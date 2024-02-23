@@ -1,127 +1,125 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D4D101DE
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 18:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DB4101DE;
+	Fri, 23 Feb 2024 18:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708713173; cv=none; b=d0iYwcivivkk4GUI6AXhvRlYjtfZSoqIVZYxNlao3W6Vl/Wr4QmJLhw14bsYncD4H0zUcFAIqjUB08Ql0ylDkDwT6Qa1YKSkMPMOHLxKctIc+u3OsT+IiVMnUhnATeXwIbuBpAnHzoNrXxWRKOkthEwiWDNAEDDq/r3uaDWO1Ak=
+	t=1708713241; cv=none; b=L+a1ixt46PE1vFVncdz3W3G3T76RRan8AraljVk6FRQYyAxdD06ElLefZIXwxdwuMlG9aPxk/MNMVvDg3PSSZXGg15EnZGFnSUFi34rQYqMVB4Vw8zhKITXA+mHEaQiL3G7ZjVHAR3DzHbUO7CcK9IGsteUKrESiuduQGDBDeqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708713173; c=relaxed/simple;
-	bh=aJ3BGTq9NSm9cTk4WqmOlLYGGdjSeSEuf85VeSJX3KE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lctJdOKig2gNMrsGKtugZIGRQScRvJm3ScLBQ2OGQ0BmA+C1R8izCrkeM7vD1ixlj5iijhnnlKRH/Cnahz6HGEIBv9cSEzCKCMsKJLRU3aDBOPBWALs0Ywa3BuG05dkcXmZilyTlCaK9oEjVS1Ju5vWpBW47Ga9vpRxshQU/dJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W6Jfx8VW; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708713241; c=relaxed/simple;
+	bh=W16s7HsLRKeMogf+4P40NdsqJiCC7rUspv0L6Ekrt7w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rl541vZPu4amQbSs75HuxToTVKYCMZbOcDJYuNHjxS3XEkAdVhQQOSPdYtx9dD3siUhliA4nZdULOlRQVDOij0Xw7GNPuhpcG8ploTi6VEoXeUf4TecdQsHDnuX4e6YfC6Bmxd7A11QAEEx+O/M9mRi+/s4AItagHNUg0Oc8zRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SM1IU5a4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W6Jfx8VW"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e4e7e25945so524220b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:32:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708713171; x=1709317971; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dXNKJkVEkUZdoKeA6PbFxQU2RahxqYWMcCRd6gZZ97g=;
-        b=W6Jfx8VWODznOO4K6E905873J2WaIy9kFrEBIS2prbgiAw2I30FNz5uvPrxQ/aoRNa
-         hwIFQlz5p+69a4O8gp2FAKd06U2+zf3/rcIMbyJMdbYmR4eHYoFUGrFjKDpE3iZFONrT
-         XAgR7MLb+TF1biT2RXENW7n7nZ52UDgJZmcL8WQKT5hD1FSOiHDXZ74382aFs93JWOR1
-         UF4ucLIkoj+s3ylbB4BsNR/+VjU6V9w8aBPLuIZfBDWxn00ZPEWRtrjf7dfS5TGqDUE+
-         PO+b7YbWftkIRwhGdZ+OAU11QEgMqmcDDQG1iMWauIwfxkVqTDkfPazsB/7yL73GATay
-         8H+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708713171; x=1709317971;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dXNKJkVEkUZdoKeA6PbFxQU2RahxqYWMcCRd6gZZ97g=;
-        b=BrAjWyCe8FH7k+sDCzK1Ad2YKo7KOQyLz3yQN8IY4PKlaojw9CXzNt0BzRl1eP/uO7
-         luMV2sErYCKhXat75TUnTvp8HYaWD2PXhR72aK5aHgAuYdC34aV8Lq1JhD5vMQT3lEJw
-         My/3V58AQmPg1u0bJctR5w4FYdqzBpykZDpcqNAE7itXiqeOSZpRJdalf8lwi5OuCqXS
-         MtrECvrhljzZcQV6KxwqTC7jXRp0TqGxcVRUwnUHG4aTRmOyhhM3R/PQWpai+rIXz+lC
-         EiWIZHItd7hdyo8FfRPdtVJh/HoGDpWfF3usFx82Uf/G9GuD6v45PGo+/2wUIkTrKfsh
-         EvTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFlGySVGVDW51PIw9TSJDJgvKQ8RA3/FPmaOufj9IoCEIRozRrWQ3Uzpj1cyKFNT+wec88XAv4AVEdHWmliWmZcoYHUMk5og5L4ISJ
-X-Gm-Message-State: AOJu0Yy8D3guNntcOPDXVKIt5O9hw3C9ERPNotXiJ8wHiY2ggF3On4xS
-	iul0VktpIfFs7I7lYHCjG4WDWd2UToivonY9mpNmWx2xe1C+CGjJ1ypJt/W0hvg=
-X-Google-Smtp-Source: AGHT+IG4UQYH68MX7y3iRYfp2fJ92YT55kxRllR+ksVeb/ZiaoCE5+Ml7rd1sXmqZO+dsdfexxhreQ==
-X-Received: by 2002:a05:6a00:2310:b0:6e4:cf7c:6c28 with SMTP id h16-20020a056a00231000b006e4cf7c6c28mr599071pfh.22.1708713170112;
-        Fri, 23 Feb 2024 10:32:50 -0800 (PST)
-Received: from p14s ([2604:3d09:148c:c800:a9ba:9d9e:b797:23f1])
-        by smtp.gmail.com with ESMTPSA id fn21-20020a056a002fd500b006e47e3e139esm7520820pfb.26.2024.02.23.10.32.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 10:32:49 -0800 (PST)
-Date: Fri, 23 Feb 2024 11:32:47 -0700
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] remoteproc: core: Add check on cached_table
- pointer
-Message-ID: <Zdjkz9bgaz+QkLg1@p14s>
-References: <20240214172127.1022199-1-arnaud.pouliquen@foss.st.com>
- <20240214172127.1022199-4-arnaud.pouliquen@foss.st.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SM1IU5a4"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41NEnafk007025;
+	Fri, 23 Feb 2024 18:30:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=Kfo/C8zqynWW3khr9w38fLA/juhM//M+1TSK7YbUzao=; b=SM
+	1IU5a4CNIWLmOnc+jXipb4Ga9eIJLWms0rnPxEXMwHDSoxe92W9Ew+cz2UneOT08
+	Iyi2XyxnbZDa1t3nXppWD2gBv5baFGSu5jpaJXHu6vAsxhujSo74jXQc1qhtrkyj
+	b1JYz/cxWMolVJrmsIH4767eZriXHsfPc1ASRZIKs+Vh4MImjLRwoZRf+c04IWja
+	WREgwfvGpnGGa1IxPu7qJXJNToVvZY2M73nvMYmrwiDnSM6QuEXhaYYJoUiQlYDP
+	AVkDtm/36vZFGTWQ5CsU0kJMULpTBDkWBl74wMVr5RZuQ0KaRJ0q/8gb9Xik4nP2
+	o7j3uPWaxue4GCbloFJw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3we3233ydp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 Feb 2024 18:30:49 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41NIUm69006076
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 Feb 2024 18:30:48 GMT
+Received: from [10.110.104.142] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 23 Feb
+ 2024 10:30:46 -0800
+Message-ID: <0aed6cf2-17ae-45aa-b7ff-03da932ea4e0@quicinc.com>
+Date: Fri, 23 Feb 2024 10:30:45 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240214172127.1022199-4-arnaud.pouliquen@foss.st.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [FYI][PATCH] tracing/treewide: Remove second parameter of
+ __assign_str()
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+CC: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>,
+        Linus Torvalds
+	<torvalds@linux-foundation.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <amd-gfx@lists.freedesktop.org>, <intel-gfx@lists.freedesktop.org>,
+        <intel-xe@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
+        <freedreno@lists.freedesktop.org>, <virtualization@lists.linux.dev>,
+        <linux-rdma@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <iommu@lists.linux.dev>, <linux-tegra@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+        <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <ath12k@lists.infradead.org>,
+        <brcm80211@lists.linux.dev>, <brcm80211-dev-list.pdl@broadcom.com>,
+        <linux-usb@vger.kernel.org>, <linux-bcachefs@vger.kernel.org>,
+        <linux-nfs@vger.kernel.org>, <ocfs2-devel@lists.linux.dev>,
+        <linux-cifs@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <selinux@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-hwmon@vger.kernel.org>, <io-uring@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-wpan@vger.kernel.org>, <dev@openvswitch.org>,
+        <linux-s390@vger.kernel.org>, <tipc-discussion@lists.sourceforge.net>,
+        Julia
+ Lawall <Julia.Lawall@inria.fr>
+References: <20240223125634.2888c973@gandalf.local.home>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240223125634.2888c973@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: wCcVNA_rPgQQt00obewLDHJucphy8QWk
+X-Proofpoint-GUID: wCcVNA_rPgQQt00obewLDHJucphy8QWk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-23_04,2024-02-23_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ impostorscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ clxscore=1011 suspectscore=0 malwarescore=0 mlxlogscore=793 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402230136
 
-On Wed, Feb 14, 2024 at 06:21:23PM +0100, Arnaud Pouliquen wrote:
-> Add a check on the optional rproc->cached_table to perform the memory
-> copy only if it is not null.
+On 2/23/2024 9:56 AM, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> 2 use cases to support:
-> - starting on boot, in which case rproc->cached_table can be null,
-> - starting on crash recovery, where the cached table is used to save
->   the resource table configuration on stop and re-apply the configuration
->   on the re-start.
+> [
+>    This is a treewide change. I will likely re-create this patch again in
+>    the second week of the merge window of v6.9 and submit it then. Hoping
+>    to keep the conflicts that it will cause to a minimum.
+> ]
 > 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-> ---
->  drivers/remoteproc/remoteproc_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 283ca071e35c..34b0093689da 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1278,7 +1278,7 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
->  	 * that any subsequent changes will be applied to the loaded version.
->  	 */
->  	loaded_table = rproc_find_loaded_rsc_table(rproc, fw);
-> -	if (loaded_table) {
-> +	if (loaded_table && rproc->cached_table) {
+> With the rework of how the __string() handles dynamic strings where it
+> saves off the source string in field in the helper structure[1], the
+> assignment of that value to the trace event field is stored in the helper
+> value and does not need to be passed in again.
 
-... and this becomes:
-
-        if (loaded_table != rproc->cached_table)
-
-with a detailed comment about what is going on and a reference to
-tee_rproc_parse_fw().
-
-There are other things to adjust in this patchset but starting with that will
-hopefully deal with a few of them.  We can address the rest at the next
-iteration.
-
-I am done reviewing this set.
-
-Thanks,
-Mathieu
->  		memcpy(loaded_table, rproc->cached_table, rproc->table_sz);
->  		rproc->table_ptr = loaded_table;
->  	}
-> -- 
-> 2.25.1
-> 
+Just curious if this could be done piecemeal by first changing the
+macros to be variadic macros which allows you to ignore the extra
+argument. The callers could then be modified in their separate trees.
+And then once all the callers have be merged, the macros could be
+changed to no longer be variadic.
