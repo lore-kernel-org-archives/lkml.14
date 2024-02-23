@@ -1,115 +1,132 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85A27C6E9
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2EF65189;
+	Fri, 23 Feb 2024 10:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684708; cv=none; b=Eip37PyWnFhHOrl+umP0r+czlwQUi5ZP/kifjYFjreNJooeeaVD8TYU66qd8EUjZa/fFATZSTcutiiYy4GJyLSvDYdMkRI8JjRniTRy+TFPC3J2HcY5jgBs2buNr7YC/0Oz8r5ukD3GsmbahZFiAQx+HZcr9y4VkPrpasvVbIfw=
+	t=1708684716; cv=none; b=b6ZvXzXr8kbAv7iTy01RK0Z25i35ZgFd6XzjU1lV9rXd6eWf47jSx/eovAxNrfWgMVCYfZrZqeOGHHBjv7Ut/xO/qvntzXGdwsvbrhOcNCuWgcgPMaVLyeZnGio2mBgfYirvuTz+MlSyou92Fd77PPH65kgLCRyHvC3f3Gmr+q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708684708; c=relaxed/simple;
-	bh=S3xPAtQF7swkXy6bnNjhtG6oQlPODcCGOzyNeLx94YY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g4eD+mWPWy0XBDgbQZHquaK3y5VJTy0zmxkjQYA/pJMLX3+3kmfeQ75t7wxbsxBq1DP6HlzQOYszLw5g4XtXlP0Wh4Wwd+7CWEhGaIk/CcipsUZfYBm7xm3hycNx6KDqUv9ResAJmAuz34zZkGJI3HBWc/J7AMDmV+I5+HsU8sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Th5zV0CGVzNlm7;
-	Fri, 23 Feb 2024 18:36:54 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3DE611400FD;
-	Fri, 23 Feb 2024 18:38:19 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 23 Feb 2024 18:38:18 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <jonathan.cameron@huawei.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<hejunhao3@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
-	<prime.zeng@hisilicon.com>, <fanghao11@huawei.com>
-Subject: [PATCH v2 3/8] drivers/perf: hisi_pcie: Fix incorrect counting under metric mode
-Date: Fri, 23 Feb 2024 18:33:54 +0800
-Message-ID: <20240223103359.18669-4-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20240223103359.18669-1-yangyicong@huawei.com>
-References: <20240223103359.18669-1-yangyicong@huawei.com>
+	s=arc-20240116; t=1708684716; c=relaxed/simple;
+	bh=QcWBpdOAclhBD0UhHITKuuNy+yVht+AsnbDVGXTP5cY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fa56oJUwj589f9yOP8ZrjszMHMLtEXRvBh6yaP9j5CCvQP5/UPffW7N5+xASxzy1VkLPr1jxRfL54ESVMmGgclBdn82bC1Pw+sXh/W7FbW3P5HgCEaJdJvGkhuY1EFdTwLN8n4HEsXMcTS/NI58KRruNWwFNQ7tP5RTosWy/YIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nASo6j/Q; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nASo6j/Q"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d2531294faso10885781fa.2;
+        Fri, 23 Feb 2024 02:38:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708684713; x=1709289513; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/57iE9xUzM64VCgKGcdjUD3L2vELMa70jtDbB0tJr/8=;
+        b=nASo6j/QnM3J+/uZ6z182gXz82tj7qM/MIqaTj07SNWeyZVG+pUAZgrPVvfwAT2V6D
+         LLQut8Lz41WyCgBXFJpUUVzFbOwzTTx/niaGNQFvNDuYeRHSW43Wh9WYzkMtegMrG5qI
+         RM8IZPR+A/15rqdPFQ2y65xpuW4D0NcBh04/1wbyvxSrxr7RwcRqTOwD8dCSFqZDiXas
+         dY4oceS0RU5FPeSKMjMJciSCJukXXlZcARxyDxFMiOKWFigrn+RBJJqq+iyPMPOr7VWM
+         KHtFmXmaqbZuxYOBOB5P4eYJO/6kZc4RsJGciWhCe3COrg9EzLSDDdIQ18LMtRoKEWkn
+         W3Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708684713; x=1709289513;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/57iE9xUzM64VCgKGcdjUD3L2vELMa70jtDbB0tJr/8=;
+        b=XmkF5d0iU0qwFXMpT1c6kmBvmF85Yvc4zC+Q4qYwLsZw+JByDwHdvtKBgKLUsbkLYs
+         gLopVoMINAk01yb/kViQi9xVylhsFZDvnS1dR9lzw4uzCEMtgRry/XYwzTRTfvdQ06Zb
+         6waYt3GgqiY7soyir40eWnUofbwcBXGXWkN42x1UpdrKRcDmY/bCBHdNVIjQpA+yxBwM
+         NSv2cdVAmJ2OlNCj8QxNQVj+hmr7y8UqoSrzp/OTd2vvt7upCcTNkP22hEHdE1FkHa+T
+         3skhvx1/+H0geZbEnqVQhbDJ6jU4Vg6w4A8J0w2ifaLIxyOv1rjJXPBgvlVJ2oWum1uO
+         fH2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWcD7YvBb/V02BgxwTDO95NQuOoCd3ar6XqR5IZhi7VsQH3DOFcQjie0IXdUJsSLoecw8iIJChXmKfrTSm09+DNOMzT9LBCggE7b5Soq7C4EtMZr+IZcTWQhRRxNB46R7ir0mmJmK7kiH0UPfAsoMfHkjvzdyPc8KyS8pQXNz1U0MLMPAkavg==
+X-Gm-Message-State: AOJu0YzoQMj++90VSF+JHD5Rb246QfRXfhivRSrWLN1SDPzs7kATQQuc
+	zLJEAT3VQFTHlwIu+5RAhyOB5aHng8zeNXbTtqscgLQGwfLAKc/h
+X-Google-Smtp-Source: AGHT+IH2eeoej2njYTlxALagRPYMimWjHDV8O5gqpwHYmZj98ZuyF9R3SzzOFKStwi3/sm9G3GkbfA==
+X-Received: by 2002:a05:6512:3b9c:b0:512:d6b4:9622 with SMTP id g28-20020a0565123b9c00b00512d6b49622mr1373111lfv.69.1708684712932;
+        Fri, 23 Feb 2024 02:38:32 -0800 (PST)
+Received: from mobilestation ([95.79.226.168])
+        by smtp.gmail.com with ESMTPSA id g15-20020a0565123b8f00b00512d16a68e0sm1000300lfv.120.2024.02.23.02.38.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Feb 2024 02:38:32 -0800 (PST)
+Date: Fri, 23 Feb 2024 13:38:30 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>, 
+	Stephen Rothwell <sfr@rothwell.id.au>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-mips@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] mips: cm: Add CM GCR and L2-sync base address
+ getters declarations
+Message-ID: <pf6cvzper4g5364nqhd4wd2pmlkyygoymobeqduulpslcjhyy6@kf66z7chjbl3>
+References: <20240215171740.14550-1-fancer.lancer@gmail.com>
+ <20240215171740.14550-3-fancer.lancer@gmail.com>
+ <ZdTgSZRTDkakekkd@alpha.franken.de>
+ <difioxc7b7e2ic2p4om36l6vu4vkud6qa6t3aeikxzkhlqhgqb@zsx3dmjcofw4>
+ <ZdhgGRknaFmxKvfI@alpha.franken.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500009.china.huawei.com (7.192.105.203)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZdhgGRknaFmxKvfI@alpha.franken.de>
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+On Fri, Feb 23, 2024 at 10:06:33AM +0100, Thomas Bogendoerfer wrote:
+> On Wed, Feb 21, 2024 at 09:39:58PM +0300, Serge Semin wrote:
+> > On Tue, Feb 20, 2024 at 06:24:25PM +0100, Thomas Bogendoerfer wrote:
+> > > On Thu, Feb 15, 2024 at 08:17:27PM +0300, Serge Semin wrote:
+> > > > Based on the design pattern utilized in the CM GCR and L2-sync base
+> > > > address getters implementation the platform-specific code is capable to
+> > > > re-define the getters and re-use the weakly defined initial versions. But
+> > > > since the re-definition is supposed to be done in another source file the
+> > > > interface methods have been globally defined which in its turn causes the
+> > > > "no previous prototype" warning printed should the re-definition is
+> > > > finally introduced. Since without the global declarations the pattern can
+> > > > be considered as incomplete and causing the warning printed, fix it by
+> > > > providing the respective methods prototype declarations in
+> > > > "arch/mips/include/asm/mips-cm.h".
+> > > > 
+> > > > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> > > > 
+> > > > ---
+> > > > 
+> > > > Note as I mentioned in the previous patch, since the weak implementation
+> > > > of the getters isn't utilized other than as a default implementation of
+> > > > the original methods, we can convert the denoted pattern to a simple
+> > > > __weak attributed methods. Let me know if that would be more preferable.
+> > > 
+> > 
+> > > how about simply remove __mips_cm_l2sync_phys_base() and do everything
+> > > via mips_cm_phys_base(). And at the moment without anyone overriding
+> > > mips_cm_phys_base I tend to keep static without __weak. If someone
+> > > needs, we can change it. Does this make sense ?
+> > 
+> > To be honest my arch code (not submitted yet) do override the
+> > mips_cm_l2sync_phys_base() method. The memory just behind the CM2
+> 
+> that's fine, I just wanted to know a reason for having it provided as
+> weak symbol.
+> 
+> > What about instead of that I'll just convert both mips_cm_phys_base()
+> > and mips_cm_l2sync_phys_base() to being defined with the underscored
+> > methods body and assign the __weak attribute to them?
+> 
+> works for me ;-) I'll pick patch 3/4 of this series, so no need to
+> resend them.
 
-The metric counting shows incorrect results if the events in the
-metric group using the same event but different filter options.
-This is because we only judge the event code to decide whether
-the event in the metric group should share the same hardware
-counter, but ignore the settings of the filter.
+Ok. Thanks. I'll submit the respective patch(es) in a several days.
 
-For example, on a platform of 2 ports 0x1 and 0x2 but only port
-0x1 has a downstream PCIe NVME device. The metric counting
-shows both ports have the same counts because we misassign these
-two events to one same hardware counter:
-[root@localhost perf-iostat]# ./perf stat -e '{hisi_pcie0_core1/event=0x0104,port=0x2/,hisi_pcie0_core1/event=0x0104,port=0x1/}'
+-Serge(y)
 
- Performance counter stats for 'system wide':
-
-        7907484924      hisi_pcie0_core1/event=0x0104,port=0x2/
-        7907484924      hisi_pcie0_core1/event=0x0104,port=0x1/
-
-      10.153863691 seconds time elapsed
-
-Fix this by using the whole config rather than the event only
-to judge whether two events are the same and should share the
-same hardware counter. With this patch, the metric counting in
-the above case tends to be corrected:
-
-[root@localhost perf-iostat]# ./perf stat -e '{hisi_pcie0_core1/event=0x0104,port=0x2/,hisi_pcie0_core1/event=0x0104,port=0x1/}'
-
- Performance counter stats for 'system wide':
-
-                 0      hisi_pcie0_core1/event=0x0104,port=0x2/
-        8123122077      hisi_pcie0_core1/event=0x0104,port=0x1/
-
-      10.152875631 seconds time elapsed
-
-Fixes: 8404b0fbc7fb ("drivers/perf: hisi: Add driver for HiSilicon PCIe PMU")
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- drivers/perf/hisilicon/hisi_pcie_pmu.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-index 2468cf3b007c..9176242eadb3 100644
---- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
-@@ -314,10 +314,16 @@ static bool hisi_pcie_pmu_valid_filter(struct perf_event *event,
- 	return true;
- }
- 
-+/*
-+ * Check Whether two events share the same config. The same config means not
-+ * only the event code, but also the filter settings of the two events are
-+ * the same.
-+ */
- static bool hisi_pcie_pmu_cmp_event(struct perf_event *target,
- 					struct perf_event *event)
- {
--	return hisi_pcie_get_real_event(target) == hisi_pcie_get_real_event(event);
-+	return hisi_pcie_pmu_get_event_ctrl_val(target) ==
-+	       hisi_pcie_pmu_get_event_ctrl_val(event);
- }
- 
- static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
--- 
-2.24.0
-
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
