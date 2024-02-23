@@ -1,54 +1,54 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854F078B7E
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:40:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B386313D
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 10:40:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708684819; cv=none; b=VHrw7iUmuROQa2irzTEBaiIVY+6oTx540u5DMUDMXpM7CTCfpwgVCSeZXz8gJy9TmNcv+5678TIAaP6aVPWvNvPaemELhs4WsAA5iKxmi97uJuApeYB/09IzNaBZc/0Fk/H3ouxdmSZDOriqt1yF57fSOjLx2U2z2iIOkLVzMRU=
+	t=1708684819; cv=none; b=DYDRwKRkNV08Kk6XsViOgtYs8UhSKIjaMh0eiNLwKfAaEq1Hl6BzDKABLUmRJlVUVxjYZCL/w/NS15Gulg5gy7S8olBhpj/ihRR1//zeuIdg1CHjrVkEPVI9jsSYn9T5X9Zt9q3Sr64rMix9uX2vnArxu07tLBHIDTbINgQHVT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708684819; c=relaxed/simple;
-	bh=mdeBdatCKk8Xzj5nvfbu+cmRuDDMrfl3wd3KLsml9bc=;
+	bh=DhCTZsK0IpfHWKIUtMPDNMHLet4Gw2VOAQsCh9OviDY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eu7BXyH4wPra3S3oWHN/JijHV2UTZsC03YLvYYhRYe14HqObcb+qyrdgvhhXsrLEehSbHAbDU8sAJVbUkc0id7xfZWGyBM+TwXF3ok107l+t3hFcrCblSMN+FMW/ufWzLTDR/fcTRbZ08fNZBRpQIDUg43VHmOQmxaQvW6p12Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TEJo/+xj; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=ZQUwIcDHVbKWJ5EQ8Xif6vEbz9+qCDXRBjj5v0B0B8djII5Oy5+hz8jbftXuV81km59K+HDiW8HjXf5nL2xH/Gp6Ed4p7FSfDLm+I55+KLxPwo5vyH5pAG7iM7upvEAzb9N01jQ4LNTb+dRIqGCtfCwM8faHnGOkU0kbsM1spWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HjwGaG1G; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TEJo/+xj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HjwGaG1G"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708684816;
+	s=mimecast20190719; t=1708684815;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HNd1RWFfxP99GP5p/jumFBlLTjGZdI0OBikpCrKysX4=;
-	b=TEJo/+xjlz3F4obG2Ic25FS16NYtOiFQMSTD8W93C+bc4ugwCDF5wVdPGzh18AkqsVGbIM
-	hv6g7ipQXnHv1C8azOuOOMmmaQW6phx1p5nDfMInlmzVxZ+LxKL8iqEioD5YYN0V0/c0wH
-	995r6SzGeWQcjG2lCbY7f03stn4KdYA=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-UfgFwcO_Nsuq-cLNup0YLg-1; Fri,
- 23 Feb 2024 05:40:11 -0500
-X-MC-Unique: UfgFwcO_Nsuq-cLNup0YLg-1
+	bh=6Dxr8YfHFuXWumS+2ASTMr73iq7XV3ma9qDcIY901Hw=;
+	b=HjwGaG1G1rftnoQcWBKD4HRO3D6p7lAPkpFS9LXle5Ggj2N9HuL5muhdBE9siMjpEoHHFs
+	MjWdLNYl1R4g2uUjEJQKOZDYfxKT8uUxSvMJR5kP/vZb6iHMVKkfyWM5OObk4I4roXodPX
+	7xDqCt7CetF2Zcxkso1EOKnc8y9AC3U=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-620-le6W4mtaN4WXA0AU7VNi3g-1; Fri, 23 Feb 2024 05:40:12 -0500
+X-MC-Unique: le6W4mtaN4WXA0AU7VNi3g-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 061A21C068D1;
-	Fri, 23 Feb 2024 10:40:11 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2C7F388CF76;
+	Fri, 23 Feb 2024 10:40:12 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D292F112132A;
-	Fri, 23 Feb 2024 10:40:10 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 06B86112132A;
+	Fri, 23 Feb 2024 10:40:12 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: seanjc@google.com,
 	michael.roth@amd.com,
 	aik@amd.com
-Subject: [PATCH v2 03/11] Documentation: kvm/sev: separate description of firmware
-Date: Fri, 23 Feb 2024 05:40:01 -0500
-Message-Id: <20240223104009.632194-4-pbonzini@redhat.com>
+Subject: [PATCH v2 09/11] KVM: SEV: define VM types for SEV and SEV-ES
+Date: Fri, 23 Feb 2024 05:40:07 -0500
+Message-Id: <20240223104009.632194-10-pbonzini@redhat.com>
 In-Reply-To: <20240223104009.632194-1-pbonzini@redhat.com>
 References: <20240223104009.632194-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -61,73 +61,171 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-The description of firmware is included part under the "SEV Key Management"
-header, part under the KVM_SEV_INIT ioctl.  Put these two bits together and
-and rename "SEV Key Management" to what it actually is, namely a description
-of the KVM_MEMORY_ENCRYPT_OP API.
-
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Message-Id: <20240209183743.22030-4-pbonzini@redhat.com>
-Reviewed-by: Michael Roth <michael.roth@amd.com>
+Message-Id: <20240209183743.22030-9-pbonzini@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- .../virt/kvm/x86/amd-memory-encryption.rst    | 29 +++++++++++--------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+ Documentation/virt/kvm/api.rst  |  2 ++
+ arch/x86/include/uapi/asm/kvm.h |  2 ++
+ arch/x86/kvm/svm/sev.c          | 21 ++++++++++++++++++++-
+ arch/x86/kvm/svm/svm.c          | 11 +++++++++++
+ arch/x86/kvm/svm/svm.h          |  2 ++
+ arch/x86/kvm/x86.c              |  4 ++++
+ 6 files changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-index 995780088eb2..37c5c37f4f6e 100644
---- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-+++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-@@ -46,14 +46,8 @@ SEV hardware uses ASIDs to associate a memory encryption key with a VM.
- Hence, the ASID for the SEV-enabled guests must be from 1 to a maximum value
- defined in the CPUID 0x8000001f[ecx] field.
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 3ec0b7a455a0..bf957bb70e4b 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -8790,6 +8790,8 @@ means the VM type with value @n is supported.  Possible values of @n are::
  
--SEV Key Management
--==================
--
--The SEV guest key management is handled by a separate processor called the AMD
--Secure Processor (AMD-SP). Firmware running inside the AMD-SP provides a secure
--key management interface to perform common hypervisor activities such as
--encrypting bootstrap code, snapshot, migrating and debugging the guest. For more
--information, see the SEV Key Management spec [api-spec]_
-+``KVM_MEMORY_ENCRYPT_OP`` API
-+=============================
+   #define KVM_X86_DEFAULT_VM	0
+   #define KVM_X86_SW_PROTECTED_VM	1
++  #define KVM_X86_SEV_VM	8
++  #define KVM_X86_SEV_ES_VM	10
  
- The main ioctl to access SEV is KVM_MEMORY_ENCRYPT_OP.  If the argument
- to KVM_MEMORY_ENCRYPT_OP is NULL, the ioctl returns 0 if SEV is enabled
-@@ -87,10 +81,6 @@ guests, such as launching, running, snapshotting, migrating and decommissioning.
- The KVM_SEV_INIT command is used by the hypervisor to initialize the SEV platform
- context. In a typical workflow, this command should be the first command issued.
+ 9. Known KVM API problems
+ =========================
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index cccaa5ff6d01..12cf6f3b367e 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -850,5 +850,7 @@ struct kvm_hyperv_eventfd {
  
--The firmware can be initialized either by using its own non-volatile storage or
--the OS can manage the NV storage for the firmware using the module parameter
--``init_ex_path``. If the file specified by ``init_ex_path`` does not exist or
--is invalid, the OS will create or override the file with output from PSP.
+ #define KVM_X86_DEFAULT_VM	0
+ #define KVM_X86_SW_PROTECTED_VM	1
++#define KVM_X86_SEV_VM		8
++#define KVM_X86_SEV_ES_VM	10
  
- Returns: 0 on success, -negative on error
+ #endif /* _ASM_X86_KVM_H */
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 06e03a6fe7e4..f859ea270fcc 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -261,6 +261,9 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	if (kvm->created_vcpus)
+ 		return -EINVAL;
  
-@@ -434,6 +424,21 @@ issued by the hypervisor to make the guest ready for execution.
- 
- Returns: 0 on success, -negative on error
- 
-+Firmware Management
-+===================
++	if (kvm->arch.vm_type != KVM_X86_DEFAULT_VM)
++		return -EINVAL;
 +
-+The SEV guest key management is handled by a separate processor called the AMD
-+Secure Processor (AMD-SP). Firmware running inside the AMD-SP provides a secure
-+key management interface to perform common hypervisor activities such as
-+encrypting bootstrap code, snapshot, migrating and debugging the guest. For more
-+information, see the SEV Key Management spec [api-spec]_
-+
-+The AMD-SP firmware can be initialized either by using its own non-volatile
-+storage or the OS can manage the NV storage for the firmware using
-+parameter ``init_ex_path`` of the ``ccp`` module. If the file specified
-+by ``init_ex_path`` does not exist or is invalid, the OS will create or
-+override the file with PSP non-volatile storage.
-+
- References
- ==========
+ 	ret = -EBUSY;
+ 	if (unlikely(sev->active))
+ 		return ret;
+@@ -280,6 +283,7 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
  
+ 	INIT_LIST_HEAD(&sev->regions_list);
+ 	INIT_LIST_HEAD(&sev->mirror_vms);
++	sev->need_init = false;
+ 
+ 	kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_SEV);
+ 
+@@ -1815,7 +1819,8 @@ int sev_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd)
+ 	if (ret)
+ 		goto out_fput;
+ 
+-	if (sev_guest(kvm) || !sev_guest(source_kvm)) {
++	if (kvm->arch.vm_type != source_kvm->arch.vm_type ||
++	    sev_guest(kvm) || !sev_guest(source_kvm)) {
+ 		ret = -EINVAL;
+ 		goto out_unlock;
+ 	}
+@@ -2136,6 +2141,7 @@ int sev_vm_copy_enc_context_from(struct kvm *kvm, unsigned int source_fd)
+ 	mirror_sev->asid = source_sev->asid;
+ 	mirror_sev->fd = source_sev->fd;
+ 	mirror_sev->es_active = source_sev->es_active;
++	mirror_sev->need_init = false;
+ 	mirror_sev->handle = source_sev->handle;
+ 	INIT_LIST_HEAD(&mirror_sev->regions_list);
+ 	INIT_LIST_HEAD(&mirror_sev->mirror_vms);
+@@ -3193,3 +3199,16 @@ void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector)
+ 
+ 	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, 1);
+ }
++
++bool sev_is_vm_type_supported(unsigned long type)
++{
++	if (type == KVM_X86_SEV_VM)
++		return sev_enabled;
++	if (type == KVM_X86_SEV_ES_VM)
++		return sev_es_enabled;
++
++	return false;
++}
++
++static_assert((KVM_X86_SEV_VM & __KVM_X86_VM_TYPE_FEATURES) == 0);
++static_assert((KVM_X86_SEV_ES_VM & __KVM_X86_VM_TYPE_FEATURES) == __KVM_X86_PROTECTED_STATE_TYPE);
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 392b9c2e2ce1..87541c84d07e 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -4087,6 +4087,11 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
+ 
+ static int svm_vcpu_pre_run(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_sev_info *sev = &to_kvm_svm(vcpu->kvm)->sev_info;
++
++	if (sev->need_init)
++		return -EINVAL;
++
+ 	return 1;
+ }
+ 
+@@ -4888,6 +4893,11 @@ static void svm_vm_destroy(struct kvm *kvm)
+ 
+ static int svm_vm_init(struct kvm *kvm)
+ {
++	if (kvm->arch.vm_type) {
++		struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
++		sev->need_init = true;
++	}
++
+ 	if (!pause_filter_count || !pause_filter_thresh)
+ 		kvm->arch.pause_in_guest = true;
+ 
+@@ -4914,6 +4924,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
+ 	.vcpu_free = svm_vcpu_free,
+ 	.vcpu_reset = svm_vcpu_reset,
+ 
++	.is_vm_type_supported = sev_is_vm_type_supported,
+ 	.vm_size = sizeof(struct kvm_svm),
+ 	.vm_init = svm_vm_init,
+ 	.vm_destroy = svm_vm_destroy,
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 864c782eaa58..63be26d4a024 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -79,6 +79,7 @@ enum {
+ struct kvm_sev_info {
+ 	bool active;		/* SEV enabled guest */
+ 	bool es_active;		/* SEV-ES enabled guest */
++	bool need_init;		/* waiting for SEV_INIT2 */
+ 	unsigned int asid;	/* ASID used for this guest */
+ 	unsigned int handle;	/* SEV firmware handle */
+ 	int fd;			/* SEV device fd */
+@@ -696,6 +697,7 @@ void sev_es_vcpu_reset(struct vcpu_svm *svm);
+ void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector);
+ void sev_es_prepare_switch_to_guest(struct vcpu_svm *svm, struct sev_es_save_area *hostsa);
+ void sev_es_unmap_ghcb(struct vcpu_svm *svm);
++bool sev_is_vm_type_supported(unsigned long type);
+ 
+ /* vmenter.S */
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index d4029053b6d8..4b26d84bc836 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4794,6 +4794,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		r = BIT(KVM_X86_DEFAULT_VM);
+ 		if (kvm_is_vm_type_supported(KVM_X86_SW_PROTECTED_VM))
+ 			r |= BIT(KVM_X86_SW_PROTECTED_VM);
++		if (kvm_is_vm_type_supported(KVM_X86_SEV_VM))
++			r |= BIT(KVM_X86_SEV_VM);
++		if (kvm_is_vm_type_supported(KVM_X86_SEV_ES_VM))
++			r |= BIT(KVM_X86_SEV_ES_VM);
+ 		break;
+ 	default:
+ 		break;
 -- 
 2.39.1
 
