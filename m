@@ -1,212 +1,111 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176BF1292C6;
-	Fri, 23 Feb 2024 17:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDBA128833;
+	Fri, 23 Feb 2024 17:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708707632; cv=none; b=k4BfV0EV8sglukBWGrsCRpUzcFnm8GrashRVBPAngs+XEilGhLDqSFziv2BXic+t18TtWe4BMaCU9nEXzGxRb0u8G9l4N1Ab1AzlW+6/o9E9x7HF2mjH8H0CttDq2cx7NFxHPzSThLN7vQX/2tkQUR2yIJlnfQk3wzHAfA6wJdY=
+	t=1708707639; cv=none; b=nN4KBQXZhYAPsVfz6Mw9160op2BeLpR3bBXyI0nKv5rCgGXgnvYznzfn9dWg6fUXAkH9YiXkb1rX0oqSp0npaI/NpCVuUA/tgJTnx0Cg8aOyTKgReSoBHTRjKf9Hl8i3YjG0vrODIiCtWHwjc6jFXQLyWBRG+yBDFNJ/iBxAZY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708707632; c=relaxed/simple;
-	bh=DP07s/Kd4y5Nre6qJCsFlczCNJviiMGXk8qxZy4ibMM=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=PecNZfdT5iyPfV0UeCHipB+aAiQB1/XFutddR7D0rrgFhBqvuKGTikR1/CqAWImVRtuMR0GFVOS/AR/QtoPHkKZO6ex65Fa5+Xn/subwV8lA1aO4f8EVvpS/ESNiPvq+r1kqdO0Bg1+tQ0AXi9vfftLtPsXvz+eakzcURkh83hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SJTgMIab; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708707639; c=relaxed/simple;
+	bh=LGoVk6is+8EOUaT6DBqIftn7bdpMxDIZS3roVQ+bxRM=;
+	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
+	 Message-ID:In-Reply-To; b=YyurgBvQkGxPGGIUvzK8+1Z0oxn2Pv0P52rzZZ3ew8WMLl+USI2dAr5R1MeCh79/C+gZ7jkHr+WKCeeSTMTecj+1K490v381D1n/Rh2baqn7eQEaWxR6KIN9j/Bn3C+P63E3+ppMVKgNTELyJDKgSQxuyvzFcADWvBkgFNWKIls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZmQUb5Pw; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJTgMIab"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-512ab55fde6so792491e87.2;
-        Fri, 23 Feb 2024 09:00:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708707629; x=1709312429; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=KdZCvZnQvtvoXFrprhSZehsA4lrftV7UQsxYXFE5r3k=;
-        b=SJTgMIabpAlnz4uH50iUovUdHjBJvSj8Usj1UcvUedXchcdDU1fk7yxDI0dGpVjZ5a
-         3h6oJ3At9Jqru45+g/klxbJIN4kkktFJaOkyV+PzF4uSTW1//haeEHllKEYkMrOI88YE
-         ADBAQawhbtfEM5/9Ms+HdPztL2yL2YjnVFG/jKHKwuf21Ry9tit4Pu9O0Y2e2jQsDSjh
-         XedHzrniNwr2rifZGb0N9Qwf+YUXvA31Wfc7MdaOH1Bv+j3KCPZCvNBEe8Oiie1ybWaL
-         hY8ZXndFlLfUFxNEubYFC3yg92K+t91goqnQD3vYc9FQq/iqH5/5eBqlamFM5HrAtF0f
-         fPcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708707629; x=1709312429;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KdZCvZnQvtvoXFrprhSZehsA4lrftV7UQsxYXFE5r3k=;
-        b=IghkoEMCElNZGVIi7qPuLj4/cThjo67Qd3y8q0rOF3tKKbApB9FkNVoZKlQT+IO7jp
-         CTVwijk5GsQLhtpm/ULfWy34Xg1+js+Igc2SOB6YxyNp2TfEPMrod775CL+fiGoqbY0u
-         l1YvPT9LmLOSw54dybulp675DsFs8uj9zc3VjVBokr/cGlWBSuvT51gAABdoP5DaqmRH
-         X9yf+VSoE5pYJPA057zHTwD8b3k4rJ3QuBj9JuKRLlTD8VLSlqmb2DkDe7IW4cCMgui+
-         4YBco/EEz7E0YBpztJqit2QhXNpFgYZaYNwiGSYRbIhB5rjllTAyx7ZQgAeo4qSeV1ev
-         F8zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUiz8dOE3Yv+wzCpXnBWUDFhZ0pas23/nkufNvqs8AWsFKQR64b9FrurAno/4RKuf5unvHFMw9kv1UAIZpGcoGFwVcIUmpgjWxbAHPFurPfcFnspgYzNJqBF9kAl7cMpl3NhenSkPHJJvo=
-X-Gm-Message-State: AOJu0Yyc3Q/JUZt00oiXltx7rrBEaebLFBt8caHlpcsG14DY2ULnALaD
-	9BwqFazpck8DRwm4dKVzzCip/d/Ph821r4OgvouZRBvpFUeTVuGT
-X-Google-Smtp-Source: AGHT+IHsOc5/Zrb/rPJJ3eV0TA68yL6/1WBUbQzJaTU3sPB0EfY7x7ikiHptfqS9ZrAkw8Swu2eBJg==
-X-Received: by 2002:a19:f710:0:b0:512:bd51:a0ea with SMTP id z16-20020a19f710000000b00512bd51a0eamr234006lfe.9.1708707628879;
-        Fri, 23 Feb 2024 09:00:28 -0800 (PST)
-Received: from razdolb ([37.1.50.248])
-        by smtp.gmail.com with ESMTPSA id j9-20020a19f509000000b00512ebe08d7bsm173052lfb.290.2024.02.23.09.00.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 09:00:28 -0800 (PST)
-References: <20231218174042.794012-1-mike.rudenko@gmail.com>
- <20231218174042.794012-10-mike.rudenko@gmail.com>
- <ZZvaDyGSMrjb6e75@valkosipuli.retiisi.eu> <878r4z4ysb.fsf@gmail.com>
- <ZdhVAEElqzmJAynB@kekkonen.localdomain>
-User-agent: mu4e 1.10.8; emacs 29.2.50
-From: Mikhail Rudenko <mike.rudenko@gmail.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>,
- Tommaso Merciai <tomm.merciai@gmail.com>, Christophe JAILLET
- <christophe.jaillet@wanadoo.fr>, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>
-Subject: Re: [PATCH v2 09/20] media: i2c: ov4689: Use runtime PM autosuspend
-Date: Fri, 23 Feb 2024 18:18:12 +0300
-In-reply-to: <ZdhVAEElqzmJAynB@kekkonen.localdomain>
-Message-ID: <87le7bdsk4.fsf@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZmQUb5Pw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708707638; x=1740243638;
+  h=to:cc:subject:references:date:mime-version:
+   content-transfer-encoding:from:message-id:in-reply-to;
+  bh=LGoVk6is+8EOUaT6DBqIftn7bdpMxDIZS3roVQ+bxRM=;
+  b=ZmQUb5PwEeopoFrMmRGEm3Ri/fixtzZQws1fDciolX88NSDg5R/33I8q
+   O8d+/ZFuhIMi7C3iM3UZOcuHxuNcRxe16avSuWGcT0gurQewDIdYQs8sU
+   D+x1a6UWNjcC/fBhT24GXvuK0lecsl5wMlLHYpbHHgGLWsHIx1t5vFekC
+   emrTA4IUorIoAOTPrNKJO5//PO8MAa3MPNOLoV1AD0eQyUJcVeV0J1YQl
+   eHut2GZhTJ5WPdecoWtUhSEx8EA+LcxGqw071Eq3dreSTKUbmlQZNvq1V
+   LMklk9++fsLD20lJSY6fEaPlZqK+zpUTy+naZivJOEajIkziRicowEhAO
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="2906473"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="2906473"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 09:00:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="5902920"
+Received: from hhuan26-mobl.amr.corp.intel.com ([10.92.17.168])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-SHA; 23 Feb 2024 09:00:35 -0800
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To: "Mehta, Sohil" <sohil.mehta@intel.com>, "mingo@redhat.com"
+ <mingo@redhat.com>, "jarkko@kernel.org" <jarkko@kernel.org>, "x86@kernel.org"
+ <x86@kernel.org>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>, "hpa@zytor.com"
+ <hpa@zytor.com>, "tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
+ "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "mkoutny@suse.com"
+ <mkoutny@suse.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "tj@kernel.org"
+ <tj@kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>, "Huang, Kai"
+ <kai.huang@intel.com>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com"
+ <anakrish@microsoft.com>, "Zhang, Bo" <zhanb@microsoft.com>,
+ "kristen@linux.intel.com" <kristen@linux.intel.com>, "yangjie@microsoft.com"
+ <yangjie@microsoft.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
+ "chrisyan@microsoft.com" <chrisyan@microsoft.com>
+Subject: Re: [PATCH v9 10/15] x86/sgx: Add EPC reclamation in cgroup
+ try_charge()
+References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
+ <20240205210638.157741-11-haitao.huang@linux.intel.com>
+ <c5d03171473821ebc9cb79e3dad4d1bf0074e674.camel@intel.com>
+ <op.2jjzaqdwwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <4db8493b-35a2-474f-997c-5e6ac1b8bd11@intel.com>
+ <op.2jkfeezjwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <c913193c0560c4372d2fdb31e9edb28bcb419f50.camel@intel.com>
+Date: Fri, 23 Feb 2024 11:00:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+From: "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel
+Message-ID: <op.2jlti6g9wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <c913193c0560c4372d2fdb31e9edb28bcb419f50.camel@intel.com>
+User-Agent: Opera Mail/1.0 (Win32)
 
+On Fri, 23 Feb 2024 04:18:18 -0600, Huang, Kai <kai.huang@intel.com> wrote:
 
-Hi Sakari,
-
-and thanks for the review!
-
-On 2024-02-23 at 08:19 GMT, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
-
-> Hi Mikhail,
+>> >
+>> Right. When code reaches to here, we already passed reclaim per cgroup.
 >
-> On Mon, Jan 08, 2024 at 06:06:52PM +0300, Mikhail Rudenko wrote:
->> Hi Sakari,
->>
->> Thanks for the review!
->>
->> On 2024-01-08 at 11:18 GMT, Sakari Ailus <sakari.ailus@iki.fi> wrote:
->>
->> > Hi Mikhail,
->> >
->> > On Mon, Dec 18, 2023 at 08:40:30PM +0300, Mikhail Rudenko wrote:
->> >> Use runtime PM autosuspend to avoid powering off the sensor during
->> >> fast stop-reconfigure-restart cycles.
->> >>
->> >> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
->> >> ---
->> >>  drivers/media/i2c/ov4689.c | 22 +++++++++++++++-------
->> >>  1 file changed, 15 insertions(+), 7 deletions(-)
->> >>
->> >> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
->> >> index 5300e621ff90..64cc6d9e48cc 100644
->> >> --- a/drivers/media/i2c/ov4689.c
->> >> +++ b/drivers/media/i2c/ov4689.c
->> >> @@ -407,26 +407,27 @@ static int ov4689_s_stream(struct v4l2_subdev *sd, int on)
->> >>  					  ov4689->cur_mode->num_regs,
->> >>  					  NULL);
->> >>  		if (ret) {
->> >> -			pm_runtime_put(dev);
->> >> +			pm_runtime_put_sync(dev);
->> >
->> > Why are you switching to pm_runtime_put_sync() here? That isn't covered by
->> > the commit message (nor I think should be done).
->>
->> PM autosuspend conversion was suggested earlier by Laurent in his review
->> of this series [1], and he adviced looking at how it was done for the
->> imx290 driver. I followed along the lines of the corresponding patch
->> [2].
+> Yes if try_charge() failed we must do pre-cgroup reclaim.
 >
-> There's no need to use the _sync() variant here. And at least it wouldn't
-> be related to autosuspend, were you to switch to that.
+>> The cgroup may not at or reach limit but system has run out of physical
+>> EPC.
+>>
+>
+> But after try_charge() we can still choose to reclaim from the current  
+> group,
+> but not necessarily have to be global, right?  I am not sure whether I am
+> missing something, but could you elaborate why we should choose to  
+> reclaim from
+> the global?
+>
 
-Ok, will use pm_runtime_put in v3. Or do you suggest dropping this patch
-altogether? Laurent?
+Once try_charge is done and returns zero that means the cgroup usage is  
+charged and it's not over usage limit. So you really can't reclaim from  
+that cgroup if allocation failed. The only  thing you can do is to reclaim  
+globally.
 
->>
->> >>  			goto unlock_and_return;
->> >>  		}
->> >>
->> >>  		ret = __v4l2_ctrl_handler_setup(&ov4689->ctrl_handler);
->> >>  		if (ret) {
->> >> -			pm_runtime_put(dev);
->> >> +			pm_runtime_put_sync(dev);
->> >>  			goto unlock_and_return;
->> >>  		}
->> >>
->> >>  		ret = cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE,
->> >>  				OV4689_MODE_STREAMING, NULL);
->> >>  		if (ret) {
->> >> -			pm_runtime_put(dev);
->> >> +			pm_runtime_put_sync(dev);
->> >>  			goto unlock_and_return;
->> >>  		}
->> >>  	} else {
->> >>  		cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE,
->> >>  			  OV4689_MODE_SW_STANDBY, NULL);
->> >> -		pm_runtime_put(dev);
->> >> +		pm_runtime_mark_last_busy(dev);
->> >> +		pm_runtime_put_autosuspend(dev);
->> >>  	}
->> >>
->> >>  unlock_and_return:
->> >> @@ -606,7 +607,9 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->> >>  		break;
->> >>  	}
->> >>
->> >> -	pm_runtime_put(dev);
->> >> +	pm_runtime_mark_last_busy(dev);
->> >> +	pm_runtime_put_autosuspend(dev);
->> >
->> > Also note that with runtime PM autosuspend,  you have to use
->> > pm_runtime_get_if_active() instead of pm_runtime_get_if_in_use().
->>
->> Noted, will do so in v3.
->>
->> >> +
->> >>  	return ret;
->> >>  }
->> >>
->> >> @@ -877,8 +880,10 @@ static int ov4689_probe(struct i2c_client *client)
->> >>  	}
->> >>
->> >>  	pm_runtime_set_active(dev);
->> >> +	pm_runtime_get_noresume(dev);
->> >>  	pm_runtime_enable(dev);
->> >> -	pm_runtime_idle(dev);
->> >> +	pm_runtime_set_autosuspend_delay(dev, 1000);
->> >> +	pm_runtime_use_autosuspend(dev);
->> >>
->> >>  	ret = v4l2_async_register_subdev_sensor(sd);
->> >>  	if (ret) {
->> >> @@ -886,11 +891,14 @@ static int ov4689_probe(struct i2c_client *client)
->> >>  		goto err_clean_subdev_pm;
->> >>  	}
->> >>
->> >> +	pm_runtime_mark_last_busy(dev);
->> >> +	pm_runtime_put_autosuspend(dev);
->> >> +
->> >>  	return 0;
->> >>
->> >>  err_clean_subdev_pm:
->> >>  	pm_runtime_disable(dev);
->> >> -	pm_runtime_set_suspended(dev);
->> >> +	pm_runtime_put_noidle(dev);
->> >>  	v4l2_subdev_cleanup(sd);
->> >>  err_clean_entity:
->> >>  	media_entity_cleanup(&sd->entity);
->>
->> [1] https://lore.kernel.org/all/20231211181935.GG27535@pendragon.ideasonboard.com/
->> [2] https://lore.kernel.org/all/20230116144454.1012-14-laurent.pinchart@ideasonboard.com/
->>
+This could happen when the sum of limits of all cgroups is greater than  
+the physical EPC, i.e., user is overcommitting.
 
+Thanks
 
---
-Best regards,
-Mikhail Rudenko
+Haitao
