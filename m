@@ -1,105 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455951353EA
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 17:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A287C140E5C;
+	Fri, 23 Feb 2024 17:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708710161; cv=none; b=XcfF2CVqkTnBS0VhseqCZtG5/QVQYP2XzlJWhGjD83RQ31c9KVkxnwSkVP6zUdc0SY2AXaZG92viSTLhDwgzPrlizvpu6kK2oGuEsVddZh9YfhlsP+cKNq3oXY5frSgiVTnLtDqpy0fzdr7JhUJWXhr1MdSULWgB5BQi+axUuB4=
+	t=1708710163; cv=none; b=Xph9suXFw6voPqUqtbJOpgyFyWQXBEocTxjl3Wzhg0tobBhg8y45NEzJyx9ogFcpS6Z9sw1zTu12nwrDL++Yfm5Qci9Q6Fq65q+Nc2VsGAhvItWg5Ns3NC22ofPsxQDaBS7KUx9J6VmLHUXZUxtxr5+JJvzViIbxIE5mdHC9sPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708710161; c=relaxed/simple;
-	bh=IycnRvyn0DFRkClwY9SGw1un5/Ap5e/m6Ec695D7Cjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WDPNqZ66fpPCPfrLyQsNwnp+CXMz2gQutkqW/7Nn2L8jxSMFtPSAtS04jup5lv4sgkztKgd5qaluiwr4NPoMdDZo/iDJdbm7LceeE5Li1g5Z6l3yO3He2g0N1anf4ML83wipykv0Bcuow4bk5bj6T4XYKbjyT57pdvji2lugQ4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JpKtTH1D; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708710163; c=relaxed/simple;
+	bh=nLyr4TWhalrsSTbLBLYPk/fSOipP3b9UOzjhAi8tqKI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nwTcn6YiHy6jN618bJXo+3MeHN/dhQAbfAuKXj8A3l0dfl2FKr5OPQSP1WLlnGu5xNEpkbrAOdY3fkyZSSilZrXSaC6uDVzhlXvQVjEjBk5lrH5AETYw3ScU0tZyMNBjSytq/bVEZOjPZFvzjA3oWg8GR97bXU8L18tiVnrZqPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9DbGu/t; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=Groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JpKtTH1D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708710160; x=1740246160;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IycnRvyn0DFRkClwY9SGw1un5/Ap5e/m6Ec695D7Cjs=;
-  b=JpKtTH1DsA15nSb92wxXAzW2ycwAmZd7rRlRwoX92fiB5GRKmimgxkW3
-   w/IkQxwKm7BF2gE6Pc5dUXhkoUI4U1KxvQ0686h2s4d59sslxe0wCId/E
-   ACrlh1lk7KgaCPa/QzS08YYC/Dx5j9XCVpkep/YY1neSdXdrdT57QHQ4X
-   yqnHYm0eEg3bX2UYA0EsVFz5OjMi7tNarQX/6/qtnWQcShzimt4klAy4g
-   I2j6QfTDMfCH3/zVaHBceHdSpZBskvFIGshYHxH/SBXxCdbCi1/+O/0n0
-   6FgiEKZQ0VI2upmeoXzqKXqe1HFf6e31JSJshZPd8VqeMDCHHO41LkOKT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="6853947"
-X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="6853947"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 09:42:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="913752235"
-X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="913752235"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 09:42:37 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rdZZD-00000006xfx-0muc;
-	Fri, 23 Feb 2024 19:42:35 +0200
-Date: Fri, 23 Feb 2024 19:42:34 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-Cc: linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] clkdev: Update clkdev id usage to allow for longer
- names
-Message-ID: <ZdjZCrpP52Hfbs6L@smile.fi.intel.com>
-References: <20240223163516.796606-1-michael.j.ruhl@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9DbGu/t"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-21f5ab945e9so475953fac.0;
+        Fri, 23 Feb 2024 09:42:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708710160; x=1709314960; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DxhluQ29UqTfdm4fCVn38u2knnwILBZPsWmaO804tyk=;
+        b=W9DbGu/tbMxbUQA2KRGjXS1SVzTHby5ZFaJWANvV29fy0gqQhwrNjX8GO0zdNRsXLP
+         4s7G+KJ84yC80cpcz66wdDAaErlwN4oT06sRWyh1qXZtqJpYl0aHdsKWt/zDDyRXrX+O
+         1A/hgTe0gpylhcBXFud8I+QQG6ZXdGA4QGUFKADgvXa7M1jqpAZGUv5+JsXom/H3C/+m
+         hLWalNHeN8QYn6wo92XKCwJcvbCUw7VqmW7ZWBvchRYlvOpg1blMMSG6ewsKMkHKvFwW
+         v1qzsfROKodaWyqUDPzN+mulAs0tCkPV0naIJKEqHZnuEf28iCNwBZHO7Oy7V/ScAqS1
+         pjlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708710160; x=1709314960;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=DxhluQ29UqTfdm4fCVn38u2knnwILBZPsWmaO804tyk=;
+        b=sdKh2EzV5IOTAhJkb+6jbFtO63sF2UN1i37zm97BbN7JoGbWl8jePPljJYHf8YR4ID
+         aar0PC2m0hV0IwF7O5rJ+1avJnnuSnND7JeGuDvdOp0v7yz+ZA5/PQjZ29Q+Cp4knk13
+         fUbHF5yUpa9gm/V/8cO5GmpQ3ZxwMrYbYKSaYKpVozj3zZa6ouP57eK2pvzndek/N1+f
+         80zm4oyxBaClMR1V629TUOZO1t3vX/m6tY1F1BtsqngkOmijW8bv/ikHs6jtMBS+HG93
+         ouyG1V8Bht+uqAwNN/9gIn5HTu3BRABaBSxSd4pbMRZ/SfrxO3XKP3YTOtGuB42e4r63
+         yvrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrvD2hIVs1rJC9B6Nw32RashM7rP+dlqAx3zsdXltun5tLIbGTz9HFPDgRd0IZVjDH71nZ7QeeE5odFcAhmVOYx6kYfWCKjWswlINL+/4r1j2kC7dCNEMomyyvg3dqxPqgvmY4FZ8CSJlNdRLLjXRkhKLZ+U2ALt00xNjk1hqEbdoNyi0qeVy8+7P7IXEHe0dBdJdceGF+MOfNzpoa7jM9Sw==
+X-Gm-Message-State: AOJu0Yy+TfUZpV1aNtctV5ru160CGCNGL2qGCC6iR5VGGzyonvGNhTCz
+	LtKdLfY3w3XPhoHuJSs+xw14ab7V4D/Lu5R5NFgMH6EPh0CSHb7x
+X-Google-Smtp-Source: AGHT+IG3mwMd0pVehrQmhoVUcYCZorVKFr87H6SZPXCfzXGnZuw6mwbcqWG+G90doupdIHyrTEyd5A==
+X-Received: by 2002:a05:6870:61cd:b0:21f:c2a4:6fe7 with SMTP id b13-20020a05687061cd00b0021fc2a46fe7mr230781oah.28.1708710160647;
+        Fri, 23 Feb 2024 09:42:40 -0800 (PST)
+Received: from localhost.localdomain (070-114-203-196.res.spectrum.com. [70.114.203.196])
+        by smtp.gmail.com with ESMTPSA id rb7-20020a056871618700b0021f6a2bd4b9sm1257803oab.3.2024.02.23.09.42.39
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 23 Feb 2024 09:42:40 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+From: John Groves <John@Groves.net>
+X-Google-Original-From: John Groves <john@groves.net>
+To: John Groves <jgroves@micron.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Matthew Wilcox <willy@infradead.org>,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Cc: John@Groves.net,
+	john@jagalactic.com,
+	Dave Chinner <david@fromorbit.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	dave.hansen@linux.intel.com,
+	gregory.price@memverge.com,
+	John Groves <john@groves.net>
+Subject: [RFC PATCH 08/20] famfs: Add famfs_internal.h
+Date: Fri, 23 Feb 2024 11:41:52 -0600
+Message-Id: <13556dbbd8d0f51bc31e3bdec796283fe85c6baf.1708709155.git.john@groves.net>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+In-Reply-To: <cover.1708709155.git.john@groves.net>
+References: <cover.1708709155.git.john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223163516.796606-1-michael.j.ruhl@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 23, 2024 at 11:35:16AM -0500, Michael J. Ruhl wrote:
-> clkdev DEV ID information is limited to an array of 20 bytes
-> (MAX_DEV_ID).  It is possible that the ID could be longer than
-> that.  If so, the lookup will fail because the "real ID" will
-> not match the copied value.
-> 
-> For instance, generating a device name for the I2C Designware
-> module using the PCI ID can result in a name of:
-> 
-> i2c_designware.39424
-> 
-> clkdev_create() will store:
-> 
-> i2c_designware.3942
-> 
-> The stored name is one off and will not match correctly during probe.
-> 
-> Increase the size of the ID to allow for a longer name.
+Add the famfs_internal.h include file. This contains internal data
+structures such as the per-file metadata structure (famfs_file_meta)
+and extent formats.
 
-> v2: Removed CON_ID update and added example to commit
+Signed-off-by: John Groves <john@groves.net>
+---
+ fs/famfs/famfs_internal.h | 53 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 fs/famfs/famfs_internal.h
 
-Usually we put changelog out of the commit messages...
-
-> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-> ---
-
-...somewhere here.
-
-Also just noticed that you forgot CCF maintainers to be included.
-I'm suggesting to use my script [1] which harvests more or less
-adequate list of people and mailing lists to Cc email to.
-
-[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.sh
-
+diff --git a/fs/famfs/famfs_internal.h b/fs/famfs/famfs_internal.h
+new file mode 100644
+index 000000000000..af3990d43305
+--- /dev/null
++++ b/fs/famfs/famfs_internal.h
+@@ -0,0 +1,53 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * famfs - dax file system for shared fabric-attached memory
++ *
++ * Copyright 2023-2024 Micron Technology, Inc.
++ *
++ * This file system, originally based on ramfs the dax support from xfs,
++ * is intended to allow multiple host systems to mount a common file system
++ * view of dax files that map to shared memory.
++ */
++#ifndef FAMFS_INTERNAL_H
++#define FAMFS_INTERNAL_H
++
++#include <linux/atomic.h>
++#include <linux/famfs_ioctl.h>
++
++#define FAMFS_MAGIC 0x87b282ff
++
++#define FAMFS_BLKDEV_MODE (FMODE_READ|FMODE_WRITE)
++
++extern const struct file_operations      famfs_file_operations;
++
++/*
++ * Each famfs dax file has this hanging from its inode->i_private.
++ */
++struct famfs_file_meta {
++	int                   error;
++	enum famfs_file_type  file_type;
++	size_t                file_size;
++	enum extent_type      tfs_extent_type;
++	size_t                tfs_extent_ct;
++	struct famfs_extent   tfs_extents[];  /* flexible array */
++};
++
++struct famfs_mount_opts {
++	umode_t mode;
++};
++
++extern const struct iomap_ops             famfs_iomap_ops;
++extern const struct vm_operations_struct  famfs_file_vm_ops;
++
++#define ROOTDEV_STRLEN 80
++
++struct famfs_fs_info {
++	struct famfs_mount_opts  mount_opts;
++	struct file             *dax_filp;
++	struct dax_device       *dax_devp;
++	struct bdev_handle      *bdev_handle;
++	struct list_head         fsi_list;
++	char                    *rootdev;
++};
++
++#endif /* FAMFS_INTERNAL_H */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
