@@ -1,109 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99D0A5DF01
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631B65DF26
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 09:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708681587; cv=none; b=VIZMnSZlpUP/eLERx7KRdYgxmOtxlVdyf8uByY3UQjP6AXbRItSlsoJSxCMKVHpsFsibQixYt7SPMq+37XhF4Pv+9z7VPl/955Ak4LT0XzTKKltoGFbaGvUnneI5ZoZxAnq1jrTwuLaoS2JSSoB+mRmF7/+oZonGRcvnWsHHGM4=
+	t=1708681593; cv=none; b=CD/jnuebEXf/dFuY/wTyPNfOsAY7FA2aW1UGolYNH/oM001mqB5iB0KvUGHZK+CDHFwh4k02MTu8BiBIMIJTBs6v4bOnQEkJoB4ai9yTC3IaAAgY/TNjFAvQfx+w4JXpM2VupL4FPnnlA1kprmz918xThP1F9JuUwBwiZAx09Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708681587; c=relaxed/simple;
-	bh=uowSVM2SjzNXmtHjgIgF2ExRHxtW4sAgUT7RZkJdK9o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SXoLPmvMCdSfcnW1iz3br3NjhSM0wEVTfGxFhkDiuLKYfJc0CWxKqvyUts47eLoHpxABqweV9kCK7rwZ/5V9NeM9NZ1PaPIOCNbjUkp6iuB42eadmPnR5AhUfr66IQy6f8WCitRH6et4D0gKDr5D/X2ALbmnBBKbKtNHixNxaC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 240221596;
-	Fri, 23 Feb 2024 01:47:02 -0800 (PST)
-Received: from a077893.arm.com (unknown [10.163.46.223])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E9F2F3F766;
-	Fri, 23 Feb 2024 01:46:20 -0800 (PST)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org
-Cc: broonie@kernel.org,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64/hw_breakpoint: Define an ISS code for watchpoint exception
-Date: Fri, 23 Feb 2024 15:16:15 +0530
-Message-Id: <20240223094615.3977323-1-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708681593; c=relaxed/simple;
+	bh=01nQ2INiur/d81dixqIGZASE4fhqoRl6nVtTuECzPUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oFrAB2NcEwfCn12Ykg6G3EekjbvlFFLeGGuGzEod5lRZnd52an/tvwFbcRS5MdNTEc8i6nmX1L3Hp4Bxizq2iDuVF+joa+frafldeXLlBtlqmGIoAgP43L52uVoPOEM1zOXchWJSMwpLO/iSDiri+pFfAQ0gFMXt+V3XG6IXDeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=J4HpwTYM; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="J4HpwTYM"
+Message-ID: <f33680e3-9593-4b81-84a5-810fa8b69c97@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1708681589;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zUiVr8FrIAV4I+cbYerjVXtjBCfQ4VEZa/T8yi40/2g=;
+	b=J4HpwTYMVOZ8VP7bU1cV1rYmzDonWG/A1zW8q70YrEx0MGtGx9hC/oWrgvqOVCWIPNEqUP
+	g7z9j3eDRshD4UGUyxvxtKfTh8fzCdgMa4sNpcf3H0dteo4DDroTQC3bghf73+zbVR37ly
+	ahRhXlHe5qVS/9GnHQ6jLViigwpBuno=
+Date: Fri, 23 Feb 2024 17:46:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] slub: avoid scanning all partial slabs in get_slabinfo()
+Content-Language: en-US
+To: Vlastimil Babka <vbabka@suse.cz>,
+ "Christoph Lameter (Ampere)" <cl@linux.com>
+Cc: David Rientjes <rientjes@google.com>,
+ Jianfeng Wang <jianfeng.w.wang@oracle.com>, penberg@kernel.org,
+ iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, roman.gushchin@linux.dev,
+ 42.hyeyoo@gmail.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Chengming Zhou <zhouchengming@bytedance.com>
+References: <20240215211457.32172-1-jianfeng.w.wang@oracle.com>
+ <6b58d81f-8e8f-3732-a5d4-40eece75013b@google.com>
+ <fee76a21-fbc5-4ad8-b4bf-ba8a8e7cee8f@suse.cz>
+ <55ccc92a-79fa-42d2-97d8-b514cf00823b@linux.dev>
+ <6daf88a2-84c2-5ba4-853c-c38cca4a03cb@linux.com>
+ <e924c39b-7636-4c34-bfe9-603cf07c21d3@linux.dev>
+ <b8f393fb-2b1d-213c-9301-35d4ffca1f50@linux.com>
+ <347b870e-a7d5-45df-84ba-4eee37b74ff6@linux.dev>
+ <1a952209-fa22-4439-af27-bf102c7d742b@suse.cz>
+ <cce26aef-ab3e-447b-8b33-5ecd78bf747d@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <cce26aef-ab3e-447b-8b33-5ecd78bf747d@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-This defines a new ISS code macro i.e ESR_ELx_WnR for watchpoint exception.
-This represents an instruction's either writing to or reading from a memory
-location during an watchpoint exception, and also moves this macro into the
-ESR header as required. This drops non-standard AARCH64_ESR_ACCESS_MASK.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-This applies on v6.8-rc5
-
- arch/arm64/include/asm/esr.h           | 4 ++++
- arch/arm64/include/asm/hw_breakpoint.h | 1 -
- arch/arm64/kernel/hw_breakpoint.c      | 3 ++-
- 3 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
-index 353fe08546cf..6c0a0b77fd2c 100644
---- a/arch/arm64/include/asm/esr.h
-+++ b/arch/arm64/include/asm/esr.h
-@@ -143,6 +143,10 @@
- #define ESR_ELx_CM_SHIFT	(8)
- #define ESR_ELx_CM 		(UL(1) << ESR_ELx_CM_SHIFT)
- 
-+/* ISS field definitions for Watchpoint exception */
-+#define ESR_ELx_WnR_SHIFT	(6)
-+#define ESR_ELx_WnR		(UL(1) << ESR_ELx_WnR_SHIFT)
-+
- /* ISS2 field definitions for Data Aborts */
- #define ESR_ELx_TnD_SHIFT	(10)
- #define ESR_ELx_TnD 		(UL(1) << ESR_ELx_TnD_SHIFT)
-diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/asm/hw_breakpoint.h
-index d67c02e53a4a..6e4862e3d238 100644
---- a/arch/arm64/include/asm/hw_breakpoint.h
-+++ b/arch/arm64/include/asm/hw_breakpoint.h
-@@ -67,7 +67,6 @@ static inline void decode_ctrl_reg(u32 reg,
- /* Watchpoints */
- #define ARM_BREAKPOINT_LOAD	1
- #define ARM_BREAKPOINT_STORE	2
--#define AARCH64_ESR_ACCESS_MASK	(1 << 6)
- 
- /* Lengths */
- #define ARM_BREAKPOINT_LEN_1	0x1
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index 86bdb2d68732..a73364a18c69 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -21,6 +21,7 @@
- 
- #include <asm/current.h>
- #include <asm/debug-monitors.h>
-+#include <asm/esr.h>
- #include <asm/hw_breakpoint.h>
- #include <asm/traps.h>
- #include <asm/cputype.h>
-@@ -792,7 +793,7 @@ static int watchpoint_handler(unsigned long addr, unsigned long esr,
- 		 * Check that the access type matches.
- 		 * 0 => load, otherwise => store
- 		 */
--		access = (esr & AARCH64_ESR_ACCESS_MASK) ? HW_BREAKPOINT_W :
-+		access = (esr & ESR_ELx_WnR) ? HW_BREAKPOINT_W :
- 			 HW_BREAKPOINT_R;
- 		if (!(access & hw_breakpoint_type(wp)))
- 			continue;
--- 
-2.25.1
+On 2024/2/23 17:37, Chengming Zhou wrote:
+> On 2024/2/23 17:24, Vlastimil Babka wrote:
+>> On 2/23/24 06:00, Chengming Zhou wrote:
+>>> On 2024/2/23 11:50, Christoph Lameter (Ampere) wrote:
+>>>> On Fri, 23 Feb 2024, Chengming Zhou wrote:
+>>>>
+>>>>>> Can we guestimate the free objects based on the number of partial slabs. That number is available.
+>>>>>
+>>>>> Yeah, the number of partial slabs is easy to know, but I can't think of a way to
+>>>>> estimate the free objects, since __slab_free() is just double cmpxchg in most cases.
+>>>>
+>>>> Well a starting point may be half the objects possible in a slab page?
+>>>
+>>> Yeah, also a choice.
+>>>
+>>>>
+>>>>
+>>>>>> How accurate need the accounting be? We also have fuzzy accounting in the VM counters.
+>>>>>
+>>>>> Maybe not need to be very accurate, some delay/fuzzy should be acceptable.
+>>>>>
+>>>>> Another direction I think is that we don't distinguish slabs on cpu partial list or
+>>>>> slabs on node partial list anymore (different with current behavior).
+>>>>>
+>>>>> Now we have three scopes:
+>>>>> 1. SL_ALL: include all slabs
+>>>>> 2. SL_PARTIAL: only include partial slabs on node
+>>>>> 3. SL_CPU: only include partail slabs on cpu and the using cpu slab
+>>>>>
+>>>>> If we change SL_PARTIAL to mean all partial slabs, it maybe simpler.
+>>>>
+>>>> Thats not going to work since you would have to scan multiple lists instead of a single list.
+>>>
+>>> We have to use percpu counters if we go this way.
+>>>
+>>>>
+>>>> Another approach may be to come up with some way to scan the partial lists without taking locks. That actually would improve the performance of the allocator. It may work with a single linked lists and RCU.
+>>
+>> We often remove a slab from the middle of a partial list due to object
+>> freeing, and this means it has to be double linked, no?
+> 
+> Right, double linked list.
+> 
+>>
+>>>>
+>>>
+>>> I think this is a better direction! We can use RCU list if slab can be freed by RCU.
+>>
+>> Often we remove slab from the partial list for other purposes than freeing -
+>> i.e. to become a cpu (partial) slab, and that can't be handled by a rcu
+>> callback nor can we wait a grace period in such situations.
+> 
+> IMHO, only free_slab() need to use call_rcu() to delay free the slab,
+> other paths like taking partial slabs from node partial list don't need
+> to wait for RCU grace period.
+> 
+> All we want is safely lockless iterate over the node partial list, right?
+Ah, I'm wrong, these paths also need to wait for RCU grace period...
 
