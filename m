@@ -1,99 +1,151 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7434A2F;
-	Fri, 23 Feb 2024 14:32:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C425979CC;
+	Fri, 23 Feb 2024 14:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708698740; cv=none; b=MsvTQzob7wWjwZ/6qxvnqwoiTLFEShBhlPxDchgluGo3gYvh9Rx7S9vtsrAQdd1erYYBkhzLu6ZCPn2u8lbGJhQ5tVl0jeM+wyNo5YYSA3aPknsfLtsTfDb0h9PoZrUjf9wNRxQOegHpRiw+2khgZX7wDsBpV0XTBJEu4WlcA7w=
+	t=1708698745; cv=none; b=BL8Q1xZ7xL7ZLPxqxfOsPxjYnfSajlWBzzkMakRgF2fwCHVw48bHaFab0hM+FVnY+mZvCZetEYFyansbW2UNl62CH4ECO57ctBED4Xfo+S6UupaxgVy71BXLbh7nANQlojJgB5NDA9mTokmSYJIoDqrWXOUxEGivwJjwuwYSWfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708698740; c=relaxed/simple;
-	bh=6CxhTI2jTiafcu7o2bWlObYCVZe38zQ+4jHomDIbkiE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lCNmeKVm+XCxHG29ZpqwI8uWqoOTrZW35VsErLZuM1G2AFJdYAL1pPYP7JvdrsFQyPfbGiPCizTHUImHk8lTM0pY4i4J0twXPRe3kfrWQy0POYPaEPqpcGUrjur2ItuIqV/PZkODQUkHyHQ6cNDVjiNGhb7RfNJfVJfeZevWRDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	s=arc-20240116; t=1708698745; c=relaxed/simple;
+	bh=jiMJsyiTNHv8UOOvPguE/ydpC4lYJNHBv7Q8fPcd5vw=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=grlL2NpDAx7gUApnQp4Z8lyVpIqKuRPBd0yy0a7/sXRaBnMgousxv/YUvDsyC0uWrEM+u+Y+lCi+oPJRBnLPEhIT0y8klK8VTMlJlyD5jpsGxEXGZOK+9f2cAtW/R4nNqeoYnCN0CRoB/EK6uDK/7koUQ2TfdlQ3lfu4uk5GN5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=q1JvnxXT; arc=none smtp.client-ip=194.87.146.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="q1JvnxXT"
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id D53F261E5FE05;
-	Fri, 23 Feb 2024 15:30:34 +0100 (CET)
-Message-ID: <de2d4d3c-1a4e-4399-aa96-9e8217621fa7@molgen.mpg.de>
-Date: Fri, 23 Feb 2024 15:30:34 +0100
+	by box.trvn.ru (Postfix) with ESMTPSA id 81FE0408D8;
+	Fri, 23 Feb 2024 19:32:19 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+	t=1708698739; bh=jiMJsyiTNHv8UOOvPguE/ydpC4lYJNHBv7Q8fPcd5vw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=q1JvnxXTtJ3QhyO00A/qk6Ygn5aeMNvly1UmdUKktB4H7OxrI9esp/pwqHM0iUxVa
+	 /jkGL1o67J8wqqZuSQCZIGBEyH8ZgXGJgG0QjEEl8vb/IXysGhsi8sPP4ndwY3sYgO
+	 g8Fwjt4BsNE6RmUxRE4pMeGWG0DWhLbJr2OWd24I1EXIPVG6oEUb8OLb+/JB3BTwJs
+	 SiqSgVQ8yoU/3nTJKUiEUievYmOo/14iXdbTa+riOvjxI9iS2BVhDinNK21Ba0ehnR
+	 V+oO8zZNuCra5R+b9DxSwauCA8GNRqaj2ArPhMDiyVX1d0J/sOOAiDm2QmkKzoiV0D
+	 R8Ia+QYER9I5Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] linux-firmware: update firmware for mediatek bluetooth
- chip (MT7921)
-Content-Language: en-US
-To: Chris Lu <chris.lu@mediatek.com>
-Cc: Josh Boyer <jwboyer@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
- Ben Hutchings <ben@decadent.org.uk>, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
- Deren Wu <deren.Wu@mediatek.com>, Aaron Hou <aaron.hou@mediatek.com>,
- KM Lin <km.lin@mediatek.com>, Robin Chiu <robin.chiu@mediatek.com>,
- Steve Lee <steve.lee@mediatek.com>, linux-bluetooth@vger.kernel.org,
- linux-firmware@kernel.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org
-References: <20240223095044.7824-1-chris.lu@mediatek.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240223095044.7824-1-chris.lu@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Date: Fri, 23 Feb 2024 19:32:17 +0500
+From: Nikita Travkin <nikita@trvn.ru>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>, Hans de Goede
+ <hdegoede@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ cros-qcom-dts-watchers@chromium.org, Andy Gross <agross@kernel.org>, Bjorn
+ Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] power: supply: Add Acer Aspire 1 embedded
+ controller driver
+In-Reply-To: <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
+References: <20240220-aspire1-ec-v3-0-02cb139a4931@trvn.ru>
+ <20240220-aspire1-ec-v3-2-02cb139a4931@trvn.ru>
+ <qoidm5wujjbeoc2hlraky26wuwmuaxi2atyl6ehovhvffdbfeh@g5gunqdei45m>
+Message-ID: <7c429d2110dbac68d0c82c8fb8bfb742@trvn.ru>
+X-Sender: nikita@trvn.ru
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Dear Chris,
-
-
-Thank you for your patch. Some nits.
-
-Am 23.02.24 um 10:50 schrieb Chris Lu:
-> Update binary firmware for MT7921 BT devices.
+Sebastian Reichel писал(а) 22.02.2024 04:41:
+> Hi,
 > 
-> File: mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin
-> Version: 20240219111427
-
-The title is very unspecific for `git log --oneline`. Could you mention 
-the version number in there? Maybe:
-
-linux-firmware: Update MediaTek MT7921 Bluetooth chip FW to 20240219111427
-
-Also, could you please add a change-log of what changed between version 
-20231109191416 and 20240219111427?
-
-> Signed-off-by: Chris Lu <chris.lu@mediatek.com>
-> ---
->   WHENCE                                  |   2 +-
->   mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin | Bin 532206 -> 530926 bytes
->   2 files changed, 1 insertion(+), 1 deletion(-)
+> On Tue, Feb 20, 2024 at 04:57:13PM +0500, Nikita Travkin wrote:
+>> Acer Aspire 1 is a Snapdragon 7c based laptop. It uses an embedded
+>> controller to control the charging and battery management, as well as to
+>> perform a set of misc functions.
+>>
+>> Unfortunately, while all this functionality is implemented in ACPI, it's
+>> currently not possible to use ACPI to boot Linux on such Qualcomm
+>> devices. To allow Linux to still support the features provided by EC,
+>> this driver reimplments the relevant ACPI parts. This allows us to boot
+>> the laptop with Device Tree and retain all the features.
+>>
+>> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+>> ---
+>>  drivers/power/supply/Kconfig           |  14 +
+>>  drivers/power/supply/Makefile          |   1 +
+>>  drivers/power/supply/acer-aspire1-ec.c | 453 +++++++++++++++++++++++++++++++++
 > 
-> diff --git a/WHENCE b/WHENCE
-> index 576f8d73..f7dcc6db 100644
-> --- a/WHENCE
-> +++ b/WHENCE
-> @@ -5645,7 +5645,7 @@ Licence: Redistributable. See LICENCE.mediatek for details.
->   Driver: mt7921 - MediaTek MT7921 bluetooth chipset
->   
->   File: mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin
-> -Version: 20231109191416
-> +Version: 20240219111427
->   
->   Licence: Redistributable. See LICENCE.mediatek for details.
->   
-> diff --git a/mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin b/mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin
-> index c7a96755b122ef7aa601eb40fbd7abb9ca85a545..34b791b7cc66780a80a18a631a9d578b2a744546 100644
-> GIT binary patch
-> literal 530926
+> I think this belongs into drivers/platform, as it handles all bits of
+> the EC.
+> 
 
-[…]
+Hm, I initially submitted it to power/supply following the c630 driver,
+but I think you're right... Though I'm not sure where in platform/ I'd
+put this driver... (+CC Hans)
 
+Seems like most of the things live in platform/x86 but there is no i.e.
+platform/arm64...
 
-Kind regards,
+Hans, (as a maintainer for most things in platform/) what do you think
+would be the best place to put this (and at least two more I'd expect)
+driver in inside platform/? And can we handle it through the
+platform-driver-x86 list?
 
-Paul
+> [...]
+> 
+>>  3 files changed, 468 insertions(+)
+>>
+>> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+>> index 3e31375491d5..e91a3acecb41 100644
+>> --- a/drivers/power/supply/Kconfig
+>> +++ b/drivers/power/supply/Kconfig
+>> @@ -985,4 +985,18 @@ config FUEL_GAUGE_MM8013
+>>  	  the state of charge, temperature, cycle count, actual and design
+>>  	  capacity, etc.
+>>
+>> +config EC_ACER_ASPIRE1
+>> +	tristate "Acer Aspire 1 Emedded Controller driver"
+>> +	depends on I2C
+>> +	depends on DRM
+>> +	help
+>> +	  Say Y here to enable the EC driver for the (Snapdragon-based)
+>> +	  Acer Aspire 1 laptop. The EC handles battery and charging
+>> +	  monitoring as well as some misc functions like the lid sensor
+>> +	  and USB Type-C DP HPD events.
+>> +
+>> +	  This driver provides battery and AC status support for the mentioned
+> 
+> I did not see any AC status bits?
+> 
+
+I was referring to whatever ACPI spec calls "AC Adapter" but I guess
+I should have used the word "charger" instead... Will reword this.
+
+>> [...]
+> 
+>> +	case POWER_SUPPLY_PROP_PRESENT:
+>> +		val->intval = 1;
+> 
+> You have an unused ASPIRE_EC_FG_FLAG_PRESENT, that looks like it
+> should be used here?
+> 
+
+Oh, you're right! I think I initially didn't have this property and
+added it like this as a reaction to that upower change that made it
+consider everything not explicitly present as absent.
+
+I've just checked what is reported after unplugging the battery and
+seems like the flag (as well as everything else) is gone. Will change
+the driver to read the flag.
+
+Thanks for your review!
+Nikita
+
+>> [...]
+> 
+> Otherwise the power-supply bits LGTM.
+> 
+> -- Sebastian
