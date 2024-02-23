@@ -1,37 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1972811F9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7803980629
 	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708697829; cv=none; b=O6ODy7Ix6tYAXKSRbkxoO+8c/4lbYY1sfsXOo6ZyM2+5QeUxUbSzIkuFORLzsA2GNwh0NGNfV6G/hFG7xTF04wIuhIUiao5L8Gah/SYiE8wlb9VYor2S6JWxuJgU54WIOyI2YMYFIriJ1rwCQCSaALluYNWgxB/Tl1s0wyqvtGc=
+	t=1708697829; cv=none; b=Khibupd50Wfx5tnQclMsE7r1+/H8h4icIFaxFHm12h/36eotlZcdDmJ+QVaOhEMAchEr4huXcMBP+Cc+rGVe0HNBBryQ0ksHvLVE/LC6fg+Gv1PsZXTo303/tCgnaHN0/9LqKtkZ6pcVFiA5mKpoe/kiHJqcXcWgXy5A6zfpH8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708697829; c=relaxed/simple;
-	bh=uBv+s4SGLMdbgolqp2QWNEru5imW1UxdLM5GyLNVTUw=;
+	bh=Up9eFZpr8dIJaujb9WoqM/K2VjYXnomqdkuQX/lsnUg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Ki2iKe/GKlgOakXDzEzOAqrpicCG8lSMCKffSSThB4ypeJhTz17X+dVXyJHPhhYhNm0f1IuZKLTMFKiOF37MrZcedfClQ8xUVNqiFIjdm4Om/pk9JuJ3fGCAb6sNGZV8X4kE91JQrw2K4w3YNLilXGvhClT5WhIu8wirOr7s57g=
+	 Content-Type; b=lrq7HYeTTLNx0yLUvqE6/SDFNpLcAIXz4K+6IGjOhvDgLk/H9ceKxFGx+plhPfcgoKtOkVW6MJd6rmRqvpiDloHYtRsOCGtJLS5pLxnWOs+dtaDaa7UUQpXDXUZ4svMJk1S74QCfYr+n4PZfsJWmO9LK4LkTcf0GkQzJ0l1JUCE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D369C43142;
-	Fri, 23 Feb 2024 14:17:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA51FC433C7;
+	Fri, 23 Feb 2024 14:17:08 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rdWOE-000000077OA-2tYX;
-	Fri, 23 Feb 2024 09:19:02 -0500
-Message-ID: <20240223141902.554087446@goodmis.org>
+	id 1rdWOD-000000077Lk-3kWI;
+	Fri, 23 Feb 2024 09:19:01 -0500
+Message-ID: <20240223141901.755071412@goodmis.org>
 User-Agent: quilt/0.67
-Date: Fri, 23 Feb 2024 09:18:45 -0500
+Date: Fri, 23 Feb 2024 09:18:40 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Daniel Vetter <daniel@ffwll.ch>,
- David Airlie <airlied@gmail.com>,
- =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [for-next][PATCH 07/13] drm/i915: Add missing ; to __assign_str() macros in tracepoint code
+ Beau Belgrave <beaub@linux.microsoft.com>
+Subject: [for-next][PATCH 02/13] tracing/user_events: Introduce multi-format events
 References: <20240223141838.985298316@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,56 +38,324 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+From: Beau Belgrave <beaub@linux.microsoft.com>
 
-I'm working on improving the __assign_str() and __string() macros to be
-more efficient, and removed some unneeded semicolons. This triggered a bug
-in the build as some of the __assign_str() macros in intel_display_trace
-was missing a terminating semicolon.
+Currently user_events supports 1 event with the same name and must have
+the exact same format when referenced by multiple programs. This opens
+an opportunity for malicious or poorly thought through programs to
+create events that others use with different formats. Another scenario
+is user programs wishing to use the same event name but add more fields
+later when the software updates. Various versions of a program may be
+running side-by-side, which is prevented by the current single format
+requirement.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240222133057.2af72a19@gandalf.local.home
+Add a new register flag (USER_EVENT_REG_MULTI_FORMAT) which indicates
+the user program wishes to use the same user_event name, but may have
+several different formats of the event. When this flag is used, create
+the underlying tracepoint backing the user_event with a unique name
+per-version of the format. It's important that existing ABI users do
+not get this logic automatically, even if one of the multi format
+events matches the format. This ensures existing programs that create
+events and assume the tracepoint name will match exactly continue to
+work as expected. Add logic to only check multi-format events with
+other multi-format events and single-format events to only check
+single-format events during find.
 
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: David Airlie <airlied@gmail.com>
-Fixes: 2ceea5d88048b ("drm/i915: Print plane name in fbc tracepoints")
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Change system name of the multi-format event tracepoint to ensure that
+multi-format events are isolated completely from single-format events.
+This prevents single-format names from conflicting with multi-format
+events if they end with the same suffix as the multi-format events.
+
+Add a register_name (reg_name) to the user_event struct which allows for
+split naming of events. We now have the name that was used to register
+within user_events as well as the unique name for the tracepoint. Upon
+registering events ensure matches based on first the reg_name, followed
+by the fields and format of the event. This allows for multiple events
+with the same registered name to have different formats. The underlying
+tracepoint will have a unique name in the format of {reg_name}.{unique_id}.
+
+For example, if both "test u32 value" and "test u64 value" are used with
+the USER_EVENT_REG_MULTI_FORMAT the system would have 2 unique
+tracepoints. The dynamic_events file would then show the following:
+  u:test u64 count
+  u:test u32 count
+
+The actual tracepoint names look like this:
+  test.0
+  test.1
+
+Both would be under the new user_events_multi system name to prevent the
+older ABI from being used to squat on multi-formatted events and block
+their use.
+
+Deleting events via "!u:test u64 count" would only delete the first
+tracepoint that matched that format. When the delete ABI is used all
+events with the same name will be attempted to be deleted. If
+per-version deletion is required, user programs should either not use
+persistent events or delete them via dynamic_events.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240222001807.1463-3-beaub@linux.microsoft.com
+
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- drivers/gpu/drm/i915/display/intel_display_trace.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/uapi/linux/user_events.h |   6 +-
+ kernel/trace/trace_events_user.c | 102 +++++++++++++++++++++++++++----
+ 2 files changed, 95 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_display_trace.h b/drivers/gpu/drm/i915/display/intel_display_trace.h
-index 99bdb833591c..7862e7cefe02 100644
---- a/drivers/gpu/drm/i915/display/intel_display_trace.h
-+++ b/drivers/gpu/drm/i915/display/intel_display_trace.h
-@@ -411,7 +411,7 @@ TRACE_EVENT(intel_fbc_activate,
- 			   struct intel_crtc *crtc = intel_crtc_for_pipe(to_i915(plane->base.dev),
- 									 plane->pipe);
- 			   __assign_str(dev, __dev_name_kms(plane));
--			   __assign_str(name, plane->base.name)
-+			   __assign_str(name, plane->base.name);
- 			   __entry->pipe = crtc->pipe;
- 			   __entry->frame = intel_crtc_get_vblank_counter(crtc);
- 			   __entry->scanline = intel_get_crtc_scanline(crtc);
-@@ -438,7 +438,7 @@ TRACE_EVENT(intel_fbc_deactivate,
- 			   struct intel_crtc *crtc = intel_crtc_for_pipe(to_i915(plane->base.dev),
- 									 plane->pipe);
- 			   __assign_str(dev, __dev_name_kms(plane));
--			   __assign_str(name, plane->base.name)
-+			   __assign_str(name, plane->base.name);
- 			   __entry->pipe = crtc->pipe;
- 			   __entry->frame = intel_crtc_get_vblank_counter(crtc);
- 			   __entry->scanline = intel_get_crtc_scanline(crtc);
-@@ -465,7 +465,7 @@ TRACE_EVENT(intel_fbc_nuke,
- 			   struct intel_crtc *crtc = intel_crtc_for_pipe(to_i915(plane->base.dev),
- 									 plane->pipe);
- 			   __assign_str(dev, __dev_name_kms(plane));
--			   __assign_str(name, plane->base.name)
-+			   __assign_str(name, plane->base.name);
- 			   __entry->pipe = crtc->pipe;
- 			   __entry->frame = intel_crtc_get_vblank_counter(crtc);
- 			   __entry->scanline = intel_get_crtc_scanline(crtc);
+diff --git a/include/uapi/linux/user_events.h b/include/uapi/linux/user_events.h
+index f74f3aedd49c..a03de03dccbc 100644
+--- a/include/uapi/linux/user_events.h
++++ b/include/uapi/linux/user_events.h
+@@ -12,6 +12,7 @@
+ #include <linux/ioctl.h>
+ 
+ #define USER_EVENTS_SYSTEM "user_events"
++#define USER_EVENTS_MULTI_SYSTEM "user_events_multi"
+ #define USER_EVENTS_PREFIX "u:"
+ 
+ /* Create dynamic location entry within a 32-bit value */
+@@ -22,8 +23,11 @@ enum user_reg_flag {
+ 	/* Event will not delete upon last reference closing */
+ 	USER_EVENT_REG_PERSIST		= 1U << 0,
+ 
++	/* Event will be allowed to have multiple formats */
++	USER_EVENT_REG_MULTI_FORMAT	= 1U << 1,
++
+ 	/* This value or above is currently non-ABI */
+-	USER_EVENT_REG_MAX		= 1U << 1,
++	USER_EVENT_REG_MAX		= 1U << 2,
+ };
+ 
+ /*
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index fce5ed5fec50..70d428c394b6 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -34,7 +34,8 @@
+ 
+ /* Limit how long of an event name plus args within the subsystem. */
+ #define MAX_EVENT_DESC 512
+-#define EVENT_NAME(user_event) ((user_event)->tracepoint.name)
++#define EVENT_NAME(user_event) ((user_event)->reg_name)
++#define EVENT_TP_NAME(user_event) ((user_event)->tracepoint.name)
+ #define MAX_FIELD_ARRAY_SIZE 1024
+ 
+ /*
+@@ -54,10 +55,13 @@
+  * allows isolation for events by various means.
+  */
+ struct user_event_group {
+-	char		*system_name;
+-	struct		hlist_node node;
+-	struct		mutex reg_mutex;
++	char			*system_name;
++	char			*system_multi_name;
++	struct hlist_node	node;
++	struct mutex		reg_mutex;
+ 	DECLARE_HASHTABLE(register_table, 8);
++	/* ID that moves forward within the group for multi-event names */
++	u64			multi_id;
+ };
+ 
+ /* Group for init_user_ns mapping, top-most group */
+@@ -78,6 +82,7 @@ static unsigned int current_user_events;
+  */
+ struct user_event {
+ 	struct user_event_group		*group;
++	char				*reg_name;
+ 	struct tracepoint		tracepoint;
+ 	struct trace_event_call		call;
+ 	struct trace_event_class	class;
+@@ -127,6 +132,8 @@ struct user_event_enabler {
+ 
+ #define ENABLE_BIT(e) ((int)((e)->values & ENABLE_VAL_BIT_MASK))
+ 
++#define EVENT_MULTI_FORMAT(f) ((f) & USER_EVENT_REG_MULTI_FORMAT)
++
+ /* Used for asynchronous faulting in of pages */
+ struct user_event_enabler_fault {
+ 	struct work_struct		work;
+@@ -330,6 +337,7 @@ static void user_event_put(struct user_event *user, bool locked)
+ static void user_event_group_destroy(struct user_event_group *group)
+ {
+ 	kfree(group->system_name);
++	kfree(group->system_multi_name);
+ 	kfree(group);
+ }
+ 
+@@ -348,6 +356,11 @@ static char *user_event_group_system_name(void)
+ 	return system_name;
+ }
+ 
++static char *user_event_group_system_multi_name(void)
++{
++	return kstrdup(USER_EVENTS_MULTI_SYSTEM, GFP_KERNEL);
++}
++
+ static struct user_event_group *current_user_event_group(void)
+ {
+ 	return init_group;
+@@ -367,6 +380,11 @@ static struct user_event_group *user_event_group_create(void)
+ 	if (!group->system_name)
+ 		goto error;
+ 
++	group->system_multi_name = user_event_group_system_multi_name();
++
++	if (!group->system_multi_name)
++		goto error;
++
+ 	mutex_init(&group->reg_mutex);
+ 	hash_init(group->register_table);
+ 
+@@ -1482,6 +1500,11 @@ static int destroy_user_event(struct user_event *user)
+ 	hash_del(&user->node);
+ 
+ 	user_event_destroy_validators(user);
++
++	/* If we have different names, both must be freed */
++	if (EVENT_NAME(user) != EVENT_TP_NAME(user))
++		kfree(EVENT_TP_NAME(user));
++
+ 	kfree(user->call.print_fmt);
+ 	kfree(EVENT_NAME(user));
+ 	kfree(user);
+@@ -1504,12 +1527,24 @@ static struct user_event *find_user_event(struct user_event_group *group,
+ 	*outkey = key;
+ 
+ 	hash_for_each_possible(group->register_table, user, node, key) {
++		/*
++		 * Single-format events shouldn't return multi-format
++		 * events. Callers expect the underlying tracepoint to match
++		 * the name exactly in these cases. Only check like-formats.
++		 */
++		if (EVENT_MULTI_FORMAT(flags) != EVENT_MULTI_FORMAT(user->reg_flags))
++			continue;
++
+ 		if (strcmp(EVENT_NAME(user), name))
+ 			continue;
+ 
+ 		if (user_fields_match(user, argc, argv))
+ 			return user_event_get(user);
+ 
++		/* Scan others if this is a multi-format event */
++		if (EVENT_MULTI_FORMAT(flags))
++			continue;
++
+ 		return ERR_PTR(-EADDRINUSE);
+ 	}
+ 
+@@ -1889,8 +1924,12 @@ static bool user_event_match(const char *system, const char *event,
+ 	struct user_event *user = container_of(ev, struct user_event, devent);
+ 	bool match;
+ 
+-	match = strcmp(EVENT_NAME(user), event) == 0 &&
+-		(!system || strcmp(system, USER_EVENTS_SYSTEM) == 0);
++	match = strcmp(EVENT_NAME(user), event) == 0;
++
++	if (match && system) {
++		match = strcmp(system, user->group->system_name) == 0 ||
++			strcmp(system, user->group->system_multi_name) == 0;
++	}
+ 
+ 	if (match)
+ 		match = user_fields_match(user, argc, argv);
+@@ -1923,6 +1962,33 @@ static int user_event_trace_register(struct user_event *user)
+ 	return ret;
+ }
+ 
++static int user_event_set_tp_name(struct user_event *user)
++{
++	lockdep_assert_held(&user->group->reg_mutex);
++
++	if (EVENT_MULTI_FORMAT(user->reg_flags)) {
++		char *multi_name;
++
++		multi_name = kasprintf(GFP_KERNEL_ACCOUNT, "%s.%llx",
++				       user->reg_name, user->group->multi_id);
++
++		if (!multi_name)
++			return -ENOMEM;
++
++		user->call.name = multi_name;
++		user->tracepoint.name = multi_name;
++
++		/* Inc to ensure unique multi-event name next time */
++		user->group->multi_id++;
++	} else {
++		/* Non Multi-format uses register name */
++		user->call.name = user->reg_name;
++		user->tracepoint.name = user->reg_name;
++	}
++
++	return 0;
++}
++
+ /*
+  * Parses the event name, arguments and flags then registers if successful.
+  * The name buffer lifetime is owned by this method for success cases only.
+@@ -1985,7 +2051,13 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 	INIT_LIST_HEAD(&user->validators);
+ 
+ 	user->group = group;
+-	user->tracepoint.name = name;
++	user->reg_name = name;
++	user->reg_flags = reg_flags;
++
++	ret = user_event_set_tp_name(user);
++
++	if (ret)
++		goto put_user;
+ 
+ 	ret = user_event_parse_fields(user, args);
+ 
+@@ -1999,11 +2071,14 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 
+ 	user->call.data = user;
+ 	user->call.class = &user->class;
+-	user->call.name = name;
+ 	user->call.flags = TRACE_EVENT_FL_TRACEPOINT;
+ 	user->call.tp = &user->tracepoint;
+ 	user->call.event.funcs = &user_event_funcs;
+-	user->class.system = group->system_name;
++
++	if (EVENT_MULTI_FORMAT(user->reg_flags))
++		user->class.system = group->system_multi_name;
++	else
++		user->class.system = group->system_name;
+ 
+ 	user->class.fields_array = user_event_fields_array;
+ 	user->class.get_fields = user_event_get_fields;
+@@ -2025,8 +2100,6 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 	if (ret)
+ 		goto put_user_lock;
+ 
+-	user->reg_flags = reg_flags;
+-
+ 	if (user->reg_flags & USER_EVENT_REG_PERSIST) {
+ 		/* Ensure we track self ref and caller ref (2) */
+ 		refcount_set(&user->refcnt, 2);
+@@ -2050,6 +2123,11 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 	user_event_destroy_fields(user);
+ 	user_event_destroy_validators(user);
+ 	kfree(user->call.print_fmt);
++
++	/* Caller frees reg_name on error, but not multi-name */
++	if (EVENT_NAME(user) != EVENT_TP_NAME(user))
++		kfree(EVENT_TP_NAME(user));
++
+ 	kfree(user);
+ 	return ret;
+ }
+@@ -2639,7 +2717,7 @@ static int user_seq_show(struct seq_file *m, void *p)
+ 	hash_for_each(group->register_table, i, user, node) {
+ 		status = user->status;
+ 
+-		seq_printf(m, "%s", EVENT_NAME(user));
++		seq_printf(m, "%s", EVENT_TP_NAME(user));
+ 
+ 		if (status != 0)
+ 			seq_puts(m, " #");
 -- 
 2.43.0
 
