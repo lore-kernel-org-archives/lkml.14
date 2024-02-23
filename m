@@ -1,213 +1,617 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947997EF0A;
-	Fri, 23 Feb 2024 13:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.24
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0B9E5DF00;
+	Fri, 23 Feb 2024 13:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708694280; cv=none; b=pVc7VAQ00iKZ5ivS7BT4YvOCP3aKf1prDXKipntQD49Dwodvvc6yFarsNmJSJEWfpLMfExFxJVxIlSJmwASkaPf0cUKLQ0LMApttLYwjfuIkhUufj34A8W46lKC98l1nDXpIO94PzOd9bPGbrcQs3b0Dc+N0JTkrSEJlkayU/ck=
+	t=1708694672; cv=none; b=JZC3g1Pvp+2nfWu48qq21rz+CSSN1fGhIfd2p2QhQ2b8XZAo0ayZzO4E/eP/vDvZsfHVE0vX/WlUrciBH4H3+Ynk20HUD80Ympt3uyLDjVJqigYH/wlMc87ovQ674X96EyjGjktwfY4vkNb/0WnGotwWVHkM1CHyJzhCFlIyxns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708694280; c=relaxed/simple;
-	bh=2JY+3DjG6lK45y3gH2HcJ0xwn7fJU24FgxnMJ0ij53U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kNyymquj5H739AkYBobzCOKaYNP/u6t9edZpcZtP/+wF9mCtmEcbX3/jWLcdaZuR7IgefUHxhgfPTUPqaI7XJqihY6PxJvBQ5JWIXyNsqQsPQXlANw3qV0GIQxjvjlIxFnKn5dvMx+qq/VGh7ijNbFwfnJKB9LIxNAaObCc/LvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b=YP916j38; arc=none smtp.client-ip=212.227.17.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=valentinobst.de header.i=kernel@valentinobst.de header.b="YP916j38"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=valentinobst.de;
-	s=s1-ionos; t=1708694262; x=1709299062; i=kernel@valentinobst.de;
-	bh=2JY+3DjG6lK45y3gH2HcJ0xwn7fJU24FgxnMJ0ij53U=;
-	h=X-UI-Sender-Class:From:Date:Subject:To:Cc;
-	b=YP916j382Om/wJDpeMVdPKBp4Rq2vdl1ggRz6j7ycQC09X1AUejyZV16GPL2ZGuA
-	 AdZ32MlIlampf/ejsFeqx4SKY+ly0BQbHq2VFR3miRHX0pN5O30o+BriwCKrPMBpz
-	 RVnM8amUiQ0poElLXTvIiNhy6sqDqgOF9dnELQRUaV2weqylbF0ow9vigEiLwgmDW
-	 T49+6Fi4KGIykidzw1M876t1sN+a2EvRW6OIBdyiOobb3/DMKUmG0OrYvD2GtIqww
-	 1xTBLUBLVv+9eKchqulOq6Wuut4I8lJAauzq4K4zg89E0qU8rhTGGGe/wGtarNKxR
-	 yNy9aMVni1jchYY7Xw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.0.101] ([95.223.130.98]) by mrelayeu.kundenserver.de
- (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis) id
- 1MPoTl-1rINoF3RnX-00MxPZ; Fri, 23 Feb 2024 14:11:16 +0100
-From: Valentin Obst <kernel@valentinobst.de>
-Date: Fri, 23 Feb 2024 14:10:51 +0100
-Subject: [PATCH v2] x86/tools: fix line number reported for malformed lines
+	s=arc-20240116; t=1708694672; c=relaxed/simple;
+	bh=si7eo+bEoYWeDrIgLTbmkzzgEEjga1X0bDAS71ME2LY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExmAt+CLoz7EfMZL/1iAJ5oYfrILgFIVXhE2p4tj8B5FsiVk2TRoOm3yY2KZ6k1iXG1lERJREzWKi4nyQo31piB4leLrtaLtjAERkSieFS23FikAMGz2dupNKR6ChM4HfYAEnm6Gc2GFTmKPjIf//VLe7EB9h2FIpnSX96+TxBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61DEF1FB;
+	Fri, 23 Feb 2024 05:25:06 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD23E3F73F;
+	Fri, 23 Feb 2024 05:24:25 -0800 (PST)
+Date: Fri, 23 Feb 2024 13:24:23 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 2/5] firmware: arm_scmi: add initial support for i.MX BBM
+ protocol
+Message-ID: <Zdich_nSNzAVgIJa@pluto>
+References: <20240202-imx95-bbm-misc-v1-0-3cb743020933@nxp.com>
+ <20240202-imx95-bbm-misc-v1-2-3cb743020933@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20240223-x86-insn-decoder-line-fix-v2-1-cde49c69f402@valentinobst.de>
-X-B4-Tracking: v=1; b=H4sIAFuZ2GUC/42NQQqDMBBFryKz7hQntUa68h7FhSaTOiBJSSRYx
- Ls39QRdvgf//R0SR+EEj2qHyFmSBF9AXSow8+hfjGILg6pVUytFuHUtik8eLZtgOeIintHJhno
- ip5j0TTkHZf+OXPTZfg6FZ0lriJ/zKtPP/lPNhISNNvY+kqbOtH0eF/ar+DCl9WoZhuM4vmBqy
- QPIAAAA
-To: Borislav Petkov <bp@alien8.de>, 
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
- Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Thomas Gleixner <tglx@linutronix.de>
-Cc: Andreas Hindborg <a.hindborg@samsung.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- John Baublitz <john.m.baublitz@gmail.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, 
- =?utf-8?q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, x86@kernel.org, 
- Valentin Obst <kernel@valentinobst.de>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708693872; l=4956;
- i=kernel@valentinobst.de; s=20240131; h=from:subject:message-id;
- bh=lbnH0WF4tXXmXq+akd4bXjRC9W7lA7jDYNQ6lPoUNDw=;
- b=NKIy1z/7P/uMN+m5mHRZ2o1/ocPXjhkEHpMT7bwPTFoeIFmDbMfeX56ekFvHSgFq8kUT2CqRe
- C4uJFGW/uf8AeViKowR0NrHbnwEfvbPXJ1QiUVH7LHUt2sT/Jk2NJwQ
-X-Developer-Key: i=kernel@valentinobst.de; a=ed25519;
- pk=3s7U8y0mqkaiurgHSQQTYWOo2tw5HgzCg5vnJVfw37Y=
-X-Provags-ID: V03:K1:6q3lfldMp4TifScdm6dJFNHXLxeAsJf8YBsSiHxjwVeiMrZEaRm
- /xF6rtmRuxT1ihSpcMORxe697KN0vNHT+cXWyJ+Z8K8WPCKn2fj8eQV1w8T63WjotYBW7TK
- V7LjICeh4A1yjQQE1EcXAEm0bgRRFmV2fiNTkVMBpZuMJQiZ8PDvstu/d4GzkYWJ/r970nf
- xTDOCYu8hpW/3H4LmSHLQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3xLKqbCpHv8=;NNUjALKrxqZfucfBVKNpSHyNDSP
- dPTUbjGItOeu9HJx/qbn6lVnKyQ9zXp8EqApO3it98ZhiBd4GSsHr6RiznARqg2KedR6QXgEo
- p7YBBnhbXHybXxv3s4TgZY1NGKoXZS0Nhw6tzHObiYE+h2PivPwHV7PZ1T3xMLUTntQTKlaWj
- RVXoaRgMkIwbqwwDuGTT1z+J2bRsgMuizgduVooHsfILkPE0Gvk2PLQs2HBkFcOdbWifKda2S
- ApH1Et2YPGBmB+QedmY6dJ5JRP13/md4BZZ5KxthPAG1MH6f0iNOFi/Dg+9blUr/edzhzAHwq
- MbP/YuWXXhG9KWCgSwkMVZgkAsTBqDHfl8YU/eT2KgGWZT65W0lznpi4z8zPOGOxt7UNFLUvW
- y9sXim8BrCNm3FDprjv7SYI5Ib4Ia9EpOq8LflYgzuChANDJav6TsCieitm+hMBsZNGC89cId
- m48CyoaowJ5nMxoDHVrpRy0xjwUD+61ZTxSVg5iTUYEYKUwN3RvznDpPCrUf8S76hhqaNYlBt
- P7BPMzy+nS+n0/OTcCc5tKW+cks14Qu52DFNCEn1Xs7yR2Akwyo0xfierH0NTPDHMC2M0U3qu
- 6dej5GbJ58PAD8B/TWfrHUq6Mj1T5QK7C5RDIofuPn3nQemMYyFEI1T3coA9Ye1UXZevM05UA
- WmmYC06RaO1OmKnJch1DnF4nk9qq+dysMqMhP1HnUc95fsu1cBtP9Frx+SJZxrYpwkrGyhm/P
- BTB5CDhiE8leou4PM0NmjALHxKQZ+KRiEo6N/TWYRI/pAKh4mNGfM4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240202-imx95-bbm-misc-v1-2-3cb743020933@nxp.com>
 
-While debugging the `X86_DECODER_SELFTEST` failure first reported in [1],
-we noticed that the line numbers reported by the `insn_decoder_test` tool
-do not correspond to the line in the output of `objdump_reformat.awk` that
-was causing the failure:
+On Fri, Feb 02, 2024 at 02:34:40PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> The i.MX BBM protocol is for managing i.MX BBM module which provides
+> RTC and BUTTON feature.
+> 
 
-  # TEST    posttest
-    llvm-objdump -d -j .text ./vmlinux | \
-    awk -f ./arch/x86/tools/objdump_reformat.awk | \
-    arch/x86/tools/insn_decoder_test -y -v
-  arch/x86/tools/insn_decoder_test: error: malformed line 1657116:
-  68db0
+Hi,
 
-  $ llvm-objdump -d -j .text ./vmlinux | \
-  awk -f ./arch/x86/tools/objdump_reformat.awk > objdump_reformat.txt
-  $ head -n `echo 1657116+2 | bc` objdump_reformat.txt | tail -n 5
-  ffffffff815430b1        41 8b 47 1c             movl
-  ffffffff815430b5        89 c1                   movl
-  ffffffff815430b7        81 c9 00 40 00 00       orl
-  ffffffff815430bd        41 89 4e 18             movl
-  ffffffff815430c1        a8 40                   testb
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/firmware/arm_scmi/Kconfig      |  10 +
+>  drivers/firmware/arm_scmi/Makefile     |   1 +
+>  drivers/firmware/arm_scmi/imx-sm-bbm.c | 381 +++++++++++++++++++++++++++++++++
+>  include/linux/scmi_nxp_protocol.h      |  50 +++++
+>  4 files changed, 442 insertions(+)
+> 
+> diff --git a/drivers/firmware/arm_scmi/Kconfig b/drivers/firmware/arm_scmi/Kconfig
+> index aa5842be19b2..56d11c9d9f47 100644
+> --- a/drivers/firmware/arm_scmi/Kconfig
+> +++ b/drivers/firmware/arm_scmi/Kconfig
+> @@ -181,3 +181,13 @@ config ARM_SCMI_POWER_CONTROL
+>  	  early shutdown/reboot SCMI requests.
+>  
+>  endmenu
+> +
+> +config IMX_SCMI_BBM_EXT
+> +	tristate "i.MX SCMI BBM EXTENSION"
+> +	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+> +	default y if ARCH_MXC
+> +	help
+> +	  This enables i.MX System BBM control logic which supports RTC
+> +	  and BUTTON.
+> +
+> +	  This driver can also be built as a module.
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> index a7bc4796519c..327687acf857 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -11,6 +11,7 @@ scmi-transport-$(CONFIG_ARM_SCMI_HAVE_MSG) += msg.o
+>  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_VIRTIO) += virtio.o
+>  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_OPTEE) += optee.o
+>  scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o voltage.o powercap.o
+> +scmi-protocols-$(CONFIG_IMX_SCMI_BBM_EXT) += imx-sm-bbm.o
+>  scmi-module-objs := $(scmi-driver-y) $(scmi-protocols-y) $(scmi-transport-y)
+>  
+>  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
+> diff --git a/drivers/firmware/arm_scmi/imx-sm-bbm.c b/drivers/firmware/arm_scmi/imx-sm-bbm.c
+> new file mode 100644
+> index 000000000000..0e12aaeabc42
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/imx-sm-bbm.c
+> @@ -0,0 +1,381 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * System Control and Management Interface (SCMI) NXP BBM Protocol
+> + *
+> + * Copyright 2024 NXP
+> + */
+> +
+> +#define pr_fmt(fmt) "SCMI Notifications BBM - " fmt
+> +
+> +#include <linux/bits.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/scmi_nxp_protocol.h>
+> +
+> +#include "protocols.h"
+> +#include "notify.h"
+> +
+> +#define SCMI_PROTOCOL_SUPPORTED_VERSION		0x0
 
-These lines are perfectly fine. The reason is that the line count reported
-by the tool only includes instruction lines, i.e., it does not count symbo=
-l
-lines. This behavior was introduced in Commit 35039eb6b199 ("x86: Show
-symbol name if insn decoder test failed"), which included symbol lines
-in the output of the awk script. This broke the `instuction lines =3D=3D t=
-otal
-lines` property without accounting for it in `insn_decoder_test.c`.
+Supported version 0 is a bit awkward...unless you fw returns version 0 too
+for this protocol version, it will cause an attempted protocol version
+negotitation (which is optionally supported on the fw side) and a splat of
+warnings from the Kernel trying to use an older version (0) with a newer
+platform version...it will carry-on anyway, just be aware of this.
 
-Add a new variable to count the combined (insn+symbol) line count and
-report this in the error message. With this patch, the line reported by th=
-e
-tool is the line causing the failure (long line wrapped at 75 chars):
+> +
+> +enum scmi_imx_bbm_protocol_cmd {
+> +	IMX_BBM_GPR_SET = 0x3,
+> +	IMX_BBM_GPR_GET = 0x4,
+> +	IMX_BBM_RTC_ATTRIBUTES = 0x5,
+> +	IMX_BBM_RTC_TIME_SET = 0x6,
+> +	IMX_BBM_RTC_TIME_GET = 0x7,
+> +	IMX_BBM_RTC_ALARM_SET = 0x8,
+> +	IMX_BBM_BUTTON_GET = 0x9,
+> +	IMX_BBM_RTC_NOTIFY = 0xA,
+> +	IMX_BBM_BUTTON_NOTIFY = 0xB,
+> +};
+> +
+> +#define BBM_PROTO_ATTR_NUM_RTC(x)  (((x) & 0xFFU) << 16U)
+> +#define BBM_PROTO_ATTR_NUM_GPR(x)  (((x) & 0xFFFFU) << 0U)
 
-  # TEST    posttest
-    llvm-objdump -d -j .text ./vmlinux | \
-    awk -f ./arch/x86/tools/objdump_reformat.awk | \
-    arch/x86/tools/insn_decoder_test -y -v
-  arch/x86/tools/insn_decoder_test: error: malformed line 1699686:
-  68db0
+Are these 2 used anywhere ? (use bitfield & GENMASK anyway if needed)
 
-  $ head -n ` echo 1699686+2 | bc` objdump_reformat.txt | tail -n 5
-  ffffffff81568dac        c3                      retq
-  <_RNvXsP_NtCs7qddEHlz8fK_4core3fmtRINtNtNtNtB7_4iter8adapters5chain5Chai=
-n
-  INtNtBA_7flatten7FlattenINtNtB7_6option8IntoIterNtNtB7_4char11EscapeDebu=
-g
-  EEINtB1a_7FlatMapNtNtNtB7_3str4iter5CharsB1T_NtB2D_23CharEscapeDebugCont=
-i
-  nueEENtB5_5Debug3fmtB7_>:ffffffff81568db0
-  ffffffff81568dad        0f 1f 00                nopl
-  ffffffff81568db0        f3 0f 1e fa             endbr64
-  ffffffff81568db4        41 56                   pushq
+> +
+> +#define GET_RTCS_NR(x)	le32_get_bits((x), GENMASK(23, 16))
+> +#define GET_GPRS_NR(x)	le32_get_bits((x), GENMASK(15, 0))
+> +
+> +#define SCMI_IMX_BBM_NOTIFY_RTC_UPDATED		BIT(2)
+> +#define SCMI_IMX_BBM_NOTIFY_RTC_ROLLOVER	BIT(1)
+> +#define SCMI_IMX_BBM_NOTIFY_RTC_ALARM		BIT(0)
+> +
+> +#define SCMI_IMX_BBM_RTC_ALARM_ENABLE_FLAG	BIT(0)
+> +
+> +#define SCMI_IMX_BBM_NOTIFY_RTC_FLAG	\
+> +	(SCMI_IMX_BBM_NOTIFY_RTC_UPDATED | \
+> +	 SCMI_IMX_BBM_NOTIFY_RTC_ROLLOVER | \
+> +	 SCMI_IMX_BBM_NOTIFY_RTC_ALARM)
+> +
+> +#define SCMI_IMX_BBM_EVENT_RTC_ID(x)        (((x) >> 24) & 0xFF)
 
-[In this case the line causing the failure is interpreted as two lines by
-the tool (due to its length, but this is fixed by [1, 2]), and the second
-line is reported. Still the spatial closeness between the reported line an=
-d
-the line causing the failure would have made debugging a lot easier.]
+bitfield.h ... but more on this down below...
 
-Link: https://lore.kernel.org/lkml/Y9ES4UKl%2F+DtvAVS@gmail.com/T/ [1]
-Link: https://lore.kernel.org/rust-for-linux/20231119180145.157455-1-sergi=
-o.collado@gmail.com/ [2]
-Fixes: 35039eb6b199 ("x86: Show symbol name if insn decoder test failed")
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
-Reported-by: John Baublitz <john.m.baublitz@gmail.com>
-Debugged-by: John Baublitz <john.m.baublitz@gmail.com>
-Signed-off-by: Valentin Obst <kernel@valentinobst.de>
-=2D--
-Changes in v2:
-- Added tags 'Reviewed-by', 'Tested-by', 'Reported-by', 'Debugged-by',
-  'Link', and 'Fixes'.
-- Explain why this patch fixes the commit mentioned in the 'Fixes' tag.
-- CCed the stable list and sent to all x86 maintainers.
-- Link to v1: https://lore.kernel.org/r/20240221-x86-insn-decoder-line-fix=
--v1-1-47cd5a1718c6@valentinobst.de
-=2D--
- arch/x86/tools/insn_decoder_test.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+> +
+> +struct scmi_imx_bbm_info {
+> +	u32 version;
+> +	int nr_rtc;
+> +	int nr_gpr;
+> +};
+> +
+> +struct scmi_msg_imx_bbm_protocol_attributes {
+> +	__le32 attributes;
+> +};
+> +
+> +struct scmi_imx_bbm_set_time {
+> +	__le32 id;
+> +	__le32 flags;
+> +	__le32 value_low;
+> +	__le32 value_high;
+> +};
+> +
+> +struct scmi_imx_bbm_get_time {
+> +	__le32 id;
+> +	__le32 flags;
+> +};
+> +
+> +struct scmi_imx_bbm_alarm_time {
+> +	__le32 id;
+> +	__le32 flags;
+> +	__le32 value_low;
+> +	__le32 value_high;
+> +};
+> +
+> +struct scmi_msg_imx_bbm_rtc_notify {
+> +	__le32 rtc_id;
+> +	__le32 flags;
+> +};
+> +
+> +struct scmi_msg_imx_bbm_button_notify {
+> +	__le32 flags;
+> +};
+> +
+> +struct scmi_imx_bbm_notify_payld {
+> +	__le32 flags;
+> +};
+> +
+> +static int scmi_imx_bbm_attributes_get(const struct scmi_protocol_handle *ph,
+> +				       struct scmi_imx_bbm_info *pi)
+> +{
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +	struct scmi_msg_imx_bbm_protocol_attributes *attr;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, PROTOCOL_ATTRIBUTES, 0, sizeof(*attr), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	attr = t->rx.buf;
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret) {
+> +		pi->nr_rtc = GET_RTCS_NR(attr->attributes);
+> +		pi->nr_gpr = GET_GPRS_NR(attr->attributes);
+> +	}
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static int scmi_imx_bbm_notify(const struct scmi_protocol_handle *ph,
+> +			       u32 src_id, int message_id, bool enable)
+> +{
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +	struct scmi_msg_imx_bbm_rtc_notify *rtc_notify;
+> +	struct scmi_msg_imx_bbm_button_notify *button_notify;
 
-diff --git a/arch/x86/tools/insn_decoder_test.c b/arch/x86/tools/insn_deco=
-der_test.c
-index 472540aeabc2..727017a3c3c7 100644
-=2D-- a/arch/x86/tools/insn_decoder_test.c
-+++ b/arch/x86/tools/insn_decoder_test.c
-@@ -114,6 +114,7 @@ int main(int argc, char **argv)
- 	unsigned char insn_buff[16];
- 	struct insn insn;
- 	int insns =3D 0;
-+	int lines =3D 0;
- 	int warnings =3D 0;
+You can move these 2, each one inside its if blocks, right ?
 
- 	parse_args(argc, argv);
-@@ -123,6 +124,8 @@ int main(int argc, char **argv)
- 		int nb =3D 0, ret;
- 		unsigned int b;
+> +
+> +	if (message_id == IMX_BBM_RTC_NOTIFY) {
+> +		ret = ph->xops->xfer_get_init(ph, message_id, sizeof(*rtc_notify), 0, &t);
+> +		if (ret)
+> +			return ret;
+> +
+> +		rtc_notify = t->tx.buf;
+> +		rtc_notify->rtc_id = cpu_to_le32(0);
+> +		rtc_notify->flags = cpu_to_le32(enable ? SCMI_IMX_BBM_NOTIFY_RTC_FLAG : 0);
+> +	} else if (message_id == IMX_BBM_BUTTON_NOTIFY) {
+> +		ret = ph->xops->xfer_get_init(ph, message_id, sizeof(*button_notify), 0, &t);
+> +		if (ret)
+> +			return ret;
+> +
+> +		button_notify = t->tx.buf;
+> +		button_notify->flags = cpu_to_le32(enable ? 1 : 0);
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +	return ret;
+> +}
+> +
+> +static enum scmi_imx_bbm_protocol_cmd evt_2_cmd[] = {
+> +	IMX_BBM_RTC_NOTIFY,
+> +	IMX_BBM_BUTTON_NOTIFY
+> +};
+> +
+> +static int scmi_imx_bbm_set_notify_enabled(const struct scmi_protocol_handle *ph,
+> +					   u8 evt_id, u32 src_id, bool enable)
+> +{
+> +	int ret, cmd_id;
+> +
+> +	if (evt_id >= ARRAY_SIZE(evt_2_cmd))
+> +		return -EINVAL;
+> +
+> +	cmd_id = evt_2_cmd[evt_id];
+> +	ret = scmi_imx_bbm_notify(ph, src_id, cmd_id, enable);
+> +	if (ret)
+> +		pr_debug("FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
+> +			 evt_id, src_id, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static void *scmi_imx_bbm_fill_custom_report(const struct scmi_protocol_handle *ph,
+> +					     u8 evt_id, ktime_t timestamp,
+> +					     const void *payld, size_t payld_sz,
+> +					     void *report, u32 *src_id)
+> +{
+> +	const struct scmi_imx_bbm_notify_payld *p = payld;
+> +	struct scmi_imx_bbm_notif_report *r = report;
+> +
+> +	if (sizeof(*p) != payld_sz)
+> +		return NULL;
+> +
+> +	if (evt_id == SCMI_EVENT_IMX_BBM_RTC) {
+> +		r->is_rtc = true;
+> +		r->is_button = false;
+> +		r->timestamp = timestamp;
+> +		r->rtc_id = SCMI_IMX_BBM_EVENT_RTC_ID(le32_to_cpu(p->flags));
 
-+		lines++;
-+
- 		if (line[0] =3D=3D '<') {
- 			/* Symbol line */
- 			strcpy(sym, line);
-@@ -134,12 +137,12 @@ int main(int argc, char **argv)
- 		strcpy(copy, line);
- 		tab1 =3D strchr(copy, '\t');
- 		if (!tab1)
--			malformed_line(line, insns);
-+			malformed_line(line, lines);
- 		s =3D tab1 + 1;
- 		s +=3D strspn(s, " ");
- 		tab2 =3D strchr(s, '\t');
- 		if (!tab2)
--			malformed_line(line, insns);
-+			malformed_line(line, lines);
- 		*tab2 =3D '\0';	/* Characters beyond tab2 aren't examined */
- 		while (s < tab2) {
- 			if (sscanf(s, "%x", &b) =3D=3D 1) {
+mmm... are you sure you want to handle endianity on a bitfield before
+extracting the ID ?
 
-=2D--
-base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
-change-id: 20240221-x86-insn-decoder-line-fix-7b1f2e1732ff
+looking at SCMI_IMX_BBM_EVENT_RTC_ID above , cannot this just be something like
 
-Best regards,
-=2D-
-Valentin Obst <kernel@valentinobst.de>
+	le32_get_bits(p->flags, GENMASK(31, 24))
 
+> +		r->rtc_evt = le32_to_cpu(p->flags) & SCMI_IMX_BBM_NOTIFY_RTC_FLAG;
+
+Same here...I dont thing endianity-conversion play on a flag bitfield is
+right...dont you just need bit 0,1,2 here to extract ? .... maybe wrong
+since I can only guess what all the payoad fields represents...
+
+> +		dev_dbg(ph->dev, "RTC: %d evt: %x\n", r->rtc_id, r->rtc_evt);
+> +		*src_id = r->rtc_evt;
+> +	} else if (evt_id == SCMI_EVENT_IMX_BBM_BUTTON) {
+> +		r->is_rtc = false;
+> +		r->is_button = true;
+> +		r->timestamp = timestamp;
+> +		dev_dbg(ph->dev, "BBM Button\n");
+> +		*src_id = 0;
+> +	} else {
+> +		WARN_ON(1);
+
+...this can be heavy on receveing malformed notif... WARN_ON_ONCE() ?
+
+> +		return NULL;
+> +	}
+> +
+> +	return r;
+> +}
+> +
+> +static int scmi_imx_bbm_get_num_sources(const struct scmi_protocol_handle *ph)
+> +{
+> +	return 1;
+> +}
+
+You can drop this...see down below.
+
+> +
+> +static const struct scmi_event scmi_imx_bbm_events[] = {
+> +	{
+> +		.id = SCMI_EVENT_IMX_BBM_RTC,
+> +		.max_payld_sz = sizeof(struct scmi_imx_bbm_notify_payld),
+> +		.max_report_sz = sizeof(struct scmi_imx_bbm_notif_report),
+> +	},
+> +	{
+> +		.id = SCMI_EVENT_IMX_BBM_BUTTON,
+> +		.max_payld_sz = sizeof(struct scmi_imx_bbm_notify_payld),
+> +		.max_report_sz = sizeof(struct scmi_imx_bbm_notif_report),
+> +	},
+> +};
+> +
+> +static const struct scmi_event_ops scmi_imx_bbm_event_ops = {
+> +	.get_num_sources = scmi_imx_bbm_get_num_sources,
+
+if the number of sources is statically defined, you dont need this
+helper and just set .num_sources=1 down below...as in
+	
+	drivers/firmware/arm_scmi/system.c
+
+> +	.set_notify_enabled = scmi_imx_bbm_set_notify_enabled,
+> +	.fill_custom_report = scmi_imx_bbm_fill_custom_report,
+> +};
+> +
+> +static const struct scmi_protocol_events scmi_imx_bbm_protocol_events = {
+> +	.queue_sz = SCMI_PROTO_QUEUE_SZ,
+> +	.ops = &scmi_imx_bbm_event_ops,
+> +	.evts = scmi_imx_bbm_events,
+> +	.num_events = ARRAY_SIZE(scmi_imx_bbm_events),
+
+.num_sources = 1
+
+> +};
+> +
+> +static int scmi_imx_bbm_protocol_init(const struct scmi_protocol_handle *ph)
+> +{
+> +	u32 version;
+> +	int ret;
+> +	struct scmi_imx_bbm_info *binfo;
+> +
+> +	ret = ph->xops->version_get(ph, &version);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(ph->dev, "NXP SM BBM Version %d.%d\n",
+> +		 PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
+> +
+> +	binfo = devm_kzalloc(ph->dev, sizeof(*binfo), GFP_KERNEL);
+> +	if (!binfo)
+> +		return -ENOMEM;
+> +
+> +	ret = scmi_imx_bbm_attributes_get(ph, binfo);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ph->set_priv(ph, binfo, version);
+> +}
+> +
+> +static int scmi_imx_bbm_rtc_time_set(const struct scmi_protocol_handle *ph,
+> +				     u32 rtc_id, u64 sec)
+> +{
+> +	struct scmi_imx_bbm_info *pi = ph->get_priv(ph);
+> +	struct scmi_imx_bbm_set_time *cfg;
+> +	struct scmi_xfer *t;
+> +	int ret;
+> +
+> +	if (rtc_id >= pi->nr_rtc)
+> +		return -EINVAL;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_BBM_RTC_TIME_SET, sizeof(*cfg), 0, &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	cfg = t->tx.buf;
+> +	cfg->id = cpu_to_le32(rtc_id);
+> +	cfg->flags = 0;
+> +	cfg->value_low = cpu_to_le32(sec & 0xffffffff);
+> +	cfg->value_high = cpu_to_le32(sec >> 32);
+> +
+lower_32_bits() / upper_32_bits .. it also handles casting
+
+> +	ret = ph->xops->do_xfer(ph, t);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static int scmi_imx_bbm_rtc_time_get(const struct scmi_protocol_handle *ph,
+> +				     u32 rtc_id, u64 *value)
+> +{
+> +	struct scmi_imx_bbm_info *pi = ph->get_priv(ph);
+> +	struct scmi_imx_bbm_get_time *cfg;
+> +	struct scmi_xfer *t;
+> +	int ret;
+> +
+> +	if (rtc_id >= pi->nr_rtc)
+> +		return -EINVAL;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_BBM_RTC_TIME_GET, sizeof(*cfg), sizeof(u64), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	cfg = t->tx.buf;
+> +	cfg->id = cpu_to_le32(rtc_id);
+> +	cfg->flags = 0;
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret)
+> +		*value = get_unaligned_le64(t->rx.buf);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static int scmi_imx_bbm_rtc_alarm_set(const struct scmi_protocol_handle *ph,
+> +				      u32 rtc_id, u64 sec)
+> +{
+> +	struct scmi_imx_bbm_info *pi = ph->get_priv(ph);
+> +	struct scmi_imx_bbm_alarm_time *cfg;
+> +	struct scmi_xfer *t;
+> +	int ret;
+> +
+> +	if (rtc_id >= pi->nr_rtc)
+> +		return -EINVAL;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_BBM_RTC_ALARM_SET, sizeof(*cfg), 0, &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	cfg = t->tx.buf;
+> +	cfg->id = cpu_to_le32(rtc_id);
+> +	cfg->flags = SCMI_IMX_BBM_RTC_ALARM_ENABLE_FLAG;
+> +	cfg->value_low = cpu_to_le32(sec & 0xffffffff);
+> +	cfg->value_high = cpu_to_le32(sec >> 32);
+
+lower_32_bits() / upper_32_bits
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static int scmi_imx_bbm_button_get(const struct scmi_protocol_handle *ph, u32 *state)
+> +{
+> +	struct scmi_xfer *t;
+> +	int ret;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_BBM_BUTTON_GET, 0, sizeof(u32), &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret)
+> +		*state = get_unaligned_le32(t->rx.buf);
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct scmi_imx_bbm_proto_ops scmi_imx_bbm_proto_ops = {
+> +	.rtc_time_get = scmi_imx_bbm_rtc_time_get,
+> +	.rtc_time_set = scmi_imx_bbm_rtc_time_set,
+> +	.rtc_alarm_set = scmi_imx_bbm_rtc_alarm_set,
+> +	.button_get = scmi_imx_bbm_button_get,
+> +};
+> +
+> +static const struct scmi_protocol scmi_imx_bbm = {
+> +	.id = SCMI_PROTOCOL_IMX_BBM,
+> +	.owner = THIS_MODULE,
+> +	.instance_init = &scmi_imx_bbm_protocol_init,
+> +	.ops = &scmi_imx_bbm_proto_ops,
+> +	.events = &scmi_imx_bbm_protocol_events,
+> +	.supported_version = SCMI_PROTOCOL_SUPPORTED_VERSION,
+
+...as said elsewhere you will *probably* need to add here:
+
+	.vendor_id = "NXP_vendor_id"
+
+or whatever is your 16-bytes NULL terminated vendor_id as exposed by
+your platform SCMI fw in response the BASE_DISCOVER_VENDOR
+
+and optionally a .sub_vendor_id / impl_ver (up to you)
+
+.. *probably* because the mechanism has just been posted and
+is under review
+
+> +};
+> +
+> +module_scmi_protocol(scmi_imx_bbm);
+> diff --git a/include/linux/scmi_nxp_protocol.h b/include/linux/scmi_nxp_protocol.h
+> new file mode 100644
+> index 000000000000..a2077e1ef5d8
+> --- /dev/null
+> +++ b/include/linux/scmi_nxp_protocol.h
+> @@ -0,0 +1,50 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * SCMI Message Protocol driver NXP extension header
+> + *
+> + * Copyright 2024 NXP.
+> + */
+> +
+> +#ifndef _LINUX_SCMI_NXP_PROTOCOL_H
+> +#define _LINUX_SCMI_NXP_PROTOCOL_H
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/device.h>
+> +#include <linux/notifier.h>
+> +#include <linux/types.h>
+> +
+> +enum scmi_nxp_protocol {
+> +	SCMI_PROTOCOL_IMX_BBM = 0x81,
+> +};
+> +
+> +struct scmi_imx_bbm_proto_ops {
+> +	int (*rtc_time_set)(const struct scmi_protocol_handle *ph, u32 id,
+> +			    uint64_t sec);
+> +	int (*rtc_time_get)(const struct scmi_protocol_handle *ph, u32 id,
+> +			    u64 *val);
+> +	int (*rtc_alarm_set)(const struct scmi_protocol_handle *ph, u32 id,
+> +			     u64 sec);
+> +	int (*button_get)(const struct scmi_protocol_handle *ph, u32 *state);
+> +};
+> +
+> +enum scmi_nxp_notification_events {
+> +	SCMI_EVENT_IMX_BBM_RTC = 0x0,
+> +	SCMI_EVENT_IMX_BBM_BUTTON = 0x1,
+> +	SCMI_EVENT_IMX_MISC_CONTROL_DISABLED = 0x0,
+> +	SCMI_EVENT_IMX_MISC_CONTROL_FALLING_EDGE = 0x1,
+> +	SCMI_EVENT_IMX_MISC_CONTROL_RISING_EDGE = 0x2,
+> +};
+> +
+> +#define SCMI_IMX_BBM_RTC_TIME_SET	0x6
+> +#define SCMI_IMX_BBM_RTC_TIME_GET	0x7
+> +#define SCMI_IMX_BBM_RTC_ALARM_SET	0x8
+> +#define SCMI_IMX_BBM_BUTTON_GET		0x9
+> +
+
+Why these protocol internal commands are exposed here too ? they are
+already defined above in the file containing the protocol implemenation
+(rightly so)
+
+> +struct scmi_imx_bbm_notif_report {
+> +	bool			is_rtc;
+> +	bool			is_button;
+> +	ktime_t			timestamp;
+> +	unsigned int		rtc_id;
+> +	unsigned int		rtc_evt;
+> +};
+> +#endif
+> 
+
+
+All in all, beside the minor remarks above, LGTM.
+
+Main open thing which remains (on our side) is the handling of vendor
+protocol module by the core (as said)...I will chase Sudeep for an
+opinion..also about the layout in the source code of all these new
+upcoming vendor modules...maybe a common subdir ?
+
+Thank,
+Cristian
