@@ -1,114 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EC77FBC5
-	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 14:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11FE6FBF;
+	Fri, 23 Feb 2024 14:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708698056; cv=none; b=MxGxaDnOeSQg/wgdcQHTRQU11aeXPldMjvnWWjslwxKw1iDQc+DnxIbAt9ALStcp8sExwVo7JVZjFFVm5BF/PPFuZmbm845SwzghnggkHbIyyB+OvjGTzBC+o8xPWuQu0m6whRe7ILdroTTqVpVz0v0tj6/fVvqxYpEP1UKa+C8=
+	t=1708698109; cv=none; b=IqQ1Dds2g4ZV6wp8i+NlapcfEny69ow2tddvAFtW7sBKeGt5cifPCVqb+DH881rEHdLHSEvWPngnO+68ZKIMLkiIrEBskY9a5xWn22dCERPoeEyJG5THPBospB7Q36fU1pPRKaxMxtGm0TV9bfMkEwFfpkxb3YN9YNG8gmF01d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708698056; c=relaxed/simple;
-	bh=+6blh3ObSk8BzEikRhDsLFdk6ABGGUYdecjw26QmFUA=;
+	s=arc-20240116; t=1708698109; c=relaxed/simple;
+	bh=GITjPyU/6jMigNK1ZyHILoVv5+gvdYxOZ3RVFKuYVnM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WqiFvWwcdm8LwDyQ0X8tFdYEn0i2g0SD5Mypeee1En4JIqrK5mZ8MUTAMj8E4Eit/w/aSj+J0bG0yCVdAYpNR78BFfaCuqH4+1/YNvBfG+Lyn+gjS3X0g648CGt32K0RhyHnvSLK8tdIvpq2nfuwSd2SulhpyykF/GMKbM1RKNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RYdYDfGa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lFC0QDXisdmynj/uMu9jxjXLhcUe/qg0X/OYvDwITHRIKRHptiMqANevQkZ5fYVbfgF6l1Rh4LyQXuYpkAObgL+1pN4mwGdRJmz5v3I5uvn9YLTXrFAN78who2paO3yuNjPCZhP/7wcw4WY0ed3tXVdZsS8TR3ze+GOA8SgAZGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R70UCjWs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RYdYDfGa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708698053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ydf+iTJAXdXXlA+IiHEHl6RCvHrcIFVq74RkfxuTk8c=;
-	b=RYdYDfGa/QDE6SsL0Y7oU17WlTqg16sB0bCXbX/7pkin1sq5BmLedmcU/+Q6A6PtZb07+4
-	dYMGTaQNGrxhDqj48TsZIZzPWkRjI6cwruRzjvY7fiQEs1yI+UmRs2lzzGJ8vfd/sJD87C
-	g07nnJnT2vEXb5Pzu7jQ7FGoSrWBeRk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-323-GqsIheNqPgaDGIRgik4bQg-1; Fri, 23 Feb 2024 09:20:50 -0500
-X-MC-Unique: GqsIheNqPgaDGIRgik4bQg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6AA13845DC3;
-	Fri, 23 Feb 2024 14:20:49 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.151])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 263CA200B251;
-	Fri, 23 Feb 2024 14:20:47 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 23 Feb 2024 15:19:30 +0100 (CET)
-Date: Fri, 23 Feb 2024 15:19:29 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] get_signal: simplify/cleanup the the usage of ksig->info
-Message-ID: <20240223141928.GB8267@redhat.com>
-References: <20240223105025.GA4542@redhat.com>
- <tencent_7C50F304C14CB2A5133317F8A13D1F544D0A@qq.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R70UCjWs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57609C433F1;
+	Fri, 23 Feb 2024 14:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708698109;
+	bh=GITjPyU/6jMigNK1ZyHILoVv5+gvdYxOZ3RVFKuYVnM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R70UCjWsObGZG+ZlxvBs/p61UxvAVIj7WCPF5uyACsIXigriAX/Dlyujzz4nH5ypC
+	 ZDmO3qy3nKPkFppx93FrOxndf+Lm34+jHBQ/8b2CWUUHl2RZ2SQfA79difCwrRhMtH
+	 o/RNHlz7JNNXwLZ3ubgnF+w9lzR22xIytIwlVKI/v7yvMKDUCijOzSYblko9ZH6SkK
+	 +8j6nD1GoYy9hMo7Baa9Kt6VAWua57q/uKEa//W3g6iiEwfttlPqUjsUD3Ak1A/PWw
+	 UoAvrzA++iA7xtRy2iSkaBmxfGPhITxlbPUISjcA53bsUXQfRCqOOL+s/eZa3dzDEO
+	 Zzpxz26ASeXYw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rdWQy-000000004u4-2RdT;
+	Fri, 23 Feb 2024 15:21:53 +0100
+Date: Fri, 23 Feb 2024 15:21:52 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Robert Foss <rfoss@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Vinod Koul <vkoul@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>,
+	freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org
+Subject: Re: [PATCH 0/6] soc: qcom: pmic_glink_altmode: fix drm bridge
+ use-after-free
+Message-ID: <ZdiqAPPTn9SvsjL8@hovoldconsulting.com>
+References: <20240217150228.5788-1-johan+linaro@kernel.org>
+ <170868613914.4029284.5549880672870201262.b4-ty@linaro.org>
+ <3c4246b6-431a-442e-8ace-3b0d0e67743f@linaro.org>
+ <ZdiU2z8rzo542_Ih@hovoldconsulting.com>
+ <d4049823-ad24-4426-887b-9c66cdd96318@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <tencent_7C50F304C14CB2A5133317F8A13D1F544D0A@qq.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+In-Reply-To: <d4049823-ad24-4426-887b-9c66cdd96318@linaro.org>
 
-On 02/23, Wen Yang wrote:
->
->
-> On 2024/2/23 18:50, Oleg Nesterov wrote:
-> >get_signal() uses signr or ksig->info.si_signo in a chaotic way, this
-> >looks confusing. Change it to always use signr.
-> >
-> >This allows us to simplify the SIGNAL_GROUP_EXIT/group_exec_task branch,
-> >it no longer needs to touch ksig at all.
-> >
-> >Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> >---
-> >  kernel/signal.c | 15 +++++++++------
-> >  1 file changed, 9 insertions(+), 6 deletions(-)
-> >
-> >diff --git a/kernel/signal.c b/kernel/signal.c
-> >index c9c57d053ce4..690982e6595e 100644
-> >--- a/kernel/signal.c
-> >+++ b/kernel/signal.c
-> >@@ -2727,12 +2727,15 @@ bool get_signal(struct ksignal *ksig)
-> >  		/* Has this task already been marked for death? */
-> >  		if ((signal->flags & SIGNAL_GROUP_EXIT) ||
-> >  		     signal->group_exec_task) {
-> >-			clear_siginfo(&ksig->info);
-> >-			ksig->info.si_signo = signr = SIGKILL;
-> >+			signr = SIGKILL;
-> >  			sigdelset(&current->pending.signal, SIGKILL);
-> >  			trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
-> >-				&sighand->action[SIGKILL - 1]);
-> >+					     &sighand->action[SIGKILL - 1]);
-> >  			recalc_sigpending();
-> >+			/*
-> >+			 * implies do_group_exit(), no need to initialize
-> >+			 * ksig->info
-> >+			 */
-> >  			goto fatal;
->
-> There is little question:
-> If the this conditions is met:
->    current->flags & PF_USER_WORKER
-> It may execute “goto out“ instead of do_group_exit().
+On Fri, Feb 23, 2024 at 02:52:28PM +0100, Neil Armstrong wrote:
+> On 23/02/2024 13:51, Johan Hovold wrote:
+> > On Fri, Feb 23, 2024 at 12:03:10PM +0100, Neil Armstrong wrote:
+> >> On 23/02/2024 12:02, Neil Armstrong wrote:
 
-Yes, but vhost/io workers do not use ksig at all.
+> >>> Thanks, Applied to https://anongit.freedesktop.org/git/drm/drm-misc.git (drm-misc-fixes)
+> >>>
+> >>> [1/6] drm/bridge: aux-hpd: fix OF node leaks
+> >>>         https://cgit.freedesktop.org/drm/drm-misc/commit/?id=9ee485bdda68d6d3f5728cbe3150eb9013d7d22b
+> >>> [2/6] drm/bridge: aux-hpd: separate allocation and registration
+> >>>         (no commit info)
+> >>> [3/6] soc: qcom: pmic_glink_altmode: fix drm bridge use-after-free
+> >>>         (no commit info)
+> >>> [4/6] soc: qcom: pmic_glink: Fix boot when QRTR=m
+> >>>         (no commit info)
+> >>> [5/6] phy: qcom-qmp-combo: fix drm bridge registration
+> >>>         (no commit info)
+> >>> [6/6] phy: qcom-qmp-combo: fix type-c switch registration
+> >>>         (no commit info)
+> >>>
+> >>
+> >> To clarify, I only applied patch 1 to drm-misc-fixes
+> > 
+> > Ok, but can you please not do that? :)
+> > 
+> > These patches should go in through the same tree to avoid conflicts.
+> > 
+> > I discussed this with Bjorn and Dmitry the other day and the conclusion
+> > was that it was easiest to take all of these through DRM.
+> 
+> I only applied patch 1, which is a standalone fix and goes into a separate tree,
+> for the next patches it would be indeed simpler for them to go via drm-misc when
+> they are properly acked.
 
-Oleg.
+But it is *not* standalone as I tried to explain above.
 
+So you have to drop it again as the later patches depend on it and
+cannot be merged (through a different tree) without it.
+
+I thought you had all the acks you needed to take this through drm-misc,
+but we can wait a bit more if necessary (and there's no rush to get the
+first one in).
+
+Johan
