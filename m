@@ -1,94 +1,106 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E6622329;
-	Fri, 23 Feb 2024 14:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392A51C680;
+	Fri, 23 Feb 2024 14:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708699525; cv=none; b=lZUiI6A1yqBFqOaxWt7hRj9srJBV7wJiZwLglO9F03B30oaeF3tvFC/2IjPjdjAosaBmDCrnN3tsZTWtG6k+FWF5QSFPHJmZ0CYfnzK+YUzQUjQAMOomk8uNs6wJoA91OT7iz9/d+NtWXBaFP0wKE+1+rd0zET5NZGvy/HYnNA4=
+	t=1708699533; cv=none; b=mTr875HbdJMfyltAVPESFaCFCWcCGJA7NJ54BVlLHjHg9gNFyOQkT1TwZ9VTMWEVm1iFl5gGxXw+DXJfvvuaKeFBH/kREY8k+oW2H1dFvuGXk7hj6dWUSjRRN+kOwv6+1oWPuMZsxvRGZ1jf/iOlPUeiDxo1uGk4tbm3LRuOFfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708699525; c=relaxed/simple;
-	bh=FYS368qujw0WANetUJ0YWVVEYUneG/dCxdwk6stMB3o=;
+	s=arc-20240116; t=1708699533; c=relaxed/simple;
+	bh=BfsdNiLPuAMy7kSkAtbNij4qj8LZNG1lsXLeWEKp+iQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ljzmNRBwhWR9NY8L3h3ZqJvH7hkp4Bg1ArpdOf7CNY4ojcEHaJRMgPXG2PZ8LaoqBkai/WqaPp8A3FZOXDO8Jz6vJBvEPC1fulFsGiIZlM8mi1A3zbHG4VeCtf3NV/vzoRbpmDIDQbwOuX8X6XlKhUXDwpB1ZH9E50hl3ex0xTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aCPiZqGI; arc=none smtp.client-ip=209.85.214.173
+	 To:Cc:Content-Type; b=tkfT0syQ67i5xe/JDbepEvCIn4Bc+Vr0nNAjuBuXHcpxVhu5uOVfYYgRjt8PliEJSyotqQ9jDJbm28HiIPsVGVPpJe4ZCNfmFpGqlm075PE0BPKZV6GnZAVuNQ/4ofAw14VLR34J6+eOfjs6xo/BPtJtWPiFvH0D6F9xCS4HK90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VoHgQvPM; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCPiZqGI"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dc0e5b223eso7151005ad.1;
-        Fri, 23 Feb 2024 06:45:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoHgQvPM"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3e706f50beso117597866b.0;
+        Fri, 23 Feb 2024 06:45:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708699524; x=1709304324; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1708699529; x=1709304329; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FYS368qujw0WANetUJ0YWVVEYUneG/dCxdwk6stMB3o=;
-        b=aCPiZqGIS+AKK5+7Zad6rGgsXk+4VkEKBkDY/PKQGqIzFAnf5FTIfk7usvQ/6JBLZb
-         YDdy3NYTNfaWiwooUxIyBacSdkId7POMChbaLxvKCny/VoVQrqA+W+mrvofzL2K8JrD+
-         MG1zj81k/+4pNEgnp/um/l7+2VOz4yPMUbXGh3DF0ncugE6a3Jb9HB4S+90eKV0H3T1m
-         f5HogaACDAU0+CWr28Eq4uHl6HEryvbipW0PavQbRI4RBPEezp6yH+tvoXnCb4B8MS9e
-         B/zp5BRBAThQfYji3tvGQaeqEC1i5pLH816LXgHbDu8KeV5rn+87EpJDx1Q3hPX9N0J4
-         pXog==
+        bh=BfsdNiLPuAMy7kSkAtbNij4qj8LZNG1lsXLeWEKp+iQ=;
+        b=VoHgQvPM4yt1NgNp0Aj5W/KgakPK8nqwI49QYLDSM2bi9TIsvzEq3Qw9t0pF4uWSVa
+         zbKLzePd83hR1wGPpTbs0JjoK/wGPL+UcJuP9QRbSpl+tuAwVlAumS+H/6c40pHJGoyo
+         DjJN0QJ4ZB2IZf0nIxQDz87enFRSCdM+XELDAjiyuxl4c119xYG3k4La2q7lrys9X45k
+         GoBJUdBFZZHVs98hcexaDNUDRf/m/laGYy6Kfy7JE0iNAi8Rj6I5LLTUGyCTBem8h+/z
+         KLc6aF6fbHEtpHy51USPrUnCT4Qdh7qNwRPBnwN1JCtgwTP6+ZlZMHniRSc265BnhoC2
+         ge0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708699524; x=1709304324;
+        d=1e100.net; s=20230601; t=1708699529; x=1709304329;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FYS368qujw0WANetUJ0YWVVEYUneG/dCxdwk6stMB3o=;
-        b=SpjAmB7gVLi0Y6Ubj9z3lPmumaTaO4rE7txSRUca7mrEWzJrHA69eKuk1YPGMj93Ai
-         eb3FV4Q2xlrgKdYTgAXANL9PdGbVBya+6xit6gzzSbMz0wVl/OgTC5PktQX1X0RTDmVl
-         8mKovSyGXZ6+zEQTrkAVwNq7LeUKSC08zXRrbk2lNrB7htoxd/lPKF7nAXi0inkjeug2
-         Wtj4BYRgo1BP/4NYPHz8jP5Ub094AgcHsv2gStDFmji+736IIMmjEBdibjzyvIpFBxMI
-         WEDaiLaoIBp2QYJdrwuVpRPqm+qrKAbtHTmWUw2jGHp7T7UR0qU/MO5qo0pKDdiTx/FF
-         sTPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVYiA+a8BOgOS3zJuREVRO+Ma0pQLnhP9VhQVs688bvfBPqn+/Ec5eM0NcSAtGIHCKM/cQhv5AMScKhblfY9uKx6KpVwPNJyrCnHRcIOMhDpO0vomr5QutW2qYlNEws2n8mgXT49j1ykrbda4UdNx2VRoRTm7orqS2nHVpqdHB0EjMHLab3nLtX2hJ/bKFXSrvQiSQqVj6J5ou8HbEDt6Y=
-X-Gm-Message-State: AOJu0Yz7OZh0s9Cm0X/qDHfcrw8nKAxB7atBS2FD2S0KsMDPuDH5ft0H
-	H7pGpX+6q6WExfV2BPlR2n4apklhc5ms0q/VK2aqcV/fUbeWuSg37rNa8wQFzHgpsJCMaZ9+nss
-	dOEeAggfDT5TQVN0tmAyd9nmi+gM=
-X-Google-Smtp-Source: AGHT+IGQh4Gasx98EwmKbpWjx7oNjPOHi30hzceQIltFlR3Zv8xEu09Tzkr96XjYz57W4Vc5AnxGSufwQh5QIluHSa4=
-X-Received: by 2002:a17:902:f811:b0:1d9:7095:7e3c with SMTP id
- ix17-20020a170902f81100b001d970957e3cmr1600961plb.57.1708699522325; Fri, 23
- Feb 2024 06:45:22 -0800 (PST)
+        bh=BfsdNiLPuAMy7kSkAtbNij4qj8LZNG1lsXLeWEKp+iQ=;
+        b=evM431ySroUilxzJcFguljHEs9NjFxP/hTP6qss51fwwdwsqNwReF4r2zxji+cF19W
+         hgp9gL0sj/N/HarqCoJ2Hn4nz+7mk69jiS2rtMDxiEGcjskPl1uN0m8O0muQny0XuXgW
+         SnHnc6ql8IwBxLV39PrPtHqvNPCyDKRaZCytbRwsmhh0+cKFWKTvnZg2lDBTr2Sq9h3W
+         p08X1wO7b5eb8UcsrhaadFBnCEUqU9A0ElCrFU172BUfCiXdZIGtU5kZmCYJdMwTKeYr
+         /3YPjlw/mE8MAv5YxelZ1gmDrdKHo1PzVYKGxXdC9KAb2dS6IlXjmOsszihSnH2l4tCV
+         vv8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWDUVw213+j2OSAViKHswMm98OIFb6beN3aGct+dQNiSrenLM9/QGdlldti7TCIxMPprB7PZuR7x7DTQecdChZrtg6jVT5Xv5csuDCkKlOrbehZH20o/b30ZUKwvW1kIm822SBVTqcz+A==
+X-Gm-Message-State: AOJu0YwhkhvXNCUtf67DZQAuu/qna2xBq94xXTR2e0AhrxtaghrNLw9W
+	uBqe6ZQlnuLC46YjkMpo+J5UVkoHJNrbvaTPPyRpCNey74uE1YcKw4x/yKK0k6/mCFEbTt07ZSU
+	hhqcc5GdN0eMotgWeIhoYLg7vUf4=
+X-Google-Smtp-Source: AGHT+IHpGq+phVFLaZeC26ocGsL8AfkiYJNn4F/EeswUoJ7ZVLBk5ozgifLr7/gd+vx88ceM9Ug0BVMVZvD8ij7037Y=
+X-Received: by 2002:a17:906:4e97:b0:a3f:d71d:d820 with SMTP id
+ v23-20020a1709064e9700b00a3fd71dd820mr1204331eju.26.1708699529198; Fri, 23
+ Feb 2024 06:45:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223-leverage-walmart-5424542cd8bd@spud> <20240223-perjury-preshow-fc2cf73d552e@spud>
-In-Reply-To: <20240223-perjury-preshow-fc2cf73d552e@spud>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 23 Feb 2024 15:45:10 +0100
-Message-ID: <CANiq72=mCnm0mKOw5K44PmZ+jF=67jxEEkcXP-E0O8CaUrps=w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] rust: make mutually exclusive with CFI_CLANG
-To: Conor Dooley <conor@kernel.org>, Matthew Maurer <mmaurer@google.com>
-Cc: linux-riscv@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org, 
-	Sami Tolvanen <samitolvanen@google.com>, Ramon de C Valle <rcvalle@google.com>
+References: <1f598a72-dd9f-4c6c-af7f-29751f84bd23@alliedtelesis.co.nz>
+ <Zde966nsJ76QOuzm@surfacebook.localdomain> <f5e74774-226a-4678-a6f9-b4f17250ad91@alliedtelesis.co.nz>
+ <CAHp75Vfq3Pc+Eo3Z5mhORZwwuKF+Y7_47dTO8qARcfba4nmj2w@mail.gmail.com>
+ <9d00e1b1-120b-4c2b-89c5-0ac736bf6441@alliedtelesis.co.nz>
+ <CAHp75VdnXtVwrLrcGjnYMfNx7roBvQm9DMr6_ndjZeAbRDbs_Q@mail.gmail.com>
+ <2a8d19ee-b18b-4b7c-869f-7d601cea30b6@alliedtelesis.co.nz>
+ <CAMuHMdUFW7iTdhQtW4eDnU50zRqsdWsLnTD74UQo8tBU66-dCA@mail.gmail.com>
+ <CAHp75Veyvw75jc4LFpW2EQQ=wSYmn_VdsPBWVG03b+P0QvyGaQ@mail.gmail.com> <CAMuHMdX0CYWGn8OSQ3sXGyZTSqjTK5n1aj2-BOudfEejp980Tg@mail.gmail.com>
+In-Reply-To: <CAMuHMdX0CYWGn8OSQ3sXGyZTSqjTK5n1aj2-BOudfEejp980Tg@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 23 Feb 2024 16:44:53 +0200
+Message-ID: <CAHp75VeGiAWOFgOVjpOCHj0-CGgUYAuGEYmLomn4ydnSVv=_yA@mail.gmail.com>
+Subject: Re: Linux support for a 7 segment LED display
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Pavel Machek <pavel@ucw.cz>, 
+	"lee@kernel.org" <lee@kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2024 at 2:38=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
+On Fri, Feb 23, 2024 at 3:01=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+> On Fri, Feb 23, 2024 at 1:36=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Fri, Feb 23, 2024 at 9:52=E2=80=AFAM Geert Uytterhoeven <geert@linux=
+-m68k.org> wrote:
+> > > Note that most larger displays are not individual LEDs, but matrices
+> > > of LEDs. Do we want to drive/scan them from software, using a
+> > > gpio-7seg-matrix driver?
+> >
+> > LED matrices are the displays (like tinyDRM is for).
 >
-> configuring a kernel without symmetrical support for kfi.
+> TinyDRM is for rectangular matrices.
+>
+> Multiple 7-segment displays are usually multiplexed using a matrix,
+> using 7 (or 8) lines shared by the corresponding segments of all
+> displays, and one common line per display.
+> https://embedded-lab.com/blog/wp-content/uploads/2011/03/Lab11_Circuit_Se=
+venSegmentMultiplexing.jpg
 
-Nit: typo.
+Yes, that's what I call "dynamic" approach (in my translated
+terminology, I dunno the proper English one). With this in mind, you
+can read my message(s) above where I referred to it.
 
-> This probably needs to go to stable. The correct fixes tag for that I am
-> not sure of however, but since CFI_CLANG predates RUST, I blamed the
-> commit adding rust support.
-
-Cc'ing Matthew et al. in case this is a problem for them, but I guess
-we can relax it later as needed.
-
-Cheers,
-Miguel
+--
+With Best Regards,
+Andy Shevchenko
