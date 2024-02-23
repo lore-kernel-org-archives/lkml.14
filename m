@@ -1,83 +1,75 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9C66FA8;
-	Fri, 23 Feb 2024 01:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06D3AD48
+	for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 01:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708650609; cv=none; b=VHklDQi5AgjL1COngpZzzmA8NhiHCPfa5prYyMzfuKWs1NQnvkQrvdA/ijQ6dX/mFlJObZIFXNFoEWIPKLrBojrcUqFANvi6EwCrzXew1amWOTmffXUEeRk6j/y04pP9SFA6esbaacL6eSysG/qk+9uVMMMH9UrC9LWmM7Zg2qY=
+	t=1708650652; cv=none; b=Cex45T1zIK2JWeS0x494gUl75uJ7gij/uHtO29Cl7PmXwV8z1MUuoQs+dMezmOgMJ8Xt2DA5oCBOzUZlng3APxIeNmbzcGH8bsIlL7LYi9DOrAISfzvun+MVaph5pMAV/IrMMsS3/043dGQ6ayY4F/79BITaoL101+1U+nIOlGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708650609; c=relaxed/simple;
-	bh=9BliyxV5UypkRqVKkRhlc0tLlQN8R0mBGtiNxzdTx7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QUeXvYheLnp1zHCTDRpn4EktDzMIXuHmLohkSHxNNGlupKfuZJ0NYCsdaGy+ADGXQLYs23HxnvFweQoIz93O9VPkEeu19ja3AVRz98m+2R6LMZwf/tOWhzCJtuB6MheS2pFlLFzEw6nN+RJ3dSwuM3LdtsbHJRHQFjcXjuHLrMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=h2MXFqEw; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="h2MXFqEw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9BliyxV5UypkRqVKkRhlc0tLlQN8R0mBGtiNxzdTx7k=; b=h2MXFqEw0M3WAbnd2IJa2IppmE
-	fVLBz+aXxtrxqccq/KVGb1DOc2NmtnMoSc0d6ikKHN7VPiU6/+BP0DtfijoEgJd6byCCfmanJkbRW
-	WpC30SqMt4HGGPg/yD8tZhmDe+8vAJE4fXsEXSZSTZWhOS2KqTEBWDeVzAb7pf7EkaTpw4+bK4XM/
-	fhU/IjGM81bFoXLvELDe6O6ppChN4XdQ//Bfpwl7ZivI7dl0Uneypwmgaw00reYyl/x7fguDyWSAp
-	4LmI80avmet4AiWE5xBbVkq96CnPthIW9YCIfqAy8B4hqDhu/SXWqWEu9JGbZ4AsAI7oRvr5vMzet
-	bTPLf4ZA==;
-Received: from [179.232.147.2] (helo=[192.168.0.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rdK48-002WHW-N1; Fri, 23 Feb 2024 02:09:29 +0100
-Message-ID: <85cdc364-e19f-625a-16e4-4efc6451fc7d@igalia.com>
-Date: Thu, 22 Feb 2024 22:09:20 -0300
+	s=arc-20240116; t=1708650652; c=relaxed/simple;
+	bh=eKSHPiYO+MMybgl4oNeCKlbZlM9yRQY6muenBaDcbr4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QzlAHZ+jmmo6jHc38CUDcj3h4E+yNlY/dG2Fc8Oj62bttIP5LP3L5hsQrk7E7Yc8seeeuC9m4tUpougI374C/auDKa5euPFekMOvvqE225tIw4kzd058YERRM9vElAOPuwx2++u5mtC9zZADJiYkd1IVyg0RPTVtcj5nQB9BGTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id A757DA17A0;
+	Fri, 23 Feb 2024 01:01:56 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf10.hostedemail.com (Postfix) with ESMTPA id 5D4F82F;
+	Fri, 23 Feb 2024 01:01:54 +0000 (UTC)
+Message-ID: <e51c5e6fe02bcc5a487cae063fe8f440013d0ca9.camel@perches.com>
+Subject: Re: [PATCH 2/2] checkpatch: Don't check for unified diff format in
+ git sendemail headers
+From: Joe Perches <joe@perches.com>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>,  Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ kernel-team@android.com, linux-kernel@vger.kernel.org
+Date: Thu, 22 Feb 2024 17:01:53 -0800
+In-Reply-To: <CAGETcx-mNt+_ST0opQ=_M1ZJK1acf8Rr0VqaAUskyig5YwL_dw@mail.gmail.com>
+References: <20240222051539.3001988-3-saravanak@google.com>
+	 <20240222051539.3001988-4-saravanak@google.com>
+	 <ffec7c7b8eb86f573e420e0582075ba1e75d0e54.camel@perches.com>
+	 <CAGETcx-mNt+_ST0opQ=_M1ZJK1acf8Rr0VqaAUskyig5YwL_dw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [syzbot] [mm?] BUG: unable to handle kernel paging request in
- copy_from_kernel_nofault
-Content-Language: en-US
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "x86@kernel.org" <x86@kernel.org>,
- Jann Horn <jannh@google.com>, Daniel Borkmann <daniel@iogearbox.net>,
- Alexei Starovoitov <ast@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Borislav Petkov <bp@alien8.de>, John Fastabend <john.fastabend@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, bpf <bpf@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- linux-kernel <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- "luto@kernel.org" <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>
-References: <87r0jwquhv.ffs@tglx>
- <c4c422ac-d017-9944-7d03-76ad416b19a4@igalia.com>
- <CAADnVQ+9vTBj9GgxotLF0_oV7cNFRebmcq_DNUm+cRJHQXCz1Q@mail.gmail.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <CAADnVQ+9vTBj9GgxotLF0_oV7cNFRebmcq_DNUm+cRJHQXCz1Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 5D4F82F
+X-Stat-Signature: 84emiutu6wa9xscooj8xczjp9shqhzcs
+X-Rspamd-Server: rspamout04
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18RgCT5QkfnPaQE88ohROxOK5TC7IviFVI=
+X-HE-Tag: 1708650114-305781
+X-HE-Meta: U2FsdGVkX18LMVA0VWZJ4aeIuZ0cEqbn+W2bLZQwLu/PawQk8Fmel/P/PKvSSHePE8VTYmmrZJ650BTvuU6B9xN2HeLNa0z/wFZD9OWbg/tEIQOX8OcHLTvkQRYQYttrDalIVVOjjKqCxF7H2VWE0xRa7BlBRZsJeBR/pWiAWnVJwwMum2slC1u/kKXsnT1H5PvDeVp+pOVxisS5RBMIjWxWeFmWrSOcB6DtPYBCpijm5x3Rh6HJMYjd1bd5jDBhUdgnBO5Gy/Oa9V0XbKEzlQbFS+uK/zyiW+DwshZgikfUCbHNlfhhQ/Vn6d6YAw438kr5w62DlKqgEQUvcdeV4Jf3Md0RDZYliBLQhLtPtF/9wSuEqOcpMMLdwDuofOyl
 
-On 22/02/2024 13:04, Alexei Starovoitov wrote:
-> [...]
-> The fix is bpf and net trees and probably will be sent to Linus today
-> as part of net PR.
+On Thu, 2024-02-22 at 16:45 -0800, Saravana Kannan wrote:
+> On Thu, Feb 22, 2024 at 12:54=E2=80=AFAM Joe Perches <joe@perches.com> wr=
+ote:
+> >=20
+> > On Wed, 2024-02-21 at 21:15 -0800, Saravana Kannan wrote:
+> > > When checkpatch is used as a git sendemail-validate hook, it's also p=
+assed
+> > > in the email header for sanity check.
+> >=20
+> > Why?
+> >=20
+> > If so, why not use a front-end script to stop/remove
+> > the file from being scanned by checkpatch?
+>=20
+> Sure, I could do that. But this also makes it easier for people to
+> start using checkpatch. Or I can put up a git hook wrapper script in
+> here for people to symlink into their .git/hooks that does this.
+>=20
+> I'd prefer the lazy route of not creating a 1 line wrapper script :)
 
-Thanks a lot Alexei!
+I'd not.  checkpatch is for _patches_.
+Don't feed stuff to it that isn't patches and expect good results.
 
-So, for completeness / archiving, the patch was now split in 2 and the
-links are:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=ee0e39a63b7
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=32019c659ec
-
-Cheers,
-
-
-Guilherme
