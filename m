@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93F04EB5E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93CF4EB5D;
 	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708810396; cv=none; b=tE/aEsqvqTtY+ZPqt2oCR5gLoCqe5q/2DdjKopPN3c4qSat2SIZtuLTsjlNTRPNtZCFv6WO39piA/xu01Silrfy1J9p3pEfi1pr/jyh0vcZ8yoKGSjkAfnZuL18lN6s64kFFqGzFBeoqaVBNxDDN+PY0638+jNY7sP4mqtHT8ts=
+	t=1708810396; cv=none; b=MHizt+UyeAnIKc0UH47cL2CB+Rtl56PIQ3DavYBTK5hidkhaCP5wuMQkvz2LYFOcHezoEqNvODd8KrsOxbcMwFV+FHLQnRjw+whHQpWNX5zZFr0v1VY/nv6bXsiVQ84qrxXyKG/L7Ep1TIHb8jWz6bMhRCiitV6F237gaJE9oyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708810396; c=relaxed/simple;
-	bh=jWTFkWLAfHQn/N4QeNXzUQZEB7hyrlDD3WfPhQ90sdk=;
+	bh=RJWvlSP6BsU9o2+sb1U+a07qsHtOTURxzuqmLpqHlu4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PYYt8XYNf6pm113GhvYVjIcAbr+60r+kJ5xC6MUDSb83Ogl/gxxdba0OH9dZQjKii7/MjnpowK7y2d9VL945ui6lRNO2CmafmhlZyp+RdQTDu8Me1WVNiNGpzZNz5m8Pd1gg99t/c1goB4vzweaKghPPSXJ5SqnOEZZ8D4Q0PGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNTIYTLp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NniliG8a0HWjvFNEmSc6JFc6ukB7RlpBdioitwwXqPAyunde5L78vg/3ufrGGEBXIFgPSYOODJ3X9Xk4wolD7ufN227jIKkjtn8OFKGFRQLUhf9O3cgieQ6uDz4xy67x5zj/prF33G+XqbLbUB8v0H4/eSSwvj7mEB+SNbFYR/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjOqLu+u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNTIYTLp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81332C43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjOqLu+u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF45C43394;
 	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708810395;
-	bh=jWTFkWLAfHQn/N4QeNXzUQZEB7hyrlDD3WfPhQ90sdk=;
+	bh=RJWvlSP6BsU9o2+sb1U+a07qsHtOTURxzuqmLpqHlu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GNTIYTLp21L8vVOD+pJU45PCPk9yav+0yCRZ1m8oA2vuxEhxF+QdPp5cY8Y0HkXkP
-	 WRNa6tv5Rk8XBPOxpdLOxf49zOhnIzDV0ZCNUkMPN/6cowFCsHgADNFfkxuY2WK7rV
-	 JUDpoPqOabMrgnUak6BK8SKlZE5LaqxHH2yRZld8DaNhaw3otnFDsd10EKJ9KZPMip
-	 63FZ82IsBWI0vmySro3dbaySU2TV8ph/lfsiDLwSNZyyQ4Zi7PDsYrJXGFqkE0ffV9
-	 e8rPVY+rq9g19UwqBDw8Vzy56UdDtIQRCTYoCXWq162s8FLkx2PfGU0JC3hEsOwYGs
-	 kUY4UrnwZAH4Q==
+	b=kjOqLu+uHM4d+W/Se6odN4WXKol5SbtQaPSmwK6EF3keW++qBVeySz/+qSPoU7uSW
+	 CcqNf2tZOs4uK3R76Cv8Xn7LA86SUyIbKpAfWn3xf8/6Isq0uDXP8BCQ+Y6IDIRghU
+	 rLdYhY3I8kdxKsCe9sOFKYZnN/qEZnvF/OmNdkBWAYDAi2al/XskajzvMjZ6Xx9xh/
+	 WBEc2ULY/6iRi58Y5Mj23oH1LWe9027Ymcxo3sToCZzj3aItp+yOTZqsWP8z1j7YNN
+	 xpFvOwauScsZQCcrjEosnx0IsVJBUFU22bHlgO5S6NNFCGCJhPg00E2nhQIIJ7OKHr
+	 FKRroXtW7wDwA==
 Received: by mercury (Postfix, from userid 1000)
-	id 26F261060EF5; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
+	id 05B3E1060E5B; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -44,10 +44,11 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	Mark Brown <broonie@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 10/16] ARM: dts: imx6ul: add missing #thermal-sensor-cells
-Date: Sat, 24 Feb 2024 22:29:42 +0100
-Message-ID: <20240224213240.1854709-11-sre@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 05/16] dt-bindings: soc: imx: fsl,imx-iomuxc-gpr: add imx6
+Date: Sat, 24 Feb 2024 22:29:37 +0100
+Message-ID: <20240224213240.1854709-6-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240224213240.1854709-1-sre@kernel.org>
 References: <20240224213240.1854709-1-sre@kernel.org>
@@ -59,27 +60,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix the following warning found via CHECK_DTBS:
+Add compatibles used by different i.MX6 variants to the i.MX IOMUX
+Controller GPR binding.
 
-tempmon: '#thermal-sensor-cells' is a required property
-
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- arch/arm/boot/dts/nxp/imx/imx6ul.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml   | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-index 9eb4eee0c272..45b7605ac381 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-@@ -638,6 +638,7 @@ tempmon: tempmon {
- 					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
- 					nvmem-cell-names = "calib", "temp_grade";
- 					clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
-+					#thermal-sensor-cells = <0>;
- 				};
- 			};
- 
+diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml b/Documentation/devicetree/bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml
+index 1da1b758b4ae..8451cb4dd87c 100644
+--- a/Documentation/devicetree/bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml
++++ b/Documentation/devicetree/bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml
+@@ -17,7 +17,23 @@ properties:
+   compatible:
+     oneOf:
+       - items:
+-          - const: fsl,imx8mq-iomuxc-gpr
++          - enum:
++              - fsl,imx6q-iomuxc-gpr
++              - fsl,imx8mq-iomuxc-gpr
++          - const: syscon
++          - const: simple-mfd
++      - items:
++          - enum:
++              - fsl,imx6sl-iomuxc-gpr
++              - fsl,imx6sll-iomuxc-gpr
++              - fsl,imx6ul-iomuxc-gpr
++          - const: fsl,imx6q-iomuxc-gpr
++          - const: syscon
++      - items:
++          - enum:
++              - fsl,imx6sx-iomuxc-gpr
++              - fsl,imx7d-iomuxc-gpr
++          - const: fsl,imx6q-iomuxc-gpr
+           - const: syscon
+           - const: simple-mfd
+       - items:
 -- 
 2.43.0
 
