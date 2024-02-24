@@ -1,26 +1,27 @@
 Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20FD3F9D8;
-	Sat, 24 Feb 2024 13:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C26B29438;
+	Sat, 24 Feb 2024 13:55:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708782912; cv=none; b=WULfPpypaG+J1Vp+Eun1iYF+Ybd9H4+iD6kV61Ht4ysHDul/t7G1rhb57OQufz77JsvoAtaaEeVotn9Z2fpvSqkqX9Rj7WIYaW719xcwJs/PSbIs8ewvV2BBqm56zyjsTgOshyP7ajxsMC6/qCipo4k3WYqUHLcxB3z0nomja6k=
+	t=1708782912; cv=none; b=NpsWXJcTXdq0fBERvwgcoxUoYCNqmf5RfAt9dktHYoMUpuiWPqZ8SAP0BssqhclVPRmiwUVmL/4R20I/XhyAKkt37QwLuJ98uvP6fSEoQynBuZ/PxQTPEyvQmsCsPyglzm9JmGa6VHPibvX4DrDuY0EQGewouaGk1Ae3Xlpdpjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708782912; c=relaxed/simple;
-	bh=ZdTOrLkg/qf7wFKH1nhH7OcmYSUdowUaRsJjf+n31IQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dqvOn/VPi9Hnc2fgT5fy26zG/4k9A3GUF6ERlq91wq8H/43v28rbwaSJAmCgLSnx2tYTazBdf6aPvMp5Pr3QpU//4HDAnAxPKWN1q+8KqYD/irrOUhQVyNRrJQXpFyclsGuT3e+MCo98ZFvfX3xocsgk0VNI7xCtUgyYtkmKD5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=ghV2nPFV; arc=none smtp.client-ip=195.181.215.36
+	bh=worLZTo9a3xOqnG2MGSIZHpGnCKBAdHSzTO+24Aiyj8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VH4OMuQ6WNQq2Zv0OuTQ+U0iZ3UsPSdLden5+BAOH6CaFTMHSfxSjo5JP2S7MPP9oTrpgaptlZVh62ZxqkYlH3Igy769FhxPG5ZdbcJ+7i4xx1pGW8TKgKX53KclO4iJD1V6FXxSuEaene13FLstNfnEUK7ewqsvnPC27tjIJEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=tn8/8t7m; arc=none smtp.client-ip=195.181.215.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="ghV2nPFV"
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="tn8/8t7m"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1708782907; bh=ZdTOrLkg/qf7wFKH1nhH7OcmYSUdowUaRsJjf+n31IQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ghV2nPFVjKO14UGccN3rXpU5361OkGdsnlFc+EPQiEijflmKOSJvXVVnOWqERaLia
-	 v8SBR8AvGUndbw/tLtwCjCu9YOR9GSD0/g/k87i40dulFob/BqRh9sn1Qv7W5KbhpD
-	 rJArs/+k/ODf+1XKCMRUT/LMNlw7oWZswM53gSVk=
+	t=1708782908; bh=worLZTo9a3xOqnG2MGSIZHpGnCKBAdHSzTO+24Aiyj8=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=tn8/8t7mgo1t0W+dgEr3h18KJxNXgTwIDGoRwGL0K1ToGMr+JXPkjDgWyZH3WlDaQ
+	 ++ktmgqP+wztmcEKw37RGrWx2mGWU7p/XBN+Mxm9xwgW40Rqm6pGiFojY+B0rFK4gF
+	 nuR/lqe88VaCCdfVDJ87ucvKDna7KxuCUsKoaukg=
 From: =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megi@xff.cz>
 To: linux-kernel@vger.kernel.org,
 	Liam Girdwood <lgirdwood@gmail.com>,
@@ -38,58 +39,49 @@ Cc: Ondrej Jirman <megi@xff.cz>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-sunxi@lists.linux.dev
-Subject: [RESEND PATCH v2 0/5] Add support for jack detection to codec present in A64 SoC
-Date: Sat, 24 Feb 2024 14:54:53 +0100
-Message-ID: <20240224135501.3822390-1-megi@xff.cz>
+Subject: [RESEND PATCH v2 1/5] dt-bindings: sound: Add jack-type property to sun8i-a33-codec
+Date: Sat, 24 Feb 2024 14:54:54 +0100
+Message-ID: <20240224135501.3822390-2-megi@xff.cz>
+In-Reply-To: <20240224135501.3822390-1-megi@xff.cz>
+References: <20240224135501.3822390-1-megi@xff.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Ondrej Jirman <megi@xff.cz>
 
-This series adds support for jack detection to this codec. I used
-and tested this on Pinephone. It works quite nicely. I tested it
-against Android headset mic button resistor specification.
+The codec driver needs to know what jack connector it is connected to
+on the board. Add proprty to describe the type of connector.
 
-The patches are improved and debugged version of the original
-ones from Arnaud Ferraris and Samuel Holland, imrpoved to better
-handle headset button presses and with more robust plug-in/out
-event debouncing.
+Signed-off-by: Ondrej Jirman <megi@xff.cz>
+---
+ .../bindings/sound/allwinner,sun8i-a33-codec.yaml        | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Please take a look. :)
-
-v2:
-- use set_jack/get_jack_type
-- get rid of some custom poking inside card internals to figure
-  out what kind of jack port we should setup the codec for
-- read jack-type from OF as suggested here: 
-  https://elixir.bootlin.com/linux/latest/source/sound/soc/soc-component.c#L288
-- add DT bindings
-
-Thank you very much,
-	Ondřej Jirman
-
-Arnaud Ferraris (2):
-  ASoC: sun50i-codec-analog: Enable jack detection on startup
-  ASoC: sun8i-codec: Implement jack and accessory detection
-
-Ondrej Jirman (1):
-  dt-bindings: sound: Add jack-type property to sun8i-a33-codec
-
-Samuel Holland (2):
-  ASoC: sun50i-codec-analog: Move suspend/resume to set_bias_level
-  ASoC: sun8i-codec: Enable bus clock at STANDBY and higher bias
-
- .../sound/allwinner,sun8i-a33-codec.yaml      |   9 +
- sound/soc/sunxi/sun50i-codec-analog.c         |  73 +++-
- sound/soc/sunxi/sun8i-codec.c                 | 359 +++++++++++++++++-
- 3 files changed, 421 insertions(+), 20 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
+index 63eadc4200ac..399fc00ad3f4 100644
+--- a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
++++ b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
+@@ -44,6 +44,15 @@ properties:
+       - const: bus
+       - const: mod
+ 
++  jack-type:
++    enum:
++      - headset
++      - headphone
++    description:
++      Type of jack connector connected to the codec. This can be either
++      a 3-pin headphone connector or 4-pin headset connector. If not
++      specified, jack detection is disabled.
++
+ required:
+   - "#sound-dai-cells"
+   - compatible
 -- 
 2.43.0
 
