@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6434E4F895;
-	Sat, 24 Feb 2024 21:33:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA5F4F5ED;
+	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708810396; cv=none; b=s429co1snvxgdbI4qi1eZLuhHA4UCIASB7vG/8DJ+CPV5DJuN5IuqTtF4bS27HC4M/XxXRo77p6ZiwGeWL+oozA/GHHO0xR2r36zHmgyJrzG82znJbvRLwH4+LrOaoT/fOr61bTxu+xi6j4aQQi0mwg7JcBt9gSJ+d0GUM4QBpw=
+	t=1708810396; cv=none; b=m86L4nbOuFkr0sUf0pN8CkksE8MdroidcIgoZE86TT8IxpKB+Qyox3/hblvnW2COAx5cgsZdBLMxSprxVn+BPOUU4AcmSzTHJFMXOVBcfUjJ6k0lUhsVDbc6u13oSHpVoJDU7K0CrYHYWTPl39WT7lwLcmaweLw2i0YY2+gjcHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708810396; c=relaxed/simple;
-	bh=f8ZOdPiqTOy6xCxg9gehc2swdQK2Ej/4a+drizyr6vU=;
+	bh=2Rf/qADjPS/HdwZc3ACrJCkDkpnzYWtpsvVoZxBWBCU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qmqRHfpsf3EfJ4ZJb4SGJh7F/QX6OOwanBhYQB+R2MWuySmfXjGHuuFu2w6Bz0AwEfAoRU946Kz59EWqWl4vJ7KvkSG2GEvAlnGYR020AOafz0RsGp4T49pLk0QPc6EOC9jXa4ktRm54GRkqsJp8hI/XUHlOSkX3V0hYt+OEvKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtbhlau5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DinkkFt9rmuOu4hsIjAoXF+INPb2C+2LgFIJmiXlYlGJ/eBFdESMmcCB07l/sua4q0nlB+BtBKkW6WK+2t3KBbN6f7dv/o1MMYcv/t1/yUnN+8MAwXbHObEMz+PeGHUhxExH63eXcRIeH8jz9qxBucaFjLNiSluml3PsBkgd9KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfXazH5Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtbhlau5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC9B8C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfXazH5Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C7FAC43330;
 	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708810395;
-	bh=f8ZOdPiqTOy6xCxg9gehc2swdQK2Ej/4a+drizyr6vU=;
+	bh=2Rf/qADjPS/HdwZc3ACrJCkDkpnzYWtpsvVoZxBWBCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qtbhlau5IYCg7dK0OT367gCDahi6NgLQmxBC5UY+fN8rYwVwvoW8FnkCHd8QsIuH/
-	 VL42rgOn2AmQbUTNzz9E7oWaBP/k0YjspgXQ2KoalvkZzBvxk246GEJ8GL5z09C7s5
-	 XzgPqJz7sHU4WUk96RbMj6LEMbbKRKmos+5JuHUwrLaZk9HBALnXnN915S0iypA9Vo
-	 Nlpji1H7YAv+YLFpYdHzlC/H0pqQs5oROXaenYLngkNpb6yy4ygIL3y1HhL2xs3xRZ
-	 dsfgrxTDcUdNARExzhXZhb5+iAMNRCB5wB17QrSQI7vCQPSSYauafQeE0Wr2ZlhNYT
-	 QGDANE8OwhZCA==
+	b=mfXazH5ZaXAKDEC3vp03BtrTcweiBVZ768aSCQofqYk2nxHRnf6V3AEfufcoUY3TZ
+	 ycXH/chm7+O91E2a/G+1r1r45ZjnK4/ZNu+LyNVwxL2MDiqVC5zbC/kQLEmCHhhrXd
+	 Kb2sAQwfcfpCf5OP5pbAMGp+gI9XSYhtQ2hrdOyGF7VCwARWBBa8idAGFszKr/Ic+d
+	 itKK46+9jBauzJz9F0LozMRnlXSXaWYugpbGHsdy0IvZeOYqB39eOFbj1TK2GuDc3V
+	 makOBfdjkT6mxQabYXC660u78LcpyvCPMOBNxQlT15bIO07/d8+wohhl2nz5xrTXfy
+	 9reRJnO1InQyw==
 Received: by mercury (Postfix, from userid 1000)
-	id 331631060EFC; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
+	id 11FFD1060E8C; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -45,10 +45,11 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
+	Michael Yackavage <michaely@ips-yes.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 12/16] ARM: dts: nxp: imx6ul: fix touchscreen node name
-Date: Sat, 24 Feb 2024 22:29:44 +0100
-Message-ID: <20240224213240.1854709-13-sre@kernel.org>
+Subject: [PATCH v4 07/16] dt-bindings: fsl-imx-sdma: fix HDMI audio index
+Date: Sat, 24 Feb 2024 22:29:39 +0100
+Message-ID: <20240224213240.1854709-8-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240224213240.1854709-1-sre@kernel.org>
 References: <20240224213240.1854709-1-sre@kernel.org>
@@ -60,28 +61,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The canonical node name for touchscreens is "touchscreen",
-so update the i.MX6UL "tsc" node accordingly.
+HDMI Audio has been added to the DT binding documentation with an
+incorrect index. DT and the driver use index 26. This happened,
+because the binding is missing MULTI_SAI type, which is using
+index 25.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reported-by: Michael Yackavage <michaely@ips-yes.com>
+Fixes: 7bdbd87d4008 ("dt-bindings: fsl-imx-sdma: Convert imx sdma to DT schema")
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- arch/arm/boot/dts/nxp/imx/imx6ul.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-index 45b7605ac381..8aa365f837ca 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
-@@ -370,7 +370,7 @@ asrc: asrc@2034000 {
- 				};
- 			};
+diff --git a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
+index b95dd8db5a30..37135fa024f9 100644
+--- a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
++++ b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
+@@ -92,7 +92,8 @@ properties:
+               description: needs firmware more than ver 2
+           - Shared ASRC: 23
+           - SAI: 24
+-          - HDMI Audio: 25
++          - Multi SAI: 25
++          - HDMI Audio: 26
  
--			tsc: tsc@2040000 {
-+			tsc: touchscreen@2040000 {
- 				compatible = "fsl,imx6ul-tsc";
- 				reg = <0x02040000 0x4000>, <0x0219c000 0x4000>;
- 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+        The third cell: transfer priority ID
+          enum:
 -- 
 2.43.0
 
