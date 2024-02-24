@@ -1,131 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBB0256A;
-	Sat, 24 Feb 2024 10:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558D824B26
+	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 10:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708770676; cv=none; b=ZLYT1nY7rU8caphpuqG2SyB/f4WGdQqNCz6JyFVHTkxDYsV5UA/ifACdUInaAyU/nu4Wq1OflDnToCD2FRvcUPhstEb74oCBM9YvAIpnNAe1mmOh4IY3LoGdHWblrSeRb/QpUYAuB6qePnJB1cnyOIXIqcWudnShHRwS+tZM9mU=
+	t=1708770690; cv=none; b=A0VVjN+LMqmxBwgoYjIQomBI9KBl/zYNlqCV83sDXo7E5C9TYj/YjG2uDTHB0dhfqczaLClaRaIyLBSBClbuxCM+x444NUlnRfGDLjFZRI15EKZh02kKQm0SJhRQe5NtuYGv4bwGj2ugbPkN16ObGfSfM97bNiiTKJeI5+240aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708770676; c=relaxed/simple;
-	bh=TZhQthnHkKwNMI4yroPtQ74XaWWynkFwbBDf/2R0uvk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kt+C0Mso/u84g+z2EhG+kHQht/yNDr7LfJRgkdEy0CDu2Kl9escjttiWs6lMv3S5XMje683MfABHzIUFmFF07WpbnOKIqRVoFqrlU0H4qNp8aqJkUipBen5sy92ruJBoU4GBZAC1vWRXybMTtI6tsd6NLhncnT7hkncf7TKnJVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bxC+4EYF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708770690; c=relaxed/simple;
+	bh=FKVmx7HpE2ep54ZS8eZHiCvcg/1cKYk/1oKsrQ+s+sU=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=DmD9XYqlqd7xvl8OaSFWQBOwsEdNR2IuqyoG+hQ8uVzXv87bko+vVesNoZhkYQu7vy+jvWibkAjMT2J3+V6jZpZLg4+QKgiyoDcjYvZ5B4w4SN/4u1Z+OInngLdGMan5umdVX5xaKzTaXKFDg6SnTRq7XxLceYPvjxmPcrdDpHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=RHn4+/1V; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bxC+4EYF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFD11C433F1;
-	Sat, 24 Feb 2024 10:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708770675;
-	bh=TZhQthnHkKwNMI4yroPtQ74XaWWynkFwbBDf/2R0uvk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bxC+4EYFJxWaNf/G6e4OGhVbsI0QmGH28VsMqNshP4keEY3Ygk7LhbHw5Pm1ozymL
-	 IUKiVa0ZI262TJzTAGeckk85MaFoBn+JbFgBxqxSzVqaCaeFAYHlRLDqrLnadCzeHt
-	 MQWmB1SG8rdu8qqvPEx+SQ7yWzAsBY0mUSSkOHXkm4vpCxt98cXb6UO5W73d/5aUDP
-	 w3DnLlOMVe661Wyjqd1LEwBQb9DsubqRq1l11XfKyfSzLkU4ZC6wgYW3KUzvhR3oVf
-	 fA1MhUgP68MqBWuE08vlK38ku42IixypkWeLJsZEmSl5RDvU2n262ozWWZLs/YK19N
-	 TnVEej9fWNeGg==
-Message-ID: <42d3ac7d-4b51-4332-8892-a4f03a315a80@kernel.org>
-Date: Sat, 24 Feb 2024 11:31:07 +0100
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="RHn4+/1V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1708770677; bh=JakpM4UpT9WYC+dBrABZ4HnlbAhvwlK1yGteAKNIH+E=;
+	h=From:To:Cc:Subject:Date;
+	b=RHn4+/1VRcSuRNSzoSiK5n9BFOpFwsJEjc6KpepWMwoTPSKO5jiRMO2wjIUPrO2Bw
+	 wpAPIcvcd/YKZbHpH8IY423LoBRcBCqNJf6gIHMbW5vNvxW+yXYa/eUKDxC3E+VCQ/
+	 9O11Aufdogy4FKHLIwaHkayJ6Xs/AP2spcC/F/DY=
+Received: from localhost.localdomain ([153.3.164.50])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id 7861CABA; Sat, 24 Feb 2024 18:30:06 +0800
+X-QQ-mid: xmsmtpt1708770606tm0ddc59u
+Message-ID: <tencent_088804E150842691191FD0021AEE8649EB0A@qq.com>
+X-QQ-XMAILINFO: NDgMZBR9sMmaOdGZZpJJ3799IWdt1+NiWL4BNUWo1Bx4tCkhNDvqXhvPEh/qGL
+	 iBOJlnBuZVivtyd2vNm4pCf3RGWVtqUIn3zJfC1kL0Gjhiok2Y+SWIM02Vt8heXevfTMq6d2zPCT
+	 3v0pi/AkS4hm4VwJamQt75chtZ8VM6h2VGs/3QeXACVajLxYkjEfl7amUr6VoIRhzrlvsCifQTjg
+	 z3uWDpDyBObbYrC7fgLUkoSNf9V+al2J4UyE9ZH4bs7C75br5ytVZ3RIGm3/datk1zh3Om75dwH9
+	 49dDkGcjBWX6yu/6QzpVsegEigXAN/j08HS/ESpiXnESkWLHNmXppdAkf4g/fOcayNU1kCtZzFxe
+	 kqFVu5u388bpsfuLGKpVYLzHgCKIygHiYkLWClvDxo+ywLnP/Qc9xB9hq49+eQNP/tY4hL17MAbe
+	 5hl5j0T3y3npONMOKjVGQ3kp1tEGMjD+QQl3XEtQdRKNijpQHGOcq0/FfBTvQ5PAXoiSnS2odcEo
+	 YRbOC8d6m+3noj8tCbpC9jimpTDO+Z/4iVImY16kp38B9FUnibxFIHfEmODfeDFdxVMGp6YaF2AD
+	 quC51p9pVX2pKaI82ATMleV08QokfwwUV2gd6S50WV4QgareSAqV64fPqD2fiaFEAH/R9VSer6Jk
+	 5sEfkoqb6Rys5O0/46/nvRGNZhFUY9mt7DD/tjUpC63pwhKkL+abBqEmxKzGH5bbes2ZNBTtDiia
+	 QnWS4/37WpxetcLzBMX1R5W3lTgx7qRlnXshcqthwwJPLJdulv84phKNgqTnwWfgSUUDfdxnbxqh
+	 ZDNF4bantifcdeyf/vZKjyyD0EA2seJjYbd0z3lQTwTM3OzN/W8xd3nCMzVFKTxmCmYoBH/1PIIK
+	 Zaiq3zwjIGFtZx49boURPANaxoMpjb9T5Q9i6PoUhbY5gpR5rXwflCB4bi+T9CvV4DYZAknjGTXv
+	 H+MoDsConeTSaAmZfoaK4DLvsFnnjnBBweRHi3JEwEkq9a5ilpYpxGKJ3ui5Z6OQYuxhOLgVLfXm
+	 hNzQWirQ==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: linke li <lilinke99@qq.com>
+To: 
+Cc: lilinke99@qq.com,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] uprobes: use READ_ONCE() to read mm->uprobes_state.xol_area in concurrent environment
+Date: Sat, 24 Feb 2024 18:25:19 +0800
+X-OQ-MSGID: <20240224102519.19874-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] dt-bindings: sound: Add jack-type property to
- sun8i-a33-codec
-Content-Language: en-US
-To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megi@xff.cz>,
- linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Arnaud Ferraris <arnaud.ferraris@collabora.com>,
- linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <20240223015219.3618111-1-megi@xff.cz>
- <20240223015219.3618111-2-megi@xff.cz>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240223015219.3618111-2-megi@xff.cz>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 23/02/2024 02:52, Ondřej Jirman wrote:
-> From: Ondrej Jirman <megi@xff.cz>
-> 
-> The codec driver needs to know what jack connector is connected to
-> on the board. Add proprty to describe the type of connector.
-> 
-> Signed-off-by: Ondrej Jirman <megi@xff.cz>
-> ---
+In function get_xol_area(), mm->uprobes_state.xol_area is read using 
+READ_ONCE() in line 1534
 
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
+1534   area = READ_ONCE(mm->uprobes_state.xol_area); /* ^^^ */
 
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline), work on fork of kernel
-(don't, instead use mainline) or you ignore some maintainers (really
-don't). Just use b4 and everything should be fine, although remember
-about `b4 prep --auto-to-cc` if you added new patches to the patchset.
+while read directly in line 1530
 
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time, thus I will skip this patch entirely till you follow
-the process allowing the patch to be tested.
+1530   	if (!mm->uprobes_state.xol_area)
+1531	    __create_xol_area(0);
 
-Please kindly resend and include all necessary To/Cc entries.
+In the same environment, reads in two places should have the same
+protection.
 
+Signed-off-by: linke li <lilinke99@qq.com>
+---
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Krzysztof
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 929e98c62965..e110941fbc6b 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1527,7 +1527,7 @@ static struct xol_area *get_xol_area(void)
+ 	struct mm_struct *mm = current->mm;
+ 	struct xol_area *area;
+ 
+-	if (!mm->uprobes_state.xol_area)
++	if (!READ_ONCE(mm->uprobes_state.xol_area))
+ 		__create_xol_area(0);
+ 
+ 	/* Pairs with xol_add_vma() smp_store_release() */
+-- 
+2.39.3 (Apple Git-145)
 
