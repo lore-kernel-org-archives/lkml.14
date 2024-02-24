@@ -1,57 +1,57 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FD0241E0
-	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 09:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820661B81F
+	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 09:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708765493; cv=none; b=Eddwk5eEiDBEZwoaFAsgf749k+PWGlD+ee3YjXamr3EQBxiDHmxObTEa2C3svsXq2k69L4D6BSrhiIGg0KXij1wzwwSCLr5D23SJqw7szV04H1o5UNRU0TDwEob6UuotpyUHRNC6dNRQgUDgitdLL+FxYMUDstEPQFEZX0zuBf8=
+	t=1708765497; cv=none; b=iY3hSKM0soP88+Z+FfW4YCApAwFpYTiExX6+iv7MVv3JO7mI9dTxpAyO9M4LQp9o5QVtYeVVD0bZPmemEGs7rDRt9wwnUcZGJtgXY6jT+BgbbxDnqQF0sqxv9i9qAfxVxt7YDuR7ObyHzIzPqCt6zNl8nAwUhXy+OYGo01Ay4tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708765493; c=relaxed/simple;
-	bh=c9aqMhav4KaCgJElWHCUEBVRnJ5cadEhjI/bL0vm03I=;
+	s=arc-20240116; t=1708765497; c=relaxed/simple;
+	bh=ekmIBLlaWKu+GWzGOa6EvRs4/d/ZpqSM2Pqyjmg1O/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DLxWzGI+mioO+UpDZYf6AHGjIGar9X1lMTd8vH0r3QeYw8+77WaNNxr5RWWbJA3yCnqFMvS/lXfLR32OhdxgCsZAS6Fy7Q+BOvCYGDvVw+Vaj6UJTdvkO8IvWFULsIEeX91tdCoSg4sKTBnfZahYYskmowhzGJvm8tNnnnFwkrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=D3J89XkI; arc=none smtp.client-ip=209.85.128.49
+	 MIME-Version:Content-Type; b=kbJmZE6LSTdu7pdFROGl7Tes1MwJN8D01j/RJRuvZAAMwUeq/dD3p7hM5koB1qLiNwrCf1GKus56oYMm9lAIZfkpHk0trllvZl/hltxmgIL2daN8SMCxgjizc7ddhI2Lh4VIxHqHw8u4mHX3B389pm55UDarmv/z6a2NNqPKp/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=Jx4GLIgY; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="D3J89XkI"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-412988c43abso4408995e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 01:04:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Jx4GLIgY"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4129f28a09fso349795e9.3
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 01:04:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1708765489; x=1709370289; darn=vger.kernel.org;
+        d=arista.com; s=google; t=1708765494; x=1709370294; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I/kjGHctWC0Cj09lJisIMBFHNypYEYqrv5pxutZK96A=;
-        b=D3J89XkI/UXWg0eXD6YVVehTuVO8qUhosE21oCx3YLyEHTCChGFMnbFOYylKBud0Uk
-         E9cBNMbc4qH6iA7LaqE8SHmh4GicLRWpAcd859uBADUoXRH81fZOTINIHzpBvw2C5Cde
-         q573aGmzXDF+ShQbTwsxRt43TItEQFdZXwU8uueSWF42t+KQK6JYBop/3JI2RCA6lu31
-         3J2ozyRwgJb5dQmbJfuufSSV47jVHgNMJFz5qhNcAJGKN8sRARaLl2hFjuU1O1iF/8Ne
-         gqpAqRxXdIoXmTd81NG3a6jcw4WhCG4uZjwPTVyobgohiB/rN+/v05QazVeNsJ/2p5gZ
-         6k+g==
+        bh=FuTwnbzDtMh7F3yHVkzWlgR2wGNYW8RXz1s/mbtmpWk=;
+        b=Jx4GLIgYHXyqmSu+OLh3pBMYkyFh05gOApUjpjYqiq3SMBmdZtwStujpVvwYpgXj46
+         vTJ1XNFWAKUTxLG7ObcnOkUHrOKGNQ+WNNnRF1xRm2u3kl1l1u0L0wwt2nsQgyA0yl4X
+         8QF4JLmr+zmywRCPfaybQw8sa+D9vdHV0EzaIjc6AV4nV/EStm2BikHDa2V4DO0UWKP2
+         V6P3MOnQMF6kTZLdr4szK6JuRVknVxNNRVTvzUbpYqmsg1d9M0fCjZVoJFtUIYYY0UIX
+         XY5CT7iO22ZBDCkwooaiH8Hvooz2geCtZPfAQIl1U2IknKg/v2U5Lmt+UtGb3D+Bv+gs
+         MbEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708765489; x=1709370289;
+        d=1e100.net; s=20230601; t=1708765494; x=1709370294;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I/kjGHctWC0Cj09lJisIMBFHNypYEYqrv5pxutZK96A=;
-        b=h67fntWaYwAYGchc+ZiEmNqJNi+UrTl2d5NlOf2jHyL18VzGoJNrUJYw/usIcY6xfa
-         xcaLJfBJeFOqjg0M8sc9Y/VUsb5a9lfKbhzQOe2nYomOHBCrCFOzAePHiV783Fa62TFD
-         PYa4B0PzaDlyxCn0yJkubWpDqOVCFppWvXW8B074g+JfbDoKIiZFEjZZAwgijLDEEVX6
-         sNrY4NDRHn6CWlT8SpfqQCAbg37a4GXW9+t/PeZeMs2AAm7pDUAQdsVObRCBm9abuFYs
-         0fpLHH3jUkhWCDzxBWSCn5aYDum5xbW5q7JhK9BdSykjIlBvRXSUAS0CXqKF+KqE2Q2W
-         sj9g==
-X-Forwarded-Encrypted: i=1; AJvYcCU2pYScsPbar+JBjRcciPjUMNl7ETHV3m7KN5X1FmDMW2BMRC0cxSMb0aH6u3vu0yQrKrvcrl/xWLETRZotyrNwATplQuUARu4nQ245
-X-Gm-Message-State: AOJu0YzZEBamIV2Jl+zQkJgZdAgyjR+IOcPGn8bRbP4WDF2F7z+GreoB
-	7sor9HnC2iIUL577eeGe6Sto8IT6z/ov6jnSvIGbYzjVAvXlxeHdD+xWkV2QVA==
-X-Google-Smtp-Source: AGHT+IHC9EDd0aNctjl1KomHFBi0eOUcuyEsCPJ9GK6ABQgNCDbG9AfofEWrqzq9pkarx60vbRB0RA==
-X-Received: by 2002:a05:600c:5114:b0:412:90ad:2cd4 with SMTP id o20-20020a05600c511400b0041290ad2cd4mr1463620wms.36.1708765488783;
-        Sat, 24 Feb 2024 01:04:48 -0800 (PST)
+        bh=FuTwnbzDtMh7F3yHVkzWlgR2wGNYW8RXz1s/mbtmpWk=;
+        b=X8v+TLn7ywcokbNzi9hMveo51mzFJu/R5389s4YzYcG13kEmJVTGwaJyBXefaDZyG2
+         gl03EKVX+CGiCrwzEJISSns5pq6+SPF69wfV5BlSTrlbKlJHCNEMv5emrYtCDaAiVJye
+         NE/5gyV3h7Q61mkjNRWxW7oh4gHrhlwzX4DrqxTlobMNac8kL95+d3vFr3zWj87YQJwy
+         CZIuP0jxeMZM1FvxSfWUj2ICWaC8I0u7eNmlze8XQ2mwpkFGHVNfdONlqCvV5rgYz2cW
+         zmjg9SPupjUJ8sWv5NW4iRmrRcAcepMbb3ziONCD8Jmmi9kIyQS4RKufCxnOTkbnGQbB
+         cMSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtUOUUDhE94IZMS5WXc0JNBHus2mpKcsNwCW+5+bmY3tlKWzRMU6vbH2kMuQwzdKHmVCQNBQR+wIyxKLpaqCSypLS75ygt+fKdwx/U
+X-Gm-Message-State: AOJu0Yw0Ohw/qBTV7uwvV6M39aI2lBc1gvrtM6TbZ+2hvbAFIIQYvlz0
+	BWkFK29ZYqRFcPp/PJRFd7M6bvd9sTdK8MjbIFTT4MfgJt9IT7S0QHuGs5Wn7A==
+X-Google-Smtp-Source: AGHT+IFjmi7saCM/UfHVyR0TQt+nRXG9hiKhS1Hy2SCvXp/ltJpiumI8VzAUgAFN+AtiuS5NZuYetw==
+X-Received: by 2002:a05:600c:3b90:b0:412:6488:bbff with SMTP id n16-20020a05600c3b9000b004126488bbffmr1332546wms.30.1708765494014;
+        Sat, 24 Feb 2024 01:04:54 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id m6-20020a7bce06000000b00410bca333b7sm5320593wmc.27.2024.02.24.01.04.46
+        by smtp.gmail.com with ESMTPSA id m6-20020a7bce06000000b00410bca333b7sm5320593wmc.27.2024.02.24.01.04.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Feb 2024 01:04:47 -0800 (PST)
+        Sat, 24 Feb 2024 01:04:53 -0800 (PST)
 From: Dmitry Safonov <dima@arista.com>
 To: Eric Dumazet <edumazet@google.com>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -68,9 +68,9 @@ Cc: Dmitry Safonov <dima@arista.com>,
 	linux-kselftest@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Dmitry Safonov <0x7f454c46@gmail.com>
-Subject: [PATCH net-next 04/10] net/tcp: Add tcp-md5 and tcp-ao tracepoints
-Date: Sat, 24 Feb 2024 09:04:12 +0000
-Message-ID: <20240224-tcp-ao-tracepoints-v1-4-15f31b7f30a7@arista.com>
+Subject: [PATCH net-next 07/10] selftests/net: Provide test_snprintf() helper
+Date: Sat, 24 Feb 2024 09:04:15 +0000
+Message-ID: <20240224-tcp-ao-tracepoints-v1-7-15f31b7f30a7@arista.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@arista.com>
 References: <20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@arista.com>
@@ -82,532 +82,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.13-dev-b6b4b
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708765347; l=17170; i=dima@arista.com; s=20231212; h=from:subject:message-id; bh=c9aqMhav4KaCgJElWHCUEBVRnJ5cadEhjI/bL0vm03I=; b=flCvV/0RM9XwbyalViJHwSnrsXbQcR35PrcyN+gmMXZtMsvul2h+9kEElnUdAVxYOAO4EP7fA +3El6tFZlWAAY3TkobZstPQEiWqPc+NSn2uwMMAQ8PjvtW7XDO2hT4V
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708765347; l=1992; i=dima@arista.com; s=20231212; h=from:subject:message-id; bh=ekmIBLlaWKu+GWzGOa6EvRs4/d/ZpqSM2Pqyjmg1O/Q=; b=SGrLpjSzyoyJAX0/GI418io3uNbysLNAQ/zBPgtrgvHzRmp5sbt/Fl6o4nB0s9pLOE0EsixHB WIzmgkJA7qtATuXNnV7O0XD+Jk0vg11taa5p18BPXzBk167YiCxddP+
 X-Developer-Key: i=dima@arista.com; a=ed25519; pk=hXINUhX25b0D/zWBKvd6zkvH7W2rcwh/CH6cjEa3OTk=
 Content-Transfer-Encoding: 8bit
 
-Instead of forcing userspace to parse dmesg (that's what currently is
-happening, at least in codebase of my current company), provide a better
-way, that can be enabled/disabled in runtime.
+Re-invented std::stringstream :-)
 
-Currently, there are already tcp events, add hashing related ones there,
-too. Rasdaemon currently exercises net_dev_xmit_timeout,
-devlink_health_report, but it'll be trivial to teach it to deal with
-failed hashes. Otherwise, BGP may trace/log them itself. Especially
-exciting for possible investigations is key rotation (RNext_key
-requests).
+No need for buffer array - malloc() it.
+It's going to be helpful of path concat printings.
 
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- include/trace/events/tcp.h | 317 +++++++++++++++++++++++++++++++++++++++++++++
- net/ipv4/tcp.c             |   7 +
- net/ipv4/tcp_ao.c          |  13 ++
- net/ipv4/tcp_input.c       |   8 +-
- net/ipv4/tcp_output.c      |   2 +
- 5 files changed, 345 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/tcp_ao/lib/aolib.h | 56 ++++++++++++++++++++++----
+ 1 file changed, 49 insertions(+), 7 deletions(-)
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 7b1ddffa3dfc..5065000aad93 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -419,6 +419,323 @@ TRACE_EVENT(tcp_cong_state_set,
- 		  __entry->cong_state)
- );
+diff --git a/tools/testing/selftests/net/tcp_ao/lib/aolib.h b/tools/testing/selftests/net/tcp_ao/lib/aolib.h
+index fbc7f6111815..fdf44d176e0b 100644
+--- a/tools/testing/selftests/net/tcp_ao/lib/aolib.h
++++ b/tools/testing/selftests/net/tcp_ao/lib/aolib.h
+@@ -37,17 +37,59 @@ extern void __test_xfail(const char *buf);
+ extern void __test_error(const char *buf);
+ extern void __test_skip(const char *buf);
  
-+DECLARE_EVENT_CLASS(tcp_hash_event,
-+
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+
-+	TP_ARGS(sk, skb),
-+
-+	TP_STRUCT__entry(
-+		__field(__u64, net_cookie)
-+		__field(const void *, skbaddr)
-+		__field(const void *, skaddr)
-+		__field(int, state)
-+
-+		/* sockaddr_in6 is always bigger than sockaddr_in */
-+		__array(__u8, saddr, sizeof(struct sockaddr_in6))
-+		__array(__u8, daddr, sizeof(struct sockaddr_in6))
-+		__field(int, l3index)
-+
-+		__field(__u16, sport)
-+		__field(__u16, dport)
-+		__field(__u16, family)
-+
-+		__field(bool, fin)
-+		__field(bool, syn)
-+		__field(bool, rst)
-+		__field(bool, psh)
-+		__field(bool, ack)
-+	),
-+
-+	TP_fast_assign(
-+		const struct tcphdr *th = (const struct tcphdr *)skb->data;
-+
-+		__entry->net_cookie = sock_net(sk)->net_cookie;
-+		__entry->skbaddr = skb;
-+		__entry->skaddr = sk;
-+		__entry->state = sk->sk_state;
-+
-+		memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-+		memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-+		TP_STORE_ADDR_PORTS_SKB(__entry, skb);
-+		__entry->l3index = inet_sdif(skb) ? inet_iif(skb) : 0;
-+
-+		/* For filtering use */
-+		__entry->sport = ntohs(th->source);
-+		__entry->dport = ntohs(th->dest);
-+		__entry->family = sk->sk_family;
-+
-+		__entry->fin = th->fin;
-+		__entry->syn = th->syn;
-+		__entry->rst = th->rst;
-+		__entry->psh = th->psh;
-+		__entry->ack = th->ack;
-+	),
-+
-+	TP_printk("net=%llu state=%s family=%s src=%pISpc dest=%pISpc L3index=%d [%c%c%c%c%c]",
-+		  __entry->net_cookie,
-+		  show_tcp_state_name(__entry->state),
-+		  show_family_name(__entry->family),
-+		  __entry->saddr, __entry->daddr,
-+		  __entry->l3index,
-+		  __entry->fin ? 'F' : ' ',
-+		  __entry->syn ? 'S' : ' ',
-+		  __entry->rst ? 'R' : ' ',
-+		  __entry->psh ? 'P' : ' ',
-+		  __entry->ack ? '.' : ' ')
-+);
-+
-+DEFINE_EVENT(tcp_hash_event, tcp_hash_bad_header,
-+
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_ARGS(sk, skb)
-+);
-+
-+DEFINE_EVENT(tcp_hash_event, tcp_hash_md5_required,
-+
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_ARGS(sk, skb)
-+);
-+
-+DEFINE_EVENT(tcp_hash_event, tcp_hash_md5_unexpected,
-+
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_ARGS(sk, skb)
-+);
-+
-+DEFINE_EVENT(tcp_hash_event, tcp_hash_md5_mismatch,
-+
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_ARGS(sk, skb)
-+);
-+
-+DEFINE_EVENT(tcp_hash_event, tcp_hash_ao_required,
-+
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_ARGS(sk, skb)
-+);
-+
-+DECLARE_EVENT_CLASS(tcp_ao_event,
-+
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
-+		 const __u8 keyid, const __u8 rnext, const __u8 maclen),
-+
-+	TP_ARGS(sk, skb, keyid, rnext, maclen),
-+
-+	TP_STRUCT__entry(
-+		__field(__u64, net_cookie)
-+		__field(const void *, skbaddr)
-+		__field(const void *, skaddr)
-+		__field(int, state)
-+
-+		/* sockaddr_in6 is always bigger than sockaddr_in */
-+		__array(__u8, saddr, sizeof(struct sockaddr_in6))
-+		__array(__u8, daddr, sizeof(struct sockaddr_in6))
-+		__field(int, l3index)
-+
-+		__field(__u16, sport)
-+		__field(__u16, dport)
-+		__field(__u16, family)
-+
-+		__field(bool, fin)
-+		__field(bool, syn)
-+		__field(bool, rst)
-+		__field(bool, psh)
-+		__field(bool, ack)
-+
-+		__field(__u8, keyid)
-+		__field(__u8, rnext)
-+		__field(__u8, maclen)
-+	),
-+
-+	TP_fast_assign(
-+		const struct tcphdr *th = (const struct tcphdr *)skb->data;
-+
-+		__entry->net_cookie = sock_net(sk)->net_cookie;
-+		__entry->skbaddr = skb;
-+		__entry->skaddr = sk;
-+		__entry->state = sk->sk_state;
-+
-+		memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-+		memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-+		TP_STORE_ADDR_PORTS_SKB(__entry, skb);
-+		__entry->l3index = inet_sdif(skb) ? inet_iif(skb) : 0;
-+
-+		/* For filtering use */
-+		__entry->sport = ntohs(th->source);
-+		__entry->dport = ntohs(th->dest);
-+		__entry->family = sk->sk_family;
-+
-+		__entry->fin = th->fin;
-+		__entry->syn = th->syn;
-+		__entry->rst = th->rst;
-+		__entry->psh = th->psh;
-+		__entry->ack = th->ack;
-+
-+		__entry->keyid = keyid;
-+		__entry->rnext = rnext;
-+		__entry->maclen = maclen;
-+	),
-+
-+	TP_printk("net=%llu state=%s family=%s src=%pISpc dest=%pISpc L3index=%d [%c%c%c%c%c] keyid=%u rnext=%u maclen=%u",
-+		  __entry->net_cookie,
-+		  show_tcp_state_name(__entry->state),
-+		  show_family_name(__entry->family),
-+		  __entry->saddr, __entry->daddr,
-+		  __entry->l3index,
-+		  __entry->fin ? 'F' : ' ',
-+		  __entry->syn ? 'S' : ' ',
-+		  __entry->rst ? 'R' : ' ',
-+		  __entry->psh ? 'P' : ' ',
-+		  __entry->ack ? '.' : ' ',
-+		  __entry->keyid, __entry->rnext, __entry->maclen)
-+);
-+
-+DEFINE_EVENT(tcp_ao_event, tcp_ao_handshake_failure,
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
-+		 const __u8 keyid, const __u8 rnext, const __u8 maclen),
-+	TP_ARGS(sk, skb, keyid, rnext, maclen)
-+);
-+
-+DEFINE_EVENT(tcp_ao_event, tcp_ao_wrong_maclen,
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
-+		 const __u8 keyid, const __u8 rnext, const __u8 maclen),
-+	TP_ARGS(sk, skb, keyid, rnext, maclen)
-+);
-+
-+DEFINE_EVENT(tcp_ao_event, tcp_ao_mismatch,
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
-+		 const __u8 keyid, const __u8 rnext, const __u8 maclen),
-+	TP_ARGS(sk, skb, keyid, rnext, maclen)
-+);
-+
-+DEFINE_EVENT(tcp_ao_event, tcp_ao_key_not_found,
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
-+		 const __u8 keyid, const __u8 rnext, const __u8 maclen),
-+	TP_ARGS(sk, skb, keyid, rnext, maclen)
-+);
-+
-+DEFINE_EVENT(tcp_ao_event, tcp_ao_rnext_request,
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
-+		 const __u8 keyid, const __u8 rnext, const __u8 maclen),
-+	TP_ARGS(sk, skb, keyid, rnext, maclen)
-+);
-+
-+DECLARE_EVENT_CLASS(tcp_ao_event_sk,
-+
-+	TP_PROTO(const struct sock *sk, const __u8 keyid, const __u8 rnext),
-+
-+	TP_ARGS(sk, keyid, rnext),
-+
-+	TP_STRUCT__entry(
-+		__field(__u64, net_cookie)
-+		__field(const void *, skaddr)
-+		__field(int, state)
-+
-+		/* sockaddr_in6 is always bigger than sockaddr_in */
-+		__array(__u8, saddr, sizeof(struct sockaddr_in6))
-+		__array(__u8, daddr, sizeof(struct sockaddr_in6))
-+
-+		__field(__u16, sport)
-+		__field(__u16, dport)
-+		__field(__u16, family)
-+
-+		__field(__u8, keyid)
-+		__field(__u8, rnext)
-+	),
-+
-+	TP_fast_assign(
-+		const struct inet_sock *inet = inet_sk(sk);
-+
-+		__entry->net_cookie = sock_net(sk)->net_cookie;
-+		__entry->skaddr = sk;
-+		__entry->state = sk->sk_state;
-+
-+		memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-+		memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-+		TP_STORE_ADDR_PORTS(__entry, inet, sk);
-+
-+		/* For filtering use */
-+		__entry->sport = ntohs(inet->inet_sport);
-+		__entry->dport = ntohs(inet->inet_dport);
-+		__entry->family = sk->sk_family;
-+
-+		__entry->keyid = keyid;
-+		__entry->rnext = rnext;
-+	),
-+
-+	TP_printk("net=%llu state=%s family=%s src=%pISpc dest=%pISpc keyid=%u rnext=%u",
-+		  __entry->net_cookie,
-+		  show_tcp_state_name(__entry->state),
-+		  show_family_name(__entry->family),
-+		  __entry->saddr, __entry->daddr,
-+		  __entry->keyid, __entry->rnext)
-+);
-+
-+DEFINE_EVENT(tcp_ao_event_sk, tcp_ao_synack_no_key,
-+	TP_PROTO(const struct sock *sk, const __u8 keyid, const __u8 rnext),
-+	TP_ARGS(sk, keyid, rnext)
-+);
-+
-+DECLARE_EVENT_CLASS(tcp_ao_event_sne,
-+
-+	TP_PROTO(const struct sock *sk, __u32 new_sne),
-+
-+	TP_ARGS(sk, new_sne),
-+
-+	TP_STRUCT__entry(
-+		__field(__u64, net_cookie)
-+		__field(const void *, skaddr)
-+		__field(int, state)
-+
-+		/* sockaddr_in6 is always bigger than sockaddr_in */
-+		__array(__u8, saddr, sizeof(struct sockaddr_in6))
-+		__array(__u8, daddr, sizeof(struct sockaddr_in6))
-+
-+		__field(__u16, sport)
-+		__field(__u16, dport)
-+		__field(__u16, family)
-+
-+		__field(__u32, new_sne)
-+	),
-+
-+	TP_fast_assign(
-+		const struct inet_sock *inet = inet_sk(sk);
-+
-+		__entry->net_cookie = sock_net(sk)->net_cookie;
-+		__entry->skaddr = sk;
-+		__entry->state = sk->sk_state;
-+
-+		memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-+		memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-+		TP_STORE_ADDR_PORTS(__entry, inet, sk);
-+
-+		/* For filtering use */
-+		__entry->sport = ntohs(inet->inet_sport);
-+		__entry->dport = ntohs(inet->inet_dport);
-+		__entry->family = sk->sk_family;
-+
-+		__entry->new_sne = new_sne;
-+	),
-+
-+	TP_printk("net=%llu state=%s family=%s src=%pISpc dest=%pISpc sne=%u",
-+		  __entry->net_cookie,
-+		  show_tcp_state_name(__entry->state),
-+		  show_family_name(__entry->family),
-+		  __entry->saddr, __entry->daddr,
-+		  __entry->new_sne)
-+);
-+
-+DEFINE_EVENT(tcp_ao_event_sne, tcp_ao_snd_sne_update,
-+	TP_PROTO(const struct sock *sk, __u32 new_sne),
-+	TP_ARGS(sk, new_sne)
-+);
-+
-+DEFINE_EVENT(tcp_ao_event_sne, tcp_ao_rcv_sne_update,
-+	TP_PROTO(const struct sock *sk, __u32 new_sne),
-+	TP_ARGS(sk, new_sne)
-+);
-+
- #endif /* _TRACE_TCP_H */
- 
- /* This part must be outside protection */
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 5fd61ae6bcc9..81f22d6afe4a 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -279,6 +279,7 @@
- #include <linux/uaccess.h>
- #include <asm/ioctls.h>
- #include <net/busy_poll.h>
-+#include <trace/events/tcp.h>
- 
- /* Track pending CMSGs. */
- enum {
-@@ -4448,6 +4449,7 @@ tcp_inbound_md5_hash(const struct sock *sk, const struct sk_buff *skb,
- 	if (!key && hash_location) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPMD5UNEXPECTED);
- 		tcp_hash_fail("Unexpected MD5 Hash found", family, skb, "");
-+		trace_tcp_hash_md5_unexpected(sk, skb);
- 		return SKB_DROP_REASON_TCP_MD5UNEXPECTED;
- 	}
- 
-@@ -4477,6 +4479,7 @@ tcp_inbound_md5_hash(const struct sock *sk, const struct sk_buff *skb,
- 					      l3index);
- 			}
- 		}
-+		trace_tcp_hash_md5_mismatch(sk, skb);
- 		return SKB_DROP_REASON_TCP_MD5FAILURE;
- 	}
- 	return SKB_NOT_DROPPED_YET;
-@@ -4501,6 +4504,7 @@ tcp_inbound_hash(struct sock *sk, const struct request_sock *req,
- 	if (tcp_parse_auth_options(th, &md5_location, &aoh)) {
- 		tcp_hash_fail("TCP segment has incorrect auth options set",
- 			      family, skb, "");
-+		trace_tcp_hash_bad_header(sk, skb);
- 		return SKB_DROP_REASON_TCP_AUTH_HDR;
- 	}
- 
-@@ -4520,6 +4524,7 @@ tcp_inbound_hash(struct sock *sk, const struct request_sock *req,
- 			tcp_hash_fail("TCP connection can't start/end using TCP-AO",
- 				      family, skb, "%s",
- 				      !aoh ? "missing AO" : "AO signed");
-+			trace_tcp_ao_handshake_failure(sk, skb, keyid, rnext, maclen);
- 			return SKB_DROP_REASON_TCP_AOFAILURE;
- 		}
- 	}
-@@ -4539,12 +4544,14 @@ tcp_inbound_hash(struct sock *sk, const struct request_sock *req,
- 		if (tcp_ao_required(sk, saddr, family, l3index, true)) {
- 			tcp_hash_fail("AO hash is required, but not found",
- 					family, skb, "L3 index %d", l3index);
-+			trace_tcp_hash_ao_required(sk, skb);
- 			return SKB_DROP_REASON_TCP_AONOTFOUND;
- 		}
- 		if (unlikely(tcp_md5_do_lookup(sk, l3index, saddr, family))) {
- 			NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPMD5NOTFOUND);
- 			tcp_hash_fail("MD5 Hash not found",
- 				      family, skb, "L3 index %d", l3index);
-+			trace_tcp_hash_md5_required(sk, skb);
- 			return SKB_DROP_REASON_TCP_MD5NOTFOUND;
- 		}
- 		return SKB_NOT_DROPPED_YET;
-diff --git a/net/ipv4/tcp_ao.c b/net/ipv4/tcp_ao.c
-index 8726aa58e8b6..416cdeaccd07 100644
---- a/net/ipv4/tcp_ao.c
-+++ b/net/ipv4/tcp_ao.c
-@@ -16,6 +16,7 @@
- #include <net/tcp.h>
- #include <net/ipv6.h>
- #include <net/icmp.h>
-+#include <trace/events/tcp.h>
- 
- DEFINE_STATIC_KEY_DEFERRED_FALSE(tcp_ao_needed, HZ);
- 
-@@ -895,6 +896,8 @@ tcp_ao_verify_hash(const struct sock *sk, const struct sk_buff *skb,
- 		tcp_hash_fail("AO hash wrong length", family, skb,
- 			      "%u != %d L3index: %d", maclen,
- 			      tcp_ao_maclen(key), l3index);
-+		trace_tcp_ao_wrong_maclen(sk, skb, aoh->keyid,
-+					  aoh->rnext_keyid, maclen);
- 		return SKB_DROP_REASON_TCP_AOFAILURE;
- 	}
- 
-@@ -911,6 +914,8 @@ tcp_ao_verify_hash(const struct sock *sk, const struct sk_buff *skb,
- 		atomic64_inc(&key->pkt_bad);
- 		tcp_hash_fail("AO hash mismatch", family, skb,
- 			      "L3index: %d", l3index);
-+		trace_tcp_ao_mismatch(sk, skb, aoh->keyid,
-+				      aoh->rnext_keyid, maclen);
- 		kfree(hash_buf);
- 		return SKB_DROP_REASON_TCP_AOFAILURE;
- 	}
-@@ -927,6 +932,7 @@ tcp_inbound_ao_hash(struct sock *sk, const struct sk_buff *skb,
- 		    int l3index, const struct tcp_ao_hdr *aoh)
++static inline char *test_snprintf(const char *fmt, va_list vargs)
++{
++	char *ret = NULL;
++	size_t size = 0;
++	va_list tmp;
++	int n = 0;
++
++	va_copy(tmp, vargs);
++	n = vsnprintf(ret, size, fmt, tmp);
++	if (n < 0)
++		return NULL;
++
++	size = (size_t) n + 1;
++	ret = malloc(size);
++	if (ret == NULL)
++		return NULL;
++
++	n = vsnprintf(ret, size, fmt, vargs);
++	if (n < 0 || n > size - 1) {
++		free(ret);
++		return NULL;
++	}
++	return ret;
++}
++
++__attribute__((__format__(__printf__, 1, 2)))
++static inline char *test_sprintf(const char *fmt, ...)
++{
++	va_list vargs;
++	char *ret;
++
++	va_start(vargs, fmt);
++	ret = test_snprintf(fmt, vargs);
++	va_end(vargs);
++
++	return ret;
++}
++
+ __attribute__((__format__(__printf__, 2, 3)))
+ static inline void __test_print(void (*fn)(const char *), const char *fmt, ...)
  {
- 	const struct tcphdr *th = tcp_hdr(skb);
-+	u8 maclen = tcp_ao_hdr_maclen(aoh);
- 	u8 *phash = (u8 *)(aoh + 1); /* hash goes just after the header */
- 	struct tcp_ao_info *info;
- 	enum skb_drop_reason ret;
-@@ -940,6 +946,8 @@ tcp_inbound_ao_hash(struct sock *sk, const struct sk_buff *skb,
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPAOKEYNOTFOUND);
- 		tcp_hash_fail("AO key not found", family, skb,
- 			      "keyid: %u L3index: %d", aoh->keyid, l3index);
-+		trace_tcp_ao_key_not_found(sk, skb, aoh->keyid,
-+					   aoh->rnext_keyid, maclen);
- 		return SKB_DROP_REASON_TCP_AOUNEXPECTED;
- 	}
+-#define TEST_MSG_BUFFER_SIZE 4096
+-	char buf[TEST_MSG_BUFFER_SIZE];
+-	va_list arg;
++	va_list vargs;
++	char *msg;
  
-@@ -979,6 +987,9 @@ tcp_inbound_ao_hash(struct sock *sk, const struct sk_buff *skb,
- 		current_key = READ_ONCE(info->current_key);
- 		/* Key rotation: the peer asks us to use new key (RNext) */
- 		if (unlikely(aoh->rnext_keyid != current_key->sndid)) {
-+			trace_tcp_ao_rnext_request(sk, skb, current_key->sndid,
-+						   aoh->rnext_keyid,
-+						   tcp_ao_hdr_maclen(aoh));
- 			/* If the key is not found we do nothing. */
- 			key = tcp_ao_established_key(info, aoh->rnext_keyid, -1);
- 			if (key)
-@@ -1043,6 +1054,8 @@ tcp_inbound_ao_hash(struct sock *sk, const struct sk_buff *skb,
- 	atomic64_inc(&info->counters.key_not_found);
- 	tcp_hash_fail("Requested by the peer AO key id not found",
- 		      family, skb, "L3index: %d", l3index);
-+	trace_tcp_ao_key_not_found(sk, skb, aoh->keyid,
-+				   aoh->rnext_keyid, maclen);
- 	return SKB_DROP_REASON_TCP_AOKEYNOTFOUND;
+-	va_start(arg, fmt);
+-	vsnprintf(buf, sizeof(buf), fmt, arg);
+-	va_end(arg);
+-	fn(buf);
++	va_start(vargs, fmt);
++	msg = test_snprintf(fmt, vargs);
++	va_end(vargs);
++
++	if (!msg)
++		return;
++
++	fn(msg);
++	free(msg);
  }
  
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 74c03f0a6c0c..11f4da3aa827 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -3575,8 +3575,10 @@ static void tcp_snd_sne_update(struct tcp_sock *tp, u32 ack)
- 
- 	ao = rcu_dereference_protected(tp->ao_info,
- 				       lockdep_sock_is_held((struct sock *)tp));
--	if (ao && ack < tp->snd_una)
-+	if (ao && ack < tp->snd_una) {
- 		ao->snd_sne++;
-+		trace_tcp_ao_snd_sne_update((struct sock *)tp, ao->snd_sne);
-+	}
- #endif
- }
- 
-@@ -3601,8 +3603,10 @@ static void tcp_rcv_sne_update(struct tcp_sock *tp, u32 seq)
- 
- 	ao = rcu_dereference_protected(tp->ao_info,
- 				       lockdep_sock_is_held((struct sock *)tp));
--	if (ao && seq < tp->rcv_nxt)
-+	if (ao && seq < tp->rcv_nxt) {
- 		ao->rcv_sne++;
-+		trace_tcp_ao_rcv_sne_update((struct sock *)tp, ao->rcv_sne);
-+	}
- #endif
- }
- 
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index e3167ad96567..dcdaf3229de9 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3727,6 +3727,7 @@ struct sk_buff *tcp_make_synack(const struct sock *sk, struct dst_entry *dst,
- #ifdef CONFIG_TCP_AO
- 		struct tcp_ao_key *ao_key = NULL;
- 		u8 keyid = tcp_rsk(req)->ao_keyid;
-+		u8 rnext = tcp_rsk(req)->ao_rcv_next;
- 
- 		ao_key = tcp_sk(sk)->af_specific->ao_lookup(sk, req_to_sk(req),
- 							    keyid, -1);
-@@ -3736,6 +3737,7 @@ struct sk_buff *tcp_make_synack(const struct sock *sk, struct dst_entry *dst,
- 		 * ao_keyid (RFC5925 RNextKeyID), so let's keep it simple here.
- 		 */
- 		if (unlikely(!ao_key)) {
-+			trace_tcp_ao_synack_no_key(sk, keyid, rnext);
- 			rcu_read_unlock();
- 			kfree_skb(skb);
- 			net_warn_ratelimited("TCP-AO: the keyid %u from SYN packet is not present - not sending SYNACK\n",
+ #define test_print(fmt, ...)						\
 
 -- 
 2.43.0
