@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9D84EB4A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93F04EB5E;
 	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708810395; cv=none; b=GOad8wGkmONz6kfbn2w1Dcsdwl14KYVGUn0ctu0aIN7W5w7B5Q49M71CpbhSSPKoc9qOdvj15ZMUXhiLbFkUouzuJAP83x9AiK37a7njG2hLfoH/NNBG3lZN+g5ABMQbmcBoUlHJ3ducPWynoFBU7oflwBsLTwL4HO+uy88QOHI=
+	t=1708810396; cv=none; b=tE/aEsqvqTtY+ZPqt2oCR5gLoCqe5q/2DdjKopPN3c4qSat2SIZtuLTsjlNTRPNtZCFv6WO39piA/xu01Silrfy1J9p3pEfi1pr/jyh0vcZ8yoKGSjkAfnZuL18lN6s64kFFqGzFBeoqaVBNxDDN+PY0638+jNY7sP4mqtHT8ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708810395; c=relaxed/simple;
-	bh=vtAZITKGgVXHTJ0/cBoLL4qU11MSmOF3yKsVn/EyOdc=;
+	s=arc-20240116; t=1708810396; c=relaxed/simple;
+	bh=jWTFkWLAfHQn/N4QeNXzUQZEB7hyrlDD3WfPhQ90sdk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RUka9QhYv1b76C/bgoKueA1NVCjyYWRt2CLK7c34y8WU0Wma7YKMRDCXtrjGmLxorvPAsimYxadZ7GuL0cjMkrz34ymsXvHz5AEkR2FqHJFgLIMtSwB4Eclv4d+w0dv1XWVHRLDbxRHbfgYNxLcagu8stPJua5TbRTqewqQxJuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJqBmAWr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PYYt8XYNf6pm113GhvYVjIcAbr+60r+kJ5xC6MUDSb83Ogl/gxxdba0OH9dZQjKii7/MjnpowK7y2d9VL945ui6lRNO2CmafmhlZyp+RdQTDu8Me1WVNiNGpzZNz5m8Pd1gg99t/c1goB4vzweaKghPPSXJ5SqnOEZZ8D4Q0PGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNTIYTLp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJqBmAWr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 860BDC4166A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNTIYTLp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81332C43390;
 	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708810395;
-	bh=vtAZITKGgVXHTJ0/cBoLL4qU11MSmOF3yKsVn/EyOdc=;
+	bh=jWTFkWLAfHQn/N4QeNXzUQZEB7hyrlDD3WfPhQ90sdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lJqBmAWrapxM2cfz/pKBJptZdGYYRaNf49wb9t4mfQMY3Zx5fAf5T1Qet0kfXnpio
-	 ShYfW5UrBL3vQUezyDJF1RVQ3GRy3Lxtr/PevXKKdRYRhWCdhydake3+8sO3t3L84b
-	 U5MWVDZt9Xammuf4oXgQDDQK3Kz3PSv20AEyw+yy65b7OfBoPEqBUQLe92mRFhdeiN
-	 U6b4j0rSQfc9CHMgdpJr4Wd64EkCjytGF2RF1JYYtCKxpJ2M1+RX6RmQ/Tk7DuNF8g
-	 eSakqUSQ5Vo9IDKit+w6ccqG1QBDAz5b70rvWxr3cIst5rgIM2rYY1WHzptXDRqtl9
-	 166ggc+KHDVCw==
+	b=GNTIYTLp21L8vVOD+pJU45PCPk9yav+0yCRZ1m8oA2vuxEhxF+QdPp5cY8Y0HkXkP
+	 WRNa6tv5Rk8XBPOxpdLOxf49zOhnIzDV0ZCNUkMPN/6cowFCsHgADNFfkxuY2WK7rV
+	 JUDpoPqOabMrgnUak6BK8SKlZE5LaqxHH2yRZld8DaNhaw3otnFDsd10EKJ9KZPMip
+	 63FZ82IsBWI0vmySro3dbaySU2TV8ph/lfsiDLwSNZyyQ4Zi7PDsYrJXGFqkE0ffV9
+	 e8rPVY+rq9g19UwqBDw8Vzy56UdDtIQRCTYoCXWq162s8FLkx2PfGU0JC3hEsOwYGs
+	 kUY4UrnwZAH4Q==
 Received: by mercury (Postfix, from userid 1000)
-	id 1940E1060E90; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
+	id 26F261060EF5; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -44,11 +44,10 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	Mark Brown <broonie@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 08/16] ARM: dts: imx6ull: fix pinctrl node name
-Date: Sat, 24 Feb 2024 22:29:40 +0100
-Message-ID: <20240224213240.1854709-9-sre@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 10/16] ARM: dts: imx6ul: add missing #thermal-sensor-cells
+Date: Sat, 24 Feb 2024 22:29:42 +0100
+Message-ID: <20240224213240.1854709-11-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240224213240.1854709-1-sre@kernel.org>
 References: <20240224213240.1854709-1-sre@kernel.org>
@@ -60,28 +59,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-pinctrl node name must be either pinctrl or pinmux.
+Fix the following warning found via CHECK_DTBS:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+tempmon: '#thermal-sensor-cells' is a required property
+
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- arch/arm/boot/dts/nxp/imx/imx6ull.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/nxp/imx/imx6ul.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ull.dtsi
-index 2bccd45e9fc2..8a1776067ecc 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ull.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ull.dtsi
-@@ -75,7 +75,7 @@ rngb: rng@2284000 {
- 				clocks = <&clks IMX6UL_CLK_DUMMY>;
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
+index 9eb4eee0c272..45b7605ac381 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul.dtsi
+@@ -638,6 +638,7 @@ tempmon: tempmon {
+ 					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+ 					nvmem-cell-names = "calib", "temp_grade";
+ 					clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
++					#thermal-sensor-cells = <0>;
+ 				};
  			};
  
--			iomuxc_snvs: iomuxc-snvs@2290000 {
-+			iomuxc_snvs: pinctrl@2290000 {
- 				compatible = "fsl,imx6ull-iomuxc-snvs";
- 				reg = <0x02290000 0x4000>;
- 			};
 -- 
 2.43.0
 
