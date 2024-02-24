@@ -1,95 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A9EAD54;
-	Sat, 24 Feb 2024 02:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADEDCDF60;
+	Sat, 24 Feb 2024 02:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708743445; cv=none; b=Srah/eK7s0CtO4Sb5Y0vGdQHuUx1jlIZMWDw2Kot8pTTZsRIoM+G1h12KG1FyNPLCqJBXM1dnfBhRgeArnzvu3FYb99jp4OIeWKs+Ldd7f1YGucKR8KK9f4S0MT0ODdbGESH6Jo31VmMIOD6i8cmrJxjJO0R1rtPz3VbLRlQWNU=
+	t=1708743587; cv=none; b=IUTgmyvNIVIEYcEK4C5xTxYMpTa7A3k/iZLkJbpagv2BrhRn7nH29r5eTC1DemeBcCvHyIZ/9srXIzA65AfFpH5lniP5jWHef6z0YwdPknHqxIOtahJ0M/6guftKnIly2M9sBpwR7tekf75U1pVbP8vAv40KrdrdK7xitPqHmPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708743445; c=relaxed/simple;
-	bh=jEHirSoRsFxzzzcf1js6eRmSK2fDWo49/HdLgHj49Tw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=LXY1p5PHIhsztR6VBu/A+rbItVIj5N/w4h9YuUpninEkNnjlSIpzyiopHvuji9Kc+prKW191utx0APGhqKKY8QIXP50DzkPPrZrdEKzW0f9PEpxTNawMSvvrUd5TJQt9Eg8tkJtZdNhLMzZ1ImCDBVbvoto1ZH6PcMs9phrzFgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O68hcKkd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O68hcKkd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12420C433F1;
-	Sat, 24 Feb 2024 02:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708743444;
-	bh=jEHirSoRsFxzzzcf1js6eRmSK2fDWo49/HdLgHj49Tw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=O68hcKkdWjRSKTSvsTpgAvZp/MRTn9n5lDL3wnut27hif4oe+QaI66N3qgtrYOVZ6
-	 S7kh9NV/W7DT7KWldB9hECnQhpjrINkb9xzczIUbsW8pcOy/YlbR8CzC/QAWerQham
-	 9nunOeoi+I3lYH65iTzQoiJQUPeD5MSg74PwjlOy+tLU6LyD9kJ46CcVHt/ndigURp
-	 EN7gIcYkf5Zs4pjiqllogkRw4aOtGa470yIDu+Bn4mmrs2SfBO3YxM4roeMYf7ZA1T
-	 EbVTkHRGQmqhYfEBBBaUMI8vKzylpepDv2EGuQ3Jkvsmy7I3nuQFmhMMfFDJZWDBJb
-	 evWSiIzdqUe3A==
-From: Mark Brown <broonie@kernel.org>
-To: tiwai@suse.com, Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, 
- linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-In-Reply-To: <20240223153910.2063698-1-rf@opensource.cirrus.com>
-References: <20240223153910.2063698-1-rf@opensource.cirrus.com>
-Subject: Re: (subset) [PATCH v2 0/6] ALSA: cs35l56: Apply calibration from
- EFI
-Message-Id: <170874344273.260432.989060891858906599.b4-ty@kernel.org>
-Date: Sat, 24 Feb 2024 02:57:22 +0000
+	s=arc-20240116; t=1708743587; c=relaxed/simple;
+	bh=zcC4poV40hXhdD6shqkx1O5mAMYUvsMHdLQpdJIhhAY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UociwsObqBlrIa0tpjGKpNEK49z0sj5uvcnqfEjeIzDgLS7l60hBBBNR5gOOgCcSUpmNoSVC/wdzV8ZKyLT/7Gyp/D2avi5Wy5+EJmHjVUjz0I2YZvljbt0RcXZJZoVoQ57Hw67J/aAGWqi9nGYzAaMipIHRaDx1homL4wyhQhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 8675892009C; Sat, 24 Feb 2024 03:54:28 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 77EED92009B;
+	Sat, 24 Feb 2024 02:54:28 +0000 (GMT)
+Date: Sat, 24 Feb 2024 02:54:28 +0000 (GMT)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Sam Ravnborg <sam@ravnborg.org>
+cc: Miquel Raynal <miquel.raynal@bootlin.com>, sparclinux@vger.kernel.org, 
+    linux-parport@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, 
+    Andreas Larsson <andreas@gaisler.com>, 
+    Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] sparc32: Use generic cmpdi2/ucmpdi2 variants
+In-Reply-To: <20240223-sam-fix-sparc32-all-builds-v1-1-5c60fd5c9250@ravnborg.org>
+Message-ID: <alpine.DEB.2.21.2402240248560.61493@angie.orcam.me.uk>
+References: <20240223-sam-fix-sparc32-all-builds-v1-0-5c60fd5c9250@ravnborg.org> <20240223-sam-fix-sparc32-all-builds-v1-1-5c60fd5c9250@ravnborg.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-0438c
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 23 Feb 2024 15:39:04 +0000, Richard Fitzgerald wrote:
-> Factory calibration of the speakers stores the calibration information
-> into an EFI variable.
+On Fri, 23 Feb 2024, Sam Ravnborg via B4 Relay wrote:
+
+> Use the generic variants - the implementation is the same.
+> As a nice side-effect fix the following warnings:
 > 
-> This set of patches adds support for applying speaker calibration
-> data from that EFI variable.
+> cmpdi2.c: warning: no previous prototype for '__cmpdi2' [-Wmissing-prototypes]
+> ucmpdi2.c: warning: no previous prototype for '__ucmpdi2' [-Wmissing-prototypes]
 > 
-> The HDA patch (#5) depends on the ASoC patches #2 and #3
-> 
-> [...]
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Andreas Larsson <andreas@gaisler.com>
+> ---
 
-Applied to
+ LGTM.  You may wish to add:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Fixes: 0fcb70851fbf ("Makefile.extrawarn: turn on missing-prototypes globally")
 
-Thanks!
+but otherwise:
 
-[1/6] ASoC: wm_adsp: Add wm_adsp_start() and wm_adsp_stop()
-      commit: 5519ac3a7164d5d1c31879bf5b0d279b58c8e88f
-[2/6] ASoC: cs-amp-lib: Add helpers for factory calibration data
-      commit: 1cad8725f2b98965ed3658bc917090b30adb14fa
-[3/6] ASoC: cs35l56: Add helper functions for amp calibration
-      commit: e1830f66f6c62d288d2c27a7ed18ab93caa0b253
-[4/6] ASoC: cs35l56: Apply amp calibration from EFI data
-      commit: 1326444e93c250ff99eba048f699313ba6acbf2f
-[5/6] ALSA: hda: cs35l56: Apply amp calibration from EFI data
-      commit: cfa43aaa7948be5a701ad4099588cf49d5a02708
+Reviewed-by: Maciej W. Rozycki <macro@orcam.me.uk>
+Tested-by: Maciej W. Rozycki <macro@orcam.me.uk> # build-tested
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+  Maciej
