@@ -1,284 +1,351 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2092.outbound.protection.partner.outlook.cn [139.219.146.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1556423BF;
-	Sat, 24 Feb 2024 01:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.92
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708738047; cv=fail; b=Am42JiQoM8XmUSheSKh9bsAmA2peIP9PyJgMRqJqSMTGIlDEOXE/LPHeD8WLCI9DOuylzrUnKUIcIZyVPidoFec3t5Aq4SRajTe6v1tpIvvFo9xDwFEUgVVk/CDOBlQOM6d/GsRb0qFEDnl/mtPbZwOGEsTXVRTIYxghrWqh1mA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708738047; c=relaxed/simple;
-	bh=RqJhYt/J/Nn4wlLnPTCiGbw3kJ+bjvYVg0GfXqkUu+E=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VISH+2Z8C5xx9HmDDMXQfAJ9kkyxaE4oBjIv40K1KPLwyrqNxqxBw4iozvyxnK+wF4N2TC+8nFc7S1dycejwpTRxTT4MGF1XA6sMKv0QarhSr25VH5Fk5BHbWY4hORF0BFSDLP3wScQsRZFDfTePUjk3VwiSWto4ZHp5Ow+/40Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M+x5hlQyu4JHNkt1Budt5OR8g01AkcgFyaGd3q+1xJ45iYIS72wgxl9VMC1Z5S0UIHocLTcHZAYyRF72bp9Wj+hw/fsnvYeFKwIfxTGIw+h1Or8x9ZsmNne3jYp1XiPL9KdIl+IqLzsSB67ftkkV15FVunN4ymI6CUcwcfkIxnEjTTxQFIoyQwB0q4a4E6Ee3DkLcTGjcX4jOX2Y0tbpEZiimHw5Z+C5rvp1dNBhMvLmP/uddVW9GhDObW3VYCMzQMSzG2jghQ/5oMsjgJxridjAITX2P+12xD+ScrF97adQbEVgIPBCU5Li12G9wp9MB4e/T0WeAibvBDa26QQdZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L5I+lJH1jfBJqp6R5/H7srzSXpFosvkZ7ZEWTS1HEjE=;
- b=nsPh5wdW52UmqAoZVD85zZ12rYYIVcdCqYC9gK+Qqq6Y4E7Q8Sb0XXGVN/vXMcqiqu/rzwa0u5ZNnQ31oqYFP/Wt5gzZM95GOJBWg/P4afm4qHlUnHjWGwYTbsuE0xU8uate2fuaX24fWlwS7NJ//YsOdiwhOSpp+1D0/fFBoipWItOy1E0mp2nEwT/vn+b7iiu7YomEmiAdmtkrbbjPoIOxAr2ZF2ykum/UhgppHz92nWCQH5AFBGxPqruapYw3J8GRxa5ykcE12j7hW2y9MxgoxKykIhUIZ5/sd49aVT3dPrYFsQdBlFx71eH2nXh6BN2EhVJ06JxdQHug8YypKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6) by ZQ0PR01MB1301.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1a::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Sat, 24 Feb
- 2024 01:12:39 +0000
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- ([fe80::d0fb:daf7:3f8b:868c]) by
- ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn ([fe80::d0fb:daf7:3f8b:868c%3])
- with mapi id 15.20.7270.047; Sat, 24 Feb 2024 01:12:39 +0000
-From: JiSheng Teoh <jisheng.teoh@starfivetech.com>
-To: Will Deacon <will@kernel.org>
-CC: Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Dan
- Williams <dan.j.williams@intel.com>, Ilkka Koskinen
-	<ilkka@os.amperecomputing.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Leyfoon Tan
-	<leyfoon.tan@starfivetech.com>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>
-Subject: RE: [PATCH v6 1/4] perf: starfive: Add StarLink PMU support
-Thread-Topic: [PATCH v6 1/4] perf: starfive: Add StarLink PMU support
-Thread-Index: AQHaUpjbN2JwsHfCRUyjP497yEf9PrEX8R2AgADfk2A=
-Date: Sat, 24 Feb 2024 01:12:39 +0000
-Message-ID:
- <ZQ0PR01MB1160A9376461CAE829BEA13AEB54A@ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn>
-References: <20240129095141.3262366-1-jisheng.teoh@starfivetech.com>
- <20240129095141.3262366-2-jisheng.teoh@starfivetech.com>
- <20240223112633.GA10403@willie-the-truck>
-In-Reply-To: <20240223112633.GA10403@willie-the-truck>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1301:EE_
-x-ms-office365-filtering-correlation-id: 04a494b2-f439-499e-070f-08dc34d5b1d1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- u4wHggxmq2e5I9NYayPTs6LIcv7zPc/h2w+imQrfZj5vabAbujxQ+vDDLM5y9wdv5isY/nWuxKVaqCnJswXLZLAkjlnFvygzt941FZ/yWcMWw4qoI/zYZVC0SZT7GeY8godc471bfmjBKbQEDe3tfvPgDqg0sLcw8UEUwLSarO5dHpXuluMcofHyxh3kQiXwN8ZiW9DvFJj0wfbBBsSEl5yQ9xphWgZuL8rVcvPjtoSuIL7CnHOopLXJAYRuUticwzxzs10hBREKv5zS43+LjSI/tiKUlF+2PpZKuk0c2Ex5Q22WlASt8UzeHpdkco3d8FBZRYnXidaTw4OsoLC/F7lt+vmjprXy2klwXyR5SUd1k0yM1UIoMlSivq6U91iKDrAL4TqDrqJS4wdISH3YyVqP/PXQ0JtmlFLtu0zdO12hv3V2DFW0RVQBtz7Ya9Av5329cZ8ArRcSmGXh5Re4Sg+DLbvK7UHzek3fXFnyKgBWNCH1TKD6d1dRRS+PU/U8g/WqpcsoxkN+gFe89WejUfo3sbkR6MnACNjo4+RmCqiTRla7vgfcfCEyVYf78Qx+
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?6v3Z/VWNIwEs474CDbCxZVvayVL7kq8njMwJs3QyS49bpIOQ3ng3aRI2WXRB?=
- =?us-ascii?Q?xaIBpu+YmPNrn4TTg41GMHZCPKoHBlbqkOkyD8SI16TjzrRUT08rdsp6hBmp?=
- =?us-ascii?Q?a2T0YemL1D313Z2lQE2CmVozYwBMZeU70EPtUqHl0CVvK2b/Gl8pC2vF4kmL?=
- =?us-ascii?Q?Kr1oOoifJFYMXGYEsKKOsDhr6D+P2fhh3fs3swBCBlfYySXPMTx45shgwyd3?=
- =?us-ascii?Q?62n4YOMLkZr7XuaR4dhf2SLhHIrfTuaaqb8JHyelpKbaYNh35/Pzd1qf3v77?=
- =?us-ascii?Q?Cam5AkfRv5a2+YkPiDohA6PVrWsGjdonjtydmFHmpW2zlMY4SjO4BZlcHrBV?=
- =?us-ascii?Q?xX213V06kt+1g9/PLqpscvlT4uH+/hSoMNMHp6Sx3XnnyMFhWMCTHCFQXxQt?=
- =?us-ascii?Q?458M6UMvfggWSeEPhMZy2+F8Vpf/ndvumINzPztPM5kiLtde4pfCjajEHRlW?=
- =?us-ascii?Q?czzzkknqXMlgeoonWi/tUofgQQoBCkyihMx/B8XNCCk2ncUFZ9+YIdsG/sd2?=
- =?us-ascii?Q?mcSz5oJv6hOGEfU2FN5F2eIwmgiezoJhCbSacnLJfNIXTebtjn5PKKu3HNeV?=
- =?us-ascii?Q?76U0wy0gkELHIKSlv25Z5FlBzgAh0HB6uJbTiTWI+MknrNY3mQFN4RlgOzPA?=
- =?us-ascii?Q?0zSeCS148zsparkfHU2UHclEbMIy1uH3ZUPlmENgjyKBsqww9PwWEYIPzIiO?=
- =?us-ascii?Q?pGXcJiL/Cl8VEtcpc0ECRZukOGfv9vX/fNHD7CxTLRl1yHcyVIbqQusKyBRi?=
- =?us-ascii?Q?b0i4jriqoADPetBd37kt6YvXmtayzrJlT9+Cvn5/8SF5hRWHXtn6l4phmxg8?=
- =?us-ascii?Q?mZcZomW+FBMEsbnnJU0CM+STTjFWPXCQG/5LfWi0MQUu3R5fWNXJsvQVrSCI?=
- =?us-ascii?Q?4EXqUPlkyYEyeju/dS537m5ylaWepatbf5Gp9ExJK7G7MaBvipJ/f8ad05xB?=
- =?us-ascii?Q?7uMw5HGZVsYQgwx+5ootdongjzyDeY9lB7GjYVo4zK+u2pcWfcWghU1IovWC?=
- =?us-ascii?Q?PCMuW26WMciadc8udlKtP5/8dRFFHLPkPZU87kGNpO9zp4JJes1gDsflPBAy?=
- =?us-ascii?Q?2rQcNk+G6IxKbzxq/ZX16+2B5lTUVyBenw95Bch53nvpnv9VZXkJ28ibAUx3?=
- =?us-ascii?Q?8O2zICyDu26gqizwt/tnrUxH2SyorkRq2a42E5jm2yfkw5DaBVUzBKhv1rrR?=
- =?us-ascii?Q?iyF2Chm2AqLoUIuoZTc8YPEFu8W2Rgr/WiOZ8DyqVBS/Ks5c0s3Z9s3DD3n2?=
- =?us-ascii?Q?GlM/CR3ej/0a+m9j3NbY6F8zO0D4SnMypbMNRAlAYX8z0kDYU9A43UobADVO?=
- =?us-ascii?Q?0U3U6CcRL3MHP7dgAxPCyhRBO0lqrveAeJWNTw6FgtLbdtp2Or6kHRfXSMjK?=
- =?us-ascii?Q?9rLhVEef3XjKYHR5Ve0B1aW17JH3osDSfHFCeMiSyYdd/ywUbpgmHCeOXF9P?=
- =?us-ascii?Q?74xGZ8Byb5uz+gjUURtelCsmkhZZVrQqqV8YYRfhfFWD0UcnlZrYSV6iA2Ba?=
- =?us-ascii?Q?gUn37r3WhG9iViqDsf9uFu7PTc/+DeGuKyhGpwq8xsorFKv0trDE83jrBlcM?=
- =?us-ascii?Q?FaqV/L578Ga+bS56Q6qLTFAJj2NGmtk75jUlQxaNIYy5/3ZbfrKFi3AFgXgk?=
- =?us-ascii?Q?/g=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766044A06
+	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 01:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708738566; cv=none; b=O9uBloJ7N0dEC0fh7zMSidZeujr3Vl0OGkz32e+x4KctwV89W81tPO+oClhnVFbEgFTyntU7I++G8gZ4AQzUioU8/H4XIO58gJ+4dOVvdWMvIHZINqBQ1rJClBb5kelTCGDsSgvhb7wg0dZGvGcyBi0T9QGuMIGqaipsgQRKwYQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708738566; c=relaxed/simple;
+	bh=qAScd7DY/IYCjD2R/EuynLEPhyrsPq/8ci8QRnkk19A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WbrboUFFkYCma68LkVcBCltb+8QMO11E1ztrki0ntk/sWNdIQAygNukYFa6X7AtCgkbjIIQo6mP/SFO74V/uSTzX7Y93RO9GSNTRKMTE1c0vS33F4mgKt947XlRyrTnfx1SBvbEyAKItG0hqc5UK1w/XndfUKlM2FrovYCe3HBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jmQQsPUQ; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jmQQsPUQ"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-42e6939d34fso140781cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 23 Feb 2024 17:36:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708738563; x=1709343363; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mhlF8VaoU7j5mCqbyUhZwnr4hHO3LQ/+x59GEqEGR2w=;
+        b=jmQQsPUQvcRJvAlwTgFmONxD5/Upc97nH/a+mNqWeR8i8JN8HNpuX+Jzn5ycV3/FvV
+         AGyy8ptsHXKXMG8LFH84boEiFqx0vqioynqlR91q78PC8ZOTJ15KYpjdzrSgd9fCOx8V
+         F5anLjXOcv30xKqL1D2GHbATkWp9Qo3OZre9EmvzMSvmWwVawyVfo3hutwrI3VxO2tAX
+         XH5hQelnu1QQYR5uyNUXmEVf2RyKD/fAP6OHSTfy6+Lp97MRVDQKF5lg8Od7jof8hLnW
+         PaC3LCtCeLbkvMfXLu3TP1r1XCwmyCdV8oEmboo2RD/VKf98y1h4wNjp2QzxjqyKU27A
+         75BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708738563; x=1709343363;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mhlF8VaoU7j5mCqbyUhZwnr4hHO3LQ/+x59GEqEGR2w=;
+        b=xBC04QEQDS71o67w8zYlK9WqnY/hbjI3kkBnsW6BjWZdPiU/2lJbOpkvjTPpsj4oDT
+         wa5Sg94cBu+x6nmY6ykFsXxgmUOt4gB110tJIGYNBzJWZp7Xl0CGHVS1tFX+2rKqB+ih
+         uFApTffLQfYIF21QlpgQtBL3pDtzpUdYSDskKr1j55vwe0u8sN7kD4SSZ23RC8wlwYzZ
+         +FnVDz06eTMffxFu/LoM7mllzjBsRLCQYugJpTkvT059alF7Odn/BzkGnvjxKLmLYOdo
+         P5T2KaS3XHD5nRDrTxP46KqohIeG28GoinF894CyWJn2wPa+58ad/FLS5ybMtdhxjzyT
+         CdFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnIG+BX+mSmFi1KlyR5xNJgym2pQ2NFZgHHAaT1/uYiBCg6jeDa4HZYGMBYrkbh4wjWrwAYOHC6MKIXEZKvt7Xh4dpbQxBPGRHavAl
+X-Gm-Message-State: AOJu0YxL1kbFN+FN48MwwwiqZ3o/bv3GXfn2Z0Wmxk6vngPx3MUlYZaI
+	/Jaz33OoV1SE8xKutyK8XPKmIX6Sq8ZYWfgGJfnM9TTqiYgaT9rZnL7FrGNkN4qZceOiIeAaYxT
+	mJtnhFsrjzFfKfN/UB5Uo+E2L4oZNP/d89jBt
+X-Google-Smtp-Source: AGHT+IGf0rr6oIUX8HTboWJgYYBRtKW9NiDl4Jx0q0Yill0NLFELHByPqLS1Q0GzF7rxZ0oe9S8xFfSvlQdbfVvRycU=
+X-Received: by 2002:a05:622a:1705:b0:42c:766f:b13c with SMTP id
+ h5-20020a05622a170500b0042c766fb13cmr144010qtk.18.1708738562977; Fri, 23 Feb
+ 2024 17:36:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04a494b2-f439-499e-070f-08dc34d5b1d1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2024 01:12:39.5679
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oBeY1yoU8o11yubo2pbUSw5GHuGFk7mTRvbFOuHOROKYhI2+AH9moKpNM84VLgcxgYNWY083g2rBC2bHnPH46ZZtaxEYo60ymimEOWIkHoI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1301
+References: <20240207011803.2637531-1-saravanak@google.com>
+ <20240207011803.2637531-3-saravanak@google.com> <20240223171849.10f9901d@booty>
+In-Reply-To: <20240223171849.10f9901d@booty>
+From: Saravana Kannan <saravanak@google.com>
+Date: Fri, 23 Feb 2024 17:35:24 -0800
+Message-ID: <CAGETcx99hhfOaEn1CH1OLDGp_pnrVeJ2nWb3X5=0j8tij4NR9w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] of: property: Improve finding the supplier of a
+ remote-endpoint property
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Xu Yang <xu.yang_2@nxp.com>, kernel-team@android.com, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> On Mon, Jan 29, 2024 at 05:51:38PM +0800, Ji Sheng Teoh wrote:
-> > This patch adds support for StarFive's StarLink PMU (Performance
-> > Monitor Unit). StarLink PMU integrates one or more CPU cores with a
-> > shared L3 memory system. The PMU supports overflow interrupt, up to 16
-> > programmable 64bit event counters, and an independent 64bit cycle
-> > counter. StarLink PMU is accessed via MMIO.
->=20
-> Since Palmer acked this (thanks!), I queued it locally but then ran into =
-a few small issues with my build testing. Comments below.
->=20
-> > diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig index
-> > 273d67ecf6d2..41278742ef88 100644
-> > --- a/drivers/perf/Kconfig
-> > +++ b/drivers/perf/Kconfig
-> > @@ -86,6 +86,15 @@ config RISCV_PMU_SBI
-> >  	  full perf feature support i.e. counter overflow, privilege mode
-> >  	  filtering, counter configuration.
+On Fri, Feb 23, 2024 at 8:18=E2=80=AFAM Luca Ceresoli <luca.ceresoli@bootli=
+n.com> wrote:
+>
+> Hello Saravana,
+>
+> [+cc Herv=C3=A9 Codina]
+>
+> On Tue,  6 Feb 2024 17:18:01 -0800
+> Saravana Kannan <saravanak@google.com> wrote:
+>
+> > After commit 4a032827daa8 ("of: property: Simplify of_link_to_phandle()=
+"),
+> > remote-endpoint properties created a fwnode link from the consumer devi=
+ce
+> > to the supplier endpoint. This is a tiny bit inefficient (not buggy) wh=
+en
+> > trying to create device links or detecting cycles. So, improve this the
+> > same way we improved finding the consumer of a remote-endpoint property=
+.
 > >
-> > +config STARFIVE_STARLINK_PMU
-> > +	depends on ARCH_STARFIVE
->=20
-> Please can you add "|| COMPILE_TEST" to this dependency so that you get b=
-uild coverage from other architectures?
->=20
-Sure, will add it in the next revision.
+> > Fixes: 4a032827daa8 ("of: property: Simplify of_link_to_phandle()")
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+>
+> After rebasing my own branch on v6.8-rc5 from v6.8-rc1 I started
+> getting unexpected warnings during device tree overlay removal. After a
+> somewhat painful bisection I identified this patch as the one that
+> triggers it all.
 
-> > +	bool "StarFive StarLink PMU"
-> > +	help
-> > +	   Provide support for StarLink Performance Monitor Unit.
-> > +	   StarLink Performance Monitor Unit integrates one or more cores wit=
-h
-> > +	   an L3 memory system. The L3 cache events are added into perf event
-> > +	   subsystem, allowing monitoring of various L3 cache perf events.
-> > +
-> >  config ARM_PMU_ACPI
-> >  	depends on ARM_PMU && ACPI
-> >  	def_bool y
->=20
-> [...]
->=20
-> > diff --git a/drivers/perf/starfive_starlink_pmu.c
-> > b/drivers/perf/starfive_starlink_pmu.c
-> > new file mode 100644
-> > index 000000000000..2447ca09a471
-> > --- /dev/null
-> > +++ b/drivers/perf/starfive_starlink_pmu.c
-> > @@ -0,0 +1,643 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * StarFive's StarLink PMU driver
-> > + *
-> > + * Copyright (C) 2023 StarFive Technology Co., Ltd.
-> > + *
-> > + * Author: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-> > + *
-> > + */
->=20
-> [...]
->=20
-> > +static void starlink_pmu_counter_start(struct perf_event *event,
-> > +				       struct starlink_pmu *starlink_pmu) {
-> > +	struct hw_perf_event *hwc =3D &event->hw;
-> > +	int idx =3D event->hw.idx;
-> > +	u64 val;
-> > +
-> > +	/*
-> > +	 * Enable counter overflow interrupt[63:0],
-> > +	 * which is mapped as follow:
-> > +	 *
-> > +	 * event counter 0	- Bit [0]
-> > +	 * event counter 1	- Bit [1]
-> > +	 * ...
-> > +	 * cycle counter	- Bit [63]
-> > +	 */
-> > +	val =3D readq(starlink_pmu->pmu_base + STARLINK_PMU_INTERRUPT_ENABLE)=
-;
-> > +
-> > +	if (hwc->config =3D=3D STARLINK_CYCLES) {
-> > +		/*
-> > +		 * Cycle count has its dedicated register, and it starts
-> > +		 * counting as soon as STARLINK_PMU_GLOBAL_ENABLE is set.
-> > +		 */
-> > +		val |=3D STARLINK_PMU_CYCLE_OVERFLOW_MASK;
-> > +	} else {
-> > +		writeq(event->hw.config, starlink_pmu->pmu_base +
-> > +		       STARLINK_PMU_EVENT_SELECT + idx * sizeof(u64));
-> > +
-> > +		val |=3D (1 << idx);
-> > +	}
->=20
-> I think this needs to be a u64 on the right hand side, or just use the
-> BIT_ULL() macro.
->=20
-Ahh ok, will just append it with BIT_ULL() macro.
+Thanks for the report.
 
-> > +
-> > +	writeq(val, starlink_pmu->pmu_base + STARLINK_PMU_INTERRUPT_ENABLE);
-> > +
-> > +	writeq(STARLINK_PMU_GLOBAL_ENABLE, starlink_pmu->pmu_base +
-> > +	       STARLINK_PMU_CONTROL);
-> > +}
->=20
-> [...]
->=20
-> > +static irqreturn_t starlink_pmu_handle_irq(int irq_num, void *data) {
-> > +	struct starlink_pmu *starlink_pmu =3D data;
-> > +	struct starlink_hw_events *hw_events =3D
-> > +			this_cpu_ptr(starlink_pmu->hw_events);
-> > +	bool handled =3D false;
-> > +	int idx;
-> > +	u64 overflow_status;
-> > +
-> > +	for (idx =3D 0; idx < STARLINK_PMU_MAX_COUNTERS; idx++) {
-> > +		struct perf_event *event =3D hw_events->events[idx];
-> > +
-> > +		if (!event)
-> > +			continue;
-> > +
-> > +		overflow_status =3D readq(starlink_pmu->pmu_base +
-> > +					STARLINK_PMU_COUNTER_OVERFLOW_STATUS);
-> > +		if (!(overflow_status & BIT(idx)))
-> > +			continue;
-> > +
-> > +		writeq(1 << idx, starlink_pmu->pmu_base +
-> > +		       STARLINK_PMU_COUNTER_OVERFLOW_STATUS);
->=20
-> Same shifting problem here.
->=20
-Got it.
+>
+> > ---
+> > --- a/drivers/of/property.c
+> > +++ b/drivers/of/property.c
+> > @@ -1232,7 +1232,6 @@ DEFINE_SIMPLE_PROP(pinctrl5, "pinctrl-5", NULL)
+> >  DEFINE_SIMPLE_PROP(pinctrl6, "pinctrl-6", NULL)
+> >  DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
+> >  DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
+> > -DEFINE_SIMPLE_PROP(remote_endpoint, "remote-endpoint", NULL)
+> >  DEFINE_SIMPLE_PROP(pwms, "pwms", "#pwm-cells")
+> >  DEFINE_SIMPLE_PROP(resets, "resets", "#reset-cells")
+> >  DEFINE_SIMPLE_PROP(leds, "leds", NULL)
+> > @@ -1298,6 +1297,17 @@ static struct device_node *parse_interrupts(stru=
+ct device_node *np,
+> >       return of_irq_parse_one(np, index, &sup_args) ? NULL : sup_args.n=
+p;
+> >  }
+> >
+> > +static struct device_node *parse_remote_endpoint(struct device_node *n=
+p,
+> > +                                              const char *prop_name,
+> > +                                              int index)
+> > +{
+> > +     /* Return NULL for index > 0 to signify end of remote-endpoints. =
+*/
+> > +     if (!index || strcmp(prop_name, "remote-endpoint"))
+>
+> There seem to be a bug here: "!index" should be "index > 0", as the
+> comment suggests. Otherwise NULL is always returned.
 
-> > +static int starlink_pmu_probe(struct platform_device *pdev) {
-> > +	struct starlink_pmu *starlink_pmu;
-> > +	struct starlink_hw_events *hw_events;
-> > +	struct resource *res;
-> > +	int cpuid, i, ret;
-> > +
-> > +	starlink_pmu =3D devm_kzalloc(&pdev->dev, sizeof(*starlink_pmu), GFP_=
-KERNEL);
-> > +	if (!starlink_pmu)
-> > +		return -ENOMEM;
-> > +
-> > +	starlink_pmu->pmu_base =3D
-> > +			devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-> > +	if (IS_ERR(starlink_pmu->pmu_base))
-> > +		return PTR_ERR(starlink_pmu->pmu_base);
-> > +
-> > +	starlink_pmu->hw_events =3D alloc_percpu_gfp(struct starlink_hw_event=
-s,
-> > +						   GFP_KERNEL);
-> > +	if (!starlink_pmu->hw_events) {
-> > +		dev_err(&pdev->dev, "Failed to allocate per-cpu PMU data\n");
-> > +		kfree(starlink_pmu);
->=20
-> You shouldn't call kfree() on a device-managed object (i.e. allocated wit=
-h devm_kzalloc()).
->=20
-You are right, I will drop it.
+Ah crap, I think you are right. It should have been "index". Not
+"!index". But I tested this! Sigh. I probably screwed up my testing.
 
-Thanks for the review Will.
+Please send out a Fix for this.
 
-JiSheng
+Geert, we got excited too soon. :(
+
+> I am going to send a quick patch for that, but haven't done so yet
+> because it still won't solve the problem, so I wanted to open the topic
+> here without further delay.
+>
+> Even with the 'index > 0' fix I'm still getting pretty much the same:
+
+This part is confusing though. If I read your DT correctly, there's a
+cycle between platform:panel-dsi-lvds and i2c:13-002c. And fw_devlink
+should not be enforcing any ordering between those devices ever.
+
+I'm surprised that in your "working" case, fw_devlink didn't detect
+any cycle. It should have. If there's any debugging to do, that's the
+one we need to debug.
+
+>
+> [   34.836781] ------------[ cut here ]------------
+> [   34.841401] WARNING: CPU: 2 PID: 204 at drivers/base/devres.c:1064 dev=
+m_kfree+0x8c/0xfc
+> ...
+> [   35.024751] Call trace:
+> [   35.027199]  devm_kfree+0x8c/0xfc
+> [   35.030520]  devm_drm_panel_bridge_release+0x54/0x64 [drm_kms_helper]
+> [   35.036990]  devres_release_group+0xe0/0x164
+> [   35.041264]  i2c_device_remove+0x38/0x9c
+> [   35.045196]  device_remove+0x4c/0x80
+> [   35.048774]  device_release_driver_internal+0x1d4/0x230
+> [   35.054003]  device_release_driver+0x18/0x24
+> [   35.058279]  bus_remove_device+0xcc/0x10c
+> [   35.062292]  device_del+0x15c/0x41c
+> [   35.065786]  device_unregister+0x18/0x34
+> [   35.069714]  i2c_unregister_device+0x54/0x88
+> [   35.073988]  of_i2c_notify+0x98/0x224
+> [   35.077656]  blocking_notifier_call_chain+0x6c/0xa0
+> [   35.082543]  __of_changeset_entry_notify+0x100/0x16c
+> [   35.087515]  __of_changeset_revert_notify+0x44/0x78
+> [   35.092398]  of_overlay_remove+0x114/0x1c4
+> ...
+>
+> By comparing the two versions I found that before removing the overlay:
+>
+>  * in the "working" case (with this patch reverted) I have:
+>
+>    # ls /sys/class/devlink/ | grep 002c
+>    platform:hpbr--i2c:13-002c
+>    platform:panel-dsi-lvds--i2c:13-002c
+
+Can you check the "status" and "sync_state_only" file in this folder
+and tell me what it says?
+
+Since these devices have a cyclic dependency between them, it should
+have been something other than "not tracked" and "sync_state_only"
+should be "1". But my guess is you'll see "active" and "0".
+
+>    platform:regulator-sys-1v8--i2c:13-002c
+>    regulator:regulator.31--i2c:13-002c
+>    #
+>
+>  * in the "broken" case (v6.8-rc5 + s/!index/index > 0/ as mentioned):
+>
+>    # ls /sys/class/devlink/ | grep 002c
+>    platform:hpbr--i2c:13-002c
+>    platform:regulator-sys-1v8--i2c:13-002c
+>    regulator:regulator.30--i2c:13-002c
+>    #
+>
+> So in the latter case the panel-dsi-lvds--i2c:13-002c link is missing.
+> I think it gets created but later on removed. Here's a snippet of the
+> kernel log when that happens:
+>
+> [    9.578279] ----- cycle: start -----
+> [    9.578283] /soc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-=
+bridge@2c: cycle: depends on /panel-dsi-lvds
+> [    9.578308] /panel-dsi-lvds: cycle: depends on /soc@0/bus@30800000/i2c=
+@30ad0000/i2cmux@70/i2c@3/dsi-lvds-bridge@2c
+> [    9.578329] ----- cycle: end -----
+> [    9.578334] platform panel-dsi-lvds: Fixed dependency cycle(s) with /s=
+oc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-bridge@2c
+> ...
+
+Somewhere in this area, I'm thinking you'll also see "device:
+'i2c:13-002c--platform:panel-dsi-lvds': device_add" do you not? And if
+you enabled device link logs, you'll see that it was "sync state only"
+link.
+
+> [    9.590620] /panel-dsi-lvds Dropping the fwnode link to /soc@0/bus@308=
+00000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-bridge@2c
+> ...
+> [    9.597280] ----- cycle: start -----
+> [    9.597283] /panel-dsi-lvds: cycle: depends on /soc@0/bus@30800000/i2c=
+@30ad0000/i2cmux@70/i2c@3/dsi-lvds-bridge@2c
+> [    9.602781] /soc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-=
+bridge@2c: cycle: depends on /panel-dsi-lvds
+> [    9.607581] ----- cycle: end -----
+> [    9.607585] i2c 13-002c: Fixed dependency cycle(s) with /panel-dsi-lvd=
+s
+> [    9.614217] device: 'platform:panel-dsi-lvds--i2c:13-002c': device_add
+> ...
+> [    9.614277] /soc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-=
+bridge@2c Dropping the fwnode link to /panel-dsi-lvds
+> [    9.614369] /soc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-=
+bridge@2c Dropping the fwnode link to /regulator-dock-sys-1v8
+> ...
+> [    9.739840] panel-simple panel-dsi-lvds: Dropping the link to 13-002c
+> [    9.739846] device: 'i2c:13-002c--platform:panel-dsi-lvds': device_unr=
+egister
+
+Oh yeah, see. The "device_add" I expected earlier is getting removed here.
+
+> [   10.247037] sn65dsi83 13-002c: Dropping the link to panel-dsi-lvds
+> [   10.247049] device: 'platform:panel-dsi-lvds--i2c:13-002c': device_unr=
+egister
+>
+> And here's the relevant portion of my device tree overlay:
+>
+> --------------------8<--------------------
+>
+
+I think the eventual fix would be this series + adding a
+"post-init-providers" property to the device that's supposed to probe
+first and point it to the device that's supposed to probe next. Do
+this at the device node level, not the endpoint level.
+https://lore.kernel.org/lkml/20240221233026.2915061-1-saravanak@google.com/
+
+
+-Saravana
+
+> /dts-v1/;
+> /plugin/;
+>
+> &{/}
+> {
+>         panel_dsi_lvds: panel-dsi-lvds {
+>                 compatible =3D "auo,g133han01.1";
+>
+>                 ports {
+>                         #address-cells =3D <1>;
+>                         #size-cells =3D <0>;
+>                         port@0{
+>                                 reg =3D <0>;
+>                                 dual-lvds-odd-pixels;
+>                                 panel_dsi_lvds_in0: endpoint {
+>                                         remote-endpoint =3D <&sn65dsi84_o=
+ut0>;
+>                                 };
+>                         };
+>
+>                         port@1{
+>                                 reg =3D <1>;
+>                                 dual-lvds-even-pixels;
+>                                 panel_dsi_lvds_in1: endpoint {
+>                                         remote-endpoint =3D <&sn65dsi84_o=
+ut1>;
+>                                 };
+>                         };
+>                 };
+>         };
+> };
+>
+> &i2c5_ch3 {
+>         dsi-lvds-bridge@2c {
+>                 compatible =3D "ti,sn65dsi84";
+>                 reg =3D <0x2c>;
+>                 vcc-supply =3D <&reg_sys_1v8>;
+>
+>                 ports {
+>                         #address-cells =3D <1>;
+>                         #size-cells =3D <0>;
+>
+>                         port@0 {
+>                                 reg =3D <0>;
+>
+>                                 sn65dsi84_from_bridge: endpoint {
+>                                         remote-endpoint =3D <&hpbr_source=
+>;
+>                                         data-lanes =3D <1 2 3 4>;
+>                                 };
+>                         };
+>                         port@2 {
+>                                 reg =3D <2>;
+>
+>                                 sn65dsi84_out0: endpoint {
+>                                         remote-endpoint =3D <&panel_dsi_l=
+vds_in0>;
+>                                 };
+>                         };
+>                         port@3 {
+>                                 reg =3D <3>;
+>
+>                                 sn65dsi84_out1: endpoint {
+>                                         remote-endpoint =3D <&panel_dsi_l=
+vds_in1>;
+>                                 };
+>                         };
+>                 };
+>         };
+> };
+>
+> --------------------8<--------------------
+>
+> That's all I could get at this point. Any clues for further
+> investigation?
+>
+> Best regards,
+> Luca
+>
+> --
+> Luca Ceresoli, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
