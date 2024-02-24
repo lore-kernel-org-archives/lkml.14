@@ -1,81 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5302907;
-	Sat, 24 Feb 2024 20:06:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27D44879B;
+	Sat, 24 Feb 2024 20:12:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708805192; cv=none; b=CCgCKI7hfArDFL/FRuINY7GDECDOH2Kv+Y+LnOyQR24gzacuc1IIdkZhBHhAeFdEg1XI4TyDzw8Sy5wKouXqSFUD/atordFu5p69mIH+Q3afEVTeccwZZ2RE0igF4Nub10j93R9ogpcdbE+vqAd9sXn9Gc5NR4je1IXluWqm3HQ=
+	t=1708805544; cv=none; b=OmM39PEtnYDCNoO8AZZC86xn/L1NIzHupur4ymEtSE6rpaKdz+ViM2GSiyNKZhhakGt4a6tfibNqV3+ZGzIrdg9cxzYntgYH3cHo7xAm7I1httbzYrvG18IGzlneJPo1VpD4XtTRqfklmANYdXmm/7LUYws8xbZbh6vMQcUT0VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708805192; c=relaxed/simple;
-	bh=4puK0De6XWcEEa6zuGMHGuAYnNyMd0c5eVc6rbiv46Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e+AiT7DYTN+UC5tYjnDWRtwthEiH/pGIvHye2jQjlS3N9Wob0pdWwY9COhdqoBQr90fX4zr/HLF0Z45TDOJsjRSf6dbMxhUfPq+t+dUurVfjBeQUSYfDGeBgDNNgHMe63YOr8mAEjz09cRTriKYVtSzIcqplP1LoVNLaY4Ene9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkejUbsj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708805544; c=relaxed/simple;
+	bh=WDOLZasr/fMaFo5Uetg09r0Mt7rM6tIyzGnsV6eeaQs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=DUt+7n5HjJ1kH2wOSoEqKdXLq5TVQw8Bnfv/+3zMWqJkg5RXg6Mea2Zgy2Zeyv8btFA28HuK1lp77Vfpp4nXTPA9GPULh/2upe1UutTWmF3uEOhKe/fcvfwqr9S8ca3s4NzXko1MeNgLJiVQldGpMcv75e7WJ+llEl6B1lL7t0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBr4HgWU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkejUbsj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B51BC433C7;
-	Sat, 24 Feb 2024 20:06:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBr4HgWU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1DA0C433C7;
+	Sat, 24 Feb 2024 20:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708805191;
-	bh=4puK0De6XWcEEa6zuGMHGuAYnNyMd0c5eVc6rbiv46Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TkejUbsjQ0HMil2N7Xb9fFYxL4s5QXUrT9Uusg2Uvxc2FYOM0tAVE3M11JyHWw/7E
-	 fYAUk3NzXzYjsq3of8XKqh+b+0+Fkll6ZeD5Q1cirG9Dkv0CHPHZrYgj0WQK+9gQZK
-	 A1VPBfIjpYhCLhgpGa/vHKSMiFS0NKGhlC3irWYdmwPck4AceZXDlbRquv5/b5sVhg
-	 7HXZTfEqNyESSAoYxwdyOHiqs+pxqFhwKJXr0dAIF9daZb6PAXHxiVpQsradIYLkr9
-	 3ADHtNrcVfrq/RLv7fCuinURuWMQRjyutoBabM6gUU/dV1kvr4hdWSgZEvwwe3XA0N
-	 /nSV6GtXJD49w==
-Date: Sat, 24 Feb 2024 20:06:26 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Varshini Rajendran <varshini.rajendran@microchip.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 22/39] dt-bindings: clk: at91: add sam9x7 clock
- controller
-Message-ID: <20240224-fragile-unwed-f1e69bbcbaed@spud>
-References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
- <20240223172741.672694-1-varshini.rajendran@microchip.com>
+	s=k20201202; t=1708805543;
+	bh=WDOLZasr/fMaFo5Uetg09r0Mt7rM6tIyzGnsV6eeaQs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KBr4HgWUK5fXSfNw6venvBGXohAKoc8LP0ELTHOnh2t2A1v0aVzXGmhqGPmKmSGxU
+	 3X+vbPq+le9YnIt8JrqSNAdITRudd6SbOV0S/U3LvsGt814GQS0uf5ENINVlQWjErZ
+	 bGS+qLwIiKC3UcvD7TD7EUmJlj6WGDVuTUD/BX3s8Fo5SmRdhUY2PioiuKpyjudYcc
+	 jVLrI9YgJY5sXnLAp8jtP9Sd4zlMozvR8WcjGor6Cu5mmDtwdpTL+ruZDwd0UnwcrV
+	 XZZcg4QGLAbNV8w+3cn/uYNror9ZEBLRiCx4c83NSboBCtVOql6VUa6ETgHjpFXOV+
+	 qQux8MJPSHmsw==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: Barry Song <21cnbao@gmail.com>,
+	Minchan Kim <minchan@kernel.org>,
+	akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	mhocko@suse.com,
+	hannes@cmpxchg.org,
+	Barry Song <v-songbaohua@oppo.com>
+Subject: Re: [PATCH RFC] mm: madvise: pageout: ignore references rather than clearing young
+Date: Sat, 24 Feb 2024 12:12:21 -0800
+Message-Id: <20240224201221.46450-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240224190724.45681-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="08K8WuCJjwZ2Dt+C"
-Content-Disposition: inline
-In-Reply-To: <20240223172741.672694-1-varshini.rajendran@microchip.com>
+Content-Transfer-Encoding: 8bit
+
+On Sat, 24 Feb 2024 11:07:23 -0800 SeongJae Park <sj@kernel.org> wrote:
+
+> Hi Barry,
+> 
+> On Sat, 24 Feb 2024 12:37:59 +0800 Barry Song <21cnbao@gmail.com> wrote:
+> 
+> [...]
+> > 
+> > BTW\uff0c
+> > Hi SeongJae,
+> > I am not quite sure if damon also needs this, so I have kept damon as is by
+> > setting ignore_references = false.  MADV_PAGEOUT is an explicit hint users
+> > don't want the memory to be reclaimed, I don't know if it is true for damon as
+> > well. If you have some comments, please chime in.
+> 
+> Thank you for calling my name :)
+> 
+> For DAMON's usecase, the document simply says the behavior would be same to
+> MADV_PAGEOUT, so if we conclude to change MADV_PAGEOUT, I think same change
+> should be made for DAMON's usecase, or update DAMON document.
+
+Thanks to Barry's nice explanation on my other reply to the patch, now I think
+the change is modest, and therefore I'd prefer the first way: Changing DAMON's
+usecase, and keep the document as is.
 
 
---08K8WuCJjwZ2Dt+C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+SJ
 
-On Fri, Feb 23, 2024 at 10:57:41PM +0530, Varshini Rajendran wrote:
-> Add bindings for SAM9X7's pmc.
->=20
-> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
---08K8WuCJjwZ2Dt+C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdpMQgAKCRB4tDGHoIJi
-0sOYAPwJwBXEIQ5PHPUQbIROCI93F1KOx91fogdH+/0eLF29bwEArakcTRztZuJr
-h9mQ5H70ST/gzqOIGy4XIal57rqTdgo=
-=2T/O
------END PGP SIGNATURE-----
-
---08K8WuCJjwZ2Dt+C--
+> 
+> 
+> Thanks,
+> SJ
+> 
+> > 
+> > >
+> > > Thanks.
+> > 
+> > Thanks
+> > Barry
