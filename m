@@ -1,182 +1,437 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2073.outbound.protection.outlook.com [40.107.95.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073F54E1C5;
-	Sat, 24 Feb 2024 15:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708787231; cv=fail; b=LpJHhop8QJLeqIchuN65SZa+gnkSKRVWCne1BKgeO9nRlJScf9CDwlaqAgb89Wg374TVJ0XOZHLy/c/igKrJBXt4ry4M53rh7YainhCuUU5Y4osA861wj16MlXewWJd0EHT76m3P/iyykGffsONpmJ++3DIrXWMCLX/pbDsHl20=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708787231; c=relaxed/simple;
-	bh=e0FhdWZczG3jNlJwaIceTYNLqtq7kTP1clVnsfufh/Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CXHExDqyHOM88LQWkwJwZtCVlLgMKDLZQqc5qvwe0AUOVgHRzw3OH6vJQvphYFWt9EDR8Zn7s+9gIGLUPDJ5aMQnky8dnAkmpUdYbYbeeZR5NGHTVkFVGfJSYNM/WpJ5jt4LvTiPfTprNV9v+rrlG0SCQI62JJ9EBDNB68cCcL0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=k8Z5dSS1; arc=fail smtp.client-ip=40.107.95.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD942E559;
+	Sat, 24 Feb 2024 15:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708787642; cv=none; b=NAj7bs6j0xWMv50iVGPxXk7NxkSk4eWIUE82jKZaoG4ni8/FhR24GuQ7S8EjBOfY16V2C4bDxq2X3Ue+y+TKgITakUm8T76cd6HqZFOlzPRPtDwRCHoPeXUlHPeFv+fUZexk4LE++0zUZD4FMQnWsnP5sSme0qGXS6MH/oaVXu4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708787642; c=relaxed/simple;
+	bh=LYTswCYwGiUPqj0hP+seBEAuBuZy43MNvVr8kKMlJKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uHbFVxC9v1joqoYex7K0ws8SVFT75Qhopsnl6i/FTku98Af4qntS80bZWaneX5FhTHO+Z9hecTqokMSNFmjWvmlrlXVQHekTOib464aj4ko24sAo6/q6sr8N9cf0hByYc27mbyFLmu0UlKEYzetRQf1Ob0aIcUNXW/v5WH+xCpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bw2m32dw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="k8Z5dSS1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OcnfSWyOFQggSiPTsES65PhBheOmwfvj3zgWuTC9GWHqsJ2j2mjY4ZwNU4SJUwhc9x53l1C6biFXWtziQw+WxYDOpWWnrbUjItzDBD1qLLs1+qt5I/FYjojRZmqkBbWNeSP3GebSLtthUIt6fMEGQuv2XuoHLDYl5bztSPdR0p07cciaTEaMvlsIcqUGPRzqf9SHjgZOqDG2ph5IJvqINHVfwYwLG+zMpWW1pu/8nPX8wqe6X0Mc3mUkMJSOVIcBd41zIycC4Dp410PSG9loxEx08tWvvgIOhDb9wk09hEqj0Y9OTmv+0Pda7VgDDmLjZmEu/1Tr4+NVc0swjTgRwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vrVed4bH4ZNo5+WAlGpRDDR5GnNw8bBIVXunyFMfGm8=;
- b=imUB0lDCeJbrMEpP74471V1uwXeC6zSjztnlULNvXgyu0dv3ZBz5AKFRnmvIbvzmYKO4kokxcRkX3vtJY9M1eLn54YsvQ3HNr4qUfKV8zwsMG9SlFd3LUqhokzJ4HmZpc4cpI83shk39unNjyXFjFFD4OygZJKHv3+ji6S2n9qKnYeK0QoNx/xZrTnsP4tCURd1GJ39WkVciDPEP2CNlSb5DeRLOl1fxoO9CNaUl1W6mw1kM/Qq7AAvLdD+JMmEcJ6R9AelNZhpNc0E4tQyRrjqt8tynH7EmxphT0QJE3U7oFi8P1uXlzlViBXb2MlaCjwFm66aktIEcKpyznax8CA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vrVed4bH4ZNo5+WAlGpRDDR5GnNw8bBIVXunyFMfGm8=;
- b=k8Z5dSS1+XZWFfeyb7JtGwpF6xBbsOykuKYdSiI4lG1DjI2pLyD//987TA9VAmaEbOW4OqO7/nuY/0+wLeYfUe9mH7PqW6E9Ndo4XEI5Ycv4naE+HCJyn26NiadmBQZYr0cehi8skRdt2O9W4E+IhZp3sgMmCgu2qjOy748G/qGnEg4iOjTRiF9Z+F5kUUjUqB7oJG95Ow6JasVtqYxlKXRwyL946X4dBBBFPgHl8b30BS+1ZPCRo5MA3NmcgdHB4PmuPJ6eee0pUWyL/7zBuXeGpakWYlI7dtfN8z+lVw2CbkK7sKGkd2p+Eit51cjIaxuyKXh3cI232QcVzrtlDw==
-Received: from DM5PR08CA0052.namprd08.prod.outlook.com (2603:10b6:4:60::41) by
- BY5PR12MB5511.namprd12.prod.outlook.com (2603:10b6:a03:1d8::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.33; Sat, 24 Feb
- 2024 15:07:04 +0000
-Received: from DS3PEPF000099D3.namprd04.prod.outlook.com
- (2603:10b6:4:60:cafe::71) by DM5PR08CA0052.outlook.office365.com
- (2603:10b6:4:60::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.48 via Frontend
- Transport; Sat, 24 Feb 2024 15:07:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DS3PEPF000099D3.mail.protection.outlook.com (10.167.17.4) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.25 via Frontend Transport; Sat, 24 Feb 2024 15:07:04 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Sat, 24 Feb
- 2024 07:06:52 -0800
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Sat, 24 Feb
- 2024 07:06:50 -0800
-Received: from sgarnayak-dt.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12 via Frontend
- Transport; Sat, 24 Feb 2024 07:06:38 -0800
-From: <ankita@nvidia.com>
-To: <ankita@nvidia.com>, <jgg@nvidia.com>, <maz@kernel.org>,
-	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
-	<yuzenghui@huawei.com>, <reinette.chatre@intel.com>, <surenb@google.com>,
-	<stefanha@redhat.com>, <brauner@kernel.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <mark.rutland@arm.com>, <alex.williamson@redhat.com>,
-	<kevin.tian@intel.com>, <yi.l.liu@intel.com>, <ardb@kernel.org>,
-	<akpm@linux-foundation.org>, <andreyknvl@gmail.com>,
-	<wangjinchao@xfusion.com>, <gshan@redhat.com>, <shahuang@redhat.com>,
-	<ricarkol@google.com>, <linux-mm@kvack.org>, <lpieralisi@kernel.org>,
-	<rananta@google.com>, <ryan.roberts@arm.com>, <david@redhat.com>,
-	<linus.walleij@linaro.org>, <bhe@redhat.com>
-CC: <aniketa@nvidia.com>, <cjia@nvidia.com>, <kwankhede@nvidia.com>,
-	<targupta@nvidia.com>, <vsethi@nvidia.com>, <acurrid@nvidia.com>,
-	<apopple@nvidia.com>, <jhubbard@nvidia.com>, <danw@nvidia.com>,
-	<kvmarm@lists.linux.dev>, <mochs@nvidia.com>, <zhiw@nvidia.com>,
-	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v9 4/4] vfio: Convey kvm that the vfio-pci device is wc safe
-Date: Sat, 24 Feb 2024 20:35:46 +0530
-Message-ID: <20240224150546.368-5-ankita@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240224150546.368-1-ankita@nvidia.com>
-References: <20240224150546.368-1-ankita@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bw2m32dw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC9FAC433F1;
+	Sat, 24 Feb 2024 15:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708787642;
+	bh=LYTswCYwGiUPqj0hP+seBEAuBuZy43MNvVr8kKMlJKg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Bw2m32dwtbhFOh88jtTl4rKfD91QOF3TVDkW6MalPxdEfWyOQF6pwA7jUFYu6Ho4J
+	 YhNo/njO8ufhPhg+RIuvgRURvvx4mrA5kW60kwUrOX2VCB2wQIuaaOUDQe2iF7HA5M
+	 G+x5/i0kRqQyPnySqZLS52H9Vv6LiEqac6k5pkM03jH/6MfgjnGASaWTJRnDrA5HPR
+	 HFAzwV7rb5EGj9dinzKhP6gbGLq37CAkDb+GSZ3doaf8t+NbE4LwF1WsyGdOc9rUmp
+	 SCktJNBeiOjwqcAm/zb12++f5j8HFyz91o8w/IcnjUQoYF9p/ru/m5/236/lpO4Uqd
+	 xGLwZvPHb+5Tw==
+Date: Sat, 24 Feb 2024 15:13:40 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matti Vaittinen <mazziesaccount@gmail.com>, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Marek Vasut
+ <marex@denx.de>, Anshul Dalal <anshulusr@gmail.com>, Javier Carrasco
+ <javier.carrasco.cruz@gmail.com>, Matt Ranostay <matt@ranostay.sg>, Stefan
+ Windfeldt-Prytz <stefan.windfeldt-prytz@axis.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 5/5] iio: light: Add support for APDS9306 Light
+ Sensor
+Message-ID: <20240224151340.3f2f51e8@jic23-huawei>
+In-Reply-To: <20240218054826.2881-6-subhajit.ghosh@tweaklogic.com>
+References: <20240218054826.2881-1-subhajit.ghosh@tweaklogic.com>
+	<20240218054826.2881-6-subhajit.ghosh@tweaklogic.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D3:EE_|BY5PR12MB5511:EE_
-X-MS-Office365-Filtering-Correlation-Id: a1b01687-e8ad-4423-fd11-08dc354a4307
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GxjN7Bwq1Hwv/A/mtDSKWWm4FjbCfLkQvpJEyuKbzX9Y6HdylNrePnfdtgf55bu9XhhbP6bLnOFqWF9i6xaIvdW7BvhuCWgdvoxhyq43q5a7orbA/0bSt95gkrspg2sPSGRrQuzL5mCEwyzmBYEgtTHmsSEm2yH4jU+N+H+Pjfb9EgWy/wHIHVRrvCxzQDccTcqD4WfTgWGZ7b5g38jcfd/asoc8kboPe1C/BMJTk/n8DCAwHf0xjRhCAD09b1KrNMA0zc9kmK5PnNvMmIOa7Vqbbad+RwMFuZDbDYjMg1c2bmomp7ZacCqQquXLOuinEn3dLlssscL0qF6deYGQOwyTIjNFDuib/i7Ld1xpwPEtIczzLZ3ab/KFz3/o8xb5C+5SU7ttaTD93P/ggwca9IGPRjSxe9eFv8JpCZVyzPI6KOoFc5N7KwTJvGunhtl/5QjGRPfMMENd6K4s+dYtIUfPo1ynL2fcxG+v4lMwFRaO/82ttdnhFvM/1JBG+wnMc9JxzTtJqSTtZU+fjzEzIxiOB0jrZEB3lE1XS28DR/fhn/1+MAN4k9ZRLRWUKaQ2yvtvU0QoU/J4u7xe9HnxmV2Q95zJgJbXPfbSbi/7bdKFH6Tlwwc9kS+nhkfk/mmdsaS8elePZESo6uhoynwlMKv7pHgt6TVbfCObTclF/JA=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006)(921011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2024 15:07:04.6499
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1b01687-e8ad-4423-fd11-08dc354a4307
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D3.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB5511
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Ankit Agrawal <ankita@nvidia.com>
+On Sun, 18 Feb 2024 16:18:26 +1030
+Subhajit Ghosh <subhajit.ghosh@tweaklogic.com> wrote:
 
-The VM_ALLOW_ANY_UNCACHED flag is implemented for ARM64,
-allowing KVM stage 2 device mapping attributes to use Normal-NC
-rather than DEVICE_nGnRE, which allows guest mappings supporting
-write-combining attributes (WC). ARM does not architecturally
-guarantee this is safe, and indeed some MMIO regions like the GICv2
-VCPU interface can trigger uncontained faults if Normal-NC is used.
+> Driver support for Avago (Broadcom) APDS9306 Ambient Light Sensor.
+> It has two channels - ALS and CLEAR. The ALS (Ambient Light Sensor)
+> channel approximates the response of the human-eye providing direct
+> read out where the output count is proportional to ambient light levels.
+> It is internally temperature compensated and rejects 50Hz and 60Hz flicker
+> caused by artificial light sources. Hardware interrupt configuration is
+> optional. It is a low power device with 20 bit resolution and has
+> configurable adaptive interrupt mode and interrupt persistence mode.
+> The device also features inbuilt hardware gain, multiple integration time
+> selection options and sampling frequency selection options.
+> 
+> This driver also uses the IIO GTS (Gain Time Scale) Helpers Namespace for
+> Scales, Gains and Integration time implementation.
+> 
+> Signed-off-by: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
+I applied this but then got some build warnings that made me look
+more closely at the int_src handling.
 
-To safely use VFIO in KVM the platform must guarantee full safety
-in the guest where no action taken against a MMIO mapping can
-trigger an uncontained failure. The expectation is that most VFIO PCI
-platforms support this for both mapping types, at least in common
-flows, based on some expectations of how PCI IP is integrated. So
-make vfio-pci set the VM_ALLOW_ANY_UNCACHED flag.
+This is confusing because of the less than helpful datasheet defintion
+of a 2 bit register that takes values 0 and 1 only.
 
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Jason Gunthorpe <jgg@nvidia.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Alex Williamson <alex.williamson@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
----
- drivers/vfio/pci/vfio_pci_core.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+I thought about trying to fix this up whilst applying but the event code
+issue is too significant to do without a means to test it.
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 1cbc990d42e0..df6f99bdf70d 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -1862,8 +1862,25 @@ int vfio_pci_core_mmap(struct vfio_device *core_vdev, struct vm_area_struct *vma
- 	/*
- 	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
- 	 * change vm_flags within the fault handler.  Set them now.
-+	 *
-+	 * VM_ALLOW_ANY_UNCACHED: The VMA flag is implemented for ARM64,
-+	 * allowing KVM stage 2 device mapping attributes to use Normal-NC
-+	 * rather than DEVICE_nGnRE, which allows guest mappings
-+	 * supporting write-combining attributes (WC). ARM does not
-+	 * architecturally guarantee this is safe, and indeed some MMIO
-+	 * regions like the GICv2 VCPU interface can trigger uncontained
-+	 * faults if Normal-NC is used.
-+	 *
-+	 * To safely use VFIO in KVM the platform must guarantee full
-+	 * safety in the guest where no action taken against a MMIO
-+	 * mapping can trigger an uncontained failure. The assumption is
-+	 * that most VFIO PCI platforms support this for both mapping types,
-+	 * at least in common flows, based on some expectations of how
-+	 * PCI IP is integrated. Hence VM_ALLOW_ANY_UNCACHED is set in
-+	 * the VMA flags.
- 	 */
--	vm_flags_set(vma, VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP);
-+	vm_flags_set(vma, VM_ALLOW_ANY_UNCACHED | VM_IO | VM_PFNMAP |
-+			VM_DONTEXPAND | VM_DONTDUMP);
- 	vma->vm_ops = &vfio_pci_mmap_ops;
- 
- 	return 0;
--- 
-2.34.1
+Jonathan
+
+
+
+> diff --git a/drivers/iio/light/apds9306.c b/drivers/iio/light/apds9306.c
+> new file mode 100644
+> index 000000000000..c18e0d48556b
+> --- /dev/null
+> +++ b/drivers/iio/light/apds9306.c
+> @@ -0,0 +1,1336 @@
+>
+....
+
+> +
+> +static struct iio_event_spec apds9306_event_spec_als[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_shared_by_all = BIT(IIO_EV_INFO_VALUE),
+> +	}, {
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_shared_by_all = BIT(IIO_EV_INFO_VALUE),
+> +	}, {
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_EITHER,
+> +		.mask_shared_by_all = BIT(IIO_EV_INFO_PERIOD),
+> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+> +	}, {
+> +		.type = IIO_EV_TYPE_THRESH_ADAPTIVE,
+> +		.mask_shared_by_all = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +};
+> +
+> +static struct iio_event_spec apds9306_event_spec_clear[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+
+Specify dir.
+
+> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +};
+> +
+> +#define APDS9306_CHANNEL(_type) \
+
+I think the code would be easier to read without this macro.  It will 
+be a few lines longer but simpler
+
+> +	.type = _type, \
+> +	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_INT_TIME) | \
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ), \
+> +	.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_INT_TIME) | \
+> +		BIT(IIO_CHAN_INFO_SAMP_FREQ), \
+> +
+> +static struct iio_chan_spec apds9306_channels_with_events[] = {
+> +	{
+> +		APDS9306_CHANNEL(IIO_LIGHT)
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_separate_available = BIT(IIO_CHAN_INFO_SCALE),
+> +		.event_spec = apds9306_event_spec_als,
+> +		.num_event_specs = ARRAY_SIZE(apds9306_event_spec_als),
+> +	}, {
+> +		APDS9306_CHANNEL(IIO_INTENSITY)
+> +		.channel2 = IIO_MOD_LIGHT_CLEAR,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.modified = 1,
+> +		.event_spec = apds9306_event_spec_clear,
+> +		.num_event_specs = ARRAY_SIZE(apds9306_event_spec_clear),
+> +	},
+> +};
+> +
+> +static struct iio_chan_spec apds9306_channels_without_events[] = {
+> +	{
+> +		APDS9306_CHANNEL(IIO_LIGHT)
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.info_mask_separate_available = BIT(IIO_CHAN_INFO_SCALE),
+> +	}, {
+> +		APDS9306_CHANNEL(IIO_INTENSITY)
+> +		.channel2 = IIO_MOD_LIGHT_CLEAR,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> +		.modified = 1,
+> +	},
+> +};
+> +
+> +/* INT_PERSISTENCE available */
+> +IIO_CONST_ATTR(thresh_either_period_available, "[0 1 15]");
+> +
+> +/* ALS_THRESH_VAR available */
+> +IIO_CONST_ATTR(thresh_adaptive_either_values_available, "[0 1 7]");
+
+These need to be static
+
+> +
+> +static struct attribute *apds9306_event_attributes[] = {
+> +	&iio_const_attr_thresh_either_period_available.dev_attr.attr,
+> +	&iio_const_attr_thresh_adaptive_either_values_available.dev_attr.attr,
+> +	NULL
+> +};
+
+> +static int apds9306_read_data(struct apds9306_data *data, int *val, int reg)
+> +{
+> +	struct device *dev = data->dev;
+> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+> +	struct apds9306_regfields *rf = &data->rf;
+> +	int ret, delay, intg_time, intg_time_idx, repeat_rate_idx, int_src;
+> +	int status = 0;
+> +	u8 buff[3];
+> +
+> +	ret = pm_runtime_resume_and_get(data->dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_field_read(rf->intg_time, &intg_time_idx);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_field_read(rf->repeat_rate, &repeat_rate_idx);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_field_read(rf->int_src, &int_src);
+> +	if (ret)
+> +		return ret;
+> +
+> +	intg_time = iio_gts_find_int_time_by_sel(&data->gts, intg_time_idx);
+> +	if (intg_time < 0)
+> +		return intg_time;
+> +
+> +	/* Whichever is greater - integration time period or sampling period. */
+> +	delay = max(intg_time, apds9306_repeat_rate_period[repeat_rate_idx]);
+> +
+> +	/*
+> +	 * Clear stale data flag that might have been set by the interrupt
+> +	 * handler if it got data available flag set in the status reg.
+> +	 */
+> +	data->read_data_available = 0;
+> +
+> +	/*
+> +	 * If this function runs parallel with the interrupt handler, either
+> +	 * this reads and clears the status registers or the interrupt handler
+> +	 * does. The interrupt handler sets a flag for read data available
+> +	 * in our private structure which we read here.
+> +	 */
+> +	ret = regmap_read_poll_timeout(data->regmap, APDS9306_MAIN_STATUS_REG,
+> +				       status, data->read_data_available ||
+> +				       (status & (APDS9306_ALS_DATA_STAT_MASK |
+> +						  APDS9306_ALS_INT_STAT_MASK)),
+> +				       APDS9306_ALS_READ_DATA_DELAY_US, delay * 2);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* If we reach here before the interrupt handler we push an event */
+> +	if ((status & APDS9306_ALS_INT_STAT_MASK))
+> +		iio_push_event(indio_dev, IIO_UNMOD_EVENT_CODE(IIO_LIGHT,
+> +			       int_src, IIO_EV_TYPE_THRESH, IIO_EV_DIR_EITHER),
+
+You are pushing an event on channel 0 or 1 (which is non obvious as that
+int_src is a 2 bit value again).  However you don't use indexed channels
+so this is wrong.
+It's also pushing IIO_LIGHT for both channels which makes no sense as you
+only have one IIO_LIGHT channel.
+
+
+> +			       iio_get_time_ns(indio_dev));
+> +
+> +	ret = regmap_bulk_read(data->regmap, reg, buff, sizeof(buff));
+> +	if (ret) {
+> +		dev_err_ratelimited(dev, "read data failed\n");
+> +		return ret;
+> +	}
+> +
+> +	*val = get_unaligned_le24(&buff);
+> +
+> +	pm_runtime_mark_last_busy(data->dev);
+> +	pm_runtime_put_autosuspend(data->dev);
+> +
+> +	return 0;
+> +}
+> +
+
+...
+
+> +
+> +static irqreturn_t apds9306_irq_handler(int irq, void *priv)
+> +{
+> +	struct iio_dev *indio_dev = priv;
+> +	struct apds9306_data *data = iio_priv(indio_dev);
+> +	struct apds9306_regfields *rf = &data->rf;
+> +	int ret, status, int_ch;
+> +
+> +	/*
+> +	 * The interrupt line is released and the interrupt flag is
+> +	 * cleared as a result of reading the status register. All the
+> +	 * status flags are cleared as a result of this read.
+> +	 */
+> +	ret = regmap_read(data->regmap, APDS9306_MAIN_STATUS_REG, &status);
+> +	if (ret < 0) {
+> +		dev_err_ratelimited(data->dev, "status reg read failed\n");
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	ret = regmap_field_read(rf->int_src, &int_ch);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if ((status & APDS9306_ALS_INT_STAT_MASK))
+> +		iio_push_event(indio_dev, IIO_UNMOD_EVENT_CODE(IIO_LIGHT,
+> +			       int_ch, IIO_EV_TYPE_THRESH, IIO_EV_DIR_EITHER),
+> +			       iio_get_time_ns(indio_dev));
+
+As commented on elsewhere I'm not seeing the relationship between the event
+pushed here and the channels this device provides (one of which is modified
+for starters).
+
+> +
+> +	/*
+> +	 * If a one-shot read through sysfs is underway at the same time
+> +	 * as this interrupt handler is executing and a read data available
+> +	 * flag was set, this flag is set to inform read_poll_timeout()
+> +	 * to exit.
+> +	 */
+> +	if ((status & APDS9306_ALS_DATA_STAT_MASK))
+> +		data->read_data_available = 1;
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+...
+
+> +static int apds9306_read_event_config(struct iio_dev *indio_dev,
+> +				      const struct iio_chan_spec *chan,
+> +				      enum iio_event_type type,
+> +				      enum iio_event_direction dir)
+> +{
+> +	struct apds9306_data *data = iio_priv(indio_dev);
+> +	struct apds9306_regfields *rf = &data->rf;
+> +	int int_en, event_ch_is_light, ret;
+> +
+> +	switch (type) {
+> +	case IIO_EV_TYPE_THRESH:
+> +		guard(mutex)(&data->mutex);
+> +
+> +		ret = regmap_field_read(rf->int_src, &event_ch_is_light);
+
+Call the local value int_src - it's not obvious to a reviewer what 
+relationship between that and int_src is. I had to go read the datasheet
+to find out.
+
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regmap_field_read(rf->int_en, &int_en);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (chan->type == IIO_LIGHT)
+> +			return int_en & event_ch_is_light;
+> +
+> +		if (chan->type == IIO_INTENSITY)
+> +			return int_en & !event_ch_is_light;
+This is the specific line the compiler doesn't like
+drivers/iio/light/apds9306.c:1036:39: warning: dubious: x & !y   
+
+I would match int_src against specific values rather than using tricks
+based on what those values happen to be.
+
+			return int_en && (int_src == APDS9306_INT_SRC_CLEAR);
+                                                      
+
+
+> +
+> +		return -EINVAL;
+> +	case IIO_EV_TYPE_THRESH_ADAPTIVE:
+> +		ret = regmap_field_read(rf->int_thresh_var_en, &int_en);
+> +		if (ret)
+> +			return ret;
+> +
+> +		return int_en;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int apds9306_write_event_config(struct iio_dev *indio_dev,
+> +				       const struct iio_chan_spec *chan,
+> +				       enum iio_event_type type,
+> +				       enum iio_event_direction dir,
+> +				       int state)
+> +{
+> +	struct apds9306_data *data = iio_priv(indio_dev);
+> +	struct apds9306_regfields *rf = &data->rf;
+> +	int ret, val;
+> +
+> +	state = !!state;
+> +
+> +	switch (type) {
+> +	case IIO_EV_TYPE_THRESH:
+> +		guard(mutex)(&data->mutex);
+Better to add explicit scope if you are going to use a guard.
+	case IIO_EV_TYPE_THRESH: {
+		guard(mutex)(&data->mutex);
+so we can see where the scope ends more clearly.
+
+> +
+> +		/*
+> +		 * If interrupt is enabled, the channel is set before enabling
+> +		 * the interrupt. In case of disable, no need to switch
+> +		 * channels. In case of different channel is selected while
+> +		 * interrupt in on, just change the channel.
+> +		 */
+> +		if (state) {
+> +			if (chan->type == IIO_LIGHT)
+> +				val = 1;
+> +			else if (chan->type == IIO_INTENSITY)
+> +				val = 0;
+> +			else
+> +				return -EINVAL;
+> +
+> +			ret = regmap_field_write(rf->int_src, val);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +
+> +		ret = regmap_field_read(rf->int_en, &val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (val == state)
+> +			return 0;
+> +
+> +		ret = regmap_field_write(rf->int_en, state);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (state)
+> +			return pm_runtime_resume_and_get(data->dev);
+> +
+> +		pm_runtime_mark_last_busy(data->dev);
+> +		pm_runtime_put_autosuspend(data->dev);
+> +
+> +		return 0;
+> +	case IIO_EV_TYPE_THRESH_ADAPTIVE:
+> +		return regmap_field_write(rf->int_thresh_var_en, state);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
 
