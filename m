@@ -1,27 +1,28 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2047.outbound.protection.outlook.com [40.107.96.47])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2076.outbound.protection.outlook.com [40.107.96.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41C74A9BF;
-	Sat, 24 Feb 2024 15:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6233846448;
+	Sat, 24 Feb 2024 15:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.76
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708787180; cv=fail; b=oVFVN1Mi0YVcs6O0myXwPLRFwxAeIkts9f540HufCtiItwzuj5UV0B3UFfBGGI8OUdUs0izztC5I3xTz5eeQbOGAs3I5GpEBN9cPf+0sizKIXluHv15mqGjP86BAqKUpmqW7edwaXQvGQjlpJGRk98Vv/A0+lM47LdPc/w3T2aw=
+	t=1708787208; cv=fail; b=KFWGSWeCAygsZ3diD71DvHSg6vAWR/tYIppoR/qZPg1BWCzVB56z4l54pEjiYwdxLSZQrRyUW5ghUObmVUEKuZsm6bq2FPsY/dpnlMkrymw1XzrYDJDg6lsnFJOU0bUUBk9HHir0r7xLJXSHvnvLcNT1s1MXCrxFcJK2B9EJ90w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708787180; c=relaxed/simple;
-	bh=SAFwc2gxk+qvcLKJksQMjk3z+Hx1gl+kqX2TcGblaxM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pNyH928lMj7sFUt+bmaAPC6eEmsZYfxkc5sMmLwLFCzggHlK4ogosKTnMk0y5M9VY8LkWJT0Ox7STVzbYVvQSLXI5HeslLzi+Rr6NgPHVInUoxN2fUmdvm1rH7//Hbx7vILtPJFb/KqvlP6i+ezTaYY0MJ8o9lJDI2GiuNAP2BA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tSsTR9Yg; arc=fail smtp.client-ip=40.107.96.47
+	s=arc-20240116; t=1708787208; c=relaxed/simple;
+	bh=vtNAZRRIQ7AEBOdIlt01kJsP5/rzP1tkZGu58xPi/2o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VBYSBBlVRcqPnowMKu6CdZcIDzxClzAyUMnPq7Dkd5KohruFoyVPBdKXFCJKo3CRBLEVlLi2LWLjKebZLRji6L6bwzDuc8CTFePT24bvbXkNdZsttkWdtdTUVUa8USPqRsyV8Bxvl1hiE9kepZ/oi5YeBmhK+td5+DRVW5Segn4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KWIgJFKA; arc=fail smtp.client-ip=40.107.96.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tSsTR9Yg"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KWIgJFKA"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FGgjjOf24/2cHpqOuwbkHPeOLrgWSiUzfKnKDbs7BmhlUc7suBQY2LPnF5509SJIxCGw/yYsly1kewFecCnG4xFUyC2iqmi74ikcMNx8rL2JtiiKI12zrkFXxnI1XqHUXguCRadmb8LBOtnKLYaTDDlASNyX86Unb6Avy1PlwmTtrC7EsfcSxTkqnqsGCD0n4ALEV4tRZqS/M34EyuCkkhB3qKVO27mUYx7JIrfGTyvD6IJrHG2nlWxnC0fN0d4SbhzUWK9DgePQGpObSydGo4w0dA/wMiZlYXwi70c+qses2wOcQUwJj7Yekt/SYwzkQb97+OWUFHLm/jB7MXg8Jg==
+ b=NDf4fv7T1lBTifRrEkxcE9lFwwsVWk/VxSSJoTn/CSyRPJiGM9bCfSc+8oPkaI8ADDwG4gphbqX1L45LAF1z6tWjxAuf3a5DkREnMdTnDMondMdPwogj2WTEipeC9X6XuVPl0gqUrL60D2wQ0LDwlk+HeOrLw/UQD4Jez5CuSb/v7BKDuZAspZewFUAmJDM38vp7F/jD04aBQ9LdeopAXej2DsgH5afoJsxQ7h9xQr6YnEf1BPO+k98qmMHNWIVvY5PAJXXr5QiGzRpJyp5hhSQ3fCxzRB+TeBf1YHfTAJlmunF6mCseH1zRHF944fBhv3erBFpyJXeaPiOkyDkSGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LUZDIzYliEDlkf7KLAlMPoVkGBFu7l2QbwRHkYMVkeU=;
- b=lzm1MkhfsNnnLt/9rCDyWRFq9WuBgkEsIyyZeGO4X7paPL1Lxq3nX2AhvLNk5s9+odEeGR+umhoLVldp4dTMfRlFvQmkuj9OcU0oEYau399hUfNSuVpbGzAP4sPdt5aZvm+6iYQS8+2SQa8WsLYLi7L+ZIFLwTmwJ1723K7HDCaNOnzj5UNv5mn/MccxVedytlRD90d6yEPHS/Dx48aMXiY/b01/4hHOrJQ0c592vjSP6GhtGRsBYNiXAKo+ey9sS14k98wx5isRSwiAnUqnnQHyUtmd9pklUCBCWxkmR+8YeLqY4T1688fvwvRQvfMZkh2XTgphemDq7f2u8Lo+QA==
+ bh=TRcaF52CMEO0QVAE1H8FtXam0Yy4RMg+DZcetOMVhQ8=;
+ b=AcEN9N4YgN9T5qBSJ+XHE76bfjdsteSDNwPWHMPb4KaB/Eez2pXCbFG7+F7lFr5AZgLyN58hZL7NFSUWHa4alnam6KQ3RfxzZPQ+6nR4ba0qDNF5gt5BvW/DdNrrSXm6oIqZPj56q5nHgXFm1JcVE1UZTTdSD1g3Rv7Sg/7vMSspK2jFe6OV0azxbyBv7LY6sCxYj/Qd5YskVwOkgIYh2UMxnlHlgqsQxKz9I4WEUul8DW5gPRUY+RR717+N/JH47LAAplReQ4utOvXyMFKvPkNY2FXqB5i8u23hrx2KRHckfv0IOocLTNxO1JequSf7Pev1BEBT8f0TnbG+KJV3yg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -29,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LUZDIzYliEDlkf7KLAlMPoVkGBFu7l2QbwRHkYMVkeU=;
- b=tSsTR9YgA33hI8qhPsemnUL65Vx6oQcWh9EegAN18ZJxG6NIFDXbLojvPO7etL/fjezPf9b+5rzT0K85Wy4A/TL8t0JoWL3BF+3mipkl6zBbpt0fW4OfLL4bYoTUMMqOTDmc2sJjlY0M/sMliQ0XJGtqaO/5Lw7V16Eh8ymxUfBOx8BWOfyGSVvB2Wg6YTiO9M3r0TYTy/f0UHasK1W40fdh6Lb7qsnXROHo1aOWU1Q4xKGmTAfAFtYNflSirqrVseRcOdX06PzjXkRkwGFVuvT2ixRCu03mg0GT+enHeD94IITMiRW6bWhgQQvglpLimRqahHWE8vlNM9W+Kb2adQ==
-Received: from CH2PR19CA0011.namprd19.prod.outlook.com (2603:10b6:610:4d::21)
- by DS0PR12MB7678.namprd12.prod.outlook.com (2603:10b6:8:135::22) with
+ bh=TRcaF52CMEO0QVAE1H8FtXam0Yy4RMg+DZcetOMVhQ8=;
+ b=KWIgJFKAjq4YPghbcHaSgnZJJjRCDw7gJ8zeBl/xNF+mXimwTgqlMeRl4LR9VfhFI3GiEswvn+FMOwPzgxiyzTi9KSeHAuytOU+SH7M6BhpRDpFv/gqXhWE82Qlo+fGUpZkiRVRr+6PQovoSkGR1hC+pEajdk0J+dwA4xy7DTYfrht68BhvCXHHTLye29174P0UHdFF0IGZNJG9+0LxE5RxaJZFAJ417EjPj1pkn4QyCTyqVm+Nh78CyDEBVcZ+QYrotoLIyv9kbaYWzk5OjUjdAabD9F+yPd6rsRS4WvFc9ihZJZ5ass3j+jXTWrWEhcX1xIUoFIFbGXNw4wL1eOw==
+Received: from CH2PR19CA0003.namprd19.prod.outlook.com (2603:10b6:610:4d::13)
+ by DM6PR12MB4894.namprd12.prod.outlook.com (2603:10b6:5:209::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.24; Sat, 24 Feb
- 2024 15:06:12 +0000
+ 2024 15:06:43 +0000
 Received: from DS3PEPF000099D7.namprd04.prod.outlook.com
- (2603:10b6:610:4d:cafe::70) by CH2PR19CA0011.outlook.office365.com
- (2603:10b6:610:4d::21) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:610:4d:cafe::99) by CH2PR19CA0003.outlook.office365.com
+ (2603:10b6:610:4d::13) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.48 via Frontend
- Transport; Sat, 24 Feb 2024 15:06:12 +0000
+ Transport; Sat, 24 Feb 2024 15:06:43 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -50,19 +51,19 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
 Received: from mail.nvidia.com (216.228.117.161) by
  DS3PEPF000099D7.mail.protection.outlook.com (10.167.17.8) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.25 via Frontend Transport; Sat, 24 Feb 2024 15:06:12 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ 15.20.7292.25 via Frontend Transport; Sat, 24 Feb 2024 15:06:43 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
  (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Sat, 24 Feb
- 2024 07:06:02 -0800
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ 2024 07:06:26 -0800
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Sat, 24 Feb
- 2024 07:06:00 -0800
+ 2024 07:06:25 -0800
 Received: from sgarnayak-dt.nvidia.com (10.127.8.9) by mail.nvidia.com
  (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12 via Frontend
- Transport; Sat, 24 Feb 2024 07:05:49 -0800
+ Transport; Sat, 24 Feb 2024 07:06:14 -0800
 From: <ankita@nvidia.com>
 To: <ankita@nvidia.com>, <jgg@nvidia.com>, <maz@kernel.org>,
 	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
@@ -81,10 +82,12 @@ CC: <aniketa@nvidia.com>, <cjia@nvidia.com>, <kwankhede@nvidia.com>,
 	<kvmarm@lists.linux.dev>, <mochs@nvidia.com>, <zhiw@nvidia.com>,
 	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v9 0/4] KVM: arm64: Allow the VM to select DEVICE_* and NORMAL_NC for IO memory
-Date: Sat, 24 Feb 2024 20:35:42 +0530
-Message-ID: <20240224150546.368-1-ankita@nvidia.com>
+Subject: [PATCH v9 2/4] mm: Introduce new flag to indicate wc safe
+Date: Sat, 24 Feb 2024 20:35:44 +0530
+Message-ID: <20240224150546.368-3-ankita@nvidia.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240224150546.368-1-ankita@nvidia.com>
+References: <20240224150546.368-1-ankita@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,143 +98,88 @@ Content-Type: text/plain
 X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D7:EE_|DS0PR12MB7678:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b8585ce-199d-4d54-838f-08dc354a23fa
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D7:EE_|DM6PR12MB4894:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1a6cb5b3-b8d0-4c8f-13d7-08dc354a3645
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	ktApkWdr0NlyvDIrtx6nokZHwdbcm8ERQF4MS21EeZynfmfRI1GDbnOWa3teX3388pJZ8ENP/VjXEDHlD9T0lu6IQnIL0V/+AQ9jzXlIK2oyLWL98vAOCmTf7Bsxivd5iLALVrELUNalpSczNgzSJ/Qpq+oNdZTlU4Ve9Yyma1iwAxET02HF5U8/hC3LbTg5VQkBSQHIe5DhHhmZPN1qsZapRS3e1hi5/qK8ubDTg1D7xQAyQLVpg2iAJcVBslelHT3awCLEcwoAdYueLg5dfybeReKFNxLJo8s2zlXs0l+7/5yjz6/OOe7g3DoonoW2hjReJRb+bgEd0qg0H5KYGjVUTOdUIoHHhIO2/8zh4MzwwuzjRjg6i3bHt/RO+rGdmuXWvDn+U+5Y3BnDdR3nhbsx3Gi7sVjX8LQz7r9bAm2njTNow90Gi7k0A8Qz2uhN588z6db+Malhtq4uh5JAkvZgwdsupZSH5audOVIdKdUR2h42zx/shx5oABuy09Fqj7T5BK+VmaJP+fIx7m6UdQ8l5ymQUU5Z0H+HDmxYnRPf2pT1e6JNREWIstPs52Z9Sfhgg6NM6I/mT+qJIICE7C8r3nkVePtppg4+tzFpIgVijl6JOLaOtlkZEhTu2yxFCgzONnAakhcDedEpVp5Y4DAf23AFbyQy96aYhTSAlCYrwrHfVdf+6maE6kVA8CMdf3BTgYtQYS0DIy0khMS0+Q==
+	nVrX1apBYdo/a+4PsEVLutRl/RKwgEa/DqzhLB8gwRjIFSeGeZSqMWG+l5LBjyCv5uCMM5Yrf5jJrikHd4W1iiT5gOWFwsOaNS64rlBLoLxKJBdIlrYflrqZ5O5t0THqvWjl79ehf6buiQvYONplBdhwg0gUBe9GqmnAzKsORGO2VEhIt4M4ARz2Dmp8JHB9BMUqNAmnJ1cXoql0Rj7fhiQgbgKnlD5BtTWe8f3f5+oI5rLXRk9d0PrV8STWr1paRjaWGrdKHi6UTwwZYH3Q+6I8Nd7Jorr6wpcqcbNM5MpGB0UnI4IRgu5Tkrcmd2RPzfwxaZFqi6YD+NVCZ/S3Z0s3ZwtVBSbOkagnxAffo8DefNuEbraKPqOFQpSOJxDXKcEjh77GcDMAzEBeKMtGI3F+igtd0D6qv3/yQjjl289mlZM0Bo47hVRLjfdfymE/rr7oQT5s/09MN1hJiGQDyaCEKLp1Pys/TWnAHE/0XUaRPHxi9ymCwuNL3MCbLaKCifiBfIDojuFEoDvpU7fIdoaz/VsWkR4eBec/i1xtPXzOKFT7rGiWIelYG91am0eCwVPx9ScbFKYsYLZuMqAPfAqheBFfjYIMBPrxFt8zICReux2eHC9GnlVhMJ6Qro3/y2fVXShUFHPH05qcXo+jGrPyzCAGrVKu6Ju6YH5UVgw=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(230273577357003)(36860700004)(40470700004)(46966006)(921011);DIR:OUT;SFP:1101;
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(36860700004)(40470700004)(46966006)(921011);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2024 15:06:12.4427
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2024 15:06:43.0054
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b8585ce-199d-4d54-838f-08dc354a23fa
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a6cb5b3-b8d0-4c8f-13d7-08dc354a3645
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DS3PEPF000099D7.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7678
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4894
 
 From: Ankit Agrawal <ankita@nvidia.com>
 
-Currently, KVM for ARM64 maps at stage 2 memory that is considered device
-with DEVICE_nGnRE memory attributes; this setting overrides (per
-ARM architecture [1]) any device MMIO mapping present at stage 1,
-resulting in a set-up whereby a guest operating system cannot
-determine device MMIO mapping memory attributes on its own but
-it is always overridden by the KVM stage 2 default.
+The VM_ALLOW_ANY_UNCACHED flag is implemented for ARM64, allowing KVM
+stage 2 device mapping attributes to use NormalNC rather than
+DEVICE_nGnRE, which allows guest mappings supporting write-combining
+attributes (WC). ARM does not architecturally guarantee this is safe,
+and indeed some MMIO regions like the GICv2 VCPU interface can trigger
+uncontained faults if NormalNC is used.
 
-This set-up does not allow guest operating systems to select device
-memory attributes independently from KVM stage-2 mappings
-(refer to [1], "Combining stage 1 and stage 2 memory type attributes"),
-which turns out to be an issue in that guest operating systems
-(e.g. Linux) may request to map devices MMIO regions with memory
-attributes that guarantee better performance (e.g. gathering
-attribute - that for some devices can generate larger PCIe memory
-writes TLPs) and specific operations (e.g. unaligned transactions)
-such as the NormalNC memory type.
+Even worse, the expectation is that there are platforms where even
+DEVICE_nGnRE can allow uncontained faults in corner cases. Unfortunately
+existing ARM IP requires platform integration to take responsibility to
+prevent this.
 
-The default device stage 2 mapping was chosen in KVM for ARM64 since
-it was considered safer (i.e. it would not allow guests to trigger
-uncontained failures ultimately crashing the machine) but this
-turned out to be asynchronous (SError) defeating the purpose.
+To safely use VFIO in KVM the platform must guarantee full safety in the
+guest where no action taken against a MMIO mapping can trigger an
+uncontained failure. The assumption is that most VFIO PCI platforms
+support this for both mapping types, at least in common flows, based
+on some expectations of how PCI IP is integrated. This can be enabled
+more broadly, for instance into vfio-platform drivers, but only after
+the platform vendor completes auditing for safety.
 
-For these reasons, relax the KVM stage 2 device memory attributes
-from DEVICE_nGnRE to Normal-NC.
+The VMA flag VM_ALLOW_ANY_UNCACHED was found to be the simplest and
+cleanest way to communicate the information from VFIO to KVM that
+mapping the region in S2 as NormalNC is safe. KVM consumes it to
+activate the code that does the S2 mapping as NormalNC.
 
-Generalizing to other devices may be problematic, however. E.g.
-GICv2 VCPU interface, which is effectively a shared peripheral, can
-allow a guest to affect another guest's interrupt distribution. Hence
-limit the change to VFIO PCI as caution. This is achieved by
-making the VFIO PCI core module set a flag that is tested by KVM
-to activate the code. This could be extended to other devices in
-the future once that is deemed safe.
-
-[1] section D8.5 - DDI0487J_a_a-profile_architecture_reference_manual.pdf
-
-Applied over v6.8-rc5.
-
-History
-=======
-v8 -> v9
-- Collected Reviewed-by and Acked-by.
-- Updated the commit messages in 2/4 and 4/4 to passive voice and fix
-  spelling error.
-- Updated subjects to align with convention of using capitalized first
-  letter.
-- Added links in 1/4 on the previous conversation for tracking purpose.
-
-v7 -> v8
-- Changed commit message of patches 2/4 and 4/4 to include detailed
-  description of the VM_ALLOW_ANY_UNCACHED flag posted by Jason in
-  the commit message.
-- Added more detailed comment in the vfio_pci_core about
-  VM_ALLOW_ANY_UNCACHED flag.
-- Rebased to v6.8-rc5.
-
-v6 -> v7
-- Changed VM_VFIO_ALLOW_WC to VM_ALLOW_ANY_UNCACHED based on suggestion
-  from Alex Williamson.
-- Refactored stage2_set_prot_attr() based on Will's suggestion to
-  reorganize the switch cases. Also updated the case to return -EINVAL
-  when both KVM_PGTABLE_PROT_DEVICE and KVM_PGTABLE_PROT_NORMAL_NC set.
-- Fixed nits pointed by Oliver and Catalin.
-
-v5 -> v6
-- Rebased to v6.8-rc2
-
-v4 -> v5
-- Moved the cover letter description text to patch 1/4.
-- Cleaned up stage2_set_prot_attr() based on Marc Zyngier suggestions.
-- Moved the mm header file changes to a separate patch.
-- Rebased to v6.7-rc3.
-
-v3 -> v4
-- Moved the vfio-pci change to use the VM_VFIO_ALLOW_WC into
-  separate patch.
-- Added check to warn on the case NORMAL_NC and DEVICE are
-  set simultaneously.
-- Fixed miscellaneous nitpicks suggested in v3.
-
-v2 -> v3
-- Added a new patch (and converted to patch series) suggested by
-  Catalin Marinas to ensure the code changes are restricted to
-  VFIO PCI devices.
-- Introduced VM_VFIO_ALLOW_WC flag for VFIO PCI to communicate
-  with VMM.
-- Reverted GIC mapping to DEVICE.
-
-v1 -> v2
-- Updated commit log to the one posted by
-  Lorenzo Pieralisi <lpieralisi@kernel.org> (Thanks!)
-- Added new flag to represent the NORMAL_NC setting. Updated
-  stage2_set_prot_attr() to handle new flag.
-
-v8 Link:
-https://lore.kernel.org/all/20240220072926.6466-1-ankita@nvidia.com/
-
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Acked-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+---
+ include/linux/mm.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Ankit Agrawal (4):
-  KVM: arm64: Introduce new flag for non-cacheable IO memory
-  mm: Introduce new flag to indicate wc safe
-  KVM: arm64: Set io memory s2 pte as normalnc for vfio pci device
-  vfio: Convey kvm that the vfio-pci device is wc safe
-
- arch/arm64/include/asm/kvm_pgtable.h |  2 ++
- arch/arm64/include/asm/memory.h      |  2 ++
- arch/arm64/kvm/hyp/pgtable.c         | 24 +++++++++++++++++++-----
- arch/arm64/kvm/mmu.c                 | 14 ++++++++++----
- drivers/vfio/pci/vfio_pci_core.c     | 19 ++++++++++++++++++-
- include/linux/mm.h                   | 14 ++++++++++++++
- 6 files changed, 65 insertions(+), 10 deletions(-)
-
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index f5a97dec5169..59576e56c58b 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -391,6 +391,20 @@ extern unsigned int kobjsize(const void *objp);
+ # define VM_UFFD_MINOR		VM_NONE
+ #endif /* CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
+ 
++/*
++ * This flag is used to connect VFIO to arch specific KVM code. It
++ * indicates that the memory under this VMA is safe for use with any
++ * non-cachable memory type inside KVM. Some VFIO devices, on some
++ * platforms, are thought to be unsafe and can cause machine crashes
++ * if KVM does not lock down the memory type.
++ */
++#ifdef CONFIG_64BIT
++#define VM_ALLOW_ANY_UNCACHED_BIT	39
++#define VM_ALLOW_ANY_UNCACHED		BIT(VM_ALLOW_ANY_UNCACHED_BIT)
++#else
++#define VM_ALLOW_ANY_UNCACHED		VM_NONE
++#endif
++
+ /* Bits set in the VMA until the stack is in its final location */
+ #define VM_STACK_INCOMPLETE_SETUP (VM_RAND_READ | VM_SEQ_READ | VM_STACK_EARLY)
+ 
 -- 
 2.34.1
 
