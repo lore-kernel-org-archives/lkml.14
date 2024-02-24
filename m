@@ -1,97 +1,93 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB53469E;
-	Sat, 24 Feb 2024 20:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5194CB36
+	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 20:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708805786; cv=none; b=OI6Wnqt/klBmu2HjOK7T6RWMSR7MgqqMqmfbzRvkhhHs/jb75WMTdT233v/vkuymlfG9ZhJoz2Wa1WjCOjJ9rElL6lLhw4pTU16DxMi0lW7o2iwjRHgcwObFC22CWl0pASqT+WO7budwTtdT1kswlVYXfEHVYstcTuLuFBBNrKg=
+	t=1708805803; cv=none; b=GGOnUMC8svTgRJEZ0odT37eRtX8GYNwUNGVtUncKAZV8Z/ItcYiBlI/3gBc3XRvlrr394G/e+Pj7FHN9KhbFeDu7PHwyJ0fzgfKTRiPWIceQj1RZjbeyVUnEVzgkqb5rpEarO4FQ1fUSWa1pjnwqrzQ5BKwjaFzOwvUCwAgN+68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708805786; c=relaxed/simple;
-	bh=yLz7Vg77PB7IlV1AITmSO9pNNY8zgh7ejy/6z5+C0lo=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=mjNVsQrHZPjy3coMRtUtORF4NzMqfzHKLCyR0HEfNE2KlfMLz+0JKRbDW5U2vzUmxtSvgchLQqzAsiWiFYzpQPxKHH+oKvk3gZBWLSsMNqn21+jV570ls1kow7QxnU2m0bebuae/D6vftqNySZGyT0jNaK/aP6i0LH5hJSH9+U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QNt6B8Yk; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1708805803; c=relaxed/simple;
+	bh=58rI6Lh5A3zmVIcZXAoo36bnf+BziOp//zU0TJUV+lo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UnIbHbCcYxGtnYHBEmGBAppI9yFT+hMRrnRNRjIBlmzLUE/eu2yn8GJCHkZyQ6B0GmehhWi3JaCCZTYz3u78msG96fxterk75zQNZpbXg89p/fJymP7JZYAAcLZMqIFEzfKNF3tSCShTxiEDuklJrYACs2Ov78PJOUF60fjN9pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=xFrxbTiv; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QNt6B8Yk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1708805777; x=1709410577; i=markus.elfring@web.de;
-	bh=yLz7Vg77PB7IlV1AITmSO9pNNY8zgh7ejy/6z5+C0lo=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=QNt6B8YkGNqRWjK92Je/bLysp4ai5k/0EujaGr1eWzp86Q4DPbv5901HqtkJ/ImL
-	 mPM/BeAep5L4IapLHjYB8Zsmgoxidk2oOyRoG5YK4VhnvSYtpNd5AeRHb76+xX5N9
-	 2MSW71oB/LjBnkMP+NRqJOoBrhNFyShAtbUUMTBx17ogYfPEd9rdi5O0POlfUc1f0
-	 zvnneTmviXfWCkS087OI2RdBC/WvkBBqHA/7tHF9VWUDDyPq/i2RkVBa+Sj+xGvSd
-	 8NnxynGyrHF9CrTqhQEu/AnmOA7Iuft59hFT/1uRD70t/ldVHRQ/QDJJMuMfmmbse
-	 6tt1eK+1XwicLSWALg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.80.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MkElP-1rBoP0152X-00ka9U; Sat, 24
- Feb 2024 21:09:43 +0100
-Message-ID: <0f25b520-563c-4b3b-96cd-d1dcc7ea6f40@web.de>
-Date: Sat, 24 Feb 2024 21:09:40 +0100
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="xFrxbTiv"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cfcf509fbdso823367a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 12:16:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1708805800; x=1709410600; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ox3kbDdE+VVlFfRSV4KRbxjd8Vtf638HvV83l5cQ8zw=;
+        b=xFrxbTivycoPaFT57zcw1LA+QUnoPtUv24FCLXEbGcJsEjK5mm3uh7wFZ9ZdchyYav
+         Aai2J+HrSGvM9bvupIJEQ4xR/e9B9kYQfA9dInE0wx1/VUeDEqZfiXXVQzu0N41wAONh
+         EudoanuqZo0759HiKiL4R6i9b6a9qo4NPybPKkC2qLA/+72acRN2OP9MCKSvFoZohjle
+         DlunLEZCALes3dbFaDzfxo0imo5szoI+g9lZaFdi9sRWKCY8edBhrtGF79ez8PvgI0Bi
+         MCVnDZb9p0fFxix5LOzmiIWeYssGQGHMw0bBm/evEFLGNmG/lk75OVUJTo2Gt9hMN0BY
+         GH8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708805800; x=1709410600;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ox3kbDdE+VVlFfRSV4KRbxjd8Vtf638HvV83l5cQ8zw=;
+        b=G7iSAh2p6Cs3AYv581fvzigG4J5iv9rSw/noncc1FVj87VpbkIyzO/d3LEvnSjpz7B
+         xr1ignS/o1uzdsgZfft90uqTpVpARxwnRe4w1Ey5o8QgS4fyaDi/dYKNQMJnzTa9SdYF
+         mPocG5Cq9aS3raUzlQuyB1dIFX63LSniPuCrivWXdjiAUKjHLo9nlV+fckEAuOOiiU2J
+         u9I7D+s4DT0yQwkt+vA+SeF8C66NrLKWVulTUKE6vdMacGNIji1jf8G/WT8uvMcRj0zq
+         E2vLflVSS3au3gXRP3I6oPWLDfVq8Ni6oR9AJ90irlAvX+McxqdD+3JRjRd8UMnvX+5f
+         dhdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzomeGD3nXtUG8DKKhT+4i5KD9GxBwAxz43G055nsPxdERvaGylj2HiWNmEM8fVavuM+1gYB12r9KeI5Q+YP6rd07PN1KFvgAwpYQH
+X-Gm-Message-State: AOJu0Yy312IQAJbIuQduV2AxQXL3XzlmgYpf0Ms1n1Q8ePqR4E7uBmOk
+	M8uLGPMhRW0DQxqZCWAKiGgl7b5PorX+AnZF006WzwT/MDZhJ467hwpwlAi1qVsmsDJEtqZOq49
+	M
+X-Google-Smtp-Source: AGHT+IHAqqPQV7N8XB40psZopiUBgLNcHzyDcaUPaIezq1Iy+VTdgSYeS2XJGE1v3VAia/J5jEvp2w==
+X-Received: by 2002:a17:90a:5e08:b0:299:6b94:4165 with SMTP id w8-20020a17090a5e0800b002996b944165mr2478612pjf.3.1708805800372;
+        Sat, 24 Feb 2024 12:16:40 -0800 (PST)
+Received: from [127.0.0.1] ([2600:380:7472:2249:6d10:d981:9c6f:5d24])
+        by smtp.gmail.com with ESMTPSA id n15-20020a17090ade8f00b002995e9aca72sm1598967pjv.29.2024.02.24.12.16.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Feb 2024 12:16:39 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: chengming.zhou@linux.dev
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, vbabka@suse.cz, roman.gushchin@linux.dev, 
+ Xiongwei.Song@windriver.com, Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <20240224134646.829105-1-chengming.zhou@linux.dev>
+References: <20240224134646.829105-1-chengming.zhou@linux.dev>
+Subject: Re: [PATCH] bdev: remove SLAB_MEM_SPREAD flag usage
+Message-Id: <170880579918.88310.13620256646819841520.b4-ty@kernel.dk>
+Date: Sat, 24 Feb 2024 13:16:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: David Lechner <dlechner@baylibre.com>, linux-spi@vger.kernel.org,
- linux-iio@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, Mark Brown <broonie@kernel.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alain Volmat <alain.volmat@foss.st.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- David Jander <david@protonic.nl>, Jonathan Cameron <jic23@kernel.org>,
- Martin Sperl <kernel@martin.sperl.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-References: <20240219-mainline-spi-precook-message-v2-1-4a762c6701b9@baylibre.com>
-Subject: Re: [PATCH v2 1/5] spi: add spi_optimize_message() APIs
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240219-mainline-spi-precook-message-v2-1-4a762c6701b9@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KmuGeYS0ux4JU6O/o1Nu+42F6g71tHr+fv4Cdf5CuQtvKg1uvSg
- vjYqz61D7ymrpo994E5hjD1PvjDRPtvAwNo4ABW+RoF6DWx1XWXdjexrxQauqSgPlIiKbo3
- nRHW4A+GgRRwZp6WbEM7VuOXok/HOHsz2z1MMcumnqxMuE6AJtwolCKp6PbYWs5E8s6iVYP
- 9jaJaK9mvtvBHtKRt3VBw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:5CHPEWZZ7GQ=;zQWgfxumXQtHf8dKzPPr9zY4xH4
- Dk0CNOIPMl2d4EbhSQZfjYsO6jKS46xWTXOrFyf90nXeXsKqLRCMBeekbPglwWSBN7QdKxBdD
- 0L1mq+g7KKqemQG7JMzCdDg3H74RKDQtS6ZFomNdyJW0yCU3ZbIaIpn7wsbX82lmNrNs9wrqn
- od0XLdwPP2vMiFEj9DRBhcOldX/dDSfeKDFsgKi10kNOVnbvy3+Wzxk2f1ac1JcdgPIT+iS+Y
- iaSh0m/qz6fYCkO25PYu3caWHornpzEmSntiZ9KL3ZZQ7PL42FcorzLb9eV0hfDgkJ2cijU0p
- 6h9FidploBmVeX/EFIkLEYFxyJ7PM17K+k/6pZz3blXRrJDK7rw2l2m+veK5isv9gXNyHdqgT
- pzYpkZzHTsisTCwqTHNda6TQKlKL3HfZO4ZnUqC5OVmvlkOGVzIqCFE06qQaUvzGX89SQpCCU
- u1F8mmWra9nBwTgV/pGno8X0gwjijH6Shwm3kX1BmEPJHOc7XRtr8aCv5MW/VEvKRDq68ImPe
- OlwXuyJ6LkBaiF1L5GwCPqsFagqLpXB0E7M1wWokHr+kY1xqc0ux7DNjQezoNBNkf8OstiJ6j
- 09PNrZ/QH4o3zOKOAo0REqVpyquyGl8GrkRxr1QlfI+EO2TRqrMy3yMlQEUbYVcN/Szha2doj
- r0cjpc0684SB5ZuW+AmwaLaTOly6OyEzX1e689iJ0VSkV2qkxChF0W99x8LPAXjWgRr70knM2
- RKTmCtdYQcgtl2jk6A4rLpo3+oXMfXBzLyr6g6pQESzk+AWbZqzClsTxNDMfJQroAwol4RFN+
- G8iztBInP4/xAEuvmrCK1VA6w3XiSkJM5jxsxh/BCrC+8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-=E2=80=A6
-> +++ b/drivers/spi/spi.c
-=E2=80=A6
-> +static int __spi_optimize_message(struct spi_device *spi,
-> +				  struct spi_message *msg)
-=E2=80=A6
 
-I propose to reconsider the usage of leading underscores in such identifie=
-rs.
+On Sat, 24 Feb 2024 13:46:46 +0000, chengming.zhou@linux.dev wrote:
+> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
+> its usage so we can delete it from slab. No functional change.
+> 
+> 
 
-See also:
-https://wiki.sei.cmu.edu/confluence/display/c/DCL37-C.+Do+not+declare+or+d=
-efine+a+reserved+identifier
+Applied, thanks!
 
-Regards,
-Markus
+[1/1] bdev: remove SLAB_MEM_SPREAD flag usage
+      commit: 82c6515d8a970f471eeb8a5ceeaa04c3e5e1b45c
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
