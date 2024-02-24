@@ -1,168 +1,141 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184712907;
-	Sat, 24 Feb 2024 20:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8841DFE5;
+	Sat, 24 Feb 2024 20:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708806835; cv=none; b=W6Y67rTHA3Zs6cBtSNTZCz37c7gyW1faJeCBpp7/hn7ruh9w7FAzV/smBo0Lfwg1+nwhD7MsxB4a50sJm+jTc8iTQ8889wXJbyVDl6Lzp47OuTepsSOpMzbLB0wCwStsDPaVbAaP282tDj2wqWXrquL93swWMTIeh/xWsXOtD6w=
+	t=1708808096; cv=none; b=W4mqbH1tKPNfgg3dld7cQOOM3BGAfrPVz/llMjhVApvj9DpKMx4ZqBkJbzr9b9sOMYHkM6yvp9jwARJQFM2WocaXkIv1Fjv0Wclvmp12RDz7cEpGBu5cBaTCp6mkRk8SJFMBfWlYAm6GkPYAa8PNofOehV+1m9o4KXll2kYAMLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708806835; c=relaxed/simple;
-	bh=cCfTcHh+L8Sb+wMNuDPsXe3SfkLkUJcgmlIeJkrlaPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NGnC6sbdpwESXQSB3FzdpE95Ee7k08TFZNgILH1lu3LN7EtNb5yLP3A1hRjd0omD9BYapsqpSO3R5pp3/CM62RLS8k3vOfwtp2ZlGrqB7/ARfAESwkBIHMf+NGLgchCzJavM7HffHtsxZZFUAuWIlmcihg9HgzjdVZUcd4nm9jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cTbO7Jro; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708808096; c=relaxed/simple;
+	bh=sAzkLyInW8vnZNRVOTYLy2onbr1cozPVspALWkhdV+M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dUvWbrojvN36DS2lJAB6nnwskjK8g6VqrHtWc5GFg5VUf8W4jzLY+TGAhYk2fug2f7qTt8vhiEJnFZClbXrnQwQ7i0LwrHb8z/3syV603McdIROzDCkVsH2TeDFhhw9ul0q7lONX4WHNuxFJx7vN2IVd6OGuWEnEm//nNQRUjIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icvaP+T4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTbO7Jro"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a26ed1e05c7so299960266b.2;
-        Sat, 24 Feb 2024 12:33:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708806832; x=1709411632; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9XM8+0P5wB9WQpTB3495MoLD3B+gCcFRkLx1uWNuJ64=;
-        b=cTbO7JroP4AjXv+7XxyYnKGkNSI6FE48BexIqtV3890ByoaN+jR4qxAt3xQhq1RR8r
-         eGt6eug0itrPDiGXz/4oUfN+7dxKIwrusVaTZuMGUMYzW39YB2A0Bb4x0/vSB+1F+A7I
-         eTTulR65PoHcPcKUqDj0RihH3yG2lxyRY2eAHhEh/RTwXSIV54/59v0qSU3KTVHusW8w
-         b2cwAIKA38rFdER7/RrX8U+lDqCNF5n6N96G2cT2XcGtr0Tzw2TpySl5mecGrM1n1K+k
-         idruhThuUgllwXAxSVFbxrttgAvm2xR5Yb6Ozf3U5Bkscx+oS0ywa12gEogWD/hGiC0Y
-         ttEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708806832; x=1709411632;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9XM8+0P5wB9WQpTB3495MoLD3B+gCcFRkLx1uWNuJ64=;
-        b=a/jME/wsZNGvjsx8yqINh9Ot1z73C5wPJQdKY7PM/BqGjQc8BvwXzxrd4Nl2sxA7Fx
-         GDOGRHDCUss+6Lbauvszf9BrxnWxWNBJ/U5g2CcFjrOWoE0gMQk/pFnBD2ex52BnuxEN
-         +1pEw53K4/ZR0cHI6ANHSG+EX67g7H9TlSgvJFalBEoXTCmQ4deMYLZXS+KkF2Alvv5A
-         GqLogy3Kjuj0fZGtIY0N5ojIu8GUEMkzcqETrZ2zMDouPfiLcDFMKjiQb59j26aSeGEB
-         lZ8jl7/vAxNyXgOCqx1ecjki2gNoBl6MxceasKw/2ZAjV3b7Lt390ZtDuDWJwXEbANbH
-         LWVA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8CuRyXjHevHd4mVAvvtAb+bk0MYMmB6yXb9ShVIcny7pyF7mStRhntmEyQSO2eO1WCP8J4gUjm8ihrRWJQfy6GjvRRPGNHUqvRrA5cCneZVb7evVQiD8pxNmHFNZybZKiQNCG
-X-Gm-Message-State: AOJu0YxfTuFjxDUYUs8xSxwLQIq4FLquWxZNxlELPMfhnJEqTIc/nxWb
-	gS/F5SyL3otgGm769q3oG4lq3Gy1zgQDG94Rmwsygoi3POsAK0V7
-X-Google-Smtp-Source: AGHT+IESmMbPDUr6ionUcnAyBbj+WoYK/YfXv7vOgH5HMQrzlxAQqwgXfE2mkH5PkcFc8w8iKaXiIQ==
-X-Received: by 2002:a17:906:b755:b0:a3f:8008:1823 with SMTP id fx21-20020a170906b75500b00a3f80081823mr2135627ejb.72.1708806832192;
-        Sat, 24 Feb 2024 12:33:52 -0800 (PST)
-Received: from fedora.. (cpe-109-60-82-34.zg3.cable.xnet.hr. [109.60.82.34])
-        by smtp.googlemail.com with ESMTPSA id o16-20020a170906359000b00a3e45fa1c77sm875363ejb.55.2024.02.24.12.33.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Feb 2024 12:33:51 -0800 (PST)
-From: Robert Marko <robimarko@gmail.com>
-To: andrew@lunn.ch,
-	f.fainelli@gmail.com,
-	olteanv@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Robert Marko <robimarko@gmail.com>
-Subject: [PATCH net-next] net: dsa: mv88e6xxx: add Amethyst specific SMI GPIO function
-Date: Sat, 24 Feb 2024 21:33:09 +0100
-Message-ID: <20240224203349.1358064-1-robimarko@gmail.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icvaP+T4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07E17C433C7;
+	Sat, 24 Feb 2024 20:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708808095;
+	bh=sAzkLyInW8vnZNRVOTYLy2onbr1cozPVspALWkhdV+M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=icvaP+T4vL8lB7rJAw7kuQPyoy5Z1d0qfqLK91Eo1y66kRKHm3r+iIv5nKlb0jqRc
+	 e8nWOD/9qE/pg4F7owoaH12r9daoQsAonOsUODrhb8+jnFbzwddfin86cks4REEmgh
+	 BbAvtx45d35WCYkxgwhZFvMtHikQu1uPOSqhpOlTRgNI1K+ptA8/nHWsMblAwz/+LQ
+	 lshJ3rm04YvFl4pi3t6rVyFFw5Hv8V0yT6l3A4hy71mxtKzOEUlXNIDQAAb0fHN5Bw
+	 nlbjmgCPwxnsKrGsbtjNPvVSXMax6XBdt6RsxcWXSO6jOM/gBEcpBZVsNeuddo4OcI
+	 w9gF+kZDN2Dpw==
+From: SeongJae Park <sj@kernel.org>
+To: Barry Song <21cnbao@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Minchan Kim <minchan@kernel.org>,
+	akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	mhocko@suse.com,
+	hannes@cmpxchg.org,
+	Barry Song <v-songbaohua@oppo.com>
+Subject: Re: [PATCH RFC] mm: madvise: pageout: ignore references rather than clearing young
+Date: Sat, 24 Feb 2024 12:54:52 -0800
+Message-Id: <20240224205453.47096-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CAGsJ_4w5JF8zjsM=vEiArUpnvN9LjAdnUn98mEUJSAhg4Y9XjQ@mail.gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The existing mv88e6xxx_g2_scratch_gpio_set_smi() cannot be used on the
-88E6393X as it requires certain P0_MODE, it also checks the CPU mode
-as it impacts the bit setting value.
+On Sun, 25 Feb 2024 04:01:40 +0800 Barry Song <21cnbao@gmail.com> wrote:
 
-This is all irrelevant for Amethyst (MV88E6191X/6193X/6393X) as only
-the default value of the SMI_PHY Config bit is set to CPU_MGD bootstrap
-pin value but it can be changed without restrictions so that GPIO pins
-9 and 10 are used as SMI pins.
+> On Sun, Feb 25, 2024 at 3:07 AM SeongJae Park <sj@kernel.org> wrote:
+> >
+> > Hi Barry,
+> >
+> > On Sat, 24 Feb 2024 12:37:59 +0800 Barry Song <21cnbao@gmail.com> wrote:
+> >
+> > [...]
+> > >
+> > > BTW，
+> > > Hi SeongJae,
+> > > I am not quite sure if damon also needs this, so I have kept damon as is by
+> > > setting ignore_references = false.  MADV_PAGEOUT is an explicit hint users
+> > > don't want the memory to be reclaimed, I don't know if it is true for damon as
+> > > well. If you have some comments, please chime in.
+> >
+> > Thank you for calling my name :)
+> >
+> > For DAMON's usecase, the document simply says the behavior would be same to
+> > MADV_PAGEOUT, so if we conclude to change MADV_PAGEOUT, I think same change
+> > should be made for DAMON's usecase, or update DAMON document.
+> 
+> Hi SeongJae,
+> 
+> I don't find similar clearing pte young in damon_pa_pageout(), so i
+> guess damon's
+> behaviour is actually different with MADV_PAGEOUT which has  pte-clearing. damon
+> is probably the best-effort but MADV_PAGEOUT isn't .
+> 
+> static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
+> {
+>         unsigned long addr, applied;
+>         LIST_HEAD(folio_list);
+> 
+>         for (addr = r->ar.start; addr < r->ar.end; addr += PAGE_SIZE) {
+>                      struct folio *folio = damon_get_folio(PHYS_PFN(addr));
+>                      ....
+> 
+>                      if (damos_pa_filter_out(s, folio))
+>                                 goto put_folio;
+> 
+>                     folio_clear_referenced(folio);
+>                     folio_test_clear_young(folio);
+>                     if (!folio_isolate_lru(folio))
+>                          goto put_folio;
+>                     if (folio_test_unevictable(folio))
+>                           folio_putback_lru(folio);
+>                     else
+>                           list_add(&folio->lru, &folio_list);
+> put_folio:
+>                folio_put(folio);
+>          }
+>          applied = reclaim_pages(&folio_list);
+>          cond_resched();
+>          return applied * PAGE_SIZE;
+> }
+> 
+> am i missing something?
 
-So, introduce Amethyst specific function and call that if the Amethyst
-family wants to setup the external PHY.
+Thank you for checking this again.  You're right.
 
-Signed-off-by: Robert Marko <robimarko@gmail.com>
----
- drivers/net/dsa/mv88e6xxx/chip.c            |  5 +++-
- drivers/net/dsa/mv88e6xxx/global2.h         |  2 ++
- drivers/net/dsa/mv88e6xxx/global2_scratch.c | 31 +++++++++++++++++++++
- 3 files changed, 37 insertions(+), 1 deletion(-)
+Technically speaking, DAMON's usage of MADV_PAGEOUT is in vaddr.c.  paddr.c is
+using not MADV_PAGEOUT but reclaim_pages().  Usage of reclaim_pages() from
+paddr is different from that of MADV_PAGEOUT since paddr doesn't clear PTE.  I
+was confused from the difference between vaddr and paddr.  I actually wanted to
+document the difference but haven't had a time for that yet.  Thank you for
+letting me remind this.
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 9caecb4dfbfa..41426950da21 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -3712,7 +3712,10 @@ static int mv88e6xxx_mdio_register(struct mv88e6xxx_chip *chip,
- 
- 	if (external) {
- 		mv88e6xxx_reg_lock(chip);
--		err = mv88e6xxx_g2_scratch_gpio_set_smi(chip, true);
-+		if (chip->info->family == MV88E6XXX_FAMILY_6393)
-+			err = mv88e6393x_g2_scratch_gpio_set_smi(chip, true);
-+		else
-+			err = mv88e6xxx_g2_scratch_gpio_set_smi(chip, true);
- 		mv88e6xxx_reg_unlock(chip);
- 
- 		if (err)
-diff --git a/drivers/net/dsa/mv88e6xxx/global2.h b/drivers/net/dsa/mv88e6xxx/global2.h
-index d9434f7cae53..3b3f8b6c82c8 100644
---- a/drivers/net/dsa/mv88e6xxx/global2.h
-+++ b/drivers/net/dsa/mv88e6xxx/global2.h
-@@ -380,6 +380,8 @@ extern const struct mv88e6xxx_gpio_ops mv88e6352_gpio_ops;
- 
- int mv88e6xxx_g2_scratch_gpio_set_smi(struct mv88e6xxx_chip *chip,
- 				      bool external);
-+int mv88e6393x_g2_scratch_gpio_set_smi(struct mv88e6xxx_chip *chip,
-+				       bool external);
- int mv88e6352_g2_scratch_port_has_serdes(struct mv88e6xxx_chip *chip, int port);
- int mv88e6xxx_g2_atu_stats_set(struct mv88e6xxx_chip *chip, u16 kind, u16 bin);
- int mv88e6xxx_g2_atu_stats_get(struct mv88e6xxx_chip *chip, u16 *stats);
-diff --git a/drivers/net/dsa/mv88e6xxx/global2_scratch.c b/drivers/net/dsa/mv88e6xxx/global2_scratch.c
-index a9d6e40321a2..6998c687c553 100644
---- a/drivers/net/dsa/mv88e6xxx/global2_scratch.c
-+++ b/drivers/net/dsa/mv88e6xxx/global2_scratch.c
-@@ -290,6 +290,37 @@ int mv88e6xxx_g2_scratch_gpio_set_smi(struct mv88e6xxx_chip *chip,
- 	return mv88e6xxx_g2_scratch_write(chip, misc_cfg, val);
- }
- 
-+/**
-+ * mv88e6393x_g2_scratch_gpio_set_smi - set gpio muxing for external smi
-+ * @chip: chip private data
-+ * @external: set mux for external smi, or free for gpio usage
-+ *
-+ * MV88E6191X/6193X/6393X GPIO pins 9 and 10 can be configured as an
-+ * external SMI interface or as regular GPIO-s.
-+ *
-+ * They however have a different register layout then the existing
-+ * function.
-+ */
-+
-+int mv88e6393x_g2_scratch_gpio_set_smi(struct mv88e6xxx_chip *chip,
-+				       bool external)
-+{
-+	int misc_cfg = MV88E6352_G2_SCRATCH_MISC_CFG;
-+	int err;
-+	u8 val;
-+
-+	err = mv88e6xxx_g2_scratch_read(chip, misc_cfg, &val);
-+	if (err)
-+		return err;
-+
-+	if (external)
-+		val &= ~MV88E6352_G2_SCRATCH_MISC_CFG_NORMALSMI;
-+	else
-+		val |= MV88E6352_G2_SCRATCH_MISC_CFG_NORMALSMI;
-+
-+	return mv88e6xxx_g2_scratch_write(chip, misc_cfg, val);
-+}
-+
- /**
-  * mv88e6352_g2_scratch_port_has_serdes - indicate if a port can have a serdes
-  * @chip: chip private data
--- 
-2.43.2
+So, your change on MADV_PAGEOUT will make an effect to vaddr, and I think it's
+ok.  Your change on reclaim_pages() could make an effect to paddr, depending on
+the additional parameter's value.  I now think it would better to make no
+effect here.  That is, let's keep the change for paddr.c in your patch as is.
 
+
+Thanks,
+SJ
+
+> 
+> >
+> >
+> > Thanks,
+> > SJ
+> >
+> 
+> Thanks
+> Barry
