@@ -1,237 +1,157 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611844CE04
-	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 20:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9048C2907
+	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 20:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708806111; cv=none; b=N+iyAifvqn2Sn8ByezdhvCnwjWMyGkCf9m7PKDVgqUs8i5TsdQ8tzWBz7Japw81xTTYK/OvBVP0mxm069XIyxFL0pDXWsHN3bO7gk8qhgGsRcKoSTFfdKy1Vz8UXiA7X3C8F741c1FydXol4qJ2SsRkkl6EvpZOsY2pqjzMFPwg=
+	t=1708806819; cv=none; b=LI1GQFWZyWw8IFp8K9kzLaMaSP1XQk5yL05ev3OzR4cgPJtGVVwPfyGyKebdRgUo2gfueSjA+RqMxJd+HO9TDJuwrlCVASE0uSRBEyWVBAlax5N9TdB3Tt9QFaSwyXT/zqnhYXxAcWc7iYE9N+YIrzEA7OyQz3GuZ4wdLX8Lzbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708806111; c=relaxed/simple;
-	bh=ehZ08gU4FIWv5pM7BAGY94VZDeKNtJCzDFKzK4Oxtz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GiVkq1YbupwQRCK+Vq4wSuyu20NBhHs3vJ8kMfgktJTmdazdqNP435z4wPwsV50aLTIcPc/zpDQ6y697CX5BOvyFZDfPBTQLAxjavw/3QZ458e31rULV8t4dLo8iO1V7YPiCmLwDH7ISuEOfS/D7xfZxsqOoYphsUuTg2nFQ4LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=bE2cP/h8; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
+	s=arc-20240116; t=1708806819; c=relaxed/simple;
+	bh=9oS3KrPJR07eSxCrD6jaIgwpwSu3635rB9ytLH2uYY4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TpDTWlhYyd08VfmqOOXE3VM5WnoDeEPJlw3MCj5dkyMSD6HkLSs3sXmcfLLSTV+NF8SbCS12RHo1GUhp31Vxh05fFgWkl5K3aci7Vi5zYsUCHJiAeD4o4IS9VlZy8yq1kBfkmuVLGg9EDtztiNCHgNnLJP1VrFos5x0ebcmLUOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lzPLYyAD; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="bE2cP/h8"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d71cb97937so22157815ad.3
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 12:21:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzPLYyAD"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dccb1421bdeso1598800276.1
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 12:33:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708806816; x=1709411616; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QcEB/B/u9FuYrsGK1/CrqSDGAOGwcMBuWBx3Xthh5/I=;
+        b=lzPLYyADpUKvr3PZLCliRmY8oXjTNbpiTNT4i3Qh4pUpEw6nmROsOwlDrzA7uRQUFK
+         9basFJS2rogs9vEgvQesRYb2vgtB0ZVBWZo5pYNdx2W9nc58j7f5ye1UwG3o85E5NIGX
+         AKvRsN8Ppd9kEZzLDHvlA+M1pHk9nGmMyGRkzRYbFPWoapYNqH+qONo7nU4uieTQj5W8
+         EWYGILUtRSXi1UrnLOLNBKTjtCahiWoTuWS9XCgMinsKyBAMRyaurGFZ5e7nYMtFif5q
+         8pto0Zp0pTUJfZJHz8XasgvflUztVctb9t/EEwz8aHcnm53IGGsjSHrCLJMG5KM/QEe0
+         g+wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708806108; x=1709410908;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:dkim-signature:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ipyqjxXJNlrJUdv0Iam1Q+/TnUziHOnI8o1nibDPQf0=;
-        b=QEImeuwFF8m+PEEdhJqk0jb2gxQ3uibvhQGUSXumULlRwzbXUezccoe6tA5FHsNazi
-         Hh6MrKQFlKNAF/+8quF7aMyWsEDble611c3ntn03mn1tyoMRayH4sAnxgMoy3yCn3L0U
-         DA5GiU6qs816YyVwzTUyfvFSldsVFkGGojpYerPyvoOofBYwAXnI44Mju7sqypCfDPCa
-         xEU9D6TVQTA0FLLLmaykW6p68bqeh+CxK5c93EtJ6sZgjk/RVRveYUeqwrtxLM4kMAS2
-         YaUtkGOcMSqGokKhwbHH1dvSiy2kXRDTbxWR7C+ntXWrPJYoQhHIZ5BUcYXxYPK/lGBz
-         GojQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdb4VeFHSBCqCSc7H7vmhvPJMrfNEhYqpSafzr76gh8Hm8UMBzYYABro0davk92YEZM35ozJleu3rsHZBqSvMTmjzUjmUfNAO4S16p
-X-Gm-Message-State: AOJu0YygjqT/Z5hB0GBrw/CZ7AJw9M8wgTMSp79uR6HSMK+weZ/+Ls5c
-	NBSB2FwE+MqV9Lx/oAGD3kHqYFsgjLz0utsJbXMhM5FcWYPnrqn2
-X-Google-Smtp-Source: AGHT+IEB9ZAcUcWJxBZNiuJpwHkCTd/u8mb2e+ap9YQDA02JMHvrCMODH3NPu20hCv96rcjn9Tir+g==
-X-Received: by 2002:a17:902:9f8f:b0:1dc:2755:16d2 with SMTP id g15-20020a1709029f8f00b001dc275516d2mr2725428plq.18.1708806108528;
-        Sat, 24 Feb 2024 12:21:48 -0800 (PST)
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id e8-20020a170902b78800b001db28ae5d81sm1346259pls.159.2024.02.24.12.21.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Feb 2024 12:21:48 -0800 (PST)
-Date: Sat, 24 Feb 2024 17:22:39 -0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1708806106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ipyqjxXJNlrJUdv0Iam1Q+/TnUziHOnI8o1nibDPQf0=;
-	b=bE2cP/h8/p0/ZKYP3QQ19ChoJxBA33csYHusYKf39XINlAwisC3LvRFCgp2scPkbwuHqMC
-	61Eep3vtb8j5QTOdPFyfEBMdlPpIlaEOL8CC6CaJj1uyff7JB8jCevzVxTUetw+5jLkNZX
-	ibOG8H6nJiRalo4j6dcRtjT+m8KiBSZzRE/da4NrlAUDTBB2WYG/MYzzq4WEKUoFJpd67h
-	3nMj3SJdAhL+xhYBXRE9H2nOQz2f2V+AxAWx4OZcUk34mcvk8wtlgS8Q3fFk9sw5bamBW6
-	oN76eJW87IVn/DPZGKRTytYGMRHk+6E6O9SpZF28Qkd4PrVYd6aY/ed6u8e7qw==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-To: Alex Elder <elder@ieee.org>
-Cc: Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] greybus: constify the struct device_type usage
-Message-ID: <ids3525jm5zkwkgizt2xtg3do37kqqtfdy5gc2cptdduexoe7r@cr4yxh3tykkh>
-References: <20240219-device_cleanup-greybus-v1-1-babb3f65e8cc@marliere.net>
- <cf5b2696-d7ca-40fc-856a-52f352cd270c@ieee.org>
+        d=1e100.net; s=20230601; t=1708806816; x=1709411616;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QcEB/B/u9FuYrsGK1/CrqSDGAOGwcMBuWBx3Xthh5/I=;
+        b=bQBs2NdQzGD12vDjEE0NhZhLUCraFSHimujAn+nraGEGVuk5bEJGK2c0UN6+KrCCiX
+         D93v4sniC8CY8wdPUAbYs26FL42tR0cYh+oHedZcqzLnSbFghsxV2mfWrFML033uHhfJ
+         qqDem5HJvO/ezDW37Ux+sHpx15D0tfrS6frSYFOn5+E+a/Gm+GYFKYNRPJWUy4B2V35m
+         2ppd6xaxevd60aoONshJWvJDbN6wMEQ8Ax0nKf8DzlKPj2wTDQzMUYykLT+LwI6yMqNW
+         sVlgCLwbEXM5IslR7OEPzSmzfzIxJmMfuTUyhgIhgpP2yn5YomhIaePRjRAE6KURZ7ra
+         i8dA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZXZ798J1hGTwxeWecrx0wWAdmRl+RDFyd+DmmisUIWAu6R9XSF2rFsy0CBk+/TV6RZjXlxv5X7USzPE/ZLjJ6/+oUGpG1ceGZI8uQ
+X-Gm-Message-State: AOJu0Yxm618rzURCIjp90XHStuLskbuFuJTg9JjVwAH/hzZXgItXNrNL
+	IRigWZyR2JZ6NaDg3/5pEprI//yn1j+g5nE5XdOv6Po41dmZybeYB06QCpF8rMRJSeVgNjtpuY+
+	XET8/Oq7azE/wEbSyD9aSAckp1OXTFQffnw1N6g==
+X-Google-Smtp-Source: AGHT+IHVYeG4sdxyYLY07ymIs/jw3wT3riBpDFnsIG97UyYCih8PQUJ+OgjP21HKGNOKC9IYaojcfsNRV1cDDc/ZQPY=
+X-Received: by 2002:a81:9957:0:b0:608:7c7e:9d59 with SMTP id
+ q84-20020a819957000000b006087c7e9d59mr3149810ywg.38.1708806816591; Sat, 24
+ Feb 2024 12:33:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf5b2696-d7ca-40fc-856a-52f352cd270c@ieee.org>
+References: <20240224190724.45681-1-sj@kernel.org> <20240224201221.46450-1-sj@kernel.org>
+In-Reply-To: <20240224201221.46450-1-sj@kernel.org>
+From: Barry Song <21cnbao@gmail.com>
+Date: Sun, 25 Feb 2024 04:33:25 +0800
+Message-ID: <CAGsJ_4w4wnbryJaAKRtNGNMg_YTGkeG3QwL9_JkT=wtwq1+_+Q@mail.gmail.com>
+Subject: Re: [PATCH RFC] mm: madvise: pageout: ignore references rather than
+ clearing young
+To: SeongJae Park <sj@kernel.org>
+Cc: Minchan Kim <minchan@kernel.org>, akpm@linux-foundation.org, damon@lists.linux.dev, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, mhocko@suse.com, 
+	hannes@cmpxchg.org, Barry Song <v-songbaohua@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 24 Feb 09:43, Alex Elder wrote:
-> On 2/19/24 6:40 AM, Ricardo B. Marliere wrote:
-> > Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
-> > core can properly handle constant struct device_type. Move the
-> > greybus_hd_type, greybus_module_type, greybus_interface_type,
-> > greybus_control_type, greybus_bundle_type and greybus_svc_type variables to
-> > be constant structures as well, placing it into read-only memory which can
-> > not be modified at runtime.
-> > 
-> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> 
-> This looks good to me.  Assuming it compiles cleanly:
-> 
-> Reviewed-by: Alex Elder <elder@linaro.org>
+On Sun, Feb 25, 2024 at 4:12=E2=80=AFAM SeongJae Park <sj@kernel.org> wrote=
+:
+>
+> On Sat, 24 Feb 2024 11:07:23 -0800 SeongJae Park <sj@kernel.org> wrote:
+>
+> > Hi Barry,
+> >
+> > On Sat, 24 Feb 2024 12:37:59 +0800 Barry Song <21cnbao@gmail.com> wrote=
+:
+> >
+> > [...]
+> > >
+> > > BTW\uff0c
+> > > Hi SeongJae,
+> > > I am not quite sure if damon also needs this, so I have kept damon as=
+ is by
+> > > setting ignore_references =3D false.  MADV_PAGEOUT is an explicit hin=
+t users
+> > > don't want the memory to be reclaimed, I don't know if it is true for=
+ damon as
+> > > well. If you have some comments, please chime in.
+> >
+> > Thank you for calling my name :)
+> >
+> > For DAMON's usecase, the document simply says the behavior would be sam=
+e to
+> > MADV_PAGEOUT, so if we conclude to change MADV_PAGEOUT, I think same ch=
+ange
+> > should be made for DAMON's usecase, or update DAMON document.
+>
+> Thanks to Barry's nice explanation on my other reply to the patch, now I =
+think
+> the change is modest, and therefore I'd prefer the first way: Changing DA=
+MON's
+> usecase, and keep the document as is.
 
-Hi Alex!
+Hi SeongJae,
 
-Thanks for reviewing.
+thanks! I actually blindly voted for keeping DAMON's behaviour but
+slightly updated the
+document as I set ignore_references to false for the DAMON case in the RFC =
+:-)
 
-> 
-> On another subject:
-> 
-> Johan might disagree, but I think it would be nice to make
-> the definitions of the Greybus device types as static (private)
-> and make the is_gb_host_device() etc. functions real functions
-> rather than static inlines in <linux/greybus.h>.
-> 
-> It turns out that all of the is_gb_*() functions are called only
-> from drivers/greybus/core.c; they could all be moved there rather
-> than advertising them in <linux/greybus.h>.
+--- a/mm/damon/paddr.c
++++ b/mm/damon/paddr.c
+@@ -249,7 +249,7 @@ static unsigned long damon_pa_pageout(struct
+damon_region *r, struct damos *s)
+ put_folio:
+  folio_put(folio);
+  }
+- applied =3D reclaim_pages(&folio_list);
++ applied =3D reclaim_pages(&folio_list, false);
+  cond_resched();
+  return applied * PAGE_SIZE;
+ }
 
-I guess it depends whether they would be used somewhere else in the
-future. Perhaps it was left there with that intention when it was first
-being developed? I agree, though. Will happily send a patch with this if
-desired.
+MADV_PAGEOUT comes from userspace by a specific process to tell the kernel
+to reclaim its own memory(actually focus on non-shared memory as it
+skips folios with
+mapcount>1).
+The range is a virtual address and the app does know it doesn't want
+to access the
+range in the foreseeable future.  and the affected app is itself not global=
+.
 
-Best regards,
--	Ricardo.
+In the DAMON case,  it seems the range is the physical address.  if
+the pa is mapped
+by more than one process, it seems safer to double-check in the kernel
+as it might
+affect multiple processes?
 
+Please correct me if I am wrong.
 
+>
+>
+> Thanks,
+> SJ
+>
+> >
+> >
+> > Thanks,
+> > SJ
 
-> 
-> 					-Alex
-> 
-> 
-> > ---
-> >   drivers/greybus/bundle.c    |  2 +-
-> >   drivers/greybus/control.c   |  2 +-
-> >   drivers/greybus/hd.c        |  2 +-
-> >   drivers/greybus/interface.c |  2 +-
-> >   drivers/greybus/module.c    |  2 +-
-> >   drivers/greybus/svc.c       |  2 +-
-> >   include/linux/greybus.h     | 12 ++++++------
-> >   7 files changed, 12 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/greybus/bundle.c b/drivers/greybus/bundle.c
-> > index 84660729538b..a6e1cca06172 100644
-> > --- a/drivers/greybus/bundle.c
-> > +++ b/drivers/greybus/bundle.c
-> > @@ -166,7 +166,7 @@ static const struct dev_pm_ops gb_bundle_pm_ops = {
-> >   	SET_RUNTIME_PM_OPS(gb_bundle_suspend, gb_bundle_resume, gb_bundle_idle)
-> >   };
-> >   
-> > -struct device_type greybus_bundle_type = {
-> > +const struct device_type greybus_bundle_type = {
-> >   	.name =		"greybus_bundle",
-> >   	.release =	gb_bundle_release,
-> >   	.pm =		&gb_bundle_pm_ops,
-> > diff --git a/drivers/greybus/control.c b/drivers/greybus/control.c
-> > index 359a25841973..b5cf49d09df2 100644
-> > --- a/drivers/greybus/control.c
-> > +++ b/drivers/greybus/control.c
-> > @@ -436,7 +436,7 @@ static void gb_control_release(struct device *dev)
-> >   	kfree(control);
-> >   }
-> >   
-> > -struct device_type greybus_control_type = {
-> > +const struct device_type greybus_control_type = {
-> >   	.name =		"greybus_control",
-> >   	.release =	gb_control_release,
-> >   };
-> > diff --git a/drivers/greybus/hd.c b/drivers/greybus/hd.c
-> > index 72b21bf2d7d3..e2f3496bddc3 100644
-> > --- a/drivers/greybus/hd.c
-> > +++ b/drivers/greybus/hd.c
-> > @@ -116,7 +116,7 @@ static void gb_hd_release(struct device *dev)
-> >   	kfree(hd);
-> >   }
-> >   
-> > -struct device_type greybus_hd_type = {
-> > +const struct device_type greybus_hd_type = {
-> >   	.name		= "greybus_host_device",
-> >   	.release	= gb_hd_release,
-> >   };
-> > diff --git a/drivers/greybus/interface.c b/drivers/greybus/interface.c
-> > index 9ec949a438ef..a88dc701289c 100644
-> > --- a/drivers/greybus/interface.c
-> > +++ b/drivers/greybus/interface.c
-> > @@ -765,7 +765,7 @@ static const struct dev_pm_ops gb_interface_pm_ops = {
-> >   			   gb_interface_runtime_idle)
-> >   };
-> >   
-> > -struct device_type greybus_interface_type = {
-> > +const struct device_type greybus_interface_type = {
-> >   	.name =		"greybus_interface",
-> >   	.release =	gb_interface_release,
-> >   	.pm =		&gb_interface_pm_ops,
-> > diff --git a/drivers/greybus/module.c b/drivers/greybus/module.c
-> > index 36f77f9e1d74..7f7153a1dd60 100644
-> > --- a/drivers/greybus/module.c
-> > +++ b/drivers/greybus/module.c
-> > @@ -81,7 +81,7 @@ static void gb_module_release(struct device *dev)
-> >   	kfree(module);
-> >   }
-> >   
-> > -struct device_type greybus_module_type = {
-> > +const struct device_type greybus_module_type = {
-> >   	.name		= "greybus_module",
-> >   	.release	= gb_module_release,
-> >   };
-> > diff --git a/drivers/greybus/svc.c b/drivers/greybus/svc.c
-> > index 0d7e749174a4..4256467fcd35 100644
-> > --- a/drivers/greybus/svc.c
-> > +++ b/drivers/greybus/svc.c
-> > @@ -1305,7 +1305,7 @@ static void gb_svc_release(struct device *dev)
-> >   	kfree(svc);
-> >   }
-> >   
-> > -struct device_type greybus_svc_type = {
-> > +const struct device_type greybus_svc_type = {
-> >   	.name		= "greybus_svc",
-> >   	.release	= gb_svc_release,
-> >   };
-> > diff --git a/include/linux/greybus.h b/include/linux/greybus.h
-> > index 18c0fb958b74..5f9791fae3c0 100644
-> > --- a/include/linux/greybus.h
-> > +++ b/include/linux/greybus.h
-> > @@ -106,12 +106,12 @@ struct dentry *gb_debugfs_get(void);
-> >   
-> >   extern struct bus_type greybus_bus_type;
-> >   
-> > -extern struct device_type greybus_hd_type;
-> > -extern struct device_type greybus_module_type;
-> > -extern struct device_type greybus_interface_type;
-> > -extern struct device_type greybus_control_type;
-> > -extern struct device_type greybus_bundle_type;
-> > -extern struct device_type greybus_svc_type;
-> > +extern const struct device_type greybus_hd_type;
-> > +extern const struct device_type greybus_module_type;
-> > +extern const struct device_type greybus_interface_type;
-> > +extern const struct device_type greybus_control_type;
-> > +extern const struct device_type greybus_bundle_type;
-> > +extern const struct device_type greybus_svc_type;
-> >   
-> >   static inline int is_gb_host_device(const struct device *dev)
-> >   {
-> > 
-> > ---
-> > base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
-> > change-id: 20240219-device_cleanup-greybus-c97c1ef52458
-> > 
-> > Best regards,
-> 
+Thanks
+ Barry
