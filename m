@@ -1,191 +1,165 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from hygieia.sysophe.eu (hygieia.sysophe.eu [138.201.91.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880D9481DA
-	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 17:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A0D4879B;
+	Sat, 24 Feb 2024 17:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=138.201.91.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708794457; cv=none; b=YxAnIC7dK31+/zVdjxHSua7VVXkukKr1NaSbWWwTYcBWq1S7m9B/xQF/lsNPqOstyWgmRkdRRhJvi0hUE1teMEQR7sYoupvZjR1yngudXBYU6JDrJPhF3uisA+F2QEo+5+m6fAFveL8smu8wFtJ3+p8s2ciVM9Tg9ktJjB5USWM=
+	t=1708794501; cv=none; b=piXFt5K4hnFh/bhOjjrp2Q6bruoprkUmZ6hWfuSXlKWBwnrsWx0fdXfUj7zKGEIVfvfG0/UnulkBLWCOIn3sxykBuEC3wzLEU0dnZyGYs346KRZX3nste6sSPXuGrFB2OfqLMAir6TB1xJL6Fe/tuIsbWJeCDFrWjJ2e+DVAYNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708794457; c=relaxed/simple;
-	bh=ozIDoFedItkmER/Orkt229o6FySIYQ15J2Qcqcu6KnU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iESOQ1X4QoPhCsDaX+BeyE6T8JPuHTl+DB6XKJGKmpRqITIzs72TlyGeRIR9NCVGGPvQnTp3vHTfmZpS8MlNDUEUiSTj4CeXFE0fdS27pFkkpgsdHbtfv0PfVM8m2jNB1fNRL/vF5pQ0AObfMjL6TApHmpTYKBPDJrL0zIhmRdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ecUldYwM; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708794501; c=relaxed/simple;
+	bh=UmoOY0WXEH/Ir+XdmtPrWmUTuq7p3/sTYgdrJ9Ydluk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GztsuAeadX+LPWsz271N7hNQnxtln3KeFrWx0KS7ZN5snulBeiCMUWqE5CMichAgU/wfhljSjqZaPu2wg2C7dHGZzbFsVV4zC+iuTr/toOoF4fnBznnstwTlGaoBoE+QxuPm/YYnoUvJuVdEa3l0olF+p+CF12QW1WMGbx8rRdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sysophe.eu; spf=pass smtp.mailfrom=sysophe.eu; dkim=pass (1024-bit key) header.d=sysophe.eu header.i=@sysophe.eu header.b=mRH73Vp8; arc=none smtp.client-ip=138.201.91.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sysophe.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sysophe.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ecUldYwM"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-68ff93c5a15so581216d6.1
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 09:07:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708794454; x=1709399254; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pkEL+dazk0pG/rsK4xpDTlcJ2SMxur3lfWU/aiLk45M=;
-        b=ecUldYwM3/O6p70SFoLUhqjfgym57h3/MhjF/L3MXrq/M419tc558AeCQrAk/KqJdb
-         CxNRvojUP66VIvaaLFoTr9LVRpDdm9wyMs5oaHuZyJaOeqHajKia86u8nV1OaI6+rK97
-         TqduFNQ4+MUWH1VBT+XxFqt3ylpTuQ+MmCLpARRRmfg3t0hao7x90OLsJ5TXcSQkrwtN
-         8Et7MzyXu/Dp3saeh2suDTsCXk9pQiOcC+oqHMP6uJiO2LzUptZ/S28PawRzzbyL+FtF
-         r+Rr6dUWag6smXMfYP2E7zfKdYDHaH77u4ok1j20gfQhKKU2gKWQFSIS4T2xEjxz3Z3W
-         IXxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708794454; x=1709399254;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pkEL+dazk0pG/rsK4xpDTlcJ2SMxur3lfWU/aiLk45M=;
-        b=SC7D5kU4P6O6jPaRBrOLJX1JnFmx2esbvW9vsrqnej0zEh7L28UAfAsQHf0VPPDQwZ
-         LpD/0V9zYHwSkhZ8cwDH8Q2Ey5wOFxzZNaSPLQJCSz+y8dzkmMPVXx/lea24Lqa0Fart
-         YBi95EAAeiWIpih/LevnoUO4HDdQ17KcHuIFvLO20mEv1HLV3O5jsryjY/MvjNm9wNXr
-         cou11XYPSsDd7+yy6xMXc3NaIA6+FmrgOd8b+RsfGfzc0+HDvVVqVEHVCu4qZN77TBfX
-         S+hPt2XHhqiuddjZNhzQtZy0LXVHkZbhaAotkafWnxoysGEmb/Au8m7apd7OMpw1CB5t
-         tvVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqbcD62ka4dHW5LBM0YdWoTfPl0oLA24g//xJjPu4hC5JRd84PfmBAeGfM49U4RHeiphqsjwRPUmqnERHINZXTxgoFbzARLvjahXYy
-X-Gm-Message-State: AOJu0YyYnbFXqeB/UepC+mPG17+uE97gZYj/rF3qrpMYso/s+IgJgtsw
-	hwWqewRH7D5uGNHkrdoOWmKY7WqkGvPVdXxX+t/3BhCzq4ajb5tXhP2nwr9c/ugasvtUPTMlGgf
-	4afvl8tUTUNGTD/91Tkd2XOyCRLPmi/sUaD+b
-X-Google-Smtp-Source: AGHT+IHmL4S1gR28xyNUSOfmm8J8cJvNswhZL87sTfb3FCUn/n4pp1DLBBQWWOfsN4nRQ0T4o6hB3IQAzHQ1UwdL1D8=
-X-Received: by 2002:a05:6214:27ca:b0:68f:e43d:a253 with SMTP id
- ge10-20020a05621427ca00b0068fe43da253mr3689819qvb.2.1708794454214; Sat, 24
- Feb 2024 09:07:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=sysophe.eu header.i=@sysophe.eu header.b="mRH73Vp8"
+Received: from hemera.lan.sysophe.eu (unknown [IPv6:2001:a18:2cf:c101:a2ce:c8ff:fe62:fc79])
+	by smtp.sysophe.eu (Postfix) with ESMTPSA id F0C9C2281C0;
+	Sat, 24 Feb 2024 17:59:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=sysophe.eu; s=201205;
+	t=1708793980; x=1708880380;
+	bh=UmoOY0WXEH/Ir+XdmtPrWmUTuq7p3/sTYgdrJ9Ydluk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=mRH73Vp8rv5+Cu3wIVme/OOAZW+igNMOmvlrg5R6m5rjG1N1z3Til1PpcnGiTVDY6
+	 IXsQM/eMKgiNlMLO9dxnG9k7qqUa9NL/orV7S8/IqaSozX8XjGb6t5IRbMdWcmUb00
+	 TDCbzOMZcPRwSZlS8ZWxhKzUfQGax/5Es5M2kwUA=
+Date: Sat, 24 Feb 2024 17:59:29 +0100
+From: Bruno =?UTF-8?B?UHLDqW1vbnQ=?= <bonbons@sysophe.eu>
+To: Li Zhijian <lizhijian@fujitsu.com>
+Cc: linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>, Benjamin
+ Tissoires <benjamin.tissoires@redhat.com>, Jonathan Cameron
+ <jic23@kernel.org>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, linux-input@vger.kernel.org
+Subject: Re: [PATCH 11/42] drivers/hid: Convert snprintf to sysfs_emit
+Message-ID: <20240224175929.6ea8d4f9@hemera.lan.sysophe.eu>
+In-Reply-To: <20240116045151.3940401-9-lizhijian@fujitsu.com>
+References: <20240116041129.3937800-1-lizhijian@fujitsu.com>
+	<20240116045151.3940401-1-lizhijian@fujitsu.com>
+	<20240116045151.3940401-9-lizhijian@fujitsu.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.39; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240112055251.36101-1-vannapurve@google.com> <20240112055251.36101-2-vannapurve@google.com>
- <etvf2mon464whscbxqktdd7bputnqmmwmoeg7ssixsk4kljfek@4wngbgzbbmck>
- <CAGtprH-95FEUzpc-yxQMo87gpqgMxyz9W8tiWtu_ZHhMW-jjuA@mail.gmail.com>
- <8a6dabdf-dc11-4989-b6b4-b49871ff9ca6@amazon.com> <SN6PR02MB41575CFBC54C46701110703CD44D2@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB41575CFBC54C46701110703CD44D2@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Sat, 24 Feb 2024 22:37:19 +0530
-Message-ID: <CAGtprH-7SYCBjrck2k7vTtHrWbkdhkOicuM9Yz900xuKHMh1vA@mail.gmail.com>
-Subject: Re: [RFC V1 1/5] swiotlb: Support allocating DMA memory from SWIOTLB
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: Alexander Graf <graf@amazon.com>, "Kirill A. Shutemov" <kirill@shutemov.name>, 
-	"x86@kernel.org" <x86@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"rientjes@google.com" <rientjes@google.com>, "seanjc@google.com" <seanjc@google.com>, 
-	"erdemaktas@google.com" <erdemaktas@google.com>, "ackerleytng@google.com" <ackerleytng@google.com>, 
-	"jxgao@google.com" <jxgao@google.com>, "sagis@google.com" <sagis@google.com>, 
-	"oupton@google.com" <oupton@google.com>, "peterx@redhat.com" <peterx@redhat.com>, 
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "dmatlack@google.com" <dmatlack@google.com>, 
-	"pgonda@google.com" <pgonda@google.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
-	"chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>, 
-	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, 
-	"andrew.jones@linux.dev" <andrew.jones@linux.dev>, "corbet@lwn.net" <corbet@lwn.net>, "hch@lst.de" <hch@lst.de>, 
-	"m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>, 
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 16, 2024 at 1:56=E2=80=AFAM Michael Kelley <mhklinux@outlook.co=
-m> wrote:
->
-> From: Alexander Graf <graf@amazon.com> Sent: Thursday, February 15, 2024 =
-1:44 AM
-> >
-> > On 15.02.24 04:33, Vishal Annapurve wrote:
-> > > On Wed, Feb 14, 2024 at 8:20=E2=80=AFPM Kirill A. Shutemov
-> > <kirill@shutemov.name> wrote:
-> > >> On Fri, Jan 12, 2024 at 05:52:47AM +0000, Vishal Annapurve wrote:
-> > >>> Modify SWIOTLB framework to allocate DMA memory always from SWIOTLB=
-.
-> > >>>
-> > >>> CVMs use SWIOTLB buffers for bouncing memory when using dma_map_* A=
-PIs
-> > >>> to setup memory for IO operations. SWIOTLB buffers are marked as sh=
-ared
-> > >>> once during early boot.
-> > >>>
-> > >>> Buffers allocated using dma_alloc_* APIs are allocated from kernel =
-memory
-> > >>> and then converted to shared during each API invocation. This patch=
- ensures
-> > >>> that such buffers are also allocated from already shared SWIOTLB
-> > >>> regions. This allows enforcing alignment requirements on regions ma=
-rked
-> > >>> as shared.
-> > >> But does it work in practice?
-> > >>
-> > >> Some devices (like GPUs) require a lot of DMA memory. So with this a=
-pproach
-> > >> we would need to have huge SWIOTLB buffer that is unused in most VMs=
-.
-> > >>
-> > > Current implementation limits the size of statically allocated SWIOTL=
-B
-> > > memory pool to 1G. I was proposing to enable dynamic SWIOTLB for CVMs
-> > > in addition to aligning the memory allocations to hugepage sizes, so
-> > > that the SWIOTLB pool can be scaled up on demand.
-> > >
->
-> Vishal --
->
-> When the dynamic swiotlb mechanism tries to grow swiotlb space
-> by adding another pool, it gets the additional memory as a single
-> physically contiguous chunk using alloc_pages().   It starts by trying
-> to allocate a chunk the size of the original swiotlb size, and if that
-> fails, halves the size until it gets a size where the allocation succeeds=
-.
-> The minimum size is 1 Mbyte, and if that fails, the "grow" fails.
->
+Hi Li,
 
-Thanks for pointing this out.
+While only looking for the snprintf() in your coccinelle analysis you
+probably also want to look for sprintf() (see e.g. else clause in
+hid-sensor-custom.c and scnprintf() (see picolcd_fb_update_rate_show
+in hid-picolcd_fb.c) to replace more s*printf() calls with sysfs_emit*
+variants.
 
-> So it seems like dynamic swiotlb is subject to the almost the same
-> memory fragmentation limitations as trying to allocate huge pages.
-> swiotlb needs a minimum of 1 Mbyte contiguous in order to grow,
-> while huge pages need 2 Mbytes, but either is likely to be
-> problematic in a VM that has been running a while.  With that
-> in mind, I'm not clear on the benefit of enabling dynamic swiotlb.
-> It seems like it just moves around the problem of needing high order
-> contiguous memory allocations.  Or am I missing something?
->
 
-Currently the SWIOTLB pool is limited to 1GB in size.  Kirill has
-pointed out that devices like GPUs could need a significant amount of
-memory to be allocated from the SWIOTLB pool. Without dynamic SWIOTLB,
-such devices run the risk of memory exhaustion without any hope of
-recovery.
 
-In addition, I am proposing to have dma_alloc_* APIs to use the
-SWIOTLB area as well, adding to the memory pressure. If there was a
-way to calculate the maximum amount of memory needed for all dma
-allocations for all possible devices used by CoCo VMs then one can use
-that number to preallocate SWIOTLB pool. I am arguing that calculating
-the maximum bound would be difficult and instead of trying to
-calculate it, allowing SWIOTLB to scale dynamically would be better
-since it provides better .
+diff --git a/drivers/hid/hid-picolcd_fb.c b/drivers/hid/hid-picolcd_fb.c
+index d726aaafb146..03074d25d662 100644
+--- a/drivers/hid/hid-picolcd_fb.c
++++ b/drivers/hid/hid-picolcd_fb.c
+@@ -459,9 +459,9 @@ static ssize_t picolcd_fb_update_rate_show(struct devic=
+e *dev,
+ 		if (ret >=3D PAGE_SIZE)
+ 			break;
+ 		else if (i =3D=3D fb_update_rate)
+-			ret +=3D scnprintf(buf+ret, PAGE_SIZE-ret, "[%u] ", i);
++			ret +=3D sysfs_emit_at(buf, ret, "[%u] ", i);
+ 		else
+-			ret +=3D scnprintf(buf+ret, PAGE_SIZE-ret, "%u ", i);
++			ret +=3D sysfs_emit_at(buf, ret, "%u ", i);
+ 	if (ret > 0)
+ 		buf[min(ret, (size_t)PAGE_SIZE)-1] =3D '\n';
+ 	return ret;
 
-So if the above argument for enabling dynamic SWIOTLB makes sense then
-it should be relatively easy to append hugepage alignment restrictions
-for SWIOTLB pool increments (inline with the fact that 2MB vs 1MB size
-allocations are nearly equally prone to failure due to memory
-fragmentation).
 
-> Michael
->
-> > > The issue with aligning the pool areas to hugepages is that hugepage
-> > > allocation at runtime is not guaranteed. Guaranteeing the hugepage
-> > > allocation might need calculating the upper bound in advance, which
-> > > defeats the purpose of enabling dynamic SWIOTLB. I am open to
-> > > suggestions here.
-> >
-> >
-> > You could allocate a max bound at boot using CMA and then only fill int=
-o
-> > the CMA area when SWIOTLB size requirements increase? The CMA region
-> > will allow movable allocations as long as you don't require the CMA spa=
-ce.
-> >
-> >
-> > Alex
->
+For hid-picolcd-*.c,
+  Acked-by: Bruno Pr=C3=A9mont <bonbons@linux-vserver.org>
+but preferably with the scnprintf() case is covered too.
+
+
+Cheers,
+Bruno
+
+On Tue, 16 Jan 2024 12:51:20 +0800 Li Zhijian wrote:
+> Per Documentation/filesystems/sysfs.rst, show() should only use sysfs_emi=
+t()
+> or sysfs_emit_at() when formatting the value to be returned to user space.
+>=20
+> coccinelle complains that there are still a couple of functions that use
+> snprintf(). Convert them to sysfs_emit().
+>=20
+> > ./drivers/hid/hid-picolcd_core.c:259:9-17: WARNING: please use sysfs_em=
+it
+> > ./drivers/hid/hid-picolcd_core.c:304:8-16: WARNING: please use sysfs_em=
+it
+> > ./drivers/hid/hid-sensor-custom.c:375:10-18: WARNING: please use sysfs_=
+emi =20
+>=20
+> No functional change intended
+>=20
+> CC: "Bruno Pr=C3=A9mont" <bonbons@linux-vserver.org>
+> CC: Jiri Kosina <jikos@kernel.org>
+> CC: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> CC: Jonathan Cameron <jic23@kernel.org>
+> CC: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> CC: linux-input@vger.kernel.org
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
+>  drivers/hid/hid-picolcd_core.c  | 6 +++---
+>  drivers/hid/hid-sensor-custom.c | 3 +--
+>  2 files changed, 4 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/hid/hid-picolcd_core.c b/drivers/hid/hid-picolcd_cor=
+e.c
+> index bbda231a7ce3..fa46fb6eab3f 100644
+> --- a/drivers/hid/hid-picolcd_core.c
+> +++ b/drivers/hid/hid-picolcd_core.c
+> @@ -256,9 +256,9 @@ static ssize_t picolcd_operation_mode_show(struct dev=
+ice *dev,
+>  	struct picolcd_data *data =3D dev_get_drvdata(dev);
+> =20
+>  	if (data->status & PICOLCD_BOOTLOADER)
+> -		return snprintf(buf, PAGE_SIZE, "[bootloader] lcd\n");
+> +		return sysfs_emit(buf, "[bootloader] lcd\n");
+>  	else
+> -		return snprintf(buf, PAGE_SIZE, "bootloader [lcd]\n");
+> +		return sysfs_emit(buf, "bootloader [lcd]\n");
+>  }
+> =20
+>  static ssize_t picolcd_operation_mode_store(struct device *dev,
+> @@ -301,7 +301,7 @@ static ssize_t picolcd_operation_mode_delay_show(stru=
+ct device *dev,
+>  {
+>  	struct picolcd_data *data =3D dev_get_drvdata(dev);
+> =20
+> -	return snprintf(buf, PAGE_SIZE, "%hu\n", data->opmode_delay);
+> +	return sysfs_emit(buf, "%hu\n", data->opmode_delay);
+>  }
+> =20
+>  static ssize_t picolcd_operation_mode_delay_store(struct device *dev,
+> diff --git a/drivers/hid/hid-sensor-custom.c b/drivers/hid/hid-sensor-cus=
+tom.c
+> index d85398721659..4fe8dccf671d 100644
+> --- a/drivers/hid/hid-sensor-custom.c
+> +++ b/drivers/hid/hid-sensor-custom.c
+> @@ -372,8 +372,7 @@ static ssize_t show_value(struct device *dev, struct =
+device_attribute *attr,
+>  				     sizeof(struct hid_custom_usage_desc),
+>  				     usage_id_cmp);
+>  		if (usage_desc)
+> -			return snprintf(buf, PAGE_SIZE, "%s\n",
+> -					usage_desc->desc);
+> +			return sysfs_emit(buf, "%s\n", usage_desc->desc);
+>  		else
+>  			return sprintf(buf, "not-specified\n");
+
+Shouldn't the sprintf() in the else clause be replaced as well?
+
+>  	 } else
+
