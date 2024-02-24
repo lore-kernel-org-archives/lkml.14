@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E939C4EB5C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9D84EB4A;
 	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708810396; cv=none; b=lpYxPqXuc5Jw9C6Tm8iwD0OnMSBFnH+AEhMWKhE+7qAqeYEjD9qhud2d3ruXLd7CewyBCWV2jxXIAmQ+N9QqkUWCMaXQ+LECjM38Yqh1dAiZHzw5McC6dxKnqqwDmO8hB4tlaLAzVExxINe15FX0GQoX8r1Y/CkapSzN/XXDhYo=
+	t=1708810395; cv=none; b=GOad8wGkmONz6kfbn2w1Dcsdwl14KYVGUn0ctu0aIN7W5w7B5Q49M71CpbhSSPKoc9qOdvj15ZMUXhiLbFkUouzuJAP83x9AiK37a7njG2hLfoH/NNBG3lZN+g5ABMQbmcBoUlHJ3ducPWynoFBU7oflwBsLTwL4HO+uy88QOHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708810396; c=relaxed/simple;
-	bh=rUmJV8kGaEHJUfJDmv7OgUPHvh7znQWSM5zbc3u5TGM=;
+	s=arc-20240116; t=1708810395; c=relaxed/simple;
+	bh=vtAZITKGgVXHTJ0/cBoLL4qU11MSmOF3yKsVn/EyOdc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y3ma53HtXkZ1+1pkHPCgEpxav4jv1OCzky39rvVTAPe/9HwFOOB28OfSXoYzHfjTMtF1wMpxRBhhQFhogVsqK54Jv/1YV/jAkGDADy5GtT2XUxq4fLolI97yZ4ICsa6bAIlHRawMHb3uHv+Gko0ZLFBtFmbNKBXElCZRFC11vY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=klIfjP51; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RUka9QhYv1b76C/bgoKueA1NVCjyYWRt2CLK7c34y8WU0Wma7YKMRDCXtrjGmLxorvPAsimYxadZ7GuL0cjMkrz34ymsXvHz5AEkR2FqHJFgLIMtSwB4Eclv4d+w0dv1XWVHRLDbxRHbfgYNxLcagu8stPJua5TbRTqewqQxJuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJqBmAWr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="klIfjP51"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52AAEC433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJqBmAWr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 860BDC4166A;
 	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708810395;
-	bh=rUmJV8kGaEHJUfJDmv7OgUPHvh7znQWSM5zbc3u5TGM=;
+	bh=vtAZITKGgVXHTJ0/cBoLL4qU11MSmOF3yKsVn/EyOdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=klIfjP51Mh7RZ5+C2clA7j6wOd8d2GqenlD+9Sj0PrJbzd4Gx9rUa0Z7vvuRvBGwM
-	 wTDCO2+P0V5h0WB60rZhl1w4zimDGNDWdxs5pqw78g4cEEdkzF8riw5F8fAg2NiHFr
-	 zDuRuEsqgRTAiBVRxGRUeCqZY2/+bAbJuGTbSw6IRoVXb+LsoSo6V+tcMsqu8KoXxz
-	 m/UwvHZolhMi4wEz4ftPABo6ehmHE9/CeSB1haa4e2Tw3x4rFbC7kcrfvPgIgmTTbQ
-	 JQBHQMcu2OflRbe5c7UYm91oEWDqHU1SMyRIjd3e+XLYUcm3qPYf1r/egqbNmkmwAu
-	 uhCM5FC3cg4mg==
+	b=lJqBmAWrapxM2cfz/pKBJptZdGYYRaNf49wb9t4mfQMY3Zx5fAf5T1Qet0kfXnpio
+	 ShYfW5UrBL3vQUezyDJF1RVQ3GRy3Lxtr/PevXKKdRYRhWCdhydake3+8sO3t3L84b
+	 U5MWVDZt9Xammuf4oXgQDDQK3Kz3PSv20AEyw+yy65b7OfBoPEqBUQLe92mRFhdeiN
+	 U6b4j0rSQfc9CHMgdpJr4Wd64EkCjytGF2RF1JYYtCKxpJ2M1+RX6RmQ/Tk7DuNF8g
+	 eSakqUSQ5Vo9IDKit+w6ccqG1QBDAz5b70rvWxr3cIst5rgIM2rYY1WHzptXDRqtl9
+	 166ggc+KHDVCw==
 Received: by mercury (Postfix, from userid 1000)
-	id 0B5B11060E89; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
+	id 1940E1060E90; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -46,9 +46,9 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 06/16] dt-bindings: lcdif: Do not require power-domains for i.MX6ULL
-Date: Sat, 24 Feb 2024 22:29:38 +0100
-Message-ID: <20240224213240.1854709-7-sre@kernel.org>
+Subject: [PATCH v4 08/16] ARM: dts: imx6ull: fix pinctrl node name
+Date: Sat, 24 Feb 2024 22:29:40 +0100
+Message-ID: <20240224213240.1854709-9-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240224213240.1854709-1-sre@kernel.org>
 References: <20240224213240.1854709-1-sre@kernel.org>
@@ -60,45 +60,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-i.MX6UL(L) uses "fsl,imx6sx-lcdif" as fallback compatible string,
-but has only very lightweight DISPLAY power domain. Its DISPLAY
-power domain is not supported by the binding / Linux kernel at
-the moment. Since the current setup is working, let's remove the
-power-domain from being required for that platform to fix the warning
-printed by CHECK_DTBS=y.
+pinctrl node name must be either pinctrl or pinmux.
 
-Fixes: f62678a77d58 ("dt-bindings: mxsfb: Document i.MX8M/i.MX6SX/i.MX6SL power-domains property")
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- Documentation/devicetree/bindings/display/fsl,lcdif.yaml | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/nxp/imx/imx6ull.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/fsl,lcdif.yaml b/Documentation/devicetree/bindings/display/fsl,lcdif.yaml
-index 1c2be8d6f633..0681fc49aa1b 100644
---- a/Documentation/devicetree/bindings/display/fsl,lcdif.yaml
-+++ b/Documentation/devicetree/bindings/display/fsl,lcdif.yaml
-@@ -120,13 +120,19 @@ allOf:
-           maxItems: 1
-         clock-names:
-           maxItems: 1
-+  - if:
-+      properties:
-+        compatible:
-+          const: fsl,imx6sx-lcdif
-+    then:
-+      required:
-+        - power-domains
-   - if:
-       properties:
-         compatible:
-           contains:
-             enum:
-               - fsl,imx6sl-lcdif
--              - fsl,imx6sx-lcdif
-               - fsl,imx8mm-lcdif
-               - fsl,imx8mn-lcdif
-               - fsl,imx8mp-lcdif
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ull.dtsi
+index 2bccd45e9fc2..8a1776067ecc 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ull.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ull.dtsi
+@@ -75,7 +75,7 @@ rngb: rng@2284000 {
+ 				clocks = <&clks IMX6UL_CLK_DUMMY>;
+ 			};
+ 
+-			iomuxc_snvs: iomuxc-snvs@2290000 {
++			iomuxc_snvs: pinctrl@2290000 {
+ 				compatible = "fsl,imx6ull-iomuxc-snvs";
+ 				reg = <0x02290000 0x4000>;
+ 			};
 -- 
 2.43.0
 
