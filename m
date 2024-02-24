@@ -1,59 +1,59 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A09210E8
-	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 10:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BD4210E8
+	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 10:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708770036; cv=none; b=OzdqyGARuGa3OCc2AHiZ+O1Mk/ZLOTTjNHlyhMJGjA3naEmfYguyz2BOZXlyyP9XQkzUtwZMkXv7BviYS8AaT2ruls1Ol7z0LG5FiZFOR7fdWUMYcUucmyx8Weig9JzW4gwb/8GtYsxGEWsCHDH2DNbS+FSYF1UD5SysTuMpLtY=
+	t=1708770538; cv=none; b=TVpzMb2w5fffgqcsg3bD5vnwKDcFWU1KfOhl9//MoREIjCCCVHvjzbO1mpZA/Z7SfYkBwwrwzHh/+CenPu6uyeemqVjpWBeX+RB8HI63oqccoWPWoTQGX7a1lzO9gGH2ra1NYg3liEI7grs5jBHh0FpMiveu9DF5GmrKRYMADig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708770036; c=relaxed/simple;
-	bh=YuENufFZlkquVDgBO8dU5fPnVLvolpMSzEAzC6ycgJ4=;
+	s=arc-20240116; t=1708770538; c=relaxed/simple;
+	bh=Wg0PBihE3EDGuRdaaCb2GnwtY1WotZgKhFda+XYqOVQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fHIbaOyRo1oXVkCxL9QJiOF4UauK1yFydTmkMeIKMXPZMaiaDzPkLqKEqtEVA4W6Bf3HKlfwy+qoecPmf1ASAhZZlQ2Mx8wEz805EfIMI0JIuwW0koI3tTR/O0gzWcdVacDm/B3NIlQfJszX/RE5zi4K7SFEeuo/mEHUM+rVXY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m+twM2BJ; arc=none smtp.client-ip=209.85.218.50
+	 In-Reply-To:Content-Type; b=tay2pxRvcvkVTVXtx0Qa8M75WSlIie0kGRCJ5/b1k5Pv33TKNRwsibAlAANbITenKlZKEVOvkOP2DQMjSQvPJOZZK346D80ijYK2ugfiIhQ4/fIiwYT2wSkG4jQNzJGHYugoK7uGfVS/rLrZeEek0FnlzsqYiD0xqDMDqYzulMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u3NfNiFI; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m+twM2BJ"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so193895966b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 02:20:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u3NfNiFI"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a3e6f79e83dso151668866b.2
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 02:28:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708770032; x=1709374832; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708770533; x=1709375333; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6vNTny4pXEvjs6cRGbtYbmBpJ/7oEEZ1oHIPJLYTMGc=;
-        b=m+twM2BJ7n/KxBVGLyA2LPOjLDBDe8FKl4EJkw99fgbD0CX9t5cZML6NEJ32YK52pl
-         QpBPM8p6omegeqTPa4DqWuW31S/aoflB3AqQ3EbOQXMXTcx3W6V0EZkcVNIg/Kj0H6VQ
-         PJUCJa3SfnhBr7kSTEROgVwoaSIvDzsDj2ec61ZR1ocV4hJNgWSBeDKO7eSJEp+blYiP
-         REhdPeoQag5wKSAXbggjckAdX164m6DivnQxuK/f79MU53gYoPInIP1RqTbAck+Bh2uc
-         blArVX0IMnHSmgNsdx2JGeiqDYTjbTWl7gVj7tVJOKpSGQJ/+NNA0nzdLpXJ4gvxgM83
-         fxbA==
+        bh=rgfQfFWKfhHnlKFB8GZQVPCeubPlUtrG7fkujZpbwSg=;
+        b=u3NfNiFI4opY+HVrfjOyy8R/cmoOU/+46Ts1JWGkHPpvO9UaMEbbBKiF1vA5IjU/z3
+         AvwJEskKkzARXOaLfjU4BA0eyomGBmdBbfKTbY+7zid2CvZkv7Gg4ecDGafMahZ5YHRi
+         8QVPRGiGAxiBrrjwkAfIag6Bewtqi0NyOm9ANoxRPB9yPYoUfZHwzWh0258kK3PkkUyK
+         1EO21JNVMamTxV0LVOP0apZXbcWrARkaXFb/Zxdg7BShxeXD80OwP5dlfaqbC/lUH08A
+         0Y25Q3LoiM6H5C3SrefwYzZYpjqXWnQZJHN3lFxJYtyVm87Xi+7KFWOjB/UrJZcBrSC8
+         E2Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708770032; x=1709374832;
+        d=1e100.net; s=20230601; t=1708770533; x=1709375333;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6vNTny4pXEvjs6cRGbtYbmBpJ/7oEEZ1oHIPJLYTMGc=;
-        b=uH/SS7I74EN0nk8RMTNt0nGpD4aYav46x2S9siq9EJ8EcO24h94qkj2iZ4ECtlXLDd
-         bLNhsR/LvLugwxOwUjc8kwssyx8knVRvBCcWue/LayfolhzTLM454MP9XpnvP5luChL7
-         3uto8wnLjhoD57awtRmug2v4usZgT1uiDvgCzdAPbbF5XXbMqb7hj0SkML0qXsMFP41+
-         nUHV1epndI4YNOyth2NW2oT5wXuK4ZuqwaqssFyHiGlKoC03t70dGTe0bxwmAvQ2iB56
-         UVmuLPJl65j3zRA9ALfWEOXyaqfO6sd5BhpLHeGA2v/m7I3Aju39Y+EvOLw2+L98JAQB
-         z4+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVcL8L2Z0tJLU8qtsENweGeVKWsXqwCw3/MII/wjjotA8BTVFqdMQKEeDV5mE7y+ZsVDVnguodIKlcoffh4sCTGLqreBkyxCqX84xGa
-X-Gm-Message-State: AOJu0YxQTDr4hq7vcGr8V51OL92g/ou0rlY1nZP6frO68KG0DMUnQXC5
-	kBi8m/4ip85KHJ7tAVG/YDGeOUvugHqPx+2904OWCtHOByTxsfZY6w7SGggX8+c=
-X-Google-Smtp-Source: AGHT+IF3zlbidJ8Y4ckq/68GuEwgnY31iAGOnONoOCQuXMzjrT09Tf8KnvgKz/qSnMzCwBuDwHnjCQ==
-X-Received: by 2002:a17:906:2844:b0:a3f:adad:9ce1 with SMTP id s4-20020a170906284400b00a3fadad9ce1mr1848309ejc.18.1708770032416;
-        Sat, 24 Feb 2024 02:20:32 -0800 (PST)
+        bh=rgfQfFWKfhHnlKFB8GZQVPCeubPlUtrG7fkujZpbwSg=;
+        b=C2MRHOnl1R6qKmDLDnm6amyqvNzNs5LQ1jIRTWmeJAd4+uVTGxNeNTGUfWcKVWzzuT
+         vaCfkbfeOT9dj6a8F/Fwxb6HjnoAU8C7wKVvr8o3Tguu1BX2/UHw49N6JSyESxheEgBM
+         CMXpCUcPfMCDiLGtqXW8FOQN458VKcOfRAQb7i5pvdDcsODrveBUrbJcEEyM24pWsF5w
+         xCzuNjEOPUwmAk0uhJi3Ho4hD1a6Oju+iU58kmJx/TOg9f3t25xKSx6PQ+2e8DhKQqWJ
+         m1xrpuoZBJgxtrljAum2W83Z7CioyuxtUseHthgQOqL9x1Oz+QEg1tu0f+bFhkg/mvVA
+         ZhCw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/V/7nwHvO/flTMbcd4YFtaHjuiYTh+6m3nfNZfS+tc11DMVeXexjceRKq9qpPQX+zrDhisonR/DyDPdhK8Bh+UBEc1xV6rgD8tP57
+X-Gm-Message-State: AOJu0YzUXZRERY64GLb30pnzzukuaoOlNZKEf19NcG+JWWBDEkSCvNKR
+	5LQezTV8Stt2ooLHR/QWNG8XLk0Nlh1yHE1oVXSSkFekTwjWVt+DSXLv9/yGgO8=
+X-Google-Smtp-Source: AGHT+IHRmKgfev3iDF0qZ2rGd4o58JZj/sbd27NcjAsUMnHOL/4J7Az80B8i+gkMBS8gGAKvW2uIBg==
+X-Received: by 2002:a17:906:2b05:b0:a3e:77d2:9e04 with SMTP id a5-20020a1709062b0500b00a3e77d29e04mr1284170ejg.24.1708770533237;
+        Sat, 24 Feb 2024 02:28:53 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id k10-20020a17090646ca00b00a3d004237ebsm447339ejs.212.2024.02.24.02.20.29
+        by smtp.gmail.com with ESMTPSA id ps8-20020a170906bf4800b00a42ee2af521sm384657ejb.137.2024.02.24.02.28.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Feb 2024 02:20:31 -0800 (PST)
-Message-ID: <133c1185-8e13-4471-8e00-8968b38df970@linaro.org>
-Date: Sat, 24 Feb 2024 11:20:29 +0100
+        Sat, 24 Feb 2024 02:28:52 -0800 (PST)
+Message-ID: <b64155f2-2965-4ea1-8c23-7c79d7a01c9f@linaro.org>
+Date: Sat, 24 Feb 2024 11:28:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,26 +61,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] dt-bindings: clock: Add Qcom QCM2290 GPUCC
+Subject: Re: [PATCH v2 1/2] dt-bindings: usb: add hisilicon,hi3798mv200-dwc3
 Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Rob Herring <robh@kernel.org>,
+To: forbidden405@outlook.com, Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Clark <robdclark@gmail.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org
-References: <20240219-topic-rb1_gpu-v2-0-2d3d6a0db040@linaro.org>
- <20240219-topic-rb1_gpu-v2-1-2d3d6a0db040@linaro.org>
+ Conor Dooley <conor+dt@kernel.org>, Yang Xiwen <forbidden405@foxmail.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20240224-dwc3-v2-0-8e4fcd757175@outlook.com>
+ <20240224-dwc3-v2-1-8e4fcd757175@outlook.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -126,18 +117,106 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240219-topic-rb1_gpu-v2-1-2d3d6a0db040@linaro.org>
+In-Reply-To: <20240224-dwc3-v2-1-8e4fcd757175@outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/02/2024 22:21, Konrad Dybcio wrote:
-> Add device tree bindings for graphics clock controller for Qualcomm
-> Technology Inc's QCM2290 SoCs.
+On 23/02/2024 22:43, Yang Xiwen via B4 Relay wrote:
+> From: Yang Xiwen <forbidden405@outlook.com>
 > 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
+> Document the DWC3 controller used by Hi3798MV200.
+> 
+> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+> +
+> +properties:
+> +  compatible:
+> +    const: hisilicon,hi3798mv200-dwc3
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 1
+> +
+> +  reg: true
+
+Constraints. maxItems: X
+
+> +
+> +  ranges: true
+> +
+> +  clocks:
+> +    items:
+> +      - description: Controller bus clock
+> +      - description: Controller suspend clock
+> +      - description: Controller reference clock
+> +      - description: Controller gm clock
+> +      - description: Controller gs clock
+> +      - description: Controller utmi clock
+> +      - description: Controller pipe clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bus
+> +      - const: suspend
+> +      - const: ref
+> +      - const: gm
+> +      - const: gs
+> +      - const: utmi
+> +      - const: pipe
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    const: soft
+> +
+> +patternProperties:
+> +  '^usb@[0-9a-z]+$':
+
+unit addresses are in hex, so a-f
+
+Open existing bindings and look how it is done there. There are no
+bindings for DWC3 glue/wrapper device having a-z.
+
+
+> +    $ref: snps,dwc3.yaml#
+> +
+> +additionalProperties: false
+
+Same comments: open existing bindings and take a look how it is there.
+This goes after 'required:' block.
+
+> +
+> +required:
+> +  - compatible
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +  - ranges
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    usb@98a0000 {
+> +            compatible = "hisilicon,hi3798mv200-dwc3";
+
+reg is always the second property. ranges is third.
+
+
+> +            #address-cells = <1>;
+> +            #size-cells = <1>;
+
+Use 4 spaces for example indentation.
+
+
 
 Best regards,
 Krzysztof
