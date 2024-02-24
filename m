@@ -1,158 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596BE24B54;
-	Sat, 24 Feb 2024 15:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A8B45976
+	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 15:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708787128; cv=none; b=bCcOB+Y3mB7qSwAxeDDMhvaFTHxveXPye6I8tkpbt/ihGX91W594ijitTcuJ6aif0bz9qILEzFVpHDP+6bpy33gqlFGuo/soa0asoo+WgBMmDlaFkEc3gDKJeKdOLd1Lfwnz6jXsWLYmOvvQ6Ec7hUfVEEfC0ijHVZC5YqG/FQ0=
+	t=1708787173; cv=none; b=Wj80449blcTgwhmwi94whCDO8tddliuTTjg6kSsSC28W8LaCNq1+QzEXVEwevuCf+7OC6OfGMgw/XLFIfDPP6IO7MV8HB7LnrAMNc9KPhlnMVQLkG6Qw66u0vrdTYK+YN0sxwi5j03fOpG580EmthZjZS5hUtschyNpm6wQGAZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708787128; c=relaxed/simple;
-	bh=oC+819alsBsCF37dz60vdeaMt67VeJuCkAD2RtMidss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DsXs3UyARUx625UQkJPgcIZkla32mzgbckZjmi8qN/To/UF8haKWmXTn7zo+UKKVIRi8I5yIHL7bFJ7R4qLIbtOT8MfiRaEHScQBxhvlGf9Nuse1xcYsRapG2HBBMe7lEqzCNPYWQcX15HcAMzIk5ZaQr6Lihmty8NrqyppIAKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJXs5p2l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708787173; c=relaxed/simple;
+	bh=1o4GXfvP6xMrbbr1RM8jSgzNi7t4j6YOvmuIy2AM9jE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Uvmd9P8bYDiGjI8JFbWYhx6Vk66P0WfB3glzm66nlzLjIxt6ERWHV3GS7egjwJCgoBqqRgFBQ71Zj1w/EQxwyIcxV8XMcpN1JMvzEsp2RWCznVmYN/fuC6GeO8cd2O5VLRWn0VagfUPrK7cPSHU00ukpsrYrfairo+EDL+6zKgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=tMfWRFgo; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJXs5p2l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC64BC433F1;
-	Sat, 24 Feb 2024 15:05:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708787128;
-	bh=oC+819alsBsCF37dz60vdeaMt67VeJuCkAD2RtMidss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dJXs5p2lPsA++XKQWmL0YkfkWSlzoIOywXQchJiIrYKG90l0zDG4Mwr2IoHpKkXs/
-	 gfV2+PBDH6R/g4nceJSBYotXoOW/Cxa+PGM0zL5lc1o1qJ71X7c7jL8Jnef7Pw9+8d
-	 vi6jhwHaPPkwFfNWWrQxcsEirCdKv3Qt6q+l7w9dP5pVTLv6WL+AnXQ6LfRrjN/7z9
-	 T9L66jdVhMbPvUjN1/4ePXzCYrkeUvZc6lczj7S1i6Bd/rSQ/StNajCaDFgZrwa0L7
-	 5uguXiiQMtbNbFFHnGyQhTHGwiyp4di8ozhvDxVoZzjJG7BT5mkSGZsFH4RFtNY5mx
-	 ESNnSJoxNjv0g==
-Date: Sat, 24 Feb 2024 12:05:24 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: [solved] Re: linux-next: build failure after merge of the perf
- tree
-Message-ID: <ZdoFtNnivIONTNtg@x1>
-References: <20240222100656.0a644254@canb.auug.org.au>
- <Zdj3FyPjE5ezyfsM@x1>
- <Zdj74Zo10vYTZNMl@x1>
- <CAM9d7ciaj80QZL0AS_T2HNBdMOyS-j1wBHQSYs=U3kHQimY1mQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="tMfWRFgo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1708787168; bh=1o4GXfvP6xMrbbr1RM8jSgzNi7t4j6YOvmuIy2AM9jE=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=tMfWRFgoNIuDUYqRsD974N3vcVI89e9R6Zbs7lKepJ7JniADdhZWgOdW7bf6wGDAb
+	 TyWdUyTZeQdx4pc6jTxX9ajGxkA2iLRZhlitAZFGDFBG6CdakEl/6NbTU42NVwLeGF
+	 t2kkJYHk6wim1WxIR4ud/+05vkpYhKudg4PpvgD0=
+From: =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megi@xff.cz>
+To: linux-kernel@vger.kernel.org,
+	Maxime Ripard <mripard@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: Ondrej Jirman <megi@xff.cz>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev
+Subject: [PATCH v2 2/3] drm/sun4i: Add more parameters to sunxi_engine commit callback
+Date: Sat, 24 Feb 2024 16:05:59 +0100
+Message-ID: <20240224150604.3855534-3-megi@xff.cz>
+In-Reply-To: <20240224150604.3855534-1-megi@xff.cz>
+References: <20240224150604.3855534-1-megi@xff.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ciaj80QZL0AS_T2HNBdMOyS-j1wBHQSYs=U3kHQimY1mQ@mail.gmail.com>
 
-On Fri, Feb 23, 2024 at 12:34:40PM -0800, Namhyung Kim wrote:
-> Hi Arnaldo,
-> 
-> On Fri, Feb 23, 2024 at 12:11 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Fri, Feb 23, 2024 at 04:50:47PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Thu, Feb 22, 2024 at 10:06:56AM +1100, Stephen Rothwell wrote:
-> > > > Hi all,
-> > > >
-> > > > After merging the perf tree, today's linux-next build (native perf)
-> > > > failed like this:
-> > > >
-> > > > util/bpf_skel/augmented_raw_syscalls.bpf.c:329:15: error: invalid application of 'sizeof' to an incomplete type 'struct timespec64'
-> > > >         __u32 size = sizeof(struct timespec64);
-> > > >                      ^     ~~~~~~~~~~~~~~~~~~~
-> > > > util/bpf_skel/augmented_raw_syscalls.bpf.c:329:29: note: forward declaration of 'struct timespec64'
-> > > >         __u32 size = sizeof(struct timespec64);
-> > > >                                    ^
-> > > >
-> > > > Caused by commit
-> > > >
-> > > >   29d16de26df1 ("perf augmented_raw_syscalls.bpf: Move 'struct timespec64' to vmlinux.h")
-> > > >
-> > > > This is a ppc64 le build.
-> > > >
-> > > > I have used the perf tree from next-20240221 for today.
-> > >
-> > > Ok, finally I managed to secure a ppc64 machine to test this and
-> > > sometimes I reproduce just like you reported, but sometimes I can't do
-> > > it, didn't manage to isolate what is that makes it fail sometimes, make
-> > > -C tools/perf clean, nuking the O= target directory, etc, when I
-> > > reproduce it:
-> >
-> > So I think I see the problem, I now left the build directory with a
-> > previous build from torvalds/master, then switched to the
-> > perf-tools-branch and tried to build from there, without first removing
-> > the old build, it fails:
-> >
-> >   CLANG   /tmp/build/perf-tools-next/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o
-> > util/bpf_skel/augmented_raw_syscalls.bpf.c:329:15: error: invalid application of 'sizeof' to an incomplete type 'struct timespec64'
-> >   329 |         __u32 size = sizeof(struct timespec64);
-> >       |                      ^     ~~~~~~~~~~~~~~~~~~~
-> > util/bpf_skel/augmented_raw_syscalls.bpf.c:329:29: note: forward declaration of 'struct timespec64'
-> >   329 |         __u32 size = sizeof(struct timespec64);
-> >       |                                    ^
-> > 1 error generated.
-> > make[2]: *** [Makefile.perf:1161: /tmp/build/perf-tools-next/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o] Error 1
-> > make[1]: *** [Makefile.perf:264: sub-make] Error 2
-> >
-> >
-> > Because it will use what was installed before in the build dir:
-> >
-> > [acme@ibm-p9z-16-lp5 perf-tools-next]$ ls -la /tmp/build/perf-tools-next/util/bpf_skel/vmlinux.h
-> > -rw-r--r--. 1 acme acme 4319 Feb 23 14:59 /tmp/build/perf-tools-next/util/bpf_skel/vmlinux.h
-> > [acme@ibm-p9z-16-lp5 perf-tools-next]$
-> >
-> > And that one doesn't have 'struct timespec64':
-> >
-> > [acme@ibm-p9z-16-lp5 perf-tools-next]$ grep timespec64 /tmp/build/perf-tools-next/util/bpf_skel/vmlinux.h
-> > [acme@ibm-p9z-16-lp5 perf-tools-next]$
-> >
-> > If I remove that directory contents:
-> >
-> > [acme@ibm-p9z-16-lp5 perf-tools-next]$ rm -rf /tmp/build/perf-tools-next/
-> > [acme@ibm-p9z-16-lp5 perf-tools-next]$ mkdir /tmp/build/perf-tools-next/
-> > [acme@ibm-p9z-16-lp5 perf-tools-next]$
-> >
-> > And then try to build again:
-> >
-> > make -k O=/tmp/build/perf-tools-next/ -C tools/perf install-bin
-> >
-> > It works.
-> >
-> > I reproduced the problem on x86_64, so, on this transition period, the
-> > problem happens, probably we need to robustify the installation of
-> > tools/perf/util/bpf_skel/vmlinux/vmlinux.h in the O= target directory,
-> > but if you just make sure the build directory is clean before trying to
-> > build it, this time, it should work, wdyt?
-> 
-> Can we add a dependency to the minimal vmlinux.h?
+From: Ondrej Jirman <megi@xff.cz>
 
-That fixes it, I'll submit a formal patch
+These will be needed later on when we move layer configuration to
+crtc update.
 
-- Arnaldo
+Signed-off-by: Ondrej Jirman <megi@xff.cz>
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+---
+ drivers/gpu/drm/sun4i/sun4i_backend.c |  4 +++-
+ drivers/gpu/drm/sun4i/sun4i_crtc.c    |  2 +-
+ drivers/gpu/drm/sun4i/sun8i_mixer.c   |  5 ++++-
+ drivers/gpu/drm/sun4i/sunxi_engine.h  | 13 ++++++++++---
+ 4 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_backend.c b/drivers/gpu/drm/sun4i/sun4i_backend.c
+index 335fd0edb904..e89eb96d3131 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_backend.c
++++ b/drivers/gpu/drm/sun4i/sun4i_backend.c
+@@ -69,7 +69,9 @@ static void sun4i_backend_disable_color_correction(struct sunxi_engine *engine)
+ 			   SUN4I_BACKEND_OCCTL_ENABLE, 0);
+ }
  
-> Thanks,
-> Namhyung
-> 
-> ---8<---
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 3cecd51b2397..33621114135e 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -1147,7 +1147,7 @@ ifeq ($(VMLINUX_H),)
->    endif
->  endif
-> 
-> -$(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL)
-> +$(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL) $(VMLINUX_H)
->  ifeq ($(VMLINUX_H),)
->         $(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@
->  else
+-static void sun4i_backend_commit(struct sunxi_engine *engine)
++static void sun4i_backend_commit(struct sunxi_engine *engine,
++				 struct drm_crtc *crtc,
++				 struct drm_atomic_state *state)
+ {
+ 	DRM_DEBUG_DRIVER("Committing changes\n");
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun4i_crtc.c b/drivers/gpu/drm/sun4i/sun4i_crtc.c
+index c06d7cd45388..18e74047b0f5 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_crtc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_crtc.c
+@@ -91,7 +91,7 @@ static void sun4i_crtc_atomic_flush(struct drm_crtc *crtc,
+ 
+ 	DRM_DEBUG_DRIVER("Committing plane changes\n");
+ 
+-	sunxi_engine_commit(scrtc->engine);
++	sunxi_engine_commit(scrtc->engine, crtc, state);
+ 
+ 	if (event) {
+ 		crtc->state->event = NULL;
+diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+index 1e681314e379..bdeb9b80e038 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -16,6 +16,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+ 
++#include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_framebuffer.h>
+@@ -249,7 +250,9 @@ int sun8i_mixer_drm_format_to_hw(u32 format, u32 *hw_format)
+ 	return -EINVAL;
+ }
+ 
+-static void sun8i_mixer_commit(struct sunxi_engine *engine)
++static void sun8i_mixer_commit(struct sunxi_engine *engine,
++			       struct drm_crtc *crtc,
++			       struct drm_atomic_state *state)
+ {
+ 	DRM_DEBUG_DRIVER("Committing changes\n");
+ 
+diff --git a/drivers/gpu/drm/sun4i/sunxi_engine.h b/drivers/gpu/drm/sun4i/sunxi_engine.h
+index ec8cf9b2bda4..ec0c4932f15c 100644
+--- a/drivers/gpu/drm/sun4i/sunxi_engine.h
++++ b/drivers/gpu/drm/sun4i/sunxi_engine.h
+@@ -7,6 +7,7 @@
+ #define _SUNXI_ENGINE_H_
+ 
+ struct drm_plane;
++struct drm_crtc;
+ struct drm_device;
+ struct drm_crtc_state;
+ struct drm_display_mode;
+@@ -59,7 +60,9 @@ struct sunxi_engine_ops {
+ 	 *
+ 	 * This function is optional.
+ 	 */
+-	void (*commit)(struct sunxi_engine *engine);
++	void (*commit)(struct sunxi_engine *engine,
++		       struct drm_crtc *crtc,
++		       struct drm_atomic_state *state);
+ 
+ 	/**
+ 	 * @layers_init:
+@@ -144,12 +147,16 @@ struct sunxi_engine {
+ /**
+  * sunxi_engine_commit() - commit all changes of the engine
+  * @engine:	pointer to the engine
++ * @crtc:	pointer to crtc the engine is associated with
++ * @state:	atomic state
+  */
+ static inline void
+-sunxi_engine_commit(struct sunxi_engine *engine)
++sunxi_engine_commit(struct sunxi_engine *engine,
++		    struct drm_crtc *crtc,
++		    struct drm_atomic_state *state)
+ {
+ 	if (engine->ops && engine->ops->commit)
+-		engine->ops->commit(engine);
++		engine->ops->commit(engine, crtc, state);
+ }
+ 
+ /**
+-- 
+2.44.0
+
