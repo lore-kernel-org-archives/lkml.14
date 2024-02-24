@@ -1,183 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E385A250EA;
-	Sat, 24 Feb 2024 12:10:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B32250EA;
+	Sat, 24 Feb 2024 12:11:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708776620; cv=none; b=lIxXH+beYIgdkeIFoOg9etSYg8pa0CCZKdkK8gLvooefhf6T6RStw3OqVIU4Nr212Z3AO0Vd5bL/jcapWNao7EDwymtHtnG2XNSCxW95nrUNi0vi87B5zQ8ao9eib8C2DYE2N14/zYblc3yutvOwIfKurwlUryMUt5UYVBkfkDs=
+	t=1708776667; cv=none; b=YcAHN/xrs9Ms3+tjsh8keFYXOIO9iURezUt/Ua6Z/c/Q0bpwreFCb4rBvz4wJIGVYAa+VDqxro8iMyJRNrHLiEN7kMTSCnFeMvaSbopIZjw1xKwA5+s+Qbdc5xxUrmxYfDRF3L49kz4RsqutKQNBhEoAnBwuhnRGKuHXBwB06jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708776620; c=relaxed/simple;
-	bh=Y/mv5b45NNa7XhCnyle8CDh3gsyrXcnhCzFA4aYSuaw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=g0RV3TkI+pAxlL4sMSfe+rD7jwrQTITouAPPh6fjIs9f8Pn6PfpcqI2hxELDnNcQPgLAN27lEvJclhoIvFL6/1x92vCnV9QKxv0NCT681yWiqkx9XQXsn48w7oUlWHZBxoCa8zfLrC6pwcXD3bvX6oaUP3t13eVUDajh1ZrNfZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9guFfAj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708776667; c=relaxed/simple;
+	bh=Pu6N//eyTGdqifeP3OJ4ufRMcGGxcldi31zFNRd6ipY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LhsJDbV8vWYnWrfm2ps51FpDnWUViNuUj03HCE+T1SsDRsllw3q3bNVXv8nRSkx6Igos3GCA2CNbQOTV1AhV0+RZ3cuEk6Z/5+U3oyowY+fiCbqrfK+UniA6sK701eaRohn5Wsp4JRSOpIEUhEiNLk/KSlWnOrWv7CwVRvxAMv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSt7BXxu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9guFfAj"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8F98EC433C7;
-	Sat, 24 Feb 2024 12:10:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSt7BXxu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58343C433C7;
+	Sat, 24 Feb 2024 12:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708776619;
-	bh=Y/mv5b45NNa7XhCnyle8CDh3gsyrXcnhCzFA4aYSuaw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Q9guFfAjFg3Kpd80dy8WG9xevz+dOvi5rFVPtX4sQpS24kf6kjalQJf6YALJ6Kcvj
-	 OTXn7iizuWkUd1F6CQQbMVCB9hZ+CqFvDgV9tlt0BuOWPHIxV4vSpLQGl/tyFjc8Hg
-	 mH+nGH5RSP7fhIBvZW3F8B8HISdAP1pdWtCWo48otp61tSg3opOmDTBJj5omxkCH+6
-	 dWVwVhhDEH2Mx0GRtYRCGP5GW3zx60Aq5cqk/W/272KA0msINfVVHkMhnt2btpflqt
-	 acfAVIqBSdGRheeHjhbHPSVP0YXsiKXjCz5fsY/EBM6+22Bbh9+fiI1r9RDYSKSQkq
-	 3xJN4BsrQ1qrg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79816C54E4A;
-	Sat, 24 Feb 2024 12:10:19 +0000 (UTC)
-From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Sat, 24 Feb 2024 20:10:18 +0800
-Subject: [PATCH v3 1/2] dt-bindings: usb: add hisilicon,hi3798mv200-dwc3
+	s=k20201202; t=1708776666;
+	bh=Pu6N//eyTGdqifeP3OJ4ufRMcGGxcldi31zFNRd6ipY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hSt7BXxugFK7a6uTMtUsydYhZeyQvuf31BUXhaJ2r+XvwbmhPWMF92aOdJnU6cG6e
+	 5fGPGAVUGUD0xRtCmMLGWzVHrGLJgLB5KO7QDq9Wn3U/+6m5gB3mIVGgR98q7n0hW3
+	 Ckej0H/uKk8yTVnBKL4d1qpGph+i7TDUchqkZxTpLRr4XT0S4XkaVtx0LklqDNgy+0
+	 7PhsF4w26CAE0nuKrrzrDwx4jgQt14gxjnTEF0HpAzAC0OyXBikS5sOTCQz3G4Z9vM
+	 7CHJZXoYKz1aTO+X5Yv+DeZ+WsRxtrpkoFpM7LvmQlc9E4N1x0FW9Ex3t0XgcsXGa0
+	 U+TM8UY7Z4QWg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+	Houlong Wei <houlong.wei@mediatek.com>,
+	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Tiffany Lin <tiffany.lin@mediatek.com>,
+	Yunfei Dong <yunfei.dong@mediatek.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Alexandre Courbot <acourbot@chromium.org>,
+	Pi-Hsun Shih <pihsun@chromium.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH] media: mediatek: vcodec: avoid -Wcast-function-type-strict warning
+Date: Sat, 24 Feb 2024 13:10:22 +0100
+Message-Id: <20240224121059.1806691-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240224-dwc3-v3-1-2535fcee7f08@outlook.com>
-References: <20240224-dwc3-v3-0-2535fcee7f08@outlook.com>
-In-Reply-To: <20240224-dwc3-v3-0-2535fcee7f08@outlook.com>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Yang Xiwen <forbidden405@foxmail.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708776618; l=3057;
- i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=jRJYka21Rl3jtVAQxHQtRgS06ZtXY4Ef7fNvMXm1l9Y=;
- b=14y9842xN9JS6FBVs22HlDE4O7AMN9Q7TM0Mxrfu9Yh8BIeVQIL5JcdNk8w/sZUQjJfNuMqYh
- 3/KLUFYNPwGA8LkKQlypHN9azB6ciK2EzIEptWC5L57E33iG7G7RHci
-X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
- pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
-X-Endpoint-Received:
- by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
-X-Original-From: Yang Xiwen <forbidden405@outlook.com>
-Reply-To: <forbidden405@outlook.com>
+Content-Transfer-Encoding: 8bit
 
-From: Yang Xiwen <forbidden405@outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-Document the DWC3 controller used by Hi3798MV200.
+The ipi handler here tries hard to maintain const-ness of its argument,
+but by doing that causes a warning about function type casts:
 
-Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
+drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c:38:32: error: cast from 'mtk_vcodec_ipi_handler' (aka 'void (*)(void *, unsigned int, void *)') to 'ipi_handler_t' (aka 'void (*)(const void *, unsigned int, void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+   38 |         ipi_handler_t handler_const = (ipi_handler_t)handler;
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~
+
+Remove the hack and just use a non-const argument.
+
+Fixes: bf1d556ad4e0 ("media: mtk-vcodec: abstract firmware interface")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../bindings/usb/hisilicon,hi3798mv200-dwc3.yaml   | 99 ++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+ drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c      |  2 +-
+ .../mediatek/vcodec/common/mtk_vcodec_fw_vpu.c         | 10 +---------
+ drivers/media/platform/mediatek/vpu/mtk_vpu.c          |  2 +-
+ drivers/media/platform/mediatek/vpu/mtk_vpu.h          |  2 +-
+ 4 files changed, 4 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml b/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml
-new file mode 100644
-index 000000000000..0c26191e9d74
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml
-@@ -0,0 +1,99 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/hisilicon,hi3798mv200-dwc3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon Hi3798MV200 DWC3 USB SoC controller
-+
-+maintainers:
-+  - Yang Xiwen <forbidden405@foxmail.com>
-+
-+properties:
-+  compatible:
-+    const: hisilicon,hi3798mv200-dwc3
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  ranges: true
-+
-+  clocks:
-+    items:
-+      - description: Controller bus clock
-+      - description: Controller suspend clock
-+      - description: Controller reference clock
-+      - description: Controller gm clock
-+      - description: Controller gs clock
-+      - description: Controller utmi clock
-+      - description: Controller pipe clock
-+
-+  clock-names:
-+    items:
-+      - const: bus
-+      - const: suspend
-+      - const: ref
-+      - const: gm
-+      - const: gs
-+      - const: utmi
-+      - const: pipe
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    const: soft
-+
-+patternProperties:
-+  '^usb@[0-9a-f]+$':
-+    $ref: snps,dwc3.yaml#
-+
-+required:
-+  - compatible
-+  - ranges
-+  - '#address-cells'
-+  - '#size-cells'
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    usb {
-+        compatible = "hisilicon,hi3798mv200-dwc3";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+        clocks = <&clk_bus>,
-+                 <&clk_suspend>,
-+                 <&clk_ref>,
-+                 <&clk_gm>,
-+                 <&clk_gs>,
-+                 <&clk_utmi>,
-+                 <&clk_pipe>;
-+        clock-names = "bus", "suspend", "ref", "gm", "gs", "utmi", "pipe";
-+        resets = <&crg 0xb0 12>;
-+        reset-names = "soft";
-+
-+        usb@98a0000 {
-+            compatible = "snps,dwc3";
-+            reg = <0x98a0000 0x10000>;
-+            interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&clk_bus>,
-+                     <&clk_suspend>,
-+                     <&clk_ref>;
-+            clock-names = "bus_early", "suspend", "ref";
-+            phys = <&usb2_phy1_port2>, <&combphy0 0>;
-+            phy-names = "usb2-phy", "usb3-phy";
-+            maximum-speed = "super-speed";
-+            dr_mode = "host";
-+        };
-+    };
-
+diff --git a/drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c b/drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c
+index b065ccd06914..378a1cba0144 100644
+--- a/drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c
++++ b/drivers/media/platform/mediatek/mdp/mtk_mdp_vpu.c
+@@ -26,7 +26,7 @@ static void mtk_mdp_vpu_handle_init_ack(const struct mdp_ipi_comm_ack *msg)
+ 	vpu->inst_addr = msg->vpu_inst_addr;
+ }
+ 
+-static void mtk_mdp_vpu_ipi_handler(const void *data, unsigned int len,
++static void mtk_mdp_vpu_ipi_handler(void *data, unsigned int len,
+ 				    void *priv)
+ {
+ 	const struct mdp_ipi_comm_ack *msg = data;
+diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+index 9f6e4b59455d..4c34344dc7dc 100644
+--- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
++++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+@@ -29,15 +29,7 @@ static int mtk_vcodec_vpu_set_ipi_register(struct mtk_vcodec_fw *fw, int id,
+ 					   mtk_vcodec_ipi_handler handler,
+ 					   const char *name, void *priv)
+ {
+-	/*
+-	 * The handler we receive takes a void * as its first argument. We
+-	 * cannot change this because it needs to be passed down to the rproc
+-	 * subsystem when SCP is used. VPU takes a const argument, which is
+-	 * more constrained, so the conversion below is safe.
+-	 */
+-	ipi_handler_t handler_const = (ipi_handler_t)handler;
+-
+-	return vpu_ipi_register(fw->pdev, id, handler_const, name, priv);
++	return vpu_ipi_register(fw->pdev, id, handler, name, priv);
+ }
+ 
+ static int mtk_vcodec_vpu_ipi_send(struct mtk_vcodec_fw *fw, int id, void *buf,
+diff --git a/drivers/media/platform/mediatek/vpu/mtk_vpu.c b/drivers/media/platform/mediatek/vpu/mtk_vpu.c
+index 7243604a82a5..724ae7c2ab3b 100644
+--- a/drivers/media/platform/mediatek/vpu/mtk_vpu.c
++++ b/drivers/media/platform/mediatek/vpu/mtk_vpu.c
+@@ -635,7 +635,7 @@ int vpu_load_firmware(struct platform_device *pdev)
+ }
+ EXPORT_SYMBOL_GPL(vpu_load_firmware);
+ 
+-static void vpu_init_ipi_handler(const void *data, unsigned int len, void *priv)
++static void vpu_init_ipi_handler(void *data, unsigned int len, void *priv)
+ {
+ 	struct mtk_vpu *vpu = priv;
+ 	const struct vpu_run *run = data;
+diff --git a/drivers/media/platform/mediatek/vpu/mtk_vpu.h b/drivers/media/platform/mediatek/vpu/mtk_vpu.h
+index a56053ff135a..da05f3e74081 100644
+--- a/drivers/media/platform/mediatek/vpu/mtk_vpu.h
++++ b/drivers/media/platform/mediatek/vpu/mtk_vpu.h
+@@ -17,7 +17,7 @@
+  * VPU interfaces with other blocks by share memory and interrupt.
+  */
+ 
+-typedef void (*ipi_handler_t) (const void *data,
++typedef void (*ipi_handler_t) (void *data,
+ 			       unsigned int len,
+ 			       void *priv);
+ 
 -- 
-2.43.0
+2.39.2
 
