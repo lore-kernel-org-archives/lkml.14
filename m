@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702474F8A2;
-	Sat, 24 Feb 2024 21:33:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDFA53391;
+	Sat, 24 Feb 2024 21:33:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708810396; cv=none; b=JQ06uZOIi/unCxqCt9nor3bssQRGwn3bKDObDIGUzthWI3w0yoQZtp6OPeNY3G7o7DLM4filw1IjR+EYPKA6fjA2cNNUeW01LwFA5mfhaQUuqEoatY8feUCkIlWWaO0tWAaxIWC8ya4vMGQ9TRswpYXtF81DOK4lJbKP2Z+TVkk=
+	t=1708810398; cv=none; b=aMkigSyh8pHm8MBaTQLtoGfU88pXejJK5wtU/fh7I/DOYs46bDH4gRiOH4QVW/24zXGHsOJlK54m3xc+PiOXv4zj6i7CpFGVwDb8LsWdfllSBRF+Ga0Xor3/LucovKjELDLs5n2x84E6drP9jqB2pa9vtVtvpWzo8KiV29+gjBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708810396; c=relaxed/simple;
-	bh=bcNrHCs+XtlQKvFbrrcQck8fBVrNGGG/DApCkyizqTE=;
+	s=arc-20240116; t=1708810398; c=relaxed/simple;
+	bh=JzqwkQRLgk7k3EhjNENSRph/tpijOyPkAp/qgI/FbTw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uYmuh6hHh6qYTKLVpUd6zlwAoScO1v5fapC0cQxzwfeZ8f/qx499dJaTbeAS/IIMVBSZh7yEEZjPOSA21r9yhoNs4tpTEweM84gp1PpDCml2cluQdpOGHp3CdmQCb97E0PiKg4AkLyyYwTY3jntzwEDRlMvKL6Ci+ThtpR/ZC6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNTeXz1+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=I/iwbPnp0vsWWRPBw2yNmLPYQ3BvfyTbGEL3Yoc/pFrHamHYk1Ik2p+o25RTMryn4LEE8Vw81wI322iAu05P6urHTW4iFWCY/S1CufJ2ruHK3gncpBxUGhnf7DrkS8+L5w72qnfrBdjDq+TZHmUIsCuvcerhMCtrUFF2AI90gu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRqOpcrv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNTeXz1+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E255C433F1;
-	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRqOpcrv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E8FC43141;
+	Sat, 24 Feb 2024 21:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708810396;
-	bh=bcNrHCs+XtlQKvFbrrcQck8fBVrNGGG/DApCkyizqTE=;
+	s=k20201202; t=1708810398;
+	bh=JzqwkQRLgk7k3EhjNENSRph/tpijOyPkAp/qgI/FbTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MNTeXz1++vNGxPu0EtncbVDZLEfkG+xF08te7wLpbTIceU8Yoc1Smc61P6H6QE7rf
-	 uj5bktZBApzk6Mr/nCR9N1r+p/yC+h/BG036mzDwnYXUnl2vKkfzln3CmyNPD4UK5c
-	 kwwzFe2qRRwgQHjKEdwjRp09zqhbY3At0q3vmOZS7ccJ4LNGRTgDKQ60VEX7p73wD2
-	 yQmtXQCs0s+B66hc4I4cY7Dg4c5lJfCU3dyygCPhYHT1YcgStT+bKrSULmWG/e60WP
-	 wdGuWBkKoAE4/ytK+z4GTJYKMzxzC5AHMKXOmFslFRLcOLbtw00lLUW5h6E0S59GLQ
-	 DtoPrGFsQYCaQ==
+	b=NRqOpcrv68im30SahywHhKVh6UtBgd42RFGW9T6/sGbZvlO7CrHGkrhIAPwdJ8xCz
+	 43QAE1TqS0ArwKg/Q59pcrUlNF35ulQ5NoswD/jqnhnrjZYify1u1IthNs9UemjuLc
+	 ztqrCTvSxnKGpxjwMJdLJCBMeOn7jgbE293aIfz9Qyri7mmHFb1eQdR+9U4KnHjK7O
+	 Ou86Hr5ikvRIf41oDc+Z66sqysNm9iKSVa8uLy9IPLxMyeTT3ieaUahIZc27NaKSLq
+	 cWTsCKJl6wcPwZBt2ztpOE6ZgPLpXuzS646ZyR2lYX2gXxPkF6GjE1+0L/JAY+sgAA
+	 s4VBlH7kgS/hg==
 Received: by mercury (Postfix, from userid 1000)
-	id 2D0261060EFA; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
+	id 45B681061142; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -46,9 +46,9 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 11/16] ARM: dts: nxp: imx6ul: xnur-gpio -> xnur-gpios
-Date: Sat, 24 Feb 2024 22:29:43 +0100
-Message-ID: <20240224213240.1854709-12-sre@kernel.org>
+Subject: [PATCH v4 15/16] dt-bindings: arm: add UNI-T UTi260B
+Date: Sat, 24 Feb 2024 22:29:47 +0100
+Message-ID: <20240224213240.1854709-16-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240224213240.1854709-1-sre@kernel.org>
 References: <20240224213240.1854709-1-sre@kernel.org>
@@ -60,72 +60,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace all "xnur-gpio" with "xnur-gpios" in the i.MX6UL(L) Touchscreen
-node, since the -gpio suffix is deprecated. All known implementations of
-this binding can handle -gpio and -gpios since day 1, so this should be
-fully backwards compatible.
+Add compatible value for i.MX6ULL based UNI-T UTi260B thermal camera.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi          | 2 +-
- arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts                | 2 +-
- arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi | 2 +-
- arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi         | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi
-index 2ac40d69425b..f10f0525490b 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi
-@@ -321,7 +321,7 @@ &snvs_pwrkey {
- &tsc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_tsc>;
--	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
- 	measure-delay-time = <0xffff>;
- 	pre-charge-time = <0xfff>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts b/arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts
-index 875ae699c5cb..2ca18f3dad0a 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts
-@@ -203,7 +203,7 @@ &pwm8 {
- &tsc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_tsc>;
--	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
- };
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 228dcc5c7d6f..7b65f9c9c1a5 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -708,6 +708,7 @@ properties:
+               - toradex,colibri-imx6ull      # Colibri iMX6ULL Modules
+               - toradex,colibri-imx6ull-emmc # Colibri iMX6ULL 1GB (eMMC) Module
+               - toradex,colibri-imx6ull-wifi # Colibri iMX6ULL Wi-Fi / BT Modules
++              - uni-t,uti260b             # UNI-T UTi260B Thermal Camera
+           - const: fsl,imx6ull
  
- &sai2 {
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi
-index 18cac19aa9b0..af337f18a266 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi
-@@ -156,7 +156,7 @@ &snvs_pwrkey {
- &tsc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_tsc>;
--	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
- 	measure-delay-time = <0xffff>;
- 	pre-charge-time = <0xffff>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi
-index 830b5a5064f2..6d2163250b5d 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi
-@@ -273,7 +273,7 @@ &tsc {
- 	pinctrl-names = "default";
- 	pre-charge-time = <0xfff>;
- 	touchscreen-average-samples = <32>;
--	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
- };
- 
- /* DHCOM UART1 */
+       - description: i.MX6ULL Armadeus Systems OPOS6ULDev Board
 -- 
 2.43.0
 
