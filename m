@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFE250A80;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702474F8A2;
 	Sat, 24 Feb 2024 21:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708810396; cv=none; b=ExKASN0BXIa+LfIXh5zsCNFT8TLFNSuBslXYsI0K8Beb923pm+qhydxjSPOo0vjbQRw30KRMx8C2l6uSI2fZaxyQm4lVhYNtOoaOb8O3byWxdkea1k1epXxbsOFqNnjPNem8sNkBw28kOnN+tpEFKEcAnv3KrRZqZ/cb4M+pDH8=
+	t=1708810396; cv=none; b=JQ06uZOIi/unCxqCt9nor3bssQRGwn3bKDObDIGUzthWI3w0yoQZtp6OPeNY3G7o7DLM4filw1IjR+EYPKA6fjA2cNNUeW01LwFA5mfhaQUuqEoatY8feUCkIlWWaO0tWAaxIWC8ya4vMGQ9TRswpYXtF81DOK4lJbKP2Z+TVkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708810396; c=relaxed/simple;
-	bh=4k5fPYp42gH3QLf+/maLO3ezxAAlAX85NAtYohge+G8=;
+	bh=bcNrHCs+XtlQKvFbrrcQck8fBVrNGGG/DApCkyizqTE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CLOdr6QOjBjlsiWW6H40owcSQXEsYhggJPXx5ipj3p/X/tWNF0m4aqeiOKLLSg51ApCWACTZxRtMfZLr7F58TgKNp/ERVfRQVoWvkzbMjREt3kgGm2TEX1UExMDUKYYeg7Td+Ax6SoIK2GB8gFPMkS0tfzV0921hssaGpZQ0my8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fmleCXU/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uYmuh6hHh6qYTKLVpUd6zlwAoScO1v5fapC0cQxzwfeZ8f/qx499dJaTbeAS/IIMVBSZh7yEEZjPOSA21r9yhoNs4tpTEweM84gp1PpDCml2cluQdpOGHp3CdmQCb97E0PiKg4AkLyyYwTY3jntzwEDRlMvKL6Ci+ThtpR/ZC6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNTeXz1+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fmleCXU/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131D6C43609;
-	Sat, 24 Feb 2024 21:33:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNTeXz1+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E255C433F1;
+	Sat, 24 Feb 2024 21:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708810396;
-	bh=4k5fPYp42gH3QLf+/maLO3ezxAAlAX85NAtYohge+G8=;
+	bh=bcNrHCs+XtlQKvFbrrcQck8fBVrNGGG/DApCkyizqTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fmleCXU/t8V0jrOZUtQTkApfX0xT5LbeQZ9jCZ5dzH3yYUeO4shKdgR1aXUQqeecL
-	 NXxmvkRBDdRmbp0jM/9+C06mNJWi6qlusLDqrkW7iO3pHCrbXt4fDBa0gucDroCuyC
-	 0uOIkNmH3tKp63gBQt8m2SE8SYktRifv8a/Bp9TdJR2etOja+coyu8CNFFl4p7e9pJ
-	 VC8Tx5yQFQMzXfT7phNpVCRbeO0vFk4fsJYfE9hmRlDAUWC/fXwVuVvRTbPLNSGede
-	 eBMQRfKe42vbB4IWjf/Ywp8e2g25Db3CtBImwLaXzVtpk9+zZztbmwsoiQ0er8mMwg
-	 rhGVQMz4AUFCg==
+	b=MNTeXz1++vNGxPu0EtncbVDZLEfkG+xF08te7wLpbTIceU8Yoc1Smc61P6H6QE7rf
+	 uj5bktZBApzk6Mr/nCR9N1r+p/yC+h/BG036mzDwnYXUnl2vKkfzln3CmyNPD4UK5c
+	 kwwzFe2qRRwgQHjKEdwjRp09zqhbY3At0q3vmOZS7ccJ4LNGRTgDKQ60VEX7p73wD2
+	 yQmtXQCs0s+B66hc4I4cY7Dg4c5lJfCU3dyygCPhYHT1YcgStT+bKrSULmWG/e60WP
+	 wdGuWBkKoAE4/ytK+z4GTJYKMzxzC5AHMKXOmFslFRLcOLbtw00lLUW5h6E0S59GLQ
+	 DtoPrGFsQYCaQ==
 Received: by mercury (Postfix, from userid 1000)
-	id 3F95C1061140; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
+	id 2D0261060EFA; Sat, 24 Feb 2024 22:33:10 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -46,9 +46,9 @@ Cc: Dong Aisheng <aisheng.dong@nxp.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 14/16] dt-bindings: vendor-prefixes: add UNI-T
-Date: Sat, 24 Feb 2024 22:29:46 +0100
-Message-ID: <20240224213240.1854709-15-sre@kernel.org>
+Subject: [PATCH v4 11/16] ARM: dts: nxp: imx6ul: xnur-gpio -> xnur-gpios
+Date: Sat, 24 Feb 2024 22:29:43 +0100
+Message-ID: <20240224213240.1854709-12-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240224213240.1854709-1-sre@kernel.org>
 References: <20240224213240.1854709-1-sre@kernel.org>
@@ -60,28 +60,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Uni-Trend Technology is a manufacturer of measurement
-and testing tools.
+Replace all "xnur-gpio" with "xnur-gpios" in the i.MX6UL(L) Touchscreen
+node, since the -gpio suffix is deprecated. All known implementations of
+this binding can handle -gpio and -gpios since day 1, so this should be
+fully backwards compatible.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi          | 2 +-
+ arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts                | 2 +-
+ arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi | 2 +-
+ arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi         | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 1a0dc04f1db4..e945e76696c2 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1484,6 +1484,8 @@ patternProperties:
-     description: Ufi Space Co., Ltd.
-   "^ugoos,.*":
-     description: Ugoos Industrial Co., Ltd.
-+  "^uni-t,.*":
-+    description: Uni-Trend Technology (China) Co., Ltd.
-   "^uniwest,.*":
-     description: United Western Technologies Corp (UniWest)
-   "^upisemi,.*":
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi
+index 2ac40d69425b..f10f0525490b 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul-14x14-evk.dtsi
+@@ -321,7 +321,7 @@ &snvs_pwrkey {
+ &tsc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_tsc>;
+-	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
++	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
+ 	measure-delay-time = <0xffff>;
+ 	pre-charge-time = <0xfff>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts b/arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts
+index 875ae699c5cb..2ca18f3dad0a 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul-geam.dts
+@@ -203,7 +203,7 @@ &pwm8 {
+ &tsc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_tsc>;
+-	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
++	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
+ };
+ 
+ &sai2 {
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi
+index 18cac19aa9b0..af337f18a266 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ul-imx6ull-opos6uldev.dtsi
+@@ -156,7 +156,7 @@ &snvs_pwrkey {
+ &tsc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_tsc>;
+-	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
++	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
+ 	measure-delay-time = <0xffff>;
+ 	pre-charge-time = <0xffff>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi b/arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi
+index 830b5a5064f2..6d2163250b5d 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6ull-dhcom-som.dtsi
+@@ -273,7 +273,7 @@ &tsc {
+ 	pinctrl-names = "default";
+ 	pre-charge-time = <0xfff>;
+ 	touchscreen-average-samples = <32>;
+-	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
++	xnur-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
+ };
+ 
+ /* DHCOM UART1 */
 -- 
 2.43.0
 
