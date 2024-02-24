@@ -1,98 +1,107 @@
-Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E9B288DB
-	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 12:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38201B977;
+	Sat, 24 Feb 2024 12:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708776533; cv=none; b=fO7/LHMoOYgcEWQjVm3SVgv919fOZ7o1j23AuOlGRHZGPFpByfBDK6YsYdv0BRUK7VcWWMT78c4Bu29llTqbdLB4Hj2RHjkSs0rD44gu5ClF/eOPNh5+XPSaNIJPBdZzOVTEM/BpwLvGOtguIQdtyS6qGcRph72NIkF3RN20d+M=
+	t=1708776620; cv=none; b=Wx4Yxkiz0oyzbhJQVyRriK7hr74OvxuxL1cmgGtVtrR4Jm8iuG9EwCTQw/wGXdo5tmrFb3We205IrOU6+uDjyH8CMtc0JK8z7d97RRDyFkSON/nfWF2Zh4wjOg83KoYUOAWUhWfQ4TVkCiNl3FnKPQA8yzoAnG/NGOe74AQWVGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708776533; c=relaxed/simple;
-	bh=UZlUKzJDIE3Ejg/2uPUT90rGzS7fsqyUAE1JCjenB8I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fSb4otCqK2whSHjSUwkD0fmfu9tjSArJynr9+MhFxuyrIvmvO68yvyqS2U/Q0Pfzj/5qqM20fu02nnPUqeRz21HuLUO5IaWndp3W30rmkXwbXk/ws+G9hMuRIzudmX/VYwPhE8dEHZQwLjw+CdmZamS8w8dCZeQWSjWQiqY+lXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=orange.fr; spf=pass smtp.mailfrom=orange.fr; dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b=REp8uHu2; arc=none smtp.client-ip=80.12.242.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=orange.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orange.fr
+	s=arc-20240116; t=1708776620; c=relaxed/simple;
+	bh=wLy4fhXT7uKWi4ko1krpJhqxlUi/4wpBJplpCsyj4Pw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=t3pZm+0WK6RXFZZ9iZy1ausDAekBqYY2vY/HS0ubneBEAmW37GolGB3hDsGKqMUcCwF79bDnz4TtBn+1/4Kz4PuLQ3o9YJwp00lhVDMdXph1oKjs5sj3NtyDQYhvECBG3ZPnHTPSA0LJVowXKO5DJbvBRAzjprN6p+EG9Qkm6kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G00LVqS3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b="REp8uHu2"
-Received: from jules-desktop.dynamic.ziggo.nl ([84.105.71.69])
-	by smtp.orange.fr with ESMTPA
-	id dqpVrjA78SI7xdqpfr56W6; Sat, 24 Feb 2024 13:08:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orange.fr;
-	s=t20230301; t=1708776524;
-	bh=3dYE06cGrljHtTRYwZzkQUBSeOHR9BhQZqpePGYgV5k=;
-	h=From:To:Cc:Subject:Date;
-	b=REp8uHu2ui4eguwwrHv9egWBjrvKQ/OPuzquVqlNFsVZDCAsFKp5KXOl7HyAzyKG9
-	 lDRufFGzsnv4/8tOtEOC5v7s1Bvzk2jr0xEjMj2WXGwyM//U40Ar91dwBQg2qfdwss
-	 3YbBJB3bX3DoYH0hqD7tJRSqlBbsZ+joHR1itXb2AU9ELh7pcODybDZCnlZm43hBc0
-	 sOePrK1IDPbkzblqCkrPjQ+umNNm7mRDdmZ/jDLpFRHv6OymbEezKVGV+bjDji87Q2
-	 ocPa5djoNAM/+c+lwOiyRbjhTDF81Y3DwZm6Vywh96Ed9sL0ui7o4T83DHZeFwMu3J
-	 xWNyjttN8n+JQ==
-X-ME-Helo: jules-desktop.dynamic.ziggo.nl
-X-ME-Auth: anVsZXMubm9pcmFudEBvcmFuZ2UuZnI=
-X-ME-Date: Sat, 24 Feb 2024 13:08:44 +0100
-X-ME-IP: 84.105.71.69
-From: Jules Noirant <jules.noirant@orange.fr>
-To: 
-Cc: jikos@kernel.org,
-	Jules Noirant <jules.noirant@orange.fr>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: usbhid: hid-pidff: fix initialisation for devices that pre-play effects
-Date: Sat, 24 Feb 2024 13:00:56 +0100
-Message-Id: <20240224120056.21251-1-jules.noirant@orange.fr>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G00LVqS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 85AEEC433F1;
+	Sat, 24 Feb 2024 12:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708776619;
+	bh=wLy4fhXT7uKWi4ko1krpJhqxlUi/4wpBJplpCsyj4Pw=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=G00LVqS3FR/NS73LgOkjWB8s2B6qgbO5qgRTK+wG55sjGWtOHG9m1CtFQieXjkAwp
+	 KzJWbBAvS9F8sq7x2O/L5c9uS+LrqTtXAXDhDEjvMl32bLUA+r9hT5X1xaki9Ckle6
+	 y3lAUCPCrTQl7jQgeRAtoCvdiOKOsIYVtJPTEscvGADyqS+JS75TnoQi7c34Fy8pfX
+	 liIRHda0ZosKB5U86cjLtdUx+fHh4y+3/aAWQaZ3zXhbIpWSt7NxR2ByjoR78CzSRo
+	 Evur6V7iJREhUhb/CwmvzD7/4b7VH8EmEd0Ek+ndxjL+scvN6NPf4FZfMw4kBvQvMW
+	 Xk7ecUVjj5wHQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A586C54E49;
+	Sat, 24 Feb 2024 12:10:19 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Subject: [PATCH v3 0/2] usb: dwc3: add glue driver for Hi3798MV200
+Date: Sat, 24 Feb 2024 20:10:17 +0800
+Message-Id: <20240224-dwc3-v3-0-2535fcee7f08@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKnc2WUC/22MQQ7CIBQFr9KwFgO/VNCV9zAuKP1YohYDFTUNd
+ 5dWNyYu5+XNTCRicBjJrppIwOSi80OBelUR0+vhhNR1hQkwEAy4pN3D1HSzlQpUKxTTmpTrLaB
+ 1zyVzOBbuXRx9eC3VxOf1GwDxCSROGZXWtoDQai3rvb+PF+/Pa+OvZE4k+KdB0RQKazrZSC6bX
+ y3n/AYMHU4B0QAAAA==
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Yang Xiwen <forbidden405@foxmail.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708776618; l=1490;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=wLy4fhXT7uKWi4ko1krpJhqxlUi/4wpBJplpCsyj4Pw=;
+ b=76z/w4AgfyzzSxqjXPJB/F4CFpVUb0GttCQbTToPlTo3FDPmDXwf8UehaAtwn2Q1pq9FTrubu
+ ME5knGb4xDDBYSWp8nhrkclCSO6jm3fU+5KeT/fYorLnehplOkLiSRd
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received:
+ by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: <forbidden405@outlook.com>
 
-Some PID compliant devices play effects outside of the usb drivers when you
-power them, for example an autocenter spring. These effects are thus
-re-triggered when you reset the device through the driver init sequence,
-preventing other effects to be played in some cases.
+Hi3798MV200 uses DWC3 with a few more clocks and a dedicated reset.
 
-This fix makes sure all the effects currently played are stopped after
-resetting the device. More specifically, it brings compatibility to the
-Brunner CLS-P joystick and potentially more of their products.
+Note xhci-histb.c can also be used. But since it's DWC3 in fact, trying
+to support it with the help of DWC3 framework seems a better solution.
 
-Signed-off-by: Jules Noirant <jules.noirant@orange.fr>
+Hi3798CV200 can also try to migrate to this driver too. Thus we can
+remove xhci-histb.c in the future.
+
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/hid/usbhid/hid-pidff.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Changes in v3:
+- binding: remove example address
+- binding: remove reg (Krzysztof)
+- binding: rearrange required (Krzysztof)
+- binding: put additionalProperties after required (Krzysztof)
+- binding: indent properly (Krzysztof)
+- Link to v2: https://lore.kernel.org/r/20240224-dwc3-v2-0-8e4fcd757175@outlook.com
 
-diff --git a/drivers/hid/usbhid/hid-pidff.c b/drivers/hid/usbhid/hid-pidff.c
-index 3b4ee21cd..aade18f9e 100644
---- a/drivers/hid/usbhid/hid-pidff.c
-+++ b/drivers/hid/usbhid/hid-pidff.c
-@@ -109,8 +109,9 @@ static const u8 pidff_pool[] = { 0x80, 0x83, 0xa9 };
- /* Special field key tables used to put special field keys into arrays */
- 
- #define PID_ENABLE_ACTUATORS	0
--#define PID_RESET		1
--static const u8 pidff_device_control[] = { 0x97, 0x9a };
-+#define PID_STOP_ALL_EFFECTS	1
-+#define PID_RESET		2
-+static const u8 pidff_device_control[] = { 0x97, 0x99, 0x9a };
- 
- #define PID_CONSTANT	0
- #define PID_RAMP	1
-@@ -1157,6 +1158,10 @@ static void pidff_reset(struct pidff_device *pidff)
- 	hid_hw_request(hid, pidff->reports[PID_DEVICE_CONTROL], HID_REQ_SET_REPORT);
- 	hid_hw_wait(hid);
- 
-+	pidff->device_control->value[0] = pidff->control_id[PID_STOP_ALL_EFFECTS];
-+	hid_hw_request(hid, pidff->reports[PID_DEVICE_CONTROL], HID_REQ_SET_REPORT);
-+	hid_hw_wait(hid);
-+
- 	pidff->device_control->value[0] =
- 		pidff->control_id[PID_ENABLE_ACTUATORS];
- 	hid_hw_request(hid, pidff->reports[PID_DEVICE_CONTROL], HID_REQ_SET_REPORT);
+Changes in v2:
+- remove histb-clock.h as it's deprecated.
+- fix bot error (Rob Herring)
+- add a dummy reg property to make simple-bus parent node happy.
+  (duplicate with subnode, not used in driver)
+- Link to v1: https://lore.kernel.org/r/20240224-dwc3-v1-0-7ffb2e2baa73@outlook.com
+
+---
+Yang Xiwen (2):
+      dt-bindings: usb: add hisilicon,hi3798mv200-dwc3
+      usb: dwc3: of-simple: Add compatible for hi3798mv200 DWC3 controller
+
+ .../bindings/usb/hisilicon,hi3798mv200-dwc3.yaml   | 99 ++++++++++++++++++++++
+ drivers/usb/dwc3/dwc3-of-simple.c                  |  1 +
+ 2 files changed, 100 insertions(+)
+---
+base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+change-id: 20240217-dwc3-697828b480aa
+
+Best regards,
 -- 
-2.40.1
+Yang Xiwen <forbidden405@outlook.com>
 
