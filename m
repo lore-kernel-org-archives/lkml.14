@@ -1,226 +1,240 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D444C62A;
-	Sat, 24 Feb 2024 20:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD264CB41
+	for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 20:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708806012; cv=none; b=XM2yZM9ePfAQsmi/oPwBluZc9KsxiuW3Y3J87LWcDPlXHnVZ8AaCcbjDIwdFpne42Lr50mPG8P+5hN6ogelSn5IIczVGKak9Xll5b4Z5YEeGI6KQLURusIjh+NAacCYlIC+i3KDADxSRE3OscTtjoX0bvlxVnageS0kqLABav+8=
+	t=1708806058; cv=none; b=lGvXKY4o/pBvJjWXwOkVZSy/Mb62dRSQriusUiBFheV2hW2HyCbkUOW3saKssWy7fflFkCl8FTLOq61Hp2K6eNns9doC8MkIAztW7fJIX7UM3PNLlA+Pyi6IY71C9L4s8/YkYC0aw4RpsNt7zL/+kPtPDh/UxZFA7jrG+KlgxNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708806012; c=relaxed/simple;
-	bh=d6g7mGsNzHw0/2qpHcMI8mxTU+9/DaSdECb6EiOaQMk=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=rOBUK2UfiKEiOQIdJjW18IJIZA3wWBqlnCfEqBVU6mwpcXBAnuiI3Bchg0lo+IfJATfCDK6qW1EvHeI6tiubwvcJ4VWbpHg+f2/YPoRsu/1522zCe3sPgiNGC4ytUFyzLQbstQezICU8lSiMVIB/ihi3qISJiSgTkW9Xiv39akQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=vkXnOvHJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PhM/TxcJ; arc=none smtp.client-ip=66.111.4.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1708806058; c=relaxed/simple;
+	bh=OhURSWM8+fuAVHhkszMUOwGry5e3K6VMP6vMpX968h0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Zk6wXfNhzuz2HHmR9Mfi5v1BsKucNfqFPM8sCGFwPpXPHxNXXlqMB6fLE/OdrcHsNGz6INAtsVOXNhG9V5JN3oBnurja+WMbn/rdhlB+dRmTJIuWrKosCeffSvRDi7khe4E+M4+WDe2JYR7wtQWTj5P/RE/KFQzxYZndQkAEFls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LXnOPI4w; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="vkXnOvHJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PhM/TxcJ"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 7FBD25C004A;
-	Sat, 24 Feb 2024 15:19:51 -0500 (EST)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Sat, 24 Feb 2024 15:19:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1708805991; x=1708892391; bh=k1iCRXdvkT
-	6Syij9+K0LSJLeSRuBH+5g6WhwKVOFFsk=; b=vkXnOvHJKYn0rqzqmDBxcxroMt
-	RTP84/F1PyQTTl1bmZekn4aPx8HgnHZpxBdw+/4T9lUcIUwcMAVD+Nu01E6986Rq
-	adQeNfcXYiY2F7jM995JLJhbw2HLJdFGwyIxjTL2PWkQR1PHb5TF+xEsH+EhrrfY
-	tg77vPhQl6pyCuNPMSx0l0nYHq7jnyRQMdLvnszxZTG/0hO9zWDdsVliqoM0f9S+
-	wAPZiIGRoWK1dwxqeS75RDo3njNoWEubalGJI0mlsA2TYLFICdVY3ils5dEXyDQU
-	a52Il1Ul8/hBHjwutQaSXPKrcnZHc+HgVGlw/R0SEkvuwupBMaL64AX0UgmA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708805991; x=1708892391; bh=k1iCRXdvkT6Syij9+K0LSJLeSRuB
-	H+5g6WhwKVOFFsk=; b=PhM/TxcJhHP+qOPFSjVUm5vSDse5VcOpOmU29pFaP2EE
-	Re0Bwcg135urcqoIeskatyVi3I4eTc5gDY9dX3ohVCLNnlQ5L6JU9FoUlFbqzH5f
-	skE6xbaChqiD7QkEu1IhKAIWHigb+HTu15H1xd3SOX/WQhUq8VaXGxqH/E1QHfZB
-	huJK7Vptxrn0fg1/OjFo2UAQzkwC1Za0ulUWDGnF0rbrTRkx89Wp2RnFHzn2L5/T
-	66dHzK070guWLb2w5bR19RnC8pxgkw5U9UtmSd3qnvqj8DHxV1UlvmnmP4NhCoul
-	fu0FiWZQFvavdcEyoQ+yZCb9Mo6sOEzAqmHCTQan+w==
-X-ME-Sender: <xms:Z0_aZT0pqYgpvdkp53608QwdAmNbfnq_IS1t-sPShVQ9GemfBe4_-g>
-    <xme:Z0_aZSF5RV0K1gCxvhIzj9P_2vmz-0Dxu1WxDypzDOTFUdiXgpKeoRHj7AWSIh_Ix
-    8_mNs3HWt2s28zReKs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeekgddufeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhesshhquhgvsggsrdgtrgeqnecugg
-    ftrfgrthhtvghrnhepueevffdtfeejveevjeehhefhveefleffheefgfehffejtedvvdfh
-    udffgeehfeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepmhhpvggrrhhsohhnsehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:Z0_aZT6RNGGSkaubespgm7cc_EOCpHNC9knr8hDtnZkUFnIqKBp_cA>
-    <xmx:Z0_aZY336ovkOs7t1ntjFrslMhK_KTkXwLfmxkX_J89kIMnbwDLEyg>
-    <xmx:Z0_aZWHZs2VSdpwK6uc7C2CcshdQY4J_ZgKB0Of7WJfZg0Io8ALA5A>
-    <xmx:Z0_aZSCLU_pexrjoJ-EOS0Yo-9gbkADJVvyrnmqZO1k7wx0bFhzsLA>
-Feedback-ID: ic2b14614:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id EE909C60097; Sat, 24 Feb 2024 15:19:50 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LXnOPI4w"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6ddca59e336so1161133a34.0
+        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 12:20:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708806055; x=1709410855; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Itgu/CZdB2adz5dOihNeRA11oIiQNAIilHhTarLaGhY=;
+        b=LXnOPI4wcHhWM0iUeHs2bGAvvsTSoMWPV00HsLUebi738YVCJHAIbdZPa27epBlW1T
+         iycZvEqmpyGGIlaqExYN4Uol46DbTwjef3kpCZ0uEEe2hzulxN/7aYiimL5rV9oyNPyg
+         kdAQK8qfo69VGLnCcbkdHwm5vYX75JzZoOilUblVDFFbBCcl4WCTdo4SoFbieCjGTnVe
+         qi9LyH3ICfGtkUUh6RVuNu2YhGm8JZHGcq0Ph0BRgWHWiDLr7GiV0RoiTarYN3g4bXJS
+         Uye3RM69rR4wcPzazDOTwL0Csb76AskY2F+O+RFpqu7CEWZzu7zsbp/hmEQu7YYkY6b4
+         bw+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708806055; x=1709410855;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Itgu/CZdB2adz5dOihNeRA11oIiQNAIilHhTarLaGhY=;
+        b=rSUzvcHDkTp0SC1hO1LX5j7rzjUFyVfoKhLDArtVodIE6Vad48CuRznJa7WSmaPamn
+         8hgliYTCfRLRMwRIldUEDw5z3ywSGLe6fTzl0A6wCZX47DN6LpHDXvMWzYr6+VqtvaeN
+         OS0GImgJsJT185uSX6BmoKWCkl+Vn6j2wNkrkrb04EJ7eoNU3X39DMoVOjLvOVfA8gqz
+         Q/cno7PmU5m/BySIwKA4MvnXihzrehODFCG47XsGK9mftI0fTY313AB61vwP+Im06g1W
+         2s6O4mXCu8y5lZTunoGzh/szTRWWh4T5irrAaz85gVNip+I5lZWxstraWcuZkQAEuJxi
+         My0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWqwkMuN5smhdUYvEROAHroZMk5LvnF8FOUqjH14UK6wufQi3FGAMnnZgjoDLhMxrtg2U+/E8zDVvdW+U+adnnNM4soMr1FeEptnmac
+X-Gm-Message-State: AOJu0YwnegywlsUdYucxDQ+CljQ5E+dujhO6ZlOE7wqSTXS3OjV+p+BP
+	4y4y+UezZFMnYNC9XpgQBaD2JKvWk1IfeIvMnjeXQT0w666YW4EPaNAVIb0ZPkk=
+X-Google-Smtp-Source: AGHT+IEaFdafQDxvOhqf7szlKBjLkGDFQh1IaD2JJ1F/oKaL+attengEbCt1ufEL8VF8J7YfxLkw5w==
+X-Received: by 2002:a9d:6045:0:b0:6e4:8c95:1ac9 with SMTP id v5-20020a9d6045000000b006e48c951ac9mr1050906otj.16.1708806055136;
+        Sat, 24 Feb 2024 12:20:55 -0800 (PST)
+Received: from localhost ([136.62.192.75])
+        by smtp.gmail.com with ESMTPSA id m24-20020a4a2418000000b005a044f901c0sm454345oof.23.2024.02.24.12.20.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Feb 2024 12:20:54 -0800 (PST)
+From: Sam Protsenko <semen.protsenko@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tomasz Figa <tomasz.figa@gmail.com>,
+	linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 01/15] dt-bindings: clock: exynos850: Add CMU_CPUCLK0 and CMU_CPUCL1
+Date: Sat, 24 Feb 2024 14:20:39 -0600
+Message-Id: <20240224202053.25313-2-semen.protsenko@linaro.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240224202053.25313-1-semen.protsenko@linaro.org>
+References: <20240224202053.25313-1-semen.protsenko@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <412acdd3-6b1f-4c45-966f-c493b6fc3ddf@app.fastmail.com>
-In-Reply-To: <6615ab2a-3267-477c-ad1b-a72d5a4244e0@roeck-us.net>
-References: <20230721122931.505957-1-dober6023@gmail.com>
- <a361ce91-beba-43d8-b969-285063658da5@app.fastmail.com>
- <6b0373a2-7750-4d57-8839-95c6fa30c6b8@roeck-us.net>
- <4209014c-1730-4c31-87d8-4192d68bcbc6@app.fastmail.com>
- <6615ab2a-3267-477c-ad1b-a72d5a4244e0@roeck-us.net>
-Date: Sat, 24 Feb 2024 15:19:30 -0500
-From: "Mark Pearson" <mpearson@squebb.ca>
-To: "Guenter Roeck" <linux@roeck-us.net>, "David Ober" <dober6023@gmail.com>,
- wim@linux-watchdog.org
-Cc: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
- "David Ober" <dober@lenovo.com>
-Subject: Re: [PATCH v3] Watchdog: New module for ITE 5632 watchdog
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Thanks Guenter,
+Document CPU clock management unit compatibles and add corresponding
+clock indices. Exynos850 has two CPU clusters (CL0 and CL1), each
+containing 4 Cortex-A55 cores. CPU PLLs are generating main CPU clocks
+for each cluster, and there are alternate ("switch") clocks that can be
+used temporarily while re-configuring the PLL for the new rate. ACLK,
+ATCLK, PCLKDBG and PERIPHCLK clocks are driving corresponding buses.
+CLK_CLUSTERx_SCLK are actual leaf CPU clocks and should be used to
+change CPU rates. Also some CoreSight clocks can be derived from
+DBG_USER (debug clock).
 
-On Sat, Feb 24, 2024, at 10:49 AM, Guenter Roeck wrote:
-> On 2/23/24 16:43, Mark Pearson wrote:
->> Thanks Guenter
->> 
->> On Fri, Feb 23, 2024, at 3:21 PM, Guenter Roeck wrote:
->>> On 2/23/24 11:58, Mark Pearson wrote:
->>>> On Fri, Jul 21, 2023, at 8:29 AM, David Ober wrote:
->>>>> This modules is to allow for the new ITE 5632 EC chip
->>>>> to support the watchdog for initial use in the Lenovo SE10
->>>>>
->>>>> Signed-off-by: David Ober <dober6023@gmail.com>
->>>>>
->>>>> V2 Fix stop to deactivate wdog on unload of module
->>>>> V2 Remove extra logging that is not needed
->>>>> V2 change udelays to usleep_range
->>>>> V2 Changed to now request region on start and release on stop instead
->>>>>      of for every ping and read/write
->>>>> V3 add counter to while loops so it will not hang
->>>>> V3 rework code to use platform_device_register_simple
->>>>> V3 rework getting the Chip ID to remove duplicate code and close IO
->>>>> V3 change some extra logging to be debug only
->>>>> ---
->>> [ ... ]
->>>>> +config ITE5632_WDT
->>>>> +        tristate "ITE 5632"
->>>>> +        select WATCHDOG_CORE
->>>>> +        help
->>>>> +          If you say yes here you get support for the watchdog
->>>>> +          functionality of the ITE 5632 eSIO chip.
->>>>> +
->>>>> +          This driver can also be built as a module. If so, the module
->>>>> +          will be called ite5632_wdt.
->>>>> +
->>>
->>> [ ... ]
->>>
->>>>
->>>>
->>>> Please let us know if there is anything else needed to get this accepted. Happy to address any feedback.
->>>>
->>>
->>> I am sure I commented on this before. The fact that the Lenovo SE10 uses an
->>> ITE 5632 controller is completely irrelevant. Lenovo could decide tomorrow to
->>> replace the ITE chip with a Nuvoton chip, use the same API to talk with it,
->>> and the watchdog would work perfectly fine.
->>>
->>> This is a driver for the watchdog implemented in the embedded controller
->>> on Lenovo SE10. It is not a watchdog driver for ITE5632. Again, the EC chip
->>> used in that Lenovo system is completely irrelevant, even more so since
->>> this seems to be one of those undocumented ITE chips which officially
->>> don't even exist. Claiming that this would be a watchdog driver for ITE5632
->>> would be not only misleading but simply wrong.
->>>
->>> It seems that we can not agree on this. That means that, from my perspective,
->>> there is no real path to move forward. Wim will have to decide if and how
->>> to proceed.
->>>
->> My apologies - I hadn't realised that was the issue (my fault for missing it). Appreciate the clarification.
->> 
->> Is this as simple as renaming this driver as (for example) a lenovo_se_wdt device, and adding in the appropriate checking during the init that it is only used on Lenovo SE10 platforms?
->> 
->
-> There would have to be additional changes. For example, the driver does not
-> return errors if its wait loops time out, and it doesn't reserve the IO address
-> range used by the chip. Tying the wait time to the number of wait loops
-> and not to the elapsed time is also something that would need to be explained.
->
-Ack - we can look at those. Thanks for the feedback.
+Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
+---
+Changes in v3:
+  - none
 
-> Also, I notice that the communication is similar to the communication with
-> Super-IO chips from ITE, but not the same. Specifically, the unlock key is
-> the same, but the lock key is different. This means that the code may unlock
-> other chips from ITE in a given system, but not lock them. Some of those chips
-> are ... let's call it less then perfect. They will act oddly on the bus if left
-> unlocked. Some of those chips will act oddly if an attempt is made to lock them
-> after unlocking them, and they have to remain unlocked to avoid corrupting
-> communication with other chips on the same bus. The impact on other chips
-> from the same vendor will have to be explored further.
+Changes in v2:
+  - none
 
-Afraid I'm still missing something here. If we make it so this driver is only used on the SE10 platform, then does that remove the concern? At that point it's specific to that HW platform and no HW changes are planned.
-Agreed that having this available generically is not a good idea.
+ .../clock/samsung,exynos850-clock.yaml        | 42 +++++++++++++++
+ include/dt-bindings/clock/exynos850.h         | 54 +++++++++++++++++++
+ 2 files changed, 96 insertions(+)
 
->
->> I don't understand the concern if a different chip was used - wouldn't that need a different driver at that point?
->> 
->
-> Why would that be the case ?
->
-> Maybe I am missing something essential. If you insist to tie this driver to the
-> ITE5632 and not to the system, you will have to provide additional information.
+diff --git a/Documentation/devicetree/bindings/clock/samsung,exynos850-clock.yaml b/Documentation/devicetree/bindings/clock/samsung,exynos850-clock.yaml
+index c752c8985a53..cdc5ded59fe5 100644
+--- a/Documentation/devicetree/bindings/clock/samsung,exynos850-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/samsung,exynos850-clock.yaml
+@@ -36,6 +36,8 @@ properties:
+       - samsung,exynos850-cmu-aud
+       - samsung,exynos850-cmu-cmgp
+       - samsung,exynos850-cmu-core
++      - samsung,exynos850-cmu-cpucl0
++      - samsung,exynos850-cmu-cpucl1
+       - samsung,exynos850-cmu-dpu
+       - samsung,exynos850-cmu-g3d
+       - samsung,exynos850-cmu-hsi
+@@ -152,6 +154,46 @@ allOf:
+             - const: dout_core_mmc_embd
+             - const: dout_core_sss
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynos850-cmu-cpucl0
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (26 MHz)
++            - description: CPUCL0 switch clock (from CMU_TOP)
++            - description: CPUCL0 debug clock (from CMU_TOP)
++
++        clock-names:
++          items:
++            - const: oscclk
++            - const: dout_cpucl0_switch
++            - const: dout_cpucl0_dbg
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynos850-cmu-cpucl1
++
++    then:
++      properties:
++        clocks:
++          items:
++            - description: External reference clock (26 MHz)
++            - description: CPUCL1 switch clock (from CMU_TOP)
++            - description: CPUCL1 debug clock (from CMU_TOP)
++
++        clock-names:
++          items:
++            - const: oscclk
++            - const: dout_cpucl1_switch
++            - const: dout_cpucl1_dbg
++
+   - if:
+       properties:
+         compatible:
+diff --git a/include/dt-bindings/clock/exynos850.h b/include/dt-bindings/clock/exynos850.h
+index bc15108aa3c2..7666241520f8 100644
+--- a/include/dt-bindings/clock/exynos850.h
++++ b/include/dt-bindings/clock/exynos850.h
+@@ -88,6 +88,18 @@
+ #define CLK_MOUT_G3D_SWITCH		76
+ #define CLK_GOUT_G3D_SWITCH		77
+ #define CLK_DOUT_G3D_SWITCH		78
++#define CLK_MOUT_CPUCL0_DBG		79
++#define CLK_MOUT_CPUCL0_SWITCH		80
++#define CLK_GOUT_CPUCL0_DBG		81
++#define CLK_GOUT_CPUCL0_SWITCH		82
++#define CLK_DOUT_CPUCL0_DBG		83
++#define CLK_DOUT_CPUCL0_SWITCH		84
++#define CLK_MOUT_CPUCL1_DBG		85
++#define CLK_MOUT_CPUCL1_SWITCH		86
++#define CLK_GOUT_CPUCL1_DBG		87
++#define CLK_GOUT_CPUCL1_SWITCH		88
++#define CLK_DOUT_CPUCL1_DBG		89
++#define CLK_DOUT_CPUCL1_SWITCH		90
+ 
+ /* CMU_APM */
+ #define CLK_RCO_I3C_PMIC		1
+@@ -195,6 +207,48 @@
+ #define CLK_GOUT_CMGP_USI1_PCLK		14
+ #define CLK_GOUT_SYSREG_CMGP_PCLK	15
+ 
++/* CMU_CPUCL0 */
++#define CLK_FOUT_CPUCL0_PLL		1
++#define CLK_MOUT_PLL_CPUCL0		2
++#define CLK_MOUT_CPUCL0_SWITCH_USER	3
++#define CLK_MOUT_CPUCL0_DBG_USER	4
++#define CLK_MOUT_CPUCL0_PLL		5
++#define CLK_DOUT_CPUCL0_CPU		6
++#define CLK_DOUT_CPUCL0_CMUREF		7
++#define CLK_DOUT_CPUCL0_PCLK		8
++#define CLK_DOUT_CLUSTER0_ACLK		9
++#define CLK_DOUT_CLUSTER0_ATCLK		10
++#define CLK_DOUT_CLUSTER0_PCLKDBG	11
++#define CLK_DOUT_CLUSTER0_PERIPHCLK	12
++#define CLK_GOUT_CLUSTER0_ATCLK		13
++#define CLK_GOUT_CLUSTER0_PCLK		14
++#define CLK_GOUT_CLUSTER0_PERIPHCLK	15
++#define CLK_GOUT_CLUSTER0_SCLK		16
++#define CLK_GOUT_CPUCL0_CMU_CPUCL0_PCLK	17
++#define CLK_GOUT_CLUSTER0_CPU		18
++#define CLK_CLUSTER0_SCLK		19
++
++/* CMU_CPUCL1 */
++#define CLK_FOUT_CPUCL1_PLL		1
++#define CLK_MOUT_PLL_CPUCL1		2
++#define CLK_MOUT_CPUCL1_SWITCH_USER	3
++#define CLK_MOUT_CPUCL1_DBG_USER	4
++#define CLK_MOUT_CPUCL1_PLL		5
++#define CLK_DOUT_CPUCL1_CPU		6
++#define CLK_DOUT_CPUCL1_CMUREF		7
++#define CLK_DOUT_CPUCL1_PCLK		8
++#define CLK_DOUT_CLUSTER1_ACLK		9
++#define CLK_DOUT_CLUSTER1_ATCLK		10
++#define CLK_DOUT_CLUSTER1_PCLKDBG	11
++#define CLK_DOUT_CLUSTER1_PERIPHCLK	12
++#define CLK_GOUT_CLUSTER1_ATCLK		13
++#define CLK_GOUT_CLUSTER1_PCLK		14
++#define CLK_GOUT_CLUSTER1_PERIPHCLK	15
++#define CLK_GOUT_CLUSTER1_SCLK		16
++#define CLK_GOUT_CPUCL1_CMU_CPUCL1_PCLK	17
++#define CLK_GOUT_CLUSTER1_CPU		18
++#define CLK_CLUSTER1_SCLK		19
++
+ /* CMU_G3D */
+ #define CLK_FOUT_G3D_PLL		1
+ #define CLK_MOUT_G3D_PLL		2
+-- 
+2.39.2
 
-I'm in agreement we should tie this to the platform - we'll make that change. No insistence implied :)
-
-> The chip does not even exist in public, so no one but you and ITE really knows
-> what its capabilities are. Is this is a chip which is used, or is going to be
-> used, in a variety of systems, possibly including systems from other vendors ?
-> Is the communication between main CPU and the chip tied to the chip and will/may
-> only be used with this chip or variants of it ? Is the ITE5632 a SuperIO-like
-> chip with fixed capabilities, or is it a programmed micro-controller ?
->
-
-Afraid I don't understand the point about the chip not existing in public - do you just mean publicly available datasheets? At the risk of being repetitive, if this driver is locked to the Lenovo SE10 platform does that address the concerns?
-
-> To a large degree all that is due to ITE and its customers not 
-> providing information
-> about their chips to the public. Due to that lack of information, my 
-> assumption was
-> that it is a programmed micro-controller. The code itself suggests, 
-> through the
-> use of the term "EC" in the driver, that it is an embedded controller, 
-> not a Suoer-IO
-> or other fixed-capability chip. If that is not the case, and if the 
-> communication
-> with the chip is fixed and not programmable, you'll have to explain 
-> that.
-
-Yeah, ack to that - and in that's something we need to address going forward in contracts we set for platforms that will have Linux support. I can't change what has already been done I'm afraid. We do have access, under NDA, to more details - but we're also limited in what we can disclose.
-I need to go look at the details for this again, with David, and see what we can do to address any questions; but there are going to be some limits I'm afraid and I'm hoping they aren't blockers.
-The aim is to get a driver working for this platform in shape enough to get accepted upstream and be useful.
-
->
-> If it is an EC, the protocol is defined by its microcode, and the 
-> driver needs
-> to be tied to the systems using that microcode. If it is a 
-> fixed-capability chip,
-> the driver should not suggest that it communicates with an embedded 
-> controller
-> but with a fixed-capability chip.
->
-
-OK - we may also have used some incorrect terminology inadvertently, so I don't want to jump to too many conclusions. Will look into this.
-
-Thanks for the detailed notes - we weren't sure what had been missing from the driver since the last submission so it's helpful to know where improvements are needed. 
-Appreciate the patience as this is a learning experience for us for this kernel sub-tree.
-
-Mark
