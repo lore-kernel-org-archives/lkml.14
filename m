@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F5212E47;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F8012E5D;
 	Sun, 25 Feb 2024 12:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708862643; cv=none; b=XYEPW/basY+H3xTP42PVH0EVdhs98x3j2Jv1y/q7qFYFrvhZvBsxRM/a0vRJeVwU/CaIQFwFRmPSM65SaWfBSDcROVZ8sExJL5Ocsbzk7dznl040NwaTrpcu683izDzV1BJyDOSV606OZBlAqo2UnF0Ory6YOzRw0ar15LSp9b8=
+	t=1708862643; cv=none; b=esfq21ImW7XWEFLlhHYt1uNNe9m/JUWOlCQkFCRaISbppRdlVr4q8i6Si6JsmHX13/j3N+lFxXMXgo+h1N79OdLRJaFq9yoTkTlhvbLjSFeTX8Dmp3f/xEinB+rXOemz7xKFjVdGjkyUbcBa98XcwPhx5kqKJLtzoAy+8yEYn4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708862643; c=relaxed/simple;
-	bh=A+X94K8nLPrBsMOn/w5jdCaGJfXT7yw62EcicOP2vgo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LjO3p7NH/bYBzuVmV5P/QGuWzoNG5GVDhWRAAIiByQoO1fSGxy2pwTW/x8Fr5CoRLxUGOzBEK6ykefm7mH2P2sGO5xO88gWGSGn4BauhvsYn3piQWa17OT7UhLD9Io/QEMcBdUqO/cUCRY2NpY+4IYC9tgDTcOIvYZlEGv7X/tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYb8dOuQ; arc=none smtp.client-ip=10.30.226.201
+	bh=zPcJ2vC3A6HhIVo48qXQTTqMOtfOET2qYf2tQ9lsrYY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IRu1O+/lz4g9JoiQ6OvZN7RNIenvgHgz9Je4CXbJz9wtRK5Hwlf5uf1GdN4LRVjlwmxFrh25LjlINzk7vOJKu6iEpsflbOP9cK6YbGbcS3ZYGJeVYLAld8HJywCKXt5OAFfO9Sm26d11cMNDdgXdAPwHz8Q6AY7tXY93rmWS/vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RyiBkJ9U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYb8dOuQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 70B0EC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RyiBkJ9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5BB42C433F1;
 	Sun, 25 Feb 2024 12:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708862643;
-	bh=A+X94K8nLPrBsMOn/w5jdCaGJfXT7yw62EcicOP2vgo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=fYb8dOuQulxc9W33hGk0+CnBFtpLHEIXsXUnENQNOa38sz4DHex6miv5lnsPS4Syc
-	 p5nkXiA+V8iTHx3GxjkNyQahU4l0hkk25wBO4f5J7U3jhoSYTcrCnFO8a82/KkK9Gl
-	 1+d3EfRqKBrv/TDGjnVG8qi6qcCf2BinvNYvIBcWb8fIExsUq8tp+CQmI67YWDMNHW
-	 Tn4PjNOawtJ2GVxBULw+pH683maWPW0e+2wxD9CSg9C9GECc4+MadqeIREYNHot7s+
-	 PlnuZXhIyK9yK+r3ISLgepIbKsDly/8KoNmKTjj2wrXanHGxT8D9XYdsXsnREsvxIZ
-	 v2Cy08PxJe+Yg==
+	bh=zPcJ2vC3A6HhIVo48qXQTTqMOtfOET2qYf2tQ9lsrYY=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=RyiBkJ9UMomoycGN8oAtIW8hlI/RFu9MkPMz7e0LzdwMDzdwpLtRi5ia6S97Mlhz7
+	 wMMoSsn0tfIC3O/I/TgUKzhjP/qZesZGfxZlg9yzblW0GK+rWmGdbPqft/FhCHt2r4
+	 HsDxhfavXrR4sIG5cwZl9eIkKv8v3p+QCw9Og2jQQ/IYUB6qcs/Z/eB6cfeBOuZqNy
+	 WESnJFfMyVsX6TXCgYZGinj1JqZrESk1vbXrXd3LPh0uF1VpkM+X73uaGnJw08Lfej
+	 f1SDd8GZXGpHrcpGdN+jLlZLn8UKh95CMY9bwTv4nemhRhcrwlo1MAa0uYCwFsSl2v
+	 gE5zMBZuaaelg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FC8C54E49;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373E3C47DD9;
 	Sun, 25 Feb 2024 12:04:03 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Sun, 25 Feb 2024 20:03:49 +0800
-Subject: [PATCH v4 2/2] usb: dwc3: of-simple: Add compatible for
- hi3798mv200 DWC3 controller
+Subject: [PATCH v4 0/2] usb: dwc3: add glue driver for Hi3798MV200
+Date: Sun, 25 Feb 2024 20:03:47 +0800
+Message-Id: <20240225-dwc3-v4-0-8c1fd6c6f615@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,22 +40,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240225-dwc3-v4-2-8c1fd6c6f615@outlook.com>
-References: <20240225-dwc3-v4-0-8c1fd6c6f615@outlook.com>
-In-Reply-To: <20240225-dwc3-v4-0-8c1fd6c6f615@outlook.com>
+X-B4-Tracking: v=1; b=H4sIAKMs22UC/23MQQ7CIBCF4as0rMXAAIKuvIdxQelgiVpMW1HT9
+ O7S6sbY5ZvM9w+kwzZgR3bFQFpMoQuxyUOuCuJq25yQhipvAgwkA65p9XCCbrbagCmlYdaS/Hp
+ r0YfnnDkc865D18f2NVcTn67fAMhPIHHKqPa+BITSWi328d5fYjyvXbySKZFgiUFmBqV3lVaaa
+ /XPxBITmYESyjtE7Zn5ZeM4vgE6APEuCAEAAA==
 To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
  Conor Dooley <conor+dt@kernel.org>
 Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708862628; l=809;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708862628; l=1668;
  i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
- bh=CsDB1ujYdciRCCnGm2g0rfxKORwEFR6rPwogWA69oCs=;
- b=PwZtfboAq7YOk3NgbRb4laCVeHt4Rc3146+HViWjMIXMOL5QnQPhJOPq/e41hU2/5DE320UdL
- deQbRycxI90B2LG1iPh7/W0ZrqAdyKwZenzj5AN3jd104gsLefAZE3v
+ bh=zPcJ2vC3A6HhIVo48qXQTTqMOtfOET2qYf2tQ9lsrYY=;
+ b=sjlryJDUd028obFeraj/Zs16TT0AhhjYtAK23/PgjYEVlDO03Ex/s8VCyMAXzJb26y7kuRDiB
+ bhkAaOd4SckApV2UcAI3de8VumYuXzlh2cEG0qf88nN38lAIOcx/vAL
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
 X-Endpoint-Received:
@@ -64,29 +65,49 @@ X-Endpoint-Received:
 X-Original-From: Yang Xiwen <forbidden405@outlook.com>
 Reply-To: <forbidden405@outlook.com>
 
-From: Yang Xiwen <forbidden405@outlook.com>
+Hi3798MV200 uses DWC3 with a few more clocks and a dedicated reset.
 
-Hi3798MV200 uses dwc3 controller with a few more clocks and a dedicated
-resets. Use of_simple driver for it.
+Note xhci-histb.c can also be used. But since it's DWC3 in fact, trying
+to support it with the help of DWC3 framework seems a better solution.
+
+Hi3798CV200 can also try to migrate to this driver too. Thus we can
+remove xhci-histb.c in the future.
 
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/usb/dwc3/dwc3-of-simple.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v4:
+- bindings: example: move ranges after compatible
+- remove me from email
+- Link to v3: https://lore.kernel.org/r/20240224-dwc3-v3-0-2535fcee7f08@outlook.com
 
-diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
-index d1539fc9eabd..158acae08af5 100644
---- a/drivers/usb/dwc3/dwc3-of-simple.c
-+++ b/drivers/usb/dwc3/dwc3-of-simple.c
-@@ -173,6 +173,7 @@ static const struct of_device_id of_dwc3_simple_match[] = {
- 	{ .compatible = "sprd,sc9860-dwc3" },
- 	{ .compatible = "allwinner,sun50i-h6-dwc3" },
- 	{ .compatible = "hisilicon,hi3670-dwc3" },
-+	{ .compatible = "hisilicon,hi3798mv200-dwc3" },
- 	{ .compatible = "intel,keembay-dwc3" },
- 	{ /* Sentinel */ }
- };
+Changes in v3:
+- binding: remove example address
+- binding: remove reg (Krzysztof)
+- binding: rearrange required (Krzysztof)
+- binding: put additionalProperties after required (Krzysztof)
+- binding: indent properly (Krzysztof)
+- Link to v2: https://lore.kernel.org/r/20240224-dwc3-v2-0-8e4fcd757175@outlook.com
 
+Changes in v2:
+- remove histb-clock.h as it's deprecated.
+- fix bot error (Rob Herring)
+- add a dummy reg property to make simple-bus parent node happy.
+  (duplicate with subnode, not used in driver)
+- Link to v1: https://lore.kernel.org/r/20240224-dwc3-v1-0-7ffb2e2baa73@outlook.com
+
+---
+Yang Xiwen (2):
+      dt-bindings: usb: add hisilicon,hi3798mv200-dwc3
+      usb: dwc3: of-simple: Add compatible for hi3798mv200 DWC3 controller
+
+ .../bindings/usb/hisilicon,hi3798mv200-dwc3.yaml   | 99 ++++++++++++++++++++++
+ drivers/usb/dwc3/dwc3-of-simple.c                  |  1 +
+ 2 files changed, 100 insertions(+)
+---
+base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+change-id: 20240217-dwc3-697828b480aa
+
+Best regards,
 -- 
-2.43.0
+Yang Xiwen <forbidden405@outlook.com>
 
