@@ -1,50 +1,38 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D8F10E4;
-	Sun, 25 Feb 2024 01:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5DF10E4;
+	Sun, 25 Feb 2024 01:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708824091; cv=none; b=tOOWMs/FcG1GLvmNw8WocFMIQddg2vg2sG1IxKE9GQ0nobhufezeKYYhQftIpREilFTe9ZOAVb9iOr/SfVUbNXKc5HmDSjljtfHLs5i7qvvC+U0hust8Ji4/vUaxrvaRPbq2S9egHxyYb2Ks67tmU1SNeQMs1jsnbHfrCr9VJLk=
+	t=1708824140; cv=none; b=KHU3sOVhBiUH/JVQf0qq2MSW6GiWyYSwv9vnBtY5KTucuOwDZdYviMx0SFxfl37qkqezTO292Ykg++WrO6C6iiGB3RvJvAoR9514U80geQgg58J2cxrpM0NFio7up8Vs7R58/jIOl0p/ds8um6wbpz1MdFJOwzL9I2ST/wH/blQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708824091; c=relaxed/simple;
-	bh=mFyhUVC44DtaGMHctMSrjt2YDHiRWqydiWVBS+Xjg58=;
+	s=arc-20240116; t=1708824140; c=relaxed/simple;
+	bh=8MxMrxDjatcZ9KrlHxfNOi3v9JyPHdQJ3JtwZyYIXhM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MEN266w72mJiLiEbmguqbhEbqqfWuUjVBNnlIcu//5mOKWj51E0WNe399Cgyshcbxu35nMBYk4ocMEIIQyzhFvHKtNHFXcQyzQRecHhVXmmKWZCnva8hCtqGsO0M6pAuo9hRbsSA+UEoYqigZBuCMT9X9zY1um8JbmNhoFaAtRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXeL2bls; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXeL2bls"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83CF6C433C7;
-	Sun, 25 Feb 2024 01:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708824090;
-	bh=mFyhUVC44DtaGMHctMSrjt2YDHiRWqydiWVBS+Xjg58=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YXeL2blskfAFqL6ZyqR1LRwtwpzA0B9B1SEWzVIDeF+qSHJrkFyU9FvpZaVPYOtRh
-	 Og0GP99/8ZvUshqDJfzDFRYTyyfdr1juUc8Mf0HKeXKf1vJf3OrOluK5nQ2FUMbUJQ
-	 LC18qAniTBv/xaEZeX6qlmKMIpmkjfJYXfaZZALS8iAEr/jMzI9afWhmooYKJvspIt
-	 YASDYgPRmQQlPIqYruvgItJRHk3L1mhiBuol/WndgMVcqcS9u/ale0cgsB4EIxHQqo
-	 fAi/GmU6ZNvTSdlDWGk+XXencMZSp4ioxC2g59dQAvIB7XFkblbHF10dr3ES8uPSZC
-	 9KlgwIhLrqQlg==
-Date: Sat, 24 Feb 2024 20:22:42 -0500
-From: Al Viro <viro@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	"Christian Brauner (Microsoft)" <brauner@kernel.org>,
-	Matt Heon <mheon@redhat.com>, Ed Santiago <santiago@redhat.com>,
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	Paul Holzinger <pholzing@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [REGRESSION] 6.8-rc process is unable to exit and consumes a lot
- of cpu
-Message-ID: <ZdqWYplgbHL7xSch@duke.home>
-References: <6a150ddd-3267-4f89-81bd-6807700c57c1@redhat.com>
- <652928aa-0fb8-425e-87b0-d65176dd2cfa@redhat.com>
- <9b92706b-14c2-4761-95fb-7dbbaede57f4@leemhuis.info>
- <e733c14e-0bdd-41b2-82aa-90c0449aff25@redhat.com>
- <f15ee051-2cfe-461f-991d-d09fd53bad4f@leemhuis.info>
- <c0cbf518-c6d4-4792-ad04-f8b535d41f4e@leemhuis.info>
- <CAHk-=wg9nqLqxr7bPFt4CUzb+w4TqENb+0G1-yJfZbwvRhi29A@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zt77nqfgl2MyzI0N3+BgYEVMenMMHKWX3WVO66WI4FHHUqqf33306BdiuM+KOJqKth5jobvfM+zjQQkda0BYEWkkKHUNvyxYk69XpXFkH0Ek4KuybcAcRsY0Z8xCEaFf9eZi4p/IUilPmvuuJNw2eT4rxZUqviiJHPXrphuQ0lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1re2ij-00HTZ9-Uf; Sun, 25 Feb 2024 08:50:23 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 25 Feb 2024 08:50:36 +0800
+Date: Sun, 25 Feb 2024 08:50:36 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: David Laight <David.Laight@aculab.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Thomas Graf <tgraf@suug.ch>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"maple-tree@lists.infradead.org" <maple-tree@lists.infradead.org>,
+	"rcu@vger.kernel.org" <rcu@vger.kernel.org>
+Subject: Re: [PATCH 0/1] Rosebush, a new hash table
+Message-ID: <ZdqO3G6Fb4wYhVEj@gondor.apana.org.au>
+References: <20240222203726.1101861-1-willy@infradead.org>
+ <Zdk2YgIoAGOEvcJi@gondor.apana.org.au>
+ <4a1416fcb3c547eb9612ce07da6a77ed@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,21 +41,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg9nqLqxr7bPFt4CUzb+w4TqENb+0G1-yJfZbwvRhi29A@mail.gmail.com>
+In-Reply-To: <4a1416fcb3c547eb9612ce07da6a77ed@AcuMS.aculab.com>
 
-On Sat, Feb 24, 2024 at 03:43:43PM -0800, Linus Torvalds wrote:
-> On Fri, 23 Feb 2024 at 23:00, Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
-> >
-> > TWIMC, the quoted mail apparently did not get delivered to Al (I got a
-> > "48 hours on the queue" warning from my hoster's MTA ~10 hours ago).
+On Sat, Feb 24, 2024 at 10:10:27PM +0000, David Laight wrote:
+>
+> > Normally an rhashtable gets resized when it reaches 75% capacity
+> > so the average chain length should always be one.
 > 
-> Al's email has been broken for the last almost two weeks - the machine
-> went belly-up in a major way.
-> 
-> I bounced the email to his kernel.org email that seems to work, but I
-> also think Al ends up being busy trying to get through everything else
-> he missed, in addition to trying to get the machine working again...
+> The average length of non-empty hash chains is more interesting.
+> You don't usually search for items in empty chains.
+> The only way you'll get all the chains of length one is if you've
+> carefully picked the data so that it hashed that way.
 
-FWIW, I'm pretty sure that it's fixed by #fixes^ (7e4a205fe56b) in
-my tree; I'll send a pull request, both for #fixes and #fixes.pathwalk.rcu
+Sure.  But given the 75% capacity, you'd need a really bad hash
+function to get an *average* (not worst-case) chain length of
+10.
+
+> I remember playing around with the elf symbol table for a browser
+> and all its shared libraries.
+> While the hash function is pretty trivial, it really didn't matter
+> whether you divided 2^n, 2^n-1 or 'the prime below 2^n' some hash
+> chains were always long.
+
+Even in the unlikely event of bad luck and everything bunches up
+together, we change theh hash function (through hash_rnd) every
+time we resize so you would expect things to even out after the
+resize event.
+
+A rehash is also automatically triggered if the worst-case chain
+length exceeds 16.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
