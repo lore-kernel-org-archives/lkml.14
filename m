@@ -1,41 +1,41 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C3E1805A
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 02:38:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3948F5256
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 02:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708828734; cv=none; b=lPuBQpE6jLSUlAlRu1ujxBHZAPCLrF6pg+o7ZH+NQDfROtniHKy65/XVRAjU7kcolynZk+fl8ThgdQ4ty34gaCvJjCCvRdVcjqQOvQS4yXF0/s87ompN4JuFkam1f38axuss/0d9TpT5l3H51/nn6kntqBCySYbFrGEgwcM2VMU=
+	t=1708828736; cv=none; b=T+csMglcWtcULjv8IjuQZ3wbJkVi/3sW1gVtk3uLdGarQZNFMGDi9qcaz2x6H0kl7MlZcl7f4DD/ztCWTK6yzI798d4yWaRo4Wa494VosLOWU/e0IQXFH29yWon08i+bK2gw9iPEe7PYlg5kwRhioqSZkJphxHiKhbtB2CNI8Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708828734; c=relaxed/simple;
-	bh=9aDC/MHLqlfI7ZdF71omQwXEoDMiNVdOwQThfvn1sVw=;
+	s=arc-20240116; t=1708828736; c=relaxed/simple;
+	bh=d8WYXNqXDWpZE4u+quG0FNl5y/ZGCmEc/dORUsz9M60=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uJ5Eq7O7GcmmxHyz9HTMRzbB/MNwSJK6aUV6RiROo1lkSaaW0Ia9tqNk1o2YTUd8VBLffQWSKzlsGgLC0yir3c7fZKbb598TMMXimLpaHsy/3hYItvMotOrLCb/gW/F1+D5lUZig4A/W7xIE+3NygmxUBKwumFY13PKjJiUHKxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=P1ACEzCo; arc=none smtp.client-ip=95.215.58.185
+	 MIME-Version; b=Ibvo9H8HwoFwj+SxxnoXCwWpmu87ojTXMgztXW4YULMRbcEuZvHut7ZBkZbBwJCrUe5v1+k3/qrt+ZXiQOzBbc1d3J+yQKe1sFyl1+URBaCaxx9wKhujT9inSnbLEVmo9qh4/raUEdxcrdeL55/tLZpvOjECESK15LK9H9RP2DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dFpkOyJp; arc=none smtp.client-ip=95.215.58.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="P1ACEzCo"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dFpkOyJp"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708828730;
+	t=1708828732;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DZ05Q5mbXYgDagN6r2B0XGx91E8emllsAKskdvguQ3M=;
-	b=P1ACEzCotmgZtAdngBcAlZDwiID3fTZ23wEWyAp6dqymLfSg0PrfkPjzlmAqAK6csR0B4E
-	mJVmcwwKGucTeMgN+bOT4aqQmHfnSfYgVYLffQCwjGTHCGwi3erHybuFlhHDg6UBMT/VLD
-	nKLa/tn48WNpIGD2S25xiBzDYmsdnLk=
+	bh=njdVxTl+tyjYoQarlLc40yxm4EXppgie2qLf5Ju2emw=;
+	b=dFpkOyJpE+vAWCrCeqjmgO4KjuyA+cNXR4K91DVMXSDUhtYjTvtg6YwMCkRtaUGjncIAsx
+	KVLX5Brz3u8mgYUCbdcLe11heCjIT0PwXC0u2vfVqvnYCX5qsnu+oB+a9z3fHp9fGTSoyx
+	WNE/5CtIf30n9gMB+JkKbtfWeKAW9Nc=
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: linux-bcachefs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Kent Overstreet <kent.overstreet@linux.dev>,
 	djwong@kernel.org,
 	bfoster@redhat.com
-Subject: [PATCH 17/21] bcachefs: Eytzinger accumulation for accounting keys
-Date: Sat, 24 Feb 2024 21:38:19 -0500
-Message-ID: <20240225023826.2413565-18-kent.overstreet@linux.dev>
+Subject: [PATCH 20/21] bcachefs: bch2_fs_accounting_to_text()
+Date: Sat, 24 Feb 2024 21:38:22 -0500
+Message-ID: <20240225023826.2413565-21-kent.overstreet@linux.dev>
 In-Reply-To: <20240225023826.2413565-1-kent.overstreet@linux.dev>
 References: <20240225023826.2413565-1-kent.overstreet@linux.dev>
 Precedence: bulk
@@ -47,257 +47,94 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The btree write buffer takes as input keys from the journal, sorts them,
-deduplicates them, and flushes them back to the btree in sorted order.
-
-The disk space accounting rewrite is moving accounting to normal btree
-keys, with update (in this case deltas) accumulated in the write buffer
-and then flushed to the btree; but this is going to increase the number
-of keys handled by the write buffer by perhaps as much as a factor of
-3x-5x.
-
-The overhead from copying around and sorting this many keys would cause
-a significant performance regression, but: there is huge locality in
-updates to accounting keys that we can take advantage of.
-
-Instead of appending accounting keys to the list of keys to be sorted,
-this patch adds an eytzinger search tree of recently seen accounting
-keys. We look up the accounting key in the eytzinger search tree and
-apply the delta directly, adding it if it doesn't exist, and
-periodically prune the eytzinger tree of unused entries.
+Helper to show raw accounting in sysfs, mainly for debugging.
 
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- fs/bcachefs/btree_write_buffer.c       | 54 +++++++++++++++++++++++++-
- fs/bcachefs/btree_write_buffer.h       | 50 ++++++++++++++++++++++--
- fs/bcachefs/btree_write_buffer_types.h |  2 +
- fs/bcachefs/journal_io.c               | 13 +++++--
- 4 files changed, 110 insertions(+), 9 deletions(-)
+ fs/bcachefs/disk_accounting.c | 26 ++++++++++++++++++++++++++
+ fs/bcachefs/disk_accounting.h |  1 +
+ fs/bcachefs/sysfs.c           |  5 +++++
+ 3 files changed, 32 insertions(+)
 
-diff --git a/fs/bcachefs/btree_write_buffer.c b/fs/bcachefs/btree_write_buffer.c
-index 002a0762fc85..13f5f63e22b7 100644
---- a/fs/bcachefs/btree_write_buffer.c
-+++ b/fs/bcachefs/btree_write_buffer.c
-@@ -531,6 +531,29 @@ static void bch2_btree_write_buffer_flush_work(struct work_struct *work)
- 	bch2_write_ref_put(c, BCH_WRITE_REF_btree_write_buffer);
- }
- 
-+static void wb_accounting_sort(struct btree_write_buffer *wb)
-+{
-+	eytzinger0_sort(wb->accounting.data, wb->accounting.nr,
-+			sizeof(wb->accounting.data[0]),
-+			wb_key_cmp, NULL);
-+}
-+
-+int bch2_accounting_key_to_wb_slowpath(struct bch_fs *c, enum btree_id btree,
-+				       struct bkey_i_accounting *k)
-+{
-+	struct btree_write_buffer *wb = &c->btree_write_buffer;
-+	struct btree_write_buffered_key new = { .btree = btree };
-+
-+	bkey_copy(&new.k, &k->k_i);
-+
-+	int ret = darray_push(&wb->accounting, new);
-+	if (ret)
-+		return ret;
-+
-+	wb_accounting_sort(wb);
-+	return 0;
-+}
-+
- int bch2_journal_key_to_wb_slowpath(struct bch_fs *c,
- 			     struct journal_keys_to_wb *dst,
- 			     enum btree_id btree, struct bkey_i *k)
-@@ -600,11 +623,35 @@ void bch2_journal_keys_to_write_buffer_start(struct bch_fs *c, struct journal_ke
- 
- 	bch2_journal_pin_add(&c->journal, seq, &dst->wb->pin,
- 			     bch2_btree_write_buffer_journal_flush);
-+
-+	darray_for_each(wb->accounting, i)
-+		memset(&i->k.v, 0, bkey_val_bytes(&i->k.k));
- }
- 
--void bch2_journal_keys_to_write_buffer_end(struct bch_fs *c, struct journal_keys_to_wb *dst)
-+int bch2_journal_keys_to_write_buffer_end(struct bch_fs *c, struct journal_keys_to_wb *dst)
- {
- 	struct btree_write_buffer *wb = &c->btree_write_buffer;
-+	unsigned live_accounting_keys = 0;
-+	int ret = 0;
-+
-+	darray_for_each(wb->accounting, i)
-+		if (!bch2_accounting_key_is_zero(bkey_i_to_s_c_accounting(&i->k))) {
-+			i->journal_seq = dst->seq;
-+			live_accounting_keys++;
-+			ret = __bch2_journal_key_to_wb(c, dst, i->btree, &i->k);
-+			if (ret)
-+				break;
-+		}
-+
-+	if (live_accounting_keys * 2 < wb->accounting.nr) {
-+		struct btree_write_buffered_key *dst = wb->accounting.data;
-+
-+		darray_for_each(wb->accounting, src)
-+			if (!bch2_accounting_key_is_zero(bkey_i_to_s_c_accounting(&src->k)))
-+				*dst++ = *src;
-+		wb->accounting.nr = dst - wb->accounting.data;
-+		wb_accounting_sort(wb);
-+	}
- 
- 	if (!dst->wb->keys.nr)
- 		bch2_journal_pin_drop(&c->journal, &dst->wb->pin);
-@@ -617,6 +664,8 @@ void bch2_journal_keys_to_write_buffer_end(struct bch_fs *c, struct journal_keys
- 	if (dst->wb == &wb->flushing)
- 		mutex_unlock(&wb->flushing.lock);
- 	mutex_unlock(&wb->inc.lock);
-+
-+	return ret;
- }
- 
- static int bch2_journal_keys_to_write_buffer(struct bch_fs *c, struct journal_buf *buf)
-@@ -640,7 +689,7 @@ static int bch2_journal_keys_to_write_buffer(struct bch_fs *c, struct journal_bu
- 	buf->need_flush_to_write_buffer = false;
- 	spin_unlock(&c->journal.lock);
- out:
--	bch2_journal_keys_to_write_buffer_end(c, &dst);
-+	ret = bch2_journal_keys_to_write_buffer_end(c, &dst) ?: ret;
+diff --git a/fs/bcachefs/disk_accounting.c b/fs/bcachefs/disk_accounting.c
+index dc020d651d0a..9d6ca2ea307b 100644
+--- a/fs/bcachefs/disk_accounting.c
++++ b/fs/bcachefs/disk_accounting.c
+@@ -286,6 +286,32 @@ int bch2_fs_replicas_usage_read(struct bch_fs *c, darray_char *usage)
  	return ret;
  }
  
-@@ -672,6 +721,7 @@ void bch2_fs_btree_write_buffer_exit(struct bch_fs *c)
- 	BUG_ON((wb->inc.keys.nr || wb->flushing.keys.nr) &&
- 	       !bch2_journal_error(&c->journal));
- 
-+	darray_exit(&wb->accounting);
- 	darray_exit(&wb->sorted);
- 	darray_exit(&wb->flushing.keys);
- 	darray_exit(&wb->inc.keys);
-diff --git a/fs/bcachefs/btree_write_buffer.h b/fs/bcachefs/btree_write_buffer.h
-index eebcd2b15249..828e2deaaa3d 100644
---- a/fs/bcachefs/btree_write_buffer.h
-+++ b/fs/bcachefs/btree_write_buffer.h
-@@ -3,6 +3,8 @@
- #define _BCACHEFS_BTREE_WRITE_BUFFER_H
- 
- #include "bkey.h"
-+#include "disk_accounting.h"
-+#include <linux/eytzinger.h>
- 
- static inline bool bch2_btree_write_buffer_should_flush(struct bch_fs *c)
- {
-@@ -29,16 +31,45 @@ struct journal_keys_to_wb {
- 	u64				seq;
- };
- 
-+static inline int wb_key_cmp(const void *_l, const void *_r)
++void bch2_fs_accounting_to_text(struct printbuf *out, struct bch_fs *c)
 +{
-+	const struct btree_write_buffered_key *l = _l;
-+	const struct btree_write_buffered_key *r = _r;
++	struct bch_accounting_mem *acc = &c->accounting[0];
 +
-+	return cmp_int(l->btree, r->btree) ?: bpos_cmp(l->k.k.p, r->k.k.p);
++	percpu_down_read(&c->mark_lock);
++	out->atomic++;
++
++	eytzinger0_for_each(i, acc->k.nr) {
++		struct disk_accounting_key acc_k;
++		bpos_to_disk_accounting_key(&acc_k, acc->k.data[i].pos);
++
++		bch2_accounting_key_to_text(out, &acc_k);
++
++		u64 v[BCH_ACCOUNTING_MAX_COUNTERS];
++		bch2_accounting_mem_read_counters(c, i, v, ARRAY_SIZE(v), false);
++
++		prt_str(out, ":");
++		for (unsigned j = 0; j < acc->k.data[i].nr_counters; j++)
++			prt_printf(out, " %llu", v[j]);
++		prt_newline(out);
++	}
++
++	--out->atomic;
++	percpu_up_read(&c->mark_lock);
 +}
 +
-+int bch2_accounting_key_to_wb_slowpath(struct bch_fs *,
-+			      enum btree_id, struct bkey_i_accounting *);
-+
-+static inline int bch2_accounting_key_to_wb(struct bch_fs *c,
-+			     enum btree_id btree, struct bkey_i_accounting *k)
-+{
-+	struct btree_write_buffer *wb = &c->btree_write_buffer;
-+	struct btree_write_buffered_key search;
-+	search.btree = btree;
-+	search.k.k.p = k->k.p;
-+
-+	unsigned idx = eytzinger0_find(wb->accounting.data, wb->accounting.nr,
-+			sizeof(wb->accounting.data[0]),
-+			wb_key_cmp, &search);
-+
-+	if (idx >= wb->accounting.nr)
-+		return bch2_accounting_key_to_wb_slowpath(c, btree, k);
-+
-+	struct bkey_i_accounting *dst = bkey_i_to_accounting(&wb->accounting.data[idx].k);
-+	bch2_accounting_accumulate(dst, accounting_i_to_s_c(k));
-+	return 0;
-+}
-+
- int bch2_journal_key_to_wb_slowpath(struct bch_fs *,
- 			     struct journal_keys_to_wb *,
- 			     enum btree_id, struct bkey_i *);
- 
--static inline int bch2_journal_key_to_wb(struct bch_fs *c,
-+static inline int __bch2_journal_key_to_wb(struct bch_fs *c,
- 			     struct journal_keys_to_wb *dst,
- 			     enum btree_id btree, struct bkey_i *k)
+ static int accounting_write_key(struct btree_trans *trans, struct bpos pos, u64 *v, unsigned nr_counters)
  {
--	EBUG_ON(!dst->seq);
--
- 	if (unlikely(!dst->room))
- 		return bch2_journal_key_to_wb_slowpath(c, dst, btree, k);
+ 	struct bkey_i_accounting *a = bch2_trans_kmalloc(trans, sizeof(*a) + sizeof(*v) * nr_counters);
+diff --git a/fs/bcachefs/disk_accounting.h b/fs/bcachefs/disk_accounting.h
+index a0cf7a0b84a7..c4a8b9cce6ba 100644
+--- a/fs/bcachefs/disk_accounting.h
++++ b/fs/bcachefs/disk_accounting.h
+@@ -186,6 +186,7 @@ static inline void bch2_accounting_mem_read(struct bch_fs *c, struct bpos p,
+ }
  
-@@ -51,8 +82,19 @@ static inline int bch2_journal_key_to_wb(struct bch_fs *c,
+ int bch2_fs_replicas_usage_read(struct bch_fs *, darray_char *);
++void bch2_fs_accounting_to_text(struct printbuf *, struct bch_fs *);
+ 
+ int bch2_accounting_gc_done(struct bch_fs *);
+ 
+diff --git a/fs/bcachefs/sysfs.c b/fs/bcachefs/sysfs.c
+index 287a0bf920db..10470cef30f0 100644
+--- a/fs/bcachefs/sysfs.c
++++ b/fs/bcachefs/sysfs.c
+@@ -204,6 +204,7 @@ read_attribute(disk_groups);
+ 
+ read_attribute(has_data);
+ read_attribute(alloc_debug);
++read_attribute(accounting);
+ 
+ #define x(t, n, ...) read_attribute(t);
+ BCH_PERSISTENT_COUNTERS()
+@@ -413,6 +414,9 @@ SHOW(bch2_fs)
+ 	if (attr == &sysfs_disk_groups)
+ 		bch2_disk_groups_to_text(out, c);
+ 
++	if (attr == &sysfs_accounting)
++		bch2_fs_accounting_to_text(out, c);
++
  	return 0;
  }
  
-+static inline int bch2_journal_key_to_wb(struct bch_fs *c,
-+			     struct journal_keys_to_wb *dst,
-+			     enum btree_id btree, struct bkey_i *k)
-+{
-+	EBUG_ON(!dst->seq);
-+
-+	return k->k.type == KEY_TYPE_accounting
-+		? bch2_accounting_key_to_wb(c, btree, bkey_i_to_accounting(k))
-+		: __bch2_journal_key_to_wb(c, dst, btree, k);
-+}
-+
- void bch2_journal_keys_to_write_buffer_start(struct bch_fs *, struct journal_keys_to_wb *, u64);
--void bch2_journal_keys_to_write_buffer_end(struct bch_fs *, struct journal_keys_to_wb *);
-+int bch2_journal_keys_to_write_buffer_end(struct bch_fs *, struct journal_keys_to_wb *);
+@@ -625,6 +629,7 @@ struct attribute *bch2_fs_internal_files[] = {
+ 	&sysfs_internal_uuid,
  
- int bch2_btree_write_buffer_resize(struct bch_fs *, size_t);
- void bch2_fs_btree_write_buffer_exit(struct bch_fs *);
-diff --git a/fs/bcachefs/btree_write_buffer_types.h b/fs/bcachefs/btree_write_buffer_types.h
-index 5f248873087c..d39d163c6ea9 100644
---- a/fs/bcachefs/btree_write_buffer_types.h
-+++ b/fs/bcachefs/btree_write_buffer_types.h
-@@ -52,6 +52,8 @@ struct btree_write_buffer {
- 	struct btree_write_buffer_keys	inc;
- 	struct btree_write_buffer_keys	flushing;
- 	struct work_struct		flush_work;
-+
-+	DARRAY(struct btree_write_buffered_key) accounting;
+ 	&sysfs_disk_groups,
++	&sysfs_accounting,
+ 	NULL
  };
  
- #endif /* _BCACHEFS_BTREE_WRITE_BUFFER_TYPES_H */
-diff --git a/fs/bcachefs/journal_io.c b/fs/bcachefs/journal_io.c
-index b37b75ccd602..3ea2be99d411 100644
---- a/fs/bcachefs/journal_io.c
-+++ b/fs/bcachefs/journal_io.c
-@@ -1815,7 +1815,8 @@ static int bch2_journal_write_prep(struct journal *j, struct journal_buf *w)
- 			jset_entry_for_each_key(i, k) {
- 				ret = bch2_journal_key_to_wb(c, &wb, i->btree_id, k);
- 				if (ret) {
--					bch2_fs_fatal_error(c, "-ENOMEM flushing journal keys to btree write buffer");
-+					bch2_fs_fatal_error(c, "error flushing journal keys to btree write buffer: %s",
-+							    bch2_err_str(ret));
- 					bch2_journal_keys_to_write_buffer_end(c, &wb);
- 					return ret;
- 				}
-@@ -1825,8 +1826,14 @@ static int bch2_journal_write_prep(struct journal *j, struct journal_buf *w)
- 		}
- 	}
- 
--	if (wb.wb)
--		bch2_journal_keys_to_write_buffer_end(c, &wb);
-+	if (wb.wb) {
-+		ret = bch2_journal_keys_to_write_buffer_end(c, &wb);
-+		if (ret) {
-+			bch2_fs_fatal_error(c, "error flushing journal keys to btree write buffer: %s",
-+					    bch2_err_str(ret));
-+			return ret;
-+		}
-+	}
- 
- 	spin_lock(&c->journal.lock);
- 	w->need_flush_to_write_buffer = false;
 -- 
 2.43.0
 
