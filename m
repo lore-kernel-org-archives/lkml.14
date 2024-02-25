@@ -1,48 +1,49 @@
-Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD2B46A0
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 04:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541F563A5
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 04:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708834046; cv=none; b=a+3hE4UmV8+laR3FJoI1DEzXYjSL3cSX9Plgxr/lUDV0nsXGuOuXZd/cBZ74e9dhvckN8A+Bo6KieXz1QIDKXwEgZHNGzSQk3tPs4A6PKaUWOxHTd8/nntkpgN25HEmPHWmZcdJZx5Ex6Tgu6fql8+6yvxJjdStUe3i/LvXgGMA=
+	t=1708834048; cv=none; b=f+bWwLOD/GnIyl6PG/HdK94QhlAh/v3YSoFEZaqnueI4i7xvTHdfcY/XvUImcOOrPyfk2tB9zCnVUdNYxGosPcMoyONJMZd6RhdUXov1fnP32UqrMIL5D9zi/U8iOn9Kc2OLCdEglqOpA9WXzqf24+E3dK2mkDCJGPPkfDG8SLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708834046; c=relaxed/simple;
-	bh=HLF+O/C3VXa6M8BYuuzaqawu+wmmS18aerFyo1QYTbY=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=ggBt3Blwo94gjMUoJY92MBUitBatREO/JUTLD9TrOPus/75Ds+z9nwcHi2UI6tt5TpqUQSwMzXMpBRLpdBXxLSxfNDAhoFZregQD9JxkLeq77SwHm8S1Rep3eQHZ3JnmileErLaglY1nP4T7wWvk26MKzLwGRmLmoiQxxMkzGZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=YMYngnUC; arc=none smtp.client-ip=203.205.221.155
+	s=arc-20240116; t=1708834048; c=relaxed/simple;
+	bh=n4omDxV4NCigiHoXtDZYmYa5GO5MOa7NnKVrOwi56cY=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=YxeYICiajmrvU49YJ2jSlrggv6A9kapzTJn4IfgKP1xuft/K7mCFsGTp0J/pbRyVkNkdG2u4yYza0R9vyTd9Lkh6hgKCTlfWWwWPlJBECV4Q5ojrYPcnFafwKh9KoQ13iLyw8Xaac9EBr0fwLvtpssOn53xTX7l2wTOBQFlHk8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=q1GDrCw2; arc=none smtp.client-ip=203.205.221.164
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="YMYngnUC"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="q1GDrCw2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1708834041;
-	bh=59IuGjIu0z5/HQW09u+ZVejbVCT8iRknbhvMeWWNcGk=;
-	h=From:To:Cc:Subject:Date;
-	b=YMYngnUCs8zNc1B+VtJ4DonA0E1ovU6QWcILGwHCo91Molr4FcIipxO/+mDCiyGaZ
-	 eSDxRB4He4lH8Rq8oD58oUoGXsvJ7SX4UChb+rw8WkPbZfCtjQBuSWuLqZP0W4WUWb
-	 56YoKt97h962DIhAP5eVSDxewtyU1YmEPKE2lBog=
+	s=s201512; t=1708834044;
+	bh=Y+FZfOgwRIGUoE4+U/hqrjcY1yVeyxZep1ZRA8BRMi0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=q1GDrCw2/ByxMqZlAmH07DTvGp8RL6vYCE31G3MW1o2Del/O+DaOGYPkIF0yLPBO3
+	 cyuw96d3SsKTyMte40WAmDHwYGIl7yEOKfq7F+6cjBo+pAXMcqZnx+ftCUwT02unMs
+	 zXfUcTUEwCRC0bafsY0oPJoL/XAVFgJ7ee7XY9AE=
 Received: from localhost.localdomain ([2409:8a60:2a61:ef40:480f:5c56:cca3:1b20])
 	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
 	id 18993038; Sun, 25 Feb 2024 12:06:09 +0800
-X-QQ-mid: xmsmtpt1708833969tfxhuw8jo
-Message-ID: <tencent_275FF7F351D515B570D0F82447BA30F3AA06@qq.com>
-X-QQ-XMAILINFO: NQR8mRxMnur95qgJaW4jYhCw4+afUk5zIXLMnvgSORBekwDI69L4NNvN9DlZKL
-	 RvT+AtAYo+eEa42vzUaptpzPuB2eDvGX0bFVLQwyjj3vldnOH0YMXpDhaCQIuaHw9a8fCGzT/Gp+
-	 QwILmQjPD4Nk/V2lUI5Rv5dofkFf1f7ttuIUj+PZdAuSbEMxrnlbcFyi6YIqOh4qF6V4hR8xsjPt
-	 WR6jIJdjXPeeT7EQsEA/PR+b9UPfGI4mi6mMKDfWyTLhNd3l2GCB/74n8Tz+2VzUhccm5O3q+djC
-	 iXWBhnN15Q6+rqEynmJseiinsi9TU6msoF1sHRyH5KA1IyUcNmkTEsj3paJ6V1Z3Uz14Nnte7E4V
-	 sF6xi8xQsC2aQuufCy+aH27XjeYbcMFzFlD3ytb9ruEIf8jO0JKcnEd0MVBnNCtTi3GtFvEfHfL4
-	 x1RPdS4a0SKNXd+UCZ5CygdvmZB1f/6C8kz3/AyDJjPsX+mJan1aFROMnpHNLUqIt4PLE/swKu1W
-	 /Y9YfghDJ9solljQlVYcGR5ZRNaBZnnKV/EMoDn/q3l/rlmy+5pKBAD2I/RBKX+Tts9IzQAg+mHR
-	 oJS367V+KFTAs9f7Pzpf7pP88uCVi0VWuGD7vFplL+Fb6LEgHJTMpLNVPC6hpfLucoGA4mHKjomL
-	 /cI/+kl9JSJdRP96D+PK+2+4W0wsAxHtnT8ZrDD0+wfqmQ9d3CkyU7R3ubfDwxQ6A73XGAW+MRQ+
-	 ZfiumXMBgnr8BkrU0tJr7kSOYJVzHgHsLq6nQG0DTab6O+oLeZn5T/mMO39KlUPj/XJrByuecxvl
-	 2oYpTTGTPJh3IMp6ixUDwUEL0tgSWrsZsg2+/b2ljqe1Zh8qGqXzB/wYiFQI/xUqAeZvUWjwfaQ4
-	 53t6NtS2KG6NKQjfGJjm6UXxy8NZRxYhxa6/hDxBMYJFb1jbLcqaCswer2fNy6O5No2SbbLwQNRM
-	 P55V5R3wEFF1Mk5/zxBFIdDGHjMASnYpaSV/u2fkWyQTJBoJX98eNMPLBTDdhX86reYMrfzDhHci
-	 JCxy9bnUSo3A4OznzGc8OOPDKqVh0=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-mid: xmsmtpt1708834024tkfqjjbuk
+Message-ID: <tencent_E7EFE2D9AB2A8E7A2EC8659220BD9E99C205@qq.com>
+X-QQ-XMAILINFO: NnYhxYSyuBnLa3HjHfIQsC2V4sWkk+PJiQspQqNqYaYaD8jqA8h+7n0t0RZgqo
+	 e1Us4DRjg5j4c/vpqJeIj07p1lJZblbZ+/dTQSFg4gtzXRZHd7dvNsQsiv+4xZszlbTSw8ko8zdN
+	 5ivPHC/eCQaw89qYNWC6YeAvaYWGOF65ZZioyeOYhfjJJy1UWbVw0/d9sGsQsicYOvnBWB2ZPILC
+	 nuDuqCfbjNKDBb5BdRYuXx7BKJZ2wLrkVSTcnieuBs87eFc3Tg/fj4uY/bjz9AtyxjznSdd5IReT
+	 G/l4OJRJNyFXqFH3Mk8RrZPBSkM482A06AhASk6wojU1G0r2c6KgBjFqAObS+iJh5iXozN5ovbds
+	 gti8w1Ju9q35K1CbJRbuiKrBVSu0qO7NlgRwVi8mzk6NUN8jG8zTP5PIXS1+0tV7vcwTK8SU8Dvw
+	 Y7OK7vDlPTbwyNlgqnoEsiOwDJNTtnNMaR/QwCLZfgNm6+cEaIoHlFywkB5OMFPef32f5MBfupR7
+	 sgmEP49iJ8MM44Ozp8jAfPQAyrstVFQLjgLnRe5K/nx4I5+3oO82xKvr+4RYfAgT/0sCQNErdXjp
+	 rh5dQBFJ5lln/S+vcP+nGWtdrCOZcztt2XLFGgIbPxQSP5KvbIQ9BPjQuHhl6S6uie04H491P+5n
+	 GjR6Iq7JJcCw/tjjvzL4qkagVL0blrYX3ADowfGqVfx7wyopct4Us0k6zJCzNBbuoAFpX3rO6aEm
+	 Nd5sVW72xfPUrv/4XY+bE4qqKgTdSVtzoCwo6uLp+IsMSTVsj4akeTKhs/fD7nhy17lcmu3sQznA
+	 F6YrTn5wzqslar7R4nhdkbeYG5i6v4sbxniNRzSlSMsdx3gox36gWWS6pvrOh1W7ptkU0dufZpNq
+	 wfDUHA/uSKq/UgraKKpqAjcj9nY7TDjZFVGNGymsyTD3SNv6qW0Qk/PsafS/NOK4hN1JnXRPikZt
+	 wwNFUREtpwmcWzVYtbcoFdpuj6BAxmQ8gu9U6dAnHsULcRIC/MsAGuCBg5gBOqw6R1n7se9q/WBI
+	 u8NzthVLMrV9xKIA0J0y9vvWXnf4TnBPzN8Y+fP3XO8eotxKMiQDzfHfJ+kJeLuPsHGNevmA==
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
 From: wenyang.linux@foxmail.com
 To: Luis Chamberlain <mcgrof@kernel.org>,
 	Kees Cook <keescook@chromium.org>,
@@ -54,12 +55,13 @@ To: Luis Chamberlain <mcgrof@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>
 Cc: Wen Yang <wenyang.linux@foxmail.com>,
-	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/8] introduce sysctl SYSCTL_U8_MAX and SYSCTL_LONG_S32_MAX
-Date: Sun, 25 Feb 2024 12:05:30 +0800
-X-OQ-MSGID: <20240225040538.845899-1-wenyang.linux@foxmail.com>
+Subject: [PATCH 5/8] sysctl: delete these duplicate static variables i_zero and i_one_hundred
+Date: Sun, 25 Feb 2024 12:05:35 +0800
+X-OQ-MSGID: <20240225040538.845899-6-wenyang.linux@foxmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240225040538.845899-1-wenyang.linux@foxmail.com>
+References: <20240225040538.845899-1-wenyang.linux@foxmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,48 +72,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Wen Yang <wenyang.linux@foxmail.com>
 
-The boundary check of multiple modules uses these static variables (such as
-two_five_five, n_65535, ue_int_max, etc), and they are also not changed.
-Therefore, add them to the shared sysctl_vals and sysctl_long_vals to avoid
-duplication. This also reduce the size a bit 
+Since these static variables (i_zero and i_one_hundred) are only used for
+boundary checks and will not be changed, remove it and use the ones in
+our shared const array.
 
-Wen Yang (8):
-  sysctl: introduce sysctl SYSCTL_U8_MAX and SYSCTL_LONG_S32_MAX
-  rxrpc: delete these duplicate static variables n_65535 and four
-  net: ipv6: delete these duplicate static variables two_five_five and
-    minus_one
-  svcrdma: delete the duplicate static variables zero
-  sysctl: delete these duplicate static variables i_zero and
-    i_one_hundred
-  epoll: delete these duplicate static variables long_zero and long_max
-  fs: inotify: delete these duplicate static variables it_zero and
-    it_int_max
-  ucounts: delete these duplicate static variables ue_zero and
-    ue_int_max
-
- fs/eventpoll.c                   |  7 ++-----
- fs/notify/inotify/inotify_user.c | 11 ++++-------
- include/linux/sysctl.h           | 15 +++++++++------
- kernel/sysctl.c                  |  4 ++--
- kernel/ucount.c                  |  7 ++-----
- lib/test_sysctl.c                |  6 ++----
- net/ipv6/addrconf.c              | 12 +++++-------
- net/rxrpc/sysctl.c               | 16 +++++++---------
- net/sunrpc/xprtrdma/svc_rdma.c   | 21 ++++++++++-----------
- 9 files changed, 43 insertions(+), 56 deletions(-)
-
+Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
 Cc: Luis Chamberlain <mcgrof@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Joel Granados <j.granados@samsung.com>
 Cc: Christian Brauner <brauner@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
+---
+ lib/test_sysctl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
+diff --git a/lib/test_sysctl.c b/lib/test_sysctl.c
+index 9321d850931f..ee69dd277a1e 100644
+--- a/lib/test_sysctl.c
++++ b/lib/test_sysctl.c
+@@ -26,8 +26,6 @@
+ #include <linux/delay.h>
+ #include <linux/vmalloc.h>
+ 
+-static int i_zero;
+-static int i_one_hundred = 100;
+ static int match_int_ok = 1;
+ 
+ 
+@@ -78,8 +76,8 @@ static struct ctl_table test_table[] = {
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= &i_zero,
+-		.extra2         = &i_one_hundred,
++		.extra1		= SYSCTL_ZERO,
++		.extra2         = SYSCTL_ONE_HUNDRED,
+ 	},
+ 	{
+ 		.procname	= "int_0002",
 -- 
 2.25.1
 
