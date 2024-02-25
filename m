@@ -1,84 +1,88 @@
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E281C02
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 20:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C1817BBD
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 20:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708893773; cv=none; b=DplyB8tMt2q/fb2kg9hAdN0f+WNeNwyupz5wweoJi3/F7vlmpfUhm2KoTUFvpGRkyI/UAptXlQr32lUurDZZYtAgy2bUbctUPkiRUTMu0178IMaWR9SzpPiMX2YqHXc6Lc4Y2nJumw5AdWOk34Jv5gqXNoU3nU2f8QXmxap6m8Q=
+	t=1708894004; cv=none; b=GWeFEn5T9YY8sFRE3jat+ePYrIKM/moyTDVaY5caHCvz/ye6+hsCuQ4qpeYAZz8W3XykHOesBUveIPFSVTbOfvLy+UHHeUH/Q0HhZM0a0FBLQnbNGcDv98SpCJt/cwH2DETkY3WEhhhWMQVzDv22OoD/YnauBzLvhQWixvXhq84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708893773; c=relaxed/simple;
-	bh=6B2FPR0QtxIfLR9Z3LlBHaeW9kudIYhVc3AQxfyaVh0=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=uE/X1V8pbYHZGpX5/4LTQED08mhXaF6XUc23XKqecgohSnjf0+u8SzBh6lao99+a93gutjMlYai58QFkR35mjp1xaVtoa3Ju1j+cpubujNsUCO7bHGukFS58pyf86sYzMKOdEAnG4R4Fwzpoa3mL05fsFvWNALWRsdctZgQtGcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 31EB96340E18;
-	Sun, 25 Feb 2024 21:36:41 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 3qNwxpp1w0yq; Sun, 25 Feb 2024 21:36:40 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id DAEFC626FAF3;
-	Sun, 25 Feb 2024 21:36:39 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tQZ0bj8G_Pvz; Sun, 25 Feb 2024 21:36:39 +0100 (CET)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 994C664507DE;
-	Sun, 25 Feb 2024 21:36:39 +0100 (CET)
-Date: Sun, 25 Feb 2024 21:36:39 +0100 (CET)
-From: Richard Weinberger <richard@nod.at>
-To: chengming zhou <chengming.zhou@linux.dev>
-Cc: linux-mtd <linux-mtd@lists.infradead.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, vbabka@suse.cz, 
-	roman gushchin <roman.gushchin@linux.dev>, 
-	Xiongwei Song <Xiongwei.Song@windriver.com>, 
-	Chengming Zhou <zhouchengming@bytedance.com>
-Message-ID: <1319891481.98257.1708893399313.JavaMail.zimbra@nod.at>
-In-Reply-To: <20240224135217.830331-1-chengming.zhou@linux.dev>
-References: <20240224135217.830331-1-chengming.zhou@linux.dev>
-Subject: Re: [PATCH] ubifs: remove SLAB_MEM_SPREAD flag usage
+	s=arc-20240116; t=1708894004; c=relaxed/simple;
+	bh=SrPQRCzhMvMmii9hQdPXD1YvNqRI54qycQwonRLO1ck=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SEaR1betTMXo1/YktbJTKGQv61n2STsbLNu7o6XkcLGbxtm3zf/EP+cznkCcoojQqn48TTHplXkrEXyh1g63Hr3WpeItL5RRXcxxHlWTyBmqOPb4lflVIA7hL/WsJwB39Xa80t4GNNaxVVkDj3sstBFiskrhlP9Kx8sShHvvjB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vduig1bT; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vduig1bT"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c1a172e46bso189857b6e.3
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 12:46:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708894001; x=1709498801; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jaoEWYXtOjOULbW2yMrOmnPYIPrfPlzxVubLNRsgJlQ=;
+        b=Vduig1bTlKQbu0yvrCM/lHROy/o0ypR163cnclNvudv3dUoUjENn0cFSdPIeQm89s8
+         q4btaB2uktWptukeVFh/71G45Z1czfj/K3/XagmBfqv/sWCbG+uWbv7xzGv2vxxJWsq0
+         J9+eXFOoWaer0ppit8cWeRTwY25TQ7qDS73DvvWtSMx6wLWzEq3KI5Ci3x85MbrZO3fo
+         svQ2x81PE5dKpA+XFlXONBlVrq8JWLynaA9C1/TQFa5ZKqpufA8wA6U6INGM4Kr1qSOb
+         w5HM9ksyVKdxyUZaO3RbhyWXWoTH8qtCuoB7f8eIJdH2FAd7SaHG3RBBavDT16+ClqIZ
+         F6yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708894001; x=1709498801;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jaoEWYXtOjOULbW2yMrOmnPYIPrfPlzxVubLNRsgJlQ=;
+        b=u4JFIMZFtsy7BFlmjEeKOsRVONoC8gVG0pARiFK6Rkb9Rlg/EWnl3+Id8kWZ62SPba
+         canE8yO85URK28L21FydcmLuWTKU2TQAvBtOlxY0Oc6F+J4zmvhSwaMjwxPHRAC+MiK6
+         F3FC6YzFoviFqoqk0b97P5QKlGKqnReK4WujUllJJjsEyVeISYv+ZAPuF+n2vbjGZjt6
+         stPuaq0UT9QXIUMUNJzKlflsc8dOiRCu4ks345M8Pb4nSwaOSkfyhKEiQvr5L19wEuFU
+         VM1iMNqm5jsDX2L5QByN0AxfEqT4W8mEaZE2PBFfxzQAB2K4XjkjGcJukslAAgcJ05L8
+         TWMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXb8E06c6l7ycO31d8aEpiQ7aOr/fQKFJxWGzc3BTrwmwj/rY194p4vphNM7yTYBkHpeUw1jXNc/isDk1t/SnpNdwyM3OjOOC1EIOD1
+X-Gm-Message-State: AOJu0Ywi4sc5+6DxwMOb+cy0oGzuglxeoI34UVDM2EJQfG54EC5IYhjA
+	D/W6X07AWjfPJAKbauCQgLJLakXU1TjPWj6c3Zp3scG/Tu55QX/QPN6AchY9c7l0ETTe+p/L4/D
+	ns3mdbQ+LQzcZh6GCTlrHFGYJs8HEV5FMl/MpbQ==
+X-Google-Smtp-Source: AGHT+IHiHD4DCI2MPVcMU8ZdLBW9A24hnVLA6ZCjQvJY+jivSwWXTU1+Dm3VJmojw/adwKuuhVJDjGQVaJJkaIHmpPw=
+X-Received: by 2002:a05:6808:d49:b0:3c1:9caf:c0b2 with SMTP id
+ w9-20020a0568080d4900b003c19cafc0b2mr3215443oik.7.1708894001601; Sun, 25 Feb
+ 2024 12:46:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
-Thread-Topic: ubifs: remove SLAB_MEM_SPREAD flag usage
-Thread-Index: BV6LRmY6creq3OFHfuv/zJQa5hNMcA==
+References: <20240225202744.60500-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240225202744.60500-1-krzysztof.kozlowski@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Sun, 25 Feb 2024 22:46:30 +0200
+Message-ID: <CAA8EJppAKRiSoHi3icFymSQjP-TQrOF2LcMEnE=BmK+=nv330w@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: qcom-pm8xxx-xoadc: drop unused kerneldoc struct
+ pm8xxx_chan_info member
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-msm@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "chengming zhou" <chengming.zhou@linux.dev>
-> An: "richard" <richard@nod.at>
-> CC: "linux-mtd" <linux-mtd@lists.infradead.org>, "linux-kernel" <linux-ke=
-rnel@vger.kernel.org>, "linux-mm"
-> <linux-mm@kvack.org>, vbabka@suse.cz, "roman gushchin" <roman.gushchin@li=
-nux.dev>, "Xiongwei Song"
-> <Xiongwei.Song@windriver.com>, "chengming zhou" <chengming.zhou@linux.dev=
->, "Chengming Zhou"
-> <zhouchengming@bytedance.com>
-> Gesendet: Samstag, 24. Februar 2024 14:52:17
-> Betreff: [PATCH] ubifs: remove SLAB_MEM_SPREAD flag usage
+On Sun, 25 Feb 2024 at 22:27, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Drop description of non-existing 'struct pm8xxx_chan_info' member:
+>
+>   qcom-pm8xxx-xoadc.c:386: warning: Excess struct member 'scale_fn_type' description in 'pm8xxx_chan_info'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  drivers/iio/adc/qcom-pm8xxx-xoadc.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-> From: Chengming Zhou <zhouchengming@bytedance.com>
->=20
-> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
-> its usage so we can delete it from slab. No functional change.
->=20
-> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Applied.
-Next time please add a reference that makes very clear why such a flag
-is no longer needed.
-It took me a few minutes to figure why SLAB_MEM_SPREAD is
-now a no-op.
 
-Thanks,
-//richard
+-- 
+With best wishes
+Dmitry
