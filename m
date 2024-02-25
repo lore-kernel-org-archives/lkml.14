@@ -1,64 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637B7111A5;
-	Sun, 25 Feb 2024 20:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E281C02
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 20:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708893660; cv=none; b=YAi1ShU921+fSwyvp7dzKTdm0da1r0/wXz51VjmPsT/thbLFztWCM2xbfPiUZMd50zqxinO6GE0jBF1R0UTwqNWYrvR09TAWyM5/Yrn26eUKVpMHxEY9IglRH7BqOtBQmb+TMSrt7KNIRBrngM3cz+ktjwSR+20ld2CeC6Y6E0w=
+	t=1708893773; cv=none; b=DplyB8tMt2q/fb2kg9hAdN0f+WNeNwyupz5wweoJi3/F7vlmpfUhm2KoTUFvpGRkyI/UAptXlQr32lUurDZZYtAgy2bUbctUPkiRUTMu0178IMaWR9SzpPiMX2YqHXc6Lc4Y2nJumw5AdWOk34Jv5gqXNoU3nU2f8QXmxap6m8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708893660; c=relaxed/simple;
-	bh=XumoTfKfv/ZGFc5svkWZgCNU7144b6sk/mox3FGWCLM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=RhqwRouy9KQam4FA5xXsjrs8wXjAp4bVFvBkZYA3EkrMwKdHt+aOA1eTN+2piPcHUn/miWdnlVSoM5+mM4Flq3jVIuJQixqN6vPSrl9b66I9/Mx+tv4aEFgR0wQpn5atVDn437Q/HOZnLQFyAjrFNrBB3IWdcGc5Aw4nrxJkXcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8402EC433C7;
-	Sun, 25 Feb 2024 20:40:59 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id 088151060D21; Sun, 25 Feb 2024 21:40:57 +0100 (CET)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Sebastian Reichel <sre@kernel.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-In-Reply-To: <20240224-device_cleanup-power-v2-1-465ff94b896c@marliere.net>
-References: <20240224-device_cleanup-power-v2-1-465ff94b896c@marliere.net>
-Subject: Re: [PATCH v2] power: supply: core: constify the struct
- device_type usage
-Message-Id: <170889365697.1930401.10570101771941744000.b4-ty@collabora.com>
-Date: Sun, 25 Feb 2024 21:40:56 +0100
+	s=arc-20240116; t=1708893773; c=relaxed/simple;
+	bh=6B2FPR0QtxIfLR9Z3LlBHaeW9kudIYhVc3AQxfyaVh0=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=uE/X1V8pbYHZGpX5/4LTQED08mhXaF6XUc23XKqecgohSnjf0+u8SzBh6lao99+a93gutjMlYai58QFkR35mjp1xaVtoa3Ju1j+cpubujNsUCO7bHGukFS58pyf86sYzMKOdEAnG4R4Fwzpoa3mL05fsFvWNALWRsdctZgQtGcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 31EB96340E18;
+	Sun, 25 Feb 2024 21:36:41 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id 3qNwxpp1w0yq; Sun, 25 Feb 2024 21:36:40 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id DAEFC626FAF3;
+	Sun, 25 Feb 2024 21:36:39 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id tQZ0bj8G_Pvz; Sun, 25 Feb 2024 21:36:39 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 994C664507DE;
+	Sun, 25 Feb 2024 21:36:39 +0100 (CET)
+Date: Sun, 25 Feb 2024 21:36:39 +0100 (CET)
+From: Richard Weinberger <richard@nod.at>
+To: chengming zhou <chengming.zhou@linux.dev>
+Cc: linux-mtd <linux-mtd@lists.infradead.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-mm <linux-mm@kvack.org>, vbabka@suse.cz, 
+	roman gushchin <roman.gushchin@linux.dev>, 
+	Xiongwei Song <Xiongwei.Song@windriver.com>, 
+	Chengming Zhou <zhouchengming@bytedance.com>
+Message-ID: <1319891481.98257.1708893399313.JavaMail.zimbra@nod.at>
+In-Reply-To: <20240224135217.830331-1-chengming.zhou@linux.dev>
+References: <20240224135217.830331-1-chengming.zhou@linux.dev>
+Subject: Re: [PATCH] ubifs: remove SLAB_MEM_SPREAD flag usage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
+Thread-Topic: ubifs: remove SLAB_MEM_SPREAD flag usage
+Thread-Index: BV6LRmY6creq3OFHfuv/zJQa5hNMcA==
 
+----- Urspr=C3=BCngliche Mail -----
+> Von: "chengming zhou" <chengming.zhou@linux.dev>
+> An: "richard" <richard@nod.at>
+> CC: "linux-mtd" <linux-mtd@lists.infradead.org>, "linux-kernel" <linux-ke=
+rnel@vger.kernel.org>, "linux-mm"
+> <linux-mm@kvack.org>, vbabka@suse.cz, "roman gushchin" <roman.gushchin@li=
+nux.dev>, "Xiongwei Song"
+> <Xiongwei.Song@windriver.com>, "chengming zhou" <chengming.zhou@linux.dev=
+>, "Chengming Zhou"
+> <zhouchengming@bytedance.com>
+> Gesendet: Samstag, 24. Februar 2024 14:52:17
+> Betreff: [PATCH] ubifs: remove SLAB_MEM_SPREAD flag usage
 
-On Sat, 24 Feb 2024 17:15:41 -0300, Ricardo B. Marliere wrote:
-> Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
-> core can properly handle constant struct device_type. Move the
-> power_supply_dev_type variable to be a constant structure as well, placing
-> it into read-only memory which can not be modified at runtime.
-> 
-> In order to accomplish that, export power_supply_attr_group in
-> power_supply.h and use it with the macro __ATTRIBUTE_GROUPS when defining
-> power_supply_dev_type in power_supply_core.c. Therefore the attribute group
-> is no longer static. Lastly, because power_supply_attr_groups is no longer
-> dynamically associated to power_supply_dev_type in
-> power_supply_init_attrs(), make the function receive zero arguments.
-> 
-> [...]
+> From: Chengming Zhou <zhouchengming@bytedance.com>
+>=20
+> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
+> its usage so we can delete it from slab. No functional change.
+>=20
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
 
-Applied, thanks!
+Applied.
+Next time please add a reference that makes very clear why such a flag
+is no longer needed.
+It took me a few minutes to figure why SLAB_MEM_SPREAD is
+now a no-op.
 
-[1/1] power: supply: core: constify the struct device_type usage
-      commit: 7b46b60944d77e361a727cd8ce46aec31c146e26
-
-Best regards,
--- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
-
+Thanks,
+//richard
