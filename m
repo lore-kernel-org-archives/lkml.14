@@ -1,215 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2A9DDAE;
-	Sun, 25 Feb 2024 08:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB6CDDC9
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 08:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708849296; cv=none; b=Vy66miI864OtuL4f6nKodbHmRNalNZ31yZfLcrG/2gv1VBqvNMQ+SZVA9Kl7YHz0eH8XbYe4H8+9AGj3/e05Y8sa4fWukNUiYS3aO75wre1u4gPV3I0U6OvDF2kXnwqKzYC36BF8GocCwgUKGaWHjP7+PIZUfdKp3rh7S45MCqw=
+	t=1708850005; cv=none; b=i5I+lvrkJmmek58gwRGklIg7DqrkOPeegs5RWdd0NCX+3AihRfiYDwbvZjUvqPVy72gbt9rSzfTIlPH2fVheGRxT9wZ/Vttm5oqU3Z2AWnluMjxU6XtSIV8QGND3OXEo//dTS89h0tT9RAbPtdJZCyHH5zb4sY/nKtkWnBIN0m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708849296; c=relaxed/simple;
-	bh=xB3wW4g4SuZMpzFlMa/SwsWelkeb4wiDp7ll1UWoUiI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i6nF5Gml+Sn9ABWzzBKZSBape4a9efzgjrRBaQvR2nUnxSpiuRT5mXRjYVgR/nL32MeFrjgMGedu9i0O5XWFzOcrHpecHeE4g8u3oYWlcom5oLgGZK8syU9F3nzjeXBRGXyvnund/1KxLFBcfgVzogp4c6u6sxV0gEnxj2IEDnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwQmkF1w; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708850005; c=relaxed/simple;
+	bh=6hgAzKoh0X8Vc/PxuhnIWRzdvMEeWy6T9l/qi5QFODY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ApKyY9yZtFEpbDliFWP6QkOjnwkBlLtiwl4sjVI6ikizni3ot14aI9x23jA7ix9sQsAY6IWeLmahXK6PzFsTiYr2QVy8D0iGW3HKDDPVXNQZMMRpHJncirUK2YswFlB4wqneIc9b8vBpV/DK6aR20WZph3aQkFLV42TdkOcQsVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SrwdVzOf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwQmkF1w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F478C43390;
-	Sun, 25 Feb 2024 08:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708849296;
-	bh=xB3wW4g4SuZMpzFlMa/SwsWelkeb4wiDp7ll1UWoUiI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bwQmkF1wVgj66V8tbSyNFes2Wag6iOaOksgjfovbafDOBl5sku3BQ71CQC8t6LsZU
-	 X9ljVkdXXhsXouPc0gV1cCnOgqpQBp1KmHDelhzPlJPH0J4ijwx6m++FBvNJ+9wZbb
-	 FffJhkHtgQ4IK28jR6O2GN3E6sVjZzGhzoQmxt1f0jiV5cxq0QMrDf8jXrpOU4UhgZ
-	 j1mYHTnnG8yWkFQ9SsPgp/dQu0IJ1oXpvsUyiqWR5uqFLh/fCQQnacZoNkfypVAKVI
-	 yXQrtwCU93/+ueOGfMQhhw///YXovZacZ01BzOJ9LtabtQuHmQrDOrLnsHOZWpxAPD
-	 XjborlfVKOOZg==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5101cd91017so3220181e87.2;
-        Sun, 25 Feb 2024 00:21:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWhPBX8hy2pI/NPZf/Be9nbCxMGchDmmHqLFbs9k4i0k3Uh4M6tUXTC0abGS3+TX0vg0R9IvILbCB8+SmLnk3wWbTsamvAmfEb+UL2Di8UMn3RcGpT6D9OQLoBvIh11Va5LPYyOQE/t5P2G
-X-Gm-Message-State: AOJu0YwcXh1iNTYHKfiOTQsoIyp/qkLyP+5lXEI3AtF7W8oqkzpDAQVZ
-	bizOA9oPimLZNcfQWSjTpW2FMF4Utjkk8kisMdCqxetYk19azFwmnI9h6YmR9R4+x/VDsZ+wjeW
-	TyezFe5x52gzy7F7ACjsAAJlq4Mc=
-X-Google-Smtp-Source: AGHT+IGsp2RFyqcVBz55gW3+2+bqaWiWNHzdDEF7DtFTWtGw9z814ip1hsMXcQoQCHYcN/NCC4H3OSzY+3KbZUw/Y0k=
-X-Received: by 2002:a05:6512:203c:b0:512:a009:6e21 with SMTP id
- s28-20020a056512203c00b00512a0096e21mr2081170lfs.31.1708849294822; Sun, 25
- Feb 2024 00:21:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SrwdVzOf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B3BC433F1;
+	Sun, 25 Feb 2024 08:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708850004;
+	bh=6hgAzKoh0X8Vc/PxuhnIWRzdvMEeWy6T9l/qi5QFODY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SrwdVzOfqd39q8MknfoPT1MJBqXSmE+Jqa3cvGdq571eBG8OqIpJ/+3NR2koZdB99
+	 Kg0OLwXYXR2wUthYisXnjlweeu0+Ahb73Hp0iprI26+t3Nfnsy9if0y51jjm4vWfeh
+	 kgvJErhgUrN3nRiRrEMlCDHK3XW/c7ja6kpCX+HA=
+Date: Sun, 25 Feb 2024 09:33:22 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Alex Elder <elder@ieee.org>, Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>, greybus-dev@lists.linaro.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] greybus: constify the struct device_type usage
+Message-ID: <2024022553-deepness-sublevel-73de@gregkh>
+References: <20240219-device_cleanup-greybus-v1-1-babb3f65e8cc@marliere.net>
+ <cf5b2696-d7ca-40fc-856a-52f352cd270c@ieee.org>
+ <ids3525jm5zkwkgizt2xtg3do37kqqtfdy5gc2cptdduexoe7r@cr4yxh3tykkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223092338.2433632-1-wenst@chromium.org>
-In-Reply-To: <20240223092338.2433632-1-wenst@chromium.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sun, 25 Feb 2024 17:20:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQmvyftnFJaByyjH+f4nxcNUKpjkDXwebEH5AhMF6U0Kw@mail.gmail.com>
-Message-ID: <CAK7LNAQmvyftnFJaByyjH+f4nxcNUKpjkDXwebEH5AhMF6U0Kw@mail.gmail.com>
-Subject: Re: [PATCH RFC] kbuild: create a list of all built DTB files
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Simon Glass <sjg@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ids3525jm5zkwkgizt2xtg3do37kqqtfdy5gc2cptdduexoe7r@cr4yxh3tykkh>
 
-On Fri, Feb 23, 2024 at 6:23=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.org> w=
-rote:
->
-> It is useful to have a list of all composite *.dtb files, along with
-> their individual components, generated from the current build.
->
-> With this commit, 'make dtbs' creates arch/*/boot/dts/dtbs-components,
-> which lists the composite dtb files created in the current build. It
-> maintains the order of the dtb-y additions in Makefiles although the
-> order is not important for DTBs.
->
-> This compliments the list of all *.dtb and *.dtbo files in dtbs-list,
-> which only includes the files directly added to dtb-y.
->
-> For example, consider this case:
->
->     foo-dtbs :=3D foo_base.dtb foo_overlay.dtbo
->     dtb-y :=3D bar.dtb foo.dtb
->
-> In this example, the new list will include foo.dtb with foo_base.dtb and
-> foo_overlay.dtbo on the same line, but not bar.dtb.
->
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
-> Hi,
->
-> I hacked up this new thing to list out the individual components of each
-> composite dtb. I think this information would be useful for FIT image
-> generation or other toolchains to consume. For example, instead of
-> including each dtb, a toolchain could realize that some are put together
-> using others, and if the bootloader supports it, put together commands
-> to reassemble the end result from the original parts.
->
-> This is based on and complements Masahiro-san's recent dtbs-list work.
+On Sat, Feb 24, 2024 at 05:22:39PM -0300, Ricardo B. Marliere wrote:
+> On 24 Feb 09:43, Alex Elder wrote:
+> > On 2/19/24 6:40 AM, Ricardo B. Marliere wrote:
+> > > Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
+> > > core can properly handle constant struct device_type. Move the
+> > > greybus_hd_type, greybus_module_type, greybus_interface_type,
+> > > greybus_control_type, greybus_bundle_type and greybus_svc_type variables to
+> > > be constant structures as well, placing it into read-only memory which can
+> > > not be modified at runtime.
+> > > 
+> > > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> > 
+> > This looks good to me.  Assuming it compiles cleanly:
+> > 
+> > Reviewed-by: Alex Elder <elder@linaro.org>
+> 
+> Hi Alex!
+> 
+> Thanks for reviewing.
+> 
+> > 
+> > On another subject:
+> > 
+> > Johan might disagree, but I think it would be nice to make
+> > the definitions of the Greybus device types as static (private)
+> > and make the is_gb_host_device() etc. functions real functions
+> > rather than static inlines in <linux/greybus.h>.
+> > 
+> > It turns out that all of the is_gb_*() functions are called only
+> > from drivers/greybus/core.c; they could all be moved there rather
+> > than advertising them in <linux/greybus.h>.
+> 
+> I guess it depends whether they would be used somewhere else in the
+> future. Perhaps it was left there with that intention when it was first
+> being developed? I agree, though. Will happily send a patch with this if
+> desired.
 
+Let's clean the code up for what we have today.  If it's needed in the
+future, we can move the structures then.
 
+thanks,
 
-This is another format of my previous per-dtb "*.dtlst"
-(but I did not pick up 3/4, 4/4 because I did not know what we need after a=
-ll).
-
-This should be discussed together with how Simon's script will look like.
-
-I can understand your Makefile code, but I still do not know
-how the entire overlay stuff will work in a big picture.
-
-
-
-
-
->
->  .gitignore             |  1 +
->  scripts/Makefile.build | 16 ++++++++++++++++
->  scripts/Makefile.lib   |  8 ++++++--
->  3 files changed, 23 insertions(+), 2 deletions(-)
->
-> diff --git a/.gitignore b/.gitignore
-> index c59dc60ba62e..bb5b3bbca4ef 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -52,6 +52,7 @@
->  *.xz
->  *.zst
->  Module.symvers
-> +dtbs-components
->  dtbs-list
->  modules.order
->
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 4971f54c855e..ba85c2385c9e 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -72,6 +72,7 @@ endif
->  subdir-builtin :=3D $(sort $(filter %/built-in.a, $(real-obj-y)))
->  subdir-modorder :=3D $(sort $(filter %/modules.order, $(obj-m)))
->  subdir-dtbslist :=3D $(sort $(filter %/dtbs-list, $(dtb-y)))
-> +subdir-dtbscomp :=3D $(sort $(filter %/dtbs-components, $(multi-dtb-y)))
->
->  targets-for-builtin :=3D $(extra-y)
->
-> @@ -390,6 +391,7 @@ $(obj)/%.asn1.c $(obj)/%.asn1.h: $(src)/%.asn1 $(objt=
-ree)/scripts/asn1_compiler
->  $(subdir-builtin): $(obj)/%/built-in.a: $(obj)/% ;
->  $(subdir-modorder): $(obj)/%/modules.order: $(obj)/% ;
->  $(subdir-dtbslist): $(obj)/%/dtbs-list: $(obj)/% ;
-> +$(subdir-dtbscomp): $(obj)/%/dtbs-components: $(obj)/% ;
->
->  #
->  # Rule to compile a set of .o files into one .a file (without symbol tab=
-le)
-> @@ -422,6 +424,20 @@ $(obj)/modules.order: $(obj-m) FORCE
->  $(obj)/dtbs-list: $(dtb-y) FORCE
->         $(call if_changed,gen_order)
->
-> +#
-> +# Rule to create dtbs-components
-> +#
-> +# This is a list of composite dtb(s), along with each dtb's components,
-> +# from the current Makefile and its sub-directories.
-> +
-> +cmd_gen_dtb_components =3D { $(foreach m, $(real-prereqs), \
-> +               $(if $(filter %/$(notdir $@), $m), cat $m, \
-> +                       echo $m: $(addprefix $(obj)/,$($(notdir $(m:%.dtb=
-=3D%-dtbs))))); \
-> +       ) :; } > $@
-> +
-> +$(obj)/dtbs-components: $(multi-dtb-y) FORCE
-> +       $(call if_changed,gen_dtb_components)
-> +
->  #
->  # Rule to compile a set of .o files into one .a file (with symbol table)
->  #
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index dbcac396329e..7c2127a84ac2 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -61,7 +61,6 @@ real-search =3D $(foreach m, $1, $(if $(call suffix-sea=
-rch, $m, $2, $3 -), $(call
->  multi-obj-y :=3D $(call multi-search, $(obj-y), .o, -objs -y)
->  multi-obj-m :=3D $(call multi-search, $(obj-m), .o, -objs -y -m)
->  multi-obj-ym :=3D $(multi-obj-y) $(multi-obj-m)
-> -
->  # Replace multi-part objects by their individual parts,
->  # including built-in.a from subdirectories
->  real-obj-y :=3D $(call real-search, $(obj-y), .o, -objs -y)
-> @@ -91,6 +90,11 @@ real-dtb-y :=3D $(call real-search, $(dtb-y), .dtb, -d=
-tbs)
->  # Base DTB that overlay is applied onto
->  base-dtb-y :=3D $(filter %.dtb, $(call real-search, $(multi-dtb-y), .dtb=
-, -dtbs))
->
-> +ifdef need-dtbslist
-> +multi-dtb-y    +=3D $(addsuffix /dtbs-components, $(subdir-ym))
-> +always-y       +=3D dtbs-components
-> +endif
-> +
->  always-y                       +=3D $(dtb-y)
->
->  # Add subdir path
-> @@ -406,7 +410,7 @@ cmd_dtc =3D $(HOSTCC) -E $(dtc_cpp_flags) -x assemble=
-r-with-cpp -o $(dtc-tmp) $< ;
->  quiet_cmd_fdtoverlay =3D DTOVL   $@
->        cmd_fdtoverlay =3D $(objtree)/scripts/dtc/fdtoverlay -o $@ -i $(re=
-al-prereqs)
->
-> -$(multi-dtb-y): FORCE
-> +$(filter-out %/dtbs-components, multi-dtb-y): FORCE
->         $(call if_changed,fdtoverlay)
->  $(call multi_depend, $(multi-dtb-y), .dtb, -dtbs)
->
-> --
-> 2.44.0.rc0.258.g7320e95886-goog
->
-
-
---
-Best Regards
-Masahiro Yamada
+greg k-h
