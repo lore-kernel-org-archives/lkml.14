@@ -1,158 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287E21367;
-	Sun, 25 Feb 2024 19:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6E51759F
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 19:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708890371; cv=none; b=pFNVcsrk3xnsNTS0zYWdsM1M5HD9uLK8+Jh1OPL99V8IXS8L0elOA9PKWSffA9qXK3McMc7FnK8hEW20qm+hnQvdT9gBnhUE0U15PayO+oRELDaTA7lAp9sh8kNGix2sJaJLDROGD3bUc510roUWGpxejWdTCFNo6TD+y8q+A8I=
+	t=1708890575; cv=none; b=j6RpAKtIx5mO7mfsiarANiHacezl4djiJ4zvo+rSIH0IU3G9XAbW/0jJNmFEiG/5wRspRm2svk3PpugUpit2WiB4jszaiqoTpaZfcssAlbxfHsfthsg4KMG4BdFEicHkrNEXQOnWQSJK6esXHaI1OzBwI4G4VuDMk8MkRRnCe/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708890371; c=relaxed/simple;
-	bh=XCasjtMWxULI0q12pSVTKCODcbYjr1nwdvbMM85j5iU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y4iWfqFFdFTX2gyy/VwuneYJ6egk8ATmHeaqkzBPXYtE2KcghDtfmMaaGzgBDfOdB5sZVa36RwY17/kdyGZ9gYK40NGnUlRoTYIPR8lStIGL5qQlCCqU0mV9G7httACNpgF8ZOrW+vJ8EyuocWuxNMbLqrMLRtvdEfSuIYOhm/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RkMg9EZx; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708890575; c=relaxed/simple;
+	bh=ZENVKkATzJXVRSZ2EC/+wfI5KUHwIHxTOQcJjOk7iBk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UE0fSwqNdWq7h3xTHaIBjp7kVKGmw2aSU14u2MididaCa0W3gPTKSUULXErgRff9wYzEYVjFCl6ZI9Z/ngbsmL9k26EO5YQm+Gx9D0Kj2grQXbMAQCILPSEv1Cmxs8EKedAP/8K+xt4HbDvn48uBPZhUzggYS1RAABwFGKk5rhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+HUjWK2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RkMg9EZx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708890369; x=1740426369;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XCasjtMWxULI0q12pSVTKCODcbYjr1nwdvbMM85j5iU=;
-  b=RkMg9EZxKUYxzX52B5bj5IZkaa7OkWQPwhmP8Dr9vT749wD07O+DZDoe
-   VSsTg/lwJ90ULgkhecjE1fp0X0EWG4nq4H0aYYKukodOsTBGZ+pMn2FPw
-   RcpUB1Q69bo1pyuiMam2qELmcYDCYd8PwiKCIfx43KtNt/N6M/B1dp9Ev
-   D00pShMBtcrgC0ZzBe3X7f2eh51qXGD5M4xYhQ5M07nKDcKX/sU0exAfn
-   groY8cvYTazzUUYQyRMQwFcLfTInvo92rWsV73kwdhLpcuvV956BPkiW1
-   j2jYP+22tQMfrohhhbFe/Fmy43HGZnHgMxh1kmZIr8jNENtQMFiMkl4HO
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3321159"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="3321159"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 11:46:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="11048625"
-Received: from gcsargen-mobl1.amr.corp.intel.com (HELO [10.255.228.214]) ([10.255.228.214])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 11:46:08 -0800
-Message-ID: <b81b1e5b-81fa-4df0-926d-1d75323cf47b@linux.intel.com>
-Date: Sun, 25 Feb 2024 11:46:07 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+HUjWK2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06DCAC433F1;
+	Sun, 25 Feb 2024 19:49:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708890574;
+	bh=ZENVKkATzJXVRSZ2EC/+wfI5KUHwIHxTOQcJjOk7iBk=;
+	h=From:Date:Subject:To:Cc:From;
+	b=U+HUjWK2OJGWfAOVNmPigJyjFa8nmpV1QQqSE8159YNGyVB5xr+znnAyinLqEAY5i
+	 eIhL1f1BXaTbWkR/GH4a2HYYI8LrFiHz5P7VXEPOsQitvAmPtHWWOCLqvrQYCpkRCn
+	 75PDyxV9CRt+q3vBsFcwmhPX8tpaK9yYVR3MrWK0uE4J+ruNasqk2YCP2jcW/qT5QK
+	 IuJdJ1BGacm4d6pkfPG5guAI8T9ZuY7hHa78EufWSweEOIJvJOi7MhCk4RYaPnSV8L
+	 xUJwSSURv9NG9q11L8UXKDL8i7QvI0xZxpNq+gJufMlpfGv01aEbMH2vD3Xu8UkJCD
+	 8EayjNI3ae4kA==
+From: Mark Brown <broonie@kernel.org>
+Date: Sun, 25 Feb 2024 19:49:25 +0000
+Subject: [PATCH] regmap: kunit: Add a test for ranges in combination with
+ windows
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] PCI/DPC: Request DPC only if also requesting AER
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Matthew W Carlis <mattc@purestorage.com>,
- Keith Busch <kbusch@kernel.org>, Lukas Wunner <lukas@wunner.de>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
-References: <20240222221521.32159-1-helgaas@kernel.org>
- <20240222221521.32159-2-helgaas@kernel.org>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240222221521.32159-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240225-regmap-test-format-v1-1-41e4fdfb1c1f@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAMSZ22UC/x3MMQqAMAxA0atIZgNtlaJeRRxKjJpBLWkRQby7x
+ fEN/z+QWIUTDNUDypckOY8CW1dAWzhWRpmLwRnXGucaVF73EDFzyricuoeM5Il8T30zdxZKGJU
+ Xuf/pOL3vB+oCkJRkAAAA
+To: linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.13-dev-0438c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3866; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=ZENVKkATzJXVRSZ2EC/+wfI5KUHwIHxTOQcJjOk7iBk=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBl25nKNzlmvoPJ6figOdDr6GMlWlk1sy8WRRRfE
+ bBnn6ElaoeJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZduZygAKCRAk1otyXVSH
+ 0FwBB/93ssYq/0SdSsyTqz7rb1eTTCY9d5DutSf4NYVmTa+l07nxq9aCj8YzZHaDRSejg/k0Qf+
+ Gaz325HVN9BA5xTeA17G4NNR30Km/29iy90oWOvnhJlvXq/XMcHOvdoapUY8YlaGudZnL84lrNx
+ ZXoqKDTiPjWRKAmWrvH+TSyZkQztKA/vJS7SH3wTT8i6L3ZPyQja3YFCzaB6XJ6yksGH4ZpTD9R
+ 9s1AYWo7P79ENT6K/hUk1LuAO2+ijwy4xMA21NlkNeIcfiYo6sSpWyQw7vNDbTewAblQzCtqKfL
+ JE6P1QXAq6OBevNgdqkbdszyFh5FS9vwQR8MiEU5MMbuTvSj
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+In preparation for taking advantage of the SPI support for pre-coooked
+messages add a test case covering the use of windows on a raw regmap,
+unfortunately the parameterisation prevents direct reuse and we will
+want to add some raw specific coverage anyway.
 
-On 2/22/24 2:15 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> When booting with "pci=noaer", we don't request control of AER, but we
-> previously *did* request control of DPC, as in the dmesg log attached at
-> the bugzilla below:
->
->   Command line: ... pci=noaer
->   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
->   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR DPC]
->
-> That's illegal per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, which
-> says:
->
->   If the operating system sets this bit [OSC_PCI_EXPRESS_DPC_CONTROL], it
->   must also set bit 7 of the Support field (indicating support for Error
->   Disconnect Recover notifications) and bits 3 and 4 of the Control field
->   (requesting control of PCI Express Advanced Error Reporting and the PCI
->   Express Capability Structure).
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/base/regmap/regmap-kunit.c | 66 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
-IIUC, this dependency is discussed in sec 4.5.2.4. "Dependencies Between
-_OSC Control Bits".
+diff --git a/drivers/base/regmap/regmap-kunit.c b/drivers/base/regmap/regmap-kunit.c
+index 0d957c5f1bcc..bb2ab6129f38 100644
+--- a/drivers/base/regmap/regmap-kunit.c
++++ b/drivers/base/regmap/regmap-kunit.c
+@@ -1341,6 +1341,71 @@ static void raw_sync(struct kunit *test)
+ 	regmap_exit(map);
+ }
+ 
++static void raw_ranges(struct kunit *test)
++{
++	struct raw_test_types *t = (struct raw_test_types *)test->param_value;
++	struct regmap *map;
++	struct regmap_config config;
++	struct regmap_ram_data *data;
++	unsigned int val;
++	int i;
++
++	config = raw_regmap_config;
++	config.volatile_reg = test_range_all_volatile;
++	config.ranges = &test_range;
++	config.num_ranges = 1;
++	config.max_register = test_range.range_max;
++
++	map = gen_raw_regmap(&config, t, &data);
++	KUNIT_ASSERT_FALSE(test, IS_ERR(map));
++	if (IS_ERR(map))
++		return;
++
++	/* Reset the page to a non-zero value to trigger a change */
++	KUNIT_EXPECT_EQ(test, 0, regmap_write(map, test_range.selector_reg,
++					      test_range.range_max));
++
++	/* Check we set the page and use the window for writes */
++	data->written[test_range.selector_reg] = false;
++	data->written[test_range.window_start] = false;
++	KUNIT_EXPECT_EQ(test, 0, regmap_write(map, test_range.range_min, 0));
++	KUNIT_EXPECT_TRUE(test, data->written[test_range.selector_reg]);
++	KUNIT_EXPECT_TRUE(test, data->written[test_range.window_start]);
++
++	data->written[test_range.selector_reg] = false;
++	data->written[test_range.window_start] = false;
++	KUNIT_EXPECT_EQ(test, 0, regmap_write(map,
++					      test_range.range_min +
++					      test_range.window_len,
++					      0));
++	KUNIT_EXPECT_TRUE(test, data->written[test_range.selector_reg]);
++	KUNIT_EXPECT_TRUE(test, data->written[test_range.window_start]);
++
++	/* Same for reads */
++	data->written[test_range.selector_reg] = false;
++	data->read[test_range.window_start] = false;
++	KUNIT_EXPECT_EQ(test, 0, regmap_read(map, test_range.range_min, &val));
++	KUNIT_EXPECT_TRUE(test, data->written[test_range.selector_reg]);
++	KUNIT_EXPECT_TRUE(test, data->read[test_range.window_start]);
++
++	data->written[test_range.selector_reg] = false;
++	data->read[test_range.window_start] = false;
++	KUNIT_EXPECT_EQ(test, 0, regmap_read(map,
++					     test_range.range_min +
++					     test_range.window_len,
++					     &val));
++	KUNIT_EXPECT_TRUE(test, data->written[test_range.selector_reg]);
++	KUNIT_EXPECT_TRUE(test, data->read[test_range.window_start]);
++
++	/* No physical access triggered in the virtual range */
++	for (i = test_range.range_min; i < test_range.range_max; i++) {
++		KUNIT_EXPECT_FALSE(test, data->read[i]);
++		KUNIT_EXPECT_FALSE(test, data->written[i]);
++	}
++
++	regmap_exit(map);
++}
++
+ static struct kunit_case regmap_test_cases[] = {
+ 	KUNIT_CASE_PARAM(basic_read_write, regcache_types_gen_params),
+ 	KUNIT_CASE_PARAM(bulk_write, regcache_types_gen_params),
+@@ -1368,6 +1433,7 @@ static struct kunit_case regmap_test_cases[] = {
+ 	KUNIT_CASE_PARAM(raw_write, raw_test_types_gen_params),
+ 	KUNIT_CASE_PARAM(raw_noinc_write, raw_test_types_gen_params),
+ 	KUNIT_CASE_PARAM(raw_sync, raw_test_cache_types_gen_params),
++	KUNIT_CASE_PARAM(raw_ranges, raw_test_cache_types_gen_params),
+ 	{}
+ };
+ 
 
-Because handling of Downstream Port Containment has a dependency on Advanced Error
-Reporting, the operating system is required to request control over Advanced Error Reporting (bit 3
-of the Control field) while requesting control over Downstream Port Containment Configuration
-(bit 7 of the Control field). If the operating system attempts to claim control of Downstream Port
-Containment Configuration without also claiming control over Advanced Error Reporting, firmware
-is required to refuse control of the feature being illegally claimed and mask the corresponding bit.
-Firmware is required to maintain ownership of Advanced Error Reporting if it retains ownership of
-Downstream Port Containment Configuration.
-If the operating system sets bit 7 of the Control field, it must set bit 7 of the Support field, indicating
-support for the Error Disconnect Recover event.
+---
+base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+change-id: 20240223-regmap-test-format-c6cc69c93d81
 
->
-> Request DPC control only if we have also requested AER control.
->
-> Fixes: ac1c8e35a326 ("PCI/DPC: Add Error Disconnect Recover (EDR) support")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218491#c12
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: <stable@vger.kernel.org>	# v5.7+
-> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Cc: Matthew W Carlis <mattc@purestorage.com>
-> Cc: Keith Busch <kbusch@kernel.org>
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> ---
-Code wise it looks fine to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->  drivers/acpi/pci_root.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index 58b89b8d950e..efc292b6214e 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -518,17 +518,19 @@ static u32 calculate_control(void)
->  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
->  		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
->  
-> -	if (pci_aer_available())
-> +	if (pci_aer_available()) {
->  		control |= OSC_PCI_EXPRESS_AER_CONTROL;
->  
-> -	/*
-> -	 * Per the Downstream Port Containment Related Enhancements ECN to
-> -	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
-> -	 * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
-> -	 * and EDR.
-> -	 */
-> -	if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
-> -		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-> +		/*
-> +		 * Per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, the
-> +		 * OS can request DPC control only if it has advertised
-> +		 * OSC_PCI_EDR_SUPPORT and requested both
-> +		 * OSC_PCI_EXPRESS_CAPABILITY_CONTROL and
-> +		 * OSC_PCI_EXPRESS_AER_CONTROL.
-> +		 */
-> +		if (IS_ENABLED(CONFIG_PCIE_DPC))
-> +			control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-> +	}
->  
->  	return control;
->  }
-
+Best regards,
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Mark Brown <broonie@kernel.org>
 
