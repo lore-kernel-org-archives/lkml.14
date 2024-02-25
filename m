@@ -1,60 +1,61 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB6E12E6D
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 14:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74405134CE
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 14:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708870373; cv=none; b=ev7ltbvsrH3iHxkc5mn7N/o7pu/k458GZU9/tCnYRmlort4UAbXQsGV8hmzL2e9m/t9HVMnWslFWOMsEt0BNGfqZEBuux3nEzE7lpWTjI91vSaSV6Sd+Sk6oxInR3FMSyUmqSGcUxcjTFG1Mi18VYbuPwyrw+oxy3W7KF5qO2gs=
+	t=1708870375; cv=none; b=R895PVE6rDs2wRg34UoA6Nfx9mBL7GLTHSePWDUhVuASZP1qyxsaN45BhYukNFpgKrOnzUL6fsdAcIck0emogIZdiY5KVj59lkhsoov6HSqv4mYM5ivc82MvQ3f4hVHnSEFY7u8leU8Z1cLSkpX48OUyjwJ+POphdXK+X9+/gYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708870373; c=relaxed/simple;
-	bh=A4/oTwY5JpAU9dbsu93L7dZvCPx7K/2ZR18bKOeKyl0=;
+	s=arc-20240116; t=1708870375; c=relaxed/simple;
+	bh=kq1wMGjAFgykNjnALUOfiwVmAiWVNLEAtKXn23jQRrA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=arG/Q/ep1S03LHt9aB0Fv36gyTsGsue5FAS0reYj062E16MbXKIwRh3poj02O7ZHLHQr6rlabn1YcLGnTpD7MyNWnp+Ag56xr3gfz6dam/jzfRcJfNKUonAAhb/iSJ+qA1nRkPLHgK3JNvXGyo9gL68hZruavVdpe0Iy8CripKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L6GgmmRJ; arc=none smtp.client-ip=209.85.167.47
+	 In-Reply-To:To:Cc; b=u3i7+MGbQiKqGvMWUVIPv/LJxTeLiXLxDXEuc0/asn3zKo39NR0hPt2+dqgLAa2/T8PyI361bBFE7530laloPrzac2jrKgJt69aXLaOGV+dJgKnQU3ik3X6cocJeKCEaPsxBt3N6ItMGN+if1iJ5QJ7XLlOHl+qZTyqbQQwYV3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BOuBoxCs; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L6GgmmRJ"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-512fb30dbc9so223073e87.2
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 06:12:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BOuBoxCs"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d2628e81b8so15871871fa.0
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 06:12:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708870370; x=1709475170; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708870372; x=1709475172; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IXkFidtqGVYDP8/cl+5cTf/LoCCSdGW5wG6DXUHuPiw=;
-        b=L6GgmmRJhNanYrJ5R04m4b3jVj0CrURPk8lw67HJcdubb4L8bs/mGNGXZZXahZwy1Q
-         KPYrEbp+c8iznKUq9TzGWZPuv4pFzm4LRe9P95IuXfmbrhZMtIQbLkEDJ9280gCeIWts
-         Jr3SMIKO5zlfsVivvCT8+x0mihhp0D71escc/d05PGJPw7ICTnqy6xnRRH1lpAxFhXeX
-         3jroP3dzYQV4hJvm6yMdchTMX35VHVEqXsM7XlJOr99RQiBAvVhVK5F7HIS2/HL9U82W
-         xny1MIV2sbqmmsX/OQfqLZxOd2RlHQVizn+l4etiAWssC5rAwq9HVlPCyE3vslYUIWVB
-         kGRQ==
+        bh=W1EgeiS53bZU89cWnjtfqhJ0Xbfd+zvllvWyAXpOfzo=;
+        b=BOuBoxCsWGVQvmsi66WqX9fJIewAxtDUUJFBsxQvaQJYC2wUiwly2Vmh7e82LmMzjI
+         6Yl/TGelB1E5ZzIYnMVmWfl8EjmqC/BetBPg3tYhZcSQZZRkd4sS7s7qHM/7MNMnkDuv
+         nxzp1LAuvI1okCeT4qcKxlw9jrjpQZXP7Z4gvZCl0bpxad0/YjH31kfAAJpP5H2RvDDO
+         ZeZLfy2v3MhaGwwyDdl/vipsoOnzT+dvn4jzLyHresgUxHdYbZaj5I9Lomv0W1dKcJpX
+         OHWZOYf4AXIWiNPtaVBd77zQhoKqnl54eI/GSoVzmcRI8YZSmM8U96orRd8Wlo6xPp48
+         mnNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708870370; x=1709475170;
+        d=1e100.net; s=20230601; t=1708870372; x=1709475172;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IXkFidtqGVYDP8/cl+5cTf/LoCCSdGW5wG6DXUHuPiw=;
-        b=W4/urwIe0XK/C+71MBUbSeAJ81W4SWL3iSmSZZIuNaczal6m09ITIjGAhAPZjTE2Qi
-         S+EYPZ9lZr2Zm7SQS+dn9M2pC13lpqYOUHRl6Fafu97DIRSuvNE/69PnXQnswJ1mJaes
-         SpuRJqMCFFH8V2gqYU/deBCOM0OlRsrzdSh918F+ca2vLXUolmwnoFO+5hWky7R0alH9
-         mQNspNMSA0LSsMpIUzW7yLmO3ljAfDloWf5TFADIsn2Vcbh//rYtCBm7Ryx1oF7MRBxh
-         QZjgsaMA/67q1OKU+/qr4C2GLY8J4cUOEr7U8YYUdMoCkCj2t9S0bwlJO6eT/WlfJPfp
-         hnWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVH3iehzbboZiVTCvZEvlh0dct78DUqko8kzMWJ6FYReM9X8uX/SZHQ4AK04aTtwh8skO/Zzq6HbVmwKta8ySPQJY32cBfOAPYlvCFi
-X-Gm-Message-State: AOJu0YxxDtYa5kPVdD3hwPKYg8vPzPTiZJuuYIk6w7STJk/k6Ign+rmH
-	aqHHjckgSSbtMsm9ghmED3wvd6oEU5fTQQJs2i/lv82dnV68DL//kboh1+7lcig=
-X-Google-Smtp-Source: AGHT+IGZ1yVlZG62WK5s8XgMXseEorjE3oDAcLvokJCsoAwczaJfRkKuxwH8PNeZCfgcle6av35Q4A==
-X-Received: by 2002:ac2:5388:0:b0:512:ec6e:9f2a with SMTP id g8-20020ac25388000000b00512ec6e9f2amr2791473lfh.19.1708870369931;
-        Sun, 25 Feb 2024 06:12:49 -0800 (PST)
+        bh=W1EgeiS53bZU89cWnjtfqhJ0Xbfd+zvllvWyAXpOfzo=;
+        b=rP/7JCD0pwlJtq4J2pOj3oCL/2k64iKVg/b84syNom6urLLdnXo5ifspU8tk7z8uZS
+         J7CReQwet5Wj/notavGDCGq+ep9lST7qDm/fCWbQeGH3a8vexGzcDFYvnEwQJA+uR1Ea
+         qr+0/8citCF5l+SE00442Pc/6lTTXMOEC0udXnhvCvurfQ3VNxxSTvW/pGaNlrXlctUT
+         yLnG8cYYxLuwHF/y4f0ii04V0N7EnTBy9G3aRqAkOtKi6XZZF54MKtOqgW5dwuTb/xdT
+         F+y4W02B3+p2ZWPkRlabpquU8iUokaq/r1ZSwCxVWsVVryZPjMb9JBV9yhsglb13LYal
+         DmBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVD2kX0iq7rs/hMhwbUogbYo1z9Dv/mXoETy/MeB4c2EuBuPYHU+P7JXHQtVe6ElxLZixMPB/n0iVLvPIit3t6MJHM7PSlsCoItqhBd
+X-Gm-Message-State: AOJu0Yy1hkgZ6egdL2nzGJ2IRYLpnv0Rk9tWjR8QnecpxXK6LmebLdZW
+	Jy8ud0wZ/OTOVrYKzdYZs+aWyzCmbIWbzNPLcQCu+N3Ibm1AXGfm/m0B4N7eTAM=
+X-Google-Smtp-Source: AGHT+IGDF5gFZnVV/AVUsZV5OqBJcSJBuROwG/Zy/8wkdCAhfxPNJhhBt9WEw3y137XfIL3bJJFROA==
+X-Received: by 2002:a05:6512:3087:b0:512:d7fb:8c8d with SMTP id z7-20020a056512308700b00512d7fb8c8dmr1562188lfd.23.1708870371781;
+        Sun, 25 Feb 2024 06:12:51 -0800 (PST)
 Received: from umbar.lan (dzyjmhybhls-s--zn36gy-3.rev.dnainternet.fi. [2001:14ba:a00e:a300:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id w13-20020ac254ad000000b00512e5bd2296sm522931lfk.217.2024.02.25.06.12.48
+        by smtp.gmail.com with ESMTPSA id w13-20020ac254ad000000b00512e5bd2296sm522931lfk.217.2024.02.25.06.12.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 06:12:48 -0800 (PST)
+        Sun, 25 Feb 2024 06:12:51 -0800 (PST)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 25 Feb 2024 16:12:46 +0200
-Subject: [PATCH v3 1/3] drm/msm/dpu: make "vblank timeout" more useful
+Date: Sun, 25 Feb 2024 16:12:48 +0200
+Subject: [PATCH v3 3/3] drm/msm/dpu: capture snapshot on the first
+ commit_done timeout
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240225-fd-dpu-debug-timeout-v3-1-252f2b21cdcc@linaro.org>
+Message-Id: <20240225-fd-dpu-debug-timeout-v3-3-252f2b21cdcc@linaro.org>
 References: <20240225-fd-dpu-debug-timeout-v3-0-252f2b21cdcc@linaro.org>
 In-Reply-To: <20240225-fd-dpu-debug-timeout-v3-0-252f2b21cdcc@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
@@ -75,42 +76,68 @@ Cc: Steev Klimaszewski <steev@kali.org>, linux-arm-msm@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1057;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2131;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=A4/oTwY5JpAU9dbsu93L7dZvCPx7K/2ZR18bKOeKyl0=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBl20rfZOXUMpqNliF8fh0oH/0RuleHVyeXPPDGe
- FISdoya/+aJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZdtK3wAKCRCLPIo+Aiko
- 1TuEB/0Z/hHj29uzA3HA/VxFscGLzDGqyZUj4/ANTvm9EjAYa0jQ1LJccv3i1tiK0jnqxIWiFoc
- wnYLHUf5Gnp42YrF0h8S+uPIOX5nmPadqvtKmBuY8GzoZs9/IYY7ggAMzbGf3HnQHDc4y6/kAbH
- 1QNNrifLpUq5wHtBq3a5QE/uZO+cXGp4ozHDQM04cEUW26qvjCcR6bMADk0Ft777z41tCostXqI
- VLDhiefC7by6PVbjx5VTY5fVKqRr1rDR7DNWIy75ZRDDVSml1SirAMOr9nydO1UNltGDhVZgcGu
- ucU+IKr4qLybtRBJaNN67n4kqWQAKakPMqnsRgbLBCnrO3nT
+ bh=kq1wMGjAFgykNjnALUOfiwVmAiWVNLEAtKXn23jQRrA=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBl20rfZatQwbsnIGDdcoW5gLJWbqK0DBCsltFny
+ PS9SGAxgeOJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZdtK3wAKCRCLPIo+Aiko
+ 1UitB/wITuYU5p6dOOSUv1JzfYEmwL/GKKF0SC4IbGLssbPmSgUySdE9DqjlCPM6rj5vaVRx1Bk
+ p+/ypYmnmyncdrYoAno3IJVFcBQWctCe5DyU6JvmrLk6gHLN8r+cKk7HyvhoFeH7F+WB1+S+NAt
+ TpOAXWCqaCGaCqzPgN+J1h3J8xbsKPKUqymyjbnVtdrjfIfGsFqA79FJpUi4MFpCzEJMfiZod/J
+ G2VBYphZ86mzY1WNA/wJlD6UN/LU9J9UEfCF0l+qulZoZ3SES+Tz369iyyFMAu2HjMlPBv76zGv
+ mUzVOA9EOlu5Yn4BVYOLhdWQOd3W4KpdLHpA3kAbEB4eED82
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-We have several reports of vblank timeout messages. However after some
-debugging it was found that there might be different causes to that.
-To allow us to identify the DPU block that gets stuck, include the
-actual CTL_FLUSH value into the timeout message.
+In order to debug commit_done timeouts, capture the devcoredump state
+when the first timeout occurs after the encoder has been enabled.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-index 2aa72b578764..6058706f03e4 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c
-@@ -480,7 +480,7 @@ static int dpu_encoder_phys_vid_wait_for_commit_done(
- 		(hw_ctl->ops.get_flush_register(hw_ctl) == 0),
- 		msecs_to_jiffies(50));
- 	if (ret <= 0) {
--		DPU_ERROR("vblank timeout\n");
-+		DPU_ERROR("vblank timeout: %x\n", hw_ctl->ops.get_flush_register(hw_ctl));
- 		return -ETIMEDOUT;
- 	}
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 30f349c8a1e5..3cae07bf0b9b 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -126,6 +126,8 @@ enum dpu_enc_rc_states {
+  * @base:		drm_encoder base class for registration with DRM
+  * @enc_spinlock:	Virtual-Encoder-Wide Spin Lock for IRQ purposes
+  * @enabled:		True if the encoder is active, protected by enc_lock
++ * @commit_done_timedout: True if there has been a timeout on commit after
++ *			enabling the encoder.
+  * @num_phys_encs:	Actual number of physical encoders contained.
+  * @phys_encs:		Container of physical encoders managed.
+  * @cur_master:		Pointer to the current master in this mode. Optimization
+@@ -172,6 +174,7 @@ struct dpu_encoder_virt {
+ 	spinlock_t enc_spinlock;
  
+ 	bool enabled;
++	bool commit_done_timedout;
+ 
+ 	unsigned int num_phys_encs;
+ 	struct dpu_encoder_phys *phys_encs[MAX_PHYS_ENCODERS_PER_VIRTUAL];
+@@ -1226,6 +1229,8 @@ static void dpu_encoder_virt_atomic_enable(struct drm_encoder *drm_enc,
+ 	else if (disp_info->intf_type == INTF_DSI)
+ 		dpu_enc->wide_bus_en = msm_dsi_wide_bus_enabled(priv->dsi[index]);
+ 
++	dpu_enc->commit_done_timedout = false;
++
+ 	mutex_lock(&dpu_enc->enc_lock);
+ 	cur_mode = &dpu_enc->base.crtc->state->adjusted_mode;
+ 
+@@ -2436,6 +2441,10 @@ int dpu_encoder_wait_for_commit_done(struct drm_encoder *drm_enc)
+ 			DPU_ATRACE_BEGIN("wait_for_commit_done");
+ 			ret = phys->ops.wait_for_commit_done(phys);
+ 			DPU_ATRACE_END("wait_for_commit_done");
++			if (ret == -ETIMEDOUT && !dpu_enc->commit_done_timedout) {
++				dpu_enc->commit_done_timedout = true;
++				msm_disp_snapshot_state(drm_enc->dev);
++			}
+ 			if (ret)
+ 				return ret;
+ 		}
 
 -- 
 2.39.2
