@@ -1,83 +1,60 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9D710A3C
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 13:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1454DDDA;
+	Sun, 25 Feb 2024 13:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708866214; cv=none; b=Y7T7BnxOOVANtbEgWs9Q83FwyRiKBZSip72IDb2alhvD91L09XCNI3gjwtSxxbWv2u9InBvap8YkxH3uyn2ogaTJw2ToW6KEk1CB/lXxfMU38sq0GMyqNONwjO7ZMXHSRUb0hbMHrCmfdXLks8Mre0/UeMBKqZKz3Gmxg2c8jWY=
+	t=1708866289; cv=none; b=p/OLEYtvlzndTSrSyy0oc96OPX+2dHq9F7hodw2Nba4lfcDx2ukDmXiJ4sMFK6DYSyDjDOXwVvE7u4QSqhO2Tn9eakCozPy1Laven8H/TECV9XaknaBXHr48f3xFgr9Utba17VfzAwHlcx8H/VQrF3Exl77y7dv2twTaTcQiqOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708866214; c=relaxed/simple;
-	bh=/SpsNiogYFqG5r7VDjXkjcW6vVlToL80VRO+IS2kI0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NsRed0XqwGBpi4Hhr12esKa3RkI6+zQxsWENI2HMrK6A10z/8v/7ctvPnhuA+x9sBgsjKPbIgaH0Gz+qcC2HeCLfZLCk0LDViYWC1+TwCIBnP8KgK71DP0qMJRtrvHI+5mDf/COsDDxaoRVoXRzI1yQsaVu++/a0oB8ogIF71ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OTmqVR/d; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1708866289; c=relaxed/simple;
+	bh=ln45ZHPv8+YkWi3VQQc0vg+57IBMoHqUd07YiLVFH48=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D/C1mXpkEBPfSwPc46srQNq1A0/y6dUL3SSP6ZETudPnkjRhA5Wc7Oi1HviV2ByLUkHqgPc4aA4HmYbn8Rj9Nz/X2N/WybS9XOkRFoxjWiZW3+5GKO+BJShnENu99mErNwHdJd4PDWj9PgNrVPgC5kK1JZKjsXoMcN3vqB9ZLWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=MUb9elrz; arc=none smtp.client-ip=123.58.177.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OTmqVR/d"
-Message-ID: <34678776-859a-42f2-802b-0c7bc90bdfdc@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708866210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YBS/vqv7//g5T5JLfCN0p+agffab/kEhJFeyvy8o3i4=;
-	b=OTmqVR/dWHrbxfIU/KRVKI+7ES2nTdRD3QMuHRXgzdpdBIZaPfEMRGCfZFpESwpu6msP4F
-	TdNgon4mhMa4q0P5Tf57uVQ/+AkGYLdfxPfcU056iFQ5sxbYoSKioTqmHvnK64lp+85I8V
-	T9DKnjQJekdUQpHzfXciJgH5YNx2wjs=
-Date: Sun, 25 Feb 2024 21:02:53 +0800
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="MUb9elrz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=jOX14Uu7tHrKUE0P91Wze9hvWOxj3jqvdUZ1ym6LhD4=;
+	b=MUb9elrzC2VUkwtnyy5ExQcS4xhA9QB2WC0pzvi42XuDbEtYqKRVJPCczzFds1
+	FLfk6fv1QnuibCFXRxrSBXSEAejI6qF1FFFVbqHWRLvvts5YRFJksrf8Bi5hXB0H
+	0qEEIW3IqzVOjB8rP7red7EJjsaCdv5u3Oq1OKQU4lt2M=
+Received: from dragon (unknown [183.213.196.200])
+	by smtp2 (Coremail) with SMTP id C1UQrADnjy+vOttlOjhWBA--.41198S3;
+	Sun, 25 Feb 2024 21:03:44 +0800 (CST)
+Date: Sun, 25 Feb 2024 21:03:43 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, shengjiu.wang@gmail.com
+Subject: Re: [PATCH] arm64: dts: imx8mm-evk: Add spdif sound card support
+Message-ID: <Zds6rztD3msV/gId@dragon>
+References: <1708582633-6969-1-git-send-email-shengjiu.wang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] ocfs2: remove SLAB_MEM_SPREAD flag usage
-Content-Language: en-US
-To: Joseph Qi <joseph.qi@linux.alibaba.com>, mark@fasheh.com,
- jlbec@evilplan.org, brauner@kernel.org, jlayton@kernel.org,
- keescook@chromium.org
-Cc: jack@suse.cz, zhouchengming@bytedance.com, azeemshaikh38@gmail.com,
- ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, vbabka@suse.cz, roman.gushchin@linux.dev,
- Xiongwei.Song@windriver.com
-References: <20240224135008.829878-1-chengming.zhou@linux.dev>
- <aee616f4-40fc-4d24-9010-d0589d59f664@linux.alibaba.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <aee616f4-40fc-4d24-9010-d0589d59f664@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1708582633-6969-1-git-send-email-shengjiu.wang@nxp.com>
+X-CM-TRANSID:C1UQrADnjy+vOttlOjhWBA--.41198S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU3jjgUUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDhCPZVszYWKNtAAAsm
 
-On 2024/2/25 20:20, Joseph Qi wrote:
+On Thu, Feb 22, 2024 at 02:17:13PM +0800, Shengjiu Wang wrote:
+> Add spdif sound card support, configure the pinmux.
 > 
+> This sound card supports recording and playing sound
+> through spdif interface.
 > 
-> On 2/24/24 9:50 PM, chengming.zhou@linux.dev wrote:
->> From: Chengming Zhou <zhouchengming@bytedance.com>
->>
->> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
->> its usage so we can delete it from slab. No functional change.
->>
-> If I understand correctly, you are referring the following patch:
-> https://lore.kernel.org/all/20240223-slab-cleanup-flags-v2-1-02f1753e8303@suse.cz/
-> 
-> But it seems that the above patch is not included in mainline yet.
-> Or am I missing something?
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-I realize my commit message should explain more why it's a no-op, my bad.
+Applied, thanks!
 
-The SLAB_MEM_SPREAD flag used to be implemented in SLAB, which was
-removed so it became a dead flag as of v6.8-rc1. That series[1]
-mark it obsolete to avoid confusion for users. So here we can just
-remove all its users, which has no functional changes.
-
-[1] https://lore.kernel.org/all/20240223-slab-cleanup-flags-v2-1-02f1753e8303@suse.cz/
-
-Thanks!
-
-> 
-> Joseph
-> 
