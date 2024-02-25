@@ -1,66 +1,65 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C8914276;
-	Sun, 25 Feb 2024 15:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B547C16427;
+	Sun, 25 Feb 2024 15:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708875969; cv=none; b=H+Y4issQ5fY6V5YI7FskvZTSHG3W2fLIUxqo2RUp7Au9jixp6WXJ/Uii4XGUCzCBUiR4vDUnlE0HbGd2U3XsFvOoYDWyH0V9wVwDQg5VnuEn8NzmVzKdwhcoRRrDwmVUTgBAho6MrQOB0h7nkPYBu3b8FYbRh0A0Dcagh1S2RhA=
+	t=1708876456; cv=none; b=JNS7TbU8O3+quslYnrAL8mB3RHa0eGYJPakMW2SP2tBAP03kjoelzOUHUEMlLPJzgVpxXJ5quC0bjWDeL4vGzMnFBriHhxzMtE+7d60R06q7RZlOL0m+bO68fWZT84U5X7PqdRV6Ny7gjwBiXBb3Hy0XsghIe71VXyRUBZaUZsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708875969; c=relaxed/simple;
-	bh=t9F39Ikr4dVm3edibCROfCU2YuulRER1E6uwGvflmoY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UvhaT4L30rwCExmvGuiTsJg/QGjrXjUCJvWN2DLdFU8h+z7PKCGYJidf9utTnCt8MHWomtJ9MyREqOPqEVwUWgsSJ1jZxA8lGD6LnGtx+cygz7LBlDjte5P4BkiMhbpONBGnkKplEQw1MRxrAdAUXdlSmX4iPCi3H1P/87dCE9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2E+HvhU; arc=none smtp.client-ip=209.85.161.44
+	s=arc-20240116; t=1708876456; c=relaxed/simple;
+	bh=z9nMvV8Br/f5lbsA6JG4GUMN22pmv5RVa5MEsG7AZxQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FWzTfebLUdmeu594j8BLi432P1G3lMOedwgmoMsNaeZrsByYU8swJmia/gh2eUtMkwgukZ4AUazVWOrvcFJZWQBqE2F0cTbvAiIaraVGQsie/sI2Mlmr0qjAubZJghxhGmAjdtBC9BUv1qUJxJxQ0cof+kCOT1alPj47muXVbro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T9bZPlIM; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2E+HvhU"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-58e256505f7so2419007eaf.3;
-        Sun, 25 Feb 2024 07:46:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9bZPlIM"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d28051376eso12513781fa.0;
+        Sun, 25 Feb 2024 07:54:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708875967; x=1709480767; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1708876453; x=1709481253; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Ie9GBSxINBIsyz8X4p5mFdB/eNwrXZ+fsuhlbACghM=;
-        b=F2E+HvhUprOU0YyJsYG3NBVPRAbh7YHtS9xxQZQ+zAmGZl0jCk/xJKtWP6PjuvSWxK
-         NQG8iE0ivfEWsRm22D/2BcwEjSeE98W2LjoOJUdNhoNEJzqO4ttbQ2KZXpYLiQqfPB7i
-         3hFtsZNWZ/5r1ZnrhJ0Xx++foU+rUK4Iat+aJoCwaA/9FnQYyJYEUuSYt5NxpuXQ2pgy
-         nOOXSMiE0MWfXyifHJlh9M+hnjXam6V+2MdkRlTkT0svHxuU/NLzHGDUEufFEgqfQBkV
-         DveFwhljOrztVadXDGUlieO9T890I3FJ1bVcDZxywU3DwX/RemgS63eflnzEMMNprIHV
-         q9zA==
+        bh=U+RTNbDlxLiVpFh7JBKRa3eX6T1fmXSslJ2kwaJm/ow=;
+        b=T9bZPlIMILbo6I80T47MqvzvJtd1zLzKFAP63yaJ5Boxvo6aPMVUhRd1+hU5ADv4Qk
+         oibkfdZboU9oNvOhghRgLFJutW/Xw+iLAnoBSHYbaxOURrK4LF6SQg3tRHKL0wcEdhph
+         m/r4sAFYQQnp3jZTC+6chxq3SFEhFtDYkZ2CEykwlFUSyWqqDQy910Qtk8rKZKScHlrP
+         O4Als3bbKKbV3Owe5LfRpJ09n/cfKtpB2OZwWPeYOxuPl5MCDVHV7rsF3ZQTJ7e+3kQH
+         vHkuCV7jJOiL7TwjeFvPsj+/+ty9OkPgnaMHJ7W2SmJsXB1riXgoIwbApRk/Hu6I4jAC
+         8xGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708875967; x=1709480767;
+        d=1e100.net; s=20230601; t=1708876453; x=1709481253;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5Ie9GBSxINBIsyz8X4p5mFdB/eNwrXZ+fsuhlbACghM=;
-        b=FaghQzoAZRdhMsE6JdlLJQSIWuS6IHJQVEZNlXkhRMaGdRD+m7mZzsktg/Jjwn/pv9
-         fe0RLrmLFlUuFiwDNmXCiGDUp5YfU2gwtWfzQpQMf4T6lPqgqiZSUS9uS6q/Rwj7MAih
-         NJuq20FAssExd+OxuYyeMsIISGWgjr9vWELbh1UxlJA9uHxBW0aLL5jdoDkRqUT61qZF
-         W++TRC59dlYfuvYLkodDk5mBI/YYnhQYzmDErcvvFkNecaehXZxvY0AnCoRJHbmlCZ5T
-         W+A7qXToY8Ij0FzngLooHnCcUfsxI/6L9xOK1vmQs82nyK2Yj7DOoVWsm4RyvnW/2Ytc
-         iBJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKidxCdxGXTkxYT3T0tLfEd3FCgU3LsCGUgERTcomqYObU3WKqKejvGnKDjYgDOp7QnTtmS0mZLyicec/xSkuF73nHd4bGhMCnQjMfeEhZ2xD0wQriaHN9Ie4SAQMI1qqTH5KxdbGSUkdNG+BXLOy5EC+W8pfyX0+bLtFk7JanC0o=
-X-Gm-Message-State: AOJu0Yw+D1e3LNjXN0iRZl7IhTcTsc80vu/o4DFIPi3HIcM+1pNaLS2j
-	tFBZbqp4/qddGwP1s0KtL0rE/EtKFPWfMFvxnacLoFrfLsGWNGg/
-X-Google-Smtp-Source: AGHT+IFWhLZfdDmqeXxHV2Hz5s5QMMfN88PxbrSK4NtiVrje2/QYuuUDVC/eIo94JaLTYSpskqYCow==
-X-Received: by 2002:a05:6358:6386:b0:17b:57fd:ec5d with SMTP id k6-20020a056358638600b0017b57fdec5dmr7714634rwh.24.1708875967244;
-        Sun, 25 Feb 2024 07:46:07 -0800 (PST)
-Received: from localhost.localdomain (123-193-217-197.dynamic.kbronet.com.tw. [123.193.217.197])
-        by smtp.gmail.com with ESMTPSA id h18-20020a056a00219200b006e468cd0a5asm2541701pfi.178.2024.02.25.07.46.05
+        bh=U+RTNbDlxLiVpFh7JBKRa3eX6T1fmXSslJ2kwaJm/ow=;
+        b=i12dnh5/sTi4zWjATwnNWNoqL6ets72lVR8SNz6kjJjGY2CkiceP+AUoz4OVifokIy
+         5HApk/bTrn1HYNrZfWz7u0i2MBadgq3Jxg/mmDPDbGO8/n9cVik2ReC9rhahxF3/ZJnb
+         eYibEG/FW5a5fXGbS1z3ygHz8pUj/ouOisaB219CfgyqkWdFg92pNvUaj8LRRweandez
+         IDq1hGDYM/JlLX6sE4MpWyaAVVwXAAT5CawYZdI16R83T0pQTWrCgamS1O4puQHc/do+
+         xqbYA32r3XCnCaGrqtazUBhjLgdswcblcpphLxFPQMoVjfKaQ27yVjRDcGjn7dZ4Xx7C
+         CGOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzlRuCQb7+FHfmpFesN3vm4iE/d8NvIGaon+dJ2T4pwGNYrs80hEk5eXOFDpLBznM5U8GRKwggeluh9nRHrgWr7QreMlD7zC2Ctq3nNvwvKPd3cGWzRj+05uLDx5EC5xB+rAuTitBxpDE=
+X-Gm-Message-State: AOJu0YyFE96pOCRlfnFllcB+IlSRxe/W0zxlXskdwopkYZyKPtei68JU
+	SYrYBFJpB1Pk0In7yFEEu96wn02EBRNv3bRN3zWhk/tUela3sQbh
+X-Google-Smtp-Source: AGHT+IH8J4Ezb3RxlZuDNF6SENZAlokznIDvMIbMLfNGU+6SI4X4wE287gT8kWe01PNnQb8I60xGkw==
+X-Received: by 2002:a05:651c:10d1:b0:2d2:2012:1fef with SMTP id l17-20020a05651c10d100b002d220121fefmr2281728ljn.47.1708876452671;
+        Sun, 25 Feb 2024 07:54:12 -0800 (PST)
+Received: from localhost.localdomain (c83-255-24-248.bredband.tele2.se. [83.255.24.248])
+        by smtp.googlemail.com with ESMTPSA id p6-20020a2e93c6000000b002d221041b59sm585179ljh.51.2024.02.25.07.54.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 07:46:06 -0800 (PST)
-From: Yiwei Lin <s921975628@gmail.com>
-To: rafael@kernel.org
-Cc: corbet@lwn.net,
-	linux-doc@vger.kernel.org,
+        Sun, 25 Feb 2024 07:54:12 -0800 (PST)
+From: Jonathan Bergh <bergh.jonathan@gmail.com>
+To: hdegoede@redhat.com
+Cc: mchehab@kernel.org,
+	linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	s921975628@gmail.com
-Subject: [PATCH] Documentation: PM: Fix runtime_pm.rst markdown syntax
-Date: Sun, 25 Feb 2024 21:00:57 +0800
-Message-Id: <20240225130057.42633-1-s921975628@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	Jonathan Bergh <bergh.jonathan@gmail.com>
+Subject: [PATCH] staging: media: atomisp: Fix formatting issues and minor code issue
+Date: Sun, 25 Feb 2024 16:53:59 +0100
+Message-Id: <20240225155359.41435-1-bergh.jonathan@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,28 +68,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The '7. Generic subsystem callbacks' should be
-a section title, but the markdown syntax now is wrong to show
-this as expected. Fix it so we can to link the chapter
-at docs.kernel.org correctly.
+This patch fixes the following code style and formatting issues:
+ * Ensure multiline block comments are correctly formatted
+ * Remove extra braces not required for single line conditional statements
 
-Signed-off-by: Yiwei Lin <s921975628@gmail.com>
+Signed-off-by: Jonathan Bergh <bergh.jonathan@gmail.com>
 ---
- Documentation/power/runtime_pm.rst | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/media/atomisp/pci/atomisp_drvfs.c         | 2 +-
+ drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 7 +++----
+ drivers/staging/media/atomisp/pci/atomisp_subdev.c        | 3 ++-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/power/runtime_pm.rst b/Documentation/power/runtime_pm.rst
-index 65b86e487..82bc76d3d 100644
---- a/Documentation/power/runtime_pm.rst
-+++ b/Documentation/power/runtime_pm.rst
-@@ -730,6 +730,7 @@ out the following operations:
-     for it, respectively.
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+index 1df534bf54d3..8ef25d2f8b87 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+@@ -34,7 +34,7 @@
+  *        bit 0: binary list
+  *        bit 1: running binary
+  *        bit 2: memory statistic
+-*/
++ */
+ struct _iunit_debug {
+ 	struct device_driver	*drv;
+ 	struct atomisp_device	*isp;
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+index 139ad7ad1dcf..804ffff245f3 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+@@ -1416,13 +1416,12 @@ static int gmin_get_config_var(struct device *maindev,
+ 	if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE))
+ 		status = efi.get_variable(var16, &GMIN_CFG_VAR_EFI_GUID, NULL,
+ 					  (unsigned long *)out_len, out);
+-	if (status == EFI_SUCCESS) {
++	if (status == EFI_SUCCESS)
+ 		dev_info(maindev, "found EFI entry for '%s'\n", var8);
+-	} else if (is_gmin) {
++	else if (is_gmin)
+ 		dev_info(maindev, "Failed to find EFI gmin variable %s\n", var8);
+-	} else {
++	else
+ 		dev_info(maindev, "Failed to find EFI variable %s\n", var8);
+-	}
  
- 7. Generic subsystem callbacks
-+==============================
- 
- Subsystems may wish to conserve code space by using the set of generic power
- management callbacks provided by the PM core, defined in
+ 	return ret;
+ }
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_subdev.c b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
+index a87fc74159e2..f8efaef2c055 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_subdev.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
+@@ -394,7 +394,8 @@ int atomisp_subdev_set_selection(struct v4l2_subdev *sd,
+ 			 * (of the desired captured image before
+ 			 * scaling, or 1 / 6 of what we get from the
+ 			 * sensor) in both width and height. Remove
+-			 * it. */
++			 * it.
++			 */
+ 			crop[pad]->width = roundup(crop[pad]->width * 5 / 6,
+ 						   ATOM_ISP_STEP_WIDTH);
+ 			crop[pad]->height = roundup(crop[pad]->height * 5 / 6,
 -- 
-2.34.1
+2.40.1
 
