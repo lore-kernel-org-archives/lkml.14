@@ -1,114 +1,152 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-233.mail.qq.com (out203-205-221-233.mail.qq.com [203.205.221.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55D06110
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 03:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6835233E1
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 04:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708833584; cv=none; b=eenlE/Asj/kCMeHSOQuD7lfnMjpxLNKv/6EiaD/qbg684K3g5Pm4QT9P8gQWoIF+ALlex90LxtNE9Zg6iIc2hwdXdGRlygbzV8i12rmm6FS3JamKGaD2C9RjTA1Fl4xl0efjILLAbPD5rSjrPRYXZb/Xzi0mzFwyRjcs9Eokzqk=
+	t=1708833992; cv=none; b=R/amVBWB5z0xudoyUSD7/Q/tUAd25BSYfAwRQcSYulbFFGwB+KjqaIgZwlAMPHPPo3WxR0xDU6T0judC/XZE0dGX2EVNZbjqas7kDJbBmUBFQ0jgY0Sgm8d5Ld799TUt6p5ewTPFvrgB2Ne6S7Luj5QM/0neqGYxs0NoZaWaQxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708833584; c=relaxed/simple;
-	bh=MUsdO6w7ERvP2PkLq4b3h828tT6GKDziyED4AzcUEJc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=GVXr9YKho/rIRD+6L5H16370SK65lvqbKrJo3fgspBDJ97T8tMsCj2ulY1+1iBh56prxhAGcspc1LUTjJXgoUM9VishISI5Mx5zHHB1ZD8cm6sGsqhvfNACDFuPEp6OiPtbm6eznGAWEXmfOWz9cI3ddNG13KzdZ3xovBJA1Xdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3652275e581so19635695ab.3
-        for <linux-kernel@vger.kernel.org>; Sat, 24 Feb 2024 19:59:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708833582; x=1709438382;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Cg4O/UrkhasJYvwgjNZJ6K6JARSDn+LYxb+PQ32Q3I=;
-        b=dkdlbl0QkL4AjzXom6/Q0HkfV4+yqdG4sDpBY7zv+sKcWghDLrVeYv2RgVEPUBt5CV
-         K3V2yhKIKj3sZNhRCQvmoAjgKqtENj3Zvwq5lRPMEk3UFHAqdqQAqDFf0Fwlf5+MyFer
-         YotBaHiunDSfWXY+wUWznCEntZUf2UGXVGT7Z+f4sj0GG5NSgfoklDi2BlMKoNML23Q1
-         veStl/STys7Fcz+mPxfQIJ0dy85IOMeFYCtd+b3Bz+8b1NyVDwZ4XIngk88AvIxuz/p/
-         INx8Jv9scZ5ICxuwfXo44UF3qe8pKwpqaIB2smJAGdWlxKOl8fI6P1/YPb9rRlj/J/cw
-         aZlg==
-X-Gm-Message-State: AOJu0Yzb+4R53Y2Fj8g28EGu3erbvHA9EtkqS69Fb1PlmM/y1pJE6XS0
-	gBDn++9IiLEuScShlrwYeryLq3uEIBIq135EqV8MQ6XWGYqBS95/SIfF9w7VDsj2fBM5+WEhymB
-	+EAaRxBUpUtTWbmSngRLeGHCbvJydNRQiFg1WWaeLLoQliz24NeMbuEohxA==
-X-Google-Smtp-Source: AGHT+IFaIcgPNhoH5vx+m4lcsKPx+gR3Tdm4UkceB/ydTgFuCPeNNGAP47cABHty2xriHNnA6ii/Wwn8i7r4PZ1gysO7Zrm2enXv
+	s=arc-20240116; t=1708833992; c=relaxed/simple;
+	bh=v0u0UY6IZLeK7m5DJpMpA2gcsbr5QD2SeoS8vKGYb4s=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=j7mLz8t595u7dPQ3Olj5yqwYIRlyW7L1rxa0U+PB+vnSCYj1QQNW5B8TgF/I30c0S3LoLPSKm0aefA7EXeHOfCxEDyiEJ856REXSE7C5JVJvBDLNN+6iSgh9YjyifQGpctbbwdnRdx/gwRYZ1kpSPT9pBdXnXkOXGkAVKOqtmmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=MWg1CTzB; arc=none smtp.client-ip=203.205.221.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="MWg1CTzB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1708833981;
+	bh=eeuZJq6Fxo2cYyc6x11JY0tSqm747i90EQ3x4JLdDpA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=MWg1CTzBCcYkNXIeWTckng8BjAbOVlYgk158ElE+Vt8ArDpGlcViwMkRMQpqthccZ
+	 W/nncZjO8yhbo3iNSutc8OuH6kXRRJUyYaH5MHSLMOK577r/6+f/e5Pe3YfJg0ZF6h
+	 3POEwVzul5tPfpwvaH7ZpO6zkLH0CE8AOwfejP00=
+Received: from localhost.localdomain ([2409:8a60:2a61:ef40:480f:5c56:cca3:1b20])
+	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
+	id 18993038; Sun, 25 Feb 2024 12:06:09 +0800
+X-QQ-mid: xmsmtpt1708833973tqo6zfhr6
+Message-ID: <tencent_95D22FF919A42A99DA3C886B322CBD983905@qq.com>
+X-QQ-XMAILINFO: OQ59tfF64tJLisGDfjHLssboL2wrAS+OJRngdWOM2ugGCBYT8TEY4f7nQdWleK
+	 PZVJRFePG7rTc/H+tpBH+NvaJHtnD83UM6gNBWzQM990fbc40e+g4u3PweR79sjfEm6iCPdrF2si
+	 mQtoR7zWd4JJQtkYm6YzFCyU+6JHD9hi/6A1S+Er1yDoeg57zcHZUNNEhF2JHmhjb3bKP/FIzE4/
+	 AULq5O9opHJxz0dp+qwsX08fJHP5FgOToRSBE1F/VFqh2Wl8FnA8ENIErQvKdfG6wRn0jxuCUCwt
+	 aEaxjWRpKGGczA2grKZ0ynSRZrQf+8PRJBjRDdyOLGXqsH69itJeDIYf71HMse992xWfC4giiyAX
+	 TDX+qkmNG7YY3jrfcg5/wvXfv+pnOZU3qIdiDAylAgPS5zBWMBJzHFH/BAyIdb51vkusD2Ww/7sp
+	 q1MY7uPGasrnH2Z0/NbUBj7g7BV1fDL/ghsuBOZVKaP5RFfUzjKaNrt2LcrMHVh+blNgW8N9SXhF
+	 OYziCHd7hKAq8t+it2WdV6Vi/Qiv1MVltuY6Fat14O811aUOb7rQK+ovLCpoHVyHH71f4E8rJ9h+
+	 ONVj7VwwAZyqcKkHrHWeVs7lol0BObISUSCfY2B2MVi/y2X2gVmWScumxI4+Pg5XXU4XfQypyNS8
+	 TjlRCks2BCiY+1xGFVr/E4aLwopXT5Hx7vy94CAGtIuH446umSkDsW9H9trWt5wAbCqlj9uhXG4D
+	 uYaeG/pNU23GE4AEY5WLueV4tyt7pdkIEIA6MyWZcIOHUZJcteqzAvMmfciM95smvStIx7OLcWpc
+	 eNk8KnNpmPHRo6c2CEtmSiRMgBLZtazBB2hjogd3PWRAzhBrJdEzLOVvJaY0AuciMRkxc5Q6hCh+
+	 4SChtu1tXpw5VXGqKxBqCUxWxJv55w1qJFuTrsqasjWtFhW7Yeo7HGnzyt2JirbVk1v76FPVUV9m
+	 /lNPJ0+PJlZJqpuu8Qvd77dFceAqi0Pu0We1raKJAOL2E8cFaRwFarZbT/OZTnF+nKlTmLvIs+yW
+	 XojuIqRzpZK1wegq8+qa0jwh3Y/PHGj0lcx/jwC0xiL1XUeqJN
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: wenyang.linux@foxmail.com
+To: Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Christian Brauner <brauner@kernel.org>,
+	davem@davemloft.net,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Wen Yang <wenyang.linux@foxmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/8] sysctl: introduce sysctl SYSCTL_U8_MAX and SYSCTL_LONG_S32_MAX
+Date: Sun, 25 Feb 2024 12:05:31 +0800
+X-OQ-MSGID: <20240225040538.845899-2-wenyang.linux@foxmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240225040538.845899-1-wenyang.linux@foxmail.com>
+References: <20240225040538.845899-1-wenyang.linux@foxmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:20ec:b0:365:3088:eae6 with SMTP id
- q12-20020a056e0220ec00b003653088eae6mr323765ilv.6.1708833581902; Sat, 24 Feb
- 2024 19:59:41 -0800 (PST)
-Date: Sat, 24 Feb 2024 19:59:41 -0800
-In-Reply-To: <000000000000fd588e060de27ef4@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a1340206122cd249@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [virtualization?] KMSAN: uninit-value in
- virtqueue_add (4)
-From: syzbot <syzbot+d7521c1e3841ed075a42@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+From: Wen Yang <wenyang.linux@foxmail.com>
 
-***
+The boundary check of multiple modules uses these static variables (such as
+two_five_five, n_65535, ue_int_max, etc), and they are also not changed.
+Therefore, add them to the shared sysctl_vals and sysctl_long_vals to avoid
+duplication.
 
-Subject: Re: [syzbot] [virtualization?] KMSAN: uninit-value in virtqueue_add (4)
-Author: penguin-kernel@i-love.sakura.ne.jp
+Also rearranged sysctl_vals and sysctl_long_vals in numerical order.
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git v6.7
-
-syzbot is reporting a false-positive KMSAN warning upon coredump, for
-dump_emit_page() path reaches memcpy_from_iter_mc() via iterate_bvec()
-by setting "struct iov_iter"->copy_mc to true.
-
-Make arch/x86/lib/copy_mc.c not to call arch/x86/lib/copy_mc_64.S
-when KMSAN is enabled.
-
-Reported-by: syzbot <syzbot+d7521c1e3841ed075a42@syzkaller.appspotmail.com>
-Closes: https://syzkaller.appspot.com/bug?extid=d7521c1e3841ed075a42
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joel Granados <j.granados@samsung.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: David Ahern <dsahern@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 ---
- arch/x86/lib/copy_mc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/linux/sysctl.h | 15 +++++++++------
+ kernel/sysctl.c        |  4 ++--
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
-index 6e8b7e600def..c6a0b8dbf58d 100644
---- a/arch/x86/lib/copy_mc.c
-+++ b/arch/x86/lib/copy_mc.c
-@@ -61,9 +61,9 @@ unsigned long copy_mc_enhanced_fast_string(void *dst, const void *src, unsigned
-  */
- unsigned long __must_check copy_mc_to_kernel(void *dst, const void *src, unsigned len)
- {
--	if (copy_mc_fragile_enabled)
-+	if (!IS_ENABLED(CONFIG_KMSAN) && copy_mc_fragile_enabled)
- 		return copy_mc_fragile(dst, src, len);
--	if (static_cpu_has(X86_FEATURE_ERMS))
-+	if (!IS_ENABLED(CONFIG_KMSAN) && static_cpu_has(X86_FEATURE_ERMS))
- 		return copy_mc_enhanced_fast_string(dst, src, len);
- 	memcpy(dst, src, len);
- 	return 0;
-@@ -74,14 +74,14 @@ unsigned long __must_check copy_mc_to_user(void __user *dst, const void *src, un
- {
- 	unsigned long ret;
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index ee7d33b89e9e..b7a13e4c411c 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -45,19 +45,22 @@ struct ctl_dir;
+ #define SYSCTL_FOUR			((void *)&sysctl_vals[4])
+ #define SYSCTL_ONE_HUNDRED		((void *)&sysctl_vals[5])
+ #define SYSCTL_TWO_HUNDRED		((void *)&sysctl_vals[6])
+-#define SYSCTL_ONE_THOUSAND		((void *)&sysctl_vals[7])
+-#define SYSCTL_THREE_THOUSAND		((void *)&sysctl_vals[8])
+-#define SYSCTL_INT_MAX			((void *)&sysctl_vals[9])
++#define SYSCTL_U8_MAX			((void *)&sysctl_vals[7])
++#define SYSCTL_ONE_THOUSAND		((void *)&sysctl_vals[8])
++#define SYSCTL_THREE_THOUSAND		((void *)&sysctl_vals[9])
++#define SYSCTL_U16_MAX			((void *)&sysctl_vals[10])
++#define SYSCTL_INT_MAX			((void *)&sysctl_vals[11])
++#define SYSCTL_NEG_ONE			((void *)&sysctl_vals[12])
  
--	if (copy_mc_fragile_enabled) {
-+	if (!IS_ENABLED(CONFIG_KMSAN) && copy_mc_fragile_enabled) {
- 		__uaccess_begin();
- 		ret = copy_mc_fragile((__force void *)dst, src, len);
- 		__uaccess_end();
- 		return ret;
- 	}
+ /* this is needed for the proc_dointvec_minmax for [fs_]overflow UID and GID */
+-#define SYSCTL_MAXOLDUID		((void *)&sysctl_vals[10])
+-#define SYSCTL_NEG_ONE			((void *)&sysctl_vals[11])
++#define SYSCTL_MAXOLDUID		SYSCTL_U16_MAX
  
--	if (static_cpu_has(X86_FEATURE_ERMS)) {
-+	if (!IS_ENABLED(CONFIG_KMSAN) && static_cpu_has(X86_FEATURE_ERMS)) {
- 		__uaccess_begin();
- 		ret = copy_mc_enhanced_fast_string((__force void *)dst, src, len);
- 		__uaccess_end();
+ extern const int sysctl_vals[];
+ 
+ #define SYSCTL_LONG_ZERO	((void *)&sysctl_long_vals[0])
+ #define SYSCTL_LONG_ONE		((void *)&sysctl_long_vals[1])
+-#define SYSCTL_LONG_MAX		((void *)&sysctl_long_vals[2])
++#define SYSCTL_LONG_S32_MAX	((void *)&sysctl_long_vals[2])
++#define SYSCTL_LONG_MAX		((void *)&sysctl_long_vals[3])
+ 
+ extern const unsigned long sysctl_long_vals[];
+ 
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 157f7ce2942d..e1e00937cb29 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -82,10 +82,10 @@
+ #endif
+ 
+ /* shared constants to be used in various sysctls */
+-const int sysctl_vals[] = { 0, 1, 2, 3, 4, 100, 200, 1000, 3000, INT_MAX, 65535, -1 };
++const int sysctl_vals[] = { 0, 1, 2, 3, 4, 100, 200, U8_MAX, 1000, 3000, 65535, INT_MAX, -1, };
+ EXPORT_SYMBOL(sysctl_vals);
+ 
+-const unsigned long sysctl_long_vals[] = { 0, 1, LONG_MAX };
++const unsigned long sysctl_long_vals[] = { 0, 1, S32_MAX, LONG_MAX, };
+ EXPORT_SYMBOL_GPL(sysctl_long_vals);
+ 
+ #if defined(CONFIG_SYSCTL)
 -- 
-2.34.1
-
+2.25.1
 
