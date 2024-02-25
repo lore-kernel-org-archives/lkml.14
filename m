@@ -1,131 +1,185 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6DCFC02;
-	Sun, 25 Feb 2024 12:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B80912B6C;
+	Sun, 25 Feb 2024 12:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708862638; cv=none; b=XM9k2cwtJMNpssjtQnwnpof6hEttMq5Bf/hU4FtXDuuHvDJ77HFpY8BrDGGC72Y8VHZ3fcl7JDDT4FfmsaGWTLKxisHQ8hqDa37mqotOcwDE4gz0XpOxNZfgGPZ47cdiLZt8A/Zq+zw1hzlPLPsg/g+6D/P7+2ZK5sWvZSB90i0=
+	t=1708862643; cv=none; b=HprROPRi0BN5EDuUZ5WKIKYgCMqPKK+MNbUH98E6bDSRTikHKbFCmXumICSHDebwUNI9wKxPpdCAse7q/lYU7nNFtrh2/IQSKCPKyaKODpgE3bOmq+ethba/MpxGYaPk0r4XeKlS712Gmup28L/6TlgvZSKVAjteBGfSnCOkVC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708862638; c=relaxed/simple;
-	bh=sJqFSA98plXohQpP4cFLXG/YZWDMCuwBQsZdZ2R/3nE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LFH7+FYXXDcfdjxshwspwxLiQp1M9R+4QsDPW4J0O5G30Tz6ZZ0/LKzaflefFnpycy+cXO04RZa0L7HS9Z379AxajC6PpnsGo6Cajt7ixoxkj3bRRLaIiOWDEOwu9LjvnUGwKB60v8Y39XxE/948q78OQv3Wv6SetJL8MpqfPr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ad2miNrs; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708862643; c=relaxed/simple;
+	bh=G8ub14H/UFjsvGpsnX+JxTo4g+Xp7Uh6sxopc63ZR5Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XF9G3R2RnKXtfdiYaQbgZWihdE/hFdYV6WltElLBOfWZY5fETdFGsluc/9VrLnvMuzxnVaKx4aUm9mhv5H9dzoiUQSuPA7HeX/5KA8/7i7/KnIT+5hdu5IIbZ7RfdN8v5O8QYs9yG3X/+7PLp8sUbdM0gZpCXphpw7/MpPH5efw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZeTwsNu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ad2miNrs"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512b29f82d1so2812089e87.1;
-        Sun, 25 Feb 2024 04:03:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708862635; x=1709467435; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FC1twFM3dUlW6rVDhNZXcofSuGipZHhYOtvT1OvAccg=;
-        b=Ad2miNrserBBBCTQ3P7hrb5F/1K1LEy7h4mCM7fCNK3VXGArj/pkfC4oolkk27UJCt
-         xggvs8qgzMR1cNMH0Lrxf8FRXSoXPIHYpqX0gRQXpxCMw/dyJZXP/b7oKYi/G0itBpf2
-         k8quVYuMtYrgHhRHlNw8gdW8qVZkVHHe4jTp3UFeyyM2HUk7ZYNY5Jk7jFbrndBy2vXM
-         9+9roNgcJ0eCZblENqWaRuascdsZ8X/5YB67UcS7ZI3bCZse035RM36qpctv6IO6W7LL
-         9BcS98uDZSnj5psFkjTKddkYci5Jf0AJA2FDtaa1JQtydDMQU9CezhdPae02NRIHfGep
-         zU9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708862635; x=1709467435;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FC1twFM3dUlW6rVDhNZXcofSuGipZHhYOtvT1OvAccg=;
-        b=uu6uoeCU2PuYqtw9jQh2D4bjyF5x+2x9GM9ZT3zW+6P8Y3Hv6U93OW4xNkpb6ENlcS
-         RQgbAuMLfVj6sG8Fmifq5eq7HIMP3TymtsRtcoqt8iAR7WG1Da0KIqg5kPveSbSuTJhd
-         m390CcS53wABEdKj2dPr2wOaYm6E2xD8KZYGOdgSTA3TRvoRGR8q4yZR4/Ah+Hj5f+Z5
-         +L8H4XHh4s1yrC8SrvhxQB4gF/HqY3UxjFQZ3odI0QXRn+ILzL6Ylpx27c/kd9gwyEjh
-         OWo0iYjGx2xn0CYGZCdwgmsPIYtzG1SIcno2Ewe925NEoAGsHXJmhG7JYsqLYHomLIbM
-         UZJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVK2P1mSsa2FDguVbjco758u6bjjU6pEdysJJUJSKNFuzg8hN6Mv0aHYeRMvnh+P04jZprskr3gupfqixV/sN2XKQaLEdumG5/NRKQLk7U4Z01cSUTO6NnxVnZ8/2iAeZ1rMCkmvXslSqw=
-X-Gm-Message-State: AOJu0YybN7dlcBZNvsGjsuPRvt2ltEQzNS9k32D1Q9QgeGdFD7n6VjR6
-	GxGij3a/N2XAoIctkgWeyBnLN5SqML1uHb3/zjvpu00/vjX3GWGU
-X-Google-Smtp-Source: AGHT+IG14uRpjk6zLINBgzWfBzR13Xfl87PUebJHNOP8WnVV2jwwRzPxaBRwsjf+yNg351cNtvnW9g==
-X-Received: by 2002:a05:6512:3254:b0:512:d6a5:bb42 with SMTP id c20-20020a056512325400b00512d6a5bb42mr2235636lfr.18.1708862634973;
-        Sun, 25 Feb 2024 04:03:54 -0800 (PST)
-Received: from localhost.localdomain (c83-255-24-248.bredband.tele2.se. [83.255.24.248])
-        by smtp.googlemail.com with ESMTPSA id c6-20020a196546000000b00512aadef912sm515987lfj.27.2024.02.25.04.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 04:03:54 -0800 (PST)
-From: Jonathan Bergh <bergh.jonathan@gmail.com>
-To: hdegoede@redhat.com
-Cc: mchehab@kernel.org,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonathan Bergh <bergh.jonathan@gmail.com>
-Subject: [PATCH] staging: media: atomisp: Fix various formatting issues and remove unneccesary braces
-Date: Sun, 25 Feb 2024 13:03:50 +0100
-Message-Id: <20240225120350.31226-1-bergh.jonathan@gmail.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZeTwsNu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 64D1BC433C7;
+	Sun, 25 Feb 2024 12:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708862643;
+	bh=G8ub14H/UFjsvGpsnX+JxTo4g+Xp7Uh6sxopc63ZR5Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=LZeTwsNufN1cu92JPfd363vX0VP0Kj/WRJTwEYWo/W+WXISH9ehnPQz8flgqT4MbA
+	 wWNdu1483wxFCu/mCIMazflXiggyiuIjJzLz/RyYTUkBJjUVKOugLO1ur/dZH5q1Q5
+	 /9+mx9VJx2ZX/o7hl3O55mbuaaE/nlsImrN9/tgYPqn+AWTeg/mhVqRYTtiS1nNI1Y
+	 R+JUEyQdOHYN0B1M3WxhVdccqgo0Qlyi6Zi74AvMSZYeTKBfhuFT7kgZ2ECiR09FVK
+	 qLrIo4P0JJDh2NMKUCaNleny6jB1qDokzN9pdnxWQpnr3EOD43j5pt1CILAiJ6YKVv
+	 1MgFwtUwbI+jQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DF4C54E41;
+	Sun, 25 Feb 2024 12:04:03 +0000 (UTC)
+From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
+Date: Sun, 25 Feb 2024 20:03:48 +0800
+Subject: [PATCH v4 1/2] dt-bindings: usb: add hisilicon,hi3798mv200-dwc3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240225-dwc3-v4-1-8c1fd6c6f615@outlook.com>
+References: <20240225-dwc3-v4-0-8c1fd6c6f615@outlook.com>
+In-Reply-To: <20240225-dwc3-v4-0-8c1fd6c6f615@outlook.com>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708862628; l=3124;
+ i=forbidden405@outlook.com; s=20230724; h=from:subject:message-id;
+ bh=TbIIsLb8wqVTCtqqeG/liaxRoSs/eRWYcg7QPbnIgSo=;
+ b=tVwGmT7az1FU3fbwJTBcEWSw9tsPGkJZ+u6uN1rLKxH6Ie+oZJ42eYFoB68jNUI+cvIaRbx38
+ 11Qz04FPRFKBwLk57nRugFHWTewUrNoftNUIWUrecM72qd1H+Bwnu50
+X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
+ pk=qOD5jhp891/Xzc+H/PZ8LWVSWE3O/XCQnAg+5vdU2IU=
+X-Endpoint-Received:
+ by B4 Relay for forbidden405@outlook.com/20230724 with auth_id=67
+X-Original-From: Yang Xiwen <forbidden405@outlook.com>
+Reply-To: <forbidden405@outlook.com>
 
-This patch fixes the following formatting issues:
- * Fix various misaligned * and */ in multiline block comments
- * Remove unnecessary braces from single line conditional statements
- * Remove repeated word "from" from comment
+From: Yang Xiwen <forbidden405@outlook.com>
 
-Signed-off-by: Jonathan Bergh <bergh.jonathan@gmail.com>
+Document the DWC3 controller used by Hi3798MV200.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/staging/media/atomisp/pci/atomisp_cmd.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ .../bindings/usb/hisilicon,hi3798mv200-dwc3.yaml   | 99 ++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_cmd.c b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-index d0db2efe0045..5fa9918c8e1e 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-@@ -65,7 +65,8 @@
-  * At 15fps this means 133ms. We set the timeout a bit longer.
-  * Each flash driver is supposed to set its own timeout, but
-  * just in case someone else changed the timeout, we set it
-- * here to make sure we don't damage the flash hardware. */
-+ * here to make sure we don't damage the flash hardware.
-+ */
- #define FLASH_TIMEOUT 800 /* ms */
- 
- union host {
-@@ -1261,11 +1262,10 @@ int atomisp_gdc_cac(struct atomisp_sub_device *asd, int flag,
- 	}
- 
- 	asd->params.gdc_cac_en = !!*value;
--	if (asd->params.gdc_cac_en) {
-+	if (asd->params.gdc_cac_en)
- 		asd->params.config.morph_table = asd->params.css_param.morph_table;
--	} else {
-+	else
- 		asd->params.config.morph_table = NULL;
--	}
- 	asd->params.css_update_params_needed = true;
- 	atomisp_update_capture_mode(asd);
- 	return 0;
-@@ -3035,8 +3035,8 @@ void atomisp_handle_parameter_and_buffer(struct atomisp_video_pipe *pipe)
- }
- 
- /*
--* Function to configure ISP parameters
--*/
-+ * Function to configure ISP parameters
-+ */
- int atomisp_set_parameters(struct video_device *vdev,
- 			   struct atomisp_parameters *arg)
- {
-@@ -3367,7 +3367,7 @@ int atomisp_fixed_pattern(struct atomisp_sub_device *asd, int flag,
- 		return 0;
- 	}
- 
--	/* Add function to get black from from sensor with shutter off */
-+	/* Add function to get black from sensor with shutter off */
- 	return 0;
- }
- 
+diff --git a/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml b/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml
+new file mode 100644
+index 000000000000..f3011694393d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/hisilicon,hi3798mv200-dwc3.yaml
+@@ -0,0 +1,99 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/usb/hisilicon,hi3798mv200-dwc3.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: HiSilicon Hi3798MV200 DWC3 USB SoC controller
++
++maintainers:
++  - Yang Xiwen <forbidden405@foxmail.com>
++
++properties:
++  compatible:
++    const: hisilicon,hi3798mv200-dwc3
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 1
++
++  ranges: true
++
++  clocks:
++    items:
++      - description: Controller bus clock
++      - description: Controller suspend clock
++      - description: Controller reference clock
++      - description: Controller gm clock
++      - description: Controller gs clock
++      - description: Controller utmi clock
++      - description: Controller pipe clock
++
++  clock-names:
++    items:
++      - const: bus
++      - const: suspend
++      - const: ref
++      - const: gm
++      - const: gs
++      - const: utmi
++      - const: pipe
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    const: soft
++
++patternProperties:
++  '^usb@[0-9a-f]+$':
++    $ref: snps,dwc3.yaml#
++
++required:
++  - compatible
++  - ranges
++  - '#address-cells'
++  - '#size-cells'
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    usb {
++        compatible = "hisilicon,hi3798mv200-dwc3";
++        ranges;
++        #address-cells = <1>;
++        #size-cells = <1>;
++        clocks = <&clk_bus>,
++                 <&clk_suspend>,
++                 <&clk_ref>,
++                 <&clk_gm>,
++                 <&clk_gs>,
++                 <&clk_utmi>,
++                 <&clk_pipe>;
++        clock-names = "bus", "suspend", "ref", "gm", "gs", "utmi", "pipe";
++        resets = <&crg 0xb0 12>;
++        reset-names = "soft";
++
++        usb@98a0000 {
++            compatible = "snps,dwc3";
++            reg = <0x98a0000 0x10000>;
++            interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&clk_bus>,
++                     <&clk_suspend>,
++                     <&clk_ref>;
++            clock-names = "bus_early", "suspend", "ref";
++            phys = <&usb2_phy1_port2>, <&combphy0 0>;
++            phy-names = "usb2-phy", "usb3-phy";
++            maximum-speed = "super-speed";
++            dr_mode = "host";
++        };
++    };
+
 -- 
-2.40.1
+2.43.0
 
