@@ -1,29 +1,29 @@
 Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B102113FF6;
-	Sun, 25 Feb 2024 13:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CF9613FF6;
+	Sun, 25 Feb 2024 13:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708869432; cv=none; b=pJF2yRi3kLZGtUnh1dLU5jfOgTrKP6gJJLkx6V9q0kHXhq3ohSf2ElKqL/Hd6tC7j4P2ShuP78LNQ35qZXi3ciduoC8Gu1PrN+GH/ttlMlkZnfP/bdscluWzrokMeIazQQohFULgXW/68c5wf8A8/DugM8KLkShMwrWNe1JtpoY=
+	t=1708869465; cv=none; b=exAMI5KMtndrXCluHyrCcrP1pR1mbOYZ8eqafjY2wAFSkL9sMWuN8UOvR++RTr/UtRD7FQt0B5g8THsueF56KOBPWluVDferTPxEM9V3cg5jkYc6QCBIvc0/BWvRXEmk/4/F3EWJSfe3QOYWpkt5NkTioHPkbvEO5a9vfbZybAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708869432; c=relaxed/simple;
-	bh=Y5V04YIMrXyVAQTp9w7j27myasXGn8hofHY6HfZqgo8=;
+	s=arc-20240116; t=1708869465; c=relaxed/simple;
+	bh=dT6UjOq82OtGv8JhWMCFAAUndjXATg2Q1WbFRoN0Ljc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=knPer5W99p3RU0kJKP1GopBCl2Uaa5kqbOGUBeQO15aOMeZLmbvdH0hmLnthjvNDuABSVC0Z7aLUTm0RydV05AQg806tOoOoD8m6AfF1fcpBmf/uY58uhsdt/cLB/OZNKcNCkxnJTMQyGJc3KpnnMCG+RJE2pbE0MPTdjcW1HXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=O/4eoxQW; arc=none smtp.client-ip=123.58.177.132
+	 Content-Type:Content-Disposition:In-Reply-To; b=uxIqSBh2WrmWsbQXFMnrIMCd3RONUW/Kyk7Dw8xXv77DiqZoIl47UixWfgaRUkyXd1AQAKoVxEcfPH9wmpVEZKID+64biRbBR6GFdYF8/fxuWudppJJ82jelrE3aPmn58DruWlqCD1bUKssEE7awz3AXEY7kG/qN5R/kMu6cuog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=KcRDngPk; arc=none smtp.client-ip=123.58.177.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="O/4eoxQW"
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="KcRDngPk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
 	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=BBcIfipgVkDfL7D0t9PhLeKx0v9Zcyil9n1gX6X4j/8=;
-	b=O/4eoxQWwbRvHllcRrKZECzaP+h/mFg2bXjuwHWSdxQNHVizmEwhlmiT/TXb4y
-	PBh+qRLhgDfaYLDg8VW+AgMUd5RdqJ63xJfNLS4YfM8cQUojuQKjHmJ6y7k9LsHE
-	TP5QJGquridZoxpP+7bXhmYUEcC5Yzdg2Y06jAmPGGO9E=
+	Content-Type; bh=s7sgSnML5VETSzdPZXDDSYO56ce74VYbKYjh5xIIj38=;
+	b=KcRDngPkoyN89PltDhSZl8Sg9z81AZZ/DB0FRfrbN9YTglpArqYxbECQAlSOGy
+	pVM0AK7PPCzfPNhcaWB3IIkLJbrdJWsDNlNQ3wuOnNowTrlgtKeuT1/x1+RMQiAe
+	VXVd6u334cqtvW7q7St5FjKt2hNOElqO+b/mAB2iUAJc4=
 Received: from dragon (unknown [183.213.196.200])
-	by smtp2 (Coremail) with SMTP id C1UQrADXfy8AR9tls7ZWBA--.31462S3;
-	Sun, 25 Feb 2024 21:56:18 +0800 (CST)
-Date: Sun, 25 Feb 2024 21:56:16 +0800
+	by smtp2 (Coremail) with SMTP id C1UQrAC3Pw5BR9tl6LpWBA--.10003S3;
+	Sun, 25 Feb 2024 21:57:22 +0800 (CST)
+Date: Sun, 25 Feb 2024 21:57:21 +0800
 From: Shawn Guo <shawnguo2@yeah.net>
 To: Sebastian Reichel <sre@kernel.org>
 Cc: Rob Herring <robh+dt@kernel.org>,
@@ -40,10 +40,10 @@ Cc: Rob Herring <robh+dt@kernel.org>,
 	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v4 13/16] ARM: dts: nxp: imx: fix weim node name
-Message-ID: <ZdtHAF6+fTYOm2co@dragon>
+Subject: Re: [PATCH v4 14/16] dt-bindings: vendor-prefixes: add UNI-T
+Message-ID: <ZdtHQRK3y06pExMt@dragon>
 References: <20240224213240.1854709-1-sre@kernel.org>
- <20240224213240.1854709-14-sre@kernel.org>
+ <20240224213240.1854709-15-sre@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,17 +52,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240224213240.1854709-14-sre@kernel.org>
-X-CM-TRANSID:C1UQrADXfy8AR9tls7ZWBA--.31462S3
+In-Reply-To: <20240224213240.1854709-15-sre@kernel.org>
+X-CM-TRANSID:C1UQrAC3Pw5BR9tl6LpWBA--.10003S3
 X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUfcTmDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDwKPZVnxcfN+BQAAs2
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUaCJmUUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDQKPZVszXQqBVQAAsO
 
-On Sat, Feb 24, 2024 at 10:29:45PM +0100, Sebastian Reichel wrote:
-> DT node names should be generic, so replace "weim" node name with
-> "memory-controller" in all i.MX SoC DT files.
+On Sat, Feb 24, 2024 at 10:29:46PM +0100, Sebastian Reichel wrote:
+> Uni-Trend Technology is a manufacturer of measurement
+> and testing tools.
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Signed-off-by: Sebastian Reichel <sre@kernel.org>
 
 Applied, thanks!
