@@ -1,97 +1,117 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194B012E71;
-	Sun, 25 Feb 2024 16:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EF314276
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 16:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708879479; cv=none; b=k304Ds4/Ee/zy1yW3ko9jtfY71OHGdLfU7+puY0qYwnad0EN7itjgzA78od8TNxNlbH4NzqbnaLugRfXH9r/QIRUZd1BcalCVoMCjW5PC10JiYnrnsFDLZGO6a+ZN3D86xmFpezNja1rCIVXLvDz+jxFn6HNxG3xGYFpu0/VwK4=
+	t=1708879587; cv=none; b=uaOZNNeSFsMQ9YjRtxHc1XNZUgtVIlrihPCm6w4FfzhKeqyFUluK5gOmtP/2aocZkhh0hkYr4ZUvG7OqFpFnihWLBu3Eb+rJ5cywS1n1J0rCutTrCVUGdp4JAyFqpgEo1TSPZiOj7BBE1GkcnHECdSt3I6HG52D2JdJV9FRrRLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708879479; c=relaxed/simple;
-	bh=x2LR7m57gltzERdPSagukEx7QYq4BUtqRMwywoeDves=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pzIUad2hjkU9Jd1wubDpD4kXDUl/06rY2KOaeIHvOXEeZTzX43AXQIPjtgPmg52DJD+HerUJrUGvw30abO/eZFcUdWeW+BMNgB+dOERgJ48vKSzrUj6CeSJARb3Kr6lXIavNjOBNRdSjJz2r9004YGpQMTXwLJcdEwYiPJ0dQlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hcQ/8Wf9; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcQ/8Wf9"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-565b434f90aso1029434a12.3;
-        Sun, 25 Feb 2024 08:44:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708879476; x=1709484276; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x2LR7m57gltzERdPSagukEx7QYq4BUtqRMwywoeDves=;
-        b=hcQ/8Wf9F/dEGOoe+pJngOr1JeMbWYHolxL4DA5MxFjekgQz1DGJakf/eFz8RdfR6J
-         1mmxtFZOCHNUlaWWVL7yLAbDJs5+rvMuP5ARtElR9Bn1D6+5xoJpxmgx9eruwet3E6/y
-         0xDi+FpBmhPcd13XR175aGZaVXkWY6Anj7ThH0631IefKXGaQkPSQ9reIdoheV5dONau
-         A2xCd8/HGVVmlOcaAQDoalHrGUB5a3wykdH1uL6RKY8hRTQdGePlQyT+w4/hI/Xsf+2d
-         SEWcImFlk50zGSfWvogGz4RdzNvPK30tRii3NkUy9YaSA5p6/WmXXvdf2zwXN3PhmkdD
-         u8VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708879476; x=1709484276;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x2LR7m57gltzERdPSagukEx7QYq4BUtqRMwywoeDves=;
-        b=KUAiDNWS2QzDsRLGECHoB3DNPqaoBql0xtDKCS0f0g+2BGq1QEzN+QLjogPZ1yEmGR
-         298WwfseXcI28Vlmf5acb47oXKqMWirkgDpsSAAiaBoCMitg0qFqZiJf+J7V12nc83Yh
-         uk4EuFoaKnWBhxOSRQe0wpDwghcjqNEMjCFj0DCa/ip3swFvvhPilPnp9hn5ZeRqxxSd
-         T74ac+0z/ZSFaY/84Scd4er37jK31GnyzzNIxpyERBfiUoTTzKzF7F0BNbdyyuH1Gzgx
-         G2NZ16nQj8UfS181rQ3+EMHPoJgdkzxJKVtNfSL9T/zffAQW5zcgHfT7OWRjG/fsa9p7
-         8BdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXf7tTXOcrEBZ6NgRvxbV1XDhVjbdnWz9khawh6RqokfIu6ZmpWLiKtdl7SdtrZ1jOLmRe0Bwjbw9KBs1u5+EWwUwizZSnHo/FvtPW0Nt8Ax2PpSXuSZVW0AWxrGlWNVR7opnTfgOfWYxnchQ==
-X-Gm-Message-State: AOJu0Yzy8kDkk+BTOB7u6HRFWznO+RCcN+U4oB3XvfGvC74sbFybGeBn
-	atu1SEOd3jW8QBg+WYVgmEMvhXDNVfp6LedKau7ed4Hsbt7AARza
-X-Google-Smtp-Source: AGHT+IE6CDIehKL7+CVs5s2qsBHULZbUv6aeQGB26C2IM3i1REtVjhwoyj4s1QPfqrxh3062yElbtg==
-X-Received: by 2002:a05:6402:340d:b0:565:7b62:9eac with SMTP id k13-20020a056402340d00b005657b629eacmr2897273edc.22.1708879476102;
-        Sun, 25 Feb 2024 08:44:36 -0800 (PST)
-Received: from [192.168.20.170] (57657817.catv.pool.telekom.hu. [87.101.120.23])
-        by smtp.gmail.com with ESMTPSA id fd13-20020a056402388d00b00562d908daf4sm1537101edb.84.2024.02.25.08.44.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Feb 2024 08:44:35 -0800 (PST)
-Message-ID: <fba360e1-6111-4208-890c-f86b671a5b7c@gmail.com>
-Date: Sun, 25 Feb 2024 17:44:33 +0100
+	s=arc-20240116; t=1708879587; c=relaxed/simple;
+	bh=vFwDF1W1RkazrGXsBXcrCyhzRqXEEq2KkvvTlcmlZCA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nUkK7lLpx4omh1nRFn7D9cU87spkZdbNGb2YDTCPH4cipf3gJTo/I4IpeS1L3hV6//MQ8Lh+ORvHFlo+d8nKAuswu7kX8nZGIJC7nAjnnnIHrrvinO/GVaWNoqmO5tXt2DWZ1VSfYhxOCfmwhW7ahsev5q+wko9p3ynej13dWt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-178-yjK-uS7gN62oNJ6hHLWGlQ-1; Sun, 25 Feb 2024 16:46:21 +0000
+X-MC-Unique: yjK-uS7gN62oNJ6hHLWGlQ-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 25 Feb
+ 2024 16:46:20 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sun, 25 Feb 2024 16:46:20 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'Linus
+ Torvalds'" <torvalds@linux-foundation.org>, 'Netdev'
+	<netdev@vger.kernel.org>, "'dri-devel@lists.freedesktop.org'"
+	<dri-devel@lists.freedesktop.org>
+CC: 'Jens Axboe' <axboe@kernel.dk>, "'Matthew Wilcox (Oracle)'"
+	<willy@infradead.org>, 'Christoph Hellwig' <hch@infradead.org>,
+	"'linux-btrfs@vger.kernel.org'" <linux-btrfs@vger.kernel.org>, "'Andrew
+ Morton'" <akpm@linux-foundation.org>, 'Andy Shevchenko'
+	<andriy.shevchenko@linux.intel.com>, "'David S . Miller'"
+	<davem@davemloft.net>, 'Dan Carpenter' <dan.carpenter@linaro.org>, "'Jani
+ Nikula'" <jani.nikula@linux.intel.com>
+Subject: [PATCH next v2 00/11] minmax: Optimise to reduce .i line length
+Thread-Topic: [PATCH next v2 00/11] minmax: Optimise to reduce .i line length
+Thread-Index: AdpoChcPZRn+4DJyQnmPt8VEo0gk8Q==
+Date: Sun, 25 Feb 2024 16:46:20 +0000
+Message-ID: <0fff52305e584036a777f440b5f474da@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: qcom: m31: match requested regulator name with dt
- schema
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Sricharan Ramabadhran <quic_srichara@quicinc.com>,
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240220-phy-qcom-m31-regulator-fix-v1-1-7675b4a916b3@gmail.com>
- <ZdiGL/TryPVrbDWp@hu-varada-blr.qualcomm.com>
-Content-Language: hu
-From: Gabor Juhos <j4g8y7@gmail.com>
-In-Reply-To: <ZdiGL/TryPVrbDWp@hu-varada-blr.qualcomm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-2024. 02. 23. 12:49 keltezéssel, Varadarajan Narayanan írta:
-> On Tue, Feb 20, 2024 at 08:13:47PM +0100, Gabor Juhos wrote:
->> According to the 'qcom,ipq5332-usb-hsphy.yaml' schema, the 5V
->> supply regulator must be defined via the 'vdd-supply' property.
->> The driver however requests for the 'vdda-phy' regulator which
->> results in the following message when the driver is probed on
->> a IPQ5018 based board with a device tree matching to the schema:
->>
+The changes to minmax.h that changed the type check to a signedness
+check significantly increased the length of the expansion.
+In some cases it has also significantly increased compile type.
+This is particularly noticable for nested expansions.
 
-<snip>
+The fact that _Static_assert() only requires a compile time constant
+not a constant expression allows a lot of simplification.
 
-> Reviewed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+The other thing that compilicates the expansion is the necessity of
+returning a constant expression from constant arguments (for VLA).
+I can only find a handful of places this is done.
+Penalising most of the code for these few cases seems 'suboptimal'.
+Instead I've added min_const() and max_const() for VLA and static
+initialisers, these check the arguments are constant to avoid misuse.
 
-Thank you for the review!
+Patch [9] is dependant on the earlier patches.
+Patch [10] isn't dependant on them.
+Patch [11] depends on both 9 and 10.
 
-Regards,
-Gabor
+Changes for v2:
+- Typographical and spelling corrections to the commit messages.
+  Patches unchanged.
+
+David Laight (11):
+  [1] minmax: Put all the clamp() definitions together
+  [2] minmax: Use _Static_assert() instead of static_assert()
+  [3] minmax: Simplify signedness check
+  [4] minmax: Replace multiple __UNIQUE_ID() by directly using __COUNTER__
+  [5] minmax: Move the signedness check out of __cmp_once() and
+    __clamp_once()
+  [6] minmax: Remove 'constexpr' check from __careful_clamp()
+  [7] minmax: minmax: Add __types_ok3() and optimise defines with 3
+    arguments
+  [8] minmax: Add min_const() and max_const()
+  [9] tree-wide: minmax: Replace all the uses of max() for array sizes with
+    max_const().
+  [10] block: Use a boolean expression instead of max() on booleans
+  [11] minmax: min() and max() don't need to return constant expressions
+
+ block/blk-settings.c                          |   2 +-
+ drivers/gpu/drm/amd/pm/swsmu/smu_cmn.c        |   2 +-
+ drivers/gpu/drm/drm_color_mgmt.c              |   4 +-
+ drivers/input/touchscreen/cyttsp4_core.c      |   2 +-
+ .../net/can/usb/etas_es58x/es58x_devlink.c    |   2 +-
+ fs/btrfs/tree-checker.c                       |   2 +-
+ include/linux/minmax.h                        | 211 ++++++++++--------
+ lib/vsprintf.c                                |   4 +-
+ net/ipv4/proc.c                               |   2 +-
+ net/ipv6/proc.c                               |   2 +-
+ 10 files changed, 127 insertions(+), 106 deletions(-)
+
+--=20
+2.17.1
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
+
