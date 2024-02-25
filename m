@@ -1,127 +1,340 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F69D267
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 11:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1331078B;
+	Sun, 25 Feb 2024 11:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708859023; cv=none; b=FBCBPwu8sruOOrhdR/l5f92IhmJA4w+3gVgVf7uia/u8GPf4etrMBhJEnL2cm4cJdaYhklQGFVo7jB86C2/KaIQPlk5C0e9Alka6FKBe5ywlnK5epoZQftg8UpxdBqihJVxiB6FhAMaMjfeahCTuj9GfCjZe0L9RvaP0BUpjFAM=
+	t=1708859950; cv=none; b=Nx4wKyEr7GGq/MhkJu3OqNUI5uj0pKB/KmgvzyV8+bSB/OJ32W+uqpmHVh8pKsyUkQUU67qVehg0mV9/eAoAZZwXb6q7PTfzqoOA1xQ6S48h3cml1JzmuCfzSldVbRKjMYy1jty6ksIUz8yAx1QRBVQgBX5zH7iVuqnkefNkdUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708859023; c=relaxed/simple;
-	bh=Z5TyrwFS5+g2naMDbgD8Y0Yup48z7yb1zLyYPj4M38M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p7Wyv8igk9OrLXAGO5r7xkrBf/KlMZKtAraqkhzFqiehBEKCHYdp43wxJ3Qyx5BAiOvGSlUtE3Hqu8Wv1GAt2gWJZFOlLGpnwoGp9P+054fhhV3cHRkDl478xpEu9im0yzneZNEdAJLqUmHq3QwHXmuveB4I7ao4CLr2YNwadGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b=ocdENja4; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=marliere.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708859950; c=relaxed/simple;
+	bh=zfoAQj3q170+Q5p9j4Wy1GVCIr8BVqhJWh3gz38npRU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dt2pCSJ/BLLyzlxDR/uATuxag2NNYxLQ7jMsE/e9kQUaXjT8PHRTVH4cCKURc4qutK6JnjG2+4pbdBK6LZbR8GZ4zlscE9GNsRvHPkxydIQyAQnrpNPVBrhtNIpceyL/SjipEAn4db/5KuHpqBZQqKE+u9ZX3L3wGhLq8hiH+AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K8gIIyjJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marliere.net header.i=@marliere.net header.b="ocdENja4"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dc09556599so19689385ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 03:03:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708859021; x=1709463821;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:dkim-signature:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=15Blst29HGQPopSfvgIrNbaX0gzGv9i907KA2hfl4tk=;
-        b=TAnbwktedNrYOjXWCNIM09tfrp3UiQBRqJ1HZUsz/choBCb+iWkhp398jh5OAx67Gt
-         bfkmDPSa31tTa7NXJ/Up9A1Q92wWkKN8xQhEKgcIrs904PnY0TvfQ2K8PPUC8eyT9mmU
-         K/AE0GBDW91ciUP2ZTmLAyToVk/8hrP1AZiMbsI0VQB1Oub0b55BFTfB7Q46hw5gM7Mb
-         AzT6VRcmq7l+IoPuQJP8//M8Vk8TYMXQnD0VkRRmX5O41Pg8fwMXSaY7LV6eXVVSdvPM
-         ti1MOOHyso5cXomP794xhAmZMS88a2uZPOoPz5RVh84EUdG2u8fs2l+FpfpMEzzuvX3r
-         +fyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVspEocjt/pH/SjKU7iPGM3dGgsABiXuF92RdUhi6Hen2U5kCvrb3k9vDSDzBHos89l7FYjxUZqpm2U2GijRQZmpD1fEI87N9RR6ksx
-X-Gm-Message-State: AOJu0YxmRvJKIncfv4Cv2gI4RSXTnaqlV2R99IdIYLlMpnOdKIywdPIm
-	id3GQ1LxWHywTo4e8E6GD4U//IN/PKgXwbowH4p/F/aYPkQ+AEoM
-X-Google-Smtp-Source: AGHT+IELd7l6EyoDFaFNGZC5uZbM1lQMJV0IFeOzxE7P/kBORfB2Op/gCFMV0iEmD5oxOQZ9P/9M1A==
-X-Received: by 2002:a17:902:dac9:b0:1dc:623d:1c3f with SMTP id q9-20020a170902dac900b001dc623d1c3fmr6537152plx.6.1708859020584;
-        Sun, 25 Feb 2024 03:03:40 -0800 (PST)
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id 21-20020a170902ee5500b001db337d53ddsm2096075plo.56.2024.02.25.03.03.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 03:03:40 -0800 (PST)
-Date: Sun, 25 Feb 2024 08:04:29 -0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2024; t=1708859018;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=15Blst29HGQPopSfvgIrNbaX0gzGv9i907KA2hfl4tk=;
-	b=ocdENja46D86FdLm2EarmlZS4PgyoWsVIdnZ93d37/F21HD68dZ7RNKI3B7j1a5AxAzDJt
-	KOdQIv20ECLNa8GC7L62qFh6VCg84LtkGvbHCWZnDkRbSBaFvrXtAfoyMn7DSZay0G7TYn
-	CECcZEZgbEzLd5Xnd81953pSQeHA3k3PV8JxjHE3pzHK6gG3OC1ey/8s9b7GM519Gljetj
-	Fh3376sZrnEoB60Kn8UApdsXcT/6xp4UEERp4mX9CxxOJA+4C6dvQc3sQsPHw5hGlXL+Jk
-	galLyTs23wLBpGAmG0jJ6WNvC0TDgmkDchAn2EjZ1Eq1RDiL6YqmBeWrz8fWtA==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alex Elder <elder@ieee.org>, Johan Hovold <johan@kernel.org>, 
-	Alex Elder <elder@kernel.org>, greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] greybus: constify the struct device_type usage
-Message-ID: <yru2ywkyqwhg3rpyuqkkx73fxkkgsfj3vcbttnzrjq662ctrov@boh65bhxjjgo>
-References: <20240219-device_cleanup-greybus-v1-1-babb3f65e8cc@marliere.net>
- <cf5b2696-d7ca-40fc-856a-52f352cd270c@ieee.org>
- <ids3525jm5zkwkgizt2xtg3do37kqqtfdy5gc2cptdduexoe7r@cr4yxh3tykkh>
- <2024022553-deepness-sublevel-73de@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8gIIyjJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D73ABC433F1;
+	Sun, 25 Feb 2024 11:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708859950;
+	bh=zfoAQj3q170+Q5p9j4Wy1GVCIr8BVqhJWh3gz38npRU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=K8gIIyjJq71NnkfCDh0Rd9WCrtifujKFBg1aNWBOPqiMd32ovI0KE1S+LU3t5w+oN
+	 cLZmGMva29/iBIIESUFWFKN96kEBqPgLExpuKCeFoCyM97VD4XRC1h/DCawys+ZVa2
+	 AtW/vxKUZLebKkQqQqJWhoROcmxyjhPAHm+Te2bOyJkNJQ4dSt+/HalwRrQzrwv4Zc
+	 AubqLj/aODjWUdkPkPJJJr2sAFB2nogsTQxC9RqNGqirBdP/a8wZg3Oz9Kv3Jfnjiy
+	 KVtebLl1qVlBHXgpFS+kituNN0znBrXuBKjdgyBTDjTkid4t7WLVSD88XS5BpWqqW0
+	 Eh3T+Bm7COZkQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1reCXC-006X95-Pb;
+	Sun, 25 Feb 2024 11:19:06 +0000
+Date: Sun, 25 Feb 2024 11:19:05 +0000
+Message-ID: <86frxg3i6u.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
+Cc: oliver.upton@linux.dev,
+	james.morse@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	sauravsc@amazon.com, Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 1/1] KVM: arm64: Affinity level 3 support
+In-Reply-To: <20240225090237.775573-2-r09922117@csie.ntu.edu.tw>
+References: <20240225090237.775573-1-r09922117@csie.ntu.edu.tw>
+	<20240225090237.775573-2-r09922117@csie.ntu.edu.tw>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024022553-deepness-sublevel-73de@gregkh>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: r09922117@csie.ntu.edu.tw, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, sauravsc@amazon.com, eric.auger@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 25 Feb 09:33, Greg Kroah-Hartman wrote:
-> On Sat, Feb 24, 2024 at 05:22:39PM -0300, Ricardo B. Marliere wrote:
-> > On 24 Feb 09:43, Alex Elder wrote:
-> > > On 2/19/24 6:40 AM, Ricardo B. Marliere wrote:
-> > > > Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
-> > > > core can properly handle constant struct device_type. Move the
-> > > > greybus_hd_type, greybus_module_type, greybus_interface_type,
-> > > > greybus_control_type, greybus_bundle_type and greybus_svc_type variables to
-> > > > be constant structures as well, placing it into read-only memory which can
-> > > > not be modified at runtime.
-> > > > 
-> > > > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> > > 
-> > > This looks good to me.  Assuming it compiles cleanly:
-> > > 
-> > > Reviewed-by: Alex Elder <elder@linaro.org>
-> > 
-> > Hi Alex!
-> > 
-> > Thanks for reviewing.
-> > 
-> > > 
-> > > On another subject:
-> > > 
-> > > Johan might disagree, but I think it would be nice to make
-> > > the definitions of the Greybus device types as static (private)
-> > > and make the is_gb_host_device() etc. functions real functions
-> > > rather than static inlines in <linux/greybus.h>.
-> > > 
-> > > It turns out that all of the is_gb_*() functions are called only
-> > > from drivers/greybus/core.c; they could all be moved there rather
-> > > than advertising them in <linux/greybus.h>.
-> > 
-> > I guess it depends whether they would be used somewhere else in the
-> > future. Perhaps it was left there with that intention when it was first
-> > being developed? I agree, though. Will happily send a patch with this if
-> > desired.
-> 
-> Let's clean the code up for what we have today.  If it's needed in the
-> future, we can move the structures then.
+[+Eric who was looking into something related recently]
 
-Sounds good to me, will send a v2 then!
+Hi Wei-Lin,
 
-Thank you,
--	Ricardo.
+Thanks for looking into this.
 
+On Sun, 25 Feb 2024 09:02:37 +0000,
+Wei-Lin Chang <r09922117@csie.ntu.edu.tw> wrote:
+>=20
+> Currently, KVM ARM64 avoids using the Aff3 field for VCPUs, which saves
+> us from having to check for hardware support in ICH_VTR_EL2.A3V or the
 
-> 
-> thanks,
-> 
-> greg k-h
+That's not strictly true. We do check for A3V support at restore time.
+
+> guest's execution state. However a VCPU could still have its Aff3 bits
+> set to non-zero if the VMM directly changes the VCPU's MPIDR_EL1. This
+> causes a mismatch between MPIDR_EL1.Aff3 and GICR_TYPER[63:56] since 0s
+> are always returned for the latter, failing the GIC Redistributor
+> matching in the VM.
+>=20
+> Let's fix this by only allowing userspace to write into the Aff3 field
+> of MPIDR_EL1 if Aff3 is valid.
+
+What does "valid" means here? 0 *is* a valid value. Or do you mean a
+non-zero value? Also, this now creates a dependency between GICR_TYPER
+and MPIDR_EL1. How is userspace supposed to order those when restoring
+a VM?
+
+> Additionally, extend reset_mpidr and
+> vgic_mmio_{read,write}_irouter to fully support Aff3. With theses
+> changes, GICR_TYPER can then safely return all four affinity levels.
+>=20
+> Suggested-by: Saurav Sachidanand <sauravsc@amazon.com>
+> Signed-off-by: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
+> ---
+>  arch/arm64/kvm/sys_regs.c          | 24 +++++++++++++++++++++---
+>  arch/arm64/kvm/vgic/vgic-debug.c   |  2 +-
+>  arch/arm64/kvm/vgic/vgic-mmio-v3.c | 18 +++++++++++-------
+>  include/kvm/arm_vgic.h             |  7 ++++++-
+>  4 files changed, 39 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 30253bd199..6694ce851a 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -239,6 +239,19 @@ static u8 get_min_cache_line_size(bool icache)
+>  	return field + 2;
+>  }
+> =20
+> +static int set_mpidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r=
+d,
+> +		   u64 val)
+> +{
+> +	bool aff3_valid =3D !vcpu_el1_is_32bit(vcpu) && kvm_vgic_has_a3v();
+
+What does this mean for a guest that doesn't have a GICv3?
+
+> +
+> +	if (!aff3_valid)
+> +		val &=3D ~((u64)MPIDR_LEVEL_MASK << MPIDR_LEVEL_SHIFT(3));
+> +
+> +	__vcpu_sys_reg(vcpu, rd->reg) =3D val;
+> +
+> +	return 0;
+> +}
+> +
+>  /* Which cache CCSIDR represents depends on CSSELR value. */
+>  static u32 get_ccsidr(struct kvm_vcpu *vcpu, u32 csselr)
+>  {
+> @@ -817,10 +830,12 @@ static u64 reset_actlr(struct kvm_vcpu *vcpu, const=
+ struct sys_reg_desc *r)
+>  static u64 reset_mpidr(struct kvm_vcpu *vcpu, const struct sys_reg_desc =
+*r)
+>  {
+>  	u64 mpidr;
+> +	bool aff3_valid =3D !vcpu_el1_is_32bit(vcpu) && kvm_vgic_has_a3v();
+
+Same thing.
+
+>
+>  	/*
+> -	 * Map the vcpu_id into the first three affinity level fields of
+> -	 * the MPIDR. We limit the number of VCPUs in level 0 due to a
+> +	 * Map the vcpu_id into the affinity level fields of the MPIDR. The
+> +	 * fourth level is mapped only if we are running a 64 bit guest and
+> +	 * A3V is supported. We limit the number of VCPUs in level 0 due to a
+>  	 * limitation to 16 CPUs in that level in the ICC_SGIxR registers
+>  	 * of the GICv3 to be able to address each CPU directly when
+>  	 * sending IPIs.
+> @@ -828,6 +843,8 @@ static u64 reset_mpidr(struct kvm_vcpu *vcpu, const s=
+truct sys_reg_desc *r)
+>  	mpidr =3D (vcpu->vcpu_id & 0x0f) << MPIDR_LEVEL_SHIFT(0);
+>  	mpidr |=3D ((vcpu->vcpu_id >> 4) & 0xff) << MPIDR_LEVEL_SHIFT(1);
+>  	mpidr |=3D ((vcpu->vcpu_id >> 12) & 0xff) << MPIDR_LEVEL_SHIFT(2);
+> +	if (aff3_valid)
+> +		mpidr |=3D (u64)((vcpu->vcpu_id >> 20) & 0xff) << MPIDR_LEVEL_SHIFT(3);
+
+=46rom virt/kcvm/kvm_main.c:
+
+static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
+{
+	int r;
+	struct kvm_vcpu *vcpu;
+	struct page *page;
+
+	if (id >=3D KVM_MAX_VCPU_IDS)
+		return -EINVAL;
+
+        [...]
+}
+
+So vcpu_id is capped at KVM_MAX_VCPU_IDS, which is 512 on arm64. How
+does this ever produce anything other than 0? This is, by the way,
+already true for Aff2. Which is why I have always found this change
+extremely questionable: why do you need to describe 2^32 CPUs when you
+can only create 512?
+
+>  	mpidr |=3D (1ULL << 31);
+>  	vcpu_write_sys_reg(vcpu, mpidr, MPIDR_EL1);
+> =20
+> @@ -2232,7 +2249,8 @@ static const struct sys_reg_desc sys_reg_descs[] =
+=3D {
+> =20
+>  	{ SYS_DESC(SYS_DBGVCR32_EL2), trap_undef, reset_val, DBGVCR32_EL2, 0 },
+> =20
+> -	{ SYS_DESC(SYS_MPIDR_EL1), NULL, reset_mpidr, MPIDR_EL1 },
+> +	{ SYS_DESC(SYS_MPIDR_EL1), NULL, reset_mpidr, MPIDR_EL1,
+> +	  .get_user =3D NULL, .set_user =3D set_mpidr },
+> =20
+>  	/*
+>  	 * ID regs: all ID_SANITISED() entries here must have corresponding
+> diff --git a/arch/arm64/kvm/vgic/vgic-debug.c b/arch/arm64/kvm/vgic/vgic-=
+debug.c
+> index 85606a531d..726cf1bd7b 100644
+> --- a/arch/arm64/kvm/vgic/vgic-debug.c
+> +++ b/arch/arm64/kvm/vgic/vgic-debug.c
+> @@ -206,7 +206,7 @@ static void print_irq_state(struct seq_file *s, struc=
+t vgic_irq *irq,
+>  		      "    %2d "
+>  		      "%d%d%d%d%d%d%d "
+>  		      "%8d "
+> -		      "%8x "
+> +		      "%8llx "
+>  		      " %2x "
+>  		      "%3d "
+>  		      "     %2d "
+> diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgi=
+c-mmio-v3.c
+> index c15ee1df03..ea0d4ad85a 100644
+> --- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+> +++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+> @@ -195,13 +195,13 @@ static unsigned long vgic_mmio_read_irouter(struct =
+kvm_vcpu *vcpu,
+>  {
+>  	int intid =3D VGIC_ADDR_TO_INTID(addr, 64);
+>  	struct vgic_irq *irq =3D vgic_get_irq(vcpu->kvm, NULL, intid);
+> +	bool aff3_valid =3D !vcpu_el1_is_32bit(vcpu) && kvm_vgic_has_a3v();
+
+Hint: if you need to write the same expression more than once, you
+probably need a helper for it. Meaning that you will only have to fix
+it once.
+
+>  	unsigned long ret =3D 0;
+> =20
+>  	if (!irq)
+>  		return 0;
+> =20
+> -	/* The upper word is RAZ for us. */
+> -	if (!(addr & 4))
+> +	if (aff3_valid || !(addr & 4))
+>  		ret =3D extract_bytes(READ_ONCE(irq->mpidr), addr & 7, len);
+>
+>  	vgic_put_irq(vcpu->kvm, irq);
+> @@ -213,11 +213,12 @@ static void vgic_mmio_write_irouter(struct kvm_vcpu=
+ *vcpu,
+>  				    unsigned long val)
+>  {
+>  	int intid =3D VGIC_ADDR_TO_INTID(addr, 64);
+> +	bool aff3_valid =3D !vcpu_el1_is_32bit(vcpu) && kvm_vgic_has_a3v();
+>  	struct vgic_irq *irq;
+>  	unsigned long flags;
+> =20
+> -	/* The upper word is WI for us since we don't implement Aff3. */
+> -	if (addr & 4)
+> +	/* The upper word is WI if Aff3 is not valid. */
+> +	if (!aff3_valid && addr & 4)
+>  		return;
+> =20
+>  	irq =3D vgic_get_irq(vcpu->kvm, NULL, intid);
+> @@ -227,8 +228,7 @@ static void vgic_mmio_write_irouter(struct kvm_vcpu *=
+vcpu,
+> =20
+>  	raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> =20
+> -	/* We only care about and preserve Aff0, Aff1 and Aff2. */
+> -	irq->mpidr =3D val & GENMASK(23, 0);
+> +	irq->mpidr =3D val & MPIDR_HWID_BITMASK;
+>  	irq->target_vcpu =3D kvm_mpidr_to_vcpu(vcpu->kvm, irq->mpidr);
+> =20
+>  	raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+> @@ -323,7 +323,11 @@ static unsigned long vgic_mmio_read_v3r_typer(struct=
+ kvm_vcpu *vcpu,
+>  	int target_vcpu_id =3D vcpu->vcpu_id;
+>  	u64 value;
+> =20
+> -	value =3D (u64)(mpidr & GENMASK(23, 0)) << 32;
+> +	value =3D MPIDR_AFFINITY_LEVEL(mpidr, 3) << 56 |
+> +		MPIDR_AFFINITY_LEVEL(mpidr, 2) << 48 |
+> +		MPIDR_AFFINITY_LEVEL(mpidr, 1) << 40 |
+> +		MPIDR_AFFINITY_LEVEL(mpidr, 0) << 32;
+
+Maybe it is time to describe these shifts in an include file, and use
+FIELD_PREP() to construct the whole thing. It will be a lot more
+readable.
+
+> +
+>  	value |=3D ((target_vcpu_id & 0xffff) << 8);
+> =20
+>  	if (vgic_has_its(vcpu->kvm))
+> diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+> index 8cc38e836f..b464ac1b79 100644
+> --- a/include/kvm/arm_vgic.h
+> +++ b/include/kvm/arm_vgic.h
+> @@ -143,7 +143,7 @@ struct vgic_irq {
+>  	unsigned int host_irq;		/* linux irq corresponding to hwintid */
+>  	union {
+>  		u8 targets;			/* GICv2 target VCPUs mask */
+> -		u32 mpidr;			/* GICv3 target VCPU */
+> +		u64 mpidr;			/* GICv3 target VCPU */
+
+Do we really need to grow each interrupt object by 4 bytes, specially
+when we at most use 4 bytes? I'd rather we store the affinity in a
+compact way and change the way we compare it to the vcpu's MPIDR_EL1.
+
+>  	};
+>  	u8 source;			/* GICv2 SGIs only */
+>  	u8 active_source;		/* GICv2 SGIs only */
+> @@ -413,6 +413,11 @@ static inline int kvm_vgic_get_max_vcpus(void)
+>  	return kvm_vgic_global_state.max_gic_vcpus;
+>  }
+> =20
+> +static inline bool kvm_vgic_has_a3v(void)
+> +{
+> +	return kvm_vgic_global_state.ich_vtr_el2 & ICH_VTR_A3V_MASK;
+> +}
+> +
+
+I can see multiple problems with this:
+
+- this is the host state, which shouldn't necessarily represent the
+  guest state. It should be possible to restore a VM that have a
+  different A3V value and still have the same guarantees.  There is
+  however a small nit around ICV_CTLR_EL1.A3V, which would require
+  trapping to emulate the A3V bit.
+
+- this assumes GICv3, which is definitely not universal (we support
+  GICv2, for which no such restriction actually exists).
+
+Finally, I don't see VM save/restore being addressed here, and I
+suspect it hasn't been looked at.
+
+Overall, this patch does too many things, and it should be split in
+discrete changes. I also want to see an actual justification for Aff3
+support. And if we introduce it, it must be fully virtualised
+(independent of the A3V support on the host).
+
+Thanks,
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
