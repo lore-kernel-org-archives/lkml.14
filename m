@@ -1,41 +1,41 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF82C6110
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 02:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E562168DA
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 02:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708828724; cv=none; b=f33UeqjZtwse7s3J1oG0Ff5VEHRNH+O/OhdgbAcPcbGMMyBb4p7AimDjSqY1MB3Yrpr0grdCdWNx6GjZ24sGOCX14BZjdO2zYlc69MtXTuG4lKLMszHm6LhL4vVqdT0JzOfZqStd/M916bxcPnI4S5IoZ0pbNW7pVQn2DRnjZ8I=
+	t=1708828733; cv=none; b=JB4sUai3dlJ8cyi+hObd9DEuZUhGQzx3/9b7Yuxb/N9ONwSHy+SogVWOWEyF4dhFjVXC6qlxl2umN9LmIPkP16qLIfdgyHVICnzCReEDvi3dyrCDsFk269+jjayLXtRHMDrZhQMiUt+s/JSi5GT5YXR9e/f8RoSjphP45rc7CBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708828724; c=relaxed/simple;
-	bh=Uiispgyd16fXObybQtFcG61HaR8E3O/9zhg2YHGpe6M=;
+	s=arc-20240116; t=1708828733; c=relaxed/simple;
+	bh=Na222wNarH0rNKP8Cur5R0WSBSTXS7OOq3fMMHi1W9w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W9eT8vDFfiNkS0Y5J3k9eOMqOadO9gxpBRVH7QqvNnlEwBDSq5XZdL5yLS4GVYOMQyzYWGsKgnqOv27BmvzO04cFWCcJIj7QytKXxj4GzEkTbyLq1FOK+AWe9tzD0TlIPCbNHxajp4xzfj8M/bCK3e6GYi4zlETaXEYQLy8BISQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t7fnIL2w; arc=none smtp.client-ip=95.215.58.177
+	 MIME-Version; b=ifJw76oPuyh5dLBf7rkUZsBqVW7qZ7v2lah4JfOVMMcMOZxpHHipWu70b4rmsh0E6yPgfaVCcAne0bL4xD37pYB8HgNBFs9OoVLKABQe1Lwvd+gxtOsjyXW7/zIr714ZHcTRA6IXamh+zXNCqj7vJqFnGBxymet30nshVL981qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bn14oTRh; arc=none smtp.client-ip=95.215.58.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t7fnIL2w"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bn14oTRh"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708828718;
+	t=1708828727;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4Tn76/W0CbcMhsnTJQ9k3lY0axZy5xliCVw9DtTqxy8=;
-	b=t7fnIL2wcLeCy/VOq8jcCQf5gADKop8vRerdJn6/OLbp0bN6Bu+GF8RVrqLEey2W/ad3Sw
-	B6Sdo2r/2qdSHPWsDgDJq1VRRjbEv2yWwk1ri6Wxh4Q2tiSGvnT662Lemw2MAX/52gPLK1
-	M1UgpiPx3yVEpu6obP8RunSyd/tK5kA=
+	bh=EbUhq312t/ujD/5UG8QAGFllKHwHozY0sW6mmTZ6ZAg=;
+	b=bn14oTRhbAz1DzfQxtsQ0EIOmJJero91RqdDt5e6rIIKFno/DqERwr1CqAB+v7uzC3iGvp
+	3Tp4f2RIv9O1RxQko0h+Bif6mNgLnuVpCa2iY+j0sv9Ymk155LDxpur7zMYjx4NZiaH4FI
+	wc25Q6Dayxmicj4npQRYDzT7dIQShqw=
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: linux-bcachefs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Kent Overstreet <kent.overstreet@linux.dev>,
 	djwong@kernel.org,
 	bfoster@redhat.com
-Subject: [PATCH 04/21] bcachefs: Disk space accounting rewrite
-Date: Sat, 24 Feb 2024 21:38:06 -0500
-Message-ID: <20240225023826.2413565-5-kent.overstreet@linux.dev>
+Subject: [PATCH 14/21] bcachefs: Convert gc to new accounting
+Date: Sat, 24 Feb 2024 21:38:16 -0500
+Message-ID: <20240225023826.2413565-15-kent.overstreet@linux.dev>
 In-Reply-To: <20240225023826.2413565-1-kent.overstreet@linux.dev>
 References: <20240225023826.2413565-1-kent.overstreet@linux.dev>
 Precedence: bulk
@@ -47,1846 +47,1882 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Main part of the disk accounting rewrite.
+Rewrite fsck/gc for the new accounting scheme.
 
-This is a wholesale rewrite of the existing disk space accounting, which
-relies on percepu counters that are sharded by journal buffer, and
-rolled up and added to each journal write.
-
-With the new scheme, every set of counters is a distinct key in the
-accounting btree; this fixes scaling limitations of the old scheme,
-where counters took up space in each journal entry and required multiple
-percpu counters.
-
-Now, in memory accounting requires a single set of percpu counters - not
-multiple for each in flight journal buffer - and in the future we'll
-probably also have counters that don't use in memory percpu counters,
-they're not strictly required.
-
-An accounting update is now a normal btree update, using the btree write
-buffer path. At transaction commit time, we apply accounting updates to
-the in memory counters, which are percpu counters indexed in an
-eytzinger tree by the accounting key.
+This adds a second set of in-memory accounting counters for gc to use;
+like with other parts of gc we run all trigger in TRIGGER_GC mode, then
+compare what we calculated to existing in-memory accounting at the end.
 
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- fs/bcachefs/alloc_background.c      |  68 +++++-
- fs/bcachefs/bcachefs.h              |   6 +-
- fs/bcachefs/bcachefs_format.h       |   1 -
- fs/bcachefs/bcachefs_ioctl.h        |   7 +-
- fs/bcachefs/btree_gc.c              |   3 +-
- fs/bcachefs/btree_iter.c            |   9 -
- fs/bcachefs/btree_trans_commit.c    |  62 ++++--
- fs/bcachefs/btree_types.h           |   1 -
- fs/bcachefs/btree_update.h          |   8 -
- fs/bcachefs/buckets.c               | 289 +++++---------------------
- fs/bcachefs/buckets.h               |  33 +--
- fs/bcachefs/disk_accounting.c       | 308 ++++++++++++++++++++++++++++
- fs/bcachefs/disk_accounting.h       | 126 ++++++++++++
- fs/bcachefs/disk_accounting_types.h |  20 ++
- fs/bcachefs/ec.c                    |  24 ++-
- fs/bcachefs/inode.c                 |   9 +-
- fs/bcachefs/recovery.c              |  12 +-
- fs/bcachefs/recovery_types.h        |   1 +
- fs/bcachefs/replicas.c              |  42 ++--
- fs/bcachefs/replicas.h              |  11 +-
- fs/bcachefs/replicas_types.h        |  16 --
- fs/bcachefs/sb-errors_types.h       |   3 +-
- fs/bcachefs/super.c                 |  49 +++--
- 23 files changed, 704 insertions(+), 404 deletions(-)
- create mode 100644 fs/bcachefs/disk_accounting_types.h
+ fs/bcachefs/alloc_background.c   | 181 +++++++++++-----------
+ fs/bcachefs/alloc_background.h   |   2 +
+ fs/bcachefs/bcachefs.h           |   4 +-
+ fs/bcachefs/btree_gc.c           | 257 ++++++++++---------------------
+ fs/bcachefs/btree_trans_commit.c |   4 +-
+ fs/bcachefs/buckets.c            | 182 ++++------------------
+ fs/bcachefs/buckets.h            |  20 +--
+ fs/bcachefs/buckets_types.h      |   7 -
+ fs/bcachefs/disk_accounting.c    | 171 +++++++++++++++++---
+ fs/bcachefs/disk_accounting.h    |  81 ++++++----
+ fs/bcachefs/ec.c                 | 148 +++++++++---------
+ fs/bcachefs/inode.c              |  43 ++----
+ fs/bcachefs/recovery.c           |   3 +-
+ fs/bcachefs/replicas.c           |  86 +----------
+ fs/bcachefs/replicas.h           |   1 -
+ fs/bcachefs/super.c              |   9 +-
+ 16 files changed, 508 insertions(+), 691 deletions(-)
 
 diff --git a/fs/bcachefs/alloc_background.c b/fs/bcachefs/alloc_background.c
-index ccd6cbfd470e..d8ad5bb28a7f 100644
+index d8ad5bb28a7f..54cb345b104c 100644
 --- a/fs/bcachefs/alloc_background.c
 +++ b/fs/bcachefs/alloc_background.c
-@@ -14,6 +14,7 @@
- #include "buckets_waiting_for_journal.h"
+@@ -731,6 +731,96 @@ static noinline int bch2_bucket_gen_update(struct btree_trans *trans,
+ 	return ret;
+ }
+ 
++static int bch2_alloc_key_to_dev_counters(struct btree_trans *trans, struct bch_dev *ca,
++					  const struct bch_alloc_v4 *old_a,
++					  const struct bch_alloc_v4 *new_a,
++					  unsigned flags)
++{
++	bool gc = flags & BTREE_TRIGGER_GC;
++
++	if ((flags & BTREE_TRIGGER_BUCKET_INVALIDATE) &&
++	    old_a->cached_sectors) {
++		int ret = bch2_mod_dev_cached_sectors(trans, ca->dev_idx,
++				 -((s64) old_a->cached_sectors), gc);
++		if (ret)
++			return ret;
++	}
++
++	if (old_a->data_type != new_a->data_type ||
++	    old_a->dirty_sectors != new_a->dirty_sectors) {
++		struct disk_accounting_key acc = {
++			.type = BCH_DISK_ACCOUNTING_dev_data_type,
++			.dev_data_type.dev = ca->dev_idx,
++			.dev_data_type.data_type = new_a->data_type,
++		};
++		s64 d[3];
++
++		if (old_a->data_type == new_a->data_type) {
++			d[0] = 0;
++			d[1] = (s64) new_a->dirty_sectors - (s64) old_a->dirty_sectors;
++			d[2] =  bucket_sectors_fragmented(ca, *new_a) -
++				bucket_sectors_fragmented(ca, *old_a);
++
++			int ret = bch2_disk_accounting_mod(trans, &acc, d, 3, gc);
++			if (ret)
++				return ret;
++		} else {
++			d[0] = 1;
++			d[1] = new_a->dirty_sectors;
++			d[2] = bucket_sectors_fragmented(ca, *new_a);
++
++			int ret = bch2_disk_accounting_mod(trans, &acc, d, 3, gc);
++			if (ret)
++				return ret;
++
++			acc.dev_data_type.data_type = old_a->data_type;
++			d[0] = -1;
++			d[1] = -(s64) old_a->dirty_sectors;
++			d[2] = -bucket_sectors_fragmented(ca, *old_a);
++
++			ret = bch2_disk_accounting_mod(trans, &acc, d, 3, gc);
++			if (ret)
++				return ret;
++		}
++	}
++
++	if (!!old_a->stripe != !!new_a->stripe) {
++		struct disk_accounting_key acc = {
++			.type = BCH_DISK_ACCOUNTING_dev_stripe_buckets,
++			.dev_stripe_buckets.dev = ca->dev_idx,
++		};
++		u64 d[1];
++
++		d[0] = (s64) !!new_a->stripe - (s64) !!old_a->stripe;
++		int ret = bch2_disk_accounting_mod(trans, &acc, d, 1, gc);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static inline struct bch_alloc_v4 bucket_m_to_alloc(struct bucket b)
++{
++	return (struct bch_alloc_v4) {
++		.gen		= b.gen,
++		.data_type	= b.data_type,
++		.dirty_sectors	= b.dirty_sectors,
++		.cached_sectors	= b.cached_sectors,
++		.stripe		= b.stripe,
++	};
++}
++
++int bch2_bucket_to_dev_counters(struct btree_trans *trans, struct bch_dev *ca,
++				struct bucket *old, struct bucket *new,
++				unsigned flags)
++{
++	struct bch_alloc_v4 old_a = bucket_m_to_alloc(*old);
++	struct bch_alloc_v4 new_a = bucket_m_to_alloc(*new);
++
++	return bch2_alloc_key_to_dev_counters(trans, ca, &old_a, &new_a, flags);
++}
++
+ int bch2_trigger_alloc(struct btree_trans *trans,
+ 		       enum btree_id btree, unsigned level,
+ 		       struct bkey_s_c old, struct bkey_s new,
+@@ -807,70 +897,9 @@ int bch2_trigger_alloc(struct btree_trans *trans,
+ 				return ret;
+ 		}
+ 
+-		/*
+-		 * need to know if we're getting called from the invalidate path or
+-		 * not:
+-		 */
+-
+-		if ((flags & BTREE_TRIGGER_BUCKET_INVALIDATE) &&
+-		    old_a->cached_sectors) {
+-			ret = bch2_mod_dev_cached_sectors(trans, new.k->p.inode,
+-							  -((s64) old_a->cached_sectors));
+-			if (ret)
+-				return ret;
+-		}
+-
+-
+-		if (old_a->data_type != new_a->data_type ||
+-		    old_a->dirty_sectors != new_a->dirty_sectors) {
+-			struct disk_accounting_key acc = {
+-				.type = BCH_DISK_ACCOUNTING_dev_data_type,
+-				.dev_data_type.dev = new.k->p.inode,
+-				.dev_data_type.data_type = new_a->data_type,
+-			};
+-			s64 d[3];
+-
+-			if (old_a->data_type == new_a->data_type) {
+-				d[0] = 0;
+-				d[1] = (s64) new_a->dirty_sectors - (s64) old_a->dirty_sectors;
+-				d[2] =  bucket_sectors_fragmented(ca, *new_a) -
+-					bucket_sectors_fragmented(ca, *old_a);
+-
+-				ret = bch2_disk_accounting_mod(trans, &acc, d, 3);
+-				if (ret)
+-					return ret;
+-			} else {
+-				d[0] = 1;
+-				d[1] = new_a->dirty_sectors;
+-				d[2] = bucket_sectors_fragmented(ca, *new_a);
+-
+-				ret = bch2_disk_accounting_mod(trans, &acc, d, 3);
+-				if (ret)
+-					return ret;
+-
+-				acc.dev_data_type.data_type = old_a->data_type;
+-				d[0] = -1;
+-				d[1] = -(s64) old_a->dirty_sectors;
+-				d[2] = -bucket_sectors_fragmented(ca, *old_a);
+-
+-				ret = bch2_disk_accounting_mod(trans, &acc, d, 3);
+-				if (ret)
+-					return ret;
+-			}
+-		}
+-
+-		if (!!old_a->stripe != !!new_a->stripe) {
+-			struct disk_accounting_key acc = {
+-				.type = BCH_DISK_ACCOUNTING_dev_stripe_buckets,
+-				.dev_stripe_buckets.dev = new.k->p.inode,
+-			};
+-			u64 d[1];
+-
+-			d[0] = (s64) !!new_a->stripe - (s64) !!old_a->stripe;
+-			ret = bch2_disk_accounting_mod(trans, &acc, d, 1);
+-			if (ret)
+-				return ret;
+-		}
++		ret = bch2_alloc_key_to_dev_counters(trans, ca, old_a, new_a, flags);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	if ((flags & BTREE_TRIGGER_ATOMIC) && (flags & BTREE_TRIGGER_INSERT)) {
+@@ -938,30 +967,6 @@ int bch2_trigger_alloc(struct btree_trans *trans,
+ 			bch2_do_gc_gens(c);
+ 	}
+ 
+-	if ((flags & BTREE_TRIGGER_GC) &&
+-	    (flags & BTREE_TRIGGER_BUCKET_INVALIDATE)) {
+-		struct bch_alloc_v4 new_a_convert;
+-		const struct bch_alloc_v4 *new_a = bch2_alloc_to_v4(new.s_c, &new_a_convert);
+-
+-		percpu_down_read(&c->mark_lock);
+-		struct bucket *g = gc_bucket(ca, new.k->p.offset);
+-
+-		bucket_lock(g);
+-
+-		g->gen_valid		= 1;
+-		g->gen			= new_a->gen;
+-		g->data_type		= new_a->data_type;
+-		g->stripe		= new_a->stripe;
+-		g->stripe_redundancy	= new_a->stripe_redundancy;
+-		g->dirty_sectors	= new_a->dirty_sectors;
+-		g->cached_sectors	= new_a->cached_sectors;
+-
+-		bucket_unlock(g);
+-		percpu_up_read(&c->mark_lock);
+-
+-		bch2_dev_usage_update(c, ca, old_a, new_a);
+-	}
+-
+ 	return 0;
+ }
+ 
+diff --git a/fs/bcachefs/alloc_background.h b/fs/bcachefs/alloc_background.h
+index 052b2fac25d6..6f273a456a6d 100644
+--- a/fs/bcachefs/alloc_background.h
++++ b/fs/bcachefs/alloc_background.h
+@@ -228,6 +228,8 @@ static inline bool bkey_is_alloc(const struct bkey *k)
+ 
+ int bch2_alloc_read(struct bch_fs *);
+ 
++int bch2_bucket_to_dev_counters(struct btree_trans *, struct bch_dev *,
++				struct bucket *, struct bucket *, unsigned);
+ int bch2_trigger_alloc(struct btree_trans *, enum btree_id, unsigned,
+ 		       struct bkey_s_c, struct bkey_s, unsigned);
+ int bch2_check_alloc_info(struct bch_fs *);
+diff --git a/fs/bcachefs/bcachefs.h b/fs/bcachefs/bcachefs.h
+index 22dc455cb436..41c436c608cf 100644
+--- a/fs/bcachefs/bcachefs.h
++++ b/fs/bcachefs/bcachefs.h
+@@ -577,7 +577,6 @@ struct bch_dev {
+ 	struct rw_semaphore	bucket_lock;
+ 
+ 	struct bch_dev_usage __percpu	*usage;
+-	struct bch_dev_usage __percpu	*usage_gc;
+ 
+ 	/* Allocator: */
+ 	u64			new_fs_bucket_idx;
+@@ -761,7 +760,7 @@ struct bch_fs {
+ 
+ 	struct bch_dev __rcu	*devs[BCH_SB_MEMBERS_MAX];
+ 
+-	struct bch_accounting_mem accounting;
++	struct bch_accounting_mem accounting[2];
+ 
+ 	struct bch_replicas_cpu replicas;
+ 	struct bch_replicas_cpu replicas_gc;
+@@ -906,7 +905,6 @@ struct bch_fs {
+ 
+ 	seqcount_t			usage_lock;
+ 	struct bch_fs_usage_base __percpu *usage;
+-	struct bch_fs_usage __percpu	*usage_gc;
+ 	u64 __percpu		*online_reserved;
+ 
+ 	struct io_clock		io_clock[2];
+diff --git a/fs/bcachefs/btree_gc.c b/fs/bcachefs/btree_gc.c
+index 15a8796197f3..54a90e88f5b8 100644
+--- a/fs/bcachefs/btree_gc.c
++++ b/fs/bcachefs/btree_gc.c
+@@ -18,6 +18,7 @@
+ #include "buckets.h"
  #include "clock.h"
  #include "debug.h"
 +#include "disk_accounting.h"
  #include "ec.h"
  #include "error.h"
- #include "lru.h"
-@@ -813,8 +814,60 @@ int bch2_trigger_alloc(struct btree_trans *trans,
+ #include "extents.h"
+@@ -1115,10 +1116,10 @@ static int bch2_gc_btrees(struct bch_fs *c, bool initial, bool metadata_only)
+ 	return ret;
+ }
  
- 		if ((flags & BTREE_TRIGGER_BUCKET_INVALIDATE) &&
- 		    old_a->cached_sectors) {
--			ret = bch2_update_cached_sectors_list(trans, new.k->p.inode,
--							      -((s64) old_a->cached_sectors));
-+			ret = bch2_mod_dev_cached_sectors(trans, new.k->p.inode,
-+							  -((s64) old_a->cached_sectors));
+-static void mark_metadata_sectors(struct bch_fs *c, struct bch_dev *ca,
+-				  u64 start, u64 end,
+-				  enum bch_data_type type,
+-				  unsigned flags)
++static int mark_metadata_sectors(struct btree_trans *trans, struct bch_dev *ca,
++				 u64 start, u64 end,
++				 enum bch_data_type type,
++				 unsigned flags)
+ {
+ 	u64 b = sector_to_bucket(ca, start);
+ 
+@@ -1126,48 +1127,68 @@ static void mark_metadata_sectors(struct bch_fs *c, struct bch_dev *ca,
+ 		unsigned sectors =
+ 			min_t(u64, bucket_to_sector(ca, b + 1), end) - start;
+ 
+-		bch2_mark_metadata_bucket(c, ca, b, type, sectors,
+-					  gc_phase(GC_PHASE_SB), flags);
++		int ret = bch2_mark_metadata_bucket(trans, ca, b, type, sectors,
++						    gc_phase(GC_PHASE_SB), flags);
++		if (ret)
++			return ret;
++
+ 		b++;
+ 		start += sectors;
+ 	} while (start < end);
++
++	return 0;
+ }
+ 
+-static void bch2_mark_dev_superblock(struct bch_fs *c, struct bch_dev *ca,
+-				     unsigned flags)
++static int bch2_mark_dev_superblock(struct btree_trans *trans, struct bch_dev *ca,
++				    unsigned flags)
+ {
+ 	struct bch_sb_layout *layout = &ca->disk_sb.sb->layout;
+-	unsigned i;
+-	u64 b;
+ 
+-	for (i = 0; i < layout->nr_superblocks; i++) {
++	for (unsigned i = 0; i < layout->nr_superblocks; i++) {
+ 		u64 offset = le64_to_cpu(layout->sb_offset[i]);
+ 
+-		if (offset == BCH_SB_SECTOR)
+-			mark_metadata_sectors(c, ca, 0, BCH_SB_SECTOR,
+-					      BCH_DATA_sb, flags);
++		if (offset == BCH_SB_SECTOR) {
++			int ret = mark_metadata_sectors(trans, ca, 0, BCH_SB_SECTOR,
++							BCH_DATA_sb, flags);
 +			if (ret)
 +				return ret;
 +		}
-+
-+
-+		if (old_a->data_type != new_a->data_type ||
-+		    old_a->dirty_sectors != new_a->dirty_sectors) {
-+			struct disk_accounting_key acc = {
-+				.type = BCH_DISK_ACCOUNTING_dev_data_type,
-+				.dev_data_type.dev = new.k->p.inode,
-+				.dev_data_type.data_type = new_a->data_type,
-+			};
-+			s64 d[3];
-+
-+			if (old_a->data_type == new_a->data_type) {
-+				d[0] = 0;
-+				d[1] = (s64) new_a->dirty_sectors - (s64) old_a->dirty_sectors;
-+				d[2] =  bucket_sectors_fragmented(ca, *new_a) -
-+					bucket_sectors_fragmented(ca, *old_a);
-+
-+				ret = bch2_disk_accounting_mod(trans, &acc, d, 3);
-+				if (ret)
-+					return ret;
-+			} else {
-+				d[0] = 1;
-+				d[1] = new_a->dirty_sectors;
-+				d[2] = bucket_sectors_fragmented(ca, *new_a);
-+
-+				ret = bch2_disk_accounting_mod(trans, &acc, d, 3);
-+				if (ret)
-+					return ret;
-+
-+				acc.dev_data_type.data_type = old_a->data_type;
-+				d[0] = -1;
-+				d[1] = -(s64) old_a->dirty_sectors;
-+				d[2] = -bucket_sectors_fragmented(ca, *old_a);
-+
-+				ret = bch2_disk_accounting_mod(trans, &acc, d, 3);
-+				if (ret)
-+					return ret;
-+			}
-+		}
-+
-+		if (!!old_a->stripe != !!new_a->stripe) {
-+			struct disk_accounting_key acc = {
-+				.type = BCH_DISK_ACCOUNTING_dev_stripe_buckets,
-+				.dev_stripe_buckets.dev = new.k->p.inode,
-+			};
-+			u64 d[1];
-+
-+			d[0] = (s64) !!new_a->stripe - (s64) !!old_a->stripe;
-+			ret = bch2_disk_accounting_mod(trans, &acc, d, 1);
- 			if (ret)
- 				return ret;
- 		}
-@@ -857,12 +910,11 @@ int bch2_trigger_alloc(struct btree_trans *trans,
- 			}
- 		}
  
--		percpu_down_read(&c->mark_lock);
--		if (new_a->gen != old_a->gen)
-+		if (new_a->gen != old_a->gen) {
-+			percpu_down_read(&c->mark_lock);
- 			*bucket_gen(ca, new.k->p.offset) = new_a->gen;
--
--		bch2_dev_usage_update(c, ca, old_a, new_a, journal_seq, false);
--		percpu_up_read(&c->mark_lock);
-+			percpu_up_read(&c->mark_lock);
-+		}
- 
- #define eval_state(_a, expr)		({ const struct bch_alloc_v4 *a = _a; expr; })
- #define statechange(expr)		!eval_state(old_a, expr) && eval_state(new_a, expr)
-@@ -906,6 +958,8 @@ int bch2_trigger_alloc(struct btree_trans *trans,
- 
- 		bucket_unlock(g);
- 		percpu_up_read(&c->mark_lock);
-+
-+		bch2_dev_usage_update(c, ca, old_a, new_a);
- 	}
- 
- 	return 0;
-diff --git a/fs/bcachefs/bcachefs.h b/fs/bcachefs/bcachefs.h
-index 9a24989c9a6a..18c00051a8f6 100644
---- a/fs/bcachefs/bcachefs.h
-+++ b/fs/bcachefs/bcachefs.h
-@@ -207,6 +207,7 @@
- #include <linux/zstd.h>
- 
- #include "bcachefs_format.h"
-+#include "disk_accounting_types.h"
- #include "errcode.h"
- #include "fifo.h"
- #include "nocow_locking_types.h"
-@@ -695,8 +696,6 @@ struct btree_trans_buf {
- 	struct btree_trans	*trans;
- };
- 
--#define REPLICAS_DELTA_LIST_MAX	(1U << 16)
--
- #define BCACHEFS_ROOT_SUBVOL_INUM					\
- 	((subvol_inum) { BCACHEFS_ROOT_SUBVOL,	BCACHEFS_ROOT_INO })
- 
-@@ -763,10 +762,11 @@ struct bch_fs {
- 
- 	struct bch_dev __rcu	*devs[BCH_SB_MEMBERS_MAX];
- 
-+	struct bch_accounting_mem accounting;
-+
- 	struct bch_replicas_cpu replicas;
- 	struct bch_replicas_cpu replicas_gc;
- 	struct mutex		replicas_gc_lock;
--	mempool_t		replicas_delta_pool;
- 
- 	struct journal_entry_res btree_root_journal_res;
- 	struct journal_entry_res replicas_journal_res;
-diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
-index 313ca7dc370d..6edd3fd63bfa 100644
---- a/fs/bcachefs/bcachefs_format.h
-+++ b/fs/bcachefs/bcachefs_format.h
-@@ -1271,7 +1271,6 @@ static inline bool jset_entry_is_key(struct jset_entry *e)
- 	switch (e->type) {
- 	case BCH_JSET_ENTRY_btree_keys:
- 	case BCH_JSET_ENTRY_btree_root:
--	case BCH_JSET_ENTRY_overwrite:
- 	case BCH_JSET_ENTRY_write_buffer_keys:
- 		return true;
- 	}
-diff --git a/fs/bcachefs/bcachefs_ioctl.h b/fs/bcachefs/bcachefs_ioctl.h
-index 4b8fba754b1c..0b82a4dd099f 100644
---- a/fs/bcachefs/bcachefs_ioctl.h
-+++ b/fs/bcachefs/bcachefs_ioctl.h
-@@ -251,10 +251,15 @@ struct bch_replicas_usage {
- 	struct bch_replicas_entry_v1 r;
- } __packed;
- 
-+static inline unsigned replicas_usage_bytes(struct bch_replicas_usage *u)
-+{
-+	return offsetof(struct bch_replicas_usage, r) + replicas_entry_bytes(&u->r);
-+}
-+
- static inline struct bch_replicas_usage *
- replicas_usage_next(struct bch_replicas_usage *u)
- {
--	return (void *) u + replicas_entry_bytes(&u->r) + 8;
-+	return (void *) u + replicas_usage_bytes(u);
- }
- 
- /*
-diff --git a/fs/bcachefs/btree_gc.c b/fs/bcachefs/btree_gc.c
-index 6c52f116098f..2dfa7ca95fc0 100644
---- a/fs/bcachefs/btree_gc.c
-+++ b/fs/bcachefs/btree_gc.c
-@@ -827,7 +827,8 @@ static int bch2_gc_mark_key(struct btree_trans *trans, enum btree_id btree_id,
- 		if (ret)
- 			goto err;
- 
--		if (fsck_err_on(k->k->version.lo > atomic64_read(&c->key_version), c,
-+		if (fsck_err_on(btree_id != BTREE_ID_accounting &&
-+				k->k->version.lo > atomic64_read(&c->key_version), c,
- 				bkey_version_in_future,
- 				"key version number higher than recorded: %llu > %llu",
- 				k->k->version.lo,
-diff --git a/fs/bcachefs/btree_iter.c b/fs/bcachefs/btree_iter.c
-index 2357af3e6757..ef7cb7174c8b 100644
---- a/fs/bcachefs/btree_iter.c
-+++ b/fs/bcachefs/btree_iter.c
-@@ -3072,15 +3072,6 @@ void bch2_trans_put(struct btree_trans *trans)
- 		srcu_read_unlock(&c->btree_trans_barrier, trans->srcu_idx);
- 	}
- 
--	if (trans->fs_usage_deltas) {
--		if (trans->fs_usage_deltas->size + sizeof(trans->fs_usage_deltas) ==
--		    REPLICAS_DELTA_LIST_MAX)
--			mempool_free(trans->fs_usage_deltas,
--				     &c->replicas_delta_pool);
--		else
--			kfree(trans->fs_usage_deltas);
--	}
--
- 	if (unlikely(trans->journal_replay_not_finished))
- 		bch2_journal_keys_put(c);
- 
-diff --git a/fs/bcachefs/btree_trans_commit.c b/fs/bcachefs/btree_trans_commit.c
-index 60f6255367b9..b005e20039bb 100644
---- a/fs/bcachefs/btree_trans_commit.c
-+++ b/fs/bcachefs/btree_trans_commit.c
-@@ -9,6 +9,7 @@
- #include "btree_update_interior.h"
- #include "btree_write_buffer.h"
- #include "buckets.h"
-+#include "disk_accounting.h"
- #include "errcode.h"
- #include "error.h"
- #include "journal.h"
-@@ -598,6 +599,14 @@ static noinline int bch2_trans_commit_run_gc_triggers(struct btree_trans *trans)
- 	return 0;
- }
- 
-+static struct bversion journal_pos_to_bversion(struct journal_res *res, unsigned offset)
-+{
-+	return (struct bversion) {
-+		.hi = res->seq >> 32,
-+		.lo = (res->seq << 32) | (res->offset + offset),
-+	};
-+}
-+
- static inline int
- bch2_trans_commit_write_locked(struct btree_trans *trans, unsigned flags,
- 			       struct btree_insert_entry **stopped_at,
-@@ -606,7 +615,7 @@ bch2_trans_commit_write_locked(struct btree_trans *trans, unsigned flags,
- 	struct bch_fs *c = trans->c;
- 	struct btree_trans_commit_hook *h;
- 	unsigned u64s = 0;
--	int ret;
-+	int ret = 0;
- 
- 	if (race_fault()) {
- 		trace_and_count(c, trans_restart_fault_inject, trans, trace_ip);
-@@ -668,21 +677,35 @@ bch2_trans_commit_write_locked(struct btree_trans *trans, unsigned flags,
- 				i->k->k.version = MAX_VERSION;
- 	}
- 
--	if (trans->fs_usage_deltas &&
--	    bch2_trans_fs_usage_apply(trans, trans->fs_usage_deltas))
--		return -BCH_ERR_btree_insert_need_mark_replicas;
--
--	/* XXX: we only want to run this if deltas are nonzero */
--	bch2_trans_account_disk_usage_change(trans);
--
- 	h = trans->hooks;
- 	while (h) {
- 		ret = h->fn(trans, h);
- 		if (ret)
--			goto revert_fs_usage;
-+			return ret;
- 		h = h->next;
- 	}
- 
-+	percpu_down_read(&c->mark_lock);
-+	struct jset_entry *entry = trans->journal_entries;
-+
-+	for (entry = trans->journal_entries;
-+	     entry != (void *) ((u64 *) trans->journal_entries + trans->journal_entries_u64s);
-+	     entry = vstruct_next(entry))
-+		if (jset_entry_is_key(entry) && entry->start->k.type == KEY_TYPE_accounting) {
-+			struct bkey_i_accounting *a = bkey_i_to_accounting(entry->start);
-+
-+			a->k.version = journal_pos_to_bversion(&trans->journal_res,
-+							(u64 *) entry - (u64 *) trans->journal_entries);
-+			BUG_ON(bversion_zero(a->k.version));
-+			ret = bch2_accounting_mem_add(trans, accounting_i_to_s_c(a));
+-		mark_metadata_sectors(c, ca, offset,
++		int ret = mark_metadata_sectors(trans, ca, offset,
+ 				      offset + (1 << layout->sb_max_size_bits),
+ 				      BCH_DATA_sb, flags);
 +			if (ret)
-+				goto revert_fs_usage;
-+		}
-+	percpu_up_read(&c->mark_lock);
-+
-+	/* XXX: we only want to run this if deltas are nonzero */
-+	bch2_trans_account_disk_usage_change(trans);
-+
- 	trans_for_each_update(trans, i)
- 		if (BTREE_NODE_TYPE_HAS_ATOMIC_TRIGGERS & (1U << i->bkey_type)) {
- 			ret = run_one_mem_trigger(trans, i, BTREE_TRIGGER_ATOMIC|i->flags);
-@@ -751,10 +774,20 @@ bch2_trans_commit_write_locked(struct btree_trans *trans, unsigned flags,
- 
- 	return 0;
- fatal_err:
--	bch2_fatal_error(c);
-+	bch2_fs_fatal_error(c, "fatal error in transaction commit: %s", bch2_err_str(ret));
-+	percpu_down_read(&c->mark_lock);
- revert_fs_usage:
--	if (trans->fs_usage_deltas)
--		bch2_trans_fs_usage_revert(trans, trans->fs_usage_deltas);
-+	for (struct jset_entry *entry2 = trans->journal_entries;
-+	     entry2 != entry;
-+	     entry2 = vstruct_next(entry2))
-+		if (jset_entry_is_key(entry2) && entry2->start->k.type == KEY_TYPE_accounting) {
-+			struct bkey_s_accounting a = bkey_i_to_s_accounting(entry2->start);
-+
-+			bch2_accounting_neg(a);
-+			bch2_accounting_mem_add(trans, a.c);
-+			bch2_accounting_neg(a);
-+		}
-+	percpu_up_read(&c->mark_lock);
- 	return ret;
- }
- 
-@@ -904,7 +937,7 @@ int bch2_trans_commit_error(struct btree_trans *trans, unsigned flags,
- 		break;
- 	case -BCH_ERR_btree_insert_need_mark_replicas:
- 		ret = drop_locks_do(trans,
--			bch2_replicas_delta_list_mark(c, trans->fs_usage_deltas));
-+			bch2_accounting_update_sb(trans));
- 		break;
- 	case -BCH_ERR_journal_res_get_blocked:
- 		/*
-@@ -996,8 +1029,6 @@ int __bch2_trans_commit(struct btree_trans *trans, unsigned flags)
- 	    !trans->journal_entries_u64s)
- 		goto out_reset;
- 
--	memset(&trans->fs_usage_delta, 0, sizeof(trans->fs_usage_delta));
--
- 	ret = bch2_trans_commit_run_triggers(trans);
- 	if (ret)
- 		goto out_reset;
-@@ -1093,6 +1124,7 @@ int __bch2_trans_commit(struct btree_trans *trans, unsigned flags)
- 	bch2_trans_verify_not_in_restart(trans);
- 	if (likely(!(flags & BCH_TRANS_COMMIT_no_journal_res)))
- 		memset(&trans->journal_res, 0, sizeof(trans->journal_res));
-+	memset(&trans->fs_usage_delta, 0, sizeof(trans->fs_usage_delta));
- 
- 	ret = do_bch2_trans_commit(trans, flags, &errored_at, _RET_IP_);
- 
-diff --git a/fs/bcachefs/btree_types.h b/fs/bcachefs/btree_types.h
-index b2ebf143c3b7..2acca37eb831 100644
---- a/fs/bcachefs/btree_types.h
-+++ b/fs/bcachefs/btree_types.h
-@@ -441,7 +441,6 @@ struct btree_trans {
- 
- 	unsigned		journal_u64s;
- 	unsigned		extra_disk_res; /* XXX kill */
--	struct replicas_delta_list *fs_usage_deltas;
- 
- 	/* Entries before this are zeroed out on every bch2_trans_get() call */
- 
-diff --git a/fs/bcachefs/btree_update.h b/fs/bcachefs/btree_update.h
-index 21f887fe857c..6f8812f21444 100644
---- a/fs/bcachefs/btree_update.h
-+++ b/fs/bcachefs/btree_update.h
-@@ -213,14 +213,6 @@ static inline void bch2_trans_reset_updates(struct btree_trans *trans)
- 	trans->journal_entries_u64s	= 0;
- 	trans->hooks			= NULL;
- 	trans->extra_disk_res		= 0;
--
--	if (trans->fs_usage_deltas) {
--		trans->fs_usage_deltas->used = 0;
--		memset((void *) trans->fs_usage_deltas +
--		       offsetof(struct replicas_delta_list, memset_start), 0,
--		       (void *) &trans->fs_usage_deltas->memset_end -
--		       (void *) &trans->fs_usage_deltas->memset_start);
--	}
- }
- 
- static inline struct bkey_i *__bch2_bkey_make_mut_noupdate(struct btree_trans *trans, struct bkey_s_c k,
-diff --git a/fs/bcachefs/buckets.c b/fs/bcachefs/buckets.c
-index c2f46b267b3a..fb915c1b7844 100644
---- a/fs/bcachefs/buckets.c
-+++ b/fs/bcachefs/buckets.c
-@@ -13,6 +13,7 @@
- #include "btree_update.h"
- #include "buckets.h"
- #include "buckets_waiting_for_journal.h"
-+#include "disk_accounting.h"
- #include "ec.h"
- #include "error.h"
- #include "inode.h"
-@@ -25,24 +26,16 @@
- 
- #include <linux/preempt.h>
- 
--static inline void fs_usage_data_type_to_base(struct bch_fs_usage_base *fs_usage,
--					      enum bch_data_type data_type,
--					      s64 sectors)
-+static inline struct bch_fs_usage *fs_usage_ptr(struct bch_fs *c,
-+						unsigned journal_seq,
-+						bool gc)
- {
--	switch (data_type) {
--	case BCH_DATA_btree:
--		fs_usage->btree		+= sectors;
--		break;
--	case BCH_DATA_user:
--	case BCH_DATA_parity:
--		fs_usage->data		+= sectors;
--		break;
--	case BCH_DATA_cached:
--		fs_usage->cached	+= sectors;
--		break;
--	default:
--		break;
--	}
-+	percpu_rwsem_assert_held(&c->mark_lock);
-+	BUG_ON(!gc && !journal_seq);
-+
-+	return this_cpu_ptr(gc
-+			    ? c->usage_gc
-+			    : c->usage[journal_seq & JOURNAL_BUF_MASK]);
- }
- 
- void bch2_fs_usage_initialize(struct bch_fs *c)
-@@ -67,24 +60,13 @@ void bch2_fs_usage_initialize(struct bch_fs *c)
- 		struct bch_dev_usage dev = bch2_dev_usage_read(ca);
- 
- 		usage->b.hidden += (dev.d[BCH_DATA_sb].buckets +
--				    dev.d[BCH_DATA_journal].buckets) *
-+				  dev.d[BCH_DATA_journal].buckets) *
- 			ca->mi.bucket_size;
++				return ret;
  	}
  
- 	percpu_up_write(&c->mark_lock);
- }
- 
--static inline struct bch_dev_usage *dev_usage_ptr(struct bch_dev *ca,
--						  unsigned journal_seq,
--						  bool gc)
--{
--	BUG_ON(!gc && !journal_seq);
--
--	return this_cpu_ptr(gc
--			    ? ca->usage_gc
--			    : ca->usage[journal_seq & JOURNAL_BUF_MASK]);
--}
--
- void bch2_dev_usage_read_fast(struct bch_dev *ca, struct bch_dev_usage *usage)
- {
- 	struct bch_fs *c = ca->fs;
-@@ -267,11 +249,6 @@ bch2_fs_usage_read_short(struct bch_fs *c)
- 	return ret;
- }
- 
--void bch2_dev_usage_init(struct bch_dev *ca)
--{
--	ca->usage_base->d[BCH_DATA_free].buckets = ca->mi.nbuckets - ca->mi.first_bucket;
--}
--
- void bch2_dev_usage_to_text(struct printbuf *out, struct bch_dev_usage *usage)
- {
- 	prt_tab(out);
-@@ -298,21 +275,20 @@ void bch2_dev_usage_to_text(struct printbuf *out, struct bch_dev_usage *usage)
- 
- void bch2_dev_usage_update(struct bch_fs *c, struct bch_dev *ca,
- 			   const struct bch_alloc_v4 *old,
--			   const struct bch_alloc_v4 *new,
--			   u64 journal_seq, bool gc)
-+			   const struct bch_alloc_v4 *new)
- {
- 	struct bch_fs_usage *fs_usage;
- 	struct bch_dev_usage *u;
- 
- 	preempt_disable();
--	fs_usage = fs_usage_ptr(c, journal_seq, gc);
-+	fs_usage = this_cpu_ptr(c->usage_gc);
- 
- 	if (data_type_is_hidden(old->data_type))
- 		fs_usage->b.hidden -= ca->mi.bucket_size;
- 	if (data_type_is_hidden(new->data_type))
- 		fs_usage->b.hidden += ca->mi.bucket_size;
- 
--	u = dev_usage_ptr(ca, journal_seq, gc);
-+	u = this_cpu_ptr(ca->usage_gc);
- 
- 	u->d[old->data_type].buckets--;
- 	u->d[new->data_type].buckets++;
-@@ -346,27 +322,11 @@ void bch2_dev_usage_update_m(struct bch_fs *c, struct bch_dev *ca,
- 	struct bch_alloc_v4 old_a = bucket_m_to_alloc(*old);
- 	struct bch_alloc_v4 new_a = bucket_m_to_alloc(*new);
- 
--	bch2_dev_usage_update(c, ca, &old_a, &new_a, 0, true);
--}
--
--static inline int __update_replicas(struct bch_fs *c,
--				    struct bch_fs_usage *fs_usage,
--				    struct bch_replicas_entry_v1 *r,
--				    s64 sectors)
--{
--	int idx = bch2_replicas_entry_idx(c, r);
--
--	if (idx < 0)
--		return -1;
--
--	fs_usage_data_type_to_base(&fs_usage->b, r->data_type, sectors);
--	fs_usage->replicas[idx]		+= sectors;
--	return 0;
-+	bch2_dev_usage_update(c, ca, &old_a, &new_a);
- }
- 
- int bch2_update_replicas(struct bch_fs *c, struct bkey_s_c k,
--			 struct bch_replicas_entry_v1 *r, s64 sectors,
--			 unsigned journal_seq, bool gc)
-+			 struct bch_replicas_entry_v1 *r, s64 sectors)
- {
- 	struct bch_fs_usage *fs_usage;
- 	int idx, ret = 0;
-@@ -393,7 +353,7 @@ int bch2_update_replicas(struct bch_fs *c, struct bkey_s_c k,
+-	for (i = 0; i < ca->journal.nr; i++) {
+-		b = ca->journal.buckets[i];
+-		bch2_mark_metadata_bucket(c, ca, b, BCH_DATA_journal,
+-					  ca->mi.bucket_size,
++	for (unsigned i = 0; i < ca->journal.nr; i++) {
++		int ret = bch2_mark_metadata_bucket(trans, ca, ca->journal.buckets[i],
++					  BCH_DATA_journal, ca->mi.bucket_size,
+ 					  gc_phase(GC_PHASE_SB), flags);
++		if (ret)
++			return ret;
  	}
++
++	return 0;
+ }
  
- 	preempt_disable();
--	fs_usage = fs_usage_ptr(c, journal_seq, gc);
-+	fs_usage = this_cpu_ptr(c->usage_gc);
- 	fs_usage_data_type_to_base(&fs_usage->b, r->data_type, sectors);
- 	fs_usage->replicas[idx]		+= sectors;
- 	preempt_enable();
-@@ -406,94 +366,13 @@ int bch2_update_replicas(struct bch_fs *c, struct bkey_s_c k,
- 
- static inline int update_cached_sectors(struct bch_fs *c,
- 			struct bkey_s_c k,
--			unsigned dev, s64 sectors,
--			unsigned journal_seq, bool gc)
-+			unsigned dev, s64 sectors)
+-static void bch2_mark_superblocks(struct bch_fs *c)
++static int bch2_mark_superblocks(struct btree_trans *trans)
  {
- 	struct bch_replicas_padded r;
++	struct bch_fs *c = trans->c;
++
+ 	mutex_lock(&c->sb_lock);
+ 	gc_pos_set(c, gc_phase(GC_PHASE_SB));
  
- 	bch2_replicas_entry_cached(&r.e, dev);
+-	for_each_online_member(c, ca)
+-		bch2_mark_dev_superblock(c, ca, BTREE_TRIGGER_GC);
++	for_each_online_member(c, ca) {
++		int ret = bch2_mark_dev_superblock(trans, ca, BTREE_TRIGGER_GC);
++		if (ret) {
++			percpu_ref_put(&ca->io_ref);
++			return ret;
++		}
++	}
+ 	mutex_unlock(&c->sb_lock);
++
++	return 0;
+ }
  
--	return bch2_update_replicas(c, k, &r.e, sectors, journal_seq, gc);
+ #if 0
+@@ -1190,146 +1211,25 @@ static void bch2_mark_pending_btree_node_frees(struct bch_fs *c)
+ 
+ static void bch2_gc_free(struct bch_fs *c)
+ {
++	bch2_accounting_free(&c->accounting[1]);
++
+ 	genradix_free(&c->reflink_gc_table);
+ 	genradix_free(&c->gc_stripes);
+ 
+ 	for_each_member_device(c, ca) {
+ 		kvfree(rcu_dereference_protected(ca->buckets_gc, 1));
+ 		ca->buckets_gc = NULL;
+-
+-		free_percpu(ca->usage_gc);
+-		ca->usage_gc = NULL;
+-	}
+-
+-	free_percpu(c->usage_gc);
+-	c->usage_gc = NULL;
 -}
 -
--static int __replicas_deltas_realloc(struct btree_trans *trans, unsigned more,
--				     gfp_t gfp)
+-static int bch2_gc_done(struct bch_fs *c,
+-			bool initial, bool metadata_only)
 -{
--	struct replicas_delta_list *d = trans->fs_usage_deltas;
--	unsigned new_size = d ? (d->size + more) * 2 : 128;
--	unsigned alloc_size = sizeof(*d) + new_size;
+-	struct bch_dev *ca = NULL;
+-	struct printbuf buf = PRINTBUF;
+-	bool verify = !metadata_only &&
+-		!c->opts.reconstruct_alloc &&
+-		(!initial || (c->sb.compat & (1ULL << BCH_COMPAT_alloc_info)));
+-	unsigned i;
+-	int ret = 0;
 -
--	WARN_ON_ONCE(alloc_size > REPLICAS_DELTA_LIST_MAX);
+-	percpu_down_write(&c->mark_lock);
 -
--	if (!d || d->used + more > d->size) {
--		d = krealloc(d, alloc_size, gfp|__GFP_ZERO);
+-#define copy_field(_err, _f, _msg, ...)					\
+-	if (dst->_f != src->_f &&					\
+-	    (!verify ||							\
+-	     fsck_err(c, _err, _msg ": got %llu, should be %llu"	\
+-		      , ##__VA_ARGS__, dst->_f, src->_f)))		\
+-		dst->_f = src->_f
+-#define copy_dev_field(_err, _f, _msg, ...)				\
+-	copy_field(_err, _f, "dev %u has wrong " _msg, ca->dev_idx, ##__VA_ARGS__)
+-#define copy_fs_field(_err, _f, _msg, ...)				\
+-	copy_field(_err, _f, "fs has wrong " _msg, ##__VA_ARGS__)
 -
--		if (unlikely(!d)) {
--			if (alloc_size > REPLICAS_DELTA_LIST_MAX)
--				return -ENOMEM;
+-	__for_each_member_device(c, ca) {
+-		/* XXX */
+-		struct bch_dev_usage *dst = this_cpu_ptr(ca->usage);
+-		struct bch_dev_usage *src = (void *)
+-			bch2_acc_percpu_u64s((u64 __percpu *) ca->usage_gc,
+-					     dev_usage_u64s());
 -
--			d = mempool_alloc(&trans->c->replicas_delta_pool, gfp);
--			if (!d)
--				return -ENOMEM;
+-		for (i = 0; i < BCH_DATA_NR; i++) {
+-			copy_dev_field(dev_usage_buckets_wrong,
+-				       d[i].buckets,	"%s buckets", bch2_data_type_str(i));
+-			copy_dev_field(dev_usage_sectors_wrong,
+-				       d[i].sectors,	"%s sectors", bch2_data_type_str(i));
+-			copy_dev_field(dev_usage_fragmented_wrong,
+-				       d[i].fragmented,	"%s fragmented", bch2_data_type_str(i));
+-		}
+-	}
 -
--			memset(d, 0, REPLICAS_DELTA_LIST_MAX);
+-	{
+-#if 0
+-		unsigned nr = fs_usage_u64s(c);
+-		/* XX: */
+-		struct bch_fs_usage *dst = this_cpu_ptr(c->usage);
+-		struct bch_fs_usage *src = (void *)
+-			bch2_acc_percpu_u64s((u64 __percpu *) c->usage_gc, nr);
 -
--			if (trans->fs_usage_deltas)
--				memcpy(d, trans->fs_usage_deltas,
--				       trans->fs_usage_deltas->size + sizeof(*d));
+-		copy_fs_field(fs_usage_hidden_wrong,
+-			      b.hidden,		"hidden");
+-		copy_fs_field(fs_usage_btree_wrong,
+-			      b.btree,		"btree");
 -
--			new_size = REPLICAS_DELTA_LIST_MAX - sizeof(*d);
--			kfree(trans->fs_usage_deltas);
+-		if (!metadata_only) {
+-			copy_fs_field(fs_usage_data_wrong,
+-				      b.data,	"data");
+-			copy_fs_field(fs_usage_cached_wrong,
+-				      b.cached,	"cached");
+-			copy_fs_field(fs_usage_reserved_wrong,
+-				      b.reserved,	"reserved");
+-			copy_fs_field(fs_usage_nr_inodes_wrong,
+-				      b.nr_inodes,"nr_inodes");
+-
+-			for (i = 0; i < BCH_REPLICAS_MAX; i++)
+-				copy_fs_field(fs_usage_persistent_reserved_wrong,
+-					      persistent_reserved[i],
+-					      "persistent_reserved[%i]", i);
 -		}
 -
--		d->size = new_size;
--		trans->fs_usage_deltas = d;
+-		for (i = 0; i < c->replicas.nr; i++) {
+-			struct bch_replicas_entry_v1 *e =
+-				cpu_replicas_entry(&c->replicas, i);
+-
+-			if (metadata_only &&
+-			    (e->data_type == BCH_DATA_user ||
+-			     e->data_type == BCH_DATA_cached))
+-				continue;
+-
+-			printbuf_reset(&buf);
+-			bch2_replicas_entry_to_text(&buf, e);
+-
+-			copy_fs_field(fs_usage_replicas_wrong,
+-				      replicas[i], "%s", buf.buf);
+-		}
+-#endif
+ 	}
+-
+-#undef copy_fs_field
+-#undef copy_dev_field
+-#undef copy_stripe_field
+-#undef copy_field
+-fsck_err:
+-	if (ca)
+-		percpu_ref_put(&ca->ref);
+-	bch_err_fn(c, ret);
+-
+-	percpu_up_write(&c->mark_lock);
+-	printbuf_exit(&buf);
+-	return ret;
+ }
+ 
+ static int bch2_gc_start(struct bch_fs *c)
+ {
+-	BUG_ON(c->usage_gc);
+-
+-	c->usage_gc = __alloc_percpu_gfp(fs_usage_u64s(c) * sizeof(u64),
+-					 sizeof(u64), GFP_KERNEL);
+-	if (!c->usage_gc) {
+-		bch_err(c, "error allocating c->usage_gc");
+-		return -BCH_ERR_ENOMEM_gc_start;
 -	}
 -
--	return 0;
--}
+ 	for_each_member_device(c, ca) {
+-		BUG_ON(ca->usage_gc);
 -
--int bch2_replicas_deltas_realloc(struct btree_trans *trans, unsigned more)
+-		ca->usage_gc = alloc_percpu(struct bch_dev_usage);
+-		if (!ca->usage_gc) {
+-			bch_err(c, "error allocating ca->usage_gc");
++		int ret = bch2_dev_usage_init(ca, true);
++		if (ret) {
+ 			percpu_ref_put(&ca->ref);
+-			return -BCH_ERR_ENOMEM_gc_start;
++			return ret;
+ 		}
+-
+-		this_cpu_write(ca->usage_gc->d[BCH_DATA_free].buckets,
+-			       ca->mi.nbuckets - ca->mi.first_bucket);
+ 	}
+ 
+ 	return 0;
+@@ -1337,13 +1237,7 @@ static int bch2_gc_start(struct bch_fs *c)
+ 
+ static int bch2_gc_reset(struct bch_fs *c)
+ {
+-	for_each_member_device(c, ca) {
+-		free_percpu(ca->usage_gc);
+-		ca->usage_gc = NULL;
+-	}
+-
+-	free_percpu(c->usage_gc);
+-	c->usage_gc = NULL;
++	bch2_accounting_free(&c->accounting[1]);
+ 
+ 	return bch2_gc_start(c);
+ }
+@@ -1368,7 +1262,7 @@ static int bch2_alloc_write_key(struct btree_trans *trans,
+ {
+ 	struct bch_fs *c = trans->c;
+ 	struct bch_dev *ca = bch_dev_bkey_exists(c, iter->pos.inode);
+-	struct bucket gc, *b;
++	struct bucket gc;
+ 	struct bkey_i_alloc_v4 *a;
+ 	struct bch_alloc_v4 old_convert, new;
+ 	const struct bch_alloc_v4 *old;
+@@ -1379,30 +1273,39 @@ static int bch2_alloc_write_key(struct btree_trans *trans,
+ 	new = *old;
+ 
+ 	percpu_down_read(&c->mark_lock);
+-	b = gc_bucket(ca, iter->pos.offset);
++	gc = *gc_bucket(ca, iter->pos.offset);
++	percpu_up_read(&c->mark_lock);
+ 
+ 	/*
+ 	 * b->data_type doesn't yet include need_discard & need_gc_gen states -
+ 	 * fix that here:
+ 	 */
+-	type = __alloc_data_type(b->dirty_sectors,
+-				 b->cached_sectors,
+-				 b->stripe,
++	type = __alloc_data_type(gc.dirty_sectors,
++				 gc.cached_sectors,
++				 gc.stripe,
+ 				 *old,
+-				 b->data_type);
+-	if (b->data_type != type) {
+-		struct bch_dev_usage *u;
+-
+-		preempt_disable();
+-		u = this_cpu_ptr(ca->usage_gc);
+-		u->d[b->data_type].buckets--;
+-		b->data_type = type;
+-		u->d[b->data_type].buckets++;
+-		preempt_enable();
+-	}
++				 gc.data_type);
+ 
+-	gc = *b;
+-	percpu_up_read(&c->mark_lock);
++	if (gc.data_type != type) {
++		struct disk_accounting_key acc = {
++			.type = BCH_DISK_ACCOUNTING_dev_data_type,
++			.dev_data_type.dev = ca->dev_idx,
++			.dev_data_type.data_type = type,
++		};
++		u64 d[3] = { 1, 0, 0 };
++
++		ret = bch2_disk_accounting_mod(trans, &acc, d, 3, true);
++		if (ret)
++			return ret;
++
++		acc.dev_data_type.data_type = gc.data_type;
++		d[0] = -1;
++		ret = bch2_disk_accounting_mod(trans, &acc, d, 3, true);
++		if (ret)
++			return ret;
++
++		gc.data_type = type;
++	}
+ 
+ 	if (metadata_only &&
+ 	    gc.data_type != BCH_DATA_sb &&
+@@ -1778,10 +1681,12 @@ int bch2_gc(struct bch_fs *c, bool initial, bool metadata_only)
+ again:
+ 	gc_pos_set(c, gc_phase(GC_PHASE_START));
+ 
+-	bch2_mark_superblocks(c);
++	ret = bch2_trans_run(c, bch2_mark_superblocks(trans));
++	bch_err_msg(c, ret, "marking superblocks");
++	if (ret)
++		goto out;
+ 
+ 	ret = bch2_gc_btrees(c, initial, metadata_only);
+-
+ 	if (ret)
+ 		goto out;
+ 
+@@ -1823,7 +1728,7 @@ int bch2_gc(struct bch_fs *c, bool initial, bool metadata_only)
+ 		ret   = bch2_gc_stripes_done(c, metadata_only) ?:
+ 			bch2_gc_reflink_done(c, metadata_only) ?:
+ 			bch2_gc_alloc_done(c, metadata_only) ?:
+-			bch2_gc_done(c, initial, metadata_only);
++			bch2_accounting_gc_done(c);
+ 
+ 		bch2_journal_unblock(&c->journal);
+ 	}
+diff --git a/fs/bcachefs/btree_trans_commit.c b/fs/bcachefs/btree_trans_commit.c
+index b005e20039bb..eac9d45bcc8c 100644
+--- a/fs/bcachefs/btree_trans_commit.c
++++ b/fs/bcachefs/btree_trans_commit.c
+@@ -697,7 +697,7 @@ bch2_trans_commit_write_locked(struct btree_trans *trans, unsigned flags,
+ 			a->k.version = journal_pos_to_bversion(&trans->journal_res,
+ 							(u64 *) entry - (u64 *) trans->journal_entries);
+ 			BUG_ON(bversion_zero(a->k.version));
+-			ret = bch2_accounting_mem_add(trans, accounting_i_to_s_c(a));
++			ret = bch2_accounting_mem_add_locked(trans, accounting_i_to_s_c(a), false);
+ 			if (ret)
+ 				goto revert_fs_usage;
+ 		}
+@@ -784,7 +784,7 @@ bch2_trans_commit_write_locked(struct btree_trans *trans, unsigned flags,
+ 			struct bkey_s_accounting a = bkey_i_to_s_accounting(entry2->start);
+ 
+ 			bch2_accounting_neg(a);
+-			bch2_accounting_mem_add(trans, a.c);
++			bch2_accounting_mem_add_locked(trans, a.c, false);
+ 			bch2_accounting_neg(a);
+ 		}
+ 	percpu_up_read(&c->mark_lock);
+diff --git a/fs/bcachefs/buckets.c b/fs/bcachefs/buckets.c
+index 5e2b9aa93241..506bb580bff4 100644
+--- a/fs/bcachefs/buckets.c
++++ b/fs/bcachefs/buckets.c
+@@ -95,113 +95,12 @@ void bch2_dev_usage_to_text(struct printbuf *out, struct bch_dev_usage *usage)
+ 	}
+ }
+ 
+-void bch2_dev_usage_update(struct bch_fs *c, struct bch_dev *ca,
+-			   const struct bch_alloc_v4 *old,
+-			   const struct bch_alloc_v4 *new)
 -{
--	return allocate_dropping_locks_errcode(trans,
--				__replicas_deltas_realloc(trans, more, _gfp));
+-	struct bch_fs_usage *fs_usage;
+-	struct bch_dev_usage *u;
+-
+-	preempt_disable();
+-	fs_usage = this_cpu_ptr(c->usage_gc);
+-
+-	if (data_type_is_hidden(old->data_type))
+-		fs_usage->b.hidden -= ca->mi.bucket_size;
+-	if (data_type_is_hidden(new->data_type))
+-		fs_usage->b.hidden += ca->mi.bucket_size;
+-
+-	u = this_cpu_ptr(ca->usage_gc);
+-
+-	u->d[old->data_type].buckets--;
+-	u->d[new->data_type].buckets++;
+-
+-	u->d[old->data_type].sectors -= bch2_bucket_sectors_dirty(*old);
+-	u->d[new->data_type].sectors += bch2_bucket_sectors_dirty(*new);
+-
+-	u->d[BCH_DATA_cached].sectors += new->cached_sectors;
+-	u->d[BCH_DATA_cached].sectors -= old->cached_sectors;
+-
+-	u->d[old->data_type].fragmented -= bch2_bucket_sectors_fragmented(ca, *old);
+-	u->d[new->data_type].fragmented += bch2_bucket_sectors_fragmented(ca, *new);
+-
+-	preempt_enable();
 -}
 -
--int bch2_update_replicas_list(struct btree_trans *trans,
--			 struct bch_replicas_entry_v1 *r,
--			 s64 sectors)
+-static inline struct bch_alloc_v4 bucket_m_to_alloc(struct bucket b)
 -{
--	struct replicas_delta_list *d;
--	struct replicas_delta *n;
--	unsigned b;
--	int ret;
--
--	if (!sectors)
--		return 0;
--
--	b = replicas_entry_bytes(r) + 8;
--	ret = bch2_replicas_deltas_realloc(trans, b);
--	if (ret)
--		return ret;
--
--	d = trans->fs_usage_deltas;
--	n = (void *) d->d + d->used;
--	n->delta = sectors;
--	unsafe_memcpy((void *) n + offsetof(struct replicas_delta, r),
--		      r, replicas_entry_bytes(r),
--		      "flexible array member embedded in strcuct with padding");
--	bch2_replicas_entry_sort(&n->r);
--	d->used += b;
--	return 0;
+-	return (struct bch_alloc_v4) {
+-		.gen		= b.gen,
+-		.data_type	= b.data_type,
+-		.dirty_sectors	= b.dirty_sectors,
+-		.cached_sectors	= b.cached_sectors,
+-		.stripe		= b.stripe,
+-	};
 -}
 -
--int bch2_update_cached_sectors_list(struct btree_trans *trans, unsigned dev, s64 sectors)
+-void bch2_dev_usage_update_m(struct bch_fs *c, struct bch_dev *ca,
+-			     struct bucket *old, struct bucket *new)
+-{
+-	struct bch_alloc_v4 old_a = bucket_m_to_alloc(*old);
+-	struct bch_alloc_v4 new_a = bucket_m_to_alloc(*new);
+-
+-	bch2_dev_usage_update(c, ca, &old_a, &new_a);
+-}
+-
+-int bch2_update_replicas(struct bch_fs *c, struct bkey_s_c k,
+-			 struct bch_replicas_entry_v1 *r, s64 sectors)
+-{
+-	struct bch_fs_usage *fs_usage;
+-	int idx, ret = 0;
+-	struct printbuf buf = PRINTBUF;
+-
+-	percpu_down_read(&c->mark_lock);
+-
+-	idx = bch2_replicas_entry_idx(c, r);
+-	if (idx < 0 &&
+-	    fsck_err(c, ptr_to_missing_replicas_entry,
+-		     "no replicas entry\n  while marking %s",
+-		     (bch2_bkey_val_to_text(&buf, c, k), buf.buf))) {
+-		percpu_up_read(&c->mark_lock);
+-		ret = bch2_mark_replicas(c, r);
+-		percpu_down_read(&c->mark_lock);
+-
+-		if (ret)
+-			goto err;
+-		idx = bch2_replicas_entry_idx(c, r);
+-	}
+-	if (idx < 0) {
+-		ret = -1;
+-		goto err;
+-	}
+-
+-	preempt_disable();
+-	fs_usage = this_cpu_ptr(c->usage_gc);
+-	fs_usage_data_type_to_base(&fs_usage->b, r->data_type, sectors);
+-	fs_usage->replicas[idx]		+= sectors;
+-	preempt_enable();
+-err:
+-fsck_err:
+-	percpu_up_read(&c->mark_lock);
+-	printbuf_exit(&buf);
+-	return ret;
+-}
+-
+-static inline int update_cached_sectors(struct bch_fs *c,
+-			struct bkey_s_c k,
+-			unsigned dev, s64 sectors)
 -{
 -	struct bch_replicas_padded r;
 -
 -	bch2_replicas_entry_cached(&r.e, dev);
 -
--	return bch2_update_replicas_list(trans, &r.e, sectors);
-+	return bch2_update_replicas(c, k, &r.e, sectors);
- }
- 
- int bch2_mark_metadata_bucket(struct bch_fs *c, struct bch_dev *ca,
-@@ -653,47 +532,6 @@ int bch2_check_bucket_ref(struct btree_trans *trans,
- 	goto out;
- }
- 
--void bch2_trans_fs_usage_revert(struct btree_trans *trans,
--				struct replicas_delta_list *deltas)
--{
--	struct bch_fs *c = trans->c;
--	struct bch_fs_usage *dst;
--	struct replicas_delta *d, *top = (void *) deltas->d + deltas->used;
--	s64 added = 0;
--	unsigned i;
--
--	percpu_down_read(&c->mark_lock);
--	preempt_disable();
--	dst = fs_usage_ptr(c, trans->journal_res.seq, false);
--
--	/* revert changes: */
--	for (d = deltas->d; d != top; d = replicas_delta_next(d)) {
--		switch (d->r.data_type) {
--		case BCH_DATA_btree:
--		case BCH_DATA_user:
--		case BCH_DATA_parity:
--			added += d->delta;
--		}
--		BUG_ON(__update_replicas(c, dst, &d->r, -d->delta));
--	}
--
--	dst->b.nr_inodes -= deltas->nr_inodes;
--
--	for (i = 0; i < BCH_REPLICAS_MAX; i++) {
--		added				-= deltas->persistent_reserved[i];
--		dst->b.reserved			-= deltas->persistent_reserved[i];
--		dst->persistent_reserved[i]	-= deltas->persistent_reserved[i];
--	}
--
--	if (added > 0) {
--		trans->disk_res->sectors += added;
--		this_cpu_add(*c->online_reserved, added);
--	}
--
--	preempt_enable();
--	percpu_up_read(&c->mark_lock);
+-	return bch2_update_replicas(c, k, &r.e, sectors);
 -}
 -
- void bch2_trans_account_disk_usage_change(struct btree_trans *trans)
+-int bch2_mark_metadata_bucket(struct bch_fs *c, struct bch_dev *ca,
++int bch2_mark_metadata_bucket(struct btree_trans *trans, struct bch_dev *ca,
+ 			      size_t b, enum bch_data_type data_type,
+ 			      unsigned sectors, struct gc_pos pos,
+ 			      unsigned flags)
  {
- 	struct bch_fs *c = trans->c;
-@@ -747,43 +585,6 @@ void bch2_trans_account_disk_usage_change(struct btree_trans *trans)
- 					should_not_have_added, disk_res_sectors);
++	struct bch_fs *c = trans->c;
+ 	struct bucket old, new, *g;
+ 	int ret = 0;
+ 
+@@ -242,12 +141,15 @@ int bch2_mark_metadata_bucket(struct bch_fs *c, struct bch_dev *ca,
+ 	g->data_type = data_type;
+ 	g->dirty_sectors += sectors;
+ 	new = *g;
+-err:
+ 	bucket_unlock(g);
+-	if (!ret)
+-		bch2_dev_usage_update_m(c, ca, &old, &new);
+ 	percpu_up_read(&c->mark_lock);
++	ret = bch2_bucket_to_dev_counters(trans, ca, &old, &new, flags);
++out:
+ 	return ret;
++err:
++	bucket_unlock(g);
++	percpu_up_read(&c->mark_lock);
++	goto out;
  }
  
--int bch2_trans_fs_usage_apply(struct btree_trans *trans,
--			      struct replicas_delta_list *deltas)
--{
--	struct bch_fs *c = trans->c;
--	struct replicas_delta *d, *d2;
--	struct replicas_delta *top = (void *) deltas->d + deltas->used;
--	struct bch_fs_usage *dst;
--	unsigned i;
--
--	percpu_down_read(&c->mark_lock);
--	preempt_disable();
--	dst = fs_usage_ptr(c, trans->journal_res.seq, false);
--
--	for (d = deltas->d; d != top; d = replicas_delta_next(d))
--		if (__update_replicas(c, dst, &d->r, d->delta))
--			goto need_mark;
--
--	dst->b.nr_inodes += deltas->nr_inodes;
--
--	for (i = 0; i < BCH_REPLICAS_MAX; i++) {
--		dst->b.reserved			+= deltas->persistent_reserved[i];
--		dst->persistent_reserved[i]	+= deltas->persistent_reserved[i];
--	}
--
--	preempt_enable();
--	percpu_up_read(&c->mark_lock);
--	return 0;
--need_mark:
--	/* revert changes: */
--	for (d2 = deltas->d; d2 != d; d2 = replicas_delta_next(d2))
--		BUG_ON(__update_replicas(c, dst, &d2->r, -d2->delta));
--
--	preempt_enable();
--	percpu_up_read(&c->mark_lock);
--	return -1;
--}
--
- /* KEY_TYPE_extent: */
- 
- static int __mark_pointer(struct btree_trans *trans,
-@@ -911,10 +712,12 @@ static int bch2_trigger_stripe_ptr(struct btree_trans *trans,
- 			stripe_blockcount_get(&s->v, p.ec.block) +
- 			sectors);
- 
--		struct bch_replicas_padded r;
--		bch2_bkey_to_replicas(&r.e, bkey_i_to_s_c(&s->k_i));
--		r.e.data_type = data_type;
--		ret = bch2_update_replicas_list(trans, &r.e, sectors);
-+		struct disk_accounting_key acc = {
-+			.type = BCH_DISK_ACCOUNTING_replicas,
-+		};
-+		bch2_bkey_to_replicas(&acc.replicas, bkey_i_to_s_c(&s->k_i));
-+		acc.replicas.data_type = data_type;
-+		ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
- err:
- 		bch2_trans_iter_exit(trans, &iter);
- 		return ret;
-@@ -951,7 +754,7 @@ static int bch2_trigger_stripe_ptr(struct btree_trans *trans,
- 		mutex_unlock(&c->ec_stripes_heap_lock);
- 
- 		r.e.data_type = data_type;
--		bch2_update_replicas(c, k, &r.e, sectors, trans->journal_res.seq, true);
-+		bch2_update_replicas(c, k, &r.e, sectors);
+ int bch2_check_bucket_ref(struct btree_trans *trans,
+@@ -496,8 +398,11 @@ static int bch2_trigger_pointer(struct btree_trans *trans,
+ 		g->data_type = bucket_data_type;
+ 		struct bucket new = *g;
+ 		bucket_unlock(g);
+-		bch2_dev_usage_update_m(c, ca, &old, &new);
+ 		percpu_up_read(&c->mark_lock);
++
++		ret = bch2_bucket_to_dev_counters(trans, ca, &old, &new, flags);
++		if (ret)
++			return ret;
  	}
  
  	return 0;
-@@ -966,16 +769,18 @@ static int __trigger_extent(struct btree_trans *trans,
+@@ -539,7 +444,7 @@ static int bch2_trigger_stripe_ptr(struct btree_trans *trans,
+ 		};
+ 		bch2_bkey_to_replicas(&acc.replicas, bkey_i_to_s_c(&s->k_i));
+ 		acc.replicas.data_type = data_type;
+-		ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
++		ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1, false);
+ err:
+ 		bch2_trans_iter_exit(trans, &iter);
+ 		return ret;
+@@ -548,8 +453,6 @@ static int bch2_trigger_stripe_ptr(struct btree_trans *trans,
+ 	if (flags & BTREE_TRIGGER_GC) {
+ 		struct bch_fs *c = trans->c;
+ 
+-		BUG_ON(!(flags & BTREE_TRIGGER_GC));
+-
+ 		struct gc_stripe *m = genradix_ptr_alloc(&c->gc_stripes, p.ec.idx, GFP_KERNEL);
+ 		if (!m) {
+ 			bch_err(c, "error allocating memory for gc_stripes, idx %llu",
+@@ -572,11 +475,16 @@ static int bch2_trigger_stripe_ptr(struct btree_trans *trans,
+ 
+ 		m->block_sectors[p.ec.block] += sectors;
+ 
+-		struct bch_replicas_padded r = m->r;
++		struct disk_accounting_key acc = {
++			.type = BCH_DISK_ACCOUNTING_replicas,
++		};
++		memcpy(&acc.replicas, &m->r.e, replicas_entry_bytes(&m->r.e));
+ 		mutex_unlock(&c->ec_stripes_heap_lock);
+ 
+-		r.e.data_type = data_type;
+-		bch2_update_replicas(c, k, &r.e, sectors);
++		acc.replicas.data_type = data_type;
++		int ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1, true);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	return 0;
+@@ -587,7 +495,6 @@ static int __trigger_extent(struct btree_trans *trans,
+ 			    struct bkey_s_c k, unsigned flags)
+ {
+ 	bool gc = flags & BTREE_TRIGGER_GC;
+-	struct bch_fs *c = trans->c;
  	struct bkey_ptrs_c ptrs = bch2_bkey_ptrs_c(k);
  	const union bch_extent_entry *entry;
  	struct extent_ptr_decoded p;
--	struct bch_replicas_padded r;
- 	enum bch_data_type data_type = bkey_is_btree_ptr(k.k)
- 		? BCH_DATA_btree
- 		: BCH_DATA_user;
- 	s64 dirty_sectors = 0;
- 	int ret = 0;
+@@ -614,11 +521,7 @@ static int __trigger_extent(struct btree_trans *trans,
  
--	r.e.data_type	= data_type;
--	r.e.nr_devs	= 0;
--	r.e.nr_required	= 1;
-+	struct disk_accounting_key acc = {
-+		.type			= BCH_DISK_ACCOUNTING_replicas,
-+		.replicas.data_type	= data_type,
-+		.replicas.nr_devs	= 0,
-+		.replicas.nr_required	= 1,
-+	};
- 
- 	bkey_for_each_ptr_decode(k.k, ptrs, p, entry) {
- 		s64 disk_sectors;
-@@ -988,8 +793,8 @@ static int __trigger_extent(struct btree_trans *trans,
  		if (p.ptr.cached) {
  			if (!stale) {
- 				ret = !gc
--					? bch2_update_cached_sectors_list(trans, p.ptr.dev, disk_sectors)
--					: update_cached_sectors(c, k, p.ptr.dev, disk_sectors, 0, true);
-+					? bch2_mod_dev_cached_sectors(trans, p.ptr.dev, disk_sectors)
-+					: update_cached_sectors(c, k, p.ptr.dev, disk_sectors);
- 				bch2_fs_fatal_err_on(ret && gc, c, "%s(): no replicas entry while updating cached sectors",
- 						     __func__);
+-				ret = !gc
+-					? bch2_mod_dev_cached_sectors(trans, p.ptr.dev, disk_sectors)
+-					: update_cached_sectors(c, k, p.ptr.dev, disk_sectors);
+-				bch2_fs_fatal_err_on(ret && gc, c, "%s(): no replicas entry while updating cached sectors",
+-						     __func__);
++				ret = bch2_mod_dev_cached_sectors(trans, p.ptr.dev, disk_sectors, gc);
  				if (ret)
-@@ -997,7 +802,7 @@ static int __trigger_extent(struct btree_trans *trans,
+ 					return ret;
  			}
- 		} else if (!p.has_ec) {
- 			dirty_sectors	       += disk_sectors;
--			r.e.devs[r.e.nr_devs++]	= p.ptr.dev;
-+			acc.replicas.devs[acc.replicas.nr_devs++] = p.ptr.dev;
- 		} else {
- 			ret = bch2_trigger_stripe_ptr(trans, k, p, data_type, disk_sectors, flags);
- 			if (ret)
-@@ -1008,14 +813,14 @@ static int __trigger_extent(struct btree_trans *trans,
- 			 * if so they're not required for mounting if we have an
- 			 * erasure coded pointer in this extent:
- 			 */
--			r.e.nr_required = 0;
-+			acc.replicas.nr_required = 0;
- 		}
+@@ -640,16 +543,7 @@ static int __trigger_extent(struct btree_trans *trans,
  	}
  
--	if (r.e.nr_devs) {
-+	if (acc.replicas.nr_devs) {
- 		ret = !gc
--			? bch2_update_replicas_list(trans, &r.e, dirty_sectors)
--			: bch2_update_replicas(c, k, &r.e, dirty_sectors, 0, true);
-+			? bch2_disk_accounting_mod(trans, &acc, &dirty_sectors, 1)
-+			: bch2_update_replicas(c, k, &acc.replicas, dirty_sectors);
- 		if (unlikely(ret && gc)) {
- 			struct printbuf buf = PRINTBUF;
- 
-@@ -1074,23 +879,23 @@ static int __trigger_reservation(struct btree_trans *trans,
- {
- 	struct bch_fs *c = trans->c;
- 	unsigned replicas = bkey_s_c_to_reservation(k).v->nr_replicas;
--	s64 sectors = (s64) k.k->size * replicas;
-+	s64 sectors = (s64) k.k->size;
- 
- 	if (flags & BTREE_TRIGGER_OVERWRITE)
- 		sectors = -sectors;
- 
- 	if (flags & BTREE_TRIGGER_TRANSACTIONAL) {
--		int ret = bch2_replicas_deltas_realloc(trans, 0);
--		if (ret)
--			return ret;
+ 	if (acc.replicas.nr_devs) {
+-		ret = !gc
+-			? bch2_disk_accounting_mod(trans, &acc, &dirty_sectors, 1)
+-			: bch2_update_replicas(c, k, &acc.replicas, dirty_sectors);
+-		if (unlikely(ret && gc)) {
+-			struct printbuf buf = PRINTBUF;
 -
--		struct replicas_delta_list *d = trans->fs_usage_deltas;
--		replicas = min(replicas, ARRAY_SIZE(d->persistent_reserved));
-+		struct disk_accounting_key acc = {
-+			.type = BCH_DISK_ACCOUNTING_persistent_reserved,
-+			.persistent_reserved.nr_replicas = replicas,
-+		};
+-			bch2_bkey_val_to_text(&buf, c, k);
+-			bch2_fs_fatal_error(c, "%s(): no replicas entry for %s", __func__, buf.buf);
+-			printbuf_exit(&buf);
+-		}
++		ret = bch2_disk_accounting_mod(trans, &acc, &dirty_sectors, 1, gc);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -699,36 +593,18 @@ static int __trigger_reservation(struct btree_trans *trans,
+ 				 enum btree_id btree_id, unsigned level,
+ 				 struct bkey_s_c k, unsigned flags)
+ {
+-	struct bch_fs *c = trans->c;
+-	unsigned replicas = bkey_s_c_to_reservation(k).v->nr_replicas;
+-	s64 sectors = (s64) k.k->size;
++	if (flags & (BTREE_TRIGGER_TRANSACTIONAL|BTREE_TRIGGER_GC)) {
++		s64 sectors = k.k->size;
  
--		d->persistent_reserved[replicas - 1] += sectors;
-+		return bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
+-	if (flags & BTREE_TRIGGER_OVERWRITE)
+-		sectors = -sectors;
++		if (flags & BTREE_TRIGGER_OVERWRITE)
++			sectors = -sectors;
+ 
+-	if (flags & BTREE_TRIGGER_TRANSACTIONAL) {
+ 		struct disk_accounting_key acc = {
+ 			.type = BCH_DISK_ACCOUNTING_persistent_reserved,
+-			.persistent_reserved.nr_replicas = replicas,
++			.persistent_reserved.nr_replicas = bkey_s_c_to_reservation(k).v->nr_replicas,
+ 		};
+ 
+-		return bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
+-	}
+-
+-	if (flags & BTREE_TRIGGER_GC) {
+-		sectors *= replicas;
+-
+-		percpu_down_read(&c->mark_lock);
+-		preempt_disable();
+-
+-		struct bch_fs_usage *fs_usage = this_cpu_ptr(c->usage_gc);
+-
+-		replicas = min(replicas, ARRAY_SIZE(fs_usage->persistent_reserved));
+-		fs_usage->b.reserved				+= sectors;
+-		fs_usage->persistent_reserved[replicas - 1]	+= sectors;
+-
+-		preempt_enable();
+-		percpu_up_read(&c->mark_lock);
++		return bch2_disk_accounting_mod(trans, &acc, &sectors, 1, flags & BTREE_TRIGGER_GC);
  	}
  
- 	if (flags & BTREE_TRIGGER_GC) {
-+		sectors *= replicas;
-+
- 		percpu_down_read(&c->mark_lock);
- 		preempt_disable();
- 
+ 	return 0;
 diff --git a/fs/bcachefs/buckets.h b/fs/bcachefs/buckets.h
-index 6387e039f789..f9a1d24c997b 100644
+index f9d8d7b9fbd1..7b8b10f74be0 100644
 --- a/fs/bcachefs/buckets.h
 +++ b/fs/bcachefs/buckets.h
-@@ -202,7 +202,6 @@ static inline struct bch_dev_usage bch2_dev_usage_read(struct bch_dev *ca)
+@@ -269,16 +269,6 @@ static inline s64 bucket_sectors_fragmented(struct bch_dev *ca, struct bch_alloc
+ 
+ /* Filesystem usage: */
+ 
+-static inline unsigned __fs_usage_u64s(unsigned nr_replicas)
+-{
+-	return sizeof(struct bch_fs_usage) / sizeof(u64) + nr_replicas;
+-}
+-
+-static inline unsigned fs_usage_u64s(struct bch_fs *c)
+-{
+-	return __fs_usage_u64s(READ_ONCE(c->replicas.nr));
+-}
+-
+ static inline unsigned dev_usage_u64s(void)
+ {
+ 	return sizeof(struct bch_dev_usage) / sizeof(u64);
+@@ -287,19 +277,11 @@ static inline unsigned dev_usage_u64s(void)
+ struct bch_fs_usage_short
+ bch2_fs_usage_read_short(struct bch_fs *);
+ 
+-void bch2_dev_usage_update(struct bch_fs *, struct bch_dev *,
+-			   const struct bch_alloc_v4 *,
+-			   const struct bch_alloc_v4 *);
+-void bch2_dev_usage_update_m(struct bch_fs *, struct bch_dev *,
+-			     struct bucket *, struct bucket *);
+-int bch2_update_replicas(struct bch_fs *, struct bkey_s_c,
+-			 struct bch_replicas_entry_v1 *, s64);
+-
+ int bch2_check_bucket_ref(struct btree_trans *, struct bkey_s_c,
+ 			  const struct bch_extent_ptr *,
+ 			  s64, enum bch_data_type, u8, u8, u32);
+ 
+-int bch2_mark_metadata_bucket(struct bch_fs *, struct bch_dev *,
++int bch2_mark_metadata_bucket(struct btree_trans *, struct bch_dev *,
+ 			      size_t, enum bch_data_type, unsigned,
+ 			      struct gc_pos, unsigned);
+ 
+diff --git a/fs/bcachefs/buckets_types.h b/fs/bcachefs/buckets_types.h
+index 570acdf455bb..7bd1a117afe4 100644
+--- a/fs/bcachefs/buckets_types.h
++++ b/fs/bcachefs/buckets_types.h
+@@ -54,13 +54,6 @@ struct bch_fs_usage_base {
+ 	u64			nr_inodes;
+ };
+ 
+-struct bch_fs_usage {
+-	/* all fields are in units of 512 byte sectors: */
+-	struct bch_fs_usage_base b;
+-	u64			persistent_reserved[BCH_REPLICAS_MAX];
+-	u64			replicas[];
+-};
+-
+ struct bch_fs_usage_short {
+ 	u64			capacity;
+ 	u64			used;
+diff --git a/fs/bcachefs/disk_accounting.c b/fs/bcachefs/disk_accounting.c
+index f898323f72c7..2884615adc1e 100644
+--- a/fs/bcachefs/disk_accounting.c
++++ b/fs/bcachefs/disk_accounting.c
+@@ -19,7 +19,7 @@ static const char * const disk_accounting_type_strs[] = {
+ 
+ int bch2_disk_accounting_mod(struct btree_trans *trans,
+ 			     struct disk_accounting_key *k,
+-			     s64 *d, unsigned nr)
++			     s64 *d, unsigned nr, bool gc)
+ {
+ 	/* Normalize: */
+ 	switch (k->type) {
+@@ -40,11 +40,14 @@ int bch2_disk_accounting_mod(struct btree_trans *trans,
+ 
+ 	memcpy_u64s_small(acc->v.d, d, nr);
+ 
+-	return bch2_trans_update_buffered(trans, BTREE_ID_accounting, &acc->k_i);
++	return likely(!gc)
++		? bch2_trans_update_buffered(trans, BTREE_ID_accounting, &acc->k_i)
++		: bch2_accounting_mem_add(trans, accounting_i_to_s_c(acc), true);
+ }
+ 
+ int bch2_mod_dev_cached_sectors(struct btree_trans *trans,
+-				unsigned dev, s64 sectors)
++				unsigned dev, s64 sectors,
++				bool gc)
+ {
+ 	struct disk_accounting_key acc = {
+ 		.type = BCH_DISK_ACCOUNTING_replicas,
+@@ -52,7 +55,7 @@ int bch2_mod_dev_cached_sectors(struct btree_trans *trans,
+ 
+ 	bch2_replicas_entry_cached(&acc.replicas, dev);
+ 
+-	return bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
++	return bch2_disk_accounting_mod(trans, &acc, &sectors, 1, gc);
+ }
+ 
+ int bch2_accounting_invalid(struct bch_fs *c, struct bkey_s_c k,
+@@ -147,7 +150,7 @@ int bch2_accounting_update_sb(struct btree_trans *trans)
+ 	return 0;
+ }
+ 
+-static int __bch2_accounting_mem_add_slowpath(struct bch_fs *c, struct bkey_s_c_accounting a)
++static int __bch2_accounting_mem_add_slowpath(struct bch_fs *c, struct bkey_s_c_accounting a, bool gc)
+ {
+ 	struct bch_replicas_padded r;
+ 
+@@ -155,7 +158,7 @@ static int __bch2_accounting_mem_add_slowpath(struct bch_fs *c, struct bkey_s_c_
+ 	    !bch2_replicas_marked_locked(c, &r.e))
+ 		return -BCH_ERR_btree_insert_need_mark_replicas;
+ 
+-	struct bch_accounting_mem *acc = &c->accounting;
++	struct bch_accounting_mem *acc = &c->accounting[gc];
+ 	unsigned new_nr_counters = acc->nr_counters + bch2_accounting_counters(a.k);
+ 
+ 	u64 __percpu *new_counters = __alloc_percpu_gfp(new_nr_counters * sizeof(u64),
+@@ -191,19 +194,64 @@ static int __bch2_accounting_mem_add_slowpath(struct bch_fs *c, struct bkey_s_c_
+ 	return 0;
+ }
+ 
+-int bch2_accounting_mem_add_slowpath(struct bch_fs *c, struct bkey_s_c_accounting a)
++int bch2_accounting_mem_add_slowpath(struct bch_fs *c, struct bkey_s_c_accounting a, bool gc)
+ {
+ 	percpu_up_read(&c->mark_lock);
+ 	percpu_down_write(&c->mark_lock);
+-	int ret = __bch2_accounting_mem_add_slowpath(c, a);
++	int ret = __bch2_accounting_mem_add_slowpath(c, a, gc);
+ 	percpu_up_write(&c->mark_lock);
+ 	percpu_down_read(&c->mark_lock);
  	return ret;
  }
  
--void bch2_dev_usage_init(struct bch_dev *);
- void bch2_dev_usage_to_text(struct printbuf *, struct bch_dev_usage *);
- 
- static inline u64 bch2_dev_buckets_reserved(struct bch_dev *ca, enum bch_watermark watermark)
-@@ -261,6 +260,13 @@ static inline u64 dev_buckets_available(struct bch_dev *ca,
- 	return __dev_buckets_available(ca, bch2_dev_usage_read(ca), watermark);
- }
- 
-+static inline s64 bucket_sectors_fragmented(struct bch_dev *ca, struct bch_alloc_v4 a)
++/* Ensures all counters in @src exist in @dst: */
++static int copy_counters(struct bch_accounting_mem *dst,
++			 struct bch_accounting_mem *src)
 +{
-+	return a.dirty_sectors
-+		? max(0, (int) ca->mi.bucket_size - (int) a.dirty_sectors)
-+		: 0;
-+}
++	unsigned orig_dst_k_nr = dst->k.nr;
++	unsigned dst_counters = dst->nr_counters;
 +
- /* Filesystem usage: */
- 
- static inline unsigned __fs_usage_u64s(unsigned nr_replicas)
-@@ -304,31 +310,11 @@ bch2_fs_usage_read_short(struct bch_fs *);
- 
- void bch2_dev_usage_update(struct bch_fs *, struct bch_dev *,
- 			   const struct bch_alloc_v4 *,
--			   const struct bch_alloc_v4 *, u64, bool);
-+			   const struct bch_alloc_v4 *);
- void bch2_dev_usage_update_m(struct bch_fs *, struct bch_dev *,
- 			     struct bucket *, struct bucket *);
--
--/* key/bucket marking: */
--
--static inline struct bch_fs_usage *fs_usage_ptr(struct bch_fs *c,
--						unsigned journal_seq,
--						bool gc)
--{
--	percpu_rwsem_assert_held(&c->mark_lock);
--	BUG_ON(!gc && !journal_seq);
--
--	return this_cpu_ptr(gc
--			    ? c->usage_gc
--			    : c->usage[journal_seq & JOURNAL_BUF_MASK]);
--}
--
- int bch2_update_replicas(struct bch_fs *, struct bkey_s_c,
--			 struct bch_replicas_entry_v1 *, s64,
--			 unsigned, bool);
--int bch2_update_replicas_list(struct btree_trans *,
- 			 struct bch_replicas_entry_v1 *, s64);
--int bch2_update_cached_sectors_list(struct btree_trans *, unsigned, s64);
--int bch2_replicas_deltas_realloc(struct btree_trans *, unsigned);
- 
- void bch2_fs_usage_initialize(struct bch_fs *);
- 
-@@ -358,9 +344,6 @@ int bch2_trigger_reservation(struct btree_trans *, enum btree_id, unsigned,
- 
- void bch2_trans_account_disk_usage_change(struct btree_trans *);
- 
--void bch2_trans_fs_usage_revert(struct btree_trans *, struct replicas_delta_list *);
--int bch2_trans_fs_usage_apply(struct btree_trans *, struct replicas_delta_list *);
--
- int bch2_trans_mark_metadata_bucket(struct btree_trans *, struct bch_dev *,
- 				    size_t, enum bch_data_type, unsigned);
- int bch2_trans_mark_dev_sb(struct bch_fs *, struct bch_dev *);
-diff --git a/fs/bcachefs/disk_accounting.c b/fs/bcachefs/disk_accounting.c
-index 209f59e87b34..327c586ac661 100644
---- a/fs/bcachefs/disk_accounting.c
-+++ b/fs/bcachefs/disk_accounting.c
-@@ -1,9 +1,13 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- #include "bcachefs.h"
-+#include "bcachefs_ioctl.h"
- #include "btree_update.h"
-+#include "btree_write_buffer.h"
- #include "buckets.h"
- #include "disk_accounting.h"
-+#include "error.h"
-+#include "journal_io.h"
- #include "replicas.h"
- 
- static const char * const disk_accounting_type_strs[] = {
-@@ -13,6 +17,44 @@ static const char * const disk_accounting_type_strs[] = {
- 	NULL
- };
- 
-+int bch2_disk_accounting_mod(struct btree_trans *trans,
-+			     struct disk_accounting_key *k,
-+			     s64 *d, unsigned nr)
-+{
-+	/* Normalize: */
-+	switch (k->type) {
-+	case BCH_DISK_ACCOUNTING_replicas:
-+		bubble_sort(k->replicas.devs, k->replicas.nr_devs, u8_cmp);
-+		break;
-+	}
++	darray_for_each(src->k, i)
++		if (eytzinger0_find(dst->k.data, orig_dst_k_nr, sizeof(dst->k.data[0]),
++				    accounting_pos_cmp, &i->pos) >= orig_dst_k_nr) {
++			if (darray_push(&dst->k, ((struct accounting_pos_offset) {
++					.pos		= i->pos,
++					.offset		= dst_counters,
++					.nr_counters	= i->nr_counters })))
++				goto err;
 +
-+	BUG_ON(nr > BCH_ACCOUNTING_MAX_COUNTERS);
-+
-+	struct {
-+		__BKEY_PADDED(k, BCH_ACCOUNTING_MAX_COUNTERS);
-+	} k_i;
-+	struct bkey_i_accounting *acc = bkey_accounting_init(&k_i.k);
-+
-+	acc->k.p = disk_accounting_key_to_bpos(k);
-+	set_bkey_val_u64s(&acc->k, sizeof(struct bch_accounting) / sizeof(u64) + nr);
-+
-+	memcpy_u64s_small(acc->v.d, d, nr);
-+
-+	return bch2_trans_update_buffered(trans, BTREE_ID_accounting, &acc->k_i);
-+}
-+
-+int bch2_mod_dev_cached_sectors(struct btree_trans *trans,
-+				unsigned dev, s64 sectors)
-+{
-+	struct disk_accounting_key acc = {
-+		.type = BCH_DISK_ACCOUNTING_replicas,
-+	};
-+
-+	bch2_replicas_entry_cached(&acc.replicas, dev);
-+
-+	return bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
-+}
-+
- int bch2_accounting_invalid(struct bch_fs *c, struct bkey_s_c k,
- 			    enum bkey_invalid_flags flags,
- 			    struct printbuf *err)
-@@ -68,3 +110,269 @@ void bch2_accounting_swab(struct bkey_s k)
- 	     p++)
- 		*p = swab64(*p);
- }
-+
-+static inline bool accounting_to_replicas(struct bch_replicas_entry_v1 *r, struct bpos p)
-+{
-+	struct disk_accounting_key acc_k;
-+	bpos_to_disk_accounting_key(&acc_k, p);
-+
-+	switch (acc_k.type) {
-+	case BCH_DISK_ACCOUNTING_replicas:
-+		memcpy(r, &acc_k.replicas, replicas_entry_bytes(&acc_k.replicas));
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static int bch2_accounting_update_sb_one(struct bch_fs *c, struct bpos p)
-+{
-+	struct bch_replicas_padded r;
-+	return accounting_to_replicas(&r.e, p)
-+		? bch2_mark_replicas(c, &r.e)
-+		: 0;
-+}
-+
-+int bch2_accounting_update_sb(struct btree_trans *trans)
-+{
-+	for (struct jset_entry *i = trans->journal_entries;
-+	     i != (void *) ((u64 *) trans->journal_entries + trans->journal_entries_u64s);
-+	     i = vstruct_next(i))
-+		if (jset_entry_is_key(i) && i->start->k.type == KEY_TYPE_accounting) {
-+			int ret = bch2_accounting_update_sb_one(trans->c, i->start->k.p);
-+			if (ret)
-+				return ret;
++			dst_counters += i->nr_counters;
 +		}
 +
-+	return 0;
-+}
++	if (dst->k.nr == orig_dst_k_nr)
++		return 0;
 +
-+static int __bch2_accounting_mem_add_slowpath(struct bch_fs *c, struct bkey_s_c_accounting a)
-+{
-+	struct bch_replicas_padded r;
-+
-+	if (accounting_to_replicas(&r.e, a.k->p) &&
-+	    !bch2_replicas_marked_locked(c, &r.e))
-+		return -BCH_ERR_btree_insert_need_mark_replicas;
-+
-+	struct bch_accounting_mem *acc = &c->accounting;
-+	unsigned new_nr_counters = acc->nr_counters + bch2_accounting_counters(a.k);
-+
-+	u64 __percpu *new_counters = __alloc_percpu_gfp(new_nr_counters * sizeof(u64),
++	u64 __percpu *new_counters = __alloc_percpu_gfp(dst_counters * sizeof(u64),
 +							sizeof(u64), GFP_KERNEL);
 +	if (!new_counters)
-+		return -BCH_ERR_ENOMEM_disk_accounting;
++		goto err;
 +
 +	preempt_disable();
 +	memcpy(this_cpu_ptr(new_counters),
-+	       bch2_acc_percpu_u64s(acc->v, acc->nr_counters),
-+	       acc->nr_counters * sizeof(u64));
++	       bch2_acc_percpu_u64s(dst->v, dst->nr_counters),
++	       dst->nr_counters * sizeof(u64));
 +	preempt_enable();
 +
-+	struct accounting_pos_offset n = {
-+		.pos		= a.k->p,
-+		.version	= a.k->version,
-+		.offset		= acc->nr_counters,
-+		.nr_counters	= bch2_accounting_counters(a.k),
-+	};
-+	if (darray_push(&acc->k, n)) {
-+		free_percpu(new_counters);
-+		return -BCH_ERR_ENOMEM_disk_accounting;
-+	}
++	free_percpu(dst->v);
++	dst->v = new_counters;
++	dst->nr_counters = dst_counters;
 +
-+	eytzinger0_sort(acc->k.data, acc->k.nr, sizeof(acc->k.data[0]), accounting_pos_cmp, NULL);
++	eytzinger0_sort(dst->k.data, dst->k.nr, sizeof(dst->k.data[0]), accounting_pos_cmp, NULL);
 +
-+	free_percpu(acc->v);
-+	acc->v = new_counters;
-+	acc->nr_counters = new_nr_counters;
-+
-+	for (unsigned i = 0; i < n.nr_counters; i++)
-+		this_cpu_add(acc->v[n.offset + i], a.v->d[i]);
 +	return 0;
++err:
++	dst->k.nr = orig_dst_k_nr;
++	return -BCH_ERR_ENOMEM_disk_accounting;
 +}
 +
-+int bch2_accounting_mem_add_slowpath(struct bch_fs *c, struct bkey_s_c_accounting a)
+ int bch2_fs_replicas_usage_read(struct bch_fs *c, darray_char *usage)
+ {
+-	struct bch_accounting_mem *acc = &c->accounting;
++	struct bch_accounting_mem *acc = &c->accounting[0];
+ 	int ret = 0;
+ 
+ 	darray_init(usage);
+@@ -234,6 +282,85 @@ int bch2_fs_replicas_usage_read(struct bch_fs *c, darray_char *usage)
+ 	return ret;
+ }
+ 
++static int accounting_write_key(struct btree_trans *trans, struct bpos pos, u64 *v, unsigned nr_counters)
 +{
-+	percpu_up_read(&c->mark_lock);
-+	percpu_down_write(&c->mark_lock);
-+	int ret = __bch2_accounting_mem_add_slowpath(c, a);
-+	percpu_up_write(&c->mark_lock);
-+	percpu_down_read(&c->mark_lock);
-+	return ret;
++	struct bkey_i_accounting *a = bch2_trans_kmalloc(trans, sizeof(*a) + sizeof(*v) * nr_counters);
++	int ret = PTR_ERR_OR_ZERO(a);
++	if (ret)
++		return ret;
++
++	bkey_accounting_init(&a->k_i);
++	a->k.p = pos;
++	set_bkey_val_bytes(&a->k, sizeof(a->v) + sizeof(*v) * nr_counters);
++	memcpy(a->v.d, v, sizeof(*v) * nr_counters);
++
++	return bch2_btree_insert_trans(trans, BTREE_ID_accounting, &a->k_i, 0);
 +}
 +
-+int bch2_fs_replicas_usage_read(struct bch_fs *c, darray_char *usage)
++int bch2_accounting_gc_done(struct bch_fs *c)
 +{
-+	struct bch_accounting_mem *acc = &c->accounting;
++	struct bch_accounting_mem *dst = &c->accounting[0];
++	struct bch_accounting_mem *src = &c->accounting[1];
++	struct btree_trans *trans = bch2_trans_get(c);
++	struct printbuf buf = PRINTBUF;
 +	int ret = 0;
 +
-+	darray_init(usage);
++	percpu_down_write(&c->mark_lock);
 +
-+	percpu_down_read(&c->mark_lock);
-+	darray_for_each(acc->k, i) {
-+		struct {
-+			struct bch_replicas_usage r;
-+			u8 pad[BCH_BKEY_PTRS_MAX];
-+		} u;
-+
-+		if (!accounting_to_replicas(&u.r.r, i->pos))
-+			continue;
-+
-+		bch2_accounting_mem_read(c, i->pos, &u.r.sectors, 1);
-+
-+		ret = darray_make_room(usage, replicas_usage_bytes(&u.r));
-+		if (ret)
-+			break;
-+
-+		memcpy(&darray_top(*usage), &u.r, replicas_usage_bytes(&u.r));
-+		usage->nr += replicas_usage_bytes(&u.r);
-+	}
-+	percpu_up_read(&c->mark_lock);
-+
-+	if (ret)
-+		darray_exit(usage);
-+	return ret;
-+}
-+
-+static bool accounting_key_is_zero(struct bkey_s_c_accounting a)
-+{
-+
-+	for (unsigned i = 0; i < bch2_accounting_counters(a.k); i++)
-+		if (a.v->d[i])
-+			return false;
-+	return true;
-+}
-+
-+static int accounting_read_key(struct bch_fs *c, struct bkey_s_c k)
-+{
-+	struct printbuf buf = PRINTBUF;
-+
-+	if (k.k->type != KEY_TYPE_accounting)
-+		return 0;
-+
-+	percpu_down_read(&c->mark_lock);
-+	int ret = __bch2_accounting_mem_add(c, bkey_s_c_to_accounting(k));
-+	percpu_up_read(&c->mark_lock);
-+
-+	if (accounting_key_is_zero(bkey_s_c_to_accounting(k)) &&
-+	    ret == -BCH_ERR_btree_insert_need_mark_replicas)
-+		ret = 0;
-+
-+	struct disk_accounting_key acc;
-+	bpos_to_disk_accounting_key(&acc, k.k->p);
-+
-+	if (fsck_err_on(ret == -BCH_ERR_btree_insert_need_mark_replicas,
-+			c, accounting_replicas_not_marked,
-+			"accounting not marked in superblock replicas\n  %s",
-+			(bch2_accounting_key_to_text(&buf, &acc),
-+			 buf.buf)))
-+		ret = bch2_accounting_update_sb_one(c, k.k->p);
-+fsck_err:
-+	printbuf_exit(&buf);
-+	return ret;
-+}
-+
-+int bch2_accounting_read(struct bch_fs *c)
-+{
-+	struct bch_accounting_mem *acc = &c->accounting;
-+
-+	int ret = bch2_trans_run(c,
-+		for_each_btree_key(trans, iter,
-+				BTREE_ID_accounting, POS_MIN,
-+				BTREE_ITER_PREFETCH|BTREE_ITER_ALL_SNAPSHOTS, k, ({
-+			struct bkey u;
-+			struct bkey_s_c k = bch2_btree_path_peek_slot_exact(btree_iter_path(trans, &iter), &u);
-+			accounting_read_key(c, k);
-+		})));
++	ret   = copy_counters(dst, src) ?:
++		copy_counters(src, dst);
 +	if (ret)
 +		goto err;
 +
-+	struct genradix_iter iter;
-+	struct journal_replay *i, **_i;
++	BUG_ON(dst->k.nr != src->k.nr);
 +
-+	genradix_for_each(&c->journal_entries, iter, _i) {
-+		i = *_i;
++	for (unsigned i = 0; i < src->k.nr; i++) {
++		BUG_ON(src->k.data[i].nr_counters != dst->k.data[i].nr_counters);
++		BUG_ON(!bpos_eq(dst->k.data[i].pos, src->k.data[i].pos));
 +
-+		if (!i || i->ignore)
-+			continue;
++		struct disk_accounting_key acc_k;
++		bpos_to_disk_accounting_key(&acc_k, src->k.data[i].pos);
 +
-+		for_each_jset_key(k, entry, &i->j)
-+			if (k->k.type == KEY_TYPE_accounting) {
-+				struct bkey_s_c_accounting a = bkey_i_to_s_c_accounting(k);
-+				unsigned idx = eytzinger0_find(acc->k.data, acc->k.nr,
-+							sizeof(acc->k.data[0]),
-+							accounting_pos_cmp, &a.k->p);
-+				if (idx < acc->k.nr &&
-+				    bversion_cmp(acc->k.data[idx].version, a.k->version) >= 0)
-+					continue;
++		unsigned nr = src->k.data[i].nr_counters;
++		u64 src_v[BCH_ACCOUNTING_MAX_COUNTERS];
++		u64 dst_v[BCH_ACCOUNTING_MAX_COUNTERS];
 +
-+				ret = accounting_read_key(c, bkey_i_to_s_c(k));
++		bch2_accounting_mem_read_counters(c, i, dst_v, nr, false);
++		bch2_accounting_mem_read_counters(c, i, src_v, nr, true);
++
++		if (memcmp(dst_v, src_v, nr * sizeof(u64))) {
++			printbuf_reset(&buf);
++			prt_str(&buf, "accounting mismatch for ");
++			bch2_accounting_key_to_text(&buf, &acc_k);
++
++			prt_str(&buf, ": got");
++			for (unsigned j = 0; j < nr; j++)
++				prt_printf(&buf, " %llu", dst_v[j]);
++
++			prt_str(&buf, " should be");
++			for (unsigned j = 0; j < nr; j++)
++				prt_printf(&buf, " %llu", src_v[j]);
++
++			if (fsck_err(c, accounting_mismatch, "%s", buf.buf)) {
++				for (unsigned j = 0; j < dst->k.data[i].nr_counters; j++)
++					percpu_u64_set(dst->v + dst->k.data[i].offset + j, src_v[j]);
++
++				ret = commit_do(trans, NULL, NULL, 0,
++						accounting_write_key(trans, src->k.data[i].pos, src_v, nr));
 +				if (ret)
 +					goto err;
 +			}
-+	}
-+
-+	percpu_down_read(&c->mark_lock);
-+	preempt_disable();
-+	struct bch_fs_usage_base *usage = &c->usage_base->b;
-+
-+	for (unsigned i = 0; i < acc->k.nr; i++) {
-+		struct disk_accounting_key k;
-+		bpos_to_disk_accounting_key(&k, acc->k.data[i].pos);
-+
-+		u64 v[BCH_ACCOUNTING_MAX_COUNTERS];
-+		bch2_accounting_mem_read_counters(c, i, v, ARRAY_SIZE(v));
-+
-+		switch (k.type) {
-+		case BCH_DISK_ACCOUNTING_persistent_reserved:
-+			usage->reserved += v[0] * k.persistent_reserved.nr_replicas;
-+			break;
-+		case BCH_DISK_ACCOUNTING_replicas:
-+			fs_usage_data_type_to_base(usage, k.replicas.data_type, v[0]);
-+			break;
 +		}
 +	}
-+	preempt_enable();
-+	percpu_up_read(&c->mark_lock);
 +err:
++fsck_err:
++	percpu_up_write(&c->mark_lock);
++	printbuf_exit(&buf);
++	bch2_trans_put(trans);
 +	bch_err_fn(c, ret);
 +	return ret;
 +}
 +
-+int bch2_dev_usage_remove(struct bch_fs *c, unsigned dev)
-+{
-+	return bch2_trans_run(c,
-+		bch2_btree_write_buffer_flush_sync(trans) ?:
-+		for_each_btree_key_commit(trans, iter, BTREE_ID_accounting, POS_MIN,
-+				BTREE_ITER_ALL_SNAPSHOTS, k, NULL, NULL, 0, ({
-+			struct disk_accounting_key acc;
-+			bpos_to_disk_accounting_key(&acc, k.k->p);
-+
-+			acc.type == BCH_DISK_ACCOUNTING_dev_data_type &&
-+			acc.dev_data_type.dev == dev
-+				? bch2_btree_bit_mod_buffered(trans, BTREE_ID_accounting, k.k->p, 0)
-+				: 0;
-+		})) ?:
-+		bch2_btree_write_buffer_flush_sync(trans));
-+}
-+
-+int bch2_dev_usage_init(struct bch_dev *ca)
-+{
-+	struct disk_accounting_key acc = {
-+		.type = BCH_DISK_ACCOUNTING_dev_data_type,
-+		.dev_data_type.dev = ca->dev_idx,
-+		.dev_data_type.data_type = BCH_DATA_free,
-+	};
-+	u64 v[3] = { ca->mi.nbuckets - ca->mi.first_bucket, 0, 0 };
-+
-+	return bch2_trans_do(ca->fs, NULL, NULL, 0,
-+			     bch2_disk_accounting_mod(trans, &acc, v, ARRAY_SIZE(v)));
+ static bool accounting_key_is_zero(struct bkey_s_c_accounting a)
+ {
+ 
+@@ -251,7 +378,7 @@ static int accounting_read_key(struct bch_fs *c, struct bkey_s_c k)
+ 		return 0;
+ 
+ 	percpu_down_read(&c->mark_lock);
+-	int ret = __bch2_accounting_mem_add(c, bkey_s_c_to_accounting(k));
++	int ret = __bch2_accounting_mem_add(c, bkey_s_c_to_accounting(k), false);
+ 	percpu_up_read(&c->mark_lock);
+ 
+ 	if (accounting_key_is_zero(bkey_s_c_to_accounting(k)) &&
+@@ -274,7 +401,7 @@ static int accounting_read_key(struct bch_fs *c, struct bkey_s_c k)
+ 
+ int bch2_accounting_read(struct bch_fs *c)
+ {
+-	struct bch_accounting_mem *acc = &c->accounting;
++	struct bch_accounting_mem *acc = &c->accounting[0];
+ 
+ 	int ret = bch2_trans_run(c,
+ 		for_each_btree_key(trans, iter,
+@@ -321,7 +448,7 @@ int bch2_accounting_read(struct bch_fs *c)
+ 		bpos_to_disk_accounting_key(&k, acc->k.data[i].pos);
+ 
+ 		u64 v[BCH_ACCOUNTING_MAX_COUNTERS];
+-		bch2_accounting_mem_read_counters(c, i, v, ARRAY_SIZE(v));
++		bch2_accounting_mem_read_counters(c, i, v, ARRAY_SIZE(v), false);
+ 
+ 		switch (k.type) {
+ 		case BCH_DISK_ACCOUNTING_persistent_reserved:
+@@ -370,8 +497,9 @@ int bch2_dev_usage_remove(struct bch_fs *c, unsigned dev)
+ 		bch2_btree_write_buffer_flush_sync(trans));
+ }
+ 
+-int bch2_dev_usage_init(struct bch_dev *ca)
++int bch2_dev_usage_init(struct bch_dev *ca, bool gc)
+ {
++	struct bch_fs *c = ca->fs;
+ 	struct disk_accounting_key acc = {
+ 		.type = BCH_DISK_ACCOUNTING_dev_data_type,
+ 		.dev_data_type.dev = ca->dev_idx,
+@@ -379,14 +507,21 @@ int bch2_dev_usage_init(struct bch_dev *ca)
+ 	};
+ 	u64 v[3] = { ca->mi.nbuckets - ca->mi.first_bucket, 0, 0 };
+ 
+-	return bch2_trans_do(ca->fs, NULL, NULL, 0,
+-			     bch2_disk_accounting_mod(trans, &acc, v, ARRAY_SIZE(v)));
++	int ret = bch2_trans_do(c, NULL, NULL, 0,
++			bch2_disk_accounting_mod(trans, &acc, v, ARRAY_SIZE(v), gc));
++	bch_err_fn(c, ret);
++	return ret;
+ }
+ 
+-void bch2_fs_accounting_exit(struct bch_fs *c)
++void bch2_accounting_free(struct bch_accounting_mem *acc)
+ {
+-	struct bch_accounting_mem *acc = &c->accounting;
+-
+ 	darray_exit(&acc->k);
+ 	free_percpu(acc->v);
++	acc->v = NULL;
++	acc->nr_counters = 0;
 +}
 +
 +void bch2_fs_accounting_exit(struct bch_fs *c)
 +{
-+	struct bch_accounting_mem *acc = &c->accounting;
-+
-+	darray_exit(&acc->k);
-+	free_percpu(acc->v);
-+}
++	bch2_accounting_free(&c->accounting[0]);
+ }
 diff --git a/fs/bcachefs/disk_accounting.h b/fs/bcachefs/disk_accounting.h
-index e15299665859..5fd053a819df 100644
+index a8526bf43207..70ac67f4a3cb 100644
 --- a/fs/bcachefs/disk_accounting.h
 +++ b/fs/bcachefs/disk_accounting.h
-@@ -2,11 +2,32 @@
- #ifndef _BCACHEFS_DISK_ACCOUNTING_H
- #define _BCACHEFS_DISK_ACCOUNTING_H
- 
-+#include <linux/eytzinger.h>
-+
-+static inline void bch2_u64s_neg(u64 *v, unsigned nr)
-+{
-+	for (unsigned i = 0; i < nr; i++)
-+		v[i] = -v[i];
-+}
-+
- static inline unsigned bch2_accounting_counters(const struct bkey *k)
- {
- 	return bkey_val_u64s(k) - offsetof(struct bch_accounting, d) / sizeof(u64);
- }
- 
-+static inline void bch2_accounting_neg(struct bkey_s_accounting a)
-+{
-+	bch2_u64s_neg(a.v->d, bch2_accounting_counters(a.k));
-+}
-+
-+static inline bool bch2_accounting_key_is_zero(struct bkey_s_c_accounting a)
-+{
-+	for (unsigned i = 0;  i < bch2_accounting_counters(a.k); i++)
-+		if (a.v->d[i])
-+			return false;
-+	return true;
-+}
-+
- static inline void bch2_accounting_accumulate(struct bkey_i_accounting *dst,
- 					      struct bkey_s_c_accounting src)
- {
-@@ -18,6 +39,26 @@ static inline void bch2_accounting_accumulate(struct bkey_i_accounting *dst,
- 		dst->k.version = src.k->version;
- }
- 
-+static inline void fs_usage_data_type_to_base(struct bch_fs_usage_base *fs_usage,
-+					      enum bch_data_type data_type,
-+					      s64 sectors)
-+{
-+	switch (data_type) {
-+	case BCH_DATA_btree:
-+		fs_usage->btree		+= sectors;
-+		break;
-+	case BCH_DATA_user:
-+	case BCH_DATA_parity:
-+		fs_usage->data		+= sectors;
-+		break;
-+	case BCH_DATA_cached:
-+		fs_usage->cached	+= sectors;
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
- static inline void bpos_to_disk_accounting_key(struct disk_accounting_key *acc, struct bpos p)
- {
- 	acc->_pad = p;
-@@ -36,6 +77,12 @@ static inline struct bpos disk_accounting_key_to_bpos(struct disk_accounting_key
+@@ -78,11 +78,9 @@ static inline struct bpos disk_accounting_key_to_bpos(struct disk_accounting_key
  	return ret;
  }
  
-+int bch2_disk_accounting_mod(struct btree_trans *,
-+			     struct disk_accounting_key *,
-+			     s64 *, unsigned);
-+int bch2_mod_dev_cached_sectors(struct btree_trans *trans,
-+				unsigned dev, s64 sectors);
-+
+-int bch2_disk_accounting_mod(struct btree_trans *,
+-			     struct disk_accounting_key *,
+-			     s64 *, unsigned);
+-int bch2_mod_dev_cached_sectors(struct btree_trans *trans,
+-				unsigned dev, s64 sectors);
++int bch2_disk_accounting_mod(struct btree_trans *, struct disk_accounting_key *,
++			     s64 *, unsigned, bool);
++int bch2_mod_dev_cached_sectors(struct btree_trans *, unsigned, s64, bool);
+ 
  int bch2_accounting_invalid(struct bch_fs *, struct bkey_s_c,
  			    enum bkey_invalid_flags, struct printbuf *);
- void bch2_accounting_key_to_text(struct printbuf *, struct disk_accounting_key *);
-@@ -49,4 +96,83 @@ void bch2_accounting_swab(struct bkey_s);
- 	.min_val_size	= 8,				\
- })
+@@ -106,15 +104,15 @@ static inline int accounting_pos_cmp(const void *_l, const void *_r)
+ 	return bpos_cmp(*l, *r);
+ }
  
-+int bch2_accounting_update_sb(struct btree_trans *);
+-int bch2_accounting_mem_add_slowpath(struct bch_fs *, struct bkey_s_c_accounting);
++int bch2_accounting_mem_add_slowpath(struct bch_fs *, struct bkey_s_c_accounting, bool);
+ 
+-static inline int __bch2_accounting_mem_add(struct bch_fs *c, struct bkey_s_c_accounting a)
++static inline int __bch2_accounting_mem_add(struct bch_fs *c, struct bkey_s_c_accounting a, bool gc)
+ {
+-	struct bch_accounting_mem *acc = &c->accounting;
++	struct bch_accounting_mem *acc = &c->accounting[gc];
+ 	unsigned idx = eytzinger0_find(acc->k.data, acc->k.nr, sizeof(acc->k.data[0]),
+ 				       accounting_pos_cmp, &a.k->p);
+ 	if (unlikely(idx >= acc->k.nr))
+-		return bch2_accounting_mem_add_slowpath(c, a);
++		return bch2_accounting_mem_add_slowpath(c, a, gc);
+ 
+ 	unsigned offset = acc->k.data[idx].offset;
+ 
+@@ -125,37 +123,48 @@ static inline int __bch2_accounting_mem_add(struct bch_fs *c, struct bkey_s_c_ac
+ 	return 0;
+ }
+ 
+-static inline int bch2_accounting_mem_add(struct btree_trans *trans, struct bkey_s_c_accounting a)
++static inline int bch2_accounting_mem_add_locked(struct btree_trans *trans, struct bkey_s_c_accounting a, bool gc)
+ {
+ 	struct bch_fs *c = trans->c;
+-	struct disk_accounting_key acc_k;
+-	bpos_to_disk_accounting_key(&acc_k, a.k->p);
+ 
+-	switch (acc_k.type) {
+-	case BCH_DISK_ACCOUNTING_persistent_reserved:
+-		trans->fs_usage_delta.reserved += acc_k.persistent_reserved.nr_replicas * a.v->d[0];
+-		break;
+-	case BCH_DISK_ACCOUNTING_replicas:
+-		fs_usage_data_type_to_base(&trans->fs_usage_delta, acc_k.replicas.data_type, a.v->d[0]);
+-		break;
+-	case BCH_DISK_ACCOUNTING_dev_data_type: {
+-		struct bch_dev *ca = bch_dev_bkey_exists(c, acc_k.dev_data_type.dev);
+-
+-		this_cpu_add(ca->usage->d[acc_k.dev_data_type.data_type].buckets, a.v->d[0]);
+-		this_cpu_add(ca->usage->d[acc_k.dev_data_type.data_type].sectors, a.v->d[1]);
+-		this_cpu_add(ca->usage->d[acc_k.dev_data_type.data_type].fragmented, a.v->d[2]);
++	if (!gc) {
++		struct disk_accounting_key acc_k;
++		bpos_to_disk_accounting_key(&acc_k, a.k->p);
 +
-+static inline int accounting_pos_cmp(const void *_l, const void *_r)
++		switch (acc_k.type) {
++		case BCH_DISK_ACCOUNTING_persistent_reserved:
++			trans->fs_usage_delta.reserved += acc_k.persistent_reserved.nr_replicas * a.v->d[0];
++			break;
++		case BCH_DISK_ACCOUNTING_replicas:
++			fs_usage_data_type_to_base(&trans->fs_usage_delta, acc_k.replicas.data_type, a.v->d[0]);
++			break;
++		case BCH_DISK_ACCOUNTING_dev_data_type: {
++			struct bch_dev *ca = bch_dev_bkey_exists(c, acc_k.dev_data_type.dev);
++
++			this_cpu_add(ca->usage->d[acc_k.dev_data_type.data_type].buckets, a.v->d[0]);
++			this_cpu_add(ca->usage->d[acc_k.dev_data_type.data_type].sectors, a.v->d[1]);
++			this_cpu_add(ca->usage->d[acc_k.dev_data_type.data_type].fragmented, a.v->d[2]);
++		}
++		}
+ 	}
+-	}
+-	return __bch2_accounting_mem_add(c, a);
++
++	return __bch2_accounting_mem_add(c, a, gc);
+ }
+ 
+-static inline void bch2_accounting_mem_read_counters(struct bch_fs *c,
+-						     unsigned idx,
+-						     u64 *v, unsigned nr)
++static inline int bch2_accounting_mem_add(struct btree_trans *trans, struct bkey_s_c_accounting a, bool gc)
 +{
-+	const struct bpos *l = _l, *r = _r;
-+
-+	return bpos_cmp(*l, *r);
++	percpu_down_read(&trans->c->mark_lock);
++	int ret = bch2_accounting_mem_add_locked(trans, a, gc);
++	percpu_up_read(&trans->c->mark_lock);
++	return ret;
 +}
 +
-+int bch2_accounting_mem_add_slowpath(struct bch_fs *, struct bkey_s_c_accounting);
++static inline void bch2_accounting_mem_read_counters(struct bch_fs *c, unsigned idx,
++						     u64 *v, unsigned nr, bool gc)
+ {
+ 	memset(v, 0, sizeof(*v) * nr);
+ 
+-	struct bch_accounting_mem *acc = &c->accounting;
++	struct bch_accounting_mem *acc = &c->accounting[0];
+ 	if (unlikely(idx >= acc->k.nr))
+ 		return;
+ 
+@@ -169,19 +178,23 @@ static inline void bch2_accounting_mem_read_counters(struct bch_fs *c,
+ static inline void bch2_accounting_mem_read(struct bch_fs *c, struct bpos p,
+ 					    u64 *v, unsigned nr)
+ {
+-	struct bch_accounting_mem *acc = &c->accounting;
++	struct bch_accounting_mem *acc = &c->accounting[0];
+ 	unsigned idx = eytzinger0_find(acc->k.data, acc->k.nr, sizeof(acc->k.data[0]),
+ 				       accounting_pos_cmp, &p);
+ 
+-	bch2_accounting_mem_read_counters(c, idx, v, nr);
++	bch2_accounting_mem_read_counters(c, idx, v, nr, false);
+ }
+ 
+ int bch2_fs_replicas_usage_read(struct bch_fs *, darray_char *);
+ 
++int bch2_accounting_gc_done(struct bch_fs *);
 +
-+static inline int __bch2_accounting_mem_add(struct bch_fs *c, struct bkey_s_c_accounting a)
-+{
-+	struct bch_accounting_mem *acc = &c->accounting;
-+	unsigned idx = eytzinger0_find(acc->k.data, acc->k.nr, sizeof(acc->k.data[0]),
-+				       accounting_pos_cmp, &a.k->p);
-+	if (unlikely(idx >= acc->k.nr))
-+		return bch2_accounting_mem_add_slowpath(c, a);
+ int bch2_accounting_read(struct bch_fs *);
+ 
+ int bch2_dev_usage_remove(struct bch_fs *, unsigned);
+-int bch2_dev_usage_init(struct bch_dev *);
++int bch2_dev_usage_init(struct bch_dev *, bool);
 +
-+	unsigned offset = acc->k.data[idx].offset;
-+
-+	EBUG_ON(bch2_accounting_counters(a.k) != acc->k.data[idx].nr_counters);
-+
-+	for (unsigned i = 0; i < bch2_accounting_counters(a.k); i++)
-+		this_cpu_add(acc->v[offset + i], a.v->d[i]);
-+	return 0;
-+}
-+
-+static inline int bch2_accounting_mem_add(struct btree_trans *trans, struct bkey_s_c_accounting a)
-+{
-+	struct disk_accounting_key acc_k;
-+	bpos_to_disk_accounting_key(&acc_k, a.k->p);
-+
-+	switch (acc_k.type) {
-+	case BCH_DISK_ACCOUNTING_persistent_reserved:
-+		trans->fs_usage_delta.reserved += acc_k.persistent_reserved.nr_replicas * a.v->d[0];
-+		break;
-+	case BCH_DISK_ACCOUNTING_replicas:
-+		fs_usage_data_type_to_base(&trans->fs_usage_delta, acc_k.replicas.data_type, a.v->d[0]);
-+		break;
-+	}
-+	return __bch2_accounting_mem_add(trans->c, a);
-+}
-+
-+static inline void bch2_accounting_mem_read_counters(struct bch_fs *c,
-+						     unsigned idx,
-+						     u64 *v, unsigned nr)
-+{
-+	memset(v, 0, sizeof(*v) * nr);
-+
-+	struct bch_accounting_mem *acc = &c->accounting;
-+	if (unlikely(idx >= acc->k.nr))
-+		return;
-+
-+	unsigned offset = acc->k.data[idx].offset;
-+	nr = min_t(unsigned, nr, acc->k.data[idx].nr_counters);
-+
-+	for (unsigned i = 0; i < nr; i++)
-+		v[i] = percpu_u64_get(acc->v + offset + i);
-+}
-+
-+static inline void bch2_accounting_mem_read(struct bch_fs *c, struct bpos p,
-+					    u64 *v, unsigned nr)
-+{
-+	struct bch_accounting_mem *acc = &c->accounting;
-+	unsigned idx = eytzinger0_find(acc->k.data, acc->k.nr, sizeof(acc->k.data[0]),
-+				       accounting_pos_cmp, &p);
-+
-+	bch2_accounting_mem_read_counters(c, idx, v, nr);
-+}
-+
-+int bch2_fs_replicas_usage_read(struct bch_fs *, darray_char *);
-+
-+int bch2_accounting_read(struct bch_fs *);
-+
-+int bch2_dev_usage_remove(struct bch_fs *, unsigned);
-+int bch2_dev_usage_init(struct bch_dev *);
-+void bch2_fs_accounting_exit(struct bch_fs *);
-+
++void bch2_accounting_free(struct bch_accounting_mem *);
+ void bch2_fs_accounting_exit(struct bch_fs *);
+ 
  #endif /* _BCACHEFS_DISK_ACCOUNTING_H */
-diff --git a/fs/bcachefs/disk_accounting_types.h b/fs/bcachefs/disk_accounting_types.h
-new file mode 100644
-index 000000000000..8da5ac182b33
---- /dev/null
-+++ b/fs/bcachefs/disk_accounting_types.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _BCACHEFS_DISK_ACCOUNTING_TYPES_H
-+#define _BCACHEFS_DISK_ACCOUNTING_TYPES_H
-+
-+#include <linux/darray.h>
-+
-+struct accounting_pos_offset {
-+	struct bpos				pos;
-+	struct bversion				version;
-+	u32					offset:24,
-+						nr_counters:8;
-+};
-+
-+struct bch_accounting_mem {
-+	DARRAY(struct accounting_pos_offset)	k;
-+	u64 __percpu				*v;
-+	unsigned				nr_counters;
-+};
-+
-+#endif /* _BCACHEFS_DISK_ACCOUNTING_TYPES_H */
 diff --git a/fs/bcachefs/ec.c b/fs/bcachefs/ec.c
-index b98e2c2b8bf0..38e5e882f4a4 100644
+index 38e5e882f4a4..bd435d385559 100644
 --- a/fs/bcachefs/ec.c
 +++ b/fs/bcachefs/ec.c
-@@ -13,6 +13,7 @@
- #include "btree_write_buffer.h"
- #include "buckets.h"
- #include "checksum.h"
-+#include "disk_accounting.h"
- #include "disk_groups.h"
- #include "ec.h"
- #include "error.h"
-@@ -324,21 +325,25 @@ int bch2_trigger_stripe(struct btree_trans *trans,
- 			new_s->nr_redundant	!= old_s->nr_redundant));
+@@ -238,10 +238,8 @@ static int bch2_trans_mark_stripe_bucket(struct btree_trans *trans,
+ 	return ret;
+ }
+ 
+-static int mark_stripe_bucket(struct btree_trans *trans,
+-			      struct bkey_s_c k,
+-			      unsigned ptr_idx,
+-			      unsigned flags)
++static int mark_stripe_bucket(struct btree_trans *trans, struct bkey_s_c k,
++			      unsigned ptr_idx, unsigned flags)
+ {
+ 	struct bch_fs *c = trans->c;
+ 	const struct bch_stripe *s = bkey_s_c_to_stripe(k).v;
+@@ -287,13 +285,16 @@ static int mark_stripe_bucket(struct btree_trans *trans,
+ 	g->stripe		= k.k->p.offset;
+ 	g->stripe_redundancy	= s->nr_redundant;
+ 	new = *g;
+-err:
+ 	bucket_unlock(g);
+-	if (!ret)
+-		bch2_dev_usage_update_m(c, ca, &old, &new);
+ 	percpu_up_read(&c->mark_lock);
++	ret = bch2_bucket_to_dev_counters(trans, ca, &old, &new, flags);
++out:
+ 	printbuf_exit(&buf);
+ 	return ret;
++err:
++	bucket_unlock(g);
++	percpu_up_read(&c->mark_lock);
++	goto out;
+ }
+ 
+ int bch2_trigger_stripe(struct btree_trans *trans,
+@@ -309,7 +310,12 @@ int bch2_trigger_stripe(struct btree_trans *trans,
+ 	const struct bch_stripe *new_s = new.k->type == KEY_TYPE_stripe
+ 		? bkey_s_c_to_stripe(new).v : NULL;
+ 
+-	if (flags & BTREE_TRIGGER_TRANSACTIONAL) {
++	BUG_ON(new_s && old_s &&
++	       (new_s->nr_blocks	!= old_s->nr_blocks ||
++		new_s->nr_redundant	!= old_s->nr_redundant));
++
++
++	if (flags & (BTREE_TRIGGER_TRANSACTIONAL|BTREE_TRIGGER_GC)) {
+ 		/*
+ 		 * If the pointers aren't changing, we don't need to do anything:
+ 		 */
+@@ -320,9 +326,34 @@ int bch2_trigger_stripe(struct btree_trans *trans,
+ 			    new_s->nr_blocks * sizeof(struct bch_extent_ptr)))
+ 			return 0;
+ 
+-		BUG_ON(new_s && old_s &&
+-		       (new_s->nr_blocks	!= old_s->nr_blocks ||
+-			new_s->nr_redundant	!= old_s->nr_redundant));
++		struct gc_stripe *gc = NULL;
++		if (flags & BTREE_TRIGGER_GC) {
++			gc = genradix_ptr_alloc(&c->gc_stripes, idx, GFP_KERNEL);
++			if (!gc) {
++				bch_err(c, "error allocating memory for gc_stripes, idx %llu", idx);
++				return -BCH_ERR_ENOMEM_mark_stripe;
++			}
++
++			/*
++			 * This will be wrong when we bring back runtime gc: we should
++			 * be unmarking the old key and then marking the new key
++			 *
++			 * Also: when we bring back runtime gc, locking
++			 */
++			gc->alive	= true;
++			gc->sectors	= le16_to_cpu(new_s->sectors);
++			gc->nr_blocks	= new_s->nr_blocks;
++			gc->nr_redundant	= new_s->nr_redundant;
++
++			for (unsigned i = 0; i < new_s->nr_blocks; i++)
++				gc->ptrs[i] = new_s->ptrs[i];
++
++			/*
++			 * gc recalculates this field from stripe ptr
++			 * references:
++			 */
++			memset(gc->block_sectors, 0, sizeof(gc->block_sectors));
++		}
  
  		if (new_s) {
--			s64 sectors = le16_to_cpu(new_s->sectors);
-+			s64 sectors = (u64) le16_to_cpu(new_s->sectors) * new_s->nr_redundant;
- 
--			struct bch_replicas_padded r;
--			bch2_bkey_to_replicas(&r.e, new);
--			int ret = bch2_update_replicas_list(trans, &r.e, sectors * new_s->nr_redundant);
-+			struct disk_accounting_key acc = {
-+				.type = BCH_DISK_ACCOUNTING_replicas,
-+			};
-+			bch2_bkey_to_replicas(&acc.replicas, new);
-+			int ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
+ 			s64 sectors = (u64) le16_to_cpu(new_s->sectors) * new_s->nr_redundant;
+@@ -331,9 +362,12 @@ int bch2_trigger_stripe(struct btree_trans *trans,
+ 				.type = BCH_DISK_ACCOUNTING_replicas,
+ 			};
+ 			bch2_bkey_to_replicas(&acc.replicas, new);
+-			int ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
++			int ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1, gc);
  			if (ret)
  				return ret;
++
++			if (gc)
++				memcpy(&gc->r.e, &acc.replicas, replicas_entry_bytes(&acc.replicas));
  		}
  
  		if (old_s) {
--			s64 sectors = -((s64) le16_to_cpu(old_s->sectors));
-+			s64 sectors = -((s64) le16_to_cpu(old_s->sectors)) * old_s->nr_redundant;
- 
--			struct bch_replicas_padded r;
--			bch2_bkey_to_replicas(&r.e, old);
--			int ret = bch2_update_replicas_list(trans, &r.e, sectors * old_s->nr_redundant);
-+			struct disk_accounting_key acc = {
-+				.type = BCH_DISK_ACCOUNTING_replicas,
-+			};
-+			bch2_bkey_to_replicas(&acc.replicas, old);
-+			int ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
+@@ -343,29 +377,42 @@ int bch2_trigger_stripe(struct btree_trans *trans,
+ 				.type = BCH_DISK_ACCOUNTING_replicas,
+ 			};
+ 			bch2_bkey_to_replicas(&acc.replicas, old);
+-			int ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1);
++			int ret = bch2_disk_accounting_mod(trans, &acc, &sectors, 1, gc);
  			if (ret)
  				return ret;
  		}
-@@ -442,8 +447,7 @@ int bch2_trigger_stripe(struct btree_trans *trans,
- 		}
  
- 		int ret = bch2_update_replicas(c, new, &m->r.e,
--				      ((s64) m->sectors * m->nr_redundant),
--				      0, true);
-+				      ((s64) m->sectors * m->nr_redundant));
- 		if (ret) {
- 			struct printbuf buf = PRINTBUF;
+ 		unsigned nr_blocks = new_s ? new_s->nr_blocks : old_s->nr_blocks;
+-		for (unsigned i = 0; i < nr_blocks; i++) {
+-			if (new_s && old_s &&
+-			    !memcmp(&new_s->ptrs[i],
+-				    &old_s->ptrs[i],
+-				    sizeof(new_s->ptrs[i])))
+-				continue;
  
-diff --git a/fs/bcachefs/inode.c b/fs/bcachefs/inode.c
-index a3139bb66f77..3dfa9f77c739 100644
---- a/fs/bcachefs/inode.c
-+++ b/fs/bcachefs/inode.c
-@@ -8,6 +8,7 @@
- #include "buckets.h"
- #include "compress.h"
- #include "dirent.h"
-+#include "disk_accounting.h"
- #include "error.h"
- #include "extents.h"
- #include "extent_update.h"
-@@ -610,11 +611,13 @@ int bch2_trigger_inode(struct btree_trans *trans,
- 
- 	if (flags & BTREE_TRIGGER_TRANSACTIONAL) {
- 		if (nr) {
--			int ret = bch2_replicas_deltas_realloc(trans, 0);
-+			struct disk_accounting_key acc = {
-+				.type = BCH_DISK_ACCOUNTING_nr_inodes
-+			};
+-			if (new_s) {
+-				int ret = bch2_trans_mark_stripe_bucket(trans,
+-						bkey_s_c_to_stripe(new), i, false);
+-				if (ret)
+-					return ret;
++		if (flags & BTREE_TRIGGER_TRANSACTIONAL) {
++			for (unsigned i = 0; i < nr_blocks; i++) {
++				if (new_s && old_s &&
++				    !memcmp(&new_s->ptrs[i],
++					    &old_s->ptrs[i],
++					    sizeof(new_s->ptrs[i])))
++					continue;
 +
-+			int ret = bch2_disk_accounting_mod(trans, &acc, &nr, 1);
- 			if (ret)
- 				return ret;
--
--			trans->fs_usage_deltas->nr_inodes += nr;
- 		}
- 
- 		bool old_deleted = bkey_is_deleted_inode(old);
-diff --git a/fs/bcachefs/recovery.c b/fs/bcachefs/recovery.c
-index b8289af66c8e..140393256f32 100644
---- a/fs/bcachefs/recovery.c
-+++ b/fs/bcachefs/recovery.c
-@@ -1194,9 +1194,6 @@ int bch2_fs_initialize(struct bch_fs *c)
- 	for (unsigned i = 0; i < BTREE_ID_NR; i++)
- 		bch2_btree_root_alloc(c, i);
- 
--	for_each_member_device(c, ca)
--		bch2_dev_usage_init(ca);
--
- 	ret = bch2_fs_journal_alloc(c);
- 	if (ret)
- 		goto err;
-@@ -1213,6 +1210,15 @@ int bch2_fs_initialize(struct bch_fs *c)
- 	if (ret)
- 		goto err;
- 
-+	for_each_member_device(c, ca) {
-+		ret = bch2_dev_usage_init(ca);
-+		bch_err_msg(c, ret, "initializing device usage");
-+		if (ret) {
-+			percpu_ref_put(&ca->ref);
-+			goto err;
++				if (new_s) {
++					int ret = bch2_trans_mark_stripe_bucket(trans,
++							bkey_s_c_to_stripe(new), i, false);
++					if (ret)
++						return ret;
++				}
++
++				if (old_s) {
++					int ret = bch2_trans_mark_stripe_bucket(trans,
++							bkey_s_c_to_stripe(old), i, true);
++					if (ret)
++						return ret;
++				}
+ 			}
 +		}
-+	}
+ 
+-			if (old_s) {
+-				int ret = bch2_trans_mark_stripe_bucket(trans,
+-						bkey_s_c_to_stripe(old), i, true);
++		if (flags & BTREE_TRIGGER_GC) {
++			BUG_ON(old_s);
 +
- 	/*
- 	 * Write out the superblock and journal buckets, now that we can do
- 	 * btree updates
-diff --git a/fs/bcachefs/recovery_types.h b/fs/bcachefs/recovery_types.h
-index 1361e34d4e64..18582e2128ed 100644
---- a/fs/bcachefs/recovery_types.h
-+++ b/fs/bcachefs/recovery_types.h
-@@ -13,6 +13,7 @@
-  * must never change:
-  */
- #define BCH_RECOVERY_PASSES()							\
-+	x(accounting_read,			37, PASS_ALWAYS)		\
- 	x(alloc_read,				 0, PASS_ALWAYS)		\
- 	x(stripes_read,				 1, PASS_ALWAYS)		\
- 	x(initialize_subvolumes,		 2, 0)				\
-diff --git a/fs/bcachefs/replicas.c b/fs/bcachefs/replicas.c
-index 678b9c20e251..dde581a49e28 100644
---- a/fs/bcachefs/replicas.c
-+++ b/fs/bcachefs/replicas.c
-@@ -254,23 +254,25 @@ static bool __replicas_has_entry(struct bch_replicas_cpu *r,
- 	return __replicas_entry_idx(r, search) >= 0;
- }
- 
--bool bch2_replicas_marked(struct bch_fs *c,
-+bool bch2_replicas_marked_locked(struct bch_fs *c,
- 			  struct bch_replicas_entry_v1 *search)
- {
--	bool marked;
--
--	if (!search->nr_devs)
--		return true;
--
- 	verify_replicas_entry(search);
- 
-+	return !search->nr_devs ||
-+		(__replicas_has_entry(&c->replicas, search) &&
-+		 (likely((!c->replicas_gc.entries)) ||
-+		  __replicas_has_entry(&c->replicas_gc, search)));
-+}
-+
-+bool bch2_replicas_marked(struct bch_fs *c,
-+			  struct bch_replicas_entry_v1 *search)
-+{
- 	percpu_down_read(&c->mark_lock);
--	marked = __replicas_has_entry(&c->replicas, search) &&
--		(likely((!c->replicas_gc.entries)) ||
--		 __replicas_has_entry(&c->replicas_gc, search));
-+	bool ret = bch2_replicas_marked_locked(c, search);
- 	percpu_up_read(&c->mark_lock);
- 
--	return marked;
-+	return ret;
- }
- 
- static void __replicas_table_update(struct bch_fs_usage *dst,
-@@ -468,20 +470,6 @@ int bch2_mark_replicas(struct bch_fs *c, struct bch_replicas_entry_v1 *r)
- 		? 0 : bch2_mark_replicas_slowpath(c, r);
- }
- 
--/* replicas delta list: */
--
--int bch2_replicas_delta_list_mark(struct bch_fs *c,
--				  struct replicas_delta_list *r)
--{
--	struct replicas_delta *d = r->d;
--	struct replicas_delta *top = (void *) r->d + r->used;
--	int ret = 0;
--
--	for (d = r->d; !ret && d != top; d = replicas_delta_next(d))
--		ret = bch2_mark_replicas(c, &d->r);
--	return ret;
--}
--
- /*
-  * Old replicas_gc mechanism: only used for journal replicas entries now, should
-  * die at some point:
-@@ -1042,8 +1030,6 @@ void bch2_fs_replicas_exit(struct bch_fs *c)
- 	kfree(c->usage_base);
- 	kfree(c->replicas.entries);
- 	kfree(c->replicas_gc.entries);
--
--	mempool_exit(&c->replicas_delta_pool);
- }
- 
- int bch2_fs_replicas_init(struct bch_fs *c)
-@@ -1052,7 +1038,5 @@ int bch2_fs_replicas_init(struct bch_fs *c)
- 			&c->replicas_journal_res,
- 			reserve_journal_replicas(c, &c->replicas));
- 
--	return mempool_init_kmalloc_pool(&c->replicas_delta_pool, 1,
--					 REPLICAS_DELTA_LIST_MAX) ?:
--		replicas_table_update(c, &c->replicas);
-+	return replicas_table_update(c, &c->replicas);
- }
-diff --git a/fs/bcachefs/replicas.h b/fs/bcachefs/replicas.h
-index 983cce782ac2..f00c586f8cd9 100644
---- a/fs/bcachefs/replicas.h
-+++ b/fs/bcachefs/replicas.h
-@@ -26,18 +26,13 @@ int bch2_replicas_entry_idx(struct bch_fs *,
- void bch2_devlist_to_replicas(struct bch_replicas_entry_v1 *,
- 			      enum bch_data_type,
- 			      struct bch_devs_list);
-+
-+bool bch2_replicas_marked_locked(struct bch_fs *,
-+			  struct bch_replicas_entry_v1 *);
- bool bch2_replicas_marked(struct bch_fs *, struct bch_replicas_entry_v1 *);
- int bch2_mark_replicas(struct bch_fs *,
- 		       struct bch_replicas_entry_v1 *);
- 
--static inline struct replicas_delta *
--replicas_delta_next(struct replicas_delta *d)
--{
--	return (void *) d + replicas_entry_bytes(&d->r) + 8;
--}
--
--int bch2_replicas_delta_list_mark(struct bch_fs *, struct replicas_delta_list *);
--
- void bch2_bkey_to_replicas(struct bch_replicas_entry_v1 *, struct bkey_s_c);
- 
- static inline void bch2_replicas_entry_cached(struct bch_replicas_entry_v1 *e,
-diff --git a/fs/bcachefs/replicas_types.h b/fs/bcachefs/replicas_types.h
-index ac90d142c4e8..fed71c861fe7 100644
---- a/fs/bcachefs/replicas_types.h
-+++ b/fs/bcachefs/replicas_types.h
-@@ -8,20 +8,4 @@ struct bch_replicas_cpu {
- 	struct bch_replicas_entry_v1 *entries;
- };
- 
--struct replicas_delta {
--	s64			delta;
--	struct bch_replicas_entry_v1 r;
--} __packed;
--
--struct replicas_delta_list {
--	unsigned		size;
--	unsigned		used;
--
--	struct			{} memset_start;
--	u64			nr_inodes;
--	u64			persistent_reserved[BCH_REPLICAS_MAX];
--	struct			{} memset_end;
--	struct replicas_delta	d[];
--};
--
- #endif /* _BCACHEFS_REPLICAS_TYPES_H */
-diff --git a/fs/bcachefs/sb-errors_types.h b/fs/bcachefs/sb-errors_types.h
-index 383e13711001..777a1adc38cf 100644
---- a/fs/bcachefs/sb-errors_types.h
-+++ b/fs/bcachefs/sb-errors_types.h
-@@ -265,7 +265,8 @@
- 	x(subvol_children_bad,					257)	\
- 	x(subvol_loop,						258)	\
- 	x(subvol_unreachable,					259)	\
--	x(accounting_mismatch,					260)
-+	x(accounting_mismatch,					260)	\
-+	x(accounting_replicas_not_marked,			261)
- 
- enum bch_sb_error_id {
- #define x(t, n) BCH_FSCK_ERR_##t = n,
-diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
-index a7f9de220d90..685d54d0ddbb 100644
---- a/fs/bcachefs/super.c
-+++ b/fs/bcachefs/super.c
-@@ -24,6 +24,7 @@
- #include "clock.h"
- #include "compress.h"
- #include "debug.h"
-+#include "disk_accounting.h"
- #include "disk_groups.h"
- #include "ec.h"
- #include "errcode.h"
-@@ -535,6 +536,7 @@ static void __bch2_fs_free(struct bch_fs *c)
- 		time_stats_exit(&c->times[i]);
- 
- 	bch2_free_pending_node_rewrites(c);
-+	bch2_fs_accounting_exit(c);
- 	bch2_fs_sb_errors_exit(c);
- 	bch2_fs_counters_exit(c);
- 	bch2_fs_snapshots_exit(c);
-@@ -1581,7 +1583,8 @@ static int bch2_dev_remove_alloc(struct bch_fs *c, struct bch_dev *ca)
- 		bch2_btree_delete_range(c, BTREE_ID_alloc, start, end,
- 					BTREE_TRIGGER_NORUN, NULL) ?:
- 		bch2_btree_delete_range(c, BTREE_ID_bucket_gens, start, end,
--					BTREE_TRIGGER_NORUN, NULL);
-+					BTREE_TRIGGER_NORUN, NULL) ?:
-+		bch2_dev_usage_remove(c, ca->dev_idx);
- 	bch_err_msg(c, ret, "removing dev alloc info");
- 	return ret;
- }
-@@ -1618,6 +1621,16 @@ int bch2_dev_remove(struct bch_fs *c, struct bch_dev *ca, int flags)
- 	if (ret)
- 		goto err;
- 
-+	/*
-+	 * We need to flush the entire journal to get rid of keys that reference
-+	 * the device being removed before removing the superblock entry
-+	 */
-+	bch2_journal_flush_all_pins(&c->journal);
-+
-+	/*
-+	 * this is really just needed for the bch2_replicas_gc_(start|end)
-+	 * calls, and could be cleaned up:
-+	 */
- 	ret = bch2_journal_flush_device_pins(&c->journal, ca->dev_idx);
- 	bch_err_msg(ca, ret, "bch2_journal_flush_device_pins()");
- 	if (ret)
-@@ -1655,17 +1668,6 @@ int bch2_dev_remove(struct bch_fs *c, struct bch_dev *ca, int flags)
- 
- 	bch2_dev_free(ca);
- 
--	/*
--	 * At this point the device object has been removed in-core, but the
--	 * on-disk journal might still refer to the device index via sb device
--	 * usage entries. Recovery fails if it sees usage information for an
--	 * invalid device. Flush journal pins to push the back of the journal
--	 * past now invalid device index references before we update the
--	 * superblock, but after the device object has been removed so any
--	 * further journal writes elide usage info for the device.
--	 */
--	bch2_journal_flush_all_pins(&c->journal);
--
- 	/*
- 	 * Free this device's slot in the bch_member array - all pointers to
- 	 * this device must be gone:
-@@ -1727,8 +1729,6 @@ int bch2_dev_add(struct bch_fs *c, const char *path)
- 		goto err;
++			for (unsigned i = 0; i < nr_blocks; i++) {
++				int ret = mark_stripe_bucket(trans, new, i, flags);
+ 				if (ret)
+ 					return ret;
+ 			}
+@@ -411,53 +458,6 @@ int bch2_trigger_stripe(struct btree_trans *trans,
+ 		}
  	}
  
--	bch2_dev_usage_init(ca);
+-	if (flags & BTREE_TRIGGER_GC) {
+-		struct gc_stripe *m =
+-			genradix_ptr_alloc(&c->gc_stripes, idx, GFP_KERNEL);
 -
- 	ret = __bch2_dev_attach_bdev(ca, &sb);
- 	if (ret)
- 		goto err;
-@@ -1793,6 +1793,10 @@ int bch2_dev_add(struct bch_fs *c, const char *path)
- 
- 	bch2_dev_usage_journal_reserve(c);
- 
-+	ret = bch2_dev_usage_init(ca);
-+	if (ret)
-+		goto err_late;
-+
- 	ret = bch2_trans_mark_dev_sb(c, ca);
- 	bch_err_msg(ca, ret, "marking new superblock");
- 	if (ret)
-@@ -1956,15 +1960,18 @@ int bch2_dev_resize(struct bch_fs *c, struct bch_dev *ca, u64 nbuckets)
- 	mutex_unlock(&c->sb_lock);
- 
- 	if (ca->mi.freespace_initialized) {
--		ret = bch2_dev_freespace_init(c, ca, old_nbuckets, nbuckets);
-+		struct disk_accounting_key acc = {
-+			.type = BCH_DISK_ACCOUNTING_dev_data_type,
-+			.dev_data_type.dev = ca->dev_idx,
-+			.dev_data_type.data_type = BCH_DATA_free,
-+		};
-+		u64 v[3] = { nbuckets - old_nbuckets, 0, 0 };
-+
-+		ret   = bch2_dev_freespace_init(c, ca, old_nbuckets, nbuckets) ?:
-+			bch2_trans_do(ca->fs, NULL, NULL, 0,
-+				bch2_disk_accounting_mod(trans, &acc, v, ARRAY_SIZE(v)));
- 		if (ret)
- 			goto err;
+-		if (!m) {
+-			bch_err(c, "error allocating memory for gc_stripes, idx %llu",
+-				idx);
+-			return -BCH_ERR_ENOMEM_mark_stripe;
+-		}
+-		/*
+-		 * This will be wrong when we bring back runtime gc: we should
+-		 * be unmarking the old key and then marking the new key
+-		 */
+-		m->alive	= true;
+-		m->sectors	= le16_to_cpu(new_s->sectors);
+-		m->nr_blocks	= new_s->nr_blocks;
+-		m->nr_redundant	= new_s->nr_redundant;
+-
+-		for (unsigned i = 0; i < new_s->nr_blocks; i++)
+-			m->ptrs[i] = new_s->ptrs[i];
+-
+-		bch2_bkey_to_replicas(&m->r.e, new);
 -
 -		/*
--		 * XXX: this is all wrong transactionally - we'll be able to do
--		 * this correctly after the disk space accounting rewrite
+-		 * gc recalculates this field from stripe ptr
+-		 * references:
 -		 */
--		ca->usage_base->d[BCH_DATA_free].buckets += nbuckets - old_nbuckets;
+-		memset(m->block_sectors, 0, sizeof(m->block_sectors));
+-
+-		for (unsigned i = 0; i < new_s->nr_blocks; i++) {
+-			int ret = mark_stripe_bucket(trans, new, i, flags);
+-			if (ret)
+-				return ret;
+-		}
+-
+-		int ret = bch2_update_replicas(c, new, &m->r.e,
+-				      ((s64) m->sectors * m->nr_redundant));
+-		if (ret) {
+-			struct printbuf buf = PRINTBUF;
+-
+-			bch2_bkey_val_to_text(&buf, c, new);
+-			bch2_fs_fatal_error(c, "no replicas entry for %s", buf.buf);
+-			printbuf_exit(&buf);
+-			return ret;
+-		}
+-	}
+-
+ 	return 0;
+ }
+ 
+diff --git a/fs/bcachefs/inode.c b/fs/bcachefs/inode.c
+index 3dfa9f77c739..e8f128d6b703 100644
+--- a/fs/bcachefs/inode.c
++++ b/fs/bcachefs/inode.c
+@@ -607,41 +607,26 @@ int bch2_trigger_inode(struct btree_trans *trans,
+ 		       struct bkey_s new,
+ 		       unsigned flags)
+ {
+-	s64 nr = bkey_is_inode(new.k) - bkey_is_inode(old.k);
+-
+-	if (flags & BTREE_TRIGGER_TRANSACTIONAL) {
+-		if (nr) {
+-			struct disk_accounting_key acc = {
+-				.type = BCH_DISK_ACCOUNTING_nr_inodes
+-			};
+-
+-			int ret = bch2_disk_accounting_mod(trans, &acc, &nr, 1);
+-			if (ret)
+-				return ret;
+-		}
+-
+-		bool old_deleted = bkey_is_deleted_inode(old);
+-		bool new_deleted = bkey_is_deleted_inode(new.s_c);
+-		if (old_deleted != new_deleted) {
+-			int ret = bch2_btree_bit_mod_buffered(trans, BTREE_ID_deleted_inodes,
+-							      new.k->p, new_deleted);
+-			if (ret)
+-				return ret;
+-		}
+-	}
+-
+ 	if ((flags & BTREE_TRIGGER_ATOMIC) && (flags & BTREE_TRIGGER_INSERT)) {
+ 		BUG_ON(!trans->journal_res.seq);
+-
+ 		bkey_s_to_inode_v3(new).v->bi_journal_seq = cpu_to_le64(trans->journal_res.seq);
  	}
  
- 	bch2_recalc_capacity(c);
+-	if (flags & BTREE_TRIGGER_GC) {
+-		struct bch_fs *c = trans->c;
++	s64 nr = bkey_is_inode(new.k) - bkey_is_inode(old.k);
++	if ((flags & (BTREE_TRIGGER_TRANSACTIONAL|BTREE_TRIGGER_GC)) && nr) {
++		struct disk_accounting_key acc = { .type = BCH_DISK_ACCOUNTING_nr_inodes };
++		int ret = bch2_disk_accounting_mod(trans, &acc, &nr, 1, flags & BTREE_TRIGGER_GC);
++		if (ret)
++			return ret;
++	}
+ 
+-		percpu_down_read(&c->mark_lock);
+-		this_cpu_add(c->usage_gc->b.nr_inodes, nr);
+-		percpu_up_read(&c->mark_lock);
++	int deleted_delta =	(int) bkey_is_deleted_inode(new.s_c) -
++				(int) bkey_is_deleted_inode(old);
++	if ((flags & BTREE_TRIGGER_TRANSACTIONAL) && deleted_delta) {
++		int ret = bch2_btree_bit_mod_buffered(trans, BTREE_ID_deleted_inodes,
++						      new.k->p, deleted_delta > 0);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	return 0;
+diff --git a/fs/bcachefs/recovery.c b/fs/bcachefs/recovery.c
+index 18fd71960d2e..6a8b2c753688 100644
+--- a/fs/bcachefs/recovery.c
++++ b/fs/bcachefs/recovery.c
+@@ -1177,8 +1177,7 @@ int bch2_fs_initialize(struct bch_fs *c)
+ 		goto err;
+ 
+ 	for_each_member_device(c, ca) {
+-		ret = bch2_dev_usage_init(ca);
+-		bch_err_msg(c, ret, "initializing device usage");
++		ret = bch2_dev_usage_init(ca, false);
+ 		if (ret) {
+ 			percpu_ref_put(&ca->ref);
+ 			goto err;
+diff --git a/fs/bcachefs/replicas.c b/fs/bcachefs/replicas.c
+index 427dc6711427..cba5ba44cfd8 100644
+--- a/fs/bcachefs/replicas.c
++++ b/fs/bcachefs/replicas.c
+@@ -275,73 +275,6 @@ bool bch2_replicas_marked(struct bch_fs *c,
+ 	return ret;
+ }
+ 
+-static void __replicas_table_update(struct bch_fs_usage *dst,
+-				    struct bch_replicas_cpu *dst_r,
+-				    struct bch_fs_usage *src,
+-				    struct bch_replicas_cpu *src_r)
+-{
+-	int src_idx, dst_idx;
+-
+-	*dst = *src;
+-
+-	for (src_idx = 0; src_idx < src_r->nr; src_idx++) {
+-		if (!src->replicas[src_idx])
+-			continue;
+-
+-		dst_idx = __replicas_entry_idx(dst_r,
+-				cpu_replicas_entry(src_r, src_idx));
+-		BUG_ON(dst_idx < 0);
+-
+-		dst->replicas[dst_idx] = src->replicas[src_idx];
+-	}
+-}
+-
+-static void __replicas_table_update_pcpu(struct bch_fs_usage __percpu *dst_p,
+-				    struct bch_replicas_cpu *dst_r,
+-				    struct bch_fs_usage __percpu *src_p,
+-				    struct bch_replicas_cpu *src_r)
+-{
+-	unsigned src_nr = sizeof(struct bch_fs_usage) / sizeof(u64) + src_r->nr;
+-	struct bch_fs_usage *dst, *src = (void *)
+-		bch2_acc_percpu_u64s((u64 __percpu *) src_p, src_nr);
+-
+-	preempt_disable();
+-	dst = this_cpu_ptr(dst_p);
+-	preempt_enable();
+-
+-	__replicas_table_update(dst, dst_r, src, src_r);
+-}
+-
+-/*
+- * Resize filesystem accounting:
+- */
+-static int replicas_table_update(struct bch_fs *c,
+-				 struct bch_replicas_cpu *new_r)
+-{
+-	struct bch_fs_usage __percpu *new_gc = NULL;
+-	unsigned bytes = sizeof(struct bch_fs_usage) +
+-		sizeof(u64) * new_r->nr;
+-	int ret = 0;
+-
+-	if ((c->usage_gc &&
+-	     !(new_gc = __alloc_percpu_gfp(bytes, sizeof(u64), GFP_KERNEL))))
+-		goto err;
+-
+-	if (c->usage_gc)
+-		__replicas_table_update_pcpu(new_gc,		new_r,
+-					     c->usage_gc,	&c->replicas);
+-
+-	swap(c->usage_gc,	new_gc);
+-	swap(c->replicas,	*new_r);
+-out:
+-	free_percpu(new_gc);
+-	return ret;
+-err:
+-	bch_err(c, "error updating replicas table: memory allocation failure");
+-	ret = -BCH_ERR_ENOMEM_replicas_table;
+-	goto out;
+-}
+-
+ noinline
+ static int bch2_mark_replicas_slowpath(struct bch_fs *c,
+ 				struct bch_replicas_entry_v1 *new_entry)
+@@ -389,7 +322,7 @@ static int bch2_mark_replicas_slowpath(struct bch_fs *c,
+ 	/* don't update in memory replicas until changes are persistent */
+ 	percpu_down_write(&c->mark_lock);
+ 	if (new_r.entries)
+-		ret = replicas_table_update(c, &new_r);
++		swap(c->replicas, new_r);
+ 	if (new_gc.entries)
+ 		swap(new_gc, c->replicas_gc);
+ 	percpu_up_write(&c->mark_lock);
+@@ -424,8 +357,9 @@ int bch2_replicas_gc_end(struct bch_fs *c, int ret)
+ 	percpu_down_write(&c->mark_lock);
+ 
+ 	ret =   ret ?:
+-		bch2_cpu_replicas_to_sb_replicas(c, &c->replicas_gc) ?:
+-		replicas_table_update(c, &c->replicas_gc);
++		bch2_cpu_replicas_to_sb_replicas(c, &c->replicas_gc);
++	if (!ret)
++		swap(c->replicas, c->replicas_gc);
+ 
+ 	kfree(c->replicas_gc.entries);
+ 	c->replicas_gc.entries = NULL;
+@@ -635,8 +569,7 @@ int bch2_sb_replicas_to_cpu_replicas(struct bch_fs *c)
+ 	bch2_cpu_replicas_sort(&new_r);
+ 
+ 	percpu_down_write(&c->mark_lock);
+-
+-	ret = replicas_table_update(c, &new_r);
++	swap(c->replicas, new_r);
+ 	percpu_up_write(&c->mark_lock);
+ 
+ 	kfree(new_r.entries);
+@@ -927,10 +860,8 @@ unsigned bch2_sb_dev_has_data(struct bch_sb *sb, unsigned dev)
+ 
+ unsigned bch2_dev_has_data(struct bch_fs *c, struct bch_dev *ca)
+ {
+-	unsigned ret;
+-
+ 	mutex_lock(&c->sb_lock);
+-	ret = bch2_sb_dev_has_data(c->disk_sb.sb, ca->dev_idx);
++	unsigned ret = bch2_sb_dev_has_data(c->disk_sb.sb, ca->dev_idx);
+ 	mutex_unlock(&c->sb_lock);
+ 
+ 	return ret;
+@@ -941,8 +872,3 @@ void bch2_fs_replicas_exit(struct bch_fs *c)
+ 	kfree(c->replicas.entries);
+ 	kfree(c->replicas_gc.entries);
+ }
+-
+-int bch2_fs_replicas_init(struct bch_fs *c)
+-{
+-	return replicas_table_update(c, &c->replicas);
+-}
+diff --git a/fs/bcachefs/replicas.h b/fs/bcachefs/replicas.h
+index eac2dff20423..ab2d00e4865c 100644
+--- a/fs/bcachefs/replicas.h
++++ b/fs/bcachefs/replicas.h
+@@ -80,6 +80,5 @@ extern const struct bch_sb_field_ops bch_sb_field_ops_replicas;
+ extern const struct bch_sb_field_ops bch_sb_field_ops_replicas_v0;
+ 
+ void bch2_fs_replicas_exit(struct bch_fs *);
+-int bch2_fs_replicas_init(struct bch_fs *);
+ 
+ #endif /* _BCACHEFS_REPLICAS_H */
+diff --git a/fs/bcachefs/super.c b/fs/bcachefs/super.c
+index 89c481831608..6617c8912e51 100644
+--- a/fs/bcachefs/super.c
++++ b/fs/bcachefs/super.c
+@@ -894,7 +894,6 @@ static struct bch_fs *bch2_fs_alloc(struct bch_sb *sb, struct bch_opts opts)
+ 	    bch2_io_clock_init(&c->io_clock[READ]) ?:
+ 	    bch2_io_clock_init(&c->io_clock[WRITE]) ?:
+ 	    bch2_fs_journal_init(&c->journal) ?:
+-	    bch2_fs_replicas_init(c) ?:
+ 	    bch2_fs_btree_cache_init(c) ?:
+ 	    bch2_fs_btree_key_cache_init(&c->btree_key_cache) ?:
+ 	    bch2_fs_btree_iter_init(c) ?:
+@@ -1772,7 +1771,7 @@ int bch2_dev_add(struct bch_fs *c, const char *path)
+ 	bch2_write_super(c);
+ 	mutex_unlock(&c->sb_lock);
+ 
+-	ret = bch2_dev_usage_init(ca);
++	ret = bch2_dev_usage_init(ca, false);
+ 	if (ret)
+ 		goto err_late;
+ 
+@@ -1946,9 +1945,9 @@ int bch2_dev_resize(struct bch_fs *c, struct bch_dev *ca, u64 nbuckets)
+ 		};
+ 		u64 v[3] = { nbuckets - old_nbuckets, 0, 0 };
+ 
+-		ret   = bch2_dev_freespace_init(c, ca, old_nbuckets, nbuckets) ?:
+-			bch2_trans_do(ca->fs, NULL, NULL, 0,
+-				bch2_disk_accounting_mod(trans, &acc, v, ARRAY_SIZE(v)));
++		ret   = bch2_trans_do(ca->fs, NULL, NULL, 0,
++				bch2_disk_accounting_mod(trans, &acc, v, ARRAY_SIZE(v), false)) ?:
++			bch2_dev_freespace_init(c, ca, old_nbuckets, nbuckets);
+ 		if (ret)
+ 			goto err;
+ 	}
 -- 
 2.43.0
 
