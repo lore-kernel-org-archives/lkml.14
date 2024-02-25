@@ -1,50 +1,49 @@
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from out203-205-221-209.mail.qq.com (out203-205-221-209.mail.qq.com [203.205.221.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396AD7476
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 04:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F9E7460
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 04:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708834104; cv=none; b=dlSDOKh0u0NeYjqZK760/U68IQo3Z52ZVW3N2focZRrSGxjt4v5KB/2ks4PlWGp5KZTMJnWuJCyfGvdlasvezCbo/bOsG5vbWdYZhk7IWzHB5E9DXm3ex/DmLtZZsS16HzihEnSmtGrBrKoh6dUsiUtrxXfCfPOhMkfdPkdJtJE=
+	t=1708834142; cv=none; b=UAYbCWLnn6itYBGpiQPuVp73Cus/kCjEbWp9eIOJF1eR2PmBdNvnQ4TZM6qLpVchN6yHJUWYzm80zH5+lqOc2yx2MvmMDaCZiJ3yqk/+zK5cda8gEBduomZBePyJQaP2Ar7QmwlVxTWTZLxeWgrJWpJ+Dt+zKM4LdO9mCE9A+XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708834104; c=relaxed/simple;
-	bh=q4dKeuWe6W4Noz1+d/7Yfs/ZMDZdDCxYAicIx07p0Fw=;
+	s=arc-20240116; t=1708834142; c=relaxed/simple;
+	bh=uomHFrNlcUsTDh2dhGspQ857QYmROGH5u+KIa214i3k=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=FnVcC6xtrQDxUWPB8KuNd/JToF5yOOau3bFFi54Ku1aCR/UD0Zr+1JpsUg4CY5uCAEZeRn8gSvHL0ZyaUvqcHbjg1bGhc+SbFMaIZItyWqCm41nq0dwsRYN1SSEy7wmBCipEdNayvOxgt5JzNgNMOjLHtC//hrg/Byeakf+bbRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=gx/nL4oI; arc=none smtp.client-ip=162.62.57.210
+	 MIME-Version; b=MVWswjPi9HibulKjH/QjY3tQgqf7/EbBbRLfc0npBNm0mLRJVQ1oK+lLZjbmI4QHB7+N2ymCrB/MF7wMS03bnk+NY2lgrJOB7U0+WtkrWP3HD+jICmkigMC6j0NAilongTFjRDKQlyuUrXhFGRR4dfHafImbvNRw6gR589WMMUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=Zc5Tcx3k; arc=none smtp.client-ip=203.205.221.209
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="gx/nL4oI"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="Zc5Tcx3k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1708834092;
-	bh=VLgh3i1HLl4qsZsnPo2rlFAeoCtuGCX5i0c6X8Lsfio=;
+	s=s201512; t=1708834132;
+	bh=mM8ldFl/qvZA4i5D0hWX4szQECAim3lPn4D9ZGUp/mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gx/nL4oITRUCY3wlbj7biUDuf2rPh1l+GoqFgparHYAHxgESkRawhxhjSGlg3gDnU
-	 3FV91cdnBwFr5xTVB9CIOhsgbgWYj127m+YgZdo1FOeXQJphM3k6XyIUnuvwWxSEy5
-	 32FwJZeq991ZEcca2I3kbsD3DP9M3ZI10jwdIlWM=
+	b=Zc5Tcx3kZyC6FFGehKcfawDx5hTxHQ7ZwK3C7bmsAkdDOF0I8fbfm3Hf/iN++6mn6
+	 ufeTyQY8q5fp5sTsK7n4X/S18yCf+sfpEChBpN74nW9Ln7REmF1fyqWI9W3RVitrT8
+	 UIulKOJQ/shd6SFcKFCVV9MbQRzxeGwHS9e5eWgY=
 Received: from localhost.localdomain ([2409:8a60:2a61:ef40:480f:5c56:cca3:1b20])
 	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
 	id 18993038; Sun, 25 Feb 2024 12:06:09 +0800
-X-QQ-mid: xmsmtpt1708834004tx0ivesbr
-Message-ID: <tencent_A7FD9E9E75AA74A87583A427F5D20F988B09@qq.com>
-X-QQ-XMAILINFO: MyIXMys/8kCt9c0H52Jz366tiakHJ3gYHewk0A//04bB4zWcvxj0dGp5YbLv6C
-	 FGtFQ8Y/PXdjyK2qk/u4xSOuFL7zwAGNaOmhXXpV3IwXHJsAbiY/Di5b/G6kK4eUzrgyPrknbUWS
-	 UBr/IC4wtS6nAwFGBsnBEiDkexwhWmWKLoRnXj3ekg1cX7EYxleemBTi4dPIjOtf4zyX+i+4ot5W
-	 7MQuhTDBfpQVSUkwADIIQv7SZVtyUg8cPu7P1ZMblMIaWjVHDKBRc/jD6mEplPM9bb7YaDIosqeq
-	 1Q2JW2XUcWEifiy04qzBbUEadc11O6dhPbJ6TdHEG3/vLLTFSMtdlsExY214kPZtXvcErUTRf5Pk
-	 F5q7XC00fw4fSlKdGEhGXtNdhvnMPsa1CDI/QrkD68O6lx4Vv1pdEtclvH3ygKBrW6G6Gc/VITPR
-	 4xwfIDSbwp0D/0PiZD2kK8bQjFbYBUFmEWDKrZFsB2hk/36MPOJ1EJhgztQiP2ePikJjZ1YkK6WF
-	 JSMh3RrN/+l2eeD0YxtlzhoCr5EG9Viky8379KlPNVMuagUeEgb80A07M5K6VgtXieqyypQXfYwN
-	 0pbYB9pVyxD/8ITWyX5jf/EICKD+mE6LZvebLO/CHUNF1qD8+ryXRzMhCLCfCZdFFbcqkOXkk1hm
-	 i1MeMdO3UAzGxwcI5K6vyREUATt5AXgGP86Q4LCvBdM/cRmYiVrNcHuaM5WLIW6kVuxd7Wxr5NUJ
-	 vwdpn/AQOm+1mTowMxjvQOZS5nlGEGC6WnGfEKjy/yQEan87waQspiyH9HRVqxX/KbYyQ83IsZTw
-	 H5qmRLIA9UgBi4JLi9TJxrENsIEp2FPwcgMs5GkePXXBcJqzVQFpGvTJ2ITFlYxyrOJj1ilmRuzZ
-	 JpGdRXTmSfJkzpHbK1uoo6dgrfsgpagPeP2mPxQ1scqLYPR5xIrlv7Ik6kQ390WpsrYDKbB4Wu7U
-	 N8/+18UZl+IQNvC+6Iv+k8nmoxNdS981uZl/by0DZzdeVpRTdG4Hp8j56rZMfX9FcxBOszZvdYFn
-	 hLw6UdnTK7Ad/J2XEXXeQiOx4LC3s84hgZ3q5atCF6ZwzcdC+NRtHzMa0eSpkf8783YPkcHvmPlr
-	 tutj8l
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-mid: xmsmtpt1708834043tmfqrrb4n
+Message-ID: <tencent_D3D0CC5A7E63CF04557ED42E411D9379E908@qq.com>
+X-QQ-XMAILINFO: NY3HYYTs4gYS1VwAnrDYUcZ7d0pPvmBjSTY5Yr6MGP4+wgDoV/3RwBtzqHPz8B
+	 9NZCYvFMIyI72jHYNnb9P56Uf86eKkFzRQ0noga19bN2djCx32UBvGgjLGRGrrvouKBBJu9oimKx
+	 8BP3SmPeC9gOV9w9LxchAJxqrGtdYYqqQ3IrO9OXUWuW200UYuKwOIt0+ZIFpDSHyYITVwU7DDbZ
+	 u/M2OLWoIgX4yF85YxAfWFg2Ah2ghe4P06FrNPDlRA+iZFWQ+T2DNP5+gXT7C3axgaK6H75yBh/m
+	 H/CGgtNMmAxGT8JTgqTtOraONBWz6URXCY8Y8MFqPmu55QtAYAJPiMbCxZLM3ljw9ACq1SArSJPO
+	 5O2S+sOEfh+I2MYP25lKKMF4Iat7EOl/zP6O5VptE1VIKFfx+Tq4QGpIomFgzIh2o5u77pOu9Yjr
+	 dnqZI/2R6WocdX/x0FdLg1slNzXkgsXniu6l97TSE0UTBQ/V61B4EUjNHMT/QninsoxrWiXYFaht
+	 tPrbfUp53t/RzDzMeeWOvzDEzoCuWXk79ys8O9Wg99z0RwVN/QSAUqZFMAiYqJbsFb3U0/wAwBl5
+	 83HgpdMyq6AergDJHIhVrzGCRLMhMvCQaZdAACP6Rgu+EEk2kUj1cCudm+xCxnXJfnQuMpzGdMyV
+	 jFVgLVzHFaPbZ+8gJFR9/7DQHcDb/fANpkxMpxKv/6LLpCraJV2rtgxEVX5DO4ok4WSyS2r/DQ29
+	 os759hbWADR5ZyxzTrhaGpoSzEzoodl+GjSMUOGT8l+00hbonx6EjeiwNefySxpp5bFnz60R4mco
+	 rbKrEbHf1gBW3pBRZoNv4EsboMKyVZRyivgYJjFyu0/ybjuBBYW1vELhVCcuynymBMCpI5CZ7POo
+	 UVXX/Am5BCMnAVAJqJGJwxMMHFhYVipeID9fCod9wBlhf9CnUK1BogWbouEI+C1tQFOnHeY52A2D
+	 b05nJPlSC88g2OvDJoH/nRKI5etIP8d/LHTpB+MDmzls3YFC8gZqDSVpZOe6raP3UH9rQpV838iU
+	 6U+Sc2xZiT87K2zyBX0vSqPUNLblm9Emui6U3QW7c2kvgnwO6WSlS6lx4p1NQ=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
 From: wenyang.linux@foxmail.com
 To: Luis Chamberlain <mcgrof@kernel.org>,
 	Kees Cook <keescook@chromium.org>,
@@ -56,11 +55,12 @@ To: Luis Chamberlain <mcgrof@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>
 Cc: Wen Yang <wenyang.linux@foxmail.com>,
-	netdev@vger.kernel.org,
+	Jan Kara <jack@suse.cz>,
+	"Darrick J. Wong" <djwong@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/8] svcrdma: delete the duplicate static variables zero
-Date: Sun, 25 Feb 2024 12:05:34 +0800
-X-OQ-MSGID: <20240225040538.845899-5-wenyang.linux@foxmail.com>
+Subject: [PATCH 6/8] epoll: delete these duplicate static variables long_zero and long_max
+Date: Sun, 25 Feb 2024 12:05:36 +0800
+X-OQ-MSGID: <20240225040538.845899-7-wenyang.linux@foxmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240225040538.845899-1-wenyang.linux@foxmail.com>
 References: <20240225040538.845899-1-wenyang.linux@foxmail.com>
@@ -74,92 +74,47 @@ Content-Transfer-Encoding: 8bit
 
 From: Wen Yang <wenyang.linux@foxmail.com>
 
-Since these static variable zero is only used for boundary checks and
-will not be changed, remove it and use the ones in our shared const array.
+Since these static variables (long_zero and long_max) are only used for
+boundary checks and will not be changed, remove it and use the ones in
+our shared const array.
 
 Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
 Cc: Luis Chamberlain <mcgrof@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: Joel Granados <j.granados@samsung.com>
 Cc: Christian Brauner <brauner@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
+Cc: Jan Kara <jack@suse.cz>
+Cc: "Darrick J. Wong" <djwong@kernel.org>
 Cc: linux-kernel@vger.kernel.org
 ---
- net/sunrpc/xprtrdma/svc_rdma.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ fs/eventpoll.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma.c b/net/sunrpc/xprtrdma/svc_rdma.c
-index f86970733eb0..5e4cd17eeb5a 100644
---- a/net/sunrpc/xprtrdma/svc_rdma.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma.c
-@@ -63,7 +63,6 @@ unsigned int svcrdma_max_req_size = RPCRDMA_DEF_INLINE_THRESH;
- static unsigned int min_max_inline = RPCRDMA_DEF_INLINE_THRESH;
- static unsigned int max_max_inline = RPCRDMA_MAX_INLINE_THRESH;
- static unsigned int svcrdma_stat_unused;
--static unsigned int zero;
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index 3534d36a1474..22864d6de04f 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -309,9 +309,6 @@ static void unlist_file(struct epitems_head *head)
  
- struct percpu_counter svcrdma_stat_read;
- struct percpu_counter svcrdma_stat_recv;
-@@ -170,8 +169,8 @@ static struct ctl_table svcrdma_parm_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &zero,
--		.extra2		= &zero,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ZERO,
- 	},
+ #include <linux/sysctl.h>
+ 
+-static long long_zero;
+-static long long_max = LONG_MAX;
+-
+ static struct ctl_table epoll_table[] = {
  	{
- 		.procname	= "rdma_stat_rq_poll",
-@@ -179,8 +178,8 @@ static struct ctl_table svcrdma_parm_table[] = {
- 		.maxlen		= sizeof(unsigned int),
+ 		.procname	= "max_user_watches",
+@@ -319,8 +316,8 @@ static struct ctl_table epoll_table[] = {
+ 		.maxlen		= sizeof(max_user_watches),
  		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &zero,
--		.extra2		= &zero,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ZERO,
+ 		.proc_handler	= proc_doulongvec_minmax,
+-		.extra1		= &long_zero,
+-		.extra2		= &long_max,
++		.extra1		= SYSCTL_LONG_ZERO,
++		.extra2		= SYSCTL_LONG_MAX,
  	},
- 	{
- 		.procname	= "rdma_stat_rq_prod",
-@@ -188,8 +187,8 @@ static struct ctl_table svcrdma_parm_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &zero,
--		.extra2		= &zero,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ZERO,
- 	},
- 	{
- 		.procname	= "rdma_stat_sq_poll",
-@@ -197,8 +196,8 @@ static struct ctl_table svcrdma_parm_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &zero,
--		.extra2		= &zero,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ZERO,
- 	},
- 	{
- 		.procname	= "rdma_stat_sq_prod",
-@@ -206,8 +205,8 @@ static struct ctl_table svcrdma_parm_table[] = {
- 		.maxlen		= sizeof(unsigned int),
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &zero,
--		.extra2		= &zero,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ZERO,
- 	},
- 	{ },
  };
+ 
 -- 
 2.25.1
 
