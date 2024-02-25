@@ -1,193 +1,95 @@
-Received: from mx11lb.world4you.com (mx11lb.world4you.com [81.19.149.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D72D2FE;
-	Sun, 25 Feb 2024 20:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C0863A5
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 20:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708892593; cv=none; b=eQ1vZPPQVFDQ0jaWQRgYmN/l82v+BEiy8ERQHdXz9O/qzEOGbjVENJhWgziABrPpVDrIUtbQzWpRwfaFueVcP55q9Tra04DkfaJiK0UnP17RtPiCX9Eu1mjtPsyHWjPYqjpXv7Z5IGWf5QMFiXpTEE20BoLZ6XDpazYaEmssUgs=
+	t=1708892751; cv=none; b=Wgp1BYzRweFGZW5PFaXQlbv+41OIXzQ7tiJ9X9KUr8vNG7wSlzDWef4Qf2i8WNqFWlLOGcxEptGbei4gvNEMKJVekHhmnuX9I6irRqX68/sD1crI+uK0llhGWfTImxIDD4QzUxCNDetZ+ajB2WCzdMHUiNPBJX2y1P4OiMYphEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708892593; c=relaxed/simple;
-	bh=yW/+obWtXZSHaK0Je1F5WkuDWcXhnWjrtjf+VbTL55I=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=mMfQ0Kw9Fgrt13u/s3V54YjJBMhtVI+Ibd6X8dVlVUaGNEFB1MnhOW7aa67VHK5XeU4wBHOunin0TAlhr1YbkYW29MLcAOOjMFmIhDJS3v2nyESOkaEVhYm0OwoB3II55i1smKtOWBzvxC8VUq0SYKfESKSu4yD9YCvfvULXoss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sw-optimization.com; spf=pass smtp.mailfrom=sw-optimization.com; dkim=pass (1024-bit key) header.d=sw-optimization.com header.i=@sw-optimization.com header.b=edXJWmE/; arc=none smtp.client-ip=81.19.149.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sw-optimization.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sw-optimization.com
+	s=arc-20240116; t=1708892751; c=relaxed/simple;
+	bh=mff2Bx4f88etHoqdVo+jEmdrbqPgNQ/kWaOd8DhYTIc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Qyb731c0mYRZNk7cXcP4fHlWYeZp6UrKwN3WiZgF6SmA128mrB25GcK8Q/gfCcmjKc3ltB4Ax/kel3TDmfJ3ZNA6XSQi5NANWSDrtH6eGbYSEIcHq12FBTUrs/KTAsa+nsK7QGj1MDLmYWEIAF1Bd34PlPeceB96AxcBDmWhgSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FEdfdOa4; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sw-optimization.com header.i=@sw-optimization.com header.b="edXJWmE/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sw-optimization.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ECMTj4d0RwuHIR6RVnxKDJNLLn5ad3xX9dN37q8WZfk=; b=edXJWmE/j2+9KN6qSnOzuJ2cHo
-	cotC8/3KLRovQiwfhhrdtKZClEeOFBhE2BtXx/BKrsE4vJ240ZAiffmNmJ618+l++GnK7ap42JQqz
-	OR+84dsQPF5WezZHAjkVd3uBM35J0UXLrIJAYU+L2JNsLO/BbKJNB/dLOTu1qv3BoSnk=;
-Received: from [82.194.150.36] (helo=[192.168.0.145])
-	by mx11lb.world4you.com with esmtpa (Exim 4.96.2)
-	(envelope-from <eas@sw-optimization.com>)
-	id 1reKkj-0006le-1n;
-	Sun, 25 Feb 2024 21:05:37 +0100
-Message-ID: <245a848c-5bbc-463d-b7e1-b82cea2c4dba@sw-optimization.com>
-Date: Sun, 25 Feb 2024 21:05:37 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FEdfdOa4"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-565ef8af2f5so297923a12.3
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 12:25:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708892748; x=1709497548; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2R/XFG9oaY6y18sf9Tff4jPtjEwP6MJBf+0W5rEV324=;
+        b=FEdfdOa42388OHWHA+D8OtVM+zbelK8SXIUPZ6xTtm9gElBK/yTcyOdveLJCvI1Kiy
+         NB+oJ6IGhNyPv8uVd5fuSnZI4GIapC5G93ocuVQuOzgotaK0hAPbTjPlHhEGoyIgRagL
+         r1bB7UQanZ4AnBNqWy4F1fVHRR8iQEl/H1uN7m9vukRLhDYi99XWo7z3mZkzQJSvgR8g
+         IVMR+nvaaMnuKdtAM2bZBjbwgn8z3/x6ZByNSdBoOgA9Q1nEIFWgGSt7K/S6h2Rf/iq0
+         DJIKHiM6y5t9BCBY+BYGOzZFwhn6HmSIoJ36WULHuwpKKLmfKQ8PTioAZdPzQXVYhR3v
+         /ZhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708892748; x=1709497548;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2R/XFG9oaY6y18sf9Tff4jPtjEwP6MJBf+0W5rEV324=;
+        b=Pl37ffy/xBYKaYetYbTfAZb981Uy7ZFokrU5cQnmg0lPE77NEN/SNngTHUj+HynjTP
+         Orc7T41PLTezT2bJ458ndg+TbkIfC9ir/YQrMhS6ckB7iAhYWtSzJUTYptgyZqRQ39a8
+         j7garjIfPzIqAOkMJXWAd2hUsnt49Ph49QgCN1BiD8XTsTW0P5utA8vtshJLKoPA5FXU
+         nY9jOy+0WlsnUrEe4lweH8AX9VV74a9/acByvvuevK4EgdbSr/Ahcyc/eic6H4W6bBMx
+         FL69kdVjD5Ox7SphIATRMc0948Qi0iU3JAQzVLJxARCg41nr+Nuc7Fww5g6V5c466IMO
+         wBug==
+X-Forwarded-Encrypted: i=1; AJvYcCWuXx1Yfe2ldk85q8/VQRhY8Nga2B0T0oJ87xT2gqCC4oOKCaHYQAkss1Xl3I+bznU4dqZ6rXj5e7aOQeFp+deH0mbSNnFP/OuZ078V
+X-Gm-Message-State: AOJu0YxMshzCVCEcf7q6QnHdBQdZTEcKTJDI4EHPumQlt7TzbMU6WqwG
+	cvMbFBzCkySRfRacHYAQo47QwklyI6704cKGoGK5Yc8Oub1bX25RQrN1WKo1OFc=
+X-Google-Smtp-Source: AGHT+IGJLb0LFIjQmJVb1XHJRopVy/BJfdLpJRuaWdrDVNDspvP1AdwQpIQuP1OWlnVfy6L/oZZsTQ==
+X-Received: by 2002:a17:906:140c:b0:a3e:dcd2:2746 with SMTP id p12-20020a170906140c00b00a3edcd22746mr3685269ejc.3.1708892748480;
+        Sun, 25 Feb 2024 12:25:48 -0800 (PST)
+Received: from krzk-bin.. ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id a26-20020a170906685a00b00a3f0dbdf106sm1741491ejs.105.2024.02.25.12.25.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Feb 2024 12:25:48 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Chris Lew <quic_clew@quicinc.com>,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] soc: qcom: geni-se: drop unused kerneldoc struct geni_wrapper param
+Date: Sun, 25 Feb 2024 21:25:44 +0100
+Message-Id: <20240225202545.59113-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: altera-msgdma: fix descriptors freeing logic
-From: Eric Schwarz <eas@sw-optimization.com>
-To: Olivier Dautricourt <olivierdautricourt@gmail.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- Vinod Koul <vkoul@kernel.org>, Stefan Roese <sr@denx.de>
-References: <20230920200636.32870-3-olivierdautricourt@gmail.com>
- <22402987-305b-024b-044e-53db17037d90@sw-optimization.com>
- <ZQyWsvcQCJgmG5aO@freebase>
- <8d18106d-444e-9346-26cc-3767540df5d8@sw-optimization.com>
- <ZQ3B9NWVmLvaVhJX@freebase>
- <5e2404d4-f36c-7718-c0fc-d226aefdf2f6@sw-optimization.com>
-Content-Language: de-DE
-In-Reply-To: <5e2404d4-f36c-7718-c0fc-d226aefdf2f6@sw-optimization.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-AV-Do-Run: Yes
 
-Hello Olivier,
+Drop description of non-existing 'struct geni_wrapper' member:
 
-just a ping on getting the patches / fixes below mainline. - Were you 
-able to get hardware for testing?
+  qcom-geni-se.c:99: warning: Excess struct member 'to_core' description in 'geni_wrapper'
 
-Many thanks
-Eric
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/soc/qcom/qcom-geni-se.c | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+index bdcf44b85b2f..2e8f24d5da80 100644
+--- a/drivers/soc/qcom/qcom-geni-se.c
++++ b/drivers/soc/qcom/qcom-geni-se.c
+@@ -89,7 +89,6 @@
+  * @base:		Base address of this instance of QUP wrapper core
+  * @clks:		Handle to the primary & optional secondary AHB clocks
+  * @num_clks:		Count of clocks
+- * @to_core:		Core ICC path
+  */
+ struct geni_wrapper {
+ 	struct device *dev;
+-- 
+2.34.1
 
-Am 28.09.2023 um 09:57 schrieb Eric Schwarz:
-> Hello Olivier,
-> 
-> Am 22.09.2023 um 18:33 schrieb Olivier Dautricourt:
->> Hi Eric,
->>
->> On Fri, Sep 22, 2023 at 09:49:59AM +0200, Eric Schwarz wrote:
->>> Hello Olivier,
->>>
->>>>> Am 20.09.2023 um 21:58 schrieb Olivier Dautricourt:
->>>>>> Sparse complains because we first take the lock in msgdma_tasklet 
->>>>>> -> move
->>>>>> locking to msgdma_chan_desc_cleanup.
->>>>>> In consequence, move calling of msgdma_chan_desc_cleanup outside 
->>>>>> of the
->>>>>> critical section of function msgdma_tasklet.
->>>>>>
->>>>>> Use spin_unlock_irqsave/restore instead of just spinlock/unlock to 
->>>>>> keep
->>>>>> state of irqs while executing the callbacks.
->>>>>
->>>>> What about the locking in the IRQ handler msgdma_irq_handler() 
->>>>> itself? -
->>>>> Shouldn't spin_unlock_irqsave/restore() be used there as well 
->>>>> instead of
->>>>> just spinlock/unlock()?
->>>>
->>>> IMO no:
->>>> It is covered by [1]("Locking Between Hard IRQ and Softirqs/Tasklets")
->>>> The irq handler cannot be preempted by the tasklet, so the
->>>> spin_lock/unlock version is ok. However the tasklet could be 
->>>> interrupted
->>>> by the Hard IRQ hence the disabling of irqs with save/restore when
->>>> entering critical section.
->>>>
->>>> It should not be needed to keep interrupts locally disabled while 
->>>> invoking
->>>> callbacks, will add this to the commit description.
->>>>
->>>> [1] https://www.kernel.org/doc/Documentation/kernel-hacking/locking.rst
->>>
->>> Thanks for the link. I have read differently here [2] w/ special 
->>> emphasis on
->>> "Lesson 3: spinlocks revisited.".
->>>
->>> [2] https://www.kernel.org/doc/Documentation/locking/spinlocks.txt
->>>
->>
->> This chapter [2] says that our code must use irq versions of spin_lock
->> because our handler does indeed play with the lock. However this
->> requirement does not apply to the irq handler itself, as we know that the
->> interrupt line is disabled during the execution of the handler (and our
->> handler is not shared with another irq).
-> 
-> "... as we know that the interrupt line is disabled during the execution 
-> of the handler (and our handler is not shared with another irq)."
-> 
-> That was the point I wanted to be sure about. So if the IRQ handler 
-> cannot be called twice ensured by architecture neither on single or 
-> multi CPU systems (SMP or others) I am fine.
-> Thanks for your response on that. Appreciated.
-> 
-> Because you take the effort to set up hardware and environment again you 
-> may also test following fixes/improvements from zynqmp driver which 
-> could then be merged into altera-msgdma driver. Please check yourself:
-> 
-> f2b816a1dfb8 ("dmaengine: zynqmp_dma: Add device_synchronize support")
-> # Caught by your patchset
-> #9558cf4ad07e ("dmaengine: zynqmp_dma: fix lockdep warning in tasklet")
-> # Caught by your patchset
-> #16ed0ef3e931 ("dmaengine: zynqmp_dma: cleanup after completing all 
-> descriptors")
-> # Caught by your patchset - For the altera-msgdma driver it is a real 
-> fix not an optimization.
-> #48594dbf793a ("dmaengine: zynqmp_dma: Use list_move_tail instead of 
-> list_del/list_add_tail")
-> 5ba080aada5e ("dmaengine: zynqmp_dma: Fix race condition in the probe")
-> 
-> Note: If the sequence is applied in reverse order the log would be 
-> comparable to zynqmp driver's log.
-> 
-> IMHO your patchset could/should be extended by two more patches and 
-> split into small junks as mentioned. Then history would stay intact to 
-> be compared to zynqmp driver.
-> 
-> Note: Take care about "Developer’s Certificate of Origin 1.1". IMHO 
-> "Signed-off-by" tags from the other patches might/must be copied at 
-> least for most of the patches then, which would make it easier to get it 
-> into mainline.
-> 
-> Btw, some cosmetic changes could be made in the mainlined driver:
-> 
-> 30s/implements/Implements/
-> 31s/data/Data/
-> 32s/data/Data/
-> 33s/the/The/
-> 39s/data/Data/
-> 40s/data/Data/
-> 41s/characteristics/Characteristics/
-> 109s/response/Response/
-> 154s/implements/Implements/
-> 154s/sw\ /SW\ /
-> 155s/support/Support/
-> 155s/api/API/
-> 156s/assosiated/Associated/
-> 157s/node\ /Node\ /
-> 158s/transmit/Transmit/
-> 259s/Hw/HW/
-> 291s/Hw/HW/
-> 322s/prepare/Prepare/
-> 327s/transfer/Transfer/
-> 378s/prepare/Prepare/
-> 384s/transfer/Transfer/
-> 385s/transfer/Transfer/
-> 502s/its/it\'s/
-> 514s/oder/order/
-> 530s/copy\ /Copy\ /
-> 680s/sSGDMA/mSGDMA/
-> 723s/Interrupt/interrupt/
-> 752s/\(\)//
-> 921s/\(\)//
-> 
-> ... and another patch, if that is taken into account.
-> 
-> Cheers
-> Eric
