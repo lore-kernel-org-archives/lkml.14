@@ -1,103 +1,235 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0281419BA5
-	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 20:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25D42CA9
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 20:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708892926; cv=none; b=cZ3KJ8sn29Zmq12LmFFUyyXzyXhcYotRFp6rrZdROZ/CYeJczT30AQ6Q8SEvNKn1i1a/+DHrf0/X9N3Fn1dL5Xu+KwQTZ/DgWegrougCtKy2zO93XzzWlnP/aPe91n+tjys/hJtxUZYPQ+lwdaK85gqHLdWSv96NO3jSvfmIqFE=
+	t=1708893471; cv=none; b=rCzl6mSJhYMqoTylYjxFA2oCs7ZSUX9LWFMMgsz421NEDgZoZlMMmDsGOtKU7CZXdZ0leQKc1qUb26UC5lbFEEF+WcKn44pEHgfOJb/El3IBOP5fauVMeIwbVrsnUsY3DdXDgV/um0QhG5JS1UOM3swUJOWRpeKNUcuxd5DC4E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708892926; c=relaxed/simple;
-	bh=bz7La++wemDtpv2Tj4GKgbBdph0RhPEew+v3vWe9MLs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cyTijYX41PbNn8NVaTsk6fM0GDq5OErBswg5Cs4y/wsaPp+E/PczlrYMkPPskLhB4OQGAPfSxdApnU4UjK+ZWgomkEmycJ9lQANhMLggzbWw2V0l50wLpBRXTM7IeHq7FO6gSnQvd5dflRdl0gBnWK5fYvpFp063zWD0E0iNaXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VpAw5+cT; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708893471; c=relaxed/simple;
+	bh=o+f5YbI4M5UPfaTvg/Fku0fzIM2l31BIbDrylqVTkQs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l6m0AE0bXYa6RF2VU+iAox3qYI2nfdfsRfAccMNlMdj/zhdvO0kR+tqKK5gUalZP0QUX+U3huF6YA0uWtBLgTge/+bM58rz+Nz9HsfenOB9prxwRE0WtEoIZPGe7Gsr3ymCF1HfRRZ6Ron6ObQuCfGc4TUws/pI8og/hgomapwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=blFS+gck; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VpAw5+cT"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3f5808b0dfso330705766b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 12:28:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708892923; x=1709497723; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LQhObH8iYYJ3IoKtoS8QTP3j/Cwz0hevmJwDdAJZbC4=;
-        b=VpAw5+cT6zgNRbIxZL+/jHBPm/KZ5do9ByQuKy4u0AusFzhqE+N9tjfA6AJznwX1Qe
-         DS1tKlDJJtakxQOEj/zVp9OZTEihJtyguZ6lJ6RS/dNG0GhCdVulzBGomGfjgrVXP0AR
-         AODYT/yM+w+V9A2ZetFT0l0EOUDdaQoK+H291B4H4DlkgO1w46z4rlC8TkFirFcB3EVe
-         eZsZDfrv19q5sbNChXer3lXakMWLLD2EIOwirDHPOUP53Xl37v2fEQzSZgx6ghnDDkAT
-         AlwigDFoaIAemXLd1BA1zeCu7LqQsAu/JzyujCPjdAa18spQIhDmE2BWWStPTN5eK4Eq
-         Hx3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708892923; x=1709497723;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LQhObH8iYYJ3IoKtoS8QTP3j/Cwz0hevmJwDdAJZbC4=;
-        b=Huy3hqKMzZYQ/K/VqDz1k3YYpvxlXyEIZdOCIzToUY4RPwpxwG8uNkTjmvlt/8VuUY
-         EL07q5R65/9cErnOhiwlkQwLbt59kk4loYHjS8EFLw8SvZOZUZdmqcmUD8pDALB2cmFn
-         YdX3AAxu962tZW4Pt+00voRG13hWv8OjMPluU38bohVCQgUhqHQE3zep8N07VZ/4VQym
-         vagzgSJpLVdENeJAo6oVU4DsOjOBxc4B3jxE8csfcXVoU+4Vmo6G9NeDe7ptvb3UcfA+
-         Hzt1OjMwQWGampGCYMIAA3yY2pf8+khck0UXMDueXb5NlHZZkQ0Qjm8XkO0zXCb7rpAI
-         8qMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUreN9yxs9haESRSopf1geZAGHocJfLfYDMeiDmQuJL4LCqhL4tPGgPmkMfRBaTwVZOxvAZ99cMkeMuip5J3Qvm73auK/uMt/Eq0mq9
-X-Gm-Message-State: AOJu0Yznwj9k5K4EjGs3gBndQyWFtQ9o64xdVgQkWfE9EKAYUH8BRiM7
-	CXCj1wk3SXrqrSfgpQqfnPbUAL934+XssjvL3JvJQjysL7Vksc6g7AIKCSKqI0tTgh9JW1AX7g+
-	u
-X-Google-Smtp-Source: AGHT+IGLKkvTXcaFKTKXQbmn8mt8Fo7Km1jdI5Q0LFi73p9Ni25HthQDDXz3lHv/AM99kDe7iqmryg==
-X-Received: by 2002:a17:906:34cd:b0:a3f:870:535c with SMTP id h13-20020a17090634cd00b00a3f0870535cmr3158316ejb.44.1708892923547;
-        Sun, 25 Feb 2024 12:28:43 -0800 (PST)
-Received: from krzk-bin.. ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id wb5-20020a170907d50500b00a3e48782f08sm1762249ejc.27.2024.02.25.12.28.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 12:28:43 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] hwmon: sis5595: drop unused DIV_TO_REG function
-Date: Sun, 25 Feb 2024 21:28:41 +0100
-Message-Id: <20240225202841.60740-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="blFS+gck"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1708893467; x=1709152667;
+	bh=o+f5YbI4M5UPfaTvg/Fku0fzIM2l31BIbDrylqVTkQs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=blFS+gckOD8y6d+oUfM2gLvszlsnY7Rr3d+JNHIXl44ZBfrmxlPRv/cxljaxBMxwS
+	 tBUdPGM7xVuwYGUGdvrUY2cqdYgIsBthrv4BlzBegh3Nh2bhVcUjSfombvmUTTJI7y
+	 m2QQRkGFksKIE5mJ8iq7GSQXBKuol+RTh+sHqm4722xp2pGAtUjQIne3GUrHtLckEr
+	 IRTbWN6+i4wXhyFsbjnSlcbnkZ8eWPHGkJvzJ1hsVWwkOou+KcTubhU0MTaY0ypRXy
+	 EGGzLyZ1vr/E6CmAP+7/12vlV9BfskaSnaaYKYoSzaT/MHcXE0ujDqdiuSWrtZtII2
+	 j0ca40T6nmhfw==
+Date: Sun, 25 Feb 2024 20:37:42 +0000
+To: Saravana Kannan <saravanak@google.com>
+From: Michael Pratt <mcpratt@pm.me>
+Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, abel.vesa@linaro.org, alexander.stein@ew.tq-group.com, andriy.shevchenko@linux.intel.com, bigunclemax@gmail.com, brgl@bgdev.pl, colin.foster@in-advantage.com, djrscally@gmail.com, dmitry.baryshkov@linaro.org, festevam@gmail.com, fido_max@inbox.ru, frowand.list@gmail.com, geert@linux-m68k.org, heikki.krogerus@linux.intel.com, kernel@pengutronix.de, linus.walleij@linaro.org, linux@roeck-us.net, luca.weiss@fairphone.com, magnus.damm@gmail.com, martin.kepplinger@puri.sm, miquel.raynal@bootlin.com, rafal@milecki.pl, ansuelsmth@gmail.com, richard@nod.at, sakari.ailus@linux.intel.com, sudeep.holla@arm.com, tglx@linutronix.de, tony@atomide.com, vigneshr@ti.com, dianders@chromium.org, jpb@kernel.org, rafael@kernel.org, Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v1 2/4] driver core: fw_devlink: Link to supplier ancestor if no device
+Message-ID: <WfZQTVQwRumG8L5YEf32cJoQCFo_5pAh7QH6Giq1CGI8J-PTcwXV-aWtWQqQCdkI2ZVQbbCVdVXxLhorucDAeKDlJoXW0A2Xfm0-cVvdhSo=@pm.me>
+In-Reply-To: <CAGETcx8S6B09T==dSp38-vX+rYjRyTaRwVqF0c2Nh-KxwDFAtw@mail.gmail.com>
+References: <20240123014517.5787-1-mcpratt@pm.me> <20240123014517.5787-3-mcpratt@pm.me> <CAGETcx8S6B09T==dSp38-vX+rYjRyTaRwVqF0c2Nh-KxwDFAtw@mail.gmail.com>
+Feedback-ID: 27397442:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-'DIV_TO_REG' function is not used:
+Hi Saravana,
 
-  sis5595.c:159:18: error: unused function 'DIV_TO_REG' [-Werror,-Wunused-function]
+Thanks for taking a look at the patch series.
+I'm going to write a longer reply to the rest of what you said later.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/hwmon/sis5595.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+On Monday, February 5th, 2024 at 14:25, Saravana Kannan <saravanak@google.c=
+om> wrote:
 
-diff --git a/drivers/hwmon/sis5595.c b/drivers/hwmon/sis5595.c
-index 641be1f7f9cd..e73b1522f3ce 100644
---- a/drivers/hwmon/sis5595.c
-+++ b/drivers/hwmon/sis5595.c
-@@ -153,13 +153,9 @@ static inline s8 TEMP_TO_REG(long val)
- }
- 
- /*
-- * FAN DIV: 1, 2, 4, or 8 (defaults to 2)
-- * REG: 0, 1, 2, or 3 (respectively) (defaults to 1)
-+ * FAN DIV: 1, 2, 4, or 8
-+ * REG: 0, 1, 2, or 3 (respectively)
-  */
--static inline u8 DIV_TO_REG(int val)
--{
--	return val == 8 ? 3 : val == 4 ? 2 : val == 1 ? 0 : 1;
--}
- #define DIV_FROM_REG(val) (1 << (val))
- 
- /*
--- 
-2.34.1
+>=20
+>=20
+> On Mon, Jan 22, 2024 at 5:46=E2=80=AFPM Michael Pratt mcpratt@pm.me wrote=
+:
+>=20
+> >=20
+> > Signed-off-by: Michael Pratt mcpratt@pm.me
+>=20
+>=20
+> NACK for a bunch of reasons.
+>=20
+> 1. This logic should not be in fwnode_link_add(). That's supposed to
+> do the exact linking that the firmware meant. This logic should be
+> where the fwnode links are converted to device links or deferred
+> probing decision is done.
 
+Yeah, I can definitely make this change without any problems.
+
+>=20
+> 2. If we handle one parent above correctly, it should be easy to
+> handle multiple parents above too. So why not fix it where we handle
+> multiple parents above?
+
+I can do this too, but since going one parent up would have to occur
+multiple times, it would still end up being a recursive search for the flag=
+.
+Without finding the right fwnode right away, the new fixup function here
+would have to recursively call itself 3 or 4 times instead of once or twice=
+,
+and each call would result in going through the entire loop of=20
+fw_devlink_link_device() for the consumer which would overall take a little=
+ more time.
+
+
+>=20
+> Btw, I'm happy to fix this or help you fix this once I understand the
+> issue. Just wanted to give a quick NACK to avoid people spending
+> cycles on this patch in its current state.
+
+
+I totally understand. I am still new to kernel things, so I imagine that
+whenever I think that I'm finished with something,
+that I'm actually just halfway done with it, even though it took forever
+to get to this point, haha.
+
+
+>=20
+> -Saravana
+>=20
+> > ---
+> > drivers/base/core.c | 49 ++++++++++++++++++++++++++++++++++++------
+> > include/linux/fwnode.h | 4 ++++
+> > 2 files changed, 47 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index c05a5f6b0641..7f2652cf5edc 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -92,13 +92,45 @@ static int __fwnode_link_add(struct fwnode_handle *=
+con,
+> > return 0;
+> > }
+> >=20
+> > +static int __fwnode_link_add_parents(struct fwnode_handle *con,
+> > + struct fwnode_handle *sup,
+> > + u8 flags, bool loop)
+> > +{
+> > + int ret =3D -EINVAL;
+> > + struct fwnode_handle parent;
+> > +
+> > + fwnode_for_each_parent_node(sup, parent) {
+> > + / Ignore the root node */
+> > + if (fwnode_count_parents(parent) &&
+> > + fwnode_device_is_available(parent) &&
+> > + !(parent->flags & FWNODE_FLAG_NOT_DEVICE) &&
+> > + !(parent->flags & FWNODE_FLAG_PARENT_IS_DEV)) {
+> > + ret =3D __fwnode_link_add(con, parent, flags);
+> > + }
+> > +
+> > + if (!loop && !ret) {
+> > + fwnode_handle_put(parent);
+> > + return 0;
+> > + }
+> > + }
+> > +
+> > + return ret;
+> > +}
+> > +
+> > int fwnode_link_add(struct fwnode_handle *con, struct fwnode_handle *su=
+p)
+> > {
+> > int ret;
+> >=20
+> > mutex_lock(&fwnode_link_lock);
+> > - ret =3D __fwnode_link_add(con, sup, 0);
+> > +
+> > + if ((sup->flags & FWNODE_FLAG_NOT_DEVICE) &&
+> > + (sup->flags & FWNODE_FLAG_PARENT_IS_DEV))
+> > + ret =3D __fwnode_link_add_parents(con, sup, 0, false);
+> > + else
+> > + ret =3D __fwnode_link_add(con, sup, 0);
+> > +
+> > mutex_unlock(&fwnode_link_lock);
+> > +
+> > return ret;
+> > }
+> >=20
+> > @@ -218,7 +250,8 @@ static void __fwnode_links_move_consumers(struct fw=
+node_handle *from,
+> > * MANAGED device links to this device, so leave @fwnode and its descend=
+ant's
+> > * fwnode links alone.
+> > *
+> > - * Otherwise, move its consumers to the new supplier @new_sup.
+> > + * Otherwise, flag descendants of @fwnode as having a parent fwnode fo=
+r a device
+> > + * that has probed and move bad fwnode consumer links from @fwnode to =
+@new_sup.
+> > */
+> > static void __fw_devlink_pickup_dangling_consumers(struct fwnode_handle=
+ *fwnode,
+> > struct fwnode_handle *new_sup)
+> > @@ -228,8 +261,11 @@ static void __fw_devlink_pickup_dangling_consumers=
+(struct fwnode_handle *fwnode,
+> > if (fwnode->dev && fwnode->dev->driver)
+> > return;
+> >=20
+> > - fwnode->flags |=3D FWNODE_FLAG_NOT_DEVICE;
+> > - __fwnode_links_move_consumers(fwnode, new_sup);
+> > + if (fwnode->flags & FWNODE_FLAG_NOT_DEVICE)
+> > + __fwnode_links_move_consumers(fwnode, new_sup);
+> > +
+> > + fwnode->flags |=3D FWNODE_FLAG_PARENT_IS_DEV;
+> > + new_sup->flags &=3D ~(FWNODE_FLAG_PARENT_IS_DEV);
+> >=20
+> > fwnode_for_each_available_child_node(fwnode, child)
+> > __fw_devlink_pickup_dangling_consumers(child, new_sup);
+> > @@ -2071,8 +2107,9 @@ static int fw_devlink_create_devlink(struct devic=
+e *con,
+> > device_links_write_unlock();
+> > }
+> >=20
+> > - if (sup_handle->flags & FWNODE_FLAG_NOT_DEVICE)
+> > - sup_dev =3D fwnode_get_next_parent_dev(sup_handle);
+> > + if ((sup_handle->flags & FWNODE_FLAG_NOT_DEVICE) &&
+> > + !(sup_handle->flags & FWNODE_FLAG_PARENT_IS_DEV))
+> > + return -EINVAL;
+> > else
+> > sup_dev =3D get_dev_from_fwnode(sup_handle);
+> >=20
+> > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> > index 2a72f55d26eb..3ed8ba503062 100644
+> > --- a/include/linux/fwnode.h
+> > +++ b/include/linux/fwnode.h
+> > @@ -30,6 +30,9 @@ struct device;
+> > * BEST_EFFORT: The fwnode/device needs to probe early and might be miss=
+ing some
+> > * suppliers. Only enforce ordering with suppliers that have
+> > * drivers.
+> > + * PARENT_IS_DEV: The fwnode is a child of a fwnode that is or will be=
+ populated as a
+> > + * struct device, which is more suitable for device links
+> > + * than the fwnode child which may never have a struct device.
+> > */
+> > #define FWNODE_FLAG_LINKS_ADDED BIT(0)
+> > #define FWNODE_FLAG_NOT_DEVICE BIT(1)
+> > @@ -37,6 +40,7 @@ struct device;
+> > #define FWNODE_FLAG_NEEDS_CHILD_BOUND_ON_ADD BIT(3)
+> > #define FWNODE_FLAG_BEST_EFFORT BIT(4)
+> > #define FWNODE_FLAG_VISITED BIT(5)
+> > +#define FWNODE_FLAG_PARENT_IS_DEV BIT(6)
+> >=20
+> > struct fwnode_handle {
+> > struct fwnode_handle *secondary;
+> > --
+> > 2.30.2
+
+--
+MCP
