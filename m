@@ -1,239 +1,193 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mx11lb.world4you.com (mx11lb.world4you.com [81.19.149.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10F71BDCE;
-	Sun, 25 Feb 2024 20:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D72D2FE;
+	Sun, 25 Feb 2024 20:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708892232; cv=none; b=drtVgvASGsPHGoxRdgdVC3i66YSQYf2WqHgVUpCjquSfy6y0KaiAKW8+OexBT+mKwMC5Ndcc1jSLSOmUAX7NQN79GIDBpZGOHVuaefBcp94mGexWF0siiOIJX/MIRhRrQPobXz95DJFOlBuSrKeqIkRUzcuP0NSzIPwj3uQPTwU=
+	t=1708892593; cv=none; b=eQ1vZPPQVFDQ0jaWQRgYmN/l82v+BEiy8ERQHdXz9O/qzEOGbjVENJhWgziABrPpVDrIUtbQzWpRwfaFueVcP55q9Tra04DkfaJiK0UnP17RtPiCX9Eu1mjtPsyHWjPYqjpXv7Z5IGWf5QMFiXpTEE20BoLZ6XDpazYaEmssUgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708892232; c=relaxed/simple;
-	bh=8mBiiw1K6hy4KkWF0bACSrn0c7z/Q+4n0AoXESCVheY=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=vFwgKlZLq1SBxVbQchfUN1qkJlc693n95KHZ3Ucp/roFH4Kd1iDu8gZDizYLyYij6ukmns1BNQqQFTh6D0C1XR61R9kQ3bLiIV9GptYzEu/ZYHWQG/RkkiLzxE61OY2qewBrBva/CBrpMf6ZmFC2YTHqAHr6+plwlRnCbZkUIXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Ve1h7206; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1708892593; c=relaxed/simple;
+	bh=yW/+obWtXZSHaK0Je1F5WkuDWcXhnWjrtjf+VbTL55I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=mMfQ0Kw9Fgrt13u/s3V54YjJBMhtVI+Ibd6X8dVlVUaGNEFB1MnhOW7aa67VHK5XeU4wBHOunin0TAlhr1YbkYW29MLcAOOjMFmIhDJS3v2nyESOkaEVhYm0OwoB3II55i1smKtOWBzvxC8VUq0SYKfESKSu4yD9YCvfvULXoss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sw-optimization.com; spf=pass smtp.mailfrom=sw-optimization.com; dkim=pass (1024-bit key) header.d=sw-optimization.com header.i=@sw-optimization.com header.b=edXJWmE/; arc=none smtp.client-ip=81.19.149.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sw-optimization.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sw-optimization.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ve1h7206"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240225201701euoutp016779edea2249c28248dbba8c4251c000~3NGveewUT3072430724euoutp01d;
-	Sun, 25 Feb 2024 20:17:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240225201701euoutp016779edea2249c28248dbba8c4251c000~3NGveewUT3072430724euoutp01d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1708892221;
-	bh=dhW+yOBdo3voypPsFOkyfZsFdQSuzWwwvrfGVCZWSrc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Ve1h7206ul8aONip2vy8Phb+MlbhOJ6vVF0OIvcjntM+tpM9mqWlP+K8KfwCI3ID1
-	 HOTXwV6WZmPDQZGECqRc4oQZKe2ZVDDHOJL2RysYp80pdVm1yf6sTFQIBQ6kcSDvMH
-	 d57FtfZ+WeqCMaI3ZOx0KjBKjmGVElMLRIZOz1fM=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240225201701eucas1p1d89fc1e57d360ca7c9b5e2c90cc56bf8~3NGvL1Hjs1109111091eucas1p1C;
-	Sun, 25 Feb 2024 20:17:01 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 8B.65.09814.D30ABD56; Sun, 25
-	Feb 2024 20:17:01 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240225201700eucas1p1fcf1392cd0d4230c17d1ff296c5995e2~3NGut75Ky2582925829eucas1p1t;
-	Sun, 25 Feb 2024 20:17:00 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240225201700eusmtrp1596f260bbede93134299c568c0b311d0~3NGutXJui0768107681eusmtrp1E;
-	Sun, 25 Feb 2024 20:17:00 +0000 (GMT)
-X-AuditID: cbfec7f4-711ff70000002656-60-65dba03da3d3
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 07.F7.09146.C30ABD56; Sun, 25
-	Feb 2024 20:17:00 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240225201700eusmtip186ccfa89ac58e360b12b80e5490a2b54~3NGui2XHm1504315043eusmtip1U;
-	Sun, 25 Feb 2024 20:17:00 +0000 (GMT)
-Received: from localhost (106.210.248.222) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Sun, 25 Feb 2024 20:16:59 +0000
-Date: Sun, 25 Feb 2024 21:16:58 +0100
-From: Joel Granados <j.granados@samsung.com>
-To: <wenyang.linux@foxmail.com>
-CC: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
-	Christian Brauner <brauner@kernel.org>, <davem@davemloft.net>, David Ahern
-	<dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/8] sysctl: introduce sysctl SYSCTL_U8_MAX and
- SYSCTL_LONG_S32_MAX
-Message-ID: <20240225201658.h6nod4c4uxclq53a@joelS2.panther.com>
+	dkim=pass (1024-bit key) header.d=sw-optimization.com header.i=@sw-optimization.com header.b="edXJWmE/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sw-optimization.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ECMTj4d0RwuHIR6RVnxKDJNLLn5ad3xX9dN37q8WZfk=; b=edXJWmE/j2+9KN6qSnOzuJ2cHo
+	cotC8/3KLRovQiwfhhrdtKZClEeOFBhE2BtXx/BKrsE4vJ240ZAiffmNmJ618+l++GnK7ap42JQqz
+	OR+84dsQPF5WezZHAjkVd3uBM35J0UXLrIJAYU+L2JNsLO/BbKJNB/dLOTu1qv3BoSnk=;
+Received: from [82.194.150.36] (helo=[192.168.0.145])
+	by mx11lb.world4you.com with esmtpa (Exim 4.96.2)
+	(envelope-from <eas@sw-optimization.com>)
+	id 1reKkj-0006le-1n;
+	Sun, 25 Feb 2024 21:05:37 +0100
+Message-ID: <245a848c-5bbc-463d-b7e1-b82cea2c4dba@sw-optimization.com>
+Date: Sun, 25 Feb 2024 21:05:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="xhnys3c7pu7tlmrh"
-Content-Disposition: inline
-In-Reply-To: <tencent_95D22FF919A42A99DA3C886B322CBD983905@qq.com>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFKsWRmVeSWpSXmKPExsWy7djPc7q2C26nGpxewWrx+vAnRos551tY
-	LNbtamWyeHrsEbvFme5ciwvb+lgtLu+aw2ZxY8JTRotjC8Qsvp1+w2jRsnoXqwO3x+yGiywe
-	W1beZPJY0HOe2WPBplKPTas62Tze77vK5vF5k1wAexSXTUpqTmZZapG+XQJXxpPjXgV7lSu2
-	Nj1nbGBcJ9fFyMkhIWAiMbtnC3MXIxeHkMAKRokrT5vYIZwvjBK3P66DynxmlPj26h4TTMuO
-	7euhEssZJbbveMoGVzVx+Qeo/q2MEqtmrGMEaWERUJX4+3QaG4jNJqAjcf7NHWYQW0RAXuLc
-	k1VgDcwCV5kkJt2YAlYkLBApcevdbjCbV8BBouHGa1YIW1Di5MwnLCA2s0CFxNF7b4BsDiBb
-	WmL5Pw6QMKeAk0TTk3XMEKcqS6zfdg7KrpU4teUWE8guCYH9nBKbNtxjhUi4SEzt3sQOYQtL
-	vDq+BcqWkTg9uYcFomEyo8T+fxCvSQisZpRY1vgVGhrWEi1XnkB1OErM7j/EDnKRhACfxI23
-	ghCH8klM2jadGSLMK9HRJgRRrSaxGuj+CYzKs5C8NgvJa7MQXoMI60gs2P2JDUNYW2LZwtfM
-	ELatxLp171kWMLKvYhRPLS3OTU8tNspLLdcrTswtLs1L10vOz93ECEyCp/8d/7KDcfmrj3qH
-	GJk4GA8xqgA1P9qw+gKjFEtefl6qkghvuMzNVCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8qiny
-	qUIC6YklqdmpqQWpRTBZJg5OqQYmLrOKZ7obK8X28acpm+o9unb27puFDo49rZNaP24OW3N+
-	DufB32ze5tLcrhZzNwY4TVq/adPcAstZyjbuxansltrmF1+t99FWOPLbMCX3Ya7rpW+XAzRV
-	pP/MN3Ba8/D49UmGv/9+erI0xVFermTF5UqTXcbn9SJr5nP9Wj9XLKyQ3zxPImuyzeMLmZ/+
-	5ux78nXJZw0vSaaWTa/qmRsUDH5u251zWNz4r9HC2d7zI4N47TvKvm67LJU7ZeHavx+ZnvCv
-	i0tcFz1B4l6le0jrqZVcKbf3P+w426In/rzn+sHHKlW35fm1Sj/bn7397fGzoD+ha9z2dXQc
-	818rcDP77aM/kW9sk1jZfi40XJsRosRSnJFoqMVcVJwIAHXTy+79AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphleLIzCtJLcpLzFFi42I5/e/4XV2bBbdTDV7dVbV4ffgTo8Wc8y0s
-	Fut2tTJZPD32iN3iTHeuxYVtfawWl3fNYbO4MeEpo8WxBWIW306/YbRoWb2L1YHbY3bDRRaP
-	LStvMnks6DnP7LFgU6nHplWdbB7v911l8/i8SS6APUrPpii/tCRVISO/uMRWKdrQwkjP0NJC
-	z8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEv49Hfo6wFu5UrPm5uYm1gXCPXxcjJISFgIrFj
-	+3rmLkYuDiGBpYwSJ6YtYIZIyEhs/HKVFcIWlvhzrYsNxBYS+MgosbNdBqJhK6PE6aYzTCAJ
-	FgFVib9Pp4EVsQnoSJx/cwdskIiAvMS5J6vYQRqYBa4ySRx/NZ0RJCEsEClx691usAZeAQeJ
-	hhuvWSGmngY64/JjqISgxMmZT1i6GDmAusskpq7ThDClJZb/4wCp4BRwkmh6sg7qaGWJ9dvO
-	Qdm1Ep//PmOcwCg8C8mgWQiDZiEMAqlgFtCSuPHvJROGsLbEsoWvmSFsW4l1696zLGBkX8Uo
-	klpanJueW2yoV5yYW1yal66XnJ+7iRGYBLYd+7l5B+O8Vx/1DjEycTAeYlQB6ny0YfUFRimW
-	vPy8VCUR3nCZm6lCvCmJlVWpRfnxRaU5qcWHGE2BgTiRWUo0OR+YnvJK4g3NDEwNTcwsDUwt
-	zYyVxHk9CzoShQTSE0tSs1NTC1KLYPqYODilGpjsYtPz6jZy32ldHGe4Q2p18UpF97kWYedX
-	t2+eosWTUrj8BqNr9asP0Veeip6dOEFApnTez8s9ed+jdxjZvRXk+xbX9PvQs44/8XMPKc7b
-	szDkTG38q0nOuqdWZbR5ih3kqzBx3SoqqR4zT/XbDDUThgKtXZ7mqy4aXi6vXDSjeLPFXMlD
-	ZqJnmdbVT7NuX6couKpVVbD6R7Fe5vp/RjYvLu1JNT0W1Sa4OHshN//eywfakxied23/rTL3
-	5XS2rq0yjtWsTpuynhUFFVTuiN6k6abwqClR54jp653rPF9oeP/TWqUsmxbx7HT0lKdHFA2v
-	Xn65fXrRgmcds94xvcvcrsvls9twx87bJ+0kjZuVWIozEg21mIuKEwGPcGKRlwMAAA==
-X-CMS-MailID: 20240225201700eucas1p1fcf1392cd0d4230c17d1ff296c5995e2
-X-Msg-Generator: CA
-X-RootMTR: 20240225040629eucas1p12649e57aa00bbabc99c525b98eb74670
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240225040629eucas1p12649e57aa00bbabc99c525b98eb74670
-References: <20240225040538.845899-1-wenyang.linux@foxmail.com>
-	<CGME20240225040629eucas1p12649e57aa00bbabc99c525b98eb74670@eucas1p1.samsung.com>
-	<tencent_95D22FF919A42A99DA3C886B322CBD983905@qq.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: altera-msgdma: fix descriptors freeing logic
+From: Eric Schwarz <eas@sw-optimization.com>
+To: Olivier Dautricourt <olivierdautricourt@gmail.com>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Vinod Koul <vkoul@kernel.org>, Stefan Roese <sr@denx.de>
+References: <20230920200636.32870-3-olivierdautricourt@gmail.com>
+ <22402987-305b-024b-044e-53db17037d90@sw-optimization.com>
+ <ZQyWsvcQCJgmG5aO@freebase>
+ <8d18106d-444e-9346-26cc-3767540df5d8@sw-optimization.com>
+ <ZQ3B9NWVmLvaVhJX@freebase>
+ <5e2404d4-f36c-7718-c0fc-d226aefdf2f6@sw-optimization.com>
+Content-Language: de-DE
+In-Reply-To: <5e2404d4-f36c-7718-c0fc-d226aefdf2f6@sw-optimization.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AV-Do-Run: Yes
 
---xhnys3c7pu7tlmrh
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello Olivier,
 
-On Sun, Feb 25, 2024 at 12:05:31PM +0800, wenyang.linux@foxmail.com wrote:
-> From: Wen Yang <wenyang.linux@foxmail.com>
->=20
-> The boundary check of multiple modules uses these static variables (such =
-as
-> two_five_five, n_65535, ue_int_max, etc), and they are also not changed.
-> Therefore, add them to the shared sysctl_vals and sysctl_long_vals to avo=
-id
-> duplication.
->=20
-> Also rearranged sysctl_vals and sysctl_long_vals in numerical order.
->=20
-> Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Joel Granados <j.granados@samsung.com>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: David Ahern <dsahern@kernel.org>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/linux/sysctl.h | 15 +++++++++------
->  kernel/sysctl.c        |  4 ++--
->  2 files changed, 11 insertions(+), 8 deletions(-)
->=20
-> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-> index ee7d33b89e9e..b7a13e4c411c 100644
-> --- a/include/linux/sysctl.h
-> +++ b/include/linux/sysctl.h
-> @@ -45,19 +45,22 @@ struct ctl_dir;
->  #define SYSCTL_FOUR			((void *)&sysctl_vals[4])
->  #define SYSCTL_ONE_HUNDRED		((void *)&sysctl_vals[5])
->  #define SYSCTL_TWO_HUNDRED		((void *)&sysctl_vals[6])
-> -#define SYSCTL_ONE_THOUSAND		((void *)&sysctl_vals[7])
-> -#define SYSCTL_THREE_THOUSAND		((void *)&sysctl_vals[8])
-> -#define SYSCTL_INT_MAX			((void *)&sysctl_vals[9])
-> +#define SYSCTL_U8_MAX			((void *)&sysctl_vals[7])
-> +#define SYSCTL_ONE_THOUSAND		((void *)&sysctl_vals[8])
-> +#define SYSCTL_THREE_THOUSAND		((void *)&sysctl_vals[9])
-> +#define SYSCTL_U16_MAX			((void *)&sysctl_vals[10])
-> +#define SYSCTL_INT_MAX			((void *)&sysctl_vals[11])
-> +#define SYSCTL_NEG_ONE			((void *)&sysctl_vals[12])
-> =20
->  /* this is needed for the proc_dointvec_minmax for [fs_]overflow UID and=
- GID */
-> -#define SYSCTL_MAXOLDUID		((void *)&sysctl_vals[10])
-> -#define SYSCTL_NEG_ONE			((void *)&sysctl_vals[11])
-> +#define SYSCTL_MAXOLDUID		SYSCTL_U16_MAX
-> =20
->  extern const int sysctl_vals[];
-> =20
->  #define SYSCTL_LONG_ZERO	((void *)&sysctl_long_vals[0])
->  #define SYSCTL_LONG_ONE		((void *)&sysctl_long_vals[1])
-> -#define SYSCTL_LONG_MAX		((void *)&sysctl_long_vals[2])
-> +#define SYSCTL_LONG_S32_MAX	((void *)&sysctl_long_vals[2])
-> +#define SYSCTL_LONG_MAX		((void *)&sysctl_long_vals[3])
-> =20
->  extern const unsigned long sysctl_long_vals[];
-> =20
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 157f7ce2942d..e1e00937cb29 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -82,10 +82,10 @@
->  #endif
-> =20
->  /* shared constants to be used in various sysctls */
-> -const int sysctl_vals[] =3D { 0, 1, 2, 3, 4, 100, 200, 1000, 3000, INT_M=
-AX, 65535, -1 };
-> +const int sysctl_vals[] =3D { 0, 1, 2, 3, 4, 100, 200, U8_MAX, 1000, 300=
-0, 65535, INT_MAX, -1, };
-Why do you insert the new values instead of just appending?
-I figure that the patch would be much smaller if you appended.
+just a ping on getting the patches / fixes below mainline. - Were you 
+able to get hardware for testing?
 
->  EXPORT_SYMBOL(sysctl_vals);
-> =20
-> -const unsigned long sysctl_long_vals[] =3D { 0, 1, LONG_MAX };
-> +const unsigned long sysctl_long_vals[] =3D { 0, 1, S32_MAX, LONG_MAX, };
-Same here. Why insert instead of append?
->  EXPORT_SYMBOL_GPL(sysctl_long_vals);
-> =20
->  #if defined(CONFIG_SYSCTL)
-> --=20
-> 2.25.1
->=20
+Many thanks
+Eric
 
---=20
 
-Joel Granados
-
---xhnys3c7pu7tlmrh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmXboDoACgkQupfNUreW
-QU/BSgv/XumlvLIqQzPZ2K8w08RnGaSRuoZb7SFKrMlCLvNKIEHUiqKoONhvu1S/
-lM+a2IGc9elUAMVlLdBslxR4FxHTOveKJgpTmrvuU3iPTHgU2l3ZTXtKzOWn2THT
-mFY8UpSgUBaU/kYb/aq+BgBcHmJcBmvlFjmghPHdcz7hxpfh/Qp0B+qPpl6g/PSp
-wl/QC/sJFjUggUTdUuEIJau5eL6xGmARCf5w8vVZUVxQvKQYO3F/epQXLNQNH7mD
-GP8IJbml9MZYM+kJ0NqWAMsOyjVqUqDDmTQhVXkqUVDkvUWHMOSndkcNk7hkNkG+
-klvjyMu3eyFdiPmwAOVH2/76xBU4TyoDsXrF6sWU5lkWFxLyEIeWvbpyTFsAZSGl
-9c+aSWaRK8agw3KBkJQBmxKpImO9yV0jDKVASo9fGGxoXvz0yL2USzonTJG7HF3w
-UNZKbYz+2brykoIga1OkjhSgo7Q41/ixzvOoFL83eiSGs2jDoTXeM6BUI+rpKe+w
-Ba4pv/mZ
-=Pa77
------END PGP SIGNATURE-----
-
---xhnys3c7pu7tlmrh--
+Am 28.09.2023 um 09:57 schrieb Eric Schwarz:
+> Hello Olivier,
+> 
+> Am 22.09.2023 um 18:33 schrieb Olivier Dautricourt:
+>> Hi Eric,
+>>
+>> On Fri, Sep 22, 2023 at 09:49:59AM +0200, Eric Schwarz wrote:
+>>> Hello Olivier,
+>>>
+>>>>> Am 20.09.2023 um 21:58 schrieb Olivier Dautricourt:
+>>>>>> Sparse complains because we first take the lock in msgdma_tasklet 
+>>>>>> -> move
+>>>>>> locking to msgdma_chan_desc_cleanup.
+>>>>>> In consequence, move calling of msgdma_chan_desc_cleanup outside 
+>>>>>> of the
+>>>>>> critical section of function msgdma_tasklet.
+>>>>>>
+>>>>>> Use spin_unlock_irqsave/restore instead of just spinlock/unlock to 
+>>>>>> keep
+>>>>>> state of irqs while executing the callbacks.
+>>>>>
+>>>>> What about the locking in the IRQ handler msgdma_irq_handler() 
+>>>>> itself? -
+>>>>> Shouldn't spin_unlock_irqsave/restore() be used there as well 
+>>>>> instead of
+>>>>> just spinlock/unlock()?
+>>>>
+>>>> IMO no:
+>>>> It is covered by [1]("Locking Between Hard IRQ and Softirqs/Tasklets")
+>>>> The irq handler cannot be preempted by the tasklet, so the
+>>>> spin_lock/unlock version is ok. However the tasklet could be 
+>>>> interrupted
+>>>> by the Hard IRQ hence the disabling of irqs with save/restore when
+>>>> entering critical section.
+>>>>
+>>>> It should not be needed to keep interrupts locally disabled while 
+>>>> invoking
+>>>> callbacks, will add this to the commit description.
+>>>>
+>>>> [1] https://www.kernel.org/doc/Documentation/kernel-hacking/locking.rst
+>>>
+>>> Thanks for the link. I have read differently here [2] w/ special 
+>>> emphasis on
+>>> "Lesson 3: spinlocks revisited.".
+>>>
+>>> [2] https://www.kernel.org/doc/Documentation/locking/spinlocks.txt
+>>>
+>>
+>> This chapter [2] says that our code must use irq versions of spin_lock
+>> because our handler does indeed play with the lock. However this
+>> requirement does not apply to the irq handler itself, as we know that the
+>> interrupt line is disabled during the execution of the handler (and our
+>> handler is not shared with another irq).
+> 
+> "... as we know that the interrupt line is disabled during the execution 
+> of the handler (and our handler is not shared with another irq)."
+> 
+> That was the point I wanted to be sure about. So if the IRQ handler 
+> cannot be called twice ensured by architecture neither on single or 
+> multi CPU systems (SMP or others) I am fine.
+> Thanks for your response on that. Appreciated.
+> 
+> Because you take the effort to set up hardware and environment again you 
+> may also test following fixes/improvements from zynqmp driver which 
+> could then be merged into altera-msgdma driver. Please check yourself:
+> 
+> f2b816a1dfb8 ("dmaengine: zynqmp_dma: Add device_synchronize support")
+> # Caught by your patchset
+> #9558cf4ad07e ("dmaengine: zynqmp_dma: fix lockdep warning in tasklet")
+> # Caught by your patchset
+> #16ed0ef3e931 ("dmaengine: zynqmp_dma: cleanup after completing all 
+> descriptors")
+> # Caught by your patchset - For the altera-msgdma driver it is a real 
+> fix not an optimization.
+> #48594dbf793a ("dmaengine: zynqmp_dma: Use list_move_tail instead of 
+> list_del/list_add_tail")
+> 5ba080aada5e ("dmaengine: zynqmp_dma: Fix race condition in the probe")
+> 
+> Note: If the sequence is applied in reverse order the log would be 
+> comparable to zynqmp driver's log.
+> 
+> IMHO your patchset could/should be extended by two more patches and 
+> split into small junks as mentioned. Then history would stay intact to 
+> be compared to zynqmp driver.
+> 
+> Note: Take care about "Developer’s Certificate of Origin 1.1". IMHO 
+> "Signed-off-by" tags from the other patches might/must be copied at 
+> least for most of the patches then, which would make it easier to get it 
+> into mainline.
+> 
+> Btw, some cosmetic changes could be made in the mainlined driver:
+> 
+> 30s/implements/Implements/
+> 31s/data/Data/
+> 32s/data/Data/
+> 33s/the/The/
+> 39s/data/Data/
+> 40s/data/Data/
+> 41s/characteristics/Characteristics/
+> 109s/response/Response/
+> 154s/implements/Implements/
+> 154s/sw\ /SW\ /
+> 155s/support/Support/
+> 155s/api/API/
+> 156s/assosiated/Associated/
+> 157s/node\ /Node\ /
+> 158s/transmit/Transmit/
+> 259s/Hw/HW/
+> 291s/Hw/HW/
+> 322s/prepare/Prepare/
+> 327s/transfer/Transfer/
+> 378s/prepare/Prepare/
+> 384s/transfer/Transfer/
+> 385s/transfer/Transfer/
+> 502s/its/it\'s/
+> 514s/oder/order/
+> 530s/copy\ /Copy\ /
+> 680s/sSGDMA/mSGDMA/
+> 723s/Interrupt/interrupt/
+> 752s/\(\)//
+> 921s/\(\)//
+> 
+> ... and another patch, if that is taken into account.
+> 
+> Cheers
+> Eric
