@@ -1,124 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64C38C10;
-	Sun, 25 Feb 2024 20:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0641B597;
+	Sun, 25 Feb 2024 20:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708891385; cv=none; b=ZCzvkFjI5MFerBUNZ7kCd/nnjzLbPsHiPBhOP/X+hk9ZUEYDXzn4t/ppjEM5OPSm8BxQKCtR+BafFoT7MPkBrUGCv9ncps7eMuQzwrmqTfOAYhdepc/M+lC5NktRQNyN39TS5WzFsy13nVw2FyX3BuNwA6QYTqS3yFcWhsEsV3k=
+	t=1708891520; cv=none; b=DPPoSxEzayZjLiuv8PMrC/W1aKjmQ5g6rP8DwaW2/yDNiyeflW9w+Xeu3zrZODnxaiebCjTx//0ix13skYGYava2jY6o1T265qdQ2/zehNCbZ8NoASOQUqfiKFxCj1upJih1c7OsUYm2unKfdQDusT11VnJPtLsAENZGu/OWl3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708891385; c=relaxed/simple;
-	bh=JdjL58AeruKy3wjRZCMa8HNnw48yFKwrynnIiyQwEXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dA10lzhWNr3lP/9BBQvuD/Nr0jkJIIWclpVGqChbxkCDMkafhgm56yRyFHLMkvrtDgKLdFmfW+kDYa76utbFUjRkXzqlAtLJ1sv9h2mSVAlZczYGZVeoa1QVoVCABhBlUBEFshe5MX3fL3h+JxZtlUghFMsFNLSNOgCz8NLZ8NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343BAC433F1;
-	Sun, 25 Feb 2024 20:03:04 +0000 (UTC)
-Date: Sun, 25 Feb 2024 15:03:02 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linke li <lilinke99@qq.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ring-buffer: use READ_ONCE() to read
- cpu_buffer->commit_page in concurrent environment
-Message-ID: <20240225150302.23c3c3c2@rorschach.local.home>
-In-Reply-To: <tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
-References: <lilinke99@qq.com>
-	<tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708891520; c=relaxed/simple;
+	bh=mtw/2VKkEd9hkpLcOoUplSmiseLh50n7k0eGQOVMFO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hDY6vSilgcBEJJCypVa/6aYpcZ87UdueYAAZMkC6e8wXo6nkCdQWq1ehYmybEk3U3irVrLkbngQZGpYve1JVaE99F160+r8K/gf7/2ofXqSgcZe2/yMyTYjzUzXMWvCZmP2BweP1XP4TaRKODDyhjuuoi6OepX/mAKaqk4PvpT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W4XWjAC0; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W4XWjAC0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708891519; x=1740427519;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mtw/2VKkEd9hkpLcOoUplSmiseLh50n7k0eGQOVMFO0=;
+  b=W4XWjAC0VI0/+1ohP34HzVUdqt0335mcustB/D68/ShmHo1a9h0CAcHX
+   xpIDCzpv5roxeJi4rnppELGYnxMUcifoxhgDw25/ylN6crOA9tc8n3vWP
+   TAj+9QnaqYNtCtjqMcgfbs/odSE4tDU5VTQtZcU0VWrIakxkex7vS7DC4
+   Er3XeWSFjlB+VPENd17Phvu+yvmwYxikWCZ7yQTMvgu6foTqt75wS2AEe
+   MQCrFSuuMm1EOlXxg0K0AK5R3RH5LheRAFgL0nc+8EEoWVcIGDHMpPLix
+   6I+nDOI/PxRtIKjPRGAw0ySccFBWRyBolVRQE09OgIYuOQ7gXx4nwX3gJ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3011882"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="3011882"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 12:05:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="6589896"
+Received: from gcsargen-mobl1.amr.corp.intel.com (HELO [10.255.228.214]) ([10.255.228.214])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 12:05:12 -0800
+Message-ID: <35cafc72-89d2-48d3-ab73-0af4ed2bcac1@linux.intel.com>
+Date: Sun, 25 Feb 2024 12:05:12 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] PCI/DPC: Remove CONFIG_PCIE_EDR
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Matthew W Carlis <mattc@purestorage.com>,
+ Keith Busch <kbusch@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <20240222221521.32159-1-helgaas@kernel.org>
+ <20240222221521.32159-3-helgaas@kernel.org>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240222221521.32159-3-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Sun, 25 Feb 2024 11:05:06 +0800
-linke li <lilinke99@qq.com> wrote:
+Hi Bjorn,
 
-> In function ring_buffer_iter_empty(), cpu_buffer->commit_page and
-> curr_commit_page->page->time_stamp is read using READ_ONCE() in 
-> line 4354, 4355
-> 
-> 4354    curr_commit_page = READ_ONCE(cpu_buffer->commit_page);
-> 4355    curr_commit_ts = READ_ONCE(curr_commit_page->page->time_stamp);
-> 
-> while they are read directly in line 4340, 4341
-> 
-> 4340    commit_page = cpu_buffer->commit_page;
-> 4341    commit_ts = commit_page->page->time_stamp;
+On 2/22/24 2:15 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>
+> Previous Kconfig allowed the possibility of enabling CONFIG_PCIE_DPC
+> without CONFIG_PCIE_EDR.  The PCI Firmware Spec, r3.3, sec 4.5.1,
+> table 4-5, says an ACPI OS that requests control of DPC must also
+> advertise support for EDR.
+>
+> Remove CONFIG_PCIE_EDR and enable the EDR code with CONFIG_PCIE_DPC so that
+> enabling DPC also enables EDR for ACPI systems.  Since EDR is an ACPI
+> feature, build edr.o only when CONFIG_ACPI is enabled.  Stubs cover the
+> case when DPC is enabled without ACPI.
+>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/acpi/pci_root.c   |  2 +-
+>  drivers/pci/pcie/Kconfig  | 14 ++++----------
+>  drivers/pci/pcie/Makefile |  5 ++++-
+>  drivers/pci/pcie/dpc.c    | 10 ----------
+>  include/linux/pci-acpi.h  |  4 ++--
+>  5 files changed, 11 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index efc292b6214e..bcaf3d3a5e05 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -448,7 +448,7 @@ static u32 calculate_support(void)
+>  		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
+>  	if (pci_msi_enabled())
+>  		support |= OSC_PCI_MSI_SUPPORT;
+> -	if (IS_ENABLED(CONFIG_PCIE_EDR))
+> +	if (IS_ENABLED(CONFIG_PCIE_DPC))	/* DPC => EDR support */
+>  		support |= OSC_PCI_EDR_SUPPORT;
 
-Just because it's used in one place does not mean it's required in
-another.
+Since EDR internally touches AER registers, I still think we should make sure
+OS enables AER support before advertising the EDR support.
 
-> 
-> There is patch similar to this. commit c1c0ce31b242 ("r8169: fix the KCSAN reported data-race in rtl_tx() while reading tp->cur_tx")
-> This patch find two read of same variable while one is protected, another
-> is not. And READ_ONCE() is added to protect.
-> 
+>  
+>  	return support;
+> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+> index 8999fcebde6a..21e98289fbe9 100644
+> --- a/drivers/pci/pcie/Kconfig
+> +++ b/drivers/pci/pcie/Kconfig
+> @@ -137,6 +137,10 @@ config PCIE_DPC
+>  	  have this capability or you do not want to use this feature,
+>  	  it is safe to answer N.
+>  
+> +	  On ACPI systems, this includes Error Disconnect Recover support,
+> +	  the hybrid model that uses both firmware and OS to implement DPC,
+> +	  as specified in the PCI Firmware Specification r3.3.
 
-Here's the entire code:
+Nit: Include some section reference?
 
-        cpu_buffer = iter->cpu_buffer;
-        reader = cpu_buffer->reader_page;
-        head_page = cpu_buffer->head_page;
-        commit_page = cpu_buffer->commit_page;
-        commit_ts = commit_page->page->time_stamp;
+> +
+>  config PCIE_PTM
+>  	bool "PCI Express Precision Time Measurement support"
+>  	help
+> @@ -145,13 +149,3 @@ config PCIE_PTM
+>  
+>  	  This is only useful if you have devices that support PTM, but it
+>  	  is safe to enable even if you don't.
+> -
+> -config PCIE_EDR
+> -	bool "PCI Express Error Disconnect Recover support"
+> -	depends on PCIE_DPC && ACPI
+> -	help
+> -	  This option adds Error Disconnect Recover support as specified
+> -	  in the Downstream Port Containment Related Enhancements ECN to
+> -	  the PCI Firmware Specification r3.2.  Enable this if you want to
+> -	  support hybrid DPC model which uses both firmware and OS to
+> -	  implement DPC.
+> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+> index 8de4ed5f98f1..72657f780c33 100644
+> --- a/drivers/pci/pcie/Makefile
+> +++ b/drivers/pci/pcie/Makefile
+> @@ -12,4 +12,7 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
+>  obj-$(CONFIG_PCIE_PME)		+= pme.o
+>  obj-$(CONFIG_PCIE_DPC)		+= dpc.o
+>  obj-$(CONFIG_PCIE_PTM)		+= ptm.o
+> -obj-$(CONFIG_PCIE_EDR)		+= edr.o
+> +
+> +ifdef CONFIG_ACPI
+> +obj-$(CONFIG_PCIE_DPC)		+= edr.o
+> +endif
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 94111e438241..0aa79581250b 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -102,19 +102,9 @@ static bool dpc_completed(struct pci_dev *pdev)
+>   */
+>  bool pci_dpc_recovered(struct pci_dev *pdev)
+>  {
+> -	struct pci_host_bridge *host;
+> -
+>  	if (!pdev->dpc_cap)
+>  		return false;
+>  
+> -	/*
+> -	 * Synchronization between hotplug and DPC is not supported
+> -	 * if DPC is owned by firmware and EDR is not enabled.
+> -	 */
+> -	host = pci_find_host_bridge(pdev->bus);
+> -	if (!host->native_dpc && !IS_ENABLED(CONFIG_PCIE_EDR))
+> -		return false;
+> -
+>  	/*
+>  	 * Need a timeout in case DPC never completes due to failure of
+>  	 * dpc_wait_rp_inactive().  The spec doesn't mandate a time limit,
+> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+> index 078225b514d4..92e196ba0249 100644
+> --- a/include/linux/pci-acpi.h
+> +++ b/include/linux/pci-acpi.h
+> @@ -122,13 +122,13 @@ extern const guid_t pci_acpi_dsm_guid;
+>  #define DSM_PCI_POWER_ON_RESET_DELAY		0x08
+>  #define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
+>  
+> -#ifdef CONFIG_PCIE_EDR
+> +#ifdef CONFIG_PCIE_DPC
+>  void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
+>  void pci_acpi_remove_edr_notifier(struct pci_dev *pdev);
+>  #else
+>  static inline void pci_acpi_add_edr_notifier(struct pci_dev *pdev) { }
+>  static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }
+> -#endif /* CONFIG_PCIE_EDR */
+> +#endif /* CONFIG_PCIE_DPC */
+>  
+>  int pci_acpi_set_companion_lookup_hook(struct acpi_device *(*func)(struct pci_dev *));
+>  void pci_acpi_clear_companion_lookup_hook(void);
 
-        /*
-         * When the writer goes across pages, it issues a cmpxchg which
-         * is a mb(), which will synchronize with the rmb here.
-         * (see rb_tail_page_update())
-         */
-        smp_rmb();
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-The above smp_rmb() is a full read barrier. The commit_page and
-timestamp are not going to be read again after this.
-
-        commit = rb_page_commit(commit_page);
-        /* We want to make sure that the commit page doesn't change */
-        smp_rmb();
-
-        /* Make sure commit page didn't change */
-        curr_commit_page = READ_ONCE(cpu_buffer->commit_page);
-        curr_commit_ts = READ_ONCE(curr_commit_page->page->time_stamp);
-
-Now the reason for the above READ_ONCE() is because the variables *are*
-going to be used again. We do *not* want the compiler to play any games
-with that.
-
-Thus, the first read of commit_page and time_stamp are read properly as
-the compiler will not do anything that can hurt us beyond that
-smp_rmb(). The second time we read those variables, we are using them
-in the below code.
-
-
-        /* If the commit page changed, then there's more data */
-        if (curr_commit_page != commit_page ||
-            curr_commit_ts != commit_ts)
-                return 0;
-
-        /* Still racy, as it may return a false positive, but that's OK */
-        return ((iter->head_page == commit_page && iter->head >= commit) ||
-                (iter->head_page == reader && commit_page == head_page &&
-                 head_page->read == commit &&
-                 iter->head == rb_page_commit(cpu_buffer->reader_page)));
-}
-
-*But* looking at this deeper, the commit_page may need a READ_ONCE()
-but not for the reason you suggested.
-
-        commit_page = cpu_buffer->commit_page;
-        commit_ts = commit_page->page->time_stamp;
-
-The commit_page above *is* used again, and we want commit_ts to be part
-of the commit_page that was originally read and not a second reading.
-
-So, I think for the commit_page we do need a READ_ONCE() but that's
-because it is referenced again just below it and we don't want the
-compiler to read the memory location again for the second reference.
-
--- Steve
