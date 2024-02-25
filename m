@@ -1,120 +1,162 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD7B1B81E;
-	Sun, 25 Feb 2024 18:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99091199B8
+	for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 18:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708884420; cv=none; b=SHzTJZdApuPJjQymMycMgAb+b3brW24f2LmYH2Tm8MQkSYMs+y2kVn8o9c4ulrcuiM1jhBmyp6xmzr+XP64LQ3Hw3e5vZtjpNo8HMS3vmX8W/3LABSrTAj892CdX3IRNR08VCnqwuqBu9/67SNes4LY6kuMI8bPHXfT0lWL67Q0=
+	t=1708884797; cv=none; b=jHDmKEZr1Wgz3sk6X7NlPGzUBdNKPAmA54V5wHkz/HjuCJcJefQTASlnqRi9RZe7AAqyx7pgji6ieeCORZeOfdos7WMVa10nCxmOmNbWsEFwj8ihb7OtNQot88inUJx1K9n9ChwqQEdijL8xZv7i+f7mTpWbfKlElogc5l4fdqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708884420; c=relaxed/simple;
-	bh=t9TH3IO25i1kABmwESoqJSXOGpunpKDuFCDvVlM+yrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LzR4tp3ZaYyiyAqzyEj1bwgpw0hr8TVDv7QWoDThhCp6UzZ4US3mTo/rRD3N7GrimJ11V6S+i2TJffXOdRIsoipaF3DLy5cnn5rAEqVgYQZOaaLa2ME+gSfCF1539/863giZgWT2Z1u57Y3lEWfQZ9AuyMs0x/P6k9iclaQg7i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJk3G/t/; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708884797; c=relaxed/simple;
+	bh=Vh/CCaRyGoVzBt8clr515fZpIzk3Wk/SMQ6DWcaoulk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=paqIWkEv5e9urIptNX+2nacluZdOsSNTMGIH11oMySdjZJZYo9gcHAGCanpJm506yxLnT7391+TmlwiFwi55oGkIBumcuqOR0kRps5pD0DWHyR58Bs23oZT7dAdZiS9uVlZZ7zjr5zggmcY1zE2wnYTWM6ZnmxNXZRlm3VzC0ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=ECSsKNDS; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJk3G/t/"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso2524772276.1;
-        Sun, 25 Feb 2024 10:06:58 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ECSsKNDS"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so1016988a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 10:13:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708884418; x=1709489218; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UyB5v20Xvkeo8vLOJ5G7Ayw3XFpy9UxBMT1oM+PlACI=;
-        b=QJk3G/t/tSpXjTrNWAoYGQMlwyHV2ltR0Vnmk+7L+vObELPIH50GGigV6RQd8WPZKe
-         4BKM5hnvIdwTXRpEBTMXRoFTzeGhVapL5qen11OkzTuMTkfKxqEnaaHcOJCIzejTxhKE
-         gFIqZLCDh8uqQDqJE+Uha5T17qJzQFfui7DCEEAnl4pHcFdeZf7smLx8tRaUM8uc1AOf
-         8avm8huruiC6zfcAI2qPSBxEumz0IsjdZQ+bSRbMmP+MSgTtvifxnRCpxJmT9sopSxyA
-         m9jBsOzrgmBj8ahClSuSfH3CYjy/luXHkImE0MgcmZEX6m0pTwsQrFBLPFoZuxgWZaic
-         SPTQ==
+        d=amarulasolutions.com; s=google; t=1708884793; x=1709489593; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KiHwGtdHmtBh1QzKH7jFf3O1j9+JB7o6S8MM1T8u71w=;
+        b=ECSsKNDS5ROUMH0BybIVXH5s1377dHyMzhdLnl4pX6W81nNE2Tf9+u0os4E4vg6mXc
+         AFnShYgt55PS7ot3IukVPNPvPMnDEgzgWszKg33bQcEGeIvo845pBK8QqA6PmdgxZDKg
+         scYTMH51FP7cpyPIoI7XdeP4PzvmiE9tkO1yM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708884418; x=1709489218;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1708884793; x=1709489593;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UyB5v20Xvkeo8vLOJ5G7Ayw3XFpy9UxBMT1oM+PlACI=;
-        b=QD+EtY/bRiIiqIslAeawZgbkqDzPv7AzN60pkvskruO/EdIgvvlVf+YEN0AeRrbbP1
-         JaSytUJwvQh0n97QtCCI0gU2M1gAjkaODGkNKp2lleoRBdCF1V7gt93mkSo3yb9JtOR/
-         WHLRqitrKdDE6rffkSh8pAgwtD9WjPumeP1qpReFNE5dqyJq1z16DmKKNfc2MakyCrj/
-         Mwmxu0G5M7CpSEy969Wz9tVIvPaI8YMPWrC4m5x784XUehvsq0vhxAaW3lM5bE5dVZ9f
-         dQBJznKXQcWYlJdlDwRyuB2hiw0HRbi2YrgfPodXsWVuvZJ4PyjrUT8I+N5XZyoW0NVi
-         Gw3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUlRsLmB2J/231pyEL4atMrCwO+KZ6EPX9hNUMujAxO5/zoO6pF39/pG7kLFi+5jfG+X9YLRrwW0u0Z71QZNPp4DxTEg27oCAdtwyc85jY+Oc2f6n4NjgylVJ69KW0R7uIjo+CKPlZ4TbBYIZ6lNcrXearGsKsQjKO3Bvs5ZOJ/IP55Lw==
-X-Gm-Message-State: AOJu0YxxfN4KYMsyoHcGjRJ7WkXdbCy6mjGvMUSyVOLT0oQ4LT8WeTiY
-	kpz+u8EzAIw+IG20V4OIQmPlpVChbsOSCY9q35oq3rbCOC6PNNEH4AZjXMKKPLkqfrHCQZkUIIb
-	NE9BlQ6a/U+2dRsKROg7hR4zS04M=
-X-Google-Smtp-Source: AGHT+IG+svL+R0QQtjbfole4iAKAk0sCbIV/24aVRBshgzy9tOplCpuFeVEJTnIBol1v6+b0OREk9APWtD3AvDe4zXI=
-X-Received: by 2002:a25:9012:0:b0:dcf:464d:8ec3 with SMTP id
- s18-20020a259012000000b00dcf464d8ec3mr2767391ybl.3.1708884418030; Sun, 25 Feb
- 2024 10:06:58 -0800 (PST)
+        bh=KiHwGtdHmtBh1QzKH7jFf3O1j9+JB7o6S8MM1T8u71w=;
+        b=SfA4yjLzDWcxC1BkrANr1dIRoEpaP1jH6tJK0DIC8KTv8a4hrRSrRdp5acWejxfBzh
+         lI8kPJBKX1cy67aRTUi/Z8+IphMHXVZ0WZ9clszkebOCaemfqVeGUQ2MP2FQGtqGeD9q
+         QvATUC2Un0n3NJvOtqa3oNu+Xa1EpU5MTzQOMwqfPsr+rkOeJjAJQXRhDkz/Ix4nWmmJ
+         k59GAlBrwE1d6kVjnZSa16gnUqY3UaLpTDzgTcaKg64q8nGrJ/jq35jRxbgHvBOnE43N
+         iG3gAcMw+XG/u3tJTiMd0iPOcpgYw9WKTNQIxH0l9fjU4hcm/JJhK45hZI87b+vEvc4n
+         6ztg==
+X-Forwarded-Encrypted: i=1; AJvYcCXYXqb+e2uO1mbhKDJwYCYD4MZlpJEbVHMIbMdM7dIaejw4jtpisdWAPNbgzuPq9L40qwTIoiiJkUPIwynQzAKk+Rpk8FR/mnvWx3/K
+X-Gm-Message-State: AOJu0YwcrX4Zv3csPyFvsMyYwjWDbpZT6+r9WBxMnTTf7iy+2jXillY3
+	KCYV6e0Kk+wEDFUZ+KUcUqczRM6zy5bdRpm24XODC6YPZHtvhyHQ0peDK8EDtt0=
+X-Google-Smtp-Source: AGHT+IHM++M8krnqdhGQhz6JRblFAu7i6LJ2frRhsjiStpFDrRbL2WD6cTTAfL452ya0F1aeOVZKrQ==
+X-Received: by 2002:aa7:cb4f:0:b0:565:7ce5:abdf with SMTP id w15-20020aa7cb4f000000b005657ce5abdfmr4035738edt.9.1708884792857;
+        Sun, 25 Feb 2024 10:13:12 -0800 (PST)
+Received: from localhost.localdomain ([2001:b07:6474:ebbf:7ba6:d425:45e9:5878])
+        by smtp.gmail.com with ESMTPSA id t1-20020a056402020100b00565ebf2ce1fsm300370edv.64.2024.02.25.10.13.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Feb 2024 10:13:12 -0800 (PST)
+From: Michael Trimarchi <michael@amarulasolutions.com>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-amarula@amarulasolutions.com,
+	Michael Trimarchi <michael@amarulasolutions.com>
+Subject: [PATCH] usb: dwc3: gadget: Fix suspend/resume warning when no-gadget is connected
+Date: Sun, 25 Feb 2024 19:13:09 +0100
+Message-Id: <20240225181309.1697245-1-michael@amarulasolutions.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131182653.2673554-1-tmaimon77@gmail.com> <20240131182653.2673554-2-tmaimon77@gmail.com>
- <bea8b72f61caaeac0ce112b57c28297b.sboyd@kernel.org>
-In-Reply-To: <bea8b72f61caaeac0ce112b57c28297b.sboyd@kernel.org>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Sun, 25 Feb 2024 20:06:47 +0200
-Message-ID: <CAP6Zq1jtYAg11EDrhJtzEOM+trKSpLuSbHPOx5ON93UDtr9JVg@mail.gmail.com>
-Subject: Re: [PATCH v23 1/3] dt-bindings: clock: npcm845: Add reference 25m
- clock property
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: benjaminfair@google.com, joel@jms.id.au, krzysztof.kozlowski+dt@linaro.org, 
-	mturquette@baylibre.com, robh+dt@kernel.org, tali.perry1@gmail.com, 
-	venture@google.com, yuenn@google.com, openbmc@lists.ozlabs.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Stephen,
+This patch restore the logic but protects the variable using a spinlock
+without moving the code
 
-The plan is for both the clock and reset will be under only the memory
-region handle like
-                sysctrl: system-controller@f0801000 {
-                        compatible = "syscon", "simple-mfd";
-                        reg = <0x0 0xf0801000 0x0 0x1000>;
+[   45.597274] dwc3 31000000.usb: wait for SETUP phase timed out
+[   45.599140] dwc3 31000000.usb: failed to set STALL on ep0out
+[   45.601069] ------------[ cut here ]------------
+[   45.601073] WARNING: CPU: 0 PID: 150 at drivers/usb/dwc3/ep0.c:289 dwc3_ep0_out_start+0xcc/0xd4
+[   45.601102] Modules linked in: cfg80211 rfkill ipv6 rpmsg_ctrl rpmsg_char crct10dif_ce rti_wdt k3_j72xx_bandgap rtc_ti_k3 omap_mailbox sa2ul authenc [last unloaded: ti_k3_r5_remoteproc]
+[   45.601151] CPU: 0 PID: 150 Comm: sh Not tainted 6.8.0-rc5 #1
+[   45.601159] Hardware name: BSH - CCM-M3 (DT)
+[   45.601164] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   45.601172] pc : dwc3_ep0_out_start+0xcc/0xd4
+[   45.601179] lr : dwc3_ep0_out_start+0x50/0xd4
+[   45.601186] sp : ffff8000832739e0
+[   45.601189] x29: ffff8000832739e0 x28: ffff800082a21000 x27: ffff8000808dc630
+[   45.601200] x26: 0000000000000002 x25: ffff800082530a44 x24: 0000000000000000
+[   45.601210] x23: ffff000000e079a0 x22: ffff000000e07a68 x21: 0000000000000001
+[   45.601219] x20: ffff000000e07880 x19: ffff000000e07880 x18: 0000000000000040
+[   45.601229] x17: ffff7fff8e1ce000 x16: ffff800080000000 x15: fffffffffffe5260
+[   45.601239] x14: 0000000000000000 x13: 206e6f204c4c4154 x12: 5320746573206f74
+[   45.601249] x11: 0000000000000001 x10: 000000000000000a x9 : ffff800083273930
+[   45.601259] x8 : 000000000000000a x7 : ffffffffffff3f0c x6 : ffffffffffff3f00
+[   45.601268] x5 : ffffffffffff3f0c x4 : 0000000000000000 x3 : 0000000000000000
+[   45.601278] x2 : 0000000000000000 x1 : ffff000004e7e600 x0 : 00000000ffffff92
+[   45.601289] Call trace:
+[   45.601293]  dwc3_ep0_out_start+0xcc/0xd4
+[   45.601301]  dwc3_ep0_stall_and_restart+0x98/0xbc
+[   45.601309]  dwc3_ep0_reset_state+0x5c/0x88
+[   45.601315]  dwc3_gadget_soft_disconnect+0x144/0x160
+[   45.601323]  dwc3_gadget_suspend+0x18/0xb0
+[   45.601329]  dwc3_suspend_common+0x5c/0x18c
+[   45.601341]  dwc3_suspend+0x20/0x44
+[   45.601350]  platform_pm_suspend+0x2c/0x6c
+[   45.601360]  __device_suspend+0x10c/0x34c
+[   45.601372]  dpm_suspend+0x1a8/0x240
+[   45.601382]  dpm_suspend_start+0x80/0x9c
+[   45.601391]  suspend_devices_and_enter+0x1c4/0x584
+[   45.601402]  pm_suspend+0x1b0/0x264
+[   45.601408]  state_store+0x80/0xec
+[   45.601415]  kobj_attr_store+0x18/0x2c
+[   45.601426]  sysfs_kf_write+0x44/0x54
+[   45.601434]  kernfs_fop_write_iter+0x120/0x1ec
+[   45.601445]  vfs_write+0x23c/0x358
+[   45.601458]  ksys_write+0x70/0x104
+[   45.601467]  __arm64_sys_write+0x1c/0x28
+[   45.601477]  invoke_syscall+0x48/0x114
+[   45.601488]  el0_svc_common.constprop.0+0x40/0xe0
+[   45.601498]  do_el0_svc+0x1c/0x28
+[   45.601506]  el0_svc+0x34/0xb8
+[   45.601516]  el0t_64_sync_handler+0x100/0x12c
+[   45.601522]  el0t_64_sync+0x190/0x194
+[   45.601531] ---[ end trace 0000000000000000 ]---
+[   45.608794] Disabling non-boot CPUs ...
+[   45.611029] psci: CPU1 killed (polled 0 ms)
+[   45.611837] Enabling non-boot CPUs ...
+[   45.612247] Detected VIPT I-cache on CPU1
 
-                        rstc: reset-controller {
-                                compatible = "nuvoton,npcm845-reset";
-                                reg = <0x0 0xf0801000 0x0 0xC4>;
-                                #reset-cells = <2>;
-                                nuvoton,sysgcr = <&gcr>;
-                        };
+Tested on a am62x board
 
-                        clk: clock-controller {
-                                compatible = "nuvoton,npcm845-clk";
-                                #clock-cells = <1>;
-                                clocks = <&refclk>;
-                                clock-names = "refclk";
-                        };
-                };
+Fixes: 61a348857e86 ("usb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend)
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+---
+ drivers/usb/dwc3/gadget.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-is it problematic?
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 4c8dd6724678..4c88e44127b5 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -4703,13 +4703,19 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+ 	unsigned long flags;
+ 	int ret;
+ 
++	spin_lock_irqsave(&dwc->lock, flags);
++	if (!dwc->gadget_driver) {
++		spin_unlock_irqrestore(&dwc->lock, flags);
++		return 0;
++	}
++	spin_unlock_irqrestore(&dwc->lock, flags);
++
+ 	ret = dwc3_gadget_soft_disconnect(dwc);
+ 	if (ret)
+ 		goto err;
+ 
+ 	spin_lock_irqsave(&dwc->lock, flags);
+-	if (dwc->gadget_driver)
+-		dwc3_disconnect_gadget(dwc);
++	dwc3_disconnect_gadget(dwc);
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+ 
+ 	return 0;
+-- 
+2.40.1
 
-But this commit is not related to it.
-
-Thanks,
-
-Tomer
-
-On Thu, 22 Feb 2024 at 07:58, Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Tomer Maimon (2024-01-31 10:26:51)
-> > diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml b/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml
-> > index b901ca13cd25..7060891d0c32 100644
-> > --- a/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml
-> > +++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml
-> > @@ -44,6 +54,8 @@ examples:
-> >              compatible = "nuvoton,npcm845-clk";
-> >              reg = <0x0 0xf0801000 0x0 0x1000>;
-> >              #clock-cells = <1>;
-> > +            clocks = <&refclk>;
-> > +            clock-names = "refclk";
->
-> The driver seems to want this to be a child of the mfd syscon. Is that
-> right?
