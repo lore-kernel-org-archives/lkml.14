@@ -1,59 +1,78 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527967E57E
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEB6249F8
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938614; cv=none; b=e8F8GOk0idbauEGX2zcA/hwWiLysa5EfPyPuMqE4TLR1QOpufIsaLre6mssVh5YIxOQFpSKi60Tj31i+CcfbWxcb/6H6GfFFd/Vx7z1ixrD0grERrvjXkJrXmL8/8TZEYPGQXgZh70RetKenm0sQ2GR7oHK93r9JtWsE/JN6jjc=
+	t=1708938702; cv=none; b=HC5a8W5MfehCK3nOFDpg5EkRZe7CfkCFhJhEiQQFFqTveRqlyckyZ7hGGyWIFLG2xYsoAiVUxuQtjwdJU7ox6upJwcBeeV6aWEnfVOwqNUY/7994p83My7arkyZOTN97b+xLJFc+rYnY1U+eyiGsukDr8wLMohlsTP+94YnJ0ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938614; c=relaxed/simple;
-	bh=xwEHMtkTa8XWTX4pV8jEMz1Xm1U0xJMw+gbcmQzUJ2Y=;
+	s=arc-20240116; t=1708938702; c=relaxed/simple;
+	bh=ab6hYbyC5KieS4nv+ZIHD2ncwsQksRliIipFl1xjrnQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MKyENx6l9KTNJKosHgENBsGsv8fGQdCvWydkgTFLlNj/hXRSMeEsXuU/GIX7sIrRKwtqxBNGdR17BXBH53sbcxFhbXgn0YZc2c4Ys25U8rPIREPqNeiKjxddPe6NQPLcZttWNyAhHQes1kbOZ1q6qY9UhU2xhxTow1lBo9Lc+PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OFQdd5zW; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=c9MNtVa1p5L8RvfiRIEIZoOyYKjgf7rAERyUkWP6n3dgg66LghS3276gqOO7lEFRjRwuT2B9/YYtqbP6Ixl0DQUHK2I32enX+B2z19RGwRgbN/iDanS5g8Sn8F3H5wdt7dk76mNfMOR9P0zPZXD7C82FEL6gxBVauc04MpVlKEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=k2/5MnNm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=S7Vocu1K; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=k2/5MnNm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=S7Vocu1K; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OFQdd5zW"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56454c695e6so4968813a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:10:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708938612; x=1709543412; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=beOjLKsLMUDO9SIyhAfuWkQxFZBDoPL260ZfGfU7EQE=;
-        b=OFQdd5zWT8IY+kSXo88Tfr0N9Cf53zuM8s56XHHdJCELQKvvbZ6x1KmLONDwzo9tSs
-         Y/5f3t+Joe2y8jJLmq7VwkrJ9l6OAUb8VWV+1Spi6inaKIX536tTKrTvIeZy8mwVtqjV
-         87DB+6GUzVYylC0mDBhxlXoe6Qc6hlPWbUoLp0td7v0LzgRpN1l5AwUKyv/x3gSUO5Yj
-         JqDfj7t6uoWcyoqxHXh+MdYTx2MOTyc3yQ+sil9pNrZ94qHPK8YoYe8Ty9JU9YbJctJ5
-         IHkAHxUydIInBHdm/mum0kAnM1xPX75YnF/cbYiMVHSKjbwkLg4PwFeXzQvzpf9Kd5Jq
-         fgCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708938612; x=1709543412;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=beOjLKsLMUDO9SIyhAfuWkQxFZBDoPL260ZfGfU7EQE=;
-        b=em2+AYC4xZJZDmS3WIiGxH6E+T/maMaTwnBHSpyD18pjaZYxvo5CRrPu43CIcygk17
-         nlfxW+2wBT3o6nr1bcO/ujmyDIOpREGGE7IpyZOvMtlprgbuFLbx1RyaekMqwNy8mRZT
-         sVrKV+VDodX7mOjz/D4M63Z5q28Gv/0ZqECM7PM2ZiMcPzl904OUem1QQAVTo3eQd1dl
-         eIBZYmHCnBPE7DqwFxXRSEwMGXAgeQyoXFMXM3HM7miEd9dFUDY6IYQMjIVjR8sfvuGU
-         Imb4CUG20QKT8nMNG1aO0Estm4e/RY8FQaKmUDUmew26tXYoaViMeWtC+NfLjS/7r/8a
-         l85g==
-X-Forwarded-Encrypted: i=1; AJvYcCX6Xlr2zlaCduldTzUOi3zP1D9U9pMgqet1E+QZd8brPyIbYfk1aZ+zZyznUSMINlMM3K5tI4n/Lu36yhJPhghBn2YZrnGtvfTekP7j
-X-Gm-Message-State: AOJu0Yz5xPEHR2c2TG6Z5QHdjADuNiOYSSpG8R2PYusspsuH0U6UA6qH
-	lk+UVq0LtkVdv15zvkmL/JARAdWOUXjLRy0eaLmJ70zfB3A9K0QhQQnbs6BRNeU=
-X-Google-Smtp-Source: AGHT+IEtGIKdmTP06PS0Y5aOlgac0kRK+GS31d413j+33+MRpAEYk6uWkiYtlVAt6Zo+j7tnyFB6pg==
-X-Received: by 2002:a05:6402:2297:b0:566:1715:4019 with SMTP id cw23-20020a056402229700b0056617154019mr289870edb.8.1708938611786;
-        Mon, 26 Feb 2024 01:10:11 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id g15-20020aa7c84f000000b00565b7672ce6sm1843718edt.30.2024.02.26.01.10.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 01:10:11 -0800 (PST)
-Message-ID: <09579b62-77fe-4ba4-b3a1-e3b17dff0188@linaro.org>
-Date: Mon, 26 Feb 2024 10:10:08 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="k2/5MnNm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="S7Vocu1K";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="k2/5MnNm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="S7Vocu1K"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7C4361F896;
+	Mon, 26 Feb 2024 09:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708938698; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=89yAF6qEhgvcbbVCO+3NfAAxt3pVNwScA2PuWa4QdPY=;
+	b=k2/5MnNmCuRZCyE22O9S+yaD2Aq91DDO0PVVUa2bFRPpuFDw4GJNI1Xy8MC66lHng9QXl/
+	RIEWFC2OtvA5WGNY/6XRFCvliAfIeFGUuShc/QP96T3LVpSkLkJEmGwujVXtotO5i+gyEF
+	hnj4x/Lk6WEMZqWu6m1mEQ+NCSFnShE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708938698;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=89yAF6qEhgvcbbVCO+3NfAAxt3pVNwScA2PuWa4QdPY=;
+	b=S7Vocu1KYjptijIjFq1WYqyP41BQy4Diu0CGnCJr52O/jDMDA3QnOfawjSlIS7UPhWN7N9
+	ITrcrYa+MAcuEmAQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708938698; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=89yAF6qEhgvcbbVCO+3NfAAxt3pVNwScA2PuWa4QdPY=;
+	b=k2/5MnNmCuRZCyE22O9S+yaD2Aq91DDO0PVVUa2bFRPpuFDw4GJNI1Xy8MC66lHng9QXl/
+	RIEWFC2OtvA5WGNY/6XRFCvliAfIeFGUuShc/QP96T3LVpSkLkJEmGwujVXtotO5i+gyEF
+	hnj4x/Lk6WEMZqWu6m1mEQ+NCSFnShE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708938698;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=89yAF6qEhgvcbbVCO+3NfAAxt3pVNwScA2PuWa4QdPY=;
+	b=S7Vocu1KYjptijIjFq1WYqyP41BQy4Diu0CGnCJr52O/jDMDA3QnOfawjSlIS7UPhWN7N9
+	ITrcrYa+MAcuEmAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 53DAC13A58;
+	Mon, 26 Feb 2024 09:11:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zqYiFMpV3GV7HAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 26 Feb 2024 09:11:38 +0000
+Message-ID: <38f7952a-bee7-4a21-a89f-facff1803c41@suse.cz>
+Date: Mon, 26 Feb 2024 10:11:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,94 +80,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/9] media: dt-bindings: Add Chameleon v3 framebuffer
+Subject: Re: [PATCH v2 0/3] cleanup of SLAB_ flags
 Content-Language: en-US
-To: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, airlied@gmail.com,
- akpm@linux-foundation.org, conor+dt@kernel.org, daniel@ffwll.ch,
- dinguyen@kernel.org, hverkuil-cisco@xs4all.nl,
- krzysztof.kozlowski+dt@linaro.org, maarten.lankhorst@linux.intel.com,
- mchehab@kernel.org, mripard@kernel.org, robh+dt@kernel.org,
- tzimmermann@suse.de
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- chromeos-krk-upstreaming@google.com, ribalda@chromium.org
-References: <20240221160215.484151-1-panikiel@google.com>
- <20240221160215.484151-8-panikiel@google.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240221160215.484151-8-panikiel@google.com>
+To: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Andrey Ryabinin
+ <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Zheng Yejian <zhengyejian1@huawei.com>,
+ Xiongwei Song <xiongwei.song@windriver.com>,
+ Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+ Steven Rostedt <rostedt@goodmis.org>
+References: <20240223-slab-cleanup-flags-v2-0-02f1753e8303@suse.cz>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240223-slab-cleanup-flags-v2-0-02f1753e8303@suse.cz>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [1.41 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 R_RATELIMIT(0.00)[to_ip_from(RLqdadssyy1w6u3twx3pq4jyny)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 BAYES_HAM(-0.00)[19.95%];
+	 RCPT_COUNT_TWELVE(0.00)[19];
+	 FREEMAIL_TO(0.00)[linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,arm.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Level: *
+X-Spam-Score: 1.41
+X-Spam-Flag: NO
 
-On 21/02/2024 17:02, Paweł Anikiel wrote:
-> The Chameleon v3 uses the framebuffer IP core to take the video signal
-> from different sources and directly write frames into memory.
+On 2/23/24 19:27, Vlastimil Babka wrote:
+> This started by the report that SLAB_MEM_SPREAD flag is dead (Patch 1).
+> Then in the alloc profiling series we realized it's too easy to reuse an
+> existing SLAB_ flag's value when defining a new one, by mistake.
+> Thus let the compiler do that for us via a new helper enum (Patch 2).
+> When checking if more flags are dead or could be removed, didn't spot
+> any, but found out the SLAB_KASAN handling of preventing cache merging
+> can be simplified since we now have an explicit SLAB_NO_MERGE (Patch 3).
 > 
-> Signed-off-by: Paweł Anikiel <panikiel@google.com>
+> The SLAB_MEM_SPREAD flag is now marked as unused and for removal, and
+> has a value of 0 so it's a no-op. Patches to remove its usage can/will
+> be submitted to respective subsystems independently of this series - the
+> flag is already dead as of v6.8-rc1 with SLAB removed. The removal of
+> dead cpuset_do_slab_mem_spread() code can also be submitted
+> independently.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-...
+Pushed to slab/for-next
 
-> +
-> +  reg:
-> +    items:
-> +      - description: core registers
-> +      - description: irq registers
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  google,legacy-format:
-> +    type: boolean
-> +    description: The incoming video stream is in 32-bit padded mode.
-
-Why is this a property of board DTS? Can't the input streams change
-depending on the usage? Who defines the incoming stream format?
-
-> +
-
-Best regards,
-Krzysztof
+> ---
+> Changes in v2:
+> - Collect R-b, T-b (thanks!)
+> - Unify all disabled flags's value to a sparse-happy zero with a new macro (lkp/sparse).
+> - Rename __SF_BIT to __SLAB_FLAG_BIT (Roman Gushchin)
+> - Rewrod kasan_cache_create() comment (Andrey Konovalov)
+> - Link to v1: https://lore.kernel.org/r/20240220-slab-cleanup-flags-v1-0-e657e373944a@suse.cz
+> 
+> ---
+> Vlastimil Babka (3):
+>       mm, slab: deprecate SLAB_MEM_SPREAD flag
+>       mm, slab: use an enum to define SLAB_ cache creation flags
+>       mm, slab, kasan: replace kasan_never_merge() with SLAB_NO_MERGE
+> 
+>  include/linux/kasan.h |  6 ----
+>  include/linux/slab.h  | 97 ++++++++++++++++++++++++++++++++++++---------------
+>  mm/kasan/generic.c    | 22 ++++--------
+>  mm/slab.h             |  1 -
+>  mm/slab_common.c      |  2 +-
+>  mm/slub.c             |  6 ++--
+>  6 files changed, 79 insertions(+), 55 deletions(-)
+> ---
+> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> change-id: 20240219-slab-cleanup-flags-c864415ecc8e
+> 
+> Best regards,
 
