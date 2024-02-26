@@ -1,63 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA2212FF63;
-	Mon, 26 Feb 2024 19:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E1512F586;
+	Mon, 26 Feb 2024 19:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708975766; cv=none; b=owrXHRr6M8WeZvzzfP0mh0JzdjUgDx2aEHXFAdHum0qa1l4reOEscXL+WD6ru+qm0vzSdayBTiQ/Fe7bHkraFjCi/LCn/mHzn2SOOZhTjYK1yHS4PDZKZD3CpcXlEPwPn4r2U/u1PRA45DEBHBDqm8upuW5c05dsMohaLnittR0=
+	t=1708975783; cv=none; b=gw5rrnjeh6+picChpEVaxjWq7KSh6Hff5IrAu4JxxqLxn01+GV1iyt/+5AhumuXJHBelq7jX6OGd4jZxXMKSi/oigfvoTl6lNYq8igdvvyZu3wS4FYwlMsQ1fgWEn8EcNqyusAuGCruMfWdBgGoPebb3ed3ZOuHakPME24GUr6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708975766; c=relaxed/simple;
-	bh=tdDlsTw7j4EibK7LKtzEHBFRiWAzX1MMDnNGDMpWa/I=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=EomqENC8j4hZ9TxubqjpThtoAPj0k05W6aEKTKjIRE3lK3LLvOZ1fT4PIqrqNJ0uBdaP6kSBwcODV+b69L5AfKd27iq0FAwpWJPid9oGU3EBWQYCmUPpNJik7nXTmOK832zh+EZdPiflhMf2+oZ+PETXi3YqPkUtXnlwcasPKJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfaMZJ/H; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfaMZJ/H"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C200C43330;
-	Mon, 26 Feb 2024 19:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708975766;
-	bh=tdDlsTw7j4EibK7LKtzEHBFRiWAzX1MMDnNGDMpWa/I=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=AfaMZJ/HmHdZHz3Wg7WlV2iJrhcPBhZ1OoNqvVMBiky7dA7fqqawQ3KqWOmRk1/Fa
-	 dCNlxcpdPNWm01EuGHnV2pVHLdQ4Rjki5XbAllsqNVVOxwn4HtKbNdPBJ5ZDxjFU5X
-	 3u/qs8adKqbvsaq1oG45DkOckfKqmEAJLUHfjS17azWRn5rtDpXWjwO4ke2C938f1M
-	 ny21B2khfbBP2KHHCgsyUj9ZQJTnTzb7g8v4IRDo+7V6sGHtUcvjZJAXT3DwaSVB0S
-	 tHdAAdN6LNlMNzI/pm6GKqcWgzC8ExZkdW8W4qkn11cUs94nWvQl4b3Z7nuvkBQ7cH
-	 +nrKM3fA3VfPA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2B1FFD88FB0;
-	Mon, 26 Feb 2024 19:29:26 +0000 (UTC)
-Subject: Re: [GIT PULL] Btrfs fixes for 6.8-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1708962398.git.dsterba@suse.com>
-References: <cover.1708962398.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-btrfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1708962398.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.8-rc6-tag
-X-PR-Tracked-Commit-Id: c7bb26b847e5b97814f522686068c5628e2b3646
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b6c1f1ecb3bf2dcd8085cc7d927ade623182a26c
-Message-Id: <170897576616.25041.5256070108579096024.pr-tracker-bot@kernel.org>
-Date: Mon, 26 Feb 2024 19:29:26 +0000
-To: David Sterba <dsterba@suse.com>
-Cc: torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1708975783; c=relaxed/simple;
+	bh=Zs+IbvV7d0hitWb7oIpv8aJWVlfPLjA5xRa5/SeXvWc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B7gQO/rFpdVByFFaC5eTkm4KUslstZeD1XqdpX4hba7a2EbIxbdfNKiKljbVZGDU25EMIXToXRBlhTB7eM2tPVKBgUgFuTnTKfubac5J0lDbTFmtvygEcD+DIQBzI1KamihTFLlB2U3xLQ8bQvecPk6nw4sCYKSNrTBKNP8VMpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
+Received: from dslb-188-097-209-155.188.097.pools.vodafone-ip.de ([188.97.209.155] helo=martin-debian-2.paytec.ch)
+	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <martin@kaiser.cx>)
+	id 1regey-001hI7-11;
+	Mon, 26 Feb 2024 20:29:08 +0100
+From: Martin Kaiser <martin@kaiser.cx>
+To: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	David Howells <dhowells@redhat.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH v2] nfs: keep server info for remounts
+Date: Mon, 26 Feb 2024 20:29:08 +0100
+Message-Id: <20240226192908.48789-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Mon, 26 Feb 2024 17:49:20 +0100:
+With newer kernels that use fs_context for nfs mounts, remounts fail with
+-EINVAL.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.8-rc6-tag
+$ mount -t nfs -o nolock 10.0.0.1:/tmp/test /mnt/test/
+$ mount -t nfs -o remount /mnt/test/
+mount: mounting 10.0.0.1:/tmp/test on /mnt/test failed: Invalid argument
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b6c1f1ecb3bf2dcd8085cc7d927ade623182a26c
+For remounts, the nfs server address and port are populated by
+nfs_init_fs_context and later overwritten with 0x00 bytes by
+nfs23_parse_monolithic. The remount then fails as the server address is
+invalid.
 
-Thank you!
+Fix this by not overwriting nfs server info in nfs23_parse_monolithic if
+we're doing a remount.
 
+Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+---
+v2:
+ - rebased against today's linux-next
+
+Dear all,
+I'm resending this patch, it might have slipped through the cracks. The
+problem that I'm trying to fix is still present in linux-next. Thanks in
+advance for any reviews and comments.
+
+
+I guess that we're taking this path for remounts
+
+do_remount
+    fs_context_for_reconfigure
+        alloc_fs_context
+            init_fs_context == nfs_init_fs_context
+               fc->root is set for remounts
+               ctx->nfs_server is populated
+    parse_monolithic_mount_data
+        nfs_fs_context_parse_monolithic
+            nfs23_parse_monolithic
+               ctx->nfs_server is overwritten with data from mount request
+
+An alternative to checking for !is_remount_fc(fc) would be to check
+if (ctx->nfs_server.addrlen == 0)
+
+ fs/nfs/fs_context.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 853e8d609bb3..41126d6dcd76 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -1111,9 +1111,12 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+ 		ctx->acdirmax	= data->acdirmax;
+ 		ctx->need_mount	= false;
+ 
+-		memcpy(sap, &data->addr, sizeof(data->addr));
+-		ctx->nfs_server.addrlen = sizeof(data->addr);
+-		ctx->nfs_server.port = ntohs(data->addr.sin_port);
++		if (!is_remount_fc(fc)) {
++			memcpy(sap, &data->addr, sizeof(data->addr));
++			ctx->nfs_server.addrlen = sizeof(data->addr);
++			ctx->nfs_server.port = ntohs(data->addr.sin_port);
++		}
++
+ 		if (sap->ss_family != AF_INET ||
+ 		    !nfs_verify_server_address(sap))
+ 			goto out_no_address;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.39.2
+
