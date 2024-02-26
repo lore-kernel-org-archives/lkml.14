@@ -1,102 +1,119 @@
-Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch [185.70.43.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A5525634;
-	Mon, 26 Feb 2024 10:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1704817;
+	Mon, 26 Feb 2024 10:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708943143; cv=none; b=DGxz0T7m0SO2XZQhRQMZEF3sXE/kfQKnLUeOljAaFoPManUVDm3Guo/PIFlRp70sXvRJrwfgXYMMIThmFNidb8llKl52dUZ6JU1dBaDW/Qom9vRmTqWxu9iesglZj96GmKgRyGX09Z5YC+LC1cBbMO4qvwhaAfefuk+BmaDMNUM=
+	t=1708943252; cv=none; b=bzBsF8t0rCsydfR1bUNQwpEucRA/Zm9pXqDOyjTyZTkFq3Upk9dDdHeUfbQwMH1t2hCoGv7R+yuz23plQJziLx/TMoR9XJbCU3AsR97QuYglDlhExwpiFhZ/L6L9Q0l5oDUHur1ZpP/xcQdKkzGGTVM8kFOlCt2vbIm1zRjNeAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708943143; c=relaxed/simple;
-	bh=FB9E9JyNIVEQ3zPi5pRp1wKuBvGQBRAGlYj3fhsP/j0=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=l6gwQBpi5QLPF17ZbU7KmZDTI7HdkWzS8Jsxop1Ll/cYSsQy1OuvDC012L6AIEXAkGd6UlSiWCEkwZI9x/5Sn0X8Y09JMP5GW5g/49lavr+Z1w+ihJtuaeVLU37GXYeM8fDUwOtWPsxcSu4nU2RQWAnoHPbtk2T4glLBZL0Uo5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=IkhqcI4k; arc=none smtp.client-ip=185.70.43.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1708943252; c=relaxed/simple;
+	bh=5L9QNoh0f+vRtiDXMwpI8NJgAp36BLuI/7gvCVOlhwg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=k5wRLfpm0zu6UOLLrFaczmPkCy2MmWgKpHTu+zXkfaAVj570FL69udg+FhW55alcyoX6z9wSM5YPPOwvDsWVuy/ZLknuIwbTpd5ntF8mMPWCxoNSbeMF8QNjR3M3RmZ8+8akIisQJwEiF4VlQTTkPYqSb0Pq8zWngwI82dK7Ops=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SLM+liUb; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="IkhqcI4k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=vdsavk55ifat5gl55bl7736lum.protonmail; t=1708943133; x=1709202333;
-	bh=hvFaazzaDjEhKYnLhgusyXuDE9SwR0SnEtKd0g5cI2w=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=IkhqcI4kDYcn9GN5/V9oh3ebZ9f4hJ/d2RaIUInChPoCxCblvoyZ7Zkxy0v/yi7MU
-	 6fJg/T+O/CREAppqWvdCCYLL+NMXX7ilsxJNXqTWgN1b5XDsV4w25qktJRgI/VkMUH
-	 cwXd8JNgfpt7e73Gju7Cp10TGceZHiEGiEn28ZchWIGljboTZcZjy7fWlEj6DdKXw4
-	 X2y7UyGg9EqLdhcRWKxZ65TM5A56sH9cjkFYk1Pja6HbRExQobDDaKzzEzAU7CWj7o
-	 1WGijrHxmf4awf7TkbT/lq9kl092Vi4ky+EtPBK5z9k/nsTviF8WiTTX0aROJ1XSzS
-	 CZqGt3mw8VEAA==
-Date: Mon, 26 Feb 2024 10:25:12 +0000
-To: bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-From: Edmund Raile <edmund.raile@proton.me>
-Cc: Edmund Raile <edmund.raile@proton.me>
-Subject: [PATCH] PCI: Mark LSI FW643 to avoid bus reset
-Message-ID: <20240226102354.86757-1-edmund.raile@proton.me>
-Feedback-ID: 45198251:user:proton
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SLM+liUb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708943250; x=1740479250;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=5L9QNoh0f+vRtiDXMwpI8NJgAp36BLuI/7gvCVOlhwg=;
+  b=SLM+liUbOTfMOALNwe8Lba5XSWMgMzJPJIXsWWFwHNTC/2ZkT4MzmZKJ
+   4hCzomsahoob/7WtRLTlbsk9nRh533Em6kH+OEDA/EBocCH5k41CKZLKP
+   VgzwPPyaHui480IxgbKeVpe+T2F8+bGP/Qky5kMVRF07JXiI+SSWgnfl+
+   uB4q2Z8QIwyZxQeNClV0h5jQ5JGsdTp6w1VaU6UbN9LbkMqIRQLfxtdKz
+   VmCSYcz/rws2eioqUyNlORq1NPbO7bJtx1eMwCk2SDDwXjzjhgcbWvlIQ
+   v+cILIeekRoR8D2aSV+j0DU1SB7HtvyNRpjw+Ja3LNI3KzNGKXBzqtBxC
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3060928"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="3060928"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 02:27:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="37629455"
+Received: from hibeid-mobl.amr.corp.intel.com (HELO localhost) ([10.252.46.254])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 02:27:24 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: David Laight <David.Laight@ACULAB.COM>, "'linux-kernel@vger.kernel.org'"
+ <linux-kernel@vger.kernel.org>, 'Linus
+ Torvalds' <torvalds@linux-foundation.org>, 'Netdev'
+ <netdev@vger.kernel.org>, "'dri-devel@lists.freedesktop.org'"
+ <dri-devel@lists.freedesktop.org>
+Cc: 'Jens Axboe' <axboe@kernel.dk>, "'Matthew Wilcox (Oracle)'"
+ <willy@infradead.org>, 'Christoph Hellwig' <hch@infradead.org>,
+ "'linux-btrfs@vger.kernel.org'" <linux-btrfs@vger.kernel.org>, 'Andrew
+ Morton' <akpm@linux-foundation.org>, 'Andy Shevchenko'
+ <andriy.shevchenko@linux.intel.com>, "'David S . Miller'"
+ <davem@davemloft.net>, 'Dan Carpenter' <dan.carpenter@linaro.org>, Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>
+Subject: RE: [PATCH next v2 02/11] minmax: Use _Static_assert() instead of
+ static_assert()
+In-Reply-To: <824b0f70413d4570bcc97b39aad81a93@AcuMS.aculab.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <0fff52305e584036a777f440b5f474da@AcuMS.aculab.com>
+ <8059bc04da1a45bc810ac339a1129a4c@AcuMS.aculab.com>
+ <87v86bo9qi.fsf@intel.com>
+ <824b0f70413d4570bcc97b39aad81a93@AcuMS.aculab.com>
+Date: Mon, 26 Feb 2024 12:27:22 +0200
+Message-ID: <87sf1fo705.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Using LSI / Agere FW643 with vfio-pci will issue an FLreset, causing
-a broken link only recoverable by removing power (power-off /
-suspend + rescan). Prevent this bus reset.
-With this change, the device can be assigned to VMs with VFIO.
+On Mon, 26 Feb 2024, David Laight <David.Laight@ACULAB.COM> wrote:
+> From: Jani Nikula
+>> Sent: 26 February 2024 09:28
+>> 
+>> On Sun, 25 Feb 2024, David Laight <David.Laight@ACULAB.COM> wrote:
+>> > The wrapper just adds two more lines of error output when the test fails.
+>> 
+>> There are only a handful of places in kernel code that use
+>> _Static_assert() directly. Nearly 900 instances of static_assert().
+>
+> How many of those supply an error message?
 
-Signed-off-by: Edmund Raile <edmund.raile@proton.me>
----
-Usefulness:
-The LSI FW643 PCIe->FireWire 800 interface may be EOL but it is
-the only one that does not use a PCIe->PCI bridge.
-It was used in the following Apple machines:
-MacBookPro10,1
-MacBookPro9,2
-MacBookPro6,2
-MacBookPro5,1
-Macmini6,1
-Macmini3,1
-iMac12,2
-iMac9,1
-iMac8,1
-It is reliable and enables FireWire audio interfaces to be used
-on modern machines.
-Virtualization allows for flexible access to professional audio
-software.
+At a glance, not many.
 
-Implementation:
-PCI_VENDOR_ID_ATT was reused as they are identical and I am
-uncertain it is correct to add another ID for LSI to pci_ids.h.
- drivers/pci/quirks.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+>> Are we now saying it's fine to use _Static_assert() directly all over
+>> the place? People will copy-paste and cargo cult.
+>
+> Is that actually a problem?
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d797df6e5f3e..a6747e1b86da 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3765,6 +3765,15 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x00=
-3e, quirk_no_bus_reset);
-  */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset)=
-;
-=20
-+/*
-+ * Using LSI / Agere FW643 with vfio-pci will issue an FLreset, causing
-+ * a broken link only recoverable by removing power (power-off /
-+ * suspend + rescan). Prevent this bus reset.
-+ * With this change, the device can be assigned to VMs with VFIO.
-+ */
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5900, quirk_no_bus_reset);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5901, quirk_no_bus_reset);
-+
- /*
-  * Some TI KeyStone C667X devices do not support bus/hot reset.  The PCIES=
-S
-  * automatically disables LTSSM when Secondary Bus Reset is received and
---=20
-2.43.0
+I don't know. I'm asking.
+
+Usually when we have compiler wrappers, they're meant to be used instead
+of the thing being wrapped.
+
+This series deviates from that, so it would seem to fair to mention it
+slightly more verbosely than just stating what's being done.
+
+> The wrapper allows the error message to be omitted and substitutes
+> the text of the conditional.
+> But it isn't 'free'.
+> As well as slightly slowing down the compilation, the error messages
+> from the compiler get more difficult to interpret.
+>
+> Most of the static_assert() will probably never generate an error.
+> But the ones in min()/max() will so it is best to make them as
+> readable as possible.
+> (Don't even look as the mess clang makes....)
+
+I'm not arguing any of this. :)
 
 
+BR,
+Jani.
+
+
+-- 
+Jani Nikula, Intel
