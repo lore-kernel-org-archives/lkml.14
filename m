@@ -1,106 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3041E4A0;
-	Mon, 26 Feb 2024 19:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BEE12DDAB;
+	Mon, 26 Feb 2024 19:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708975283; cv=none; b=KP6PB0PHP+vYGmRVXHg8TtThIvnW573FpYbGGGBFZEWATm+iMR/VnpgB+Dl87KNftxZOKqUCJS8fyn+dJtsYNzDw0UX5kVRWKRHZQV6gpZbu8Gh8+ssO6QmlK9FSQfvF3FOOU8ExiA7CzdDhCernZ9d7w26FYdKNHmFdaVNFlt8=
+	t=1708975301; cv=none; b=ct4uIiPheXS8KGgKSMKX2IyQbBPDnUPE9gC/ZALzfEk8t7OzuFdkpNwtiinY86itYTnFoNkaMOlpV/PcgJPj1eLB99QAsdBmNFwYfKPR121yg5cjfWEs3zYgsQwX0U+Hpgnua+hGfX6rxQ9vmH/JlBfa/ICu1Hs9IoQW7n1LYsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708975283; c=relaxed/simple;
-	bh=wjgaOpqKnPa1lZbDj2bRKbgtOayd+k4TQpqi607Xcfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bRizO/r7xYaF85GRQxPXlGbqrxp9aPqe/qrI3IHkVmM8bcdbLJNakpihq+dchSzAw7FYcEvviVzymI9bIn2xhdwnNTKQmJDRYoiiPsyW9OEaY6QcOayfNWsIYhjlSh1H+7dsQb49YILWaoQ5PlQRjEneXpxhhuwuwwLSI56oV8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G0zMHPKD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708975301; c=relaxed/simple;
+	bh=BhwZDP9hYJk+cNxTWcvUP6DCeBXECSJ839dFR9fsm+0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzxshBbMM0hq51+KA84EWMx0JADYz/+OGTgFjnvRbi2UyGiQ2fQAdFJ+fK6egkTXT3Buiw+0zSYrP02FhPXb0BB/q1E+8ap+Eg7DYUnfnnBH/n0K+7q829ZJLcTjtAgDxISo+f2QnE/WSG1jsQP+BrIkqi1N1Cp/A/MPyu4EHXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i/rGofxx; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G0zMHPKD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF66C433C7;
-	Mon, 26 Feb 2024 19:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708975283;
-	bh=wjgaOpqKnPa1lZbDj2bRKbgtOayd+k4TQpqi607Xcfg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=G0zMHPKD7EeJ0mhOJu/9CwVwqqTPmaucAJ3Sl5TK9WTWY/XgQ9BN1ZjoqIkHzsIPA
-	 BOCSUOP2ys8lt/emCYXSG7eBfW2Jg8QwQk8fkcn/8SCWYXEz1CjjXCy7A2OK76NwLt
-	 SE37CBk26HL3kmvm4rFIhEyHkd4kyPFSmBWg+IAXj4r/YOtvRIMA6aIH1Gpc5y75eO
-	 opRVMDNsGqzhOhMsaxVqmNG5Xa4IaTR+ZMzK75/wZIiUsujDz5/IEb1pigGgZKtRJI
-	 6YNSBZf+PZVNVfAM5wg2mAqh5XCgl3VP0sYezy46pJO2JWhBZbl2P17jRS8s5KlBX/
-	 m4nIPxKAGNIbA==
-Date: Mon, 26 Feb 2024 19:20:55 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, haibo.chen@nxp.com,
- lars@metafoo.de, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
- kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Peng
- Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: imx93: drop the 4th
- interrupt
-Message-ID: <20240226192055.54b4a6b1@jic23-huawei>
-In-Reply-To: <20240226-germinate-anymore-fb85ca9bb226@spud>
-References: <20240226130826.3824251-1-peng.fan@oss.nxp.com>
-	<20240226-germinate-anymore-fb85ca9bb226@spud>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i/rGofxx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708975301; x=1740511301;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BhwZDP9hYJk+cNxTWcvUP6DCeBXECSJ839dFR9fsm+0=;
+  b=i/rGofxxyW+jvY6VwQ0y6CB7GqSvxPRHSMZVWACITy0axE9FT49LDAJo
+   D1pDibMZgSKDu/xLqcgB0X5V73B/9okNyWLXjlP5D0vh7fWzSQfw0f/8a
+   iXG462b/nloL7zMJ6k6RyT6dgUsVQBfF1IcYA8U0V78NqdnOiyN3LXw+U
+   KQW8i5xIh5kCL+6qs7h/QuOuIo4Xcru5/3RdJQ6wl3RULAvjMMIFOx8Wq
+   qnfE+xW4agRlp7aL0qGII/ncP/mrtYTfkpfKIUc1Dc/an8/L9Gh3BSZJf
+   D0XgX0iwU5aOXpynrGqmLUvbkqzGJEvAk2iVpE/hlRekwo++Rq16kTRDN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="25752823"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="25752823"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 11:21:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="11448181"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 11:21:38 -0800
+Date: Mon, 26 Feb 2024 11:21:37 -0800
+From: Isaku Yamahata <isaku.yamahata@linux.intel.com>
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
+	Sean Christopherson <seanjc@google.com>,
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH v18 060/121] KVM: TDX: TDP MMU TDX support
+Message-ID: <20240226192137.GP177224@ls.amr.corp.intel.com>
+References: <cover.1705965634.git.isaku.yamahata@intel.com>
+ <a47c5a9442130f45fc09c1d4ae0e4352054be636.1705965635.git.isaku.yamahata@intel.com>
+ <9da45a6a-a40b-4768-90d0-d7de674baec1@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <9da45a6a-a40b-4768-90d0-d7de674baec1@linux.intel.com>
 
-On Mon, 26 Feb 2024 16:24:47 +0000
-Conor Dooley <conor@kernel.org> wrote:
+On Tue, Jan 30, 2024 at 11:31:22PM +0800,
+Binbin Wu <binbin.wu@linux.intel.com> wrote:
 
-> On Mon, Feb 26, 2024 at 09:08:25PM +0800, Peng Fan (OSS) wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> > 
-> > Per i.MX93 Reference Mannual Rev.4, 12/2013, there is no interrupt 268,
-> > so drop it.  
+> > +
+> > +/*
+> > + * TLB shoot down procedure:
+> > + * There is a global epoch counter and each vcpu has local epoch counter.
+> > + * - TDH.MEM.RANGE.BLOCK(TDR. level, range) on one vcpu
+> > + *   This blocks the subsequenct creation of TLB translation on that range.
+> > + *   This corresponds to clear the present bit(all RXW) in EPT entry
+> > + * - TDH.MEM.TRACK(TDR): advances the epoch counter which is global.
+> > + * - IPI to remote vcpus
+> > + * - TDExit and re-entry with TDH.VP.ENTER on remote vcpus
+> > + * - On re-entry, TDX module compares the local epoch counter with the global
+> > + *   epoch counter.  If the local epoch counter is older than the global epoch
+> > + *   counter, update the local epoch counter and flushes TLB.
+> > + */
+> > +static void tdx_track(struct kvm *kvm)
+> > +{
+> > +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+> > +	u64 err;
+> > +
+> > +	KVM_BUG_ON(!is_hkid_assigned(kvm_tdx), kvm);
+> > +	/* If TD isn't finalized, it's before any vcpu running. */
+> > +	if (unlikely(!is_td_finalized(kvm_tdx)))
+> > +		return;
+> > +
+> > +	/*
+> > +	 * tdx_flush_tlb() waits for this function to issue TDH.MEM.TRACK() by
+> > +	 * the counter.  The counter is used instead of bool because multiple
+> > +	 * TDH_MEM_TRACK() can be issued concurrently by multiple vcpus.
+> > +	 */
+> > +	atomic_inc(&kvm_tdx->tdh_mem_track);
+> > +	/*
+> > +	 * KVM_REQ_TLB_FLUSH waits for the empty IPI handler, ack_flush(), with
+> > +	 * KVM_REQUEST_WAIT.
+> > +	 */
+> > +	kvm_make_all_cpus_request(kvm, KVM_REQ_TLB_FLUSH);
+> > +
+> > +	do {
+> > +		/*
+> > +		 * kvm_flush_remote_tlbs() doesn't allow to return error and
+> > +		 * retry.
+> > +		 */
+> > +		err = tdh_mem_track(kvm_tdx->tdr_pa);
+> > +	} while (unlikely((err & TDX_SEAMCALL_STATUS_MASK) == TDX_OPERAND_BUSY));
 > 
-> Don't just remove it from the example, drop it from the binding too?
-> It does permit a 4th "self testing" interrupt.
+> Why the sequence of the code is different from the description of the
+> function.
+> In the description, do the TDH.MEM.TRACK before IPIs.
+> But in the code, do TDH.MEM.TRACK after IPIs?
 
-I'm missing something. See below...
-> 
-> Thanks,
-> Conor.
-> 
-> > 
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml b/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
-> > index dacc526dc695..dfc3f512918f 100644
-> > --- a/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/adc/nxp,imx93-adc.yaml
-> > @@ -31,7 +31,6 @@ properties:
-> >        - description: normal conversion, include EOC (End of Conversion),
-> >            ECH (End of Chain), JEOC (End of Injected Conversion) and
-> >            JECH (End of injected Chain).
-> > -      - description: Self-testing Interrupts.
-
-Eyes skipped over this maybe?  The 4th interrupt is removed from binding here...
-
-> >  
-> >    clocks:
-> >      maxItems: 1
-> > @@ -70,8 +69,7 @@ examples:
-> >              reg = <0x44530000 0x10000>;
-> >              interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
-> >                           <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
-> > -                         <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
-> > -                         <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
-> > +                         <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>;
-> >              clocks = <&clk IMX93_CLK_ADC1_GATE>;
-> >              clock-names = "ipg";
-> >              vref-supply = <&reg_vref_1v8>;
-> > -- 
-> > 2.37.1
-> >   
-
+It's intentional to handle IPI in parallel as we already introduced
+tdh_mem_track.
+-- 
+Isaku Yamahata <isaku.yamahata@linux.intel.com>
