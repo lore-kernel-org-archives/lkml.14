@@ -1,109 +1,108 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278B6DDA9;
-	Mon, 26 Feb 2024 00:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEC0DDBE;
+	Mon, 26 Feb 2024 00:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708907656; cv=none; b=YkZ9bGrqqEjwTOrNrmBwO/7/Isn1TApKYVtxbopIFzcqdXybn8ObrSZ7aYPlw8VjDyelfKg3YlP9sgiDg4mOQj9DIESBmxEoxHxH2ttabObSZlgNk9KmToxZHsEJ5ejGvVBSPr+XN0uFiXh/YtlofZlNnlmo6YGdjbN+CGrxqxA=
+	t=1708907658; cv=none; b=gBzTQ+KnTXSpvT5xVhRJ7hfUsBA55KWuxWP/dNYIU/UR3VWBXm65tYfJFSSB8z71oOvPNScypFQEJa6cW7UMf2dQLuWgpILl4AwmckTWVUnVrRVDfL/IIh4QHQ7pyI+eGeaqWWz30cjgYcYa2xWMwECL7l3QESmGt6zxIXvou5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708907656; c=relaxed/simple;
-	bh=54BOPxkMLzdRKYevCC6yKEk91ZN6DktUcQnOZ91yBos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KOFdPv8dz1FTIAiHEO44iNnX/8l8Tm+bE7RsHSeyG+l8fD/ol59zmvNza/mEO3SN5Y+JpODIKa8wDTvqfdBbbI5UwiuKM/LVRDthe2yDlZxwTDzW+Uyb75w6TyY48++r8MKisPnPuc9gW63xd7FgJetzL7kOvMaKXpEEgd/7+7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1reOVA-0001je-1q;
-	Mon, 26 Feb 2024 00:05:48 +0000
-Date: Mon, 26 Feb 2024 00:05:40 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Richard Weinberger <richard@nod.at>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-mtd <linux-mtd@lists.infradead.org>,
-	devicetree <devicetree@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 7/7] mtd: ubi: provide NVMEM layer over UBI volumes
-Message-ID: <ZdvV1KABu_UCSL7B@makrotopia.org>
-References: <cover.1702952891.git.daniel@makrotopia.org>
- <82ceb13954f7e701bf47c112333e7b15a57fc360.1702952891.git.daniel@makrotopia.org>
- <20240219120156.383a1427@xps-13>
- <1209094181.98490.1708899174329.JavaMail.zimbra@nod.at>
+	s=arc-20240116; t=1708907658; c=relaxed/simple;
+	bh=ttzOyxwp5HttIsI7+ixES73I7rKS2i2CvFelCKZ5srI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=QcLAAVfHrrt4/BGDBszlXdjMoip6FvRlVaDjhIneTe47bguQpUbofRyO2ELAh+OJHH1I+kGfrzGuWB8bdy0FVC0wDkJ0/an+kA+geWPJwElCXeWFtJ/C7WcLcylWsMs/IuzvTjDi+zs11uPfaP/OPEZRPcsR/Wa43ZQO1RaIXFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icqivLWZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icqivLWZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 825F5C433C7;
+	Mon, 26 Feb 2024 00:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708907657;
+	bh=ttzOyxwp5HttIsI7+ixES73I7rKS2i2CvFelCKZ5srI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=icqivLWZoOIWcx3YpYKFRb21c/WlzzHzoecOx2qSqmbh8S8Q1lQSc5i5/7E+s6zIQ
+	 q96li2GvvSNockxnelAB8veZVCKQKhWdCdtSYWIs5ga3kKML40ItzewApIO79WZU4Y
+	 UjLM1XT0K6Lwm6x6wOz51bvW43SMeNJiDR2AA36d9amQqxu9Lo7N5sZse/aSFWFBIB
+	 vnkIWvXJrFRZiA/IUNb6QrTY0G5I40Il+aUcD8/MdYJ4K2DpsyoWl/dvT2S0OvRR14
+	 WeqKh4UMUdRYY03/MnKTMZHmYNvDPcpKz/FbIoqgKH+yCZzDpicNIdLKvJ4ZNtfko3
+	 JuzTVu+ButvrA==
+Date: Mon, 26 Feb 2024 09:34:14 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Remove second parameter to __assign_rel_str()
+Message-Id: <20240226093414.0ff0276080d61be9d4b68a73@kernel.org>
+In-Reply-To: <20240223162519.2beb8112@gandalf.local.home>
+References: <20240223162519.2beb8112@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1209094181.98490.1708899174329.JavaMail.zimbra@nod.at>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Richard,
+On Fri, 23 Feb 2024 16:25:19 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Sun, Feb 25, 2024 at 11:12:54PM +0100, Richard Weinberger wrote:
-> ----- Ursprüngliche Mail -----
-> > Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
-> > An: "Daniel Golle" <daniel@makrotopia.org>
-> > CC: "richard" <richard@nod.at>, "Vignesh Raghavendra" <vigneshr@ti.com>, "Rob Herring" <robh+dt@kernel.org>, "Krzysztof
-> > Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>, "linux-mtd"
-> > <linux-mtd@lists.infradead.org>, "devicetree" <devicetree@vger.kernel.org>, "linux-kernel"
-> > <linux-kernel@vger.kernel.org>
-> > Gesendet: Montag, 19. Februar 2024 12:01:56
-> > Betreff: Re: [PATCH v7 7/7] mtd: ubi: provide NVMEM layer over UBI volumes
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> > Hi Daniel,
-> > 
-> > daniel@makrotopia.org wrote on Tue, 19 Dec 2023 02:33:48 +0000:
-> > 
-> >> In an ideal world we would like UBI to be used where ever possible on a
-> >> NAND chip. And with UBI support in ARM Trusted Firmware and U-Boot it
-> >> is possible to achieve an (almost-)all-UBI flash layout. Hence the need
-> >> for a way to also use UBI volumes to store board-level constants, such
-> >> as MAC addresses and calibration data of wireless interfaces.
-> >> 
-> >> Add UBI volume NVMEM driver module exposing UBI volumes as NVMEM
-> >> providers. Allow UBI devices to have a "volumes" firmware subnode with
-> >> volumes which may be compatible with "nvmem-cells".
-> >> Access to UBI volumes via the NVMEM interface at this point is
-> >> read-only, and it is slow, opening and closing the UBI volume for each
-> >> access due to limitations of the NVMEM provider API.
-> > 
-> > I don't feel qualified enough to review the other patches, however this
-> > one looks good to me.
+> The second parameter of __assign_rel_str() is no longer used. It can be removed.
 > 
-> Finally(!), I had enough time to look.
-> Thanks for addressing all my comments form the previous series.
-> Patches applied.
+> Note, the only real users of rel_string is user events. This code is just
+> in the sample code for testing purposes.
+> 
+> This makes __assign_rel_str() different than __assign_str() but that's
+> fine. __assign_str() is used over 700 places and has a larger impact. That
+> change will come later.
 
-It's an enourmous coicident that you are writing just now that I found
-a sizeof(int)-related problem which triggers a compiler warning when
-building the UBI NVMEM provider on 32-bit platforms. I was just about
-to prepare an updated series. Literally in this minute.
-Should I still send the whole updates series or only the final patch
-(as the necessary change is there) or a follow-up patch fixing the
-original patch?
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
 
 > 
-> I have only one tiny request, can you share the lockdep spalt
-> you encountered in ubi_notify_add() regarding mtd_table_mutex
-> and ubi_devices_mutex? The solutions looks okay to me, but
-> if you have more details that would be great.
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  include/trace/stages/stage6_event_callback.h | 2 +-
+>  samples/trace_events/trace-events-sample.h   | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
+> index 935608971899..a0c15f67eabe 100644
+> --- a/include/trace/stages/stage6_event_callback.h
+> +++ b/include/trace/stages/stage6_event_callback.h
+> @@ -91,7 +91,7 @@
+>  #define __rel_string_len(item, src, len) __rel_dynamic_array(char, item, -1)
+>  
+>  #undef __assign_rel_str
+> -#define __assign_rel_str(dst, src)					\
+> +#define __assign_rel_str(dst)						\
+>  	do {								\
+>  		char *__str__ = __get_rel_str(dst);			\
+>  		int __len__ = __get_rel_dynamic_array_len(dst) - 1;	\
+> diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
+> index 2dfaf7fc7bfa..500981eca74d 100644
+> --- a/samples/trace_events/trace-events-sample.h
+> +++ b/samples/trace_events/trace-events-sample.h
+> @@ -574,7 +574,7 @@ TRACE_EVENT(foo_rel_loc,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		__assign_rel_str(foo, foo);
+> +		__assign_rel_str(foo);
+>  		__entry->bar = bar;
+>  		__assign_rel_bitmask(bitmask, mask,
+>  			BITS_PER_BYTE * sizeof(unsigned long));
+> -- 
+> 2.43.0
+> 
 
-I will setup a test build to reproduce the original warning and
-let you know shortly.
 
-
-Cheers
-
-
-Daniel
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
