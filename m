@@ -1,44 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FD1132C13;
-	Mon, 26 Feb 2024 08:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B7E1CD37;
+	Mon, 26 Feb 2024 08:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936178; cv=none; b=KTEBMZB0UIuDQ2T8s1BBP6Q6fXxrxBUrGDP1f2tIWIDuHqEsYo0rHoXj0O3FPQjTyaQlz61+cI9Qdt+P1had61vOh1rKMYIk9bv78qd3IXXtXBVFjTWkcVMk4ulZk7yUR4Kct9bCtuWY95kESYSasl1T5beDT1JqF45+jxWjpEw=
+	t=1708936190; cv=none; b=jxB0qX+tkd7nreW2kXK6MQ9cevEtNisp725WjvCvXiaq0LqhzedSheXk0m77b97nljdlZQft+xCsK0hwXnHRfYLpYx4ajtwHGDeHYvbCmdeMOuON/p0Ad2Rgdq0quoz2rkb8cExADhLFjusN6Fz9CvysuoILbiENHKZztEpy7mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936178; c=relaxed/simple;
-	bh=KhO9+dBhvKMB6pZRM19WAk4VyKqQ7LgR/rHkkV+J3mM=;
+	s=arc-20240116; t=1708936190; c=relaxed/simple;
+	bh=cp1eBjoAT8NOI0oEDQWVIksfHFeL9PGp78iWB16k6Lw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b7SWsRnIP3fZ9pdDLmDo7U9jqxY3uyC8DWk8+wo85w7YuNaGhdv7gS2DKFwC+6hNITyx5mnRuhALZzF1qfOyxDeL+nPFpSKZeivG0gApCa2F+vlBr4+BAeWwP9DXQN3dRZ3LyTkSDusymkmzofgMgFdCDXTAZWwUavTeOSgh0Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HCxYqcri; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=dLpri2oL0s4KF1ZU+qJZqS8LMPoocffkkgMdLwzEXftEF5CIUKRfXIPeKP9WfNznw+JlaO4MB6yAw+mI7SK0E+X3eh7rLSSMq3gpb94sW513l99Zf6umqRBi3gyivcn7et1cLEo8fmBqBTAsIk17GJ/tP4mYiQ1MJTuTH0jmY/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Je6Xy/OQ; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HCxYqcri"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Je6Xy/OQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936176; x=1740472176;
+  t=1708936189; x=1740472189;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=KhO9+dBhvKMB6pZRM19WAk4VyKqQ7LgR/rHkkV+J3mM=;
-  b=HCxYqcri6thDVQhpln36QrpOHtyw/2LdhSYVToKrGibTAl+QcbryjonY
-   72Za+j9It3lzwFaomifyidVdCHBZt8KMaumauvrll7oNm6f/CvSDDntS8
-   F+lQtogeYUdfSYBlnitE9Fd7zAmmm3p2cPwgemRbIJQOzBTfqtwj1AUR/
-   8msRaQZJsv2xfPhE6gWeapqwMgP289TszFzwADjVcAfosh+6xCdNHW/o7
-   HQJ/oSFqWve/XSD5Um0qgyeU2aGOd84s9ZJEew+HFjUVaQazKcRJJxxD1
-   cL76m5DT+h2JXwWzd/v2X96RgPi7wE3YhXqBIt5woZ6PYuuAponcOqNyx
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="20751517"
+  bh=cp1eBjoAT8NOI0oEDQWVIksfHFeL9PGp78iWB16k6Lw=;
+  b=Je6Xy/OQ+wax9XBNaqHN4iFYUlMJB8Fwyc5ieqP0gTJ9WjzO34iMHX/M
+   WfB6S9IOXOKfvJM8z6Nh8pJVfrJePZquL8aTJ3Em72h60E+rbSooCZBuY
+   h2JyY+PLh90Q733jNATUIj9kEk0mzQKWac+D0TcYqLTgkQSW5A6wctzEs
+   ymBmBitL6qwxQdCz3DJWNxQGZhcxDZyayFepeRUgCLeCJ00FDzbR0a38e
+   SoMTJeqf3732nnmp9Jx9BFtNiEIYovOEVZk0PB5P981ML5EEcjG2tVRGw
+   zsTJkikycQreZh1vRqnAbBWkDNcvArfj761PqZkm0GWyggXIU3MLalwfb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14623307"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="20751517"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:33 -0800
+   d="scan'208";a="14623307"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:33 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6735302"
+   d="scan'208";a="6519407"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:33 -0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:33 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -53,9 +53,9 @@ Cc: isaku.yamahata@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com,
 	Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v8 05/14] KVM: TDX: Update tdx_sept_{set,drop}_private_spte() to support large page
-Date: Mon, 26 Feb 2024 00:29:19 -0800
-Message-Id: <69f9845176b8a4f59440ce1c2d2d7f10c5585ed7.1708933624.git.isaku.yamahata@intel.com>
+Subject: [PATCH v8 07/14] KVM: TDX: Pass desired page level in err code for page fault handler
+Date: Mon, 26 Feb 2024 00:29:21 -0800
+Message-Id: <3d2a6bfb033ee1b51f7b875360bd295376c32b54.1708933624.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933624.git.isaku.yamahata@intel.com>
 References: <cover.1708933624.git.isaku.yamahata@intel.com>
@@ -69,167 +69,144 @@ Content-Transfer-Encoding: 8bit
 
 From: Xiaoyao Li <xiaoyao.li@intel.com>
 
-Allow large page level AUG and REMOVE for TDX pages.
+For TDX, EPT violation can happen when TDG.MEM.PAGE.ACCEPT.
+And TDG.MEM.PAGE.ACCEPT contains the desired accept page level of TD guest.
+
+1. KVM can map it with 4KB page while TD guest wants to accept 2MB page.
+
+  TD geust will get TDX_PAGE_SIZE_MISMATCH and it should try to accept
+  4KB size.
+
+2. KVM can map it with 2MB page while TD guest wants to accept 4KB page.
+
+  KVM needs to honor it because
+  a) there is no way to tell guest KVM maps it as 2MB size. And
+  b) guest accepts it in 4KB size since guest knows some other 4KB page
+     in the same 2MB range will be used as shared page.
+
+For case 2, it need to pass desired page level to MMU's
+page_fault_handler. Use bit 29:31 of kvm PF error code for this purpose.
 
 Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/kvm/vmx/tdx.c | 68 ++++++++++++++++++++++--------------------
- 1 file changed, 35 insertions(+), 33 deletions(-)
+ arch/x86/kvm/vmx/common.h   |  6 +++++-
+ arch/x86/kvm/vmx/tdx.c      | 18 ++++++++++++++++--
+ arch/x86/kvm/vmx/tdx_arch.h | 19 +++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c      |  2 +-
+ 4 files changed, 41 insertions(+), 4 deletions(-)
 
+diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
+index 027aa4175d2c..787f59c44abc 100644
+--- a/arch/x86/kvm/vmx/common.h
++++ b/arch/x86/kvm/vmx/common.h
+@@ -67,7 +67,8 @@ static inline void vmx_handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
+ }
+ 
+ static inline int __vmx_handle_ept_violation(struct kvm_vcpu *vcpu, gpa_t gpa,
+-					     unsigned long exit_qualification)
++					     unsigned long exit_qualification,
++					     int err_page_level)
+ {
+ 	u64 error_code;
+ 
+@@ -90,6 +91,9 @@ static inline int __vmx_handle_ept_violation(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 	if (kvm_is_private_gpa(vcpu->kvm, gpa))
+ 		error_code |= PFERR_GUEST_ENC_MASK;
+ 
++	if (err_page_level > PG_LEVEL_NONE)
++		error_code |= (err_page_level << PFERR_LEVEL_START_BIT) & PFERR_LEVEL_MASK;
++
+ 	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
+ }
+ 
 diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 8205d68ed477..d73a32588ad8 100644
+index d73a32588ad8..6941e9483e7e 100644
 --- a/arch/x86/kvm/vmx/tdx.c
 +++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1454,11 +1454,12 @@ void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int pgd_level)
- 	td_vmcs_write64(to_tdx(vcpu), SHARED_EPT_POINTER, root_hpa);
- }
+@@ -1812,7 +1812,20 @@ void tdx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
  
--static void tdx_unpin(struct kvm *kvm, kvm_pfn_t pfn)
-+static void tdx_unpin(struct kvm *kvm, kvm_pfn_t pfn, enum pg_level level)
+ static int tdx_handle_ept_violation(struct kvm_vcpu *vcpu)
  {
--	struct page *page = pfn_to_page(pfn);
-+	int i;
++	union tdx_ext_exit_qualification ext_exit_qual;
+ 	unsigned long exit_qual;
++	int err_page_level = 0;
++
++	ext_exit_qual.full = tdexit_ext_exit_qual(vcpu);
++
++	if (ext_exit_qual.type >= NUM_EXT_EXIT_QUAL) {
++		pr_err("EPT violation at gpa 0x%lx, with invalid ext exit qualification type 0x%x\n",
++			tdexit_gpa(vcpu), ext_exit_qual.type);
++		kvm_vm_bugged(vcpu->kvm);
++		return 0;
++	} else if (ext_exit_qual.type == EXT_EXIT_QUAL_ACCEPT) {
++		err_page_level = tdx_sept_level_to_pg_level(ext_exit_qual.req_sept_level);
++	}
  
--	put_page(page);
-+	for (i = 0; i < KVM_PAGES_PER_HPAGE(level); i++)
-+		put_page(pfn_to_page(pfn + i));
- }
- 
- static int tdx_mem_page_aug(struct kvm *kvm, gfn_t gfn,
-@@ -1475,7 +1476,7 @@ static int tdx_mem_page_aug(struct kvm *kvm, gfn_t gfn,
- 
- 	err = tdh_mem_page_aug(kvm_tdx->tdr_pa, gpa, tdx_level, hpa, &out);
- 	if (unlikely(err == TDX_ERROR_SEPT_BUSY)) {
--		tdx_unpin(kvm, pfn);
-+		tdx_unpin(kvm, pfn, level);
- 		return -EAGAIN;
- 	}
- 	if (unlikely(err == (TDX_EPT_ENTRY_STATE_INCORRECT | TDX_OPERAND_ID_RCX))) {
-@@ -1484,7 +1485,7 @@ static int tdx_mem_page_aug(struct kvm *kvm, gfn_t gfn,
- 		if (level_state.level == tdx_level &&
- 		    level_state.state == TDX_SEPT_PENDING &&
- 		    entry.leaf && entry.pfn == pfn && entry.sve) {
--			tdx_unpin(kvm, pfn);
-+			tdx_unpin(kvm, pfn, level);
- 			WARN_ON_ONCE(!(to_kvm_tdx(kvm)->attributes &
- 				       TDX_TD_ATTR_SEPT_VE_DISABLE));
- 			return -EAGAIN;
-@@ -1492,7 +1493,7 @@ static int tdx_mem_page_aug(struct kvm *kvm, gfn_t gfn,
- 	}
- 	if (KVM_BUG_ON(err, kvm)) {
- 		pr_tdx_error(TDH_MEM_PAGE_AUG, err, &out);
--		tdx_unpin(kvm, pfn);
-+		tdx_unpin(kvm, pfn, level);
- 		return -EIO;
- 	}
- 
-@@ -1519,7 +1520,7 @@ static int tdx_mem_page_add(struct kvm *kvm, gfn_t gfn,
- 		return -EINVAL;
- 
- 	if (KVM_BUG_ON(!kvm_tdx->source_page, kvm)) {
--		tdx_unpin(kvm, pfn);
-+		tdx_unpin(kvm, pfn, level);
- 		return -EINVAL;
- 	}
- 
-@@ -1537,7 +1538,7 @@ static int tdx_mem_page_add(struct kvm *kvm, gfn_t gfn,
- 	 * fail with parameters user provided.
- 	 */
- 	if (err) {
--		tdx_unpin(kvm, pfn);
-+		tdx_unpin(kvm, pfn, level);
- 		return -EIO;
- 	}
- 
-@@ -1548,10 +1549,7 @@ static int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
- 				     enum pg_level level, kvm_pfn_t pfn)
- {
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
--
--	/* TODO: handle large pages. */
--	if (KVM_BUG_ON(level != PG_LEVEL_4K, kvm))
--		return -EINVAL;
-+	int i;
- 
- 	/*
- 	 * Because restricted mem doesn't support page migration with
-@@ -1561,7 +1559,8 @@ static int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
- 	 * TODO: Once restricted mem introduces callback on page migration,
- 	 * implement it and remove get_page/put_page().
- 	 */
--	get_page(pfn_to_page(pfn));
-+	for (i = 0; i < KVM_PAGES_PER_HPAGE(level); i++)
-+		get_page(pfn_to_page(pfn + i));
- 
- 	if (likely(is_td_finalized(kvm_tdx)))
- 		return tdx_mem_page_aug(kvm, gfn, level, pfn);
-@@ -1578,11 +1577,9 @@ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
- 	gpa_t gpa = gfn_to_gpa(gfn);
- 	hpa_t hpa = pfn_to_hpa(pfn);
- 	hpa_t hpa_with_hkid;
-+	int r = 0;
- 	u64 err;
--
--	/* TODO: handle large pages. */
--	if (KVM_BUG_ON(level != PG_LEVEL_4K, kvm))
--		return -EINVAL;
-+	int i;
- 
- 	if (unlikely(!is_hkid_assigned(kvm_tdx))) {
+ 	if (kvm_is_private_gpa(vcpu->kvm, tdexit_gpa(vcpu))) {
  		/*
-@@ -1592,7 +1589,7 @@ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
- 		err = tdx_reclaim_page(hpa, level);
- 		if (KVM_BUG_ON(err, kvm))
- 			return -EIO;
--		tdx_unpin(kvm, pfn);
-+		tdx_unpin(kvm, pfn, level);
- 		return 0;
+@@ -1839,7 +1852,7 @@ static int tdx_handle_ept_violation(struct kvm_vcpu *vcpu)
  	}
  
-@@ -1609,22 +1606,27 @@ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
- 		return -EIO;
- 	}
- 
--	hpa_with_hkid = set_hkid_to_hpa(hpa, (u16)kvm_tdx->hkid);
--	do {
--		/*
--		 * TDX_OPERAND_BUSY can happen on locking PAMT entry.  Because
--		 * this page was removed above, other thread shouldn't be
--		 * repeatedly operating on this page.  Just retry loop.
--		 */
--		err = tdh_phymem_page_wbinvd(hpa_with_hkid);
--	} while (unlikely(err == (TDX_OPERAND_BUSY | TDX_OPERAND_ID_RCX)));
--	if (KVM_BUG_ON(err, kvm)) {
--		pr_tdx_error(TDH_PHYMEM_PAGE_WBINVD, err, NULL);
--		return -EIO;
-+	for (i = 0; i < KVM_PAGES_PER_HPAGE(level); i++) {
-+		hpa_with_hkid = set_hkid_to_hpa(hpa, (u16)kvm_tdx->hkid);
-+		do {
-+			/*
-+			 * TDX_OPERAND_BUSY can happen on locking PAMT entry.
-+			 * Because this page was removed above, other thread
-+			 * shouldn't be repeatedly operating on this page.
-+			 * Simple retry should work.
-+			 */
-+			err = tdh_phymem_page_wbinvd(hpa_with_hkid);
-+		} while (unlikely(err == (TDX_OPERAND_BUSY | TDX_OPERAND_ID_RCX)));
-+		if (KVM_BUG_ON(err, kvm)) {
-+			pr_tdx_error(TDH_PHYMEM_PAGE_WBINVD, err, NULL);
-+			r = -EIO;
-+		} else {
-+			tdx_clear_page(hpa, PAGE_SIZE);
-+			tdx_unpin(kvm, pfn + i, PG_LEVEL_4K);
-+		}
-+		hpa += PAGE_SIZE;
- 	}
--	tdx_clear_page(hpa, PAGE_SIZE);
--	tdx_unpin(kvm, pfn);
--	return 0;
-+	return r;
+ 	trace_kvm_page_fault(vcpu, tdexit_gpa(vcpu), exit_qual);
+-	return __vmx_handle_ept_violation(vcpu, tdexit_gpa(vcpu), exit_qual);
++	return __vmx_handle_ept_violation(vcpu, tdexit_gpa(vcpu), exit_qual, err_page_level);
  }
  
- static int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
+ static int tdx_handle_ept_misconfig(struct kvm_vcpu *vcpu)
+@@ -3027,7 +3040,8 @@ int tdx_pre_memory_mapping(struct kvm_vcpu *vcpu,
+ 
+ 	/* TDX supports only 4K to pre-populate. */
+ 	*max_level = PG_LEVEL_4K;
+-	*error_code = TDX_SEPT_PFERR;
++	*error_code = TDX_SEPT_PFERR |
++		((PG_LEVEL_4K << PFERR_LEVEL_START_BIT) & PFERR_LEVEL_MASK);
+ 
+ 	r = get_user_pages_fast(mapping->source, 1, 0, &page);
+ 	if (r < 0)
+diff --git a/arch/x86/kvm/vmx/tdx_arch.h b/arch/x86/kvm/vmx/tdx_arch.h
+index 87ef22e9cd49..19f2deafde5b 100644
+--- a/arch/x86/kvm/vmx/tdx_arch.h
++++ b/arch/x86/kvm/vmx/tdx_arch.h
+@@ -221,6 +221,25 @@ union tdx_sept_level_state {
+ 	u64 raw;
+ };
+ 
++union tdx_ext_exit_qualification {
++	struct {
++		u64 type		:  4;
++		u64 reserved0		: 28;
++		u64 req_sept_level	:  3;
++		u64 err_sept_level	:  3;
++		u64 err_sept_state	:  8;
++		u64 err_sept_is_leaf	:  1;
++		u64 reserved1		: 17;
++	};
++	u64 full;
++};
++
++enum tdx_ext_exit_qualification_type {
++	EXT_EXIT_QUAL_NONE = 0,
++	EXT_EXIT_QUAL_ACCEPT = 1,
++	NUM_EXT_EXIT_QUAL,
++};
++
+ /*
+  * Global scope metadata field ID.
+  * See Table "Global Scope Metadata", TDX module 1.5 ABI spec.
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index f8a00a766c40..a2004a0feb1c 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5752,7 +5752,7 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
+ 	if (unlikely(allow_smaller_maxphyaddr && !kvm_vcpu_is_legal_gpa(vcpu, gpa)))
+ 		return kvm_emulate_instruction(vcpu, 0);
+ 
+-	return __vmx_handle_ept_violation(vcpu, gpa, exit_qualification);
++	return __vmx_handle_ept_violation(vcpu, gpa, exit_qualification, PG_LEVEL_NONE);
+ }
+ 
+ static int handle_ept_misconfig(struct kvm_vcpu *vcpu)
 -- 
 2.25.1
 
