@@ -1,69 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131D51B7E5;
-	Mon, 26 Feb 2024 05:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9294A18B1A;
+	Mon, 26 Feb 2024 05:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708926504; cv=none; b=Qq3Qt3NEa9HYGTZrzkmxZ/ah9yBIl8xsUmTGmhITuXyGBBsczNWTr+eiqnhbzZnyPiQhmlAdlpM16CmkUBBf3VK/xuHSCCF+pEZ27th+xywyRHu7hqkp5S6AVs5dDkSYPIII6onEnKJQeMMFlosv3DLuNGZpqEiWGOVDapv/WpE=
+	t=1708926860; cv=none; b=DXFZu/ghcKv+zvXrb0jdQJ2QaSng/8IT0b8GMXf97gz2z9l5Wxiis8Y2klywSVpUcnWTx4Egc52w0eBW5tPbFpl6Njd7qKlvRl21BJyJXgQh5DsbDmLFm5dsP2iYIy0qKHG6QKewnEpFrV9S0pbETasR83abNBS/7SCfsnJCkIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708926504; c=relaxed/simple;
-	bh=u7CLzGGgeUR5UtKNQZH1WZ/ThLdbAF6AVV2qj9OlCAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jsa3Kb5voP3nMgILulAvmr02zYehSSnV0ksS1zImabKfVDGl6iXJq+Efnnx3tzmmT/owGgJ6RpJm+VCuONC+seV+mR34KI9jPoj77elEgm/Ezzsegm+Z5wveXytAt1dksc8NIRcXRwAsHnLwY5VW6ud6xiAoVP5R3jGyb2KH1AU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Re2K+9Ep; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708926860; c=relaxed/simple;
+	bh=ziO5kqnT5u7rj2sL7Ro1i1857NkKBcyWaJgBElXIe/Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uzu0Fbpc/fONdJ7BPejR8Sjpw9rEzUEzg7hEGDxeSEvVvZYM/caMpkKU2HbOyxsPRI9QZ5dC6mVqluqIjYLmBeC+jcDabq2HpHd43Gb91/WpQV5+uJv851sGzgh9KLNlVnv0IJP92TWUuhlEDU9gbT359EKaShxjdfKtwegVbeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=IVgxQX5Q; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Re2K+9Ep"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88076C433C7;
-	Mon, 26 Feb 2024 05:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708926503;
-	bh=u7CLzGGgeUR5UtKNQZH1WZ/ThLdbAF6AVV2qj9OlCAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Re2K+9EpWgBJYLju3xPpZNKzqf/DDqnINN06XzRitwLoXkyj7FE4onm70DLwHv1cl
-	 57ztG9665u7pyl8hlVYlPy27dyUexRxx8dIRsGniv1wv3ihWeyq0jEWY9Lgb0qFbWL
-	 fZtZUkGUEfavnIntohPt1a2KMqT/VrX4m1vH1hwHqfVDHBLisurebLsFZ/6ga04idt
-	 9MxQ9VORcoj+po1kiIwKczZYf9xwaq7YETjs5mvfsusAA9reNeZFAk4BBN+bXr+DC6
-	 fPZp4LMBh846PWETAef8eAQHlL5/f/yLsrEb9vuhkC3DE7IZPSdriI9jIdu5vYbwi6
-	 fUadevw3ThF3w==
-Date: Mon, 26 Feb 2024 13:48:20 +0800
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>, linux-kernel@vger.kernel.org,
-	chrome-platform@lists.linux.dev
-Subject: Re: [PATCH 7/7] extcon: usbc-cros-ec: Convert to platform remove
- callback returning void
-Message-ID: <ZdwmJNGLJgAa5Z45@google.com>
-References: <cover.1708876186.git.u.kleine-koenig@pengutronix.de>
- <52d0a4317d5372f1135259d4fbbd2822b86ba8f4.1708876186.git.u.kleine-koenig@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="IVgxQX5Q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=ziO5kqnT5u7rj2sL7Ro1i1857NkKBcyWaJgBElXIe/Y=;
+	t=1708926858; x=1709358858; b=IVgxQX5QfB3GWPM5oFteva3LL+zb888O4EIhXCegTEDBpTO
+	2AZR+sfOnhU5dnfkzROmcIDQWF7KB5wnH3HZ5Sn/2Q+6d3KY/5FwCrebK5OunumJ+wqJBNW8CpNOn
+	3az4JE6/8T5aVjs3/Jb0RbudjRcDpF8JnOGxt9lPK3ikUQ3Ctj2DL2Ub0EkxLIuv4ObUUZhJkIG4M
+	0PS8rgxJ2Qss4n3MQVjolBLvggVpTxs/VLAaVLEEa4Hej2btts2QVU1r0wcHK1aScwViiZuHGPj/B
+	OFae+wi2FNd3sXGzCQS+jWTxP3BmSyy1qJH1cVRFmPaQqt7IaJVuvHI/NzhIm1EQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1reTwM-0007nl-6e; Mon, 26 Feb 2024 06:54:14 +0100
+Message-ID: <ebcdfcf3-e63d-43c3-a770-d87678282cdf@leemhuis.info>
+Date: Mon, 26 Feb 2024 06:54:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <52d0a4317d5372f1135259d4fbbd2822b86ba8f4.1708876186.git.u.kleine-koenig@pengutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Recent-ish changes in binfmt_elf made my program segfault
+Content-Language: en-US, de-DE
+To: Kees Cook <keescook@chromium.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Jan Bujak <j@exia.io>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, linux-fsdevel@vger.kernel.org
+References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
+ <874jf5co8g.fsf@email.froward.int.ebiederm.org>
+ <202401221226.DAFA58B78@keescook>
+ <87v87laxrh.fsf@email.froward.int.ebiederm.org>
+ <202401221339.85DBD3931@keescook>
+ <95eae92a-ecad-4e0e-b381-5835f370a9e7@leemhuis.info>
+ <202402041526.23118AD@keescook>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <202402041526.23118AD@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708926858;6d7274d8;
+X-HE-SMSGID: 1reTwM-0007nl-6e
 
-On Sun, Feb 25, 2024 at 04:54:56PM +0100, Uwe Kleine-König wrote:
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is ignored (apart
-> from emitting a warning) and this typically results in resource leaks.
-> 
-> To improve here there is a quest to make the remove callback return
-> void. In the first step of this quest all drivers are converted to
-> .remove_new(), which already returns void. Eventually after all drivers
-> are converted, .remove_new() will be renamed to .remove().
-> 
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+On 05.02.24 00:27, Kees Cook wrote:
+> On Thu, Feb 01, 2024 at 11:47:02AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+>> for once, to make this easily accessible to everyone.
+>>
+>> Eric, what's the status wrt. to this regression? Things from here look
+>> stalled, but I might be missing something.
+>>
+> If Eric doesn't beat me to it, I'm hoping to look at this more this
+> coming week.
 
-Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
+Friendly reminder that this regression is still out there, as it seems
+things stalled. Or was there some progress or even a fix? Then please
+tell me!
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
