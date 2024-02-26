@@ -1,46 +1,46 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507D7130E4E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD1E131729;
 	Mon, 26 Feb 2024 17:22:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708968178; cv=none; b=q/yj/VoZYvIqD+ScZoubvYqemPyqwmcUPnPJZSLdpMKSj667eG0hkIeLOpAVBYCpsfdoFtqyWJ2e3DXSP1bpHCYZsIYA6Cfa/UCcXdgFFpv+KbxGvqGo0I2yqNirDN6yZna4xzfpJO/qdqhHzbrW2pg0ioJYgaPYJPuJLFckuvc=
+	t=1708968179; cv=none; b=rZ7xWQQDOaMCqC8XdAR8rPnwwS/DBSKwLjB9VLtDvJ0pE+DCGcYXPazQwvnjgGyV9LldC4f6uz1qczI/7H7ogxQtyZNMS7TWvgT2sJV1t2JvxJT1rXeTzx67/bQ5jIXtoxSGEOnRd6Ji8api8FK+E7FuNF2016/pq9GYDIaJZ38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708968178; c=relaxed/simple;
-	bh=OSQZOg4C5cUA/203TuHkAoX1Budypr/wre25wNXEejI=;
+	s=arc-20240116; t=1708968179; c=relaxed/simple;
+	bh=Tc4Ktv/D7YTB7Nmxjy0xTT+j9o08Tb6wQ5ZBOneqWIk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IjFhR2xIgqNVg+SP896gY5PuwJQWF/X4IlLCmzB37vBsKhwFbgCvp+/l1zRcjloPs+aPFs/jPZCpWLNubDp8GgavCx+hHyXEe6JRZFYMje4L6DDIqYVxEtHV00kKe4JeQ+6BaQfW0Wg/frcIct8KNoTJ6coY2y3Ch8HWKA6WxCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=S+x7vylU; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=rwDHtMBmfiLoVenvIjCbrkXiEFEFOfr9WwgqS2OHem4N/0vUPYW7OfpMkWSwnXeYpIV30faisL9wwkXEfZ5papa3sTqrDtmxnnF0ZyNUHCiErTISc7A408VKx2lWikMQX4j3h7raLVYJZzZ+xJp8blewfNbWmW1mFMDQVS2M6CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pE7BqOzS; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="S+x7vylU"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41QF9YDN002486;
-	Mon, 26 Feb 2024 17:22:35 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pE7BqOzS"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41QGjDq5014223;
+	Mon, 26 Feb 2024 17:22:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=IZByAaaeVj1XjREUyDsvcmk4MOJ2bjkDHKZeq+giCnE=; b=S+
-	x7vylUgVmTJ3bbjb0MZ85000MYS4OCGTntLLt2y9gKKcZKuhOSHt2OyVt8G4+RhR
-	nbFWg8QSEV7FB2IeyN/5FnSLqI3CW+NFznHkYN3CUzweBo5/7V1If2CJ8vfwpiPg
-	EVopgCuFOh5Bl22101WdWy4hw/MIFHESFg8hPOVlAvdoV9vlMuWrgDoYPVEtHzHY
-	PZDWOcSfhSu0/xs5kSc52zevcNgItNVI0q8LAkJajztaWueZ/BD+WJXZIxJiW2aU
-	vE/Q+73Wyj0wE+IEpuiaotboMH2mCRDRXy5bViKUk4jQBqtbOKNoq28cFlSCbJld
-	2I5SeFHvI5f3HAY0eEyA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wgkxn1jqw-1
+	qcppdkim1; bh=N+szkwugbiAMw3EsTUBEqZQBYgLwAbjT++yuFPP2PuQ=; b=pE
+	7BqOzSiifkPg8DnHhbacruL8VhiHJeGd7tHIFppnDw8hj549YWSb3xB7tYrNut12
+	lPU4ZS9aYjKEfTzU9DZAsAZwyUVg3AMFaq85RdgK+vMEuLTV+lGyAJEdls+JqwrA
+	M+1SoK5wfFkZull4UVbyLnq8iGh6dn658DYZY7vCU2ZUikq6xXJ0QcyYgfd/RqfK
+	T1gVM0ftI23vJ43mSuBOXTBBcfxj38Xkofiz4c0WpfK/ac2b/jWz25/mSh3fatpM
+	2IYnjA0zi0Tu+trozKw5n2lEwUPziNHfJX8yJayzBxuqZxchHWyQkJgUJWDzNL2U
+	XCQPpDHaX9Lun8X975ZQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wgkxp9htw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 17:22:34 +0000 (GMT)
+	Mon, 26 Feb 2024 17:22:36 +0000 (GMT)
 Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41QHMX1Y001114
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41QHMZqi013103
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 17:22:33 GMT
+	Mon, 26 Feb 2024 17:22:35 GMT
 Received: from hu-c-gdjako-lv.qualcomm.com (10.49.16.6) by
  nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 26 Feb 2024 09:22:32 -0800
+ 15.2.1118.40; Mon, 26 Feb 2024 09:22:34 -0800
 From: Georgi Djakov <quic_c_gdjako@quicinc.com>
 To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
         <conor+dt@kernel.org>, <will@kernel.org>, <robin.murphy@arm.com>,
@@ -51,9 +51,9 @@ CC: <devicetree@vger.kernel.org>, <andersson@kernel.org>,
         <linux-arm-msm@vger.kernel.org>, <quic_cgoldswo@quicinc.com>,
         <quic_sukadev@quicinc.com>, <quic_pdaly@quicinc.com>,
         <quic_sudaraja@quicinc.com>, <djakov@kernel.org>
-Subject: [PATCH v5 1/7] dt-bindings: iommu: Add Qualcomm TBU bindings
-Date: Mon, 26 Feb 2024 09:22:12 -0800
-Message-ID: <20240226172218.69486-2-quic_c_gdjako@quicinc.com>
+Subject: [PATCH v5 4/7] iommu/arm-smmu-qcom: Use a custom context fault handler for sdm845
+Date: Mon, 26 Feb 2024 09:22:15 -0800
+Message-ID: <20240226172218.69486-5-quic_c_gdjako@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240226172218.69486-1-quic_c_gdjako@quicinc.com>
 References: <20240226172218.69486-1-quic_c_gdjako@quicinc.com>
@@ -69,99 +69,181 @@ X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
  nasanex01a.na.qualcomm.com (10.52.223.231)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6UiUYkcIYO3ZK_vb1dupmEy3OEp4-Gdu
-X-Proofpoint-GUID: 6UiUYkcIYO3ZK_vb1dupmEy3OEp4-Gdu
+X-Proofpoint-ORIG-GUID: ZLr_R9aVmSU1kBlVWGrYZyZMcytkEr2N
+X-Proofpoint-GUID: ZLr_R9aVmSU1kBlVWGrYZyZMcytkEr2N
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-26_11,2024-02-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- clxscore=1015 priorityscore=1501 malwarescore=0 impostorscore=0 mlxscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 lowpriorityscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2402260132
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 adultscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402260132
 
-The "apps_smmu" on the Qualcomm sdm845 platform is an implementation
-of the SMMU-500, that consists of a single TCU (Translation Control
-Unit) and multiple TBUs (Translation Buffer Units). These TBUs have
-hardware debugging features that are specific and only present on
-Qualcomm hardware. Represent them as independent DT nodes. List all
-the resources that are needed to operate them (such as registers,
-clocks, power domains and interconnects).
+The sdm845 platform now supports TBUs, so let's get additional debug
+info from the TBUs when a context fault occurs. Implement a custom
+context fault handler that does both software + hardware page table
+walks and TLB Invalidate All.
 
 Signed-off-by: Georgi Djakov <quic_c_gdjako@quicinc.com>
 ---
- .../devicetree/bindings/iommu/qcom,tbu.yaml   | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/qcom,tbu.yaml
+ .../iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c    | 130 ++++++++++++++++++
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c    |   4 +
+ 2 files changed, 134 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iommu/qcom,tbu.yaml b/Documentation/devicetree/bindings/iommu/qcom,tbu.yaml
-new file mode 100644
-index 000000000000..6841ca9af21f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/qcom,tbu.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iommu/qcom,tbu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c
+index 62900d485fa2..b69624ab5f76 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c
+@@ -306,6 +306,136 @@ static phys_addr_t qcom_iova_to_phys(struct arm_smmu_domain *smmu_domain,
+ 	return phys;
+ }
+ 
++static phys_addr_t qcom_smmu_iova_to_phys_hard(struct arm_smmu_domain *smmu_domain, dma_addr_t iova)
++{
++	struct arm_smmu_device *smmu = smmu_domain->smmu;
++	int idx = smmu_domain->cfg.cbndx;
++	u32 frsynra;
++	u16 sid;
 +
-+title: Qualcomm TBU (Translation Buffer Unit)
++	frsynra = arm_smmu_gr1_read(smmu, ARM_SMMU_GR1_CBFRSYNRA(idx));
++	sid = FIELD_GET(ARM_SMMU_CBFRSYNRA_SID, frsynra);
 +
-+maintainers:
-+  - Georgi Djakov <quic_c_gdjako@quicinc.com>
++	return qcom_iova_to_phys(smmu_domain, iova, sid);
++}
 +
-+description:
-+  The Qualcomm SMMU500 implementation consists of TCU and TBU. The TBU contains
-+  a Translation Lookaside Buffer (TLB) that caches page tables. TBUs provides
-+  debug features to trace and trigger debug transactions. There are multiple TBU
-+  instances with each client core.
++static phys_addr_t qcom_smmu_verify_fault(struct arm_smmu_domain *smmu_domain, dma_addr_t iova, u32 fsr)
++{
++	struct io_pgtable *iop = io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops);
++	struct arm_smmu_device *smmu = smmu_domain->smmu;
++	phys_addr_t phys_post_tlbiall;
++	phys_addr_t phys;
 +
-+properties:
-+  compatible:
-+    const: qcom,qsmmuv500-tbu
++	phys = qcom_smmu_iova_to_phys_hard(smmu_domain, iova);
++	io_pgtable_tlb_flush_all(iop);
++	phys_post_tlbiall = qcom_smmu_iova_to_phys_hard(smmu_domain, iova);
 +
-+  reg:
-+    maxItems: 1
++	if (phys != phys_post_tlbiall) {
++		dev_err(smmu->dev,
++			"ATOS results differed across TLBIALL... (before: %pa after: %pa)\n",
++			&phys, &phys_post_tlbiall);
++	}
 +
-+  clocks:
-+    maxItems: 1
++	return (phys == 0 ? phys_post_tlbiall : phys);
++}
 +
-+  interconnects:
-+    maxItems: 1
++irqreturn_t qcom_smmu_context_fault(int irq, void *dev)
++{
++	struct arm_smmu_domain *smmu_domain = dev;
++	struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
++	struct arm_smmu_device *smmu = smmu_domain->smmu;
++	u32 fsr, fsynr, cbfrsynra, resume = 0;
++	int idx = smmu_domain->cfg.cbndx;
++	phys_addr_t phys_soft;
++	unsigned long iova;
++	int ret, tmp;
 +
-+  power-domains:
-+    maxItems: 1
++	static DEFINE_RATELIMIT_STATE(_rs,
++				      DEFAULT_RATELIMIT_INTERVAL,
++				      DEFAULT_RATELIMIT_BURST);
 +
-+  qcom,stream-id-range:
-+    description: Phandle of a SMMU device and Stream ID range (address and size) that is assigned by the TBU
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    items:
-+      - items:
-+          - description: phandle of a smmu node
-+          - description: stream id base address
-+          - description: stream id size
++	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
++	if (!(fsr & ARM_SMMU_FSR_FAULT))
++		return IRQ_NONE;
 +
-+required:
-+  - compatible
-+  - reg
-+  - qcom,stream-id-range
++	fsynr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSYNR0);
++	iova = arm_smmu_cb_readq(smmu, idx, ARM_SMMU_CB_FAR);
++	cbfrsynra = arm_smmu_gr1_read(smmu, ARM_SMMU_GR1_CBFRSYNRA(idx));
 +
-+unevaluatedProperties: false
++	phys_soft = ops->iova_to_phys(ops, iova);
 +
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+    #include <dt-bindings/interconnect/qcom,icc.h>
-+    #include <dt-bindings/interconnect/qcom,sdm845.h>
++	tmp = report_iommu_fault(&smmu_domain->domain, NULL, iova,
++				 fsynr & ARM_SMMU_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
++	if (!tmp || tmp == -EBUSY) {
++		dev_dbg(smmu->dev,
++			"Context fault handled by client: iova=0x%08lx, fsr=0x%x, fsynr=0x%x, cb=%d\n",
++			iova, fsr, fsynr, idx);
++		dev_dbg(smmu->dev, "soft iova-to-phys=%pa\n", &phys_soft);
++		ret = IRQ_HANDLED;
++		resume = ARM_SMMU_RESUME_TERMINATE;
++	} else {
++		phys_addr_t phys_atos = qcom_smmu_verify_fault(smmu_domain, iova, fsr);
 +
-+    tbu@150e1000 {
-+        compatible = "qcom,qsmmuv500-tbu";
-+        reg = <0x150e1000 0x1000>;
-+        clocks = <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
-+        interconnects = <&system_noc MASTER_GNOC_SNOC QCOM_ICC_TAG_ACTIVE_ONLY
-+                         &config_noc SLAVE_IMEM_CFG QCOM_ICC_TAG_ACTIVE_ONLY>;
-+        power-domains = <&gcc HLOS1_VOTE_AGGRE_NOC_MMU_PCIE_TBU_GDSC>;
-+        qcom,stream-id-range = <&apps_smmu 0x1c00 0x400>;
-+    };
-+...
++		if (__ratelimit(&_rs)) {
++			dev_err(smmu->dev,
++				"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
++				fsr, iova, fsynr, cbfrsynra, idx);
++			dev_err(smmu->dev,
++				"FSR    = %08x [%s%s%s%s%s%s%s%s%s], SID=0x%x\n",
++				fsr,
++				(fsr & 0x02) ? "TF " : "",
++				(fsr & 0x04) ? "AFF " : "",
++				(fsr & 0x08) ? "PF " : "",
++				(fsr & 0x10) ? "EF " : "",
++				(fsr & 0x20) ? "TLBMCF " : "",
++				(fsr & 0x40) ? "TLBLKF " : "",
++				(fsr & 0x80) ? "MHF " : "",
++				(fsr & 0x40000000) ? "SS " : "",
++				(fsr & 0x80000000) ? "MULTI " : "",
++				cbfrsynra);
++
++			dev_err(smmu->dev,
++				"soft iova-to-phys=%pa\n", &phys_soft);
++			if (!phys_soft)
++				dev_err(smmu->dev,
++					"SOFTWARE TABLE WALK FAILED! Looks like %s accessed an unmapped address!\n",
++					dev_name(smmu->dev));
++			if (phys_atos)
++				dev_err(smmu->dev, "hard iova-to-phys (ATOS)=%pa\n",
++					&phys_atos);
++			else
++				dev_err(smmu->dev, "hard iova-to-phys (ATOS) failed\n");
++		}
++		ret = IRQ_NONE;
++		resume = ARM_SMMU_RESUME_TERMINATE;
++	}
++
++	/*
++	 * If the client returns -EBUSY, do not clear FSR and do not RESUME
++	 * if stalled. This is required to keep the IOMMU client stalled on
++	 * the outstanding fault. This gives the client a chance to take any
++	 * debug action and then terminate the stalled transaction.
++	 * So, the sequence in case of stall on fault should be:
++	 * 1) Do not clear FSR or write to RESUME here
++	 * 2) Client takes any debug action
++	 * 3) Client terminates the stalled transaction and resumes the IOMMU
++	 * 4) Client clears FSR. The FSR should only be cleared after 3) and
++	 *    not before so that the fault remains outstanding. This ensures
++	 *    SCTLR.HUPCF has the desired effect if subsequent transactions also
++	 *    need to be terminated.
++	 */
++	if (tmp != -EBUSY) {
++		/* Clear the faulting FSR */
++		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
++
++		/* Retry or terminate any stalled transactions */
++		if (fsr & ARM_SMMU_FSR_SS)
++			arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_RESUME, resume);
++	}
++
++	return ret;
++}
++
+ static int qcom_tbu_probe(struct platform_device *pdev)
+ {
+ 	struct of_phandle_args args = { .args_count = 2 };
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+index 8b04ece00420..a8238f75c5d3 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+@@ -421,6 +421,10 @@ static const struct arm_smmu_impl sdm845_smmu_500_impl = {
+ 	.reset = qcom_sdm845_smmu500_reset,
+ 	.write_s2cr = qcom_smmu_write_s2cr,
+ 	.tlb_sync = qcom_smmu_tlb_sync,
++#ifdef CONFIG_ARM_SMMU_QCOM_TBU
++	.context_fault = qcom_smmu_context_fault,
++	.context_fault_needs_threaded_irq = true,
++#endif
+ };
+ 
+ static const struct arm_smmu_impl qcom_adreno_smmu_v2_impl = {
