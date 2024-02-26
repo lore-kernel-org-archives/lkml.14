@@ -1,50 +1,46 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3490C11737;
-	Mon, 26 Feb 2024 03:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773331172C;
+	Mon, 26 Feb 2024 03:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708917626; cv=none; b=tiLKols6PNHfTUT5S+iCSOVapra+NqGh/S9x0m5BWbq21ftcaaT9aqHWdofP/UgJ6H4Jl4rx+cEP+T+rEOpkiRGCOz2Co43vjZBlqFJzutb1MoMpU/hF+TCn7JCIeB69GjPkIlXbIOeG9MgB6zWcCoYYOEHiqKrasBtuUTjKflI=
+	t=1708917640; cv=none; b=fJIiPNKMQ8aioxWvrgdm6VqAvO8/eMItTzDIAFFW8U0ARYHrfDuUse5Cw1xc/1zdCKFs3TdzZGHjZeW7o/7hv1Guwv2mxgFrqfWoGMajPT0fR4L6/nq7wqSR7Tow9jsJkYRYudxot7vsye9miV3/fZ7/hdW3WZzn1r6e0lOys2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708917626; c=relaxed/simple;
-	bh=qNyxXNVKh3rYR+lfM0KuOhVs8XEV+DHoZej5cgSnoF4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A7oaPVJoDeaHt3kBtHDBbgP69Nxphf0fnxrhCFXsYX+g9v6NP11Ro3UWOxrpSa0sXofyrOOXVoJlfFJFUWG+8OG3zmJQiFTKKTAVjmCRyNdEEnBAF+wfYpQmM6oRWk1DgE9Ly2JZNUBRhFysmJq56v+f7S9CU8hW35TxBOw/nPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=lO5wNnL/; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="lO5wNnL/"
-Received: from localhost.localdomain (ppp118-210-168-240.adl-adc-lon-bras34.tpg.internode.on.net [118.210.168.240])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id C384A2014E;
-	Mon, 26 Feb 2024 11:20:10 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1708917614;
-	bh=LNLPAUiRFnZl/7VHr8STDz7uh32Y54i1QIk4cgSLlRM=;
-	h=From:To:Cc:Subject:Date;
-	b=lO5wNnL/oJkFpK7pr0cijMRFZxr4Dnou6xRPTIB7bjv+v5iAQtbt2mAZw7TkqZadJ
-	 C9/nLWyAw8QBnFfpkAMkNrLQT+jKY1WvOJ4skySh4O/lCXze70qwc9kjkjjKag2Kce
-	 Sjs1rvcK8IBcbmp3YZus2BD8ppszTSt0U6sIWZ2oXJNZtkU5BgXZ+XP/OUIkQtJyMh
-	 FzsFfRaJiwd+ET6IT536vzo3BM7qUqP5ifDmp3G+Kj/Att/olv8rpwouOHvCaCos4D
-	 R7Vm7DskK1PBOELGnpFUkEkog9MEG/Mr4udmfZf6q/U+dKf5++ifyrghgvsoWRY8LP
-	 opkZEfKKS4gdA==
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	krzysztof.kozlowski+dt@linaro.org
-Cc: Andrew Jeffery <andrew@codeconstruct.com.au>,
-	robh+dt@kernel.org,
-	conor+dt@kernel.org,
-	joel@jms.id.au,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to DT schema
-Date: Mon, 26 Feb 2024 13:49:51 +1030
-Message-Id: <20240226031951.284847-1-andrew@codeconstruct.com.au>
+	s=arc-20240116; t=1708917640; c=relaxed/simple;
+	bh=8uON6ExkItyMBcuClHBaUoANSnGY1opElW9eSX9yIoY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TKXigYtWlWSfO1OFsujSRUyVpraPBpe8pgi3ns7y+FN4tKzrjdUeJBY9oWXrw8ZS8/WtaWXCpQfWUNK6kZqE2AlkIKifoQvxY7cI+M9E5ss+r3FdBhBJTI2WqMnxJI23LsZffC6/7PQObU9JnXJpc6H21HwcgTHzpvAiTMCYnC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tjm8W4CRGz4f3mHW;
+	Mon, 26 Feb 2024 11:20:27 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id D771A1A0A03;
+	Mon, 26 Feb 2024 11:20:34 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g5_A9xl7gKzFA--.13921S6;
+	Mon, 26 Feb 2024 11:20:34 +0800 (CST)
+From: linan666@huaweicloud.com
+To: song@kernel.org,
+	shli@fb.com,
+	neilb@suse.com
+Cc: mariusz.tkaczyk@linux.intel.com,
+	linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v7 2/9] md: changed the switch of RAID_VERSION to if
+Date: Mon, 26 Feb 2024 11:14:37 +0800
+Message-Id: <20240226031444.3606764-3-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240226031444.3606764-1-linan666@huaweicloud.com>
+References: <20240226031444.3606764-1-linan666@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,150 +48,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX5g5_A9xl7gKzFA--.13921S6
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFyfWr1kJrWxAF4fGw1UGFg_yoW3GrX_ua
+	1Sqas7JrW2kF1Skr10vr43ZryYyFs7Wr4xuFnFg3s5Zw13ZryfWrn5GrZ8Xw4rXa4UWF98
+	AFn8trWFvr4DKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbBkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
+	0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vY
+	z4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c
+	02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE
+	4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4
+	IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxGrwCFx2Iq
+	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
+	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
+	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
+	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
+	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUvAp5UUUUU=
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Squash warnings such as:
+From: Li Nan <linan122@huawei.com>
 
-```
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,ast2400-gpio']
-```
+There is only one case of this 'switch'. Change it to 'if'.
 
-Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+Signed-off-by: Li Nan <linan122@huawei.com>
 ---
-v2: Address feedback from Krzysztof:
-    https://lore.kernel.org/all/0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org/
+ drivers/md/md.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-v1: https://lore.kernel.org/all/20240220052918.742793-1-andrew@codeconstruct.com.au/
-
- .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 73 +++++++++++++++++++
- .../devicetree/bindings/gpio/gpio-aspeed.txt  | 39 ----------
- 2 files changed, 73 insertions(+), 39 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-new file mode 100644
-index 000000000000..74d376567dfc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Aspeed GPIO controller
-+
-+maintainers:
-+  - Andrew Jeffery <andrew@codeconstruct.com.au>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - aspeed,ast2400-gpio
-+      - aspeed,ast2500-gpio
-+      - aspeed,ast2600-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: The clock to use for debounce timings
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+  gpio-line-names: true
-+  gpio-ranges: true
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  ngpios: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: aspeed,ast2600-gpio
-+    then:
-+      required:
-+        - ngpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio@1e780000 {
-+        compatible = "aspeed,ast2400-gpio";
-+        reg = <0x1e780000 0x1000>;
-+        interrupts = <20>;
-+        interrupt-controller;
-+        #gpio-cells = <2>;
-+        gpio-controller;
-+    };
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-deleted file mode 100644
-index b2033fc3a71a..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-+++ /dev/null
-@@ -1,39 +0,0 @@
--Aspeed GPIO controller Device Tree Bindings
---------------------------------------------
--
--Required properties:
--- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
--					or "aspeed,ast2600-gpio".
--
--- #gpio-cells 		: Should be two
--			  - First cell is the GPIO line number
--			  - Second cell is used to specify optional
--			    parameters (unused)
--
--- reg			: Address and length of the register set for the device
--- gpio-controller	: Marks the device node as a GPIO controller.
--- interrupts		: Interrupt specifier (see interrupt bindings for
--			  details)
--- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
--
--Optional properties:
--
--- clocks		: A phandle to the clock to use for debounce timings
--- ngpios		: Number of GPIOs controlled by this controller. Should	be set
--				  when there are multiple GPIO controllers on a SoC (ast2600).
--
--The gpio and interrupt properties are further described in their respective
--bindings documentation:
--
--- Documentation/devicetree/bindings/gpio/gpio.txt
--- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
--
--  Example:
--	gpio@1e780000 {
--		#gpio-cells = <2>;
--		compatible = "aspeed,ast2400-gpio";
--		gpio-controller;
--		interrupts = <20>;
--		reg = <0x1e780000 0x1000>;
--		interrupt-controller;
--	};
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 332eda680aea..b783a64765a7 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -7612,12 +7612,8 @@ static int md_ioctl(struct block_device *bdev, blk_mode_t mode,
+ 	 * Commands dealing with the RAID driver but not any
+ 	 * particular array:
+ 	 */
+-	switch (cmd) {
+-	case RAID_VERSION:
+-		err = get_version(argp);
+-		goto out;
+-	default:;
+-	}
++	if (cmd == RAID_VERSION)
++		return get_version(argp);
+ 
+ 	/*
+ 	 * Commands creating/starting a new array:
 -- 
 2.39.2
 
