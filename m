@@ -1,101 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED8E12FB03
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 19:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A711312FB3D;
+	Mon, 26 Feb 2024 19:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708975705; cv=none; b=Oxgi2uPpWYcRiXMaw+vSNyg8dIk0ZRf2tKco4IztLFXLiFAm5U3n+LqmRXjjO0X0nNT9gdGkP9MN6psdHH+uR2YG9N0jmPeU4MswkyRhtcSDCLEHO1fNklZPW91LS7fLQJ2nXMNBKRk75lfGvq0/u+QCtx8Abbd85+TWI+26FFI=
+	t=1708975762; cv=none; b=DHAjK3F63Awy1CDuj8Ra1bPyAkjBRLCd7ren0Hwnkye20NIR3VuJRNTiVjD6hIJjuc9hV5CD62IfKQszfxb3nN/pisntT3gTAE9SFtMpb/mheiSXzF3D0y7uJ8SO8E5zIQAFkB80xLrj62nIhdZn8vbXKmA64LdFmMUU4GkMJaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708975705; c=relaxed/simple;
-	bh=w09eVwNl/udBZSm14ewjIAURwXfKkMekAoVbB7ELkK8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HLL1hhkZPLb4i5evzYsk96MdYQ0xrFvpgfAbOjyI3CqmhCID2yfAsgf3IwFsu8PTdp+wCuvfslVN6Sy+Dqt3NiatZnQx+CmEhVE8oBtTdRX61PAJ8mzJHTMx2XiNfBYMZu+4k39noEnT3IVD+gI4R4tzI1L3S1QelEmONl4qgG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XDn2P28F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708975762; c=relaxed/simple;
+	bh=pzn0ZncNBxfqWLhJOjD6jRvXY1I6BehRr4oC5jt9FXQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GBCnUpi0zPK0e+6sbqyiQP2ijdqxPdO6hgF0B9rdAYCFNrptoqZZHh4hx3mFRfiqmUqLILiGsMNmHsNzl4JFwNFPEb9DhhISg8c1wOFNmO4g89RJWusesCY73GZmZrqZTI4w2QHu/YeNis2aQvh2X9MmO0LzSsJNlwiM394i4nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UzFxYvyj; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XDn2P28F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0AB5C43390;
-	Mon, 26 Feb 2024 19:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708975704;
-	bh=w09eVwNl/udBZSm14ewjIAURwXfKkMekAoVbB7ELkK8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=XDn2P28FvP1BUb8/iHdXPrLLEU/UcXEvXdDNNArcIcqJZmopOzPChOLnkKiKAUbz+
-	 CEO/zV216e0VjFSo1EC1Rr1j1BQwwcmRzHnCSefgLLFUvsFX93B7tWb2h5owJ7cvzP
-	 C5fIRWg6+iD1/GsiKk6BG3mPMXvi42pwxqZoV/C6QUwMODC2pEdR5WfKDUD3VkgWHU
-	 YvWaPutNbMJ/zAab0RAZp8eczvG8dfWNQ3srVwb92OgjuNdZNzoLm6YKSFVUgPQaOO
-	 eOUaH8+EmPDYO8gVQK7cxttQtpmXlit5AvbP8uGv0FX4g74BbZBBj+7nIbCRiMI6ij
-	 pQV0W0w4n4olw==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>
-Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, 
- linux-amlogic@lists.infradead.org
-In-Reply-To: <20240223175116.2005407-1-jbrunet@baylibre.com>
-References: <20240223175116.2005407-1-jbrunet@baylibre.com>
-Subject: Re: [PATCH 0/6] ASoC: meson: axg fixes and clean-up
-Message-Id: <170897570345.121037.4947854271427341182.b4-ty@kernel.org>
-Date: Mon, 26 Feb 2024 19:28:23 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzFxYvyj"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc1ff3ba1aso28713335ad.3;
+        Mon, 26 Feb 2024 11:29:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708975760; x=1709580560; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pPWdCKuKMXOCg7OdGv4GkDBEzhKQAW9zONsmjZ4GyO8=;
+        b=UzFxYvyjqlNDlNxn+CBxubpdlIQtBEmDHMRKJa1ZKVDoG2J/+w/THL9tu2FIfo2J4u
+         FzP/PNtF5595BxMqki8pVxYO7///6EP1EBr2jCpLAnZhsjX38lfkG33GBHje6/zPRKES
+         9uUGvR5dCtc/dpxgQZRiaAuR8hkrpvrZcsTdQ78L4ZBrIrCm2tz6VpQQBcCsTpynupr2
+         H3Pj4QdxS+1G+553vc3TFvqK9nTFNuo7N4Q3b4wX/La4Tjp4bYtLEPXqDrsDOXqXQjpc
+         kco1N127S3jRu3NCvuFGpTr/qmyYLybn4B+AqPQ8HQWFF49OwW2blWzcCuovVHCqFobv
+         L8+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708975760; x=1709580560;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pPWdCKuKMXOCg7OdGv4GkDBEzhKQAW9zONsmjZ4GyO8=;
+        b=cjUlLxpT4iokFebQu/n2RoRqLfMSHyZmsmal0g4aP3MTOivI9lGUq/aQg1ahsYYzBT
+         yx+MdZFewzub4KyR7B5SiD1LaWI3p8v4s8cS6iZFOZLzauZjmwsNa8U7f5uSwwjt6a3H
+         Wuft/ZDHCkNCiXfECt0xuiGaupf6GYy58oREnFoBpiqfd2mX124FyGgxBnOsrm3+6vg6
+         3jN7uMOt4IxykPE4RkztdwPilR6Krn4yYEY2Wj254Uqt404kGRPTfpZJyPGUayXX/ka/
+         Y9rrHWb/HqJ5mPR7n7xZCbPmGC9QS030v7WQ7nk5J7u7gqNtunakz/5s29Irk2CELPiL
+         dcCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGyi8sL984h9r/hc2DWPS2CJSgEQBean8cLywl0J1q2aDf/UBOm+B8AXzR67NL8xITCPREo5RQN9cFkJ0vlYLFbT28YU1rwbsOW11F
+X-Gm-Message-State: AOJu0YwPK/FxUSbRLN9qZDRxhw9vCalJEgYYo+6Uq2o9Low1g5QQ+gZp
+	dYPrZeZoHtSl97xqeUF0O0yyc3Ckc6TjSPRBbKgi4tj04KycUSf4odCRP6J+
+X-Google-Smtp-Source: AGHT+IHDtyeLzOkphtZJk6Eeb7FQQuG/gJNl59TE4WnV+2B58WYwnXtDV5euQdYCyAhb4nipKAs2lg==
+X-Received: by 2002:a17:903:1109:b0:1dc:63b2:7c2e with SMTP id n9-20020a170903110900b001dc63b27c2emr7796425plh.31.1708975759752;
+        Mon, 26 Feb 2024 11:29:19 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l20-20020a170902e2d400b001d71729ec9csm47824plc.188.2024.02.26.11.29.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 11:29:18 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 26 Feb 2024 11:29:17 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Helge Deller <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] parisc/unaligned: Rewrite 64-bit inline assembly of
+ emulate_ldd()
+Message-ID: <d5c6f6b6-e65b-4928-912d-464b9f2f6661@roeck-us.net>
+References: <20240216073315.3801833-1-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-a684c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240216073315.3801833-1-linux@roeck-us.net>
 
-On Fri, 23 Feb 2024 18:51:06 +0100, Jerome Brunet wrote:
-> This are various fixes and clean up gathered while working on Amlogic audio
-> support. These help better handle higher and unusual clock configuration
-> for TDM, SPDIF or PDM.
+Hi Helge,
+
+On Thu, Feb 15, 2024 at 11:33:15PM -0800, Guenter Roeck wrote:
+> Convert to use real temp variables instead of clobbering processor
+> registers. This aligns the 64-bit inline assembly code with the 32-bit
+> assembly code which was rewritten with commit 427c1073a2a1
+> ("parisc/unaligned: Rewrite 32-bit inline assembly of emulate_ldd()").
 > 
-> Jerome Brunet (6):
->   ASoC: meson: axg-tdm-interface: fix mclk setup without mclk-fs
->   ASoC: meson: axg-tdm-interface: add frame rate constraint
->   ASoC: meson: axg-tdm-interface: update error format error traces
->   ASoC: meson: axg-spdifin: use max width for rate detection
->   ASoC: meson: axg-fifo: take continuous rates
->   ASoC: meson: axg-fifo: use FIELD helpers
+> While at it, fix comment in 32-bit rewrite code. Temporary variables are
+> now used for both 32-bit and 64-bit code, so move their declarations
+> to the function header.
 > 
-> [...]
+> No functional change intended.
+> 
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> Implemented while analyzing a bug. I am not really sure of it is worth
+> the effort, but I figured that I might as well submit it.
+> 
+>  arch/parisc/kernel/unaligned.c | 29 +++++++++++++----------------
+>  1 file changed, 13 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/parisc/kernel/unaligned.c b/arch/parisc/kernel/unaligned.c
+> index c520e551a165..622c7b549fb8 100644
+> --- a/arch/parisc/kernel/unaligned.c
+> +++ b/arch/parisc/kernel/unaligned.c
+> @@ -169,7 +169,8 @@ static int emulate_ldw(struct pt_regs *regs, int toreg, int flop)
+>  static int emulate_ldd(struct pt_regs *regs, int toreg, int flop)
+>  {
+>  	unsigned long saddr = regs->ior;
+> -	__u64 val = 0;
+> +	unsigned long shift;
+> +	__u64 val = 0, temp1;
+>  	ASM_EXCEPTIONTABLE_VAR(ret);
+>  
+>  	DPRINTF("load " RFMT ":" RFMT " to r%d for 8 bytes\n", 
+> @@ -180,25 +181,22 @@ static int emulate_ldd(struct pt_regs *regs, int toreg, int flop)
+>  
+>  #ifdef CONFIG_64BIT
+>  	__asm__ __volatile__  (
+> -"	depd,z	%3,60,3,%%r19\n"		/* r19=(ofs&7)*8 */
+> -"	mtsp	%4, %%sr1\n"
+> -"	depd	%%r0,63,3,%3\n"
+> -"1:	ldd	0(%%sr1,%3),%0\n"
+> -"2:	ldd	8(%%sr1,%3),%%r20\n"
+> -"	subi	64,%%r19,%%r19\n"
+> -"	mtsar	%%r19\n"
+> -"	shrpd	%0,%%r20,%%sar,%0\n"
+> +"	depd,z	%4,60,3,%2\n"		/* shift=(ofs&7)*8 */
+> +"	mtsp	%5, %%sr1\n"
+> +"	depd	%%r0,63,3,%4\n"
+> +"1:	ldd	0(%%sr1,%4),%0\n"
+> +"2:	ldd	8(%%sr1,%4),%3\n"
+> +"	subi	64,%2,%2\n"
+> +"	mtsar	%2\n"
+> +"	shrpd	%0,%3,%%sar,%0\n"
+>  "3:	\n"
+>  	ASM_EXCEPTIONTABLE_ENTRY_EFAULT(1b, 3b, "%1")
+>  	ASM_EXCEPTIONTABLE_ENTRY_EFAULT(2b, 3b, "%1")
+> -	: "=r" (val), "+r" (ret)
+> -	: "0" (val), "r" (saddr), "r" (regs->isr)
+> -	: "r19", "r20" );
+> +	: "+r" (val), "+r" (ret), "=&r" (shift), "=&r" (temp1)
+> +	: "r" (saddr), "r" (regs->isr) );
 
-Applied to
+It looks like something went wrong when this patch was applied. It is now
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
++"      depd,z  %4,60,3,%3\n"           /* shift=(ofs&7)*8 */
+...
++       : "+r" (val), "+r" (ret), "+r" (saddr), "=&r" (shift), "=&r" (temp1)
++       : "r" (regs->isr) );
 
-Thanks!
+meaning saddr is now %2, but the depd,z instruction
+still assumes it is %4. Unfortunately this results in a crash
+when trying to boot linux-next on parisc64.
 
-[1/6] ASoC: meson: axg-tdm-interface: fix mclk setup without mclk-fs
-      commit: e3741a8d28a1137f8b19ae6f3d6e3be69a454a0a
-[2/6] ASoC: meson: axg-tdm-interface: add frame rate constraint
-      commit: 59c6a3a43b221cc2a211181b1298e43b2c2df782
-[3/6] ASoC: meson: axg-tdm-interface: update error format error traces
-      commit: 48bbec092e4cf2fe1d3f81a889ec176e83aee695
-[4/6] ASoC: meson: axg-spdifin: use max width for rate detection
-      commit: a2417b6c0f9c3cc914c88face9abd6e9b9d76c00
-[5/6] ASoC: meson: axg-fifo: take continuous rates
-      commit: 8b410b3c46128f1eee78f1182731b84d9d2e79ef
-[6/6] ASoC: meson: axg-fifo: use FIELD helpers
-      (no commit info)
+The patch below on top of linux-next fixes the problem for me.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Guenter
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+---
+iff --git a/arch/parisc/kernel/unaligned.c b/arch/parisc/kernel/unaligned.c
+index 31974eddedc9..a8e75e5b884a 100644
+--- a/arch/parisc/kernel/unaligned.c
++++ b/arch/parisc/kernel/unaligned.c
+@@ -181,7 +181,7 @@ static int emulate_ldd(struct pt_regs *regs, int toreg, int flop)
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+ #ifdef CONFIG_64BIT
+        __asm__ __volatile__  (
+-"      depd,z  %4,60,3,%3\n"           /* shift=(ofs&7)*8 */
++"      depd,z  %2,60,3,%3\n"           /* shift=(ofs&7)*8 */
+ "      mtsp    %5, %%sr1\n"
+ "      depd    %%r0,63,3,%2\n"
+ "1:    ldd     0(%%sr1,%2),%0\n"
