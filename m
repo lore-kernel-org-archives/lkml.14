@@ -1,184 +1,90 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2822012BEBD;
-	Mon, 26 Feb 2024 15:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BBF12BEB6;
+	Mon, 26 Feb 2024 15:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708962243; cv=none; b=ChXHu7IluvBvSd4CJ3E0VRM5gyFUTD4c5vgiXQFYn6q1sFRvOuiFarwoDF2L5aacCywFjwf9craLn/BglWrlx2tkDwr/WSOQqzwf8lb/r4Fi8tapPCzcbk2wdcP3UyS+LbdbBSvSWNV4xTrNGDwFyf8R/SVOmH8NsMsCma5NIzQ=
+	t=1708962260; cv=none; b=Ukt8hzQAw0nWPdaIi+Kj8e2ekwVr99kA5qice12+NogI3HFFIa+AzByy/Cew/IGr/b4R4JpuA/n+3+Pg5N4p+UrCnNC0uUFPwYM15y73mlTaPrapqUXX/7roO6befHxbTQf1ljCrkrQaxkZ7ihX3DFOucQVxB7Xq9eEVg82AhpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708962243; c=relaxed/simple;
-	bh=p19kTaortInEha0cwpwtBZnqivplGiTeVDdaQ9egqbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MkRr7oFhca9p+s2UgEa98fH2Iargimx05JG1fChH+Vn1CoCU2OSPCkOzY4OxfFoaSPvIRBWYRGopeN7FodpO5B4nSAtkczYkGkL4vZ2jdZxXQNNI0JqJUjkrnL75aDu+0WVCj/vYIgJJZtAy/gbBfPa4SFxXO438wKTFSI+d5NE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VrsStQxc; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VrsStQxc"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BD49B40E0192;
-	Mon, 26 Feb 2024 15:43:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zQBq6k5xoCaZ; Mon, 26 Feb 2024 15:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1708962234; bh=MQZvRp1V0lIMTMZthnsmol8I4kRgnl75tJYZUkvpj8U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VrsStQxcO/dy3x+x3wa1y1hi5a5pKkUi36+spe97eUaQOa6OwLy03JeVYFDTTlxSm
-	 b7nv6Obb27or0Kez96zL+EV3dte70DQWWtYY5nXaJ43mgx5E9iIt2bAmZku6QOmGQm
-	 j0ehgJ8cXjloiGZpVXsbe1VTmTdzBYX6q2yqat0yX+SHtdivV/ZtoyTjcdUxeQuFvK
-	 C4gAZQodqzv858TLzmEYk8ipxM0LsuQJnRkUCVEyBk4kBglYhRie4+eSbOjSFfbTY9
-	 7Mqd7OKoLQHKdKOxhdOpsydjkBre6SHTUjMYxfdLudckSH0RiQyJGecGrQFAl9gVu2
-	 ZiQAq1Ha19Xmu6/J9pioJt9RLBpHy34pQ27fyOU9XzbueP/l9slxGncgfedfwmK2wO
-	 L8fSldA53IXqtvNxH87t8827Dlx0uQ23g6LnKlfrBYPlxln4eXIO0ST+tt+sm6sRHR
-	 TGL9tKSjcjeNuj5LJZDUtbqIgKqhBXmlXOGVpmH0DBz0K1n6A8cn+txqlLmQZrAjp2
-	 rAKPp/RAtEqNnQe/wM6Cu800xrz3mMNaY8iAOlBkxoWryUyaznS8Wb1mFRBvvhXkGG
-	 B8uAAQzyB9KShfv++tjeuh2xUPk9VBdY4b5U3QrxvbZycKbYZy+udD4LWXrhd+no2r
-	 rrWsanG6VV9X6CgsYs+YxoLQ=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AC90D40E016C;
-	Mon, 26 Feb 2024 15:43:45 +0000 (UTC)
-Date: Mon, 26 Feb 2024 16:43:39 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: tony.luck@intel.com, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, avadhut.naik@amd.com,
-	john.allen@amd.com, muralidhara.mk@amd.com, sathyapriya.k@amd.com,
-	naveenkrishna.chatradhi@amd.com
-Subject: Re: [PATCH 1/3] RAS: Export ras_debugfs_dir
-Message-ID: <20240226154339.GDZdyxq7YoDLPXdi8x@fat_crate.local>
-References: <20240226152941.2615007-1-yazen.ghannam@amd.com>
- <20240226152941.2615007-2-yazen.ghannam@amd.com>
+	s=arc-20240116; t=1708962260; c=relaxed/simple;
+	bh=l6azYtmZx0Q9eDroWkMEXLj2U7XzEVVBEhmA/Mh94jQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nl5l+odmMkNMaQoPiN48gBbIzTm2Q04sNxwplN2emHJuEq7wFPogr3qB7C+EHjE4DnvTxQ3onAgZOgO5J3mNh15dKVae6k0yKV+Fe1MnTVnItqJMbvTt1wg5DX6XBQqeD8UALdenr/sooT61ucyf80JtiqNg6aby0j2g6o02FhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6092149eb55so47157b3.0;
+        Mon, 26 Feb 2024 07:44:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708962257; x=1709567057;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+0oW41fZhGgX0TG6t6VonNXEiYIoCQkfm20+OXgBAB8=;
+        b=AkvrpxiyjM1b6ZUvwNm3TsxSWMvFm3Zy8KlQTZyqa2CxfM8HJESGQu0AbK3yiy1Iyr
+         yr0n2kv12BKqEZueR1vocKqEQyDW1n39vDhmm+Op/Mkx4g72gugv+9dTcsvOoFLd9xDi
+         P22B2jagPX4/FrBknnfZwEvwAAJjuh4SAz7AvdS8u660+SB1i3I+Wq0X5NDVkg1hVUWI
+         /iMBHhIHx81L2WSu95TkYoGiJZQyjaS8S7cG2Ut8vd+Nx/VQIqIrKC2F0eSgZSjM6W8O
+         XfSHE2kxkwITzcVNeCy0Is8KAbI6chWQHn4Rzhdxv6dG0ak8p9jIpWO0trPEyJ0hsUa+
+         Uv1g==
+X-Forwarded-Encrypted: i=1; AJvYcCV/jstLjttO9EKyoRgS6DV8Dj87QOCYbJ00RTLhi5GgtyU2ZfK1vh0f+a0fg5HgQrllv0rYKWu7Eg7gcAPOvKKBlYDFf3iRKstcOJmTwjG5CrApzz6WUWYaN97F6RXrujJl0geyjFSZxw==
+X-Gm-Message-State: AOJu0YySiR23kNGu/H+RfCayCsoT/VAXuSPjofuK99db32HkfFUZZiiZ
+	tiCEGbk/rbqvoqIAjTkgxupFyqwupni2+0OMnKXlwOj/a5taT1rhanhFqiTjvvM=
+X-Google-Smtp-Source: AGHT+IEpBqVljuXH+2A3SraKvrHPvp7pltPHINYXJSHYyEGt83c6Q2IFyMyqahUfYO+PEBFa4U9LVg==
+X-Received: by 2002:a81:5753:0:b0:608:d2ce:59e9 with SMTP id l80-20020a815753000000b00608d2ce59e9mr3373739ywb.31.1708962257126;
+        Mon, 26 Feb 2024 07:44:17 -0800 (PST)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id i3-20020a0df803000000b006049c16b843sm1223006ywf.145.2024.02.26.07.44.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 07:44:16 -0800 (PST)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so2995233276.1;
+        Mon, 26 Feb 2024 07:44:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXWGTbWJu1UkpA+aY/m9yVtoJDoMP5EqZ7yLMCMfjqzF6WDqGRoHBeJcOs5zkOlyXALqkGoGfKgEvtq4xkgMuop71nGwonwnyKRIE6WRjs5W67Oz5CXjJnffQOr+GbrFHOvf5yjPkJnrA==
+X-Received: by 2002:a5b:8c2:0:b0:dc7:43fe:e124 with SMTP id
+ w2-20020a5b08c2000000b00dc743fee124mr3839477ybq.11.1708962256151; Mon, 26 Feb
+ 2024 07:44:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240226152941.2615007-2-yazen.ghannam@amd.com>
+References: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com> <20240219170337.2161754-8-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240219170337.2161754-8-andriy.shevchenko@linux.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 Feb 2024 16:44:04 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWevSiXD9mXfw74NUt0OebB3QhCE4HZTVBJ0dLE4=Lbow@mail.gmail.com>
+Message-ID: <CAMuHMdWevSiXD9mXfw74NUt0OebB3QhCE4HZTVBJ0dLE4=Lbow@mail.gmail.com>
+Subject: Re: [PATCH v3 7/9] auxdisplay: ht16k33: Drop struct ht16k33_seg
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Robin van der Gracht <robin@protonic.nl>, Paul Burton <paulburton@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 26, 2024 at 09:29:39AM -0600, Yazen Ghannam wrote:
-> ...so that RAS modules can use it.
-> 
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> ---
->  drivers/ras/debugfs.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
-> index ffb973c328e3..fd3d4595c122 100644
-> --- a/drivers/ras/debugfs.c
-> +++ b/drivers/ras/debugfs.c
-> @@ -4,6 +4,7 @@
->  #include "debugfs.h"
->  
->  struct dentry *ras_debugfs_dir;
-> +EXPORT_SYMBOL_GPL(ras_debugfs_dir);
+On Mon, Feb 19, 2024 at 6:03=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> The struct ht16k33_seg is repeating struct linedisp. Use the latter
+> directly.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I am never a fan of exporting things so let's add a helper this first,
-in a separate pre-patch.
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Also, I'd like to have this:
+Gr{oetje,eeting}s,
 
--       fmpm_dfs_dir = debugfs_create_dir(KBUILD_MODNAME, ras_debugfs_dir);
-+       fmpm_dfs_dir = debugfs_create_dir("fmpm", dfs);
+                        Geert
 
-so that we don't accidentally change the module name and fsck up scripts
-in the process.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Thx.
-
----
-
-diff --git a/drivers/ras/amd/fmpm.c b/drivers/ras/amd/fmpm.c
-index e0811a71e6e7..b8e3e4c81f7e 100644
---- a/drivers/ras/amd/fmpm.c
-+++ b/drivers/ras/amd/fmpm.c
-@@ -913,10 +913,13 @@ static const struct file_operations fmpm_fops = {
- 
- static void setup_debugfs(void)
- {
--	if (!ras_debugfs_dir)
-+	struct dentry *dfs;
-+
-+	dfs = ras_get_debugfs_root();
-+	if (!dfs)
- 		return;
- 
--	fmpm_dfs_dir = debugfs_create_dir(KBUILD_MODNAME, ras_debugfs_dir);
-+	fmpm_dfs_dir = debugfs_create_dir("fmpm", dfs);
- 	if (!fmpm_dfs_dir)
- 		return;
- 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 321af498ee11..e440b15fbabc 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -480,9 +480,15 @@ DEFINE_SHOW_ATTRIBUTE(array);
- 
- static int __init create_debugfs_nodes(void)
- {
--	struct dentry *d, *pfn, *decay, *count, *array;
-+	struct dentry *d, *pfn, *decay, *count, *array, *dfs;
- 
--	d = debugfs_create_dir("cec", ras_debugfs_dir);
-+	dfs = ras_get_debugfs_root();
-+	if (!dfs) {
-+		pr_warn("Error getting RAS debugfs root!\n");
-+		return -1;
-+	}
-+
-+	d = debugfs_create_dir("cec", dfs);
- 	if (!d) {
- 		pr_warn("Error creating cec debugfs node!\n");
- 		return -1;
-diff --git a/drivers/ras/debugfs.c b/drivers/ras/debugfs.c
-index fd3d4595c122..42afd3de68b2 100644
---- a/drivers/ras/debugfs.c
-+++ b/drivers/ras/debugfs.c
-@@ -3,11 +3,16 @@
- #include <linux/ras.h>
- #include "debugfs.h"
- 
--struct dentry *ras_debugfs_dir;
--EXPORT_SYMBOL_GPL(ras_debugfs_dir);
-+static struct dentry *ras_debugfs_dir;
- 
- static atomic_t trace_count = ATOMIC_INIT(0);
- 
-+struct dentry *ras_get_debugfs_root(void)
-+{
-+	return ras_debugfs_dir;
-+}
-+EXPORT_SYMBOL_GPL(ras_get_debugfs_root);
-+
- int ras_userspace_consumers(void)
- {
- 	return atomic_read(&trace_count);
-diff --git a/drivers/ras/debugfs.h b/drivers/ras/debugfs.h
-index c07443b462ad..4749ccdeeba1 100644
---- a/drivers/ras/debugfs.h
-+++ b/drivers/ras/debugfs.h
-@@ -4,6 +4,6 @@
- 
- #include <linux/debugfs.h>
- 
--extern struct dentry *ras_debugfs_dir;
-+struct dentry *ras_get_debugfs_root(void);
- 
- #endif /* __RAS_DEBUGFS_H__ */
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
