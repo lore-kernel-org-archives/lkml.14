@@ -1,117 +1,100 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94A25B5D6;
-	Mon, 26 Feb 2024 09:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1517F5D49A;
+	Mon, 26 Feb 2024 09:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708940308; cv=none; b=otKLZojnNtzkojozxLIC1MyyYZQHYJsYKtXiinhftWd6KlEad0tDMb05nBQKmwVebJrKWrreXXwkm4lswggmGiP7lOJ94WKR81AJMO8aU7+NBM9Gzrdf9/3SRmVWI3PZEn9/yOqtGVJthNDadki2SRq/fYSOl045kITSiqeInD4=
+	t=1708940324; cv=none; b=OHjl8Sd9hotWBNobIw4CJZdouh0XNbETSPDPcKpYa2KDGe9bgvvqTm5Px+xOc60y0dAxtZALYylUcfxGd3F3BWf6AamQvQdujXxmFtte7y4QYNYZAa7Y2n2uBsTJ0ZVGG3XUTVtcbZNcOGAyPmgIHFh0zXWAF0K+XORJKOJcJFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708940308; c=relaxed/simple;
-	bh=SMs1Y+hialITWBjfQsUdDr8qHdCEWZ6zXD7jHaki0/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WGOrWpn4wBO5BGPcTkpJynqQEfBiQo3MkFA1MrDMaDuN9bNEJej2cEgAglGXvGNqCzkTflLqr6tOigLnHfVSBeviZc34RDAS2QNnEeEnl3wiCt03K1wasF7mXuOqmUgkB62nDjDPkEWdWf7ZU26Q5SVfpmvAixZmOOCiX2W1dYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JuZGqgGV; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708940324; c=relaxed/simple;
+	bh=hhG00OyEDeWdYwOZW6NZDyKXB/h/3F2ZEF/AqLqkOj8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=JLzbkzGWD5rbPBMH1kAFgOTTe6hc9sgX9yt8kVPTL7h70LMAj2GFcNSluawh8yIqq44EYfHoTwr6upz3JOCecqy75vSEdDotGiwkGWh6lEnqCpt9c3JPZ9AU7G9jO7r4gbXFwIC+zewNG7Vk+yRoSc4+TjaUtYKiv9qh78BoQGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndpY59ga; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuZGqgGV"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a3ed9cae56fso443999766b.1;
-        Mon, 26 Feb 2024 01:38:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708940305; x=1709545105; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CEeXKLGrEyf0RjKWbIJdXt/9KeyZPE5HzwT6aiVEQEU=;
-        b=JuZGqgGVn1zHJ5W3uQ0ciZGaYt08+o4qHD+Hj/sCUfXdF1xoxlPRez3cPwuWkWYcp9
-         NPRg7pyVHqvl8tHNj+8Ou83BLhhyCtqrFt2BMDb5y5YPICYYBUQ9bp3woM6w5J73+ONJ
-         yxV4rkb3MyvBActOuaPFgPDnzT36ZmBIeBm0D9flyd+bDZFqhV3B+6pZjTbm6ZGqkFiF
-         CN0X04x/YlPJhfowBukwKRL2d0a/C6isdf1rz/m4lqxBmzwDaK/wCkA35b5i8WBuf78d
-         i5cciTLNUEbArsw6Uc0vfC8NhzbOdLv8k4SPCMJ820UU08MGF9AoF+Ef18ZYg5gPYaPn
-         Vq0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708940305; x=1709545105;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CEeXKLGrEyf0RjKWbIJdXt/9KeyZPE5HzwT6aiVEQEU=;
-        b=Trm5ClSVEcV2mSsUWcLDpckFhnmAfxmo29VfzATVSOEkXYA7+T2YpYBpi2hFkbtUrD
-         GARuKNY/S2mCMRNJsyOta6HCqOF9BtYCKJQOhkrfXHQ6H3TuoPedj9c1Hxgku3AHrkSV
-         GfONqdh4+EPH/U/jbTgLtgZXS6wlPD0jFOD0HloSQ0nb3vK01/tv9Zkvin+mKG6wYWR1
-         1J0Z7orHANWAuOvpKqyK+qnJ5uJppVHn/g1oa7o5zTffSE1YoTd5dpU/wNOYNwqXIVyn
-         gLx+UtFUnQ61gD1SkI5GV/YC3lTsCebeFHlsLpJzMNaJZ4ZUzyYyTxjCKZIPD2QS0rUy
-         JVrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXwpgXL0b0HK8cvcc7D88nCQkA07t0cSLLSYDTvxGpwjaPzK2QpCZbRo1ulSYv2jyizuZSRaaVXzoHIkpEbTy+J0rjyGrYtqQBtIEmDKgjBrQO91/5CVlEvoeyYmmECNA61z0Mm6zFlRMWzFHuP4KTukVAs81tos10NrxophQbLCaKV0p65NM3zRAAleNVXal8uFNBtzzT0j9pcPNIM2rXMPpPL
-X-Gm-Message-State: AOJu0YyYOFCVc52AUFb9ooB6JZLrrtQflKJC2MTmPdAHsyw3R9FEtmUy
-	S0wJIfCB0uWZcC/UECEyejYUIkgSa6N6FMwuGTmE0AV4sIuMFNBAYoeNI2d1xmU=
-X-Google-Smtp-Source: AGHT+IHFoYTXEtCWGW7uOxJhBsyYSKE5bYZdLPJ570cnBMrBR7xjMlIQusRknRCZjTi3pLm69JXraw==
-X-Received: by 2002:a17:906:408d:b0:a3c:5e17:1635 with SMTP id u13-20020a170906408d00b00a3c5e171635mr5435997ejj.30.1708940304895;
-        Mon, 26 Feb 2024 01:38:24 -0800 (PST)
-Received: from unknown.netbird.cloud (net-93-65-126-20.cust.vodafonedsl.it. [93.65.126.20])
-        by smtp.googlemail.com with ESMTPSA id fd13-20020a056402388d00b00562d908daf4sm2158595edb.84.2024.02.26.01.38.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 01:38:24 -0800 (PST)
-From: Gianluca Boiano <morf3089@gmail.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Cc: Gianluca Boiano <morf3089@gmail.com>
-Subject: [PATCH v2 3/3] dt-bindings: leds: leds-qcom-lpg: Add support for PMI8950 PWM
-Date: Mon, 26 Feb 2024 10:37:32 +0100
-Message-ID: <20240226093732.3478845-3-morf3089@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240226093732.3478845-1-morf3089@gmail.com>
-References: <d17121a0-ca14-41fd-9802-bb4118629e34@linaro.org>
- <20240226093732.3478845-1-morf3089@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndpY59ga"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BE6BC433F1;
+	Mon, 26 Feb 2024 09:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708940323;
+	bh=hhG00OyEDeWdYwOZW6NZDyKXB/h/3F2ZEF/AqLqkOj8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=ndpY59gaX5H/LlbJgo0UuXF1oSj6Xg2eZvHSb/62FfoQj7dXzoOEzjqHpXaRxdjeW
+	 N6J+awVv5/pINt0vdAxc83xdEm7dw9ZKBKZ13wT6zI4gkHePQuEFj1/qZwG/dpdyPz
+	 svLgGz0DQwc4CM4Y24TLXzqWf3MpQBWIAeXeARk8W9R2YutToSWPSv/8/LIoVJIF+2
+	 mGUi0hXd+rnnjR5yTemGuSr7S5ISUTBPHslaOdXv5+NNBIHLxfou8aQeM/107eFjSl
+	 m1qJ9rhvIm7Ol0fjuEVEnWqsxcdUahD/paGBAdLFVrQtcIzIsLwidZ6dBIdvMyOBS/
+	 kOVf1xkieH6Lw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 26 Feb 2024 11:38:39 +0200
+Message-Id: <CZEWS8QBYSF9.120NE1F4L75VT@suppilovahvero>
+Cc: "Ross Philipson" <ross.philipson@oracle.com>, "Kanth Ghatraju"
+ <kanth.ghatraju@oracle.com>, "Peter Huewe" <peterhuewe@gmx.de>
+Subject: Re: [PATCH 1/3] tpm: protect against locality counter underflow
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Lino Sanfilippo" <l.sanfilippo@kunbus.com>, "Daniel P. Smith"
+ <dpsmith@apertussolutions.com>, "Alexander Steffen"
+ <Alexander.Steffen@infineon.com>, "Jason Gunthorpe" <jgg@ziepe.ca>, "Sasha
+ Levin" <sashal@kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240131170824.6183-1-dpsmith@apertussolutions.com>
+ <20240131170824.6183-2-dpsmith@apertussolutions.com>
+ <CYU3CFW08DAA.29DJY7SJYPJJZ@suppilovahvero>
+ <2ba9a96e-f93b-48e2-9ca0-48318af7f9b1@kunbus.com>
+ <ae3fecc4-7b76-4607-8749-045e17941923@infineon.com>
+ <91f600ef-867b-4523-89be-1c0ba34f8a4c@kunbus.com>
+ <8692fcf6-2e67-45b4-b809-7723f30736a2@apertussolutions.com>
+ <75642d53-9daa-4be7-8d3d-d1d86bc60b3e@kunbus.com>
+In-Reply-To: <75642d53-9daa-4be7-8d3d-d1d86bc60b3e@kunbus.com>
 
-Update leds-qcom-lpg binding to support PMI8950 PWM.
+On Sat Feb 24, 2024 at 4:34 AM EET, Lino Sanfilippo wrote:
+>
+>
+> On 23.02.24 02:56, Daniel P. Smith wrote:
+>
+> >>
+> >> Will the TPM TIS CORE ever (have to) request another locality than 0? =
+Maybe the best would
+> >> be to hardcode TPM_ACCESS(0) and get rid of all the locality parameter=
+s that are
+> >> passed from one function to another.
+> >> But this is rather code optimization and not really required to fix th=
+e reported bug.
+> >=20
+> > Actually, doing so will break the TPM API. The function
+> > tpm_tis_request_locality() is registered as the locality handler,
+> > =C2=A0int (*request_locality)(struct tpm_chip *chip, int loc), in the t=
+is
+> > instance of struct tpm_class_ops{}. This is the API used by the Secure
+> > Launch series to open Locality2 for the measurements it must record.
+> >=20
+>
+> I dont understand this. How do you use locality 2 with the current mainli=
+ne
+> API? Do you adjust the mainline code to use locality 2 instead of 0? This=
+ would=20
+> at least explain how you ran into the underflow issue which from
+> the source code seems to be impossible when using locality 0. But then I =
+wonder why
+> this has not been made clear in this discussion. And then we are talking
+> about fixing a bug that does not even exist in the upstream code.=20
 
-Signed-off-by: Gianluca Boiano <morf3089@gmail.com>
----
-Changes in v2:
-- Add missing entry for if
-- Rebase on top of https://lore.kernel.org/linux-devicetree/20240226073713.19045-1-krzysztof.kozlowski@linaro.org/T/#t
-- Link to v1: https://lore.kernel.org/all/20240224224951.1357644-2-morf3089@gmail.com/
----
- Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks for bringing this up, now I finally figured out what confuses me
+in this series.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-index 6649ca2ec805..e93e9b30660b 100644
---- a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-+++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-@@ -27,6 +27,7 @@ properties:
-           - qcom,pm8994-lpg
-           - qcom,pmc8180c-lpg
-           - qcom,pmi632-lpg
-+          - qcom,pmi8950-pwm
-           - qcom,pmi8994-lpg
-           - qcom,pmi8998-lpg
-           - qcom,pmk8550-pwm
-@@ -148,6 +149,7 @@ allOf:
-             enum:
-               - qcom,pm8350c-pwm
-               - qcom,pm8550-pwm
-+              - qcom,pmi8950-pwm
-     then:
-       properties:
-         nvmem:
--- 
-2.44.0
+Daniel, I also have troubles understanding why locality_count would ever
+be greater than zero exactly in the mainline kernel, *without* [1]?
 
+[1] https://lore.kernel.org/linux-integrity/20240214221847.2066632-1-ross.p=
+hilipson@oracle.com/
+
+BR, Jarkko
