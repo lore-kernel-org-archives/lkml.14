@@ -1,102 +1,138 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529A36E5E4;
-	Mon, 26 Feb 2024 14:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 583CA12A14A;
+	Mon, 26 Feb 2024 14:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708956310; cv=none; b=g3m+r2E3VXBYtvM4LKBdBwov+ZZ9s30NhuNXchTt32uCdUGsCxcb2a215cZdlOJMgG3F0PNEBFMpPHgMuf686Y6eCBjhduDdRep4i+GoZTkQslPNXzt1fATLJ5y6TBPyGzehwGGJJbY1rMFGMb/lt9mzpEyl3/h62KlXNVDabDA=
+	t=1708956379; cv=none; b=IUGh9nU5qUeOmLHsYRjPdAE01R6O4/PP3nOehDM+/3gj7jLt2ItN+eOQKndGER6eFeHW77N/EMngRlTW84Wau9JX9fPzRErHErkUm4GHxb9x53pvwxBGdpb6Y8nyfXHXYQgI6f1QJih1vXRoDRx5qeBOWbMP0u0a/lExEybsD3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708956310; c=relaxed/simple;
-	bh=dnftFdY8VqdOgojQCgXwDM7PhxDarzbWxRwZDJmUAOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sl2o9Qj+RbYrHma8X2O6SN2VfmVqPqEkS8xVoGaxez1YSEgkz1+ZXnK0n2o64vp0yTzdX00OsZcdEbgAb9YML7e5DJlC/ITYfxsqGB3/zLVg1qX+LuqNVOeygIPzRdCXpLUJDZ1/tIHi8mdzn9MaZL/BOvCyU/wPXKXiFkSM4OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Clac9yRf; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Clac9yRf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5y6HROkFi5XzN2ly4doWlXui4PXni9QOJgZq8uvzy6Q=; b=Clac9yRfCmprivunqvFzwOF3Vp
-	veOafi534cS4fkI0gDuYJw8uMv9Sepu5nfwf2AdzEMfpGX54AD4rCKMZBrAbSGZz4YSzQeqPE2XnG
-	8zjky85kAJWCfDtnQigvkDeB+ZXsNntPL2Yn2SGLkloL858VTfTFKSjWI5HpXgdJ2uyT62llekbjk
-	HNiqcKu0YTSMiztAAHLyYvQ5saMhYrBLD1c1y7SBY/of9cB70m+uc2ejoxWHsjBuKYYkN1K2Hsph9
-	3Llwr/jGu1J96/QED3PyiVzHsEHC07LlM1g7ncTB54/l4NPgN/mwG0vZxL5ixHRidryVEVoomoCA4
-	ttYTIFPQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44126)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rebbE-0003hL-1w;
-	Mon, 26 Feb 2024 14:04:56 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rebbB-0006Tw-Ix; Mon, 26 Feb 2024 14:04:53 +0000
-Date: Mon, 26 Feb 2024 14:04:53 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Shengyu Qu <wiagn233@outlook.com>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v1] net: sfp: add quirks for ODI DFP-34X-2C2
-Message-ID: <ZdyahVYAhPgf2Xqn@shell.armlinux.org.uk>
-References: <TY3P286MB2611C0FA24318AA397DB689B985A2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1708956379; c=relaxed/simple;
+	bh=Ig1CU3NKL8/cdJN+rmc1e4GaDBcrnBkfyq6QFF/1g7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G8/0gnVdoWeg0h9p1ISwsgvd9dgak9cN0Xb2W9lgxjTbt+TcNWFktgr2tp1p4g6i1Kxj1DX13BD/VvODzQH+CkE4euCmUkniVa8zK0P6eYkyuYqmb5tTXYgSoSAbGATefGajivRjKeZKmvWPzH5D0DBIWFf+AwhIJkPnAR1mDIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-5d-65dc9ad5f17d
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: sj@kernel.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	honggyu.kim@sk.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	lizhijian@cn.fujitsu.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com
+Subject: [PATCH v2 1/7] mm/damon: refactor DAMOS_PAGEOUT with migration_mode
+Date: Mon, 26 Feb 2024 23:05:47 +0900
+Message-ID: <20240226140555.1615-2-honggyu.kim@sk.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20240226140555.1615-1-honggyu.kim@sk.com>
+References: <20240226140555.1615-1-honggyu.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TY3P286MB2611C0FA24318AA397DB689B985A2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsXC9ZZnoe61WXdSDRb+ZbSY2GNgMWf9GjaL
+	XTdCLP7vPcZo8eT/b1aLEzcb2Sw6vy9lsbi8aw6bxb01/1ktjqw/y2Kx7haQtfnsGWaLxcvV
+	LPZ1PGCyOPz1DZPF5EsL2CxeTDnDaHFy1mQWi9lH77E7CHv8PziJ2WPp6TdsHhuagMTOWXfZ
+	PVr23WL3WLCp1KPlyFtWj8V7XjJ5bFrVyeax6dMkdo8TM36zeOx8aOnxYvNMRo/e5ndsHp83
+	yQXwR3HZpKTmZJalFunbJXBlzGnYwFzQwlsx78catgbGK1xdjJwcEgImEjfmPmXqYuQAsxdv
+	1QIJswmoSVx5OQksLCLgILHqq0IXIxcHs0ADi8SPz5dYQGqEBXwk1v67wQ5iswioSvzaNB8s
+	zitgJvHoWC8jxHhNicfbf4LVcAqYS/w/3M4GMlMIqObobWaIckGJkzOfgLUyC8hLNG+dzQyy
+	S0LgFLvE3yvrWSHmSEocXHGDZQIj/ywkPbOQ9CxgZFrFKJSZV5abmJljopdRmZdZoZecn7uJ
+	ERh9y2r/RO9g/HQh+BCjAAejEg+vQ+2dVCHWxLLiytxDjBIczEoivOEyN1OFeFMSK6tSi/Lj
+	i0pzUosPMUpzsCiJ8xp9K08REkhPLEnNTk0tSC2CyTJxcEo1MDK+N4yt27RA9+y/ac7bG3rd
+	Dz+yUDrannj3QV6ted70+a3f/ZKifvgU12UsuB/YVTyxslSkL/lnqMwXP1sPWSGeB3JTFtmG
+	3z7qLOWYNm9R24NJbss36+yscjzc+K1eUO+lQNXsWZ2JgQd3xe8zfeywek10WvC1nbd1tSsZ
+	rr5e/Ffj2KdFS5RYijMSDbWYi4oTAbUWVdi6AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsXCNUNLT/fqrDupBo0HdSwm9hhYzFm/hs1i
+	140Qi/97jzFaPPn/m9XixM1GNovPz14zW3Q++c5ocXjuSVaLzu9LWSwu75rDZnFvzX9WiyPr
+	z7JYrLsFZG0+e4bZYvFyNYtD156zWuzreMBkcfjrGyaLyZcWsFm8mHKG0eLkrMksFrOP3mN3
+	EPf4f3ASs8fS02/YPDY0AYmds+6ye7Tsu8XusWBTqUfLkbesHov3vGTy2LSqk81j06dJ7B4n
+	Zvxm8dj50NLjxeaZjB69ze/YPL7d9vBY/OIDU4BgFJdNSmpOZllqkb5dAlfGnIYNzAUtvBXz
+	fqxha2C8wtXFyMEhIWAisXirVhcjJwebgJrElZeTmEDCIgIOEqu+KnQxcnEwCzSwSPz4fIkF
+	pEZYwEdi7b8b7CA2i4CqxK9N88HivAJmEo+O9TKC2BICmhKPt/8Eq+EUMJf4f7idDWSmEFDN
+	0dvMEOWCEidnPgFrZRaQl2jeOpt5AiPPLCSpWUhSCxiZVjGKZOaV5SZm5pjqFWdnVOZlVugl
+	5+duYgRG2rLaPxN3MH657H6IUYCDUYmH16H2TqoQa2JZcWXuIUYJDmYlEd5wmZupQrwpiZVV
+	qUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYxhHAuf6dzr6NtyNJy7
+	13qtTeBhUWmln4dEykuTjp9kPrPYvdXukZi588M8jvz/Okuuvs5e+U/k4+zt36xcRG4WSjyW
+	j2Gbe+7GhJ35d3/qb7q6TXVr2Mlrj62Yb2bkL4n3/jzrYsN99qW/1PO3W39Rl/abUabYKMh2
+	/GZw+UrX89m3ys78F+1XYinOSDTUYi4qTgQATejUCbACAAA=
+X-CFilter-Loop: Reflected
 
-On Mon, Feb 26, 2024 at 09:23:46PM +0800, Shengyu Qu wrote:
-> ODI DFP-34X-2C2 is capable of 2500base-X, but incorrectly report its
-> capabilities in the EEPROM.
-> So use sfp_quirk_2500basex for this module to allow 2500Base-X mode.
+This is a preparation patch that introduces migration modes.
 
-This was previously submitted by Sergio Palumbo, and comes in two
-different forms - an OEM version and non-OEM. There was extensive
-discussion about this, and the result is that I'm not accepting this
-quirk for this module.
+The damon_pa_pageout is renamed to damon_pa_migrate and it receives an
+extra argument for migration_mode.
 
-The reason is that the module _defaults_ to 1000base-X and requires
-manual reconfiguration by the user to operate at 2500base-X.
-Unfortunately, there is no way for the kernel to know whether that
-reconfiguration has occurred.
+No functional changes applied.
 
-The addition of this quirk makes the kernel select 2500base-X when
-the module is plugged in to a host that supports both 2500base-X
-and 1000base-X, resulting in the link with the module never coming
-up. (2500base-X is 1000base-X clocked 2.5x faster, and there is
-nothing in the line protocol that identifies this.)
+Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+---
+ mm/damon/paddr.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-Consequently, adding this quirk makes modules in their default
-configuration not link with the host, and thus be inaccessible.
-
-Therefore, for the best user experience (in terms of having a working
-module when it turns up at the doorstep) the only option is to refuse
-this quirk.
-
-Now, what I really don't like is that I had a lengthy discussion over
-this with Sergio, and it seems from a mainline developer point of view
-that "oh, Sergio wasn't successful in getting this merged, someone else
-can have a go".
-
-It _isn't_ the person who is the problem - it is the principle and the
-confusion this will cause to users who receive modules in their default
-configuration (1000base-X), and then plug them in with this quirk in
-place, and the kernel selects 2500base-X resulting in no link and *no*
-access to the module.
-
+diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
+index 081e2a325778..277a1c4d833c 100644
+--- a/mm/damon/paddr.c
++++ b/mm/damon/paddr.c
+@@ -224,7 +224,12 @@ static bool damos_pa_filter_out(struct damos *scheme, struct folio *folio)
+ 	return false;
+ }
+ 
+-static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
++enum migration_mode {
++	MIG_PAGEOUT,
++};
++
++static unsigned long damon_pa_migrate(struct damon_region *r, struct damos *s,
++				      enum migration_mode mm)
+ {
+ 	unsigned long addr, applied;
+ 	LIST_HEAD(folio_list);
+@@ -249,7 +254,14 @@ static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
+ put_folio:
+ 		folio_put(folio);
+ 	}
+-	applied = reclaim_pages(&folio_list);
++	switch (mm) {
++	case MIG_PAGEOUT:
++		applied = reclaim_pages(&folio_list);
++		break;
++	default:
++		/* Unexpected migration mode. */
++		return 0;
++	}
+ 	cond_resched();
+ 	return applied * PAGE_SIZE;
+ }
+@@ -297,7 +309,7 @@ static unsigned long damon_pa_apply_scheme(struct damon_ctx *ctx,
+ {
+ 	switch (scheme->action) {
+ 	case DAMOS_PAGEOUT:
+-		return damon_pa_pageout(r, scheme);
++		return damon_pa_migrate(r, scheme, MIG_PAGEOUT);
+ 	case DAMOS_LRU_PRIO:
+ 		return damon_pa_mark_accessed(r, scheme);
+ 	case DAMOS_LRU_DEPRIO:
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.34.1
+
