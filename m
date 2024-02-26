@@ -1,65 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7790F208B0
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DC5249F5
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944512; cv=none; b=FPlF/q5TWguLG6uxlLTtMRLHLl0daG+qR1xX2/g9Y4dzRnK+c0vWX/BviDVY9JSLMvPR0Qx3PKo7kM/aVPwfxXYtWqVP0h1ds4DTFYnh1JBx/pmwIHhjRHUuhV94fbIf6whiUIj5i8dUw3560e749CxVuc9NC1MdCWwwLuEVOY0=
+	t=1708944525; cv=none; b=OYdSfMeTublAGJhcZgrKl7OG8BBPIKv4eL+wimUoG7Q48MaNZLqHuIql8qZGQSo6GPVghWmCOiMxWtho/JALhDwXWoevQRJKJe8L6FLzAW8ZvRhf6y2ZaRyInuarBKxsPx+yOINpvCSAflGN/HwdPYgvjX52lIhZr9+LNZ2WqZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944512; c=relaxed/simple;
-	bh=acLFONxVsgOTr7U735zdjWOky1DA+WSRO0IbU4NPfOQ=;
+	s=arc-20240116; t=1708944525; c=relaxed/simple;
+	bh=CgLSVjg8YzV7wsZ4kQ2CtgEGGOtghXgQ/KD7jkKWfsc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fwFPkn6ob8K1aKA0//XrQvHXf8KpK1G0Ez6+GNOEC8SwWKO42d3Zah0Mk/02Taly+rQuVzm/4Jz6YKQUv9WMbDEP9GALqR15s+1QxzHKT2uqlOU+AaTkAENpSFWhbCQA3bNZ9Uj88Ulzdz6GKDrsghtADOfmOkzb8ZdfyD/pmOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q3qIJF0H; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=nF2/kqaKlzlDnytkgIEdveFdyk+yM7ifSzrGHzGfAW5i5b4Jnqi3sTbgjYKyVe7oNMzf6SltIWYFZ08o6X6u19IuSwsUfdQDTU5KhiPdx1s8YgJdovr9JvcSZKVqulpQGLMCdO2E1bRhEFQkDS2WHm8Zb02akHg65ZCj1wgxIZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DOwwVIS8; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q3qIJF0H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DOwwVIS8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708944509;
+	s=mimecast20190719; t=1708944522;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3WWbzeMEGRxSialS8tcKozQ9wwd4hRgUVyZjvYbLpxY=;
-	b=Q3qIJF0HjRQXuMEZKFt5yObsjqLCNytQLOF+gT+5ZiVi+dultDc5VxZQJKz4MDMXHAkGCJ
-	WWhfFXGhOrqID4U5K3NPMUiHtoHqiq1r3ZiblffAYNkdHGUrUxg+NPrbeA0bUc1ii6aOfW
-	+VLqXxltHueJFXliYR700Y7KeJ/fBxI=
+	bh=5OE8GoZ9j6WhBuZWvbJNk/RKp/M9fLXpjDr094aLbX0=;
+	b=DOwwVIS8+oCQ0PYOhfMqauWyLyd5lIA1A+P2Vnyyt2cwC4s04rHZdi8Wg8e9zx+IcUEbn3
+	rL2P2hPzDyOPWTWsDgwLO8BU/Ux4/dRlwL++ua8+srkSf5fqwOPiCkJSnPYXv317z9IDLB
+	97C4tsG3DvOAKP812A0E6c5J4DoFOPc=
 Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
  [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-167-aCoOmdD8NW2y9aKHOrgGsQ-1; Mon, 26 Feb 2024 05:48:27 -0500
-X-MC-Unique: aCoOmdD8NW2y9aKHOrgGsQ-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a3f84b660b8so192373266b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:48:27 -0800 (PST)
+ us-mta-594-3NwQjjPlP2iRQedq1xuajA-1; Mon, 26 Feb 2024 05:48:41 -0500
+X-MC-Unique: 3NwQjjPlP2iRQedq1xuajA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a3f84b660b8so192387366b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:48:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708944506; x=1709549306;
+        d=1e100.net; s=20230601; t=1708944520; x=1709549320;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3WWbzeMEGRxSialS8tcKozQ9wwd4hRgUVyZjvYbLpxY=;
-        b=UylV3eqw/xNU6cNOji+vPfM/WAstsdTEQglVCHlHgSAVOhfRvuVHgotde9vlX+vC4V
-         ZtcCc4WAXXk8Mf4QFJ64oq4/Cs7Snkmxntrz7ll/MRmxqLibcE4MNATiJapsDyJN88VA
-         eSbg3znGhKL7R8IbozsBshF4FjBDz8u8+qitpqRNTRU5Ithgkcy3hM9nUwHGfDQERVJI
-         cF06QnNUFOtLOm/mSGDa1MBgt2zwp5xYeaAVYlZW8P3EwFVJ2sz3r7wyRFxXFJ7UPjgl
-         1ePkIKEpucljqigL+JbvCcX0JUPHvNQxCF4n0Dl9mqcupOzRDM6uo4vP+YXt6IkkG2Rg
-         2I1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX3iGCP3AHgZL5Fa7FeK7zynpSMubLS4T5zIhPnzUazIZjxHEJ0vTgK47UNsVezP+K5Kcjerj3ZQi0OsXiYSHAwAIHqmeDjFlnIu7mB
-X-Gm-Message-State: AOJu0YyZ9I4Kt2OjyN7XoaOVhsKNjItfDzAUjqh3tiXDi57+C7aRMQOJ
-	lsQlGYIadoTzk8DtVZKFAg+G2XNwZQY5Ofc1CYIJg9S+h7YcHtjd8r+/vpGBY/UIda9bUcrunVO
-	XlvDh2jdl4VD01a8Z6BWNF/3vGGjibZHGzX/bdiI36iq/5y7w2ku8p3kYdR2M/Q==
-X-Received: by 2002:a17:906:1745:b0:a3e:7eb1:4bf6 with SMTP id d5-20020a170906174500b00a3e7eb14bf6mr4954345eje.2.1708944506488;
-        Mon, 26 Feb 2024 02:48:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF/DbS/FCtwKr1Rp5bCbvcrf2BitGmFkRtx+KUkSgHkve9ZbfaEcy17sRDczqZ/+/ba7QExmA==
-X-Received: by 2002:a17:906:1745:b0:a3e:7eb1:4bf6 with SMTP id d5-20020a170906174500b00a3e7eb14bf6mr4954332eje.2.1708944506154;
-        Mon, 26 Feb 2024 02:48:26 -0800 (PST)
+        bh=5OE8GoZ9j6WhBuZWvbJNk/RKp/M9fLXpjDr094aLbX0=;
+        b=Y68ue7L9rvsc8e2mVmpKdhJ7vnJu3g/kD4f+qD5AhdAA3pKvx9gsHlxeYPQLgWvqDt
+         2RRBQXHdH7KRzRZWALN7O9vbgJhEQXeL01yvJYx2knZ3+Jb4Xx5r4H5l+QPKutnOlBul
+         YpClua4q6kcnMvJC4xXd0a+7e9u3anHbepzcox0bpS0DU4raThTnENj4Y47HN/ossMiA
+         9eUMLPqNqv2bAtEmH4gRX6tnVl4rLWyOhx5rP5qVlDbtKVAkLrFD0TFYf9z+Fi97Kycv
+         yr5cMU4aCpor4gQ5AYjk2sl54h5sHW/V7iUquVhB3b7d2CvXSgFnSFDb0wBFGxRTkOKF
+         qzPw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9Z2HvjcQn7ey1L7IIqpazLUKz658hGZ2pGqw4Pg+BVgT4cp3IWBKN0WuM1ia11Q/scw0IEX0aiwjSmmq3YDVBNQP/yfCJzOx3AVC4
+X-Gm-Message-State: AOJu0Yz/btVvS1WqxQpXIpruZkThDR3xcBmDYV19ZQg4eNF/aGpvWmCm
+	GuCal9dp7l1uHlEVlwMj33FsvnmpT/NmT9BDlyiFSo5vdURUC++a3lcbjgMrHSf5ylI4MIWuPqb
+	lehJ/567/4mDBWvgFQ9tmydDJ8yKToVXCkeOfqJwEpHtDTEH6SgDAtylqRUHuDg==
+X-Received: by 2002:a17:906:5609:b0:a43:7df:1ad0 with SMTP id f9-20020a170906560900b00a4307df1ad0mr2785212ejq.10.1708944520270;
+        Mon, 26 Feb 2024 02:48:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFG00i0E8QDj4z2oVxDIc+1nq6MzBGh9+dsfWWEcglt6+KLB0qC1ou2UUdnvPuYHPSpzRDLnw==
+X-Received: by 2002:a17:906:5609:b0:a43:7df:1ad0 with SMTP id f9-20020a170906560900b00a4307df1ad0mr2785200ejq.10.1708944520040;
+        Mon, 26 Feb 2024 02:48:40 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id rf14-20020a1709076a0e00b00a4339b8b1bbsm1143238ejc.212.2024.02.26.02.48.25
+        by smtp.gmail.com with ESMTPSA id rf14-20020a1709076a0e00b00a4339b8b1bbsm1143238ejc.212.2024.02.26.02.48.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 02:48:25 -0800 (PST)
-Message-ID: <1044283e-5059-421b-810b-f5f6938937cc@redhat.com>
-Date: Mon, 26 Feb 2024 11:48:24 +0100
+        Mon, 26 Feb 2024 02:48:39 -0800 (PST)
+Message-ID: <182c1e88-0bc2-48a8-89d8-5b0e4b68c6b9@redhat.com>
+Date: Mon, 26 Feb 2024 11:48:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,27 +67,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: media: atomisp: Fix various formatting issues
- and remove unneccesary braces
+Subject: Re: [PATCH] staging: media: atomisp: Fix formatting issues and minor
+ code issue
 Content-Language: en-US
 To: Jonathan Bergh <bergh.jonathan@gmail.com>
 Cc: mchehab@kernel.org, linux-media@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20240225120350.31226-1-bergh.jonathan@gmail.com>
+References: <20240225155359.41435-1-bergh.jonathan@gmail.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240225120350.31226-1-bergh.jonathan@gmail.com>
+In-Reply-To: <20240225155359.41435-1-bergh.jonathan@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Jonathan,
 
-On 2/25/24 13:03, Jonathan Bergh wrote:
-> This patch fixes the following formatting issues:
->  * Fix various misaligned * and */ in multiline block comments
->  * Remove unnecessary braces from single line conditional statements
->  * Remove repeated word "from" from comment
+On 2/25/24 16:53, Jonathan Bergh wrote:
+> This patch fixes the following code style and formatting issues:
+>  * Ensure multiline block comments are correctly formatted
+>  * Remove extra braces not required for single line conditional statements
 > 
 > Signed-off-by: Jonathan Bergh <bergh.jonathan@gmail.com>
+
 
 Thanks, patch looks good to me:
 
@@ -99,56 +99,61 @@ Regards,
 
 Hans
 
+
+
+
 > ---
->  drivers/staging/media/atomisp/pci/atomisp_cmd.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>  drivers/staging/media/atomisp/pci/atomisp_drvfs.c         | 2 +-
+>  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 7 +++----
+>  drivers/staging/media/atomisp/pci/atomisp_subdev.c        | 3 ++-
+>  3 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_cmd.c b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-> index d0db2efe0045..5fa9918c8e1e 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
-> @@ -65,7 +65,8 @@
->   * At 15fps this means 133ms. We set the timeout a bit longer.
->   * Each flash driver is supposed to set its own timeout, but
->   * just in case someone else changed the timeout, we set it
-> - * here to make sure we don't damage the flash hardware. */
-> + * here to make sure we don't damage the flash hardware.
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+> index 1df534bf54d3..8ef25d2f8b87 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
+> @@ -34,7 +34,7 @@
+>   *        bit 0: binary list
+>   *        bit 1: running binary
+>   *        bit 2: memory statistic
+> -*/
 > + */
->  #define FLASH_TIMEOUT 800 /* ms */
->  
->  union host {
-> @@ -1261,11 +1262,10 @@ int atomisp_gdc_cac(struct atomisp_sub_device *asd, int flag,
->  	}
->  
->  	asd->params.gdc_cac_en = !!*value;
-> -	if (asd->params.gdc_cac_en) {
-> +	if (asd->params.gdc_cac_en)
->  		asd->params.config.morph_table = asd->params.css_param.morph_table;
+>  struct _iunit_debug {
+>  	struct device_driver	*drv;
+>  	struct atomisp_device	*isp;
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> index 139ad7ad1dcf..804ffff245f3 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> @@ -1416,13 +1416,12 @@ static int gmin_get_config_var(struct device *maindev,
+>  	if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE))
+>  		status = efi.get_variable(var16, &GMIN_CFG_VAR_EFI_GUID, NULL,
+>  					  (unsigned long *)out_len, out);
+> -	if (status == EFI_SUCCESS) {
+> +	if (status == EFI_SUCCESS)
+>  		dev_info(maindev, "found EFI entry for '%s'\n", var8);
+> -	} else if (is_gmin) {
+> +	else if (is_gmin)
+>  		dev_info(maindev, "Failed to find EFI gmin variable %s\n", var8);
 > -	} else {
 > +	else
->  		asd->params.config.morph_table = NULL;
+>  		dev_info(maindev, "Failed to find EFI variable %s\n", var8);
 > -	}
->  	asd->params.css_update_params_needed = true;
->  	atomisp_update_capture_mode(asd);
->  	return 0;
-> @@ -3035,8 +3035,8 @@ void atomisp_handle_parameter_and_buffer(struct atomisp_video_pipe *pipe)
+>  
+>  	return ret;
 >  }
->  
->  /*
-> -* Function to configure ISP parameters
-> -*/
-> + * Function to configure ISP parameters
-> + */
->  int atomisp_set_parameters(struct video_device *vdev,
->  			   struct atomisp_parameters *arg)
->  {
-> @@ -3367,7 +3367,7 @@ int atomisp_fixed_pattern(struct atomisp_sub_device *asd, int flag,
->  		return 0;
->  	}
->  
-> -	/* Add function to get black from from sensor with shutter off */
-> +	/* Add function to get black from sensor with shutter off */
->  	return 0;
->  }
->  
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_subdev.c b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
+> index a87fc74159e2..f8efaef2c055 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_subdev.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
+> @@ -394,7 +394,8 @@ int atomisp_subdev_set_selection(struct v4l2_subdev *sd,
+>  			 * (of the desired captured image before
+>  			 * scaling, or 1 / 6 of what we get from the
+>  			 * sensor) in both width and height. Remove
+> -			 * it. */
+> +			 * it.
+> +			 */
+>  			crop[pad]->width = roundup(crop[pad]->width * 5 / 6,
+>  						   ATOM_ISP_STEP_WIDTH);
+>  			crop[pad]->height = roundup(crop[pad]->height * 5 / 6,
 
