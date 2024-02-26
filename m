@@ -1,132 +1,119 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC7712DDAB
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 18:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AC212C522;
+	Mon, 26 Feb 2024 18:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708973018; cv=none; b=WjYiJKR2LQ+KeXbizS6E0RbXodoXr3x+AtMJTbDx9LeONuyLBs7b92VogNhN6i3kFH2b8J4D6/8y0KD1I2iyJalmAP84c1CEOEj2gVyyJ7IfGGMqcUA9rTlSCwSnPKvjMtCTECAeUdyyLCJO9ImXAX+ttkN0QFI2JIqA6LfQjrw=
+	t=1708973099; cv=none; b=ZUFwMSohNnbf2uqMdDxI0JcKubWCTgDQeruNtS6Pne47J/jkgQfvOmqTFJW9r5fog2rpQSku4uzpiNQcpZCeWyX3uamWklQUL2oV/tFCDaqaep/CVghgoncspbwoBPfimctbHbYIw2PC21nQzoWUZQ9fxR/c4OtBPZ7p6+NsXAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708973018; c=relaxed/simple;
-	bh=J6isOQHBwpgJQxuhK194OHKrDkPAeRMvr01+zxAUxJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=APNgW14wjOLdCjAAYKnTubUGZQDOowSmdHGwxK10Mm2wdzRjJkbnouNfu5KQgDFyWD3EQE4NiwhO+LU1P32Rvsnio/YjV1ZPaWuLz91A30H3NVUPTJLqnsWr8Uk9S5Qvxu3HSLfQ8B1aPznHXI1p2y2ymxoGFFwS3lxWWysd94w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mIrt10no; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708973099; c=relaxed/simple;
+	bh=GS9gp4VWJdv3Hua02gaR8hLCNcDTZXmN4IufTEOI7P8=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=qGJf/I8eqF7bRkbJBXplx/MLUw26VCExVoRmG/EAte/8tizvlezT8DE6546VPXeQb93qk3hOtLXhVsr8rpxbS5gsfOkHOtbecGT1fBFXa+gZ8/sW1PuIR98ulHxqd00pA2gLfpfeW1oxfnB/k0ZX3+CiJYh+nT5EU5baFOW+1rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NIaQONGi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s4JGeO0/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIrt10no"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6e4a0e80d14so769694a34.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:43:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708973016; x=1709577816; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DAkbitPXYXtd7UV/o6SYG/LfxMkpu6ctTHaHbiVeocc=;
-        b=mIrt10nodhdknewFcy4MWOo3lZbpCdw0zuE+YhClMQhktgslRcxxJ2zvOGqF7tUx9m
-         0fxuYeHMxHlsgFgeoyevIgckKXNOOAqTtxZ9doIvF8nQCTrFCJWnw4/2nsxYNel+9vTJ
-         +O5fnprmSynn4tkooKzCHbawnWeSfBt5C6SAUGS4YmJgoSds9XdoauDQcKT530qvgrBM
-         nelF6j+dI5BuhwTq4Kgx42EmegYJW6hnIHJ5jyS1OqiC+xsyg/bjzZdfvp98pzDe+b6x
-         feKBbJlCf+Vt3TrFuS+AKBa+sKRuD01TYoNcscXt5owq6U9l/yIzRuwsgJyr+UuM88RP
-         0AiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708973016; x=1709577816;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DAkbitPXYXtd7UV/o6SYG/LfxMkpu6ctTHaHbiVeocc=;
-        b=aIA5DWmABjlKX2Kuv3Usd84HVEmrrM/nFb4oAqR9epPPs240LogrXkhxWg+GJYBFww
-         z8yELHahbDSTIdq9dOKhc7Kb8h0oiE/Mh5Cw7xbzwa+/c2l11uC2Bpd5w/Ql8LMoWGdF
-         SjkUAGreUrmrypYfbGlqe0yiFWct02i7D9lG/9qBLNuD0082masY2TZqBD6Ed0BbrK/3
-         KjuJDFzZPZgwXoggZKCESK2WXxR0aIbun7UcUUNy7/A+swcsN38qpo70NaAGe4DOo6lx
-         55rz5lq5w5V3hDePKgzJcoO3FQ5Vw1L+Xh/Z6hnFyG0+WSXj9bTOUsOgzXojRB8QUGzx
-         sIMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJA1Gx7HswLiX3h1g9upBzeVqcOMsxAskaPYfBFL7AYFeuDy/LQz+CJ+epHR3i6/rEvLgJKb+4BSxIFUe7St+fvkgharbtHGYFm1Lc
-X-Gm-Message-State: AOJu0YwSWSq5a8OENg6viTLXIBKvuX7OzoqJKjfcaaJ68OTavvrMPvJD
-	ccBqWLTx0YXU0Ubl9ZBma2l4hshN/wc4rpgeqU7FZrm5nklhHVhB
-X-Google-Smtp-Source: AGHT+IHJFjHVrXwCb+MKLtrxz4B3i7S6NFPxkP3MbyyfUUwlOxB03i2Y1kUIZWJF/NjtbadQv25Y/g==
-X-Received: by 2002:a05:6358:5e8b:b0:176:40d5:2bd5 with SMTP id z11-20020a0563585e8b00b0017640d52bd5mr11919424rwn.6.1708973015596;
-        Mon, 26 Feb 2024 10:43:35 -0800 (PST)
-Received: from google.com ([2620:0:1000:8411:4943:f730:fe3c:820c])
-        by smtp.gmail.com with ESMTPSA id r32-20020a632060000000b005d30550f954sm4277845pgm.31.2024.02.26.10.43.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 10:43:34 -0800 (PST)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date: Mon, 26 Feb 2024 10:43:32 -0800
-From: Minchan Kim <minchan@kernel.org>
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, damon@lists.linux.dev, sj@kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>, Michal Hocko <mhocko@suse.com>,
-	Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH v2] mm: madvise: pageout: ignore references rather than
- clearing young
-Message-ID: <Zdzb1LYhVO8byNQp@google.com>
-References: <20240226005739.24350-1-21cnbao@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NIaQONGi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s4JGeO0/"
+Date: Mon, 26 Feb 2024 18:44:55 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708973095;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=enCiCbZJXdvA+exzx6jm5HR+LaOpH1BSeM0RAR+839A=;
+	b=NIaQONGiZrV6tvOmXJAcajmiD2Z8bk+YdO5qEII9+vm0+SI9yiDQbB/FltbsHEyw281RaL
+	0hw6HNdJtI60EAkJ02yYJOhuVBdTf1KkV6CiKr2zRynDFlijK9EMR9vx5mDAH839H9aaBs
+	HHU59FHq0FenOWZbwFS1XPMWIB58yPytfivbkIF2NBhwo5P1aQNmNagP0DaiwenYanepTi
+	iDClAVFRdHXYFPuOBT4l3uFQ4oEyQZKwgVuAvNv5JX43NHwmKoNi4HImTj5L17SYoezPSf
+	Ctlr99nPeZz21cBbzKNz27OAApxEDhGOl/MCCWdnHmXzHIW81fb5tLdGnuPJww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708973095;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=enCiCbZJXdvA+exzx6jm5HR+LaOpH1BSeM0RAR+839A=;
+	b=s4JGeO0/CC6oNTJCYW5QKUjHgcyV4UR/caPpfsWxgLaM4C6ENE/MOaFnhbeWtBi0D6asFf
+	bjNhsAMyQ3Ej3XDQ==
+From: "tip-bot2 for Paolo Bonzini" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/cpu: Allow reducing x86_phys_bits during
+ early_identify_cpu()
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, stable@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226005739.24350-1-21cnbao@gmail.com>
+Message-ID: <170897309511.398.3611355957607833957.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 26, 2024 at 01:57:39PM +1300, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
-> 
-> While doing MADV_PAGEOUT, the current code will clear PTE young
-> so that vmscan won't read young flags to allow the reclamation
-> of madvised folios to go ahead.
-> It seems we can do it by directly ignoring references, thus we
-> can remove tlb flush in madvise and rmap overhead in vmscan.
-> 
-> Regarding the side effect, in the original code, if a parallel
-> thread runs side by side to access the madvised memory with the
-> thread doing madvise, folios will get a chance to be re-activated
-> by vmscan (though the time gap is actually quite small since
-> checking PTEs is done immediately after clearing PTEs young). But
-> with this patch, they will still be reclaimed. But this behaviour
-> doing PAGEOUT and doing access at the same time is quite silly
-> like DoS. So probably, we don't need to care. Or ignoring the
-> new access during the quite small time gap is even better.
-> 
-> For DAMON's DAMOS_PAGEOUT based on physical address region, we
-> still keep its behaviour as is since a physical address might
-> be mapped by multiple processes. MADV_PAGEOUT based on virtual
-> address is actually much more aggressive on reclamation. To
-> untouch paddr's DAMOS_PAGEOUT, we simply pass ignore_references
-> as false in reclaim_pages().
-> 
-> A microbench as below has shown 6% decrement on the latency of
-> MADV_PAGEOUT,
-> 
->  #define PGSIZE 4096
->  main()
->  {
->  	int i;
->  #define SIZE 512*1024*1024
->  	volatile long *p = mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
->  			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-> 
->  	for (i = 0; i < SIZE/sizeof(long); i += PGSIZE / sizeof(long))
->  		p[i] =  0x11;
-> 
->  	madvise(p, SIZE, MADV_PAGEOUT);
->  }
-> 
-> w/o patch                    w/ patch
-> root@10:~# time ./a.out      root@10:~# time ./a.out
-> real	0m49.634s            real   0m46.334s
-> user	0m0.637s             user   0m0.648s
-> sys	0m47.434s            sys    0m44.265s
-> 
-> Cc: SeongJae Park <sj@kernel.org>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+The following commit has been merged into the x86/urgent branch of tip:
 
-Acked-by: Minchan Kim <minchan@kernel.org>
+Commit-ID:     9a458198eba98b7207669a166e64d04b04cb651b
+Gitweb:        https://git.kernel.org/tip/9a458198eba98b7207669a166e64d04b04cb651b
+Author:        Paolo Bonzini <pbonzini@redhat.com>
+AuthorDate:    Thu, 01 Feb 2024 00:09:01 +01:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Mon, 26 Feb 2024 08:16:15 -08:00
+
+x86/cpu: Allow reducing x86_phys_bits during early_identify_cpu()
+
+In commit fbf6449f84bf ("x86/sev-es: Set x86_virt_bits to the correct
+value straight away, instead of a two-phase approach"), the initialization
+of c->x86_phys_bits was moved after this_cpu->c_early_init(c).  This is
+incorrect because early_init_amd() expected to be able to reduce the
+value according to the contents of CPUID leaf 0x8000001f.
+
+Fortunately, the bug was negated by init_amd()'s call to early_init_amd(),
+which does reduce x86_phys_bits in the end.  However, this is very
+late in the boot process and, most notably, the wrong value is used for
+x86_phys_bits when setting up MTRRs.
+
+To fix this, call get_cpu_address_sizes() as soon as X86_FEATURE_CPUID is
+set/cleared, and c->extended_cpuid_level is retrieved.
+
+Fixes: fbf6449f84bf ("x86/sev-es: Set x86_virt_bits to the correct value straight away, instead of a two-phase approach")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Cc:stable@vger.kernel.org
+Link: https://lore.kernel.org/all/20240131230902.1867092-2-pbonzini%40redhat.com
+---
+ arch/x86/kernel/cpu/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 0b97bcd..fbc4e60 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1589,6 +1589,7 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ 		get_cpu_vendor(c);
+ 		get_cpu_cap(c);
+ 		setup_force_cpu_cap(X86_FEATURE_CPUID);
++		get_cpu_address_sizes(c);
+ 		cpu_parse_early_param();
+ 
+ 		if (this_cpu->c_early_init)
+@@ -1601,10 +1602,9 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ 			this_cpu->c_bsp_init(c);
+ 	} else {
+ 		setup_clear_cpu_cap(X86_FEATURE_CPUID);
++		get_cpu_address_sizes(c);
+ 	}
+ 
+-	get_cpu_address_sizes(c);
+-
+ 	setup_force_cpu_cap(X86_FEATURE_ALWAYS);
+ 
+ 	cpu_set_bug_bits(c);
