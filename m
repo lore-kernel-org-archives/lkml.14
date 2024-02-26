@@ -1,79 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309971350E7;
-	Mon, 26 Feb 2024 14:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2FF135419;
+	Mon, 26 Feb 2024 14:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708959320; cv=none; b=UqVX6CIwDFPUBcvgt5Odt9hAA0ioUFRSMH0+Q6C1HtyFXE0a228g5AQ/3ODCIhgdWMHon5jrOmip6RejZ/3QwzJo3iRbWEb8SeA1lyCMuR9ezBCASESyLK76fbSCSneiiyCy1YEXT9yKCE/SeEe1eowpXOvMd3oPh/oErNXlXAY=
+	t=1708959333; cv=none; b=QbPZ9XYkbxWsQhVed7Z9qCcBJp9lPBvmDUA8asnxibuS9BUq8DMXQ5z60nyxoMqMkJcOUUkca/0SgKYb6fBMNtuBD2IhydJWKeo++ECFWbb9/4+ehvtJJwLi8G5B5TPYLDLFDZNx9f2b26X4m8ijIepkG2XfJ+DJM17WKH1zQqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708959320; c=relaxed/simple;
-	bh=SHDBTf5C5XMzZppp5DC1oDDIjabtSADDcRTNwJ3pHAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ac911gAvcCT4103X4swOdA9T5/ksBH6TPPs4d5sSFo9+VPKLiPUsF+OhgcDvkXtIS9SV0orZH0ertTC6rg9wUy3KTOrLM/SMmbuKdiz49PDkNslyCGxwcd/Uf9EThFpiSIbqk3AfwXnlxp7Bb3XJLW5mXO6bd9ys3LZwoRVp3QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WadZePrh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WadZePrh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A1FAC433F1;
-	Mon, 26 Feb 2024 14:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708959319;
-	bh=SHDBTf5C5XMzZppp5DC1oDDIjabtSADDcRTNwJ3pHAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WadZePrhydomBWSz8uFS7lO8azeX2/uaMhOWABcgLXAagrkhRukFAJ1Ru4x9gfGdk
-	 l0AvNL9nmp0mxTlE1BrXGA+q17oe3G6z+J67aUVfMcvdRCB24jq2audnmjgNyLqAYO
-	 JuzHcuzdnFaiYcZkZ6AekL7P84Omu4apAE0t1fx9lhzzOlTNkj0uhDXzTfaCuSEguX
-	 EB+uRGDUiFaxUN4W8b/PZVlhMCnOZo83OplURxF1TEIbkfNdXvB1VswNgh0BrxF8cp
-	 HrgJGL0MLeWeSYFT5AYiOFLTpLFxAZ+s/xSY3tOgWI70lrMNYatuSv0YaLvwfpxIOS
-	 UhzuBVYWHV7kA==
-Date: Mon, 26 Feb 2024 08:55:17 -0600
-From: Rob Herring <robh@kernel.org>
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 06/16] dt-bindings: lcdif: Do not require
- power-domains for i.MX6ULL
-Message-ID: <170895931635.643835.3601839818121921964.robh@kernel.org>
-References: <20240224213240.1854709-1-sre@kernel.org>
- <20240224213240.1854709-7-sre@kernel.org>
+	s=arc-20240116; t=1708959333; c=relaxed/simple;
+	bh=Ra5nRQiwmBuhhUWhWiSbDuLHQ11UKnwbPZndQYrHsgk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j2bWaEw7iv/5Ie1q8NlJszmmLnYcsp9RvG0gFgD6z8qWi6w7BXGgAFcqixhywaqhWklxuUWZCC0yKAGRLruFT78EhQh6t9YyD+EHcqySBopdmeHVIPufjte8BwMR4dJrZ0Exn0XQP3ZvGBGb27gY5NBgqLnZ2KFsCHNXE8fSGu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
+From: Daniil Dulov <d.dulov@aladdin.ru>
+To: Hans de Goede <hdegoede@redhat.com>
+CC: Daniil Dulov <d.dulov@aladdin.ru>, Mark Gross <mgross@linux.intel.com>,
+	Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>,
+	Vadim Pasternak <vadimp@nvidia.com>, <platform-driver-x86@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH] platform/mellanox: mlxreg-hotplug: Check pointer for NULL before dereferencing it
+Date: Mon, 26 Feb 2024 17:54:42 +0300
+Message-ID: <20240226145442.3468-1-d.dulov@aladdin.ru>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240224213240.1854709-7-sre@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EXCH-2016-01.aladdin.ru (192.168.1.101) To
+ EXCH-2016-01.aladdin.ru (192.168.1.101)
 
+mlxreg_hotplug_work_helper() implies that item can be NULL. There is a
+sanity check that checks item for NULL and then dereferences it.
 
-On Sat, 24 Feb 2024 22:29:38 +0100, Sebastian Reichel wrote:
-> i.MX6UL(L) uses "fsl,imx6sx-lcdif" as fallback compatible string,
-> but has only very lightweight DISPLAY power domain. Its DISPLAY
-> power domain is not supported by the binding / Linux kernel at
-> the moment. Since the current setup is working, let's remove the
-> power-domain from being required for that platform to fix the warning
-> printed by CHECK_DTBS=y.
-> 
-> Fixes: f62678a77d58 ("dt-bindings: mxsfb: Document i.MX8M/i.MX6SX/i.MX6SL power-domains property")
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> ---
->  Documentation/devicetree/bindings/display/fsl,lcdif.yaml | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
+Even though, the comment before sanity check says that it can only happen
+if some piece of hardware is broken, but in this case it will lead to
+NULL-pointer dereference before the function is even called,
+so let's check it before dereferencing.
 
-Applied, thanks!
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: c6acad68eb2d ("platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface")
+Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
+---
+ drivers/platform/mellanox/mlxreg-hotplug.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
+
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index 5c022b258f91..524121b9f070 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -348,20 +348,6 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 	u32 regval, bit;
+ 	int ret;
+ 
+-	/*
+-	 * Validate if item related to received signal type is valid.
+-	 * It should never happen, excepted the situation when some
+-	 * piece of hardware is broken. In such situation just produce
+-	 * error message and return. Caller must continue to handle the
+-	 * signals from other devices if any.
+-	 */
+-	if (unlikely(!item)) {
+-		dev_err(priv->dev, "False signal: at offset:mask 0x%02x:0x%02x.\n",
+-			item->reg, item->mask);
+-
+-		return;
+-	}
+-
+ 	/* Mask event. */
+ 	ret = regmap_write(priv->regmap, item->reg + MLXREG_HOTPLUG_MASK_OFF,
+ 			   0);
+@@ -556,7 +542,7 @@ static void mlxreg_hotplug_work_handler(struct work_struct *work)
+ 
+ 	/* Handle topology and health configuration changes. */
+ 	for (i = 0; i < pdata->counter; i++, item++) {
+-		if (aggr_asserted & item->aggr_mask) {
++		if (item && (aggr_asserted & item->aggr_mask)) {
+ 			if (item->health)
+ 				mlxreg_hotplug_health_work_helper(priv, item);
+ 			else
+-- 
+2.25.1
 
