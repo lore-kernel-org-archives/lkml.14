@@ -1,194 +1,205 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6592134722
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 22:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708987138; cv=none; b=rT9eIlfWC8nBHcM07uOIX4XUz5hErD7BThqwcHoHUaAYiRAfsSX0NvoM+/HmFC6hsyx9wtrtZMOlovQM7zwoCokW89+WF0lMPWprgH7xue2o1LRJxTd6ClLAvc3OAG90BqbMi6XSOvyqrg8kGBSJ/C7E/DTISwftiMY4jdkoU2g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708987138; c=relaxed/simple;
-	bh=Kna95S8a5X5qYHXQaf0hY660SinfhcPH/VKsumHlEU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uTc33Uoa5b6KtFjm1M1mpZxi0D/iMtRGsqJkinSwgd/9Iwno9krjJKbo/trywxHpKbbX+MUC+BJ/s449jcfKhbsg5njmeOFbf1Qnm9zhWPINgIGeW87KWT/kv764SrM5X9Zl7hgWQge0chi601aHcz9NBRS8U3ErcmOkmusF/AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZSx7ci83; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F7F1350E4;
+	Mon, 26 Feb 2024 22:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708987143; cv=fail; b=JA2esL4z6VG65S/+it3cWDz051R60vjanr7MCdz7ST4s/tf6sqXFudbUnDut2vFz3Cn9qEsHLsCx0PLGTOHtwN58/ygJDenPLwCy9UJOHZdKOmShGRhPt7q/uNoqeB+voe8X84rFYryfj5IVJoVHsiiAZZ6X3zwrfiDO1X/2YSo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708987143; c=relaxed/simple;
+	bh=PGEeG+NpdcUI3yXA0bZoSQlmqz19fYOONAsK1YxpmmQ=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=M01/VraKUMh+HkMyLebUzXBhh3rwHWENWlbg4yx7gRKpU+YelkuR3w4n45VSBhVabdICifWtLNgzLfaRoTbso3RQDZ/UoljzUGMd9DcydUTlq7QESfqRkaNHaklhk5bu+TKcw4LIGy/pJ5zcTO6nrV01c5eLCHogw3K6JaaFIBc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jgiFomFs; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZSx7ci83"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6ddca59e336so2047810a34.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 14:38:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708987136; x=1709591936; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a91PQgJAkXhE3tI3QtihYX3shOIlngJRqPpCQigQ7j0=;
-        b=ZSx7ci83tVHTXrit7Y0LLV7NSacAFI2+2cjqLXzM4mxHP8+EOCbs2O9Fo44VMqI5UV
-         DmQuiXrAWv1Y3zbseaaTEkYWEF/ZX/DyDS/yVjLBTH3MW3v4rbsSs6i0nl5SXXOmVKYO
-         2gpYB7w63mkGnUqRDJ87D+7EuWW4nCTJkqGh4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708987136; x=1709591936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a91PQgJAkXhE3tI3QtihYX3shOIlngJRqPpCQigQ7j0=;
-        b=tBoAoqnNV/rEif0sDpqLE+h8oVNR37KAR1JgPDnobCno5yOjvQWYxoNmoNjWJjB603
-         CQXtfOap8WfIK90ZJr6mPEJmW08KBfAcwlqP3xV2rGsXEpgfX5qEyoEk0NRGbRaVnWGh
-         maNOG8lLu1uWwunbiuqeIMj38tzC5bPYv6Ovx0h4CQf764SzKOwDAQfAqEuvVs0XiyRE
-         D0dvCFCZ6IJKy82vDJD/YJ6vZBzekLRCiPj5v/Qntrm9Vr7FNzXjJWOo4mi2QFKBCRcP
-         7XnllIJsmgzrQJ0+xCUru4GkBAt73/bUp8IFSR85uVV8h4i6R3EWfq8WtCh2rjDzgTcv
-         V9bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUc/Eu/P0M7F6ppP9GuVRScTjZLGmiy2MNPyc+7qlKmN09ej4Cl7LG04rPLXfVE6l2jy3lsBkM0Uit+7ZAA1LZsZGpTB2Tvd47s13w
-X-Gm-Message-State: AOJu0YxU2ZiQtqW3EhKwyht0aCJD/TlAbPqiR9P2WlWvG8aQ74Uxywnv
-	asxC9BJxU3fIHvlYSjAQpoVWvV3bzTwf3hA+MUcNi1eV9/2S1W3IgYDtm4rE9aWK9hBjK9jj4Tq
-	0wSO5qY4g+KGt8HEpPara4YLCOY3Tc5udAgxb
-X-Google-Smtp-Source: AGHT+IEJSF064zLDcy7THqsCR1Gu3viyZcgQ3FkbswHkFN3DhjMF+9ef6R6pAXqmZFZ5eIfckZ51AgUo6HsG2mo3Z7U=
-X-Received: by 2002:a9d:7ccc:0:b0:6e4:779d:f8bc with SMTP id
- r12-20020a9d7ccc000000b006e4779df8bcmr3715976otn.19.1708987135817; Mon, 26
- Feb 2024 14:38:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jgiFomFs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708987142; x=1740523142;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=PGEeG+NpdcUI3yXA0bZoSQlmqz19fYOONAsK1YxpmmQ=;
+  b=jgiFomFs+c83I1mUvThUYuZLnIp9NxHZ1xrM/BhkVS3nNDBuXW4dvWfw
+   H4gSth5/qY6ofX1Uhkd5FbZ/M9VsYq3no2tDZjdsBSn35ZYp4jUqWVrLZ
+   roMO5yHnnue2IBpXLe8TdsvDcmTvgq2ou9VM3P/Ns2hHaJEUznLNvI+fK
+   y7I5VRlqnaOQ4DC/HyI9HuNz7gp7Vo7OUzCzmgXmtZJD4R+DNCUFSPlUL
+   IktQcGemRpCAbmXelVqga7aP18TO12WGpyvJi8FUer9LmG8oV+jh5/nAW
+   UHSr6dzAmXU/rgLxa8LelAO4UoNUMd1AY/0AgbG8GCaXhFpgUIBBiUijo
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3432701"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="3432701"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 14:39:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="11493756"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Feb 2024 14:39:01 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 26 Feb 2024 14:39:00 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 26 Feb 2024 14:39:00 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 26 Feb 2024 14:39:00 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TK6HNZsvYax+zFJIG+UFQfD0j6SGkKIqLJ2mINFYGNcxO9pqCQCO6WpqCjvHdpmHdaK1qMBt+bH8Jnb6XUzyOeAiOhWouj89vEi/rAYGcrRJ1ZBGxjImbYnyQBodfpry5l8lnhjnmepuw0C56GWRCeyV/PWVIuGHX58tDMh3R1DtE0nrp/55BRAlE5OLmQ69nJLqzHQCO4AX3TyNRsgVX5Am/bVvbjUmGgEbqi1EpAX7RE8kheEd6/VnnWYpMKhqajM/XiOr5LjCkhNT3HWg+oxlEWPshVisQBErMZkIPPYMJ02d4nqM+Lom4chqLYLPk7cOhhRwcLkDpzWXWsYmVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dnC6iHUOD58vjdcSCDSM3JbiCUN6BkY7TPrjSqvwQ6E=;
+ b=R/lVuPZEk3kkxftYZjK6wd9XZOJhLSiv6KPVF2ffOZfYueEDQ5sPsgnDV98gTL6CXnp9b1xr83yhHOSN1sIK2Mmo2N0N7KrVHEwyeuzwS9V5skUE5mMieX3+3fx/e7c8V2edVwf2uNrVBzpx+WrhLQkPwYCK7glaiUH8Vo/l+wRpyMZrGA3SiSNTIx2l5ZHMjjuGED8zsVXJRg1RqezIGQIVPqFi0fnuqLItsjVudMhUSnKrf2cR8Ub2CKQxpzhu5RC3lElzBaOeP2PYHtJlfOHhK+pluAAmQcRgwiA+LwKCJ0jaV08t7d8BykXOsV1oCQXNP0091bA9knaGarBrSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
+ by DS0PR11MB6373.namprd11.prod.outlook.com (2603:10b6:8:cb::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.22; Mon, 26 Feb
+ 2024 22:38:58 +0000
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92]) by BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92%4]) with mapi id 15.20.7339.024; Mon, 26 Feb 2024
+ 22:38:58 +0000
+Message-ID: <420b53a7-90fd-48fb-9f08-d28fc936e0f8@intel.com>
+Date: Tue, 27 Feb 2024 11:38:44 +1300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 10/15] x86/sgx: Add EPC reclamation in cgroup
+ try_charge()
+Content-Language: en-US
+To: Dave Hansen <dave.hansen@intel.com>, Haitao Huang
+	<haitao.huang@linux.intel.com>, "tj@kernel.org" <tj@kernel.org>,
+	"jarkko@kernel.org" <jarkko@kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>, "hpa@zytor.com"
+	<hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>,
+	"tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>, "mkoutny@suse.com"
+	<mkoutny@suse.com>, "Mehta, Sohil" <sohil.mehta@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>
+CC: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+	"seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com"
+	<anakrish@microsoft.com>, "Zhang, Bo" <zhanb@microsoft.com>,
+	"kristen@linux.intel.com" <kristen@linux.intel.com>, "yangjie@microsoft.com"
+	<yangjie@microsoft.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
+	"chrisyan@microsoft.com" <chrisyan@microsoft.com>
+References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
+ <20240205210638.157741-11-haitao.huang@linux.intel.com>
+ <c5d03171473821ebc9cb79e3dad4d1bf0074e674.camel@intel.com>
+ <op.2jjzaqdwwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <4db8493b-35a2-474f-997c-5e6ac1b8bd11@intel.com>
+ <op.2jkfeezjwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <c913193c0560c4372d2fdb31e9edb28bcb419f50.camel@intel.com>
+ <op.2jlti6g9wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <7b53e155-2622-4acb-b7c9-d22e623e4cb3@intel.com>
+ <op.2jqdjjd8wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <48faaea8b24f032baa6a858a2909a5b4ace769c6.camel@intel.com>
+ <op.2jrpgcufwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <010f5c8e-6e63-4b37-82d7-ba755f989755@intel.com>
+ <a2d633da-6ab8-49d0-bca5-1e9eb7c3fc9a@intel.com>
+From: "Huang, Kai" <kai.huang@intel.com>
+In-Reply-To: <a2d633da-6ab8-49d0-bca5-1e9eb7c3fc9a@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR03CA0283.namprd03.prod.outlook.com
+ (2603:10b6:303:b5::18) To BL1PR11MB5978.namprd11.prod.outlook.com
+ (2603:10b6:208:385::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223223958.3887423-1-hsinyi@chromium.org> <20240223223958.3887423-3-hsinyi@chromium.org>
- <CAD=FV=Xs4V7ei4NW0T0x0Bq6_dQF6sZKvFSy2WGQFQsHae=61Q@mail.gmail.com>
-In-Reply-To: <CAD=FV=Xs4V7ei4NW0T0x0Bq6_dQF6sZKvFSy2WGQFQsHae=61Q@mail.gmail.com>
-From: Hsin-Yi Wang <hsinyi@chromium.org>
-Date: Mon, 26 Feb 2024 14:38:30 -0800
-Message-ID: <CAJMQK-jKuA_2Y+rQ5q4MkbmkQFJh4+DC98GhExuVt39DTfBwsg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/panel: panel-edp: Match with panel hash for
- overridden modes
-To: Doug Anderson <dianders@chromium.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR11MB5978:EE_|DS0PR11MB6373:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9b8f212-dd9f-4e37-cbdd-08dc371bb86f
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5uFl1yy4x607kWrsiaGTORCEj8WUUQ9gZCO37b34vlPl/DvKywohS086X+XVKziakQq3tX+NyhAt7VgcDFP+5S7CoeLPIegopPHKYj7YhEqVIxOO4aY2HqLlYrLIXKFwGFKPl3MBoRAeYEEgGvR5iQam4/SZNwCXZV7Phm3EXFWZYxQiz8ZOnMhsmr/ZZ9Y/FEWre0gD+d4FmkLEEuDTpCbRmBWWGvZzqceZb6oeRsXN/GtQV6r5K3ele766VouLJQ+SQJopaJWgeOHFxZLvHDkFEurA9XZ4Sm6RQJfIYSh4VXnmYXboTqWuMHt2iNc2IputZ1HIG1Yn1nY1ueEb7WlsN5WGg0I5X318cGVjTe+ftHND4MLuEP85Puvs7QBtbMRNI7t1Rv5ubKoxxx5cCzgSk0QzDGbpUI1dRo4uoczxSNdX+bD4Mn4OF+rXgRID/cEaVuoVZlHyZGjpnOScH0WkF+PqkZWkkx9BtEke0l7c0bBbsW7Oeee3+47lkZGiGbOKy740s4jeJWoyTQggpfsVvRzI4XeLyxdav7zT9bI3tTCNA61vr5LAWmr2k8RYozFjAD/YmUlwNndFgjLFivkVWgqRnrW84pdpJw1mH7CnKQipo9bgkJHvdXW7ob43Dvmfr6IJ50MZyPdQ+gS0z840mwlq+j4dQJ6IdmGzmrVtm7zrvC3h4ErekcJIa+IGcApd2mAU0sRNRy0T6V+6xw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WFRiMnhkbk9CMVo4bS9JNGQwK2lodXFTaHVFOGdHYWovZEhGTitOeStzTXdE?=
+ =?utf-8?B?L1QzYkxNY2lEZnMyQmpNY3djcTE2amdrdnBaWVJYMHpKTVRkcGxXUm4vdmpx?=
+ =?utf-8?B?aWdTU3NFVmR2R1FReVlVUW44bUlnOXExZ1VWQWs3SXpDM05ZNzZ3bkRiY3lX?=
+ =?utf-8?B?Sk1QM2J4NGRZZFFPbzJsbVBkeTQ1bmQ2Zko4dXRhblRjVUE5Q01KUE43UzV1?=
+ =?utf-8?B?VCt1YUlpdVRBZ3BDeDJoZThaeFk0RUxDQW9DR0JtY3lmcGhyRFpTMjA0UENX?=
+ =?utf-8?B?QkN4dmdlV2c0VHBLeHVsWjJLditVbndvT1p5Z0p0YXZmWHlvWjBqMWU2MnFV?=
+ =?utf-8?B?b0FNanN2ejJzZXdUS2JINGc0QWlYLzFCcGZjM05tMlc0NnFZOXJ1SFNuVWNa?=
+ =?utf-8?B?UUJ6OXM0MnFDN2lFSjlodEcrVjgwaFlZdngyeWRyUEZrTXVmL1RzUGIrVm40?=
+ =?utf-8?B?M1NxaC96NS8vVDJsRXR2NlE3Q1dVUnBKM0lUeHpXa294S1pFWER4UXA0Y0Fj?=
+ =?utf-8?B?aGpzU2ZBZjg2TEo0MFlQRllVR2tscXNVSkgwRnJrdnh3WFlPcGdKVk1XZ09G?=
+ =?utf-8?B?a0Vkc2JBUU1HcSsrYUVEUkFja205bDRXR1BialF6Y212TVV6Y1FRajMvMnlm?=
+ =?utf-8?B?Smg4aytzVVNNV3poSnEzcS82UXcxU2Fnb0prK3BBVW1LWHd4S3MyTTkwRlFS?=
+ =?utf-8?B?QVlLWW9nN0dTbTVLZ2ZSV09qQ3VHZzMvQnhwc0dpWDk4eUd2UTAzZmI3WmE4?=
+ =?utf-8?B?UW9sWlVLTU41aGczVFo4dlppSDc2REwxQUhETVZrb2JpUU1GSHJ6dTVwSytx?=
+ =?utf-8?B?NGZEc0pkVCtmUEpwUFMzNzE2OXUwdHdYd1VTd2FiOUFlcURvSDJ0YWtMUXlM?=
+ =?utf-8?B?cnArb1FubEErcVY4bTFVRm9HWmJrSlI2VlNMTkJzdWgxZnJJVE1oaUFtNWlC?=
+ =?utf-8?B?UTcxQk9NcFROZG94di95ZzM5SDVjdUY5SjVrMUhhM3g0THpNd3VIV29McTI2?=
+ =?utf-8?B?RWxwK2psREg4QnU4WXlBT1RLc2NxOEFscUN0dzErQ0t0OW8yS0RGNFpSQkdz?=
+ =?utf-8?B?RDNVRVhrb1Y4YVlHTndJT1locDVPL2xFbzExZlhDdVU0aTZhVHhrS0JiZm1Q?=
+ =?utf-8?B?RXA1cXNDeEJyd0gzQk0rcWFjakxaOUpCanhBRVBIVW83dXNBcDhEdHltZVlj?=
+ =?utf-8?B?K2gzTUtQdGpuYUZKblNTbERITCtGSzMyTEdwbEhZT1k4Mjh6eUhRQmw5ZkIv?=
+ =?utf-8?B?eFd2REVlN3Uya2MzNmxVdzY0bUhxWDBla1RoSHJab3VFdG41SnFsTG1DZUNi?=
+ =?utf-8?B?UWJPT1BwOXFKczZXL2ladTZSbHA3QlZwNEM3Yi9iNjIrRG80cms4RTlCTnFs?=
+ =?utf-8?B?YVNvV3V2dXRoOXl1azNYR1ZFREQxOU1vN2puOVFRZWlGV0dRY1BORFQ5cEs5?=
+ =?utf-8?B?M1RvRlZ0VFJDNkFhN3MwNmdWRHUrNFV6bkxwZmpCRzMzQkVTalBHN1l2S0JE?=
+ =?utf-8?B?VEJlR1VyVlVBdFpDdUlrNDN4ajNIZWJVOUwrY3o4eDQ5TThyWk1qQWRoanhk?=
+ =?utf-8?B?ZVhDS0Y2VWJIT044aEpiaXBGZk4yVXR2RW1OdHc1Q2FiRHhBUWtSYkpBVGNy?=
+ =?utf-8?B?Ky9RTFZVVGFzdUE3UFBaU0hYM0UrZU5yNlFzYWI5TG5Rc3JZUTFES0pXUllj?=
+ =?utf-8?B?OXc2RThJUVdIbVNkaGdWTjdqZkJwK0ZlQlJiZUlEZ3hWQXRvVXU4Qk9pVkJ2?=
+ =?utf-8?B?a3dVQUhsYzJXY3N2NXcyTG4yWG1zK1VwUnJwMllnODdSSVg4dnNlVTQ4bXNa?=
+ =?utf-8?B?ZFpHQUtyd2Y4UzF4d1N2b3FZQlFGN29LdlJ0eEhJRHI5U1R3dGZlSFJKNCs2?=
+ =?utf-8?B?SGlhWXBmNUhEMWVQVm02dkN6dlVXRml5S01wOUZzV3FGTmVkbUFReVVGNkNM?=
+ =?utf-8?B?N3JTbzdjWk1oMGkyWHNPK1FnbUdTaGJmaFJxTTgrMEkyM3hERUZRdFhXaHBE?=
+ =?utf-8?B?L2tCamVSVWVMMmc1VVpwUCtzM0hqMXNIYUErYWV1dGUyQWMyMm10OEs1WmVB?=
+ =?utf-8?B?cUNCQWQ2M3BPTDUxWi9QQ0ZDL0dSOE04cVRNa3Y1MHM3SWY1RjBUbGU3Nmpa?=
+ =?utf-8?Q?SLore3OMv2Fn0qtDqEml0yM+v?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9b8f212-dd9f-4e37-cbdd-08dc371bb86f
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 22:38:57.9816
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pedJp9OPuyyusjGwhf1ZPZSfF226uI0wxGyftOtcxHqCmoCXeJDpoQpLuX3DPLfuluP/BxifimmFYMKWBvB5BA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6373
+X-OriginatorOrg: intel.com
 
-On Mon, Feb 26, 2024 at 2:29=E2=80=AFPM Doug Anderson <dianders@chromium.or=
-g> wrote:
->
-> Hi,
->
-> On Fri, Feb 23, 2024 at 2:40=E2=80=AFPM Hsin-Yi Wang <hsinyi@chromium.org=
-> wrote:
-> >
-> > It's found that some panels have variants that they share the same pane=
-l id
-> > although their EDID and names are different. One of the variants requir=
-es
-> > using overridden modes to resolve glitching issue as described in commi=
-t
-> > 70e0d5550f5c ("drm/panel-edp: Add auo_b116xa3_mode"). Other variants sh=
-ould
-> > use the modes parsed from EDID.
-> >
-> > For example, AUO 0x405c B116XAK01.0, it has at least 2 different varian=
-ts
-> > that EDID and panel name are different, but using the same panel id. On=
-e of
-> > the variants require using overridden mode. Same case for AUO 0x615c
-> > B116XAN06.1.
-> >
-> > Add such entries and use the hash of the EDID to match the panel needs =
-the
-> > overridden modes.
->
-> As pointed out in an offline discussion, it's possible that we might
-> want to "ignore" some of these bytes for the purpose of the CRC.
-> Specifically, we might want to ignore:
-> * byte 16 - Week of manufacture
-> * byte 17 - Year of manufacture
-> * byte 127 - Checksum
->
-> That way if a manufacturer actually is updating those numbers in
-> production we can still have one hash that captures all the panels. I
-> have no idea if manufacturers actually are, but IMO the hash of the
-> rest of the base block should be sufficient to differentiate between
-> different panels anyway. It would be easy to just zero out those 3
-> bytes before computing the CRC.
->
-> What do you think?
 
-Agreed that we can zero out these fields.
 
->
->
-> > @@ -758,13 +762,13 @@ static void panel_edp_parse_panel_timing_node(str=
-uct device *dev,
-> >                 dev_err(dev, "Reject override mode: No display_timing f=
-ound\n");
-> >  }
-> >
-> > -static const struct edp_panel_entry *find_edp_panel(u32 panel_id);
-> > +static const struct edp_panel_entry *find_edp_panel(u32 panel_id, u32 =
-panel_hash);
-> >
-> >  static int generic_edp_panel_probe(struct device *dev, struct panel_ed=
-p *panel)
-> >  {
-> >         struct panel_desc *desc;
-> >         void *base_block;
-> > -       u32 panel_id;
-> > +       u32 panel_id, panel_hash;
-> >         char vend[4];
-> >         u16 product_id;
-> >         u32 reliable_ms =3D 0;
-> > @@ -796,15 +800,17 @@ static int generic_edp_panel_probe(struct device =
-*dev, struct panel_edp *panel)
-> >         base_block =3D drm_edid_get_base_block(panel->ddc);
-> >         if (base_block) {
-> >                 panel_id =3D drm_edid_get_panel_id(base_block);
-> > +               panel_hash =3D crc32_le(~0, base_block, EDID_LENGTH) ^ =
-0xffffffff;
->
-> Any reason you need to XOR with 0xffffffff?
->
-To be consistent with the crc32[1] command. It's more convenient to be
-able to verify it with userspace tools.
+On 27/02/2024 11:31 am, Dave Hansen wrote:
+> On 2/26/24 14:24, Huang, Kai wrote:
+>> What is the downside of doing per-group reclaim when try_charge()
+>> succeeds for the enclave but failed to allocate EPC page?
+>>
+>> Could you give an complete answer why you choose to use global reclaim
+>> for the above case?
+> 
+> There are literally two different limits at play.  There's the limit
+> that the cgroup imposes and then the actual physical limit.
+> 
+> Hitting the cgroup limit induces cgroup reclaim.
+> 
+> Hitting the physical limit induces global reclaim.
+> 
+> Maybe I'm just being dense, but I fail to understand why you would want
+> to entangle those two different concepts more than absolutely necessary.
 
-[1] https://www.commandlinux.com/man-page/man1/crc32.1.html
-
->
-> > @@ -2077,13 +2098,32 @@ static const struct edp_panel_entry edp_panels[=
-] =3D {
-> >         { /* sentinal */ }
-> >  };
-> >
-> > -static const struct edp_panel_entry *find_edp_panel(u32 panel_id)
-> > +/*
-> > + * Similar to edp_panels, this table lists panel variants that require=
- using
-> > + * overridden modes but have the same panel id as one of the entries i=
-n edp_panels.
-> > + *
-> > + * Sort first by vendor, then by product ID.
->
-> Add ", then by hash" just in case we need it.
->
->
-> > +static const struct edp_panel_entry *find_edp_panel(u32 panel_id, u32 =
-panel_hash)
-> >  {
-> >         const struct edp_panel_entry *panel;
-> >
-> > -       if (!panel_id)
-> > +       if (!panel_id || !panel_hash)
-> >                 return NULL;
->
-> IMO just remove the check above. Not sure why it was there in the
-> first place. Maybe I had it from some older version of the code?
-> Callers shouldn't be calling us with a panel ID / hash of 0 anyway,
-> and if they do they'll go through the loop and return NULL anyway.
->
-
-Sure.
-
->
->
-> -Doug
+OK.  Yes I agree doing per-cgroup reclaim when hitting physical limit 
+would bring another layer of consideration of when to do global reclaim, 
+which is not necessary now.
