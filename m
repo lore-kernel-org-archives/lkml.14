@@ -1,89 +1,411 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8453139589;
-	Mon, 26 Feb 2024 16:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7771212B166;
+	Mon, 26 Feb 2024 16:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966475; cv=none; b=qxdkBPMlChTSeI5Gn/OmHpU5brb8x3tk1PKNZupMNXNBfWVQZahi+a1DdVYHLsNG8mx5i6rNCNUDLaW64afnJjexx3SGyofCwXAHmg7xig2aT/W0A1zJWkMaCYCCef3TUn6vxavKf23VXUpfzbheRrlqpkk9uu4FOinq76BQjiY=
+	t=1708966503; cv=none; b=SaBe/+Wid7itx5M1RO42JH1gZA7dVP7F3lNffJljw3ADiThEm1azGkVK3eOvxuuJdQI3Nxg9VzF+e+pKE5uvJ99rsaqP9Rg48KYRjSv/HZfsyVe+/3r9GJKxGVgtgGocfBDE/hliFXl1e15QGaSQpP7tLafA4/geOj+qt02naMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966475; c=relaxed/simple;
-	bh=KGjLGeRBLcDhrAjcwZ6uCmxmGzHwCCXg366IMJ3f9Hk=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=tJrurJdG//S6WqqO7Q6yHDUkyxidftGusbJbtszhndqEm75lAcI9ebgFjcMcL9zK/5Nk1qQddb8Uf6Ss8z2x8f1JuMaNW74RLeompR702YdNhpsZGoRuYufl9TAiXUnHsr+KV1ehAUBw9EZcabkgZDNvwc0yNMl6QGDoXrZ043U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHsf+QmE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHsf+QmE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29539C433F1;
-	Mon, 26 Feb 2024 16:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708966475;
-	bh=KGjLGeRBLcDhrAjcwZ6uCmxmGzHwCCXg366IMJ3f9Hk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=cHsf+QmE6jddSTAcCG6fQcqQWK29+p34aKmuKM2SmsV2k9Hkvf+Z+SjkqzGIcg7eA
-	 IIHOsz0MznwbPxmlsfI6hCaheBgBxIZYX8keLCX6xUmEP0oFlMmklieZO9Ug5rA7fO
-	 /jCvX70a51H6LIJadbJVJm09sRliu+9R0SYVHE9YnajxJ770gcodJ+r6R1PIDqYUBh
-	 9MRj1t30uJY5zuNHRIGHhLD8X7ARBAHU5DzvSnb4pHGUdBjyhfVJHhm44PZB+igh4u
-	 ElUNLtx+INgfwuT1w7+t8YrCuan4rO5cOsHYtpzHjNBfW/+hJjepiNp24+dSm3GJwn
-	 C1y0+B9XGf12Q==
-Date: Mon, 26 Feb 2024 10:54:34 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1708966503; c=relaxed/simple;
+	bh=QGcRLTEri+GL4LDVdXNHiMq2PMr0H3LVHWba/SRnYx4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fin284iXrKy2czy+Oaw1xqYPf6diJyNHBJqmi5Qxwv/BjXUiYqe8WFe/CU+Q7R4LxULJ6KcH1xSD2wO3EZIWLcDCXKnfOM6sidrYZHo99Nx21hUCUjuFBhyJoV1TRCufzJfyUJ+0MEVWhABBvK8JvfYLNOKZOBh24zpj1nT3IRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-60921c4dc27so134697b3.3;
+        Mon, 26 Feb 2024 08:55:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708966497; x=1709571297;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W+9BchcdAdA5Rmse93Wm2Y92LoxElKC7hpYEsTuUwfs=;
+        b=bdVE8vslNwapHdlYkfkyS/B9S/cydPiA7MYtvSaUBeFEVdS0mTIIDJa0696a9ADHa5
+         ozWIjrbLxnJtdG297rsFXU46o2gM8AyG2dp0xnXzL5EH9nkEUFic52tbg0VgciLeJnb1
+         oGN7W/sNN1VJMOaksz/kBTMjyFTpYiQRsgkeRAswCDBDq6sEjsoZC4irTcWxwkMuAcAM
+         u48PCEX5FnJgxWq5GrBNJDrWIDDz61aXGGXZJaRW2N7EeWxTlicdqk57v1bmB3r3ZXYr
+         UgB2UBjkuVBKhqiwtdWJfyZ2NtF2T5qMLIMEMusHS1aWMj+ly8P2ZdSus0qwGLrpOavw
+         qPrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVS/J/I5mBV5iE2nmAcXR1VRcxsiuj7/0bOMfHYxZ62vZ4GtwC+vOngQ0jnI+zrXYZPW6EIOl+sLvIs+WunrXFMTE8UG1tocciMEigKcACES150oa7Um7bwBLxi6NZzJf8SupqxujTEPmMtM6NB6tX5uiNxMrshjID/4D/filOHIaEm12VftonoWyOjMs+HVjxqpgusIVB/TNy8+et3SjjdkFfdOHXWaAWeyMP/6Hfotr+v8VAl0GsVpLvdteQk4hWxXjY63d7GsgItGef5CsNjejiGLOBb3VvgNk0t+EhZHWlo2yrGq6nmSBuLYVfuWu1Fj2Ucn/Izwn6b68rc0/am9mjGZNqcW7BOluSroKUQxDZOU4ttl3g=
+X-Gm-Message-State: AOJu0YwUK8CbtoZfPCJujzglx7aXTgXegSZYsdDk5Vmg5t13qU0YZ6lT
+	dabYm8j9pkmzAuf0hMZSU2YHpV0X75Fzc5wwaos2hqocNZZPTONW6Vgn3EClHaw=
+X-Google-Smtp-Source: AGHT+IHR73T8g+pH1z/OZAzR6/uguNJQiIbExpK1JFKQKd+Z0Hl91C+S3h9Le/ajC2vYDJ9YhOVA6A==
+X-Received: by 2002:a81:af17:0:b0:608:d160:f9aa with SMTP id n23-20020a81af17000000b00608d160f9aamr5926196ywh.46.1708966497424;
+        Mon, 26 Feb 2024 08:54:57 -0800 (PST)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id w10-20020a0dd40a000000b006077c89b001sm1269523ywd.83.2024.02.26.08.54.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 08:54:56 -0800 (PST)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso3372772276.1;
+        Mon, 26 Feb 2024 08:54:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWQm2yJ1I0NE5/zVVgr2R45VuJyjU0bQtTgZi3QzVm5f5MPMLSZjEowY6iXyzGThwIdfG7vWKn0dQog43zDwn2FCaPa3eNy8UxrfKymtw9dERyzPDX1/Nf2Mq12Nr6XcMXyJ+D1lkWXrGO5s0ZYeL2O1ZTYgyynJzttwv0Fyl0A7Q5y1R2ReSOcdJZGKbXK5GpTBf6Yp22BGFLv18bqm0cMXaeyscTGb2ao/XPh2IE0VabEpHzh120ojHbjMar119fxVAbvqb8gANB8/MusVSyEUI6lLhnv5EddiQOcSMHgcFDVXE5dKz0dE/kiIn8LZ5st/oCChPm1OKklK6keeAMM/LnVjJr+XjkSuJMwX2Mh4INUqKqFZoo=
+X-Received: by 2002:a25:9346:0:b0:dcd:98bd:7cc8 with SMTP id
+ g6-20020a259346000000b00dcd98bd7cc8mr5030611ybo.48.1708966495877; Mon, 26 Feb
+ 2024 08:54:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Zev Weiss <zev@bewilderbeest.net>
-Cc: Guenter Roeck <linux@roeck-us.net>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, linux-kernel@vger.kernel.org, 
- Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Conor Dooley <conor+dt@kernel.org>, linux-aspeed@lists.ozlabs.org
-In-Reply-To: <20240226091754.16027-2-zev@bewilderbeest.net>
-References: <20240226091754.16027-2-zev@bewilderbeest.net>
-Message-Id: <170896502304.859066.13236138723073669130.robh@kernel.org>
-Subject: Re: [PATCH] ARM: dts: aspeed: ahe50dc: Update lm25066 regulator
- name
+References: <cover.1704788539.git.ysato@users.sourceforge.jp> <f7a504fc42486f4f3f75ca7ac8cd57c084407da0.1704788539.git.ysato@users.sourceforge.jp>
+In-Reply-To: <f7a504fc42486f4f3f75ca7ac8cd57c084407da0.1704788539.git.ysato@users.sourceforge.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 Feb 2024 17:54:43 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXOaasX9Dv-Kv=VOO0dhnp8ObQC6-YqsFZT0Q-VeqPg+Q@mail.gmail.com>
+Message-ID: <CAMuHMdXOaasX9Dv-Kv=VOO0dhnp8ObQC6-YqsFZT0Q-VeqPg+Q@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v6 08/37] clocksource: sh_tmu: CLOCKSOURCE support.
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Saton-san,
 
-On Mon, 26 Feb 2024 01:17:53 -0800, Zev Weiss wrote:
-> A recent change to the lm25066 driver changed the name of its
-> regulator from vout0 to vout; device-tree users of lm25066's regulator
-> functionality (of which ahe50dc is the only one) thus require a
-> corresponding update.
-> 
-> Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
-> Cc: Conor Dooley <conor+dt@kernel.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> ---
->  arch/arm/boot/dts/aspeed/aspeed-bmc-delta-ahe50dc.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Thanks for your patch!
 
+Please drop the period at the end of the one-line summary.
 
-My bot found new DT warnings on the .dts files added or changed in this
-series.
+On Tue, Jan 9, 2024 at 9:23=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> Allows initialization as CLOCKSOURCE.
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not.
+Please explain why this is needed. E.g.
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
+    Add support for early registration using TIMER_OF_DECLARE(),
+    so the timer can be used as a clocksource on SoCs that do not
+    have any other suitable timer.
 
-  pip3 install dtschema --upgrade
+>
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
+> --- a/drivers/clocksource/sh_tmu.c
+> +++ b/drivers/clocksource/sh_tmu.c
 
-New warnings running 'make CHECK_DTBS=y aspeed/aspeed-bmc-delta-ahe50dc.dtb' for 20240226091754.16027-2-zev@bewilderbeest.net:
+> @@ -148,8 +151,8 @@ static int __sh_tmu_enable(struct sh_tmu_channel *ch)
+>         /* enable clock */
+>         ret =3D clk_enable(ch->tmu->clk);
+>         if (ret) {
+> -               dev_err(&ch->tmu->pdev->dev, "ch%u: cannot enable clock\n=
+",
+> -                       ch->index);
+> +               pr_err("%s ch%u: cannot enable clock\n",
+> +                      ch->tmu->name, ch->index);
 
-arch/arm/boot/dts/aspeed/aspeed-bmc-delta-ahe50dc.dtb: ahb: apb: {'compatible': ['simple-bus'], '#address-cells': [[1]], '#size-cells': [[1]], 'ranges': True, 'syscon@1e6e2000': {'compatible': ['aspeed,ast2400-scu', 'syscon', 'simple-mfd'], 'reg': [[510533632, 424]], '#address-cells': [[1]], '#size-cells': [[1]], 'ranges': [[0, 510533632, 4096]], '#clock-cells': [[1]], '#reset-cells': [[1]], 'phandle': [[2]], 'p2a-control@2c': {'reg': [[44, 4]], 'compatible': ['aspeed,ast2400-p2a-ctrl'], 'status': ['disabled']}, 'silicon-id@7c': {'compatible': ['aspeed,ast2400-silicon-id', 'aspeed,silicon-id'], 'reg': [[124, 4]]}, 'pinctrl@80': {'reg': [[128, 24], [160, 16]], 'compatible': ['aspeed,ast2400-pinctrl'], 'phandle': [[17]], 'acpi_default': {'function': ['ACPI'], 'groups': ['ACPI']}, 'adc0_default': {'function': ['ADC0'], 'groups': ['ADC0'], 'phandle': [[7]]}, 'adc1_default': {'function': ['ADC1'], 'groups': ['ADC1'], 'phandle': [[8]]}, 'adc10_default': {'function': ['ADC10'], 'groups': ['ADC10']}, 'adc11_default': {'function': ['ADC11'], 'groups': ['ADC11']}, 'adc12_default': {'function': ['ADC12'], 'groups': ['ADC12']}, 'adc13_default': {'function': ['ADC13'], 'groups': ['ADC13']}, 'adc14_default': {'function': ['ADC14'], 'groups': ['ADC14']}, 'adc15_default': {'function': ['ADC15'], 'groups': ['ADC15']}, 'adc2_default': {'function': ['ADC2'], 'groups': ['ADC2'], 'phandle': [[9]]}, 'adc3_default': {'function': ['ADC3'], 'groups': ['ADC3'], 'phandle': [[10]]}, 'adc4_default': {'function': ['ADC4'], 'groups': ['ADC4'], 'phandle': [[11]]}, 'adc5_default': {'function': ['ADC5'], 'groups': ['ADC5'], 'phandle': [[12]]}, 'adc6_default': {'function': ['ADC6'], 'groups': ['ADC6'], 'phandle': [[13]]}, 'adc7_default': {'function': ['ADC7'], 'groups': ['ADC7'], 'phandle': [[14]]}, 'adc8_default': {'function': ['ADC8'], 'groups': ['ADC8'], 'phandle': [[15]]}, 'adc9_default': {'function': ['ADC9'], 'groups': ['ADC9'], 'phandle': [[16]]}, 'bmcint_default': {'function': ['BMCINT'], 'groups': ['BMCINT']}, 'ddcclk_default': {'function': ['DDCCLK'], 'groups': ['DDCCLK']}, 'ddcdat_default': {'function': ['DDCDAT'], 'groups': ['DDCDAT']}, 'extrst_default': {'function': ['EXTRST'], 'groups': ['EXTRST']}, 'flack_default': {'function': ['FLACK'], 'groups': ['FLACK']}, 'flbusy_default': {'function': ['FLBUSY'], 'groups': ['FLBUSY']}, 'flwp_default': {'function': ['FLWP'], 'groups': ['FLWP']}, 'gpid_default': {'function': ['GPID'], 'groups': ['GPID']}, 'gpid0_default': {'function': ['GPID0'], 'groups': ['GPID0']}, 'gpid2_default': {'function': ['GPID2'], 'groups': ['GPID2']}, 'gpid4_default': {'function': ['GPID4'], 'groups': ['GPID4']}, 'gpid6_default': {'function': ['GPID6'], 'groups': ['GPID6']}, 'gpie0_default': {'function': ['GPIE0'], 'groups': ['GPIE0']}, 'gpie2_default': {'function': ['GPIE2'], 'groups': ['GPIE2']}, 'gpie4_default': {'function': ['GPIE4'], 'groups': ['GPIE4']}, 'gpie6_default': {'function': ['GPIE6'], 'groups': ['GPIE6']}, 'i2c10_default': {'function': ['I2C10'], 'groups': ['I2C10'], 'phandle': [[27]]}, 'i2c11_default': {'function': ['I2C11'], 'groups': ['I2C11'], 'phandle': [[28]]}, 'i2c12_default': {'function': ['I2C12'], 'groups': ['I2C12'], 'phandle': [[29]]}, 'i2c13_default': {'function': ['I2C13'], 'groups': ['I2C13'], 'phandle': [[30]]}, 'i2c14_default': {'function': ['I2C14'], 'groups': ['I2C14'], 'phandle': [[31]]}, 'i2c3_default': {'function': ['I2C3'], 'groups': ['I2C3'], 'phandle': [[20]]}, 'i2c4_default': {'function': ['I2C4'], 'groups': ['I2C4'], 'phandle': [[21]]}, 'i2c5_default': {'function': ['I2C5'], 'groups': ['I2C5'], 'phandle': [[22]]}, 'i2c6_default': {'function': ['I2C6'], 'groups': ['I2C6'], 'phandle': [[23]]}, 'i2c7_default': {'function': ['I2C7'], 'groups': ['I2C7'], 'phandle': [[24]]}, 'i2c8_default': {'function': ['I2C8'], 'groups': ['I2C8'], 'phandle': [[25]]}, 'i2c9_default': {'function': ['I2C9'], 'groups': ['I2C9'], 'phandle': [[26]]}, 'lpcpd_default': {'function': ['LPCPD'], 'groups': ['LPCPD']}, 'lpcpme_default': {'function': ['LPCPME'], 'groups': ['LPCPME']}, 'lpcrst_default': {'function': ['LPCRST'], 'groups': ['LPCRST']}, 'lpcsmi_default': {'function': ['LPCSMI'], 'groups': ['LPCSMI']}, 'mac1link_default': {'function': ['MAC1LINK'], 'groups': ['MAC1LINK']}, 'mac2link_default': {'function': ['MAC2LINK'], 'groups': ['MAC2LINK']}, 'mdio1_default': {'function': ['MDIO1'], 'groups': ['MDIO1']}, 'mdio2_default': {'function': ['MDIO2'], 'groups': ['MDIO2'], 'phandle': [[4]]}, 'ncts1_default': {'function': ['NCTS1'], 'groups': ['NCTS1']}, 'ncts2_default': {'function': ['NCTS2'], 'groups': ['NCTS2']}, 'ncts3_default': {'function': ['NCTS3'], 'groups': ['NCTS3']}, 'ncts4_default': {'function': ['NCTS4'], 'groups': ['NCTS4']}, 'ndcd1_default': {'function': ['NDCD1'], 'groups': ['NDCD1']}, 'ndcd2_default': {'function': ['NDCD2'], 'groups': ['NDCD2']}, 'ndcd3_default': {'function': ['NDCD3'], 'groups': ['NDCD3']}, 'ndcd4_default': {'function': ['NDCD4'], 'groups': ['NDCD4']}, 'ndsr1_default': {'function': ['NDSR1'], 'groups': ['NDSR1']}, 'ndsr2_default': {'function': ['NDSR2'], 'groups': ['NDSR2']}, 'ndsr3_default': {'function': ['NDSR3'], 'groups': ['NDSR3']}, 'ndsr4_default': {'function': ['NDSR4'], 'groups': ['NDSR4']}, 'ndtr1_default': {'function': ['NDTR1'], 'groups': ['NDTR1']}, 'ndtr2_default': {'function': ['NDTR2'], 'groups': ['NDTR2']}, 'ndtr3_default': {'function': ['NDTR3'], 'groups': ['NDTR3']}, 'ndtr4_default': {'function': ['NDTR4'], 'groups': ['NDTR4']}, 'ndts4_default': {'function': ['NDTS4'], 'groups': ['NDTS4']}, 'nri1_default': {'function': ['NRI1'], 'groups': ['NRI1']}, 'nri2_default': {'function': ['NRI2'], 'groups': ['NRI2']}, 'nri3_default': {'function': ['NRI3'], 'groups': ['NRI3']}, 'nri4_default': {'function': ['NRI4'], 'groups': ['NRI4']}, 'nrts1_default': {'function': ['NRTS1'], 'groups': ['NRTS1']}, 'nrts2_default': {'function': ['NRTS2'], 'groups': ['NRTS2']}, 'nrts3_default': {'function': ['NRTS3'], 'groups': ['NRTS3']}, 'oscclk_default': {'function': ['OSCCLK'], 'groups': ['OSCCLK']}, 'pwm0_default': {'function': ['PWM0'], 'groups': ['PWM0']}, 'pwm1_default': {'function': ['PWM1'], 'groups': ['PWM1']}, 'pwm2_default': {'function': ['PWM2'], 'groups': ['PWM2']}, 'pwm3_default': {'function': ['PWM3'], 'groups': ['PWM3']}, 'pwm4_default': {'function': ['PWM4'], 'groups': ['PWM4']}, 'pwm5_default': {'function': ['PWM5'], 'groups': ['PWM5']}, 'pwm6_default': {'function': ['PWM6'], 'groups': ['PWM6']}, 'pwm7_default': {'function': ['PWM7'], 'groups': ['PWM7']}, 'rgmii1_default': {'function': ['RGMII1'], 'groups': ['RGMII1']}, 'rgmii2_default': {'function': ['RGMII2'], 'groups': ['RGMII2'], 'phandle': [[3]]}, 'rmii1_default': {'function': ['RMII1'], 'groups': ['RMII1']}, 'rmii2_default': {'function': ['RMII2'], 'groups': ['RMII2']}, 'rom16_default': {'function': ['ROM16'], 'groups': ['ROM16']}, 'rom8_default': {'function': ['ROM8'], 'groups': ['ROM8']}, 'romcs1_default': {'function': ['ROMCS1'], 'groups': ['ROMCS1']}, 'romcs2_default': {'function': ['ROMCS2'], 'groups': ['ROMCS2']}, 'romcs3_default': {'function': ['ROMCS3'], 'groups': ['ROMCS3']}, 'romcs4_default': {'function': ['ROMCS4'], 'groups': ['ROMCS4']}, 'rxd1_default': {'function': ['RXD1'], 'groups': ['RXD1']}, 'rxd2_default': {'function': ['RXD2'], 'groups': ['RXD2']}, 'rxd3_default': {'function': ['RXD3'], 'groups': ['RXD3']}, 'rxd4_default': {'function': ['RXD4'], 'groups': ['RXD4']}, 'salt1_default': {'function': ['SALT1'], 'groups': ['SALT1']}, 'salt2_default': {'function': ['SALT2'], 'groups': ['SALT2']}, 'salt3_default': {'function': ['SALT3'], 'groups': ['SALT3']}, 'salt4_default': {'function': ['SALT4'], 'groups': ['SALT4']}, 'sd1_default': {'function': ['SD1'], 'groups': ['SD1']}, 'sd2_default': {'function': ['SD2'], 'groups': ['SD2']}, 'sgpmck_default': {'function': ['SGPMCK'], 'groups': ['SGPMCK']}, 'sgpmi_default': {'function': ['SGPMI'], 'groups': ['SGPMI']}, 'sgpmld_default': {'function': ['SGPMLD'], 'groups': ['SGPMLD']}, 'sgpmo_default': {'function': ['SGPMO'], 'groups': ['SGPMO']}, 'sgpsck_default': {'function': ['SGPSCK'], 'groups': ['SGPSCK']}, 'sgpsi0_default': {'function': ['SGPSI0'], 'groups': ['SGPSI0']}, 'sgpsi1_default': {'function': ['SGPSI1'], 'groups': ['SGPSI1']}, 'sgpsld_default': {'function': ['SGPSLD'], 'groups': ['SGPSLD']}, 'sioonctrl_default': {'function': ['SIOONCTRL'], 'groups': ['SIOONCTRL']}, 'siopbi_default': {'function': ['SIOPBI'], 'groups': ['SIOPBI']}, 'siopbo_default': {'function': ['SIOPBO'], 'groups': ['SIOPBO']}, 'siopwreq_default': {'function': ['SIOPWREQ'], 'groups': ['SIOPWREQ']}, 'siopwrgd_default': {'function': ['SIOPWRGD'], 'groups': ['SIOPWRGD']}, 'sios3_default': {'function': ['SIOS3'], 'groups': ['SIOS3']}, 'sios5_default': {'function': ['SIOS5'], 'groups': ['SIOS5']}, 'siosci_default': {'function': ['SIOSCI'], 'groups': ['SIOSCI']}, 'spi1_default': {'function': ['SPI1'], 'groups': ['SPI1']}, 'spi1debug_default': {'function': ['SPI1DEBUG'], 'groups': ['SPI1DEBUG']}, 'spi1passthru_default': {'function': ['SPI1PASSTHRU'], 'groups': ['SPI1PASSTHRU']}, 'spics1_default': {'function': ['SPICS1'], 'groups': ['SPICS1']}, 'timer3_default': {'function': ['TIMER3'], 'groups': ['TIMER3']}, 'timer4_default': {'function': ['TIMER4'], 'groups': ['TIMER4']}, 'timer5_default': {'function': ['TIMER5'], 'groups': ['TIMER5']}, 'timer6_default': {'function': ['TIMER6'], 'groups': ['TIMER6']}, 'timer7_default': {'function': ['TIMER7'], 'groups': ['TIMER7']}, 'timer8_default': {'function': ['TIMER8'], 'groups': ['TIMER8']}, 'txd1_default': {'function': ['TXD1'], 'groups': ['TXD1']}, 'txd2_default': {'function': ['TXD2'], 'groups': ['TXD2']}, 'txd3_default': {'function': ['TXD3'], 'groups': ['TXD3']}, 'txd4_default': {'function': ['TXD4'], 'groups': ['TXD4']}, 'uart6_default': {'function': ['UART6'], 'groups': ['UART6']}, 'usbcki_default': {'function': ['USBCKI'], 'groups': ['USBCKI']}, 'usb2h_default': {'function': ['USB2H1'], 'groups': ['USB2H1'], 'phandle': [[5]]}, 'usb2d_default': {'function': ['USB2D1'], 'groups': ['USB2D1'], 'phandle': [[6]]}, 'vgabios_rom_default': {'function': ['VGABIOS_ROM'], 'groups': ['VGABIOS_ROM']}, 'vgahs_default': {'function': ['VGAHS'], 'groups': ['VGAHS']}, 'vgavs_default': {'function': ['VGAVS'], 'groups': ['VGAVS']}, 'vpi18_default': {'function': ['VPI18'], 'groups': ['VPI18']}, 'vpi24_default': {'function': ['VPI24'], 'groups': ['VPI24']}, 'vpi30_default': {'function': ['VPI30'], 'groups': ['VPI30']}, 'vpo12_default': {'function': ['VPO12'], 'groups': ['VPO12']}, 'vpo24_default': {'function': ['VPO24'], 'groups': ['VPO24']}, 'wdtrst1_default': {'function': ['WDTRST1'], 'groups': ['WDTRST1']}, 'wdtrst2_default': {'function': ['WDTRST2'], 'groups': ['WDTRST2']}}}, 'hwrng@1e6e2078': {'compatible': ['timeriomem_rng'], 'reg': [[510533752, 4]], 'period': [[1]], 'quality': [[100]]}, 'adc@1e6e9000': {'compatible': ['aspeed,ast2400-adc'], 'reg': [[510562304, 176]], 'clocks': [[2, 26]], 'resets': [[2, 2]], '#io-channel-cells': [[1]], 'status': ['okay'], 'pinctrl-names': ['default'], 'pinctrl-0': [[7, 8, 9, 10, 11, 12, 13, 14, 15, 16]], 'phandle': [[33]]}, 'sram@1e720000': {'compatible': ['mmio-sram'], 'reg': [[510787584, 32768]]}, 'video@1e700000': {'compatible': ['aspeed,ast2400-video-engine'], 'reg': [[510656512, 4096]], 'clocks': [[2, 3], [2, 0]], 'clock-names': ['vclk', 'eclk'], 'interrupts': [[7]], 'status': ['disabled']}, 'sd-controller@1e740000': {'compatible': ['aspeed,ast2400-sd-controller'], 'reg': [[510918656, 256]], '#address-cells': [[1]], '#size-cells': [[1]], 'ranges': [[0, 510918656, 65536]], 'clocks': [[2, 22]], 'status': ['disabled'], 'sdhci@100': {'compatible': ['aspeed,ast2400-sdhci'], 'reg': [[256, 256]], 'interrupts': [[26]], 'sdhci,auto-cmd12': True, 'clocks': [[2, 28]], 'status': ['disabled']}, 'sdhci@200': {'compatible': ['aspeed,ast2400-sdhci'], 'reg': [[512, 256]], 'interrupts': [[26]], 'sdhci,auto-cmd12': True, 'clocks': [[2, 28]], 'status': ['disabled']}}, 'gpio@1e780000': {'#gpio-cells': [[2]], 'gpio-controller': True, 'compatible': ['aspeed,ast2400-gpio'], 'reg': [[511180800, 4096]], 'interrupts': [[20]], 'gpio-ranges': [[17, 0, 0, 220]], 'clocks': [[2, 26]], 'interrupt-controller': True, '#interrupt-cells': [[2]], 'status': ['okay'], 'gpio-line-names': ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'RESET_PEER_N', 'HEARTBEAT_OUT', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'DOOM_N', '', '', '', '', 'LED_PWR_BLUE', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'BMC_ID', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'LED_GREEN', '', 'LED_RED', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'HEARTBEAT_IN', 'BOARDREV0', 'BOARDREV1', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''], 'phandle': [[32]], 'doom-guardrail': {'gpio-hog': True, 'gpios': [[32, 1]], 'output-low': True}}, 'timer@1e782000': {'compatible': ['aspeed,ast2400-timer'], 'reg': [[511188992, 144]], 'interrupts': [[16], [17], [18], [35], [36], [37], [38], [39]], 'clocks': [[2, 26]], 'clock-names': ['PCLK']}, 'rtc@1e781000': {'compatible': ['aspeed,ast2400-rtc'], 'reg': [[511184896, 24]], 'status': ['disabled']}, 'serial@1e783000': {'compatible': ['ns16550a'], 'reg': [[511193088, 32]], 'reg-shift': [[2]], 'interrupts': [[9]], 'clocks': [[2, 13]], 'resets': [[18, 4]], 'no-loopback-test': True, 'status': ['disabled']}, 'serial@1e784000': {'compatible': ['ns16550a'], 'reg': [[511197184, 32]], 'reg-shift': [[2]], 'interrupts': [[10]], 'clocks': [[2, 15]], 'no-loopback-test': True, 'status': ['disabled']}, 'watchdog@1e785000': {'compatible': ['aspeed,ast2400-wdt'], 'reg': [[511201280, 28]], 'clocks': [[2, 26]]}, 'watchdog@1e785020': {'compatible': ['aspeed,ast2400-wdt'], 'reg': [[511201312, 28]], 'clocks': [[2, 26]]}, 'pwm-tacho-controller@1e786000': {'compatible': ['aspeed,ast2400-pwm-tacho'], '#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[511205376, 4096]], 'clocks': [[2, 35]], 'resets': [[2, 5]], 'status': ['disabled']}, 'serial@1e787000': {'compatible': ['aspeed,ast2400-vuart'], 'reg': [[511209472, 64]], 'reg-shift': [[2]], 'interrupts': [[8]], 'clocks': [[2, 26]], 'no-loopback-test': True, 'status': ['disabled']}, 'lpc@1e789000': {'compatible': ['aspeed,ast2400-lpc-v2', 'simple-mfd', 'syscon'], 'reg': [[511217664, 4096]], 'reg-io-width': [[4]], '#address-cells': [[1]], '#size-cells': [[1]], 'ranges': [[0, 511217664, 4096]], 'lpc-ctrl@80': {'compatible': ['aspeed,ast2400-lpc-ctrl'], 'reg': [[128, 16]], 'clocks': [[2, 8]], 'status': ['disabled']}, 'lpc-snoop@90': {'compatible': ['aspeed,ast2400-lpc-snoop'], 'reg': [[144, 8]], 'interrupts': [[8]], 'clocks': [[2, 8]], 'status': ['disabled']}, 'lhc@a0': {'compatible': ['aspeed,ast2400-lhc'], 'reg': [[160, 36], [200, 8]]}, 'reset-controller@98': {'compatible': ['aspeed,ast2400-lpc-reset'], 'reg': [[152, 4]], '#reset-cells': [[1]], 'phandle': [[18]]}, 'ibt@140': {'compatible': ['aspeed,ast2400-ibt-bmc'], 'reg': [[320, 24]], 'interrupts': [[8]], 'clocks': [[2, 8]], 'status': ['disabled']}, 'uart-routing@9c': {'compatible': ['aspeed,ast2400-uart-routing'], 'reg': [[156, 4]], 'status': ['disabled']}}, 'peci-controller@1e78b000': {'compatible': ['aspeed,ast2400-peci'], 'reg': [[511225856, 96]], 'interrupts': [[15]], 'clocks': [[2, 6]], 'resets': [[2, 6]], 'cmd-timeout-ms': [[1000]], 'clock-frequency': [[1000000]], 'status': ['disabled']}, 'serial@1e78d000': {'compatible': ['ns16550a'], 'reg': [[511234048, 32]], 'reg-shift': [[2]], 'interrupts': [[32]], 'clocks': [[2, 14]], 'resets': [[18, 5]], 'no-loopback-test': True, 'status': ['disabled']}, 'serial@1e78e000': {'compatible': ['ns16550a'], 'reg': [[511238144, 32]], 'reg-shift': [[2]], 'interrupts': [[33]], 'clocks': [[2, 20]], 'resets': [[18, 6]], 'no-loopback-test': True, 'status': ['okay']}, 'serial@1e78f000': {'compatible': ['ns16550a'], 'reg': [[511242240, 32]], 'reg-shift': [[2]], 'interrupts': [[34]], 'clocks': [[2, 21]], 'resets': [[18, 7]], 'no-loopback-test': True, 'status': ['disabled']}, 'bus@1e78a000': {'compatible': ['simple-bus'], '#address-cells': [[1]], '#size-cells': [[1]], 'ranges': [[0, 511221760, 4096]], 'interrupt-controller@0': {'#interrupt-cells': [[1]], 'compatible': ['aspeed,ast2400-i2c-ic'], 'reg': [[0, 64]], 'interrupts': [[12]], 'interrupt-controller': True, 'phandle': [[19]]}, 'i2c-bus@40': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[64, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[200000]], 'interrupts': [[0]], 'interrupt-parent': [[19]], 'status': ['okay'], 'pca9541@79': {'compatible': ['nxp,pca9541'], 'reg': [[121]], 'i2c-arb': {'#address-cells': [[1]], '#size-cells': [[0]], 'efuse@10': {'compatible': ['lm25066'], 'reg': [[16]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse03-reg'], 'phandle': [[36]]}}}, 'efuse@11': {'compatible': ['lm25066'], 'reg': [[17]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse04-reg'], 'phandle': [[37]]}}}, 'efuse@12': {'compatible': ['lm25066'], 'reg': [[18]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse01-reg'], 'phandle': [[34]]}}}, 'efuse@13': {'compatible': ['lm25066'], 'reg': [[19]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse02-reg'], 'phandle': [[35]]}}}, 'efuse@14': {'compatible': ['lm25066'], 'reg': [[20]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse13-reg'], 'phandle': [[46]]}}}, 'efuse@15': {'compatible': ['lm25066'], 'reg': [[21]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse14-reg'], 'phandle': [[47]]}}}, 'efuse@16': {'compatible': ['lm25066'], 'reg': [[22]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse15-reg'], 'phandle': [[48]]}}}, 'efuse@17': {'compatible': ['lm25066'], 'reg': [[23]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse16-reg'], 'phandle': [[49]]}}}, 'efuse@40': {'compatible': ['lm25066'], 'reg': [[64]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse12-reg'], 'phandle': [[45]]}}}, 'efuse@41': {'compatible': ['lm25066'], 'reg': [[65]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse11-reg'], 'phandle': [[44]]}}}, 'efuse@42': {'compatible': ['lm25066'], 'reg': [[66]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse10-reg'], 'phandle': [[43]]}}}, 'efuse@43': {'compatible': ['lm25066'], 'reg': [[67]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse09-reg'], 'phandle': [[42]]}}}, 'efuse@44': {'compatible': ['lm25066'], 'reg': [[68]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse08-reg'], 'phandle': [[41]]}}}, 'efuse@45': {'compatible': ['lm25066'], 'reg': [[69]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse07-reg'], 'phandle': [[40]]}}}, 'efuse@46': {'compatible': ['lm25066'], 'reg': [[70]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse05-reg'], 'phandle': [[38]]}}}, 'efuse@47': {'compatible': ['lm25066'], 'reg': [[71]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse06-reg'], 'phandle': [[39]]}}}, 'efuse@50': {'compatible': ['lm25066'], 'reg': [[80]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse17-reg'], 'phandle': [[50]]}}}, 'efuse@51': {'compatible': ['lm25066'], 'reg': [[81]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse18-reg'], 'phandle': [[51]]}}}, 'efuse@52': {'compatible': ['lm25066'], 'reg': [[82]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse20-reg'], 'phandle': [[53]]}}}, 'efuse@53': {'compatible': ['lm25066'], 'reg': [[83]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse19-reg'], 'phandle': [[52]]}}}, 'efuse@54': {'compatible': ['lm25066'], 'reg': [[84]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse22-reg'], 'phandle': [[55]]}}}, 'efuse@55': {'compatible': ['lm25066'], 'reg': [[85]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse21-reg'], 'phandle': [[54]]}}}, 'efuse@56': {'compatible': ['lm25066'], 'reg': [[86]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse24-reg'], 'phandle': [[57]]}}}, 'efuse@57': {'compatible': ['lm25066'], 'reg': [[87]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse23-reg'], 'phandle': [[56]]}}}}}}, 'i2c-bus@80': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[128, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[200000]], 'interrupts': [[1]], 'interrupt-parent': [[19]], 'status': ['okay'], 'pca9541@72': {'compatible': ['nxp,pca9541'], 'reg': [[114]], 'i2c-arb': {'#address-cells': [[1]], '#size-cells': [[0]]}}}, 'i2c-bus@c0': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[192, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[200000]], 'interrupts': [[2]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[20]], 'status': ['okay'], 'pca9541@73': {'compatible': ['nxp,pca9541'], 'reg': [[115]], 'i2c-arb': {'#address-cells': [[1]], '#size-cells': [[0]]}}}, 'i2c-bus@100': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[256, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[200000]], 'interrupts': [[3]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[21]], 'status': ['okay'], 'pca9541@74': {'compatible': ['nxp,pca9541'], 'reg': [[116]], 'i2c-arb': {'#address-cells': [[1]], '#size-cells': [[0]]}}}, 'i2c-bus@140': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[320, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[200000]], 'interrupts': [[4]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[22]], 'status': ['okay'], 'pca9541@7a': {'compatible': ['nxp,pca9541'], 'reg': [[122]], 'i2c-arb': {'#address-cells': [[1]], '#size-cells': [[0]], 'gpio@20': {'compatible': ['nxp,pca9534'], 'reg': [[32]], 'gpio-controller': True, '#gpio-cells': [[2]]}, 'efuse@10': {'compatible': ['lm25066'], 'reg': [[16]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse27-reg'], 'phandle': [[60]]}}}, 'efuse@11': {'compatible': ['lm25066'], 'reg': [[17]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse28-reg'], 'phandle': [[61]]}}}, 'efuse@12': {'compatible': ['lm25066'], 'reg': [[18]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse25-reg'], 'phandle': [[58]]}}}, 'efuse@13': {'compatible': ['lm25066'], 'reg': [[19]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse26-reg'], 'phandle': [[59]]}}}, 'efuse@14': {'compatible': ['lm25066'], 'reg': [[20]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse37-reg'], 'phandle': [[70]]}}}, 'efuse@15': {'compatible': ['lm25066'], 'reg': [[21]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse38-reg'], 'phandle': [[71]]}}}, 'efuse@16': {'compatible': ['lm25066'], 'reg': [[22]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse39-reg'], 'phandle': [[72]]}}}, 'efuse@17': {'compatible': ['lm25066'], 'reg': [[23]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse40-reg'], 'phandle': [[73]]}}}, 'efuse@40': {'compatible': ['lm25066'], 'reg': [[64]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse36-reg'], 'phandle': [[69]]}}}, 'efuse@41': {'compatible': ['lm25066'], 'reg': [[65]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse35-reg'], 'phandle': [[68]]}}}, 'efuse@42': {'compatible': ['lm25066'], 'reg': [[66]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse34-reg'], 'phandle': [[67]]}}}, 'efuse@43': {'compatible': ['lm25066'], 'reg': [[67]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse33-reg'], 'phandle': [[66]]}}}, 'efuse@44': {'compatible': ['lm25066'], 'reg': [[68]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse32-reg'], 'phandle': [[65]]}}}, 'efuse@45': {'compatible': ['lm25066'], 'reg': [[69]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse31-reg'], 'phandle': [[64]]}}}, 'efuse@46': {'compatible': ['lm25066'], 'reg': [[70]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse29-reg'], 'phandle': [[62]]}}}, 'efuse@47': {'compatible': ['lm25066'], 'reg': [[71]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse30-reg'], 'phandle': [[63]]}}}, 'efuse@50': {'compatible': ['lm25066'], 'reg': [[80]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse41-reg'], 'phandle': [[74]]}}}, 'efuse@51': {'compatible': ['lm25066'], 'reg': [[81]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse42-reg'], 'phandle': [[75]]}}}, 'efuse@52': {'compatible': ['lm25066'], 'reg': [[82]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse44-reg'], 'phandle': [[77]]}}}, 'efuse@53': {'compatible': ['lm25066'], 'reg': [[83]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse43-reg'], 'phandle': [[76]]}}}, 'efuse@54': {'compatible': ['lm25066'], 'reg': [[84]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse46-reg'], 'phandle': [[79]]}}}, 'efuse@55': {'compatible': ['lm25066'], 'reg': [[85]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse45-reg'], 'phandle': [[78]]}}}, 'efuse@56': {'compatible': ['lm25066'], 'reg': [[86]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse48-reg'], 'phandle': [[81]]}}}, 'efuse@57': {'compatible': ['lm25066'], 'reg': [[87]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse47-reg'], 'phandle': [[80]]}}}, 'efuse@59': {'compatible': ['lm25066'], 'reg': [[89]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse49-reg'], 'phandle': [[82]]}}}, 'efuse@5a': {'compatible': ['lm25066'], 'reg': [[90]], 'shunt-resistor-micro-ohms': [[675]], 'regulators': {'vout': {'regulator-name': ['efuse50-reg'], 'phandle': [[83]]}}}}}}, 'i2c-bus@180': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[384, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[100000]], 'interrupts': [[5]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[23]], 'status': ['disabled']}, 'i2c-bus@1c0': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[448, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[200000]], 'interrupts': [[6]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[24]], 'status': ['okay'], 'pca9541@75': {'compatible': ['nxp,pca9541'], 'reg': [[117]], 'i2c-arb': {'#address-cells': [[1]], '#size-cells': [[0]]}}}, 'i2c-bus@300': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[768, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[200000]], 'interrupts': [[7]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[25]], 'status': ['okay'], 'pca9541@76': {'compatible': ['nxp,pca9541'], 'reg': [[118]], 'i2c-arb': {'#address-cells': [[1]], '#size-cells': [[0]]}}}, 'i2c-bus@340': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[832, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[200000]], 'interrupts': [[8]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[26]], 'status': ['okay'], 'pca9541@7c': {'compatible': ['nxp,pca9541'], 'reg': [[124]], 'i2c-arb': {'#address-cells': [[1]], '#size-cells': [[0]], 'fancontrol@30': {'compatible': ['delta,ahe50dc-fan'], 'reg': [[48]]}, 'eeprom@50': {'compatible': ['atmel,24c02'], 'reg': [[80]]}}}}, 'i2c-bus@380': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[896, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[100000]], 'interrupts': [[9]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[27]], 'status': ['disabled']}, 'i2c-bus@3c0': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[960, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[100000]], 'interrupts': [[10]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[28]], 'status': ['disabled']}, 'i2c-bus@400': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[1024, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[100000]], 'interrupts': [[11]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[29]], 'status': ['disabled']}, 'i2c-bus@440': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[1088, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[200000]], 'interrupts': [[12]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[30]], 'status': ['okay'], 'pca9541@71': {'compatible': ['nxp,pca9541'], 'reg': [[113]], 'i2c-arb': {'#address-cells': [[1]], '#size-cells': [[0]]}}}, 'i2c-bus@480': {'#address-cells': [[1]], '#size-cells': [[0]], 'reg': [[1152, 64]], 'compatible': ['aspeed,ast2400-i2c-bus'], 'clocks': [[2, 26]], 'resets': [[2, 7]], 'bus-frequency': [[100000]], 'interrupts': [[13]], 'interrupt-parent': [[19]], 'pinctrl-names': ['default'], 'pinctrl-0': [[31]], 'status': ['disabled']}}} should not be valid under {'type': 'object'}
-	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+Please wrap the line after, not before, "ch->tmu->name,".
 
+>                 return ret;
+>         }
+>
 
+> @@ -324,14 +332,14 @@ static int sh_tmu_register_clocksource(struct sh_tm=
+u_channel *ch,
+>         cs->mask =3D CLOCKSOURCE_MASK(32);
+>         cs->flags =3D CLOCK_SOURCE_IS_CONTINUOUS;
+>
+> -       dev_info(&ch->tmu->pdev->dev, "ch%u: used as clock source\n",
+> -                ch->index);
+> +       pr_info("%s ch%u: used as clock source\n",
+> +               ch->tmu->name, ch->index);
 
+No need to wrap this line at all.
 
+>
+>         clocksource_register_hz(cs, ch->tmu->rate);
+>         return 0;
+>  }
+>
+> -static struct sh_tmu_channel *ced_to_sh_tmu(struct clock_event_device *c=
+ed)
+> +static inline struct sh_tmu_channel *ced_to_sh_tmu(struct clock_event_de=
+vice *ced)
+>  {
+>         return container_of(ced, struct sh_tmu_channel, ced);
+>  }
+> @@ -364,8 +372,8 @@ static int sh_tmu_clock_event_set_state(struct clock_=
+event_device *ced,
+>         if (clockevent_state_oneshot(ced) || clockevent_state_periodic(ce=
+d))
+>                 sh_tmu_disable(ch);
+>
+> -       dev_info(&ch->tmu->pdev->dev, "ch%u: used for %s clock events\n",
+> -                ch->index, periodic ? "periodic" : "oneshot");
+> +       pr_info("%s ch%u: used for %s clock events\n",
+> +               ch->tmu->name, ch->index, periodic ? "periodic" : "onesho=
+t");
 
+Please wrap the line after, not before, "ch->tmu->name,".
+
+>         sh_tmu_clock_event_start(ch, periodic);
+>         return 0;
+>  }
+> @@ -403,7 +411,8 @@ static void sh_tmu_clock_event_resume(struct clock_ev=
+ent_device *ced)
+>  }
+>
+>  static void sh_tmu_register_clockevent(struct sh_tmu_channel *ch,
+> -                                      const char *name)
+> +                                      const char *name,
+> +                                      struct device_node *np)
+
+"np" is unused in this function, hence this change is unneeded.
+(Hey, I already said that in my review of v3)
+
+>  {
+>         struct clock_event_device *ced =3D &ch->ced;
+>         int ret;
+> @@ -417,30 +426,32 @@ static void sh_tmu_register_clockevent(struct sh_tm=
+u_channel *ch,
+>         ced->set_state_shutdown =3D sh_tmu_clock_event_shutdown;
+>         ced->set_state_periodic =3D sh_tmu_clock_event_set_periodic;
+>         ced->set_state_oneshot =3D sh_tmu_clock_event_set_oneshot;
+> -       ced->suspend =3D sh_tmu_clock_event_suspend;
+> -       ced->resume =3D sh_tmu_clock_event_resume;
+> -
+> -       dev_info(&ch->tmu->pdev->dev, "ch%u: used for clock events\n",
+> -                ch->index);
+> +       if (ch->tmu->pdev) {
+> +               ced->suspend =3D sh_tmu_clock_event_suspend;
+> +               ced->resume =3D sh_tmu_clock_event_resume;
+> +       }
+> +       pr_info("%s ch%u: used for clock events\n",
+> +               ch->tmu->name, ch->index);
+
+No need to wrap this line at all.
+
+>
+>         clockevents_config_and_register(ced, ch->tmu->rate, 0x300, 0xffff=
+ffff);
+>
+>         ret =3D request_irq(ch->irq, sh_tmu_interrupt,
+>                           IRQF_TIMER | IRQF_IRQPOLL | IRQF_NOBALANCING,
+> -                         dev_name(&ch->tmu->pdev->dev), ch);
+> +                         ch->tmu->name, ch);
+>         if (ret) {
+> -               dev_err(&ch->tmu->pdev->dev, "ch%u: failed to request irq=
+ %d\n",
+> -                       ch->index, ch->irq);
+> +               pr_err("%s ch%u: failed to request irq %d\n",
+> +                      ch->tmu->name, ch->index, ch->irq);
+
+Please wrap the line after, not before, "ch->tmu->name,".
+
+>                 return;
+>         }
+>  }
+>
+>  static int sh_tmu_register(struct sh_tmu_channel *ch, const char *name,
+> +                          struct device_node *np,
+
+np is unneeded.
+
+>                            bool clockevent, bool clocksource)
+>  {
+>         if (clockevent) {
+>                 ch->tmu->has_clockevent =3D true;
+> -               sh_tmu_register_clockevent(ch, name);
+> +               sh_tmu_register_clockevent(ch, name, np);
+>         } else if (clocksource) {
+>                 ch->tmu->has_clocksource =3D true;
+>                 sh_tmu_register_clocksource(ch, name);
+
+> @@ -465,53 +477,59 @@ static int sh_tmu_channel_setup(struct sh_tmu_chann=
+el *ch, unsigned int index,
+>         else
+>                 ch->base =3D tmu->mapbase + 8 + ch->index * 12;
+>
+> -       ch->irq =3D platform_get_irq(tmu->pdev, index);
+> +       if (tmu->pdev)
+> +               ch->irq =3D platform_get_irq(tmu->pdev, index);
+> +       else
+> +               ch->irq =3D of_irq_get(np, index);
+
+You can use of_irq_get() unconditionally.
+
+>         if (ch->irq < 0)
+>                 return ch->irq;
+>
+>         ch->cs_enabled =3D false;
+>         ch->enable_count =3D 0;
+>
+> -       return sh_tmu_register(ch, dev_name(&tmu->pdev->dev),
+> +       return sh_tmu_register(ch, tmu->name, np,
+
+No need to pass np.
+
+>                                clockevent, clocksource);
+>  }
+>
+> -static int sh_tmu_map_memory(struct sh_tmu_device *tmu)
+> +static int sh_tmu_map_memory(struct sh_tmu_device *tmu, struct device_no=
+de *np)
+>  {
+>         struct resource *res;
+>
+> -       res =3D platform_get_resource(tmu->pdev, IORESOURCE_MEM, 0);
+> -       if (!res) {
+> -               dev_err(&tmu->pdev->dev, "failed to get I/O memory\n");
+> -               return -ENXIO;
+> -       }
+> +       if (tmu->pdev) {
+> +               res =3D platform_get_resource(tmu->pdev, IORESOURCE_MEM, =
+0);
+> +               if (!res) {
+> +                       pr_err("sh_tmu failed to get I/O memory\n");
+> +                       return -ENXIO;
+> +               }
+> +
+> +               tmu->mapbase =3D ioremap(res->start, resource_size(res));
+> +       } else
+> +               tmu->mapbase =3D of_iomap(np, 0);
+
+You can use of_iomap() unconditionally.
+
+>
+> -       tmu->mapbase =3D ioremap(res->start, resource_size(res));
+>         if (tmu->mapbase =3D=3D NULL)
+>                 return -ENXIO;
+>
+>         return 0;
+>  }
+>
+> -static int sh_tmu_parse_dt(struct sh_tmu_device *tmu)
+> +static int sh_tmu_parse_dt(struct sh_tmu_device *tmu, struct device_node=
+ *np)
+>  {
+> -       struct device_node *np =3D tmu->pdev->dev.of_node;
+> -
+>         tmu->model =3D SH_TMU;
+>         tmu->num_channels =3D 3;
+>
+>         of_property_read_u32(np, "#renesas,channels", &tmu->num_channels)=
+;
+>
+>         if (tmu->num_channels !=3D 2 && tmu->num_channels !=3D 3) {
+> -               dev_err(&tmu->pdev->dev, "invalid number of channels %u\n=
+",
+> -                       tmu->num_channels);
+> +               pr_err("%s: invalid number of channels %u\n",
+> +                      tmu->name, tmu->num_channels);
+
+Please wrap the line after, not before, "ch->tmu->name,".
+
+>                 return -EINVAL;
+>         }
+>
+>         return 0;
+>  }
+>
+> -static int sh_tmu_setup(struct sh_tmu_device *tmu, struct platform_devic=
+e *pdev)
+> +static int sh_tmu_setup(struct sh_tmu_device *tmu,
+> +                       struct platform_device *pdev, struct device_node =
+*np)
+>  {
+>         unsigned int i;
+>         int ret;
+
+> @@ -531,14 +554,17 @@ static int sh_tmu_setup(struct sh_tmu_device *tmu, =
+struct platform_device *pdev)
+>                 tmu->model =3D id->driver_data;
+>                 tmu->num_channels =3D hweight8(cfg->channels_mask);
+>         } else {
+> -               dev_err(&tmu->pdev->dev, "missing platform data\n");
+> +               pr_err("%s missing platform data\n", tmu->name);
+>                 return -ENXIO;
+>         }
+>
+>         /* Get hold of clock. */
+> -       tmu->clk =3D clk_get(&tmu->pdev->dev, "fck");
+> +       if (pdev)
+> +               tmu->clk =3D clk_get(&tmu->pdev->dev, "fck");
+> +       else
+> +               tmu->clk =3D of_clk_get(np, 0);
+
+You can use of_clk_get() unconditionally.
+
+>         if (IS_ERR(tmu->clk)) {
+> -               dev_err(&tmu->pdev->dev, "cannot get clock\n");
+> +               pr_err("%s: cannot get clock\n", tmu->name);
+>                 return PTR_ERR(tmu->clk);
+>         }
+>
+
+> @@ -665,12 +711,17 @@ static void __exit sh_tmu_exit(void)
+>         platform_driver_unregister(&sh_tmu_device_driver);
+>  }
+>
+> +subsys_initcall(sh_tmu_init);
+> +module_exit(sh_tmu_exit);
+> +#endif
+> +
+>  #ifdef CONFIG_SUPERH
+> +#ifdef CONFIG_SH_DEVICE_TREE
+> +TIMER_OF_DECLARE(sh_tmu, "renesas,tmu", sh_tmu_of_register);
+
+Probably this TIMER_OF_DECLARE() should be done unconditionally,
+like is done in drivers/clocksource/renesas-ostm.c.
+
+I gave that a try on R-Mobile A1, which also has TMU, but it didn't
+seem to work (timer not firing?). So I suspect there are some missing
+clk_enable() calls.  In the case of the platform driver, these are
+handled using pm_runtime_get_sync().
+
+> +#else
+>  sh_early_platform_init("earlytimer", &sh_tmu_device_driver);
+>  #endif
+> -
+> -subsys_initcall(sh_tmu_init);
+> -module_exit(sh_tmu_exit);
+> +#endif
+>
+>  MODULE_AUTHOR("Magnus Damm");
+>  MODULE_DESCRIPTION("SuperH TMU Timer Driver");
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
