@@ -1,157 +1,124 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D6054F8C
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0437954BFE;
+	Mon, 26 Feb 2024 09:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708939598; cv=none; b=Grqx0Ywt0D8/akKjw3rxgpV3FQGBCMQxvLBRtj5vS7eaJzhkk45EXjifNO5ywGwCuwsIWTkN0Ye/Sqi2273Kr8922mKNVV2EnAOazEleaKfiLmShLpq8oaA5mULebG9uBzEgKOp/4bjThAOpKPr6yjB7sRgZmUlI9OTwiezS6hA=
+	t=1708939687; cv=none; b=F4NP0ByFihjW5HaLo0yq1T8qa2KOoCl3oj1J1HESkzBgwOT+HkfMQe4WwX20n1Z0jHnEAjK8ujg7h7KsRBcrKXmqpAQsQd1g2sWF6t9UOtROVn7MV9SLqA65ZCk9M2IgWFb+lt+8fNDRqw37/GvpCIfUvRjLadPmyEXKIwW7Y4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708939598; c=relaxed/simple;
-	bh=9deL/d/BcOgJ90IBVOvhsZVsKJ8Cuz+9AZRxFu2eesM=;
+	s=arc-20240116; t=1708939687; c=relaxed/simple;
+	bh=lpT4EEEFtGcKtomDFu0DuY1Ilyst3kgzdjJTTE066wo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jffTDaCC9B44EadAuY1SBlo4QVjBDPFE87yGTuJgHCo2LADkwsCJ/qBwWRzJrLgAljfDS7dfgndA07svqYn+1gD0lF+uzJWFb3s0uXXiw+kNqdTII1ItnPSGCajDDexePDpKyzFoXSfH0y/P34wqY6lByiuFfLcYCZTW3gDCKi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dr9Tm/Za; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=EK3rTlNEaZ6lp1b662Ww1FE9LamHKlpCTwxo3lW1a2o2B8OC/00+/CeYRzbrmwt3/YX45ivgu5A+Nbu8+8t48Rf50hH41Lj54MS381lgo6eLK7rYu0m4+BBA7KZD8CEayHvTZ8mV5RuuxzZBgNeldqjm+i90k9AW2ma9oQQkIrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pm4F8Qtn; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dr9Tm/Za"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7d5cbc4a585so877489241.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:26:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pm4F8Qtn"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-564fc495d83so3161104a12.0;
+        Mon, 26 Feb 2024 01:28:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708939595; x=1709544395; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1708939684; x=1709544484; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9deL/d/BcOgJ90IBVOvhsZVsKJ8Cuz+9AZRxFu2eesM=;
-        b=Dr9Tm/ZatKZhrXF9KI8MCnZw7ZhFyK0ELsljHMsMzle3S2NJuT8QQkUsgLoby6CLSI
-         4ehZktOHqg4bfJUqiucIMaRpZI41RCI4MbWji2w2k4ciK6Z7GLYvh1alj9a15fxB9/Y1
-         5lXdwn+JQJhH8UEV8ZzXrfP5tf7G72AlqVLzM16fv0wrQT9Pli2K/AtW4fyqo9ghmN2k
-         G9RoYFkNOG73TTyY9QdLkeZyZFYFOqKpg9LwJS5C+1TbjqwVF0uBRDaLHhQipKYuDlX+
-         OS1LAEDxKO3IDiOe1dXavOwXIC2rRoC4FY4mWznMJ/1YMi4kOeUjVWgBM7QRWR3AZrHr
-         oGrQ==
+        bh=zezp1plCc6cYEOmZOZvdSFi9iYdG1RWykK9uDZ/Mnao=;
+        b=Pm4F8QtnPZwSrIMol8Llm+ovWwY93+b0PKQ9/YWRHkoR/dJk2GvMuLZdigDjMyE8Kt
+         aEt8BAdgyVMqyOoxj3LLSwnbyIlNlxE6cEFb+nVwOOp515MjqrIukytmQO0umTOytyxv
+         Tm0b+L5fLtOkN8wReplJWcB042OWIcohgkrO8gFOSA3t7cpOraWA2ydA9GmjGRSWEUFC
+         vE7WMmK5Req3xH5L69vFx3bDp+TktNcdplmQ3SOxPPVrpsquGKFHJH5TKypOu1+j76Az
+         Wvkfp7nj7LIxquWbcYEze7i/RWmKGqLU1icAyWMH4N6vt1tyOrALyxp0qH0uK6UxuqL5
+         TK2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708939595; x=1709544395;
+        d=1e100.net; s=20230601; t=1708939684; x=1709544484;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9deL/d/BcOgJ90IBVOvhsZVsKJ8Cuz+9AZRxFu2eesM=;
-        b=oh7SI1cWmsnXOslrjoDdxCuoQkAajjaSgffcRk8Prx7AJC19IPPa34jfpFkMgCkwOV
-         hNzmew+/bcG/iucg7hw8ZyZFehHyECPBKyzjQ/4gaoEBN/5/G80s7HGW7JKPxYGlmpaW
-         /tCKmHEXHj6+gxZfk1VZlXslzde2mm/4knaegBeSVd/kOga8N6vdtJuPoverCC+WTJNa
-         FCXp77RFFlkhLVr3PGcVE8zEz4dHYDIY8KOHql64G8vqi+VGeETOSiZ/C9sTquN5V34p
-         eXsH4Qjj/HJfo/DOkxDO5ed4LKjg+5eTshCEK6aNRyGDlXblsrRBgK1QcqMGqXcBkAnX
-         xCOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXWueFEvhTEhwavq7CLZ+pt7hNifLQj1Z5QT20eZGEto1aUL5oDe37JdDm1bBdwV1lWjupKmbwYTInEZ5gaeWX4I7KM0jAKHGrJpaMY
-X-Gm-Message-State: AOJu0Yym7FfLKJkmKLfIZFYpBQpALacP4YhtavUCTst03AwR6z0gD/UE
-	01wAXuF8BW/DH1w3NtFO4xM15Xl5H+7DGFY1ehe1QW4d9TI22Q/nhEPv35crkl06DJhtfsp3Rwd
-	oL8NvNuRXt1CGadBL+/niUElJms5M3muc6YSdRAgU8czzoM2oI5yg
-X-Google-Smtp-Source: AGHT+IHUnRw4mFGKo0EZ/hFZK/eG3IFnyKzaqS0jzj1uJLOk9IiRiRv/WsrXIPvhAqjXo29J5z4X1jK9bDP4OCfWkSk=
-X-Received: by 2002:a1f:cc84:0:b0:4b6:d63c:ca8f with SMTP id
- c126-20020a1fcc84000000b004b6d63cca8fmr2397957vkg.16.1708939595308; Mon, 26
- Feb 2024 01:26:35 -0800 (PST)
+        bh=zezp1plCc6cYEOmZOZvdSFi9iYdG1RWykK9uDZ/Mnao=;
+        b=rRSIrCl2f5LMBiHVS5i3vYg9GQEj/QEjnBuQfSHUm2TjkFgUjzwwXw89mTjWxTUBC0
+         2LKFVxTBpp1OFLsd79iBIXbSQ5VPBkBkDdwA4zfn3dyjVaqdzc3tyoO7EKtHrmtD1QOo
+         FRPIFY1iqWp3A9k4x3GueMK38v7PgSExfs/8OTV+1YI6kjEh8ttH4eqZ5+Y0I8IusG/j
+         Am4mLN9ySoZAY5Jz5jZvMx4M37Sa1sJZ7dkcYpObTTXxuOseLC+i7kF/yX9qO3tXxiZG
+         kXhcGMKbrE6e2FksVRX0TyUlQ76uYhqZA6Qu7RC7cRwdELll3nBN3FIi88HOkSygdlir
+         wkIw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRpHk4yTEg0AU20mY6VPsE4R4PZ0/IQk7Rxt63IrvzFYCAUeLp3q6qqcbTVNYU544rNl566orbl1SxAemi52gk9GBRyAtc6Ds7iSAPn/Qx8LxDmC6WwEc5MG2mQ4jiiRmoksaf
+X-Gm-Message-State: AOJu0Yz320quea1j30KMkkHlUz0qFAMpFPNJJkYKRUj7beb46CsLb9ja
+	/MHKCD9+d+dSc8RgAfGSRoGrMhFY88J7TUPEL3tejzbnikXFt7mFvN+1GoTI21CTgRpf4YADnRt
+	2LBF3TsU3VObHRhJgpX3zglpyBeU=
+X-Google-Smtp-Source: AGHT+IHSYUBtbIIKd5SFQ0SrthFoCS/puFEZ/tiizES94XySMAwveW9qDVNNtbHeTogNFlQ80ybtAHjRWTsBT85jaCc=
+X-Received: by 2002:a17:906:8802:b0:a3f:40ac:1e0e with SMTP id
+ zh2-20020a170906880200b00a3f40ac1e0emr4166524ejb.67.1708939684159; Mon, 26
+ Feb 2024 01:28:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsOzpRPZGg23QqJAzKnqkZPKzvieeg=W7sgjgi3q0pBo0g@mail.gmail.com>
- <CA+fCnZeNsUV4_92A9DMg=yqyS_y_JTABguyQyNMpm6JPKVxruw@mail.gmail.com>
- <CABXGCsPerqj=zXJ0pUCnZ29JGmZFSvH6DB22r2uKio61c1bVkw@mail.gmail.com>
- <CANpmjNMn+ULqbSGQ6uOa0JDhw=2my5TtBK4Y+xyBES_iaG_SEA@mail.gmail.com>
- <CABXGCsM9BSD+SYFkvkYxmcrZL+aUfUb_M-rjNJhzb2cYHQr5ww@mail.gmail.com>
- <CANpmjNNXKiM0j4mR-Rr2KALhgz87=QjCOomEymNMWjtos=Z3Ug@mail.gmail.com>
- <CANpmjNOnbNw2fRL3_depaAgt81p-VpHh5_O_26kyxofjECgsFQ@mail.gmail.com>
- <CABXGCsPB-KEbE+SfymVmqfiomFVngFL2Je81Qyhw1F5_aZX-TQ@mail.gmail.com>
- <CABXGCsO5dcEuorLAXR3CFzDVyAWNk4_YfqCh=UJddfzpWF7hNg@mail.gmail.com>
- <CANpmjNPsdM2HrRFgEHYxX1seT2fbOFDuO6Ci-qF3X2y=9_PD1A@mail.gmail.com>
- <91c50335-e7b6-4ae1-9dad-a0c990b52021@suse.cz> <20240219152836.11d36709c594e66fe3037f2d@linux-foundation.org>
- <7e31accb-db01-486f-afb8-18a3f5402d00@suse.cz> <CABXGCsOHswLa5rd_Q7kHDHESb=BtqB+F=LV7Wvv+qoRxrqCboA@mail.gmail.com>
- <20240220093011.bf84486d704c3814079c2aa0@linux-foundation.org>
- <96c51d35-15ce-42d0-b81b-7e76044e1f2b@suse.cz> <CANpmjNMObiX5X721DERccn16aMW+WMPz+wvLKv=UdaQi3XOMwA@mail.gmail.com>
-In-Reply-To: <CANpmjNMObiX5X721DERccn16aMW+WMPz+wvLKv=UdaQi3XOMwA@mail.gmail.com>
-From: Marco Elver <elver@google.com>
-Date: Mon, 26 Feb 2024 10:25:56 +0100
-Message-ID: <CANpmjNPP=c4ZfJmWFexR=03Lk4gGMr7yPW=j81WAnM_vCSCwCQ@mail.gmail.com>
-Subject: Re: regression/bisected commit 773688a6cb24b0b3c2ba40354d883348a2befa38
- make my system completely unusable under high load
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, Andrey Konovalov <andreyknvl@gmail.com>, glider@google.com, 
-	dvyukov@google.com, eugenis@google.com, Oscar Salvador <osalvador@suse.de>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>
+References: <20240223115839.3572852-1-leitao@debian.org> <20240223115839.3572852-2-leitao@debian.org>
+In-Reply-To: <20240223115839.3572852-2-leitao@debian.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Mon, 26 Feb 2024 17:27:27 +0800
+Message-ID: <CAL+tcoA=FVBJi2eJgAELhWG_f+N-kwmrHc+XRfKXhYk2RJcPKg@mail.gmail.com>
+Subject: Re: [PATCH net-next 2/2] net/vsockmon: Do not set zeroed statistics
+To: Breno Leitao <leitao@debian.org>
+Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com, 
+	edumazet@google.com, Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, horms@kernel.org, 
+	"open list:VM SOCKETS (AF_VSOCK)" <virtualization@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 Feb 2024 at 19:51, Marco Elver <elver@google.com> wrote:
+On Fri, Feb 23, 2024 at 7:59=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
+ote:
 >
-> On Tue, 20 Feb 2024 at 19:16, Vlastimil Babka <vbabka@suse.cz> wrote:
-> >
-> > On 2/20/24 18:30, Andrew Morton wrote:
-> > > On Tue, 20 Feb 2024 10:37:03 +0500 Mikhail Gavrilov <mikhail.v.gavril=
-ov@gmail.com> wrote:
-> > >
-> > >> On Tue, Feb 20, 2024 at 4:50=E2=80=AFAM Vlastimil Babka <vbabka@suse=
-.cz> wrote:
-> > >> > >
-> > >> > > I'm all confused.
-> > >> > >
-> > >> > > 4434a56ec209 ("stackdepot: make fast paths lock-less again") was
-> > >> > > mainlined for v6.8-rc3.
-> > >> >
-> > >> > Uh sorry, I just trusted the info that it's not merged and didn't =
-verify
-> > >> > it myself. Yeah, I can see it is there.
-> > >> >
-> > >>
-> > >> Wait, I am talk about these two patches which is not merged yet:
-> > >> [PATCH v2 1/2] stackdepot: use variable size records for non-evictab=
-le entries
-> > >> [PATCH v2 2/2] kasan: revert eviction of stack traces in generic mod=
-e
-> > >> https://lore.kernel.org/linux-mm/20240129100708.39460-1-elver@google=
-.com/
-> > >
-> > > A can move those into the 6.8-rc hotfixes queue, and it appears a
-> > > cc:stable will not be required.
-> > >
-> > > However I'm not seeing anything in the changelogs to indicate that
-> > > we're fixing a dramatic performance regression, nor why that
-> > > regressions is occurring.
+> Do not set rtnl_link_stats64 fields to zero, since they are zeroed
+> before ops->ndo_get_stats64 is called in core dev_get_stats() function.
 >
-> It's primarily fixing a regression of memory usage overhead for
-> stackdepot users in general. Performance is mostly fixed, but patch
-> 2/2 ("kasan: revert eviction of stack traces in generic mode") also
-> helps with KASAN performance because entries that were being
-> repeatedly evicted-then-reallocated are just allocated once and with
-> increasing system uptime the slow path will be taken much less.
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
+
+Another similar codes that also can be changed later go like this:
+
+diff --git a/drivers/net/nlmon.c b/drivers/net/nlmon.c
+index 5e19a6839dea..9b205b152734 100644
+--- a/drivers/net/nlmon.c
++++ b/drivers/net/nlmon.c
+@@ -56,10 +56,8 @@ nlmon_get_stats64(struct net_device *dev, struct
+rtnl_link_stats64 *stats)
+        dev_lstats_read(dev, &packets, &bytes);
+
+        stats->rx_packets =3D packets;
+-       stats->tx_packets =3D 0;
+
+        stats->rx_bytes =3D bytes;
+-       stats->tx_bytes =3D 0;
+ }
+
+ static u32 always_on(struct net_device *dev)
+
+> ---
+>  drivers/net/vsockmon.c | 3 ---
+>  1 file changed, 3 deletions(-)
 >
-> > We also seem have an unhappy bot with the 2/2 patch :/ although it's no=
-t yet
-> > clear if it's a genuine issue.
-> >
-> > https://lore.kernel.org/all/202402201506.b7e4b9b6-oliver.sang@intel.com=
-/
-
-This was confirmed to be a non-bug by RCU devs.
-
-> While it would be nice if 6.8 would not regress over 6.7 (performance
-> is mostly fixed, memory usage is not), waiting for confirmation what
-> the rcutorture issue from the bot is about might be good.
+> diff --git a/drivers/net/vsockmon.c b/drivers/net/vsockmon.c
+> index a0b4dca36baf..a1ba5169ed5d 100644
+> --- a/drivers/net/vsockmon.c
+> +++ b/drivers/net/vsockmon.c
+> @@ -46,9 +46,6 @@ static void
+>  vsockmon_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *s=
+tats)
+>  {
+>         dev_lstats_read(dev, &stats->rx_packets, &stats->rx_bytes);
+> -
+> -       stats->tx_packets =3D 0;
+> -       stats->tx_bytes =3D 0;
+>  }
 >
-> Mikhail: since you are testing mainline, in about 4 weeks the fixes
-> should then reach 6.9-rc in the next merge window. Until then, if it's
-> not too difficult for you, you can apply those 2 patches in your own
-> tree.
-
-There are more issues that are fixed by "[PATCH v2 1/2] stackdepot:
-use variable size records for non-evictable entries". See
-https://lore.kernel.org/all/ZdxYXQdZDuuhcqiv@elver.google.com/
-
-This will eventually reach stable, but it might be good to reconsider
-mainlining it earlier.
-
-Thanks,
--- Marco
+>  static int vsockmon_is_valid_mtu(int new_mtu)
+> --
+> 2.39.3
+>
+>
