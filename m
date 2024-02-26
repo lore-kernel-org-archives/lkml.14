@@ -1,93 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC53E7E570;
-	Mon, 26 Feb 2024 13:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2303E1292E5
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 13:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708955769; cv=none; b=rbSKhmjIUAge9QtiWVRT2oiKl0gK3DUv6xCR5JW/JJUukDJWG43tKJKr7PZGPQGCk0rV6b+1KfFUKiyg4y6LSwDCMPTepqEU7WslklakS662k1pfuhj3US9AXLTuaGUlw6F/RnSqiO0X+1/2ukT58aLgkR3/MnMV8Mur5+sTZkE=
+	t=1708955781; cv=none; b=XYWA4bRub9mwW9X6uFgs/BoOz8gq6UgkGUKS5rL46fMh9mmggyiAPKM1/DINlnwr0+V9qwD9bfFbcrnj7gyJGIrnDSmyD8cF8qUh2kjD/Q3r3uTR82g6SVPxxr/i7MLX0DrI+5LzwAnoVOFZ7HlSvQPrhJvyLy1l+huCdsoGux0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708955769; c=relaxed/simple;
-	bh=Z+YufZLQTF3twHN8Tt45XHdmDYZSZIos7wJ19PJBXBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EIHh6v/cj3RxcavyYmRw20HVZP1Isr3/EbRMNlvRybS9eUMT7rdcOFTqhpPSTkSlt+Uve85hJLDLZBqWpNFUJnFIQHV4m96yVT989qRa3TpAV1Rm7pI7oB1XZlbgq8wmAqH4bJg2JTJa0T5wh6KmX30FoGIRJSk/7u4kVpndA4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PLZHVksw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PLZHVksw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E989EC433F1;
-	Mon, 26 Feb 2024 13:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708955769;
-	bh=Z+YufZLQTF3twHN8Tt45XHdmDYZSZIos7wJ19PJBXBo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PLZHVkswvcvglQyfMOc3PRrvH2+yMEJzPecFowmBPlXbnHCpy8Jp4R10HCX2Gsf1t
-	 ppcZl86Gz7YnWCDdJkX2ZM2ONHtxeQMjD+krgIrMfYSAqUdcl6/Pr4fE5h4D/cpcdS
-	 gUuRZLjYcg0LYPmWNqe32YCUS97v8/QxFzbWAwswJel9gvfeVG+r31BqJ+INrN7+d8
-	 AhrcILGsnTCH3sqZhZAS9xfo8AHl4yTv6EFbYx89nqppq/7b6of5fwD3brVDHNUnfE
-	 AF4PxhPWMxykPYuFbmTRIjYIv85KeN/thbklOKvLjkP4fOzbsQBC5LfQWKk+Qg0vr/
-	 jey/s8zz7Dg+g==
-Date: Mon, 26 Feb 2024 14:56:06 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
-	rcu@vger.kernel.org, Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Subject: Re: [PATCH v2 0/6] RCU tasks fixes for v6.9
-Message-ID: <ZdyYdhZtNuJp3h-a@localhost.localdomain>
-References: <20240217012745.3446231-1-boqun.feng@gmail.com>
- <Zdd7x4Rmy_-WDqfl@localhost.localdomain>
- <cf84fb44-9620-40bc-a68d-051edf6823b8@paulmck-laptop>
- <ZdiOot2RJm1VuzSJ@lothringen>
- <8f992601-153e-4cc1-8e7e-6684823cd590@paulmck-laptop>
+	s=arc-20240116; t=1708955781; c=relaxed/simple;
+	bh=XIkSHf9MuD6TQyL63b+wRC/40nq8CMEr5zZm2/qaYHA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=D9Kyo6JyDui/DhRLlaD8LXiNtHf9CHnA42MTeXEUoB4y1CYhLv45oP/++M1wrZ342oSZhzJ/4ePHufDZDE2IBx5DjaV89/57bNKsKVht5AgEUWeP5gtIao5n8T3ER9ErB+ChhFgHy7vIFI70jwYCptycKsDBLCUJCLHLNPiSSlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rebSh-00047B-FK; Mon, 26 Feb 2024 14:56:07 +0100
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rebSg-0030Qd-Bf; Mon, 26 Feb 2024 14:56:06 +0100
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rebSg-009FzF-0y;
+	Mon, 26 Feb 2024 14:56:06 +0100
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Subject: [PATCH v3 0/3] usb: gadget: 9pfs transport
+Date: Mon, 26 Feb 2024 14:56:03 +0100
+Message-Id: <20240116-ml-topic-u9p-v3-0-c62a36eccda1@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8f992601-153e-4cc1-8e7e-6684823cd590@paulmck-laptop>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHOY3GUC/32NQQ6DIBREr2JYlwqIVrrqPZouAL9KomBAjY3x7
+ gW3Tbt8k5k3OwrgDQR0z3bkYTXBOBuhuGRI99J2gE0TGTHCOKG0wuOAZzcZjRcx4VqU7MbLgoC
+ iKE6UDICVl1b3aTQO45Cf7Ty2U2Hy0Jrt/Hu+IvcmzM6/z/uVpvTH00oxwbKpdUGqVkgOjwlst
+ 8zeWbNdG0DJtrJ/BhYNildataVgomJfhuM4Pg4hBI4QAQAA
+To: Eric Van Hensbergen <ericvh@kernel.org>, 
+ Latchesar Ionkov <lucho@ionkov.net>, 
+ Dominique Martinet <asmadeus@codewreck.org>, 
+ Christian Schoenebeck <linux_oss@crudebyte.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: v9fs@lists.linux.dev, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+ kernel@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4095;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=XIkSHf9MuD6TQyL63b+wRC/40nq8CMEr5zZm2/qaYHA=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBl3Jh0xW1GHNjv9zrehCmAqI3J3gtUlO/kNkvGa
+ 8MMworIHiSJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZdyYdAAKCRC/aVhE+XH0
+ q39DD/0UD8bDJxrAVL8hAIgxDzidf9NPpn7eQr96MiptN/HDVLo+7zJbK0BqGG7Vej6GmU1jrHp
+ Ssz5SC+iJrIGq4Ol51hgUD5boGJvbR+x7Dqtvlvqth11BzpvZKhtu8tSnyMFD+LPNudMedAEo0J
+ hPC7P+7oFWi/DfpbJeA32Q6QhL8qj6rKLJqRHuIsEMT4K1g6Yf+gicpWVtt7zVDC/RU7Pi+9VWQ
+ XPERD6DnBvkWTYK1Sx9a/7Zq90/9DEXRwTSZeY23ULHpAOEZF5C5zEyh2cbFsbuZgJhpQ2FmMWQ
+ v+ho5ZfDnvKfsHuw983iB62bhPwEAkTgX6JX9wPk25UmgYSbw4I2889C0tow5USY9QK2vvIVNj7
+ OItyI4QzUCRCiacYNYECf7RqIzVANjUudDsocY4kuyDLfmyYRbYEj/3TdBh35nVqkqAtpMmlMsj
+ UqqL5mr40RFNCGbbsZLSy9u2u6+jUPQiaiuLYaBHjd6icf4423wOGSifTNkTBqbFMSwNXucK14t
+ EJaQMe2paLYqoCVCidHnwSouvpUIce6r+ZE/Gieck+EyHsTHF4B2YnzRDb9d/T3/F6cEAYDUR29
+ tATUBfeIK8OHf97OXw/kFCIKrw5aG0SS/iyzp+NDKr1PcltS1psELyI/m1FRvVrmsdvz0j0Bk2A
+ 0n1rP4tsko6TA8g==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Le Fri, Feb 23, 2024 at 04:43:04PM -0800, Paul E. McKenney a écrit :
-> I do indeed mean doing cond_resched() mid-stream.
-> 
-> One way to make this happen would be to do something like this:
-> 
-> struct task_struct_anchor {
-> 	struct list_head tsa_list;
-> 	struct list_head tsa_adjust_list;
-> 	atomic_t tsa_ref;  // Or use an appropriate API.
-> 	bool tsa_is_anchor;
-> }
-> 
-> Each task structure would contain one of these, though there are a
-> number of ways to conserve space if needed.
-> 
-> These anchors would be placed perhaps every 1,000 tasks or so.  When a
-> traversal encountered one, it could atomic_inc_not_zero() the reference
-> count, and if that succeeded, exit the RCU read-side critical section and
-> do a cond_resched().  It could then enter a new RCU read-side critical
-> section, drop the reference, and continue.
-> 
-> A traveral might container_of() its way from ->tsa_list to the
-> task_struct_anchor structure, then if ->tsa_is_anchor is false,
-> container_of() its way to the enclosing task structure.
-> 
-> How to maintain proper spacing of the anchors?
-> 
-> One way is to make the traversals do the checking.  If the space between a
-> pair of anchors was to large or too small, it could add the first of the
-> pair to a list to be adjusted.  This list could periodically be processed,
-> perhaps with more urgency if a huge gap had opened up.
-> 
-> Freeing an anchor requires decrementing the reference count, waiting for
-> it to go to zero, removing the anchor, waiting for a grace period (perhaps
-> asynchronously), and only then freeing the anchor.
-> 
-> Anchors cannot be moved, only added or removed.
-> 
-> So it is possible.  But is it reasonable?  ;-)
+This series is adding support to mount usb hostside exported 9pfs
+filesystems via the usb gadget interface. It also includes a simple tool
+(p9_fwd.py) to translate an tcp 9pfs transport and reuse it via the usb
+interface.
 
-Wow! And this will need to be done both for process leaders (p->tasks)
-and for threads (p->thread_node) :-)
+    +--------------------------+    |    +--------------------------+
+    |  9PFS mounting client    |    |    |  9PFS exporting server   |
+ SW |                          |    |    |                          |
+    |   (this:trans_usbg)      |    |    |(e.g. diod or nfs-ganesha)|
+    +-------------^------------+    |    +-------------^------------+
+                  |                 |                  |
+                  |                 |           +------v------+
+                  |                 |           |  p9_fwd.py  |
+                  |                 |           +------^------+
+                  |                 |                  |
+------------------|------------------------------------|-------------
+                  |                 |                  |
+    +-------------v------------+    |    +-------------v------------+
+    |                          |    |    |                          |
+ HW |   USB Device Controller  <--------->   USB Host Controller    |
+    |                          |    |    |                          |
+    +--------------------------+    |    +--------------------------+
+
+The USB host exports a filesystem, while the gadget on the USB device
+side makes it mountable.
+
+Diod (9pfs server) and the forwarder are on the development host, where
+the root filesystem is actually stored. The gadget is initialized during
+boot (or later) on the embedded board. Then the forwarder will find it
+on the USB bus and start forwarding requests.
+
+In this case the 9p requests come from the device and are handled by the
+host. The reason is that USB device ports are normally not available on
+PCs, so a connection in the other direction would not work.
+
+One use-case is to use it as an alternative to NFS root booting during
+the development of embedded Linux devices.
+
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+Changes in v3:
+- dropped patch "usb: gadget: legacy: add 9pfs multi gadget" as discussed with gregkh
+- Link to v2: https://lore.kernel.org/r/20240116-ml-topic-u9p-v2-0-b46cbf592962@pengutronix.de
+
+Changes in v2:
+- improved the commit messages
+- introduced an patch to move the header u_f.h to include/linux/usb to compile usb gadget functions treewide
+- moved usbg gadget function to net/9p/
+- adderessed several comments in function driver, like the cleanup path and kbuild errors
+- improved the documentation in Documentation/filesystems/9p.rst
+- Link to v1: https://lore.kernel.org/r/20240116-ml-topic-u9p-v1-0-ad8c306f9a4e@pengutronix.de
+
+---
+Michael Grzeschik (3):
+      usb: gadget: function: move u_f.h to include/linux/usb/
+      net/9p/usbg: Add new usb gadget function transport
+      tools: usb: p9_fwd: add usb gadget packet forwarder script
+
+ Documentation/filesystems/9p.rst                |  47 ++
+ drivers/usb/gadget/configfs.c                   |   2 +-
+ drivers/usb/gadget/function/f_fs.c              |   2 +-
+ drivers/usb/gadget/function/f_hid.c             |   2 +-
+ drivers/usb/gadget/function/f_loopback.c        |   2 +-
+ drivers/usb/gadget/function/f_midi.c            |   2 +-
+ drivers/usb/gadget/function/f_midi2.c           |   2 +-
+ drivers/usb/gadget/function/f_sourcesink.c      |   2 +-
+ drivers/usb/gadget/u_f.c                        |   2 +-
+ {drivers/usb/gadget => include/linux/usb}/u_f.h |   0
+ net/9p/Kconfig                                  |   6 +
+ net/9p/Makefile                                 |   4 +
+ net/9p/trans_usbg.c                             | 871 ++++++++++++++++++++++++
+ tools/usb/p9_fwd.py                             | 194 ++++++
+ 14 files changed, 1130 insertions(+), 8 deletions(-)
+---
+base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
+change-id: 20240116-ml-topic-u9p-895274530eb1
+
+Best regards,
+-- 
+Michael Grzeschik <m.grzeschik@pengutronix.de>
+
