@@ -1,268 +1,163 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FAB12C55D
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 14:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D59012C81C
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 14:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708957821; cv=none; b=H2SltgSxdgHq3p+tuAZnjTpVJqcvHHhrE4BiQV/fSNJPXjbU5sTxUnlUicl7JBLVIJeUcWf73hcMHjaIke1Hic8zrdU3IBRpde0ueGQ3PIlB+PVFgg62XYBZexFvOZV448w+sivXm7qvA3qFdB5G/gRsnXqZvqdWKUZF87nPliQ=
+	t=1708957824; cv=none; b=fht0sF+8GgFlnmvl5OmHMamZJMmWqieYNzvW1l4ra5DlEBXLbXNgKYllIIJ/ILXcUBaIDp6lbRhEvOuZ4int+34wOEEtF9Dk+9b7Xg97RYM5WElUi/9pki1l2Mf8czu8Qz4FRzu6sgY0sruK3eihbWFxj8at6aPnB/u9TEgbxnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708957821; c=relaxed/simple;
-	bh=WZPNjU+tKWbG1/7EwXfp1HjOJvLOdEPU1KuRuZ22CGg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Bm7V92jCUs1jbnVf2S6aLPSpeYfRE8yIOztToaqHwNR2tkjy1JchPuhRfNcCnGSOUt+uUPPpN/LMFNLUq8vLG9HKVOfuNgp/kdqKfiIvYjodMVXWv4p8dSc1WPQUjILJ4IBMeqClh74rqPqq9q9/HkxUWbzhOM5V//bvimEec74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2QEPb+Mj; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1708957824; c=relaxed/simple;
+	bh=aahv011X+X2bCJWogAZ/p9o524/qNn1McMTkxyr3Rtg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qn6i43h4Fk7KE1FczJs4f1XL0sp1c5nDgfONSiSkvsL68dYnqMKRYzuNscXTWzc76f5Pd54jYxexxj0OBnT+ca4mU1atgSnrgaReNCZrB/WzlhKUDUdhyezmaUJ0MDYVsM/cLxEOF/9R1BCyWl0C6D5M9XzuiHA9LIUNnubrgEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ilipB5Yx; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2QEPb+Mj"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcd94cc48a1so4271653276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 06:30:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilipB5Yx"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e4d869b019so1350286b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 06:30:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708957818; x=1709562618; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aHBDJ41pn3iOna4rTXtxPzeJ6vfMVADf3iDfGB7g+R4=;
-        b=2QEPb+MjnI56wEfb45TsVm3qQ9DWpl1NDS/j2MgF8PlRNmOKCcXGcvwpLz1e9I6sqx
-         hO4m69w2NtRCo3MyTwaQwt8IVdXEWI6coOB4IG6/MgQaX0u4GEKgrdjnflL/ymJkZ+F0
-         vKUhSNIF4Zf6yt/NV8Q0I1dsujzFFzxL265oXueGWwufVlrqWrOEVfqH0fMkAlDzj9cd
-         Z66lQLsSQ7+uT5rONPHqjvtH/enY17ms1I6xfcCj+d4gvGFX/I3MSWVJb3KdOdo3/cnL
-         /KcuLqe3AujVzukS99Ns+GjDqzW8oGZeIqcCAA+/v9qr+9R48Qp4NhmQuXlkWCT0/amw
-         P11w==
+        d=gmail.com; s=20230601; t=1708957822; x=1709562622; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=8iQr8HwaNQNOUci9FEjsnMVRNF1lAkHI7cHoltg2ljM=;
+        b=ilipB5YxDi9teMnT+HqcoDuxJbWH0djiohg4ShFXoxYoQ2nFiWFKrHsniRuB/3RXua
+         WURIc+cRzCpOiJ5kXV8M6Sp087cmoyk2Lf5mDO3UEzWQnmLQ30ZBknmF1Jgjau3EC2Sx
+         0Qm0HNxS2LkV6oJaxApRxZ4b8gPTPwiwitWxWZIWrsCzdrxeY54E0RzbCZbaBr5SJWQx
+         CqQm3f0wzheDUNFytZvxWBWR595qhSAZfyhzXigStHrf2EVqoJX3jY5Gm/w3g14pMrK1
+         74HrxYQB9g1ccxIy0JyJGUYbkcUarustQvztuk+AMWP69zEUcGfDLuUsFJYHz9cf+grJ
+         o6Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708957818; x=1709562618;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aHBDJ41pn3iOna4rTXtxPzeJ6vfMVADf3iDfGB7g+R4=;
-        b=kE0Uq60hCoHmPK/YF0EvU3jCE6qXVacDxd9eWOrobzfRtf/zYk9tBcn0ZqRdJGtPps
-         kUfISCXbyxJib6Hxjtsk0Uo/y0MdiHi6T1rv2MhCCwOxALfNRgPWgHd3gnRmLAGg7Xu/
-         rkX+kGZmGmULDef7tcov/Uk9GmbWlnOPp5K8qXnsg6fxzsKI/ORF0QDjBnTLE9h2XDyP
-         p3VQNsbch4yPXQ+FqCjuLEiHBk7rBj+Lblkx3auhjliifjnK7jm4AgboWrtVsBXP255I
-         IRuoIbNT0XjBWAQNoOAQ9KKXbFtlx3wJ0xXJ6e+InzVcswuqzRBMqc+IFcUerytQ07VV
-         qklg==
-X-Gm-Message-State: AOJu0Yz15EXecM9LadPmmSQCShzCWF6PFZDpFYiKRhjht7c9VGhy/L61
-	RJ+4Nxdfg4CbHnQg/LbbQ3ji0qZdeZPNVSOB7iUQ0I8R+LK2QhwczsUXIhyvnRGVadMIFo6qJnb
-	fVWNHVnaGlqdhPP32BG0A42F4AgEtLfNnB4/s/uHRxSxUMPwI3PjyVHaHiJIGJ3DeNI5oOMs1YJ
-	P5C0jkatCvkWzv4Lk2w3EGspQR3/a2bw==
-X-Google-Smtp-Source: AGHT+IGhfWgLDKjgKBzD9HHo/JGuu3u5CiubkHT0Pq0lnQt5M9sGLUKvkoIJLTqVuGN9vlyXVUFm/y8e
-X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
- (user=ardb job=sendgmr) by 2002:a05:6902:1003:b0:dc6:e5e9:f3af with SMTP id
- w3-20020a056902100300b00dc6e5e9f3afmr2087407ybt.9.1708957818551; Mon, 26 Feb
- 2024 06:30:18 -0800 (PST)
-Date: Mon, 26 Feb 2024 15:30:01 +0100
-In-Reply-To: <20240226142952.64769-12-ardb+git@google.com>
+        d=1e100.net; s=20230601; t=1708957822; x=1709562622;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8iQr8HwaNQNOUci9FEjsnMVRNF1lAkHI7cHoltg2ljM=;
+        b=E2RZgQZDrsQ02DoUQOEePzmLPraQrXWrhqkjolLKvFtzkes1yPBQ7Sl0tTOPARrBt9
+         MLSfXmT3+7Zs/odvjYzIfG5WtIWwu1Crsfga3hRGO6mwymLXcq6KaY+123gUDptF+8jX
+         NMI+GG+qd+OvapBQIvDWnvYJ/+My3hl9PVp6asg6Ck6dvLI2SPzUh6GKH8tWiP46/TY8
+         UNEpBllM6RZk4beuvj3Ld3nW0P71MToOeFCSc2mwWyOdG87w8Nk+Jn+HJVoWoeOkf8J5
+         SmVyTOeXMYcZ/raMlUVSRC/UZc9W6lwPB4eXo7+q1FSbfNKbPz+B8lQ+x/VcSDZYH1si
+         0WDA==
+X-Forwarded-Encrypted: i=1; AJvYcCVMvy7b0VvkwDqrbXHCAB9AIfln2mXiteY1aWEYm9slH0rs3fdiBrAWfW5WMc3UUFmUH8bnH9vFjp3ijBgTc4qiqGdb2mNmi9atNYl9
+X-Gm-Message-State: AOJu0Yw/sEOhBtcyYh2+QHqTEqyX2tFdOmbU8QveOJzHq1QdWGrvebXU
+	9qb6CiFZi8lpieYlUpA7c9aIhnjYFK29zdEQlpDRsj/yrau4wECDdtsxO2vC
+X-Google-Smtp-Source: AGHT+IE/jOB64UWBuvL7paVh492qVScfuVVd+meJwV1R/hb3OgfzHSZG6oh0sQGGxby8dzh6SpwmDg==
+X-Received: by 2002:a62:61c2:0:b0:6e3:fa52:2f26 with SMTP id v185-20020a6261c2000000b006e3fa522f26mr5390782pfb.8.1708957822269;
+        Mon, 26 Feb 2024 06:30:22 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c2-20020a63a402000000b005e45b337b34sm4028346pgf.0.2024.02.26.06.30.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 06:30:21 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <f5e40f0f-d2e3-4dcf-90a5-3bf65051cce0@roeck-us.net>
+Date: Mon, 26 Feb 2024 06:30:20 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240226142952.64769-12-ardb+git@google.com>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240226142952.64769-20-ardb+git@google.com>
-Subject: [PATCH v6 08/10] x86/sme: Move early SME kernel encryption handling
- into .head.text
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Dionna Glaze <dionnaglaze@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Brian Gerst <brgerst@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Drop myself as maintainer of TYPEC port
+ controller drivers
+Content-Language: en-US
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org
+References: <20240215202039.1982539-1-linux@roeck-us.net>
+ <Zdw+oku+pBOOtqnu@kuha.fi.intel.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <Zdw+oku+pBOOtqnu@kuha.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On 2/25/24 23:32, Heikki Krogerus wrote:
+> Hi Guenter,
+> 
+> On Thu, Feb 15, 2024 at 12:20:39PM -0800, Guenter Roeck wrote:
+>> I am no longer involved in Type-C development and not really current on its
+>> status and progress. Recently I have been doing more damage than good.
+>> It is time to go.
+>>
+>> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>>   MAINTAINERS | 3 +--
+>>   1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 73d898383e51..ae3283f9eceb 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -22864,9 +22864,8 @@ S:	Maintained
+>>   F:	drivers/usb/typec/mux/pi3usb30532.c
+>>   
+>>   USB TYPEC PORT CONTROLLER DRIVERS
+>> -M:	Guenter Roeck <linux@roeck-us.net>
+>>   L:	linux-usb@vger.kernel.org
+>> -S:	Maintained
+>> +S:	Orphan
+>>   F:	drivers/usb/typec/tcpm/
+>>   
+>>   USB UHCI DRIVER
+>> -- 
+>> 2.39.2
+> 
+> I'm sorry to respond a bit late, but I wanted to also thank you for
+> all the help.
+> 
 
-The .head.text section is the initial primary entrypoint of the core
-kernel, and is entered with the CPU executing from a 1:1 mapping of
-memory. Such code must never access global variables using absolute
-references, as these are based on the kernel virtual mapping which is
-not active yet at this point.
+Thanks. Sorry for my recent mess-ups.
 
-Given that the SME startup code is also called from this early execution
-context, move it into .head.text as well. This will allow more thorough
-build time checks in the future to ensure that early startup code only
-uses RIP-relative references to global variables.
+Guenter
 
-Also replace some occurrences of __pa_symbol() [which relies on the
-compiler generating an absolute reference, which is not guaranteed] and
-an open coded RIP-relative access with RIP_REL_REF().
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/include/asm/mem_encrypt.h |  4 +-
- arch/x86/mm/mem_encrypt_identity.c | 40 ++++++++------------
- 2 files changed, 18 insertions(+), 26 deletions(-)
-
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index b1437ba0b3b8..f922b682b9b4 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -47,7 +47,7 @@ void __init sme_unmap_bootdata(char *real_mode_data);
- 
- void __init sme_early_init(void);
- 
--void __init sme_encrypt_kernel(struct boot_params *bp);
-+void sme_encrypt_kernel(struct boot_params *bp);
- void sme_enable(struct boot_params *bp);
- 
- int __init early_set_memory_decrypted(unsigned long vaddr, unsigned long size);
-@@ -81,7 +81,7 @@ static inline void __init sme_unmap_bootdata(char *real_mode_data) { }
- 
- static inline void __init sme_early_init(void) { }
- 
--static inline void __init sme_encrypt_kernel(struct boot_params *bp) { }
-+static inline void sme_encrypt_kernel(struct boot_params *bp) { }
- static inline void sme_enable(struct boot_params *bp) { }
- 
- static inline void sev_es_init_vc_handling(void) { }
-diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-index 0180fbbcc940..174a7192c9cb 100644
---- a/arch/x86/mm/mem_encrypt_identity.c
-+++ b/arch/x86/mm/mem_encrypt_identity.c
-@@ -41,6 +41,7 @@
- #include <linux/mem_encrypt.h>
- #include <linux/cc_platform.h>
- 
-+#include <asm/init.h>
- #include <asm/setup.h>
- #include <asm/sections.h>
- #include <asm/coco.h>
-@@ -95,7 +96,7 @@ struct sme_populate_pgd_data {
-  */
- static char sme_workarea[2 * PMD_SIZE] __section(".init.scratch");
- 
--static void __init sme_clear_pgd(struct sme_populate_pgd_data *ppd)
-+static void __head sme_clear_pgd(struct sme_populate_pgd_data *ppd)
- {
- 	unsigned long pgd_start, pgd_end, pgd_size;
- 	pgd_t *pgd_p;
-@@ -110,7 +111,7 @@ static void __init sme_clear_pgd(struct sme_populate_pgd_data *ppd)
- 	memset(pgd_p, 0, pgd_size);
- }
- 
--static pud_t __init *sme_prepare_pgd(struct sme_populate_pgd_data *ppd)
-+static pud_t __head *sme_prepare_pgd(struct sme_populate_pgd_data *ppd)
- {
- 	pgd_t *pgd;
- 	p4d_t *p4d;
-@@ -147,7 +148,7 @@ static pud_t __init *sme_prepare_pgd(struct sme_populate_pgd_data *ppd)
- 	return pud;
- }
- 
--static void __init sme_populate_pgd_large(struct sme_populate_pgd_data *ppd)
-+static void __head sme_populate_pgd_large(struct sme_populate_pgd_data *ppd)
- {
- 	pud_t *pud;
- 	pmd_t *pmd;
-@@ -163,7 +164,7 @@ static void __init sme_populate_pgd_large(struct sme_populate_pgd_data *ppd)
- 	set_pmd(pmd, __pmd(ppd->paddr | ppd->pmd_flags));
- }
- 
--static void __init sme_populate_pgd(struct sme_populate_pgd_data *ppd)
-+static void __head sme_populate_pgd(struct sme_populate_pgd_data *ppd)
- {
- 	pud_t *pud;
- 	pmd_t *pmd;
-@@ -189,7 +190,7 @@ static void __init sme_populate_pgd(struct sme_populate_pgd_data *ppd)
- 		set_pte(pte, __pte(ppd->paddr | ppd->pte_flags));
- }
- 
--static void __init __sme_map_range_pmd(struct sme_populate_pgd_data *ppd)
-+static void __head __sme_map_range_pmd(struct sme_populate_pgd_data *ppd)
- {
- 	while (ppd->vaddr < ppd->vaddr_end) {
- 		sme_populate_pgd_large(ppd);
-@@ -199,7 +200,7 @@ static void __init __sme_map_range_pmd(struct sme_populate_pgd_data *ppd)
- 	}
- }
- 
--static void __init __sme_map_range_pte(struct sme_populate_pgd_data *ppd)
-+static void __head __sme_map_range_pte(struct sme_populate_pgd_data *ppd)
- {
- 	while (ppd->vaddr < ppd->vaddr_end) {
- 		sme_populate_pgd(ppd);
-@@ -209,7 +210,7 @@ static void __init __sme_map_range_pte(struct sme_populate_pgd_data *ppd)
- 	}
- }
- 
--static void __init __sme_map_range(struct sme_populate_pgd_data *ppd,
-+static void __head __sme_map_range(struct sme_populate_pgd_data *ppd,
- 				   pmdval_t pmd_flags, pteval_t pte_flags)
- {
- 	unsigned long vaddr_end;
-@@ -233,22 +234,22 @@ static void __init __sme_map_range(struct sme_populate_pgd_data *ppd,
- 	__sme_map_range_pte(ppd);
- }
- 
--static void __init sme_map_range_encrypted(struct sme_populate_pgd_data *ppd)
-+static void __head sme_map_range_encrypted(struct sme_populate_pgd_data *ppd)
- {
- 	__sme_map_range(ppd, PMD_FLAGS_ENC, PTE_FLAGS_ENC);
- }
- 
--static void __init sme_map_range_decrypted(struct sme_populate_pgd_data *ppd)
-+static void __head sme_map_range_decrypted(struct sme_populate_pgd_data *ppd)
- {
- 	__sme_map_range(ppd, PMD_FLAGS_DEC, PTE_FLAGS_DEC);
- }
- 
--static void __init sme_map_range_decrypted_wp(struct sme_populate_pgd_data *ppd)
-+static void __head sme_map_range_decrypted_wp(struct sme_populate_pgd_data *ppd)
- {
- 	__sme_map_range(ppd, PMD_FLAGS_DEC_WP, PTE_FLAGS_DEC_WP);
- }
- 
--static unsigned long __init sme_pgtable_calc(unsigned long len)
-+static unsigned long __head sme_pgtable_calc(unsigned long len)
- {
- 	unsigned long entries = 0, tables = 0;
- 
-@@ -285,7 +286,7 @@ static unsigned long __init sme_pgtable_calc(unsigned long len)
- 	return entries + tables;
- }
- 
--void __init sme_encrypt_kernel(struct boot_params *bp)
-+void __head sme_encrypt_kernel(struct boot_params *bp)
- {
- 	unsigned long workarea_start, workarea_end, workarea_len;
- 	unsigned long execute_start, execute_end, execute_len;
-@@ -320,9 +321,8 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
- 	 *     memory from being cached.
- 	 */
- 
--	/* Physical addresses gives us the identity mapped virtual addresses */
--	kernel_start = __pa_symbol(_text);
--	kernel_end = ALIGN(__pa_symbol(_end), PMD_SIZE);
-+	kernel_start = (unsigned long)RIP_REL_REF(_text);
-+	kernel_end = ALIGN((unsigned long)RIP_REL_REF(_end), PMD_SIZE);
- 	kernel_len = kernel_end - kernel_start;
- 
- 	initrd_start = 0;
-@@ -339,14 +339,6 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
- 	}
- #endif
- 
--	/*
--	 * We're running identity mapped, so we must obtain the address to the
--	 * SME encryption workarea using rip-relative addressing.
--	 */
--	asm ("lea sme_workarea(%%rip), %0"
--	     : "=r" (workarea_start)
--	     : "p" (sme_workarea));
--
- 	/*
- 	 * Calculate required number of workarea bytes needed:
- 	 *   executable encryption area size:
-@@ -356,7 +348,7 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
- 	 *   pagetable structures for the encryption of the kernel
- 	 *   pagetable structures for workarea (in case not currently mapped)
- 	 */
--	execute_start = workarea_start;
-+	execute_start = workarea_start = (unsigned long)RIP_REL_REF(sme_workarea);
- 	execute_end = execute_start + (PAGE_SIZE * 2) + PMD_SIZE;
- 	execute_len = execute_end - execute_start;
- 
--- 
-2.44.0.rc0.258.g7320e95886-goog
 
