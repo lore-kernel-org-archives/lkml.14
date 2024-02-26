@@ -1,201 +1,225 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91CE1CAA2
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA001D69E;
+	Mon, 26 Feb 2024 08:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708937019; cv=none; b=k+OJy/yCWH672cTSb/LY12k1GQ/hxTz2BWdjbDOqHbqz3IoEAwCeISDjxIgajs0kHwqXmxYMjoe9ZzlUEG8+Xdh4PU4HKECpDPJvd7alzWU352nfZ183uI5zgOSDG+gK2DqQpu4Cl3ODlW5RUmouHLLNXE69oSfGsW2LUlQlavU=
+	t=1708937057; cv=none; b=TYvsApdvgw35fkxakmebXVDCWYXNOg6MLRE4bWz44FVIgtwHZ2BW6vGkixAbD0hmbHSjYTdGU5gbvA6e90FnW63+upeSyQ8oQn9gHYErU4phCavwIni1xdpwNNZ5nmrQoIy/XRcJPt+zi4TUEYa98xDUXjNb7IJZuVHTa1wq46c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708937019; c=relaxed/simple;
-	bh=ff9YDknUAfWbL+Qlzh7JnnvIMBsX8B6h0Cy2E6mlWLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o0beSrk6JpQ6ziO9RHI/woDZK1/Day9A6Z9wFgJ/eKIfOJLM0jlJWzMVhI3gc06QdDyFvu91Axse/+A1DKUQ3CI3UkwJbWn5f9WPq1kqUHWrkPRn3MzGbGAyf3AEi9czMxp3Fnr9fX24LRwt/nhWv2/ZlIOmC/ZmoF75b21Epf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=p/94khlF; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bWNTJkTO; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="p/94khlF";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bWNTJkTO"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CE9701FB3D;
-	Mon, 26 Feb 2024 08:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1708937016; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lCro49qKFb96ctGGHx0sMJf91QqvH7dMQtCRbD9/a3Y=;
-	b=p/94khlFMrPoU8svplFmUmTUb8/+VJ9NtDtg9Nv120CoQt12J5AKgAaJQTDCzD0PAqYsEB
-	HSKeuUyLUMu1GZlJFzHpWBylEGdjGuL86bvtkqgCFyzL67wal/MfNiUm/T+8UJlVNOdVrK
-	oCjAlSjY33goDle8rpo+m5nb+3/eaOM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1708937015; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lCro49qKFb96ctGGHx0sMJf91QqvH7dMQtCRbD9/a3Y=;
-	b=bWNTJkTOWTfd1NIXZT1FXBRV0jUN7QWza9A6QAZIcqK2h5L2BNdf8bB0+xmaeNtn8hoCwL
-	1V+XcMv+GpwcCaZK6344GJImjy2FF9jlfq8gss9FmXHoCvJAag20KAwvUhgP2wWF7xLVPU
-	KxcxIBFHJGKtsaGI0YmDv6DNQL4mh54=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C250513A58;
-	Mon, 26 Feb 2024 08:43:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Rdf/LjdP3GUJFQAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Mon, 26 Feb 2024 08:43:35 +0000
-Date: Mon, 26 Feb 2024 09:43:35 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	akpm@linux-foundation.org, kent.overstreet@linux.dev,
-	petr@tesarici.cz, keescook@chromium.org, pasha.tatashin@soleen.com,
-	kernel-team@android.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/1] mm: enumerate all gfp flags
-Message-ID: <ZdxPN4RpNW54ckTE@tiehlicka>
-References: <20240224015800.2569851-1-surenb@google.com>
- <c45d16c6-abab-4132-a499-c231dcedebb2@wanadoo.fr>
- <CAJuCfpFskKqCGj4imMMLjUQJWR_8-KHuYc=xAZ4e20+57Zf5Rg@mail.gmail.com>
+	s=arc-20240116; t=1708937057; c=relaxed/simple;
+	bh=uscKEYignr3+K4U+SNizooeP+KV5pNE3Uw2IIlWJNN8=;
+	h=From:To:Subject:Date:Message-Id; b=fqP9fcJXkTh+jp3D1Dck3rbP80kMl9MZW8Js4gqHN/JhB6iB5mj7TiQc6aze0zfDT6nJOQEDHHyU/jqUje6UXVMPHjgckojBSevoZqg8vLDWPuu8LFmpdC0qeiBFbmqAN9UUDoZ3atMphAffTrm0gSfEYOOoEj7X2g15O6yafyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 957EE20061B;
+	Mon, 26 Feb 2024 09:44:08 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2C1B02010FC;
+	Mon, 26 Feb 2024 09:44:08 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 784F7180031D;
+	Mon, 26 Feb 2024 16:44:06 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: hverkuil@xs4all.nl,
+	sakari.ailus@iki.fi,
+	tfiga@chromium.org,
+	m.szyprowski@samsung.com,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v13 00/16] Add audio support in v4l2 framework
+Date: Mon, 26 Feb 2024 16:28:13 +0800
+Message-Id: <1708936109-11587-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpFskKqCGj4imMMLjUQJWR_8-KHuYc=xAZ4e20+57Zf5Rg@mail.gmail.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-2.60 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-3.00)[100.00%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[wanadoo.fr];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[wanadoo.fr,linux-foundation.org,linux.dev,tesarici.cz,chromium.org,soleen.com,android.com,kvack.org,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.60
 
-On Sun 25-02-24 01:12:46, Suren Baghdasaryan wrote:
-> On Sat, Feb 24, 2024 at 7:03 AM Christophe JAILLET
-> <christophe.jaillet@wanadoo.fr> wrote:
-> >
-> > Le 24/02/2024 à 02:58, Suren Baghdasaryan a écrit :
-> > > Introduce GFP bits enumeration to let compiler track the number of used
-> > > bits (which depends on the config options) instead of hardcoding them.
-> > > That simplifies __GFP_BITS_SHIFT calculation.
-> > >
-> > > Suggested-by: Petr Tesařík <petr@tesarici.cz>
-> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > > Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > > Acked-by: Michal Hocko <mhocko@suse.com>
-> > > ---
-> > > Changes from v4 [1]:
-> > > - Split from the series [2] as a stand-alone patch, per Michal Hocko
-> > > - Added Reviewed-by, per Pasha Tatashin
-> > > - Added Acked-by, per Michal Hocko
-> > >
-> > > [1] https://lore.kernel.org/all/20240221194052.927623-7-surenb@google.com/
-> > > [2] https://lore.kernel.org/all/20240221194052.927623-1-surenb@google.com/
-> > >
-> > >   include/linux/gfp_types.h | 90 +++++++++++++++++++++++++++------------
-> > >   1 file changed, 62 insertions(+), 28 deletions(-)
-> > >
-> > > diff --git a/include/linux/gfp_types.h b/include/linux/gfp_types.h
-> > > index 1b6053da8754..868c8fb1bbc1 100644
-> > > --- a/include/linux/gfp_types.h
-> > > +++ b/include/linux/gfp_types.h
-> > > @@ -21,44 +21,78 @@ typedef unsigned int __bitwise gfp_t;
-> > >    * include/trace/events/mmflags.h and tools/perf/builtin-kmem.c
-> > >    */
-> > >
-> > > +enum {
-> > > +     ___GFP_DMA_BIT,
-> > > +     ___GFP_HIGHMEM_BIT,
-> > > +     ___GFP_DMA32_BIT,
-> > > +     ___GFP_MOVABLE_BIT,
-> > > +     ___GFP_RECLAIMABLE_BIT,
-> > > +     ___GFP_HIGH_BIT,
-> > > +     ___GFP_IO_BIT,
-> > > +     ___GFP_FS_BIT,
-> > > +     ___GFP_ZERO_BIT,
-> > > +     ___GFP_UNUSED_BIT,      /* 0x200u unused */
-> >
-> > Hi,
-> >
-> > what is the need to have this ___GFP_UNUSED_BIT now?
-> 
-> Hi!
-> We can remove it but then all values will shift. That should be safe
-> to do now but I prefer one patch to do only one thing. We can add a
-> separate patch to do further cleanup of unused values.
+Audio signal processing also has the requirement for memory to
+memory similar as Video.
 
-Agreed!
+This asrc memory to memory (memory ->asrc->memory) case is a non
+real time use case.
 
-> > > +     ___GFP_DIRECT_RECLAIM_BIT,
-> > > +     ___GFP_KSWAPD_RECLAIM_BIT,
-> > > +     ___GFP_WRITE_BIT,
-> > > +     ___GFP_NOWARN_BIT,
-> > > +     ___GFP_RETRY_MAYFAIL_BIT,
-> > > +     ___GFP_NOFAIL_BIT,
-> > > +     ___GFP_NORETRY_BIT,
-> > > +     ___GFP_MEMALLOC_BIT,
-> > > +     ___GFP_COMP_BIT,
-> > > +     ___GFP_NOMEMALLOC_BIT,
-> > > +     ___GFP_HARDWALL_BIT,
-> > > +     ___GFP_THISNODE_BIT,
-> > > +     ___GFP_ACCOUNT_BIT,
-> > > +     ___GFP_ZEROTAGS_BIT,
-> > > +#ifdef CONFIG_KASAN_HW_TAGS
-> > > +     ___GFP_SKIP_ZERO_BIT,
-> > > +     ___GFP_SKIP_KASAN_BIT,
-> > > +#endif
-> > > +#ifdef CONFIG_LOCKDEP
-> > > +     ___GFP_NOLOCKDEP_BIT,
-> > > +#endif
-> > > +     ___GFP_LAST_BIT
-> > > +};
-> >
-> > Does it make sense to have something like:
-> >    BUILD_BUG_ON(___GFP_LAST_BIT > BITS_PER_LONG, "blah");
-> 
-> I suppose that would not hurt, except gfp_t is unsigned int, not long.
-> Something like this would work I think:
-> 
-> BUILD_BUG_ON_MSG(___GFP_LAST_BIT > BITS_PER_TYPE(gfp_t), "GFP bit overflow");
-> 
-> except I'm not sure where to put this check. One of the __init
-> functions in page_alloc.c would probably work but none seem to be
-> appropriate. mm_core_init() perhaps? Other ideas?
+User fills the input buffer to the asrc module, after conversion, then asrc
+sends back the output buffer to user. So it is not a traditional ALSA playback
+and capture case.
 
-Would that check add much? We currently cannot use the full width of the
-gfp_t because radix tree code needs to fit also its own tag into the
-same word (see radix_tree_init). If the radix tree constrain is lifted
-then we should add something like the above.
+It is a specific use case,  there is no reference in current kernel.
+v4l2 memory to memory is the closed implementation,  v4l2 current
+support video, image, radio, tuner, touch devices, so it is not
+complicated to add support for this specific audio case.
+
+Because we had implemented the "memory -> asrc ->i2s device-> codec"
+use case in ALSA.  Now the "memory->asrc->memory" needs
+to reuse the code in asrc driver, so the first 3 patches is for refining
+the code to make it can be shared by the "memory->asrc->memory"
+driver.
+
+The main change is in the v4l2 side, A /dev/vl4-audioX will be created,
+user applications only use the ioctl of v4l2 framework.
+
+Other change is to add memory to memory support for two kinds of i.MX ASRC
+module.
+
+changes in v13
+- change 'pixelformat' to 'audioformat' in dev-audio-mem2mem.rst
+- add more description for clock drift in ext-ctrls-audio-m2m.rst
+- Add "media: v4l2-ctrls: add support for fraction_bits" from Hans
+  to avoid build issue for kernel test robot
+
+changes in v12
+- minor changes according to comments
+- drop min_buffers_needed = 1 and V4L2_CTRL_FLAG_UPDATE flag
+- drop bus_info
+
+changes in v11
+- add add-fixed-point-test-controls in vivid.
+- add v4l2_ctrl_fp_compose() helper function for min and max
+
+changes in v10
+- remove FIXED_POINT type
+- change code base on media: v4l2-ctrls: add support for fraction_bits
+- fix issue reported by kernel test robot
+- remove module_alias
+
+changes in v9:
+- add MEDIA_ENT_F_PROC_AUDIO_RESAMPLER.
+- add MEDIA_INTF_T_V4L_AUDIO
+- add media controller support
+- refine the vim2m-audio to support 8k<->16k conversion.
+
+changes in v8:
+- refine V4L2_CAP_AUDIO_M2M to be 0x00000008
+- update doc for FIXED_POINT
+- address comments for imx-asrc
+
+changes in v7:
+- add acked-by from Mark
+- separate commit for fixed point, m2m audio class, audio rate controls
+- use INTEGER_MENU for rate,  FIXED_POINT for rate offset
+- remove used fmts
+- address other comments for Hans
+
+changes in v6:
+- use m2m_prepare/m2m_unprepare/m2m_start/m2m_stop to replace
+  m2m_start_part_one/m2m_stop_part_one, m2m_start_part_two/m2m_stop_part_two.
+- change V4L2_CTRL_TYPE_ASRC_RATE to V4L2_CTRL_TYPE_FIXED_POINT
+- fix warning by kernel test rebot
+- remove some unused format V4L2_AUDIO_FMT_XX
+- Get SNDRV_PCM_FORMAT from V4L2_AUDIO_FMT in driver.
+- rename audm2m to viaudm2m.
+
+changes in v5:
+- remove V4L2_AUDIO_FMT_LPCM
+- define audio pixel format like V4L2_AUDIO_FMT_S8...
+- remove rate and format in struct v4l2_audio_format.
+- Add V4L2_CID_ASRC_SOURCE_RATE and V4L2_CID_ASRC_DEST_RATE controls
+- updata document accordingly.
+
+changes in v4:
+- update document style
+- separate V4L2_AUDIO_FMT_LPCM and V4L2_CAP_AUDIO_M2M in separate commit
+
+changes in v3:
+- Modify documents for adding audio m2m support
+- Add audio virtual m2m driver
+- Defined V4L2_AUDIO_FMT_LPCM format type for audio.
+- Defined V4L2_CAP_AUDIO_M2M capability type for audio m2m case.
+- with modification in v4l-utils, pass v4l2-compliance test.
+
+changes in v2:
+- decouple the implementation in v4l2 and ALSA
+- implement the memory to memory driver as a platfrom driver
+  and move it to driver/media
+- move fsl_asrc_common.h to include/sound folder
+
+Hans Verkuil (1):
+  media: v4l2-ctrls: add support for fraction_bits
+
+Shengjiu Wang (15):
+  ASoC: fsl_asrc: define functions for memory to memory usage
+  ASoC: fsl_easrc: define functions for memory to memory usage
+  ASoC: fsl_asrc: move fsl_asrc_common.h to include/sound
+  ASoC: fsl_asrc: register m2m platform device
+  ASoC: fsl_easrc: register m2m platform device
+  media: uapi: Add V4L2_CAP_AUDIO_M2M capability flag
+  media: v4l2: Add audio capture and output support
+  media: uapi: Define audio sample format fourcc type
+  media: uapi: Add V4L2_CTRL_CLASS_M2M_AUDIO
+  media: uapi: Add audio rate controls support
+  media: uapi: Declare interface types for Audio
+  media: uapi: Add an entity type for audio resampler
+  media: vivid: add fixed point test controls
+  media: imx-asrc: Add memory to memory driver
+  media: vim2m-audio: add virtual driver for audio memory to memory
+
+ .../media/mediactl/media-types.rst            |   11 +
+ .../userspace-api/media/v4l/buffer.rst        |    6 +
+ .../userspace-api/media/v4l/common.rst        |    1 +
+ .../media/v4l/dev-audio-mem2mem.rst           |   71 +
+ .../userspace-api/media/v4l/devices.rst       |    1 +
+ .../media/v4l/ext-ctrls-audio-m2m.rst         |   59 +
+ .../userspace-api/media/v4l/pixfmt-audio.rst  |   87 ++
+ .../userspace-api/media/v4l/pixfmt.rst        |    1 +
+ .../media/v4l/vidioc-enum-fmt.rst             |    2 +
+ .../media/v4l/vidioc-g-ext-ctrls.rst          |    4 +
+ .../userspace-api/media/v4l/vidioc-g-fmt.rst  |    4 +
+ .../media/v4l/vidioc-querycap.rst             |    3 +
+ .../media/v4l/vidioc-queryctrl.rst            |   11 +-
+ .../media/videodev2.h.rst.exceptions          |    3 +
+ .../media/common/videobuf2/videobuf2-v4l2.c   |    4 +
+ drivers/media/platform/nxp/Kconfig            |   13 +
+ drivers/media/platform/nxp/Makefile           |    1 +
+ drivers/media/platform/nxp/imx-asrc.c         | 1256 +++++++++++++++++
+ drivers/media/test-drivers/Kconfig            |   10 +
+ drivers/media/test-drivers/Makefile           |    1 +
+ drivers/media/test-drivers/vim2m-audio.c      |  793 +++++++++++
+ drivers/media/test-drivers/vivid/vivid-core.h |    2 +
+ .../media/test-drivers/vivid/vivid-ctrls.c    |   26 +
+ drivers/media/v4l2-core/v4l2-compat-ioctl32.c |    9 +
+ drivers/media/v4l2-core/v4l2-ctrls-api.c      |    1 +
+ drivers/media/v4l2-core/v4l2-ctrls-core.c     |   93 +-
+ drivers/media/v4l2-core/v4l2-ctrls-defs.c     |   10 +
+ drivers/media/v4l2-core/v4l2-dev.c            |   21 +
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   66 +
+ drivers/media/v4l2-core/v4l2-mem2mem.c        |   13 +-
+ include/media/v4l2-ctrls.h                    |   13 +-
+ include/media/v4l2-dev.h                      |    2 +
+ include/media/v4l2-ioctl.h                    |   34 +
+ .../fsl => include/sound}/fsl_asrc_common.h   |   60 +
+ include/uapi/linux/media.h                    |    2 +
+ include/uapi/linux/v4l2-controls.h            |    9 +
+ include/uapi/linux/videodev2.h                |   44 +-
+ sound/soc/fsl/fsl_asrc.c                      |  144 ++
+ sound/soc/fsl/fsl_asrc.h                      |    4 +-
+ sound/soc/fsl/fsl_asrc_dma.c                  |    2 +-
+ sound/soc/fsl/fsl_easrc.c                     |  233 +++
+ sound/soc/fsl/fsl_easrc.h                     |    6 +-
+ 42 files changed, 3109 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/userspace-api/media/v4l/dev-audio-mem2mem.rst
+ create mode 100644 Documentation/userspace-api/media/v4l/ext-ctrls-audio-m2m.rst
+ create mode 100644 Documentation/userspace-api/media/v4l/pixfmt-audio.rst
+ create mode 100644 drivers/media/platform/nxp/imx-asrc.c
+ create mode 100644 drivers/media/test-drivers/vim2m-audio.c
+ rename {sound/soc/fsl => include/sound}/fsl_asrc_common.h (60%)
+
 -- 
-Michal Hocko
-SUSE Labs
+2.34.1
+
