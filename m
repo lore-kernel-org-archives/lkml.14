@@ -1,215 +1,361 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2D0605BF;
-	Mon, 26 Feb 2024 09:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708940625; cv=fail; b=LuaVukU68CbqtzEe8AoxIniZRn4TQs/de/JXNGjNDsJB2vMi2csqrx2siQ0U1/vwJwAS8y6t/0LBe4w1Emfa66RhG8vhr18sHOARQ5+ueZoZ8fUUFkgvHAWIjy2r8brISWCWsYLAPxMA9tzukuJ2ACZku2hLseaACouJU8Ez3+E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708940625; c=relaxed/simple;
-	bh=OnNcejwjMd5lgeA6G6Xh48UEk52uAmeGSD14ZZ12nvQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nyqekBMKK7Os1dFvj6I/oHABZnLqQ6hrRuwMIzi5fAspJTZuP1IaxyFfJFrhpUux1Yv/AI8+ShwPCTR+b7/pPqnkSI/4pCf4adDU7yXf48bil7kttMz2p4r2WTzjXZ2nqwL9rqIlSTV6UNyeR+F276hrtZPevmYuyYkFqmnq56Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l8nBpyJ7; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB675605BF;
+	Mon, 26 Feb 2024 09:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708940633; cv=none; b=XLX5Hxf5FlZkOJ0uiJ2hbhTZpNCy0mZXOpGnseDDaMWpedBd0trYcj/VFR45oZq1iO4C9KDtTXuPKOmS++KYwZhj/hbXhiccT7XDVlAJIcbnjmtG4sUxIerQTolW+jTGBnofN62+tluIUz8ucFb1U7q8S/7L6CEkRTGksALBGSo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708940633; c=relaxed/simple;
+	bh=wx6qcLjfOsQ5f26kn1aBWeymF+akqJQOWHEnKood6b4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KqLoV7sA490rIr367igm8XMK6zpOYDeyE218l2q+Tb1aMFeC1As+T6/z0+qlkw70eh005/9fUeMG4L40xB1sJF7DK7oqx6t/q8g9Bn7ztCe8PwrMXP1Oo8Hv6xDUUrseg8EXxWYE6T7ubW787trDSM3A6DTyM1reTQfpQey/UpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i0Y0a47c; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l8nBpyJ7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708940623; x=1740476623;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=OnNcejwjMd5lgeA6G6Xh48UEk52uAmeGSD14ZZ12nvQ=;
-  b=l8nBpyJ7u27FJjG72uIXTRjYkUOBBA+5K49f40yrrkZuxOt3MhKjPdgl
-   LdnmCs4kqUsegygYwkRewpGgROmMsoUOeyzSgaiDYRsObTl+x/C5uqKgJ
-   iskx1sWcXCsirH/0mHOA7NXeCjlBCRd+VR1F+/MHMZtBl5GdaADlz6dug
-   fjWx61ShQeu95QTKMJsdXMk6mwc1FCv2fJ8AuiB5crfYy/nNQkpSfxCCZ
-   PGSLcWypsbitXW8ND71bTHR3G5gJoT8sqgAVFNNsWBoY/bfsEaVgVuliE
-   oJ1eaD7GrjZ3ANVPCNCYQCfN4HPK1KCAgfvmWQVkDAER+MUVC5guydDf9
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14346910"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="14346910"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 01:43:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="29791145"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Feb 2024 01:43:42 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 26 Feb 2024 01:43:41 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 26 Feb 2024 01:43:41 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 26 Feb 2024 01:43:41 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 26 Feb 2024 01:43:41 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z964BZdCsdGHxY8uLscDfPwhwpOLmUvf93HA1KP3ZyM5Y6GuHMAtbOyeTdMchM4DjyHvHb6KloyErkw2PB1WqcuoFLn8IcHcKWoF/Hu0zbGLigEG6JsIjk29WW5H3p55rjTsl4zdUq2mxcxT7G8V4FZG4616PabT5SEUcllcOJLn4YeAbEpzr5Pos++kVCxNNgeI9ZrFqTmiGF538KyYHnMccVjYTgCR+D/2ELN5s6B2rDFvfLmQ8ZaR0Sfvivfrxo1Kwu7QF+vpgf0giV7Bgzqh+OVNGGkgL+K6Iqcq6T/i5ED5yNeY/PXvSQiH0DPyaR6Lj/oKbnEpn6Fb4wMjgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EHPvINdd+NTJDDZLP3ob/B2yeb7uzcmd+jPCKE75hlE=;
- b=lRqdEXnGwx3FiIPEPK1V4QKF3kmD5VQo3JcznByusdNEXYuZ6laht39HGLWa7ervTb1pzE7E41liIlZkEi0zMr1ef073vTUC5JIWegCCKZFFREBst9GPI5EQWAKo67ha94Us3tvS36SWZR3ivyQzJ3nhsM9XYrfcNTYgunRM1Rgs0RCDqd9Wn9ba97NfexClwTgU9StpR/4D0QXQGIyw8kC+WVzRxU9UQ8M6f/p6MMMng0TIocEAXf4fHDfNWv9dns1R5r0gPIN4RCIy76OW0ewfBo8z/WdLcVKyWhOomAIAni/5q9erCMzv/tuK8lFyFVFHV9Rnb88bzOXtrSL4ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN0PR11MB6231.namprd11.prod.outlook.com (2603:10b6:208:3c4::15)
- by CY5PR11MB6140.namprd11.prod.outlook.com (2603:10b6:930:28::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.24; Mon, 26 Feb
- 2024 09:43:39 +0000
-Received: from MN0PR11MB6231.namprd11.prod.outlook.com
- ([fe80::6440:4b82:c32c:9eb7]) by MN0PR11MB6231.namprd11.prod.outlook.com
- ([fe80::6440:4b82:c32c:9eb7%5]) with mapi id 15.20.7339.024; Mon, 26 Feb 2024
- 09:43:39 +0000
-Date: Mon, 26 Feb 2024 10:43:35 +0100
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-CC: Fenghua Yu <fenghua.yu@intel.com>, Shuah Khan <shuah@kernel.org>,
-	<ilpo.jarvinen@linux.intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] selftests/resctrl: Simplify cleanup in ctrl-c
- handler
-Message-ID: <qxn5tpm3gkv7l32rbcjapik6mn7uzmv24zw7hyrvp55mngyufb@3fgphjebxkvb>
-References: <cover.1708599491.git.maciej.wieczor-retman@intel.com>
- <e84995d79debfa8775a1535a82c6ca637f6891da.1708599491.git.maciej.wieczor-retman@intel.com>
- <635699af-4abc-491e-9528-66ebfe9eaf6d@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <635699af-4abc-491e-9528-66ebfe9eaf6d@intel.com>
-X-ClientProxiedBy: WA2P291CA0015.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1e::28) To MN0PR11MB6231.namprd11.prod.outlook.com
- (2603:10b6:208:3c4::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i0Y0a47c"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5d8b276979aso2187542a12.2;
+        Mon, 26 Feb 2024 01:43:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708940631; x=1709545431; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kqpalVXYBbAnAdxE01aG7B7dGxizfJoTVD+z7ZQguYE=;
+        b=i0Y0a47cNOdv9fAFLixnRQc3GfBw6ldX6PutEKzpmKmpnMl/ZfG9Dn9lrNWmLUFJEE
+         4ig5lGf+6AI8eYBs7hHj+Mod0rjcgTuAKCNkA4dofjK8qTgaV+xI/Ja4MN0oHC7uRAMJ
+         JDzuT41wFIY6gxm0HwFZ7iS+CQYPu1onuEyRDMQOpDkN0ldwBHXdNDxFNzjM1771BMlr
+         GAe28nsphbRvzp44I6Vmx9flH1gh0wmHG0EoMnW4lQAMknfmjrhIycN/V6GXYfzhGmuw
+         iYuIp/rakv002WgnIDo6qa9C1oEUCqxMRqQjNvKianosAgXXwWNEb496mQqxb30YHVAt
+         jsEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708940631; x=1709545431;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kqpalVXYBbAnAdxE01aG7B7dGxizfJoTVD+z7ZQguYE=;
+        b=FQxSZXosW7W+hhrvG5WnAx6gX0LjviYXnGDmAa+YjScRtG5Ta2zxMED8WjQjpukp7u
+         GN80Q8Rs9732xpFSxjUqf6OuMLxeJEfsLRjAlbR4XHPwTVNQbH+QeNGIOhMhSFmZWf8L
+         osxJyXlchJIwbhWTJZ/3GJP40eHL8Jw5ZPpzmk4KbZCdeTiiA1hkxnWfqrpkaoowagw1
+         eD3bYZUtoDX5xVeu9La14sBGEGaWbyAEiRNRxs+7ve+fh8JVpySB369kYrfTzdJ+yiXT
+         Owea6SCOwPvKjCnLiDKoq3X8l4Os65gQ9fa9YE/rncL5gmwMwpJfl1vgaj6bOT5KANJp
+         nlTA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/cKLI5sBsvCTJCHrW6LjuPk2G3AytPwigB/dHF2XJlgvA31UV6zByPRg4WnI61blQKoPBzc6/xXPR+cuBpDps8Ht/7qEtWHpBC4TVRBy2jA1AHAx5Jz3UiiSMBTEbfKuM5fp9KRGqLqGXmR762qKAq1ULb7gFBRmecVgI/0VWrembVj3PXEH1BLbXlm5lMMsBYrZm/BclrbdiuDX61LEBJCPMNR4BqnU=
+X-Gm-Message-State: AOJu0YxDZizlzRLlnrivRqASNdfqsQ8XecrhJikgosleLThOheDoibuS
+	DVN7vMTEkJXNJWtwkrOcRSXen+IjOg2r7zc3ypso1NF12uoFdFRf
+X-Google-Smtp-Source: AGHT+IHaEETYLvx63vUgW4mx8iDIKO+7XQPbUO0Oz3DOmt3gdXfISHID2KvvvcZXG4w3BnJgyAy1Ig==
+X-Received: by 2002:a05:6a21:1799:b0:19e:48b6:9c43 with SMTP id nx25-20020a056a21179900b0019e48b69c43mr5148618pzb.58.1708940630983;
+        Mon, 26 Feb 2024 01:43:50 -0800 (PST)
+Received: from localhost.localdomain ([115.187.42.119])
+        by smtp.gmail.com with ESMTPSA id y13-20020a62ce0d000000b006e4f1bdff29sm3799164pfg.1.2024.02.26.01.43.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 01:43:50 -0800 (PST)
+From: Raihan Ahamed <raihan1999ahamed@gmail.com>
+To: krzysztof.kozlowski+dt@linaro.org
+Cc: raihan1999ahamed@gmail.com,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 2/2] arm64: dts: qcom: msm8953-lenovo-kuntao: Add initial device tree
+Date: Mon, 26 Feb 2024 15:11:04 +0530
+Message-ID: <20240226094256.5736-2-raihan1999ahamed@gmail.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240226094256.5736-1-raihan1999ahamed@gmail.com>
+References: <a762f756-1a92-4d82-be38-098bacaf25dc@linaro.org>
+ <20240226094256.5736-1-raihan1999ahamed@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR11MB6231:EE_|CY5PR11MB6140:EE_
-X-MS-Office365-Filtering-Correlation-Id: c04f7f20-0795-43f7-5587-08dc36af6947
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: r38cexJc5sduoOxMLqL9xRsujncCBqymkDb/lnV9NFll1OPE/TZ8HkYHGaEESnejT43KXcL3fP+LPhgoUyM2K+rvUqmgwvl9OuMIQNhnhnN/w54WbMeJddGc/KzEZCW3aru6DbWYuaNyX6TP3KdGqlTlUhOO3xo+QS+rndG7rA9rWPlRBKgDzVtuLebqzwuwmopvlJ1QMLAdOadqrP70yrZzC0sAsE9Sm3RJQA58hOJuOV++B9UeF6NVCbJIt+O20ti9o1i2QTB0eLZvqq2pSMknYucJ1VfTk+YZwCt4PJiszIT3ZHo3rBdSEx0Uu/iyKzkhbpRMP3Pa6/SR8V1AXqU7CYId5oLSVV3oPzFaP3k7GD2F9Nd1q0JGvRM2cDrymqwNe/YnWIsgL9BiZcUl/BB5hPgbXrYsCAOc94i3W8tnFCtD5c0i4HT9X+po5TkPZXhzNy0qrr30iHq4/7BetZQ7Xm43WI7yrDcniPDcXeFC0Fgjs/X9hLHSXk9eAxqc2JQnwaGnoy/PjBzKPSbFd+Is73MYDmXyu74DTYSQk622vIIbg4gKHuq4vIyJDAP9BQOC5LaHBN/ldWNDCzoVxxI7UySGEVS9KUlvIzW1815LuqTFXSFKG1mXZr4Bp1eX
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6231.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?zW+GA0f1vojNlviYvKjL027UY+RtQzL/oJLSVIR6+ZGLJgFoabPCZqF6I2?=
- =?iso-8859-1?Q?uFRr7JmyX1nsyFHZdXZyjBRFhCRLpFI8YmPAyZS0XqNzgAjJbhmNcYP3nv?=
- =?iso-8859-1?Q?NuJDASwoatUpDKaLTTGYHXcr+tBkujq6cG8HMxzmetGo4KyW2o83asKvZs?=
- =?iso-8859-1?Q?xz2y4692X3Ao9wRIxtVD27lFy93W2RZVxjBl9iTT/Q831Xb1Tr8TnBIAbn?=
- =?iso-8859-1?Q?f1gezI8A143coADC/xhtXBQOw7RDnAGSalyEHoU7sHwSTU89L9MycWA4QM?=
- =?iso-8859-1?Q?N011XTniPWbOqW7iPF3T2a4/QUfP5WKaM/2zJ8X0crPeStSwNZRHJnxJYg?=
- =?iso-8859-1?Q?jBP1XSvwwb3YVsKw4fgBJFT+0lNISuT7OQ31EcAwUB5JiVkKln8CWSujK4?=
- =?iso-8859-1?Q?U7Njde//KL4KUV3WL1Gc49Ha7FC8JF5mOam/1IbjwxzXFctfyDtmxF6pjf?=
- =?iso-8859-1?Q?530X1aAP0FK/vXXqQ/Kh0c6DNKuDkZaZsMlzrY2LFdFPrVVbeEz1mbOwLe?=
- =?iso-8859-1?Q?3y/LuIHdtEn1Tx1aloFhInnxRuqHZRenWtPErwdZ3cfvtwq8hM6YQ2P9Hk?=
- =?iso-8859-1?Q?9ZtySFUXURWYjl/pTvF9uu3TrVdtOrQuV3Teeey2hS43QujT+W5QulI7qr?=
- =?iso-8859-1?Q?MwylM1eG+YSPu8BLZUEtl2cOnCFpHlseq4h4AU6G91E/64HGeWyB7vTlz4?=
- =?iso-8859-1?Q?jGyHcqtNBe2ycxRTUpes6JE6oVXc3C8Lpvi4dbruX2PqK1hHm27koW66fF?=
- =?iso-8859-1?Q?tlz1N1uIfmROgqZPvTaDWnkcoY8h2e+jyYN/xVODguiBqJq015AJcfLyJY?=
- =?iso-8859-1?Q?CYf3pp9+dMhBsZCvVpsCjJuNBpJdphjVxjSklMszAdyGSVfhtYxqv9ZwEf?=
- =?iso-8859-1?Q?UfHFN81Dx3Get+erIHzlBVr2Lemy3DmUddlM5toOOThMHjjcqawmdgAyea?=
- =?iso-8859-1?Q?+zSZZEKxTkS6PpLFTyiKn2fsmD1TzycDt23rWoVfGpRIqqK2pQuN1U12is?=
- =?iso-8859-1?Q?q33aAM6qN0MlgQ+MJP3Z5eJzbPrtma0on1un0ctwIzJZHyeEp6vpI4QAWg?=
- =?iso-8859-1?Q?F8tf50HA/CLSmCqN2z/jG7456sE6blafkxM8TbB9AdE+exNfbDBORI2e7G?=
- =?iso-8859-1?Q?GBUWj4OzU8hRkZ4Ely7Z+d8kZ7ECqTyw0ik2MoftqiMBnHCdqnIAockfao?=
- =?iso-8859-1?Q?TqZysPXnqrZXzJqZ6cV9wSkrH3EPlwkHkSKIimNeGqCssQWT5WXOJcd0DD?=
- =?iso-8859-1?Q?FqRP70ZEgFn2LvcGlgyD2Ot7ARyQbJSazyd1NCy0rYN5o7CEp9vZ5+6fLt?=
- =?iso-8859-1?Q?5xG88UCTCHOZNXW4SxbyBXaT5wLhO+oeFfT54lmfy8P9DJTw0d8DwKQDrS?=
- =?iso-8859-1?Q?zydMUyG/bA9/lAWg2ZDu2ElYA2eY5L/6xzVJP35Q3FEQkIsuxby3NCBoZC?=
- =?iso-8859-1?Q?G45+h5ItvClDG3vkaib2n8kVWBBVw4T656t2o862prtPf0URXFEl0LsVhu?=
- =?iso-8859-1?Q?LjFdo1raPquEzvUaKbDSCfPLSPv7SE1O44IuoeFdpZswsUpIV7AEIwsdOC?=
- =?iso-8859-1?Q?YlW0nTyDnwlB9K3xECrcDzot2TqpgWW+LSIgSP7f9yt1P+kgzhR1dUbkYN?=
- =?iso-8859-1?Q?SgR/W0dBHXmTHFa0NQm3WjHTYp1dIDdjldmUVAE2iIepzBKuWOCKUNdiZ4?=
- =?iso-8859-1?Q?YYuK5rUL57XcsMSrTgw=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c04f7f20-0795-43f7-5587-08dc36af6947
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6231.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 09:43:39.3928
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KfwuGqrZEP8hTD9l4V3pTkYn/OoGKdjpUMBI04T+y0SfwOQa6+ID2lbo8QIGFSQRqm+CfRqIyYIVSHaxn1s3Xot+e4kDIlwy5oZKP8tKp4w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6140
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On 2024-02-23 at 13:18:22 -0800, Reinette Chatre wrote:
->Hi Maciej,
->
->On 2/22/2024 4:07 AM, Maciej Wieczor-Retman wrote:
->  	}
->> diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
->> index 5a49f07a6c85..0134aa2f896a 100644
->> --- a/tools/testing/selftests/resctrl/resctrl_val.c
->> +++ b/tools/testing/selftests/resctrl/resctrl_val.c
->> @@ -62,6 +62,7 @@ struct imc_counter_config {
->>  static char mbm_total_path[1024];
->>  static int imcs;
->>  static struct imc_counter_config imc_counters_config[MAX_IMCS][2];
->> +static const struct resctrl_test *current_test;
->>  
->>  void membw_initialize_perf_event_attr(int i, int j)
->>  {
->> @@ -472,7 +473,8 @@ void ctrlc_handler(int signum, siginfo_t *info, void *ptr)
->>  	if (bm_pid)
->>  		kill(bm_pid, SIGKILL);
->>  	umount_resctrlfs();
->> -	tests_cleanup();
->> +	if (current_test->cleanup)
->> +		current_test->cleanup();
->
->Could you please make this more robust with a:
->
->	if (current_test && current_test->cleanup)
+Lenovo P2 is a handset using the MSM8953 SoC released in 2016
 
-Okay, will do.
+Add a device tree with initial support for:
 
->
->>  	ksft_print_msg("Ending\n\n");
->>  
->>  	exit(EXIT_SUCCESS);
->> @@ -482,13 +484,14 @@ void ctrlc_handler(int signum, siginfo_t *info, void *ptr)
->>   * Register CTRL-C handler for parent, as it has to kill
->>   * child process before exiting.
->>   */
->> -int signal_handler_register(void)
->> +int signal_handler_register(const struct resctrl_test *test)
->>  {
->>  	struct sigaction sigact = {};
->>  	int ret = 0;
->>  
->>  	bm_pid = 0;
->>  
->> +	current_test = test;
->>  	sigact.sa_sigaction = ctrlc_handler;
->>  	sigemptyset(&sigact.sa_mask);
->>  	sigact.sa_flags = SA_SIGINFO;
->
->Could you please reset the pointer in signal_handler_unregister()?
+- GPIO keys
+- SDHCI (internal and external storage)
+- USB Device Mode
+- WCNSS (WiFi/BT)
+- Regulators
 
-Okay, I'll set it to NULL here.
+Signed-off-by: Raihan Ahamed <raihan1999ahamed@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/msm8953-lenovo-kuntao.dts   | 240 ++++++++++++++++++
+ 2 files changed, 241 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
 
->
->Reinette
-
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 39889d5f8e12..aebfb1ae728c 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -49,6 +49,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-huawei-kiwi.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-longcheer-l9100.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-samsung-a7.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8939-sony-xperia-kanuti-tulip.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-lenovo-kuntao.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-motorola-potter.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-daisy.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-mido.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts b/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
+new file mode 100644
+index 000000000000..2fd6345bbe15
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8953-lenovo-kuntao.dts
+@@ -0,0 +1,240 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2024, Raihan Ahamed <raihan1999ahamed@gmail.com>
++ */
++/dts-v1/;
++
++#include "msm8953.dtsi"
++#include "pm8953.dtsi"
++#include "pmi8950.dtsi"
++
++/delete-node/ &qseecom_mem;
++
++/ {
++	model = "Lenovo P2";
++	compatible = "lenovo,kuntao", "qcom,msm8953";
++	chassis-type = "handset";
++	qcom,msm-id = <0x125 0x00>;
++	qcom,board-id = <0x41 0x82b1 0x41 0x83b0>;
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_key_default>;
++
++		key-volume-up {
++			label = "Volume Up";
++			gpios = <&tlmm 85 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++			debounce-interval = <15>;
++		};
++	};
++
++	reserved-memory {
++		qseecom_mem: qseecom@84a00000 {
++			reg = <0x0 0x84a00000 0x0 0x1900000>;
++			no-map;
++		};
++
++		ramoops@8ee00000 {
++			compatible = "ramoops";
++			reg = <0x0 0x8ee00000 0x0 0x80000>;
++			console-size = <0x40000>;
++			ftrace-size = <0x15000>;
++			record-size = <0x5000>;
++			pmsg-size = <0x2000>;
++		};
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&hsusb_phy {
++	vdd-supply = <&pm8953_l3>;
++	vdda-pll-supply = <&pm8953_l7>;
++	vdda-phy-dpdm-supply = <&pm8953_l13>;
++
++	status = "okay";
++};
++
++&pm8953_resin {
++	linux,code = <KEY_VOLUMEDOWN>;
++	status = "okay";
++};
++
++&rpm_requests {
++	regulators {
++		compatible = "qcom,rpm-pm8953-regulators";
++		vdd_s1-supply = <&vph_pwr>;
++		vdd_s2-supply = <&vph_pwr>;
++		vdd_s3-supply = <&vph_pwr>;
++		vdd_s4-supply = <&vph_pwr>;
++		vdd_s5-supply = <&vph_pwr>;
++		vdd_s6-supply = <&vph_pwr>;
++		vdd_s7-supply = <&vph_pwr>;
++		vdd_l1-supply = <&pm8953_s3>;
++		vdd_l2_l3-supply = <&pm8953_s3>;
++		vdd_l4_l5_l6_l7_l16_l19-supply = <&pm8953_s4>;
++		vdd_l8_l11_l12_l13_l14_l15-supply = <&vph_pwr>;
++		vdd_l9_l10_l17_l18_l22-supply = <&vph_pwr>;
++
++		pm8953_s1: s1 {
++			regulator-min-microvolt = <863000>;
++			regulator-max-microvolt = <1152000>;
++		};
++
++		pm8953_s3: s3 {
++			regulator-min-microvolt = <1224000>;
++			regulator-max-microvolt = <1224000>;
++		};
++
++		pm8953_s4: s4 {
++			regulator-min-microvolt = <1896000>;
++			regulator-max-microvolt = <2048000>;
++		};
++
++		pm8953_l1: l1 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1100000>;
++		};
++
++		pm8953_l2: l2 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++
++		pm8953_l3: l3 {
++			regulator-min-microvolt = <925000>;
++			regulator-max-microvolt = <925000>;
++			regulator-allow-set-load;
++		};
++
++		pm8953_l5: l5 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l6: l6 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l7: l7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1900000>;
++		};
++
++		pm8953_l8: l8 {
++			regulator-min-microvolt = <2900000>;
++			regulator-max-microvolt = <2900000>;
++		};
++
++		pm8953_l9: l9 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3300000>;
++		};
++
++		pm8953_l10: l10 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l11: l11 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <3000000>;
++		};
++
++		pm8953_l12: l12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3000000>;
++		};
++
++		pm8953_l13: l13 {
++			regulator-min-microvolt = <3075000>;
++			regulator-max-microvolt = <3125000>;
++		};
++
++		pm8953_l15: l15 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l16: l16 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l17: l17 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <3000000>;
++		};
++
++		pm8953_l19: l19 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1350000>;
++		};
++
++		pm8953_l22: l22 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2850000>;
++		};
++
++		pm8953_l23: l23 {
++			regulator-min-microvolt = <975000>;
++			regulator-max-microvolt = <1225000>;
++		};
++	};
++};
++
++&sdhc_1 {
++	vmmc-supply = <&pm8953_l8>;
++	vqmmc-supply = <&pm8953_l5>;
++
++	status = "okay";
++};
++
++&sdhc_2 {
++	vmmc-supply = <&pm8953_l11>;
++	vqmmc-supply = <&pm8953_l12>;
++
++	cd-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
++
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_off>;
++	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
++
++	status = "okay";
++};
++
++&tlmm {
++	gpio-reserved-ranges = <0 4>, <135 4>;
++};
++
++&usb3 {
++	status = "okay";
++};
++
++&usb3_dwc3 {
++	dr_mode = "peripheral";
++};
++
++&wcnss {
++	vddpx-supply = <&pm8953_l5>;
++
++	status = "okay";
++};
++
++&wcnss_iris {
++	compatible = "qcom,wcn3660b";
++
++	vddxo-supply = <&pm8953_l7>;
++	vddrfa-supply = <&pm8953_l19>;
++	vddpa-supply = <&pm8953_l9>;
++	vdddig-supply = <&pm8953_l5>;
++};
 -- 
-Kind regards
-Maciej Wieczór-Retman
+2.43.2
+
