@@ -1,103 +1,174 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0972605AF
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31A0604BB;
+	Mon, 26 Feb 2024 12:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708950581; cv=none; b=cNi2MZnrKR7jTh5WymiHeEZIEMLVuWzZfH0SguuS65fk2BA2vMZcFvTFeIQeo2Wno70gzX4iJrBi/a60OqEBIJufmml4m17e5OAIC2PJ9xW6pTh1Mw7g8sTnxgjd9Xc8tc06DLFYGLL02T8oTpT5n2gVJH2ZrpBZVHcvq0zh5Ck=
+	t=1708950602; cv=none; b=Pr16979YzLzQs14JY4PAUX0LhKeANMF2pDfRhZXgPKcwK+cvZHzaNkSHYIdQilgZJnRoA6zr6jaeUiufFrtPVhs0TTJKhBFixvKSNtTURDbkNvs1Fm5nZyzXOWaEFX86MLMu8L2ZZVhKq5taUPkHTHoexbMNRnUoQxJ1QH//CKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708950581; c=relaxed/simple;
-	bh=/yIz5oyLBfSA++ON1dY6EPVob2yea5MQlWsNhAmfIVc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YEUVwHUzKqfYKN/JXd3RGgZlegsez+MYsB3g262FhR3dAEvuj3Or78CehhPhoyFKsYbmFSzOvJI0sbMXfUFxVhMWCKtveB0lDLwSixX2+yvmzRXwtDfGKa60w+WnL9jJpPqp79WyRCSpg+at6L7PDf8+59H1CmX28bI2VKuSJhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zvxlmbc1; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708950602; c=relaxed/simple;
+	bh=2UzpBftGfONTgJsYO9jo3Eiv5eHfoMEaol+tbd/SXHA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PKWPyTvgeW2vqxUBOSUuLHIqLgMUid9jCXPSUo4wTdo9RJ+G1ZMU9J4vFwu+9eMiiEZcLqyO4ogPXM2es+vAAOVztYCoQfcTjwgA0J+u6qZC8/zUj/JuYqossibt4rDd9CO2wU+KBVpom/ZHudGp5quYnNen9ynX9bB0SGSSRM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=nO7o1mql; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zvxlmbc1"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-563b7b3e3ecso4144749a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 04:29:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708950578; x=1709555378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SUO6wmBtkv4ffo/uxOeQsK49ucl/5uSltaqOCTDJPag=;
-        b=zvxlmbc1hoLmUsYE3vC2ANVf9Ser6/fe32yCoRTtB1xN43g9yN8TNVacuv4No4SzO9
-         qcT+aZaV4ZiKvw6kqI1jPhynrkMDjfuUwwySb2bglXUU2hZT3km4K/rTG7ovaKuU2y/H
-         mZDgRhX2rW82Gf0z8NUQeUv0vO+v688WX5I2tI1hxLsD6McTeApY4+5jbrHbKcJoVAcB
-         LiOS6Kd40bzld+sf5sjtDIuTrQ2e02JRmsBbNLiJZEHkH75vPcju8Kv2kPJFzT/eU02R
-         HHPhGXG+McoYDTsEwuUOz6uVlqWhmjmSAkwwbKXfqI8/DMUKmaT+lwSPqdmpnsYQPTSf
-         SyBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708950578; x=1709555378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SUO6wmBtkv4ffo/uxOeQsK49ucl/5uSltaqOCTDJPag=;
-        b=jl11ffVrfIKErjZd0jHM3IvNkrwe4jRi+FsT5ZZCAJUylTslmbBOsYR5amg4UYQtgl
-         5ZaxfjWU5gcbGA86Tj9OSpeUY4VSliCXfSBtIq7jhCFKSBlrGDIjVn2O+oIOF4WO4cNP
-         JEUQx/sHqsOs1LKt48KPRYio4h0ZjxPc9B2P8iRHNTRAIReHD6RqkPwUxo1Jh9MFePVH
-         tLfX2W7aD4pwl4PH4nXPosvRkxmCPTqtkhzGsm+eAIZr3/aieJ7jXvR81G6uaOZf5S3Q
-         H9+Vj4kGTt3h721AsLaos4liYLZLsv9vJqL2CfOA5GVBcn9AmSuJk6l2lmKKwhYYDKMV
-         xSXw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9sFQZDSFtaQovBmKIc4ALkUx+Ir3JYBnqvxb6e8cLNhNtMgVAOHEI/KIVsVhreWqwOgjDBynkluf2T9UgIyKdpbQpKQPUggsZs0Kn
-X-Gm-Message-State: AOJu0YyHeWlhBscr0t19ERXjNPctVOAv+4RGarG28vuHn6RhdN2m0zQM
-	fn5sgABSGAMZKRDQlKTAo/SwQEllTHRRnzcCYbM1hlG+gF2mBQlt059o49W65YA=
-X-Google-Smtp-Source: AGHT+IEG45l2x++PIZXi1hnUpUUkA/1s8de6YMCGRZc2XdUxmEusGFOlqs4MacdMEgFnjeNKBj1UZQ==
-X-Received: by 2002:a50:ef08:0:b0:566:ee8:8b1d with SMTP id m8-20020a50ef08000000b005660ee88b1dmr869351eds.24.1708950577837;
-        Mon, 26 Feb 2024 04:29:37 -0800 (PST)
-Received: from krzk-bin.. ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id s17-20020a50ab11000000b0055f0b3ec5d8sm2422683edc.36.2024.02.26.04.29.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 04:29:37 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] dt-bindings: input: allwinner,sun4i-a10-lrad: drop redundant type from label
-Date: Mon, 26 Feb 2024 13:29:34 +0100
-Message-Id: <20240226122934.89257-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="nO7o1mql"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6uiBS+Qi7asaIxy6/7a5MSyWBWL8eWW6sZvNhsKqAP4=; b=nO7o1mql1l5uhE1TZDI6i2tAQ0
+	wyfpn30zdIhLWSm7LAnvxgSFa2K1lK+j8MYcjGXa3TeWtoyonvn57BTBA9m+ETkCt6ZIvqsghfzW4
+	QAkfqgbBwiJk6xewHIkjbf5mFTN6T3aHAdhW3Y83KUgbhQtVNSRTgrXyQWMm9kq+mNSD53P++KVhj
+	ZNMqKZl7GrmXWMRIT6+EryKM0uK4yq1WzsKmahmk+zfy22KNPxpv9a7uSSI4bexip7spal8O/YBHm
+	eVHrLna8RfH0FyG5WHfJ8TqABMatDf2YBgl8JDX89I05n3kSdljjUpE3jYhLzD+JTP31KV9ZKYzqQ
+	4yOKJ0pQ==;
+Received: from [177.34.169.255] (helo=[192.168.0.139])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1rea72-003YnI-Sh; Mon, 26 Feb 2024 13:29:41 +0100
+Message-ID: <244fe6b9-f295-4c85-908a-014ada0033fa@igalia.com>
+Date: Mon, 26 Feb 2024 09:29:32 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 29/36] drm/vc4: tests: Remove vc4_dummy_plane structure
+Content-Language: en-US
+To: Maxime Ripard <mripard@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>,
+ Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+ Sebastian Wick <sebastian.wick@redhat.com>,
+ =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+ <20240222-kms-hdmi-connector-state-v7-29-8f4af575fce2@kernel.org>
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Autocrypt: addr=mcanal@igalia.com; keydata=
+ xjMEZIsaeRYJKwYBBAHaRw8BAQdAGU6aY8oojw61KS5rGGMrlcilFqR6p6ID45IZ6ovX0h3N
+ H01haXJhIENhbmFsIDxtY2FuYWxAaWdhbGlhLmNvbT7CjwQTFggANxYhBDMCqFtIvFKVRJZQ
+ hDSPnHLaGFVuBQJkixp5BQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQNI+cctoYVW5u
+ GAEAwpaC5rI3wD8zqETKwGVoXd6+AbmGfZuVD40xepy7z/8BAM5w95/oyPsHUqOsg/xUTlNp
+ rlbhA+WWoaOXA3XgR+wCzjgEZIsaeRIKKwYBBAGXVQEFAQEHQGoOK0jgh0IorMAacx6WUUWb
+ s3RLiJYWUU6iNrk5wWUbAwEIB8J+BBgWCAAmFiEEMwKoW0i8UpVEllCENI+cctoYVW4FAmSL
+ GnkFCQWjmoACGwwACgkQNI+cctoYVW6cqwD/Q9R98msvkhgRvi18fzUPFDwwogn+F+gQJJ6o
+ pwpgFkAA/R2zOfla3IT6G3SBoV5ucdpdCpnIXFpQLbmfHK7dXsAC
+In-Reply-To: <20240222-kms-hdmi-connector-state-v7-29-8f4af575fce2@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-dtschema defines label as string, so $ref in other bindings is
-redundant.
+On 2/22/24 15:14, Maxime Ripard wrote:
+> The vc4_dummy_plane structure is an exact equivalent to vc4_plane, so we
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../bindings/input/allwinner,sun4i-a10-lradc-keys.yaml           | 1 -
- 1 file changed, 1 deletion(-)
+Maybe I understood incorrectly, but isn't the vc4_dummy_plane structure 
+equivalent to drm_plane?
 
-diff --git a/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml b/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
-index 5efceb313879..c384bf0bb25d 100644
---- a/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
-+++ b/Documentation/devicetree/bindings/input/allwinner,sun4i-a10-lradc-keys.yaml
-@@ -49,7 +49,6 @@ patternProperties:
-     $ref: input.yaml#
-     properties:
-       label:
--        $ref: /schemas/types.yaml#/definitions/string
-         description: Descriptive name of the key
- 
-       linux,code: true
--- 
-2.34.1
+Best Regards,
+- Maíra
 
+> don't need it.
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>   drivers/gpu/drm/vc4/tests/vc4_mock.c       |  6 ++----
+>   drivers/gpu/drm/vc4/tests/vc4_mock.h       |  9 ++-------
+>   drivers/gpu/drm/vc4/tests/vc4_mock_plane.c | 14 +++++---------
+>   3 files changed, 9 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vc4/tests/vc4_mock.c b/drivers/gpu/drm/vc4/tests/vc4_mock.c
+> index becb3dbaa548..0731a7d85d7a 100644
+> --- a/drivers/gpu/drm/vc4/tests/vc4_mock.c
+> +++ b/drivers/gpu/drm/vc4/tests/vc4_mock.c
+> @@ -109,16 +109,14 @@ static const struct vc4_mock_desc vc5_mock =
+>   static int __build_one_pipe(struct kunit *test, struct drm_device *drm,
+>   			    const struct vc4_mock_pipe_desc *pipe)
+>   {
+> -	struct vc4_dummy_plane *dummy_plane;
+>   	struct drm_plane *plane;
+>   	struct vc4_dummy_crtc *dummy_crtc;
+>   	struct drm_crtc *crtc;
+>   	unsigned int i;
+>   
+> -	dummy_plane = vc4_dummy_plane(test, drm, DRM_PLANE_TYPE_PRIMARY);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dummy_plane);
+> +	plane = vc4_dummy_plane(test, drm, DRM_PLANE_TYPE_PRIMARY);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane);
+>   
+> -	plane = &dummy_plane->plane.base;
+>   	dummy_crtc = vc4_mock_pv(test, drm, plane, pipe->data);
+>   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dummy_crtc);
+>   
+> diff --git a/drivers/gpu/drm/vc4/tests/vc4_mock.h b/drivers/gpu/drm/vc4/tests/vc4_mock.h
+> index 2d0b339bd9f3..002b6218960c 100644
+> --- a/drivers/gpu/drm/vc4/tests/vc4_mock.h
+> +++ b/drivers/gpu/drm/vc4/tests/vc4_mock.h
+> @@ -21,13 +21,8 @@ struct drm_crtc *vc4_find_crtc_for_encoder(struct kunit *test,
+>   	return NULL;
+>   }
+>   
+> -struct vc4_dummy_plane {
+> -	struct vc4_plane plane;
+> -};
+> -
+> -struct vc4_dummy_plane *vc4_dummy_plane(struct kunit *test,
+> -					struct drm_device *drm,
+> -					enum drm_plane_type type);
+> +struct drm_plane *vc4_dummy_plane(struct kunit *test, struct drm_device *drm,
+> +				  enum drm_plane_type type);
+>   
+>   struct vc4_dummy_crtc {
+>   	struct vc4_crtc crtc;
+> diff --git a/drivers/gpu/drm/vc4/tests/vc4_mock_plane.c b/drivers/gpu/drm/vc4/tests/vc4_mock_plane.c
+> index 62b18f5f41db..973f5f929097 100644
+> --- a/drivers/gpu/drm/vc4/tests/vc4_mock_plane.c
+> +++ b/drivers/gpu/drm/vc4/tests/vc4_mock_plane.c
+> @@ -22,15 +22,12 @@ static const uint32_t vc4_dummy_plane_formats[] = {
+>   	DRM_FORMAT_XRGB8888,
+>   };
+>   
+> -struct vc4_dummy_plane *vc4_dummy_plane(struct kunit *test,
+> -					struct drm_device *drm,
+> -					enum drm_plane_type type)
+> +struct drm_plane *vc4_dummy_plane(struct kunit *test, struct drm_device *drm,
+> +				  enum drm_plane_type type)
+>   {
+> -	struct vc4_dummy_plane *dummy_plane;
+>   	struct drm_plane *plane;
+>   
+> -	dummy_plane = drmm_universal_plane_alloc(drm,
+> -						 struct vc4_dummy_plane, plane.base,
+> +	plane = __drmm_universal_plane_alloc(drm, sizeof(struct drm_plane), 0,
+>   						 0,
+>   						 &vc4_dummy_plane_funcs,
+>   						 vc4_dummy_plane_formats,
+> @@ -38,10 +35,9 @@ struct vc4_dummy_plane *vc4_dummy_plane(struct kunit *test,
+>   						 NULL,
+>   						 DRM_PLANE_TYPE_PRIMARY,
+>   						 NULL);
+> -	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dummy_plane);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane);
+>   
+> -	plane = &dummy_plane->plane.base;
+>   	drm_plane_helper_add(plane, &vc4_dummy_plane_helper_funcs);
+>   
+> -	return dummy_plane;
+> +	return plane;
+>   }
+> 
