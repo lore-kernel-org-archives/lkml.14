@@ -1,92 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5B867F7F9
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 13:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8B84F888;
+	Mon, 26 Feb 2024 13:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708952658; cv=none; b=ZIFtibPnpyb0L8QqD5tEQTaG32XlozMJ0eotgvOsJW029jKGiq6RBWxZl8GGTr8xpDv3QCxsyMSxkBUoiJK36KIN0OWWiu5/P0rSfUnT8wfNGvUYktHWEt9Jp9KBLSMZ/plzEXo8VSVJyZra15qEu8xXkxA/bpw2CC2PVadfiKU=
+	t=1708952740; cv=none; b=oEihh2bW3GiGpyBcejeZAamBmNsJH1EACeCVM7QXqr/fHW2xOCriBDsJOIhHm4q6wBpqUE0911o8fNFtysnREiMb5cICmNAt/TA2KsqNnk/umzFaUCVKQwH70S10vxng6yTkyImEWgxXcHxO0bPtMXxt08M5QAPVjak8spkz008=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708952658; c=relaxed/simple;
-	bh=NLg6QYanoeqzWqGaHoMhjzpszT/KgDkGZ09M4+9jIsk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X8XSfCA9A4VP239N8uCUh+j/TIZSz17jWmxbgTqZ0O0b6jNGKSG7zHzIpmMgHm/CDrzbQAtM3BojnGO7Ll4Lnbjt1EHAwlQAunvj0zDClSww+uzK1MoxxUz9guJpQ8UlNr5OO2e4APVw1lA2iZCze4gqpEI18zZiHE5iLmwI4u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70626DA7;
-	Mon, 26 Feb 2024 05:04:54 -0800 (PST)
-Received: from [10.57.67.4] (unknown [10.57.67.4])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 291613F762;
-	Mon, 26 Feb 2024 05:04:13 -0800 (PST)
-Message-ID: <318be511-06de-423e-8216-af869f27f849@arm.com>
-Date: Mon, 26 Feb 2024 13:04:11 +0000
+	s=arc-20240116; t=1708952740; c=relaxed/simple;
+	bh=Qs7NWvysjXV5VOP+DYiXYxHczsg5xn86YV7OT/OGLRk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EnAW/WBxNcSTxhN8W6Fqx7ef0/YpW4jE+ycSx2SbwGFbG68J4MZlobQc2QEnPnYssKAIlqeixpMt0bFgE16NtgZe37SQr6h91a8F8ISrzhhHirPGyafDQ/C8M5otLEnGJT5WqhuP5CcTZ2USdhRxASeP+myXGRhar3hdWUHTfJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ayEeBOHd; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ayEeBOHd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708952738; x=1740488738;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Qs7NWvysjXV5VOP+DYiXYxHczsg5xn86YV7OT/OGLRk=;
+  b=ayEeBOHd2CNMg9saXdQTR3ZX/+dl35A+996MwKeAlkJWIoor0qFYvwdh
+   1SboeG/kJO+V9swVPMMK2HtP0ioeFmEX798bnI67VlezPWbOpQP1I78x2
+   oonBWex1WvnHS1i1FmQxEBdqMbjw/biO/yaNhIpUX6vudCSspmo5Lpsdp
+   lqLwPfatB8HPebk06o7hs2cOAE/7XsknFXpIwOcQ1ucrPH/HQ4BvOQ3eh
+   iqvDsNIhktZYu5et+/+kz6J6qHSWz61Gsqe8SXD2uSK9vx80KN1sihCXA
+   yN5jIujjbS08tj83bF3fRwFS7KGjTz0B7vjVZieuDtLZe3s0lT5+k7gzW
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3102530"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="3102530"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 05:05:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="37668537"
+Received: from pkwiatko-mobl.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.23.220])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 05:05:33 -0800
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: shuah@kernel.org,
+	reinette.chatre@intel.com,
+	fenghua.yu@intel.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Subject: [PATCH v4 0/3] selftests/resctrl: Simplify test cleanup functions
+Date: Mon, 26 Feb 2024 14:05:22 +0100
+Message-ID: <cover.1708949785.git.maciej.wieczor-retman@intel.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mm/madvise: enhance lazyfreeing with mTHP in
- madvise_free
-Content-Language: en-GB
-To: Lance Yang <ioworker0@gmail.com>, David Hildenbrand <david@redhat.com>
-Cc: 21cnbao@gmail.com, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
- minchan@kernel.org, peterx@redhat.com, shy828301@gmail.com,
- songmuchun@bytedance.com, wangkefeng.wang@huawei.com, zokeefe@google.com,
- fengwei.yin@intel.com
-References: <CAGsJ_4zera4+bWuXHKjdU3QdiR3sqcUQB3gF08DPD49OCT4S9w@mail.gmail.com>
- <20240226083714.26187-1-ioworker0@gmail.com>
- <9bcf5141-7376-441e-bbe3-779956ef28b9@redhat.com>
- <CAK1f24mdwjz2J5VmeYSDwb4jMbrXUVCSF_0pOcWSVt1cfa0FhQ@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAK1f24mdwjz2J5VmeYSDwb4jMbrXUVCSF_0pOcWSVt1cfa0FhQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 26/02/2024 08:55, Lance Yang wrote:
-> Hey David,
-> 
-> Thanks for your suggestion!
-> 
-> On Mon, Feb 26, 2024 at 4:41 PM David Hildenbrand <david@redhat.com> wrote:
->>
-> [...]
->>> On Mon, Feb 26, 2024 at 12:00 PM Barry Song <21cnbao@gmail.com> wrote:
->>> [...]
->>>> On Mon, Feb 26, 2024 at 1:33 AM Lance Yang <ioworker0@gmail.com> wrote:
->>> [...]
-> [...]
->>> +static inline bool pte_range_cont_mapped(pte_t *pte, unsigned long nr)
->>> +{
->>> +     pte_t pte_val;
->>> +     unsigned long pfn = pte_pfn(pte);
->>> +     for (int i = 0; i < nr; i++) {
->>> +             pte_val = ptep_get(pte + i);
->>> +             if (pte_none(pte_val) || pte_pfn(pte_val) != (pfn + i))
->>> +                     return false;
->>> +     }
->>> +     return true;
->>> +}
->>
->> I dislike the "cont mapped" terminology.
->>
->> Maybe folio_pte_batch() does what you want?
-> 
-> folio_pte_batch() is a good choice. Appreciate it!
+Cleaning up after tests is implemented separately for individual tests
+and called at the end of each test execution. Since these functions are
+very similar and a more generalized test framework was introduced a
+function pointer in the resctrl_test struct can be used to reduce the
+amount of function calls.
 
-Agreed, folio_pte_batch() is likely to be widely useful for this change and
-others, so suggest exporting it from memory.c and reusing as is if possible.
+These functions are also all called in the ctrl-c handler because the
+handler isn't aware which test is currently running. Since the handler
+is implemented with a sigaction no function parameters can be passed
+there but information about what test is currently running can be passed
+with a global variable.
 
-> 
-> Best,
-> Lance
-> 
->>
->> --
->> Cheers,
->>
->> David / dhildenb
->>
+Series applies cleanly on top of kselftests/next.
+
+Changelog v4:
+- Check current_test pointer and reset it in signal unregistering.
+- Move cleanup call to test_cleanup function.
+
+Changelog v3:
+- Make current_test static.
+- Add callback NULL check to the ctrl-c handler.
+
+Changelog v2:
+- Make current_test a const pointer limited in scope to resctrl_val
+  file.
+- Remove tests_cleanup from resctrl.h.
+- Cleanup 'goto out' path and labels in individual test functions.
+
+Older versions of this series:
+[v1] https://lore.kernel.org/all/cover.1708434017.git.maciej.wieczor-retman@intel.com/
+[v2] https://lore.kernel.org/all/cover.1708596015.git.maciej.wieczor-retman@intel.com/
+[v3] https://lore.kernel.org/all/cover.1708599491.git.maciej.wieczor-retman@intel.com/
+
+Maciej Wieczor-Retman (3):
+  selftests/resctrl: Add cleanup function to test framework
+  selftests/resctrl: Simplify cleanup in ctrl-c handler
+  selftests/resctrl: Move cleanups out of individual tests
+
+ tools/testing/selftests/resctrl/cat_test.c    |  8 +++-----
+ tools/testing/selftests/resctrl/cmt_test.c    |  4 ++--
+ tools/testing/selftests/resctrl/mba_test.c    |  8 +++-----
+ tools/testing/selftests/resctrl/mbm_test.c    |  8 +++-----
+ tools/testing/selftests/resctrl/resctrl.h     |  9 +++------
+ .../testing/selftests/resctrl/resctrl_tests.c | 20 +++++++------------
+ tools/testing/selftests/resctrl/resctrl_val.c |  8 ++++++--
+ 7 files changed, 27 insertions(+), 38 deletions(-)
+
+-- 
+2.43.2
 
