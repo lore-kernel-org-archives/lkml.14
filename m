@@ -1,158 +1,102 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB71132467;
-	Mon, 26 Feb 2024 21:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6E7130AF9;
+	Mon, 26 Feb 2024 21:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708982766; cv=none; b=VyKpYHJj0TxFbrzpBWYuCPTzq7dtQSJFdkgPd2Ini6GRcH4vxdlzEb6nCcnphocf4zexWy1axY7nLEuxcPMGi2I7BhAcA21yHorrEkRtH81BALVy0VzEtAksZkbr+yy7ic02NgLHucQIMeKI23hz1RJrEqCrBT/3wFtsCCd9dAo=
+	t=1708982865; cv=none; b=A7bCIBkMJf7R4dRMw9kva2cWB9DItR7v1rGpkyCqv68xfKSvRzy0ZaXYSr7yoEUTT/LWd1DHPngWi1u6psBN4fIJe7ChzunIz/QRx+CroQz4wTIvwbgoZFkoX0qgamQ28/pDoVC/62fwuUSQzDou3IxCZs4b9pX3y5ytX2S5VRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708982766; c=relaxed/simple;
-	bh=+aZznYEEJnxpn3Hfp1CaaYgaYW/C+miPXfNVer03ZgQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sznuEA5EDp/NsBYL1M+rA7hheHCfRdNXUufBQd5tM+Yfxl2X08Dv/AOMY63DMi5MEsbTcKcBNDXPX8CJe880emPwIztkNHiP2V7HiiK1ufxEWB9znypMwu3tvG9KArByKUqp29p+wufsPLLsRN8ty/2mI4SVWTqeOvRO5jk5cy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=go/dzltW; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708982865; c=relaxed/simple;
+	bh=RJWvlSP6BsU9o2+sb1U+a07qsHtOTURxzuqmLpqHlu4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oB7sUbenAge1cIC+AU5sPuotRLlcthfeHiEImNSBkeKNOKKrTWz743gvblKImQfsedrb1heIM1n/UK7+fnS31wvhvqycT2vkvWZZ2CNVqnCThbnkq2RhGHXZaqgbmu9ODMW7Q8kFmUm1XW7NjOZHgv7bj27NxNC2e0ueJa/Ay0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JY5YrDgF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="go/dzltW"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512f6f263a6so1609308e87.2;
-        Mon, 26 Feb 2024 13:26:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708982762; x=1709587562; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=144mFCoAmLnYhpxBxU841lMdT4yO+1U9AQuLuH2HZyw=;
-        b=go/dzltWJvq453cg6xIphjT9bHHy1Tm4rfMV5KKuNt+xkMir0bfn7NirrZ0tWqRO9B
-         Prt4wPjurTd7oA1r0tBGifpmnA8w9hKiydBOtTPeHZvDJKoy0fohSIH2jjquZfTCD6vT
-         1EVqQWLf35J4lcs/SRiDRP2njOXnwHHubxKn+5SHrOzJHTP7jUze06HbGLbyPPNBiaDn
-         /NWUVaPZoZWMIQhiTj5nUu/pPWFvkTJdxUwUz1LfSTACWTCBzgA9m2cUc/4y01c2ceC4
-         APkvW0qZ/HEvUTpcNzxB74b650B9cj+pofZ/qTtAbbEqS/1/KvzjaATKmBWRBqzzSN0M
-         UsEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708982762; x=1709587562;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=144mFCoAmLnYhpxBxU841lMdT4yO+1U9AQuLuH2HZyw=;
-        b=Zg8s+hfaC6fNXHjh4jvzcTWkpYTUAHJxuOiaHYavATpZrN+ZD0chEoH3kAEoaTy2Qb
-         1Sq+EvLegXZq8ZLRbvpsLJYcGdMrQ7qO09+c8lkXvsQaKztEvgPm7L6cX1AgaHD82+zK
-         YuN1jqEztXPSvEVGuA+Uq+v01Fnag9JHdwNuvwnmQuz0s+9qittNb7WOZ69LDUJ4PGgD
-         wWI813t0W2Z1d/jgqW0CzJFlIr1B6eM3HMGxtYUns3YTedcjdwZXjiaiJi5jnL9PtUo/
-         LcaO9m7OafEzgY20U9SGgLpk385zg8AUShogEQaqCmKww0A92RUBOY4SzpgHuzsBYohf
-         +9zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpz8TWxSC/0CvZ6R61PIAf1Id7TepTNJy1C4aGPQCBpNeSkm5+zSnWbinQGMBs86DSdDNJ1HfyLJZsye3PaB6QZbK4O56pvy5uPHv7VXvF4wAEsOXcVByM8cOsioorpL03GNGjIlJsyfgqvf9+bdiZITXWyfM/204gwvCKcWJk99cGJQ==
-X-Gm-Message-State: AOJu0Yy/izbCtsc7pJ+n9PD1IJ57cdrw9oi9q8GANjnYDMDSW05KgpqR
-	xhUu60lVVuC017QV9HWkhvgcv+1yFlU2qMRFgV4nWRzbXNQhFgzbg8+phF1tQWw=
-X-Google-Smtp-Source: AGHT+IFQLy90dKHP1KmZIFww9MmLvhA0blg1bSFrxq0mZJs4PHyAwh+6VgF2nnwMNyfYZ/ajg1W5sw==
-X-Received: by 2002:ac2:4ecf:0:b0:512:d4fb:14da with SMTP id p15-20020ac24ecf000000b00512d4fb14damr4799760lfr.44.1708982762327;
-        Mon, 26 Feb 2024 13:26:02 -0800 (PST)
-Received: from [127.0.1.1] (2a02-8389-41cf-e200-06e1-5ae1-dc32-d149.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:6e1:5ae1:dc32:d149])
-        by smtp.gmail.com with ESMTPSA id uz28-20020a170907119c00b00a3df13a4fe0sm122386ejb.15.2024.02.26.13.26.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 13:26:01 -0800 (PST)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Mon, 26 Feb 2024 22:25:57 +0100
-Subject: [PATCH v2 3/3] iio: humidity: hdc3020: add reset management
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JY5YrDgF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E16EC43390;
+	Mon, 26 Feb 2024 21:27:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708982865;
+	bh=RJWvlSP6BsU9o2+sb1U+a07qsHtOTURxzuqmLpqHlu4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JY5YrDgFt0bRZUO5HdFGGeoQ99uGHzI7I/zSadrhV0hxKE4pjA3qkXPrNGAGI/wgM
+	 LFDAvHQNMSZRuSSyjC4G5h3aKS+PhULlzRcq6D/2+eiRtHeoG2e4dyc7viVwCLP6WW
+	 P1kiOJq62+C2kgdfFKItZEJPyU+J31jVn3I31hbD4s2XgxWIaoHv28YQYVnggvAYKN
+	 jkrwOmh1122TndBGOYBwXn2ylyavN8kisXj+Xk19DUQ9fqlGN2G/GwqbO4/RibAsEp
+	 ut/lIW4ih/ck7RdPj4HD1M1FPAlMi3O2VbjS1WKn2DQfupXO38O4GiNWDMp5Z9YbS0
+	 qPyOywHAQ3QvQ==
+Received: by mercury (Postfix, from userid 1000)
+	id B978E1060E5B; Mon, 26 Feb 2024 22:27:41 +0100 (CET)
+From: Sebastian Reichel <sre@kernel.org>
+To: Sebastian Reichel <sre@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	imx@lists.linux.dev
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 4/6] dt-bindings: soc: imx: fsl,imx-iomuxc-gpr: add imx6
+Date: Mon, 26 Feb 2024 22:26:26 +0100
+Message-ID: <20240226212740.2019837-5-sre@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240226212740.2019837-1-sre@kernel.org>
+References: <20240226212740.2019837-1-sre@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240226-hdc3020-pm-v2-3-cec6766086e8@gmail.com>
-References: <20240226-hdc3020-pm-v2-0-cec6766086e8@gmail.com>
-In-Reply-To: <20240226-hdc3020-pm-v2-0-cec6766086e8@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Li peiyu <579lpy@gmail.com>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
- devicetree@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708982756; l=2300;
- i=javier.carrasco.cruz@gmail.com; s=20230509; h=from:subject:message-id;
- bh=+aZznYEEJnxpn3Hfp1CaaYgaYW/C+miPXfNVer03ZgQ=;
- b=CZMSC7gN5LcIOZou5QfuhlYuJ+aLxLzWNTgKdYnWvtbl6n34l0Vn2Iy1YDlOp497+AzeeU5Wa
- ppLyaUJsXAsDcbgbfAKxlBH9dEMdJQZAFrJ8mvyxhIC60dUF52FpUgX
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=tIGJV7M+tCizagNijF0eGMBGcOsPD+0cWGfKjl4h6K8=
+Content-Transfer-Encoding: 8bit
 
-The HDC3020 provides an active low reset signal that must be handled if
-connected. Asserting this signal turns the device into Trigger-on Demand
-measurement mode, reducing its power consumption when no measurements
-are required like in low-power modes.
+Add compatibles used by different i.MX6 variants to the i.MX IOMUX
+Controller GPR binding.
 
-According to the datasheet, the longest "Reset Ready" is 3 ms, which is
-only taken into account if the reset signal is defined.
-
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
- drivers/iio/humidity/hdc3020.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml   | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/humidity/hdc3020.c b/drivers/iio/humidity/hdc3020.c
-index 6848be41e1c8..aa477b5e583e 100644
---- a/drivers/iio/humidity/hdc3020.c
-+++ b/drivers/iio/humidity/hdc3020.c
-@@ -15,6 +15,7 @@
- #include <linux/cleanup.h>
- #include <linux/crc8.h>
- #include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-@@ -70,6 +71,7 @@
- 
- struct hdc3020_data {
- 	struct i2c_client *client;
-+	struct gpio_desc *reset_gpio;
- 	struct regulator *vdd_supply;
- 	/*
- 	 * Ensure that the sensor configuration (currently only heater is
-@@ -558,6 +560,9 @@ static int hdc3020_power_off(struct hdc3020_data *data)
- {
- 	hdc3020_exec_cmd(data, HDC3020_EXIT_AUTO);
- 
-+	if (data->reset_gpio)
-+		gpiod_set_value_cansleep(data->reset_gpio, 1);
-+
- 	return regulator_disable(data->vdd_supply);
- }
- 
-@@ -571,6 +576,11 @@ static int hdc3020_power_on(struct hdc3020_data *data)
- 
- 	fsleep(5000);
- 
-+	if (data->reset_gpio) {
-+		gpiod_set_value_cansleep(data->reset_gpio, 0);
-+		fsleep(3000);
-+	}
-+
- 	if (data->client->irq) {
- 		/*
- 		 * The alert output is activated by default upon power up,
-@@ -627,6 +637,12 @@ static int hdc3020_probe(struct i2c_client *client)
- 		return dev_err_probe(&client->dev, PTR_ERR(data->vdd_supply),
- 				     "Unable to get VDD regulator\n");
- 
-+	data->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-+						   GPIOD_OUT_HIGH);
-+	if (IS_ERR(data->reset_gpio))
-+		return dev_err_probe(&client->dev, PTR_ERR(data->reset_gpio),
-+				     "Cannot get reset GPIO\n");
-+
- 	ret = hdc3020_power_on(data);
- 	if (ret)
- 		return dev_err_probe(&client->dev, ret, "Power on failed\n");
-
+diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml b/Documentation/devicetree/bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml
+index 1da1b758b4ae..8451cb4dd87c 100644
+--- a/Documentation/devicetree/bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml
++++ b/Documentation/devicetree/bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml
+@@ -17,7 +17,23 @@ properties:
+   compatible:
+     oneOf:
+       - items:
+-          - const: fsl,imx8mq-iomuxc-gpr
++          - enum:
++              - fsl,imx6q-iomuxc-gpr
++              - fsl,imx8mq-iomuxc-gpr
++          - const: syscon
++          - const: simple-mfd
++      - items:
++          - enum:
++              - fsl,imx6sl-iomuxc-gpr
++              - fsl,imx6sll-iomuxc-gpr
++              - fsl,imx6ul-iomuxc-gpr
++          - const: fsl,imx6q-iomuxc-gpr
++          - const: syscon
++      - items:
++          - enum:
++              - fsl,imx6sx-iomuxc-gpr
++              - fsl,imx7d-iomuxc-gpr
++          - const: fsl,imx6q-iomuxc-gpr
+           - const: syscon
+           - const: simple-mfd
+       - items:
 -- 
-2.40.1
+2.43.0
 
