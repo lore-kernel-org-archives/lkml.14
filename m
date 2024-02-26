@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019CE7A72C;
-	Mon, 26 Feb 2024 08:28:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE2F79DC5;
+	Mon, 26 Feb 2024 08:28:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936131; cv=none; b=jZs5YVjrLPzsyqL3mJZNp9BrSuhsoI4bjEbjPsPqFpvE+QxhYZoOTGAEMAe7LIDI09p85l/mFB+2NCWGuHAbeKhFUgKoTWhOlXNZHFn4wuOvjJG+a+MMwE5/7rEL4CycOLjIuX7jTYc3pAYVY/lfuRbl1xRmKOlDFRGXtgvImUY=
+	t=1708936131; cv=none; b=Z8xDLjFDHPoEw1J5kRN9bVeTEwCVXVb56nnhyD7T6MmNs+kksG9morNuppZMOV8iE6/UIWUJCUeGQFWF42C0DGq51Jr33pJDnXJq7vAZVTo0W0O3sh+A0J1wQqHEmhIto934eJY8aHmYRBJIjcSEqu38/iCPdDzCYFWYbRZvlyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708936131; c=relaxed/simple;
-	bh=/sAXojEGYW4Sd48ndXBIWs56QmQk33LvAtJbkrrQS6g=;
+	bh=J0itU+rEBhLn1btxTLuPmm/pBpAavEDlMWDiVUOlSCE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bwe57A30LHvEt2mIK/A0ynflSQi8mX/a2sN9GCUD4l/eClN25tcWP7v0vezIBlILhvMDJxWfb9hK4NU0yzUiSqDkggOE7Do5G2Bd68/Ovun6DpwN2cGKyzaIScplhWYneius+/tvTWk57L+6lLQ/EPPEGD9gDhn/k2EkdjXbtCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OvFjUD+U; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=JibRA242OrgtHxf7sT3HalNi3tS40mo75KTKI8ck2LJi35/2I6VREDnbTPAMt2AZwMJwZuaqdYSEgMySUjhPKuW8cr1wX+ajqIQNbJjjYrvO/pKQqERDOSWLUXpDbf+U4HS8r3YPooGl7oeZrFbXvx+/giFRAW6RvzPP3JKIjK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NXSAlv6D; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OvFjUD+U"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NXSAlv6D"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936130; x=1740472130;
+  t=1708936128; x=1740472128;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/sAXojEGYW4Sd48ndXBIWs56QmQk33LvAtJbkrrQS6g=;
-  b=OvFjUD+Ugm0OSh9HGuQA9xtoDIMeO1/BOx2s9SRj520IZaAzojl7+Syh
-   AD2shgY0seNVkyCNMQqjwtlNFFYmM+ZdrA6tTYWsGiJkO3SVoDbxX40W3
-   lxJXoc8fgPeft5LsgUBd/Bfw2ooKx9t2qqdzb+Wcb+rS7D5tM0X/4xE3F
-   iM8RVfVeEeJjD8AvVUF8kferLvVBZYf781qQtbvNGAZ9sEqC4BEhyPp4W
-   OBUnlgeaTegLhAuhSKu5MRPxRUe17pb6DyNyS4wuJokqzfwAuFArk67nw
-   5oqxZXzmTuDdK45PKRr1Vm6K4ilG6iYWY1Y8SWa9GHVJpfLIAttr9Pyys
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3069551"
+  bh=J0itU+rEBhLn1btxTLuPmm/pBpAavEDlMWDiVUOlSCE=;
+  b=NXSAlv6DARUWxW2f0ft9fb1YF+e+xn27cXeE3NTNSqC1xuLTQ4pUTvd5
+   nZkOfQeo23Ltk2uaKVq30MXxhPASkDYJjbZNoce/zArI4CJycnjJgPlDF
+   p9mz1LYK4rqRNk68j4gDz9gQ/opsNMTc1xxvlO76EMsgSOAKnYOHXSy1Y
+   3AW0Ivx/4YtpGiwRbJ/3Wp1Q+pQAE8hQ+8Pt8EJa9cbLcYSC081Yay8Gt
+   GR1aptc0TwMkdgGh89U868d45XuWdMA8nZjD8GuPiErwPZTo7ktaUaBXM
+   eO+Rq+copS4v8/ux8a8BcZIgAd4+8hHlGuL9wOn+rht/6Rk65CHhCOde2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3069545"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="3069551"
+   d="scan'208";a="3069545"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:49 -0800
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:47 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="11272637"
+   d="scan'208";a="11272626"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:48 -0800
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:46 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,10 +51,13 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com
-Subject: [PATCH v19 090/130] KVM: x86: Assume timer IRQ was injected if APIC state is proteced
-Date: Mon, 26 Feb 2024 00:26:32 -0800
-Message-Id: <b557cb31b634d0bad229a43e501d587b979c2368.1708933498.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com,
+	Xiaoyao Li <xiaoyao.li@intel.com>,
+	Sean Christopherson <sean.j.christopherson@intel.com>,
+	Chao Gao <chao.gao@intel.com>
+Subject: [PATCH v19 088/130] KVM: x86: Add a switch_db_regs flag to handle TDX's auto-switched behavior
+Date: Mon, 26 Feb 2024 00:26:30 -0800
+Message-Id: <ca5d0399cdbbaa6c7c6528ad85b3560cec0f0752.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -66,45 +69,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sean Christopherson <seanjc@google.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-If APIC state is protected, i.e. the vCPU is a TDX guest, assume a timer
-IRQ was injected when deciding whether or not to busy wait in the "timer
-advanced" path.  The "real" vIRR is not readable/writable, so trying to
-query for a pending timer IRQ will return garbage.
+Add a flag, KVM_DEBUGREG_AUTO_SWITCHED_GUEST, to skip saving/restoring DRs
+irrespective of any other flags.  TDX-SEAM unconditionally saves and
+restores guest DRs and reset to architectural INIT state on TD exit.
+So, KVM needs to save host DRs before TD enter without restoring guest DRs
+and restore host DRs after TD exit.
 
-Note, TDX can scour the PIR if it wants to be more precise and skip the
-"wait" call entirely.
+Opportunistically convert the KVM_DEBUGREG_* definitions to use BIT().
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+Reported-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Chao Gao <chao.gao@intel.com>
+Signed-off-by: Chao Gao <chao.gao@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/kvm/lapic.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h | 10 ++++++++--
+ arch/x86/kvm/vmx/tdx.c          |  1 +
+ arch/x86/kvm/x86.c              | 11 ++++++++---
+ 3 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index e8034f2f2dd1..8025c7f614e0 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1774,8 +1774,17 @@ static void apic_update_lvtt(struct kvm_lapic *apic)
- static bool lapic_timer_int_injected(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_lapic *apic = vcpu->arch.apic;
--	u32 reg = kvm_lapic_get_reg(apic, APIC_LVTT);
-+	u32 reg;
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 3ab85c3d86ee..a9df898c6fbd 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -610,8 +610,14 @@ struct kvm_pmu {
+ struct kvm_pmu_ops;
  
+ enum {
+-	KVM_DEBUGREG_BP_ENABLED = 1,
+-	KVM_DEBUGREG_WONT_EXIT = 2,
++	KVM_DEBUGREG_BP_ENABLED		= BIT(0),
++	KVM_DEBUGREG_WONT_EXIT		= BIT(1),
 +	/*
-+	 * Assume a timer IRQ was "injected" if the APIC is protected.  KVM's
-+	 * copy of the vIRR is bogus, it's the responsibility of the caller to
-+	 * precisely check whether or not a timer IRQ is pending.
++	 * Guest debug registers (DR0-3 and DR6) are saved/restored by hardware
++	 * on exit from or enter to guest. KVM needn't switch them. Because DR7
++	 * is cleared on exit from guest, DR7 need to be saved/restored.
 +	 */
-+	if (apic->guest_apic_protected)
-+		return true;
-+
-+	reg  = kvm_lapic_get_reg(apic, APIC_LVTT);
- 	if (kvm_apic_hw_enabled(apic)) {
- 		int vec = reg & APIC_VECTOR_MASK;
- 		void *bitmap = apic->regs + APIC_ISR;
++	KVM_DEBUGREG_AUTO_SWITCH	= BIT(2),
+ };
+ 
+ struct kvm_mtrr_range {
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 7aa9188f384d..ab7403a19c5d 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -586,6 +586,7 @@ int tdx_vcpu_create(struct kvm_vcpu *vcpu)
+ 
+ 	vcpu->arch.efer = EFER_SCE | EFER_LME | EFER_LMA | EFER_NX;
+ 
++	vcpu->arch.switch_db_regs = KVM_DEBUGREG_AUTO_SWITCH;
+ 	vcpu->arch.cr0_guest_owned_bits = -1ul;
+ 	vcpu->arch.cr4_guest_owned_bits = -1ul;
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 1b189e86a1f1..fb7597c22f31 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -11013,7 +11013,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	if (vcpu->arch.guest_fpu.xfd_err)
+ 		wrmsrl(MSR_IA32_XFD_ERR, vcpu->arch.guest_fpu.xfd_err);
+ 
+-	if (unlikely(vcpu->arch.switch_db_regs)) {
++	if (unlikely(vcpu->arch.switch_db_regs & ~KVM_DEBUGREG_AUTO_SWITCH)) {
+ 		set_debugreg(0, 7);
+ 		set_debugreg(vcpu->arch.eff_db[0], 0);
+ 		set_debugreg(vcpu->arch.eff_db[1], 1);
+@@ -11059,6 +11059,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	 */
+ 	if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)) {
+ 		WARN_ON(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP);
++		WARN_ON(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH);
+ 		static_call(kvm_x86_sync_dirty_debug_regs)(vcpu);
+ 		kvm_update_dr0123(vcpu);
+ 		kvm_update_dr7(vcpu);
+@@ -11071,8 +11072,12 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	 * care about the messed up debug address registers. But if
+ 	 * we have some of them active, restore the old state.
+ 	 */
+-	if (hw_breakpoint_active())
+-		hw_breakpoint_restore();
++	if (hw_breakpoint_active()) {
++		if (!(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))
++			hw_breakpoint_restore();
++		else
++			set_debugreg(__this_cpu_read(cpu_dr7), 7);
++	}
+ 
+ 	vcpu->arch.last_vmentry_cpu = vcpu->cpu;
+ 	vcpu->arch.last_guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
 -- 
 2.25.1
 
