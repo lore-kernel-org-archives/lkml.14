@@ -1,106 +1,92 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95CF5731A
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB5058210;
+	Mon, 26 Feb 2024 09:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708939906; cv=none; b=tWJq8Tyy5J33lphEeZ/gnO0X4SyjJ+w/1W/JaUfJHewMlHBCRj/WRUj6Zeklh246qOBbnxaiGdo1OiM6rsU5BwM23lkHW0qgsNMxUZOLnLTFE3795hvRWhjT7WEWsxyqr8enxGGgEyVulYFKSronVhCW295Yfd1W7DveaCsnhPk=
+	t=1708939928; cv=none; b=uN20hVap2Wed8BKU6Ii/DhrnMqesKTrBvidyRs5cDP8wVB9poapPy97HZHkt3uHh6oqvQHaH48UxgvDX/Cn6J4/JSknq6vPSmw7ivZsbc6o/JZ40V+2+t30yzAnYjXjHKfDAB62juDPnedEGQN1oxnvcd74I0RWVO4w5NsYRBos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708939906; c=relaxed/simple;
-	bh=oMwEwBsS9LpqWFkXQJGn/wGr2D2RG9J1+84Vl1zgefc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZsGt78Ca9wYItER7IR3+oHKcmF9tnB/z/nE4SQAmWb8mOTWEB70MpJ77FHl1/CB1iWZwrMA8lOoR6VfZzMvLsNDYxC+4/RtoL0P//IYxNm7Lqf/tTQed2UnRYc+X6MhAZBZ9no/C4KhzX7jjOKla5b0S+tXDZrCPa7EGA6D1qq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=h8/+EL5W; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1708939928; c=relaxed/simple;
+	bh=Po8+iwR8b2R3RnTXoNqpB7PrLacZ0N1cHivXMdzH5sA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W9rujUSyO9WbgBN8nD5zDhNwW/weGXdhXeQ+/qTyPeGp86RWNRi1tQBag+moNVTfXgPbvqsLHv9RKBxgBNIyyuzoKhsZNQCMRj7X9NAPyaB9kPxGAiR6UCvUzxzFBKVpDO2YQsq9ntkCdCxcI2z0aHY7yU1tNgXMvPsH7wdVEOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=gA80zArq; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="h8/+EL5W"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-36521bd11a6so8050065ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:31:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1708939903; x=1709544703; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gbQaXGx202MYUih537vCjMC9neGAB2aCaE4Hy7lgplw=;
-        b=h8/+EL5WaBr9GK6/F/s/38m8F6UPwXXgldRJNPunHwVbQgr7YDpsL+koRonuYQOul/
-         damgjLUV6PP+icnzNGeOiYhYQMuQlRmU98phonhhrDhONbGdJe8JKIWDlj64w+vizN95
-         PbMCOgQVK9GBXY+glMwDuRLeM48dIQJFXFcXmTCwjfMpoL2y1GEECBEkR/l1aCXLklTq
-         2RWUyKn2PNcntDiUnZLh64sAP60tElQdBBEmrzrXQEuEjeBaeN5zP/0TIiiaQfn4QBbG
-         74alzU/YFPbTZ7KVYymJT/8EjZN2CSkpU9VJZ009aMlFfg0NeblxpQFx3qf4YOYbhxPQ
-         78SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708939903; x=1709544703;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gbQaXGx202MYUih537vCjMC9neGAB2aCaE4Hy7lgplw=;
-        b=k8wwyvIdMcCxQJsgUY6XBkKzYA5ngakIbIlbFQV0gzXJGJtB+tV/1AS4+m//nu9mNC
-         YmVgpMn1pVIP+M8sttgK/R6aHbzfFRIi/KxGf6URWE8Q1ZeXAsEFa9amZDnRiIJaW7/b
-         Nk/w7cenA6iLBIP+5YogWqMGJi0uqcn/alAzSPZkXAMfQth9TGPMCYEOkddFv6xDxqRy
-         CZtGinjdRfplzQlsN2siki9fWdS3hzbhrNwT9Sp/3NUJEYspsLoJruqINUchiVS9YssW
-         tUdUQT9gQogtQbj4JD9VVs6fGhNWHDSH9h9HKKxg2MqzdX1yZZFXtKN0GBRJ4tEc9Vkk
-         4Ojw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCn8jgj4/lMQILGjmVBf/7nfbkhc430zsE1mruix5b44W2O9cXPBk+M1rfLwEQCgTVWA69yUwkIMHXrM9TnqIQMRoBkdGP5sipWG0l
-X-Gm-Message-State: AOJu0Yy3gHOl/ta94OkGtDQWjYbYr7G8Vn6njBazjkwLWIZ4627ByOFI
-	NgpF2xd4+lAX6CL7vCIFiBNQ8HIG8DIX/pT+ZpdjKofZ5r8cr87NSJwB9cGlMJ0=
-X-Google-Smtp-Source: AGHT+IEmj3b9nZlpJaFO3EymrQ7Xj9BGLomqh0QQ/h+wzTZtX70NSEYzexvpQN94Fv3ml/LFzgnoDA==
-X-Received: by 2002:a05:6e02:214d:b0:365:bf3:60e2 with SMTP id d13-20020a056e02214d00b003650bf360e2mr9636330ilv.6.1708939902818;
-        Mon, 26 Feb 2024 01:31:42 -0800 (PST)
-Received: from C02CV19DML87.bytedance.net ([203.208.189.14])
-        by smtp.gmail.com with ESMTPSA id z6-20020a63e546000000b005d68962e1a7sm3539555pgj.24.2024.02.26.01.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 01:31:42 -0800 (PST)
-From: "$(uname)" <qirui.001@bytedance.com>
-X-Google-Original-From: "$(uname)" <$(mail address)>
-To: bp@alien8.de,
-	mingo@redhat.com,
-	tglx@linutronix.de,
-	hpa@zytor.com,
-	jpoimboe@redhat.com,
-	peterz@infradead.org,
-	mbenes@suse.cz,
-	gregkh@linuxfoundation.org,
-	stable@vger.kernel.org,
-	alexandre.chartre@oracle.com
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	qirui.001@bytedance.com
-Subject: [PATCH 0/3] Support intra-function call validation
-Date: Mon, 26 Feb 2024 17:31:30 +0800
-Message-Id: <20240226093133.94909-1-qirui.001@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gA80zArq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=yYySHCkB1fVu3TPhXHHVfFL4AcaC9fq3QRqpB04qwVw=; b=gA80zArq7rFCVuIfQpJX1WAPAV
+	IKwfv/r/3V3paXcNj9IKgY7QWmZkXMQpSlf5ykbchsm+QCh4SzXiTPUJg/A+52pw7NFWHQ5vrxY9i
+	884kKpvYHGyvungyo532wuwHlaMxnWxLjsAZFFO/TMwSzZH7xuMWO3W5lvdmnRDmNzcgt6+gQ6vd8
+	7pLsKYpP+GdpdivRSZnijzpCmNCBi8WBKtUCHi1cbPJDX7xaXiYjME5vVuNASV3If6bl2xTUcVzpV
+	fnWdeWAeW2lr47gWWbN2V+0BHiXLLjfQt4aJAWjAoc0wILIkiEueuAbMEFmuehjIRjnE5tIvixPdc
+	fli9P6uQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39856)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1reXL0-0002fj-21;
+	Mon, 26 Feb 2024 09:31:54 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1reXKx-0006Ju-TN; Mon, 26 Feb 2024 09:31:51 +0000
+Date: Mon, 26 Feb 2024 09:31:51 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Steffen =?iso-8859-1?Q?B=E4tz?= <steffen@innosonix.de>
+Cc: Fabio Estevam <festevam@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 1/2] net: dsa: mv88e6xxx: fix marvell 6320/21 switch
+ probing
+Message-ID: <Zdxah+wBafeTHzQ0@shell.armlinux.org.uk>
+References: <20240226091325.53986-1-steffen@innosonix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240226091325.53986-1-steffen@innosonix.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-From: Rui Qi <qirui.001@bytedance.com>
+On Mon, Feb 26, 2024 at 10:13:23AM +0100, Steffen Bätz wrote:
+> @@ -649,6 +649,19 @@ static void mv88e6352_phylink_get_caps(struct mv88e6xxx_chip *chip, int port,
+>  	}
+>  }
+>  
+> +static void mv88e632x_phylink_get_caps(struct mv88e6xxx_chip *chip, int port,
+> +				       struct phylink_config *config)
+> +{
+> +	unsigned long *supported = config->supported_interfaces;
+> +	int err, cmode;
+> +
+> +	/* Translate the default cmode */
+> +	mv88e6xxx_translate_cmode(chip->ports[port].cmode, supported);
+> +
+> +	config->mac_capabilities = MAC_SYM_PAUSE | MAC_10 | MAC_100 |
+> +				   MAC_1000FD;
+> +}
+> +
 
-Since kernel version 5.4.250 LTS, there has been an issue with the kernel live patching feature becoming unavailable. When compiling the sample code for kernel live patching, the following message is displayed when enabled:
+This looks identical to mv88e6351_phylink_get_caps(). Would that work
+for you instead?
 
-livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
-
-After investigation, it was found that this is due to objtool not supporting intra-function calls, resulting in incorrect orc entry generation.
-
-This patchset adds support for intra-function calls, allowing the kernel live patching feature to work correctly.
-
-Alexandre Chartre (2):
-  objtool: is_fentry_call() crashes if call has no destination
-  objtool: Add support for intra-function calls
-
-Rui Qi (1):
-  x86/speculation: Support intra-function call validation
-
- arch/x86/include/asm/nospec-branch.h          |  7 ++
- include/linux/frame.h                         | 11 ++++
- .../Documentation/stack-validation.txt        |  8 +++
- tools/objtool/arch/x86/decode.c               |  6 ++
- tools/objtool/check.c                         | 64 +++++++++++++++++--
- 5 files changed, 91 insertions(+), 5 deletions(-)
+Thanks.
 
 -- 
-2.39.2 (Apple Git-143)
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
