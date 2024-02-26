@@ -1,51 +1,51 @@
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5820F4EB45;
-	Mon, 26 Feb 2024 10:49:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E0F4EB42;
+	Mon, 26 Feb 2024 10:49:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944587; cv=none; b=IRA8W4WIp1Q8/MlKKy7qldnA4+75YRwjk0HLOLeb7eS2hRPorYeVTwM0/uDK5QZwCkNzgM3JHC6U+xCwX4fOeI7BtsF7v7JfGVS0E3GaCY2agviO4dwQcUDbr9R6sjcc4ETS3BqQ9I7pXGqDdfBhiImar1skUmQubwGtnAWWBdM=
+	t=1708944588; cv=none; b=EJqqaXLkKMMTD4XjZzJ1bQZoFvRfSRivU35/OTyAYPRFuqfZxkBSa3jE8zz876fwYnEOvpsPU3TQOgnStI3RCHgAD12UrZKngLkHbtN88oE4oVrpFXW8JxhyKLpdM8t4ofzZfLZaXU5Z7RrK4I5IJNKrd+2YXaZcjrpM8AL+Cy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944587; c=relaxed/simple;
-	bh=twuwkRyRHslPFywmVO+y38lM6opxhSMBvIUj8FgdjtU=;
+	s=arc-20240116; t=1708944588; c=relaxed/simple;
+	bh=iKYO2rG3BTMKt5WCaCdwZY//PQVAlVNZ1d+5MI+Gots=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=k9LlFfhEhK7Jsm6IYqI5S5UfYOM9YSidX45UMtHl+xOIDGXJWkA6905KeOoZCdwQF9tqvmxCNsOe8uryU7hbPc81LQCreev2xJh981yV/S6FuFSyHer8h6KADY31CbNwPTmqTTYN2uZyybU6Q8Carpv//b5Od1VOv/Hx/m4CjT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=7m+vXXzy; arc=none smtp.client-ip=185.132.182.106
+	 In-Reply-To:To:CC; b=mpreVKiaYq6Dvo9Gv1gLpJf61F2jCyGeTRXuYcVn06auiXlL/ze1J6z0OCkPcsTSp3cXHGhL5FpO7V4r29i2eRBsTgF+/YUCJYQTZYl0DEb9BjcyoqlyfasmULpX5OSTjyoCzB3GZkVmMsmrLhHQky4KRYSdMLhK7z20CZGZMt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=vg/JvPWp; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="7m+vXXzy"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41QALFRK004526;
-	Mon, 26 Feb 2024 11:49:17 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="vg/JvPWp"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41QALKTN025578;
+	Mon, 26 Feb 2024 11:49:24 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:date:subject:mime-version:content-type
 	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=selector1; bh=LS0fC07Uerxobb1Hl9X+Or5HXmC5pJ+PVXGLcG2X85I
-	=; b=7m+vXXzyeFnQa8iAl3RxC71EJ0r/V84QTpMiBXdhcDL2BWP0eNPg82zi+Tl
-	BB9XmFGdjEoB9on+yUyMSSE652EU7pUt8ANI0bRsZ5/JJ4JuOW6CwyW47o2bbyzJ
-	mIyVZvEC7AF3wBiWnCerhEwEAYlWzglUI1RMVJ7vo3xuIEoRQBmq+1YpBKcbY5kU
-	g4Q+7+mn22ucu/uFMvl1nyOPOL7PrIHtjMTYxiJB3g3JhDypnrV0FiQU5G0MRP8U
-	fMLXs8DcC69zfhKjIxguMlaVsor8/asgf0qNIIn8bj05B70EfG2uogPDonjPwdRO
-	I5nTdBqFfSx1G1X6uDbslNtqeIQ==
+	:cc; s=selector1; bh=DnsKquutEGOQewPoi6J/BDbXg1mh4kqRqxYNbt4LG2M
+	=; b=vg/JvPWpPfkIqrTHKtz4t+wPErcR6jikhRiL2G1usxocAEZ/05pboKOLv6Q
+	L9k+yDZ9P/MxflXqOFwMvX0jHKngqpVqjhIhVzGDAucbhcReVXQ+Mn1HnounBVEt
+	mmCWNF02BdWrTRoq/CkmMfi34ILQZXq0WXleb8/oYxMlD/y+62DmXItx6y1vNQw4
+	knrxBbRG3XzNVlXB8fpjnvcxhsGOSRv+70Q33zy6GNT374h4CTErRMyRr2OaGpbp
+	k8dhkcWhWa5Rerlx2J6ir1zdEgxCrYhjUTZbM/kGhfp8FHxe+ezOpnGEsoiqT1CD
+	774mt9+FwohuYrNL3Gy/ZXrQJLQ==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wf6rkeyc9-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wf8p26kne-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 11:49:17 +0100 (CET)
+	Mon, 26 Feb 2024 11:49:24 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EA29840047;
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4476F40044;
 	Mon, 26 Feb 2024 11:49:12 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 80B93265EF5;
-	Mon, 26 Feb 2024 11:48:09 +0100 (CET)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9683B266D12;
+	Mon, 26 Feb 2024 11:48:10 +0100 (CET)
 Received: from localhost (10.252.9.163) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 26 Feb
- 2024 11:48:09 +0100
+ 2024 11:48:10 +0100
 From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-Date: Mon, 26 Feb 2024 11:48:05 +0100
-Subject: [PATCH v6 1/3] dt-bindings: display: add STM32 LVDS device
+Date: Mon, 26 Feb 2024 11:48:07 +0100
+Subject: [PATCH v6 3/3] drm/stm: ltdc: add lvds pixel clock
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240226-lvds-v6-1-15e3463fbe70@foss.st.com>
+Message-ID: <20240226-lvds-v6-3-15e3463fbe70@foss.st.com>
 References: <20240226-lvds-v6-0-15e3463fbe70@foss.st.com>
 In-Reply-To: <20240226-lvds-v6-0-15e3463fbe70@foss.st.com>
 To: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
@@ -78,9 +78,7 @@ To: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
 CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
-        Conor Dooley
-	<conor.dooley@microchip.com>
+        Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
 X-Mailer: b4 0.12.4
 X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
  (10.75.129.70)
@@ -88,179 +86,88 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-26_07,2024-02-26_01,2023-05-22_02
 
-Add "st,stm32mp25-lvds" compatible.
+The STM32MP25x display subsystem presents a mux which feeds the loopback
+pixel clock of the current bridge in use into the LTDC. This mux is only
+accessible through sysconfig registers which is not yet available in the
+STM32MP25x common clock framework.
+
+While waiting for a complete update of the clock framework, this would
+allow to use the LVDS.
 
 Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Yannick Fertre <yannick.fertre@foss.st.com>
 ---
-Depends on: "dt-bindings: stm32: add clocks and reset binding for
-	    stm32mp25 platform" by Gabriel Fernandez
-
-Changes in v6:
-	- Added Conor's Reviewed-by
-
-Changes in v5:
-	- Fixed path in MAINTAINERS
-
-Changes in v4:
-	- Align filename to compatible
-	- Fix compatible in the example
-	- Remove redundant word in the subject
-
-Changes in v3:
-	- Clarify commit dependency
-	- Fix includes in the example
-	- Fix YAML
-	- Add "clock-cells" description
-	- s/regroups/is composed of/
-	- Changed compatible to show SoC specificity
-
 Changes in v2:
-	- Switch compatible and clock-cells related areas
-	- Remove faulty #include in the example.
-	- Add entry in MAINTAINERS
+	- Fixed my address
+	- Fixed smatch warning
 ---
- .../bindings/display/st,stm32mp25-lvds.yaml        | 119 +++++++++++++++++++++
- MAINTAINERS                                        |   1 +
- 2 files changed, 120 insertions(+)
+ drivers/gpu/drm/stm/ltdc.c | 19 +++++++++++++++++++
+ drivers/gpu/drm/stm/ltdc.h |  1 +
+ 2 files changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/st,stm32mp25-lvds.yaml b/Documentation/devicetree/bindings/display/st,stm32mp25-lvds.yaml
-new file mode 100644
-index 000000000000..6736f93256b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/st,stm32mp25-lvds.yaml
-@@ -0,0 +1,119 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/st,stm32mp25-lvds.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 LVDS Display Interface Transmitter
-+
-+maintainers:
-+  - Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-+  - Yannick Fertre <yannick.fertre@foss.st.com>
-+
-+description: |
-+  The STMicroelectronics STM32 LVDS Display Interface Transmitter handles the
-+  LVDS protocol: it maps the pixels received from the upstream Pixel-DMA (LTDC)
-+  onto the LVDS PHY.
-+
-+  It is composed of three sub blocks:
-+    - LVDS host: handles the LVDS protocol (FPD / OpenLDI) and maps its input
-+      pixels onto the data lanes of the PHY
-+    - LVDS PHY: parallelize the data and drives the LVDS data lanes
-+    - LVDS wrapper: handles top-level settings
-+
-+  The LVDS controller driver supports the following high-level features:
-+    - FDP-Link-I and OpenLDI (v0.95) protocols
-+    - Single-Link or Dual-Link operation
-+    - Single-Display or Double-Display (with the same content duplicated on both)
-+    - Flexible Bit-Mapping, including JEIDA and VESA
-+    - RGB888 or RGB666 output
-+    - Synchronous design, with one input pixel per clock cycle
-+
-+properties:
-+  compatible:
-+    const: st,stm32mp25-lvds
-+
-+  "#clock-cells":
-+    const: 0
-+    description:
-+      Provides the internal LVDS PHY clock to the framework.
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: APB peripheral clock
-+      - description: Reference clock for the internal PLL
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: ref
-+
-+  resets:
-+    maxItems: 1
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          LVDS input port node, connected to the LTDC RGB output port.
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          LVDS output port node, connected to a panel or bridge input port.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - "#clock-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/st,stm32mp25-rcc.h>
-+    #include <dt-bindings/reset/st,stm32mp25-rcc.h>
-+
-+    lvds: lvds@48060000 {
-+        compatible = "st,stm32mp25-lvds";
-+        reg = <0x48060000 0x2000>;
-+        #clock-cells = <0>;
-+        clocks = <&rcc CK_BUS_LVDS>, <&rcc CK_KER_LVDSPHY>;
-+        clock-names = "pclk", "ref";
-+        resets = <&rcc LVDS_R>;
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            port@0 {
-+                reg = <0>;
-+                lvds_in: endpoint {
-+                   remote-endpoint = <&ltdc_ep1_out>;
-+                };
-+            };
-+
-+            port@1 {
-+                reg = <1>;
-+                lvds_out0: endpoint {
-+                   remote-endpoint = <&lvds_panel_in>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3527a2ece6cd..ff5c945f206e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7240,6 +7240,7 @@ L:	dri-devel@lists.freedesktop.org
- S:	Maintained
- T:	git git://anongit.freedesktop.org/drm/drm-misc
- F:	Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml
-+F:	Documentation/devicetree/bindings/display/st,stm32mp25-lvds.yaml
- F:	drivers/gpu/drm/stm
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 5576fdae4962..23011a8913bd 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -838,6 +838,12 @@ ltdc_crtc_mode_valid(struct drm_crtc *crtc,
+ 	int target_max = target + CLK_TOLERANCE_HZ;
+ 	int result;
  
- DRM DRIVERS FOR TI KEYSTONE
++	if (ldev->lvds_clk) {
++		result = clk_round_rate(ldev->lvds_clk, target);
++		DRM_DEBUG_DRIVER("lvds pixclk rate target %d, available %d\n",
++				 target, result);
++	}
++
+ 	result = clk_round_rate(ldev->pixel_clk, target);
+ 
+ 	DRM_DEBUG_DRIVER("clk rate target %d, available %d\n", target, result);
+@@ -1896,6 +1902,8 @@ void ltdc_suspend(struct drm_device *ddev)
+ 
+ 	DRM_DEBUG_DRIVER("\n");
+ 	clk_disable_unprepare(ldev->pixel_clk);
++	if (ldev->lvds_clk)
++		clk_disable_unprepare(ldev->lvds_clk);
+ }
+ 
+ int ltdc_resume(struct drm_device *ddev)
+@@ -1910,6 +1918,13 @@ int ltdc_resume(struct drm_device *ddev)
+ 		DRM_ERROR("failed to enable pixel clock (%d)\n", ret);
+ 		return ret;
+ 	}
++	if (ldev->lvds_clk) {
++		if (clk_prepare_enable(ldev->lvds_clk)) {
++			clk_disable_unprepare(ldev->pixel_clk);
++			DRM_ERROR("Unable to prepare lvds clock\n");
++			return -ENODEV;
++		}
++	}
+ 
+ 	return 0;
+ }
+@@ -1981,6 +1996,10 @@ int ltdc_load(struct drm_device *ddev)
+ 		}
+ 	}
+ 
++	ldev->lvds_clk = devm_clk_get(dev, "lvds");
++	if (IS_ERR(ldev->lvds_clk))
++		ldev->lvds_clk = NULL;
++
+ 	rstc = devm_reset_control_get_exclusive(dev, NULL);
+ 
+ 	mutex_init(&ldev->err_lock);
+diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
+index 9d488043ffdb..4a60ce5b610c 100644
+--- a/drivers/gpu/drm/stm/ltdc.h
++++ b/drivers/gpu/drm/stm/ltdc.h
+@@ -44,6 +44,7 @@ struct ltdc_device {
+ 	void __iomem *regs;
+ 	struct regmap *regmap;
+ 	struct clk *pixel_clk;	/* lcd pixel clock */
++	struct clk *lvds_clk;	/* lvds pixel clock */
+ 	struct mutex err_lock;	/* protecting error_status */
+ 	struct ltdc_caps caps;
+ 	u32 irq_status;
 
 -- 
 2.25.1
