@@ -1,33 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE69E12F593;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025CA13173B;
 	Mon, 26 Feb 2024 21:27:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708982865; cv=none; b=F2A13jDYpLNu0+GLTbfJ/JnwVhF3BAJAQsUWTwwRtli5/XNRHQ7AhRJVMfepNIn38pklIUzSN8XsH4K7vxID0zGaX6ZHvaF4+ZnGdJ5icRILHsaLOs3sXmnX/CIVnjEiMiXgZ2EOg/iX87g128BHp+Q/Sgw9WHTufbA+dSFUeaM=
+	t=1708982866; cv=none; b=kI0+jafdMnMsonsFOvA6PzWJfxDU5Ag2LVDv5ZwSHlYEh2XAFir6G7iIqU9HMaYEQhn7YM+2uxrZjq/YYCO8UauOOQaDbadRh1OUSX4sj4Wu0xvJ8BvlO8mLAK4kcOZzGKYDGnmVuKq7UjQzxw3r53+fF62xmEMnn75r5803ekg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708982865; c=relaxed/simple;
-	bh=W7KyzBkyJPOjERPAmGBasbk62LFaM6Pz/kkeIkNL5bU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=omypmVw2heKmMMgk2D014SaUL6z6CROYG/uU8wiM7OfBwVIGIfmOXyfZNvPOMTDDdz1IG6isJ/eKGdwWyqVSXOtZwnb1E3SJLZV9gveikACgsM4fC4bkHmdsm/c4THHfjcMRyTyD0t6RnxQvyGFQmo1I0Cb7Tu0yZaa0NxwEX1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdxR78Sr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708982866; c=relaxed/simple;
+	bh=grAv2UX9w5//0+lqXh40HuhHnzKW6J9sNOgymXTHUsI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ja6N6LMvyiYWm2VqEGbOueE2eH2b0qozSGW5z7F3iMy4fr+LIh8IAffJEZU2HT0vEvjR6wqojzrfAhRmGLj5pWDTKXyvh8kXnqwVI3dFIZIGjUNM6y+knKWz5kxwAmqtiopph9ojwgASNcNP3/rsh1nnZoTpu+v5gjR2m7kRI4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTueOrf7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdxR78Sr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32931C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTueOrf7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3084FC43394;
 	Mon, 26 Feb 2024 21:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708982865;
-	bh=W7KyzBkyJPOjERPAmGBasbk62LFaM6Pz/kkeIkNL5bU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FdxR78SrpAa0TFYd0AyYylwTnUDbADZhRGR82OivyPEdJBsBV3Ckquq7C15t+838f
-	 DF/MxqCs3zaCE9lDrMSzMu67+D2GaEoEjYUQhz8V1fNM8WuQbmT7UKL/8uXqFUTeKH
-	 qKeUr/8V6Fs22XLrWcK5CLXa7gSQeWqYT+TwDvAnfqbl2iktywxEm01AY41b7eI1pb
-	 0bCTHa8KdwqXHGLV/dwegg5YWhN8dNw2COcPk0rYJgfhoQl0iKkAIF+BOCIJul9l/Y
-	 2dN32yJJPTihGOGV+wuIvAkJ1rEkUNSSB1IgEQmh0hjKUZ7KJKcKB8YpY0sMfRDjZG
-	 JgMs2Vf6x4ZYg==
+	bh=grAv2UX9w5//0+lqXh40HuhHnzKW6J9sNOgymXTHUsI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fTueOrf7H0r1t9Wsr2bFQgWujJs3YsO9rmcLDgOqqgi8Z/zNJOwmeIGcRUDWpU1qZ
+	 7qeKm8Dx4AIufgZ3kLf68RCjd/tDfy1DbhIPTiZ0+exBgJwBGtPaayJ/j8uhbdZR8v
+	 b5uOwERbHorkC4uYVDLJ9rerLLJNEkRrQbV676HJYVvSfwMX5NRDv/TEOHd8qi71W2
+	 qQT/87ccjxlkvkIMtrwgpCjVSM4bF9MdK+SQRgyMKisjW7WDqpuq7qj8lkdp3KVyYn
+	 +kBMZyxbDE6DCw+Wdy7BItXexurtPw0d0B5A78qY9bG3QdW5sLGWlkTONoObcS7lvj
+	 ALfB3fp9x21Sw==
 Received: by mercury (Postfix, from userid 1000)
-	id B339C1060DFB; Mon, 26 Feb 2024 22:27:41 +0100 (CET)
+	id A1FF21060D83; Mon, 26 Feb 2024 22:27:41 +0100 (CET)
 From: Sebastian Reichel <sre@kernel.org>
 To: Sebastian Reichel <sre@kernel.org>,
 	Shawn Guo <shawnguo@kernel.org>,
@@ -44,13 +43,11 @@ Cc: Rob Herring <robh+dt@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v5 3/6] dt-bindings: soc: imx: fsl,imx-anatop: add binding
-Date: Mon, 26 Feb 2024 22:26:25 +0100
-Message-ID: <20240226212740.2019837-4-sre@kernel.org>
+	Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH v5 0/6] UNI-T UTi260B support
+Date: Mon, 26 Feb 2024 22:26:22 +0100
+Message-ID: <20240226212740.2019837-1-sre@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240226212740.2019837-1-sre@kernel.org>
-References: <20240226212740.2019837-1-sre@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,149 +56,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add missing binding for i.MX anatop syscon.
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
----
- .../bindings/soc/imx/fsl,imx-anatop.yaml      | 128 ++++++++++++++++++
- 1 file changed, 128 insertions(+)
+Hi,
+
+This adds adds support for the UNI-T UTi260B thermal camera, which is based
+on i.MX6ULL. The series first updates DT bindings, so that CHECK_DTBS no
+longer reports any errors for i.MX6ULL (i.e. for an empty board). They are
+not specific to the UTi260B and in fact that machine has most of the IP
+handled by these patches marked as disabled. The last patch adds the actual
+thermal camera DT.
+
+The DT is based on reverse engineered information. More information about
+the device can be found in this presentation from Embedded Recipes 2023:
+
+ * https://embedded-recipes.org/2023/wp-content/uploads/2023/10/Running-FOSS-on-a-Thermal-Camera-Sebastian-Reichel-compressed.pdf
+ * https://www.youtube.com/watch?v=uvObsCG-Cqo
+
+I also prepared a branch with these patches (and a minimal kernel config)
+and published it here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-misc.git/log/?h=uti260b-v5
+
+Changes since PATCHv4:
+ * https://lore.kernel.org/all/20240224213240.1854709-1-sre@kernel.org/
+  - drop merged patches
+  - use new NXP mailing list
+  - UTi260B board DT: change patch title
+  - UTi260B board DT: fix node order
+
+Changes since PATCHv3:
+ * https://lore.kernel.org/all/20240216223654.1312880-1-sre@kernel.org/
+  - weim binding: use " instead of '
+  - weim binding: use "if: not: required: - foo" instead of "if: properties: foo: false"
+  - imx6ull-uti260b.dts: merge ecspi3_csgrp into ecspi3grp
+  - collect Reviewed-by from Krzysztof Kozlowski
+
+Changes since PATCHv2:
+ * https://lore.kernel.org/all/20240213010347.1075251-1-sre@kernel.org/
+  - drop fsl,imx-asrc YAML binding conversion (merged)
+  - collect a bunch of Reviewed-by/Acked-by tags
+  - weim DT binding: fix issue with requirements
+  - xnur-gpio -> xnur-gpios change: Improve patch long description
+
+Changes since PATCHv1:
+ * https://lore.kernel.org/all/20240210012114.489102-1-sre@kernel.org/
+  - uni-t,imx6ull-uti260b -> uni-t,uti260b
+  - add Acked-by for uni-t vendor prefix
+  - add Acked-by for HDMI audio index fix
+  - add Acked-by for LCDIF power-domain requirement drop
+  - anatop DT binding: Fixed indentation in example
+  - anatop DT binding: Described IRQs
+  - touchscreen DT binding: change tsc@ to touchscreen@ in example
+  - touchscreen DT binding: change xnur-gpio to xnur-gpios
+  - weim DT binding: drop acme,whatever example
+  - weim DT binding: use flash@ instead of nor@
+  - weim DT binding: update weim.txt reference in arcx,anybus-controller.txt
+  - weim DT binding: switch to memory-controller binding
+  - fsl,imx-asrc DT binding: fix ASoC patch subject prefix
+  - fsl,imx-asrc DT binding: add constraints
+  - add new patch fixing xnur-gpio(s) in all i.MX6UL board DT files
+  - add new patch fixing touchscreen nodename in i.MX6UL SoC DT file
+  - add new patch fixing weim nodename in all i.MX SoC DT files
+  - device DTS: use color/functions for the led
+  - device DTS: increase SPI speed
+  - device DTS: add comment for SD / eMMC node
+
+Unadressed feedback from PATCHv1:
+  - anatop phandle vs parent: technically it makes sense to just use the
+    parent, but this driver is only used by i.MX6. The current code makes
+	use of the phandle, so we cannot drop it because of backwards
+	compatibility. So I don't see a point in deprecating this property.
+  - touchscreen binding: I kept measure-delay-time and pre-charge-time
+    values in hex, since that is being used everywhere and the unit
+	is unknown. The values are directly written into HW registers and
+	the i.MX6UL TRM does not provide any hints about the unit. I do not
+	have an i.MX6UL device with a touchsreen, so I cannot test either.
+  - regulator name in DT: I did not rename the regulators to just
+    "regulator", since the nodename must be unique.
+
+Greetings,
+
+-- Sebastian
+
+Sebastian Reichel (6):
+  dt-bindings: pinctrl: fsl,imx6ul-pinctrl: convert to YAML
+  dt-bindings: input: touchscreen: fsl,imx6ul-tsc convert to YAML
+  dt-bindings: soc: imx: fsl,imx-anatop: add binding
+  dt-bindings: soc: imx: fsl,imx-iomuxc-gpr: add imx6
+  dt-bindings: fsl-imx-sdma: fix HDMI audio index
+  ARM: dts: imx: Add UNI-T UTi260B thermal camera board
+
+ .../devicetree/bindings/dma/fsl,imx-sdma.yaml |   3 +-
+ .../input/touchscreen/fsl,imx6ul-tsc.yaml     |  97 +++
+ .../bindings/input/touchscreen/imx6ul_tsc.txt |  38 --
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.txt   |  37 --
+ .../bindings/pinctrl/fsl,imx6ul-pinctrl.yaml  | 116 ++++
+ .../bindings/soc/imx/fsl,imx-anatop.yaml      | 128 ++++
+ .../bindings/soc/imx/fsl,imx-iomuxc-gpr.yaml  |  18 +-
+ arch/arm/boot/dts/nxp/imx/Makefile            |   1 +
+ arch/arm/boot/dts/nxp/imx/imx6ull-uti260b.dts | 566 ++++++++++++++++++
+ 9 files changed, 927 insertions(+), 77 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/fsl,imx6ul-tsc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/imx6ul_tsc.txt
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx6ul-pinctrl.yaml
  create mode 100644 Documentation/devicetree/bindings/soc/imx/fsl,imx-anatop.yaml
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6ull-uti260b.dts
 
-diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,imx-anatop.yaml b/Documentation/devicetree/bindings/soc/imx/fsl,imx-anatop.yaml
-new file mode 100644
-index 000000000000..5a59e3470510
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/imx/fsl,imx-anatop.yaml
-@@ -0,0 +1,128 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/imx/fsl,imx-anatop.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ANATOP register
-+
-+maintainers:
-+  - Shawn Guo <shawnguo@kernel.org>
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - fsl,imx6sl-anatop
-+              - fsl,imx6sll-anatop
-+              - fsl,imx6sx-anatop
-+              - fsl,imx6ul-anatop
-+              - fsl,imx7d-anatop
-+          - const: fsl,imx6q-anatop
-+          - const: syscon
-+          - const: simple-mfd
-+      - items:
-+          - const: fsl,imx6q-anatop
-+          - const: syscon
-+          - const: simple-mfd
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: Temperature sensor event
-+      - description: Brown-out event on either of the support regulators
-+      - description: Brown-out event on either the core, gpu or soc regulators
-+
-+  tempmon:
-+    type: object
-+    unevaluatedProperties: false
-+    $ref: /schemas/thermal/imx-thermal.yaml
-+
-+patternProperties:
-+  "regulator-((3p0)|(vddcore)|(vddsoc))$":
-+    type: object
-+    unevaluatedProperties: false
-+    $ref: /schemas/regulator/anatop-regulator.yaml
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6ul-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    anatop: anatop@20c8000 {
-+        compatible = "fsl,imx6ul-anatop", "fsl,imx6q-anatop",
-+                     "syscon", "simple-mfd";
-+        reg = <0x020c8000 0x1000>;
-+        interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        reg_3p0: regulator-3p0 {
-+            compatible = "fsl,anatop-regulator";
-+            regulator-name = "vdd3p0";
-+            regulator-min-microvolt = <2625000>;
-+            regulator-max-microvolt = <3400000>;
-+            anatop-reg-offset = <0x120>;
-+            anatop-vol-bit-shift = <8>;
-+            anatop-vol-bit-width = <5>;
-+            anatop-min-bit-val = <0>;
-+            anatop-min-voltage = <2625000>;
-+            anatop-max-voltage = <3400000>;
-+            anatop-enable-bit = <0>;
-+        };
-+
-+        reg_arm: regulator-vddcore {
-+            compatible = "fsl,anatop-regulator";
-+            regulator-name = "cpu";
-+            regulator-min-microvolt = <725000>;
-+            regulator-max-microvolt = <1450000>;
-+            regulator-always-on;
-+            anatop-reg-offset = <0x140>;
-+            anatop-vol-bit-shift = <0>;
-+            anatop-vol-bit-width = <5>;
-+            anatop-delay-reg-offset = <0x170>;
-+            anatop-delay-bit-shift = <24>;
-+            anatop-delay-bit-width = <2>;
-+            anatop-min-bit-val = <1>;
-+            anatop-min-voltage = <725000>;
-+            anatop-max-voltage = <1450000>;
-+        };
-+
-+        reg_soc: regulator-vddsoc {
-+            compatible = "fsl,anatop-regulator";
-+            regulator-name = "vddsoc";
-+            regulator-min-microvolt = <725000>;
-+            regulator-max-microvolt = <1450000>;
-+            regulator-always-on;
-+            anatop-reg-offset = <0x140>;
-+            anatop-vol-bit-shift = <18>;
-+            anatop-vol-bit-width = <5>;
-+            anatop-delay-reg-offset = <0x170>;
-+            anatop-delay-bit-shift = <28>;
-+            anatop-delay-bit-width = <2>;
-+            anatop-min-bit-val = <1>;
-+            anatop-min-voltage = <725000>;
-+            anatop-max-voltage = <1450000>;
-+        };
-+
-+        tempmon: tempmon {
-+            compatible = "fsl,imx6ul-tempmon", "fsl,imx6sx-tempmon";
-+            interrupt-parent = <&gpc>;
-+            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+            fsl,tempmon = <&anatop>;
-+            nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+            nvmem-cell-names = "calib", "temp_grade";
-+            clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
-+            #thermal-sensor-cells = <0>;
-+        };
-+    };
 -- 
 2.43.0
 
