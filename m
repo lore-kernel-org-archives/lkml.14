@@ -1,207 +1,94 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD7C15ACB
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14254EEDE
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708916155; cv=none; b=Q96tctGI0N513B/85mwRdrz5NX/0fx64KBCgyFQBSfMV0dxXUSwia9Bk3aNvmRN6bq9M25SVtQc4w3WVR3QcKZyIAC0XjN+PGBpCJ2gZfXYlXmVx4EmfrVtdfa4ASNyPKxdmufa3oJhxtdB95gSyhHc+bUeOCxj3eqbnWiRBrJU=
+	t=1708916222; cv=none; b=UmGRTwcWYVPQ4ozCIChqfyZuGY4ibRzhHelSo+nSGf0awnmrvew7b3S+uzxUYQ9KiqhffzIopMyG+9uUQ4nGFEcZp4JbeANpJfaQvrnDA7TZvq9u4qnA0SyZY1qNewFnjaI3RDHmolCZMUlF3y7UDHoZvIiIXfbRP/RFKnmL59g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708916155; c=relaxed/simple;
-	bh=rsarDI+hNwZN0pX3REbm4i46L5xfbAYfqDtfaWlSzoM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GVfGl6PkXGs5quT7sTFPiG17zLDu053gk/yrjFdPLK8G5u+CLnM9/9FlqHt8uyCRQ55JUkrFglIwvdNMGVu8hxD5+DbkqcoFrqN+YpU6Lkd3lqYB7YERvbn7jS9QZ9fp3T4PwTRHpnYj7dyBQrpexCTh466G8WCLCLnVYttpShY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TjlbJ4zD0zqhdk;
-	Mon, 26 Feb 2024 10:55:08 +0800 (CST)
-Received: from kwepemm600020.china.huawei.com (unknown [7.193.23.147])
-	by mail.maildlp.com (Postfix) with ESMTPS id DA1D01400D3;
-	Mon, 26 Feb 2024 10:55:44 +0800 (CST)
-Received: from [10.174.179.160] (10.174.179.160) by
- kwepemm600020.china.huawei.com (7.193.23.147) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 26 Feb 2024 10:55:43 +0800
-Message-ID: <a905dea7-018e-80c0-ab54-85766add8d96@huawei.com>
-Date: Mon, 26 Feb 2024 10:55:43 +0800
+	s=arc-20240116; t=1708916222; c=relaxed/simple;
+	bh=RkYRKXC8rDGhcHXpOqxOD+2kabTswxu8nRbiz9T3PnA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hDnP7/8OUfb5Z34jHcnBbqMyf+ypN2oSUCD9aEqIRREGRo4pYjNTva43lFaVnAiSLc5iib6z8GWi5hSwXhoj4gf0a5mEUsxe1BbwndlpHFF8jsLOdfTX8MLgouWjqxYL7Nn1DLBx+y7l17Xp+NsNMVCqIeyXPAhcyepaVD2WTbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4546ceb75acc42a9b2151b68aacf51a8-20240226
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:e41c192e-b886-4454-bc77-1e6bcaeef539,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.37,REQID:e41c192e-b886-4454-bc77-1e6bcaeef539,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:6f543d0,CLOUDID:42c032ff-c16b-4159-a099-3b9d0558e447,B
+	ulkID:2402261019466BTZH2M6,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
+	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: 4546ceb75acc42a9b2151b68aacf51a8-20240226
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1034945641; Mon, 26 Feb 2024 10:19:44 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 7A78CE000EBC;
+	Mon, 26 Feb 2024 10:19:44 +0800 (CST)
+X-ns-mid: postfix-65DBF540-285856213
+Received: from kernel.. (unknown [172.20.15.254])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 43257E000EBC;
+	Mon, 26 Feb 2024 10:19:41 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: lucas.demarchi@intel.com,
+	ogabbay@kernel.org,
+	thomas.hellstrom@linux.intel.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch
+Cc: intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] drm/xe: use KMEM_CACHE() to create xe_hw_fence cache
+Date: Mon, 26 Feb 2024 10:19:12 +0800
+Message-Id: <20240226021912.1779715-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2] filemap: avoid unnecessary major faults in
- filemap_fault()
-To: "Huang, Ying" <ying.huang@intel.com>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <willy@infradead.org>, <fengwei.yin@intel.com>,
-	<aneesh.kumar@linux.ibm.com>, <shy828301@gmail.com>, <hughd@google.com>,
-	<david@redhat.com>, <wangkefeng.wang@huawei.com>, Nanyong Sun
-	<sunnanyong@huawei.com>
-References: <20240206092627.1421712-1-zhangpeng362@huawei.com>
- <87jznhypxy.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Language: en-US
-From: "zhangpeng (AS)" <zhangpeng362@huawei.com>
-In-Reply-To: <87jznhypxy.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600020.china.huawei.com (7.193.23.147)
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/2/7 10:21, Huang, Ying wrote:
+Use the KMEM_CACHE() macro instead of kmem_cache_create() to simplify
+the creation of SLAB caches when the default values are used.
 
-> Peng Zhang <zhangpeng362@huawei.com> writes:
->> From: ZhangPeng <zhangpeng362@huawei.com>
->>
->> The major fault occurred when using mlockall(MCL_CURRENT | MCL_FUTURE)
->> in application, which leading to an unexpected performance issue[1].
->>
->> This caused by temporarily cleared PTE during a read+clear/modify/write
->> update of the PTE, eg, do_numa_page()/change_pte_range().
->>
->> For the data segment of the user-mode program, the global variable area
->> is a private mapping. After the pagecache is loaded, the private anonymous
->> page is generated after the COW is triggered. Mlockall can lock COW pages
->> (anonymous pages), but the original file pages cannot be locked and may
->> be reclaimed. If the global variable (private anon page) is accessed when
->> vmf->pte is zeroed in numa fault, a file page fault will be triggered.
->>
->> At this time, the original private file page may have been reclaimed.
->> If the page cache is not available at this time, a major fault will be
->> triggered and the file will be read, causing additional overhead.
->>
->> Fix this by rechecking the PTE without acquiring PTL in filemap_fault()
->> before triggering a major fault.
->>
->> Testing file anonymous page read and write page fault performance in ext4
->> and ramdisk using will-it-scale[2] on a x86 physical machine. The data
->> is the average change compared with the mainline after the patch is
->> applied. The test results are within the range of fluctuation, and there
->> is no obvious difference. The test results are as follows:
-> You still claim that there's no difference in the test results.  If so,
-> why do you implement the patch?  IMHO, you need to prove your patch can
-> improve the performance in some cases.
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ drivers/gpu/drm/xe/xe_hw_fence.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I'm sorry that maybe I didn't express myself clearly.
-
-The purpose of this patch is to fix the issue that major fault may still be triggered
-with mlockall(), thereby improving a little performance. This patch is more of a bugfix
-than a performance improvement patch.
-
-This issue affects our traffic analysis service. The inbound traffic is heavy. If a major
-fault occurs, the I/O schedule is triggered and the original I/O is suspended. Generally,
-the I/O schedule is 0.7 ms. If other applications are operating disks, the system needs
-to wait for more than 10 ms. However, the inbound traffic is heavy and the NIC buffer is
-small. As a result, packet loss occurs. The traffic analysis service can't tolerate packet
-loss.
-
-To prevent packet loss, we use the mlockall() function to prevent I/O. It is unreasonable
-that major faults will still be triggered after mlockall() is used.
-
-In our service test environment, the baseline is 7 major faults/12 hours. After applied the
-unlock patch, the probability of triggering the major fault is 1 major faults/12 hours. After
-applied the lock patch, no major fault will be triggered. So only the locked patch can actually
-solve our problem.
-
-The test data provided is intended to prove that the patch does not have a major impact
-on the performance of the page fault itself.
-
->> 	                 processes processes_idle threads threads_idle
->> ext4    private file write: -1.14%  -0.08%         -1.87%   0.13%
->> ext4    shared  file write:  0.14%  -0.53%          2.88%  -0.77%
->> ext4    private file  read:  0.03%  -0.65%         -0.51%  -0.08%
->> tmpfs   private file write: -0.34%  -0.11%          0.20%   0.15%
->> tmpfs   shared  file write:  0.96%   0.10%          2.78%  -0.34%
->> ramdisk private file write: -1.21%  -0.21%         -1.12%   0.11%
->> ramdisk private file  read:  0.00%  -0.68%         -0.33%  -0.02%
->>
->> [1] https://lore.kernel.org/linux-mm/9e62fd9a-bee0-52bf-50a7-498fa17434ee@huawei.com/
->> [2] https://github.com/antonblanchard/will-it-scale/
->>
->> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
->> Suggested-by: Yin Fengwei <fengwei.yin@intel.com>
->> Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
->> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->> ---
->> v1->v2:
->> - Add more test results per Huang, Ying
->> - Add more comments before check PTE per Huang, Ying, David Hildenbrand
->>    and Yin Fengwei
->> - Change pte_offset_map_nolock to pte_offset_map as the ptl lock won't
->>    be used
->>
->> RFC->v1:
->> - Add error handling when ptep == NULL per Huang, Ying and Matthew
->>    Wilcox
->> - Check the PTE without acquiring PTL in filemap_fault(), suggested by
->>    Huang, Ying and Yin Fengwei
->> - Add pmd_none() check before PTE map
->> - Update commit message and add performance test information
->>
->>   mm/filemap.c | 34 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 34 insertions(+)
->>
->> diff --git a/mm/filemap.c b/mm/filemap.c
->> index 142864338ca4..a2c1a98bc771 100644
->> --- a/mm/filemap.c
->> +++ b/mm/filemap.c
->> @@ -3238,6 +3238,40 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
->>   			mapping_locked = true;
->>   		}
->>   	} else {
->> +		if (!pmd_none(*vmf->pmd)) {
->> +			pte_t *ptep;
->> +
->> +			ptep = pte_offset_map(vmf->pmd, vmf->address);
->> +			if (unlikely(!ptep))
->> +				return VM_FAULT_NOPAGE;
->> +			/*
->> +			 * Recheck PTE as the PTE can be cleared temporarily
->> +			 * during a read+clear/modify/write update of the PTE,
->> +			 * eg, do_numa_page()/change_pte_range(). This will
->> +			 * trigger a major fault, even if we use mlockall,
->> +			 * which may affect performance.
->> +			 * We don't hold PTL here as acquiring PTL hurts
->> +			 * performance. So the check is still racy, but
->> +			 * the race window seems small enough.
->> +			 *
->> +			 * If we lose the race during the check, the page_fault
->> +			 * will be triggered. Butthe page table entry lock
->> +			 * still make sure the correctness:
->> +			 * - If the page cache is not reclaimed, the page_fault
->> +			 *   will work like the page fault was served already
->> +			 *   and bail out.
->> +			 * - If the page cache is reclaimed, the major fault
->> +			 *   will be triggered, page cache is filled,
->> +			 *   page_fault also work like the page fault was
->> +			 *   served already and bail out.
->> +			 */
-> IMHO, this is too long.  It can be shorten to like,
->
-> If we lose the race, major fault may be triggered unnecessary.  This
-> hurts performance but not functionality.
-
-OK, I'll fix it in the next version.
-
->> +			if (unlikely(!pte_none(ptep_get_lockless(ptep))))
->> +				ret = VM_FAULT_NOPAGE;
->> +			pte_unmap(ptep);
->> +			if (unlikely(ret))
->> +				return ret;
->> +		}
->> +
->>   		/* No page in the page cache at all */
->>   		count_vm_event(PGMAJFAULT);
->>   		count_memcg_event_mm(vmf->vma->vm_mm, PGMAJFAULT);
-> --
-> Best Regards,
-> Huang, Ying
-
--- 
-Best Regards,
-Peng
+diff --git a/drivers/gpu/drm/xe/xe_hw_fence.c b/drivers/gpu/drm/xe/xe_hw_=
+fence.c
+index a6094c81f2ad..cd258e0ccdf3 100644
+--- a/drivers/gpu/drm/xe/xe_hw_fence.c
++++ b/drivers/gpu/drm/xe/xe_hw_fence.c
+@@ -20,9 +20,7 @@ static struct kmem_cache *xe_hw_fence_slab;
+=20
+ int __init xe_hw_fence_module_init(void)
+ {
+-	xe_hw_fence_slab =3D kmem_cache_create("xe_hw_fence",
+-					     sizeof(struct xe_hw_fence), 0,
+-					     SLAB_HWCACHE_ALIGN, NULL);
++	xe_hw_fence_slab =3D KMEM_CACHE(xe_hw_fence, SLAB_HWCACHE_ALIGN);
+ 	if (!xe_hw_fence_slab)
+ 		return -ENOMEM;
+=20
+--=20
+2.39.2
 
