@@ -1,868 +1,392 @@
-Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6D61292E0
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 14:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B013A1C6B9;
+	Mon, 26 Feb 2024 14:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708956865; cv=none; b=BI7NplGkenReX+bdn9g/8uMZXjnwGG3d0TVqkmQO0ZfUcTXqYaXK3XfGbYQofIPTm+jViW3/keGMMc+y0p7IdX8MKKIXUAaJbum5Wl3DZi1C3SqFw6joCJx4mZNLczVul8hkuYoZa5rFz2kU7+2g09GgX2GGM2+QvbIiSjOBmxg=
+	t=1708956945; cv=none; b=HcY/NjMGhtOM65MrTRCqIX6yxkesjrqF7ZCVjp852X2uc6tKVffidbfXLBBHCDnoi0qNRINgkeV9D+u4SHmIvcn/BrxWFpqyMB4Jt18Z+7wMUsGtknZcUsAsi+rasg/9+k2giJR42zd8fiPFkKFPk+y6CdNXkvRQAgKkDtAW9L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708956865; c=relaxed/simple;
-	bh=DOBmYvge90bQRE2AxleqLIpzOL3zv7BD5gxL75yFTUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FaX51CUROrJnuJyEWCvBMlgt+n4r3zgNYR2nKEmcTSBRCQhJMa/Ya6YH5Rl6x6G/WaVse8PXtsfy4O38+cAv0ajR2twVVEFyynA5mRS/CbSdX6q958zsab3UH+TyR7mGQ8b5oHJzVdCaOvlOkOTJK0taztWT2fmURKxmPrNcBOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=EffqSd7u; arc=none smtp.client-ip=198.252.153.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
+	s=arc-20240116; t=1708956945; c=relaxed/simple;
+	bh=iqKxUW8vw4K5O4nubqAcfgPBbMUQaHd5GGqHmxDzISg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dmkvIgegADX7P0uj8v9pKU4SsFLsKaieIbnkmG4RfiQxBlU+c8TChtPepTBkjXT8siAidjujsEINldLl3C8InHq8qo2NLu0OMPgnxfd8yiJ5CdRZv5jyxrt6aO4whsCTzmNvvKGTLyRMEdEwPnBqZ2wznlGHIpAC13JBaRVCo9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3VWTstb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="EffqSd7u"
-Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx0.riseup.net (Postfix) with ESMTPS id 4Tk2g159GNz9snF;
-	Mon, 26 Feb 2024 14:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-	t=1708956862; bh=DOBmYvge90bQRE2AxleqLIpzOL3zv7BD5gxL75yFTUM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EffqSd7uCSqn3Fs0fmurRz2ziQz/DHXjUK1oAZKujFKY0+SLoC7lvLCNyxawZpzno
-	 9oqFrXRFfa+n3lf27wUb2xRLz1/oEEyqvE1ktwsbbGZ8o5+1QZigHA9PcjwWq9C9Nq
-	 rFZtI5CLabTS0uo4D3Lj4VoVyaWtsmrHcLMpAgIw=
-X-Riseup-User-ID: B5C64FBCBE29917DC1DF478E2A3BF73D238DE231D05AD82E64A0A8EF786C67D0
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4Tk2fh0rnSzJsD4;
-	Mon, 26 Feb 2024 14:14:03 +0000 (UTC)
-Message-ID: <3d34fda7-1a95-472d-b059-eec7cb280c35@riseup.net>
-Date: Mon, 26 Feb 2024 11:14:01 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3VWTstb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B29EDC433C7;
+	Mon, 26 Feb 2024 14:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708956945;
+	bh=iqKxUW8vw4K5O4nubqAcfgPBbMUQaHd5GGqHmxDzISg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i3VWTstbv5SE2tnhmV3R6JAPgBJiWiqOGyORUY4mMWfiGNlrkTf+jJyJZqqMgtiUi
+	 LWUgJP/G3sFXboNmHfoXnYA+rRLqilVtTRIcb4aP/S5D8WRgp4o7NSwQMzakEGHUDf
+	 9fV4gQABQOmeFNDC1Wd88XG4zzThWvl6FDdD5mlHc4Piouh151cCBRRj0LxE6VJJzd
+	 48xUQYH0SYuQvDgM5KfaalL8Au8F1QY4glfyh8FSpyKhrRAcKQJ4QzHCjqQdumpy+/
+	 HDHiOb8q68NcvswOErwFJp2Xr3/jCaA/0HMjkM0vMa1Tm/2OiKr6hupDMirm05OWxs
+	 ybtmnDsW6Vh8w==
+Date: Mon, 26 Feb 2024 22:02:25 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Cc: u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	dlan@gentoo.org, inochiama@outlook.com
+Subject: Re: [PATCH v3 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+Message-ID: <ZdyZ8SvqbpllDDeY@xhacker>
+References: <20240223082014.109385-1-qiujingbao.dlmu@gmail.com>
+ <20240223082632.109767-1-qiujingbao.dlmu@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 5/9] drm/vkms: Re-introduce line-per-line composition
- algorithm
-Content-Language: en-US
-To: Louis Chauvet <louis.chauvet@bootlin.com>,
- Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
- Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- pekka.paalanen@haloniitty.fi
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
- thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com,
- nicolejadeyee@google.com
-References: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
- <20240226-yuv-v3-5-ff662f0994db@bootlin.com>
-From: Arthur Grillo <arthurgrillo@riseup.net>
-In-Reply-To: <20240226-yuv-v3-5-ff662f0994db@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240223082632.109767-1-qiujingbao.dlmu@gmail.com>
 
-
-
-On 26/02/24 05:46, Louis Chauvet wrote:
-> Re-introduce a line-by-line composition algorithm for each pixel format.
-> This allows more performance by not requiring an indirection per pixel
-> read. This patch is focused on readability of the code.
+On Fri, Feb 23, 2024 at 04:26:32PM +0800, Jingbao Qiu wrote:
+> Implement the PWM driver for CV1800.
 > 
-> Line-by-line composition was introduced by [1] but rewritten back to
-> pixel-by-pixel algorithm in [2]. At this time, nobody noticed the impact
-> on performance, and it was merged.
-> 
-> This patch is almost a revert of [2], but in addition efforts have been
-> made to increase readability and maintainability of the rotation handling.
-> The blend function is now divided in two parts:
-> - Transformation of coordinates from the output referential to the source
-> referential
-> - Line conversion and blending
-> 
-> Most of the complexity of the rotation management is avoided by using
-> drm_rect_* helpers. The remaining complexity is around the clipping, to
-> avoid reading/writing outside source/destination buffers.
-> 
-> The pixel conversion is now done line-by-line, so the read_pixel_t was
-> replaced with read_pixel_line_t callback. This way the indirection is only
-> required once per line and per plane, instead of once per pixel and per
-> plane.
-> 
-> The read_line_t callbacks are very similar for most pixel format, but it
-> is required to avoid performance impact. Some helpers were created to
-> avoid code repetition:
-> - get_step_1x1: get the step in byte to reach next pixel block in a
->   certain direction
-> - *_to_argb_u16: helpers to perform colors conversion. They should be
->   inlined by the compiler, and they are used to avoid repetition between
->   multiple variants of the same format (argb/xrgb and maybe in the
->   future for formats like bgr formats).
-> 
-> This new algorithm was tested with:
-> - kms_plane (for color conversions)
-> - kms_rotation_crc (for rotations of planes)
-> - kms_cursor_crc (for translations of planes)
-> The performance gain was mesured with:
-> - kms_fb_stress
-> 
-> [1]: commit 8ba1648567e2 ("drm: vkms: Refactor the plane composer to accept
->      new formats")
->      https://lore.kernel.org/all/20220905190811.25024-7-igormtorrente@gmail.com/
-> [2]: commit 322d716a3e8a ("drm/vkms: isolate pixel conversion
->      functionality")
->      https://lore.kernel.org/all/20230418130525.128733-2-mcanal@igalia.com/
-> 
-> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 > ---
->  drivers/gpu/drm/vkms/vkms_composer.c | 219 +++++++++++++++++++++++-------
->  drivers/gpu/drm/vkms/vkms_drv.h      |  24 +++-
->  drivers/gpu/drm/vkms/vkms_formats.c  | 253 ++++++++++++++++++++++-------------
->  drivers/gpu/drm/vkms/vkms_formats.h  |   2 +-
->  drivers/gpu/drm/vkms/vkms_plane.c    |   8 +-
->  5 files changed, 349 insertions(+), 157 deletions(-)
+>  drivers/pwm/Kconfig      |  10 ++
+>  drivers/pwm/Makefile     |   1 +
+>  drivers/pwm/pwm-cv1800.c | 259 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 270 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-cv1800.c
 > 
-> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> index 5b341222d239..e555bf9c1aee 100644
-> --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> @@ -24,9 +24,10 @@ static u16 pre_mul_blend_channel(u16 src, u16 dst, u16 alpha)
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 4b956d661755..455f07af94f7 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -186,6 +186,16 @@ config PWM_CROS_EC
+>  	  PWM driver for exposing a PWM attached to the ChromeOS Embedded
+>  	  Controller.
 >  
->  /**
->   * pre_mul_alpha_blend - alpha blending equation
-> - * @frame_info: Source framebuffer's metadata
->   * @stage_buffer: The line with the pixels from src_plane
->   * @output_buffer: A line buffer that receives all the blends output
-> + * @x_start: The start offset to avoid useless copy
-> + * @count: The number of byte to copy
->   *
->   * Using the information from the `frame_info`, this blends only the
->   * necessary pixels from the `stage_buffer` to the `output_buffer`
-> @@ -37,51 +38,23 @@ static u16 pre_mul_blend_channel(u16 src, u16 dst, u16 alpha)
->   * drm_plane_create_blend_mode_property(). Also, this formula assumes a
->   * completely opaque background.
->   */
-> -static void pre_mul_alpha_blend(struct vkms_frame_info *frame_info,
-> -				struct line_buffer *stage_buffer,
-> -				struct line_buffer *output_buffer)
-> +static void pre_mul_alpha_blend(
-> +	struct line_buffer *stage_buffer,
-> +	struct line_buffer *output_buffer,
-> +	int x_start,
-> +	int pixel_count)
->  {
-> -	int x_dst = frame_info->dst.x1;
-> -	struct pixel_argb_u16 *out = output_buffer->pixels + x_dst;
-> -	struct pixel_argb_u16 *in = stage_buffer->pixels;
-> -	int x_limit = min_t(size_t, drm_rect_width(&frame_info->dst),
-> -			    stage_buffer->n_pixels);
-> -
-> -	for (int x = 0; x < x_limit; x++) {
-> -		out[x].a = (u16)0xffff;
-> -		out[x].r = pre_mul_blend_channel(in[x].r, out[x].r, in[x].a);
-> -		out[x].g = pre_mul_blend_channel(in[x].g, out[x].g, in[x].a);
-> -		out[x].b = pre_mul_blend_channel(in[x].b, out[x].b, in[x].a);
-> +	struct pixel_argb_u16 *out = &output_buffer->pixels[x_start];
-> +	struct pixel_argb_u16 *in = &stage_buffer->pixels[x_start];
+> +config PWM_CV1800
+> +	tristate "Sophgo CV1800 PWM driver"
+> +	depends on ARCH_SOPHGO || COMPILE_TEST
+> +	help
+> +	  Generic PWM framework driver for the Sophgo CV1800 series
+> +	  SoCs.
 > +
-> +	for (int i = 0; i < pixel_count; i++) {
-> +		out[i].a = (u16)0xffff;
-> +		out[i].r = pre_mul_blend_channel(in[i].r, out[i].r, in[i].a);
-> +		out[i].g = pre_mul_blend_channel(in[i].g, out[i].g, in[i].a);
-> +		out[i].b = pre_mul_blend_channel(in[i].b, out[i].b, in[i].a);
->  	}
->  }
->  
-> -static int get_y_pos(struct vkms_frame_info *frame_info, int y)
-> -{
-> -	if (frame_info->rotation & DRM_MODE_REFLECT_Y)
-> -		return drm_rect_height(&frame_info->rotated) - y - 1;
-> -
-> -	switch (frame_info->rotation & DRM_MODE_ROTATE_MASK) {
-> -	case DRM_MODE_ROTATE_90:
-> -		return frame_info->rotated.x2 - y - 1;
-> -	case DRM_MODE_ROTATE_270:
-> -		return y + frame_info->rotated.x1;
-> -	default:
-> -		return y;
-> -	}
-> -}
-> -
-> -static bool check_limit(struct vkms_frame_info *frame_info, int pos)
-> -{
-> -	if (drm_rotation_90_or_270(frame_info->rotation)) {
-> -		if (pos >= 0 && pos < drm_rect_width(&frame_info->rotated))
-> -			return true;
-> -	} else {
-> -		if (pos >= frame_info->rotated.y1 && pos < frame_info->rotated.y2)
-> -			return true;
-> -	}
-> -
-> -	return false;
-> -}
->  
->  static void fill_background(const struct pixel_argb_u16 *background_color,
->  			    struct line_buffer *output_buffer)
-> @@ -163,6 +136,37 @@ static void apply_lut(const struct vkms_crtc_state *crtc_state, struct line_buff
->  	}
->  }
->  
-> +/**
-> + * direction_for_rotation() - Helper to get the correct reading direction for a specific rotation
+> +	  To compile this driver as a module, build the dependecies
+> +	  as modules, this will be called pwm-cv1800.
+> +
+>  config PWM_DWC_CORE
+>  	tristate
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index c5ec9e168ee7..6c3c4a07a316 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLK)		+= pwm-clk.o
+>  obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
+>  obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
+>  obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
+> +obj-$(CONFIG_PWM_CV1800)	+= pwm-cv1800.o
+>  obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
+>  obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
+>  obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
+> diff --git a/drivers/pwm/pwm-cv1800.c b/drivers/pwm/pwm-cv1800.c
+> new file mode 100644
+> index 000000000000..da1309dc0091
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-cv1800.c
+> @@ -0,0 +1,259 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * pwm-cv1800.c: PWM driver for Sophgo cv1800
 > + *
-> + * @rotation: rotation to analyze
+> + * Author: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> + *
+> + * Limitations:
+> + * - It output low when PWM channel disabled.
+> + * - This pwm device supports dynamic loading of PWM parameters. When PWMSTART
+> + *   is written from 0 to 1, the register value (HLPERIODn, PERIODn) will be
+> + *   temporarily stored inside the PWM. If you want to dynamically change the
+> + *   waveform during PWM output, after writing the new value to HLPERIODn and
+> + *   PERIODn, write 1 and then 0 to PWMUPDATE[n] to make the new value effective.
+> + * - Supports up to Rate/2 output, and the lowest is about Rate/(2^30-1).
+> + * - By setting HLPERIODn to 0, can produce 100% duty cycle.
 > + */
-> +enum pixel_read_direction direction_for_rotation(unsigned int rotation)
-> +{
-> +	if (rotation & DRM_MODE_ROTATE_0) {
-> +		if (rotation & DRM_MODE_REFLECT_X)
-> +			return READ_LEFT;
-> +		else
-> +			return READ_RIGHT;
-> +	} else if (rotation & DRM_MODE_ROTATE_90) {
-> +		if (rotation & DRM_MODE_REFLECT_Y)
-> +			return READ_UP;
-> +		else
-> +			return READ_DOWN;
-> +	} else if (rotation & DRM_MODE_ROTATE_180) {
-> +		if (rotation & DRM_MODE_REFLECT_X)
-> +			return READ_RIGHT;
-> +		else
-> +			return READ_LEFT;
-> +	} else if (rotation & DRM_MODE_ROTATE_270) {
-> +		if (rotation & DRM_MODE_REFLECT_Y)
-> +			return READ_DOWN;
-> +		else
-> +			return READ_UP;
-> +	}
-> +	return READ_RIGHT;
-> +}
 > +
->  /**
->   * blend - blend the pixels from all planes and compute crc
->   * @wb: The writeback frame buffer metadata
-> @@ -183,11 +187,11 @@ static void blend(struct vkms_writeback_job *wb,
->  {
->  	struct vkms_plane_state **plane = crtc_state->active_planes;
->  	u32 n_active_planes = crtc_state->num_active_planes;
-> -	int y_pos;
->  
->  	const struct pixel_argb_u16 background_color = { .a = 0xffff };
->  
->  	size_t crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
-> +	size_t crtc_x_limit = crtc_state->base.crtc->mode.hdisplay;
->  
->  	/*
->  	 * The planes are composed line-by-line. It is a necessary complexity to avoid poor
-> @@ -198,22 +202,133 @@ static void blend(struct vkms_writeback_job *wb,
->  
->  		/* The active planes are composed associatively in z-order. */
->  		for (size_t i = 0; i < n_active_planes; i++) {
-> -			y_pos = get_y_pos(plane[i]->frame_info, y);
-> +			struct vkms_plane_state *current_plane = plane[i];
->  
-> -			if (!check_limit(plane[i]->frame_info, y_pos))
-> +			/* Avoid rendering useless lines */
-> +			if (y < current_plane->frame_info->dst.y1 ||
-> +			    y >= current_plane->frame_info->dst.y2) {
->  				continue;
-> -
-> -			vkms_compose_row(stage_buffer, plane[i], y_pos);
-> -			pre_mul_alpha_blend(plane[i]->frame_info, stage_buffer,
-> -					    output_buffer);
-> +			}
+> +#include <linux/clk.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
 > +
-> +			/*
-> +			 * src_px is the line to copy. The initial coordinates are inside the
-
-So maybe is better to rename to src_line?
-
-Best Regards,
-~Arthur Grillo
-
-> +			 * destination framebuffer, and then drm_rect_* helpers are used to
-> +			 * compute the correct position into the source framebuffer.
-> +			 */
-> +			struct drm_rect src_px = DRM_RECT_INIT(
-> +				current_plane->frame_info->dst.x1, y,
-> +				drm_rect_width(&current_plane->frame_info->dst), 1);
-> +			struct drm_rect tmp_src;
+> +#define PWM_CV1800_HLPERIOD_BASE 0x00
+> +#define PWM_CV1800_PERIOD_BASE 0x04
+> +#define PWM_CV1800_PWM_CV1800_POLARITY 0x40
+> +#define PWM_CV1800_START 0x44
+> +#define PWM_CV1800_DONE 0x48
+> +#define PWM_CV1800_UPDATE 0x4c
+> +#define PWM_CV1800_OE 0xd0
 > +
-> +			drm_rect_fp_to_int(&tmp_src, &current_plane->frame_info->src);
+> +#define PWM_CV1800_HLPERIOD(n) (PWM_CV1800_HLPERIOD_BASE + ((n) * 0x08))
+> +#define PWM_CV1800_PERIOD(n) (PWM_CV1800_PERIOD_BASE + ((n) * 0x08))
 > +
-> +			/*
-> +			 * [1]: Clamping src_px to the crtc_x_limit to avoid writing outside of the
-> +			 * destination buffer
-> +			 */
-> +			src_px.x2 = min_t(int, src_px.x2, (int)crtc_x_limit);
+> +#define PWM_CV1800_UPDATE_MASK(n) (BIT(0) << (n))
+> +#define PWM_CV1800_OE_MASK(n) (BIT(0) << (n))
+> +#define PWM_CV1800_START_MASK(n) (BIT(0) << (n))
 > +
-> +			/*
-> +			 * Transform the coordinate x/y from the crtc to coordinates into
-> +			 * coordinates for the src buffer.
-> +			 *
-> +			 * - Cancel the offset of the dst buffer.
-> +			 * - Invert the rotation. This assumes that
-> +			 *   dst = drm_rect_rotate(src, rotation) (dst and src have the
-> +			 *   same size, but can be rotated).
-> +			 * - Apply the offset of the source rectangle to the coordinate.
-> +			 */
-> +			drm_rect_translate(&src_px, -current_plane->frame_info->dst.x1,
-> +					   -current_plane->frame_info->dst.y1);
-> +			drm_rect_rotate_inv(&src_px,
-> +					    drm_rect_width(&tmp_src),
-> +					    drm_rect_height(&tmp_src),
-> +					    current_plane->frame_info->rotation);
-> +			drm_rect_translate(&src_px, tmp_src.x1, tmp_src.y1);
+> +#define PWM_CV1800_MAXPERIOD (BIT(30) - 1)
+> +#define PWM_CV1800_MINPERIOD BIT(1)
+> +#define PWM_CV1800_MINHLPERIOD BIT(0)
+> +#define PWM_CV1800_PERIOD_RESET BIT(1)
+> +#define PWM_CV1800_HLPERIOD_RESET BIT(0)
+> +#define PWM_CV1800_REG_DISABLE 0x0U
+> +#define PWM_CV1800_REG_ENABLE(n) (BIT(0) << (n))
 > +
-> +			/* Get the correct reading direction in the source buffer. */
-> +
-> +			enum pixel_read_direction direction =
-> +				direction_for_rotation(current_plane->frame_info->rotation);
-> +
-> +			int x_start = src_px.x1;
-> +			int y_start = src_px.y1;
-> +			int pixel_count;
-> +			/* [2]: Compute and clamp the number of pixel to read */
-> +			if (direction == READ_RIGHT || direction == READ_LEFT) {
-> +				/*
-> +				 * In horizontal reading, the src_px width is the number of pixel to
-> +				 * read
-> +				 */
-> +				pixel_count = drm_rect_width(&src_px);
-> +				if (x_start < 0) {
-> +					pixel_count += x_start;
-> +					x_start = 0;
-> +				}
-> +				if (x_start + pixel_count > current_plane->frame_info->fb->width) {
-> +					pixel_count =
-> +						(int)current_plane->frame_info->fb->width - x_start;
-> +				}
-> +			} else {
-> +				/*
-> +				 * In vertical reading, the src_px height is the number of pixel to
-> +				 * read
-> +				 */
-> +				pixel_count = drm_rect_height(&src_px);
-> +				if (y_start < 0) {
-> +					pixel_count += y_start;
-> +					y_start = 0;
-> +				}
-> +				if (y_start + pixel_count > current_plane->frame_info->fb->height) {
-> +					pixel_count =
-> +						(int)current_plane->frame_info->fb->width - y_start;
-> +				}
-> +			}
-> +
-> +			if (pixel_count <= 0) {
-> +				/* Nothing to read, so avoid multiple function calls for nothing */
-> +				continue;
-> +			}
-> +
-> +			/*
-> +			 * Modify the starting point to take in account the rotation
-> +			 *
-> +			 * src_px is the top-left corner, so when reading READ_LEFT or READ_TOP, it
-> +			 * must be changed to the top-right/bottom-left corner.
-> +			 */
-> +			if (direction == READ_LEFT) {
-> +				// x_start is now the right point
-> +				x_start += pixel_count - 1;
-> +			} else if (direction == READ_UP) {
-> +				// y_start is now the bottom point
-> +				y_start += pixel_count - 1;
-> +			}
-> +
-> +			/*
-> +			 * Perform the conversion and the blending
-> +			 *
-> +			 * Here we know that the read line (x_start, y_start, pixel_count) is
-> +			 * inside the source buffer [2] and we don't write outside the stage
-> +			 * buffer [1]
-> +			 */
-> +			current_plane->pixel_read_line(
-> +				current_plane->frame_info,
-> +				x_start,
-> +				y_start,
-> +				direction,
-> +				pixel_count,
-> +				&stage_buffer->pixels[current_plane->frame_info->dst.x1]);
-> +
-> +			pre_mul_alpha_blend(stage_buffer, output_buffer,
-> +					    current_plane->frame_info->dst.x1,
-> +					    pixel_count);
->  		}
->  
->  		apply_lut(crtc_state, output_buffer);
->  
->  		*crc32 = crc32_le(*crc32, (void *)output_buffer->pixels, row_size);
-> -
->  		if (wb)
-> -			vkms_writeback_row(wb, output_buffer, y_pos);
-> +			vkms_writeback_row(wb, output_buffer, y);
->  	}
->  }
->  
-> @@ -224,7 +339,7 @@ static int check_format_funcs(struct vkms_crtc_state *crtc_state,
->  	u32 n_active_planes = crtc_state->num_active_planes;
->  
->  	for (size_t i = 0; i < n_active_planes; i++)
-> -		if (!planes[i]->pixel_read)
-> +		if (!planes[i]->pixel_read_line)
->  			return -1;
->  
->  	if (active_wb && !active_wb->pixel_write)
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-> index 886c885c8cf5..0bf49b3c435b 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> @@ -39,7 +39,6 @@
->  struct vkms_frame_info {
->  	struct drm_framebuffer *fb;
->  	struct drm_rect src, dst;
-> -	struct drm_rect rotated;
->  	struct iosys_map map[DRM_FORMAT_MAX_PLANES];
->  	unsigned int rotation;
->  };
-> @@ -69,14 +68,26 @@ struct vkms_writeback_job {
->  	pixel_write_t pixel_write;
->  };
->  
-> +enum pixel_read_direction {
-> +	READ_UP,
-> +	READ_DOWN,
-> +	READ_LEFT,
-> +	READ_RIGHT
+> +struct cv1800_pwm {
+> +	struct regmap *map;
+> +	struct clk *clk;
+> +	unsigned long clk_rate;
 > +};
 > +
->  /**
-> - * typedef pixel_read_t - These functions are used to read a pixel in the source frame,
-> + * typedef pixel_read_line_t - These functions are used to read a pixel line in the source frame,
->   * convert it to `struct pixel_argb_u16` and write it to @out_pixel.
->   *
-> - * @src_pixels: Pointer to the pixel to read
-> - * @out_pixel: Pointer to write the converted pixel
-> + * @frame_info: Frame used as source for the pixel value
-> + * @y: Y (height) coordinate in the source buffer
-> + * @x_start: X (width) coordinate of the first pixel to copy
-> + * @x_end: X (width) coordinate of the last pixel to copy
-> + * @out_pixel: Pointer where to write the pixel value. Pixels will be written between x_start and
-> + *  x_end.
->   */
-> -typedef void (*pixel_read_t)(u8 *src_pixels, struct pixel_argb_u16 *out_pixel);
-> +typedef void (*pixel_read_line_t)(struct vkms_frame_info *frame_info, int x_start, int y_start, enum
-> +	pixel_read_direction direction, int count, struct pixel_argb_u16 out_pixel[]);
->  
->  /**
->   * vkms_plane_state - Driver specific plane state
-> @@ -88,7 +99,7 @@ typedef void (*pixel_read_t)(u8 *src_pixels, struct pixel_argb_u16 *out_pixel);
->  struct vkms_plane_state {
->  	struct drm_shadow_plane_state base;
->  	struct vkms_frame_info *frame_info;
-> -	pixel_read_t pixel_read;
-> +	pixel_read_line_t pixel_read_line;
->  };
->  
->  struct vkms_plane {
-> @@ -193,7 +204,6 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *source_name,
->  /* Composer Support */
->  void vkms_composer_worker(struct work_struct *work);
->  void vkms_set_composer(struct vkms_output *out, bool enabled);
-> -void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state *plane, int y);
->  void vkms_writeback_row(struct vkms_writeback_job *wb, const struct line_buffer *src_buffer, int y);
->  
->  /* Writeback */
-> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-> index 1f5aeba57ad6..46daea6d3ee9 100644
-> --- a/drivers/gpu/drm/vkms/vkms_formats.c
-> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-> @@ -11,21 +11,29 @@
->  
->  /**
->   * packed_pixels_offset() - Get the offset of the block containing the pixel at coordinates x/y
-> - * in the first plane
->   *
->   * @frame_info: Buffer metadata
->   * @x: The x coordinate of the wanted pixel in the buffer
->   * @y: The y coordinate of the wanted pixel in the buffer
-> + * @plane_index: The index of the plane to use
->   *
->   * The caller must be aware that this offset is not always a pointer to a pixel. If individual
->   * pixel values are needed, they have to be extracted from the resulting block.
->   */
-> -static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
-> +static size_t packed_pixels_offset(const struct vkms_frame_info *frame_info, int x, int y,
-> +				   size_t plane_index)
->  {
->  	struct drm_framebuffer *fb = frame_info->fb;
-> -
-> -	return fb->offsets[0] + (y * fb->pitches[0])
-> -			      + (x * fb->format->cpp[0]);
-> +	const struct drm_format_info *format = frame_info->fb->format;
-> +	/* Directly using x and y to multiply pitches and format->ccp is not sufficient because
-> +	 * in some formats a block can represent multiple pixels.
-> +	 *
-> +	 * Dividing x and y by the block size allows to extract the correct offset of the block
-> +	 * containing the pixel.
+> +static inline struct cv1800_pwm *to_cv1800_pwm_dev(struct pwm_chip *chip)
+> +{
+> +	return pwmchip_get_drvdata(chip);
+> +}
+> +
+> +static const struct regmap_config cv1800_pwm_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +};
+> +
+> +static int cv1800_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			     bool enable)
+> +{
+> +	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
+> +	u32 pwm_enable;
+> +
+> +	regmap_read(priv->map, PWM_CV1800_START, &pwm_enable);
+
+what's the reason of using regmap?
+
+> +	pwm_enable &= PWM_CV1800_START_MASK(pwm->hwpwm);
+> +
+> +	/*
+> +	 * If the parameters are changed during runtime, Register needs
+> +	 * to be updated to take effect.
 > +	 */
-> +	return fb->offsets[plane_index] +
-> +	       (y / drm_format_info_block_width(format, plane_index)) * fb->pitches[plane_index] +
-> +	       (x / drm_format_info_block_height(format, plane_index)) * format->char_per_block[plane_index];
->  }
->  
->  /**
-> @@ -35,44 +43,56 @@ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int
->   * @frame_info: Buffer metadata
->   * @x: The x(width) coordinate inside the plane
->   * @y: The y(height) coordinate inside the plane
-> + * @plane_index: The index of the plane
->   *
-> - * Takes the information stored in the frame_info, a pair of coordinates, and
-> - * returns the address of the first color channel.
-> - * This function assumes the channels are packed together, i.e. a color channel
-> - * comes immediately after another in the memory. And therefore, this function
-> - * doesn't work for YUV with chroma subsampling (e.g. YUV420 and NV21).
-> + * Takes the information stored in the frame_info, a pair of coordinates, and returns the address
-> + * of the block containing this pixel.
-> + * The caller must be aware that this pointer is sometimes not directly a pixel, it needs some
-> + * additional work to extract pixel color from this block.
->   */
->  static void *packed_pixels_addr(const struct vkms_frame_info *frame_info,
-> -				int x, int y)
-> +				int x, int y, size_t plane_index)
->  {
-> -	size_t offset = pixel_offset(frame_info, x, y);
-> -
-> -	return (u8 *)frame_info->map[0].vaddr + offset;
-> +	return (u8 *)frame_info->map[0].vaddr + packed_pixels_offset(frame_info, x, y, plane_index);
->  }
->  
-> -static void *get_packed_src_addr(const struct vkms_frame_info *frame_info, int y)
-> +/**
-> + * get_step_1x1() - Common helper to compute the correct step value between each pixel to read in a
-> + * certain direction.
-> + * This must be used only with format where blockh == blockw == 1.
-> + * In the case when direction is not a valid pixel_read_direction, the returned step is 0, so you
-> + * must not rely on this result to create a loop variant.
-> + *
-> + * @fb Framebuffer to iter on
-> + * @direction Direction of the reading
-> + */
-> +static int get_step_1x1(struct drm_framebuffer *fb, enum pixel_read_direction direction,
-> +			int plane_index)
->  {
-> -	int x_src = frame_info->src.x1 >> 16;
-> -	int y_src = y - frame_info->rotated.y1 + (frame_info->src.y1 >> 16);
-> -
-> -	return packed_pixels_addr(frame_info, x_src, y_src);
-> +	switch (direction) {
-> +	default:
-> +		DRM_ERROR("Invalid direction for pixel reading: %d\n", direction);
-> +		return 0;
-> +	case READ_RIGHT:
-> +		return fb->format->char_per_block[plane_index];
-> +	case READ_LEFT:
-> +		return -fb->format->char_per_block[plane_index];
-> +	case READ_DOWN:
-> +		return (int)fb->pitches[plane_index];
-> +	case READ_UP:
-> +		return -(int)fb->pitches[plane_index];
+> +	if (pwm_enable && enable) {
+> +		regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
+> +				   PWM_CV1800_UPDATE_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
+> +		regmap_update_bits(priv->map, PWM_CV1800_UPDATE,
+> +				   PWM_CV1800_UPDATE_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_DISABLE);
+> +	} else if (!pwm_enable && enable) {
+> +		regmap_update_bits(priv->map, PWM_CV1800_OE,
+
+I believe this isn't correct.
+TRM says setting OE as 1 means output enable, while 0 means input.
+So I guess the controller may support pwm capture, but I didn't
+get too much information about pwm capture of the controller from
+the TRM, so can you please check and implement the .capture hook
+if it's supported?
+
+> +				   PWM_CV1800_OE_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
+> +		regmap_update_bits(priv->map, PWM_CV1800_START,
+> +				   PWM_CV1800_START_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
+> +	} else if (pwm_enable && !enable) {
+> +		regmap_update_bits(priv->map, PWM_CV1800_OE,
+
+ditto
+
+> +				   PWM_CV1800_OE_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_DISABLE);
+> +		regmap_update_bits(priv->map, PWM_CV1800_START,
+> +				   PWM_CV1800_START_MASK(pwm->hwpwm),
+> +				   PWM_CV1800_REG_DISABLE);
 > +	}
->  }
->  
-> -static int get_x_position(const struct vkms_frame_info *frame_info, int limit, int x)
-> -{
-> -	if (frame_info->rotation & (DRM_MODE_REFLECT_X | DRM_MODE_ROTATE_270))
-> -		return limit - x - 1;
-> -	return x;
-> -}
->  
->  /*
-> - * The following  functions take pixel data from the buffer and convert them to the format
-> + * The following  functions take pixel data (a, r, g, b, pixel, ...), convert them to the format
->   * ARGB16161616 in out_pixel.
->   *
-> - * They are used in the `vkms_compose_row` function to handle multiple formats.
-> + * They are used in the `read_line`s functions to avoid duplicate work for some pixel formats.
->   */
->  
-> -static void ARGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
-> +static void ARGB8888_to_argb_u16(struct pixel_argb_u16 *out_pixel, int a, int r, int g, int b)
->  {
->  	/*
->  	 * The 257 is the "conversion ratio". This number is obtained by the
-> @@ -80,48 +100,26 @@ static void ARGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixe
->  	 * the best color value in a pixel format with more possibilities.
->  	 * A similar idea applies to others RGB color conversions.
->  	 */
-> -	out_pixel->a = (u16)src_pixels[3] * 257;
-> -	out_pixel->r = (u16)src_pixels[2] * 257;
-> -	out_pixel->g = (u16)src_pixels[1] * 257;
-> -	out_pixel->b = (u16)src_pixels[0] * 257;
-> -}
-> -
-> -static void XRGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
-> -{
-> -	out_pixel->a = (u16)0xffff;
-> -	out_pixel->r = (u16)src_pixels[2] * 257;
-> -	out_pixel->g = (u16)src_pixels[1] * 257;
-> -	out_pixel->b = (u16)src_pixels[0] * 257;
-> +	out_pixel->a = (u16)a * 257;
-> +	out_pixel->r = (u16)r * 257;
-> +	out_pixel->g = (u16)g * 257;
-> +	out_pixel->b = (u16)b * 257;
->  }
->  
-> -static void ARGB16161616_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
-> +static void ARGB16161616_to_argb_u16(struct pixel_argb_u16 *out_pixel, int a, int r, int g, int b)
->  {
-> -	u16 *pixels = (u16 *)src_pixels;
-> -
-> -	out_pixel->a = le16_to_cpu(pixels[3]);
-> -	out_pixel->r = le16_to_cpu(pixels[2]);
-> -	out_pixel->g = le16_to_cpu(pixels[1]);
-> -	out_pixel->b = le16_to_cpu(pixels[0]);
-> -}
-> -
-> -static void XRGB16161616_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
-> -{
-> -	u16 *pixels = (u16 *)src_pixels;
-> -
-> -	out_pixel->a = (u16)0xffff;
-> -	out_pixel->r = le16_to_cpu(pixels[2]);
-> -	out_pixel->g = le16_to_cpu(pixels[1]);
-> -	out_pixel->b = le16_to_cpu(pixels[0]);
-> +	out_pixel->a = le16_to_cpu(a);
-> +	out_pixel->r = le16_to_cpu(r);
-> +	out_pixel->g = le16_to_cpu(g);
-> +	out_pixel->b = le16_to_cpu(b);
->  }
->  
-> -static void RGB565_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
-> +static void RGB565_to_argb_u16(struct pixel_argb_u16 *out_pixel, const u16 *pixel)
->  {
-> -	u16 *pixels = (u16 *)src_pixels;
-> -
->  	s64 fp_rb_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(31));
->  	s64 fp_g_ratio = drm_fixp_div(drm_int2fixp(65535), drm_int2fixp(63));
->  
-> -	u16 rgb_565 = le16_to_cpu(*pixels);
-> +	u16 rgb_565 = le16_to_cpu(*pixel);
->  	s64 fp_r = drm_int2fixp((rgb_565 >> 11) & 0x1f);
->  	s64 fp_g = drm_int2fixp((rgb_565 >> 5) & 0x3f);
->  	s64 fp_b = drm_int2fixp(rgb_565 & 0x1f);
-> @@ -132,34 +130,105 @@ static void RGB565_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
->  	out_pixel->b = drm_fixp2int_round(drm_fixp_mul(fp_b, fp_rb_ratio));
->  }
->  
-> -/**
-> - * vkms_compose_row - compose a single row of a plane
-> - * @stage_buffer: output line with the composed pixels
-> - * @plane: state of the plane that is being composed
-> - * @y: y coordinate of the row
-> +/*
-> + * The following functions are read_line function for each pixel format supported by VKMS.
->   *
-> - * This function composes a single row of a plane. It gets the source pixels
-> - * through the y coordinate (see get_packed_src_addr()) and goes linearly
-> - * through the source pixel, reading the pixels and converting it to
-> - * ARGB16161616 (see the pixel_read() callback). For rotate-90 and rotate-270,
-> - * the source pixels are not traversed linearly. The source pixels are queried
-> - * on each iteration in order to traverse the pixels vertically.
-> + * They read a line starting at the point @x_start,@y_start following the @direction. The result
-> + * is stored in @out_pixel and in the format ARGB16161616.
-> + *
-> + * Those function are very similar, but it is required for performance reason. In the past, some
-> + * experiment were done, and with a generic loop the performance are very reduced [1].
-> + *
-> + * [1]: https://lore.kernel.org/dri-devel/d258c8dc-78e9-4509-9037-a98f7f33b3a3@riseup.net/
->   */
-> -void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state *plane, int y)
 > +
-> +static void ARGB8888_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
-> +			       enum pixel_read_direction direction, int count,
-> +			       struct pixel_argb_u16 out_pixel[])
-> +{
-> +	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
-> +
-> +	int step = get_step_1x1(frame_info->fb, direction, 0);
-> +
-> +	while (count) {
-> +		u8 *px = (u8 *)src_pixels;
-> +
-> +		ARGB8888_to_argb_u16(out_pixel, px[3], px[2], px[1], px[0]);
-> +		out_pixel += 1;
-> +		src_pixels += step;
-> +		count--;
-> +	}
+> +	return 0;
 > +}
 > +
-> +static void XRGB8888_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
-> +			       enum pixel_read_direction direction, int count,
-> +			       struct pixel_argb_u16 out_pixel[])
+> +static int cv1800_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			    const struct pwm_state *state)
 > +{
-> +	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
+> +	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
+> +	u32 period_val, hlperiod_val;
+> +	u64 tem;
 > +
-> +	int step = get_step_1x1(frame_info->fb, direction, 0);
+> +	if (state->polarity != PWM_POLARITY_NORMAL)
+> +		return -EINVAL;
+
+This is wrong. Per the TRM, The POLARITY(offset 0x040) reg can set the
+polarity, so both PWM_POLARITY_NORMAL and PWM_POLARITY_INVERSED are supported.
+
 > +
-> +	while (count) {
-> +		u8 *px = (u8 *)src_pixels;
+> +	/*
+> +	 * This hardware use PERIOD and HLPERIOD registers to represent PWM waves.
+> +	 *
+> +	 * The meaning of PERIOD is how many clock cycles (from the clock source)
+> +	 * are used to represent PWM waves.
+> +	 * PERIOD = rate(MHz) / target(MHz)
+> +	 * PERIOD = period(ns) * rate(Hz) / NSEC_PER_SEC
+> +	 * The meaning of HLPERIOD is the number of low-level cycles in PERIOD.
+> +	 * HLPERIOD = PERIOD - rate(MHz) / duty(MHz)
+> +	 * HLPERIOD = PERIOD - (duty(ns) * rate(Hz) / NSEC_PER_SEC)
+> +	 */
+> +	tem = mul_u64_u64_div_u64(state->period, priv->clk_rate, NSEC_PER_SEC);
+> +	if (tem < PWM_CV1800_MINPERIOD)
+> +		return -EINVAL;
 > +
-> +		ARGB8888_to_argb_u16(out_pixel, 255, px[2], px[1], px[0]);
-> +		out_pixel += 1;
-> +		src_pixels += step;
-> +		count--;
-> +	}
+> +	if (tem > PWM_CV1800_MAXPERIOD)
+> +		tem = PWM_CV1800_MAXPERIOD;
+> +
+> +	period_val = (u32)tem;
+> +
+> +	tem = mul_u64_u64_div_u64(state->duty_cycle, priv->clk_rate,
+> +				  NSEC_PER_SEC);
+> +	if (tem > period_val)
+> +		return -EINVAL;
+> +	hlperiod_val = period_val - (u32)tem;
+> +
+> +	regmap_write(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), period_val);
+> +	regmap_write(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), hlperiod_val);
+> +
+> +	cv1800_pwm_enable(chip, pwm, state->enabled);
+> +
+> +	return 0;
 > +}
 > +
-> +static void ARGB16161616_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
-> +				   enum pixel_read_direction direction, int count,
-> +				   struct pixel_argb_u16 out_pixel[])
+> +static int cv1800_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +				struct pwm_state *state)
 > +{
-> +	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
+> +	struct cv1800_pwm *priv = to_cv1800_pwm_dev(chip);
+> +	u32 period_val, hlperiod_val;
+> +	u64 period_ns = 0;
+> +	u64 duty_ns = 0;
+> +	u32 enable = 0;
 > +
-> +	int step = get_step_1x1(frame_info->fb, direction, 0);
+> +	regmap_read(priv->map, PWM_CV1800_PERIOD(pwm->hwpwm), &period_val);
+> +	regmap_read(priv->map, PWM_CV1800_HLPERIOD(pwm->hwpwm), &hlperiod_val);
 > +
-> +	while (count) {
-> +		u16 *px = (u16 *)src_pixels;
+> +	if (period_val != PWM_CV1800_PERIOD_RESET ||
+> +	    hlperiod_val != PWM_CV1800_HLPERIOD_RESET) {
+> +		period_ns = DIV_ROUND_UP_ULL(period_val * NSEC_PER_SEC, priv->clk_rate);
+> +		duty_ns = DIV_ROUND_UP_ULL(hlperiod_val * period_ns, period_val);
 > +
-> +		ARGB16161616_to_argb_u16(out_pixel, px[3], px[2], px[1], px[0]);
-> +		out_pixel += 1;
-> +		src_pixels += step;
-> +		count--;
+> +		regmap_read(priv->map, PWM_CV1800_START, &enable);
+> +
+> +		enable &= PWM_CV1800_START_MASK(pwm->hwpwm);
 > +	}
+> +
+> +	state->period = period_ns;
+> +	state->duty_cycle = duty_ns;
+> +	state->enabled = enable;
+> +	state->polarity = PWM_POLARITY_NORMAL;
+
+This is not correct, see above.
+
+> +
+> +	return 0;
 > +}
 > +
-> +static void XRGB16161616_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
-> +				   enum pixel_read_direction direction, int count,
-> +				   struct pixel_argb_u16 out_pixel[])
+> +static const struct pwm_ops cv1800_pwm_ops = {
+> +	.apply = cv1800_pwm_apply,
+> +	.get_state = cv1800_pwm_get_state,
+> +};
+> +
+> +static void devm_clk_rate_exclusive_put(void *data)
 > +{
-> +	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
+> +	struct clk *clk = data;
 > +
-> +	int step = get_step_1x1(frame_info->fb, direction, 0);
-> +
-> +	while (count) {
-> +		u16 *px = (u16 *)src_pixels;
-> +
-> +		ARGB16161616_to_argb_u16(out_pixel, 0xFFFF, px[2], px[1], px[0]);
-> +		out_pixel += 1;
-> +		src_pixels += step;
-> +		count--;
-> +	}
+> +	clk_rate_exclusive_put(clk);
 > +}
 > +
-> +static void RGB565_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
-> +			     enum pixel_read_direction direction, int count,
-> +			     struct pixel_argb_u16 out_pixel[])
->  {
-> -	struct pixel_argb_u16 *out_pixels = stage_buffer->pixels;
-> -	struct vkms_frame_info *frame_info = plane->frame_info;
-> -	u8 *src_pixels = get_packed_src_addr(frame_info, y);
-> -	int limit = min_t(size_t, drm_rect_width(&frame_info->dst), stage_buffer->n_pixels);
-> +	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
->  
-> -	for (size_t x = 0; x < limit; x++, src_pixels += frame_info->fb->format->cpp[0]) {
-> -		int x_pos = get_x_position(frame_info, limit, x);
-> +	int step = get_step_1x1(frame_info->fb, direction, 0);
->  
-> -		if (drm_rotation_90_or_270(frame_info->rotation))
-> -			src_pixels = get_packed_src_addr(frame_info, x + frame_info->rotated.y1)
-> -				+ frame_info->fb->format->cpp[0] * y;
-> +	while (count) {
-> +		u16 *px = (u16 *)src_pixels;
->  
-> -		plane->pixel_read(src_pixels, &out_pixels[x_pos]);
-> +		RGB565_to_argb_u16(out_pixel, px);
-> +		out_pixel += 1;
-> +		src_pixels += step;
-> +		count--;
->  	}
->  }
->  
-> @@ -247,7 +316,7 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
->  {
->  	struct vkms_frame_info *frame_info = &wb->wb_frame_info;
->  	int x_dst = frame_info->dst.x1;
-> -	u8 *dst_pixels = packed_pixels_addr(frame_info, x_dst, y);
-> +	u8 *dst_pixels = packed_pixels_addr(frame_info, x_dst, y, 0);
->  	struct pixel_argb_u16 *in_pixels = src_buffer->pixels;
->  	int x_limit = min_t(size_t, drm_rect_width(&frame_info->dst), src_buffer->n_pixels);
->  
-> @@ -256,27 +325,27 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
->  }
->  
->  /**
-> - * Retrieve the correct read_pixel function for a specific format.
-> + * Retrieve the correct read_line function for a specific format.
->   * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
->   * pointer is valid before using it in a vkms_plane_state.
->   *
->   * @format: 4cc of the format
->   */
-> -pixel_read_t get_pixel_read_function(u32 format)
-> +pixel_read_line_t get_pixel_read_line_function(u32 format)
->  {
->  	switch (format) {
->  	case DRM_FORMAT_ARGB8888:
-> -		return &ARGB8888_to_argb_u16;
-> +		return &ARGB8888_read_line;
->  	case DRM_FORMAT_XRGB8888:
-> -		return &XRGB8888_to_argb_u16;
-> +		return &XRGB8888_read_line;
->  	case DRM_FORMAT_ARGB16161616:
-> -		return &ARGB16161616_to_argb_u16;
-> +		return &ARGB16161616_read_line;
->  	case DRM_FORMAT_XRGB16161616:
-> -		return &XRGB16161616_to_argb_u16;
-> +		return &XRGB16161616_read_line;
->  	case DRM_FORMAT_RGB565:
-> -		return &RGB565_to_argb_u16;
-> +		return &RGB565_read_line;
->  	default:
-> -		return (pixel_read_t)NULL;
-> +		return (pixel_read_line_t)NULL;
->  	}
->  }
->  
-> diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
-> index 3ecea4563254..8d2bef95ff79 100644
-> --- a/drivers/gpu/drm/vkms/vkms_formats.h
-> +++ b/drivers/gpu/drm/vkms/vkms_formats.h
-> @@ -5,7 +5,7 @@
->  
->  #include "vkms_drv.h"
->  
-> -pixel_read_t get_pixel_read_function(u32 format);
-> +pixel_read_line_t get_pixel_read_line_function(u32 format);
->  
->  pixel_write_t get_pixel_write_function(u32 format);
->  
-> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-> index f68b1b03d632..58c1c74742b5 100644
-> --- a/drivers/gpu/drm/vkms/vkms_plane.c
-> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-> @@ -106,9 +106,9 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
->  		return;
->  
->  	fmt = fb->format->format;
-> -	pixel_read_t pixel_read = get_pixel_read_function(fmt);
-> +	pixel_read_line_t pixel_read_line = get_pixel_read_line_function(fmt);
->  
-> -	if (!pixel_read) {
-> +	if (!pixel_read_line) {
->  		DRM_WARN("Pixel format is not supported by VKMS planes. State is inchanged\n");
->  		return;
->  	}
-> @@ -128,10 +128,8 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
->  									  DRM_MODE_REFLECT_X |
->  									  DRM_MODE_REFLECT_Y);
->  
-> -	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
-> -			drm_rect_height(&frame_info->rotated), frame_info->rotation);
->  
-> -	vkms_plane_state->pixel_read = pixel_read;
-> +	vkms_plane_state->pixel_read_line = pixel_read_line;
->  }
->  
->  static int vkms_plane_atomic_check(struct drm_plane *plane,
+> +static int cv1800_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct cv1800_pwm *priv;
+> +	struct pwm_chip *chip;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	chip = devm_pwmchip_alloc(dev, 4, sizeof(*priv));
+
+it's better to replace magic "4" with proper macro.
+
+> +	if (!chip)
+> +		return PTR_ERR(chip);
+> +
+> +	priv = to_cv1800_pwm_dev(chip);
+> +
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	priv->map = devm_regmap_init_mmio(&pdev->dev, base,
+> +					  &cv1800_pwm_regmap_config);
+> +	if (IS_ERR(priv->map))
+> +		return PTR_ERR(priv->map);
+> +
+> +	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+> +	if (IS_ERR(priv->clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
+> +				     "clk not found\n");
+> +
+> +	ret = clk_rate_exclusive_get(priv->clk);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "failed to get exclusive rate\n");
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev, devm_clk_rate_exclusive_put,
+> +				       priv->clk);
+> +	if (ret) {
+> +		clk_rate_exclusive_put(priv->clk);
+> +		return ret;
+> +	}
+> +
+> +	priv->clk_rate = clk_get_rate(priv->clk);
+> +	if (!priv->clk_rate)
+> +		return dev_err_probe(&pdev->dev, -EINVAL,
+> +				     "Invalid clock rate: %lu\n",
+> +				     priv->clk_rate);
+> +
+> +	chip->ops = &cv1800_pwm_ops;
+> +
+> +	return devm_pwmchip_add(dev, chip);
+> +}
+> +
+> +static const struct of_device_id cv1800_pwm_dt_ids[] = {
+> +	{ .compatible = "sophgo,cv1800-pwm" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, cv1800_pwm_dt_ids);
+> +
+> +static struct platform_driver cv1800_pwm_driver = {
+> +	.driver = {
+> +		.name = "cv1800-pwm",
+> +		.of_match_table = cv1800_pwm_dt_ids,
+> +	},
+> +	.probe = cv1800_pwm_probe,
+> +};
+> +module_platform_driver(cv1800_pwm_driver);
+> +
+> +MODULE_AUTHOR("Jingbao Qiu");
+> +MODULE_DESCRIPTION("Sophgo cv1800 PWM Driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.25.1
 > 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
