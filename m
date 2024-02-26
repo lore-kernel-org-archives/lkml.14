@@ -1,202 +1,68 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B5B9DF44;
-	Mon, 26 Feb 2024 02:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A2BD53C;
+	Mon, 26 Feb 2024 02:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708913280; cv=none; b=l/infBJ3nk200g2HxurHLA4YNETEAb01lZpsu+8isaBX7ohMgsxLMb6xhmoamzdrS3bH4Nqy65QsV/C/df+WYs6ZqXAolAZuhJT3pMWg8U04BycLWeSwRdqZNPEUbQgP3C3cvdyZD241VQPjvHKOoftqSLFXVz/9lJY43m16VAs=
+	t=1708913392; cv=none; b=I8fpm8nG/+7gAdedlKYyNFqpjMbnl2N34bm1Vc1Jm5Lks20KUYXyR5ij5Yh/opXvfMFD98wVZ6k4LZ54E1n/FnWpO6FJ/dXTtTUWVJtkcPzHHzZnCK4Ix5vxLatUKvfV6syYdl6p+YT8GsQpe6aOPLYiv5/ztuMNHjQNfUXfvxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708913280; c=relaxed/simple;
-	bh=+m12NCYdeTJyVL7my1OrMmea+AsFYD4Qm8ZLRqy23b0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=dY5w+i0C7V+DuX75QzmljKjlzq17mKUQ13bclNSqD1IyT7cbNYJ972kgbrVJ1m7EzdHW2yNX0FTdk4D8AGwHyMEy+jq9Z2uRYRjuwAPBjzb/cjS1P4KeTBx6qRltslrcpHk22+xWCaXxe7R6nS/dLCeeuC4fCCzhGKd8biVVzPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.173])
-	by gateway (Coremail) with SMTP id _____8BxuvB88ttlTmcRAA--.44569S3;
-	Mon, 26 Feb 2024 10:07:56 +0800 (CST)
-Received: from [10.20.42.173] (unknown [10.20.42.173])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxnhN68ttlMRtEAA--.58956S3;
-	Mon, 26 Feb 2024 10:07:54 +0800 (CST)
-Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
- Paolo Bonzini <pbonzini@redhat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org
-References: <20240222032803.2177856-1-maobibo@loongson.cn>
- <20240222032803.2177856-4-maobibo@loongson.cn>
- <CAAhV-H5eqXMqTYVb6cAVqOsDNcEDeP9HzaMKw69KFQeVaAYEdA@mail.gmail.com>
-From: maobibo <maobibo@loongson.cn>
-Message-ID: <b6705098-1521-a892-9850-af84acd68674@loongson.cn>
-Date: Mon, 26 Feb 2024 10:07:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1708913392; c=relaxed/simple;
+	bh=lvgBpJeiNO4JZFhHCp3nkqQsW03Xio7lH2pdcYGihLw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ry+aUhI534S8uIbVFkFyRC240j5NlJWhkn1t/Wh6aUyQswrH3hW8y4cJz5Oa68qDbimoqRo2/E5x0nrbNJE/iE0VIF0h7Ida8Epk+6CuvvfxS73ZQcSOQ80d+vUM74a1lj0/DHS7oVX2YpyqvlPqN5T5ZAYsqVrwWmtw/z2nOVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cxm1fqLW; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cxm1fqLW"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708913381; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=4QkB4mdIbmJS3piWDwWiFV9dkhjomMatkolXiaczfHs=;
+	b=cxm1fqLWfOS32CvZ34dbomdZ/sanxtDLcyuFXRWtOGX+FRYo+S0Yj+juPPp+ujC6UjFS8GqK3+O2jHrxgTm3Npgj1tOedbZQDa1kV4XpJjxnJPW6m75LxN86tCOnQdzTHhom0wlD+vpa1FYLYFyfQ+yiGsTEevJamLMll0WHFuM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0W1A3lZ5_1708913368;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W1A3lZ5_1708913368)
+          by smtp.aliyun-inc.com;
+          Mon, 26 Feb 2024 10:09:40 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: fancer.lancer@gmail.com
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] bus: bt1-apb: Remove duplicate include
+Date: Mon, 26 Feb 2024 10:09:27 +0800
+Message-Id: <20240226020927.111091-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5eqXMqTYVb6cAVqOsDNcEDeP9HzaMKw69KFQeVaAYEdA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxnhN68ttlMRtEAA--.58956S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWw47urW5uw4kGw4kJryDXFc_yoWrurWrpF
-	W8ZFnYgF48GrySy3sFqa15WrnFqr4kGr129FyfJa48CF4aqryfJr10krZ0kFyDtws5CF1I
-	qF15tr1avF4qyagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxhiSDUUUU
 
+./drivers/bus/bt1-apb.c: linux/clk.h is included more than once.
 
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8312
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+---
+ drivers/bus/bt1-apb.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On 2024/2/24 下午5:13, Huacai Chen wrote:
-> Hi, Bibo,
-> 
-> On Thu, Feb 22, 2024 at 11:28 AM Bibo Mao <maobibo@loongson.cn> wrote:
->>
->> Instruction cpucfg can be used to get processor features. And there
->> is trap exception when it is executed in VM mode, and also it is
->> to provide cpu features to VM. On real hardware cpucfg area 0 - 20
->> is used.  Here one specified area 0x40000000 -- 0x400000ff is used
->> for KVM hypervisor to privide PV features, and the area can be extended
->> for other hypervisors in future. This area will never be used for
->> real HW, it is only used by software.
-> After reading and thinking, I find that the hypercall method which is
-> used in our productive kernel is better than this cpucfg method.
-> Because hypercall is more simple and straightforward, plus we don't
-> worry about conflicting with the real hardware.
-About cpucfg area 0x40000000 -- 0x400000ff, I have negotiated with chip 
-designer. This area will never be used with real hardware.
-
-Regards
-Bibo Mao
-> 
-> Huacai
-> 
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> ---
->>   arch/loongarch/include/asm/inst.h      |  1 +
->>   arch/loongarch/include/asm/loongarch.h | 10 ++++++
->>   arch/loongarch/kvm/exit.c              | 46 +++++++++++++++++---------
->>   3 files changed, 41 insertions(+), 16 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/inst.h b/arch/loongarch/include/asm/inst.h
->> index d8f637f9e400..ad120f924905 100644
->> --- a/arch/loongarch/include/asm/inst.h
->> +++ b/arch/loongarch/include/asm/inst.h
->> @@ -67,6 +67,7 @@ enum reg2_op {
->>          revhd_op        = 0x11,
->>          extwh_op        = 0x16,
->>          extwb_op        = 0x17,
->> +       cpucfg_op       = 0x1b,
->>          iocsrrdb_op     = 0x19200,
->>          iocsrrdh_op     = 0x19201,
->>          iocsrrdw_op     = 0x19202,
->> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
->> index 46366e783c84..a1d22e8b6f94 100644
->> --- a/arch/loongarch/include/asm/loongarch.h
->> +++ b/arch/loongarch/include/asm/loongarch.h
->> @@ -158,6 +158,16 @@
->>   #define  CPUCFG48_VFPU_CG              BIT(2)
->>   #define  CPUCFG48_RAM_CG               BIT(3)
->>
->> +/*
->> + * cpucfg index area: 0x40000000 -- 0x400000ff
->> + * SW emulation for KVM hypervirsor
->> + */
->> +#define CPUCFG_KVM_BASE                        0x40000000UL
->> +#define CPUCFG_KVM_SIZE                        0x100
->> +#define CPUCFG_KVM_SIG                 CPUCFG_KVM_BASE
->> +#define  KVM_SIGNATURE                 "KVM\0"
->> +#define CPUCFG_KVM_FEATURE             (CPUCFG_KVM_BASE + 4)
->> +
->>   #ifndef __ASSEMBLY__
->>
->>   /* CSR */
->> diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
->> index 923bbca9bd22..6a38fd59d86d 100644
->> --- a/arch/loongarch/kvm/exit.c
->> +++ b/arch/loongarch/kvm/exit.c
->> @@ -206,10 +206,37 @@ int kvm_emu_idle(struct kvm_vcpu *vcpu)
->>          return EMULATE_DONE;
->>   }
->>
->> -static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
->> +static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
->>   {
->>          int rd, rj;
->>          unsigned int index;
->> +
->> +       rd = inst.reg2_format.rd;
->> +       rj = inst.reg2_format.rj;
->> +       ++vcpu->stat.cpucfg_exits;
->> +       index = vcpu->arch.gprs[rj];
->> +
->> +       /*
->> +        * By LoongArch Reference Manual 2.2.10.5
->> +        * Return value is 0 for undefined cpucfg index
->> +        */
->> +       switch (index) {
->> +       case 0 ... (KVM_MAX_CPUCFG_REGS - 1):
->> +               vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
->> +               break;
->> +       case CPUCFG_KVM_SIG:
->> +               vcpu->arch.gprs[rd] = *(unsigned int *)KVM_SIGNATURE;
->> +               break;
->> +       default:
->> +               vcpu->arch.gprs[rd] = 0;
->> +               break;
->> +       }
->> +
->> +       return EMULATE_DONE;
->> +}
->> +
->> +static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
->> +{
->>          unsigned long curr_pc;
->>          larch_inst inst;
->>          enum emulation_result er = EMULATE_DONE;
->> @@ -224,21 +251,8 @@ static int kvm_trap_handle_gspr(struct kvm_vcpu *vcpu)
->>          er = EMULATE_FAIL;
->>          switch (((inst.word >> 24) & 0xff)) {
->>          case 0x0: /* CPUCFG GSPR */
->> -               if (inst.reg2_format.opcode == 0x1B) {
->> -                       rd = inst.reg2_format.rd;
->> -                       rj = inst.reg2_format.rj;
->> -                       ++vcpu->stat.cpucfg_exits;
->> -                       index = vcpu->arch.gprs[rj];
->> -                       er = EMULATE_DONE;
->> -                       /*
->> -                        * By LoongArch Reference Manual 2.2.10.5
->> -                        * return value is 0 for undefined cpucfg index
->> -                        */
->> -                       if (index < KVM_MAX_CPUCFG_REGS)
->> -                               vcpu->arch.gprs[rd] = vcpu->arch.cpucfg[index];
->> -                       else
->> -                               vcpu->arch.gprs[rd] = 0;
->> -               }
->> +               if (inst.reg2_format.opcode == cpucfg_op)
->> +                       er = kvm_emu_cpucfg(vcpu, inst);
->>                  break;
->>          case 0x4: /* CSR{RD,WR,XCHG} GSPR */
->>                  er = kvm_handle_csr(vcpu, inst);
->> --
->> 2.39.3
->>
+diff --git a/drivers/bus/bt1-apb.c b/drivers/bus/bt1-apb.c
+index e97c1d1c7578..595fb22b73e0 100644
+--- a/drivers/bus/bt1-apb.c
++++ b/drivers/bus/bt1-apb.c
+@@ -22,7 +22,6 @@
+ #include <linux/clk.h>
+ #include <linux/reset.h>
+ #include <linux/time64.h>
+-#include <linux/clk.h>
+ #include <linux/sysfs.h>
+ 
+ #define APB_EHB_ISR			0x00
+-- 
+2.20.1.7.g153144c
 
