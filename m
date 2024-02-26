@@ -1,95 +1,158 @@
-Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868ED133429;
-	Mon, 26 Feb 2024 17:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB77112BE9F
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966836; cv=none; b=hhlQRbgi9vqcTBihtF1YMM32PXXFQTv7FzAFQNHB98eJdPzTwXHzy8yq5diuU/lsHQ33WhtXKLhZq3iOH9UJI+oCzHUdLo66KLALvh7snEQevxFjjjLxnpcGkU4yFJvVNvi9GoTVRaSM812eIvb5zTwBcSM0Gf+McnJz0XZEjqY=
+	t=1708966967; cv=none; b=X7nwc6YuNVt1+KPAYHmV4X2nWyJ82ScWcDaB0mRU8ozsLZHsBtJjLlnKyTLzsJ/Po2I/6kSa89Tedf3gs/rUNsHKBrUUvuzjaDxYgpnWgAKLTX6ZkGaUJAffByniIasVY22Vo9cATRnjZHgZki02leTcvByKhWwFbJ2vyqcwl40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966836; c=relaxed/simple;
-	bh=TJQajcvykBMBxUEeqy/MVrgfkPcyDTbvbZrHw1dY2c0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DAuNCR0gcAoHJ6QZnlAKHYlayDYYHesBlPlImpGgyQa7xYyqcHM3xWgbxYNRXwHhmL/SfN/GEI90IwgwUmt0KiG8lmfFMo5CrPEJpW3E1ACAP0bg1uCbFYdszuDr9iVkhitaUiApol8w3Vhp5eFdRjpJW5npu8rFYKyBM0+VrnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
-From: Daniil Dulov <d.dulov@aladdin.ru>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: Daniil Dulov <d.dulov@aladdin.ru>, Davidlohr Bueso <dave@stgolabs.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Triplett
-	<josh@joshtriplett.org>, Steven Rostedt <rostedt@goodmis.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
-	<jiangshanlai@gmail.com>, Joel Fernandes <joel@joelfernandes.org>,
-	<linux-kernel@vger.kernel.org>, <rcu@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, David Vernet <void@manifault.com>
-Subject: [PATCH 5.10 1/1] rcutorture: Add missing return and use __func__ in warning
-Date: Mon, 26 Feb 2024 20:00:11 +0300
-Message-ID: <20240226170011.22798-2-d.dulov@aladdin.ru>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240226170011.22798-1-d.dulov@aladdin.ru>
-References: <20240226170011.22798-1-d.dulov@aladdin.ru>
+	s=arc-20240116; t=1708966967; c=relaxed/simple;
+	bh=PtOqPsnVzJ1VY1JY7qLS12ZY7lQ1eJRkNRobbhPJDEY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sCQWFstQGJrjm7dmNNFAMdXX/+GHh+sBkgq4kqdC/a8seYk9vwAonduIh9K87UtBRGDe31yZLgi+jB1tlhHay+NglIR2ifs7aWHNBWsXjwUoayv3KsCdL7Z/FgQiIQy5HxnoqTTHB9r5oTysQsgtKY8kOXAhVzbokMvadga1X40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=zozBNRb9; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zozBNRb9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1708966966; x=1740502966;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PtOqPsnVzJ1VY1JY7qLS12ZY7lQ1eJRkNRobbhPJDEY=;
+  b=zozBNRb96n6uzb0FXmkpuhZEWVkbMJF25xgtFcf8fGc6B5gPR7fHUOkw
+   G+NQzPYP8eTzV0h11xfSPVocjc5RW22S+DjTs0mjuiMCRXN8BvZffmoPJ
+   qRCf3NkcICcGxa2VBChQXUPoJnTSr+wo7yCwKfZOgHyB5y9slhcoKRxtO
+   eaYCWfutfS8JHhxaUavru9S3b9plplyuegQUwRw1GRHWsZLVVGOcbxuty
+   nYBBQ2N4vCxCE91kI1mV4hWKldghhb1QxcVSIe0AmqZeAu6Yf5k7KM6Wg
+   qEAnDHP5peMP/jU6bxeorsjnvv/iuzRP2/aErOsB2mn93bMxAiECDc9MW
+   Q==;
+X-CSE-ConnectionGUID: +usMHQQ3RByG3mwbmXRohw==
+X-CSE-MsgGUID: Coq3DASSR1qrFD28x3eO4g==
+X-IronPort-AV: E=Sophos;i="6.06,186,1705388400"; 
+   d="scan'208";a="16839304"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Feb 2024 10:02:45 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 26 Feb 2024 10:02:37 -0700
+Received: from [10.159.245.205] (10.10.85.11) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Mon, 26 Feb 2024 10:02:36 -0700
+Message-ID: <798ca59b-5d91-41b4-a49f-1f11af14e7ee@microchip.com>
+Date: Mon, 26 Feb 2024 18:01:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EXCH-2016-01.aladdin.ru (192.168.1.101) To
- EXCH-2016-01.aladdin.ru (192.168.1.101)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 20/39] ARM: at91: add support in SoC driver for new
+ sam9x7
+Content-Language: en-US, fr-FR
+To: Varshini Rajendran <varshini.rajendran@microchip.com>,
+	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: Claudiu Beznea <claudiu.beznea@microchip.com>
+References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
+ <20240223172722.672592-1-varshini.rajendran@microchip.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+In-Reply-To: <20240223172722.672592-1-varshini.rajendran@microchip.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: David Vernet <void@manifault.com>
+On 23/02/2024 at 18:27, Varshini Rajendran - I67070 wrote:
+> Add support for SAM9X7 SoC in the SoC driver.
+> 
+> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+> Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+> Changes in v4:
+> - Sorted the entries alphabetically as per comment from Claudiu
+> - Updated EXID
+> Note: Did not remove the Reviewed-by tag since the changes were only
+> cosmetic and did not affect functionality
+> ---
+>   drivers/soc/atmel/soc.c | 23 +++++++++++++++++++++++
+>   drivers/soc/atmel/soc.h |  9 +++++++++
+>   2 files changed, 32 insertions(+)
+> 
+> diff --git a/drivers/soc/atmel/soc.c b/drivers/soc/atmel/soc.c
+> index cc9a3e107479..cae3452cbc60 100644
+> --- a/drivers/soc/atmel/soc.c
+> +++ b/drivers/soc/atmel/soc.c
+> @@ -101,6 +101,29 @@ static const struct at91_soc socs[] __initconst = {
+>   		 AT91_CIDR_VERSION_MASK, SAM9X60_D6K_EXID_MATCH,
+>   		 "sam9x60 8MiB SDRAM SiP", "sam9x60"),
+>   #endif
+> +#ifdef CONFIG_SOC_SAM9X7
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X72_EXID_MATCH,
+> +		 "sam9x72", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X70_EXID_MATCH,
+> +		 "sam9x70", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, SAM9X75_D1G_EXID_MATCH,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75 1Gb DDR3L SiP ", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, SAM9X75_D5M_EXID_MATCH,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75 512Mb DDR2 SiP", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, SAM9X75_D1M_EXID_MATCH,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75 128Mb DDR2 SiP", "sam9x7"),
+> +	AT91_SOC(SAM9X7_CIDR_MATCH, SAM9X75_D2G_EXID_MATCH,
+> +		 AT91_CIDR_VERSION_MASK, SAM9X75_EXID_MATCH,
+> +		 "sam9x75 2Gb DDR3L SiP", "sam9x7"),
 
-commit 80dcee695143255261f30c7cc2a041ba413717a4 upstream.
+(as highlighted in previous review of this patch):
+https://lore.kernel.org/linux-arm-kernel/20230728102905.267131-1-varshini.rajendran@microchip.com/T/#m2dac0ce9e1991c3d714785062a76ccdce11a02a6
 
-The rcutorture module has an rcu_torture_writer task that repeatedly
-performs writes, synchronizations, and deletes. There is a corner-case
-check in rcu_torture_writer() wherein if nsynctypes is 0, a warning is
-issued and the task waits to be stopped via a call to
-torture_kthread_stopping() rather than performing any work.
+I want RAM size in Bytes.
 
-There should be a return statement following this call to
-torture_kthread_stopping(), as the intention with issuing the call to
-torture_kthread_stopping() in the first place is to avoid the
-rcu_torture_writer task from performing any work. Some of the work may even
-be dangerous to perform, such as potentially causing a #DE due to
-nsynctypes being used in a modulo operator when querying for sync updates
-to issue.
+Sorry but NACK.
 
-This patch adds the missing return call.  As a bonus, it also fixes a
-checkpatch warning that was emitted due to the WARN_ONCE() call using the
-name of the function rather than __func__.
+Best regards,
+   Nicolas
 
-Signed-off-by: David Vernet <void@manifault.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
----
- kernel/rcu/rcutorture.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 6c1aea48a79a..69856904838c 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1063,7 +1063,7 @@ rcu_torture_writer(void *arg)
- 		pr_alert("%s: gp_sync without primitives.\n", __func__);
- 	}
- 	if (WARN_ONCE(nsynctypes == 0,
--		      "rcu_torture_writer: No update-side primitives.\n")) {
-+		      "%s: No update-side primitives.\n", __func__)) {
- 		/*
- 		 * No updates primitives, so don't try updating.
- 		 * The resulting test won't be testing much, hence the
-@@ -1071,6 +1071,7 @@ rcu_torture_writer(void *arg)
- 		 */
- 		rcu_torture_writer_state = RTWS_STOPPING;
- 		torture_kthread_stopping("rcu_torture_writer");
-+		return 0;
- 	}
- 
- 	do {
--- 
-2.25.1
+> +#endif
+>   #ifdef CONFIG_SOC_SAMA5
+>   	AT91_SOC(SAMA5D2_CIDR_MATCH, AT91_CIDR_MATCH_MASK,
+>   		 AT91_CIDR_VERSION_MASK, SAMA5D21CU_EXID_MATCH,
+> diff --git a/drivers/soc/atmel/soc.h b/drivers/soc/atmel/soc.h
+> index 7a9f47ce85fb..fc4157c5f6e3 100644
+> --- a/drivers/soc/atmel/soc.h
+> +++ b/drivers/soc/atmel/soc.h
+> @@ -44,6 +44,7 @@ at91_soc_init(const struct at91_soc *socs);
+>   #define AT91SAM9X5_CIDR_MATCH		0x019a05a0
+>   #define AT91SAM9N12_CIDR_MATCH		0x019a07a0
+>   #define SAM9X60_CIDR_MATCH		0x019b35a0
+> +#define SAM9X7_CIDR_MATCH		0x09750020
+>   #define SAMA7G5_CIDR_MATCH		0x00162100
+>   
+>   #define AT91SAM9M11_EXID_MATCH		0x00000001
+> @@ -74,6 +75,14 @@ at91_soc_init(const struct at91_soc *socs);
+>   #define SAMA7G54_D2G_EXID_MATCH		0x00000020
+>   #define SAMA7G54_D4G_EXID_MATCH		0x00000028
+>   
+> +#define SAM9X70_EXID_MATCH		0x00000005
+> +#define SAM9X72_EXID_MATCH		0x00000004
+> +#define SAM9X75_D1G_EXID_MATCH		0x00000018
+> +#define SAM9X75_D2G_EXID_MATCH		0x00000020
+> +#define SAM9X75_D1M_EXID_MATCH		0x00000003
+> +#define SAM9X75_D5M_EXID_MATCH		0x00000010
+> +#define SAM9X75_EXID_MATCH		0x00000000
+> +
+>   #define AT91SAM9XE128_CIDR_MATCH	0x329973a0
+>   #define AT91SAM9XE256_CIDR_MATCH	0x329a93a0
+>   #define AT91SAM9XE512_CIDR_MATCH	0x329aa3a0
 
