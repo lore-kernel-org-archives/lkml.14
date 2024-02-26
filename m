@@ -1,101 +1,133 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2471BF27
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 07:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BE31BDE6
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 07:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708932612; cv=none; b=MjG/DN6aoPmPKGJHZyaNXZdSJWcxA4tOkGi+a2oE++MDwNpSyP5Bs/78CyzFw66Ik+k+M0GwV2YUtBztfBQkwV9tOvM9Qsr9IS+Z/M+QA3IKldoXi8X3m6jhopx6YkFulPsruuRS8zqnp8/+g99MoseAficEIUTPHwPa4sOkrfM=
+	t=1708932682; cv=none; b=ftd4lpNoKb7rXXgpBC8hmch6/vhtfkCLHR2uJ2opDO0doV+52MN49inXv77x2UDZG9MsFbsM5DjGZZEplHe9cSt45e1NZUU2hklESh+Rlfcca4aHhsH9DtS5wsOnLWj8gSe6KMQfuAlcKqgWIJfMCn5alpboDTp8wq63NSpP6NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708932612; c=relaxed/simple;
-	bh=bZ5BRcxIgT25jdo0qV0ny4CuAKwGateNRh5VLJjnIU4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KPLh8Z8WgBqLVXkHBvbMftj8X4jn0XzCim+PJnjZxyGjfZkuDjHR3sAfr5DmuNBYkUordDxeoSgrrLkmvPAyQTey1NVkgaxiwl3yFjTZe84IEjZCSWaDP836MI9HO6FnP6zO7e0XkD+NF2nL9XR43pCI5LRIwLX+S5y3MsyKBms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=VkzPfiBZ; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+	s=arc-20240116; t=1708932682; c=relaxed/simple;
+	bh=ufkbGUAlYUoKulI00K9+ehWHAATX13BMFcYZ+siKI5o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PlYxOXtSSudcyE7qjAdaZic34cUls6cFoJ6dgzwo22RTaSZrmWpZnFXnSQU+SxInRSTgQfR7swUVKjo3Qo15wH46pfR885b4ldmx4PdhysB4dEJq0Og+uYPjEsseLqFxC9acDCqvolovfUJFPE7stRBSAgDM9KQJducALpkDdGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAbuOUmH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="VkzPfiBZ"
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41Q5dCCP026565;
-	Mon, 26 Feb 2024 07:30:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PPS06212021; bh=tUwXftD1tbwMrW8GhPkEx1MEpT8RN8HhiQS0CcOAEo0=; b=
-	VkzPfiBZIdBzHMhYa3jXkowPB7Gq7edh4xguJzLvYJaeoG9Z5Q88wezHcXG1ASM6
-	8/HSpmJObhoXV1O9MIcnVYI7Smb07yHqR1uCNyxd49elt9lgdIGHOLgbT2GMURYZ
-	YGJNITJ3L5r+yBltxwUEWUc0tjox1t2E/MKPvWiPPZxXlwxGL3oTb/uJMrNopNLX
-	eMWa6t2V8UxuVO9+swq4OAUIpyOHfTVauS8UqKL+ICiklpDkmhl9VMYMqYfPNeCM
-	VtADOV4fzbomYQl2YiIx1F3ScQSBs+6VLyGDSItLxvhg2YJPfjDrOSLn5f95E75y
-	13lQZBIQ8ZFys1OrrRTo3g==
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3wf7e69jxp-8
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 26 Feb 2024 07:30:05 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 25 Feb 2024 23:30:03 -0800
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Sun, 25 Feb 2024 23:30:02 -0800
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <syzbot+93bd128a383695391534@syzkaller.appspotmail.com>
-CC: <syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [syzbot] [dri?] WARNING in vkms_get_vblank_timestamp (2)
-Date: Mon, 26 Feb 2024 15:30:01 +0800
-Message-ID: <20240226073001.1248179-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000edf6a306105afb50@google.com>
-References: <000000000000edf6a306105afb50@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAbuOUmH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BD13FC43394;
+	Mon, 26 Feb 2024 07:31:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708932681;
+	bh=ufkbGUAlYUoKulI00K9+ehWHAATX13BMFcYZ+siKI5o=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=cAbuOUmHTAP+4f51xPbOUxMd639TljHnVyHiB6J3p8oVreplHyUn8D9S7o8rVTDtw
+	 undfub15lW7LpXCuC7OB8HgZTQ7yGclN2LS5TQ9DxddXe9Ep4iTQ3gFDCGtF0g+X5q
+	 fumQqWkT4/OcvKEZGyeogKYiImj51grCiVYm8iXtsNDsTKr2jj1gPg/SO9M093gyAN
+	 pt8xlyHTT4SEOHxWVsy/evQlwhIQQS3wc4KLWoBVjMr44JfGBpjVLREQYejyFe7BIE
+	 1BCur4yN6nWnDLkKWTJJ37SGO8hWkYFWSdvZevIbHQoIypW6hVIIBU8oOjYfl+Zx5y
+	 5qgQzvcxPWYiQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D83C54E4A;
+	Mon, 26 Feb 2024 07:31:21 +0000 (UTC)
+From:
+ Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
+Date: Mon, 26 Feb 2024 10:29:58 +0300
+Subject: [PATCH v8 02/38] ARM: ep93xx: add regmap aux_dev
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: MWiiFpwpgfxYc934K5izVACfAA3GpMtE
-X-Proofpoint-ORIG-GUID: MWiiFpwpgfxYc934K5izVACfAA3GpMtE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_04,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 phishscore=0 mlxscore=0 impostorscore=0 spamscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=962 clxscore=1015
- priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2402120000 definitions=main-2402260055
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240226-ep93xx-v8-2-3136dca7238f@maquefel.me>
+References: <20240226-ep93xx-v8-0-3136dca7238f@maquefel.me>
+In-Reply-To: <20240226-ep93xx-v8-0-3136dca7238f@maquefel.me>
+To: Nikita Shubin <nikita.shubin@maquefel.me>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal <dlemoal@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>
+Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, 
+ Arnd Bergmann <arnd@arndb.de>
+X-Mailer: b4 0.13-dev-e3e53
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708932678; l=1819;
+ i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
+ bh=EhQQyDo+EFlJ9/0Xh2mELcKKDmANhg1EW47ZiNjCdIA=; =?utf-8?q?b=3DY/wJhJdBka7A?=
+ =?utf-8?q?LmdNlgr1QmMZ84oAa6Z4CKmE0L+2lz4nfS82zov/TioZIAnfoHpLmVlO1gXNF9Sn?=
+ vJUOd+zeCQxZjc5T28Yi7rX8FVrWB2vNuV+X+ZPBKaFUX4Rn4WmU
+X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
+ pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
+X-Endpoint-Received:
+ by B4 Relay for nikita.shubin@maquefel.me/20230718 with auth_id=65
+X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
+Reply-To: <nikita.shubin@maquefel.me>
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+From: Nikita Shubin <nikita.shubin@maquefel.me>
 
+The following driver's should be instantiated by ep93xx syscon driver:
 
-diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index 61e500b8c9da..45942547af44 100644
---- a/drivers/gpu/drm/vkms/vkms_crtc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-@@ -20,12 +20,12 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+- reboot
+- pinctrl
+- clock
+
+They all require access to DEVCFG register with a shared lock held, to
+avoid conflict writing to swlocked parts of DEVCFG.
+
+Provide common resources such as base, regmap and spinlock via auxiliary
+bus framework.
+
+Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+---
+ include/linux/soc/cirrus/ep93xx.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/include/linux/soc/cirrus/ep93xx.h b/include/linux/soc/cirrus/ep93xx.h
+index 56fbe2dc59b1..a27447971302 100644
+--- a/include/linux/soc/cirrus/ep93xx.h
++++ b/include/linux/soc/cirrus/ep93xx.h
+@@ -3,6 +3,18 @@
+ #define _SOC_EP93XX_H
  
- 	fence_cookie = dma_fence_begin_signalling();
- 
-+	spin_lock(&output->lock);
- 	ret_overrun = hrtimer_forward_now(&output->vblank_hrtimer,
- 					  output->period_ns);
- 	if (ret_overrun != 1)
- 		pr_warn("%s: vblank timer overrun\n", __func__);
- 
--	spin_lock(&output->lock);
- 	ret = drm_crtc_handle_vblank(crtc);
- 	if (!ret)
- 		DRM_ERROR("vkms failure on handling vblank");
-@@ -100,6 +100,9 @@ static bool vkms_get_vblank_timestamp(struct drm_crtc *crtc,
- 
- 	*vblank_time = READ_ONCE(output->vblank_hrtimer.node.expires);
- 
-+	if (!in_vblank_irq && *vblank_time == vblank->time)
-+		return true;
+ struct platform_device;
++struct regmap;
++struct spinlock_t;
 +
- 	if (WARN_ON(*vblank_time == vblank->time))
- 		return true;
++enum ep93xx_soc_model {
++	EP93XX_9301_SOC,
++	EP93XX_9307_SOC,
++	EP93XX_9312_SOC,
++};
++
++#include <linux/auxiliary_bus.h>
++#include <linux/compiler_types.h>
++#include <linux/container_of.h>
  
+ #define EP93XX_CHIP_REV_D0	3
+ #define EP93XX_CHIP_REV_D1	4
+@@ -10,6 +22,20 @@ struct platform_device;
+ #define EP93XX_CHIP_REV_E1	6
+ #define EP93XX_CHIP_REV_E2	7
+ 
++struct ep93xx_regmap_adev {
++	struct auxiliary_device adev;
++	struct regmap *map;
++	void __iomem *base;
++	spinlock_t *lock;
++	void (*write)(struct regmap *map, spinlock_t *lock, unsigned int reg,
++		      unsigned int val);
++	void (*update_bits)(struct regmap *map, spinlock_t *lock,
++			    unsigned int reg, unsigned int mask, unsigned int val);
++};
++
++#define to_ep93xx_regmap_adev(_adev) \
++	container_of((_adev), struct ep93xx_regmap_adev, adev)
++
+ #ifdef CONFIG_ARCH_EP93XX
+ int ep93xx_pwm_acquire_gpio(struct platform_device *pdev);
+ void ep93xx_pwm_release_gpio(struct platform_device *pdev);
+
+-- 
+2.41.0
+
