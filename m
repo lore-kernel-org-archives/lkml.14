@@ -1,39 +1,38 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E745C5F2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2F55B053
 	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:47:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708937276; cv=none; b=AYCrXPL1zRWNMf6KeVZ/MEDsppTTFXw8Ek76RTEgUZji3SZGHeAfQoOkTEgOn9cH3mPHWzFjJAIR4ze2LOfSWOpWXMSCCf+klC/db1MSpSpf1Q7CiEtHwf8EPFm6hf3+y/aFksp7MCt/LDQhZ0NYL91bZdzt+he2wuzphm9HqrE=
+	t=1708937276; cv=none; b=WbLpsWMKLZ0zSx5dnAWx9BWD+sShtZz4BtlOdWXcmAFT80GLm+vq0knXzwMbnzc+mpDcPNNtNTHqDUeR/HVQBx7S5WnOVmgahp0XzPDjHTfHw+eO9nkn5VgpXSJxJAqFND5QJX4NyAPcx1+QGC8L5Fm8qwROLTIZNx7M9oOQAsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708937276; c=relaxed/simple;
-	bh=WtbjyPm53hzNlCoTEu2tMOVKVRGjW9BjcslmdMUrI3M=;
+	bh=52wWLXv52UxCcak1ee9ZxfQFyR67YA1n+FDOTYunbls=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R9iurHpSt3dqKgTp/8HWSf3/NJJy6BEAh4uN7b70etyI83V93KDOHoeEcxQw5tEdxx0ZX7oS6bAQ2d4HkWvayobdpFgtuSZKcSgQNgQO48BNNEX0AvoeJxdYImJIaW0UCanodidTTQwsPTuMBXaK3tOLMtqZOROdpnTkiLiVec4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nAZWxsWy; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=DE8nMayZ6sTGUvtNvmkUbxHYi0YwBHfZNUdr1Xn3Faddyinr6UiIAGjlUAB64Tpu3hvdDCrm1FrqtWZzvdPeufBlUSkTlPiHEVmO66YzMqNuw9e3uYL+Wccrc2ZBxPCcx0yAzsQ9iHlQ2rSCNeRd64kE4cxqPUBTdQ9ryaibxno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nN8TuUL6; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nAZWxsWy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4B4DFE0016;
-	Mon, 26 Feb 2024 08:47:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nN8TuUL6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 77F77E0009;
+	Mon, 26 Feb 2024 08:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708937273;
+	t=1708937267;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hFcELKdEH2CqVcdv8HdPB42K6t4+ILioqNSm5RowIZQ=;
-	b=nAZWxsWyWy8iTA5GHKJyzVaWbQmel+ZWRgnuyrCc/8PgHYNNXsZPAdmwoxY61t2H3XLg+O
-	2JnSpzn3XASIQQ9iPKdhGZ7LOAr74/KIsBwd0tO3u3EqxLHPD6//WQ6cOFMVuC4gr4bQw2
-	MvpyS7Jy7B0kq70ltMDJ9gtuItgr7xQgZ6RLph9W/qiANF5GJLUBHBXC1Wm/TZB+5Qb6s6
-	6Z1PksbFMMubdkv0X7M4y6KlzkOhxFzYP0VpSQLI9OsD2taQXd4gc51c/U9tzFHrHd6aUO
-	J05VU5gAun+jj9bfeeue+kOhvqQxKdTCWw/JQLu7H+6NMpi4Nb0TeyvqDcy9Wg==
+	bh=H9vIAXwIOUIWcL2JXzqSsbjPwFVUBmSDwO7BEh2dBj4=;
+	b=nN8TuUL6adz42hygbOVFWa4jgP7KBBogIYXA6S4gttnyqR8f1KSl2+QF9GZq0FlNLk7+N/
+	BmgWf0eBzwlbGm5NAuBfmETP5jFUvCTkR53QXAzoLXXwFMtIf/QtURKrUMeVOVB7x/yvUI
+	v3hJ0xNMR9grs/13q4p01e4in7bD9FwCv/zVYNh7sX8GknqQP8BEovTZSWR9s5JNZJMGwe
+	m3/rrKXkd/mkOWttOjNrfOc1liuqynTenGCw1zrm32Kulzx+NNPbFita9oPVKgywhcmsYx
+	tT1mQc+pOZMkAxV90zug2UxjzhLyxTg+FAwQ3SnlLHhBKlSu99G/g3gZEfZA+A==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Mon, 26 Feb 2024 09:46:37 +0100
-Subject: [PATCH v3 7/9] drm/vkms: Add range and encoding properties to
- pixel_read function
+Date: Mon, 26 Feb 2024 09:46:32 +0100
+Subject: [PATCH v3 2/9] drm/vkms: Use drm_frame directly
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240226-yuv-v3-7-ff662f0994db@bootlin.com>
+Message-Id: <20240226-yuv-v3-2-ff662f0994db@bootlin.com>
 References: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
 In-Reply-To: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -58,55 +57,123 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
  nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1160;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4080;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=vFKwJ9LvmL6TH9o/eb/NeXNgMqZMacWZ1OBVcb0LDIk=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl3FAukzY8KaZO7FMrnXURFUQb3OqcogtEjW+Jtayr
- VMHCBb+JAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZdxQLgAKCRAgrS7GWxAs4gDZD/
- 9KQ0ph+07NE94lo1zi5xUwN1JnjbzuPErCi9fwe04Xscm8paR3OegBCno8Znh2frrFqUuF+Sxn/y1g
- 7RFOJGME6nFyt+3hadE5D8CC2P+HPa7ZdiKGo85Vn+ETVfK15Iwn8OUkCoazpNus+yDiO6WbWGE7kh
- WPu30pjNyvs1z1/jZvKWEzHbfISFnOVT9qxNgIr+fDWRzRKboihgWZN91/jZeqQidama75nZmzuVUN
- eVGCYEcHzapsv9qTqS6iqm90NOQ9kQUxfW5Zh8NSOHajdJkIoMUb41hRNhIhx4vmuYBzOX5eGLyWSu
- SzglPYVkd4udTyDlfIeeuYdDrmqqd3leIXCm5MW1dfTpIYg/31u3a98L3ED0IahHlbHg+3M4O6tySJ
- FIGoUiHLtCbPwgPR5GhLrjx2q8n77vUAtxaLxtBkdA8lYLh12rdaTdQJRdV42alNZ851GSS30DNxHq
- Rh4niDXfL0u+OREdpJIOk5N427TWK3YT7YR2b4byvHByCe5gUFqrd6ApQ/HqHyeWHUQTiEjM0zIsoN
- JV0BlO2FeIItTCsGQ9zL3Ie8tbdeqE5+Mz+NP2KHLOGrbw5uZP/kMAspexquIcuFV8H09gdv6btrFb
- RCEgr561YMVP/AoD5Dz/bUlb7+FDnHyHL2FohJ8jEVFocmpsO2qZg+4tuQow==
+ bh=LCanIMOHanyMsqevo6fpwtNwvVAT/mqVTUFuxMtxwSE=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl3FAtuiQ6jRmzYIPsTeKSZE8illNBYsEnwQ+gUreK
+ zWIHgHaJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZdxQLQAKCRAgrS7GWxAs4u60EA
+ CUaP/X34+cahIVRsIhdYkZI45wEqbIjim8CgMJfqBKAMArEQboSF06LAZgy2bnZqYIGMnaipJWPe6W
+ hWtOXzCXalmQCpW3S5P9c+/5AraMUs743wICTWerTIfkiPelYBCIYMEUGCltJSuEcVjjcHfJ//wXqG
+ dkVJS3l5S1iijWk8nOTaGxWAc2sMe7cDRSYtt+rrbKul0B0hAiNCUvxiEjbXinuVPOaiYR0+VMiU9s
+ 3GXuAQwq69j54ABCgN5qDEtH/oyZVABLwaiQQClnXinqIsfmtTkVl89lKsRrX0ZWyPXPCG9rPbOy6+
+ g9ynWpzXtAsN8WdkcuCO2QLYcTYLXxQBYNEF0PQLRw6QrFhfdd/LJSBcCN/bLTAsgpwIjJsriwNcXL
+ dvTlfkohhcPpUHKzr96+4Ebsm72lUZAsXl39sZEDOEciDyQR/SuJRWaxLzyPEcWWtGfVuvOEW21jtL
+ 6g95Zd/fgOtiTS+sC+OBEo2PIQpq72olLG1fl1qDL52SCEbb0fTLv55F9V5hSaj9rq1ogBGJlI/eOW
+ DbafjTZRa1Szk9H67gB3LUn/PB/JtGYP+r1rPlfVlczD3Rf0IPOSLobUa3CbgK/rf0/j0XGp4SNFN1
+ 0Q3BJSFX7rcDUv8mzQXRO6Ot7Y54G/O4JaVyk9ypWP/VfLmmMb3kCLke7q9A==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
 From: Arthur Grillo <arthurgrillo@riseup.net>
 
-Create range and encoding properties. This should be noop, as none of
-the conversion functions need those properties.
+Remove intermidiary variables and access the variables directly from
+drm_frame. These changes should be noop.
 
 Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
-[Louis Chauvet: retained only relevant parts]
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_plane.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/vkms/vkms_drv.h       |  3 ---
+ drivers/gpu/drm/vkms/vkms_formats.c   | 12 +++++++-----
+ drivers/gpu/drm/vkms/vkms_plane.c     |  3 ---
+ drivers/gpu/drm/vkms/vkms_writeback.c |  5 -----
+ 4 files changed, 7 insertions(+), 16 deletions(-)
 
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index 8f5710debb1e..b4b357447292 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -31,9 +31,6 @@ struct vkms_frame_info {
+ 	struct drm_rect rotated;
+ 	struct iosys_map map[DRM_FORMAT_MAX_PLANES];
+ 	unsigned int rotation;
+-	unsigned int offset;
+-	unsigned int pitch;
+-	unsigned int cpp;
+ };
+ 
+ struct pixel_argb_u16 {
+diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+index 36046b12f296..172830a3936a 100644
+--- a/drivers/gpu/drm/vkms/vkms_formats.c
++++ b/drivers/gpu/drm/vkms/vkms_formats.c
+@@ -11,8 +11,10 @@
+ 
+ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
+ {
+-	return frame_info->offset + (y * frame_info->pitch)
+-				  + (x * frame_info->cpp);
++	struct drm_framebuffer *fb = frame_info->fb;
++
++	return fb->offsets[0] + (y * fb->pitches[0])
++			      + (x * fb->format->cpp[0]);
+ }
+ 
+ /*
+@@ -131,12 +133,12 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
+ 	u8 *src_pixels = get_packed_src_addr(frame_info, y);
+ 	int limit = min_t(size_t, drm_rect_width(&frame_info->dst), stage_buffer->n_pixels);
+ 
+-	for (size_t x = 0; x < limit; x++, src_pixels += frame_info->cpp) {
++	for (size_t x = 0; x < limit; x++, src_pixels += frame_info->fb->format->cpp[0]) {
+ 		int x_pos = get_x_position(frame_info, limit, x);
+ 
+ 		if (drm_rotation_90_or_270(frame_info->rotation))
+ 			src_pixels = get_packed_src_addr(frame_info, x + frame_info->rotated.y1)
+-				+ frame_info->cpp * y;
++				+ frame_info->fb->format->cpp[0] * y;
+ 
+ 		plane->pixel_read(src_pixels, &out_pixels[x_pos]);
+ 	}
+@@ -223,7 +225,7 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
+ 	struct pixel_argb_u16 *in_pixels = src_buffer->pixels;
+ 	int x_limit = min_t(size_t, drm_rect_width(&frame_info->dst), src_buffer->n_pixels);
+ 
+-	for (size_t x = 0; x < x_limit; x++, dst_pixels += frame_info->cpp)
++	for (size_t x = 0; x < x_limit; x++, dst_pixels += frame_info->fb->format->cpp[0])
+ 		wb->pixel_write(dst_pixels, &in_pixels[x]);
+ }
+ 
 diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index 427ca67c60ce..95dfde297377 100644
+index 90c09046e0af..d5203f531d96 100644
 --- a/drivers/gpu/drm/vkms/vkms_plane.c
 +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -228,5 +228,14 @@ struct vkms_plane *vkms_plane_init(struct vkms_device *vkmsdev,
- 	drm_plane_create_rotation_property(&plane->base, DRM_MODE_ROTATE_0,
- 					   DRM_MODE_ROTATE_MASK | DRM_MODE_REFLECT_MASK);
+@@ -124,9 +124,6 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
+ 	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
+ 			drm_rect_height(&frame_info->rotated), frame_info->rotation);
  
-+	drm_plane_create_color_properties(&plane->base,
-+					  BIT(DRM_COLOR_YCBCR_BT601) |
-+					  BIT(DRM_COLOR_YCBCR_BT709) |
-+					  BIT(DRM_COLOR_YCBCR_BT2020),
-+					  BIT(DRM_COLOR_YCBCR_LIMITED_RANGE) |
-+					  BIT(DRM_COLOR_YCBCR_FULL_RANGE),
-+					  DRM_COLOR_YCBCR_BT601,
-+					  DRM_COLOR_YCBCR_FULL_RANGE);
-+
- 	return plane;
+-	frame_info->offset = fb->offsets[0];
+-	frame_info->pitch = fb->pitches[0];
+-	frame_info->cpp = fb->format->cpp[0];
+ 	vkms_plane_state->pixel_read = get_pixel_conversion_function(fmt);
  }
+ 
+diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
+index bc724cbd5e3a..c8582df1f739 100644
+--- a/drivers/gpu/drm/vkms/vkms_writeback.c
++++ b/drivers/gpu/drm/vkms/vkms_writeback.c
+@@ -149,11 +149,6 @@ static void vkms_wb_atomic_commit(struct drm_connector *conn,
+ 	crtc_state->active_writeback = active_wb;
+ 	crtc_state->wb_pending = true;
+ 	spin_unlock_irq(&output->composer_lock);
+-
+-	wb_frame_info->offset = fb->offsets[0];
+-	wb_frame_info->pitch = fb->pitches[0];
+-	wb_frame_info->cpp = fb->format->cpp[0];
+-
+ 	drm_writeback_queue_job(wb_conn, connector_state);
+ 	active_wb->pixel_write = get_pixel_write_function(wb_format);
+ 	drm_rect_init(&wb_frame_info->src, 0, 0, crtc_width, crtc_height);
 
 -- 
 2.43.0
