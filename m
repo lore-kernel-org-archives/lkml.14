@@ -1,106 +1,230 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8D71CD2B
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A1921A14;
+	Mon, 26 Feb 2024 09:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938339; cv=none; b=L2DtvnOCHvokt45PgVZS/PcxiU8mHM3Iu8zA875YMFX2uag9QPaiUTp11g3XaoglJ3Xh8h54YT6cn9bo5GszDk3ycfsvRTm/92LjUkb3Dft7H1iYlCZ32b8iVVLJbOfVClj/L2QwJxSKY+9uFIzl3GcuqAK6mJ59Bg9Vsjz+Xas=
+	t=1708938340; cv=none; b=E2cYkvMiazkm2Do1as/b0mb24m6+Ki+lMp1mZiI1brHYZftPh1Bg5fqUdA+qlipS8PQGq3Mm6MMbGNKTDhagQvkUJ34UDnEAbY6VCO7XfHEgTqPxxErX7qJubqtqt9VKho6kKTNXlhiP+qCtNWNI8A4nxyFsZZAEV0E25KnR0Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938339; c=relaxed/simple;
-	bh=krkPkE2Z5L0UxpKDRAB4tBQ/QZXyjRxjCqMUWq6zpk0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F6Wj+BwGKqW419+O6zP5YlwgJ1ruo9UyHuecZPS4kyj4y5efFzvbqspKfJZt82NpdCzVyNk9uoMCzeBRrSdDCqIupy3LzaqrVJ7bjWmhBdx5+Zvs76FahszXG+MxfrJCtNLHxAIHFmzR1GEbfM9FXE+RaSYZkn7Xwys+gZuQtpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=xDyB9ESE; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1708938340; c=relaxed/simple;
+	bh=S8gKWyE7cMaxsz53QmeYdf2C4bKVTLAnugHHvwdiP9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oVvLf2CYWmPDB0+wZHHFy8MAbbaUB33A/kJusVijH1dEJlMOUf8MVvqFmF+XyhGqAza61iSeIJ4DAaVrokXSDwqpAn/YCYIVLORk3K5NWpjcsU97AG8/wnk6Bo55ZTsoX42gf2mEJ82bN9wRZEE7UoJnKNYFGiMhoiTAmQj56wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XOBc0yUZ; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="xDyB9ESE"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412a8b79b46so554715e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:05:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1708938337; x=1709543137; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lVqQ7Rjy5L8DAOM0lDlFnwur37SLSiQdNyMxMNLovDA=;
-        b=xDyB9ESESOcNO8RZYRw2RQqRlb+kFDo2yy3tPUfl4dy0ru6tb/0UwPQ8SR9G9Cg6Ki
-         Gnte6G8MdbNJ0x7r8qs7G0g5z0yyQRxksay8ZogvzrtMqwqdGXakxYZh3+yLWdliEsvk
-         Rr7q8JGymAXMCWv5dF5fU9PhxkE19I6BnmREmbEgNtFzloQ1VlXMrPcFe7Z10h0W/BXG
-         5M1QuxZ4r388Pw9q+VUU1OBg9VE06cVNpjDek11mHVyumStI6miG+2NLEdRWiCVmvWCs
-         Yp0uxGc0Fx26bkrFfZtNbR2k1k6ugIqx1tfj4tl7KGfsy0pRD8DwdusXBnfNP1IORoRP
-         wMVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708938337; x=1709543137;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lVqQ7Rjy5L8DAOM0lDlFnwur37SLSiQdNyMxMNLovDA=;
-        b=N3P2ejJkjJtULszpsYKM6pfPaUnQ3QVW3boVgK0VIk4+AK+pt+ek0sBKSIU29Qarwh
-         2hc1+rRymWFU0FiZhmtX+zSQx62GSqoz9AaOR5RUcxvTch5RdFdKVUWSSchNnEJLLLGr
-         8UBKAXvxop8LxX5EH9zcZfuhzo0xTYe52R2SOuU+dSbg1qvHEpZWQSv0fx8zJbwpLpZh
-         gcYqRqyqWszX3uJc6M1dEiEujUdverFESMC1tn5WeU4mYYSWipiMULxnphp2zreH7P3P
-         kI8oYNKUNCxq1kbCjgFoNSSYi8dGemZSKXce0hZAMLHLroKCyLA0dEN5GDaqdPFU9Sz1
-         Lnjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeeZeDMGBt1AtMDx4YmJivF54isI0BayWu0EhlciZCo6GJek5rpVwO9FQo+/0zcJa1Z/LoLyzvjnwpcR7wgO0AK/KmDD52w7anJPWq
-X-Gm-Message-State: AOJu0Yw50eneta9YIhfgzHb0E37BJN2H0RjsK2vEDqK0q+JfK6wxPjFe
-	LZb1/MIidK+CNqYl2u1q6yB3BPisK4/qTAq9ZwFuAqULqle9wzITL0F1VWhWzn8=
-X-Google-Smtp-Source: AGHT+IFMrND3CGXr30BMgK7aqK6xYyb6lMe9pffxDZ2J6ciAdDCzXrZc//N36r9hNyKptzEOz81QOA==
-X-Received: by 2002:a05:600c:444d:b0:412:9842:c4f2 with SMTP id v13-20020a05600c444d00b004129842c4f2mr5387610wmn.12.1708938336615;
-        Mon, 26 Feb 2024 01:05:36 -0800 (PST)
-Received: from fedora.fritz.box (aftr-82-135-80-35.dynamic.mnet-online.de. [82.135.80.35])
-        by smtp.gmail.com with ESMTPSA id jd17-20020a05600c68d100b004129335947fsm11283074wmb.8.2024.02.26.01.05.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 01:05:36 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: thorsten.blum@toblux.com
-Cc: anna-maria@linutronix.de,
-	frederic@kernel.org,
-	jstultz@google.com,
-	liaochang1@huawei.com,
-	linux-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	tglx@linutronix.de
-Subject: [PATCH v2] time: Use div64_ul() instead of do_div()
-Date: Mon, 26 Feb 2024 10:03:06 +0100
-Message-ID: <20240226090305.117120-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <E2A9A6AE-84F4-4C86-80CA-CC0C480FD9A8@toblux.com>
-References: <E2A9A6AE-84F4-4C86-80CA-CC0C480FD9A8@toblux.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XOBc0yUZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708938339; x=1740474339;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=S8gKWyE7cMaxsz53QmeYdf2C4bKVTLAnugHHvwdiP9s=;
+  b=XOBc0yUZXTFR3LvjFuV8zo39tRbmqM37EK8/zZc64JchVzQ08sYNyxXE
+   jNJE+A3XXFgYkUwWGyUcfcpSq8TNYAaYx9e7rDG5wRy3nMf6r5c9X8Zwv
+   rT185w10wOFuiOsc/cV7GCkz+3F2VbHxLNmKcCtX6V1sRPDncvwxfaKhO
+   3r9SXlv0Xoul66zIlqq+kq5EnDCmVZkEaLEhrdlUeFn/iwmcbHzkEhNiM
+   j2wp3YgbStY9wbJ288HEM1BXKv10xVoL6VSagjLlMGy1r9eHCXtpQrr0V
+   u01Z5f6DtdaIp+wp96MdEvqJA6DcVRMhGu9jAPITxZhxWGy8QF8zG0KUG
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="6997608"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="6997608"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 01:05:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="937029619"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="937029619"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by fmsmga001.fm.intel.com with SMTP; 26 Feb 2024 01:05:33 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 26 Feb 2024 11:05:32 +0200
+Date: Mon, 26 Feb 2024 11:05:32 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Jameson Thies <jthies@google.com>
+Cc: linux-usb@vger.kernel.org, pmalani@chromium.org, bleung@google.com,
+	abhishekpandit@chromium.org, andersson@kernel.org,
+	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com,
+	gregkh@linuxfoundation.org, hdegoede@redhat.com,
+	neil.armstrong@linaro.org, rajaram.regupathy@intel.com,
+	saranya.gopal@intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] usb: typec: ucsi: Register cables based on
+ GET_CABLE_PROPERTY
+Message-ID: <ZdxUXPX1mT8JUxtT@kuha.fi.intel.com>
+References: <20240223010328.2826774-1-jthies@google.com>
+ <20240223010328.2826774-3-jthies@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240223010328.2826774-3-jthies@google.com>
 
-Fixes Coccinelle/coccicheck warning reported by do_div.cocci.
+On Fri, Feb 23, 2024 at 01:03:26AM +0000, Jameson Thies wrote:
+> Register cables with the Type-C Connector Class in the UCSI driver based
+> on the PPM response to GET_CABLE_PROPERTY. Registered cable properties
+> include plug type, cable type and major revision.
+> 
+> Signed-off-by: Jameson Thies <jthies@google.com>
 
-Compared to do_div(), div64_ul() does not implicitly cast the divisor and
-does not unnecessarily calculate the remainder.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
-Changes in v2:
-- s/div64_long/div64_ul/ as suggested by Chang Liao
----
- kernel/time/jiffies.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> ---
+> Tested on v6.6 kernel. Expected cable properties populate the USB Type-C
+> connector class sysfs paths:
+> redrix-rev3 /sys/class/typec # ls port2-cable
+> device  identity  plug_type  port2-plug0  power  subsystem  type  uevent
+> usb_power_delivery_revision
+> 
+>  drivers/usb/typec/ucsi/ucsi.c | 69 +++++++++++++++++++++++++++++++++++
+>  drivers/usb/typec/ucsi/ucsi.h |  5 +++
+>  2 files changed, 74 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+> index ae105383e69e..15e82f5fab37 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.c
+> +++ b/drivers/usb/typec/ucsi/ucsi.c
+> @@ -734,6 +734,50 @@ static void ucsi_unregister_partner_pdos(struct ucsi_connector *con)
+>  	con->partner_pd = NULL;
+>  }
+>  
+> +static int ucsi_register_cable(struct ucsi_connector *con)
+> +{
+> +	struct typec_cable *cable;
+> +	struct typec_cable_desc desc = {};
+> +
+> +	switch (UCSI_CABLE_PROP_FLAG_PLUG_TYPE(con->cable_prop.flags)) {
+> +	case UCSI_CABLE_PROPERTY_PLUG_TYPE_A:
+> +		desc.type = USB_PLUG_TYPE_A;
+> +		break;
+> +	case UCSI_CABLE_PROPERTY_PLUG_TYPE_B:
+> +		desc.type = USB_PLUG_TYPE_B;
+> +		break;
+> +	case UCSI_CABLE_PROPERTY_PLUG_TYPE_C:
+> +		desc.type = USB_PLUG_TYPE_C;
+> +		break;
+> +	default:
+> +		desc.type = USB_PLUG_NONE;
+> +		break;
+> +	}
+> +
+> +	desc.active = !!(UCSI_CABLE_PROP_FLAG_ACTIVE_CABLE & con->cable_prop.flags);
+> +	desc.pd_revision = UCSI_CABLE_PROP_FLAG_PD_MAJOR_REV_AS_BCD(con->cable_prop.flags);
+> +
+> +	cable = typec_register_cable(con->port, &desc);
+> +	if (IS_ERR(cable)) {
+> +		dev_err(con->ucsi->dev,
+> +			"con%d: failed to register cable (%ld)\n", con->num,
+> +			PTR_ERR(cable));
+> +		return PTR_ERR(cable);
+> +	}
+> +
+> +	con->cable = cable;
+> +	return 0;
+> +}
+> +
+> +static void ucsi_unregister_cable(struct ucsi_connector *con)
+> +{
+> +	if (!con->cable)
+> +		return;
+> +
+> +	typec_unregister_cable(con->cable);
+> +	con->cable = NULL;
+> +}
+> +
+>  static void ucsi_pwr_opmode_change(struct ucsi_connector *con)
+>  {
+>  	switch (UCSI_CONSTAT_PWR_OPMODE(con->status.flags)) {
+> @@ -807,6 +851,7 @@ static void ucsi_unregister_partner(struct ucsi_connector *con)
+>  	typec_partner_set_usb_power_delivery(con->partner, NULL);
+>  	ucsi_unregister_partner_pdos(con);
+>  	ucsi_unregister_altmodes(con, UCSI_RECIPIENT_SOP);
+> +	ucsi_unregister_cable(con);
+>  	typec_unregister_partner(con->partner);
+>  	con->partner = NULL;
+>  }
+> @@ -907,6 +952,28 @@ static int ucsi_check_connection(struct ucsi_connector *con)
+>  	return 0;
+>  }
+>  
+> +static int ucsi_check_cable(struct ucsi_connector *con)
+> +{
+> +	u64 command;
+> +	int ret;
+> +
+> +	if (con->cable)
+> +		return 0;
+> +
+> +	command = UCSI_GET_CABLE_PROPERTY | UCSI_CONNECTOR_NUMBER(con->num);
+> +	ret = ucsi_send_command(con->ucsi, command, &con->cable_prop, sizeof(con->cable_prop));
+> +	if (ret < 0) {
+> +		dev_err(con->ucsi->dev, "GET_CABLE_PROPERTY failed (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = ucsi_register_cable(con);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+>  static void ucsi_handle_connector_change(struct work_struct *work)
+>  {
+>  	struct ucsi_connector *con = container_of(work, struct ucsi_connector,
+> @@ -948,6 +1015,7 @@ static void ucsi_handle_connector_change(struct work_struct *work)
+>  			ucsi_register_partner(con);
+>  			ucsi_partner_task(con, ucsi_check_connection, 1, HZ);
+>  			ucsi_partner_task(con, ucsi_check_connector_capability, 1, HZ);
+> +			ucsi_partner_task(con, ucsi_check_cable, 1, HZ);
+>  
+>  			if (UCSI_CONSTAT_PWR_OPMODE(con->status.flags) ==
+>  			    UCSI_CONSTAT_PWR_OPMODE_PD)
+> @@ -1346,6 +1414,7 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
+>  		ucsi_register_partner(con);
+>  		ucsi_pwr_opmode_change(con);
+>  		ucsi_port_psy_changed(con);
+> +		ucsi_check_cable(con);
+>  	}
+>  
+>  	/* Only notify USB controller if partner supports USB data */
+> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
+> index 469a2baf472e..f0aabef0b7c6 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.h
+> +++ b/drivers/usb/typec/ucsi/ucsi.h
+> @@ -265,6 +265,9 @@ struct ucsi_cable_property {
+>  #define   UCSI_CABLE_PROPERTY_PLUG_TYPE_C	2
+>  #define   UCSI_CABLE_PROPERTY_PLUG_OTHER	3
+>  #define UCSI_CABLE_PROP_FLAG_MODE_SUPPORT	BIT(5)
+> +#define UCSI_CABLE_PROP_FLAG_PD_MAJOR_REV(_f_)	(((_f_) & GENMASK(7, 6)) >> 6)
+> +#define UCSI_CABLE_PROP_FLAG_PD_MAJOR_REV_AS_BCD(_f_) \
+> +	UCSI_SPEC_REVISION_TO_BCD(UCSI_CABLE_PROP_FLAG_PD_MAJOR_REV(_f_))
+>  	u8 latency;
+>  } __packed;
+>  
+> @@ -400,6 +403,7 @@ struct ucsi_connector {
+>  
+>  	struct typec_port *port;
+>  	struct typec_partner *partner;
+> +	struct typec_cable *cable;
+>  
+>  	struct typec_altmode *port_altmode[UCSI_MAX_ALTMODES];
+>  	struct typec_altmode *partner_altmode[UCSI_MAX_ALTMODES];
+> @@ -408,6 +412,7 @@ struct ucsi_connector {
+>  
+>  	struct ucsi_connector_status status;
+>  	struct ucsi_connector_capability cap;
+> +	struct ucsi_cable_property cable_prop;
+>  	struct power_supply *psy;
+>  	struct power_supply_desc psy_desc;
+>  	u32 rdo;
+> -- 
+> 2.44.0.rc0.258.g7320e95886-goog
 
-diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
-index bc4db9e5ab70..fccee15e94d5 100644
---- a/kernel/time/jiffies.c
-+++ b/kernel/time/jiffies.c
-@@ -91,7 +91,7 @@ int register_refined_jiffies(long cycles_per_second)
- 	/* shift_hz stores hz<<8 for extra accuracy */
- 	shift_hz = (u64)cycles_per_second << 8;
- 	shift_hz += cycles_per_tick/2;
--	do_div(shift_hz, cycles_per_tick);
-+	shift_hz = div64_ul(shift_hz, cycles_per_tick);
- 	/* Calculate nsec_per_tick using shift_hz */
- 	nsec_per_tick = (u64)NSEC_PER_SEC << 8;
- 	nsec_per_tick += (u32)shift_hz/2;
 -- 
-2.43.2
-
+heikki
