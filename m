@@ -1,35 +1,35 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2376250F3;
-	Mon, 26 Feb 2024 10:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6589E2C85A;
+	Mon, 26 Feb 2024 10:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944265; cv=none; b=uy9nOFRpbW8X8r0BUWV8ya6F67LugbFsCHt1TGTQP6I2RSk7xkCZNDtBWyo2k9LMjV4H4o2HOR0kp7oEjQiDn+5z3no6+T5Xptea7Mfo79FFYgNDpEyaYskgQdSI1s9muBwiCjl0YJLChVhgU4HdtEakMJ0ZfslV49NZ4mkcFKk=
+	t=1708944267; cv=none; b=t2ekY0ojAY2sOiuaeNUVTW0hEK02O5WuuCjsr4hn5zyyRIcIdYrj/wTjhk+WDW9hr7aPGhHdEZRMn5D8iIa9wuNgQJRTGf0qpFActcKL4XK+TA2t4oynGhc1l/VUSgIVVyzTRaD+0aeK1hfVNx1zFA4rfzk60g5Ke9xgxtQoWJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944265; c=relaxed/simple;
-	bh=Mzg4VQDL7/+JjZ0LamZA5un67+MkmbTypdD0xYwByHA=;
+	s=arc-20240116; t=1708944267; c=relaxed/simple;
+	bh=KgChHRTTo7OQwKFWE6bKTcZq0vzU8U1NkHXjfoExUKg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TwUUeq4d1rHJlnIJm478a1d5XhesbOZdV3EIWn7FjMUq5LVW6b1KfgC7rAnlL4cJ9EIHu0e013NAL7PKwmLOnuy6uAa3XZky+sCNFHYG9KBgBoBDSIPURcsxy+IzglErSLK0bEoNy0GMBGFyz7GbUMaEco8zUspRMlix3Z+Qk/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hWdv3ucc; arc=none smtp.client-ip=217.70.183.197
+	 MIME-Version; b=dxHjele30w6kTRovpYqOoVj9DTKm5MON0YpAPCBSlXtHSWZ7T7RPzWn2a/xQGqEVlj5pqhx4etYmaBJbs32f2T90WBa4lpVp/9Bu22R0SH62Kcv3DZn6Th1XMdlk/7rJIv5+y99dm98fB3ilf2HXV/eWptSC7nM7xAchQerOYPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OCtf67bi; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hWdv3ucc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 71EA91C0014;
-	Mon, 26 Feb 2024 10:44:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OCtf67bi"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C74171BF207;
+	Mon, 26 Feb 2024 10:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708944256;
+	t=1708944263;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=igltBX1RS9CACcoo51+Edx1JXCfvvMD3zziOJnrUnRA=;
-	b=hWdv3uccgP5E0Amuaxr8HuqdxkuoA2qnMsmPpOKY+fRYp4N4uSMkm/WisxzLd1aiX0c4A8
-	aMwG65eQ9u4GmNGphWebNTnQzapQddmmaLISYNsQPZ6pauYSAszpcnkp3FXNSPcUwVMlfB
-	6HMxmRexNKYj5XPKUHYAzjNk4ND9Gb4oWGzoKmilPQbNA1ZH5H4wC7uQ8D9xOVtBHM50j6
-	OfMrVqCZXGipu2u98puF4todaGLGx5P1x5Lfk4eb6z8Fa1LYgwA4bxN4Qg11F2ilpEMDdz
-	Y802+sds+7NFmgKSa5ICAZkFBZU01T8xZ1kwuUG+bBP7RFH7/4kHuA66B3rWjA==
+	bh=C0jfSaNWPM8c7hemQqNUqquDEQ7dm7utmz7Pw/Vpj80=;
+	b=OCtf67biXRAmquLsBCLSCV19/ukE313faNhAeIO05ukEICb/E+Xz0ZY5SHoT3rSTLRkkgf
+	tSB0HPPzhqM+tSh1SAhft0qghO9Vr2LB2uG5D7lYvi8xap9hnKpCxjynTCn9qdXVdPGuVj
+	ggVc/zvfQUZcdQRm/ucm9o6dWKw5mtLNt8R+JugDx/8G3ZnurUnwqeF1c6tQhrTkR3qrtg
+	sP5Gt+X6VXPoK1wm/yVsxvdmVavM5/8/qyb2hj3RGBaaYQfqU+lZoh2FwfZAcKTpiIDuw6
+	O0fTTH431PldL3VPxKZ1vUbwId1iktgkDt5WWlfoZh5P/+0VMbmTWYkIolTZHQ==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
 To: William Zhang <william.zhang@broadcom.com>,
 	Linux MTD List <linux-mtd@lists.infradead.org>,
@@ -44,22 +44,22 @@ Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
 	kamal.dasu@broadcom.com,
 	tomer.yacoby@broadcom.com,
 	dan.beygelman@broadcom.com,
-	David Regan <dregan@broadcom.com>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andre Przywara <andre.przywara@arm.com>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Conor Dooley <conor.dooley@microchip.com>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Alexandre TORGUE <alexandre.torgue@st.com>,
-	Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6 07/13] ARM: dts: broadcom: bcmbca: Add NAND controller node
-Date: Mon, 26 Feb 2024 11:44:11 +0100
-Message-Id: <20240226104411.489517-1-miquel.raynal@bootlin.com>
+	devicetree@vger.kernel.org,
+	Brian Norris <computersforpeace@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Richard Weinberger <richard@nod.at>,
+	Kamal Dasu <kdasu.kdev@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v6 05/13] dt-bindings: mtd: brcmnand: Add WP pin connection property
+Date: Mon, 26 Feb 2024 11:44:22 +0100
+Message-Id: <20240226104422.489635-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240223034758.13753-8-william.zhang@broadcom.com>
+In-Reply-To: <20240223034758.13753-6-william.zhang@broadcom.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -68,16 +68,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'9bc2c33cce32171427e604eb678dad693c6925b6'
+X-linux-mtd-patch-commit: b'638eff86cf9ae36796d704bec24b83e3a4e348bd'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, 2024-02-23 at 03:47:52 UTC, William Zhang wrote:
-> Add support for Broadcom STB NAND controller in BCMBCA ARMv7 chip dts
-> files.
+On Fri, 2024-02-23 at 03:47:50 UTC, William Zhang wrote:
+> Add brcm,wp-not-connected property to have an option for disabling this
+> feature on broadband board design that does not connect WP pin.
 > 
 > Signed-off-by: William Zhang <william.zhang@broadcom.com>
-> Reviewed-by: David Regan <dregan@broadcom.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
