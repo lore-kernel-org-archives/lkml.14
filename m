@@ -1,61 +1,117 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB3A22626;
-	Mon, 26 Feb 2024 10:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25DC1CD0C;
+	Mon, 26 Feb 2024 10:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708945054; cv=none; b=ap2tndtylbYirLpH2r8IkcIPclVj6KphCTtoXGYiyskYDyB+ZM/VkUYud05YLC2TggWg1ZNi3eerJZluSlLy+GZHoqximEp/FdzBGysDX2G6dQiFmCyhpMXnQ4zeM6hfeuWhw++LjjjPCzZlOxSPB5TUOkocV4q33eaMEzgW2zw=
+	t=1708945093; cv=none; b=iVU0ExR2VuZbfHqI0o/GiYEAIdALk+8L8FgyKzMS1P6Dy/QoPFG+WV9+SgzkmMbRAZyVIkfPnUce/muyf93rhDs8dyCnS7ff6CKfXu3WtEs3D55J1YG4GRTDfVtqkWwk0o+Za3A3Mb726cVRVvEX28Fd7XDu6XQRwLJdHkdI8Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708945054; c=relaxed/simple;
-	bh=u5oWRzn/7hndJk1lfnmcJE+isM/HfInNAVsppGMJ/eI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vBuJFnFZt0BKINjoAgkpenIUGolcpPk7YT3ZP3nUNGXJ/inc3jr2k779zsifeOT3TcR4ramY//zy4ZBjJmiAZkn9T1hvK+4eF2+LGR1zHmz+wlA5AgB99mH9TmWWf9P0vT6IHWZj+wAY1afBRTN3Ndg3zbAYxnxbFc5KSmoN9Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 0236168CFE; Mon, 26 Feb 2024 11:57:28 +0100 (CET)
-Date: Mon, 26 Feb 2024 11:57:27 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: hch@lst.de, chandanbabu@kernel.org, corbet@lwn.net, david@fromorbit.com,
-	djwong@kernel.org, linux-kernel@vger.kernel.org,
-	linux-next@vger.kernel.org, linux-xfs@vger.kernel.org,
-	mchehab@kernel.org, sfr@canb.auug.org.au
-Subject: Re: linux-next: build warning after merge of the xfs tree
-Message-ID: <20240226105727.GA28770@lst.de>
-References: <20240223140619.GA30519@lst.de> <22187737-e0ad-4cc4-98fd-5e43ebc5ecee@gmail.com>
+	s=arc-20240116; t=1708945093; c=relaxed/simple;
+	bh=+M/IcrkC4KiqVSgKEfF4MEPWWH07B+P/vlCcnh7YeNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pcnWxYICDM4YTAbS0S7JvIjkPo1+fKegRixFEo5WqxVzv/Sj+3c7bWJKjvXPy//NVK7iMNtfkfCqE6v1+iGAyc6SfNX7luSFZ2nS2tKVH+WDyhc+CpVxBHQoMRehcPYHXXEcfCfqynGxsX1DS8rFsf96U8MpFIMw37+zI8OR3YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nb2rg0g4; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nb2rg0g4"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso2823397a12.3;
+        Mon, 26 Feb 2024 02:58:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708945090; x=1709549890; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dpglvbug8B6rz9FHKHRWvwGpjAjoa19+rytvw+mL+G8=;
+        b=Nb2rg0g47TxtWTRp+xwiGcZChBALbmlu6u9bSrhXbkb7gAVW2ZlL5O/3V0IOJm8OHR
+         4dvi3cxrO6v2wPdkFODBd2VOBqS1++JsMyKHApeBCD5628dsIdxEalZSclEwiIlj0pIk
+         vZDM9AKmLM9YKSJFrTdrwZGSNTzXwV04yAjQaXEq9ALE2CdquiNZs/Fgvl/nOP0QR22p
+         EtVKIpYowHzpYhKhZtZoySh8sT4Xnxy3d72sAE+Il+FTXa0vnYmblPsN2D+OxNKfSeel
+         AfYYeVPbl7XuSzygDNYdd4Lh3YjWOaeYmgPKia/B5jnvSvrNF7Z4lWbPp/5dtdII5PuO
+         VDwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708945090; x=1709549890;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dpglvbug8B6rz9FHKHRWvwGpjAjoa19+rytvw+mL+G8=;
+        b=u72Uv+C7NRW1/R+dzdQbW3sEiivOOm5HirzSgdJ7AizKXhXwGD6DfcPxoiTQMMD1Y3
+         kjLl79HpP6sqr8945cw9Bt+XdZnmE+ahFFMy01KF4lddseNv2iYLayUFSVFYi4oIrkV5
+         h5r0v6SZ/CabwbpUCkFmk40Xt1jThfDGAVekpi6910dagpNC9TfvTsys2goc+o2jb7q6
+         4RqUA6aFF428I5b1+fnmVLAoeuTk0hAO4P3DBMIMAnQRrvEkTVED5os0Gj/vvc3MnHwM
+         bY6Z7lFz2XgPSFf+YLHuotdQn8RGk85UEvrmmuHTZGLOM7q2DtW3zC18f7mzxK0J3HmD
+         i0DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWiA+ovq2zxcSlUGNGxYZY8Ho715VdxmIC++EpIoxZPStUr03X2ABAgm9nALBG8AIlAeoq102kzo9XEgxU8Wo2RwdlaRzmlGByZzWXYju8oy6/TzYALFLX/3WOgct4nonX21s6hSQioTIURlsJ3zBPIouVUSsZcTuqQ2qLKfnhc1AyRjX90aMAkWP8NyLV8pF3kOO8GUXeozlUK1tK/61SO1r2p
+X-Gm-Message-State: AOJu0Yx1pl7mfuWk0It7jMJw/yLfPU78evgV1T0pzb6xCi4nGlWxwoC+
+	kbtU3+Hrn78cbMClOU25p8LPsoJEkiDq3z3aXoA9C7OF8szRFpLOPH5WW69CaW0=
+X-Google-Smtp-Source: AGHT+IHlLHZm/lD5o0ODr2jph5YVCXmo4l+6pEuWoFbGcmWuhZ7+htWa73xP6x7O+DkYRUE1lW866g==
+X-Received: by 2002:a17:906:ce5b:b0:a3e:cb18:d4f with SMTP id se27-20020a170906ce5b00b00a3ecb180d4fmr3911722ejb.30.1708945090018;
+        Mon, 26 Feb 2024 02:58:10 -0800 (PST)
+Received: from unknown.netbird.cloud (net-93-65-126-20.cust.vodafonedsl.it. [93.65.126.20])
+        by smtp.googlemail.com with ESMTPSA id f19-20020a170906085300b00a3fce8c0f99sm2315769ejd.191.2024.02.26.02.58.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 02:58:09 -0800 (PST)
+From: Gianluca Boiano <morf3089@gmail.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Cc: Gianluca Boiano <morf3089@gmail.com>
+Subject: [PATCH 1/3] leds: qcom-lpg: Add support for PMI8950 PWM
+Date: Mon, 26 Feb 2024 11:57:45 +0100
+Message-ID: <20240226105747.3547856-1-morf3089@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <d17121a0-ca14-41fd-9802-bb4118629e34@linaro.org>
+References: <d17121a0-ca14-41fd-9802-bb4118629e34@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <22187737-e0ad-4cc4-98fd-5e43ebc5ecee@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 24, 2024 at 06:07:28PM +0900, Akira Yokosawa wrote:
-> How about teaching kernel-doc unary "*" on param?
+The PMI8950 PMIC contains 1 PWM channel
 
-That would be great!
+Signed-off-by: Gianluca Boiano <morf3089@gmail.com>
+---
+ drivers/leds/rgb/leds-qcom-lpg.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> 
-> Substitution would look like:
-> 
->    (kernel-doc)       (RST)
->    *@param     ->  ***param**
-> 
-> Sphinx detects double asterisk, starts strong emphasis, waits for
-> another double asterisk to appear, and stops strong emphasis.
-> Hence you would get boldface "*param" in pretty printed docs.
-> 
-> Diff below (against docs-next) should add a rule for param_deref
-> (only for RST).
-
-I'd love to go with this instead of working around the issue:
-
-Acked-by: Christoph Hellwig <hch@lst.de>
+diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+index 6bdc5b923f98..9467c796bd04 100644
+--- a/drivers/leds/rgb/leds-qcom-lpg.c
++++ b/drivers/leds/rgb/leds-qcom-lpg.c
+@@ -1693,6 +1693,13 @@ static const struct lpg_data pm8941_lpg_data = {
+ 	},
+ };
+ 
++static const struct lpg_data pmi8950_pwm_data = {
++	.num_channels = 1,
++	.channels = (const struct lpg_channel_data[]) {
++		{ .base = 0xb000 },
++	},
++};
++
+ static const struct lpg_data pm8994_lpg_data = {
+ 	.lut_base = 0xb000,
+ 	.lut_size = 64,
+@@ -1819,6 +1826,7 @@ static const struct of_device_id lpg_of_table[] = {
+ 	{ .compatible = "qcom,pm8941-lpg", .data = &pm8941_lpg_data },
+ 	{ .compatible = "qcom,pm8994-lpg", .data = &pm8994_lpg_data },
+ 	{ .compatible = "qcom,pmi632-lpg", .data = &pmi632_lpg_data },
++	{ .compatible = "qcom,pmi8950-pwm", .data = &pmi8950_pwm_data },
+ 	{ .compatible = "qcom,pmi8994-lpg", .data = &pmi8994_lpg_data },
+ 	{ .compatible = "qcom,pmi8998-lpg", .data = &pmi8998_lpg_data },
+ 	{ .compatible = "qcom,pmc8180c-lpg", .data = &pm8150l_lpg_data },
+-- 
+2.44.0
 
