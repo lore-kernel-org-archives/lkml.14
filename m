@@ -1,167 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68B060BA1
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 19:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2927A60BA1
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 19:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708976763; cv=none; b=lwutWdlFl6FpIoD5SAOicwasnlb9nBb/Wmcdbs1zvGGIKQg1+pt2dEjXf0hiQaOFyWs1N/XoxerFffhZXcB+t64MagzrGLzZU33tMS2Opn35OdUhj09HJYpnDZcA+JAeAwZcHY631KsvXDWNHL+rj3JLisQsk6ZKme+v/xgFVOQ=
+	t=1708976812; cv=none; b=A+qIYwSoCk8LE0i45PXLiqyWpvErvWaIAst6WbAz1J33kLt9eJoY5o/z6PbvHsh//2vIEBMULH6/HU1374ascAXv00KhDke/FfqbDPEgHzOSgug+jh7nQtn7jwPYDzIuFHcArfRsdW4I+T5QIakGTjlp7hY86e0Vys/3/e0oPn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708976763; c=relaxed/simple;
-	bh=PRIi2ZULSVf7CQK4g6AhLe5g/jZELpR4BhlNwOtoOjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dGHjjsNMxGx2iXwnNoQCziHLq0NW5HY2qXoC2uO6PquIQO4GR0GFivd26I2xfeUrP9UVZwdWcNiDWjWrbVng0NMwjcfG6B8C5GpzaQM06ZkXkhEdAroGEQoozCC16eSQPM58+d5aA7n4TS3ZHgPc7a0Kh8+xUnxud0g21NNXFeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZrSDcFM4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708976812; c=relaxed/simple;
+	bh=yMSkd40jQ58IsjTFcyz6Y0aROzLE9aRQL+3vxznmzos=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BGIXPk086pQ4Y3BYa6bmNl5jhgwksqugvXsI1uVlwDrwdV+wEdI6s4zAOjZggASbWQYhvoIDYA1BObK9xQ0ew80T4XkyBa3rHZvqoFTnD/1bzR+ylA6FNo6ldRT4jz8lN7YNs5gsEtibcP8nwal/mh3h6GFkWr2EG03HK0OKBgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hqqrgstT; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZrSDcFM4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708976760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5i7BL5hCOxaRnKdA86IrwzpsGPN6Vv17A+A9wPGIjok=;
-	b=ZrSDcFM4dkhB9bqBwmVggrqvCJKo5gkNm5HoTx3LYcR+fqj1p1rnhoh0pbiJgCwu4kt3jg
-	964xryatqQEZDgq3ZA4ijsmy+7457UwjC1V1C4MeykWO42bfid8Grzik+daxOmkNpmXNBf
-	MDhY1YoSUt9qt+mf9wdVFUVNzWk3TlE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-BQH8IQO6OxaTExHoz-2osw-1; Mon, 26 Feb 2024 14:45:58 -0500
-X-MC-Unique: BQH8IQO6OxaTExHoz-2osw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 69A6685A58B;
-	Mon, 26 Feb 2024 19:45:57 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.85])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 7CFA22022AAA;
-	Mon, 26 Feb 2024 19:45:55 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 26 Feb 2024 20:44:38 +0100 (CET)
-Date: Mon, 26 Feb 2024 20:44:35 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: wenyang.linux@foxmail.com
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] exit: add exit_code to trace_sched_process_exit and
- move it earlier in do_exit()
-Message-ID: <20240226194434.GC9510@redhat.com>
-References: <tencent_20932DE952CC4B7E12CF2E5530D45641BF08@qq.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqqrgstT"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d208be133bso54655101fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 11:46:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708976809; x=1709581609; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ek2V91xP+64JAHW/SkXga3bXiJC6Qhuuv1X5zy2fbQc=;
+        b=hqqrgstTWoiW4MH3bmBsIW/jABm5EFevS0hi1CtJQzNkbmdx0V54XiYUjEm+n0AhiS
+         JhtSKtDFZ/I2tkCxhcNbf2lUPg1y0K0eh4Ys6h84wkyWdd3XG8f8SZhGn4D99Y7VfC6S
+         u9GIy8zgjzsgK71TtWewyW4E4SbW36qkMjWpe4+olnFprjLzTNgsmTe6vJQjbfft42m5
+         9BhhKbiIVzUgzgNgIaxJrttomrUmFQj6y0SO9TItvCzsaujgM6krm3GrKxnEq1PHaM9X
+         xZSmFLPjrhjYaQ+BoNXQ0xh10tspFZWOWBy1Tq7wn+AYm6VoS1t/BMC0Qb6rm9l4+hPE
+         l6Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708976809; x=1709581609;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ek2V91xP+64JAHW/SkXga3bXiJC6Qhuuv1X5zy2fbQc=;
+        b=JwZ95eqNq1/D+BQ+crdaYsQgGmk2KmCgVDYdyXlmuNh9jU/SdKhjspC3YLll7YQgrG
+         +1hbgWYmg3CbuSHlXFNqXNt47pvpeaODrWqq6TsR9jFgI409uKUbSP+lxJ9I4hXViDyY
+         taRP6rXDs7c0YJ4SXo3vEEfPFck2mpmr/uojtRXDzBni/vrKs859DSUE73LDMEMJwpAm
+         YA4WSfVK3gvdJglIpG2HiSN6ZvaxCNN3LlTCwgQBabAE8zRuqqZIhuBO+HLap/B7Lpos
+         h5WkE5gMXW++gRq/xiabmE2zM2tSl4niJVWi5GQ/B4fOVu9tlUjgynvZriJhFoq7hTZD
+         t6bA==
+X-Gm-Message-State: AOJu0YylR3i+JvsYhlWwZMA2r5yacrSJw6kTEW9o8uiIXfqPCf1vsQ9w
+	F3XITwhxh6Qu2lbQqccy3M6wLNti82plL4apJPqX8JoOpOERPYFk
+X-Google-Smtp-Source: AGHT+IF2GxvAjeDiXSF6GLyuxDh9BJgcMbwryKAGrX8RsjuVPXDVCE9uco4cqw9tZGd+ESQQW6juJQ==
+X-Received: by 2002:a2e:80d3:0:b0:2d2:8c9a:c4e5 with SMTP id r19-20020a2e80d3000000b002d28c9ac4e5mr2272204ljg.18.1708976808940;
+        Mon, 26 Feb 2024 11:46:48 -0800 (PST)
+Received: from localhost.localdomain (host86-133-224-40.range86-133.btcentralplus.com. [86.133.224.40])
+        by smtp.gmail.com with ESMTPSA id x1-20020a05600c2a4100b0041292306f2csm12728453wme.16.2024.02.26.11.46.48
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 26 Feb 2024 11:46:48 -0800 (PST)
+From: Levi Yun <ppbuk5246@gmail.com>
+To: hannes@cmpxchg.org,
+	surenb@google.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	Levi Yun <ppbuk5246@gmail.com>
+Subject: [PATCH] psi: Fix avg trigger being fired unexpectedly.
+Date: Mon, 26 Feb 2024 19:46:42 +0000
+Message-ID: <20240226194642.47530-1-ppbuk5246@gmail.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_20932DE952CC4B7E12CF2E5530D45641BF08@qq.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Transfer-Encoding: 8bit
 
-Well. since I have already participated in the previous discussions...
+commit 915a087e4c473("psi: Fix trigger being fired unexpectedly at initial")
+fixes unexpected event fired when group->total accumlated for PSI_POLL.
+But, for PSI_AVGS, win->value should be initialized with group->total[PSI_AVGS].
+Moreover, to get exact initial value for win->value, it should be set
+under each trigger lock to synchronize each rtpoll/avgs_works.
 
-As I said, I can't ack this (user-visible) patch even if I tried to
-suggest this from the very beginning, I leave it to the maintainers.
+Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
+---
+ kernel/sched/psi.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-I see nothing wrong in this change, but let me ask: do we really need
-to report the exit code? this makes this patch even more user-visible
-and I have no idea if it can break the current users.
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 7b4aa5809c0f..e7f66ab2ad3e 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1323,9 +1323,6 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group, char *buf,
+ 	t->state = state;
+ 	t->threshold = threshold_us * NSEC_PER_USEC;
+ 	t->win.size = window_us * NSEC_PER_USEC;
+-	window_reset(&t->win, sched_clock(),
+-			group->total[PSI_POLL][t->state], 0);
+-
+ 	t->event = 0;
+ 	t->last_event_time = 0;
+ 	t->of = of;
+@@ -1336,6 +1333,8 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group, char *buf,
 
-On 02/23, wenyang.linux@foxmail.com wrote:
->
-> From: Wen Yang <wenyang.linux@foxmail.com>
-> 
-> Currently coredump_task_exit() takes some time to wait for the generation
-> of the dump file. But if the user-space wants to receive a notification
-> as soon as possible it maybe inconvenient.
-> 
-> Add exit_code to the TP trace_sched_process_exit() and move it earlier in
-> do_exit(). This way a user-space monitor could detect the exits and
-> potentially make some preparations in advance.
-> 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/trace/events/sched.h | 28 +++++++++++++++++++++++++---
->  kernel/exit.c                |  2 +-
->  2 files changed, 26 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> index dbb01b4b7451..c2e8655fd453 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -330,9 +330,31 @@ DEFINE_EVENT(sched_process_template, sched_process_free,
->  /*
->   * Tracepoint for a task exiting:
->   */
-> -DEFINE_EVENT(sched_process_template, sched_process_exit,
-> -	     TP_PROTO(struct task_struct *p),
-> -	     TP_ARGS(p));
-> +TRACE_EVENT(sched_process_exit,
-> +
-> +	TP_PROTO(struct task_struct *task, long code),
-> +
-> +	TP_ARGS(task, code),
-> +
-> +	TP_STRUCT__entry(
-> +		__array(	char,	comm,	TASK_COMM_LEN	)
-> +		__field(	pid_t,	pid			)
-> +		__field(	int,	prio			)
-> +		__field(	long,	code			)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		memcpy(__entry->comm, task->comm, TASK_COMM_LEN);
-> +		__entry->pid		= task->pid;
-> +		__entry->prio		= task->prio;
-> +		__entry->code		= code;
-> +	),
-> +
-> +	TP_printk("comm=%s pid=%d prio=%d exit_code=0x%lx",
-> +		  __entry->comm, __entry->pid, __entry->prio,
-> +		  __entry->code)
-> +);
-> +
->  
->  /*
->   * Tracepoint for waiting on task to unschedule:
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 493647fd7c07..48b6ed7f7760 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -826,6 +826,7 @@ void __noreturn do_exit(long code)
->  
->  	WARN_ON(tsk->plug);
->  
-> +	trace_sched_process_exit(tsk, code);
->  	kcov_task_exit(tsk);
->  	kmsan_task_exit(tsk);
->  
-> @@ -866,7 +867,6 @@ void __noreturn do_exit(long code)
->  
->  	if (group_dead)
->  		acct_process();
-> -	trace_sched_process_exit(tsk);
->  
->  	exit_sem(tsk);
->  	exit_shm(tsk);
-> -- 
-> 2.25.1
-> 
+ 	if (privileged) {
+ 		mutex_lock(&group->rtpoll_trigger_lock);
++		window_reset(&t->win, sched_clock(),
++				group->total[PSI_POLL][t->state], 0);
 
+ 		if (!rcu_access_pointer(group->rtpoll_task)) {
+ 			struct task_struct *task;
+@@ -1361,6 +1360,9 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group, char *buf,
+ 	} else {
+ 		mutex_lock(&group->avgs_lock);
+
++		window_reset(&t->win, sched_clock(),
++				group->total[PSI_AVGS][t->state], 0);
++
+ 		list_add(&t->node, &group->avg_triggers);
+ 		group->avg_nr_triggers[t->state]++;
+
+--
+2.39.2
