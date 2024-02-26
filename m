@@ -1,60 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from hall.aurel32.net (hall.aurel32.net [195.154.113.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7909B6A006;
-	Mon, 26 Feb 2024 19:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B6D12BF27;
+	Mon, 26 Feb 2024 19:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.154.113.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708974906; cv=none; b=Fl9snUwU8EjQV3CVoqzLyLGsk70dx7wGPL//pSLWraVJns+5732Ij3bkUAGstRyTLRFdWwRddmsJJwu5JURVbKB9NyHOJ4PWPhDlnh/cGyGhRxd1slN3+o0cjSnrlnmpcHdSRLdD06L9+G6EtbwcaoTyBp44td+iQCFzhtDQ1iw=
+	t=1708974966; cv=none; b=pt9X7s+JsrzsgCugxdLOdWdJlA3GKI0D3YeQz1VAk9oHN9ZPUEtU3h4agku2Ra5loOHKcrEXSUWnryH1anbbBxWXnUD56Ow3gDHPgOmRpa8sU+wRvm1LdWZ5lqJNmZYDfr3aATceqlGqQ21Jl7VTdvtoQTw3p/7sQKqvJaoiqYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708974906; c=relaxed/simple;
-	bh=LJiXX+ulWwWSULerhyjRE2sXzGGRm+4Qph36BbfVcE8=;
+	s=arc-20240116; t=1708974966; c=relaxed/simple;
+	bh=O0ZIo6cxxJHxd5FG0ZXs1D3kPCmDGTjZpf2SePW4mK4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MaKj5Aw4/tj6j7mrDzWcMOfqU4ovKko9hoqycOqT4l4wk3Ot/owQoYvnozZc4sBYIVQxupmFKlqNhCfpV7zHq4gfXfEiKQHek9+a2Py6cO7QwpumIm+aQzm1R1OyjEHX45bKcOwPE2hqpk3hr2zlJVf4vpb2nqtwYXUHfnj1LuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BRCLsaeV; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1uuwnBnW1GX4cc1Q5iqSicrBDaIQdGQIZ5PU5gqVcf5IasZXO93FGADeCaqV0GF+yYcyIue75KWMf32+GzS5LsV9wRms9nE2uRJbYN9fcKK0828BjsYslBgXkyKMvsWKFxktikMIYUrMyIzW+s5/e90fJWrnkHJA0k64MP9QzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net; spf=pass smtp.mailfrom=aurel32.net; dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b=QyS7hGWI; arc=none smtp.client-ip=195.154.113.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aurel32.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BRCLsaeV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708974905; x=1740510905;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LJiXX+ulWwWSULerhyjRE2sXzGGRm+4Qph36BbfVcE8=;
-  b=BRCLsaeVlWmJmFikCx+S8jt1Z+7a2V27dCKSG6IeDqZTG8yWq+3K7egn
-   HMYbvBadP6Hn2zBxn2HwIxr221BaTmtmjMkGgJJxqGUsnNS+nGn7jDWpf
-   KMpz/9RKGmFDquBuR9jC8zrvVThSvce3+pI9v7flA/n3/+/whPF+0IkAz
-   dzLFplxFDjPwleVdktuUJisys0ud3dD1cWsTzwab6ULL7ur9mpRMwv3e4
-   yYjhBXtlZdxS+4acxckM7nLUQZf6XcxrlthYfd5waC1vIM26yinDHm1nK
-   iyNqLO++pBc8SiXZhL164MZ4jAEdQ/8RV0igIF452whBEzLilmY5IhMEy
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14721893"
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="14721893"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 11:15:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="6912300"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 11:15:03 -0800
-Date: Mon, 26 Feb 2024 11:15:02 -0800
-From: Isaku Yamahata <isaku.yamahata@linux.intel.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	Sean Christopherson <sean.j.christopherson@intel.com>,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v18 057/121] KVM: TDX: Add load_mmu_pgd method for TDX
-Message-ID: <20240226191502.GO177224@ls.amr.corp.intel.com>
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
- <bd5256f2f58c36c6e8712e8137525815eede3bc8.1705965635.git.isaku.yamahata@intel.com>
- <9d024bfc-4b1d-4da5-81ba-36e60cf5e284@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="QyS7hGWI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
+	; s=202004.hall; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:Reply-To:
+	Subject:Content-ID:Content-Description:X-Debbugs-Cc;
+	bh=OTrgJSJ1jDEPsGQxe8NHCf/xZH4XRsuoxTPG/b1FsiA=; b=QyS7hGWI1LCToHyw7V9iQMYHun
+	l7QpKUvlkFmqUnyTqBxsxezsPT4BE+q4DF+ZiOHNgkEOdd8bjWVEhO6cizyxFAEZD2mOdPidhrH+h
+	nQxqOMMVb51ZFFZwIrzRq1MkLntB29UnFBXaPsZhaCNAuay4/FZCAZ+le/Uw8oAVxwITbFd+zmCqc
+	g3N+RXuLRLwlgKmLTPF2bgYqVpcsH1tm/ZRxHby6c6AQlRinRmt9CSBuY/Bh8MX4iXWzL32pV3Ys+
+	74cpgV+eN6Wyzdbqmf88v1Y8Qc6qqD/eWTDsuAKtzWdrKACXsmtwDfRccbUmBuQxUVQVaQ/a+yBai
+	xAQaB4hw==;
+Received: from ohm.aurel32.net ([2001:bc8:30d7:111::2] helo=ohm.rr44.fr)
+	by hall.aurel32.net with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <aurelien@aurel32.net>)
+	id 1reflL-004AMc-1u;
+	Mon, 26 Feb 2024 19:31:39 +0100
+Date: Mon, 26 Feb 2024 19:31:38 +0100
+From: Aurelien Jarno <aurelien@aurel32.net>
+To: Minda Chen <minda.chen@starfivetech.com>
+Cc: David Abdurachmanov <david.abdurachmanov@gmail.com>,
+	Conor Dooley <conor@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v15 15/23] PCI: microchip: Add event irqchip field to
+ host port and add PLDA irqchip
+Message-ID: <ZdzZClVcyHXKwsUJ@aurel32.net>
+Mail-Followup-To: Minda Chen <minda.chen@starfivetech.com>,
+	David Abdurachmanov <david.abdurachmanov@gmail.com>,
+	Conor Dooley <conor@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+References: <20240218101831.113469-1-minda.chen@starfivetech.com>
+ <20240218101831.113469-2-minda.chen@starfivetech.com>
+ <SHXPR01MB0863FCE82CA2155E52A3EB6FE650A@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+ <CAEn-LTphwFA6KgCZWsqiMMob2Xw4t4sCZ70U0u0z2=yJOpyGHA@mail.gmail.com>
+ <SHXPR01MB0863DBBEB8C6AD12F3C0056DE657A@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,25 +94,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9d024bfc-4b1d-4da5-81ba-36e60cf5e284@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <SHXPR01MB0863DBBEB8C6AD12F3C0056DE657A@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On Mon, Feb 05, 2024 at 10:23:34AM +0800,
-Binbin Wu <binbin.wu@linux.intel.com> wrote:
+Hi,
 
-> > diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> > index 59d170709f82..25510b6740a3 100644
-> > --- a/arch/x86/kvm/vmx/tdx.c
-> > +++ b/arch/x86/kvm/vmx/tdx.c
-> > @@ -501,6 +501,11 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
-> >   	 */
-> >   }
-> > +void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int pgd_level)
-> > +{
-> > +	td_vmcs_write64(to_tdx(vcpu), SHARED_EPT_POINTER, root_hpa & PAGE_MASK);
-> 
-> If we have concern about the alignment of root_hpa, shouldn't we do some
-> check instead of masking the address quietly?
+On 2024-02-21 10:10, Minda Chen wrote:
+>=20
+>=20
+> >=20
+> > On Tue, Feb 20, 2024 at 1:02=E2=80=AFPM Minda Chen <minda.chen@starfive=
+tech.com>
+> > wrote:
+> > >
+> > >
+> > > >
+> > > > As PLDA dts binding doc(Documentation/devicetree/bindings/pci/
+> > > > plda,xpressrich3-axi-common.yaml) showed, PLDA PCIe contains an
+> > > > interrupt controller.
+> > > >
+> > > > Microchip PolarFire PCIE event IRQs includes PLDA interrupts and
+> > > > Polarfire their own interrupts. The interrupt irqchip ops includes
+> > > > ack/mask/unmask interrupt ops, which will write correct registers.
+> > > > Microchip Polarfire PCIe additional interrupts require to write
+> > > > Polarfire SoC self-defined registers. So Microchip PCIe event irqch=
+ip ops can
+> > not be re-used.
+> > > >
+> > > > To support PLDA its own event IRQ process, implements PLDA irqchip
+> > > > ops and add event irqchip field to struct pcie_plda_rp.
+> > > >
+> > > > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+> > > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > > > ---
+> > > >  .../pci/controller/plda/pcie-microchip-host.c | 66 +++++++++++++++=
++++-
+> > > >  drivers/pci/controller/plda/pcie-plda.h       |  3 +
+> > > >  2 files changed, 68 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c
+> > > > b/drivers/pci/controller/plda/pcie-microchip-host.c
+> > > > index b3df373a2141..beaf5c27da84 100644
+> > > > --- a/drivers/pci/controller/plda/pcie-microchip-host.c
+> > > > +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+> > > > @@ -770,6 +770,64 @@ static struct irq_chip mc_event_irq_chip =3D {
+> > > >       .irq_unmask =3D mc_unmask_event_irq,  };
+> > > >
+> > > Hi Thomas
+> > >   I think this patch code it is easy to review. If you busy, Could you
+> > > let other IRQ maintainer review? Thanks.
+> > >
+> > > Hi Lorenzo, Bjorn and Krzysztof
+> >=20
+> > Hi Minda,
+> >=20
+> > This patchset seems to have broken threading (lore, mailman). I have se=
+en other
+> > folks on IRC mentioning that too.
+> >=20
+> > I am not sure if that requires re-sending, but let's wait for others to=
+ comment.
+> >=20
+> > Cheers,
+> > david
+> >=20
+> Do you mean the auto test error in linux-riscv?=20
+> I can see that. But In v14 resend version, There is no error. Version 15 =
+just add
+> a new patch. Other no change. It is very strange.
+> If not this error, I will waiting others comment.
 
-Makes sense. I'll add WARN_ON_ONCE(root_hpa & ~PAGE_MASK)
--- 
-Isaku Yamahata <isaku.yamahata@linux.intel.com>
+V15 is wrongly threaded:
+- Patch 2 has no In-Reply-To / In-Reply-To headers
+- Patch 3 to 13 reference patch 2 instead of the cover letter
+- Patch 14 has no In-Reply-To / In-Reply-To headers
+- Patch 15 references patch 14 instead of the cover letter
+- Patch 16 has no In-Reply-To / In-Reply-To headers
+- Patch 17 to 23 reference patch 17 instead of the cover letter
+
+Said otherwise, the patches appears as (sorry for the long lines):
+
+[PATCH v15 00/23] Refactoring Microchip PCIe driver and add StarFive PCIe
+=E2=94=94=E2=94=80>[PATCH v15 01/23] dt-bindings: PCI: Add PLDA XpressRICH =
+PCIe host common properties
+[PATCH v15 02/23] PCI: microchip: Move pcie-microchip-host.c to plda direct=
+ory
+=E2=94=9C=E2=94=80>[PATCH v15 03/23] PCI: microchip: Move PLDA IP register =
+macros to pcie-plda.h
+=E2=94=9C=E2=94=80>[PATCH v15 04/23] PCI: microchip: Add bridge_addr field =
+to struct mc_pcie
+=E2=94=9C=E2=94=80>[PATCH v15 05/23] PCI: microchip: Rename two PCIe data s=
+tructures
+=E2=94=9C=E2=94=80>[PATCH v15 06/23] PCI: microchip: Move PCIe host data st=
+ructures to plda-pcie.h
+=E2=94=9C=E2=94=80>[PATCH v15 07/23] PCI: microchip: Rename two setup funct=
+ions
+=E2=94=9C=E2=94=80>[PATCH v15 08/23] PCI: microchip: Change the argument of=
+ plda_pcie_setup_iomems()
+=E2=94=9C=E2=94=80>[PATCH v15 09/23] PCI: microchip: Move setup functions t=
+o pcie-plda-host.c
+=E2=94=9C=E2=94=80>[PATCH v15 10/23] PCI: microchip: Rename interrupt relat=
+ed functions
+=E2=94=9C=E2=94=80>[PATCH v15 11/23] PCI: microchip: Add num_events field t=
+o struct plda_pcie_rp
+=E2=94=9C=E2=94=80>[PATCH v15 12/23] PCI: microchip: Add request_event_irq(=
+) callback function
+=E2=94=94=E2=94=80>[PATCH v15 13/23] PCI: microchip: Add INTx and MSI event=
+ num to struct plda_event
+[PATCH v15 14/23] PCI: microchip: Add get_events() callback and add PLDA ge=
+t_event()
+=E2=94=94=E2=94=80>[PATCH v15 15/23] PCI: microchip: Add event irqchip fiel=
+d to host port and add PLDA irqchip
+[PATCH v15 16/23] PCI: microchip: Move IRQ functions to pcie-plda-host.c
+=E2=94=9C=E2=94=80>[PATCH v15 17/23] PCI: plda: Add event bitmap field to s=
+truct plda_pcie_rp
+=E2=94=9C=E2=94=80>[PATCH v15 18/23] PCI: plda: Add host init/deinit and ma=
+p bus functions
+=E2=94=9C=E2=94=80>[PATCH v15 19/23] dt-bindings: PCI: Add StarFive JH7110 =
+PCIe controller
+=E2=94=9C=E2=94=80>[PATCH v15 20/23] PCI: Add PCIE_RESET_CONFIG_DEVICE_WAIT=
+_MS waiting time value
+=E2=94=9C=E2=94=80>[PATCH v15 21/23] PCI: starfive: Add JH7110 PCIe control=
+ler
+=E2=94=9C=E2=94=80>[PATCH v15 22/23] PCI: starfive: Offload the NVMe timeou=
+t workaround to host drivers.
+=E2=94=94=E2=94=80>[PATCH v15 23/23] riscv: dts: starfive: add PCIe dts con=
+figuration for JH7110
+
+I *think* it is the reason why some tools are not able to consider all
+the patches as a single patchset.
+
+Regards
+Aurelien
+
+--=20
+Aurelien Jarno                          GPG: 4096R/1DDD8C9B
+aurelien@aurel32.net                     http://aurel32.net
