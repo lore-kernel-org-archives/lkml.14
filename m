@@ -1,234 +1,237 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2069.outbound.protection.outlook.com [40.107.95.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE64712BF11;
-	Mon, 26 Feb 2024 15:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708961406; cv=none; b=lyjT4qhMwBplqozakXtinu8XFu304JtXti7KNhX+8/Wulv0y5Jp23RbkdniZR6oP6zuRIwo1UrscrvCTIrpxJQlTDJDbhCGMU2ldbHc/gj+CHns3b3wVCPRawdMH2ts9ZPp78m2o0zjE3cpLcULmuMAaX5+6424m7h0NWzQks+g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708961406; c=relaxed/simple;
-	bh=1dPT6v1I08Wyw5hcrN7bcgojMxnYVXIX2j0GluKbE6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fbYkgK03hP5wkvcXoLLl1ePdYs4s7xYszXkekkRxEzz038dqVAdstLmoZ6LGVNAJ7cyQ56hH/R7XuTg/Q7qaiqYz1pQcKA2GK6YqgXP6O/tn+/+egXqTkAXtE1YJi2eU2zhFfVCzB4jaULWhA4IPVnLAurhWc7Cpn8GfjSg3+Ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Y68N6UCu; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1436F12BF04;
+	Mon, 26 Feb 2024 15:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708961407; cv=fail; b=E/ssLU2EUHbaoBV3iVx1J3p5sISVvuHJ8+akFniwbWqe2zPCTutZW0P/seTfjyCmrSMCBlPAdIkAA2DliyhpXNRM0KYjlqtF88x9crFexb9+Oz3Gk+CIbyPQon5Ce5vvoGXHRPEgahSePwILI6IfXP1xvN6+xFqR7bRTRI6iA1A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708961407; c=relaxed/simple;
+	bh=O2DaZKUVdJdHfqYpsi8cYS07DrBogz2tu9421v2kQuE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BxFDPz2cGBGm2GmMDMAjTy6/HyfFEFIIYb75JVeB8kt+HO3o3oNvAIFtRLSfhfb4hzCPA6WepDzxvqBS5gM0mb1DU7HXxxLJj7if5A9tigMK5qrSSrMVGj3g3d6xIdHj64PBnoCJ+BtUf33YsLhDc/308I247dvPkGl6Ezbr+bI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4Prv1yUv; arc=fail smtp.client-ip=40.107.95.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Y68N6UCu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708961402;
-	bh=1dPT6v1I08Wyw5hcrN7bcgojMxnYVXIX2j0GluKbE6Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y68N6UCuVbVFFasJj+ySVlHijeOnuqq7y8A5tsZ0r2I5+eHsdn6kGbuIQEhK7g7eh
-	 9xrlqCRvZTuDtW8PiCKK+RnlkYifQubrxK/ifQjhcDxUuEeLgqnHmMYB3ARUCjhxJj
-	 T5OONjkP2MYwvgu1TBRjX6KjEImlNeFxDuUqGdrT+ZyldQzxawK2jN3Y/MEAGVgYnx
-	 iks6DyEZIRF4HSGtkr11rFZq481N2a7ZUThufV2fpbjtNHSXZWAQnBSuXZA94ggtor
-	 G7R8S41pEbfY3rseYnbtvq4FdHetz7E2Pyy6OTkjE7TP5umlIbZUyaorLZuFMZad8Z
-	 u5JPfnYhZgszw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 591A237820C3;
-	Mon, 26 Feb 2024 15:30:01 +0000 (UTC)
-Message-ID: <e15fdb18-d4de-495f-b90b-ba0e787cbef4@collabora.com>
-Date: Mon, 26 Feb 2024 16:30:00 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4Prv1yUv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AqVG6VV000yJPQftdBl419cFKUnm0vMaVLAdmWmOsEX/Erys/NehTUYD8beJ6UawdkzJaR8CWUMoID8MiF5FKrdVQAj3AgEffkeEMUeDqhcjFENS82LRCM5JTYUPWai1f12mnvkVnXLeUNTnk0pjRFB/ajUuzAm5Jw+PuMnUuJZJYrl5TilXmX8PZPaeSowKBnyLfm6QDjBXtLISV2Ko8vjcy+s65lEApAAtno/2iJ4tlCDAEbT3RRFr0DFZDvsBS6MqU7vB5bSRyfwnkAoORrMnCz570O7TvvFX4aSXiN3S3mjcSJPNIFUa7uAgp0CIVPXOPDThf/tKhRJYduAR3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ly228eJ8AZmumPzBOy+HtVxFu7gzrh1aPSEfBgI1m6s=;
+ b=SPlzADJDEAAVwAGY7E8lgOa88fdKqGCAt+ZkM0LEc5ilCBlsubAD07YzxYC1hBj0aFolCuFm8e40auKyZgad4RNKlx9g4zJrcpIWaARcunnsxV+xOjMhFTX71XSGfs3gSbFQTVWRu6ns/BOdJNL8RK/Wz97RcFyXS8mrMLQskrvU3U/a/SX13hnt0dAtOPyCcwI2GPCaYJrBBp6I1sqnqrjldx7ZsCs4ktOfm/bDbSOb8kOYsidDQgEkGcLaQqhWSfnoIcr+ZSxHhhLFhR/I7ebsrFhz0cxFNHT2QQ9AQsaDQppm5acl/wacdSa9Vsf22Y2vCYv1Sv/Is5AmEqpa1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ly228eJ8AZmumPzBOy+HtVxFu7gzrh1aPSEfBgI1m6s=;
+ b=4Prv1yUvG212E4xpTKqA6g51UjgAFjNKpmXJ6hGj79p+IGeadK0/F8T5DzGbRgjd273yewKcX1fpocJgDy+zE/kMjQyhTOL06ALCQZGKjDoqhEhXhGrFFq1bQbThrTNfFz2FssQ4v2XdGfwxdtvpckOPFOW3hjREq3FMSS8Q00s=
+Received: from SJ0PR03CA0384.namprd03.prod.outlook.com (2603:10b6:a03:3a1::29)
+ by IA1PR12MB7591.namprd12.prod.outlook.com (2603:10b6:208:429::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Mon, 26 Feb
+ 2024 15:29:58 +0000
+Received: from CO1PEPF000044FA.namprd21.prod.outlook.com
+ (2603:10b6:a03:3a1:cafe::93) by SJ0PR03CA0384.outlook.office365.com
+ (2603:10b6:a03:3a1::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.49 via Frontend
+ Transport; Mon, 26 Feb 2024 15:29:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044FA.mail.protection.outlook.com (10.167.241.200) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7362.0 via Frontend Transport; Mon, 26 Feb 2024 15:29:55 +0000
+Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 26 Feb
+ 2024 09:29:51 -0600
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: <bp@alien8.de>, <tony.luck@intel.com>, <linux-edac@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <avadhut.naik@amd.com>,
+	<john.allen@amd.com>, <muralidhara.mk@amd.com>, <sathyapriya.k@amd.com>,
+	<naveenkrishna.chatradhi@amd.com>, Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: [PATCH 2/3] RAS/AMD/FMPM: Save SPA values
+Date: Mon, 26 Feb 2024 09:29:40 -0600
+Message-ID: <20240226152941.2615007-3-yazen.ghannam@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240226152941.2615007-1-yazen.ghannam@amd.com>
+References: <20240226152941.2615007-1-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/18] ASoC: dt-bindings: mediatek,mt8365-mt6357: Add
- audio sound card document
-Content-Language: en-US
-To: Alexandre Mergnat <amergnat@baylibre.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Lee Jones <lee@kernel.org>,
- Flora Fu <flora.fu@mediatek.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-References: <20240226-audio-i350-v1-0-4fa1cea1667f@baylibre.com>
- <20240226-audio-i350-v1-2-4fa1cea1667f@baylibre.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240226-audio-i350-v1-2-4fa1cea1667f@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044FA:EE_|IA1PR12MB7591:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c589e48-6623-4733-e01e-08dc36dfc8d7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Ipo+RQenvVmLqTZwuh98kRrQHXqCaLUk8OnjdbmPraIDZvZZhyoBS+OKUBVoY88AszUSMX6YY5fkdCdPZd3MYaW0qbQ2YS33gLRXiHYtNfaPjvd1dUTjvIFuQy73YWH2C0jM+mhLqX1paLKWwwueQD/SbB0Em97JVetnehXPEex4YugWondEwB1muJzyM9tlNBQ84Bm6caSVFPMTm51TQ9gTp+CL9CB2ZHhIRQnbclOtCUs6sIiE7qzOC+CzYgNED7Y/ssielv+0OrnVgvubQRNBiMl8JNrylfPu5OhxHHagdrnPzOhkNarQwWlg7f8MovcbV6JINUjigJ5kwwBC2Gryq1Zf2eGQRUJDK8FVXNHLxpw6psCLJZJQf2vY/MBdZ19YB8+1MfK+CCtNPIEAbY0CZhvH9Yi7i2eYE2npkCN1LZ8x2teY+PMAF6MTKC3XaxudnuorFkH/PzQ+qwQ9T0IDDfwB2KA7e0WUd2BHK4hJstW2EfdSbYAVRJ7f6SxgBDpDNkx3lInLvVYlh2X0sa4oGWG2DdDckkpSwQkZM4nJ6iKKoQ9ig4mdbLmP9kgIanjZR6xBawOgwNHTk32jcKBZ+/xmAjrjpDDs8YuzMkLLB3vWBJD0WXHL0giWlb1O+pEoxH0+qPkJPrraAHeWjOpj1JJrrAJRt0DZs7Z1o/6nC6fkkASObphu7v28c7HJSwwSq6TcKEFt/LU0FaQ2wni00evhSikWadGyW+6jEZgyFZ3gRxcyV6Hs83DwCf5V
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 15:29:55.3246
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c589e48-6623-4733-e01e-08dc36dfc8d7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044FA.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7591
 
-Il 26/02/24 15:01, Alexandre Mergnat ha scritto:
-> Add soundcard bindings for the MT8365 SoC with the MT6357 audio codec.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> ---
->   .../bindings/sound/mediatek,mt8365-mt6357.yaml     | 127 +++++++++++++++++++++
->   1 file changed, 127 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt8365-mt6357.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt8365-mt6357.yaml
-> new file mode 100644
-> index 000000000000..f469611ec6b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/mediatek,mt8365-mt6357.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/mediatek,mt8365-mt6357.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Mediatek MT8365 sound card with MT6357 sound codec.
-> +
-> +maintainers:
-> +  - Alexandre Mergnat <amergnat@baylibre.com>
-> +
-> +description:
-> +  This binding describes the MT8365 sound card.
-> +
-> +properties:
-> +  compatible:
-> +    const: mediatek,mt8365-mt6357
-> +
-> +  mediatek,hp-pull-down:
-> +    description:
-> +      Earphone driver positive output stage short to the
-> +      audio reference ground.
-> +      Default value is false.
-> +    type: boolean
-> +
-> +  mediatek,micbias0-microvolt:
-> +    description: |
+The system physical address (SPA) of an error is not a stable value. It
+will change depending on the location of the memory: parts can be
+swapped. And it will change depending on memory topology: NUMA nodes
+and/or interleaving can be adjusted.
 
-description: Selects MIC Bias 0 output voltage
+Therefore, the SPA value is not part of the "FRU Memory Poison" record
+format. And it will not be saved to persistent storage.
 
-> +      Selects MIC Bias 0 output voltage.
-> +      [1.7v, 1.8v, 1.9v, 2.0v, 2.1v, 2.5v, 2.6v, 2.7v]
-> +    enum: [0, 1, 2, 3, 4, 5, 6, 7]
+However, the SPA values can be helpful during debug and for system
+admins during run time.
 
-No, you don't say 0 1 2 3 4 to a property that says "microvolt", that's simply
-wrong.
+Save the SPA values in a separate structure. Update this when records
+are restored and when new errors are saved.
 
-mediatek,micbias0-microvolt = <2100000>;
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+---
+ drivers/ras/amd/fmpm.c | 54 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-...so you want a binding that says
-enum: [ 1700000, 1800000, this, that, 2700000]
-
-> +
-> +  mediatek,micbias1-microvolt:
-> +    description: |
-> +      Selects MIC Bias 1 output voltage.
-> +      [1.7v, 1.8v, 1.9v, 2.0v, 2.1v, 2.5v, 2.6v, 2.7v]
-> +    enum: [0, 1, 2, 3, 4, 5, 6, 7]
-
-same here.
-
-> +
-> +  mediatek,platform:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: The phandle of MT8365 ASoC platform.
-> +
-> +  pinctrl-names:
-> +    minItems: 1
-> +    items:
-> +      - const: aud_default
-> +      - const: aud_dmic
-> +      - const: aud_miso_off
-> +      - const: aud_miso_on
-> +      - const: aud_mosi_off
-> +      - const: aud_mosi_on
-> +
-> +  vaud28-supply:
-> +    description:
-> +      2.8 volt supply for the audio codec
-> +
-> +patternProperties:
-> +  "^dai-link-[0-9]+$":
-> +    type: object
-> +    description:
-> +      Container for dai-link level properties and CODEC sub-nodes.
-> +
-> +    properties:
-> +      codec:
-> +        type: object
-> +        description: Holds subnode which indicates codec dai.
-> +
-> +        properties:
-> +          sound-dai:
-> +            maxItems: 1
-> +            description: phandle of the codec DAI
-> +
-> +        additionalProperties: false
-> +
-> +      link-name:
-> +        description:
-> +          This property corresponds to the name of the BE dai-link to which
-> +          we are going to update parameters in this node.
-> +        items:
-> +          const: 2ND I2S BE
-> +
-> +      sound-dai:
-> +        maxItems: 1
-> +        description: phandle of the CPU DAI
-> +
-> +    additionalProperties: false
-> +
-> +    required:
-> +      - link-name
-> +      - sound-dai
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - mediatek,platform
-> +  - pinctrl-names
-> +  - vaud28-supply
-> +
-> +examples:
-> +  - |
-> +    sound {
-> +        compatible = "mediatek,mt8365-mt6357";
-> +        mediatek,platform = <&afe>;
-
-Please:
-
-https://docs.kernel.org/devicetree/bindings/dts-coding-style.html
-
-Regards,
-Angelo
-
-> +        pinctrl-names = "aud_default",
-> +            "aud_dmic",
-> +            "aud_miso_off",
-> +            "aud_miso_on",
-> +            "aud_mosi_off",
-> +            "aud_mosi_on";
-> +        pinctrl-0 = <&aud_default_pins>;
-> +        pinctrl-1 = <&aud_dmic_pins>;
-> +        pinctrl-2 = <&aud_miso_off_pins>;
-> +        pinctrl-3 = <&aud_miso_on_pins>;
-> +        pinctrl-4 = <&aud_mosi_off_pins>;
-> +        pinctrl-5 = <&aud_mosi_on_pins>;
-> +        vaud28-supply = <&mt6357_vaud28_reg>;
-> +
-> +        /* hdmi interface */
-> +        dai-link-0 {
-> +            sound-dai = <&afe>;
-> +            link-name = "2ND I2S BE";
-> +
-> +            codec {
-> +                sound-dai = <&it66121hdmitx>;
-> +            };
-> +        };
-> +    };
-> 
+diff --git a/drivers/ras/amd/fmpm.c b/drivers/ras/amd/fmpm.c
+index 80dd112b720a..04961d36dd9f 100644
+--- a/drivers/ras/amd/fmpm.c
++++ b/drivers/ras/amd/fmpm.c
+@@ -111,6 +111,9 @@ struct fru_rec {
+  */
+ static struct fru_rec **fru_records;
+ 
++#define INVALID_SPA	~0ULL
++static u64 *sys_addrs;
++
+ #define CPER_CREATOR_FMP						\
+ 	GUID_INIT(0xcd5c2993, 0xf4b2, 0x41b2, 0xb5, 0xd4, 0xf9, 0xc3,	\
+ 		  0xa0, 0x33, 0x08, 0x75)
+@@ -140,6 +143,9 @@ static unsigned int max_nr_fru;
+ /* Total length of record including headers and list of descriptor entries. */
+ static size_t max_rec_len;
+ 
++/* Total number of entries for the entire system. */
++static unsigned int sys_nr_entries;
++
+ /*
+  * Protect the local records cache in fru_records and prevent concurrent
+  * writes to storage. This is only needed after init once notifier block
+@@ -269,6 +275,40 @@ static bool rec_has_fpd(struct fru_rec *rec, struct cper_fru_poison_desc *fpd)
+ 	return false;
+ }
+ 
++static void save_spa(struct fru_rec *rec, unsigned int entry,
++		     u64 addr, u64 id, unsigned int cpu)
++{
++	unsigned int i, fru_idx, sys_entry;
++	unsigned long sys_addr;
++	struct atl_err a_err;
++
++	memset(&a_err, 0, sizeof(struct atl_err));
++
++	a_err.addr = addr;
++	a_err.ipid = id;
++	a_err.cpu  = cpu;
++
++	sys_addr = amd_convert_umc_mca_addr_to_sys_addr(&a_err);
++	if (IS_ERR_VALUE(sys_addr)) {
++		pr_debug("Failed to get system address\n");
++		return;
++	}
++
++	for (i = 0; i < sys_nr_entries; i += max_nr_entries) {
++		fru_idx = i / max_nr_entries;
++		if (fru_records[fru_idx] != rec)
++			continue;
++
++		sys_entry = i + entry;
++		if (sys_entry < sys_nr_entries) {
++			sys_addrs[sys_entry] = sys_addr;
++			pr_debug("fru_idx: %u, entry: %u, sys_entry: %u, sys_addr: 0x%016llx\n",
++				 fru_idx, entry, sys_entry, sys_addrs[sys_entry]);
++			break;
++		}
++	}
++}
++
+ static void update_fru_record(struct fru_rec *rec, struct mce *m)
+ {
+ 	struct cper_sec_fru_mem_poison *fmp = &rec->fmp;
+@@ -301,6 +341,7 @@ static void update_fru_record(struct fru_rec *rec, struct mce *m)
+ 	entry  = fmp->nr_entries;
+ 
+ save_fpd:
++	save_spa(rec, entry, m->addr, m->ipid, m->extcpu);
+ 	fpd_dest  = &rec->entries[entry];
+ 	memcpy(fpd_dest, &fpd, sizeof(struct cper_fru_poison_desc));
+ 
+@@ -385,6 +426,7 @@ static void retire_mem_fmp(struct fru_rec *rec)
+ 			continue;
+ 
+ 		retire_dram_row(fpd->addr, fpd->hw_id, err_cpu);
++		save_spa(rec, i, fpd->addr, fpd->hw_id, err_cpu);
+ 	}
+ }
+ 
+@@ -696,6 +738,8 @@ static int get_system_info(void)
+ 	if (!max_nr_entries)
+ 		max_nr_entries = FMPM_DEFAULT_MAX_NR_ENTRIES;
+ 
++	sys_nr_entries = max_nr_fru * max_nr_entries;
++
+ 	max_rec_len  = sizeof(struct fru_rec);
+ 	max_rec_len += sizeof(struct cper_fru_poison_desc) * max_nr_entries;
+ 
+@@ -714,6 +758,7 @@ static void free_records(void)
+ 		kfree(rec);
+ 
+ 	kfree(fru_records);
++	kfree(sys_addrs);
+ }
+ 
+ static int allocate_records(void)
+@@ -734,6 +779,15 @@ static int allocate_records(void)
+ 		}
+ 	}
+ 
++	sys_addrs = kcalloc(sys_nr_entries, sizeof(u64), GFP_KERNEL);
++	if (!sys_addrs) {
++		ret = -ENOMEM;
++		goto out_free;
++	}
++
++	for (i = 0; i < sys_nr_entries; i++)
++		sys_addrs[i] = INVALID_SPA;
++
+ 	return ret;
+ 
+ out_free:
+-- 
+2.34.1
 
