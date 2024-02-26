@@ -1,139 +1,147 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21EFA22069
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 19:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E085712FB39;
+	Mon, 26 Feb 2024 19:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708976165; cv=none; b=K4GhvRxdvk0nn1mhRaxqWNQUniqBTNeGJrjJxd1vanmhH8igwo9+wducSQTMX3NqLhudd/ugzcuepe5NFqy/kD3DacGFxwL4WulvXMd/EAZQ9QKG8YxzIsjTR4H4mwLBMGpLtpZVnDXkjvmLhUt3gEgLdRB37L8zUM9caiwhbaU=
+	t=1708976198; cv=none; b=A+t4+lO/2Rpm9kIWz/tE2NLHweyHXCUnApTsS5roXAj0LdKcRSRcaVm+qLwlQo1Z/XOlzSfg3e3gzWzTQDZb2Shvp9dXvjexJmGYcM2+qUUhR/BxJ5o5JWLjDhi+nHbO+f0Kr+GsIsktyAW28fR1ymSjBCmegIXlxmu+1pP2xUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708976165; c=relaxed/simple;
-	bh=UaVvJo8VEL45JixxaiG9F8e+o68JzaMmzhDzuncz1fs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xnbcr4D/T3/+ALKIs4z6YcZo75e3T2NkHRWXIbLNEo19AUbv5f6jfXvpoDCIEWPFwQOetxwAnTO2abWzh3GSYqfR2HoUdtUQU5YADZlao7zVCOPvQMzkRQBQM+uGWYw0S06gwhdxmRifql2XQfIgdvXl+5ph7K1/pmDBhUqEsYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09272DA7;
-	Mon, 26 Feb 2024 11:36:41 -0800 (PST)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B306A3F762;
-	Mon, 26 Feb 2024 11:36:00 -0800 (PST)
-Message-ID: <6be819d8-f1f9-4833-81c3-32220617f0c5@arm.com>
-Date: Mon, 26 Feb 2024 19:35:59 +0000
+	s=arc-20240116; t=1708976198; c=relaxed/simple;
+	bh=0g8oO3mZalsLQAk5UUbbYQntsgQXvTMN7AAaIaAYZDE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t2f6baOGdfGBHOPfurnGJdWwjQmcAhMVEeH1AO/91/KnDHbzf+ezwUspXICc8482ZSCJyygkx76gnD48xPqglXsYqYI57xVPOhP/tJW0OP3XFI0wMnKMPQWAqO6xN4JOepRP/yOvGzVMpQHGWozAmkHZlfZJN889RH1DmmTUvEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=PRXhWHtZ; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="PRXhWHtZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1708976165; x=1709580965; i=w_armin@gmx.de;
+	bh=0g8oO3mZalsLQAk5UUbbYQntsgQXvTMN7AAaIaAYZDE=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=PRXhWHtZWZC4UtwCXNcZbqwz8kazePWC2v3LpTUZK1QyRcYuanjtqlSaS59jQOcW
+	 RK1FO0YfD5MF3FFsSE0kMoLfOltIfTdbvv1kONbjVe1moB3IPPMB5KsnAPCqb/B3v
+	 xckAVzyfG1iRQr4eEYWqO6bqd/TEI4tEIbWQbWhFfJK5i8FMY6ofhJo+Z8c3ROdGO
+	 syLlR4lPPLPhn7CNZ2PNLwOfIDJMQ8UE6cJKBP1/YJH2kRZWT11/G2JER7JaNYyPj
+	 sdq1CYCV194gIL54HV/KMoct9Fj2+I2/li/FXywN15yLWbXeDGZiicCuY0M6Shl+8
+	 im4OHWvIXwsDbI4jGA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1Mq2jC-1rAHxf2pSk-00nC39; Mon, 26 Feb 2024 20:36:05 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: jithu.joseph@intel.com,
+	linux@weissschuh.net,
+	pali@kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	Dell.Client.Kernel@dell.com,
+	jdelvare@suse.com,
+	linux@roeck-us.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] platform/x86: wmi: Ignore duplicated GUIDs in legacy matches
+Date: Mon, 26 Feb 2024 20:35:55 +0100
+Message-Id: <20240226193557.2888-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/5] iommu/dma: Force swiotlb_max_mapping_size on an
- untrusted device
-Content-Language: en-GB
-To: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Cc: kernel-team@android.com, iommu@lists.linux.dev,
- Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>,
- Petr Tesarik <petr.tesarik1@huawei-partners.com>,
- Dexuan Cui <decui@microsoft.com>, Nicolin Chen <nicolinc@nvidia.com>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20240221113504.7161-1-will@kernel.org>
- <20240221113504.7161-6-will@kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20240221113504.7161-6-will@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VDydBzZvOch54Gn/Gprxj7ysOw+8qumP0PAC4sF0AkUOJA7UuVh
+ thsbrxwgKZT3rfPFCFyINQWgqp4EAB/8VIHMD0UdQ1qQ+ys3ZNfMOAhVuhgZnTNdFh3q7vv
+ 2N0ZzV8zXg+pBkXne+4ITY6Ko7leIxWr1ztA+Myg9x0kHLRrxyJBQinfq7SQQbmQjjRJtoG
+ nTwrrBGANJPo23aX6yB3A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:WHoeCtfxej8=;zqdJaHzShJ3dljc+NoDpiSg2ldC
+ 7FDX3K9NeApx9gDDBt0wck6ATGXCGcgDoUyB89Wcpuj64g06tChlTnLjXW/j97e/EDrrMWNAh
+ 99E+QY+UaHoLQrasYkDvsPhE8UvN+RnM36M/X1JAdNae8ktWC2MOgrW+n2XksRo88JCBH5m9+
+ lvhKa/vO9Rbly1acVpt/LCI6Osz7Jp1f3Z/1oB9HPoh+oTF8TDSAXGs7Ywdg45CUMlSOCzC+g
+ 0MpwEYItrKQ3NAziYybpVH4Lgcf1DU62G37BHGGwERhGbrnYp7SoOnexd5safVJwueyKNijij
+ BGEmVarxoT8GRiG4QebKBzFNzW7P66h75T9khKgDDnn+wVmbBb5NIIbfGFIgc7QQjLA/4J1c8
+ sl2aZLXZXjP5tFZENsdsRFT9F7DHRokDf/Fq4jHZit1LBXVjmPmbPSy6kf1CS2zgqOuuOpcbK
+ 3XMav50Lvt4NnQbq1x/0YTDIXTUktTRoJp+q4v7tjfEwJKjC0XmqzTS1t6MMwHUKxbx5bbKUt
+ L1PgxKret82sh7qwOrBIV28oANDAYaUDPNMaM2/IhWC+PcejUJntslYpsDIJDb05oPBY4pP6c
+ pE6JKmveB/fEgPwqnc/y23DiS0dYtzomUHk2zs7F43E0CZP3Cxqo0sqB5Bec+yYkSCGaMXSMz
+ uJpMhCbcwr00JlOmqTcMWKoU0+B9pxFkGKqyJPghynKoVfzZltcr5JePq5To669a0mhENhYwQ
+ tF/rupeQPfz38GiWQaGS0FPxgGaPXTNN18VD8lQU4ZrIjKdupJxT84liakqT5to5wbCKRqNZo
+ LLyeMzeW+IDD6760kn67hq6hKLRBXmWo4HNtSTDE20Iw8=
 
-On 21/02/2024 11:35 am, Will Deacon wrote:
-> From: Nicolin Chen <nicolinc@nvidia.com>
-> 
-> The swiotlb does not support a mapping size > swiotlb_max_mapping_size().
-> On the other hand, with a 64KB PAGE_SIZE configuration, it's observed that
-> an NVME device can map a size between 300KB~512KB, which certainly failed
-> the swiotlb mappings, though the default pool of swiotlb has many slots:
->      systemd[1]: Started Journal Service.
->   => nvme 0000:00:01.0: swiotlb buffer is full (sz: 327680 bytes), total 32768 (slots), used 32 (slots)
->      note: journal-offline[392] exited with irqs disabled
->      note: journal-offline[392] exited with preempt_count 1
-> 
-> Call trace:
-> [    3.099918]  swiotlb_tbl_map_single+0x214/0x240
-> [    3.099921]  iommu_dma_map_page+0x218/0x328
-> [    3.099928]  dma_map_page_attrs+0x2e8/0x3a0
-> [    3.101985]  nvme_prep_rq.part.0+0x408/0x878 [nvme]
-> [    3.102308]  nvme_queue_rqs+0xc0/0x300 [nvme]
-> [    3.102313]  blk_mq_flush_plug_list.part.0+0x57c/0x600
-> [    3.102321]  blk_add_rq_to_plug+0x180/0x2a0
-> [    3.102323]  blk_mq_submit_bio+0x4c8/0x6b8
-> [    3.103463]  __submit_bio+0x44/0x220
-> [    3.103468]  submit_bio_noacct_nocheck+0x2b8/0x360
-> [    3.103470]  submit_bio_noacct+0x180/0x6c8
-> [    3.103471]  submit_bio+0x34/0x130
-> [    3.103473]  ext4_bio_write_folio+0x5a4/0x8c8
-> [    3.104766]  mpage_submit_folio+0xa0/0x100
-> [    3.104769]  mpage_map_and_submit_buffers+0x1a4/0x400
-> [    3.104771]  ext4_do_writepages+0x6a0/0xd78
-> [    3.105615]  ext4_writepages+0x80/0x118
-> [    3.105616]  do_writepages+0x90/0x1e8
-> [    3.105619]  filemap_fdatawrite_wbc+0x94/0xe0
-> [    3.105622]  __filemap_fdatawrite_range+0x68/0xb8
-> [    3.106656]  file_write_and_wait_range+0x84/0x120
-> [    3.106658]  ext4_sync_file+0x7c/0x4c0
-> [    3.106660]  vfs_fsync_range+0x3c/0xa8
-> [    3.106663]  do_fsync+0x44/0xc0
-> 
-> Since untrusted devices might go down the swiotlb pathway with dma-iommu,
-> these devices should not map a size larger than swiotlb_max_mapping_size.
-> 
-> To fix this bug, add iommu_dma_max_mapping_size() for untrusted devices to
-> take into account swiotlb_max_mapping_size() v.s. iova_rcache_range() from
-> the iommu_dma_opt_mapping_size().
+When matching a WMI device to a GUID used by the legacy GUID-based
+API, devices with a duplicated GUID should be ignored.
 
-On the basis that this is at least far closer to correct than doing nothing,
+Add an additional WMI device flag signaling that the GUID used by
+the WMI device is also used by another WMI device. Ignore such
+devices inside the match functions used by the legacy GUID-based API.
 
-Acked-by: Robin Murphy <robin.murphy@arm.com>
+Tested on a ASUS Prime B650-Plus.
 
-TBH I'm scared to think about theoretical correctness for all the 
-interactions between the IOVA granule and min_align_mask, since just the 
-SWIOTLB stuff is bad enough, even before you realise the ways that the 
-IOVA allocation isn't necessarily right either. However I reckon as long 
-as we don't ever see a granule smaller than IO_TLB_SIZE, and/or a 
-min_align_mask larger than a granule, then this should probably work 
-well enough as-is.
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/wmi.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-Cheers,
-Robin.
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index abd0183c4107..29dfe52eb802 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -57,6 +57,7 @@ static_assert(__alignof__(struct guid_block) =3D=3D 1);
 
-> Fixes: 82612d66d51d ("iommu: Allow the dma-iommu api to use bounce buffers")
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> Link: https://lore.kernel.org/r/ee51a3a5c32cf885b18f6416171802669f4a718a.1707851466.git.nicolinc@nvidia.com
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->   drivers/iommu/dma-iommu.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 50ccc4f1ef81..7d1a20da6d94 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -1706,6 +1706,13 @@ static size_t iommu_dma_opt_mapping_size(void)
->   	return iova_rcache_range();
->   }
->   
-> +static size_t iommu_dma_max_mapping_size(struct device *dev)
-> +{
-> +	if (is_swiotlb_active(dev) && dev_is_untrusted(dev))
-> +		return swiotlb_max_mapping_size(dev);
-> +	return SIZE_MAX;
-> +}
-> +
->   static const struct dma_map_ops iommu_dma_ops = {
->   	.flags			= DMA_F_PCI_P2PDMA_SUPPORTED,
->   	.alloc			= iommu_dma_alloc,
-> @@ -1728,6 +1735,7 @@ static const struct dma_map_ops iommu_dma_ops = {
->   	.unmap_resource		= iommu_dma_unmap_resource,
->   	.get_merge_boundary	= iommu_dma_get_merge_boundary,
->   	.opt_mapping_size	= iommu_dma_opt_mapping_size,
-> +	.max_mapping_size       = iommu_dma_max_mapping_size,
->   };
->   
->   /*
+ enum {	/* wmi_block flags */
+ 	WMI_READ_TAKES_NO_ARGS,
++	WMI_GUID_DUPLICATED,
+ 	WMI_NO_EVENT_DATA,
+ };
+
+@@ -196,6 +197,12 @@ static int wmidev_match_guid(struct device *dev, cons=
+t void *data)
+ 	struct wmi_block *wblock =3D dev_to_wblock(dev);
+ 	const guid_t *guid =3D data;
+
++	/* Legacy GUID-based functions are restricted to only see
++	 * a single WMI device for each GUID.
++	 */
++	if (test_bit(WMI_GUID_DUPLICATED, &wblock->flags))
++		return 0;
++
+ 	if (guid_equal(guid, &wblock->gblock.guid))
+ 		return 1;
+
+@@ -207,6 +214,12 @@ static int wmidev_match_notify_id(struct device *dev,=
+ const void *data)
+ 	struct wmi_block *wblock =3D dev_to_wblock(dev);
+ 	const u32 *notify_id =3D data;
+
++	/* Legacy GUID-based functions are restricted to only see
++	 * a single WMI device for each GUID.
++	 */
++	if (test_bit(WMI_GUID_DUPLICATED, &wblock->flags))
++		return 0;
++
+ 	if (wblock->gblock.flags & ACPI_WMI_EVENT && wblock->gblock.notify_id =
+=3D=3D *notify_id)
+ 		return 1;
+
+@@ -1036,10 +1049,12 @@ static int wmi_create_device(struct device *wmi_bu=
+s_dev,
+ 	wblock->dev.dev.parent =3D wmi_bus_dev;
+
+ 	count =3D guid_count(&wblock->gblock.guid);
+-	if (count)
++	if (count) {
+ 		dev_set_name(&wblock->dev.dev, "%pUL-%d", &wblock->gblock.guid, count);
+-	else
++		set_bit(WMI_GUID_DUPLICATED, &wblock->flags);
++	} else {
+ 		dev_set_name(&wblock->dev.dev, "%pUL", &wblock->gblock.guid);
++	}
+
+ 	device_initialize(&wblock->dev.dev);
+
+=2D-
+2.39.2
+
