@@ -1,138 +1,115 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 583CA12A14A;
-	Mon, 26 Feb 2024 14:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51C912BF3D;
+	Mon, 26 Feb 2024 14:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708956379; cv=none; b=IUGh9nU5qUeOmLHsYRjPdAE01R6O4/PP3nOehDM+/3gj7jLt2ItN+eOQKndGER6eFeHW77N/EMngRlTW84Wau9JX9fPzRErHErkUm4GHxb9x53pvwxBGdpb6Y8nyfXHXYQgI6f1QJih1vXRoDRx5qeBOWbMP0u0a/lExEybsD3U=
+	t=1708956382; cv=none; b=DgAB7Z+cXdFkVu/iOVxVWi3JlTCKHy3KbWMgYjgWAPqOH/H0u2IZuZ3V7Ka7v1QInMuAZrng8RDzz4YFf6ljIq8VUvMoexqTED/ecg2pq/vlQ1uWTJuHFCq7DhqnZhWLp19jNWpJE/1iRJu/bgLa9KhoWfT1mCUeSJcEGtYVFAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708956379; c=relaxed/simple;
-	bh=Ig1CU3NKL8/cdJN+rmc1e4GaDBcrnBkfyq6QFF/1g7U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G8/0gnVdoWeg0h9p1ISwsgvd9dgak9cN0Xb2W9lgxjTbt+TcNWFktgr2tp1p4g6i1Kxj1DX13BD/VvODzQH+CkE4euCmUkniVa8zK0P6eYkyuYqmb5tTXYgSoSAbGATefGajivRjKeZKmvWPzH5D0DBIWFf+AwhIJkPnAR1mDIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-5d-65dc9ad5f17d
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: sj@kernel.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org
-Cc: akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	dave.jiang@intel.com,
-	honggyu.kim@sk.com,
-	hyeongtak.ji@sk.com,
-	kernel_team@skhynix.com,
-	linmiaohe@huawei.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	lizhijian@cn.fujitsu.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rakie.kim@sk.com,
-	rostedt@goodmis.org,
-	surenb@google.com,
-	yangx.jy@fujitsu.com,
-	ying.huang@intel.com,
-	ziy@nvidia.com,
-	42.hyeyoo@gmail.com
-Subject: [PATCH v2 1/7] mm/damon: refactor DAMOS_PAGEOUT with migration_mode
-Date: Mon, 26 Feb 2024 23:05:47 +0900
-Message-ID: <20240226140555.1615-2-honggyu.kim@sk.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20240226140555.1615-1-honggyu.kim@sk.com>
-References: <20240226140555.1615-1-honggyu.kim@sk.com>
+	s=arc-20240116; t=1708956382; c=relaxed/simple;
+	bh=FYCrbv8lR+vqpkF25UfiF/snYND+v7+9Kz2QpvWdZ5A=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=C6ew6GWLfrN50FkS6CAgbEWpjIS4jkncmgGAahcyEa4tlR0/TiMkcDdPr6gjhRbHNKSW8ihWmQm27MwOQmAuTOswe7yg7hsmMHSih+s9V5EZa4QnYkHyoGRdUwrzKaEnYR5G2+TQmc58evQuP36Hs8Zp8i3754E8qJFN1WNLElY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Tk2R709B5z2BdgF;
+	Mon, 26 Feb 2024 22:04:03 +0800 (CST)
+Received: from canpemm500005.china.huawei.com (unknown [7.192.104.229])
+	by mail.maildlp.com (Postfix) with ESMTPS id 679D21A016C;
+	Mon, 26 Feb 2024 22:06:16 +0800 (CST)
+Received: from [10.174.176.34] (10.174.176.34) by
+ canpemm500005.china.huawei.com (7.192.104.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 26 Feb 2024 22:06:15 +0800
+Subject: Re: [PATCH] ext4: remove unused parameter biop in
+ ext4_issue_discard()
+To: Wenchao Hao <haowenchao2@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, <linux-ext4@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <louhongxiang@huawei.com>
+References: <20240226081731.3224470-1-haowenchao2@huawei.com>
+From: Zhang Yi <yi.zhang@huawei.com>
+Message-ID: <71d17598-c39b-9e11-03f0-cb344a24d8a5@huawei.com>
+Date: Mon, 26 Feb 2024 22:06:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsXC9ZZnoe61WXdSDRb+ZbSY2GNgMWf9GjaL
-	XTdCLP7vPcZo8eT/b1aLEzcb2Sw6vy9lsbi8aw6bxb01/1ktjqw/y2Kx7haQtfnsGWaLxcvV
-	LPZ1PGCyOPz1DZPF5EsL2CxeTDnDaHFy1mQWi9lH77E7CHv8PziJ2WPp6TdsHhuagMTOWXfZ
-	PVr23WL3WLCp1KPlyFtWj8V7XjJ5bFrVyeax6dMkdo8TM36zeOx8aOnxYvNMRo/e5ndsHp83
-	yQXwR3HZpKTmZJalFunbJXBlzGnYwFzQwlsx78catgbGK1xdjJwcEgImEjfmPmXqYuQAsxdv
-	1QIJswmoSVx5OQksLCLgILHqq0IXIxcHs0ADi8SPz5dYQGqEBXwk1v67wQ5iswioSvzaNB8s
-	zitgJvHoWC8jxHhNicfbf4LVcAqYS/w/3M4GMlMIqObobWaIckGJkzOfgLUyC8hLNG+dzQyy
-	S0LgFLvE3yvrWSHmSEocXHGDZQIj/ywkPbOQ9CxgZFrFKJSZV5abmJljopdRmZdZoZecn7uJ
-	ERh9y2r/RO9g/HQh+BCjAAejEg+vQ+2dVCHWxLLiytxDjBIczEoivOEyN1OFeFMSK6tSi/Lj
-	i0pzUosPMUpzsCiJ8xp9K08REkhPLEnNTk0tSC2CyTJxcEo1MDK+N4yt27RA9+y/ac7bG3rd
-	Dz+yUDrannj3QV6ted70+a3f/ZKifvgU12UsuB/YVTyxslSkL/lnqMwXP1sPWSGeB3JTFtmG
-	3z7qLOWYNm9R24NJbss36+yscjzc+K1eUO+lQNXsWZ2JgQd3xe8zfeywek10WvC1nbd1tSsZ
-	rr5e/Ffj2KdFS5RYijMSDbWYi4oTAbUWVdi6AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsXCNUNLT/fqrDupBo0HdSwm9hhYzFm/hs1i
-	140Qi/97jzFaPPn/m9XixM1GNovPz14zW3Q++c5ocXjuSVaLzu9LWSwu75rDZnFvzX9WiyPr
-	z7JYrLsFZG0+e4bZYvFyNYtD156zWuzreMBkcfjrGyaLyZcWsFm8mHKG0eLkrMksFrOP3mN3
-	EPf4f3ASs8fS02/YPDY0AYmds+6ye7Tsu8XusWBTqUfLkbesHov3vGTy2LSqk81j06dJ7B4n
-	Zvxm8dj50NLjxeaZjB69ze/YPL7d9vBY/OIDU4BgFJdNSmpOZllqkb5dAlfGnIYNzAUtvBXz
-	fqxha2C8wtXFyMEhIWAisXirVhcjJwebgJrElZeTmEDCIgIOEqu+KnQxcnEwCzSwSPz4fIkF
-	pEZYwEdi7b8b7CA2i4CqxK9N88HivAJmEo+O9TKC2BICmhKPt/8Eq+EUMJf4f7idDWSmEFDN
-	0dvMEOWCEidnPgFrZRaQl2jeOpt5AiPPLCSpWUhSCxiZVjGKZOaV5SZm5pjqFWdnVOZlVugl
-	5+duYgRG2rLaPxN3MH657H6IUYCDUYmH16H2TqoQa2JZcWXuIUYJDmYlEd5wmZupQrwpiZVV
-	qUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYxhHAuf6dzr6NtyNJy7
-	13qtTeBhUWmln4dEykuTjp9kPrPYvdXukZi588M8jvz/Okuuvs5e+U/k4+zt36xcRG4WSjyW
-	j2Gbe+7GhJ35d3/qb7q6TXVr2Mlrj62Yb2bkL4n3/jzrYsN99qW/1PO3W39Rl/abUabYKMh2
-	/GZw+UrX89m3ys78F+1XYinOSDTUYi4qTgQATejUCbACAAA=
-X-CFilter-Loop: Reflected
+In-Reply-To: <20240226081731.3224470-1-haowenchao2@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500005.china.huawei.com (7.192.104.229)
 
-This is a preparation patch that introduces migration modes.
+On 2024/2/26 16:17, Wenchao Hao wrote:
+> all caller of ext4_issue_discard() would set biop to NULL since
+> 'commit 55cdd0af2bc5 ("ext4: get discard out of jbd2 commit kthread
+> contex")', it's unnecessary to keep this parameter any more.
+> 
+> Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
 
-The damon_pa_pageout is renamed to damon_pa_migrate and it receives an
-extra argument for migration_mode.
+Thanks for the patch, it looks good to me.
 
-No functional changes applied.
+Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
 
-Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
----
- mm/damon/paddr.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-index 081e2a325778..277a1c4d833c 100644
---- a/mm/damon/paddr.c
-+++ b/mm/damon/paddr.c
-@@ -224,7 +224,12 @@ static bool damos_pa_filter_out(struct damos *scheme, struct folio *folio)
- 	return false;
- }
- 
--static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
-+enum migration_mode {
-+	MIG_PAGEOUT,
-+};
-+
-+static unsigned long damon_pa_migrate(struct damon_region *r, struct damos *s,
-+				      enum migration_mode mm)
- {
- 	unsigned long addr, applied;
- 	LIST_HEAD(folio_list);
-@@ -249,7 +254,14 @@ static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s)
- put_folio:
- 		folio_put(folio);
- 	}
--	applied = reclaim_pages(&folio_list);
-+	switch (mm) {
-+	case MIG_PAGEOUT:
-+		applied = reclaim_pages(&folio_list);
-+		break;
-+	default:
-+		/* Unexpected migration mode. */
-+		return 0;
-+	}
- 	cond_resched();
- 	return applied * PAGE_SIZE;
- }
-@@ -297,7 +309,7 @@ static unsigned long damon_pa_apply_scheme(struct damon_ctx *ctx,
- {
- 	switch (scheme->action) {
- 	case DAMOS_PAGEOUT:
--		return damon_pa_pageout(r, scheme);
-+		return damon_pa_migrate(r, scheme, MIG_PAGEOUT);
- 	case DAMOS_LRU_PRIO:
- 		return damon_pa_mark_accessed(r, scheme);
- 	case DAMOS_LRU_DEPRIO:
--- 
-2.34.1
-
+> ---
+>  fs/ext4/mballoc.c | 16 +++++-----------
+>  1 file changed, 5 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index d72b5e3c92ec..1590ee3f4603 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -3807,8 +3807,7 @@ int ext4_mb_release(struct super_block *sb)
+>  }
+>  
+>  static inline int ext4_issue_discard(struct super_block *sb,
+> -		ext4_group_t block_group, ext4_grpblk_t cluster, int count,
+> -		struct bio **biop)
+> +		ext4_group_t block_group, ext4_grpblk_t cluster, int count)
+>  {
+>  	ext4_fsblk_t discard_block;
+>  
+> @@ -3817,13 +3816,8 @@ static inline int ext4_issue_discard(struct super_block *sb,
+>  	count = EXT4_C2B(EXT4_SB(sb), count);
+>  	trace_ext4_discard_blocks(sb,
+>  			(unsigned long long) discard_block, count);
+> -	if (biop) {
+> -		return __blkdev_issue_discard(sb->s_bdev,
+> -			(sector_t)discard_block << (sb->s_blocksize_bits - 9),
+> -			(sector_t)count << (sb->s_blocksize_bits - 9),
+> -			GFP_NOFS, biop);
+> -	} else
+> -		return sb_issue_discard(sb, discard_block, count, GFP_NOFS, 0);
+> +
+> +	return sb_issue_discard(sb, discard_block, count, GFP_NOFS, 0);
+>  }
+>  
+>  static void ext4_free_data_in_buddy(struct super_block *sb,
+> @@ -6475,7 +6469,7 @@ static void ext4_mb_clear_bb(handle_t *handle, struct inode *inode,
+>  	} else {
+>  		if (test_opt(sb, DISCARD)) {
+>  			err = ext4_issue_discard(sb, block_group, bit,
+> -						 count_clusters, NULL);
+> +						 count_clusters);
+>  			if (err && err != -EOPNOTSUPP)
+>  				ext4_msg(sb, KERN_WARNING, "discard request in"
+>  					 " group:%u block:%d count:%lu failed"
+> @@ -6726,7 +6720,7 @@ __acquires(bitlock)
+>  	 */
+>  	mb_mark_used(e4b, &ex);
+>  	ext4_unlock_group(sb, group);
+> -	ret = ext4_issue_discard(sb, group, start, count, NULL);
+> +	ret = ext4_issue_discard(sb, group, start, count);
+>  	ext4_lock_group(sb, group);
+>  	mb_free_blocks(NULL, e4b, start, ex.fe_len);
+>  	return ret;
+> 
