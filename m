@@ -1,54 +1,53 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA00127B61;
-	Mon, 26 Feb 2024 13:27:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64380128812;
+	Mon, 26 Feb 2024 13:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708954053; cv=none; b=ozgSdpJb7bao09CxudfDoL1IqQYGe0Hd3NYPXo2Qd+MYsflECpLuh+0UEs9ztx2dpcwRq3yioDpE2l4RW9EN9TuSBsdfQz1X7hUgMBXRHgtWc7O12rPFfVK+AXMXqeVt4Ln6mnEqsBJm3aBqvVO0X767jbGHqBY1wMemN/ilXFw=
+	t=1708954063; cv=none; b=ECkai80vsHijtRCabHZKk5WmL2RV5ih6YrwTj/U2nY7zSGRF1sbBJotNOoIl+a+mQD5w6ufeYz4gpzEcI3obTFfvu9V4xjIOEU3S5Iyjp5gigrt9AKb1UKAlppSIb0oiEtHnsaA3iMzAyo3bQJqoKtJN7Wb7SEsGVjzlAMr0jXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708954053; c=relaxed/simple;
-	bh=/pzbee++7gipWyKBJo8nIPzMwu9sYBmCTcdughsOT9Y=;
+	s=arc-20240116; t=1708954063; c=relaxed/simple;
+	bh=Dxyoh09PfHjd9+QoVmmIPu/9OxF02YHNKUdvOQw8kXo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eC/1+VnYCVtuCc1O+ajxSf0YLLRHF6mS/DDl9vWjsrs3SzkX0OkuqvpXYw2KB4tMyZYDUD65pCTe7jsBXxbGRpU9bWokXHNFo3lxGjwBokv4vcSPcAzdBCh6u0bx4lHmlZzdX+0qpExZ+1KHf6Osp8siZ9JtHqL9H+8mly7kWE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IZEXbvzG; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=WnJHfg0vOzhRUM5g7IVaIU7qMylb4AuZVIlnhQDUZ88G5dCuQ2dZQFXOXTDFKYueb+6LvwyhLRZ5kxRIp6E0qbHVMuYa6UOzGjZaLRIQ7XsgqGVHuOYWALbOAJ0XwsWal4OHvXBcOXTwqg6BIkjBZp7q9Samd4xO0N6Wl6QkZsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R2Tk/XC8; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IZEXbvzG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R2Tk/XC8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708954052; x=1740490052;
+  t=1708954062; x=1740490062;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=/pzbee++7gipWyKBJo8nIPzMwu9sYBmCTcdughsOT9Y=;
-  b=IZEXbvzGJFjIxVqgsIqpvWkRZ4lSESnCm3Ki3ChpVaPkCyqKhsifgoJZ
-   WXxfi2FSTVti/ps4r7fPV4lmBiD47vIYLvA20+BWOzHnVnvUIH14fZVwi
-   L47Gp2fLTTpNVRpFcpHjLxYkFYkUby3gOFYLs3XmZtGpzRADtTzrhwz7z
-   L0tHAncphrx7u/QSA+uHYElAlXBakuxb4AemXr0UYW8mf8ShJi829yi9M
-   CzzI54n4pDvJeIt0IzSqMtHNX3AvXx5VFiiHJmXg/4npNI8Kt01OTgUH+
-   bPRXwxYfSxsrw8mo/ABlmvj28AmWLx8CPJHJCi6E8gt5sYJhNJTt4mjbc
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="20781525"
+  bh=Dxyoh09PfHjd9+QoVmmIPu/9OxF02YHNKUdvOQw8kXo=;
+  b=R2Tk/XC8h5HB/FuskfCIekD5yfmsxqfJuxmDUlbIwTtgVozfo66AXV1Q
+   7ujkpSijwOfwZ3Cr/9i6lfiifb5UyVQH4OD9KNvbgUk1s9s/kZffz7/Ua
+   szjHntSVMGLv46bt9VeHUsImd0yQkzywRyba0mA01Xe7RmZr78N0IauNz
+   QREXmZ8WHXYTkuLhsuj3bVUYexPSH3fMGI4rNb+NiJDzElnxjx1mYrueT
+   pDCDV/4cmRf7R8bq7WUOGOQdbinDFYdzkjsSrAuwcjlcKXFCMoxS2fZz+
+   EOI/hkXAiNcxzy6OVaP3KcKI5mbxNWNXSZPYBStUVUd6qqM63Cl8hnM+X
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="20781538"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="20781525"
+   d="scan'208";a="20781538"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 05:27:26 -0800
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 05:27:34 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="11255355"
+   d="scan'208";a="11255391"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.12])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 05:27:24 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 05:27:32 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Armin Wolf <W_Armin@gmx.de>
-Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240223162905.12416-1-W_Armin@gmx.de>
-References: <20240223162905.12416-1-W_Armin@gmx.de>
-Subject: Re: [PATCH] platform/x86: dell-privacy: Remove usage of
- wmi_has_guid()
-Message-Id: <170895403712.2243.7938994758806690740.b4-ty@linux.intel.com>
-Date: Mon, 26 Feb 2024 15:27:17 +0200
+To: shravankr@nvidia.com, Luiz Capitulino <luizcap@redhat.com>
+Cc: davthompson@nvidia.com, ndalvi@redhat.com, linux-kernel@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org
+In-Reply-To: <cover.1708635408.git.luizcap@redhat.com>
+References: <cover.1708635408.git.luizcap@redhat.com>
+Subject: Re: [PATCH 0/2] platform/mellanox: mlxbf-pmc: Fix module loading
+Message-Id: <170895404513.2243.14840310263795846559.b4-ty@linux.intel.com>
+Date: Mon, 26 Feb 2024 15:27:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,15 +58,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
-On Fri, 23 Feb 2024 17:29:05 +0100, Armin Wolf wrote:
+On Thu, 22 Feb 2024 15:57:28 -0500, Luiz Capitulino wrote:
 
-> The WMI driver core already takes care that the WMI driver is
-> only bound to WMI devices with a matching GUID.
+> The mlxbf-pmc driver fails to load when the firmware reports a new but not
+> yet implemented performance block. I can reproduce this today with a
+> Bluefield-3 card and UEFI version 4.6.0-18-g7d063bb-BId13035, since this
+> reports the new clock_measure performance block.
 > 
-> Remove the unnecessary call to wmi_has_guid(), which will always
-> be true when the driver probes.
-> 
-> Tested on a Dell Inspiron 3505.
+> This[1] patch from Shravan implements the clock_measure support and will
+> solve the issue. But this series avoids the situation by ignoring and
+> logging unsupported performance blocks.
 > 
 > [...]
 
@@ -78,8 +78,10 @@ platform-drivers-x86/review-ilpo branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: dell-privacy: Remove usage of wmi_has_guid()
-      commit: 39849d8fa03c501305dd6fb814fbfbc768fcf96f
+[1/2] platform/mellanox: mlxbf-pmc: mlxbf_pmc_event_list(): make size ptr optional
+      commit: c5b649996ac63d43f1d4185de177c90d664b2230
+[2/2] platform/mellanox: mlxbf-pmc: Ignore unsupported performance blocks
+      commit: 4e39d7be4123f65adf78b0a466cbaf1169d7cedb
 
 --
  i.
