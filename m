@@ -1,249 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [83.166.143.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2A8135A48;
-	Mon, 26 Feb 2024 17:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEFA12F366
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708967130; cv=none; b=H8nDGFO7QaKhEwyku94EkmhLhU1lBMfk2l2LL2UpWTdYCzAbtVS/52jYTYqqMTFOjMX/oENyy1oTaP0TSC9lLVQ1aJzMNx/rZ8f4t4yIUA5g5pQMriFCjljQGLtiwkh4kYRr5oaG6xKSp0malSAlcOjIwHjlW36SyLWUM7/RamA=
+	t=1708967154; cv=none; b=TMyjAJS0e0BSQrxxNQJn4ZhqsiuN55AASlAZjLTAZFxBRp+Q+wSwPWU5BX/1tZTCwgMGecx0aTI6XYllDEZ9aiDKiK0OMFpPSCuND/5moxNkBZmo8gnpJaj1s9oqyyc/8oQLvrFlwKmo+T5MXI1zgV4mIz/yXoITNBma9CaeKEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708967130; c=relaxed/simple;
-	bh=wx87YOEUXHlfv7Ll5FAldV+GhFRYXH7Cua1+myCejKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Cu7kkMeyqi6C5OaWFT/Bt5i1WmgN4PE5iiDGMyQ7wjQTnxzqP8JNvXCZ1U0+FFewo4dRY+f0yrw7KrPqtLkbPYNR4sA9dIcBFFXU5gHmaXeLbB7gfOu+P+wRnr6m4nuNhqNMwkaxSZcvZkZM45w2fgeAxFmyL2v1dIB8W5Izirs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2810C433F1;
-	Mon, 26 Feb 2024 17:05:28 +0000 (UTC)
-Date: Mon, 26 Feb 2024 12:07:28 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Richard Chang <richardycc@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, liumartin@google.com, surenb@google.com,
- minchan@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm: add alloc_contig_migrate_range allocation
- statistics
-Message-ID: <20240226120728.3f495fa7@gandalf.local.home>
-In-Reply-To: <20240226120629.0c371252@gandalf.local.home>
-References: <20240226100045.2083962-1-richardycc@google.com>
-	<20240226120629.0c371252@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708967154; c=relaxed/simple;
+	bh=TEpQO8oVhWg12vbtVS68hwoIFoQZycElKAGrNEzuM9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fu08EbTRR1f5T5i0TM5ro1EFmohg+DfamccSuBmWYBaGU21Mr9rvQFOSOef4S6Z4YB8NqQA2H92ZBXfxDDiq3P3WDJZzFffak3NEDn+6Vr81yl2WqSiuX6aanUDqRLr7kvcBOowXGVgRDIasu58rl8rYqBRubJtvJ3yXMWXEMuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=J5hwbTHq; arc=none smtp.client-ip=83.166.143.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="J5hwbTHq"
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Tk6Sk4MjfzQkL;
+	Mon, 26 Feb 2024 18:05:42 +0100 (CET)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Tk6Sj5blNz1sr;
+	Mon, 26 Feb 2024 18:05:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1708967142;
+	bh=TEpQO8oVhWg12vbtVS68hwoIFoQZycElKAGrNEzuM9o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J5hwbTHqlvYD7XVRvMUl+1yLrl1IYNrSHFaPd8XOBjVbSlYpYstl5VbR9fB/ZR0zT
+	 JMGK2lOQSwEMUYdDl7Dyk0mcgPxC3oA1Jqi097/QPKxFi0rLGPUkh6CUmXtp72Ifs7
+	 JsByWA9GE4IGe2H/Z8jBwKANLAlE0JkMPCdJXydE=
+Date: Mon, 26 Feb 2024 18:05:33 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack3000@gmail.com>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Paul Moore <paul@paul-moore.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Shervin Oloumi <enlightened@chromium.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] landlock: Warn once if a Landlock action is requested
+ while disabled
+Message-ID: <20240226.Ceemai4ahxei@digikod.net>
+References: <20240219191804.2978911-1-mic@digikod.net>
+ <20240221.b8dcd9590c37@gnoack.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240221.b8dcd9590c37@gnoack.org>
+X-Infomaniak-Routing: alpha
 
-On Mon, 26 Feb 2024 12:06:29 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Mon, 26 Feb 2024 10:00:15 +0000
-> Richard Chang <richardycc@google.com> wrote:
+On Wed, Feb 21, 2024 at 10:35:50PM +0100, Günther Noack wrote:
+> Hello!
 > 
-> > alloc_contig_migrate_range has every information to be able to
-> > understand big contiguous allocation latency. For example, how many
-> > pages are migrated, how many times they were needed to unmap from
-> > page tables.
+> I think this is a good idea.
+> Some minor implementation remarks below.
+> 
+> On Mon, Feb 19, 2024 at 08:18:04PM +0100, Mickaël Salaün wrote:
+> > Because sandboxing can be used as an opportunistic security measure,
+> > user space may not log unsupported features.  Let the system
+> > administrator know if an application tries to use Landlock but failed
+> > because it isn't enabled at boot time.  This may be caused by bootloader
+> > configurations with outdated "lsm" kernel's command-line parameter.
 > > 
-> > This patch adds the trace event to collect the allocation statistics.
-> > In the field, it was quite useful to understand CMA allocation
-> > latency.
-> > 
-> > Signed-off-by: Richard Chang <richardycc@google.com>
+> > Cc: Günther Noack <gnoack@google.com>
+> > Cc: stable@vger.kernel.org
+> > Fixes: 265885daf3e5 ("landlock: Add syscall implementations")
+> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
 > > ---
-> >  include/trace/events/kmem.h | 39 +++++++++++++++++++++++++++++++++++++
-> >  mm/internal.h               |  3 ++-
-> >  mm/page_alloc.c             | 30 +++++++++++++++++++++++-----
-> >  mm/page_isolation.c         |  2 +-
-> >  4 files changed, 67 insertions(+), 7 deletions(-)
+> >  security/landlock/syscalls.c | 18 +++++++++++++++---
+> >  1 file changed, 15 insertions(+), 3 deletions(-)
 > > 
-> > diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-> > index 58688768ef0f..964704d76f9f 100644
-> > --- a/include/trace/events/kmem.h
-> > +++ b/include/trace/events/kmem.h
-> > @@ -304,6 +304,45 @@ TRACE_EVENT(mm_page_alloc_extfrag,
-> >  		__entry->change_ownership)
-> >  );
+> > diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
+> > index f0bc50003b46..b5b424819dee 100644
+> > --- a/security/landlock/syscalls.c
+> > +++ b/security/landlock/syscalls.c
+> > @@ -33,6 +33,18 @@
+> >  #include "ruleset.h"
+> >  #include "setup.h"
 > >  
-> > +TRACE_EVENT(mm_alloc_contig_migrate_range_info,
-> > +
-> > +	TP_PROTO(unsigned long start,
-> > +		 unsigned long end,
-> > +		 int migratetype,
-> > +		 unsigned long nr_migrated,
-> > +		 unsigned long nr_reclaimed,
-> > +		 unsigned long nr_mapped),
-> > +
-> > +	TP_ARGS(start, end, migratetype,
-> > +		nr_migrated, nr_reclaimed, nr_mapped),
-> > +
-> > +	TP_STRUCT__entry(
-> > +		__field(unsigned long, start)
-> > +		__field(unsigned long, end)
-> > +		__field(int, migratetype)  
+> > +static bool is_not_initialized(void)
+> > +{
+> > +	if (likely(landlock_initialized))
+> > +		return false;
 > 
-> 
-> Please move the int to the end of the longs, as it will cause a 4 byte hole
-> in 64 bit machines otherwise.
-> 
-> 
-> > +		__field(unsigned long, nr_migrated)
-> > +		__field(unsigned long, nr_reclaimed)
-> > +		__field(unsigned long, nr_mapped)
-> > +	),
-> > +
-> > +	TP_fast_assign(
-> > +		__entry->start = start;
-> > +		__entry->end = end;
-> > +		__entry->migratetype = migratetype;
-> > +		__entry->nr_migrated = nr_migrated;
-> > +		__entry->nr_reclaimed = nr_reclaimed;
-> > +		__entry->nr_mapped = nr_mapped;
-> > +	),
-> > +
-> > +	TP_printk("start=0x%lx end=0x%lx migratetype=%d nr_migrated=%lu nr_reclaimed=%lu nr_mapped=%lu",
-> > +		  __entry->start,
-> > +		  __entry->end,
-> > +		  __entry->migratetype,
-> > +		  __entry->nr_migrated,
-> > +		  __entry->nr_reclaimed,
-> > +		  __entry->nr_mapped)
-> > +);
-> > +
-> >  /*
-> >   * Required for uniquely and securely identifying mm in rss_stat tracepoint.
-> >   */
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index f309a010d50f..e114c647e278 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -537,7 +537,8 @@ isolate_migratepages_range(struct compact_control *cc,
-> >  			   unsigned long low_pfn, unsigned long end_pfn);
-> >  
-> >  int __alloc_contig_migrate_range(struct compact_control *cc,
-> > -					unsigned long start, unsigned long end);
-> > +					unsigned long start, unsigned long end,
-> > +					int migratetype);
-> >  
-> >  /* Free whole pageblock and set its migration type to MIGRATE_CMA. */
-> >  void init_cma_reserved_pageblock(struct page *page);
-> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > index 150d4f23b010..f840bc785afa 100644
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -6219,9 +6219,14 @@ static void alloc_contig_dump_pages(struct list_head *page_list)
-> >  	}
-> >  }
-> >  
-> > -/* [start, end) must belong to a single zone. */
-> > +/*
-> > + * [start, end) must belong to a single zone.
-> > + * @migratetype: using migratetype to filter the type of migration in
-> > + *		trace_mm_alloc_contig_migrate_range_info.
-> > + */
-> >  int __alloc_contig_migrate_range(struct compact_control *cc,
-> > -					unsigned long start, unsigned long end)
-> > +					unsigned long start, unsigned long end,
-> > +					int migratetype)
-> >  {
-> >  	/* This function is based on compact_zone() from compaction.c. */
-> >  	unsigned int nr_reclaimed;
-> > @@ -6232,6 +6237,10 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
-> >  		.nid = zone_to_nid(cc->zone),
-> >  		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-> >  	};
-> > +	struct page *page;
-> > +	unsigned long total_mapped = 0;
-> > +	unsigned long total_migrated = 0;
-> > +	unsigned long total_reclaimed = 0;
-> >  
-> >  	lru_cache_disable();
-> >  
-> > @@ -6257,9 +6266,16 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
-> >  							&cc->migratepages);
-> >  		cc->nr_migratepages -= nr_reclaimed;
-> >  
-> > +		total_reclaimed += nr_reclaimed;
-> > +		list_for_each_entry(page, &cc->migratepages, lru)
-> > +			total_mapped += page_mapcount(page);  
-> 
-> You're doing this calculation regardless of if tracing is enabled or not
-> and it's only used for tracing? Please add:
-> 
-> 		if (trace_mm_alloc_contig_migrate_range_info_enabled()) {
-> 			total_reclaimed += nr_reclaimed;
-> 			list_for_each_entry(page, &cc->migratepages, lru)
-> 				total_mapped += page_mapcount(page);
-> 		}
-> 
-> -- Steve
+> Optional stylistic remark; I try to avoid predicate functions which
+> have a "negated" meaning, because double negations are slightly more
+> error prone.  (We return false here, so Landlock is not not
+> initialized.)
 
-Oops, I forgot to remove this sig when I came back and added the below
-reply too.
-
--- Steve
-
+I agree, I was also bothered about this double negation. I'll send a v2
+with the same behavior but an is_initialized() helper instead.
 
 > 
 > > +
-> >  		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
-> >  			NULL, (unsigned long)&mtc, cc->mode, MR_CONTIG_RANGE, NULL);
-> >  
-> > +		if (!ret)  
-> 
-> May want the above to be:
-> 
-> 		if (trace_mm_alloc_config_migrate_range_info_enabled() && !ret)
-> 
-> too.
-> 
-> -- Steve
-> 
-> > +			total_migrated += cc->nr_migratepages;
+> > +	pr_warn_once(
+> > +		"Disabled but requested by user space. "
+> > +		"You should enable Landlock at boot time: "
+> > +		"https://docs.kernel.org/userspace-api/landlock.html#kernel-support\n");
+> > +	return true;
+> > +}
 > > +
-> >  		/*
-> >  		 * On -ENOMEM, migrate_pages() bails out right away. It is pointless
-> >  		 * to retry again over this error, so do the same here.
-> > @@ -6273,9 +6289,13 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
-> >  		if (!(cc->gfp_mask & __GFP_NOWARN) && ret == -EBUSY)
-> >  			alloc_contig_dump_pages(&cc->migratepages);
-> >  		putback_movable_pages(&cc->migratepages);
-> > -		return ret;
-> >  	}
-> > -	return 0;
-> > +
-> > +	trace_mm_alloc_contig_migrate_range_info(start, end, migratetype,
-> > +						 total_migrated,
-> > +						 total_reclaimed,
-> > +						 total_mapped);
-> > +	return (ret < 0) ? ret : 0;
-> >  }
-> >  
 > >  /**
-> > @@ -6355,7 +6375,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
-> >  	 * allocated.  So, if we fall through be sure to clear ret so that
-> >  	 * -EBUSY is not accidentally used or returned to caller.
-> >  	 */
-> > -	ret = __alloc_contig_migrate_range(&cc, start, end);
-> > +	ret = __alloc_contig_migrate_range(&cc, start, end, migratetype);
-> >  	if (ret && ret != -EBUSY)
-> >  		goto done;
-> >  	ret = 0;
-> > diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> > index cd0ea3668253..a5c8fa4c2a75 100644
-> > --- a/mm/page_isolation.c
-> > +++ b/mm/page_isolation.c
-> > @@ -434,7 +434,7 @@ static int isolate_single_pageblock(unsigned long boundary_pfn, int flags,
-> >  				}
+> >   * copy_min_struct_from_user - Safe future-proof argument copying
+> >   *
+> > @@ -173,7 +185,7 @@ SYSCALL_DEFINE3(landlock_create_ruleset,
+> >  	/* Build-time checks. */
+> >  	build_check_abi();
 > >  
-> >  				ret = __alloc_contig_migrate_range(&cc, head_pfn,
-> > -							head_pfn + nr_pages);
-> > +							head_pfn + nr_pages, page_mt);
-> >  
-> >  				/*
-> >  				 * restore the page's migratetype so that it can  
+> > -	if (!landlock_initialized)
+> > +	if (is_not_initialized())
+> >  		return -EOPNOTSUPP;
 > 
+> Technically, any Landlock user needs to go through the
+> landlock_create_ruleset() system call anyway; it might be enough to
+> just add it in that place and leave the other system calls as they
+> were.  Then you could also omit the special function.
 
+True, but we never know. I prefer to cover all entry points the same
+way.  It makes things more consistent and easier to review.
+
+> 
+> Reviewed-by: Günther Noack <gnoack3000@gmail.com>
+> 
+> –Günther
+> 
