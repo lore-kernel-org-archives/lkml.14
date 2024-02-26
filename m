@@ -1,237 +1,380 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2070.outbound.protection.outlook.com [40.107.7.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7736B12C55E;
-	Mon, 26 Feb 2024 17:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708967071; cv=none; b=HRk8yplHpxg0b1UsF9A5GRPoKOOWJ8IAuVj9OGaxG8Ugk0g7EH+FHkkyQQN7yZ0jkxwcJVl6qDaD/nelD2Chij9EkudeAAdTatBNLACSLOsyVh0Kduu/GOZsk4ikiUxsceIuanM+4nRXbnFE4pOGL/caK2eO07YDGwS15KL1yRI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708967071; c=relaxed/simple;
-	bh=RKIx+oQQY1jqQNQfa40US/jQ3+vApFBCzgxBshqFQus=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tu3cOe2l3agysoF9Zv898TdTnPr4nxX7em4BQMQooWGR6G57PeGRnZe5IGMiA0g8OuT0pSUYapkJfahYC2rZu0ns4EKlJ9SqOvTkaaBVyDa1z8NMWwydGxCimgre31uPEF10bN5WLzyhc0uOLqisxYOAQqlrrhJ21P8ExedYUBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2875AC433F1;
-	Mon, 26 Feb 2024 17:04:30 +0000 (UTC)
-Date: Mon, 26 Feb 2024 12:06:29 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Richard Chang <richardycc@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, liumartin@google.com, surenb@google.com,
- minchan@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm: add alloc_contig_migrate_range allocation
- statistics
-Message-ID: <20240226120629.0c371252@gandalf.local.home>
-In-Reply-To: <20240226100045.2083962-1-richardycc@google.com>
-References: <20240226100045.2083962-1-richardycc@google.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C630F12C55E;
+	Mon, 26 Feb 2024 17:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708967092; cv=fail; b=iJ98eD/0vcQUC1LutI/gxdKbLJWoU7G+CsChfgiHzzS0s/PK9/wcfkx1KIms4/4qh3vokbFvAngaMz9XCeKWt3KzzAIpP1WF2sjURQa5nWYqWj+iQ5fKYu3ghzoM/spfF6rKoGfkA9NdbvMHUa6o1aq6leg5UPUUyD49OFFydOQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708967092; c=relaxed/simple;
+	bh=1J3Eif809Ell802j1pFqjDEUnWh9Cb7I29PMCNND56I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hw0H+3cr5NytL4ZZONbi6gUirYkaCIFZJjslRYesU+e+CNDYgTffigZvnUH9ivooMTHa86Ie97PX++K5svUGWgly7H1QuX/FbFrFHHbRbP7/aaFvDraaA8dPJIw+diHnOrynCZ3WRdVcb0OiDSr7TuSyLiqt/0XKK/SE8nzXLbg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=K1RwleFT; arc=fail smtp.client-ip=40.107.7.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="K1RwleFT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JNvLMVDAeTU5xGpk6JdeFq+5+AZLYuX9vdmC+HzS4CVX2Zs0TvK6/C9cD/6cHcqNvMimvricIeWLxwv2iGzvJVixIguWUlDe1U6UYNxWu1KM+rM2ZEdlEt/8PKZWTaLc8eWFIxGM8L7Iw56duFAMFCDVRzvaH0KWkvzKfMyra/3FjodSbgZCSIg9EYiKc38ieT1hqBGhHQifU+qpqPe6UBmp50zQzvbPxsibrmhyR1ZMulOpsZz4MB4cjoh4sU5CZKilTb7FFA+wzE8zhh+7VsZjpf6dCpbdVRbgHUF99C2JKKL+mVowwIB3UTIFpJ4wfRWroHKTOLludbTLMVGj5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lgnUFmJUrI0cHdJ6noOvxgaagPsRUL2bYYKbrhtmtFM=;
+ b=nHRolmB/XCLObfliar1A6kRV49e22KLr9phTkavPBT3DlzgLgzWwQbQoDCpEn6/pa8UNbUWM407Q3Yrz5b1OppnYSxREyOd6uyAa0tTSClnmAee2a1BN5CO5NuYZT9MaOazEv/UrGeFmL4TE0hnWExn4tNPPKXTyOaKpucvousvI6lTpKgHceCAR8WdjC80m0cxifFx+WeukpMj14SP0482+OhRtZVpGWMQviHx2+BQoVDX1qQR1mfuMAu80+by9bKcGXeFUOItjjoK5aFFuHua+jMro0PRfx7p/e5hTI72h0U1LFCrDfZ/vWCy2P9OqbVoiL+9jIRZNEx32VC1Ohg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lgnUFmJUrI0cHdJ6noOvxgaagPsRUL2bYYKbrhtmtFM=;
+ b=K1RwleFTPk66pJwWZV/GRqxShdcdtt239htycRhQBsiKFCmzs2XkI6nOkfHDqzOoU2Idc4wj+bV4Y/YQUDQDx09XOSZFr1geuY8fezvy/Cwm0V8e4obwVOBimv84HiLLq97qrgnNvfmXeUPkmTYPcmu7rrnYZOZg+EbwCKAYjRE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM7PR04MB6984.eurprd04.prod.outlook.com (2603:10a6:20b:de::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.33; Mon, 26 Feb
+ 2024 17:04:45 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa%7]) with mapi id 15.20.7316.032; Mon, 26 Feb 2024
+ 17:04:45 +0000
+Date: Mon, 26 Feb 2024 12:04:33 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kishon Vijay Abraham I <kishon@ti.com>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v8 06/10] PCI: dwc: ep: Call dw_pcie_ep_init_registers()
+ API directly from all glue drivers
+Message-ID: <ZdzEoXwU42rFCF/W@lizhi-Precision-Tower-5810>
+References: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
+ <20240224-pci-dbi-rework-v8-6-64c7fd0cfe64@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240224-pci-dbi-rework-v8-6-64c7fd0cfe64@linaro.org>
+X-ClientProxiedBy: BY5PR03CA0024.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::34) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB6984:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4b35674a-bd2d-414e-3435-08dc36ed083e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	jc9/K57ZKWRTpFiuv8fhEVO3cSozRbz0Mdr0143sxCfzjjNl1HCeke1mOquhRG+yA0CyD+rocsu7nhMmlXGWa8rEICLtGEnJQOsualgYJBdmQYaX9xqJLccF/a8eOMH+deGlNEYCpDSso31fowIDU7aeblzruZBim7OIMJID6PHZ7aSGUHMFBb98k6j4+VpjDuTISLERTSDD45ZiEiDGF27cYuE9obpkZ6k/y7h5cCeYr5E9tr/4A1ssL0/B4Rg9mxD0I8KvInqK8TIRnVAxb2e80m0VgycPxTr5B3gMvIsE/d7TU/VqVAoTvp0WMxL10iCHEfKd81SZQUQFuxZXxrcW10CLHNFEphd3GtAliVyJcTEAq1IhJER4IueSjnP0H3PICzDwjJAnwKtcYImfYnehZ0Wvdr/OC6uictf/2A2RTqIZiMryjtiXjVIEMNMTc+do/cIkKGU16VClQqadW81VTVFjGUkNhk/lEEwVK+nAFvxcDYxMMWfdMt53kLJPhPWOmPhDTdrMR56UUQFiV/DwtaK03uRJWHQZD6ZMCSBuTmSRIaDUjQZLEXPZwJJQeomYPe1vEbNomZiuZZ1GBzSqu+Z/o1WE39WJhgDSutC9bEHa6OmmRbJ2kx35cVqb9SUWfRLpOC25RDHYHpnoT2hyjTGzUgaB06FlWWQZNs0fIsqih2ZOXturda/XwXTddujLapmaZwtgw0BIBxXIVlsTvNhCaP4vJfnoWb8u91M=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?/9yaYU6SJQYw813z1EFQXJcz7YwBAxV8T6mbei1uEpItEl3B1jwmEVF0bYBa?=
+ =?us-ascii?Q?qY7eEWIjq59++7HEDIVu95eE3SchxKAO2ITxNznzJXknXRt8SUezGmjSnPmM?=
+ =?us-ascii?Q?vkXdAksQBc+AeJRQzsURfcrKUYDmZ1nzYFX0RjlKIhjIsaNxl8J5pj5NzyVn?=
+ =?us-ascii?Q?uwnVK9u0VCY/J+fwr+YZe89cIQrKzk00MHnN6Y9itBvct+vQI3XS1kAMntSI?=
+ =?us-ascii?Q?XSQiFabN6glBkGH/RH6tBatKRHibvJJoZp2GCw6yvnoUUkdM7fA9gxy0YAp0?=
+ =?us-ascii?Q?mK7CtXRgKMDJNcugz/JDSnrGCzzrmaAgWK6wuhQO/vDlPnk6MndsJmeqRXaU?=
+ =?us-ascii?Q?Rf6n09BXGYUbDoTvan7U+d/kTr/U4SQ6j/d93O/7/HRhBLIySh/Pvtz+J1rW?=
+ =?us-ascii?Q?eU2flXngOurn1sCxhfnhmzZ095DxNN73wgg20+6TBmTpmtKqaqOljAMRM66v?=
+ =?us-ascii?Q?W+bmI3A4op6WLemx8gCnHaT6o7g9Tc+rFsTEnFMJ1Vx5XToovq7mCLpjwa3d?=
+ =?us-ascii?Q?Lvt0qSVNTNzNWDuT5yWxsHW/XBQ4KGUZYLP5uXqMHTeSYQu12TXbDoL96wj7?=
+ =?us-ascii?Q?6EyZj6bycwbKnYZRBBPsN0+tE5FnOmg3NNZe62bl9h+b9bdN/LkNubklQlef?=
+ =?us-ascii?Q?x14irtGcQeU6nGMAIluoWBZK6LxKHzXZ/pIY4jSrc6iqD2iR79CXK5QkELuw?=
+ =?us-ascii?Q?qhqQiE2idNTdRElREJhn2SCavOZcr2KvsEfh75d6qY4b5oEa/ukbhpxEmQg/?=
+ =?us-ascii?Q?DP0RuEpqBkcnyTm/Le6z9VsnNxaxFz/txVDfZtFNSTxURhoSS1uw8+IfC2u1?=
+ =?us-ascii?Q?uSyGapOWPWa+Hh/L4yY6BCRAA6ZfMvf+8PKL+s2lIyO811963bvzKqwUvToo?=
+ =?us-ascii?Q?cgyNrFXhfEH/oDOhvQ3M6joYsp75zQutY88o0e3s1hhlZbFqpeSrrUaKygB8?=
+ =?us-ascii?Q?vInci+kkj6MoRNkbG8Clj3ZYd8x2IcFi3rihcz4hwu86MjHJHC22MfVR3sV/?=
+ =?us-ascii?Q?h2UMeM0Le0bFQI07nD4MrLqOc4pmPEsWGgHCf3D+tyy67iadcRycRbYAyxRe?=
+ =?us-ascii?Q?CExKn/pXeV7uYOm603GzbEH0RpZN+ukt8BSqrFxiV+cGUnMr6e/HQa8W4UAF?=
+ =?us-ascii?Q?R94uITB4DulfgkO5rn8ohMUC7ZWdQ7g+jtuRxyVVkLl+Z2kBgMKlgh3Cv/Gn?=
+ =?us-ascii?Q?328okaV/VygjBqej+VGZ37ElcOkOJZtMYLvluucJEm2orol4RbOVFOruB/ZM?=
+ =?us-ascii?Q?gumKOuNMA+X11t3vzquX42ASGh75fMEzzBpcy140+ln09PVjQN09xf/ScEBb?=
+ =?us-ascii?Q?od+w+AHd9NyxoEtialhPsyVAyMvld/LcK2xEiH0/KS92Lxx9AHp50JCRC3Zn?=
+ =?us-ascii?Q?c3HVLSeiz2ubdmzCyaKZsfyzuahywldVzK1sWCnhTpM+iUzJ3J2KOylOVi8b?=
+ =?us-ascii?Q?DrG7f7ixncAvHp4s8VP4Uu1Wl0XjyxCgVXFYcOeWt9p2HZWxv2vJus+A1Ab/?=
+ =?us-ascii?Q?HHeTf2W+Y1oPz4cj4dz74V4izxZu2z1qRMyPLi5NrEchX4RbkpaxUhYW/sPF?=
+ =?us-ascii?Q?eXrEI9xaksW7JbCIObV2owU8kKbVGv357uhv/4a+?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b35674a-bd2d-414e-3435-08dc36ed083e
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 17:04:45.5891
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sQMDPBYlrIQxWwmHHrWIW7/L2vSfF9H9qVxKTDqwOKDNCcRdywmfx+umBvpnHVRN5dGlvBRRlVM1+dJuFVc/wg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6984
 
-On Mon, 26 Feb 2024 10:00:15 +0000
-Richard Chang <richardycc@google.com> wrote:
-
-> alloc_contig_migrate_range has every information to be able to
-> understand big contiguous allocation latency. For example, how many
-> pages are migrated, how many times they were needed to unmap from
-> page tables.
+On Sat, Feb 24, 2024 at 12:24:12PM +0530, Manivannan Sadhasivam wrote:
+> Currently, dw_pcie_ep_init_registers() API is directly called by the glue
+> drivers requiring active refclk from host. But for the other drivers, it is
+> getting called implicitly by dw_pcie_ep_init(). This is due to the fact
+> that this API initializes DWC EP specific registers and that requires an
+> active refclk (either from host or generated locally by endpoint itsef).
 > 
-> This patch adds the trace event to collect the allocation statistics.
-> In the field, it was quite useful to understand CMA allocation
-> latency.
+> But, this causes a discrepancy among the glue drivers. So to avoid this
+> confusion, let's call this API directly from all glue drivers irrespective
+> of refclk dependency. Only difference here is that the drivers requiring
+> refclk from host will call this API only after the refclk is received and
+> other drivers without refclk dependency will call this API right after
+> dw_pcie_ep_init().
 > 
-> Signed-off-by: Richard Chang <richardycc@google.com>
+> This change will also allow us to remove the "core_init_notifier" flag in
+> the later commits.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  include/trace/events/kmem.h | 39 +++++++++++++++++++++++++++++++++++++
->  mm/internal.h               |  3 ++-
->  mm/page_alloc.c             | 30 +++++++++++++++++++++++-----
->  mm/page_isolation.c         |  2 +-
->  4 files changed, 67 insertions(+), 7 deletions(-)
+>  drivers/pci/controller/dwc/pci-dra7xx.c           |  7 +++++++
+>  drivers/pci/controller/dwc/pci-imx6.c             |  8 ++++++++
+>  drivers/pci/controller/dwc/pci-keystone.c         |  9 +++++++++
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c    |  7 +++++++
+>  drivers/pci/controller/dwc/pcie-designware-ep.c   | 22 ----------------------
+>  drivers/pci/controller/dwc/pcie-designware-plat.c |  9 +++++++++
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c       | 12 +++++++++++-
+>  drivers/pci/controller/dwc/pcie-uniphier-ep.c     | 13 ++++++++++++-
+>  8 files changed, 63 insertions(+), 24 deletions(-)
 > 
-> diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-> index 58688768ef0f..964704d76f9f 100644
-> --- a/include/trace/events/kmem.h
-> +++ b/include/trace/events/kmem.h
-> @@ -304,6 +304,45 @@ TRACE_EVENT(mm_page_alloc_extfrag,
->  		__entry->change_ownership)
->  );
->  
-> +TRACE_EVENT(mm_alloc_contig_migrate_range_info,
-> +
-> +	TP_PROTO(unsigned long start,
-> +		 unsigned long end,
-> +		 int migratetype,
-> +		 unsigned long nr_migrated,
-> +		 unsigned long nr_reclaimed,
-> +		 unsigned long nr_mapped),
-> +
-> +	TP_ARGS(start, end, migratetype,
-> +		nr_migrated, nr_reclaimed, nr_mapped),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(unsigned long, start)
-> +		__field(unsigned long, end)
-> +		__field(int, migratetype)
-
-
-Please move the int to the end of the longs, as it will cause a 4 byte hole
-in 64 bit machines otherwise.
-
-
-> +		__field(unsigned long, nr_migrated)
-> +		__field(unsigned long, nr_reclaimed)
-> +		__field(unsigned long, nr_mapped)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->start = start;
-> +		__entry->end = end;
-> +		__entry->migratetype = migratetype;
-> +		__entry->nr_migrated = nr_migrated;
-> +		__entry->nr_reclaimed = nr_reclaimed;
-> +		__entry->nr_mapped = nr_mapped;
-> +	),
-> +
-> +	TP_printk("start=0x%lx end=0x%lx migratetype=%d nr_migrated=%lu nr_reclaimed=%lu nr_mapped=%lu",
-> +		  __entry->start,
-> +		  __entry->end,
-> +		  __entry->migratetype,
-> +		  __entry->nr_migrated,
-> +		  __entry->nr_reclaimed,
-> +		  __entry->nr_mapped)
-> +);
-> +
->  /*
->   * Required for uniquely and securely identifying mm in rss_stat tracepoint.
->   */
-> diff --git a/mm/internal.h b/mm/internal.h
-> index f309a010d50f..e114c647e278 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -537,7 +537,8 @@ isolate_migratepages_range(struct compact_control *cc,
->  			   unsigned long low_pfn, unsigned long end_pfn);
->  
->  int __alloc_contig_migrate_range(struct compact_control *cc,
-> -					unsigned long start, unsigned long end);
-> +					unsigned long start, unsigned long end,
-> +					int migratetype);
->  
->  /* Free whole pageblock and set its migration type to MIGRATE_CMA. */
->  void init_cma_reserved_pageblock(struct page *page);
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 150d4f23b010..f840bc785afa 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -6219,9 +6219,14 @@ static void alloc_contig_dump_pages(struct list_head *page_list)
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index 0e406677060d..395042b29ffc 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -467,6 +467,13 @@ static int dra7xx_add_pcie_ep(struct dra7xx_pcie *dra7xx,
+>  		return ret;
 >  	}
+>  
+> +	ret = dw_pcie_ep_init_registers(ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
+> +		dw_pcie_ep_deinit(ep);
+> +		return ret;
+> +	}
+> +
+>  	return 0;
 >  }
 >  
-> -/* [start, end) must belong to a single zone. */
-> +/*
-> + * [start, end) must belong to a single zone.
-> + * @migratetype: using migratetype to filter the type of migration in
-> + *		trace_mm_alloc_contig_migrate_range_info.
-> + */
->  int __alloc_contig_migrate_range(struct compact_control *cc,
-> -					unsigned long start, unsigned long end)
-> +					unsigned long start, unsigned long end,
-> +					int migratetype)
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index dc2c036ab28c..bfcafa440ddb 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1136,6 +1136,14 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
+>  		dev_err(dev, "failed to initialize endpoint\n");
+>  		return ret;
+>  	}
+> +
+> +	ret = dw_pcie_ep_init_registers(ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
+> +		dw_pcie_ep_deinit(ep);
+> +		return ret;
+> +	}
+> +
+>  	/* Start LTSSM. */
+>  	imx6_pcie_ltssm_enable(dev);
+>  
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index c0c62533a3f1..8392894ed286 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -1286,6 +1286,13 @@ static int ks_pcie_probe(struct platform_device *pdev)
+>  		ret = dw_pcie_ep_init(&pci->ep);
+>  		if (ret < 0)
+>  			goto err_get_sync;
+> +
+> +		ret = dw_pcie_ep_init_registers(&pci->ep);
+> +		if (ret < 0) {
+> +			dev_err(dev, "Failed to initialize DWC endpoint registers\n");
+> +			goto err_ep_init;
+> +		}
+> +
+>  		break;
+>  	default:
+>  		dev_err(dev, "INVALID device type %d\n", mode);
+> @@ -1295,6 +1302,8 @@ static int ks_pcie_probe(struct platform_device *pdev)
+>  
+>  	return 0;
+>  
+> +err_ep_init:
+> +	dw_pcie_ep_deinit(&pci->ep);
+>  err_get_sync:
+>  	pm_runtime_put(dev);
+>  	pm_runtime_disable(dev);
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index 2e398494e7c0..b712fdd06549 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -276,6 +276,13 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = dw_pcie_ep_init_registers(&pci->ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
+> +		dw_pcie_ep_deinit(&pci->ep);
+> +		return ret;
+> +	}
+> +
+>  	return ls_pcie_ep_interrupt_init(pcie, pdev);
+>  }
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index ed1f2afd830a..278bdc9b2269 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -729,7 +729,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	struct device *dev = pci->dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct device_node *np = dev->of_node;
+> -	const struct pci_epc_features *epc_features;
+>  
+>  	INIT_LIST_HEAD(&ep->func_list);
+>  
+> @@ -775,29 +774,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  		goto err_exit_epc_mem;
+>  	}
+>  
+> -	if (ep->ops->get_features) {
+> -		epc_features = ep->ops->get_features(ep);
+> -		if (epc_features->core_init_notifier)
+> -			return 0;
+> -	}
+
+why remove this check?
+
+Frank
+
+> -
+> -	/*
+> -	 * NOTE:- Avoid accessing the hardware (Ex:- DBI space) before this
+> -	 * step as platforms that implement 'core_init_notifier' feature may
+> -	 * not have the hardware ready (i.e. core initialized) for access
+> -	 * (Ex: tegra194). Any hardware access on such platforms result
+> -	 * in system hang.
+> -	 */
+> -	ret = dw_pcie_ep_init_registers(ep);
+> -	if (ret)
+> -		goto err_free_epc_mem;
+> -
+>  	return 0;
+>  
+> -err_free_epc_mem:
+> -	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+> -			      epc->mem->window.page_size);
+> -
+>  err_exit_epc_mem:
+>  	pci_epc_mem_exit(epc);
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
+> index 778588b4be70..ca9b22e654cd 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
+> @@ -145,6 +145,15 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
+>  
+>  		pci->ep.ops = &pcie_ep_ops;
+>  		ret = dw_pcie_ep_init(&pci->ep);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = dw_pcie_ep_init_registers(&pci->ep);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to initialize DWC endpoint registers\n");
+> +			dw_pcie_ep_deinit(&pci->ep);
+> +		}
+> +
+>  		break;
+>  	default:
+>  		dev_err(dev, "INVALID device type %d\n", dw_plat_pcie->mode);
+> diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> index 9d9d22e367bb..fb7c03639a53 100644
+> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> @@ -414,6 +414,7 @@ static const struct dw_pcie_ep_ops pcie_ep_ops = {
+>  static int rcar_gen4_add_dw_pcie_ep(struct rcar_gen4_pcie *rcar)
 >  {
->  	/* This function is based on compact_zone() from compaction.c. */
->  	unsigned int nr_reclaimed;
-> @@ -6232,6 +6237,10 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
->  		.nid = zone_to_nid(cc->zone),
->  		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
->  	};
-> +	struct page *page;
-> +	unsigned long total_mapped = 0;
-> +	unsigned long total_migrated = 0;
-> +	unsigned long total_reclaimed = 0;
+>  	struct dw_pcie_ep *ep = &rcar->dw.ep;
+> +	struct device *dev = rcar->dw.dev;
+>  	int ret;
 >  
->  	lru_cache_disable();
+>  	if (!IS_ENABLED(CONFIG_PCIE_RCAR_GEN4_EP))
+> @@ -422,8 +423,17 @@ static int rcar_gen4_add_dw_pcie_ep(struct rcar_gen4_pcie *rcar)
+>  	ep->ops = &pcie_ep_ops;
 >  
-> @@ -6257,9 +6266,16 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
->  							&cc->migratepages);
->  		cc->nr_migratepages -= nr_reclaimed;
->  
-> +		total_reclaimed += nr_reclaimed;
-> +		list_for_each_entry(page, &cc->migratepages, lru)
-> +			total_mapped += page_mapcount(page);
-
-You're doing this calculation regardless of if tracing is enabled or not
-and it's only used for tracing? Please add:
-
-		if (trace_mm_alloc_contig_migrate_range_info_enabled()) {
-			total_reclaimed += nr_reclaimed;
-			list_for_each_entry(page, &cc->migratepages, lru)
-				total_mapped += page_mapcount(page);
-		}
-
--- Steve
-
+>  	ret = dw_pcie_ep_init(ep);
+> -	if (ret)
+> +	if (ret) {
+>  		rcar_gen4_pcie_ep_deinit(rcar);
+> +		return ret;
+> +	}
 > +
->  		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
->  			NULL, (unsigned long)&mtc, cc->mode, MR_CONTIG_RANGE, NULL);
+> +	ret = dw_pcie_ep_init_registers(ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
+> +		dw_pcie_ep_deinit(ep);
+> +		rcar_gen4_pcie_ep_deinit(rcar);
+> +	}
 >  
-> +		if (!ret)
-
-May want the above to be:
-
-		if (trace_mm_alloc_config_migrate_range_info_enabled() && !ret)
-
-too.
-
--- Steve
-
-> +			total_migrated += cc->nr_migratepages;
+>  	return ret;
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> index 3fced0d3e851..82ccaea089be 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> @@ -399,7 +399,18 @@ static int uniphier_pcie_ep_probe(struct platform_device *pdev)
+>  		return ret;
+>  
+>  	priv->pci.ep.ops = &uniphier_pcie_ep_ops;
+> -	return dw_pcie_ep_init(&priv->pci.ep);
+> +	ret = dw_pcie_ep_init(&priv->pci.ep);
+> +	if (ret)
+> +		return ret;
 > +
->  		/*
->  		 * On -ENOMEM, migrate_pages() bails out right away. It is pointless
->  		 * to retry again over this error, so do the same here.
-> @@ -6273,9 +6289,13 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
->  		if (!(cc->gfp_mask & __GFP_NOWARN) && ret == -EBUSY)
->  			alloc_contig_dump_pages(&cc->migratepages);
->  		putback_movable_pages(&cc->migratepages);
-> -		return ret;
->  	}
-> -	return 0;
+> +	ret = dw_pcie_ep_init_registers(&priv->pci.ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
+> +		dw_pcie_ep_deinit(&priv->pci.ep);
+> +		return ret;
+> +	}
 > +
-> +	trace_mm_alloc_contig_migrate_range_info(start, end, migratetype,
-> +						 total_migrated,
-> +						 total_reclaimed,
-> +						 total_mapped);
-> +	return (ret < 0) ? ret : 0;
+> +	return 0;
 >  }
 >  
->  /**
-> @@ -6355,7 +6375,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
->  	 * allocated.  So, if we fall through be sure to clear ret so that
->  	 * -EBUSY is not accidentally used or returned to caller.
->  	 */
-> -	ret = __alloc_contig_migrate_range(&cc, start, end);
-> +	ret = __alloc_contig_migrate_range(&cc, start, end, migratetype);
->  	if (ret && ret != -EBUSY)
->  		goto done;
->  	ret = 0;
-> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-> index cd0ea3668253..a5c8fa4c2a75 100644
-> --- a/mm/page_isolation.c
-> +++ b/mm/page_isolation.c
-> @@ -434,7 +434,7 @@ static int isolate_single_pageblock(unsigned long boundary_pfn, int flags,
->  				}
->  
->  				ret = __alloc_contig_migrate_range(&cc, head_pfn,
-> -							head_pfn + nr_pages);
-> +							head_pfn + nr_pages, page_mt);
->  
->  				/*
->  				 * restore the page's migratetype so that it can
-
+>  static const struct uniphier_pcie_ep_soc_data uniphier_pro5_data = {
+> 
+> -- 
+> 2.25.1
+> 
