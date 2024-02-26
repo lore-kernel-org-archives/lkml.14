@@ -1,115 +1,131 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74A81D69E
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332134EB5D;
+	Mon, 26 Feb 2024 09:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708939344; cv=none; b=I1dp8Q6zJ0vSkgF6A+GEIUZVe4GqSFPjdvsl6B+OHIHMRw55OzgltnovGT6AFwAPU6yBG5b7HlhfHgBsPpelBWlppgOL6RMRSudohuIuE4exh86lp3J4ISX6AMGYEPd21v7hNstLijyQd/WevQeoiGc2hZ+HGigQ35kTyTUOxNc=
+	t=1708939361; cv=none; b=evKFAhtMCq67NbZFq1Ej4c0suMaJUqKyfcXO3XUVyaZdY2eeytH92cVq8RKViDlL0AxE2gWcBUhagzDNoTrQtxxZlyZEod11jStyW9C9CO2TZVEZ0DHLzNdyhiATWhf0dSk4v0zeH+gNAun9Zs4GZInGyzlRVyXeQKmAj893nh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708939344; c=relaxed/simple;
-	bh=j8XfaiFpFxA90a4LK42YXfNdmNz9AouX/NgcsYVPG08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bDPW+qRw0M09PgduXStMd1Oq4GS5OqqzsCg+xq24vM81C7HYmhwo6ruE1jucZ1MMxmFbvViNbB+xWl1p0/kOJji/663jdEGj6uOVFC0DLzIpS2cph99D1cpqJC/gqu/uLlJGC+rDq+q/QWl3/Gj4kLBHCBrmUgXHic2JMK2Nb94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=1hX8+4ka; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1708939361; c=relaxed/simple;
+	bh=nHmAy4X/MhOUx7m403mmSo7DPD1Gl0hucVSHAPwk1YA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=LrppRc1rwiJ8FfiSzyS0qeA0J+k7PbbxxkmTG71QwsNDY/NUrWBW4kKLPkO6ea3qZ4tgcf3iXpyIHuU3MZWHW2Q4ES2Zf2xLmFHyhWrbATyDFG8wKuVKlJnTAZ+NXKoJGOSe8WGuUByhNrj4333V9apaI+rk1ye45LpJrOyhgoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lw6p1EJV; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="1hX8+4ka"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33d066f8239so2083044f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:22:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1708939341; x=1709544141; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j8XfaiFpFxA90a4LK42YXfNdmNz9AouX/NgcsYVPG08=;
-        b=1hX8+4ka2IXadTkHka4Jpdk+G2QU4NO3kxWy6hOWpJfarp0bgruourRNnGQ9SZ6UuM
-         00TY/PhF1f3X5yi5oDsC/Xk6ARAV6WKqtvTATOM89CJeZfN0DpGCNBMzHpxMBkDE/dWV
-         UOg6zfckMBw4FoGBY2eM1B7FE3MAxBKnFICjV2aqMlzt4ZZ2QUk5JNAYgNwdB5tYBoO4
-         6x6yrPg3puiAo0QKR14OEEIfSAZrzhu4wt+Wc2DnmR9MCl4e213MnIG4zlzOS+S9s59y
-         oKI0ua4TFTeRVxh7RVLTd3nmXcNPMI4dJvJp9IGVzAQFX9iwauzoII3lep/5gt9I8Mch
-         O99g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708939341; x=1709544141;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j8XfaiFpFxA90a4LK42YXfNdmNz9AouX/NgcsYVPG08=;
-        b=wSGpGQ73Am53QEpuGSCL+0M0tvAdgJkbqfNfdq4F6BwImLrld5lGrOakM+dMXjkbkI
-         /CpFigedjBchlcu9644w68nmTbYGPcTrYvv/yeRDzgDLd8MYgk3AN0QjOYvRUnSET0qB
-         tMkpCkxRR9HmU2dxsgLERe3W0cAGPUzYpW4Zpt7wNNwZ9SRH+mIhYS4wCbGyVbt8DXfX
-         fPNTsFWArW+Jowi30JC3uZw9VevcgGEG8tYDNHJyQ0Y3yJjvvzW5J4nRXDheVuNUkx33
-         +OikB2gr+v4TVeLC7BD/TSxhddjjDkupAWDXmVptaELE7Sx0yVuW81AuX39LdAD3PRJC
-         FNqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUh/i/pyo5I6reCz6nu05AmQczwbxO9tmgcKnpo/lfW+T4R60Ml4u/yYnmr6eM9BECniaE1tZfIqsOBlD2g4u9sZvAmbT7XiIHDtKUw
-X-Gm-Message-State: AOJu0YzpJq5nr2X5L7rNytMXy+BWM/2JOg3yHPp2tztLnFEDovyI7pTt
-	wX/4cR2ZeQVf3h1l0QCZnHRevHLoe+MXBfYNkEL4bh+I1KW6Q1ZqajZ1/Wdmavg=
-X-Google-Smtp-Source: AGHT+IFhByc7Z/s+hrcaeMhRiOLNXEQPUqLbBOTkrI67qidhCeOFDFWtzdBsTN1m+Ij8d6SU/mQ3XA==
-X-Received: by 2002:adf:e40f:0:b0:33d:a185:17ec with SMTP id g15-20020adfe40f000000b0033da18517ecmr4122739wrm.4.1708939341017;
-        Mon, 26 Feb 2024 01:22:21 -0800 (PST)
-Received: from localhost ([86.61.181.4])
-        by smtp.gmail.com with ESMTPSA id e11-20020adfe7cb000000b0033d071c0477sm7605769wrn.59.2024.02.26.01.22.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 01:22:20 -0800 (PST)
-Date: Mon, 26 Feb 2024 10:22:19 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel@axis.com, Serge Semin <fancer.lancer@gmail.com>
-Subject: Re: [PATCH net-next v3] net: stmmac: mmc_core: Drop interrupt
- registers from stats
-Message-ID: <ZdxYS6Fmd6NLScGC@nanopsycho>
-References: <20240223-stmmac_stats-v3-1-5d483c2a071a@axis.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lw6p1EJV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708939361; x=1740475361;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=nHmAy4X/MhOUx7m403mmSo7DPD1Gl0hucVSHAPwk1YA=;
+  b=Lw6p1EJV7agIkqG+SujyyR4/TdX+pYm/lqAdQw/YbhjV+u/3L/SAKCnp
+   6J1GOMbrkYR1vKBdtdZKYFapcHCZcvpsG8gloFn3eqiTiLT5lkj/IizUu
+   CTTItcj4r8BRQva6j+/SXrLTijQhD1SU9m5vkMjERifiMiGkHGXwtyNx3
+   kTWmjBubOWhfH3hp73VVMC4QwhgMHXK0GuBPuKcKP2fbIXReeXSveim+n
+   EgSd1dmrpGJJts2MX2bhfF7aUnhwZYMM3cO+00U3JqM5nylPCXgrXhEA4
+   mOsFTPbz2scXGiAkC1QIlp3ZORlYURv5f4jyVWCB0+GQLPTzeUgd6ysf+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="13764211"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="13764211"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 01:22:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="937029631"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="937029631"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2024 01:22:36 -0800
+Message-ID: <1e719367-01ae-565a-2199-0ff7e260422b@linux.intel.com>
+Date: Mon, 26 Feb 2024 11:24:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223-stmmac_stats-v3-1-5d483c2a071a@axis.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: "Christian A. Ehrhardt" <lk@c--e.de>, niklas.neronin@linux.intel.com,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ linux-x86_64@vger.kernel.org, netdev@vger.kernel.org,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+References: <CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com>
+ <Zb6D/5R8nNrxveAP@cae.in-ulm.de> <Zb/30qOGYAH4j6Mn@cae.in-ulm.de>
+ <CABXGCsPu73D+JS9dpvzX78RktK2VOv_xT8vvuVaQ=B6zs2dMNQ@mail.gmail.com>
+ <e7b96819-edf7-1f9f-7b01-e2e805c99b33@linux.intel.com>
+ <CABXGCsPjW_Gr4fGBzYSkr_4tsn0fvuT72G-YJYXcb1a4kX=CQw@mail.gmail.com>
+ <2d87509a-1515-520c-4b9e-bba4cd4fa2c6@linux.intel.com>
+ <CABXGCsPdXqRG6v97KDGy+o59xc3ayaq3rLj267veC7YcKVp8ww@mail.gmail.com>
+ <1126ed0a-bfc1-a752-1b5e-f1339d7a8aa5@linux.intel.com>
+ <CABXGCsN5_O3iKDOyYxtsGTGDA6fw4962CjzXLSnOK3rscELq+Q@mail.gmail.com>
+ <a026ecd8-6fba-017d-d673-0d0759a37ed8@linux.intel.com>
+ <CABXGCsOgy8H4GGcNU1jRE+SzRqwnPeNuy_3xBukjwB-bPxeZrQ@mail.gmail.com>
+ <CABXGCsOd=E428ixUOw+msRpnaubgx5-cVU7TDXwRUCdrM5Oicw@mail.gmail.com>
+ <34d7ab1b-ab12-489d-a480-5e6ccc41bfc3@infradead.org>
+ <10487018-49b8-4b27-98a1-07cee732290d@infradead.org>
+ <4f34b6a8-4415-6ea4-8090-262847d606c6@linux.intel.com>
+ <3ea25443-1275-4c67-90e0-b637212d32b5@leemhuis.info>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: This is the fourth time I've tried to find what led to the
+ regression of outgoing network speed and each time I find the merge commit
+ 8c94ccc7cd691472461448f98e2372c75849406c
+In-Reply-To: <3ea25443-1275-4c67-90e0-b637212d32b5@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Fri, Feb 23, 2024 at 09:37:01PM CET, jesper.nilsson@axis.com wrote:
->The MMC IPC interrupt status and interrupt mask registers are
->of little use as Ethernet statistics, but incrementing counters
->based on the current interrupt and interrupt mask registers
->makes them actively misleading.
->
->For example, if the interrupt mask is set to 0x08420842,
->the current code will increment by that amount each iteration,
->leading to the following sequence of nonsense:
->
->mmc_rx_ipc_intr_mask: 969816526
->mmc_rx_ipc_intr_mask: 1108361744
->
->These registers have been included in the Ethernet statistics
->since the first version of MMC back in 2011 (commit 1c901a46d57).
->That commit also mentions the MMC interrupts as
->"something to add later (if actually useful)".
->
->If the registers are actually useful, they should probably
->be part of the Ethernet register dump instead of statistics,
->but for now, drop the counters for mmc_rx_ipc_intr and
->mmc_rx_ipc_intr_mask completely.
->
->Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
->Signed-off-by: Jesper Nilsson <jesper.nilsson@axis.com>
+On 26.2.2024 7.45, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 21.02.24 14:44, Mathias Nyman wrote:
+>> On 21.2.2024 1.43, Randy Dunlap wrote:
+>>> On 2/20/24 15:41, Randy Dunlap wrote:
+>>>> {+ tglx]
+>>>> On 2/20/24 15:19, Mikhail Gavrilov wrote:
+>>>>> On Mon, Feb 19, 2024 at 2:41 PM Mikhail Gavrilov
+>>>>> <mikhail.v.gavrilov@gmail.com> wrote:
+>>>>> I spotted network performance regression and it turned out, this was
+>>>>> due to the network card getting other interrupt. It is a side effect
+>>>>> of commit 57e153dfd0e7a080373fe5853c5609443d97fa5a.
+>>>> That's a merge commit (AFAIK, maybe not so much). The commit in
+>>>> mainline is:
+>>>>
+>>>> commit f977f4c9301c
+>>>> Author: Niklas Neronin <niklas.neronin@linux.intel.com>
+>>>> Date:   Fri Dec 1 17:06:40 2023 +0200
+>>>>
+>>>>       xhci: add handler for only one interrupt line
+>>>>
+>>>>> Installing irqbalance daemon did not help. Maybe someone experienced
+>>>>> such a problem?
+>>>>
+>>>> Thomas, would you look at this, please?
+>>>>
+>>>> A network device and xhci (USB) driver are now sharing interrupts.
+>>>> This causes a large performance decrease for the networking device.
+>>
+>> Short recap:
+> 
+> Thx for that. As the 6.8 release is merely two or three weeks away while
+> a fix is nowhere near in sight yet (afaics!) I start to wonder if we
+> should consider a revert here and try reapplying the culprit in a later
+> cycle when this problem is fixed.
 
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+I don't think reverting this series is a solution.
 
-[...]
+This isn't really about those usb xhci patches.
+This is about which interrupt gets assigned to which CPU.
 
->---
->base-commit: a08689109c5989acdc5c320de8e45324f6cfa791
->change-id: 20240216-stmmac_stats-e3561d460d0e
+Mikhail got unlucky when the network adapter interrupts on that system was
+assigned to CPU0, clearly a more "clogged" CPU, thus causing a drop in max
+bandwidth.
 
-
-Not sure what this is good for...
+Thanks
+Mathias
