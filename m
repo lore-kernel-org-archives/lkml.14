@@ -1,355 +1,553 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA9410FD;
-	Mon, 26 Feb 2024 14:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30E560DCB;
+	Mon, 26 Feb 2024 14:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708958029; cv=none; b=lttpXc8zrE5MH913SYdEsnehcN63EQ7pk4RfQAk9qRWbc/mT8k8PiA+QpE63h7i2VwZnNb6/8NtD+KwFD8Vwm1XJVojukk0BvQMWSjIlxdntQkvM+/Ii6W7Zq8b17fLlZSeOOnMfkwx4LsaZiAbP6TgLY97GnoRdXBBWvigyrkE=
+	t=1708958053; cv=none; b=R+2Eh6WYx2w4jtqcm/JkxEoWxAvQrSFpoDm92cOD4kvYxP6gP7MvfSQgT1eUhLnI2lRDyhhZPgwjtJg7YlsbZhhnCTPriYMWdjLclhC/+OFK8ZXTj2R5Uwa5+g9dRQ5YqLeXvcCiS8toAQUUHoyUyLxkXRWMtkxgh1Ll72OWyXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708958029; c=relaxed/simple;
-	bh=dT6v8U0ot3NdnGD7v4AKkIg9jGS5sjTxVUovtNIskWc=;
-	h=Content-Type:Mime-Version:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=s8LzN/Om6ft7MosIBOA/glGTtdoVmpLb5J/wImrLLK/WfiaoMBOC7+ZcfP33aRAz3PjIOqi5K/jdZyK/hcRG/YQbT/UJtq3HaJ273RnNyumt735GRy06x/sY50zdilK4yRY+UBv3feuP5/ZjtRQU4qR8aW/RE2inzLUPpvifanI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S2vCt+/J; arc=none smtp.client-ip=209.85.208.53
+	s=arc-20240116; t=1708958053; c=relaxed/simple;
+	bh=vcbUHufROzppyQjoIxkULiv+lfFzN4BwPJoVWA6nuIM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=itxagsGQZ70aH87RKVwdlzAmgpO/YPPrhkWRu0mkCDPsTIYCcogVLchRLCR3aeqEwaTDxn/y5fRB2CqJpYkmhqhJhny6SMo/ZEDK8fJbIcqKEW3YMZmgoQy+/cTm9CvPoq49kpy3J10qtVA8aX1Ifpwrl7qwdj1P3wmm3D8s6g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lJUD8cfG; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2vCt+/J"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5658082d2c4so3944275a12.1;
-        Mon, 26 Feb 2024 06:33:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJUD8cfG"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5dc949f998fso2108658a12.3;
+        Mon, 26 Feb 2024 06:34:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708958025; x=1709562825; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3N6Ym3bgXQzF5z7AmW2Qb4zuSJjYbLzuSuV+PTkZGxo=;
-        b=S2vCt+/JwEkikaO9TpeU/p/AlGPtPghmbK74hT/0Jx1CUw3BGLOqNM/AUc2rovFcW4
-         xrKrAXz90IBox1OeLmvKDcMdbEfDIyBzkDcgnfG6fHEnafl4xpaYD+6jqcsewPGsmobv
-         mJTGF93y3PNDc+qbCNW7Cgf+SEUtvp1GIlP2/BcQEBGzpPZSqL5uoA8An0FwE+welTLN
-         49Ji75lGo8RaqVNKOwFNAq0YJ2UuJOVoAcurKz9IfMxN+DnjBlXgyqhI93g7oWz2kEu/
-         d2QqNLf7Eba3HprB8Qg3Lbm6vPc1UEpUcNeubeXa56OOJL41mh6RE89ITpFL6THt8qOH
-         4+dQ==
+        d=gmail.com; s=20230601; t=1708958051; x=1709562851; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t25uH2puf/UzSgQbWO6SwGj41zbXZ2MTmXL6cUJyp1k=;
+        b=lJUD8cfGVPoH2a++tbktb/l/HRYfEy3t3UW1S90X8FnmUgQDl0SersgEYNsXPrwvzA
+         9wzigtK6vrM1Lg/vVxfkFfaYhu1/FfMtbW/EOn6Pwbb99h3yP6QrKm4vmZgLvDSQ6zOq
+         ocGp5NsngQwOAIZFTsZih1RMLzXCj0uiL9XGXUa41fGy1uDLUDs3PAmBh6RQjUs94Itx
+         hg7/sEHsr8nKvmxtdf8vNZ4h9T5Q986sWW+kmIyV7cJ5lvWa3l+VG6Yya2gaymyCC5CT
+         cXLrokr477ZnVWC1Tzf5VtCKUhMJGJVK2xYU3MsENXsWeMVFLsvYCLfd8h7qR2Ai6f23
+         GT1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708958025; x=1709562825;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1708958051; x=1709562851;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3N6Ym3bgXQzF5z7AmW2Qb4zuSJjYbLzuSuV+PTkZGxo=;
-        b=dOWwaL75CwNPZG9t/XDmdzjXAUs1cVsB/u4iayzjZr29iYtx5acVOU5cIM9/OMIav1
-         530zXR6yvmChkjOPfslWFKGVngV7GquiQg0tYwdfMfqoHFCyc0p1IIlCTzQ/pelQCAEa
-         UVRgv19u/yCIy5KlcynWtHAUb5hclU5Zii2HhHS1AxIL80i73odyJbV3CPzl+kC+n689
-         9HBRHwmSD0Z+SQVJP9mkiVeUJSg5P8nmDdjMHIWifyvRHJOTan9rDOAXg0lOxQoTdiKl
-         yWJ+5tYPDeo2VSMHlRdsM75ja3GU4km1UzSovpZFH1h+gXdTAGNIn1wDPHDxBxP51MSM
-         4jmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUqvxTai0BlJ0gWrxg3yFBJHhoxtNpYALarbQmlYk1IiKscgPc/DQSwfPcIndcS03259cfG1xgJH2wmwAhUAdbPYM2ft1KzfYW2UokT5+N7cppvliefv6utHhEkMNml8pUmMQWcirkiuCjdpBoHBwdbWNz9haEIsbFG1aNjFoBmjAs=
-X-Gm-Message-State: AOJu0Yx8T/hmYttoVa/CPKk/A8dth1pENEZIVnBO/z/MdcVwdX2XXrsW
-	VOM6pVkk+ATl2WQF145BYXmfAczxazb0DtIuJP/IQxZPi5fhwPW5wowgjJiw
-X-Google-Smtp-Source: AGHT+IHgys4HEymXkOTHp1yCx3gCB2tXlabzaPGh5szcy6U0nbuX8/uSEHAx937Ahxxw0TFO6/BZpQ==
-X-Received: by 2002:a17:906:603:b0:a3e:fc79:c92b with SMTP id s3-20020a170906060300b00a3efc79c92bmr4479666ejb.31.1708958024993;
-        Mon, 26 Feb 2024 06:33:44 -0800 (PST)
-Received: from localhost (p200300e41f222300f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f22:2300:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id vw7-20020a170907a70700b00a4324ae24dbsm1556647ejc.62.2024.02.26.06.33.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 06:33:44 -0800 (PST)
-Content-Type: multipart/signed;
- boundary=d466fbf28d2645461829b3779913021bcae7500246ea7f2e1559fe55a58a;
- micalg=pgp-sha256; protocol="application/pgp-signature"
+        bh=t25uH2puf/UzSgQbWO6SwGj41zbXZ2MTmXL6cUJyp1k=;
+        b=LEFWpiAiRTRqTqtIn0PY5Q54wEe11KusN1SkmN0FLDrYXOyTBF36CV6g1f4lJM4JbQ
+         uJyXE5/yZFPQgcxmRN1++T5rGN2xXLrhIZLtXM5ufoCnkq4yxBlfhyN3gcHJJhf0tKaj
+         egd9puhl3nRThqrvuEWzKDOANSYt06Ot3eRVDdp778qNe162v/bz+8fpJf8eR3fu6ECB
+         p8SgO9+PCH2m7387lLhSdumALcRfzXgomstq/zzDmc7oOGE50Ch3QANBn3R5/PmjrsJt
+         fJGaOe9Pao3zZUejUI6DxFWImFQxFBEAXIyMmLSisviJ+f/R9IShjojKsdhA7RVXceNu
+         P+Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/px7m878akM/7X02n7Qy0IaMhH+4BDY4WK1cSGFF7KcUFI+RVAspzqmaR7l7kDQY1nhTVnkMo6Mw653+eWHAEmHuk
+X-Gm-Message-State: AOJu0YyeoK0jizqSVRex10mcR0AWC3tLPWySb0BxxwPv1YJjjt9c1+Xi
+	PIcxzNwgiYWv0kDfHaP/OlRRtrNOl1s4E7VOJt8m1NCSsIw5nklmqzdvYDC7
+X-Google-Smtp-Source: AGHT+IFJBoGVieLf5XevT8WAWg2NJBGQw0jOm3JyNK4IJH6jr8hwlDT/wc93iYbWqC54cwInbnJ1Tg==
+X-Received: by 2002:a17:90a:4094:b0:299:3354:feff with SMTP id l20-20020a17090a409400b002993354feffmr4131301pjg.30.1708958050550;
+        Mon, 26 Feb 2024 06:34:10 -0800 (PST)
+Received: from localhost ([198.11.178.15])
+        by smtp.gmail.com with ESMTPSA id r13-20020a17090ad40d00b0029a7df64720sm6308092pju.53.2024.02.26.06.34.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Feb 2024 06:34:10 -0800 (PST)
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	kvm@vger.kernel.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	x86@kernel.org,
+	Kees Cook <keescook@chromium.org>,
+	Juergen Gross <jgross@suse.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>
+Subject: [RFC PATCH 00/73] KVM: x86/PVM: Introduce a new hypervisor
+Date: Mon, 26 Feb 2024 22:35:17 +0800
+Message-Id: <20240226143630.33643-1-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Mon, 26 Feb 2024 15:33:43 +0100
-Message-Id: <CZF325ZTG8X5.28VUA9EUUHHBK@gmail.com>
-Cc: "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Jose Abreu"
- <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, <netdev@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <linux-tegra@vger.kernel.org>, "Thierry Reding" <treding@nvidia.com>
-Subject: Re: [PATCH net-next v3 3/3] net: stmmac: Configure AXI on Tegra234
- MGBE
-From: "Thierry Reding" <thierry.reding@gmail.com>
-To: "Serge Semin" <fancer.lancer@gmail.com>
-X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
-References: <20240219-stmmac-axi-config-v3-0-fca7f046e6ee@nvidia.com>
- <20240219-stmmac-axi-config-v3-3-fca7f046e6ee@nvidia.com>
- <xne2i6jwqaptsrd2hjdahxbscysgtj7iabqendyjb75fnrjc5z@js7n7qngtzym>
- <CZ9Z70HO2C7J.398BRNM8NBIG1@gmail.com>
- <kns2u6o4nhz4vda74r2mscyyp6yjgo2p62vryeenucm4o3ngzb@j6ch3sl6xha2>
-In-Reply-To: <kns2u6o4nhz4vda74r2mscyyp6yjgo2p62vryeenucm4o3ngzb@j6ch3sl6xha2>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---d466fbf28d2645461829b3779913021bcae7500246ea7f2e1559fe55a58a
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
-On Fri Feb 23, 2024 at 11:24 PM CET, Serge Semin wrote:
-> On Tue, Feb 20, 2024 at 03:28:39PM +0100, Thierry Reding wrote:
-> > On Mon Feb 19, 2024 at 7:32 PM CET, Serge Semin wrote:
-> > > On Mon, Feb 19, 2024 at 05:46:06PM +0100, Thierry Reding wrote:
-> > > > From: Thierry Reding <treding@nvidia.com>
-> > > >=20
-> > > > Allow the device to use bursts and increase the maximum number of
-> > > > outstanding requests to improve performance. Measurements show an
-> > > > increase in throughput of around 5x on a 1 Gbps link.
-> > > >=20
-> > > > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > > > ---
-> > > >  drivers/net/ethernet/stmicro/stmmac/dwmac-tegra.c | 9 +++++++++
-> > > >  1 file changed, 9 insertions(+)
-> > > >=20
-> > > > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-tegra.c b/dr=
-ivers/net/ethernet/stmicro/stmmac/dwmac-tegra.c
-> > > > index bab57d1675df..b6bfa48f279d 100644
-> > > > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-tegra.c
-> > > > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-tegra.c
-> > > > @@ -199,6 +199,12 @@ static void mgbe_uphy_lane_bringup_serdes_down=
-(struct net_device *ndev, void *mg
-> > > >  	writel(value, mgbe->xpcs + XPCS_WRAP_UPHY_RX_CONTROL);
-> > > >  }
-> > > > =20
-> > > > +static const struct stmmac_axi tegra234_mgbe_axi =3D {
-> > > > +	.axi_wr_osr_lmt =3D 63,
-> > > > +	.axi_rd_osr_lmt =3D 63,
-> > > > +	.axi_blen =3D { 256, },
-> > > > +};
-> > > > +
-> > > >  static int tegra_mgbe_probe(struct platform_device *pdev)
-> > > >  {
-> > > >  	struct plat_stmmacenet_data *plat;
-> > > > @@ -284,6 +290,9 @@ static int tegra_mgbe_probe(struct platform_dev=
-ice *pdev)
-> > > >  	if (err < 0)
-> > > >  		goto disable_clks;
-> > > > =20
-> > > > +	/* setup default AXI configuration */
-> > > > +	res.axi =3D &tegra234_mgbe_axi;
-> > > > +
-> > > >  	plat =3D devm_stmmac_probe_config_dt(pdev, &res);
-> > > >  	if (IS_ERR(plat)) {
-> > > >  		err =3D PTR_ERR(plat);
-> > >
-> > > Let's get back to the v2 discussion:
-> > >
-> > > On Mon Feb 5, 2024 at 1:44 AM CET, Serge Semin wrote:
-> > > > The entire series can be converted to just a few lines of change:
-> > > >     plat =3D devm_stmmac_probe_config_dt(pdev, res.mac);
-> > > >     if (IS_ERR(plat)) {
-> > > >             err =3D PTR_ERR(plat);
-> > > >             goto disable_clks;
-> > > >     }
-> > > > +
-> > > > +   if (IS_ERR_OR_NULL(plat->axi)) {
-> > > > +           plat->axi =3D devm_kzalloc(&pdev->dev, sizeof(*axi), GF=
-P_KERNEL);
-> > > > +           if (!plat->axi) {
-> > > > +                   ret =3D -ENOMEM;
-> > > > +                   goto disable_clks;
-> > > > +           }
-> > > > +   } /* else memset plat->axi with zeros if you wish */
-> > > > +
-> > > > +   plat->axi->axi_wr_osr_lmt =3D 63;
-> > > > +   plat->axi->axi_rd_osr_lmt =3D 63;
-> > > > +   plat->axi->axi_blen[0] =3D 256;
-> > > > =20
-> > > >     plat->has_xgmac =3D 1;
-> > > >     plat->flags |=3D STMMAC_FLAG_TSO_EN;
-> > > >     plat->pmt =3D 1;
-> > > >
-> > > > Please don't overcomplicate the already overcomplicated driver with=
- a
-> > > > functionality which can be reached by the default one. In this case
-> > > > the easiest way is to let the generic code work and then
-> > > > override/replace/fix/etc the retrieved values. Thus there won't be
-> > > > need in adding the redundant functionality and keep the generic
-> > > > DT-platform code a bit simpler to read.
-> > >
-> > > You responded with:
-> > >
-> > > On Tue, Feb 13, 2024 at 04:51:34PM +0100, Thierry Reding wrote:
-> > > > I'm not sure I understand how this is overcomplicating things. The =
-code
-> > > > is pretty much unchanged, except that the AXI configuration can now=
- have
-> > > > driver-specified defaults before the DT is parsed. Perhaps I need t=
-o add
-> > > > comments to make that a bit clearer?
-> > > >=20
-> > > > While your version is certainly simpler it has the drawback that it=
- no
-> > > > longer allows the platform defaults to be overridden in device tree=
-. I
-> > > > would prefer if the defaults can be derived from the compatible str=
-ing
-> > > > but if need be for those defaults to still be overridable from devi=
-ce
-> > > > tree.
-> > >
-> > > Currently available functionality is easier to read and understand: b=
-y
-> > > default the data is retrieved from the DT, if no AXI DT-node found yo=
-u
-> > > can allocate/create your own AXI-configs, if there is AXI DT-node you
-> > > can fix it up in whatever way your wish. Thus the default behavior is
-> > > straightforward. You on the contrary suggest to add an additional
-> > > field to the resources structure which would need to be merged in wit=
-h
-> > > the data retrieved from DT. It makes the stmmac_axi_setup() method an=
-d
-> > > the entire logic more complex and thus harder to comprehend.
-> >=20
-> > I suppose that's subjective. Being able to let the driver provide
-> > defaults that can then be overridden by values from DT doesn't seem lik=
-e
-> > a very exotic (or complicated) feature to me. We do that elsewhere all
-> > the time. Do the comments that I added in this version not sufficiently
-> > explain what's going on?
->
-> I have perfectly understood what was going on since v1. My concern is
-> the implementation. Here is the way the platform-specific setup
-> currently works.
->
-> There are two structures: stmmac_resources and plat_stmmacenet_data.
-> The former one contains the generic platform resources like CSRs
-> mapping, IRQs and MAC-address. The later one mainly has the DW
-> MAC-specific settings. Yes, plat_stmmacenet_data has been evolved to
-> an ugly monster with many redundant flags (fixing code and data here
-> and there in the driver) and with some generic platform resources
-> (which should have been added to the stmmac_resources structure in the
-> first place, like clocks and resets). But still it's purpose is
-> more-or-less defined. Both of these structures can be filled in with
-> data either directly by the glue drivers or by calling the
-> ready-to-use DW MAC platform data getters (stmmac_probe_config_dt()
-> and stmmac_get_platform_resources()). Most importantly is that
-> currently these structures have independent init semantics: no common
-> data, no fields used in both contexts. There are tons of problematic
-> places or questionable implementations in the driver, but at least
-> this one is more-or-less defined: coherency is minimal, logic is
-> linear.
->
-> You suggest to break that logic by introducing a new stmmac_resources
-> field which doesn't represent a generic resource data, but which
-> purpose is to tweak the AXI-settings in the plat_stmmacenet_data
-> structure. The pointer won't be even ever initialized in the
-> stmmac_get_platform_resources() method because it's done in the
-> stmmac_probe_config_dt() function. Based on all of that the change you
-> suggest look more like a fixup of the problem with your particular
-> device/platform.
->
-> Let's assume you patches are accepted. In sometime an another
-> developer comes with a need to pre-define say MTL Tx/Rx queue configs,
-> then another one with DMA configs, MDIO-bus settings, and so on. Thus
-> the stmmac_resources structure will eventually turn in a set of the
-> tweaks and the plat_stmmacenet_data pre-defines. That's how the
-> plat_stmmacenet_data structure has turned in what it is now. This
-> doesn't look like a right path to take again.
->
-> >=20
-> > > The driver is already overwhelmed with flags and private/platform dat=
-a
-> > > fixing the code here and there (see plat_stmmacenet_data, it's a
-> > > madness). So please justify in more details why do you need one more
-> > > complexity added instead of:
-> > > 1. overriding the AXI-configs retrieved from DT,
-> >=20
-> > Again, overriding the AXI configs read from DT doesn't keep the current
-> > default behaviour of DT being the final authority. That's a policy that
-> > should remain intact. This patch (series) is about allowing the driver
-> > to override the AXI defaults with something that's sensible based on
-> > the compatible string. The current defaults, for example, cause the GBE
-> > on Tegra devices to run at around 100 Mbps even on a 1 Gbps link.
-> >=20
-> > > 2. updating DT on your platform
-> >=20
->
-> > That's one possibility and was in fact the first variant I used, but it
-> > has a few drawbacks. For example, it means that I need to create the AX=
-I
-> > node just to make the device functional, but if possible it's better to
-> > derive all necessary information from the compatible string. Having thi=
-s
-> > in a separate AXI configuration node is duplicating information that's
-> > already implied by the compatible string.
-> >=20
-> > Also, on Tegra we have a few instances of this device that are all
-> > configured the same way. Since the AXI configuration node is supposed t=
-o
-> > be a child of the Ethernet controller node, we end up having to
-> > duplicate even more information.
->
-> None of that sounds like big problems. The default behavior doesn't
-> make your devices not-working. Yes, the performance is poor, but they
-> still work. Regarding the AXI-config DT-nodes it's not a problem at
-> all. A lot of the DW *MAC instances currently have the AXI-config
-> DT-subnodes. It's absolutely fine to have them setting up the same
-> configs.
+This RFC series proposes a new virtualization framework built upon the
+KVM hypervisor that does not require hardware-assisted virtualization
+techniques. PVM (Pagetable-based virtual machine) is implemented as a
+new vendor for KVM x86, which is compatible with the KVM virtualization
+software stack, such as Kata Containers, a secure container technique in
+a cloud-native environment.
 
-But that's precisely my issue. In my opinion the default behavior for a
-device should be to be able to run at optimal performance without having
-to resort to extra quirks.
+The work also led to a paper being accepted at SOSP 2023 [sosp-2023-acm]
+[sosp-2023-pdf], and Lai delivered a presentation at the symposium in
+Germany in October 2023 [sosp-2023-slides]:
 
-All of the AXI configuration parameters can be derived from the DT
-compatible string, so it shouldn't be necessary to duplicate that
-information in an additional AXI configuration node.
+	PVM: Efficient Shadow Paging for Deploying Secure Containers in
+	Cloud-native Environment
 
-> Once again having the pre-defined configs is fine. All I am worried
-> about is the implementation you suggest especially in using the
-> stmmac_resources structure to tweak up the plat_stmmacenet_data data.
-> So the easiest solutions in your case are:
-> 1. Initialize the plat_stmmacenet_data->axi pointer if no AXI
-> DT-subnode was detected by the stmmac_probe_config_dt() method, after
-> the method is called. This will provide almost the same semantics as
-> you suggest. The only difference is that it would work not on the
-> property level but on the node-level one. (Note the implementation
-> suggested by you doesn't provide the AXI-configs pre-definition for
-> the boolean properties. So it doesn't provide a complete AXI-config
-> default pre-definition.)
+PVM has been adopted by Alibaba Cloud and Ant Group in production to
+host tens of thousands of secure containers daily, and it has also been
+adopted by the Openanolis community.
 
-Quite frankly that would not be useful at all. If there's no way to
-override defaults individually this becomes very brittle. If somebody
-wanted to override just a single parameter, they would need to reproduce
-the entire AXI configuration node, using an exact copy of the defaults
-for the parameters that they don't want to change.
+Motivation
+==========
+A team in Ant Group, co-creator of Kata Containers along with Intel,
+deploy the VM-based containers in our public cloud VM to satisfy dynamic
+resource requests and various needs to isolate workloads. However, for
+safety, nested virtualization is disabled in the L0 hypervisor, so we
+cannot use KVM directly. Additionally, the current nested architecture
+involves complex and expensive transitions between the L0 hypervisor and
+L1 hypervisor.
 
-> 2. Add the proper AXI-config DT-subnodes to the respective device tree
-> sources.
->
-> If despite of all my reasoning you still insist on having a
-> pre-defined setting pattern, then we'll need to come up with some
-> better solution. On the top of my mind it might be for example a
-> pre-definition of the entire plat_stmmacenet_data structure instance
-> or using the software nodes.
+So the over-arching goals of PVM are to completely decouple secure
+container hosting from the host hypervisor and hardware virtualization
+support to:
+  1) enable nested virtualization within any IaaS clouds without affecting
+  the security, flexibility, and complexity of the cloud platform;
+  2) avoid costly exits to the host hypervisor and devise efficient world
+  switching mechanisms.
 
-That sounds very impractical. We'd need to make sure to deep-copy the
-pre-definition structure and such, then deal with reference counting of
-the clocks, resets and whatever else.
+Why PVM
+=======
+The PVM hypervisor has the following features:
 
-I'll drop this series and stick with AXI configuration nodes like
-everyone else.
+- Compatible with KVM ecosystems.
 
-Thierry
+- No requiremment for hardware assistance.  Many cloud provider doesn't
+  enable nested virtualization.  And it can also enable KVM in TDX/SEV
+  guests.
 
---d466fbf28d2645461829b3779913021bcae7500246ea7f2e1559fe55a58a
-Content-Type: application/pgp-signature; name="signature.asc"
+- Flexible. Businesses with secure containers can easily expand in the
+  cloud when demand surges, instead of waiting to accquire bare metal.
+  Cloud vendors often offer lower pricing for spot instances or
+  preemptible VMs.
 
------BEGIN PGP SIGNATURE-----
+- Help for kernel CI with fast [re-]booting PVM guest kernels nested in
+  cheeper VMs.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmXcoUgACgkQ3SOs138+
-s6FFBRAAvNmKW5F9JaZOWoRbNCOa24mgbUt2118hqt2TCYg5cU/lFowjl6Gg7vcL
-fVJ7RjCI/d3BZzXd2Lgvr5HW1BPpbG80qw+vZ1Sk7cotpBKch23rKlHr/4yNF/bJ
-qLYCTDetGLgdmxVGgTH5pSdAZr/AwdQBWGVe+ey3iS5g5cNa/ci4Dyeu6atg2CLI
-3fFK26jTN3UHKCGayh5F9viDzC0iJgOweVTfeRMN3vVBCE8dosCNyU7PvpUff6lV
-BR11OqwLYgBpQRAyhYIT+LC8kxCB8IDrcZzxs/P2+E5BPySADmKhtvEJB4AshRuA
-2NSgahz4lMMTFYMLRMhbWEw5IItAubUQynqBjQK/vIRLwZoeE29oIaJrggLzpgcS
-r/db31k6zgxjMpo8pW5vg5kPqeTQk3Ixlp/4QGp4eOut4wcOgH92erV2mlHoIOoV
-4GuTp2h3MgBpP3HQ/GkalaaBoCjVhHC3S9gw/iehocnU+tVeWXSXibmuhtvLVrgZ
-Q8eaBRDEZpj3sAjspUJus1UtcoQakt645qYO1dRT4xdM5UgmfmTO9O4x7T9YrKm+
-u8fk6WcwKvVmSmsvT2bbaVsyideKDh8FTeSwPBotlZyblx7jc31EQ57SoQH7rDK8
-Hc+DehK0PQm1aaMqVY0V32A7n809vQzDrhilQyskekLwYgSLOFE=
-=Ivt5
------END PGP SIGNATURE-----
+- Enable light-weight container kernels.
 
---d466fbf28d2645461829b3779913021bcae7500246ea7f2e1559fe55a58a--
+Design
+======
+The design detail can be found in our paper posted in SOSP2023.
+
+The framework contains 3 main objects:
+
+"Switcher" - The code and data that handling the VM enter and VM exit.
+
+"PVM hypervisor" - A new vendor implementation for KVM x86, it uses
+                   existed software emulation in KVM for virtualization,
+                   e.g., shadow paging, APIC emulation, x86 instruction
+                   emulator.
+
+"PVM paravirtual guest" - A PIE linux kernel runs in hardware CPL3, and
+                          use existed PVOPS to implement optimization.
+
+
+                shadowed-user-pagetable shadowed-kernel-pagetable
+                            +----------|-----------+
+                            |   user   |  kernel   |
+    h_ring3                 |  (umod)  |  (smod)   |
+                            +---+------|--------+--+
+                        syscall |    ^      ^   | hypercall/
+            interrupt/exception |    |      |   | interrupt/exception
+--------------------------------|----|------|---|------------------------------------
+                                |    |sysret|   |
+    h_ring0                     v    | /iret|   v
+                              +------+------+----+
+                              |     switcher     |
+                              +---------+--------+
+                            vm entry ^  | vm exit
+                      (function call)|  v (function return)
+      +..............................+..........................................+
+      .                                                                         .
+      .     +---------------+                      +--------------+             .
+      .     |    kvm.ko     |                      |  kvm-pvm.ko  |             .
+      .     +---------------+                      +--------------+             .
+      .                         Virtualization                                  .
+      .   memory virtualization                  CPU Virtualization             .
+      +.........................................................................+
+                                 PVM hypervisor
+
+
+1. Switcher: To simplify, we reuse host entries to handle VM enter and
+             VM exit, A flag is introduced to mark that the guest world
+             is switched or during the switch in the entries. Therefore,
+             the guest almost looks like a normal userspace process in
+             the host.
+
+2. Host MMU: The switcher needs to be accessed by the guest, which is
+             similar to the CPU entry area for userspace in KPTI.
+             Therefore, for simplification, we reserved a range of PGDs
+             for the guest, and the guest kernel can only be allowed to
+             run in this range. During the root SP allocation, the
+             host PGDs of the switcher will be cloned into the guest
+             SPT.
+
+3. Event delivery: A new event delivery is used instead of the IDT-based
+                   event delivery. The event delivery in PVM is similar
+                   to FRED.
+
+Design Decisions
+================
+In designing PVM, many decisions have been made and explained in the
+patches. "Integral entry", "Exclusive address space separation and PIE
+guest", and "Simple spec design" are among important decisions besides
+for "KVM ecosystems" and "Ring3+Pagetable for privilege seperation".
+
+Integral entry
+--------------
+The PVM switcher is integrated into the host kernel's entry code,
+providing the following advantages:
+
+- Full control: In XENPV/Lguest, the host Linux (dom0) entry code is
+  subordinate to the hypervisor/switcher, and the host Linux kernel
+  loses control over the entry code. This can cause inconvenience if
+  there is a need to update something when there is a bug in the
+  switcher or hardware.  Integral entry gives the control back to the
+  host kernel.
+
+- Zero overhead incurred: The integrated entry code doesn't cause any
+  overhead in host Linux entry path, thanks to the discreet design with
+  PVM code in the switcher, where the PVM path is bypassed on host events.
+  While in XENPV/Lguest, host events must be handled by the
+  hypervisor/switcher before being processed.
+
+- Integral design allows all aspects of the entry and switcher to be
+  considered together.
+
+This RFC patchset doesn't include the complete design for integral
+entry. It requires fixing the issue with IST [atomic-ist-entry].
+And it would be better with the conversion of some ASM code to C code
+[asm-to-c] (The link provided is not the final version, and some partial
+patchset had sent separately later on). The new version of the patches
+for converting ASM code and fixing the IST problem will be updated
+and sent separately later.
+
+Without the complete integral entry code, this patchset still has
+unresolved issues related to IST, KPTI, and so on.
+
+Exclusive address space separation and PIE guest
+------------------------------------------------
+In the higher half of the address spaces (where the most significant
+bits in the addresses are 1s), the address ranges that a PVM guest is
+allowed are exclusive from the host kernel.
+
+- The exclusivity of the address makes it possible to design the
+  integral entry because the switcher needs to be mapped for all
+  guests.
+
+- The exclusivity of the address allows the host kernel to still utilize
+  global pages and save TLB entries. (XENPV doesn't allow it)
+
+- With exclusivity, the existing shadow page table code can be reused
+  with very few changes. The shadow page table contains both the guest
+  portions and the host portions.
+
+- Exclusivity necessitates the use of a Position-Independent Executable
+  (PIE) guest since the host kernel occupies the top 2GB of the address
+  space.
+
+- With PIE kernel, the PVM guest kernel in hardware ring3 can be located
+  in the lower half of the address spaces in the future when Linear
+  Address Space Separation (LASS) is enabled.
+
+This RFC patchset doesn't contain PIE patches which are not specific to
+PVM and our effort to make linux kernel PIE continues.
+
+Simple spec design
+------------------
+Designing a new paravirtualized guest is not an ideal opportunity to
+redesign the specification. However, in order to avoid the known flaws
+of x86_64 and enable the paravirtualized ABI on hardware ring3, the x86
+PVM specification has some moderate differences from the x86
+specification.
+
+- Remove/Ignore most indirect tables and 32-bit supervisor mode.
+
+- Simplified event delivery and the removal of IST.
+
+- Add some software synthetic instructions.
+
+See more details in the patch1 which contains the whole x86 PVM
+specification.
+
+Status
+======
+Current some features are not supported or disabled in PVM.
+
+- SMAP/SMEP can't be enabled directly, however, we can use PKU to
+  emulate SMAP and use NX to emulate SMEP.
+
+- 5-level paging is not fully implemented.
+
+- Speculative control for guest is disabled.
+
+- LDT is not supported.
+
+- PMU virtualization is not implemented. Actually, we have reused
+  the current code in pmu_intel.c and pmu_amd.c to implement it.
+
+PVM has been adopted in Alibaba Cloud and Ant Group for hosting secure
+containers, providing a more performant and cost-effective option for
+cloud users.
+
+Performance drawback
+====================
+The most significant drawback of PVM is shadowpaging. Shadowpaging
+results in very bad performance when guest applications frequently
+modify pagetable, including excessive processes forking.
+
+However, many long-running cloud services, such as Java, modify
+pagetables less frequently and can perform very well with shadowpaging.
+In some cases, they can even outperform EPT since they can avoid EPT TLB
+entries. Furthermore, PVM can utilize host PCIDs for guest processes,
+providing a finer-grained approach compared to VPID/ASID.
+
+To mitigate the performance problem, we designed several optimizations
+for the shadow MMU (not included in the patchset) and also planning to
+build a shadow EPT in L0 for L2 PVM guests.
+
+See the paper for more optimizations and the performance details.
+
+Future plans
+============
+Some optimizations are not covered in this series now.
+
+- Parallel Page fault for SPT and Paravirtualized MMU Optimization.
+
+- Post interrupt emulation.
+
+- Relocate guest kernel into userspace address range.
+
+- More flexible container solutions based on it.
+
+Patches layout
+==============
+[01-02]: PVM ABI documentation and header
+[03-04]: Switcher implementation
+[05-49]: PVM hypervisor implementation
+       - 05-13: KVM module involved changes
+       - 14-49: PVM module implementation
+                patch 15: Add a vmalloc helper to reserve a kernel
+                          address range for guest.
+                patch 19: Export 32-bit ignore syscall for PVM.
+
+[50-73]: PVM guest implementation
+       - 50-52: Pack relocation information into vmlinux and allow
+                it to do relocation.
+       - 53: Introduce Kconfig and cpu features.
+       - 54-59: Relocate guest kernel to the allowed range.
+       - 60-65: Event handling and hypercall.
+       - 66-69: PVOPS implementation.
+       - 70-73: Disable some features and syscalls.
+
+Code base
+=========
+The code base is at branch [linux-pie] which is commit ceb6a6f023fd
+("Linu 6.7-rc6") + PIE series [pie-patchset].
+
+Complete code can be found at [linux-pvm].
+
+Testing
+=======
+Testing with Kata Containers can be found at [pvm-get-started].
+
+We also provide a VM image based on the `Official Ubuntu Cloud Image`,
+which has containerd, kata, pvm hypervisor/guest, and configurations
+prepared and you can use to test Kata Containers with PVM directly.
+[pvm-get-started-nested-in-vm]
+
+
+
+[sosp-2023-acm]: https://dl.acm.org/doi/10.1145/3600006.3613158
+[sosp-2023-pdf]: https://github.com/virt-pvm/misc/blob/main/sosp2023-pvm-paper.pdf
+[sosp-2023-slides]: https://github.com/virt-pvm/misc/blob/main/sosp2023-pvm-slides.pptx
+[asm-to-c]: https://lore.kernel.org/lkml/20211126101209.8613-1-jiangshanlai@gmail.com/
+[atomic-ist-entry]: https://lore.kernel.org/lkml/20230403140605.540512-1-jiangshanlai@gmail.com/
+[pie-patchset]: https://lore.kernel.org/lkml/cover.1682673542.git.houwenlong.hwl@antgroup.com
+[linux-pie]: https://github.com/virt-pvm/linux/tree/pie
+[linux-pvm]: https://github.com/virt-pvm/linux/tree/pvm
+[pvm-get-started]: https://github.com/virt-pvm/misc/blob/main/pvm-get-started-with-kata.md
+[pvm-get-started-nested-in-vm]: https://github.com/virt-pvm/misc/blob/main/pvm-get-started-with-kata.md#verify-kata-containers-with-pvm-using-vm-image
+
+
+
+Hou Wenlong (22):
+  KVM: x86: Allow hypercall handling to not skip the instruction
+  KVM: x86: Implement gpc refresh for guest usage
+  KVM: x86/emulator: Reinject #GP if instruction emulation failed for
+    PVM
+  mm/vmalloc: Add a helper to reserve a contiguous and aligned kernel
+    virtual area
+  x86/entry: Export 32-bit ignore syscall entry and __ia32_enabled
+    variable
+  KVM: x86/PVM: Support for kvm_exit() tracepoint
+  KVM: x86/PVM: Support for CPUID faulting
+  x86/tools/relocs: Cleanup cmdline options
+  x86/tools/relocs: Append relocations into input file
+  x86/boot: Allow to do relocation for uncompressed kernel
+  x86/pvm: Relocate kernel image to specific virtual address range
+  x86/pvm: Relocate kernel image early in PVH entry
+  x86/pvm: Make cpu entry area and vmalloc area variable
+  x86/pvm: Relocate kernel address space layout
+  x86/pvm: Allow to install a system interrupt handler
+  x86/pvm: Add early kernel event entry and dispatch code
+  x86/pvm: Enable PVM event delivery
+  x86/pvm: Use new cpu feature to describe XENPV and PVM
+  x86/pvm: Don't use SWAPGS for gsbase read/write
+  x86/pvm: Adapt pushf/popf in this_cpu_cmpxchg16b_emu()
+  x86/pvm: Use RDTSCP as default in vdso_read_cpunode()
+  x86/pvm: Disable some unsupported syscalls and features
+
+Lai Jiangshan (51):
+  KVM: Documentation: Add the specification for PVM
+  x86/ABI/PVM: Add PVM-specific ABI header file
+  x86/entry: Implement switcher for PVM VM enter/exit
+  x86/entry: Implement direct switching for the switcher
+  KVM: x86: Set 'vcpu->arch.exception.injected' as true before vendor
+    callback
+  KVM: x86: Move VMX interrupt/nmi handling into kvm.ko
+  KVM: x86/mmu: Adapt shadow MMU for PVM
+  KVM: x86: Add PVM virtual MSRs into emulated_msrs_all[]
+  KVM: x86: Introduce vendor feature to expose vendor-specific CPUID
+  KVM: x86: Add NR_VCPU_SREG in SREG enum
+  KVM: x86: Create stubs for PVM module as a new vendor
+  KVM: x86/PVM: Implement host mmu initialization
+  KVM: x86/PVM: Implement module initialization related callbacks
+  KVM: x86/PVM: Implement VM/VCPU initialization related callbacks
+  KVM: x86/PVM: Implement vcpu_load()/vcpu_put() related callbacks
+  KVM: x86/PVM: Implement vcpu_run() callbacks
+  KVM: x86/PVM: Handle some VM exits before enable interrupts
+  KVM: x86/PVM: Handle event handling related MSR read/write operation
+  KVM: x86/PVM: Introduce PVM mode switching
+  KVM: x86/PVM: Implement APIC emulation related callbacks
+  KVM: x86/PVM: Implement event delivery flags related callbacks
+  KVM: x86/PVM: Implement event injection related callbacks
+  KVM: x86/PVM: Handle syscall from user mode
+  KVM: x86/PVM: Implement allowed range checking for #PF
+  KVM: x86/PVM: Implement segment related callbacks
+  KVM: x86/PVM: Implement instruction emulation for #UD and #GP
+  KVM: x86/PVM: Enable guest debugging functions
+  KVM: x86/PVM: Handle VM-exit due to hardware exceptions
+  KVM: x86/PVM: Handle ERETU/ERETS synthetic instruction
+  KVM: x86/PVM: Handle PVM_SYNTHETIC_CPUID synthetic instruction
+  KVM: x86/PVM: Handle KVM hypercall
+  KVM: x86/PVM: Use host PCID to reduce guest TLB flushing
+  KVM: x86/PVM: Handle hypercalls for privilege instruction emulation
+  KVM: x86/PVM: Handle hypercall for CR3 switching
+  KVM: x86/PVM: Handle hypercall for loading GS selector
+  KVM: x86/PVM: Allow to load guest TLS in host GDT
+  KVM: x86/PVM: Enable direct switching
+  KVM: x86/PVM: Implement TSC related callbacks
+  KVM: x86/PVM: Add dummy PMU related callbacks
+  KVM: x86/PVM: Handle the left supported MSRs in msrs_to_save_base[]
+  KVM: x86/PVM: Implement system registers setting callbacks
+  KVM: x86/PVM: Implement emulation for non-PVM mode
+  x86/pvm: Add Kconfig option and the CPU feature bit for PVM guest
+  x86/pvm: Detect PVM hypervisor support
+  x86/pti: Force enabling KPTI for PVM guest
+  x86/pvm: Add event entry/exit and dispatch code
+  x86/pvm: Add hypercall support
+  x86/kvm: Patch KVM hypercall as PVM hypercall
+  x86/pvm: Implement cpu related PVOPS
+  x86/pvm: Implement irq related PVOPS
+  x86/pvm: Implement mmu related PVOPS
+
+ Documentation/virt/kvm/x86/pvm-spec.rst  |  989 +++++++
+ arch/x86/Kconfig                         |   32 +
+ arch/x86/Makefile.postlink               |    9 +-
+ arch/x86/entry/Makefile                  |    4 +
+ arch/x86/entry/calling.h                 |   47 +-
+ arch/x86/entry/common.c                  |    1 +
+ arch/x86/entry/entry_64.S                |   75 +-
+ arch/x86/entry/entry_64_pvm.S            |  189 ++
+ arch/x86/entry/entry_64_switcher.S       |  270 ++
+ arch/x86/entry/vsyscall/vsyscall_64.c    |    4 +
+ arch/x86/include/asm/alternative.h       |   14 +
+ arch/x86/include/asm/cpufeatures.h       |    2 +
+ arch/x86/include/asm/disabled-features.h |    8 +-
+ arch/x86/include/asm/idtentry.h          |   12 +-
+ arch/x86/include/asm/init.h              |    5 +
+ arch/x86/include/asm/kvm-x86-ops.h       |    2 +
+ arch/x86/include/asm/kvm_host.h          |   30 +-
+ arch/x86/include/asm/kvm_para.h          |    7 +
+ arch/x86/include/asm/page_64.h           |    3 +
+ arch/x86/include/asm/paravirt.h          |   14 +-
+ arch/x86/include/asm/pgtable_64_types.h  |   14 +-
+ arch/x86/include/asm/processor.h         |    5 +
+ arch/x86/include/asm/ptrace.h            |    5 +
+ arch/x86/include/asm/pvm_para.h          |  103 +
+ arch/x86/include/asm/segment.h           |   14 +-
+ arch/x86/include/asm/switcher.h          |  119 +
+ arch/x86/include/uapi/asm/kvm_para.h     |    8 +-
+ arch/x86/include/uapi/asm/pvm_para.h     |  131 +
+ arch/x86/kernel/Makefile                 |    1 +
+ arch/x86/kernel/asm-offsets_64.c         |   31 +
+ arch/x86/kernel/cpu/common.c             |   11 +
+ arch/x86/kernel/head64.c                 |   10 +
+ arch/x86/kernel/head64_identity.c        |  108 +-
+ arch/x86/kernel/head_64.S                |   34 +
+ arch/x86/kernel/idt.c                    |    2 +
+ arch/x86/kernel/kvm.c                    |    2 +
+ arch/x86/kernel/ldt.c                    |    3 +
+ arch/x86/kernel/nmi.c                    |    8 +-
+ arch/x86/kernel/process_64.c             |   10 +-
+ arch/x86/kernel/pvm.c                    |  579 ++++
+ arch/x86/kernel/traps.c                  |    3 +
+ arch/x86/kernel/vmlinux.lds.S            |   18 +
+ arch/x86/kvm/Kconfig                     |    9 +
+ arch/x86/kvm/Makefile                    |    5 +-
+ arch/x86/kvm/cpuid.c                     |   26 +-
+ arch/x86/kvm/cpuid.h                     |    3 +
+ arch/x86/kvm/host_entry.S                |   50 +
+ arch/x86/kvm/mmu/mmu.c                   |   36 +-
+ arch/x86/kvm/mmu/paging_tmpl.h           |    3 +
+ arch/x86/kvm/mmu/spte.c                  |    4 +
+ arch/x86/kvm/pvm/host_mmu.c              |  119 +
+ arch/x86/kvm/pvm/pvm.c                   | 3257 ++++++++++++++++++++++
+ arch/x86/kvm/pvm/pvm.h                   |  169 ++
+ arch/x86/kvm/svm/svm.c                   |    4 +
+ arch/x86/kvm/trace.h                     |    7 +-
+ arch/x86/kvm/vmx/vmenter.S               |   43 -
+ arch/x86/kvm/vmx/vmx.c                   |   18 +-
+ arch/x86/kvm/x86.c                       |   33 +-
+ arch/x86/kvm/x86.h                       |   18 +
+ arch/x86/mm/dump_pagetables.c            |    3 +-
+ arch/x86/mm/kaslr.c                      |    8 +-
+ arch/x86/mm/pti.c                        |    7 +
+ arch/x86/platform/pvh/enlighten.c        |   22 +
+ arch/x86/platform/pvh/head.S             |    4 +
+ arch/x86/tools/relocs.c                  |   88 +-
+ arch/x86/tools/relocs.h                  |   20 +-
+ arch/x86/tools/relocs_common.c           |   38 +-
+ arch/x86/xen/enlighten_pv.c              |    1 +
+ include/linux/kvm_host.h                 |   10 +
+ include/linux/vmalloc.h                  |    2 +
+ include/uapi/Kbuild                      |    4 +
+ mm/vmalloc.c                             |   10 +
+ virt/kvm/pfncache.c                      |    2 +-
+ 73 files changed, 6793 insertions(+), 166 deletions(-)
+ create mode 100644 Documentation/virt/kvm/x86/pvm-spec.rst
+ create mode 100644 arch/x86/entry/entry_64_pvm.S
+ create mode 100644 arch/x86/entry/entry_64_switcher.S
+ create mode 100644 arch/x86/include/asm/pvm_para.h
+ create mode 100644 arch/x86/include/asm/switcher.h
+ create mode 100644 arch/x86/include/uapi/asm/pvm_para.h
+ create mode 100644 arch/x86/kernel/pvm.c
+ create mode 100644 arch/x86/kvm/host_entry.S
+ create mode 100644 arch/x86/kvm/pvm/host_mmu.c
+ create mode 100644 arch/x86/kvm/pvm/pvm.c
+ create mode 100644 arch/x86/kvm/pvm/pvm.h
+
+-- 
+2.19.1.6.gb485710b
+
