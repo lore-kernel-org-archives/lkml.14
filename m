@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2648358AD6;
-	Mon, 26 Feb 2024 08:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C825059B73;
+	Mon, 26 Feb 2024 08:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936083; cv=none; b=ADl7j/XI4HIG/rXcG87UHUPSwJfmhbu4Dv5Yh6Vb4/hs9hmJSFLvd59Skai3dUwXIkazZQc4PAcg71JxlQaU/VwbhiAbrG958XOVlLhYoAuducPoVOFM5nXkIgkJBp3SH0XmYowxFIEY5zl1hSSf571lUTv0kAiAubOzoaIlhmE=
+	t=1708936084; cv=none; b=UTa68KEDXNbMAHcoAf7bsLvhMDCx2N6Lmy7u3g0JOWicwndgrK1Jers3AdC2f7Sgk6UwNb13dqHQVsMkQdvLOKDSJIA0hWYeTQfZv3+1zgZxJKN50lLtbW3ORelf6M8HwqXyOtBLaSWk0edDzoQ1Swu6qgi8lCTMxvP4MAS0B4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936083; c=relaxed/simple;
-	bh=K69f0zNuV/UzQ9kbwGm3AyR8yiZyeyS3gj6Lw7kZQdg=;
+	s=arc-20240116; t=1708936084; c=relaxed/simple;
+	bh=l+3Kq91FdtoMuKPtJHkyFU2e9BGW3nCpaz0IbZQ7Utk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qv+yZ/DhCi/unAL6B8ZLmX6h6SIZX57vIcXgLK2B+RqBAF/QuZX7gliJ+sa0vkXWuINGi2FdtFK/N8w2lt0+ahBNc101UsSyGIQiAfyV95oQjeTa2AeLJg/tZ1iNUV/DxblV+JPPe0cpOvN1BQOpT4wn5742FnZTmoAZZNtca8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PhExB/FN; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version; b=bWw0kzDEGHjA7TOGS1XkQKtEgAVnLFGFcuTSofaYR3kP2dm82VOO+ODsCIxEwF34Ccx2AzmEu7PCpNHz/ztsrmhAnG8VXigUlQ7DCeuNN7BFCp5Otc/zdDnzt3IwH2hASLFatjn1peJV5DOfGtHhFwyHQBSj69A9u9xX+m8kn5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c3c+959t; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PhExB/FN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3c+959t"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936081; x=1740472081;
+  t=1708936083; x=1740472083;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=K69f0zNuV/UzQ9kbwGm3AyR8yiZyeyS3gj6Lw7kZQdg=;
-  b=PhExB/FN9Mbs5mJnYZEQ351zxzrc/UjJSQKhCo2v//8jRsokNIwnT+jS
-   UqkgPKqI1oV8yDFYf0J5G4+tDiNfA8ajlDEE1oUaZ3HGWAyByvoZjl3zo
-   feWdtTZTRslyC7DgdFCxuU4BNrwHuxBB5/MRVbMx1H4letvInF/fuiIxF
-   TJjQIExyPltW+vxNlOYQhjwQP6AnNDDcT/7NZTd8BCHb6nkjNFHzR2F74
-   J8pGjXSoEcn/uZWHWuSgrLweaNqjWdPjx3pDpGfeLb/HrCGu4F2FPmRDj
-   lW8KGG5YofQSMzNFYunOQLfLtFtp9bno7clhiIbzzfT6gSnwy6gRYFjDE
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="6155292"
+  bh=l+3Kq91FdtoMuKPtJHkyFU2e9BGW3nCpaz0IbZQ7Utk=;
+  b=c3c+959txCD2e1cHNnEVTrJDA8qmnTnCRlTxEbnJ410UEfwy5RdSM4bF
+   u26yQnBLGyqEYQxDNobaUs9XrvzhVunc8LpHgNdR3EtKb9PF0iwL0ytcZ
+   HpBaSER0Td2tSV+/HI8BT4dDiXmYsdFzY9p71lCAbJKlL7RejLnqLp6iu
+   +GCSJfjG7e3HzZ/rwEPKjWyQqp/ZANHx/x17h+ZrGErd2LhV7cTp9s3g1
+   KgC+6udG0nMtWS8MQqAAwzJsDNb31Jsp3/yE0KdIFaWAPVb7MC8xdutf9
+   4uboLPs/qgQZy11/icakmdFTcXdhiRkbz0LfT5M1UYS0aGnl6qqdnFn2Z
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="6155306"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6155292"
+   d="scan'208";a="6155306"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:59 -0800
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:01 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6615583"
+   d="scan'208";a="6615624"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:59 -0800
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:01 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,10 +51,11 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com
-Subject: [PATCH v19 034/130] KVM: TDX: Get system-wide info about TDX module on initialization
-Date: Mon, 26 Feb 2024 00:25:36 -0800
-Message-Id: <eaa2c1e23971f058e5921681b0b84d7ea7d38dc1.1708933498.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com,
+	Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH v19 036/130] KVM: TDX: x86: Add ioctl to get TDX systemwide parameters
+Date: Mon, 26 Feb 2024 00:25:38 -0800
+Message-Id: <167f8f7e9b19154d30c7fe8f733f947592eb244c.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -66,212 +67,152 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-TDX KVM needs system-wide information about the TDX module, store it in
-struct tdx_info.
+Implement an ioctl to get system-wide parameters for TDX.  Although the
+function is systemwide, vm scoped mem_enc ioctl works for userspace VMM
+like qemu and device scoped version is not define, re-use vm scoped
+mem_enc.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+---
+v18:
+- drop the use of tdhsysinfo_struct and TDH.SYS.INFO, use TDH.SYS.RD().
+  For that, dynamically allocate/free tdx_info.
+- drop the change of tools/arch/x86/include/uapi/asm/kvm.h.
+
+v14 -> v15:
+- ABI change: added supported_gpaw and reserved area.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
-v19:
-- Added features0
-- Use tdx_sys_metadata_read()
-- Fix error recovery path by Yuan
-
-Change v18:
-- Newly Added
-
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
----
- arch/x86/include/uapi/asm/kvm.h | 11 +++++
- arch/x86/kvm/vmx/main.c         |  9 +++-
- arch/x86/kvm/vmx/tdx.c          | 80 ++++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/x86_ops.h      |  2 +
- 4 files changed, 100 insertions(+), 2 deletions(-)
+ arch/x86/include/uapi/asm/kvm.h | 17 ++++++++++
+ arch/x86/kvm/vmx/tdx.c          | 56 +++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/tdx.h          |  3 ++
+ 3 files changed, 76 insertions(+)
 
 diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index aa7a56a47564..45b2c2304491 100644
+index 9ea46d143bef..e28189c81691 100644
 --- a/arch/x86/include/uapi/asm/kvm.h
 +++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -567,4 +567,15 @@ struct kvm_pmu_event_filter {
- #define KVM_X86_TDX_VM		2
- #define KVM_X86_SNP_VM		3
+@@ -604,4 +604,21 @@ struct kvm_tdx_cpuid_config {
+ 	__u32 edx;
+ };
  
-+#define KVM_TDX_CPUID_NO_SUBLEAF	((__u32)-1)
++/* supported_gpaw */
++#define TDX_CAP_GPAW_48	(1 << 0)
++#define TDX_CAP_GPAW_52	(1 << 1)
 +
-+struct kvm_tdx_cpuid_config {
-+	__u32 leaf;
-+	__u32 sub_leaf;
-+	__u32 eax;
-+	__u32 ebx;
-+	__u32 ecx;
-+	__u32 edx;
++struct kvm_tdx_capabilities {
++	__u64 attrs_fixed0;
++	__u64 attrs_fixed1;
++	__u64 xfam_fixed0;
++	__u64 xfam_fixed1;
++	__u32 supported_gpaw;
++	__u32 padding;
++	__u64 reserved[251];
++
++	__u32 nr_cpuid_configs;
++	struct kvm_tdx_cpuid_config cpuid_configs[];
 +};
 +
  #endif /* _ASM_X86_KVM_H */
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index fa19682b366c..a948a6959ac7 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -32,6 +32,13 @@ static __init int vt_hardware_setup(void)
- 	return 0;
- }
- 
-+static void vt_hardware_unsetup(void)
-+{
-+	if (enable_tdx)
-+		tdx_hardware_unsetup();
-+	vmx_hardware_unsetup();
-+}
-+
- static int vt_vm_init(struct kvm *kvm)
- {
- 	if (is_td(kvm))
-@@ -54,7 +61,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 
- 	.check_processor_compatibility = vmx_check_processor_compat,
- 
--	.hardware_unsetup = vmx_hardware_unsetup,
-+	.hardware_unsetup = vt_hardware_unsetup,
- 
- 	/* TDX cpu enablement is done by tdx_hardware_setup(). */
- 	.hardware_enable = vmx_hardware_enable,
 diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index dce21f675155..5edfb99abb89 100644
+index 07a3f0f75f87..816ccdb4bc41 100644
 --- a/arch/x86/kvm/vmx/tdx.c
 +++ b/arch/x86/kvm/vmx/tdx.c
-@@ -40,6 +40,21 @@ static void __used tdx_guest_keyid_free(int keyid)
- 	ida_free(&tdx_guest_keyid_pool, keyid);
- }
+@@ -6,6 +6,7 @@
+ #include "capabilities.h"
+ #include "x86_ops.h"
+ #include "x86.h"
++#include "mmu.h"
+ #include "tdx_arch.h"
+ #include "tdx.h"
  
-+struct tdx_info {
-+	u64 features0;
-+	u64 attributes_fixed0;
-+	u64 attributes_fixed1;
-+	u64 xfam_fixed0;
-+	u64 xfam_fixed1;
-+
-+	u16 num_cpuid_config;
-+	/* This must the last member. */
-+	DECLARE_FLEX_ARRAY(struct kvm_tdx_cpuid_config, cpuid_configs);
-+};
-+
-+/* Info about the TDX module. */
-+static struct tdx_info *tdx_info;
-+
- #define TDX_MD_MAP(_fid, _ptr)			\
- 	{ .fid = MD_FIELD_ID_##_fid,		\
- 	  .ptr = (_ptr), }
-@@ -66,7 +81,7 @@ static size_t tdx_md_element_size(u64 fid)
- 	}
- }
+@@ -55,6 +56,58 @@ struct tdx_info {
+ /* Info about the TDX module. */
+ static struct tdx_info *tdx_info;
  
--static int __used tdx_md_read(struct tdx_md_map *maps, int nr_maps)
-+static int tdx_md_read(struct tdx_md_map *maps, int nr_maps)
- {
- 	struct tdx_md_map *m;
- 	int ret, i;
-@@ -84,9 +99,26 @@ static int __used tdx_md_read(struct tdx_md_map *maps, int nr_maps)
- 	return 0;
- }
- 
-+#define TDX_INFO_MAP(_field_id, _member)			\
-+	TD_SYSINFO_MAP(_field_id, struct tdx_info, _member)
++static int tdx_get_capabilities(struct kvm_tdx_cmd *cmd)
++{
++	struct kvm_tdx_capabilities __user *user_caps;
++	struct kvm_tdx_capabilities *caps = NULL;
++	int ret = 0;
 +
- static int __init tdx_module_setup(void)
- {
-+	u16 num_cpuid_config;
- 	int ret;
-+	u32 i;
++	if (cmd->flags)
++		return -EINVAL;
 +
-+	struct tdx_md_map mds[] = {
-+		TDX_MD_MAP(NUM_CPUID_CONFIG, &num_cpuid_config),
-+	};
-+
-+	struct tdx_metadata_field_mapping fields[] = {
-+		TDX_INFO_MAP(FEATURES0, features0),
-+		TDX_INFO_MAP(ATTRS_FIXED0, attributes_fixed0),
-+		TDX_INFO_MAP(ATTRS_FIXED1, attributes_fixed1),
-+		TDX_INFO_MAP(XFAM_FIXED0, xfam_fixed0),
-+		TDX_INFO_MAP(XFAM_FIXED1, xfam_fixed1),
-+	};
- 
- 	ret = tdx_enable();
- 	if (ret) {
-@@ -94,7 +126,48 @@ static int __init tdx_module_setup(void)
- 		return ret;
- 	}
- 
-+	ret = tdx_md_read(mds, ARRAY_SIZE(mds));
-+	if (ret)
-+		return ret;
-+
-+	tdx_info = kzalloc(sizeof(*tdx_info) +
-+			   sizeof(*tdx_info->cpuid_configs) * num_cpuid_config,
-+			   GFP_KERNEL);
-+	if (!tdx_info)
++	caps = kmalloc(sizeof(*caps), GFP_KERNEL);
++	if (!caps)
 +		return -ENOMEM;
-+	tdx_info->num_cpuid_config = num_cpuid_config;
 +
-+	ret = tdx_sys_metadata_read(fields, ARRAY_SIZE(fields), tdx_info);
-+	if (ret)
-+		goto error_out;
-+
-+	for (i = 0; i < num_cpuid_config; i++) {
-+		struct kvm_tdx_cpuid_config *c = &tdx_info->cpuid_configs[i];
-+		u64 leaf, eax_ebx, ecx_edx;
-+		struct tdx_md_map cpuids[] = {
-+			TDX_MD_MAP(CPUID_CONFIG_LEAVES + i, &leaf),
-+			TDX_MD_MAP(CPUID_CONFIG_VALUES + i * 2, &eax_ebx),
-+			TDX_MD_MAP(CPUID_CONFIG_VALUES + i * 2 + 1, &ecx_edx),
-+		};
-+
-+		ret = tdx_md_read(cpuids, ARRAY_SIZE(cpuids));
-+		if (ret)
-+			goto error_out;
-+
-+		c->leaf = (u32)leaf;
-+		c->sub_leaf = leaf >> 32;
-+		c->eax = (u32)eax_ebx;
-+		c->ebx = eax_ebx >> 32;
-+		c->ecx = (u32)ecx_edx;
-+		c->edx = ecx_edx >> 32;
++	user_caps = (void __user *)cmd->data;
++	if (copy_from_user(caps, user_caps, sizeof(*caps))) {
++		ret = -EFAULT;
++		goto out;
 +	}
 +
- 	return 0;
++	if (caps->nr_cpuid_configs < tdx_info->num_cpuid_config) {
++		ret = -E2BIG;
++		goto out;
++	}
 +
-+error_out:
++	*caps = (struct kvm_tdx_capabilities) {
++		.attrs_fixed0 = tdx_info->attributes_fixed0,
++		.attrs_fixed1 = tdx_info->attributes_fixed1,
++		.xfam_fixed0 = tdx_info->xfam_fixed0,
++		.xfam_fixed1 = tdx_info->xfam_fixed1,
++		.supported_gpaw = TDX_CAP_GPAW_48 |
++		((kvm_get_shadow_phys_bits() >= 52 &&
++		  cpu_has_vmx_ept_5levels()) ? TDX_CAP_GPAW_52 : 0),
++		.nr_cpuid_configs = tdx_info->num_cpuid_config,
++		.padding = 0,
++	};
++
++	if (copy_to_user(user_caps, caps, sizeof(*caps))) {
++		ret = -EFAULT;
++		goto out;
++	}
++	if (copy_to_user(user_caps->cpuid_configs, &tdx_info->cpuid_configs,
++			 tdx_info->num_cpuid_config *
++			 sizeof(tdx_info->cpuid_configs[0]))) {
++		ret = -EFAULT;
++	}
++
++out:
 +	/* kfree() accepts NULL. */
-+	kfree(tdx_info);
++	kfree(caps);
 +	return ret;
- }
- 
- bool tdx_is_vm_type_supported(unsigned long type)
-@@ -162,3 +235,8 @@ int __init tdx_hardware_setup(struct kvm_x86_ops *x86_ops)
- out:
- 	return r;
- }
-+
-+void tdx_hardware_unsetup(void)
-+{
-+	kfree(tdx_info);
 +}
-diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index f4da88a228d0..e8cb4ae81cf1 100644
---- a/arch/x86/kvm/vmx/x86_ops.h
-+++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -136,9 +136,11 @@ void vmx_setup_mce(struct kvm_vcpu *vcpu);
++
+ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
+ {
+ 	struct kvm_tdx_cmd tdx_cmd;
+@@ -68,6 +121,9 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
+ 	mutex_lock(&kvm->lock);
+ 
+ 	switch (tdx_cmd.id) {
++	case KVM_TDX_CAPABILITIES:
++		r = tdx_get_capabilities(&tdx_cmd);
++		break;
+ 	default:
+ 		r = -EINVAL;
+ 		goto out;
+diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
+index 473013265bd8..22c0b57f69ca 100644
+--- a/arch/x86/kvm/vmx/tdx.h
++++ b/arch/x86/kvm/vmx/tdx.h
+@@ -3,6 +3,9 @@
+ #define __KVM_X86_TDX_H
  
  #ifdef CONFIG_INTEL_TDX_HOST
- int __init tdx_hardware_setup(struct kvm_x86_ops *x86_ops);
-+void tdx_hardware_unsetup(void);
- bool tdx_is_vm_type_supported(unsigned long type);
- #else
- static inline int tdx_hardware_setup(struct kvm_x86_ops *x86_ops) { return -EOPNOTSUPP; }
-+static inline void tdx_hardware_unsetup(void) {}
- static inline bool tdx_is_vm_type_supported(unsigned long type) { return false; }
- #endif
- 
++
++#include "tdx_ops.h"
++
+ struct kvm_tdx {
+ 	struct kvm kvm;
+ 	/* TDX specific members follow. */
 -- 
 2.25.1
 
