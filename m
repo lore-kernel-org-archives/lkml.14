@@ -1,60 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6531BDCD;
-	Mon, 26 Feb 2024 07:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36D9175BE;
+	Mon, 26 Feb 2024 07:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708931678; cv=none; b=owP+ckRp89TpfLCRpz9DwY55KYFe99v/BubuZtDo+xWxzouBSwWcebyM1KpdptqlaKjhy5Nu0scIkfvhQv57h49SIled9xyuwDKXHvaZmY1TxUUTVzzapwDI3X6zzzHAJLlkFX8VjhZRnUnYSg18+idlCOumYcquOqm7IdUhNro=
+	t=1708931779; cv=none; b=LVcL3oiqr8jfU0m7BH4wpi45ADAx4D6fNXkCycOWwrJqxB5+Jt4U4+ujZmxLM54ke66pV0EqHe3+V5HEs8K/Y/Kz/K/sRvsGF0j0VrgLuepVpaqqXacTjaiLlvIuXq31WSK4T+k5qanoiqmJDmVa/pmlerwPZ9UuTLt9Fp9YYcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708931678; c=relaxed/simple;
-	bh=84WLTzyDlnzOxy+y2JEyz7+nxtE7gM9OqxOxGtRK5fA=;
+	s=arc-20240116; t=1708931779; c=relaxed/simple;
+	bh=2RlYg33BiX3NtOsnhjj8RG35wYd23faEZA9/J7KHbxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oVewCmWvVEZ5yhAhwUInNvq4kDHua8jCupnNQ84Vi7qn6ERSLx0e1GQJFUe4mxVrcritb/If19qgggw8j1IwmoTq+I1POjSuZjrV7tS9iRCNmOxlZAChLaQH6eSNmszUVjSXpHEMgAY1dJ4aRdmR57Km7nf9oTWu/BoyqIDDddY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFO19x23; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=snIQ4VNmGA0Ag7I7+LlzwsutMARbsR1Pp2JaHMMG0QWZ8T6vwgz6NxdmuxFIPtCFNEqGoIl0uXYQU7fTukHCWh+gO3Xg1RCyrcvh7RUOZ1CUEYa0sMELVzapfFVgeiuZxzE+khbLJnTy+s+ZIf+z8VgadLiw4Ysb0OM/IW5/PQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=I1rcZf1X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFO19x23"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708931677; x=1740467677;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=84WLTzyDlnzOxy+y2JEyz7+nxtE7gM9OqxOxGtRK5fA=;
-  b=hFO19x237BzvQ3Zsryh6l6aq5tmQEh0glJhPXFMCqtpRL2qg3nfsdUTc
-   heMdaK+OmLrZ0nhlK3LLN+ig/i+mtZVDsR5BiYYv1o4m/UGBfaraJLbhV
-   R9nv9Xuz7cB0KponAck8Q7tO7Pibxx8jSaq4xkrqI4nVaXLYes+1+dEHk
-   Hh09uPYukv3Rg1IQ7wQW9465sQlkPsSNojcRgYrN0VM6mSR/8jAnUiOIv
-   Vly0yFX47J/kj5JmTH53Bz62zzISr3TmIF3lgH77lWxxEXj9NZg3zD/PN
-   WVMrr/0TZgge2x/j3OqvH2BIXy6iIsyQgbHejMOpDJuULzKkbNYW3SD4Y
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="6146193"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6146193"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 23:14:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="37569524"
-Received: from linux.bj.intel.com ([10.238.157.71])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 23:14:33 -0800
-Date: Mon, 26 Feb 2024 15:11:39 +0800
-From: Tao Su <tao1.su@linux.intel.com>
-To: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yi Lai <yi1.lai@intel.com>, Xudong Hao <xudong.hao@intel.com>
-Subject: Re: [PATCH] x86/cpu: Add a VMX flag to enumerate 5-level EPT support
- to userspace
-Message-ID: <Zdw5qziEGdTyLIFN@linux.bj.intel.com>
-References: <20240110002340.485595-1-seanjc@google.com>
- <170864656017.3080257.14048100709856204250.b4-ty@google.com>
- <dfca56c5-770b-46a3-90a3-3a6b219048f2@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="I1rcZf1X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE762C433F1;
+	Mon, 26 Feb 2024 07:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708931778;
+	bh=2RlYg33BiX3NtOsnhjj8RG35wYd23faEZA9/J7KHbxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I1rcZf1XGpMfTaBMYLeAoV171MgKE7m65z3JRw0SEcLJ55iYD094dU3ftd7qu+Agr
+	 4VwA93Kx7VlL7e5sNXNEyCO093O3vbnt+ry+xgxcxSMqRjCJIlZ/Oqx6V40OD+orGJ
+	 kz+zTkP1eGflBYXA22cnP2SsmKicWPey+bHi6ag8=
+Date: Mon, 26 Feb 2024 08:16:10 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, Wang Weiyang <wangweiyang2@huawei.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>
+Subject: Re: [PATCH stable 4.19] mm: memcontrol: switch to rcu protection in
+ drain_all_stock()
+Message-ID: <2024022601-flavorful-gerbil-da52@gregkh>
+References: <20240226030140.129822-1-gongruiqi1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,58 +46,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dfca56c5-770b-46a3-90a3-3a6b219048f2@intel.com>
+In-Reply-To: <20240226030140.129822-1-gongruiqi1@huawei.com>
 
-On Mon, Feb 26, 2024 at 09:30:33AM +0800, Xiaoyao Li wrote:
-> On 2/23/2024 9:35 AM, Sean Christopherson wrote:
-> > On Tue, 09 Jan 2024 16:23:40 -0800, Sean Christopherson wrote:
-> > > Add a VMX flag in /proc/cpuinfo, ept_5level, so that userspace can query
-> > > whether or not the CPU supports 5-level EPT paging.  EPT capabilities are
-> > > enumerated via MSR, i.e. aren't accessible to userspace without help from
-> > > the kernel, and knowing whether or not 5-level EPT is supported is sadly
-> > > necessary for userspace to correctly configure KVM VMs.
-> > > 
-> > > When EPT is enabled, bits 51:49 of guest physical addresses are consumed
-> > > if and only if 5-level EPT is enabled.  For CPUs with MAXPHYADDR > 48, KVM
-> > > *can't* map all legal guest memory if 5-level EPT is unsupported, e.g.
-> > > creating a VM with RAM (or anything that gets stuffed into KVM's memslots)
-> > > above bit 48 will be completely broken.
-> > > 
-> > > [...]
-> > 
-> > Applied to kvm-x86 vmx, with a massaged changelog to avoid presenting this as a
-> > bug fix (and finally fixed the 51:49=>51:48 goof):
-> > 
-> >      Add a VMX flag in /proc/cpuinfo, ept_5level, so that userspace can query
-> >      whether or not the CPU supports 5-level EPT paging.  EPT capabilities are
-> >      enumerated via MSR, i.e. aren't accessible to userspace without help from
-> >      the kernel, and knowing whether or not 5-level EPT is supported is useful
-> >      for debug, triage, testing, etc.
-> >      For example, when EPT is enabled, bits 51:48 of guest physical addresses
-> >      are consumed by the CPU if and only if 5-level EPT is enabled.  For CPUs
-> >      with MAXPHYADDR > 48, KVM *can't* map all legal guest memory if 5-level
-> >      EPT is unsupported, making it more or less necessary to know whether or
-> >      not 5-level EPT is supported.
-> > 
-> > [1/1] x86/cpu: Add a VMX flag to enumerate 5-level EPT support to userspace
-> >        https://github.com/kvm-x86/linux/commit/b1a3c366cbc7
+On Mon, Feb 26, 2024 at 11:01:40AM +0800, GONG, Ruiqi wrote:
+> From: Roman Gushchin <guro@fb.com>
 > 
-> Do we need a new KVM CAP for this? This decides how to interact with old
-> kernel without this patch. In that case, no ept_5level in /proc/cpuinfo,
-> what should we do in the absence of ept_5level? treat it only 4 level EPT
-> supported?
+> commit e1a366be5cb4f849ec4de170d50eebc08bb0af20 upstream.
+> 
+> Commit 72f0184c8a00 ("mm, memcg: remove hotplug locking from try_charge")
+> introduced css_tryget()/css_put() calls in drain_all_stock(), which are
+> supposed to protect the target memory cgroup from being released during
+> the mem_cgroup_is_descendant() call.
+> 
+> However, it's not completely safe.  In theory, memcg can go away between
+> reading stock->cached pointer and calling css_tryget().
+> 
+> This can happen if drain_all_stock() races with drain_local_stock()
+> performed on the remote cpu as a result of a work, scheduled by the
+> previous invocation of drain_all_stock().
+> 
+> The race is a bit theoretical and there are few chances to trigger it, but
+> the current code looks a bit confusing, so it makes sense to fix it
+> anyway.  The code looks like as if css_tryget() and css_put() are used to
+> protect stocks drainage.  It's not necessary because stocked pages are
+> holding references to the cached cgroup.  And it obviously won't work for
+> works, scheduled on other cpus.
+> 
+> So, let's read the stock->cached pointer and evaluate the memory cgroup
+> inside a rcu read section, and get rid of css_tryget()/css_put() calls.
+> 
+> Link: http://lkml.kernel.org/r/20190802192241.3253165-1-guro@fb.com
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Hillf Danton <hdanton@sina.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: stable@vger.kernel.org  # 4.19
+> Fixes: cdec2e4265df ("memcg: coalesce charging via percpu storage")
+> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+> ---
+> 
+> This patch [1] fixed a UAF problem in drain_all_stock() existed prior to
+> 5.9, and following discussions [2] mentioned that the fix depends on an
+> RCU read protection to stock->cached (introduced in 5.4), which doesn't
+> existed in 4.19. So backport this part to 4.19 as well.
 
-Maybe also adding flag for 4-level EPT can be an option. If userspace
-checks both 4-level and 5-level are not in /proc/cpuinfo, it can regard
-the kernel as old.
+Now queued up, thanks.
 
-Thanks,
-Tao
-
-> 
-> 
-> 
-> > --
-> > https://github.com/kvm-x86/linux/tree/next
-> > 
-> 
+greg k-h
