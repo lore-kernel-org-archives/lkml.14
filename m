@@ -1,225 +1,304 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF4912C815
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A14912E1F3
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708968976; cv=none; b=oHhtY5Hjc2X1Gx4j0nDsaUTE4HOFGPw6XvzEqivKFX/h6Ny1E6RiefBGtdwz62gmXPuGWd98x/t3EpXTsQX2w+rfq8jfUh4R7lrvyN/JidUn3MGvpLJN5lAx/JQ1aEWoJZ8tJ05vzUiGaXQLYDBxnFzYZSNSKHDvyn/xu1z8XLw=
+	t=1708968981; cv=none; b=AA65ccn95WIfFA2U2toEZfgiXjoU725saZV7OcbyureaKaBDTGfwfPInQAgKH5cqAtIro9q3pruutGWqLdb+n1HWgKY0c9/oRlQevYuyCWyiahEdE7lxnxnDeGjubwzSxKj6thCJwsQYJXyU2MZLHN3HhZ32TlS5JkBpsETETgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708968976; c=relaxed/simple;
-	bh=64LLbGIR/8APPJSPhXlfGs7W8sFo6E0sPbfeChWhobI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dRfSqsaLLDYNZPUinigpoHojGwrSD3LYMr2PZwjNd1Ofc+px7SBOpPsuM2qWwWjGDjCFnQPolJD8vM+1u1KhcfD4NMSTm//lBhTpx6DbW7EE89QFH8ThmNlLGYkoRC8nhadH6BKQ/hNnuZEbqh/YX8WOTEczDgVRkOFiafcecB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Qs8QVnlS; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1708968981; c=relaxed/simple;
+	bh=aHCWKYUowEiJlYHQoqwEiRkIXxFGOS+v0Qck42dejEw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u2qQI+nK3pchYuTfJtDJcdoz1Gpe3x5PpiqpvZRYHdNEc0YHM/o6U1oe8OOAygH/gzcs1WzEIt1dZMBqLeRps0pbiLD39yPSawiAH/Ws6BJq9XeRG8kDAVLOqv72fz10NPE/l6W2EruGtibZ1meuP+iEdQcEOZ7V7ZjGPT7WxxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LqvqVx37; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Qs8QVnlS"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dc49afb495so27351475ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:36:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LqvqVx37"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-68f571be9ddso33257226d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:36:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1708968974; x=1709573774; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q+PYYW7UEsHejYdW/JnG+5xV/sOqO0PQ2tlk3lcQucc=;
-        b=Qs8QVnlSKHx/8oqe3h1QQjRkeLf7loffnL2UHu2xVuEC9bgZjM9TiTWL2Mi2IyIW9u
-         8yRyJGPW5Xj6vlKyEY+yyuoHDZ1uC/oj/PVhKjbF0vqJhfb11+KEIAPWRzt6vGuxgJVg
-         LmNkZAfncxb6ezw/f1rGh0Y0Qzt9nVhWxoOTo=
+        d=chromium.org; s=google; t=1708968978; x=1709573778; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0TJDpiQS0mzwh7myIO+xWtjFUw057mz9Kw5WxBUdIdQ=;
+        b=LqvqVx37UWyE5uc2uf1be2/KY9OhJUZxcS3+Z620c8KWefWafg9PwWiv8jr0elemVz
+         Gd8UhbqdRE2BIWRntxoV8P8YvFVjSG7FnbpPxkdIKDsprxLqcv+8+8nnnkUyxARBMQJa
+         gP55aUGkQT4pX9Aji5w2ccIaAVsFwmKlard0Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708968974; x=1709573774;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=q+PYYW7UEsHejYdW/JnG+5xV/sOqO0PQ2tlk3lcQucc=;
-        b=hV3V5KaP2J4kvdF8JJOC4oRyw5H68hG91V5bXO4cdxbeYkpQ0DBNAH4kcptbJwxtOp
-         GfmjtlYHXpVnXx4k9s9zLUMBlfPPt1rY22kvKW8aDs1r3ml/AtrXoKo/s+AFqE1jK1FW
-         9ObDhu9rnQlM/5EcEwo/2N2rzEQl/pw/JOHt+KQQBsVscD0iWia6OBQr39s/zSPNoHT/
-         9lCOMIL3Jz4nDZYLuI3Dpk6RfYZMcA/kDrtMntfoJrgqVJtZIG9e4iDXkLOJR6qde/lK
-         U/oba1o7EJ3HYHim422/t4jB2ZbrcG/s9fMn5MtEB8zv6QUJQGsiUhLh7ZVdewrVslHt
-         NKlw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfPthYogWqahjsazH5Y4LzJwkp8XvdnZWn8i3aYAvnRPc0bX0GvzkpqoQPetVtjnH/pFxTRzas7O4eEvw3Nda+n3Dfz9BGFP0H4pO/
-X-Gm-Message-State: AOJu0Yw0qR348cKkqNyk7zV/qODtb9qc/FZ7TypEkCuIanlNFp3s3EJs
-	nfZOE095p7pbJXbhEEsQAudfqU5QOSwOoApPFNtXPtYKqMrhwkg36GP9/dkjgA==
-X-Google-Smtp-Source: AGHT+IGeMwwj/BHix8iZnp0hBVmpqSjZvkNoWglvw7L0K1Tcb2UxR5iTvNV9HoijkjygRE7XNIfoow==
-X-Received: by 2002:a17:902:6b4c:b0:1db:b36c:715f with SMTP id g12-20020a1709026b4c00b001dbb36c715fmr7376058plt.24.1708968974197;
-        Mon, 26 Feb 2024 09:36:14 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id i19-20020a170902eb5300b001db5c8202a4sm4202191pli.59.2024.02.26.09.36.02
+        d=1e100.net; s=20230601; t=1708968978; x=1709573778;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0TJDpiQS0mzwh7myIO+xWtjFUw057mz9Kw5WxBUdIdQ=;
+        b=WxLGkznFLc8G1GY+0KXwtxSGRpXQPSfVBt0ssZC+iN2xicaB326mvBvopHrqcXsZUd
+         5IoV7BoU+GUkwDepGjTCgIaggbWaocLMkf3A7dh5dhnlZ837e6AgAytSIQgZzOvMVT2O
+         l0qqB8Bq8Z4bKTkiZf7ZtcJuX3S6mQVz7nkYCVeIDieppIrL9gV4w+lsn2oSqKGSuL7q
+         lHksDKSGUAcBOQ7VIA1MEpSES2MD+IHPyS5MIJjNyXQXJXArkpoSFoAs9zuksBUS7IE2
+         P8NEUEpQeT/p2qsoMAa5Rb9RPAPRt/o/bhMTDReo/XkYRBd6cCWYmM8h0rJ6jLeNnZHP
+         1R7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUVoHl98kIBRdPUVA/Loan5p8Vl9KEfBttshW5qOGzGY5yf1++2gnmuNoL/i0/Dva/OElLvVHCrsN/h4UIkrKb37FrmZLOZ1Sa9YLx5
+X-Gm-Message-State: AOJu0YxfPGeds8Sk/OTN2gYCtlbh5d+KDAI/Ps1rAO2XJe1PgHatcrQo
+	xTOz81QtM6Ps+KOeS1hL6AgfpeXIGfjSHGZs6IKJxJCFXT/MGU/31vMrwD1hIYn/0xyRwt1GPoc
+	=
+X-Google-Smtp-Source: AGHT+IFRGVJ9fOOEAnGLOBRwBOnFUxAy0Dp9rHK0t5s1ARYGXRn4VOlqiJ2YSebtwgBECP50v5s8Ww==
+X-Received: by 2002:a0c:e18a:0:b0:68f:7f3b:5ef7 with SMTP id p10-20020a0ce18a000000b0068f7f3b5ef7mr7103278qvl.17.1708968977826;
+        Mon, 26 Feb 2024 09:36:17 -0800 (PST)
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com. [209.85.219.50])
+        by smtp.gmail.com with ESMTPSA id mv8-20020a056214338800b006901a6dc877sm237041qvb.145.2024.02.26.09.36.17
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 09:36:08 -0800 (PST)
-Message-ID: <90ecf4d2-0eee-48e6-8222-7d3b5fd52b2f@broadcom.com>
-Date: Mon, 26 Feb 2024 09:36:02 -0800
+        Mon, 26 Feb 2024 09:36:17 -0800 (PST)
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6861538916cso24146766d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:36:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXkAuiIn7I7nhz/833wLF7WcZNr2M3QmN5ZDOz888He0wpRRNABHrVZTJpRvrNZoImG21RPJGyEb3OfUzLXuuMOcwUb2IiCZx2n8hZ3
+X-Received: by 2002:a05:6214:1c8a:b0:68f:5fce:66f1 with SMTP id
+ ib10-20020a0562141c8a00b0068f5fce66f1mr8157094qvb.46.1708968976685; Mon, 26
+ Feb 2024 09:36:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/13] mtd: rawnand: brcmnand: driver and doc updates
-To: William Zhang <william.zhang@broadcom.com>,
- Linux MTD List <linux-mtd@lists.infradead.org>,
- Linux ARM List <linux-arm-kernel@lists.infradead.org>,
- Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
-Cc: f.fainelli@gmail.com, kursad.oney@broadcom.com,
- joel.peshkin@broadcom.com, anand.gore@broadcom.com, dregan@mail.com,
- kamal.dasu@broadcom.com, tomer.yacoby@broadcom.com,
- dan.beygelman@broadcom.com, Andre Przywara <andre.przywara@arm.com>,
- Rob Herring <robh+dt@kernel.org>, Kamal Dasu <kdasu.kdev@gmail.com>,
- Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>, David Regan <dregan@broadcom.com>,
- devicetree@vger.kernel.org, Alexandre TORGUE <alexandre.torgue@st.com>,
- Vignesh Raghavendra <vigneshr@ti.com>,
- Brian Norris <computersforpeace@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
- linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>
-References: <20240223034758.13753-1-william.zhang@broadcom.com>
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- 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
-In-Reply-To: <20240223034758.13753-1-william.zhang@broadcom.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000a91aa106124c58fc"
+References: <20240226-fix-clang-warnings-v2-0-fa1bc931d17e@chromium.org> <20240226-fix-clang-warnings-v2-3-fa1bc931d17e@chromium.org>
+In-Reply-To: <20240226-fix-clang-warnings-v2-3-fa1bc931d17e@chromium.org>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 26 Feb 2024 18:35:59 +0100
+X-Gmail-Original-Message-ID: <CANiDSCtvLkWJ=-DgnAGFmHSuXy_ZCcgxfccQQ3cK_6y+WkML6A@mail.gmail.com>
+Message-ID: <CANiDSCtvLkWJ=-DgnAGFmHSuXy_ZCcgxfccQQ3cK_6y+WkML6A@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] media: mediatek: vcodedc: Fix Wcast-function-type-strict
+ warnings
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Mike Isely <isely@pobox.com>, 
+	Tiffany Lin <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, 
+	Yunfei Dong <yunfei.dong@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	nfraprado@collabora.com
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---000000000000a91aa106124c58fc
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi
 
-On 2/22/24 19:47, William Zhang wrote:
-> This patch series is an update from the previous version [1] after
-> exex_op support and fixes (patch 1 to 4 from the previous version.)
-> 
-> It updates all the BCMBCA SoC to support the nand controller and add
-> functions to handle BCMBCA specific needs on ECC and Write Protection
-> usage. The device tree document is also updated accordingly with the new
-> properties needed by the driver.
-> 
-> In addition there is a bug fix for exec_op helper functions, log level
-> adjustment on uncorrectable ECC error and some coding style fixes.
-> 
-> [1] https://lore.kernel.org/lkml/20230606231252.94838-1-william.zhang@broadcom.com/
+On Mon, 26 Feb 2024 at 18:32, Ricardo Ribalda <ribalda@chromium.org> wrote:
+>
+> Building with LLVM=3D1 throws the following warning:
+> drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c:38:32: =
+warning: cast from 'mtk_vcodec_ipi_handler' (aka 'void (*)(void *, unsigned=
+ int, void *)') to 'ipi_handler_t' (aka 'void (*)(const void *, unsigned in=
+t, void *)') converts to incompatible function type [-Wcast-function-type-s=
+trict]
+>
+> Constify the types to avoid the warning.
 
-Miquel, thanks for having applied the patches, we should have discussed 
-ahead of time whether you should take the SoC/board-level DTS changes 
-through your tree or mine, but it's fine either way and should not lead 
-to conflicts in Linus' tree.
--- 
-Florian
+Please note that this has only been compile tested.
 
 
---000000000000a91aa106124c58fc
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/platform/mediatek/mdp3/mtk-mdp3-vpu.c          | 12 ++++++=
+------
+>  .../media/platform/mediatek/vcodec/common/mtk_vcodec_fw.h    |  2 +-
+>  .../platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c      | 10 +-----=
+----
+>  drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c |  2 +-
+>  drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c |  2 +-
+>  drivers/remoteproc/mtk_scp.c                                 |  4 ++--
+>  include/linux/remoteproc/mtk_scp.h                           |  2 +-
+>  include/linux/rpmsg/mtk_rpmsg.h                              |  2 +-
+>  8 files changed, 14 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-vpu.c b/driver=
+s/media/platform/mediatek/mdp3/mtk-mdp3-vpu.c
+> index 49fc2e9d45dd5..c4f1c49b9d52a 100644
+> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-vpu.c
+> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-vpu.c
+> @@ -77,10 +77,10 @@ void mdp_vpu_shared_mem_free(struct mdp_vpu_dev *vpu)
+>                 dma_free_wc(dev, vpu->config_size, vpu->config, vpu->conf=
+ig_addr);
+>  }
+>
+> -static void mdp_vpu_ipi_handle_init_ack(void *data, unsigned int len,
+> +static void mdp_vpu_ipi_handle_init_ack(const void *data, unsigned int l=
+en,
+>                                         void *priv)
+>  {
+> -       struct mdp_ipi_init_msg *msg =3D (struct mdp_ipi_init_msg *)data;
+> +       const struct mdp_ipi_init_msg *msg =3D data;
+>         struct mdp_vpu_dev *vpu =3D
+>                 (struct mdp_vpu_dev *)(unsigned long)msg->drv_data;
+>
+> @@ -91,10 +91,10 @@ static void mdp_vpu_ipi_handle_init_ack(void *data, u=
+nsigned int len,
+>         complete(&vpu->ipi_acked);
+>  }
+>
+> -static void mdp_vpu_ipi_handle_deinit_ack(void *data, unsigned int len,
+> +static void mdp_vpu_ipi_handle_deinit_ack(const void *data, unsigned int=
+ len,
+>                                           void *priv)
+>  {
+> -       struct mdp_ipi_deinit_msg *msg =3D (struct mdp_ipi_deinit_msg *)d=
+ata;
+> +       const struct mdp_ipi_deinit_msg *msg =3D data;
+>         struct mdp_vpu_dev *vpu =3D
+>                 (struct mdp_vpu_dev *)(unsigned long)msg->drv_data;
+>
+> @@ -102,10 +102,10 @@ static void mdp_vpu_ipi_handle_deinit_ack(void *dat=
+a, unsigned int len,
+>         complete(&vpu->ipi_acked);
+>  }
+>
+> -static void mdp_vpu_ipi_handle_frame_ack(void *data, unsigned int len,
+> +static void mdp_vpu_ipi_handle_frame_ack(const void *data, unsigned int =
+len,
+>                                          void *priv)
+>  {
+> -       struct img_sw_addr *addr =3D (struct img_sw_addr *)data;
+> +       const struct img_sw_addr *addr =3D data;
+>         struct img_ipi_frameparam *param =3D
+>                 (struct img_ipi_frameparam *)(unsigned long)addr->va;
+>         struct mdp_vpu_dev *vpu =3D
+> diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw.=
+h b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw.h
+> index 300363a40158c..2561b99c95871 100644
+> --- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw.h
+> +++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw.h
+> @@ -23,7 +23,7 @@ enum mtk_vcodec_fw_use {
+>
+>  struct mtk_vcodec_fw;
+>
+> -typedef void (*mtk_vcodec_ipi_handler) (void *data,
+> +typedef void (*mtk_vcodec_ipi_handler) (const void *data,
+>         unsigned int len, void *priv);
+>
+>  struct mtk_vcodec_fw *mtk_vcodec_fw_select(void *priv, enum mtk_vcodec_f=
+w_type type,
+> diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_=
+vpu.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+> index 9f6e4b59455da..4c34344dc7dcb 100644
+> --- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+> +++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
+> @@ -29,15 +29,7 @@ static int mtk_vcodec_vpu_set_ipi_register(struct mtk_=
+vcodec_fw *fw, int id,
+>                                            mtk_vcodec_ipi_handler handler=
+,
+>                                            const char *name, void *priv)
+>  {
+> -       /*
+> -        * The handler we receive takes a void * as its first argument. W=
+e
+> -        * cannot change this because it needs to be passed down to the r=
+proc
+> -        * subsystem when SCP is used. VPU takes a const argument, which =
+is
+> -        * more constrained, so the conversion below is safe.
+> -        */
+> -       ipi_handler_t handler_const =3D (ipi_handler_t)handler;
+> -
+> -       return vpu_ipi_register(fw->pdev, id, handler_const, name, priv);
+> +       return vpu_ipi_register(fw->pdev, id, handler, name, priv);
+>  }
+>
+>  static int mtk_vcodec_vpu_ipi_send(struct mtk_vcodec_fw *fw, int id, voi=
+d *buf,
+> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c=
+ b/drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c
+> index 82e57ae983d55..a840dd2a48d0e 100644
+> --- a/drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c
+> +++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec_vpu_if.c
+> @@ -97,7 +97,7 @@ static bool vpu_dec_check_ap_inst(struct mtk_vcodec_dec=
+_dev *dec_dev, struct vde
+>   * This function runs in interrupt context and it means there's an IPI M=
+SG
+>   * from VPU.
+>   */
+> -static void vpu_dec_ipi_handler(void *data, unsigned int len, void *priv=
+)
+> +static void vpu_dec_ipi_handler(const void *data, unsigned int len, void=
+ *priv)
+>  {
+>         struct mtk_vcodec_dec_dev *dec_dev;
+>         const struct vdec_vpu_ipi_ack *msg =3D data;
+> diff --git a/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c=
+ b/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c
+> index 84ad1cc6ad171..ea0c4a281d1a1 100644
+> --- a/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c
+> +++ b/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c
+> @@ -57,7 +57,7 @@ static bool vpu_enc_check_ap_inst(struct mtk_vcodec_enc=
+_dev *enc_dev, struct ven
+>         return ret;
+>  }
+>
+> -static void vpu_enc_ipi_handler(void *data, unsigned int len, void *priv=
+)
+> +static void vpu_enc_ipi_handler(const void *data, unsigned int len, void=
+ *priv)
+>  {
+>         struct mtk_vcodec_enc_dev *enc_dev;
+>         const struct venc_vpu_ipi_msg_common *msg =3D data;
+> diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
+> index a35409eda0cf2..b508136b416a8 100644
+> --- a/drivers/remoteproc/mtk_scp.c
+> +++ b/drivers/remoteproc/mtk_scp.c
+> @@ -78,10 +78,10 @@ static void scp_wdt_handler(struct mtk_scp *scp, u32 =
+scp_to_host)
+>                 rproc_report_crash(scp_node->rproc, RPROC_WATCHDOG);
+>  }
+>
+> -static void scp_init_ipi_handler(void *data, unsigned int len, void *pri=
+v)
+> +static void scp_init_ipi_handler(const void *data, unsigned int len, voi=
+d *priv)
+>  {
+>         struct mtk_scp *scp =3D priv;
+> -       struct scp_run *run =3D data;
+> +       const struct scp_run *run =3D data;
+>
+>         scp->run.signaled =3D run->signaled;
+>         strscpy(scp->run.fw_ver, run->fw_ver, SCP_FW_VER_LEN);
+> diff --git a/include/linux/remoteproc/mtk_scp.h b/include/linux/remotepro=
+c/mtk_scp.h
+> index 7c2b7cc9fe6c1..84e579940b8e5 100644
+> --- a/include/linux/remoteproc/mtk_scp.h
+> +++ b/include/linux/remoteproc/mtk_scp.h
+> @@ -8,7 +8,7 @@
+>
+>  #include <linux/platform_device.h>
+>
+> -typedef void (*scp_ipi_handler_t) (void *data,
+> +typedef void (*scp_ipi_handler_t) (const void *data,
+>                                    unsigned int len,
+>                                    void *priv);
+>  struct mtk_scp;
+> diff --git a/include/linux/rpmsg/mtk_rpmsg.h b/include/linux/rpmsg/mtk_rp=
+msg.h
+> index 363b60178040b..9d67507471fba 100644
+> --- a/include/linux/rpmsg/mtk_rpmsg.h
+> +++ b/include/linux/rpmsg/mtk_rpmsg.h
+> @@ -9,7 +9,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/remoteproc.h>
+>
+> -typedef void (*ipi_handler_t)(void *data, unsigned int len, void *priv);
+> +typedef void (*ipi_handler_t)(const void *data, unsigned int len, void *=
+priv);
+>
+>  /*
+>   * struct mtk_rpmsg_info - IPI functions tied to the rpmsg device.
+>
+> --
+> 2.44.0.rc0.258.g7320e95886-goog
+>
 
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEILFPNio+AE2dV9oI
-l4XHzLSyvgcYoIkpejccUvqv4GvKMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTI0MDIyNjE3MzYxNFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCMPwIGfIJOPXlvRmKTqpgfuoi6uxZTo9+M
-U/T5HQCEk8weGuMi+GeN9Q5cDaVb1BcxbXtSrGFRtgcgUVMigaXF7d0GVto93Dbt6XhYqi3IVhCb
-XqHWylUU3m6CniYfeAW25gTCbsFrvlxW6gvRjBEnFMZQRovdCaI6rytNgyFMJdqgfBm+RagQXcaC
-0Z/D/1qFcH8uTs2VtquwH/oiWeR8WJFkbqe+CXq0VJKbb9nCP/KmOKAqai3eucHi4rgCu1ejBBZT
-IVqz/LUujG2du/ATlHxtYLeyatU4BWTE+oALS+eQ0j45C5vw2DifpG3EktqvM47/0dBh/vAMxNbu
-T++E
---000000000000a91aa106124c58fc--
+
+--=20
+Ricardo Ribalda
