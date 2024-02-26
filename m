@@ -1,181 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D847E1CA81
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FF41CA87;
+	Mon, 26 Feb 2024 08:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708935941; cv=none; b=flloKybA1qzJLglD/AWR7RVt6cM1UJ+pKGO/xLZzcTrkgPqRwQSyE/gACkll7Lz7xEN9gevvbgFwcg4mAJbot6j2lfo5EybEynffss/7aCPnjUaDooTTkCaAq2QeDuVyGgBXY70A3J8H7/IPSbO9Bt4NgTukRto7buU1x4vNoek=
+	t=1708935964; cv=none; b=jbRs3Hn7Dz+eaqIUHgJizVclMS5RlAu9QGk1HNrAt0zDP8VzI69xJPzG+bUHnD1UlHxZIYV4978H1RMw/2t+tam1ZLScfA4zJFEbTB4zYTnEPtmR8CJ2Dw/byHlt5NHctR7LALXHkjnyL+1BEgj3DzY7x+89aCW34VsfHPbrYWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708935941; c=relaxed/simple;
-	bh=d9TfJ1vj7CqpSO3yp7wBMj3Qok8UMIT9GlpK+EBJT5I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QDhrnBv9mbpZ7RJZ/is13rYHv9zsOOfczt/e5VCGDSmz5gfJNOxYWgN+NMQ1mb6RE6uLzX3m/qCJeDsPWutMmevpSbVRBNrxFGE3GeMY+5PfDTz3lD8pXw6IxSKxBVbDwvzQ5oxWYB/Mke1DXJLifyXlKddRsIPKlAmH9wrlRnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SzdnX2BE; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708935964; c=relaxed/simple;
+	bh=I+M+uyV5FpwwpkemvG8PFA89tmGoOFufVYcPptG81kg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cXMqESCL9C81oPg5yhs+FYE6eEa5jU88kbYYncDkj2IlI7ih7R7zs5gXwFZWMIn59fwM4Lf9EX5XLgQS6pRt57JvNdsAkN+pXBx5VWgwXjTXe+t22hZhJvnDc4Vnb/AiAXqrmXzy0pkr0d7VHSfHob3UM67Z9fZVElaqrtrx0CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=rem6OKKw; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SzdnX2BE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708935940; x=1740471940;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=d9TfJ1vj7CqpSO3yp7wBMj3Qok8UMIT9GlpK+EBJT5I=;
-  b=SzdnX2BE9f+rvX4I8fpH3gEVtQjkzHSqNYRWtLggqAJ8XheBATPR8qI9
-   3uuCAbw3xfwiRjPbmvk57xcFLyfA+U88GwPI2lAvOpvSqr/IdCzumNJJV
-   cCkq5hCUL+Rpa9D29yF4ODZ0zIvVbBB5d2njJvQ2e9ur8FUvngiXbRXlC
-   SAqHa5oAPD3VNYqB9FTwWsbkIFzNYdeZpSAPu8V0xefjSl6XgmPqQGi7g
-   gcp3REZNuuUO9uGlv1i5BsZFm8RPW7bbEV9Y9/8XHopuyZOo+tw6g2dw7
-   yKg0bV2HPUoIypj6vXZYOamlVRsLD5dB19IQDVC7/QT9xAQD481Dvls8h
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="20750875"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="20750875"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:25:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6734000"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
-  by fmviesa008.fm.intel.com with ESMTP; 26 Feb 2024 00:25:35 -0800
-From: Chen Yu <yu.c.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Juri Lelli <juri.lelli@redhat.com>
-Cc: Abel Wu <wuyun.abel@bytedance.com>,
-	Tim Chen <tim.c.chen@intel.com>,
-	"Tiwei Bie" <tiwei.btw@antgroup.com>,
-	Honglei Wang <wanghonglei@didichuxing.com>,
-	Aaron Lu <aaron.lu@intel.com>,
-	Chen Yu <yu.chen.surf@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.c.chen@intel.com>,
-	kernel test robot <oliver.sang@intel.com>
-Subject: [RFC PATCH] sched/eevdf: Return leftmost entity in pick_eevdf() if no eligible entity is found
-Date: Mon, 26 Feb 2024 16:23:49 +0800
-Message-Id: <20240226082349.302363-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="rem6OKKw"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41Q3T6cD001925;
+	Mon, 26 Feb 2024 09:25:42 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=ipjqMNVCa6S6fgiDE7vR21a99GdkTx/G11g4uP/BcWo=; b=re
+	m6OKKwNwvCp2pW4u/6mMlfjuS8RNmSFjVPAmlz2bPp9F+JqJox3Hc/SBI2Q5yadI
+	dGPwtVG/NEKZEs3agmVqVQ5BcX2oxwPMMkbh65QGAV4GlAyHist0zk+J59ucHGin
+	FmAFH6qAfwOzUf2ONh9hKbTwgE0qMQbNSzWuCL1QAlBJ6OaWCzZMcyc9x3BQAkii
+	+3+u4SVAdfy1xN413PoKsb3nvp+/sAmqIg415Wk/Dx6UPvlzlgelKuOlxI9tweoL
+	UBeFFz/9GKvnTn6kU8fqc9Dg6w1Juv2LbZfBxpfKbUs3nfY1pmg2NT9YMF2q6rYa
+	dQETh34CLS96SptsmWZA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wf6rke8dn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Feb 2024 09:25:42 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 492164002D;
+	Mon, 26 Feb 2024 09:25:38 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C3E12243FD1;
+	Mon, 26 Feb 2024 09:25:07 +0100 (CET)
+Received: from [10.201.21.177] (10.201.21.177) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 26 Feb
+ 2024 09:25:07 +0100
+Message-ID: <9859023c-57bf-4316-911c-c5f5ade1ebb4@foss.st.com>
+Date: Mon, 26 Feb 2024 09:25:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] memory: stm32-fmc2-ebi: check regmap_read return
+ value
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>
+References: <20240219140202.85680-1-christophe.kerello@foss.st.com>
+ <20240219140202.85680-3-christophe.kerello@foss.st.com>
+ <1c4ab974-2b72-45ce-ab20-de158b91e356@linaro.org>
+Content-Language: en-US
+From: Christophe Kerello <christophe.kerello@foss.st.com>
+In-Reply-To: <1c4ab974-2b72-45ce-ab20-de158b91e356@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-26_05,2024-02-23_01,2023-05-22_02
 
-There is occasional report from lkp that the kernel hits the NULL pointer
-exception:
+Hi Krzysztof,
 
-[  512.079810][ T8305] BUG: kernel NULL pointer dereference, address: 0000002c
-[  512.080897][ T8305] #PF: supervisor read access in kernel mode
-[  512.081636][ T8305] #PF: error_code(0x0000) - not-present page
-[  512.082337][ T8305] *pde = 00000000
-[  512.082829][ T8305] Oops: 0000 [#1] PREEMPT SMP
-[  512.083407][ T8305] CPU: 1 PID: 8305 Comm: watchdog Tainted: G        W
-[  512.086203][ T8305] EIP: set_next_entity (fair.c:?)
+On 2/21/24 09:29, Krzysztof Kozlowski wrote:
+> On 19/02/2024 15:01, Christophe Kerello wrote:
+>> Check regmap_read return value to avoid to use uninitialized local
+>> variables.
+>>
+>> Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
+>> ---
+>> Changes in v2:
+>>   - New patch added
+>>
+>>   drivers/memory/stm32-fmc2-ebi.c | 128 +++++++++++++++++++++++---------
+>>   1 file changed, 94 insertions(+), 34 deletions(-)
+>>
+> 
+> ...
+> 
+>> -static void stm32_fmc2_ebi_save_setup(struct stm32_fmc2_ebi *ebi)
+>> +static int stm32_fmc2_ebi_save_setup(struct stm32_fmc2_ebi *ebi)
+>>   {
+>>   	unsigned int cs;
+>> +	int ret;
+>>   
+>>   	for (cs = 0; cs < FMC2_MAX_EBI_CE; cs++) {
+>> -		regmap_read(ebi->regmap, FMC2_BCR(cs), &ebi->bcr[cs]);
+>> -		regmap_read(ebi->regmap, FMC2_BTR(cs), &ebi->btr[cs]);
+>> -		regmap_read(ebi->regmap, FMC2_BWTR(cs), &ebi->bwtr[cs]);
+>> +		ret = regmap_read(ebi->regmap, FMC2_BCR(cs), &ebi->bcr[cs]);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		ret = regmap_read(ebi->regmap, FMC2_BTR(cs), &ebi->btr[cs]);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		ret = regmap_read(ebi->regmap, FMC2_BWTR(cs), &ebi->bwtr[cs]);
+>> +		if (ret)
+>> +			return ret;
+> 
+> These are just:
+> 
+> ret |= regmapr_read()
+> and one "if (ret)" clause.
+> 
 
-This is caused by NULL candidate returned by pick_eevdf() as Abel analyzed.
-After
-commit 2227a957e1d5 ("sched/eevdf: Sort the rbtree by virtual deadline")
-the NULL candidate would trigger the NULL pointer exception. While before
-this commit, there would be warning.
+Ok, it will be done in V3.
 
-This NULL entity issue was always there before above commit. With debug
-patch to print the cfs_rq and all the entities in the tree, we have the
-information when the issue was reproduced:
+Regards,
+Christophe Kerello.
 
-[  514.461242][ T8390] cfs_rq avg_vruntime:386638640128 avg_load:2048 min_vruntime:763383370431
-[  514.535935][ T8390] current on_rq se 0xc5851400, deadline:18435852013562231446
-			min_vruntime:18437121115753667698 vruntime:18435852013561943404, load:629
-[  514.536772][ T8390] Traverse rb-tree from left to right
-[  514.537138][ T8390]  se 0xec1234e0 deadline:763384870431 min_vruntime:763383370431 vruntime:763383370431 non-eligible
-[  514.537835][ T8390]  se 0xec4fcf20 deadline:763762447228 min_vruntime:763760947228 vruntime:763760947228 non-eligible
-[  514.538539][ T8390] Traverse rb-tree from topdown
-[  514.538877][ T8390]  middle se 0xec1234e0 deadline:763384870431 min_vruntime:763383370431 vruntime:763383370431 non-eligible
-[  514.539605][ T8390]  middle se 0xec4fcf20 deadline:763762447228 min_vruntime:763760947228 vruntime:763760947228 non-eligible
-[  514.540340][ T8390] Found best:0x0
-[  514.540613][ T8390] BUG: kernel NULL pointer dereference, address: 00000074
-
-We can see that non of the entities in the tree are eligible, neither is
-the current entity on this cfs_rq. As a result, curr is set to NULL:
-if (curr && (!curr->on_rq || !entity_eligible(cfs_rq, curr)))
-	curr = NULL;
-
-and the best is set to NULL, which caused the problem:
-if (!best || (curr && entity_before(curr, best)))
-	best = curr;
-
-The cause is that, the curr is eligible, but vruntime_eligible()
-returns false. And the false negative is due to the following
-code in vruntime_eligible():
-
-return avg >= (s64)(vruntime - cfs_rq->min_vruntime) * load;
-
-According to the log, vruntime is 18435852013561943404, the
-cfs_rq->min_vruntime is 763383370431, the load is 629 + 2048 = 2677,
-thus:
-s64 delta = (s64)(18435852013561943404 - 763383370431) = -10892823530978643
-    delta * 2677 = 7733399554989275921
-that is to say, the multiply result overflow the s64, which turns the
-negative value into a positive value, thus eligible check fails.
-
-So where is this insane huge vruntime 18435852013561943404 coming from?
-My guess is that, it is because the initial value of cfs_rq->min_vruntime
-is set to (unsigned long)(-(1LL << 20)). If the task(watchdog in this case)
-seldom scheduled in, its vruntime might not move forward too much and
-remain its original value by previous place_entity().
-
-The proper fix should deal with the overflow of entity_key() * load, but
-I don't have much clue on that, so propose this conservative method to
-restore the previous behavior before the mentioned commit.
-
-Fixes: 2227a957e1d5 ("sched/eevdf: Sort the rbtree by virtual deadline")
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/lkml/202401301012.2ed95df0-oliver.sang@intel.com/
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- kernel/sched/fair.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 533547e3c90a..fb9202f464e2 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -880,7 +880,7 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
- 	struct rb_node *node = cfs_rq->tasks_timeline.rb_root.rb_node;
- 	struct sched_entity *se = __pick_first_entity(cfs_rq);
- 	struct sched_entity *curr = cfs_rq->curr;
--	struct sched_entity *best = NULL;
-+	struct sched_entity *best = NULL, *leftmost;
- 
- 	/*
- 	 * We can safely skip eligibility check if there is only one entity
-@@ -905,6 +905,8 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
- 		goto found;
- 	}
- 
-+	leftmost = se;
-+
- 	/* Heap search for the EEVD entity */
- 	while (node) {
- 		struct rb_node *left = node->rb_left;
-@@ -937,6 +939,15 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
- 	if (!best || (curr && entity_before(curr, best)))
- 		best = curr;
- 
-+	/*
-+	 * entity_eligible() could bring false negative due to
-+	 * multiply overflow, which reports no eligible entity.
-+	 * Return leftmost entity as a backup(it is guaranteed
-+	 * the tree is not NULL.
-+	 */
-+	if (!best)
-+		best = leftmost;
-+
- 	return best;
- }
- 
--- 
-2.25.1
-
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
