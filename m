@@ -1,129 +1,102 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9461CA91;
-	Mon, 26 Feb 2024 21:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056CB1CA91
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 21:21:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708982416; cv=none; b=ZG/cnxevfEndisNEAMG+hjfLmi2tUUCVbfvl0Y9xTzuIiYZulA+W8XAYjfCNIX9zDY+sv+Ov/8U8Fho/Cqt+mACJcX/k0NSx3m6CWz+bjUM/TFX2YMqb8kXumFf9UiAaqIG4DJUttszQ/Gn4C1OcnA/5O/0ID/238bUpEcA9nG0=
+	t=1708982491; cv=none; b=oL8OJNLoFvJLteAqRlY54m/VKHRMho1hthjW0dYexTm2h3D56XosqGoV3flScYoIlSzFOUlPHDARESoduD7FjomSloCuNsK6OMOFS3Z6qYR2N5Vrj9Qc2g4gDagcYGqJM7QP0DLEfvXpmLGxlOt871wUQ1FXAj0abkelARItfA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708982416; c=relaxed/simple;
-	bh=FOYERU8NmHbg9gmrjoR9sSh2LIJ3GOCMFBBjojIKe7s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V20M9vqvmU2/Vl1X8GFxURi2el/22KIO1bM9MOAbbbL3FZ+/Beq93HpQpmCJUY31fXZgoWUl2IDjH/mpFXNTL6usplipqDiydGNcqxyQiAPbgAZ+77auMxhvwn8V+8jUY3lt4VZJfbYd60zlDR7mCwF5HpkjM0Qf39wEDlUL49U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=tGyjfZzN; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1708982491; c=relaxed/simple;
+	bh=w3le3Y2EYxbOx/Q57ccXOJbKsiJ/mZk+9wNEJ7K0FVs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dywa7HbWlKX8psbFDqqqCay2KZcWDizFNG+HeeZn4DgyhO8aorPiKCZiRQDOie//14J57qrgJm6auzWWDqGgZ4EBu2lwcbWqud9NrJ71nPOzcaSDIT1oElqUadslNT6TYN2KrVsQgs4js6muTTIRjJ7wTnKbRSHslJzIYoDbAA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=z/tTiTfH; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="tGyjfZzN"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="z/tTiTfH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1708982407;
-	bh=FOYERU8NmHbg9gmrjoR9sSh2LIJ3GOCMFBBjojIKe7s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=tGyjfZzNynVi35o31WlvR1PvlfJKFER57QjCs6311NQcOgI/4vA71M8Dltn1h1Z5l
-	 31dOZ4A2DY3gdyhD1zo/i9rlLLqykuhaOBC5RetYpA1oskEqv/p18wdhbc1/DxjeCD
-	 4bT4orGTbbCyNPREd41qUWGnS5Fta+TLeC3M83YuStrflt8sNXY3mZjqxkDCiwWL3i
-	 UO48PDdpwx1MVo0o5wPZV1oQcvrHUUVRZi1srE3ZQXr1BnBpG3ZCk7tu5I+tYtG2VN
-	 sL5Fwc6TLFh+cvhLauMicwfffKDEFq3tCEeousne8iOGZ0PE/rfF240a8IQwyL5V1m
-	 KyvcyvtPXDlvg==
-Received: from nicolas-tpx395.lan (cola.collaboradmins.com [195.201.22.229])
+	s=mail; t=1708982488;
+	bh=w3le3Y2EYxbOx/Q57ccXOJbKsiJ/mZk+9wNEJ7K0FVs=;
+	h=From:Date:Subject:To:Cc:From;
+	b=z/tTiTfH7Oqezmj3gH/H/IANV/MOcJi/Yb8EIZz2oCKQ/V1zOYo25xeuSIJdRoQ/9
+	 Ij1kPRdJlaSvE+MAHqcAWNuCcGyeyzR9UbWD1+mHsiYLIfB22ZimzTkgl25ezmRR4z
+	 4TD6dj6tlyigSvvH0DvCuTMNhu8wb3NzAXcgg7ZCOP/h0GV/8SAy4mgLc3HbpJ9FxM
+	 z9T91Y6pf9tkV+garuHKcb9upsWSFizf7Yh8twiuEWmpZYRNNq1BmM97VHD8w5hexe
+	 fEcdke5uee2IKciDk6kWMTNgTYr77qRWlUY3c0R4r4cJhF+As/9Hc0bC/cIc2+BdIz
+	 XPV0d/b5rDTxQ==
+Received: from [192.168.1.151] (zone.collabora.co.uk [167.235.23.81])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5223D378111A;
-	Mon, 26 Feb 2024 21:20:05 +0000 (UTC)
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Tiffany Lin <tiffany.lin@mediatek.com>,
-	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-	Yunfei Dong <yunfei.dong@mediatek.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: kernel@collabora.com,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] media: mediatek: vcodec: Fix oops when HEVC init fails
-Date: Mon, 26 Feb 2024 16:19:52 -0500
-Message-ID: <20240226211954.400891-1-nicolas.dufresne@collabora.com>
-X-Mailer: git-send-email 2.43.2
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 53229378111A;
+	Mon, 26 Feb 2024 21:21:25 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Mon, 26 Feb 2024 16:20:58 -0500
+Subject: [PATCH] drm/bridge: anx7625: Don't log an error when DSI host
+ can't be found
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240226-anx7625-defer-log-no-dsi-host-v1-1-242b1af31884@collabora.com>
+X-B4-Tracking: v=1; b=H4sIALkA3WUC/x3MwQqDMAwA0F+RnBfQ6NTtV2QHTVMNjHY0Mgriv
+ 1s8vss7wCSpGLyrA5L81TSGguZRAW9zWAXVFQPV1NVEPc4hDz090YmXhN+4YojoTHGLtiO3/sW
+ 88ELjAOX4JfGa73/6nOcFC4XP6G8AAAA=
+To: Robert Foss <rfoss@kernel.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ owen <qwt9588@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@kernel.org>, 
+ kernel@collabora.com, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.13.0
 
-In stateless HEVC case, the instance pointer was saved in the
-context regardless if the initialization worked. As the pointer
-is freed in failure, this resulted in use after free in the
-deinit function.
+Given that failing to find a DSI host causes the driver to defer probe,
+make use of dev_err_probe() to log the reason. This makes the defer
+probe reason available and avoids alerting userspace about something
+that is not necessarily an error.
 
- Hardware name: Acer Tomato (rev3 - 4) board (DT)
- pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
- pc : vcodec_vpu_send_msg+0x4c/0x190 [mtk_vcodec_dec]
- lr : vcodec_send_ap_ipi+0x78/0x170 [mtk_vcodec_dec]
- sp : ffff80008750bc20
- x29: ffff80008750bc20 x28: ffff1299f6d70000 x27: 0000000000000000
- x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
- x23: ffff80008750bc98 x22: 000000000000a003 x21: ffffd45c4cfae000
- x20: 0000000000000010 x19: ffff1299fd668310 x18: 000000000000001a
- x17: 000000040044ffff x16: ffffd45cb15dc648 x15: 0000000000000000
- x14: ffff1299c08da1c0 x13: ffffd45cb1f87a10 x12: ffffd45cb2f5fe80
- x11: 0000000000000001 x10: 0000000000001b30 x9 : ffffd45c4d12b488
- x8 : 1fffe25339380d81 x7 : 0000000000000001 x6 : ffff1299c9c06c00
- x5 : 0000000000000132 x4 : 0000000000000000 x3 : 0000000000000000
- x2 : 0000000000000010 x1 : ffff80008750bc98 x0 : 0000000000000000
- Call trace:
-  vcodec_vpu_send_msg+0x4c/0x190 [mtk_vcodec_dec]
-  vcodec_send_ap_ipi+0x78/0x170 [mtk_vcodec_dec]
-  vpu_dec_deinit+0x1c/0x30 [mtk_vcodec_dec]
-  vdec_hevc_slice_deinit+0x30/0x98 [mtk_vcodec_dec]
-  vdec_if_deinit+0x38/0x68 [mtk_vcodec_dec]
-  mtk_vcodec_dec_release+0x20/0x40 [mtk_vcodec_dec]
-  fops_vcodec_release+0x64/0x118 [mtk_vcodec_dec]
-  v4l2_release+0x7c/0x100
-  __fput+0x80/0x2d8
-  __fput_sync+0x58/0x70
-  __arm64_sys_close+0x40/0x90
-  invoke_syscall+0x50/0x128
-  el0_svc_common.constprop.0+0x48/0xf0
-  do_el0_svc+0x24/0x38
-  el0_svc+0x38/0xd8
-  el0t_64_sync_handler+0xc0/0xc8
-  el0t_64_sync+0x1a8/0x1b0
- Code: d503201f f9401660 b900127f b900227f (f9400400)
-
-Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Fixes: 2674486aac7d ("media: mediatek: vcodec: support stateless hevc decoder")
+Fixes: 269332997a16 ("drm/bridge: anx7625: Return -EPROBE_DEFER if the dsi host was not found")
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 ---
- .../mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c       | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/analogix/anx7625.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c
-index 06ed47df693bf..21836dd6ef85a 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c
-@@ -869,7 +869,6 @@ static int vdec_hevc_slice_init(struct mtk_vcodec_dec_ctx *ctx)
- 	inst->vpu.codec_type = ctx->current_codec;
- 	inst->vpu.capture_type = ctx->capture_fourcc;
+diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
+index 29d91493b101..4ee5614a2623 100644
+--- a/drivers/gpu/drm/bridge/analogix/anx7625.c
++++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
+@@ -2076,10 +2076,8 @@ static int anx7625_setup_dsi_device(struct anx7625_data *ctx)
+ 	};
  
--	ctx->drv_handle = inst;
- 	err = vpu_dec_init(&inst->vpu);
- 	if (err) {
- 		mtk_vdec_err(ctx, "vdec_hevc init err=%d", err);
-@@ -898,6 +897,7 @@ static int vdec_hevc_slice_init(struct mtk_vcodec_dec_ctx *ctx)
- 	mtk_vdec_debug(ctx, "lat hevc instance >> %p, codec_type = 0x%x",
- 		       inst, inst->vpu.codec_type);
+ 	host = of_find_mipi_dsi_host_by_node(ctx->pdata.mipi_host_node);
+-	if (!host) {
+-		DRM_DEV_ERROR(dev, "fail to find dsi host.\n");
+-		return -EPROBE_DEFER;
+-	}
++	if (!host)
++		return dev_err_probe(dev, -EPROBE_DEFER, "fail to find dsi host.\n");
  
-+	ctx->drv_handle = inst;
- 	return 0;
- error_free_inst:
- 	kfree(inst);
+ 	dsi = devm_mipi_dsi_device_register_full(dev, host, &info);
+ 	if (IS_ERR(dsi)) {
+
+---
+base-commit: 2ae0a045e6814c8c1d676d6153c605a65746aa29
+change-id: 20240226-anx7625-defer-log-no-dsi-host-c3f9ccbcb287
+
+Best regards,
 -- 
-2.43.2
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
