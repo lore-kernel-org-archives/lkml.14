@@ -1,122 +1,91 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9416E381BE;
-	Mon, 26 Feb 2024 10:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FD66024C
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708942568; cv=none; b=px69FDSlQYGnbmfJ02ln+b3YpJiwGC/xen1p/DP7+wyzz7KdDpd5n/7NRFiygsnYhQdXMKk/oypBUjEZ3TOJip+BdcQtucualrC5yK07kNW8c8KrTzEz8hjXvmIGTJMw3fcPn+Sfq0607CtS/uLtxgAWKY20HPOaNXiOcUqrQIg=
+	t=1708942572; cv=none; b=GfFsM+qZE3ByhPz9f9XlcxbUboTQRhXj3pZXXf/6WXDsM/iN3SOC5/OkjY4PbGg7UjSoMaNXtwxnP/4wYOKAdDasTVF04UXnYXDkY8yc9AQ9obrtyycCv/eX1AZRT78x02DlI1vObte+5NaA/glgbZ8Zguk/X8Ee+U5ncaHvxv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708942568; c=relaxed/simple;
-	bh=UDNvKSYg+/SA5i8qLf0z8IBqL6wuxzfyh+tb5eFpRXg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IzZifWJGVyLW5D+hedIrpnrb/VwmFZ+a36rs1hP1WLOXORQs5E/mQuOuoEMJ9VHUqdy+VNYDSmUe8H/MFKdl4imHM1mb3BxNuS8dX5Ns0r9HYPodpAqzgrlcmEyjSqxoweRQD3oX7RhkLcoqJrTQbSF/goeNouyQTGvdbSobnok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=JT+WIcT9; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="JT+WIcT9"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41QAFijw010324;
-	Mon, 26 Feb 2024 11:15:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=OW57AZTUsQlp0CNOE8yjZNo7VI7deZ88cKgdLkWe72c=; b=JT
-	+WIcT9QolRpLOc/FyUTQPE1SdjiI4HED5CBLcRFE8fA4aabvoojqeE+bAqkMtgJH
-	jUtpSKKthrEgEKA8D1UCeg5SYT+P9pH3puhNYAfF0XdOAJHgDGXhEJaV7W3F/ciA
-	pqWedqQJqOdSIdTyQKSPb9lWt9I2VbqUriYixBl6ma8lQUhafrAWsxVjnqDHhtFI
-	vTkSDyZZU4BzI+6y/h6vclkY4fN1PkUUN40NcN2iCxTocD2uC2Tl8BVc9QjHBdKk
-	wLRYE5q21KfGjFqzKEHggTaZb/Y6G9Y/DmzUqn4RNzbVZN9SZap2RXLa3z8JWXas
-	cGotRzlTzFmVbO+1wzNQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wfv9tv67b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 11:15:45 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2D3234002D;
-	Mon, 26 Feb 2024 11:15:30 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8170F25ED94;
-	Mon, 26 Feb 2024 11:15:00 +0100 (CET)
-Received: from localhost (10.201.21.177) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 26 Feb
- 2024 11:15:00 +0100
-From: Christophe Kerello <christophe.kerello@foss.st.com>
-To: <krzysztof.kozlowski@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>,
-        Christophe Kerello <christophe.kerello@foss.st.com>
-Subject: [PATCH v3 1/5] dt-bindings: memory-controller: st,stm32: add MP25 support
-Date: Mon, 26 Feb 2024 11:14:24 +0100
-Message-ID: <20240226101428.37791-2-christophe.kerello@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240226101428.37791-1-christophe.kerello@foss.st.com>
-References: <20240226101428.37791-1-christophe.kerello@foss.st.com>
+	s=arc-20240116; t=1708942572; c=relaxed/simple;
+	bh=VmTbkppW6YpAajcXsJ4b9OS5/DxwJNy3p3kYrUucLas=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=LBrnqy8JxZPLMgiqKsyUr+Bko1Lc8b9NFE0IA/4pQaqut9VwBlvIPw5wIpytrQ4KSmRnYxojXUIzPC69kO1fH3rE+BqVHECfakEQNWKHIGKsluXfAV1YzgO53cU1HdBUUU/f5yD8Au+qIs4gkCNS01kr5p8hUStNl08Tmusdgto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-91-CfTYQ5CAOY6_UOUoiheBlQ-1; Mon, 26 Feb 2024 10:16:02 +0000
+X-MC-Unique: CfTYQ5CAOY6_UOUoiheBlQ-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 26 Feb
+ 2024 10:16:01 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Mon, 26 Feb 2024 10:16:01 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'kernel test robot' <lkp@intel.com>, "'linux-kernel@vger.kernel.org'"
+	<linux-kernel@vger.kernel.org>, 'Linus Torvalds'
+	<torvalds@linux-foundation.org>, 'Netdev' <netdev@vger.kernel.org>,
+	"'dri-devel@lists.freedesktop.org'" <dri-devel@lists.freedesktop.org>
+CC: "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
+	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>, 'Jens Axboe'
+	<axboe@kernel.dk>, "'Matthew Wilcox (Oracle)'" <willy@infradead.org>,
+	'Christoph Hellwig' <hch@infradead.org>, "'linux-btrfs@vger.kernel.org'"
+	<linux-btrfs@vger.kernel.org>, 'Andrew Morton' <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>, 'Andy Shevchenko'
+	<andriy.shevchenko@linux.intel.com>, "'David S . Miller'"
+	<davem@davemloft.net>, 'Dan Carpenter' <dan.carpenter@linaro.org>, "'Jani
+ Nikula'" <jani.nikula@linux.intel.com>
+Subject: RE: [PATCH next v2 11/11] minmax: min() and max() don't need to
+ return constant expressions
+Thread-Topic: [PATCH next v2 11/11] minmax: min() and max() don't need to
+ return constant expressions
+Thread-Index: AdpoC6KUHy5Z1N7yRkiaBkc7ZdEdRQAjHDKAAAEYtvA=
+Date: Mon, 26 Feb 2024 10:16:01 +0000
+Message-ID: <bd7321effdf24d11aa16098bb40869ce@AcuMS.aculab.com>
+References: <a18dcae310f74dcb9c6fc01d5bdc0568@AcuMS.aculab.com>
+ <202402261720.EAMC0eHM-lkp@intel.com>
+In-Reply-To: <202402261720.EAMC0eHM-lkp@intel.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_07,2024-02-23_01,2023-05-22_02
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Add a new compatible string to support MP25 SoC.
+From: kernel test robot <lkp@intel.com>
+> Sent: 26 February 2024 09:42
+....
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202402261720.EAMC0eHM-lkp=
+@intel.com/
+>=20
+> All warnings (new ones prefixed by >>):
+>=20
+> >> arch/x86/mm/pgtable.c:437:14: warning: variable length array used [-Wv=
+la]
+>      437 |         pmd_t *pmds[MAX_PREALLOCATED_PMDS];
 
-On MP1 SoC, RNB signal (NAND controller signal) and NWAIT signal (PSRAM
-controller signal) have been integrated together in the SoC. That means
-that the NAND controller and the PSRAM controller (if the signal is
-used) can not be used at the same time. On MP25 SoC, the 2 signals can
-be used outside the SoC, so there is no more restrictions.
+Not surprisingly I missed X86_CONFIG_PAE builds :-)
 
-MP1 SoC also embeds revision 1.1 of the FMC2 IP when MP25 SoC embeds
-revision 2.0 of the FMC2 IP.
+=09David
 
-MP25 SoC is also using PSCI OS-initiated mode, so allow a single
-'power-domains' entry for STM32 FMC2. As MP1 will move on PSCI
-OS-initiated mode, add this property as optional for all FMC2 variants.
-
-Signed-off-by: Christophe Kerello <christophe.kerello@foss.st.com>
----
-Changes in v2:
- - V1 patch 1 and 2 have been squashed and commit message has been updated.
-
- .../bindings/memory-controllers/st,stm32-fmc2-ebi.yaml     | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml b/Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
-index 14f1833d37c9..84ac6f50a6fc 100644
---- a/Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/st,stm32-fmc2-ebi.yaml
-@@ -23,7 +23,9 @@ maintainers:
- 
- properties:
-   compatible:
--    const: st,stm32mp1-fmc2-ebi
-+    enum:
-+      - st,stm32mp1-fmc2-ebi
-+      - st,stm32mp25-fmc2-ebi
- 
-   reg:
-     maxItems: 1
-@@ -34,6 +36,9 @@ properties:
-   resets:
-     maxItems: 1
- 
-+  power-domains:
-+    maxItems: 1
-+
-   "#address-cells":
-     const: 2
- 
--- 
-2.25.1
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
