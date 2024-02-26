@@ -1,180 +1,192 @@
-Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [207.211.30.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C5912C522
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.211.30.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971DD12C559
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708960960; cv=none; b=txSVx+g+XLOZTsdsuRYzkY+TMO18Zgp2iLtzYYTa2bYYq+HPCNkabJkjlny5HvjQYQ+nCyZH0VWU9LO3wczB708bXGMXAOiR1VjKPQvjzSCNOP4Tc1GQ3q0OOPX8C2xdMa67G2fXlwhOGKgVndOs4cUkGOWEXrCwkqTMx/yQ2S4=
+	t=1708960961; cv=none; b=k2zkL2GagkQzUJStr1oX4iQj0WKbQhv8QMjOYQ/j/0+XdD6r4pEO+PPse7fzMqDL9p1lV3Qo5aeFGv00GQnQEw71Jw9iTsBDsnQXo2w7jLbyo8+WO5naiy4OX49GdTw8l7MLamb9NNMJOVaPpI8kKVQbMxsuUU4oLDQ8BLTrwXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708960960; c=relaxed/simple;
-	bh=XXRAFqi6kit/CJzUZCswo5V1wts4Yus3f0+vof+UBHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z4WrzbEZYsmGGpcZkseMtCh4PpcD6ouQtK/dYEm7RmgxTB4HLcbxulTiVVI6KSFLP27QOylkaMXbhT83EaOpevnjXwI5zvLK7SRrJqTcUD2jyNrkf/KdLMaSbYLizHzH77bjpEP377S/S3/uIVz+DCsLKD9FSRdzF75kKC0qiLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=207.211.30.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-681-qE5a-wOcMIKf7NpvicHYHg-1; Mon, 26 Feb 2024 10:21:23 -0500
-X-MC-Unique: qE5a-wOcMIKf7NpvicHYHg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D37ED800074;
-	Mon, 26 Feb 2024 15:21:22 +0000 (UTC)
-Received: from gentoo.redhat.com (unknown [10.45.224.64])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 21406492BE2;
-	Mon, 26 Feb 2024 15:21:22 +0000 (UTC)
-From: Alexey Gladkov <legion@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-api@vger.kernel.org
-Subject: [RFC PATCH v2 1/5] VT: Add KD_FONT_OP_GET_INFO operation
-Date: Mon, 26 Feb 2024 16:21:10 +0100
-Message-ID: <a13e766ee428f515dca3afb4365e8e09623660c7.1708960303.git.legion@kernel.org>
-In-Reply-To: <cover.1708960303.git.legion@kernel.org>
-References: <cover.1708011391.git.legion@kernel.org> <cover.1708960303.git.legion@kernel.org>
+	s=arc-20240116; t=1708960961; c=relaxed/simple;
+	bh=37wQmO+YdaEsa3xL7Q6rKO9ox5eQT6E5utt65Fi0uWE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z/HiC7aj+gMKAh4HpK1roE9qtVvraYH/j7H1ft0v6sWI/cYeXfqbXyqdP3CTzeHb9VmcSSdo6TSDxACqaY3ZP+wns/ktxGeb3Vlwby6GSQRjbFMXl0pQ1nfeWuwPWEQ1vUigLQaf5+SHONpccOD6dB9SwRNiHusG97zWnbOIQEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zeK1VO/g; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zeK1VO/g"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-412a882bd4eso4013485e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 07:22:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708960958; x=1709565758; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=onsSHtOKzEIZICx5NzIaNglbxD6fxTitMyvZQ+hIAqU=;
+        b=zeK1VO/g6vNqLIHxNEMJ1OGZstMbOTQVVpRQmBwQvwJvZzc0+6RHmbBCPKpMcw52FO
+         8jZ3VhXnzdG+Eh7YRbbvnrW/IRF4+YbvpWMjRI+qjNvnt9dS9xSfq8+L4PVQF+HoYW5o
+         nAbmwuRcMtvuGUos7kPD1hFA+jTidw+6OLre9laXWJHg6GM3axatywuI252AaKCEL5oI
+         Kyky0jM6YRLuO3chk8lbvE4PSuRzy6ccqTFpupmirFn2WeBjoGO5ZT+MdhOeJbRLKHfA
+         8hGRiFicQb1NAu+giaOIh07ii3sSN3twWuhwcJyVp6tQLHAIYKZM+zAU902d2O2phYjx
+         7UWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708960958; x=1709565758;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=onsSHtOKzEIZICx5NzIaNglbxD6fxTitMyvZQ+hIAqU=;
+        b=Ot/DbcsHWRFuXUBcIMEDUthTYETg3S7bNNYCrMIcvNpfuPJiQxI07Cdle/EgmfwqBp
+         viyanEJ452YsiZ2Q6DWsQh9pdShoZ3t4Hj/IXy6fKiP/zaC/Qj+tbFEFeRcwf9ndBab3
+         98hJdQTamMVpvvQ54q10U7zdSrwhK9NUKxj6NA+S8fcq2cbe9X8B3KzROJZWodaWvZdn
+         JkzNLWhtq8XWQMC/waYP68n8YA4HX3qzrEl7k7ftvgMQZVJV8f2oM3MA1pm2Za6dDqu5
+         eQFAgE4rxQIl5svoObodsqQmQn6mAVWpP6veKicSspn2T+wiFLQUhGR1/fQ46DFPEwBR
+         KePA==
+X-Forwarded-Encrypted: i=1; AJvYcCVVoavy6fnOpAATU3Zf/j9QAmhJbDPxhkyIKptzoROmS8caHyU6xNVbv/SsWxtwPZ2aZrxMOvy3NmqsukaZFAPtU3bWzxUT9BmnlCIV
+X-Gm-Message-State: AOJu0YxIWnzxn5KU+2wRTV1J8DJw8QW0RcZ+aaChOBNKZ31vYAco0daF
+	HuSQhNqVY47kOzBd8pDgTGEeDn/chJn6aUWmmrH1rmblOTnt/KBZYVC2+zry59I=
+X-Google-Smtp-Source: AGHT+IHmIAE28QIf+BOgjzS1zi4WvdZf+4TEqP7lmYyZmGNVY7QdJSt90PHhdVd7cN8dHnYUh/tiRg==
+X-Received: by 2002:adf:cc91:0:b0:33d:46b6:395b with SMTP id p17-20020adfcc91000000b0033d46b6395bmr4861177wrj.7.1708960957695;
+        Mon, 26 Feb 2024 07:22:37 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id bv20-20020a0560001f1400b0033d73e1505bsm8687383wrb.18.2024.02.26.07.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 07:22:37 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Mon, 26 Feb 2024 16:22:36 +0100
+Subject: [PATCH] phy: qcom: qmp-combo: fix sm8650 voltage swing table
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240226-topic-sm8650-upstream-combo-phy-swing-update-v1-1-08707ebca92a@linaro.org>
+X-B4-Tracking: v=1; b=H4sIALus3GUC/x2NSQrDMAwAvxJ0rsAxzkK/UnpwbDXRwQuW04WQv
+ 8f0OAzMHCBUmATu3QGF3iycYoP+1oHbbFwJ2TcGrbRRWo9YU2aHEuZxULhnqYVsQJfCkjBvP5Q
+ Px7UJbyuh6Rc76dlMyjtoyVzoxd//7vE8zwsAV5SofgAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3818;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=37wQmO+YdaEsa3xL7Q6rKO9ox5eQT6E5utt65Fi0uWE=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBl3Ky8MrhetOzd/dgn1AZoOgkWz4JjSAOJRRohsEox
+ zH+aA8CJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZdysvAAKCRB33NvayMhJ0XvsEA
+ Ci9Nb/Lc28Ri7tvyVr3ZqwThwYr/pTkkgAMKkiA/vmAc0zcpefA/hoWPMmyUnCH3M23irg11jFIITH
+ 9iHaokAjzj7XniUL2vqOvwb5+TtZsRjCvJPOjL+XHHPCivmtDDJTC0p0biANppJjmUHwQOc964Mt+x
+ hm1Yirt4Q3sqlgZEq/djlV7zd+2qB3mv35tQfEs5+8FbMUNgtD6YqZDUxwdGc9sZrknECYE5/y/oC4
+ rV+kWH32K1FSWscWykvM9mGUxdN3lAImUVqZBqmObdWZN3/MOGUBdQnurMd5TKfETxE9DTlHLH/8fl
+ i6YkbKmFHABfDxy9nlpaCuohzoBtbkbEBGvH9tXVwKPawQ3fko45Y6314QxtHjcudlwzwVmHDy2IxV
+ CTag5bSdAs+F1twLcsz351vaZGCEdMp7dYggFCRmTUa+pepIGfI3jbnfg82yJDsom7wmT4RHcfPeRE
+ YIpLjW1iRIP91ydrHJ66gVpMEYiRHQs3CQopmOSNoxSWDj6lQXYWpuQiNer4f+ldkMtmbL6FOEomMG
+ tVSQG245OaPB6eULzyCd8YWf2rathd+tnoe0G3phzlGGeBRrVXGfXABhzxeKpLRVkamvlXTOi39rY8
+ Py4TE3eKnodh78TFCtJcL6zbtM13EI/USVy3tXplexWm726bcqGBwXVXOFdA==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Each driver has its own restrictions on font size. There is currently no
-way to understand what the requirements are. The new operation allows
-userspace to get the maximum font size values.
+The QMP USB3/DP PHY found in the SM8650 SoC requires a slighly
+different Voltage Swing table for HBR/RBR link speeds.
 
-Signed-off-by: Alexey Gladkov <legion@kernel.org>
+Add a new hbr/rbr voltage switch table named "v6" used in a new
+sm8650 qmp_phy_cfg struct replacing the sm8550 fallback used for
+the sm8650 compatible.
+
+Fixes: 80c1afe8c5fe ("phy: qcom: qmp-combo: add QMP USB3/DP PHY tables for SM8650")
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- drivers/tty/vt/vt.c       | 24 ++++++++++++++++++++++++
- drivers/tty/vt/vt_ioctl.c | 12 ++++++++++++
- include/linux/console.h   |  2 ++
- include/linux/vt_kern.h   |  1 +
- include/uapi/linux/kd.h   | 13 ++++++++++++-
- 5 files changed, 51 insertions(+), 1 deletion(-)
+ drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 54 ++++++++++++++++++++++++++++++-
+ 1 file changed, 53 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 156efda7c80d..8c2a3d98b5ec 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -4680,6 +4680,30 @@ int con_font_op(struct vc_data *vc, struct console_font_op *op)
- 	return -ENOSYS;
- }
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+index 546d3c6bee32..66991886da87 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+@@ -1377,6 +1377,13 @@ static const u8 qmp_dp_v5_voltage_swing_hbr_rbr[4][4] = {
+ 	{ 0x3f, 0xff, 0xff, 0xff }
+ };
  
-+int con_font_info(struct vc_data *vc, struct console_font_info *info)
-+{
-+	int rc = -EINVAL;
-+
-+	info->min_height = 0;
-+	info->max_height = max_font_height;
-+
-+	info->min_width = 0;
-+	info->max_width = max_font_width;
-+
-+	info->flags = KD_FONT_INFO_FLAG_LOW_SIZE | KD_FONT_INFO_FLAG_HIGH_SIZE;
-+
-+	console_lock();
-+	if (vc->vc_mode != KD_TEXT)
-+		rc = -EINVAL;
-+	else if (vc->vc_sw->con_font_info)
-+		rc = vc->vc_sw->con_font_info(vc, info);
-+	else
-+		rc = -ENOSYS;
-+	console_unlock();
-+
-+	return rc;
-+}
-+
- /*
-  *	Interface exported to selection and vcs.
-  */
-diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
-index 8c685b501404..a5f160e15a76 100644
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -479,6 +479,18 @@ static int vt_k_ioctl(struct tty_struct *tty, unsigned int cmd,
- 		break;
- 	}
- 
-+	case KDFONTINFO:
-+		struct console_font_info fnt_info;
-+
-+		if (copy_from_user(&fnt_info, up, sizeof(fnt_info)))
-+			return -EFAULT;
-+		ret = con_font_info(vc, &fnt_info);
-+		if (ret)
-+			return ret;
-+		if (copy_to_user(up, &fnt_info, sizeof(fnt_info)))
-+			return -EFAULT;
-+		break;
-+
- 	default:
- 		return -ENOIOCTLCMD;
- 	}
-diff --git a/include/linux/console.h b/include/linux/console.h
-index 779d388af8a0..5bea6f6c2042 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -20,6 +20,7 @@
- #include <linux/types.h>
- 
- struct vc_data;
-+struct console_font_info;
- struct console_font_op;
- struct console_font;
- struct module;
-@@ -59,6 +60,7 @@ struct consw {
- 			unsigned int lines);
- 	int	(*con_switch)(struct vc_data *vc);
- 	int	(*con_blank)(struct vc_data *vc, int blank, int mode_switch);
-+	int	(*con_font_info)(struct vc_data *vc, struct console_font_info *info);
- 	int	(*con_font_set)(struct vc_data *vc, struct console_font *font,
- 			unsigned int vpitch, unsigned int flags);
- 	int	(*con_font_get)(struct vc_data *vc, struct console_font *font,
-diff --git a/include/linux/vt_kern.h b/include/linux/vt_kern.h
-index c1f5aebef170..6bda4cc1fe6f 100644
---- a/include/linux/vt_kern.h
-+++ b/include/linux/vt_kern.h
-@@ -32,6 +32,7 @@ void do_blank_screen(int entering_gfx);
- void do_unblank_screen(int leaving_gfx);
- void poke_blanked_console(void);
- int con_font_op(struct vc_data *vc, struct console_font_op *op);
-+int con_font_info(struct vc_data *vc, struct console_font_info *info);
- int con_set_cmap(unsigned char __user *cmap);
- int con_get_cmap(unsigned char __user *cmap);
- void scrollback(struct vc_data *vc);
-diff --git a/include/uapi/linux/kd.h b/include/uapi/linux/kd.h
-index 6b384065c013..781e086e55bf 100644
---- a/include/uapi/linux/kd.h
-+++ b/include/uapi/linux/kd.h
-@@ -183,8 +183,19 @@ struct console_font {
- 
- #define KD_FONT_FLAG_DONT_RECALC 	1	/* Don't recalculate hw charcell size [compat] */
- 
-+#define KDFONTINFO	0x4B73	/* font information */
-+
-+#define KD_FONT_INFO_FLAG_LOW_SIZE	(1U << 0) /* 256 */
-+#define KD_FONT_INFO_FLAG_HIGH_SIZE	(1U << 1) /* 512 */
-+
-+struct console_font_info {
-+	unsigned int min_width, min_height;	/* minimal font size */
-+	unsigned int max_width, max_height;	/* maximum font size */
-+	unsigned int flags;			/* KD_FONT_INFO_FLAG_* */
++static const u8 qmp_dp_v6_voltage_swing_hbr_rbr[4][4] = {
++	{ 0x27, 0x2f, 0x36, 0x3f },
++	{ 0x31, 0x3e, 0x3f, 0xff },
++	{ 0x36, 0x3f, 0xff, 0xff },
++	{ 0x3f, 0xff, 0xff, 0xff }
 +};
 +
- /* note: 0x4B00-0x4B4E all have had a value at some time;
-    don't reuse for the time being */
--/* note: 0x4B60-0x4B6D, 0x4B70-0x4B72 used above */
-+/* note: 0x4B60-0x4B6D, 0x4B70-0x4B73 used above */
+ static const u8 qmp_dp_v6_pre_emphasis_hbr_rbr[4][4] = {
+ 	{ 0x20, 0x2d, 0x34, 0x3a },
+ 	{ 0x20, 0x2e, 0x35, 0xff },
+@@ -1996,6 +2003,51 @@ static const struct qmp_phy_cfg sm8550_usb3dpphy_cfg = {
+ 	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+ };
  
- #endif /* _UAPI_LINUX_KD_H */
++static const struct qmp_phy_cfg sm8650_usb3dpphy_cfg = {
++	.offsets		= &qmp_combo_offsets_v3,
++
++	.serdes_tbl		= sm8550_usb3_serdes_tbl,
++	.serdes_tbl_num		= ARRAY_SIZE(sm8550_usb3_serdes_tbl),
++	.tx_tbl			= sm8550_usb3_tx_tbl,
++	.tx_tbl_num		= ARRAY_SIZE(sm8550_usb3_tx_tbl),
++	.rx_tbl			= sm8550_usb3_rx_tbl,
++	.rx_tbl_num		= ARRAY_SIZE(sm8550_usb3_rx_tbl),
++	.pcs_tbl		= sm8550_usb3_pcs_tbl,
++	.pcs_tbl_num		= ARRAY_SIZE(sm8550_usb3_pcs_tbl),
++	.pcs_usb_tbl		= sm8550_usb3_pcs_usb_tbl,
++	.pcs_usb_tbl_num	= ARRAY_SIZE(sm8550_usb3_pcs_usb_tbl),
++
++	.dp_serdes_tbl		= qmp_v6_dp_serdes_tbl,
++	.dp_serdes_tbl_num	= ARRAY_SIZE(qmp_v6_dp_serdes_tbl),
++	.dp_tx_tbl		= qmp_v6_dp_tx_tbl,
++	.dp_tx_tbl_num		= ARRAY_SIZE(qmp_v6_dp_tx_tbl),
++
++	.serdes_tbl_rbr		= qmp_v6_dp_serdes_tbl_rbr,
++	.serdes_tbl_rbr_num	= ARRAY_SIZE(qmp_v6_dp_serdes_tbl_rbr),
++	.serdes_tbl_hbr		= qmp_v6_dp_serdes_tbl_hbr,
++	.serdes_tbl_hbr_num	= ARRAY_SIZE(qmp_v6_dp_serdes_tbl_hbr),
++	.serdes_tbl_hbr2	= qmp_v6_dp_serdes_tbl_hbr2,
++	.serdes_tbl_hbr2_num	= ARRAY_SIZE(qmp_v6_dp_serdes_tbl_hbr2),
++	.serdes_tbl_hbr3	= qmp_v6_dp_serdes_tbl_hbr3,
++	.serdes_tbl_hbr3_num	= ARRAY_SIZE(qmp_v6_dp_serdes_tbl_hbr3),
++
++	.swing_hbr_rbr		= &qmp_dp_v6_voltage_swing_hbr_rbr,
++	.pre_emphasis_hbr_rbr	= &qmp_dp_v6_pre_emphasis_hbr_rbr,
++	.swing_hbr3_hbr2	= &qmp_dp_v5_voltage_swing_hbr3_hbr2,
++	.pre_emphasis_hbr3_hbr2 = &qmp_dp_v5_pre_emphasis_hbr3_hbr2,
++
++	.dp_aux_init		= qmp_v4_dp_aux_init,
++	.configure_dp_tx	= qmp_v4_configure_dp_tx,
++	.configure_dp_phy	= qmp_v4_configure_dp_phy,
++	.calibrate_dp_phy	= qmp_v4_calibrate_dp_phy,
++
++	.regs			= qmp_v6_usb3phy_regs_layout,
++	.reset_list		= msm8996_usb3phy_reset_l,
++	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++};
++
+ static int qmp_combo_dp_serdes_init(struct qmp_combo *qmp)
+ {
+ 	const struct qmp_phy_cfg *cfg = qmp->cfg;
+@@ -3625,7 +3677,7 @@ static const struct of_device_id qmp_combo_of_match_table[] = {
+ 	},
+ 	{
+ 		.compatible = "qcom,sm8650-qmp-usb3-dp-phy",
+-		.data = &sm8550_usb3dpphy_cfg,
++		.data = &sm8650_usb3dpphy_cfg,
+ 	},
+ 	{
+ 		.compatible = "qcom,x1e80100-qmp-usb3-dp-phy",
+
+---
+base-commit: 8552c902efe7ef670b6961fb8885b67961aeb629
+change-id: 20240226-topic-sm8650-upstream-combo-phy-swing-update-41ba728470dc
+
+Best regards,
 -- 
-2.44.0
+Neil Armstrong <neil.armstrong@linaro.org>
 
