@@ -1,123 +1,190 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0079135A45
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 23:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634AB135A7A;
+	Mon, 26 Feb 2024 23:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708990975; cv=none; b=TsMRXjluXInobS+ioyIS7JnNb+Kx6kvNaSw7wep9a+QQTNMIH1wP312Jo3Fsltn+It64BB+DaVVt6At+Eh8IxVdSr22WDDy6MAzb0LyRCoZwwm+++nZlHT+PmhCNpXjoj2ig3gG+hB3FCrJ/zzP/K7ldF3jubwlFgxFQ+qdAyto=
+	t=1708991143; cv=none; b=enCzWm2Ny13/JIWUiTQCe4KUHWPIMjPZR6nlccnnV1l6cBQdJwj7qnWP57Kh7VrsxsI/nXCIR66iw17nKtMANq+vcN7i3cqmc/j45lkzg3HblEOR6Es1Ij2e+uiY7torkMAYqGNSa6R0ZjBDDTDincjCWlbNS4iR+Nh06PPz/0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708990975; c=relaxed/simple;
-	bh=5kYeIFVo2xR1oxYSbdUq98xOTZBkvlA2zXrP0sPUMtw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ExTIEJEDA3oyQ1G8Ttt/x+RP0bGV00Gv3NJj35QiQtq7kGQ/YOd3HPHvSFgrqd8Ois9bEIIZXa1j8Jul536toYVWgaZZAxnX3DJ2qiLOw/ig2Jv+EcWVgrt5sQD/S4HeISuVks4kFe2KU4OY1tkRfzoXLNmD7GVDhu+d5WqU3K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KUyuvAji; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com
+	s=arc-20240116; t=1708991143; c=relaxed/simple;
+	bh=XgqOTJb39qn6qfwvzC4Xjd8T0w2B1vbycueYW2K2slw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Nnd2HSCbjcKcNF1dgfEl8D04fWaKiBvjffHSwqbLhGV4cHkwCPSDgCz2lnl8QkrRq/bRwk8E5SoERbd2FmnE/ikCLuyCFL23ifXzShSPy096oZJCPxpU2pBfM5QkS814o70N3te2tDItXRZms5F6WbPKKgYFHxCGXLmaT54wbYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EU8PAxe+; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KUyuvAji"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1d542680c9cso42833485ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:42:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EU8PAxe+"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3651d6dea15so12392605ab.1;
+        Mon, 26 Feb 2024 15:45:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708990973; x=1709595773; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vfgvyT3McQFjbyFi2yOlB8GW53W4hlIR4nzJRu+A9Fw=;
-        b=KUyuvAjijrOCmHDeb4BOagQjogokx03FIOMwmWzVhjNvlH2/rkEJ9vKB5rzP7AqhJk
-         I3KAadGJOatUmpRtzzPBNISKf6PXMRbNSvwbMFDMt8OLC1CQDWMpiz2I8xSijKdt90g7
-         m8lWRz+aaFJ+yqnP47EkLcRKufPQHx9hL7ZeTCT53Hl52iLUhZqlTeHmz6Z+kC5MLpWZ
-         PiYigi1bxsSZI8SguJzjcE+d/RwZXP1/sS3FDxhjouPEBBLvYLhTB349gTCp2zIGMT8H
-         SQjufGq43YV3QogkohhBQx+J3DxdzTDgiIqqZoJDm6qRfdwNBIXN5UEKqLD8x94fce+f
-         +/dQ==
+        d=gmail.com; s=20230601; t=1708991139; x=1709595939; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ENJCVwViqySP78QQC22e16vdfpVFUmVF6XiIGfyzNm8=;
+        b=EU8PAxe+VgumJUzw7MzB47y5YXZadvE26yszmZtCxus791HV/z7xdqu8Bd7eWVKuTB
+         vOY91l7KY6dwCXU44hKv8KhuOPp+3cXgsRnl7TBppKyPbdZGyy1+b651mielcXledxvR
+         qpU+keFQ5U/jmJHHRfU/jnOm3gQ4l7PmlReFWjoiZIpy2FVXOB3swSfa4Co677nOhFmN
+         bft+IjS2jlbpco/Ow5Gjr/VJokfuiBPz4//VuB5QMedOUZbzvdn1/CXG31sOwXhEOYK4
+         lZfVNrDBoeJshC02a8dfR1zS3+9crK2eM0wUEB0DBe+JWqw4Vk9pJsftwy3AJFf9bVTq
+         Xaew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708990973; x=1709595773;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vfgvyT3McQFjbyFi2yOlB8GW53W4hlIR4nzJRu+A9Fw=;
-        b=v08CTLZqeJv1uClLTP6Nkd8ciOV+Njk5N74+wUCgEX0unLE0bkc/oN5FMBhX8537sm
-         KqIyMTEkvGL97vhsalyaDyXPbrFj5NQ/Z/Jh9iQDmqmrprCaKRBA5NwLVW7ZpMvBMzdM
-         uTJNEzR6+SyPUEGNSK4P5o1b/uxpHslkDXEsowuvSw+ZKDQukqVPxMGtndhdBw9Pt0fH
-         xWuRkFl6p+3ED0wbarHG+PvHTSVWP1xwgwFhMTyTHdYFjhzLA+Outi0W7heM+kxHm8ur
-         ABRL2qYAiEQE+KGUu4qcI4U0l6sF8JV/MTeVW5pwG1mjyWwF9D6LpTMNy/xDydsfpIU6
-         EivA==
-X-Forwarded-Encrypted: i=1; AJvYcCWORwAHPwGVMZP/CaDe3bGvyJvT86cV6qF98uegXSd4+7O9wrUS9Asn8PtYqIrRFWvAqdYU0PrQUJdeZgja4ZkjJvHELCs0zINMZdQ9
-X-Gm-Message-State: AOJu0Yyl7x+9yZtdTyzf5qj4Evs0SRdGLi0GQ18JzGPy9f1MtkAq8Vis
-	iAjKzi/1GQehjaXlEn4Qn7WFPOBHfXCkvFJehH1THVwFpETuBY08aBrgo8G0T8lktvdDiOzoAKC
-	m74TG4uktGWo+BQ==
-X-Google-Smtp-Source: AGHT+IEyZTVFkgm70LFK0GBHxb5VVbTY8nIkrEL6/h6HTvZiPIlhwJSjyLHv4XJhkcQG2yJrgxGsBbLwsi6VXm0=
-X-Received: from rdbabiera.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:18a8])
- (user=rdbabiera job=sendgmr) by 2002:a17:903:410b:b0:1db:f7e5:afd2 with SMTP
- id r11-20020a170903410b00b001dbf7e5afd2mr324688pld.12.1708990973145; Mon, 26
- Feb 2024 15:42:53 -0800 (PST)
-Date: Mon, 26 Feb 2024 23:42:29 +0000
+        d=1e100.net; s=20230601; t=1708991139; x=1709595939;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ENJCVwViqySP78QQC22e16vdfpVFUmVF6XiIGfyzNm8=;
+        b=RVy2Upt5kLWRuf5Jpe4YFNr4tK9ZQuhjvS3uGGjWPot30Pz1iplS4ygob5JHqIKwxl
+         ErFT9jCGdkqziNCCvh6TNetM/ouHix6ae3kj3HWqwyUXy+Xa23xasNBKy7nXMk/k2mDG
+         NAAHTQSMljez9eDNWkw0HjUFePpoJG3xkkUt2q+Uy3lSvNtB9zz0UpQ6Q62ZZ5IhUCGi
+         Q6PTsrf/NPKgh07pFcJtXyknMtkbLXwAw2XvqjhMBAdtltn/1cm616NhPjxB7dMZBMeT
+         gxJnsnSChyfUt9YbxexhTPc65CSh+halQWkj0n01cPbf/gqwM5uE7zdn+nFnfYdes4gs
+         zgZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUr+Z83Y7mUWplde0dru9oOMPpV+3HJcg3HU5x9fqIAVdo8KLTgktZS7GhYtF2LdJV731iv74JSy/FhMFtkajMxHdKvwWRqE6n7B8TqWLp3XpO6CqxAXXVGinJmArX7UsdY8KjJRHSFng==
+X-Gm-Message-State: AOJu0YxwFV4Z1XP48yQP7yQdQs3YAEwPasKeSpL4G7xLCGbZ89N0veW3
+	hZpPR/lCpUZJd0y/Xf0tkZd+ad37zrcgytzd/JlX6DqBX2HYGueB
+X-Google-Smtp-Source: AGHT+IE0Qm5yQ6rNCxa0d3sGukCo6hDILzXZzbUGhgTRn/EM30OHE3gVJrckX3sKvHnVgYCb1ktBmA==
+X-Received: by 2002:a05:6e02:1a45:b0:365:4e45:5436 with SMTP id u5-20020a056e021a4500b003654e455436mr5629213ilv.15.1708991138844;
+        Mon, 26 Feb 2024 15:45:38 -0800 (PST)
+Received: from aford-System-Version.lan ([2601:447:d002:5be:9c95:d061:819a:2ab2])
+        by smtp.gmail.com with ESMTPSA id c25-20020a023319000000b004741cf1e95esm1545317jae.11.2024.02.26.15.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 15:45:38 -0800 (PST)
+From: Adam Ford <aford173@gmail.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-phy@lists.infradead.org
+Cc: aford@beaconembedded.com,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Adam Ford <aford173@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V6 1/6] dt-bindings: phy: add binding for the i.MX8MP HDMI PHY
+Date: Mon, 26 Feb 2024 17:45:12 -0600
+Message-ID: <20240226234532.80114-2-aford173@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240226234532.80114-1-aford173@gmail.com>
+References: <20240226234532.80114-1-aford173@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=rdbabiera@google.com; a=openpgp; fpr=639A331F1A21D691815CE090416E17CA2BBBD5C8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1719; i=rdbabiera@google.com;
- h=from:subject; bh=5kYeIFVo2xR1oxYSbdUq98xOTZBkvlA2zXrP0sPUMtw=;
- b=owGbwMvMwCFW0bfok0KS4TbG02pJDKl3FZ/ULxGdr8xuuKPE/pdU9tnNxT7/l5/PsViUxfhyY
- rqZYENsRykLgxgHg6yYIouuf57BjSupW+Zw1hjDzGFlAhnCwMUpABNZe5Dhf+6culvXpuycd/aG
- 1/evWYVK35ef+sCvNJ2Nz4s1U9aQUZThf8x2v1OtilMZfm29z7HsgaXQjlcWzAf5gu7zVMU++6T JywQA
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Message-ID: <20240226234228.1768725-2-rdbabiera@google.com>
-Subject: [PATCH v2] usb: typec: altmodes/displayport: create sysfs nodes after
- assigning driver data
-From: RD Babiera <rdbabiera@google.com>
-To: rdbabiera@google.com, heikki.krogerus@linux.intel.com, 
-	gregkh@linuxfoundation.org
-Cc: badhri@google.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The DisplayPort driver's sysfs nodes may be present to the userspace before
-typec_altmode_set_drvdata() completes in dp_altmode_probe. This means that
-a sysfs read can trigger a NULL pointer error by deferencing dp->hpd in
-hpd_show or dp->lock in pin_assignment_show, as dev_get_drvdata() returns
-NULL in those cases.
+From: Lucas Stach <l.stach@pengutronix.de>
 
-Create sysfs nodes after typec_altmode_set_drvdata call.
+Add a DT binding for the HDMI PHY found on the i.MX8MP SoC.
 
-Fixes: 0e3bb7d6894d ("usb: typec: Add driver for DisplayPort alternate mode")
-Cc: stable@vger.kernel.org
-Signed-off-by: RD Babiera <rdbabiera@google.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
-Changes from v1:
-* Moved sysfs node creation instead of NULL checking dev_get_drvdata().
----
- drivers/usb/typec/altmodes/displayport.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+V6:  No Change
 
-diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
-index 5a80776c7255..5bbdd2c04237 100644
---- a/drivers/usb/typec/altmodes/displayport.c
-+++ b/drivers/usb/typec/altmodes/displayport.c
-@@ -731,10 +731,6 @@ int dp_altmode_probe(struct typec_altmode *alt)
- 	      DP_CAP_PIN_ASSIGN_DFP_D(alt->vdo)))
- 		return -ENODEV;
- 
--	ret = sysfs_create_group(&alt->dev.kobj, &dp_altmode_group);
--	if (ret)
--		return ret;
--
- 	dp = devm_kzalloc(&alt->dev, sizeof(*dp), GFP_KERNEL);
- 	if (!dp)
- 		return -ENOMEM;
-@@ -766,6 +762,10 @@ int dp_altmode_probe(struct typec_altmode *alt)
- 	if (plug)
- 		typec_altmode_set_drvdata(plug, dp);
- 
-+	ret = sysfs_create_group(&alt->dev.kobj, &dp_altmode_group);
-+	if (ret)
-+		return ret;
+V5:  No Change
+
+V4:  No Change
+
+V3:  Removed mintems at the request of Krzysztof and add his
+     reviewed-by
+
+V2:  I (Adam) tried to help move this along, so I took Lucas' patch
+     and attempted to apply fixes based on feedback.  I don't have
+     all the history, so apologies for that.
+
+     Added phy-cells to the required list and fixed an error due
+     to the word 'binding' being in the title.
+---
+ .../bindings/phy/fsl,imx8mp-hdmi-phy.yaml     | 62 +++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/fsl,imx8mp-hdmi-phy.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/fsl,imx8mp-hdmi-phy.yaml b/Documentation/devicetree/bindings/phy/fsl,imx8mp-hdmi-phy.yaml
+new file mode 100644
+index 000000000000..c43e86a8c2e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/fsl,imx8mp-hdmi-phy.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/fsl,imx8mp-hdmi-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	dp->state = plug ? DP_STATE_ENTER_PRIME : DP_STATE_ENTER;
- 	schedule_work(&dp->work);
- 
-
-base-commit: a560a5672826fc1e057068bda93b3d4c98d037a2
++title: Freescale i.MX8MP HDMI PHY
++
++maintainers:
++  - Lucas Stach <l.stach@pengutronix.de>
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx8mp-hdmi-phy
++
++  reg:
++    maxItems: 1
++
++  "#clock-cells":
++    const: 0
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: apb
++      - const: ref
++
++  "#phy-cells":
++    const: 0
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - "#clock-cells"
++  - clocks
++  - clock-names
++  - "#phy-cells"
++  - power-domains
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx8mp-clock.h>
++    #include <dt-bindings/power/imx8mp-power.h>
++
++    phy@32fdff00 {
++        compatible = "fsl,imx8mp-hdmi-phy";
++        reg = <0x32fdff00 0x100>;
++        clocks = <&clk IMX8MP_CLK_HDMI_APB>,
++                 <&clk IMX8MP_CLK_HDMI_24M>;
++        clock-names = "apb", "ref";
++        power-domains = <&hdmi_blk_ctrl IMX8MP_HDMIBLK_PD_HDMI_TX_PHY>;
++        #clock-cells = <0>;
++        #phy-cells = <0>;
++    };
 -- 
-2.44.0.rc1.240.g4c46232300-goog
+2.43.0
 
