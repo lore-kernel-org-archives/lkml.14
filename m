@@ -1,97 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99871C686;
-	Mon, 26 Feb 2024 08:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A231C696;
+	Mon, 26 Feb 2024 08:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708935452; cv=none; b=JYoWz9Ym2pD1Bf06x8W7qc0dygi5Be5RDPsK6JaHkiLvyVWfBcwDNO1cI+t8i9vscYZcrqi4uImSFGy2dGldwSAiKzyXjTf+KgZjeIKzAOqe+CYSbNlNlfWHvXDiwZu1G0WH5ppyZW8BUwe1TRQ1ZK6Vytu550qRZXqQ2tJBF8s=
+	t=1708935557; cv=none; b=lPhkL8CXaHxcfiM/cjapEJZ/RTDF6q+4ORS0VVW/Lz3cqLjvx9NcnvYyQIc3Y+Pc71qqeLfiJjuCw2dnp36wx19z1Uv5EtotXOQqC+mbfdaLUo1fVC1iyG2LX2F6thqOxHJMU9MfgWRSxPS58kHi+RYoT2OLxrmrJUbmtY1YFBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708935452; c=relaxed/simple;
-	bh=xFNrO3cRpxVX2q2vaPJgUCpJMYXc8VBae+MPtxz8abk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GXZUVN3r7IEZxNa822ueRMV7d+PFduWe2A2XXG6hgXaifeOPX4Z/zNyrMxEz3KiTXBTiGBQd4JmJFN0QHS6F57E3eP9AlP1AqgGuS+Rqp9BemiYMxEuw78MA1IWnXTtGjkr0TgvGwIxym+EVDDuJzBiKdC+M/vRiGtLQeXWmsFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P77BET42; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708935557; c=relaxed/simple;
+	bh=zRa4yJkcA4V6X2vjCJFvlB/Gfr7vxYL8h6QUTOx2fZc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RmpMVWeI6Zp/b0q1dvhdJyQepA2CHDFf0bGUEPVLcLd9siAz8buUrY6Qb6nvE9fWSuw6phctJzpDPAk6jJ1V5IRL1o2a2UN/xa4QoP6kXu1Goa18qFn5sBn8SkqKJbMC5fblVV3WUYsZkhiJFYj1zDEChkYRF/mxERr7MD6VSdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=bEt2Xa9D; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P77BET42"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708935450; x=1740471450;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xFNrO3cRpxVX2q2vaPJgUCpJMYXc8VBae+MPtxz8abk=;
-  b=P77BET42LrLtzyx42xrtCwF2QiOgED5vhSOSdZdLat2kMKRdyDOSrCMT
-   POFBUq48L8wVcu/jaTOY4VxYc5dufjAeIDfo7exOZdXV0iCuUKf9few1u
-   FH8M51Yj/MLkRlGLc68M6ycn3gRqJiThmgcbga85RpfHN2wRPcZ6Ouo0i
-   REgMWheerKxIx3+oKnb3XX6CHxWyoSV5kXE38xfKSn+TXpeA2Lz8fWXGX
-   ZQ9GB/WM/7F7LRPmSit5jCrOMrVGiach9mkOXXSY1KkUQem2QYBEkg5o0
-   4k9W1EpypIhujZOs2ykbeOk0jrSWjqrRWh8D7Ox7m4SEzdtjihJjv2vRI
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="6992206"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6992206"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:17:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="937029526"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="937029526"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmsmga001.fm.intel.com with SMTP; 26 Feb 2024 00:17:27 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 26 Feb 2024 10:17:26 +0200
-Date: Mon, 26 Feb 2024 10:17:26 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: RD Babiera <rdbabiera@google.com>
-Cc: gregkh@linuxfoundation.org, badhri@google.com,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] usb: typec: altmodes/displayport: send configure
- message on sop'
-Message-ID: <ZdxJFuHnOnyNiWmn@kuha.fi.intel.com>
-References: <20240223002302.3937235-2-rdbabiera@google.com>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bEt2Xa9D"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dc09556599so24193465ad.1;
+        Mon, 26 Feb 2024 00:19:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1708935555; x=1709540355; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zRa4yJkcA4V6X2vjCJFvlB/Gfr7vxYL8h6QUTOx2fZc=;
+        b=bEt2Xa9DGcTXdQdGdsPjiej0u93NgJNcNv19DrVWYZSGQ2YWEW4hDfmnYst9+BsDnj
+         qhJxfirc9r4NVRtvSCbs3vG385Ye8dvtuJxl6ORS8gsXcmqxf2GrEThL+7fsYS/q1GiQ
+         /lxKn8BAuLE4Hk3RJtcfQzFcf+MexBN+4o7ilkA9jffYfQMoL4bikZEo9Q0frHq/a/WP
+         z/0C2AgEQhNwgj6G/CIHOAisFalbI8n3M2VmSS6MfNSW7ifif5N9EXmS5D8gULp82QKj
+         v6b4V9U2BGRpc2j4MGV6TCaZRU4DikdCFlrP0SbqnoVLe92Mnf1OxIFHJiCQQW4fAkjx
+         5D4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708935555; x=1709540355;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zRa4yJkcA4V6X2vjCJFvlB/Gfr7vxYL8h6QUTOx2fZc=;
+        b=uaO75uf0RqUmMiSObxd2C1TK/S+lCSTBgJw1iGhqdrTRPNqNuiC20ea+ndofvzKK+Q
+         wf6cc6txcDV9TwxR/UI/94PC+Wijw6caAygmL56tcuulk/YyHIXWBofZLUnYURNvpF1q
+         0+zV6DsFeeg5Ob90T37jLEF3LAZj4eiZL+JEWEWn25+RARabGQitdk8mdGOPWtb9VsBZ
+         GtYt+/6yepArvnTicCU90PSsrPUhN0vj91X7bLdYM2YRxmTeNUtbJQuPYND6CaUG+7tl
+         7aHd71SE9c+cCYx7MsG0LvW3g8hSAOYZ8owY2+9XmBMhxKoUpzpPWrQVUETc5IVITpLb
+         PHRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6Ybg1b/iju7E7YbrdKGzvcszL9M0+vCDabcPuOU7FytGD4CWn4WjvdikSmvJ79HjCbrCpS2QUIRcwDDeLe5wYvU2jCR9JvPsdh4I4Z2tDhd7Glqvi2y0l8hNdqJM0+1+DbdROhzR4nQ==
+X-Gm-Message-State: AOJu0Yyouh03TA4uadbnHyocDx3rtrjJARCxfaVlEXgwTSH3BJ3yF/a8
+	/CU15gFvtfcIfYjIFitzVvu1E+aXArEKgJkIlsQcilcJNE5WRwK7GSJrCPEEj4pFf3b7Lmwd7dR
+	KHyFM0xdTZCHDXU3kd4y7mfR84/A=
+X-Google-Smtp-Source: AGHT+IHSKx4UhHS4/QTc0p0DdYlvOIScoPdMc1mzgFs3IyOjSbzD8+0JaBmln7m9eAh6BmvSRIksg68WtgQUL+yJNrQ=
+X-Received: by 2002:a17:903:54a:b0:1dc:afd0:e273 with SMTP id
+ jo10-20020a170903054a00b001dcafd0e273mr173179plb.59.1708935554895; Mon, 26
+ Feb 2024 00:19:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240223002302.3937235-2-rdbabiera@google.com>
+References: <20240224084030.5867-1-krzysztof.kozlowski@linaro.org> <20240224084030.5867-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240224084030.5867-2-krzysztof.kozlowski@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Mon, 26 Feb 2024 09:19:03 +0100
+Message-ID: <CAFBinCBqh_0hbYWk8Hk6iYbkZuHa1Nbq5WJLY7FRhwbsgAyurA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: arm: amlogic: add Neil, Martin and
+ Jerome as maintainers
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2024 at 12:23:03AM +0000, RD Babiera wrote:
-> When the port is setting the pin configuration when no configuration is
-> chosen, the DisplayPort driver will not send Configure to the cable plug
-> if it's available. Add transition to DP_STATE_CONFIGURE_PRIME.
-> 
-> Fixes: 71ba4fe56656 ("usb: typec: altmodes/displayport: add SOP' support")
-> Signed-off-by: RD Babiera <rdbabiera@google.com>
+Hi Krzysztof,
 
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+On Sat, Feb 24, 2024 at 9:40=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Add rest of Linux Amlogic Meson SoC maintainers and reviewers to the
+> Amlogic board/SoC binding maintainers.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Obviously the patch is fine for me - still I have one question:
+are you expecting an Acked-by here so you can take it through a
+devicetree git tree or should Neil take it through the amlogic tree
+(in that case I'm not sure if he can as the amlogic mailing list is
+not CC'ed)?
 
-> ---
->  drivers/usb/typec/altmodes/displayport.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
-> index 5a80776c7255..867f9796f8a8 100644
-> --- a/drivers/usb/typec/altmodes/displayport.c
-> +++ b/drivers/usb/typec/altmodes/displayport.c
-> @@ -164,7 +164,8 @@ static int dp_altmode_status_update(struct dp_altmode *dp)
->  	} else if (!(con & DP_CONF_CURRENTLY(dp->data.conf))) {
->  		ret = dp_altmode_configure(dp, con);
->  		if (!ret) {
-> -			dp->state = DP_STATE_CONFIGURE;
-> +			dp->state = dp->plug_prime ? DP_STATE_CONFIGURE_PRIME :
-> +						     DP_STATE_CONFIGURE;
->  			if (dp->hpd != hpd) {
->  				dp->hpd = hpd;
->  				dp->pending_hpd = true;
-> 
-> base-commit: 3bf0514dc6f36f81ee11b1becd977cb87b4c90c6
-> -- 
-> 2.44.0.rc0.258.g7320e95886-goog
 
--- 
-heikki
+Best regards,
+Martin
