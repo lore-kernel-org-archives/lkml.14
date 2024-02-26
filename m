@@ -1,172 +1,148 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FB61292E3
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A9C129A72
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938915; cv=none; b=nR3pPDDcfefl/JmItkqOIOIrwS61ADnEa92mUU23qAJWIRdOfd+ZlC3ovZ+3vW5gMyFo0zwQrDYpkYrgHOu7gSmazP2CTa5Krc12gIWljjino9wBMc8gZTVz+3qfxrMkptRMC3G8WABsGSAEKlvGNTPp7aTvs0ZRB/2ES/qcdPw=
+	t=1708938920; cv=none; b=RYQPfyQb6joWwteY+FQftvh2vdn/vzDkX5KBCFPJqPveBqoikeo6uxYJpQpk/xqkkXDlsFkHpP+Xp1EKDe4EvTsJjN/Ky5oD7GEnRq9ehSHqxUP3/ft2PhnLWndYos6FLgxM4wa9wdeJF5B/JOh+WkMItQz5A9d7R3tdPg1jfug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938915; c=relaxed/simple;
-	bh=mRwbDpb0ij8Xw2/ZTB1QFqO3lhOKWpdvaWOhLI8/l0s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=j3Mv2hx009OPLQK1s9sCgWvRtjqcZY2ZVr5RBoEYPop6Z5GGtK1Ni5ecmW9x9OYAbKkJCfI/jVWmLwbhW57o4QXHK1Ds4wqTgVGpL+Ttu9I7Rbmtiu1FPXtNEGvzZ7z9/VPo6nKxEntVfi8yEuhe/G0NtWQYuT84F2z+c8EXfzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=innosonix.de; spf=pass smtp.mailfrom=innosonix.de; dkim=pass (2048-bit key) header.d=innosonix-de.20230601.gappssmtp.com header.i=@innosonix-de.20230601.gappssmtp.com header.b=zwAHLVPG; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=innosonix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=innosonix.de
+	s=arc-20240116; t=1708938920; c=relaxed/simple;
+	bh=G566LV+/F51/W9KYFln95LPDYYcArDHrm4mzHyYxoZ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u2nO6n3WPViV+lCsEgkcZRtP/1QL3Mu+gj3khta7Pg6Fq4KNVMh9Pl+t9Ib32gsBDCgrDzEF/JO83Dv+rqL2r+1o2SJLcBWFH8zCRsqt+ht7AEzrGcQHhJYhv7Pr+uxVKesTThq3C7oXXRe+LM9RVE/RZo21SgVft29eO2/5bjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rzmvm2gp; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=innosonix-de.20230601.gappssmtp.com header.i=@innosonix-de.20230601.gappssmtp.com header.b="zwAHLVPG"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-565c4d0fa48so196789a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:15:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rzmvm2gp"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5655c7dd3b1so4408600a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:15:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=innosonix-de.20230601.gappssmtp.com; s=20230601; t=1708938911; x=1709543711; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=e4bvmsbUVP8t3z5aGFyV9accu6q6ga6KJpKlOm2I6Dc=;
-        b=zwAHLVPG8Q7ZoZL+1y2y8w1fsv4cQrM74SkZYYACrxGOmo42eqcdNCRa0fvOL1Qgzg
-         Ul4FJ7hTO8CEabPVfChNNvujnag940JY1Ggra2Wh/FG0YLcIcLxTZQuHAwBlWHlieGgG
-         2dzdswMDFNPYZPZqp/c45a3cFspfO+wvU8lbFv1toq9fAfnX0HOzlHhBd1HQJcRzO4M0
-         4lRs5/G78i1U3h0+rk6/oIOGE4UIdL8dGs8p2wHxbLcgEQ3O5rA/XwToWk8sJ68k719S
-         wHYN8vQ4RpBHipgaorGL910aujhsrA6yQkf5le4HeNUYkmDiRiyY2lXzJq7KLWTscT8G
-         dFbQ==
+        d=linaro.org; s=google; t=1708938917; x=1709543717; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wlH1Ter4o/LuhmUGIySGl8jfbKhW6NJPyE0QFDQ/6s4=;
+        b=rzmvm2gpLi5FHXiOATNBh0HPBz6oZK3tydPONzg486EPi+f+whxmorKHyAtJCQgihS
+         waGCktYzu1er1GADpg9n5pLevWKBJlwlxC8weJkbQtOCifNuGOq3a5KhzZad7gjedCyo
+         +lgMyZ3g7rxBGrOgnYDCeSyT0eBz0Vi6S6IXVBs2OvYnihxMHkFxaLL19g9YzkJR6mye
+         RsixNiZZ9zIPc293Rq6jkJD6WUaYd0tO/GSgychq79NUPetImQU6weoikR8qiiVflAeb
+         OYmkLfYGwr0/Diz36Vdv/QeGAyW3JWo8yV0HgHmGSv3Y77LCnx4VnhUvwDe4ZMEAfdZf
+         whsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708938911; x=1709543711;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e4bvmsbUVP8t3z5aGFyV9accu6q6ga6KJpKlOm2I6Dc=;
-        b=HrXXJuyP50smIrh99utUIvw0DQ82//LH3zTiinG5QweFCdK9qMObzu7xP0ynaPmw9P
-         iK+uQQ5J1jgCVVnF6AoFGpDpd/k1Cnee2sdoFPnt/iyVqYH+Qm5hvrhfGWinym4SVoDF
-         ubis/AvW6j6H9QNpjJDydlaUynMbyrtEbFsctP6ekfRHBUpQ5aS/+a0Ge7yj3olnPNSL
-         GSzW+2/5cYH2LIi0F6/JkPWBQUcoiWfcXIYnN97HMdqBEtEgbJJvd83jXLxrlvlRj2bq
-         ggLLcVlAoNCYLZB33oa98uScFxieEvv3YZ2d/QxuhFA0s8N9XMD1JvwkkCRar8/wgj9v
-         T/yg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9iqaocYOKWsaMJJeRD8Oeh/AnxrIkDzMTuWHAvUsBMb+AC75Fzu2ndJ0gqgXWkjT3R6Jngzs+Vf+lor+FsQdktO9zVBYbgHFNLIVb
-X-Gm-Message-State: AOJu0YxAvl87dQWMhOaSdSyidiqBB5KB0dQSV8uXOrxOu4cxbFtI2joE
-	YImjdZIr87IbNielKrt2tXDQCQ2rmTKNj4RP/L6gDNquSHY2Pdov3Qjuq0dO8EL7JF8fI8IWdlh
-	C8qTDyipIcdLLWqDgfnE77dJU2crC1LxpDifOyPVyko950I0AX86+ieA=
-X-Google-Smtp-Source: AGHT+IEVD0IlFEawq4IEerLcFn9x9qaXN2oGPFLx3sq15fad5AHZ5PISUKCrY+x8u4PlD14Jrb2VnA==
-X-Received: by 2002:a50:9549:0:b0:565:4b6e:7f71 with SMTP id v9-20020a509549000000b005654b6e7f71mr4830055eda.3.1708938910570;
-        Mon, 26 Feb 2024 01:15:10 -0800 (PST)
-Received: from localhost.localdomain (p549da391.dip0.t-ipconnect.de. [84.157.163.145])
-        by smtp.gmail.com with ESMTPSA id bm17-20020a0564020b1100b00564c7454bf3sm2163206edb.8.2024.02.26.01.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 01:15:10 -0800 (PST)
-From: =?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>
-To: 
-Cc: Fabio Estevam <festevam@gmail.com>,
-	=?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net 1/2] net: dsa: mv88e6xxx: fix marvell 6320/21 switch probing
-Date: Mon, 26 Feb 2024 10:13:23 +0100
-Message-Id: <20240226091325.53986-1-steffen@innosonix.de>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1708938917; x=1709543717;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wlH1Ter4o/LuhmUGIySGl8jfbKhW6NJPyE0QFDQ/6s4=;
+        b=MkKg3DRstSGlBh/ePV1yc1zCOlWuWxpYpwUf0r/BbARmzAlFf6NPieYMAx+XB/MYX6
+         5hujD1jWKDRHm0Go4n8NL1DBgB+evp2LdTvaMWvHHXTSePR8Gu0KeIHQ3p9WN0udtY9k
+         s2JG9uSlT+DbsNMsJXTckiyxQP6A5Jf7pV9TBgGgPr8GkFzmno05js7VibSIu2exnQPt
+         +gy+Tzp9A0SlVSVEwq6LjQcFS1NkMK+/tNDBlmCbVtKw7BZLxATuMrRLZ0jQIY1aD9pR
+         kUFaa+mix6H4zIGFpVLNLPILnYi463wtn00PP0sV0gsuUPv9L0sR8J03P8fwMp6q+1yk
+         7xNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYvG51WU8jK+1+4OVJn61d0gUERZL8uCe7YZFrDtjQkoLzfz7t2Q68yssfewjWAstvio2Yi4+EdmX4Kl4dmIdfZXMyw8xUi+hMfn8X
+X-Gm-Message-State: AOJu0Yzi1H4newCT/mCRhi/8phjBZHyVHXnnbEM0qWrdQWFPkFk8Q1Pq
+	QdQugLQOeL7N39EsbrYEK1FSIu7zLQ/eQzy+dPiuVz8OOABmpMOwYAB7f2+iy9o=
+X-Google-Smtp-Source: AGHT+IEXUVR/N8Ym4kzVlbEuwaD2lWsgOYP5/F36Su6nMdyWMJ//J8As/t2DKFX23EsFXq+ZVVEfZg==
+X-Received: by 2002:a17:906:1745:b0:a3f:2168:214b with SMTP id d5-20020a170906174500b00a3f2168214bmr5890928eje.1.1708938916861;
+        Mon, 26 Feb 2024 01:15:16 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id tl18-20020a170907c31200b00a437d3e975esm167009ejc.210.2024.02.26.01.15.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 01:15:16 -0800 (PST)
+Message-ID: <310cefcb-a4d5-4f4f-a482-ba2ff08a57f6@linaro.org>
+Date: Mon, 26 Feb 2024 10:15:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 9/9] ARM: dts: chameleonv3: Add video device nodes
+Content-Language: en-US
+To: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, airlied@gmail.com,
+ akpm@linux-foundation.org, conor+dt@kernel.org, daniel@ffwll.ch,
+ dinguyen@kernel.org, hverkuil-cisco@xs4all.nl,
+ krzysztof.kozlowski+dt@linaro.org, maarten.lankhorst@linux.intel.com,
+ mchehab@kernel.org, mripard@kernel.org, robh+dt@kernel.org,
+ tzimmermann@suse.de
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ chromeos-krk-upstreaming@google.com, ribalda@chromium.org
+References: <20240221160215.484151-1-panikiel@google.com>
+ <20240221160215.484151-10-panikiel@google.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240221160215.484151-10-panikiel@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-As of commit de5c9bf40c45 ("net: phylink: require supported_interfaces to
-be filled")
-Marvell 88e6320/21 switches fail to be probed:
+On 21/02/2024 17:02, Paweł Anikiel wrote:
+> Add device nodes for the video system present on the Chameleon v3.
+> It consists of six framebuffers and two Intel Displayport receivers.
+> 
+> Signed-off-by: Paweł Anikiel <panikiel@google.com>
+> ---
 
 ...
-mv88e6085 30be0000.ethernet-1:00: phylink: error: empty supported_interface=
-s
-error creating PHYLINK: -22
-...
 
-The problem stems from the use of mv88e6185_phylink_get_caps() to get
-the device capabilities. Create a new dedicated phylink_get_caps for the
-6320 and 6321 to properly support their set of capabilities.
+> +		dprx_sst: dp-receiver@c0064000 {
+> +			compatible = "intel,dprx-20.0.1";
+> +			reg = <0xc0064000 0x800>;
+> +			interrupt-parent = <&dprx_sst_irq>;
+> +			interrupts = <0 IRQ_TYPE_EDGE_RISING>;
+> +			intel,max-link-rate = <0x1e>;
 
-Fixes: de5c9bf40c45 ("net: phylink: require supported_interfaces to be fill=
-ed")
-Signed-off-by: Steffen B=C3=A4tz <steffen@innosonix.de>
----
- drivers/net/dsa/mv88e6xxx/chip.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+Rate is not in hex! Rate is in Hz, at least usually...
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/c=
-hip.c
-index 9caecb4dfbfa..32b927b7c221 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -649,6 +649,19 @@ static void mv88e6352_phylink_get_caps(struct mv88e6xx=
-x_chip *chip, int port,
- 	}
- }
-=20
-+static void mv88e632x_phylink_get_caps(struct mv88e6xxx_chip *chip, int po=
-rt,
-+				       struct phylink_config *config)
-+{
-+	unsigned long *supported =3D config->supported_interfaces;
-+	int err, cmode;
-+
-+	/* Translate the default cmode */
-+	mv88e6xxx_translate_cmode(chip->ports[port].cmode, supported);
-+
-+	config->mac_capabilities =3D MAC_SYM_PAUSE | MAC_10 | MAC_100 |
-+				   MAC_1000FD;
-+}
-+
- static void mv88e6341_phylink_get_caps(struct mv88e6xxx_chip *chip, int po=
-rt,
- 				       struct phylink_config *config)
- {
-@@ -5042,7 +5055,7 @@ static const struct mv88e6xxx_ops mv88e6320_ops =3D {
- 	.gpio_ops =3D &mv88e6352_gpio_ops,
- 	.avb_ops =3D &mv88e6352_avb_ops,
- 	.ptp_ops =3D &mv88e6352_ptp_ops,
--	.phylink_get_caps =3D mv88e6185_phylink_get_caps,
-+	.phylink_get_caps =3D mv88e632x_phylink_get_caps,
- };
-=20
- static const struct mv88e6xxx_ops mv88e6321_ops =3D {
-@@ -5088,7 +5101,7 @@ static const struct mv88e6xxx_ops mv88e6321_ops =3D {
- 	.gpio_ops =3D &mv88e6352_gpio_ops,
- 	.avb_ops =3D &mv88e6352_avb_ops,
- 	.ptp_ops =3D &mv88e6352_ptp_ops,
--	.phylink_get_caps =3D mv88e6185_phylink_get_caps,
-+	.phylink_get_caps =3D mv88e632x_phylink_get_caps,
- };
-=20
- static const struct mv88e6xxx_ops mv88e6341_ops =3D {
---=20
-2.34.1
+Fix your bindings...
 
-
---=20
-
-
-*innosonix GmbH*
-Hauptstr. 35
-96482 Ahorn
-central: +49 9561 7459980
-www.innosonix.de <http://www.innosonix.de>
-
-innosonix GmbH
-Gesch=C3=A4ftsf=C3=BChrer:=20
-Markus B=C3=A4tz, Steffen B=C3=A4tz
-USt.-IdNr / VAT-Nr.: DE266020313
-EORI-Nr.:=20
-DE240121536680271
-HRB 5192 Coburg
-WEEE-Reg.-Nr. DE88021242
-
---=20
+Best regards,
+Krzysztof
 
