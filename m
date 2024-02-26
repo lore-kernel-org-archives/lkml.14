@@ -1,81 +1,136 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5ACA12C7FC;
-	Mon, 26 Feb 2024 16:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538EE12C7FC;
+	Mon, 26 Feb 2024 16:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966407; cv=none; b=h8HEUjDyuGMZbKjuWzw8/miCVSo0RAbC4zw/CXyGx4WmxbT+nJsUZ5cWB5KcGFRD9wNA+42JMqKOuDGzCoGaf5VBAWlxFvoiD3te7sBgVSlqus+6nZdzle+C+Pio8g/C8qyJ90GD8/7sghKSxqyBb8q86L9jajAbnoX+3jv8XJQ=
+	t=1708966422; cv=none; b=G3GLpHD6+F9FLYSOuLOa5CuUWXfogmdIgZ4LaFbtWGOxPB3BxCGOABfT3sTqljaI1sfkgbRNi5etPwrdno1+fJZ1XhYqO3oaUIw2Gidi37zmjGmOJVmOPDV22qGruXlPfKBm+IBMGs6SDQoywWH9PeYMd8wL56RLJRPuEgD6w3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966407; c=relaxed/simple;
-	bh=KiMCRLVbukxEd51VY4SmxiqAWQeh8Z/9xcRcx2E0GJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ArWvTSpIaGKA9p8k0Aa8wuJUy992opduedtgh9vg7y/HV8meN4BviITSxD0xA+N4VX+YUf7eVuFrPzOgP/Uobn/QMZmsxv3iF+uL4a4SgRbywY02sjESv/4aKNgAGINaMNGzgoqIgRw1JSUSfGhdNLGWKBU1BMc+rI6HqZ4Q2Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=O8RMkpuQ; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1708966422; c=relaxed/simple;
+	bh=gT16x+suHzi4RJDxnpVIxo63PiknxpyG8sAgpETh/No=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=C18aW4D5v+etRDMCA+RqxNL7euhKTfLjpjTrjkqrDJ57qJB7WubP9mjSnLGNDLZuuHbDH9LiUZA7oohhLT0ixMpATvJQewtf85EgdM4n+/XcZ4uyonsT+SDAeTnRlFWgULKFEHMneBvscMQW14LnKijTIVsPyHp+f5MWdyOUMFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AfhZeMNN; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="O8RMkpuQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=e5LzI+fYwzqDfr49BonbGexI34AFnEafybLaYyE7TzE=; b=O8RMkpuQvWfdaWYT9H+x798kxN
-	3OjtAKfdXSLzuH/3DhZVZ0N2S7PEqUyi+ZmvSt97RQ9fu+wOij778f2eIiYt+2Pia4fkuRzN6edx0
-	sj/Ta2LGh6x+2xCJVvg/jHX9QLaw+ZyWh3o9c8zgSuQhee+h1MvF+eCoKWlAfJmYJwgM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1reeEP-008kFI-KP; Mon, 26 Feb 2024 17:53:33 +0100
-Date: Mon, 26 Feb 2024 17:53:33 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Catalin Popescu <catalin.popescu@leica-geosystems.com>,
-	hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bsp-development.geo@leica-geosystems.com, m.felsch@pengutronix.de
-Subject: Re: [PATCH net-next v2] net: phy: dp83826: disable WOL at init
-Message-ID: <13a68356-235e-4945-8cf7-5b7a42b0bf46@lunn.ch>
-References: <20240226162339.696461-1-catalin.popescu@leica-geosystems.com>
- <Zdy+Y8Mqs22yRrre@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AfhZeMNN"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41QGgXK8003017;
+	Mon, 26 Feb 2024 16:53:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=RLpioKRBvBvjG6X7CZTJJIG/dvzFzjHsdAqj+Tw9e24=;
+ b=AfhZeMNNflhS5TlF0OCbInsUq8fnMnbB5orPGZGIpKBIUZ1e/8jtujywLdDW05JL5vUG
+ PtSrtp3J7ub1IJT80KlLH8cR9v/Z+XSEJYqkQCkU7AzyWPtV7MzBa1VXK8YLUVlmi7aZ
+ ICft/iwRVJ5gyPqL+1gj9L82tsqo40lurcGokFd/Z6m34biM+DcMKufT7jqNXHaGxuqQ
+ lVDSAX1H/g6XtD/HRVqH0NXswot/aAJNn6Hc+inEYh073WVL5GYCM0FzuDHa79ErUMu6
+ kuHh6YBdaJ4qwZnQ5gjAb5sKX/y719FTfPfl7KVyKy+hTLixfC78fiUUjIcH2AqjlKw4 mw== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wgxd4g9r3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Feb 2024 16:53:28 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41QFNDw3024154;
+	Mon, 26 Feb 2024 16:53:27 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wfw0k23er-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Feb 2024 16:53:27 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41QGrP6a14222036
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 Feb 2024 16:53:27 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2983B58053;
+	Mon, 26 Feb 2024 16:53:25 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 67E0658043;
+	Mon, 26 Feb 2024 16:53:24 +0000 (GMT)
+Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.57.130])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 26 Feb 2024 16:53:24 +0000 (GMT)
+From: Eddie James <eajames@linux.ibm.com>
+To: linux-fsi@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, andi.shyti@kernel.org,
+        eajames@linux.ibm.com, alistair@popple.id.au, joel@jms.id.au,
+        jk@ozlabs.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, lakshmiy@us.ibmcom
+Subject: [PATCH v2 03/31] fsi: Use a defined value for default echo delay
+Date: Mon, 26 Feb 2024 10:52:53 -0600
+Message-Id: <20240226165321.91976-4-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240226165321.91976-1-eajames@linux.ibm.com>
+References: <20240226165321.91976-1-eajames@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zdy+Y8Mqs22yRrre@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: BzkZT1ZBTfjOdMiCTz16bdgXKFfgIfAD
+X-Proofpoint-ORIG-GUID: BzkZT1ZBTfjOdMiCTz16bdgXKFfgIfAD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-26_11,2024-02-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402260128
 
-On Mon, Feb 26, 2024 at 04:37:55PM +0000, Russell King (Oracle) wrote:
-> On Mon, Feb 26, 2024 at 05:23:39PM +0100, Catalin Popescu wrote:
-> > Commit d1d77120bc28 ("net: phy: dp83826: support TX data voltage tuning")
-> > introduced a regression in that WOL is not disabled by default for DP83826.
-> > WOL should normally be enabled through ethtool.
-> > 
-> > Fixes: d1d77120bc28 ("net: phy: dp83826: support TX data voltage tuning")
-> > Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
-> 
-> It seems rather interesting that WoL is disabled in the config_init()
-> method - because this will be called when the PHY is attached to its
-> network driver (reasonable I guess) but also at resume time - which
-> means one can't just set the WoL mode once and that status will be
-> preserved.
-> 
-> Maybe Andrew can clarify, but I thought once WoL was configured, that
-> configuration should remain until the system is rebooted.
+Avoid hardcoding '16' several times.
 
-Yes, i noticed this as well.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ drivers/fsi/fsi-core.c  | 6 +++---
+ drivers/fsi/fsi-slave.h | 2 ++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-d1d77120bc28 does change the behaviour, clearing WoL was dropped. As
-you say, WoL was probably broken before d1d77120bc28 and it will still
-be broken after this patch, so no real change there :-)
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 1c687eb021a0..8823e8e56dab 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -1008,8 +1008,8 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 	slave->link = link;
+ 	slave->id = id;
+ 	slave->size = FSI_SLAVE_SIZE_23b;
+-	slave->t_send_delay = 16;
+-	slave->t_echo_delay = 16;
++	slave->t_send_delay = FSI_SMODE_SD_DEFAULT;
++	slave->t_echo_delay = FSI_SMODE_ED_DEFAULT;
+ 
+ 	/* Get chip ID if any */
+ 	slave->chip_id = -1;
+@@ -1160,7 +1160,7 @@ static int fsi_master_break(struct fsi_master *master, int link)
+ 	if (master->send_break)
+ 		rc = master->send_break(master, link);
+ 	if (master->link_config)
+-		master->link_config(master, link, 16, 16);
++		master->link_config(master, link, FSI_SMODE_SD_DEFAULT, FSI_SMODE_ED_DEFAULT);
+ 
+ 	return rc;
+ }
+diff --git a/drivers/fsi/fsi-slave.h b/drivers/fsi/fsi-slave.h
+index dba65bd4e083..dca9db0a42e5 100644
+--- a/drivers/fsi/fsi-slave.h
++++ b/drivers/fsi/fsi-slave.h
+@@ -41,8 +41,10 @@
+ #define FSI_SMODE_SID_MASK	3		/* ID Mask */
+ #define FSI_SMODE_ED_SHIFT	20		/* Echo delay shift */
+ #define FSI_SMODE_ED_MASK	0xf		/* Echo delay mask */
++#define FSI_SMODE_ED_DEFAULT	 16		/* Default echo delay */
+ #define FSI_SMODE_SD_SHIFT	16		/* Send delay shift */
+ #define FSI_SMODE_SD_MASK	0xf		/* Send delay mask */
++#define FSI_SMODE_SD_DEFAULT	 16		/* Default send delay */
+ #define FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
+ #define FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
+ 
+-- 
+2.39.3
 
-Catalin as a followup, could you please look at suspend/resume via
-WoL. As Russell pointed out, if the machine is woken from suspend, we
-expect the WoL settings to be kept. So WoL should be cleared on boot,
-but not resume.
-
-    Andrew
