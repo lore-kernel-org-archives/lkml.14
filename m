@@ -1,66 +1,51 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C29D12E1F3
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 18:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A767412E1D5;
+	Mon, 26 Feb 2024 18:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708971249; cv=none; b=aA3asEts5EO4iHoKmxYniJmA+SS5tEZ/rLogzVYH8aFciFW5fWZxQIl4TR4vz86jTJbwSF/1Xo15zA9FFDjb+x8uK20LdBAnLpwP/bw1JIVsCVexbWjlLRtS8WcbSGXwER5gopjOTleZJGJPKKbgnJ/W2R4eHJg7NA3KPtAUo8M=
+	t=1708971575; cv=none; b=K8WQjCyhLYCYQCzHw7/RDaDB7OFG5VNcNrN1XEtIEVFCLTJZ9Vt2PJiQPU/k2eOertTiNVRMh61Z0A3BQsq9JIvTByDfdvsjOdYherWsZz7K8cjb7mRZ7pSQlfmQSP1k/6SE5koq1M5MMVIT+YGNXcPmT3h+UlkidknwadWHDRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708971249; c=relaxed/simple;
-	bh=jvztlj2fOBuagAeUU8MHaIuRSoRjQLL3omt64QErqFk=;
+	s=arc-20240116; t=1708971575; c=relaxed/simple;
+	bh=Z/5vyQkhSyY8T3YX1ooj4Fr7eQCk9ePPjokpVbkSqFM=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XqKV9EOnYAzzgZK5hXGO1jX69vjcY3Gx/8NemfZ7ilr9PCXvYA0W3E0wOdiDTR1hGtsI1roXuNNojtNok3fukzNI9FUmDyqTYqNXi8r4d9hWQMtKN65VnmtnbT0fvVt2eHz05anmN2unWsup/Rf58kdZKpc72PfHXKxUpKbh9f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IDkyR1pW; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 MIME-Version:Content-Type; b=NhbEmNVF2Ocl8ZtHgrmmGQ2ujxlVSpJrATLsJQQgaf1I1kt10+jK01z1k/wJqzwF6crmVjQgjKMI4cpCRwNGkXiO74vigHLh/sDxqulYTW72IvqlMcspRzBttmi8aNIIArFfJfpevYf8Gq8qjJ1Hc0PIVn0KjnkIH6bh39PxsaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cGgoFCLf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R9JB9LDB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IDkyR1pW"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33d18931a94so2663673f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:14:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708971246; x=1709576046; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rdOlnisLBpgn2tY4M92YMommU1ind5HDlDhk0k1dAms=;
-        b=IDkyR1pW8ChSsmgSDgCrCtd9tXDSkuaVXK6aGF8RCmymEvGQukXH8c6LHRwmLL1eW7
-         MOVJ4D+EzPSTFbaQoOJc3ASI6veG/5K8OoZRrOzTLC05/wxX9XoqLsw579UTs4ZiFYag
-         B/r/U2ZQA8450ogF9zjyFDyuy7eU0qlxXqiDkutmgee9z/hrpouQT48APEHk+/WpXhqY
-         wrnHKg0aWrynLQy9qgIkTfvUQ8GN0xKo3i6DuqATijgO3XVgDM4kSncU/E+YuTqlh+bO
-         2y9sDBfDvXSFd+yVq4RwiZutUVKY48BrbZbFl7Dz377mgT7KMK0SqdRjcO260b9rkPdj
-         ndpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708971246; x=1709576046;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rdOlnisLBpgn2tY4M92YMommU1ind5HDlDhk0k1dAms=;
-        b=XdRNKhR9K2u8W4NPY8MwlCT4o2uY/6HQvGttCYNAZvmNcAm4NFwthixFBekk3fn3lb
-         8ntEKLGsN1AojzELmt7ooeYVCItNBUMIZEVYU+xX9leGpufH9Cm0VEYlsMJJzmmvvQz/
-         IQnuvb/vOrNS2987bo9lgR5TlRO6sIiPUwUM47Y1S1mT/iqFWX5MEgWWq6m4e0uUjE0g
-         Ix90vr3TbhZ9rlUC7SsN3OpNHJtoBP7ZSwWq3HNFqqRlywNmeIFTohK3yiaFpDgE1Chr
-         rbMZs5G5H0X7iMBNvwHATmFXDpwp52VtzYNgqtVSLJhIu/7WSMkrfKbQ88f6Vk0DWNZj
-         0onA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXtfRkWlLzyLasiIn/BHTRSNNdEJgAz5pJDZ/ryJ6UmQLXGRRkQVZcmPN2w9EYRwx1thzXyDkXI59x6mazHRE4eU3u9gYjH87qq8nU
-X-Gm-Message-State: AOJu0YwLkjEhSwSeidmDUnBZtdve9asTHlxnsTPgQhnjNADwHaVMNMX/
-	IMdifD+Xf3GpXqWtX2IHlrJiKFsGp5LaLT3NYkni/KD80X9nvO7Pf+k1/9t6XkaOR8h+lMnzskC
-	d
-X-Google-Smtp-Source: AGHT+IFPy8PQ+Y6ALtHBB46D50zSvTEsaf8HgqKvkKq5krJix8fiZnDh+U3QAloD0ksGoobusBm3aw==
-X-Received: by 2002:a05:6000:12d0:b0:33d:6554:fe81 with SMTP id l16-20020a05600012d000b0033d6554fe81mr4990641wrx.64.1708971245802;
-        Mon, 26 Feb 2024 10:14:05 -0800 (PST)
-Received: from localhost (a109-49-32-45.cpe.netcabo.pt. [109.49.32.45])
-        by smtp.gmail.com with ESMTPSA id h4-20020a05600016c400b0033dda0e82e5sm3542919wrf.32.2024.02.26.10.14.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 10:14:05 -0800 (PST)
-From: Rui Miguel Silva <rui.silva@linaro.org>
-To: Chengming Zhou <chengming.zhou@linux.dev>, gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, vbabka@suse.cz,
- roman.gushchin@linux.dev, Xiongwei.Song@windriver.com
-Subject: Re: [PATCH] usb: isp1760: remove SLAB_MEM_SPREAD flag usage
-In-Reply-To: <e7f00fbe-a676-4d47-b1bb-cc69cc391172@linux.dev>
-References: <20240224135256.830413-1-chengming.zhou@linux.dev>
- <e7f00fbe-a676-4d47-b1bb-cc69cc391172@linux.dev>
-Date: Mon, 26 Feb 2024 18:14:04 +0000
-Message-ID: <m34jdvm6tv.fsf@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cGgoFCLf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R9JB9LDB"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708971569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jp20KoVGhhuk462r1NDh+rcZQEgIkTFGl1UxvwRBJaw=;
+	b=cGgoFCLfQcqJ1fg68sh454LSjikqBCUVAWYFAU4O/KZKlJhgwii0CGSisqn7oBGT5YVDmF
+	cC/y/wMth3aVBotgTt6wxehD+e60oU0d+cTPH14wM0a9yi07KF7+0J2REehdrN2UTrrZlQ
+	+VRSLQ1YqBUacySwFXC7NZhbROGiwGn2CpLfbhOwAF4+kTZtSg4UAnG49OPC5uXBkv1Ueo
+	aRAg8J1bkHgTwaHTvVLfsbxy/RTuzgrAvBcP5EcErr9w/ctH+Wjz+wWU5QPVD8Whm8COHq
+	4cF3hSHKCsXlqJWTO5dcS3bWYz9Z5/ZG12E08VDOnSjY9JSt2+zz006q7kgl5w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708971569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jp20KoVGhhuk462r1NDh+rcZQEgIkTFGl1UxvwRBJaw=;
+	b=R9JB9LDBVcIFfUTLLMSYBP7+YDFdXrdV1gD034EG9WW0b5726XFh9fOnvaik1VCNtq+v/d
+	JPS/bDs0hfJP7RCw==
+To: tip-bot2 for Ingo Molnar <tip-bot2@linutronix.de>,
+ linux-tip-commits@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org
+Subject: Re: [tip: x86/apic] smp: Provide 'setup_max_cpus' definition on UP too
+In-Reply-To: <170894808668.398.2149303099223176501.tip-bot2@tip-bot2>
+References: <170894808668.398.2149303099223176501.tip-bot2@tip-bot2>
+Date: Mon, 26 Feb 2024 19:19:29 +0100
+Message-ID: <87o7c39jgu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,67 +54,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Hey Zhou,
-many thanks for the patch.
+On Mon, Feb 26 2024 at 11:48, tip-bot2 for Ingo Molnar wrote:
+> --- a/include/linux/smp.h
+> +++ b/include/linux/smp.h
+> @@ -218,6 +218,8 @@ smp_call_function_any(const struct cpumask *mask, smp_call_func_t func,
+>  static inline void kick_all_cpus_sync(void) {  }
+>  static inline void wake_up_all_idle_cpus(void) {  }
+>  
+> +static const unsigned int setup_max_cpus = 0;
 
-Chengming Zhou <chengming.zhou@linux.dev> writes:
+Oops. I missed that when looking at the patch. This is in a header file
+and will be instantiated a gazillion times where ever the header is
+included. It want's to be a define, no?
 
-> On 2024/2/24 21:52, chengming.zhou@linux.dev wrote:
->> From: Chengming Zhou <zhouchengming@bytedance.com>
->> 
->> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
->> its usage so we can delete it from slab. No functional change.
->
-> Update changelog to make it clearer:
->
-> The SLAB_MEM_SPREAD flag used to be implemented in SLAB, which was
-> removed as of v6.8-rc1, so it became a dead flag since the commit
-> 16a1d968358a ("mm/slab: remove mm/slab.c and slab_def.h"). And the
-> series[1] went on to mark it obsolete to avoid confusion for users.
-> Here we can just remove all its users, which has no functional change.
->
-> [1] https://lore.kernel.org/all/20240223-slab-cleanup-flags-v2-1-02f1753e8303@suse.cz/
+Thanks,
 
-With this changelog, you can add my tag:
-Acked-by: Rui Miguel Silva <rui.silva@linaro.org>
+        tglx
+---
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -218,7 +218,7 @@ smp_call_function_any(const struct cpuma
+ static inline void kick_all_cpus_sync(void) {  }
+ static inline void wake_up_all_idle_cpus(void) {  }
+ 
+-static const unsigned int setup_max_cpus = 0;
++#define setup_max_cpus	(0)
+ 
+ #ifdef CONFIG_UP_LATE_INIT
+ extern void __init up_late_init(void);
 
-Cheers,
-    Rui
->
-> Thanks!
->
->> 
->> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
->> ---
->>  drivers/usb/isp1760/isp1760-hcd.c | 8 +++-----
->>  1 file changed, 3 insertions(+), 5 deletions(-)
->> 
->> diff --git a/drivers/usb/isp1760/isp1760-hcd.c b/drivers/usb/isp1760/isp1760-hcd.c
->> index 76862ba40f35..0e5e4cb74c87 100644
->> --- a/drivers/usb/isp1760/isp1760-hcd.c
->> +++ b/drivers/usb/isp1760/isp1760-hcd.c
->> @@ -2521,21 +2521,19 @@ static const struct hc_driver isp1760_hc_driver = {
->>  int __init isp1760_init_kmem_once(void)
->>  {
->>  	urb_listitem_cachep = kmem_cache_create("isp1760_urb_listitem",
->> -			sizeof(struct urb_listitem), 0, SLAB_TEMPORARY |
->> -			SLAB_MEM_SPREAD, NULL);
->> +			sizeof(struct urb_listitem), 0, SLAB_TEMPORARY, NULL);
->>  
->>  	if (!urb_listitem_cachep)
->>  		return -ENOMEM;
->>  
->>  	qtd_cachep = kmem_cache_create("isp1760_qtd",
->> -			sizeof(struct isp1760_qtd), 0, SLAB_TEMPORARY |
->> -			SLAB_MEM_SPREAD, NULL);
->> +			sizeof(struct isp1760_qtd), 0, SLAB_TEMPORARY, NULL);
->>  
->>  	if (!qtd_cachep)
->>  		goto destroy_urb_listitem;
->>  
->>  	qh_cachep = kmem_cache_create("isp1760_qh", sizeof(struct isp1760_qh),
->> -			0, SLAB_TEMPORARY | SLAB_MEM_SPREAD, NULL);
->> +			0, SLAB_TEMPORARY, NULL);
->>  
->>  	if (!qh_cachep)
->>  		goto destroy_qtd;
+
