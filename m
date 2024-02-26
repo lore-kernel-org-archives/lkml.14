@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A2E73F1F;
-	Mon, 26 Feb 2024 08:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E831F77A0E;
+	Mon, 26 Feb 2024 08:28:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936123; cv=none; b=Id1x6DYdYajyXn2F/FI/BmCfZpeRKQQrFeH8BwdXQp+kkJjyRf25GSrtl+/5CsOUkDTPHzxcKs1YqETgim5LiHcogtWVV8/P5acgkglxy1XNQY49FJCtUfxDbyAkUQmL64zXsmotgI5TgE5YusX9SrTPoCB4htWyKbDxZgyi5+o=
+	t=1708936124; cv=none; b=naC9StShK8ALOm/UTQQEpS0Ue/wN7bssa3BCunW3Rt7ANPhBg/5QUrTEJiDNNv+uxp4NeAF249uegQ5AnG9PYkfiA0ZaeBXf3Upv0NOVqiOERCUhcHMyXkdqZx8uUiXPoQbbtqEYMz2qau1Uhj5dq6J4i6sYjjSTpJZ0OK+WiiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936123; c=relaxed/simple;
-	bh=QAWpp4LjklCnK07uK2feZ4n6OzER6GSYaRkObJrBCqk=;
+	s=arc-20240116; t=1708936124; c=relaxed/simple;
+	bh=d16HpBuwInS8Tw2Ei/8iq4CZW3uueOnKvGugn8F5q+Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q9PdOcmIH5YL5VofnwfxHT7j/AE8bUyh7Xe9Taujj7ON8TgkDmVw2lu0KvKNOWFr50H4suW8hPhGSWgKQVwzvuNO/tM/D1+v5IawPoeXkI4Zjxa5uNPi6HpQkKLq+IwPukYnA3wRoEAeZtlcbs6L2XR7GBDEPQfn6zDgVX549B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nu6Bu72i; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=tX6c46R/69xmEjBZjUGLz7uA83ZUwh15d4TfQ6+EzKpMc9s2tOP9Zjt1PMD8xvx774gETj2YCCefAdRH73XM/l2QwZOxTtlWlcJeCCXOJsF5+pEQi76Eys1kXpnKsGTcYjDdwxwm3wq4JALAOUz/QqUcY1/pZ5cfR1uGmaV0Vmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FCvGvELX; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nu6Bu72i"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FCvGvELX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936121; x=1740472121;
+  t=1708936123; x=1740472123;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=QAWpp4LjklCnK07uK2feZ4n6OzER6GSYaRkObJrBCqk=;
-  b=nu6Bu72iExAw+Ha37v+ax1J+digzGAae9PZfXnRdBGF4Tcu9dyKUZReS
-   CywflQCdhHZWzva/P4rBGQ+dwDAUqr60LfVsfbR5rbDAdvnwFAgII0U87
-   v2b8IRSJuKN0lhk46ZZ9BoeUAumb9tPc4JtQvrHIvQsdr8AXffkwwV3WC
-   IbGBkD/bnf+2uUDlKRg0oJ0jYy8ydEC4nCCPotW8GC+qBZx3evBO0140X
-   Kxfhtmg99LWud5+zlTVgZFcmbmERS9/aTJ/T/cuNEAULXNr5j9Y2gPALZ
-   pW/q//GklbTDS4Cx3cefWnPIKOgTMZDhQrrUGAxya07dzq7ODV/5v2/pP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3069521"
+  bh=d16HpBuwInS8Tw2Ei/8iq4CZW3uueOnKvGugn8F5q+Q=;
+  b=FCvGvELXmKt3QrxVDZt7OmY9LRVIVwB6avar2149XGqho1QiTDqi+LvN
+   XXFUcyQyGBVBcu/P3Hezj+QVbIjJpSgSdUT0u63/OPq/r7nFAxES9hLZb
+   07JKcDgt6ChoP/zf9d+t8ef7O/hBuzwyCUXcXaih3l5gsxw8WbYX4BDtn
+   x1AAdl1okVA1rRjIffdDNSNs01LMMqWawAqdoIqLMI/CmMWLCEYjImDdG
+   q2JjEp4otB6SP4JdxdsqlEa3f+VonJqhZg4qfwYYdYbyALaKSFceoxg1U
+   jtGEzbEqAE7y+RBq3jVyf2UvRLlMcf5v3VtrZ3FBHxFZLYD9G2Yuqs/Nk
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3069529"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="3069521"
+   d="scan'208";a="3069529"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:41 -0800
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="11272563"
+   d="scan'208";a="11272581"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:40 -0800
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:42 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,10 +52,10 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com,
-	Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v19 083/130] KVM: TDX: Add TSX_CTRL msr into uret_msrs list
-Date: Mon, 26 Feb 2024 00:26:25 -0800
-Message-Id: <06135e0897ae90c3dc7fd608948f8bdcd30a17ae.1708933498.git.isaku.yamahata@intel.com>
+	Binbin Wu <binbin.wu@linux.intel.com>
+Subject: [PATCH v19 085/130] KVM: TDX: Complete interrupts after tdexit
+Date: Mon, 26 Feb 2024 00:26:27 -0800
+Message-Id: <aa6a927214a5d29d5591a0079f4374b05a82a03f.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -67,121 +67,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Yang Weijiang <weijiang.yang@intel.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-TDX module resets the TSX_CTRL MSR to 0 at TD exit if TSX is enabled for
-TD. Or it preserves the TSX_CTRL MSR if TSX is disabled for TD.  VMM can
-rely on uret_msrs mechanism to defer the reload of host value until exiting
-to user space.
+This corresponds to VMX __vmx_complete_interrupts().  Because TDX
+virtualize vAPIC, KVM only needs to care NMI injection.
 
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 ---
 v19:
-- fix the type of tdx_uret_tsx_ctrl_slot. unguent int => int.
+- move tdvps_management_check() to this patch
+- typo: complete -> Complete in short log
 ---
- arch/x86/kvm/vmx/tdx.c | 33 +++++++++++++++++++++++++++++++--
- arch/x86/kvm/vmx/tdx.h |  8 ++++++++
- 2 files changed, 39 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/tdx.c | 10 ++++++++++
+ arch/x86/kvm/vmx/tdx.h |  4 ++++
+ 2 files changed, 14 insertions(+)
 
 diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 7e2b1e554246..83dcaf5b6fbd 100644
+index 83dcaf5b6fbd..b8b168f74dfe 100644
 --- a/arch/x86/kvm/vmx/tdx.c
 +++ b/arch/x86/kvm/vmx/tdx.c
-@@ -547,14 +547,21 @@ static struct tdx_uret_msr tdx_uret_msrs[] = {
- 	{.msr = MSR_LSTAR,},
- 	{.msr = MSR_TSC_AUX,},
- };
-+static int tdx_uret_tsx_ctrl_slot;
- 
--static void tdx_user_return_update_cache(void)
-+static void tdx_user_return_update_cache(struct kvm_vcpu *vcpu)
- {
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(tdx_uret_msrs); i++)
- 		kvm_user_return_update_cache(tdx_uret_msrs[i].slot,
- 					     tdx_uret_msrs[i].defval);
-+	/*
-+	 * TSX_CTRL is reset to 0 if guest TSX is supported. Otherwise
-+	 * preserved.
-+	 */
-+	if (to_kvm_tdx(vcpu->kvm)->tsx_supported && tdx_uret_tsx_ctrl_slot != -1)
-+		kvm_user_return_update_cache(tdx_uret_tsx_ctrl_slot, 0);
+@@ -535,6 +535,14 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+ 	 */
  }
  
- static void tdx_restore_host_xsave_state(struct kvm_vcpu *vcpu)
-@@ -649,7 +656,7 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	tdx_vcpu_enter_exit(tdx);
- 
--	tdx_user_return_update_cache();
-+	tdx_user_return_update_cache(vcpu);
- 	tdx_restore_host_xsave_state(vcpu);
- 	tdx->host_state_need_restore = true;
- 
-@@ -1167,6 +1174,22 @@ static int setup_tdparams_xfam(struct kvm_cpuid2 *cpuid, struct td_params *td_pa
- 	return 0;
- }
- 
-+static bool tdparams_tsx_supported(struct kvm_cpuid2 *cpuid)
++static void tdx_complete_interrupts(struct kvm_vcpu *vcpu)
 +{
-+	const struct kvm_cpuid_entry2 *entry;
-+	u64 mask;
-+	u32 ebx;
-+
-+	entry = kvm_find_cpuid_entry2(cpuid->entries, cpuid->nent, 0x7, 0);
-+	if (entry)
-+		ebx = entry->ebx;
-+	else
-+		ebx = 0;
-+
-+	mask = __feature_bit(X86_FEATURE_HLE) | __feature_bit(X86_FEATURE_RTM);
-+	return ebx & mask;
++	/* Avoid costly SEAMCALL if no nmi was injected */
++	if (vcpu->arch.nmi_injected)
++		vcpu->arch.nmi_injected = td_management_read8(to_tdx(vcpu),
++							      TD_VCPU_PEND_NMI);
 +}
 +
- static int setup_tdparams(struct kvm *kvm, struct td_params *td_params,
- 			struct kvm_tdx_init_vm *init_vm)
- {
-@@ -1209,6 +1232,7 @@ static int setup_tdparams(struct kvm *kvm, struct td_params *td_params,
- 	MEMCPY_SAME_SIZE(td_params->mrowner, init_vm->mrowner);
- 	MEMCPY_SAME_SIZE(td_params->mrownerconfig, init_vm->mrownerconfig);
+ struct tdx_uret_msr {
+ 	u32 msr;
+ 	unsigned int slot;
+@@ -663,6 +671,8 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
+ 	trace_kvm_exit(vcpu, KVM_ISA_VMX);
  
-+	to_kvm_tdx(kvm)->tsx_supported = tdparams_tsx_supported(cpuid);
- 	return 0;
++	tdx_complete_interrupts(vcpu);
++
+ 	return EXIT_FASTPATH_NONE;
  }
  
-@@ -2014,6 +2038,11 @@ int __init tdx_hardware_setup(struct kvm_x86_ops *x86_ops)
- 			return -EIO;
- 		}
- 	}
-+	tdx_uret_tsx_ctrl_slot = kvm_find_user_return_msr(MSR_IA32_TSX_CTRL);
-+	if (tdx_uret_tsx_ctrl_slot == -1 && boot_cpu_has(X86_FEATURE_MSR_TSX_CTRL)) {
-+		pr_err("MSR_IA32_TSX_CTRL isn't included by kvm_find_user_return_msr\n");
-+		return -EIO;
-+	}
- 
- 	max_pkgs = topology_max_packages();
- 	tdx_mng_key_config_lock = kcalloc(max_pkgs, sizeof(*tdx_mng_key_config_lock),
 diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-index e96c416e73bf..44eab734e702 100644
+index 44eab734e702..0d8a98feb58e 100644
 --- a/arch/x86/kvm/vmx/tdx.h
 +++ b/arch/x86/kvm/vmx/tdx.h
-@@ -17,6 +17,14 @@ struct kvm_tdx {
- 	u64 xfam;
- 	int hkid;
+@@ -142,6 +142,8 @@ static __always_inline void tdvps_vmcs_check(u32 field, u8 bits)
+ 			 "Invalid TD VMCS access for 16-bit field");
+ }
  
-+	/*
-+	 * Used on each TD-exit, see tdx_user_return_update_cache().
-+	 * TSX_CTRL value on TD exit
-+	 * - set 0     if guest TSX enabled
-+	 * - preserved if guest TSX disabled
-+	 */
-+	bool tsx_supported;
++static __always_inline void tdvps_management_check(u64 field, u8 bits) {}
 +
- 	bool finalized;
- 	atomic_t tdh_mem_track;
+ #define TDX_BUILD_TDVPS_ACCESSORS(bits, uclass, lclass)				\
+ static __always_inline u##bits td_##lclass##_read##bits(struct vcpu_tdx *tdx,	\
+ 							u32 field)		\
+@@ -200,6 +202,8 @@ TDX_BUILD_TDVPS_ACCESSORS(16, VMCS, vmcs);
+ TDX_BUILD_TDVPS_ACCESSORS(32, VMCS, vmcs);
+ TDX_BUILD_TDVPS_ACCESSORS(64, VMCS, vmcs);
  
++TDX_BUILD_TDVPS_ACCESSORS(8, MANAGEMENT, management);
++
+ static __always_inline u64 td_tdcs_exec_read64(struct kvm_tdx *kvm_tdx, u32 field)
+ {
+ 	struct tdx_module_args out;
 -- 
 2.25.1
 
