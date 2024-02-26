@@ -1,98 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE76132C01
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AA112CD83;
+	Mon, 26 Feb 2024 16:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966702; cv=none; b=Cb21wu5Jf/fD3mn1l6UlI8mx3QzzaOsj9o4GjHaPLfG56t9fJbsog1G2tuZb02ShHJC5RsrMMXIh3cumOsoTwJuDop4QGypdetFMxGlHAjeMfC+ry4IEfnjYX8Ejk059/L0JFTW/M/JZNOUri5FLyICW6Tgw00TxPOYn+6bTE78=
+	t=1708966724; cv=none; b=fJs7+T2xFFn+qa056jt36jOCZu3olH9mRLmQSqMmmZxFtXL1ZBMJR6XHICly1fq+8tvI9w7/4RX9aQud4yk9oO5L11kLw97S3uWNnjgdO1s/g8Z4MyGQNjW7Ikf2iGSrD3rcVHtwr0WPRpcTt5hh9my7BbzZ2joDlED5mOYaDu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966702; c=relaxed/simple;
-	bh=LqGMQtPIGznoCP9QmWV2gD3wXujgVsqlU0n95FID8CY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rsZWd3DyYF8fGyvhurvZ+TsUQz4ux/xJ8cudQlKQipKRGO8TBrDYmAsZ/LwVGEWWNXY9ZozFaHkrZt55q6Cc8R1IKwuIqxUti86NdPBaUg5B6Hg+BE4KVDRBuwwDZh1NAX/QIcRqlY1gpalhDsbrr64r5pIPzx6OtAIoTAlefzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HH6RcE0c; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HH6RcE0c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708966699;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=92kRab4HqwTQmO/VgKs5fSqh+D6/YdS7SG+n+Wli5ZI=;
-	b=HH6RcE0cjCp3ZP3EDiaqG4BLdVqo72hpOjB5gaFlQWTMn6S29saQs2Jk0B1WO1PP8kswdj
-	YnOQfi6gbzuS0VboTxDSdwx8fq10PjKiksqziN3Y/BOD2voMEN3z8esCdbuAGiap7xWPuM
-	5E7XzOpbtYxHLfCLdMJEMXkOCEs3qr8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-156-79WX0-_8NRyaSb_F6N9a1Q-1; Mon, 26 Feb 2024 11:58:15 -0500
-X-MC-Unique: 79WX0-_8NRyaSb_F6N9a1Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B5C8C83B86C;
-	Mon, 26 Feb 2024 16:58:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.85])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 49036400D783;
-	Mon, 26 Feb 2024 16:58:13 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 26 Feb 2024 17:56:55 +0100 (CET)
-Date: Mon, 26 Feb 2024 17:56:53 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Collingbourne <pcc@google.com>,
-	Wen Yang <wenyang.linux@foxmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] get_signal: don't initialize ksig->info if
- SIGNAL_GROUP_EXIT/group_exec_task
-Message-ID: <20240226165653.GA20834@redhat.com>
+	s=arc-20240116; t=1708966724; c=relaxed/simple;
+	bh=LV1lgUElkVfzNOqis9pVzjpqJoYJQJQBjKfDVfkceJo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qCv95nA80od+2JykVwol5bMwGx8NyTblWaW1tawG/uQ0pzSag++vVwebMGLUAUCjMt9hzd4/ZckF9QSmRAUNs/lxBerY9XbaXW9rnhy85P+kH4eEHjerxU1oa5wLvpanjiQFjMhFHWNEVsWUnwd4BKGL7E2uu16j9d9w1oRbbJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dcdb210cb6aso3682106276.2;
+        Mon, 26 Feb 2024 08:58:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708966721; x=1709571521;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e4qKUYUF0RxYNDdA27YqJy76NZTg9yYGjFyTyqzOPJg=;
+        b=VHg+wdDUYK+rayYVabacVZSfGQpiVtULTk5SKozRiYOD/eTkGkRsDIOh9eF/pGg/rZ
+         5fBeU7Et6XR/zl12N5z6kLaCM8ncgct7OiKRNF/lSEzXkQ9MO5hXRduF3H5eI1h1TIF5
+         WbhHLBQ5dXlWUtJwjAcuNFoSu3ekmoBd+T/1I59Ay/cqd15LgTQhhmRRGf7aZrapaSTS
+         DkAqHypnXwNssJWTWkMFDtlj3iuoORPm5bqlfOz9+FXxZHsBUuRrh5rwfvzm4SLkp7QC
+         n0j79Y/FXW5eeNf8lHIZXAWz6P8gu6rbVK8myliT/6pDp/sdyQH53lHypNtqLr9Id5jZ
+         o6jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUVIul+eHs1EW5ryXyXXLa+Av8el2I2dwQYiUqjtDU0pI1wOl5TTweHOFMJe4F9vDuaUWWYo2PAoyUwXBn4LOiPH3AyVz8ItGCUamoOFdVLAgWklK7oZvcqxSdfOpHnAQE5yyiExAPEQ==
+X-Gm-Message-State: AOJu0YwRQGoZgcNp+NQl1U5K6y1JpYEeF4dHIhAMQNFJlVr1gs1wJ9KG
+	+oyuWdVSQwFI8Y43ZrG8gp/yaEprUDYp6MS/JICoMktuYtWtyxKVEhK2ra6c6Uo=
+X-Google-Smtp-Source: AGHT+IFK8Zm7a4KvkSxxt6fsiofJN1Bn3s6+e5z5rAsUhJ+LRp0VHWLLnhkWeWr14Oq0BQBgcsAfRw==
+X-Received: by 2002:a25:84c6:0:b0:dcc:f2a4:153e with SMTP id x6-20020a2584c6000000b00dccf2a4153emr4745621ybm.46.1708966721409;
+        Mon, 26 Feb 2024 08:58:41 -0800 (PST)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id w18-20020a25c712000000b00dc6f4c19d93sm1026752ybe.7.2024.02.26.08.58.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 08:58:41 -0800 (PST)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcdb210cb6aso3682081276.2;
+        Mon, 26 Feb 2024 08:58:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVW7cy1WRAGuMRpmG7Feo5z0YLimpUg5yRbMEpCJrN9Y0bZi4chGGQABa0RrkEP79GwAJAeXdCupP5zb2g00gYxj07G9cmWyeFELUxH43UItZZ9AgI2MP9OlV6/UkV0cP9NsRGmNirX0g==
+X-Received: by 2002:a25:820e:0:b0:dcc:273e:1613 with SMTP id
+ q14-20020a25820e000000b00dcc273e1613mr5147543ybk.40.1708966720897; Mon, 26
+ Feb 2024 08:58:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226165612.GA20787@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+References: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
+ <20240219170337.2161754-10-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdWpepH0P8g9dPfq1rsZRJsvOnoZ7VnjqTL9nkSGtKFpYQ@mail.gmail.com> <Zdy5lDOBrQ9XFCpm@smile.fi.intel.com>
+In-Reply-To: <Zdy5lDOBrQ9XFCpm@smile.fi.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 Feb 2024 17:58:29 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWoFQfMV90kwy8rxqVt+1eGvh=F7GqtJri5BSydWDiiMQ@mail.gmail.com>
+Message-ID: <CAMuHMdWoFQfMV90kwy8rxqVt+1eGvh=F7GqtJri5BSydWDiiMQ@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] auxdisplay: Add driver for MAX695x 7-segment LED controllers
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Robin van der Gracht <robin@protonic.nl>, Paul Burton <paulburton@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This initialization is incomplete and unnecessary, neither do_group_exit()
-nor PF_USER_WORKER need ksig->info.
+Hi Andy,
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/signal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+On Mon, Feb 26, 2024 at 5:17=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Mon, Feb 26, 2024 at 05:01:46PM +0100, Geert Uytterhoeven wrote:
+> > On Mon, Feb 19, 2024 at 6:03=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > Add initial driver for the MAX6958 and MAX6959 7-segment LED
+> > > controllers.
+>
+> > LGTM, so
+> > Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>
+> Thanks, but see below.
+>
+> ...
+>
+> > > +       u8 buf[4];
+> > > +
+> > > +       /* Map segments according to datasheet */
+> > > +       buf[0] =3D bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
+> > > +       buf[1] =3D bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
+> > > +       buf[2] =3D bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
+> > > +       buf[3] =3D bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
+> >
+> > for (unsigned int i =3D 0; i < linedisp->num_chars; i++) { ... }
+> >
+> > > +
+> > > +       regmap_bulk_write(priv->regmap, REG_DIGIT(0), buf, ARRAY_SIZE=
+(buf));
+> >
+> > linedisp->num_chars
+>
+> Maybe, but then we probably want to synchronize the 4 there and here as w=
+e
+> can't have VLA on stack.
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index a69d3069067a..9c6a5ccac328 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2727,12 +2727,15 @@ bool get_signal(struct ksignal *ksig)
- 		/* Has this task already been marked for death? */
- 		if ((signal->flags & SIGNAL_GROUP_EXIT) ||
- 		     signal->group_exec_task) {
--			clear_siginfo(&ksig->info);
--			ksig->info.si_signo = signr = SIGKILL;
-+			signr = SIGKILL;
- 			sigdelset(&current->pending.signal, SIGKILL);
- 			trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
--				&sighand->action[SIGKILL - 1]);
-+					     &sighand->action[SIGKILL-1]);
- 			recalc_sigpending();
-+			/*
-+			 * implies do_group_exit() or return to PF_USER_WORKER,
-+			 * no need to initialize ksig->info/etc.
-+			 */
- 			goto fatal;
- 		}
- 
--- 
-2.25.1.362.g51ebf55
+You can still keep the maximum buf[4], so no VLA needed?
 
+>
+> > > +}
+>
+> ...
+>
+> > > +       ret =3D linedisp_register(&priv->linedisp, dev, 4, &max6959_l=
+inedisp_ops);
+> >
+> > + device_property_read_u32(dev, "display-width-chars", ...) handling.
+>
+> Not sure it should be part of this series.
+
+Fair enough, so please go ahead without.
+
+Even "display-width-chars" might not cover all cases, as a board
+may use any subset of the 4 DIGn signals, even in any order...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
