@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2A72576D;
-	Mon, 26 Feb 2024 08:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6971B38397;
+	Mon, 26 Feb 2024 08:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936063; cv=none; b=O+AE/ZpQ1xouLjRqgScAyXtpI20QTAl9//cEnfXY8Th+5vplYerD8GqjvQin4HFJ0JMpqKrKCGtv5/yfAt+rwXHs3UfDkMRsi58CMjOATvjwC1gnSDOeG5dRphW/Mc23XfSdWU0RqkC3fC7DyRvUy2mbV8AzReUB5P1GI28pn9c=
+	t=1708936064; cv=none; b=pF5J3HEbuQPP9h7Z1CVwgogwrkdjufFplX5oDUtJPirTYnki3/iwu8F5X+Ug9mq2drsFoEL0HH3VlDwNUmLUWwF85/PsqD7Tv2KgyVmN3KJc9SEbu8qw/SPyHrrqKPztaU57QosBZpU+QVfHJno96ZpTfs69J85lTehxhJQp+Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936063; c=relaxed/simple;
-	bh=xIS0IEpU4jLV8PiHi+HchMYIeNnm0fFPNPHfNFUxmaM=;
+	s=arc-20240116; t=1708936064; c=relaxed/simple;
+	bh=Fyink57/ejQGrZ8tQRVicXDKz0HYEbCM9W9KphhTHVI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UEhwOwvOd/UgI7Hs3zJ7AFzlYt/bM+/NJnzqRqJgFx0EiELstCuGiGtGTXNIL6Fn/fpSmDSt9B2SjkOS27lKvyG7etXX5qXR2plQ/R6dPuZZrQDrAj4Yk4FZlYyh65TuUoW0sEPamtiDQq2y4aoMk9eSdzjODDfqcQ5rW6ociD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WGwzpJXw; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=r+DAekreflbmQuWO8yoyLk1OGY6bXHq6LZU+FLepVVTXet2AuGjK7AzJFkiXUJw/dq2pbukz43+6HHRPHFynT24qUNoIYMOJsZmT+nXLuyxa26e9MqNYwEnBrV16UhHkjkMr07KNsVjS3oA0nycPVouZLLKEZ6ZtiuHfWmZu7lI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V2gLD7oE; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WGwzpJXw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V2gLD7oE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936061; x=1740472061;
+  t=1708936062; x=1740472062;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xIS0IEpU4jLV8PiHi+HchMYIeNnm0fFPNPHfNFUxmaM=;
-  b=WGwzpJXwqFrom4jDm3BFVTCqX7uiDXqoq3mIwbVakbW6l008gXz/RNix
-   BjCZzENr5zbRYZSarOCuEeMpH2DMa70c66bMVCLEn8xReOwqwqo6xJHAF
-   R9NUK9bug+GKGKhcT9xQNyUJZgj6QWQtONP91mCBUyaA9q4WqcP0T4bRq
-   CwhXLzMyizBc+12weAZyofPl98hrEDGzrkld3wb2utTQrYbDsWFEXlUXo
-   S4fUrNx8zIYnHXDiyJFl19/OJ8dGHuSQWQ8uvruMzWg0yw+/g78iHc0mX
-   d4I9nzkgEaULD9vjkPmfnAVAkV151qVeAw3+TPff69H+5M5NejDwLSsU9
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="28631456"
+  bh=Fyink57/ejQGrZ8tQRVicXDKz0HYEbCM9W9KphhTHVI=;
+  b=V2gLD7oE5oysIguiRSLUZOD6qMydjEB0hYWDSop+WMEMQdy66UUyj3Og
+   Ddvy+dJpwOQfb1TPxHWE9G+HL+SJPqsvlvD5eFYnvJnNCFIPtALV663wF
+   6+pgklIv5Cbu6/TEo1e6OLGIT2rGzyr5yu6OZYwE/cU5V5Pwkjre8tpoC
+   u1BmttzhJkmVGgP7524WF1N0LN4n2qtaZdDX39VLgZfd0OwKzZKnxI3zP
+   crLkVGhKhHysOYXYjriP37u8j8KW6aAzy/GsVMXkVb0GTAL3YnZLZmwhu
+   TSl7E/CYjvN8lrYWjVT8QGKOwrzZYH+J4U4IM8c+DTzxoxKBCDF9OOQay
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="28631466"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="28631456"
+   d="scan'208";a="28631466"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:40 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6474311"
+   d="scan'208";a="6474321"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:39 -0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:40 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v19 008/130] x86/tdx: Warning with 32bit build shift-count-overflow
-Date: Mon, 26 Feb 2024 00:25:10 -0800
-Message-Id: <a50918ba3415be4186a91161fe3bbd839153d8b2.1708933498.git.isaku.yamahata@intel.com>
+Subject: [PATCH v19 010/130] KVM: x86: Pass is_private to gmem hook of gmem_max_level
+Date: Mon, 26 Feb 2024 00:25:12 -0800
+Message-Id: <8108cc2b8ff01ec22de68f0d0758ef0671db43fc.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -68,39 +68,47 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-This patch fixes the following warnings.
+TDX wants to know the faulting address is shared or private so that the max
+level is limited by Secure-EPT or not.  Because fault->gfn doesn't include
+shared bit, gfn doesn't tell if the faulting address is shared or not.
+Pass is_private for TDX case.
 
-   In file included from arch/x86/kernel/asm-offsets.c:22:
-   arch/x86/include/asm/tdx.h:92:87: warning: shift count >= width of type [-Wshift-count-overflow]
-   arch/x86/include/asm/tdx.h:20:21: note: expanded from macro 'TDX_ERROR'
-   #define TDX_ERROR                       _BITUL(63)
+TDX logic will be if (!is_private) return 0; else return PG_LEVEL_4K.
 
-                                           ^~~~~~~~~~
-
-Also consistently use ULL for TDX_SEAMCALL_VMFAILINVALID.
-
-Fixes: 527a534c7326 ("x86/tdx: Provide common base for SEAMCALL and TDCALL C wrappers")
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/include/asm/tdx.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 3 ++-
+ arch/x86/kvm/mmu/mmu.c          | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index 16be3a1e4916..1e9dcdf9912b 100644
---- a/arch/x86/include/asm/tdx.h
-+++ b/arch/x86/include/asm/tdx.h
-@@ -17,9 +17,9 @@
-  * Bits 47:40 == 0xFF indicate Reserved status code class that never used by
-  * TDX module.
-  */
--#define TDX_ERROR			_BITUL(63)
-+#define TDX_ERROR			_BITULL(63)
- #define TDX_SW_ERROR			(TDX_ERROR | GENMASK_ULL(47, 40))
--#define TDX_SEAMCALL_VMFAILINVALID	(TDX_SW_ERROR | _UL(0xFFFF0000))
-+#define TDX_SEAMCALL_VMFAILINVALID	(TDX_SW_ERROR | _ULL(0xFFFF0000))
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index d15f5b4b1656..57ce89fc2740 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1797,7 +1797,8 @@ struct kvm_x86_ops {
  
- #define TDX_SEAMCALL_GP			(TDX_SW_ERROR | X86_TRAP_GP)
- #define TDX_SEAMCALL_UD			(TDX_SW_ERROR | X86_TRAP_UD)
+ 	gva_t (*get_untagged_addr)(struct kvm_vcpu *vcpu, gva_t gva, unsigned int flags);
+ 
+-	int (*gmem_max_level)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, u8 *max_level);
++	int (*gmem_max_level)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn,
++			      bool is_private, u8 *max_level);
+ };
+ 
+ struct kvm_x86_nested_ops {
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 1e5e12d2707d..22db1a9f528a 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4324,7 +4324,8 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
+ 
+ 	max_level = kvm_max_level_for_order(max_order);
+ 	r = static_call(kvm_x86_gmem_max_level)(vcpu->kvm, fault->pfn,
+-						fault->gfn, &max_level);
++						fault->gfn, fault->is_private,
++						&max_level);
+ 	if (r) {
+ 		kvm_release_pfn_clean(fault->pfn);
+ 		return r;
 -- 
 2.25.1
 
