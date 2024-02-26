@@ -1,80 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55DA12FF83
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D272C1BDD8;
+	Mon, 26 Feb 2024 15:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708960018; cv=none; b=FznCUfI0ZFbs7FZHcDPpm5WtD15zsLHiP+4NCAUW52HBGxku84StSmT+NTZ/Tgr5CWQcKTg9L63Ktv+TfNT71hQqaUvPBzwAG3M2H28noVDFyzNKRQIFRGxuPOvuLJ1er7yld0mEipwPyZCkE3LpIJvWJ9V1HLVrfkJcMLk26rw=
+	t=1708960064; cv=none; b=Z0DXkngAZ3oeiMz5aCnCwV22eYt2GffFY5oT+oHi9dfRbyhGuT+SvrMm9FYGn/fAs+A+iYmomOcVZz79Yjsltp7x9/76A5Rq7aeG+zgxPAud9CXXPoKFrS9VO7P15MD4X29LodcSno+YmQD+LjsF8tkqUMbvSizyAkGSBeXlXVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708960018; c=relaxed/simple;
-	bh=nC/HNevsj+Y1+O/yDGBtbFausYvDBCTRzB+f3qASm+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pC/0nWvOGFSV+XqvFVNZNrSnm2j00gXsvxF2SsgtU27sYv7MOpM1qz00/Gxmi2NFcH1ekKv/2/fppPmj9xdF3+AwYCOuHS+iaS6R5uxAL61DLh2Zobgr0KY5rqtGX9Xt0F81Ysruvl2E98cjh24eXGeqGltqNc2Pu2Ey0tbNbwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Qtwjxk3b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708960064; c=relaxed/simple;
+	bh=M7isSVoISBnfAYmSdJfpU2svN/fglbkO/NWIZRmoyJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O/j67CK91kzkg0bNCUWCTJC8ppwWN5SX2MawtodxOKNbxi0QmK2jTlLITFIEH6FSfYXdGEecE6Vmfx+w52nMG9jeaBXOugPBSGSmG+2/AvFkN/HCN5T3ZhSqNNDmvs/FrAscbFwiL+79c0DUDuOAdqqqFcICRCub7IpC3XSszog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=j/wyto49; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Qtwjxk3b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3840EC433F1;
-	Mon, 26 Feb 2024 15:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708960018;
-	bh=nC/HNevsj+Y1+O/yDGBtbFausYvDBCTRzB+f3qASm+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qtwjxk3bnNHWkbrckTgbw3Jey17dZvhSSADRUykG2op3iqZrY2MWJut21c7rNwoW0
-	 HUDMgcpGRaehomjZMG57fdYPhQh3T8Sl77dtK7+BLR+gNpzj/ut22QyHjDADXpAB0h
-	 R8GGQckiaEqFWj0pf6tTBkudEELngUQUWL/aPVfA=
-Date: Mon, 26 Feb 2024 16:06:51 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: CVE-2023-52451: powerpc/pseries/memhp: Fix access beyond end of
- drmem array
-Message-ID: <2024022639-wronged-grafted-6777@gregkh>
-References: <2024022257-CVE-2023-52451-7bdb@gregkh>
- <Zdylmz28rZ-mCeiN@tiehlicka>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="j/wyto49"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9097A1BF214;
+	Mon, 26 Feb 2024 15:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708960060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KziltWlW/enUkzAKM/Tk7OteTNYodSmSK05UPd9lgds=;
+	b=j/wyto49AhT8qkVrQVcz4QBLfaAh7ivuygjixxSQbqcEDQ3/hsBDFvEtfwV14Pkudhpa64
+	Lk+yQk0uoIwvMfZ3otZ4Ta0h+eNBicOPlzjRqfQM1dm0vlpwd28nNZeY/qAMjWlc53pKxc
+	tAn1r1BaFqUUGW4K7fHLWcl/VxrdxDxA8xaDBGXKzamJ9vBcsiXOFpjIPDb4yPoLLijG3a
+	QsK4Y5j/Nd5ElZVPRh+1+3cBP+T865h8xvX/6ib9Aw9aPWx1d5fk+Nhfsbnd8+Bii+PFYE
+	4O43RE4JyrxNFain1pyQJaxXuxZFRY4Pd5i7H65cb6g9yD8H8ksSvfEltOTDag==
+Date: Mon, 26 Feb 2024 16:07:36 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
+ <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Florian Fainelli
+ <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Jonathan
+ Corbet <corbet@lwn.net>
+Subject: Re: [PATCH net-next 2/2] doc: sfp-phylink: mention the
+ mac_capabilities and supported_interfaces
+Message-ID: <20240226160736.5a10733f@device-28.home>
+In-Reply-To: <Zdx5v1UXDqsKsjW8@shell.armlinux.org.uk>
+References: <20240220160406.3363002-1-maxime.chevallier@bootlin.com>
+	<20240220160406.3363002-3-maxime.chevallier@bootlin.com>
+	<Zdx5v1UXDqsKsjW8@shell.armlinux.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zdylmz28rZ-mCeiN@tiehlicka>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Mon, Feb 26, 2024 at 03:52:11PM +0100, Michal Hocko wrote:
-> On Thu 22-02-24 17:21:58, Greg KH wrote:
-> > Description
-> > ===========
-> > 
-> > In the Linux kernel, the following vulnerability has been resolved:
-> > 
-> > powerpc/pseries/memhp: Fix access beyond end of drmem array
-> > 
-> > dlpar_memory_remove_by_index() may access beyond the bounds of the
-> > drmem lmb array when the LMB lookup fails to match an entry with the
-> > given DRC index. When the search fails, the cursor is left pointing to
-> > &drmem_info->lmbs[drmem_info->n_lmbs], which is one element past the
-> > last valid entry in the array. The debug message at the end of the
-> > function then dereferences this pointer:
-> > 
-> >         pr_debug("Failed to hot-remove memory at %llx\n",
-> >                  lmb->base_addr);
+On Mon, 26 Feb 2024 11:45:03 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+
+> On Tue, Feb 20, 2024 at 05:04:04PM +0100, Maxime Chevallier wrote:
+> > +   Fill-in all the :c:type:`phy_interface_t <phy_interface_t>` (i.e. all MAC to
+> > +   PHY link modes) that your MAC can output. The following example shows a  
 > 
-> While this is a reasonable fix and the stable material it is really
-> unclear to me why it has gained a CVE. Memory hotplug is a privileged
-> operation. Could you clarify please?
+> Technically, this should be "MAC and all PCS associated with this MAC".
+> 
 
-As you know, history has shown us that accessing out of your allocated
-memory can cause problems, and we can not assume use-cases, as we don't
-know how everyone uses our codebase, so marking places where we fix
-out-of-bound memory accesses is resolving a weakness in the codebase,
-hence a CVE assignment.
+Given that PCS should be covered in the doc, that's true :) I'll add
+that in V2.
 
-If your systems are not vulnerable to this specific issue, wonderful, no
-need to take it, but why wouldn't you want to take a fix that resolves a
-known weakness?
+Thanks,
 
-thanks,
-
-greg k-h
+Maxime
