@@ -1,126 +1,179 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27DF129A8F;
-	Mon, 26 Feb 2024 13:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384CA12A146
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 13:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708955233; cv=none; b=Z6K3yXu5OadIBaPm6hHCu7Jvn+u3KI852ZzBEmMarrsS263kmFAma5tNrHkxJmFVbaC9bwSChLEPyIm7P+ZnIk9ZEUxNrx6Q4Hs3aWvaRqPcAXmanMJrVwepvIF9EmHXJC1VrCBPlx/PJaj6PiPcbpIZaP6PlVUZL4+woDkADkk=
+	t=1708955234; cv=none; b=kA7R1rWYSaeDj0gv6eY5FKhB4pf5x1ssAhUNbADC7Tfu2fgYRhXCMA8yexlYkOviZqHWO6o+35UBfIHVsW6pjNLvpccwKf9jGUkzqSIkFUmgqDX8PDcEA/fYGWNQBBjOgTNGBpgCXt95SGcgQmURD1oQV9ZmWwthllzs+JCldjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708955233; c=relaxed/simple;
-	bh=eJjDKWoKh4iQaxPxySS728JDwYFeD/6g1kPRnb36634=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=pF7zOiP42pNHrVZ8th0d6deUQekSaeOTK7W27GycrBpS9PZPKK2P/BfVDuUJyGC5TbcTt/hhCWkf0JNhBl+BgPlWvgYqPsvuo3KyRWYOV9zFgVKtm2ktE6JfcIRTN+MYtLjk1xcPAhXlekyhF0b77sBkD8QCwk7owwCffidy2f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=acUP74UJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mRfsMFat; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1708955234; c=relaxed/simple;
+	bh=YfrokfUsybNY74MtugqEcnTyIb7t+vGl7tW9pWrAewY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dIdLV66ov8oPaDip2RQye4GuvZ0AmzlNimxMTH4gBnDIcdptuPq6N//p4U7CQSVy2Zi3QIM9EV+01MtH1JPbMPE31wQ+hERmiJClHSq0wwlUM60pjb2yWpBlfS2KiuY4ImjpexXED6qpqWtTzC4Nz1FpLJd2vslkmgt93p+P3n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M00khUpl; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="acUP74UJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mRfsMFat"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id C35251380059;
-	Mon, 26 Feb 2024 08:47:10 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 26 Feb 2024 08:47:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708955230; x=1709041630; bh=a1PSlUV0gC
-	w1dBpXCUcLNWCgd48YCMKuI96VEVuc7N4=; b=acUP74UJ+xsVl9E9SnUTFssEvv
-	hMieduIVj8yuJdaGAFUU9SIfunAb0DIBLbXxah3BtLPd623MJbXj8RoL+/5TC82I
-	NfXlT+Gmk+p8jARsKXRPJFHzzXSKB3r64IxkYjMLR0u9MOIRevWICrM/4b9STQQT
-	6m+/qUd0gCJhHULjvmNK3AZ3AWIVJWIB5X9ngcJQvN0ncL8cp1IM9lLoI0y1w3qn
-	+3VTPJEWmdXF6pL+6oNiejiUpbnIoX6C36Ix7qilg4D7k/72s3Zj3SQ/4eaCTXi4
-	ZT2wcDAFPFG7tyQdac9xV9F1nng7ol98rjjXGxxVJ2hw6SpVu42Fimlsex2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708955230; x=1709041630; bh=a1PSlUV0gCw1dBpXCUcLNWCgd48Y
-	CMKuI96VEVuc7N4=; b=mRfsMFatDH3J3fLd4ATDIdcusHzpzRiJJTs+97urpncz
-	g5s+p7kls+KFvKm6+SvDHADqwMAK+rrQmaYp9SZ2VYutrviuTd00+iVN1/+gZpRD
-	htk3Ejpk0X2KNHsbgOMZAmpgaHma4d1GE3gTnsaNm4k5b4d218xtWyLV/x5rqz8p
-	HV1tCPLWaglNWl75jQMQZDmXMnZycxJUhrQnxZ9HWzurOSyddel6FcXzglVh72ky
-	1wsHZC+rJ4yiDucYzjRWmG+xwfy8O6LbpVajks++dDJFcEUwThtglS3IIMYjm2nB
-	J3MxFKvYNSVldPZURXtWQlfpAcaPYeQuYEKJyVjqOA==
-X-ME-Sender: <xms:XZbcZR4G3DJi8fFm80olcVwb9SwVNeAm4K4QsHILs0q_C7TXd_WgJA>
-    <xme:XZbcZe6qy0QHuOFDH0wQT-oui-WS7nzfodeH-dQCxKkJg275Nd6ZrXCnWMAST0JRP
-    w9GPpkRtB7o6Gy2lNw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgedvgdehgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:XpbcZYfzETUKKjlWtt642IGujcU3ow5G5VEmD1Z5OG15D5Q2-KWf6w>
-    <xmx:XpbcZaJmx5AbYUiBgzZuJyUSyyU-CnkEb2b1-h2u3oqgtXFLveRKCg>
-    <xmx:XpbcZVIDuCArvpJnN0P9CasHHa_5yQ0jzurrjs_kbKY8xm7X0f-EYQ>
-    <xmx:XpbcZXhzH7RT_3IGHoJHE5lFUcufsx4b3GdCw9cWVVHynQsN738mSA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D8D5DB6008D; Mon, 26 Feb 2024 08:47:09 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M00khUpl"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-607e54b6cf5so20602347b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 05:47:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708955232; x=1709560032; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z3VNu3jbt2E2dPwyMwWXLjmnd7lyq2z8eAe3tEfU6WA=;
+        b=M00khUplfsDX+0HrTs0wwASLK9eckclBujIbeZqxIYPV/HVRT/KhAk8s5QbWmM7oyi
+         NDqzbC7rH5uC6WxF+pZPHLWouLPYIY4ZsWrTbA0KM/8vmxlWSpWPkDKhxb+ttVZA/+zF
+         Nq4/REQ/mRjnHIHHfE57Jhwhu7tSPgVtREJ8qn4mpB1C2S1tCdP2pMUrTkfUt3UTKhCE
+         vqKTz1dCWKiY1HZUiUVku9EEx6B5qHLqWKvEIY6/SqxytiB3O3m9Cr+L1x+Aamq9FJMj
+         1l0Hc/t+l/t8B+G7kmQLdk7A+c3b1f2UxSpfHnRsiIt0U90uMsb2k2xPr1mNzfbXRceb
+         9cUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708955232; x=1709560032;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z3VNu3jbt2E2dPwyMwWXLjmnd7lyq2z8eAe3tEfU6WA=;
+        b=VqqknBW/23XaP/nme4bpYxOfDzB2ShGC/8jijEO34NNnq3RkvmFVeR/OpGnrimSw39
+         NJMn1KYK3hmkqe6mA7KPYHSzwMowP2JcMPzZNd1/465IgR4OJjI/OTrYCADuzY4Os4yW
+         18iuFnJtILrC5pOnzdC/Kb5wCWBROks4p8TdkgTvetDXrFXmgfz5cGfEVEpFbRz9XGIw
+         qi3iuAw37fx5VOjJX3XplWlDRyP5ji44lY31kSLqfYlGDDE6zhCDl+7S7RBiQbTDgjr9
+         R1Q+aYWKIoSaQ6i+FYhPJ1jO5sNpiWsTRzp7WR2vd0x7qCc59gWxfggZ2uI4bw9hroWJ
+         3QeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUj9B/qMVcr27kkabljXrFZ/ln72XLO8uJAxbayR9tLCDqP5tuRV8I1nuEh7VXWHgw+Xob5QSA48JM0UHNNoguagBm+Nhc9xKVkAAFq
+X-Gm-Message-State: AOJu0YwQvoqviV1oeYi+LJ0DA6ITGMRmoVTcyUweZfaiYO7W1z3u/R49
+	vN8SWMypc73cC9T0iSOV0VOwbHDmGdtkCA49h6U+pLPefniqm1eorYiQ3qf0C7P39P4GDys6vsr
+	uZPx4TcoqzwN3WTe45G1L9dLP/x8=
+X-Google-Smtp-Source: AGHT+IHVu12IKFVkB7sagqRbr02Yr/SH/2B72heqL/GYC7Lj8ZA2d9FyRXqO0S6/Xte+4CcI8bihGWkhT6PqCdJcWYM=
+X-Received: by 2002:a0d:e813:0:b0:608:e551:d9e9 with SMTP id
+ r19-20020a0de813000000b00608e551d9e9mr2190603ywe.16.1708955232261; Mon, 26
+ Feb 2024 05:47:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ef732971-bf70-4d8c-9fe8-3ca163a0c29c@app.fastmail.com>
-In-Reply-To: <20240226-graustufen-hinsehen-6c578a744806@brauner>
-References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
- <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
- <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
- <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
- <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
- <3c396b7c-adec-4762-9584-5824f310bf7b@app.fastmail.com>
- <6f7a8e320f3c2bd5e9b704bb8d1f311714cd8644.camel@xry111.site>
- <b9fb0de1-bfb9-47a6-9730-325e7641c182@app.fastmail.com>
- <20240226-graustufen-hinsehen-6c578a744806@brauner>
-Date: Mon, 26 Feb 2024 14:46:49 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Christian Brauner" <brauner@kernel.org>
-Cc: "Xi Ruoyao" <xry111@xry111.site>, "Icenowy Zheng" <uwu@icenowy.me>,
- "Huacai Chen" <chenhuacai@kernel.org>, "WANG Xuerui" <kernel@xen0n.name>,
- linux-api@vger.kernel.org, "Kees Cook" <keescook@chromium.org>,
- "Xuefeng Li" <lixuefeng@loongson.cn>, "Jianmin Lv" <lvjianmin@loongson.cn>,
- "Xiaotian Wu" <wuxiaotian@loongson.cn>, "WANG Rui" <wangrui@loongson.cn>,
- "Miao Wang" <shankerwangmiao@gmail.com>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep argument
- inspection again?
-Content-Type: text/plain
+References: <df416acb-d913-4e67-b810-cd991003242e@intel.com>
+ <20240226083526.26002-1-ioworker0@gmail.com> <8b909691-ca53-43b9-aab1-dba3ef3577cd@arm.com>
+ <517e4c23-11f8-4ded-a502-354c482c4e51@redhat.com>
+In-Reply-To: <517e4c23-11f8-4ded-a502-354c482c4e51@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Mon, 26 Feb 2024 21:47:00 +0800
+Message-ID: <CAK1f24nP=g3xD=3FR11Qg0V3gsrioPcDU7a+9pjPAEORLzcd3A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/madvise: enhance lazyfreeing with mTHP in madvise_free
+To: David Hildenbrand <david@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, fengwei.yin@intel.com, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com, 
+	minchan@kernel.org, peterx@redhat.com, shy828301@gmail.com, 
+	songmuchun@bytedance.com, wangkefeng.wang@huawei.com, zokeefe@google.com, 
+	21cnbao@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 26, 2024, at 14:32, Christian Brauner wrote:
-> On Mon, Feb 26, 2024 at 10:20:23AM +0100, Arnd Bergmann wrote:
->> On Mon, Feb 26, 2024, at 08:09, Xi Ruoyao wrote:
+On Mon, Feb 26, 2024 at 9:04=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
 >
-> What this tells me without knowing the exact reason is that they thought
-> "Oh, if we just return ENOSYS then the workload or glibc will just
-> always be able to fallback to fstat() or fstatat()". Which ultimately is
-> the exact same thing that containers often assume.
+> On 26.02.24 13:57, Ryan Roberts wrote:
+> > On 26/02/2024 08:35, Lance Yang wrote:
+> >> Hey Fengwei,
+> >>
+> >> Thanks for taking time to review!
+> >>
+> >>> On Mon, Feb 26, 2024 at 10:38=E2=80=AFAM Yin Fengwei <fengwei.yin@int=
+el.com> wrote:
+> >>>> On Sun, Feb 25, 2024 at 8:32=E2=80=AFPM Lance Yang <ioworker0@gmail.=
+com> wrote:
+> >> [...]
+> >>>> --- a/mm/madvise.c
+> >>>> +++ b/mm/madvise.c
+> >>>> @@ -676,11 +676,43 @@ static int madvise_free_pte_range(pmd_t *pmd, =
+unsigned long addr,
+> >>>>                 */
+> >>>>                if (folio_test_large(folio)) {
+> >>>>                        int err;
+> >>>> +                     unsigned long next_addr, align;
+> >>>>
+> >>>> -                     if (folio_estimated_sharers(folio) !=3D 1)
+> >>>> -                             break;
+> >>>> -                     if (!folio_trylock(folio))
+> >>>> -                             break;
+> >>>> +                     if (folio_estimated_sharers(folio) !=3D 1 ||
+> >>>> +                         !folio_trylock(folio))
+> >>>> +                             goto skip_large_folio;
+> >>>> +
+> >>>> +                     align =3D folio_nr_pages(folio) * PAGE_SIZE;
+> >>>> +                     next_addr =3D ALIGN_DOWN(addr + align, align);
+> >>> There is a possible corner case:
+> >>> If there is a cow folio associated with this folio and the cow folio
+> >>> has smaller size than this folio for whatever reason, this change can=
+'t
+> >>> handle it correctly.
+> >>
+> >> Thanks for pointing that out; it's very helpful to me!
+> >> I made some changes. Could you please check if this corner case is now=
+ resolved?
+> >>
+> >> As a diff against this patch.
+> >>
+> >> diff --git a/mm/madvise.c b/mm/madvise.c
+> >> index bcbf56595a2e..c7aacc9f9536 100644
+> >> --- a/mm/madvise.c
+> >> +++ b/mm/madvise.c
+> >> @@ -686,10 +686,12 @@ static int madvise_free_pte_range(pmd_t *pmd, un=
+signed long addr,
+> >>                      next_addr =3D ALIGN_DOWN(addr + align, align);
+> >>
+> >>                      /*
+> >> -                     * If we mark only the subpages as lazyfree,
+> >> -                     * split the large folio.
+> >> +                     * If we mark only the subpages as lazyfree, or
+> >> +                     * if there is a cow folio associated with this f=
+olio,
+> >> +                     * then split the large folio.
+> >>                       */
+> >> -                    if (next_addr > end || next_addr - addr !=3D alig=
+n)
+> >> +                    if (next_addr > end || next_addr - addr !=3D alig=
+n ||
+> >> +                        folio_total_mapcount(folio) !=3D folio_nr_pag=
+es(folio))
+> >
+> > I still don't think this is correct. I think you were previously assumi=
+ng that
+> > if you see a page from a large folio then the whole large folio should =
+be
+> > contiguously mapped? This new check doesn't validate that assumption re=
+liably;
+> > you need to iterate through every pte to generate a batch, like David d=
+oes in
+> > folio_pte_batch() for this to be safe.
+> >
+> > An example of when this check is insufficient; let's say you have a 4 p=
+age anon
+> > folio mapped contiguously in a process (total_mapcount=3D4). The proces=
+s is forked
+> > (total_mapcount=3D8). Then each process munmaps the second 2 pages
+> > (total_mapcount=3D4). In place of the munmapped 2 pages, 2 new pages ar=
+e mapped.
+> > Then call madvise. It's probably even easier to trigger for file-backed=
+ memory
+> > (I think this code path is used for both file and anon?)
 >
-> So really, just skipping on various system calls isn't going to work.
-> You can't just implement new system calls and forget about the rest
-> unless you know exactly what workloads your architecure will run on.
+> What would work here is using folio_pte_batch() to get how many PTEs are
+> mapped *here*, then comparing the the batch size to folio_nr_pages(). If
+> both match, we are mapping all subpages.
+
+Thanks! I'll use folio_pte_batch() here in v2.
+
+Best,
+Lance
+
 >
-> Please implement fstat() or fstatat() and stop inventing hacks for
-> statx() to make weird sandboxing rules work, please.
-
-Do you mean we should add fstat64_time64() for all architectures
-then? Would use use the same structure layout as statx for this,
-the 64-bit version of the 'struct stat' layout from
-include/uapi/asm-generic/stat.h, or something new that solves
-the same problems?
-
-I definitely don't want to see a new time32 API added to
-mips64 and the 32-bit architectures, so the existing stat64
-interface won't work as a statx replacement.
-
-     Arnd
+> --
+> Cheers,
+>
+> David / dhildenb
+>
