@@ -1,65 +1,65 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DC5249F5
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:48:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0536C249F5
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944525; cv=none; b=OYdSfMeTublAGJhcZgrKl7OG8BBPIKv4eL+wimUoG7Q48MaNZLqHuIql8qZGQSo6GPVghWmCOiMxWtho/JALhDwXWoevQRJKJe8L6FLzAW8ZvRhf6y2ZaRyInuarBKxsPx+yOINpvCSAflGN/HwdPYgvjX52lIhZr9+LNZ2WqZ8=
+	t=1708944549; cv=none; b=HwUtvHiC8nH9EOcomX0XOsk000NHEsf39PlufqQ12utLiMZLPu9Vs7sWzt7b7RIeb022jA7UOSBP1QHvHW6Dcnt49RnOSa3/SRVShynY1cXX6bkLJACrEHMc0GnqxQk+WkfYWSI99hNGxkGAvcKkFqvlBfKeHuLSFf0v8cVlpXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944525; c=relaxed/simple;
-	bh=CgLSVjg8YzV7wsZ4kQ2CtgEGGOtghXgQ/KD7jkKWfsc=;
+	s=arc-20240116; t=1708944549; c=relaxed/simple;
+	bh=oN6z/Ma+rlJcjTxPxoSfXJuY6hkPlkN3GBr7lfToEJI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nF2/kqaKlzlDnytkgIEdveFdyk+yM7ifSzrGHzGfAW5i5b4Jnqi3sTbgjYKyVe7oNMzf6SltIWYFZ08o6X6u19IuSwsUfdQDTU5KhiPdx1s8YgJdovr9JvcSZKVqulpQGLMCdO2E1bRhEFQkDS2WHm8Zb02akHg65ZCj1wgxIZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DOwwVIS8; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=mBnHsIYaeXAFr2gkPYfJsYRFTokFiVWQvmHS1Sl0lnIMt2ylCLFc976ddjcnjP1wCwc1kzHgfRh/kPvfX5hPxD0jGWOmvuSC8wHLAsRtE+DPNyloO85Huju/4Z34kaHv33A0lbywqVKWnoxFT4s6aDJNeh7b0Jjxf8hBIDsgiqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BAnRi3fW; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DOwwVIS8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BAnRi3fW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708944522;
+	s=mimecast20190719; t=1708944546;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5OE8GoZ9j6WhBuZWvbJNk/RKp/M9fLXpjDr094aLbX0=;
-	b=DOwwVIS8+oCQ0PYOhfMqauWyLyd5lIA1A+P2Vnyyt2cwC4s04rHZdi8Wg8e9zx+IcUEbn3
-	rL2P2hPzDyOPWTWsDgwLO8BU/Ux4/dRlwL++ua8+srkSf5fqwOPiCkJSnPYXv317z9IDLB
-	97C4tsG3DvOAKP812A0E6c5J4DoFOPc=
+	bh=hrWLYtqd2oPYXe7xrqMQ9XAg0ahyT9g/GSMPGa3xAnU=;
+	b=BAnRi3fWo3uPOl95FFIU6cLqwmsxAai3i1qN5I9/dXVlDQm26fcHa+uED+bv+GsnkUm+cN
+	FyLlP9zs8JXLL4pGSKiBTlnAPlNQa0AiFcQGv7gsx9v/yMxsu7qXjvEkIOHoiMmZuOIVXP
+	sfAwSaHAumx59xiyZMsD+m/PM0qUn7w=
 Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
  [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-594-3NwQjjPlP2iRQedq1xuajA-1; Mon, 26 Feb 2024 05:48:41 -0500
-X-MC-Unique: 3NwQjjPlP2iRQedq1xuajA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a3f84b660b8so192387366b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:48:41 -0800 (PST)
+ us-mta-682-x7z6bIFyMOaX1vv7x24PUQ-1; Mon, 26 Feb 2024 05:49:05 -0500
+X-MC-Unique: x7z6bIFyMOaX1vv7x24PUQ-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a3f52ebbb6cso130879266b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:49:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708944520; x=1709549320;
+        d=1e100.net; s=20230601; t=1708944544; x=1709549344;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5OE8GoZ9j6WhBuZWvbJNk/RKp/M9fLXpjDr094aLbX0=;
-        b=Y68ue7L9rvsc8e2mVmpKdhJ7vnJu3g/kD4f+qD5AhdAA3pKvx9gsHlxeYPQLgWvqDt
-         2RRBQXHdH7KRzRZWALN7O9vbgJhEQXeL01yvJYx2knZ3+Jb4Xx5r4H5l+QPKutnOlBul
-         YpClua4q6kcnMvJC4xXd0a+7e9u3anHbepzcox0bpS0DU4raThTnENj4Y47HN/ossMiA
-         9eUMLPqNqv2bAtEmH4gRX6tnVl4rLWyOhx5rP5qVlDbtKVAkLrFD0TFYf9z+Fi97Kycv
-         yr5cMU4aCpor4gQ5AYjk2sl54h5sHW/V7iUquVhB3b7d2CvXSgFnSFDb0wBFGxRTkOKF
-         qzPw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Z2HvjcQn7ey1L7IIqpazLUKz658hGZ2pGqw4Pg+BVgT4cp3IWBKN0WuM1ia11Q/scw0IEX0aiwjSmmq3YDVBNQP/yfCJzOx3AVC4
-X-Gm-Message-State: AOJu0Yz/btVvS1WqxQpXIpruZkThDR3xcBmDYV19ZQg4eNF/aGpvWmCm
-	GuCal9dp7l1uHlEVlwMj33FsvnmpT/NmT9BDlyiFSo5vdURUC++a3lcbjgMrHSf5ylI4MIWuPqb
-	lehJ/567/4mDBWvgFQ9tmydDJ8yKToVXCkeOfqJwEpHtDTEH6SgDAtylqRUHuDg==
-X-Received: by 2002:a17:906:5609:b0:a43:7df:1ad0 with SMTP id f9-20020a170906560900b00a4307df1ad0mr2785212ejq.10.1708944520270;
-        Mon, 26 Feb 2024 02:48:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFG00i0E8QDj4z2oVxDIc+1nq6MzBGh9+dsfWWEcglt6+KLB0qC1ou2UUdnvPuYHPSpzRDLnw==
-X-Received: by 2002:a17:906:5609:b0:a43:7df:1ad0 with SMTP id f9-20020a170906560900b00a4307df1ad0mr2785200ejq.10.1708944520040;
-        Mon, 26 Feb 2024 02:48:40 -0800 (PST)
+        bh=hrWLYtqd2oPYXe7xrqMQ9XAg0ahyT9g/GSMPGa3xAnU=;
+        b=qC5w6VEJVUPuowzx82MuJn95MoKqql4C01FbFXpcXPOjopsOLran+5nyLm8nC4tgMi
+         lpFU60SFXUQ3AyYaxoI5YYof5Foz6+qtPM7Rsc1c5J4CcXW9fopEdCxucURKLOEexz7o
+         YgF9/6jZQi4shqC0W983Cmh/D0gyxV3D6s9kgAWzBTemN6Vo4O1PxQxVdjCerSKX/7pE
+         OReRWaYqtDwV9NBBpOBo2/l1bT7sLwsWLbuHlj/Ykca6syN5ZIV0IJQltN5rGZy1Z1JB
+         gjvOvcsFg0KiemZzMfGyhoxkfNHgJ8OEwavw5fxOiMatwbZ7D1lOa8lZQXaGnE+aPHpk
+         RZgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWoGmJR8uV71YQfTr3r6y+SI7335XhzAApaIlmEzSsBglIkcrnIFBlm0YbasW3GEvZ8oq/ch26hdL9Sq1W9xftpdPFitUsdxhciE7VK
+X-Gm-Message-State: AOJu0YxmOWVxQ6yYS7bT30+brEPlrFssgsVjLR76hWX2l4a7djBm1hoT
+	1FJxXbWzPEhBHutFkLWl9Wcq7B5uHr4aZf5eJKN1a9DD6Xd6H91Co+1sX0mBicWc/qP36JKkOSV
+	jwYjL6GKcaj4NjjZSpyPG1TwvADd7tFBkxCYGAuTyqZfagL4oFB+DXljVQkQRXA==
+X-Received: by 2002:a17:906:c40c:b0:a3f:d2f3:d226 with SMTP id u12-20020a170906c40c00b00a3fd2f3d226mr3902605ejz.17.1708944544473;
+        Mon, 26 Feb 2024 02:49:04 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFgFHc4kU42ZCWURdwrBTU2m+DV9YfBo4gixVnObYtzVknKuFLf5Ic5UH7eLPkpUMhjJLrKkQ==
+X-Received: by 2002:a17:906:c40c:b0:a3f:d2f3:d226 with SMTP id u12-20020a170906c40c00b00a3fd2f3d226mr3902592ejz.17.1708944544206;
+        Mon, 26 Feb 2024 02:49:04 -0800 (PST)
 Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id rf14-20020a1709076a0e00b00a4339b8b1bbsm1143238ejc.212.2024.02.26.02.48.38
+        by smtp.gmail.com with ESMTPSA id rf14-20020a1709076a0e00b00a4339b8b1bbsm1143238ejc.212.2024.02.26.02.49.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 02:48:39 -0800 (PST)
-Message-ID: <182c1e88-0bc2-48a8-89d8-5b0e4b68c6b9@redhat.com>
-Date: Mon, 26 Feb 2024 11:48:38 +0100
+        Mon, 26 Feb 2024 02:49:03 -0800 (PST)
+Message-ID: <549ba85b-9902-4fed-9f67-e3ebc3aec3ec@redhat.com>
+Date: Mon, 26 Feb 2024 11:49:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,33 +67,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: media: atomisp: Fix formatting issues and minor
- code issue
+Subject: Re: [PATCH] platform/x86: dell-privacy: Remove usage of
+ wmi_has_guid()
 Content-Language: en-US
-To: Jonathan Bergh <bergh.jonathan@gmail.com>
-Cc: mchehab@kernel.org, linux-media@vger.kernel.org,
+To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com
+Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20240225155359.41435-1-bergh.jonathan@gmail.com>
+References: <20240223162905.12416-1-W_Armin@gmx.de>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240225155359.41435-1-bergh.jonathan@gmail.com>
+In-Reply-To: <20240223162905.12416-1-W_Armin@gmx.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Jonathan,
+Hi,
 
-On 2/25/24 16:53, Jonathan Bergh wrote:
-> This patch fixes the following code style and formatting issues:
->  * Ensure multiline block comments are correctly formatted
->  * Remove extra braces not required for single line conditional statements
+On 2/23/24 17:29, Armin Wolf wrote:
+> The WMI driver core already takes care that the WMI driver is
+> only bound to WMI devices with a matching GUID.
 > 
-> Signed-off-by: Jonathan Bergh <bergh.jonathan@gmail.com>
-
+> Remove the unnecessary call to wmi_has_guid(), which will always
+> be true when the driver probes.
+> 
+> Tested on a Dell Inspiron 3505.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 
 Thanks, patch looks good to me:
 
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-(I'll apply this to my atomisp-branch the next time I'm working on that branch).
 
 Regards,
 
@@ -101,59 +102,26 @@ Hans
 
 
 
-
 > ---
->  drivers/staging/media/atomisp/pci/atomisp_drvfs.c         | 2 +-
->  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 7 +++----
->  drivers/staging/media/atomisp/pci/atomisp_subdev.c        | 3 ++-
->  3 files changed, 6 insertions(+), 6 deletions(-)
+>  drivers/platform/x86/dell/dell-wmi-privacy.c | 4 ----
+>  1 file changed, 4 deletions(-)
 > 
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
-> index 1df534bf54d3..8ef25d2f8b87 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_drvfs.c
-> @@ -34,7 +34,7 @@
->   *        bit 0: binary list
->   *        bit 1: running binary
->   *        bit 2: memory statistic
-> -*/
-> + */
->  struct _iunit_debug {
->  	struct device_driver	*drv;
->  	struct atomisp_device	*isp;
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> index 139ad7ad1dcf..804ffff245f3 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> @@ -1416,13 +1416,12 @@ static int gmin_get_config_var(struct device *maindev,
->  	if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE))
->  		status = efi.get_variable(var16, &GMIN_CFG_VAR_EFI_GUID, NULL,
->  					  (unsigned long *)out_len, out);
-> -	if (status == EFI_SUCCESS) {
-> +	if (status == EFI_SUCCESS)
->  		dev_info(maindev, "found EFI entry for '%s'\n", var8);
-> -	} else if (is_gmin) {
-> +	else if (is_gmin)
->  		dev_info(maindev, "Failed to find EFI gmin variable %s\n", var8);
-> -	} else {
-> +	else
->  		dev_info(maindev, "Failed to find EFI variable %s\n", var8);
-> -	}
->  
->  	return ret;
->  }
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_subdev.c b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
-> index a87fc74159e2..f8efaef2c055 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_subdev.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_subdev.c
-> @@ -394,7 +394,8 @@ int atomisp_subdev_set_selection(struct v4l2_subdev *sd,
->  			 * (of the desired captured image before
->  			 * scaling, or 1 / 6 of what we get from the
->  			 * sensor) in both width and height. Remove
-> -			 * it. */
-> +			 * it.
-> +			 */
->  			crop[pad]->width = roundup(crop[pad]->width * 5 / 6,
->  						   ATOM_ISP_STEP_WIDTH);
->  			crop[pad]->height = roundup(crop[pad]->height * 5 / 6,
+> diff --git a/drivers/platform/x86/dell/dell-wmi-privacy.c b/drivers/platform/x86/dell/dell-wmi-privacy.c
+> index 4d94603f7785..4b65e1655d42 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-privacy.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-privacy.c
+> @@ -297,10 +297,6 @@ static int dell_privacy_wmi_probe(struct wmi_device *wdev, const void *context)
+>  	struct key_entry *keymap;
+>  	int ret, i, j;
+> 
+> -	ret = wmi_has_guid(DELL_PRIVACY_GUID);
+> -	if (!ret)
+> -		pr_debug("Unable to detect available Dell privacy devices!\n");
+> -
+>  	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+>  		return -ENOMEM;
+> --
+> 2.39.2
+> 
 
