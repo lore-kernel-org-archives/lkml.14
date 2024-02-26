@@ -1,188 +1,325 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4288F21A0B
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A63535BB;
+	Mon, 26 Feb 2024 10:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708943366; cv=none; b=FBeRcNsQRcXCWAiUgk1yrIuUoFw2tJmHklrpRB08QmLJ64StGMUnXVl0gDvYo8zZYPlVypsUmixtlIyoRm9giVy/zfxx/QD4zDDh2S1nyoTdoprvIx6QUMcJM/eOca8IeLYUZ40qkf/t0UqZr6YWsurHTlhpX+jv2mvchr36IpA=
+	t=1708943397; cv=none; b=Qp8PSyllYhVGwYAphGJG+1yTB0PMGAiCvhFhi2Rj4sbXvhYlmYq36PUZctPio7p3LHcKcDmMV4VqFEsZRbAY0WbQhe/xYn7M1HdQJo2QgxF1HRBmVYc3qkvmfD+2vZg3l5eLk2M1NZkpsSyRIbhvSv4l18Fim+d0hZco/P7KRyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708943366; c=relaxed/simple;
-	bh=j8vs2kYNqidZarWFkHkNVn2iIvZToZdN0qkN5+xNYUA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=imKVYGOvct9bKa23CQH0juZ8u+dytvxglCev157ncKSjzqHSoZ/W78oCL80tFjmtPkyNCtAHebGmhYkEXjZqtAIHga6h0bdHiHZMLKtNgD+KY+91ZXevN0/CR2G+in/7yUjKo4/Eqjagw3YYNF0vej/vVCSMEratbSG+XGzdNKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V2GhjPKz; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V2GhjPKz"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5654ef0c61fso15350a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:29:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708943362; x=1709548162; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+9LBZSvHXbFImgyGtsmIfeO7+emcfrVlLTSHoyquOhU=;
-        b=V2GhjPKze02j75RwUxXRdFvDaAyVns3p4JoF2SfROBj6oBvTAjQyJmXD7j8EUoiPts
-         XDwm38iLP/HiYVPZGypvUXPuXfJQ4a/e/ioAfUNfjeFIr7P27ytyqzPZnl4XteClNEV9
-         VYXqK9Nie+OzBF3v9iJPBiAeyX6p0CRoi502zjiBthaGmAFjNn57DmB6uyFff8nPsH9P
-         NVLzpuCrmJeqtU6Un+azJzLOwu7ylSc8tcDgTb2o3Mcl6bmz2bSKML9cHsXxAzgy0fu7
-         lKaYUSbdJ6JdX+L1k1w0ANUo10e9r7lpX99H9carH7fpBVOa94O9ON4+yJOC2tJnNZ/c
-         ByDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708943362; x=1709548162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+9LBZSvHXbFImgyGtsmIfeO7+emcfrVlLTSHoyquOhU=;
-        b=i5iChnO6RqTRPdT1n7OSZqAHZUXzfRKQuwYrXbypQ/w81rt6xNEyrzrWl7crlXo7eX
-         WUSmHb0FTEKvxcL3xKvbqmmsCARmYulLomTWy9m3hkGIQS+t1cTvbT6mSDT46CedZOcF
-         /yRtSFaXyM2x7MXLnh4WmA8eXDx6LdzORRMUdAKDrtCLX7tNCDQABwk92WTvTlEJjxZt
-         V5VXaYP5VJEdADjPuwhOchNWg5N9dQMbgsQ3LiQ0yBp0vl1FR7pjR68mUrVXznVehEkm
-         qLvyuMP0DdSBZuiSlG4NScXCrgBrVgezURdcJoj/3JmhpT/XBVUe6bdNxQtKz3b3RNRJ
-         K0KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdoEEnGQrUd9nkVNK8XdoW8YQMPQeaz9ZajoUqqzN9cq7ftbeXanj1+RlEfArfyG9uRGJDh/GtuMaublrzJivuH8z7l+LXB2oVsRzJ
-X-Gm-Message-State: AOJu0YzFJd49sJC1fFEAuI9QhEGxKQhtZ+w8TGiZyZ3xZJawj7j8Wrr/
-	/ZQLiAP+niRttSvFbtVk20IiGvwO3Epc9IpJZG1ZvoxP19qWPmaOk7MlHqSyjqHyYZfKmKTErak
-	FbaJxsvAtRG41UjGKi4P41KZq47hi7dmTNPPm
-X-Google-Smtp-Source: AGHT+IFKz46PFB51fdJ85PXmyLQGXMahOGGYRTDTtbRxiAG3nY7eMN8+lnfxZ63efS90ND8l5xonPPcns8ila5ukGns=
-X-Received: by 2002:a50:a6d7:0:b0:565:4b98:758c with SMTP id
- f23-20020a50a6d7000000b005654b98758cmr279364edc.4.1708943362220; Mon, 26 Feb
- 2024 02:29:22 -0800 (PST)
+	s=arc-20240116; t=1708943397; c=relaxed/simple;
+	bh=/G2UA+uUkp//XVcfRaG2YejlfgNtu6ZxQ2UfuCjPiyk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nmj8hlPln6JMedpMMDvCrGQ+VQRiBqwTYKPyeWGJH62D8h8M131R7a3eqo3xk2Znw5VOrJYa6smo1Sbbrd07pKvwy+kco0cZ70MTyxO3ortiomfNGC2TTVYImJnIMZrXxj1vy1Kz0Id1CNyB6nzqMgm+jgEK7+AK97XsbHmBOv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TjxZd1L8dz6JB1P;
+	Mon, 26 Feb 2024 18:25:13 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 882B51400DD;
+	Mon, 26 Feb 2024 18:29:46 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
+ 2024 10:29:45 +0000
+Date: Mon, 26 Feb 2024 10:29:44 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Shiju Jose <shiju.jose@huawei.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
+	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
+	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
+Subject: Re: [RFC PATCH v6 00/12] cxl: Add support for CXL feature commands,
+ CXL device patrol scrub control and DDR5 ECS control features
+Message-ID: <20240226102944.000070a3@Huawei.com>
+In-Reply-To: <65d8f5201f8cc_2509b29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240215111455.1462-1-shiju.jose@huawei.com>
+	<65d6936952764_1138c7294e@dwillia2-xfh.jf.intel.com.notmuch>
+	<54c55412e9374e4e9cacf8410a5a98cb@huawei.com>
+	<65d8f5201f8cc_2509b29467@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220021804.9541-1-shijie@os.amperecomputing.com>
- <CANn89iJoHDzfYfhcwVvR4m7DiVG-UfFNqm+D1WD-2wjOttk6ew@mail.gmail.com>
- <bea860f8-a196-4dff-a655-4da920e2ebfa@amperemail.onmicrosoft.com>
- <CANn89i+1uMAL_025rNc3C1Ut-E5S8Nat6KhKEzcFeC1xxcFWaA@mail.gmail.com>
- <c2bd73b6-b21f-4ad8-a176-eec677bc6cf3@amperemail.onmicrosoft.com>
- <CANn89i+Cr1Tbdxqy6fB-sOLca+AHFc-3-0xGktVUsQFFMVsC0A@mail.gmail.com> <bd0a9d66-783d-4936-a5b0-cd4082704137@kernel.org>
-In-Reply-To: <bd0a9d66-783d-4936-a5b0-cd4082704137@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 26 Feb 2024 11:29:07 +0100
-Message-ID: <CANn89iKJtLZFjY_kYhV5NcgKiAkhi_stftvai1dCwQLMOLea6g@mail.gmail.com>
-Subject: Re: [PATCH] net: skbuff: allocate the fclone in the current NUMA node
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: aleksander.lobakin@intel.com, 
-	Shijie Huang <shijie@amperemail.onmicrosoft.com>, 
-	Huang Shijie <shijie@os.amperecomputing.com>, kuba@kernel.org, 
-	patches@amperecomputing.com, davem@davemloft.net, horms@kernel.org, 
-	ast@kernel.org, dhowells@redhat.com, linyunsheng@huawei.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	cl@os.amperecomputing.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, Feb 26, 2024 at 11:18=E2=80=AFAM Jesper Dangaard Brouer <hawk@kerne=
-l.org> wrote:
->
->
->
-> On 24/02/2024 20.07, Eric Dumazet wrote:
-> > On Tue, Feb 20, 2024 at 9:37=E2=80=AFAM Shijie Huang
-> > <shijie@amperemail.onmicrosoft.com> wrote:
-> >>
-> >>
-> >> =E5=9C=A8 2024/2/20 16:17, Eric Dumazet =E5=86=99=E9=81=93:
-> >>> On Tue, Feb 20, 2024 at 7:26=E2=80=AFAM Shijie Huang
-> >>> <shijie@amperemail.onmicrosoft.com> wrote:
-> >>>>
-> >>>> =E5=9C=A8 2024/2/20 13:32, Eric Dumazet =E5=86=99=E9=81=93:
-> >>>>> On Tue, Feb 20, 2024 at 3:18=E2=80=AFAM Huang Shijie
-> >>>>> <shijie@os.amperecomputing.com> wrote:
-> >>>>>> The current code passes NUMA_NO_NODE to __alloc_skb(), we found
-> >>>>>> it may creates fclone SKB in remote NUMA node.
-> >>>>> This is intended (WAI)
-> >>>> Okay. thanks a lot.
-> >>>>
-> >>>> It seems I should fix the issue in other code, not the networking.
-> >>>>
-> >>>>> What about the NUMA policies of the current thread ?
-> >>>> We use "numactl -m 0" for memcached, the NUMA policy should allocate
-> >>>> fclone in
-> >>>>
-> >>>> node 0, but we can see many fclones were allocated in node 1.
-> >>>>
-> >>>> We have enough memory to allocate these fclones in node 0.
-> >>>>
-> >>>>> Has NUMA_NO_NODE behavior changed recently?
-> >>>> I guess not.
-> >>>>> What means : "it may creates" ? Please be more specific.
-> >>>> When we use the memcached for testing in NUMA, there are maybe 20% ~=
- 30%
-> >>>> fclones were allocated in
-> >>>>
-> >>>> remote NUMA node.
-> >>> Interesting, how was it measured exactly ?
-> >>
-> >> I created a private patch to record the status for each fclone allocat=
-ion.
-> >>
-> >>
-> >>> Are you using SLUB or SLAB ?
-> >>
-> >> I think I use SLUB. (CONFIG_SLUB=3Dy,
-> >> CONFIG_SLAB_MERGE_DEFAULT=3Dy,CONFIG_SLUB_CPU_PARTIAL=3Dy)
-> >>
-> >
-> > A similar issue comes from tx_action() calling __napi_kfree_skb() on
-> > arbitrary skbs
-> > including ones that were allocated on a different NUMA node.
-> >
-> > This pollutes per-cpu caches with not optimally placed sk_buff :/
-> >
-> > Although this should not impact fclones, __napi_kfree_skb() only ?
-> >
-> > commit 15fad714be86eab13e7568fecaf475b2a9730d3e
-> > Author: Jesper Dangaard Brouer <brouer@redhat.com>
-> > Date:   Mon Feb 8 13:15:04 2016 +0100
-> >
-> >      net: bulk free SKBs that were delay free'ed due to IRQ context
-> >
-> > What about :
-> >
-> > diff --git a/net/core/dev.c b/net/core/dev.c
-> > index c588808be77f563c429eb4a2eaee5c8062d99582..63165138c6f690e14520f11=
-e32dc16f2845abad4
-> > 100644
-> > --- a/net/core/dev.c
-> > +++ b/net/core/dev.c
-> > @@ -5162,11 +5162,7 @@ static __latent_entropy void
-> > net_tx_action(struct softirq_action *h)
-> >                                  trace_kfree_skb(skb, net_tx_action,
-> >                                                  get_kfree_skb_cb(skb)-=
->reason);
-> >
-> > -                       if (skb->fclone !=3D SKB_FCLONE_UNAVAILABLE)
-> > -                               __kfree_skb(skb);
-> > -                       else
-> > -                               __napi_kfree_skb(skb,
-> > -                                                get_kfree_skb_cb(skb)-=
->reason);
->
-> Yes, I think it makes sense to avoid calling __napi_kfree_skb here.
-> The __napi_kfree_skb call will cache SKB slub-allocation (but "release"
-> data) on a per CPU napi_alloc_cache (see code napi_skb_cache_put()).
-> In net_tx_action() there is a chance this could originate from another
-> CPU or even NUMA node.  I notice this is only for SKBs on the
-> softnet_data->completion_queue, which have a high chance of being cache
-> cold.  My patch 15fad714be86e only made sense when we bulk freed these
-> SKBs, but after Olek's changes to cache freed SKBs, then this shouldn't
-> be calling __napi_kfree_skb() (previously named __kfree_skb_defer).
->
-> I support this RFC patch from Eric.
->
-> Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+On Fri, 23 Feb 2024 11:42:24 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Note that this should not matter for most NIC, because their drivers
-perform TX completion from NAPI context, we do not hit this path.
+> Shiju Jose wrote:
+> > Hi Dan,
+> >=20
+> > Thanks for the feedback.
+> >=20
+> > Please find reply inline.
+> >  =20
+> > >-----Original Message-----
+> > >From: Dan Williams <dan.j.williams@intel.com>
+> > >Sent: 22 February 2024 00:21
+> > >To: Shiju Jose <shiju.jose@huawei.com>; linux-cxl@vger.kernel.org; lin=
+ux-
+> > >acpi@vger.kernel.org; linux-mm@kvack.org; dan.j.williams@intel.com;
+> > >dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
+> > >dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel=
+.com;
+> > >ira.weiny@intel.com
+> > >Cc: linux-edac@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >david@redhat.com; Vilas.Sridharan@amd.com; leo.duran@amd.com;
+> > >Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
+> > >tony.luck@intel.com; Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
+> > >rafael@kernel.org; lenb@kernel.org; naoya.horiguchi@nec.com;
+> > >james.morse@arm.com; jthoughton@google.com; somasundaram.a@hpe.com;
+> > >erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
+> > >mike.malvestuto@intel.com; gthelen@google.com;
+> > >wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
+> > >tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.=
+com>;
+> > >kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
+> > >Linuxarm <linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
+> > >Subject: RE: [RFC PATCH v6 00/12] cxl: Add support for CXL feature com=
+mands,
+> > >CXL device patrol scrub control and DDR5 ECS control features
+> > >
+> > >shiju.jose@ wrote: =20
+> > >> From: Shiju Jose <shiju.jose@huawei.com>
+> > >>
+> > >> 1. Add support for CXL feature mailbox commands.
+> > >> 2. Add CXL device scrub driver supporting patrol scrub control and E=
+CS
+> > >> control features.
+> > >> 3. Add scrub subsystem driver supports configuring memory scrubs in =
+the =20
+> > >system. =20
+> > >> 4. Register CXL device patrol scrub and ECS with scrub subsystem.
+> > >> 5. Add common library for RASF and RAS2 PCC interfaces.
+> > >> 6. Add driver for ACPI RAS2 feature table (RAS2).
+> > >> 7. Add memory RAS2 driver and register with scrub subsystem. =20
+> > >
+> > >I stepped away from this patch set to focus on the changes that landed=
+ for v6.8
+> > >and the follow-on regression fixups. Now that v6.8 CXL work has quiete=
+d down
+> > >and I circle back to this set for v6.9 I find the lack of story in thi=
+s cover letter to
+> > >be unsettling. As a reviewer I should not have to put together the sto=
+ry on why
+> > >Linux should care about this feature and independently build up the
+> > >maintainence-burden vs benefit tradeoff analysis. =20
+> > I will add more details to the cover letter.
+> >   =20
+> > >
+> > >Maybe it is self evident to others, but for me there is little in thes=
+e changelogs
+> > >besides "mechanism exists, enable it". There are plenty of platform or=
+ device
+> > >mechanisms that get specified that Linux does not enable for one reaso=
+n or
+> > >another.
+> > >
+> > >The cover letter needs to answer why it matters, and what are the trad=
+eoffs.
+> > >Mind you, in my submissions I do not always get this right in the cove=
+r letter [1],
+> > >but hopefully at least one of the patches tells the story [2].
+> > >
+> > >In other words, imagine you are writing the pull request to Linus or s=
+omeone
+> > >else with limited time who needs to make a risk decision on a pull req=
+uest with a
+> > >diffstat of:
+> > >
+> > >    23 files changed, 3083 insertions(+)
+> > >
+> > >...where the easiest decision is to just decline. As is, these changel=
+ogs are not
+> > >close to tipping the scale to "accept".
+> > >
+> > >[sidebar: how did this manage to implement a new subsystem with 2 cons=
+umers
+> > >(CXL + ACPI), without modifying a single existing line? Zero deletions=
+? That is
+> > >either an indication that Linux perfectly anticipated this future use =
+case
+> > >(unlikely), or more work needs to be done to digest an integrate these=
+ concepts
+> > >into existing code paths]
+> > >
+> > >One of the first questions for me is why CXL and RAS2 as the first con=
+sumers and
+> > >not NVDIMM-ARS and/or RASF Patrol Scrub? Part of the maintenance burde=
+n =20
+> > We don't personally care about NVDIMMS but would welcome drivers from o=
+thers. =20
+>=20
+> Upstream would also welcome consideration of maintenance burden
+> reduction before piling on, at least include *some* consideration of the
+> implications vs this response that comes off as "that's somebody else's
+> problem".
 
-It seems that switching to SLUB instead of SLAB has increased the chances
-of getting memory from another node.
+We can do analysis of whether the interfaces are suitable etc but
+have no access to test hardware or emulation. I guess I can hack something
+together easily enough. Today ndctl has some support. Interestingly the mod=
+el
+is different from typical volatile scrubbing as it's all on demand - that
+could be easily wrapped up in a software scrub scheduler though, but we'd n=
+eed
+input from you and other Intel people on how this is actually used.=20
 
-We probably need to investigate.
+The use model is a lot less obvious than autonomous scrubbers - I assume be=
+cause
+the persistence means you need to do this rarely if at all (though ARS does
+support scrubbing volatile memory on nvdimms)
+
+So initial conclusion is it would need a few more controls or it needs
+some software handling of scan scheduling to map it to the interface type
+that is common to CXL and RAS2 scrub controls.
+
+Intent of the comment was to keep scope somewhat confined, and to=20
+invite others to get involved, not to rule out doing some light weight
+analysis of whether this feature would work for another potential user
+which we weren't even aware of until you mentioned it (thanks!).
+
+>=20
+> > Regarding RASF patrol scrub no one cared about it as it's useless and
+> > any new implementation should be RAS2. =20
+>=20
+> The assertion that "RASF patrol scrub no one cared about it as it's
+> useless and any new implementation should be RAS2" needs evidence.
+>=20
+> For example, what platforms are going to ship with RAS2 support, what
+> are the implications of Linux not having RAS2 scrub support in a month,
+> or in year? There are parts of the ACPI spec that have never been
+> implemented what is the evidence that RAS2 is not going to suffer the
+> same fate as RASF?=20
+
+=46rom discussions with various firmware folk we have a chicken and egg
+situation on RAS2. They will stick to their custom solutions unless there is
+plausible support in Linux for it - so right now it's a question mark
+on roadmaps. Trying to get rid of that question mark is why Shiju and I
+started looking at this in the first place. To get rid of that question
+mark we don't necessarily need to have it upstream, but we do need
+to be able to make the argument that there will be a solution ready
+soon after they release the BIOS image.  (Some distros will take years
+to catch up though).
+
+If anyone else an speak up on this point please do. Discussions and
+feedback communicated to Shiju and I off list aren't going to
+convince people :(
+Negatives perhaps easier to give than positives given this is seen as
+a potential feature for future platforms so may be confidential.
+
+> There are parts of the CXL specification that have
+> never been implemented in mass market products.
+
+Obviously can't talk about who was involved in this feature
+in it's definition, but I have strong confidence it will get implemented
+for reasons I can point at on a public list.=20
+a) There will be scrubbing on devices.
+b) It will need control (evidence for this is the BIOS controls mentioned b=
+elow
+   for equivalent main memory).
+c) Hotplug means that control must be done by OS driver (or via very fiddly
+   pre hotplug hacks that I think we can all agree should not be necessary
+   and aren't even an option on all platforms)
+d) No one likes custom solutions.
+This isn't a fancy feature with a high level of complexity which helps.
+
+Today there is the option for main memory of leaving it to BIOS parameters.
+A quick google gave me some examples (to make sure they are public):
+Dell: PowerEdge R640 BIOS and UEFI Reference Guide
+  - Memory patrol scrub - Sets the memory patrol scrub frequency.
+HP UEFI System Utilities for HPE ProLiant Gen 11 SErvers
+  - Enabling or disable patrol scrub
+Spec list of flags for lenovo systems (tells you that turning patrol scrub
+   off is a good idea ;)
+Huawei Kunpeng 920 RAS config menu.=20
+  - Active Scrub, Active Scrub interval etc.
+
+>=20
+> > Previous discussions in the community about RASF and scrub could be fin=
+d here.
+> > https://lore.kernel.org/lkml/20230915172818.761-1-shiju.jose@huawei.com=
+/#r
+> > and some old ones,
+> > https://patchwork.kernel.org/project/linux-arm-kernel/patch/CS1PR84MB00=
+38718F49DBC0FF03919E1184390@CS1PR84MB0038.NAMPRD84.PROD.OUTLOOK.COM/
+> >  =20
+>=20
+> Do not make people hunt for old discussions, if there are useful points
+> in that discussion that make the case for the patch set include those in
+> the next submission, don't make people hunt for the latest state of the
+> story.
+
+Sure, more of an essay needed along with links given we are talking
+about the views of others.
+
+Quick summary from a reread of the linked threads.
+AMD not implemented RASF/RAS2 yet - looking at it last year, but worried
+about inflexibility of RAS2 spec today. They were looking at some spec
+changes to improve this + other functions to be added to RAS2.
+I agree with it being limited, but think extending with backwards
+compatibility isn't a problem (and ACPI spec rules in theory guarantee
+it won't break).  I'm keen on working with current version
+so that we can ensure the ABI design for CXL encompasses it.
+
+Intel folk were cc'd but not said anything on that thread, but Tony Luck
+did comment in Jiaqi Yan's software scrubbing discussion linked below.
+He observed that a hardware implementation can be complex if doing range
+based scrubbing due to interleave etc. RAS2 and CXL both side step this
+somewhat by making it someone elses problem. In RAS2 the firmware gets
+to program multiple scrubbers to cover the range requested. In CXL
+for now this leaves the problem for userspace, but we can definitely
+consider a region interface if it makes sense.
+
+I'd also like to see inputs from a wider range of systems folk + other
+CPU companies.  How easy this is to implement is heavily dependent on
+what entity in your system is responsible for this sort of runtime
+service and that varies a lot.
+
+>=20
+> > https://lore.kernel.org/all/20221103155029.2451105-1-jiaqiyan@google.co=
+m/ =20
+>=20
+> Yes, now that is a useful changelog, thank you for highlighting it,
+> please follow its example.
+
+It's not a changelog as such but a RFC in text only form.
+However indeed lots of good info in there.
+
+Jonathan
+
+
+
