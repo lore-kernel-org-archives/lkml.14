@@ -1,216 +1,225 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BAC12DD9B;
-	Mon, 26 Feb 2024 17:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF4912C815
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708968922; cv=none; b=EH8BCuW5pQoZS9V5oqMNeb5Idmu6io6PHt8WxUk8CJ86aMLX6cGSfb0LqXjYxFSUsKhWMbWL9LcFTBsRr8uhgl0zupvd3adIK4xYqkg18GMRNGz+oU0+rItgfntfrCzuTmd8RNTQCVuU83Mx1dPrnvr8XPZGNRssDpgYDk+pFVQ=
+	t=1708968976; cv=none; b=oHhtY5Hjc2X1Gx4j0nDsaUTE4HOFGPw6XvzEqivKFX/h6Ny1E6RiefBGtdwz62gmXPuGWd98x/t3EpXTsQX2w+rfq8jfUh4R7lrvyN/JidUn3MGvpLJN5lAx/JQ1aEWoJZ8tJ05vzUiGaXQLYDBxnFzYZSNSKHDvyn/xu1z8XLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708968922; c=relaxed/simple;
-	bh=pZFdEHHS74uSQSTtdQp92KKc3jquRq20V+XWcp6EgKY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=khIzCPUpvLHSPoWEOrdXTAbVz6xCQMjwSrCOJr85EICxU9WolFzNgY84RxZOfx2YkK3EqDAIpPOYGIK+aZvWbhXCZJ+uursR7VpMGca7dJJyYnRjk7HnOh8PyvN1zuJPC0z509nnUL7EF1JgXoAnOfWR1WQ8EgiZzeaIH9UVr98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TFaxMXfp; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708968976; c=relaxed/simple;
+	bh=64LLbGIR/8APPJSPhXlfGs7W8sFo6E0sPbfeChWhobI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dRfSqsaLLDYNZPUinigpoHojGwrSD3LYMr2PZwjNd1Ofc+px7SBOpPsuM2qWwWjGDjCFnQPolJD8vM+1u1KhcfD4NMSTm//lBhTpx6DbW7EE89QFH8ThmNlLGYkoRC8nhadH6BKQ/hNnuZEbqh/YX8WOTEczDgVRkOFiafcecB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Qs8QVnlS; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFaxMXfp"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bbd6ea06f5so1914626b6e.1;
-        Mon, 26 Feb 2024 09:35:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Qs8QVnlS"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dc49afb495so27351475ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:36:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708968919; x=1709573719; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+        d=broadcom.com; s=google; t=1708968974; x=1709573774; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Hg3y8nxzXla36uWDR1Drq6uiHQJkrYi4jCCDyrCzFbs=;
-        b=TFaxMXfp3JGeK9rllU4q9ofK/0Lh1SJWyiBZDr76KNyWArPxKLWGTdfXIoEvn7Dd60
-         RSx+lMGC672ZDaJdmfQnub6MpQZrEUudpzt/oQVg0CMuXnESay/aoSkCIdOgTtSm4cm9
-         MGWnb/iyA1bpZ4oTiPtwlGHDlMujBuVn/ku1Oa7MA51GVTgD6vrW/1ereRhYzHH0tB2N
-         jI4gy40F7OHsmQOf04rHyIi5MetxRVtBDBXeKpfuBrvOuM7JnsEq6MVD+505hHp1cs7D
-         6nQWqu75nKvIIoG1zWTUvGtAJ+SMwfFjz7erA6oZj/s2kmx5mSUUe0LRK/97mk22mMG4
-         +u3A==
+        bh=q+PYYW7UEsHejYdW/JnG+5xV/sOqO0PQ2tlk3lcQucc=;
+        b=Qs8QVnlSKHx/8oqe3h1QQjRkeLf7loffnL2UHu2xVuEC9bgZjM9TiTWL2Mi2IyIW9u
+         8yRyJGPW5Xj6vlKyEY+yyuoHDZ1uC/oj/PVhKjbF0vqJhfb11+KEIAPWRzt6vGuxgJVg
+         LmNkZAfncxb6ezw/f1rGh0Y0Qzt9nVhWxoOTo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708968919; x=1709573719;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hg3y8nxzXla36uWDR1Drq6uiHQJkrYi4jCCDyrCzFbs=;
-        b=GZDakPuv5kJxh5ThHivFtMarV2GxA806VhOnnDNwTcrktgZhWqrcG9VQ2EfZBlfIqU
-         +04Q4htxMJhjlNWfLvRYD7EcaN7JRJoKDnJ6umtQeEqViBjAseKyRoE0MB06jeq3oROd
-         wqEESjHDcy8n7WBGhNU++MhQCtqhrfw9PrOrk6oYVM+KgQf62hQdaulbw5uPpQAaSsDM
-         2X+RU0rE/2ExX3EU9cdaG7kz4puOUBURR01LZKXPM2X42DYHyCONvnDZRGg8CvJMXNk8
-         MgyuOiLelcbUZzbD3NCNu82CHWCeSSaxmYhiYmjxW4DxxEWfdjadpiyPkGXwzT5IJwWr
-         Q7qw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGwfw8uanz+A3FwfbRMLzcD+6r92UcmkIjmeUTJRwLOOMYHHogE/4TLP1b77chQ06TY9ovoUjtlJSlbZnsn0pnO2Y3drjzzLqfTcoibhKBeBSIfcP1cKJFPoZBSJpa/98EEqO5TvItZlSsGEMBl1/mOF8GWeITbMU3tR0SzLDbccXA0eVCiwmOp+V3yrr7oNbn4BY9svV/tM7IL/CMDy1qpw==
-X-Gm-Message-State: AOJu0Yyha+5NXBSYw2wGGFCi5iKZ0PdvmxIewdbJFA8GE6yFBR2KWoCN
-	NUWGcabyha7QkCNfdxRwvxa+BBfeK+KH+zxuwstHFiqcc5fGgIjs/KqnWqCvRzE=
-X-Google-Smtp-Source: AGHT+IFuGdZK2cA6mg4QaQRipIAZUshKOlcLnpK35D5bx97ZwiW/jzC0fLpOLdgOaA8FJ/BdbTj3rQ==
-X-Received: by 2002:a05:6808:d8:b0:3c1:578b:e25e with SMTP id t24-20020a05680800d800b003c1578be25emr3049917oic.9.1708968919401;
-        Mon, 26 Feb 2024 09:35:19 -0800 (PST)
-Received: from Borg-9.local (070-114-203-196.res.spectrum.com. [70.114.203.196])
-        by smtp.gmail.com with ESMTPSA id bh26-20020a056808181a00b003c15125b39asm1126976oib.34.2024.02.26.09.35.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 09:35:18 -0800 (PST)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Mon, 26 Feb 2024 11:35:17 -0600
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com, 
-	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, 
-	dave.hansen@linux.intel.com, gregory.price@memverge.com
-Subject: Re: [RFC PATCH 08/20] famfs: Add famfs_internal.h
-Message-ID: <u6nfwlidsmmhejsboqdo4r2juox4txkzt4ffjlnlcqzzrwthlt@wsh5eb5xeghj>
-References: <cover.1708709155.git.john@groves.net>
- <13556dbbd8d0f51bc31e3bdec796283fe85c6baf.1708709155.git.john@groves.net>
- <20240226124818.0000251d@Huawei.com>
+        d=1e100.net; s=20230601; t=1708968974; x=1709573774;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=q+PYYW7UEsHejYdW/JnG+5xV/sOqO0PQ2tlk3lcQucc=;
+        b=hV3V5KaP2J4kvdF8JJOC4oRyw5H68hG91V5bXO4cdxbeYkpQ0DBNAH4kcptbJwxtOp
+         GfmjtlYHXpVnXx4k9s9zLUMBlfPPt1rY22kvKW8aDs1r3ml/AtrXoKo/s+AFqE1jK1FW
+         9ObDhu9rnQlM/5EcEwo/2N2rzEQl/pw/JOHt+KQQBsVscD0iWia6OBQr39s/zSPNoHT/
+         9lCOMIL3Jz4nDZYLuI3Dpk6RfYZMcA/kDrtMntfoJrgqVJtZIG9e4iDXkLOJR6qde/lK
+         U/oba1o7EJ3HYHim422/t4jB2ZbrcG/s9fMn5MtEB8zv6QUJQGsiUhLh7ZVdewrVslHt
+         NKlw==
+X-Forwarded-Encrypted: i=1; AJvYcCWfPthYogWqahjsazH5Y4LzJwkp8XvdnZWn8i3aYAvnRPc0bX0GvzkpqoQPetVtjnH/pFxTRzas7O4eEvw3Nda+n3Dfz9BGFP0H4pO/
+X-Gm-Message-State: AOJu0Yw0qR348cKkqNyk7zV/qODtb9qc/FZ7TypEkCuIanlNFp3s3EJs
+	nfZOE095p7pbJXbhEEsQAudfqU5QOSwOoApPFNtXPtYKqMrhwkg36GP9/dkjgA==
+X-Google-Smtp-Source: AGHT+IGeMwwj/BHix8iZnp0hBVmpqSjZvkNoWglvw7L0K1Tcb2UxR5iTvNV9HoijkjygRE7XNIfoow==
+X-Received: by 2002:a17:902:6b4c:b0:1db:b36c:715f with SMTP id g12-20020a1709026b4c00b001dbb36c715fmr7376058plt.24.1708968974197;
+        Mon, 26 Feb 2024 09:36:14 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i19-20020a170902eb5300b001db5c8202a4sm4202191pli.59.2024.02.26.09.36.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 09:36:08 -0800 (PST)
+Message-ID: <90ecf4d2-0eee-48e6-8222-7d3b5fd52b2f@broadcom.com>
+Date: Mon, 26 Feb 2024 09:36:02 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226124818.0000251d@Huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 00/13] mtd: rawnand: brcmnand: driver and doc updates
+To: William Zhang <william.zhang@broadcom.com>,
+ Linux MTD List <linux-mtd@lists.infradead.org>,
+ Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+ Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
+Cc: f.fainelli@gmail.com, kursad.oney@broadcom.com,
+ joel.peshkin@broadcom.com, anand.gore@broadcom.com, dregan@mail.com,
+ kamal.dasu@broadcom.com, tomer.yacoby@broadcom.com,
+ dan.beygelman@broadcom.com, Andre Przywara <andre.przywara@arm.com>,
+ Rob Herring <robh+dt@kernel.org>, Kamal Dasu <kdasu.kdev@gmail.com>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, David Regan <dregan@broadcom.com>,
+ devicetree@vger.kernel.org, Alexandre TORGUE <alexandre.torgue@st.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>,
+ Brian Norris <computersforpeace@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+ linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>
+References: <20240223034758.13753-1-william.zhang@broadcom.com>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ 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
+In-Reply-To: <20240223034758.13753-1-william.zhang@broadcom.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000a91aa106124c58fc"
 
-On 24/02/26 12:48PM, Jonathan Cameron wrote:
-> On Fri, 23 Feb 2024 11:41:52 -0600
-> John Groves <John@Groves.net> wrote:
-> 
-> > Add the famfs_internal.h include file. This contains internal data
-> > structures such as the per-file metadata structure (famfs_file_meta)
-> > and extent formats.
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> Hi John,
-> 
-> Build this up as you add the definitions in later patches.
-> 
-> Separate header patches just make people jump back and forth when trying
-> to review.  Obviously more work to build this stuff up cleanly but
-> it's worth doing to save review time.
-> 
+--000000000000a91aa106124c58fc
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Ohhhhkaaaaay. I think you're right, just not looking forward to
-all that rebasing.
-
-> Generally I'd plumb up Kconfig and Makefile a the beginning as it means
-> that the set is bisectable and we can check the logic of building each stage.
-> That is harder to do but tends to bring benefits in forcing clear step
-> wise approach on a patch set. Feel free to ignore this one though as it
-> can slow things down.
-
-I'm not sure that's practical. A file system needs a bunch of different
-kinds of operations
-- super_operations
-- fs_context_operations
-- inode_operations
-- file_operations
-- dax holder_operations, iomap_ops
-- etc.
-
-Will think about the dependency graph of these entities, but I'm not sure
-it's tractable...
-
+On 2/22/24 19:47, William Zhang wrote:
+> This patch series is an update from the previous version [1] after
+> exex_op support and fixes (patch 1 to 4 from the previous version.)
 > 
-> A few trivial comments inline.
+> It updates all the BCMBCA SoC to support the nand controller and add
+> functions to handle BCMBCA specific needs on ECC and Write Protection
+> usage. The device tree document is also updated accordingly with the new
+> properties needed by the driver.
 > 
-> > ---
-> >  fs/famfs/famfs_internal.h | 53 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >  create mode 100644 fs/famfs/famfs_internal.h
-> > 
-> > diff --git a/fs/famfs/famfs_internal.h b/fs/famfs/famfs_internal.h
-> > new file mode 100644
-> > index 000000000000..af3990d43305
-> > --- /dev/null
-> > +++ b/fs/famfs/famfs_internal.h
-> > @@ -0,0 +1,53 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * famfs - dax file system for shared fabric-attached memory
-> > + *
-> > + * Copyright 2023-2024 Micron Technology, Inc.
-> > + *
-> > + * This file system, originally based on ramfs the dax support from xfs,
-> > + * is intended to allow multiple host systems to mount a common file system
-> > + * view of dax files that map to shared memory.
-> > + */
-> > +#ifndef FAMFS_INTERNAL_H
-> > +#define FAMFS_INTERNAL_H
-> > +
-> > +#include <linux/atomic.h>
+> In addition there is a bug fix for exec_op helper functions, log level
+> adjustment on uncorrectable ECC error and some coding style fixes.
 > 
-> Why?
+> [1] https://lore.kernel.org/lkml/20230606231252.94838-1-william.zhang@broadcom.com/
 
-Because fault counters are the one phased change to this file, and this
-should have been with that. That may go away, but either way I'll do the
-phased thing with this file.
+Miquel, thanks for having applied the patches, we should have discussed 
+ahead of time whether you should take the SoC/board-level DTS changes 
+through your tree or mine, but it's fine either way and should not lead 
+to conflicts in Linus' tree.
+-- 
+Florian
 
-> 
-> > +#include <linux/famfs_ioctl.h>
-> > +
-> > +#define FAMFS_MAGIC 0x87b282ff
-> > +
-> > +#define FAMFS_BLKDEV_MODE (FMODE_READ|FMODE_WRITE)
-> 
-> Spaces around | 
 
-Done
+--000000000000a91aa106124c58fc
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-> 
-> > +
-> > +extern const struct file_operations      famfs_file_operations;
-> 
-> I wouldn't force alignment. It rots too often as new stuff gets added
-> and doesn't really help readability much.
-
-OK
-
-> 
-> > +
-> > +/*
-> > + * Each famfs dax file has this hanging from its inode->i_private.
-> > + */
-> > +struct famfs_file_meta {
-> > +	int                   error;
-> > +	enum famfs_file_type  file_type;
-> > +	size_t                file_size;
-> > +	enum extent_type      tfs_extent_type;
-> > +	size_t                tfs_extent_ct;
-> > +	struct famfs_extent   tfs_extents[];  /* flexible array */
-> 
-> Comment kind of obvious ;) I'd drop it.  Though we have
-> magic markings for __counted_by which would be good to use from the start.
-
-Done
-
-> 
-> 
-> 
-> > +};
-> > +
-> > +struct famfs_mount_opts {
-> > +	umode_t mode;
-> > +};
-> > +
-> > +extern const struct iomap_ops             famfs_iomap_ops;
-> > +extern const struct vm_operations_struct  famfs_file_vm_ops;
-> > +
-> > +#define ROOTDEV_STRLEN 80
-> 
-> Why?  You aren't creating an array of this size here so I can't
-> immediately see what the define is for.
-
-Oversight. It was a char array but I switched to strdup() and 
-failed to delete this. Gone now, thanks.
-
-Thanks,
-John
-
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEILFPNio+AE2dV9oI
+l4XHzLSyvgcYoIkpejccUvqv4GvKMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTI0MDIyNjE3MzYxNFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCMPwIGfIJOPXlvRmKTqpgfuoi6uxZTo9+M
+U/T5HQCEk8weGuMi+GeN9Q5cDaVb1BcxbXtSrGFRtgcgUVMigaXF7d0GVto93Dbt6XhYqi3IVhCb
+XqHWylUU3m6CniYfeAW25gTCbsFrvlxW6gvRjBEnFMZQRovdCaI6rytNgyFMJdqgfBm+RagQXcaC
+0Z/D/1qFcH8uTs2VtquwH/oiWeR8WJFkbqe+CXq0VJKbb9nCP/KmOKAqai3eucHi4rgCu1ejBBZT
+IVqz/LUujG2du/ATlHxtYLeyatU4BWTE+oALS+eQ0j45C5vw2DifpG3EktqvM47/0dBh/vAMxNbu
+T++E
+--000000000000a91aa106124c58fc--
