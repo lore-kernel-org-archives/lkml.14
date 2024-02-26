@@ -1,244 +1,250 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FCA81756;
-	Mon, 26 Feb 2024 13:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE08B7A73D
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 13:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708952830; cv=none; b=h0cNBJ1Br/ZJrkCCfMwdug82ViruDyf/0sAvOyE+ieccuFJ++HmevOrero8QsayDPpglSLJK+OSuPmtp+R/YSf1N6EFV6OcJ3wT78I4rj1bjt9bIIpwNY9AZhRBjLt50VW1DpQ3vO46YtcA6hlg85LjpVn+ieKwEsWM6tCSHHvM=
+	t=1708952895; cv=none; b=Pk8E4U4fG7ZpVcv5U8W3n35IjSt4p/J+ro9NV/fGDYB/XHam8u0TMp1PILReVhw9cDb5QKF9DlPnQ2IboW4t1/xvILX2YZsotMsX3VRItT1/SqZmSa5S94mrL+vaa2qm8hVsC1YUoG0ZaLT1PDp9XgVPX+k/nY3MdJuFvCx5bCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708952830; c=relaxed/simple;
-	bh=bx31a6Hgu3PNfIf12RI+wbdyS9Wxxa8ztr0P7NRK8fU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dsEOhSQ/d58FOeyCE8d00uOhhsoByxTliI1KmFEoNNT58CixCnGqskbB3JXpeyiAGO3SgdkWOxfI3Wf86IkJS2Yrjlq3jNlEDWdGh9ldABhBeVDu2sblXlGlwnYhZoHHg32sm8vHcKWj6h7YbsRdF1xTpBZH15DkMyqNRTI7IhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KTT5wpb5; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708952895; c=relaxed/simple;
+	bh=qitPqKYHu5SkbJi3zE8S/yb2YXcoDr4Jzx8rsJA2d/g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ojTQZBov3x6lCUBM86pCFm7yINOGE4g4XWN8qwv2bzBf3TaH4xBfCXMS+bw7ITug7zRgKzSQSN2o417FijpkCZ2nuMTry26VgGRw5Nh69z1wglnsA2jVnW2v+xtuZKiNJiiI+9B/l0E6EI1emyzIJnEzMlUu60h3s3NgGJ8bOkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=Q9HC9gdX; arc=none smtp.client-ip=198.252.153.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KTT5wpb5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708952829; x=1740488829;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=bx31a6Hgu3PNfIf12RI+wbdyS9Wxxa8ztr0P7NRK8fU=;
-  b=KTT5wpb5/eOsLGz0ekkZb7eQZ553nhge/5ozR2Wg/2a9Ppuh0NeP4bAr
-   2Jf+R0wdyCxoiu8zNrbfRFUcXq8l29gt8sUwoSH+WOxjLqoxvfw1d6nZy
-   zqtgr0tiKXm6eRlItFPu4tAc/tjTIECNAlO4M5+j8PrqZreAVYTCzIGYy
-   FfO9QdTzAndvSu64ZZX63rP3aeC0zo7FL9+2q+wiDfRPAAMpWxLkQhiSP
-   muxoTOsEKxdQFTpJJyzoZE7vNQZmeDx3glBeqx8XV02cERRfkVPpaygwD
-   ovpJI8WBYHAUH77ZkMXx7+h8e6/Ur1HmSWCiLdY14ztpjoDKI22WD2qOq
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14669214"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="14669214"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 05:06:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6586267"
-Received: from pkwiatko-mobl.ger.corp.intel.com (HELO wieczorr-mobl1.intel.com) ([10.213.23.220])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 05:06:40 -0800
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 3/3] selftests/resctrl: Move cleanups out of individual tests
-Date: Mon, 26 Feb 2024 14:05:50 +0100
-Message-ID: <ef48cf79fb4ef464e78294240e781d2987811385.1708949785.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <cover.1708949785.git.maciej.wieczor-retman@intel.com>
-References: <cover.1708949785.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="Q9HC9gdX"
+Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.riseup.net (Postfix) with ESMTPS id 4Tk1BZ404zzDqG9;
+	Mon, 26 Feb 2024 13:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1708952887; bh=qitPqKYHu5SkbJi3zE8S/yb2YXcoDr4Jzx8rsJA2d/g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Q9HC9gdXLpyVO/iXWdfYrJMCdrQUOQr4rdNwpkzqyHEFSDppyq0RC2XgISEqsvZ+d
+	 Mda5o7Z1F0QCzxx8Gk4NSq7mEkKh5oTpohLcpM+bae3ShSo8PGZpUTvLV7gb36tbHF
+	 1Dy7zTnM+3pb/3kICxxhLyI+Xc1QD4cGv8rs6M3U=
+X-Riseup-User-ID: 2BC69804A301033890366CE1256AF965CF62B045EC3E4EC86A117B16AAEE2F45
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4Tk1BS1GSzzJsBS;
+	Mon, 26 Feb 2024 13:07:59 +0000 (UTC)
+Message-ID: <406988be-48a4-4762-9c03-7a27c8e7b91e@riseup.net>
+Date: Mon, 26 Feb 2024 10:07:57 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 3/9] drm/vkms: write/update the documentation for pixel
+ conversion and pixel write functions
+Content-Language: en-US
+To: Louis Chauvet <louis.chauvet@bootlin.com>,
+ Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ pekka.paalanen@haloniitty.fi
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+ thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com,
+ nicolejadeyee@google.com
+References: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
+ <20240226-yuv-v3-3-ff662f0994db@bootlin.com>
+From: Arthur Grillo <arthurgrillo@riseup.net>
+In-Reply-To: <20240226-yuv-v3-3-ff662f0994db@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Every test calls its cleanup function at the end of it's test function.
-After the cleanup function pointer is added to the test framework this
-can be simplified to executing the callback function at the end of the
-generic test running function.
 
-Make test cleanup functions static and call them from the end of
-run_single_test() from the resctrl_test's cleanup function pointer.
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
-Changelog v4:
-- Move cleanup call to test_cleanup(). (Reinette)
+On 26/02/24 05:46, Louis Chauvet wrote:
+> Add some documentation on pixel conversion functions.
+> Update of outdated comments for pixel_write functions.
+> 
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> ---
+>  drivers/gpu/drm/vkms/vkms_composer.c |  4 +++
+>  drivers/gpu/drm/vkms/vkms_drv.h      | 13 ++++++++
+>  drivers/gpu/drm/vkms/vkms_formats.c  | 58 ++++++++++++++++++++++++++++++------
+>  3 files changed, 66 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> index c6d9b4a65809..5b341222d239 100644
+> --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> @@ -189,6 +189,10 @@ static void blend(struct vkms_writeback_job *wb,
+>  
+>  	size_t crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
+>  
+> +	/*
+> +	 * The planes are composed line-by-line. It is a necessary complexity to avoid poor
+> +	 * blending performance.
 
-Changelog v2:
-- Change most goto out paths into return ret. (Ilpo)
+At this moment in the series, you have not yet reintroduced the
+line-by-line algorithm yet. Maybe it's better to add this comment when
+you do.
 
- tools/testing/selftests/resctrl/cat_test.c      | 7 ++-----
- tools/testing/selftests/resctrl/cmt_test.c      | 3 +--
- tools/testing/selftests/resctrl/mba_test.c      | 7 ++-----
- tools/testing/selftests/resctrl/mbm_test.c      | 7 ++-----
- tools/testing/selftests/resctrl/resctrl.h       | 4 ----
- tools/testing/selftests/resctrl/resctrl_tests.c | 6 ++++--
- 6 files changed, 11 insertions(+), 23 deletions(-)
+Also, I think it's good to give more context, like:
+"The planes are composed line-by-line, instead of pixel-by-pixel"
 
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index 2d2f69d3e5b7..1d1efed6164e 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -128,7 +128,7 @@ static int check_results(struct resctrl_val_param *param, const char *cache_type
- 	return fail;
- }
- 
--void cat_test_cleanup(void)
-+static void cat_test_cleanup(void)
- {
- 	remove(RESULT_FILE_NAME);
- }
-@@ -284,13 +284,10 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- 
- 	ret = cat_test(test, uparams, &param, span, start_mask);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	ret = check_results(&param, test->resource,
- 			    cache_total_size, full_cache_mask, start_mask);
--out:
--	cat_test_cleanup();
--
- 	return ret;
- }
- 
-diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
-index 32ddee87e43d..c477f3c9635f 100644
---- a/tools/testing/selftests/resctrl/cmt_test.c
-+++ b/tools/testing/selftests/resctrl/cmt_test.c
-@@ -91,7 +91,7 @@ static int check_results(struct resctrl_val_param *param, size_t span, int no_of
- 				 MAX_DIFF, MAX_DIFF_PERCENT, runs - 1, true);
- }
- 
--void cmt_test_cleanup(void)
-+static void cmt_test_cleanup(void)
- {
- 	remove(RESULT_FILE_NAME);
- }
-@@ -161,7 +161,6 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 		ksft_print_msg("Intel CMT may be inaccurate when Sub-NUMA Clustering is enabled. Check BIOS configuration.\n");
- 
- out:
--	cmt_test_cleanup();
- 	free(span_str);
- 
- 	return ret;
-diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-index 7cc4067ce930..a2f81d900900 100644
---- a/tools/testing/selftests/resctrl/mba_test.c
-+++ b/tools/testing/selftests/resctrl/mba_test.c
-@@ -137,7 +137,7 @@ static int check_results(void)
- 	return show_mba_info(bw_imc, bw_resc);
- }
- 
--void mba_test_cleanup(void)
-+static void mba_test_cleanup(void)
- {
- 	remove(RESULT_FILE_NAME);
- }
-@@ -158,13 +158,10 @@ static int mba_run_test(const struct resctrl_test *test, const struct user_param
- 
- 	ret = resctrl_val(test, uparams, uparams->benchmark_cmd, &param);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	ret = check_results();
- 
--out:
--	mba_test_cleanup();
--
- 	return ret;
- }
- 
-diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
-index 071e2d3808a7..6589154c102e 100644
---- a/tools/testing/selftests/resctrl/mbm_test.c
-+++ b/tools/testing/selftests/resctrl/mbm_test.c
-@@ -105,7 +105,7 @@ static int mbm_setup(const struct resctrl_test *test,
- 	return ret;
- }
- 
--void mbm_test_cleanup(void)
-+static void mbm_test_cleanup(void)
- {
- 	remove(RESULT_FILE_NAME);
- }
-@@ -126,15 +126,12 @@ static int mbm_run_test(const struct resctrl_test *test, const struct user_param
- 
- 	ret = resctrl_val(test, uparams, uparams->benchmark_cmd, &param);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	ret = check_results(DEFAULT_SPAN);
- 	if (ret && (get_vendor() == ARCH_INTEL))
- 		ksft_print_msg("Intel MBM may be inaccurate when Sub-NUMA Clustering is enabled. Check BIOS configuration.\n");
- 
--out:
--	mbm_test_cleanup();
--
- 	return ret;
- }
- 
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index 826783b29c9d..428ce9174384 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -153,8 +153,6 @@ int resctrl_val(const struct resctrl_test *test,
- 		const struct user_params *uparams,
- 		const char * const *benchmark_cmd,
- 		struct resctrl_val_param *param);
--void mbm_test_cleanup(void);
--void mba_test_cleanup(void);
- unsigned long create_bit_mask(unsigned int start, unsigned int len);
- unsigned int count_contiguous_bits(unsigned long val, unsigned int *start);
- int get_full_cbm(const char *cache_type, unsigned long *mask);
-@@ -163,9 +161,7 @@ int get_cache_size(int cpu_no, const char *cache_type, unsigned long *cache_size
- void ctrlc_handler(int signum, siginfo_t *info, void *ptr);
- int signal_handler_register(const struct resctrl_test *test);
- void signal_handler_unregister(void);
--void cat_test_cleanup(void);
- unsigned int count_bits(unsigned long n);
--void cmt_test_cleanup(void);
- 
- void perf_event_attr_initialize(struct perf_event_attr *pea, __u64 config);
- void perf_event_initialize_read_format(struct perf_event_read *pe_read);
-diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c b/tools/testing/selftests/resctrl/resctrl_tests.c
-index 161f5365b4f0..4c902cf80c49 100644
---- a/tools/testing/selftests/resctrl/resctrl_tests.c
-+++ b/tools/testing/selftests/resctrl/resctrl_tests.c
-@@ -94,8 +94,10 @@ static int test_prepare(const struct resctrl_test *test)
- 	return 0;
- }
- 
--static void test_cleanup(void)
-+static void test_cleanup(const struct resctrl_test *test)
- {
-+	if (test->cleanup)
-+		test->cleanup();
- 	umount_resctrlfs();
- 	signal_handler_unregister();
- }
-@@ -137,7 +139,7 @@ static void run_single_test(const struct resctrl_test *test, const struct user_p
- 	ksft_test_result(!ret, "%s: test\n", test->name);
- 
- cleanup:
--	test_cleanup();
-+	test_cleanup(test);
- }
- 
- static void init_user_params(struct user_params *uparams)
--- 
-2.43.2
+Best Regards,
+~Arthur Grillo
 
+> +	 */
+>  	for (size_t y = 0; y < crtc_y_limit; y++) {
+>  		fill_background(&background_color, output_buffer);
+>  
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+> index b4b357447292..18086423a3a7 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> @@ -25,6 +25,17 @@
+>  
+>  #define VKMS_LUT_SIZE 256
+>  
+> +/**
+> + * struct vkms_frame_info - structure to store the state of a frame
+> + *
+> + * @fb: backing drm framebuffer
+> + * @src: source rectangle of this frame in the source framebuffer
+> + * @dst: destination rectangle in the crtc buffer
+> + * @map: see drm_shadow_plane_state@data
+> + * @rotation: rotation applied to the source.
+> + *
+> + * @src and @dst should have the same size modulo the rotation.
+> + */
+>  struct vkms_frame_info {
+>  	struct drm_framebuffer *fb;
+>  	struct drm_rect src, dst;
+> @@ -52,6 +63,8 @@ struct vkms_writeback_job {
+>   * vkms_plane_state - Driver specific plane state
+>   * @base: base plane state
+>   * @frame_info: data required for composing computation
+> + * @pixel_read: function to read a pixel in this plane. The creator of a vkms_plane_state must
+> + * ensure that this pointer is valid
+>   */
+>  struct vkms_plane_state {
+>  	struct drm_shadow_plane_state base;
+> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> index 172830a3936a..cb7a49b7c8e7 100644
+> --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> @@ -9,6 +9,17 @@
+>  
+>  #include "vkms_formats.h"
+>  
+> +/**
+> + * packed_pixels_offset() - Get the offset of the block containing the pixel at coordinates x/y
+> + * in the first plane
+> + *
+> + * @frame_info: Buffer metadata
+> + * @x: The x coordinate of the wanted pixel in the buffer
+> + * @y: The y coordinate of the wanted pixel in the buffer
+> + *
+> + * The caller must be aware that this offset is not always a pointer to a pixel. If individual
+> + * pixel values are needed, they have to be extracted from the resulting block.
+> + */
+>  static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
+>  {
+>  	struct drm_framebuffer *fb = frame_info->fb;
+> @@ -17,12 +28,13 @@ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int
+>  			      + (x * fb->format->cpp[0]);
+>  }
+>  
+> -/*
+> - * packed_pixels_addr - Get the pointer to pixel of a given pair of coordinates
+> +/**
+> + * packed_pixels_addr() - Get the pointer to the block containing the pixel at the given
+> + * coordinates
+>   *
+>   * @frame_info: Buffer metadata
+> - * @x: The x(width) coordinate of the 2D buffer
+> - * @y: The y(Heigth) coordinate of the 2D buffer
+> + * @x: The x(width) coordinate inside the plane
+> + * @y: The y(height) coordinate inside the plane
+>   *
+>   * Takes the information stored in the frame_info, a pair of coordinates, and
+>   * returns the address of the first color channel.
+> @@ -53,6 +65,13 @@ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, i
+>  	return x;
+>  }
+>  
+> +/*
+> + * The following  functions take pixel data from the buffer and convert them to the format
+> + * ARGB16161616 in out_pixel.
+> + *
+> + * They are used in the `vkms_compose_row` function to handle multiple formats.
+> + */
+> +
+>  static void ARGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
+>  {
+>  	/*
+> @@ -145,12 +164,11 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
+>  }
+>  
+>  /*
+> - * The following  functions take an line of argb_u16 pixels from the
+> - * src_buffer, convert them to a specific format, and store them in the
+> - * destination.
+> + * The following functions take one argb_u16 pixel and convert it to a specific format. The
+> + * result is stored in @dst_pixels.
+>   *
+> - * They are used in the `compose_active_planes` to convert and store a line
+> - * from the src_buffer to the writeback buffer.
+> + * They are used in the `vkms_writeback_row` to convert and store a pixel from the src_buffer to
+> + * the writeback buffer.
+>   */
+>  static void argb_u16_to_ARGB8888(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
+>  {
+> @@ -216,6 +234,14 @@ static void argb_u16_to_RGB565(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
+>  	*pixels = cpu_to_le16(r << 11 | g << 5 | b);
+>  }
+>  
+> +/**
+> + * Generic loop for all supported writeback format. It is executed just after the blending to
+> + * write a line in the writeback buffer.
+> + *
+> + * @wb: Job where to insert the final image
+> + * @src_buffer: Line to write
+> + * @y: Row to write in the writeback buffer
+> + */
+>  void vkms_writeback_row(struct vkms_writeback_job *wb,
+>  			const struct line_buffer *src_buffer, int y)
+>  {
+> @@ -229,6 +255,13 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
+>  		wb->pixel_write(dst_pixels, &in_pixels[x]);
+>  }
+>  
+> +/**
+> + * Retrieve the correct read_pixel function for a specific format.
+> + * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
+> + * pointer is valid before using it in a vkms_plane_state.
+> + *
+> + * @format: 4cc of the format
+> + */
+>  void *get_pixel_conversion_function(u32 format)
+>  {
+>  	switch (format) {
+> @@ -247,6 +280,13 @@ void *get_pixel_conversion_function(u32 format)
+>  	}
+>  }
+>  
+> +/**
+> + * Retrieve the correct write_pixel function for a specific format.
+> + * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
+> + * pointer is valid before using it in a vkms_writeback_job.
+> + *
+> + * @format: 4cc of the format
+> + */
+>  void *get_pixel_write_function(u32 format)
+>  {
+>  	switch (format) {
+> 
