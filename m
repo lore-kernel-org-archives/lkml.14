@@ -1,191 +1,167 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14688129A6E
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224BA129A83
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938921; cv=none; b=Tyam7IJcQKhow5pIaq57YHs1sh9T4YWZUiE3b3P81NjEqhH+/8bJ1P4fjGXARHAIEXC1Zl7xm9lWS6IvISDsxy9Q9IZqQG6WZ+YGvu6FR8KaGP9som5t3SNX8dv32lX+gVImJw5+o8rKr9w9urASrgfZ5OIPbbhoB/ece4YFugQ=
+	t=1708938921; cv=none; b=XIR9g18Ovza2T4ta02bMs+5C6+OgfEsWQwHgBCsMHRnWmnQOBpGmvMbzCytCE9D4tDFO5q0kSLK1K4L/4jU1mV2+nBtHRqutLRcyrxygzOt+yPt+Solb53bwDVKxw5huz/52JtXzCnEaUI8/m8cbsMyJr50y8SfSTijZNUC0HBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708938921; c=relaxed/simple;
-	bh=1nsO2sbgy7HnxuG5nHFX9lFzO6oldSfWF1CTUMJTGLQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iFnMEtXv2VIZwixLuH0R2RIHfqjq49GIiro8I/FVSd9Ob9A78eRaljAgoUyBuwgMCv2s9GsDAVomUdm8CAmYIZy20Mht5sGWQHthKITu4xEqTzXebSpPDewzEM7muGdSWl4SwI0Yw9ajExOueIePFrSiuEHVKY3udPkdi5AtgZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=innosonix.de; spf=pass smtp.mailfrom=innosonix.de; dkim=pass (2048-bit key) header.d=innosonix-de.20230601.gappssmtp.com header.i=@innosonix-de.20230601.gappssmtp.com header.b=oF5JvOb2; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=innosonix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=innosonix.de
+	bh=OPslEpvTPGKWnBZFeMHtrwh2tuZS0bNiX5RiQgg4reo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jsi2Lfo0SDIhAAhv8bGzG9MxULyn1+YF5UPq7VbPdD985hPRpvQHD7UldBQhWGU6y5uLhMN6KC+2OnMEplmNNFuhMb3hJLK2vyT7Ie5yqCN0wGqhse1Uf8tMhua+irBeyF8gOKl4CfdjMeuY452rESHyiSHw+E9blvBKfU6MCQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I5dCuMFR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=innosonix-de.20230601.gappssmtp.com header.i=@innosonix-de.20230601.gappssmtp.com header.b="oF5JvOb2"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55369c59708so947510a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:15:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=innosonix-de.20230601.gappssmtp.com; s=20230601; t=1708938916; x=1709543716; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QLITLxaZSB9SoVACx0xoHq4X5hT7/t8O6Nlq55OjBL0=;
-        b=oF5JvOb28kOnU7siFrSLTZd//3MvSrD3uL77MuhhC1Assbla0msmyOQtoY/BwRt/g1
-         M3PIMF2NyeqY2frO+oW/dZNJMDVym8P+16xjHDNOXfyFSTmaTWVQDdSgFDOGv7JiY6/Y
-         VNypMh1MmZRtKLefadOXsvAIfsswo/DyUeCL4Jg+mpCo7YGFRME6U3G85goDPMXwswWm
-         wKYMZkQHbdIMjRyDHlIg/D5+lyL2zUTRQ8RVh54WWv9A32KZcwzjXZTKA8Z3W/GO+e4S
-         rjD5y+7hGrZRtSLFugTnk/qjt3RTNUVrhBAEdR1LsH/VnOGBNfht9pwWNKR7p0COdADQ
-         dYWg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I5dCuMFR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708938918;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XM2rZSrkvpj1hoTBbAanVZWuvHXWVTnHCwh05d8mRxk=;
+	b=I5dCuMFRwLkTzEdzRA/J5/dOyfXacjiPaKEZLb481RSDc/2/yyDTf/I2Xf12Bn2tzuR8x3
+	9iRTC3yP0F39OJ5yWACZ6iq5cJA+HIri1724MAazz19iWdJPqj8/nhKS7Yc+fS2V8tqsrj
+	pGB9+u5z+YuIOWqGWz7pRbNiO9/i8XE=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-IIWS53fPPH6mWO_ZofpbKw-1; Mon, 26 Feb 2024 04:15:16 -0500
+X-MC-Unique: IIWS53fPPH6mWO_ZofpbKw-1
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-1d4212b6871so34645535ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:15:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1708938916; x=1709543716;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QLITLxaZSB9SoVACx0xoHq4X5hT7/t8O6Nlq55OjBL0=;
-        b=ruGrGNfNnNPh85tf8fESKZMirSUKXCuWtFP/wal+w2Sdov7otliphwPGbWR3vHHvE+
-         dbAv15fVSEhsplQVHBCDgHbhRESMMqlXXCGrOzfYzCm90IxZ+JCeELxvRp3nybwmVjGz
-         uh20uvoSBLHtQwzkwJ8IeilhKAsuJjgID8IGLFdBTB4RTxviJb3WWXDnEfqQhdevOKFW
-         SZg9Ez1yerGSwgx3S+LNGg8TmYADSq5yyWOiyGyeT5ujDzKT/Z+5e0pYeUPkZDzFpajB
-         PC7acj+u8+xB3gn36jX9yfzIOvK4z0jZJy8+6ATkZGCay1kPs+cMyUrdHS+A4KAY8UQ4
-         KmXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIkFZJJ/troeO+O0NmBp16HJw2PneHOGmCmx9QH4zjP+O71yER7/eF0nESqzsU6W2g840NccXDL9t8o2DR/D4Bif5zyXDwQ6B+QmvR
-X-Gm-Message-State: AOJu0YyidUGCmUIPRgnPM2nXbpZcV9GF3b5IN1nXXl0HCjGipKl8fcCC
-	b53I7embIVgxpOt53LRF0sQWQUXn01DoeTa5rjU1cqV/sIZnLPAgLIpS9h0sGbB1Beb3XuFZ/IU
-	uaX1TKI9H6HpOUAbib+jRIlLjT3cvTW0SAUwu3prO/ilht+aebblxixxw47ZWRvRNBakJnfcOr2
-	TZ
-X-Google-Smtp-Source: AGHT+IHkKpbZCqodh34vjnigOw8aWudpn8lKFX/JMUhFn4B3kLN8ezmVMiTUWNIAvT9dGTIP6zELJQ==
-X-Received: by 2002:a50:d7c4:0:b0:565:dac5:3ef8 with SMTP id m4-20020a50d7c4000000b00565dac53ef8mr1968223edj.1.1708938916229;
-        Mon, 26 Feb 2024 01:15:16 -0800 (PST)
-Received: from localhost.localdomain (p549da391.dip0.t-ipconnect.de. [84.157.163.145])
-        by smtp.gmail.com with ESMTPSA id bm17-20020a0564020b1100b00564c7454bf3sm2163206edb.8.2024.02.26.01.15.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=XM2rZSrkvpj1hoTBbAanVZWuvHXWVTnHCwh05d8mRxk=;
+        b=vTM3ko9+TiH2pk7ZKBViCcccUlilEOjyZyIwzK7K5nPRJCye34cKy9hmbKB2qdqqEJ
+         rboOpT5gP0H9byNmOATkYAxTe3qAfM+At9pgWfy4gY6Qtbm/9K1Spfb1ygv2+cwKfoiE
+         DgJNPYXJBLou63kxZdXE5cx8YQx8+tRpklp2RbJAkpQAD88IBR33SW3SSGyKocuvp0WE
+         FzA4OpgX7lhT99Vk8h2DY/Vd68T+8dM2HECFygpnw4c1phJxkQ6dAYjvVltfcGLYo6Yq
+         KTyKkf0OWOAnD6hflPEkKupDGskn094YG1yukj0HmIlSavujCYBSYmQ+wl4QjFFOGmeR
+         bUlA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhuwogHZ0t0INPt4iuiYVPnOGtQ32pz+jNeYUajfhx3kluOGWkYtSGCLewIdfXB7UjbKCIia2xmLs8eA8tbUO1ak4qoI1UEo7FxA09
+X-Gm-Message-State: AOJu0YzQ9wOQeVYkmCBt8/GCCNx+p6Q+OdqLFCivC5OH/MqpKocX4RCj
+	+1HLZ9rNb3InRsUbrcMGgK70KsfSo+GYnjx2xSPjZ/xZ0k20xLPk49j1qdY3ytzMN/1s00bzNFe
+	XXoEcXmLfISeKvBZ6H0tke1k3QgDdLOfXitq95SQRuE/qsw8scQJ3uc8hQgGMTulQhru4xvjg0F
+	3gemY6CQeflsBEXkgwyJe94Ha9kGezfG8nGPAx
+X-Received: by 2002:a17:902:82cc:b0:1da:1e60:f9fe with SMTP id u12-20020a17090282cc00b001da1e60f9femr6496598plz.54.1708938915903;
         Mon, 26 Feb 2024 01:15:15 -0800 (PST)
-From: =?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>
-To: 
-Cc: Fabio Estevam <festevam@gmail.com>,
-	=?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net 2/2] net: dsa: mv88e6xxx: 6320/21 read cmode on serdes ports
-Date: Mon, 26 Feb 2024 10:13:24 +0100
-Message-Id: <20240226091325.53986-2-steffen@innosonix.de>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240226091325.53986-1-steffen@innosonix.de>
-References: <20240226091325.53986-1-steffen@innosonix.de>
+X-Google-Smtp-Source: AGHT+IGjtiAUPuzUBh4ubPX1A7L/YMlH/RSQKeJB9SeQOJhVhv0bZs2gncFg69XwV63F4kbstlJtlzKLWYqTjwHKI7s=
+X-Received: by 2002:a17:902:82cc:b0:1da:1e60:f9fe with SMTP id
+ u12-20020a17090282cc00b001da1e60f9femr6496587plz.54.1708938915603; Mon, 26
+ Feb 2024 01:15:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240222075806.1816400-1-yukuai1@huaweicloud.com> <20240222075806.1816400-5-yukuai1@huaweicloud.com>
+In-Reply-To: <20240222075806.1816400-5-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Mon, 26 Feb 2024 17:15:04 +0800
+Message-ID: <CALTww2-heW83=h44Jo1+6urS1xkzm4EWBuoo_0R_Dn-RjiG9eg@mail.gmail.com>
+Subject: Re: [PATCH md-6.9 04/10] md/raid1-10: add a helper raid1_check_read_range()
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: paul.e.luse@linux.intel.com, song@kernel.org, neilb@suse.com, shli@fb.com, 
+	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, yukuai3@huawei.com, 
+	yi.zhang@huawei.com, yangerkun@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On the mv88e6320 and 6321 switch family, port 0/1 are serdes only ports.
-Modified the mv88e6352_get_port4_serdes_cmode function to pass a port
-number since the register set of the 6352 is equal on the 6320/21 families.
+On Thu, Feb 22, 2024 at 4:04=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> The checking and handler of bad blocks appear many timers during
+> read_balance() in raid1 and raid10. This helper will be used in later
+> patches to simplify read_balance() a lot.
+>
+> Co-developed-by: Paul Luse <paul.e.luse@linux.intel.com>
+> Signed-off-by: Paul Luse <paul.e.luse@linux.intel.com>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  drivers/md/raid1-10.c | 49 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>
+> diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
+> index 512746551f36..9bc0f0022a6c 100644
+> --- a/drivers/md/raid1-10.c
+> +++ b/drivers/md/raid1-10.c
+> @@ -227,3 +227,52 @@ static inline bool exceed_read_errors(struct mddev *=
+mddev, struct md_rdev *rdev)
+>
+>         return false;
+>  }
+> +
+> +/**
+> + * raid1_check_read_range() - check a given read range for bad blocks,
+> + * available read length is returned;
+> + * @rdev: the rdev to read;
+> + * @this_sector: read position;
+> + * @len: read length;
+> + *
+> + * helper function for read_balance()
+> + *
+> + * 1) If there are no bad blocks in the range, @len is returned;
+> + * 2) If the range are all bad blocks, 0 is returned;
+> + * 3) If there are partial bad blocks:
+> + *  - If the bad block range starts after @this_sector, the length of fi=
+rst
+> + *  good region is returned;
+> + *  - If the bad block range starts before @this_sector, 0 is returned a=
+nd
+> + *  the @len is updated to the offset into the region before we get to t=
+he
+> + *  good blocks;
+> + */
+> +static inline int raid1_check_read_range(struct md_rdev *rdev,
+> +                                        sector_t this_sector, int *len)
+> +{
+> +       sector_t first_bad;
+> +       int bad_sectors;
+> +
+> +       /* no bad block overlap */
+> +       if (!is_badblock(rdev, this_sector, *len, &first_bad, &bad_sector=
+s))
+> +               return *len;
+> +
+> +       /*
+> +        * bad block range starts offset into our range so we can return =
+the
+> +        * number of sectors before the bad blocks start.
+> +        */
+> +       if (first_bad > this_sector)
+> +               return first_bad - this_sector;
+> +
+> +       /* read range is fully consumed by bad blocks. */
+> +       if (this_sector + *len <=3D first_bad + bad_sectors)
+> +               return 0;
+> +
+> +       /*
+> +        * final case, bad block range starts before or at the start of o=
+ur
+> +        * range but does not cover our entire range so we still return 0=
+ but
+> +        * update the length with the number of sectors before we get to =
+the
+> +        * good ones.
+> +        */
+> +       *len =3D first_bad + bad_sectors - this_sector;
+> +       return 0;
+> +}
+> --
+> 2.39.2
+>
+>
 
-Signed-off-by: Steffen B=C3=A4tz <steffen@innosonix.de>
----
- drivers/net/dsa/mv88e6xxx/chip.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/c=
-hip.c
-index 32b927b7c221..2d7361852d7e 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -589,12 +589,12 @@ static void mv88e6351_phylink_get_caps(struct mv88e6x=
-xx_chip *chip, int port,
- 				   MAC_1000FD;
- }
-=20
--static int mv88e6352_get_port4_serdes_cmode(struct mv88e6xxx_chip *chip)
-+static int mv88e63xx_get_port_serdes_cmode(struct mv88e6xxx_chip *chip, in=
-t port)
- {
- 	u16 reg, val;
- 	int err;
-=20
--	err =3D mv88e6xxx_port_read(chip, 4, MV88E6XXX_PORT_STS, &reg);
-+	err =3D mv88e6xxx_port_read(chip, port, MV88E6XXX_PORT_STS, &reg);
- 	if (err)
- 		return err;
-=20
-@@ -603,16 +603,16 @@ static int mv88e6352_get_port4_serdes_cmode(struct mv=
-88e6xxx_chip *chip)
- 		return 0xf;
-=20
- 	val =3D reg & ~MV88E6XXX_PORT_STS_PHY_DETECT;
--	err =3D mv88e6xxx_port_write(chip, 4, MV88E6XXX_PORT_STS, val);
-+	err =3D mv88e6xxx_port_write(chip, port, MV88E6XXX_PORT_STS, val);
- 	if (err)
- 		return err;
-=20
--	err =3D mv88e6xxx_port_read(chip, 4, MV88E6XXX_PORT_STS, &val);
-+	err =3D mv88e6xxx_port_read(chip, port, MV88E6XXX_PORT_STS, &val);
- 	if (err)
- 		return err;
-=20
- 	/* Restore PHY_DETECT value */
--	err =3D mv88e6xxx_port_write(chip, 4, MV88E6XXX_PORT_STS, reg);
-+	err =3D mv88e6xxx_port_write(chip, port, MV88E6XXX_PORT_STS, reg);
- 	if (err)
- 		return err;
-=20
-@@ -640,7 +640,7 @@ static void mv88e6352_phylink_get_caps(struct mv88e6xxx=
-_chip *chip, int port,
- 		if (err <=3D 0)
- 			return;
-=20
--		cmode =3D mv88e6352_get_port4_serdes_cmode(chip);
-+		cmode =3D mv88e63xx_get_port_serdes_cmode(chip, port);
- 		if (cmode < 0)
- 			dev_err(chip->dev, "p%d: failed to read serdes cmode\n",
- 				port);
-@@ -660,6 +660,16 @@ static void mv88e632x_phylink_get_caps(struct mv88e6xx=
-x_chip *chip, int port,
-=20
- 	config->mac_capabilities =3D MAC_SYM_PAUSE | MAC_10 | MAC_100 |
- 				   MAC_1000FD;
-+
-+	/* Port 0/1 are serdes only ports */
-+	if (port =3D=3D 0 || port =3D=3D 1) {
-+		cmode =3D mv88e63xx_get_port_serdes_cmode(chip, port);
-+		if (cmode < 0)
-+			dev_err(chip->dev, "p%d: failed to read serdes cmode\n",
-+				port);
-+		else
-+			mv88e6xxx_translate_cmode(cmode, supported);
-+	}
- }
-=20
- static void mv88e6341_phylink_get_caps(struct mv88e6xxx_chip *chip, int po=
-rt,
---=20
-2.34.1
-
-
---=20
-
-
-*innosonix GmbH*
-Hauptstr. 35
-96482 Ahorn
-central: +49 9561 7459980
-www.innosonix.de <http://www.innosonix.de>
-
-innosonix GmbH
-Gesch=C3=A4ftsf=C3=BChrer:=20
-Markus B=C3=A4tz, Steffen B=C3=A4tz
-USt.-IdNr / VAT-Nr.: DE266020313
-EORI-Nr.:=20
-DE240121536680271
-HRB 5192 Coburg
-WEEE-Reg.-Nr. DE88021242
-
---=20
+This patch looks good to me.
+Reviewed-by: Xiao Ni <xni@redhat.com>
 
