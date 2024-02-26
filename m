@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92138101C3
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:58:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B425317722
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:59:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708916328; cv=none; b=tFicO6uSXUk/pynFbATmB366TQF2/K91F8XugkstlsWR3qVFpqvjI9VeTv3KVLz4kOVSQW98p+nNDyOz5u7v4WSetkHIXrAtJN0JM0DvKn25yCVAqflvRO0lTmdqmvoWIw9BnJqYl5AMfpOvC/XEtsSZjMUx6x/bLeN3zoVHt9Q=
+	t=1708916379; cv=none; b=qxBvHIg1VzPVJhKn3n62oOaM6PmjeOr5i/tEfjUa9eoVggx7J8DhKcBocaY+PTtoOB6Uia6aXF0M/rKk05FaHG9Mmiko3XkzuH5XdJJKHOrqzEJD9jCveDN0PdMKlKpC7ky9q8w8gg6dzFR39WUgvutOLALiz1BQoT5D5+Ve4HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708916328; c=relaxed/simple;
-	bh=RfBWpLaLGNc6IDMNpsE0Yy7Ub8NnNUuIZa8qRbfcZvI=;
+	s=arc-20240116; t=1708916379; c=relaxed/simple;
+	bh=taKs/RPbNJKiITCMU+JxhHq8kEWFW9sKdPpxHB/iRHQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=a6wWSEQOOVvbtchwQnY3kkeLWB5txBzy0Vi/jxb/ct2eV0MWhHOQeZhSTMweFDBPrHTUvsSQmRiELYtF8kXhA0ohmEt6nc6gKLwoduaLAJlOjTWm+yOoV9lAeh2VnBfbaoCbdLNEqzubvLmP3h1TcVAhy9HhPTB3Co074ujbIxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6uxVAo6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=GbwT7zoBdMfQKyL7kcj8K4DP0U/QhC/mCpeFtpP7xUW5Dl54jsGfJuPIwjKMOQAjRmc6N7LWaAAkcrhLZ/pIKROrzoKvbqzT6Yp4R8nG4j+9iks+6GtErRjN2VMArFmeRVIcR7w7GVm/Txu5RRER5ZDnIQTEle/twuZqZVUA/zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oudjE6Mc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6uxVAo6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360C8C433F1;
-	Mon, 26 Feb 2024 02:58:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oudjE6Mc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C75AC433F1;
+	Mon, 26 Feb 2024 02:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708916328;
-	bh=RfBWpLaLGNc6IDMNpsE0Yy7Ub8NnNUuIZa8qRbfcZvI=;
+	s=k20201202; t=1708916379;
+	bh=taKs/RPbNJKiITCMU+JxhHq8kEWFW9sKdPpxHB/iRHQ=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Y6uxVAo6kDfvR+tACBcxtJLT9K42alVgDRsv0T1vZ3t3xr4VBT3661Q8qjkvtc+/G
-	 DWokoik9zZyMyWVel+RNcu7DmWBok8kyOOGWfRWtHSymUGYScIYmhD+eEBHoAPxpI4
-	 DkTY02DwM8+br93DOBnnQG0Cf4lyGJ1fw/J1rF3XBhnbzMLAJKnRVLZkeAnJLTs+2k
-	 4CnWA9RAzzQczzufMFeA+GpyDUpfFQ8Zu5xE7mVuOCWmxqAgxw9yGqOzw7HeJ5Li+w
-	 Z0spdDPSRAEgOiDoc2s3dbk4k37qtu8kS2yEHYRP2/A4Q6+8qHjtqoc4251EfA1o48
-	 bfDWyJfSOQESw==
-Message-ID: <6b2854fd-8999-4671-a243-d78139f8a40f@kernel.org>
-Date: Mon, 26 Feb 2024 10:58:44 +0800
+	b=oudjE6McByKnZwSCcQDqCnm/MOwr6ZFScZTuxETM9ZtzUvbFWr0+uPg0VtSQIxJad
+	 AXwV/LQLDTAfRDFTlNZhfZeQ7cRE5XdTtDSPm4ZBLmviIp4Vv1d+gS769OQIvm24/v
+	 WRlKBh6AE7NcXN48/uVNrFHgLos55hiFo9e7fPHC7HOf3S1o7ki/dyCeD7wsvMyG5q
+	 Aslq3s9YP6sOQB8/axCHcUK4cTNtIEHLap3hODqMb/VzeDlpV9Rq90PcNtYDdNTa30
+	 BKz6LX/tBO4UIIzZLiA5uE0SXoOT26tUt3xLfwUDoJzWPBy8mQGuQZ1ObeZaKVRW7K
+	 uKnJbxaBfihYQ==
+Message-ID: <b0ceea04-19e4-45ad-aee5-8ca3585e2171@kernel.org>
+Date: Mon, 26 Feb 2024 10:59:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,21 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [f2fs-dev] [PATCH 4/5] f2fs: prevent an f2fs_gc loop during
- disable_checkpoint
+Subject: Re: [f2fs-dev] [PATCH 5/5] f2fs: allow to mount if cap is 100
 Content-Language: en-US
 To: Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net
 References: <20240223205535.307307-1-jaegeuk@kernel.org>
- <20240223205535.307307-4-jaegeuk@kernel.org>
+ <20240223205535.307307-5-jaegeuk@kernel.org>
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20240223205535.307307-4-jaegeuk@kernel.org>
+In-Reply-To: <20240223205535.307307-5-jaegeuk@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2024/2/24 4:55, Jaegeuk Kim wrote:
-> Don't get stuck in the f2fs_gc loop while disabling checkpoint. Instead, we have
-> a time-based management.
+> Don't block mounting the partition, if cap is 100%.
 > 
 > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 
