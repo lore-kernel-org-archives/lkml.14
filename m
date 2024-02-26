@@ -1,311 +1,262 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from FRA01-MR2-obe.outbound.protection.outlook.com (mail-mr2fra01on2135.outbound.protection.outlook.com [40.107.9.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9531912F5A0;
-	Mon, 26 Feb 2024 19:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708974109; cv=none; b=PVKhhpsAUcD35MM5Dqduz3iEc+f+05/MO+r5QLiORIe1OYXmUUPESf06RzMuvvMsk8NaopuqI4/B6WLGRcIyA71BsDutxtH19HJ1IVfdyFPUnxDgPGa/0lITWl/HzmVsw7OIuFn8C99FtFzls3t77Np0Lkeh5AuyoetMzJysn90=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708974109; c=relaxed/simple;
-	bh=9j0M+ymeUq7RxwTggM61y9yRYx+xKOLcvoURJI6KkkY=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID; b=ulm7ZCcRF2lcYAzVs2dsZ8o6z2DdgsKBN0zROum74zYz6FMVqXcuv7JRsGGTkQdXpGOoR9Q246QGjZPDeUA0aGIhRXHpCVbqkxt0Km7muOs2UNOZl0rs1Kci82haRp+2pwUIo3hqQcP7OmMn377PvMydFcNd55uMJBxQH06Gwaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cj8zdIjV; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B788F12C815;
+	Mon, 26 Feb 2024 19:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.9.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708974155; cv=fail; b=Y5SatA89B3RUFWBQfwVMOi7Gqh+JM6krJCtTl3LYUIHnS6V4o/ehN13npi2iV5SuOW2AjT0Ia661kJPHwlhg85NT+bjHXXX6c/UPzHTOf7Ylx4wYTyidNnBTXUWXt346ZUQs34upxTJkjow1AKDCmp60zOyhw4J/4zsbLccFV6E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708974155; c=relaxed/simple;
+	bh=63iy1cHEb+hJBvJ1MSRh7y8sSDFhqkCsu0Cg818Svyo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ro41TlUuMymsXABpcQaGX9zAxyNFH+6B4RcYGx6nU4baDkUhMdOTsBu7xh36mARcjYtpmuH8LaKoYfpulqeJzNsRpw9XrTPGauhjkR6pX0Ma1faOrwPwn7hWxhN9EbRJoo6W6r1mlYZ5hVkLm7PCPtTEyaiDMqeFx5agFBSYcY8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b=WAVky+kY; arc=fail smtp.client-ip=40.107.9.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cj8zdIjV"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so517716366b.0;
-        Mon, 26 Feb 2024 11:01:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708974104; x=1709578904; darn=vger.kernel.org;
-        h=message-id:in-reply-to:date:subject:cc:to:from:user-agent
-         :references:from:to:cc:subject:date:message-id:reply-to;
-        bh=G8LMK8OmvNm1GCisv4uIp/0KVo3ky6Fv9X1ollGhF9w=;
-        b=Cj8zdIjV+JJw3Mw6SRnTbQxwX8N7JhsWBrgYi64p9rirAwX5MxNq0nQ9Gt+s/HVMvC
-         B3zH/ArkDg/xHPqxWp6ck553hxnub6Wdx1OB0rHZJRqvOjBdMQ05frdMHz9zVS6c/pIQ
-         r3bQjtndRhACyRcNoP9BHKlqeVcAC6oWHPUvl4o1HfNkT0XY2sfYrslStSRZp9bCW1kN
-         PN+ru22fLqOA/hGjDFnOFukB1jv4j9Rp2fN1iE8KfROXkQTX8IS926KIPPjKrAwS0luj
-         cdYEp0vZvPV/Q2/8K4gS09tXhcUwMzgl67CSWUxNbLrXPod7A1CSYEWuvbFPQiO7Rmyr
-         PLSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708974104; x=1709578904;
-        h=message-id:in-reply-to:date:subject:cc:to:from:user-agent
-         :references:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G8LMK8OmvNm1GCisv4uIp/0KVo3ky6Fv9X1ollGhF9w=;
-        b=a3oyBjbTHvoq5IeTa/5d0aq/pYiu7YasB5/p0riHJmvQooJFxcrK+2w/DBVHZ9lQxM
-         VCoOVMsnLBQC64XHlB+nd85inEikHvEGq6XjIbGkrBFdLqAbx2309k+CU4s+vTAI9TT6
-         T8NDAa8k/YaqjVUnJwNufRf5bqScwNUrekJKWWOY3ZfWFPoNYSMDK3agFK4vptyow3Ra
-         8Tos2bd+F0gs5rEpW/osdg0954jiIgRtOlHac4wZaLhdIxKPWkU/UpkxBgDkmQ4wvvQT
-         jq/s1FICp4aQhAszNrsKcXQiBmMSJsXIlwa9ToXT1MdN222GnbWdtnjsFobl9fY4fp7K
-         F4qg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMY7nm31d5ORFbWmwFnC12ObYSP/glpvvofZDggqv7wFRUJEUFgzzicmNTLawF6sMYkHk60M3j7u3hUYk4fsE0DQ6p4Pu7oJ4aC8IFNKJqy2QplRmfXdSUewpoz5D/uV5cY36SqfjSqnWb+lxV7e7gYbip+9RVMXERyIax/m3EdmPn8fI/GWSfwNk8foGFtIiZdO8uVY3hCQE34pRkVy4=
-X-Gm-Message-State: AOJu0Yzp5AxhRoO+MpFOeIvCqJVMNt1QhaHGpHdV2tB96kkjhK8dyAzT
-	UznLKbKINSvw5VIhU/mTroWBWrnf14Fi64FW7LjlYUFrQ6EIL/T5qQtxuxRQSoQ=
-X-Google-Smtp-Source: AGHT+IGdEIaZLKD3wdEPtPOUU82YFpEJuuWamhrWmTEfl2I1OvXx/SEnakxHT/t6WNjdl4uFzBp7ig==
-X-Received: by 2002:a17:906:fcb7:b0:a43:5499:6ac8 with SMTP id qw23-20020a170906fcb700b00a4354996ac8mr3114712ejb.20.1708974103706;
-        Mon, 26 Feb 2024 11:01:43 -0800 (PST)
-Received: from bhlegrsu ([2a02:908:2525:6ea0:3aea:4843:afab:a903])
-        by smtp.gmail.com with ESMTPSA id s18-20020a170906455200b00a3f2d8d3782sm21618ejq.180.2024.02.26.11.01.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 11:01:43 -0800 (PST)
-References: <20240224210409.112333-1-wafgo01@gmail.com>
- <20240225160926.GA58532@thinkpad>
- <20240225203917.GA4678@bhlegrsu.conti.de> <20240226094530.GA2778@thinkpad>
-User-agent: mu4e 1.8.14; emacs 29.0.92
-From: Wadim Mueller <wafgo01@gmail.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
- Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Kishon Vijay Abraham
- I
- <kishon@kernel.org>, Jens Axboe <axboe@kernel.dk>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Shunsuke Mie
- <mie@igel.co.jp>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH 0/3] Add support for Block Passthrough Endpoint function
- driver
-Date: Mon, 26 Feb 2024 19:47:30 +0100
-In-reply-to: <20240226094530.GA2778@thinkpad>
-Message-ID: <rq85odwmqryrr4.fsf@gmail.com>
+	dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b="WAVky+kY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WwsB+ZQoaCc4FEKbN6iUdsHEha4h9dMsBajQoRoMsu+XAMGKJ7wSSgGjjmIRoVvbL+LjKG7fLFbaCDI5TAbjxNfWq0Ikgz44tkXhaBu9R68Lu/aHlYdNsaB+IGGXWxFxSlhKam6SQ2rRFq8mIzK+kpOSeNoLa31/FrxT61fRN0mCFU/7QC+kGUp386WWsYyOUV2oumHGaBJcHZzzgshA0VvnlTPI1qzIfCQnn/ze85tUMLPXt5fJItK51PcYezoCvsOJeGZzbpwzxxcZHivwAuaa3ZydfJUTWBX3CXOQ8NwpK002GSxcI3m99dcckSeDLF0hIrAREqI0ZOGYAWBIRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=63iy1cHEb+hJBvJ1MSRh7y8sSDFhqkCsu0Cg818Svyo=;
+ b=nyufXwcsefaWuTAJc0GoACKzWvJ+/WWjKJOv5f//5woLSGxypsebaFdGhCVf8mjSon+kl2nHo3GHC/n5hj6BWWsdOACNFC1BpFUZHKy5csq/nK+g+8kSqVUf+uuRTIS6NQYFKbCEpx4j9VohhGRUSMyFYaY2KMdfFATtGGe8XhuC25RyFrw2NcMiZ9RbQ9yFYTV8KMCXBd7Xl8DRqyEdCiXuee6RhP6uDvsGMROJ0rimkB5zm0w4pkQLN9wVEZqyt4DRCtGZHjZ/pnd4nFed0fThJ4Q0pt9/HxGbXhcTpIqo6apF0lWULykhPQau1ZgjtehvRh4HtQOOIvWpKBZ4fQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
+ dkim=pass header.d=csgroup.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=63iy1cHEb+hJBvJ1MSRh7y8sSDFhqkCsu0Cg818Svyo=;
+ b=WAVky+kYhaAt1rNBgYcL2svBPSxrDP8KAlI4aO07nOuzs2y8aYj7tCVHvQpJV7K3N3WOO+qfLNThBpIsvQM6wb9Ib3izwHS2gnZU69ACWMuzdvIlNdemOHb4B0Dso8r7yfgagLfwFhuwSVPoxkuhvzobbrePh1OgUHLoQd+X1xvrPzvS+eqYtZ0lNGQgmXKE/U2pakSP/B8OqJF66ztpY3D0SJMxJ+8XXfQArz8jVqXXORU0HcnWKXhTj0uuwj3llHtKP9UXLT4yLpJuMC6VcAOm/eD2j7ZLENpRn7FqbH3rvs9ChxFrB7rty5QBWoKqeH4vNrePPxQjigErZgcayw==
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
+ by MR1P264MB3219.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:3c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Mon, 26 Feb
+ 2024 19:02:29 +0000
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::c192:d40f:1c33:1f4e]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::c192:d40f:1c33:1f4e%6]) with mapi id 15.20.7316.035; Mon, 26 Feb 2024
+ 19:02:29 +0000
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Kees Cook
+	<keescook@chromium.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>
+CC: Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>, Vineet
+ Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin
+ Marinas <catalin.marinas@arm.com>, Guo Ren <guoren@kernel.org>, Brian Cain
+	<bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, Geert Uytterhoeven
+	<geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer
+	<tsbogend@alpha.franken.de>, Helge Deller <deller@gmx.de>, Michael Ellerman
+	<mpe@ellerman.id.au>, Palmer Dabbelt <palmer@dabbelt.com>, John Paul Adrian
+ Glaubitz <glaubitz@physik.fu-berlin.de>, Andreas Larsson
+	<andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, "x86@kernel.org"
+	<x86@kernel.org>, Max Filippov <jcmvbkbc@gmail.com>, Andy Lutomirski
+	<luto@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham
+	<kbingham@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+	"linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-csky@vger.kernel.org"
+	<linux-csky@vger.kernel.org>, "linux-hexagon@vger.kernel.org"
+	<linux-hexagon@vger.kernel.org>, "loongarch@lists.linux.dev"
+	<loongarch@lists.linux.dev>, "linux-m68k@lists.linux-m68k.org"
+	<linux-m68k@lists.linux-m68k.org>, "linux-mips@vger.kernel.org"
+	<linux-mips@vger.kernel.org>, "linux-openrisc@vger.kernel.org"
+	<linux-openrisc@vger.kernel.org>, "linux-parisc@vger.kernel.org"
+	<linux-parisc@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "linux-sh@vger.kernel.org"
+	<linux-sh@vger.kernel.org>, "sparclinux@vger.kernel.org"
+	<sparclinux@vger.kernel.org>, "linux-um@lists.infradead.org"
+	<linux-um@lists.infradead.org>
+Subject: Re: [PATCH 1/4] arch: consolidate existing CONFIG_PAGE_SIZE_*KB
+ definitions
+Thread-Topic: [PATCH 1/4] arch: consolidate existing CONFIG_PAGE_SIZE_*KB
+ definitions
+Thread-Index: AQHaaM7rN2hV21jYgUGwUZqovHeHwbEc+xEA
+Date: Mon, 26 Feb 2024 19:02:29 +0000
+Message-ID: <9aae81d0-dfaf-423c-8ceb-72829a98420d@csgroup.eu>
+References: <20240226161414.2316610-1-arnd@kernel.org>
+ <20240226161414.2316610-2-arnd@kernel.org>
+In-Reply-To: <20240226161414.2316610-2-arnd@kernel.org>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=csgroup.eu;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MRZP264MB2988:EE_|MR1P264MB3219:EE_
+x-ms-office365-filtering-correlation-id: 7f0c6bf2-4cef-40dd-8983-08dc36fd7afe
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ yPMvzfWzUBoH8MpY8O7bXP2oDzPIN1dkcoRQWPeHzb8AsCM48ORwi/CWBivBlSWukGqQnsHteBtghynjPaM58D71bkiwuBmngFBjKRFLdhijbDokqQHMzC4rnyEUbc5nPd+aPqkwuF/KG0wg/6R+LvzULHWSR/+cAxU9+0hlDoGBT0WmxhwBusSbxEwK6N4Jy6oa18i+uPZfGx8TY07xf+bp4fSksvL7pWU82andrDQrdV8l52SwYPdgBL+v0edf6b2hUxnyr+H0ZOCLngNzxk2LzRYE5alVBr2O63IxM5dHPWNFj+a2zeajPj2BhUfRq9t0oH2kdpPWhPstd9eOhgLQjLrvNEROdspje25E/TmqY7sGTxUitJCO9nzP7BmLsIuWQ2RVngaO0ik/7eKO8z+hd85iks/TpchQTMNMJc/2vFtu/EIXRuxeeIyjZKCt9xZB86YPRM6aNOYuDwTKNO+sa8UY1ce2y8fd1mHEAJfsvkAuSC6M4a5EaTBzOajE1dRrJDuvaOMHuCr1Us6vN7fmcSGSuQcj8WXf+YsGAUb2nNPYwb4Md+7YTBGyZoYVCwcqLLkqArgt3FND38Y36YVySgcpI3CDhTxcDXpEpRQj5sECHuT89hUnbMgmoK4P/OmRkSS9/bX61TiPBKSAWl0IO5EeDnWCRVh09C/7k3KFjwyUZk0EWQmjB8JOnS1TyvKx1SB6duSmcPDpXp2ODQ==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(230273577357003)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?cU1MNXJrZnpEYmptdWhzK2kvNGw5WnJIYzJGTzd3L3pCTXpaTjJZSTBOZkZj?=
+ =?utf-8?B?dXRXKyt6NXNBMVEwZXBmUFZZWGt1NXRTMjVxelZFTmtZZDFDQm1WUDVhSGZq?=
+ =?utf-8?B?bmUvQTBDQUdneDFIZkpSMVRENURwdWdtVXp5QXNpeDQvc01zdXliZW9JUmxF?=
+ =?utf-8?B?YU5WbFowZ3A2a0lyNjV3QTFLRU5paWx2M29QOEhVSEdha2Z5V0dtMGdMWXNZ?=
+ =?utf-8?B?bkhIN3Y1QTBkTVBxakNscDdmNVptMUVBK2o2aENBWFRnaitnOXF5Nnh2eklI?=
+ =?utf-8?B?MWtjTVdSWmVCclJzNGM0dElWVXQrLzRxZmR1b1Zubm1CMTY2Z285NXlSMmJC?=
+ =?utf-8?B?a1dnaWs5cC9LK0hHS0ZDM1ZNMHl3RmZuN05Sdm9VQnJBTTEvWGFPZVR4Lzhj?=
+ =?utf-8?B?RWhKbnJOa0pvMVlsZFpNT1ZKUFV2bFFSbXIvbGVOQitoR21EVjY1emd6dVlZ?=
+ =?utf-8?B?bXZZRUFqdEtaR2Y0c0FvS1g5ZjVlcUtOK1NBV3hLdWhFUE1LdkE2Qm92V2Vx?=
+ =?utf-8?B?cFhYS0lFM3NqR2U4c0RXSzExKzRtYVRaSTB5MkR4N3NvenM4NkNnY2w3bkdx?=
+ =?utf-8?B?eUtJWm1XZHA4QlhHblN5MUxCRU9qbXNhcjZITUxZR0JnVEwrY0Z0RzJUWFBL?=
+ =?utf-8?B?OVVhWXljUVRNRmhEYkd4dkJVeGF6NlA0a211MzVYTml3MGUrQXNFZUE5K25E?=
+ =?utf-8?B?OFhOVnNCTzIrK3hMRytRTWViRHpYYUx6TTMxc3c5ekh4bHRzUzhoV3FZaHdP?=
+ =?utf-8?B?ZzlaV0ZzeWt3eEZnYm1xS0ppTDRYZFA0USs1WDRmekFyOG5FajVETlo0NXdv?=
+ =?utf-8?B?d2wxaUc2TmtlZWFuU3FXTmNMSWlJZ05xUkYxWTZQY2d0alArYVhwNTM3dDdl?=
+ =?utf-8?B?YzNJRmlpRjFWQWxUNFlvTlFhdWRleS9nREVIOGhrdjZvS3pPNUFlckFENk42?=
+ =?utf-8?B?NFZyUHBNM25uOC9QM3dva2wxYVVScDR5YUF2K1dhKzBNV1BQMWZlM3M2RDNj?=
+ =?utf-8?B?VzlHUncrZldVdTVlYzBoLzdCUVJZeVNVRWR2TXRXUHRGY1hGRnloNkI4WlEx?=
+ =?utf-8?B?SU5ZM0J4blNtaVBCRHJpaDEweENVVGV6dyt0bmorNUpXVXVaRHdpNXRRZVB1?=
+ =?utf-8?B?UTV2VXBmcHlGbTdxb295T1B1akFhZlpFWVhzaG13SnZ5OEdlU0h5QWJHNHZZ?=
+ =?utf-8?B?VXFPRnA0K2drMTVSWmlVZmpxaW0xVHRRaWZEUTErWnc4NXVkYU5TbjZyQW1J?=
+ =?utf-8?B?VnhoTVFYQmZPR2daT1ZFdExOdktrNzF3enBuMy9pdy9sdEJLcEc5L2VMOVRO?=
+ =?utf-8?B?OUd0Tkw3NkJuazIxN1hrTlJCdnZDZUtnUlg1OEtqWnY1VW43QUEzYkJpZ0Q1?=
+ =?utf-8?B?OVpUS28raGlMVG9GVmVwQ3JacGdsVVZwZm02Ym9LNWU4UUpNdTkvMHJjeE45?=
+ =?utf-8?B?ZERkK1FWSUZZTmM3WE1IZVJCV3lEK2V6MHhIamxUUFBTOWY1b0t5V1FZaEFW?=
+ =?utf-8?B?WEhVY1duRFJERTBIQ0xHV2hGSzRxelFIcFVsalV4bFFESXMyMXBDd1AzTlAr?=
+ =?utf-8?B?QzRnOWc3bkUzR09MV0NJSVRiajA5S2pEMHhXd3paSkk5OFg5bTNZaFFQTm8v?=
+ =?utf-8?B?RjZrd2RTaXFEaGJmS1lNbjNmcXpVTGR0b0g3Q3E2d0l3YnpDNU9peklIT0xS?=
+ =?utf-8?B?NzVwOFA2a09OUVhCRjJ1WXB6UDFVQ3BvVlRQcE5BRlhUZUUrMWw0MHlxNVE0?=
+ =?utf-8?B?eVlpTGgrQWtTbzVPM2dtL2dtVEhvVTJzeE90ZXJVY2UzWmdTVGVMRGJnSjl1?=
+ =?utf-8?B?Sms5dWJJcUhZRS9wZm84L3dIOE82QTRqNDBQemkzS3FzdTlIbjNPbWo2N1Ey?=
+ =?utf-8?B?OE5xQ1B3UXNNaVUxVlpQTnJZNFQyUXdvM0J3WnBuOTFTeTVVbS9SSEcybVUw?=
+ =?utf-8?B?RHJLRWthVmk0ajdPTkpwQ0VOcisrUG83ZXJJVHF5dU02TThISnU1Y0NLMmFv?=
+ =?utf-8?B?eFJua2pPV3NhWmlaZzZtc0owZnBKRUtQRmdUQVk2ZjkvWCtOWjhJZGFmK3hH?=
+ =?utf-8?B?VlNabEZ3Q2srbjhMTVYzeUtsNjVmcmNwdWRaWHdjMTU0Nm90eHJrdDhtYmNq?=
+ =?utf-8?B?Ri8xWUt3WGM2WThHamNKanFCVVNZYXhxL3Vrbk1GMi81SS95NkVYekJObmtx?=
+ =?utf-8?B?VkE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FFD2F81AA0835F4FA268BEB367E2D1C7@FRAP264.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
---text follows this line--
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: csgroup.eu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f0c6bf2-4cef-40dd-8983-08dc36fd7afe
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2024 19:02:29.7787
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /q2BCeYoW9m0j2S3gLSH120YZt9Qu06LLWV/oq5SeYDkEb1/DOTQfiBnVCiZST53S3Ivsuqk6lBbvbUngZiefE52Mskyl0AVML4qA12wEew=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MR1P264MB3219
 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
-
-> On Sun, Feb 25, 2024 at 09:39:17PM +0100, Wadim Mueller wrote:
->> On Sun, Feb 25, 2024 at 09:39:26PM +0530, Manivannan Sadhasivam wrote:
->> > On Sat, Feb 24, 2024 at 10:03:59PM +0100, Wadim Mueller wrote:
->> > > Hello,
->> > >=20
->> > > This series adds support for the Block Passthrough PCI(e) Endpoint f=
-unctionality.
->> > > PCI Block Device Passthrough allows one Linux Device running in EP m=
-ode to expose its Block devices to the PCI(e) host (RC). The device can exp=
-ort either the full disk or just certain partitions.
->> > > Also an export in readonly mode is possible. This is useful if you w=
-ant to share the same blockdevice between different SoCs, providing each So=
-C its own partition(s).
->> > >=20
->> > >=20
->> > > Block Passthrough
->> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> > > The PCI Block Passthrough can be a useful feature if you have multip=
-le SoCs in your system connected
->> > > through a PCI(e) link, one running in RC mode, the other in EP mode.
->> > > If the block devices are connected to one SoC (SoC2 in EP Mode from =
-the diagramm below) and you want to access
->> > > those from the other SoC (SoC1 in RC mode below), without having any=
- direct connection to
->> > > those block devices (e.g. if you want to share an NVMe between two S=
-oCs). An simple example of such a configurationis is shown below:
->> > >=20
->> > >=20
->> > >                                                            +--------=
------+
->> > >                                                            |        =
-     |
->> > >                                                            |   SD Ca=
-rd   |
->> > >                                                            |        =
-     |
->> > >                                                            +------^-=
------+
->> > >                                                                   |
->> > >                                                                   |
->> > >     +--------------------------+                +-----------------v-=
----------------+
->> > >     |                          |      PCI(e)    |                   =
-               |
->> > >     |         SoC1 (RC)        |<-------------->|            SoC2 (E=
-P)             |
->> > >     | (CONFIG_PCI_REMOTE_DISK) |                |(CONFIG_PCI_EPF_BLO=
-CK_PASSTHROUGH)|
->> > >     |                          |                |                   =
-               |
->> > >     +--------------------------+                +-----------------^-=
----------------+
->> > >                                                                   |
->> > >                                                                   |
->> > >                                                            +------v-=
------+
->> > >                                                            |        =
-     |
->> > >                                                            |    NVMe=
-     |
->> > >                                                            |        =
-     |
->> > >                                                            +--------=
------+
->> > >=20
->> > >=20
->> > > This is to a certain extent a similar functionality which NBD expose=
-s over Network, but on the PCI(e) bus utilizing the EPC/EPF Kernel Framewor=
-k.
->> > >=20
->> > > The Endpoint Function driver creates parallel Queues which run on se=
-perate CPU Cores using percpu structures. The number of parallel queues is =
-limited
->> > > by the number of CPUs on the EP device. The actual number of queues =
-is configurable (as all other features of the driver) through CONFIGFS.
->> > >=20
->> > > A documentation about the functional description as well as a user g=
-uide showing how both drivers can be configured is part of this series.
->> > >=20
->> > > Test setup
->> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> > >=20
->> > > This series has been tested on an NXP S32G2 SoC running in Endpoint =
-mode with a direct connection to an ARM64 host machine.
->> > >=20
->> > > A performance measurement on the described setup shows good performa=
-nce metrics. The S32G2 SoC has a 2xGen3 link which has a maximum Bandwidth =
-of ~2GiB/s.
->> > > With the explained setup a Read Datarate of 1.3GiB/s (with DMA ... w=
-ithout DMA the speed saturated at ~200MiB/s) was achieved using an 512GiB K=
-ingston NVMe
->> > > when accessing the NVMe from the ARM64 (SoC1) Host. The local Read D=
-atarate accessing the NVMe dirctly from the S32G2 (SoC2) was around 1.5GiB.
->> > >=20
->> > > The measurement was done through the FIO tool [1] with 4kiB Blocks.
->> > >=20
->> > > [1] https://linux.die.net/man/1/fio
->> > >=20
->> >=20
->> > Thanks for the proposal! We are planning to add virtio function suppor=
-t to
->> > endpoint subsystem to cover usecases like this. I think your usecase c=
-an be
->> > satisfied using vitio-blk. Maybe you can add the virtio-blk endpoint f=
-unction
->> > support once we have the infra in place. Thoughts?
->> >=20
->> > - Mani
->> >
->>=20
->> Hi Mani,
->> I initially had the plan to implement the virtio-blk as an endpoint
->> function driver instead of a self baked driver.=20
->>=20
->> This for sure is more elegant as we could reuse the
->> virtio-blk pci driver instead of implementing a new one (as I did)=20
->>=20
->> But I initially had some concerns about the feasibility, especially
->> that the virtio-blk pci driver is expecting immediate responses to some
->> register writes which I would not be able to satisfy, simply because we
->> do not have any kind of interrupt/event which would be triggered on the
->> EP side when the RC is accessing some BAR Registers (at least there is
->> no machanism I know of). As virtio is made mainly for Hypervisor <->
->
-> Right. There is a limitation currently w.r.t triggering doorbell from the=
- host
-> to endpoint. But I believe that could be addressed later by repurposing t=
-he
-> endpoint MSI controller [1].
->
->> As virtio is made mainly for Hypervisor <->
->> Guest communication I was afraid that a Hypersisor is able to Trap every
->> Register access from the Guest and act accordingly, which I would not be
->> able to do. I hope this make sense to you.
->>=20
->
-> I'm not worrying about the hypervisor right now. Here the endpoint is exp=
-osing
-> the virtio devices and host is consuming it. There is no virtualization p=
-lay
-> here. I talked about this in the last plumbers [2].
->
-
-Okay, I understand this. The hypervisor was more of an example. I will
-try to explain.
-
-I am currently reading through the virtio spec [1].
-In chapter 4.1.4.5.1 there is the following statement:
-
-"The device MUST reset ISR status to 0 on driver read."
-
-So I was wondering, how we, as an PCI EP Device, supposed to clear a
-register when the driver reads the same register? I mean how do we detect a
-register read?
-If you are a hypervisor its easy to do so, because you can intercept
-every memory access made my the guest (the same applies if you build
-custom HW for this purpose). But for us as an EP device its
-difficult to detect this, even with MSIs and Doorbell Registers in
-place.
-
-Modifying the virtio layer to write to some doorbell register after
-reading the ISR status register would be possible, but kind of ugly.
-
-
-[1] https://docs.oasis-open.org/virtio/virtio/v1.2/csd01/virtio-v1.2-csd01.=
-pdf
-
->> But to make a long story short, yes I agree with you that virtio-blk
->> would satisfy my usecase, and I generally think it would be a better
->> solution, I just did not know that you are working on some
->> infrastructure for that. And yes I would like to implement the endpoint
->> function driver for virtio-blk. Is there already an development tree you
->> use to work on the infrastructre I could have a look at?
->>=20
->
-> Shunsuke has a WIP branch [3], that I plan to co-work in the coming days.
-> You can use it as a reference in the meantime.
->
-> - Mani
->
-> [1] https://lore.kernel.org/all/20230911220920.1817033-1-Frank.Li@nxp.com/
-> [2] https://www.youtube.com/watch?v=3D1tqOTge0eq0
-> [3] https://github.com/ShunsukeMie/linux-virtio-rdma/tree/v6.6-rc1-epf-vc=
-on
->
->> - Wadim
->>=20
->>=20
->>=20
->> > > Wadim Mueller (3):
->> > >   PCI: Add PCI Endpoint function driver for Block-device passthrough
->> > >   PCI: Add PCI driver for a PCI EP remote Blockdevice
->> > >   Documentation: PCI: Add documentation for the PCI Block Passthrough
->> > >=20
->> > >  .../function/binding/pci-block-passthru.rst   |   24 +
->> > >  Documentation/PCI/endpoint/index.rst          |    3 +
->> > >  .../pci-endpoint-block-passthru-function.rst  |  331 ++++
->> > >  .../pci-endpoint-block-passthru-howto.rst     |  158 ++
->> > >  MAINTAINERS                                   |    8 +
->> > >  drivers/block/Kconfig                         |   14 +
->> > >  drivers/block/Makefile                        |    1 +
->> > >  drivers/block/pci-remote-disk.c               | 1047 +++++++++++++
->> > >  drivers/pci/endpoint/functions/Kconfig        |   12 +
->> > >  drivers/pci/endpoint/functions/Makefile       |    1 +
->> > >  .../functions/pci-epf-block-passthru.c        | 1393 ++++++++++++++=
-+++
->> > >  include/linux/pci-epf-block-passthru.h        |   77 +
->> > >  12 files changed, 3069 insertions(+)
->> > >  create mode 100644 Documentation/PCI/endpoint/function/binding/pci-=
-block-passthru.rst
->> > >  create mode 100644 Documentation/PCI/endpoint/pci-endpoint-block-pa=
-ssthru-function.rst
->> > >  create mode 100644 Documentation/PCI/endpoint/pci-endpoint-block-pa=
-ssthru-howto.rst
->> > >  create mode 100644 drivers/block/pci-remote-disk.c
->> > >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-block-pas=
-sthru.c
->> > >  create mode 100644 include/linux/pci-epf-block-passthru.h
->> > >=20
->> > > --=20
->> > > 2.25.1
->> > >=20
->> >=20
->> > --=20
->> > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
-=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=
-=AE=E0=AF=8D
-
+DQoNCkxlIDI2LzAyLzIwMjQgw6AgMTc6MTQsIEFybmQgQmVyZ21hbm4gYSDDqWNyaXTCoDoNCj4g
+RnJvbTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4NCj4gDQo+IFRoZXNlIGZvdXIgYXJj
+aGl0ZWN0dXJlcyBkZWZpbmUgdGhlIHNhbWUgS2NvbmZpZyBzeW1ib2xzIGZvciBjb25maWd1cmlu
+Zw0KPiB0aGUgcGFnZSBzaXplLiBNb3ZlIHRoZSBsb2dpYyBpbnRvIGEgY29tbW9uIHBsYWNlIHdo
+ZXJlIGl0IGNhbiBiZSBzaGFyZWQNCj4gd2l0aCBhbGwgb3RoZXIgYXJjaGl0ZWN0dXJlcy4NCj4g
+DQo+IFNpZ25lZC1vZmYtYnk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQo+IC0tLQ0K
+PiAgIGFyY2gvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICB8IDU4ICsrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrLS0NCj4gICBhcmNoL2hleGFnb24vS2NvbmZpZyAgICAgICAgICAgICAg
+fCAyNSArKystLS0tLS0tLS0tDQo+ICAgYXJjaC9oZXhhZ29uL2luY2x1ZGUvYXNtL3BhZ2UuaCAg
+IHwgIDYgKy0tLQ0KPiAgIGFyY2gvbG9vbmdhcmNoL0tjb25maWcgICAgICAgICAgICB8IDIxICsr
+KystLS0tLS0tDQo+ICAgYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20vcGFnZS5oIHwgMTAgKy0t
+LS0tDQo+ICAgYXJjaC9taXBzL0tjb25maWcgICAgICAgICAgICAgICAgIHwgNTggKysrLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgIGFyY2gvbWlwcy9pbmNsdWRlL2FzbS9wYWdlLmgg
+ICAgICB8IDE2ICstLS0tLS0tLQ0KPiAgIGFyY2gvc2gvaW5jbHVkZS9hc20vcGFnZS5oICAgICAg
+ICB8IDEzICstLS0tLS0NCj4gICBhcmNoL3NoL21tL0tjb25maWcgICAgICAgICAgICAgICAgfCA0
+MiArKysrKysrLS0tLS0tLS0tLS0tLS0tDQo+ICAgOSBmaWxlcyBjaGFuZ2VkLCA4OCBpbnNlcnRp
+b25zKCspLCAxNjEgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9LY29uZmln
+IGIvYXJjaC9LY29uZmlnDQo+IGluZGV4IGE1YWYwZWRkM2ViOC4uMjM3Y2VhMDFlZDliIDEwMDY0
+NA0KPiAtLS0gYS9hcmNoL0tjb25maWcNCj4gKysrIGIvYXJjaC9LY29uZmlnDQo+IEBAIC0xMDc4
+LDE3ICsxMDc4LDcxIEBAIGNvbmZpZyBIQVZFX0FSQ0hfQ09NUEFUX01NQVBfQkFTRVMNCj4gICAJ
+ICBhbmQgdmljZS12ZXJzYSAzMi1iaXQgYXBwbGljYXRpb25zIHRvIGNhbGwgNjQtYml0IG1tYXAo
+KS4NCj4gICAJICBSZXF1aXJlZCBmb3IgYXBwbGljYXRpb25zIGRvaW5nIGRpZmZlcmVudCBiaXRu
+ZXNzIHN5c2NhbGxzLg0KPiAgIA0KPiArY29uZmlnIEhBVkVfUEFHRV9TSVpFXzRLQg0KPiArCWJv
+b2wNCj4gKw0KPiArY29uZmlnIEhBVkVfUEFHRV9TSVpFXzhLQg0KPiArCWJvb2wNCj4gKw0KPiAr
+Y29uZmlnIEhBVkVfUEFHRV9TSVpFXzE2S0INCj4gKwlib29sDQo+ICsNCj4gK2NvbmZpZyBIQVZF
+X1BBR0VfU0laRV8zMktCDQo+ICsJYm9vbA0KPiArDQo+ICtjb25maWcgSEFWRV9QQUdFX1NJWkVf
+NjRLQg0KPiArCWJvb2wNCj4gKw0KPiArY29uZmlnIEhBVkVfUEFHRV9TSVpFXzI1NktCDQo+ICsJ
+Ym9vbA0KPiArDQo+ICtjaG9pY2UNCj4gKwlwcm9tcHQgIk1NVSBwYWdlIHNpemUiDQo+ICsNCg0K
+VGhhdCdzIGEgbmljZSByZS1mYWN0b3IuDQoNClRoZSBvbmx5IGRyYXdiYWNrIEkgc2VlIGlzIHRo
+YXQgd2UgYXJlIGxvb3Npbmcgc2V2ZXJhbCBpbnRlcmVzdGluZyANCmFyY2gtc3BlY2lmaWMgY29t
+bWVudHMvaGVscCB0ZXh0LiBEb24ndCBrbm93IGlmIHRoZXJlIGNvdWxkIGJlIGFuIGVhc3kgDQp3
+YXkgdG8ga2VlcCB0aGVtLg0KDQoNCj4gK2NvbmZpZyBQQUdFX1NJWkVfNEtCDQo+ICsJYm9vbCAi
+NEtCIHBhZ2VzIg0KPiArCWRlcGVuZHMgb24gSEFWRV9QQUdFX1NJWkVfNEtCDQo+ICsNCj4gK2Nv
+bmZpZyBQQUdFX1NJWkVfOEtCDQo+ICsJYm9vbCAiOEtCIHBhZ2VzIg0KPiArCWRlcGVuZHMgb24g
+SEFWRV9QQUdFX1NJWkVfOEtCDQo+ICsNCj4gK2NvbmZpZyBQQUdFX1NJWkVfMTZLQg0KPiArCWJv
+b2wgIjE2S0IgcGFnZXMiDQo+ICsJZGVwZW5kcyBvbiBIQVZFX1BBR0VfU0laRV8xNktCDQo+ICsN
+Cj4gK2NvbmZpZyBQQUdFX1NJWkVfMzJLQg0KPiArCWJvb2wgIjMyS0IgcGFnZXMiDQo+ICsJZGVw
+ZW5kcyBvbiBIQVZFX1BBR0VfU0laRV8zMktCDQo+ICsNCj4gK2NvbmZpZyBQQUdFX1NJWkVfNjRL
+Qg0KPiArCWJvb2wgIjY0S0IgcGFnZXMiDQo+ICsJZGVwZW5kcyBvbiBIQVZFX1BBR0VfU0laRV82
+NEtCDQo+ICsNCj4gK2NvbmZpZyBQQUdFX1NJWkVfMjU2S0INCj4gKwlib29sICIyNTZLQiBwYWdl
+cyINCj4gKwlkZXBlbmRzIG9uIEhBVkVfUEFHRV9TSVpFXzI1NktCDQoNCkhleGFnb24gc2VlbSB0
+byBhbHNvIHVzZSBDT05GSUdfUEFHRV9TSVpFXzFNQiA/DQoNCj4gKw0KPiArZW5kY2hvaWNlDQo+
+ICsNCj4gICBjb25maWcgUEFHRV9TSVpFX0xFU1NfVEhBTl82NEtCDQo+ICAgCWRlZl9ib29sIHkN
+Cj4gLQlkZXBlbmRzIG9uICFBUk02NF82NEtfUEFHRVMNCj4gICAJZGVwZW5kcyBvbiAhUEFHRV9T
+SVpFXzY0S0INCj4gLQlkZXBlbmRzIG9uICFQQVJJU0NfUEFHRV9TSVpFXzY0S0INCj4gICAJZGVw
+ZW5kcyBvbiBQQUdFX1NJWkVfTEVTU19USEFOXzI1NktCDQo+ICAgDQo+ICAgY29uZmlnIFBBR0Vf
+U0laRV9MRVNTX1RIQU5fMjU2S0INCj4gICAJZGVmX2Jvb2wgeQ0KPiAgIAlkZXBlbmRzIG9uICFQ
+QUdFX1NJWkVfMjU2S0INCj4gICANCj4gK2NvbmZpZyBQQUdFX1NISUZUDQo+ICsJaW50DQo+ICsJ
+ZGVmYXVsdCAxMiBpZiBQQUdFX1NJWkVfNEtCDQo+ICsJZGVmYXVsdCAxMyBpZiBQQUdFX1NJWkVf
+OEtCDQo+ICsJZGVmYXVsdCAxNCBpZiBQQUdFX1NJWkVfMTZLQg0KPiArCWRlZmF1bHQgMTUgaWYg
+UEFHRV9TSVpFXzMyS0INCj4gKwlkZWZhdWx0IDE2IGlmIFBBR0VfU0laRV82NEtCDQo+ICsJZGVm
+YXVsdCAxOCBpZiBQQUdFX1NJWkVfMjU2S0INCj4gKw0KPiAgICMgVGhpcyBhbGxvd3MgdG8gdXNl
+IGEgc2V0IG9mIGdlbmVyaWMgZnVuY3Rpb25zIHRvIGRldGVybWluZSBtbWFwIGJhc2UNCj4gICAj
+IGFkZHJlc3MgYnkgZ2l2aW5nIHByaW9yaXR5IHRvIHRvcC1kb3duIHNjaGVtZSBvbmx5IGlmIHRo
+ZSBwcm9jZXNzDQo+ICAgIyBpcyBub3QgaW4gbGVnYWN5IG1vZGUgKGNvbXBhdCB0YXNrLCB1bmxp
+bWl0ZWQgc3RhY2sgc2l6ZSBvcg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9oZXhhZ29uL0tjb25maWcg
+Yi9hcmNoL2hleGFnb24vS2NvbmZpZw0KPiBpbmRleCBhODgwZWUwNjdkMmUuLmFhYzQ2ZWUxYTAw
+MCAxMDA2NDQNCj4gLS0tIGEvYXJjaC9oZXhhZ29uL0tjb25maWcNCj4gKysrIGIvYXJjaC9oZXhh
+Z29uL0tjb25maWcNCj4gQEAgLTgsNiArOCwxMSBAQCBjb25maWcgSEVYQUdPTg0KPiAgIAlzZWxl
+Y3QgQVJDSF9IQVNfU1lOQ19ETUFfRk9SX0RFVklDRQ0KPiAgIAlzZWxlY3QgQVJDSF9OT19QUkVF
+TVBUDQo+ICAgCXNlbGVjdCBETUFfR0xPQkFMX1BPT0wNCj4gKwlzZWxlY3QgRlJBTUVfUE9JTlRF
+Ug0KPiArCXNlbGVjdCBIQVZFX1BBR0VfU0laRV80S0INCj4gKwlzZWxlY3QgSEFWRV9QQUdFX1NJ
+WkVfMTZLQg0KPiArCXNlbGVjdCBIQVZFX1BBR0VfU0laRV82NEtCDQo+ICsJc2VsZWN0IEhBVkVf
+UEFHRV9TSVpFXzI1NktCDQo+ICAgCSMgT3RoZXIgcGVuZGluZyBwcm9qZWN0cy90by1kbyBpdGVt
+cy4NCj4gICAJIyBzZWxlY3QgSEFWRV9SRUdTX0FORF9TVEFDS19BQ0NFU1NfQVBJDQo+ICAgCSMg
+c2VsZWN0IEhBVkVfSFdfQlJFQUtQT0lOVCBpZiBQRVJGX0VWRU5UUw0KPiBAQCAtMTIwLDI2ICsx
+MjUsNiBAQCBjb25maWcgTlJfQ1BVUw0KPiAgIAkgIFRoaXMgaXMgcHVyZWx5IHRvIHNhdmUgbWVt
+b3J5IC0gZWFjaCBzdXBwb3J0ZWQgQ1BVIGFkZHMNCj4gICAJICBhcHByb3hpbWF0ZWx5IGVpZ2h0
+IGtpbG9ieXRlcyB0byB0aGUga2VybmVsIGltYWdlLg0KPiAgIA0KPiAtY2hvaWNlDQo+IC0JcHJv
+bXB0ICJLZXJuZWwgcGFnZSBzaXplIg0KPiAtCWRlZmF1bHQgUEFHRV9TSVpFXzRLQg0KPiAtCWhl
+bHANCj4gLQkgIENoYW5nZXMgdGhlIGRlZmF1bHQgcGFnZSBzaXplOyB1c2Ugd2l0aCBjYXV0aW9u
+Lg0KPiAtDQo+IC1jb25maWcgUEFHRV9TSVpFXzRLQg0KPiAtCWJvb2wgIjRLQiINCj4gLQ0KPiAt
+Y29uZmlnIFBBR0VfU0laRV8xNktCDQo+IC0JYm9vbCAiMTZLQiINCj4gLQ0KPiAtY29uZmlnIFBB
+R0VfU0laRV82NEtCDQo+IC0JYm9vbCAiNjRLQiINCj4gLQ0KPiAtY29uZmlnIFBBR0VfU0laRV8y
+NTZLQg0KPiAtCWJvb2wgIjI1NktCIg0KPiAtDQo+IC1lbmRjaG9pY2UNCj4gLQ0KPiAgIHNvdXJj
+ZSAia2VybmVsL0tjb25maWcuaHoiDQo+ICAgDQo+ICAgZW5kbWVudQ0KPiBkaWZmIC0tZ2l0IGEv
+YXJjaC9oZXhhZ29uL2luY2x1ZGUvYXNtL3BhZ2UuaCBiL2FyY2gvaGV4YWdvbi9pbmNsdWRlL2Fz
+bS9wYWdlLmgNCj4gaW5kZXggMTBmMWJjMDc0MjNjLi42NWM5YmFjNjM5ZmEgMTAwNjQ0DQo+IC0t
+LSBhL2FyY2gvaGV4YWdvbi9pbmNsdWRlL2FzbS9wYWdlLmgNCj4gKysrIGIvYXJjaC9oZXhhZ29u
+L2luY2x1ZGUvYXNtL3BhZ2UuaA0KPiBAQCAtMTMsMjcgKzEzLDIyIEBADQo+ICAgLyogIFRoaXMg
+aXMgcHJvYmFibHkgbm90IHRoZSBtb3N0IGdyYWNlZnVsIHdheSB0byBoYW5kbGUgdGhpcy4gICov
+DQo+ICAgDQo+ICAgI2lmZGVmIENPTkZJR19QQUdFX1NJWkVfNEtCDQo+IC0jZGVmaW5lIFBBR0Vf
+U0hJRlQgMTINCj4gICAjZGVmaW5lIEhFWEFHT05fTDFfUFRFX1NJWkUgX19IVk1fUERFX1NfNEtC
+DQo+ICAgI2VuZGlmDQo+ICAgDQo+ICAgI2lmZGVmIENPTkZJR19QQUdFX1NJWkVfMTZLQg0KPiAt
+I2RlZmluZSBQQUdFX1NISUZUIDE0DQo+ICAgI2RlZmluZSBIRVhBR09OX0wxX1BURV9TSVpFIF9f
+SFZNX1BERV9TXzE2S0INCj4gICAjZW5kaWYNCj4gICANCj4gICAjaWZkZWYgQ09ORklHX1BBR0Vf
+U0laRV82NEtCDQo+IC0jZGVmaW5lIFBBR0VfU0hJRlQgMTYNCj4gICAjZGVmaW5lIEhFWEFHT05f
+TDFfUFRFX1NJWkUgX19IVk1fUERFX1NfNjRLQg0KPiAgICNlbmRpZg0KPiAgIA0KPiAgICNpZmRl
+ZiBDT05GSUdfUEFHRV9TSVpFXzI1NktCDQo+IC0jZGVmaW5lIFBBR0VfU0hJRlQgMTgNCj4gICAj
+ZGVmaW5lIEhFWEFHT05fTDFfUFRFX1NJWkUgX19IVk1fUERFX1NfMjU2S0INCj4gICAjZW5kaWYN
+Cj4gICANCj4gICAjaWZkZWYgQ09ORklHX1BBR0VfU0laRV8xTUINCj4gLSNkZWZpbmUgUEFHRV9T
+SElGVCAyMA0KPiAgICNkZWZpbmUgSEVYQUdPTl9MMV9QVEVfU0laRSBfX0hWTV9QREVfU18xTUIN
+Cj4gICAjZW5kaWYNCj4gICANCj4gQEAgLTUwLDYgKzQ1LDcgQEANCj4gICAjZGVmaW5lIEhWTV9I
+VUdFUEFHRV9TSVpFIDB4NQ0KPiAgICNlbmRpZg0KPiAgIA0KPiArI2RlZmluZSBQQUdFX1NISUZU
+IENPTkZJR19QQUdFX1NISUZUDQo+ICAgI2RlZmluZSBQQUdFX1NJWkUgICgxVUwgPDwgUEFHRV9T
+SElGVCkNCj4gICAjZGVmaW5lIFBBR0VfTUFTSyAgKH4oKDEgPDwgUEFHRV9TSElGVCkgLSAxKSkN
+Cj4gICANCg0KQ291bGQgd2UgbW92ZSBQQUdFX1NJWkUgYW5kIFBBR0VfTUFTSyBpbiBhIGdlbmVy
+aWMvY29yZSBoZWFkZXIgaW5zdGVhZCANCm9mIGhhdmluZyBpdCBkdXBsaWNhdGVkIGZvciBlYWNo
+IGFyY2ggPw0KDQpDaHJpc3RvcGhlDQo=
