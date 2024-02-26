@@ -1,154 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5C61CD2F;
-	Mon, 26 Feb 2024 10:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C351DA37;
+	Mon, 26 Feb 2024 10:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944748; cv=none; b=OTdzz6Ak1HiExwT4XQmV/OePmDr8vhLIv1rre0YiIQWPRBR2RpWdFFVbJ5N1QhXV4tUrLk7QlUTYTz7bXrnJMfvxxQebiywI8P03uMsAqwFJWDFdFeYxsuB06D5siwVIRWCfDFcnU66yZUrgMSMh0cbYMsBUhm+ResdOJGwR/VA=
+	t=1708944810; cv=none; b=rycdXJEpSIbjy4LXadLZ9wJwuK0jAQpV9O7JGO53QuoJG1CXZih0Xue1IEdgmLss8xPs0mpquMPrcGGIRnrtle/6Z/2IjnwOiBr6GQRErEuaTzV2DbVty7myG3ETwc8DQvb2wf79tPX1aUZ/nNWbuyewBRNge/L9ykkD+QOjTk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944748; c=relaxed/simple;
-	bh=ekKIocdQoec7SV7sHdadhD/DGm3snDu/b5yKeGLLLck=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=cv5na6GE1zBdUgD9mRfIt1HqoFEA1ByIA5HisBD9w7WRlh56Wubp7+l0z+6jt5gr6kyrGXfJx69DZmc+nZ8VjfLwd4VbBRR4TPxh3Sud5zyMBppniDXC4cjkGH4ybePMJxtbHuDspaRWX/WhZnj2uGoxYdEdeLLAsHbAKa5gQWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EcqgKii1; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708944810; c=relaxed/simple;
+	bh=MfMjSREicPDXRC/3aBTnncTM7gNapB8ABPtYerIMlIA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=deI7jONRoc4iK1BheaJN1O7/9Pt6tevZBu2VKdH//ClJQdofJV+DvIG+wwBnSixCJzVcWXzthHKVDaD+smthk9lhTbc661d7GclLqs1qsrBPMPsI8EG+v8gIbhA1/FU5GMZSuHTKhPDZj8mzipT2+nmXjjQaLcFTpWiLEuqKTfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7PzBfJs; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EcqgKii1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708944747; x=1740480747;
-  h=message-id:date:mime-version:to:cc:references:from:
-   subject:in-reply-to:content-transfer-encoding;
-  bh=ekKIocdQoec7SV7sHdadhD/DGm3snDu/b5yKeGLLLck=;
-  b=EcqgKii1PoRnIiruPzyDmQij4HHJGAPE6YW5Os+E9hH2rw2IbeeodIXl
-   stiX+LNmu694CCTCH7oE9Kxu3xFsHwn4LxQA919z3KZ2fKjCU9LBwnxal
-   eUrYTBRJSzE2TC8qeXQnbVy3jMbGzOrbAMupRMf2sUdvoY/mvkquR7wC8
-   Dk4an5HwItUWxpqeWk/zC/a+39TfT2yh2FJXaFw3nzN49iAsuLzyBLWS3
-   cPds3USnf/0CLwGNqUUYBRfFbokU5cQUyo7BkL9zORQYO6V8jygjAI4Vd
-   KeyKrl8K+hxBoXGJwsJfGXLKweQ2t/ry8Y/AmMmoNK1DZLaLAw4eFD3V0
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3367919"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="3367919"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 02:52:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="937029783"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="937029783"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2024 02:52:23 -0800
-Message-ID: <acc2b877-4b42-fd4d-867b-603dae95d09d@linux.intel.com>
-Date: Mon, 26 Feb 2024 12:54:03 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7PzBfJs"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-412a4a932f4so6106185e9.0;
+        Mon, 26 Feb 2024 02:53:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708944807; x=1709549607; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WxImVZgrwHuDPLvTHCT/J1rnzl1rCH1Ccw5OGBwvHPM=;
+        b=R7PzBfJsDaz8s4ebbFMOBi29olB4Q804x5i/YuENyYPh3ukOJurzrHmnVV/ZIZk5y5
+         AUZp5u7jZWgF3IQRrZoZw2IjoMT5hKPQ2xmcQv2Uwl+FtT6w2GZ4lNAcSDkEz8R71kXN
+         MhazCB3To/Y+E7plDtqOnHiF7qYcw9TuHo3j+SRiUYItkqbNQc+3ojYvxJSa0SrrE8g5
+         n4N9hQW2j86CycxkUMepi4Pb+ZBLN5pBFIIsDS092oExmM/SO+EL6ncIypOIRctZuSwn
+         ffP0DGx1EotUpI2ccoDbFftFHCwJrhHLv3CXteg4HZyWFenJyLkeVJFdpkQAzPp0lO8U
+         88QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708944807; x=1709549607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WxImVZgrwHuDPLvTHCT/J1rnzl1rCH1Ccw5OGBwvHPM=;
+        b=xGFdXVG64Q2gVsl2J1F8fR07S3B5N3xAGutdY949uZIw2ybrkoMiv54jdGz761MrjP
+         PVFQjgkzZ42jb8V8oJwVX4/aUqEckpcTOtnDvm9Vx/N0WRBQ0OoJPBDJcmQG5+hBFE9d
+         w8gqpBM5jHugvNdbNLWBrUOXhyWYPVxbPHgxQZV4Jx96BNgvn0Ssq8ZggsJaRYfOoDFZ
+         6AEBReVEZwnopUxuR2tK92FJGjBVRjbnpFYwM/05e0b0VG7JrSZxCJLUnbY3j2xR5MQC
+         N8ypjfj5xD4orT84eRjvDQzy6pdoXzCTCOS4bIsjEu5gNnwpqTnUgXqweJQfTbaDqQF0
+         AFsA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQimkaG601L87evuTKiCx9FbYqeVXYUc3eY20yOAoklCJkQBZDwN5CTvBf+dO69FvHoHHDC8NkdtcaiKZEIXx62oe9SKdvjdMNw0dziC6m5MtDfIwY4mge01wMr7Z7DtZQ9fArf8wvA1jQjEZVdQ==
+X-Gm-Message-State: AOJu0Yz8loiPI+FJT2dUVkjCioi1VOksFYRbaDBxAZ52bC1RGzHmWFAd
+	fz9Ic+4XvPxB/ofBB8u1j7Sug87LBA8vWz41HW4LsW1Wy+B4vJWV
+X-Google-Smtp-Source: AGHT+IFS46DdNEiDIIuLjUalKwqRgb8fMiohPHldcIt0jR12r1ZO9era2cs2BvZcIixNBzEHG1yWqg==
+X-Received: by 2002:a05:600c:1f0f:b0:412:a4fc:219b with SMTP id bd15-20020a05600c1f0f00b00412a4fc219bmr1780452wmb.41.1708944807012;
+        Mon, 26 Feb 2024 02:53:27 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id o25-20020a05600c379900b004129051a8f7sm11378892wmr.41.2024.02.26.02.53.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 02:53:26 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] perf test: Fix spelling mistake "curent" -> "current"
+Date: Mon, 26 Feb 2024 10:53:26 +0000
+Message-Id: <20240226105326.3944887-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.13.0
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Thomas Gleixner <tglx@linutronix.de>
-Cc: "Christian A. Ehrhardt" <lk@c--e.de>, niklas.neronin@linux.intel.com,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
- Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- linux-x86_64@vger.kernel.org, netdev@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-References: <CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com>
- <e7b96819-edf7-1f9f-7b01-e2e805c99b33@linux.intel.com>
- <CABXGCsPjW_Gr4fGBzYSkr_4tsn0fvuT72G-YJYXcb1a4kX=CQw@mail.gmail.com>
- <2d87509a-1515-520c-4b9e-bba4cd4fa2c6@linux.intel.com>
- <CABXGCsPdXqRG6v97KDGy+o59xc3ayaq3rLj267veC7YcKVp8ww@mail.gmail.com>
- <1126ed0a-bfc1-a752-1b5e-f1339d7a8aa5@linux.intel.com>
- <CABXGCsN5_O3iKDOyYxtsGTGDA6fw4962CjzXLSnOK3rscELq+Q@mail.gmail.com>
- <a026ecd8-6fba-017d-d673-0d0759a37ed8@linux.intel.com>
- <CABXGCsOgy8H4GGcNU1jRE+SzRqwnPeNuy_3xBukjwB-bPxeZrQ@mail.gmail.com>
- <CABXGCsOd=E428ixUOw+msRpnaubgx5-cVU7TDXwRUCdrM5Oicw@mail.gmail.com>
- <34d7ab1b-ab12-489d-a480-5e6ccc41bfc3@infradead.org>
- <10487018-49b8-4b27-98a1-07cee732290d@infradead.org>
- <4f34b6a8-4415-6ea4-8090-262847d606c6@linux.intel.com>
- <3ea25443-1275-4c67-90e0-b637212d32b5@leemhuis.info>
- <1e719367-01ae-565a-2199-0ff7e260422b@linux.intel.com>
- <410817b8-1cf9-4285-b20b-f1fa0513cee8@leemhuis.info>
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: This is the fourth time I've tried to find what led to the
- regression of outgoing network speed and each time I find the merge commit
- 8c94ccc7cd691472461448f98e2372c75849406c
-In-Reply-To: <410817b8-1cf9-4285-b20b-f1fa0513cee8@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On 26.2.2024 11.51, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 26.02.24 10:24, Mathias Nyman wrote:
->> On 26.2.2024 7.45, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 21.02.24 14:44, Mathias Nyman wrote:
->>>> On 21.2.2024 1.43, Randy Dunlap wrote:
->>>>> On 2/20/24 15:41, Randy Dunlap wrote:
->>>>>> {+ tglx]
->>>>>> On 2/20/24 15:19, Mikhail Gavrilov wrote:
->>>>>>> On Mon, Feb 19, 2024 at 2:41 PM Mikhail Gavrilov
->>>>>>> <mikhail.v.gavrilov@gmail.com> wrote:
->>>>>>> I spotted network performance regression and it turned out, this was
->>>>>>> due to the network card getting other interrupt. It is a side effect
->>>>>>> of commit 57e153dfd0e7a080373fe5853c5609443d97fa5a.
->>>>>> That's a merge commit (AFAIK, maybe not so much). The commit in
->>>>>> mainline is:
->>>>>>
->>>>>> commit f977f4c9301c
->>>>>> Author: Niklas Neronin <niklas.neronin@linux.intel.com>
->>>>>> Date:   Fri Dec 1 17:06:40 2023 +0200
->>>>>>
->>>>>>        xhci: add handler for only one interrupt line
->>>>>>
->>>>>>> Installing irqbalance daemon did not help. Maybe someone experienced
->>>>>>> such a problem?
->>>>>>
->>>>>> Thomas, would you look at this, please?
->>>>>>
->>>>>> A network device and xhci (USB) driver are now sharing interrupts.
->>>>>> This causes a large performance decrease for the networking device.
->>>>
->>>> Short recap:
->>>
->>> Thx for that. As the 6.8 release is merely two or three weeks away while
->>> a fix is nowhere near in sight yet (afaics!) I start to wonder if we
->>> should consider a revert here and try reapplying the culprit in a later
->>> cycle when this problem is fixed.
-> 
-> Thx for the reply.
-> 
->> I don't think reverting this series is a solution.
->>
->> This isn't really about those usb xhci patches.
->> This is about which interrupt gets assigned to which CPU.
-> 
-> I know, but from my understanding of Linus expectations wrt to handling
-> regressions it does not matter much if a bug existed earlier or
-> somewhere else: what counts is the commit that exposed the problem.
-> 
-> But I might be wrong here. Anyway, not CCing Linus for this; but I'll
-> likely point him to this direction on Sunday in my next weekly report,
-> unless some fix comes into sight.
-> 
->> Mikhail got unlucky when the network adapter interrupts on that system was
->> assigned to CPU0, clearly a more "clogged" CPU, thus causing a drop in max
->> bandwidth.
-> 
-> But maybe others will be just as "unlucky". Or is there anything to
-> believe otherwise? Maybe some aspect of the .config or local setup that
-> is most likely unique to Mikhail's setup?
+There is a spelling mistake in a pr_debug message. Fix it.
 
-I believe this is a zero-sum case.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/perf/tests/symbols.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Others got equally lucky due to this change.
-Their devices end up interrupting less clogged CPUs and see a similar
-performance increase.
-  
-Thanks
-Mathias
+diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
+index 2fed6d67f50f..d208105919ed 100644
+--- a/tools/perf/tests/symbols.c
++++ b/tools/perf/tests/symbols.c
+@@ -85,7 +85,7 @@ static int create_map(struct test_info *ti, char *filename, struct map **map_p)
+ 		*map_p = find_module_map(ti->machine, dso);
+ 		dso__put(dso);
+ 		if (!*map_p) {
+-			pr_debug("Failed to find map for curent kernel module %s",
++			pr_debug("Failed to find map for current kernel module %s",
+ 				 filename);
+ 			return TEST_FAIL;
+ 		}
+-- 
+2.39.2
 
