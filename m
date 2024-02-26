@@ -1,129 +1,146 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA8E5914E
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC19E3C473;
+	Mon, 26 Feb 2024 10:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708943498; cv=none; b=hlBxK8Oa2sHgMucsDd/TaPD7kz5jwpK7JG3CJQcwSnWoF4Tz7uLvl/QBvzEmXx6HSLFxnm6ljFzv3Zzds/Icd2r00cnfpxiz8hvF5JZ6Tsqh6XkPj3RCN9wVDl2aIoPhgOMrOhgr3UP+dxqhPyuc+TPGwHZawXli00eWQidVLZM=
+	t=1708943565; cv=none; b=cuOpaWSc8qix9hfamCgMrqYVNz2Fbg/lNyb9PuZy0RvdbLb7YgpA6MamPNU4Sle7UVX6eWw7jfMZtGU8iXNQQyB+A0uQjZLESjUa5bq39P6hwGcJU8manp80/17e2qPpzDgFHxWx214LS0G033T9FG/bT/i8k1AP4i/Lf4sFtCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708943498; c=relaxed/simple;
-	bh=YBmvDMpRGbUssXw57iHLXnbZL+pvLvxeKYGu3bFUqMI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ThtoAdJUK9ewW4RxQ7wVQfcaQlbUl4GdEH2JraDL+jqW003Xh+RPkMYCobStLk0Ym8HZwU6FqInU+9Em65oPW/IHAaiRibT5QlYcbomCjCDfGPaLq2lRxH0776AkUCCKxnA7OlGcFS23DvTng8EpzA9H6gWxpYQO2JkTmeUaG1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SzwyDB/r; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1708943565; c=relaxed/simple;
+	bh=F3u55OhGV8InGLOYAPhg8yuB0UVyGy0x9fN5zJSV8wE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ORiLn60HRX4ltb32q+qHo5rhRnCaJbyH0O/x99YrOPAAV/63KszulsUd5w+i1tYN7Z6T+DSy7wzmy2/fZABrjmM3jAFsOQ9/ZQPZjwwYdkUY2fBkzI+4hE5zPD4RdhDuCemrtG3OpsHU0f7dzDt9Bx4VjaooLlWgsUAG9u3NkyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mJvurQKT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SzwyDB/r"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41Q9JLf3018413;
-	Mon, 26 Feb 2024 10:31:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=le4LCgrgl0rQAQk2X8xwPeGpze2aZA5cLCkLShXKXyo=;
- b=SzwyDB/rjwukVAMs8+qo23oDKO17zsG+Aj96YibLhgzof29rVjCRBwt6wt/RisC44t4A
- e3igHRR12L1uEzq3/yrlNMUoAmVmvOssZGsQR+39SyVZ+DsNcOxJGuLhppZ0OCjdAtoR
- VGkyo6LDfrCfM0CPg8sekNqE6O6mR5/63G4suv8s7BarF0p0r/T0SE6iwvBrlkGF0oHq
- IWv8+HmYnHJKOUfivo5cjxnu8FbsFLJG/2Q8EHiGz+qD5UsafSAmKKGbgZbDVrlD8VNz
- zDC1lrBQsok6scnj3nLW+zEowvVhYhaB626ik4SmDJD7cU11pPGvJ2Gr89DaWEXlD8Ld Jw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wg0bh5atn-1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mJvurQKT"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41Q5eY7H016300;
+	Mon, 26 Feb 2024 10:32:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=Oh0I/8EOZ6xCmzAUVJLEl67sfABnr7ehv+/eYw3Po3k=; b=mJ
+	vurQKTxWEqeqvKvgrf9s/KWMl38bjh+TCHJZ80a7WXUVtg+SoVvmMYJsNcMi2/Ro
+	D1bJBrHQRM7WkDXAP2qmaKWZcrF6Sg4v+v/S9zDn1VCpyjWgMnczE3dzjNjV15dP
+	iA9+VnmEFdKS5Yrn3bAXJjJsA6owDALJGHHlUVQYzmJsAJtY0+CIbS6nFIQjV8lE
+	TmVKJfbhzd4f9srLs7n7qibDMdbd9ncWonyVADhn7SiI7+Ab30ZGvJvX66bGc2Bc
+	LGZw6BLxULOyzoE5FbR/MsFS9Gy/H7poJRmq2Q70tq590YLak2V8QDpaNoD3+nWN
+	kGaPWNPGj25fm7KVI9Ag==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wgkxn0m7g-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 10:31:24 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41QAVEJZ006271;
-	Mon, 26 Feb 2024 10:31:20 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wg0bh5adx-1
+	Mon, 26 Feb 2024 10:32:39 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41QAWd35008758
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 10:31:20 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41Q95gUl008147;
-	Mon, 26 Feb 2024 10:30:20 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfv9m08q1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 10:30:20 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41QAUEUr13435474
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Feb 2024 10:30:16 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7746D20063;
-	Mon, 26 Feb 2024 10:30:14 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 061DD20040;
-	Mon, 26 Feb 2024 10:30:12 +0000 (GMT)
-Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.in.ibm.com (unknown [9.203.115.195])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 26 Feb 2024 10:30:11 +0000 (GMT)
-From: Hari Bathini <hbathini@linux.ibm.com>
-To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Kexec-ml <kexec@lists.infradead.org>
-Cc: lkml <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, Dave Young <dyoung@redhat.com>
-Subject: [PATCH linux-next v2 0/3] powerpc/kexec: split CONFIG_CRASH_DUMP out from CONFIG_KEXEC_CORE
-Date: Mon, 26 Feb 2024 16:00:07 +0530
-Message-ID: <20240226103010.589537-1-hbathini@linux.ibm.com>
-X-Mailer: git-send-email 2.43.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nTwYa3cQ1v0eiyh8TCyR0naNdMplF2k2
-X-Proofpoint-GUID: edVtaD2Y3it8A-0l1Pshl5wXE-nEVdPN
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Mon, 26 Feb 2024 10:32:39 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 26 Feb
+ 2024 02:32:36 -0800
+Message-ID: <d617c991-b7a7-eb8f-0747-303c33cbf9a7@quicinc.com>
+Date: Mon, 26 Feb 2024 16:02:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] soc: qcom: llcc: Add llcc device availability check
+Content-Language: en-US
+To: Sahil Chandna <quic_chandna@quicinc.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240220122805.9084-1-quic_mojha@quicinc.com>
+ <c60638be-e12e-4148-8c20-1dbba9c817da@quicinc.com>
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <c60638be-e12e-4148-8c20-1dbba9c817da@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: iiFrOk5F21ZQD7YkY-qWH2GQK1LBOq-_
+X-Proofpoint-GUID: iiFrOk5F21ZQD7YkY-qWH2GQK1LBOq-_
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-26_07,2024-02-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2402260079
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 lowpriorityscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2402260080
 
-This patch series is a follow-up to [1] based on discussions at [2]
-about additional work needed to get it working on powerpc.
 
-The first patch in the series makes struct crash_mem available with or
-without CONFIG_CRASH_DUMP enabled. The next patch moves kdump specific
-code for kexec_file_load syscall under CONFIG_CRASH_DUMP and the last
-patch splits other kdump specific code under CONFIG_CRASH_DUMP and
-removes dependency with CONFIG_CRASH_DUMP for CONFIG_KEXEC_CORE.
 
-[1] https://lore.kernel.org/all/20240124051254.67105-1-bhe@redhat.com/
-[2] https://lore.kernel.org/all/9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com/
+On 2/22/2024 11:37 PM, Sahil Chandna wrote:
+> On 2/20/2024 5:58 PM, Mukesh Ojha wrote:
+>> When llcc driver is enabled  and llcc device is not
+>> physically there on the SoC, client can get
+>> -EPROBE_DEFER on calling llcc_slice_getd() and it
+>> is possible they defer forever.
+>>
+>> Let's add a check device availabilty and set the
+>> appropriate applicable error in drv_data.
+>>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>>   drivers/soc/qcom/llcc-qcom.c | 23 ++++++++++++++++++++++-
+>>   1 file changed, 22 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
+>> index 4ca88eaebf06..cb336b183bba 100644
+>> --- a/drivers/soc/qcom/llcc-qcom.c
+>> +++ b/drivers/soc/qcom/llcc-qcom.c
+>> @@ -769,6 +769,27 @@ static const struct qcom_sct_config x1e80100_cfgs 
+>> = {
+>>   };
+>>   static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
+>> +static DEFINE_MUTEX(dev_avail);
+> what is the requirement for mutex lock here? Since we are only trying to 
+> find if node present or not
 
-Changes in v2:
-* Fixed a compile error for POWERNV build reported by Sourabh.
+I was trying to avoid two parallel call from llcc_slice_getd() calling
+parallel call to of_find_node_by_name() as it should be one time search 
+for device presence to find a node and check if device is present or
+not.
 
-Hari Bathini (3):
-  kexec/kdump: make struct crash_mem available without CONFIG_CRASH_DUMP
-  powerpc/kexec: split CONFIG_KEXEC_FILE and CONFIG_CRASH_DUMP
-  powerpc/kdump: Split KEXEC_CORE and CRASH_DUMP dependency
+-Mukesh
 
- arch/powerpc/Kconfig                 |   9 +-
- arch/powerpc/include/asm/kexec.h     |  98 +++++-----
- arch/powerpc/kernel/prom.c           |   2 +-
- arch/powerpc/kernel/setup-common.c   |   2 +-
- arch/powerpc/kernel/smp.c            |   4 +-
- arch/powerpc/kexec/Makefile          |   3 +-
- arch/powerpc/kexec/core.c            |   4 +
- arch/powerpc/kexec/elf_64.c          |   4 +-
- arch/powerpc/kexec/file_load_64.c    | 269 ++++++++++++++-------------
- arch/powerpc/platforms/powernv/smp.c |   2 +-
- include/linux/crash_core.h           |  12 +-
- 11 files changed, 209 insertions(+), 200 deletions(-)
-
--- 
-2.43.2
-
+>> +
+>> +static bool is_llcc_device_available(void)
+>> +{
+>> +    static struct llcc_drv_data *ptr;
+>> +
+>> +    mutex_lock(&dev_avail);
+>> +    if (!ptr) {
+>> +        struct device_node *node;
+>> +
+>> +        node = of_find_node_by_name(NULL, "system-cache-controller");
+>> +        if (!of_device_is_available(node)) {
+>> +            pr_warn("llcc-qcom: system-cache-controller node not 
+>> found\n");
+>> +            drv_data = ERR_PTR(-ENODEV);
+>> +        }
+>> +        of_node_put(node);
+>> +        ptr = drv_data;
+>> +    }
+>> +    mutex_unlock(&dev_avail);
+>> +    return (PTR_ERR(ptr) != -ENODEV) ? true : false;
+>> +}
+>>   /**
+>>    * llcc_slice_getd - get llcc slice descriptor
+>> @@ -783,7 +804,7 @@ struct llcc_slice_desc *llcc_slice_getd(u32 uid)
+>>       struct llcc_slice_desc *desc;
+>>       u32 sz, count;
+>> -    if (IS_ERR(drv_data))
+>> +    if (!is_llcc_device_available() || IS_ERR(drv_data))
+>>           return ERR_CAST(drv_data);
+>>       cfg = drv_data->cfg;
+> 
