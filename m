@@ -1,89 +1,132 @@
-Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2FF135419;
-	Mon, 26 Feb 2024 14:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414B42AD16
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 14:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708959333; cv=none; b=QbPZ9XYkbxWsQhVed7Z9qCcBJp9lPBvmDUA8asnxibuS9BUq8DMXQ5z60nyxoMqMkJcOUUkca/0SgKYb6fBMNtuBD2IhydJWKeo++ECFWbb9/4+ehvtJJwLi8G5B5TPYLDLFDZNx9f2b26X4m8ijIepkG2XfJ+DJM17WKH1zQqE=
+	t=1708959448; cv=none; b=r+xOrQ8jD2u5g9/TkQiXsaUsJwiqaBrSBMjlDjKnZheRj/UBs1BC454ejTyNZxnakitR4LO0Pxj4U957kyf27IIW3o/Dro1Q6G8X4pNW+OT9wuCdRu+Btqy13uk/Q4LqRUr3oKO1PCUQ0L1jxZxQtZ8y5pzZlb8YdWtbwYSXHO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708959333; c=relaxed/simple;
-	bh=Ra5nRQiwmBuhhUWhWiSbDuLHQ11UKnwbPZndQYrHsgk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j2bWaEw7iv/5Ie1q8NlJszmmLnYcsp9RvG0gFgD6z8qWi6w7BXGgAFcqixhywaqhWklxuUWZCC0yKAGRLruFT78EhQh6t9YyD+EHcqySBopdmeHVIPufjte8BwMR4dJrZ0Exn0XQP3ZvGBGb27gY5NBgqLnZ2KFsCHNXE8fSGu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
-From: Daniil Dulov <d.dulov@aladdin.ru>
-To: Hans de Goede <hdegoede@redhat.com>
-CC: Daniil Dulov <d.dulov@aladdin.ru>, Mark Gross <mgross@linux.intel.com>,
-	Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>,
-	Vadim Pasternak <vadimp@nvidia.com>, <platform-driver-x86@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] platform/mellanox: mlxreg-hotplug: Check pointer for NULL before dereferencing it
-Date: Mon, 26 Feb 2024 17:54:42 +0300
-Message-ID: <20240226145442.3468-1-d.dulov@aladdin.ru>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708959448; c=relaxed/simple;
+	bh=sPrQVnmnSPaSkztqFXjNFHxol/WrC9nhR5tw9QxJAlg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SrpgD8cy1gwdwFNKjfuOb0mgizyRHICcTY7XbE4UIk1qVXEGLll3YhYiTXNyg5LxPP7y1W2leMJO+4hffuM7j0RCxDeELG97RZJ1e3dVK8RSDaFWPcUUcd5eB6WG6WwezI3t8G5++hQwvW4iuRDH8om2FAYuZuXfzMBeuTjWGpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxbLvpIJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxbLvpIJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8177AC433C7;
+	Mon, 26 Feb 2024 14:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708959447;
+	bh=sPrQVnmnSPaSkztqFXjNFHxol/WrC9nhR5tw9QxJAlg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PxbLvpIJEYlHpdr1A8xYVZRVEbIsK/+s101mjGkyPaiXKiPlcVWfV2SiMgC/jEhP+
+	 pQ06pJ9ltxPT4xzdZVPbL5vPpsXFsMWNNY7WFaQchZgDkrqta2QfSXLaRZ+TMlXRsV
+	 wcJseGzQbaBG4yMbJMQ8ctIV42ivMZcMBzyDTYsfYg4qytm99Bfyth0btOZvBHrzf5
+	 NTsW19P3iTQp1Cu+X93N5fQ/whpRMnjv2RYLnoXDfR2z6Y/KXZPcq/x5K/NeMuSKKy
+	 ro7+4jgNNjBpkEoEFsSxPksi74HqjL7p/YvTAkn7feRnNRHCW20UNUiGZCC5K0qFqz
+	 wP7R/3P8DyLGQ==
+Message-ID: <07675649-181a-4509-a595-d7ff9230e402@kernel.org>
+Date: Mon, 26 Feb 2024 06:57:26 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: deprecate CONFIG_MMU=n
+Content-Language: en-US
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+ Andrew Jones <ajones@ventanamicro.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Atish Patra <atishp@rivosinc.com>
+References: <20240226140649.293254-1-cleger@rivosinc.com>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20240226140649.293254-1-cleger@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EXCH-2016-01.aladdin.ru (192.168.1.101) To
- EXCH-2016-01.aladdin.ru (192.168.1.101)
 
-mlxreg_hotplug_work_helper() implies that item can be NULL. There is a
-sanity check that checks item for NULL and then dereferences it.
+On 2024/02/26 6:06, Clément Léger wrote:
+> Deprecation of NOMMU support for riscv was discussed during LPC 2023
+> [1]. Reasons for this involves lack of users as well as maintenance
+> efforts to support this mode. psABI FDPIC specification also never
+> made it upstream and last public messages of this development seems to
+> date back from 2020 [2]. Plan the deprecation to be done in 2 years from
+> now. Mark the Kconfig option as deprecated by adding a new dummy option
+> which explicitly displays the deprecation in case of CONFIG_MMU=n. This option
+> is selected indirectly by CONFIG_RISCV_M_MODE since an option can not
+> select another one directly with a "select" in case of such CONFIG=n.
+> Additionally, display a pr_err() message at boot time in case of NOMMU
+> build to warn about upcoming deprecation.
+> 
+> Link: https://lpc.events/event/17/contributions/1478/ [1]
+> Link: https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/ZjYUJswknQ4/m/WYRRylTwAAAJ [2]
+> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+> 
+> ---
+>  arch/riscv/Kconfig        | 8 ++++++++
+>  arch/riscv/kernel/setup.c | 4 ++++
+>  2 files changed, 12 insertions(+)
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index bffbd869a068..8da58c102d3f 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -221,6 +221,7 @@ config ARCH_MMAP_RND_COMPAT_BITS_MAX
+>  # set if we run in machine mode, cleared if we run in supervisor mode
+>  config RISCV_M_MODE
+>  	bool
+> +	select NOMMU
+>  	default !MMU
+>  
+>  # set if we are running in S-mode and can use SBI calls
+> @@ -236,6 +237,13 @@ config MMU
+>  	  Select if you want MMU-based virtualised addressing space
+>  	  support by paged memory management. If unsure, say 'Y'.
+>  
+> +config NOMMU
+> +	depends on !MMU
+> +	bool "NOMMU kernel (DEPRECATED)"
+> +	help
+> +	  NOMMU kernel is deprecated and is scheduled for removal by
+> +	  the beginning of 2027.
 
-Even though, the comment before sanity check says that it can only happen
-if some piece of hardware is broken, but in this case it will lead to
-NULL-pointer dereference before the function is even called,
-so let's check it before dereferencing.
+2 years from now is 2026...
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> +
+>  config PAGE_OFFSET
+>  	hex
+>  	default 0xC0000000 if 32BIT && MMU
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index 4f73c0ae44b2..8799816ef0a6 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -295,6 +295,10 @@ void __init setup_arch(char **cmdline_p)
+>  	riscv_set_dma_cache_alignment();
+>  
+>  	riscv_user_isa_enable();
+> +
+> +#if !defined(CONFIG_MMU)
 
-Fixes: c6acad68eb2d ("platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface")
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
----
- drivers/platform/mellanox/mlxreg-hotplug.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+	if (!IS_ENABLED(CONFIG_MMU))
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index 5c022b258f91..524121b9f070 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -348,20 +348,6 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
- 	u32 regval, bit;
- 	int ret;
- 
--	/*
--	 * Validate if item related to received signal type is valid.
--	 * It should never happen, excepted the situation when some
--	 * piece of hardware is broken. In such situation just produce
--	 * error message and return. Caller must continue to handle the
--	 * signals from other devices if any.
--	 */
--	if (unlikely(!item)) {
--		dev_err(priv->dev, "False signal: at offset:mask 0x%02x:0x%02x.\n",
--			item->reg, item->mask);
--
--		return;
--	}
--
- 	/* Mask event. */
- 	ret = regmap_write(priv->regmap, item->reg + MLXREG_HOTPLUG_MASK_OFF,
- 			   0);
-@@ -556,7 +542,7 @@ static void mlxreg_hotplug_work_handler(struct work_struct *work)
- 
- 	/* Handle topology and health configuration changes. */
- 	for (i = 0; i < pdata->counter; i++, item++) {
--		if (aggr_asserted & item->aggr_mask) {
-+		if (item && (aggr_asserted & item->aggr_mask)) {
- 			if (item->health)
- 				mlxreg_hotplug_health_work_helper(priv, item);
- 			else
+would be more elegant here...
+
+> +	pr_err("RISC-V NOMMU support is deprecated and scheduled for removal by the beginning of 2027\n");
+
+Why pr_err() ? pr_warn() seems more appropriate.
+
+> +#endif
+>  }
+>  
+>  bool arch_cpu_is_hotpluggable(int cpu)
+
 -- 
-2.25.1
+Damien Le Moal
+Western Digital Research
 
