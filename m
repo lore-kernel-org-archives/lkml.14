@@ -1,86 +1,132 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301E7131750;
-	Mon, 26 Feb 2024 22:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08647131E3F
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 22:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708985118; cv=none; b=JoC4omrZF/s8cmiznFgN+zCwcKaEM32Svv+j4FcI+gY+wwpPcMUdTSRSet/tEh0Y1vtxyBVhZDNwMGmDWW1ztGLxD5IPg9kWrkRnrPUBG7wjqg6RxkvwjY8ZKNzsW31ZBlaGI/P0WNMEHxk4E7mQU9rJKSpTh2EXAenabwkTiwo=
+	t=1708985156; cv=none; b=F2KtIICvEH6rVMjRJX7AVpx68AZMwGj7qBm8nmS1J/Zuv229mew69u7wRxermKJmk/+BZiQLN5JQZvDr8Y15zBpFNLwBKa6Tz3dgeFiBv0RVxyoSDhf1tADVAgltVzhyZ6ZlM0QKkbB9/Bc5ilu7TLcVINx8ZL5qdRLpTpfbAc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708985118; c=relaxed/simple;
-	bh=p/3wyl8Jo2S9QJLB6T+6NCzPxPyNA7mOUdaRW8YuZWw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AzTBmYLNZbfQpPcI6AgZJ7sWr7zgma6qrq6PGw+mZjN6uLaklznBOjUAbhSI4H5mfes33xdOj1xHc4kttoZjx+BHBPCvLur6XT6Dz0qeeYit6P76JPeAg8fweq99cCebgce3G3ONhRpZ+tNP3qXqWAupYfAYRa5IA293bbcCXqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=WAOAtxwr; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1708985156; c=relaxed/simple;
+	bh=yX1kJCbPWTdvnCbAkmvr1WQD29vVYqXsCcrJQQKRZDM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XHnChu53STIrROnnD3Ix/BfCaia1KMdIZr0DYKJTmSfTNVYxFsa4x45Q9AFIwCPgNE7Bh8xobHpdIWdAPEYv2Q2pOVKUnzzKBgp03RQcprOU+/PYVe6HwBry2UpNhYSZHezBAf8DhCXAnkpiMtlfRkusSKQ42DC58tRNMGBstCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+NziswA; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="WAOAtxwr"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1dc0e5b223eso30079575ad.1;
-        Mon, 26 Feb 2024 14:05:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+NziswA"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-787a2a14d9cso290575985a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 14:05:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1708985116; x=1709589916; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p/3wyl8Jo2S9QJLB6T+6NCzPxPyNA7mOUdaRW8YuZWw=;
-        b=WAOAtxwr1TMCWC/ibqjgpAobRjQUwP8jClDyALdoPMFqUXqyDo4rYFmTb2s7dTuILB
-         j81PKUJYiDH/ILJspfU0GZrj1dGXSErINkFVscAkRRfBnWa6NQ55a4GyiW/faV5TW4cb
-         5Fa7gUhPSSXYlU0suYNBnhTwXEGqU1n6QtL0v6M4XZp7vkt67PjcmNxdA3ohCR6gq0Ve
-         yWTV0lvHuqTiYpIxEhnBiCvoWsReAqBDUQa3RhNsvkWJZF/E24TpoP157xbN3rhbvRcd
-         SnulNUEwVylV4wC322/4qXQFeXjUebrLg8359Qrhr4XmvZp4qFGVCi+vnsnDYE+Z1vvF
-         MWMA==
+        d=gmail.com; s=20230601; t=1708985153; x=1709589953; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=T5WmPlH+GeSSkC2r3zeNTmXAIzwepnNSeSNojo2GFVo=;
+        b=T+NziswAS2Cs0WjxMlEwNiqVHQZU9qVbHUE7cwhUPus316SCqCdStuInHkDdnhMVYu
+         j44pG8Qoh7YfGMGuW9TTsgM6Vnxx3NlsSyD62A4CN9hs/4wBMIG8VGrcwQB15+3pVXvO
+         D9LVkjvus1lCAqii/Wnj6syGBiSLy6Um4dvrI4is0BOxJA+BvdadlPYaz5Cw6SZjPzke
+         2O4/W+oMwBrPhPnUIPEbmRkCKnc+eoWHx1pyGnEq9nsAT9YW7NId04n4++3ntlUEOMub
+         oFSAmZcruL86SXvr05lUJbd9Cof6FCdYvnKTh2XFimc7o6pRfEDAflioZIj8s2PS9+o5
+         qAmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708985116; x=1709589916;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p/3wyl8Jo2S9QJLB6T+6NCzPxPyNA7mOUdaRW8YuZWw=;
-        b=SKRklSOttPYq9KA/hILxi7xAUDzyw+qTgDWzIljU9FEFg8nFS28PbDbe6F39YFvfCQ
-         RbhxOITePEkXuotUnIieS9MPKEYWc5FEnTdETu6vfHMYNjLlhICGXgSqOw5rF3UvXwRr
-         AiH1tne8leMullCtBk6OjwCJtH96wiq1wtyinz8MZPDfoRAgzUcHEgJGs3QNq5itbfr5
-         f/dovsL2Uc1JhIWpitx3ls+/++riMIbxeHEi0gvxNd9W1Fr6jch6OQXD1haemBCKQn0s
-         JFe/3Eb1lufqXfPgVqXdCl5f8Lr9PevYiK7Ayusi8v3+iG6br0jiwvK3lnfoWYkhnImi
-         o4oA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9TsACsjnH1Fv9APlOwNpgVrkbb1+4nAkrRE4AcwGZtUGPuduGpxUWwhclUAhDSxKMe9SKAxHH2V1ANJTe4Ecp6C6FPibZw3LryT3fN1CWLaZbS+1tkYjT97VtHuqTkx0DJyirDRC/7Q==
-X-Gm-Message-State: AOJu0YzfJJMNEXPA6+x0eHikRMrXdfJFdkriK72lZ0zj9x8ClyxqzZxi
-	ez0ZHxBwgrZuYkR40EG5Q6FyFKyBGvgahn5JkToxXARr8dQTfGJFCCwuqHgdmf/Xafdijh34gXp
-	hfgvaBPb0g2N2W2Z1eOGjffwp/kU=
-X-Google-Smtp-Source: AGHT+IF/GAOdaVYQdXJhgPE9e+g37fsL94g20U51TnMoE/5craeH10xNbQkGDkY7uYATSqOuqeXz+FrRGZ5PzyVFXo8=
-X-Received: by 2002:a17:902:ea08:b0:1dc:1ff2:c6d6 with SMTP id
- s8-20020a170902ea0800b001dc1ff2c6d6mr8707132plg.22.1708985116478; Mon, 26 Feb
- 2024 14:05:16 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708985153; x=1709589953;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T5WmPlH+GeSSkC2r3zeNTmXAIzwepnNSeSNojo2GFVo=;
+        b=PTOnfjDtZNEKlwQUchfPhWXftd7lyfzSo1kgHRtrZ6uTYzuA32n80Lsaf7R95sVUNJ
+         8kQ5UZc57uIXK0Kp7i/l+s/v5MywvznZ7TlCpUxBef0qQODzbalI/GkfSXw60SuRcyy+
+         /4taJxFlQJZTpnUSf9UsAdH3TxgEMw27IBl8nNj0t/KvubbqQx13+623qIy0O1ryFIYW
+         DB0rQpOiSdoVrFIETMkWss5isDifRBnXXXFkLQfpBmstqmwIk9ahgAMpx10Jk/3OyBqm
+         hkKIkjdaABmRJjTj3KMW98nA5+1UHb7RQzvV9XNJS9We9DnYhfP1Gy/DkHT2ncMlsYNF
+         +J9A==
+X-Gm-Message-State: AOJu0Ywp++lDVRkJzrkhgiEWoqcs070P7NZWspeXbPs/RKQKnsTDw9KK
+	Cd5deEpRn5vZvbkD3+K4zz97sfDXBcdd57BJAZdBvw5xAVCczSeLLhjYcIs=
+X-Google-Smtp-Source: AGHT+IEa1wplouoy61yETidsAd9JDqMskSySFFRauiGu8PTwLfhuUYL0EusVasE9rlkjMKHuhDTaEg==
+X-Received: by 2002:a05:6214:2429:b0:690:7b4:825 with SMTP id gy9-20020a056214242900b0069007b40825mr526433qvb.26.1708985153624;
+        Mon, 26 Feb 2024 14:05:53 -0800 (PST)
+Received: from citadel.lan (2600-6c4a-4d3f-6d5c-0000-0000-0000-1019.inf6.spectrum.com. [2600:6c4a:4d3f:6d5c::1019])
+        by smtp.gmail.com with ESMTPSA id ow1-20020a0562143f8100b0068fdb03a3a3sm3435376qvb.95.2024.02.26.14.05.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 14:05:53 -0800 (PST)
+From: Brian Gerst <brgerst@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH v2] x86/boot/64: Load kernel GDT in early boot
+Date: Mon, 26 Feb 2024 17:05:44 -0500
+Message-ID: <20240226220544.70769-1-brgerst@gmail.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240224084030.5867-1-krzysztof.kozlowski@linaro.org>
- <20240224084030.5867-2-krzysztof.kozlowski@linaro.org> <e2cda8f8-4250-4ac5-b7ba-6069f37c1b98@linaro.org>
-In-Reply-To: <e2cda8f8-4250-4ac5-b7ba-6069f37c1b98@linaro.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Mon, 26 Feb 2024 23:05:05 +0100
-Message-ID: <CAFBinCAymkEJycdvBeumMVL04_7mNCdr7yGz9pKxh__-Uo3rrA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: amlogic: add Neil, Martin and
- Jerome as maintainers
-To: neil.armstrong@linaro.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 26, 2024 at 9:21=E2=80=AFAM Neil Armstrong
-<neil.armstrong@linaro.org> wrote:
->
-> + linux-amlogic@lists.infradead.org
->
-> On 24/02/2024 09:40, Krzysztof Kozlowski wrote:
-> > Add rest of Linux Amlogic Meson SoC maintainers and reviewers to the
-> > Amlogic board/SoC binding maintainers.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Instead of loading a duplicate GDT just for early boot, load the kernel
+GDT from its physical address.
+
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+---
+v2: Updated to latest tip tree
+
+ arch/x86/include/asm/desc.h |  1 +
+ arch/x86/kernel/head64.c    | 13 ++-----------
+ 2 files changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
+index ec95fe44fa3a..62dc9f59ea76 100644
+--- a/arch/x86/include/asm/desc.h
++++ b/arch/x86/include/asm/desc.h
+@@ -46,6 +46,7 @@ struct gdt_page {
+ } __attribute__((aligned(PAGE_SIZE)));
+ 
+ DECLARE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page);
++DECLARE_INIT_PER_CPU(gdt_page);
+ 
+ /* Provide the original GDT */
+ static inline struct desc_struct *get_cpu_gdt_rw(unsigned int cpu)
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 72351c3121a6..fd77a266f29d 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -68,15 +68,6 @@ unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
+ EXPORT_SYMBOL(vmemmap_base);
+ #endif
+ 
+-/*
+- * GDT used on the boot CPU before switching to virtual addresses.
+- */
+-static struct desc_struct startup_gdt[GDT_ENTRIES] __initdata = {
+-	[GDT_ENTRY_KERNEL32_CS]         = GDT_ENTRY_INIT(DESC_CODE32, 0, 0xfffff),
+-	[GDT_ENTRY_KERNEL_CS]           = GDT_ENTRY_INIT(DESC_CODE64, 0, 0xfffff),
+-	[GDT_ENTRY_KERNEL_DS]           = GDT_ENTRY_INIT(DESC_DATA64, 0, 0xfffff),
+-};
+-
+ #ifdef CONFIG_X86_5LEVEL
+ static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
+ {
+@@ -589,8 +580,8 @@ void __head startup_64_setup_gdt_idt(void)
+ 	void *handler = NULL;
+ 
+ 	struct desc_ptr startup_gdt_descr = {
+-		.address = (unsigned long)&RIP_REL_REF(startup_gdt),
+-		.size    = sizeof(startup_gdt) - 1,
++		.address = (unsigned long)&RIP_REL_REF(init_per_cpu_var(gdt_page.gdt)),
++		.size    = GDT_SIZE - 1,
+ 	};
+ 
+ 	/* Load GDT */
+
+base-commit: afb9cce6ad6e808cf659f43925941be96f61b9c9
+-- 
+2.43.2
+
