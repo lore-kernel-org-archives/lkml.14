@@ -1,161 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EADF1E878;
-	Mon, 26 Feb 2024 20:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7034D12C55E
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 20:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708980197; cv=none; b=CdfJjekNh+rxCs5edzht5nSzVfvsckvfGn+9F/KPSSHVqC974eXmrvhzkxPtlJxJO5BEiR/VG1QrQ+ExaRz9TCp4YYUyibqoQwh0/5uKRsO3Vyv0TTTpKAXdP6GPTNBMxi+38POFhCy74pvO1WjhIJTHhhfNpKxzjrUn/s3VXl0=
+	t=1708980613; cv=none; b=I++AoVzr9XNae6DEZruZvBJcoqfzQQMlyI3KBbl1r8g6OC9ZNJ7ph6NcjidanBziYf4nAjNZIe4hYkNE/rmVD81WLv6YQvh2Qo6hD/A7vlMQGBC7e4BM5k0J7ibIcDqL4wD2nPwcyMau1WUnD613A8xRPnaEheMdeG7TeuTOH+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708980197; c=relaxed/simple;
-	bh=MdpXJHvPFyl1RGvBDZHlVxvMYdSYQEzmwqbyhU9uefI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pllEUbQcNu5kfDFWYcoVSQG1kpnvMoibO3vFQbt3U2B92MjShMut4M4osFBxhVqbiW74QuLGPSTEkGpIe/M7YWmkFuDUtdeotifXzW2BErR2SZ/6dejajnwqMpKbJ1rGEl90amxZxWL6yWT2uIsOGXu+RU0XSLcCnrLLjjfQJuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFTKedXe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708980613; c=relaxed/simple;
+	bh=EFzQ048XVQadnpWaezrhvIBalzckp/A18w0hw0sx5VM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VDtrBfZ5DjBAJkvHzESAfxzdg19fYQ+iypXWc7c062PVmRgl7D6vMEiYU4BYdsmRzhBCx3biHgsU/ohoZTzRAYw00Z1+/1fVaxXAVUbsdtvwt/2lZgsIISVLntKf60SizvLQ8gJGBxjOSaKdIqwmQFZRnFAnrh4u5Yw6bVbkr4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ACnsvKAp; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFTKedXe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DBD2C433F1;
-	Mon, 26 Feb 2024 20:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708980197;
-	bh=MdpXJHvPFyl1RGvBDZHlVxvMYdSYQEzmwqbyhU9uefI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mFTKedXeGids3PFaNjc8pIdSTCfpY1rxt/VGX52eFORSwm45uc6U8Oly1UDpo09jC
-	 wTbTQrcU68F418dMHqJgghcgJeLiGFJyM6Uyvyc4+kOs3rzNrEal2u4J9dZPH87xjA
-	 679uJKZDD04T90Tn2sYH5JMv4RGiSa0d+OEUlICSJ89mBVtWQvvHuij2mPHyqpc4yQ
-	 u1LQQM9X/HNRt23aBUqs/qQw/INSsjexkrkXS5jf6JAE7nmOWP5qiczWIN1T4CdAMm
-	 3wzvIOMJo53sB3obX1HRSqbkiD7nbspgIgYdPSbxgsIiI5DJnfBK3SN9F/3kcogWp+
-	 tvsvsWXuRs7qw==
-Date: Mon, 26 Feb 2024 20:41:42 +0000
-From: Simon Horman <horms@kernel.org>
-To: Dmitry Safonov <dima@arista.com>
-Cc: Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Dmitry Safonov <0x7f454c46@gmail.com>
-Subject: Re: [PATCH net-next 03/10] net/tcp: Move tcp_inbound_hash() from
- headers
-Message-ID: <20240226204142.GJ13129@kernel.org>
-References: <20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@arista.com>
- <20240224-tcp-ao-tracepoints-v1-3-15f31b7f30a7@arista.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACnsvKAp"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7da6e831977so437371241.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:50:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708980611; x=1709585411; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=21VVnvV+8fyMK5A5F+ykm7rHLhBGKI6x/dMJLjTkT0M=;
+        b=ACnsvKApS5YGBQM+UOys6bKszxCXB7/rBsji/kqrBMbkDthW6a3sROB8jpZaxqimS5
+         6dNVLXY+NI0pt1qF7DkxWeVsSlhmkxcX2oSDCC2bphR/zh1lmd5rTIzgrXgTuv/uTRXc
+         c5jrvsjw5ozocSiKx85rxup4H0LkEROfXYjdi8E/NwJvZOodpUJWELozxLhXM7XNJu3B
+         CFFhF21z/1yn+MeAS6+QowtyIi91MmkZa8sWu4wgjQ6tzp+S99cyGWtyYUKJdMbuFZ9m
+         +BcDW3rMiXjisegCj7hUN8Hc44uh5i7wIo0CQvzZSJSQwQNpcDXOX2PkwEoYcHM36r4o
+         V1+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708980611; x=1709585411;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=21VVnvV+8fyMK5A5F+ykm7rHLhBGKI6x/dMJLjTkT0M=;
+        b=gh4tr8aPG4mh85x4jQnJAvFkRSV9gjcfUP6HewRA+WjDGFZBqZT4/o4okDjK9G54ib
+         /z3rqC+mKZ/O2Br6VJT3nJFj8rE0Hjp9/skxKEEObA5PGHxZsZkgzDuLuTtkTGSmLwzF
+         GQX7V/iL3yrj7ts9kIB85k4zDs0ShpS1tYNAS8ww7ov4luGolSOGyV9W1D+R7oHvnJTj
+         iGkIHN8sX/vgysdqLERd3b/0MiWVkNlCEZOxsmh5jTJzfLfWs+oLk+VOTDC74JjsD8/g
+         ezyJsDbStYWgyolAKMF9ZGXVBxI/VUTXIo77hXMugl4MiaHf9BzPl2xbtA0VdNit1ykL
+         qaeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPNeEMAGeDPfocsEylRkYui7E6M0P7UCE/hN33c+XUH6j/y+TJ0TPC8MgZobrmjvx8s+nNcfDKBduhp0Y4PMfyxv8+2mZeSiHoETOJ
+X-Gm-Message-State: AOJu0YwmSEheHxVsAnZAongchMTUYfmdNTvICA0AfqggjuIKgTSAePBC
+	z4pKBVg+N69NWKlxvPrAl9weXQEe0QLfEA5uhaDxBVLDfozmT1Yw/zKCVLt5elA1RCE1S7qEwmI
+	mCXa6/c/xDt/Q+6HQsLg9pXCsYmQ=
+X-Google-Smtp-Source: AGHT+IEdCPFYY2btKi3bJxNTN4gBmARMBQKwxn/TaiW7B5j0KDJgX6OVZmbI4zx7wFjzdoqCzTgIPANPctbqrt0SXrE=
+X-Received: by 2002:a05:6102:510a:b0:472:2e63:ef2c with SMTP id
+ bm10-20020a056102510a00b004722e63ef2cmr2433610vsb.9.1708980611352; Mon, 26
+ Feb 2024 12:50:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240224-tcp-ao-tracepoints-v1-3-15f31b7f30a7@arista.com>
+References: <CAGsJ_4zera4+bWuXHKjdU3QdiR3sqcUQB3gF08DPD49OCT4S9w@mail.gmail.com>
+ <20240226083714.26187-1-ioworker0@gmail.com> <9bcf5141-7376-441e-bbe3-779956ef28b9@redhat.com>
+ <CAK1f24mdwjz2J5VmeYSDwb4jMbrXUVCSF_0pOcWSVt1cfa0FhQ@mail.gmail.com> <318be511-06de-423e-8216-af869f27f849@arm.com>
+In-Reply-To: <318be511-06de-423e-8216-af869f27f849@arm.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 27 Feb 2024 09:49:59 +1300
+Message-ID: <CAGsJ_4z+0yXUDYwxKNAqYwxAAYpfKpKd2u_dVTDP3b-KPOQT1g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/madvise: enhance lazyfreeing with mTHP in madvise_free
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Lance Yang <ioworker0@gmail.com>, David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com, 
+	minchan@kernel.org, peterx@redhat.com, shy828301@gmail.com, 
+	songmuchun@bytedance.com, wangkefeng.wang@huawei.com, zokeefe@google.com, 
+	fengwei.yin@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 24, 2024 at 09:04:11AM +0000, Dmitry Safonov wrote:
-> Two reasons:
-> 1. It's grown up enough
-> 2. In order to not do header spaghetti by including
->    <trace/events/tcp.h>, which is necessary for TCP tracepoints.
-> 
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
+On Tue, Feb 27, 2024 at 2:04=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com>=
+ wrote:
+>
+> On 26/02/2024 08:55, Lance Yang wrote:
+> > Hey David,
+> >
+> > Thanks for your suggestion!
+> >
+> > On Mon, Feb 26, 2024 at 4:41=E2=80=AFPM David Hildenbrand <david@redhat=
+.com> wrote:
+> >>
+> > [...]
+> >>> On Mon, Feb 26, 2024 at 12:00=E2=80=AFPM Barry Song <21cnbao@gmail.co=
+m> wrote:
+> >>> [...]
+> >>>> On Mon, Feb 26, 2024 at 1:33=E2=80=AFAM Lance Yang <ioworker0@gmail.=
+com> wrote:
+> >>> [...]
+> > [...]
+> >>> +static inline bool pte_range_cont_mapped(pte_t *pte, unsigned long n=
+r)
+> >>> +{
+> >>> +     pte_t pte_val;
+> >>> +     unsigned long pfn =3D pte_pfn(pte);
+> >>> +     for (int i =3D 0; i < nr; i++) {
+> >>> +             pte_val =3D ptep_get(pte + i);
+> >>> +             if (pte_none(pte_val) || pte_pfn(pte_val) !=3D (pfn + i=
+))
+> >>> +                     return false;
+> >>> +     }
+> >>> +     return true;
+> >>> +}
+> >>
+> >> I dislike the "cont mapped" terminology.
+> >>
+> >> Maybe folio_pte_batch() does what you want?
+> >
+> > folio_pte_batch() is a good choice. Appreciate it!
+>
+> Agreed, folio_pte_batch() is likely to be widely useful for this change a=
+nd
+> others, so suggest exporting it from memory.c and reusing as is if possib=
+le.
 
-...
+I actually missed folio_pte_batch() in cont-pte series and re-invented
+a function
+to check if a large folio is entirely mapped in MADV_PAGEOUT[1]. exporting
+folio_pte_batch() will also benefit that case. The problem space is same.
 
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index c82dc42f57c6..5fd61ae6bcc9 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -4485,6 +4485,78 @@ EXPORT_SYMBOL(tcp_inbound_md5_hash);
->  
->  #endif
->  
-> +/* Called with rcu_read_lock() */
-> +enum skb_drop_reason
-> +tcp_inbound_hash(struct sock *sk, const struct request_sock *req,
-> +		 const struct sk_buff *skb,
-> +		 const void *saddr, const void *daddr,
-> +		 int family, int dif, int sdif)
-> +{
-> +	const struct tcphdr *th = tcp_hdr(skb);
-> +	const struct tcp_ao_hdr *aoh;
-> +	const __u8 *md5_location;
-> +	int l3index;
-> +
-> +	/* Invalid option or two times meet any of auth options */
-> +	if (tcp_parse_auth_options(th, &md5_location, &aoh)) {
-> +		tcp_hash_fail("TCP segment has incorrect auth options set",
-> +			      family, skb, "");
-> +		return SKB_DROP_REASON_TCP_AUTH_HDR;
-> +	}
-> +
-> +	if (req) {
-> +		if (tcp_rsk_used_ao(req) != !!aoh) {
-> +			u8 keyid, rnext, maclen;
-> +
-> +			if (aoh) {
-> +				keyid = aoh->keyid;
-> +				rnext = aoh->rnext_keyid;
-> +				maclen = tcp_ao_hdr_maclen(aoh);
-> +			} else {
-> +				keyid = rnext = maclen = 0;
-> +			}
+[1] https://lore.kernel.org/linux-mm/20240118111036.72641-7-21cnbao@gmail.c=
+om/
 
-Hi Dmitry,
+>
+> >
+> > Best,
+> > Lance
+> >
+> >>
+> >> --
+> >> Cheers,
+> >>
+> >> David / dhildenb
 
-it looks like keyid is set but otherwise unused.
-
-Flagged by W=1 builds with gcc-13 and clang-17.
-
-> +
-> +			NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPAOBAD);
-> +			tcp_hash_fail("TCP connection can't start/end using TCP-AO",
-> +				      family, skb, "%s",
-> +				      !aoh ? "missing AO" : "AO signed");
-> +			return SKB_DROP_REASON_TCP_AOFAILURE;
-> +		}
-> +	}
-> +
-> +	/* sdif set, means packet ingressed via a device
-> +	 * in an L3 domain and dif is set to the l3mdev
-> +	 */
-> +	l3index = sdif ? dif : 0;
-> +
-> +	/* Fast path: unsigned segments */
-> +	if (likely(!md5_location && !aoh)) {
-> +		/* Drop if there's TCP-MD5 or TCP-AO key with any rcvid/sndid
-> +		 * for the remote peer. On TCP-AO established connection
-> +		 * the last key is impossible to remove, so there's
-> +		 * always at least one current_key.
-> +		 */
-> +		if (tcp_ao_required(sk, saddr, family, l3index, true)) {
-> +			tcp_hash_fail("AO hash is required, but not found",
-> +					family, skb, "L3 index %d", l3index);
-> +			return SKB_DROP_REASON_TCP_AONOTFOUND;
-> +		}
-> +		if (unlikely(tcp_md5_do_lookup(sk, l3index, saddr, family))) {
-> +			NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPMD5NOTFOUND);
-> +			tcp_hash_fail("MD5 Hash not found",
-> +				      family, skb, "L3 index %d", l3index);
-> +			return SKB_DROP_REASON_TCP_MD5NOTFOUND;
-> +		}
-> +		return SKB_NOT_DROPPED_YET;
-> +	}
-> +
-> +	if (aoh)
-> +		return tcp_inbound_ao_hash(sk, skb, family, req, l3index, aoh);
-> +
-> +	return tcp_inbound_md5_hash(sk, skb, saddr, daddr, family,
-> +				    l3index, md5_location);
-> +}
-> +
->  void tcp_done(struct sock *sk)
->  {
->  	struct request_sock *req;
-> 
-> -- 
-> 2.43.0
-> 
-> 
+Thanks
+Barry
