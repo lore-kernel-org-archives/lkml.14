@@ -1,88 +1,91 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFEB12C7F6;
-	Mon, 26 Feb 2024 20:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC5D2AD0F;
+	Mon, 26 Feb 2024 20:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.47.171.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708980810; cv=none; b=VZovVbne7JV2cIatGeLlBOGOGw2ECVkGJ7+35RvhG0XkfiQBa7ChF8LmTZ7QM8cQG9aCCgEy41cF2kY4E1fuFc2i6/7W2gcsaXR8QjScUQdoOnOaa23gpnyX02UGgSA1Td+TXNMxnCD7naLFKrOhZfvLcDYuSOAHsZjlQpiLj0I=
+	t=1708980957; cv=none; b=XS49tVPjDDruoxZz5951KNH35BGHLqFIL7+43EmAkI9mb7JWybV78PIb5hrR7BrITYEy9RSM9fdeLe3SYuJNtPuJJq1kK5lCPdG7EtbORRgSMHv/s0GWBWuBpeSXrDrwJGTBalxEguJ8kzcl/X/7Mr0yVdpYReB02kp48lDFtss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708980810; c=relaxed/simple;
-	bh=0uuyXwtXBhT4lKZPab76TWhVhwVGMx+Z82IxNhoFkJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WVlzEa8Igj/kfXClyU0Gbdh0vRgMyeHZXkHwh8sfbcKu6/dI4g036Vu0JmuRAfmJe0o0VO+tajJsPIx+gf7WgLB3m93MSBZ5U3YUwLFaf9sbFZChbSL9cRIADRjbNIzVEux4UCFqsWqtI/xL7Gz9WOBvBiOW1pE3QLg76e4WF9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cUFSVx66; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1708980957; c=relaxed/simple;
+	bh=02zprmOhLIbgChsRDiWJHbDY7QAwsInduXqZqDxFSDU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KGpsDy7xIClgjz7O7Fp0sgNfFyykJpOJITX/m90CxLuXUEHe5iWG5q7Ik0bP/FV5la5G5A2M4Z1xmPVwLJsUNjQGe7QVWzxwF2oDWAoiIdFxpXoGagPNl9vkSooS1Jvhuk+8zHSQ5vSC5bk4cGMgs8OniiVPC2cAv59W6OIfVOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=datenfreihafen.org; spf=pass smtp.mailfrom=datenfreihafen.org; dkim=pass (2048-bit key) header.d=datenfreihafen.org header.i=@datenfreihafen.org header.b=hbhyWQdG; arc=none smtp.client-ip=78.47.171.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=datenfreihafen.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=datenfreihafen.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cUFSVx66"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1708980804;
-	bh=VXJnkZmX0FPhcwZxkySoznvdUiSDnw5EemMrFJowppg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cUFSVx669T0DvPz8Ywpe/lCahs7JYL2jrmUbp47Ls7XGCoTfiWQCL0Z53ZHStZt4F
-	 cz5a2xnUJ05ORoBzPxYNG+yvMzhx6OGIkwExbSKN1w44jdTIdrZwVmjKGj0gJYIapr
-	 zqRcoWJlxIznkDmmKzcdGMOUvHDJeSI/e+6nw7vRY5dkbJHLyAYJVM/XU3IgoTicuW
-	 bI+S3J21grbERWfUF6wouP7m3Tz4Hbo4RiJDSaXeRDnNb+UURvswvpDVx7sNw+9syt
-	 dG8+0gQ8JqBmya8e1MrrMMzX9W/R+5Dg6tZ4j3+8Yr7VWzDwFqr3KGtr/ugZu1PQG8
-	 6V+JDSIg1/ajg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=datenfreihafen.org header.i=@datenfreihafen.org header.b="hbhyWQdG"
+Received: from [IPV6:2003:e9:d739:bb29:632d:d63:dac0:8169] (p200300e9d739bb29632d0d63dac08169.dip0.t-ipconnect.de [IPv6:2003:e9:d739:bb29:632d:d63:dac0:8169])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TkCWR6y3Lz4wc6;
-	Tue, 27 Feb 2024 07:53:23 +1100 (AEDT)
-Date: Tue, 27 Feb 2024 07:53:22 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the loongarch tree
-Message-ID: <20240227075322.15f084b7@canb.auug.org.au>
+	(Authenticated sender: stefan@datenfreihafen.org)
+	by proxima.lasnet.de (Postfix) with ESMTPSA id CA816C0924;
+	Mon, 26 Feb 2024 21:49:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=datenfreihafen.org;
+	s=2021; t=1708980590;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W7OAuuFC+fmZ1nPUbf+yUsQuGL64Qf+7Ju4BkHDCQyU=;
+	b=hbhyWQdGtF1jVC6oFeUWMiEA/2Uib6EkQ9ecEZuw5ktZEAFcoeRjg36hFd+fjGEi1Ry3bg
+	FTfFLjiNkbsHpRnwGCAeDr2kmyJBzchfBRjEvRgYrdFiwHk7DggMh3tsa/+m7nSN1s10XT
+	UhA49YuCE0Ctac11Zadx53QbVWQ5NMcvmHEgLTirVGWm4ne24wyQ8/KjK5uhcl51EVowba
+	0keODdJYk1JEG8emE9DsER76SyIIPL59ZpukYG29wPjDYuuI83vm4JUFzjJG9/PL2XX32S
+	MtuKOcZmiNQ7oPhMf0kgl5lel3SFTruW3U6U+YmSO4QaY509Mpb708uVTPkURg==
+Message-ID: <87cc872f-d6f9-47d6-b579-f0412430889c@datenfreihafen.org>
+Date: Mon, 26 Feb 2024 21:48:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/92sZMzJ0992hmEkcQyEN7dW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: ieee802154: at86rf230: convert to use maple tree
+ register cache
+Content-Language: en-US
+To: Bo Liu <liubo03@inspur.com>, alex.aring@gmail.com,
+ miquel.raynal@bootlin.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com
+Cc: linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240202064512.39259-1-liubo03@inspur.com>
+From: Stefan Schmidt <stefan@datenfreihafen.org>
+In-Reply-To: <20240202064512.39259-1-liubo03@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Sig_/92sZMzJ0992hmEkcQyEN7dW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi all,
+On 02.02.24 07:45, Bo Liu wrote:
+> The maple tree register cache is based on a much more modern data structure
+> than the rbtree cache and makes optimisation choices which are probably
+> more appropriate for modern systems than those made by the rbtree cache.
+> 
+> Signed-off-by: Bo Liu <liubo03@inspur.com>
+> ---
+>   drivers/net/ieee802154/at86rf230.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ieee802154/at86rf230.c b/drivers/net/ieee802154/at86rf230.c
+> index 164c7f605af5..6212164ffb36 100644
+> --- a/drivers/net/ieee802154/at86rf230.c
+> +++ b/drivers/net/ieee802154/at86rf230.c
+> @@ -316,7 +316,7 @@ static const struct regmap_config at86rf230_regmap_spi_config = {
+>   	.val_bits = 8,
+>   	.write_flag_mask = CMD_REG | CMD_WRITE,
+>   	.read_flag_mask = CMD_REG,
+> -	.cache_type = REGCACHE_RBTREE,
+> +	.cache_type = REGCACHE_MAPLE,
+>   	.max_register = AT86RF2XX_NUMREGS,
+>   	.writeable_reg = at86rf230_reg_writeable,
+>   	.readable_reg = at86rf230_reg_readable,
 
-Commits
+This patch has been applied to the wpan-next tree and will be
+part of the next pull request to net-next. Thanks!
 
-  58aeb61a338e ("LoongArch: Add ORC stack unwinder support")
-  a6bbf4a71828 ("objtool: Check local label in read_unwind_hints()")
-  81168bc899dd ("objtool: Check local label in add_dead_ends()")
-  545dcd435e0a ("objtool/LoongArch: Enable orc to be built")
-  da7492437f53 ("objtool/x86: Separate arch-specific and generic parts")
-  f7af74356cf9 ("objtool/LoongArch: Implement instruction decoder")
-  b68e6ed546d0 ("objtool/LoongArch: Enable objtool to be built")
-
-are missing a Signed-off-by from their committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/92sZMzJ0992hmEkcQyEN7dW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXc+kIACgkQAVBC80lX
-0Gw0Mwf+NVwXGRXdkxd+z8xmlMkZH1Im7E0A9LOD1m458YbodhqQ6DXKTQWHe7lv
-AS/voOt2B+0mdjn0m8bTgAubDYPzYIgC35SJWLCPksXeCI7gEs+fDsAmZA/Ltz+V
-06VbNzE8ISS6dmj2KN6NmBq0GaxNOCcJyaOsjgKfkuCSt4FSn3yDORikp2e8rj2d
-l13lBEv9QYRvjpQiN5wMpGcQ7/aUCSYomddBAvpHu7ND7LxoJrb2MANOGbC3bOK5
-zUy7QU9h4ZDuh1zpPfMP7uMiFoNi4YacznesbCVwa7ugKWTq4hh9XWcdsjrfRBaa
-WcMg6zyhhCXD2BhCUSAqApEbZkuQ6w==
-=Z0vk
------END PGP SIGNATURE-----
-
---Sig_/92sZMzJ0992hmEkcQyEN7dW--
+regards
+Stefan Schmidt
