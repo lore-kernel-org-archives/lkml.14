@@ -1,134 +1,215 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9310D1CFBE
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6C3249EE
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708942724; cv=none; b=hPJmE6nZb4po5/H/CKzQG0G4u92Z5Gb7k7dq8sWlBCQsd8EfgdQqqElpiAWkOU4g/F5wmfO2bikDXHGVHWfxRsuNJX9Q41ezOzV7J1zmA0X4/sRHxwEmcHq6ktA7j9I/E0AEiQucKhGBequVVAjyLnyNsQiOWhwBrh6lKfGwPoM=
+	t=1708942791; cv=none; b=DqXEmVpBXiQzx7W4cKijv/z3mKMBdAJmQOY4WnTwaTRLHBXpQHCaD/MAoztHrKUQb/sIJYA7+rp782KiDCUk9EAWQSjqTRfOUtrocix6ujZDNLnB/NSJEOlc/58PBLQZZZyLteLsChw4RX7916DNlOH452jdeV88x5BeGEaMrSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708942724; c=relaxed/simple;
-	bh=3dY9v8pzYytwG1dhDWUFwhk6KVuyvtvg0hRzpm2/Tjs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EpM1Hlr9dQJ2dhoRjHJcs8ubBCgIEkc4zmCoWPj+q85QlK2BMGw/oiiJYdjMtZbWjbvoE67c+vQ0Pvv709+b+ZbpMuoWufshAyVuejlVe2RMVS0uMf0w6djKiGTMto2OIJV1EQiblQNL/BVNAef+lhTHm3j3T06nw8YwKDb/RGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cFIEi9BN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708942791; c=relaxed/simple;
+	bh=naM3nrCEoGKVPNMnNa/U9dLb592lAQ5Uqmk/rEeHMTM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U3UDEqkMiOLGCZLcmYS2IwZ44ukGEPVEFr2TRPG9wSMpkGfkp0zNM4TjkZlJea83FtYhcnzJtvlQnPKvJMbsLn4bNCnoIOnSdOIb9s2jpfgP95PiTsnCaga6TWoOYWgQwi2dIqSSTRMBEETBvjNutkyoOWs57HW2N1PFIF5bLUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=gLydUfzo; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cFIEi9BN"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41Q5dJPw011612;
-	Mon, 26 Feb 2024 10:18:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=O2DE/nIvS1ODn/CemR0wgKU5W8KOvSU+fm4XqxrMHec=; b=cF
-	IEi9BN+DOccfzhedeCDBq6iogDL+oKI2f6dPou1pKel0osuznVYAR/1pia5oaXeI
-	w2pSpGGd5S/r00B2jEMypKLeWRgIEDMf4kyNMhn00nn2XZLPK1cdwxd958Kvq7nL
-	OBXxCVWwMvu5+yAb3OnFvKI3uV4/uRlM41uCchqXUtkoeLDGXreu12Gy+iH3tHbb
-	kzO6EecwYdPx/HnMX+kAC6zx7hG51peyDWo8WUA+d8t8XSy9hLuIjB1AwgUKP7fT
-	AcA3XI3/Jct+28T+pQ1swj/w4LBRWpWN7LA0Y3Kie78qu7dMF3nd4MH+NCLsftnd
-	vFORyuNNHtIzvEbudlLQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wgkxngk40-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 10:18:24 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41QAIO07010807
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 10:18:24 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 26 Feb
- 2024 02:18:21 -0800
-Message-ID: <e5474801-53c1-6bbb-8781-e5cee42d6a90@quicinc.com>
-Date: Mon, 26 Feb 2024 15:47:47 +0530
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="gLydUfzo"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-563d32ee33aso3764899a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:19:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1708942787; x=1709547587; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mAMdRwp6uD10Sj7sMKu/Xy/lMXUaiG3hTaGl/25oH/w=;
+        b=gLydUfzo7OQI1HYHR9I8mNS5rg/lgN81c8XQA9Lbk6ic8y9ZHFBu61h80CmAhm8OOn
+         8kyVC5veJw//5lcOb+6jPU64ZLokp333agmf004uRKiSbVOmPk0Ukj2k/UlVn0lU7Ucf
+         sOZTMd3MSqEM4QtulQCNJq8VOnqt+HCbGKxgU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708942787; x=1709547587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mAMdRwp6uD10Sj7sMKu/Xy/lMXUaiG3hTaGl/25oH/w=;
+        b=dri/X0c7irutFh8JpGdCqJRmfYOPuRzjgbyO+st27BY10z2GtKR32nxb2+mPhSto+u
+         4ngr+40MAvx/EavBar3JivU8QYqLJWh1k7BTXc2TcauyIbeiCpqFH5Z6Jxcvx2/ZD4hp
+         pMWpAKM0gE5JeWe7fSVE96Pe7CQDLjzJ+TMYp6mtsP66nffSLKL48h3mX47C0Ud13HET
+         0Gw+RHN+znlUPVL61BFZQWxYqdSoIh2cu/jpBilt4GjA52Dih6Hi4AmXYVp5BBP1MINR
+         MgousI3ieY/UrBykprMWni15ir9S757s8UVuIFIJHgsrHPSomP7LQpLg6pw0efv/UeCN
+         p6OA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3l52OIk4uEQZVYbD6S4bAkuaIBNvgHo2UuNhvYsRg5zc0Rcm8czN40P3TecIudHXVMLhnJr5AMM8I/RTWU9Vz0DI0bkL/e3ca6Yq1
+X-Gm-Message-State: AOJu0Yze08+tnGO3HNY86rI+3GjggxCXBvEjb7MdZeod843mrKHyaAdI
+	CeH3iAcLOJSt908CJ8exVY6o3PAKqL2gpOiLrTUWvAjsO6bzr6A32rmrFCeABirA3MGqS0cigaE
+	oU7FtpX1Zplub7y0z4QOqvk1al3cgNzPs/Bo30Q==
+X-Google-Smtp-Source: AGHT+IE1EqdtdQGTPAKqsGiEVNv3lYWX9sCbBopDAeFZ7Civ8FBPUesqVAT7wDSWNEPhNpzhb6vML07R7iwhlPK/Gxw=
+X-Received: by 2002:aa7:d052:0:b0:565:a252:e171 with SMTP id
+ n18-20020aa7d052000000b00565a252e171mr3633761edo.39.1708942787332; Mon, 26
+ Feb 2024 02:19:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] printk: Add atomic context check inside console_unlock()
-Content-Language: en-US
-To: John Ogness <john.ogness@linutronix.de>, <pmladek@suse.com>,
-        <rostedt@goodmis.org>, <senozhatsky@chromium.org>
-CC: <linux-kernel@vger.kernel.org>
-References: <20240222090538.23017-1-quic_mojha@quicinc.com>
- <87plwo5z4k.fsf@jogness.linutronix.de>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <87plwo5z4k.fsf@jogness.linutronix.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lzNiT9SrsIx7z_LR_XkQc73CMGh9MF2q
-X-Proofpoint-GUID: lzNiT9SrsIx7z_LR_XkQc73CMGh9MF2q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_07,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 adultscore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402260078
+References: <20240226100502.1845284-1-michael@amarulasolutions.com> <2024022609-groom-passably-909c@gregkh>
+In-Reply-To: <2024022609-groom-passably-909c@gregkh>
+From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Date: Mon, 26 Feb 2024 11:19:36 +0100
+Message-ID: <CAOf5uwnd+qh0PZgXhPN21Eng7HN+_Vjgjad7UxZ79-b1gZEhOw@mail.gmail.com>
+Subject: Re: [PATCH V3] usb: dwc3: gadget: Fix suspend/resume warning when
+ no-gadget is connected
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Greg
+
+On Mon, Feb 26, 2024 at 11:14=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Feb 26, 2024 at 11:05:02AM +0100, Michael Trimarchi wrote:
+> > This patch avoid to disconnect an already gadget in not connected state
+> >
+> > [   45.597274] dwc3 31000000.usb: wait for SETUP phase timed out
+> > [   45.599140] dwc3 31000000.usb: failed to set STALL on ep0out
+> > [   45.601069] ------------[ cut here ]------------
+> > [   45.601073] WARNING: CPU: 0 PID: 150 at drivers/usb/dwc3/ep0.c:289 d=
+wc3_ep0_out_start+0xcc/0xd4
+> > [   45.601102] Modules linked in: cfg80211 rfkill ipv6 rpmsg_ctrl rpmsg=
+_char crct10dif_ce rti_wdt k3_j72xx_bandgap rtc_ti_k3 omap_mailbox sa2ul au=
+thenc [last unloaded: ti_k3_r5_remoteproc]
+> > [   45.601151] CPU: 0 PID: 150 Comm: sh Not tainted 6.8.0-rc5 #1
+> > [   45.601159] Hardware name: BSH - CCM-M3 (DT)
+> > [   45.601164] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BT=
+YPE=3D--)
+> > [   45.601172] pc : dwc3_ep0_out_start+0xcc/0xd4
+> > [   45.601179] lr : dwc3_ep0_out_start+0x50/0xd4
+> > [   45.601186] sp : ffff8000832739e0
+> > [   45.601189] x29: ffff8000832739e0 x28: ffff800082a21000 x27: ffff800=
+0808dc630
+> > [   45.601200] x26: 0000000000000002 x25: ffff800082530a44 x24: 0000000=
+000000000
+> > [   45.601210] x23: ffff000000e079a0 x22: ffff000000e07a68 x21: 0000000=
+000000001
+> > [   45.601219] x20: ffff000000e07880 x19: ffff000000e07880 x18: 0000000=
+000000040
+> > [   45.601229] x17: ffff7fff8e1ce000 x16: ffff800080000000 x15: fffffff=
+ffffe5260
+> > [   45.601239] x14: 0000000000000000 x13: 206e6f204c4c4154 x12: 5320746=
+573206f74
+> > [   45.601249] x11: 0000000000000001 x10: 000000000000000a x9 : ffff800=
+083273930
+> > [   45.601259] x8 : 000000000000000a x7 : ffffffffffff3f0c x6 : fffffff=
+fffff3f00
+> > [   45.601268] x5 : ffffffffffff3f0c x4 : 0000000000000000 x3 : 0000000=
+000000000
+> > [   45.601278] x2 : 0000000000000000 x1 : ffff000004e7e600 x0 : 0000000=
+0ffffff92
+> > [   45.601289] Call trace:
+> > [   45.601293]  dwc3_ep0_out_start+0xcc/0xd4
+> > [   45.601301]  dwc3_ep0_stall_and_restart+0x98/0xbc
+> > [   45.601309]  dwc3_ep0_reset_state+0x5c/0x88
+> > [   45.601315]  dwc3_gadget_soft_disconnect+0x144/0x160
+> > [   45.601323]  dwc3_gadget_suspend+0x18/0xb0
+> > [   45.601329]  dwc3_suspend_common+0x5c/0x18c
+> > [   45.601341]  dwc3_suspend+0x20/0x44
+> > [   45.601350]  platform_pm_suspend+0x2c/0x6c
+> > [   45.601360]  __device_suspend+0x10c/0x34c
+> > [   45.601372]  dpm_suspend+0x1a8/0x240
+> > [   45.601382]  dpm_suspend_start+0x80/0x9c
+> > [   45.601391]  suspend_devices_and_enter+0x1c4/0x584
+> > [   45.601402]  pm_suspend+0x1b0/0x264
+> > [   45.601408]  state_store+0x80/0xec
+> > [   45.601415]  kobj_attr_store+0x18/0x2c
+> > [   45.601426]  sysfs_kf_write+0x44/0x54
+> > [   45.601434]  kernfs_fop_write_iter+0x120/0x1ec
+> > [   45.601445]  vfs_write+0x23c/0x358
+> > [   45.601458]  ksys_write+0x70/0x104
+> > [   45.601467]  __arm64_sys_write+0x1c/0x28
+> > [   45.601477]  invoke_syscall+0x48/0x114
+> > [   45.601488]  el0_svc_common.constprop.0+0x40/0xe0
+> > [   45.601498]  do_el0_svc+0x1c/0x28
+> > [   45.601506]  el0_svc+0x34/0xb8
+> > [   45.601516]  el0t_64_sync_handler+0x100/0x12c
+> > [   45.601522]  el0t_64_sync+0x190/0x194
+> > [   45.601531] ---[ end trace 0000000000000000 ]---
+> > [   45.608794] Disabling non-boot CPUs ...
+> > [   45.611029] psci: CPU1 killed (polled 0 ms)
+> > [   45.611837] Enabling non-boot CPUs ...
+> > [   45.612247] Detected VIPT I-cache on CPU1
+> >
+> > Tested on a am62x board with a usbnet gadget
+> >
+> > Fixes: 61a348857e86 ("usb: dwc3: gadget: Fix NULL pointer dereference i=
+n dwc3_gadget_suspend)
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> > ---
+> > V2->V3:
+> >       - Change the logic of the patch using the gadget connected state
+> >       - Change of the commit message
+> > V1->V2:
+> >       - Add stable in CC
+> > ---
+> >  drivers/usb/dwc3/gadget.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> > index 4c8dd6724678..a7316a1703ad 100644
+> > --- a/drivers/usb/dwc3/gadget.c
+> > +++ b/drivers/usb/dwc3/gadget.c
+> > @@ -2650,6 +2650,15 @@ static int dwc3_gadget_soft_disconnect(struct dw=
+c3 *dwc)
+> >       int ret;
+> >
+> >       spin_lock_irqsave(&dwc->lock, flags);
+> > +     /*
+> > +      * Attempt to disconnect a no connected gadget
+>
+> What does this mean?  And why a 3 line comment?
+>
+> > +      */
+> > +     if (!dwc->connected) {
+> > +             dev_warn(dwc->dev, "No connected device\n");
+>
+> You are printing while a spinlock is held?  What can userspace do with
+> this message?
+
+I will drop it.
+
+>
+> > +             spin_unlock_irqrestore(&dwc->lock, flags);
+> > +             return 0;
+>
+> No error handling?  Why not?
+
+The function tries to disconnect an already disconnected gadget, so in
+this case is a nop. If we want to handle
+an error I can check the impact on the dwc3 gadget.
+
+Michael
+
+>
+> thanks,
+>
+> greg k-h
 
 
 
-On 2/22/2024 8:23 PM, John Ogness wrote:
-> On 2024-02-22, Mukesh Ojha <quic_mojha@quicinc.com> wrote:
->> Situation of schedule while atomic context can happen in a
->> scenario if CPU-Y executing a async probe of ufs and while
->> printing a line it is started spinning for console lock
->> after preemption disable on CPU-Y and later it got the handover
->> of console lock from CPU-X and in console_unlock() it get
->> schedule with preempt disable as console_may_schedule was one
->> and due to which do_cond_resched was one.
-> 
-> Nice catch. But I think the below patch is the appropriate fix:
+--=20
+Michael Nazzareno Trimarchi
+Co-Founder & Chief Executive Officer
+M. +39 347 913 2170
+michael@amarulasolutions.com
+__________________________________
 
-Thanks for the change @john, would you be sending this as proper
-patch.
-
--Mukesh
-> 
-> John Ogness
-> 
-> -------8<--------
-> Subject: [PATCH] printk: Update @console_may_schedule in
->   console_trylock_spinning()
-> 
-> console_trylock_spinning() may takeover the console lock from a
-> scheduable context. Update @console_may_schedule to make sure it
-> reflects a trylock acquire.
-> 
-> Reported-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> Link: https://lore.kernel.org/lkml/20240222090538.23017-1-quic_mojha@quicinc.com
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> ---
->   kernel/printk/printk.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 1685a71f3f71..1612b50b2374 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -2020,6 +2020,12 @@ static int console_trylock_spinning(void)
->   	 */
->   	mutex_acquire(&console_lock_dep_map, 0, 1, _THIS_IP_);
->   
-> +	/*
-> +	 * Update @console_may_schedule for trylock because the previous
-> +	 * owner may have been scheduable.
-> +	 */
-> +	console_may_schedule = 0;
-> +
->   	return 1;
->   }
->   
-> 
-> base-commit: e7081d5a9d976b84f61f497316d7c940a4a2e67a
+Amarula Solutions BV
+Joop Geesinkweg 125, 1114 AB, Amsterdam, NL
+T. +31 (0)85 111 9172
+info@amarulasolutions.com
+www.amarulasolutions.com
