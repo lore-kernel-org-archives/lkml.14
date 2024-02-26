@@ -1,173 +1,143 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B347690B;
-	Mon, 26 Feb 2024 09:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40411C292;
+	Mon, 26 Feb 2024 09:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708941042; cv=none; b=NXM6GG0I8Focl6WL78ekSDS6vuGz5fwKRDTSs1vUi7hg+RLJJwT0cLxV/sVEfHbqYZSZHFMvVVAydTcJq1goAmc9a4mN8HtNIock61kbjZBk+CBF3mC6fuchRLfGEaCcLUDexqirRsCnog9+Qit57HT/qOT2HAHTMSV1FT9Aapg=
+	t=1708941130; cv=none; b=qCpC6xoDkVLB4B4oQ77cRZbXDrcCbE8RfStgdNQ94Mt0V+ivDN59EeqMCCJc3514cNliIiCw2jYvjOUGw9xBro7fjodMKXxJShar2GCYM/PuzDM19nOgzGYCt2aukogzlVE3c7Ld3pnosKawF0BDWw9iC8q1eFflgkE1fsjFXMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708941042; c=relaxed/simple;
-	bh=Y9b2xLAZqzX+pdH+yrlRg/WTNLCOOaokY7gPgj+Co8E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=afjdAfqD1s/N1d0wocJyl7sZ2jzlty8LMHd8hijW/0v+Hw/rAqcUVnQLXb4d8uaRddpV/gnR1DfAv0azdQb5lw1POD9hPTKH+o4pFg0Aw4YcRE9nCfbWieufBAKUDzflxRSWHod7T/fQwrv5XN4ZNZVFO2nzoMQ0zYOtiWmNXM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=r/dmaeu8; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1708941130; c=relaxed/simple;
+	bh=bjjIsryzIkgWdBrE8ljZIXZJZRlbXaBSO7Ggu+Lj5iY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e44vq4T9c08Nce+1u3e1cpeYkaAt7qn22ZZS8K/bZA30VN2p6gVwrQYE0i5hxSSXb9SSwNPDDNIZ3XcEa7cLHHR56SCxs0kFvvT5PE/S0tf+AlpaCB1OwP/nolBgOJhty9+26tLGHUOVS39c2JLalXBtZkuyBZr+RG3PGCqId30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XqsvtyJm; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="r/dmaeu8"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Tjwpj3Lszz9sd1;
-	Mon, 26 Feb 2024 10:50:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1708941037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TxspCYGvd47S6sMZqiF8IxyiXSLrdsbW3Rzpn1A8oVs=;
-	b=r/dmaeu8ky0Zitwk6d/p71mCATrvYsjhMj+pqGiiXKmkR/JFZzQ4UzKBr1JYGDYt7Xmey+
-	4YlsyGLVY0JeTsSAfX9QD8ohDznFOefXqdL91rLdcOIA0b1DC1jKooTiTD8P0N5Otpz96p
-	FcEQHn9pTyCODOwN1oCWuNkBxQtVNSDXAYq2A1Cb7+uZg+SFwRAQhVuH+UxnnR2HHXDPnr
-	lu6+d5f2UIJPqHRvfkqMvtKaGXc4xWYIrcigS98zQJZKP+4F+ZO7iCuF7Us0aVsFsSJ5W/
-	fzYF/GIvrVQbR8vvaMZ1Xxgb/Yz13ovRc4iCTJuTdI+c/VrA577/Qf+r01F9TQ==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	david@fromorbit.com,
-	chandan.babu@oracle.com,
-	akpm@linux-foundation.org,
-	mcgrof@kernel.org,
-	ziy@nvidia.com,
-	hare@suse.de,
-	djwong@kernel.org,
-	gost.dev@samsung.com,
-	linux-mm@kvack.org,
-	willy@infradead.org,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH 13/13] xfs: enable block size larger than page size support
-Date: Mon, 26 Feb 2024 10:49:36 +0100
-Message-ID: <20240226094936.2677493-14-kernel@pankajraghav.com>
-In-Reply-To: <20240226094936.2677493-1-kernel@pankajraghav.com>
-References: <20240226094936.2677493-1-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XqsvtyJm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=L5xZC2Izj3nU4loPeVkRvNhUrf88CIQ/mXkio06DCJA=;
+	t=1708941128; x=1709373128; b=XqsvtyJmNUSaNWFt9a2Zxhc3MycXQ0yGyWfptFBzVgwvvJV
+	ZER5JGxcGB0baVlQqe+3Rhjez/IvMkT7cV9pjA+F/tnRfu1S2nxLtVOa7dQGhQeZ8PbcBYBSe1S2n
+	AwPY7QlC75hRGY+k1WRKpU7xGLLLmNn+Q3VbrC25DN84K2Kz3mZKR5fn2xUP7xo5Gl8xMFooD0otp
+	j7MKKdIa5or+lre24YntO+jo0QHfL/e6uJ3kjH6ioOYzelpBqOm34JHF3PVVr4FzQGETyAnSEjOBj
+	ISHxuZFoVP59sFQ7PaZvnVdaH+Zeuj2CYsOKyN74WZjh8bLkHwG15Gy+PTz/BLIg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1reXeL-0004Te-6R; Mon, 26 Feb 2024 10:51:53 +0100
+Message-ID: <410817b8-1cf9-4285-b20b-f1fa0513cee8@leemhuis.info>
+Date: Mon, 26 Feb 2024 10:51:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: This is the fourth time I've tried to find what led to the
+ regression of outgoing network speed and each time I find the merge commit
+ 8c94ccc7cd691472461448f98e2372c75849406c
+Content-Language: en-US, de-DE
+To: Mathias Nyman <mathias.nyman@linux.intel.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: "Christian A. Ehrhardt" <lk@c--e.de>, niklas.neronin@linux.intel.com,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ linux-x86_64@vger.kernel.org, netdev@vger.kernel.org,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+References: <CABXGCsNnUfCCYVSb_-j-a-cAdONu1r6Fe8p2OtQ5op_wskOfpw@mail.gmail.com>
+ <CABXGCsPu73D+JS9dpvzX78RktK2VOv_xT8vvuVaQ=B6zs2dMNQ@mail.gmail.com>
+ <e7b96819-edf7-1f9f-7b01-e2e805c99b33@linux.intel.com>
+ <CABXGCsPjW_Gr4fGBzYSkr_4tsn0fvuT72G-YJYXcb1a4kX=CQw@mail.gmail.com>
+ <2d87509a-1515-520c-4b9e-bba4cd4fa2c6@linux.intel.com>
+ <CABXGCsPdXqRG6v97KDGy+o59xc3ayaq3rLj267veC7YcKVp8ww@mail.gmail.com>
+ <1126ed0a-bfc1-a752-1b5e-f1339d7a8aa5@linux.intel.com>
+ <CABXGCsN5_O3iKDOyYxtsGTGDA6fw4962CjzXLSnOK3rscELq+Q@mail.gmail.com>
+ <a026ecd8-6fba-017d-d673-0d0759a37ed8@linux.intel.com>
+ <CABXGCsOgy8H4GGcNU1jRE+SzRqwnPeNuy_3xBukjwB-bPxeZrQ@mail.gmail.com>
+ <CABXGCsOd=E428ixUOw+msRpnaubgx5-cVU7TDXwRUCdrM5Oicw@mail.gmail.com>
+ <34d7ab1b-ab12-489d-a480-5e6ccc41bfc3@infradead.org>
+ <10487018-49b8-4b27-98a1-07cee732290d@infradead.org>
+ <4f34b6a8-4415-6ea4-8090-262847d606c6@linux.intel.com>
+ <3ea25443-1275-4c67-90e0-b637212d32b5@leemhuis.info>
+ <1e719367-01ae-565a-2199-0ff7e260422b@linux.intel.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <1e719367-01ae-565a-2199-0ff7e260422b@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4Tjwpj3Lszz9sd1
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1708941128;d91db294;
+X-HE-SMSGID: 1reXeL-0004Te-6R
 
-From: Pankaj Raghav <p.raghav@samsung.com>
+On 26.02.24 10:24, Mathias Nyman wrote:
+> On 26.2.2024 7.45, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 21.02.24 14:44, Mathias Nyman wrote:
+>>> On 21.2.2024 1.43, Randy Dunlap wrote:
+>>>> On 2/20/24 15:41, Randy Dunlap wrote:
+>>>>> {+ tglx]
+>>>>> On 2/20/24 15:19, Mikhail Gavrilov wrote:
+>>>>>> On Mon, Feb 19, 2024 at 2:41 PM Mikhail Gavrilov
+>>>>>> <mikhail.v.gavrilov@gmail.com> wrote:
+>>>>>> I spotted network performance regression and it turned out, this was
+>>>>>> due to the network card getting other interrupt. It is a side effect
+>>>>>> of commit 57e153dfd0e7a080373fe5853c5609443d97fa5a.
+>>>>> That's a merge commit (AFAIK, maybe not so much). The commit in
+>>>>> mainline is:
+>>>>>
+>>>>> commit f977f4c9301c
+>>>>> Author: Niklas Neronin <niklas.neronin@linux.intel.com>
+>>>>> Date:   Fri Dec 1 17:06:40 2023 +0200
+>>>>>
+>>>>>       xhci: add handler for only one interrupt line
+>>>>>
+>>>>>> Installing irqbalance daemon did not help. Maybe someone experienced
+>>>>>> such a problem?
+>>>>>
+>>>>> Thomas, would you look at this, please?
+>>>>>
+>>>>> A network device and xhci (USB) driver are now sharing interrupts.
+>>>>> This causes a large performance decrease for the networking device.
+>>>
+>>> Short recap:
+>>
+>> Thx for that. As the 6.8 release is merely two or three weeks away while
+>> a fix is nowhere near in sight yet (afaics!) I start to wonder if we
+>> should consider a revert here and try reapplying the culprit in a later
+>> cycle when this problem is fixed.
 
-Page cache now has the ability to have a minimum order when allocating
-a folio which is a prerequisite to add support for block size > page
-size.
+Thx for the reply.
 
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- fs/xfs/libxfs/xfs_ialloc.c |  5 +++++
- fs/xfs/libxfs/xfs_shared.h |  3 +++
- fs/xfs/xfs_icache.c        |  6 ++++--
- fs/xfs/xfs_mount.c         |  1 -
- fs/xfs/xfs_super.c         | 10 ++--------
- 5 files changed, 14 insertions(+), 11 deletions(-)
+> I don't think reverting this series is a solution.
+> 
+> This isn't really about those usb xhci patches.
+> This is about which interrupt gets assigned to which CPU.
 
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index 2361a22035b0..c040bd6271fd 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -2892,6 +2892,11 @@ xfs_ialloc_setup_geometry(
- 		igeo->ialloc_align = mp->m_dalign;
- 	else
- 		igeo->ialloc_align = 0;
-+
-+	if (mp->m_sb.sb_blocksize > PAGE_SIZE)
-+		igeo->min_folio_order = mp->m_sb.sb_blocklog - PAGE_SHIFT;
-+	else
-+		igeo->min_folio_order = 0;
- }
- 
- /* Compute the location of the root directory inode that is laid out by mkfs. */
-diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
-index 4220d3584c1b..67ed406e7a81 100644
---- a/fs/xfs/libxfs/xfs_shared.h
-+++ b/fs/xfs/libxfs/xfs_shared.h
-@@ -188,6 +188,9 @@ struct xfs_ino_geometry {
- 	/* precomputed value for di_flags2 */
- 	uint64_t	new_diflags2;
- 
-+	/* minimum folio order of a page cache allocation */
-+	unsigned int	min_folio_order;
-+
- };
- 
- #endif /* __XFS_SHARED_H__ */
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index dba514a2c84d..a1857000e2cd 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -88,7 +88,8 @@ xfs_inode_alloc(
- 	/* VFS doesn't initialise i_mode or i_state! */
- 	VFS_I(ip)->i_mode = 0;
- 	VFS_I(ip)->i_state = 0;
--	mapping_set_large_folios(VFS_I(ip)->i_mapping);
-+	mapping_set_folio_min_order(VFS_I(ip)->i_mapping,
-+				    M_IGEO(mp)->min_folio_order);
- 
- 	XFS_STATS_INC(mp, vn_active);
- 	ASSERT(atomic_read(&ip->i_pincount) == 0);
-@@ -323,7 +324,8 @@ xfs_reinit_inode(
- 	inode->i_rdev = dev;
- 	inode->i_uid = uid;
- 	inode->i_gid = gid;
--	mapping_set_large_folios(inode->i_mapping);
-+	mapping_set_folio_min_order(inode->i_mapping,
-+				    M_IGEO(mp)->min_folio_order);
- 	return error;
- }
- 
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 69af3b06be99..c7df1857195c 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -131,7 +131,6 @@ xfs_sb_validate_fsb_count(
- 	xfs_sb_t	*sbp,
- 	uint64_t	nblocks)
- {
--	ASSERT(PAGE_SHIFT >= sbp->sb_blocklog);
- 	ASSERT(sbp->sb_blocklog >= BBSHIFT);
- 	uint64_t mapping_count;
- 	uint64_t bytes;
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 5a2512d20bd0..685ce7bf7324 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1625,16 +1625,10 @@ xfs_fs_fill_super(
- 		goto out_free_sb;
- 	}
- 
--	/*
--	 * Until this is fixed only page-sized or smaller data blocks work.
--	 */
- 	if (mp->m_sb.sb_blocksize > PAGE_SIZE) {
- 		xfs_warn(mp,
--		"File system with blocksize %d bytes. "
--		"Only pagesize (%ld) or less will currently work.",
--				mp->m_sb.sb_blocksize, PAGE_SIZE);
--		error = -ENOSYS;
--		goto out_free_sb;
-+"EXPERIMENTAL: Filesystem with Large Block Size (%d bytes) enabled.",
-+			mp->m_sb.sb_blocksize);
- 	}
- 
- 	/* Ensure this filesystem fits in the page cache limits */
--- 
-2.43.0
+I know, but from my understanding of Linus expectations wrt to handling
+regressions it does not matter much if a bug existed earlier or
+somewhere else: what counts is the commit that exposed the problem.
 
+But I might be wrong here. Anyway, not CCing Linus for this; but I'll
+likely point him to this direction on Sunday in my next weekly report,
+unless some fix comes into sight.
+
+> Mikhail got unlucky when the network adapter interrupts on that system was
+> assigned to CPU0, clearly a more "clogged" CPU, thus causing a drop in max
+> bandwidth.
+
+But maybe others will be just as "unlucky". Or is there anything to
+believe otherwise? Maybe some aspect of the .config or local setup that
+is most likely unique to Mikhail's setup?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
