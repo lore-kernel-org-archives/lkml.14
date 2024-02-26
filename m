@@ -1,153 +1,161 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2131.outbound.protection.partner.outlook.cn [139.219.146.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AE363B1;
-	Mon, 26 Feb 2024 06:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BAF1BDCE;
+	Mon, 26 Feb 2024 06:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.131
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708927477; cv=pass; b=lTutuD8hjoP5/YT5z+UnwnZUYbV4AvXbyx23geJpJ0CW3Pii903mWG+XiJE9bmKjz1JVaGvgdfb16lCa6ZI+PmYEBM0R+P24gZcSYdrYdJ0v3UqZOgr8u1muZ3JN8PlOS7m2W6hnVBzJM2qmTUNT7g1fCkhw80S4IFz6DTPHCbo=
+	t=1708927501; cv=fail; b=NjGTDwQhE4Sa680Y/qUOAfpyAQx11Fs3a183eDsV/jQTBd8kUNKibPG5CXK4iqAr5sAEo52SfvLx0Q28uvn399XQWUUVDkvtgKVjsiGe3t/tzHMM4+AFeVyS8rAA3n8X8ffkQ02b88hQ2rBUKWWt3jTr07AllWV+1wuazYd7WAQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708927477; c=relaxed/simple;
-	bh=CZVTpBGF86V/SGUwaHA7h+OYsTh8TAqio3D0tYnMqbc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BWEmFSpS9UaEHp9zyMebi5BuyeSZFBOyuP0aYef9dlpVmjeLtA260Yo5gFywvKJBPdWlo0ocMbe2f4S0cO1epZEdlnbpNVXch5ClHuGszaJdIEIRg2jWrd1YspY7fsIgqfg+GjIDuQE+3lkbt0gL+2Wfzs1ea+UAkRHfQ9aKfeM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=QDmAwvF+; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="QDmAwvF+"
-ARC-Seal: i=1; a=rsa-sha256; t=1708927440; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=TcsIh9ADSLaGaizzV7Meh/U0sik1DIKqedMt5LCLU1EDdkZ2LvzM+qsEw8l+VJ8A1TcTKXyAwbia9UOmDNmEY4cVp+6/Dhoio0RsFq+xIBPAkZ0bhXkl9RxWj1d1NThHyV1zLHxL4R4Yx01mb6oMEqqgekvsx4UnmArRdRTaSvo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1708927440; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=CZVTpBGF86V/SGUwaHA7h+OYsTh8TAqio3D0tYnMqbc=; 
-	b=ka45S8jnRfOOrzbW+F7FPqM8zRrOLq9z6pJ1dfB5WGGx2H4K8evZPWy9SREDOeEX42Jqlzsdoq0QjCeQXDBXmsFz9Tkeu3CufAFArqaf96tcnyuVDCwIDhpFvvJr0nJJQQnuuh7nFTEotRy85feH4XDxMim7iDDkbIIUsGAhKHU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1708927440;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=CZVTpBGF86V/SGUwaHA7h+OYsTh8TAqio3D0tYnMqbc=;
-	b=QDmAwvF+V4Q9r8FMBx2ZQH+E53G1Ax9gHEBQGLrkvyRAxfv26QHtlDrdpsT6XnKP
-	GJpKmhbRedV61bI4UQ88PV1jgE66pqllfBnm/5CD+s6fyIBkXRebQx3F6naU9QOdNLZ
-	SPGpGRRfnNHNVaaxIoFOXoXfqUBjTxwwkXrt88rmOvevvy2xl/lsxkrr1iS+y2Mm+/D
-	qDeeuBLLNgkDDPpo0YwjDkaxd2kGk6Gr40jTxf/2XvGHaUcmvWL824A5F7Pl6+A+IoQ
-	P6eUXKQ+irEcf53sY5htc5Y1/zdl4fz/gMFGIqzDzatrQLTdrY/sl9Cl/n6mDkjKqiW
-	e589WQTyUw==
-Received: from edelgard.fodlan.icenowy.me (112.94.101.70 [112.94.101.70]) by mx.zohomail.com
-	with SMTPS id 1708927438859856.127358578202; Sun, 25 Feb 2024 22:03:58 -0800 (PST)
-Message-ID: <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
-Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep
- argument inspection again?
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Christian
- Brauner <brauner@kernel.org>, Kees Cook <keescook@chromium.org>, Xuefeng Li
- <lixuefeng@loongson.cn>, Jianmin Lv <lvjianmin@loongson.cn>, Xiaotian Wu
- <wuxiaotian@loongson.cn>, WANG Rui <wangrui@loongson.cn>, Miao Wang
- <shankerwangmiao@gmail.com>, "loongarch@lists.linux.dev"
- <loongarch@lists.linux.dev>, linux-arch <linux-arch@vger.kernel.org>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date: Mon, 26 Feb 2024 14:03:48 +0800
-In-Reply-To: <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
-References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
-	 <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
-	 <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
-	 <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	s=arc-20240116; t=1708927501; c=relaxed/simple;
+	bh=ijAC6DtRyHCS+TxvTSHdNenGPycAQt4/0/Eejk5ldi4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=CEZUvyQCuqnuqTRtE+C7M7i6sTG97gockanMmRNhcOBggdMR4RWZYZo7vpVAay1iWe2RqjKIt5Wniy7NJ2dsIl7xXZVsZ7kxAVw82v3fHk59RSyDc971ayASHtmWxA20a8jIDRWXXAC4ZhQTIUZAxziakHUAEwcIpYSIK1pOT2E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AfEFJ5Y5leTBHTAgrbdaK8Uc0uLN4h+v/RvRCjOF1jKvWhdi0ks/MihqGhUlukDhqwmAclFSNopOYwdMMgvttoTzNRi1i+mqPNBQChVAxLc0uBT5OJSbJejZflJP11n8Zs6k69SOIG87+fBX9BWmiuwdltqHtSMC6N0xuwSAn/TC6sVwgUE/161D78ASnZI6Ewj4Kgd4wEj39mc2D8lnM7Rw+5NFSp8HZJ3sy8lc1JoQv2DGp58zYpOS6ajGTzcn+ALJLyGq9UzvW2bSZ42IiCF19nC5VBA5rF6tM/UKZ2O8QdNqVcIpalbPdtObk3nblMuHWrp0kg0Q6NhM1VKpgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X0wqzL9KCuENp2vmnM/R/u/DQnxZW72DkvivK6K5EGs=;
+ b=h6C9vhNCdPeG7JZtvUcL1QJ/xirAkCgGyW7rLcurRkgJWo+62rFcCBZQJ8iXznN9D/KphlgFLnoIvOwpF4l526FuE0xezW5KCuJbv/ovKSJO3Ql80E3sX88tV5sfGG33wpRf1iE+eIee1qEdQaVB2pVD1Ad5+uVAYPY6ynveUR+GRVTV/tsIMhAwDbkVzl4St6ncHjINZvS+0VPJou2yXkQDw2jzHela3LsNNjTYXbF7ThF6hP7WGf+U3juM0hbusN6n5urpSn3dBNEpUYjM9LiG6guclKaHePuDdMkguX797uaHxWGIG5v8xxrPoO0KiIWiwJGwDit9+UMyTjzxXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10) by SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.42; Mon, 26 Feb
+ 2024 05:50:33 +0000
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ ([fe80::b0af:4c9d:2058:a344]) by
+ SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%6])
+ with mapi id 15.20.7249.041; Mon, 26 Feb 2024 05:50:33 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Jack Zhu <jack.zhu@starfivetech.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v4 0/2] Add JH8100 external interrupt controller support
+Date: Sun, 25 Feb 2024 21:50:23 -0800
+Message-Id: <20240226055025.1669223-1-changhuang.liang@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SH0PR01CA0006.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:5::18) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_
+X-MS-Office365-Filtering-Correlation-Id: 48ef64b8-860e-46b6-be76-08dc368ed8c9
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	VqyhRCosvruoweP3zFvRPg9TAGDGNEo6VOQcqjR+aDI13Uhqe37vhjv0zyswP5Q6z4YnZ2xiyQuTGpbDtlX+eEK4FcaKIhIM/nVSxt3yZwMsfyMm10VCNfA8b+/m1bbyMKBduzhI5K7Zjd4mxjlTVr7I8i5EkPADiXa3wedD4ghkgvzUyRksFYsCxk6DymN8wq2MMhJRcaD86SQYG9nvDTgcdPi2HwgQW3uT+gwW9IhrdZIxScublFjLlwsGujM7cmRLGXDIir6rC+rrvIEg20ShIW0OtW9OMA6zNB3xAu9zz4bjJbxmb5v9I48qHG3mlNXbpEODBBlpcvThUzEWVf+7JzYWBtnb8CITaCF0+/vOJXwLmmit8sK9lv0LQ5jSAephhmL5L1nYiRq+IUC98PdLwSuRmXvziHoemJQLZzcje4aHTx8YbVygrLjUST8goman75V75Kwe8nxd0TvdVA5SbnDqBOJMSabtiZxExGYJLxEK37Pa5IQAKFozgbp/ZngVg7/o3LdSPui3WXJGqalMZahbZ48d1uu9lpvsv+jVfUvps2tQc2j/6CniMt52U4I2TQMJxe2CdI4tFb/sG6z7dbKOsJe9BV39E5DTL3Xh1RfMJE1mnOXZSZo0Z8e5
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(230273577357003)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hLFhtELmrjhysrm6MEbw6TbCQljYvrRni4aGwnWszT6UJAqX0lrTa79X5oUJ?=
+ =?us-ascii?Q?kd4lYvXx3UZBUHWRnVdEhr37aT6rc861OKKgl2OwWxHrctUnsnFW2nOANjfy?=
+ =?us-ascii?Q?pNmMjZndVAsJPdYQSLWCLs1MRmTjCkTZGJ/WW+Al4n653gS9GRFQRLFijOv+?=
+ =?us-ascii?Q?bOsyJZlaGo3+4LO7pNY1p+jnL1itTgjdAE6xwDgxnsXybHCoDZ2cXFYWgQoa?=
+ =?us-ascii?Q?LlPlOmvQHG1ZV8cU3SEJrh7iWdTtBYjImtySk8wIWoFOiRJiljyj0qH7bU31?=
+ =?us-ascii?Q?ivE1wApp6yHsYFt1XMdZYA/WI1BZZB+i0DFHyRSTwXl6DuM/7zKK/ORc0wFc?=
+ =?us-ascii?Q?0uZdmy4/XmF18vDrgSKs/Fp+jFVS9LI1fo61YBh0Q76Nbho6NVd1Yxy9x7A4?=
+ =?us-ascii?Q?3UB4buc6wlHsIANgFQx+DKoSs6HKr8Nybkfe979/w6HHczqRpACVjC23Msx8?=
+ =?us-ascii?Q?sDUEy6I3KrEtoyuFVIwroV/EFiEaG4APQ2f5oUcl/8LKsSiJjfze+8r9A/lj?=
+ =?us-ascii?Q?2gj5f5HPAbZQvk9BCwEm2QRX/69y4p9UTB8Ch2hggLC44U1o0X7WjFOqk/dJ?=
+ =?us-ascii?Q?9pRzyMT1SDO19ifv780Quq/OP1nQNDCrp1rz9bqBYuHqUAPu5HnbXERKjyuX?=
+ =?us-ascii?Q?lXBRFaMw9zthFn6P6/+o5hnCzCGRTEOn9PSnrgiJhsqdyLSC6JNOLmxXKFtC?=
+ =?us-ascii?Q?mHhKKryEX3qOgetTbvGWvRAJ3MDWpAkw642wQx4/nU4tXmnOuhOe7NEJ+ACu?=
+ =?us-ascii?Q?ueYM7zegjQz/o8eBeUZnt6ijcVV0ByWJfSQWAw6EqLTpmjsHmwrC/sDGiZOR?=
+ =?us-ascii?Q?gOFfjFJFUPMLxDelIvZcpsoZuvCWZE2dkRelN5SJ5vsrsr/Gx0zvCP0NIEmu?=
+ =?us-ascii?Q?cw8bJ0e7GTFjFhBxRpFPlWNkbjmFDmSSt6Quyo0PrjXvWtNe2wk9EbuBv9Md?=
+ =?us-ascii?Q?j2UDAZl8jxt4Wen4f8aC9Is26cH+Z5SrETzHdL98qdT0EKDsKvh9THnwONoS?=
+ =?us-ascii?Q?6qMBGbBD0j/1noO3GahrLxIx9yn1YBNNpxt9HHHhJ87Z9lEC2k6laUBY/Dn0?=
+ =?us-ascii?Q?j/iJWkfJhUEfyoCqEueRq/NpqOM8cxLw5e0p/KvQ1zbf9KS21Vx9RAP1G4kJ?=
+ =?us-ascii?Q?GHTyr60GJKxIHsoVVHusUVt1Nit7y2SkrerXK1Wci+r13tlituw7kEIT0LwN?=
+ =?us-ascii?Q?19Iw3hvh8peO1WPE/TFM50yLdx1ulUiWKx7VDrUvIC2ZWYR7ZS2gjt1CsWav?=
+ =?us-ascii?Q?yalTMhy7jPS3Y9oTZzGcTEKFBHmmjEPI4Ag3WwVdG6zLZDuNWPrHgMaEnIW5?=
+ =?us-ascii?Q?QZoFVk8XpbwtwUhc/TRoXU+BcRXSCJssJ4ptYAbXB1tvGnUmVcCEmOa5Wuvr?=
+ =?us-ascii?Q?U4nLIb0ysdT8KVpaxtJZ1gXNcRbXGGI/vq5O2N5uir92RWRx7IHmCwUSglk+?=
+ =?us-ascii?Q?zll1Q4Lce2ZD8gCZDYnHZlp0Q4jOZuyyExzNyKgAYZsvj3qvMiamDMFnqy9M?=
+ =?us-ascii?Q?1CZqjYnx8hJZ3WxnFKKfnA/k3pkN4GBcxB2/n36Tl2ByeIVunNlwBZgrx4RW?=
+ =?us-ascii?Q?XZTCiam2KliIWoTNOzK4vqVJSFESZ2/13hjV+XDOJSfq/PK5VNm9BKoBfVc9?=
+ =?us-ascii?Q?VeW44YJuxXnGwzslunMgPcI=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48ef64b8-860e-46b6-be76-08dc368ed8c9
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 05:50:33.1452
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hHod81AiHUng3QpyIxHUTSi2wxtBsgpBWu1OBFmg2JwNAS4qzvRlc9N09G8cSODC3iXLw9vTBnJQygaJq+SgFrEIS6oV6cubnyzSoWO94EuZASddnryeLal6fnHzTOpA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0671
 
-=E5=9C=A8 2024-02-25=E6=98=9F=E6=9C=9F=E6=97=A5=E7=9A=84 15:32 +0800=EF=BC=
-=8CXi Ruoyao=E5=86=99=E9=81=93=EF=BC=9A
-> On Sun, 2024-02-25 at 14:51 +0800, Icenowy Zheng wrote:
-> > > From my point of view, I prefer to "restore fstat", because we
-> > > need
-> > > to
-> > > use the Chrome sandbox everyday (even though it hasn't been
-> > > upstream
-> > > by now). But I also hope "seccomp deep argument inspection" can
-> > > be
-> > > solved in the future.
-> >=20
-> > My idea is this problem needs syscalls to be designed with deep
-> > argument inspection in mind; syscalls before this should be
-> > considered
-> > as historical error and get fixed by resotring old syscalls.
->=20
-> I'd not consider fstat an error as using statx for fstat has a
-> performance impact (severe for some workflows), and Linus has
-> concluded
+This patchset adds external interrupt controller driver for the StarFive
+JH81000 SoC. It can be used to handle high-level input interrupt signals.
+It also send the output interrupt signal to RISC-V PLIC.
 
-Sorry for clearance, I mean statx is an error in ABI design, not fstat.
+changes since v3:
+- Replaced "raw_spin_lock_irqsave" with "raw_spin_lock"
+- Replaced "raw_spin_unlock_irqsave" with "raw_spin_unlock"
+- Replaced "clear_bit" with "__clear_bit"
 
-> "if the user wants fstat, give them fstat" for the performance issue:
->=20
-> https://sourceware.org/pipermail/libc-alpha/2023-September/151365.html
->=20
-> However we only want fstat (actually "newfstat" in fs/stat.c), and it
-> seems we don't want to resurrect newstat, newlstat, newfstatat, etc.
-> (or
-> am I missing any benefit - performance or "just pleasing seccomp" -
-> of
-> them comparing to statx?) so we don't want to just define
-> __ARCH_WANT_NEW_STAT.=C2=A0 So it seems we need to add some new #if to
-> fs/stat.c and include/uapi/asm-generic/unistd.h.
->=20
-> And no, it's not a design issue of all other syscalls.=C2=A0 It's just th=
-e
-> design issue of seccomp.=C2=A0 There's no way to design a syscall allowin=
-g
-> seccomp to inspect a 100-character path in its argument unless
-> refactoring seccomp entirely because we cannot fit a 100-character
-> path
-> into 8 registers.
+v3: https://lore.kernel.org/all/20240221022647.5297-1-changhuang.liang@starfivetech.com/
 
-Well my meaning is that syscalls should be designed to be simple to
-prevent this kind of circumstance.
+changes since v2:
+- Rebased on tag v6.8-rc4.
+- Added raw_spinlock_t
+- Added irq_domain_remove free domain
+- Updated struct declarations and initializers
+- Updated variable declarations
+- Dropped store clk in struct starfive_irq_chip
+- Replaced "starfive_intc_mod" with "starfive_intc_bit_set&starfive_intc_bit_clear"
+- Replaced "struct irq_domain *root_domain" with "struct irq_domain *domain"
+- Added reset_control_assert&clk_disable_unprepare helper functions to error recover
 
->=20
-> As at now people do use PTRACE_PEEKDATA for "deep inspection"
-> (actually
-> "debugging" the target process) but it obviously makes a very severe
-> performance impact.
->=20
-> <rant>
->=20
-> Today the entire software industry is saying "do things in a
-> declarative
-> way" but seccomp is completely the opposite.=C2=A0 It's auditing *how* th=
-e
-> sandboxed application is doing things instead of *what* will be done.
->=20
-> I've raised my against to seccomp and/or syscall allowlisting several
-> times after seeing so many breakages like:
->=20
-> - https://github.com/NetworkConfiguration/dhcpcd/issues/120
-> - https://gitlab.gnome.org/GNOME/tracker-miners/-/issues/252
-> - https://blog.pintia.cn/2018/06/27/glibc-segmentation-fault/
-> -
-> http://web.archive.org/web/20210126121421/http://acm.xidian.edu.cn/discus=
-s/thread.php?tid=3D148&cid=3D#
-> =C2=A0(comment 3)
->=20
-> but people just keep telling me "you are wrong, you don't understand
-> security".=C2=A0 Some of them even complain "seccomp is broken" as well
-> but
-> still keep using it.
->=20
-> </rant>
->=20
+v2: https://lore.kernel.org/all/20240130055843.216342-1-changhuang.liang@starfivetech.com/
 
+changes since v1:
+- Rebased on tag v6.8-rc1.
+- Dropped store reset_contorl.
+- Replaced "of_reset_control_get_by_index" with of_reset_control_get_exclusive
+- Printed the error code via %pe
+
+v1: https://lore.kernel.org/all/20240111023201.6187-1-changhuang.liang@starfivetech.com/
+
+
+Changhuang Liang (2):
+  dt-bindings: interrupt-controller: Add starfive,jh8100-intc
+  irqchip: Add StarFive external interrupt controller
+
+ .../starfive,jh8100-intc.yaml                 |  61 ++++++
+ MAINTAINERS                                   |   6 +
+ drivers/irqchip/Kconfig                       |  11 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-starfive-jh8100-intc.c    | 207 ++++++++++++++++++
+ 5 files changed, 286 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/starfive,jh8100-intc.yaml
+ create mode 100644 drivers/irqchip/irq-starfive-jh8100-intc.c
+
+--
+2.25.1
