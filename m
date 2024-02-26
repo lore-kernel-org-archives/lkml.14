@@ -1,180 +1,95 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2EC1EA72;
-	Mon, 26 Feb 2024 22:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B788F1EA72;
+	Mon, 26 Feb 2024 22:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708985268; cv=none; b=raEKoP0zDU6vCqR8AadYgUWkbLpQIo0HiZZ+jOD/lc0GsN1tFrBNYZ0Mm35DzSuj3r9dJxVjiqwV5yqPCBgITiwe5t5im5Qs8m3iyPQdPNMTHX5gTTIv/Nwpmvcqs5LbsbmYHIiWA4h+kjWmHsXJIDx5YyZ/5RtZS5jeJGe8+zE=
+	t=1708985466; cv=none; b=c0fJ/n28epG+nEwlSjxFWj/EdWCTEe3TIKPqs7hBlQu6ObqJD8RShDKElQ/O+R2ijQS9Dbq91hU45hU/zotKpEwl0tnsLFqSQ0dMVap3G0UgR9MRuct9/15O2fB03xCwYowptJFyG868B93E61ToQp0cvBZcZMT5hSwrtwAlUFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708985268; c=relaxed/simple;
-	bh=3bj+zZCVpfp7NxPeaeA8ZeRn6O/0o+N/z5ULqJofpEg=;
+	s=arc-20240116; t=1708985466; c=relaxed/simple;
+	bh=aLP1wrwgND98W3fl2x4ZMt1cA9P2D4b6s5545BhBdRA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DlBb01uzs1rNPt99OjhoBOpA8k3z17rXcr3LA3yc8aQA7McyZS8d6VoenJKH9Ti/wzdQkoj8/T/d7nTQh/thhUpsb56iE8hF4zzYAL87LPdPTvpHiKJMr1Pora0UkerNOlyRIW0WGnoklzBKu6EXEIFZHjxzW9+bc6rNfviUemA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VA1ePOC1; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gNPrDHLktTqjVN/SiYOeu/Rh3DWE6mfsz6u92e5USIS6aP3F7X1ag8135mAqxfUtCPYTi9o6uQ88t5DOQpOD39/qi7nx/I93fc7fwXXAqXC1vLKQ1ZFvK8be4gfV8oPorQ5O5dlUgjca3BDWNCxk9iDp3nZn26VVv2dj008ycQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VEam6rVe; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VA1ePOC1"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-512fcef91d4so1983485e87.3;
-        Mon, 26 Feb 2024 14:07:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708985265; x=1709590065; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pHEg/PobD24tdsAcn0OzUyhowswPKvxcAqmhC1J0GNY=;
-        b=VA1ePOC1XlEZKyk4NBNenIRFl1x8dkw1TisKQo5VYnS1w6lS2pKdXcPjoIKTAaztuH
-         Y3krDQTzC/1ulUuucnKeNT9HYmtPnYXufKWs5OJ+6ye9jHOH8rLs8eQrl7QVQgU90YU6
-         vTeeNXvEyWSSycg3vYKPwl1x2j5OPc5iBYqIX77uL+rmPPkUDFN1oNszFqoRg7yWv6nt
-         mFRYNcMFprl/rX3gH5f/d2pfpGe/rGDGmaQ/TZf/jDpi8ryJbkgHo2ZGkxcfv4Zi4jmR
-         eDiHccgoeX83VFJ0qEFyP1qs0x3PV3g+MBPA67Pf1iBv922T4cUMnIlcALBHLtJiKnKG
-         aOLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708985265; x=1709590065;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pHEg/PobD24tdsAcn0OzUyhowswPKvxcAqmhC1J0GNY=;
-        b=AiJVZGkVk90UyVBmB9ZxEKFgq2fFTz0bjrxTy56FdfweCbZkNBOZRXLdWl1caNTF+B
-         orvEh/eVzi0vOdz7++0caA5sRMSwitTzsY20rcBQBzoUOlk3BSKXJRzl9LO7xanW948N
-         e/KnZiEzQT5trSRKmgp2ryBhT2BxHO2y7+UhAmH6vEAbF6hIlzs7UZBBSrUEM852BlHz
-         fnTzBtppERfQBxUgzR2dKAbXPfmn/Y0oW7YWrlhNA616wZnhCYTiDy2o043X84DZACqd
-         CpWOulsTWDXWJVbjDq8rBClcJXhlsYQ0YWVD6Dk/CiIoQYNB9UeC7cAeV+XeWwY/gF4S
-         OWqw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3zo+NhDPQOJFIVoGU+417tw4n5LihoC79jPiC00GRAOWRaVzlQKxi1NtIlRxhProR25qQ7LXtRwxHa9NtqrBI4HGv9vSO/8fRvQt5KeyAxhQ9SOJB4GjwfJ6699gD1fB5DyYZQb8lio8z
-X-Gm-Message-State: AOJu0YxhW2Rz7SFs4i1IaoQY+AZxNgKdDVjYt9q6v4WAtmY0oTz9EMIy
-	scOVlUdiPVEZM/q9THKH1xVdV65Ppwe/QfG7HTv/vNloXBiEVU/B
-X-Google-Smtp-Source: AGHT+IGz0v9kfZ8Pryt+LljBAadvtBLU3DXwhJnm4Yo8WhLtfZT8YFLtxKyvtv7wmiR80zXDE5VPcw==
-X-Received: by 2002:a05:6512:b0f:b0:512:b71d:3283 with SMTP id w15-20020a0565120b0f00b00512b71d3283mr6197335lfu.67.1708985264849;
-        Mon, 26 Feb 2024 14:07:44 -0800 (PST)
-Received: from localhost ([94.19.228.143])
-        by smtp.gmail.com with ESMTPSA id w4-20020a19c504000000b00512fe237508sm446024lfe.27.2024.02.26.14.07.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 14:07:44 -0800 (PST)
-Date: Tue, 27 Feb 2024 01:05:30 +0300
-From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Ovidiu Panait <ovidiu.panait@windriver.com>,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Cc: Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Subject: Re: [PATCH] crypto: sun8i-ce - Fix use after free in unprepare.
-Message-ID: <Zd0LKrryWNs15zxi@skv.local>
-Mail-Followup-To: Andrey Skvortsov <andrej.skvortzov@gmail.com>,
-	Corentin Labbe <clabbe.montjoie@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Ovidiu Panait <ovidiu.panait@windriver.com>,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Arnaud Ferraris <arnaud.ferraris@collabora.com>
-References: <20240226215358.555234-1-andrej.skvortzov@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VEam6rVe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708985462; x=1740521462;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aLP1wrwgND98W3fl2x4ZMt1cA9P2D4b6s5545BhBdRA=;
+  b=VEam6rVeShjbXNBpnszmCLS6L6xle8F8d5BZfdr52JMlVNRATnb+Z2th
+   9nUB5vnyZ2HtpWbN2cnPcE52ypjH/fZVyfNKNCwbWFqtVk8ISGQ7V8Mrp
+   GGP6huu9xDe1aDo+nkt9x2ukQ82lZzQCyWZOjF+y4/XP1D+9IWwudoCkR
+   9rD9Vt7tLJq9H3w5N/20p8Qa663Ac8DCOeRVoljk3TOkePbkjDKDHyf9W
+   ah3Jta+tCkNHyDWFmMSDMQIDKltraul9gN7lxvi74i8TKHrPaLCcDvMhu
+   iyixFxJjfCJHTunmdNIs34K2XnnEZmHlTrbAGpLYEupxrQq4cLSZ5ASKU
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="7119032"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="7119032"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 14:11:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="11596128"
+Received: from jhaqq-mobl1.amr.corp.intel.com (HELO desk) ([10.209.17.170])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 14:11:01 -0800
+Date: Mon, 26 Feb 2024 14:10:59 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Alyssa Milburn <alyssa.milburn@intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Subject: Re: [tip: x86/urgent] x86/bugs: Add asm helpers for executing VERW
+Message-ID: <20240226221059.mnuurhn6g3irys37@desk>
+References: <170839092792.398.3678407222202963581.tip-bot2@tip-bot2>
+ <6380ba8d-4e99-46e6-8d92-911d10963ba7@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240226215358.555234-1-andrej.skvortzov@gmail.com>
+In-Reply-To: <6380ba8d-4e99-46e6-8d92-911d10963ba7@suse.com>
 
-On 24-02-27 00:53, Andrey Skvortsov wrote:
-> sun8i_ce_cipher_unprepare should be called before
-> crypto_finalize_skcipher_request, because client callbacks may
-> immediately free memory, that isn't needed anymore. But it will be
-> used by unprepare after free. Before removing prepare/unprepare
-> callbacks it was handled by crypto engine in crypto_finalize_request.
+On Mon, Feb 26, 2024 at 09:17:30AM +0200, Nikolay Borisov wrote:
+> > diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
+> > index 262e655..077083e 100644
+> > --- a/arch/x86/include/asm/nospec-branch.h
+> > +++ b/arch/x86/include/asm/nospec-branch.h
+> > @@ -315,6 +315,17 @@
+> >   #endif
+> >   .endm
+> > +/*
+> > + * Macro to execute VERW instruction that mitigate transient data sampling
+> > + * attacks such as MDS. On affected systems a microcode update overloaded VERW
+> > + * instruction to also clear the CPU buffers. VERW clobbers CFLAGS.ZF.
+> > + *
+> > + * Note: Only the memory operand variant of VERW clears the CPU buffers.
+> > + */
+> > +.macro CLEAR_CPU_BUFFERS
+> > +	ALTERNATIVE "", __stringify(verw _ASM_RIP(mds_verw_sel)), X86_FEATURE_CLEAR_CPU_BUF
+> 
+> Any particular reason why this uses RIP-relative vs an absolute address
+> mode?
 
-And potentially rk3288_crypto driver is affected by the similar
-problem.
+Early versions of the series had the VERW arg pointing to the macro
+itself, that is why relative addressing was used. That got changed in a
+later version with all VERW sites pointing to a single memory location.
 
-https://elixir.bootlin.com/linux/v6.8-rc6/source/drivers/crypto/rockchip/rk3288_crypto_ahash.c#L339
+> I know in our private exchange you said there is no significance but
+> for example older kernels have a missing relocation support in alternatives.
+> This of course can be worked around by slightly changing the logic of the
+> macro which means different kernels will have slightly different macros.
 
-> 
-> Usually that results in a pointer dereference problem during a in
-> crypto selftest.
->  Unable to handle kernel NULL pointer dereference at
->                                       virtual address 0000000000000030
->  Mem abort info:
->    ESR = 0x0000000096000004
->    EC = 0x25: DABT (current EL), IL = 32 bits
->    SET = 0, FnV = 0
->    EA = 0, S1PTW = 0
->    FSC = 0x04: level 0 translation fault
->  Data abort info:
->    ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
->    CM = 0, WnR = 0, TnD = 0, TagAccess = 0
->    GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
->  user pgtable: 4k pages, 48-bit VAs, pgdp=000000004716d000
->  [0000000000000030] pgd=0000000000000000, p4d=0000000000000000
->  Internal error: Oops: 0000000096000004 [#1] SMP
-> 
-> This problem is detected by KASAN as well.
->  ==================================================================
->  BUG: KASAN: slab-use-after-free in sun8i_ce_cipher_do_one+0x6e8/0xf80 [sun8i_ce]
->  Read of size 8 at addr ffff00000dcdc040 by task 1c15000.crypto-/373
-> 
->  Hardware name: Pine64 PinePhone (1.2) (DT)
->  Call trace:
->   dump_backtrace+0x9c/0x128
->   show_stack+0x20/0x38
->   dump_stack_lvl+0x48/0x60
->   print_report+0xf8/0x5d8
->   kasan_report+0x90/0xd0
->   __asan_load8+0x9c/0xc0
->   sun8i_ce_cipher_do_one+0x6e8/0xf80 [sun8i_ce]
->   crypto_pump_work+0x354/0x620 [crypto_engine]
->   kthread_worker_fn+0x244/0x498
->   kthread+0x168/0x178
->   ret_from_fork+0x10/0x20
-> 
->  Allocated by task 379:
->   kasan_save_stack+0x3c/0x68
->   kasan_set_track+0x2c/0x40
->   kasan_save_alloc_info+0x24/0x38
->   __kasan_kmalloc+0xd4/0xd8
->   __kmalloc+0x74/0x1d0
->   alg_test_skcipher+0x90/0x1f0
->   alg_test+0x24c/0x830
->   cryptomgr_test+0x38/0x60
->   kthread+0x168/0x178
->   ret_from_fork+0x10/0x20
-> 
->  Freed by task 379:
->   kasan_save_stack+0x3c/0x68
->   kasan_set_track+0x2c/0x40
->   kasan_save_free_info+0x38/0x60
->   __kasan_slab_free+0x100/0x170
->   slab_free_freelist_hook+0xd4/0x1e8
->   __kmem_cache_free+0x15c/0x290
->   kfree+0x74/0x100
->   kfree_sensitive+0x80/0xb0
->   alg_test_skcipher+0x12c/0x1f0
->   alg_test+0x24c/0x830
->   cryptomgr_test+0x38/0x60
->   kthread+0x168/0x178
->   ret_from_fork+0x10/0x20
-> 
->  The buggy address belongs to the object at ffff00000dcdc000
->   which belongs to the cache kmalloc-256 of size 256
->  The buggy address is located 64 bytes inside of
->   freed 256-byte region [ffff00000dcdc000, ffff00000dcdc100)
-> 
-> Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-> Fixes: 4136212ab18e ("crypto: sun8i-ce - Remove prepare/unprepare request")
-
--- 
-Best regards,
-Andrey Skvortsov
+Do you anticipate a problem with that? If yes, I can send a patch to use
+fixed addressing in upstream as well.
