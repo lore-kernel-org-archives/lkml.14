@@ -1,63 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1CC12FB28;
-	Mon, 26 Feb 2024 16:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F4212FB28;
+	Mon, 26 Feb 2024 16:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966529; cv=none; b=S6tz/8goQ5oe1X7xtJvIqCQAdeRrS4ZGUbItlR8gLaagyubt/0h2leeYL+v+YJCEbhHnhG60gA8BM2ol6EyGsduxiVN8ts22zD04t5KUlQzkCze/TdrEDidK8gxczTOBnfcpDWWNU3efkaHkTL9guk29dYRzFvjXjaQQ4l6/DAM=
+	t=1708966533; cv=none; b=Q1sr9BzQ16KbeRqosfHT5lximpjFA8RoS6Xmj05WM5LT8cE8MOBttcHeoiH7IQ+TY8COsaA0JmDrfoAxR9e9orT8DkikMx+kxnV0xHcg7dVPKnhzHQqNa31iI3M/kbYJnXepTJfcMWE1IZpnS6GT2HpWUXuJLXK00g7RVqbHrJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966529; c=relaxed/simple;
-	bh=CjYlvF1PkcXdWh85XRVSTZMPR+ij0q27bHrWUczGxSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qmdvIDT6Zy/H/EPKpQnP5T0FfWopohx2mo56q2gnnWsXSRMedBSnIw4LEqWxeB08oBCY9cVl9+1J0c6+uvoIowq/D1+fHYITeCvHxQg3SK/qifbvnz/I+zTqrNL8Ij8UT+8ogvErMK3BRs6qpozTyc/vwo/LHs0GbDzeiylQMDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 018A7C433F1;
-	Mon, 26 Feb 2024 16:55:27 +0000 (UTC)
-Date: Mon, 26 Feb 2024 11:57:27 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2] tracing: Add warning if string in __assign_str()
- does not match __string()
-Message-ID: <20240226115727.09906783@gandalf.local.home>
-In-Reply-To: <20240226093328.3022e75eb1d349aca51029cd@kernel.org>
-References: <20240223161356.63b72403@gandalf.local.home>
-	<20240226093328.3022e75eb1d349aca51029cd@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708966533; c=relaxed/simple;
+	bh=BJdX+dwkJG0erLF5KJUdvylWO68GXGEtp2ZkUTRBKEs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oFrqH/GyeYolKjmb846PIUJOddh9YX257CJacpMKBkh5lxFQXrO/DAaD7sPRdsO0LkEaCnvreg5GTHoQVwl6R0jMJg/ch9zhkXEQ0f5si3MMh7keaXgUnDucthiwW+QVUnzVhJtycvyQpN0bxJOCL2h6xmawhggEeTpAY8Am+Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bZmB41bu; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bZmB41bu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708966532; x=1740502532;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=BJdX+dwkJG0erLF5KJUdvylWO68GXGEtp2ZkUTRBKEs=;
+  b=bZmB41bu44mhNlprPEGSFqpXg5rIbiKkUQhV8wrfA7w/Y+xWDpCHCpbl
+   1HpOS3y1JlXzZzvGny5N/iuBp2UcEhX7mPmjoyEtIkEx1KNVXDIuZrU6G
+   3qf59Wb3VRoIbkfL7SpAeqEUiH+OqpFRtx3eaIlJpLPbcLPXUmCDDM9jq
+   AH5hy+ndJ8mWM5oiGw4D186hTY2o0mCkZGlBxN+/Y6NTX+YzWdAYbRkhl
+   VFtghxPJpbkGchVATl3io67ZKAPcrAH4uN4Mvk1ICmWEiToQ+2EUQqtP4
+   fH9/ypIRnmeAGdqNP7waQOrKrbWr3ENiYwsdoDN2jOk28+O0rLj8mOI9Q
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="7045372"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="7045372"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:55:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="6874410"
+Received: from dcai-bmc-sherry-1.sh.intel.com ([10.239.138.57])
+  by fmviesa008.fm.intel.com with ESMTP; 26 Feb 2024 08:55:28 -0800
+From: Haiyue Wang <haiyue.wang@intel.com>
+To: netdev@vger.kernel.org,
+	lixiaoyan@google.com
+Cc: Haiyue Wang <haiyue.wang@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net v2] Documentations: correct net_cachelines title for struct inet_sock
+Date: Tue, 27 Feb 2024 00:57:46 +0800
+Message-ID: <20240226165821.4062854-1-haiyue.wang@intel.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240223120215.2300560-1-haiyue.wang@intel.com>
+References: <20240223120215.2300560-1-haiyue.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 26 Feb 2024 09:33:28 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+It's 'inet_sock' fast path usage breakdown, not 'inet_connection_sock',
+correct it.
 
-> On Fri, 23 Feb 2024 16:13:56 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > In preparation to remove the second parameter of __assign_str(), make sure
-> > it is really a duplicate of __string() by adding a WARN_ON_ONCE().
-> >   
-> 
-> Looks good to me. So eventually this is removed when the second parameter
-> is removed?
+Signed-off-by: Haiyue Wang <haiyue.wang@intel.com>
+---
+v2: Adjust the title length to the markup lines.
+---
+ Documentation/networking/net_cachelines/inet_sock.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Yes, I applied this after my other patches.
+diff --git a/Documentation/networking/net_cachelines/inet_sock.rst b/Documentation/networking/net_cachelines/inet_sock.rst
+index a2babd0d7954..595d7ef5fc8b 100644
+--- a/Documentation/networking/net_cachelines/inet_sock.rst
++++ b/Documentation/networking/net_cachelines/inet_sock.rst
+@@ -1,9 +1,9 @@
+ .. SPDX-License-Identifier: GPL-2.0
+ .. Copyright (C) 2023 Google LLC
+ 
+-=====================================================
+-inet_connection_sock struct fast path usage breakdown
+-=====================================================
++==========================================
++inet_sock struct fast path usage breakdown
++==========================================
+ 
+ Type                    Name                  fastpath_tx_access  fastpath_rx_access  comment
+ ..struct                ..inet_sock                                                     
+-- 
+2.43.2
 
-
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
-Thanks!
-
--- Steve
