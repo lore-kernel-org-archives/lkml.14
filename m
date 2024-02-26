@@ -1,98 +1,154 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9A112C7E2;
-	Mon, 26 Feb 2024 16:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891F512CD97;
+	Mon, 26 Feb 2024 16:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708964714; cv=none; b=laExBUVHsqEk+sNUcBGIQpSKWVHejDiyxfvgXO1i1Hpjguvb6Pkabse7OIeNQuilSKNM/npJphDm4iSKUqfze6tIa0VdBC1hgGs3zrz2esS85zE8TzezbNxKk79dwfVfvepzI+bShkiylRygdpi4BzBnAI9f01rXFb4K9bq6rXQ=
+	t=1708964749; cv=none; b=GCWIEREILh0X46QI7oRmuQ5dmM52C3nm+sEchRAk3kvZqv2ZL/OfOnx87yEBJ9sOaxPZXT2WDg9k8JvjTsvTJxD8+DBVx0q4PZRwjvkbokzUH5nQudFbiwU23rE5hadGnjW6Yz+z9XAkLu1wE0Z9X2FTmlDcPH7Cv/OZRjf7p5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708964714; c=relaxed/simple;
-	bh=Zha9MTer1+ivlDWWnbhfFfwPZpnIbtl+PNMA/+71lL8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fjioWndvyblWHrtlKdY4NGcdspzidyiSrnK2ttxByA25+jixm6OJ1Mb94AdkRvN3js0OY3lZLQQJRSI+hSE1Dt4nLIIBm7q1R6iMBPR/pzYVTYU9K1V9PCTpLTb2OsrJA9aOrImCm9bipetPG/cfdqtWaviLgt315SRzcPwh0rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkwIMLu2; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708964749; c=relaxed/simple;
+	bh=M644AwlcdbJIK6jKjqVty6atIp/A2bidPGf41KXqsw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VU1l7i3Zrv5G63UK2+DIfthkBzwR2k4kZ0BRb4V7v846jRKpiOnKkJp2VFTDzCglkrFwZ4AuPlI2FSF1EVjQsQFjdoHsTT7EY2+DAk3w8OkyOybpmZgASvtrr7r+uO6XVW/qOk+IlemI2rksf3Q17CooNyTLg+WCK1Qn3HaueKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=dEYla/AI; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkwIMLu2"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so2573405a12.1;
-        Mon, 26 Feb 2024 08:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708964713; x=1709569513; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pKzSA2YeBsQVoAG/zw8293MLkS2N7cW4zmSYPw7lkcI=;
-        b=WkwIMLu2eIcFchAz4W3MRuLcIYmHKhJzW1USCUy9ahAIwtcSf6BJVmiRyj252igIwC
-         Knezu0q7rSHZIPm9jY8QKRj8SyH/9xZUB26IDDcZnWhpXUtXxxB4VlBWV6ZzN+cCtKhJ
-         9xGZCzEQcne5f/cJpy43kD02sY2rknF2nWNnz1g+pOMOrhGq6wmci+tISDskhtUhl2+d
-         fOm23YpG+1P8AE2IZh+M8AYz2PfXSIDWczl4Ac7EvyYIsLKXPzaKZwoswWQo3jQj1QIr
-         iDk//FVdh9TCsPFSGlUI8QH1iKDV5W2F5dH/E2Krt8s/XcA6yyavJC4qxSpvJfYPoZJf
-         551Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708964713; x=1709569513;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pKzSA2YeBsQVoAG/zw8293MLkS2N7cW4zmSYPw7lkcI=;
-        b=BYaKzVcwUKanuziAz6xjJUOKKvXhmKAVB5eqfd4qpJJh8XxBx9vKaECnkVP/7s/fAd
-         9gUDuLJpaRV6gG7cnmnH4+8t0CXDchmp+B26D3lKqvMXf5k1/Nxa6P0NUsfTtuW8gv/j
-         eQFucWmidt0zbxSrmkyTibaxjNVdmAQxzTfPUGbz5MthQnKHixr/fsXHaKTbhRvUHx4K
-         0YmKBpzFgGBFbZM1ZzxgD705hoqM6EAtwUU7SJKYhEUOA2gTUzAqw4Yf+fFUCbmu6Y+L
-         6WT8HVk/m5v/3/PqSdfgNSoeP0lPRVTGJA1HeoQaCD61vJthBYygqcjJdb2gj1AZchjg
-         YRgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVw7sohP+Ac9jS+gvF9YuEa0LxG67TSTYqFK2Rhq4wkUKg192Yz9u42f1NdCqyJYFcHk/BGei8y5OAz6RQ6205q92eKZi/b2b2D+YVi3am29L6BKwjdhCXYz3Q4bto3tIkz+4Q9
-X-Gm-Message-State: AOJu0YwTNU5GQ+29shaUKEkIOVVlT2yiDM78/9nYwE59XYNCC9SIELYp
-	Cou9303sfJCWhzCA5vuEcacxI9kEHSDo5KKOut/hdtRjlKFT3NG42lFzbgUtQqwqku9qVdB2UWc
-	qNPrXWVQYaeWujRu3r7Pfloe7hyXUSgV0Kmw=
-X-Google-Smtp-Source: AGHT+IGOXpY4O8BIzcr9S1OBjFMDtYrl2tpYRREP8DHO0Yl73utTwzqwIYVznJEMBHxUvHZ9WDt+xa90ai4WWJ3fuGk=
-X-Received: by 2002:a17:90a:ce97:b0:29a:1ed5:18a2 with SMTP id
- g23-20020a17090ace9700b0029a1ed518a2mr4659219pju.47.1708964712608; Mon, 26
- Feb 2024 08:25:12 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dEYla/AI"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D26DF40E0192;
+	Mon, 26 Feb 2024 16:16:30 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0nrPwegJ6bWT; Mon, 26 Feb 2024 16:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1708964188; bh=mHQ8bfE6f3nYOsHMRhfypl1NqckUD1JD2a1p01ILVIo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dEYla/AIA+H46pXvNQR0AR8cr1Tl7325Z2IDiLDcmJVkTCq8kZINw4Rb+eoYEVaWC
+	 dQ4/cg/yx/7VpqwUCD8OmPI/BMopgFeds9z7WcsNzkPrSUy8+yoxcn4i03C/Vi2aRU
+	 KlIZAuEyG6MkxfHLsEM8CkENvHsNo9r0B+P5QpFMFHtsvv08EYnouhuhe3AmjKUjKy
+	 NrVxhocJ7RN0d5dL4qYYog2erYyqAHdfW/zSLhx4VQmdJD520B5EMOP7ucupty5wLn
+	 qb35KkQGUtWLcfdwg34JvYY5XkgkEFT4cd6a6++B0R4V44mYk0BjL+laUmiR0XrjRW
+	 Am69hO+/oRUnAbXH2DKwmmkON4Zn94gUZuBx7hw6Wj4Gly3feGy1X9mQaQpfv7drV3
+	 j3CcOTKRcQ+cs/BOSvOC3+pOStOOI2oRgdvesOsTELxCCiw9yLMksh2vFnVZY7H+5C
+	 7nyaNPoVR+/RkOQ74UILw7nN5bAcNDbEplaXPXlAE+ulMUiDDqYJ1j9RmUblzqquOV
+	 2xQWrenTnHMwJ6pj6+VwMxoFciTRUWb9MajB/OPGPMnOxI1nDK6g4hWeO6SViRAOWf
+	 FFu0/bjew0h1PGEnNoe8Xv/R39OEbuVdglaj6gYlckGvEbc6TeeVDBp/VvJ6cRSZ3w
+	 6MLzF7UpuriAiTBOkNUUjvXc=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B0B9C40E0196;
+	Mon, 26 Feb 2024 16:16:19 +0000 (UTC)
+Date: Mon, 26 Feb 2024 17:16:12 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: tony.luck@intel.com, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, avadhut.naik@amd.com,
+	john.allen@amd.com, muralidhara.mk@amd.com, sathyapriya.k@amd.com,
+	naveenkrishna.chatradhi@amd.com
+Subject: Re: [PATCH 2/3] RAS/AMD/FMPM: Save SPA values
+Message-ID: <20240226161612.GDZdy5TH6H5VWRGWOK@fat_crate.local>
+References: <20240226152941.2615007-1-yazen.ghannam@amd.com>
+ <20240226152941.2615007-3-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240224203349.1358064-1-robimarko@gmail.com> <cb5c185f-1946-4548-9918-01548e9dd9cf@lunn.ch>
-In-Reply-To: <cb5c185f-1946-4548-9918-01548e9dd9cf@lunn.ch>
-From: Robert Marko <robimarko@gmail.com>
-Date: Mon, 26 Feb 2024 17:25:00 +0100
-Message-ID: <CAOX2RU7xKM6ywGbzfB2ZCmYadJYG1uq=doTBfPGNnaYaocmG4Q@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: dsa: mv88e6xxx: add Amethyst specific SMI
- GPIO function
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: f.fainelli@gmail.com, olteanv@gmail.com, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240226152941.2615007-3-yazen.ghannam@amd.com>
 
-On Mon, 26 Feb 2024 at 14:57, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Sat, Feb 24, 2024 at 09:33:09PM +0100, Robert Marko wrote:
-> > The existing mv88e6xxx_g2_scratch_gpio_set_smi() cannot be used on the
-> > 88E6393X as it requires certain P0_MODE, it also checks the CPU mode
-> > as it impacts the bit setting value.
-> >
-> > This is all irrelevant for Amethyst (MV88E6191X/6193X/6393X) as only
-> > the default value of the SMI_PHY Config bit is set to CPU_MGD bootstrap
-> > pin value but it can be changed without restrictions so that GPIO pins
-> > 9 and 10 are used as SMI pins.
-> >
-> > So, introduce Amethyst specific function and call that if the Amethyst
-> > family wants to setup the external PHY.
->
-> This looks good. The only comment i have is maybe we should rename
-> mv88e6xxx_g2_scratch_gpio_set_smi() to something more specific. It
-> seems it is only applicable to MV88E6XXX_FAMILY_6390, so maybe
-> mv88e6390_g2_scratch_gpio_set_smi()?
+On Mon, Feb 26, 2024 at 09:29:40AM -0600, Yazen Ghannam wrote:
+> @@ -111,6 +111,9 @@ struct fru_rec {
+>   */
+>  static struct fru_rec **fru_records;
+>  
+> +#define INVALID_SPA	~0ULL
+> +static u64 *sys_addrs;
 
-That sounds like a good idea, want me to send a v2 with the rename as well?
+Let's do:
 
-Regards,
-Robert
->
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
->
->     Andrew
+/* system physical addresses array */
+static u64 *spa_addrs;
+
+so that it is self-documenting.
+
+> +
+>  #define CPER_CREATOR_FMP						\
+>  	GUID_INIT(0xcd5c2993, 0xf4b2, 0x41b2, 0xb5, 0xd4, 0xf9, 0xc3,	\
+>  		  0xa0, 0x33, 0x08, 0x75)
+> @@ -140,6 +143,9 @@ static unsigned int max_nr_fru;
+>  /* Total length of record including headers and list of descriptor entries. */
+>  static size_t max_rec_len;
+>  
+> +/* Total number of entries for the entire system. */
+> +static unsigned int sys_nr_entries;
+
+sys_ things are always related to syscalls etc. Since it is a static
+var, just call it:
+
+	/* Number of SPA entries */
+	nr_entries
+
+or so.
+
+I was gonna say "nr_err_records" but we're calling them entries so...
+
+>  /*
+>   * Protect the local records cache in fru_records and prevent concurrent
+>   * writes to storage. This is only needed after init once notifier block
+> @@ -269,6 +275,40 @@ static bool rec_has_fpd(struct fru_rec *rec, struct cper_fru_poison_desc *fpd)
+>  	return false;
+>  }
+>  
+> +static void save_spa(struct fru_rec *rec, unsigned int entry,
+> +		     u64 addr, u64 id, unsigned int cpu)
+> +{
+> +	unsigned int i, fru_idx, sys_entry;
+> +	unsigned long sys_addr;
+> +	struct atl_err a_err;
+> +
+> +	memset(&a_err, 0, sizeof(struct atl_err));
+> +
+> +	a_err.addr = addr;
+> +	a_err.ipid = id;
+> +	a_err.cpu  = cpu;
+> +
+> +	sys_addr = amd_convert_umc_mca_addr_to_sys_addr(&a_err);
+> +	if (IS_ERR_VALUE(sys_addr)) {
+> +		pr_debug("Failed to get system address\n");
+> +		return;
+> +	}
+> +
+> +	for (i = 0; i < sys_nr_entries; i += max_nr_entries) {
+> +		fru_idx = i / max_nr_entries;
+> +		if (fru_records[fru_idx] != rec)
+> +			continue;
+> +
+> +		sys_entry = i + entry;
+> +		if (sys_entry < sys_nr_entries) {
+> +			sys_addrs[sys_entry] = sys_addr;
+> +			pr_debug("fru_idx: %u, entry: %u, sys_entry: %u, sys_addr: 0x%016llx\n",
+> +				 fru_idx, entry, sys_entry, sys_addrs[sys_entry]);
+> +			break;
+> +		}
+
+	else {
+		WARN_ON_ONCE("... indexing wrong bla... ");
+	}
+
+to catch crap.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
