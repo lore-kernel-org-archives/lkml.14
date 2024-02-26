@@ -1,101 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE4812CDAE;
-	Mon, 26 Feb 2024 17:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7736B12C55E;
+	Mon, 26 Feb 2024 17:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966993; cv=none; b=HH3lCU0GG05JtttK0FMn+yV8FT6VpO/rl60mSRYglwl4UTdVHf7xk3dTR8hPOM/Zb3bNjQ/Sxft+4dWIohDJtzrMoVJ7f2Np2MgyBt9J0gRDbbtDlKyIYhL+fm8yOu3FLkkxTc2dni8FJ499KTt676CczyPMLeonTEj8YOaN2OQ=
+	t=1708967071; cv=none; b=HRk8yplHpxg0b1UsF9A5GRPoKOOWJ8IAuVj9OGaxG8Ugk0g7EH+FHkkyQQN7yZ0jkxwcJVl6qDaD/nelD2Chij9EkudeAAdTatBNLACSLOsyVh0Kduu/GOZsk4ikiUxsceIuanM+4nRXbnFE4pOGL/caK2eO07YDGwS15KL1yRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966993; c=relaxed/simple;
-	bh=NUzHR+U4SYb2lE4JHpxCjO2+K8X+/FKb4mt4Sicx7s0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mIRv7JdH/1A/bRtlUvLObFv8guvh2rUyOy0hdXw8zAh3+chfO4jC5TU1VKTx3r8cP83wy2C601/dCDQ7XrCawMVzU4rda2sN4jWAbbPDiREk6b3ie39N/yUkEWeMyEGEP6xK56SVEn5OxljvHR16XNKRH6VdMUmkZuuzOPHoCZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g3tzPsg/; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g3tzPsg/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708966992; x=1740502992;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=NUzHR+U4SYb2lE4JHpxCjO2+K8X+/FKb4mt4Sicx7s0=;
-  b=g3tzPsg//Pg+Pza2arRbxD+ppjDi0Vbz95htOS6LezOASQm0UkgRIvpP
-   NOH5k03/lScFkFXsZ2nDgEwFR8OJh1xBV4bHbtHp6sF9HyWg45Cqb0XS1
-   q/Qk0JOkqC3WCi+WSp5tH9iynxe9/wxqUQxIBaP3D4tJNYf9g0LtZD6F9
-   IzC4kOoxnXOTWojqzdT7nGC2OsnqhoFkqhZVA6076NTQ+Qj7mPPYsKhuC
-   yLn5AGs+PNB9uzZZfMKRxkcNdbUOFlhCqUoGdxZNi0vjOKpWUByHvRVy1
-   LOb843Q5cw6rVhXIqAYVUx7VJ0h8kObqOVWidzaDqVTm4Jwp1V6TO8u8h
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="13905714"
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="13905714"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 09:03:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="913882086"
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="913882086"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 09:03:08 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1reeNe-00000007k6Q-0DB5;
-	Mon, 26 Feb 2024 19:03:06 +0200
-Date: Mon, 26 Feb 2024 19:03:05 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Paul Burton <paulburton@kernel.org>
-Subject: Re: [PATCH v3 8/9] dt-bindings: auxdisplay: Add Maxim MAX6958/6959
-Message-ID: <ZdzESR_sELGcHsi7@smile.fi.intel.com>
-References: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
- <20240219170337.2161754-9-andriy.shevchenko@linux.intel.com>
- <CAMuHMdVjh3jofcf2SdjRO5bAfokEzjoxv_z89JJyyfwwt5DZsw@mail.gmail.com>
+	s=arc-20240116; t=1708967071; c=relaxed/simple;
+	bh=RKIx+oQQY1jqQNQfa40US/jQ3+vApFBCzgxBshqFQus=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tu3cOe2l3agysoF9Zv898TdTnPr4nxX7em4BQMQooWGR6G57PeGRnZe5IGMiA0g8OuT0pSUYapkJfahYC2rZu0ns4EKlJ9SqOvTkaaBVyDa1z8NMWwydGxCimgre31uPEF10bN5WLzyhc0uOLqisxYOAQqlrrhJ21P8ExedYUBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2875AC433F1;
+	Mon, 26 Feb 2024 17:04:30 +0000 (UTC)
+Date: Mon, 26 Feb 2024 12:06:29 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Richard Chang <richardycc@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, liumartin@google.com, surenb@google.com,
+ minchan@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: add alloc_contig_migrate_range allocation
+ statistics
+Message-ID: <20240226120629.0c371252@gandalf.local.home>
+In-Reply-To: <20240226100045.2083962-1-richardycc@google.com>
+References: <20240226100045.2083962-1-richardycc@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdVjh3jofcf2SdjRO5bAfokEzjoxv_z89JJyyfwwt5DZsw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 26, 2024 at 04:52:34PM +0100, Geert Uytterhoeven wrote:
-> On Mon, Feb 19, 2024 at 6:03 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Mon, 26 Feb 2024 10:00:15 +0000
+Richard Chang <richardycc@google.com> wrote:
 
-...
-
-> To handle cases where less than 4 characters are wired
-> (based on hit,hd44780.yaml):
+> alloc_contig_migrate_range has every information to be able to
+> understand big contiguous allocation latency. For example, how many
+> pages are migrated, how many times they were needed to unmap from
+> page tables.
 > 
->     display-width-chars:
->       description: Width of the display, in character cells.
->       minimum: 1
->       maximum: 4
->       default: 4
+> This patch adds the trace event to collect the allocation statistics.
+> In the field, it was quite useful to understand CMA allocation
+> latency.
+> 
+> Signed-off-by: Richard Chang <richardycc@google.com>
+> ---
+>  include/trace/events/kmem.h | 39 +++++++++++++++++++++++++++++++++++++
+>  mm/internal.h               |  3 ++-
+>  mm/page_alloc.c             | 30 +++++++++++++++++++++++-----
+>  mm/page_isolation.c         |  2 +-
+>  4 files changed, 67 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+> index 58688768ef0f..964704d76f9f 100644
+> --- a/include/trace/events/kmem.h
+> +++ b/include/trace/events/kmem.h
+> @@ -304,6 +304,45 @@ TRACE_EVENT(mm_page_alloc_extfrag,
+>  		__entry->change_ownership)
+>  );
+>  
+> +TRACE_EVENT(mm_alloc_contig_migrate_range_info,
+> +
+> +	TP_PROTO(unsigned long start,
+> +		 unsigned long end,
+> +		 int migratetype,
+> +		 unsigned long nr_migrated,
+> +		 unsigned long nr_reclaimed,
+> +		 unsigned long nr_mapped),
+> +
+> +	TP_ARGS(start, end, migratetype,
+> +		nr_migrated, nr_reclaimed, nr_mapped),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(unsigned long, start)
+> +		__field(unsigned long, end)
+> +		__field(int, migratetype)
 
-As discussed in the patch 9 this seems to be a material for other update.
 
-> The rest LGTM, so
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Please move the int to the end of the longs, as it will cause a 4 byte hole
+in 64 bit machines otherwise.
 
-I'll take this tag when applying the patch. Tell me if it's not the case.
-Thank you!
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +		__field(unsigned long, nr_migrated)
+> +		__field(unsigned long, nr_reclaimed)
+> +		__field(unsigned long, nr_mapped)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->start = start;
+> +		__entry->end = end;
+> +		__entry->migratetype = migratetype;
+> +		__entry->nr_migrated = nr_migrated;
+> +		__entry->nr_reclaimed = nr_reclaimed;
+> +		__entry->nr_mapped = nr_mapped;
+> +	),
+> +
+> +	TP_printk("start=0x%lx end=0x%lx migratetype=%d nr_migrated=%lu nr_reclaimed=%lu nr_mapped=%lu",
+> +		  __entry->start,
+> +		  __entry->end,
+> +		  __entry->migratetype,
+> +		  __entry->nr_migrated,
+> +		  __entry->nr_reclaimed,
+> +		  __entry->nr_mapped)
+> +);
+> +
+>  /*
+>   * Required for uniquely and securely identifying mm in rss_stat tracepoint.
+>   */
+> diff --git a/mm/internal.h b/mm/internal.h
+> index f309a010d50f..e114c647e278 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -537,7 +537,8 @@ isolate_migratepages_range(struct compact_control *cc,
+>  			   unsigned long low_pfn, unsigned long end_pfn);
+>  
+>  int __alloc_contig_migrate_range(struct compact_control *cc,
+> -					unsigned long start, unsigned long end);
+> +					unsigned long start, unsigned long end,
+> +					int migratetype);
+>  
+>  /* Free whole pageblock and set its migration type to MIGRATE_CMA. */
+>  void init_cma_reserved_pageblock(struct page *page);
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 150d4f23b010..f840bc785afa 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -6219,9 +6219,14 @@ static void alloc_contig_dump_pages(struct list_head *page_list)
+>  	}
+>  }
+>  
+> -/* [start, end) must belong to a single zone. */
+> +/*
+> + * [start, end) must belong to a single zone.
+> + * @migratetype: using migratetype to filter the type of migration in
+> + *		trace_mm_alloc_contig_migrate_range_info.
+> + */
+>  int __alloc_contig_migrate_range(struct compact_control *cc,
+> -					unsigned long start, unsigned long end)
+> +					unsigned long start, unsigned long end,
+> +					int migratetype)
+>  {
+>  	/* This function is based on compact_zone() from compaction.c. */
+>  	unsigned int nr_reclaimed;
+> @@ -6232,6 +6237,10 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
+>  		.nid = zone_to_nid(cc->zone),
+>  		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
+>  	};
+> +	struct page *page;
+> +	unsigned long total_mapped = 0;
+> +	unsigned long total_migrated = 0;
+> +	unsigned long total_reclaimed = 0;
+>  
+>  	lru_cache_disable();
+>  
+> @@ -6257,9 +6266,16 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
+>  							&cc->migratepages);
+>  		cc->nr_migratepages -= nr_reclaimed;
+>  
+> +		total_reclaimed += nr_reclaimed;
+> +		list_for_each_entry(page, &cc->migratepages, lru)
+> +			total_mapped += page_mapcount(page);
 
+You're doing this calculation regardless of if tracing is enabled or not
+and it's only used for tracing? Please add:
+
+		if (trace_mm_alloc_contig_migrate_range_info_enabled()) {
+			total_reclaimed += nr_reclaimed;
+			list_for_each_entry(page, &cc->migratepages, lru)
+				total_mapped += page_mapcount(page);
+		}
+
+-- Steve
+
+> +
+>  		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
+>  			NULL, (unsigned long)&mtc, cc->mode, MR_CONTIG_RANGE, NULL);
+>  
+> +		if (!ret)
+
+May want the above to be:
+
+		if (trace_mm_alloc_config_migrate_range_info_enabled() && !ret)
+
+too.
+
+-- Steve
+
+> +			total_migrated += cc->nr_migratepages;
+> +
+>  		/*
+>  		 * On -ENOMEM, migrate_pages() bails out right away. It is pointless
+>  		 * to retry again over this error, so do the same here.
+> @@ -6273,9 +6289,13 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
+>  		if (!(cc->gfp_mask & __GFP_NOWARN) && ret == -EBUSY)
+>  			alloc_contig_dump_pages(&cc->migratepages);
+>  		putback_movable_pages(&cc->migratepages);
+> -		return ret;
+>  	}
+> -	return 0;
+> +
+> +	trace_mm_alloc_contig_migrate_range_info(start, end, migratetype,
+> +						 total_migrated,
+> +						 total_reclaimed,
+> +						 total_mapped);
+> +	return (ret < 0) ? ret : 0;
+>  }
+>  
+>  /**
+> @@ -6355,7 +6375,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
+>  	 * allocated.  So, if we fall through be sure to clear ret so that
+>  	 * -EBUSY is not accidentally used or returned to caller.
+>  	 */
+> -	ret = __alloc_contig_migrate_range(&cc, start, end);
+> +	ret = __alloc_contig_migrate_range(&cc, start, end, migratetype);
+>  	if (ret && ret != -EBUSY)
+>  		goto done;
+>  	ret = 0;
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index cd0ea3668253..a5c8fa4c2a75 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -434,7 +434,7 @@ static int isolate_single_pageblock(unsigned long boundary_pfn, int flags,
+>  				}
+>  
+>  				ret = __alloc_contig_migrate_range(&cc, head_pfn,
+> -							head_pfn + nr_pages);
+> +							head_pfn + nr_pages, page_mt);
+>  
+>  				/*
+>  				 * restore the page's migratetype so that it can
 
