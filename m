@@ -1,155 +1,160 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE4A13399F;
-	Mon, 26 Feb 2024 14:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58C6134727;
+	Mon, 26 Feb 2024 14:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708958162; cv=none; b=EMUWJqLhN62GUxv3++vPOL/j61Ub923cDG2tRAFOONJz3UhtYxdNTErtZhVkL+9IaCbJJxNhJMePAaOAbY9tcwKwq/qmbOIm7wWm3n8m4NciaSir0j1vVXDWHpo/v14GCwGUzfGUJmFueqLzfCoMzg5Vv4icW7nrdCJwveEnylI=
+	t=1708958166; cv=none; b=LGCeAEUgHGHdLfxO8zk7fCqey//n4DP7OM9VOQqo3lrtiIpL6ajrSHUUbFdklB9PH8zl3x6Gki6fQbJ/E8UrlfBaGlpHJ6TUWLz6QG84vxAH4lsBO03+Cz6jsqzZ2qoRwrakNiWiH49vHmmlkXiwSA8qcytL/C2n5l2kIWH7aGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708958162; c=relaxed/simple;
-	bh=pkXKcagVoUrfls8IZw2n6mmAXzIWVwR2aUX+9PNq4Ls=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eodqSTfeuuP3TuUdDvUtmyNGCs4c09SWZYcfOSgZw4bFI4YIVkTQkIUhu6clYIPi+Ihaft1QlAhr2GZUiO8jNkuZDsqm5LTVm3mXmHXbG1X236XfEVVdYcnRQ4npX+y9tFR5Qrcme5CZiLA6E3GowPeR9o0/m1tRaG4oKIZjOk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UXBfCvkY; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708958166; c=relaxed/simple;
+	bh=9ywEGY5Eo3x6FAI3cUqz0fj17fVyroyFNHMiCN6mL/0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=AL3yII8vq0mTujTbnvC0jhlf86YzXSYe9nmhJB7H7mLfiJ7XD14Q1XRx1qqy8vRZJG5wwdBX1UDQLpuFfQU2U71yd1IYvSHpCflQ9XyIJCTs/NY+57Nat6XgensQqeNUTvtCz2xRt6C6Gbosb5QGuzay2XDJ4gohBXKMzgibQe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iKTqD1KN; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXBfCvkY"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so2021669a12.3;
-        Mon, 26 Feb 2024 06:36:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708958160; x=1709562960; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0jozFDje0mLN9coijYdqOvVfSSMDTpV9h2OeBFaDVOU=;
-        b=UXBfCvkYIvmIvIACUAcHD7+X/wXG9DEXmEpNshxYTOvRnKa+OsjmwvwEEgo8A91pJb
-         b2fU7/N6YFUbrDcFynuHLJSoPQjSeRvsW1zkhIPfMKU5tNg8KMg52Th5c0s8jYtCpBeW
-         NwkS3TRNdeI0MhUT5e0E/BtYeIMmOHeH9Ia4uJY5Hy5NY4QmFE8YsaHvLekc3Y09mNIu
-         qwy2lJXgCNwEh6bxJzvrgNJtRyMlVooCjBEUgsshBzM3JzOklkhe8R1rK+9A0HaTAjUH
-         /gPZ/Trn4cDtR4ZeP/yDKeNQV8QwqN/+92WCwm8lItYHdaBNZfFTXuYgeom2+pOiDdq8
-         8mqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708958160; x=1709562960;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0jozFDje0mLN9coijYdqOvVfSSMDTpV9h2OeBFaDVOU=;
-        b=TjnvCL9zJFCYTAqYTgbNT9OfCCWUtKCesrY/g1lbDZeyAKspdK1svCsOoZW39PttX+
-         spe4jEVH7m2Q8Uye+sZU1SdNw6LPI7UXsn4Gsi4aaX3EE/Y5FaMvBi96lw2cDZNbZ+c7
-         rOgNlQE1hF47I0LHOe6johOWRuEIYQkIDbtyW4AAHUU2uoWQ848JrJ8U4jt+0rk7STKz
-         a43LX5CXnOEwqdnrftcpi33moON9z498vk2ql9xFy5weAXAdUYDuMcS/HWNSG5P9eROa
-         u3d9/Ia0Js5t7auJkQrI8k1K0UondgR6DMroh4yc+RLHKdFugppkrEX8RayD7xQee3uF
-         N/Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvi39gVkVMzgOziQuOjdc32ps17mAZ7pYFZw9mwMMUI8hqgcOoBDAyHG1GbTrfs27PLL/SNgH4X5E6jnspARQKUL6A
-X-Gm-Message-State: AOJu0YxsUs+3dmGACIU4wh0XtRcU/UogleGxtX42P9VciWgnTQtUNbSn
-	MppvpGHktw9wy9k+IOeMw8uUWy5zpf19s2F28uvJYk8GkRn5YSIuyoPE5ZTI
-X-Google-Smtp-Source: AGHT+IFYLWbfH3g6LFVQ3GaEXvFm9BatfltE1NholegVyczA8+K3NeZcIQavpkYWVcIHl7qwAcIEcQ==
-X-Received: by 2002:a17:90a:db86:b0:29a:2860:28b9 with SMTP id h6-20020a17090adb8600b0029a286028b9mr4563991pjv.48.1708958159681;
-        Mon, 26 Feb 2024 06:35:59 -0800 (PST)
-Received: from localhost ([47.88.5.130])
-        by smtp.gmail.com with ESMTPSA id sw8-20020a17090b2c8800b0029abf47ec7fsm2333867pjb.0.2024.02.26.06.35.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Feb 2024 06:35:59 -0800 (PST)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	Hou Wenlong <houwenlong.hwl@antgroup.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	kvm@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	x86@kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Juergen Gross <jgross@suse.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [RFC PATCH 25/73] KVM: x86/PVM: Implement APIC emulation related callbacks
-Date: Mon, 26 Feb 2024 22:35:42 +0800
-Message-Id: <20240226143630.33643-26-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240226143630.33643-1-jiangshanlai@gmail.com>
-References: <20240226143630.33643-1-jiangshanlai@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iKTqD1KN"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 751121BF209;
+	Mon, 26 Feb 2024 14:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708958161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xzRRKGTCf49DCuAE0sJucov1JPKZw/oB6zFjk/bAKO0=;
+	b=iKTqD1KNUEKWwhSN9AhG2JhtpDWL87tAJ9I4T86LLIn0QkDMqI+Oq/4+t5fhJHfsecTixf
+	s+/UCitLkC/j7Yzf2luIY9kN/WVrqMOEEhpie7a1JCoV8PxKfF7ZsBq1MSbynBrgmJ/0G8
+	ZxSoSjSk+MX665A3cbZFKu1gKOPna55GAkVF91br9adMhh4PNkUAXQV2JhQDci4qKmmejm
+	JL2SGM4FZHA5FflxtIvKquzoswqNZ3772Bw7PYJFrEI13XKigy9mEFjpYofCBWCbm8cCGy
+	ekDso4pH4pexQ/dQvsW+ccS6C8ALdQM9DHAkXv9hA7YZiY3GXIkRlLIWyj4lqg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 26 Feb 2024 15:35:59 +0100
+Message-Id: <CZF33W51MC4M.3GUBZFQXT39DB@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v3 1/8] dt-bindings: usb: ti,j721e-usb: drop useless
+ compatible list
+Cc: "Conor Dooley" <conor@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Roger Quadros" <rogerq@kernel.org>, "Peter Chen"
+ <peter.chen@kernel.org>, "Pawel Laszczak" <pawell@cadence.com>, "Nishanth
+ Menon" <nm@ti.com>, "Vignesh Raghavendra" <vigneshr@ti.com>, "Tero Kristo"
+ <kristo@kernel.org>, "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Kevin
+ Hilman" <khilman@kernel.org>, "Alan Stern" <stern@rowland.harvard.edu>,
+ <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+To: "Conor Dooley" <conor.dooley@microchip.com>
+X-Mailer: aerc 0.15.2
+References: <20240223-j7200-usb-suspend-v3-0-b41c9893a130@bootlin.com>
+ <20240223-j7200-usb-suspend-v3-1-b41c9893a130@bootlin.com>
+ <20240223-clarity-variably-206b01b7276a@spud>
+ <CZEXXXQDZZWB.1M5CTZAFVO4YP@bootlin.com>
+ <20240226-portable-rockslide-e501667a0d9a@wendy>
+In-Reply-To: <20240226-portable-rockslide-e501667a0d9a@wendy>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+Hello,
 
-For PVM, APIC virtualization for the guest is supported by reusing APIC
-emulation.
-
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
+On Mon Feb 26, 2024 at 12:56 PM CET, Conor Dooley wrote:
+> On Mon, Feb 26, 2024 at 11:33:06AM +0100, Th=C3=A9o Lebrun wrote:
+> > Hello Conor,
+> >=20
+> > On Fri Feb 23, 2024 at 7:12 PM CET, Conor Dooley wrote:
+> > > On Fri, Feb 23, 2024 at 05:05:25PM +0100, Th=C3=A9o Lebrun wrote:
+> > > > Compatible can be A or B, not A or B or A+B. Remove last option.
+> > > > A=3Dti,j721e-usb and B=3Dti,am64-usb.
+> > > >=20
+> > > > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml | 9 +++---=
 ---
- arch/x86/kvm/pvm/pvm.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+> > > >  1 file changed, 3 insertions(+), 6 deletions(-)
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yam=
+l b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
+> > > > index 95ff9791baea..949f45eb45c2 100644
+> > > > --- a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
+> > > > +++ b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
+> > > > @@ -11,12 +11,9 @@ maintainers:
+> > > > =20
+> > > >  properties:
+> > > >    compatible:
+> > > > -    oneOf:
+> > > > -      - const: ti,j721e-usb
+> > > > -      - const: ti,am64-usb
+> > > > -      - items:
+> > > > -          - const: ti,j721e-usb
+> > > > -          - const: ti,am64-usb
+> > >
+> > > Correct, this makes no sense. The devices seem to be compatible thoug=
+h,
+> > > so I would expect this to actually be:
+> > > oneOf:
+> > >   - const: ti,j721e-usb
+> > >   - items:
+> > >       - const: ti,am64-usb
+> > >       - const: ti,j721e-usb
+> >=20
+> > I need your help to grasp what that change is supposed to express? Woul=
+d
+> > you mind turning it into english sentences?
+> > A=3Dti,j721e-usb and B=3Dti,am64-usb. My understanding of your proposal=
+ is
+> > that a device can either be compat with A or B. But B is compatible
+> > with A so you express it as a list of items. If B is compat with A then
+> > A is compat with B. Does the order of items matter?
+>
+> The two devices are compatible with each other, based on an inspection of
+> the driver and the existing "A+B" setup. If this was a newly submitted
+> binding, "B" would not get approved because "A+B" allows support without
+> software changes and all that jazz.
+>
+> Your patch says that allowing "A", "B" and "A+B" makes no sense and you
+> suggest removing "A+B". I am agreeing that it makes no sense to allow
+> all 3 of these situations.
+>
+> What I also noticed is other problems with the binding. What should have
+> been "A+B" is actually documented as "B+A", but that doesn't make sense
+> when the originally supported device is "A".
+>
+> Therefore my suggestion was to only allow "A" and "A+B", which is what
+> we would (hopefully) tell you to do were you submitting the am64 support
+> as a new patch today.
 
-diff --git a/arch/x86/kvm/pvm/pvm.c b/arch/x86/kvm/pvm/pvm.c
-index 3735baee1d5f..ce047d211657 100644
---- a/arch/x86/kvm/pvm/pvm.c
-+++ b/arch/x86/kvm/pvm/pvm.c
-@@ -566,6 +566,25 @@ static int pvm_get_cpl(struct kvm_vcpu *vcpu)
- 	return 3;
- }
- 
-+static void pvm_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
-+				  int trig_mode, int vector)
-+{
-+	struct kvm_vcpu *vcpu = apic->vcpu;
-+
-+	kvm_lapic_set_irr(vector, apic);
-+	kvm_make_request(KVM_REQ_EVENT, vcpu);
-+	kvm_vcpu_kick(vcpu);
-+}
-+
-+static void pvm_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
-+{
-+}
-+
-+static bool pvm_apic_init_signal_blocked(struct kvm_vcpu *vcpu)
-+{
-+	return false;
-+}
-+
- static void pvm_setup_mce(struct kvm_vcpu *vcpu)
- {
- }
-@@ -1083,19 +1102,25 @@ static struct kvm_x86_ops pvm_x86_ops __initdata = {
- 	.vcpu_pre_run = pvm_vcpu_pre_run,
- 	.vcpu_run = pvm_vcpu_run,
- 	.handle_exit = pvm_handle_exit,
-+	.refresh_apicv_exec_ctrl = pvm_refresh_apicv_exec_ctrl,
-+	.deliver_interrupt = pvm_deliver_interrupt,
- 
- 	.vcpu_after_set_cpuid = pvm_vcpu_after_set_cpuid,
- 
- 	.handle_exit_irqoff = pvm_handle_exit_irqoff,
- 
-+	.request_immediate_exit = __kvm_request_immediate_exit,
-+
- 	.sched_in = pvm_sched_in,
- 
- 	.nested_ops = &pvm_nested_ops,
- 
- 	.setup_mce = pvm_setup_mce,
- 
-+	.apic_init_signal_blocked = pvm_apic_init_signal_blocked,
- 	.msr_filter_changed = pvm_msr_filter_changed,
- 	.complete_emulated_msr = kvm_complete_insn_gp,
-+	.vcpu_deliver_sipi_vector = kvm_vcpu_deliver_sipi_vector,
- };
- 
- static struct kvm_x86_init_ops pvm_init_ops __initdata = {
--- 
-2.19.1.6.gb485710b
+Thank you for the in-depth explanation! It makes much more sense now,
+especially the handling of historic stuff that ideally wouldn't have
+been done this way but that won't be changed from now on.
+
+> > I've not applied your proposal to check for dtbs_check but I'd guess it
+> > would throw warnings for the single existing upstream DTSI (as of
+> > v6.8-rc6) that uses "ti,am64-usb"? See:
+> > arch/arm64/boot/dts/ti/k3-am64-main.dtsi.
+>
+> Yeah, it would but it's not as if that cannot be changed. There's no
+> concerns here about backwards compatibility here, right?
+
+I'm not involved in the maintenance of this platform so I do not believe
+I should be answering this question. I asked the question because I
+taught there always were concerns of backwards-compat when it comes to
+DT and dt-bindings (in the best of all possible worlds).
+
+K3 maintainers are already in cc.
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
