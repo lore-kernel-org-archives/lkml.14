@@ -1,188 +1,76 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF45512BF2A
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9053612AAC8;
+	Mon, 26 Feb 2024 15:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708961131; cv=none; b=uvTTEmBMuvaLulLgF+Uewb08CBQdxQBUwBvgb32s0Dxll+MdYXa884Ahzway0+TEo7twgdinyIJ0soPjsUhKm7hf9Aix+kKR2w6qaoNSlVuLdf00wtFSb+XjEHRNXbJGq6sY64KHzBvqRzsfPx7jFTEeDjsodPfdTRnH8DMlLOI=
+	t=1708961148; cv=none; b=Jkzf8IyQgLrONUL5PWNz57EDebqnRMVA+Fdqz4QvwRuiGzIDXWLoc28FYF5M4C2NRcieSgR9GKnVjo6muNXYBtH87K4kYhM/pelKQITmzLdnZ0aOciwJ2Er0Pz2BZ1Zc85u3c+bfkwsXlhKgUcdNfBCietdB1lZPmMOBYyhyvD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708961131; c=relaxed/simple;
-	bh=r18uY5ZOhrp77TZ+zC5Izune83GhbAV0ksmeVyZNBVc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ydg8TgW2zIlH5Gx6uxtGRHVzRyS9sxFy94LDFxYAXvb/ESIs50At7O2eKWKtDbFmMNAmlidmuwY8NRsD/kxf2dVcdjUYkvye3H/4oXbyfJtADsEv+oEKFzoI1Sp5yvJOT21fAEqMS4uAMy1t5HRZLPkcu9Wj6pUAXYbK/KW4+OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=w/m54H4F; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1708961148; c=relaxed/simple;
+	bh=35PpGcNElBfhbkjp86sPv570xrDAxjARvJldXaJsLJ0=;
+	h=Date:Message-Id:From:To:Cc:Subject:In-Reply-To; b=uFX69m0RQt2C30j9CeVFbUTqkY0q2MUVMMtbqx0p9XqM0aN9W3bjaOgOfgJhVZoU77KvtviJahfaOlgcD20up93bbmdubXp9vMx78jaZu9LIZZrig1KrCfk/GDP/Nzjt0DThfL44ttCwvGyQC0KPRmMj7xXkpMeJUJeQsJNIdj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RyguRwkX; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="w/m54H4F"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41294731cf2so861745e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 07:25:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RyguRwkX"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e457fab0e2so1932924b3a.0;
+        Mon, 26 Feb 2024 07:25:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1708961126; x=1709565926; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OmdxWUDOxWS1QVUQvuVEam/7eao/3EwtoaN4YjxgRj8=;
-        b=w/m54H4F6a/Cz5OvZkNwWeUuDnA2DpXlaj+f1kUXfCe1WiO9I5/a2Mx8Xt8blvbmZx
-         jJscoJbVqJMnLqVj5jAOKzP0Te/cGVgA7kDdb8DAtf2w4T/hwSZ/eeIwEpRLCTVbz8Xz
-         WkbW9zHhJSg66OFG3qUF7G7vhzL66AHs7T02iSHdyOEwgVY/Fs2xT7TRhhP2haunov0x
-         NOjbFT6zvAt8R6kB3psJLkfE9BDJnIhjrBUxhksKOT8/4jHmIJXvlr5hiRZfU5BeQLmh
-         gLx5msa8/vrbPRGKcUZ4Y1PNkBvGIR+XSg+3fT8hZWnAOGmogJBkb+T6Oh79rIFjT7jz
-         lWAQ==
+        d=gmail.com; s=20230601; t=1708961145; x=1709565945; darn=vger.kernel.org;
+        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=F8NKzZ475Ed0sOpYbcC1ZbHtZtsQL/sozjb3F+5kRmI=;
+        b=RyguRwkXkeDbLi/gmyI8h8saaDb7mBBb8kXslI4rV5y4KqpCGKtU8CT6VAoxfQ4g2X
+         ysr3DgPY+fanh3NAhHE7GB233tSo5nshJpIhrSOOtLZyHjQ5UQHrQVo//H5Mo4L5lX1j
+         4gSQY1+PDQasmv1JCjKHCqvpeoJ0mUzPyArHu3rYm7t9uqNTfRipvoenjOg8yDwABdhe
+         Gvk6t273TQyyv/bSTJ4at3638qTKxkrLI1G4q/wmHVJg+jD/AAPVuZErdcPwJtg8Phcv
+         /2ehxB5EdKiPwimFC4pr0TTX8jmKYQoK4Gi47dPWIzcPq10ozZg6O02hdp9DgXa4hTAS
+         jzbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708961126; x=1709565926;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OmdxWUDOxWS1QVUQvuVEam/7eao/3EwtoaN4YjxgRj8=;
-        b=JKIzMmwyBw85XYw7CsDBTe+Ow/LHTvnezr/Tbqt80BNjhSr3Ks7E/G6qJVYqmOfPht
-         wK7HKRQzB0ib5lpZwBbCBAJX8oaFz8gpGmguhJiQmRNINV0Lx0HmPGsGBhOVVHIIfIcP
-         eOZH5pEZZBRN/G4+spkfEWNHJCmLXzc3KzZkFy03UzOgc/ZtMTIBfKfnls1LPsYde6Ba
-         GaMK2BspkXIQedfZ5pcDVVhaLPW0yfhrguGQEza15uRrdqOY37sgVE0WeMP3Kxqzmcpo
-         ThSQnTVmDT7TxLCY9zesZ2Hd+F8Yi48QKvrcNqhFIfHcSQHKiSw9WBsgzLpbOTvHgj9q
-         Qx0g==
-X-Forwarded-Encrypted: i=1; AJvYcCU+UQk6qHDYAtLWrgXFQIW5B35ZpMtUZu4LaZHkd8TmD0dEJC0O/Z+jwnc2x23NI7P8xnQQvtR8WevEtQs+50gSAn7PCyGp5N6iomQJ
-X-Gm-Message-State: AOJu0Yx/4etWU0Tpd7mCTrRDQ5Oq6F05CRTKcLr9MfhVU5vfvhBta7yn
-	kshyGYNM0m4UFLM5tCXabHaUoGXWniNbCHSBE/bbgSUBNoMoD8Z5/+DXRN4apAM=
-X-Google-Smtp-Source: AGHT+IEkU69h1irasa49nI1pNbDA2kcFQo4hhVQlKOlNfBMwqoujEQcijkM6sDdPgjSSEEDn4iC4tA==
-X-Received: by 2002:a05:600c:5114:b0:412:5670:ef62 with SMTP id o20-20020a05600c511400b004125670ef62mr5374363wms.1.1708961125880;
-        Mon, 26 Feb 2024 07:25:25 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:999:a3a0:83a3:2c00:c690:18b0? ([2a01:e0a:999:a3a0:83a3:2c00:c690:18b0])
-        by smtp.gmail.com with ESMTPSA id be13-20020a05600c1e8d00b004129ed6f9cbsm7888226wmb.4.2024.02.26.07.25.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 07:25:25 -0800 (PST)
-Message-ID: <ea356036-5a0b-47ea-aafb-f9813cc6ec9b@rivosinc.com>
-Date: Mon, 26 Feb 2024 16:25:24 +0100
+        d=1e100.net; s=20230601; t=1708961145; x=1709565945;
+        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F8NKzZ475Ed0sOpYbcC1ZbHtZtsQL/sozjb3F+5kRmI=;
+        b=kt3PAKtaFqpCIWneyRXzsMVLt84QBG9a+7FrsTKPfmSXJhylkftiT1q6vDIm/D6d5O
+         2dDdtM1LHXLO9/vIxFMd+ojh5onROdc/90P0Pf++574nkinyUrgarr/bFqm3jWxmNoPx
+         KpcQvM5x2sOuv4gkP48eya/Y/LZH1KISpkVu36U0gy6a4ft4hgONx773gv2UR6Y/LMYz
+         AeTx4rf9ddhsJP6p7tBye8FXB/c7yc2kGlWkruQwg1/FzLVnLphazfAjAmJBsq81Qyik
+         0bzviE2IOatJ3VU0iw8nHj3GkFoXOrvvanF3aSb5kbf7EQ4PMAW7us5NzQNMO8IZCYv+
+         18UA==
+X-Forwarded-Encrypted: i=1; AJvYcCXk/39xpRQehujapChuotdGNyD0KXJ9oj2aj1JCoiHsPUGA7ST2ad5e00CAMIw/RBAjSOZKFfKvKO+8L1FNtJtpE/CedVRy5jPr4Ik32dN6K9q3gHq41xz4OlgDyh9gvkDaQcBWZnfZuw==
+X-Gm-Message-State: AOJu0Yz+AMHnDKyp9ofKLzQB/YtRJzPvYzy6PIisCmxsVH3jFXJIKuxw
+	4pAfQ9PGAwMa5vUFJY2D+gucsdTBT6IG+JtZXJlRcKdOEC3d/CDW
+X-Google-Smtp-Source: AGHT+IH7O66PS1kSAdFwBUsTZAkLBVJQ014OLt0Vyy8s/hru2LcBTua4x8Y9mwKONnJDFaVy1ImQOA==
+X-Received: by 2002:a05:6a00:a0a:b0:6e4:fdb5:fd99 with SMTP id p10-20020a056a000a0a00b006e4fdb5fd99mr6690577pfh.5.1708961145032;
+        Mon, 26 Feb 2024 07:25:45 -0800 (PST)
+Received: from dw-tp ([171.76.80.106])
+        by smtp.gmail.com with ESMTPSA id r11-20020aa79ecb000000b006e484e13454sm4170729pfq.32.2024.02.26.07.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 07:25:44 -0800 (PST)
+Date: Mon, 26 Feb 2024 20:55:40 +0530
+Message-Id: <875xyb1c3v.fsf@doe.com>
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Wenchao Hao <haowenchao2@huawei.com>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: louhongxiang@huawei.com, Wenchao Hao <haowenchao2@huawei.com>
+Subject: Re: [PATCH] ext4: remove unused parameter biop in ext4_issue_discard()
+In-Reply-To: <20240226081731.3224470-1-haowenchao2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: deprecate CONFIG_MMU=n
-Content-Language: en-US
-To: Samuel Holland <samuel.holland@sifive.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Conor Dooley <conor.dooley@microchip.com>,
- Andrew Jones <ajones@ventanamicro.com>, Damien Le Moal <dlemoal@kernel.org>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
- Atish Patra <atishp@rivosinc.com>
-References: <20240226140649.293254-1-cleger@rivosinc.com>
- <40dee2c1-ff24-40b2-a13c-6934139ba869@sifive.com>
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <40dee2c1-ff24-40b2-a13c-6934139ba869@sifive.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Wenchao Hao <haowenchao2@huawei.com> writes:
 
+> all caller of ext4_issue_discard() would set biop to NULL since
+> 'commit 55cdd0af2bc5 ("ext4: get discard out of jbd2 commit kthread
+> contex")', it's unnecessary to keep this parameter any more.
+>
+> Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
 
-On 26/02/2024 16:14, Samuel Holland wrote:
-> On 2024-02-26 8:06 AM, Clément Léger wrote:
->> Deprecation of NOMMU support for riscv was discussed during LPC 2023
->> [1]. Reasons for this involves lack of users as well as maintenance
->> efforts to support this mode. psABI FDPIC specification also never
->> made it upstream and last public messages of this development seems to
->> date back from 2020 [2]. Plan the deprecation to be done in 2 years from
-> 
-> What are the criteria for delaying/canceling the removal? NOMMU support doesn't
-> rot nearly as fast as XIP; static PIE ELF works and is well specified; and as
-> mentioned at LPC, there are some users, even if "just for fun".
+Nice little cleanup. Feel free to add - 
 
-Hi Samuel,
+Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
 
-I was actually developing some feature that encountered NOMMU build
-failures and I was reminded that NOMMU was discussed to be deprecated
-during last LPC. I guess I could also mark XIP as deprecated. The
-rationale behind delaying is to let some users to manifest themselves
-before a full removal. But this can still be discussed of course, this
-patch was also meant to trigger such feedback.
-
-> 
->> now. Mark the Kconfig option as deprecated by adding a new dummy option
->> which explicitly displays the deprecation in case of CONFIG_MMU=n. This option
->> is selected indirectly by CONFIG_RISCV_M_MODE since an option can not
->> select another one directly with a "select" in case of such CONFIG=n.
->> Additionally, display a pr_err() message at boot time in case of NOMMU
->> build to warn about upcoming deprecation.
->>
->> Link: https://lpc.events/event/17/contributions/1478/ [1]
->> Link: https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/ZjYUJswknQ4/m/WYRRylTwAAAJ [2]
->> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->>
->> ---
->>  arch/riscv/Kconfig        | 8 ++++++++
->>  arch/riscv/kernel/setup.c | 4 ++++
->>  2 files changed, 12 insertions(+)
->>
->> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->> index bffbd869a068..8da58c102d3f 100644
->> --- a/arch/riscv/Kconfig
->> +++ b/arch/riscv/Kconfig
->> @@ -221,6 +221,7 @@ config ARCH_MMAP_RND_COMPAT_BITS_MAX
->>  # set if we run in machine mode, cleared if we run in supervisor mode
->>  config RISCV_M_MODE
->>  	bool
->> +	select NOMMU
->>  	default !MMU
->>  
->>  # set if we are running in S-mode and can use SBI calls
->> @@ -236,6 +237,13 @@ config MMU
->>  	  Select if you want MMU-based virtualised addressing space
->>  	  support by paged memory management. If unsure, say 'Y'.
->>  
->> +config NOMMU
->> +	depends on !MMU
->> +	bool "NOMMU kernel (DEPRECATED)"
->> +	help
->> +	  NOMMU kernel is deprecated and is scheduled for removal by
->> +	  the beginning of 2027.
->> +
-> 
-> The idiomatic way to display this kind of warning is a comment directive:
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index d4e890fb5b5a..b736440ce0f7 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -248,6 +248,9 @@ config MMU
->           Select if you want MMU-based virtualised addressing space
->           support by paged memory management. If unsure, say 'Y'.
-> 
-> +comment "NOMMU support is deprecated (scheduled for removal in 2027)"
-> +       depends on !MMU
-> +
-
-Thanks, I was not able to find any example of such usage.
-
-Clément
-
->  config PAGE_OFFSET
->         hex
->         default 0xC0000000 if 32BIT && MMU
-> 
-> Regards,
-> Samuel
-> 
->>  config PAGE_OFFSET
->>  	hex
->>  	default 0xC0000000 if 32BIT && MMU
->> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
->> index 4f73c0ae44b2..8799816ef0a6 100644
->> --- a/arch/riscv/kernel/setup.c
->> +++ b/arch/riscv/kernel/setup.c
->> @@ -295,6 +295,10 @@ void __init setup_arch(char **cmdline_p)
->>  	riscv_set_dma_cache_alignment();
->>  
->>  	riscv_user_isa_enable();
->> +
->> +#if !defined(CONFIG_MMU)
->> +	pr_err("RISC-V NOMMU support is deprecated and scheduled for removal by the beginning of 2027\n");
->> +#endif
->>  }
->>  
->>  bool arch_cpu_is_hotpluggable(int cpu)
-> 
