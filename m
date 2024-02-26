@@ -1,71 +1,75 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2067.outbound.protection.outlook.com [40.107.94.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3D658AA6;
-	Mon, 26 Feb 2024 09:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708940051; cv=none; b=GSEu4V0rFWRpRCY6VoXIhIR9cM5x7WMQ3ARQNYX0plagjpRkLHpFA48ZOsCEbOKNGgYM0z5pI7PO6eOFtw2fI4kVaH9SjFcg6rLlyYMeaSgvlMzwmsGTf04MRGFVGSTCuNqj6X5s6NWua/ioetFPhiACixDzVYImKl4i66E9nl4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708940051; c=relaxed/simple;
-	bh=B5XmgnTQfmniREvPObTq626oj49TOQPaFFKPyJV8MWE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oMy1Etxwxi8W4DHEJAU9cTGFIuBrt5NjSA3JJCfds6TQ6oVxLjw+6yngxwN1bdOGZhRjePG/0gZIE5I2jMmKoR42YOrROzofyRE2WdYMpJG/oNBg3MuhvEd4uTEfTbDweV59QzWW9hAuW4OgJfAh6XN8Tp7ALEy2FhpEN4S+wuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U661mhYt; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FBE59B70;
+	Mon, 26 Feb 2024 09:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708940052; cv=fail; b=PYpW4dIsfE4+Hlz9Z59anjMfdJtDMnGiG9Ihd5ehfkLq2j88k2sCk2VW3zcAawYmeSo74U+eycmmWi7sSbb4LaHBwV/Y9U13FOGYiPLKq9CGyAaKWtakEB7VJBJ45k+jLnhJHO+fB0qJPU2QI/OD1AC6Ggodh9f+Jmhdj9hqcPE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708940052; c=relaxed/simple;
+	bh=n5kdWOGHcqUQi1C01+5xje06SaqcPxfMqLu+q83VKK4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ViAcKJHVKi2sRoGofdJ9QQWWQ32vAL7Q6FMpr+TVSNafMn1YFSzaxEfz8qSp0JnjHQz8gC+EUuVuCdJHOdofxTDzqOpZOWlgJpFKhc/7fFc2QTx978IvX131Q3Z7qI1Zu1AzTYWC7M78dxrwAZHjLA5begoT1K599W/KZeimnaA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TsHTKA2I; arc=fail smtp.client-ip=40.107.94.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U661mhYt"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33d90dfe73cso1891569f8f.0;
-        Mon, 26 Feb 2024 01:34:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708940048; x=1709544848; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yLtF7BizwZvfZN5GuZUignuLCSNDd+sax5JxYiM+LhA=;
-        b=U661mhYt+yxbagFzdkYhPwkALZo7ch3nZaO3fiYpVkrDq5hRg6A0pCKK09PlzXstqs
-         iHMFzz3RNrj8jWFvw/o91mP7+pQGIraH3dGxUrJxs92D4Ko8l+N8WcmcipWAAAfyBjWU
-         ULF+uBBDtFqrIJgv1cpNL2tHQCdCzEprBFrLujju5I2+x0c+g9Ba++cQ5tGlJQbrfE5Y
-         116EYtLuCWA/kKg522xXt40OGbCKi/n2h1Kw3Yw5FP0sTgtob6hWpoXO81i/T2+ie/dK
-         L2ZT4hC4U1v113QfetHCMXlmSR6jqKHItkf+d89acnpkDOoiv9N8F5h6K3XY3Lag6G1q
-         x+ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708940048; x=1709544848;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yLtF7BizwZvfZN5GuZUignuLCSNDd+sax5JxYiM+LhA=;
-        b=MWkuyShDuU/1Pym/vaMFtZN2hQ3o0VyjTosqnef5Kv1jS5f7sjKJzJ1N11+dB2KxwY
-         X7BcuBBeFkND2UAZZMXE2CiLnDeoDuGY2AeGHjtZk0AJzdsohdngzVvXKXGFzo4+LB53
-         Qn0kbCqLAZGjtG1LhDfe9aYW36R5FeCk2dpJrQ+rLr9Iy6oqRgX/TujFLJAWVZJ6mXXV
-         8fbkCDu0K6dC3+Vhg7QECHdJbdHslCJie6Uinv1q/UKpZoxqfglG6kc2q+Fe2DdPxRdq
-         AzbAH4a+suQ5E4N18WxkRmUR1wGuW+JpGvfrRiTqScIfmEli0GKuJLF3+oMSHo3Chqy/
-         IvVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWStX0ILebTPF2klBWwFD/C2oYbPdyIcBf9yj3wpLMGh5DDQyy1dCJdQ5jn4rmmzcJ++GOgq0dXwUuQzbI2NNGhhpLOALpnSumL9GNfTD8spq0FlrsRRFfSN2pbPC9PKUorT/aC
-X-Gm-Message-State: AOJu0Yw0UHvCiCPOFuN8O5LjWTBROx2VZYaMyaa8vms08287KAr1jK+Q
-	FVw15+KLDyIzhFa1S37pQGq1msLlUGAwXCj7LRiL9ZncrKv59ah3
-X-Google-Smtp-Source: AGHT+IEi6GB9us55+eZ6PLrMscsWzljtbO5rOv8g03rm2DGHxEr4TSML+Pwaf/AFQXl8ljBVN2nDEQ==
-X-Received: by 2002:a05:6000:1752:b0:33d:3cd3:5ffd with SMTP id m18-20020a056000175200b0033d3cd35ffdmr5624541wrf.22.1708940047938;
-        Mon, 26 Feb 2024 01:34:07 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:a92:c660:e2e4:db7a:f447:614])
-        by smtp.gmail.com with ESMTPSA id bj20-20020a0560001e1400b0033db0c866f7sm7749527wrb.11.2024.02.26.01.34.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 01:34:07 -0800 (PST)
-From: Piotr Wejman <piotrwejman90@gmail.com>
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Piotr Wejman <piotrwejman90@gmail.com>
-Subject: [PATCH v2] net: stmmac: fix rx queue priority assignment
-Date: Mon, 26 Feb 2024 10:31:44 +0100
-Message-Id: <20240226093144.31965-1-piotrwejman90@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TsHTKA2I"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mqEp6MbfqJw7ez7MHtwL5MqPoUWxKGtlfh/lUIWGXcAPJ+fdCH+nJxiM46CBm5vCg7iBa3FxKTXeGGplTy82b74VFBX/1pNx8jzmpiE3kdQGaEW0D9U4/ZuArC/bKTSpKF3IzRa9WXGAuscZ9T/Zx1ljlgIcWItqWXn+dT44YYKK4HULCfIH1gZKPlPe+10e+7xuUdLENOt0BX3mkqUy8ZtuCYrPzhdbcWFM5HIChU1PygsxhNZcQypQLpPaI666h1/ev2lfzj4N32LIw6kml4jhyj4WK2NZtTAwGTuZ8nubvv2WJ7jc7qbSJmBxOTtzoJR40CnFHS1cdLIV4NZqEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q+O5bCVThQKY+yU0HHeTtd7kcs7uNH9IJcrnKxTr0gc=;
+ b=iu1Qu8kmg2MKSkqNmBJfub5hkTV/txDxeBf8SvPyRI6OoP0DRLYgvLo5USLv1cQjLzLm9lzjU2DL08r0kGa8Jp6i3UCEmSQRYM6sMFPyENSs3wOO9Ae7efjg11TDFX5tX4Igu6nHdrNs2hO5MZBGM2UxtBe2n1ztYhVZ/TU6q9eAHqpuq9YLob200hUgku78VHZpLZ4dk0MTpU9s3rXmH+iFncaHs+o/fl+UHn1I8XiggZ9w2aa/b/UKt6MvZ1lM+LRJj2ePB9cFbL9SX08sUErPxzI7SUu1RLYt83dH3F5WwttIWbf2zYlDswR3utcnFOwNmyyB5vx+EVIpZIZmfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q+O5bCVThQKY+yU0HHeTtd7kcs7uNH9IJcrnKxTr0gc=;
+ b=TsHTKA2I/QbuP/gPefJHdkq6xGw8qPls8m27NG4SesyMp1JkWqJYQLaKgK4EgpjYk/4gNX1Ib6DSlY/2dPRAzwfX0eFbwdiB0L3l/xWUhiKmMZOoObp1riAD4bs5Iqqy/7fUqnaxR8adQ5QStLE/TO8VOejDG6zBPssqINVcI/Y=
+Received: from SA9PR10CA0024.namprd10.prod.outlook.com (2603:10b6:806:a7::29)
+ by PH8PR12MB7136.namprd12.prod.outlook.com (2603:10b6:510:22b::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.33; Mon, 26 Feb
+ 2024 09:34:05 +0000
+Received: from SN1PEPF0002BA4D.namprd03.prod.outlook.com
+ (2603:10b6:806:a7:cafe::1d) by SA9PR10CA0024.outlook.office365.com
+ (2603:10b6:806:a7::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.49 via Frontend
+ Transport; Mon, 26 Feb 2024 09:34:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SN1PEPF0002BA4D.mail.protection.outlook.com (10.167.242.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Mon, 26 Feb 2024 09:34:05 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 26 Feb
+ 2024 03:34:04 -0600
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 26 Feb
+ 2024 03:34:04 -0600
+Received: from xhdmubinusm40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Mon, 26 Feb 2024 03:34:01 -0600
+From: Mubin Sayyed <mubin.sayyed@amd.com>
+To: <krzysztof.kozlowski+dt@linaro.org>, <robh+dt@kernel.org>,
+	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>
+CC: <daniel.lezcano@linaro.org>, <tglx@linutronix.de>, <michal.simek@amd.com>,
+	<linux-kernel@vger.kernel.org>, Mubin Sayyed <mubin.sayyed@amd.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3] dt-bindings: timer: Add support for cadence TTC PWM
+Date: Mon, 26 Feb 2024 15:03:33 +0530
+Message-ID: <20240226093333.2581092-1-mubin.sayyed@amd.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -74,147 +78,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4D:EE_|PH8PR12MB7136:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4f070777-eeaf-4ae0-178f-08dc36ae131b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	b+3GVh9E4He4LKOgIDz3aH4KW5f+yhX2iDS3GlXhYQDqLG5HFs8zYCmUhvAWYgcbcS88S3I0Fgb49wNUN6zYOB+4RizUAM5K2FN81BQsliSjEbMjLFOy49YjvIjYBnzno7bBbLJkxyl+fqv0XQo6IxuzS94BDGtJdQ0a+QycjOWNhMGM3qv6XkNYFTFeIeeHKI1Xt+wnflSYt/x9iWks6E5J2MEnUq+YBAtE1eYRkPl79l70uM9u9tLZ6Rr9cKcIr5I8NWnmaJ/zvDDaVtB8LQb+L+96DZ8lrAKMYqh3mm5i0dPN0cSA0UNFQhl03Au+C/8O2byIM8BxmPNVJit9k0BjQzBiSL+thf769G9+IZtg3q2SAiRCaKn3c4k6WARixCm5PaqLF79KkrWr+tTsYItV4pVNNy+nF1C/gs3Rh7+qi7tP20TVAR2dNfANdUiAWM6qG2t51Ywb34VAQEXiVmi1czKCmtazuT9Rq5dg5ogKcyTvw8yljzNEQL579nbWf24X6Kssvn5WDCo+4gJUY5VcG9g5cMCUsYHFh9jKVWlWBvpj+rwspA7uBHbiqzxdCpnFLKDA/Qwv6Wa3yIlSIdIL/NUJuUFVq4qahC71z4fX5om2i/TNEKOeBRVBlwgRtf3tF1Et36t3nu5muB1ymfyQU6/2vZwOIyFXo4ggb8tn0RUuacVIWEnnRHZ3/P37TBh5H5FtCZKO+GA0tcCLOC4v71LOhzG0Bu82MF3xaCuiOM6e8BGw0nGm4IIy3q09
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 09:34:05.1894
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f070777-eeaf-4ae0-178f-08dc36ae131b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA4D.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7136
 
-The driver should ensure that same priority is not mapped to multiple
-rx queues. Currently rx_queue_priority() function is adding
-priorities for a queue without clearing them from others.
+Cadence TTC can act as PWM device, it will be supported through
+separate PWM framework based driver. Decision to configure
+specific TTC device as PWM or clocksource/clockevent would
+be done based on presence of "#pwm-cells" property.
 
-From DesignWare Cores Ethernet Quality-of-Service
-Databook, section 17.1.29 MAC_RxQ_Ctrl2:
-"[...]The software must ensure that the content of this field is
-mutually exclusive to the PSRQ fields for other queues, that is,
-the same priority is not mapped to multiple Rx queues[...]"
+Also, interrupt property is not required for TTC PWM driver.
+Update bindings to support TTC PWM configuration.
 
-After this patch, rx_queue_priority() function will:
-- assign desired priorities to a queue
-- remove those priorities from all other queues
-The write sequence of CTRL2 and CTRL3 registers is done in the way to
-ensure this order.
-
-Signed-off-by: Piotr Wejman <piotrwejman90@gmail.com>
+Signed-off-by: Mubin Sayyed <mubin.sayyed@amd.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Changes in v2:
-  - Add some comments
-  - Apply same changes to dwxgmac2_rx_queue_prio()
-  - Revert "Rename prio argument to prio_mask"
-  - Link to v1: https://lore.kernel.org/netdev/20240219102405.32015-1-piotrwejman90@gmail.com/T/#u
+Changes for v3:
+  Add Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+  tag
+  Remove bindings from subject
+  1/3 and 3/3 are dropped as of now (WIP).
 
- .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 42 +++++++++++++++----
- .../ethernet/stmicro/stmmac/dwxgmac2_core.c   | 40 ++++++++++++++----
- 2 files changed, 66 insertions(+), 16 deletions(-)
+Changes for v2:
+  Update subject
+  Modify #pwm-cells to constant 3
+  Update example to use generic name
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 6b6d0de09619..76ec0c1da250 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -92,19 +92,43 @@ static void dwmac4_rx_queue_priority(struct mac_device_info *hw,
- 				     u32 prio, u32 queue)
- {
- 	void __iomem *ioaddr = hw->pcsr;
--	u32 base_register;
--	u32 value;
-+	u32 clear_mask = 0;
-+	u32 ctrl2, ctrl3;
-+	int i;
+link for v2:
+  https://lore.kernel.org/linux-arm-kernel/20231114124748.581850-2-mubin.sayyed@amd.com/T/
+---
+ .../devicetree/bindings/timer/cdns,ttc.yaml   | 22 ++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/timer/cdns,ttc.yaml b/Documentation/devicetree/bindings/timer/cdns,ttc.yaml
+index dbba780c9b02..da342464d32e 100644
+--- a/Documentation/devicetree/bindings/timer/cdns,ttc.yaml
++++ b/Documentation/devicetree/bindings/timer/cdns,ttc.yaml
+@@ -32,12 +32,23 @@ properties:
+     description: |
+       Bit width of the timer, necessary if not 16.
  
--	base_register = (queue < 4) ? GMAC_RXQ_CTRL2 : GMAC_RXQ_CTRL3;
--	if (queue >= 4)
--		queue -= 4;
-+	ctrl2 = readl(ioaddr + GMAC_RXQ_CTRL2);
-+	ctrl3 = readl(ioaddr + GMAC_RXQ_CTRL3);
-+	
-+	/* The software must ensure that the same priority
-+	 * is not mapped to multiple Rx queues.
-+	 */
-+	for (i = 0; i < 4; i++)
-+		clear_mask |= ((prio << GMAC_RXQCTRL_PSRQX_SHIFT(i)) &
-+						GMAC_RXQCTRL_PSRQX_MASK(i));
- 
--	value = readl(ioaddr + base_register);
-+	ctrl2 &= ~clear_mask;
-+	ctrl3 &= ~clear_mask;
- 
--	value &= ~GMAC_RXQCTRL_PSRQX_MASK(queue);
--	value |= (prio << GMAC_RXQCTRL_PSRQX_SHIFT(queue)) &
-+	/* Assign new priorities to a queue and
-+	 * clear them from others queues.
-+	 * The CTRL2 and CTRL3 registers write sequence is done
-+	 * in the way to ensure this order.
-+	 */
-+	if (queue < 4) {
-+		ctrl2 |= (prio << GMAC_RXQCTRL_PSRQX_SHIFT(queue)) &
- 						GMAC_RXQCTRL_PSRQX_MASK(queue);
--	writel(value, ioaddr + base_register);
++  "#pwm-cells":
++    const: 3
 +
-+		writel(ctrl2, ioaddr + GMAC_RXQ_CTRL2);
-+		writel(ctrl3, ioaddr + GMAC_RXQ_CTRL3);
-+	} else {
-+		queue -= 4;
-+
-+		ctrl3 |= (prio << GMAC_RXQCTRL_PSRQX_SHIFT(queue)) &
-+						GMAC_RXQCTRL_PSRQX_MASK(queue);
-+
-+		writel(ctrl3, ioaddr + GMAC_RXQ_CTRL3);
-+		writel(ctrl2, ioaddr + GMAC_RXQ_CTRL2);
-+	}
- }
+ required:
+   - compatible
+   - reg
+-  - interrupts
+   - clocks
  
- static void dwmac4_tx_queue_priority(struct mac_device_info *hw,
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 1af2f89a0504..7ad73e1d353e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -105,17 +105,43 @@ static void dwxgmac2_rx_queue_prio(struct mac_device_info *hw, u32 prio,
- 				   u32 queue)
- {
- 	void __iomem *ioaddr = hw->pcsr;
--	u32 value, reg;
-+	u32 clear_mask = 0;
-+	u32 ctrl2, ctrl3;
-+	int i;
- 
--	reg = (queue < 4) ? XGMAC_RXQ_CTRL2 : XGMAC_RXQ_CTRL3;
--	if (queue >= 4)
-+	ctrl2 = readl(ioaddr + XGMAC_RXQ_CTRL2);
-+	ctrl3 = readl(ioaddr + XGMAC_RXQ_CTRL3);
-+	
-+	/* The software must ensure that the same priority
-+	 * is not mapped to multiple Rx queues.
-+	 */
-+	for (i = 0; i < 4; i++)
-+		clear_mask |= ((prio << XGMAC_PSRQ_SHIFT(i)) &
-+						XGMAC_PSRQ(i));
++allOf:
++  - if:
++      not:
++        required:
++          - "#pwm-cells"
++    then:
++      required:
++        - interrupts
 +
-+	ctrl2 &= ~clear_mask;
-+	ctrl3 &= ~clear_mask;
+ additionalProperties: false
+ 
+ examples:
+@@ -50,3 +61,12 @@ examples:
+         clocks = <&cpu_clk 3>;
+         timer-width = <32>;
+     };
 +
-+	/* Assign new priorities to a queue and
-+	 * clear them from others queues.
-+	 * The CTRL2 and CTRL3 registers write sequence is done
-+	 * in the way to ensure this order.
-+	 */
-+	if (queue < 4) {
-+		ctrl2 |= (prio << XGMAC_PSRQ_SHIFT(queue)) &
-+						XGMAC_PSRQ(queue);
-+
-+		writel(ctrl2, ioaddr + XGMAC_RXQ_CTRL2);
-+		writel(ctrl3, ioaddr + XGMAC_RXQ_CTRL3);
-+	} else {
- 		queue -= 4;
- 
--	value = readl(ioaddr + reg);
--	value &= ~XGMAC_PSRQ(queue);
--	value |= (prio << XGMAC_PSRQ_SHIFT(queue)) & XGMAC_PSRQ(queue);
-+		ctrl3 |= (prio << XGMAC_PSRQ_SHIFT(queue)) &
-+						XGMAC_PSRQ(queue);
- 
--	writel(value, ioaddr + reg);
-+		writel(ctrl3, ioaddr + XGMAC_RXQ_CTRL3);
-+		writel(ctrl2, ioaddr + XGMAC_RXQ_CTRL2);
-+	}
- }
- 
- static void dwxgmac2_tx_queue_prio(struct mac_device_info *hw, u32 prio,
++  - |
++    pwm: pwm@f8002000 {
++        compatible = "cdns,ttc";
++        reg = <0xf8002000 0x1000>;
++        clocks = <&cpu_clk 3>;
++        timer-width = <32>;
++        #pwm-cells = <3>;
++    };
 -- 
 2.25.1
 
