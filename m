@@ -1,112 +1,112 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732D312BF29;
-	Mon, 26 Feb 2024 14:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE42B12BF29
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 14:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708958668; cv=none; b=V3Wdb+2NgS3H/zd3ET1KljWxZN6/c9F0BrqkLapTXu9Y/iZHRr1Q5HpX9rJbnJ3cUbX6V15QokponENwFGJOuIT9ufti/03z4DixRttJ5uImOmBQU9oYG5A9EXo+SvRV/0eQIYMoD5zZRxa37EHo3BDFbXt+qfz+ykfsmsYgrc0=
+	t=1708958687; cv=none; b=lLKvkb10Gf2x9ZpvzBhrVGHXAfyefz4sptP38LUXuk1oo6pKTzkWwDNUJduGyXxt1NhEPjYg8UKUnzGtq/D0ibONA44wZ4XalZGkj+SJTfRB7yjO3IQ95Xz9EMx4c/AY85GWlVLXHQBeLhQSWaKf9Z9GPIl+papxRM2wOJLt9UE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708958668; c=relaxed/simple;
-	bh=WS8wGXmQM2s1gH1iYfEEVs4FsClq44BPDrBK14QrVOA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KMYRu1dtWWn7AsrX7f79Sp8Rhd3c6fLfFqQjbR3Bwq/NT7sdm8oQJml56nj5+AyesllRslhwEg6YDm7QVuqjY1Weprosj6Pf3fUUNQTHd1wyHmLV0g9ZiG4RWmbA/hDHi4RLsH6VmPURK7zx7WxwwbF4CICd+80Wo6lMZ8Y0qhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DCHsz+Gk; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1708958687; c=relaxed/simple;
+	bh=+7EGPxI8njojWIFtKK0niBxOgiA/ror8Zq84fmjVI+s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kxTicjA7QnTghOeWGSu4ENmf0AzjY6G/rviaYKu6D/zvAFVKTNA8R4PUGjwFr9mKs/qFT2IJENQq6eD7SVnFCkVc6o0eknDxeh3eLKsmZa7JaS8MgxCCncmdcB3DfCHQm1WiKzbA/0vzveTLKGFkO9oacu/VfP3cBmQhVT+za1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oqqs7shT; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DCHsz+Gk"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41QDLLdF031418;
-	Mon, 26 Feb 2024 14:43:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=vEUYPk/vTjUcosp4mayE+HEMCQCXiWr8F/WnC06iTYQ=;
- b=DCHsz+GkTt9rNVCCdVmhEAkA5ZrezQMCfGL0y2w6tT5OrubfWdR3EMvzYZY3RbpxEZnk
- barjTYcrSibPx4+EHS/o4v7vcubTQDkDZ+RxzYFxbu2UuWmpFp7dZPmzteWCRvCrx9CK
- JM9cvc7kJtJlPsKCkCVOxaUZUiphApUhgywD4gP+oyE3KrdxaXAVg8uQOtFrI6V7YCpH
- qXMXCXCqm8Ym2+iNcby3Nxdnwd6mrTdSnqnfT9dGs2iYdyUTw8iNQUvzdk1vmBNBCHWj
- bN1sv7j7+ATNc8+eV9AD6pWoZochj9pYZZ2YdfB8onjtjQ0a+T5Dpv7yIH0LnZfssE+z Qw== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wf90v4njc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Feb 2024 14:43:58 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41QESwwd001840;
-	Mon, 26 Feb 2024 14:43:56 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wf6w5n9ry-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Feb 2024 14:43:56 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41QEhuwF030519;
-	Mon, 26 Feb 2024 14:43:56 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3wf6w5n9qa-1;
-	Mon, 26 Feb 2024 14:43:55 +0000
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-To: Matthew Sakai <msakai@redhat.com>, dm-devel@lists.linux.dev,
-        Mike Snitzer <snitzer@kernel.org>, Ken Raeburn <raeburn@redhat.com>,
-        Chung Chung <cchung@redhat.com>, Thomas Jaskiewicz <tom@jaskiewicz.us>,
-        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        John Wiele <jwiele@redhat.com>,
-        "J. corwin Coburn" <corwin@hurlbutnet.net>,
-        linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, dan.carpenter@linaro.org
-Subject: [PATCH] dm vdo: Fix a use-after-free in load_index_save()
-Date: Mon, 26 Feb 2024 06:41:35 -0800
-Message-ID: <20240226144155.2101066-1-harshit.m.mogalapalli@oracle.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oqqs7shT"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41241f64c6bso24698905e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 06:44:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708958683; x=1709563483; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xebCF9Rlp7+lnTRinKmQM1qUIifmCWo6oOreD/07nk0=;
+        b=oqqs7shTGESEKQNn6q9EY0l+JAG9rPGh9KneyUKyY1Gb/QVjOzpdbXgc9gc7TdXgKW
+         yzIWcNlbH0QNXTfH55/oeUkSA1Tx2roq1KL9bb/smfdYRgPWuJF8PZ6MDMP/uuKJAMHA
+         lL9g43jLJKeyD0Ktc9YGjAfYUKYb5iq0jcA4DMRU3JtaiU9D1IcP6OwsMqApQtRx+y6Y
+         CMZpIne3ANYaKB5apSijLkgSG5F/hbVOAHoqcC01KkFhcdM4jp9S18Ezj4fYVac1DTB5
+         HAmUafG5tWnWHduUJf9Yfa2J3nnR2v+bOez0FE4dCY2m0t5bLf3dAegtdkwsVSsAy6Li
+         0vVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708958683; x=1709563483;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xebCF9Rlp7+lnTRinKmQM1qUIifmCWo6oOreD/07nk0=;
+        b=PxPV1Y2oL7qICSaKdB40kz+U5f+bMGgrdX88bCB5viCXZT547Hre8DV10bWr3LPxSx
+         voDPhk4+9N24oBAD1cZ+BqUXSy9l4mUggCV9VNBhxFVQhpZSLmMCZ7UzV2UKCN2yt5Nv
+         B7UngCpSJuE3xpHGnLb+Dak/lOwkglC2EmY44VYKp8NMkXYIhptCYZi/+8RyM2vP9N9X
+         bR6Ppe+t/93ZJ+DkA8cTHt6XDkglm6Y7EzoIUubD5vScvyz8Kieah9aMicC3vU8PCSZb
+         aKBEs8FCkGLCe8alxvqUdHcTeXwD9Q8wIhninFlQlOb6ofhtXPBG81buEhelxnahkEPK
+         N8rw==
+X-Forwarded-Encrypted: i=1; AJvYcCV36UTE9sLR8a1xLLxYEbnxSBuZuZrSU2wHLaqmeSnXd9qD4EVmfOIEVP+8B6T3m+wskutdLi2wkKkJZuvkItldaUDiWIaQtOBPXe/f
+X-Gm-Message-State: AOJu0YycLGqG2RyJ9z/Hl+Rw/Dqprq0WmmVENNjvij0CT8uw0dkmh+jU
+	eVDM9AkTvKbJlQZ+Cr8jYe4deD6WPNiAsBayzLJNPAcAemaVwHteOvxZFl0kTBU=
+X-Google-Smtp-Source: AGHT+IG9SpqrImlSczgJxnpgDOf0lff+zMPddH3C9S1iodwRZL/rSMYdzPAPbQ3AXMmt1pT+Z1JJIw==
+X-Received: by 2002:a05:600c:35d1:b0:412:a927:a646 with SMTP id r17-20020a05600c35d100b00412a927a646mr582114wmq.24.1708958683167;
+        Mon, 26 Feb 2024 06:44:43 -0800 (PST)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id n1-20020a05600c4f8100b004127ead18aasm8586036wmq.22.2024.02.26.06.44.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 06:44:42 -0800 (PST)
+Message-ID: <46630fa5-381a-4006-ade4-2c18e76331ff@linaro.org>
+Date: Mon, 26 Feb 2024 15:44:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] dt-bindings: timer: Add support for cadence TTC PWM
+Content-Language: en-US
+To: Mubin Sayyed <mubin.sayyed@amd.com>, krzysztof.kozlowski+dt@linaro.org,
+ robh+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org
+Cc: tglx@linutronix.de, michal.simek@amd.com, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20240226093333.2581092-1-mubin.sayyed@amd.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20240226093333.2581092-1-mubin.sayyed@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_10,2024-02-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 adultscore=0
- mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402260111
-X-Proofpoint-GUID: 4v26zrTyEdjYF7bZ2CgOZzmIitR6aBNZ
-X-Proofpoint-ORIG-GUID: 4v26zrTyEdjYF7bZ2CgOZzmIitR6aBNZ
 
-Smatch warns:
-	drivers/md/dm-vdo/indexer/index-layout.c:1570
-	load_index_save() warn: 'table' was already freed.
+On 26/02/2024 10:33, Mubin Sayyed wrote:
+> Cadence TTC can act as PWM device, it will be supported through
+> separate PWM framework based driver. Decision to configure
+> specific TTC device as PWM or clocksource/clockevent would
+> be done based on presence of "#pwm-cells" property.
+> 
+> Also, interrupt property is not required for TTC PWM driver.
+> Update bindings to support TTC PWM configuration.
+> 
+> Signed-off-by: Mubin Sayyed <mubin.sayyed@amd.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+> Changes for v3:
+>    Add Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>    tag
+>    Remove bindings from subject
+>    1/3 and 3/3 are dropped as of now (WIP).
+> 
+> Changes for v2:
+>    Update subject
+>    Modify #pwm-cells to constant 3
+>    Update example to use generic name
+> 
+> link for v2:
+>    https://lore.kernel.org/linux-arm-kernel/20231114124748.581850-2-mubin.sayyed@amd.com/T/
+> ---
 
-Store the error value in result and then free the table before
-returning.
+Applied, thanks
 
-Fixes: b46d79bdb82a ("dm vdo: add deduplication index storage interface")
-Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
----
-This is based on static analysis and only compile tested.
----
- drivers/md/dm-vdo/indexer/index-layout.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/dm-vdo/indexer/index-layout.c b/drivers/md/dm-vdo/indexer/index-layout.c
-index 1453fddaa656..18fac999e3e4 100644
---- a/drivers/md/dm-vdo/indexer/index-layout.c
-+++ b/drivers/md/dm-vdo/indexer/index-layout.c
-@@ -1566,10 +1566,11 @@ static int __must_check load_index_save(struct index_save_layout *isl,
- 
- 
- 	if (table->header.type != RH_TYPE_SAVE) {
-+		result = vdo_log_error_strerror(UDS_CORRUPT_DATA,
-+						"unexpected index save %u header type %u",
-+						instance, table->header.type);
- 		vdo_free(table);
--		return vdo_log_error_strerror(UDS_CORRUPT_DATA,
--					      "unexpected index save %u header type %u",
--					      instance, table->header.type);
-+		return result;
- 	}
- 
- 	result = read_index_save_data(reader, isl, table->header.payload);
 -- 
-2.39.3
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
