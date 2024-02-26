@@ -1,180 +1,157 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AACC335C0;
-	Mon, 26 Feb 2024 09:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D6054F8C
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708939585; cv=none; b=sDCsLmR+slg1v5aa8Q1veoQXhOuNxqYjx+ilkWSPrMq6FDf8gTRh3f4DyreMt4Pbi6wBeE4Qc1B/ormaYY172p5RQjP0obfJvRuGQjttmrvQmVKye+4AvK0q4+nI7Cuh9VQJOHXo4Ms66VSq49Jtw2PlENrohEUPFlCOq6itP8Q=
+	t=1708939598; cv=none; b=Grqx0Ywt0D8/akKjw3rxgpV3FQGBCMQxvLBRtj5vS7eaJzhkk45EXjifNO5ywGwCuwsIWTkN0Ye/Sqi2273Kr8922mKNVV2EnAOazEleaKfiLmShLpq8oaA5mULebG9uBzEgKOp/4bjThAOpKPr6yjB7sRgZmUlI9OTwiezS6hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708939585; c=relaxed/simple;
-	bh=XwLxxp8u8DvmEjdgtmzsdNA/nMFyAao9iyW50HyGSqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F4kXQOgek7s9f0jaL9cJb6lNWOP8wRkZeHkSXoIdysLwOvvx+kVERxi0J69/CAAz/WyRS848fNBI3zqpxYbcSutZDumf6oFW/bJm5vwQUADYU6sOFfQiAo1U9lZsJqnmz0/FdN44ExwhdBzh91UCVPJj9YVmCkRjXyFDcSuXXUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jeLtCvF5; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1708939598; c=relaxed/simple;
+	bh=9deL/d/BcOgJ90IBVOvhsZVsKJ8Cuz+9AZRxFu2eesM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jffTDaCC9B44EadAuY1SBlo4QVjBDPFE87yGTuJgHCo2LADkwsCJ/qBwWRzJrLgAljfDS7dfgndA07svqYn+1gD0lF+uzJWFb3s0uXXiw+kNqdTII1ItnPSGCajDDexePDpKyzFoXSfH0y/P34wqY6lByiuFfLcYCZTW3gDCKi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dr9Tm/Za; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jeLtCvF5"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8654920007;
-	Mon, 26 Feb 2024 09:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708939574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dJ/TScN96xow2EgjcWkCcR2wGSrDb70yHEKhAIhIqck=;
-	b=jeLtCvF51DIye3jd9TDzyVizqTWW0ZkjrTr6zB6ApmN3dCkSvOaMv1ITwAKf8eG/rXsQ7b
-	O2XzGbGiBzFsf7rXcq6WEhPQLZIoEpmR0EEXImxcuSixWK1OE7ZPQ33JDy1RfLTFoli/ZY
-	y9b9UvjEw6QfZ20HsI3BbfCFP+v7uOlRtg3MN3H/K0WN2blm86CKEzOIw3NhIU0n6j0WJC
-	http5/7pXhfjw3qlWgVIzdrLL69waGkW2hnybaReMfji+i46OI+2YTM46LRInjSNgpCpAd
-	o3yTHnLaT8x4TKNzgHoLN0bomHuraPzXRS/N7VDTcoMfBZHiy1DVJWzfpFjuGA==
-Date: Mon, 26 Feb 2024 10:26:08 +0100
-From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-To: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Cc: Saeed Mahameed <saeed@kernel.org>, Leon Romanovsky <leon@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Richard Cochran
- <richardcochran@gmail.com>, Tariq Toukan <tariqt@nvidia.com>, Gal Pressman
- <gal@nvidia.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>, Hangbin Liu
- <liuhangbin@gmail.com>, Paul Greenwalt <paul.greenwalt@intel.com>, Justin
- Stitt <justinstitt@google.com>, Randy Dunlap <rdunlap@infradead.org>,
- Maxime Chevallier <maxime.chevallier@bootlin.com>, Wojciech Drewek
- <wojciech.drewek@intel.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- Jiri Pirko <jiri@resnulli.us>, Jacob Keller <jacob.e.keller@intel.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu
- <joabreu@synopsys.com>, Dragos Tatulea <dtatulea@nvidia.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH RFC net-next v1 4/6] net/mlx5e: Implement ethtool
- hardware timestamping statistics
-Message-ID: <20240226102608.135cb11c@kmaincent-XPS-13-7390>
-In-Reply-To: <20240223192658.45893-5-rrameshbabu@nvidia.com>
-References: <20240223192658.45893-1-rrameshbabu@nvidia.com>
-	<20240223192658.45893-5-rrameshbabu@nvidia.com>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dr9Tm/Za"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7d5cbc4a585so877489241.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:26:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708939595; x=1709544395; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9deL/d/BcOgJ90IBVOvhsZVsKJ8Cuz+9AZRxFu2eesM=;
+        b=Dr9Tm/ZatKZhrXF9KI8MCnZw7ZhFyK0ELsljHMsMzle3S2NJuT8QQkUsgLoby6CLSI
+         4ehZktOHqg4bfJUqiucIMaRpZI41RCI4MbWji2w2k4ciK6Z7GLYvh1alj9a15fxB9/Y1
+         5lXdwn+JQJhH8UEV8ZzXrfP5tf7G72AlqVLzM16fv0wrQT9Pli2K/AtW4fyqo9ghmN2k
+         G9RoYFkNOG73TTyY9QdLkeZyZFYFOqKpg9LwJS5C+1TbjqwVF0uBRDaLHhQipKYuDlX+
+         OS1LAEDxKO3IDiOe1dXavOwXIC2rRoC4FY4mWznMJ/1YMi4kOeUjVWgBM7QRWR3AZrHr
+         oGrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708939595; x=1709544395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9deL/d/BcOgJ90IBVOvhsZVsKJ8Cuz+9AZRxFu2eesM=;
+        b=oh7SI1cWmsnXOslrjoDdxCuoQkAajjaSgffcRk8Prx7AJC19IPPa34jfpFkMgCkwOV
+         hNzmew+/bcG/iucg7hw8ZyZFehHyECPBKyzjQ/4gaoEBN/5/G80s7HGW7JKPxYGlmpaW
+         /tCKmHEXHj6+gxZfk1VZlXslzde2mm/4knaegBeSVd/kOga8N6vdtJuPoverCC+WTJNa
+         FCXp77RFFlkhLVr3PGcVE8zEz4dHYDIY8KOHql64G8vqi+VGeETOSiZ/C9sTquN5V34p
+         eXsH4Qjj/HJfo/DOkxDO5ed4LKjg+5eTshCEK6aNRyGDlXblsrRBgK1QcqMGqXcBkAnX
+         xCOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXWueFEvhTEhwavq7CLZ+pt7hNifLQj1Z5QT20eZGEto1aUL5oDe37JdDm1bBdwV1lWjupKmbwYTInEZ5gaeWX4I7KM0jAKHGrJpaMY
+X-Gm-Message-State: AOJu0Yym7FfLKJkmKLfIZFYpBQpALacP4YhtavUCTst03AwR6z0gD/UE
+	01wAXuF8BW/DH1w3NtFO4xM15Xl5H+7DGFY1ehe1QW4d9TI22Q/nhEPv35crkl06DJhtfsp3Rwd
+	oL8NvNuRXt1CGadBL+/niUElJms5M3muc6YSdRAgU8czzoM2oI5yg
+X-Google-Smtp-Source: AGHT+IHUnRw4mFGKo0EZ/hFZK/eG3IFnyKzaqS0jzj1uJLOk9IiRiRv/WsrXIPvhAqjXo29J5z4X1jK9bDP4OCfWkSk=
+X-Received: by 2002:a1f:cc84:0:b0:4b6:d63c:ca8f with SMTP id
+ c126-20020a1fcc84000000b004b6d63cca8fmr2397957vkg.16.1708939595308; Mon, 26
+ Feb 2024 01:26:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <CABXGCsOzpRPZGg23QqJAzKnqkZPKzvieeg=W7sgjgi3q0pBo0g@mail.gmail.com>
+ <CA+fCnZeNsUV4_92A9DMg=yqyS_y_JTABguyQyNMpm6JPKVxruw@mail.gmail.com>
+ <CABXGCsPerqj=zXJ0pUCnZ29JGmZFSvH6DB22r2uKio61c1bVkw@mail.gmail.com>
+ <CANpmjNMn+ULqbSGQ6uOa0JDhw=2my5TtBK4Y+xyBES_iaG_SEA@mail.gmail.com>
+ <CABXGCsM9BSD+SYFkvkYxmcrZL+aUfUb_M-rjNJhzb2cYHQr5ww@mail.gmail.com>
+ <CANpmjNNXKiM0j4mR-Rr2KALhgz87=QjCOomEymNMWjtos=Z3Ug@mail.gmail.com>
+ <CANpmjNOnbNw2fRL3_depaAgt81p-VpHh5_O_26kyxofjECgsFQ@mail.gmail.com>
+ <CABXGCsPB-KEbE+SfymVmqfiomFVngFL2Je81Qyhw1F5_aZX-TQ@mail.gmail.com>
+ <CABXGCsO5dcEuorLAXR3CFzDVyAWNk4_YfqCh=UJddfzpWF7hNg@mail.gmail.com>
+ <CANpmjNPsdM2HrRFgEHYxX1seT2fbOFDuO6Ci-qF3X2y=9_PD1A@mail.gmail.com>
+ <91c50335-e7b6-4ae1-9dad-a0c990b52021@suse.cz> <20240219152836.11d36709c594e66fe3037f2d@linux-foundation.org>
+ <7e31accb-db01-486f-afb8-18a3f5402d00@suse.cz> <CABXGCsOHswLa5rd_Q7kHDHESb=BtqB+F=LV7Wvv+qoRxrqCboA@mail.gmail.com>
+ <20240220093011.bf84486d704c3814079c2aa0@linux-foundation.org>
+ <96c51d35-15ce-42d0-b81b-7e76044e1f2b@suse.cz> <CANpmjNMObiX5X721DERccn16aMW+WMPz+wvLKv=UdaQi3XOMwA@mail.gmail.com>
+In-Reply-To: <CANpmjNMObiX5X721DERccn16aMW+WMPz+wvLKv=UdaQi3XOMwA@mail.gmail.com>
+From: Marco Elver <elver@google.com>
+Date: Mon, 26 Feb 2024 10:25:56 +0100
+Message-ID: <CANpmjNPP=c4ZfJmWFexR=03Lk4gGMr7yPW=j81WAnM_vCSCwCQ@mail.gmail.com>
+Subject: Re: regression/bisected commit 773688a6cb24b0b3c2ba40354d883348a2befa38
+ make my system completely unusable under high load
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, Andrey Konovalov <andreyknvl@gmail.com>, glider@google.com, 
+	dvyukov@google.com, eugenis@google.com, Oscar Salvador <osalvador@suse.de>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux Memory Management List <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: kory.maincent@bootlin.com
 
-On Fri, 23 Feb 2024 11:24:48 -0800
-Rahul Rameshbabu <rrameshbabu@nvidia.com> wrote:
+On Tue, 20 Feb 2024 at 19:51, Marco Elver <elver@google.com> wrote:
+>
+> On Tue, 20 Feb 2024 at 19:16, Vlastimil Babka <vbabka@suse.cz> wrote:
+> >
+> > On 2/20/24 18:30, Andrew Morton wrote:
+> > > On Tue, 20 Feb 2024 10:37:03 +0500 Mikhail Gavrilov <mikhail.v.gavril=
+ov@gmail.com> wrote:
+> > >
+> > >> On Tue, Feb 20, 2024 at 4:50=E2=80=AFAM Vlastimil Babka <vbabka@suse=
+.cz> wrote:
+> > >> > >
+> > >> > > I'm all confused.
+> > >> > >
+> > >> > > 4434a56ec209 ("stackdepot: make fast paths lock-less again") was
+> > >> > > mainlined for v6.8-rc3.
+> > >> >
+> > >> > Uh sorry, I just trusted the info that it's not merged and didn't =
+verify
+> > >> > it myself. Yeah, I can see it is there.
+> > >> >
+> > >>
+> > >> Wait, I am talk about these two patches which is not merged yet:
+> > >> [PATCH v2 1/2] stackdepot: use variable size records for non-evictab=
+le entries
+> > >> [PATCH v2 2/2] kasan: revert eviction of stack traces in generic mod=
+e
+> > >> https://lore.kernel.org/linux-mm/20240129100708.39460-1-elver@google=
+.com/
+> > >
+> > > A can move those into the 6.8-rc hotfixes queue, and it appears a
+> > > cc:stable will not be required.
+> > >
+> > > However I'm not seeing anything in the changelogs to indicate that
+> > > we're fixing a dramatic performance regression, nor why that
+> > > regressions is occurring.
+>
+> It's primarily fixing a regression of memory usage overhead for
+> stackdepot users in general. Performance is mostly fixed, but patch
+> 2/2 ("kasan: revert eviction of stack traces in generic mode") also
+> helps with KASAN performance because entries that were being
+> repeatedly evicted-then-reallocated are just allocated once and with
+> increasing system uptime the slow path will be taken much less.
+>
+> > We also seem have an unhappy bot with the 2/2 patch :/ although it's no=
+t yet
+> > clear if it's a genuine issue.
+> >
+> > https://lore.kernel.org/all/202402201506.b7e4b9b6-oliver.sang@intel.com=
+/
 
-> Feed driver statistics counters related to hardware timestamping to
-> standardized ethtool hardware timestamping statistics group.
->=20
-> Signed-off-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-> Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
+This was confirmed to be a non-bug by RCU devs.
 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-> b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c index
-> bc31196d348a..836198445726 100644 ---
-> a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c +++
-> b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c @@ -1155,6 +1155,74 =
-@@
-> void mlx5e_stats_rmon_get(struct mlx5e_priv *priv, *ranges =3D
-> mlx5e_rmon_ranges; }
-> =20
-> +void mlx5e_stats_ts_get(struct mlx5e_priv *priv,
-> +			struct ethtool_ts_stats *ts_stats)
-> +{
-> +	enum ethtool_ts_stats_layer layer;
-> +	struct mlx5e_ptp *ptp;
-> +	bool tx_ptp_opened;
-> +	int i, j;
-> +
-> +	mutex_lock(&priv->state_lock);
-> +
-> +	tx_ptp_opened =3D priv->tx_ptp_opened;
-> +
-> +	/* NOTE: this needs to be changed whenever ethtool timestamping
-> +	 * layer selection is implemented.
-> +	 */
-> +	if (ts_stats->layer =3D=3D ETHTOOL_TS_STATS_LAYER_ACTIVE)
-> +		layer =3D tx_ptp_opened ? ETHTOOL_TS_STATS_LAYER_PHY :
-> +					ETHTOOL_TS_STATS_LAYER_DMA;
-> +	else
-> +		layer =3D ts_stats->layer;
-> +
-> +	switch (layer) {
-> +	case ETHTOOL_TS_STATS_LAYER_PHY:
-> +		if (!tx_ptp_opened)
-> +			return;
-> +
-> +		ptp =3D priv->channels.ptp;
-> +
-> +		ts_stats->pkts =3D 0;
-> +		ts_stats->err =3D 0;
-> +		ts_stats->late =3D 0;
-> +		ts_stats->lost =3D 0;
-> +
-> +		/* Aggregate stats across all TCs */
-> +		for (i =3D 0; i < ptp->num_tc; i++) {
-> +			struct mlx5e_ptp_cq_stats *stats =3D
-> ptp->ptpsq[i].cq_stats; +
-> +			ts_stats->pkts +=3D stats->cqe;
-> +			ts_stats->err +=3D stats->abort + stats->err_cqe;
-> +			ts_stats->late +=3D stats->late_cqe;
-> +			ts_stats->lost +=3D stats->lost_cqe;
-> +		}
-> +		break;
-> +	case ETHTOOL_TS_STATS_LAYER_DMA:
-> +		/* DMA layer will always successfully timestamp packets.
-> Other
-> +		 * counters do not make sense for this layer.
-> +		 */
-> +		ts_stats->pkts =3D 0;
-> +
-> +		/* Aggregate stats across all SQs */
-> +		mutex_lock(&priv->state_lock);
-> +		for (j =3D 0; j < priv->channels.num; j++) {
-> +			struct mlx5e_channel *c =3D priv->channels.c[j];
-> +
-> +			for (i =3D 0; i < c->num_tc; i++) {
-> +				struct mlx5e_sq_stats *stats =3D
-> c->sq[i].stats; +
-> +				ts_stats->pkts +=3D stats->timestamps;
-> +			}
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	mutex_unlock(&priv->state_lock);
-> +}
-> +
+> While it would be nice if 6.8 would not regress over 6.7 (performance
+> is mostly fixed, memory usage is not), waiting for confirmation what
+> the rcutorture issue from the bot is about might be good.
+>
+> Mikhail: since you are testing mainline, in about 4 weeks the fixes
+> should then reach 6.9-rc in the next merge window. Until then, if it's
+> not too difficult for you, you can apply those 2 patches in your own
+> tree.
 
-To follow the same logic as my patch series you should use phc qualifier in=
-stead
-of the layer. See patch 9 of my series.
-With HWTSTAMP_PROVIDER_QUALIFIER_PRECISE for the IEEE 1588 which mean the P=
-HY
-layer on your case and HWTSTAMP_PROVIDER_QUALIFIER_APPROX for the DMA layer.
+There are more issues that are fixed by "[PATCH v2 1/2] stackdepot:
+use variable size records for non-evictable entries". See
+https://lore.kernel.org/all/ZdxYXQdZDuuhcqiv@elver.google.com/
 
-Even if the timestamp is made physically on the PHY, this driver does not
-register any phy device. The NIC manages all the network architecture by
-itself. We decided to use the phc qualifier to fit this use case.
+This will eventually reach stable, but it might be good to reconsider
+mainlining it earlier.
 
-The layer description should only be used internally in the kernel when we =
-are
-registering a PHY device and using the phy tsinfo/hwtstamp/rxtstamp/tstsamp
-callbacks.
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Thanks,
+-- Marco
