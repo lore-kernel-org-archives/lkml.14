@@ -1,57 +1,57 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B99F1C6A8
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 03:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5834D1CAAF
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 03:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708919798; cv=none; b=pzXiBtG1vrInl5g/dJ7hA4bi3wSzfk6XBhbF463bbrWvZsSYo4ihubAdYPIG1b1cmqYX2AXlawWqTB8f/GjMDK2Lghw1RceesHG85Be33gjxxPzUDa52kOGcKMQ311rLdUkvtqbBPkumAoSrVcvuKiVrBiLMrwDzybzneX2LVuI=
+	t=1708919799; cv=none; b=jtzx2sXyjnCiWMj3SSxjwfQ+JOS5OzmJN5dpsBEZtV+5HUnAJznWHhZCQsV0qnXILraf1qFFFTygp/8bXFIk79N731X+5RGCof5kUCkK3hi7ztgqATN8H/JlO6wlVEDu61eyU1YdY3bydARbm6L9GV4gpM8ko9rAoDlzX5/uYTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708919798; c=relaxed/simple;
-	bh=1u7hURa5SotBF7E39nq1ZuwEEo5Vll5q+P/Z5QRIR6Q=;
+	s=arc-20240116; t=1708919799; c=relaxed/simple;
+	bh=+qXOC7uyNCfO3onc/Ij4YTWsCuq+NgWkyhuI5FVLo1M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SZSK7Jyv/2rTyUmzvfXb9fWV7TewZ8d5BZyUwPPy17lC4aPFQtR78iqqY3NN/7537/KGqN3JnFNioZlGn8zeerCvpOJib7NBDRA5EF5WP8iRUZ1b7RJp4P3n4hPtHur3IKP/i93BIX1OPvorRJeNhtF582vPbGRQ98SkTQxk7lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=R8GrpEZE; arc=none smtp.client-ip=209.85.216.44
+	 MIME-Version; b=sQeXbAiCeab4iARja/ZtBAsVnjQAkvmTXleC93kvQYDM8/POLU26dtVGonmLMVbmj9jvD528us4OETVbvEcln+TbNR/pkG8dabDtjDFQ6uV6UAAryF0QOSwy6PwAGULP2ZaW7V5LrMQJUvZU0M5Vu/IsL4px3+KGthJz8WERKuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=fNKTMAMf; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="R8GrpEZE"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-299ea1f1989so1105098a91.0
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 19:56:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="fNKTMAMf"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dc3b4b9b62so22412585ad.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 19:56:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=darkphysics.net; s=google; t=1708919796; x=1709524596; darn=vger.kernel.org;
+        d=darkphysics.net; s=google; t=1708919798; x=1709524598; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L6tGxskfEu9aXnzE+dB8cAliyoIBj16sQvq/Y/hZR3k=;
-        b=R8GrpEZE3NYBS8jzHXSwwBOGj1p7wbUA2caNAL0PbLnvIgRjuVx9H3R0qwt/BXI5WD
-         fXL9YTEZ6x7HDYbb/5YBHBqh7Fotd9+yYW3sda/IQjyMus+FWb40zP4pjdD7vZBJcxfj
-         00Yx2svM6m7D+rF6pzHDG2BPvwMKEh89H7Tgo+z+T+rg1uqUfj0SCdHH3IKimLdaAkJP
-         MBR1DfShcQxb7DEOBf3Y1jmLhM8Z9neYGTbL//303OEZlu5A3uoXpYaK5mGLEhxSIOxd
-         6FB6ytryb4BRMWOXSgz+HYEPAk1khHABW/Ku8lW6fZJU5Op+XYOWJDuM3DevEkAlKCtS
-         R9yA==
+        bh=KsGpwW/IQSH0g2lIKg+JsO77ipE/Ng9n2y5WNXmPBxY=;
+        b=fNKTMAMfGyR95EGiJuaIqeIN+lWZ2r36DbjFbVgkoX2u5PZXMMn7OudMs437tjBLDK
+         sVbOivxSlh50RhrAKTXsDZn3vyhZGMpKsIk5yvVtB0Yn+lxR92Xd/IxaFE6hqe6LHY+T
+         +cL4jebdypxq91d6MJQxV+TKLvIYy1xkIvzbHVaDA1wkShX2QCaaRh9+/psrrG3Fvq3V
+         0m4hVgwhpdsg3ZJt6N/MISa/FczdiDuhuqJEkUHIJTnufm4fqYa5ZkrSB6Ty/P7fKJTK
+         jxlsp+OWwEjZ8E8fNoyNJBfNRtsuztbTVLqenQcoUYzqtytGlR9Tbjpmtsr46mna9mzY
+         N2PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708919796; x=1709524596;
+        d=1e100.net; s=20230601; t=1708919798; x=1709524598;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L6tGxskfEu9aXnzE+dB8cAliyoIBj16sQvq/Y/hZR3k=;
-        b=kSSNbE7wjzvKkOFlbaJBlHqOPJp9IH7Bq3lrvr7EqE5uGHg5qWtQPwPK/aV3FHggGW
-         V7G36UNqStPlodt3zvk7J93t5MNXLD4+Hd5HfNuhhnsG4NzcvHIAnhsWQexcZ4rEk/c9
-         7IDlUsKgthM0Mb5YcXwIlljBhUVcQ3LcnFp/GiO08Y27HiPcoKRpYYR2IgTR1+qs1gJL
-         JYYSfezoR81uomlsZ6sAaPYRCBvqMLpKaPHLTrXfPeM+KZKqt4Lu0wH5Ej5dD693jNcK
-         fQzf2SxbYrTbV4Ck+tTD1c8ueZ7XuxJfoQLC5hjiMtmUl1fqIughn37CocgLQkWqdwPo
-         rS1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWLVxdrw9Jx51gCsUCikyO1Hb61IP1WsJK2Ft3VwMXmqFYg4hKsraTwZ+m+cBsJbrzQ9e83bLqxdtcXigq4SlVXmjzydOaz7pFoBhYG
-X-Gm-Message-State: AOJu0YwXFzIR4btLVC1jjNgf82W8oOQNuNyzOsw00DuoftMNSRofpYtv
-	/UXgRX7sXcCXJplo7bjcim+FWMwk281gJKYMXlaNJ3vufM7b/QfpfiXtf8dwQ9Q=
-X-Google-Smtp-Source: AGHT+IEygXvZXsKKX+RteNlkEeMde3p8Sfrujz1Yi7Hukkoi2Ml7eVb7F0Lm5SkgsCA/cP2uI+YWgg==
-X-Received: by 2002:a17:902:e5cf:b0:1dc:fb5:6f36 with SMTP id u15-20020a170902e5cf00b001dc0fb56f36mr7120020plf.32.1708919795919;
-        Sun, 25 Feb 2024 19:56:35 -0800 (PST)
+        bh=KsGpwW/IQSH0g2lIKg+JsO77ipE/Ng9n2y5WNXmPBxY=;
+        b=pLmTs+drzWDvyOUvG/Kf0GlftacGemkCbfRh5FtCOQfnHEMDnu6eIJYxxozqD6zB4T
+         84wNnySF5c0ANxHyeTM/x3YCzDMNOt+iEZ5s/NpkDnincheo25+uUx5a0rr1TLHG3x/j
+         s4jegdh7vHWS4JfyKfrIXLpty1vslIKpuSGNeGRpC4XvHSA+eECOH8QD5i5gw+enm6Ra
+         bV6EieWTkwdg80HUdyHr9e3OkQLTxjCkDtninpg/zNLCzR8lIvWaDONTLiVZ4RzNuAvi
+         k+hJYBZNi9AVq1p6TGgBDTLEea6hiNo+65nqRdzQpUdnb9gZ87vHIJ+UL+DfruQX+VCF
+         35MA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4tHDuw2ernwF+yA57vHyVI1iLE3KVD6DJCIBIC+6E54b9GEUnMwSAC7NcwYybH5fVYUHTinGsRKHIt1MKt4PnEBujcCnr1DGj2RWU
+X-Gm-Message-State: AOJu0Yypa+AKBnUFQKYjXLx53CHmtlq1X7Bbm7SLcfXjidU1xHo3pG6d
+	SNcWMbfMi7BoIRs+Ab7BreI36leqbM5iR1NN7+tQG+CM42s421TTe32KPdy3o0w=
+X-Google-Smtp-Source: AGHT+IFyvxaV9n2kU65l431zMDHkO3AYTRqpmWx6fT26Kv0HMX4KdPYahVnwtwSKmypoNUvjILeFFg==
+X-Received: by 2002:a17:902:b698:b0:1dc:a605:53fd with SMTP id c24-20020a170902b69800b001dca60553fdmr1110093pls.10.1708919797778;
+        Sun, 25 Feb 2024 19:56:37 -0800 (PST)
 Received: from oatmeal.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
-        by smtp.gmail.com with ESMTPSA id kh5-20020a170903064500b001d8a93fa5b1sm2897615plb.131.2024.02.25.19.56.35
+        by smtp.gmail.com with ESMTPSA id kh5-20020a170903064500b001d8a93fa5b1sm2897615plb.131.2024.02.25.19.56.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 19:56:35 -0800 (PST)
+        Sun, 25 Feb 2024 19:56:37 -0800 (PST)
 From: Tree Davies <tdavies@darkphysics.net>
 To: gregkh@linuxfoundation.org,
 	philipp.g.hortmann@gmail.com,
@@ -59,9 +59,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tree Davies <tdavies@darkphysics.net>
-Subject: [PATCH 09/20] Staging: rtl8192e: Rename variable CcxRmCapBuf
-Date: Sun, 25 Feb 2024 19:56:13 -0800
-Message-Id: <20240226035624.370443-10-tdavies@darkphysics.net>
+Subject: [PATCH 11/20] Staging: rtl8192e: Rename variable CcxVerNumBuf
+Date: Sun, 25 Feb 2024 19:56:15 -0800
+Message-Id: <20240226035624.370443-12-tdavies@darkphysics.net>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240226035624.370443-1-tdavies@darkphysics.net>
 References: <20240226035624.370443-1-tdavies@darkphysics.net>
@@ -73,34 +73,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename variable CcxRmCapBuf to ccx_rm_cap_buf to fix checkpatch
+Rename variable CcxVerNumBuf to ccx_ver_num_buf to fix checkpatch
 warning Avoid CamelCase.
 
 Signed-off-by: Tree Davies <tdavies@darkphysics.net>
 ---
- drivers/staging/rtl8192e/rtllib_softmac.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/staging/rtl8192e/rtllib_softmac.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/staging/rtl8192e/rtllib_softmac.c b/drivers/staging/rtl8192e/rtllib_softmac.c
-index db1a47ce3528..71583bcd8334 100644
+index 61d4518dcd7b..4ab4cf6e1197 100644
 --- a/drivers/staging/rtl8192e/rtllib_softmac.c
 +++ b/drivers/staging/rtl8192e/rtllib_softmac.c
-@@ -838,12 +838,12 @@ rtllib_association_req(struct rtllib_network *beacon,
+@@ -852,12 +852,12 @@ rtllib_association_req(struct rtllib_network *beacon,
  	}
  
- 	if (beacon->ccx_rm_enable) {
--		static const u8 CcxRmCapBuf[] = {0x00, 0x40, 0x96, 0x01, 0x01,
-+		static const u8 ccx_rm_cap_buf[] = {0x00, 0x40, 0x96, 0x01, 0x01,
- 			0x00};
- 		struct octet_string os_ccx_rm_cap;
+ 	if (beacon->bss_ccx_ver_number >= 2) {
+-		u8 CcxVerNumBuf[] = {0x00, 0x40, 0x96, 0x03, 0x00};
++		u8 ccx_ver_num_buf[] = {0x00, 0x40, 0x96, 0x03, 0x00};
+ 		struct octet_string osCcxVerNum;
  
--		os_ccx_rm_cap.octet = (u8 *)CcxRmCapBuf;
--		os_ccx_rm_cap.Length = sizeof(CcxRmCapBuf);
-+		os_ccx_rm_cap.octet = (u8 *)ccx_rm_cap_buf;
-+		os_ccx_rm_cap.Length = sizeof(ccx_rm_cap_buf);
- 		tag = skb_put(skb, ccxrm_ie_len);
+-		CcxVerNumBuf[4] = beacon->bss_ccx_ver_number;
+-		osCcxVerNum.octet = CcxVerNumBuf;
+-		osCcxVerNum.Length = sizeof(CcxVerNumBuf);
++		ccx_ver_num_buf[4] = beacon->bss_ccx_ver_number;
++		osCcxVerNum.octet = ccx_ver_num_buf;
++		osCcxVerNum.Length = sizeof(ccx_ver_num_buf);
+ 		tag = skb_put(skb, cxvernum_ie_len);
  		*tag++ = MFIE_TYPE_GENERIC;
- 		*tag++ = os_ccx_rm_cap.Length;
+ 		*tag++ = osCcxVerNum.Length;
 -- 
 2.39.2
 
