@@ -1,128 +1,106 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B5E79935
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8D71CD2B
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938274; cv=none; b=r1Vq1S6lcLgXQqtwnNYt15CSHN+kqq7/rPx5nrl58omW9zNcvDC3KkY55TcnTnAsRYQ04i3xx4wrVu5aFZ4MB4bQXXczfeexxV9bSxy/+zIsI2iQlTcUW5FNUP7nRevvgdJyPMCIkUFtARfiQNBge2FLeTWnDEoEif1fhh4s43Q=
+	t=1708938339; cv=none; b=L2DtvnOCHvokt45PgVZS/PcxiU8mHM3Iu8zA875YMFX2uag9QPaiUTp11g3XaoglJ3Xh8h54YT6cn9bo5GszDk3ycfsvRTm/92LjUkb3Dft7H1iYlCZ32b8iVVLJbOfVClj/L2QwJxSKY+9uFIzl3GcuqAK6mJ59Bg9Vsjz+Xas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938274; c=relaxed/simple;
-	bh=Jm7acJD9o2mBJ7G+eOxNpeNfksyPwS+AXcvG2TmDrwo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qVaIZJXXDZ5mH5g3pA1qLStWVEyVUFe2Wi/+w6aLc5V4JESVMR0FP0XOU7fpDNemnwMAQGOSViJy0B5A98o7SblMgb+w/GpSgTzFkhV46QZYYieMiTl6x37I7T9jz5iwRw4jCe7zPWXEzuvZSRS7ABr3QLmA7/CqHj0xjpGR970=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Lg53u2nu; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708938339; c=relaxed/simple;
+	bh=krkPkE2Z5L0UxpKDRAB4tBQ/QZXyjRxjCqMUWq6zpk0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F6Wj+BwGKqW419+O6zP5YlwgJ1ruo9UyHuecZPS4kyj4y5efFzvbqspKfJZt82NpdCzVyNk9uoMCzeBRrSdDCqIupy3LzaqrVJ7bjWmhBdx5+Zvs76FahszXG+MxfrJCtNLHxAIHFmzR1GEbfM9FXE+RaSYZkn7Xwys+gZuQtpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=xDyB9ESE; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lg53u2nu"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a3e6f79e83dso290782366b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:04:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="xDyB9ESE"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412a8b79b46so554715e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:05:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708938271; x=1709543071; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XK97/Ais5pPf/X1///jyXhhD+o5dKRJYFfX0RVnBU80=;
-        b=Lg53u2nuGkywoA58JgAtYB6JuoZZaUhNyaJVG1KTw0PBjK4goxNg01uM3Zc+h+6dId
-         DBlHTfnKCt+XSg71HoUoZoCt3irpmeYzmHIaSf9pYIAeotbSf9xxO3LvcnDdIIM9FZ1Q
-         ujSpeU/tj5UG4Kjr+DZxrJ5auWQfhIwsK5O2ukIKNXcI9OxAcI244d5L0iowMEOPGKf9
-         HTuUYZyvsKoHKsXHwNq7woDDI+FjrxLLO8P9km35uBX0yNupA0aKkAdVBw39wssyCsfM
-         9+5k6EprHbw3fwWVF/EsaHRF3vl5P0VWOAreddCWPi0eSMe5yf+hiKQ4aRYDdz5wrs5h
-         mFSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708938271; x=1709543071;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1708938337; x=1709543137; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XK97/Ais5pPf/X1///jyXhhD+o5dKRJYFfX0RVnBU80=;
-        b=tXS3LBj3A2dZKwt8ZTWVeiBGxq7UPAUDCXD4rKkslUT4B7KtZ005IKA7pOMEXG8lUo
-         /xtNF7/fK1tVlP2mrw9tjJ6MbnEWrFjAzQaU3a9MfIVAhJKJRmMEGN5P+5xNA1Q9sIQk
-         3SAUIHXm1MPcyV4feLXhd7AYHS7vpVjS/bW1yldp/hxW8xCjClCLIeugzrZeOi2mn2Br
-         Q03xpCp9C1kLUnSbMeWx5KGeEena/mR+REU2FKtjzoHAl4vaGn3JY1PLCg6do1fEJBBN
-         O6WzMWvhOwa9PZgiAIdhgGMJC/CjL7YJHyWnszYE+Xi5eKz+V6LNlL5LGUlMR9HbhVoN
-         MeAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzkqWURvq3AqGmKyj3wRHyC3WDDMXLn+ScWVSMzVRHfJplrpkaEUaU6PVHxoWoWyAR2yuAQFdObnRtBfBhe4lzNyMcC1X0EkpmGWQW
-X-Gm-Message-State: AOJu0Yyr4eEqNhWRVkD74kUbA3xNIHJpwv6tLpXpBRqoD2Adug33ZJjY
-	xkG6QDGZbp3oJlfhtq0D8FDSjSEmR7R1YTEGruQfiBHUxdiaJ8FLdimYpiw6XJI=
-X-Google-Smtp-Source: AGHT+IEP31lrkAYgXHTXfaTNGbJ5RbfHTcM0xJ2Z+InoGeeBiYd/7OfA29vMJCRwdLnHEOFQNbp6Rw==
-X-Received: by 2002:a17:906:c2d8:b0:a43:2fa9:c05b with SMTP id ch24-20020a170906c2d800b00a432fa9c05bmr1842731ejb.41.1708938270828;
-        Mon, 26 Feb 2024 01:04:30 -0800 (PST)
-Received: from linaro.org ([188.24.162.93])
-        by smtp.gmail.com with ESMTPSA id i20-20020a1709061cd400b00a3f2bf468b9sm2244445ejh.173.2024.02.26.01.04.29
+        bh=lVqQ7Rjy5L8DAOM0lDlFnwur37SLSiQdNyMxMNLovDA=;
+        b=xDyB9ESESOcNO8RZYRw2RQqRlb+kFDo2yy3tPUfl4dy0ru6tb/0UwPQ8SR9G9Cg6Ki
+         Gnte6G8MdbNJ0x7r8qs7G0g5z0yyQRxksay8ZogvzrtMqwqdGXakxYZh3+yLWdliEsvk
+         Rr7q8JGymAXMCWv5dF5fU9PhxkE19I6BnmREmbEgNtFzloQ1VlXMrPcFe7Z10h0W/BXG
+         5M1QuxZ4r388Pw9q+VUU1OBg9VE06cVNpjDek11mHVyumStI6miG+2NLEdRWiCVmvWCs
+         Yp0uxGc0Fx26bkrFfZtNbR2k1k6ugIqx1tfj4tl7KGfsy0pRD8DwdusXBnfNP1IORoRP
+         wMVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708938337; x=1709543137;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lVqQ7Rjy5L8DAOM0lDlFnwur37SLSiQdNyMxMNLovDA=;
+        b=N3P2ejJkjJtULszpsYKM6pfPaUnQ3QVW3boVgK0VIk4+AK+pt+ek0sBKSIU29Qarwh
+         2hc1+rRymWFU0FiZhmtX+zSQx62GSqoz9AaOR5RUcxvTch5RdFdKVUWSSchNnEJLLLGr
+         8UBKAXvxop8LxX5EH9zcZfuhzo0xTYe52R2SOuU+dSbg1qvHEpZWQSv0fx8zJbwpLpZh
+         gcYqRqyqWszX3uJc6M1dEiEujUdverFESMC1tn5WeU4mYYSWipiMULxnphp2zreH7P3P
+         kI8oYNKUNCxq1kbCjgFoNSSYi8dGemZSKXce0hZAMLHLroKCyLA0dEN5GDaqdPFU9Sz1
+         Lnjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeeZeDMGBt1AtMDx4YmJivF54isI0BayWu0EhlciZCo6GJek5rpVwO9FQo+/0zcJa1Z/LoLyzvjnwpcR7wgO0AK/KmDD52w7anJPWq
+X-Gm-Message-State: AOJu0Yw50eneta9YIhfgzHb0E37BJN2H0RjsK2vEDqK0q+JfK6wxPjFe
+	LZb1/MIidK+CNqYl2u1q6yB3BPisK4/qTAq9ZwFuAqULqle9wzITL0F1VWhWzn8=
+X-Google-Smtp-Source: AGHT+IFMrND3CGXr30BMgK7aqK6xYyb6lMe9pffxDZ2J6ciAdDCzXrZc//N36r9hNyKptzEOz81QOA==
+X-Received: by 2002:a05:600c:444d:b0:412:9842:c4f2 with SMTP id v13-20020a05600c444d00b004129842c4f2mr5387610wmn.12.1708938336615;
+        Mon, 26 Feb 2024 01:05:36 -0800 (PST)
+Received: from fedora.fritz.box (aftr-82-135-80-35.dynamic.mnet-online.de. [82.135.80.35])
+        by smtp.gmail.com with ESMTPSA id jd17-20020a05600c68d100b004129335947fsm11283074wmb.8.2024.02.26.01.05.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 01:04:30 -0800 (PST)
-Date: Mon, 26 Feb 2024 11:04:28 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: abelvesa@kernel.org, peng.fan@nxp.com, mturquette@baylibre.com,
-	sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-	shengjiu.wang@gmail.com, marex@denx.de, m.felsch@pengutronix.de,
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: imx: imx8mp: Fix SAI_MCLK_SEL definition
-Message-ID: <ZdxUHAg2UZOU/s4h@linaro.org>
-References: <1708683351-8504-1-git-send-email-shengjiu.wang@nxp.com>
+        Mon, 26 Feb 2024 01:05:36 -0800 (PST)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: thorsten.blum@toblux.com
+Cc: anna-maria@linutronix.de,
+	frederic@kernel.org,
+	jstultz@google.com,
+	liaochang1@huawei.com,
+	linux-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	tglx@linutronix.de
+Subject: [PATCH v2] time: Use div64_ul() instead of do_div()
+Date: Mon, 26 Feb 2024 10:03:06 +0100
+Message-ID: <20240226090305.117120-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <E2A9A6AE-84F4-4C86-80CA-CC0C480FD9A8@toblux.com>
+References: <E2A9A6AE-84F4-4C86-80CA-CC0C480FD9A8@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1708683351-8504-1-git-send-email-shengjiu.wang@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-On 24-02-23 18:15:51, Shengjiu Wang wrote:
-> There is SAI1, SAI2, SAI3, SAI5, SAI6, SAI7 existing in this block
-> control, the order is discontinuous. The definition of SAI_MCLK_SEL(n)
-> is not match with the usage of CLK_SAIn(n).
-> 
-> So define SAI##n##_MCLK_SEL separately to fix the issue.
-> 
-> Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Fixes Coccinelle/coccicheck warning reported by do_div.cocci.
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+Compared to do_div(), div64_ul() does not implicitly cast the divisor and
+does not unnecessarily calculate the remainder.
 
-> ---
->  drivers/clk/imx/clk-imx8mp-audiomix.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-> index e4300df88f1a..55ed211a5e0b 100644
-> --- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-> +++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-> @@ -18,7 +18,12 @@
->  
->  #define CLKEN0			0x000
->  #define CLKEN1			0x004
-> -#define SAI_MCLK_SEL(n)		(0x300 + 4 * (n))	/* n in 0..5 */
-> +#define SAI1_MCLK_SEL		0x300
-> +#define SAI2_MCLK_SEL		0x304
-> +#define SAI3_MCLK_SEL		0x308
-> +#define SAI5_MCLK_SEL		0x30C
-> +#define SAI6_MCLK_SEL		0x310
-> +#define SAI7_MCLK_SEL		0x314
->  #define PDM_SEL			0x318
->  #define SAI_PLL_GNRL_CTL	0x400
->  
-> @@ -95,13 +100,13 @@ static const struct clk_parent_data clk_imx8mp_audiomix_pll_bypass_sels[] = {
->  		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK1_SEL, {},		\
->  		clk_imx8mp_audiomix_sai##n##_mclk1_parents,		\
->  		ARRAY_SIZE(clk_imx8mp_audiomix_sai##n##_mclk1_parents), \
-> -		SAI_MCLK_SEL(n), 1, 0					\
-> +		SAI##n##_MCLK_SEL, 1, 0					\
->  	}, {								\
->  		"sai"__stringify(n)"_mclk2_sel",			\
->  		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK2_SEL, {},		\
->  		clk_imx8mp_audiomix_sai_mclk2_parents,			\
->  		ARRAY_SIZE(clk_imx8mp_audiomix_sai_mclk2_parents),	\
-> -		SAI_MCLK_SEL(n), 4, 1					\
-> +		SAI##n##_MCLK_SEL, 4, 1					\
->  	}, {								\
->  		"sai"__stringify(n)"_ipg_cg",				\
->  		IMX8MP_CLK_AUDIOMIX_SAI##n##_IPG,			\
-> -- 
-> 2.34.1
-> 
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Changes in v2:
+- s/div64_long/div64_ul/ as suggested by Chang Liao
+---
+ kernel/time/jiffies.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
+index bc4db9e5ab70..fccee15e94d5 100644
+--- a/kernel/time/jiffies.c
++++ b/kernel/time/jiffies.c
+@@ -91,7 +91,7 @@ int register_refined_jiffies(long cycles_per_second)
+ 	/* shift_hz stores hz<<8 for extra accuracy */
+ 	shift_hz = (u64)cycles_per_second << 8;
+ 	shift_hz += cycles_per_tick/2;
+-	do_div(shift_hz, cycles_per_tick);
++	shift_hz = div64_ul(shift_hz, cycles_per_tick);
+ 	/* Calculate nsec_per_tick using shift_hz */
+ 	nsec_per_tick = (u64)NSEC_PER_SEC << 8;
+ 	nsec_per_tick += (u32)shift_hz/2;
+-- 
+2.43.2
+
