@@ -1,124 +1,105 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A2C1CF90
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 04:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59C717BC5;
+	Mon, 26 Feb 2024 04:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708920597; cv=none; b=hZALbj6k42KRr4oTRXxx9v7M1B3/BPAD8tMLSxnwrCBa2IthojUmlB1dsqUXYjPIY16rcxBEmNzsXeVHE/qbwlxdHRoZ0iA51j5EUHPADFZV/ZLgje8PBC1Uea6kcpe4jhIRLRMfL4b3naFgrnN+RjShHRTQcKh5fCxurnYkNy4=
+	t=1708920756; cv=none; b=D1r3MGu+OnPipM47h/ivV0CGN0oY3qAEPAixZAJA9RsowZNLwI/IbSlvWO0Kc9erETtIaYUSwWr6C4NNyeyz6ZulBo93vsBMEEKZSVPLV7LQlp0qdOcCNleP/X3TXdo7rXih+NLlcL0mJhQ3rRN7QVG956bhum5t7wdpqCVMhAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708920597; c=relaxed/simple;
-	bh=cHX9yVZX2U/M0SSdzvjQb4m+7zWASmD9kQu3egh0Rao=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oPojVZVFcCS+Ni1f1ihrqcY0YvPMEa2KJ9Vqb6Id+Iq/RIttbNmdwnt3ML0mXmcaDiBiNJHGTN6lXegX+gIik08lHbB2oMSQ5PIXM4iUYpuv6STggibE4jFpaJBTSCVwLy+5agdMoPoeE6xQgAnMoV5aZCa6oJtbNBfHKW94I8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=UvHc+HTW; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1708920756; c=relaxed/simple;
+	bh=Pe94gA4uf1vHFYSF+mnEFT0ytZjmWjUodzwCgag62eU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=S+i0L0I9hMvsN1bu1CFPxvS5LcrTF2t/7GjByAvxVDAGZJRTgBD5hsVCNzw6x73e13d7uMHjeFvjAFdYcX/Kc1RZChEYlOpaDKhu+y5yGBysRt32D7umRsNC3X0Lvl/9rrNjcdYgNWRe0wGbjL3HrzxLKqTYI+R9QlRc3yKifYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=mrK4AxRc; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="UvHc+HTW"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e4751b97eeso970788b3a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 20:09:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="mrK4AxRc"
+Received: from [192.168.68.112] (ppp118-210-168-240.adl-adc-lon-bras34.tpg.internode.on.net [118.210.168.240])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 85F5A2014E;
+	Mon, 26 Feb 2024 12:12:28 +0800 (AWST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1708920595; x=1709525395; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KTFsbe7fY6CIFM3QbszGAvcCN7xF4yBveTkrIBLrPJ8=;
-        b=UvHc+HTW/kng637kcRm+uzKhBY/NCdx5AyH5TZfTlbjx6rxCM1THjniPNlTUWKaFcr
-         GrMuw0MTV1/yiy94RcBlCe775nGgAakK+ujukMofkKMHF0Iy88Mzi2PwvwhZmhgGysae
-         LgosrDS2dBVMEg8alKkPlr8TaZ0+542EAccbbmzlqZPisYzFiSmpG2DmFPpmM20RA58O
-         YqcSj2cZ73GJ8icc1/uRwVCFAjUti28CbYi0nfNmArgHsqZRP+3iqs1pTu99LagtyWO5
-         iXzD0EhxvnxxADFIhcwXG7C9zPIP1IVNHKFjlPTaGjO1FWrkhLn0CkFsm5PHM8/RiR7W
-         eHmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708920595; x=1709525395;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KTFsbe7fY6CIFM3QbszGAvcCN7xF4yBveTkrIBLrPJ8=;
-        b=fc0lxgR5CFEmwKvbUWxOU/6WAZ5AYJO/X4MTZndeaaHmEl9hGznGJrMGl4+isY1ENk
-         ceKWeUcS0Wyq4QTH5SoD29X3d8UmQ3NiwIWlIdhZbV0B7+pRQTyHUv9xcnc4kQNHtHh8
-         Hg9tXujAlrPrx8+dxVoEHdTdF9QRRRbcOOvHZZW7wZMqMSocHIX7rJGMkYj1EQtmbbxW
-         ELWBlrdM0lneXLZlgYPXwbWfhvqXZlWB6GvThZW91YMXRyppa52ul/wsMHBYrtDGmgKn
-         UVBBuG1ZrHTObwx+qyFIbGBnA8SGct+romHRoeFHIwPHMjrZssPWvbqSxEz5GEYqPVyx
-         CMeg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsxmeNf0Ydm6BJbQP6D0QzZSjy5XZTXfqxmx/LDmjn+prCEYyOhyAWwKFDu4YP2HFZRvfPcuVRFhopXRpx4YzEKl1FB0/lZSc+sfQD
-X-Gm-Message-State: AOJu0YzwPvPJcnwvvo8U+Y8WIsJ3qCsJ+ywCJH8f4U2nzPt1SsCA4b4Q
-	SQN6iLZE0CbPP5De++zaLOmqan7ovkGpSpahGzdt8ylIhd1fkqvlXMcYFImDfwk=
-X-Google-Smtp-Source: AGHT+IHj9OgwVeQU3Cywg5QOFfuPC+ebRt4KQX5RwmYYiHt6jMDZHnRVOUIEP3MvR2JMPDXGFDjhPA==
-X-Received: by 2002:a05:6a21:350f:b0:1a0:e8dd:f488 with SMTP id zc15-20020a056a21350f00b001a0e8ddf488mr5082090pzb.3.1708920595534;
-        Sun, 25 Feb 2024 20:09:55 -0800 (PST)
-Received: from localhost.localdomain ([171.76.86.62])
-        by smtp.gmail.com with ESMTPSA id d11-20020a170902654b00b001dc6f7e794dsm3023258pln.16.2024.02.25.20.09.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 20:09:55 -0800 (PST)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v15 10/10] MAINTAINERS: Add entry for RISC-V AIA drivers
-Date: Mon, 26 Feb 2024 09:37:46 +0530
-Message-Id: <20240226040746.1396416-11-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240226040746.1396416-1-apatel@ventanamicro.com>
-References: <20240226040746.1396416-1-apatel@ventanamicro.com>
+	d=codeconstruct.com.au; s=2022a; t=1708920752;
+	bh=XXRWq9LzaWJldDlLUORe5CRUYm2s2hhDXWkS7OTa4Lg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=mrK4AxRcBQAiIKCOPTCJmIVgne/8nIuXIhpXuCDvYKC2xvr/0qonrkIXrDVMHnkfV
+	 SJpQ4glDbG8r8ZjSpRe+DY6Ey7JhHXhfcfOaTTqNev7gE4fsswYgJPcRwqQuMxQUhh
+	 BRsglrzdRY+rIyDxyE3sHLuSt/KMh5558ntUPdudvw3DoZIN56Eblru48iBTPsNITc
+	 /m0B0b/q1uA3uO0RcplIh/4kxIWbI6pxJ4/lCg3g7iwcqHbLU8D7m5H3O8ChcCltuz
+	 o55K+LzKWT+TD7MkYpfONNShG2JzgYB31QHJBUSVedDncb82YdRV5cKQoSRMIq7zBB
+	 //zPm9ZLM1GHg==
+Message-ID: <ab237d0e08b6919d29f25d89ec34d149341f4c57.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v1 10/14] serial: 8250_of: Switch to use
+ uart_read_port_properties()
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner
+ <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+ linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-mips@vger.kernel.org, linux-tegra@vger.kernel.org, Jiri Slaby
+ <jirislaby@kernel.org>, Joel Stanley <joel@jms.id.au>, Florian Fainelli
+ <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden
+ <sbranden@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Al Cooper <alcooperx@gmail.com>, 
+ Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Paul
+ Cercueil <paul@crapouillou.net>,  Vladimir Zapolskiy <vz@mleia.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter
+ <jonathanh@nvidia.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Andi Shyti
+ <andi.shyti@linux.intel.com>
+Date: Mon, 26 Feb 2024 14:42:27 +1030
+In-Reply-To: <Zdd6lnXwvpPPUhRR@smile.fi.intel.com>
+References: <20240221183442.4124354-1-andriy.shevchenko@linux.intel.com>
+	 <20240221183442.4124354-11-andriy.shevchenko@linux.intel.com>
+	 <0a828f2c50de712940fb9a881702ac1678a35b7c.camel@codeconstruct.com.au>
+	 <ZddKzHplwOX7naLv@smile.fi.intel.com> <Zdd5m2xIPlGI0_Qv@smile.fi.intel.com>
+	 <Zdd6lnXwvpPPUhRR@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add myself as maintainer for RISC-V AIA drivers including the
-RISC-V INTC driver which supports both AIA and non-AIA platforms.
+On Thu, 2024-02-22 at 18:47 +0200, Andy Shevchenko wrote:
+> On Thu, Feb 22, 2024 at 06:43:08PM +0200, Andy Shevchenko wrote:
+> > On Thu, Feb 22, 2024 at 03:23:24PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Feb 22, 2024 at 11:07:05AM +1030, Andrew Jeffery wrote:
+> > > > On Wed, 2024-02-21 at 20:31 +0200, Andy Shevchenko wrote:
+> > > > > Since we have now a common helper to read port properties
+> > > > > use it instead of sparse home grown solution.
+> > > >=20
+> > > > I did some brief testing of the series for the Aspeed machines unde=
+r
+> > > > qemu, building them on top of v6.8-rc5:
+> > > >=20
+> > > > export ARCH=3Darm
+> > > > export CROSS_COMPILE=3Darm-linux-gnueabihf-
+> > > > make aspeed_g5_defconfig
+> > > > make -j$(nproc)
+> > > > qemu-system-arm -M rainier-bmc -nographic -no-reboot -kernel arch/a=
+rm/boot/zImage -dtb arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-rainier.dtb -in=
+itrd ...
+> > > >=20
+> > > > I got an oops during boot, which bisected to this change:
+> > >=20
+> > > Thank you for prompt testing! I will look at it.
+> >=20
+> > I found the issue, will be fixed in next version.
+>=20
+> Whoever is going to test this series, the
+>=20
+> -		port->iotype =3D use_defaults ? UPIO_MEM : port->iotype;
+> +		port->iotype =3D UPIO_MEM;
+>=20
+> should be applied to uart_read_port_properties() implementation.
+>=20
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Thanks, with that fix applied it works fine for me also.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9ed4d3868539..d948f9210f1b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18801,6 +18801,20 @@ S:	Maintained
- F:	drivers/mtd/nand/raw/r852.c
- F:	drivers/mtd/nand/raw/r852.h
- 
-+RISC-V AIA DRIVERS
-+M:	Anup Patel <anup@brainfault.org>
-+L:	linux-riscv@lists.infradead.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
-+F:	drivers/irqchip/irq-riscv-aplic-*.c
-+F:	drivers/irqchip/irq-riscv-aplic-*.h
-+F:	drivers/irqchip/irq-riscv-imsic-*.c
-+F:	drivers/irqchip/irq-riscv-imsic-*.h
-+F:	drivers/irqchip/irq-riscv-intc.c
-+F:	include/linux/irqchip/riscv-aplic.h
-+F:	include/linux/irqchip/riscv-imsic.h
-+
- RISC-V ARCHITECTURE
- M:	Paul Walmsley <paul.walmsley@sifive.com>
- M:	Palmer Dabbelt <palmer@dabbelt.com>
--- 
-2.34.1
-
+Andrew
