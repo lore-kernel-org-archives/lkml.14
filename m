@@ -1,123 +1,106 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E43CA4E;
-	Mon, 26 Feb 2024 09:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51351605BF;
+	Mon, 26 Feb 2024 09:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708940602; cv=none; b=qW4XKN0+i1M5HK45595FiqFw2YLM5hF01vWT6PU7yKbu28wWAIv1rBKq4QL3NbT6F1SncSkfMyu/+kjSVpF4nATjrG9zIbVlt5T3vV5h/V+9njXYfRIMYKpACVAN+7Pxw7J9LKWyreeIRPQFSVmLQekCPaq3kAQXmYXZPwD13nY=
+	t=1708940618; cv=none; b=evLA/jgf05MjEhAKtzEf3k4FKv4qWacZvqZFL2meMO6lw6tpdmXmytTXjOFC/yaqQp1S+ru+FP/ZuSZYXDw/HmN6ED2m0Iqb4gprSPT4O0FlOQVzZFfi1rK1smIlQl7W2p7krvTSnt3EUrRFO9buy7LfE6tHDIIXGBCJhsiiX4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708940602; c=relaxed/simple;
-	bh=K4GBuBvY1jfaKNJfI+V2iQAToLrbcQCzobKkx+s7CfI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=otiKHpXIaZR9Zg3jh9jSvazyWHyEiP1pcKM574ZLnB0jwis9+jRuw4y+QtEcffRhhCuRdDRGpgFW1zxi/OyheND5DFZtZpgIj287yD1C7A9IGe3bXtKsOob4bkYHs+rJTVmBcV/h2UW2/t1LFhKVG31hWq624NNJvDkRJreuZIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BMQO1ZH/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1708940618; c=relaxed/simple;
+	bh=Pve/bSIlmcARf4qUjbNWYScv11fgtbnnRqedP2X1KB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iBk7R6ZKtUkMtuUmrIabEmzITYG82YQcHYte9Z/NFIo5daoqsJAg9fG9m78d+MOqIxGqnjVGcvkhU/76yYSsuBGQYtP9FOtyFYcMeXkRfYH0yE7A3zwcHzBm9D5S+vHem3QSmm0zSM36wLP8cXjJzX0bBsHCu8xCXRp8cncYM4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihutsKax; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BMQO1ZH/"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41Q9PrLp028933;
-	Mon, 26 Feb 2024 09:43:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=tPqIhtoFZXpZFmCyP7Lnu9T4i55IofRcpfNy6UEYCmY=; b=BM
-	QO1ZH/h1SrCYOvYK0GONf06sofiRF/gqfcIRaF/dC4hx2zVcCbBJslkuSVcAqEsr
-	p1u61ruVFRdcebf8gUI/6lMpwVKge5lrCZdafHTGgKlsDuk2Skqt7QfRwClmgmJj
-	LMWGj5TZkWv4VXjaStQpLq3ynH64vw0YLSdxd/iYo5UZAZP/C1iQPVJGKUrtaJnD
-	FxeJScgVepVK+0R+fPR+ndyBdGEWfhA62tGSMFKVtDStXke42PUee9JE45XvGgg8
-	iP7y3MNlIqDBn3gcGsfofSahzfM0MNKe/GbNkp1nVkUTj08YlouvGi3TC3HuY/uA
-	/4hdsrVR/DByZ2STvVtQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wgkxkrh25-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 09:43:05 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41Q9h4OM019569
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 09:43:04 GMT
-Received: from hu-sarohasa-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 26 Feb 2024 01:42:54 -0800
-From: Sarosh Hasan <quic_sarohasa@quicinc.com>
-To: Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        "Jose
- Abreu" <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Prasad Sodagudi
-	<psodagud@quicinc.com>,
-        Andrew Halaney <ahalaney@redhat.com>, Rob Herring
-	<robh@kernel.org>
-CC: <kernel@quicinc.com>, Sneh Shah <quic_snehshah@quicinc.com>,
-        Suraj Jaiswal
-	<quic_jsuraj@quicinc.com>
-Subject: [PATCH net-next v2] net: stmmac: dwmac-qcom-ethqos: Update link clock rate only for RGMII
-Date: Mon, 26 Feb 2024 15:12:26 +0530
-Message-ID: <20240226094226.14276-1-quic_sarohasa@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihutsKax"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6e480fe439aso1512361a34.0;
+        Mon, 26 Feb 2024 01:43:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708940616; x=1709545416; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6VNsylMFMmdhai5j9YeBwLJQVh2MvMY/FXe9gb0gujA=;
+        b=ihutsKax5PX5JjG/qHabaTP14Datw4llWYd87Mh3ij/G+R7ygMO6nFYXrMK9TCQsj5
+         u8xNGtHRYnggi1P9NHfr/sNujAhDXQ1sNxjeRBybWzq9DanzSk37H0/tUxSGc5fe5Ijj
+         K2X63Qhducy29Yvm/ZPVsYtUfcWPBUPOfNWGJ20NXuAWrooVvC/DEF5xp3X7E1iy7mwb
+         T4jzNkJHzI9KomGiwqgI1pCWUl67krH/QDJ76pYHH9jmydpNdxlwynaimKmnJ4nATZtl
+         wgSQYvsHZFQg1D9Wm6igY1TWLc02GD0KhQfcJMvThoUhexqPssgwLoIkQ/ermhGo/+X3
+         21YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708940616; x=1709545416;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6VNsylMFMmdhai5j9YeBwLJQVh2MvMY/FXe9gb0gujA=;
+        b=nv86EOay9nnruLjPvraaY6xrc4cbe7Yps5Qmaw4gu/Iud0x19MN4ZQDsvtNDFQs+A9
+         6t6DEUq4QOLfVTClUCPOVEM/Ehw9hg/fxqb/+rF8PP/DDnBtTvhkeSbRd2IVkvvJZ+aX
+         dBt9Ef8z9OHdShUdz1YPSYDKadFXQsdqYy8tT3+crWO0IbbpYKYZoCG0XzlKLSBFuwU4
+         7kGIdjZnVhMRKYOsz1HcnUrosE36sfL3hO8j2rPp0tWXtSMhUBed+H/3fG9HptLvviru
+         1DzNJqEROOsqva2YMGCCLmPJIpH0B7qCQ+u6fX/GUc9xpgy9J/RbLXpLzFElRvfsnzOt
+         9sCA==
+X-Forwarded-Encrypted: i=1; AJvYcCXinLduFbRgwavR20T8eADa03QY1nBFBtM8XADhSQOlYkBdscjUKN7aWzK47BUow/dWQ2OjaDuoKHcFDo0di90VV8c6FGK61RuGFRCfTmDmfvXkr/Hf2qMoRUKo/iEpiy6YJQErVZ/DSt4iSQsYO9KcYzX1HchSzNOrUNwWAl7Q+NQoodXwwSRuYpTXepuARc5E7GkICxoCvY9xEGhhPBFL9nO7tzmKkE8=
+X-Gm-Message-State: AOJu0Yy8hqtq1pduCD4GTCk4BR5txyHzYdtoEXI7WTOgUCSE+xExV2kx
+	05c447XmV+0CBniGZCWGgTRhOjby4U6p1Vi/FaXJnzFfpWzQjqy5
+X-Google-Smtp-Source: AGHT+IEvtdQh+nOu/op95T7vu5tX8kKvdS9zJYMUhfDmlzVn9o/gBPLbQATjpRQLy/M0LsqNXjwpaw==
+X-Received: by 2002:a05:6359:4127:b0:17b:55f0:3bba with SMTP id kh39-20020a056359412700b0017b55f03bbamr8962252rwc.5.1708940616142;
+        Mon, 26 Feb 2024 01:43:36 -0800 (PST)
+Received: from localhost.localdomain ([115.187.42.119])
+        by smtp.gmail.com with ESMTPSA id y13-20020a62ce0d000000b006e4f1bdff29sm3799164pfg.1.2024.02.26.01.43.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 01:43:35 -0800 (PST)
+From: Raihan Ahamed <raihan1999ahamed@gmail.com>
+To: krzysztof.kozlowski+dt@linaro.org
+Cc: raihan1999ahamed@gmail.com,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: arm: qcom: Add Lenovo P2
+Date: Mon, 26 Feb 2024 15:11:03 +0530
+Message-ID: <20240226094256.5736-1-raihan1999ahamed@gmail.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <a762f756-1a92-4d82-be38-098bacaf25dc@linaro.org>
+References: <a762f756-1a92-4d82-be38-098bacaf25dc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: tUDjRYwkIeEMxJzJSSUfF6jLBNtXEbHZ
-X-Proofpoint-GUID: tUDjRYwkIeEMxJzJSSUfF6jLBNtXEbHZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_07,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 phishscore=0 mlxlogscore=924 malwarescore=0
- suspectscore=0 bulkscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2402120000 definitions=main-2402260073
+Content-Transfer-Encoding: 8bit
 
-Updating link clock rate for different speeds is only needed when
-using RGMII, as that mode requires changing clock speed when the link
-speed changes. Let's restrict updating the link clock speed in
-ethqos_update_link_clk() to just RGMII. Other modes such as SGMII
-only need to enable the link clock (which is already done in probe).
+Document the compatible for the MSM8953-based Lenovo P2
 
-Signed-off-by: Sarosh Hasan <quic_sarohasa@quicinc.com>
+smartphone released in 2016
+
+Signed-off-by: Raihan Ahamed <raihan1999ahamed@gmail.com>
 ---
-v2 changelog:
-- Addressed Konrad Dybcio comment on optimizing the patch
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-index 31631e3f89d0..c182294a6515 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-@@ -169,6 +169,9 @@ static void rgmii_dump(void *priv)
- static void
- ethqos_update_link_clk(struct qcom_ethqos *ethqos, unsigned int speed)
- {
-+	if (!phy_interface_mode_is_rgmii(ethqos->phy_mode))
-+		return;
-+
- 	switch (speed) {
- 	case SPEED_1000:
- 		ethqos->link_clk_rate =  RGMII_1000_NOM_CLK_FREQ;
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 1a5fb889a444..6cc19c8d116d 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -263,6 +263,7 @@ properties:
+ 
+       - items:
+           - enum:
++              - lenovo,kuntao
+               - motorola,potter
+               - xiaomi,daisy
+               - xiaomi,mido
 -- 
-2.17.1
+2.43.2
 
