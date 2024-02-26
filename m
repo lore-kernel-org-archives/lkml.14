@@ -1,214 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4A54EB2C
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DB14EB3D;
+	Mon, 26 Feb 2024 10:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944582; cv=none; b=GlGzxY/zkt/6rR40NI0QHe/TPQdAUjS4eBUpbBxnsSZ9byZaK1ZPTd/QBjrwJ7AK9DyHoaTFPcGiEnBZiWjnhJTljJtYNS4GHhSKp1xWp1voURdW0sZjhTBHzKKF1M959TG7EtlQAY7Tpt5+CrR1wG9ILlKRsXQ6cHsLx5l9Ok0=
+	t=1708944587; cv=none; b=gL4MhP69PyWGzm8XBEO0sGzfKefaq+K0MkR4of7M0d+Do2RnD0VYbH8K4jvINgrZ8kj0Lca0Y7zyIN7ML6flRKGgxSCZqAAZkSVroObIgMz98+21nn7/1YWy0hf29m5X8EeRF/VjR4aXyHtJ3+wf9ydmn9x14Xd0rULpgl7H+MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944582; c=relaxed/simple;
-	bh=s5FZTsY04OR2sn6XFn4Jw5cp8uBwLriO7EA+PC8imxM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yd1nFLEZBFABX7Lc8DnpSUXhBUynq8aBnd9L+pRVHZmSX+7G1XD6RhFLE3KeMOKSalH5/c8U2MMHJadDLluYKdDYmF10SdG2NLeAvw1zbCXCxZMgQ0fo8xDrQI85LJMPVXNLT/b8PHdS8+rUydWef0qGB6VXVgVNE4cIfZ9jeig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nd2PJ5E+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708944587; c=relaxed/simple;
+	bh=VakyMaA1l7gz26bljxnOjhozKPXHVEdJUrM8CWUHQT0=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=ImGHEFpckRPasjaaHAlsvVJvykXy/g7h7yq0JzF5KDAxSZ+6Sudpzv5pf+rgDRq2NfVxlIRniHiYH9kcsjkx4K3SUhJQlh+BXcJTcUIAx35pa4PMjQhFA8YG7Wj1hXL4Jn/Su3uw8UidsucovLE5ldxptNPINpxQJHWlhR4eXCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=obmUA0pg; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nd2PJ5E+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708944579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tp2IsM3kS/CQBpKX2Ld+o0BiTLGfA2jr4ARdI9dgpI8=;
-	b=Nd2PJ5E+Wdo0KbSmqi/zirpYOhXnifYIzu6Qsptw+Ska+vU9gAqyuinH9KTrji4FpQykiO
-	adtCuo21yosDuzkjj9ff0yeLB2pFwqvkSNgoRCAiFT9+vWBDeWzvqW9o5D6FLTxXgVg0hT
-	bttKnk9uEk7AvhVV0vT1QqGHgZafDZg=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-e8Ds4u_RN36zx3gjVbB9XQ-1; Mon, 26 Feb 2024 05:49:37 -0500
-X-MC-Unique: e8Ds4u_RN36zx3gjVbB9XQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a2f71c83b7eso275139666b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:49:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708944576; x=1709549376;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tp2IsM3kS/CQBpKX2Ld+o0BiTLGfA2jr4ARdI9dgpI8=;
-        b=gpf7nKoG1UhTQB7bCIupRxQjFRSyY3SCFCiDwPzp9vN+4ObOTy1QTKmHX2aVmTVIDY
-         wmXt+RFvVabKB2LczAJf9DLotrAQ+6uo0dUvQhg5ew37DM6hbfIIqAOnn8ySSA6YEsRR
-         ceNddRKqdU+areYSriQYd6Kv31i0aLrBOtePXLYtvjpjNHrmaR2BPLrfyUP1plJuMrPE
-         lM+GB1gDlPsaWYGXz+UtXEv1Sk6jpVSBF7vMc2/AOlYDxDG1zcpUDcjiNyJD3sGm22+/
-         NiD9icrDtKqKNfhUp4H4Pdf59D5rFk9FWs7OrSozonjjn7duPGgWHBs73IjnWWoloeM/
-         wxjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWduGk1JmIZU2i2pHpBJz1+4ooR0ZoBVnzLZwQc2cSgaqNZInGXR/YwbGOhKjfBH6QKKZz3e8RgJe3vnYPX72LSQriBP+29wp8kjyha
-X-Gm-Message-State: AOJu0Yx9F5gfke6NjViBtTl0kPLlDcFudRdy5pe3adsviseXlYcDyAB2
-	uAx2byG1Z/zsX5/OuLR/FSpfgqeZjdYNcpV0xqT3Iz3he1N4gpMkl6Hf0RKX0LhXIJKmlWSkpN/
-	DozYLgj8Ze7lSQaUl2tl8HE4YMHZ16dO2I4DXbRacSoZP8RiCxVMS+6migpSQxg==
-X-Received: by 2002:a17:906:b7d3:b0:a3d:993e:ad24 with SMTP id fy19-20020a170906b7d300b00a3d993ead24mr3820664ejb.59.1708944576819;
-        Mon, 26 Feb 2024 02:49:36 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF+FHnqYXRywJjuKWIUXKnjByNIBL0LdeL0VrfUgVCQQPSjHmo45/hmmD4XRHZnCoq4l/N8lA==
-X-Received: by 2002:a17:906:b7d3:b0:a3d:993e:ad24 with SMTP id fy19-20020a170906b7d300b00a3d993ead24mr3820656ejb.59.1708944576630;
-        Mon, 26 Feb 2024 02:49:36 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id rf14-20020a1709076a0e00b00a4339b8b1bbsm1143238ejc.212.2024.02.26.02.49.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 02:49:35 -0800 (PST)
-Message-ID: <5badfbc2-fbb0-4aea-a75e-3b50aabdc94d@redhat.com>
-Date: Mon, 26 Feb 2024 11:49:33 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="obmUA0pg"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41QALGin020301;
+	Mon, 26 Feb 2024 11:49:17 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=selector1; bh=KSlAKh5khHrm2l
+	h9JDEYwfn6mQwNRMWXeZ4rXWYoMPM=; b=obmUA0pgK23lV+iGq6BnCH2IcutvDH
+	pOBwx7Akg0ILyMRM1yYdHrvITrC9rJFjCspZ901h0kD9syoUxuV+mXlxOVQdl28G
+	xsqfE99qn+2bv20dk12Wj9Nnx+/2n7XIvA4H9MsZuELZQ1Q87WC37Trd6+7IsT+5
+	nH5jRX3Xhnga96kb6yZEF9eqOnqm2GimHuGeuyxkqMvdtSfYyZ0DPfWXS1ZebnI/
+	jl7jdrOEWnc/udr5VCA484zKV3WF6RlsUMo2kgXv0XxCXCCTGyqGfY/Mfu4nWnQ9
+	X4uaQO7eRHFFOmCZFdn2Ax5bML3DoelJ8zd1m/b39ad3EiaLIQKvW11w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wftw4mpfb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Feb 2024 11:49:17 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id F178540048;
+	Mon, 26 Feb 2024 11:49:12 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E8979266D0C;
+	Mon, 26 Feb 2024 11:48:08 +0100 (CET)
+Received: from localhost (10.252.9.163) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 26 Feb
+ 2024 11:48:08 +0100
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+Subject: [PATCH v6 0/3] Introduce STM32 LVDS driver
+Date: Mon, 26 Feb 2024 11:48:04 +0100
+Message-ID: <20240226-lvds-v6-0-15e3463fbe70@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] platform/mellanox: mlxbf-pmc: mlxbf_pmc_event_list():
- make size ptr optional
-Content-Language: en-US
-To: Luiz Capitulino <luizcap@redhat.com>, ilpo.jarvinen@linux.intel.com,
- shravankr@nvidia.com
-Cc: davthompson@nvidia.com, ndalvi@redhat.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <cover.1708635408.git.luizcap@redhat.com>
- <182de8ec6b9c33152f2ba6b248c35b0311abf5e4.1708635408.git.luizcap@redhat.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <182de8ec6b9c33152f2ba6b248c35b0311abf5e4.1708635408.git.luizcap@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGRs3GUC/22MQQ6CMBBFr0JmbcmILbSuvIdxAXQqTZSaDmk0h
+ LtbMC5MXL6f/94MTNETw7GYIVLy7MOYod4V0A/teCXhbWaosJJYoRK3ZFkQakm9QtKNhnx9RHL
+ +uWXOl8yD5ynE11ZNcl2/gfoTSFKgMNoqZ1p3MMaeXGAueSr7cIc1kdQ/TWWts/u6MU2HDs2vt
+ izLG10KIC3RAAAA
+To: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Yannick Fertre <yannick.fertre@foss.st.com>,
+        Philippe Cornu <philippe.cornu@foss.st.com>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
+        Conor Dooley
+	<conor.dooley@microchip.com>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-26_07,2024-02-26_01,2023-05-22_02
 
-Hi,
+This serie introduces a new DRM bridge driver for STM32MP257 platforms
+based on Arm Cortex-35. It also adds an instance in the device-tree and
+handle the inclusion of the driver within the DRM framework. First patch
+adds a new panel compatible in the panel-lvds driver, which is used by
+default on the STM32MP257.
 
-On 2/22/24 21:57, Luiz Capitulino wrote:
-> The mlxbf_pmc_event_list() function returns a pointer to an array of
-> supported events and the array size. The array size is returned via
-> a pointer passed as an argument, which is mandatory.
-> 
-> However, we want to be able to use mlxbf_pmc_event_list() just to check
-> if a block name is implemented/supported. For this usage passing the size
-> argument is not necessary so let's make it optional.
-> 
-> Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
+Changes in v6:
+	- [1/3] Added Conor's Reviewed-by
+	- [2/3] Fixed kernel test robot warnings
+	- Rebased on latest drm-misc-next
 
-Thanks, patch looks good to me:
+Changes in v5:
+	- Fixed path in MAINTAINERS
+	- Fixed compatible in driver
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Changes in v4:
+	- Align dt-bindings filename and compatible
+	- Remove redundant word in [1/6] subject
+	- Fix example on typo
+	- Some minor fixes on YAML syntax
+	- Explicitly include linux/platform_device.h
+	- Drop device-tree related patch after internal discussions
+	- Rebase on latest drm-misc-next
 
-Regards,
+Changes in v3:
+	- Changed the compatible to show SoC specificity
+	- Fixed includes in dt-binding example
+	- Added "#clock-cells" description in dt-binding example
+	- Some minor fixes on typo
 
-Hans
+Changes in v2:
+	- Dropped [1/8] because already merged
+	- Dropped [4/8] since not mandatory for this serie
+	- [1/6]: Switch compatible and clock-cells related areas
+	- [1/6]: Remove faulty #include in the example.
+	- [1/6]: Add missing entry in MAINTAINERS
+	- [2/6]: Removed CamelCase macros
+	- [2/6]: Removed hard to read debug log
+	- [3/6]: Fixed my address
+	- [3/6]: Fixed smatch warning
+	- [5/6]: Move changes to stm32mp255.dtsi
 
+Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+---
+Raphael Gallais-Pou (3):
+      dt-bindings: display: add STM32 LVDS device
+      drm/stm: lvds: add new STM32 LVDS Display Interface Transmitter driver
+      drm/stm: ltdc: add lvds pixel clock
 
+ .../bindings/display/st,stm32mp25-lvds.yaml        |  119 ++
+ MAINTAINERS                                        |    1 +
+ drivers/gpu/drm/stm/Kconfig                        |   11 +
+ drivers/gpu/drm/stm/Makefile                       |    2 +
+ drivers/gpu/drm/stm/ltdc.c                         |   19 +
+ drivers/gpu/drm/stm/ltdc.h                         |    1 +
+ drivers/gpu/drm/stm/lvds.c                         | 1226 ++++++++++++++++++++
+ 7 files changed, 1379 insertions(+)
+---
+base-commit: de8de2c8acb931ce6197a04376a7078ccf50e821
+change-id: 20240205-lvds-e084ec50e878
 
-> ---
->  drivers/platform/mellanox/mlxbf-pmc.c | 40 +++++++++++++++------------
->  1 file changed, 22 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-> index 250405bb59a7..b71636eb3db1 100644
-> --- a/drivers/platform/mellanox/mlxbf-pmc.c
-> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
-> @@ -966,32 +966,33 @@ static bool mlxbf_pmc_valid_range(unsigned int blk_num, u32 offset)
->  }
->  
->  /* Get the event list corresponding to a certain block */
-> -static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk, size_t *size)
-> +static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk, size_t *psize)
->  {
->  	const struct mlxbf_pmc_events *events;
-> +	size_t size;
->  
->  	if (strstr(blk, "tilenet")) {
->  		events = mlxbf_pmc_hnfnet_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_hnfnet_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_hnfnet_events);
->  	} else if (strstr(blk, "tile")) {
->  		events = mlxbf_pmc_hnf_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_hnf_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_hnf_events);
->  	} else if (strstr(blk, "triogen")) {
->  		events = mlxbf_pmc_smgen_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
->  	} else if (strstr(blk, "trio")) {
->  		switch (pmc->event_set) {
->  		case MLXBF_PMC_EVENT_SET_BF1:
->  			events = mlxbf_pmc_trio_events_1;
-> -			*size = ARRAY_SIZE(mlxbf_pmc_trio_events_1);
-> +			size = ARRAY_SIZE(mlxbf_pmc_trio_events_1);
->  			break;
->  		case MLXBF_PMC_EVENT_SET_BF2:
->  			events = mlxbf_pmc_trio_events_2;
-> -			*size = ARRAY_SIZE(mlxbf_pmc_trio_events_2);
-> +			size = ARRAY_SIZE(mlxbf_pmc_trio_events_2);
->  			break;
->  		default:
->  			events = NULL;
-> -			*size = 0;
-> +			size = 0;
->  			break;
->  		}
->  	} else if (strstr(blk, "mss")) {
-> @@ -999,43 +1000,46 @@ static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk, size
->  		case MLXBF_PMC_EVENT_SET_BF1:
->  		case MLXBF_PMC_EVENT_SET_BF2:
->  			events = mlxbf_pmc_mss_events_1;
-> -			*size = ARRAY_SIZE(mlxbf_pmc_mss_events_1);
-> +			size = ARRAY_SIZE(mlxbf_pmc_mss_events_1);
->  			break;
->  		case MLXBF_PMC_EVENT_SET_BF3:
->  			events = mlxbf_pmc_mss_events_3;
-> -			*size = ARRAY_SIZE(mlxbf_pmc_mss_events_3);
-> +			size = ARRAY_SIZE(mlxbf_pmc_mss_events_3);
->  			break;
->  		default:
->  			events = NULL;
-> -			*size = 0;
-> +			size = 0;
->  			break;
->  		}
->  	} else if (strstr(blk, "ecc")) {
->  		events = mlxbf_pmc_ecc_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_ecc_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_ecc_events);
->  	} else if (strstr(blk, "pcie")) {
->  		events = mlxbf_pmc_pcie_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_pcie_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_pcie_events);
->  	} else if (strstr(blk, "l3cache")) {
->  		events = mlxbf_pmc_l3c_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_l3c_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_l3c_events);
->  	} else if (strstr(blk, "gic")) {
->  		events = mlxbf_pmc_smgen_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
->  	} else if (strstr(blk, "smmu")) {
->  		events = mlxbf_pmc_smgen_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
->  	} else if (strstr(blk, "llt_miss")) {
->  		events = mlxbf_pmc_llt_miss_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_llt_miss_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_llt_miss_events);
->  	} else if (strstr(blk, "llt")) {
->  		events = mlxbf_pmc_llt_events;
-> -		*size = ARRAY_SIZE(mlxbf_pmc_llt_events);
-> +		size = ARRAY_SIZE(mlxbf_pmc_llt_events);
->  	} else {
->  		events = NULL;
-> -		*size = 0;
-> +		size = 0;
->  	}
->  
-> +	if (psize)
-> +		*psize = size;
-> +
->  	return events;
->  }
->  
+Best regards,
+-- 
+Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
 
