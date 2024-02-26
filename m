@@ -1,94 +1,126 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14254EEDE
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0504E17BB9;
+	Mon, 26 Feb 2024 02:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708916222; cv=none; b=UmGRTwcWYVPQ4ozCIChqfyZuGY4ibRzhHelSo+nSGf0awnmrvew7b3S+uzxUYQ9KiqhffzIopMyG+9uUQ4nGFEcZp4JbeANpJfaQvrnDA7TZvq9u4qnA0SyZY1qNewFnjaI3RDHmolCZMUlF3y7UDHoZvIiIXfbRP/RFKnmL59g=
+	t=1708916270; cv=none; b=Ys+K/Jg//kN5lS/r2i3xRnrwomeif5kEg+iTjt5mcocqebf+Oq1+wXB30LOjlHTG8gvE9ZXTYMzFvak1dkWmkSySgtZZRfShFbaw0HpGgL7TjpDOEsDidfP4xWO7Yuqr3+a+DyYVF5yhOHKUjDLM2IhwPV8jNuAB/E++LEDke7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708916222; c=relaxed/simple;
-	bh=RkYRKXC8rDGhcHXpOqxOD+2kabTswxu8nRbiz9T3PnA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hDnP7/8OUfb5Z34jHcnBbqMyf+ypN2oSUCD9aEqIRREGRo4pYjNTva43lFaVnAiSLc5iib6z8GWi5hSwXhoj4gf0a5mEUsxe1BbwndlpHFF8jsLOdfTX8MLgouWjqxYL7Nn1DLBx+y7l17Xp+NsNMVCqIeyXPAhcyepaVD2WTbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 4546ceb75acc42a9b2151b68aacf51a8-20240226
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:e41c192e-b886-4454-bc77-1e6bcaeef539,IP:10,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:20
-X-CID-INFO: VERSION:1.1.37,REQID:e41c192e-b886-4454-bc77-1e6bcaeef539,IP:10,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:6f543d0,CLOUDID:42c032ff-c16b-4159-a099-3b9d0558e447,B
-	ulkID:2402261019466BTZH2M6,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
-	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 4546ceb75acc42a9b2151b68aacf51a8-20240226
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1034945641; Mon, 26 Feb 2024 10:19:44 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 7A78CE000EBC;
-	Mon, 26 Feb 2024 10:19:44 +0800 (CST)
-X-ns-mid: postfix-65DBF540-285856213
-Received: from kernel.. (unknown [172.20.15.254])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 43257E000EBC;
-	Mon, 26 Feb 2024 10:19:41 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: lucas.demarchi@intel.com,
-	ogabbay@kernel.org,
-	thomas.hellstrom@linux.intel.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch
-Cc: intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] drm/xe: use KMEM_CACHE() to create xe_hw_fence cache
-Date: Mon, 26 Feb 2024 10:19:12 +0800
-Message-Id: <20240226021912.1779715-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1708916270; c=relaxed/simple;
+	bh=sf0KuPewUZdF8qwi9t9dgOKKjG4aN33ww+ZjUC4PqeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nAeG55bi21dPts44COTL3hk6UGz86wvjQA/yVLUWmbuF5+BBMUiYGU8bmYvB5aZ/xrCbRT9wWiD+dmQQ+ETzBPiKquDln1+0evssuZxSaR6B44L8snjW1CZqi4tc15P5O0c6flpc75KEY+OS5sZSsccf8PLWuNZnYRUMvA9CnXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=izpYQFOR; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="izpYQFOR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1708916266;
+	bh=MIBBx6GI1McT+ipBiqM/URogFUQRYQ2StmjJeyQkKFY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=izpYQFOR/IbI+5PtE9V9CKOrVm6RblRIfkkXotuQjU/i2BmOVeprc1T+32SVa1wf2
+	 Icb/zi4ezbwpAAz83Ox6yykn0ZPeQXO4Mmtv70RbVezkGCulxgs7W/qojwyZa2Qep6
+	 35H3ws7KguLHWE74KhZ6bKWgo6vYUa2zPkgQAoBTJ4dyi9tei24d9ipP8IwIHClZNb
+	 cLJHVv1Vsb+yCFu1zBoxxuqeJe+wWIQEVSRauXVDpexK7kyxRLgiWsU4pVjTS9JrH8
+	 kbWhXVORO/jAV7TXRaDvtw6dZHmiknRu5zYmplhRr6h0KMYRTeSzrlI6x6eB2f1KvZ
+	 yEbv8C5bwEtoA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TjlfK69tlz4wcC;
+	Mon, 26 Feb 2024 13:57:45 +1100 (AEDT)
+Date: Mon, 26 Feb 2024 13:57:45 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Paul E. McKenney" <paulmck@kernel.org>, "Rafael J. Wysocki"
+ <rjw@rjwysocki.net>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Nikhil V <quic_nprakash@quicinc.com>
+Subject: linux-next: manual merge of the rcu tree with the pm tree
+Message-ID: <20240226135745.12ac854d@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/4gv1_Pr=DbHejtL+I7uOn.=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/4gv1_Pr=DbHejtL+I7uOn.=
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Use the KMEM_CACHE() macro instead of kmem_cache_create() to simplify
-the creation of SLAB caches when the default values are used.
+Hi all,
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- drivers/gpu/drm/xe/xe_hw_fence.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Today's linux-next merge of the rcu tree got a conflict in:
 
-diff --git a/drivers/gpu/drm/xe/xe_hw_fence.c b/drivers/gpu/drm/xe/xe_hw_=
-fence.c
-index a6094c81f2ad..cd258e0ccdf3 100644
---- a/drivers/gpu/drm/xe/xe_hw_fence.c
-+++ b/drivers/gpu/drm/xe/xe_hw_fence.c
-@@ -20,9 +20,7 @@ static struct kmem_cache *xe_hw_fence_slab;
-=20
- int __init xe_hw_fence_module_init(void)
- {
--	xe_hw_fence_slab =3D kmem_cache_create("xe_hw_fence",
--					     sizeof(struct xe_hw_fence), 0,
--					     SLAB_HWCACHE_ALIGN, NULL);
-+	xe_hw_fence_slab =3D KMEM_CACHE(xe_hw_fence, SLAB_HWCACHE_ALIGN);
- 	if (!xe_hw_fence_slab)
- 		return -ENOMEM;
-=20
+  Documentation/admin-guide/kernel-parameters.txt
+
+between commit:
+
+  3fec6e5961b7 ("PM: hibernate: Support to select compression algorithm")
+
+from the pm tree and commit:
+
+  600716592a3a ("doc: Add EARLY flag to early-parsed kernel boot parameters=
+")
+
+from the rcu tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
 --=20
-2.39.2
+Cheers,
+Stephen Rothwell
 
+diff --cc Documentation/admin-guide/kernel-parameters.txt
+index c503770e8f0b,3f894fbb4916..000000000000
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@@ -1753,18 -1749,7 +1754,18 @@@
+  				(that will set all pages holding image data
+  				during restoration read-only).
+ =20
+ +	hibernate.compressor=3D 	[HIBERNATION] Compression algorithm to be
+ +				used with hibernation.
+ +				Format: { lzo | lz4 }
+ +				Default: lzo
+ +
+ +				lzo: Select LZO compression algorithm to
+ +				compress/decompress hibernation image.
+ +
+ +				lz4: Select LZ4 compression algorithm to
+ +				compress/decompress hibernation image.
+ +
+- 	highmem=3Dnn[KMG]	[KNL,BOOT] forces the highmem zone to have an exact
++ 	highmem=3Dnn[KMG]	[KNL,BOOT,EARLY] forces the highmem zone to have an ex=
+act
+  			size of <nn>. This works even on boxes that have no
+  			highmem otherwise. This also works to reduce highmem
+  			size on bigger boxes.
+
+--Sig_/4gv1_Pr=DbHejtL+I7uOn.=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXb/ikACgkQAVBC80lX
+0GwQWAf7B+7G0prf44SGgzsLu+Bb6kk3pV+R6mR573pVFBIZnBuySykCFvucCeGR
+hbBpdNKOQA6wG9C7Dm/HqnYGdJZb0NrxYJyMR/4rH2giAbpROE6Okyy8QmT/C82E
+Taf4rXpOiacEIfuy5FhtDN0NF8BbeznMq3MaOc1shWzHbn0VuA5dNrIfJIJE6MSm
+5hQ9h+DGnGI2jzvAJTxNqXMXbw/VUPfYLUFxOTOlcdTu20x7uziIqPXjf2V9j+Md
+z6lnRjwxPwNz5tybZQ81eMvG6xVauEWjMTOF8d5LSrj01PnVwuvLcAkmHTYiMG8W
+MuEnHX7vKIvAtqRNg18v7tSV5c5CVA==
+=fcfT
+-----END PGP SIGNATURE-----
+
+--Sig_/4gv1_Pr=DbHejtL+I7uOn.=--
