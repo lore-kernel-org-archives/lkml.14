@@ -1,152 +1,119 @@
-Received: from flow4-smtp.messagingengine.com (flow4-smtp.messagingengine.com [103.168.172.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB74F604D4
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BCA604D4
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708951585; cv=none; b=a8OFAfCKO9UGP2W4mJGlIOB2bMJe8bwrA8zKj5FByTRgPfG2ZFzFHBCdyTuqRXh7zCnSozB932iriBb5Lh32j053kcB0T5alWk4cgTz3bjTc0nUg/isIgUNHWzZxj1xqIdeHrm52ayjHYDostmm8QxCVLSOM+b0XZiERje6XPSc=
+	t=1708951656; cv=none; b=RpC31xlIpxlOv+RXni4l2QoVE08pjTX/6LJbynQK0HYWnIPCKKzUwABO/SpPsI0ZcCM4JlzwE4Xfb8HdkqcPyEMkatg0qES6/ZqHhhKaAHE1MPOrToaxY5zLCLqGdv6La5BSoTyk+IXQUfaKtHmIee1wU5OVU87zHjv30cDIaM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708951585; c=relaxed/simple;
-	bh=Hjga4g8h8EsTThE+F4rVKI4ZVs0b3pehd/liyc4Wgbw=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=aMzJvq0yBeBdUJ1+2Rf3ziBBhV4f7lR4A2pG2/ndeJxf1tnPiuT2FGFymmL9WZC3wdbSH67Ao0t3sYWF0UptOyiOxAz1xX3tFI22oxtL24hD5HxKZZxJIidTsEqQS+C2mCC9YSFlhSR7VW20XIARTTcwgi3VW+lWwGfQmzIyY+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=rvn+xbm7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=on+1Xfn4; arc=none smtp.client-ip=103.168.172.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1708951656; c=relaxed/simple;
+	bh=dN7vlfm2CWuP7gytdhzY1G0iMgJePvyOPGhA6GCsXPU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExBzrDQHF+kGiEJAfoKEsxy7i+kZ6AKPXCGZLC2Rd/zugQDT0AeO8wc/88WfAi+T6+1qrNMNITuOmpMKFvr0EDRUA4/gLQPdD3KuUDN2HzSPiyiCj//Vpqn4REjDT6qUYoTGPVAxs4LhL3qv2kQTzwoWmHfGWFGKPabz4Huv6Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=yorHxad0; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="rvn+xbm7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="on+1Xfn4"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailflow.nyi.internal (Postfix) with ESMTP id A607420008D;
-	Mon, 26 Feb 2024 07:46:22 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 26 Feb 2024 07:46:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708951582; x=1708958782; bh=tolKghCFsQ
-	ADX1q2Jjm5jKYzOjR/B/HXvaX3V+TXekk=; b=rvn+xbm7pZZyftzDJFztAqH8YF
-	KhQiIypwmL2ercPlH7urWxllkqskmWZXB1J8GEWU9M/K1hvo2pIOA80Vxd9qR8/K
-	0IgZ0XpE9ek9Aa68n8/AHbqvtcJRtLUf4Rnd4g3NaowWdZJTY+YBGBUQwK4yKX0U
-	emljzCLD+7ME516CNEtArsLjvYy/mvVGOGSH427Kl+VJDD5iGN3KAVEudgZronfZ
-	+JjsYrEuELxooBDTKHPTgwY7I1MhMXn+rmigm+FuopWCpVzf3vbzShTSMYMMtCGn
-	gNhapD2qQONmXWe7ea/ngmaRpUPDHBiARZqw8Csx1sXRsoAkRqx7KFt0ooWQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708951582; x=1708958782; bh=tolKghCFsQADX1q2Jjm5jKYzOjR/
-	B/HXvaX3V+TXekk=; b=on+1Xfn4V8nkMVxRKRveEKNq/P0ULsBTXEM6igzd2K5X
-	gnxx/g6WH/hZv0FyxTHNvv6P9muFaVyKr///MXz2oReQN1Hvr5Huy8YCXlSMtgkW
-	0RcuXxMWc4lT0neu+elBX3STLo8o8EUZuujy7ldWPv6KPqyXzCemOHu6HTHLujiU
-	VqACvGC7iskSWVac+YSDAPFVtNCWk1bsVDusfFi2B1e4MSsPCJYWKMf82nj2myCf
-	yzrL6UepxrwXTD4wKxV9GKqaIg7qbJVk97sjbivy2Umz4ddfISFVW98Sq7/YKcCE
-	l3R1ktxfO0DKvOofL6akLv46VdJlMKt4iR3UVE+SSw==
-X-ME-Sender: <xms:HojcZU2AHeYuQFerjVB7dR26ZnSXJKRlgNwqIVhbV1Wrxv-hCsZmaw>
-    <xme:HojcZfHqxtBxfOH8b7cDw-8yK3GWge8791prc4oCK0d3Y__cB2srFX-HfbjTbuzmj
-    wKMBuJwp1e-U_imsz8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgedvgdegvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:HojcZc7mUifSZCwWHqSVQwD9ttivIpbaJYHe-KAa9tBbOMMmv192QA>
-    <xmx:HojcZd3FdOjExv5V2xErwfIGuKgz4u-gamvwkv4BHXGj0p-IhzJKNg>
-    <xmx:HojcZXGRfC0V-h6JRrvjsxUbArNNH6coDLaVR9UXjPIOtsGBtcp5fQ>
-    <xmx:HojcZSm7xmYZSsqnwvvT9LlvA5Z0LG_R_Pi54Cgi4a3_tg4v0M12eMinvY4>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 3ABBFB6008D; Mon, 26 Feb 2024 07:46:22 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="yorHxad0"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e459b39e2cso1640137b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 04:47:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1708951654; x=1709556454; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nyrubZrd+iQQ9LRdmGo0pLnE0GnOJFu8Ms2d6zdohTc=;
+        b=yorHxad0Q2CTEfzncY+ztjfHw/nemFR33fL9via7ohGcaIULF0x3HojLZf/UqW3S4z
+         9bZI0jUT9fM48y4aBcJE/Gs5ACGUaat0xkeo0mKou5B0L5hr47wgWceI3dRhhkuuJNQY
+         zN/kSt8OXwj9SJ+M5wRKvCbrgxivjyceI0OGGEx5FdJP9I6btAhUdFYNuAXEPz7DVsVt
+         lXAlBbHxLl1dEU1Ahc265wpsNvn9I/DVyFXrPWbv2o5QTOs0gJutv9aDECKWyvZxyEoM
+         FWshhAUN7+kJp4m0HJBJG70taftd1XZadPI//NOZQsXPAOhHQVCGqW0qL/1wG/+V74gq
+         UI5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708951654; x=1709556454;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nyrubZrd+iQQ9LRdmGo0pLnE0GnOJFu8Ms2d6zdohTc=;
+        b=Xkv4eSXBrAgqK5VF6WtFzq4onBaKCLivsxTL1+xNUd2kKf6PueLhg6N2ziIHV/GihD
+         X9T9N9OIglcDK2XILIxkB27kE4Y41Ga2j9ftzh7SWuw2hgi3Ox5rYyuqB8DxB+GjLA/p
+         PL/nc5CiNRVX228qmTiuyOh9QRM0niykCmXrcpmL2Ue603xxRKj/mwwX15YoQ7R+jjxr
+         Rt+h/NHbkr7Aptw+/KjUtJ0txXchRR0LsZRxuA7r5ttzh5mjDHjb6S86jTK/ffc11lSV
+         mGbBUV7NijWGAPYfFF8z5hJ3VLYPre4Kdhu/fdRKY7MzB7BZ9Q1n5As3y4XWIgO+mkHm
+         stzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKNqCVcen54IXOJJG1YKGvrBV7+4e11e40k21FDA7d8z7+/1nL3q4thstktXXB4sUfL5Rax8fC6RtBqZyhO/0Aqv+GMutYvVgB31Hk
+X-Gm-Message-State: AOJu0YzTZ3eJD4ICYWSmeSP3yqnTEdR04YTV0wlfTfUGCTiyqzv3FPz6
+	yaUmBe3srK9AKAPJ0rdQfdEaxMsGReJkHsgGQgBD9VGi+Ibx2SvMcLPh8AfpfVw=
+X-Google-Smtp-Source: AGHT+IFX/dKtzGRqrmOKHZtigWLQqswOK9f44At5pPNmVA4fazaZ6Tbtk13iEH+Bwie50vdjALOU8A==
+X-Received: by 2002:a05:6a21:1584:b0:1a1:5ad:4129 with SMTP id nr4-20020a056a21158400b001a105ad4129mr1274023pzb.15.1708951653839;
+        Mon, 26 Feb 2024 04:47:33 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-247-196.pa.nsw.optusnet.com.au. [49.181.247.196])
+        by smtp.gmail.com with ESMTPSA id l3-20020a62be03000000b006e4432027d1sm4030530pff.142.2024.02.26.04.47.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 04:47:33 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1reaOI-00BkxF-2y;
+	Mon, 26 Feb 2024 23:47:30 +1100
+Date: Mon, 26 Feb 2024 23:47:30 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chandan.babu@oracle.com,
+	akpm@linux-foundation.org, mcgrof@kernel.org, ziy@nvidia.com,
+	hare@suse.de, djwong@kernel.org, gost.dev@samsung.com,
+	linux-mm@kvack.org, willy@infradead.org,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH 12/13] xfs: make the calculation generic in
+ xfs_sb_validate_fsb_count()
+Message-ID: <ZdyIYrei4QWvAMpx@dread.disaster.area>
+References: <20240226094936.2677493-1-kernel@pankajraghav.com>
+ <20240226094936.2677493-13-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <79815966-a8fe-46cf-85ee-16657fa2392c@app.fastmail.com>
-In-Reply-To: 
- <7hfobmmgs6ntnusobalqxslcyv3kqdlnhxjoxbaful4ameavj2@niodl55l7b7g>
-References: <20240224121528.1972719-1-arnd@kernel.org>
- <7hfobmmgs6ntnusobalqxslcyv3kqdlnhxjoxbaful4ameavj2@niodl55l7b7g>
-Date: Mon, 26 Feb 2024 13:46:01 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Lucas De Marchi" <lucas.demarchi@intel.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Oded Gabbay" <ogabbay@kernel.org>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "Dave Airlie" <airlied@gmail.com>,
- "Daniel Vetter" <daniel@ffwll.ch>, "Rodrigo Vivi" <rodrigo.vivi@intel.com>,
- "Matthew Brost" <matthew.brost@intel.com>,
- "Francois Dugast" <francois.dugast@intel.com>,
- "Jani Nikula" <jani.nikula@intel.com>,
- "Tejas Upadhyay" <tejas.upadhyay@intel.com>,
- "Matthew Auld" <matthew.auld@intel.com>,
- "Mauro Carvalho Chehab" <mchehab@kernel.org>,
- "Michal Wajdeczko" <michal.wajdeczko@intel.com>,
- "Matt Roper" <matthew.d.roper@intel.com>,
- "Daniele Ceraolo Spurio" <daniele.ceraolospurio@intel.com>,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] drm/xe/kunit: fix link failure with built-in xe
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226094936.2677493-13-kernel@pankajraghav.com>
 
-On Mon, Feb 26, 2024, at 04:42, Lucas De Marchi wrote:
-> On Sat, Feb 24, 2024 at 01:14:59PM +0100, Arnd Bergmann wrote:
->>From: Arnd Bergmann <arnd@arndb.de>
->>
->>When the driver is built-in but the tests are in loadable modules,
->>the helpers don't actually get put into the driver:
->>
->>ERROR: modpost: "xe_kunit_helper_alloc_xe_device" [drivers/gpu/drm/xe/tests/xe_test.ko] undefined!
->>
->>Change the Makefile to ensure they are always part of the driver
->>even when the rest of the kunit tests are in loadable modules.
->>
->>The tests/xe_kunit_helpers.c file depends on DRM_KUNIT_TEST_HELPERS,
->>so this has to always be selected by the main XE module now, rather
->>than the actual tests. In turn, the "depends on (m || (y && KUNIT=y))"
->>doesn't really do what it tried and can just be removed.
->
-> it actually did, which was to workaround issues prior to the commit you
-> are pointing out.  What it did  was to make sure xe.ko is m, or if it's
-> built-in, kunit is also built-in. Apparently the problem here is that
-> the xe_test.ko is missing the symbols.
+On Mon, Feb 26, 2024 at 10:49:35AM +0100, Pankaj Raghav (Samsung) wrote:
+> From: Pankaj Raghav <p.raghav@samsung.com>
+> 
+> Instead of assuming that PAGE_SHIFT is always higher than the blocklog,
+> make the calculation generic so that page cache count can be calculated
+> correctly for LBS.
+> 
+> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> ---
+>  fs/xfs/xfs_mount.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+> index aabb25dc3efa..69af3b06be99 100644
+> --- a/fs/xfs/xfs_mount.c
+> +++ b/fs/xfs/xfs_mount.c
+> @@ -133,9 +133,15 @@ xfs_sb_validate_fsb_count(
+>  {
+>  	ASSERT(PAGE_SHIFT >= sbp->sb_blocklog);
+>  	ASSERT(sbp->sb_blocklog >= BBSHIFT);
+> +	uint64_t mapping_count;
+> +	uint64_t bytes;
+>  
+> +	if (check_mul_overflow(nblocks, (1 << sbp->sb_blocklog), &bytes))
+> +		return -EFBIG;
+> +
+> +	mapping_count = bytes >> PAGE_SHIFT;
 
-Ah, I misunderstood the intention, as I was thrown off by the
-redundant 'y &&' which sounds like it was trying to force XE
-to be built-in rather than modular when Kunit is !=m.
+max_index, not a "mapping count". Also, put this after this comment:
 
-The more common way to write this is 'depends on KUNIT || !KUNIT',
-with some drivers writing it as 'depends on m || KUNIT!=m'.
+>  	/* Limited by ULONG_MAX of page cache index */
 
-I double-checked now and found that the dependency is indeed
-still needed:
+So it is obvious what the max_index we are calculating belongs to.
 
-WARNING: unmet direct dependencies detected for DRM_KUNIT_TEST_HELPERS
-  Depends on [m]: HAS_IOMEM [=y] && DRM [=y] && KUNIT [=m]
-  Selected by [y]:
-  - DRM_XE [=y] && HAS_IOMEM [=y] && DRM [=y] && PCI [=y] && MMU [=y] && (ACPI_VIDEO [=y] || !ACPI [=y]) && DRM_XE_KUNIT_TEST [=m]!=n
-  Selected by [m]:
-  - DRM_KUNIT_TEST [=m] && HAS_IOMEM [=y] && DRM [=y] && KUNIT [=m] && MMU [=y]
-
-> See commit 08987a8b6820 ("drm/xe: Fix build with KUNIT=m").
->
-> I'm happy to remove it though if it's indeed not needed anymore.
-
-Ideally the xe.ko module should not depend on anything exported
-by lib/kunit, but for the moment, the tests/xe_kunit_helpers.o
-file is still included in xe.ko and in turn depends on kunit.
-
-Changing this is probably a little more complicated than my
-patch, so I'll just send a v2 without the incorrect line.
-
-     Arnd
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
