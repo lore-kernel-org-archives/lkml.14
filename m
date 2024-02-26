@@ -1,84 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690E51CA97;
-	Mon, 26 Feb 2024 08:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1A81CA91;
+	Mon, 26 Feb 2024 08:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936005; cv=none; b=FCgf22hHmP0VL5+rJeaohWGcICKIuW6alxOADmmwar5UDKh0AJu4IRVqy6PPum19ZvSvFlVSNdXEhqIq248yBOlhVMYu+JtHmGrq5vWeNUT1D3/WAyfhwpxn+4H3SKLznstB6c/mM5oCHT01jJekxsIVtlfnIlx28bXeMYZD11U=
+	t=1708936032; cv=none; b=u6SHYpaJrBlowXPAGqtTpTIJfUk8d5FQv4meM1ZWG47kY0s+CgFikau4diXetBHQBlaeL0R8OUZA/Jmx5TrilqOjuhTYbMQjsBjW7UtFeua5/3Y0UiGdsU3plBXQ+DiOHimSwov11HOPHkAuYyvuxRqU6xl/6rcG7bPuOXg97kA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936005; c=relaxed/simple;
-	bh=haGI4n0YbA/4IGvdyThAvozbIdXURA6fZt37AbQcuwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ofgLHtjW3ijlVWOheD4/5aMINbb0KdlIrEjS7WSFmhgfReTT2sj04CeBCuhNm6WPRjTWyFZgmfImBfoKn359HMuTXGbyBLzp/6TU19X+6g2OtcRjbrIYMf4BAGUMy2gtgNKVzynUQtL5Y9DGXTNUcU2qetpcyORMeV1SDX/8JM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNmznQSW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708936032; c=relaxed/simple;
+	bh=opGkT1SPK5IIzhy5L61IRDO4fs/Se1zLuTjvPJtOAos=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ObZop8PBzhA+wPDNiW+KQDdjDhUFwD5F4zuhoRHJvFGlkG7XNKzuq6u4zoaGj3m4q+6vczGpndpGc4A3RG4JsTStUdg5HuL4315VMlDhbaPSzUgiZJfmWf5Na2j1F/NPoyGCbwlYl7mjVMS+Xj33/R//O/ihV2+PEeoki2HAeaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=eSYuuTHo; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNmznQSW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AF2C433F1;
-	Mon, 26 Feb 2024 08:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708936005;
-	bh=haGI4n0YbA/4IGvdyThAvozbIdXURA6fZt37AbQcuwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gNmznQSWN2MhRkWhQYUIWP+Q7rle+L3MEZFkSXk5ZDHhsdKwJ3eKwV4yUx2xGVc4I
-	 nULj0FswhucxGEgmahSlP9vZQFhLMOChl5XMThaYhBcYOhMGRu9lJmLes4bYQ86Ojr
-	 SRE22RvpV0wPnWE+EZnfXbnSj8bp6h0jlq/aw+4smaqf+9FpCLumPKq+4k2ooPltCK
-	 est+fM5foWvlrRE+Dikaboekn76SBl4/WXLB2TiOnMt0bWzd0usIgjp3890azDNTm5
-	 chJjME7RTUEGY2OP1CYvdRqhUxiQJABmduh8XNhmVEZXqkPLY1D2ocCrIv5PgV0Yl7
-	 h0lp69Wyrzwmg==
-Date: Mon, 26 Feb 2024 09:26:38 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Kees Cook <keescook@chromium.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Xiaotian Wu <wuxiaotian@loongson.cn>, 
-	WANG Rui <wangrui@loongson.cn>, Miao Wang <shankerwangmiao@gmail.com>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, linux-arch <linux-arch@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep argument
- inspection again?
-Message-ID: <20240226-granit-seilschaft-eccc2433014d@brauner>
-References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
- <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
- <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
- <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
- <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="eSYuuTHo"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41Q7U9S0026021;
+	Mon, 26 Feb 2024 09:27:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=+LqaC1k2A/CeSV89OpDz4o3lBGabPbXT8Ayn3ozZF+E=; b=eS
+	YuuTHoml5z4VcKgqoFxayaUxIXvZSZB5J9MSNBejh+kYnNzSshlK2EiAPBI8DJe2
+	MCNR+59y/W9S+eQXxCokj1fFMX+uSHTgnUt8hqFAuQJRdMF+6HbFCTrt5SM+7vq0
+	t9gLrO9z36cI62RYxzuqB8qfS5IDP0GYIw42pVMC/zqEokI4RS2waTulWb7zBIx/
+	DFOVgq1A4BKKUjaR6UFwpMyrVcELCxAl1Oq9XHZBwv9zfJ+bWyrhnnFyjWblaWo1
+	G8+AheIRSbOKpbNKX+UK6U7/wRs+ejgX9goH80q1Obauw1HD22z1IFtV5CghkE28
+	GEoj3u7rKgOgS+qveTtw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wftw4kys9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Feb 2024 09:27:04 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 54A3840047;
+	Mon, 26 Feb 2024 09:27:01 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B2CC424DFE9;
+	Mon, 26 Feb 2024 09:26:32 +0100 (CET)
+Received: from [10.201.21.177] (10.201.21.177) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 26 Feb
+ 2024 09:26:31 +0100
+Message-ID: <9fb17963-8942-4810-ae86-508fd7b3466a@foss.st.com>
+Date: Mon, 26 Feb 2024 09:26:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] memory: stm32-fmc2-ebi: add MP25 support
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <devicetree@vger.kernel.org>
+References: <20240219140202.85680-1-christophe.kerello@foss.st.com>
+ <20240219140202.85680-4-christophe.kerello@foss.st.com>
+ <21ad2752-ad25-451a-b892-6b3b31c1031a@linaro.org>
+From: Christophe Kerello <christophe.kerello@foss.st.com>
+In-Reply-To: <21ad2752-ad25-451a-b892-6b3b31c1031a@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-26_05,2024-02-23_01,2023-05-22_02
 
-On Mon, Feb 26, 2024 at 02:03:48PM +0800, Icenowy Zheng wrote:
-> 在 2024-02-25星期日的 15:32 +0800，Xi Ruoyao写道：
-> > On Sun, 2024-02-25 at 14:51 +0800, Icenowy Zheng wrote:
-> > > > From my point of view, I prefer to "restore fstat", because we
-> > > > need
-> > > > to
-> > > > use the Chrome sandbox everyday (even though it hasn't been
-> > > > upstream
-> > > > by now). But I also hope "seccomp deep argument inspection" can
-> > > > be
-> > > > solved in the future.
-> > > 
-> > > My idea is this problem needs syscalls to be designed with deep
-> > > argument inspection in mind; syscalls before this should be
-> > > considered
-> > > as historical error and get fixed by resotring old syscalls.
-> > 
-> > I'd not consider fstat an error as using statx for fstat has a
-> > performance impact (severe for some workflows), and Linus has
-> > concluded
+Hi Krzysztof,
+
+On 2/21/24 09:32, Krzysztof Kozlowski wrote:
+> On 19/02/2024 15:02, Christophe Kerello wrote:
+>> Add the support of the revision 2 of FMC2 IP.
+>>       - PCSCNTR register has been removed,
+>>       - CFGR register has been added,
+>>       - the bit used to enable the IP has moved from BCR1 to CFGR,
+>>       - the timeout for CEx deassertion has moved from PCSCNTR to BCRx,
+>>       - the continuous clock enable has moved from BCR1 to CFGR,
+>>       - the clk divide ratio has moved from BCR1 to CFGR.
+>>
+>> The MP1 SoCs have only one signal to manage all the controllers (NWAIT).
+>> The MP25 SOC has one RNB signal for the NAND controller and one NWAIT
+>> signal for the memory controller.
+>>
+>> Let's use a platform data structure for parameters that will differ
+>> between MP1 and MP25.
 > 
-> Sorry for clearance, I mean statx is an error in ABI design, not fstat.
+> 
+> ...
+> 
+>> +
+>>   	ebi->regmap = device_node_to_regmap(dev->of_node);
+>>   	if (IS_ERR(ebi->regmap))
+>>   		return PTR_ERR(ebi->regmap);
+>> @@ -1190,9 +1502,11 @@ static int stm32_fmc2_ebi_probe(struct platform_device *pdev)
+>>   	if (ret)
+>>   		goto err_release;
+>>   
+>> -	ret = stm32_fmc2_ebi_save_setup(ebi);
+>> -	if (ret)
+>> -		goto err_release;
+>> +	if (ebi->data->save_setup) {
+> 
+> This cannot be NULL.
 
-We will not be limited arbitrarly in system call design by seccomp being
-unable to do deep argument inspection. That ship has sailed many years
-ago. And it's a bit laughable to disalow pointer arguments and structs
-in system calls because seccomp isn't able to inspect them.
+Ok, it will be done in V3.
+
+Regards,
+Christophe Kerello.
+
+> 
+>> +		ret = ebi->data->save_setup(ebi);
+>> +		if (ret)
+>> +			goto err_release;
+>> +	}
+>>   
+>>   	platform_set_drvdata(pdev, ebi);
+>>   
+>> @@ -1238,7 +1552,9 @@ static int __maybe_unused stm32_fmc2_ebi_resume(struct device *dev)
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> -	stm32_fmc2_ebi_set_setup(ebi);
+>> +	if (ebi->data->set_setup)
+> 
+> This cannot be NULL.
+> 
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
