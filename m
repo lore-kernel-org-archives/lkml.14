@@ -1,173 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F7F60871
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FF1633F8
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708937660; cv=none; b=p6CeiOUcvGl7AIHb3uxKpvRYsZsHld67125QBme0UYu3A0L52PrCo2SV3TJ28TcAGx9XYR5Ka3IH0xsX1JWmtqYJpP5HBQr5qHkF3Skg5AwFJbgqO5ip3pmPnOizuJW+ggk/3nv1dGzCmVwvLKqRESFZ93Ntr1hlF6alNAFdGc4=
+	t=1708937723; cv=none; b=D4UMZIogLO9RVGgCStV+bJjdXCYwlbGBkx/K6au5cw/2hgv4GVt1H1xoFkHJk5/e/IizsDXQ9dDoYzZ7sG4PT78WLWr4nxh4fDVpAIP+gmgNG3fYqEpStWE6XRohl9xtMuNy9BAsg4Vb/3hahYE0cMwAuPQxObZRNdxn014Jx78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708937660; c=relaxed/simple;
-	bh=5rmuGovVj23y9tnoyw6Jh9PR3P6pgiflK+yqXuAlWpU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lih8/IfVQss5auoOu5+6n2o1+QKOL3q3dmHPgRV9DA6sh7VpulRob4g7mnqYUyOzU+kVhVg2OeyBHMYNDYrCP3isD7eAt2goGbqyPrpapoALuGdg7AShYykPdLIiq6rNXyJIWM+R1kjX1dxyM52yTXQrEIy72ga6wvaKl5WR3D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Iq2L7gxk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708937723; c=relaxed/simple;
+	bh=FXpxeWXQkgRg7/0hnbUUrk9DWMBqlRXoPwgtM8kCONY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RFWWzCce5BR79zHTmUa9IDnsRa+hv5IkStoDNR+eLvo5obZInWC3aJkmCBihGj6h0Zqzn4rz6oFDXkomYqeGluff9SvEJQdyiT4nqKcjmB3j0idMN3apH7Qdz9ZteQT2U8ElyhzZOJQrp/JLRCePSrKgoqlfky4/lkQnPiImny0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mJ9y1P6+; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Iq2L7gxk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708937658;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=74RKReSheiCBlSpk+QjmiZByTze9J0mvwNQaQ7Ez7Gw=;
-	b=Iq2L7gxkTfO91fPMleM+vBcL2gKVQXKJ1JFIxQFqd9pzaf5yJwEJOY2V/FwYuPGJzNeFR8
-	RZRoaAGKgML72REFZ9QkKoS4j+Bm8Oc5JXi9H9ECa5taYPdyDpV3bVMYR1cSM6Y20EuWLf
-	rNtUYzQXoEQb7DnAv4EOg4Q9zutMi0s=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657-JywvlVd7PbetLkn97wbh7g-1; Mon, 26 Feb 2024 03:54:16 -0500
-X-MC-Unique: JywvlVd7PbetLkn97wbh7g-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-412a6bdd67fso1747385e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 00:54:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708937655; x=1709542455;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJ9y1P6+"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-608342633b8so23655947b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 00:55:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708937721; x=1709542521; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=74RKReSheiCBlSpk+QjmiZByTze9J0mvwNQaQ7Ez7Gw=;
-        b=wkeH/nIQpouo+4CXY0JPJEzRHjmpP0nj9kl5w9xRSCdPxpl00YaGFCBjVtYcZ4xUNP
-         OOqGLZ/F+rWTLS1L2ubK+OG81qGGo3ljdKpJR36HkW+26DVJ2K4FIYnZIZ9pm2L9d7BL
-         CIoibRRFG9z0IQehfCHMq7yXczYFVvZRe6bThXNX/c+MZ9PAEvBjcAsGsg50Qa7zFNGa
-         73B22q2OQ1ibq8iy+eieCg1x+N0ZkfL3frhMIpPa3xCzKLlGn6DiYMzs6cyZ7cdMs7oI
-         A95L/JlWYpevbQee6NFl22bF9Dpc2NgfFargHx7dw9XtF8rTzYUrBlh8GbJV3DraY+kR
-         +Deg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4b8EkH7Yjtfw6N46TIjTHaVH+gdyZrwIptIcGRlhs8Y855D2vg5KZcgsWmBo76TeA7f6zWnRvhc6bW7Dhj8wJzO18kzposQSKDUjN
-X-Gm-Message-State: AOJu0YzNXkzI5B6wjDkdRqaG/LmvEp3zqFHLszE6uy21+EyYHi6PKst2
-	anUGf6tLqJsuZ5NrEzYGwOyELwHYLgGTj7XOOZFl6pMWfsCDYq+G+uJiYRD1p7ePRWp2Q4p4R/a
-	wI4EdP8w20FsxvVXd2Xfvg/zUlGiQ4NmyaLr6OrDN5pwsei2pFvOkhGt3hbPxFe4NymA4Bg==
-X-Received: by 2002:a05:600c:468e:b0:412:6250:7179 with SMTP id p14-20020a05600c468e00b0041262507179mr4760530wmo.32.1708937655152;
-        Mon, 26 Feb 2024 00:54:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEMJAt7GeBhPRYkCSVO+k/YUhbgy2w29H3RnCZMdyybNcgJwbaLAokXxD4AuYxzf8lQOWygrQ==
-X-Received: by 2002:a05:600c:468e:b0:412:6250:7179 with SMTP id p14-20020a05600c468e00b0041262507179mr4760517wmo.32.1708937654728;
-        Mon, 26 Feb 2024 00:54:14 -0800 (PST)
-Received: from ?IPV6:2003:cb:c72f:f700:104b:9184:1b45:1898? (p200300cbc72ff700104b91841b451898.dip0.t-ipconnect.de. [2003:cb:c72f:f700:104b:9184:1b45:1898])
-        by smtp.gmail.com with ESMTPSA id p19-20020a05600c205300b00412945d2051sm7400674wmg.12.2024.02.26.00.54.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 00:54:14 -0800 (PST)
-Message-ID: <8a723092-347d-443a-82e1-4093f6a1ba0e@redhat.com>
-Date: Mon, 26 Feb 2024 09:54:13 +0100
+        bh=MkCFtlqoX39H9E2dfaJPOMPy21LrIumnHS1T319uwME=;
+        b=mJ9y1P6+GP0t3vfBVuaznWuVDkVPOnraYcc3y73d101Hje/DpMDR38mbqo3jaCAlg1
+         ESpT9ADiLHvfIdg5nlwUYfp4tJEL24ntuwGKHuVerGZ8sQ1mnLafIw3kEvP5CSTN9fpQ
+         eIlkXVM+9Tpk4f2IJ5eU1BM0dvYWr/9sk4CnOn+hNOsdcgNwXb0/Cw3eCiS8CvZ7nddO
+         4bAsfqPmWJtnvQ3jYiLQ5jEyhrMh8wJxHNG4rx6X47CvJ1AgAe75oOGz8DLE1Xsn2Nm6
+         ehR1FWYCIpLUimTOD9rYd68lUW2dF6utvpIN5ZsusbPfPQBBrAeZ3jR9fI6xBYj+tc35
+         Emcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708937721; x=1709542521;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MkCFtlqoX39H9E2dfaJPOMPy21LrIumnHS1T319uwME=;
+        b=lHfnR7qEIMwSZyFB6AUjNUetBK+Y2w65LQ0KoF5XmRj3m02xWfwp7Dw+K7NpEdnk6A
+         Y5JyY8G9OaoDajcRSdmG8uL+Vpe0VIr8KguRv/TlO772RpQd0WNO7HKyuovNAZIiC6Ho
+         an2zT/KWXFz8cdmQE3DOkgUFZBurRBfZakTp4a2cN9mMbtP0r9ZOxgubqNAQPFHqInta
+         8mxhZ9M9/byMRIJ782L2To6oF9uBK//gABLQsuI4m4HdAcS0lbuc0hCtf2lrHGfbnvEj
+         3UpVBLIKljwPZ91jCkXEyxsRI2L3PUUWInTqx/0vtF1e9V6fYf+wF4y0yXQxSh+dVvcU
+         7Rcg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYGrSFAeL+nv+lc5jfoNhgJnFeH1HFdsx0EjK4hSbFxObQVF3dg0EOvNflmQIr5NVYMOcqKAGARKXGpGdNj2FDoIVXvueLMx2k0oDc
+X-Gm-Message-State: AOJu0Yzhzf9gMv8zIEd2iR48+vJfA0WdO4GaZSaSTE2mGuSLwvp67zkP
+	0GVQbWr4XFFBGdW21k5XyO/ST9nTKFVimomaDHmXF+yoxXYIEd9U4Itrou/6HE7pkr3lqE/N56s
+	UJxYuYBAFZwTyYxhXxUpuZhDJoeI=
+X-Google-Smtp-Source: AGHT+IFpshRlCDcswRxHKDpIYcNPkCMA9n8AA4i9TFIC7v6bKQyn7cCMPvsPzoO9pgN/fqS3O/m2xsrUVN2tnVuvAdg=
+X-Received: by 2002:a81:af5f:0:b0:608:e122:88 with SMTP id x31-20020a81af5f000000b00608e1220088mr3737137ywj.9.1708937720800;
+ Mon, 26 Feb 2024 00:55:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm, thp: display [never] for defrag when THP is set to
- never
-Content-Language: en-US
-To: Liu Song <liusong@linux.alibaba.com>,
- Yuanhe Shu <xiangzao@linux.alibaba.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240222115323.4925-1-xiangzao@linux.alibaba.com>
- <ec6f2c48-3010-4a02-8f42-fc6b912039cf@redhat.com>
- <d9eb6672-788e-414d-8138-37a3038e3c47@linux.alibaba.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <d9eb6672-788e-414d-8138-37a3038e3c47@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAGsJ_4zera4+bWuXHKjdU3QdiR3sqcUQB3gF08DPD49OCT4S9w@mail.gmail.com>
+ <20240226083714.26187-1-ioworker0@gmail.com> <9bcf5141-7376-441e-bbe3-779956ef28b9@redhat.com>
+In-Reply-To: <9bcf5141-7376-441e-bbe3-779956ef28b9@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Mon, 26 Feb 2024 16:55:09 +0800
+Message-ID: <CAK1f24mdwjz2J5VmeYSDwb4jMbrXUVCSF_0pOcWSVt1cfa0FhQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm/madvise: enhance lazyfreeing with mTHP in madvise_free
+To: David Hildenbrand <david@redhat.com>
+Cc: 21cnbao@gmail.com, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, mhocko@suse.com, minchan@kernel.org, peterx@redhat.com, 
+	ryan.roberts@arm.com, shy828301@gmail.com, songmuchun@bytedance.com, 
+	wangkefeng.wang@huawei.com, zokeefe@google.com, fengwei.yin@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 23.02.24 12:01, Liu Song wrote:
-> 
-> 在 2024/2/22 20:14, David Hildenbrand 写道:
->> On 22.02.24 12:53, Yuanhe Shu wrote:
->>> When transparent_hugepage is set to never by cmdline or echo, defrag
->>> still show what it used to be and can be modified which makes user
->>> confusing whether defrag would take effect.
->>>
->>> Actually if transparent_hugepage is set to never, defrag will not take
->>> effect. Just Display never and remain unchangeable to for defrag when
->>> transparent_hugepage is set to never.
->>>
->>> Suggested-by: Liu Song <liusong@linux.alibaba.com>
->>> Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
->>> ---
->>
->> No, I don't think we want such a dependency between both options.
->>
->> You might just end up breaking existing scripts (enable defrag before
->> enabling THP) for no good reason.
->>
-> In certain situations where khugepaged_thread is NULL, it would be more
-> reasonable for the value of
-> /sys/kernel/mm/transparent_hugepage/khugepaged/defrag to be 0. The patch
-> should include a fix for this case.
+Hey David,
 
-Why?
+Thanks for your suggestion!
 
-We have a bunch of THP toggles. They reside in 
-"/sys/kernel/mm/transparent_hugepage/", indicating that they are THP 
-specific.
+On Mon, Feb 26, 2024 at 4:41=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+[...]
+> > On Mon, Feb 26, 2024 at 12:00=E2=80=AFPM Barry Song <21cnbao@gmail.com>=
+ wrote:
+> > [...]
+> >> On Mon, Feb 26, 2024 at 1:33=E2=80=AFAM Lance Yang <ioworker0@gmail.co=
+m> wrote:
+> > [...]
+[...]
+> > +static inline bool pte_range_cont_mapped(pte_t *pte, unsigned long nr)
+> > +{
+> > +     pte_t pte_val;
+> > +     unsigned long pfn =3D pte_pfn(pte);
+> > +     for (int i =3D 0; i < nr; i++) {
+> > +             pte_val =3D ptep_get(pte + i);
+> > +             if (pte_none(pte_val) || pte_pfn(pte_val) !=3D (pfn + i))
+> > +                     return false;
+> > +     }
+> > +     return true;
+> > +}
+>
+> I dislike the "cont mapped" terminology.
+>
+> Maybe folio_pte_batch() does what you want?
 
-Some of them are only in effect if some other toggles are set.
+folio_pte_batch() is a good choice. Appreciate it!
 
-That is very common practice.
+Best,
+Lance
 
-If you think something could be confusing, maybe clarify the doc? I 
-don't immediately see why any code changes are required, really.
-
--- 
-Cheers,
-
-David / dhildenb
-
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
