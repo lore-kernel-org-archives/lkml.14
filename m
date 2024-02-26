@@ -1,28 +1,27 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A544014273;
-	Mon, 26 Feb 2024 03:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C57A1B94E;
+	Mon, 26 Feb 2024 03:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708917642; cv=none; b=qOgCmb+58gbKZ/g/IlN7ijotxRuIsATfJRNwraMhRt06DuYtrkk1lzLthFO/sPISJbVFADVX0c0LUF1plCDfxLWrVgsnzO/9SWObyQv3bfDaSrd4YZJbF68yMDt3caxMuFQqn9kWKLWLLwYqxJ0sIfJOaUCswJkvmcAg9irmkVU=
+	t=1708917644; cv=none; b=XKs+AFJ/rnfb+iN9CB00YeNMgMUIm9NuEJGq6KIYzZ5J4/CLaGuYpy+zssr4GtvHsDBEVu00QsSUlqgKJFLyakss9II5udkP08KM2swbBhvTkuvEEIuzN9QDZMms+L+NBDAV+hz+lF1dYiar1SmIzg+0E4qI3O/dmJhu3K/0AHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708917642; c=relaxed/simple;
-	bh=40SyGCbiX4rvZexZzYmMqhaF5bdF2/siL2OVPP1zPbs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Jcxo7byaMV5UzEHEkUNz9MQfWi0bFT5w1gWu4D9rtQCfUeVB1bEF5bkwECrUVFHUUHEkGjRsIVnv+8Moaq9aT9uAIAaTd517ZUUtOML5vrAK4Y2eh1OMI20wwsqPXA0ybE8DjssfphMoK6GghybSNCqW5ux4pPhQmbL+AO0Izsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	s=arc-20240116; t=1708917644; c=relaxed/simple;
+	bh=Pb+nukCNoYTydGMlkfyH1QI3j74Xn9liscDHiVH61EI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Po0+yGEsQV/ZC8zU5jYgaRW55p6SWF6igulwVH7CnEKP8HACiJja3+HyKYO2Bch+8Wh58pXEKKQYY1n0rE9YVbSjNbxaCYfZLbbbKawR6itmVtNOM0FvIwu430GceAWEjBcbEi9cgWPniThdsujb+gSaNyTJ2u5RuzlX4xmyWW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tjm8f2sv2z4f3kK8;
-	Mon, 26 Feb 2024 11:20:34 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Tjm8X5Sgbz4f3jXP;
+	Mon, 26 Feb 2024 11:20:28 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id AF16A1A0232;
-	Mon, 26 Feb 2024 11:20:37 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id E8DB61A0ECC;
+	Mon, 26 Feb 2024 11:20:33 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g5_A9xl7gKzFA--.13921S12;
-	Mon, 26 Feb 2024 11:20:37 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g5_A9xl7gKzFA--.13921S4;
+	Mon, 26 Feb 2024 11:20:33 +0800 (CST)
 From: linan666@huaweicloud.com
 To: song@kernel.org,
 	shli@fb.com,
@@ -35,12 +34,10 @@ Cc: mariusz.tkaczyk@linux.intel.com,
 	yi.zhang@huawei.com,
 	houtao1@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH v7 8/9] md: clean up openers check in do_md_stop() and md_set_readonly()
-Date: Mon, 26 Feb 2024 11:14:43 +0800
-Message-Id: <20240226031444.3606764-9-linan666@huaweicloud.com>
+Subject: [PATCH v7 0/9] bugfix of MD_CLOSING and clean up md_ioctl()
+Date: Mon, 26 Feb 2024 11:14:35 +0800
+Message-Id: <20240226031444.3606764-1-linan666@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240226031444.3606764-1-linan666@huaweicloud.com>
-References: <20240226031444.3606764-1-linan666@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,169 +45,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g5_A9xl7gKzFA--.13921S12
-X-Coremail-Antispam: 1UD129KBjvJXoWxCw1UWw1xuF1DCr1xJrW3trb_yoWrtw1kp3
-	yIqas8Gr4UXrySqF4UGFWkW3W5tw18tFyktry3C3yru3WftrnrGFyFgF18ArW8Kas7Awn8
-	Xa1UAFyUuFy7GrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErc
-	IFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUvzuAUUUUU=
+X-CM-TRANSID:cCh0CgAX5g5_A9xl7gKzFA--.13921S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrurWUKw4rXrW8ArWxWr45ZFb_yoWkJFc_XF
+	Z5Aa45Wr1xCF42ka45ZF1UArWjyr48GryUJFs2kr42yw17tw1UXFWDJF43Xw17WFWIkF1r
+	Cr4DAa1Iyan7XjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+	rcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUBSoJUUUUU=
 X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
 From: Li Nan <linan122@huawei.com>
 
-Before stopping or setting readonly, mddev_set_closing_and_sync_blockdev()
-is always called to check the openers. So no longer need to check it again
-in do_md_stop() and md_set_readonly(). Clean it up.
+Changes in v7:
+ - adapt to md-6.9 branch.
 
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/md.c | 37 ++++++++++++++-----------------------
- 1 file changed, 14 insertions(+), 23 deletions(-)
+Changes in v6:
+ - in patch 2, return directly.
+ - in patch 4, return directly in case GET_DISK_INFO and GET_ARRAY_INFO.
+ - in patch 7, rewrite commit message.
+ - add patch 8, clean up openers check.
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index fe0c7c80fb5e..82c12ecf17a6 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -4482,8 +4482,8 @@ array_state_show(struct mddev *mddev, char *page)
- 	return sprintf(page, "%s\n", array_states[st]);
- }
- 
--static int do_md_stop(struct mddev *mddev, int ro, struct block_device *bdev);
--static int md_set_readonly(struct mddev *mddev, struct block_device *bdev);
-+static int do_md_stop(struct mddev *mddev, int ro);
-+static int md_set_readonly(struct mddev *mddev);
- static int restart_array(struct mddev *mddev);
- 
- static ssize_t
-@@ -4544,14 +4544,14 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
- 	case inactive:
- 		/* stop an active array, return 0 otherwise */
- 		if (mddev->pers)
--			err = do_md_stop(mddev, 2, NULL);
-+			err = do_md_stop(mddev, 2);
- 		break;
- 	case clear:
--		err = do_md_stop(mddev, 0, NULL);
-+		err = do_md_stop(mddev, 0);
- 		break;
- 	case readonly:
- 		if (mddev->pers)
--			err = md_set_readonly(mddev, NULL);
-+			err = md_set_readonly(mddev);
- 		else {
- 			mddev->ro = MD_RDONLY;
- 			set_disk_ro(mddev->gendisk, 1);
-@@ -4561,7 +4561,7 @@ array_state_store(struct mddev *mddev, const char *buf, size_t len)
- 	case read_auto:
- 		if (mddev->pers) {
- 			if (md_is_rdwr(mddev))
--				err = md_set_readonly(mddev, NULL);
-+				err = md_set_readonly(mddev);
- 			else if (mddev->ro == MD_RDONLY)
- 				err = restart_array(mddev);
- 			if (err == 0) {
-@@ -6419,7 +6419,7 @@ void md_stop(struct mddev *mddev)
- 
- EXPORT_SYMBOL_GPL(md_stop);
- 
--static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
-+static int md_set_readonly(struct mddev *mddev)
- {
- 	int err = 0;
- 	int did_freeze = 0;
-@@ -6437,9 +6437,7 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- 		   !test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags));
- 	mddev_lock_nointr(mddev);
- 
--	mutex_lock(&mddev->open_mutex);
--	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
--	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
-+	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
- 		pr_warn("md: %s still in use.\n",mdname(mddev));
- 		err = -EBUSY;
- 		goto out;
-@@ -6464,7 +6462,6 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- 		sysfs_notify_dirent_safe(mddev->sysfs_state);
- 	}
- 
--	mutex_unlock(&mddev->open_mutex);
- 	return err;
- }
- 
-@@ -6472,8 +6469,7 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
-  *   0 - completely stop and dis-assemble array
-  *   2 - stop but do not disassemble array
-  */
--static int do_md_stop(struct mddev *mddev, int mode,
--		      struct block_device *bdev)
-+static int do_md_stop(struct mddev *mddev, int mode)
- {
- 	struct gendisk *disk = mddev->gendisk;
- 	struct md_rdev *rdev;
-@@ -6486,12 +6482,9 @@ static int do_md_stop(struct mddev *mddev, int mode,
- 
- 	stop_sync_thread(mddev, true, false);
- 
--	mutex_lock(&mddev->open_mutex);
--	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
--	    mddev->sysfs_active ||
-+	if (mddev->sysfs_active ||
- 	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
- 		pr_warn("md: %s still in use.\n",mdname(mddev));
--		mutex_unlock(&mddev->open_mutex);
- 		if (did_freeze) {
- 			clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 			set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
-@@ -6513,13 +6506,11 @@ static int do_md_stop(struct mddev *mddev, int mode,
- 				sysfs_unlink_rdev(mddev, rdev);
- 
- 		set_capacity_and_notify(disk, 0);
--		mutex_unlock(&mddev->open_mutex);
- 		mddev->changed = 1;
- 
- 		if (!md_is_rdwr(mddev))
- 			mddev->ro = MD_RDWR;
--	} else
--		mutex_unlock(&mddev->open_mutex);
-+	}
- 	/*
- 	 * Free resources if final stop
- 	 */
-@@ -6565,7 +6556,7 @@ static void autorun_array(struct mddev *mddev)
- 	err = do_md_run(mddev);
- 	if (err) {
- 		pr_warn("md: do_md_run() returned %d\n", err);
--		do_md_stop(mddev, 0, NULL);
-+		do_md_stop(mddev, 0);
- 	}
- }
- 
-@@ -7734,11 +7725,11 @@ static int md_ioctl(struct block_device *bdev, blk_mode_t mode,
- 		goto unlock;
- 
- 	case STOP_ARRAY:
--		err = do_md_stop(mddev, 0, bdev);
-+		err = do_md_stop(mddev, 0);
- 		goto unlock;
- 
- 	case STOP_ARRAY_RO:
--		err = md_set_readonly(mddev, bdev);
-+		err = md_set_readonly(mddev);
- 		goto unlock;
- 
- 	case HOT_REMOVE_DISK:
+Changes in v5:
+ - add patches 1-4 to clean up md_ioct(), pathc 4 can help us clean up
+   local variable 'clear_md_closing'.
+ - in patches 5 and 7, clean up local variable 'clear_md_closing'.
+
+
+Li Nan (9):
+  md: merge the check of capabilities into md_ioctl_valid()
+  md: changed the switch of RAID_VERSION to if
+  md: clean up invalid BUG_ON in md_ioctl
+  md: return directly before setting did_set_md_closing
+  md: Don't clear MD_CLOSING when the raid is about to stop
+  md: factor out a helper to sync mddev
+  md: sync blockdev before stopping raid or setting readonly
+  md: clean up openers check in do_md_stop() and md_set_readonly()
+  md: check mddev->pers before calling md_set_readonly()
+
+ drivers/md/md.c | 183 ++++++++++++++++++++++++------------------------
+ 1 file changed, 91 insertions(+), 92 deletions(-)
+
 -- 
 2.39.2
 
