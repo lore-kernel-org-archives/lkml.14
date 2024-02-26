@@ -1,251 +1,165 @@
-Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
+Received: from smtp2.infineon.com (smtp2.infineon.com [217.10.52.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4257F497
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4007A1D54B;
+	Mon, 26 Feb 2024 12:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708951461; cv=none; b=fynT4P1cOAObIvldxxNKhNnJY/jvRcZOZfUu8EEhWPSCLkFrzQLvHaQBoVAMa0+6HsM6dwridDN6lXuvWQJAUdWrRI214imVvJUz2HMn2TD1DHTPA8qcCaYpJaw1Z9HqlHLLGe+A1zy41xtLpQ7T2+XqR6RaqSafih6K3Iw2Vh8=
+	t=1708951510; cv=none; b=l3ruT69LkFlUH88XUZo+8shGVcdimbnSOai1JAvrRPddJXxIMd1QTEktLrbU+mZbsnyUQrnLaBH7jlwNPrAnblW/NokPBnxvrFUDVEk5PrpalyC+SUrfLe/cQ5Px515YGhPL5nTqNM48WgtTerErzl07w9UtUah+4wK+kR2Nnxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708951461; c=relaxed/simple;
-	bh=Olm5WKHxqb6QWM5isUwceIC1qHYorkTL+1j53UzOYwM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mk2lBVMW1x4d7hQ0XBOzpB97Mc/DpXZfqLFMHBOFwAvXeJfqeSfIz5zEpTomQv1BihFT9e2FgkGMznBHL+atU8NLSLi3OD8UUjjyGjuvjQAeF6aPdEgaRn8BmA89s7dEkZQ9wPAMUJWOKuCj0P/BLIUx1UngW4l9dBV0vURAllw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=U+ZHKIbv; arc=none smtp.client-ip=198.252.153.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
+	s=arc-20240116; t=1708951510; c=relaxed/simple;
+	bh=uopANXtSJT51k4uIm3FZj2qxgzsKx67DpU6Vep4VvQU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=n254ky+SS0yX9HR7ona3hZvArTcc2O2W7Ip4mUWcF863vZgeQOP6KyZ0U2XgpRX34k2uxskY4T6T9Qvzb0KLLpJg6k47Yjt4xtl1HiPUtruvY1bD+l8MTnPjeoUAbpsLDnss6qc7fuK/DzbPtSQGpI5RhmHIM3BGF1bzDO4tJtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=A+BOZT7K; arc=none smtp.client-ip=217.10.52.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="U+ZHKIbv"
-Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx0.riseup.net (Postfix) with ESMTPS id 4Tk0g03Nykz9skq;
-	Mon, 26 Feb 2024 12:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-	t=1708951453; bh=Olm5WKHxqb6QWM5isUwceIC1qHYorkTL+1j53UzOYwM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U+ZHKIbv8yeH0OkbgiicBpxM20nR/wWIEK9lHoVwQ9quuV58ENWdTvmBYBB90pIug
-	 WM0/KhiBqeyD8kdk5UzSV81TmSaAPZZII2wIedU6J8XjzNyimn8M2/m2KkoucbDSQX
-	 HBKBdU3UmiFFpPx955RkbeOVMrO2GDw6QtRyEDVg=
-X-Riseup-User-ID: 68748640731C1B3F7536CAFC2F5550E7BC852D84B3E84E299E7BD83344413D0A
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4Tk0ft1d19zJsBS;
-	Mon, 26 Feb 2024 12:44:05 +0000 (UTC)
-Message-ID: <848f2690-2f20-4a92-82ff-64cdee8cb2ee@riseup.net>
-Date: Mon, 26 Feb 2024 09:44:02 -0300
+	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="A+BOZT7K"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
+  t=1708951509; x=1740487509;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uopANXtSJT51k4uIm3FZj2qxgzsKx67DpU6Vep4VvQU=;
+  b=A+BOZT7KA3BZTWASeXZ5D2m8w64M+6DJk98LVJ/ywMFq2UP4H12ejBH6
+   nKnXi1+PJ9LrQX+4Fe/1MaN1RcWauWCFro/OGjQ5Tchdre1zVH5J0bzbc
+   IdjUlS7RDap4wzCamWWrLUb0cHu3vVg5EZSC7aLAk2LprAs1u07WlHzvi
+   Q=;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="69010008"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705359600"; 
+   d="scan'208";a="69010008"
+Received: from unknown (HELO MUCSE814.infineon.com) ([172.23.29.40])
+  by smtp2.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 13:43:57 +0100
+Received: from KLUSE844.infineon.com (172.28.156.184) by MUCSE814.infineon.com
+ (172.23.29.40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 26 Feb
+ 2024 13:43:56 +0100
+Received: from [10.160.239.31] (10.160.239.31) by KLUSE844.infineon.com
+ (172.28.156.184) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 26 Feb
+ 2024 13:43:56 +0100
+Message-ID: <fd34e752-b6ce-4880-9ef5-4feda985bf42@infineon.com>
+Date: Mon, 26 Feb 2024 13:43:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 4/9] drm/vkms: Add typedef and documentation for
- pixel_read and pixel_write functions
-Content-Language: en-US
-To: Louis Chauvet <louis.chauvet@bootlin.com>,
- Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
- Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- pekka.paalanen@haloniitty.fi
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
- thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com,
- nicolejadeyee@google.com
-References: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
- <20240226-yuv-v3-4-ff662f0994db@bootlin.com>
-From: Arthur Grillo <arthurgrillo@riseup.net>
-In-Reply-To: <20240226-yuv-v3-4-ff662f0994db@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] tpm: protect against locality counter underflow
+To: "Daniel P. Smith" <dpsmith@apertussolutions.com>, Lino Sanfilippo
+	<l.sanfilippo@kunbus.com>, Jarkko Sakkinen <jarkko@kernel.org>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>, Sasha Levin <sashal@kernel.org>,
+	<linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Ross Philipson <ross.philipson@oracle.com>, Kanth Ghatraju
+	<kanth.ghatraju@oracle.com>, Peter Huewe <peterhuewe@gmx.de>
+References: <20240131170824.6183-1-dpsmith@apertussolutions.com>
+ <20240131170824.6183-2-dpsmith@apertussolutions.com>
+ <CYU3CFW08DAA.29DJY7SJYPJJZ@suppilovahvero>
+ <2ba9a96e-f93b-48e2-9ca0-48318af7f9b1@kunbus.com>
+ <ae3fecc4-7b76-4607-8749-045e17941923@infineon.com>
+ <f52546f1-acca-4915-924c-cdd2018215d5@apertussolutions.com>
+From: Alexander Steffen <Alexander.Steffen@infineon.com>
+In-Reply-To: <f52546f1-acca-4915-924c-cdd2018215d5@apertussolutions.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MUCSE822.infineon.com (172.23.29.53) To
+ KLUSE844.infineon.com (172.28.156.184)
 
-
-
-On 26/02/24 05:46, Louis Chauvet wrote:
-> Introduce two typedefs: pixel_read_t and pixel_write_t. It allows the
-> compiler to check if the passed functions take the correct arguments.
-> Such typedefs will help ensuring consistency across the code base in
-> case of update of these prototypes.
+On 23.02.2024 02:55, Daniel P. Smith wrote:
+> On 2/20/24 13:42, Alexander Steffen wrote:
+>> On 02.02.2024 04:08, Lino Sanfilippo wrote:
+>>> On 01.02.24 23:21, Jarkko Sakkinen wrote:
+>>>
+>>>>
+>>>> On Wed Jan 31, 2024 at 7:08 PM EET, Daniel P. Smith wrote:
+>>>>> Commit 933bfc5ad213 introduced the use of a locality counter to
+>>>>> control when a
+>>>>> locality request is allowed to be sent to the TPM. In the commit,
+>>>>> the counter
+>>>>> is indiscriminately decremented. Thus creating a situation for an
+>>>>> integer
+>>>>> underflow of the counter.
+>>>>
+>>>> What is the sequence of events that leads to this triggering the
+>>>> underflow? This information should be represent in the commit message.
+>>>>
+>>>
+>>> AFAIU this is:
+>>>
+>>> 1. We start with a locality_counter of 0 and then we call
+>>> tpm_tis_request_locality()
+>>> for the first time, but since a locality is (unexpectedly) already 
+>>> active
+>>> check_locality() and consequently __tpm_tis_request_locality() return
+>>> "true".
+>>
+>> check_locality() returns true, but __tpm_tis_request_locality() returns
+>> the requested locality. Currently, this is always 0, so the check for
+>> !ret will always correctly indicate success and increment the
+>> locality_count.
+>>
+>> But since theoretically a locality != 0 could be requested, the correct
+>> fix would be to check for something like ret >= 0 or ret == l instead of
+>> !ret. Then the counter will also be incremented correctly for localities
+>> != 0, and no underflow will happen later on. Therefore, explicitly
+>> checking for an underflow is unnecessary and hides the real problem.
+>>
 > 
-> Introduce a check around the get_pixel_*_functions to avoid using a
-> nullptr as a function.
+> My apologies, but I will have to humbly disagree from a fundamental
+> level here. If a state variable has bounds, then those bounds should be
+> enforced when the variable is being manipulated.
+
+That's fine, but that is not what your proposed fix does.
+
+tpm_tis_request_locality and tpm_tis_relinquish_locality are meant to be 
+called in pairs: for every (successful) call to tpm_tis_request_locality 
+there *must* be a corresponding call to tpm_tis_relinquish_locality 
+afterwards. Unfortunately, in C there is no language construct to 
+enforce that (nothing like a Python context manager), so instead 
+locality_count is used to count the number of successful calls to 
+tpm_tis_request_locality, so that tpm_tis_relinquish_locality can wait 
+to actually relinquish the locality until the last expected call has 
+happened (you can think of that as a Python RLock, to stay with the 
+Python analogies).
+
+So if locality_count ever gets negative, that is certainly a bug 
+somewhere. But your proposed fix hides this bug, by allowing 
+tpm_tis_relinquish_locality to be called more often than 
+tpm_tis_request_locality. You could have added something like 
+BUG_ON(priv->locality_count == 0) before decrementing the counter. That 
+would really enforce the bounds, without hiding the bug, and I would be 
+fine with that.
+
+Of course, that still leaves the actual bug to be fixed. In this case, 
+there is no mismatch between the calls to tpm_tis_request_locality and 
+tpm_tis_relinquish_locality. It is just (as I said before) that the 
+counting of successful calls in tpm_tis_request_locality is broken for 
+localities != 0, so that is what you need to fix.
+
+> Assuming that every
+> path leading to the variable manipulation code has ensured proper
+> manipulation is just that, an assumption. When assumptions fail is how
+> bugs and vulnerabilities occur.
 > 
-> Document for those typedefs.
+> To your point, does this full address the situation experienced, I would
+> say it does not. IMHO, the situation is really a combination of both
+> patch 1 and patch 2, but the request was to split the changes for
+> individual discussion. We selected this one as being the fixes for two
+> reasons. First, it blocks the underflow such that when the Secure Launch
+> series opens Locality 2, it will get incremented at that time and the
+> internal locality tracking state variables will end up with the correct
+> values. Thus leading to the relinquish succeeding at kernel shutdown.
+> Second, it provides a stronger defensive coding practice.
 > 
-> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> ---
->  drivers/gpu/drm/vkms/vkms_drv.h       | 23 +++++++++++++++++++++--
->  drivers/gpu/drm/vkms/vkms_formats.c   |  8 ++++----
->  drivers/gpu/drm/vkms/vkms_formats.h   |  4 ++--
->  drivers/gpu/drm/vkms/vkms_plane.c     |  9 ++++++++-
->  drivers/gpu/drm/vkms/vkms_writeback.c |  9 ++++++++-
->  5 files changed, 43 insertions(+), 10 deletions(-)
+> Another reason that this works as a fix is that the TPM specification
+> requires the registers to be mirrored across all localities, regardless
+> of the active locality. While all the request/relinquishes for Locality
+> 0 sent by the early code do not succeed, obtaining the values via the
+> Locality 0 registers are still guaranteed to be correct.
 > 
-> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-> index 18086423a3a7..886c885c8cf5 100644
-> --- a/drivers/gpu/drm/vkms/vkms_drv.h
-> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-> @@ -53,12 +53,31 @@ struct line_buffer {
->  	struct pixel_argb_u16 *pixels;
->  };
->  
-> +/**
-> + * typedef pixel_write_t - These functions are used to read a pixel from a
-> + * `struct pixel_argb_u16*`, convert it in a specific format and write it in the @dst_pixels
-> + * buffer.
-> + *
-> + * @dst_pixel: destination address to write the pixel
-> + * @in_pixel: pixel to write
-> + */
-> +typedef void (*pixel_write_t)(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel);
-> +
->  struct vkms_writeback_job {
->  	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
->  	struct vkms_frame_info wb_frame_info;
-> -	void (*pixel_write)(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel);
-> +	pixel_write_t pixel_write;
->  };
->  
-> +/**
-> + * typedef pixel_read_t - These functions are used to read a pixel in the source frame,
-> + * convert it to `struct pixel_argb_u16` and write it to @out_pixel.
-> + *
-> + * @src_pixels: Pointer to the pixel to read
-> + * @out_pixel: Pointer to write the converted pixel
-> + */
-> +typedef void (*pixel_read_t)(u8 *src_pixels, struct pixel_argb_u16 *out_pixel);
-> +
->  /**
->   * vkms_plane_state - Driver specific plane state
->   * @base: base plane state
-> @@ -69,7 +88,7 @@ struct vkms_writeback_job {
->  struct vkms_plane_state {
->  	struct drm_shadow_plane_state base;
->  	struct vkms_frame_info *frame_info;
-> -	void (*pixel_read)(u8 *src_buffer, struct pixel_argb_u16 *out_pixel);
-> +	pixel_read_t pixel_read;
->  };
->  
->  struct vkms_plane {
-> diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-> index cb7a49b7c8e7..1f5aeba57ad6 100644
-> --- a/drivers/gpu/drm/vkms/vkms_formats.c
-> +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-> @@ -262,7 +262,7 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
->   *
->   * @format: 4cc of the format
->   */
-> -void *get_pixel_conversion_function(u32 format)
-> +pixel_read_t get_pixel_read_function(u32 format)
->  {
->  	switch (format) {
->  	case DRM_FORMAT_ARGB8888:
-> @@ -276,7 +276,7 @@ void *get_pixel_conversion_function(u32 format)
->  	case DRM_FORMAT_RGB565:
->  		return &RGB565_to_argb_u16;
->  	default:
-> -		return NULL;
-> +		return (pixel_read_t)NULL;
->  	}
->  }
->  
-> @@ -287,7 +287,7 @@ void *get_pixel_conversion_function(u32 format)
->   *
->   * @format: 4cc of the format
->   */
-> -void *get_pixel_write_function(u32 format)
-> +pixel_write_t get_pixel_write_function(u32 format)
->  {
->  	switch (format) {
->  	case DRM_FORMAT_ARGB8888:
-> @@ -301,6 +301,6 @@ void *get_pixel_write_function(u32 format)
->  	case DRM_FORMAT_RGB565:
->  		return &argb_u16_to_RGB565;
->  	default:
-> -		return NULL;
-> +		return (pixel_write_t)NULL;
->  	}
->  }
-> diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
-> index cf59c2ed8e9a..3ecea4563254 100644
-> --- a/drivers/gpu/drm/vkms/vkms_formats.h
-> +++ b/drivers/gpu/drm/vkms/vkms_formats.h
-> @@ -5,8 +5,8 @@
->  
->  #include "vkms_drv.h"
->  
-> -void *get_pixel_conversion_function(u32 format);
-> +pixel_read_t get_pixel_read_function(u32 format);
->  
-> -void *get_pixel_write_function(u32 format);
-> +pixel_write_t get_pixel_write_function(u32 format);
->  
->  #endif /* _VKMS_FORMATS_H_ */
-> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-> index d5203f531d96..f68b1b03d632 100644
-> --- a/drivers/gpu/drm/vkms/vkms_plane.c
-> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-> @@ -106,6 +106,13 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
->  		return;
->  
->  	fmt = fb->format->format;
-> +	pixel_read_t pixel_read = get_pixel_read_function(fmt);
-> +
-> +	if (!pixel_read) {
-> +		DRM_WARN("Pixel format is not supported by VKMS planes. State is inchanged\n");
+> v/r,
+> dps
 
-s/inchanged/unchanged/
-
-> +		return;
-> +	}
-> +
->  	vkms_plane_state = to_vkms_plane_state(new_state);
->  	shadow_plane_state = &vkms_plane_state->base;
->  
-> @@ -124,7 +131,7 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
->  	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
->  			drm_rect_height(&frame_info->rotated), frame_info->rotation);
->  
-> -	vkms_plane_state->pixel_read = get_pixel_conversion_function(fmt);
-> +	vkms_plane_state->pixel_read = pixel_read;
->  }
->  
->  static int vkms_plane_atomic_check(struct drm_plane *plane,
-> diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
-> index c8582df1f739..c92b9f06c4a4 100644
-> --- a/drivers/gpu/drm/vkms/vkms_writeback.c
-> +++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-> @@ -140,6 +140,13 @@ static void vkms_wb_atomic_commit(struct drm_connector *conn,
->  	if (!conn_state)
->  		return;
->  
-> +	pixel_write_t pixel_write = get_pixel_write_function(wb_format);
-> +
-> +	if (!pixel_write) {
-> +		DRM_WARN("Pixel format is not supported by VKMS writeback. State is inchanged\n");
-
-Same here
-
-Best Regards,
-~Arthur Grillo
-
-> +		return;
-> +	}
-> +
->  	vkms_set_composer(&vkmsdev->output, true);
->  
->  	active_wb = conn_state->writeback_job->priv;
-> @@ -150,7 +157,7 @@ static void vkms_wb_atomic_commit(struct drm_connector *conn,
->  	crtc_state->wb_pending = true;
->  	spin_unlock_irq(&output->composer_lock);
->  	drm_writeback_queue_job(wb_conn, connector_state);
-> -	active_wb->pixel_write = get_pixel_write_function(wb_format);
-> +	active_wb->pixel_write = pixel_write;
->  	drm_rect_init(&wb_frame_info->src, 0, 0, crtc_width, crtc_height);
->  	drm_rect_init(&wb_frame_info->dst, 0, 0, crtc_width, crtc_height);
->  }
-> 
