@@ -1,157 +1,127 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D51D7F49D
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F16F7F498
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708951448; cv=none; b=R7n9VDJSZl83GONtqunWXAdNOA3D18gtrhzzQTnltpVZEjQeppV9pyeyP9nAL7P39OKjzt7FFvvxpisUQxUpCA5pKHlTzoEhVWnXynLumIri+3Jfu5ah9u/tDkaS0/8D51g3kQdbRuhpGox+2dRNZJdxL5EvjKFFG3ckbYPG0c8=
+	t=1708951461; cv=none; b=mf7+DEmznfq30OyPswRBG7ARWqQqlC6R29lkvzItJlUbXSMPw4cBdmyk5cjUsKO5njjqIlHwEv+VXrADZln/jn0RBUG+wrV6G2rfHpvwO6HM7hIoM9+/ma+74iud+VJfpIkI4BOfl7eKVzgVJOVYtAcQ0INckynFfvg+EMBSY00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708951448; c=relaxed/simple;
-	bh=VGOF//hEPOKVInRy9u/t4EELWuVUy3vArJLdV3NkLOc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YuVbiHxVDHnfAATTOEBO2AtEWxkDBz+0UFbJPWopmeCmJ9/2TiYATL0KYrFEAtnfkd23d8ONJGzCjiScYaRcMK5b5bPIOj3lZ50iaCYv4VsUQkqSxy+1q4d3e/TpV8n4v1H0GdenfO8UlFO9Hh30P8BwS+NdX+nXEZrKmjajhxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H8syFrFb; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708951461; c=relaxed/simple;
+	bh=uDBv6eovvwNdT+3GaN9kzuRnFK1pxbxDzvh1+/xK5Pc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LTkOFWT3NnEqxiZT5dljiUzRMEApNknMpyRKo35BYISpzb1A9FjFumdtXd39ufA2RIAJIIBNuTOPl9HKdk9Lrt6+RxqbW132AndaRFvdvBmP2hN5fN/bpCH10m4QGs6/iGwz6vbAgLjCAi3IDYSxB2Hy/krTs9MYtxGuJDkeLCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=XG8c2qGw; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H8syFrFb"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7c72294e3d1so147961139f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 04:44:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="XG8c2qGw"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6d9f94b9186so2658481b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 04:44:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708951446; x=1709556246; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q+35+P4r2JIren/LNJaaaherP1wCOAvB2HpC0DyEeMg=;
-        b=H8syFrFb9/7hwuQYGNNJLkZYo4lqzE58RFdyMuyd7KQR8uHVLXOY7wGlPvPl7y+2Bf
-         oUDO+WKQkkBYTfZmQ/k2c8z6XKJ5Zg1EOVkSo9emX33xVX+toBsMwJiz5CZnY94oF0VN
-         xbz34HTA9pdobQN2BSCR+i4TqLahgXt2SnbNcerhyZ574fKjjJLFFe+9nshMGsHyZCXp
-         2A5ZTZw9VYH9jkG4fwzXE/Fvh9z8pj23fEvEw2zQx8wESTc3kBcsUO1HTbczX2+OfN0o
-         VZJZOkfyrsdKKZl8oSo7S8VTMoMxAT05VJYODHDNFN10t7W+3fOe2I1E2D7fodfGTQ+/
-         EUDw==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1708951459; x=1709556259; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V9GRrB7FsQKdoO/mCKPDN/I5gsB0+aF7FI7yJuEpIP4=;
+        b=XG8c2qGwwog5aCdlYX22/9iHp1fPnl1zSe8AdP372N4BQhGeyQmhNl2lfBfviQaLUo
+         HzJ1egMGO13VCCXpDg7QTGDNHMhlyHeC0xEv8ANxIZDIqru/U4SsESDGyeKlMKDNHJS2
+         3AwzKJ8Irf2fp+X6BE28hZ6N3cUCovGHG+EtZFfgHYwX5JirOTu4B4pEruuMUiaxsBpA
+         Xq7hz+dAte7cIJ0TX4t9GN4zeWzd1ZetN1houW4wQ0TesMNg7GQeRrvh95kIVU/bRsWw
+         j+HAs9msJTgQplj8kkiW+nzjGgzXK3GsZtcwBVSBVdNKwjWiPb8DH6YuMRjU7CRoltUA
+         z+rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708951446; x=1709556246;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q+35+P4r2JIren/LNJaaaherP1wCOAvB2HpC0DyEeMg=;
-        b=bUaViX0hUj10iEqCLSH50iuVmMUxmjznMrZFU8PlJkzjP8h2HCjNE1HZ1vaHASHM/E
-         XSZldiIoLnWCVbIgmR49Y2hsfWZ6jx5D8qSqw/+ewlXDw9twK9yDPPlCqnj7Sy/Y/xFm
-         1DhvuS3coAlELravVKii3dBj6qxA6+utZGsB5ztdqatgPbCyEmLXTtNLD7NbfWVxpzHp
-         w22W+RCFlJD5oaz6KwPuwaenXH8i99IC7dgBvfilsaz9SWb7/VXq2XYQAjuZ7ChH/Up6
-         WevgV9z18wKGJ9uooNUqkrPqRPcx8C6Rvqgo5ICxYod+vdxJXpIwrBIinoz5MfqhSzzx
-         mXWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWRJYTTFLLtyD9ueqkWKO5UUlZPSMsxL0ATcc2/IIPKeNRHYqDwP0h7RC55OnTC//duO/qPvxZ54h2ZuY0s3XjnBlsaAuJb7qZmnbJx
-X-Gm-Message-State: AOJu0YyTI+ZYJxN4jHZCMUaJyC7IotUmi1X3pe4zaUNlA9SAkE7kw6lG
-	ftVPPcFiFbLx9En0sQs1/6S0M8uP9MKu7kQ5gOhkkeZmnYXbRzVRxXfRmiiSb4sSSJEd85O4VG7
-	XWC3t+lTYf+6tYHvb3xr5k3WJAjnXxr2Cv02K
-X-Google-Smtp-Source: AGHT+IHcQ49ya8fWuFRYRtaEwX1j4GO+9eoCIEgu+RmTzs9mIQP4CSt0k7FW7/FiUFuNkGHC/QwN3dkzwfDTaAEIpSg=
-X-Received: by 2002:a6b:c8d8:0:b0:7c7:9646:827b with SMTP id
- y207-20020a6bc8d8000000b007c79646827bmr7806606iof.18.1708951446529; Mon, 26
- Feb 2024 04:44:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708951459; x=1709556259;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V9GRrB7FsQKdoO/mCKPDN/I5gsB0+aF7FI7yJuEpIP4=;
+        b=gsmFI1XAvtECPHNi0Tm+py1LcUVfTTBfHvGBUkQsHjtCp2+q8HaGGUmpfs8Dd34Jc1
+         HON6PdiKdQoyQRorc5KacyrHwiBWwK5bl0io0zkIi3HXEXOgoTTgjC/NtzPWzVofe9Hh
+         HYIQPuNE2QUNqIAOAHcILhvQ/mIcTtZ27MUkTN7b5XqmDbV9priJWUSA2XFJxJ1ZZSwq
+         TVazQ4YE3qbE5lHoCthPFowWdm8kq4DF4g6Z33XWpbRdPcYmXOij35eeWcpDFGkZxs8W
+         SRMulYi3zl7DQ3O8+M2UWG7imkCowdvTfA+PMXQd/S9eKfuLPQm3spo5vKhILIn66qZS
+         qJLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNQ9tpBDpKe+GgQd5QxXyCfGOUE3j2UasXBFfXqtTK6dWmUXBbd70bsB9hM4f/tqTl7nhfSACGkhUQ+zpskRe+PjOsSRuivZwxfwwT
+X-Gm-Message-State: AOJu0YyAEubu9dLXCOtwEYD4Vb9OMMs8l9Fhe1hn4wK2MYSchZYy01d4
+	6VWSXznpbQIP6G3FvHl3/FB0VXbXV6kcI+QM6qlHhLU4Fag3qXlZ8QvrMa5h1w8=
+X-Google-Smtp-Source: AGHT+IGVIPYZ6gPZ6GL6KlSqg0tncDkt7FDH+J+n2o4zbqRm8gNCsIbUHWADIPqxmkwXqGjloP0o5A==
+X-Received: by 2002:aa7:9d9a:0:b0:6e4:59b7:1dd4 with SMTP id f26-20020aa79d9a000000b006e459b71dd4mr7434462pfq.31.1708951459543;
+        Mon, 26 Feb 2024 04:44:19 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-247-196.pa.nsw.optusnet.com.au. [49.181.247.196])
+        by smtp.gmail.com with ESMTPSA id b27-20020aa78edb000000b006e4195cccb5sm1385769pfr.133.2024.02.26.04.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 04:44:19 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1reaLA-00Bkux-1O;
+	Mon, 26 Feb 2024 23:44:16 +1100
+Date: Mon, 26 Feb 2024 23:44:16 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chandan.babu@oracle.com,
+	akpm@linux-foundation.org, mcgrof@kernel.org, ziy@nvidia.com,
+	hare@suse.de, djwong@kernel.org, gost.dev@samsung.com,
+	linux-mm@kvack.org, willy@infradead.org,
+	Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 11/13] xfs: expose block size in stat
+Message-ID: <ZdyHoOHBQ19JJap2@dread.disaster.area>
+References: <20240226094936.2677493-1-kernel@pankajraghav.com>
+ <20240226094936.2677493-12-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221160215.484151-1-panikiel@google.com> <20240221160215.484151-9-panikiel@google.com>
- <13aeb2ff-72f4-49d9-b65e-ddc31569a936@linaro.org> <CAM5zL5q0oKoTMR0jSwYVAChCOJ9iKYPRFiU1vH4qDqhHALKz4w@mail.gmail.com>
- <e1fd8cbd-060b-4d15-8256-6d8dbba545da@linaro.org>
-In-Reply-To: <e1fd8cbd-060b-4d15-8256-6d8dbba545da@linaro.org>
-From: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>
-Date: Mon, 26 Feb 2024 13:43:55 +0100
-Message-ID: <CAM5zL5qxBM1xQ__t86gxUKMy8O3BzoCe_vTFxxsqFq7mw4-8EQ@mail.gmail.com>
-Subject: Re: [PATCH v2 8/9] media: dt-bindings: Add Intel Displayport RX IP
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org, 
-	daniel@ffwll.ch, dinguyen@kernel.org, hverkuil-cisco@xs4all.nl, 
-	krzysztof.kozlowski+dt@linaro.org, maarten.lankhorst@linux.intel.com, 
-	mchehab@kernel.org, mripard@kernel.org, robh+dt@kernel.org, 
-	tzimmermann@suse.de, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, chromeos-krk-upstreaming@google.com, 
-	ribalda@chromium.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226094936.2677493-12-kernel@pankajraghav.com>
 
-On Mon, Feb 26, 2024 at 1:06=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 26/02/2024 11:59, Pawe=C5=82 Anikiel wrote:
-> >>> +properties:
-> >>> +  compatible:
-> >>> +    const: intel,dprx-20.0.1
-> >>> +
-> >>> +  reg:
-> >>> +    maxItems: 1
-> >>> +
-> >>> +  interrupts:
-> >>> +    maxItems: 1
-> >>> +
-> >>> +  intel,max-link-rate:
-> >>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>> +    description: Max link rate configuration parameter
-> >>
-> >> Please do not duplicate property name in description. It's useless.
-> >> Instead explain what is this responsible for.
-> >>
-> >> Why max-link-rate would differ for the same dprx-20.0.1? And why
-> >> standard properties cannot be used?
-> >>
-> >> Same for all questions below.
-> >
-> > These four properties are the IP configuration parameters mentioned in
-> > the device description. When generating the IP core you can set these
-> > parameters, which could make them differ for the same dprx-20.0.1.
-> > They are documented in the user guide, for which I also put a link in
-> > the description. Is that enough? Or should I also document these
-> > parameters here?
->
-> user-guide is something for users, like user-space programmers or
-> end-users. I would never open it to look for any information related to
-> hardware.
->
-> Anyway, external resources are a no-go. We have it clearly in submitting
-> patches:
->
-> https://elixir.bootlin.com/linux/v6.8-rc6/source/Documentation/process/su=
-bmitting-patches.rst#L130
+On Mon, Feb 26, 2024 at 10:49:34AM +0100, Pankaj Raghav (Samsung) wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> For block size larger than page size, the unit of efficient IO is
+> the block size, not the page size. Leaving stat() to report
+> PAGE_SIZE as the block size causes test programs like fsx to issue
+> illegal ranges for operations that require block size alignment
+> (e.g. fallocate() insert range). Hence update the preferred IO size
+> to reflect the block size in this case.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> dd2d535e3fb29d ("xfs: cleanup calculating the stat optimal I/O size")]
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Okay, I will describe these properties in the bindings as well.
+Something screwed up there, and you haven't put your own SOB on
+this.
 
->
-> >
-> >>
-> >>> +
-> >>> +  intel,max-lane-count:
-> >>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>> +    description: Max lane count configuration parameter
-> >>> +
-> >>> +  intel,multi-stream-support:
-> >>> +    type: boolean
-> >>> +    description: Multi-Stream Transport support configuration parame=
-ter
-> >>> +
-> >>> +  intel,max-stream-count:
-> >>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>> +    description: Max stream count configuration parameter
-> >>> +
-> >>> +  port:
-> >>> +    $ref: /schemas/graph.yaml#/properties/port
-> >>> +    description: SST main link
-> >>
-> >> I don't understand why you have both port and ports. Shouldn't this be
-> >> under ports?
-> >
-> > I put both so that you can use the shorter port property when the
-> > device only has one port (i.e. no MST support). It would work fine
-> > without it. If you think that's unnecessary, I can remove it (and use
-> > the ports property even if there is only one).
->
-> No, it is fine, but then you need allOf: which will restrict to only one
-> of them: either port or ports.
+> ---
+>  fs/xfs/xfs_iops.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index a0d77f5f512e..1b4edfad464f 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -543,7 +543,7 @@ xfs_stat_blksize(
+>  			return 1U << mp->m_allocsize_log;
+>  	}
+>  
+> -	return PAGE_SIZE;
+> +	return max_t(unsigned long, PAGE_SIZE, mp->m_sb.sb_blocksize);
+>  }
 
-There already is an allOf below that says that ports is required for
-MST support and port is required otherwise. Isn't this enough?
+This function returns a uint32_t, same type as
+mp->m_sb.sb_blocksize. The comparision should use uint32_t casts,
+not unsigned long.
+
+ALso, this bears no resemblence to the original patch I wrote back in
+2018. Please remove my SOB from it - you can state that "this change
+is based on a patch originally from Dave Chinner" to credit the
+history of it, but it's certainly not the patch I wrote 6 years ago
+and so my SOB does not belong on it.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
