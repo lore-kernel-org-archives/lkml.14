@@ -1,104 +1,76 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9B11C6BE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBD71C6A3;
 	Mon, 26 Feb 2024 08:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708935584; cv=none; b=KSpwRVqV8Rwg6lqSYWIqhedlvVp4ewqBV6RgZ//RTGnpkwUYRtS85oV+t9ZInf9tBueJ/GJvyHToNIDpX34DsNgn5pCLDletBkczaBg8PsDT02oEYfgcupD370V0hSlveX6T6yaqklKFMjP3ZEwpNHXcbsm0WIfYV0f0vAbytb8=
+	t=1708935584; cv=none; b=OkylQflu1ibdtctJnNHDQY048TCHJyV79pNYtfIJvMEhor4DBHBso4F1VRy/esZss+7fuKLVil0ywChuyt9M9OPCDOo0NUhVjrfOBbc3Hp8HBJCFBoEBxnbiSeHZOOHdZeza2mX4hykw1rojABFWmgyZBoXCviz0xURSjlmWkiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708935584; c=relaxed/simple;
-	bh=7Cvdv+6m35PKTqou4Ax97tarJ+H1kTTmnj+72Mpfq0U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=i66LpJCJSHQ/HwvDqByJn2P1AJx0tO4HqIY6TJ76NEgMwueBsdn+qiY2nhy6fIEyrcLYu7jVYgA0p770CHcfWuHC9O+h4ex79T8pO56FX6DIkVnWi/9tsXGya8SfLRJGKCm3dh4Sb85XzmuZwjw5N9jLrZn3fC7MEvBwn7pT3Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Tjtl71np4z1h0fk;
-	Mon, 26 Feb 2024 16:17:23 +0800 (CST)
-Received: from kwepemm600012.china.huawei.com (unknown [7.193.23.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 37B2D1A016C;
-	Mon, 26 Feb 2024 16:19:36 +0800 (CST)
-Received: from build.huawei.com (10.175.101.6) by
- kwepemm600012.china.huawei.com (7.193.23.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 26 Feb 2024 16:19:35 +0800
-From: Wenchao Hao <haowenchao2@huawei.com>
-To: Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>,
-	<linux-ext4@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <louhongxiang@huawei.com>, Wenchao Hao <haowenchao2@huawei.com>
-Subject: [PATCH] ext4: remove unused parameter biop in ext4_issue_discard()
-Date: Mon, 26 Feb 2024 16:17:31 +0800
-Message-ID: <20240226081731.3224470-1-haowenchao2@huawei.com>
-X-Mailer: git-send-email 2.32.0
+	bh=ll48MJwAP66eEE4I1mxVSojHViPUkd6NS79nXsjLCi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PQg4QAsY3d3/z4k8t7473NiOQA9rIk7LwJ+C2ILla7DFrVgsF02aBAhZ2vKgKTNIx2nV215reTUBM41QTAQwaKXanthEY/QIat0m+Z74fuc0RjxlUz9wDiCfCgEGvbrd9NhNp14VIkEMMK3tvbJ0ylfJEKNn9jDPnjZUX/Rx9kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=edDb6HqW; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="edDb6HqW"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B1B221BF20A;
+	Mon, 26 Feb 2024 08:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708935574;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lIvDXxGeo51SInc9MmWiuWKt5CaioIotY1PibSab+q4=;
+	b=edDb6HqW+23DlG3IR4K7W1sKpq7+g2Mi4GEa9/PHxn471OHUsIfql/37IOwKqYQcmckmJy
+	9CwLpZOVAx2+K3ATxpKSmns9PRxwjW47tdx62GkQyUtY1RmvvV8CJM3hLD5aB/SJGmpR0a
+	Lo15g3MVTuAlsHCu3BFQ6JkUyQVFNuW0lHXRduc7xf2XlXGKlhZotXgMdWGxSxI/DtyjNR
+	71G/IqLSe7UvOs0TzfIT75FzfbrY7xhOBHErauIzB/WTMdkZTzAmul0GHjPGZsEHvRsUPS
+	H1gqEWyFtoWQSZH03MPQsVIK0/FYoluH8M/9stD9HzPiV9QeoKNwYTf/ZTIAbw==
+Date: Mon, 26 Feb 2024 09:19:32 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ "=?UTF-8?Q?Herv=C3=A9?= Codina" <herve.codina@bootlin.com>,
+ kernel-team@android.com, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: property: fw_devlink: Fix stupid bug in
+ remote-endpoint parsing
+Message-ID: <20240226091932.3f39e2c5@booty>
+In-Reply-To: <20240224052436.3552333-1-saravanak@google.com>
+References: <20240224052436.3552333-1-saravanak@google.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600012.china.huawei.com (7.193.23.74)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-all caller of ext4_issue_discard() would set biop to NULL since
-'commit 55cdd0af2bc5 ("ext4: get discard out of jbd2 commit kthread
-contex")', it's unnecessary to keep this parameter any more.
+On Fri, 23 Feb 2024 21:24:35 -0800
+Saravana Kannan <saravanak@google.com> wrote:
 
-Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
----
- fs/ext4/mballoc.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+> Introduced a stupid bug in commit 782bfd03c3ae ("of: property: Improve
+> finding the supplier of a remote-endpoint property") due to a last minute
+> incorrect edit of "index !=0" into "!index". This patch fixes it to be
+> "index > 0" to match the comment right next to it.
+> 
+> Reported-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> Link: https://lore.kernel.org/lkml/20240223171849.10f9901d@booty/
+> Fixes: 782bfd03c3ae ("of: property: Improve finding the supplier of a remote-endpoint property")
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index d72b5e3c92ec..1590ee3f4603 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -3807,8 +3807,7 @@ int ext4_mb_release(struct super_block *sb)
- }
- 
- static inline int ext4_issue_discard(struct super_block *sb,
--		ext4_group_t block_group, ext4_grpblk_t cluster, int count,
--		struct bio **biop)
-+		ext4_group_t block_group, ext4_grpblk_t cluster, int count)
- {
- 	ext4_fsblk_t discard_block;
- 
-@@ -3817,13 +3816,8 @@ static inline int ext4_issue_discard(struct super_block *sb,
- 	count = EXT4_C2B(EXT4_SB(sb), count);
- 	trace_ext4_discard_blocks(sb,
- 			(unsigned long long) discard_block, count);
--	if (biop) {
--		return __blkdev_issue_discard(sb->s_bdev,
--			(sector_t)discard_block << (sb->s_blocksize_bits - 9),
--			(sector_t)count << (sb->s_blocksize_bits - 9),
--			GFP_NOFS, biop);
--	} else
--		return sb_issue_discard(sb, discard_block, count, GFP_NOFS, 0);
-+
-+	return sb_issue_discard(sb, discard_block, count, GFP_NOFS, 0);
- }
- 
- static void ext4_free_data_in_buddy(struct super_block *sb,
-@@ -6475,7 +6469,7 @@ static void ext4_mb_clear_bb(handle_t *handle, struct inode *inode,
- 	} else {
- 		if (test_opt(sb, DISCARD)) {
- 			err = ext4_issue_discard(sb, block_group, bit,
--						 count_clusters, NULL);
-+						 count_clusters);
- 			if (err && err != -EOPNOTSUPP)
- 				ext4_msg(sb, KERN_WARNING, "discard request in"
- 					 " group:%u block:%d count:%lu failed"
-@@ -6726,7 +6720,7 @@ __acquires(bitlock)
- 	 */
- 	mb_mark_used(e4b, &ex);
- 	ext4_unlock_group(sb, group);
--	ret = ext4_issue_discard(sb, group, start, count, NULL);
-+	ret = ext4_issue_discard(sb, group, start, count);
- 	ext4_lock_group(sb, group);
- 	mb_free_blocks(NULL, e4b, start, ex.fe_len);
- 	return ret;
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+
 -- 
-2.32.0
-
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
