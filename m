@@ -1,239 +1,106 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412BF1EB2B
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7AA537E4
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708941711; cv=none; b=gCO/N+g8b/GWxAJjyHaIaOse7Z31YOZrsiEZ/51vpTRkY1isdwBMyYrgJnBe8wbCvt1MkMGB01GJ1FubFtMKjBbLflbu342DQVeOn40O58Uqx5SHid48uyrqs4pXj7Nf/reK5AcV06r9j/+yu3sXH/0s/epKrXhoGiupXPuZ3fM=
+	t=1708941766; cv=none; b=r8qFiVuJUKZEPiTJfal9XdwyaSq6FNxLnkdpbpICTCggqCzFpy5np3paTFtkSSyvb+yjdBnuzA+3gIuy9iUfkxw5tjhVzBthmouTq7hTuXi12wv7y2rbSpYS0XRecno/1BlAJfAlVcaPznnFsmiYBHsIWC78cL2rBWjgJcAf0hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708941711; c=relaxed/simple;
-	bh=W/nEdRu05n//+j4BnofLYmeUB0FRNpUFT1+Eakz+t/A=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MWgpkoWpJq9zK0wW1GnOWTuumtlI4/wx6wRdDN1WEzs6c97ia/XwS8aLRwUQ7a77AlnnKvghi/AbkIKmefck+kjkyFfdR41GA+Ayb/48vZui5VeCvsSQeskkhvRNpIl3eg+KRJB7P5nLA4xvWAUPA0KW5Y+uPQwmavIRtQ8o0Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--richardycc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JT1H4Mak; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--richardycc.bounces.google.com
+	s=arc-20240116; t=1708941766; c=relaxed/simple;
+	bh=FMXE677AO8wWequWg/647kFxLIZ8WzSQjNdPcXIe84c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gQVCMmfU7i1XFMfvcKrz6LXTB9sp22lEEvy5LoP3y74Pjcvfu/iP/sOBTf2pRCvpiMUuqq7c+HEGDotQYS/0CC0r97Y6LCkMnzODmbZZJ3W0wzfPnrJsRE2cW91AU51vLavgVGPDJqU7crpxuakgZtpvUygoi1o6I3+PgJXz2EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cIxFLjrP; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JT1H4Mak"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6e4d20632c3so1520916b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:01:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cIxFLjrP"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a43488745bcso109762666b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:02:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708941709; x=1709546509; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gyI/MoWdVSABhMtiVRAkTZHZn+lW5oiA7R70q9bef8k=;
-        b=JT1H4Mak/f0DteoRvLE7is0PNc5FO0OHrng4Mf9ICcUMUzU4XAXmjYm2otsqhB9pOh
-         fWOSux+g9ELQ2+G6i3VJayjSimcEbXfpPuX6/0Mhisyp/Rockfo0Uoy6oYdoZNkQcTuF
-         S5lAiTVZts8Trx5cbcm0iBiH9QjSTcKSDjnAfpWpC0PNfQ1v9ji0LfIsAUWMt19YZQBo
-         V0dVpVDBWQx6hn8m9aoGqgXK/N2gaV5vUCrvcrFEjAN5bgppygzXcU6nTX6Ew7WoFke3
-         lKzQ2MxoFS01GqlauGZy0/rs0nBwy/xPG1rA8UoBSWth2hAAdsadfu8F0uZSTy5vEwQF
-         8GaA==
+        d=linaro.org; s=google; t=1708941763; x=1709546563; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jsfybu/J7fq2BKb3fyxEbQKzNC70FxEDrNxyD6UJV2w=;
+        b=cIxFLjrPrCsa1o1j4ZxDCcrXDY3oIwHYHWfsjLfsYW4zO8z+BiPdvY+MpgFOGjml78
+         lktAZHqkGofhJfv9AUF6CZ6Vp7cYDm+PZl7y4nbpyG1KApvRT8tdUOA6y4ai29J7ZoI8
+         lZGrzIOVgocFIPQraye2IShvGesgv1W5cJAjHtu8JSQGjXr7wEIRZq6JWoHfOtA5lKqS
+         mt0AHBvnvkJsYUZ7ukM7ZEXhFJnBNJeFFdlls7OyX20FDYILlXpC8ENUKgsHq3T9RdJ9
+         gSHAc4ruYOWyQLRTfrpBApjSflT1nZqMur6n+uNZgCW0yCOrhWVQkB865bcM29fTSuk+
+         dW7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708941709; x=1709546509;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gyI/MoWdVSABhMtiVRAkTZHZn+lW5oiA7R70q9bef8k=;
-        b=h171XFQ14auhlV7fUIZBSrqQU1cxlJAzG1Ki8VZj5qy5YoxeW5CLsDNnRfBHcn0a1C
-         3RN+TIMYVxAsVL3aCGq/STfBxTRiDpvwZWntn++LgnpIGeTyIgsZiW35/xWISl6mSmBa
-         d7yAS2RvxpCDSx95rDuTjN5tUUJQ2w5NoBPsOJZFntbiGX+BbLHmzRlF77Tsbb415e5V
-         KT8thbRo01IRlW7xe1kJKGNJmUofscUhFhuCb/dofM1YGk9dOcMbTd/FWlBF8RPofmGf
-         O1hyZAVOzv4Cq2g3E/JJSdcT+OZADTods4hFpXQCecuEbfcO8g02c6My6/pThmKtZbeo
-         bsTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVmD6Cgmx8Cq3w7QJ1S95mNfpNTF40gVhQgGMYrcFaY0saA5Dwq2rWhkrtPHG5Pb8amemeiCpqktNb+winovwbcc5HRzOFuvpQc4a55
-X-Gm-Message-State: AOJu0Yx3y+hLZSx4lXDRaZqqxrmCccDVQ8QDhp+GCohdN4VahiGwoNPT
-	bTfLvi287JrYqH15sJFp/SyV5KaG2Y5TxBVU6aHaw+YdiqX38U/m9PCE3JyprAcryTA7hIdBls+
-	TIvd5xmIyL+lw/atf
-X-Google-Smtp-Source: AGHT+IHsMsnGd+L6Ih3NO8l76Y1KOj9vYrg8gPa96vnLXi5uITU09PrnBtcNIlKstccydMSWJ4PxB/iLZvaiHzoW
-X-Received: from richardycc.c.googlers.com ([fda3:e722:ac3:cc00:3:22c1:c0a8:f5f])
- (user=richardycc job=sendgmr) by 2002:aa7:88d4:0:b0:6e5:3590:5dc3 with SMTP
- id k20-20020aa788d4000000b006e535905dc3mr9037pff.4.1708941709522; Mon, 26 Feb
- 2024 02:01:49 -0800 (PST)
-Date: Mon, 26 Feb 2024 10:00:15 +0000
+        d=1e100.net; s=20230601; t=1708941763; x=1709546563;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jsfybu/J7fq2BKb3fyxEbQKzNC70FxEDrNxyD6UJV2w=;
+        b=TNPs59rPMwJ7aZKiKAWgsZP5RBovJRvW3qPQQCKysBV8b12Dn6GOg0+hGtn0g/bB39
+         +aOJc2rfbmuX1efEWOrPyWWnMEXFfnqZrSvazubDTD51v9BgLwt2n+1/jqLAOgwuCfoP
+         lc/K9e+2gnfjqc9li3fuf46jmXZiEdzfRMLpbiG/k4kz9FUyVZU6LIsGYmysrYxVNOaH
+         sKOUtpRbp7+wTcUD3AkQfcjGJsENAhQHmVoQKx575NmwPJz80nOq8P3iPKEzxc+DqS43
+         CCNj4qkMMU5RbLLYlwpopRdP8V91p8qaS9lPqoBRCZJ5ys07wwK2g0kkhhpF5Aw3+Vd7
+         bAeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvKme7TAioOPMngVY6Aeo1Q2jIRvtXw362kARIa6X8YO82t+A4Kl6uoq25kA7Y8BPMStZOAKReZjz82EYQLOyo6jAfux0T6DgUXXgi
+X-Gm-Message-State: AOJu0Yw5kzf8Iy+SdVxjDCdVTj2JzDhLMKkdd2YEaO0xhjN72eSoWyyD
+	Lpw6EIIZD0DIS3/I44E/Czr/4In1vH6o1nfMiQGhT0o6bpkIUkMLxrI6UpsxZDQ=
+X-Google-Smtp-Source: AGHT+IF5ob2nxmdMYoXYiTfxoywwvzuSWhSgCcUYqYf7yAuMkb9+/iKNXTtfGae++7reeSVA5ElfRw==
+X-Received: by 2002:a17:906:4f95:b0:a3f:52dc:6a21 with SMTP id o21-20020a1709064f9500b00a3f52dc6a21mr4306694eju.14.1708941762699;
+        Mon, 26 Feb 2024 02:02:42 -0800 (PST)
+Received: from 1.. ([79.115.63.202])
+        by smtp.gmail.com with ESMTPSA id jx20-20020a170906ca5400b00a3d777aa8fesm2258764ejb.69.2024.02.26.02.02.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 02:02:42 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: Pratyush Yadav <pratyush@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-mtd@lists.infradead.org,
+	Josua Mayer <josua@solid-run.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Yazan Shhady <yazan.shhady@solid-run.com>,
+	Rob Herring <robh@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7] dt-bindings: mtd: spi-nor: add optional interrupts property
+Date: Mon, 26 Feb 2024 12:02:37 +0200
+Message-Id: <170894175149.30146.3207560853406450700.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240219-mtd-flash-interrupt-binding-v7-1-206e30a656fa@solid-run.com>
+References: <20240219-mtd-flash-interrupt-binding-v7-1-206e30a656fa@solid-run.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240226100045.2083962-1-richardycc@google.com>
-Subject: [PATCH] mm: add alloc_contig_migrate_range allocation statistics
-From: Richard Chang <richardycc@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	akpm@linux-foundation.org, richardycc@google.com
-Cc: liumartin@google.com, surenb@google.com, minchan@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=590; i=tudor.ambarus@linaro.org; h=from:subject:message-id; bh=FMXE677AO8wWequWg/647kFxLIZ8WzSQjNdPcXIe84c=; b=owEBbQGS/pANAwAKAUtVT0eljRTpAcsmYgBl3GG7RxwRnOerZC5wsNaIk5lFzF4BjDuzFg+Dj BY7/tk64LSJATMEAAEKAB0WIQQdQirKzw7IbV4d/t9LVU9HpY0U6QUCZdxhuwAKCRBLVU9HpY0U 6Z7+CACw4HgtlaW+WJ9I5b9WPhh6l/AMqhDc+vLlwQrd57Yfz7D54Pxvh1e3LRlJNTUU2Sf4PYy KUbirTSAaVvrBrPHXkMwr2dIN6aF42j1s1xZBz5Cvykcs2m6sEXnSKQlHyONVnV5cP7zw4w6YPZ 2wE6EyoxLkfpvZSAHIMjpOXkVDcETLwtdHGpctE1ORRSHksUc52TyMWs+6WWuYqGnt2q2Nff4m5 /NoZB38BMW38A01SCil6lc0uV+E/tXvO/sPSS8eEVBSsQkreIAevUNpus5Ltg/x7X5UuTG9DVwt eDg6FGQxEjDwPmZGYGEX+ctOOocmWo4OkSp2pyalupIBcbKi
+X-Developer-Key: i=tudor.ambarus@linaro.org; a=openpgp; fpr=280B06FD4CAAD2980C46DDDF4DB1B079AD29CF3D
+Content-Transfer-Encoding: 8bit
 
-alloc_contig_migrate_range has every information to be able to
-understand big contiguous allocation latency. For example, how many
-pages are migrated, how many times they were needed to unmap from
-page tables.
+On Mon, 19 Feb 2024 15:41:19 +0100, Josua Mayer wrote:
+> Some spi flash memories have an interrupt signal which can be used for
+> signalling on-chip events such as busy status or ecc errors to the host.
+> 
+> Add binding for "interrupts" property so that boards wiring this signal
+> may describe the connection.
+> 
+> 
+> [...]
 
-This patch adds the trace event to collect the allocation statistics.
-In the field, it was quite useful to understand CMA allocation
-latency.
+Applied to git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git,
+spi-nor/next branch. Thanks!
 
-Signed-off-by: Richard Chang <richardycc@google.com>
----
- include/trace/events/kmem.h | 39 +++++++++++++++++++++++++++++++++++++
- mm/internal.h               |  3 ++-
- mm/page_alloc.c             | 30 +++++++++++++++++++++++-----
- mm/page_isolation.c         |  2 +-
- 4 files changed, 67 insertions(+), 7 deletions(-)
+[1/1] dt-bindings: mtd: spi-nor: add optional interrupts property
+      (no commit info)
 
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index 58688768ef0f..964704d76f9f 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -304,6 +304,45 @@ TRACE_EVENT(mm_page_alloc_extfrag,
- 		__entry->change_ownership)
- );
- 
-+TRACE_EVENT(mm_alloc_contig_migrate_range_info,
-+
-+	TP_PROTO(unsigned long start,
-+		 unsigned long end,
-+		 int migratetype,
-+		 unsigned long nr_migrated,
-+		 unsigned long nr_reclaimed,
-+		 unsigned long nr_mapped),
-+
-+	TP_ARGS(start, end, migratetype,
-+		nr_migrated, nr_reclaimed, nr_mapped),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, start)
-+		__field(unsigned long, end)
-+		__field(int, migratetype)
-+		__field(unsigned long, nr_migrated)
-+		__field(unsigned long, nr_reclaimed)
-+		__field(unsigned long, nr_mapped)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->start = start;
-+		__entry->end = end;
-+		__entry->migratetype = migratetype;
-+		__entry->nr_migrated = nr_migrated;
-+		__entry->nr_reclaimed = nr_reclaimed;
-+		__entry->nr_mapped = nr_mapped;
-+	),
-+
-+	TP_printk("start=0x%lx end=0x%lx migratetype=%d nr_migrated=%lu nr_reclaimed=%lu nr_mapped=%lu",
-+		  __entry->start,
-+		  __entry->end,
-+		  __entry->migratetype,
-+		  __entry->nr_migrated,
-+		  __entry->nr_reclaimed,
-+		  __entry->nr_mapped)
-+);
-+
- /*
-  * Required for uniquely and securely identifying mm in rss_stat tracepoint.
-  */
-diff --git a/mm/internal.h b/mm/internal.h
-index f309a010d50f..e114c647e278 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -537,7 +537,8 @@ isolate_migratepages_range(struct compact_control *cc,
- 			   unsigned long low_pfn, unsigned long end_pfn);
- 
- int __alloc_contig_migrate_range(struct compact_control *cc,
--					unsigned long start, unsigned long end);
-+					unsigned long start, unsigned long end,
-+					int migratetype);
- 
- /* Free whole pageblock and set its migration type to MIGRATE_CMA. */
- void init_cma_reserved_pageblock(struct page *page);
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 150d4f23b010..f840bc785afa 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6219,9 +6219,14 @@ static void alloc_contig_dump_pages(struct list_head *page_list)
- 	}
- }
- 
--/* [start, end) must belong to a single zone. */
-+/*
-+ * [start, end) must belong to a single zone.
-+ * @migratetype: using migratetype to filter the type of migration in
-+ *		trace_mm_alloc_contig_migrate_range_info.
-+ */
- int __alloc_contig_migrate_range(struct compact_control *cc,
--					unsigned long start, unsigned long end)
-+					unsigned long start, unsigned long end,
-+					int migratetype)
- {
- 	/* This function is based on compact_zone() from compaction.c. */
- 	unsigned int nr_reclaimed;
-@@ -6232,6 +6237,10 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
- 		.nid = zone_to_nid(cc->zone),
- 		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
- 	};
-+	struct page *page;
-+	unsigned long total_mapped = 0;
-+	unsigned long total_migrated = 0;
-+	unsigned long total_reclaimed = 0;
- 
- 	lru_cache_disable();
- 
-@@ -6257,9 +6266,16 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
- 							&cc->migratepages);
- 		cc->nr_migratepages -= nr_reclaimed;
- 
-+		total_reclaimed += nr_reclaimed;
-+		list_for_each_entry(page, &cc->migratepages, lru)
-+			total_mapped += page_mapcount(page);
-+
- 		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
- 			NULL, (unsigned long)&mtc, cc->mode, MR_CONTIG_RANGE, NULL);
- 
-+		if (!ret)
-+			total_migrated += cc->nr_migratepages;
-+
- 		/*
- 		 * On -ENOMEM, migrate_pages() bails out right away. It is pointless
- 		 * to retry again over this error, so do the same here.
-@@ -6273,9 +6289,13 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
- 		if (!(cc->gfp_mask & __GFP_NOWARN) && ret == -EBUSY)
- 			alloc_contig_dump_pages(&cc->migratepages);
- 		putback_movable_pages(&cc->migratepages);
--		return ret;
- 	}
--	return 0;
-+
-+	trace_mm_alloc_contig_migrate_range_info(start, end, migratetype,
-+						 total_migrated,
-+						 total_reclaimed,
-+						 total_mapped);
-+	return (ret < 0) ? ret : 0;
- }
- 
- /**
-@@ -6355,7 +6375,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
- 	 * allocated.  So, if we fall through be sure to clear ret so that
- 	 * -EBUSY is not accidentally used or returned to caller.
- 	 */
--	ret = __alloc_contig_migrate_range(&cc, start, end);
-+	ret = __alloc_contig_migrate_range(&cc, start, end, migratetype);
- 	if (ret && ret != -EBUSY)
- 		goto done;
- 	ret = 0;
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index cd0ea3668253..a5c8fa4c2a75 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -434,7 +434,7 @@ static int isolate_single_pageblock(unsigned long boundary_pfn, int flags,
- 				}
- 
- 				ret = __alloc_contig_migrate_range(&cc, head_pfn,
--							head_pfn + nr_pages);
-+							head_pfn + nr_pages, page_mt);
- 
- 				/*
- 				 * restore the page's migratetype so that it can
+Cheers,
 -- 
-2.44.0.rc0.258.g7320e95886-goog
-
+Tudor Ambarus <tudor.ambarus@linaro.org>
