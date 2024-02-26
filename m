@@ -1,113 +1,188 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B8A51C28
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4288F21A0B
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708943307; cv=none; b=c4PyshE39Hl8vsVWpL1g/k7BsZ/vyfgcnbStVDs4tVXAdD0U7NBrpIckAHnj5z1cvxBE6kaeusXrWBMMO1ah8LKgTLaS5Y4nwnVCLh7Dqf3W7szA0tAa+iDo4Fk7NxpxrXyKDYq3NBBNssoaJKQzUYcVWdPmg4k6GGGVPJ4GHR0=
+	t=1708943366; cv=none; b=FBeRcNsQRcXCWAiUgk1yrIuUoFw2tJmHklrpRB08QmLJ64StGMUnXVl0gDvYo8zZYPlVypsUmixtlIyoRm9giVy/zfxx/QD4zDDh2S1nyoTdoprvIx6QUMcJM/eOca8IeLYUZ40qkf/t0UqZr6YWsurHTlhpX+jv2mvchr36IpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708943307; c=relaxed/simple;
-	bh=waWe7OOZqahMFAXntvNTQ2+JkvgINPphRNC6W6LEW2I=;
+	s=arc-20240116; t=1708943366; c=relaxed/simple;
+	bh=j8vs2kYNqidZarWFkHkNVn2iIvZToZdN0qkN5+xNYUA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y47CGJX0A38KSzWJj3lk30mriKbEHmaeCNN+Fg+KZSPvZF4Hhat8MkUTlGMT5AEeBkpIcSz9WrH0B1KzYZkT9SuH8VpyKXEyfWZhXZx4TN+iRHcJLKjKNefmJcfrENXG3228E0OkKMV+ej2RQjTYoK79c5e3Qc+KPpx7BgSQzMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cKGIz79v; arc=none smtp.client-ip=209.85.208.46
+	 To:Cc:Content-Type; b=imKVYGOvct9bKa23CQH0juZ8u+dytvxglCev157ncKSjzqHSoZ/W78oCL80tFjmtPkyNCtAHebGmhYkEXjZqtAIHga6h0bdHiHZMLKtNgD+KY+91ZXevN0/CR2G+in/7yUjKo4/Eqjagw3YYNF0vej/vVCSMEratbSG+XGzdNKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V2GhjPKz; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cKGIz79v"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5654ef0c61fso15335a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:28:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V2GhjPKz"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5654ef0c61fso15350a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:29:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708943304; x=1709548104; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708943362; x=1709548162; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8rfRwBowmUFktKeSXXFXGsqMq0Ukd1jU9ormvR1IvtI=;
-        b=cKGIz79vMSfWFtztdJAsvWXoJQgfKaDkcdWPbQqeF6/rVwgDj+SI1+pobg7W55ac5y
-         Jx/xDTaV3Yi4KZKhBCpsDI0coyxt+N9e3OFLu2xbtmJTsnJO40yqM8xK6PTTlxoHjWFu
-         dRPjMtFbEDe4Ib0+jw1eJjXlpU/T/CcQ7NT3stDE/WVvjjnp83OcHO/rOafHhNYX5C4H
-         XQH/xcZ3LVqL2o3hsStG4Tp6Ffz7GDGzDQvvCe4CjwshtKf2RnkaJGJ81K5eoMMf47O7
-         gdGAYmdiG8R64Laooiw/olWQVPYGNGWi+1n/65MtahwprUyPHFh2gPPKb1aKLRc54FWx
-         dEpA==
+        bh=+9LBZSvHXbFImgyGtsmIfeO7+emcfrVlLTSHoyquOhU=;
+        b=V2GhjPKze02j75RwUxXRdFvDaAyVns3p4JoF2SfROBj6oBvTAjQyJmXD7j8EUoiPts
+         XDwm38iLP/HiYVPZGypvUXPuXfJQ4a/e/ioAfUNfjeFIr7P27ytyqzPZnl4XteClNEV9
+         VYXqK9Nie+OzBF3v9iJPBiAeyX6p0CRoi502zjiBthaGmAFjNn57DmB6uyFff8nPsH9P
+         NVLzpuCrmJeqtU6Un+azJzLOwu7ylSc8tcDgTb2o3Mcl6bmz2bSKML9cHsXxAzgy0fu7
+         lKaYUSbdJ6JdX+L1k1w0ANUo10e9r7lpX99H9carH7fpBVOa94O9ON4+yJOC2tJnNZ/c
+         ByDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708943304; x=1709548104;
+        d=1e100.net; s=20230601; t=1708943362; x=1709548162;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8rfRwBowmUFktKeSXXFXGsqMq0Ukd1jU9ormvR1IvtI=;
-        b=p1eiERZhh8DOI1FSya43Qq1HMVy8biOhqBGbwlZ7JOaKqq6rm9Kf3XJgOkonN4FvuR
-         FhY2rvZ7iV9zvIlyc8kqI/aYPW/J7c+f6cTKBVC0ZNnYxQZlqhx2JlnDHO27bS7FQwQO
-         qWS3PXziiXyVYQSbtsCnzlrLt73L4z5PvBm7MN0qlQwzXTMXA5Xk1h4fKEG309YnbXYt
-         UVpYXAZHd64przPiP4OfgSzlhZr+iGlg8D6D2GT/ZwTWPPekiJVEWBSdOgLp8YipYFv2
-         f1Vk2fQ2TA1qOwpo+5mUg42M8juJetlYtqyGT08vbn3KbxeU4Hcli69HbAMGBWeNixqY
-         0M6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXYj1+4R4UBHD/ZoE0j46J4gWEGjdARZjoX5DoAHQjUueeiEsc4vg1+jPe8KeBnem/F2FaBztjsibeI3schKYlW1mv9p1fipZCl/JmH
-X-Gm-Message-State: AOJu0Yx+WrGgRDAVJAcLOusFWA/22zjAo2zqhFzqylEhfVOgK5TCIXM6
-	qKpvHNNpIcmYHoerG+PCY6BF54dtVow+3SOs/IFs7fTIHJRc/0mSH5TFynhBUDfDt2bCMWjfpuZ
-	RIXY3TWfg7pj2oqd8kqrtvWdpVjs/9nOpdZpN
-X-Google-Smtp-Source: AGHT+IELZ4/+1yceKUOXF1OW2l/m9kzRNhkxpc47HL7wUVrNJOnYJONx4oMWuJfC6Y2/nmM8qzK5lAwpCUs5GN8aJSw=
-X-Received: by 2002:a05:6402:2693:b0:565:ad42:b97d with SMTP id
- w19-20020a056402269300b00565ad42b97dmr204645edd.0.1708943303993; Mon, 26 Feb
- 2024 02:28:23 -0800 (PST)
+        bh=+9LBZSvHXbFImgyGtsmIfeO7+emcfrVlLTSHoyquOhU=;
+        b=i5iChnO6RqTRPdT1n7OSZqAHZUXzfRKQuwYrXbypQ/w81rt6xNEyrzrWl7crlXo7eX
+         WUSmHb0FTEKvxcL3xKvbqmmsCARmYulLomTWy9m3hkGIQS+t1cTvbT6mSDT46CedZOcF
+         /yRtSFaXyM2x7MXLnh4WmA8eXDx6LdzORRMUdAKDrtCLX7tNCDQABwk92WTvTlEJjxZt
+         V5VXaYP5VJEdADjPuwhOchNWg5N9dQMbgsQ3LiQ0yBp0vl1FR7pjR68mUrVXznVehEkm
+         qLvyuMP0DdSBZuiSlG4NScXCrgBrVgezURdcJoj/3JmhpT/XBVUe6bdNxQtKz3b3RNRJ
+         K0KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdoEEnGQrUd9nkVNK8XdoW8YQMPQeaz9ZajoUqqzN9cq7ftbeXanj1+RlEfArfyG9uRGJDh/GtuMaublrzJivuH8z7l+LXB2oVsRzJ
+X-Gm-Message-State: AOJu0YzFJd49sJC1fFEAuI9QhEGxKQhtZ+w8TGiZyZ3xZJawj7j8Wrr/
+	/ZQLiAP+niRttSvFbtVk20IiGvwO3Epc9IpJZG1ZvoxP19qWPmaOk7MlHqSyjqHyYZfKmKTErak
+	FbaJxsvAtRG41UjGKi4P41KZq47hi7dmTNPPm
+X-Google-Smtp-Source: AGHT+IFKz46PFB51fdJ85PXmyLQGXMahOGGYRTDTtbRxiAG3nY7eMN8+lnfxZ63efS90ND8l5xonPPcns8ila5ukGns=
+X-Received: by 2002:a50:a6d7:0:b0:565:4b98:758c with SMTP id
+ f23-20020a50a6d7000000b005654b98758cmr279364edc.4.1708943362220; Mon, 26 Feb
+ 2024 02:29:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223143833.1509961-1-guanyulin@google.com> <a299118d-eeec-40b4-9a3d-48dc40f34e12@gmail.com>
-In-Reply-To: <a299118d-eeec-40b4-9a3d-48dc40f34e12@gmail.com>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Mon, 26 Feb 2024 18:28:00 +0800
-Message-ID: <CAOuDEK3wP6zhEwgUn5zSedtwTYVFaJeBfeXkSg897EhpGP9=ig@mail.gmail.com>
-Subject: Re: [PATCH v3] PM / core: conditionally skip system pm in
- device/driver model
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: rafael@kernel.org, pavel@ucw.cz, len.brown@intel.com, 
-	gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com, 
-	petr.tesarik.ext@huawei.com, rdunlap@infradead.org, james@equiv.tech, 
-	broonie@kernel.org, james.clark@arm.com, masahiroy@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20240220021804.9541-1-shijie@os.amperecomputing.com>
+ <CANn89iJoHDzfYfhcwVvR4m7DiVG-UfFNqm+D1WD-2wjOttk6ew@mail.gmail.com>
+ <bea860f8-a196-4dff-a655-4da920e2ebfa@amperemail.onmicrosoft.com>
+ <CANn89i+1uMAL_025rNc3C1Ut-E5S8Nat6KhKEzcFeC1xxcFWaA@mail.gmail.com>
+ <c2bd73b6-b21f-4ad8-a176-eec677bc6cf3@amperemail.onmicrosoft.com>
+ <CANn89i+Cr1Tbdxqy6fB-sOLca+AHFc-3-0xGktVUsQFFMVsC0A@mail.gmail.com> <bd0a9d66-783d-4936-a5b0-cd4082704137@kernel.org>
+In-Reply-To: <bd0a9d66-783d-4936-a5b0-cd4082704137@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 26 Feb 2024 11:29:07 +0100
+Message-ID: <CANn89iKJtLZFjY_kYhV5NcgKiAkhi_stftvai1dCwQLMOLea6g@mail.gmail.com>
+Subject: Re: [PATCH] net: skbuff: allocate the fclone in the current NUMA node
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: aleksander.lobakin@intel.com, 
+	Shijie Huang <shijie@amperemail.onmicrosoft.com>, 
+	Huang Shijie <shijie@os.amperecomputing.com>, kuba@kernel.org, 
+	patches@amperecomputing.com, davem@davemloft.net, horms@kernel.org, 
+	ast@kernel.org, dhowells@redhat.com, linyunsheng@huawei.com, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	cl@os.amperecomputing.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 24, 2024 at 2:20=E2=80=AFAM Florian Fainelli <f.fainelli@gmail.=
-com> wrote:
+On Mon, Feb 26, 2024 at 11:18=E2=80=AFAM Jesper Dangaard Brouer <hawk@kerne=
+l.org> wrote:
 >
-> On 2/23/24 06:38, Guan-Yu Lin wrote:
-> > In systems with a main processor and a co-processor, asynchronous
-> > controller management can lead to conflicts.  One example is the main
-> > processor attempting to suspend a device while the co-processor is
-> > actively using it. To address this, we introduce a new sysfs entry
-> > called "conditional_skip". This entry allows the system to selectively
-> > skip certain device power management state transitions. To use this
-> > feature, set the value in "conditional_skip" to indicate the type of
-> > state transition you want to avoid.  Please review /Documentation/ABI/
-> > testing/sysfs-devices-power for more detailed information.
 >
-> This looks like a poor way of dealing with a lack of adequate resource
-> tracking from Linux on behalf of the co-processor(s) and I really do not
-> understand how someone is supposed to use that in a way that works.
 >
-> Cannot you use a HW maintained spinlock between your host processor and
-> the co-processor such that they can each claim exclusive access to the
-> hardware and you can busy-wait until one or the other is done using the
-> device? How is your partitioning between host processor owned blocks and
-> co-processor(s) owned blocks? Is it static or is it dynamic?
-> --
-> Florian
+> On 24/02/2024 20.07, Eric Dumazet wrote:
+> > On Tue, Feb 20, 2024 at 9:37=E2=80=AFAM Shijie Huang
+> > <shijie@amperemail.onmicrosoft.com> wrote:
+> >>
+> >>
+> >> =E5=9C=A8 2024/2/20 16:17, Eric Dumazet =E5=86=99=E9=81=93:
+> >>> On Tue, Feb 20, 2024 at 7:26=E2=80=AFAM Shijie Huang
+> >>> <shijie@amperemail.onmicrosoft.com> wrote:
+> >>>>
+> >>>> =E5=9C=A8 2024/2/20 13:32, Eric Dumazet =E5=86=99=E9=81=93:
+> >>>>> On Tue, Feb 20, 2024 at 3:18=E2=80=AFAM Huang Shijie
+> >>>>> <shijie@os.amperecomputing.com> wrote:
+> >>>>>> The current code passes NUMA_NO_NODE to __alloc_skb(), we found
+> >>>>>> it may creates fclone SKB in remote NUMA node.
+> >>>>> This is intended (WAI)
+> >>>> Okay. thanks a lot.
+> >>>>
+> >>>> It seems I should fix the issue in other code, not the networking.
+> >>>>
+> >>>>> What about the NUMA policies of the current thread ?
+> >>>> We use "numactl -m 0" for memcached, the NUMA policy should allocate
+> >>>> fclone in
+> >>>>
+> >>>> node 0, but we can see many fclones were allocated in node 1.
+> >>>>
+> >>>> We have enough memory to allocate these fclones in node 0.
+> >>>>
+> >>>>> Has NUMA_NO_NODE behavior changed recently?
+> >>>> I guess not.
+> >>>>> What means : "it may creates" ? Please be more specific.
+> >>>> When we use the memcached for testing in NUMA, there are maybe 20% ~=
+ 30%
+> >>>> fclones were allocated in
+> >>>>
+> >>>> remote NUMA node.
+> >>> Interesting, how was it measured exactly ?
+> >>
+> >> I created a private patch to record the status for each fclone allocat=
+ion.
+> >>
+> >>
+> >>> Are you using SLUB or SLAB ?
+> >>
+> >> I think I use SLUB. (CONFIG_SLUB=3Dy,
+> >> CONFIG_SLAB_MERGE_DEFAULT=3Dy,CONFIG_SLUB_CPU_PARTIAL=3Dy)
+> >>
+> >
+> > A similar issue comes from tx_action() calling __napi_kfree_skb() on
+> > arbitrary skbs
+> > including ones that were allocated on a different NUMA node.
+> >
+> > This pollutes per-cpu caches with not optimally placed sk_buff :/
+> >
+> > Although this should not impact fclones, __napi_kfree_skb() only ?
+> >
+> > commit 15fad714be86eab13e7568fecaf475b2a9730d3e
+> > Author: Jesper Dangaard Brouer <brouer@redhat.com>
+> > Date:   Mon Feb 8 13:15:04 2016 +0100
+> >
+> >      net: bulk free SKBs that were delay free'ed due to IRQ context
+> >
+> > What about :
+> >
+> > diff --git a/net/core/dev.c b/net/core/dev.c
+> > index c588808be77f563c429eb4a2eaee5c8062d99582..63165138c6f690e14520f11=
+e32dc16f2845abad4
+> > 100644
+> > --- a/net/core/dev.c
+> > +++ b/net/core/dev.c
+> > @@ -5162,11 +5162,7 @@ static __latent_entropy void
+> > net_tx_action(struct softirq_action *h)
+> >                                  trace_kfree_skb(skb, net_tx_action,
+> >                                                  get_kfree_skb_cb(skb)-=
+>reason);
+> >
+> > -                       if (skb->fclone !=3D SKB_FCLONE_UNAVAILABLE)
+> > -                               __kfree_skb(skb);
+> > -                       else
+> > -                               __napi_kfree_skb(skb,
+> > -                                                get_kfree_skb_cb(skb)-=
+>reason);
 >
+> Yes, I think it makes sense to avoid calling __napi_kfree_skb here.
+> The __napi_kfree_skb call will cache SKB slub-allocation (but "release"
+> data) on a per CPU napi_alloc_cache (see code napi_skb_cache_put()).
+> In net_tx_action() there is a chance this could originate from another
+> CPU or even NUMA node.  I notice this is only for SKBs on the
+> softnet_data->completion_queue, which have a high chance of being cache
+> cold.  My patch 15fad714be86e only made sense when we bulk freed these
+> SKBs, but after Olek's changes to cache freed SKBs, then this shouldn't
+> be calling __napi_kfree_skb() (previously named __kfree_skb_defer).
+>
+> I support this RFC patch from Eric.
+>
+> Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
 
-This patch enables devices to selectively participate in system power
-transitions. This is crucial when multiple processors, managed by
-different operating system kernels, share the same controller. One
-processor shouldn't enforce the same power transition procedures on
-the controller =E2=80=93 another processor might be using it at that moment=
-.
-While a spinlock is necessary for synchronizing controller access, we
-still need to add the flexibility to dynamically customize power
-transition behavior for each device. And that's what this patch is
-trying to do.
-In our use case, the host processor and co-processor are managed by
-separate operating system kernels. This arrangement is static.
+Note that this should not matter for most NIC, because their drivers
+perform TX completion from NAPI context, we do not hit this path.
+
+It seems that switching to SLUB instead of SLAB has increased the chances
+of getting memory from another node.
+
+We probably need to investigate.
