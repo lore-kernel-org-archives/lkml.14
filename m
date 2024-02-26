@@ -1,213 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7C91332AE
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 19:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ECC135407
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 19:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708974243; cv=none; b=kEnSFSNYLdVaA/UGGgQ8unjYQk8paikKxBa7Wxnci1KDwcvky8dvG8QiXpGJTHlndfzskWNFi8MB6uZyFTy0kd7uhDzhYCISnvhNbmObbk7KAVpNberiMEPjZXPoGKKo0FHJkvhsndxi1RPDWHcrqacDlzU8YZGcwH1qPM4/ftQ=
+	t=1708974256; cv=none; b=nI2LloyGRTon5mx71gqT04c2vHiKknvH6BYmGMlBgxJNj2rza6REMfLLkg5cAvi3av/RubTmwKx4CFxArer2dy8ifPVavqtCREyuuhqtGrc5pggafACvUnfBEtsx8fg5bjJ166Hz5YfjrwtFLEaHeOCDaSfngqM1vLeebUiW9aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708974243; c=relaxed/simple;
-	bh=MKdPVqybJx+yUazMzrxA3fRZNvilom9H2HTpOiyF0rA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sb5FQMIljjYq7SvH0aSS6TseD9KVKFixn6WpE6nziLJi1fVswv+GCiv7dYMKXwKHc7G4NnB1QJEkjyZAgTeodJavkStUIrVqpBScn4kaQmFQlxDhhIxp0Sv0UiKqdAO+72Z5oRKXSiWbHCVTkDbGiTzyDD8TV21M9c2YLg+eR6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fP++q3bI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1708974256; c=relaxed/simple;
+	bh=JIqIxUB3Ayzkf/mD0blka6O8DKfFWgrE9WEYSScIHy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DBU199Gd8TSC25p/FzS27G0xfChg56Sec2NOzvt/u3Sg+nTgb3Ek0AgnqxthmV2vm1Bd2nk2dcsWZw+AQy/jMTvpj2oOQ6kngRyQZOB3XtlYDGGzRy4WCDOaOvNJ2CAH6CJ7kOU2XhA5c3rM3cc9KMxe+U/07IxTSLkclQj/E3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=B3XZR+6t; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fP++q3bI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708974238;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v8nmWNDUyYukZZP1ueJe+cOG2n3yMwyfYzVyARW8Tlk=;
-	b=fP++q3bI2JAsLAhWdATu/4tlMRhA8vql824iCsalHUWXmVC9AD5fOreA2dNPXGD72EUyH8
-	dRxJ/QXoa9yIaZLJdOdHfYWsDsbs3uDN6++q3HeGHaT29/4ktfSqBCiZ4VfUWRNz3qYzwx
-	AsY7sgfFikKuFhEcQgSCaKMtrEPQjhk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-629-E5YkqV7yNVKEa4Kp88TusQ-1; Mon, 26 Feb 2024 14:03:48 -0500
-X-MC-Unique: E5YkqV7yNVKEa4Kp88TusQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 486198F7760;
-	Mon, 26 Feb 2024 19:03:47 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1FF1B492BC8;
-	Mon, 26 Feb 2024 19:03:47 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: seanjc@google.com,
-	michael.roth@amd.com,
-	aik@amd.com
-Subject: [PATCH v3 08/15] KVM: SEV: store VMSA features in kvm_sev_info
-Date: Mon, 26 Feb 2024 14:03:37 -0500
-Message-Id: <20240226190344.787149-9-pbonzini@redhat.com>
-In-Reply-To: <20240226190344.787149-1-pbonzini@redhat.com>
-References: <20240226190344.787149-1-pbonzini@redhat.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B3XZR+6t"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc49b00bdbso29522095ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 11:04:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708974253; x=1709579053; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rqEaslcv+csbSpF6YQBGR7kuM3sWH8YoMpbM5vrlm2I=;
+        b=B3XZR+6tYaiLmvO0ormzojOJS7q2VNS3VFHyapT0mYeCoLK0DxsW42E/Fyoss/kqcp
+         mLiKMAOlbl9wyTCPu5nS79QgEgum9zDXpFi3SNMTipdU+yE37Q/xZySU6Z2PWb7019Hi
+         5m35Vb5iqfIONp2TiVTpVr5BtosabOcNFViMs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708974253; x=1709579053;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rqEaslcv+csbSpF6YQBGR7kuM3sWH8YoMpbM5vrlm2I=;
+        b=Xwd0ZOhgXKMWzbws8bTIb0Mn+XywQQQYtonenDwwaC0i8wV60MSmJaGskNWW3zc91l
+         EEZPzIyksBN9ObgneF57OE1weKe+vv6ON836PtELH5+oxYLW5FZ5r0mqYqRq6AGUzpix
+         xW7F3IZ17OmeN0ZQrA/e+V1hoOWA+T/xAt44kJVQgMjADSlp1FfAjbMClbhDzaWNS8x+
+         7YYQczmJtD730qjuaNh9It1crY6h2ckWin9CV7QRDKsq2vKx7EZer6pc2tMmK7DuCASx
+         OGmhc8wfEJ0nI3V1/zeILCN8dxohr+udygUKgJG2wX+XIj3tW/ocd0Ik2gTGaHYaWwjP
+         Si7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXZ+8gl+SGYUuXEw6AvsedJoOxcGbbxOQCtPnwKVU0JDGiInNhZFl1x1N9vW1qyOOPITnd1Z9Y5gDuj1JxvqKqVn0DRpCiyqZHcPrF6
+X-Gm-Message-State: AOJu0YxYQGG1pgLuKI9AMV8k99T5b3Ojrh99VxmRHZGdm0Kghp375Wc9
+	erV4OuVE8xFzzDiAetxCnEgSn9aSHQZrtJ2+iRold36dL5NzDVo33s4ll2wY6A==
+X-Google-Smtp-Source: AGHT+IGFFetjjHPW/ivkyZlW9eIrIhfwZbvoWRltu7/bfVEDnv3KZmmFg2wZd+UfH3HTAx1gx80+dA==
+X-Received: by 2002:a17:902:d2cc:b0:1d9:7095:7e3c with SMTP id n12-20020a170902d2cc00b001d970957e3cmr8949703plc.57.1708974253283;
+        Mon, 26 Feb 2024 11:04:13 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u6-20020a170902b28600b001d8aadaa7easm31822plr.96.2024.02.26.11.04.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 11:04:12 -0800 (PST)
+Date: Mon, 26 Feb 2024 11:04:12 -0800
+From: Kees Cook <keescook@chromium.org>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc: Jakub Kicinski <kuba@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	davem@davemloft.net,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Will Drewry <wad@chromium.org>, edumazet@google.com,
+	jakub@cloudflare.com, pabeni@redhat.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 2/2] selftests/harness: Merge TEST_F_FORK() into TEST_F()
+Message-ID: <202402261102.3BE03F08DF@keescook>
+References: <20240223160259.22c61d1e@kernel.org>
+ <20240226162335.3532920-1-mic@digikod.net>
+ <20240226162335.3532920-3-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+In-Reply-To: <20240226162335.3532920-3-mic@digikod.net>
 
-Right now, the set of features that are stored in the VMSA upon
-initialization is fixed and depends on the module parameters for
-kvm-amd.ko.  However, the hypervisor cannot really change it at will
-because the feature word has to match between the hypervisor and whatever
-computes a measurement of the VMSA for attestation purposes.
+On Mon, Feb 26, 2024 at 05:23:35PM +0100, Mickaël Salaün wrote:
+> Remplace Landlock-specific TEST_F_FORK() with an improved TEST_F() which
+> brings four related changes:
+> 
+> Run TEST_F()'s tests in a grandchild process to make it possible to
+> drop privileges and delegate teardown to the parent.
+> 
+> Compared to TEST_F_FORK(), simplify handling of the test grandchild
+> process thanks to vfork(2), and makes it generic (e.g. no explicit
+> conversion between exit code and _metadata).
+> 
+> Compared to TEST_F_FORK(), run teardown even when tests failed with an
+> assert thanks to commit 63e6b2a42342 ("selftests/harness: Run TEARDOWN
+> for ASSERT failures").
+> 
+> Simplify the test harness code by removing the no_print and step fields
+> which are not used.  I added this feature just after I made
+> kselftest_harness.h more broadly available but this step counter
+> remained even though it wasn't needed after all. See commit 369130b63178
+> ("selftests: Enhance kselftest_harness.h to print which assert failed").
 
-Add a field to kvm_sev_info that holds the set of features to be stored
-in the VMSA; and query it instead of referring to the module parameters.
+I'm personally fine dropping the step counter. (I do wonder if that
+removal should be split from the grandchild launching.)
 
-Because KVM_SEV_INIT and KVM_SEV_ES_INIT accept no parameters, this
-does not yet introduce any functional change, but it paves the way for
-an API that allows customization of the features per-VM.
+> Replace spaces with tabs in one line of __TEST_F_IMPL().
+> 
+> Cc: Günther Noack <gnoack@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Will Drewry <wad@chromium.org>
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Message-Id: <20240209183743.22030-6-pbonzini@redhat.com>
-Reviewed-by: Michael Roth <michael.roth@amd.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/sev.c | 22 ++++++++++++++++++----
- arch/x86/kvm/svm/svm.c |  2 +-
- arch/x86/kvm/svm/svm.h |  3 ++-
- 3 files changed, 21 insertions(+), 6 deletions(-)
+One typo below, but otherwise seems good to me:
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 16a5c64232b7..b46612db0594 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -96,6 +96,14 @@ static inline bool is_mirroring_enc_context(struct kvm *kvm)
- 	return !!to_kvm_svm(kvm)->sev_info.enc_context_owner;
- }
- 
-+static bool sev_vcpu_has_debug_swap(struct vcpu_svm *svm)
-+{
-+	struct kvm_vcpu *vcpu = &svm->vcpu;
-+	struct kvm_sev_info *sev = &to_kvm_svm(vcpu->kvm)->sev_info;
-+
-+	return sev->vmsa_features & SVM_SEV_FEAT_DEBUG_SWAP;
-+}
-+
- /* Must be called with the sev_bitmap_lock held */
- static bool __sev_recycle_asids(unsigned int min_asid, unsigned int max_asid)
- {
-@@ -244,6 +252,8 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 
- 	sev->active = true;
- 	sev->es_active = argp->id == KVM_SEV_ES_INIT;
-+	sev->vmsa_features = sev_supported_vmsa_features;
-+
- 	ret = sev_asid_new(sev);
- 	if (ret)
- 		goto e_no_asid;
-@@ -263,6 +273,7 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	sev_asid_free(sev);
- 	sev->asid = 0;
- e_no_asid:
-+	sev->vmsa_features = 0;
- 	sev->es_active = false;
- 	sev->active = false;
- 	return ret;
-@@ -557,6 +568,8 @@ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 
- static int sev_es_sync_vmsa(struct vcpu_svm *svm)
- {
-+	struct kvm_vcpu *vcpu = &svm->vcpu;
-+	struct kvm_sev_info *sev = &to_kvm_svm(vcpu->kvm)->sev_info;
- 	struct sev_es_save_area *save = svm->sev_es.vmsa;
- 
- 	/* Check some debug related fields before encrypting the VMSA */
-@@ -598,7 +611,7 @@ static int sev_es_sync_vmsa(struct vcpu_svm *svm)
- 	save->xss  = svm->vcpu.arch.ia32_xss;
- 	save->dr6  = svm->vcpu.arch.dr6;
- 
--	save->sev_features = sev_supported_vmsa_features;
-+	save->sev_features = sev->vmsa_features;
- 
- 	pr_debug("Virtual Machine Save Area (VMSA):\n");
- 	print_hex_dump_debug("", DUMP_PREFIX_NONE, 16, 1, save, sizeof(*save), false);
-@@ -1678,6 +1691,7 @@ static void sev_migrate_from(struct kvm *dst_kvm, struct kvm *src_kvm)
- 	dst->pages_locked = src->pages_locked;
- 	dst->enc_context_owner = src->enc_context_owner;
- 	dst->es_active = src->es_active;
-+	dst->vmsa_features = src->vmsa_features;
- 
- 	src->asid = 0;
- 	src->active = false;
-@@ -3048,7 +3062,7 @@ static void sev_es_init_vmcb(struct vcpu_svm *svm)
- 	svm_set_intercept(svm, TRAP_CR8_WRITE);
- 
- 	vmcb->control.intercepts[INTERCEPT_DR] = 0;
--	if (!sev_es_debug_swap_enabled) {
-+	if (!sev_vcpu_has_debug_swap(svm)) {
- 		vmcb_set_intercept(&vmcb->control, INTERCEPT_DR7_READ);
- 		vmcb_set_intercept(&vmcb->control, INTERCEPT_DR7_WRITE);
- 		recalc_intercepts(svm);
-@@ -3103,7 +3117,7 @@ void sev_es_vcpu_reset(struct vcpu_svm *svm)
- 					    sev_enc_bit));
- }
- 
--void sev_es_prepare_switch_to_guest(struct sev_es_save_area *hostsa)
-+void sev_es_prepare_switch_to_guest(struct vcpu_svm *svm, struct sev_es_save_area *hostsa)
- {
- 	/*
- 	 * All host state for SEV-ES guests is categorized into three swap types
-@@ -3131,7 +3145,7 @@ void sev_es_prepare_switch_to_guest(struct sev_es_save_area *hostsa)
- 	 * the CPU (Type-B). If DebugSwap is disabled/unsupported, the CPU both
- 	 * saves and loads debug registers (Type-A).
- 	 */
--	if (sev_es_debug_swap_enabled) {
-+	if (sev_vcpu_has_debug_swap(svm)) {
- 		hostsa->dr0 = native_get_debugreg(0);
- 		hostsa->dr1 = native_get_debugreg(1);
- 		hostsa->dr2 = native_get_debugreg(2);
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 595642099772..1cf9e5f1fd02 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1523,7 +1523,7 @@ static void svm_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
- 		struct sev_es_save_area *hostsa;
- 		hostsa = (struct sev_es_save_area *)(page_address(sd->save_area) + 0x400);
- 
--		sev_es_prepare_switch_to_guest(hostsa);
-+		sev_es_prepare_switch_to_guest(svm, hostsa);
- 	}
- 
- 	if (tsc_scaling)
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 8f2394169703..d6147ad18571 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -85,6 +85,7 @@ struct kvm_sev_info {
- 	unsigned long pages_locked; /* Number of pages locked */
- 	struct list_head regions_list;  /* List of registered regions */
- 	u64 ap_jump_table;	/* SEV-ES AP Jump Table address */
-+	u64 vmsa_features;
- 	struct kvm *enc_context_owner; /* Owner of copied encryption context */
- 	struct list_head mirror_vms; /* List of VMs mirroring */
- 	struct list_head mirror_entry; /* Use as a list entry of mirrors */
-@@ -684,7 +685,7 @@ int sev_handle_vmgexit(struct kvm_vcpu *vcpu);
- int sev_es_string_io(struct vcpu_svm *svm, int size, unsigned int port, int in);
- void sev_es_vcpu_reset(struct vcpu_svm *svm);
- void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector);
--void sev_es_prepare_switch_to_guest(struct sev_es_save_area *hostsa);
-+void sev_es_prepare_switch_to_guest(struct vcpu_svm *svm, struct sev_es_save_area *hostsa);
- void sev_es_unmap_ghcb(struct vcpu_svm *svm);
- void sev_free_vcpu(struct kvm_vcpu *vcpu);
- void sev_vm_destroy(struct kvm *kvm);
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+
+> [...]
+>  			_metadata->setup_completed = true; \
+> -			fixture_name##_##test_name(_metadata, &self, variant->data); \
+> +			/* Use the same _metadata. */ \
+> +			child = vfork(); \
+> +			if (child == 0) { \
+> +				fixture_name##_##test_name(_metadata, &self, variant->data); \
+> +				_exit(0); \
+> +			} \
+> +			if (child < 0) { \
+> +				ksft_print_msg("ERROR SPAWNING TEST GANDCHILD\n"); \
+
+typo: GAND -> GRAND
+
 -- 
-2.39.1
-
-
+Kees Cook
