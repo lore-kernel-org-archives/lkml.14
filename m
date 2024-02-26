@@ -1,140 +1,114 @@
-Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1871CFBB;
-	Mon, 26 Feb 2024 11:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B80591D52D
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 11:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708945471; cv=none; b=o/obUQfd1sNBA657S6qmI46QJ9vpEdIUfQFV7tkJl3ZlQBZD2SqwXB4AO1oGkjDecOeZlWTUzKTKV8WQSbDWCDhIHvzrAedKmIRa8dGAULbvVptuVXpacDW8fmZRxFNyY3+FxPGaHzIp6JH4ENYLNHqDADuMwAwhj3kdkmLHHPw=
+	t=1708945530; cv=none; b=CvrLMpzw04kNcN8QaTRfpC7Hp476r9MD04u+CybUj1SPqqbrbUhGv3wqgFeg9Xb3taW6P+I4YEhwZ/wH6PU3dFhE6twXGlGcXBYA4NQ/b9unhttQ136Up0rEW4SlXaoyIWoo/amc5SGxswPwJXmGIJukAiB7MQ6nZJxBEU8UvOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708945471; c=relaxed/simple;
-	bh=wCOmd+l5m9r5bzHyaJa9PVhFFirSiX7036ruKNxn+9E=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=bvW/bAlY7u9G684H8/dSD0yu/aggHzCa/VC19KwSYZ6p16EctnGZ1Yq5ssU1ky7PRdN5fLlei/OvNxKx9UdPebzWTjjn7LxQmFBLfpbNcCDfvOz+wA9agrkyDuCH/VYQDy+J4j4aLbvLtw7JLjWBn7lMrYvgOnmDY7h95/+kvRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=1cDbI1KF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BOmOhPS9; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="1cDbI1KF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BOmOhPS9"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 73FA111400C7;
-	Mon, 26 Feb 2024 06:04:28 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 26 Feb 2024 06:04:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708945468; x=1709031868; bh=4rftxlO4TG
-	0vRu6X+oJU8zpjfmLQJkJVGVso4QepWqk=; b=1cDbI1KFvBc9zDWdjjLJLrpwyA
-	ecEkMLjCS6VUTdctTFO5goa+OkF2E9fi8I+8wF/nKDmBMDs7v3DPxWH5cTHDEmN1
-	Fg5J+D+XqrGWQDHFi+zBxy2Fl1u+ho6km/C+80HrIeO9H8Ep+7VngJ8COI7dzBb7
-	dSNwq00RAeNeQPIMcz69BuDXMx1OjBvJ8EvtUByEzIPm7rscvEMbJeNXAb6Ec5ak
-	xl1PZhkEHZXXmJ31FjBkN7A5rBXLSx+GGbChzSwpZkS5oWgEDKopvVDb9KwMSTwn
-	UK5+pks/4aY+KGsh4CaHaoZY4sts4/lNZgmSAU3mL8c4E0+88Vkx9+ICbopg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708945468; x=1709031868; bh=4rftxlO4TG0vRu6X+oJU8zpjfmLQ
-	JkJVGVso4QepWqk=; b=BOmOhPS9oaUZApfgx0rsoe5nefS7g5iisxLtCytK6TGw
-	aGGdaD5Co6riRsdz+z1oICJ38mu6zDPJdwEaAho2oL6SL9uyI9MLoQ9Y+adgQ5Et
-	hRXdomuknUugMO5mOB2kR4W6A6dsB4fFQRHp2hPaxhoFE5oi+ttOb4JO+UDHbKoG
-	qlkSAEm8jkaDaCWFZhZGtP+5OY07i+hG73DiOyt/GTThTvfFGHmw+r8TJ0/ja3xW
-	+u4ajGWFV2i0/ImJ2MFpyZe7+/T5nfgIj+gMXn+KYg7Dc7fSykgDHYvujK/fwyfN
-	MAqpWYE+UxnjaiVl0pBxnhVhJSi+jToinDs283K+jQ==
-X-ME-Sender: <xms:O3DcZTFoLQ_yO25OJCOVy9S2JnIR4c_V4bJHUFkIouO546PeVEJ6gw>
-    <xme:O3DcZQV_ExWh1YD0XxdWIRJgc5VWXfkEJ2bGqmjL3OFcsVNcPfGDOkHrPnV5Marqd
-    57gTpfVEbK-Y6-Iwd0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgedvgddvvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
-    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:O3DcZVLrZ-OTQ2b1gWT7TcXhEW1S55fIU6WBRzcx6gh8rSTYVJC-oA>
-    <xmx:O3DcZRFKJoHWmR_N9u1Oy_71HzsBFU1jDDbsAle-g1zT-Q46tLtKow>
-    <xmx:O3DcZZWTyKXdU4NJuBfYll0thz03CXH1fgBuz6rOPkdoOONjY8QIpg>
-    <xmx:PHDcZbI7-XZSrQo7UBstceqoZX3UO_ULf0sunxdBRL4_0Ibao7Y4VQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 03ED7B6008F; Mon, 26 Feb 2024 06:04:26 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	s=arc-20240116; t=1708945530; c=relaxed/simple;
+	bh=Dpvh1u6uIHD3zL72KLsDUAqLNGDPN7ZtBbRRizpzWpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cFfQ468zJgZDz7mKOPkaPZVvrpMh4mZtPyGHvEP5Zk/zHrqBSMKrOLbep6G661CywVEJd/Wqy9AU3jL1LphWLVL6tAy8XFIUB7RqoccrFeAEA4nRNVG4iCDFIP25ABmMKaV33+GY04i7CsiJeTsX+dphR0Y09c5ZHsRxKoyptLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4B9CDA7;
+	Mon, 26 Feb 2024 03:06:03 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.68.53])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC98B3F6C4;
+	Mon, 26 Feb 2024 03:05:23 -0800 (PST)
+Date: Mon, 26 Feb 2024 11:04:46 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	broonie@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/hw_breakpoint: Determine lengths from generic perf
+ breakpoint macros
+Message-ID: <ZdxwTkUALQfqjagf@FVFF77S0Q05N>
+References: <20240223113102.4027779-1-anshuman.khandual@arm.com>
+ <20240223125224.GC10641@willie-the-truck>
+ <1901fadb-1d71-4374-be8c-00935bb27854@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <34af21b5-a878-418e-a70b-299cab61b37e@app.fastmail.com>
-In-Reply-To: <20240226105427.7191-2-fancer.lancer@gmail.com>
-References: <20240226105427.7191-1-fancer.lancer@gmail.com>
- <20240226105427.7191-2-fancer.lancer@gmail.com>
-Date: Mon, 26 Feb 2024 12:04:06 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Serge Semin" <fancer.lancer@gmail.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- "Andrew Morton" <akpm@linux-foundation.org>
-Cc: "Alexey Malahov" <Alexey.Malahov@baikalelectronics.ru>,
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mips: cm: Convert __mips_cm_l2sync_phys_base() to weak
- function
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1901fadb-1d71-4374-be8c-00935bb27854@arm.com>
 
-On Mon, Feb 26, 2024, at 11:54, Serge Semin wrote:
-> The __mips_cm_l2sync_phys_base() and mips_cm_l2sync_phys_base() couple was
-> introduced in commit 9f98f3dd0c51 ("MIPS: Add generic CM probe & access
-> code") where the former method was a weak implementation of the later
-> function. Such design pattern permitted to re-define the original method
-> and to use the weak implementation in the new function. A similar approach
-> was introduced in the framework of another arch-specific programmable
-> interface: mips_cm_phys_base() and __mips_cm_phys_base(). The only
-> difference is that the underscored method of the later couple was declared
-> in the "asm/mips-cm.h" header file, but it wasn't done for the CM L2-sync
-> methods in the subject. Due to the missing global function declaration
-> the "missing prototype" warning was spotted in the framework of the commit
-> 9a2036724cd6 ("mips: mark local function static if possible") and fixed
-> just be re-qualifying the weak method as static. Doing that broke what was
-> originally implied by having the weak implementation globally defined.
->
-> Let's fix the broken CM2 L2-sync arch-interface by dropping the static
-> qualifier and, seeing the implemented pattern hasn't been used for over 10
-> years but will be required soon (see the link for the discussion around
-> it), converting it to a single weakly defined method:
-> mips_cm_l2sync_phys_base().
->
-> Fixes: 9a2036724cd6 ("mips: mark local function static if possible")
-> Link: 
-> https://lore.kernel.org/linux-mips/20240215171740.14550-3-fancer.lancer@gmail.com
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-
-I'm sorry I introduced the regression here, thanks for addressing it.
-
-> -static phys_addr_t __mips_cm_l2sync_phys_base(void)
-> +phys_addr_t __weak mips_cm_l2sync_phys_base(void)
->  {
->  	u32 base_reg;
+On Mon, Feb 26, 2024 at 08:19:39AM +0530, Anshuman Khandual wrote:
+> On 2/23/24 18:22, Will Deacon wrote:
+> > On Fri, Feb 23, 2024 at 05:01:02PM +0530, Anshuman Khandual wrote:
+> >> Both platform i.e ARM_BREAKPOINT_LEN_X and generic i.e HW_BREAKPOINT_LEN_X
+> >> macros are used interchangeably to convert event->attr.bp_len and platform
+> >> breakpoint control arch_hw_breakpoint_ctrl->len. Let's be consistent while
+> >> deriving one from the other. This does not cause any functional changes.
+> >>
+> >> Cc: Will Deacon <will@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >> This applies on v6.8-rc5
+> >>
+> >>  arch/arm64/kernel/hw_breakpoint.c | 16 ++++++++--------
+> >>  1 file changed, 8 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+> >> index 35225632d70a..1ab9fc865ddd 100644
+> >> --- a/arch/arm64/kernel/hw_breakpoint.c
+> >> +++ b/arch/arm64/kernel/hw_breakpoint.c
+> >> @@ -301,28 +301,28 @@ static int get_hbp_len(u8 hbp_len)
+> >>  
+> >>  	switch (hbp_len) {
+> >>  	case ARM_BREAKPOINT_LEN_1:
+> >> -		len_in_bytes = 1;
+> >> +		len_in_bytes = HW_BREAKPOINT_LEN_1;
+> > 
+> > I don't think we should do this. The HW_BREAKPOINT_LEN_* definitions are
+> > part of the user ABI and, although they correspond to the length in bytes,
+> > that's not necessarily something we should rely on.
 > 
-> @@ -217,9 +217,6 @@ static phys_addr_t __mips_cm_l2sync_phys_base(void)
->  	return mips_cm_phys_base() + MIPS_CM_GCR_SIZE;
->  }
-> 
-> -phys_addr_t mips_cm_l2sync_phys_base(void)
-> -	__attribute__((weak, alias("__mips_cm_l2sync_phys_base")));
-> -
+> Why should not we rely on the user ABI macros if these byte lengths were
+> initially derived from them. 
 
-I generally have a bad feeling about weak functions, as they tend
-to cause more problems than they solve, specifically with how they
-hide what's going on, and how I still can't figure out what this
-one aliases to.
+Why should we change the clear:
+	
+	len_in_bytes = 1;
 
-Since the resolution of the alias is all done at link time
-anyway, could you just convert these to an #ifdef check
-that documents exactly when each of the versions is used?
+... to the longer, and less clear:
 
-      Arnd
+	len_in_bytes = HW_BREAKPOINT_LEN_1;
+
+... ?
+
+> But also there are similar conversions in arch_bp_generic_fields().
+
+Those are specifically for converting from the rch_hw_breakpoint_ctrl encodings
+to the perf_event_attr encodings. There we don't care about the specific value
+of the byte, just that we're using the correct encoding.
+
+> These hard coded raw byte length numbers seems cryptic, where as in reality
+> these are just inter converted from generic HW breakpoints lengths.
+
+There are three distinct concepts here:
+
+1. The length in bytes, as returned above by get_hbp_len()
+
+2. The length as encoded in the ARM_BREAKPOINT_LEN_* encoding
+
+3. The length as encoded in the HW_BREAKPOINT_LEN_* encoding.
+
+I think you're arguing that since 1 and 3 happen to have the values we should
+treat them as the same thing. I think that Will and I believe that they should
+be kept distinct because they are distinct concepts.
+
+I don't think this needs to change, and can be left as-is.
+
+Mark.
