@@ -1,151 +1,311 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C321E866;
-	Mon, 26 Feb 2024 19:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9531912F5A0;
+	Mon, 26 Feb 2024 19:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708974083; cv=none; b=Cah14Xo0ogwrNMp2WCdIRknag62BT9PVyCq00Cb4jvCtOIxs+PMN8/4nONQp+sBd9zeR/3NT6LN8pUxyVljYnlD4gx3k5dcuSBxmdo/3fMQ9g9FqoeI1g+jlaeRaBZIzC5+ssuDD2GhLonjzausg+uiHmFRAqc4peWlKcvr8mBw=
+	t=1708974109; cv=none; b=PVKhhpsAUcD35MM5Dqduz3iEc+f+05/MO+r5QLiORIe1OYXmUUPESf06RzMuvvMsk8NaopuqI4/B6WLGRcIyA71BsDutxtH19HJ1IVfdyFPUnxDgPGa/0lITWl/HzmVsw7OIuFn8C99FtFzls3t77Np0Lkeh5AuyoetMzJysn90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708974083; c=relaxed/simple;
-	bh=yOFcvLPco3wQISY5eg48pUdY5mUUXeOE0Rt33co90sU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tx0eZALfdGIuOjuvP21knOUk38mW2OHdzVLVXBzebntYECIIsjJYRYKyqIgWO1erASCJJV4mZ7Juf/jkSoPdk+GzX/Y4k5KpUswrjg7QrruKiG4btMTEu+NTD1imsmm8cO/Plj1j/xjZTOyGSjraLc7SgAaoxTUvBRXaDMBaMG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cny+eNz8; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708974109; c=relaxed/simple;
+	bh=9j0M+ymeUq7RxwTggM61y9yRYx+xKOLcvoURJI6KkkY=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID; b=ulm7ZCcRF2lcYAzVs2dsZ8o6z2DdgsKBN0zROum74zYz6FMVqXcuv7JRsGGTkQdXpGOoR9Q246QGjZPDeUA0aGIhRXHpCVbqkxt0Km7muOs2UNOZl0rs1Kci82haRp+2pwUIo3hqQcP7OmMn377PvMydFcNd55uMJBxQH06Gwaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cj8zdIjV; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cny+eNz8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708974082; x=1740510082;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yOFcvLPco3wQISY5eg48pUdY5mUUXeOE0Rt33co90sU=;
-  b=cny+eNz8d/q3mNrwUhQho3yIF/HfClJ62O5fzhGxtYc6h5hziNcq7JOM
-   RrY0PjV6KdbUw1Bvi+5kJfA/ZCtwKSK0ZZnhY1Jnm43+S4Q27YmshRHFo
-   cgs/D0TxHnVw+mPihHnFaVxWhZYRXJ7cARZU0pZwVNcbYBR/rNRBrqpm5
-   LZkDa4nStiUvdA68YyDJC3Ys4cfMQkcc5UnoCuv5qrUOAETcy/unHsEHW
-   5/3oesLQPmjdtG2aTalE/VpfSX4la29vIV9cwPHqr8r/TbpzdW0X7Wa8k
-   SDwh46TM2Nw4U2DQBAajb/8GIhIUQ/chftdJZh/RSVf/g10y9RCqma6Ta
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3208044"
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="3208044"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 11:01:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="6793381"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 11:01:21 -0800
-Date: Mon, 26 Feb 2024 11:01:20 -0800
-From: Isaku Yamahata <isaku.yamahata@linux.intel.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
-	Sean Christopherson <sean.j.christopherson@intel.com>,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v18 030/121] KVM: TDX: Do TDX specific vcpu initialization
-Message-ID: <20240226190120.GM177224@ls.amr.corp.intel.com>
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
- <9ac6ab3979a477d4a40e0655208248b70bb43ebb.1705965635.git.isaku.yamahata@intel.com>
- <f3321756-95f1-4532-b1de-42b334b684ba@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cj8zdIjV"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so517716366b.0;
+        Mon, 26 Feb 2024 11:01:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708974104; x=1709578904; darn=vger.kernel.org;
+        h=message-id:in-reply-to:date:subject:cc:to:from:user-agent
+         :references:from:to:cc:subject:date:message-id:reply-to;
+        bh=G8LMK8OmvNm1GCisv4uIp/0KVo3ky6Fv9X1ollGhF9w=;
+        b=Cj8zdIjV+JJw3Mw6SRnTbQxwX8N7JhsWBrgYi64p9rirAwX5MxNq0nQ9Gt+s/HVMvC
+         B3zH/ArkDg/xHPqxWp6ck553hxnub6Wdx1OB0rHZJRqvOjBdMQ05frdMHz9zVS6c/pIQ
+         r3bQjtndRhACyRcNoP9BHKlqeVcAC6oWHPUvl4o1HfNkT0XY2sfYrslStSRZp9bCW1kN
+         PN+ru22fLqOA/hGjDFnOFukB1jv4j9Rp2fN1iE8KfROXkQTX8IS926KIPPjKrAwS0luj
+         cdYEp0vZvPV/Q2/8K4gS09tXhcUwMzgl67CSWUxNbLrXPod7A1CSYEWuvbFPQiO7Rmyr
+         PLSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708974104; x=1709578904;
+        h=message-id:in-reply-to:date:subject:cc:to:from:user-agent
+         :references:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G8LMK8OmvNm1GCisv4uIp/0KVo3ky6Fv9X1ollGhF9w=;
+        b=a3oyBjbTHvoq5IeTa/5d0aq/pYiu7YasB5/p0riHJmvQooJFxcrK+2w/DBVHZ9lQxM
+         VCoOVMsnLBQC64XHlB+nd85inEikHvEGq6XjIbGkrBFdLqAbx2309k+CU4s+vTAI9TT6
+         T8NDAa8k/YaqjVUnJwNufRf5bqScwNUrekJKWWOY3ZfWFPoNYSMDK3agFK4vptyow3Ra
+         8Tos2bd+F0gs5rEpW/osdg0954jiIgRtOlHac4wZaLhdIxKPWkU/UpkxBgDkmQ4wvvQT
+         jq/s1FICp4aQhAszNrsKcXQiBmMSJsXIlwa9ToXT1MdN222GnbWdtnjsFobl9fY4fp7K
+         F4qg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMY7nm31d5ORFbWmwFnC12ObYSP/glpvvofZDggqv7wFRUJEUFgzzicmNTLawF6sMYkHk60M3j7u3hUYk4fsE0DQ6p4Pu7oJ4aC8IFNKJqy2QplRmfXdSUewpoz5D/uV5cY36SqfjSqnWb+lxV7e7gYbip+9RVMXERyIax/m3EdmPn8fI/GWSfwNk8foGFtIiZdO8uVY3hCQE34pRkVy4=
+X-Gm-Message-State: AOJu0Yzp5AxhRoO+MpFOeIvCqJVMNt1QhaHGpHdV2tB96kkjhK8dyAzT
+	UznLKbKINSvw5VIhU/mTroWBWrnf14Fi64FW7LjlYUFrQ6EIL/T5qQtxuxRQSoQ=
+X-Google-Smtp-Source: AGHT+IGdEIaZLKD3wdEPtPOUU82YFpEJuuWamhrWmTEfl2I1OvXx/SEnakxHT/t6WNjdl4uFzBp7ig==
+X-Received: by 2002:a17:906:fcb7:b0:a43:5499:6ac8 with SMTP id qw23-20020a170906fcb700b00a4354996ac8mr3114712ejb.20.1708974103706;
+        Mon, 26 Feb 2024 11:01:43 -0800 (PST)
+Received: from bhlegrsu ([2a02:908:2525:6ea0:3aea:4843:afab:a903])
+        by smtp.gmail.com with ESMTPSA id s18-20020a170906455200b00a3f2d8d3782sm21618ejq.180.2024.02.26.11.01.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 11:01:43 -0800 (PST)
+References: <20240224210409.112333-1-wafgo01@gmail.com>
+ <20240225160926.GA58532@thinkpad>
+ <20240225203917.GA4678@bhlegrsu.conti.de> <20240226094530.GA2778@thinkpad>
+User-agent: mu4e 1.8.14; emacs 29.0.92
+From: Wadim Mueller <wafgo01@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Kishon Vijay Abraham
+ I
+ <kishon@kernel.org>, Jens Axboe <axboe@kernel.dk>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Shunsuke Mie
+ <mie@igel.co.jp>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: [PATCH 0/3] Add support for Block Passthrough Endpoint function
+ driver
+Date: Mon, 26 Feb 2024 19:47:30 +0100
+In-reply-to: <20240226094530.GA2778@thinkpad>
+Message-ID: <rq85odwmqryrr4.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+
+--text follows this line--
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f3321756-95f1-4532-b1de-42b334b684ba@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 25, 2024 at 03:56:53PM +0800,
-Binbin Wu <binbin.wu@linux.intel.com> wrote:
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
 
-> > diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> > index 8330f448ab8e..245be29721b4 100644
-> > --- a/arch/x86/kvm/vmx/tdx.c
-> > +++ b/arch/x86/kvm/vmx/tdx.c
-...
-> > @@ -951,15 +992,147 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
-> >   	return r;
-> >   }
-> > +/* VMM can pass one 64bit auxiliary data to vcpu via RCX for guest BIOS. */
-> > +static int tdx_td_vcpu_init(struct kvm_vcpu *vcpu, u64 vcpu_rcx)
-> > +{
-> > +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
-> > +	struct vcpu_tdx *tdx = to_tdx(vcpu);
-> > +	unsigned long *tdvpx_pa = NULL;
-> > +	unsigned long tdvpr_pa;
-> > +	unsigned long va;
-> > +	int ret, i;
-> > +	u64 err;
-> > +
-> > +	if (is_td_vcpu_created(tdx))
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * vcpu_free method frees allocated pages.  Avoid partial setup so
-> > +	 * that the method can't handle it.
-> > +	 */
-> > +	va = __get_free_page(GFP_KERNEL_ACCOUNT);
-> > +	if (!va)
-> > +		return -ENOMEM;
-> > +	tdvpr_pa = __pa(va);
-> > +
-> > +	tdvpx_pa = kcalloc(tdx_info->nr_tdvpx_pages, sizeof(*tdx->tdvpx_pa),
-> > +			   GFP_KERNEL_ACCOUNT);
-> > +	if (!tdvpx_pa) {
-> > +		ret = -ENOMEM;
-> > +		goto free_tdvpr;
-> > +	}
-> > +	for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
-> > +		va = __get_free_page(GFP_KERNEL_ACCOUNT);
-> > +		if (!va) {
-> > +			ret = -ENOMEM;
-> > +			goto free_tdvpx;
-> > +		}
-> > +		tdvpx_pa[i] = __pa(va);
-> > +	}
-> > +
-> > +	err = tdh_vp_create(kvm_tdx->tdr_pa, tdvpr_pa);
-> > +	if (KVM_BUG_ON(err, vcpu->kvm)) {
-> > +		ret = -EIO;
-> > +		pr_tdx_error(TDH_VP_CREATE, err, NULL);
-> > +		goto free_tdvpx;
-> > +	}
-> > +	tdx->tdvpr_pa = tdvpr_pa;
-> > +
-> > +	tdx->tdvpx_pa = tdvpx_pa;
-> > +	for (i = 0; i < tdx_info->nr_tdvpx_pages; i++) {
-> > +		err = tdh_vp_addcx(tdx->tdvpr_pa, tdvpx_pa[i]);
-> > +		if (KVM_BUG_ON(err, vcpu->kvm)) {
-> > +			pr_tdx_error(TDH_VP_ADDCX, err, NULL);
-> > +			for (; i < tdx_info->nr_tdvpx_pages; i++) {
-> > +				free_page((unsigned long)__va(tdvpx_pa[i]));
-> > +				tdvpx_pa[i] = 0;
-> > +			}
-> > +			/* vcpu_free method frees TDVPX and TDR donated to TDX */
-> vcpu_free() interface is called by two sites.
-> One is the error handling path of kvm_vm_ioctl_create_vcpu() when vcpu
-> creation.
-> The other is during kvm_destroy_vm().
-> 
-> What about the error occurs in KVM_TDX_INIT_VCPU?
-> Let's assume TDR and some of tdvpx pages are donated to TDX, and the next
-> call of tdh_vp_addcx() failed. The comment says "vcpu_free method frees
-> TDVPX
-> and TDR donated to TDX", but if it happens, it seems that vcpu_free() would
-> not be called? Memory leakage?
+> On Sun, Feb 25, 2024 at 09:39:17PM +0100, Wadim Mueller wrote:
+>> On Sun, Feb 25, 2024 at 09:39:26PM +0530, Manivannan Sadhasivam wrote:
+>> > On Sat, Feb 24, 2024 at 10:03:59PM +0100, Wadim Mueller wrote:
+>> > > Hello,
+>> > >=20
+>> > > This series adds support for the Block Passthrough PCI(e) Endpoint f=
+unctionality.
+>> > > PCI Block Device Passthrough allows one Linux Device running in EP m=
+ode to expose its Block devices to the PCI(e) host (RC). The device can exp=
+ort either the full disk or just certain partitions.
+>> > > Also an export in readonly mode is possible. This is useful if you w=
+ant to share the same blockdevice between different SoCs, providing each So=
+C its own partition(s).
+>> > >=20
+>> > >=20
+>> > > Block Passthrough
+>> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> > > The PCI Block Passthrough can be a useful feature if you have multip=
+le SoCs in your system connected
+>> > > through a PCI(e) link, one running in RC mode, the other in EP mode.
+>> > > If the block devices are connected to one SoC (SoC2 in EP Mode from =
+the diagramm below) and you want to access
+>> > > those from the other SoC (SoC1 in RC mode below), without having any=
+ direct connection to
+>> > > those block devices (e.g. if you want to share an NVMe between two S=
+oCs). An simple example of such a configurationis is shown below:
+>> > >=20
+>> > >=20
+>> > >                                                            +--------=
+-----+
+>> > >                                                            |        =
+     |
+>> > >                                                            |   SD Ca=
+rd   |
+>> > >                                                            |        =
+     |
+>> > >                                                            +------^-=
+-----+
+>> > >                                                                   |
+>> > >                                                                   |
+>> > >     +--------------------------+                +-----------------v-=
+---------------+
+>> > >     |                          |      PCI(e)    |                   =
+               |
+>> > >     |         SoC1 (RC)        |<-------------->|            SoC2 (E=
+P)             |
+>> > >     | (CONFIG_PCI_REMOTE_DISK) |                |(CONFIG_PCI_EPF_BLO=
+CK_PASSTHROUGH)|
+>> > >     |                          |                |                   =
+               |
+>> > >     +--------------------------+                +-----------------^-=
+---------------+
+>> > >                                                                   |
+>> > >                                                                   |
+>> > >                                                            +------v-=
+-----+
+>> > >                                                            |        =
+     |
+>> > >                                                            |    NVMe=
+     |
+>> > >                                                            |        =
+     |
+>> > >                                                            +--------=
+-----+
+>> > >=20
+>> > >=20
+>> > > This is to a certain extent a similar functionality which NBD expose=
+s over Network, but on the PCI(e) bus utilizing the EPC/EPF Kernel Framewor=
+k.
+>> > >=20
+>> > > The Endpoint Function driver creates parallel Queues which run on se=
+perate CPU Cores using percpu structures. The number of parallel queues is =
+limited
+>> > > by the number of CPUs on the EP device. The actual number of queues =
+is configurable (as all other features of the driver) through CONFIGFS.
+>> > >=20
+>> > > A documentation about the functional description as well as a user g=
+uide showing how both drivers can be configured is part of this series.
+>> > >=20
+>> > > Test setup
+>> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> > >=20
+>> > > This series has been tested on an NXP S32G2 SoC running in Endpoint =
+mode with a direct connection to an ARM64 host machine.
+>> > >=20
+>> > > A performance measurement on the described setup shows good performa=
+nce metrics. The S32G2 SoC has a 2xGen3 link which has a maximum Bandwidth =
+of ~2GiB/s.
+>> > > With the explained setup a Read Datarate of 1.3GiB/s (with DMA ... w=
+ithout DMA the speed saturated at ~200MiB/s) was achieved using an 512GiB K=
+ingston NVMe
+>> > > when accessing the NVMe from the ARM64 (SoC1) Host. The local Read D=
+atarate accessing the NVMe dirctly from the S32G2 (SoC2) was around 1.5GiB.
+>> > >=20
+>> > > The measurement was done through the FIO tool [1] with 4kiB Blocks.
+>> > >=20
+>> > > [1] https://linux.die.net/man/1/fio
+>> > >=20
+>> >=20
+>> > Thanks for the proposal! We are planning to add virtio function suppor=
+t to
+>> > endpoint subsystem to cover usecases like this. I think your usecase c=
+an be
+>> > satisfied using vitio-blk. Maybe you can add the virtio-blk endpoint f=
+unction
+>> > support once we have the infra in place. Thoughts?
+>> >=20
+>> > - Mani
+>> >
+>>=20
+>> Hi Mani,
+>> I initially had the plan to implement the virtio-blk as an endpoint
+>> function driver instead of a self baked driver.=20
+>>=20
+>> This for sure is more elegant as we could reuse the
+>> virtio-blk pci driver instead of implementing a new one (as I did)=20
+>>=20
+>> But I initially had some concerns about the feasibility, especially
+>> that the virtio-blk pci driver is expecting immediate responses to some
+>> register writes which I would not be able to satisfy, simply because we
+>> do not have any kind of interrupt/event which would be triggered on the
+>> EP side when the RC is accessing some BAR Registers (at least there is
+>> no machanism I know of). As virtio is made mainly for Hypervisor <->
+>
+> Right. There is a limitation currently w.r.t triggering doorbell from the=
+ host
+> to endpoint. But I believe that could be addressed later by repurposing t=
+he
+> endpoint MSI controller [1].
+>
+>> As virtio is made mainly for Hypervisor <->
+>> Guest communication I was afraid that a Hypersisor is able to Trap every
+>> Register access from the Guest and act accordingly, which I would not be
+>> able to do. I hope this make sense to you.
+>>=20
+>
+> I'm not worrying about the hypervisor right now. Here the endpoint is exp=
+osing
+> the virtio devices and host is consuming it. There is no virtualization p=
+lay
+> here. I talked about this in the last plumbers [2].
+>
 
-vcpu_free() is called because we already created vcpu with KVM_VCPU_CREATE
-irrelevant of the result of TDX_VCPU_INIT.
-tdx_vcpu_free() handles error case of TDX_VCPU_INIT. So no leakage.
--- 
-Isaku Yamahata <isaku.yamahata@linux.intel.com>
+Okay, I understand this. The hypervisor was more of an example. I will
+try to explain.
+
+I am currently reading through the virtio spec [1].
+In chapter 4.1.4.5.1 there is the following statement:
+
+"The device MUST reset ISR status to 0 on driver read."
+
+So I was wondering, how we, as an PCI EP Device, supposed to clear a
+register when the driver reads the same register? I mean how do we detect a
+register read?
+If you are a hypervisor its easy to do so, because you can intercept
+every memory access made my the guest (the same applies if you build
+custom HW for this purpose). But for us as an EP device its
+difficult to detect this, even with MSIs and Doorbell Registers in
+place.
+
+Modifying the virtio layer to write to some doorbell register after
+reading the ISR status register would be possible, but kind of ugly.
+
+
+[1] https://docs.oasis-open.org/virtio/virtio/v1.2/csd01/virtio-v1.2-csd01.=
+pdf
+
+>> But to make a long story short, yes I agree with you that virtio-blk
+>> would satisfy my usecase, and I generally think it would be a better
+>> solution, I just did not know that you are working on some
+>> infrastructure for that. And yes I would like to implement the endpoint
+>> function driver for virtio-blk. Is there already an development tree you
+>> use to work on the infrastructre I could have a look at?
+>>=20
+>
+> Shunsuke has a WIP branch [3], that I plan to co-work in the coming days.
+> You can use it as a reference in the meantime.
+>
+> - Mani
+>
+> [1] https://lore.kernel.org/all/20230911220920.1817033-1-Frank.Li@nxp.com/
+> [2] https://www.youtube.com/watch?v=3D1tqOTge0eq0
+> [3] https://github.com/ShunsukeMie/linux-virtio-rdma/tree/v6.6-rc1-epf-vc=
+on
+>
+>> - Wadim
+>>=20
+>>=20
+>>=20
+>> > > Wadim Mueller (3):
+>> > >   PCI: Add PCI Endpoint function driver for Block-device passthrough
+>> > >   PCI: Add PCI driver for a PCI EP remote Blockdevice
+>> > >   Documentation: PCI: Add documentation for the PCI Block Passthrough
+>> > >=20
+>> > >  .../function/binding/pci-block-passthru.rst   |   24 +
+>> > >  Documentation/PCI/endpoint/index.rst          |    3 +
+>> > >  .../pci-endpoint-block-passthru-function.rst  |  331 ++++
+>> > >  .../pci-endpoint-block-passthru-howto.rst     |  158 ++
+>> > >  MAINTAINERS                                   |    8 +
+>> > >  drivers/block/Kconfig                         |   14 +
+>> > >  drivers/block/Makefile                        |    1 +
+>> > >  drivers/block/pci-remote-disk.c               | 1047 +++++++++++++
+>> > >  drivers/pci/endpoint/functions/Kconfig        |   12 +
+>> > >  drivers/pci/endpoint/functions/Makefile       |    1 +
+>> > >  .../functions/pci-epf-block-passthru.c        | 1393 ++++++++++++++=
++++
+>> > >  include/linux/pci-epf-block-passthru.h        |   77 +
+>> > >  12 files changed, 3069 insertions(+)
+>> > >  create mode 100644 Documentation/PCI/endpoint/function/binding/pci-=
+block-passthru.rst
+>> > >  create mode 100644 Documentation/PCI/endpoint/pci-endpoint-block-pa=
+ssthru-function.rst
+>> > >  create mode 100644 Documentation/PCI/endpoint/pci-endpoint-block-pa=
+ssthru-howto.rst
+>> > >  create mode 100644 drivers/block/pci-remote-disk.c
+>> > >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-block-pas=
+sthru.c
+>> > >  create mode 100644 include/linux/pci-epf-block-passthru.h
+>> > >=20
+>> > > --=20
+>> > > 2.25.1
+>> > >=20
+>> >=20
+>> > --=20
+>> > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
+=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=
+=AE=E0=AF=8D
+
