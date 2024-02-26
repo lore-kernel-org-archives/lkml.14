@@ -1,39 +1,40 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21498604C5;
-	Mon, 26 Feb 2024 12:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD645FDC9;
+	Mon, 26 Feb 2024 12:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708950482; cv=none; b=UeUM6534UWZEwIGTaC5KfXBo9EAiNtkexaqDgLf871y73TklpJW31+j/RHyLv11h26JQHyZBxLEwktaToLpUkU3tXkR7WhUnM3qxj/60aEvomyeGnziWUjzClUGOsawFUbi5Pwc0RHzlFeexgoSbORrqsi/t7WjhMxmBJPpjvPc=
+	t=1708950504; cv=none; b=OdnScvArGbGDh2l7qrC/bP4wWlcAe69/UJrc9zPgiAinAa/TjfoZ1+EEEvDcccnrqeeqvH5RFjJiBOdw4oi1WmcasdJxbUJ4kcFDmRgIjNarf6w7gz3kYOq0KNjUyhII6xlHzIfehOQUagttsUve7hpTh0r71jbmsT1JYCALjbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708950482; c=relaxed/simple;
-	bh=miy4N2ehf3wS51/2HOmrvNhD5ox2WtUJHV9WrrQzbcw=;
+	s=arc-20240116; t=1708950504; c=relaxed/simple;
+	bh=0Wd0sKNO7tP2RqySG2jQChiUIciUjhQMEGc7f9XIo5k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WAhgulAkZmj99lSHZqYe2mYX3vP0xKLcvndbQtrunS68Rnzi8LoaidNkFMSVet4RBiOIXidFstuEok52J9s+M5j5g6B8M2mLeHIpoZQ/tiPvDIfRTwGz1ZRNGo09q3QWBOKoFc4l0ZYuM9lkicHCk6h3g5xKXfH0HAIXLJCG7j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=mB6dP2If; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=MpEmCryoqRdLjdWfdTxFzCtssdJqHHK47V60Z1nOtpiAZ9xR+SjeUuaWgNaGi3njrcPUKl7Nh3bpWXEtmodx74QE/3LQr1VpYgLrz/oJM9+OSfHUPZ1sotM11h/krRX+xNik3kRp83AfWwqXwqVgki1RtHOcfVtWxAeWDF4JWi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BdrbsL+f; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="mB6dP2If"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=BehYZsTcBskWJbVJTSYJK03NQKC1Vfs2VOyvrT1egZI=; b=mB6dP2IfuiHH2mt6Om4PMPs6LD
-	+njc7OCEnWxnk188JDHYXrrtzN6ZVA/52jhCzCL7Zmyq8Au0H8Hhs1qOLmvYUC2zaernc0A4C/4q8
-	6KHeZK/Ixtp8yngEKbkrNfXn3iOWHokcG6TsPgJTxBOXahIQylM1PPqzfZN3H9vg6sSKb6W11NwE+
-	farhczgWnrfLuQdX1H7PAZP0zYJUB9H9vRj/Dzi/yS2J7z+T/ItwIb5P0gvgvd+8Dn0zCaet0Rnir
-	lrzLR5j8rAuvqoWauYbpFF3Y0hdOHR535+5MvMp1N4q/dTPTvJDyNVcGQI3AsAvsS6Z69ayquB+Ay
-	tknsYalQ==;
-Received: from [177.34.169.255] (helo=[192.168.0.139])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rea58-003Yij-Nd; Mon, 26 Feb 2024 13:27:43 +0100
-Message-ID: <f078cbc0-f8bd-4e14-9395-09afa851a070@igalia.com>
-Date: Mon, 26 Feb 2024 09:27:36 -0300
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BdrbsL+f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1708950501;
+	bh=0Wd0sKNO7tP2RqySG2jQChiUIciUjhQMEGc7f9XIo5k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BdrbsL+fURkkEt+RFYfL883Z7DqkhNSW6PazwFDXk8Bcfefd+wUchjmpl05PC0G/z
+	 Vl5G9crrnjX1YDTq6xZqg2UiTMpaz6Xcz8ukVDf5/jUtCR+qm953bTjUbOCo4r6Vzr
+	 6IKEuDjCvQ/yF4MkHB2oy3P+6i9oJwN3KlIVLfaVhAZIATkSJ1JHzhMvaCOKyw4ySk
+	 0w5cbw0dz9Rc8aSr5qwlASm3EnuI3vGlaaTVGm5N6gAdQy53vcnM3Z8arw/inhR6Qq
+	 BGzf6JFf6+t76xYCcbSQamVUfliaEd3+3y/jUSgWHLrLKNx2mbnynXV3N59AiiDe5s
+	 KaDsUUYpx/TFg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EE39C37803EE;
+	Mon, 26 Feb 2024 12:28:20 +0000 (UTC)
+Message-ID: <3756ad5e-7c05-4502-9a6a-ffb58c76390e@collabora.com>
+Date: Mon, 26 Feb 2024 13:28:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,245 +42,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 05/36] drm/tests: connector: Add tests for
- drmm_connector_init
+Subject: Re: [PATCH] dt-bindings: leds: Add LED_FUNCTION_WAN_ONLINE for
+ Internet access
 Content-Language: en-US
-To: Maxime Ripard <mripard@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>,
- Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
- Sebastian Wick <sebastian.wick@redhat.com>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
- <20240222-kms-hdmi-connector-state-v7-5-8f4af575fce2@kernel.org>
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-Autocrypt: addr=mcanal@igalia.com; keydata=
- xjMEZIsaeRYJKwYBBAHaRw8BAQdAGU6aY8oojw61KS5rGGMrlcilFqR6p6ID45IZ6ovX0h3N
- H01haXJhIENhbmFsIDxtY2FuYWxAaWdhbGlhLmNvbT7CjwQTFggANxYhBDMCqFtIvFKVRJZQ
- hDSPnHLaGFVuBQJkixp5BQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQNI+cctoYVW5u
- GAEAwpaC5rI3wD8zqETKwGVoXd6+AbmGfZuVD40xepy7z/8BAM5w95/oyPsHUqOsg/xUTlNp
- rlbhA+WWoaOXA3XgR+wCzjgEZIsaeRIKKwYBBAGXVQEFAQEHQGoOK0jgh0IorMAacx6WUUWb
- s3RLiJYWUU6iNrk5wWUbAwEIB8J+BBgWCAAmFiEEMwKoW0i8UpVEllCENI+cctoYVW4FAmSL
- GnkFCQWjmoACGwwACgkQNI+cctoYVW6cqwD/Q9R98msvkhgRvi18fzUPFDwwogn+F+gQJJ6o
- pwpgFkAA/R2zOfla3IT6G3SBoV5ucdpdCpnIXFpQLbmfHK7dXsAC
-In-Reply-To: <20240222-kms-hdmi-connector-state-v7-5-8f4af575fce2@kernel.org>
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-leds@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>
+References: <20240223112223.1368-1-zajec5@gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240223112223.1368-1-zajec5@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 2/22/24 15:13, Maxime Ripard wrote:
-> drmm_connector_init is the preferred function to initialize a
-> drm_connector structure. Let's add a bunch of unit tests for it.
+Il 23/02/24 12:22, Rafał Miłecki ha scritto:
+> From: Rafał Miłecki <rafal@milecki.pl>
 > 
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
-
-Best Regards,
-- Maíra
-
-> ---
->   drivers/gpu/drm/tests/drm_connector_test.c | 170 ++++++++++++++++++++++++++++-
->   1 file changed, 169 insertions(+), 1 deletion(-)
+> It's common for routers to have LED indicating link on the WAN port.
 > 
-> diff --git a/drivers/gpu/drm/tests/drm_connector_test.c b/drivers/gpu/drm/tests/drm_connector_test.c
-> index c66aa2dc8d9d..a268847be8d1 100644
-> --- a/drivers/gpu/drm/tests/drm_connector_test.c
-> +++ b/drivers/gpu/drm/tests/drm_connector_test.c
-> @@ -3,10 +3,175 @@
->    * Kunit test for drm_modes functions
->    */
->   
-> +#include <linux/i2c.h>
-> +
-> +#include <drm/drm_atomic_state_helper.h>
->   #include <drm/drm_connector.h>
-> +#include <drm/drm_drv.h>
-> +#include <drm/drm_kunit_helpers.h>
->   
->   #include <kunit/test.h>
->   
-> +struct drm_connector_init_priv {
-> +	struct drm_device drm;
-> +	struct drm_connector connector;
-> +	struct i2c_adapter ddc;
-> +};
-> +
-> +static const struct drm_connector_funcs dummy_funcs = {
-> +	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
-> +	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
-> +	.reset			= drm_atomic_helper_connector_reset,
-> +};
-> +
-> +static int dummy_ddc_xfer(struct i2c_adapter *adapter,
-> +			  struct i2c_msg *msgs, int num)
-> +{
-> +	return num;
-> +}
-> +
-> +static u32 dummy_ddc_func(struct i2c_adapter *adapter)
-> +{
-> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-> +}
-> +
-> +static const struct i2c_algorithm dummy_ddc_algorithm = {
-> +	.master_xfer = dummy_ddc_xfer,
-> +	.functionality = dummy_ddc_func,
-> +};
-> +
-> +static void i2c_del_adapter_wrapper(void *ptr)
-> +{
-> +	struct i2c_adapter *adap = ptr;
-> +
-> +	i2c_del_adapter(adap);
-> +}
-> +
-> +static int drm_test_connector_init(struct kunit *test)
-> +{
-> +	struct drm_connector_init_priv *priv;
-> +	struct device *dev;
-> +	int ret;
-> +
-> +	dev = drm_kunit_helper_alloc_device(test);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dev);
-> +
-> +	priv = drm_kunit_helper_alloc_drm_device(test, dev,
-> +						 struct drm_connector_init_priv, drm,
-> +						 DRIVER_MODESET | DRIVER_ATOMIC);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
-> +
-> +	strscpy(priv->ddc.name, "dummy-connector-ddc", sizeof(priv->ddc.name));
-> +	priv->ddc.owner = THIS_MODULE;
-> +	priv->ddc.algo = &dummy_ddc_algorithm;
-> +	priv->ddc.dev.parent = dev;
-> +
-> +	ret = i2c_add_adapter(&priv->ddc);
-> +	KUNIT_ASSERT_EQ(test, ret, 0);
-> +
-> +	ret = kunit_add_action_or_reset(test, i2c_del_adapter_wrapper, &priv->ddc);
-> +	KUNIT_ASSERT_EQ(test, ret, 0);
-> +
-> +	test->priv = priv;
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Test that the registration of a bog standard connector works as
-> + * expected and doesn't report any error.
-> + */
-> +static void drm_test_drmm_connector_init(struct kunit *test)
-> +{
-> +	struct drm_connector_init_priv *priv = test->priv;
-> +	int ret;
-> +
-> +	ret = drmm_connector_init(&priv->drm, &priv->connector,
-> +				  &dummy_funcs,
-> +				  DRM_MODE_CONNECTOR_HDMIA,
-> +				  &priv->ddc);
-> +	KUNIT_EXPECT_EQ(test, ret, 0);
-> +}
-> +
-> +/*
-> + * Test that the registration of a connector without a DDC adapter
-> + * doesn't report any error.
-> + */
-> +static void drm_test_drmm_connector_init_null_ddc(struct kunit *test)
-> +{
-> +	struct drm_connector_init_priv *priv = test->priv;
-> +	int ret;
-> +
-> +	ret = drmm_connector_init(&priv->drm, &priv->connector,
-> +				  &dummy_funcs,
-> +				  DRM_MODE_CONNECTOR_HDMIA,
-> +				  NULL);
-> +	KUNIT_EXPECT_EQ(test, ret, 0);
-> +}
-> +
-> +/*
-> + * Test that the registration of a connector succeeds for all possible
-> + * connector types.
-> + */
-> +static void drm_test_drmm_connector_init_type_valid(struct kunit *test)
-> +{
-> +       struct drm_connector_init_priv *priv = test->priv;
-> +       unsigned int connector_type = *(unsigned int *)test->param_value;
-> +       int ret;
-> +
-> +       ret = drmm_connector_init(&priv->drm, &priv->connector,
-> +				 &dummy_funcs,
-> +				 connector_type,
-> +				 &priv->ddc);
-> +       KUNIT_EXPECT_EQ(test, ret, 0);
-> +}
-> +
-> +static const unsigned int drm_connector_init_type_valid_tests[] = {
-> +	DRM_MODE_CONNECTOR_Unknown,
-> +	DRM_MODE_CONNECTOR_VGA,
-> +	DRM_MODE_CONNECTOR_DVII,
-> +	DRM_MODE_CONNECTOR_DVID,
-> +	DRM_MODE_CONNECTOR_DVIA,
-> +	DRM_MODE_CONNECTOR_Composite,
-> +	DRM_MODE_CONNECTOR_SVIDEO,
-> +	DRM_MODE_CONNECTOR_LVDS,
-> +	DRM_MODE_CONNECTOR_Component,
-> +	DRM_MODE_CONNECTOR_9PinDIN,
-> +	DRM_MODE_CONNECTOR_DisplayPort,
-> +	DRM_MODE_CONNECTOR_HDMIA,
-> +	DRM_MODE_CONNECTOR_HDMIB,
-> +	DRM_MODE_CONNECTOR_TV,
-> +	DRM_MODE_CONNECTOR_eDP,
-> +	DRM_MODE_CONNECTOR_VIRTUAL,
-> +	DRM_MODE_CONNECTOR_DSI,
-> +	DRM_MODE_CONNECTOR_DPI,
-> +	DRM_MODE_CONNECTOR_WRITEBACK,
-> +	DRM_MODE_CONNECTOR_SPI,
-> +	DRM_MODE_CONNECTOR_USB,
-> +};
-> +
-> +static void drm_connector_init_type_desc(const unsigned int *type, char *desc)
-> +{
-> +	sprintf(desc, "%s", drm_get_connector_type_name(*type));
-> +}
-> +
-> +KUNIT_ARRAY_PARAM(drm_connector_init_type_valid,
-> +		  drm_connector_init_type_valid_tests,
-> +		  drm_connector_init_type_desc);
-> +
-> +static struct kunit_case drmm_connector_init_tests[] = {
-> +	KUNIT_CASE(drm_test_drmm_connector_init),
-> +	KUNIT_CASE(drm_test_drmm_connector_init_null_ddc),
-> +	KUNIT_CASE_PARAM(drm_test_drmm_connector_init_type_valid,
-> +			 drm_connector_init_type_valid_gen_params),
-> +	{ }
-> +};
-> +
-> +static struct kunit_suite drmm_connector_init_test_suite = {
-> +	.name = "drmm_connector_init",
-> +	.init = drm_test_connector_init,
-> +	.test_cases = drmm_connector_init_tests,
-> +};
-> +
->   struct drm_get_tv_mode_from_name_test {
->   	const char *name;
->   	enum drm_connector_tv_mode expected_mode;
-> @@ -70,7 +235,10 @@ static struct kunit_suite drm_get_tv_mode_from_name_test_suite = {
->   	.test_cases = drm_get_tv_mode_from_name_tests,
->   };
->   
-> -kunit_test_suite(drm_get_tv_mode_from_name_test_suite);
-> +kunit_test_suites(
-> +	&drmm_connector_init_test_suite,
-> +	&drm_get_tv_mode_from_name_test_suite
-> +);
->   
->   MODULE_AUTHOR("Maxime Ripard <maxime@cerno.tech>");
->   MODULE_LICENSE("GPL");
+> Some devices however have an extra LED that's meant to be used if WAN
+> connection is actually "online" (there is Internet access available).
 > 
+> It was suggested to add #define for such use case.
+
+In this case, you can use the Suggested-by tag, but I'm not picky anyway :-)
+
+> 
+> Link: https://lore.kernel.org/linux-devicetree/80e92209-5578-44e7-bd4b-603a29053ddf@collabora.com/T/#u
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+
