@@ -1,162 +1,131 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33FA12BEA1;
+	Mon, 26 Feb 2024 16:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708963213; cv=none; b=q8LCmuLIkW+k5uxJazRjmXvoRbGhMQ5Xn2c1W/U/3ZwY7ru8VjGSHoglfXDErPCry3HBClK29qzOygblmC0kYlkmyestcKqFttWQ09h18vxs9eKZhiWGtMGmSUnwVyNDNf3y/NmkMCFWTV8cNn9U0QdbiVf/7wpn2hese0kNLck=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708963213; c=relaxed/simple;
+	bh=eiEN98yjHWpgsNieB++vFqM13GnLlyTzpq+LgyXfNJQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=m0s0fTy228gOGuB0P73Ph+InQfkcIruaBof91YjEqCFbVWzsM2aw4ImC4nDDPb4cWb77kdhHzRCtKEi+ytQHnWTxONA86Qd2au5BYcKSwNoWC23cwERgw9z8oPDsQEeDHg+eGDXkTTTaiMqZkEWwwN1qCGApvK5txKJzOnRkc5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QkD/LCs3; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QkD/LCs3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708963212; x=1740499212;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=eiEN98yjHWpgsNieB++vFqM13GnLlyTzpq+LgyXfNJQ=;
+  b=QkD/LCs3soZs/MyJ4+ilDzn1vFS0yW7zn3SycV0yvs4uOM8EMhOOTHyi
+   wVbwY2938XgYxfaW+0vwBDMNhpzZdua8hVHfEUTbzlY5HYX15QYlr/syQ
+   fUikc+i57oAhVLSDGXNTX4qrlHu2oaru7fY0m/ueSjdtjg5SeyGgK4Vjx
+   ErkCUjQUIHt4V0bRTrlIPPk5IU98945LjkcPT+XFwXZjxvT6E/lP8KbKk
+   ZTwCuNcZm3vxI2J/dckpa+r2QTwph85+LKqI5rtOkywmrmAIklQJyY9Xb
+   zHUv5Ss4ln6QmhmPVAUo8jbKSvRkvxKxG5dn+2bd5/ET+zJq+wCTKiuo0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3419570"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="3419570"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:00:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="6914761"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:00:10 -0800
+Received: from [10.213.175.136] (kliang2-mobl1.ccr.corp.intel.com [10.213.175.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DB312BF01
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708962994; cv=none; b=HfmNWX2CCQi/8fkdFknlQ/J5wWkG25K0GC2EemM3Pp807xW4VJOQTXxAW95VDWJMn+qsXmiOB2xaliJAU6F9E0PJIvnf4Hjpf5uuqpD/oBMdX2HqpUo/ApQtTxAaBqt5I+kmSSX63XAsCKngW235xiiPPNCBdgn3jaxZYuWkkGc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708962994; c=relaxed/simple;
-	bh=wTNfxtjjEuUsYp1JNTlYg2x2iUW0rS+mI/kNL5uqq8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qpQwM0qaMlRhJvLNPsMu1fb30zU91/494a6iVGzfFBdnlMddAPecBB1FiYtP+LK37fvDAfPqR+fJ+Zlnyua2VkvNsIMX4u6yAECnWRfdDUyy0xFCb5j1mR8tJ6K1IABkFQNnG6lqj9g4L+c5q1sDUGDNG8snohK52lGsjW8UNyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Cr1+/oE/; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cr1+/oE/"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3e5d82ad86so455706066b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 07:56:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708962988; x=1709567788; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wTNfxtjjEuUsYp1JNTlYg2x2iUW0rS+mI/kNL5uqq8k=;
-        b=Cr1+/oE/lSCT/KHR3Phkvu0oyWtYMIRymC8UkSU5TJXl2DHLmMkZvmEUWnrxMPhvlL
-         PR6nGU3T+QzVzvL5okTMXg/mgy5Y6JDhk0SZEPfVWcgdIpM2SAv2c2DpPqSguOPHdTBZ
-         uguKnnCQyFtmGfBpGpC4DHwQScsNUUqc16GR0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708962988; x=1709567788;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wTNfxtjjEuUsYp1JNTlYg2x2iUW0rS+mI/kNL5uqq8k=;
-        b=KJLO1WmltK3yePVIUtkVNU1/+SpfrlOziGQ3kCyy//fYBLI/x+6qlRFyjItCsv9u09
-         W9AD02JMDZ1vLFXG6j/nLYc2dsvZ1fkS3cIx8ZxPcOTOumFLCnizzS8sVayYK/wxyH1N
-         +lqLPk00dzingDd56Hv9titTKpVXpFwAE776c30hRHw5iniuZnrRVWKcrIq9fikKSA5H
-         ZpkK7wiAf7sFfL1XwcGG+AKmSEXjVmWx9e9uyoH2MKAXbfB0u2pw+MsLXwqSpaIawBJO
-         IGlgakdTJ3h6zjagSWCqYNA/4CI6piSjIIhMQEX6QZYYHRjk4VvmHEX5TCq7HRVb4lGs
-         E+VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJZl502jJtgYrE13a0vPuMlkdrb5+/0MnbcsdbgpyydoejpYWAE7BEiXWybs4PaQ1Vjx999sa8/t/JG2aQ8Y5ViAGo60eDYcS0J6B5
-X-Gm-Message-State: AOJu0YxWFXnJIqj3GxX4igI/c+FlVlDrEWDRi28Oe5EfhkcorqB/S1V9
-	tpC4dFgYgXmYAy1s/oaGLRZs82f9zLwvdKkRHsdK/s9LKGdstmgPZ7Y6kqtjoTnpueFAq+KeaUo
-	Cpw==
-X-Google-Smtp-Source: AGHT+IHpzRjINi4RgXeDk0okBNd4/uQ3D0c3yxLNEYCapSIcyD76PjMgUnylYBuBF7k2pmMR333fig==
-X-Received: by 2002:a17:906:4bd4:b0:a3d:994a:791d with SMTP id x20-20020a1709064bd400b00a3d994a791dmr5025546ejv.59.1708962988623;
-        Mon, 26 Feb 2024 07:56:28 -0800 (PST)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id i20-20020a1709061cd400b00a3f2bf468b9sm2568183ejh.173.2024.02.26.07.56.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 07:56:27 -0800 (PST)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56619428c41so5889a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 07:56:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVghL7jt3RrYi4ppRF70Uupt/bsATAX435/H04HT1vTyCVrzM9JaeKax1wnlgw5YToKWsMpVbKDdgehD3xvIWdY2uF64uW1eiuvVGFU
-X-Received: by 2002:a50:9f28:0:b0:562:9d2:8857 with SMTP id
- b37-20020a509f28000000b0056209d28857mr330238edf.6.1708962985791; Mon, 26 Feb
- 2024 07:56:25 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTPS id 11EDC580ABD;
+	Mon, 26 Feb 2024 08:00:08 -0800 (PST)
+Message-ID: <cf12ec88-0a15-4aa8-b6b8-948841d7d66d@linux.intel.com>
+Date: Mon, 26 Feb 2024 11:00:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221-rb3gen2-dp-connector-v1-0-dc0964ef7d96@quicinc.com>
- <20240221-rb3gen2-dp-connector-v1-3-dc0964ef7d96@quicinc.com>
- <CAA8EJpo=9vhM+5YzaFxUoYRuEWQyrMS8wLNPSF3K=bN5JwWyDw@mail.gmail.com>
- <8313a7c3-3ace-4dee-ad27-8f51a06cd58c@linaro.org> <CAA8EJpqFj5nf8d_=Uoup7qg+nQrxqQU-DHbL3uSP138m9AcXLw@mail.gmail.com>
- <8fcb5816-2d59-4e27-ba68-8e0ed6e7d839@linaro.org> <CAA8EJporaUuddHHqpyYHiYSu=toHmrDxSHf9msZUJoym4Nz72g@mail.gmail.com>
- <20240222150423.GI2936378@hu-bjorande-lv.qualcomm.com> <CAA8EJpqd=1KV_dN8AURQDcFDDyO+YtbC59gM7ftt+HohGM93hg@mail.gmail.com>
-In-Reply-To: <CAA8EJpqd=1KV_dN8AURQDcFDDyO+YtbC59gM7ftt+HohGM93hg@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 26 Feb 2024 07:56:09 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XJVFX-GkL-wiAoi=r6tdiDHkJ_aFSpx6FE6+gFT5xJjA@mail.gmail.com>
-Message-ID: <CAD=FV=XJVFX-GkL-wiAoi=r6tdiDHkJ_aFSpx6FE6+gFT5xJjA@mail.gmail.com>
-Subject: Re: [PATCH 3/9] arm64: dts: qcom: sc7280: Enable MDP turbo mode
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <quic_bjorande@quicinc.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, cros-qcom-dts-watchers@chromium.org, 
-	Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] perf metrics: Fix metric matching
+Content-Language: en-US
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240224011420.3066322-1-irogers@google.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240224011420.3066322-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On Thu, Feb 22, 2024 at 9:32=E2=80=AFAM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Thu, 22 Feb 2024 at 17:04, Bjorn Andersson <quic_bjorande@quicinc.com>=
- wrote:
-> >
-> > On Thu, Feb 22, 2024 at 11:46:26AM +0200, Dmitry Baryshkov wrote:
-> > > On Thu, 22 Feb 2024 at 11:28, Konrad Dybcio <konrad.dybcio@linaro.org=
-> wrote:
-> > > >
-> > > >
-> > > >
-> > > > On 2/22/24 10:04, Dmitry Baryshkov wrote:
-> > > > > On Thu, 22 Feb 2024 at 10:56, Konrad Dybcio <konrad.dybcio@linaro=
-.org> wrote:
-> > > > >>
-> > > > >>
-> > > > >>
-> > > > >> On 2/22/24 00:41, Dmitry Baryshkov wrote:
-> > > > >>> On Thu, 22 Feb 2024 at 01:19, Bjorn Andersson <quic_bjorande@qu=
-icinc.com> wrote:
-> > > > >>>>
-> > > > >>>> The max frequency listed in the DPU opp-table is 506MHz, this =
-is not
-> > > > >>>> sufficient to drive a 4k@60 display, resulting in constant und=
-errun.
-> > > > >>>>
-> > > > >>>> Add the missing MDP_CLK turbo frequency of 608MHz to the opp-t=
-able to
-> > > > >>>> fix this.
-> > > > >>>
-> > > > >>> I think we might want to keep this disabled for ChromeOS device=
-s. Doug?
-> > > > >>
-> > > > >> ChromeOS devices don't get a special SoC
-> > > > >
-> > > > > But they have the sc7280-chrome-common.dtsi, which might contain =
-a
-> > > > > corresponding /delete-node/ .
-> > > >
-> > > > What does that change? The clock rates are bound to the
-> > > > SoC and the effective values are limited by link-frequencies
-> > > > or the panel driver.
-> > >
-> > > Preventing the DPU from overheating? Or spending too much power?
-> > >
-> >
-> > Perhaps I'm misunderstanding the implementation then, are we always
-> > running at the max opp? I thought the opp was selected based on the
-> > current need for performance?
->
-> Yes. My concern was whether the Chrome people purposely skipped this
-> top/turbo freq for any reason. In such a case, surprising them by
-> adding it to all platforms might be not the best idea. I hope Doug can
-> comment here.
 
-Thanks for thinking of us! In this case, I think the only users left
-of the sc7280 Chrome devices are folks like Rob and then a few folks
-on Qualcomm's display team (like Abhinav), so if they're happy with
-the change then I have no objections.
+On 2024-02-23 8:14 p.m., Ian Rogers wrote:
+> The metric match function fails for cases like looking for "metric" in
+> the string "all;foo_metric;metric" as the "metric" in "foo_metric"
+> matches but isn't preceeded by a ';'. Fix this by matching the first
+> list item and recursively matching on failure the next item after a
+> semicolon.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-In any case, I'm not aware of any reason why this would have been
-skipped for Chrome. The Chrome devices were always intended to support
-4K so I assume this was an oversight and nothing more. ...of course,
-as Abhinav points out Chrome devices are currently limited to HBR2 + 2
-lanes DP so they can't go 4K60 anyway.
+For the series,
 
-In any case, in case it matters, feel free to have:
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Acked-by: Douglas Anderson <dianders@chromium.org>
+Thanks,
+Kan
+
+> ---
+>  tools/perf/util/metricgroup.c | 22 ++++++++++------------
+>  1 file changed, 10 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index b24a1c177a80..2d6865c392ef 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -352,25 +352,23 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
+>  	return 0;
+>  }
+>  
+> -static bool match_metric(const char *n, const char *list)
+> +static bool match_metric(const char *metric_or_groups, const char *sought)
+>  {
+>  	int len;
+>  	char *m;
+>  
+> -	if (!list)
+> +	if (!sought)
+>  		return false;
+> -	if (!strcmp(list, "all"))
+> +	if (!strcmp(sought, "all"))
+>  		return true;
+> -	if (!n)
+> -		return !strcasecmp(list, "No_group");
+> -	len = strlen(list);
+> -	m = strcasestr(n, list);
+> -	if (!m)
+> -		return false;
+> -	if ((m == n || m[-1] == ';' || m[-1] == ' ') &&
+> -	    (m[len] == 0 || m[len] == ';'))
+> +	if (!metric_or_groups)
+> +		return !strcasecmp(sought, "No_group");
+> +	len = strlen(sought);
+> +	if (!strncasecmp(metric_or_groups, sought, len) &&
+> +	    (metric_or_groups[len] == 0 || metric_or_groups[len] == ';'))
+>  		return true;
+> -	return false;
+> +	m = strchr(metric_or_groups, ';');
+> +	return m && match_metric(m + 1, sought);
+>  }
+>  
+>  static bool match_pm_metric(const struct pmu_metric *pm, const char *pmu, const char *metric)
