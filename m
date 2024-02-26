@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43405336F;
-	Mon, 26 Feb 2024 08:27:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A92353E2D;
+	Mon, 26 Feb 2024 08:27:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936071; cv=none; b=lWpKHc41WVS1/5/G5AvF7Q0qivTBBv3ohdUYjP1Gx5csA7oZXflpuYJVa5tolBM1L70sDVgJ7dD63KWGQ+vHoo+prmmqtkHLrfUtOQqbHdl5jZHxVDvHtjEPVba2Bix6tt47ymttmmqMC3N/ESX5SXCUef43+dp/uc+jjmVxOdA=
+	t=1708936073; cv=none; b=kXVgyIhMKh6BqkAOzyYYUQPxLB2g/6jhBAlhNr+HfUWmDzmOn8H8b++ZZfCNY+oIETTlRuiD/TS0UiRq7iGgm3lsJPOvzt1yR+dVu0W3t1jU0DE9kcdx7dX7Xze7KNVl3pn/Kn6JJrXTYGi6M5XJiKislCodLYjHf5wxaC03D8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936071; c=relaxed/simple;
-	bh=qKBirrBY3+MoQoDpbImPbRXsqS9NNbeEormb4888U70=;
+	s=arc-20240116; t=1708936073; c=relaxed/simple;
+	bh=ZOimDrQPGotChcrBFIpUTI6niKrsT5WJoO34ZaH7XfY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X1vwIRd+1+y+3h40XrcQhspSvTdUZjB+pNZU1VM1zZKoNz+ZCAwL1atJ7eQGZ2ldpJzla0nTYata7CI8i/uShxUJnvKMmrEWaKe0bguc3wbHOlBufJW3f0/ZVqilN3iViQcw/qf0S6vRRhUAUdZczYx+jr9Y66gd8/H01cVnBf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eGJhJmfZ; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=hFrL8eztccLKdBRwFiiRuZnFULM0vU17xim/0XTPi/sx3pHtBHxUX23Btm0SPpOEE4x2K/7eIwp29Hc/fDfrxtEXuDHA4XX4w8bWqR1Fhb1m2P0HG1/6B11JmZ06Jp1YKvJb3w5TCDP+WzdJUFsRT8hJLdx9a1MZ1skiFh921LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ny3P4K5p; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eGJhJmfZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ny3P4K5p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936070; x=1740472070;
+  t=1708936072; x=1740472072;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qKBirrBY3+MoQoDpbImPbRXsqS9NNbeEormb4888U70=;
-  b=eGJhJmfZRHZRK592g1XLGwrkp7EqGydS49l0gxJ81LAb2nsnBqcAumUV
-   1ihZ1k8xBuEdTFvhIUotzeMV3jjJhAe/+jcUNPQGszFLWRb8ou9nGNYCc
-   yB1uBNWIYGPef7BmEzPDl+R3hJEb4w7jx9ZuUx+JFHQy229RxspPH02sy
-   BskrFFbkaARPY++u7l9SlXnzBd6Alsb5nNJWEdRMG/QMeGaRWJds4Z572
-   VphbKuxkZTaA/Q4ddzN/EWFnD+1vMSuUuYiLJ2CmJGT0G1ahL8ptB/zHk
-   VxsEB4nsnIHjEY7flFqqmsZ83pluEkUgs10X+919mjy8OuqPPhzRSa7+S
+  bh=ZOimDrQPGotChcrBFIpUTI6niKrsT5WJoO34ZaH7XfY=;
+  b=ny3P4K5ptdLSYeHrYKkyoDcCZLnl+stGQM7hmahZPtx8heecEZzu4Ygt
+   TVoNfUPbVaQ/56W+sT5768MyLSuOQ0HnJUxkXqtHAcZ9xw6AvMnaT7s22
+   3HJDJWx/H2zx1zhnfGBc5OEBgOvX1VbLxZaHhwzChhfeFjBAOE+YUUjA+
+   zZW46mzw8Ozgb2FPkyVAJJg1qrxPILDhHHXi1oFm2MfZ2fiHQlNE9qUTk
+   weeJANb3ZU9q0kXZ9KnVKIHcSa5JNryOuIeHTofCV+0IJ0zB26tg+wZ7m
+   ZifpJN5tsOcOKRaHTPnBNUNofQgNTwg9RBl+scyHGjHvaHPuM7Lc5vm1Q
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="28631506"
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="28631515"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="28631506"
+   d="scan'208";a="28631515"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:44 -0800
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:45 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6474357"
+   d="scan'208";a="6474365"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:44 -0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:45 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,10 +51,11 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com
-Subject: [PATCH v19 019/130] KVM: x86: Add is_vm_type_supported callback
-Date: Mon, 26 Feb 2024 00:25:21 -0800
-Message-Id: <6712a8a18abb033b1c32b9b6579ac297e3b00ab6.1708933498.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com,
+	Yuan Yao <yuan.yao@intel.com>
+Subject: [PATCH v19 021/130] KVM: x86/vmx: initialize loaded_vmcss_on_cpu in vmx_init()
+Date: Mon, 26 Feb 2024 00:25:23 -0800
+Message-Id: <c1b7f0e5c2476f9f565acda5c1e746b8d181499b.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -68,173 +69,56 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-For SEV_SNP and TDX, allow the backend can override the supported vm type.
-Add KVM_X86_SNP_VM and KVM_X86_TDX_VM to reserve the bit.
+vmx_hardware_disable() accesses loaded_vmcss_on_cpu via
+hardware_disable_all().  To allow hardware_enable/disable_all() before
+kvm_init(), initialize it in before kvm_x86_vendor_init() in vmx_init()
+so that tdx module initialization, hardware_setup method, can reference
+the variable.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Reviewed-by: Yuan Yao <yuan.yao@intel.com>
 
 ---
 v19:
-- Mention KVM_X86_SNP_VM to the commit message
+- Fix the subject to match the patch by Yuan
 
 v18:
-- include into TDX KVM patch series v18
-
-Changes v3 -> v4:
-- Added KVM_X86_SNP_VM
-
-Changes v2 -> v3:
-- no change
-- didn't bother to rename KVM_X86_PROTECTED_VM to KVM_X86_SW_PROTECTED_VM
-
-Changes v1 -> v2
-- no change
+- Move the vmcss_on_cpu initialization from vmx_hardware_setup() to
+  early point of vmx_init() by Binbin
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/include/asm/kvm-x86-ops.h |  1 +
- arch/x86/include/asm/kvm_host.h    |  1 +
- arch/x86/include/uapi/asm/kvm.h    |  2 ++
- arch/x86/kvm/svm/svm.c             |  7 +++++++
- arch/x86/kvm/vmx/vmx.c             |  7 +++++++
- arch/x86/kvm/x86.c                 | 12 +++++++++++-
- arch/x86/kvm/x86.h                 |  2 ++
- 7 files changed, 31 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index 156832f01ebe..8be71a5c5c87 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -20,6 +20,7 @@ KVM_X86_OP(hardware_disable)
- KVM_X86_OP(hardware_unsetup)
- KVM_X86_OP(has_emulated_msr)
- KVM_X86_OP(vcpu_after_set_cpuid)
-+KVM_X86_OP(is_vm_type_supported)
- KVM_X86_OP(vm_init)
- KVM_X86_OP_OPTIONAL(vm_destroy)
- KVM_X86_OP_OPTIONAL_RET0(vcpu_precreate)
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 28314e7d546c..37cda8aa07b6 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1603,6 +1603,7 @@ struct kvm_x86_ops {
- 	bool (*has_emulated_msr)(struct kvm *kvm, u32 index);
- 	void (*vcpu_after_set_cpuid)(struct kvm_vcpu *vcpu);
- 
-+	bool (*is_vm_type_supported)(unsigned long vm_type);
- 	unsigned int vm_size;
- 	int (*vm_init)(struct kvm *kvm);
- 	void (*vm_destroy)(struct kvm *kvm);
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index a448d0964fc0..aa7a56a47564 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -564,5 +564,7 @@ struct kvm_pmu_event_filter {
- 
- #define KVM_X86_DEFAULT_VM	0
- #define KVM_X86_SW_PROTECTED_VM	1
-+#define KVM_X86_TDX_VM		2
-+#define KVM_X86_SNP_VM		3
- 
- #endif /* _ASM_X86_KVM_H */
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index e90b429c84f1..f76dd52d29ba 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4886,6 +4886,12 @@ static void svm_vm_destroy(struct kvm *kvm)
- 	sev_vm_destroy(kvm);
- }
- 
-+static bool svm_is_vm_type_supported(unsigned long type)
-+{
-+	/* FIXME: Check if CPU is capable of SEV-SNP. */
-+	return __kvm_is_vm_type_supported(type);
-+}
-+
- static int svm_vm_init(struct kvm *kvm)
- {
- 	if (!pause_filter_count || !pause_filter_thresh)
-@@ -4914,6 +4920,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.vcpu_free = svm_vcpu_free,
- 	.vcpu_reset = svm_vcpu_reset,
- 
-+	.is_vm_type_supported = svm_is_vm_type_supported,
- 	.vm_size = sizeof(struct kvm_svm),
- 	.vm_init = svm_vm_init,
- 	.vm_destroy = svm_vm_destroy,
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 1111d9d08903..fca3457dd050 100644
+index 434f5aaef030..8af0668e4dca 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7541,6 +7541,12 @@ static int vmx_vcpu_create(struct kvm_vcpu *vcpu)
- 	return err;
- }
+@@ -8539,6 +8539,10 @@ static int __init vmx_init(void)
+ 	 */
+ 	hv_init_evmcs();
  
-+static bool vmx_is_vm_type_supported(unsigned long type)
-+{
-+	/* TODO: Check if TDX is supported. */
-+	return __kvm_is_vm_type_supported(type);
-+}
++	/* vmx_hardware_disable() accesses loaded_vmcss_on_cpu. */
++	for_each_possible_cpu(cpu)
++		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
 +
- #define L1TF_MSG_SMT "L1TF CPU bug present and SMT on, data leak possible. See CVE-2018-3646 and https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/l1tf.html for details.\n"
- #define L1TF_MSG_L1D "L1TF CPU bug present and virtualization mitigation disabled, data leak possible. See CVE-2018-3646 and https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/l1tf.html for details.\n"
+ 	r = kvm_x86_vendor_init(&vt_init_ops);
+ 	if (r)
+ 		return r;
+@@ -8554,11 +8558,8 @@ static int __init vmx_init(void)
+ 	if (r)
+ 		goto err_l1d_flush;
  
-@@ -8263,6 +8269,7 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
- 	.hardware_disable = vmx_hardware_disable,
- 	.has_emulated_msr = vmx_has_emulated_msr,
+-	for_each_possible_cpu(cpu) {
+-		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+-
++	for_each_possible_cpu(cpu)
+ 		pi_init_cpu(cpu);
+-	}
  
-+	.is_vm_type_supported = vmx_is_vm_type_supported,
- 	.vm_size = sizeof(struct kvm_vmx),
- 	.vm_init = vmx_vm_init,
- 	.vm_destroy = vmx_vm_destroy,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 03dab4266172..442b356e4939 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4576,12 +4576,18 @@ static int kvm_ioctl_get_supported_hv_cpuid(struct kvm_vcpu *vcpu,
- }
- #endif
+ 	cpu_emergency_register_virt_callback(vmx_emergency_disable);
  
--static bool kvm_is_vm_type_supported(unsigned long type)
-+bool __kvm_is_vm_type_supported(unsigned long type)
- {
- 	return type == KVM_X86_DEFAULT_VM ||
- 	       (type == KVM_X86_SW_PROTECTED_VM &&
- 		IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_enabled);
- }
-+EXPORT_SYMBOL_GPL(__kvm_is_vm_type_supported);
-+
-+static bool kvm_is_vm_type_supported(unsigned long type)
-+{
-+	return static_call(kvm_x86_is_vm_type_supported)(type);
-+}
- 
- int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- {
-@@ -4784,6 +4790,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		r = BIT(KVM_X86_DEFAULT_VM);
- 		if (kvm_is_vm_type_supported(KVM_X86_SW_PROTECTED_VM))
- 			r |= BIT(KVM_X86_SW_PROTECTED_VM);
-+		if (kvm_is_vm_type_supported(KVM_X86_TDX_VM))
-+			r |= BIT(KVM_X86_TDX_VM);
-+		if (kvm_is_vm_type_supported(KVM_X86_SNP_VM))
-+			r |= BIT(KVM_X86_SNP_VM);
- 		break;
- 	default:
- 		break;
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 2f7e19166658..4e40c23d66ed 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -9,6 +9,8 @@
- #include "kvm_cache_regs.h"
- #include "kvm_emulate.h"
- 
-+bool __kvm_is_vm_type_supported(unsigned long type);
-+
- struct kvm_caps {
- 	/* control of guest tsc rate supported? */
- 	bool has_tsc_control;
 -- 
 2.25.1
 
