@@ -1,249 +1,223 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2045.outbound.protection.outlook.com [40.107.13.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD1E131729;
-	Mon, 26 Feb 2024 17:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708968179; cv=none; b=rZ7xWQQDOaMCqC8XdAR8rPnwwS/DBSKwLjB9VLtDvJ0pE+DCGcYXPazQwvnjgGyV9LldC4f6uz1qczI/7H7ogxQtyZNMS7TWvgT2sJV1t2JvxJT1rXeTzx67/bQ5jIXtoxSGEOnRd6Ji8api8FK+E7FuNF2016/pq9GYDIaJZ38=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708968179; c=relaxed/simple;
-	bh=Tc4Ktv/D7YTB7Nmxjy0xTT+j9o08Tb6wQ5ZBOneqWIk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rwDHtMBmfiLoVenvIjCbrkXiEFEFOfr9WwgqS2OHem4N/0vUPYW7OfpMkWSwnXeYpIV30faisL9wwkXEfZ5papa3sTqrDtmxnnF0ZyNUHCiErTISc7A408VKx2lWikMQX4j3h7raLVYJZzZ+xJp8blewfNbWmW1mFMDQVS2M6CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pE7BqOzS; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A056512D766;
+	Mon, 26 Feb 2024 17:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708968256; cv=fail; b=MasQ0W3FsnjXRu8QxS2fGYP+NQ8Ye5n6yd6EyXoV5nofZKN8YIjxXxB4aHvXB+mumm0FcDdTo+C6xSfHNRhXptZ+1MzXVldwcahfFQaWGBTRknSbN18I8oZNw/lgrp0xKCapTkgCRVWgF2F2PWpcSGhsyW638PRfGjb3n9eWoH0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708968256; c=relaxed/simple;
+	bh=PM2wD2xjzF8cCj78haADShcp5zW7p1XSRQy3pL/CEwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dugei2T22o4fh571KV25cMvz5b1XkKHZXAJtC3JWThJt8988yH1f9U3m4+rqMi6pZaR4QQIovQwQkzVqJhUMLO6eQgYubD8QRuEzKnLefliRHCyFyBXjJDogv2x81BIbJuXF+Lc3u/RinwP+fvt66cly5TWltm9trYtWkkwqkXI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=ZWrD+lGR; arc=fail smtp.client-ip=40.107.13.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pE7BqOzS"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41QGjDq5014223;
-	Mon, 26 Feb 2024 17:22:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=N+szkwugbiAMw3EsTUBEqZQBYgLwAbjT++yuFPP2PuQ=; b=pE
-	7BqOzSiifkPg8DnHhbacruL8VhiHJeGd7tHIFppnDw8hj549YWSb3xB7tYrNut12
-	lPU4ZS9aYjKEfTzU9DZAsAZwyUVg3AMFaq85RdgK+vMEuLTV+lGyAJEdls+JqwrA
-	M+1SoK5wfFkZull4UVbyLnq8iGh6dn658DYZY7vCU2ZUikq6xXJ0QcyYgfd/RqfK
-	T1gVM0ftI23vJ43mSuBOXTBBcfxj38Xkofiz4c0WpfK/ac2b/jWz25/mSh3fatpM
-	2IYnjA0zi0Tu+trozKw5n2lEwUPziNHfJX8yJayzBxuqZxchHWyQkJgUJWDzNL2U
-	XCQPpDHaX9Lun8X975ZQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wgkxp9htw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 17:22:36 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41QHMZqi013103
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 17:22:35 GMT
-Received: from hu-c-gdjako-lv.qualcomm.com (10.49.16.6) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 26 Feb 2024 09:22:34 -0800
-From: Georgi Djakov <quic_c_gdjako@quicinc.com>
-To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <joro@8bytes.org>, <iommu@lists.linux.dev>
-CC: <devicetree@vger.kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robdclark@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <quic_cgoldswo@quicinc.com>,
-        <quic_sukadev@quicinc.com>, <quic_pdaly@quicinc.com>,
-        <quic_sudaraja@quicinc.com>, <djakov@kernel.org>
-Subject: [PATCH v5 4/7] iommu/arm-smmu-qcom: Use a custom context fault handler for sdm845
-Date: Mon, 26 Feb 2024 09:22:15 -0800
-Message-ID: <20240226172218.69486-5-quic_c_gdjako@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240226172218.69486-1-quic_c_gdjako@quicinc.com>
-References: <20240226172218.69486-1-quic_c_gdjako@quicinc.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZWrD+lGR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mMNKdXTuUzsXscCP5A+vO9+DMAVevTYYtwE3IT0ID3hcH5k4zkAr1wXlLlh0PaWi4uYWEEJf3ESNtmgCyzEGg/meSY/lt27wEOqCVpnGYXoDd83mbkgwz4spff4l4k5XutITfq0622FZ4xYKLdr4grc4+8t26NfmjDq1ZGeT/pSlDZ8gBCjMhEkh64BNhqJxC/wsQGWl8rEikWLeW9soj1T8eIHt9yjN0XhDaHCRu6K3nZCrq+whnm7sPpB/x2f6Sq/+4tt+5pLGYikS9o2sNDFOSz20OoPfbj823ULMOqtUd9bA1570CXA5C4w3t2992snf0p3SMNQxYYDHbTHjAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mPS+uPdsb/Im+iMg/azpKnFlqsqECX/yjPTNVc2JlUY=;
+ b=gfi0Q4QKDUsjpNAKXZjSUoOIirqn73+kZneTjVN3SUkMUjxovGoshfm/Y2xM+3b/QB9q5VGZNkmDTudU+d4Bmo/UqorpqMEjZVrkhiGZO+ajNmZ9iJPNEkDt7CudOGolvkfzp/oyNMfZZuQpRNnQGzNC6CKsb2hROlEZJj455kfGyVuSYNIWay4yN84Uzz7o9EoVkjh/gZ2yLf1Hf96b+iREUnd8+0spl98BZKeNBdvvheWKFcuJMzSV0bLLAgTI/Y5NGwgPTskNilt1mTXG4lLW3kwyYix2ZF9vrCRskXUmztcixjHla3zF6zulFzcOow62GLlG3tOXJryy6XE8DQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mPS+uPdsb/Im+iMg/azpKnFlqsqECX/yjPTNVc2JlUY=;
+ b=ZWrD+lGRP/ZA5cLPVqfDMRCX+0O1VrP9xAbasVtj/3rpdlWkr4tjA3IH0ZU8zwR5nIF/c87ImU1+LV+eYWi3mT31zSfDHr6HBdDM+c0x052Jyl5SdDqmWs671Svz8R0eey2kbAIhyZHycKYCKUnohX8m1P0qVwFRar3tZplzEPI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by VI0PR04MB10230.eurprd04.prod.outlook.com (2603:10a6:800:240::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Mon, 26 Feb
+ 2024 17:24:10 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa%7]) with mapi id 15.20.7316.032; Mon, 26 Feb 2024
+ 17:24:10 +0000
+Date: Mon, 26 Feb 2024 12:24:02 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Serge Semin <fancer.lancer@gmail.com>
+Subject: Re: [PATCH v4 0/5] PCI: dwc: Add common pme_turn_off message by
+ using outbound iATU
+Message-ID: <ZdzJMtgcaCPpJNNW@lizhi-Precision-Tower-5810>
+References: <20240213-pme_msg-v4-0-e2acd4d7a292@nxp.com>
+ <ZdNwxAi2KH/P07bi@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZdNwxAi2KH/P07bi@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: SJ0PR05CA0146.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::31) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ZLr_R9aVmSU1kBlVWGrYZyZMcytkEr2N
-X-Proofpoint-GUID: ZLr_R9aVmSU1kBlVWGrYZyZMcytkEr2N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_11,2024-02-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 adultscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402260132
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI0PR04MB10230:EE_
+X-MS-Office365-Filtering-Correlation-Id: ccb9418f-177b-4995-d234-08dc36efbe96
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	8aLdQBtIqTkJaDm956sx+zMAmj1+c+QTHsuztAD7KVq6/luVOFQlD+QrnB3x625YaZr0MrflBM/tO8zLJs2jX8fphDsX2+C4/vJu6aZplMUBmfl2bXwJfLUcz2cO/sCCv8MVP8/jkW0yR/r1pS3bi/mBNXMNLb0c9IFD/RDervmBTOArKHSXSvYWMCqs5ViJW7qUfXLzhULjaN3bbzQwv1dhu98fgeIPxTlQgc0N4kFsQjphCia0lLdxVRUhF79FItKcCqfJ/AE1WEl38jJZ2/LldK+1C+oZ2ukeWXYBJ7lCh6Zo97l4UCnD04ay1iPNaW4RBbx+RXX2y/OYN6pxGl2bSbjlpwrn6TdNZsbtMkdpFG+fyvxerLXW6uBae/5XJWrcXhKai1zsT+aq8wW9ZU1/XbrRe2kQ8cjXqpy5uNnCafZ+WHZbcTT2yW3SYFvEVJ+bRLvn4pC+qofsCNJ5M5OvXF6cX14BH6EwxVnFw6SdCyaWZ1EnkKZMDujrps3ND5Gogsd8vh9sm5zn41eWaWn2iLE+OJNrnGJXRtS4owj75+XG293/PDeJscujVl1/NfugRpo8PLdH3mxlfvpHKTQrOscmLp5w8+goibl9WvuIaV5QEWH8iw7tWvdyIL22F6vWnNPgkfE3lqo1Yz+27jxZgdGBjj0w1NoWv0LTRw/bTvHd6lxFd5o8qIilo5UXsrwv060u1b6G8OS4hpe+wA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Y5nH9hqu1egOP6aj81T76uBN2MuuByfy803xlD5vB/4lR/gLxcENuWccBCAz?=
+ =?us-ascii?Q?I1InH17e9Kndwb1kFAt0p84KCrr8Eh1rZRHjZYeKo77hdh2f6Yy7bNsn0+WT?=
+ =?us-ascii?Q?4x7JZhFmXaM5OYKM+QpJoNxm16MvfAlUY6Lx0GCZSlRvoalWJw3D98vun1EE?=
+ =?us-ascii?Q?6N8aOKHjpUWn6dKTms1o42sDgXvGGtLYf+p73hnTESBBATwRfYFL/uttPoV4?=
+ =?us-ascii?Q?ZplbDFNCBCkXAgS1R0znbUUWDXDnank5sPL2UuDLTzYTce+dlQlkPDVkEFJN?=
+ =?us-ascii?Q?ZCvGUVoxZA9bt/a6bdYF7FikYSAUHff21WogfcP1aBSrmGjE8roR/gPm3gsy?=
+ =?us-ascii?Q?W1eNSathrr6lBzZo3Z4GDbJ3EzroBpWPR1Ir0/GTbaUaPg47TgDW3tDW3t5V?=
+ =?us-ascii?Q?IUKIi9epTjuoZLdmJEJ/LiYGLhLm6MNmrFceLu1ZSkF1F9CLcpDfTcWoE557?=
+ =?us-ascii?Q?K1T/6WJqJ64H59782iDHq4yn3zTjipbff/9HdXGrfWqoiq13Ala+lqVtDhMN?=
+ =?us-ascii?Q?/k0zg5qEvxqwSBuoTx+g7wEx2wXguTslHJwF0Sl0Z69Q7gFHwufdrOhsjcZ0?=
+ =?us-ascii?Q?/XvssGi1j/VdQ+JDbZtvsGT/QfIkedLg0y5VFZf9qZGm7Yxm6O9iAIVB7zBd?=
+ =?us-ascii?Q?d/iXKtQ+a04Uj/0Pt/y3pv6qxOi2p+lFLEa/0Vybb6upQNaCL+rTiaJOeoFI?=
+ =?us-ascii?Q?Arauy1fRBzqMLH91GXK+GodXOtloS8honizZ2L6S1T9ZL6F0nKAmci6bn4EZ?=
+ =?us-ascii?Q?f8+RqcKXwM7BvJn/F9L93e1sZA3KnrhpfwJ9CIzIqAVSTfDcmlDVBVSc3CV0?=
+ =?us-ascii?Q?mZwq3QHzRSLPKC1p/K5Zos0/FBWtVZlewaF9nc0AMKk6NWLq7Dy7RtBlyqdV?=
+ =?us-ascii?Q?d1elEziSaDn+7PGirVWVzGNotFDUPeBfr99/XbT7b3iPzmlQTJWxBVKb5BI4?=
+ =?us-ascii?Q?MR+5bHsGWaldUTskvnAVddcEtlCjpi2nWPWF4H8FJ/QIeZF/J25AMp0MnmVc?=
+ =?us-ascii?Q?Z1uo/lXr+2icZaGsDrG2zxzVTKI6JdX9rlySAJ/rChaq86PUs5RtAOVLqpSC?=
+ =?us-ascii?Q?AmT4rlD0BGX9M4pRvkN3BO8CcqPrtJTD9JF/GLRqn3WhypB7skvbEgn+pHEt?=
+ =?us-ascii?Q?ZnE+Uh842fVp1eD/9ZpA/QcxqtLExZKtEA/plR+QDI9V6mAx1uefbSxJvzpU?=
+ =?us-ascii?Q?us23AB6ocqWbeOXHKU1GhVqw3sadUzkk0ul/XY4kFrLwIpIeAqj4H1w8iMoq?=
+ =?us-ascii?Q?XvCYuBbZszFWLzeDjfLvxfB3GOVVTGfcichQAU9cB2n42PGMJuqc3XVbV6e3?=
+ =?us-ascii?Q?XAZ38wyEKx66EIoRbeUDoeY5ZO/RK8dANvNc+KdanTmlV/wx7h6Ho0XqN5zB?=
+ =?us-ascii?Q?kN9crR2K/AnZ7ldapLjKpc9BVCx8xvT0FfqPSNRmt8s66PrruX8WgwgFjKMC?=
+ =?us-ascii?Q?STIn4C7ldy8VviG+ua0550BR6S6mF7qr6HZPZsz63/zust3vXNc8X0zrlOfs?=
+ =?us-ascii?Q?2yDa6YAk4TAOEsKmRsz26KhGQS1TGM9cDhNjjyQSAtov+itfsvfH+n+6ChiJ?=
+ =?us-ascii?Q?2ewJ1FFqS/3TB4vmGmEkaicvixCUczJJMBYvTu8R?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccb9418f-177b-4995-d234-08dc36efbe96
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 17:24:10.6112
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 50eSc3KRNvmKxuAVNC0t9GGAvKBA2zoXKZ5IUbATEUdkK6O6ewpKWqghRasEVqbJIibLZ7Ei8nW+l+jRNEbB1Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10230
 
-The sdm845 platform now supports TBUs, so let's get additional debug
-info from the TBUs when a context fault occurs. Implement a custom
-context fault handler that does both software + hardware page table
-walks and TLB Invalidate All.
+On Mon, Feb 19, 2024 at 10:16:20AM -0500, Frank Li wrote:
+> On Tue, Feb 13, 2024 at 04:50:21PM -0500, Frank Li wrote:
+> > Involve an new and common mathod to send pme_turn_off() message. Previously
+> > pme_turn_off() implement by platform related special register to trigge    
+> > it.                                                                        
+> 
+> @mani:l
+> 
+> 	Do you have chance look this patches. Actually other patches
+> already reviewed. Only missed
+> 
+> 	PCI: dwc: Add common send PME_Turn_Off message method
+> 	PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
+> 
+> 	This patch will reduce customer's PME_Turn_off method. Many code
+> can be cleaned after this.
 
-Signed-off-by: Georgi Djakov <quic_c_gdjako@quicinc.com>
----
- .../iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c    | 130 ++++++++++++++++++
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c    |   4 +
- 2 files changed, 134 insertions(+)
+@mani and @lpieralisi
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c
-index 62900d485fa2..b69624ab5f76 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom-tbu.c
-@@ -306,6 +306,136 @@ static phys_addr_t qcom_iova_to_phys(struct arm_smmu_domain *smmu_domain,
- 	return phys;
- }
- 
-+static phys_addr_t qcom_smmu_iova_to_phys_hard(struct arm_smmu_domain *smmu_domain, dma_addr_t iova)
-+{
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	int idx = smmu_domain->cfg.cbndx;
-+	u32 frsynra;
-+	u16 sid;
-+
-+	frsynra = arm_smmu_gr1_read(smmu, ARM_SMMU_GR1_CBFRSYNRA(idx));
-+	sid = FIELD_GET(ARM_SMMU_CBFRSYNRA_SID, frsynra);
-+
-+	return qcom_iova_to_phys(smmu_domain, iova, sid);
-+}
-+
-+static phys_addr_t qcom_smmu_verify_fault(struct arm_smmu_domain *smmu_domain, dma_addr_t iova, u32 fsr)
-+{
-+	struct io_pgtable *iop = io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops);
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	phys_addr_t phys_post_tlbiall;
-+	phys_addr_t phys;
-+
-+	phys = qcom_smmu_iova_to_phys_hard(smmu_domain, iova);
-+	io_pgtable_tlb_flush_all(iop);
-+	phys_post_tlbiall = qcom_smmu_iova_to_phys_hard(smmu_domain, iova);
-+
-+	if (phys != phys_post_tlbiall) {
-+		dev_err(smmu->dev,
-+			"ATOS results differed across TLBIALL... (before: %pa after: %pa)\n",
-+			&phys, &phys_post_tlbiall);
-+	}
-+
-+	return (phys == 0 ? phys_post_tlbiall : phys);
-+}
-+
-+irqreturn_t qcom_smmu_context_fault(int irq, void *dev)
-+{
-+	struct arm_smmu_domain *smmu_domain = dev;
-+	struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	u32 fsr, fsynr, cbfrsynra, resume = 0;
-+	int idx = smmu_domain->cfg.cbndx;
-+	phys_addr_t phys_soft;
-+	unsigned long iova;
-+	int ret, tmp;
-+
-+	static DEFINE_RATELIMIT_STATE(_rs,
-+				      DEFAULT_RATELIMIT_INTERVAL,
-+				      DEFAULT_RATELIMIT_BURST);
-+
-+	fsr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSR);
-+	if (!(fsr & ARM_SMMU_FSR_FAULT))
-+		return IRQ_NONE;
-+
-+	fsynr = arm_smmu_cb_read(smmu, idx, ARM_SMMU_CB_FSYNR0);
-+	iova = arm_smmu_cb_readq(smmu, idx, ARM_SMMU_CB_FAR);
-+	cbfrsynra = arm_smmu_gr1_read(smmu, ARM_SMMU_GR1_CBFRSYNRA(idx));
-+
-+	phys_soft = ops->iova_to_phys(ops, iova);
-+
-+	tmp = report_iommu_fault(&smmu_domain->domain, NULL, iova,
-+				 fsynr & ARM_SMMU_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
-+	if (!tmp || tmp == -EBUSY) {
-+		dev_dbg(smmu->dev,
-+			"Context fault handled by client: iova=0x%08lx, fsr=0x%x, fsynr=0x%x, cb=%d\n",
-+			iova, fsr, fsynr, idx);
-+		dev_dbg(smmu->dev, "soft iova-to-phys=%pa\n", &phys_soft);
-+		ret = IRQ_HANDLED;
-+		resume = ARM_SMMU_RESUME_TERMINATE;
-+	} else {
-+		phys_addr_t phys_atos = qcom_smmu_verify_fault(smmu_domain, iova, fsr);
-+
-+		if (__ratelimit(&_rs)) {
-+			dev_err(smmu->dev,
-+				"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
-+				fsr, iova, fsynr, cbfrsynra, idx);
-+			dev_err(smmu->dev,
-+				"FSR    = %08x [%s%s%s%s%s%s%s%s%s], SID=0x%x\n",
-+				fsr,
-+				(fsr & 0x02) ? "TF " : "",
-+				(fsr & 0x04) ? "AFF " : "",
-+				(fsr & 0x08) ? "PF " : "",
-+				(fsr & 0x10) ? "EF " : "",
-+				(fsr & 0x20) ? "TLBMCF " : "",
-+				(fsr & 0x40) ? "TLBLKF " : "",
-+				(fsr & 0x80) ? "MHF " : "",
-+				(fsr & 0x40000000) ? "SS " : "",
-+				(fsr & 0x80000000) ? "MULTI " : "",
-+				cbfrsynra);
-+
-+			dev_err(smmu->dev,
-+				"soft iova-to-phys=%pa\n", &phys_soft);
-+			if (!phys_soft)
-+				dev_err(smmu->dev,
-+					"SOFTWARE TABLE WALK FAILED! Looks like %s accessed an unmapped address!\n",
-+					dev_name(smmu->dev));
-+			if (phys_atos)
-+				dev_err(smmu->dev, "hard iova-to-phys (ATOS)=%pa\n",
-+					&phys_atos);
-+			else
-+				dev_err(smmu->dev, "hard iova-to-phys (ATOS) failed\n");
-+		}
-+		ret = IRQ_NONE;
-+		resume = ARM_SMMU_RESUME_TERMINATE;
-+	}
-+
-+	/*
-+	 * If the client returns -EBUSY, do not clear FSR and do not RESUME
-+	 * if stalled. This is required to keep the IOMMU client stalled on
-+	 * the outstanding fault. This gives the client a chance to take any
-+	 * debug action and then terminate the stalled transaction.
-+	 * So, the sequence in case of stall on fault should be:
-+	 * 1) Do not clear FSR or write to RESUME here
-+	 * 2) Client takes any debug action
-+	 * 3) Client terminates the stalled transaction and resumes the IOMMU
-+	 * 4) Client clears FSR. The FSR should only be cleared after 3) and
-+	 *    not before so that the fault remains outstanding. This ensures
-+	 *    SCTLR.HUPCF has the desired effect if subsequent transactions also
-+	 *    need to be terminated.
-+	 */
-+	if (tmp != -EBUSY) {
-+		/* Clear the faulting FSR */
-+		arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
-+
-+		/* Retry or terminate any stalled transactions */
-+		if (fsr & ARM_SMMU_FSR_SS)
-+			arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_RESUME, resume);
-+	}
-+
-+	return ret;
-+}
-+
- static int qcom_tbu_probe(struct platform_device *pdev)
- {
- 	struct of_phandle_args args = { .args_count = 2 };
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-index 8b04ece00420..a8238f75c5d3 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-@@ -421,6 +421,10 @@ static const struct arm_smmu_impl sdm845_smmu_500_impl = {
- 	.reset = qcom_sdm845_smmu500_reset,
- 	.write_s2cr = qcom_smmu_write_s2cr,
- 	.tlb_sync = qcom_smmu_tlb_sync,
-+#ifdef CONFIG_ARM_SMMU_QCOM_TBU
-+	.context_fault = qcom_smmu_context_fault,
-+	.context_fault_needs_threaded_irq = true,
-+#endif
- };
- 
- static const struct arm_smmu_impl qcom_adreno_smmu_v2_impl = {
+	Do you have chance to look these?
+
+Frank
+
+> 
+> Frank Li
+> 
+> >                                                                            
+> > But Yoshihiro give good idea by using iATU to send out message. Previously 
+> > Yoshihiro provide patches to raise INTx message by dummy write to outbound 
+> > iATU.                                                                      
+> >                                                                            
+> > Use similar mathod to send out pme_turn_off message.                       
+> >                                                                            
+> > Previous two patches is picked from Yoshihiro' big patch serialise.        
+> >  PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()                 
+> >  PCI: Add INTx Mechanism Messages macros                                   
+> >                                                                            
+> > PCI: Add PME_TURN_OFF message macro                                        
+> > dt-bindings: PCI: dwc: Add 'msg" register region, Add "msg" region to use  
+> > to map PCI msg.                                                            
+> >                                                                            
+> > PCI: dwc: Add common pme_turn_off message method                           
+> > Using common pme_turn_off() message if platform have not define their.
+> > 
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> > Changes in v4:
+> > - Remove dt-binding patch. Needn't change any dts file and binding doc.
+> >   Reserve a region at end of first IORESOURCE_MEM window by call
+> >   request_resource(). So PCIe stack will not use this reserve region to any
+> > PCIe devices.
+> >   I tested it by reserve at begin of IORESOURCE_MEM window. PCIe stack
+> > will skip it as expection.
+> > 
+> >   Fixed a issue, forget set iATU index when sent PME_turn_off.
+> > 
+> > - Link to v3: https://lore.kernel.org/r/20240202-pme_msg-v3-0-ff2af57a02ad@nxp.com
+> > 
+> > Changes in v3:
+> > - fix 'MSG"
+> > - Add pcie spec ref in head file
+> > - using function name dw_pci_pme_turn_off()
+> > - Using PCIE_ prefix macro
+> > - Link to v2: https://lore.kernel.org/r/20240201-pme_msg-v2-0-6767052fe6a4@nxp.com
+> > 
+> > Changes in v2:
+> >   - Add my sign off at PCI: dwc: Add outbound MSG TLPs support
+> >   - Add Bjorn review tag at  Add INTx Mechanism Messages macros
+> >   - using PME_Turn_Off match PCIe spec
+> >   - ref to pcie spec v6.1
+> >   - using section number.
+> > 
+> > - Link to v1: https://lore.kernel.org/r/20240130-pme_msg-v1-0-d52b0add5c7c@nxp.com
+> > 
+> > ---
+> > Frank Li (2):
+> >       PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
+> >       PCI: dwc: Add common send PME_Turn_Off message method
+> > 
+> > Yoshihiro Shimoda (3):
+> >       PCI: Add INTx Mechanism Messages macros
+> >       PCI: dwc: Consolidate args of dw_pcie_prog_outbound_atu() into a structure
+> >       PCI: dwc: Add outbound MSG TLPs support
+> > 
+> >  drivers/pci/controller/dwc/pcie-designware-ep.c   |  21 ++--
+> >  drivers/pci/controller/dwc/pcie-designware-host.c | 145 +++++++++++++++++++---
+> >  drivers/pci/controller/dwc/pcie-designware.c      |  54 ++++----
+> >  drivers/pci/controller/dwc/pcie-designware.h      |  21 +++-
+> >  drivers/pci/pci.h                                 |  20 +++
+> >  5 files changed, 197 insertions(+), 64 deletions(-)
+> > ---
+> > base-commit: e08fc59eee9991afa467d406d684d46d543299a9
+> > change-id: 20240130-pme_msg-dd2d81ee9886
+> > 
+> > Best regards,
+> > -- 
+> > Frank Li <Frank.Li@nxp.com>
+> > 
