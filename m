@@ -1,89 +1,227 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACE2405CE;
-	Mon, 26 Feb 2024 20:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D691DFCD;
+	Mon, 26 Feb 2024 20:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708979910; cv=none; b=H9CWjuq0JnRL4Ejkt7EDiN55Buzrkd0s9J/QG/qiHThQda0nyzdCZuGUIyvoNhHIDbN4hs9AMWe6zN+haP0izS10DSSW3GEH/XJwYztrN0bSwRdMuhcMQKBDO0NHXdNpyKbPGzyNyhqoz9mYCJUiSLcIlrzhwTER1x0iFat6G3w=
+	t=1708980141; cv=none; b=BXCH6+R4WA3qpm6zWfxqEdX8LjMEZyDjv1MpJ2PsuiYUKR1+bWx3dOAZ5hlhcqio+d1b83bwxY+MI3JvvanegmevorMzo8btyGgnTmdw8lAt7mI8E7oE/Qls+gy8A+AMNPsoz7yXsXzPsU3j0rtoyLuLpxlh32jOjKDN3dGnOa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708979910; c=relaxed/simple;
-	bh=HsejdDvqC73ldVFNrH/9/DZMlTWUElyHEKA91R848fc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aWa28q2Ii9AO359nBeeSEFgwggxSTw5ETrMzYA6tMC9NQhNbNjY4YRNCZrdEQoYTWKZH5d3/Eq0g4mXrVUZRR298yF/gTFYAh9MozsRfY4pwCOzc3oSNrabjVGNvrF4zEMQVo4g8tOvET4rCGCdxluh7HK5baBxhoi8C5LMnIJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRtgsqzf; arc=none smtp.client-ip=209.85.215.181
+	s=arc-20240116; t=1708980141; c=relaxed/simple;
+	bh=OWpEILxNCGKi9UijO32jbCo3J5K197DN5nUkWLCXD3w=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=TnusNcdsIk2nVqiPcNQwtkx8V1hT0gptijh8AWUgfAQD617TNP//wLytE/uFqT6mJAzHb4MZZ/SRK8sU5u8Qsx7auZjS6KWwAF6n5cd3hIQwKO0dVdxO/xY8HHEZA+5BhRg5wbeMDdfjwIQ+Wvr+AmvMdhzYnTbinm6uJv8QE14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BzHkKzZk; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRtgsqzf"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5cfcf509fbdso1678583a12.1;
-        Mon, 26 Feb 2024 12:38:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzHkKzZk"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1dc75972f25so28940275ad.1;
+        Mon, 26 Feb 2024 12:42:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708979908; x=1709584708; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1708980138; x=1709584938; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0scXHFBtzVvkjRXYq6gEBt9Z90URlSPbBo1jvpXeT4Q=;
-        b=CRtgsqzfZ7mwZdpkvLWruY1zfewGt78lLiu9y/XcBkjAGM0tftpLrYXPZGEJZUSjNp
-         Suf4ARCDW4feQAQdfx7iDaONEDkFPAGWp7ERFDvcCJUrR1Nk3g2dCvYe9vK4uQc38A7P
-         1Gi0rWldyILAMa1aiZoCVUIpsM3wiBHpePsPOu4OP0mlLKfvLlHaPlo2qgsYGIiES6Na
-         MsyXWubgjLRN3wHMB/QA7AQt2iI1AphcPpx2xRwKdefTUKIlNNptR7hs6BMOL88LCFhj
-         F+xxKIRn0JgCYqFXDcR70UNvfh1VzeL3WhIGMl20Vs04PdTNDzAG/OiGENDE8auUMLGi
-         pbNA==
+        bh=X8/sZv9YSQN5VoeMFHC9Ppfxe4Q4sN12GRL5yh7nIDA=;
+        b=BzHkKzZkgrvNUX3Kz7bIAuNb1WbnTRwnxGhpZ0Y5d5KVFiz30CSyTJbLKSMWbvEFER
+         u4muabf7BuKeky77wqYn8ujy01lH9pHPCyK8grSZEXFtJCJj/HJfvpgp15Di+pIn6Oks
+         ZeGIYggh/eqtVhdXfttXQzyRKDUnl3FO1Yzj+sI3FjyvzDlUB8c+tiYSpy2aKooleLSn
+         0HKqGpJnV46vwLPMblzjeOYepxaMiX0/5CQrk3CWVRAKWDjIqtETMfcRiC+Bnuu0AT2j
+         PF6GZRFVa8ETnpdM8IW+3N1ohbEW6WHHBHlxS4H5At/yJJzjyaFoqWgFJ/m8IUEbhG6E
+         QEAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708979908; x=1709584708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0scXHFBtzVvkjRXYq6gEBt9Z90URlSPbBo1jvpXeT4Q=;
-        b=seniln/SjlerBVX2WJKWtggPI6z8ALN/Hel7wv9E0CPLbk5LAc/9YIDYBSOpUzyAeP
-         ypzDYfIncHuXLy8hF4VrIA8xORJV/mtqs53Nx0j+suD36A1M+XkcwnwCVVIYLx6SCxla
-         FqKG90GrO8OAg5qUmetqfAY2le5atwubrwgrImJ7cWrpsisbvX5Cd0PC8yrFEGT1ZBq4
-         3yh6Ekomqx6NW+8RBCxdzQhkIEZu2RK/gbicQpaagQp/b59JvyyBniX7Gnl+2eU1Cgvj
-         mSLDcUwuiCG6WJJFs0mFnA36B8ozbMqRQfvozfuSeLclu02jfV4q4fyBKMDxiNALWxlg
-         D/nw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZeH8ai2Cm4D20yffIMxGgjEqZ8l7dUO5cE6s6ob8gaTPzvyDFjhoIvLkht0XQl5vD7Hp0TDne5MfM+LrsJZafcGC6nwqPRGu8XKi1bM/yUif9K3MskvIhBxBcFlSRGOQ8FNC4SnZltg==
-X-Gm-Message-State: AOJu0YwBtCAiGcqBgXhHOCKBlRpemFGbUYMk3tVzQjFlz0kGEd8OJ8+u
-	v9ZJalgBY8ZdtHQennnatW5MkDP7oBeX6Gjw/BD+nOanxOt7CG1Ot4yDGt8upC95k2+bgB27MVK
-	S3SERw346BMtzjRmIN/WWdNkx4CGV3GOR
-X-Google-Smtp-Source: AGHT+IG/6g2Uunj3KJXa+FfivRmJy6KPW89uXNNLxqYlIofCsJ/0C9Rj5gg9hWMoFnHZFtzVNsWawNA10uncefclPMM=
-X-Received: by 2002:a17:902:eb4c:b0:1dc:3c:fb67 with SMTP id
- i12-20020a170902eb4c00b001dc003cfb67mr8978730pli.5.1708979908509; Mon, 26 Feb
- 2024 12:38:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708980138; x=1709584938;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=X8/sZv9YSQN5VoeMFHC9Ppfxe4Q4sN12GRL5yh7nIDA=;
+        b=MBtdAzeT5tOcPEYZcuO/XywLhTxLGQhVt9uxVhCdFwyr88ooFgAP0vIVfETfxThp8N
+         SkZ1VhhxeicXaIbs7c/7hdSAyba4L3FC7gketb2DajTYukAs483O7pX1T70dvCzeXf4Y
+         QDh6ljGJybvjpfev14681/hZjVGoDczST5hbaH3ek8eI3qCIuBKGCQ/bv1nQrXAl/Ce7
+         zFHgozNiRbmoi2Nc/nI39Mov4SrHvLXrITjuejpo6a6ebvVzQ6UCrRwF2NGllHg2b1ng
+         ZG6m1YbQJGsBDxJtbS2N+XpUgrlF9abx4Opem5PczZS36e6iGDn9pHIDc34sE0StK5JN
+         CYvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeZ9L2pOVTq66PjkId8v+0EEMkhiMZkeqvrAmjurg31RuPVxhjvEkAxfsoemcjUnMwMfDa6k+yPVRheZqz7sokNUTKHhsYjD/2wfMuEcJa9AIx92llq305vV5rWD4nUPGco/a1hlhD+1mm03ULdXJuOJfV943EaeXn
+X-Gm-Message-State: AOJu0Yy1cIUCfHibYDTBfuRC3hf7cklQkDec/PTeqn3ApaqgU4itg41/
+	kbyxpnBnDeNwnc5WmdtI8MirPsQLUq4cIFD+9dO5a12c12lDd6VM
+X-Google-Smtp-Source: AGHT+IGwekaX4Ei1fFfoNjzsX11nAcGMnXREGSlHn4sg62b/PqcMNxEWgMrzf2y7rtNSewGJei8qQg==
+X-Received: by 2002:a17:902:b906:b0:1dc:3294:f09b with SMTP id bf6-20020a170902b90600b001dc3294f09bmr7490733plb.26.1708980137547;
+        Mon, 26 Feb 2024 12:42:17 -0800 (PST)
+Received: from localhost ([98.97.116.12])
+        by smtp.gmail.com with ESMTPSA id mh13-20020a17090309cd00b001dc9893b03bsm100695plb.272.2024.02.26.12.42.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 12:42:16 -0800 (PST)
+Date: Mon, 26 Feb 2024 12:42:15 -0800
+From: John Fastabend <john.fastabend@gmail.com>
+To: Jason Wang <jasowang@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>, 
+ mst@redhat.com, 
+ hengqi@linux.alibaba.com, 
+ davem@davemloft.net, 
+ edumazet@google.com, 
+ kuba@kernel.org, 
+ netdev@vger.kernel.org, 
+ virtualization@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, 
+ john.fastabend@gmail.com, 
+ daniel@iogearbox.net, 
+ ast@kernel.org, 
+ Liang Chen <liangchen.linux@gmail.com>
+Message-ID: <65dcf7a775437_20e0a2087f@john.notmuch>
+In-Reply-To: <CACGkMEuUeQTJYpZDx8ggqwBWULQS1Fjd_DgPvVMLq-_cjYfm7g@mail.gmail.com>
+References: <20240202121151.65710-1-liangchen.linux@gmail.com>
+ <c8d59e75-d0bb-4a03-9ef4-d6de65fa9356@kernel.org>
+ <CAKhg4tJFpG5nUNdeEbXFLonKkFUP0QCh8A9CpwU5OvtnBuz4Sw@mail.gmail.com>
+ <5297dad6499f6d00f7229e8cf2c08e0eacb67e0c.camel@redhat.com>
+ <CAKhg4tLbF8SfYD4dU9U9Nhii4FY2dftjPKYz-Emrn-CRwo10mg@mail.gmail.com>
+ <73c242b43513bde04eebb4eb581deb189443c26b.camel@redhat.com>
+ <CAKhg4tJPjcShkw4-FHFkKOcgzHK27A5pMu9FP7OWj4qJUX1ApA@mail.gmail.com>
+ <1b2d471a5d06ecadcb75e3d9155b6d566afb2767.camel@redhat.com>
+ <1708652254.1517398-1-xuanzhuo@linux.alibaba.com>
+ <CACGkMEuUeQTJYpZDx8ggqwBWULQS1Fjd_DgPvVMLq-_cjYfm7g@mail.gmail.com>
+Subject: Re: [PATCH net-next v5] virtio_net: Support RX hash XDP hint
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240226203358.275986-1-Frank.Li@nxp.com> <20240226203358.275986-3-Frank.Li@nxp.com>
-In-Reply-To: <20240226203358.275986-3-Frank.Li@nxp.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Mon, 26 Feb 2024 17:38:16 -0300
-Message-ID: <CAOMZO5CoucMLo2T7z25EpBeakmKt38jis-_OC1-_C1vGtXEwWw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: imx8qm-mek: add flexspi0 support
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, 
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 26, 2024 at 5:34=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
+Jason Wang wrote:
+> On Fri, Feb 23, 2024 at 9:42=E2=80=AFAM Xuan Zhuo <xuanzhuo@linux.aliba=
+ba.com> wrote:
+> >
+> > On Fri, 09 Feb 2024 13:57:25 +0100, Paolo Abeni <pabeni@redhat.com> w=
+rote:
+> > > On Fri, 2024-02-09 at 18:39 +0800, Liang Chen wrote:
+> > > > On Wed, Feb 7, 2024 at 10:27=E2=80=AFPM Paolo Abeni <pabeni@redha=
+t.com> wrote:
+> > > > >
+> > > > > On Wed, 2024-02-07 at 10:54 +0800, Liang Chen wrote:
+> > > > > > On Tue, Feb 6, 2024 at 6:44=E2=80=AFPM Paolo Abeni <pabeni@re=
+dhat.com> wrote:
+> > > > > > >
+> > > > > > > On Sat, 2024-02-03 at 10:56 +0800, Liang Chen wrote:
+> > > > > > > > On Sat, Feb 3, 2024 at 12:20=E2=80=AFAM Jesper Dangaard B=
+rouer <hawk@kernel.org> wrote:
+> > > > > > > > > On 02/02/2024 13.11, Liang Chen wrote:
+> > > > > > > [...]
+> > > > > > > > > > @@ -1033,6 +1039,16 @@ static void put_xdp_frags(stru=
+ct xdp_buff *xdp)
+> > > > > > > > > >       }
+> > > > > > > > > >   }
+> > > > > > > > > >
+> > > > > > > > > > +static void virtnet_xdp_save_rx_hash(struct virtnet_=
+xdp_buff *virtnet_xdp,
+> > > > > > > > > > +                                  struct net_device =
+*dev,
+> > > > > > > > > > +                                  struct virtio_net_=
+hdr_v1_hash *hdr_hash)
+> > > > > > > > > > +{
+> > > > > > > > > > +     if (dev->features & NETIF_F_RXHASH) {
+> > > > > > > > > > +             virtnet_xdp->hash_value =3D hdr_hash->h=
+ash_value;
+> > > > > > > > > > +             virtnet_xdp->hash_report =3D hdr_hash->=
+hash_report;
+> > > > > > > > > > +     }
+> > > > > > > > > > +}
+> > > > > > > > > > +
+> > > > > > > > >
+> > > > > > > > > Would it be possible to store a pointer to hdr_hash in =
+virtnet_xdp_buff,
+> > > > > > > > > with the purpose of delaying extracting this, until and=
+ only if XDP
+> > > > > > > > > bpf_prog calls the kfunc?
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > That seems to be the way v1 works,
+> > > > > > > > https://lore.kernel.org/all/20240122102256.261374-1-liang=
+chen.linux@gmail.com/
+> > > > > > > > . But it was pointed out that the inline header may be ov=
+erwritten by
+> > > > > > > > the xdp prog, so the hash is copied out to maintain its i=
+ntegrity.
+> > > > > > >
+> > > > > > > Why? isn't XDP supposed to get write access only to the pkt=
 
-> +&flexspi0 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_flexspi0>;
-> +       nxp,fspi-dll-slvdly =3D <4>;
-> +       status =3D "okay";
-> +
-> +       flash0: mt35xu512aba@0 {
+> > > > > > > contents/buffer?
+> > > > > > >
+> > > > > >
+> > > > > > Normally, an XDP program accesses only the packet data. Howev=
+er,
+> > > > > > there's also an XDP RX Metadata area, referenced by the data_=
+meta
+> > > > > > pointer. This pointer can be adjusted with bpf_xdp_adjust_met=
+a to
+> > > > > > point somewhere ahead of the data buffer, thereby granting th=
+e XDP
+> > > > > > program access to the virtio header located immediately befor=
+e the
+> > > > >
+> > > > > AFAICS bpf_xdp_adjust_meta() does not allow moving the meta_dat=
+a before
+> > > > > xdp->data_hard_start:
+> > > > >
+> > > > > https://elixir.bootlin.com/linux/latest/source/net/core/filter.=
+c#L4210
+> > > > >
+> > > > > and virtio net set such field after the virtio_net_hdr:
+> > > > >
+> > > > > https://elixir.bootlin.com/linux/latest/source/drivers/net/virt=
+io_net.c#L1218
+> > > > > https://elixir.bootlin.com/linux/latest/source/drivers/net/virt=
+io_net.c#L1420
+> > > > >
+> > > > > I don't see how the virtio hdr could be touched? Possibly even =
+more
+> > > > > important: if such thing is possible, I think is should be some=
+what
+> > > > > denied (for the same reason an H/W nic should prevent XDP from
+> > > > > modifying its own buffer descriptor).
+> > > >
+> > > > Thank you for highlighting this concern. The header layout differ=
+s
+> > > > slightly between small and mergeable mode. Taking 'mergeable mode=
+' as
+> > > > an example, after calling xdp_prepare_buff the layout of xdp_buff=
 
-Node names should be generic.
+> > > > would be as depicted in the diagram below,
+> > > >
+> > > >                       buf
+> > > >                        |
+> > > >                        v
+> > > >         +--------------+--------------+-------------+
+> > > >         | xdp headroom | virtio header| packet      |
+> > > >         | (256 bytes)  | (20 bytes)   | content     |
+> > > >         +--------------+--------------+-------------+
+> > > >         ^                             ^
+> > > >         |                             |
+> > > >  data_hard_start                    data
+> > > >                                   data_meta
+> > > >
+> > > > If 'bpf_xdp_adjust_meta' repositions the 'data_meta' pointer a li=
+ttle
+> > > > towards 'data_hard_start', it would point to the inline header, t=
+hus
+> > > > potentially allowing the XDP program to access the inline header.=
 
-Please run dt-schema checks. Otherwise, you will introduce more warnings.
+
+Fairly late to the thread sorry. Given above layout does it make sense to=
+
+just delay extraction to the kfunc as suggested above? Sure the XDP progr=
+am
+could smash the entry in virtio header, but this is already the case for
+anything else there. A program writing over the virtio header is likely
+buggy anyways. Worse that might happen is bad rss values and mappings?
+
+I like seeing more use cases for the hints though.
+
+Thanks!
+John=
