@@ -1,255 +1,128 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from wp725.webpack.hosteurope.de (wp725.webpack.hosteurope.de [80.237.130.247])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB035B67A
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8392D5C5F2
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708937170; cv=none; b=V/0vDa2+0cxvvwpGQJQKS8WRwVSBVgfI3LTjCIwYMdGHjnxTp15yZzTFeWznbXrAhOc60yVZOlrlFvluqYf44alZuQZpI7MDnXvaUC4vgce074JgPRgOcomBrWwpr6mQM2dRggfLAyIfgF7gU4Lq1pMmLiWI4z3dTRexwCqCpyQ=
+	t=1708937229; cv=none; b=p3xgDirj2t6UUGTfPDgvMsJT2Cdtb4VRMYtRB8a+tNVtR2rkiUtPvpGrFdGhEqx3USHFbBUvRAmtmHwmW9d3Pmv8dMV8OOAO7RscJD1HGuy550PnBhhnuAwzqh6+L6Av9pdno+7vCT/WYffO41BEk0E8R0jhqWGBelSD6Yy2fqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708937170; c=relaxed/simple;
-	bh=UY8UOhk7ftwA2QGpByE16I6C5vSz2mv2Ox9M8vz+S30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=H/+wn4PPtsGfT4li3ToJKizYvNpDysyBwIRRBg8BdYEXOL4hwYUUZcCbpCN/oyawW4BKAaxDdg/HRjuavC7Fq1XE2j/oNu5oMHPxxz/zMzlB6PTaNe0Z82KLn7C83vj8nbTtwbRbtWflyqL5wm5XA0k1+fZ+tQYH6ZYZR89DlhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TjvKd5jkbz1h0Z1;
-	Mon, 26 Feb 2024 16:43:49 +0800 (CST)
-Received: from kwepemm600020.china.huawei.com (unknown [7.193.23.147])
-	by mail.maildlp.com (Postfix) with ESMTPS id C007C18001A;
-	Mon, 26 Feb 2024 16:46:02 +0800 (CST)
-Received: from [10.174.179.160] (10.174.179.160) by
- kwepemm600020.china.huawei.com (7.193.23.147) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 26 Feb 2024 16:46:01 +0800
-Message-ID: <ad4f0b57-25b2-3f48-3222-6f37f35ed81b@huawei.com>
-Date: Mon, 26 Feb 2024 16:46:00 +0800
+	s=arc-20240116; t=1708937229; c=relaxed/simple;
+	bh=kHanvvYcRx0MVPjLLF6An2HOqAFz7K2fbDWRfTHow6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AuNb/m801KWHMaIZKnE0M4EVIfRMZez0s5B1k9mefHlItd0v3pbEaXZrgAEza6KS+j6kG9PwAc+rsjFjQR5RvSzBMBSQW6tDpYsQyWbJodAhIgCLY2vQ4H9vEa1rA0bgqULqikCl/GAqNhKzHnLr0mqtci6kXHLnvRnn0SM6Wxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fivetechno.de; spf=pass smtp.mailfrom=fivetechno.de; dkim=pass (2048-bit key) header.d=fivetechno.de header.i=@fivetechno.de header.b=JvuLnh4y; arc=none smtp.client-ip=80.237.130.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fivetechno.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fivetechno.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fivetechno.de header.i=@fivetechno.de header.b="JvuLnh4y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fivetechno.de; s=he121032; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=KOYgHTclGDn2Bg+LUu3vk4T9YHqwzQOCJmLHdazZugY=; t=1708937227;
+	x=1709369227; b=JvuLnh4y2VHIrsM/S9MTDt0Lt/3MzKsBslYfYZC6aQD1W7XOfok3D+rrBXuMT
+	Lhok3LjOo2UlsWv2lgn1YqRyt8VoVd+z4xwKDgr0lETVmOVMQs80YmYxdAWsCxsp0a9d2FgUO7yPL
+	lhFCi27r4VJxeCUm7r+Jzad0d4bmpZB6wgDeR/xGEDikxOwLK9JnOb1LNVg+1xeAX0M3HttTA/hkX
+	2oTaXoo3N96oK7Ws/VacN1/wyjmeA7ROfpRu3pmIE/ZTUKvsxnzAnb3PME5vTAeFlEjFbrWL0DBSG
+	BugM5OC9ClNm1C/8O61BszmolmghxsqcXxjL3sIoxrH1+XILQQ==;
+Received: from p5098d998.dip0.t-ipconnect.de ([80.152.217.152] helo=hermes.fivetechno.de); authenticated
+	by wp725.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1reW85-0004Go-Am; Mon, 26 Feb 2024 09:14:29 +0100
+X-Virus-Scanned: by amavisd-new 2.12.1 using newest ClamAV at
+	linuxbbg.five-lan.de
+Received: from [192.168.178.100] (p508f320b.dip0.t-ipconnect.de [80.143.50.11])
+	(authenticated bits=0)
+	by hermes.fivetechno.de (8.15.2/8.15.2/SUSE Linux 0.8) with ESMTPSA id 41Q8ESZ6008535
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 26 Feb 2024 09:14:28 +0100
+Message-ID: <23a1a9c6-ece4-4817-8e5c-6831d75eefd1@fivetechno.de>
+Date: Mon, 26 Feb 2024 09:14:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2] filemap: avoid unnecessary major faults in
- filemap_fault()
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>, "Huang, Ying" <ying.huang@intel.com>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <willy@infradead.org>, <fengwei.yin@intel.com>,
-	<aneesh.kumar@linux.ibm.com>, <shy828301@gmail.com>, <hughd@google.com>,
-	<wangkefeng.wang@huawei.com>, Nanyong Sun <sunnanyong@huawei.com>
-References: <20240206092627.1421712-1-zhangpeng362@huawei.com>
- <87jznhypxy.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <a905dea7-018e-80c0-ab54-85766add8d96@huawei.com>
- <87frxfhibt.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <43182940-ddaa-7073-001a-e95d0999c5ba@huawei.com>
- <87il2bek6f.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <fdbe3a71-ff6b-4397-8276-9ca2f3e6db89@redhat.com>
-From: "zhangpeng (AS)" <zhangpeng362@huawei.com>
-In-Reply-To: <fdbe3a71-ff6b-4397-8276-9ca2f3e6db89@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] regulator: mp8859: Cleanups and enhancements
+Content-Language: de-DE
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+References: <20240225-regulator-mp8859-v1-0-68ee2c839ded@kernel.org>
+From: Markus Reichl <m.reichl@fivetechno.de>
+Autocrypt: addr=m.reichl@fivetechno.de; keydata=
+ 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
+ ZnS2JHg/17+ErCtiUzuJ5EGMPA==
+In-Reply-To: <20240225-regulator-mp8859-v1-0-68ee2c839ded@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600020.china.huawei.com (7.193.23.147)
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1708937227;ad0ebb3b;
+X-HE-SMSGID: 1reW85-0004Go-Am
 
-On 2024/2/26 16:20, David Hildenbrand wrote:
+Hi Mark,
 
-> On 26.02.24 08:52, Huang, Ying wrote:
->> "zhangpeng (AS)" <zhangpeng362@huawei.com> writes:
->>
->>> On 2024/2/26 14:04, Huang, Ying wrote:
->>>
->>>> "zhangpeng (AS)" <zhangpeng362@huawei.com> writes:
->>>>
->>>>> On 2024/2/7 10:21, Huang, Ying wrote:
->>>>>
->>>>>> Peng Zhang <zhangpeng362@huawei.com> writes:
->>>>>>> From: ZhangPeng <zhangpeng362@huawei.com>
->>>>>>>
->>>>>>> The major fault occurred when using mlockall(MCL_CURRENT | 
->>>>>>> MCL_FUTURE)
->>>>>>> in application, which leading to an unexpected performance 
->>>>>>> issue[1].
->>>>>>>
->>>>>>> This caused by temporarily cleared PTE during a 
->>>>>>> read+clear/modify/write
->>>>>>> update of the PTE, eg, do_numa_page()/change_pte_range().
->>>>>>>
->>>>>>> For the data segment of the user-mode program, the global 
->>>>>>> variable area
->>>>>>> is a private mapping. After the pagecache is loaded, the private 
->>>>>>> anonymous
->>>>>>> page is generated after the COW is triggered. Mlockall can lock 
->>>>>>> COW pages
->>>>>>> (anonymous pages), but the original file pages cannot be locked 
->>>>>>> and may
->>>>>>> be reclaimed. If the global variable (private anon page) is 
->>>>>>> accessed when
->>>>>>> vmf->pte is zeroed in numa fault, a file page fault will be 
->>>>>>> triggered.
->>>>>>>
->>>>>>> At this time, the original private file page may have been 
->>>>>>> reclaimed.
->>>>>>> If the page cache is not available at this time, a major fault 
->>>>>>> will be
->>>>>>> triggered and the file will be read, causing additional overhead.
->>>>>>>
->>>>>>> Fix this by rechecking the PTE without acquiring PTL in 
->>>>>>> filemap_fault()
->>>>>>> before triggering a major fault.
->>>>>>>
->>>>>>> Testing file anonymous page read and write page fault 
->>>>>>> performance in ext4
->>>>>>> and ramdisk using will-it-scale[2] on a x86 physical machine. 
->>>>>>> The data
->>>>>>> is the average change compared with the mainline after the patch is
->>>>>>> applied. The test results are within the range of fluctuation, 
->>>>>>> and there
->>>>>>> is no obvious difference. The test results are as follows:
->>>>>> You still claim that there's no difference in the test results.  
->>>>>> If so,
->>>>>> why do you implement the patch?  IMHO, you need to prove your 
->>>>>> patch can
->>>>>> improve the performance in some cases.
->>>>> I'm sorry that maybe I didn't express myself clearly.
->>>>>
->>>>> The purpose of this patch is to fix the issue that major fault may 
->>>>> still be triggered
->>>>> with mlockall(), thereby improving a little performance. This 
->>>>> patch is more of a bugfix
->>>>> than a performance improvement patch.
->>>>>
->>>>> This issue affects our traffic analysis service. The inbound 
->>>>> traffic is heavy. If a major
->>>>> fault occurs, the I/O schedule is triggered and the original I/O 
->>>>> is suspended. Generally,
->>>>> the I/O schedule is 0.7 ms. If other applications are operating 
->>>>> disks, the system needs
->>>>> to wait for more than 10 ms. However, the inbound traffic is heavy 
->>>>> and the NIC buffer is
->>>>> small. As a result, packet loss occurs. The traffic analysis 
->>>>> service can't tolerate packet
->>>>> loss.
->>>>>
->>>>> To prevent packet loss, we use the mlockall() function to prevent 
->>>>> I/O. It is unreasonable
->>>>> that major faults will still be triggered after mlockall() is used.
->>>>>
->>>>> In our service test environment, the baseline is 7 major faults/12 
->>>>> hours. After applied the
->>>>> unlock patch, the probability of triggering the major fault is 1 
->>>>> major faults/12 hours. After
->>>>> applied the lock patch, no major fault will be triggered. So only 
->>>>> the locked patch can actually
->>>>> solve our problem.
->>>> This is the data I asked for.
->>>>
->>>> But, you said that this is a feature bug fix instead of performance
->>>> improvement.  So, I checked the mlock(2), and found the following 
->>>> words,
->>>>
->>>> "
->>>>          mlockall() locks all pages mapped into the address space 
->>>> of the calling
->>>>          process.  This includes the pages of the code, data, and 
->>>> stack segment,
->>>>          as well as shared libraries, user space kernel data, 
->>>> shared memory, and
->>>>          memory-mapped files.  All mapped pages are guaranteed to 
->>>> be resident in
->>>>          RAM when the call returns successfully; the  pages are  
->>>> guaranteed  to
->>>>          stay in RAM until later unlocked.
->>>> "
->>>>
->>>> In theory, the locked page are in RAM.  So, IIUC, we don't violate the
->>>> ABI.  But, in effect, we does do that.
->>>
->>> "mlockall() locks all pages mapped into the address space of the 
->>> calling process."
->>> For a private mapping, mlockall() can lock COW pages (anonymous 
->>> pages), but the
->>> original file pages can't be locked. Maybe, we violate the ABI here.
->>
->> If so, please make it explicit and loudly.
->>
->>> This is also
->>> the cause of this issue. The patch fix the impact of this issue: 
->>> prevent major
->>> faults, reduce IO, and fix the service packet loss issue.
->>>
->>> Preventing major faults, and thus reducing IO, could be an important 
->>> reason to use
->>> mlockall(). Could we fix this with the locked patch? Or is there 
->>> another way?
->>
->> Unfortunately, locked patch cause performance regressions for more
->> common cases.  Is it possible for us to change ptep_modify_prot_start()
->> to use some magic PTE value instead of 0?  That may be possible.  But,
->> that isn't enough, you need to change all ptep_get_and_clear() users.
+Am 25.02.24 um 15:59 schrieb Mark Brown:
+> I had cause to look at the MP8859 driver together with the datasheet and
+> noticed a few small issues and missing features.  This series deals with
+> many of these issues, the device also has support for interrupts which
+> are not implemented here.
 >
-> Trigger (false) major faults for mlocked memory is suboptimal.
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+> Mark Brown (8):
+>       regulator: mp8859: Specify register accessibility and enable caching
+>       regulator: mp8859: Validate and log device identifier information
+>       regulator: mp8859: Support enable control
+>       regulator: mp8859: Support mode operations
+>       regulator: mp8859: Support active discharge control
+>       regulator: mp8859: Support status and error readback
+>       regulator: mp8859: Report slew rate
+>       regulator: mp8859: Implement set_current_limit()
 >
-> Having such pages temporarily not mapped (e.g., page migration) is 
-> acceptable (pages are in RAM but are getting moved). We handle that 
-> using nonswap migration entries.
+>  drivers/regulator/mp8859.c | 252 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 251 insertions(+), 1 deletion(-)
+> ---
+> base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+> change-id: 20240224-regulator-mp8859-eebd7c16c374
 >
-> Let me understand the issue first:
->
-> 1) MAP_PRIVATE file mapping that is mlocked.
->
-> 2) We caused COW, so we now have an anonymous page mapped. That anon
->    page is mlocked.
->
-> 3) Change of protection (under PT lock) will temporarily clear the PTE
->
-> 4) Page fault will trigger and find the PTE still cleared (without PT
->    lock)
->
-> 5) We don't realize that there is a page mapped and, therefore, trigger
->    a major fault.
->
-> Using the PT lock would fix it properly. Doing it as in this patch can 
-> only be considered an optimization, not a proper fix.
->
-> Using a magic PTE to work around "just use the PT lock like everyone 
-> else" feels a bit odd. The patch states "We don't hold PTL here as 
-> acquiring PTL hurts performance" -- do we have any numbers on that?
->
-Testing file anonymous page read and write page fault performance in ext4
-, tmpfs and ramdisk using will-it-scale[2] on a x86 physical machine. The
-data is the average change compared with the mainline after the patch is
-applied.
+> Best regards,
+Tested on rk3399-roc-pc.
 
-with the locked patch:
-                           processes processes_idle threads threads_idle
-ext4    private file write: -0.51%    0.08%          -0.03%  -0.04%
-ext4    shared  file write:  0.135%  -0.531%          2.883% -0.772%
-ramdisk private file write: -0.48%    0.23%          -1.08%   0.27%
-ramdisk private file  read:  0.07%   -6.90%          -5.85%  -0.70%
-tmpfs   private file write: -0.344%  -0.110%          0.200%  0.145%
-tmpfs   shared  file write:  0.958%   0.101%          2.781% -0.337%
-tmpfs    private file read: -0.16%    0.00%          -0.12%   0.41%
+Tested-by: Markus Reichl <m.reichl@fivetechno.de>
 
-with the no locked patch:
-                           processes processes_idle threads threads_idle
-ext4    private file write: -1.14%  -0.08%         -1.87%   0.13%
-ext4    private file  read:  0.03%  -0.65%         -0.51%  -0.08%
-ramdisk private file write: -1.21%  -0.21%         -1.12%   0.11%
-ramdisk private file  read:  0.00%  -0.68%         -0.33%  -0.02%
-
-I could also run other tests if needed.
-
-> We could special-case that for MLOCK'ed VMAs with MCL_FUTURE, meaning, 
-> take the PTL to double-check only in such VMAs.
->
-Agreed. I think this solution is great. Thanks for your suggestion!
-
--- 
-Best Regards,
-Peng
+Gruß,
+--
+Markus Reichl
 
