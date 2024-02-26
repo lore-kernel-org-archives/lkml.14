@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7E8128379;
-	Mon, 26 Feb 2024 08:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5602D1292DA;
+	Mon, 26 Feb 2024 08:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936146; cv=none; b=qKaAqZGzCD3KAJYSJ+v6n02nMmnHYkCMaTKD7yzEQET6PW/KOeko+wJctoJ6fuOHdvOhBsUbNfZLjiseex7hr8KyL0hzDhiaLkKKzqs7IBSaizs1JMiB5jt130qlwDIlPlxhIN+X+MYkKQ4PADs5LsMZ+Q99iCJuPOqAqhoK6yI=
+	t=1708936148; cv=none; b=a/YsmOn8nEzs+eSNflavLkI+eSSY9Tr8VUXGntD72ejrJc3eDI2cl1v+mg0QuiFY/Pdeh7OFPUvMxDmFuAAmpOOlaX1snbLYiXBr1mv9MaWizXjQwEGo5o/W6Vyx9WFQYxtMVrMDSzRtdDnW6PBIX8rLC/WTXAfhE4ATwUwO6Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936146; c=relaxed/simple;
-	bh=gMBjeQic0/mGScZZUcKmn0/6xULcS4yuQddjIJvT7Rg=;
+	s=arc-20240116; t=1708936148; c=relaxed/simple;
+	bh=iLKBzkaZ2x4CHI/IAJCoPiQoXu/6vbCP7L7Yic/bYOw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fR9rryjhrsR/e3JjBm0los0mKTmgID8CH8eagw5WODsQr/5pOj1RHwkMb5zxze+VyanJZFbrRD7YHJo2XYeudcJskojuyfXcG4ATVdO9tWfVOakxGnNxbG5uExrUSd/4k7gdjm1Q01wMp8cjKjpEVl6YlOyb6OikbIWRJYkMrMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KwChySHP; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=n82SATvrcv0RvVPDScS/m0ZRxVswKKmNMATSiBHiajF7ryMdKM7n1AR2L7hR7AGX6izPK6p6aQdv4dbjvAFcfumpIHbgjHtJ6if+97ngaR9POCfCQahpMBKq5amMlZAE2W/HN4eISi0S5NFz0Ryj/1HV6dv6P//rrroB3U52T7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U1Cz3jTU; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KwChySHP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U1Cz3jTU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936145; x=1740472145;
+  t=1708936146; x=1740472146;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=gMBjeQic0/mGScZZUcKmn0/6xULcS4yuQddjIJvT7Rg=;
-  b=KwChySHPgguaOQDp9/L5zv/yIz+LM1IA9IyGa1QlXXPqHmPKc8UDHXFO
-   jRgJhezDafNDdn/KQpioJ9BUpwu1JvIcWC9GO/HXXLQ778thdd3s59PD8
-   PFKi3ZW/zKpNYmjr2EWJ6t1FEU3ef0Tl4/CPUVIG6hZVVNOGIhYvMgjLr
-   /Fy+S1euZXHXNgtlQnN0TgrcSinG7cVvWvb5avNjnBjkR1UsnF7M4acz9
-   HkTLJrig7LvHCbHq4IKKUDovzeVcuVuEIelO/RzeMG1YxXHaS2P4II3o/
-   xPDt45I/nksGbJM2wHCm5h54mV8t3ZGJnqwyNKBtvXjvUv3kKoqeZQc7q
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="20751320"
+  bh=iLKBzkaZ2x4CHI/IAJCoPiQoXu/6vbCP7L7Yic/bYOw=;
+  b=U1Cz3jTUjgnNuhg1yJYijnV4hUVmUyhhU3r88mvz10roSxnMQ3TD9lMk
+   Q1vR96ZJ79Yg6U7OUnOxzisCxp3cyToggRDufOlZcD8PSVgabXcr6kU9p
+   E6Y1XUEpuVmu/ExXwbLEyU/UlfNbsXEO63WVYe1brBYZ122ZwfbtVkYkI
+   zrZh2KeI7DuF+goB59WEoGIFh1X8JqDN/g4KrfhJ/wTno2Gyr9EHBYB4V
+   TvQ6Jk8ys3ulFKosAUMyCyphQzjNiWbbrj0jJ4Hg9J37HZMdIn/2/kcJ4
+   rsFZMVbaqU7KT11bjImXCFIvuL+FH0RWsARL3NOcnpik7UtW79D1fjI7i
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="20751330"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="20751320"
+   d="scan'208";a="20751330"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:03 -0800
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:04 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6735058"
+   d="scan'208";a="6735065"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:03 -0800
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:04 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v19 106/130] KVM: TDX: Add KVM Exit for TDX TDG.VP.VMCALL
-Date: Mon, 26 Feb 2024 00:26:48 -0800
-Message-Id: <b9fbb0844fc6505f8fb1e9a783615b299a5a5bb3.1708933498.git.isaku.yamahata@intel.com>
+Subject: [PATCH v19 108/130] KVM: TDX: Handle TDX PV HLT hypercall
+Date: Mon, 26 Feb 2024 00:26:50 -0800
+Message-Id: <c083430632ba9e80abd09bccd5609fb3cd9d9c63.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -68,241 +68,102 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Some of TDG.VP.VMCALL require device model, for example, qemu, to handle
-them on behalf of kvm kernel module. TDVMCALL_REPORT_FATAL_ERROR,
-TDVMCALL_MAP_GPA, TDVMCALL_SETUP_EVENT_NOTIFY_INTERRUPT, and
-TDVMCALL_GET_QUOTE requires user space VMM handling.
-
-Introduce new kvm exit, KVM_EXIT_TDX, and functions to setup it. Device
-model should update R10 if necessary as return value.
+Wire up TDX PV HLT hypercall to the KVM backend function.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
-v14 -> v15:
-- updated struct kvm_tdx_exit with union
-- export constants for reg bitmask
+v19:
+- move tdvps_state_non_arch_check() to this patch
+
+v18:
+- drop buggy_hlt_workaround and use TDH.VP.RD(TD_VCPU_STATE_DETAILS)
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/kvm/vmx/tdx.c   | 83 ++++++++++++++++++++++++++++++++++++-
- include/uapi/linux/kvm.h | 89 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 170 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/tdx.c | 26 +++++++++++++++++++++++++-
+ arch/x86/kvm/vmx/tdx.h |  4 ++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index c8eb47591105..72dbe2ff9062 100644
+index eb68d6c148b6..a2caf2ae838c 100644
 --- a/arch/x86/kvm/vmx/tdx.c
 +++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1038,6 +1038,78 @@ static int tdx_emulate_vmcall(struct kvm_vcpu *vcpu)
+@@ -688,7 +688,18 @@ void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 
+ bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
+ {
+-	return pi_has_pending_interrupt(vcpu);
++	bool ret = pi_has_pending_interrupt(vcpu);
++	union tdx_vcpu_state_details details;
++	struct vcpu_tdx *tdx = to_tdx(vcpu);
++
++	if (ret || vcpu->arch.mp_state != KVM_MP_STATE_HALTED)
++		return true;
++
++	if (tdx->interrupt_disabled_hlt)
++		return false;
++
++	details.full = td_state_non_arch_read64(tdx, TD_VCPU_STATE_DETAILS_NON_ARCH);
++	return !!details.vmxip;
+ }
+ 
+ void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
+@@ -1130,6 +1141,17 @@ static int tdx_emulate_cpuid(struct kvm_vcpu *vcpu)
  	return 1;
  }
  
-+static int tdx_complete_vp_vmcall(struct kvm_vcpu *vcpu)
++static int tdx_emulate_hlt(struct kvm_vcpu *vcpu)
 +{
-+	struct kvm_tdx_vmcall *tdx_vmcall = &vcpu->run->tdx.u.vmcall;
-+	__u64 reg_mask = kvm_rcx_read(vcpu);
++	struct vcpu_tdx *tdx = to_tdx(vcpu);
 +
-+#define COPY_REG(MASK, REG)							\
-+	do {									\
-+		if (reg_mask & TDX_VMCALL_REG_MASK_ ## MASK)			\
-+			kvm_## REG ## _write(vcpu, tdx_vmcall->out_ ## REG);	\
-+	} while (0)
++	/* See tdx_protected_apic_has_interrupt() to avoid heavy seamcall */
++	tdx->interrupt_disabled_hlt = tdvmcall_a0_read(vcpu);
 +
-+
-+	COPY_REG(R10, r10);
-+	COPY_REG(R11, r11);
-+	COPY_REG(R12, r12);
-+	COPY_REG(R13, r13);
-+	COPY_REG(R14, r14);
-+	COPY_REG(R15, r15);
-+	COPY_REG(RBX, rbx);
-+	COPY_REG(RDI, rdi);
-+	COPY_REG(RSI, rsi);
-+	COPY_REG(R8, r8);
-+	COPY_REG(R9, r9);
-+	COPY_REG(RDX, rdx);
-+
-+#undef COPY_REG
-+
-+	return 1;
-+}
-+
-+static int tdx_vp_vmcall_to_user(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_tdx_vmcall *tdx_vmcall = &vcpu->run->tdx.u.vmcall;
-+	__u64 reg_mask;
-+
-+	vcpu->arch.complete_userspace_io = tdx_complete_vp_vmcall;
-+	memset(tdx_vmcall, 0, sizeof(*tdx_vmcall));
-+
-+	vcpu->run->exit_reason = KVM_EXIT_TDX;
-+	vcpu->run->tdx.type = KVM_EXIT_TDX_VMCALL;
-+
-+	reg_mask = kvm_rcx_read(vcpu);
-+	tdx_vmcall->reg_mask = reg_mask;
-+
-+#define COPY_REG(MASK, REG)							\
-+	do {									\
-+		if (reg_mask & TDX_VMCALL_REG_MASK_ ## MASK) {			\
-+			tdx_vmcall->in_ ## REG = kvm_ ## REG ## _read(vcpu);	\
-+			tdx_vmcall->out_ ## REG = tdx_vmcall->in_ ## REG;	\
-+		}								\
-+	} while (0)
-+
-+
-+	COPY_REG(R10, r10);
-+	COPY_REG(R11, r11);
-+	COPY_REG(R12, r12);
-+	COPY_REG(R13, r13);
-+	COPY_REG(R14, r14);
-+	COPY_REG(R15, r15);
-+	COPY_REG(RBX, rbx);
-+	COPY_REG(RDI, rdi);
-+	COPY_REG(RSI, rsi);
-+	COPY_REG(R8, r8);
-+	COPY_REG(R9, r9);
-+	COPY_REG(RDX, rdx);
-+
-+#undef COPY_REG
-+
-+	/* notify userspace to handle the request */
-+	return 0;
++	tdvmcall_set_return_code(vcpu, TDVMCALL_SUCCESS);
++	return kvm_emulate_halt_noskip(vcpu);
 +}
 +
  static int handle_tdvmcall(struct kvm_vcpu *vcpu)
  {
  	if (tdvmcall_exit_type(vcpu))
-@@ -1048,8 +1120,15 @@ static int handle_tdvmcall(struct kvm_vcpu *vcpu)
+@@ -1138,6 +1160,8 @@ static int handle_tdvmcall(struct kvm_vcpu *vcpu)
+ 	switch (tdvmcall_leaf(vcpu)) {
+ 	case EXIT_REASON_CPUID:
+ 		return tdx_emulate_cpuid(vcpu);
++	case EXIT_REASON_HLT:
++		return tdx_emulate_hlt(vcpu);
+ 	default:
  		break;
  	}
+diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
+index 4399d474764f..11c74c34555f 100644
+--- a/arch/x86/kvm/vmx/tdx.h
++++ b/arch/x86/kvm/vmx/tdx.h
+@@ -104,6 +104,8 @@ struct vcpu_tdx {
+ 	bool host_state_need_restore;
+ 	u64 msr_host_kernel_gs_base;
  
--	tdvmcall_set_return_code(vcpu, TDVMCALL_INVALID_OPERAND);
--	return 1;
-+	/*
-+	 * Unknown VMCALL.  Toss the request to the user space VMM, e.g. qemu,
-+	 * as it may know how to handle.
-+	 *
-+	 * Those VMCALLs require user space VMM:
-+	 * TDVMCALL_REPORT_FATAL_ERROR, TDVMCALL_MAP_GPA,
-+	 * TDVMCALL_SETUP_EVENT_NOTIFY_INTERRUPT, and TDVMCALL_GET_QUOTE.
-+	 */
-+	return tdx_vp_vmcall_to_user(vcpu);
++	bool interrupt_disabled_hlt;
++
+ 	/*
+ 	 * Dummy to make pmu_intel not corrupt memory.
+ 	 * TODO: Support PMU for TDX.  Future work.
+@@ -166,6 +168,7 @@ static __always_inline void tdvps_vmcs_check(u32 field, u8 bits)
  }
  
- void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int pgd_level)
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 5e2b28934aa9..a7aa804ef021 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -167,6 +167,92 @@ struct kvm_xen_exit {
- 	} u;
- };
+ static __always_inline void tdvps_management_check(u64 field, u8 bits) {}
++static __always_inline void tdvps_state_non_arch_check(u64 field, u8 bits) {}
  
-+/* masks for reg_mask to indicate which registers are passed. */
-+#define TDX_VMCALL_REG_MASK_RBX	BIT_ULL(2)
-+#define TDX_VMCALL_REG_MASK_RDX	BIT_ULL(3)
-+#define TDX_VMCALL_REG_MASK_RSI	BIT_ULL(6)
-+#define TDX_VMCALL_REG_MASK_RDI	BIT_ULL(7)
-+#define TDX_VMCALL_REG_MASK_R8	BIT_ULL(8)
-+#define TDX_VMCALL_REG_MASK_R9	BIT_ULL(9)
-+#define TDX_VMCALL_REG_MASK_R10	BIT_ULL(10)
-+#define TDX_VMCALL_REG_MASK_R11	BIT_ULL(11)
-+#define TDX_VMCALL_REG_MASK_R12	BIT_ULL(12)
-+#define TDX_VMCALL_REG_MASK_R13	BIT_ULL(13)
-+#define TDX_VMCALL_REG_MASK_R14	BIT_ULL(14)
-+#define TDX_VMCALL_REG_MASK_R15	BIT_ULL(15)
-+
-+struct kvm_tdx_exit {
-+#define KVM_EXIT_TDX_VMCALL	1
-+	__u32 type;
-+	__u32 pad;
-+
-+	union {
-+		struct kvm_tdx_vmcall {
-+			/*
-+			 * RAX(bit 0), RCX(bit 1) and RSP(bit 4) are reserved.
-+			 * RAX(bit 0): TDG.VP.VMCALL status code.
-+			 * RCX(bit 1): bitmap for used registers.
-+			 * RSP(bit 4): the caller stack.
-+			 */
-+			union {
-+				__u64 in_rcx;
-+				__u64 reg_mask;
-+			};
-+
-+			/*
-+			 * Guest-Host-Communication Interface for TDX spec
-+			 * defines the ABI for TDG.VP.VMCALL.
-+			 */
-+			/* Input parameters: guest -> VMM */
-+			union {
-+				__u64 in_r10;
-+				__u64 type;
-+			};
-+			union {
-+				__u64 in_r11;
-+				__u64 subfunction;
-+			};
-+			/*
-+			 * Subfunction specific.
-+			 * Registers are used in this order to pass input
-+			 * arguments.  r12=arg0, r13=arg1, etc.
-+			 */
-+			__u64 in_r12;
-+			__u64 in_r13;
-+			__u64 in_r14;
-+			__u64 in_r15;
-+			__u64 in_rbx;
-+			__u64 in_rdi;
-+			__u64 in_rsi;
-+			__u64 in_r8;
-+			__u64 in_r9;
-+			__u64 in_rdx;
-+
-+			/* Output parameters: VMM -> guest */
-+			union {
-+				__u64 out_r10;
-+				__u64 status_code;
-+			};
-+			/*
-+			 * Subfunction specific.
-+			 * Registers are used in this order to output return
-+			 * values.  r11=ret0, r12=ret1, etc.
-+			 */
-+			__u64 out_r11;
-+			__u64 out_r12;
-+			__u64 out_r13;
-+			__u64 out_r14;
-+			__u64 out_r15;
-+			__u64 out_rbx;
-+			__u64 out_rdi;
-+			__u64 out_rsi;
-+			__u64 out_r8;
-+			__u64 out_r9;
-+			__u64 out_rdx;
-+		} vmcall;
-+	} u;
-+};
-+
- #define KVM_S390_GET_SKEYS_NONE   1
- #define KVM_S390_SKEYS_MAX        1048576
+ #define TDX_BUILD_TDVPS_ACCESSORS(bits, uclass, lclass)				\
+ static __always_inline u##bits td_##lclass##_read##bits(struct vcpu_tdx *tdx,	\
+@@ -226,6 +229,7 @@ TDX_BUILD_TDVPS_ACCESSORS(32, VMCS, vmcs);
+ TDX_BUILD_TDVPS_ACCESSORS(64, VMCS, vmcs);
  
-@@ -210,6 +296,7 @@ struct kvm_xen_exit {
- #define KVM_EXIT_NOTIFY           37
- #define KVM_EXIT_LOONGARCH_IOCSR  38
- #define KVM_EXIT_MEMORY_FAULT     39
-+#define KVM_EXIT_TDX              40
+ TDX_BUILD_TDVPS_ACCESSORS(8, MANAGEMENT, management);
++TDX_BUILD_TDVPS_ACCESSORS(64, STATE_NON_ARCH, state_non_arch);
  
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -470,6 +557,8 @@ struct kvm_run {
- 			__u64 gpa;
- 			__u64 size;
- 		} memory_fault;
-+		/* KVM_EXIT_TDX_VMCALL */
-+		struct kvm_tdx_exit tdx;
- 		/* Fix the size of the union. */
- 		char padding[256];
- 	};
+ static __always_inline u64 td_tdcs_exec_read64(struct kvm_tdx *kvm_tdx, u32 field)
+ {
 -- 
 2.25.1
 
