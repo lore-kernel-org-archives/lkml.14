@@ -1,180 +1,117 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB2A81756;
-	Mon, 26 Feb 2024 12:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9607F475;
+	Mon, 26 Feb 2024 12:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708952208; cv=none; b=AVmGHMpfDRNJJXKAPACV3iplJn3JK/SRAhSwo0RCkYEmWlmYb9uNATaDi16Spv0Nbgqu/vEKfrh5G+D7dbEoCsB9fZsXlIowNTvP/ZC6atIeKT7ukl224qDz4UaCla8MjUJCBOhFgxICB4Bhy3HWRt4aJTCvnZoQz1cMUeicXQA=
+	t=1708952231; cv=none; b=mzZ0jDLxoMvKqplnG5Enzfwzidxi6LGt7Cn2ui99wtsO2hpPHDBzE0SGtDlAzIL0ObgE87nauiA8vzFYe9udcuHVJnEQYYsYY/DbF0OaMaymZgyzxl1XyEfFmFrTkO/RxwOfm1nkl+lQy50L0pvPAEelLkKu0EXQ0oYurEfQz9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708952208; c=relaxed/simple;
-	bh=NC9zbuoZghbczDmZXWcpM9NU9mKbcnjtKFhuyF8fuZs=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XmlU2Y5svXNQP2I1mmdauHhBrlOMRxZwf4b/qSDRV5vSTFMobtAggOGhjwUEYUO3ghjJbVg6k519nQPU2cYQBvW7/xSLrSY9VtN4b8MH3Y+xJO1zFwl1hztsuEqHzLeZNLaHchOGYV3w7YwqTRutHB6wYfpVWhqlLZLgxs8nSGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk0s85lMRz6K9JP;
-	Mon, 26 Feb 2024 20:53:00 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id F41F9140FB6;
-	Mon, 26 Feb 2024 20:56:43 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
- 2024 12:56:43 +0000
-Date: Mon, 26 Feb 2024 12:56:42 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: John Groves <John@Groves.net>
-CC: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, "Dan
- Williams" <dan.j.williams@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Alexander
- Viro" <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Jan
- Kara" <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <john@jagalactic.com>, Dave Chinner
-	<david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
-	<dave.hansen@linux.intel.com>, <gregory.price@memverge.com>
-Subject: Re: [RFC PATCH 10/20] famfs: famfs_open_device() &
- dax_holder_operations
-Message-ID: <20240226125642.000076d2@Huawei.com>
-In-Reply-To: <74359fdc83688fb1aac1cb2c336fbd725590a131.1708709155.git.john@groves.net>
-References: <cover.1708709155.git.john@groves.net>
-	<74359fdc83688fb1aac1cb2c336fbd725590a131.1708709155.git.john@groves.net>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1708952231; c=relaxed/simple;
+	bh=JHreYlFG9Bvy0VWQqGq32kV4+VYQfyv2BVzD2+p+oGI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fVG3MtnXB4XeaL1oBHSNCOxfXb9hTVg6RSC6PtyvgApVRL7AIImUTODYZjuazR9f1Jpm4Jq5wP9/VmNDJFT6lAPHhgpBTb9ArIrCrknRBseg/VtuAANAOWgHGprbFqNMx5AkQHNYhbEnLoUKGKqesYMyu7PXudfxf64jSgJTHyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=hisilicon.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Tk0w873P6z1xpTt;
+	Mon, 26 Feb 2024 20:55:36 +0800 (CST)
+Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 16B191A0172;
+	Mon, 26 Feb 2024 20:57:05 +0800 (CST)
+Received: from [10.67.120.168] (10.67.120.168) by
+ kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 26 Feb 2024 20:57:04 +0800
+Message-ID: <954a1e9b-d0bb-10ea-aaa9-6a958de30537@hisilicon.com>
+Date: Mon, 26 Feb 2024 20:57:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.0
+Subject: Re: [PATCH v2 for-next 2/2] RDMA/hns: Support userspace configuring
+ congestion control algorithm with QP granularity
+Content-Language: en-US
+To: Leon Romanovsky <leon@kernel.org>
+CC: Jason Gunthorpe <jgg@ziepe.ca>, <linux-rdma@vger.kernel.org>,
+	<linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>
+References: <20240208035038.94668-1-huangjunxian6@hisilicon.com>
+ <20240208035038.94668-3-huangjunxian6@hisilicon.com>
+ <20240221155248.GD13491@ziepe.ca>
+ <26ea175c-fa31-720c-2ac3-41abcb4d398a@hisilicon.com>
+ <20240226080946.GC1842804@unreal>
+From: Junxian Huang <huangjunxian6@hisilicon.com>
+In-Reply-To: <20240226080946.GC1842804@unreal>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi500006.china.huawei.com (7.221.188.68)
 
-On Fri, 23 Feb 2024 11:41:54 -0600
-John Groves <John@Groves.net> wrote:
 
-> Famfs works on both /dev/pmem and /dev/dax devices. This commit introduces
-> the function that opens a block (pmem) device and the struct
-> dax_holder_operations that are needed for that ABI.
+
+On 2024/2/26 16:09, Leon Romanovsky wrote:
+> On Thu, Feb 22, 2024 at 03:06:20PM +0800, Junxian Huang wrote:
+>>
+>>
+>> On 2024/2/21 23:52, Jason Gunthorpe wrote:
+>>> On Thu, Feb 08, 2024 at 11:50:38AM +0800, Junxian Huang wrote:
+>>>> Support userspace configuring congestion control algorithm with
+>>>> QP granularity. If the algorithm is not specified in userspace,
+>>>> use the default one.
+>>>>
+>>>> Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+>>>> ---
+>>>>  drivers/infiniband/hw/hns/hns_roce_device.h | 23 +++++--
+>>>>  drivers/infiniband/hw/hns/hns_roce_hw_v2.c  | 14 +---
+>>>>  drivers/infiniband/hw/hns/hns_roce_hw_v2.h  |  3 +-
+>>>>  drivers/infiniband/hw/hns/hns_roce_main.c   |  3 +
+>>>>  drivers/infiniband/hw/hns/hns_roce_qp.c     | 71 +++++++++++++++++++++
+>>>>  include/uapi/rdma/hns-abi.h                 | 17 +++++
+>>>>  6 files changed, 112 insertions(+), 19 deletions(-)
 > 
-> In this commit, support for opening character /dev/dax is stubbed. A
-> later commit introduces this capability.
+> <...>
 > 
-> Signed-off-by: John Groves <john@groves.net>
-
-Formatting comments mostly same as previous patches, so I'll stop repeating them.
-
-> ---
->  fs/famfs/famfs_inode.c | 83 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 83 insertions(+)
+>>>> +
+>>>> +enum hns_roce_create_qp_comp_mask {
+>>>> +	HNS_ROCE_CREATE_QP_MASK_CONGEST_TYPE = 1 << 1,
+>>>
+>>> Why 1<<1 not 1<<0?
+>>
+>> This is to keep consistent with our internal ABI, there are some
+>> features not upstream yet.
+>>
 > 
-> diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
-> index 3329aff000d1..82c861998093 100644
-> --- a/fs/famfs/famfs_inode.c
-> +++ b/fs/famfs/famfs_inode.c
-> @@ -68,5 +68,88 @@ static const struct super_operations famfs_ops = {
->  	.show_options	= famfs_show_options,
->  };
->  
-> +/***************************************************************************************
-> + * dax_holder_operations for block dax
-> + */
-> +
-> +static int
-> +famfs_blk_dax_notify_failure(
-> +	struct dax_device	*dax_devp,
-> +	u64			offset,
-> +	u64			len,
-> +	int			mf_flags)
-> +{
-> +
-> +	pr_err("%s: dax_devp %llx offset %llx len %lld mf_flags %x\n",
-> +	       __func__, (u64)dax_devp, (u64)offset, (u64)len, mf_flags);
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +const struct dax_holder_operations famfs_blk_dax_holder_ops = {
-> +	.notify_failure		= famfs_blk_dax_notify_failure,
-> +};
-> +
-> +static int
-> +famfs_open_char_device(
-> +	struct super_block *sb,
-> +	struct fs_context  *fc)
-> +{
-> +	pr_err("%s: Root device is %s, but your kernel does not support famfs on /dev/dax\n",
-> +	       __func__, fc->source);
-> +	return -ENODEV;
-> +}
-> +
-> +/**
-> + * famfs_open_device()
-> + *
-> + * Open the memory device. If it looks like /dev/dax, call famfs_open_char_device().
-> + * Otherwise try to open it as a block/pmem device.
-> + */
-> +static int
-> +famfs_open_device(
-> +	struct super_block *sb,
-> +	struct fs_context  *fc)
-> +{
-> +	struct famfs_fs_info *fsi = sb->s_fs_info;
-> +	struct dax_device    *dax_devp;
-> +	u64 start_off = 0;
-> +	struct bdev_handle   *handlep;
-Definitely don't force alignment in local parameter definitions.
-Always goes wrong and makes for unreadable mess in patches!
+> <...>
+> 
+>>>> @@ -114,6 +128,9 @@ struct hns_roce_ib_alloc_ucontext_resp {
+>>>>  	__u32	reserved;
+>>>>  	__u32	config;
+>>>>  	__u32	max_inline_data;
+>>>> +	__u8	reserved0;
+>>>> +	__u8	congest_type;
+>>>
+>>> Why this layout?
+>>>> Jason
+>>
+>> Same as the 1<<1 issue, to keep consistent with our internal ABI.
+> 
+> We are talking about upstream kernel UAPI, there is no internal ABI here.
+> 
+> Please fix it.
+> 
+> Thanks
+> 
 
-> +
-> +	if (fsi->dax_devp) {
-> +		pr_err("%s: already mounted\n", __func__);
-Fine to fail but worth a error message? Not sure on convention on this but seems noisy
-and maybe in userspace control which isn't good.
-> +		return -EALREADY;
-> +	}
-> +
-> +	if (strstr(fc->source, "/dev/dax")) /* There is probably a better way to check this */
-> +		return famfs_open_char_device(sb, fc);
-> +
-> +	if (!strstr(fc->source, "/dev/pmem")) { /* There is probably a better way to check this */
-> +		pr_err("%s: primary backing dev (%s) is not pmem\n",
-> +		       __func__, fc->source);
-> +		return -EINVAL;
-> +	}
-> +
-> +	handlep = bdev_open_by_path(fc->source, FAMFS_BLKDEV_MODE, fsi, &fs_holder_ops);
-> +	if (IS_ERR(handlep->bdev)) {
-> +		pr_err("%s: failed blkdev_get_by_path(%s)\n", __func__, fc->source);
-> +		return PTR_ERR(handlep->bdev);
-> +	}
-> +
-> +	dax_devp = fs_dax_get_by_bdev(handlep->bdev, &start_off,
-> +				      fsi  /* holder */,
-> +				      &famfs_blk_dax_holder_ops);
-> +	if (IS_ERR(dax_devp)) {
-> +		pr_err("%s: unable to get daxdev from handlep->bdev\n", __func__);
-> +		bdev_release(handlep);
-> +		return -ENODEV;
-> +	}
-> +	fsi->bdev_handle = handlep;
-> +	fsi->dax_devp    = dax_devp;
-> +
-> +	pr_notice("%s: root device is block dax (%s)\n", __func__, fc->source);
+Sure. Will fix it in next version.
 
-pr_debug()  Kernel log is too noisy anyway! + I'd assume we can tell this succeeded
-in lots of other ways.
+Thanks,
+Junxian
 
-
-> +	return 0;
-> +}
-> +
-> +
->  
->  MODULE_LICENSE("GPL");
-
+>>
+>> Thanks,
+>> Junxian
