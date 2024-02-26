@@ -1,63 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2C91AACC;
-	Mon, 26 Feb 2024 13:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9EF1AACC;
+	Mon, 26 Feb 2024 13:47:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708955256; cv=none; b=aEJMX3MxKcxNwdGANM1x6eqiSKU53vmzOfbYzA5dFYzEFeZSMusgLbaZn3QkBtC5UbarwdouQXCoOLwR4zQWIKWbwRLnnJ5AWkb9Nag75lHH1H5dSUzhfeJbBWsYV1dCJFMFtRh6HKILSjyxktAZw0sUGp3bNPrlhVfRx+rKPE0=
+	t=1708955275; cv=none; b=ITSAAs0iLWhxWrxu7tisSKbcdjOFJktDFIPJYU1gHPcncuFmq8kPD8H8Doly7svUT/LI0krGwFziQk9zebKLYqCgON8+IWxTLxs8/71geqSfBovhwPRCJY+4hPKAMv01XVajzzCeJF8thUSJO1IjBJDyN0czAX2+WtfwaBy5dcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708955256; c=relaxed/simple;
-	bh=fSJaGhfbzk3mg9Gy/IkD4517DdQOP65I1oQqAokj57g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kv5owtYhvTKfPO+JgWkoQ5IDtG7KjL6kXjcIJFt04QSjKr9Wm14nyyI6QXjGyWI7gUgQ3uXkVRD4p9YGFds4p7DUej0Pies5WmRxLuX7QOyFk77awWxlt7IwREK+xjgAQFvUjqlrbNukDeMZAl+48SViDyQwL/9H6KXU+Jh7+oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLF2GRs1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLF2GRs1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B552C433C7;
-	Mon, 26 Feb 2024 13:47:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708955255;
-	bh=fSJaGhfbzk3mg9Gy/IkD4517DdQOP65I1oQqAokj57g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SLF2GRs1FNRQRREvRc0IrbCboJQPubtEH/xb1/5pMSw4F/R5Ds+sNAKHXtH3bTZ73
-	 IipHQ7/5PdlRjKq0/n2WuEQGT81qUUAmsd3l4Sh3rEbbDgoUHGhFBWTmRRYrKrKD1k
-	 p3rqxWMAuCSy8yyPUBPCawWS46wLH6pUQXi1Aw5Lpog2b5rLJsMxOfJS9CajvuICQ0
-	 d+zJv0b8zQ/PNYvOzo+GG+/3srCyC6GNu1PEMK+XPrBfRVzvo3Ra7qoINBrJHuIZIZ
-	 aqlSU/DN4ZjmecGXdHB+/Oj4iAreUbOoBZximzjzWy7xdkBy2mR3V0FOUVHMFyH4gz
-	 d3HbrlViWZT+w==
-Date: Mon, 26 Feb 2024 13:47:30 +0000
-From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com,
-	edumazet@google.com,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] xfrm: Do not allocate stats in the driver
-Message-ID: <20240226134730.GE13129@kernel.org>
-References: <20240222144117.1370101-1-leitao@debian.org>
+	s=arc-20240116; t=1708955275; c=relaxed/simple;
+	bh=E83r2PzgmcARJDM5rhAvuhFm7oVmjpWV1yfSKzHMk8E=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hg07kq/lHaLt0zq3aWrURdiNuhcPAOIVe5xHlRrLOPz+78Cjs5xV7KdmtmX21meeHc5yNrlhLv5aded4HLtmMJr0EqCLjJtlIfycmLk4xGbblCMdy64eTzdosFT848Yc4Bf7+3m4UbIIBf9h9YJNhXStB3QGhjvinKgPb3HI6jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk20704Rnz6K9PX;
+	Mon, 26 Feb 2024 21:44:07 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4623F1418DD;
+	Mon, 26 Feb 2024 21:47:50 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
+ 2024 13:47:49 +0000
+Date: Mon, 26 Feb 2024 13:47:48 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: John Groves <John@Groves.net>
+CC: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, "Dan
+ Williams" <dan.j.williams@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Alexander
+ Viro" <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Jan
+ Kara" <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <john@jagalactic.com>, Dave Chinner
+	<david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
+	<dave.hansen@linux.intel.com>, <gregory.price@memverge.com>
+Subject: Re: [RFC PATCH 17/20] famfs: Add module stuff
+Message-ID: <20240226134748.00003f57@Huawei.com>
+In-Reply-To: <e633fb92d3c20ba446e60c2c161cf07074aef374.1708709155.git.john@groves.net>
+References: <cover.1708709155.git.john@groves.net>
+	<e633fb92d3c20ba446e60c2c161cf07074aef374.1708709155.git.john@groves.net>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222144117.1370101-1-leitao@debian.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Feb 22, 2024 at 06:41:17AM -0800, Breno Leitao wrote:
-> With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
-> convert veth & vrf"), stats allocation could be done on net core
-> instead of this driver.
-> 
-> With this new approach, the driver doesn't have to bother with error
-> handling (allocation failure checking, making sure free happens in the
-> right spot, etc). This is core responsibility now.
-> 
-> Remove the allocation in the xfrm driver and leverage the network
-> core allocation.
+On Fri, 23 Feb 2024 11:42:01 -0600
+John Groves <John@Groves.net> wrote:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+> This commit introduces the module init and exit machinery for famfs.
+> 
+> Signed-off-by: John Groves <john@groves.net>
+I'd prefer to see this from the start with the functionality of the module
+built up as you go + build logic in place.  Makes it easy to spot places
+where the patches aren't appropriately self constrained. 
+> ---
+>  fs/famfs/famfs_inode.c | 44 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
+> index ab46ec50b70d..0d659820e8ff 100644
+> --- a/fs/famfs/famfs_inode.c
+> +++ b/fs/famfs/famfs_inode.c
+> @@ -462,4 +462,48 @@ static struct file_system_type famfs_fs_type = {
+>  	.fs_flags	  = FS_USERNS_MOUNT,
+>  };
+>  
+> +/*****************************************************************************************
+> + * Module stuff
+
+I'd drop these drivers structure comments. They add little beyond
+a high possibility of being wrong after the code has evolved a bit.
+
+> + */
+> +static struct kobject *famfs_kobj;
+> +
+> +static int __init init_famfs_fs(void)
+> +{
+> +	int rc;
+> +
+> +#if defined(CONFIG_DEV_DAX_IOMAP)
+> +	pr_notice("%s: Your kernel supports famfs on /dev/dax\n", __func__);
+> +#else
+> +	pr_notice("%s: Your kernel does not support famfs on /dev/dax\n", __func__);
+> +#endif
+> +	famfs_kobj = kobject_create_and_add(MODULE_NAME, fs_kobj);
+> +	if (!famfs_kobj) {
+> +		pr_warn("Failed to create kobject\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	rc = sysfs_create_group(famfs_kobj, &famfs_attr_group);
+> +	if (rc) {
+> +		kobject_put(famfs_kobj);
+> +		pr_warn("%s: Failed to create sysfs group\n", __func__);
+> +		return rc;
+> +	}
+> +
+> +	return register_filesystem(&famfs_fs_type);
+
+If this fails, do we not leak the kobj and sysfs groups?
+
+> +}
+> +
+> +static void
+> +__exit famfs_exit(void)
+> +{
+> +	sysfs_remove_group(famfs_kobj,  &famfs_attr_group);
+> +	kobject_put(famfs_kobj);
+> +	unregister_filesystem(&famfs_fs_type);
+> +	pr_info("%s: unregistered\n", __func__);
+> +}
+> +
+> +
+> +fs_initcall(init_famfs_fs);
+> +module_exit(famfs_exit);
+> +
+> +MODULE_AUTHOR("John Groves, Micron Technology");
+>  MODULE_LICENSE("GPL");
 
