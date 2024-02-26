@@ -1,131 +1,147 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAFA12BF0A;
-	Mon, 26 Feb 2024 16:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D18112BF3C;
+	Mon, 26 Feb 2024 16:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708963311; cv=none; b=BRWf9ZFE5YFWDm93WpETer3lV9MKnkVZdLcQu+2SxTCZrWxMX5qJmeCag9Sf62UZdVHGxZm9o1xQZd2S2dp9eiG4G7XiPQdQKwovvGDqy4W22Up1uHeuxNnspL1QwChbPapRYzdgST3IL4P9+C3jV0ZcmmUO3DRS4nZOnzfRYhw=
+	t=1708963322; cv=none; b=WTLwndwgzUUi8q0BpNBNaZFfwGCDdZ69Wy+QwxGTrjiX5WX4bHxyUtOJhii/Km67HY/Vnzh0OcnX0Rh3f5GUAuq3s+DXGpgYNLl8W2RS7oi6iWiomR4CbUR0SezI41VH7gb/i+34c+K/L4G2Js8AVpvvaAZdnv2R1Hzou3fYbZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708963311; c=relaxed/simple;
-	bh=YPgDeRMRVLtnHfl04hdaDS9KGjCh+SsqQcfmaX4GLmI=;
+	s=arc-20240116; t=1708963322; c=relaxed/simple;
+	bh=z1qeTpEjMEfc2m6/6tnNBSOhd7axsMR5VpVy+elxQ20=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o0DKbtWRizz2MS1yMId66Ms/osRMHtnteaYo81/0+MZEEZtt3Ab/+uv96w5faUVupryjDKRebXwh/Vbb4lnFfU2HEf1vX/d42eMuRXwdetBI6D24ZKdkuK6kIoTC6275IWNj7x36dVs0PvQWb/CuukdkJMfU8ZAXJDwDDk6WN3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZiXu/agE; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=AT+t/SM0FZYA78VGuenK8QkrwyT7JoUkyDl1uYODhCnclN2ha3hoMLFeFVtPCfFeRgEiAdKCgNXnx9BeVVVvnlFwgzQLyJl85objJyO4Jgr/u1dWkenCRqXXTT6P4KfsLgQFoV8O3mh/mmrEBZNwIfcs7gE0j3hskl914PBNnHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiXu/agE"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4cb26623d8dso573928e0c.1;
-        Mon, 26 Feb 2024 08:01:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708963309; x=1709568109; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dr6er5yzK+VgY/KBbDAv+oUau3v0fquMnz84YiSHUuk=;
-        b=ZiXu/agEaD7a+BSStD/oMQx0NiPC1/pSsz1VMfwOYZn/7Oe/Yn34t6BU3SA14UQpn7
-         lmbLIvDZadC67rEZSPVEjV+Gy1hf5c83ovdAmZuG5FxWatM1/6104fdgs7K378gRvJaG
-         I6k7SoUpR9WAnyOA9i9PuqPX2zocTWnVT1dWuc1cJSYZQhHTxAA2Ljt+Ao+yHRx9SzWQ
-         FTzVEChAP23MnwPNkC0uIgXZz3RDH0xdlfncj7JhII1YiO/2kTLQZjc/mj0qi4gLy+xz
-         6BfHvCLeIpWN+SNXrUKG+R75XQt0FcYCh7WK6sf4DD3NDMJWlGk/cRSYbvr9dS4V4hUL
-         owkQ==
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-607e54b6cf5so21992767b3.0;
+        Mon, 26 Feb 2024 08:02:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708963309; x=1709568109;
+        d=1e100.net; s=20230601; t=1708963319; x=1709568119;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dr6er5yzK+VgY/KBbDAv+oUau3v0fquMnz84YiSHUuk=;
-        b=W9GY9iWqGd0jNl8uDAElD3HeL58AoudamjCgJh6fTBbJerAnRTPWjZ94+yYCyZDWo/
-         tua9EsMgXaDYcrUn8Dl1fg3XbdkyPIYbHepev29R55s60OoZbaQeJN0fq1M6SdCDxoQ2
-         pxmGxqAqjT6N8ApBkLk0NHJWs5zCG0L4SA7EkMhuvhF2V86SsqCKVDXhq22UlhUU4wSu
-         tdHXFDvWBb3bDxhwNKMFoqzdJf+IfXCt3oRz/ORX2Uq8bozNbggeLMmZwJZE17JLg2Aj
-         vgbHLFPP+LgaXnXlDjG+Xjxj7bBwvhhQCJ5JPm8xfOffpNUeXeDkdfL4JLY4hZOxrizj
-         /23w==
-X-Forwarded-Encrypted: i=1; AJvYcCVSMbFEaLjwe8jrZXBJXTQbQ9FEWuD2jLhAYv0Lig4oAMCCeN9pVi2pfE4p5Ubef65Mr3Ft0Bd5Vifrkr3jrT6s7RnILNs0TN3oUle1kD2dcjRXlMeGqWltGBmQPyqw4zeTOO+lqvoxIF8jrjgMXnGNK1el9XG+v+LyOfzQ/TJ73lNQBwBy7ZjbzbJf
-X-Gm-Message-State: AOJu0YzRs3o47w2pRHSvpg2H7jFd7wTAOuwD2pzdz6UheKovrXpsaYOQ
-	EuuTH1LDDUtA/xuTa721VJML1dYaiU0+5zwS3jeTMVfH0SGD2s+p1KxumqoC+OX21yRgy4S5tDR
-	cWbZQW9hYKGL9qYGAl7xVtEHOhgk=
-X-Google-Smtp-Source: AGHT+IGsv4knkXxBVsnhcjIYxDKPlgPUfu1PPn87PUSjQhpSoWYOr16Fc+xOKTUaHGroCvn3RtQLBkqKyu+fia8fDnE=
-X-Received: by 2002:a1f:c642:0:b0:4cb:2662:3651 with SMTP id
- w63-20020a1fc642000000b004cb26623651mr3650234vkf.6.1708963303632; Mon, 26 Feb
- 2024 08:01:43 -0800 (PST)
+        bh=oYLdQGeG0+orphpmC7yUAHvEglcSX2xBetFEu0Q3iXQ=;
+        b=OUrsjVLO1WFlPifNNYrpZzOeqsGt84XY5/43PsYF6D16Gp6YplrY2UNwUgUgI2Pb7U
+         lQCA+4a/z1oNWP666dOa0BAGiqEMgD3I8AgOY6JUM3I5/ZFCZ9x5Yso93MZ0uxF4U61D
+         YARAXbYyX2UuHfCZiUKGIsM7vycFNP6XYrBvri/AxtOIrPqbpvNZoXml4BaFa5cRtMYT
+         nfRlKRTMJ/TGb2hnvn3O2nrmAwZrDcHE6WQPiYzVo0TRPKfz6+ZRQhFWG/Qs9pypVwK4
+         4SIQMLHM/lyPnTINMqlGvuhgi6PJ9pBpDasCGVoDBOlMVOfsfFAQNm9R9vHByGrVmS1Y
+         TFGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOa2ED2kO9hQTiWh27SW023CGNGgrv3xP6Ekc56gU3vioZszupeISrzjIY5H6DUjhGaynd8n6OV13AnPvS6orLxPKcLM5yUP1y8HKGxvVOIxYJRvkTNQ/wgtp2IocwKVqrgQNi3jemVQ==
+X-Gm-Message-State: AOJu0YyCMPomDNM7/6jnKl76pDRTvuKLTeKYX2dO1z884MiI6n6+oSPm
+	lOPmWH8Gs4zbHCOKxIVi47FP7UYB7NwD9Qa8BplBPelcBzouwgEAJfpdXkOqYMw=
+X-Google-Smtp-Source: AGHT+IFWp6qoVWibZnaoUG6/6q4jndWnf1FBWR5155ZcWCf/bajewxyzUgo5a4pzMRlI/bfsXmS/eQ==
+X-Received: by 2002:a81:ae62:0:b0:608:b1eb:f631 with SMTP id g34-20020a81ae62000000b00608b1ebf631mr3888836ywk.3.1708963318708;
+        Mon, 26 Feb 2024 08:01:58 -0800 (PST)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id f187-20020a0dc3c4000000b00607bc220c5esm1232202ywd.102.2024.02.26.08.01.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 08:01:58 -0800 (PST)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dbed179f0faso1799401276.1;
+        Mon, 26 Feb 2024 08:01:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUnqaGkn8K7XmgE2pg4xd08EDjclbV+BGwoJwieYPvQ3KJTDhx6gbcL7SKPFUVQb5AeFyOzpget+i77N1dSwGRaI5Eb1s1X15HqDQxDj/No6eAn4f5NuRqSs1TulTyewRHNR9rVN11o2Q==
+X-Received: by 2002:a25:e0ce:0:b0:dc6:e7f6:254a with SMTP id
+ x197-20020a25e0ce000000b00dc6e7f6254amr4561945ybg.8.1708963318051; Mon, 26
+ Feb 2024 08:01:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240219160912.1206647-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240219160912.1206647-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV3eVTek9sYwXbqu98ta8wx197GMc-k3q1RZRb8ar=jFg@mail.gmail.com>
- <CA+V-a8uNaRL7wE0SmwmiCq3o798-2Kd-fegKJ2Tep5mZuS2O2w@mail.gmail.com> <CAMuHMdWwn2nVx=vebT+Egas+b_dt7d28eN_ykrA+ckZ2GPuXHQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWwn2nVx=vebT+Egas+b_dt7d28eN_ykrA+ckZ2GPuXHQ@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 26 Feb 2024 16:00:53 +0000
-Message-ID: <CA+V-a8stTXWue+oCLpCooL5WxXJofovjtxkEcEk_SB0_RZdz0w@mail.gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: arm: renesas: Document Renesas RZ/V2H{P}
- System Controller
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
+References: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com> <20240219170337.2161754-10-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240219170337.2161754-10-andriy.shevchenko@linux.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 Feb 2024 17:01:46 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWpepH0P8g9dPfq1rsZRJsvOnoZ7VnjqTL9nkSGtKFpYQ@mail.gmail.com>
+Message-ID: <CAMuHMdWpepH0P8g9dPfq1rsZRJsvOnoZ7VnjqTL9nkSGtKFpYQ@mail.gmail.com>
+Subject: Re: [PATCH v3 9/9] auxdisplay: Add driver for MAX695x 7-segment LED controllers
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+	Robin van der Gracht <robin@protonic.nl>, Paul Burton <paulburton@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+Hi Andy,
 
-On Mon, Feb 26, 2024 at 3:15=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
+On Mon, Feb 19, 2024 at 6:03=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> Add initial driver for the MAX6958 and MAX6959 7-segment LED
+> controllers.
 >
-> Hi Prabhakar,
->
-> On Mon, Feb 26, 2024 at 3:01=E2=80=AFPM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Mon, Feb 26, 2024 at 1:41=E2=80=AFPM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> > > On Mon, Feb 19, 2024 at 5:10=E2=80=AFPM Prabhakar <prabhakar.csengg@g=
-mail.com> wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/soc/renesas/renesas,r9a09g0=
-57-sys.yaml
-> > > > +  clocks:
-> > > > +    items:
-> > > > +      - description: Clock from external oscillator
-> > >
-> > > Isn't this SYS_0_PCLK inside the CPG?
-> > >
-> > As per the block diagram (figure 4.4-3), if we follow the clock source
-> > for SYS it traces back to 24MHz Oscillator. Let me know how you want
-> > me to describe this please.
->
-> Yes, that is the diagram I was looking at.
-> MAIN OSC 24 MHz -> MAINCLK -> SYS_0_PCLK.
->
-> MAIN OSC 24 MHz is a clock input to the CPG.
-> MAINCLK is a CPG internal core clock.
-> SYS_0_PCLK is a CPG clock output, serving as the SYS module clock.
->
-Agreed.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> I think the standard "maxItems: 1" would be fine, and no description
-> is needed.
->
-OK, makes sense.
+Thanks for your patch!
 
-> > > > +
-> > > > +  resets:
-> > > > +    items:
-> > > > +      - description: SYS_0_PRESETN reset signal
->
-> Same here.
->
-Ok.
+LGTM, so
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Cheers,
-Prabhakar
+> --- /dev/null
+> +++ b/drivers/auxdisplay/max6959.c
+
+> +static void max6959_disp_update(struct work_struct *work)
+> +{
+> +       struct max6959_priv *priv =3D container_of(work, struct max6959_p=
+riv, work.work);
+> +       struct linedisp *linedisp =3D &priv->linedisp;
+> +       struct linedisp_map *map =3D linedisp->map;
+> +       char *s =3D linedisp->buf;
+> +       u8 buf[4];
+> +
+> +       /* Map segments according to datasheet */
+> +       buf[0] =3D bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
+> +       buf[1] =3D bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
+> +       buf[2] =3D bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
+> +       buf[3] =3D bitrev8(map_to_seg7(&map->map.seg7, *s++)) >> 1;
+
+for (unsigned int i =3D 0; i < linedisp->num_chars; i++) { ... }
+
+> +
+> +       regmap_bulk_write(priv->regmap, REG_DIGIT(0), buf, ARRAY_SIZE(buf=
+));
+
+linedisp->num_chars
+
+> +}
+
+> +static int max6959_i2c_probe(struct i2c_client *client)
+> +{
+> +       struct device *dev =3D &client->dev;
+> +       struct max6959_priv *priv;
+> +       int ret;
+> +
+> +       priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       priv->regmap =3D devm_regmap_init_i2c(client, &max6959_regmap_con=
+fig);
+> +       if (IS_ERR(priv->regmap))
+> +               return PTR_ERR(priv->regmap);
+> +
+> +       ret =3D max6959_power_on(priv);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D linedisp_register(&priv->linedisp, dev, 4, &max6959_lined=
+isp_ops);
+
++ device_property_read_u32(dev, "display-width-chars", ...) handling.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
