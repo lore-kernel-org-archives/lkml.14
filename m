@@ -1,216 +1,204 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A751BDD8
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 07:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF7C1C686
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 07:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708933958; cv=none; b=PLkgjNmOHqM0Iahb8hN2vzGTxyJBu+ZUVTc+/VT6vkzOsn5cjJKCET5eR30k7ud07Kl5GD/W7iV+WrmLVvLnpArsjro/58hNNOAKxS9jXHUAbcv1o5N5Oke3jqkyqtiGSAFmOAJdVdf+zzXGna106Jae1PzUYfrTdXoa8Gy55Fw=
+	t=1708934017; cv=none; b=Gwdzztd9zFqW8GSK0ScuhAjuOnJdqfoZCn8B+DC47Ai713VorPi6nz8W79CEmRMsCph2ID5B0fDLQsByKDdtj734m/tf+iGWyCDzJPIngV4B+vVtZpuLkXThPiC/uM4w6z6E3+woyFa1LEIIT/uV5lqQrUaN93wQdScoB3TrBQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708933958; c=relaxed/simple;
-	bh=79IFNXtUb0pKOStZ3CnUgtwtP/UJl7nrruMLfiTiZ4I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BKTmtnSUXkNvGcQJUTEDrC3ogBBhJ1iJWvtZ8tgWKEqDuRGFqA+9rUZXelBsNoCZ1gvSaUieDgrnyzcirw1erun530KbTU85XP4GiklBwTa+LNzyKA04wnvyjoxhA9PXJQoL4SyaZXeU3Iy3i11GKk0BQnNKshn86ETM0zctGvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZrodU2zL; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708934017; c=relaxed/simple;
+	bh=H1/68T6vtEI19f2OwbzYGbUoeQTa60oidED9lAkt07k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KWQ2HGIO+C7ZFPlbotBvyNKgdXK5U1YHr+0Bnzchx/Y9ui64BcYCTCqqakZrjpaqg3C1psIiQsz1bcNWwEUn5bAahVhCrbboLZ0xAsnnPYn4e4aTesBMjqqsd+MbsiKoPKADoorAXenI1MrWH/hVlek2NT/R/7HbBfBGaz2K1ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=UBqnKylB; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrodU2zL"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33dc3fe739aso688262f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 23:52:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="UBqnKylB"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so399839166b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 25 Feb 2024 23:53:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708933955; x=1709538755; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPQ+HZG9ZH8pgTa6BFUHg2MQy0OsY1NDbVY61HuOvvM=;
-        b=ZrodU2zL+mpi/4Ak/M0e21kaQ0sMDyDeLFMz8lopiT22u4U8ww3yi1kYJ78u6o+1rt
-         YBf3RElJZTVnEYaOWTQFpb5h86pKf7695PWaHejrVUMo3Fy/ypEiZhgCt638bEmhAexX
-         AbOi5d1NHlGXvx9NrERYNgY4VTGSTwM2XnDQn3XqgU35NNrZl86FaVgfC9N3xEGuXQmd
-         eBeyZqf6ToC1+Td0137Wx1VzD/qyDSvbsWwz75Xybal54uDqk9BirQzTHfxWiIvBJ/kz
-         KUDAWokaTcqqMyO+KHCB1eeWH8jDVd1/qg4rIoKMqgfd/A5zxu5QDKlQ88VXECsO0yrk
-         2ROw==
+        d=amarulasolutions.com; s=google; t=1708934013; x=1709538813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0DLWa7NcP4etKwAniB6QuHD07G5jSHGqKq2CbdXaCTc=;
+        b=UBqnKylBLQ/njzmb6jfdu45pAv7Jq9vmv3/Xq6ftDeMrCSi/p4F6w4Lc2s+E9NOUtM
+         dRCBi19q4rmcOlwi4j0hiDJfNipAj2tPx0acJ1incJN38HS0Z9CBcdkV3wdrrcsumMTI
+         /7AQXK4oVhmg9Iq61eVDv+ZJ51GoAw1pk2yTw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708933955; x=1709538755;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZPQ+HZG9ZH8pgTa6BFUHg2MQy0OsY1NDbVY61HuOvvM=;
-        b=rZvbSfC2oWEeS85ZcXg5aHNMMTJpOpDFWZDhVet/OBoHMIgtGikEvV6zXiAiGkGxxr
-         Dz2rr/EfgE62ZhVa5ImczGacWqYlb6Kqk/iqgPgPuPH4ICwxV+JFNaCZKqypWmeCFOK+
-         MgmDcyKtY2BFyKJr+GKlARUM09GgSii+0HyZUHJ1yRYMoM9m3PYDCz8zz5la6iv81UA3
-         5a+yKUHu4c4OW4WxkQMntQ7/I2TTCSYAIOCjjpG9C4/Em/gf5+AqQ5WEtrA2lxboEu8j
-         xh4i9FFEvRDRZx14A0J5jk3NGvTjRsi1bE49+90RtjWQM9ytpkSSXNk1M8En/xlDSxuo
-         WggQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmO9NVJGnU5gve/vJ7ahjw1EmO+sFY3iOs2vlZZ9g7VKJ7kmkmPZdDcSxharrl4wgrdtxN0FM4movN/uw4Vh7LXUCE1BcV3+zAf8Xm
-X-Gm-Message-State: AOJu0YwUoeL5gPIWTUwo6JlnCm6fCD+n1V82ZK+pyJsgyfQCDtMtka1h
-	ULHOQIUzITZYkjzD7uewXERPeYIRC5I7fe9Kexxv/MfIt0AA+6Rh
-X-Google-Smtp-Source: AGHT+IFaQ6sNsZyzhrO0DhVowwdLlWEGJHqFGcrFAghi/l+k+EEJbC6GBWulh3qLj9alsBg0etlpBg==
-X-Received: by 2002:a5d:528f:0:b0:33d:dd41:674c with SMTP id c15-20020a5d528f000000b0033ddd41674cmr704870wrv.28.1708933954756;
-        Sun, 25 Feb 2024 23:52:34 -0800 (PST)
-Received: from Ubuntu22.myguest.virtualbox.org ([46.121.140.152])
-        by smtp.gmail.com with ESMTPSA id bj20-20020a0560001e1400b0033db0c866f7sm7436968wrb.11.2024.02.25.23.52.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 23:52:34 -0800 (PST)
-Received: by Ubuntu22.myguest.virtualbox.org (sSMTP sendmail emulation); Mon, 26 Feb 2024 09:52:31 +0200
-From: Meir Elisha <meir6264@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ruan Jinjie <ruanjinjie@huawei.com>,
-	Yang Yingliang <yangyingliang@huawei.com>
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Meir Elisha <meir6264@gmail.com>
-Subject: [PATCH v3] Staging: rtl8723bs: Remove spaces before tabs in rtw_set_auth
-Date: Mon, 26 Feb 2024 09:52:25 +0200
-Message-Id: <20240226075225.44881-1-meir6264@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1708934013; x=1709538813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0DLWa7NcP4etKwAniB6QuHD07G5jSHGqKq2CbdXaCTc=;
+        b=ZpfQR96FabVpu06qdkSDQZMT0SIdRuLK+P2H7V81IOa8DKfpC8XCuJgLCqBNZ53a9v
+         0xPuqR7fXUwNiS/AEarH6nzwpSUVaAkgI2uwTKOE33wd7gO3XB2+A1tb/njdbsqCa55d
+         0tW1t5aRURQjB8DoRoF0GQgMPl9GRddPGllTQ9GXWyMtVbsDUbMxfVaSVJdJbYLEJFyh
+         rrDh4XctsMZg9zxc2A7TyztThExDSvQNZ28RYiMr0FIOxLemxGiHy35BoXNC6b5tCoFi
+         2WBpZLFe1udES9mKcCAvulc/w41/YS8vjxoAeYkXRfdWFkRnRcFA/7qXJX5b2BwXRJdt
+         LIaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWDuyesPMkNlPtJ+fVWxfHHVqKyYYhAQ0/tg0hZAY6y4BQJBHOEeMAJTTiDmXGKGa+f1rBrdA85liyGwmkgRJnYK0zBril02+tVPnb5
+X-Gm-Message-State: AOJu0YxOAxzaFzKCXimPDai9KxHYKfows9o370SN5NOm65dib/HpGe5c
+	kzQkhO6LU2QcdKEdlQNnOqiogyDq42mHHWQER263BeP6pSnUpis8RFqJkXg1cUInQRtbr5k971G
+	O6Gb8xXcR4m1GRS+KDyVMTnfvrfFX8e9eZkJFYw==
+X-Google-Smtp-Source: AGHT+IEhOCKWXEBEZgQAKtk2f60JhvlK6LnyTrP3IE8mObADY6Ur4vqS9GaLdac9/qnxIORF2bcbkB4Pe4oF+dX3X4A=
+X-Received: by 2002:a17:906:b798:b0:a41:3d8b:80d with SMTP id
+ dt24-20020a170906b79800b00a413d8b080dmr4627327ejb.37.1708934012843; Sun, 25
+ Feb 2024 23:53:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240226070348.1703879-1-michael@amarulasolutions.com>
+In-Reply-To: <20240226070348.1703879-1-michael@amarulasolutions.com>
+From: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Date: Mon, 26 Feb 2024 08:53:21 +0100
+Message-ID: <CAOf5uw=P0UYXP8ujHpF+hnGR_cg90gqv9na7cVH1sQ-BtEgrTA@mail.gmail.com>
+Subject: Re: [PATCH V2] usb: dwc3: gadget: Fix suspend/resume warning when
+ no-gadget is connected
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-amarula@amarulasolutions.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove spaces before tabs to improve coding style.
+Hi all
 
-Signed-off-by: Meir Elisha <meir6264@gmail.com>
----
-Changes in v3: subject and description changed, revert dead code changes
-Changes in v2: remove dead code
+Please don't review, I'm not happy with it and even it's broken. I
+need to find better solution
 
- drivers/staging/rtl8723bs/core/rtw_mlme.c | 48 +++++++++++------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+On Mon, Feb 26, 2024 at 8:03=E2=80=AFAM Michael Trimarchi
+<michael@amarulasolutions.com> wrote:
+>
+> This patch restore the logic but protects the variable using a spinlock
+> without moving the code
+>
+> [   45.597274] dwc3 31000000.usb: wait for SETUP phase timed out
+> [   45.599140] dwc3 31000000.usb: failed to set STALL on ep0out
+> [   45.601069] ------------[ cut here ]------------
+> [   45.601073] WARNING: CPU: 0 PID: 150 at drivers/usb/dwc3/ep0.c:289 dwc=
+3_ep0_out_start+0xcc/0xd4
+> [   45.601102] Modules linked in: cfg80211 rfkill ipv6 rpmsg_ctrl rpmsg_c=
+har crct10dif_ce rti_wdt k3_j72xx_bandgap rtc_ti_k3 omap_mailbox sa2ul auth=
+enc [last unloaded: ti_k3_r5_remoteproc]
+> [   45.601151] CPU: 0 PID: 150 Comm: sh Not tainted 6.8.0-rc5 #1
+> [   45.601159] Hardware name: BSH - CCM-M3 (DT)
+> [   45.601164] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYP=
+E=3D--)
+> [   45.601172] pc : dwc3_ep0_out_start+0xcc/0xd4
+> [   45.601179] lr : dwc3_ep0_out_start+0x50/0xd4
+> [   45.601186] sp : ffff8000832739e0
+> [   45.601189] x29: ffff8000832739e0 x28: ffff800082a21000 x27: ffff80008=
+08dc630
+> [   45.601200] x26: 0000000000000002 x25: ffff800082530a44 x24: 000000000=
+0000000
+> [   45.601210] x23: ffff000000e079a0 x22: ffff000000e07a68 x21: 000000000=
+0000001
+> [   45.601219] x20: ffff000000e07880 x19: ffff000000e07880 x18: 000000000=
+0000040
+> [   45.601229] x17: ffff7fff8e1ce000 x16: ffff800080000000 x15: fffffffff=
+ffe5260
+> [   45.601239] x14: 0000000000000000 x13: 206e6f204c4c4154 x12: 532074657=
+3206f74
+> [   45.601249] x11: 0000000000000001 x10: 000000000000000a x9 : ffff80008=
+3273930
+> [   45.601259] x8 : 000000000000000a x7 : ffffffffffff3f0c x6 : fffffffff=
+fff3f00
+> [   45.601268] x5 : ffffffffffff3f0c x4 : 0000000000000000 x3 : 000000000=
+0000000
+> [   45.601278] x2 : 0000000000000000 x1 : ffff000004e7e600 x0 : 00000000f=
+fffff92
+> [   45.601289] Call trace:
+> [   45.601293]  dwc3_ep0_out_start+0xcc/0xd4
+> [   45.601301]  dwc3_ep0_stall_and_restart+0x98/0xbc
+> [   45.601309]  dwc3_ep0_reset_state+0x5c/0x88
+> [   45.601315]  dwc3_gadget_soft_disconnect+0x144/0x160
+> [   45.601323]  dwc3_gadget_suspend+0x18/0xb0
+> [   45.601329]  dwc3_suspend_common+0x5c/0x18c
+> [   45.601341]  dwc3_suspend+0x20/0x44
+> [   45.601350]  platform_pm_suspend+0x2c/0x6c
+> [   45.601360]  __device_suspend+0x10c/0x34c
+> [   45.601372]  dpm_suspend+0x1a8/0x240
+> [   45.601382]  dpm_suspend_start+0x80/0x9c
+> [   45.601391]  suspend_devices_and_enter+0x1c4/0x584
+> [   45.601402]  pm_suspend+0x1b0/0x264
+> [   45.601408]  state_store+0x80/0xec
+> [   45.601415]  kobj_attr_store+0x18/0x2c
+> [   45.601426]  sysfs_kf_write+0x44/0x54
+> [   45.601434]  kernfs_fop_write_iter+0x120/0x1ec
+> [   45.601445]  vfs_write+0x23c/0x358
+> [   45.601458]  ksys_write+0x70/0x104
+> [   45.601467]  __arm64_sys_write+0x1c/0x28
+> [   45.601477]  invoke_syscall+0x48/0x114
+> [   45.601488]  el0_svc_common.constprop.0+0x40/0xe0
+> [   45.601498]  do_el0_svc+0x1c/0x28
+> [   45.601506]  el0_svc+0x34/0xb8
+> [   45.601516]  el0t_64_sync_handler+0x100/0x12c
+> [   45.601522]  el0t_64_sync+0x190/0x194
+> [   45.601531] ---[ end trace 0000000000000000 ]---
+> [   45.608794] Disabling non-boot CPUs ...
+> [   45.611029] psci: CPU1 killed (polled 0 ms)
+> [   45.611837] Enabling non-boot CPUs ...
+> [   45.612247] Detected VIPT I-cache on CPU1
+>
+> Tested on a am62x board
+>
+> Fixes: 61a348857e86 ("usb: dwc3: gadget: Fix NULL pointer dereference in =
+dwc3_gadget_suspend)
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> ---
+> V1->V2:
+>         Add cc to stable
+> ---
+>  drivers/usb/dwc3/gadget.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 4c8dd6724678..4c88e44127b5 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -4703,13 +4703,19 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+>         unsigned long flags;
+>         int ret;
+>
+> +       spin_lock_irqsave(&dwc->lock, flags);
+> +       if (!dwc->gadget_driver) {
+> +               spin_unlock_irqrestore(&dwc->lock, flags);
+> +               return 0;
+> +       }
+> +       spin_unlock_irqrestore(&dwc->lock, flags);
+> +
+>         ret =3D dwc3_gadget_soft_disconnect(dwc);
+>         if (ret)
+>                 goto err;
+>
+>         spin_lock_irqsave(&dwc->lock, flags);
+> -       if (dwc->gadget_driver)
+> -               dwc3_disconnect_gadget(dwc);
+> +       dwc3_disconnect_gadget(dwc);
+>         spin_unlock_irqrestore(&dwc->lock, flags);
+>
+>         return 0;
+> --
+> 2.40.1
+>
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-index 5568215b35bd..5379393349fe 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-@@ -169,7 +169,7 @@ void _rtw_free_network(struct	mlme_priv *pmlmepriv, struct wlan_network *pnetwor
- {
- 	unsigned int delta_time;
- 	u32 lifetime = SCANQUEUE_LIFETIME;
--/* 	_irqL irqL; */
-+/*	_irqL irqL; */
- 	struct __queue *free_queue = &(pmlmepriv->free_bss_pool);
- 
- 	if (!pnetwork)
-@@ -389,7 +389,7 @@ int is_same_network(struct wlan_bssid_ex *src, struct wlan_bssid_ex *dst, u8 fea
- 	d_cap = le16_to_cpu(tmpd);
- 
- 	return (src->ssid.ssid_length == dst->ssid.ssid_length) &&
--		/* 	(src->configuration.ds_config == dst->configuration.ds_config) && */
-+		/* (src->configuration.ds_config == dst->configuration.ds_config) && */
- 			((!memcmp(src->mac_address, dst->mac_address, ETH_ALEN))) &&
- 			((!memcmp(src->ssid.ssid, dst->ssid.ssid, src->ssid.ssid_length))) &&
- 			((s_cap & WLAN_CAPABILITY_IBSS) ==
-@@ -627,11 +627,11 @@ void rtw_add_network(struct adapter *adapter, struct wlan_bssid_ex *pnetwork)
- }
- 
- /* select the desired network based on the capability of the (i)bss. */
--/*  check items: (1) security */
--/* 			   (2) network_type */
--/* 			   (3) WMM */
--/* 			   (4) HT */
--/*                      (5) others */
-+/* check items: (1) security */
-+/* (2) network_type */
-+/* (3) WMM */
-+/* (4) HT */
-+/* (5) others */
- int rtw_is_desired_network(struct adapter *adapter, struct wlan_network *pnetwork);
- int rtw_is_desired_network(struct adapter *adapter, struct wlan_network *pnetwork)
- {
-@@ -1054,9 +1054,9 @@ static struct sta_info *rtw_joinbss_update_stainfo(struct adapter *padapter, str
- 			memset((u8 *)&psta->dot11rxpn, 0, sizeof(union pn48));
- 		}
- 
--		/* 	Commented by Albert 2012/07/21 */
--		/* 	When doing the WPS, the wps_ie_len won't equal to 0 */
--		/* 	And the Wi-Fi driver shouldn't allow the data packet to be transmitted. */
-+		/* Commented by Albert 2012/07/21 */
-+		/* When doing the WPS, the wps_ie_len won't equal to 0 */
-+		/* And the Wi-Fi driver shouldn't allow the data packet to be transmitted. */
- 		if (padapter->securitypriv.wps_ie_len != 0) {
- 			psta->ieee8021x_blocked = true;
- 			padapter->securitypriv.wps_ie_len = 0;
-@@ -1916,10 +1916,10 @@ signed int rtw_set_auth(struct adapter *adapter, struct security_priv *psecurity
- signed int rtw_set_key(struct adapter *adapter, struct security_priv *psecuritypriv, signed int keyid, u8 set_tx, bool enqueue)
- {
- 	u8 keylen;
--	struct cmd_obj		*pcmd;
--	struct setkey_parm	*psetkeyparm;
--	struct cmd_priv 	*pcmdpriv = &(adapter->cmdpriv);
--	signed int	res = _SUCCESS;
-+	struct cmd_obj *pcmd;
-+	struct setkey_parm *psetkeyparm;
-+	struct cmd_priv *pcmdpriv = &(adapter->cmdpriv);
-+	signed int res = _SUCCESS;
- 
- 	psetkeyparm = rtw_zmalloc(sizeof(struct setkey_parm));
- 	if (!psetkeyparm) {
-@@ -2023,8 +2023,8 @@ int rtw_restruct_wmm_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, uint in_
- /*  */
- /*  Search by BSSID, */
- /*  Return Value: */
--/* 		-1		:if there is no pre-auth key in the  table */
--/* 		>= 0		:if there is pre-auth key, and   return the entry id */
-+/*  -1 :if there is no pre-auth key in the  table */
-+/*  >= 0 :if there is pre-auth key, and   return the entry id */
- /*  */
- /*  */
- 
-@@ -2187,7 +2187,7 @@ void rtw_joinbss_reset(struct adapter *padapter)
- 	u8 threshold;
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
- 
--	struct ht_priv 	*phtpriv = &pmlmepriv->htpriv;
-+	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
- 
- 	/* todo: if you want to do something io/reg/hw setting before join_bss, please add code here */
- 
-@@ -2213,11 +2213,11 @@ void rtw_joinbss_reset(struct adapter *padapter)
- 
- void rtw_ht_use_default_setting(struct adapter *padapter)
- {
--	struct mlme_priv 	*pmlmepriv = &padapter->mlmepriv;
--	struct ht_priv 	*phtpriv = &pmlmepriv->htpriv;
-+	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-+	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
- 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
--	bool		bHwLDPCSupport = false, bHwSTBCSupport = false;
--	bool		bHwSupportBeamformer = false, bHwSupportBeamformee = false;
-+	bool bHwLDPCSupport = false, bHwSTBCSupport = false;
-+	bool bHwSupportBeamformer = false, bHwSupportBeamformee = false;
- 
- 	if (pregistrypriv->wifi_spec)
- 		phtpriv->bss_coexist = 1;
-@@ -2288,7 +2288,7 @@ unsigned int rtw_restructure_ht_ie(struct adapter *padapter, u8 *in_ie, u8 *out_
- 	u8 cbw40_enable = 0, stbc_rx_enable = 0, operation_bw = 0;
- 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
--	struct ht_priv 	*phtpriv = &pmlmepriv->htpriv;
-+	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 
- 	phtpriv->ht_option = false;
-@@ -2417,7 +2417,7 @@ void rtw_update_ht_cap(struct adapter *padapter, u8 *pie, uint ie_len, u8 channe
- 	struct ieee80211_ht_cap *pht_capie;
- 	/* struct recv_reorder_ctrl *preorder_ctrl; */
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
--	struct ht_priv 	*phtpriv = &pmlmepriv->htpriv;
-+	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
- 	/* struct recv_priv *precvpriv = &padapter->recvpriv; */
- 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
- 	/* struct wlan_network *pcur_network = &(pmlmepriv->cur_network);; */
-@@ -2546,7 +2546,7 @@ void rtw_issue_addbareq_cmd(struct adapter *padapter, struct xmit_frame *pxmitfr
- void rtw_append_exented_cap(struct adapter *padapter, u8 *out_ie, uint *pout_len)
- {
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
--	struct ht_priv 	*phtpriv = &pmlmepriv->htpriv;
-+	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
- 	u8 cap_content[8] = {0};
- 
- 	if (phtpriv->bss_coexist)
--- 
-2.34.1
 
+--=20
+Michael Nazzareno Trimarchi
+Co-Founder & Chief Executive Officer
+M. +39 347 913 2170
+michael@amarulasolutions.com
+__________________________________
+
+Amarula Solutions BV
+Joop Geesinkweg 125, 1114 AB, Amsterdam, NL
+T. +31 (0)85 111 9172
+info@amarulasolutions.com
+www.amarulasolutions.com
