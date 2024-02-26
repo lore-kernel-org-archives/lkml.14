@@ -1,89 +1,128 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AFD79935
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B5E79935
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938266; cv=none; b=XtQ+POxRD04SL7UewkuI6aU9oWeVOO5Cd0tXCMjC4h0Z7eOPKz9Q4+SV3JenJpAlcPHz7fly9Sqykx8zmEZJFLeb1lcHvrUFmmGPvwchNve5I+Bhp5TH26dcQRBmj1a3K9x4nMjx9M/PYUYN6MWiEpjUCB0FRMoujbDnNlBZDR8=
+	t=1708938274; cv=none; b=r1Vq1S6lcLgXQqtwnNYt15CSHN+kqq7/rPx5nrl58omW9zNcvDC3KkY55TcnTnAsRYQ04i3xx4wrVu5aFZ4MB4bQXXczfeexxV9bSxy/+zIsI2iQlTcUW5FNUP7nRevvgdJyPMCIkUFtARfiQNBge2FLeTWnDEoEif1fhh4s43Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938266; c=relaxed/simple;
-	bh=kjoOBO5dV83WE6D/m1dPB4O07n3XvBLpXsn6foUCW+o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hbelt3NrFaq/p06W1dYAm9KoxSIYQzbZryrNnxTBKP37yKPUzNYudLxTK6ea1uKdYCNpsuDnu/zm2r8dT32KRX2zwYEzpVFQMN0VBVjIOuMWIRhBpY/c8W7ECec9zsFfPLTnXTD+frswpDXH042Sbc3yW8kjBgrodkI8eAQiac4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d61e572074a642ad8fb0589f8f636a01-20240226
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:ce398543-a259-4799-9710-7a6001f2deec,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.37,REQID:ce398543-a259-4799-9710-7a6001f2deec,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:9790d280-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:240226170419I9TKTXCE,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
-	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: d61e572074a642ad8fb0589f8f636a01-20240226
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 2107915134; Mon, 26 Feb 2024 17:04:16 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 4ACDBE000EBC;
-	Mon, 26 Feb 2024 17:04:16 +0800 (CST)
-X-ns-mid: postfix-65DC540F-955139647
-Received: from kernel.. (unknown [172.20.15.254])
-	by mail.kylinos.cn (NSMail) with ESMTPA id B891DE000EBC;
-	Mon, 26 Feb 2024 17:04:12 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	x86@kernel.org,
-	hpa@zytor.com
-Cc: linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] x86/mm/pat: fix kernel-doc warning
-Date: Mon, 26 Feb 2024 17:04:11 +0800
-Message-Id: <20240226090411.1925770-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1708938274; c=relaxed/simple;
+	bh=Jm7acJD9o2mBJ7G+eOxNpeNfksyPwS+AXcvG2TmDrwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qVaIZJXXDZ5mH5g3pA1qLStWVEyVUFe2Wi/+w6aLc5V4JESVMR0FP0XOU7fpDNemnwMAQGOSViJy0B5A98o7SblMgb+w/GpSgTzFkhV46QZYYieMiTl6x37I7T9jz5iwRw4jCe7zPWXEzuvZSRS7ABr3QLmA7/CqHj0xjpGR970=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Lg53u2nu; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lg53u2nu"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a3e6f79e83dso290782366b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:04:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708938271; x=1709543071; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XK97/Ais5pPf/X1///jyXhhD+o5dKRJYFfX0RVnBU80=;
+        b=Lg53u2nuGkywoA58JgAtYB6JuoZZaUhNyaJVG1KTw0PBjK4goxNg01uM3Zc+h+6dId
+         DBlHTfnKCt+XSg71HoUoZoCt3irpmeYzmHIaSf9pYIAeotbSf9xxO3LvcnDdIIM9FZ1Q
+         ujSpeU/tj5UG4Kjr+DZxrJ5auWQfhIwsK5O2ukIKNXcI9OxAcI244d5L0iowMEOPGKf9
+         HTuUYZyvsKoHKsXHwNq7woDDI+FjrxLLO8P9km35uBX0yNupA0aKkAdVBw39wssyCsfM
+         9+5k6EprHbw3fwWVF/EsaHRF3vl5P0VWOAreddCWPi0eSMe5yf+hiKQ4aRYDdz5wrs5h
+         mFSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708938271; x=1709543071;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XK97/Ais5pPf/X1///jyXhhD+o5dKRJYFfX0RVnBU80=;
+        b=tXS3LBj3A2dZKwt8ZTWVeiBGxq7UPAUDCXD4rKkslUT4B7KtZ005IKA7pOMEXG8lUo
+         /xtNF7/fK1tVlP2mrw9tjJ6MbnEWrFjAzQaU3a9MfIVAhJKJRmMEGN5P+5xNA1Q9sIQk
+         3SAUIHXm1MPcyV4feLXhd7AYHS7vpVjS/bW1yldp/hxW8xCjClCLIeugzrZeOi2mn2Br
+         Q03xpCp9C1kLUnSbMeWx5KGeEena/mR+REU2FKtjzoHAl4vaGn3JY1PLCg6do1fEJBBN
+         O6WzMWvhOwa9PZgiAIdhgGMJC/CjL7YJHyWnszYE+Xi5eKz+V6LNlL5LGUlMR9HbhVoN
+         MeAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWzkqWURvq3AqGmKyj3wRHyC3WDDMXLn+ScWVSMzVRHfJplrpkaEUaU6PVHxoWoWyAR2yuAQFdObnRtBfBhe4lzNyMcC1X0EkpmGWQW
+X-Gm-Message-State: AOJu0Yyr4eEqNhWRVkD74kUbA3xNIHJpwv6tLpXpBRqoD2Adug33ZJjY
+	xkG6QDGZbp3oJlfhtq0D8FDSjSEmR7R1YTEGruQfiBHUxdiaJ8FLdimYpiw6XJI=
+X-Google-Smtp-Source: AGHT+IEP31lrkAYgXHTXfaTNGbJ5RbfHTcM0xJ2Z+InoGeeBiYd/7OfA29vMJCRwdLnHEOFQNbp6Rw==
+X-Received: by 2002:a17:906:c2d8:b0:a43:2fa9:c05b with SMTP id ch24-20020a170906c2d800b00a432fa9c05bmr1842731ejb.41.1708938270828;
+        Mon, 26 Feb 2024 01:04:30 -0800 (PST)
+Received: from linaro.org ([188.24.162.93])
+        by smtp.gmail.com with ESMTPSA id i20-20020a1709061cd400b00a3f2bf468b9sm2244445ejh.173.2024.02.26.01.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 01:04:30 -0800 (PST)
+Date: Mon, 26 Feb 2024 11:04:28 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: abelvesa@kernel.org, peng.fan@nxp.com, mturquette@baylibre.com,
+	sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+	shengjiu.wang@gmail.com, marex@denx.de, m.felsch@pengutronix.de,
+	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clk: imx: imx8mp: Fix SAI_MCLK_SEL definition
+Message-ID: <ZdxUHAg2UZOU/s4h@linaro.org>
+References: <1708683351-8504-1-git-send-email-shengjiu.wang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1708683351-8504-1-git-send-email-shengjiu.wang@nxp.com>
 
-Fix kernel-doc warning in memtype.c:
-arch/x86/mm/pat/memtype.c:710: warning: Function parameter or struct memb=
-er 'pfn' not described in 'pat_pfn_immune_to_uc_mtrr'
+On 24-02-23 18:15:51, Shengjiu Wang wrote:
+> There is SAI1, SAI2, SAI3, SAI5, SAI6, SAI7 existing in this block
+> control, the order is discontinuous. The definition of SAI_MCLK_SEL(n)
+> is not match with the usage of CLK_SAIn(n).
+> 
+> So define SAI##n##_MCLK_SEL separately to fix the issue.
+> 
+> Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- arch/x86/mm/pat/memtype.c | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
 
-diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-index 0904d7e8e126..77c86a575268 100644
---- a/arch/x86/mm/pat/memtype.c
-+++ b/arch/x86/mm/pat/memtype.c
-@@ -700,6 +700,7 @@ static enum page_cache_mode lookup_memtype(u64 paddr)
- /**
-  * pat_pfn_immune_to_uc_mtrr - Check whether the PAT memory type
-  * of @pfn cannot be overridden by UC MTRR memory type.
-+ * @pfn:  the page frame number to check
-  *
-  * Only to be called when PAT is enabled.
-  *
---=20
-2.39.2
-
+> ---
+>  drivers/clk/imx/clk-imx8mp-audiomix.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
+> index e4300df88f1a..55ed211a5e0b 100644
+> --- a/drivers/clk/imx/clk-imx8mp-audiomix.c
+> +++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+> @@ -18,7 +18,12 @@
+>  
+>  #define CLKEN0			0x000
+>  #define CLKEN1			0x004
+> -#define SAI_MCLK_SEL(n)		(0x300 + 4 * (n))	/* n in 0..5 */
+> +#define SAI1_MCLK_SEL		0x300
+> +#define SAI2_MCLK_SEL		0x304
+> +#define SAI3_MCLK_SEL		0x308
+> +#define SAI5_MCLK_SEL		0x30C
+> +#define SAI6_MCLK_SEL		0x310
+> +#define SAI7_MCLK_SEL		0x314
+>  #define PDM_SEL			0x318
+>  #define SAI_PLL_GNRL_CTL	0x400
+>  
+> @@ -95,13 +100,13 @@ static const struct clk_parent_data clk_imx8mp_audiomix_pll_bypass_sels[] = {
+>  		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK1_SEL, {},		\
+>  		clk_imx8mp_audiomix_sai##n##_mclk1_parents,		\
+>  		ARRAY_SIZE(clk_imx8mp_audiomix_sai##n##_mclk1_parents), \
+> -		SAI_MCLK_SEL(n), 1, 0					\
+> +		SAI##n##_MCLK_SEL, 1, 0					\
+>  	}, {								\
+>  		"sai"__stringify(n)"_mclk2_sel",			\
+>  		IMX8MP_CLK_AUDIOMIX_SAI##n##_MCLK2_SEL, {},		\
+>  		clk_imx8mp_audiomix_sai_mclk2_parents,			\
+>  		ARRAY_SIZE(clk_imx8mp_audiomix_sai_mclk2_parents),	\
+> -		SAI_MCLK_SEL(n), 4, 1					\
+> +		SAI##n##_MCLK_SEL, 4, 1					\
+>  	}, {								\
+>  		"sai"__stringify(n)"_ipg_cg",				\
+>  		IMX8MP_CLK_AUDIOMIX_SAI##n##_IPG,			\
+> -- 
+> 2.34.1
+> 
