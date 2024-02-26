@@ -1,99 +1,103 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F911CF80;
-	Mon, 26 Feb 2024 08:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6316D1C292;
+	Mon, 26 Feb 2024 08:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708935349; cv=none; b=M25Rb4z3blfqpIT0qrVcn9+la0k72O46Op9vquIrLH6Fy1sKVWUWBikM+Pdcl1PPnvnU559uGFUPcFluJCSGZidy3OfTqZDsGge71wBREJk/fo8K4VhUXgKfbJ6t+gR7dC4j/YQQL7dKf4+bncdl0w6yflVILWq6ymAFfR5jHGU=
+	t=1708935348; cv=none; b=bVxP8VmN2ayOz20cJRKATgJME9Lg3/GyEj2Jqiqp/g1wsZXaclMuLDSv7OM6ZVsEkuA+hpxiWvVfDv293CeVCaPZ86Wd8yYhAAIBq3gFEcuHp1DHdvdEOXbAfv94Ru6Pt/oBH6X1lMxGxtFUT0wdsyj+9XWPinyZfEtLmfPAirg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708935349; c=relaxed/simple;
-	bh=1Ly8Ln5JNzP8Po26apTgYD6fQ2vZoTYlsMkbNJ0EYuE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ejPu8uJIl7ydnT3+iD3BKrifj5wy5uQOZ5vUnNhRpMj6a9EQo2lu7K2Y4X/SLFZg5lvG0g7REkjpdiy1dFOvIsaB/SRoOZ+k+HGn1qSZiSo4Vyw02l1zDrrTR4JjNWZt4Uo3VGPZmuDMWGmdsgZELKQQ09Y6Ce3xPU771qF9NkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c414adaebff1491ea3c435d69bf18d7c-20240226
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:78a62de6-603d-4ccf-97e6-01674f37df55,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.37,REQID:78a62de6-603d-4ccf-97e6-01674f37df55,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:63bad180-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:2402261559416CA0LJEE,BulkQuantity:0,Recheck:0,SF:17|19|44|66|38|24|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
-	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: c414adaebff1491ea3c435d69bf18d7c-20240226
-X-User: huxiaoying@kylinos.cn
-Received: from localhost.localdomain [(112.64.161.44)] by mailgw
-	(envelope-from <huxiaoying@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 51673992; Mon, 26 Feb 2024 15:59:39 +0800
-From: Tom Hu <huxiaoying@kylinos.cn>
-To: linux-kernel@vger.kernel.org,
-	stern@rowland.harvard.edu,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	usb-storage@lists.one-eyed-alien.net,
-	Tom Hu <huxiaoying@kylinos.cn>
-Subject: [PATCH] usb-storage: Add Brain USB3-FW to IGNORE_UAS
-Date: Mon, 26 Feb 2024 15:59:36 +0800
-Message-Id: <20240226075936.1744353-1-huxiaoying@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708935348; c=relaxed/simple;
+	bh=gOnZYDgEPaUyxmyyfWi9fPSzeqDFwFnfKgtLfSpD0mg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TQE8cGj1YMbMoPjRFOzVqFPzIBYz8ogI2ANIpWgEMGNM0IXp4zf1+UJnKED5WhzjkcBF+jrOtNl/6StGd0idIyC8nI0TxMds+fdZks6eZ4aa4HPQrFJsE1VUvLEWwa0lGxiAPHNoq9SXlMqBqiBg3vGXLM3X/5Aa3vzjEMnG2dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=v5/yDgLn; arc=none smtp.client-ip=115.28.160.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="v5/yDgLn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+	t=1708935343; bh=gOnZYDgEPaUyxmyyfWi9fPSzeqDFwFnfKgtLfSpD0mg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=v5/yDgLnrAHr7z3v+SEOCCq/Lkm8yMusJ7UjwWPqzRvsFklNr6hu3irxieAkc0hmA
+	 OhAR2Gcwnki740xd5qLyXPGA0kcZu2z0TqVXwq6JRseFZH0phG7eZvZcIXgAsqqC0K
+	 7lFn2Wj2Vk7goqpcYu5B+YdUQwx9Z/yePRboBIKo=
+Received: from [28.0.0.1] (unknown [101.230.251.34])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9EE916006F;
+	Mon, 26 Feb 2024 16:15:43 +0800 (CST)
+Message-ID: <48afa638-9145-40ee-9868-fa82a1fce271@xen0n.name>
+Date: Mon, 26 Feb 2024 16:15:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] loongarch/crypto: Clean up useless assignment operations
+Content-Language: en-US
+To: WangYuli <wangyuli@uniontech.com>, herbert@gondor.apana.org.au,
+ davem@davemloft.net, chenhuacai@kernel.org
+Cc: linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Guan Wentao <guanwentao@uniontech.com>
+References: <20240226080328.334021-1-wangyuli@uniontech.com>
+From: WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20240226080328.334021-1-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The UAS mode of BRAIN USB_HDD is reported to fail to work on several
-platforms with the following error message, then after re-connecting the
-device will be offlined and not working at all.
+On 2/26/24 16:03, WangYuli wrote:
+> Both crc32 and crc32c hw accelerated funcs will calculate the
+> remaining len. Those codes are derived from
+> arch/mips/crypto/crc32-mips.c and "len -= sizeof(u32)" is not
+> necessary for 64-bit CPUs.
+> 
+> Removing it can make context code style more unified and improve
+> code readability.
+> 
+> Suggested-by: Guan Wentao <guanwentao@uniontech.com>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>   arch/loongarch/crypto/crc32-loongarch.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
+> index a49e507af38c..3eebea3a7b47 100644
+> --- a/arch/loongarch/crypto/crc32-loongarch.c
+> +++ b/arch/loongarch/crypto/crc32-loongarch.c
+> @@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+>   
+>   		CRC32(crc, value, w);
+>   		p += sizeof(u32);
+> -		len -= sizeof(u32);
+>   	}
+>   
+>   	if (len & sizeof(u16)) {
+> @@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+>   
+>   		CRC32C(crc, value, w);
+>   		p += sizeof(u32);
+> -		len -= sizeof(u32);
+>   	}
+>   
+>   	if (len & sizeof(u16)) {
 
-[  622.518442][ 2] sd 8:0:0:0: [sda] tag#17 uas_eh_abort_handler 0 uas-tag 18
-                   inflight: CMD
-[  622.527575][ 2] sd 8:0:0:0: [sda] tag#17 CDB: Write(10) 2a 00 03 6f 88 00 00
-                   04 00 00
-[  622.536330][ 2] sd 8:0:0:0: [sda] tag#0 uas_eh_abort_handler 0 uas-tag 1
-                   inflight: CMD
-[  622.545266][ 2] sd 8:0:0:0: [sda] tag#0 CDB: Write(10) 2a 00 07 44 1a 88 00
-                   00 08 00
+Sure, but IIRC Loongson still has hopes in having 32-bit-only models 
+support upstream? The possibility cannot be ruled out because from 
+public information (e.g. the 2023-11-28 news event), Loongson is known 
+to be actively licensing their reduced 32-bit-only IP cores to third 
+parties.
 
-These disks have a broken uas implementation, the tag field of the status
-iu-s is not set properly, so we need to fall-back to usb-storage.
+Ultimately whether we want to imply 64-bit operation with the crc32 
+module is up to Loongson to decide, and I think Huacai may have 
+something to add, but IMO at least we could gate the statement with 
+#ifdef's so we don't outright lose 32-bit compatibility with this code.
 
-Signed-off-by: Hu Xiaoying <huxiaoying@kylinos.cn>
-1
----
- drivers/usb/storage/unusual_uas.h | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/usb/storage/unusual_uas.h b/drivers/usb/storage/unusual_uas.h
-index 1f8c9b16a0fb..98b7ff2c76ba 100644
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -83,6 +83,13 @@ UNUSUAL_DEV(0x0bc2, 0x331a, 0x0000, 0x9999,
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_NO_REPORT_LUNS),
- 
-+/* Reported-by: Tom Hu <huxiaoying@kylinos.cn> */
-+UNUSUAL_DEV(0x1234, 0x1234, 0x0000, 0x9999,
-+		"Brain",
-+		"External HDD",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_IGNORE_UAS),
-+
- /* Reported-by: Benjamin Tissoires <benjamin.tissoires@redhat.com> */
- UNUSUAL_DEV(0x13fd, 0x3940, 0x0000, 0x9999,
- 		"Initio Corporation",
 -- 
-2.25.1
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
 
