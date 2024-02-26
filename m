@@ -1,142 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5108012E1F8;
-	Mon, 26 Feb 2024 17:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EA412B167
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708969326; cv=none; b=tbsUG+L10Uq1TlDT6l3t1a+ii1OsAPFUnAv7m0gqhjjK4XGopS1GSw1LCiduTHq0l1qs7A2Db9/rHQjTWeRXVocPeeg4K90ZUYqDj7cdTy6fAsVlrKOTz8ztv1cnUD3RnS+rBftmyGuK8ZkPB/WxhPrFN1h7/915QbP1Zxe4Qec=
+	t=1708969635; cv=none; b=CUyGfrtFJ1I4PkD+agtZtj83ke9WW9/ul6QjMXLSHs9iafUGFWKFuKJbo84Sr9/bJGyyyqZJshFHh9yfh+6t6H/t0bDeVuEmdMhMW0ZqTyZ1HkZXWwCfzEOzRIVR1gjOTKE2/NM+SJFyCTK6Yc0hgGGNHvkWAlX33Q2XsisgaCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708969326; c=relaxed/simple;
-	bh=iwCMXGQsbQGxiwJHs3E7w0+xefWy7qifrPJJKX5kaWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XDSvpPApulPUj9DpmPRRIOGDP13+JoR9zQcH4KuNpwmBZl0NaMw1bk5X5WbXdvZ7k/90P3teYHHIlHxmVrPgXC+BOA75YHbk9avQnX/dJGVuWZkw4vlflBT2VmjBbrCH8QDIFCpIsQBSoZeztscUZ8Vlyp9VTzIRFeY7/kTmAEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M832y/Kf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708969635; c=relaxed/simple;
+	bh=B41ir5VYbxpF04PAmMUAVJ67JQSh5yH++omCohwmiS4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F/f8LTkOaR6IZTWWzX/M+/lBVKXxX5rDi8XYZOE1+CSvoXAe5xrkJuxwILZpCLKLIgxBbgJBrPHNgACTz6qG+S/wp/6LoUGfvGoTgrfFzCnvUi+L08wOmYQ57SwIOtuStWl6W1RJgRMI7ZcOfqAqHfga+YIFWyFrwuk4DtYhDIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VbX5F5/D; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M832y/Kf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91435C433F1;
-	Mon, 26 Feb 2024 17:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708969325;
-	bh=iwCMXGQsbQGxiwJHs3E7w0+xefWy7qifrPJJKX5kaWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M832y/Kf5o1+ndCigTMjJT0fqyP07vheldOXHsrUIazVUsDR1n2cK1kUPBNZJ32tI
-	 GqPO/GOeqgoHtwrWa28KMr+p3w/oHNMyBKu4+FshHmfKOHClC11AY1UMrhC77B+dDt
-	 UvpOd7A7Xb9p94SZmSp10hBvODDMZO2OyOSgh8XW0cEdskgxj4lGQLxxSeNhj+Wojr
-	 PzrbU4Q5ISYRdIlG4hyDAPSH8yvGFMOsbAVKBk/LchidazNKTboLZwyCxyb7JLYkEF
-	 xgcBRTlePUqNPjwz8nx9jdFtb6Q8cLlWhyTy76KBtLOWEDfx+DFmrm0PZ6DR9dXIf1
-	 GwjHvFAT250og==
-Date: Mon, 26 Feb 2024 17:40:31 +0000
-From: Simon Horman <horms@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 2/2] selftests: mptcp: explicitly trigger the
- listener diag code-path
-Message-ID: <20240226174031.GH13129@kernel.org>
-References: <cover.1708515908.git.pabeni@redhat.com>
- <1116d80f808ea870f3f77fe927dbd6c622d062ae.1708515908.git.pabeni@redhat.com>
- <20240222131338.GA960874@kernel.org>
- <22424f1c-3f76-454d-9de4-486c3f2f2478@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VbX5F5/D"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e49a5b1bbfso916357a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:47:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708969633; x=1709574433; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x+coxhOY/Hxui8PDFROluhcZaBPd/6HAGgu1JExmMgQ=;
+        b=VbX5F5/DZxveCk2tDyNEIm7WztWZikJvS/YRnxBwsZMnJs8Crnm5NwaBubebNioLHh
+         ufnUC8Fo+DrZ/XdhakT6xmn6J+w06Iw/038QHNHAHcgR8X/gXKNWOt7gWYHOsIHwUUYI
+         eDHouEcOG+q0xBuieDZtKUirxYjDaTLgK98shmMUrdvB1YwWaoWFiAI3jsJnsTQQsSza
+         zQKkyJjGukK58k0PXIJ6i6qc528fCAU4XYG4Fr1D2MyVEQgGb2XUR1WdHyfCvbUln7du
+         5RLdb/bRkvAvVw0PC6lHZG+zIMN7p9hBTsyHZxdBho3dxLBXBhe0eKAn9uNN8q6Q6acv
+         9Rlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708969633; x=1709574433;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x+coxhOY/Hxui8PDFROluhcZaBPd/6HAGgu1JExmMgQ=;
+        b=E0OivX3p7T4ON6+uD5IkpesjpnvMUjx+ibmLHU6Z2TanWwdIyATXVX5cu63rx97gQ1
+         yQq7lHDmFw8XnwGxPelwSTHXgpMg34eucAxrYnL1rkJo+238yAXxw6wyOH1UTT3CktBc
+         uUFREEult232NVJqvDmPHPFdr4LUPo7rPummqDGkjfN6xeFxlQjfwq85ZYEJ+3rJerl2
+         VtX4wSeC4apnYa7uRw5tjiWhUTtDxxsh+8dO/DDhDxoRugV+bxomYlKFU28B/2BvOTRF
+         Jgar0i8pyeJjagi/whgU4llpqiq4bpc51JcsG/RNvgf8Kc4RAvxK8SY+0p8nZ/lH1cL1
+         jWuw==
+X-Forwarded-Encrypted: i=1; AJvYcCWbA4pG1Pv788+Rr+rvXyQ0d6gtGE7yolr71yEoSHwKqY+ZcRpRvyxd90wa1CW0D0i3Psv+dof0bRqjmKNQqa8k4jJcLwrnXpqAj/SB
+X-Gm-Message-State: AOJu0Yyb6tAyzrNQWrGfFW1pIXUO4fA/M+f1rCudl1aotSrrYINql6z3
+	NwW6wm2nuEoqjgkJvilu69rfpjgIporRZGEydYsPQ//XrFFLsiszDnm4gIoub5Y=
+X-Google-Smtp-Source: AGHT+IFCePGlGVE4lMjTY0/9moCLWOzSCx+v5oqeY2701JqpmJJ2XNiwbKLDRoBfBHN6yiXmmfdKLQ==
+X-Received: by 2002:a9d:6c42:0:b0:6e4:8122:c5a2 with SMTP id g2-20020a9d6c42000000b006e48122c5a2mr9142155otq.0.1708969633143;
+        Mon, 26 Feb 2024 09:47:13 -0800 (PST)
+Received: from ishi.. ([185.243.57.248])
+        by smtp.gmail.com with ESMTPSA id t3-20020a05620a034300b00787c7c0a078sm2247762qkm.121.2024.02.26.09.47.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 09:47:12 -0800 (PST)
+From: William Breathitt Gray <william.gray@linaro.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: William Breathitt Gray <william.gray@linaro.org>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] counter: constify the struct device_type usage
+Date: Mon, 26 Feb 2024 12:46:49 -0500
+Message-ID: <170896953583.22408.16217091033236084164.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240219-device_cleanup-counter-v1-1-24d0316ae815@marliere.net>
+References: <20240219-device_cleanup-counter-v1-1-24d0316ae815@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <22424f1c-3f76-454d-9de4-486c3f2f2478@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 22, 2024 at 03:49:44PM +0100, Matthieu Baerts wrote:
-> Hi Simon,
-> 
-> Thank you for the review!
-> 
-> On 22/02/2024 2:13 pm, Simon Horman wrote:
-> > On Wed, Feb 22, 2024 at 12:46:59PM +0100, Paolo Abeni wrote:
-> >> l The mptcp diag interface already experienced a few locking bugs
-> >> that lockdep and appropriate coverage have detected in advance.
-> >>
-> >> Let's add a test-case triggering the relevant code path, to prevent
-> >> similar issues in the future.
-> >>
-> >> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> >> ---
-> >>  tools/testing/selftests/net/mptcp/diag.sh | 30 +++++++++++++++++++++++
-> >>  1 file changed, 30 insertions(+)
-> >>
-> >> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-> >> index 60a7009ce1b5..3ab584b38566 100755
-> >> --- a/tools/testing/selftests/net/mptcp/diag.sh
-> >> +++ b/tools/testing/selftests/net/mptcp/diag.sh
-> >> @@ -81,6 +81,21 @@ chk_msk_nr()
-> >>  	__chk_msk_nr "grep -c token:" "$@"
-> >>  }
-> >>  
-> >> +chk_listener_nr()
-> >> +{
-> >> +	local expected=$1
-> >> +	local msg="$2"
-> >> +
-> >> +	if [ $expected -gt 0 ] && \
-> >> +	   ! mptcp_lib_kallsyms_has "mptcp_diag_dump_listeners"; then
-> >> +		printf "%-50s%s\n" "$msg - mptcp" "[ skip ]"
-> >> +		mptcp_lib_result_skip "many listener sockets"
-> >> +	else
-> >> +		__chk_nr "ss -inmlHMON $ns | wc -l" "$expected" "$msg - mptcp"
-> >> +	fi
-> >> +	__chk_nr "ss -inmlHtON $ns | wc -l" "$expected" "$msg - subflows"
-> >> +}
-> >> +
-> >>  wait_msk_nr()
-> >>  {
-> >>  	local condition="grep -c token:"
-> >> @@ -279,5 +294,20 @@ flush_pids
-> >>  chk_msk_inuse 0 "many->0"
-> >>  chk_msk_cestab 0 "many->0"
-> >>  
-> >> +chk_listener_nr 0 "no listener sockets"
-> >> +NR_SERVERS=100
-> >> +for I in $(seq 1 $NR_SERVERS); do
-> >> +	ip netns exec $ns ./mptcp_connect -p $((I + 20001)) -l 0.0.0.0 2>&1 >/dev/null &
-> >> +	mptcp_lib_wait_local_port_listen $ns $((I + 20001))
-> >> +done
-> >> +
-> >> +chk_listener_nr $NR_SERVERS "many listener sockets"
-> >> +
-> >> +# gracefull termination
-> > 
-> > nit, as you plan to re-spin anyway: graceful
-> 
-> Paolo sent a new version on MPTCP ML only. When applying the new
-> version, I fixed this:
-> 
-> https://lore.kernel.org/mptcp/e98b8b07-558c-498a-97fb-dd5cab11e439@kernel.org/
-> 
-> >> +for I in $(seq 1 $NR_SERVERS); do
-> >> +	echo a | ip netns exec $ns ./mptcp_connect -p $((I + 20001)) 127.0.0.1 2>&1 >/dev/null
-> > 
-> > I'm not sure of the validity of this but shellcheck complains that:
-> > 
-> >   SC2069 (warning): To redirect stdout+stderr, 2>&1 must be last (or use '{ cmd > file; } 2>&1' to clarify).
-> > 
-> > Also for the same constriction slightly earlier in this patch.
-> 
-> Good catch!
-> 
-> I should add shellcheck support in our CI to catch that :)
-> 
-> I just applied the suggested modification in our tree [1]. The new
-> version that will be sent to netdev will no longer have this issue.
-> 
-> https://github.com/multipath-tcp/mptcp_net-next/commit/31f1460d552c
 
-Thanks Matt,
+On Mon, 19 Feb 2024 16:52:52 -0300, Ricardo B. Marliere wrote:
+> Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
+> core can properly handle constant struct device_type. Move the
+> counter_device_type variable to be a constant structure as well, placing it
+> into read-only memory which can not be modified at runtime.
+> 
+> 
 
-much appreciated.
+Applied, thanks!
+
+[1/1] counter: constify the struct device_type usage
+      commit: 3bb282ef1149a08a94bc5321b758825bc99c84c0
+
+William Breathitt Gray <william.gray@linaro.org>
