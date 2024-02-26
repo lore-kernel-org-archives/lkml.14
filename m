@@ -1,136 +1,105 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15E8129A74
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9379D12BF27
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938934; cv=none; b=JfSXG7h3Mu8idv59cJ0GsxQWby0zkv7qiReGajjgTyby1yWC/yJbL8UhVM3oqmFYy9UDPLHmgGvDg3ttDmQcP2AEq8QnMxLIwrHB63LlDawtBzkrJSd5RbT6Hglx1a01AzOhcnos+7d3Z6BJkMhLJC7uq4pgtL6crEjob7dBvfg=
+	t=1708938950; cv=none; b=qk3Od2LEzPUHv6sSGQ0a8w1cgTMPqeEvkNmS9qDYLzxrM0Py0eVRCcf3her0DQxnOA6Jbk52TaMu9l0UV5wdX4JL0wjK3Ao7nF3hDCJJP+41n/KCPFXlLws95uo71uNfyyaLk4pcaH83HfrF4esS0x2+BwqAtgrYdMPT3RV3nYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938934; c=relaxed/simple;
-	bh=QF9YeSn2bc4tYDCafTxeVXBSQs58EaDIiH/nuRQ20NI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Np2vIPdnuGEl2E9/otz6Ad3hzYsib8L3kJ0SLpbz1pWA3YnjEBuLwgv0JCcHC4usYWU+wJGlb5MXKkrOe5XrKl+k/2r0ooD/Qy8pcrsDnd30IE31Gg/eufpQuAUYDwE+soW3nBTBBYDhh1lzz74bLoAYHdwmoJ+8c3+bNk1t+N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R12ayGvb; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1708938950; c=relaxed/simple;
+	bh=B1VvnK0P1FlmJrbO/JVZFYLy8Ss/+g/BAdsgVdmRAzk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S/GAgfO6t9bSQsK0hy4qzxk8NN4QKzSIPMr6cSeDqQ8vEVRNrybMiACwLeBgGraLdsgVcTdRZ3kRYy7h5erb1YAZLBC3J70SdbqfjAKS0kBtRm5yAXLhq+WspE3oLuYAipcj2UZE+Eq/URkplNaPF6WHmIZEOSX/edzmBXA63Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OiJMEiOz; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R12ayGvb"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-564e4477b7cso11382a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:15:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OiJMEiOz"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-565a2c4cc1aso2293249a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:15:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708938931; x=1709543731; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1708938947; x=1709543747; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3PpUbqhc+g7vhrTDiU7KzbrIeL60wiFB52dzsG8i29k=;
-        b=R12ayGvbH08lYqy3CtK2M4FJOtfyDrXmDiUE4Vr12v4+XBR8Q7NAQqpSGLfwCzLvzu
-         6wZ/0CrFVpw6I59RqzAIimZkZIEWyvwloh7cJ9uzKzzJIXrJbCkGuHQAhW/N4PndBKh+
-         wh1EuusR1wpcWq6LqTf92jVqu1ZjqCP3iEos4QN3Ho2PvtAGPHcQsnzOfNmyNiTkvVRG
-         LP0h4OIG8X/ox1qJl9+vy/TT4/PEXsj45rH4UYOTDmH/qaRrZU7anMSeIRHvsFrwHv/N
-         oxAoCC09Ejkl2GnTAqRFtzHpt4Y++Q8IF9GYWlGJSKETX197PQedgwCAdPBmiTLc9wr7
-         7FzQ==
+        bh=WMRgoAUtSN5Ck2RhMavH7hlZPPY3JhOWKPfiauprr90=;
+        b=OiJMEiOzJ1ikzDbyJqwHo869d0Kr/NInoeR56507+zyCUW9IWpcRHegNGsAJlXIJrj
+         iuC3DnZnXpJuQXeRS7Oj65pKGnhqIJE4T0Y4cSn3VoU5S3THJq5UexuQHOmejQmZwHNe
+         yVSf+J4oDT8099Ds/uYM2f+dGeS+PF9nM7Yv1Xri8dWBGwqkT2+QRXS4IQ1ZYkRK1y8Z
+         a8Oh0kqDddxCMCoBQJI7CpnvFOWELaJFcZyVe4abaMl3XrvDwjjJuGXHhsmdmnsrvTfY
+         I80qz2+9pr6Th2e6p751p9swpK74MQbs2IxLxurQk4fmOY7V9WWdzaxlz7o4dHZweP0U
+         9BHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708938931; x=1709543731;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1708938947; x=1709543747;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3PpUbqhc+g7vhrTDiU7KzbrIeL60wiFB52dzsG8i29k=;
-        b=KkHx7MiT0/0ZIX9ErvO2fAPDXCGnBcsc5ta5Dzt9DBUcgzjKaumXeZEq77JLdMB6U8
-         b2KClkCfhT7qkMMYDC8N3O5UyR8/V+TW7mw8M0QmYjEV26Z6YbcoWByI2XUsaWyOaBNF
-         rG2ZHc7mjrrG3KaeDn9OQ4s4gSxo4Ca0exZ9F4AbSc21pJQ4dZR9b7ixOgVHICYbz9Zu
-         m8NnLOZQV32d2VAL9xor3JDyrnMnIRkRGwY9yUqG64DUJgAWx9yAKJQWdl+zWtdDYAYT
-         +uSPABpNr41W6m65wAmmcm7iKN/IxLK+TrD7OP39lSP8oKlkN9t4iGJdg+bXNGGkYTtW
-         ZtIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKCuPTWPw50zzjRQXNB3AJW0030vDXYg7m6qPvzVTwYl7X24//LDwZrDxUF5d7qqswYUfTz7A1d9upKreBTyU4grsHO8FmgTkhb4fB
-X-Gm-Message-State: AOJu0YyXNg08dKPE4ZtgJEfCa54uPeQmEglnyAPmkcCH80pcb751ty6m
-	yyHCsEAx2UXqgtUTmKETHPPsQSRoMQEdQc1mpWLfeqefY30ksrpsR0pp9JLxwnz3lrcBZ7y5aMN
-	dUZMeYmnuMx1Z6arLJSBXa7TdurZrxdQr1inn
-X-Google-Smtp-Source: AGHT+IFYC4cdUdD58nWD8MZNjN7IfTcOlMWs2ezscub4EPb/vnrtmbhgho8MUB/aoZHnXQk3kNcCtBi9wQrZP9SgN40=
-X-Received: by 2002:a50:c30a:0:b0:566:306:22b7 with SMTP id
- a10-20020a50c30a000000b00566030622b7mr49949edb.1.1708938930851; Mon, 26 Feb
- 2024 01:15:30 -0800 (PST)
+        bh=WMRgoAUtSN5Ck2RhMavH7hlZPPY3JhOWKPfiauprr90=;
+        b=XO9Du+Vt16ok6RAa7qs2eTDkNdDAp8EXJPg9XkggfdBb+2iZ+SqfrIZ7RpBz8gdiis
+         FxnuVP3nx98iwTvqK3nJigLQdBHqJfmaUYJUaDfc3ErQcVjbAq29hSweAZmdyCgspYnq
+         wCHfARWHTEAOdb1y/RWBCNWQ0yuOd5ggCrxR1du5LDZDadvZ3zDO0q2zQKBOM6g2Ts2G
+         jLccNWJH8fI5bimAyIdP9gHJR1tKEztHCJI3X8HFNLfScDEW3c/diZ0xoIGi7BtGZwym
+         7h/Fw+91jyuAsj7K2cW65hymnNs9zGHF3+lqQzdDLtREhogHn3e1wlEvuD6DS7iKIpY/
+         HPfA==
+X-Gm-Message-State: AOJu0YzwHmJtiiQZEraCsfi1ZwTZtGIVSBNXDwSqCtgdLgcpjaicvNof
+	NCLcy9kXwV/3lYt0ew61Ornd0sn2HbPC7U4qSVJSaZvskI/0a+CsnivrIOiX4n8=
+X-Google-Smtp-Source: AGHT+IEifvcg1VVqeXHvGwhlcQ3feko6nFw94q2Cwdrt1A+BRQIuLqp+6l3tAihxJzMqtKkot8TAzA==
+X-Received: by 2002:a17:906:3397:b0:a3f:d797:e6e2 with SMTP id v23-20020a170906339700b00a3fd797e6e2mr3943939eja.28.1708938946971;
+        Mon, 26 Feb 2024 01:15:46 -0800 (PST)
+Received: from hackbox.lan ([188.24.162.93])
+        by smtp.gmail.com with ESMTPSA id 7-20020a170906308700b00a3e799969aesm2191088ejv.119.2024.02.26.01.15.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 01:15:46 -0800 (PST)
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Abel Vesa <abelvesa@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Peng Fan <peng.fan@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	kernel@pengutronix.de,
+	linux-imx@nxp.com,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kernel-janitors@vger.kernel.org,
+	Markus Elfring <Markus.Elfring@web.de>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	cocci@inria.fr
+Subject: Re: [PATCH 0/2] clk: imx: composite-8m: Adjustments for __imx8m_clk_hw_composite()
+Date: Mon, 26 Feb 2024 11:15:39 +0200
+Message-Id: <170893890773.1758840.9115935052552967417.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <1d494176-2238-4430-bc26-4e4c78fe4ede@web.de>
+References: <1d494176-2238-4430-bc26-4e4c78fe4ede@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223143833.1509961-1-guanyulin@google.com> <Zdi3UWWRfKw1N_Jn@smile.fi.intel.com>
-In-Reply-To: <Zdi3UWWRfKw1N_Jn@smile.fi.intel.com>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Mon, 26 Feb 2024 17:15:00 +0800
-Message-ID: <CAOuDEK1KbZ9=W3ffWN-h_AAhbB9RqJvKsnF4G9qus3o2wkk=3w@mail.gmail.com>
-Subject: Re: [PATCH v3] PM / core: conditionally skip system pm in
- device/driver model
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: rafael@kernel.org, pavel@ucw.cz, len.brown@intel.com, 
-	gregkh@linuxfoundation.org, petr.tesarik.ext@huawei.com, 
-	rdunlap@infradead.org, james@equiv.tech, broonie@kernel.org, 
-	james.clark@arm.com, masahiroy@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 23, 2024 at 11:18=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Feb 23, 2024 at 02:38:29PM +0000, Guan-Yu Lin wrote:
-> > In systems with a main processor and a co-processor, asynchronous
-> > controller management can lead to conflicts.  One example is the main
-> > processor attempting to suspend a device while the co-processor is
-> > actively using it. To address this, we introduce a new sysfs entry
-> > called "conditional_skip". This entry allows the system to selectively
-> > skip certain device power management state transitions. To use this
-> > feature, set the value in "conditional_skip" to indicate the type of
-> > state transition you want to avoid.  Please review /Documentation/ABI/
-> > testing/sysfs-devices-power for more detailed information.
->
-> ...
->
-> > +static ssize_t conditional_skip_store(struct device *dev,
-> > +                                   struct device_attribute *attr,
-> > +                                   const char *buf, size_t n)
-> > +{
->
-> > +     int ret;
->
-> > +     if (kstrtoint(buf, 0, &ret))
->
-> Why is it int? It seems like flags, should not be unsigned as u32 or so?
->
 
-The ".event" member in struct pm_message is an int, but the values
-assigned to it are used like bit flags (e.g. PM_EVENT_FREEZE=3D0x1,
-PM_EVENT_SUSPEND=3D0x2, PM_EVENT_HIBERNATE=3D0x4). Is this an intentional
-design choice? We might need to change the design accordingly.
+On Fri, 22 Dec 2023 17:33:19 +0100, Markus Elfring wrote:
+> A few update suggestions were taken into account
+> from source code analysis.
+> 
+> Markus Elfring (2):
+>   Less function calls after error detection
+>   Delete two unnecessary initialisations
+> 
+> [...]
 
-> > +             return -EINVAL;
->
-> Do not shadow the real error code without justification.
->
+Applied, thanks!
 
-Thanks for suggesting the desired implementation. I'll refactor it in
-the next version.
+[1/2] clk: imx: composite-8m: Less function calls in __imx8m_clk_hw_composite() after error detection
+      commit: fed6bf52c86df27ad4f39a72cdad8c27da9a50ba
+[2/2] clk: imx: composite-8m: Delete two unnecessary initialisations in __imx8m_clk_hw_composite()
+      commit: e1ed0b0362285981c575f12ae9e8b9dfe56a046c
 
-> > +     ret &=3D (PM_EVENT_FREEZE|PM_EVENT_SUSPEND|PM_EVENT_HIBERNATE);
-> > +
-> > +     dev->power.conditional_skip_pm =3D ret;
-> > +
-> > +     return n;
-> > +}
->
-> > +
->
-> Redundant blank line.
->
-
-Thanks for the heads-up.
-
-> > +static DEVICE_ATTR_RW(conditional_skip);
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Best regards,
+-- 
+Abel Vesa <abel.vesa@linaro.org>
