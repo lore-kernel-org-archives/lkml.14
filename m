@@ -1,102 +1,287 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5DCF9C3
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 03:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AA3C8C7;
+	Mon, 26 Feb 2024 03:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708916554; cv=none; b=cVliZgePCr6pZhZPmxhXtiPyPjyaw9LXy1ctQXbWbSacF+8LMeWGltn8FiQh+8+E7A5GQ1IgyFDqKSCAARVnG67AbiGEiIRJLrtYNIK5VIS80lLr8qTRW2yNBx7wsxLLPT8aTqfML/QYdXOOYNFMlmaSDrHLpLVzz+Eepf+PQFg=
+	t=1708916699; cv=none; b=BSEt57m0dxQekucnIG7birg9L0AajabOHSQaNAozjXnTafBfbb1k4V7wNB6gyCbI7BNbLmxMyjJiesjpJb2I1lR2Vo5qGXCyPIz7WPaqJXYWwS3JHFmOKXx3CnspLN5Uk4YHpo2mvd8eqhu2zTIH3MkcgtD+klI3cuGjRBtbcOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708916554; c=relaxed/simple;
-	bh=RCEU+SPzcUGA1zcpyZgBCLYlfuElCOrCdvbtQNZwiSg=;
+	s=arc-20240116; t=1708916699; c=relaxed/simple;
+	bh=7DPdQp+crI03h1yJx2LmjB97PDiC+mM7c78GGmSvO3s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DBthx9sQNjcbU5+pS3j1s51/Yct1BeVL6f4flTmxbEFLWg3nZQPpU35fOwG6+J1M3P8gklfWDPloy1VcnU3jUlwoGHxI8sq7QrnpFYXES2kxjM6zOhaRUaP+SMjAKpMagTTIx8F3bGHEm2VPGp20VffIbUdtwxE3VKEnpO0gpD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QieB6N03; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=kC2MY79QMYRgkRM4UTSmcP1mGrqFiWF07AswbUZbYkj/mGKa0Z27ATI0XFGIa36gCgU+DbhhOw8HycxYFxkGhL+zUto5YJb9h2eHpuufAdknYO3t2Mj8Qu9LHShR7+PRXLv6m26gRNGGVU2pqCVa203rQv2iDlc2AmZJvXUMsxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=kLcVw91j; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QieB6N03"
-Message-ID: <e7f00fbe-a676-4d47-b1bb-cc69cc391172@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1708916549;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qLnUgfVyZPSEL5gUBH6XVmm8mzZPojhGbh54ahAhp+E=;
-	b=QieB6N03fX4o3UrEdw0KLjmTi+KZ/hp42DYy4cBVJUwDrvOyptjc6N7j9fdtYWU8fOsGKk
-	9OJdwdWWtmhPe7yGQSi4CKIVc2o2eMfAM+ON4FxQqfypQzKhPNVFGHz/qJKwBS9QJRKuhx
-	HeuY47+h63rcxxL/JcvmuvBh+9N29Z0=
-Date: Mon, 26 Feb 2024 11:02:24 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="kLcVw91j"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708916693; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=8fHEj3Es1WjucFLsLgdW49Mkhy0Q0HKu/7afnZ+AaHQ=;
+	b=kLcVw91j+1601OCE5O3fVMYSJUhyPt/uhiZGr6V73/plm4M5fXUqx3uRs7J/5hTIReOLsMljNdZtGlqZ5hubLv2iStOpso07wBaVrymT4OBZxtuY+vJhweXxvb3TovigJw0ULHvfffgt7rEzLiAqpH08qsLOPlaAY9EOJ9OssBc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0W1AK4gS_1708916691;
+Received: from 30.221.129.59(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W1AK4gS_1708916691)
+          by smtp.aliyun-inc.com;
+          Mon, 26 Feb 2024 11:04:52 +0800
+Message-ID: <a1890ec0-99be-41cc-9117-46269bc6abad@linux.alibaba.com>
+Date: Mon, 26 Feb 2024 11:04:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] usb: isp1760: remove SLAB_MEM_SPREAD flag usage
-Content-Language: en-US
-To: rui.silva@linaro.org, gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, vbabka@suse.cz,
- roman.gushchin@linux.dev, Xiongwei.Song@windriver.com
-References: <20240224135256.830413-1-chengming.zhou@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240224135256.830413-1-chengming.zhou@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 06/15] net/smc: implement DMB-related operations
+ of loopback-ism
+To: Wenjia Zhang <wenjia@linux.ibm.com>, wintera@linux.ibm.com,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, jaka@linux.ibm.com, Gerd Bayer <gbayer@linux.ibm.com>
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
+ alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240111120036.109903-1-guwen@linux.alibaba.com>
+ <20240111120036.109903-7-guwen@linux.alibaba.com>
+ <b5b4b96f-e512-4c1a-b749-f9fc3e7c2fcf@linux.ibm.com>
+ <a06cdb50-591b-4984-b7d5-7ab758569d21@linux.alibaba.com>
+ <2fe9e5e0-aa5a-41e8-a2b3-80db0208cfa9@linux.ibm.com>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <2fe9e5e0-aa5a-41e8-a2b3-80db0208cfa9@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2024/2/24 21:52, chengming.zhou@linux.dev wrote:
-> From: Chengming Zhou <zhouchengming@bytedance.com>
+
+
+On 2024/2/23 22:12, Wenjia Zhang wrote:
 > 
-> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
-> its usage so we can delete it from slab. No functional change.
-
-Update changelog to make it clearer:
-
-The SLAB_MEM_SPREAD flag used to be implemented in SLAB, which was
-removed as of v6.8-rc1, so it became a dead flag since the commit
-16a1d968358a ("mm/slab: remove mm/slab.c and slab_def.h"). And the
-series[1] went on to mark it obsolete to avoid confusion for users.
-Here we can just remove all its users, which has no functional change.
-
-[1] https://lore.kernel.org/all/20240223-slab-cleanup-flags-v2-1-02f1753e8303@suse.cz/
-
-Thanks!
-
 > 
-> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> ---
->  drivers/usb/isp1760/isp1760-hcd.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+> On 20.02.24 02:55, Wen Gu wrote:
+>>
+>>
+>> On 2024/2/16 22:13, Wenjia Zhang wrote:
+>>>
+>>>
+>>> On 11.01.24 13:00, Wen Gu wrote:
+>>>> This implements DMB (un)registration and data move operations of
+>>>> loopback-ism device.
+>>>>
+>>>> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+>>>> ---
+>>>>   net/smc/smc_cdc.c      |   6 ++
+>>>>   net/smc/smc_cdc.h      |   1 +
+>>>>   net/smc/smc_loopback.c | 133 ++++++++++++++++++++++++++++++++++++++++-
+>>>>   net/smc/smc_loopback.h |  13 ++++
+>>>>   4 files changed, 150 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/net/smc/smc_cdc.c b/net/smc/smc_cdc.c
+>>>> index 3c06625ceb20..c820ef197610 100644
+>>>> --- a/net/smc/smc_cdc.c
+>>>> +++ b/net/smc/smc_cdc.c
+>>>> @@ -410,6 +410,12 @@ static void smc_cdc_msg_recv(struct smc_sock *smc, struct smc_cdc_msg *cdc)
+>>>>   static void smcd_cdc_rx_tsklet(struct tasklet_struct *t)
+>>>>   {
+>>>>       struct smc_connection *conn = from_tasklet(conn, t, rx_tsklet);
+>>>> +
+>>>> +    smcd_cdc_rx_handler(conn);
+>>>> +}
+>>>> +
+>>>> +void smcd_cdc_rx_handler(struct smc_connection *conn)
+>>>> +{
+>>>>       struct smcd_cdc_msg *data_cdc;
+>>>>       struct smcd_cdc_msg cdc;
+>>>>       struct smc_sock *smc;
+>>>> diff --git a/net/smc/smc_cdc.h b/net/smc/smc_cdc.h
+>>>> index 696cc11f2303..11559d4ebf2b 100644
+>>>> --- a/net/smc/smc_cdc.h
+>>>> +++ b/net/smc/smc_cdc.h
+>>>> @@ -301,5 +301,6 @@ int smcr_cdc_msg_send_validation(struct smc_connection *conn,
+>>>>                    struct smc_wr_buf *wr_buf);
+>>>>   int smc_cdc_init(void) __init;
+>>>>   void smcd_cdc_rx_init(struct smc_connection *conn);
+>>>> +void smcd_cdc_rx_handler(struct smc_connection *conn);
+>>>>   #endif /* SMC_CDC_H */
+>>>> diff --git a/net/smc/smc_loopback.c b/net/smc/smc_loopback.c
+>>>> index 353d4a2d69a1..f72e7b24fc1a 100644
+>>>> --- a/net/smc/smc_loopback.c
+>>>> +++ b/net/smc/smc_loopback.c
+>>>> @@ -15,11 +15,13 @@
+>>>>   #include <linux/types.h>
+>>>>   #include <net/smc.h>
+>>>> +#include "smc_cdc.h"
+>>>>   #include "smc_ism.h"
+>>>>   #include "smc_loopback.h"
+>>>>   #if IS_ENABLED(CONFIG_SMC_LO)
+>>>>   #define SMC_LO_V2_CAPABLE    0x1 /* loopback-ism acts as ISMv2 */
+>>>> +#define SMC_DMA_ADDR_INVALID    (~(dma_addr_t)0)
+>>>>   static const char smc_lo_dev_name[] = "loopback-ism";
+>>>>   static struct smc_lo_dev *lo_dev;
+>>>> @@ -50,6 +52,97 @@ static int smc_lo_query_rgid(struct smcd_dev *smcd, struct smcd_gid *rgid,
+>>>>       return 0;
+>>>>   }
+>>>> +static int smc_lo_register_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb,
+>>>> +                   void *client_priv)
+>>>> +{
+>>>> +    struct smc_lo_dmb_node *dmb_node, *tmp_node;
+>>>> +    struct smc_lo_dev *ldev = smcd->priv;
+>>>> +    int sba_idx, order, rc;
+>>>> +    struct page *pages;
+>>>> +
+>>>> +    /* check space for new dmb */
+>>>> +    for_each_clear_bit(sba_idx, ldev->sba_idx_mask, SMC_LO_MAX_DMBS) {
+>>>> +        if (!test_and_set_bit(sba_idx, ldev->sba_idx_mask))
+>>>> +            break;
+>>>> +    }
+>>>> +    if (sba_idx == SMC_LO_MAX_DMBS)
+>>>> +        return -ENOSPC;
+>>>> +
+>>>> +    dmb_node = kzalloc(sizeof(*dmb_node), GFP_KERNEL);
+>>>> +    if (!dmb_node) {
+>>>> +        rc = -ENOMEM;
+>>>> +        goto err_bit;
+>>>> +    }
+>>>> +
+>>>> +    dmb_node->sba_idx = sba_idx;
+>>>> +    order = get_order(dmb->dmb_len);
+>>>> +    pages = alloc_pages(GFP_KERNEL | __GFP_NOWARN |
+>>>> +                __GFP_NOMEMALLOC | __GFP_COMP |
+>>>> +                __GFP_NORETRY | __GFP_ZERO,
+>>>> +                order);
+>>>> +    if (!pages) {
+>>>> +        rc = -ENOMEM;
+>>>> +        goto err_node;
+>>>> +    }
+>>>> +    dmb_node->cpu_addr = (void *)page_address(pages);
+>>>> +    dmb_node->len = dmb->dmb_len;
+>>>> +    dmb_node->dma_addr = SMC_DMA_ADDR_INVALID;
+>>>> +
+>>>> +again:
+>>>> +    /* add new dmb into hash table */
+>>>> +    get_random_bytes(&dmb_node->token, sizeof(dmb_node->token));
+>>>> +    write_lock(&ldev->dmb_ht_lock);
+>>>> +    hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb_node->token) {
+>>>> +        if (tmp_node->token == dmb_node->token) {
+>>>> +            write_unlock(&ldev->dmb_ht_lock);
+>>>> +            goto again;
+>>>> +        }
+>>>> +    }
+>>>> +    hash_add(ldev->dmb_ht, &dmb_node->list, dmb_node->token);
+>>>> +    write_unlock(&ldev->dmb_ht_lock);
+>>>> +
+>>> The write_lock_irqsave()/write_unlock_irqrestore() and read_lock_irqsave()/read_unlock_irqrestore()should be used 
+>>> instead of write_lock()/write_unlock() and read_lock()/read_unlock() in order to keep the lock irq-safe.
+>>>
+>>
+>> dmb_ht_lock won't be hold in an interrupt or sockirq context. The dmb_{register|unregister},
+>> dmb_{attach|detach} and data_move are all on the process context. So I think write_(un)lock
+>> and read_(un)lock is safe here.
 > 
-> diff --git a/drivers/usb/isp1760/isp1760-hcd.c b/drivers/usb/isp1760/isp1760-hcd.c
-> index 76862ba40f35..0e5e4cb74c87 100644
-> --- a/drivers/usb/isp1760/isp1760-hcd.c
-> +++ b/drivers/usb/isp1760/isp1760-hcd.c
-> @@ -2521,21 +2521,19 @@ static const struct hc_driver isp1760_hc_driver = {
->  int __init isp1760_init_kmem_once(void)
->  {
->  	urb_listitem_cachep = kmem_cache_create("isp1760_urb_listitem",
-> -			sizeof(struct urb_listitem), 0, SLAB_TEMPORARY |
-> -			SLAB_MEM_SPREAD, NULL);
-> +			sizeof(struct urb_listitem), 0, SLAB_TEMPORARY, NULL);
->  
->  	if (!urb_listitem_cachep)
->  		return -ENOMEM;
->  
->  	qtd_cachep = kmem_cache_create("isp1760_qtd",
-> -			sizeof(struct isp1760_qtd), 0, SLAB_TEMPORARY |
-> -			SLAB_MEM_SPREAD, NULL);
-> +			sizeof(struct isp1760_qtd), 0, SLAB_TEMPORARY, NULL);
->  
->  	if (!qtd_cachep)
->  		goto destroy_urb_listitem;
->  
->  	qh_cachep = kmem_cache_create("isp1760_qh", sizeof(struct isp1760_qh),
-> -			0, SLAB_TEMPORARY | SLAB_MEM_SPREAD, NULL);
-> +			0, SLAB_TEMPORARY, NULL);
->  
->  	if (!qh_cachep)
->  		goto destroy_qtd;
+> right, it is not directly hold in a interrupt context, but it has a dependency on conn->send_lock as you wrote below, 
+> which requires irq-safe lock. And this matches our finding from a test:
+> 
+> =====================================================
+> WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+> 6.8.0-rc4-00787-g8eb4d2392609 #2 Not tainted
+> -----------------------------------------------------
+> smcapp/33802 [HC0[0]:SC0[2]:HE1:SE0] is trying to acquire:
+> 00000000a2fc0330 (&ldev->dmb_ht_lock){++++}-{2:2}, at: smc_lo_move_data+0x84/0x1d0 [>
+> and this task is already holding:
+> 00000000e4df6f28 (&smc->conn.send_lock){+.-.}-{2:2}, at: smc_tx_sndbuf_nonempty+0xaa>
+> which would create a new lock dependency:
+> (&smc->conn.send_lock){+.-.}-{2:2} -> (&ldev->dmb_ht_lock){++++}-{2:2}
+> but this new dependency connects a SOFTIRQ-irq-safe lock:
+> (&smc->conn.send_lock){+.-.}-{2:2}
+> 
+
+I understand, thank you Wenjia. I will fix it in the next version.
+
+>>
+>>>> +    dmb->sba_idx = dmb_node->sba_idx;
+>>>> +    dmb->dmb_tok = dmb_node->token;
+>>>> +    dmb->cpu_addr = dmb_node->cpu_addr;
+>>>> +    dmb->dma_addr = dmb_node->dma_addr;
+>>>> +    dmb->dmb_len = dmb_node->len;
+>>>> +
+>>>> +    return 0;
+>>>> +
+>>>> +err_node:
+>>>> +    kfree(dmb_node);
+>>>> +err_bit:
+>>>> +    clear_bit(sba_idx, ldev->sba_idx_mask);
+>>>> +    return rc;
+>>>> +}
+>>>> +
+>>>> +static int smc_lo_unregister_dmb(struct smcd_dev *smcd, struct smcd_dmb *dmb)
+>>>> +{
+>>>> +    struct smc_lo_dmb_node *dmb_node = NULL, *tmp_node;
+>>>> +    struct smc_lo_dev *ldev = smcd->priv;
+>>>> +
+>>>> +    /* remove dmb from hash table */
+>>>> +    write_lock(&ldev->dmb_ht_lock);
+>>>> +    hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb->dmb_tok) {
+>>>> +        if (tmp_node->token == dmb->dmb_tok) {
+>>>> +            dmb_node = tmp_node;
+>>>> +            break;
+>>>> +        }
+>>>> +    }
+>>>> +    if (!dmb_node) {
+>>>> +        write_unlock(&ldev->dmb_ht_lock);
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +    hash_del(&dmb_node->list);
+>>>> +    write_unlock(&ldev->dmb_ht_lock);
+>>>> +
+>>>> +    clear_bit(dmb_node->sba_idx, ldev->sba_idx_mask);
+>>>> +    kfree(dmb_node->cpu_addr);
+>>>> +    kfree(dmb_node);
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>>   static int smc_lo_add_vlan_id(struct smcd_dev *smcd, u64 vlan_id)
+>>>>   {
+>>>>       return -EOPNOTSUPP;
+>>>> @@ -76,6 +169,38 @@ static int smc_lo_signal_event(struct smcd_dev *dev, struct smcd_gid *rgid,
+>>>>       return 0;
+>>>>   }
+>>>> +static int smc_lo_move_data(struct smcd_dev *smcd, u64 dmb_tok,
+>>>> +                unsigned int idx, bool sf, unsigned int offset,
+>>>> +                void *data, unsigned int size)
+>>>> +{
+>>>> +    struct smc_lo_dmb_node *rmb_node = NULL, *tmp_node;
+>>>> +    struct smc_lo_dev *ldev = smcd->priv;
+>>>> +
+>>>> +    read_lock(&ldev->dmb_ht_lock);
+>>>> +    hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb_tok) {
+>>>> +        if (tmp_node->token == dmb_tok) {
+>>>> +            rmb_node = tmp_node;
+>>>> +            break;
+>>>> +        }
+>>>> +    }
+>>>> +    if (!rmb_node) {
+>>>> +        read_unlock(&ldev->dmb_ht_lock);
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +    read_unlock(&ldev->dmb_ht_lock);
+>>>> +
+>>>> +    memcpy((char *)rmb_node->cpu_addr + offset, data, size);
+>>>> +
+>>>
+>>> Should this read_unlock be placed behind memcpy()?
+>>>
+>>
+>> dmb_ht_lock is used to ensure safe access to the DMB hash table of loopback-ism.
+>> The DMB hash table could be accessed by all the connections on loopback-ism, so
+>> it should be protected.
+>>
+>> But a certain DMB is only used by one connection, and the move_data process is
+>> protected by conn->send_lock (see smcd_tx_sndbuf_nonempty()), so the memcpy(rmb_node)
+>> here is safe and no race with other.
+>>
+>> Thanks!
+>>
+> sounds reasonable.
+>>> <...>
