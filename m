@@ -1,101 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874D212BEAF;
-	Mon, 26 Feb 2024 15:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8923612B159;
+	Mon, 26 Feb 2024 15:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708962032; cv=none; b=n/wr0d2PaDruVpVlnqpNnZDK63R2c+y1YtfMI7GCjpEbxj5uNR2JFAEE4bimPzyMIR39r9TNu7DhCdylPzvEFKv2GKqH+DMmDeCg3erPmiwPHNd2PlARirh7T5BocvOGHHnsA+GH0qx97BDTzlxt3vT1Ed8+dwb4YZdYyzpCBbs=
+	t=1708962055; cv=none; b=d6vVdKeLG9439B4sBDHH98oxj+CbIHlDco8L3SJ9pRhQkdi9E3GSZ13lfupp2vfjbHCURWCIOjxNrOuJaB1aDvhW+8ErtqHH271hM0bO3IQAGuWfgY04ymOJxLPix8lK33zrzCY6AcZ39h89aMhmNHQJvT/Jx5GzA7aRk6eWg0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708962032; c=relaxed/simple;
-	bh=LqdZVF/5a5y9c7R0XJh34mAsJKHFvghTFVi0Kr3+2NY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nwC30FoeTXpKO/dNmwnO9GJXrNSRMXrZmgKg5AQFX/95eUR5VX2+WuDrRFU5OvLCLo7scsCVKbYanCm7Vo3IcpmhFL7qX2sTUAr0dT/t56SSBHZU0LN+NI3Ic4sd6jQNH3uVqMBjziUVb3/8SZEFRVhHhhrqNuGEv2KUFW+WdaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDxVS0q8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDxVS0q8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C92C433C7;
-	Mon, 26 Feb 2024 15:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708962032;
-	bh=LqdZVF/5a5y9c7R0XJh34mAsJKHFvghTFVi0Kr3+2NY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pDxVS0q8Z3vpInLZ2QGBmd3bVTIaQVmD0Lg1FYweLvPwIbiCpQkMP7ZsWJjB8XGxz
-	 gzfyUh1+Ri7hI47ZLD0r2BbaP4NKvMOkYaCvn8A6uukIq4ZRgoAEGku8/mMxhNqzkA
-	 yvH2C6zhpPfy58dvkw+7jlsSzx5UfhYSmHsA0+tq1nwW+D9zb3A5R/sPl88jfUmX1O
-	 C2bPKjjaN4znMiobBOe3M/Kr19GSPeS6tZECdBbtUYH87T3HRdbua3LgIychQrhL6L
-	 E4SFQz52hUoq8sS6Y1U0lSrRsoxaUm8Lk/mld0Yd6oJw3qUFfKO2RjYMYTv722TFJQ
-	 aki7mnG1lzw/g==
-Date: Mon, 26 Feb 2024 16:40:25 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Xi Ruoyao <xry111@xry111.site>, Icenowy Zheng <uwu@icenowy.me>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-api@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Xiaotian Wu <wuxiaotian@loongson.cn>, 
-	WANG Rui <wangrui@loongson.cn>, Miao Wang <shankerwangmiao@gmail.com>, 
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, Linux-Arch <linux-arch@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep argument
- inspection again?
-Message-ID: <20240226-sandbank-bewerben-219120323e29@brauner>
-References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
- <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
- <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
- <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
- <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
- <3c396b7c-adec-4762-9584-5824f310bf7b@app.fastmail.com>
- <6f7a8e320f3c2bd5e9b704bb8d1f311714cd8644.camel@xry111.site>
- <b9fb0de1-bfb9-47a6-9730-325e7641c182@app.fastmail.com>
- <20240226-graustufen-hinsehen-6c578a744806@brauner>
- <ef732971-bf70-4d8c-9fe8-3ca163a0c29c@app.fastmail.com>
+	s=arc-20240116; t=1708962055; c=relaxed/simple;
+	bh=JvGqVtPMzjCWMpjEKF/jb89vLcg20ScqtVMRggNfqfE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PeOrF7zvWuXhOI6fkuIsfSlPNUZdBXmQ0LwNJs3rBoVLBk882oklrlgRyQBMQjWjzIbAjC/+e3BTizhEk0n74/vuBIuyH3F6pYy5nijySA8uj0nDpJ57v5jufFLmnI8mL7XVhWkwShpk8sqex0xHM+CJPcn+ZPJl+dJaVAyHUww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-60822b444c9so20073037b3.2;
+        Mon, 26 Feb 2024 07:40:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708962053; x=1709566853;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xtU3gBiSlF+zY1t4TZQha65DndWfF2kOq1bgpFzA6E0=;
+        b=GYRQ+SOxJq+9gbNMTAHgHaCRIU4EXo9LY4SqKsJ81VzSaOgBjCsfVmtrGUM8FopB82
+         3K822OgMPXz/euo0aB3Fm/QahCcdDy+4WBrW4VQRu8O3NakccN5hY4ALDG6rnGETHUTb
+         upPTKtanVi+m7lON2ngVRiLukGboz2PbJc1DBzkRpVDWLBjO2Oge7PFrHSKgr2P4+yDZ
+         009SvzDa+i3QW2O0lxd1hTJoJDBXnrXu3TSTim3AHKtGwvwCKwYeq4Fn3fLi2fhDa+4H
+         d2pXXkLMX8NdjzhUHvitI1ESD5iXe4pi/pItPdfWEftvZYCduIzh5wfVsB6bSYg1m09o
+         lfhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVknfQ2TZ/O+jldSQox71Vp+o4YRh0jqjVnbt3dZrSXSQXdr8GexY9US7ndHUAzThc0wwmxdxTPptF0xrOC9k/HtZdS9TFrYPyn3MwlfzlZorXxGGgUGyrRdDzN2hnJZqFlGhDsV/3Gfw==
+X-Gm-Message-State: AOJu0Yyy2xk9Sp9LaPQeseA9IOjDGmegJ+ulCEK5/T+uwxIDI8BFByVR
+	5+HulIxog/gpdZpfJdzjK5uTHdY0FE8inTFoFSO1+5ub7Z5hTJAY8UxKmNdumC8=
+X-Google-Smtp-Source: AGHT+IFEfCOkQ1T8BKL6ipSFMTFi4GzxkTFlbcihhfK8vKLGglPSH3UA3YdgS0yk7shnY+J+wemyfg==
+X-Received: by 2002:a05:690c:fc6:b0:608:bec5:f27d with SMTP id dg6-20020a05690c0fc600b00608bec5f27dmr7444033ywb.41.1708962053130;
+        Mon, 26 Feb 2024 07:40:53 -0800 (PST)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id l37-20020a81ad25000000b00608d55efe59sm1192421ywh.112.2024.02.26.07.40.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 07:40:52 -0800 (PST)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dc6d8bd618eso3217906276.3;
+        Mon, 26 Feb 2024 07:40:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUR8Au/rELoLXN1T2MJNVK5z+vjcbKptYByRgDA5qozXTpDbmOT4CkuXKO6rlC9E8bUekoP9uvo2XUKs4SXke5W93ooFVQKsB7oMxecNtbKSprT6Pd0Xdb8GWx3XkHeCMImZ4vslTINIA==
+X-Received: by 2002:a25:5f4e:0:b0:dc6:ebca:c2e8 with SMTP id
+ h14-20020a255f4e000000b00dc6ebcac2e8mr4934465ybm.5.1708962052506; Mon, 26 Feb
+ 2024 07:40:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ef732971-bf70-4d8c-9fe8-3ca163a0c29c@app.fastmail.com>
+References: <20240219170337.2161754-1-andriy.shevchenko@linux.intel.com>
+ <20240219170337.2161754-6-andriy.shevchenko@linux.intel.com> <ZdTp5LQOTpL5ke96@smile.fi.intel.com>
+In-Reply-To: <ZdTp5LQOTpL5ke96@smile.fi.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 Feb 2024 16:40:41 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWYy1-TeofX9NnQ0anbJDz8N3Y_uSnR94Bz=VJ+H2yRWQ@mail.gmail.com>
+Message-ID: <CAMuHMdWYy1-TeofX9NnQ0anbJDz8N3Y_uSnR94Bz=VJ+H2yRWQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/9] auxdisplay: ht16k33: Define a few helper macros
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Robin van der Gracht <robin@protonic.nl>, Paul Burton <paulburton@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 26, 2024 at 02:46:49PM +0100, Arnd Bergmann wrote:
-> On Mon, Feb 26, 2024, at 14:32, Christian Brauner wrote:
-> > On Mon, Feb 26, 2024 at 10:20:23AM +0100, Arnd Bergmann wrote:
-> >> On Mon, Feb 26, 2024, at 08:09, Xi Ruoyao wrote:
-> >
-> > What this tells me without knowing the exact reason is that they thought
-> > "Oh, if we just return ENOSYS then the workload or glibc will just
-> > always be able to fallback to fstat() or fstatat()". Which ultimately is
-> > the exact same thing that containers often assume.
-> >
-> > So really, just skipping on various system calls isn't going to work.
-> > You can't just implement new system calls and forget about the rest
-> > unless you know exactly what workloads your architecure will run on.
-> >
-> > Please implement fstat() or fstatat() and stop inventing hacks for
-> > statx() to make weird sandboxing rules work, please.
-> 
-> Do you mean we should add fstat64_time64() for all architectures
-> then? Would use use the same structure layout as statx for this,
-> the 64-bit version of the 'struct stat' layout from
-> include/uapi/asm-generic/stat.h, or something new that solves
-> the same problems?
-> 
-> I definitely don't want to see a new time32 API added to
-> mips64 and the 32-bit architectures, so the existing stat64
-> interface won't work as a statx replacement.
+On Tue, Feb 20, 2024 at 7:05=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Mon, Feb 19, 2024 at 06:58:04PM +0200, Andy Shevchenko wrote:
+> > Define a few helper macros =E2=80=94 wrappers on contaoner_of)() =E2=80=
+=94 for easier
+>
+> I have fixed 'container_of()' above locally.
 
-I don't specifically care but the same way you don't want to see newer
-time32 apis added to architectures I don't want to have hacks in our
-system calls that aren't even a clear solution to the problem outlined
-in this thread.
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Short of adding fstatx() the problem isn't solved by a new flag to
-statx() as explained in my other mails. But I'm probably missing
-something here because I find this notion of "design system calls for
-seccomp and the Chromium sandbox" to be an absurd notion and it makes me
-a bit impatient.
+Gr{oetje,eeting}s,
 
-And fwiw, once mseal() lands seccomp should be a lot easier to get deep
-argument inspection.
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
