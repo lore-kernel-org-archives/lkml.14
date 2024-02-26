@@ -1,53 +1,68 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877DA129A63
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 14:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2779E128389;
+	Mon, 26 Feb 2024 14:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708956523; cv=none; b=irUPLB8KJx1MzVTF5BjMTvmgvCMZBf7HAad5p+BIsKQODjQWBMn+ex+mDdtVmpK1MEULFfMrz5rMLX37yVwTKlJsc6GnpcLxnVbFJaYKDZ965udRxLl7mmmHSWlNtArt2zhohNa9acyzSAxwnmSDfW/Nj/xZpWbTsuCh8uPX32I=
+	t=1708956753; cv=none; b=GizA9HWRHPhIorjDDiuyGwncMk1uaix8PFK4koYpTLqRcmCH0nZVe3QueWNmQLEK1/sxCAg6lm0q0U9xXZ84mfknHSEGVZXS5qt3nOLwAZuce3n0QoyQ1WfrBr4NcFbM3O9ZXCiEFHp/WQ+6/8rRhBba/ld3ELfyL6pSVDTIWVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708956523; c=relaxed/simple;
-	bh=2i0LB7lTxQRchprLI/cdRp85vhRM2QpIg6JVzOjaY7w=;
+	s=arc-20240116; t=1708956753; c=relaxed/simple;
+	bh=UtF0hU+9ize1OU+qLoslQEHlSpGHD5zpSnj1SCFGdww=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZxLOQ2ia6/68DbxJNYSIonbAfx9QDIaL2dQ4ttbgCxkVLpfFX8C6ZuwPPX8J2z9dJc9SjJtGVuIzqNAV6izp9BxhWUDdYygyuXX9sEbgR4NOsgLNmbcA9BzLNW+rVFyUhFqozWJQwK9zeEeS+CSY2BHgVh7HpAkG1P8pQtlmJwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=LMs55jDI; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=TMXrZbwgQ843Y2czSEwTuwQWqF7DUhD7U7cipWZqf8tREcZIvQFBKJCQBnH7LFbikNO3hsyMPweonKeYC/O2T0wv1xFo0WMvWoHmKVWc/UKKDtT+b1jRFwth5DwfWAiwTQouiBOOUY6oLmYpj/zD9QRZvFQxw7L9RsAo83n1Mpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wf7ZRLx8; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LMs55jDI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=og2C+QX7RdSlbChapFxZDOWO2lHc9kddFG0iUeGvz80=; b=LMs55jDIZ7LjCFTkYTM16KODR0
-	rs+IF/4TFSxK38WAgChMtiHyk/uWUpg8ePGc2+PF74DCejyob9Ea1TCJXIgYlGbrnx5pYiSXk5kpB
-	9JqGM9d7qm/MTpkNQoaGkECzg27H4EmIwVeHKGdJ/HMvhTj3Z587BwloRthVY7Iz5vjgwFwPOUnwJ
-	ogg1G1X5PWCxYWwWeKmTQ0zkc/O1nl7Ocqll5Lo19SuuugjUXfRib5NyjjBklYpYzTczPzwUJLLYe
-	XVQTd8KMkMaVfyN/UCWLSq+8Xl6Vc+lG9BE32sKHBq3tnnhYRg5xPd2u2P/URDvCORm/K7YXItTmW
-	UMTWwMnA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33800)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rebel-0003jA-15;
-	Mon, 26 Feb 2024 14:08:35 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rebeh-0006U3-UY; Mon, 26 Feb 2024 14:08:31 +0000
-Date: Mon, 26 Feb 2024 14:08:31 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Duoming Zhou <duoming@zju.edu.cn>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, gregory.clement@bootlin.com,
-	sebastian.hesselbarth@gmail.com
-Subject: Re: [PATCH] ARM: mvebu: Add check in coherency.c to prevent null
- pointer dereference
-Message-ID: <ZdybX3aZo03iBduX@shell.armlinux.org.uk>
-References: <20240225060450.53044-1-duoming@zju.edu.cn>
- <eb036663-2109-4d75-8386-451fa5c34889@lunn.ch>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wf7ZRLx8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708956753; x=1740492753;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UtF0hU+9ize1OU+qLoslQEHlSpGHD5zpSnj1SCFGdww=;
+  b=Wf7ZRLx8fzxO0iwIciHCEZHDRFVtFM3+eEbRMHJHHMnpkwfru1XCnkGU
+   XZsZ7FXGCnqfxBrWZs1sbPGT724mF79406ij4M6Ag2W0ZxyHckUw8G/Jn
+   ySIjptUp5tFbQ5PDm9RfBP+k6WGre2HezqhwxWdaYDQfXX8TXNY8Iei79
+   UioeVWBJbbGikjh8Yah3o7z/g/bAKZapMXsKRuC3FGc06+dB0eHZwbQGN
+   O/51ZcGGxktB930Oo7AbuA1R9I3NhPgK4on58e8DPTwkbWd2hTzGLn9ub
+   OBYU05lzaFw5Wzd4Ars2rMfDowvGO9IbnCr2XNA+7Szn8Ebz9PAXxw9oG
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="7046723"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="7046723"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 06:12:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="913871995"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="913871995"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 06:12:27 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rebiS-00000007hMH-04x7;
+	Mon, 26 Feb 2024 16:12:24 +0200
+Date: Mon, 26 Feb 2024 16:12:23 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Marek Vasut <marex@denx.de>, Anshul Dalal <anshulusr@gmail.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Matt Ranostay <matt@ranostay.sg>,
+	Stefan Windfeldt-Prytz <stefan.windfeldt-prytz@axis.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 5/5] iio: light: Add support for APDS9306 Light Sensor
+Message-ID: <ZdycR6nr3rtrnuth@smile.fi.intel.com>
+References: <20240218054826.2881-1-subhajit.ghosh@tweaklogic.com>
+ <20240218054826.2881-6-subhajit.ghosh@tweaklogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,51 +71,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eb036663-2109-4d75-8386-451fa5c34889@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20240218054826.2881-6-subhajit.ghosh@tweaklogic.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Feb 26, 2024 at 02:39:37PM +0100, Andrew Lunn wrote:
-> On Sun, Feb 25, 2024 at 02:04:50PM +0800, Duoming Zhou wrote:
-> > The kzalloc() in armada_375_380_coherency_init() will return
-> > null if the physical memory has run out. As a result, if we
-> > dereference the property pointer, the null pointer dereference
-> > bug will happen.
-> > 
-> > This patch adds a check to avoid null pointer dereference.
-> > 
-> > Fixes: 497a92308af8 ("ARM: mvebu: implement L2/PCIe deadlock workaround")
-> > Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+On Sun, Feb 18, 2024 at 04:18:26PM +1030, Subhajit Ghosh wrote:
+> Driver support for Avago (Broadcom) APDS9306 Ambient Light Sensor.
+> It has two channels - ALS and CLEAR. The ALS (Ambient Light Sensor)
+> channel approximates the response of the human-eye providing direct
+> read out where the output count is proportional to ambient light levels.
+> It is internally temperature compensated and rejects 50Hz and 60Hz flicker
+> caused by artificial light sources. Hardware interrupt configuration is
+> optional. It is a low power device with 20 bit resolution and has
+> configurable adaptive interrupt mode and interrupt persistence mode.
+> The device also features inbuilt hardware gain, multiple integration time
+> selection options and sampling frequency selection options.
 > 
-> I have to wounder how we can run out of memory here. This code is
-> being called from:
-> 
-> postcore_initcall(coherency_late_init);
-> 
-> If you look at:
-> 
-> https://elixir.bootlin.com/linux/latest/source/include/linux/init.h#L299
-> 
-> You can see that only true kernel core stuff has been called before
-> that. If that has consumed all the available memory, something is very
-> seriously wrong, and the machine is not going to last another couple
-> of milliseconds before it crashes no matter what checking you do.
-> 
-> So i do wounder if your time could be better spent in other places?
+> This driver also uses the IIO GTS (Gain Time Scale) Helpers Namespace for
+> Scales, Gains and Integration time implementation.
 
-Sadly, it's an easy patch generation target for newbies getting involved
-with kernel development. "Find all kzalloc()s and look to see whether
-they check for a NULL pointer, if not generate a patch".
+...
 
-This results in people doing exactly that, not looking at the bigger
-picture, and not considering whether a NULL pointer could occur there.
+> +/*
+> + * Available scales with gain 1x - 18x, timings 3.125, 25, 50, 100, 200, 400 mS
 
-The other issue is that if a NULL pointer is returned at this point,
-the resulting oops at least allows a developer to debug it (maybe not
-a user if the console isn't up.) Adding this patch which basically
-just continues the loop silently means that there's no diagnostic that
-something went wrong, and it's up to someone to figure out "why does
-XYZ no longer work" to figure it out...
+"mS" --> "ms."
+
+> + * Time impacts to gain: 1x, 8x, 16x, 32x, 64x, 128x
+> + */
+
+...
+
+> +	/*
+> +	 * If this function runs parallel with the interrupt handler, either
+> +	 * this reads and clears the status registers or the interrupt handler
+> +	 * does. The interrupt handler sets a flag for read data available
+> +	 * in our private structure which we read here.
+> +	 */
+> +	ret = regmap_read_poll_timeout(data->regmap, APDS9306_MAIN_STATUS_REG,
+> +				       status, data->read_data_available ||
+> +				       (status & (APDS9306_ALS_DATA_STAT_MASK |
+> +						  APDS9306_ALS_INT_STAT_MASK)),
+> +				       APDS9306_ALS_READ_DATA_DELAY_US, delay * 2);
+
+> +
+
+Redundant blank line
+
+> +	if (ret)
+> +		return ret;
+
+...
+
+> +static int apds9306_init_iio_gts(struct apds9306_data *data)
+> +{
+> +	int i, ret, part_id;
+> +
+> +	ret = regmap_read(data->regmap, APDS9306_PART_ID_REG, &part_id);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(apds9306_gts_mul); i++)
+> +		if (part_id == apds9306_gts_mul[i].part_id)
+> +			break;
+> +
+> +	if (i == ARRAY_SIZE(apds9306_gts_mul))
+> +		return -ENXIO;
+
+Strange choice of the error code, why not (one of) -ENOENT / -ENODATA ?
+
+> +	return devm_iio_init_iio_gts(data->dev,
+> +				     apds9306_gts_mul[i].max_scale_int,
+> +				     apds9306_gts_mul[i].max_scale_nano,
+> +				     apds9306_gains, ARRAY_SIZE(apds9306_gains),
+> +				     apds9306_itimes, ARRAY_SIZE(apds9306_itimes),
+> +				     &data->gts);
+
+> +
+> +	return -ENXIO;
+
+Dead code.
+
+> +}
+
+...
+
+Jonathan, are you going to apply this and addressing comments at the same time?
+Or should it be another version?
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+With Best Regards,
+Andy Shevchenko
+
+
