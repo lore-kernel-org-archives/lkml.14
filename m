@@ -1,296 +1,195 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2059.outbound.protection.outlook.com [40.107.8.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B3F33EC;
-	Mon, 26 Feb 2024 00:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708907034; cv=none; b=vE5rD4VYqdmhfBeQgX0LPZIoBrSeJBNES6qoDFAFrf3FWQlq/p7uXkv6fQzfo8Sc3C6kGNpSd0mCLPPIJC/VnoK0KT7jurm2jC224JlqxEkYDwYMaMr/NZ65IiPp8ybTZm2qaZhy9zmO7fmgU4M96T0ae7jqXRxMQ1bDSnk3SoM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708907034; c=relaxed/simple;
-	bh=CF56sxrMUbhfd9jdc++hHknqQjW6Pw4Hu7N6DnVeMhE=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KeAHZH83r/HNzshF3XnT395FZkZlfLK8vbMLiImKsB2Go8oKmKY5jAxSxjk9ntsjfYkbt54CV8aVQHIyHs2Rs2cSEhiQtghqM0+UbZrP75/gNLQGWvSVMLlNYVbAjboMkSXHIvIueUdsRuu41arGN47HWBd3cgRsTBkGpWJt5cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1reOmW-0001qY-0d;
-	Mon, 26 Feb 2024 00:23:44 +0000
-Date: Mon, 26 Feb 2024 00:23:41 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Golle <daniel@makrotopia.org>, linux-mtd@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 7/7] mtd: ubi: provide NVMEM layer over UBI volumes
-Message-ID: <3ac88da4adc342af428b359cd27037b1498f6c91.1708906456.git.daniel@makrotopia.org>
-References: <cover.1708906456.git.daniel@makrotopia.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFC8ED9;
+	Mon, 26 Feb 2024 00:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708907336; cv=fail; b=BHeRMAdp8wOqsw0LxR/zqvS5zSA/lkuywze+mVJhbjXXiJIMT9OpZQsc8zp9KKlZTm7qFWCt8bnfpk9bGkoII0qeoV2ZGJmw4dRQ71mFy68XGDIyFTtL1pQTILwGco9opP2Vg+Ownkqfrpp174Fb+OWuabHIbanB3GIyCtVX4fQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708907336; c=relaxed/simple;
+	bh=kVLBfhQC5nk3GBJw6sb8GiBG6NDTnx2Syhi5Q8pWS/I=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Txp1rwW1bNpWlof2iYBMC+kQCFxwhwguPp0+Rql3Lyhvi31WpzNdrl1vm1G383uIBFEvcSRzL9Hi3xNiJ63Z+Nkrk1hmf51YqHgdvBxWYJlUpitQeEy2TrcGVwdqkEyNTkl4QCvYOZ5aCRXiD1fXAr+IxP/hoVvgObPNV5w2tWI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=I0+9DS8g; arc=fail smtp.client-ip=40.107.8.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="I0+9DS8g"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BuHUdJncO5EUe8QYLaDMPj+zHtKQ3LLRQ5ma/WYAv4m3fhI9+Wk+xEQ1yQbBif328SJDTMxbPfN4m+kT/V1+1a15oiZdbPSeWxMV3lwJCjBUUzNjpwQy+64D70vDVQmw4tn/8YBLJ+OqWjAyJ1mXEESnS/b8eIVlHiNGwoS2/ugkZKsc+I2Q9DIaHEwi3o3HYz9DD4Y4IUc3tBpso93UvBBfFAnhn0ZfXBO9YZiTN2Yf4KYv6NnQQTEwUhJoi8DoqRuzvGO+i/NubQVV3KBwLYL+FNHhGG6jtNelbnLzTtE8KQgup4Z14mnLy/5qHZz6XJyK1MG3+2YMmMKkJ5gKJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4lSIVSefzI4Ll1HhaaSr0w8grOd298QhYfjbJ6Ed4kI=;
+ b=W08AdrhAIyjc/KUOoA2YEWqt39jcuQCH/fdLvvoS2uwBouAOv6MvZWB1BIYffRZeWRg8ayBPExxeRXNfECBMNicg+zJKsIpFjutAeIqsOYbFoErpWY5FaaRP/j9bt4MogiV7g14FBP9V0PKrkfGkJe6Aa0441SDXGYpi+Dui1RrBZdnDzR10rVzi/QKHzMpt+kxHnVQSayxWoQ5TdHQPf1xUVe+KCURoHb6t2gFcJTv16OEn7WURAa3DWiKFmGW1sf0dkE2+9VVgWhxXp0RwfEjdZG7k+D2ztH5o/fzCEy+bL+WN9vz2AKtT9Rbh/nsKpvXvxwlyH/+oRvFKEKpTuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4lSIVSefzI4Ll1HhaaSr0w8grOd298QhYfjbJ6Ed4kI=;
+ b=I0+9DS8g9d+xE1EWuRciBiZ/fBbTixbDOekBj2L908V6KWdAN/jVLcm892mj2lRykpqIym51Z93j4SlPPatNPwTdM6pOEGpkHxUJ6VuacVv9cUg+o9aQRDSxp0OhMi4SGawDXSZFPtMxOoaSvlP0hVowtkxOcojUk7xsj3l2nXc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by AM8PR04MB7891.eurprd04.prod.outlook.com (2603:10a6:20b:237::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Mon, 26 Feb
+ 2024 00:28:50 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::1232:ed97:118f:72fd]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::1232:ed97:118f:72fd%4]) with mapi id 15.20.7316.034; Mon, 26 Feb 2024
+ 00:28:50 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: rafael@kernel.org,
+	daniel.lezcano@linaro.org
+Cc: rui.zhang@intel.com,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH V2] thermal/drivers/qoriq: fix getting tmu range
+Date: Mon, 26 Feb 2024 08:36:57 +0800
+Message-Id: <20240226003657.3012880-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0039.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::9) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1708906456.git.daniel@makrotopia.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AM8PR04MB7891:EE_
+X-MS-Office365-Filtering-Correlation-Id: eee1fefd-8e38-41b8-1cf1-08dc3661e76d
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	O6HcQV5TiUNQyaLntKKV+SAx+uC0tYFG49Lr+Zs1DlWKHCFFTV9Myuep4MExCvpTWi+Jcysff8cxj/7JTNrP0yvH7VbmUFpHw5ZOugq2Ui+7fxLEKr7i4LKgW2mYIiYkJPmaKLvJZ2jUaDCBV+AUza9EluU4vHR8mpsR+snvN59HJvQu1y7qln2yPT+tjCpIRa7ZXpdz8E/9NSs2UEzXtX/XT/cx8xCSyh9v8LI9KdvIpEAXL2X1bQ+Zbj/46eSvEQqLs1IwPKcXx6ON5yYLgXbuBKkho3JO1UceKPhDr0s9MwMTrMCnW98TedeD+HIFkOB1EFtbkwMq2jTFt50agEkq+tYNoRt2TqAnx4DU2XMWF4ohbhocjJijbvcBykRO0HALkNo1GpaxmOMW/M7TwIhB1HYs5GSM5qvnRcI56varYMslO4qrAsdq+boYzvl8kqEHYjLJrJNjhy1e+LaPyOg5g1NEu6Pu3adAhvi72vx4TugSRdFjjqxY1vSl2PQucIJRUE5wW2+6EvdAMxmWRffhi7awVPF3x2GDGNWvCSbxr/TgjQGPpT4/IU1lFialu2oV08xLATvN7PfHeCl17wSZ21xCbRz0WcfbjHLBVCEMTe66UTnsrpQQSWpngVC61yrYN/468jZkqYHOdSPrsNstUIxBU0okgOPdJJ7s1wP+ErHoOsztCYe2jbd5idhdk35oiKoWBq8KsCiCbXkm8A==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aPrPbdHtgJXsqI+eD1oRcO7DzGCog+d1dQ8UZfvd89Lz9+sOAsIqKUumTtuO?=
+ =?us-ascii?Q?1aBF5uVHoAvyXlg1XFBTRrUSb062jXmvv/UOWk4KkqNl0m/2pbRf9tVygzKC?=
+ =?us-ascii?Q?Hc9SJlvKFBnism9EGHr8T74lS3HiQhfxhtKd1g8kQ0YRZhOTx+uyaY+ysyP3?=
+ =?us-ascii?Q?BKXQKEEe0xbb7amAvEyuk1+6PRS7Ebktow0BDbDcB24RA4GVQhDujaJIG505?=
+ =?us-ascii?Q?DFRxFu0J2C5Pt8JM5pu3BGp3g/iagpWVALmq7ueBii6aGYiUFQFFpu8Wp03S?=
+ =?us-ascii?Q?hoM9ERnu54GYFfkdolHc5E6cfWYWuGCgTT4oMVMpsCFMegPPrlmWooIWFzjP?=
+ =?us-ascii?Q?mU1lKN/+Zq6A/5VSSYhb+b5nKxOdoYbeVO4jxX69J3QpkCflVCrKCMzOAGA0?=
+ =?us-ascii?Q?EbaMSMlldh98mouI34A8cz+aWD7bGpTaNWV5xANSmqHp2w8ze4QbgW0emMxh?=
+ =?us-ascii?Q?cbc9sFpozbwB6nZcLGquOEqA/F3x9MkOkmEz/IdJiZg0YAR/rdoygUHjRF9h?=
+ =?us-ascii?Q?6z19gFDpn5VxS6eicBynDjdgolpnLT1d3q4ZCZ59p/xiOhzb1on5+Lh2WFxA?=
+ =?us-ascii?Q?Aq1NC5/w2LR8C4KqwQvWhQiHA17LzkfU+2iEPGB8V8HLLd9NOzJjGk3BBzI4?=
+ =?us-ascii?Q?zSpZyGViwUSNrDkJdS7h/MVEcti7UEL6B38irMna6DpiZAYr9c8thiGxQ5d0?=
+ =?us-ascii?Q?IZ51PW8b6y7NT1EZFSS4eD7WF8otZwPe43tmDT4TURTO46jvaL6VXmA5vbqD?=
+ =?us-ascii?Q?mAvYfoGgQpnGfYAgUj/pYaMW6RQb73J/Aw33cIrfWRW+QkLxmlvbrwm4/q6D?=
+ =?us-ascii?Q?UqsmW3icIoK4CDUFeIG9jPpLcTBKU3sOADlRWezEJu7XocZ3MnNfHqsZV0KF?=
+ =?us-ascii?Q?2y8r1OoQGLMME9JsIqYDXMt6whJfgrkVejlK8I/Gfn8oqFAccQJzntXLQHOx?=
+ =?us-ascii?Q?SVWekujrHuU/RxtmUvWtcnNQtHCgnKdeJlakUQBweIWj8kvPkTaEnhJr8R8n?=
+ =?us-ascii?Q?tmqsRnQRm1RAx4+urW0HQDb9gTT4+GGOOrv1kUmb5xGoEw18+E08Lus2KPK8?=
+ =?us-ascii?Q?qafbirgj1y9tVOV0wVTvh6afAAlpSeSvzAP9PiOHH/XUqcjwXb3o6g0QOqAY?=
+ =?us-ascii?Q?inGQjreUwZ3S6NQapA03dKFE2ZgWdQxXJm6woEEdDliXohezlBhErgNuWwp8?=
+ =?us-ascii?Q?9rB6fKoksYmSIL/l6qC5lYtsyvMXNMowQQT63BesU49C7/rPdyufIhAz7IcB?=
+ =?us-ascii?Q?WAz71LKAY3+DabJjyrdmXb7Qo/KXutEJrz5kMVaowqRHEg9x7K5wbBwjBJ3E?=
+ =?us-ascii?Q?iIqSGWavCC7R3bVHf6uSmSgO05KLGvlFDXO7uG5mkw60wz5DGlpc2Knu8XCz?=
+ =?us-ascii?Q?khnbIVQmZUZuEasyM7UZTfhk3gTf48XNjnQ7bpBzWsTh8HHk+29gWhTjL4CP?=
+ =?us-ascii?Q?5lzLeMDlghBLYOeqI6GLrt9KbY5+tzlUZcICVQ3g1heNpaNOjoIV7gxHNT4c?=
+ =?us-ascii?Q?JpyJcTBeu0Ps+3Y7XO4ykvDVjxlxRnLRT71i+e23+WMHVMxFGh5Nc1/sDmfm?=
+ =?us-ascii?Q?lzl3SqVIg76ko0t9JcLg6g/6Uxn4xdbXZW2KbfJq?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eee1fefd-8e38-41b8-1cf1-08dc3661e76d
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 00:28:50.7229
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1Tpq3F07LHF7AeYiPnVgPo45H0I4FVcFJu6VasENgdOk2byP767mupyuDHMoPIU8inj84/KbTIG/zYo5QhDCOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7891
 
-In an ideal world we would like UBI to be used where ever possible on a
-NAND chip. And with UBI support in ARM Trusted Firmware and U-Boot it
-is possible to achieve an (almost-)all-UBI flash layout. Hence the need
-for a way to also use UBI volumes to store board-level constants, such
-as MAC addresses and calibration data of wireless interfaces.
+From: Peng Fan <peng.fan@nxp.com>
 
-Add UBI volume NVMEM driver module exposing UBI volumes as NVMEM
-providers. Allow UBI devices to have a "volumes" firmware subnode with
-volumes which may be compatible with "nvmem-cells".
-Access to UBI volumes via the NVMEM interface at this point is
-read-only, and it is slow, opening and closing the UBI volume for each
-access due to limitations of the NVMEM provider API.
+TMU Version 1 has 4 TTRCRs, while TMU Version >=2 has 16 TTRCRs.
+So limit the len to 4 will report "invalid range data" for i.MX93.
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+This patch drop the local array with allocated ttrcr array and
+able to support larger tmu ranges.
+
+Fixes: f12d60c81fce ("thermal/drivers/qoriq: Support version 2.1")
+Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/mtd/ubi/Kconfig  |  13 +++
- drivers/mtd/ubi/Makefile |   1 +
- drivers/mtd/ubi/nvmem.c  | 191 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 205 insertions(+)
- create mode 100644 drivers/mtd/ubi/nvmem.c
 
-diff --git a/drivers/mtd/ubi/Kconfig b/drivers/mtd/ubi/Kconfig
-index 7499a540121e8..e28a3af83c0eb 100644
---- a/drivers/mtd/ubi/Kconfig
-+++ b/drivers/mtd/ubi/Kconfig
-@@ -113,4 +113,17 @@ config MTD_UBI_FAULT_INJECTION
- 	   testing purposes.
+V2:
+ Rebased to linux-next
+ Add T-b
+ Link to v1: https://lore.kernel.org/all/20231020081337.3141488-1-peng.fan@oss.nxp.com/
+
+ drivers/thermal/qoriq_thermal.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index 8552d2ca87ad..0cc883818878 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -62,6 +62,9 @@
+ #define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
+ 					   * Control Register
+ 					   */
++#define NUM_TTRCR_V1	4
++#define NUM_TTRCR_MAX	16
++
+ #define REGS_IPBRR(n)		(0xbf8 + 4 * (n)) /* IP Block Revision
+ 						   * Register n
+ 						   */
+@@ -79,6 +82,7 @@ struct qoriq_sensor {
  
- 	   If in doubt, say "N".
-+
-+config MTD_UBI_NVMEM
-+	tristate "UBI virtual NVMEM"
-+	default n
-+	depends on NVMEM
-+	help
-+	   This option enabled an additional driver exposing UBI volumes as NVMEM
-+	   providers, intended for platforms where UBI is part of the firmware
-+	   specification and used to store also e.g. MAC addresses or board-
-+	   specific Wi-Fi calibration data.
-+
-+	   If in doubt, say "N".
-+
- endif # MTD_UBI
-diff --git a/drivers/mtd/ubi/Makefile b/drivers/mtd/ubi/Makefile
-index 543673605ca72..4b51aaf00d1a2 100644
---- a/drivers/mtd/ubi/Makefile
-+++ b/drivers/mtd/ubi/Makefile
-@@ -7,3 +7,4 @@ ubi-$(CONFIG_MTD_UBI_FASTMAP) += fastmap.o
- ubi-$(CONFIG_MTD_UBI_BLOCK) += block.o
+ struct qoriq_tmu_data {
+ 	int ver;
++	u32 ttrcr[NUM_TTRCR_MAX];
+ 	struct regmap *regmap;
+ 	struct clk *clk;
+ 	struct qoriq_sensor	sensor[SITES_MAX];
+@@ -255,17 +259,17 @@ static int qoriq_tmu_calibration(struct device *dev,
+ 				 struct qoriq_tmu_data *data)
+ {
+ 	int i, val, len;
+-	u32 range[4];
+ 	const u32 *calibration;
+ 	struct device_node *np = dev->of_node;
  
- obj-$(CONFIG_MTD_UBI_GLUEBI) += gluebi.o
-+obj-$(CONFIG_MTD_UBI_NVMEM) += nvmem.o
-diff --git a/drivers/mtd/ubi/nvmem.c b/drivers/mtd/ubi/nvmem.c
-new file mode 100644
-index 0000000000000..5820a170d2512
---- /dev/null
-+++ b/drivers/mtd/ubi/nvmem.c
-@@ -0,0 +1,191 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (c) 2023 Daniel Golle <daniel@makrotopia.org>
-+ */
-+
-+/* UBI NVMEM provider */
-+#include "ubi.h"
-+#include <linux/nvmem-provider.h>
-+#include <asm/div64.h>
-+
-+/* List of all NVMEM devices */
-+static LIST_HEAD(nvmem_devices);
-+static DEFINE_MUTEX(devices_mutex);
-+
-+struct ubi_nvmem {
-+	struct nvmem_device *nvmem;
-+	int ubi_num;
-+	int vol_id;
-+	int usable_leb_size;
-+	struct list_head list;
-+};
-+
-+static int ubi_nvmem_reg_read(void *priv, unsigned int from,
-+			      void *val, size_t bytes)
-+{
-+	uint32_t bytes_left, offs, to_read;
-+	struct ubi_nvmem *unv = priv;
-+	struct ubi_volume_desc *desc;
-+	uint64_t lnum = from;
-+	int err = 0;
-+
-+	desc = ubi_open_volume(unv->ubi_num, unv->vol_id, UBI_READONLY);
-+	if (IS_ERR(desc))
-+		return PTR_ERR(desc);
-+
-+	bytes_left = bytes;
-+	offs = do_div(lnum, unv->usable_leb_size);
-+	while (bytes_left) {
-+		to_read = unv->usable_leb_size - offs;
-+
-+		if (to_read > bytes_left)
-+			to_read = bytes_left;
-+
-+		err = ubi_read(desc, lnum, val, offs, to_read);
-+		if (err)
-+			break;
-+
-+		lnum += 1;
-+		offs = 0;
-+		bytes_left -= to_read;
-+		val += to_read;
-+	}
-+	ubi_close_volume(desc);
-+
-+	if (err)
-+		return err;
-+
-+	return bytes_left == 0 ? 0 : -EIO;
-+}
-+
-+static int ubi_nvmem_add(struct ubi_volume_info *vi)
-+{
-+	struct device_node *np = dev_of_node(vi->dev);
-+	struct nvmem_config config = {};
-+	struct ubi_nvmem *unv;
-+	int ret;
-+
-+	if (!np)
-+		return 0;
-+
-+	if (!of_get_child_by_name(np, "nvmem-layout"))
-+		return 0;
-+
-+	if (WARN_ON_ONCE(vi->usable_leb_size <= 0) ||
-+	    WARN_ON_ONCE(vi->size <= 0))
-+		return -EINVAL;
-+
-+	unv = kzalloc(sizeof(struct ubi_nvmem), GFP_KERNEL);
-+	if (!unv)
-+		return -ENOMEM;
-+
-+	config.id = NVMEM_DEVID_NONE;
-+	config.dev = vi->dev;
-+	config.name = dev_name(vi->dev);
-+	config.owner = THIS_MODULE;
-+	config.priv = unv;
-+	config.reg_read = ubi_nvmem_reg_read;
-+	config.size = vi->usable_leb_size * vi->size;
-+	config.word_size = 1;
-+	config.stride = 1;
-+	config.read_only = true;
-+	config.root_only = true;
-+	config.ignore_wp = true;
-+	config.of_node = np;
-+
-+	unv->ubi_num = vi->ubi_num;
-+	unv->vol_id = vi->vol_id;
-+	unv->usable_leb_size = vi->usable_leb_size;
-+	unv->nvmem = nvmem_register(&config);
-+	if (IS_ERR(unv->nvmem)) {
-+		ret = dev_err_probe(vi->dev, PTR_ERR(unv->nvmem),
-+				    "Failed to register NVMEM device\n");
-+		kfree(unv);
-+		return ret;
-+	}
-+
-+	mutex_lock(&devices_mutex);
-+	list_add_tail(&unv->list, &nvmem_devices);
-+	mutex_unlock(&devices_mutex);
-+
-+	return 0;
-+}
-+
-+static void ubi_nvmem_remove(struct ubi_volume_info *vi)
-+{
-+	struct ubi_nvmem *unv_c, *unv = NULL;
-+
-+	mutex_lock(&devices_mutex);
-+	list_for_each_entry(unv_c, &nvmem_devices, list)
-+		if (unv_c->ubi_num == vi->ubi_num && unv_c->vol_id == vi->vol_id) {
-+			unv = unv_c;
-+			break;
-+		}
-+
-+	if (!unv) {
-+		mutex_unlock(&devices_mutex);
-+		return;
-+	}
-+
-+	list_del(&unv->list);
-+	mutex_unlock(&devices_mutex);
-+	nvmem_unregister(unv->nvmem);
-+	kfree(unv);
-+}
-+
-+/**
-+ * nvmem_notify - UBI notification handler.
-+ * @nb: registered notifier block
-+ * @l: notification type
-+ * @ns_ptr: pointer to the &struct ubi_notification object
-+ */
-+static int nvmem_notify(struct notifier_block *nb, unsigned long l,
-+			 void *ns_ptr)
-+{
-+	struct ubi_notification *nt = ns_ptr;
-+
-+	switch (l) {
-+	case UBI_VOLUME_RESIZED:
-+		ubi_nvmem_remove(&nt->vi);
-+		fallthrough;
-+	case UBI_VOLUME_ADDED:
-+		ubi_nvmem_add(&nt->vi);
-+		break;
-+	case UBI_VOLUME_SHUTDOWN:
-+		ubi_nvmem_remove(&nt->vi);
-+		break;
-+	default:
-+		break;
-+	}
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block nvmem_notifier = {
-+	.notifier_call = nvmem_notify,
-+};
-+
-+static int __init ubi_nvmem_init(void)
-+{
-+	return ubi_register_volume_notifier(&nvmem_notifier, 0);
-+}
-+
-+static void __exit ubi_nvmem_exit(void)
-+{
-+	struct ubi_nvmem *unv, *tmp;
-+
-+	mutex_lock(&devices_mutex);
-+	list_for_each_entry_safe(unv, tmp, &nvmem_devices, list) {
-+		nvmem_unregister(unv->nvmem);
-+		list_del(&unv->list);
-+		kfree(unv);
-+	}
-+	mutex_unlock(&devices_mutex);
-+
-+	ubi_unregister_volume_notifier(&nvmem_notifier);
-+}
-+
-+module_init(ubi_nvmem_init);
-+module_exit(ubi_nvmem_exit);
-+MODULE_DESCRIPTION("NVMEM layer over UBI volumes");
-+MODULE_AUTHOR("Daniel Golle");
-+MODULE_LICENSE("GPL");
+ 	len = of_property_count_u32_elems(np, "fsl,tmu-range");
+-	if (len < 0 || len > 4) {
++	if (len < 0 || (data->ver == TMU_VER1 && len > NUM_TTRCR_V1) ||
++	    (data->ver > TMU_VER1 && len > NUM_TTRCR_MAX)) {
+ 		dev_err(dev, "invalid range data.\n");
+ 		return len;
+ 	}
+ 
+-	val = of_property_read_u32_array(np, "fsl,tmu-range", range, len);
++	val = of_property_read_u32_array(np, "fsl,tmu-range", data->ttrcr, len);
+ 	if (val != 0) {
+ 		dev_err(dev, "failed to read range data.\n");
+ 		return val;
+@@ -273,7 +277,7 @@ static int qoriq_tmu_calibration(struct device *dev,
+ 
+ 	/* Init temperature range registers */
+ 	for (i = 0; i < len; i++)
+-		regmap_write(data->regmap, REGS_TTRnCR(i), range[i]);
++		regmap_write(data->regmap, REGS_TTRnCR(i), data->ttrcr[i]);
+ 
+ 	calibration = of_get_property(np, "fsl,tmu-calibration", &len);
+ 	if (calibration == NULL || len % 8) {
 -- 
-2.44.0
+2.37.1
+
