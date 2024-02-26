@@ -1,135 +1,151 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C3821292FB;
-	Mon, 26 Feb 2024 14:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA16129A60;
+	Mon, 26 Feb 2024 14:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708956275; cv=none; b=GtN6FOBwhvjDUBJ/4uxEQSTEMSPyZgwYOD8yIcSTrFmzwWqkMT14F11ijikPBmndX7Wb4bnBfIHtdeIAakCzfr04SMliMotA1l1chHQ5gjUTzXwJ3IQ75ZuZdJN0cxAx7tPsTclyE7X+O/B0P9mPg/KjI7URFSnw1YDlB1TqQl4=
+	t=1708956310; cv=none; b=i9Q3QJNGEsz4jhrAr1gg1ctX2CysOUd6tdjo6UTrU/GqCaqJjgBxfDdah00WwyIYB59LEnlT0xJfAugWE4SqTaPDEfEvnQ16JC5sBW/IxB24cBW/+Fu5y+z3DxVwarNSzE+WwV2NF2VaxU9gg+5Zlr93W+66fZRncbdYhaufeWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708956275; c=relaxed/simple;
-	bh=eE9D94MSGkexm4+cS9xd5Yz5/AUzCiXROv8azBoWYqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jQUtUXtgFfXrPvZyB/5l4TS44t6nRIM3gfB/APXYzgZ8+eKil7gHWgEfSBs5bfXKPeRRVIiK6h38hmXbuLg35dC55g42sMV1PD27VBBZZKMdZR2ZOIvuCVlJa7+IomxD7L89elmWKX2IC7wBy99vdSOrQfPYwTMT2xtsH8E5x8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 543F5DA7;
-	Mon, 26 Feb 2024 06:05:11 -0800 (PST)
-Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC99E3F762;
-	Mon, 26 Feb 2024 06:04:30 -0800 (PST)
-Date: Mon, 26 Feb 2024 14:04:28 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 4/5] firmware: imx: support BBM module
-Message-ID: <ZdyabHM25C9TF7cm@pluto>
-References: <20240202-imx95-bbm-misc-v1-0-3cb743020933@nxp.com>
- <20240202-imx95-bbm-misc-v1-4-3cb743020933@nxp.com>
+	s=arc-20240116; t=1708956310; c=relaxed/simple;
+	bh=jHSce+q5MjsDAgQbyi7uaNk3h/+HF3xzKrNAxfo4btM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=beyxF2iSgR4Q4NlBj9GDb/a/LQaAfTHhjdwVFLe6aZMMuiAS2aCRUiEEQupBpMnXWTbv7M7nTlUFWep2Rsyij63ROJGdEZWscQ/IrWMuDASAfBBTFRsAnEbNHSogjWeb7EUfeDg8r3wOvdUoMBSZjTvAz4G//N82BuHiqSFbaJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J/rebweo; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J/rebweo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708956309; x=1740492309;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jHSce+q5MjsDAgQbyi7uaNk3h/+HF3xzKrNAxfo4btM=;
+  b=J/rebweo0izsGCO/aghdtHTB2h42ZI6mRGY+GWnkfNYif56a+Kvau6+P
+   sl2mpogGoo/uRBD65+v94G1/Y4UKOaGHLj5kfrsdLyKOvTMqVP+UW59Z4
+   W5WETM0/JFpEroBdyS1S1hPrMmdAALzxErsLhrrWRMY74J/3e70Sq5yeS
+   WiiVP0KE48zJ1vcpIFD9sQQ0lII601RLW59vwRmdbnm76jEACW73u97gl
+   mWNo17OckNjAidU8mv4Mxk9xB2IrxoSI6JiyRmOj2N7Dk2MHDuLTVB/En
+   FpSQcJwA/cD9YJPOEdaiKbj5j7gq/V1Gm+VKyLkrZ0Y9xZNX+wmchrW8+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3789553"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="3789553"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 06:04:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="37468062"
+Received: from dukhanki-mobl.amr.corp.intel.com (HELO [10.209.30.102]) ([10.209.30.102])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 06:04:54 -0800
+Message-ID: <d9b0df06-da68-4729-8aac-2a77e890e152@intel.com>
+Date: Mon, 26 Feb 2024 06:04:54 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240202-imx95-bbm-misc-v1-4-3cb743020933@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 10/15] x86/sgx: Add EPC reclamation in cgroup
+ try_charge()
+Content-Language: en-US
+To: "Huang, Kai" <kai.huang@intel.com>, "tj@kernel.org" <tj@kernel.org>,
+ "jarkko@kernel.org" <jarkko@kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+ "hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>,
+ "tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
+ "mkoutny@suse.com" <mkoutny@suse.com>, "Mehta, Sohil"
+ <sohil.mehta@intel.com>,
+ "haitao.huang@linux.intel.com" <haitao.huang@linux.intel.com>,
+ "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "anakrish@microsoft.com" <anakrish@microsoft.com>,
+ "Zhang, Bo" <zhanb@microsoft.com>,
+ "kristen@linux.intel.com" <kristen@linux.intel.com>,
+ "yangjie@microsoft.com" <yangjie@microsoft.com>,
+ "Li, Zhiquan1" <zhiquan1.li@intel.com>,
+ "chrisyan@microsoft.com" <chrisyan@microsoft.com>
+References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
+ <20240205210638.157741-11-haitao.huang@linux.intel.com>
+ <c5d03171473821ebc9cb79e3dad4d1bf0074e674.camel@intel.com>
+ <op.2jjzaqdwwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <4db8493b-35a2-474f-997c-5e6ac1b8bd11@intel.com>
+ <op.2jkfeezjwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <c913193c0560c4372d2fdb31e9edb28bcb419f50.camel@intel.com>
+ <op.2jlti6g9wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <7b53e155-2622-4acb-b7c9-d22e623e4cb3@intel.com>
+ <op.2jqdjjd8wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <48faaea8b24f032baa6a858a2909a5b4ace769c6.camel@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <48faaea8b24f032baa6a858a2909a5b4ace769c6.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 02, 2024 at 02:34:42PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> The BBM module provides RTC and BUTTON feature. To i.MX95, this module
-> is managed by System Manager. Linux could use i.MX SCMI BBM Extension
-> protocol to use RTC and BUTTON feature.
-> 
-> This driver is to use SCMI interface to get/set RTC, enable pwrkey.
-> 
+On 2/26/24 03:36, Huang, Kai wrote:
+>> In case of overcomitting, even if we always reclaim from the same cgroup  
+>> for each fault, one group may still interfere the other: e.g., consider an  
+>> extreme case in that group A used up almost all EPC at the time group B  
+>> has a fault, B has to fail allocation and kill enclaves.
+> If the admin allows group A to use almost all EPC, to me it's fair to say he/she
+> doesn't want to run anything inside B at all and it is acceptable enclaves in B
+> to be killed.
 
-Hi some further remarks questin about pwrkey down below.
+Folks, I'm having a really hard time following this thread.  It sounds
+like there's disagreement about when to do system-wide reclaim.  Could
+someone remind me of the choices that we have?  (A proposed patch would
+go a _long_ way to helping me understand)
 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/firmware/imx/Makefile |   1 +
->  drivers/firmware/imx/sm-bbm.c | 317 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 318 insertions(+)
-> 
- [snip]
+Also, what does the core mm memcg code do?
 
-> +static int scmi_imx_bbm_pwrkey_init(struct scmi_device *sdev)
-> +{
-> +	const struct scmi_handle *handle = sdev->handle;
-> +	struct device *dev = &sdev->dev;
-> +	struct scmi_imx_bbm *bbnsm = dev_get_drvdata(dev);
-> +	struct input_dev *input;
-> +	int ret;
-> +
-> +	if (device_property_read_u32(dev, "linux,code", &bbnsm->keycode)) {
-> +		bbnsm->keycode = KEY_POWER;
-> +		dev_warn(dev, "key code is not specified, using default KEY_POWER\n");
-> +	}
+Last, what is the simplest (least amount of code) thing that the SGX
+cgroup controller could implement here?
 
-This linux,code binding prop is searched in the SCMI device node, BUT
-your BB< protocol binding does NOT mention it at all.
-
-> +
-> +	INIT_DELAYED_WORK(&bbnsm->check_work, scmi_imx_bbm_pwrkey_check_for_events);
-> +
-> +	input = devm_input_allocate_device(dev);
-> +	if (!input) {
-> +		dev_err(dev, "failed to allocate the input device for SCMI IMX BBM\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	input->name = dev_name(dev);
-> +	input->phys = "bbnsm-pwrkey/input0";
-> +	input->id.bustype = BUS_HOST;
-> +
-> +	input_set_capability(input, EV_KEY, bbnsm->keycode);
-> +
-> +	ret = devm_add_action_or_reset(dev, scmi_imx_bbm_pwrkey_act, bbnsm);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register remove action\n");
-> +		return ret;
-> +	}
-> +
-> +	bbnsm->input = input;
-> +
-> +	ret = handle->notify_ops->devm_event_notifier_register(sdev, SCMI_PROTOCOL_IMX_BBM,
-> +							       SCMI_EVENT_IMX_BBM_BUTTON,
-> +							       NULL, &bbnsm->nb);
-> +
-> +	if (ret)
-> +		dev_err(dev, "Failed to register BBM Button Events %d:", ret);
-> +
-> +	ret = input_register_device(input);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register input device\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-
-I suppose you cannot use std SystemPower protocol and scmi_power_control
-existent upstream driver because you are configuring the event keycode that
-is associated with your button press event using linux,code DT properies
-looked up above, right ? (which you need to define somewhere as said
-above..)
-
-I was thinking that maybe handling events associated with generic button-presses
-could be done via some std SCMI protocols like PINCTRL/GPIO (IF IT HAD NOTIFICATIONS)
-and some custom SCMI gpio-keys driver in the future (not now clearly :D)...thoughts ?
-
-Thanks,
-Cristian
