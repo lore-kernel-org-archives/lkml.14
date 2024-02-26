@@ -1,165 +1,212 @@
-Received: from smtp2.infineon.com (smtp2.infineon.com [217.10.52.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4007A1D54B;
-	Mon, 26 Feb 2024 12:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.52.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AB57F475;
+	Mon, 26 Feb 2024 12:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708951510; cv=none; b=l3ruT69LkFlUH88XUZo+8shGVcdimbnSOai1JAvrRPddJXxIMd1QTEktLrbU+mZbsnyUQrnLaBH7jlwNPrAnblW/NokPBnxvrFUDVEk5PrpalyC+SUrfLe/cQ5Px515YGhPL5nTqNM48WgtTerErzl07w9UtUah+4wK+kR2Nnxo=
+	t=1708951523; cv=none; b=pwoHvbtWGMmGjkzl4EwA0/yjlkWkYh1Z/8mz8sKzi+6cMo7lUbzpsiP9iz+bRGghQTc5jzGwWNDQlNYeDHanlLrxrvlmmNqC3nK7BNcj8f8X8V0hCdvMYb5voSbayxFpwfPV8sFglDd4uBm/mXW9ySDiBmzIGWaxsWYpNuUeFoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708951510; c=relaxed/simple;
-	bh=uopANXtSJT51k4uIm3FZj2qxgzsKx67DpU6Vep4VvQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=n254ky+SS0yX9HR7ona3hZvArTcc2O2W7Ip4mUWcF863vZgeQOP6KyZ0U2XgpRX34k2uxskY4T6T9Qvzb0KLLpJg6k47Yjt4xtl1HiPUtruvY1bD+l8MTnPjeoUAbpsLDnss6qc7fuK/DzbPtSQGpI5RhmHIM3BGF1bzDO4tJtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com; spf=pass smtp.mailfrom=infineon.com; dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b=A+BOZT7K; arc=none smtp.client-ip=217.10.52.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infineon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infineon.com
+	s=arc-20240116; t=1708951523; c=relaxed/simple;
+	bh=TZVUR9ocsVnQ0pHZ0RxO5osTV317Ybr1stOPtvhwMVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t46Slly8HLYvTB+l2aSCZ8zafU9GX8dKLscZ/VQVgmWGzScMcQQhnrBFf/Dh+QEYfGXlstAZ1Wk9sJT6ap53Uodfko8my/vW6v8JyG3CFvEdhYBoRgDcO2uuzD7y8erOZZjU3Z8W/ykjJIXeviyWHVxPtXkVK83+I/7BDjVFl8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFATgu95; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=infineon.com header.i=@infineon.com header.b="A+BOZT7K"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=infineon.com; i=@infineon.com; q=dns/txt; s=IFXMAIL;
-  t=1708951509; x=1740487509;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=uopANXtSJT51k4uIm3FZj2qxgzsKx67DpU6Vep4VvQU=;
-  b=A+BOZT7KA3BZTWASeXZ5D2m8w64M+6DJk98LVJ/ywMFq2UP4H12ejBH6
-   nKnXi1+PJ9LrQX+4Fe/1MaN1RcWauWCFro/OGjQ5Tchdre1zVH5J0bzbc
-   IdjUlS7RDap4wzCamWWrLUb0cHu3vVg5EZSC7aLAk2LprAs1u07WlHzvi
-   Q=;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="69010008"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705359600"; 
-   d="scan'208";a="69010008"
-Received: from unknown (HELO MUCSE814.infineon.com) ([172.23.29.40])
-  by smtp2.infineon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 13:43:57 +0100
-Received: from KLUSE844.infineon.com (172.28.156.184) by MUCSE814.infineon.com
- (172.23.29.40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 26 Feb
- 2024 13:43:56 +0100
-Received: from [10.160.239.31] (10.160.239.31) by KLUSE844.infineon.com
- (172.28.156.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 26 Feb
- 2024 13:43:56 +0100
-Message-ID: <fd34e752-b6ce-4880-9ef5-4feda985bf42@infineon.com>
-Date: Mon, 26 Feb 2024 13:43:55 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFATgu95"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d22b8c6e0dso30821091fa.2;
+        Mon, 26 Feb 2024 04:45:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708951519; x=1709556319; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5inM5MIJdH95rtY5NIhYJAB5BjouiCH5y6Mv4miue6E=;
+        b=CFATgu955PKZ5Q3KOI/IJrC4V/mVJUHH78HzHoPcgVhmJ47kFoWlHNbJHqKMJBCMt3
+         xfXtTgcAltKvTw178tvGpS3pgHgYwneheFHXE8/fZRM+nR5+MnlnYEFkkRkaIlh+SG7o
+         CPtYYh7FuDIHRaAhtLm8OaA4e+kON0V/5RDnaxh3LMLI7Yg/cD+oH7ID69xEHqzAaHOv
+         uQDnxBV2h5CKt3V56cjDrlfPZbFNZXIc3yhGDNNm1z2Y9AcHKRjsxoCfjSx1GccREqzK
+         aLh1wN75U1qLh0d5YYPFOS5Hb7tvXC+CuFEkdUScAG/L5ZSbWUkFWB+indjKd7n6mwDc
+         laug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708951519; x=1709556319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5inM5MIJdH95rtY5NIhYJAB5BjouiCH5y6Mv4miue6E=;
+        b=T85w89LF+2Ak4Pg2bk1QcrJGoNapnimwcuMk/aUV1mdJVr8MY/7L/uQhdOsEFeFJnS
+         SXrS4yU404YrP8YfMuutu3wHk6OyCKMVyhKb9TDCFlTNWLMF/DYCrtsicZT93K78LZN/
+         k6/EFV75GiMMuGfQrmp/mcgP6sA2teOItULNoYRU6Zt2TFchSyUbNcl8qPYlTNpIc27S
+         EfLPqRmlj/p86Kkyvp6VG5qtTG63H/lm/7vfV++0FuJR5EDFkvpbnieBWn56MOtRrA+R
+         58KSIlx0IvZjBFzfCGFTGNMmXaKfJeDLdgoZW9iquOHlomwCj+TgGeFrMwVsX3DY1K6B
+         idLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwL6czKDZvcJvlFmsGYvj5UJKFd8MyUikkFWJXfvBWg2VOR52U2A3fdxdSwTf+cPugRzqkmzy95b8RiBNfsdWHma3L0sw/XV/bTskNrB85c24pHKHujTTzK9moWPCGcr+1fS732lcemdhe7S48cLn08hyRSnNGwim5xjNHt8WOD0pJFI4U/GPX3hXngD+iNRxHWAOBkirlbO5nstAuUKmcGs+3Qi1TAEhz
+X-Gm-Message-State: AOJu0YyQC72C4iP+P3PjcWpcH0d04NFCA4qUlXh9Kly4xOSSa/MNAP6s
+	dUDQs6HeT5/jEiycxQLN5JZz+WLqwgSQxkwY4ZsoZsAFkmSIc9eM
+X-Google-Smtp-Source: AGHT+IFTcXELJgIuddDmuX7MVZviLk/f/Js23B+qxWOY8L55q/M6wGDtHgANSMV7Pitn4EaDSF8hvA==
+X-Received: by 2002:a05:6512:3605:b0:512:fccc:f289 with SMTP id f5-20020a056512360500b00512fcccf289mr1822609lfs.6.1708951519358;
+        Mon, 26 Feb 2024 04:45:19 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id f21-20020a193815000000b00512d8cecd78sm856365lfa.197.2024.02.26.04.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 04:45:18 -0800 (PST)
+Date: Mon, 26 Feb 2024 15:45:16 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Marek Vasut <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev
+Subject: Re: [PATCH v3 1/5] PCI: dwc: Refactor dw_pcie_edma_find_chip() API
+Message-ID: <fielxplkgrvz5qmqrrq5ahmah5yqx7anjylrlcqyev2z2cl2wo@3ltyl242vkba>
+References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
+ <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] tpm: protect against locality counter underflow
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>, Lino Sanfilippo
-	<l.sanfilippo@kunbus.com>, Jarkko Sakkinen <jarkko@kernel.org>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, Sasha Levin <sashal@kernel.org>,
-	<linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Ross Philipson <ross.philipson@oracle.com>, Kanth Ghatraju
-	<kanth.ghatraju@oracle.com>, Peter Huewe <peterhuewe@gmx.de>
-References: <20240131170824.6183-1-dpsmith@apertussolutions.com>
- <20240131170824.6183-2-dpsmith@apertussolutions.com>
- <CYU3CFW08DAA.29DJY7SJYPJJZ@suppilovahvero>
- <2ba9a96e-f93b-48e2-9ca0-48318af7f9b1@kunbus.com>
- <ae3fecc4-7b76-4607-8749-045e17941923@infineon.com>
- <f52546f1-acca-4915-924c-cdd2018215d5@apertussolutions.com>
-From: Alexander Steffen <Alexander.Steffen@infineon.com>
-In-Reply-To: <f52546f1-acca-4915-924c-cdd2018215d5@apertussolutions.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MUCSE822.infineon.com (172.23.29.53) To
- KLUSE844.infineon.com (172.28.156.184)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
 
-On 23.02.2024 02:55, Daniel P. Smith wrote:
-> On 2/20/24 13:42, Alexander Steffen wrote:
->> On 02.02.2024 04:08, Lino Sanfilippo wrote:
->>> On 01.02.24 23:21, Jarkko Sakkinen wrote:
->>>
->>>>
->>>> On Wed Jan 31, 2024 at 7:08 PM EET, Daniel P. Smith wrote:
->>>>> Commit 933bfc5ad213 introduced the use of a locality counter to
->>>>> control when a
->>>>> locality request is allowed to be sent to the TPM. In the commit,
->>>>> the counter
->>>>> is indiscriminately decremented. Thus creating a situation for an
->>>>> integer
->>>>> underflow of the counter.
->>>>
->>>> What is the sequence of events that leads to this triggering the
->>>> underflow? This information should be represent in the commit message.
->>>>
->>>
->>> AFAIU this is:
->>>
->>> 1. We start with a locality_counter of 0 and then we call
->>> tpm_tis_request_locality()
->>> for the first time, but since a locality is (unexpectedly) already 
->>> active
->>> check_locality() and consequently __tpm_tis_request_locality() return
->>> "true".
->>
->> check_locality() returns true, but __tpm_tis_request_locality() returns
->> the requested locality. Currently, this is always 0, so the check for
->> !ret will always correctly indicate success and increment the
->> locality_count.
->>
->> But since theoretically a locality != 0 could be requested, the correct
->> fix would be to check for something like ret >= 0 or ret == l instead of
->> !ret. Then the counter will also be incremented correctly for localities
->> != 0, and no underflow will happen later on. Therefore, explicitly
->> checking for an underflow is unnecessary and hides the real problem.
->>
+Hi Manivannan
+
+On Mon, Feb 26, 2024 at 05:07:26PM +0530, Manivannan Sadhasivam wrote:
+> In order to add support for Hyper DMA (HDMA), let's refactor the existing
+> dw_pcie_edma_find_chip() API by moving the common code to separate
+> functions.
 > 
-> My apologies, but I will have to humbly disagree from a fundamental
-> level here. If a state variable has bounds, then those bounds should be
-> enforced when the variable is being manipulated.
-
-That's fine, but that is not what your proposed fix does.
-
-tpm_tis_request_locality and tpm_tis_relinquish_locality are meant to be 
-called in pairs: for every (successful) call to tpm_tis_request_locality 
-there *must* be a corresponding call to tpm_tis_relinquish_locality 
-afterwards. Unfortunately, in C there is no language construct to 
-enforce that (nothing like a Python context manager), so instead 
-locality_count is used to count the number of successful calls to 
-tpm_tis_request_locality, so that tpm_tis_relinquish_locality can wait 
-to actually relinquish the locality until the last expected call has 
-happened (you can think of that as a Python RLock, to stay with the 
-Python analogies).
-
-So if locality_count ever gets negative, that is certainly a bug 
-somewhere. But your proposed fix hides this bug, by allowing 
-tpm_tis_relinquish_locality to be called more often than 
-tpm_tis_request_locality. You could have added something like 
-BUG_ON(priv->locality_count == 0) before decrementing the counter. That 
-would really enforce the bounds, without hiding the bug, and I would be 
-fine with that.
-
-Of course, that still leaves the actual bug to be fixed. In this case, 
-there is no mismatch between the calls to tpm_tis_request_locality and 
-tpm_tis_relinquish_locality. It is just (as I said before) that the 
-counting of successful calls in tpm_tis_request_locality is broken for 
-localities != 0, so that is what you need to fix.
-
-> Assuming that every
-> path leading to the variable manipulation code has ensured proper
-> manipulation is just that, an assumption. When assumptions fail is how
-> bugs and vulnerabilities occur.
+> No functional change.
 > 
-> To your point, does this full address the situation experienced, I would
-> say it does not. IMHO, the situation is really a combination of both
-> patch 1 and patch 2, but the request was to split the changes for
-> individual discussion. We selected this one as being the fixes for two
-> reasons. First, it blocks the underflow such that when the Secure Launch
-> series opens Locality 2, it will get incremented at that time and the
-> internal locality tracking state variables will end up with the correct
-> values. Thus leading to the relinquish succeeding at kernel shutdown.
-> Second, it provides a stronger defensive coding practice.
+> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 52 +++++++++++++++++++++-------
+>  1 file changed, 39 insertions(+), 13 deletions(-)
 > 
-> Another reason that this works as a fix is that the TPM specification
-> requires the registers to be mirrored across all localities, regardless
-> of the active locality. While all the request/relinquishes for Locality
-> 0 sent by the early code do not succeed, obtaining the values via the
-> Locality 0 registers are still guaranteed to be correct.
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 250cf7f40b85..193fcd86cf93 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -880,7 +880,17 @@ static struct dw_edma_plat_ops dw_pcie_edma_ops = {
+>  	.irq_vector = dw_pcie_edma_irq_vector,
+>  };
+>  
+> -static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> +static void dw_pcie_edma_init_data(struct dw_pcie *pci)
+> +{
+> +	pci->edma.dev = pci->dev;
+> +
+> +	if (!pci->edma.ops)
+> +		pci->edma.ops = &dw_pcie_edma_ops;
+> +
+> +	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+> +}
+> +
+> +static int dw_pcie_edma_find_mf(struct dw_pcie *pci)
+>  {
+>  	u32 val;
+>  
+> @@ -900,24 +910,27 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+>  	else
+>  		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
 > 
-> v/r,
-> dps
 
+> -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
+> -		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> -
+> -		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> -	} else if (val != 0xFFFFFFFF) {
+> -		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+> +	/* Set default mapping format here and update it below if needed */
+> +	pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+>  
+> +	if (val == 0xFFFFFFFF && pci->edma.reg_base)
+> +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> +	else if (val != 0xFFFFFFFF)
+>  		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
+> -	} else {
+> +	else
+>  		return -ENODEV;
+> -	}
+
+Sorry for not posting my opinion about this earlier, but IMO v2 code
+was more correct than this one. This version makes the code being not
+linear as it was in v2, thus harder to comprehend:
+
+1. Setting up a default value and then overriding it or not makes the
+reader to keep in mind the initialized value which is harder than to
+just read what is done in the respective branch.
+
+2. Splitting up the case clause with respective inits and the mapping
+format setting up also makes it harder to comprehend what's going on.
+In the legacy case the reg-base address and the mapping format init are
+split up while they should have been done simultaneously only if (val
+!= 0xFFFFFFFF).
+
+3. The most of the current devices has the unrolled mapping (available
+since v4.9 IP-core), thus having the mf field pre-initialized produces
+a redundant store operation for the most of the modern devices.
+
+4. Getting rid from the curly braces isn't something what should be
+avoided at any cost and doesn't give any optimization really. It
+doesn't cause having less C-lines of the source code and doesn't
+improve the code readability.
+
+So to speak, I'd suggest to get back the v2 implementation here.
+
+>  
+> -	pci->edma.dev = pci->dev;
+> +	return 0;
+> +}
+>  
+> -	if (!pci->edma.ops)
+> -		pci->edma.ops = &dw_pcie_edma_ops;
+> +static int dw_pcie_edma_find_channels(struct dw_pcie *pci)
+> +{
+> +	u32 val;
+>  
+> -	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+
+> +	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
+> +		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> +	else
+> +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+
+Just dw_pcie_readl_dma(pci, PCIE_DMA_CTRL)
+
+-Serge(y)
+
+>  
+>  	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
+>  	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
+> @@ -930,6 +943,19 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+>  	return 0;
+>  }
+>  
+> +static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> +{
+> +	int ret;
+> +
+> +	dw_pcie_edma_init_data(pci);
+> +
+> +	ret = dw_pcie_edma_find_mf(pci);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return dw_pcie_edma_find_channels(pci);
+> +}
+> +
+>  static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
+>  {
+>  	struct platform_device *pdev = to_platform_device(pci->dev);
+> 
+> -- 
+> 2.25.1
+> 
