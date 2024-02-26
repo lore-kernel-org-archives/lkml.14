@@ -1,185 +1,128 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10630364A6;
-	Mon, 26 Feb 2024 12:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CF77E569;
+	Mon, 26 Feb 2024 12:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708950773; cv=none; b=RUFbaJchShp1uceT3buqJgsc0fucUdYq10QWvezAqsiIC9oZlDfR9Ch+arjMk/KX49wpMoSx3TO5ciR58bVtaOGWIklok2WuAJG5d39s3mX/Eg4lsPQy696t8X0Gh1oVEzXi/AomicQz3am8Zhxwig1T2WlJvPwKttOB03IP+3E=
+	t=1708950800; cv=none; b=YRcyVhkehCdWIpe+srS+Wk7ZxYBWSnTc0pxcp3CJJb+M5ujE11wq1UPtvtQUagz99qZu86td5Vz2k6ipVy9eV4L8ZTEaoufZ4AgD9+8iXbXbIqHXMpCIfSww7VKvGfQY36uu8vstGv+27J2ZLHqriuUfigtWPmu7YcqrlqTw7A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708950773; c=relaxed/simple;
-	bh=+samE29DNF5Z/tfPUmXV4vESiIfB7rjrnsGi9M7ixAY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=thHmHPKeAmkItYVDrfJ4c8gaqhvxG/PX06m021dhBxMV5F2p0f8QovRcnyLK2BFATqVavyI1n199E7B9ZHShCH8sfeSneAlidm6lqrYExKSKXfrlVALunSNeuGUA8mWp0+JWrhTpuMA1OdNn2Y+WHUkr8IOXV7/xRROGwsGhkuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk0Jr5kkRz6K643;
-	Mon, 26 Feb 2024 20:28:28 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4DEFE141FF8;
-	Mon, 26 Feb 2024 20:32:47 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
- 2024 12:32:46 +0000
-Date: Mon, 26 Feb 2024 12:32:45 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: John Groves <John@Groves.net>
-CC: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, "Dan
- Williams" <dan.j.williams@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Alexander
- Viro" <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Jan
- Kara" <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <john@jagalactic.com>, Dave Chinner
-	<david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
-	<dave.hansen@linux.intel.com>, <gregory.price@memverge.com>
-Subject: Re: [RFC PATCH 05/20] dev_dax_iomap: Add dax_operations for use by
- fs-dax on devdax
-Message-ID: <20240226123245.00000c01@Huawei.com>
-In-Reply-To: <5727b1be956278e3a6c4cf7b728ee4f8f037ae51.1708709155.git.john@groves.net>
-References: <cover.1708709155.git.john@groves.net>
-	<5727b1be956278e3a6c4cf7b728ee4f8f037ae51.1708709155.git.john@groves.net>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1708950800; c=relaxed/simple;
+	bh=NAXgruINWdOQv8VRnp1gn8XclW92gQqN4yv7U/TfJwU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C9qIhYXFygOEF2lwvT4XA5BxbLNa+YPpK4nyHDHkh3QmhM8nzM2meoAIDQaur3QBbAj6hbDnnd3gZ0EjFMfXI1Tmo/jZw/+Dj9nLJccnDevY80CRNCV7Vs/1U68/J4PKMsspMQkJFbByUnc6x9xJOmUrYG6Yqgar0TLBOHZ2KqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-68f9e399c91so23888776d6.2;
+        Mon, 26 Feb 2024 04:33:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708950797; x=1709555597;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C7Jt6uOGYEF2aQdl/7Fp6F1BKKNUfz+MFg3gqXg/aVI=;
+        b=vu13B6/B/v/ihJI8pnyPloan8v+uyqADRsw7kZaDVDGAhxsG8YxpkPcRyyQeD2jVyy
+         mUo2kZC7324JxjTP+JzVMM8SOcLc6Brxd89BF9hQymAeT1VjsREE/H1ixANio0saiMKj
+         LJA/indnVL5PBrWfCEtx41g9WwU9+gHRntzQq6+dnIfRxFv3ytagTw3X5vIMVNPiUuZI
+         uE7tEE+xwp4nLSbznW66x9zA0gwWuCSCd3GebppIB2E2EP0/jb7chKnAliAAULvQKkE3
+         AYqTAp5O+Y8BaPTB106urtJ7RkyMAvmJxo5fKhCxlknZXZo6xFqYrb5mNcspu5pGwlaW
+         TJ8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVScpXo+QLPDDn9E7kW4uHIyFrvkUY0u7EcY+rtJfx7H2bKJR0H8DFVi9RLYIJTooG2ik+qcAAXIo4Qpn5w8GiPVxNFVthTsU2zGm1ENJvWQHtzQBAE9J/KgxhuVWvcSU0ujjxYHogvYR56qdCV1qrQV68q/kdASpatobbpaXwymVISFvQSAn9zHnxcMXVzzK4kpWe6gF8mqH3pKi99Fn7IaBsnKRuVM2OBG+aKZA==
+X-Gm-Message-State: AOJu0Yz/kIlkvO69qQ6t496KaIl3hS76aN8LfEP0viwVPESGtOuziu2x
+	VmSFzM8x1rGwUxujbZz84G5b4M4jjtrf4uKkhg+7fopMMaj2Owqk7bmBLUMOs6I=
+X-Google-Smtp-Source: AGHT+IF7HkvvFrGX+e9P2Fon9GwVWSTyrXraAW9omwnJtiMWP3h4WRWxkEDniIAoWtiaYGvtAoTgAw==
+X-Received: by 2002:a0c:e286:0:b0:68f:714d:3e87 with SMTP id r6-20020a0ce286000000b0068f714d3e87mr6760275qvl.60.1708950797203;
+        Mon, 26 Feb 2024 04:33:17 -0800 (PST)
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com. [209.85.222.176])
+        by smtp.gmail.com with ESMTPSA id og17-20020a056214429100b0068fe3170b0esm2864225qvb.11.2024.02.26.04.33.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 04:33:17 -0800 (PST)
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-783045e88a6so269017885a.0;
+        Mon, 26 Feb 2024 04:33:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWy/qDwvGp33svSE0yWKzyuHon8HS2OIRP/WgdP8/PoMibD2OrkZuTRba2A+svL/xcjtwUHZRDd5DaLHvqOthvOVzzisQObles36IeUKoiploy78GcW8t+AboVMK0voPVJvWkw6LwGkMEw9pYSgU+Hv1JupmFfAHZJErmDnc1nNIC2unTa5j+x/aLjXvBGW2ueIZ2jcaJpMueYzSoUxodgi1lNABmTFUl42Isx69g==
+X-Received: by 2002:a05:6902:3c5:b0:dc2:2041:fc49 with SMTP id
+ g5-20020a05690203c500b00dc22041fc49mr4426711ybs.5.1708950484424; Mon, 26 Feb
+ 2024 04:28:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+References: <20240222083946.3977135-1-peterlin@andestech.com> <20240222083946.3977135-6-peterlin@andestech.com>
+In-Reply-To: <20240222083946.3977135-6-peterlin@andestech.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 Feb 2024 13:27:52 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWzzrQBq-RzFnfr8pXgeUOuqG8CwCjwDOwfCJzGQ=ZDJA@mail.gmail.com>
+Message-ID: <CAMuHMdWzzrQBq-RzFnfr8pXgeUOuqG8CwCjwDOwfCJzGQ=ZDJA@mail.gmail.com>
+Subject: Re: [PATCH v9 05/10] riscv: dts: renesas: r9a07g043f: Update
+ compatible string to use Andes INTC
+To: Yu Chien Peter Lin <peterlin@andestech.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, ajones@ventanamicro.com, 
+	alexander.shishkin@linux.intel.com, andre.przywara@arm.com, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, atishp@atishpatra.org, 
+	conor+dt@kernel.org, conor.dooley@microchip.com, conor@kernel.org, 
+	devicetree@vger.kernel.org, evan@rivosinc.com, geert+renesas@glider.be, 
+	guoren@kernel.org, heiko@sntech.de, irogers@google.com, 
+	jernej.skrabec@gmail.com, jolsa@kernel.org, jszhang@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, locus84@andestech.com, magnus.damm@gmail.com, 
+	mark.rutland@arm.com, mingo@redhat.com, n.shubin@yadro.com, 
+	namhyung@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	peterz@infradead.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	rdunlap@infradead.org, robh+dt@kernel.org, samuel@sholland.org, 
+	sunilvl@ventanamicro.com, tglx@linutronix.de, tim609@andestech.com, 
+	uwu@icenowy.me, wens@csie.org, will@kernel.org, inochiama@outlook.com, 
+	unicorn_wang@outlook.com, wefu@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 23 Feb 2024 11:41:49 -0600
-John Groves <John@Groves.net> wrote:
-
-> Notes about this commit:
-> 
-> * These methods are based somewhat loosely on pmem_dax_ops from
->   drivers/nvdimm/pmem.c
-> 
-> * dev_dax_direct_access() is returns the hpa, pfn and kva. The kva was
->   newly stored as dev_dax->virt_addr by dev_dax_probe().
-> 
-> * The hpa/pfn are used for mmap (dax_iomap_fault()), and the kva is used
->   for read/write (dax_iomap_rw())
-> 
-> * dev_dax_recovery_write() and dev_dax_zero_page_range() have not been
->   tested yet. I'm looking for suggestions as to how to test those.
-> 
-> Signed-off-by: John Groves <john@groves.net>
+On Thu, Feb 22, 2024 at 9:40=E2=80=AFAM Yu Chien Peter Lin
+<peterlin@andestech.com> wrote:
+> The Andes hart-level interrupt controller (Andes INTC) allows AX45MP
+> cores to handle custom local interrupts, such as the performance
+> counter overflow interrupt.
+>
+> Signed-off-by: Yu Chien Peter Lin <peterlin@andestech.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Tested-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  drivers/dax/bus.c | 107 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 107 insertions(+)
-> 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 664e8c1b9930..06fcda810674 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -10,6 +10,12 @@
->  #include "dax-private.h"
->  #include "bus.h"
->  
-> +#if IS_ENABLED(CONFIG_DEV_DAX_IOMAP)
-> +#include <linux/backing-dev.h>
-> +#include <linux/pfn_t.h>
-> +#include <linux/range.h>
-> +#endif
-> +
+> Changes v1 -> v2:
+>   - New patch
+> Changes v2 -> v3:
+>   - Fixed possible compatibles for Andes INTC
+> Changes v3 -> v4:
+>   - No change
+> Changes v4 -> v5:
+>   - Include Geert's Reviewed-by
+>   - Include Prabhakar's Reviewed/Tested-by
+> Changes v5 -> v6:
+>   - No change
+> Changes v6 -> v7:
+>   - No change
+> Changes v7 -> v8:
+>   - No change
+> Changes v8 -> v9:
+>   - No change
 
-Is it worth avoiding includes based on config? Probably not.
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+so Palmer can pick it up with the rest of the series
+(the Renesas tree imerge window for v6.9 has closed)
 
->  static DEFINE_MUTEX(dax_bus_lock);
->  
->  #define DAX_NAME_LEN 30
-> @@ -1349,6 +1355,101 @@ __weak phys_addr_t dax_pgoff_to_phys(struct dev_dax *dev_dax, pgoff_t pgoff,
->  }
->  EXPORT_SYMBOL_GPL(dax_pgoff_to_phys);
->  
-> +#if IS_ENABLED(CONFIG_DEV_DAX_IOMAP)
-> +
+Gr{oetje,eeting}s,
 
-> +
-> +static long __dev_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
-> +			     long nr_pages, enum dax_access_mode mode, void **kaddr,
-> +			     pfn_t *pfn)
-> +{
-> +	struct dev_dax *dev_dax = dax_get_private(dax_dev);
-> +	size_t dax_size = dev_dax_size(dev_dax);
-> +	size_t size = nr_pages << PAGE_SHIFT;
-> +	size_t offset = pgoff << PAGE_SHIFT;
-> +	phys_addr_t phys;
-> +	u64 virt_addr = dev_dax->virt_addr + offset;
-> +	pfn_t local_pfn;
-> +	u64 flags = PFN_DEV|PFN_MAP;
-> +
-> +	WARN_ON(!dev_dax->virt_addr); /* virt_addr must be saved for direct_access */
-Fair enough, but from local code point of view, does it make sense to check this
-if !kaddr as we won't use this.
-> +
-> +	phys = dax_pgoff_to_phys(dev_dax, pgoff, nr_pages << PAGE_SHIFT);
-> +
-> +	if (kaddr)
-> +		*kaddr = (void *)virt_addr;
+                        Geert
 
-Back to earlier comment on virt_addr as a void *. Definitely looking like
-that would be more accurate and simpler!  Also not much point in computing
-virt_addr unless kaddr is good.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-> +
-> +	local_pfn = phys_to_pfn_t(phys, flags); /* are flags correct? */
-If you aren't going to do anything with it for !pfn, move it under the if (pfn).
-
-> +	if (pfn)
-> +		*pfn = local_pfn;
-> +
-> +	/* This the valid size at the specified address */
-> +	return PHYS_PFN(min_t(size_t, size, dax_size - offset));
-> +}
-> +
-
-> +
-> +static const struct dax_operations dev_dax_ops = {
-> +	.direct_access = dev_dax_direct_access,
-> +	.zero_page_range = dev_dax_zero_page_range,
-> +	.recovery_write = dev_dax_recovery_write,
-> +};
-> +
-> +#endif /* IS_ENABLED(CONFIG_DEV_DAX_IOMAP) */
-> +
->  struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
->  {
->  	struct dax_region *dax_region = data->dax_region;
-> @@ -1404,11 +1505,17 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
->  		}
->  	}
->  
-
-If we were to make this 
-
-	if (IS_ENABLED(CONFIG_DEV_DAX_IOMAP))
-
-etc can we avoid the ifdef stuff above and let dead code removal deal with it?
-Might need a few stubs - I haven't tried.
-
-> +#if IS_ENABLED(CONFIG_DEV_DAX_IOMAP)
-> +	/* holder_ops currently populated separately in a slightly hacky way */
-> +	dax_dev = alloc_dax(dev_dax, &dev_dax_ops);
-> +#else
->  	/*
->  	 * No dax_operations since there is no access to this device outside of
->  	 * mmap of the resulting character device.
->  	 */
->  	dax_dev = alloc_dax(dev_dax, NULL);
-> +#endif
-> +
->  	if (IS_ERR(dax_dev)) {
->  		rc = PTR_ERR(dax_dev);
->  		goto err_alloc_dax;
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
