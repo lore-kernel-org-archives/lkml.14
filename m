@@ -1,316 +1,160 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7635C12FF86;
-	Mon, 26 Feb 2024 16:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A37130E54;
+	Mon, 26 Feb 2024 16:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966429; cv=none; b=aLQ75w/4sjGgCtyS8k/DAfHbG4SpArM0HoUzVNe0qI3bqZWnFtUdtwCxaucQ4LBqWu9cH8jc+ahpPCc3+TWDmDkRoWhIic8RvVd3FiRK86JSIYC0RkM9c846p6TBeTHjFAtrBv/PSoKFZQomnXGxr8apzI6ArwQGX7n+f8ItrGY=
+	t=1708966431; cv=none; b=P6OlsTF4rModqLYMUJKYbB/t3D7G+a5R2SRzobxUoBsJAHWguvMM1tU2/rxINVr8Wt5ZxmaPjzsnulO4+mu7TQpvxkXuMigJUUVcBZUqG9/h3KdtSM4gjYpsJCGhJPFaU4QxXk2fiVBbMNQ7+q3gDw8W/ZLfs7F6/H7/ZCmk9XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966429; c=relaxed/simple;
-	bh=3nimcBkyHMSfym8s4tUd4i+bP6FP4+nFWT7XoE1U7e0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A3NfI5atuMWitk27pPqCpDm2lLn2sHSRORVEqzXI7z8kvE5QDkb7kvX4CfLxS9+RPIKKtpHv2G0F4eO0bJ2V0bCnDUnQ/C3c4I/TmUdn3wMp0HTdAPZmYQpr22T6+iRDCOdr2Mf76DLCYFjJFDF4KXhkNr3xmxdSDUAI977NEYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oj3hOWbO; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1708966431; c=relaxed/simple;
+	bh=MardUWIsmATEFKuh2wT2c1olpb4/Ho/XLdLxS4S1UFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eUK85t8z1/g/oaf+ENZM212t/n9YgeKwa7G9mGFp32mFfQgwf0xo1a1HSMBUmWYW31I6WllZVZhjnKnOwOGtG3Dv93FQy92fZpo8ibB9cju4CQonLBcIV/RbmrOuQOiZHsk8L14mgr4t150ZV/FDZZ04zsmSLC7oGQ79yShDUpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SC1Y7gg5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DP8JmlMt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SC1Y7gg5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=DP8JmlMt; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oj3hOWbO"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41QG15OI018815;
-	Mon, 26 Feb 2024 16:53:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=zrnHDAhdPUnbtmjsykKg9BbRlBjR1tZ8tUSGR8/dp0k=;
- b=oj3hOWbOMbkjNXKXEKIsbberAkFxEqyZbvpLWUj984XbaX91D2eJaNdcFGca8LzdiNiI
- elwXIe3S0YzHzm/EXz6lhnKW9TUdkqWZnS34QrrRUFIX762llvVBm8vn0WJL+tVj7M+s
- I27JSd+L7sluSJqLIPxUcfknbTLsacW/mjdUaAhnMD54DFA6x2mKehpnfYHGJoQ6cxPH
- 5RXuGWz4qXrqvLd1sUPkf4QIIqO3at9lWMHApaMKP84udlqUh6uIcJC8q1LGQvK13Xo4
- zPopWx/dw6Q03y/kKUI9iSj3G6kqAdUhnYXYt4rfNMxr+p9dxbDBAvdeExq1gMEmPzgr ag== 
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wgw0k3559-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 16:53:37 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41QG2Vib008792;
-	Mon, 26 Feb 2024 16:53:36 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wftstarbe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 16:53:35 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41QGrXA628115624
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Feb 2024 16:53:35 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 36BAC58066;
-	Mon, 26 Feb 2024 16:53:33 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7EBD358053;
-	Mon, 26 Feb 2024 16:53:32 +0000 (GMT)
-Received: from slate16.aus.stglabs.ibm.com (unknown [9.61.57.130])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 26 Feb 2024 16:53:32 +0000 (GMT)
-From: Eddie James <eajames@linux.ibm.com>
-To: linux-fsi@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, andi.shyti@kernel.org,
-        eajames@linux.ibm.com, alistair@popple.id.au, joel@jms.id.au,
-        jk@ozlabs.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, lakshmiy@us.ibmcom
-Subject: [PATCH v2 13/31] fsi: hub: Use common initialization and link enable
-Date: Mon, 26 Feb 2024 10:53:03 -0600
-Message-Id: <20240226165321.91976-14-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240226165321.91976-1-eajames@linux.ibm.com>
-References: <20240226165321.91976-1-eajames@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SC1Y7gg5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DP8JmlMt";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SC1Y7gg5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="DP8JmlMt"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 83DC61FB5E;
+	Mon, 26 Feb 2024 16:53:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708966427; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MgS/hvgxhSITdk7Ky5kATehTNmll0NfOjHtx26rdj8w=;
+	b=SC1Y7gg5QXG1RWGqgXzNKCkOz8jPKpuj/x6TjPWa8IGN9RLI+3dktUTdFANCKO0rZbBLxq
+	BW0KbR0x/ICg3txrKimd5S5/9kGkfBHYFKR3TQ4A0A3NuBE/63gIAiMRDQJZ4yU3gmKLcK
+	vqPk9PorpQ5yg7PGad8rMnmzf5GJJpI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708966427;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MgS/hvgxhSITdk7Ky5kATehTNmll0NfOjHtx26rdj8w=;
+	b=DP8JmlMtfZcmpcKO0tD6mnWB1fho5gzEMOcSqXzjdfyn/BRtS8fTGzZYy+GrUCIxD17X+w
+	yCHYsByOXT8FocBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1708966427; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MgS/hvgxhSITdk7Ky5kATehTNmll0NfOjHtx26rdj8w=;
+	b=SC1Y7gg5QXG1RWGqgXzNKCkOz8jPKpuj/x6TjPWa8IGN9RLI+3dktUTdFANCKO0rZbBLxq
+	BW0KbR0x/ICg3txrKimd5S5/9kGkfBHYFKR3TQ4A0A3NuBE/63gIAiMRDQJZ4yU3gmKLcK
+	vqPk9PorpQ5yg7PGad8rMnmzf5GJJpI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1708966427;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MgS/hvgxhSITdk7Ky5kATehTNmll0NfOjHtx26rdj8w=;
+	b=DP8JmlMtfZcmpcKO0tD6mnWB1fho5gzEMOcSqXzjdfyn/BRtS8fTGzZYy+GrUCIxD17X+w
+	yCHYsByOXT8FocBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F076813A58;
+	Mon, 26 Feb 2024 16:53:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id g9dZOhrC3GXKFgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 26 Feb 2024 16:53:46 +0000
+Message-ID: <fd480d2f-01bd-4658-b1b2-bf78383496f6@suse.cz>
+Date: Mon, 26 Feb 2024 17:53:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9JtxlGHNjdCSQi9QI3kM5SOlEskEtO_T
-X-Proofpoint-ORIG-GUID: 9JtxlGHNjdCSQi9QI3kM5SOlEskEtO_T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_11,2024-02-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- clxscore=1015 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- spamscore=0 suspectscore=0 phishscore=0 bulkscore=0 mlxlogscore=838
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402260128
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/36] slab: objext: introduce objext_flags as
+ extension to page_memcg_data_flags
+Content-Language: en-US
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, hannes@cmpxchg.org,
+ roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
+ willy@infradead.org, liam.howlett@oracle.com,
+ penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
+ peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
+ rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
+ yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
+ hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
+ ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org,
+ ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
+ iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
+ elver@google.com, dvyukov@google.com, shakeelb@google.com,
+ songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
+ minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
+ cgroups@vger.kernel.org
+References: <20240221194052.927623-1-surenb@google.com>
+ <20240221194052.927623-11-surenb@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240221194052.927623-11-surenb@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=SC1Y7gg5;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=DP8JmlMt
+X-Spamd-Result: default: False [-0.28 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_GT_50(0.00)[74];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-1.48)[91.52%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,chromium.org:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -0.28
+X-Rspamd-Queue-Id: 83DC61FB5E
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Bar: /
 
-Set up an FSI regmap for the hub master to use the new common
-master initialization and link enable procedures.
+On 2/21/24 20:40, Suren Baghdasaryan wrote:
+> Introduce objext_flags to store additional objext flags unrelated to memcg.
+> 
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- drivers/fsi/fsi-master-hub.c | 141 ++++++-----------------------------
- 1 file changed, 23 insertions(+), 118 deletions(-)
-
-diff --git a/drivers/fsi/fsi-master-hub.c b/drivers/fsi/fsi-master-hub.c
-index 111bf7a11458..92aa07055c56 100644
---- a/drivers/fsi/fsi-master-hub.c
-+++ b/drivers/fsi/fsi-master-hub.c
-@@ -9,6 +9,7 @@
- #include <linux/fsi.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/regmap.h>
- #include <linux/slab.h>
- 
- #include "fsi-master.h"
-@@ -16,8 +17,6 @@
- 
- #define FSI_ENGID_HUB_MASTER		0x1c
- 
--#define FSI_LINK_ENABLE_SETUP_TIME	10	/* in mS */
--
- /*
-  * FSI hub master support
-  *
-@@ -78,134 +77,33 @@ static int hub_master_break(struct fsi_master *master, int link)
- 	return hub_master_write(master, link, 0, addr, &cmd, sizeof(cmd));
- }
- 
--static int hub_master_link_enable(struct fsi_master *master, int link,
--				  bool enable)
--{
--	struct fsi_master_hub *hub = to_fsi_master_hub(master);
--	int idx, bit;
--	__be32 reg;
--	int rc;
--
--	idx = link / 32;
--	bit = link % 32;
--
--	reg = cpu_to_be32(0x80000000 >> bit);
--
--	if (!enable)
--		return fsi_device_write(hub->upstream, FSI_MCENP0 + (4 * idx),
--					&reg, 4);
--
--	rc = fsi_device_write(hub->upstream, FSI_MSENP0 + (4 * idx), &reg, 4);
--	if (rc)
--		return rc;
--
--	mdelay(FSI_LINK_ENABLE_SETUP_TIME);
--
--	return 0;
--}
--
- static void hub_master_release(struct device *dev)
- {
- 	struct fsi_master_hub *hub = to_fsi_master_hub(to_fsi_master(dev));
- 
-+	regmap_exit(hub->master.map);
- 	kfree(hub);
- }
- 
--/* mmode encoders */
--static inline u32 fsi_mmode_crs0(u32 x)
--{
--	return (x & FSI_MMODE_CRS0MASK) << FSI_MMODE_CRS0SHFT;
--}
--
--static inline u32 fsi_mmode_crs1(u32 x)
--{
--	return (x & FSI_MMODE_CRS1MASK) << FSI_MMODE_CRS1SHFT;
--}
--
--static int hub_master_init(struct fsi_master_hub *hub)
--{
--	struct fsi_device *dev = hub->upstream;
--	__be32 reg;
--	int rc;
--
--	reg = cpu_to_be32(FSI_MRESP_RST_ALL_MASTER | FSI_MRESP_RST_ALL_LINK
--			| FSI_MRESP_RST_MCR | FSI_MRESP_RST_PYE);
--	rc = fsi_device_write(dev, FSI_MRESP0, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	/* Initialize the MFSI (hub master) engine */
--	reg = cpu_to_be32(FSI_MRESP_RST_ALL_MASTER | FSI_MRESP_RST_ALL_LINK
--			| FSI_MRESP_RST_MCR | FSI_MRESP_RST_PYE);
--	rc = fsi_device_write(dev, FSI_MRESP0, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	reg = cpu_to_be32(FSI_MECTRL_EOAE | FSI_MECTRL_P8_AUTO_TERM);
--	rc = fsi_device_write(dev, FSI_MECTRL, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	reg = cpu_to_be32(FSI_MMODE_EIP | FSI_MMODE_ECRC | FSI_MMODE_EPC
--			| fsi_mmode_crs0(1) | fsi_mmode_crs1(1)
--			| FSI_MMODE_P8_TO_LSB);
--	rc = fsi_device_write(dev, FSI_MMODE, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	reg = cpu_to_be32(0xffff0000);
--	rc = fsi_device_write(dev, FSI_MDLYR, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	reg = cpu_to_be32(~0);
--	rc = fsi_device_write(dev, FSI_MSENP0, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	/* Leave enabled long enough for master logic to set up */
--	mdelay(FSI_LINK_ENABLE_SETUP_TIME);
--
--	rc = fsi_device_write(dev, FSI_MCENP0, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	rc = fsi_device_read(dev, FSI_MAEB, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	reg = cpu_to_be32(FSI_MRESP_RST_ALL_MASTER | FSI_MRESP_RST_ALL_LINK);
--	rc = fsi_device_write(dev, FSI_MRESP0, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	rc = fsi_device_read(dev, FSI_MLEVP0, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	/* Reset the master bridge */
--	reg = cpu_to_be32(FSI_MRESB_RST_GEN);
--	rc = fsi_device_write(dev, FSI_MRESB0, &reg, sizeof(reg));
--	if (rc)
--		return rc;
--
--	reg = cpu_to_be32(FSI_MRESB_RST_ERR);
--	return fsi_device_write(dev, FSI_MRESB0, &reg, sizeof(reg));
--}
--
- static int hub_master_probe(struct device *dev)
- {
-+	struct regmap_config hub_master_regmap_config;
- 	struct fsi_device *fsi_dev = to_fsi_dev(dev);
- 	struct fsi_master_hub *hub;
-+	struct regmap *map;
- 	uint32_t reg, links;
--	__be32 __reg;
- 	int rc;
- 
--	rc = fsi_device_read(fsi_dev, FSI_MVER, &__reg, sizeof(__reg));
-+	fsi_master_regmap_config(&hub_master_regmap_config);
-+	hub_master_regmap_config.reg_base = fsi_dev->addr;
-+	map = regmap_init_fsi(fsi_dev, &hub_master_regmap_config);
-+	if (IS_ERR(map))
-+		return PTR_ERR(map);
-+
-+	rc = regmap_read(map, FSI_MVER, &reg);
- 	if (rc)
--		return rc;
-+		goto err_regmap;
- 
--	reg = be32_to_cpu(__reg);
- 	links = (reg >> 8) & 0xff;
- 	dev_dbg(dev, "hub version %08x (%d links)\n", reg, links);
- 
-@@ -213,7 +111,7 @@ static int hub_master_probe(struct device *dev)
- 			FSI_HUB_LINK_SIZE * links);
- 	if (rc) {
- 		dev_err(dev, "can't claim slave address range for links");
--		return rc;
-+		goto err_regmap;
- 	}
- 
- 	hub = kzalloc(sizeof(*hub), GFP_KERNEL);
-@@ -229,22 +127,25 @@ static int hub_master_probe(struct device *dev)
- 	hub->master.dev.parent = dev;
- 	hub->master.dev.release = hub_master_release;
- 	hub->master.dev.of_node = of_node_get(dev_of_node(dev));
-+	hub->master.map = map;
- 
- 	hub->master.lbus_divider = 1;
- 	hub->master.idx = fsi_dev->slave->link + 1;
- 	hub->master.n_links = links;
-+	hub->master.flags = FSI_MASTER_FLAG_INTERRUPT;
- 	hub->master.read = hub_master_read;
- 	hub->master.write = hub_master_write;
- 	hub->master.send_break = hub_master_break;
--	hub->master.link_enable = hub_master_link_enable;
- 
- 	dev_set_drvdata(dev, hub);
- 
--	hub_master_init(hub);
-+	rc = fsi_master_init(&hub->master, fsi_device_local_bus_frequency(fsi_dev));
-+	if (rc)
-+		goto err_free;
- 
- 	rc = fsi_master_register(&hub->master);
- 	if (rc)
--		goto err_release;
-+		goto err_free;
- 
- 	/* At this point, fsi_master_register performs the device_initialize(),
- 	 * and holds the sole reference on master.dev. This means the device
-@@ -256,9 +157,13 @@ static int hub_master_probe(struct device *dev)
- 	get_device(&hub->master.dev);
- 	return 0;
- 
-+err_free:
-+	kfree(hub);
- err_release:
- 	fsi_slave_release_range(fsi_dev->slave, FSI_HUB_LINK_OFFSET,
- 			FSI_HUB_LINK_SIZE * links);
-+err_regmap:
-+	regmap_exit(map);
- 	return rc;
- }
- 
--- 
-2.39.3
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
