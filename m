@@ -1,149 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F87C22EE0
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 11:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1672D029
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 11:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708947237; cv=none; b=FMZKd0X9urnXchZrSd2EAUMi9wu/IVnKGjZh7e6EYYCfBklSg/1Z51nr//NeFt65vjyrCXgmd/SKXsBUgXMBRDK9sq5U/gSLB7by4FGMcwpjHv0vMP9zqSoy1sIX4iLSprHhHJQWQyBgji54kWO1SgU1liPTWibPL2Yz2eJoioc=
+	t=1708947242; cv=none; b=lRNHobTX+A8EN81D+x6hiJngJoFd1ug0QmSbTBvQBa59pw6aQUaIdzWh62ylumXFOU6FHVdqLOqswhkEaF5QT1GFaUlSfWFovKaKSySxaL7oglkIyQ6pQNOKcQ+JWc5E05wergWAuVIGGqsuJMVK+u52U368bUuWrZ6qmtD0Pco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708947237; c=relaxed/simple;
-	bh=+nicV0g2b5jsmt8ZfpewvXZy/UwWJ4BnLx9od6RHkZg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MZu23AoYkaI6PMt6qR3oFjhP0LQmE31AGjGhPb/hOkUJjZwHQ3HeSbqfvjG1kJ4djgFEdVKDo3b5gkb5W9kkTGv7+Gq6Me/C1hXNPKnA5tvUp0x6wX/O1COO3t7tUaOFWgz4Y6YwlZGu7dOWSWNvF85OiJCZdCfokTaxWXMj4s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D2CFDA7;
-	Mon, 26 Feb 2024 03:34:34 -0800 (PST)
-Received: from e127643.broadband (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 302833F6C4;
-	Mon, 26 Feb 2024 03:33:52 -0800 (PST)
-From: James Clark <james.clark@arm.com>
-To: coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	maz@kernel.org,
-	suzuki.poulose@arm.com,
-	acme@kernel.org,
-	oliver.upton@linux.dev,
-	broonie@kernel.org
-Cc: James Clark <james.clark@arm.com>,
-	James Morse <james.morse@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Miguel Luis <miguel.luis@oracle.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Quentin Perret <qperret@google.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 5/8] arm64: KVM: Add iflag for FEAT_TRF
-Date: Mon, 26 Feb 2024 11:30:33 +0000
-Message-Id: <20240226113044.228403-6-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240226113044.228403-1-james.clark@arm.com>
-References: <20240226113044.228403-1-james.clark@arm.com>
+	s=arc-20240116; t=1708947242; c=relaxed/simple;
+	bh=d0kydW1Yxuo1MsG4YJurMo9qxI32GA5maZXnljWXEGQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kXDf+TIhI5okrt2UmEYReU2uQZfHbfFjXm0EkaKe/fBrOHrlt07x10OOxPVnA9ePReofmr0WvlQWq1adeK/1lGztXMVo3qwK8DxDQ7z9LXNY9q5IdlqoP8ic3rF92TYK7xaHisWY6eTCtJogoljZCx3GFGgnUgCNvQj14UWin70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=K++EOJnY; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="K++EOJnY"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e332bc65b3so1416964b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 03:34:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1708947240; x=1709552040; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wdsp0gMDY9ztgsqYmpfOLfIwYX7WF34YfJrpayCYhWs=;
+        b=K++EOJnYUCNPr0CYwYChswGetVdU8ZYqtdMelvpfIiCYLsZX0Vr+hv2l9zThbiPMS2
+         eC+7nM4BgXJHsFYUAwQGgNJQd1ImXPUaoKNmxqZBjMBb/cL5nwnSPk9sugyb5Jo9N0e7
+         fO+aV0SBAPxcPvaS3K+r6zPDOuOCGquieNrtKW9cyk0Uu0iZnpwKkD+u901UbKwWewi0
+         gtNspoHsbDKSD8IDtghmjEKoz0LoSNWpIM7h72iRbczvkBqiF6PLOxFOPFMLgLawdPG0
+         21nMkvT3gBd7dYJhCHXN1jvperYQAl3FM0XWBQ4ih+Zea8zFIWSJ/PRRbRkyTLMERdRh
+         rnpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708947240; x=1709552040;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Wdsp0gMDY9ztgsqYmpfOLfIwYX7WF34YfJrpayCYhWs=;
+        b=a91Ba97OU8wEZ6MPyFJ3NH1g1J2a2UEyC6a5Wi2hFRTC8ZUzxLZSECE43rHkLC2sLf
+         vw5Gu9nRp1x83ezmqacVBzSr55XeMR0SU2a5SB9M64avv4FgfhYJpli9IsMADnatX+OI
+         fo04c9FIJop6cyrs15TvP+aIBY9LnItcUnyHRWVRkpRLizV3QZceTalMGdeLqwWFEpjD
+         IxMAnBBBEt3Zws9mExnGvZmZSeGmixM8rPoVlBWQtZHczkGZgxuAOglUuGC14/iEGBkR
+         4SotXS0z5Q54QCjsh4XVcWh7DCr3fT5dAe5dPeDUwCMo9BfQGsjFcGpmN3Lai92G1pf0
+         XhDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrA7PLYu1EqrSoIkZbEIRK44htsNIR06xUxZsWHmSu3N6hCPckf8xSKfVoR9ZotKa6y4EJWzh5ZRiu3eOC/z3Fv6Y8tJjfYJM55Ev9
+X-Gm-Message-State: AOJu0Yx5Tl1wH8z5fxR5fdFm6CRKDTTnEhtD9VErY1nujAzT9P0SYiiZ
+	j9W9N5Jeb8smxuVYxPGR/DUA7eEaD5s56YzsVQEk0iqkHWerzc4FQ1WiaPb4pkA=
+X-Google-Smtp-Source: AGHT+IFrqop9IWtx6Qj69nWqO1n/SWu8DT5ggnEUyrLz2QTvgJxjukIRIrGPsQX+Am24ajuetLPWRg==
+X-Received: by 2002:a05:6a21:1693:b0:1a1:3dc:6686 with SMTP id np19-20020a056a21169300b001a103dc6686mr801467pzb.59.1708947240327;
+        Mon, 26 Feb 2024 03:34:00 -0800 (PST)
+Received: from [10.74.73.182] ([203.208.189.12])
+        by smtp.gmail.com with ESMTPSA id d20-20020a170903209400b001dc95205b56sm2320016plc.53.2024.02.26.03.33.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 03:33:59 -0800 (PST)
+Message-ID: <f516eb83-c393-af67-803f-4cf664865cf8@bytedance.com>
+Date: Mon, 26 Feb 2024 19:33:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH 0/3] Support intra-function call validation
+To: bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, hpa@zytor.com,
+ jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
+ gregkh@linuxfoundation.org, stable@vger.kernel.org,
+ alexandre.chartre@oracle.com
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org
+References: <20240226094925.95835-1-qirui.001@bytedance.com>
+From: qirui <qirui.001@bytedance.com>
+In-Reply-To: <20240226094925.95835-1-qirui.001@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add an extra iflag to signify if the TRFCR register is accessible.
-Because TRBE requires FEAT_TRF, DEBUG_STATE_SAVE_TRBE still has the same
-behavior even though it's only set when FEAT_TRF is present.
+This issue only occurs in 5.4 LTS versions after LTS 5.4.250 (inclusive), and this patchset is based on commit 6e1f54a4985b63bc1b55a09e5e75a974c5d6719b (Linux 5.4.269)
 
-The following holes are left in struct kvm_vcpu_arch, but there aren't
-enough other 8 bit fields to rearrange it to leave any hole smaller than
-7 bytes:
-
-  u8                         cflags;               /*  2292     1 */
-  /* XXX 1 byte hole, try to pack */
-  u16                        iflags;               /*  2294     2 */
-  u8                         sflags;               /*  2296     1 */
-  bool                       pause;                /*  2297     1 */
-  /* XXX 6 bytes hole, try to pack */
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
----
- arch/arm64/include/asm/kvm_host.h |  4 +++-
- arch/arm64/kvm/debug.c            | 24 ++++++++++++++++++++----
- 2 files changed, 23 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 21c57b812569..85b5477bd1b4 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
- 	u8 cflags;
- 
- 	/* Input flags to the hypervisor code, potentially cleared after use */
--	u8 iflags;
-+	u16 iflags;
- 
- 	/* State flags for kernel bookkeeping, unused by the hypervisor code */
- 	u8 sflags;
-@@ -779,6 +779,8 @@ struct kvm_vcpu_arch {
- #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
- /* vcpu running in HYP context */
- #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
-+/* Save trace filter controls */
-+#define DEBUG_STATE_SAVE_TRFCR	__vcpu_single_flag(iflags, BIT(8))
- 
- /* SVE enabled for host EL0 */
- #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
-diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-index ce8886122ed3..49a13e72ddd2 100644
---- a/arch/arm64/kvm/debug.c
-+++ b/arch/arm64/kvm/debug.c
-@@ -332,14 +332,30 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
- 	    !(read_sysreg_s(SYS_PMBIDR_EL1) & BIT(PMBIDR_EL1_P_SHIFT)))
- 		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_SPE);
- 
--	/* Check if we have TRBE implemented and available at the host */
--	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
--	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
--		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-+	/*
-+	 * Set SAVE_TRFCR flag if FEAT_TRF (TraceFilt) exists. This flag
-+	 * signifies that the exclude_host/exclude_guest settings of any active
-+	 * host Perf session on a core running a VCPU can be written into
-+	 * TRFCR_EL1 on guest switch.
-+	 */
-+	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceFilt_SHIFT)) {
-+		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRFCR);
-+		/*
-+		 * Check if we have TRBE implemented and available at the host.
-+		 * If it's in use at the time of guest switch then trace will
-+		 * need to be completely disabled. The architecture mandates
-+		 * FEAT_TRF with TRBE, so we only need to check for TRBE after
-+		 * TRF.
-+		 */
-+		if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
-+		    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
-+			vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-+	}
- }
- 
- void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
- {
- 	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
- 	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-+	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRFCR);
- }
--- 
-2.34.1
-
+On 2/26/24 5:49 PM, Rui Qi wrote:
+> Since kernel version 5.4.250 LTS, there has been an issue with the kernel live patching feature becoming unavailable. When compiling the sample code for kernel live patching, the following message is displayed when enabled:
+> 
+> livepatch: klp_check_stack: kworker/u256:6:23490 has an unreliable stack
+> 
+> After investigation, it was found that this is due to objtool not supporting intra-function calls, resulting in incorrect orc entry generation.
+> 
+> This patchset adds support for intra-function calls, allowing the kernel live patching feature to work correctly.
+> 
+> Alexandre Chartre (2):
+>    objtool: is_fentry_call() crashes if call has no destination
+>    objtool: Add support for intra-function calls
+> 
+> Rui Qi (1):
+>    x86/speculation: Support intra-function call validation
+> 
+>   arch/x86/include/asm/nospec-branch.h          |  7 ++
+>   include/linux/frame.h                         | 11 ++++
+>   .../Documentation/stack-validation.txt        |  8 +++
+>   tools/objtool/arch/x86/decode.c               |  6 ++
+>   tools/objtool/check.c                         | 64 +++++++++++++++++--
+>   5 files changed, 91 insertions(+), 5 deletions(-)
+> 
