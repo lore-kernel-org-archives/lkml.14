@@ -1,59 +1,61 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467DE1BF31;
-	Mon, 26 Feb 2024 07:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95FD1BF33;
+	Mon, 26 Feb 2024 07:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708933731; cv=none; b=XEtiCnTaB/oFUZJNiVM1hkRLNO/yBHsvK2MNMbKAcoSgOMG+r5bHSKHbAv5grcG5ABeUfpERZlHA3b+crlg0rICE1qCMIadGv/GDT4lfx3eT0yEkKh+y2F4N4BP6K4XcJtCgmsU4JdC5K6j8NuuRG0X6GBW9kM0PRTxWokfl398=
+	t=1708933733; cv=none; b=u6S5eXRK2nIP1P2hOapyCDTn78vG1eyR0OzG3s8dcvNw0wG8ljxuljONPgincusZ9GEtMeybkax8T3neVfK3mToV0AJI386Bxv/gdS0kCxL//NnfCzajoW7hUD0ZtRegyRIepICFlfonVtmwEVjtw+m58EWTnEsLJG3eEH9BMsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708933731; c=relaxed/simple;
-	bh=PFCX+psKPyMBHPeR5ppV9yu0fZYBi5SxEA057Wc/M/0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WfYI/SmlP7Z6C0fmBuT69yhQWmgZGCKIzyQjr2fhAYE/UdwHBJLjjiLh9erVC81g0F3brx1LEbovTak5LIuWOcNZ2/d2XzC+z+hh67eUhsjyNF649cq0ee1iJM3vCPNVLSFTcUw1B99wu7U/geBvkanxWPZR/oOSikVdo33pcYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EjJ+FGAj; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1708933733; c=relaxed/simple;
+	bh=uP0MS5a00nAzP+9tQ+LCTr4sG1JbDOljmNcqcWIv+C0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=IzOeDN4JYGVlxU1kK1TEY4nkH7mxhk7RvyzOSbIQScDKJZ41IqeclZeJh5GbrjMJn/yEZZX216w4lfVSo6ZzZLVKOsTMDjwYFYt8cPSE5BdZL+XqW0ZIMkzmhz/FzCQH8m7YHl1CbN0hzTfXWZ4DbJQJsC4DCvkBz5l4taAOYrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DZzhwEdk; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EjJ+FGAj"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-412a87f0d8eso466455e9.2;
-        Sun, 25 Feb 2024 23:48:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZzhwEdk"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-412a390347dso6039785e9.3;
+        Sun, 25 Feb 2024 23:48:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708933728; x=1709538528; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HqQvE+FIcyUadHgmZr58h0Sz29nDm7hjlZzXPmEulQE=;
-        b=EjJ+FGAjs1hSdYHQC35xjDHZgfugRcEsOGTFQ5E6n5K4lw1FnLfb0F27IQTMPHb9E5
-         ug2DZ2oH39mOQwXFjO8Ny0TIk3ntv8I4002ej4HGNN1cc9nUt5xI7BQkaesJVlSozyFm
-         AcO6rbrNrdW1CfRljdgCCMHtsAkVn0d/5yH0uOXCiJif9uBatusa3bjVRSObY72ZuEsW
-         j68W98t3E7g8uyvfz4RFKCrSPONoXvXjeylp+K3DPO7PyOZa7Re8fDuRU/qx2dK2DKZP
-         qAalynRHRehXuzn0Xlu5rzuH3kVpmfC8+vv7ee+Da65Cd02A3uuO5hXc2Gm5iqsZ5Mp6
-         z+Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708933728; x=1709538528;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1708933730; x=1709538530; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HqQvE+FIcyUadHgmZr58h0Sz29nDm7hjlZzXPmEulQE=;
-        b=tSfGrHMifgMYYBQBJOISYk0SeG3yJEkLW3pD7ycn9i//ITrEktnkNeZmn9NV222Wqi
-         p4T9t6C+t3L1wQ2ABGGE2+l3fC0Hfq1zOqTvz/gq0QlmzaUlL8rkLJkCpS/nhBlGhXwy
-         2Mvs/WkAduPUfWaQZLG8tHOXzOR+i6Ia4HuJFwUAMj+sn0qAmkwhSYsd5LQ6obbZQ5YK
-         kZMDFCzc88MKeAK3x41IGhcllTiW3haN0aSAE40mBh2lWeXI7PxE0nOorzEnXaT/J+jy
-         5VCnvXICsLv4UNG+7pwab8DKn6fLYXN1MwkebfOYiZuGyetMKJJqQuFaK8k2m1Y5sZmY
-         DL0A==
-X-Forwarded-Encrypted: i=1; AJvYcCU+xtyEEg09JdWrUgucRUQ/t/K1KlWZWuWkOF5KKtBJeuY9vD1GBJp3JXK35o23mFqtW6Fo2b6F0KskQ4VS3Kds9MgP+5s5dVStsERaXPXLD9akIggmwRTDwajyJ0zrw6v+UvS8YSYAKw==
-X-Gm-Message-State: AOJu0YyLD04kJCK5JRUrR9XyeUhX2EG+nlWw3HcefdPEOBWm2hyNImYd
-	2xZewikt8mXPQrig509BhKFT96jmRKG3U6G8/1Nxj1VSsE9iYIvi
-X-Google-Smtp-Source: AGHT+IHc0CtK0sG6FMH/QvZFvD6vHXweFp3uv9SCDGrhT9OnD2sx7OTNoXF8fRQH5jTmgWWvK5/jAw==
-X-Received: by 2002:a05:600c:46cb:b0:412:10a1:25ed with SMTP id q11-20020a05600c46cb00b0041210a125edmr5352886wmo.33.1708933728607;
-        Sun, 25 Feb 2024 23:48:48 -0800 (PST)
+        bh=kBudS8pduB+JnQNCiuQyA0sgsK2wbQ0gKDhX+xdHCYQ=;
+        b=DZzhwEdkCdvQ0fzOFBI664mgVC4aRvNxflJJUePWOZMXIfZkp0Q0zs88MAzSzStR8S
+         FSf92xEuvBB6vKQH3xaKDRugHbXvzvgtrxaZJdcQNbiyuK+V6NuVOu8f9gfsvy7XdC0n
+         9mrZpYmj+7Ug/Wc+qfkxfGrOlVh6JHF3AvseI7yD1IyeFxjVLGTe2gJfPxDYh4Bq/OFs
+         Jj6G83tyzLlVdHTx4004cyKe+RxfK6LlNaXJw5SnyUSFSjBf3Vy8La3N38MiW55UsWej
+         NknmN+v1hxS2EDApBdX1kAZ1nVdRnXLKvFaTiJyCvDMRAJwz8IAM3WKDaHxzoKa8usQo
+         Qzwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708933730; x=1709538530;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kBudS8pduB+JnQNCiuQyA0sgsK2wbQ0gKDhX+xdHCYQ=;
+        b=RTRlGyMux7uPkDtBsIFcr05PvCUkkOtRu2TTFDXGHwWytLE67tB/+5CJHcIZ3aG8jP
+         xAIbmv66THLTHitXS3SdPvMCw0aAXd0ch30BY5i6Q164AIebCBTUvbMZTVqR/WnkKUSQ
+         qPRdbWFdLp6r56fUEl4hvJW5Y5ileLsspBuB74avMXDe6oQduXkZfKeeXrsXdBG+PyaO
+         I0eZG40nVJFcjJFAbxTqQKUZbsDzLN+Os7O3hn+bKMo1oiu20AVkwDmRjHtojZS9NSP+
+         WAJsuxvqdCCFPo7A6dW89BxMbWzdlQYJdiz0imMzVxEkjE/gDhuqZbHFmttS1g+Yr7Cw
+         8X9g==
+X-Forwarded-Encrypted: i=1; AJvYcCU24UB31OAQGHrA68qAasqEhFOTAnHQlmY+LY1d6EWspVZJ/of9GgLEuyjQtAkB4A/DaT9EMkH7tdNlrJVb0S0CWXIG1WDmTnnKuPYLyrbc2ju6/H+pGDXlqdSE08O9as5rgFdZN4kWHQ==
+X-Gm-Message-State: AOJu0YzOXiTBsRxIjz+t2scwh+wlY8AF/U+WXekcIfEWkIIxN0q8fW9k
+	9vmCI8l6vJ0zlEj2wTNGFcJ68LiIZv+5oEyeyv0Pat0OOWsLeNQxQ6/cJm/F
+X-Google-Smtp-Source: AGHT+IEXcDk7P9a8aCttVoCtQxLZ0Uzp44RGGS8NQoqbv9ZdSzUiG/XAntntAmTmivSIdul1erLtDg==
+X-Received: by 2002:a05:600c:1989:b0:412:9c29:e6b3 with SMTP id t9-20020a05600c198900b004129c29e6b3mr4401757wmq.12.1708933730141;
+        Sun, 25 Feb 2024 23:48:50 -0800 (PST)
 Received: from localhost ([2001:861:3385:e20:6384:4cf:52c5:3194])
-        by smtp.gmail.com with ESMTPSA id f6-20020a05600c154600b00412a482cd90sm2728024wmg.25.2024.02.25.23.48.48
+        by smtp.gmail.com with ESMTPSA id l6-20020a1c7906000000b0040fddaf9ff4sm10995788wme.40.2024.02.25.23.48.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 23:48:48 -0800 (PST)
+        Sun, 25 Feb 2024 23:48:50 -0800 (PST)
 From: Raphael Gallais-Pou <rgallaispou@gmail.com>
-Subject: [PATCH 0/2] Update st,stih407-thermal device
-Date: Mon, 26 Feb 2024 08:48:37 +0100
-Message-Id: <20240226-thermal-v1-0-8b03589ece73@gmail.com>
+Date: Mon, 26 Feb 2024 08:48:39 +0100
+Subject: [PATCH 2/2] ARM: dts: st: add thermal property on stih410.dtsi and
+ stih418.dtsi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,9 +64,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFVC3GUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDIyNT3ZKM1KLcxBxdi+QUg6RE8zQTU6MkJaDqgqLUtMwKsEnRsbW1APf
- VSj1ZAAAA
+Message-Id: <20240226-thermal-v1-2-8b03589ece73@gmail.com>
+References: <20240226-thermal-v1-0-8b03589ece73@gmail.com>
+In-Reply-To: <20240226-thermal-v1-0-8b03589ece73@gmail.com>
 To: "Rafael J. Wysocki" <rafael@kernel.org>, 
  Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
  Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh+dt@kernel.org>, 
@@ -75,26 +77,40 @@ Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 X-Mailer: b4 0.13.0
 
-Those two patches update the thermal device by converting the deprecated
-txt documentation file to DT schema, and adding a required property in
-the device tree where it is needed.
+"#thermal-sensor-cells" is required and missing in thermal nodes.
+Add it.
 
 Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
 ---
-Raphael Gallais-Pou (2):
-      dt-bindings: thermal: convert st,stih407-thermal to DT schema
-      ARM: dts: st: add thermal property on stih410.dtsi and stih418.dtsi
+ arch/arm/boot/dts/st/stih410.dtsi | 1 +
+ arch/arm/boot/dts/st/stih418.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
- .../bindings/thermal/st,stih407-thermal.yaml       | 61 ++++++++++++++++++++++
- .../devicetree/bindings/thermal/st-thermal.txt     | 32 ------------
- arch/arm/boot/dts/st/stih410.dtsi                  |  1 +
- arch/arm/boot/dts/st/stih418.dtsi                  |  1 +
- 4 files changed, 63 insertions(+), 32 deletions(-)
----
-base-commit: b6d69282db550689ab5980e06eedd23b64584a73
-change-id: 20240225-thermal-8cd0ba7f452b
+diff --git a/arch/arm/boot/dts/st/stih410.dtsi b/arch/arm/boot/dts/st/stih410.dtsi
+index 29e95e9d3229..a69231854f78 100644
+--- a/arch/arm/boot/dts/st/stih410.dtsi
++++ b/arch/arm/boot/dts/st/stih410.dtsi
+@@ -270,6 +270,7 @@ thermal@91a0000 {
+ 			clock-names = "thermal";
+ 			clocks = <&clk_sysin>;
+ 			interrupts = <GIC_SPI 205 IRQ_TYPE_EDGE_RISING>;
++			#thermal-sensor-cells = <0>;
+ 		};
+ 
+ 		cec@94a087c {
+diff --git a/arch/arm/boot/dts/st/stih418.dtsi b/arch/arm/boot/dts/st/stih418.dtsi
+index b35b9b7a7ccc..0f0db988a907 100644
+--- a/arch/arm/boot/dts/st/stih418.dtsi
++++ b/arch/arm/boot/dts/st/stih418.dtsi
+@@ -113,6 +113,7 @@ thermal@91a0000 {
+ 			clock-names = "thermal";
+ 			clocks = <&clk_sysin>;
+ 			interrupts = <GIC_SPI 205 IRQ_TYPE_EDGE_RISING>;
++			#thermal-sensor-cells = <0>;
+ 		};
+ 	};
+ };
 
-Best regards,
 -- 
-Raphael Gallais-Pou <rgallaispou@gmail.com>
+2.43.2
 
