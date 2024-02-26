@@ -1,222 +1,159 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFEA131E2F;
-	Mon, 26 Feb 2024 21:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57843130E2E;
+	Mon, 26 Feb 2024 21:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708984592; cv=none; b=ELUFG3rmtgQWKHhk5N48AH44fUFg3djrHFqUGyULlp0mTbrCGwJQHbaINZQ+zIlFQ1JgSAWUiRbrsS+Vv/9y0Yat0E7317emJ4ZXQEnLBxMzwFWLt+up92GKf+rqsBCsxhuL641uUIY6+3r3zUUDjK1TjU0pGAHT4rf0jK+YUGM=
+	t=1708984611; cv=none; b=HW3GTeZEOh2ReCV/U3N1zgdYV7gRkDTK14ZU1sUA5hJuCAkSRMoln1ze5hgrKHoVOVc/fQl79WbqDasxRoSIyAYGR3WptWUQmWkULKiQ2Jw4/NWifnbNTDt8BUZy8F8p3Xb0M1QpQkPuobKnTeK3KU+FK5A15oF8FkZz6/bHS4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708984592; c=relaxed/simple;
-	bh=SLknjA5Z15uYeDnlExQifv2QhXWofp4qqSN0YtcmwZk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dO1SOiw7aUp7A8jYKZD5gZk121fUXVCxCiggGyDwGsqJYveex5juqe0kYnl7XNFZOfCX4zDkRc1G7YdKYjfv82oJ08oCzDzCu1CG6yUhLRrTHcBVHZMKCoWNdnC2ctPvHCoDWdQGPyAlN43XZ4qGcOOvTnwLcP2efHGQ/d25uZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mhvVYNVZ; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708984611; c=relaxed/simple;
+	bh=OKSebMMO6/DYqu7NpbNiHX/+srJ9ql/kyB206hhDmAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q2rGpaBa4QavKa2aIWs4thW6/FUmCcNcZJIQJPwtErs5+4vhqemeqNpizGSUsPTB/cyWno83OOMSQNvY6QoYIVfxnyj4+r+j8yuRKUDYlCs9mJHKqRp8NSB0zqaiE5I9wbgRu3KCNAUrT6Jpb7tTsFN0oRUYAPGOo7eheUp8GSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eSueyoK8; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhvVYNVZ"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d24a727f78so50932271fa.0;
-        Mon, 26 Feb 2024 13:56:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708984589; x=1709589389; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=u1eIEAwPr48i+Yenfq0jlQKcUkAqO/w8pfipw6YSNWk=;
-        b=mhvVYNVZDGa538nSUn+rk38VBsJ7qp7ZIPYOSc5UpeSFtNrR10xROr/VavxaUAqxgT
-         NnadlzaQyvvfERehVzeFNU48dlEqtg2ub/vt9bJ6f94GavNZj3PXDgbZplPb5oCcNKRk
-         NCsvJSc38aegBVu/N+t6fEP8kM2VTaT5JvHxtYjes79lFqQGbJkY7ffvGgDLlMZ7cCg0
-         DwW10/gqWcQmUI47Y6AV1v8FI66+yLMCFlLktoOBhP/vUGdyv7bCMFAvValrcfLr3CFh
-         jLl9yl3L0e214xbzCZy6ozMOPZpZ+Yag0+09LLkJSfFA5JJRtuyxCjKG4RyuVNyVJP/e
-         lDfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708984589; x=1709589389;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u1eIEAwPr48i+Yenfq0jlQKcUkAqO/w8pfipw6YSNWk=;
-        b=J6H5SIY3+BzgvRznYbFI9PjYh37wM8httLibzhgZCpJWplX62i+kGycSKcqT+8nwXK
-         lCrfNX2L81MrB/wr0iLZmSdc7Tol6B+qHqPbEYwqG+jRz6+Xuigt/vkOWlSuMNAMp230
-         bpT/Aq5nb8tDq0O05RTLFwZSlDQCY4H3m9VriQ6wEGhsXKypfotml/GAUQ0hevU4RhQd
-         HraMi3tlWGFM44utxEkBH0xnBhgCFIvOv3/WuKXHvHuVLYZ7X8KeetD7DysP5FBit7q3
-         RKshLG/kWvaLpZmIWHzAgHaLcprzdASIXEX9yw3w537TW00pvGscCeGo11LdIpHBf+XG
-         9I6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVh0kd2QruLH0ix5S/TMvfaI9YdsT2LEcJ9vpgaFOGUDTXSJIjAu1h+UqbWv9OheBodCS4Whi1S1qt5invOXvI1YXw2RKzTAcLSK2lpNgFtW++r0AVC/sJUs8Em3dXGEgyvXIAxS4dCdoFV
-X-Gm-Message-State: AOJu0YwL+V6LAcJgSeEhsARHPkTmXCsecaB4VDKnZmWYilYQ55Ucq3rS
-	/u7T8u8f0GS6j/OgbmxMr0nEPMT+yp7dv3LX/MAntDyBUyjZlNaA
-X-Google-Smtp-Source: AGHT+IGGbUJ58ZLM7LIZyXCH7sTUgCAfWQZm/Ne7NZYSrHReRIXBPDv7+mmqDgsGTYNJAYLkOcLpsg==
-X-Received: by 2002:a05:651c:97:b0:2d2:438a:11ec with SMTP id 23-20020a05651c009700b002d2438a11ecmr5209265ljq.2.1708984588910;
-        Mon, 26 Feb 2024 13:56:28 -0800 (PST)
-Received: from localhost.localdomain ([94.19.228.143])
-        by smtp.gmail.com with ESMTPSA id k3-20020a2ea283000000b002d08f3640b5sm1018539lja.11.2024.02.26.13.56.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 13:56:28 -0800 (PST)
-From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Ovidiu Panait <ovidiu.panait@windriver.com>,
-	linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-	Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Subject: [PATCH] crypto: sun8i-ce - Fix use after free in unprepare.
-Date: Tue, 27 Feb 2024 00:53:57 +0300
-Message-ID: <20240226215358.555234-1-andrej.skvortzov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eSueyoK8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708984609; x=1740520609;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=OKSebMMO6/DYqu7NpbNiHX/+srJ9ql/kyB206hhDmAs=;
+  b=eSueyoK8aKsQAh0CC6+iOy03JJ47WBD2iF2RlZhkQ/hcAplnA0CdBQpW
+   FeOpGPS/YVJ+vmxG/t4pu/6bJIUdFGUnB/AI/y12lygDsFL/Vby5LS8kq
+   4Zojwq5i8qMx1HquW2LrIIiALvwnv0A5JUY2CKORyhEwjqflNxBm9xsUd
+   87eMffDc8csxpDIpIYION6Dp+JJcepumZxrHtCJYfxqSqCRFC9S0VovA7
+   QQQlG//tncVz6Au0Kn/hzQZQLN2ClNYmOkigAoqgd7z9w8Xarub25hOyq
+   wuS9gHSI2aWdwsVjeDWejMz5DEAJr8kWkP8nw8NgAtEYxfe3rQqX0AMmf
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3416212"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="3416212"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 13:56:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="7028174"
+Received: from dukhanki-mobl.amr.corp.intel.com (HELO [10.209.30.102]) ([10.209.30.102])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 13:56:43 -0800
+Message-ID: <3f4c6d12-7e0f-44ca-920e-ec219904e0aa@intel.com>
+Date: Mon, 26 Feb 2024 13:56:42 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 10/15] x86/sgx: Add EPC reclamation in cgroup
+ try_charge()
+Content-Language: en-US
+To: Haitao Huang <haitao.huang@linux.intel.com>,
+ "Huang, Kai" <kai.huang@intel.com>, "tj@kernel.org" <tj@kernel.org>,
+ "jarkko@kernel.org" <jarkko@kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+ "hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>,
+ "tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
+ "mkoutny@suse.com" <mkoutny@suse.com>, "Mehta, Sohil"
+ <sohil.mehta@intel.com>,
+ "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "anakrish@microsoft.com" <anakrish@microsoft.com>,
+ "Zhang, Bo" <zhanb@microsoft.com>,
+ "kristen@linux.intel.com" <kristen@linux.intel.com>,
+ "yangjie@microsoft.com" <yangjie@microsoft.com>,
+ "Li, Zhiquan1" <zhiquan1.li@intel.com>,
+ "chrisyan@microsoft.com" <chrisyan@microsoft.com>
+References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
+ <20240205210638.157741-11-haitao.huang@linux.intel.com>
+ <c5d03171473821ebc9cb79e3dad4d1bf0074e674.camel@intel.com>
+ <op.2jjzaqdwwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <4db8493b-35a2-474f-997c-5e6ac1b8bd11@intel.com>
+ <op.2jkfeezjwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <c913193c0560c4372d2fdb31e9edb28bcb419f50.camel@intel.com>
+ <op.2jlti6g9wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <7b53e155-2622-4acb-b7c9-d22e623e4cb3@intel.com>
+ <op.2jqdjjd8wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <48faaea8b24f032baa6a858a2909a5b4ace769c6.camel@intel.com>
+ <d9b0df06-da68-4729-8aac-2a77e890e152@intel.com>
+ <op.2jrquskiwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <op.2jrquskiwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-sun8i_ce_cipher_unprepare should be called before
-crypto_finalize_skcipher_request, because client callbacks may
-immediately free memory, that isn't needed anymore. But it will be
-used by unprepare after free. Before removing prepare/unprepare
-callbacks it was handled by crypto engine in crypto_finalize_request.
+On 2/26/24 13:48, Haitao Huang wrote:
+> In case of overcomitting, i.e., sum of limits greater than the EPC
+> capacity, if one group has a fault, and its usage is not above its own
+> limit (try_charge() passes), yet total usage of the system has exceeded
+> the capacity, whether we do global reclaim or just reclaim pages in the
+> current faulting group.
 
-Usually that results in a pointer dereference problem during a in
-crypto selftest.
- Unable to handle kernel NULL pointer dereference at
-                                      virtual address 0000000000000030
- Mem abort info:
-   ESR = 0x0000000096000004
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
-   FSC = 0x04: level 0 translation fault
- Data abort info:
-   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp=000000004716d000
- [0000000000000030] pgd=0000000000000000, p4d=0000000000000000
- Internal error: Oops: 0000000096000004 [#1] SMP
+I don't see _any_ reason to limit reclaim to the current faulting cgroup.
 
-This problem is detected by KASAN as well.
- ==================================================================
- BUG: KASAN: slab-use-after-free in sun8i_ce_cipher_do_one+0x6e8/0xf80 [sun8i_ce]
- Read of size 8 at addr ffff00000dcdc040 by task 1c15000.crypto-/373
+>> Last, what is the simplest (least amount of code) thing that the SGX
+>> cgroup controller could implement here?
+> 
+> I still think the current approach of doing global reclaim is reasonable
+> and simple: try_charge() checks cgroup limit and reclaim within the
+> group if needed, then do EPC page allocation, reclaim globally if
+> allocation fails due to global usage reaches the capacity.
+> 
+> I'm not sure how not doing global reclaiming in this case would bring
+> any benefit.
+I tend to agree.
 
- Hardware name: Pine64 PinePhone (1.2) (DT)
- Call trace:
-  dump_backtrace+0x9c/0x128
-  show_stack+0x20/0x38
-  dump_stack_lvl+0x48/0x60
-  print_report+0xf8/0x5d8
-  kasan_report+0x90/0xd0
-  __asan_load8+0x9c/0xc0
-  sun8i_ce_cipher_do_one+0x6e8/0xf80 [sun8i_ce]
-  crypto_pump_work+0x354/0x620 [crypto_engine]
-  kthread_worker_fn+0x244/0x498
-  kthread+0x168/0x178
-  ret_from_fork+0x10/0x20
-
- Allocated by task 379:
-  kasan_save_stack+0x3c/0x68
-  kasan_set_track+0x2c/0x40
-  kasan_save_alloc_info+0x24/0x38
-  __kasan_kmalloc+0xd4/0xd8
-  __kmalloc+0x74/0x1d0
-  alg_test_skcipher+0x90/0x1f0
-  alg_test+0x24c/0x830
-  cryptomgr_test+0x38/0x60
-  kthread+0x168/0x178
-  ret_from_fork+0x10/0x20
-
- Freed by task 379:
-  kasan_save_stack+0x3c/0x68
-  kasan_set_track+0x2c/0x40
-  kasan_save_free_info+0x38/0x60
-  __kasan_slab_free+0x100/0x170
-  slab_free_freelist_hook+0xd4/0x1e8
-  __kmem_cache_free+0x15c/0x290
-  kfree+0x74/0x100
-  kfree_sensitive+0x80/0xb0
-  alg_test_skcipher+0x12c/0x1f0
-  alg_test+0x24c/0x830
-  cryptomgr_test+0x38/0x60
-  kthread+0x168/0x178
-  ret_from_fork+0x10/0x20
-
- The buggy address belongs to the object at ffff00000dcdc000
-  which belongs to the cache kmalloc-256 of size 256
- The buggy address is located 64 bytes inside of
-  freed 256-byte region [ffff00000dcdc000, ffff00000dcdc100)
-
-Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Fixes: 4136212ab18e ("crypto: sun8i-ce - Remove prepare/unprepare request")
----
- .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 34 +++++++++----------
- 1 file changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-index 1262a7773ef3..de50c00ba218 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-@@ -299,22 +299,6 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
- 	return err;
- }
- 
--static void sun8i_ce_cipher_run(struct crypto_engine *engine, void *areq)
--{
--	struct skcipher_request *breq = container_of(areq, struct skcipher_request, base);
--	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(breq);
--	struct sun8i_cipher_tfm_ctx *op = crypto_skcipher_ctx(tfm);
--	struct sun8i_ce_dev *ce = op->ce;
--	struct sun8i_cipher_req_ctx *rctx = skcipher_request_ctx(breq);
--	int flow, err;
--
--	flow = rctx->flow;
--	err = sun8i_ce_run_task(ce, flow, crypto_tfm_alg_name(breq->base.tfm));
--	local_bh_disable();
--	crypto_finalize_skcipher_request(engine, breq, err);
--	local_bh_enable();
--}
--
- static void sun8i_ce_cipher_unprepare(struct crypto_engine *engine,
- 				      void *async_req)
- {
-@@ -360,6 +344,23 @@ static void sun8i_ce_cipher_unprepare(struct crypto_engine *engine,
- 	dma_unmap_single(ce->dev, rctx->addr_key, op->keylen, DMA_TO_DEVICE);
- }
- 
-+static void sun8i_ce_cipher_run(struct crypto_engine *engine, void *areq)
-+{
-+	struct skcipher_request *breq = container_of(areq, struct skcipher_request, base);
-+	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(breq);
-+	struct sun8i_cipher_tfm_ctx *op = crypto_skcipher_ctx(tfm);
-+	struct sun8i_ce_dev *ce = op->ce;
-+	struct sun8i_cipher_req_ctx *rctx = skcipher_request_ctx(breq);
-+	int flow, err;
-+
-+	flow = rctx->flow;
-+	err = sun8i_ce_run_task(ce, flow, crypto_tfm_alg_name(breq->base.tfm));
-+	sun8i_ce_cipher_unprepare(engine, areq);
-+	local_bh_disable();
-+	crypto_finalize_skcipher_request(engine, breq, err);
-+	local_bh_enable();
-+}
-+
- int sun8i_ce_cipher_do_one(struct crypto_engine *engine, void *areq)
- {
- 	int err = sun8i_ce_cipher_prepare(engine, areq);
-@@ -368,7 +369,6 @@ int sun8i_ce_cipher_do_one(struct crypto_engine *engine, void *areq)
- 		return err;
- 
- 	sun8i_ce_cipher_run(engine, areq);
--	sun8i_ce_cipher_unprepare(engine, areq);
- 	return 0;
- }
- 
--- 
-2.43.0
+Kai, I think your examples sound a little bit contrived.  Have actual
+users expressed a strong intent for doing anything with this series
+other than limiting bad actors from eating all the EPC?
 
