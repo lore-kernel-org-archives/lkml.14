@@ -1,137 +1,146 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1A81CA91;
-	Mon, 26 Feb 2024 08:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982E61CAB7
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936032; cv=none; b=u6SHYpaJrBlowXPAGqtTpTIJfUk8d5FQv4meM1ZWG47kY0s+CgFikau4diXetBHQBlaeL0R8OUZA/Jmx5TrilqOjuhTYbMQjsBjW7UtFeua5/3Y0UiGdsU3plBXQ+DiOHimSwov11HOPHkAuYyvuxRqU6xl/6rcG7bPuOXg97kA=
+	t=1708936035; cv=none; b=S7vr6GSJyf79aLgsX8Z2rjTV1LwmdCklC8G1AFwj+IqlNe9RJK5zQ5XWUAbbELCWX7VwwRrfqPfehONS6rIYx8fZ2d8tRYx1eb0bJBus4F+aSK5y6DCQNwEqxSiGgqSPkfisC2ygTPfYxfsxSZSrOzDcmV7fgt2I63+UC+tFE6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936032; c=relaxed/simple;
-	bh=opGkT1SPK5IIzhy5L61IRDO4fs/Se1zLuTjvPJtOAos=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ObZop8PBzhA+wPDNiW+KQDdjDhUFwD5F4zuhoRHJvFGlkG7XNKzuq6u4zoaGj3m4q+6vczGpndpGc4A3RG4JsTStUdg5HuL4315VMlDhbaPSzUgiZJfmWf5Na2j1F/NPoyGCbwlYl7mjVMS+Xj33/R//O/ihV2+PEeoki2HAeaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=eSYuuTHo; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1708936035; c=relaxed/simple;
+	bh=REK+VNCXI3WjyjsuKl+HSXiJRNqvxmX5KAPsA/J1Roo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lc/bC5u2RoF6V3MZM3UmA37dQBkXGlGHXMiElroLXW2yGsMGzngpU0xsH6OaOYz4KKb7Iga7xgkRE90/+F4ijtxphSo09Hv+H+Uc2u1YKsfZOfAuOiLL8lf/pV/yyZBKNevIw+N4WGGHT+uHJPDcoXfZba56xIhULR1+9kC4YSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F/3QGtvt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="eSYuuTHo"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41Q7U9S0026021;
-	Mon, 26 Feb 2024 09:27:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=+LqaC1k2A/CeSV89OpDz4o3lBGabPbXT8Ayn3ozZF+E=; b=eS
-	YuuTHoml5z4VcKgqoFxayaUxIXvZSZB5J9MSNBejh+kYnNzSshlK2EiAPBI8DJe2
-	MCNR+59y/W9S+eQXxCokj1fFMX+uSHTgnUt8hqFAuQJRdMF+6HbFCTrt5SM+7vq0
-	t9gLrO9z36cI62RYxzuqB8qfS5IDP0GYIw42pVMC/zqEokI4RS2waTulWb7zBIx/
-	DFOVgq1A4BKKUjaR6UFwpMyrVcELCxAl1Oq9XHZBwv9zfJ+bWyrhnnFyjWblaWo1
-	G8+AheIRSbOKpbNKX+UK6U7/wRs+ejgX9goH80q1Obauw1HD22z1IFtV5CghkE28
-	GEoj3u7rKgOgS+qveTtw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wftw4kys9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 09:27:04 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 54A3840047;
-	Mon, 26 Feb 2024 09:27:01 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B2CC424DFE9;
-	Mon, 26 Feb 2024 09:26:32 +0100 (CET)
-Received: from [10.201.21.177] (10.201.21.177) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 26 Feb
- 2024 09:26:31 +0100
-Message-ID: <9fb17963-8942-4810-ae86-508fd7b3466a@foss.st.com>
-Date: Mon, 26 Feb 2024 09:26:31 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/3QGtvt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708936031;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zGkEjPkjWA9B4Ml20UNQYktxGpIUURUmKif/cYqIu08=;
+	b=F/3QGtvtM1I2iFggDWwHePEnpi8MX4ZOtDb040D5cI7zMeZ2v1X/MClnAdidp0L7Q9iiL3
+	rDqkvRJSor4cNtBHyhfl5tB4QuBXkHWglqtd5p++b9c75ZDMpBSmd/EyJSHqS0WJ6Gez5y
+	x/48822dX1tiUY1GI9e27dEC14q1aww=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-59-hUMJ_eIpOwShCEc_53iP4g-1; Mon, 26 Feb 2024 03:27:09 -0500
+X-MC-Unique: hUMJ_eIpOwShCEc_53iP4g-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-559391de41bso2459174a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 00:27:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708936028; x=1709540828;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zGkEjPkjWA9B4Ml20UNQYktxGpIUURUmKif/cYqIu08=;
+        b=lrbagD1LApxWZ/RE2CB/V2qRFZbMX043628a6JbwEafyslBdfrO/G3jX53yh9KH7E+
+         Q4W7UtxRlIbr1mPUnj3sCYQeZrj+y9UBkAlxT7nE7YIucfHadBOnFjoxjA2y1M7fplgG
+         yPcVy+5ifBEPztTNXbwnK+bH6bNrhJV98HzI12VWTI1K/LczgEx82MGiafpfA5B2y6uV
+         LuSkDHNnwFd5TynDc6NNYSLFodt5X2AHaOHRaSFA2dzZHWgxHSOLvgzxzlXbOyAis5iy
+         FtBFAlBoTFX45nqWoE348yXgpX84+F4ujJ2tTEp4aGtifSkFrFCnkN71OFcWsI4xnPdy
+         FTFg==
+X-Forwarded-Encrypted: i=1; AJvYcCURFaT7+kszZSDHaY5T/OMw32m5PIQ73PO3Un4AKJXSpEN94nfsYgrVYk9o7Nas/YFKX+yOhR8CfQ+io7x4MM6j2IlAcYTrGzSX5CH5
+X-Gm-Message-State: AOJu0Yxmza3Iwktsya3bMG9UpPKoq+UzOOsPiEZZxVDxNjcKPzkReH4o
+	Fkq3kZyqoAQ/9ltQdO/UCHy0EYvsWkizAwygZOwzYVpit7eAPZHLFus61oSWRqWbffjoTbiBbX/
+	BRWHWKPQOxDMD88r86iuYlf/pzCRH1h0zc86N2fOTAsQL3PBHt0AD143IJE9A9g==
+X-Received: by 2002:a05:6402:1487:b0:565:7ce5:abd5 with SMTP id e7-20020a056402148700b005657ce5abd5mr3814990edv.18.1708936027997;
+        Mon, 26 Feb 2024 00:27:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEs8Tjqo0VpOsvxWN6d4PjBqkrrs6LEUpm+NGUAUsWf2FRaOQEeC4y6T0kpK+5Rwd2wg9QwJA==
+X-Received: by 2002:a05:6402:1487:b0:565:7ce5:abd5 with SMTP id e7-20020a056402148700b005657ce5abd5mr3814973edv.18.1708936027632;
+        Mon, 26 Feb 2024 00:27:07 -0800 (PST)
+Received: from sgarzare-redhat (host-87-11-6-148.retail.telecomitalia.it. [87.11.6.148])
+        by smtp.gmail.com with ESMTPSA id k1-20020a05640212c100b005653fe3f180sm2105105edx.70.2024.02.26.00.27.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 00:27:06 -0800 (PST)
+Date: Mon, 26 Feb 2024 09:27:04 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com, 
+	edumazet@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	horms@kernel.org, 
+	"open list:VM SOCKETS (AF_VSOCK)" <virtualization@lists.linux.dev>
+Subject: Re: [PATCH net-next 1/2] net/vsockmon: Leverage core stats allocator
+Message-ID: <nrphi5hjfgpzhkfjsvskxhis6uqc3ham6u5x3c5imw2slkombb@phutaqxg23io>
+References: <20240223115839.3572852-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] memory: stm32-fmc2-ebi: add MP25 support
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>
-References: <20240219140202.85680-1-christophe.kerello@foss.st.com>
- <20240219140202.85680-4-christophe.kerello@foss.st.com>
- <21ad2752-ad25-451a-b892-6b3b31c1031a@linaro.org>
-From: Christophe Kerello <christophe.kerello@foss.st.com>
-In-Reply-To: <21ad2752-ad25-451a-b892-6b3b31c1031a@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_05,2024-02-23_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240223115839.3572852-1-leitao@debian.org>
 
-Hi Krzysztof,
+On Fri, Feb 23, 2024 at 03:58:37AM -0800, Breno Leitao wrote:
+>With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+>convert veth & vrf"), stats allocation could be done on net core
+>instead of this driver.
+>
+>With this new approach, the driver doesn't have to bother with error
+>handling (allocation failure checking, making sure free happens in the
+>right spot, etc). This is core responsibility now.
+>
+>Remove the allocation in the vsockmon driver and leverage the network
+>core allocation instead.
+>
+>Signed-off-by: Breno Leitao <leitao@debian.org>
+>---
+> drivers/net/vsockmon.c | 16 +---------------
+> 1 file changed, 1 insertion(+), 15 deletions(-)
 
-On 2/21/24 09:32, Krzysztof Kozlowski wrote:
-> On 19/02/2024 15:02, Christophe Kerello wrote:
->> Add the support of the revision 2 of FMC2 IP.
->>       - PCSCNTR register has been removed,
->>       - CFGR register has been added,
->>       - the bit used to enable the IP has moved from BCR1 to CFGR,
->>       - the timeout for CEx deassertion has moved from PCSCNTR to BCRx,
->>       - the continuous clock enable has moved from BCR1 to CFGR,
->>       - the clk divide ratio has moved from BCR1 to CFGR.
->>
->> The MP1 SoCs have only one signal to manage all the controllers (NWAIT).
->> The MP25 SOC has one RNB signal for the NAND controller and one NWAIT
->> signal for the memory controller.
->>
->> Let's use a platform data structure for parameters that will differ
->> between MP1 and MP25.
-> 
-> 
-> ...
-> 
->> +
->>   	ebi->regmap = device_node_to_regmap(dev->of_node);
->>   	if (IS_ERR(ebi->regmap))
->>   		return PTR_ERR(ebi->regmap);
->> @@ -1190,9 +1502,11 @@ static int stm32_fmc2_ebi_probe(struct platform_device *pdev)
->>   	if (ret)
->>   		goto err_release;
->>   
->> -	ret = stm32_fmc2_ebi_save_setup(ebi);
->> -	if (ret)
->> -		goto err_release;
->> +	if (ebi->data->save_setup) {
-> 
-> This cannot be NULL.
+Thanks for this patch!
 
-Ok, it will be done in V3.
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Regards,
-Christophe Kerello.
+>
+>diff --git a/drivers/net/vsockmon.c b/drivers/net/vsockmon.c
+>index b1bb1b04b664..a0b4dca36baf 100644
+>--- a/drivers/net/vsockmon.c
+>+++ b/drivers/net/vsockmon.c
+>@@ -13,19 +13,6 @@
+> #define DEFAULT_MTU (VIRTIO_VSOCK_MAX_PKT_BUF_SIZE + \
+> 		     sizeof(struct af_vsockmon_hdr))
+>
+>-static int vsockmon_dev_init(struct net_device *dev)
+>-{
+>-	dev->lstats = netdev_alloc_pcpu_stats(struct pcpu_lstats);
+>-	if (!dev->lstats)
+>-		return -ENOMEM;
+>-	return 0;
+>-}
+>-
+>-static void vsockmon_dev_uninit(struct net_device *dev)
+>-{
+>-	free_percpu(dev->lstats);
+>-}
+>-
+> struct vsockmon {
+> 	struct vsock_tap vt;
+> };
+>@@ -79,8 +66,6 @@ static int vsockmon_change_mtu(struct net_device *dev, int new_mtu)
+> }
+>
+> static const struct net_device_ops vsockmon_ops = {
+>-	.ndo_init = vsockmon_dev_init,
+>-	.ndo_uninit = vsockmon_dev_uninit,
+> 	.ndo_open = vsockmon_open,
+> 	.ndo_stop = vsockmon_close,
+> 	.ndo_start_xmit = vsockmon_xmit,
+>@@ -112,6 +97,7 @@ static void vsockmon_setup(struct net_device *dev)
+> 	dev->flags = IFF_NOARP;
+>
+> 	dev->mtu = DEFAULT_MTU;
+>+	dev->pcpu_stat_type = NETDEV_PCPU_STAT_LSTATS;
+> }
+>
+> static struct rtnl_link_ops vsockmon_link_ops __read_mostly = {
+>-- 
+>2.39.3
+>
 
-> 
->> +		ret = ebi->data->save_setup(ebi);
->> +		if (ret)
->> +			goto err_release;
->> +	}
->>   
->>   	platform_set_drvdata(pdev, ebi);
->>   
->> @@ -1238,7 +1552,9 @@ static int __maybe_unused stm32_fmc2_ebi_resume(struct device *dev)
->>   	if (ret)
->>   		return ret;
->>   
->> -	stm32_fmc2_ebi_set_setup(ebi);
->> +	if (ebi->data->set_setup)
-> 
-> This cannot be NULL.
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
