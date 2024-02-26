@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C93A4F8A0;
-	Mon, 26 Feb 2024 08:27:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7010951C4C;
+	Mon, 26 Feb 2024 08:27:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936069; cv=none; b=dSqOeekH0NEBwzgZOKN4coGrYUFSB1k2fRXKU+88KopL6y2ykgVPV8GJUVAoq9ZswQ+0wxcsUuNe4+yFmtIl1IEh39OVvDB+cK9y/D6j+naWCboMBzijx1HTJxIeK2ICjWb9FbVs0SajJj9mEcJkxiXbE1HN7FD2+4Sq3Pv9kpU=
+	t=1708936070; cv=none; b=WYQTY+BDKmL9DtW3m6Ui+zw9b0+77douwVH3Bwc97w4YarW0/ke7fOf0MWFwFtdMJP+LvqzVM1XvbNQuOd2x7h3DeiEp4o5pqRvtvv1Jx88SRnV0QGeSMNDK6fTx9PGH1Zc/WjivMTkllaEFuSMsOOT2vO45GiRdMjTNosuKHg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936069; c=relaxed/simple;
-	bh=yEg4v544YC7e+UFPcUmTBeIBNiztK9idn0tOEopCeIQ=;
+	s=arc-20240116; t=1708936070; c=relaxed/simple;
+	bh=o8YPZiq6LeeZQGwQQQuIE5wqxkP0AxPJNMylilPEjus=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RO8fhbNt8HbNSiAxWg8n3kylaNFvAuTD2V1rnRG7HWpzYdoOwtQf+6glab7e1vxfs1YHLjL+Kp3FIICltAYwZO5MPBfn86IJomtRMirm5cZyziBcFwYV0eFU4dXcYHyh0/XNVA7HhmBHWngpaYhHny1eOrNP8OU3BSJkt3tkFgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IDx2P+CM; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=POK9SGWXNt5Pwsg8gV1AZkU3XtTILmPlmFpI5BibedFfnK1JgWj7qyIDW9FAyMC9JjODoEGmUe+cF0zj+ajF5vJNGbtzMzWM1wzv7OrNxyCaFTgAfFLpuLVSqwRv574d0gCiPNaLHUASTiaUGniGbXPwwczEw3+ju6hsnOrMilk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aj5qsrUs; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IDx2P+CM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aj5qsrUs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936067; x=1740472067;
+  t=1708936068; x=1740472068;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yEg4v544YC7e+UFPcUmTBeIBNiztK9idn0tOEopCeIQ=;
-  b=IDx2P+CMzhL++faYjGDve/xKCONFD+CCHyUyPO+Jh+lhNV/Z0Ey5CmwU
-   QhZDfTe7TgjTin7CWgOjc0k7Gn9gWqsRZV2eBQcqV/6ZuzRBmHuzWv+yl
-   oePP2kAzD6idPWo2OX0LhduJARg5SoDS5CwsdYgw2C7GntHxlLA1oWYvZ
-   g2GUwaOX9nfPje50nI86tMs5FPxJ82ae/K5GX2YsyeYRop9tXMhukE6+G
-   z1wDQhq84wOZa/OrzSgIQh1CGmdCDolbO8UKO9EZPcRBezHgDdj9G76aq
-   QFGGa0ltqNQRf285gFeUSfhNX86fSPdAgAejIC5nHqBz+jkqMsHq8b71f
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="28631491"
+  bh=o8YPZiq6LeeZQGwQQQuIE5wqxkP0AxPJNMylilPEjus=;
+  b=aj5qsrUsb0uB8pdy59w+SY8cx0gRe8kKqrf8ZYPVrwbz9hnCAOmktJmO
+   kTXuh3VyIqc1hgpzb5sDU+hAtP9mDnWEoS21FYufyDUPq6bcjHOtYONl3
+   +QQFzsm/1KWbp/HOMtQ+pw03csWPVaFzC1K/+VFdho9uz5KzmzYdchFi1
+   QjS3i8FKtjYafwk86Rk44pHbvVk6SIeQuOVYsG6f6nLnQCJwsItL5XuUq
+   4XUVnRSGWuJhL46IFluOpZQAQIT12Exjg/KHVmDmtpYslZboM1c8tBFJJ
+   mn1MpLOQX3+gMUclX71+AKnrIItX5lpK9hNJtacZUUQ6Nm12yUZ4PQ7Ge
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="28631497"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="28631491"
+   d="scan'208";a="28631497"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6474342"
+   d="scan'208";a="6474348"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:42 -0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:43 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v19 015/130] KVM: Document KVM_MEMORY_MAPPING ioctl
-Date: Mon, 26 Feb 2024 00:25:17 -0800
-Message-Id: <b695d166f95992339cc1836e656387042454b1e9.1708933498.git.isaku.yamahata@intel.com>
+Subject: [PATCH v19 017/130] KVM: x86: Implement kvm_arch_{, pre_}vcpu_memory_mapping()
+Date: Mon, 26 Feb 2024 00:25:19 -0800
+Message-Id: <b61447f906e77f64bd1ddc5389408b901ac20046.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -68,55 +68,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Adds documentation of KVM_MEMORY_MAPPING ioctl.
+Wire KVM_MEMORY_MAPPING ioctl to kvm_mmu_map_tdp_page() to populate
+guest memory.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
 v19:
 - newly added
 ---
- Documentation/virt/kvm/api.rst | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/x86/kvm/x86.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 3ec0b7a455a0..667dc58f7d2f 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6323,6 +6323,34 @@ a single guest_memfd file, but the bound ranges must not overlap).
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 48a61d283406..03dab4266172 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4663,6 +4663,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_VM_DISABLE_NX_HUGE_PAGES:
+ 	case KVM_CAP_IRQFD_RESAMPLE:
+ 	case KVM_CAP_MEMORY_FAULT_INFO:
++	case KVM_CAP_MEMORY_MAPPING:
+ 		r = 1;
+ 		break;
+ 	case KVM_CAP_EXIT_HYPERCALL:
+@@ -5801,6 +5802,31 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
+ 	}
+ }
  
- See KVM_SET_USER_MEMORY_REGION2 for additional details.
- 
-+4.143 KVM_MEMORY_MAPPING
-+------------------------
++void kvm_arch_vcpu_pre_memory_mapping(struct kvm_vcpu *vcpu)
++{
++	kvm_mmu_reload(vcpu);
++}
 +
-+:Capability: KVM_CAP_MEMORY_MAPPING
-+:Architectures: none
-+:Type: vcpu ioctl
-+:Parameters: struct kvm_memory_mapping(in/out)
-+:Returns: 0 on success, <0 on error
++int kvm_arch_vcpu_memory_mapping(struct kvm_vcpu *vcpu,
++				 struct kvm_memory_mapping *mapping)
++{
++	u8 max_level = KVM_MAX_HUGEPAGE_LEVEL;
++	u64 error_code = PFERR_WRITE_MASK;
++	u8 goal_level = PG_LEVEL_4K;
++	int r;
 +
-+KVM_MEMORY_MAPPING populates guest memory without running vcpu.
++	r = kvm_mmu_map_tdp_page(vcpu, gfn_to_gpa(mapping->base_gfn), error_code,
++				 max_level, &goal_level);
++	if (r)
++		return r;
 +
-+::
++	if (mapping->source)
++		mapping->source += KVM_HPAGE_SIZE(goal_level);
++	mapping->base_gfn += KVM_PAGES_PER_HPAGE(goal_level);
++	mapping->nr_pages -= KVM_PAGES_PER_HPAGE(goal_level);
++	return r;
++}
 +
-+  struct kvm_memory_mapping {
-+	__u64 base_gfn;
-+	__u64 nr_pages;
-+	__u64 flags;
-+	__u64 source;
-+  };
-+
-+KVM_MEMORY_MAPPING populates guest memory in the underlying mapping. If source
-+is not zero and it's supported (it depends on underlying technology), the guest
-+memory content is populated with the source.  If nr_pages is large, it may
-+return -EAGAIN and the values (base_gfn and nr_pages. source if not zero) are
-+updated to point the remaining range.
-+
-+The "flags" field is reserved for future extensions and must be '0'.
-+
- 5. The kvm_run structure
- ========================
- 
+ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 			 unsigned int ioctl, unsigned long arg)
+ {
 -- 
 2.25.1
 
