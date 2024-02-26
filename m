@@ -1,138 +1,190 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C783412BEA1;
-	Mon, 26 Feb 2024 16:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B85812CD8F;
+	Mon, 26 Feb 2024 16:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708964490; cv=none; b=NGEOSQ/p9XqwuGgHu6u7VxbV977OZp45i2hDp0rgZCa0T/5CcZvARz20RgXqqhg4oPYuHlTYeR5iYeSptFV4PoWoKgXK7rgMy6H/BLhyWjGm/ndaegze8EcptnZQcBt7tZ+l8jtGtyjcz2IXU7q7CgiwX5WYv5tZgWYuJSXChTA=
+	t=1708964494; cv=none; b=GxiKgcysqFOkPLUZ1IuqCrnetpUoELtOWW0CA2OaDWNihd5GNpCPX7ykqw+HBJAEqvsp1Mu3JGsSwOdJj/pJ8/WmRqWgSgJjJHf7L54HCe9KAOZMd4aVznNAB4TwPKZwJ7DPEE8x7orlX9qNeluKcXtHbhIbPozpl06u501Zwbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708964490; c=relaxed/simple;
-	bh=/EHIikTMWeOS0ZuaWwLi00khF35uJieHD8tZwTSpUD0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S6o2nCwjOonuM61LWkwFwCWyG073hjvMI2BkUUeSwg85yuelnCHbtwG+KlvBXccK85cQNjr8t4ayjnA5c1NQGI6pLqS4yreSxTLmtwpdWX6MfR9YnONdBFoLaBwNicWZ0Sjt8Gn3w0bqMwKeH3jldHICI+nJrMVc+T0FYuOd9VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iUdIC7l5; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iUdIC7l5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708964486; x=1740500486;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/EHIikTMWeOS0ZuaWwLi00khF35uJieHD8tZwTSpUD0=;
-  b=iUdIC7l5fudfQwkhG6GfZc/SyxkzEswt+DhYO92D34wBaR4ODY7kYl4d
-   OwGw2nWRZ+pHy3Gz+3qOXtwImVWozDT/mHGbHuiyf2bXHVqm+l0PheApx
-   3HJ+PrfxJ2uVgiuYy1Ekke7+ThSARHj08H9O9h1Y9193XEmCwW0M8qf21
-   Z3RF8wE3VzDJYoAFuwTOsD70rO1led6m9Q5DtkD6TGKLnU13AqEF0o1uJ
-   ijMoe/DpMjK8hV9Kp2y0cvq4+5nQ30WnS3igpoxMU1x/dXbrXIbXwdEb/
-   LJgXFj9I+aZcDNSQYhfRDUAppJbhghYXQ5JS8c6KdkRzAcGaOjhIwTfmk
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3373739"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="3373739"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:21:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6652281"
-Received: from dukhanki-mobl.amr.corp.intel.com (HELO [10.209.30.102]) ([10.209.30.102])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:21:24 -0800
-Message-ID: <3807c397-2eef-4f1d-ae85-4259f061f08e@intel.com>
-Date: Mon, 26 Feb 2024 08:21:23 -0800
+	s=arc-20240116; t=1708964494; c=relaxed/simple;
+	bh=K8Zp0ZPKDcwcP3G/KRjzFIjbZsJkztFYeVAPVMu3ls8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jaU+dAw9IG0T/+RjLslPCJ7CMFdSiuBrrhI72cj3fpSklsy21NYfI+fvGZlOvcGF68NsUMTzQpXLYKREu/FFRm2xD7HsAA8QZh6locuNSWUuiBlup6DertHPu6G7c5BnAMmRtE+uHQfYUQnA+aniDLr2OjAVlCSnxACdAS8qLNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc6d9a8815fso3012295276.3;
+        Mon, 26 Feb 2024 08:21:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708964488; x=1709569288;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AnNfNm5GP8AlHR3LpO3OZDALnBwQPt1VpdE5YdvyhHU=;
+        b=FVnpkMWODbp4c5fW2UFshr2DOS6ND2QSWBJ96wrSUsYfNeHmiEw68PeRPLajn1WFVJ
+         3A4auSk7dBLYT9PHhzXsQN3UvDp6ciDmKi+gpjZuVoypDpQLbPOdFxB3n8QjBl0k1ttZ
+         4ibqSJPlm4m0oqQ4vJQLJJtJyblmBFtXOIkuXsYjKmLDsZDlZ6sD0CZrqQJg/XiI9Qrr
+         XIrxk/xfYEnGoOG3yEbOQj/6XAA9Ed8zaWXYAQap8o/4yd8PLAsYJyasNfssnhMckVYb
+         2ujHhjbPlrnu2jESuNXNyiPZmDgE4mWnxLZJ/HE/ZF0H6fjb1XshkNcf3wAGPjRjBjLF
+         54Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCXShRe8maavP53tYStEtKgKz8neu6AFmiEHZbDSs9yJtoXLB4o7X9SClhCyoRJ8rBHsWoIqbytyflsmm4zqC3O0ODnLbpceL4cufCRJHxcc85/B7dGm7yTnfiOYgmLadxLBw16O1S7b9eGVGPAtD+1cR2iEN7455fW2gxdoEbfmqy8cYw06Fys01Uyhp/G+SYxO2rNJ3XfZLWe6oXVn5qdl9ip4VrfHfUWSBMlx+W+SE7wObjWdP4ze1KdB9FFzu6/0YsoFQQEqJAyVq9jmiZyU8/TjnyBlqKDhSfz51+jBIEyqQM3aw11XR5w+cRlrnXqzg9vWD+A4KDSB25a5KVOMQBxQn5vN4ZqwPW/YX6qouFgWPMgMWeA=
+X-Gm-Message-State: AOJu0Yy81+JK7ge34eIBYzpFD03VtP5Vd5q6Ycx9FBePAsB5SV3AzXcP
+	JmiSQ6cvCelDrJLZTBOV3YYbvkTB8kwmYhi7qKICdWVAa00tLrnIoK5OVq5T42w=
+X-Google-Smtp-Source: AGHT+IEJFJN64SqcZMHnkcdm3I6piTKl+/O4wLy59UNIzTaX9D/pCnztcN4qJmRcfE8aCJx/sq4G5Q==
+X-Received: by 2002:a25:ae4f:0:b0:dcd:6722:c728 with SMTP id g15-20020a25ae4f000000b00dcd6722c728mr5196743ybe.14.1708964487740;
+        Mon, 26 Feb 2024 08:21:27 -0800 (PST)
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
+        by smtp.gmail.com with ESMTPSA id t13-20020a25aa8d000000b00dcc620f4139sm1019289ybi.14.2024.02.26.08.21.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 08:21:27 -0800 (PST)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc23bf7e5aaso3149877276.0;
+        Mon, 26 Feb 2024 08:21:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVqq+jjHfFEPR//OoVVvagRJjk2vjYlnHtyaHvCkOTs+ZFsF6i2R9w6bPoez1blin2aatCtHOQT9jQYIElkQ9XMjM9QNds8HM8FC3tlEEH9+Yi9Xgmrd9nwPw+GjrHL2P2liAGPfbKQf/35XswvsVHxtSDT/8iWz6gCPatMAF/8swgyF+Kaf15fxCjtMXc+SyGjkj04rv8XYMbPZk1keuKBa2brkuHCjSCpJvOpJhsuRu8RsF4ZbZ/3+GUzSpybSWmZSiHFZ8PUn2uIWKWeG7SID418BORxF8mxGgfXlukUXRHQRIJjgqiJWTjI5W7tkkmEpMZICjZRFqfhifFTZag09MAiRGnJus0GfeYjxe+V5h7j3PNIttU=
+X-Received: by 2002:a25:360b:0:b0:dcc:35ca:aac4 with SMTP id
+ d11-20020a25360b000000b00dcc35caaac4mr5201494yba.51.1708964485283; Mon, 26
+ Feb 2024 08:21:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] x86/cpu: fix invalid MTRR mask values for SEV or
- TME
-Content-Language: en-US
-To: Yin Fengwei <fengwei.yin@intel.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- Zixi Chen <zixchen@redhat.com>, Adam Dunlap <acdunlap@google.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Xiaoyao Li <xiaoyao.li@intel.com>, Kai Huang <kai.huang@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, stable@vger.kernel.org
-References: <20240131230902.1867092-1-pbonzini@redhat.com>
- <2b5e6d68-007e-48bd-be61-9a354be2ccbf@intel.com>
- <CABgObfa_7ZAq1Kb9G=ehkzHfc5if3wnFi-kj3MZLE3oYLrArdQ@mail.gmail.com>
- <CABgObfbetwO=4whrCE+cFfCPJa0nsK=h6sQAaoamJH=UqaJqTg@mail.gmail.com>
- <CABgObfbUcG5NyKhLOnihWKNVM0OZ7zb9R=ADzq7mjbyOCg3tUw@mail.gmail.com>
- <eefbce80-18c5-42e7-8cde-3a352d5811de@intel.com>
- <CABgObfY=3msvJ2M-gHMqawcoaW5CDVDVxCO0jWi+6wrcrsEtAw@mail.gmail.com>
- <9c4ee2ca-007d-42f3-b23d-c8e67a103ad8@intel.com>
- <CABgObfYttER8yZBTReO+Cd5VqQCpEY9UdHH5E8BKuA1+2CsimA@mail.gmail.com>
- <7e118d89-3b7a-4e13-b3de-2acfbf712ad5@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <7e118d89-3b7a-4e13-b3de-2acfbf712ad5@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1704788539.git.ysato@users.sourceforge.jp> <e5d965a1ba1447466c4a70c95b1e3aa8c1aebe4b.1704788539.git.ysato@users.sourceforge.jp>
+In-Reply-To: <e5d965a1ba1447466c4a70c95b1e3aa8c1aebe4b.1704788539.git.ysato@users.sourceforge.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 Feb 2024 17:21:13 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVyz4mbExe8ZzPkVxEujYBhCBBrh88n8D6ykcZyy3=SEA@mail.gmail.com>
+Message-ID: <CAMuHMdVyz4mbExe8ZzPkVxEujYBhCBBrh88n8D6ykcZyy3=SEA@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v6 02/37] sh: Kconfig unified OF supported targets.
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/25/24 17:57, Yin Fengwei wrote:
-> On 2/23/24 02:08, Paolo Bonzini wrote:
->> On Thu, Feb 22, 2024 at 7:07 PM Dave Hansen <dave.hansen@intel.com> wrote:
->>>> Ping, in the end are we applying these patches for either 6.8 or 6.9?
->>> Let me poke at them and see if we can stick them in x86/urgent early
->>> next week.  They do fix an actual bug that's biting people, right?
->> Yes, I have gotten reports of {Sapphire,Emerald} Rapids machines that
->> don't boot at all without either these patches or
->> "disable_mtrr_cleanup".
-> We tried platform other than Sapphire and Emerald. This patchset can fix
-> boot issues on that platform also.
+Hi Sato-san,
 
-Fengwei, could you also test this series on the troublesome hardware,
-please?
+On Tue, Jan 9, 2024 at 9:23=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> Targets that support OF should be treated as one board.
+>
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-> https://lore.kernel.org/all/20240222183926.517AFCD2@davehans-spike.ostc.intel.com/
+Thanks for your patch!
 
-If it _also_ fixes the problem, it'll be a strong indication that it's
-the right long-term approach.
+> --- a/arch/sh/Kconfig
+> +++ b/arch/sh/Kconfig
+> @@ -710,6 +710,7 @@ choice
+>         prompt "Kernel command line"
+>         optional
+>         default CMDLINE_OVERWRITE
+> +       depends on !OF || USE_BUILTIN_DTB
+
+This is still useful in the generic OF case.
+
+I think it would be good to model this similar to what arm/arm64/riscv
+are using (from bootloader / extend / force).
+
+>         help
+>           Setting this option allows the kernel command line arguments
+>           to be set.
+> diff --git a/arch/sh/boards/Kconfig b/arch/sh/boards/Kconfig
+> index 109bec4dad94..e7e52779ef62 100644
+> --- a/arch/sh/boards/Kconfig
+> +++ b/arch/sh/boards/Kconfig
+> @@ -19,16 +19,9 @@ config SH_DEVICE_TREE
+>         select TIMER_OF
+>         select COMMON_CLK
+>         select GENERIC_CALIBRATE_DELAY
+> -
+> -config SH_JCORE_SOC
+> -       bool "J-Core SoC"
+> -       select SH_DEVICE_TREE
+> -       select CLKSRC_JCORE_PIT
+> -       select JCORE_AIC
+> -       depends on CPU_J2
+> -       help
+> -         Select this option to include drivers core components of the
+> -         J-Core SoC, including interrupt controllers and timers.
+> +       select GENERIC_IRQ_CHIP
+> +       select SYS_SUPPORTS_PCI
+> +       select GENERIC_PCI_IOMAP if PCI
+>
+>  config SH_SOLUTION_ENGINE
+>         bool "SolutionEngine"
+> @@ -293,6 +286,7 @@ config SH_LANDISK
+>         bool "LANDISK"
+>         depends on CPU_SUBTYPE_SH7751R
+>         select HAVE_PCI
+> +       select SYS_SUPPORTS_PCI
+>         help
+>           I-O DATA DEVICE, INC. "LANDISK Series" support.
+>
+> @@ -369,6 +363,16 @@ config SH_APSH4AD0A
+>         help
+>           Select AP-SH4AD-0A if configuring for an ALPHAPROJECT AP-SH4AD-=
+0A.
+>
+> +config SH_OF_BOARD
+> +       bool "General Open Firmware boards"
+> +       select SH_DEVICE_TREE
+> +       select CLKSRC_JCORE_PIT if CPU_J2
+> +       select JCORE_AIC if CPU_J2
+
+Please move these selects to CPU_J2 instead...
+
+> +       select HAVE_PCI if CPU_SUBTYPE_SH7751R
+
+... and this to CPU_SUBTYPE_SH7751R, else it will become
+a long unmaintainable list soon...
+
+> +       help
+> +         This board means general OF supported targets.
+> +
+> +
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
