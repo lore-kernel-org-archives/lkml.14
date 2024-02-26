@@ -1,52 +1,48 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05181CF92;
-	Mon, 26 Feb 2024 10:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A411CAB1;
+	Mon, 26 Feb 2024 10:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944200; cv=none; b=f4TpIyh2KS8UKAHJsBfP68ePjUCHA+DVhssJfR6/KiAz7dWMbN3ubR01T2TGT7rl1ovhFXCyoIkRCS9KjD/u9ISxlQd4W5+K1yFsKdRGltB+r1VYbkGQ2sJkVYCPbaBe6u98V4hnP7vUrntjzjhmjnzAhaJR3e2LoxE3gnh6Ofo=
+	t=1708944207; cv=none; b=tZISm+fy8/aoTMzhZ/WBJi9iRqmrCvfBE4W4F60Umo9lxqMDkDYUH59uguQpNFFTIuJFuWqI+GcjV4wYTDSdCF5iUn6YC0NbwU3vAnTwF+jXgpl0k3ExHNSUynXYjJBZGiGEkH1UtSruE9wRSqdIpHOv2iaULt7s6LKzN1GY9yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944200; c=relaxed/simple;
-	bh=aUcVDM1+6ARSzZRquw7Ik0hUINROv/efcpHajUakwjY=;
+	s=arc-20240116; t=1708944207; c=relaxed/simple;
+	bh=bCOEdmzm2b5pTbM42AruTEdEivbhVbBQbwIOPdHVrdY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WpSJH+19x/NgE7OtHgX9ZR7KqW3HXPa+8z9aLLxH9gDn2YmQu6bu8SwkCAjPiyveGt7JGgWikjTqw7iMmzmZsTDFCdB1vBKmFmuTQCMKBnZ7CAYEDUa5BaAlzOzoNQceKlGTSl7rLNwmWrMPaSeFHewECuMXQYorgB4Qe4gRzKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=W0KmmBG5; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=t6sYcDv/KToCyo7Ht0uCgQ0wACLEacrHw0vAfc4R4/7Z/0RJImdBBkyOkQrGlWnp+F8NN349aV8erm52FqX1bCDHvkU+IqvlJK1WnpMJJviB3O/uP6ToKsExvcQ6aOCATeikjrOqnvGlMt0mTLAKVkcH4wsoIajmhoEIlcLw5bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YvGqP2LL; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="W0KmmBG5"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EDC16FF824;
-	Mon, 26 Feb 2024 10:43:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YvGqP2LL"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0E2AFE0003;
+	Mon, 26 Feb 2024 10:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708944196;
+	t=1708944203;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=21jxhojpGuLyAIprsmsZyKfJVscT4QidpkL5l1YrKGk=;
-	b=W0KmmBG5feEiVPtqgBp5uHiLTZEoe5HmuoblznMIabvdxsixyTRNUXFKaD5PvQkoZGGuPO
-	JqJ9/2E3PvyCq0Qx4bSdWOCQ9tbJibgvAdirLuvt80zOGIZixx5xDjkFDDF4UUTHvsgUxA
-	FUemVTgay0icE9nMnMasLZ4Uc5d1He/RbThLQf7XMx2Mc9K3r1Z8VW9Zs21y+eY2g/Oftq
-	VHPUZ7RtooOvjAvgVJDDuxXfFO5DM8xnT85haWDtIeE9c7VzaqSKFJPTmkyHD37NU9sxy7
-	E74XPFs8o4e7KlJ5RLG9Z74EimKbgHihWLE+FXA/GbuvjYHBkZwjSwq6ISPFgg==
+	bh=9cUOu/Bvds6IWzkUYXUufNxfYQc8ER3syNtdbbPnHc8=;
+	b=YvGqP2LLM+FcTfrtjxQwzs7w3A2fUilwQeUI58huYIm2Kg1IQMFfGt+Zet2mcELXqH2fob
+	mn4B2THIdiZmkOsYQUmnmSIq4P258lPEmg80dYPqD/7sY7u7ZuXtoaC3XfASxHuN01/MFn
+	ysabwloahnVouXM+KREKryMSYQojH8p/FzMg2NlnQZn5HSHyoT3D1K0H8Wx/BrtIVlKNTm
+	YKgKPmiXzz+jm91LfbKhCi8QmV4Qbldt0B7Dhu8K9Dwx5BCADLIQKTfxbCH4yIhlMgmDkQ
+	Y/F6coD0LmKVep9scoc2ocmi7rGw4SfPk/796x6la7xFzZjySPlpMgNuZCwfTw==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	linux-fbdev@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
+To: Colin Ian King <colin.i.king@gmail.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Richard Weinberger <richard@nod.at>,
-	Lee Jones <lee@kernel.org>,
-	Andy Lowe <alowe@mvista.com>,
-	Thomas Hellstrom <thellstrom@vmware.com>,
-	Alan Hourihane <alanh@fairlite.co.uk>
-Subject: Re: [PATCH 2/2] mtd: Remove support for Carillo Ranch driver
-Date: Mon, 26 Feb 2024 11:43:12 +0100
-Message-Id: <20240226104312.488935-1-miquel.raynal@bootlin.com>
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-mtd@lists.infradead.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] mtd: chips: remove redundant assignment to variable timeo
+Date: Mon, 26 Feb 2024 11:43:22 +0100
+Message-Id: <20240226104322.489020-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231208224703.1603264-2-willy@infradead.org>
+In-Reply-To: <20240215140106.2062858-1-colin.i.king@gmail.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,16 +51,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'77bf032528393d2dc9430b3cea1fee8d0762a86f'
+X-linux-mtd-patch-commit: b'2416a2e7be9b27157f173268f5c7f769bd72a8dc'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, 2023-12-08 at 22:47:03 UTC, "Matthew Wilcox (Oracle)" wrote:
-> As far as anybody can tell, this product never shipped.  If it did,
-> it shipped in 2007 and nobody has access to one any more.  Remove the
-> mtd NOR driver.
+On Thu, 2024-02-15 at 14:01:06 UTC, Colin Ian King wrote:
+> In two functions the variable timeo is being initialized with a value
+> that is never read, it is being re-assigned later on. The initializations
+> are redundant and can be removed.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Cleans up clang scan build warning:
+> warning: Value stored to 'timeo' during its initialization is never
+> read [deadcode.DeadStores]
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/next, thanks.
 
