@@ -1,130 +1,107 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB2712AAC8
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB013219E3;
+	Mon, 26 Feb 2024 15:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708961239; cv=none; b=D1etR/g06Wb6gmBIyRDUZVBE2eSHIgEe2dhOrBIKqiixPywQoEHglKmxS2i2yotAnePxHYtQN0CACrRnW8ZhL9uEVxA0hQqH93wMCefvIcUHna6ZnLCKFt3wn+epQZNtIZZeDui0z0j/+pVFK5xFHoXTs680v0bO1zSdoZxRoeM=
+	t=1708961279; cv=none; b=OfkLrOrCyFXwKCN/mgXLhgCtuQUTr6Nzqa0h/C/Kb/WTOFUygtXHZRlmcj8Do0+7oBxtsrYipknnDnmKLLRZ4XQb3aEAPKji9LahFnfhaa+hLe/NTT4Rr5DKzOLBhIZ5EE7T8cQNdzIEnZksW3QlKTSuYOTcjRRBcjeLzaysjs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708961239; c=relaxed/simple;
-	bh=ujz3KPBAMBQU33eq3LN9zOuebEUgTrKcSEL6G1EBSkE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Tr8Oajn48lV76lIFWu8PpcpYktT0WjdUIE4POCkFxf7mG5ylZiBoIL3WjOEx0Of9JPF+iiboy1YlRwRSqT/GmsAmpNx4XuuSf3UO7mWCMQ77oipcqIwZe4jDbEmYCh16BajC246ZWNt6YNWH2ZskE+j+pfepEP9FJk/9txaoYUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hrsTFM81; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1708961279; c=relaxed/simple;
+	bh=XaHk1CGkgz44435i/fuj0zT7LXSXHOspkU3pxQTrO7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tV+AkCwA1feSp8Ik7yXEXQvKwYUkxdT2voDifpi8UQYaqxoIpYuYehqHYzTMn8c+rYT2qY7/B4PAKs3qv2dmgG69BoeZ922xg74qsZVi3UVbE7PsZ4qwc8TbIxuVBzFzpuVObNXdZ45O7Y1gmwiUMseziQImw/0IBsLI2hQ0iv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Ynvz/lPN; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hrsTFM81"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcc05887ee9so4314190276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 07:27:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708961237; x=1709566037; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DPyeDZVIIyCXYt9YL0uYOoqOy56Yb0xUHXTmaer34Ao=;
-        b=hrsTFM81d20T/qXvuoeg1B0y+bo9Z2l/Ae7J70FNWGSCFr8wgaocjWSPcx/oobaZ/P
-         9YziBwwgZGPIDMB0xtl9x495rSdjPMkErpHsgNGHw7PIp8ycnapA7Hbg1ebEv+ljRNvG
-         cNK4TuMEt9qUpnPiIOIYCtrS05jpPqfSdFvW8+QLL7aHFP7PNY+jdeM2RBHgRz21UU3g
-         Z6X36jAA0YGrzThloQ1o6TXCsrbO15dskNw7B5osY8MgLUK571fWemUW+h51Kp9WUGwo
-         RY72Pg6hJ4hccx3Vd1IHtPT+E0EcHIzO2q/cOK4xTpSGQqB88miegxSWleKTLjs4P+DV
-         U0lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708961237; x=1709566037;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DPyeDZVIIyCXYt9YL0uYOoqOy56Yb0xUHXTmaer34Ao=;
-        b=sr1bnPASIpnxKOG1PDr0QooqWhs4wQuktV4tP2BBF3sZGGpDZY5tGiqB4mzA+dKRiN
-         TUuSTLFK6iXZDPxM/iSa2ScOb4/1ToPQpXQFTOTmHzjzVg/TcV0R9HjhLKIyCtRzQTAU
-         zA+G3dxusEEjG+Ugv2/Ve/4iLi8joNnU3uQXARpOg9mW0yIrYEJEAzPIhhlUXBCgT8aA
-         O7i32OEmgyNVhAZW8mEhu+yCR2y5YrdU6slbcbnSHdczl2WsRolWpgpDvzq/UFnntEX7
-         EkRDGUVhwwn3RZ9NfPIdqZ3GZWONBNy1JPZjekr5rhfoLfPjZYxhhtr0tmfIC4krr5qZ
-         IxFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXb84kfK2ANjIk9WX+XYETruM8p0r+GEgm3M2aw4z+14wcoUheaHM5VwTwb3d0aB+252oUXqub8jkDJtgPLC0EHIHRvCmVWHnZVTMX8
-X-Gm-Message-State: AOJu0YxyZYj851BmP37Yl0ViW0IDwdTd/PFd3rYhJSqlm/z3Qgs3IKLh
-	zx6/hUPV7TmRd3rhOi1ibqUhz8I+9M3CzY8cxJUvGZKfYc9jJ998K6TJGPp2QrWAAP95YgodhvV
-	oiA==
-X-Google-Smtp-Source: AGHT+IHkBgKMhwVLkljwA3qRqGVQLniO8Rd2JfPhJNxGsBGlHhVC+4r/+VEFC4ZaYLPTGWbUsyBC7X4WmVs=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1245:b0:dbe:30cd:8fcb with SMTP id
- t5-20020a056902124500b00dbe30cd8fcbmr261623ybu.0.1708961237221; Mon, 26 Feb
- 2024 07:27:17 -0800 (PST)
-Date: Mon, 26 Feb 2024 07:27:15 -0800
-In-Reply-To: <Zdw5qziEGdTyLIFN@linux.bj.intel.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ynvz/lPN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=OgvLF2sxTIfRPsS3ujCyxTkAmer7UG07rXHGb61zVMk=; b=Yn
+	vz/lPN+xCrwZAx6sK9e2RXXTIp3hv4HL8OFQfR7MnxY3UjQduln30YkNamCCzJ0o42bBHvEFtllBx
+	vzKle+N6NDcL+EW8WGvWMAY6doakPbVNU7YW4oDOf7My5yKjskwawrGDneBIAGmWLHV4xSIz5K4Ks
+	5ws1ipWzW/2e1TQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1recte-008jix-Df; Mon, 26 Feb 2024 16:28:02 +0100
+Date: Mon, 26 Feb 2024 16:28:02 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: =?iso-8859-1?Q?J=E9r=E9mie?= Dautheribes <jeremie.dautheribes@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, Andrew Davis <afd@ti.com>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+	Yen-Mei Goh <yen-mei.goh@keysight.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next 1/3] dt-bindings: net: dp83822: support
+ configuring RMII master/slave mode
+Message-ID: <d14ba685-dc7e-4f99-a21e-bae9f3e6bc79@lunn.ch>
+References: <20240222103117.526955-1-jeremie.dautheribes@bootlin.com>
+ <20240222103117.526955-2-jeremie.dautheribes@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240110002340.485595-1-seanjc@google.com> <170864656017.3080257.14048100709856204250.b4-ty@google.com>
- <dfca56c5-770b-46a3-90a3-3a6b219048f2@intel.com> <Zdw5qziEGdTyLIFN@linux.bj.intel.com>
-Message-ID: <Zdyt028xOBAgiBtn@google.com>
-Subject: Re: [PATCH] x86/cpu: Add a VMX flag to enumerate 5-level EPT support
- to userspace
-From: Sean Christopherson <seanjc@google.com>
-To: Tao Su <tao1.su@linux.intel.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yi Lai <yi1.lai@intel.com>, 
-	Xudong Hao <xudong.hao@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240222103117.526955-2-jeremie.dautheribes@bootlin.com>
 
-On Mon, Feb 26, 2024, Tao Su wrote:
-> On Mon, Feb 26, 2024 at 09:30:33AM +0800, Xiaoyao Li wrote:
-> > On 2/23/2024 9:35 AM, Sean Christopherson wrote:
-> > > On Tue, 09 Jan 2024 16:23:40 -0800, Sean Christopherson wrote:
-> > > > Add a VMX flag in /proc/cpuinfo, ept_5level, so that userspace can query
-> > > > whether or not the CPU supports 5-level EPT paging.  EPT capabilities are
-> > > > enumerated via MSR, i.e. aren't accessible to userspace without help from
-> > > > the kernel, and knowing whether or not 5-level EPT is supported is sadly
-> > > > necessary for userspace to correctly configure KVM VMs.
-> > > > 
-> > > > When EPT is enabled, bits 51:49 of guest physical addresses are consumed
-> > > > if and only if 5-level EPT is enabled.  For CPUs with MAXPHYADDR > 48, KVM
-> > > > *can't* map all legal guest memory if 5-level EPT is unsupported, e.g.
-> > > > creating a VM with RAM (or anything that gets stuffed into KVM's memslots)
-> > > > above bit 48 will be completely broken.
-> > > > 
-> > > > [...]
-> > > 
-> > > Applied to kvm-x86 vmx, with a massaged changelog to avoid presenting this as a
-> > > bug fix (and finally fixed the 51:49=>51:48 goof):
-> > > 
-> > >      Add a VMX flag in /proc/cpuinfo, ept_5level, so that userspace can query
-> > >      whether or not the CPU supports 5-level EPT paging.  EPT capabilities are
-> > >      enumerated via MSR, i.e. aren't accessible to userspace without help from
-> > >      the kernel, and knowing whether or not 5-level EPT is supported is useful
-> > >      for debug, triage, testing, etc.
-> > >      For example, when EPT is enabled, bits 51:48 of guest physical addresses
-> > >      are consumed by the CPU if and only if 5-level EPT is enabled.  For CPUs
-> > >      with MAXPHYADDR > 48, KVM *can't* map all legal guest memory if 5-level
-> > >      EPT is unsupported, making it more or less necessary to know whether or
-> > >      not 5-level EPT is supported.
-> > > 
-> > > [1/1] x86/cpu: Add a VMX flag to enumerate 5-level EPT support to userspace
-> > >        https://github.com/kvm-x86/linux/commit/b1a3c366cbc7
-> > 
-> > Do we need a new KVM CAP for this? This decides how to interact with old
-> > kernel without this patch. In that case, no ept_5level in /proc/cpuinfo,
-> > what should we do in the absence of ept_5level? treat it only 4 level EPT
-> > supported?
+On Thu, Feb 22, 2024 at 11:31:15AM +0100, Jérémie Dautheribes wrote:
+> Add property ti,rmii-mode to support selecting the RMII operation mode
+> between:
+> 	- master mode (PHY operates from a 25MHz clock reference)
+> 	- slave mode (PHY operates from a 50MHz clock reference)
 > 
-> Maybe also adding flag for 4-level EPT can be an option. If userspace
-> checks both 4-level and 5-level are not in /proc/cpuinfo, it can regard
-> the kernel as old.
+> If not set, the operation mode is configured by hardware straps.
+> 
+> Signed-off-by: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
+> ---
+>  .../devicetree/bindings/net/ti,dp83822.yaml      | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> index 8f4350be689c..8f23254c0458 100644
+> --- a/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> +++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> @@ -80,6 +80,22 @@ properties:
+>             10625, 11250, 11875, 12500, 13125, 13750, 14375, 15000]
+>      default: 10000
+>  
+> +  ti,rmii-mode:
+> +    description: |
+> +       If present, select the RMII operation mode. Two modes are
+> +       available:
+> +         - RMII master, where the PHY operates from a 25MHz clock reference,
+> +         provided by a crystal or a CMOS-level oscillator
+> +         - RMII slave, where the PHY operates from a 50MHz clock reference,
+> +         provided by a CMOS-level oscillator
 
-The intent is that this is informational only, not something that userspace can
-or should use to make decisions about how to configure KVM guests.  As pointed
-out elsewhere in the thread, simply restricting guest.MAXPHYADDR to 48 doesn't
-actually create an architecturally viable VM.  At the very least, KVM needs to
-be configured with allow_smaller_maxphyaddr=1, and aside from the gaping holes
-in KVM related to that knob, AIUI allow_smaller_maxphyaddr=1 isn't an option in
-this case due to other quirks/flaws with the CPU in question.
+What has master and slave got to do with this?
 
-I don't think there's been an on-list summary posted, but the plan is to figure
-out a way to inform guest firmware of the max _usable_ physical address, so that
-firmware doesn't create BARs and whatnot in memory that KVM can't map.  And then
-have KVM relay the usuable guest.MAXPHYADDR to userspace.  That way userspace
-doesn't need to infer the effective guest.MAXPHYADDR from EPT knobs.
+Sometimes, the MAC provides a clock to the PHY, and all data transfer
+over the RMII bus is timed by that.
+
+Sometimes, the PHY provides a clock to the MAC, and all data transfer
+over the RMII bus is timed by that.
+
+Here there is a clear master/slave relationship, who is providing the
+clock, who is consuming the clock. However, what you describe does not
+fit that. Maybe look at other PHY bindings, and copy what they do for
+clocks.
+
+	Andrew
