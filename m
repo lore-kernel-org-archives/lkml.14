@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D65C7C0B2;
-	Mon, 26 Feb 2024 08:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78AD57AE4B;
+	Mon, 26 Feb 2024 08:28:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936136; cv=none; b=RuOUYNWwGuFIcQqDv/0TtVuaO7nFyVIHK4403j5ogr9qdpaVX4+h9tLhduBKOkxo+ink1CtsQAb8FzSfZlg23F+bbiw1KrjnuXQGuGihTMvX7i2rW9RCZdHornL11hrGUKi/CvuCtzKDMbsA23oGwOysq65rDrt1o0gHUCPVXfc=
+	t=1708936133; cv=none; b=dvzLU4Q/Nwt5IAduafUMd6BZ808gchZBN/57W49a/himxPw8EXWULqJV8Ov69LgTUfByh5qocBuwgwuuT+cd5kZKoh9/5S93cwcjji7mOIxJH77caf/M1iMR6gfIS0QUhEqD17CilkmkxLdnvvQssXs7/dpN2i13eyH551abILw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936136; c=relaxed/simple;
-	bh=IWPbF7kZorjnaCcjYxxog90DbjeIj9s2BnbE9skJqgc=;
+	s=arc-20240116; t=1708936133; c=relaxed/simple;
+	bh=PyikNyG7fKJSTvY484nYih3zF/u6N+ZdYnoP25Ocepo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nSqDUYS7EF1kMD7t1+Tjtcp4smWJVrXh3D+5NrJDG9jl3LKhrjxmngOD8lr8YqV8IoiAySgP6aARtTxQpg3FhKv6JEM+uVFnvdoBscGwH7Y4kkDX+jG81acCxUH/SXhVSKmMGZOjyZQBCDku+yiSTwix3Wt4Ie2nTasFA7QYR8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n7gOygWI; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=OERPMMD6Oj8xikjs9vPyM+mMUm4m7xYZ8w0uIPN8B+SphxbIFjGCllIRC6P3Vy3wNzKaOZe3aaymmmV+EzsC/IhSBXC/jrM4wVCLPBxTu/YEonqCV47629olxs5/0zVvh3CmbcFmDlV+DFWQ88Vsz6m+dZLWz8d1fBqssstB5/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=fail smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=afHs07nx; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n7gOygWI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="afHs07nx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936134; x=1740472134;
+  t=1708936132; x=1740472132;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IWPbF7kZorjnaCcjYxxog90DbjeIj9s2BnbE9skJqgc=;
-  b=n7gOygWI4do3yG7L2pmJfWAc3i5aLceBpHChDsTRUel8KvTOyqw/gq5h
-   YUZ1vePOyCBcz8bU4KdBUQvUFmym6hdXl6VVAnFCvTZ3eHuInntqsJ+eq
-   om9p8JvxTHuXzHNWbBzM850H6nmuNo3fUE7SlAFEiNCXuNmiot3pJccui
-   RFjvDhKQd73GyFgJH49Fo+Lb6I5+Z+VvdXk5uHzcmWYuMt6m95/MQB50w
-   /uxE2semFsB9jLEsUSFTnfl6A0/g+fPFdDswxPugOk96ZDSiEFSWzxfMC
-   O+ShRPcjI5lsS9nkTjgKnmeVDKveR0hI6oZgEmXIbc07yxRhEA1dfA9w+
+  bh=PyikNyG7fKJSTvY484nYih3zF/u6N+ZdYnoP25Ocepo=;
+  b=afHs07nxATRYSzSJD41ixUbnBTr5Q4PGgIxjZUnLqgMmQzVP2Bta426o
+   6aI4ivjgBVJ2sm/WvmX8YGda6qJFfKlNL0TqhGUgX2xwTOMlsmrEzvmKC
+   QTDhTzgCQ9AalPxP6MClGJ+TIzmKSktNtGUpTO34oeLT9M2LYzngRmIdB
+   pUQx7qO9YlN39z0+lxSiGvo4ZycJVRF9ye4Y2pJzhJO2S/vgjuDHMyTIW
+   svFxxfyzrEcYdzU/cBcQ/VZZ5ucHDjHuHuCyg0j2amJEi16+DdCYB8fHu
+   wgRa73i7D5rKiFWFTneG/0pEqVzOprDycLe1xl7j0/Z1z1h++2PkDAmHN
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3069583"
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3069564"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="3069583"
+   d="scan'208";a="3069564"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:54 -0800
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="11272669"
+   d="scan'208";a="11272647"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:53 -0800
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:50 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,11 +51,10 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com,
-	Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v19 096/130] KVM: VMX: Move NMI/exception handler to common helper
-Date: Mon, 26 Feb 2024 00:26:38 -0800
-Message-Id: <b709dc92da98e6bd0ba15c80c1f291beafc9dada.1708933498.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com
+Subject: [PATCH v19 092/130] KVM: TDX: Implement interrupt injection
+Date: Mon, 26 Feb 2024 00:26:34 -0800
+Message-Id: <b2d9539b23f155b95864db3eacce55e0e24eed4d.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -67,213 +66,476 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-TDX mostly handles NMI/exception exit mostly the same to VMX case.  The
-difference is how to retrieve exit qualification.  To share the code with
-TDX, move NMI/exception to a common header, common.h.
+TDX supports interrupt inject into vcpu with posted interrupt.  Wire up the
+corresponding kvm x86 operations to posted interrupt.  Move
+kvm_vcpu_trigger_posted_interrupt() from vmx.c to common.h to share the
+code.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+VMX can inject interrupt by setting interrupt information field,
+VM_ENTRY_INTR_INFO_FIELD, of VMCS.  TDX supports interrupt injection only
+by posted interrupt.  Ignore the execution path to access
+VM_ENTRY_INTR_INFO_FIELD.
+
+As cpu state is protected and apicv is enabled for the TDX guest, VMM can
+inject interrupt by updating posted interrupt descriptor.  Treat interrupt
+can be injected always.
+
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/common.h | 59 +++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/vmx.c    | 68 +++++----------------------------------
- 2 files changed, 67 insertions(+), 60 deletions(-)
+ arch/x86/kvm/vmx/common.h      | 71 ++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/main.c        | 93 ++++++++++++++++++++++++++++++----
+ arch/x86/kvm/vmx/posted_intr.c |  2 +-
+ arch/x86/kvm/vmx/posted_intr.h |  2 +
+ arch/x86/kvm/vmx/tdx.c         | 25 +++++++++
+ arch/x86/kvm/vmx/vmx.c         | 67 +-----------------------
+ arch/x86/kvm/vmx/x86_ops.h     |  7 ++-
+ 7 files changed, 190 insertions(+), 77 deletions(-)
 
 diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
-index 6f21d0d48809..632af7a76d0a 100644
+index 235908f3e044..6f21d0d48809 100644
 --- a/arch/x86/kvm/vmx/common.h
 +++ b/arch/x86/kvm/vmx/common.h
-@@ -4,8 +4,67 @@
+@@ -4,6 +4,7 @@
  
  #include <linux/kvm_host.h>
  
-+#include <asm/traps.h>
-+
- #include "posted_intr.h"
++#include "posted_intr.h"
  #include "mmu.h"
-+#include "vmcs.h"
-+#include "x86.h"
-+
-+extern unsigned long vmx_host_idt_base;
-+void vmx_do_interrupt_irqoff(unsigned long entry);
-+void vmx_do_nmi_irqoff(void);
-+
-+static inline void vmx_handle_nm_fault_irqoff(struct kvm_vcpu *vcpu)
-+{
-+	/*
-+	 * Save xfd_err to guest_fpu before interrupt is enabled, so the
-+	 * MSR value is not clobbered by the host activity before the guest
-+	 * has chance to consume it.
-+	 *
-+	 * Do not blindly read xfd_err here, since this exception might
-+	 * be caused by L1 interception on a platform which doesn't
-+	 * support xfd at all.
-+	 *
-+	 * Do it conditionally upon guest_fpu::xfd. xfd_err matters
-+	 * only when xfd contains a non-zero value.
-+	 *
-+	 * Queuing exception is done in vmx_handle_exit. See comment there.
-+	 */
-+	if (vcpu->arch.guest_fpu.fpstate->xfd)
-+		rdmsrl(MSR_IA32_XFD_ERR, vcpu->arch.guest_fpu.xfd_err);
-+}
-+
-+static inline void vmx_handle_exception_irqoff(struct kvm_vcpu *vcpu,
-+					       u32 intr_info)
-+{
-+	/* if exit due to PF check for async PF */
-+	if (is_page_fault(intr_info))
-+		vcpu->arch.apf.host_apf_flags = kvm_read_and_reset_apf_flags();
-+	/* if exit due to NM, handle before interrupts are enabled */
-+	else if (is_nm_fault(intr_info))
-+		vmx_handle_nm_fault_irqoff(vcpu);
-+	/* Handle machine checks before interrupts are enabled */
-+	else if (is_machine_check(intr_info))
-+		kvm_machine_check();
-+}
-+
-+static inline void vmx_handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
-+							u32 intr_info)
-+{
-+	unsigned int vector = intr_info & INTR_INFO_VECTOR_MASK;
-+	gate_desc *desc = (gate_desc *)vmx_host_idt_base + vector;
-+
-+	if (KVM_BUG(!is_external_intr(intr_info), vcpu->kvm,
-+	    "unexpected VM-Exit interrupt info: 0x%x", intr_info))
-+		return;
-+
-+	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
-+	vmx_do_interrupt_irqoff(gate_offset(desc));
-+	kvm_after_interrupt(vcpu);
-+
-+	vcpu->arch.at_instruction_boundary = true;
-+}
  
  static inline int __vmx_handle_ept_violation(struct kvm_vcpu *vcpu, gpa_t gpa,
- 					     unsigned long exit_qualification)
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 29d891e0795e..f8a00a766c40 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -518,7 +518,7 @@ static inline void vmx_segment_cache_clear(struct vcpu_vmx *vmx)
- 	vmx->segment_cache.bitmask = 0;
+@@ -30,4 +31,74 @@ static inline int __vmx_handle_ept_violation(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
  }
  
--static unsigned long host_idt_base;
-+unsigned long vmx_host_idt_base;
++static inline void kvm_vcpu_trigger_posted_interrupt(struct kvm_vcpu *vcpu,
++						     int pi_vec)
++{
++#ifdef CONFIG_SMP
++	if (vcpu->mode == IN_GUEST_MODE) {
++		/*
++		 * The vector of the virtual has already been set in the PIR.
++		 * Send a notification event to deliver the virtual interrupt
++		 * unless the vCPU is the currently running vCPU, i.e. the
++		 * event is being sent from a fastpath VM-Exit handler, in
++		 * which case the PIR will be synced to the vIRR before
++		 * re-entering the guest.
++		 *
++		 * When the target is not the running vCPU, the following
++		 * possibilities emerge:
++		 *
++		 * Case 1: vCPU stays in non-root mode. Sending a notification
++		 * event posts the interrupt to the vCPU.
++		 *
++		 * Case 2: vCPU exits to root mode and is still runnable. The
++		 * PIR will be synced to the vIRR before re-entering the guest.
++		 * Sending a notification event is ok as the host IRQ handler
++		 * will ignore the spurious event.
++		 *
++		 * Case 3: vCPU exits to root mode and is blocked. vcpu_block()
++		 * has already synced PIR to vIRR and never blocks the vCPU if
++		 * the vIRR is not empty. Therefore, a blocked vCPU here does
++		 * not wait for any requested interrupts in PIR, and sending a
++		 * notification event also results in a benign, spurious event.
++		 */
++
++		if (vcpu != kvm_get_running_vcpu())
++			__apic_send_IPI_mask(get_cpu_mask(vcpu->cpu), pi_vec);
++		return;
++	}
++#endif
++	/*
++	 * The vCPU isn't in the guest; wake the vCPU in case it is blocking,
++	 * otherwise do nothing as KVM will grab the highest priority pending
++	 * IRQ via ->sync_pir_to_irr() in vcpu_enter_guest().
++	 */
++	kvm_vcpu_wake_up(vcpu);
++}
++
++/*
++ * Send interrupt to vcpu via posted interrupt way.
++ * 1. If target vcpu is running(non-root mode), send posted interrupt
++ * notification to vcpu and hardware will sync PIR to vIRR atomically.
++ * 2. If target vcpu isn't running(root mode), kick it to pick up the
++ * interrupt from PIR in next vmentry.
++ */
++static inline void __vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu,
++						  struct pi_desc *pi_desc, int vector)
++{
++	if (pi_test_and_set_pir(vector, pi_desc))
++		return;
++
++	/* If a previous notification has sent the IPI, nothing to do.  */
++	if (pi_test_and_set_on(pi_desc))
++		return;
++
++	/*
++	 * The implied barrier in pi_test_and_set_on() pairs with the smp_mb_*()
++	 * after setting vcpu->mode in vcpu_enter_guest(), thus the vCPU is
++	 * guaranteed to see PID.ON=1 and sync the PIR to IRR if triggering a
++	 * posted interrupt "fails" because vcpu->mode != IN_GUEST_MODE.
++	 */
++	kvm_vcpu_trigger_posted_interrupt(vcpu, POSTED_INTR_VECTOR);
++}
++
+ #endif /* __KVM_X86_VMX_COMMON_H */
+diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+index 5fd99e844b86..f2c9d6358f9e 100644
+--- a/arch/x86/kvm/vmx/main.c
++++ b/arch/x86/kvm/vmx/main.c
+@@ -228,6 +228,34 @@ static bool vt_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
+ 	return tdx_protected_apic_has_interrupt(vcpu);
+ }
  
- #if IS_ENABLED(CONFIG_HYPERV)
- static bool __read_mostly enlightened_vmcs = true;
-@@ -4273,7 +4273,7 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
- 	vmcs_write16(HOST_SS_SELECTOR, __KERNEL_DS);  /* 22.2.4 */
- 	vmcs_write16(HOST_TR_SELECTOR, GDT_ENTRY_TSS*8);  /* 22.2.4 */
++static void vt_apicv_pre_state_restore(struct kvm_vcpu *vcpu)
++{
++	struct pi_desc *pi = vcpu_to_pi_desc(vcpu);
++
++	pi_clear_on(pi);
++	memset(pi->pir, 0, sizeof(pi->pir));
++}
++
++static int vt_sync_pir_to_irr(struct kvm_vcpu *vcpu)
++{
++	if (is_td_vcpu(vcpu))
++		return -1;
++
++	return vmx_sync_pir_to_irr(vcpu);
++}
++
++static void vt_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
++			   int trig_mode, int vector)
++{
++	if (is_td_vcpu(apic->vcpu)) {
++		tdx_deliver_interrupt(apic, delivery_mode, trig_mode,
++					     vector);
++		return;
++	}
++
++	vmx_deliver_interrupt(apic, delivery_mode, trig_mode, vector);
++}
++
+ static void vt_flush_tlb_all(struct kvm_vcpu *vcpu)
+ {
+ 	if (is_td_vcpu(vcpu)) {
+@@ -297,6 +325,53 @@ static void vt_sched_in(struct kvm_vcpu *vcpu, int cpu)
+ 	vmx_sched_in(vcpu, cpu);
+ }
  
--	vmcs_writel(HOST_IDTR_BASE, host_idt_base);   /* 22.2.4 */
-+	vmcs_writel(HOST_IDTR_BASE, vmx_host_idt_base);   /* 22.2.4 */
++static void vt_set_interrupt_shadow(struct kvm_vcpu *vcpu, int mask)
++{
++	if (is_td_vcpu(vcpu))
++		return;
++	vmx_set_interrupt_shadow(vcpu, mask);
++}
++
++static u32 vt_get_interrupt_shadow(struct kvm_vcpu *vcpu)
++{
++	if (is_td_vcpu(vcpu))
++		return 0;
++
++	return vmx_get_interrupt_shadow(vcpu);
++}
++
++static void vt_inject_irq(struct kvm_vcpu *vcpu, bool reinjected)
++{
++	if (is_td_vcpu(vcpu))
++		return;
++
++	vmx_inject_irq(vcpu, reinjected);
++}
++
++static void vt_cancel_injection(struct kvm_vcpu *vcpu)
++{
++	if (is_td_vcpu(vcpu))
++		return;
++
++	vmx_cancel_injection(vcpu);
++}
++
++static int vt_interrupt_allowed(struct kvm_vcpu *vcpu, bool for_injection)
++{
++	if (is_td_vcpu(vcpu))
++		return true;
++
++	return vmx_interrupt_allowed(vcpu, for_injection);
++}
++
++static void vt_enable_irq_window(struct kvm_vcpu *vcpu)
++{
++	if (is_td_vcpu(vcpu))
++		return;
++
++	vmx_enable_irq_window(vcpu);
++}
++
+ static u8 vt_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
+ {
+ 	if (is_td_vcpu(vcpu))
+@@ -426,31 +501,31 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
+ 	.handle_exit = vmx_handle_exit,
+ 	.skip_emulated_instruction = vmx_skip_emulated_instruction,
+ 	.update_emulated_instruction = vmx_update_emulated_instruction,
+-	.set_interrupt_shadow = vmx_set_interrupt_shadow,
+-	.get_interrupt_shadow = vmx_get_interrupt_shadow,
++	.set_interrupt_shadow = vt_set_interrupt_shadow,
++	.get_interrupt_shadow = vt_get_interrupt_shadow,
+ 	.patch_hypercall = vmx_patch_hypercall,
+-	.inject_irq = vmx_inject_irq,
++	.inject_irq = vt_inject_irq,
+ 	.inject_nmi = vmx_inject_nmi,
+ 	.inject_exception = vmx_inject_exception,
+-	.cancel_injection = vmx_cancel_injection,
+-	.interrupt_allowed = vmx_interrupt_allowed,
++	.cancel_injection = vt_cancel_injection,
++	.interrupt_allowed = vt_interrupt_allowed,
+ 	.nmi_allowed = vmx_nmi_allowed,
+ 	.get_nmi_mask = vmx_get_nmi_mask,
+ 	.set_nmi_mask = vmx_set_nmi_mask,
+ 	.enable_nmi_window = vmx_enable_nmi_window,
+-	.enable_irq_window = vmx_enable_irq_window,
++	.enable_irq_window = vt_enable_irq_window,
+ 	.update_cr8_intercept = vmx_update_cr8_intercept,
+ 	.set_virtual_apic_mode = vmx_set_virtual_apic_mode,
+ 	.set_apic_access_page_addr = vmx_set_apic_access_page_addr,
+ 	.refresh_apicv_exec_ctrl = vmx_refresh_apicv_exec_ctrl,
+ 	.load_eoi_exitmap = vmx_load_eoi_exitmap,
+-	.apicv_pre_state_restore = vmx_apicv_pre_state_restore,
++	.apicv_pre_state_restore = vt_apicv_pre_state_restore,
+ 	.required_apicv_inhibits = VMX_REQUIRED_APICV_INHIBITS,
+ 	.hwapic_irr_update = vmx_hwapic_irr_update,
+ 	.hwapic_isr_update = vmx_hwapic_isr_update,
+ 	.guest_apic_has_interrupt = vmx_guest_apic_has_interrupt,
+-	.sync_pir_to_irr = vmx_sync_pir_to_irr,
+-	.deliver_interrupt = vmx_deliver_interrupt,
++	.sync_pir_to_irr = vt_sync_pir_to_irr,
++	.deliver_interrupt = vt_deliver_interrupt,
+ 	.dy_apicv_has_pending_interrupt = pi_has_pending_interrupt,
+ 	.protected_apic_has_interrupt = vt_protected_apic_has_interrupt,
  
- 	vmcs_writel(HOST_RIP, (unsigned long)vmx_vmexit); /* 22.2.5 */
+diff --git a/arch/x86/kvm/vmx/posted_intr.c b/arch/x86/kvm/vmx/posted_intr.c
+index b66add9da0f3..c86768b83f0b 100644
+--- a/arch/x86/kvm/vmx/posted_intr.c
++++ b/arch/x86/kvm/vmx/posted_intr.c
+@@ -52,7 +52,7 @@ static inline struct vcpu_pi *vcpu_to_pi(struct kvm_vcpu *vcpu)
+ 	return (struct vcpu_pi *)vcpu;
+ }
  
-@@ -5166,7 +5166,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 	intr_info = vmx_get_intr_info(vcpu);
+-static inline struct pi_desc *vcpu_to_pi_desc(struct kvm_vcpu *vcpu)
++struct pi_desc *vcpu_to_pi_desc(struct kvm_vcpu *vcpu)
+ {
+ 	return &vcpu_to_pi(vcpu)->pi_desc;
+ }
+diff --git a/arch/x86/kvm/vmx/posted_intr.h b/arch/x86/kvm/vmx/posted_intr.h
+index 2fe8222308b2..0f9983b6910b 100644
+--- a/arch/x86/kvm/vmx/posted_intr.h
++++ b/arch/x86/kvm/vmx/posted_intr.h
+@@ -105,6 +105,8 @@ struct vcpu_pi {
+ 	/* Until here common layout betwwn vcpu_vmx and vcpu_tdx. */
+ };
  
- 	/*
--	 * Machine checks are handled by handle_exception_irqoff(), or by
-+	 * Machine checks are handled by vmx_handle_exception_irqoff(), or by
- 	 * vmx_vcpu_run() if a #MC occurs on VM-Entry.  NMIs are handled by
- 	 * vmx_vcpu_enter_exit().
- 	 */
-@@ -5174,7 +5174,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		return 1;
++struct pi_desc *vcpu_to_pi_desc(struct kvm_vcpu *vcpu);
++
+ void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu);
+ void vmx_vcpu_pi_put(struct kvm_vcpu *vcpu);
+ void pi_wakeup_handler(void);
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 1da58c36217c..1dfa9b503e0d 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -7,6 +7,7 @@
  
- 	/*
--	 * Queue the exception here instead of in handle_nm_fault_irqoff().
-+	 * Queue the exception here instead of in vmx_handle_nm_fault_irqoff().
- 	 * This ensures the nested_vmx check is not skipped so vmexit can
- 	 * be reflected to L1 (when it intercepts #NM) before reaching this
- 	 * point.
-@@ -6889,59 +6889,6 @@ void vmx_load_eoi_exitmap(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap)
+ #include "capabilities.h"
+ #include "x86_ops.h"
++#include "common.h"
+ #include "mmu.h"
+ #include "tdx_arch.h"
+ #include "tdx.h"
+@@ -603,6 +604,9 @@ int tdx_vcpu_create(struct kvm_vcpu *vcpu)
+ 	tdx->host_state_need_save = true;
+ 	tdx->host_state_need_restore = false;
+ 
++	tdx->pi_desc.nv = POSTED_INTR_VECTOR;
++	tdx->pi_desc.sn = 1;
++
+ 	return 0;
+ }
+ 
+@@ -610,6 +614,7 @@ void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ {
+ 	struct vcpu_tdx *tdx = to_tdx(vcpu);
+ 
++	vmx_vcpu_pi_load(vcpu, cpu);
+ 	if (vcpu->cpu == cpu)
+ 		return;
+ 
+@@ -848,6 +853,12 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	trace_kvm_entry(vcpu);
+ 
++	if (pi_test_on(&tdx->pi_desc)) {
++		apic->send_IPI_self(POSTED_INTR_VECTOR);
++
++		kvm_wait_lapic_expire(vcpu);
++	}
++
+ 	tdx_vcpu_enter_exit(tdx);
+ 
+ 	tdx_user_return_update_cache(vcpu);
+@@ -1213,6 +1224,16 @@ static int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
+ 	return tdx_sept_drop_private_spte(kvm, gfn, level, pfn);
+ }
+ 
++void tdx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
++			   int trig_mode, int vector)
++{
++	struct kvm_vcpu *vcpu = apic->vcpu;
++	struct vcpu_tdx *tdx = to_tdx(vcpu);
++
++	/* TDX supports only posted interrupt.  No lapic emulation. */
++	__vmx_deliver_posted_interrupt(vcpu, &tdx->pi_desc, vector);
++}
++
+ static int tdx_get_capabilities(struct kvm_tdx_cmd *cmd)
+ {
+ 	struct kvm_tdx_capabilities __user *user_caps;
+@@ -1972,6 +1993,10 @@ int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp)
+ 	if (ret)
+ 		return ret;
+ 
++	td_vmcs_write16(tdx, POSTED_INTR_NV, POSTED_INTR_VECTOR);
++	td_vmcs_write64(tdx, POSTED_INTR_DESC_ADDR, __pa(&tdx->pi_desc));
++	td_vmcs_setbit32(tdx, PIN_BASED_VM_EXEC_CONTROL, PIN_BASED_POSTED_INTR);
++
+ 	tdx->initialized = true;
+ 	return 0;
+ }
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 162bb134aae6..1349ec438837 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4157,50 +4157,6 @@ void vmx_msr_filter_changed(struct kvm_vcpu *vcpu)
+ 		pt_update_intercept_for_msr(vcpu);
+ }
+ 
+-static inline void kvm_vcpu_trigger_posted_interrupt(struct kvm_vcpu *vcpu,
+-						     int pi_vec)
+-{
+-#ifdef CONFIG_SMP
+-	if (vcpu->mode == IN_GUEST_MODE) {
+-		/*
+-		 * The vector of the virtual has already been set in the PIR.
+-		 * Send a notification event to deliver the virtual interrupt
+-		 * unless the vCPU is the currently running vCPU, i.e. the
+-		 * event is being sent from a fastpath VM-Exit handler, in
+-		 * which case the PIR will be synced to the vIRR before
+-		 * re-entering the guest.
+-		 *
+-		 * When the target is not the running vCPU, the following
+-		 * possibilities emerge:
+-		 *
+-		 * Case 1: vCPU stays in non-root mode. Sending a notification
+-		 * event posts the interrupt to the vCPU.
+-		 *
+-		 * Case 2: vCPU exits to root mode and is still runnable. The
+-		 * PIR will be synced to the vIRR before re-entering the guest.
+-		 * Sending a notification event is ok as the host IRQ handler
+-		 * will ignore the spurious event.
+-		 *
+-		 * Case 3: vCPU exits to root mode and is blocked. vcpu_block()
+-		 * has already synced PIR to vIRR and never blocks the vCPU if
+-		 * the vIRR is not empty. Therefore, a blocked vCPU here does
+-		 * not wait for any requested interrupts in PIR, and sending a
+-		 * notification event also results in a benign, spurious event.
+-		 */
+-
+-		if (vcpu != kvm_get_running_vcpu())
+-			__apic_send_IPI_mask(get_cpu_mask(vcpu->cpu), pi_vec);
+-		return;
+-	}
+-#endif
+-	/*
+-	 * The vCPU isn't in the guest; wake the vCPU in case it is blocking,
+-	 * otherwise do nothing as KVM will grab the highest priority pending
+-	 * IRQ via ->sync_pir_to_irr() in vcpu_enter_guest().
+-	 */
+-	kvm_vcpu_wake_up(vcpu);
+-}
+-
+ static int vmx_deliver_nested_posted_interrupt(struct kvm_vcpu *vcpu,
+ 						int vector)
+ {
+@@ -4253,20 +4209,7 @@ static int vmx_deliver_posted_interrupt(struct kvm_vcpu *vcpu, int vector)
+ 	if (!vcpu->arch.apic->apicv_active)
+ 		return -1;
+ 
+-	if (pi_test_and_set_pir(vector, &vmx->pi_desc))
+-		return 0;
+-
+-	/* If a previous notification has sent the IPI, nothing to do.  */
+-	if (pi_test_and_set_on(&vmx->pi_desc))
+-		return 0;
+-
+-	/*
+-	 * The implied barrier in pi_test_and_set_on() pairs with the smp_mb_*()
+-	 * after setting vcpu->mode in vcpu_enter_guest(), thus the vCPU is
+-	 * guaranteed to see PID.ON=1 and sync the PIR to IRR if triggering a
+-	 * posted interrupt "fails" because vcpu->mode != IN_GUEST_MODE.
+-	 */
+-	kvm_vcpu_trigger_posted_interrupt(vcpu, POSTED_INTR_VECTOR);
++	__vmx_deliver_posted_interrupt(vcpu, &vmx->pi_desc, vector);
+ 	return 0;
+ }
+ 
+@@ -6946,14 +6889,6 @@ void vmx_load_eoi_exitmap(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap)
  	vmcs_write64(EOI_EXIT_BITMAP3, eoi_exit_bitmap[3]);
  }
  
--void vmx_do_interrupt_irqoff(unsigned long entry);
--void vmx_do_nmi_irqoff(void);
--
--static void handle_nm_fault_irqoff(struct kvm_vcpu *vcpu)
+-void vmx_apicv_pre_state_restore(struct kvm_vcpu *vcpu)
 -{
--	/*
--	 * Save xfd_err to guest_fpu before interrupt is enabled, so the
--	 * MSR value is not clobbered by the host activity before the guest
--	 * has chance to consume it.
--	 *
--	 * Do not blindly read xfd_err here, since this exception might
--	 * be caused by L1 interception on a platform which doesn't
--	 * support xfd at all.
--	 *
--	 * Do it conditionally upon guest_fpu::xfd. xfd_err matters
--	 * only when xfd contains a non-zero value.
--	 *
--	 * Queuing exception is done in vmx_handle_exit. See comment there.
--	 */
--	if (vcpu->arch.guest_fpu.fpstate->xfd)
--		rdmsrl(MSR_IA32_XFD_ERR, vcpu->arch.guest_fpu.xfd_err);
+-	struct vcpu_vmx *vmx = to_vmx(vcpu);
+-
+-	pi_clear_on(&vmx->pi_desc);
+-	memset(vmx->pi_desc.pir, 0, sizeof(vmx->pi_desc.pir));
 -}
 -
--static void handle_exception_irqoff(struct kvm_vcpu *vcpu, u32 intr_info)
--{
--	/* if exit due to PF check for async PF */
--	if (is_page_fault(intr_info))
--		vcpu->arch.apf.host_apf_flags = kvm_read_and_reset_apf_flags();
--	/* if exit due to NM, handle before interrupts are enabled */
--	else if (is_nm_fault(intr_info))
--		handle_nm_fault_irqoff(vcpu);
--	/* Handle machine checks before interrupts are enabled */
--	else if (is_machine_check(intr_info))
--		kvm_machine_check();
--}
--
--static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
--					     u32 intr_info)
--{
--	unsigned int vector = intr_info & INTR_INFO_VECTOR_MASK;
--	gate_desc *desc = (gate_desc *)host_idt_base + vector;
--
--	if (KVM_BUG(!is_external_intr(intr_info), vcpu->kvm,
--	    "unexpected VM-Exit interrupt info: 0x%x", intr_info))
--		return;
--
--	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
--	vmx_do_interrupt_irqoff(gate_offset(desc));
--	kvm_after_interrupt(vcpu);
--
--	vcpu->arch.at_instruction_boundary = true;
--}
--
- void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -6950,9 +6897,10 @@ void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
- 		return;
+ void vmx_do_interrupt_irqoff(unsigned long entry);
+ void vmx_do_nmi_irqoff(void);
  
- 	if (vmx->exit_reason.basic == EXIT_REASON_EXTERNAL_INTERRUPT)
--		handle_external_interrupt_irqoff(vcpu, vmx_get_intr_info(vcpu));
-+		vmx_handle_external_interrupt_irqoff(vcpu,
-+						     vmx_get_intr_info(vcpu));
- 	else if (vmx->exit_reason.basic == EXIT_REASON_EXCEPTION_NMI)
--		handle_exception_irqoff(vcpu, vmx_get_intr_info(vcpu));
-+		vmx_handle_exception_irqoff(vcpu, vmx_get_intr_info(vcpu));
- }
+diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
+index f3f90186926c..12a212e71827 100644
+--- a/arch/x86/kvm/vmx/x86_ops.h
++++ b/arch/x86/kvm/vmx/x86_ops.h
+@@ -58,7 +58,6 @@ int vmx_check_intercept(struct kvm_vcpu *vcpu,
+ bool vmx_apic_init_signal_blocked(struct kvm_vcpu *vcpu);
+ void vmx_migrate_timers(struct kvm_vcpu *vcpu);
+ void vmx_set_virtual_apic_mode(struct kvm_vcpu *vcpu);
+-void vmx_apicv_pre_state_restore(struct kvm_vcpu *vcpu);
+ bool vmx_check_apicv_inhibit_reasons(enum kvm_apicv_inhibit reason);
+ void vmx_hwapic_irr_update(struct kvm_vcpu *vcpu, int max_irr);
+ void vmx_hwapic_isr_update(int max_isr);
+@@ -158,6 +157,9 @@ void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
+ bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu);
+ u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio);
  
- /*
-@@ -8284,7 +8232,7 @@ __init int vmx_hardware_setup(void)
- 	int r;
++void tdx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
++			   int trig_mode, int vector);
++
+ int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp);
  
- 	store_idt(&dt);
--	host_idt_base = dt.address;
-+	vmx_host_idt_base = dt.address;
+ void tdx_flush_tlb(struct kvm_vcpu *vcpu);
+@@ -198,6 +200,9 @@ static inline void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu) {}
+ static inline bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu) { return false; }
+ static inline u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio) { return 0; }
  
- 	vmx_setup_user_return_msrs();
++static inline void tdx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
++					 int trig_mode, int vector) {}
++
+ static inline int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp) { return -EOPNOTSUPP; }
  
+ static inline void tdx_flush_tlb(struct kvm_vcpu *vcpu) {}
 -- 
 2.25.1
 
