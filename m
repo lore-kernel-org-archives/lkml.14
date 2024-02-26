@@ -1,165 +1,144 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A05412CD80;
-	Mon, 26 Feb 2024 16:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A459712C807;
+	Mon, 26 Feb 2024 16:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966724; cv=none; b=Bg1Al7HZv0geMoLMXmB5RwkGZUD/fGrp6EieEXLXR25gHV5Py7HNPjgsie7Cau42LdhGbWK+ikVkxIpQJq9CB8IqOVxWxXdRk3xF//UHOx8eYCnofiDkYMa/IQLgqujHFhs4WymtLXzCigP67GRV8hs+PSN4Z/unu+iwEGq0XFI=
+	t=1708966750; cv=none; b=MR2yzSMAN21Co9ZJ/uNZYRnpphtPHGjciO7MnbTtHBMpZfH82HzYU2eD9UPtaXwxbHfCr7rXda0O1iJFoOhnW8ErEuGij9C1/DtcKq8az29nJBi8W1e0jLEBOQNFvUg6U8cf+AMrooFkYpnNFpI3oJeZAaFMJ/T7yT40MmwFb18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966724; c=relaxed/simple;
-	bh=zYKjf9atYKOAZsSmpBw821yA+yGfcDbKYiZ1glrCtOI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p1EEw4B0UAuIfbsSrMdXwKXWtfNFNszn4PBc9ul1lqvz/u6YVpAF0Y2Z0JD7t6EBPRaOf3Qd2enCo+C7zF/VtqQBM6CTOHuREqbRZq2zCSF/56pboPuW45zMY4P03ostmsMc0u8hxoPj1DsXqLhk/4w+s5xMGL8RIxTH4/vtLGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jcYeMA68; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q/Xv00rl; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jcYeMA68; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q/Xv00rl; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1708966750; c=relaxed/simple;
+	bh=BLAS03sOMxIrSy3dV5ost75fW5umBREUcI8rl3VAb3A=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iUXCdLYQ8JgFQy3d/8GpC/6Z8BumUTAmFvEodAiyY1RrI/HEuIRB3UO5i16Tbz//8ZxCvxoJdSxkxrnfxRui29/y512txvtwtooB5D8aGa4EKA2JrLaNsUTnSxMQgTvLeTFQx7C45GFh/az2YPrqwqwpvpoblKUx8LffMcB7bjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R4SNCihX; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jcYeMA68";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q/Xv00rl";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jcYeMA68";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q/Xv00rl"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 14138225F4;
-	Mon, 26 Feb 2024 16:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708966721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l0KFPjXNqVsEqy2ySF8st8aX9aaAa1NXHzLxm/9qX7E=;
-	b=jcYeMA68fIDBke9G63XYDHgm8r7rC8tM+xa/Jd9ZUVyLmCWWjabOr3q1eQCqkPp8AXYygU
-	B6gQn18Om2KAhCXe4PdV8gb9C03jZeMWnTF7c8/KmoT48mw5r5Fs8oh4z7Va22fcqWQo2R
-	5nb3sre7bhuJCoZed92SVCBqLCLRheE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708966721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l0KFPjXNqVsEqy2ySF8st8aX9aaAa1NXHzLxm/9qX7E=;
-	b=Q/Xv00rlXZFJgefrppCuzXJpBCyRFGwXI/qhd56LD39Ty5Lx3SkyuS3agI9PXyjpcd844V
-	kHbrGV8fBOAd1zCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708966721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l0KFPjXNqVsEqy2ySF8st8aX9aaAa1NXHzLxm/9qX7E=;
-	b=jcYeMA68fIDBke9G63XYDHgm8r7rC8tM+xa/Jd9ZUVyLmCWWjabOr3q1eQCqkPp8AXYygU
-	B6gQn18Om2KAhCXe4PdV8gb9C03jZeMWnTF7c8/KmoT48mw5r5Fs8oh4z7Va22fcqWQo2R
-	5nb3sre7bhuJCoZed92SVCBqLCLRheE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708966721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l0KFPjXNqVsEqy2ySF8st8aX9aaAa1NXHzLxm/9qX7E=;
-	b=Q/Xv00rlXZFJgefrppCuzXJpBCyRFGwXI/qhd56LD39Ty5Lx3SkyuS3agI9PXyjpcd844V
-	kHbrGV8fBOAd1zCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6763713A58;
-	Mon, 26 Feb 2024 16:58:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5Hq7GEDD3GUxGAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 26 Feb 2024 16:58:40 +0000
-Message-ID: <a9ebb623-298d-4acf-bdd5-0025ccb70148@suse.cz>
-Date: Mon, 26 Feb 2024 17:58:40 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4SNCihX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708966749; x=1740502749;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=BLAS03sOMxIrSy3dV5ost75fW5umBREUcI8rl3VAb3A=;
+  b=R4SNCihXvVwHSornTPea3RdglxrpsuMUrA2dGwFcYuri3etLggJaLnb3
+   1DJ2gNNmVjjUCKvJr23cCXtWG4fABgFYC1CRGV1mtgVMebe4YPMf65y8i
+   wYYQ5lsJkPwj4oya+BZ12HcC+2+/12vK0uVwNTXgWNSmBwKaitMvF4ois
+   9Mw/cBFPRVRkMXlDdYYYDQ+2XNaTpAboyJrhNY8h7sgIbrGzVIFHiVDkq
+   tZMvO7+WdVyimRo3GeGDhXuCy8HswT0jrvat4hPkFnozHBx5vQ3Et9YOp
+   wxtrs0dwBx7cnxSlApcancypid0/rS7T8I47HbmWcStpIzuPSKhMRGhrx
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3133426"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="3133426"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:59:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="7269610"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.12])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:59:05 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 Feb 2024 18:59:00 +0200 (EET)
+To: Luiz Capitulino <luizcap@redhat.com>
+cc: shravankr@nvidia.com, davthompson@nvidia.com, ndalvi@redhat.com, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 0/2] platform/mellanox: mlxbf-pmc: Fix module loading
+In-Reply-To: <1608d86a-24e8-403b-b199-ce23f8411cfd@redhat.com>
+Message-ID: <8a05120e-fcdf-f7f2-6b60-22e3ee819d37@linux.intel.com>
+References: <cover.1708635408.git.luizcap@redhat.com> <170895404513.2243.14840310263795846559.b4-ty@linux.intel.com> <def1a153-3cfb-431d-a7d2-a13bb7d65f4f@redhat.com> <29863354-4efe-d199-a9d4-7daf83f6cde9@linux.intel.com>
+ <1608d86a-24e8-403b-b199-ce23f8411cfd@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 13/36] lib: prevent module unloading if memory is not
- freed
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, mhocko@suse.com, hannes@cmpxchg.org,
- roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
- willy@infradead.org, liam.howlett@oracle.com,
- penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
- peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
- will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
- dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
- david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
- nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
- rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
- yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
- hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
- ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org,
- ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
- iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
- elver@google.com, dvyukov@google.com, shakeelb@google.com,
- songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
- minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, linux-arch@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
- cgroups@vger.kernel.org
-References: <20240221194052.927623-1-surenb@google.com>
- <20240221194052.927623-14-surenb@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20240221194052.927623-14-surenb@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Bar: /
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=jcYeMA68;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="Q/Xv00rl"
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.73 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_GT_50(0.00)[74];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-0.73)[83.74%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Score: -0.73
-X-Rspamd-Queue-Id: 14138225F4
-X-Spam-Flag: NO
+Content-Type: multipart/mixed; BOUNDARY="8323328-730537961-1708964317=:1203"
+Content-ID: <4b808e5d-8e8a-3c86-7ca7-e69e8bd41f28@linux.intel.com>
 
-On 2/21/24 20:40, Suren Baghdasaryan wrote:
-> Skip freeing module's data section if there are non-zero allocation tags
-> because otherwise, once these allocations are freed, the access to their
-> code tag would cause UAF.
-> 
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I know that module unloading was never considered really supported etc.
-But should we printk something so the admin knows why it didn't unload, and
-can go check those outstanding allocations?
+--8323328-730537961-1708964317=:1203
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <0b7f7ff4-48f1-66a2-0394-e1037cd78cc7@linux.intel.com>
 
+On Mon, 26 Feb 2024, Luiz Capitulino wrote:
+
+> On 2024-02-26 11:04, Ilpo J=E4rvinen wrote:
+> > On Mon, 26 Feb 2024, Luiz Capitulino wrote:
+> >=20
+> > > On 2024-02-26 08:27, Ilpo J=E4rvinen wrote:
+> > > > On Thu, 22 Feb 2024 15:57:28 -0500, Luiz Capitulino wrote:
+> > > >=20
+> > > > > The mlxbf-pmc driver fails to load when the firmware reports a ne=
+w but
+> > > > > not
+> > > > > yet implemented performance block. I can reproduce this today wit=
+h a
+> > > > > Bluefield-3 card and UEFI version 4.6.0-18-g7d063bb-BId13035, sin=
+ce
+> > > > > this
+> > > > > reports the new clock_measure performance block.
+> > > > >=20
+> > > > > This[1] patch from Shravan implements the clock_measure support a=
+nd
+> > > > > will
+> > > > > solve the issue. But this series avoids the situation by ignoring=
+ and
+> > > > > logging unsupported performance blocks.
+> > > > >=20
+> > > > > [...]
+> > > >=20
+> > > >=20
+> > > > Thank you for your contribution, it has been applied to my local
+> > > > review-ilpo branch. Note it will show up in the public
+> > > > platform-drivers-x86/review-ilpo branch only once I've pushed my
+> > > > local branch there, which might take a while.
+> > >=20
+> > > Thank you Ilpo and thanks Hans for the review.
+> > >=20
+> > > The only detail is that we probably want this merged for 6.8 since
+> > > the driver doesn't currently load with the configuration mentioned ab=
+ove.
+> >=20
+> > Oh, sorry, I missed the mention in the coverletter.
+> >=20
+> > So you'd want I drop these from review-ilpo branch as there they end
+> > up into for-next branch, and they should go through Hans instead who
+> > handles fixes branch for this cycle?
+>=20
+> If that's the path to get this series merged for this cycle then yes,
+> but let's see if Hans agrees (sorry that I didn't know this before
+> posting).
+>
+> One additional detail is that this series is on top of linux-next, which
+> has two additional mlxbf-pmc changes:
+>
+> *
+> https://lore.kernel.org/lkml/39be055af3506ce6f843d11e45d71620f2a96e26.170=
+7808180.git.shravankr@nvidia.com/
+> *
+> https://lore.kernel.org/lkml/d8548c70339a29258a906b2b518e5c48f669795c.170=
+7808180.git.shravankr@nvidia.com/
+>=20
+> Maybe those two should be included for 6.8 as well?
+
+Those look a new feature to me so they belong to for-next. So no, they=20
+will not end up into 6.8 (to fixes branch). If the 2 patches in this=20
+series do not apply without some for-next targetting dependencies, you=20
+should rebase on top of fixes branch and send a new version.
+
+About those two patches, please also see my reply. I intentionally only 2=
+=20
+patches of that series because I wanted to see sysfs documentation first=20
+so you should resend those two patches to for-next with sysfs=20
+documentation.
+
+--=20
+ i.
+--8323328-730537961-1708964317=:1203--
