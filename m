@@ -1,137 +1,139 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF891B27D;
-	Mon, 26 Feb 2024 12:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D635660252
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708950107; cv=none; b=eA3JodmapVfBbQJZgvQ0iBRHpJIxmvlwWLmhOgBOx5XSvGsR1lw1o+FitHhktCO8w0bpUsB9fFs7uJhHX+8zupx94Pl9Q9iEoyr1Cg5t4QIunczEsuU7wM+5OWk7b3gJWxXYWSl5Kh/4N0gkSKe/Z1RMVkC+mBvqfqsk4/4YoDk=
+	t=1708950229; cv=none; b=QBLFSWBYNV2/fxZSVZPEoXEagvhtqfP1xDGlgWBvlxFqn2M6oWzzypb3lprZ3k2lW1EtEL1KgsllpTbeBeJYt3N/1wA/B/tKGlvO5YcVGeF6OFLpsClDiy4UXUwl66braYYDyeCSHi/F+wmbL0DAguhysPM8Fj899jsoyhBOJdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708950107; c=relaxed/simple;
-	bh=pi3BrUr3ur1vJpL7LOfjfmoG+suaosBkg1tWLQHk5BU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eDJypdXrTtigFt3O3M8nJYLrQhB8Y0L6mgB7jMdvXtMyZ7rNJRVOxdBQOPOjVj1v1W5tyx9TmzeRfiztpf0j0mdqzTFdh4+YeTcFBAtr6VXKejCpsHWSTnDruzsaEd/in4C7Ldktiz3KB87zFZim1XrskglFQ2IPdV0g0DpPBwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk04k1G1Pz6K9M8;
-	Mon, 26 Feb 2024 20:17:58 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C7CA1400DB;
-	Mon, 26 Feb 2024 20:21:41 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
- 2024 12:21:40 +0000
-Date: Mon, 26 Feb 2024 12:21:39 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: John Groves <John@Groves.net>
-CC: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, "Dan
- Williams" <dan.j.williams@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Alexander
- Viro" <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Jan
- Kara" <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <john@jagalactic.com>, Dave Chinner
-	<david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
-	<dave.hansen@linux.intel.com>, <gregory.price@memverge.com>
-Subject: Re: [RFC PATCH 04/20] dev_dax_iomap: Save the kva from memremap
-Message-ID: <20240226122139.0000135b@Huawei.com>
-In-Reply-To: <66620f69fa3f3664d955649eba7da63fdf8d65ad.1708709155.git.john@groves.net>
-References: <cover.1708709155.git.john@groves.net>
-	<66620f69fa3f3664d955649eba7da63fdf8d65ad.1708709155.git.john@groves.net>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1708950229; c=relaxed/simple;
+	bh=jDAhdEpIbKlSXWc3tggrWyIET+6KayygFiH8Jlx4FdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nbUQnCAr1jMrvmXCwbwdPQsnIoDOmDvIIVLzMXpxHM3ZqXH2RvIrVsJlddokMbL3KWuSd+do/pTb6omNZTMLcEaPKJYwWXwzdlZVdnT+jaDCRPXtp5PRlrz/Tpml5PgUdJNRChQoBTaSnt7b2oecuwL91wxCE4xB6Nr3nxTillo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KFmqfP0Z; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KFmqfP0Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1708950225;
+	bh=jDAhdEpIbKlSXWc3tggrWyIET+6KayygFiH8Jlx4FdQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KFmqfP0ZEp9VwkGbslYkheutZpcnCyH+w7n2pXU85NgWvIcdbZfOyBcav1JM4g5LW
+	 tGmyxsZTYk/queDLgYvAoip8HRcbX4kYgCWLuGdh7UwNiQCKo0qWw87VaBGA165Mn3
+	 CIwkSVEBg8xuVKJ5jeDXrQiOYNGkCK5w3bF6Z0BjO6SvjRwtO6XSJGGKHMVtPGpGc0
+	 kriSFMLerP31qCy6sdcyPUB7CYBEWM6+y3GWHZ3fpQ58BxiYJBd36t43/74JD87Yg3
+	 8IvNN1LGKvsEnNq4ApjEtp8DZSEoe1b812iAk7QsooeSwmM4D+IuL1gmYcSHI8G5gd
+	 7M2d/gb84AaTg==
+Received: from eldfell (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pq)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E5F6837803EE;
+	Mon, 26 Feb 2024 12:23:44 +0000 (UTC)
+Date: Mon, 26 Feb 2024 14:23:43 +0200
+From: Pekka Paalanen <pekka.paalanen@collabora.com>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, Melissa Wen
+ <melissa.srw@gmail.com>, =?UTF-8?B?TWHDrXJh?= Canal
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel
+ Vetter <daniel@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+ thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH v2 7/9] drm/vkms: Add range and encoding properties to
+ pixel_read function
+Message-ID: <20240226142343.459f23f7.pekka.paalanen@collabora.com>
+In-Reply-To: <20240223-yuv-v2-7-aa6be2827bb7@bootlin.com>
+References: <20240223-yuv-v2-0-aa6be2827bb7@bootlin.com>
+	<20240223-yuv-v2-7-aa6be2827bb7@bootlin.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: multipart/signed; boundary="Sig_/ZEoDf4cS/x3p=01Lsgfn.zi";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, 23 Feb 2024 11:41:48 -0600
-John Groves <John@Groves.net> wrote:
+--Sig_/ZEoDf4cS/x3p=01Lsgfn.zi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Save the kva from memremap because we need it for iomap rw support
-> 
-> Prior to famfs, there were no iomap users of /dev/dax - so the virtual
-> address from memremap was not needed.
-> 
-> Also: in some cases dev_dax_probe() is called with the first
-> dev_dax->range offset past pgmap[0].range. In those cases we need to
-> add the difference to virt_addr in order to have the physaddr's in
-> dev_dax->ranges match dev_dax->virt_addr.
+On Fri, 23 Feb 2024 12:37:27 +0100
+Louis Chauvet <louis.chauvet@bootlin.com> wrote:
 
-Probably good to have info on when this happens and preferably why
-this dragon is there.
+> From: Arthur Grillo <arthurgrillo@riseup.net>
+>=20
+> Create range and encoding properties. This should be noop, as none of
+> the conversion functions need those properties.
 
-> 
-> Dragons...
-> 
-> Signed-off-by: John Groves <john@groves.net>
+None of the conversion function needs this? How can one say so?
+The previous patch is making use of them already, AFAICT?
+
+How is this a noop? Is it not exposing new UAPI from VKMS?
+
+
+Thanks,
+pq
+
+>=20
+> Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
+> [Louis Chauvet: retained only relevant parts]
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 > ---
->  drivers/dax/dax-private.h |  1 +
->  drivers/dax/device.c      | 15 +++++++++++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-> index 446617b73aea..894eb1c66b4a 100644
-> --- a/drivers/dax/dax-private.h
-> +++ b/drivers/dax/dax-private.h
-> @@ -63,6 +63,7 @@ struct dax_mapping {
->  struct dev_dax {
->  	struct dax_region *region;
->  	struct dax_device *dax_dev;
-> +	u64 virt_addr;
-
-Why as a u64? If it's a virt address why not just void *?
-
->  	unsigned int align;
->  	int target_node;
->  	bool dyn_id;
-> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-> index 40ba660013cf..6cd79d00fe1b 100644
-> --- a/drivers/dax/device.c
-> +++ b/drivers/dax/device.c
-> @@ -372,6 +372,7 @@ static int dev_dax_probe(struct dev_dax *dev_dax)
->  	struct dax_device *dax_dev = dev_dax->dax_dev;
->  	struct device *dev = &dev_dax->dev;
->  	struct dev_pagemap *pgmap;
-> +	u64 data_offset = 0;
->  	struct inode *inode;
->  	struct cdev *cdev;
->  	void *addr;
-> @@ -426,6 +427,20 @@ static int dev_dax_probe(struct dev_dax *dev_dax)
->  	if (IS_ERR(addr))
->  		return PTR_ERR(addr);
->  
-> +	/* Detect whether the data is at a non-zero offset into the memory */
-> +	if (pgmap->range.start != dev_dax->ranges[0].range.start) {
-> +		u64 phys = (u64)dev_dax->ranges[0].range.start;
-
-Why the cast? Ranges use u64s internally.
-
-> +		u64 pgmap_phys = (u64)dev_dax->pgmap[0].range.start;
-> +		u64 vmemmap_shift = (u64)dev_dax->pgmap[0].vmemmap_shift;
+>  drivers/gpu/drm/vkms/vkms_plane.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkm=
+s_plane.c
+> index 427ca67c60ce..95dfde297377 100644
+> --- a/drivers/gpu/drm/vkms/vkms_plane.c
+> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+> @@ -228,5 +228,14 @@ struct vkms_plane *vkms_plane_init(struct vkms_devic=
+e *vkmsdev,
+>  	drm_plane_create_rotation_property(&plane->base, DRM_MODE_ROTATE_0,
+>  					   DRM_MODE_ROTATE_MASK | DRM_MODE_REFLECT_MASK);
+> =20
+> +	drm_plane_create_color_properties(&plane->base,
+> +					  BIT(DRM_COLOR_YCBCR_BT601) |
+> +					  BIT(DRM_COLOR_YCBCR_BT709) |
+> +					  BIT(DRM_COLOR_YCBCR_BT2020),
+> +					  BIT(DRM_COLOR_YCBCR_LIMITED_RANGE) |
+> +					  BIT(DRM_COLOR_YCBCR_FULL_RANGE),
+> +					  DRM_COLOR_YCBCR_BT601,
+> +					  DRM_COLOR_YCBCR_FULL_RANGE);
 > +
-> +		if (!WARN_ON(pgmap_phys > phys))
-> +			data_offset = phys - pgmap_phys;
-> +
-> +		pr_notice("%s: offset detected phys=%llx pgmap_phys=%llx offset=%llx shift=%llx\n",
-> +		       __func__, phys, pgmap_phys, data_offset, vmemmap_shift);
+>  	return plane;
+>  }
+>=20
 
-pr_debug() + dynamic debug will then deal with __func__ for you.
 
-> +	}
-> +	dev_dax->virt_addr = (u64)addr + data_offset;
-> +
->  	inode = dax_inode(dax_dev);
->  	cdev = inode->i_cdev;
->  	cdev_init(cdev, &dax_fops);
+--Sig_/ZEoDf4cS/x3p=01Lsgfn.zi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmXcgs8ACgkQI1/ltBGq
+qqd0yQ/+PlsbBszx14fLcIryZU8Vr70SeP1/sr10MG/XYQgLAvcou7ushiRPDMtc
+Vw7fD+bI7Egqs3s7nS4gFPhQX9Ej/iroulD7kUdejtzi9J4e2n5Z7ccS/uu5UoXQ
+esCHtd3ZHMY5Sgi/FK76VUZV5EeW0WTkKAQy4rMHPaUumxi2RhueLQ+YVP8nzsIs
+c9s1W8VQNAOKNKiIE7YNU0jjiA1FlqhGdghMQjpX1RYK7PB13xYmZKTZS0bUueut
+oCrzvVkrAA2ASmxyRdlDaQeOmGso2/ajbc0PamCsWklQLTBbfuoy0yNnRXBXjVJG
+RKUpyRlG4QI9/vGyFE818fbUT/f4CnwfN5yoeaM3Ciqv+zqH6fVnsXiqu1z1rQTm
+EvzbcmCbNfzVj4+LbiVJCrrxcse8Nu0KA5HwXUlCxdyTVuW4s3ffYJnU/e6Ymicb
+fgB1dGANe7d8BHUXO9JHyI4pQwIUM+7os9l3DWIEK64T9DTQCZqLPiMQeQbpDYjs
+Wpd2coi52Gr37Kuauz0mX0TwRp7/ADi0+gpHBoX4Z+CtrTgPaWxhRcS9lmcyNo05
++LOovrnQMOydRPLvkMYsoDCWI/SdVhSt8XF5xiDEV6QOorm+wDLIh/qPz9me5/eb
+U8vOpJuiE4KaKr8GwTCldJPr6GwR+CUEB1aUA33UEsZvtPbQoWg=
+=obet
+-----END PGP SIGNATURE-----
+
+--Sig_/ZEoDf4cS/x3p=01Lsgfn.zi--
