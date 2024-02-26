@@ -1,42 +1,42 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82EE1EB27;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5966A1DDF2;
 	Mon, 26 Feb 2024 08:29:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936192; cv=none; b=mhS0OlElxNiTKXW4AiZUVrnksb8rbPIzez1gIA8Pr4709EpsAXjDNsVDHdXgrp3nxQPYCUj298hJ0eyDyAbuGXShR5giH/fnArZkrW1o/20l1K8K2QHCssaasjJp8AbQKpGlT4CaV1vZrcJKXaWQO5lMSIMyXplj0HA+x9+s2Iw=
+	t=1708936192; cv=none; b=osA+uYsGnX6yOZ5hOhGr03LlXbmnIEEtHbbtI5Kn3nWT+hrmAsNxXZJlH89uKIxbakhl4UEAR9eFOCjiv0nIpRHSGsZMYekQvw30ETavHfpd+0v4GrNlGXxWngAt7a5lVhDtbs9YB193CnYyCCP+mMl/Z479SYQRYnY4xxhYtYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708936192; c=relaxed/simple;
-	bh=1Ryj6u4U9BulVOUlWacagZD4U9GjBBr6paLN/Y3sP80=;
+	bh=AX82JcILUa46R1G0PfPXFjiVx0GFJf+AzOhgtIqj4R8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tbWzAqxfVhLDKJNmgfgUfwLSvc/s9WYQPLQOBAo2u7akrvn5Ky0gbZoBq7kZH36PdKxEUeGwyVmv09wWhw/mXyGVuY3zYS5tSlsFWPOhiBG5YdpPsZm+CknqH/t6LBv8RTxRv6rordn8CNQZuGn7biveMcjbyL/vz50EI1Qe9G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OFmB7O7U; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=TLzuW94I5f+r7CjxiG6WdcFw+Ttz0ipUzMzpi2FAYmysFE39ePR3yeAt+KGcAcEgJIDnhqH4L3fcNr2JRhtUYoMMzcjWikEa1DX4JOEPN3KO1vu8tM6THUq5VCNjIW3zGhGG26XVU5aneDGGG8B+l6fF4l66DnwstBQ8Wq3BaQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OzFZCYjp; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OFmB7O7U"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OzFZCYjp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936191; x=1740472191;
+  t=1708936190; x=1740472190;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1Ryj6u4U9BulVOUlWacagZD4U9GjBBr6paLN/Y3sP80=;
-  b=OFmB7O7UcgzbkUTZnW9wU+JaA//593FWMu6WwCCmDU2MecNet3AGt1Hn
-   giEGdKRhllfTSlLOwjJ1k09H6/uBJWBorjjfH4luyYZux/yaA9sd8ayEZ
-   ETq6FKdovk4t/BpjYtB2QFHTU/Gu8d9munVuya956xUR6eWzQbIERVSsK
-   J0Cw0vpW6btIEdWvGta4kvVypd5El/SPUsWn6uRUlz7ehvrFSGP8grkSY
-   GdGpa7rfWF3EmcoWP6HTsQfL0Z6jH75ZsjTu/YuDciu+jtDTfWe3j3Z4X
-   qGKLJ23Suebc4IacYY0nNJ9foRcZt97xHqlIy7dMLCkdzUHODdyEGIDQZ
+  bh=AX82JcILUa46R1G0PfPXFjiVx0GFJf+AzOhgtIqj4R8=;
+  b=OzFZCYjp7MydseztlfNJWt+31fupV8S4VOh5t2Q+7eMogLtfz+kXIe1l
+   XfwYugpG17bSyno6Ot0yG36xlaSWxv3OKShEJ1l4j8c0hf5Yef3a5FmbC
+   nY2IGmNcgHho8b7Wu2CgJGwrq38S6e1Rg2RxkM3voT1PXzYX2/b/ptQJn
+   Q7LbW8hA6pdL3xJL1bFeAYc7pXdU1/LJg0SS5PzVHmrSZDnQoDta51W1i
+   /vKTdRdnn2ltowBpbuwVVwfP+prVIUjWviKGiaCChPkQLczEg35gsfLaL
+   5CFdQfMlv/DbOoXdhqgUfEyVf7QSSB0ZkliqdM3M4x/tetn6FS0inCuqE
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14623303"
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14623311"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="14623303"
+   d="scan'208";a="14623311"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:33 -0800
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:34 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6519404"
+   d="scan'208";a="6519410"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
   by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:33 -0800
 From: isaku.yamahata@intel.com
@@ -51,11 +51,10 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com,
-	Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v8 06/14] KVM: MMU: Introduce level info in PFERR code
-Date: Mon, 26 Feb 2024 00:29:20 -0800
-Message-Id: <4d61104bff388a081ff8f6ae4ac71e05a13e53c3.1708933624.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com
+Subject: [PATCH v8 08/14] KVM: x86/tdp_mmu: Allocate private page table for large page split
+Date: Mon, 26 Feb 2024 00:29:22 -0800
+Message-Id: <657c4a403e63f2c7e1742b4cdb09ca94c6d5d9b8.1708933624.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933624.git.isaku.yamahata@intel.com>
 References: <cover.1708933624.git.isaku.yamahata@intel.com>
@@ -67,79 +66,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Xiaoyao Li <xiaoyao.li@intel.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-For TDX, EPT violation can happen when TDG.MEM.PAGE.ACCEPT.
-And TDG.MEM.PAGE.ACCEPT contains the desired accept page level of TD guest.
+Make tdp_mmu_alloc_sp_split() aware of private page table.
 
-1. KVM can map it with 4KB page while TD guest wants to accept 2MB page.
-
-  TD guest will get TDX_PAGE_SIZE_MISMATCH and it should try to accept
-  4KB size.
-
-2. KVM can map it with 2MB page while TD guest wants to accept 4KB page.
-
-  KVM needs to honor it because
-  a) there is no way to tell guest KVM maps it as 2MB size. And
-  b) guest accepts it in 4KB size since guest knows some other 4KB page
-     in the same 2MB range will be used as shared page.
-
-For case 2, it need to pass desired page level to KVM MMU page fault
-handler. Use bit 29:31 of kvm PF error code for this purpose.
-
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 5 +++++
- arch/x86/kvm/mmu/mmu.c          | 5 +++++
- 2 files changed, 10 insertions(+)
+ arch/x86/kvm/mmu/mmu_internal.h | 9 +++++++++
+ arch/x86/kvm/mmu/tdp_mmu.c      | 8 ++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index e4d40e31fc31..c864a1ff2eb1 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -262,6 +262,8 @@ enum x86_intercept_stage;
- #define PFERR_FETCH_BIT 4
- #define PFERR_PK_BIT 5
- #define PFERR_SGX_BIT 15
-+#define PFERR_LEVEL_START_BIT 29
-+#define PFERR_LEVEL_END_BIT 31
- #define PFERR_GUEST_FINAL_BIT 32
- #define PFERR_GUEST_PAGE_BIT 33
- #define PFERR_GUEST_ENC_BIT 34
-@@ -274,6 +276,7 @@ enum x86_intercept_stage;
- #define PFERR_FETCH_MASK	BIT(PFERR_FETCH_BIT)
- #define PFERR_PK_MASK		BIT(PFERR_PK_BIT)
- #define PFERR_SGX_MASK		BIT(PFERR_SGX_BIT)
-+#define PFERR_LEVEL_MASK	GENMASK_ULL(PFERR_LEVEL_END_BIT, PFERR_LEVEL_START_BIT)
- #define PFERR_GUEST_FINAL_MASK	BIT_ULL(PFERR_GUEST_FINAL_BIT)
- #define PFERR_GUEST_PAGE_MASK	BIT_ULL(PFERR_GUEST_PAGE_BIT)
- #define PFERR_GUEST_ENC_MASK	BIT_ULL(PFERR_GUEST_ENC_BIT)
-@@ -283,6 +286,8 @@ enum x86_intercept_stage;
- 				 PFERR_WRITE_MASK |		\
- 				 PFERR_PRESENT_MASK)
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index 9e2c7c6d85bf..9aa4c6ffa207 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -201,6 +201,15 @@ static inline void kvm_mmu_alloc_private_spt(struct kvm_vcpu *vcpu, struct kvm_m
+ 	}
+ }
  
-+#define PFERR_LEVEL(err_code)	(((err_code) & PFERR_LEVEL_MASK) >> PFERR_LEVEL_START_BIT)
++static inline int kvm_alloc_private_spt_for_split(struct kvm_mmu_page *sp, gfp_t gfp)
++{
++	gfp &= ~__GFP_ZERO;
++	sp->private_spt = (void *)__get_free_page(gfp);
++	if (!sp->private_spt)
++		return -ENOMEM;
++	return 0;
++}
 +
- /* apic attention bits */
- #define KVM_APIC_CHECK_VAPIC	0
- /*
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index b8d6ce02e66d..081df7855065 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4625,6 +4625,11 @@ bool __kvm_mmu_honors_guest_mtrrs(bool vm_has_noncoherent_dma)
- 
- int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+ static inline void kvm_mmu_free_private_spt(struct kvm_mmu_page *sp)
  {
-+	u8 err_level = PFERR_LEVEL(fault->error_code);
-+
-+	if (err_level)
-+		fault->max_level = min(fault->max_level, err_level);
-+
- 	/*
- 	 * If the guest's MTRRs may be used to compute the "real" memtype,
- 	 * restrict the mapping level to ensure KVM uses a consistent memtype
+ 	if (sp->private_spt)
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index 1a0e4baa8311..66de875d3de1 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -1593,8 +1593,12 @@ static struct kvm_mmu_page *__tdp_mmu_alloc_sp_for_split(gfp_t gfp, union kvm_mm
+ 
+ 	sp->role = role;
+ 	sp->spt = (void *)__get_free_page(gfp);
+-	/* TODO: large page support for private GPA. */
+-	WARN_ON_ONCE(kvm_mmu_page_role_is_private(role));
++	if (kvm_mmu_page_role_is_private(role)) {
++		if (kvm_alloc_private_spt_for_split(sp, gfp)) {
++			free_page((unsigned long)sp->spt);
++			sp->spt = NULL;
++		}
++	}
+ 	if (!sp->spt) {
+ 		kmem_cache_free(mmu_page_header_cache, sp);
+ 		return NULL;
 -- 
 2.25.1
 
