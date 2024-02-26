@@ -1,129 +1,91 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A9914AD3B;
-	Mon, 26 Feb 2024 14:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D9C14AD2D;
+	Mon, 26 Feb 2024 14:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708958361; cv=none; b=GTPbMTB6x6/pZ4bbBK3uWVBVz0zsO6F5N+sqZBndB2+qoe+On4Q4d03p1BD8nmq4J3SFmQg/JtGSR/9Q5WmoL2LgC3e014H37G+OKVAE48Xe1rFRN/upPTjA3SLH+krElgAAToFu8ruiF6rJPX/T8AzDFJPelSpW2vbGo8AhGJg=
+	t=1708958362; cv=none; b=V/NybaR+DA7/X4GtxnFH7ztOtRvOz4KHXpvq7aFBOnAfkWbGOAgFgDTvLBmTW0YMD5Kqxe9vb24kEmSd8RDARZ8uDRduhhIgLIpLYgFPNMvLgXmK45nkFhEqEw4vF6kyWiTv9EF8qLzuxYPyFCmw1L+eQmi553wictYUprz7mLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708958361; c=relaxed/simple;
-	bh=XhSoym3qQlKNWcZaO1fmucbwOJAhaGU0ZDzfY5zhuSk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AvrL2yEVwObNlWd5YgQQkzkilx2JzkYaRwfI8GYlGyuNTNeMvJT6U309O0xcB8Pz+TKPBPhLYXYavPJwuR6qjc4YvTGAAZ9pJDurSqUj7PuCdBxFMFO9y35RyGMkwfA8sS3Iga6lHlXpmak6XZ3qzIi+P6HdwsAk8VFpy6jMRMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=km8qtcDh; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708958362; c=relaxed/simple;
+	bh=u6Nlj9aFWUkGtMphlgtcfzyYeMBYqT2bTgNnhxzd4PA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QOFpq6rrWE0okhZIUPbi8cnh+KMKhcwFhWKRPRNHlu9JP70LF27zruBxHAJ2VKdOZAMN3gHqUZs+5PdEgOtHTqceH53goStOPdkdVhhOCO0DrHjwVIC2NOyno00zWDbUQQSvxQ3dp0okeGauYhIGFnEU3SFVAUslzJfvibj3I6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=i36GNJFU; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="km8qtcDh"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dcafff3c50so3680195ad.0;
-        Mon, 26 Feb 2024 06:39:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708958359; x=1709563159; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WkFyhfs2k+/ZiDzHPyMbRms0OafqFweJ9xnGHR0iLV8=;
-        b=km8qtcDhONpx3iGTYwvzSZTeaCQUZLPRlKLAAnm+nDZXnmuiCpSvU3aDjI2f2+wcyj
-         9R9zPCS5dcnEGWyht4zpdJcf3y86FDNnQZsg6/7c+vakIEkp+lNCffDEyYMK1c9XIhmO
-         XGCLdXyJFjUo6xNmrfM5lczAEuU1mbqDY+3lry/Zwdtl0dFleT//VJfl4wQ2AvjWQN1n
-         i190qpCZ5ejZPEum/3rxE9+jhtGAIJXD4FJf71v2VtYyNsduJrK98TPHEOqxj+NyjvqP
-         b220mHUMYfWQe8p03aJ+oZXPxUF8IlhqH8r0WHljj2xuwkYXzGu38KnP8uaQV4iBIJoA
-         daWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708958359; x=1709563159;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WkFyhfs2k+/ZiDzHPyMbRms0OafqFweJ9xnGHR0iLV8=;
-        b=QLfjRmAE3+g0JOShuRWDVMLAGoGxb4dnlynOCMWzZHz6BbVx9tuZwQ/atYeYKpZn4g
-         NLeL+l0dVAWs991UO3SNY0Ri37W3r+QZxhg2iKIQiFULgs3DsdoKu/F7p8GyjPQVyndB
-         2kHZBFPUJXr8Wzcf9KSCJ+77aFiASjBEIB9HmheCcBuEyYRB2N1vZlnLK4wP71UC5qVj
-         WBf1OM2zcAEUjSigZu3aPCQ/uf8VBFsZbHb+MnRvM1MJNUVtIqfoVpp9YAhf9gMFIuXU
-         OBXcRGEHdoSdW+t7udCwlSi3ABzWSxTMNyDwQ+WDZp6uEO3fU6Cgz7sS82rof94sE/Rk
-         3XnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/92nAyb+4OnrYd5XiInYZguhoAtZTAIWrNNZqahzpMobFxK0m2eZHoYTP//9v7STJmmgqJyrkytt5mjzeepGolKVB
-X-Gm-Message-State: AOJu0YyfAh+9xksGH7f2UUxqF4usGqpPEBnBBTajRjcdRLAwt/rqKmun
-	gZQNQn+YcsFSxKksRGKvMKgaxO3FbUaUWdHBj5SWVLCZsdH79fMRbYvyqkfm
-X-Google-Smtp-Source: AGHT+IF8tRUu66bSXe/aJmjWB0UBmQOoCiQpAK7DNUmyzrYAZTKYIv0rpCc73qQs0tztBkfqpn2XWQ==
-X-Received: by 2002:a17:902:d488:b0:1dc:8042:3b76 with SMTP id c8-20020a170902d48800b001dc80423b76mr10400301plg.2.1708958359247;
-        Mon, 26 Feb 2024 06:39:19 -0800 (PST)
-Received: from localhost ([198.11.176.14])
-        by smtp.gmail.com with ESMTPSA id b4-20020a170903228400b001db5ea6664asm3997276plh.21.2024.02.26.06.39.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Feb 2024 06:39:18 -0800 (PST)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	Hou Wenlong <houwenlong.hwl@antgroup.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	kvm@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	x86@kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Juergen Gross <jgross@suse.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [RFC PATCH 65/73] x86/kvm: Patch KVM hypercall as PVM hypercall
-Date: Mon, 26 Feb 2024 22:36:22 +0800
-Message-Id: <20240226143630.33643-66-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240226143630.33643-1-jiangshanlai@gmail.com>
-References: <20240226143630.33643-1-jiangshanlai@gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="i36GNJFU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=XPs0zPZIiUMU61zxAetpvc6AZcILYC4oTZnxDxpcdNc=; b=i36GNJFUnA++Z4gOewmHXVagLb
+	6ejWEec7cnUdo6EPzUZnziutrcncOvwrvq/t31x4xz5gInslKYJbXQH9/Nu7s/CARGxVrP/eckNPc
+	YocpXU/nvYsaKSb9a23T84FaOIQ/5Vh9ZMRPJbmLWOQL2dk6OfvW2cRHs6gMThumQ6p4XDdEW9/9r
+	iSimuM7vxqGMMNyTL1WEmsiovJdAj/4R77IJtcGI+LKG/FQBiTlyh741voW9xicVhea+DTRbbB3uI
+	WQq2A+H6aS4g40j10/cZRZsa7FRSrJa53olqCx2KCIxKgmxG72NpIDwb9mPlR10OMVmdTCJ20KoLA
+	4ar5Lq4A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45490)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rec8K-0003qd-23;
+	Mon, 26 Feb 2024 14:39:08 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rec8I-0006VD-77; Mon, 26 Feb 2024 14:39:06 +0000
+Date: Mon, 26 Feb 2024 14:39:06 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Shengyu Qu <wiagn233@outlook.com>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1] net: sfp: add quirks for ODI DFP-34X-2C2
+Message-ID: <ZdyiigYNGf8WVZNu@shell.armlinux.org.uk>
+References: <TY3P286MB2611C0FA24318AA397DB689B985A2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
+ <ZdyahVYAhPgf2Xqn@shell.armlinux.org.uk>
+ <TY3P286MB2611BD62C30B37A5BE02D3C5985A2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY3P286MB2611BD62C30B37A5BE02D3C5985A2@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+On Mon, Feb 26, 2024 at 10:16:46PM +0800, Shengyu Qu wrote:
+> Hi Russell,
+> 
+> > On Mon, Feb 26, 2024 at 09:23:46PM +0800, Shengyu Qu wrote:
+> > > ODI DFP-34X-2C2 is capable of 2500base-X, but incorrectly report its
+> > > capabilities in the EEPROM.
+> > > So use sfp_quirk_2500basex for this module to allow 2500Base-X mode.
+> > This was previously submitted by Sergio Palumbo, and comes in two
+> > different forms - an OEM version and non-OEM. There was extensive
+> > discussion about this, and the result is that I'm not accepting this
+> > quirk for this module.
+> > 
+> > The reason is that the module _defaults_ to 1000base-X and requires
+> > manual reconfiguration by the user to operate at 2500base-X.
+> > Unfortunately, there is no way for the kernel to know whether that
+> > reconfiguration has occurred.
+> No, In the firmware of this stick, the speed rate is configured to auto
+> negotiation rather than fixed 1000base-X.
 
-Modify the KVM_HYPERCALL macro to enable patching the KVM hypercall as a
-PVM hypercall. Note that this modification will increase the size by two
-bytes for each KVM hypercall instruction.
+How does this "auto negotiation" work?
 
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
----
- arch/x86/include/asm/kvm_para.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+I mean *exactly* how does it work? How does it know whether the host is
+operating at 1000base-X or 2500base-X?
 
-diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-index 57bc74e112f2..1a322b684146 100644
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -2,6 +2,7 @@
- #ifndef _ASM_X86_KVM_PARA_H
- #define _ASM_X86_KVM_PARA_H
- 
-+#include <asm/pvm_para.h>
- #include <asm/processor.h>
- #include <asm/alternative.h>
- #include <linux/interrupt.h>
-@@ -18,8 +19,14 @@ static inline bool kvm_check_and_clear_guest_paused(void)
- }
- #endif /* CONFIG_KVM_GUEST */
- 
-+#ifdef CONFIG_PVM_GUEST
-+#define KVM_HYPERCALL \
-+	ALTERNATIVE_2("vmcall", "vmmcall", X86_FEATURE_VMMCALL, \
-+		      "call pvm_hypercall", X86_FEATURE_KVM_PVM_GUEST)
-+#else
- #define KVM_HYPERCALL \
-         ALTERNATIVE("vmcall", "vmmcall", X86_FEATURE_VMMCALL)
-+#endif /* CONFIG_PVM_GUEST */
- 
- /* For KVM hypercalls, a three-byte sequence of either the vmcall or the vmmcall
-  * instruction.  The hypervisor may replace it with something else but only the
+There is *no* inband protocol to allow this to be negotiated.
+
 -- 
-2.19.1.6.gb485710b
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
