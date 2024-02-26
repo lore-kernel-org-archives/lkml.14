@@ -1,104 +1,140 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BB41BC4E;
-	Mon, 26 Feb 2024 10:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2055D54FBA;
+	Mon, 26 Feb 2024 10:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708943408; cv=none; b=TfE9CmFWaz0cy3kaoea65Jwa+p/lTreFzutV6KZokVfMSBE0+yLapbRkunjhH5Gtzg2unkmNg/VwGq678yZ3SjRtAODSMdkQ+xKIsedEN3mQbpCxyj5qCtur2vHjluBar75CCkeF0PAihzMbM9xnQzIjI3v2Y0iiSkLgUS9tXBo=
+	t=1708943425; cv=none; b=iLbe6US5XVLwMaOkNxd6dS2OhI2iWGSKLFFm8Yt8ujTbuB/qMWvhkmaefb4XJMf4xQxkqKuLM8yTuGNcbYDOLtl5RGHLl6FXVJpQ4NSNUXuzIYUqQI0wzE4a0jzyNlC/SbKTu+5/UL9Vmh6Ym1o68Wusch2xWxsxvmzy/SofvWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708943408; c=relaxed/simple;
-	bh=1gssGLDWBwd5TR2GbXCEaXghJw5mSrwpLhPlGUk3dTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rLLwiqGa+m8Z9rdbXp5u0cTR2q0epIvVamxJ0sHP9//cdylxCrYGuZd8Obqo7iSllsm0XM/EYnJ444fnRwJXTxNF9wMjLoj2/wml8zWnTyZzWX5OpwUBJ/PkiNwt9uhoE7bv+nHM6IP4I6xbspdLIqx7AIugkUaidJKS0VyY0q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=T7kI/UOW; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1708943425; c=relaxed/simple;
+	bh=R2ave+VKw8AG0nmVmTwyOlNLt2F8ifyUq03l0B4OtVA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GgYsaf6nFOSI6Sio+pjF8JdR6uxGEUOw4YeIelMW4eif+XH2N+HAxn52odY5nAEbozCL3OqcuRileaMpLYhFljTPWrR4o+haAhsD82r2nWdE5R54O7/xsyyd7StUprN14jGyc8Fxijdua1pobbYlsOLh+gTqMXqYFiiydaN4z9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=a2h+nP8P; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="T7kI/UOW"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8C88E40E0192;
-	Mon, 26 Feb 2024 10:30:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 3hwmnnfbHmpR; Mon, 26 Feb 2024 10:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1708943400; bh=Uk18MAnYeobpuZAlHZy8fLU6VFT+yZHRPdSaWvS7J0o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T7kI/UOWE8N3GaTFewiJhglD8ljyhWOM2j5YbFSLN0p49b34AZNO+BLYA4zsOEkyO
-	 itjl0w0A0oFcdGnU7x8bXJtNLJ6z06cPrtC+MHPeRlK6faoX/XFJf2kY1sXTChcehH
-	 PTcjKMMDESMAa8qTNaRtyX34ejT5yONemI5jv6BQsSjacnDu9b+xBuYQCu7RIGAUEO
-	 WccwpfWnEt8e50ocFo3GJpCF+v8S+ozCaX2YasQegHwsEomEbT3CFv6Ng5qYFJJjPM
-	 M3l4HcdyFMchU7zmd+8tHxIUXstADLz6zl8kGHWRAKaCmICTSbbROgh9yM0AeBBJiZ
-	 Y4UdFtaf8x23++dzKM5RqNsZZ7Tegf6YFzPRk7K623NnkFOl8dI6cgLnkZ4sVVKUqj
-	 ZdOMafPgQGr76rBAlb7M6mkZgHs8I4iBYi8yY47MNyklCWReHLZNS3LHrUYm+pKStR
-	 ugG1zW2pLOQ0DaHJOEVQleUq+UWkxL1akaW0gB5ijK5TZnIkg2iSGoI3pLPLaLNOUm
-	 x+lMQFrd2nRpzRpEKgMOk75x5n14jiJ7sUYJgvcCtsyoKa7gT/F5b5OPrZE3vGfnEA
-	 m2yVc0e5MK1q7AuYqu5ph+pX6sQzBXYLUMa62wkb10Nc5f8Lq3TndaVNbrMLjDMVhO
-	 RZ/sgkb6VP37z5cNy9TLDIQM=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AE6AD40E019E;
-	Mon, 26 Feb 2024 10:29:24 +0000 (UTC)
-Date: Mon, 26 Feb 2024 11:29:18 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>,
-	"james.morse@arm.com" <james.morse@arm.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, "Luck, Tony" <tony.luck@intel.com>,
-	rafael@kernel.org, wangkefeng.wang@huawei.com,
-	tanxiaofei@huawei.com, mawupeng1@huawei.com, linmiaohe@huawei.com,
-	naoya.horiguchi@nec.com, gregkh@linuxfoundation.org,
-	will@kernel.org, jarkko@kernel.org, linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org, linux-edac@vger.kernel.org,
-	x86@kernel.org, justin.he@arm.com, ardb@kernel.org,
-	ying.huang@intel.com, ashish.kalra@amd.com,
-	baolin.wang@linux.alibaba.com, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, lenb@kernel.org, hpa@zytor.com,
-	robert.moore@intel.com, lvying6@huawei.com, xiexiuqi@huawei.com,
-	zhuo.song@linux.alibaba.com
-Subject: Re: [PATCH v11 1/3] ACPI: APEI: send SIGBUS to current task if
- synchronous memory error not recovered
-Message-ID: <20240226102918.GBZdxn_v0NbVjs2XMB@fat_crate.local>
-References: <20221027042445.60108-1-xueshuai@linux.alibaba.com>
- <20240204080144.7977-2-xueshuai@linux.alibaba.com>
- <20240219092528.GTZdMeiDWIDz613VeT@fat_crate.local>
- <bdf15819-46e0-498f-97e1-a0183f257086@linux.alibaba.com>
- <65d82c9352e78_24f3f294d5@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <20240223120813.00005d1f@Huawei.com>
- <20240223121701.00004bcf@Huawei.com>
- <00126cf9-bb59-4c05-8046-478d0d7f4297@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="a2h+nP8P"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41Q9tuNs011093;
+	Mon, 26 Feb 2024 10:30:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=riixjeCWiyR8itCb2LMRE
+	VDtb9m8Cn2wHYFk6ADL81I=; b=a2h+nP8P/GK2TOE28pZutvyLX5XA7b4omLQxZ
+	6+3fak/cDKVnWgW43ZNgwfP7azxAm3kIPVn26mGXEZfqPeaS+Aihsc1S7jVvLM1d
+	03ollrHFAxQHvtLQUrKxkvvurY82X2R9Sh8Yg5lPVD/Pfc2174P7XAFS4DeRzqCI
+	CYzj1YrtdCrCFxJq6gYMGpipMMQoC2xXPRKiZNs6li7+jrw4rqsh3N94dg85ntKz
+	94xLRgibsEZ1yaNNQgdhbHLczptlasUd5/rjD7mb/m1YN5rij6bcAa9Fb1bUVAat
+	mCYMIk0wlPS54bjuu3AWFsGv2Ezp2iBvJe0T0enQSemyMF1fg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wgkxm0km4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Feb 2024 10:30:10 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41QAU96N010217
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Feb 2024 10:30:09 GMT
+Received: from hu-kuldsing-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 26 Feb 2024 02:30:00 -0800
+Date: Mon, 26 Feb 2024 15:59:56 +0530
+From: Kuldeep Singh <quic_kuldsing@quicinc.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Elliot Berman
+	<quic_eberman@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Guru Das Srinagesh
+	<quic_gurus@quicinc.com>,
+        Andrew Halaney <ahalaney@redhat.com>,
+        "Maximilian
+ Luz" <luzmaximilian@gmail.com>,
+        Alex Elder <elder@linaro.org>,
+        "Srini
+ Kandagatla" <srinivas.kandagatla@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <kernel@quicinc.com>,
+        "Bartosz
+ Golaszewski" <bartosz.golaszewski@linaro.org>,
+        Deepti Jaggi
+	<quic_djaggi@quicinc.com>
+Subject: Re: [PATCH v7 02/12] firmware: qcom: scm: enable the TZ mem allocator
+Message-ID: <20240226102955.GA19256@hu-kuldsing-hyd.qualcomm.com>
+References: <20240205182810.58382-1-brgl@bgdev.pl>
+ <20240205182810.58382-3-brgl@bgdev.pl>
+ <tnylagkmj36lve2ub5voumtkqjdy6j3hr6yyk4mqkaabvc3gdv@voaiu2oqi73o>
+ <CAMRc=McmfufqqEvouRCjY1ukVB_ie1r5QEocqRUK0VBheEq5Hg@mail.gmail.com>
+ <CAMRc=Mc_iwMzKznfUknm+RwS3jN_GimpirdTDVCPtnYYS_1PNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <00126cf9-bb59-4c05-8046-478d0d7f4297@linux.alibaba.com>
+In-Reply-To: <CAMRc=Mc_iwMzKznfUknm+RwS3jN_GimpirdTDVCPtnYYS_1PNg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: YAYVSprMegzkEPn8MCJpuljkkaLzy2VM
+X-Proofpoint-GUID: YAYVSprMegzkEPn8MCJpuljkkaLzy2VM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-26_07,2024-02-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 clxscore=1011 impostorscore=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402260078
 
-On Sat, Feb 24, 2024 at 02:08:42PM +0800, Shuai Xue wrote:
-> @Borislav, do you have any other concerns?
+> > > As we're not moving from the callers freely allocating what they need,
+> > > to a fixed sized pool of 256kb. Please document why 256kb was choosen,
+> > > so that we have something to fall back on when someone runs out of this
+> > > space, or wonders "why not 128kb?".
+> > >
+> >
+> > If you worry about these pools being taken out of the total memory and
+> > prefer to have a way to avoid it, I was thinking about another
+> > build-time mode for the allocator - one where there's no pool but it
+> > just allocates chunks using dma_alloc_coherent() like before and pool
+> > size is ignored. Does it sound good?
+> >
+> 
+> Or we could even have an argument for the initial size of the pool and
+> then once it's exhausted, we'd add a new chunk (maybe twice the size?)
+> and so on.
 
-Yes, this change needs to be further reviewed by an ARM person: I have
-no clue what those "abnormal synchronous errors" on ARM are and how
-they're supposed to be handled properly there:
+Hi Bartosz,
 
-- what happens if you get such an error when ghes is disabled there?
+Thanks for shmbridge patch series. Few questions.
 
-- is that even the right place to handle them?
+	1. With current design of every client maintaining it's own pool,
+	For any target, we might end up occupying lot more space by
+	different clients than we actually need.
 
-James?
+	2. Also, there's no option to configure pool size for each client at
+	runtime level and a fixed 256K value is chosen for qcom_scm/qseecom.
+	Pool size will be same for each target and thus making it less
+	scalabale if there's adjustment needed at target specific level.
+	Ex: For a low DDR memory target, pool size should scale down accordingly
+	as 256K will become a big ask but there's no way to choose specific pool
+	size for just one target.
+		2.1 One way to do configure custom pool size value is to add new
+		property in qcom_scm/qseecom or client DT node and then create
+		pool of size with this provided value. Though there are ways to
+		tackle this, but still clients specifying it's own pool size
+		will always fetch more CMA region than what is actually needed.
 
--- 
-Regards/Gruss,
-    Boris.
- ttps://people.kernel.org/tglx/notes-about-netiquette
+Can you please share your ideas as well for upcoming version.
+
+Regards
+Kuldeep
