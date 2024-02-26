@@ -1,117 +1,140 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F1E73F38
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D67D768FE
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938085; cv=none; b=rVwgdPDLkfPHtLXtoUHBMIPTeEEqn0sRy1ZU/BZLU0KQbYRjrJy+j44/YjuTYj6fcGi6KLMHxrUhG0ax64GOq83XdgwNGYtqroY9g3RRF3duHOXTcqXHDBFi0208jRGLKrfJAYYYmG/NvUZVHI4KUHLKsNfBGQmlcaLxXNMrb3s=
+	t=1708938097; cv=none; b=kFe2l3NKZ5Xo+sfMS9mVnBAED45A3Q5NbBCEUHTUMsfC5M9oHuI2o0aH/p8CGBOQOTQ3q2MlSwopNoYj9hZkvnTAs/u1LgsN4BU92Dkaf+TBBvbMDYy5FWHYu5SlikHwJ092IwYYIQivNLRzwlOa7zaLzy1AhIxXJMl6HzdQ6js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938085; c=relaxed/simple;
-	bh=AekaovUwYdpBZWADqweYZwJLmuNvX/G38sf66ZdKDjw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L9MESH4kzqoHONK2QsmkVBHooxVUw5danMhAFE6e7QPkz1diqQf0a9j4MDDKtYgZlR7W2Veo8H7B1Qxuef8NAJb463dxoLJsp+9dQRaHHEJIFIwLXVPrr849Pvde78y2Coeaz90mQWlqWw5+vUcFDgF1tpb9lBzo4y49KEfp6wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=hwLbvwyC; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=SYY/3zp7 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1708938097; c=relaxed/simple;
+	bh=jqtuVKB6jVpeIk6g8OR6wf2uee7/sWQBcCvsmRCqn5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uahca4kubAiwDTqhuQXsH1bFltHhkTpjIGoxRpSkbvdusXhICx4fakl4dgEu4FBydLvx5BwtA37PnR0ZRFUa1psgngyYJMBNy93rL5cZ+0BvV2XYK/tWrB5pEral8QBRB225qmLAjggZGTLlPy1/lcFL4Z7EELzqB3h7zlcGl98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cYs9vVaP; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="hwLbvwyC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="SYY/3zp7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cYs9vVaP"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5649c25369aso3445043a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:01:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1708938082; x=1740474082;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1dfSttFAckwOQAmC1ve5LgiPNLJsHK4JP7XZDTkYNuA=;
-  b=hwLbvwyC73Ihtbj6LFaqNANAmr+kcOFYCNLuiCRdfPk9pFIzymiwCqWw
-   nsO7wS9Y0Dtp+GayKHo4XfJ/mU1a5mSROJosftN+G0YNJrI1X5qqvHJgu
-   dJ9TIZxY9S73QONnJxpLVR/A9vTExzGSs/bznBudTzudOJ1M96ujkTkr4
-   IYSgDcQNlVw6ZYafG8AtU6ipxox34nNLLAaN++5DvjliN+wP/bk08TRSF
-   Mvb+8fNV+MAa1wa7hcNUmlqHmXgagsHMbpUZd0f/zfF3zt+Iy9XbU+Bok
-   M0r9ywuvDBDsRRsyt3ACO+7d5G7cZQ9kxEmmzyTA3UH3eyMmHbt2pYdup
-   A==;
-X-IronPort-AV: E=Sophos;i="6.06,185,1705359600"; 
-   d="scan'208";a="35589021"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 26 Feb 2024 10:01:13 +0100
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 08F11161427;
-	Mon, 26 Feb 2024 10:01:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1708938069; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=1dfSttFAckwOQAmC1ve5LgiPNLJsHK4JP7XZDTkYNuA=;
-	b=SYY/3zp7x8QiKOHJcB7rCv+tbl44IANZ19yC++/0yXIFGaNJht1DExfMIudv0YEJsgcTBc
-	1zVxrLvigteiBy5ovJvSZSqeuHsKgd27UHkG2IAcVwUliifs7Q/UfP9AlrNxJPzNztl6bc
-	m4s/ZKYvK2zchPUylpzkp0C4Vou/1c8o3+UNw/RXixLWXqV94Zo58VjhQqKA1FzC1PqB9X
-	ntxhnIWtwK3aUe+CER7IZAw0eaK9ByEilq9Feowl+oDBFdh1/29P+65MPGqDF2LwD2/win
-	WKNPk48agcvc9+H9npwk5nSDFu3IKjdKCZbqqXT0e2AxwJ4cvbPK9PJU7b9ULA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/1] drm/bridge: Silence error messages upon probe deferral
-Date: Mon, 26 Feb 2024 09:59:18 +0100
-Message-Id: <20240226085918.264205-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+        d=linaro.org; s=google; t=1708938094; x=1709542894; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jqtuVKB6jVpeIk6g8OR6wf2uee7/sWQBcCvsmRCqn5A=;
+        b=cYs9vVaPU2qw2D+tMGc8DpRP3CllhHs/WNdTgqmDJcrHqqk5wl/Nt08DiFN8mkVHHs
+         I1XoYliC6hgxLo6wxuE23bmQ7cb8fiODIdH2Nvki6DvFSC8Cn/Io/nXTPGZvAR8ZKdPc
+         nYzJMXmSM0us61Ljm+fA3TglOrZb12AjDnV8z6WZCL6t+mQTqd7prnl5eH3ix2+leZYp
+         0gUDXQj3ztQRGe5GBzUSpTkBGWnmfzhk9e/gHtjZ/oAkagtix/UwubFCn/z80HWfRlx8
+         nha85jwp7HaVMRLBJZlXjUZfAruYOuA8tDUQNXkoiQ79cmPRxiF2aVCqsnmfoFKhwxdX
+         uLeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708938094; x=1709542894;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jqtuVKB6jVpeIk6g8OR6wf2uee7/sWQBcCvsmRCqn5A=;
+        b=YavczPT9l/mdUrsujkWsLrphKK0mlf1myyIBYgogRfGlxbkTy8W0KqAU0v8pZ7+jnl
+         ZBMO3HzcgjomuaGpGPRuU/91rpJudlaVmmZt1QBd0emP2lBq57vwciY8OSSWwUyhAqvY
+         0f2+Uaudc+KfoEnIKWUXIaF+q13bp+7u09DmwtqfgtHU2dub9MWGJLu2znyR8e58Baal
+         YUMGsN3Q+S89X6aWdjrDwEV1YIHJ25l1Igph5EsvaaYaVZY7PaqMAJa0UnIE4c2nI3W7
+         fLFSraTbqHl8SX/lKQcXI7uJc/zSgOUWFMoKPsRFqjtvSPjmmMP35Q0LP3kcvITppGoq
+         wiHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtQ4mrZ38aBB99Y0hauPLW+r2OxUg2pSwUuBOppgiJdLtAm+RjuzBKUrea4IpAIKtim0jZqRPbB2sTrGsjL4agHAK0LYTMfOrGqpGp
+X-Gm-Message-State: AOJu0YwBpb8HtrDx2mq89AMZ5zrdFGl+eWpo9fX4kfx+C8azmUiko7C7
+	QibRN0dylBRWspQif8G0/yygvfzOXy41PlDBHdZKoy6xEN7aZTsXaYwKhGwmBHs=
+X-Google-Smtp-Source: AGHT+IHYQO855QKpEJ9PKTw5O2ZHBP94gVAVsTlS0xAVc4G1TUoaOToo5rPnbogPFB2MPO+0r97JBw==
+X-Received: by 2002:a17:906:a405:b0:a42:e079:f94d with SMTP id l5-20020a170906a40500b00a42e079f94dmr4095380ejz.57.1708938093715;
+        Mon, 26 Feb 2024 01:01:33 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id 7-20020a170906308700b00a3e799969aesm2178043ejv.119.2024.02.26.01.01.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 01:01:33 -0800 (PST)
+Message-ID: <91f29265-36fd-4d0e-99b1-61eaada59601@linaro.org>
+Date: Mon, 26 Feb 2024 10:01:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: iio: gyroscope: bosch,bmg160: add
+ spi-max-frequency binding
+Content-Language: en-US
+To: Marco Felsch <m.felsch@pengutronix.de>, jic23@kernel.org,
+ lars@metafoo.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, hns@goldelico.com
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@pengutronix.de
+References: <20240221174305.3423039-1-m.felsch@pengutronix.de>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240221174305.3423039-1-m.felsch@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When -EPROBE_DEFER is returned do not raise an error, but silently return
-this error instead. Fixes error like this:
-[drm:drm_bridge_attach] *ERROR* failed to attach bridge
-  /soc@0/bus@30800000/mipi-dsi@30a00000 to encoder None-34: -517
-[drm:drm_bridge_attach] *ERROR* failed to attach bridge
-  /soc@0/bus@30800000/mipi-dsi@30a00000 to encoder None-34: -517
+On 21/02/2024 18:43, Marco Felsch wrote:
+> Make use of the common spi-peripheral-props.yaml to pull in the common
+> spi device properties and limit the spi-max-frequency to 10 MHz as this
+> is the max. frequency if VDDIO >= 1.62V.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-Reviewed-by: Robert Foss <rfoss@kernel.org>
----
-Changes in v3:
-* Adjust the indentation
-* Proper line breaks in commit messages
+The example uses i2c, so I would expect to see in commit msg explanation
+which devices are SPI devices.
 
- drivers/gpu/drm/drm_bridge.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Also:
+A nit, subject: drop second/last, redundant "binding". The "dt-bindings"
+prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 521a71c61b164..08b474d82c9fc 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -353,13 +353,15 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
- 	bridge->encoder = NULL;
- 	list_del(&bridge->chain_node);
- 
-+	if (ret != -EPROBE_DEFER) {
- #ifdef CONFIG_OF
--	DRM_ERROR("failed to attach bridge %pOF to encoder %s: %d\n",
--		  bridge->of_node, encoder->name, ret);
-+		DRM_ERROR("failed to attach bridge %pOF to encoder %s: %d\n",
-+			  bridge->of_node, encoder->name, ret);
- #else
--	DRM_ERROR("failed to attach bridge to encoder %s: %d\n",
--		  encoder->name, ret);
-+		DRM_ERROR("failed to attach bridge to encoder %s: %d\n",
-+			  encoder->name, ret);
- #endif
-+	}
- 
- 	return ret;
- }
--- 
-2.34.1
+
+
+Best regards,
+Krzysztof
 
