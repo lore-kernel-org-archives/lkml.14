@@ -1,71 +1,75 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3768A12C55F
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB5E12CDA2;
+	Mon, 26 Feb 2024 16:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708963944; cv=none; b=dkXC8Js0XRpTqQXwPqGmfKkpLr4BZgH03C0yQXrktMgo5tVJ47Tsn1CWlTr0hXyK7zqijFE1rI2Er9spn6z/anh7ER+mJ8xWpJI7h0ODv7HhRWEJ1A3F//9E/2dGgLI1149G9l/2oRz518TdEEM4A9+T5Ci/9/pftU7YPwYO2dw=
+	t=1708963948; cv=none; b=Aniutkgnj/Pfv6bUFo7JPEtvQENQ4kOvgrGC9Iqff0w1URJD8i8ttOleHoyNy3ejaRXC7dht39THyHmwlUz1N5ItFx1mFVmdGSKU1ym35/N57NRr2hP/FXzL8K2XEe8P2FRUAOiFCEKyx2FtEdzXjp667gKrNAU5Xiv2K2IulcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708963944; c=relaxed/simple;
-	bh=a6f7tH+OqrI8hsygIm05fQcRkKGxUj/pum2GnIuoRvs=;
+	s=arc-20240116; t=1708963948; c=relaxed/simple;
+	bh=tQNiq/mgSFz2PUfr0gE59I6IY0MHAe5YR/fIFXdocZQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BExbW09Htn+UQgwGOJ1EMbLNEfUTddiMC/3aNlz7rgY818IOLxPw70dN+c6/y80FarFpy6eKt133c1gBaHHBDBxrtrb4W4tvjXcS2N7D89NboAEFL50OvZg1pIbIJ8vajXXuV3HYlXYIfyrL7c39K/pISnwt66d/+BQ4PwEJu3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BoRS2yBQ; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=tvCgcKrvgZ0y0xd+FrFdwkJGx9LVZgNfTybn+ZK4xNIr32ZnjyHw1k9gNgJrkROrRgu6YtUxg1i6m8STu1fHwhi5Rng/H7msuVoNdsQxzQGRzNXNwI5p+eNWptor/wB3gCFoZAK7poLIK+XIan6XiG3EUwgXT6H3HXdlUSKXlPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdXL7ZpN; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BoRS2yBQ"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5a04fb5e689so1665978eaf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:12:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdXL7ZpN"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-21fed501addso1102786fac.2;
+        Mon, 26 Feb 2024 08:12:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708963942; x=1709568742; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1708963946; x=1709568746; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5sH6z9nrzqVNTL38OQhoDAwWJzK93pXYFPgmQuEUCcY=;
-        b=BoRS2yBQ1FIjCzXe3Am2ozDjd3R7N9NAiJC1hWk9JYXOnorAh5dgaVcrrCuX3qzaAb
-         bmOWwsK+A4uJnnUfIEoe4BYki7CgvY/ejWPgaB7Dw02NDMsmqwRenfzVpUmm/H/EpDW/
-         I/PjgplIDH5Ld/WFgRp/hihvBa3mwqwiS6Iyizq1zvc40oE/ir1RsVddHzl1cQFMmXDE
-         WOA1XJqA+nMW8KNueKX64MqlWrHnP4kl2Z/aHcRIVOau4X7G4RbMAqjdDlHLH6lsPK2+
-         XqMRfNbdIDn0WS5LBRF/wndbTKXPEA6gl1UaIbQw1XRHQ8tZh8rgTkweQ8qKV6cpzPhA
-         +0UA==
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3G9TdB9RDZyiGXRBXvJ+nwad2XnEGLHfMJJdqndI5mg=;
+        b=NdXL7ZpNfZwNgvOZRMYu0juBam/1KL5TWe637tCz2P2ZyVtCPAPZTRtRHHBfrXKMRU
+         TZPzYjLJxox2wSzXRbQRSnbpqgT3pf6WzzRbXHcw8yR+mYD4diIifaFFL1y7++UkeAxv
+         dg1x7hFPYhqCE/Kgp49HJdRzO1SZo58EqHf8xDuYS617NekBgWSWfb0xdPFJ6AyNArTh
+         +QTv18RJgzFKePj7r6qsyfDFo0WC+r2UTNcxMtOOtIyjBmW28apJsVkbYTN8tEvW9N1M
+         Cl/TDi9Ej7LE0qYZHkCBg+ek/WRwjYn/Ng2/n4NfoOphmQJHItSYOIrQ4JiWsfGcYAew
+         YQzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708963942; x=1709568742;
+        d=1e100.net; s=20230601; t=1708963946; x=1709568746;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5sH6z9nrzqVNTL38OQhoDAwWJzK93pXYFPgmQuEUCcY=;
-        b=j/t25Dl/uZysb9ov3WERj2P8s6uDnOvUwEuHX5i0GahlQr86tmyXB8ZtPCGnGRznkz
-         Z891z9C6rIyX0ay6Q5wr9K7X49AP1f9k0+rSzfGJYgra8vU2h7z6dYG+OqZuoYo1Trv5
-         +ApgrjqU3If2H9Dlyzr8CVdwsLonORJanAG8pCtXUqbaF9bjb0ltvzLkoK8GJndOec6j
-         Zyq/YITuUph4p5veMSqhqwVIFtqbvvyD/fvD9WyZI3ViSd4HIWXxpn/pIsFyEqnDf1xt
-         0+xEIypPIo1aUOFW4FSUDliDRhw5Gymkds0Dn5gsq5gIf2HXqFvoWdNvMMFsTWLlryK+
-         mSqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWldqriY6XmNu35uESpYmzMiZJTZt6khAlJDlokVM9tD7umIf1R+LPJbY1KnUcEI6mYFuvZ0yb+gpsFzF28GWbonriMrTSzHkby0UHn
-X-Gm-Message-State: AOJu0YzjPectfb1n7hyxnvTOdKX8qkQoP9K5D3HQFT3+norjZ8nShq6G
-	ShmoN8rR9sK5OHUOdxwOMLzuG7wPpmWrjoLQRwHIVfRdeQoqM3NBmCEONffXZ4Y=
-X-Google-Smtp-Source: AGHT+IFjUb+c/fFWRXoZFCN25O2SmDpaUNvFqFasQHJGd7CEyCqvLCJr1Pd5sypoEjZ6QljgaKYLNw==
-X-Received: by 2002:a05:6358:6f0c:b0:17b:b532:80be with SMTP id r12-20020a0563586f0c00b0017bb53280bemr1375921rwn.25.1708963942241;
-        Mon, 26 Feb 2024 08:12:22 -0800 (PST)
-Received: from p14s ([2604:3d09:148c:c800:360c:e16d:91ef:5fec])
-        by smtp.gmail.com with ESMTPSA id d18-20020a63d652000000b005cfbdf71baasm3591736pgj.47.2024.02.26.08.12.21
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3G9TdB9RDZyiGXRBXvJ+nwad2XnEGLHfMJJdqndI5mg=;
+        b=kIXnTe8ynV5uWzGaC4kto+643SOiFTy9vJg861ZBmNzDFbQwCSj34cRmu0nUUl0+V+
+         JBetcDUP81hUM/B72KQ6E1uJwc6qShoUSC9JsZgeb+Za17Sny5+eq1R+0rbdz4s58p8N
+         1pEZvHilq4euqa8DB1A3vKpBtZGgNa5qSKtLfpoapRA5lFejTAngzt8hVsmovqdnnBuY
+         rMZp2ANNflD52gS+b/tfhCP5eUcAfWNcCSeIgQ2Xu6FCkm/mu+1f1hMRpBEAp98NLpR/
+         u263+s43zE1oFn/r78vpFM+q27/y4h9ZSK8DG1gFLcAGSGGtBWSYol8jXn791eb5W6sT
+         Px1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXTguJdLjT1x7SNWAnR4TgR35ZTM9//KMRPktKSD1+IPKKDa+EClvBQtz3+UfkX6wWQFJMHorJ0Fxre7nPqONMS6tgc13en2hv2Mz2GSRiRasbDCdoklfxvNiA8T4RJDfYBrWunwlDyRc/EQxahxFv3phXyB7mUwS5oE/KH9+mLKh1U6BkJ+302xzJriS7YhP1FZiHyXq2xWd53lSWPISuVRQ==
+X-Gm-Message-State: AOJu0YxC1fq81hXL1Nbgqz8fIiAWCjjFkSzlDla6ubOWL9b3/PkQClaX
+	Fp+omQgAQ0MSulCtgEvmeysyWKfJZTEZRrIAzWgzT9KiP8c4tTlGhMclqVg3XPs=
+X-Google-Smtp-Source: AGHT+IF7XFSvjH18bFGEx9CdpnvASYnU/JfYs8/rfFLnUGwRoKon7Rt5YnfmRZ/vr9pQMg4VgCwROQ==
+X-Received: by 2002:a05:6870:e413:b0:21f:ca80:52c5 with SMTP id n19-20020a056870e41300b0021fca8052c5mr7306817oag.4.1708963946299;
+        Mon, 26 Feb 2024 08:12:26 -0800 (PST)
+Received: from Borg-9.local (070-114-203-196.res.spectrum.com. [70.114.203.196])
+        by smtp.gmail.com with ESMTPSA id xd12-20020a056870ce4c00b0021f86169b99sm1583576oab.43.2024.02.26.08.12.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 08:12:21 -0800 (PST)
-Date: Mon, 26 Feb 2024 09:12:19 -0700
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org
-Subject: Re: [PATCH 3/3] dt-bindings: remoteproc: ti,davinci: remove unstable
- remark
-Message-ID: <Zdy4YwD9LNmq7hth@p14s>
-References: <20240224091236.10146-1-krzysztof.kozlowski@linaro.org>
- <20240224091236.10146-3-krzysztof.kozlowski@linaro.org>
+        Mon, 26 Feb 2024 08:12:25 -0800 (PST)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Mon, 26 Feb 2024 10:12:23 -0600
+From: John Groves <John@groves.net>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, john@jagalactic.com, 
+	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, 
+	dave.hansen@linux.intel.com, gregory.price@memverge.com
+Subject: Re: [RFC PATCH 06/20] dev_dax_iomap: Add CONFIG_DEV_DAX_IOMAP kernel
+ build parameter
+Message-ID: <52dovqfrfdvtwa2l5oiujxoe2e7asbz2qpslq7fb3axf5hdoem@m4j32p6ttrrf>
+References: <cover.1708709155.git.john@groves.net>
+ <13365680ad42ba718c36b90165c56c3db43e8fdf.1708709155.git.john@groves.net>
+ <20240226123416.0000200f@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,36 +78,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240224091236.10146-3-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240226123416.0000200f@Huawei.com>
 
-On Sat, Feb 24, 2024 at 10:12:36AM +0100, Krzysztof Kozlowski wrote:
-> TI Davinci remoteproc bindings were marked as work-in-progress /
-> unstable in 2017 in commit ae67b8007816 ("dt-bindings: remoteproc: Add
-> bindings for Davinci DSP processors"). Almost seven years is enough, so
-> drop the "unstable" remark and expect usual ABI rules.
+On 24/02/26 12:34PM, Jonathan Cameron wrote:
+> On Fri, 23 Feb 2024 11:41:50 -0600
+> John Groves <John@Groves.net> wrote:
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../devicetree/bindings/remoteproc/ti,davinci-rproc.txt        | 3 ---
->  1 file changed, 3 deletions(-)
+> > Add the CONFIG_DEV_DAX_IOMAP kernel config parameter to control building
+> > of the iomap functionality to support fsdax on devdax.
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
-> index 25f8658e216f..48a49c516b62 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
-> @@ -1,9 +1,6 @@
->  TI Davinci DSP devices
->  =======================
->  
-> -Binding status: Unstable - Subject to changes for DT representation of clocks
-> -			   and resets
-> -
+> I would squash with previous patch.
+> 
+> Only reason I ever see for separate Kconfig patches is when there is something
+> complex in the dependencies and you want to talk about it in depth in the
+> patch description. That's not true here so no need for separate patch.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Done
 
->  The TI Davinci family of SoCs usually contains a TI DSP Core sub-system that
->  is used to offload some of the processor-intensive tasks or algorithms, for
->  achieving various system level goals.
-> -- 
-> 2.34.1
-> 
+Thanks,
+John
+
