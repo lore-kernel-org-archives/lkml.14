@@ -1,121 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82F5604B7
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1E1604BB
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708949765; cv=none; b=aPYPtnBlyu2Y85C3KidgjDSBist2Q8cEKSuZo9sKSgQjYQ/OTKwDBhHwIh60G9GyEqkxURZF6DwgQrAmr5UeJCUzUPhY9LndwQr9vekRsOHpvsvmi6bo50EG3qXjEMFwSnlkUQf90SV5BLW+hyZMsGIE37dtJsf9pTN7T6LUJp4=
+	t=1708949858; cv=none; b=eNf+wxFBtbQ3L/xtp1nALU86sYjfaHFxQz3F5DLstgwfAj38QfmbdTiEJktrTKviwEv7CPQ8Uz/f8wh975PK+EDIP+yjkEOMQqMizkvipCaz6MNOe5KJYt/SUlw2WX5R7W/omFIe0oweGu4TNPPzTZs+RrmI+yFn655u0sqxAgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708949765; c=relaxed/simple;
-	bh=dIUCjHoNQgOf5LX5CDqGdhGVPI2lsfrC1oPUtvZVZCo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=siiSnrw1CXbPBtxatAx6p4pBCl+YdrPgPsqH1KLaQ1MnG6xwVPU2i4YTcJbRS79/F6wYOll9HQB4UQfsbG+Nw41/4cP0GFW02kpc3u2gSrgZNSGhe1YJU6eoDQfWWoQvFQJ9WprPENSy0cqbT5qDZf+Jr9MDqgLFZ5vdgLkGtMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BjE/PJV0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708949858; c=relaxed/simple;
+	bh=OGa8p8GgC/sb7ZVi2Q9MDNE+Wiv/ZCXz/jfCrGqA2yI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pubA/4wYMFSfgxwvzMZEFPSMYv++SJnm1aKPv++PSDKMrJm701pdTVymn+Y0J+TZvu/Gb3u9GPAmdge3artJhVdZZXxckfsbtJfoC0Fm5GvhJjnT1+cxcJQy+fyg3pAufMBEpzxjo9zeKLgzWJUvbidxMaXIJYMOnc1uw+EStIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NKfEe9PE; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BjE/PJV0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6338C433C7;
-	Mon, 26 Feb 2024 12:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708949765;
-	bh=dIUCjHoNQgOf5LX5CDqGdhGVPI2lsfrC1oPUtvZVZCo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BjE/PJV0v+5zRxcM8rFDX0y0HdQRjazPEjtTatnxIbu0sm1KaPw35w3HvJoJ0Nb4W
-	 taKWESXQeBJFOclrjZE9C+Ek2pqnYjj27AdjVVNmxyWmEYZ9++N92Fltmortj0RoqI
-	 PGPPJpF8I3P6jCd2wQWPrOSi7NsxUt9cs+SWVXCtEMahNU+mEkO8hKMiejFzbIkaRk
-	 BamAkSamVvchgalafebxbjTNkFCl3eDMhcj2F9Qfivm5MMD8kbEe78a74FeSawq/Lg
-	 QV3QbkbBR0HryGgeQGJaQYG8oU7XWB9mXGGytrRx1TobkJb0Pz6wKnLMNXiXfaAPKM
-	 nMEC7EVaSPxdQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Richard Weinberger <richard@nod.at>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: kernel test robot <lkp@intel.com>,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ubifs: fix function comment warning
-Date: Mon, 26 Feb 2024 13:15:52 +0100
-Message-Id: <20240226121600.1267204-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NKfEe9PE"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412a5de8a06so4129775e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 04:17:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708949851; x=1709554651; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cjYNEFjj+8Br1K/kWVmcw1ELzUHGJ7r8kZWsJb6hqRI=;
+        b=NKfEe9PE+8DLfYH962wdrzgAynjfJzZR4bZvzvomOX1I0vEMXYYcGVHM3ZnYIvyyxF
+         E7olb6ccQFbnKJ0g+C076g/FTjD7GjsgGexR0k0DSvD5VFbGPcdx9wyV3LQhtRx369CP
+         DOwYAzgpGZ80gJLj6mmvJVkiQQFaBDCc8QVltCCh9vGwizwl5Vji3IXUF7eU2sXPCgv6
+         hPswyDGHxWctKfargV7OX6j8PgjE7MA0nOUKuOjwLlZpiWk523PA/Rg67xUcsvKPsE7j
+         8scMRJJ18R1c4qSX71mSfYIVprMOPVzycYEHCowU14AMOe4j04Ve1W9SfY8xZnm0VMvI
+         F5Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708949851; x=1709554651;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cjYNEFjj+8Br1K/kWVmcw1ELzUHGJ7r8kZWsJb6hqRI=;
+        b=kRtqjscH0QHA7qBx/N3CebFcdkHOxXPyM0lI/2LzqGlr1PNelzgIPIGZo0xw0b3nwa
+         k98z2wqtexsyK79Dl0DDdKicuC/E4YDGkaf1w4xDIdbUfgaxLFbfOZjtiYOyN+eRiVIM
+         j3RrR/5Qu8pvLgXLY1bCTV39oJ1XcnBN+TJEOOFmVW7a/jAuF9rFv5h/z9fesg7Y3YKE
+         VLWOMmQlwVMkv4gM6SMigCYePefDV4ciTfP4YBJSzyMRUwcGk3i3FNJka+OG2kW3fi9J
+         aDVbx9jS/lnGjVkDpOZnBvEbnbryjXWcrovbRny8uTEGXRa5s56fkoSrhbSs6Xz5ZJgY
+         mPLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxiKnmmqAsnHKD17/vbDyMXQNFIlr4yGgL+VQfFIPfq8lkbL30L9qYKBgQa880GGEcuowBcMWusXXPTDymLoPB7/SC0t287hi1vhc6
+X-Gm-Message-State: AOJu0YzEoKiWw3Mexp7tJ9mEvkggNtVy5TDa+HFeRyeMXHPeyntYWGM7
+	hnnNGJCospU8uSn7FTKxc6izOKvi+2e+7wUJdkEzcP/qG4hM5MYu0pSYgDo36fY=
+X-Google-Smtp-Source: AGHT+IHk1FfpA2y4Z9oTsQIg5vqYkF8R+cidEV/qNA4rtoBDqquyDCAvUHa8PCJ/+wEXXwmQMEcg1A==
+X-Received: by 2002:a05:6000:1841:b0:33d:2180:30da with SMTP id c1-20020a056000184100b0033d218030damr7107865wri.58.1708949851400;
+        Mon, 26 Feb 2024 04:17:31 -0800 (PST)
+Received: from [192.168.1.70] ([84.102.31.43])
+        by smtp.gmail.com with ESMTPSA id bj20-20020a0560001e1400b0033db0c866f7sm8245904wrb.11.2024.02.26.04.17.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 04:17:31 -0800 (PST)
+Message-ID: <45c31edd-45ea-4101-ae1d-5e0f95c88d20@baylibre.com>
+Date: Mon, 26 Feb 2024 13:17:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 07/14] mfd: tps6594-core: Add TI TPS65224 PMIC core
+Content-Language: en-US
+To: Bhargav Raviprakash <bhargav.r@ltts.com>, linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+ lgirdwood@gmail.com, broonie@kernel.org, linus.walleij@linaro.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com,
+ vigneshr@ti.com, kristo@kernel.org
+References: <20240223093701.66034-1-bhargav.r@ltts.com>
+ <20240223093701.66034-8-bhargav.r@ltts.com>
+From: Julien Panis <jpanis@baylibre.com>
+In-Reply-To: <20240223093701.66034-8-bhargav.r@ltts.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 2/23/24 10:36, Bhargav Raviprakash wrote:
+> Add functionality of the TPS65224 PMIC to the TPS6594 core driver. This
+> includes adding IRQ resource, MFD cells, and device initialization for
+> TPS65224.
+>
+> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> ---
+>   drivers/mfd/tps6594-core.c | 250 ++++++++++++++++++++++++++++++++++---
+>   1 file changed, 232 insertions(+), 18 deletions(-)
 
-My previous fix introduced a new W=1 warning for the kerneldoc style
-comments:
-
-fs/ubifs/find.c:86: warning: Function parameter or struct member 'arg' not described in 'scan_for_dirty_cb'
-
-Adjust the comments to the argument names.
-
-Reported-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202402261559.cYtMOkIn-lkp@intel.com/
-Fixes: ec724e534dfd ("ubifs: fix function pointer cast warnings")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- fs/ubifs/find.c   | 8 ++++----
- fs/ubifs/lprops.c | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/fs/ubifs/find.c b/fs/ubifs/find.c
-index 6ebf3c04ac5f..643718906b9f 100644
---- a/fs/ubifs/find.c
-+++ b/fs/ubifs/find.c
-@@ -73,7 +73,7 @@ static int valuable(struct ubifs_info *c, const struct ubifs_lprops *lprops)
-  * @c: the UBIFS file-system description object
-  * @lprops: LEB properties to scan
-  * @in_tree: whether the LEB properties are in main memory
-- * @data: information passed to and from the caller of the scan
-+ * @arg: information passed to and from the caller of the scan
-  *
-  * This function returns a code that indicates whether the scan should continue
-  * (%LPT_SCAN_CONTINUE), whether the LEB properties should be added to the tree
-@@ -340,7 +340,7 @@ int ubifs_find_dirty_leb(struct ubifs_info *c, struct ubifs_lprops *ret_lp,
-  * @c: the UBIFS file-system description object
-  * @lprops: LEB properties to scan
-  * @in_tree: whether the LEB properties are in main memory
-- * @data: information passed to and from the caller of the scan
-+ * @arg: information passed to and from the caller of the scan
-  *
-  * This function returns a code that indicates whether the scan should continue
-  * (%LPT_SCAN_CONTINUE), whether the LEB properties should be added to the tree
-@@ -581,7 +581,7 @@ int ubifs_find_free_space(struct ubifs_info *c, int min_space, int *offs,
-  * @c: the UBIFS file-system description object
-  * @lprops: LEB properties to scan
-  * @in_tree: whether the LEB properties are in main memory
-- * @data: information passed to and from the caller of the scan
-+ * @arg: information passed to and from the caller of the scan
-  *
-  * This function returns a code that indicates whether the scan should continue
-  * (%LPT_SCAN_CONTINUE), whether the LEB properties should be added to the tree
-@@ -773,7 +773,7 @@ int ubifs_save_dirty_idx_lnums(struct ubifs_info *c)
-  * @c: the UBIFS file-system description object
-  * @lprops: LEB properties to scan
-  * @in_tree: whether the LEB properties are in main memory
-- * @data: information passed to and from the caller of the scan
-+ * @arg: information passed to and from the caller of the scan
-  *
-  * This function returns a code that indicates whether the scan should continue
-  * (%LPT_SCAN_CONTINUE), whether the LEB properties should be added to the tree
-diff --git a/fs/ubifs/lprops.c b/fs/ubifs/lprops.c
-index a11c3dab7e16..8788740ec57f 100644
---- a/fs/ubifs/lprops.c
-+++ b/fs/ubifs/lprops.c
-@@ -1005,7 +1005,7 @@ void dbg_check_heap(struct ubifs_info *c, struct ubifs_lpt_heap *heap, int cat,
-  * @c: the UBIFS file-system description object
-  * @lp: LEB properties to scan
-  * @in_tree: whether the LEB properties are in main memory
-- * @lst: lprops statistics to update
-+ * @arg: lprops statistics to update
-  *
-  * This function returns a code that indicates whether the scan should continue
-  * (%LPT_SCAN_CONTINUE), whether the LEB properties should be added to the tree
--- 
-2.39.2
+Acked-by: Julien Panis <jpanis@baylibre.com>
 
