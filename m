@@ -1,82 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF5B7A73D;
-	Mon, 26 Feb 2024 13:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8225C1CFA9
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 13:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708952926; cv=none; b=MrcjM/vEt7LxJegoQHOZmbBClxjbOlDCVlhK9wGNmg64Flagi689YWooiITdR+IA0WBm3dYV01CQyQW+TXs75c3WzDqnvBZufCdZ76pNMjAGLUCHqiqEqVNG08TwB9XojcbyDxuCS6W3+3z0bqmaNTrePt0FHE2vl79B/4lqqBQ=
+	t=1708953002; cv=none; b=FxVFT6D540NQz0svibnUWGHNPu9PTSTvMsfvKPPn1Y30qtr2vjg9VS1L+0K++hRGcntH77dr89NeLVYnYhJsK2jSOEyx7uuV+J/jDDily/1xwCi7h0668DCLBDI0gtZY+v2Cj2aNDmlNsgRU0xPHsh3+htTGOko7hPDV1PhvT3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708952926; c=relaxed/simple;
-	bh=4I3RhXtBZX5OMS1orfIVhwSdCHuuX6f8mq6Wj0gtZnk=;
+	s=arc-20240116; t=1708953002; c=relaxed/simple;
+	bh=CETfm2ZAiU7NP2W+UKDMT2EafoPo2rsh7PincvKVpA4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PIJrAMB1suNvHcJQ6ptvDslyRxfpCnxKRJ/dvtVMY20hg/1BolvD5gFVL0LVaxtnJE25jXZhXJuEcudjU0R4KRXTQsThlm0R5+Vt2CV32OlNXAWwfo7zXEN7coL0OUVojsknBGxq8iDZNRtcfJR+PL8ZmmMMauARysecF/X94Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i4MQPSVw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=knYYfWlv9jBVaGZGZWMOOKqo6WP3vpi7nsCNQO/Kr0dYQOzgBeYNa5AzRU47jHvT2ZvmVyYu4gU70/HZWzXhWYw1RYXc99fiNREO+kHF7BH84kIUgrMPiFHWCw099TbellgHtXByQLKTChatdB19l8lJ6CQK++xOrygbRrNBPZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pfyoy3mI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i4MQPSVw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52256C433F1;
-	Mon, 26 Feb 2024 13:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708952926;
-	bh=4I3RhXtBZX5OMS1orfIVhwSdCHuuX6f8mq6Wj0gtZnk=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pfyoy3mI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9075BC433F1;
+	Mon, 26 Feb 2024 13:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1708953001;
+	bh=CETfm2ZAiU7NP2W+UKDMT2EafoPo2rsh7PincvKVpA4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i4MQPSVw3XtdgHB96J2XPs1a5xP8BWaggsHWOVzkgLdhJ9jDEorKezr0o5zkC1rlU
-	 YwfUj/FgqO79fQ4FaPOCWrh44rEAaNMQ8fBCCRGFeoXkk7Q5y28TqLuVZdm3nmRfMn
-	 tFOXbboHD+2rjZcToXXaGO2h79+E5NtEEsEX9o2/gJIBVkstkmgJIbh2yYhIP4m+NP
-	 bHgSAmkRmraDvGw1k+Z+8YfhsIN2M6tsDQAxPWzfFrcEt3Uj5fXKpilhCgXntGdTNA
-	 /GGqwNOtotzSKRpNXWP/EXLqQyh4QztiOkGYrEs4f+Wy8XcsxsW450G3thi8UVedet
-	 9bGMiGH20dMag==
-Date: Mon, 26 Feb 2024 13:08:41 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v4 0/2] ASoC: codecs: tx-macro: correct TX SMIC MUXn
- widgets on SM8350+
-Message-ID: <ba3d3695-cde9-4aac-83ac-ee8aa949d57e@sirena.org.uk>
-References: <20240226115925.53953-1-krzysztof.kozlowski@linaro.org>
+	b=pfyoy3mI3LcKIKqtiEDFsyAmK1ZrZEr71DdXi945tYs2iEfyTxY7TpTbyIhMqRSAu
+	 QrRw9T/3ESsBoXLNyaNfz0dWHMbBmWtygyDBShOGWiJAtjzvnRZ7aitnGNNyhHXV9q
+	 kC1xNXEJbCKldiN7uSWzq9by4PfNI20WDmvplfKQ=
+Date: Mon, 26 Feb 2024 14:09:59 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, russ.weight@linux.dev,
+	rafael@kernel.org, linux-kernel@vger.kernel.org,
+	cocci@systeme.lip6.fr
+Subject: Re: [PATCH vRFC 3/8] treewide: rename firmware_request_platform()
+Message-ID: <2024022644-trough-humility-12b8@gregkh>
+References: <20240222180033.23775-1-quic_mojha@quicinc.com>
+ <20240222180033.23775-4-quic_mojha@quicinc.com>
+ <2024022347-ribcage-clench-37c4@gregkh>
+ <Zdi2odoYPBWywOXn@bombadil.infradead.org>
+ <2024022323-accustom-eradicate-8af4@gregkh>
+ <Zdj1K28NBfGfSJ-0@bombadil.infradead.org>
+ <2024022452-unwilling-pancake-3b2a@gregkh>
+ <ed9f2b75-38d3-8562-0476-2200e201d4c9@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="I5r0FAbl9DxiaVsF"
-Content-Disposition: inline
-In-Reply-To: <20240226115925.53953-1-krzysztof.kozlowski@linaro.org>
-X-Cookie: Walk softly and carry a BFG-9000.
-
-
---I5r0FAbl9DxiaVsF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ed9f2b75-38d3-8562-0476-2200e201d4c9@quicinc.com>
 
-On Mon, Feb 26, 2024 at 12:59:23PM +0100, Krzysztof Kozlowski wrote:
-> Hi,
->=20
-> Changelog in individual patches.
+On Mon, Feb 26, 2024 at 04:22:09PM +0530, Mukesh Ojha wrote:
+> 
+> 
+> On 2/24/2024 11:06 AM, Greg KH wrote:
+> > On Fri, Feb 23, 2024 at 11:42:35AM -0800, Luis Chamberlain wrote:
+> > > On Fri, Feb 23, 2024 at 04:33:40PM +0100, Greg KH wrote:
+> > > > On Fri, Feb 23, 2024 at 07:15:45AM -0800, Luis Chamberlain wrote:
+> > > > > On Fri, Feb 23, 2024 at 07:21:31AM +0100, Greg KH wrote:
+> > > > > > On Thu, Feb 22, 2024 at 11:30:28PM +0530, Mukesh Ojha wrote:
+> > > > > > > Rename firmware_request_platform() to request_firmware_platform()
+> > > > > > > to be more concrete and align with the name of other request
+> > > > > > > firmware family functions.
+> > > > > > 
+> > > > > > Sorry, but no, it should be "noun_verb" for public functions.
+> > > > > 
+> > > > > News to me, do we have this documented somewhere?
+> > > > 
+> > > > Not really, but searching makes it nicer.
+> > > > 
+> > > > And yes, I violated this in the past in places, and have regretted it...
+> > > 
+> > > Care to share a few examples of regret?
+> > 
+> > 	get_device()
+> > 	put_device()
+> > 	kill_device()
+> > 
+> > vs. a saner:
+> > 	kobject_get()
+> > 	kobject_put()
+> > 	kobject_del()
+> > 
+> > Learn from the mistakes of my youth please :)
+> 
+> Thanks for the history.,
+> In that case, should we fix this verb_noun cases ?
+> 
+> request_firmware()
+> request_firmware_into_buf()
+> request_firmware_nowarn()
+> request_firmware_direct()
+> request_firmware_cache()
+> request_partial_firmware_into_buf()
+> release_firmware()
 
-When sending a cover letter please write something in that cover letter
-describing what the series is.
+That would provide consistency, right?
 
---I5r0FAbl9DxiaVsF
-Content-Type: application/pgp-signature; name="signature.asc"
+thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXcjVgACgkQJNaLcl1U
-h9Covwf+NRfuyXK8kzRR1j16coiFwpz6tb4kpW28h/xI4oxMxLg+7Fo36uOmi5pY
-fxGsJqk8KWby7nw0SLcxsvRRBZ+fkHyotIrDcLjS+hgUMMA76vZcxafKEUmu2QVu
-NJnJAwFwMd5ghEmMhCy0K3ca6uilnO26t/FF1o2UsCErxCmpw7UuRkkajluFZfdA
-uyYhYC4D9YBAlbZCYbgpohAY4+QvnLjlYaP7t4nylBP1cXGBK973g7J96n2xBaE1
-AecjWOfjyg2Y7BkjpNWN+4akAH6y/bxUMnW7PpXbW/QTVIF05ZK11zfMW1ju8fhB
-46uWNSN3NH++6KUaF61n/rSwKJdxDw==
-=fq70
------END PGP SIGNATURE-----
-
---I5r0FAbl9DxiaVsF--
+greg k-h
