@@ -1,117 +1,210 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AEA12C7E1
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC33C12B166;
+	Mon, 26 Feb 2024 17:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708967952; cv=none; b=TIoKBQnkqDMBqqCogFY3IJHm/yJAmDWQXC27xix4lhcdrPEZhoQsoWhfkonrRzZGfWEUZEMXx0qxlviA4o2e3oWRi8kTAiuY3sr3dDPTpnlxq9u5VXmGGXeIWNpOA4IV5Fg1IE8Vx60dUOk/T1Wy1J2bvumQkHKHrsBPwrMnch4=
+	t=1708967971; cv=none; b=dbfV3XJTlCnzHnc7igha6CZEDNvXat6oBKxIzk2frzcZE9N87GBXnkBL5WuYL71tzqQ4LPtjw+wmWyPi1kCwwrY1iRcWWTOy2zFYK+Eq+UH7022aoWUTt4if/lg+Vtc0hYtZrSPFD1GSReizWNwc0AGLZ2FAz0zc1KDEnU9HJtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708967952; c=relaxed/simple;
-	bh=HD230qnCazUJ0VkUYF/KpSDIa6u84SjbwrA7bGZsANE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iPTXh+YOXo/FfQl41aqu1NOapGS0mopnf2DNpdrHBS1RIKcwakC/11AG91mMiQNbs9w/yNjpIZ4KLkG+nru6Y+Qh4AZci9CA5EMapRYoNkgdiaL3fw0cXZxLdp/D8TmTr5bJIISV+Oj/Bk/sZaXnr6uxgyR8q5qcF7NdIQ1A7lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eNhTIo/2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wJ7UNBSe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708967971; c=relaxed/simple;
+	bh=dSCOT5VowSSiF2b2NApXSB/9K003MpinyKVVYOsEMq8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=dIrA8Hf3gbBJBM+UsiEIYTPqwezf3SM6q8C2S41/RdgtAzh6QzzMRrnIZksx4KmTgBBTqm4tcQnckO9yPNNz0vnGiZdbuvumljuMrjqewFQ98dXiLBxNzKMEYZLcM5jRCG0664Hy7Ie7y2/kH8ktis6zQd7QFhdaEp2oNQQYgIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ua0qrjg+; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eNhTIo/2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wJ7UNBSe"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708967945;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V3vn3rLr5G2NqalvLJxxGRPMV5b+Ax+IZGLTu4ZEzgI=;
-	b=eNhTIo/2o/RWZs1pVkfZG/4iSYj+Fq4lfpzGaiNGzKPenf5WsKnoNIN/N+ToalNrqOFzUi
-	B3qG725EMvlSkwhNmA7oDgkiuf2oJnWc8uThdWvlz2UN9jfHouxmF4xFTMEKWlD66zciO6
-	fM/g4/uWJ6JP/CWQTa5vzUjif07bN9BydW5Nv7rqH+3Lmosx4LrWxy+SUOhitZ76GJ9vYE
-	6TxrbUNq8u6UXtIn0OIdNibFimGIe8tVYKJpwaRaodcctqspYDml2mqah3l1y1DY0w7mdm
-	kq6OXdX4BcPMCl4JCm/nYpFW82AC5F/PvAHVeRiPQ9WaZm/wva08WTvuGPVt4g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708967945;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V3vn3rLr5G2NqalvLJxxGRPMV5b+Ax+IZGLTu4ZEzgI=;
-	b=wJ7UNBSeICW3VDibCMDLFvkAv2zCuzVWNl9Gbg368H8OVoZJxmReNGCIcT+MDGt7WB4qRP
-	1r9yQnfY3kOsDQAA==
-To: Arnd Bergmann <arnd@arndb.de>, Naresh Kamboju
- <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, Linux ARM
- <linux-arm-kernel@lists.infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Kees Cook <keescook@chromium.org>
-Subject: Re: arch/arm64/include/asm/atomic_ll_sc.h:298:9: error: unknown
- type name 'u128'
-In-Reply-To: <23e6b40b-deb4-4e94-b454-cb2af0543af1@app.fastmail.com>
-References: <CA+G9fYtrXXm_KO9fNPz3XaRxHV7UD_yQp-TEuPQrNRHU+_0W_Q@mail.gmail.com>
- <0fe0add2-6b17-441f-a0e1-7c1ee9b0ea71@app.fastmail.com>
- <871q8zkygb.fsf@somnus>
- <23e6b40b-deb4-4e94-b454-cb2af0543af1@app.fastmail.com>
-Date: Mon, 26 Feb 2024 18:19:04 +0100
-Message-ID: <87wmqrjg8n.fsf@somnus>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ua0qrjg+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708967970; x=1740503970;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=dSCOT5VowSSiF2b2NApXSB/9K003MpinyKVVYOsEMq8=;
+  b=Ua0qrjg+Q9qi2rb3PAY5C8K0GZjHoWk6k4o+laeT9fyRPnqPz5qRbfz9
+   6KD37sd60HhTMFZHXi61/fuH2P994BrAMaPh67HWnYIxJpKyRuPXzelZd
+   NFpznx2ymcoFmz8m7xgpcSazkKt4wJlEnyZLEYs/sMVqhxO+aR9/i9T8e
+   5JH2fGB4pNsmCaVaRAAxBEayME+3/BuQp1jm8LqoVW3QyQu/ZxyqEKFiz
+   EY+DwXs/546z58oOnzUFVxGgtcgVITKM72tkNcppPTdQpE4XdNSUo8AT/
+   PD6YPCte87je6A2OGyYV0pPYLFdxDEbyBq6/mAxOxkrwp7Vu9CnRyMINt
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="20714036"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="20714036"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 09:19:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937030284"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="937030284"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2024 09:19:26 -0800
+Message-ID: <785ddb6f-dca2-466d-c4bb-a6723a51e3e8@linux.intel.com>
+Date: Mon, 26 Feb 2024 19:21:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
+Content-Language: en-US
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Mike Jones <mike@mjones.io>
+References: <14c16bf9-bcdf-4e6b-ac36-f995f5f088a1@molgen.mpg.de>
+ <ZdxVTBkym5ovV8ss@kuha.fi.intel.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: xhci_hcd: `Timeout while waiting for setup device command`, 37 s
+ until Ethernet connection is established
+In-Reply-To: <ZdxVTBkym5ovV8ss@kuha.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-"Arnd Bergmann" <arnd@arndb.de> writes:
-
-> On Mon, Feb 26, 2024, at 17:00, Anna-Maria Behnsen wrote:
->> "Arnd Bergmann" <arnd@arndb.de> writes:
->>> Commit a0d2fcd62ac2 ("vdso/ARM: Make union vdso_data_store
->>> available for all architectures") introduced a reference to
->>> the asm/page.h in include/vdso/datapage.h, but this is outside
->>> of the vdso/*.h namespace and doesn't work in the compat vdso.
+On 26.2.2024 11.09, Heikki Krogerus wrote:
+> +Mathias
+> 
+> On Sat, Feb 24, 2024 at 08:45:43PM +0100, Paul Menzel wrote:
+>> Dear Linux folks,
 >>
->> But the asm namespace works for the vdso namespace. Only linux headers
->> do not work, or am I wrong?
->
-> The vdso namespace was added to have something that works for
-> userspace code in both compat 32-bit mode and native (32 or
-> 64) bit mode, while anything outside of include/vdso may not
-> work here.
->
->> PAGE_SIZE is defined in asm/page-def.h for arm64. So this could be a
->> fast fix (tested with clang-14):
 >>
->> ---8<----
->> --- a/include/vdso/datapage.h
->> +++ b/include/vdso/datapage.h
->> @@ -19,7 +19,11 @@
->>  #include <vdso/time32.h>
->>  #include <vdso/time64.h>
->> 
->> +#ifdef CONFIG_ARM64
->> +#include <asm/page-def.h>
->> +#else
->>  #include <asm/page.h>
->> +#endif
->> 
->>  #ifdef CONFIG_ARCH_HAS_VDSO_DATA
->>  #include <asm/vdso/data.h>
->> ---8<---
->
-> I've sent my own patch now, which is something we probably want
-> anyway, but is obviously much more invasive thank your four-line
-> patch.
+>> I suspended a Dell XPS 13 9360 with no devices attached into ACPI S3. Then
+>> connecting an LMP USB-C mini Dock (P/N 15954) [1] with an Ethernet cable
+>> attached to the left USB-C port and resumed the system from ACPI S3. It took
+>> 37 seconds, until the link was established.
+>>
+>> ```
+>> [    0.000000] Linux version 6.8.0-rc5+
 
-Yes I saw it already.
+...
 
-> Maybe we can put your quick fix in the tip tree for the moment
-> and I put my patches into the asm-generic tree, then
-> we can do the trivial cleanup from my final patch later.
->
+>> [135636.985555] hub 4-1.1:1.0: hub_suspend
+>> [135636.985997] usb 4-1.1: usb auto-suspend, wakeup 1
+>> [135637.005910] usb 4-1.1: usb auto-resume
+>> [135637.071744] usb 4-1.1: Waited 0ms for CONNECT
+>> [135637.071751] usb 4-1.1: finish resume
+>> [135637.072442] hub 4-1.1:1.0: hub_resume
+>> [135637.100903] usb 4-1.1-port3: link state change
+>> [135637.101072] usb 4-1.1-port3: do warm reset, port only
+>> [135637.160024] usb 4-1.1-port3: not warm reset yet, waiting 50ms
+>> [135642.359752] xhci_hcd 0000:39:00.0: Timeout while waiting for setup
+>> device command
+>> [135642.359904] usb 4-1.1: kworker/1:0 timed out on ep0in len=0/4
+>> [135642.360403] usb 4-1.1-port3: not warm reset yet, waiting 200ms
+>> [135642.567550] usb 4-1.4: device not accepting address 4, error -62
+>> [135642.567787] usb 4-1.1-port3: not warm reset yet, waiting 200ms
+>> [135642.587834] usb 3-1.1-port3: not reset yet, waiting 10ms
+>> [135642.608022] usb 3-1.1-port3: not reset yet, waiting 10ms
+>> [135642.627960] usb 3-1.1-port3: not reset yet, waiting 200ms
+>> [135642.779575] usb 4-1.1-port3: not warm reset yet, waiting 200ms
+>> [135642.836010] usb 3-1.1-port3: not reset yet, waiting 200ms
+>> [135642.987924] usb 4-1.1-port3: not warm reset yet, waiting 200ms
+>> [135642.989649] usb 4-1.1-port3: not enabled, trying warm reset again...
+>> [135643.044090] usb 3-1.1-port3: not reset yet, waiting 200ms
+>> [135643.253218] usb 3-1.1-port3: not reset yet, waiting 200ms
+>> [135643.254188] hub 3-1.1:1.0: state 7 ports 4 chg 0000 evt 0008
+>> [135643.254573] usb 3-1.1-port3: status 0100, change 0001, 12 Mb/s
+>> [135643.254782] usb 3-1.1-port3: indicator auto status 0
+>> [135643.255501] hub 4-1.1:1.0: state 7 ports 4 chg 0000 evt 0008
+>> [135643.256309] usb 4-1.1-port3: status 0203, change 0001, 5.0 Gb/s
+>> [135643.272060] usb 4-1-port4: not reset yet, waiting 10ms
+>> [135643.292703] usb 4-1-port4: not reset yet, waiting 10ms
+>> [135643.311459] usb 4-1-port4: not reset yet, waiting 200ms
+>> [135643.395529] usb 3-1.1-port3: debounce total 100ms stable 100ms status
+>> 0x100
+>> [135643.395546] hub 3-1.1:1.0: hub_suspend
+>> [135643.395900] usb 3-1.1: usb auto-suspend, wakeup 1
+>> [135643.399598] usb 4-1.1-port3: debounce total 100ms stable 100ms status
+>> 0x203
+>> [135648.759590] xhci_hcd 0000:39:00.0: Timeout while waiting for setup
+>> device command
+>> [135654.135471] xhci_hcd 0000:39:00.0: Timeout while waiting for setup
+>> device command
+>> [135654.343365] usb 4-1.4: device not accepting address 5, error -62
+>> [135654.343741] usb 4-1-port4: attempt power cycle
+>> [135654.423462] usb 4-1.1.3: new SuperSpeed USB device number 6 using
+>> xhci_hcd
+>> [135654.443569] usb 4-1.1.3: USB quirks for this device: 400
+>> [135654.443996] usb 4-1.1.3: skipped 1 descriptor after endpoint
+>> [135654.444015] usb 4-1.1.3: skipped 1 descriptor after endpoint
+>> [135654.444026] usb 4-1.1.3: skipped 1 descriptor after endpoint
+>> [135654.444146] usb 4-1.1.3: skipped 3 descriptors after interface
+>> [135654.444157] usb 4-1.1.3: skipped 1 descriptor after endpoint
+>> [135654.444166] usb 4-1.1.3: skipped 1 descriptor after endpoint
+>> [135654.444174] usb 4-1.1.3: skipped 1 descriptor after endpoint
+>> [135654.444231] usb 4-1.1.3: default language 0x0409
+>> [135654.444459] usb 4-1.1.3: udev 6, busnum 4, minor = 389
+>> [135654.444472] usb 4-1.1.3: New USB device found, idVendor=0bda,
+>> idProduct=8153, bcdDevice=30.00
+>> [135654.444485] usb 4-1.1.3: New USB device strings: Mfr=1, Product=2,
+>> SerialNumber=6
+>> [135654.444495] usb 4-1.1.3: Product: USB 10/100/1000 LAN
+>> [135654.444503] usb 4-1.1.3: Manufacturer: Realtek
+>> [135654.444510] usb 4-1.1.3: SerialNumber: 000001
+>> [135654.444978] r8152-cfgselector 4-1.1.3: usb_probe_device
+>> [135654.447545] r8152-cfgselector 4-1.1.3: adding 4-1.1.3:1.0 (config #1,
+>> interface 0)
+>> [135654.447741] r8152 4-1.1.3:1.0: usb_probe_interface
+>> [135654.447753] r8152 4-1.1.3:1.0: usb_probe_interface - got id
+>> [135654.527864] r8152-cfgselector 4-1.1.3: reset SuperSpeed USB device
+>> number 6 using xhci_hcd
+>> [135654.547443] r8152-cfgselector 4-1.1.3: USB quirks for this device: 400
+>> [135654.570025] r8152 4-1.1.3:1.0: load rtl8153a-4 v2 02/07/20 successfully
+>> [135654.601390] r8152 4-1.1.3:1.0 eth0: v1.12.13
+>> [135654.602115] hub 4-1.1:1.0: state 7 ports 4 chg 0000 evt 0008
+>> [135660.535346] xhci_hcd 0000:39:00.0: Timeout while waiting for setup
+>> device command
+>> [135665.911069] xhci_hcd 0000:39:00.0: Timeout while waiting for setup
+>> device command
+>> [135666.118792] usb 4-1.4: device not accepting address 7, error -62
+>> [135666.138995] usb 4-1-port4: not reset yet, waiting 10ms
+>> [135666.158967] usb 4-1-port4: not reset yet, waiting 10ms
+>> [135666.178919] usb 4-1-port4: not reset yet, waiting 200ms
+>> [135666.387360] usb 4-1-port4: not reset yet, waiting 200ms
+>> [135666.595345] usb 4-1-port4: not reset yet, waiting 200ms
+>> [135666.803419] usb 4-1-port4: not reset yet, waiting 200ms
+>> [135666.804994] hub 4-1:1.0: state 7 ports 4 chg 0000 evt 0010
+>> [135666.861597] r8152 4-1.1.3:1.0 enx00e04ceabb21: renamed from eth0
+>> [135666.922339] r8152 4-1.1.3:1.0 enx00e04ceabb21: carrier on
 
-I'll send a quick fix and reference there to your future cleanup queue.
+...
 
-Thanks,
+>> The last part continues until unplugging device, but this might be a
+>> separate issue, as the Ethernet connection was functional.
+>>
+>> So from
+>>
+>>      [135654.601390] r8152 4-1.1.3:1.0 eth0: v1.12.13
+>>
+>> to
+>>
+>>      [135666.861597] r8152 4-1.1.3:1.0 enx00e04ceabb21: renamed from eth0
+>>
+>> it took 12 seconds.
+>>
+>> Is that a problem with the laptop or the adapter? And can it be fixed
+>> somehow?
 
-	Anna-Maria
+Your dock has a couple usb hubs, the network adapter is behind the second one.
+
+Looks like several of the usb devices have issues enumerating, hub enumerates one
+device at a time so enumeration issue on a hub will block enumerating other
+devices on that same hub.
+
+In addition to other devices failing it looks like this network adapter
+behind 4-1.1-port3 takes a long time to reset as well.
+
+Are there any other usb devices connected to this hub that can be removed?
+Does that improve the situation?
+
+Does dock work normally if its connected to a fully running system, (S0)
+
+Also, those extra hub_suspend and hub_resume entries looks suspicious
+
+Thanks
+Mathias
 
