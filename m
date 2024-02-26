@@ -1,121 +1,180 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBE08005E
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB2A81756;
+	Mon, 26 Feb 2024 12:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708952202; cv=none; b=c3718WmK1FXd4FFBeKVQ4l81M3UBuPxTKotw4HDGOKZGwp4FhZ3JpznacX7KMwFd76+zp/6T94bfw4TYE2Qn5vEniaG7JTqjK+9GCAiv96JmyYr21XIAo9j4HOb55wA21ZQVqEuxObWYGaNyW+VTate7AK1U+40T0CCPc2Nu8Gc=
+	t=1708952208; cv=none; b=AVmGHMpfDRNJJXKAPACV3iplJn3JK/SRAhSwo0RCkYEmWlmYb9uNATaDi16Spv0Nbgqu/vEKfrh5G+D7dbEoCsB9fZsXlIowNTvP/ZC6atIeKT7ukl224qDz4UaCla8MjUJCBOhFgxICB4Bhy3HWRt4aJTCvnZoQz1cMUeicXQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708952202; c=relaxed/simple;
-	bh=ZWGyD5hzgW44HzlR18tI17IUrY8Vy5u5/537CqTcSss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NjoQ5cXgBw8H1REkpdO/eFfarcrSKCYhZBw2DM3ncL/Hg+P+A0zGBQBMgG3dPwCH1ZFZYmzkVj0YFZ3UJm/8ekO6VRmvKCW3RXIrfIA0yTE8huv/tlSmwATKLTiOnhoLc3bdD8n7iX85+CeOpaiGw2c1fCh28ItkdCgXutOEkws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=WcPKrZPJ; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WcPKrZPJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1708952200; x=1740488200;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ZWGyD5hzgW44HzlR18tI17IUrY8Vy5u5/537CqTcSss=;
-  b=WcPKrZPJWZxeLbkklxZwlt5S4hhddqHn2hVsrFkGFcIWIFp38jX9uEJc
-   KbzwWGCcIPUHm/m5ZOrC22aI20x3ddJHs5K+fF+bGObgxS5Se35wNdLhi
-   9YHv1bUfBL6ZekU3GtvV9AZImsdwZ2X81RcxSokXdXxjkUgsO1ZPJJJmx
-   wMWSJrACTLgyuCpMGKhne7ilOSasJKG8NNMBysgMkKHBKlwaMNN0/zoGU
-   cB3iwCsbrqZXAxawjp898PwdUZKrLfVQfv9f/bbQ4shXOJ7nZpfp29WkU
-   +Cw4FvwMKSyWBPZJGTMMjc/7oOuqWfyj9JWMtadEDerFBIk6S1AtCxvWX
-   Q==;
-X-CSE-ConnectionGUID: kHv4xSMiQjOsauQ9YHuS0g==
-X-CSE-MsgGUID: Lh8qfODeRFOytOATbH+2rg==
-X-IronPort-AV: E=Sophos;i="6.06,185,1705388400"; 
-   d="scan'208";a="184095717"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Feb 2024 05:56:39 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 26 Feb 2024 05:55:58 -0700
-Received: from [10.159.245.205] (10.10.85.11) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Mon, 26 Feb 2024 05:55:57 -0700
-Message-ID: <b4fadbb7-5263-4271-9728-b25cc78ebad0@microchip.com>
-Date: Mon, 26 Feb 2024 13:54:58 +0100
+	s=arc-20240116; t=1708952208; c=relaxed/simple;
+	bh=NC9zbuoZghbczDmZXWcpM9NU9mKbcnjtKFhuyF8fuZs=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XmlU2Y5svXNQP2I1mmdauHhBrlOMRxZwf4b/qSDRV5vSTFMobtAggOGhjwUEYUO3ghjJbVg6k519nQPU2cYQBvW7/xSLrSY9VtN4b8MH3Y+xJO1zFwl1hztsuEqHzLeZNLaHchOGYV3w7YwqTRutHB6wYfpVWhqlLZLgxs8nSGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk0s85lMRz6K9JP;
+	Mon, 26 Feb 2024 20:53:00 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id F41F9140FB6;
+	Mon, 26 Feb 2024 20:56:43 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
+ 2024 12:56:43 +0000
+Date: Mon, 26 Feb 2024 12:56:42 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: John Groves <John@Groves.net>
+CC: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, "Dan
+ Williams" <dan.j.williams@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Alexander
+ Viro" <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Jan
+ Kara" <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <john@jagalactic.com>, Dave Chinner
+	<david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
+	<dave.hansen@linux.intel.com>, <gregory.price@memverge.com>
+Subject: Re: [RFC PATCH 10/20] famfs: famfs_open_device() &
+ dax_holder_operations
+Message-ID: <20240226125642.000076d2@Huawei.com>
+In-Reply-To: <74359fdc83688fb1aac1cb2c336fbd725590a131.1708709155.git.john@groves.net>
+References: <cover.1708709155.git.john@groves.net>
+	<74359fdc83688fb1aac1cb2c336fbd725590a131.1708709155.git.john@groves.net>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mtd: nand: raw: atmel: Fix comment in timings preparation
-Content-Language: en-US, fr-FR
-To: Alexander Dahl <ada@thorsis.com>, <linux-kernel@vger.kernel.org>
-CC: Boris Brezillon <bbrezillon@kernel.org>, Tudor Ambarus
-	<tudor.ambarus@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>, <linux-mtd@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>
-References: <20240226122537.75097-1-ada@thorsis.com>
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <20240226122537.75097-1-ada@thorsis.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 26/02/2024 at 13:25, Alexander Dahl wrote:
-> Looks like a copy'n'paste mistake introduced when initially adding the
-> dynamic timings feature with commit f9ce2eddf176 ("mtd: nand: atmel: Add
-> ->setup_data_interface() hooks").  The context around this and
-> especially the code itself suggests 'read' is meant instead of write.
+On Fri, 23 Feb 2024 11:41:54 -0600
+John Groves <John@Groves.net> wrote:
+
+> Famfs works on both /dev/pmem and /dev/dax devices. This commit introduces
+> the function that opens a block (pmem) device and the struct
+> dax_holder_operations that are needed for that ABI.
 > 
-> Signed-off-by: Alexander Dahl <ada@thorsis.com>
+> In this commit, support for opening character /dev/dax is stubbed. A
+> later commit introduces this capability.
+> 
+> Signed-off-by: John Groves <john@groves.net>
 
-Looks indeed valid:
-Reviewed-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-
-Thanks Alexander. Best regards,
-   Nicolas
+Formatting comments mostly same as previous patches, so I'll stop repeating them.
 
 > ---
->   drivers/mtd/nand/raw/atmel/nand-controller.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/famfs/famfs_inode.c | 83 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
 > 
-> diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-> index 4cb478bbee4a..dc75d50d52e8 100644
-> --- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-> +++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-> @@ -1370,23 +1370,23 @@ static int atmel_smc_nand_prepare_smcconf(struct atmel_nand *nand,
->           *
->           * NRD_PULSE = tRP
->           */
->          ncycles = DIV_ROUND_UP(conf->timings.sdr.tRP_min, mckperiodps);
->          totalcycles += ncycles;
->          ret = atmel_smc_cs_conf_set_pulse(smcconf, ATMEL_SMC_NRD_SHIFT,
->                                            ncycles);
->          if (ret)
->                  return ret;
-> 
->          /*
-> -        * The write cycle timing is directly matching tWC, but is also
-> +        * The read cycle timing is directly matching tRC, but is also
->           * dependent on the setup and hold timings we calculated earlier,
->           * which gives:
->           *
->           * NRD_CYCLE = max(tRC, NRD_PULSE + NRD_HOLD)
->           *
->           * NRD_SETUP is always 0.
->           */
->          ncycles = DIV_ROUND_UP(conf->timings.sdr.tRC_min, mckperiodps);
->          ncycles = max(totalcycles, ncycles);
->          ret = atmel_smc_cs_conf_set_cycle(smcconf, ATMEL_SMC_NRD_SHIFT,
->                                            ncycles);
-> 
-> base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
-> --
-> 2.39.2
-> 
+> diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
+> index 3329aff000d1..82c861998093 100644
+> --- a/fs/famfs/famfs_inode.c
+> +++ b/fs/famfs/famfs_inode.c
+> @@ -68,5 +68,88 @@ static const struct super_operations famfs_ops = {
+>  	.show_options	= famfs_show_options,
+>  };
+>  
+> +/***************************************************************************************
+> + * dax_holder_operations for block dax
+> + */
+> +
+> +static int
+> +famfs_blk_dax_notify_failure(
+> +	struct dax_device	*dax_devp,
+> +	u64			offset,
+> +	u64			len,
+> +	int			mf_flags)
+> +{
+> +
+> +	pr_err("%s: dax_devp %llx offset %llx len %lld mf_flags %x\n",
+> +	       __func__, (u64)dax_devp, (u64)offset, (u64)len, mf_flags);
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +const struct dax_holder_operations famfs_blk_dax_holder_ops = {
+> +	.notify_failure		= famfs_blk_dax_notify_failure,
+> +};
+> +
+> +static int
+> +famfs_open_char_device(
+> +	struct super_block *sb,
+> +	struct fs_context  *fc)
+> +{
+> +	pr_err("%s: Root device is %s, but your kernel does not support famfs on /dev/dax\n",
+> +	       __func__, fc->source);
+> +	return -ENODEV;
+> +}
+> +
+> +/**
+> + * famfs_open_device()
+> + *
+> + * Open the memory device. If it looks like /dev/dax, call famfs_open_char_device().
+> + * Otherwise try to open it as a block/pmem device.
+> + */
+> +static int
+> +famfs_open_device(
+> +	struct super_block *sb,
+> +	struct fs_context  *fc)
+> +{
+> +	struct famfs_fs_info *fsi = sb->s_fs_info;
+> +	struct dax_device    *dax_devp;
+> +	u64 start_off = 0;
+> +	struct bdev_handle   *handlep;
+Definitely don't force alignment in local parameter definitions.
+Always goes wrong and makes for unreadable mess in patches!
+
+> +
+> +	if (fsi->dax_devp) {
+> +		pr_err("%s: already mounted\n", __func__);
+Fine to fail but worth a error message? Not sure on convention on this but seems noisy
+and maybe in userspace control which isn't good.
+> +		return -EALREADY;
+> +	}
+> +
+> +	if (strstr(fc->source, "/dev/dax")) /* There is probably a better way to check this */
+> +		return famfs_open_char_device(sb, fc);
+> +
+> +	if (!strstr(fc->source, "/dev/pmem")) { /* There is probably a better way to check this */
+> +		pr_err("%s: primary backing dev (%s) is not pmem\n",
+> +		       __func__, fc->source);
+> +		return -EINVAL;
+> +	}
+> +
+> +	handlep = bdev_open_by_path(fc->source, FAMFS_BLKDEV_MODE, fsi, &fs_holder_ops);
+> +	if (IS_ERR(handlep->bdev)) {
+> +		pr_err("%s: failed blkdev_get_by_path(%s)\n", __func__, fc->source);
+> +		return PTR_ERR(handlep->bdev);
+> +	}
+> +
+> +	dax_devp = fs_dax_get_by_bdev(handlep->bdev, &start_off,
+> +				      fsi  /* holder */,
+> +				      &famfs_blk_dax_holder_ops);
+> +	if (IS_ERR(dax_devp)) {
+> +		pr_err("%s: unable to get daxdev from handlep->bdev\n", __func__);
+> +		bdev_release(handlep);
+> +		return -ENODEV;
+> +	}
+> +	fsi->bdev_handle = handlep;
+> +	fsi->dax_devp    = dax_devp;
+> +
+> +	pr_notice("%s: root device is block dax (%s)\n", __func__, fc->source);
+
+pr_debug()  Kernel log is too noisy anyway! + I'd assume we can tell this succeeded
+in lots of other ways.
+
+
+> +	return 0;
+> +}
+> +
+> +
+>  
+>  MODULE_LICENSE("GPL");
 
