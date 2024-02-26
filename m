@@ -1,70 +1,63 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278EE39FFA
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D7439FFA;
+	Mon, 26 Feb 2024 08:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936385; cv=none; b=sFtExEhaDbr4FoK2iVFj7hASeSd5i4ECakFmek/ifFlcl9ANj8ZXu6kEepnqr7rL0FBMEVC+2u2djLH3Bb0GVT4NAIgEN7JFZgS3dKhDUWCCVWXpYXy8v5r/hPcBbGZ9ZPd3WuvjOgrtrosd5lLAQJsDaNIxYMMAoiFLS3Qmf2c=
+	t=1708936397; cv=none; b=d4ry8HBqOIrkeT1GrkQF2U5ekQZ+vfesMx8oIEVgujkYXVeqChcV4rUn8bGISwqfT+Ca81S+FYRgf5PvVj/rf0lhfSBuFudLgX6hhpGhQ1TyQh2wZxUH2kABN8pShkoGNHg/+Ch95s3pM0OJyW3iphzdzS4n7VD7TVSbRlRFogE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936385; c=relaxed/simple;
-	bh=sFg3Bue0RjE/q0rJ6RRsG8lFGuBuxnCDFsgJoW7Tpog=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=DtUdxDYmMql2QR28WmpmW72NxuAK5JNoaFSkeNnAFZubv7etiq4BEdpic4cl5EkQgAsJbiYEWwc/+0ZPL0JFCg20qGYaNN3TDXPREw+YVm0K+pvwW/eFwRjtv4eN9EDOBj6qy48cGUC6S5CCkCRziPrvNHDOtTtp2SGU2Zpjh+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36560f1cfaeso28457305ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 00:33:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708936383; x=1709541183;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n/qOo82yrwnBfpaGzzEF0rDHMHxNOUl2Wyw8qHLHclE=;
-        b=KPaRObvXDQ/xpw3aMsaENaYHfu8h2uwUSZ4oP/KggpsFaI9Coz4b0Lvd/UqnSiB3TK
-         eVm0IhsNICWp0Hf1CidLhYk8gC8ZmtdRzBsplm1EtnjHpEEo0ila96VCCV3WKobQnWmQ
-         MfTL5tvnMAoK0IQC2i7MYuOzC/X24mIp1hdbWoDZWbEfDGcjQ8S+MPIntQQoeFiWwdn7
-         xXVBnXfHreX8f7o59/NkreTveWp9GbBtEwG+R5DPozoLr6xFAmbVKguoddiywLgw3qNW
-         OIFgwywNYaQ5E/TY/9BXihxSH9KrBbHs6DeO3VNvJpN6Pk6GPog0HWHV/k9IespDQZg3
-         kfNQ==
-X-Gm-Message-State: AOJu0YzT3ouWRABo+aI8Sy8FyQI3osIbDKPROigLfzo1VDyUi+w2i3F7
-	axXTOwh68GbOt6f5QQxmCF/CDcsx0GzkVZgyW+qlVEEMRCBF4R4xYhN0Lp8J/OyCKHj3LxIrTPT
-	TdS9OgF8NcDiVafg66VrpnOiAteqPlYcOjNDT9DuUmVd5dZKTZUM5aHVXOg==
-X-Google-Smtp-Source: AGHT+IGHgS21ONnp7RGydJ9XYeZwtrNpntoOmhBAo08bBZNwrbskRHezey8k0ND82JwrgJZx7JysgW18oYdOdiy9RQoiXZyz8Av7
+	s=arc-20240116; t=1708936397; c=relaxed/simple;
+	bh=8YnqCvaVNYar5aIZBImce4B4KXZMqOiJJmxtzNMwcOY=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=Q9DizdHYmIF7GroclEUu76lV9uT0uYJQYkcUjzyg+Hbd5+BBpV9WuvJ46CvHQ5dis7PprGP7s0GTXQTPStgkJ+o+Bv0z1pfsRP48mBUzF1K2r6JvPKPPemt9TgJesmfhGmHlDTHgxHC5FCPMRZPpH1Sosjo1KOmSCkmpQDder+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=15.184.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-FEAT: B8vEhG33zUTqMh/Df+7C7/cZTpPTQihZsq8pvLymg+J8YWdC3ZJw6O6x4eqO/
+	nti0nNjmZ4R4ntBHTIbWl61+2eCvit1id/VezWT+CFzzdaClVgACFXFN06iCxbgC4C2/0Hn
+	UisnnP2IRvPIl+zzxNzXr84Q5npOIp5Bo5xGB4hXLeojn12YtboYb5N0URS7qPW+iAknfUF
+	ubIZ+KCzOhPJjijpVNvY3gsNFLFHb5//f1UPweiVFIfYlMQnAdHNRpx6B6xF3ar9rLTL/SB
+	RRVIU9g5n8eoD14SyEjCVx044dFtzFyQzMnl9XxoPBMDllh3pdwcnt++pIyyTZ/g9Rh3cER
+	hkfddYg7NQAPVoBKwAcYKMQbe9XHLyyWYYertnbSAZl3uHTpbc=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: Cyo8Q8zJxI1JsbZ6iSukuqr7xFbz3rxXnIeXv/emwKg=
+X-QQ-STYLE: 
+X-QQ-mid: t5gz7a-2t1708935908t4705339
+From: "=?utf-8?B?5YWz5paH5rab?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?aGVyYmVydA==?=" <herbert@gondor.apana.org.au>, "=?utf-8?B?ZGF2ZW0=?=" <davem@davemloft.net>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
+Cc: "=?utf-8?B?bGludXgtY3J5cHRv?=" <linux-crypto@vger.kernel.org>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] loongarch/crypto: Clean up useless assignment operations
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b83:b0:365:21f4:700d with SMTP id
- h3-20020a056e021b8300b0036521f4700dmr320140ili.2.1708936383286; Mon, 26 Feb
- 2024 00:33:03 -0800 (PST)
-Date: Mon, 26 Feb 2024 00:33:03 -0800
-In-Reply-To: <20240226073001.1248179-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000011d729061244c264@google.com>
-Subject: Re: [syzbot] [dri?] WARNING in vkms_get_vblank_timestamp (2)
-From: syzbot <syzbot+93bd128a383695391534@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Mon, 26 Feb 2024 08:25:07 +0000
+X-Priority: 3
+Message-ID: <tencent_29355025499B47007555CE13@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <20240226080328.334021-1-wangyuli@uniontech.com>
+	<48afa638-9145-40ee-9868-fa82a1fce271@xen0n.name>
+In-Reply-To: <48afa638-9145-40ee-9868-fa82a1fce271@xen0n.name>
+X-QQ-ReplyHash: 3202933845
+X-BIZMAIL-ID: 12383567994983227794
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Mon, 26 Feb 2024 16:25:10 +0800 (CST)
+Feedback-ID: t:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-0
 
-Hello,
-
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-no output from test machine
-
-
-
-Tested on:
-
-commit:         d206a76d Linux 6.8-rc6
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=13e0b622180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=18dc188a654638a3
-dashboard link: https://syzkaller.appspot.com/bug?extid=93bd128a383695391534
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=109e4e54180000
+U3VyZSxidXQgd2Ugbm90IHNlZW0gdG8gaGF2ZSAiY3JjLncuZC53IiBkd29yZCBhc20gaW4g
+bG9vbmdhcmNoIDMyYml0IG1vZGUsbm93IHRoZSB3aG9sZSBmaWxlIGNhbiBvbmx5IHJ1biBp
+biA2NGJpdCBtb2RlPw0KDQpUaGFua3Mu
 
