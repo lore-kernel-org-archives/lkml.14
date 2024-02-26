@@ -1,42 +1,42 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9B34D5AC;
-	Mon, 26 Feb 2024 08:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C93A4F8A0;
+	Mon, 26 Feb 2024 08:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936067; cv=none; b=TZGovrxgZOPpOv6kVgjPiLzyxBESOY+c9k33t96o16g7e9eNXR94JPVR3c+4HYBXvi6xFI8PzQJXuwB/RkeTOwbqccobs2llSK6oYvXw1McWvNrDYttEdIuFmaO6+GbpG2nBJ/b2oqlhC9lj5nUPPaIPxa2hhLIqFYic8UE3qUE=
+	t=1708936069; cv=none; b=dSqOeekH0NEBwzgZOKN4coGrYUFSB1k2fRXKU+88KopL6y2ykgVPV8GJUVAoq9ZswQ+0wxcsUuNe4+yFmtIl1IEh39OVvDB+cK9y/D6j+naWCboMBzijx1HTJxIeK2ICjWb9FbVs0SajJj9mEcJkxiXbE1HN7FD2+4Sq3Pv9kpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936067; c=relaxed/simple;
-	bh=Awuik1MUAYsAnCDFjrgL7JE4Wn0+9r53tlCToVb0+AQ=;
+	s=arc-20240116; t=1708936069; c=relaxed/simple;
+	bh=yEg4v544YC7e+UFPcUmTBeIBNiztK9idn0tOEopCeIQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lGwLZK92Q6brMjmv9i4DlwaOc6f0Gu0vdYkgdU+SsHdVoNiY/wg4Da9exw0BRvCdI7vkXwCj1LnayJ5vTF6SzTR0QAyWNJxZWTyH/upjynFQhgEJ508cnjF+8nNNUZDTPpDVQxW54tBTCRcfOqHMaStdHmPRnGg+TGyFYY26Bfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eAoVIEZx; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=RO8fhbNt8HbNSiAxWg8n3kylaNFvAuTD2V1rnRG7HWpzYdoOwtQf+6glab7e1vxfs1YHLjL+Kp3FIICltAYwZO5MPBfn86IJomtRMirm5cZyziBcFwYV0eFU4dXcYHyh0/XNVA7HhmBHWngpaYhHny1eOrNP8OU3BSJkt3tkFgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IDx2P+CM; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eAoVIEZx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IDx2P+CM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936065; x=1740472065;
+  t=1708936067; x=1740472067;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Awuik1MUAYsAnCDFjrgL7JE4Wn0+9r53tlCToVb0+AQ=;
-  b=eAoVIEZxkRvjJIiWiAjOYqVVD3dbQan1SyYsXU/oayX73Q7UkJCaqowq
-   w+MQh7ugGL7JQrCjHlNDxa4K7pUDD1IRKvx1AySEi2MxHLKF9IsLcSv7r
-   bDPNbjaOJoWJjpuzcTDHgmqUQuCFYNxA5rGQKIdwCHaQrm82tr6ndXGA/
-   Ypc9pWeRcOm8EGtoNW7zj+s5/KYWMeHWYG4HNaRc7MXFyNaphDSqBk458
-   /3eWQsZNXh2iZ9XBacwmX3c9KGIycHiigo/hh+CGjnQ5NDhhNvLplFGEv
-   Sde9fvbECUJAwNksMpp2gYCmnSJOw3BBIEqySnsq+Dcc/Lu12ooDxLdrI
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="28631479"
+  bh=yEg4v544YC7e+UFPcUmTBeIBNiztK9idn0tOEopCeIQ=;
+  b=IDx2P+CMzhL++faYjGDve/xKCONFD+CCHyUyPO+Jh+lhNV/Z0Ey5CmwU
+   QhZDfTe7TgjTin7CWgOjc0k7Gn9gWqsRZV2eBQcqV/6ZuzRBmHuzWv+yl
+   oePP2kAzD6idPWo2OX0LhduJARg5SoDS5CwsdYgw2C7GntHxlLA1oWYvZ
+   g2GUwaOX9nfPje50nI86tMs5FPxJ82ae/K5GX2YsyeYRop9tXMhukE6+G
+   z1wDQhq84wOZa/OrzSgIQh1CGmdCDolbO8UKO9EZPcRBezHgDdj9G76aq
+   QFGGa0ltqNQRf285gFeUSfhNX86fSPdAgAejIC5nHqBz+jkqMsHq8b71f
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="28631491"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="28631479"
+   d="scan'208";a="28631491"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:42 -0800
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6474333"
+   d="scan'208";a="6474342"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
   by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:27:42 -0800
 From: isaku.yamahata@intel.com
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v19 013/130] KVM: x86: Use PFERR_GUEST_ENC_MASK to indicate fault is private
-Date: Mon, 26 Feb 2024 00:25:15 -0800
-Message-Id: <c560cdadb7d0dc88b831cf1a5382cf6f166ff022.1708933498.git.isaku.yamahata@intel.com>
+Subject: [PATCH v19 015/130] KVM: Document KVM_MEMORY_MAPPING ioctl
+Date: Mon, 26 Feb 2024 00:25:17 -0800
+Message-Id: <b695d166f95992339cc1836e656387042454b1e9.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -68,153 +68,54 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-SEV-SNP defines PFERR_GUEST_ENC_MASK (bit 32) in page-fault error bits to
-represent the guest page is encrypted.  Use the bit to designate that the
-page fault is private and that it requires looking up memory attributes.
-The vendor kvm page fault handler should set PFERR_GUEST_ENC_MASK bit based
-on their fault information.  It may or may not use the hardware value
-directly or parse the hardware value to set the bit.
-
-For KVM_X86_SW_PROTECTED_VM, ask memory attributes for the fault
-privateness.  For async page fault, carry the bit and use it for kvm page
-fault handler.
-
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-
----
-Changes v4 -> v5:
-- Eliminate kvm_is_fault_private() by open code the function
-- Make async page fault handler to carry is_private bit
-
-Changes v3 -> v4:
-- rename back struct kvm_page_fault::private => is_private
-- catch up rename: KVM_X86_PROTECTED_VM => KVM_X86_SW_PROTECTED_VM
-
-Changes v2 -> v3:
-- Revive PFERR_GUEST_ENC_MASK
-- rename struct kvm_page_fault::is_private => private
-- Add check KVM_X86_PROTECTED_VM
-
-Changes v1 -> v2:
-- Introduced fault type and replaced is_private with fault_type.
-- Add kvm_get_fault_type() to encapsulate the difference.
+Adds documentation of KVM_MEMORY_MAPPING ioctl.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  3 +++
- arch/x86/kvm/mmu/mmu.c          | 24 +++++++++++++++++-------
- arch/x86/kvm/mmu/mmu_internal.h |  2 +-
- 3 files changed, 21 insertions(+), 8 deletions(-)
+v19:
+- newly added
+---
+ Documentation/virt/kvm/api.rst | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 57ce89fc2740..28314e7d546c 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -264,6 +264,7 @@ enum x86_intercept_stage;
- #define PFERR_SGX_BIT 15
- #define PFERR_GUEST_FINAL_BIT 32
- #define PFERR_GUEST_PAGE_BIT 33
-+#define PFERR_GUEST_ENC_BIT 34
- #define PFERR_IMPLICIT_ACCESS_BIT 48
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 3ec0b7a455a0..667dc58f7d2f 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -6323,6 +6323,34 @@ a single guest_memfd file, but the bound ranges must not overlap).
  
- #define PFERR_PRESENT_MASK	BIT(PFERR_PRESENT_BIT)
-@@ -275,6 +276,7 @@ enum x86_intercept_stage;
- #define PFERR_SGX_MASK		BIT(PFERR_SGX_BIT)
- #define PFERR_GUEST_FINAL_MASK	BIT_ULL(PFERR_GUEST_FINAL_BIT)
- #define PFERR_GUEST_PAGE_MASK	BIT_ULL(PFERR_GUEST_PAGE_BIT)
-+#define PFERR_GUEST_ENC_MASK	BIT_ULL(PFERR_GUEST_ENC_BIT)
- #define PFERR_IMPLICIT_ACCESS	BIT_ULL(PFERR_IMPLICIT_ACCESS_BIT)
+ See KVM_SET_USER_MEMORY_REGION2 for additional details.
  
- #define PFERR_NESTED_GUEST_PAGE (PFERR_GUEST_PAGE_MASK |	\
-@@ -1836,6 +1838,7 @@ struct kvm_arch_async_pf {
- 	gfn_t gfn;
- 	unsigned long cr3;
- 	bool direct_map;
-+	u64 error_code;
- };
- 
- extern u32 __read_mostly kvm_nr_uret_msrs;
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index ccdbff3d85ec..61674d6b17aa 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4246,18 +4246,19 @@ static u32 alloc_apf_token(struct kvm_vcpu *vcpu)
- 	return (vcpu->arch.apf.id++ << 12) | vcpu->vcpu_id;
- }
- 
--static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--				    gfn_t gfn)
-+static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu,
-+				    struct kvm_page_fault *fault)
- {
- 	struct kvm_arch_async_pf arch;
- 
- 	arch.token = alloc_apf_token(vcpu);
--	arch.gfn = gfn;
-+	arch.gfn = fault->gfn;
- 	arch.direct_map = vcpu->arch.mmu->root_role.direct;
- 	arch.cr3 = kvm_mmu_get_guest_pgd(vcpu, vcpu->arch.mmu);
-+	arch.error_code = fault->error_code & PFERR_GUEST_ENC_MASK;
- 
--	return kvm_setup_async_pf(vcpu, cr2_or_gpa,
--				  kvm_vcpu_gfn_to_hva(vcpu, gfn), &arch);
-+	return kvm_setup_async_pf(vcpu, fault->addr,
-+				  kvm_vcpu_gfn_to_hva(vcpu, fault->gfn), &arch);
- }
- 
- void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
-@@ -4276,7 +4277,8 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
- 	      work->arch.cr3 != kvm_mmu_get_guest_pgd(vcpu, vcpu->arch.mmu))
- 		return;
- 
--	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, 0, true, NULL);
-+	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, work->arch.error_code,
-+			      true, NULL);
- }
- 
- static inline u8 kvm_max_level_for_order(int order)
-@@ -4390,7 +4392,7 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 			trace_kvm_async_pf_repeated_fault(fault->addr, fault->gfn);
- 			kvm_make_request(KVM_REQ_APF_HALT, vcpu);
- 			return RET_PF_RETRY;
--		} else if (kvm_arch_setup_async_pf(vcpu, fault->addr, fault->gfn)) {
-+		} else if (kvm_arch_setup_async_pf(vcpu, fault)) {
- 			return RET_PF_RETRY;
- 		}
- 	}
-@@ -5814,6 +5816,14 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
- 	if (WARN_ON_ONCE(!VALID_PAGE(vcpu->arch.mmu->root.hpa)))
- 		return RET_PF_RETRY;
- 
-+	/*
-+	 * This is racy with updating memory attributes with mmu_seq.  If we
-+	 * hit a race, it would result in retrying page fault.
-+	 */
-+	if (vcpu->kvm->arch.vm_type == KVM_X86_SW_PROTECTED_VM &&
-+	    kvm_mem_is_private(vcpu->kvm, gpa_to_gfn(cr2_or_gpa)))
-+		error_code |= PFERR_GUEST_ENC_MASK;
++4.143 KVM_MEMORY_MAPPING
++------------------------
 +
- 	r = RET_PF_INVALID;
- 	if (unlikely(error_code & PFERR_RSVD_MASK)) {
- 		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index 21f55e8b4dc6..0443bfcf5d9c 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -292,13 +292,13 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 		.user = err & PFERR_USER_MASK,
- 		.prefetch = prefetch,
- 		.is_tdp = likely(vcpu->arch.mmu->page_fault == kvm_tdp_page_fault),
-+		.is_private = err & PFERR_GUEST_ENC_MASK,
- 		.nx_huge_page_workaround_enabled =
- 			is_nx_huge_page_enabled(vcpu->kvm),
- 
- 		.max_level = KVM_MAX_HUGEPAGE_LEVEL,
- 		.req_level = PG_LEVEL_4K,
- 		.goal_level = PG_LEVEL_4K,
--		.is_private = kvm_mem_is_private(vcpu->kvm, cr2_or_gpa >> PAGE_SHIFT),
- 	};
- 	int r;
++:Capability: KVM_CAP_MEMORY_MAPPING
++:Architectures: none
++:Type: vcpu ioctl
++:Parameters: struct kvm_memory_mapping(in/out)
++:Returns: 0 on success, <0 on error
++
++KVM_MEMORY_MAPPING populates guest memory without running vcpu.
++
++::
++
++  struct kvm_memory_mapping {
++	__u64 base_gfn;
++	__u64 nr_pages;
++	__u64 flags;
++	__u64 source;
++  };
++
++KVM_MEMORY_MAPPING populates guest memory in the underlying mapping. If source
++is not zero and it's supported (it depends on underlying technology), the guest
++memory content is populated with the source.  If nr_pages is large, it may
++return -EAGAIN and the values (base_gfn and nr_pages. source if not zero) are
++updated to point the remaining range.
++
++The "flags" field is reserved for future extensions and must be '0'.
++
+ 5. The kvm_run structure
+ ========================
  
 -- 
 2.25.1
