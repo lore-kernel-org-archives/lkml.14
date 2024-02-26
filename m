@@ -1,67 +1,110 @@
-Received: from mail78-36.sinamail.sina.com.cn (mail78-36.sinamail.sina.com.cn [219.142.78.36])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B8D5B03B
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.142.78.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9A75B1F6;
+	Mon, 26 Feb 2024 12:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708949246; cv=none; b=pnbs2v1KjDj172zfImfdY2pAR6iq1y8OUXyiT8QUddab/fqbbBQNumOFyhX2ToQ+LKVzl+68s77frDPn6bMB4L6uo049WnlhUJPKow5mU1mykd2wZuXlCIHSFesMg0puJ6R88leQ/7UDKII/6Xp2uFe40wIXUXyfaOSnhzmpIbw=
+	t=1708949258; cv=none; b=LC9ZLtR1pVZUMRUnDqbVo4Qbn7+ZoWOFV/G1vDRuFlmg53yMuSofTwuJbVHV1V9Mg34PQJI8cWgOuhD/M27HhSDecdQjFNuDbhh8VtNJpMHqgXJBHwwvCU/Y6Gar2RAJW6VYs5jF90S7qcds6TBx28yD9f+njyPBvy5PLmNqs5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708949246; c=relaxed/simple;
-	bh=pLt7uW/tLWOix+u8T0EY+yCzxoIKPC5tGiwPgZA82wQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tkc8w8ojzDCMXSkF66hQFk5DTkcYoRJFPvp0vll9KHUIJORozvvoFnN1zgyrNskFFjBu4L2MallM9VR9vWtq1CZD73yh1RL2Q3/baDUVgFCPQwbawA1rOOpRZRaHiZDu5l7MYwVLBfphx1T/vdqO9tTN5mYOvezkwt9eiM5YfEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=219.142.78.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.50.169])
-	by sina.com (172.16.235.25) with ESMTP
-	id 65DC7EC900006951; Mon, 26 Feb 2024 20:06:35 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 74897934210316
-X-SMAIL-UIID: B7F26EFD82E247E782670C81FCE0147F-20240226-200635-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+c2ada45c23d98d646118@syzkaller.appspotmail.com>
-Cc: almaz.alexandrovich@paragon-software.com,
-	boqun.feng@gmail.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ntfs3@lists.linux.dev,
-	penguin-kernel@i-love.sakura.ne.jp,
-	syzkaller-bugs@googlegroups.com,
-	torvalds@linux-foundation.org
-Subject: Re: [syzbot] [ntfs3?] possible deadlock in ntfs_set_state (2)
-Date: Mon, 26 Feb 2024 20:06:23 +0800
-Message-Id: <20240226120623.1464-1-hdanton@sina.com>
-In-Reply-To: <00000000000044c2da06124774f7@google.com> (raw)
-References: 
+	s=arc-20240116; t=1708949258; c=relaxed/simple;
+	bh=tst3N3Ogd0NLb+9yQntn2eZ6lXZNfRn8LL6bYGoKxOc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bPAXqVTjRW8+LFQcR30kUDTwYcPqSE7qbajyYsKIzGKmOS1L+mzhrJf75N9cQLDz4xcaH1KFg/YYv+7J30ISaWxE/ma08Xf7Z/vWKuuy2ckUhtLDYXT1313D4SPvgyQ0HEOnHYuX/yT/lgr0SGhW88WiFF0gJBm9HgTelCUa7rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zo1CLWn7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zo1CLWn7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9E2FC433C7;
+	Mon, 26 Feb 2024 12:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708949258;
+	bh=tst3N3Ogd0NLb+9yQntn2eZ6lXZNfRn8LL6bYGoKxOc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Zo1CLWn7kBO3dqtZwYhjmHvz67hXbCsddgPuOPmU86fiMqg0ZsBgR48+8JOSOuf+u
+	 580OS/zJkG5wR3YOOPnMlJkAGuqVivmU+zKwp0ntgCv/OgWDJhRWV5boR3dBkzVAdv
+	 6nqXS5XAZj5u9+K51qRE2a9iQOucI8+LUouBdbSO34nWJIVYqsgrlvQFQ7sozX+0Nt
+	 CzSYzEwUIHh7LEOzBPXross7QDzOC48AridRdNko68syRIxa8OGgPkU7QjnJjSt7UQ
+	 zw2B/toZ/Cn+TXkZO9jEqbhmRSKx/TuP/jNwQRQDBV/TlaVjd5oq9/cK+2it4rub3/
+	 a6OnXjJ+dtM7w==
+From: Roger Quadros <rogerq@kernel.org>
+Subject: [PATCH v6 0/4] arm64: dts: ti: am62: Add USB support for k3-am62p
+Date: Mon, 26 Feb 2024 14:03:06 +0200
+Message-Id: <20240226-b4-for-v6-5-am62-usb-typec-dt-v6-0-acf77fff4344@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPp93GUC/43NQQ6CMBCF4auQWTsGaluQlfcwLKAdoFEpmWIjI
+ dzdyglcfm/xvw0CsaMAdbYBU3TB+SlBnzIwYzsNhM4mg8iFzIW4YCex94xRo8L2pQW+Q4fLOpN
+ Bu2Cpr0RGmsrIFlJjZurd5+jfm+TRhcXzetxF9Vv/LUeFOcpOVUraorRFdXsQT/Q8ex6g2ff9C
+ /Y8QlnLAAAA
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>
+Cc: Andrew Davis <afd@ti.com>, b-liu@ti.com, srk@ti.com, 
+ r-gunasekaran@ti.com, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Roger Quadros <rogerq@kernel.org>, Rob Herring <robh@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1486; i=rogerq@kernel.org;
+ h=from:subject:message-id; bh=tst3N3Ogd0NLb+9yQntn2eZ6lXZNfRn8LL6bYGoKxOc=;
+ b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBl3H8B5NRe0+ntzBZocwRCFpqIUzzMk6GiOSfm7
+ LVKZRCdLFGJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZdx/AQAKCRDSWmvTvnYw
+ k+rAEAC1Avjo5YCFn0nTskB3ig6WyENuCGfXxlC3gLifKf7LC/N/Gaepyrfg8JJbeiVYmQ4YP2h
+ EpD+Nfny9z8tlV8OYOt9QNJlfnOBxo5EPTXpdQJcQomjVXO+DP1Iv5P13L8Vvx+SjrjQKKpHzk6
+ dgFlQRt+nTso9/F3YhZMElSdraI+cVW84fy+FfkLhWA22uGOQTsiB4Qv8dm7by5ZKtkPQ11xZHN
+ yAnLLfqNA2n7ZK71GXzcNyb74QXNNzmxJShuZ/Jr8g50H/yXrjaDIdQBle8ecNgyf3r+u2VkqnD
+ xRuPZbra1vAwmtDPoeoCGrXde/GZvB2sC6kZe2dLqZ8XyTqOYLtrGxvxYZ/vnM3z+7NSeE5INSy
+ snWIcsPGETNs7SH3YGvAGpdt9cTsSzJXbomZqjgi37oQvdIW0g1YmARh/ntQ4TTeULn6Q7Vx4r1
+ jHLrpwbNtoBW87/nHXZ3AO3ctbp5zk17veP4OVk/4JW+KkBr5L6FFhK0VqQwTP6xF+sThSDR2P3
+ aq4Q6VFlRIw75g8HjlpQhwd4ZXtlbS+mrukkZMVUeEyJD+EkBns4t/8ndD/uT3s5zovpggH1vHj
+ DxJ9O9ckuC3mm2m2sQ/1QkzXjO+Q3srNh/ITMXWrofOmNTFrGarhWSKtSbMUkm9mXyQKPFn24iM
+ FOsCYdagOETN0uA==
+X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
+ fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
 
-Test non-zero subkey against the mainline tree.
+Hi,
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
+This series first adds device nodes for USB0_PHY_CTRL and USB1_PHY_CTRL
+in the wkup_conf node and fixus up the USB nodes to use the newly
+added nodes.
 
---- x/fs/ntfs3/fsntfs.c
-+++ y/fs/ntfs3/fsntfs.c
-@@ -944,7 +944,7 @@ int ntfs_set_state(struct ntfs_sb_info *
- 	if (!ni)
- 		return -EINVAL;
- 
--	mutex_lock_nested(&ni->ni_lock, NTFS_INODE_MUTEX_DIRTY);
-+	mutex_lock_nested(&ni->ni_lock, (1 + NTFS_INODE_MUTEX_PARENT2));
- 
- 	attr = ni_find_attr(ni, NULL, NULL, ATTR_VOL_INFO, NULL, 0, NULL, &mi);
- 	if (!attr) {
---
+Then it adds USB support for AM62P SoC and AM62P5-SK board.
+
+cheers,
+-roger
+
+Signed-off-by: Roger Quadros <rogerq@kernel.org>
+---
+Changes in v6:
+- Rebased on next-20240226
+- Link to v5: https://lore.kernel.org/r/20240223-b4-for-v6-5-am62-usb-typec-dt-v5-0-4b5854d17d18@kernel.org
+
+---
+Roger Quadros (4):
+      dt-bindings: mfd: syscon: Add ti,am62-usb-phy-ctrl compatible
+      arm64: dts: ti: k3-am62/a: use sub-node for USB_PHY_CTRL registers
+      arm64: dts: ti: k3-am62p: add the USB sub-system
+      arm64: dts: ti: k3-am62a: Disable USB LPM
+
+ Documentation/devicetree/bindings/mfd/syscon.yaml |  1 +
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi          |  4 +-
+ arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi        | 10 ++++
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi         |  8 ++-
+ arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi       | 10 ++++
+ arch/arm64/boot/dts/ti/k3-am62p-main.dtsi         | 50 +++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi       | 10 ++++
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts           | 67 +++++++++++++++++++++++
+ 8 files changed, 156 insertions(+), 4 deletions(-)
+---
+base-commit: 8552c902efe7ef670b6961fb8885b67961aeb629
+change-id: 20240223-b4-for-v6-5-am62-usb-typec-dt-769eec4c8c4a
+
+Best regards,
+-- 
+Roger Quadros <rogerq@kernel.org>
+
