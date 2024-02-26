@@ -1,241 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54076134CF9;
-	Mon, 26 Feb 2024 08:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2151E516
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936197; cv=none; b=Ixwkaq+qnRrd/bsvo70YDGoLsCWWotPTZW9DV6wWjMfYhbimycqoDtQ9rWr1xdNvDPsW9yYMACsgEjBBFahuWf3ulthT3khb0UQiIQPbm4+1eUUjq1y+DktADS6Gwr8U1VADPI45hKBSN4voTj4wcktY7txBbmeJBWbASWgCb1c=
+	t=1708936281; cv=none; b=Iv/x+jlZPwVxTiJJX1cmMh0WEcLjlSdWw8MSZtFdjgFnil960jNyWlPTgldomTg7K0MTvjv0Kc94OcMTNPLGa1yTVjmsGgob3d65Np9OrR2vUnwtSYPkr2pIh4PvG/NRgvTSRkdAzzrHlmQMhPO7I2H7LZDi4QoFRGoo6sEXTcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936197; c=relaxed/simple;
-	bh=vAER6tofN9QA4BcfDZw3ooI9Hrt9ifz5SaXVfMtvuno=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L+OazS2hU2IOTPnyePAp4b2DSO8j8+1r/eOJGyF4n/zoFATfiCGtO7KTCvwJMyWSzYOh29tp1z2gmIhza/l1TdX7qjOU4FcTwGrbeZmWvrlPaeyPwqv8elDXYhahMr2+vgRXfNWuoQUOmLZz2Q3HbyMxHbK0SzOCaDoX11vvnjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e/7M++5H; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708936281; c=relaxed/simple;
+	bh=Dygiyz1OnjTfaz+BngVouI977noQ0Hft298bDIocTX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qsswAsSMa5znKONs8953bHRcWMDG9lkGmlmU4nzhDgdw5/P5gNZHH1he8GF+z4rpmyv2+apN7OHZJuVQmxbGs/13WS7gRYcgTbS1yytS+jDN7VX1hFx57n8S0WQzNRATUkvGcu+Dzieg6Cg2+dN6VMFrAQCsFisn0DTwD7yWIMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YOGtk9ps; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e/7M++5H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936194; x=1740472194;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vAER6tofN9QA4BcfDZw3ooI9Hrt9ifz5SaXVfMtvuno=;
-  b=e/7M++5HFJq76rr3qLy86biEXqxchkp7+m8gxhNMqXziwRmet0a+fsCy
-   uwWhYYdjswOzd40Tp8VgmBw3E1r2bWYQisQ32uOumDnctDVaqtRoRV6ZO
-   sW7P2lLcBM16Hrv/J4biValdE3BEBMUmI/fSZ10E+CLR8aiUDqCLitHFW
-   59bXFgf8c1qlIczL4mhDvUe3p2iOGZRDyNmHoTKgfwl8bpcDxEmUnSgrJ
-   0LTTn9CFo4oCUgEkJNzTS2ftoUHukJwA+Sy+KBbZhSOqBBDuCqC8SMkzx
-   GMSboVilxO+NVtyv7bkNX9hos6xFcRU6xI2CqktZHYZt8kBy8uxSaOjO2
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14623332"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="14623332"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6519432"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:36 -0800
-From: isaku.yamahata@intel.com
-To: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: isaku.yamahata@intel.com,
-	isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>,
-	Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com,
-	hang.yuan@intel.com,
-	tina.zhang@intel.com
-Subject: [PATCH v8 12/14] KVM: TDX: Implement merge pages into a large page
-Date: Mon, 26 Feb 2024 00:29:26 -0800
-Message-Id: <e8e1d5f5e3be744b3d12a8d447a7494d7933fa9d.1708933624.git.isaku.yamahata@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1708933624.git.isaku.yamahata@intel.com>
-References: <cover.1708933624.git.isaku.yamahata@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YOGtk9ps"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708936278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TfCEbsiS180Pzdnz3BmbeixICS+mxWP3WbokAEMsGb4=;
+	b=YOGtk9psPqfjwRTvtstQ8Jvw8KUYvgopM9O01PygNulUc8MvJMtDg82YwaUdLRzte9L4HD
+	eEi9D5WzQk+abMUf8rpKaxTsS3l4ftq86fh9gwunA3tbFaZCrQXxsdx+4rcfH38e1Diy5C
+	0BXHnSXaRNYJ18ZvY0Kz+6EkfqcyMgM=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-213-vc6YpDizM5692yWiS9WCpA-1; Mon, 26 Feb 2024 03:31:15 -0500
+X-MC-Unique: vc6YpDizM5692yWiS9WCpA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a3ec1d8b1e2so139416666b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 00:31:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708936274; x=1709541074;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TfCEbsiS180Pzdnz3BmbeixICS+mxWP3WbokAEMsGb4=;
+        b=vkb5AzNZV58X542Q9+maR6QwyCyJp1bEeg4XgORJmRi/LC420i0LHETRkMiwn9xjFa
+         QYdC0ukQ6fbpyfB3doG8kfGdGpXIL8ZTqG7nKAM11o/db7Sr6C9qwsywP0G40f/HDPFQ
+         0jRhTvVL1FdNcju+vU1xJ1v3fv+6GzAChWQw1MAjw5706TL0sy9aluQ+yH54+eOiLoeg
+         cwEFL95bZ56oDR+dQ/0whcGLs+YdR0pX6SHax62KVHyM6sQdXUR2stTxmg4EhnuADzM3
+         4bxzfdL6zkrGo6gvaTH4hOdbwcFc7Ih1zIUg6xnmO2V93DN2rtaPtSwjm8ls5UtJVK+M
+         /Orw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8LxoQbw5WKUx+sddN2+lXeyZk8B/jgaLN0/Gw5yxn21Je4nePKkWHjZUSrwEALLkeqlDDCY+QKrve5P5mJBQeHxZTg8RC0WaxnfgA
+X-Gm-Message-State: AOJu0Yz/O/KgB/5H6SQtdB4ndLE6RV8AIcZmk31QqcSpiCO0n3ik4cpO
+	ueQ2xE6IOmobl8ySc+u3SLoG1lL8IpB5d3AgnohS1/H64VfnpVuMS0iE3MSA3y1ctkO26NVrX25
+	M3Ad7Z7te+D9rvS3hL0TEIkiWJexAQ+2ZcnA9U190DqSP1rQFm7jByMjpTlG1Hw==
+X-Received: by 2002:a17:906:a44d:b0:a3d:9a28:52e6 with SMTP id cb13-20020a170906a44d00b00a3d9a2852e6mr4010968ejb.50.1708936274467;
+        Mon, 26 Feb 2024 00:31:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHkiK6ZRARULAZlIUD5UEKkd5/oLyZp7eTkoe/Z67A7OQ0GXsH51rC970dStdoLZ85YatD2eQ==
+X-Received: by 2002:a17:906:a44d:b0:a3d:9a28:52e6 with SMTP id cb13-20020a170906a44d00b00a3d9a2852e6mr4010953ejb.50.1708936274154;
+        Mon, 26 Feb 2024 00:31:14 -0800 (PST)
+Received: from sgarzare-redhat (host-87-11-6-148.retail.telecomitalia.it. [87.11.6.148])
+        by smtp.gmail.com with ESMTPSA id vk3-20020a170907cbc300b00a42fe08081fsm1874734ejc.47.2024.02.26.00.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 00:31:13 -0800 (PST)
+Date: Mon, 26 Feb 2024 09:31:11 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com, 
+	edumazet@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	horms@kernel.org, 
+	"open list:VM SOCKETS (AF_VSOCK)" <virtualization@lists.linux.dev>
+Subject: Re: [PATCH net-next 2/2] net/vsockmon: Do not set zeroed statistics
+Message-ID: <rqyg27a7ukbrg7wz44jqliv3ckl6ub6fnpdcpxsutw3yyczajm@iqzvhw4rqdy6>
+References: <20240223115839.3572852-1-leitao@debian.org>
+ <20240223115839.3572852-2-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20240223115839.3572852-2-leitao@debian.org>
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+On Fri, Feb 23, 2024 at 03:58:38AM -0800, Breno Leitao wrote:
+>Do not set rtnl_link_stats64 fields to zero, since they are zeroed
+>before ops->ndo_get_stats64 is called in core dev_get_stats() function.
+>
+>Signed-off-by: Breno Leitao <leitao@debian.org>
+>---
+> drivers/net/vsockmon.c | 3 ---
+> 1 file changed, 3 deletions(-)
 
-Implement merge_private_stp callback.
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
----
-v7:
-- Fix subject, x86/tdp_mmu => TDX
-- comment: use ulink instead of free for clarity
-
-v6:
-- repeat TDH.MEM.PAGE.PROMOTE() on TDX_INTERRUPTED_RESTARTABLE
-
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
----
- arch/x86/kvm/vmx/tdx.c       | 74 ++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/tdx_arch.h  |  1 +
- arch/x86/kvm/vmx/tdx_errno.h |  2 +
- arch/x86/kvm/vmx/tdx_ops.h   | 11 ++++++
- 4 files changed, 88 insertions(+)
-
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 88af64658a9c..5b4d94a6c6e2 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1674,6 +1674,51 @@ static int tdx_sept_split_private_spt(struct kvm *kvm, gfn_t gfn,
- 	return 0;
- }
- 
-+static int tdx_sept_merge_private_spt(struct kvm *kvm, gfn_t gfn,
-+				      enum pg_level level, void *private_spt)
-+{
-+	int tdx_level = pg_level_to_tdx_sept_level(level);
-+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-+	struct tdx_module_args out;
-+	gpa_t gpa = gfn_to_gpa(gfn) & KVM_HPAGE_MASK(level);
-+	u64 err;
-+
-+	/* See comment in tdx_sept_set_private_spte() */
-+	do {
-+		err = tdh_mem_page_promote(kvm_tdx->tdr_pa, gpa, tdx_level, &out);
-+	} while (err == TDX_INTERRUPTED_RESTARTABLE);
-+	if (unlikely(err == TDX_ERROR_SEPT_BUSY))
-+		return -EAGAIN;
-+	if (unlikely(err == (TDX_EPT_INVALID_PROMOTE_CONDITIONS |
-+			     TDX_OPERAND_ID_RCX)))
-+		/*
-+		 * Some pages are accepted, some pending.  Need to wait for TD
-+		 * to accept all pages.  Tell it the caller.
-+		 */
-+		return -EAGAIN;
-+	if (KVM_BUG_ON(err, kvm)) {
-+		pr_tdx_error(TDH_MEM_PAGE_PROMOTE, err, &out);
-+		return -EIO;
-+	}
-+	WARN_ON_ONCE(out.rcx != __pa(private_spt));
-+
-+	/*
-+	 * TDH.MEM.PAGE.PROMOTE unlinks the Secure-EPT page for the lower level.
-+	 * Flush cache for reuse.
-+	 */
-+	do {
-+		err = tdh_phymem_page_wbinvd(set_hkid_to_hpa(__pa(private_spt),
-+							     to_kvm_tdx(kvm)->hkid));
-+	} while (unlikely(err == (TDX_OPERAND_BUSY | TDX_OPERAND_ID_RCX)));
-+	if (WARN_ON_ONCE(err)) {
-+		pr_tdx_error(TDH_PHYMEM_PAGE_WBINVD, err, NULL);
-+		return -EIO;
-+	}
-+
-+	tdx_clear_page(__pa(private_spt), PAGE_SIZE);
-+	return 0;
-+}
-+
- static int tdx_sept_zap_private_spte(struct kvm *kvm, gfn_t gfn,
- 				      enum pg_level level)
- {
-@@ -1770,6 +1815,33 @@ static void tdx_track(struct kvm *kvm)
- 
- }
- 
-+static int tdx_sept_unzap_private_spte(struct kvm *kvm, gfn_t gfn,
-+				       enum pg_level level)
-+{
-+	int tdx_level = pg_level_to_tdx_sept_level(level);
-+	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-+	gpa_t gpa = gfn_to_gpa(gfn) & KVM_HPAGE_MASK(level);
-+	struct tdx_module_args out;
-+	u64 err;
-+
-+	do {
-+		err = tdh_mem_range_unblock(kvm_tdx->tdr_pa, gpa, tdx_level, &out);
-+
-+		/*
-+		 * tdh_mem_range_block() is accompanied with tdx_track() via kvm
-+		 * remote tlb flush.  Wait for the caller of
-+		 * tdh_mem_range_block() to complete TDX track.
-+		 */
-+	} while (err == (TDX_TLB_TRACKING_NOT_DONE | TDX_OPERAND_ID_SEPT));
-+	if (unlikely(err == TDX_ERROR_SEPT_BUSY))
-+		return -EAGAIN;
-+	if (KVM_BUG_ON(err, kvm)) {
-+		pr_tdx_error(TDH_MEM_RANGE_UNBLOCK, err, &out);
-+		return -EIO;
-+	}
-+	return 0;
-+}
-+
- static int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
- 				     enum pg_level level, void *private_spt)
- {
-@@ -3331,9 +3403,11 @@ int __init tdx_hardware_setup(struct kvm_x86_ops *x86_ops)
- 	x86_ops->link_private_spt = tdx_sept_link_private_spt;
- 	x86_ops->free_private_spt = tdx_sept_free_private_spt;
- 	x86_ops->split_private_spt = tdx_sept_split_private_spt;
-+	x86_ops->merge_private_spt = tdx_sept_merge_private_spt;
- 	x86_ops->set_private_spte = tdx_sept_set_private_spte;
- 	x86_ops->remove_private_spte = tdx_sept_remove_private_spte;
- 	x86_ops->zap_private_spte = tdx_sept_zap_private_spte;
-+	x86_ops->unzap_private_spte = tdx_sept_unzap_private_spte;
- 
- 	return 0;
- 
-diff --git a/arch/x86/kvm/vmx/tdx_arch.h b/arch/x86/kvm/vmx/tdx_arch.h
-index bb324f744bbf..a320f6d45731 100644
---- a/arch/x86/kvm/vmx/tdx_arch.h
-+++ b/arch/x86/kvm/vmx/tdx_arch.h
-@@ -29,6 +29,7 @@
- #define TDH_MNG_KEY_FREEID		20
- #define TDH_MNG_INIT			21
- #define TDH_VP_INIT			22
-+#define TDH_MEM_PAGE_PROMOTE		23
- #define TDH_MEM_SEPT_RD			25
- #define TDH_VP_RD			26
- #define TDH_MNG_KEY_RECLAIMID		27
-diff --git a/arch/x86/kvm/vmx/tdx_errno.h b/arch/x86/kvm/vmx/tdx_errno.h
-index 416708e6cbb7..799d7166e69a 100644
---- a/arch/x86/kvm/vmx/tdx_errno.h
-+++ b/arch/x86/kvm/vmx/tdx_errno.h
-@@ -21,6 +21,8 @@
- #define TDX_KEY_CONFIGURED			0x0000081500000000ULL
- #define TDX_NO_HKID_READY_TO_WBCACHE		0x0000082100000000ULL
- #define TDX_FLUSHVP_NOT_DONE			0x8000082400000000ULL
-+#define TDX_TLB_TRACKING_NOT_DONE		0xC0000B0800000000ULL
-+#define TDX_EPT_INVALID_PROMOTE_CONDITIONS	0xC0000B0900000000ULL
- #define TDX_EPT_ENTRY_STATE_INCORRECT		0xC0000B0D00000000ULL
- 
- /*
-diff --git a/arch/x86/kvm/vmx/tdx_ops.h b/arch/x86/kvm/vmx/tdx_ops.h
-index d8f0d9aa7439..bf660eefa9e0 100644
---- a/arch/x86/kvm/vmx/tdx_ops.h
-+++ b/arch/x86/kvm/vmx/tdx_ops.h
-@@ -254,6 +254,17 @@ static inline u64 tdh_mem_page_demote(hpa_t tdr, gpa_t gpa, int level, hpa_t pag
- 	return tdx_seamcall_sept(TDH_MEM_PAGE_DEMOTE, &in, out);
- }
- 
-+static inline u64 tdh_mem_page_promote(hpa_t tdr, gpa_t gpa, int level,
-+				       struct tdx_module_args *out)
-+{
-+	struct tdx_module_args in = {
-+		.rcx = gpa | level,
-+		.rdx = tdr,
-+	};
-+
-+	return tdx_seamcall_sept(TDH_MEM_PAGE_PROMOTE, &in, out);
-+}
-+
- static inline u64 tdh_mr_extend(hpa_t tdr, gpa_t gpa,
- 				struct tdx_module_args *out)
- {
--- 
-2.25.1
+>
+>diff --git a/drivers/net/vsockmon.c b/drivers/net/vsockmon.c
+>index a0b4dca36baf..a1ba5169ed5d 100644
+>--- a/drivers/net/vsockmon.c
+>+++ b/drivers/net/vsockmon.c
+>@@ -46,9 +46,6 @@ static void
+> vsockmon_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
+> {
+> 	dev_lstats_read(dev, &stats->rx_packets, &stats->rx_bytes);
+>-
+>-	stats->tx_packets = 0;
+>-	stats->tx_bytes = 0;
+> }
+>
+> static int vsockmon_is_valid_mtu(int new_mtu)
+>-- 
+>2.39.3
+>
 
