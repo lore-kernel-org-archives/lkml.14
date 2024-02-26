@@ -1,174 +1,173 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E0F4EB42;
-	Mon, 26 Feb 2024 10:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B831F51C54
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944588; cv=none; b=EJqqaXLkKMMTD4XjZzJ1bQZoFvRfSRivU35/OTyAYPRFuqfZxkBSa3jE8zz876fwYnEOvpsPU3TQOgnStI3RCHgAD12UrZKngLkHbtN88oE4oVrpFXW8JxhyKLpdM8t4ofzZfLZaXU5Z7RrK4I5IJNKrd+2YXaZcjrpM8AL+Cy8=
+	t=1708944593; cv=none; b=s7Ff+rQfiK4YUT3B5uFqewbt1R54McUdukKSssQ6wHoyxRezmXQslETc23nsCUB9xEARrFe6urbOM+CESVUEJS2QZw+Kihv5E+aQtFCMyakvDZVijHc3XcxUA74ix6enq7kGMDRFXNNr2UgjZ/Y78UbngA0xqN2IKM5rmg18rME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944588; c=relaxed/simple;
-	bh=iKYO2rG3BTMKt5WCaCdwZY//PQVAlVNZ1d+5MI+Gots=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=mpreVKiaYq6Dvo9Gv1gLpJf61F2jCyGeTRXuYcVn06auiXlL/ze1J6z0OCkPcsTSp3cXHGhL5FpO7V4r29i2eRBsTgF+/YUCJYQTZYl0DEb9BjcyoqlyfasmULpX5OSTjyoCzB3GZkVmMsmrLhHQky4KRYSdMLhK7z20CZGZMt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=vg/JvPWp; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1708944593; c=relaxed/simple;
+	bh=xBvZMepYm7Nn/S7XM6PeWCm3/cfRN3K0c7tROTXKYAU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oJqMFqv72H7cVId0DrHeCflptkfSSvoXBAIxHlir/sJsfKAsA83Sqat8m9P2szcDJyOWykHvt3aq3rUrsj7cjXtBKcsUYrj0s7S063ASmy777M7IhWfTo77o5x4BztUsrvEN+1Cp0KuiONPpbKWUAajBHScBcHVYTWt9BsHhKl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K07X0JnP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="vg/JvPWp"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41QALKTN025578;
-	Mon, 26 Feb 2024 11:49:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=selector1; bh=DnsKquutEGOQewPoi6J/BDbXg1mh4kqRqxYNbt4LG2M
-	=; b=vg/JvPWpPfkIqrTHKtz4t+wPErcR6jikhRiL2G1usxocAEZ/05pboKOLv6Q
-	L9k+yDZ9P/MxflXqOFwMvX0jHKngqpVqjhIhVzGDAucbhcReVXQ+Mn1HnounBVEt
-	mmCWNF02BdWrTRoq/CkmMfi34ILQZXq0WXleb8/oYxMlD/y+62DmXItx6y1vNQw4
-	knrxBbRG3XzNVlXB8fpjnvcxhsGOSRv+70Q33zy6GNT374h4CTErRMyRr2OaGpbp
-	k8dhkcWhWa5Rerlx2J6ir1zdEgxCrYhjUTZbM/kGhfp8FHxe+ezOpnGEsoiqT1CD
-	774mt9+FwohuYrNL3Gy/ZXrQJLQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3wf8p26kne-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 11:49:24 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4476F40044;
-	Mon, 26 Feb 2024 11:49:12 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9683B266D12;
-	Mon, 26 Feb 2024 11:48:10 +0100 (CET)
-Received: from localhost (10.252.9.163) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 26 Feb
- 2024 11:48:10 +0100
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-Date: Mon, 26 Feb 2024 11:48:07 +0100
-Subject: [PATCH v6 3/3] drm/stm: ltdc: add lvds pixel clock
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K07X0JnP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708944590;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zLsQE+aQgJssDnfahlpKah+vS9VVX8IFDY4R5ijqCjA=;
+	b=K07X0JnP+b+pwOTjCi++TEtwR5u27fF0H4gs5/LZucRMjvqhuI4O4b5w3w4cdHgKYxfP2T
+	UjEkFjeGbvDnNoOQw7BWVydoX0+biRcve7wST1UjmcaHHpvj9Gb1GIvyshnTe6W7kzuvAt
+	4y+fi9K3shUCHp1qFtXa9ncq2rgL+Uc=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-252-eiNG2G99OxqyWnkoQSQ7mg-1; Mon, 26 Feb 2024 05:49:49 -0500
+X-MC-Unique: eiNG2G99OxqyWnkoQSQ7mg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a438a8b3a82so1558366b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:49:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708944588; x=1709549388;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zLsQE+aQgJssDnfahlpKah+vS9VVX8IFDY4R5ijqCjA=;
+        b=IVzjA4EMB/mcP1bu5IquzEbA/2x7Ru19KYqY+2ijYiHVyoUk8g3sjcdNNE4oym/8RV
+         6aZ46EKJM307Y/A8xCcak2TSnksFgPMJ9Z2tQ9z2i7Etss5NoGQBZTh092OAtQeOIqKL
+         fybQSVy3xxoc9RIHlSUu+eCYBbBV8vE+pXLvqH2HIZQeXfiizv4I5T8HVnXgQSpWVTcp
+         5ZMMNF4EWfYZZeX91FVttX+RFcktHwnDUVafyS425812sIiHrjP+oGD5kughNtxbJAzz
+         YR9BPCPprZlUu2sVpjXwBgQRA6HqM47/LMAVNi8NlaCWvXz1smN0Y+6VHtehesAER6C8
+         PcgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPOGvrjO2OsIfY/Gj9AQDaAbAzScl9m4GpSDCX82h6N9PZ+5fg4wzQdUwVZq1Koee8+EftZZsEpYFUiEpkMrFWIbZL/TgnrQQhGOwf
+X-Gm-Message-State: AOJu0YxhNqmJSDSYpm0QiaJhu63SmZ0tg1BlxtYBQldQIgzBHBTsm1kR
+	xZAqvGYOJHviPL8nRQ7hmGch4kPyQDjqKQf6rEuTDID9dn762TNZeEPkfHGirsixGfUYeGHIp7E
+	NShqVmlEiLYyvH+TRsp+fBCJJiBMSbvojvlDns8K03IIcxZm4vZ9K/BS4ofK3/Q==
+X-Received: by 2002:a17:906:796:b0:a40:2994:723d with SMTP id l22-20020a170906079600b00a402994723dmr4709308ejc.14.1708944588117;
+        Mon, 26 Feb 2024 02:49:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFKyU3LFE+SgMH8QDE7z68a7X6R3AF+gQJk2X59d10p2Lq6yuPldRKNWCz1SQ3UGbriyeOf9g==
+X-Received: by 2002:a17:906:796:b0:a40:2994:723d with SMTP id l22-20020a170906079600b00a402994723dmr4709300ejc.14.1708944587789;
+        Mon, 26 Feb 2024 02:49:47 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id rf14-20020a1709076a0e00b00a4339b8b1bbsm1143238ejc.212.2024.02.26.02.49.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 02:49:47 -0800 (PST)
+Message-ID: <3a641698-a0eb-4335-932a-2f0ae73dab44@redhat.com>
+Date: Mon, 26 Feb 2024 11:49:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] platform/mellanox: mlxbf-pmc: Ignore unsupported
+ performance blocks
+Content-Language: en-US
+To: Luiz Capitulino <luizcap@redhat.com>, ilpo.jarvinen@linux.intel.com,
+ shravankr@nvidia.com
+Cc: davthompson@nvidia.com, ndalvi@redhat.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <cover.1708635408.git.luizcap@redhat.com>
+ <f8e2e6210b43e825b69824b420c801cd513d401d.1708635408.git.luizcap@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <f8e2e6210b43e825b69824b420c801cd513d401d.1708635408.git.luizcap@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240226-lvds-v6-3-15e3463fbe70@foss.st.com>
-References: <20240226-lvds-v6-0-15e3463fbe70@foss.st.com>
-In-Reply-To: <20240226-lvds-v6-0-15e3463fbe70@foss.st.com>
-To: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Yannick Fertre <yannick.fertre@foss.st.com>,
-        Philippe Cornu <philippe.cornu@foss.st.com>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-X-Mailer: b4 0.12.4
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_07,2024-02-26_01,2023-05-22_02
 
-The STM32MP25x display subsystem presents a mux which feeds the loopback
-pixel clock of the current bridge in use into the LTDC. This mux is only
-accessible through sysconfig registers which is not yet available in the
-STM32MP25x common clock framework.
+Hi,
 
-While waiting for a complete update of the clock framework, this would
-allow to use the LVDS.
+On 2/22/24 21:57, Luiz Capitulino wrote:
+> Currently, the driver has two behaviors to deal with new & unsupported
+> performance blocks reported by the firmware:
+> 
+>  1. For register and unknown block types, the driver will fail to load
+>     with the following error message:
+> 
+>     [ 4510.956369] mlxbf-pmc: probe of MLNXBFD2:00 failed with error -22
+> 
+>  2. For counter and crspace blocks, the driver will load and sysfs files
+>     will be created but getting the contents of event_list or trying to
+>     setup the counter will fail
+> 
+> Instead, let's ignore and log unsupported blocks. This means the driver
+> will always load and unsupported blocks will never show up in sysfs.
+> 
+> Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
 
-Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-Signed-off-by: Yannick Fertre <yannick.fertre@foss.st.com>
----
-Changes in v2:
-	- Fixed my address
-	- Fixed smatch warning
----
- drivers/gpu/drm/stm/ltdc.c | 19 +++++++++++++++++++
- drivers/gpu/drm/stm/ltdc.h |  1 +
- 2 files changed, 20 insertions(+)
+Thanks, patch looks good to me:
 
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index 5576fdae4962..23011a8913bd 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -838,6 +838,12 @@ ltdc_crtc_mode_valid(struct drm_crtc *crtc,
- 	int target_max = target + CLK_TOLERANCE_HZ;
- 	int result;
- 
-+	if (ldev->lvds_clk) {
-+		result = clk_round_rate(ldev->lvds_clk, target);
-+		DRM_DEBUG_DRIVER("lvds pixclk rate target %d, available %d\n",
-+				 target, result);
-+	}
-+
- 	result = clk_round_rate(ldev->pixel_clk, target);
- 
- 	DRM_DEBUG_DRIVER("clk rate target %d, available %d\n", target, result);
-@@ -1896,6 +1902,8 @@ void ltdc_suspend(struct drm_device *ddev)
- 
- 	DRM_DEBUG_DRIVER("\n");
- 	clk_disable_unprepare(ldev->pixel_clk);
-+	if (ldev->lvds_clk)
-+		clk_disable_unprepare(ldev->lvds_clk);
- }
- 
- int ltdc_resume(struct drm_device *ddev)
-@@ -1910,6 +1918,13 @@ int ltdc_resume(struct drm_device *ddev)
- 		DRM_ERROR("failed to enable pixel clock (%d)\n", ret);
- 		return ret;
- 	}
-+	if (ldev->lvds_clk) {
-+		if (clk_prepare_enable(ldev->lvds_clk)) {
-+			clk_disable_unprepare(ldev->pixel_clk);
-+			DRM_ERROR("Unable to prepare lvds clock\n");
-+			return -ENODEV;
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -1981,6 +1996,10 @@ int ltdc_load(struct drm_device *ddev)
- 		}
- 	}
- 
-+	ldev->lvds_clk = devm_clk_get(dev, "lvds");
-+	if (IS_ERR(ldev->lvds_clk))
-+		ldev->lvds_clk = NULL;
-+
- 	rstc = devm_reset_control_get_exclusive(dev, NULL);
- 
- 	mutex_init(&ldev->err_lock);
-diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
-index 9d488043ffdb..4a60ce5b610c 100644
---- a/drivers/gpu/drm/stm/ltdc.h
-+++ b/drivers/gpu/drm/stm/ltdc.h
-@@ -44,6 +44,7 @@ struct ltdc_device {
- 	void __iomem *regs;
- 	struct regmap *regmap;
- 	struct clk *pixel_clk;	/* lcd pixel clock */
-+	struct clk *lvds_clk;	/* lvds pixel clock */
- 	struct mutex err_lock;	/* protecting error_status */
- 	struct ltdc_caps caps;
- 	u32 irq_status;
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
--- 
-2.25.1
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/platform/mellanox/mlxbf-pmc.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+> index b71636eb3db1..746567767e5b 100644
+> --- a/drivers/platform/mellanox/mlxbf-pmc.c
+> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
+> @@ -1043,6 +1043,11 @@ static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk, size
+>  	return events;
+>  }
+>  
+> +static bool mlxbf_pmc_event_supported(const char *blk)
+> +{
+> +	return !!mlxbf_pmc_event_list(blk, NULL);
+> +}
+> +
+>  /* Get the event number given the name */
+>  static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
+>  {
+> @@ -1761,6 +1766,9 @@ static int mlxbf_pmc_init_perftype_counter(struct device *dev, unsigned int blk_
+>  	struct mlxbf_pmc_attribute *attr;
+>  	unsigned int i = 0, j = 0;
+>  
+> +	if (!mlxbf_pmc_event_supported(pmc->block_name[blk_num]))
+> +		return -ENOENT;
+> +
+>  	/* "event_list" sysfs to list events supported by the block */
+>  	attr = &pmc->block[blk_num].attr_event_list;
+>  	attr->dev_attr.attr.mode = 0444;
+> @@ -1840,7 +1848,7 @@ static int mlxbf_pmc_init_perftype_reg(struct device *dev, unsigned int blk_num)
+>  
+>  	events = mlxbf_pmc_event_list(pmc->block_name[blk_num], &count);
+>  	if (!events)
+> -		return -EINVAL;
+> +		return -ENOENT;
+>  
+>  	pmc->block[blk_num].attr_event = devm_kcalloc(
+>  		dev, count, sizeof(struct mlxbf_pmc_attribute), GFP_KERNEL);
+> @@ -1878,7 +1886,7 @@ static int mlxbf_pmc_create_groups(struct device *dev, unsigned int blk_num)
+>  	else if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_REGISTER)
+>  		err = mlxbf_pmc_init_perftype_reg(dev, blk_num);
+>  	else
+> -		err = -EINVAL;
+> +		err = -ENOENT;
+>  
+>  	if (err)
+>  		return err;
+> @@ -1983,6 +1991,10 @@ static int mlxbf_pmc_map_counters(struct device *dev)
+>  			return -ENOMEM;
+>  
+>  		ret = mlxbf_pmc_create_groups(dev, i);
+> +		if (ret == -ENOENT) {
+> +			dev_warn(dev, "ignoring unsupported block: '%s'\n", pmc->block_name[i]);
+> +			continue;
+> +		}
+>  		if (ret)
+>  			return ret;
+>  	}
 
