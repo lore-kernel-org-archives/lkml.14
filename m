@@ -1,214 +1,127 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5487D605AD
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8305604DA
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 12:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708950443; cv=none; b=NT/PzUIJwFLRv4mXu0AfFd6u/sg/D+km1K0/VF1sGAI+60NfigmlRcomCyoA02Inv29yhFyKs9w/w2fg3zRKSG/JRDa4dEvcGSGeLKyijOZUiCoTJcy/72IFh6tExV8sLcj1AYi1EMMekXmzs7Cb0V/+s1TZ9RFywm2HOQZqpfM=
+	t=1708950468; cv=none; b=j3GZQXw9UEvhwteDtUDXk4v0Ndvq6JX4lQuoYmkB4ooLQABsOFWxMBbr128p7jy0MP1FN4J2cjQQCSLh9IbuF3YrCtF0CGmz1KDvVra8E+0h61w15914uDWpEEhMTMZcQyl32uD3+t1b6HKnvx7aU1Fg1d95aqQhy0clYD3UiQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708950443; c=relaxed/simple;
-	bh=MnH2zzUiBpWHT2hKic62kcd5bAVn2S8JMO/2jTnLU58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nWP74HqixJGa02smt0hZeH71kBdobfISElFwgEQ7Rk+/Gw7JgdFssLDnkP8K3GegrqZfTpFdaBlVFujdymDUNechNCVJoChFV0XVPrXHRmUPwOlR03u8j89FvHaFOb3h4PzXQjZ3aq583enNYIHw4LIzpO5V1KtnqmqD3Tsenls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rea4U-0003lf-Nu; Mon, 26 Feb 2024 13:27:02 +0100
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rea4T-002zWT-As; Mon, 26 Feb 2024 13:27:01 +0100
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1rea4T-0095RZ-0l;
-	Mon, 26 Feb 2024 13:27:01 +0100
-Date: Mon, 26 Feb 2024 13:27:01 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux@roeck-us.net, jun.li@nxp.com, devicetree@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH v3 4/4] usb: typec: tcpci: add support to set connector
- orientation
-Message-ID: <20240226122701.inqpodm6mdfxwjo2@pengutronix.de>
-References: <20240222210903.208901-1-m.felsch@pengutronix.de>
- <20240222210903.208901-5-m.felsch@pengutronix.de>
- <ZdxII9W/CBx76Xai@kuha.fi.intel.com>
+	s=arc-20240116; t=1708950468; c=relaxed/simple;
+	bh=BHKUodbD8Bj5QFPxPd50B2p1oIY5ll5UwHoPYKL3J7Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BW+xfpQSoFpG6QL3kQ488KBAjGfN+0PbW+LVwEsHnkHTlwO4ZcNgDL2cTel2MHFa6E4Q7ngGynOlMDYS2cha+u/sA9GcCDC8YTLnDQbfi9vuBOvh690nIDERHEqgETLkfYE+1LdX/iwlr2q3hEIcEgXnWlC+XfzhQ1EAW84dmZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Djy+2Vc6; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Djy+2Vc6"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7c48fc56752so94554239f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 04:27:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708950466; x=1709555266; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z/faix5We06aG7AM987K0dvt+ZyZCoD81fzNbsR727U=;
+        b=Djy+2Vc60+NAKyfpSMm1C7AK5j8VqvBGvSNfTe/JtNXZ1ePe9a7IAVky79Ocgb+MPj
+         ruDHDCHTzZ2sQ4x1glFaM2TP6pQTKCGnvUgOcUUB5E5BHF3PKbtIqIEUupBy8EgCccpj
+         ug1mMbxgzcLO+g2Rj1OE4mLSaiX9OZx/DzHYO2Zwe2q2K8mlNEbL/h/HiRd9v7l9NmIA
+         uD3An6A2Et8EvvnRyAhqq7Hq75/9glICzCkUpmoXj6qTx1PokVG2K+eqUuoUpwe/rljE
+         s+XzdfjHsKZhC6KNrFtPVdDYV3XDed/w0ybbnoVc5eD8/I7PSwoNfq+2eSkM7mJSREyn
+         bqFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708950466; x=1709555266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z/faix5We06aG7AM987K0dvt+ZyZCoD81fzNbsR727U=;
+        b=hQMxqvMLgsXwuKAU7ETRl6gAxcQPmXaAh9ATBEGxrhly++h0PccKuH+WBil9oqfMhN
+         zNZGJZc00Hsqbv3+dnZn+/Ce7RSuQBVcSuEPkl7sF0Z5EBSOcV+PoJEWFNbI1zH5kFiT
+         kayX9z4lOOtgONZFPmgfZP5HBm2de92mTykiMkvjl8WmYshB/AFY91v5G/8sdQUT/Z8e
+         H2LWzVFVM5/J8lmbx2joA7jErIrRJjvYFGYwYtOx1pGAO+LwjPcN5qq6NYKyO6QrSwnX
+         asFKAQqSrRE7WZSjuZKwql5k+xYUuxjfx6dP2SaRHF1OCitthYYnLu7aeihV5tLv9JBB
+         NYLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfiQrg4Jj2FPurShPl2LMsG0pWpjk9HWOg12TTCGUBK1ln0So9fngzbE3GgKO1DGm7zIAhSOCGnvSwGk7mXAKfsiHJegh3GRDls75d
+X-Gm-Message-State: AOJu0YyRs9pTkFd6u+vVEJS3ZMuRDJWW/uF8da8SkFLF2CLrdZ5scSLy
+	SoOOx8rLmz3qrta13iPPeUBai8T7o6ok5bvjYwqHZe2BkWAUCV2BFnaluxSHn2m19OFED2qI4o/
+	lxjvtlJYNH/wimSI//sLVHgzBfhc7rXTYTvfN
+X-Google-Smtp-Source: AGHT+IGbzgYpilRjkDEnKbvgS5UZhDNoI1XMbPezAG50YHRpmOYcGoysSkihTQvNaJRrC7lL2YXgrI5ogNuUIHDGx2E=
+X-Received: by 2002:a05:6602:3413:b0:7c7:bbfd:d843 with SMTP id
+ n19-20020a056602341300b007c7bbfdd843mr5675422ioz.19.1708950466041; Mon, 26
+ Feb 2024 04:27:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZdxII9W/CBx76Xai@kuha.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20240221160215.484151-1-panikiel@google.com> <20240221160215.484151-10-panikiel@google.com>
+ <310cefcb-a4d5-4f4f-a482-ba2ff08a57f6@linaro.org> <CAM5zL5rQsYuo3+rW9+YPmvUg9PtNiR0Dy59e8Kf787ranfLh3Q@mail.gmail.com>
+ <e2ae7bfc-fb51-4a60-bb52-c6ccca7a4189@linaro.org>
+In-Reply-To: <e2ae7bfc-fb51-4a60-bb52-c6ccca7a4189@linaro.org>
+From: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>
+Date: Mon, 26 Feb 2024 13:27:35 +0100
+Message-ID: <CAM5zL5pz0K5ro4-UjiYojM4h9Lqo_af5ZmH1FoZ_ajde_3+Dcg@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] ARM: dts: chameleonv3: Add video device nodes
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org, 
+	daniel@ffwll.ch, dinguyen@kernel.org, hverkuil-cisco@xs4all.nl, 
+	krzysztof.kozlowski+dt@linaro.org, maarten.lankhorst@linux.intel.com, 
+	mchehab@kernel.org, mripard@kernel.org, robh+dt@kernel.org, 
+	tzimmermann@suse.de, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, chromeos-krk-upstreaming@google.com, 
+	ribalda@chromium.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Feb 26, 2024 at 1:07=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 26/02/2024 12:09, Pawe=C5=82 Anikiel wrote:
+> > On Mon, Feb 26, 2024 at 10:15=E2=80=AFAM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >>
+> >> On 21/02/2024 17:02, Pawe=C5=82 Anikiel wrote:
+> >>> Add device nodes for the video system present on the Chameleon v3.
+> >>> It consists of six framebuffers and two Intel Displayport receivers.
+> >>>
+> >>> Signed-off-by: Pawe=C5=82 Anikiel <panikiel@google.com>
+> >>> ---
+> >>
+> >> ...
+> >>
+> >>> +             dprx_sst: dp-receiver@c0064000 {
+> >>> +                     compatible =3D "intel,dprx-20.0.1";
+> >>> +                     reg =3D <0xc0064000 0x800>;
+> >>> +                     interrupt-parent =3D <&dprx_sst_irq>;
+> >>> +                     interrupts =3D <0 IRQ_TYPE_EDGE_RISING>;
+> >>> +                     intel,max-link-rate =3D <0x1e>;
+> >>
+> >> Rate is not in hex! Rate is in Hz, at least usually...
+> >>
+> >> Fix your bindings...
+> >
+> > This is the DisplayPort link rate, for which the allowed values are
+> > 8.1 Gbps, 5.4 Gbps, 2.7 Gbps, or 1.62 Gbps. The standard way to encode
+> > them (used in the DisplayPort DPCD registers and this device's
+>
+> Then it is in bps or some other units:
+>
+> https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pr=
+operty-units.yaml
+>
+> > configuration) is by multiples of 0.27Gbps. This value (AFAIK) is
+> > usually represented in hex, so 8.1Gbps would be 0x1e.
+>
+> No, the value is represented in logical units. Frequency in Hz. Rate in
+> bps/kbps/etc. Voltage in volts.
 
-On 24-02-26, Heikki Krogerus wrote:
-> On Thu, Feb 22, 2024 at 10:09:03PM +0100, Marco Felsch wrote:
-> > This add the support to set the optional connector orientation bit which
-> > is part of the optional CONFIG_STANDARD_OUTPUT register 0x18 [1]. This
-> > allows system designers to connect the tcpc orientation pin directly to
-> > the 2:1 ss-mux.
-> > 
-> > [1] https://www.usb.org/sites/default/files/documents/usb-port_controller_specification_rev2.0_v1.0_0.pdf
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> > v3:
-> > - no changes
-> > v2:
-> > - Make use of fallthrough 
-> > 
-> >  drivers/usb/typec/tcpm/tcpci.c | 44 ++++++++++++++++++++++++++++++++++
-> >  include/linux/usb/tcpci.h      |  8 +++++++
-> >  2 files changed, 52 insertions(+)
-> > 
-> > diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-> > index 7118551827f6..73a52e7f95c2 100644
-> > --- a/drivers/usb/typec/tcpm/tcpci.c
-> > +++ b/drivers/usb/typec/tcpm/tcpci.c
-> > @@ -67,6 +67,18 @@ static int tcpci_write16(struct tcpci *tcpci, unsigned int reg, u16 val)
-> >  	return regmap_raw_write(tcpci->regmap, reg, &val, sizeof(u16));
-> >  }
-> >  
-> > +static bool tcpci_check_std_output_cap(struct regmap *regmap, u8 mask)
-> > +{
-> > +	unsigned int reg;
-> > +	int ret;
-> > +
-> > +	ret = regmap_read(regmap, TCPC_STD_OUTPUT_CAP, &reg);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return (reg & mask) == mask;
-> > +}
-> > +
-> >  static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
-> >  {
-> >  	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> > @@ -301,6 +313,28 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
-> >  			   TCPC_TCPC_CTRL_ORIENTATION : 0);
-> >  }
-> >  
-> > +static int tcpci_set_orientation(struct tcpc_dev *tcpc,
-> > +				 enum typec_orientation orientation)
-> > +{
-> > +	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> > +	unsigned int reg;
-> > +
-> > +	switch (orientation) {
-> > +	case TYPEC_ORIENTATION_NONE:
-> > +		/* We can't put a single output into high impedance */
-> > +		fallthrough;
-> > +	case TYPEC_ORIENTATION_NORMAL:
-> > +		reg = TCPC_CONFIG_STD_OUTPUT_ORIENTATION_NORMAL;
-> > +		break;
-> > +	case TYPEC_ORIENTATION_REVERSE:
-> > +		reg = TCPC_CONFIG_STD_OUTPUT_ORIENTATION_FLIPPED;
-> > +		break;
-> > +	}
-> > +
-> > +	return regmap_update_bits(tcpci->regmap, TCPC_CONFIG_STD_OUTPUT,
-> > +				  TCPC_CONFIG_STD_OUTPUT_ORIENTATION_MASK, reg);
-> > +}
-> > +
-> >  static void tcpci_set_partner_usb_comm_capable(struct tcpc_dev *tcpc, bool capable)
-> >  {
-> >  	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> > @@ -808,6 +842,9 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
-> >  	if (tcpci->data->vbus_vsafe0v)
-> >  		tcpci->tcpc.is_vbus_vsafe0v = tcpci_is_vbus_vsafe0v;
-> >  
-> > +	if (tcpci->data->set_orientation)
-> > +		tcpci->tcpc.set_orientation = tcpci_set_orientation;
-> 
-> I don't think that flag is needed - not yet at least. Please just call
-> tcpci_check_std_output_cap() directly from here.
+Okay, thanks for the info. So if I understand correctly, the max link
+rate should be represented in bps in the devicetree, and then be
+converted to the per 0.27Gbps value by the driver?
 
-The reason for having it this way was to not break exsisting user like:
-tcpci_rt1711h, tcpci_mt6370, tcpci_maxim which may or may not implement
-the TCPC_STD_OUTPUT_CAP_ORIENTATION. This way the users of
-tcpci_register_port() can decide by on its own if they do have this
-feature or not and how this is checked. I'm fine with your proposal if
-you still think that we can check this unconditional.
-
-Regards,
-  Marco
-
-> >  	err = tcpci_parse_config(tcpci);
-> >  	if (err < 0)
-> >  		return ERR_PTR(err);
-> > @@ -851,6 +888,13 @@ static int tcpci_probe(struct i2c_client *client)
-> >  	if (err < 0)
-> >  		return err;
-> >  
-> > +	err = tcpci_check_std_output_cap(chip->data.regmap,
-> > +					 TCPC_STD_OUTPUT_CAP_ORIENTATION);
-> > +	if (err < 0)
-> > +		return err;
-> > +
-> > +	chip->data.set_orientation = err;
-> > +
-> >  	chip->tcpci = tcpci_register_port(&client->dev, &chip->data);
-> >  	if (IS_ERR(chip->tcpci))
-> >  		return PTR_ERR(chip->tcpci);
-> > diff --git a/include/linux/usb/tcpci.h b/include/linux/usb/tcpci.h
-> > index 467e8045e9f8..f2bfb4250366 100644
-> > --- a/include/linux/usb/tcpci.h
-> > +++ b/include/linux/usb/tcpci.h
-> > @@ -47,6 +47,9 @@
-> >  #define TCPC_SINK_FAST_ROLE_SWAP	BIT(0)
-> >  
-> >  #define TCPC_CONFIG_STD_OUTPUT		0x18
-> > +#define TCPC_CONFIG_STD_OUTPUT_ORIENTATION_MASK		BIT(0)
-> > +#define TCPC_CONFIG_STD_OUTPUT_ORIENTATION_NORMAL	0
-> > +#define TCPC_CONFIG_STD_OUTPUT_ORIENTATION_FLIPPED	1
-> >  
-> >  #define TCPC_TCPC_CTRL			0x19
-> >  #define TCPC_TCPC_CTRL_ORIENTATION	BIT(0)
-> > @@ -127,6 +130,7 @@
-> >  #define TCPC_DEV_CAP_2			0x26
-> >  #define TCPC_STD_INPUT_CAP		0x28
-> >  #define TCPC_STD_OUTPUT_CAP		0x29
-> > +#define TCPC_STD_OUTPUT_CAP_ORIENTATION	BIT(0)
-> >  
-> >  #define TCPC_MSG_HDR_INFO		0x2e
-> >  #define TCPC_MSG_HDR_INFO_DATA_ROLE	BIT(3)
-> > @@ -198,12 +202,16 @@ struct tcpci;
-> >   *		Chip level drivers are expected to check for contaminant and call
-> >   *		tcpm_clean_port when the port is clean to put the port back into
-> >   *		toggling state.
-> > + * @set_orientation:
-> > + *		Optional; Enable setting the connector orientation
-> > + *		CONFIG_STANDARD_OUTPUT (0x18) bit0.
-> >   */
-> >  struct tcpci_data {
-> >  	struct regmap *regmap;
-> >  	unsigned char TX_BUF_BYTE_x_hidden:1;
-> >  	unsigned char auto_discharge_disconnect:1;
-> >  	unsigned char vbus_vsafe0v:1;
-> > +	unsigned char set_orientation:1;
-> >  
-> >  	int (*init)(struct tcpci *tcpci, struct tcpci_data *data);
-> >  	int (*set_vconn)(struct tcpci *tcpci, struct tcpci_data *data,
-> > -- 
-> > 2.39.2
-> 
-> -- 
-> heikki
-> 
+One problem is that the values here are too large to be represented in
+bps (since the datatype is uint32). Can the property be in Mbps
+instead?
