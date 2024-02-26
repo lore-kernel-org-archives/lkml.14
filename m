@@ -1,110 +1,106 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E1512F586;
-	Mon, 26 Feb 2024 19:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A6122069
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 19:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708975783; cv=none; b=gw5rrnjeh6+picChpEVaxjWq7KSh6Hff5IrAu4JxxqLxn01+GV1iyt/+5AhumuXJHBelq7jX6OGd4jZxXMKSi/oigfvoTl6lNYq8igdvvyZu3wS4FYwlMsQ1fgWEn8EcNqyusAuGCruMfWdBgGoPebb3ed3ZOuHakPME24GUr6s=
+	t=1708976080; cv=none; b=BybV9EiGiqeq7zagbmcKpBVDmGAQLFiMckEgRVsSjpjnyW00GyJDUcCp5TA9wne7vG/FbtOLhFoISoflw0YdHi5RDCkFLgLAcJ9C2597bMMAo1zebJxOFvEn6kcjbPS0SdKHkVzlv7go88JaZ8XFS9l7JEqEt+BwZmT2rTUTGoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708975783; c=relaxed/simple;
-	bh=Zs+IbvV7d0hitWb7oIpv8aJWVlfPLjA5xRa5/SeXvWc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B7gQO/rFpdVByFFaC5eTkm4KUslstZeD1XqdpX4hba7a2EbIxbdfNKiKljbVZGDU25EMIXToXRBlhTB7eM2tPVKBgUgFuTnTKfubac5J0lDbTFmtvygEcD+DIQBzI1KamihTFLlB2U3xLQ8bQvecPk6nw4sCYKSNrTBKNP8VMpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from dslb-188-097-209-155.188.097.pools.vodafone-ip.de ([188.97.209.155] helo=martin-debian-2.paytec.ch)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <martin@kaiser.cx>)
-	id 1regey-001hI7-11;
-	Mon, 26 Feb 2024 20:29:08 +0100
-From: Martin Kaiser <martin@kaiser.cx>
-To: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	David Howells <dhowells@redhat.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v2] nfs: keep server info for remounts
-Date: Mon, 26 Feb 2024 20:29:08 +0100
-Message-Id: <20240226192908.48789-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1708976080; c=relaxed/simple;
+	bh=hWEKAq88fYxNI1hRg1anzj/i0fUllsHeQ+yLt2KGLzw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HQzFLwQPDK+ak97O9wcPgejV9m0K94vNbz+o0fGYgXvgdpSgy4r20uLzukcWnX/BEKqhSgDFqU0fuksWP0naGat5BsmMUWDGPod1c9bPrXef/s39T/UuVVU+5IsWKwQmwm9+sYDW19YImFbo2CSPArDXpl9u2s1jZeH0P/z4kFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=evl44Lqn; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evl44Lqn"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4c8a8f59ad0so470914e0c.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 11:34:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708976078; x=1709580878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OglrNgb8KxWqpi2oIRKvGycThhSHWIKrWgrygyi4MtM=;
+        b=evl44LqnKAW7iVtv48ofMsqDIjC0bt+/JRM5wILoZ1UN3pZfa0tH1Y4I7cY4QrGtOo
+         XUyxqZPcASAjegp9mM2ETiI9NCjprJKNXPcLVEkad0eSe9C1qfG2ZzfWRHf33diXjI6+
+         msJZcBZI1iyh5K0c+0NYbiKWNMsxNzanGNy+1gLnGazZeNJPCCji3KUM7TJLoH8npcj1
+         AzTvyETe6XKb3VxO6GhwSK8t8mdpTyhiCzioTp1xpZfQ+tQ6tVUK29PMMe9R3+yB8zRK
+         hzictgELY+yv3eu6RCfbZ5kmbChLB7Wqp4IIqs1cuiWV1BDDxfQrt34v6UEjq2C6xaob
+         k56w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708976078; x=1709580878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OglrNgb8KxWqpi2oIRKvGycThhSHWIKrWgrygyi4MtM=;
+        b=fNaC4vjBD50xoxnqFR/4CIfy8vJXgh6/nYzHfUPOLtP3/XMVVyo5uGbEmWikLFMSGd
+         zeiJWzeQuP6r+qfNIaJTWfNBu198XSfPmZUkgT/rQhgwgvjio9vT2R4LEuzpdCKRruVh
+         zU2UrTNpRkvxqzqDH6EiDfSsDXkHa4nTJooyjIJroBFQrb8ApkjxqkO8J6OJP4XFwnSg
+         +0N78gbhrbl0KPIFO/hsXwaHQiu24fZOLYqPj5uGhAyvpH8d0AsewKewqJQ6ryDbICTW
+         osX5MrGAPoSaNbUuDmDBc2zWutJfMNRba/fRC7saKonlAP/lEefteHCtf35vVUuRwjup
+         IfsQ==
+X-Gm-Message-State: AOJu0Yx73ji0ShQFIJo+ofrSd+8Ydx5GVvhLQuZvQOUF3rc4aWEbFjam
+	KZMicXlriR/lwOmhjCN4Dmw9O3Q3l28ZeH1diHakTvNPFkfQfuAZo0x8LdSyNy951x/7Aml3UMP
+	D7EEOKyQBmNKl6NPl9rUA+Qxyu5Q=
+X-Google-Smtp-Source: AGHT+IFRbmLcH3yDVMWlS4qRhMIzTge8OdpmN7IXcrrJAEBTH5t6Buk71GP4NesYll77VpA88EfVMoNzZG/5LoYJ3VA=
+X-Received: by 2002:a1f:c784:0:b0:4c9:a9c9:4b3b with SMTP id
+ x126-20020a1fc784000000b004c9a9c94b3bmr4166189vkf.9.1708976077978; Mon, 26
+ Feb 2024 11:34:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240223205535.307307-1-jaegeuk@kernel.org> <20240223205535.307307-5-jaegeuk@kernel.org>
+In-Reply-To: <20240223205535.307307-5-jaegeuk@kernel.org>
+From: Daeho Jeong <daeho43@gmail.com>
+Date: Mon, 26 Feb 2024 11:34:27 -0800
+Message-ID: <CACOAw_xdBY5Rg1J4jUTaH0UxVrdZ+CCVQj72q_cMxyCHuCTy_Q@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH 5/5] f2fs: allow to mount if cap is 100
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With newer kernels that use fs_context for nfs mounts, remounts fail with
--EINVAL.
+On Fri, Feb 23, 2024 at 12:56=E2=80=AFPM Jaegeuk Kim <jaegeuk@kernel.org> w=
+rote:
+>
+> Don't block mounting the partition, if cap is 100%.
+>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+>  fs/f2fs/segment.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 6d586ae8b55f..f11361152d2a 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -904,6 +904,9 @@ int f2fs_disable_cp_again(struct f2fs_sb_info *sbi, b=
+lock_t unusable)
+>  {
+>         int ovp_hole_segs =3D
+>                 (overprovision_segments(sbi) - reserved_segments(sbi));
+> +
+> +       if (F2FS_OPTION(sbi).unusable_cap_perc =3D=3D 100)
+> +               return 0;
 
-$ mount -t nfs -o nolock 10.0.0.1:/tmp/test /mnt/test/
-$ mount -t nfs -o remount /mnt/test/
-mount: mounting 10.0.0.1:/tmp/test on /mnt/test failed: Invalid argument
+With this, f2fs will not execute GC. What is this 100
+unusable_cap_perc used for?
 
-For remounts, the nfs server address and port are populated by
-nfs_init_fs_context and later overwritten with 0x00 bytes by
-nfs23_parse_monolithic. The remount then fails as the server address is
-invalid.
-
-Fix this by not overwriting nfs server info in nfs23_parse_monolithic if
-we're doing a remount.
-
-Fixes: f2aedb713c28 ("NFS: Add fs_context support.")
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
-v2:
- - rebased against today's linux-next
-
-Dear all,
-I'm resending this patch, it might have slipped through the cracks. The
-problem that I'm trying to fix is still present in linux-next. Thanks in
-advance for any reviews and comments.
-
-
-I guess that we're taking this path for remounts
-
-do_remount
-    fs_context_for_reconfigure
-        alloc_fs_context
-            init_fs_context == nfs_init_fs_context
-               fc->root is set for remounts
-               ctx->nfs_server is populated
-    parse_monolithic_mount_data
-        nfs_fs_context_parse_monolithic
-            nfs23_parse_monolithic
-               ctx->nfs_server is overwritten with data from mount request
-
-An alternative to checking for !is_remount_fc(fc) would be to check
-if (ctx->nfs_server.addrlen == 0)
-
- fs/nfs/fs_context.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 853e8d609bb3..41126d6dcd76 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -1111,9 +1111,12 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
- 		ctx->acdirmax	= data->acdirmax;
- 		ctx->need_mount	= false;
- 
--		memcpy(sap, &data->addr, sizeof(data->addr));
--		ctx->nfs_server.addrlen = sizeof(data->addr);
--		ctx->nfs_server.port = ntohs(data->addr.sin_port);
-+		if (!is_remount_fc(fc)) {
-+			memcpy(sap, &data->addr, sizeof(data->addr));
-+			ctx->nfs_server.addrlen = sizeof(data->addr);
-+			ctx->nfs_server.port = ntohs(data->addr.sin_port);
-+		}
-+
- 		if (sap->ss_family != AF_INET ||
- 		    !nfs_verify_server_address(sap))
- 			goto out_no_address;
--- 
-2.39.2
-
+>         if (unusable > F2FS_OPTION(sbi).unusable_cap)
+>                 return -EAGAIN;
+>         if (is_sbi_flag_set(sbi, SBI_CP_DISABLED_QUICK) &&
+> --
+> 2.44.0.rc0.258.g7320e95886-goog
+>
+>
+>
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
