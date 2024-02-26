@@ -1,110 +1,114 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99EB1CA9C;
-	Mon, 26 Feb 2024 08:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A7E1DDC9
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708935105; cv=none; b=t+6Q2CwCgEtFBDekf+h24HiU2BwtK6mfHgMM0CY55SxtY7rAV5tY6eSUvz4nWuq+lQK7YmODrmczPt3QZyKLDs1s4ESPHlSgZ4K+GPHSYUQ4eM4ZsvTCZgTOWnthY5PnOFBBXqsJmQFL/2AdgrViRYLb2Tf1oLL49EpqurJtn0U=
+	t=1708935111; cv=none; b=pFObNg7Gk8na3SuxUHTvDFi3f7d+dNFf+NAcuXPJ7pfFtmpiZWnGpb+eIeMD2rUXJIY7URbx1mAeYMXu60b3klGbjBvYDb2Ofq96w1tZbYLAMYOmWTZLeoPgvorjHBCrNJ05l+0QmBm+TKiJ2qSJ1P4EDNYTjTguyWAPdYsdksk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708935105; c=relaxed/simple;
-	bh=l1szuv+hM027uh7ebfrh0DP41MYlcjkvn+YrDlbSB00=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X/wU2WnRVsQR2WThI0ERKeL7RUQhIe2RdARamXeKgLJaEplv6Jd6uJTF6aM2Qmft+mJ06c39hah1FUHBNDQ2Ki7goK28VFCjikD7INmVMf3eMuTzT/E30SiBL3lofbPU/gchllF+J+oFMcMfcwN+si7oS6rRsCu0UQCFBMOYios=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=0CeLspdw; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="0CeLspdw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1708935104; x=1740471104;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=l1szuv+hM027uh7ebfrh0DP41MYlcjkvn+YrDlbSB00=;
-  b=0CeLspdwYAdXaULECrC9NCV/eE09mIKtZ3ta/LP8CBudH/66p6nnuZ0L
-   R2dc8w5KdoyUF2du7n1vNUKHdKGdOHulDcx9xWvg5bOiE5ICPYsrrkiPG
-   HClIe8nIOg4xKcAoDbJpaytt/UTv4YdchScH5PeSRsxfQc7oZelhnaB9A
-   cyG4NiFH8k3IJLz2lKrPFi9Cyr9CxfLO5TWATmGbqaddUQF4Rp1/S7ZIt
-   C3Xct6zFcKPsF8dwzWHOl2PzFdZ4J0mxUdPEOOPq0o0hBvD1sYOLA189P
-   FrI1S/hTdXCE+FB2LEIseg1FPB+W0PsuqknHy6dLo6Sf0FjCkDiXIZdtD
-   g==;
-X-CSE-ConnectionGUID: 4ynsao6ZS2GCwmDsGpJRvQ==
-X-CSE-MsgGUID: Y91qGN6RS+mCUHsn5fFwMQ==
-X-IronPort-AV: E=Sophos;i="6.06,185,1705388400"; 
-   d="scan'208";a="247559931"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Feb 2024 01:11:43 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 26 Feb 2024 01:11:32 -0700
-Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 26 Feb 2024 01:11:29 -0700
-From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-To: <netdev@vger.kernel.org>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bryan.whitehead@microchip.com>, <richardcochran@gmail.com>,
-	<UNGLinuxDriver@microchip.com>
-Subject: [PATCH net 2/3] net: lan743x: support WOL in MAC even when PHY does not
-Date: Mon, 26 Feb 2024 13:39:33 +0530
-Message-ID: <20240226080934.46003-3-Raju.Lakkaraju@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240226080934.46003-1-Raju.Lakkaraju@microchip.com>
-References: <20240226080934.46003-1-Raju.Lakkaraju@microchip.com>
+	s=arc-20240116; t=1708935111; c=relaxed/simple;
+	bh=YDGOXFdSvfeITdsIL3f9430fMpMbdJEoFUqaY9acy24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lIszNd+dexWKuc06vThtzIMu0fbhD8mWUqSjPgKiDADtsuObicZ1+5BvZQhCkc2LGuBk0SmgkRVoxQ5PPoLXl71p/JxobReEHi03JmKaRoHI3mXVrylGzYltJ/X8WfdqJDVK/G3Abz7QzxNKy9eZ0j/jV5LDjbjP0qjirrFYdN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1reW59-0007kh-6J; Mon, 26 Feb 2024 09:11:27 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1reW55-002xHu-LS; Mon, 26 Feb 2024 09:11:23 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1reW55-00BVKV-1q;
+	Mon, 26 Feb 2024 09:11:23 +0100
+Date: Mon, 26 Feb 2024 09:11:23 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, 
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	William Qiu <william.qiu@starfivetech.com>, Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: pwm: opencores: Add compatible for StarFive
+ JH8100
+Message-ID: <opzxowacxsagwgw3l33p6y7omzjokus2bi3ol5wizfwjwi2s44@3p5frb4ysji7>
+References: <20240226033945.816974-1-jisheng.teoh@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rca4flnr32kuc7cm"
+Content-Disposition: inline
+In-Reply-To: <20240226033945.816974-1-jisheng.teoh@starfivetech.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Allow WOL support if MAC supports it, even if the PHY does not support it
 
-Fixes: e9e13b6adc338 ("lan743x: fix for potential NULL pointer dereference
-with bare card")
+--rca4flnr32kuc7cm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
----
- drivers/net/ethernet/microchip/lan743x_ethtool.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Hello,
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_ethtool.c b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-index a2b3f4433ca8..4899582b3d1d 100644
---- a/drivers/net/ethernet/microchip/lan743x_ethtool.c
-+++ b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-@@ -1163,6 +1163,17 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
- 				   struct ethtool_wolinfo *wol)
- {
- 	struct lan743x_adapter *adapter = netdev_priv(netdev);
-+	int ret;
-+
-+	if (netdev->phydev) {
-+		ret = phy_ethtool_set_wol(netdev->phydev, wol);
-+		if (ret != -EOPNOTSUPP && ret != 0)
-+			return ret;
-+
-+		if (ret == -EOPNOTSUPP)
-+			netif_info(adapter, drv, adapter->netdev,
-+				   "phy does not support WOL\n");
-+	}
- 
- 	adapter->wolopts = 0;
- 	if (wol->wolopts & WAKE_UCAST)
-@@ -1187,8 +1198,7 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
- 
- 	device_set_wakeup_enable(&adapter->pdev->dev, (bool)wol->wolopts);
- 
--	return netdev->phydev ? phy_ethtool_set_wol(netdev->phydev, wol)
--			: -ENETDOWN;
-+	return 0;
- }
- #endif /* CONFIG_PM */
- 
--- 
-2.34.1
+On Mon, Feb 26, 2024 at 11:39:45AM +0800, Ji Sheng Teoh wrote:
+> StarFive JH8100 uses the same OpenCores PWM controller as JH7110.
+> Mark JH8100 as compatible to the OpenCores PWM controller.
+>=20
+> Signed-off-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
+> Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+>=20
+> ---
+>=20
+> This patch depends on patch [1] ("dt-bindings: pwm: Add bindings for
+> OpenCores PWM Controller") in Conor's riscv-dt-for-next branch.
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/commi=
+t/?h=3Driscv-dt-for-next&id=3D2529085831b01fcd02ff58ab4e2596d3b31bcf80
 
+I recommend to make use of git format-patch's --base parameter to
+additionally(!) make this information available to the build bots.
+
+Looks fine to me.
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Coner: If you're happy with this patch, please apply it in the same way
+as the initial OpenCores PWM Controller binding patch.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--rca4flnr32kuc7cm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXcR6oACgkQj4D7WH0S
+/k7wTQgAsgA+AFOOP3+++k2BuC4anQCkeyI3AcDzpTBTk5QyC+DV7CR82aNjU5Sr
+zdmvrqgBqdnBfCed75PotH8o0HeH7omhQ7kOys5qBs3G0fhi7jxQTr/gHd9twA4R
+LlOdBlm9CSakAKEv9jbag0k//CYif0aGsf0cTNpF2RX6+gkoj5iOFbRkVd3gtizu
+fbuLkbQ/2M3K4NZN5Tf8cAjU9FKEza5KU9xO+PhOIUGiis9F7ccSkv40PVj1rz7m
+fbP85x6bvFBU+2bReKeA+GFCksHyItrMNLDktayQYjr9ktyxIZdARrB/astRo55s
+LcZaVDOA+uw0EMm4M/y+U8HI8xdvww==
+=8D5M
+-----END PGP SIGNATURE-----
+
+--rca4flnr32kuc7cm--
