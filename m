@@ -1,102 +1,141 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8387A12BE8A;
-	Mon, 26 Feb 2024 16:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7008D12C55E;
+	Mon, 26 Feb 2024 16:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966212; cv=none; b=Oyp3/Ef5R0Pek1a6l09yvZEAE2Gu9Q06/C5ZSJ0V+TqR9P5tZ6FR3lGvHEtxWyIdBgszSBNd5saiS9BtBqSAIeEaCFhbyDIoDIHIzpedrgBflNCYfEnXP5f8nr4ICpSNpxl/me8cnRdERqvWzFSQVJI8Q/VXSKvkPYhZ5sI1/oM=
+	t=1708966218; cv=none; b=fyFpISKE+BPrWK8KYzd3PEaTl5mIE5DWL7X87UAqbImAE/2pYRHct7aCTEgpEmqkQ2cmOsf6WQl1H4Gw5VgnZh2d78QpA5/UZpWfdlGGx7mCiXaVwtnKKSXYn4hk1G/ura5Wr8da3o79f5WT0WewilRFROHk+iQ2SVUkjZnJZEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966212; c=relaxed/simple;
-	bh=tYJtKOb5YnFqEfI64gUF97SWIUHpOFQPG5IqgXsQzxY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LbuFX22eOXoioXyZaUOWmxtTYiU6PB2htPVeWTX1j4StjWyHAMTQLMTOryGl++ykP6s0O87tyPsin8BK67obuNGapRFOmWluvGUMUKZMJclPfi+mf4xgNEqujhjyP/dDZpeyvUDc09xWKbhp4x7hF1HGEdYymLtBGBeUhXWxrIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=M1bF301I; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1708966218; c=relaxed/simple;
+	bh=7YvuyP2/3dQMz06f8V/sENTfum4SLtdXfnyglIOEK08=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FZnznCa5pTcbgVf0pH1XlsVbysNbWMY456uw/OSmdZE743VF4gxj0EPvvlBab2kNuPg1vdv0gGskyocJpDdlokMxz8ZYH7O4gLkV5hgGN+GwbRefFubdJ5JNOqIQMxAhpt/HLmPCmU02TpmNVCJYi6nfZ+WnncTBK287DzZba1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/S6xSlO; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="M1bF301I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1708966207;
-	bh=tYJtKOb5YnFqEfI64gUF97SWIUHpOFQPG5IqgXsQzxY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=M1bF301I5pHXWIqKowEvXZnugysDMbfT3wTfA7qcjhKz9uSu0mytoul7Sj3riwCki
-	 0btIqqUngLHgyE1W1pUD3G4BtlxJJy1uSZXjH1kIty7wGFzyWFe6dEWHVVFxHYGzty
-	 /x1VA7kY0mPFaP7OgjjseuG8Cb3rkoXO1MKcVzR0=
-Received: from [IPv6:240e:358:11b4:ae00:dc73:854d:832e:5] (unknown [IPv6:240e:358:11b4:ae00:dc73:854d:832e:5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id F41D466C2D;
-	Mon, 26 Feb 2024 11:49:57 -0500 (EST)
-Message-ID: <8e5e31daa3b76dc80ff5ec6ad46191bfd87f7df7.camel@xry111.site>
-Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep
- argument inspection again?
-From: Xi Ruoyao <xry111@xry111.site>
-To: Christian Brauner <brauner@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Icenowy Zheng <uwu@icenowy.me>, Huacai Chen <chenhuacai@kernel.org>, 
- WANG Xuerui <kernel@xen0n.name>, linux-api@vger.kernel.org, Kees Cook
- <keescook@chromium.org>, Xuefeng Li <lixuefeng@loongson.cn>, Jianmin Lv
- <lvjianmin@loongson.cn>, Xiaotian Wu <wuxiaotian@loongson.cn>, WANG Rui
- <wangrui@loongson.cn>, Miao Wang <shankerwangmiao@gmail.com>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, Linux-Arch
- <linux-arch@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>
-Date: Tue, 27 Feb 2024 00:49:51 +0800
-In-Reply-To: <20240226-sandbank-bewerben-219120323e29@brauner>
-References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
-	 <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
-	 <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
-	 <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
-	 <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
-	 <3c396b7c-adec-4762-9584-5824f310bf7b@app.fastmail.com>
-	 <6f7a8e320f3c2bd5e9b704bb8d1f311714cd8644.camel@xry111.site>
-	 <b9fb0de1-bfb9-47a6-9730-325e7641c182@app.fastmail.com>
-	 <20240226-graustufen-hinsehen-6c578a744806@brauner>
-	 <ef732971-bf70-4d8c-9fe8-3ca163a0c29c@app.fastmail.com>
-	 <20240226-sandbank-bewerben-219120323e29@brauner>
-Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
- keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/S6xSlO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708966217; x=1740502217;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7YvuyP2/3dQMz06f8V/sENTfum4SLtdXfnyglIOEK08=;
+  b=a/S6xSlORqGh5ZOWdQSRqjOdu6G4e0Z9QLyVLEaykGySUpqCUNNVY6O+
+   ohFE048AaFFZ22IZWSiTsIO5u0c8WDvycbevbNcM52darXWxW46mnOZKu
+   kOm7etZ4Gwh8V9vSHJX4IyqllQy7AhyVBpnypw4jSt4mr4PmONo/kvclt
+   RDDqcvwsroFX2rgwHIoTKmEJvXVENlZGoVC6lWvpdh0kNzYTssdAT9UGC
+   Qqij5I2jY5ydniaCofVVwtIax6JoNcmEjSM75xlD8IQEp3XfEJbwWVlSh
+   YtPjALktfVt/xiVvPYY99p600dHbGUkhIrhg2H28FdpcQg6PXxkLHuXiL
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="7044878"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="7044878"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:50:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="6871348"
+Received: from tvereenx-mobl.amr.corp.intel.com (HELO [10.251.5.170]) ([10.251.5.170])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:50:12 -0800
+Message-ID: <d238cb35-bdf6-4f10-a729-41ef8916605f@linux.intel.com>
+Date: Mon, 26 Feb 2024 08:50:11 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] PCI/DPC: Request DPC only if also requesting AER
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Matthew W Carlis <mattc@purestorage.com>, Keith Busch <kbusch@kernel.org>,
+ Lukas Wunner <lukas@wunner.de>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
+References: <20240226163305.GA202015@bhelgaas>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240226163305.GA202015@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-02-26 at 16:40 +0100, Christian Brauner wrote:
 
-> > I definitely don't want to see a new time32 API added to
-> > mips64 and the 32-bit architectures, so the existing stat64
-> > interface won't work as a statx replacement.
->=20
-> I don't specifically care but the same way you don't want to see newer
-> time32 apis added to architectures I don't want to have hacks in our
-> system calls that aren't even a clear solution to the problem outlined
-> in this thread.
+On 2/26/24 8:33 AM, Bjorn Helgaas wrote:
+> On Mon, Feb 26, 2024 at 07:46:05AM -0800, Kuppuswamy Sathyanarayanan wrote:
+>> On 2/26/24 7:18 AM, Bjorn Helgaas wrote:
+>>> On Sun, Feb 25, 2024 at 11:46:07AM -0800, Kuppuswamy Sathyanarayanan wrote:
+>>>> On 2/22/24 2:15 PM, Bjorn Helgaas wrote:
+>>>>> From: Bjorn Helgaas <bhelgaas@google.com>
+>>>>>
+>>>>> When booting with "pci=noaer", we don't request control of AER, but we
+>>>>> previously *did* request control of DPC, as in the dmesg log attached at
+>>>>> the bugzilla below:
+>>>>>
+>>>>>   Command line: ... pci=noaer
+>>>>>   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+>>>>>   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR DPC]
+>>>>>
+>>>>> That's illegal per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, which
+>>>>> says:
+>>>>>
+>>>>>   If the operating system sets this bit [OSC_PCI_EXPRESS_DPC_CONTROL], it
+>>>>>   must also set bit 7 of the Support field (indicating support for Error
+>>>>>   Disconnect Recover notifications) and bits 3 and 4 of the Control field
+>>>>>   (requesting control of PCI Express Advanced Error Reporting and the PCI
+>>>>>   Express Capability Structure).
+>>>> IIUC, this dependency is discussed in sec 4.5.2.4. "Dependencies
+>>>> Between _OSC Control Bits".
+>>>>
+>>>> Because handling of Downstream Port Containment has a dependency on
+>>>> Advanced Error Reporting, the operating system is required to
+>>>> request control over Advanced Error Reporting (bit 3 of the Control
+>>>> field) while requesting control over Downstream Port Containment
+>>>> Configuration (bit 7 of the Control field). If the operating system
+>>>> attempts to claim control of Downstream Port Containment
+>>>> Configuration without also claiming control over Advanced Error
+>>>> Reporting, firmware is required to refuse control of the feature
+>>>> being illegally claimed and mask the corresponding bit.  Firmware is
+>>>> required to maintain ownership of Advanced Error Reporting if it
+>>>> retains ownership of Downstream Port Containment Configuration.  If
+>>>> the operating system sets bit 7 of the Control field, it must set
+>>>> bit 7 of the Support field, indicating support for the Error
+>>>> Disconnect Recover event.
+>>> So I guess you're suggesting that there are two defects here?
+>>>
+>>>   1) Linux requested DPC control without requesting AER control.
+>>>
+>>>   2) Platform granted DPC control when it shouldn't have.
+>>>
+>>> I do agree with that, but obviously we can only fix 1) in Linux.
+>> Sorry, maybe my comment was not clear. I was just suggesting to
+>> change the spec reference from r3.3, sec 4.5.1, table 4-5 to r3.3,
+>> sec 4.5.2.4 "Dependencies Between _OSC Control Bits".
+> The requirement that the OS request AER control whenever it requests
+> DPC control is mentioned in both sec 4.5.1 and sec 4.5.2.4.  IMO sec
+> 4.5.2.4 should not exist because the per-bit table in sec 4.5.1 is a
+> better place for implementation guidance.  4.5.2.4 is easy to miss,
+> mostly redundant, and hard to integrate with the 4.5.1 table.
+>
+> What advantage do you see for citing 4.5.2.4 instead of 4.5.1?  The
+> only real difference I see is that it also points out a firmware
+> problem.  I don't think the extra text is worth it since it doesn't
+> motivate the Linux change.
 
-So we should have a fstat_whatever64, IMO.
 
-> Short of adding fstatx() the problem isn't solved by a new flag to
-> statx() as explained in my other mails. But I'm probably missing
-> something here because I find this notion of "design system calls for
-> seccomp and the Chromium sandbox" to be an absurd notion and it makes me
-> a bit impatient.
+My thinking is, since the fix is related to the dependency between
+_OSC control bits (AER & DPC), and there is a special section in the
+spec which discuss it, I thought it is better to  quote it.
 
-I'm sharing the feeling on seccomp and/or (mis)uses of it, but using
-statx() or fstatat() for fstat() has a performance impact as they must
-inspect path (do a uaccess) and make sure it's an empty string, and
-Linus concluded "if the user want fstat, you should give the user fstat"
-for this issue:
+But I get your point. I think either if fine.
 
-https://sourceware.org/pipermail/libc-alpha/2023-September/151365.html
+>
+> Bjorn
 
-If it was just seccomp I'd not comment on this topic at all.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
