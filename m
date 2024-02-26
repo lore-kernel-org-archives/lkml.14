@@ -1,122 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF669604A7
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8BA819
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708965323; cv=none; b=NzUoWOb1oVCyH4CDFJ/vX6i9F5wiPzD1CHpJy4BAUxKurTYDT7Ubv0djdfIXuPITOythl4w8ID+gVOqfZaFGsMn5efnm/VPYllWGmDigCi+6BLkT8cGMTlxljMzvcqziuM/CU4GBs9f10OQKXMZ9Gqi2txQbRff1WNdxBxRZ9Ds=
+	t=1708965422; cv=none; b=Wdwfg81p4uxGJOf0Fb3PQC4IRM9/Op5uDvR/KvUO0KfcxlGJTQeepAxelr3XcE1PW/uGaXG8i6TvFnDHT9DhKxrxNUWkCMlviCnBkjxfCBfJ0XFh6ryJ6//Ks/EwETitMoo7iVRLGIJh+iVDoSVjZOrD1EZm7MDInnoKu6UbF+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708965323; c=relaxed/simple;
-	bh=bNDcDNc34X+9faRpf39NJUZgLUHAm/B0I0qitkCJ95A=;
+	s=arc-20240116; t=1708965422; c=relaxed/simple;
+	bh=m5uEE0J/0gplulyhcRxPAZP9nBxR735Jv+WoSYhGm8Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tOJVXLJ4NrHbgkpRwJhIz5qkRCCoCkWeLWplCkpfFVVh3LUuheQLQTUujMbiSenRWOuU5aQVCH7KOvtQDkUrFCv9f7fvsrg/OVugWjBDZAj6jc3hEAudCbkIO9qC1k6hmIz1R5yR/knafoYvAyM5fdRV9Y+ZfbHUEFlIVi7QjEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hkGnIYJp; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kT9xeYs6qMnpv98wCt1hauoO26O8dSD++qGCaEZex8BSzg8r3GiCgUYBABFjl3RUAuEJVYbmecdmKHgqBB/RHd2pfYeLvMxvG5hXmiXM4ZZvYvNT8HYYYeg1c4BdNZWG+uUu50qssnihp+0FbPhsxx5pFa0P2Uwy+r5IeKhuJHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Kg4Ga9pq; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Kg4Ga9pq; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hkGnIYJp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708965322; x=1740501322;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=bNDcDNc34X+9faRpf39NJUZgLUHAm/B0I0qitkCJ95A=;
-  b=hkGnIYJpaiggquvdwX+A4v0vgh5OgX1mdT7PTD2cmaihHp9ImuJc6vTx
-   ClCUwaYAY3VJyyphWhka1KVwltMCvjkBd8H6iI+PyC3y7+JJ7Ht4+ExfD
-   rBtwS2g5UHnqaR4bX8hWtHZTdmeQaGSWFsL/8SwymmQzM0K4kNJ7Kaw5Y
-   5lYv6jv5jx08t/rw4HqwF+70ulv5eoJ3ONJnll038WgS/vdW0I80emuhG
-   zV4uzeDLOfWQU3KBkK+Fgi4Ntx4jop9w5Dam8G0OxEhOmHnnriY8whraH
-   HpNVQxardv0nimdF/qjUi2WV+YgvBW2iTmERd73Th39yooOL2Cdm54L04
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="20805975"
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="20805975"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:35:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="827770449"
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="827770449"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orsmga001.jf.intel.com with SMTP; 26 Feb 2024 08:35:16 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 26 Feb 2024 18:35:16 +0200
-Date: Mon, 26 Feb 2024 18:35:16 +0200
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	intel-gfx@lists.freedesktop.org, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/12] drm/i915: Indicate which pipe failed the fastset
- check overall
-Message-ID: <Zdy9xNwuwLFO4zKj@intel.com>
-References: <20240215164055.30585-1-ville.syrjala@linux.intel.com>
- <20240215164055.30585-2-ville.syrjala@linux.intel.com>
- <ZdfApN1h97GTfL1t@intel.com>
- <Zdj2ONs8BZ6959Xb@intel.com>
- <87bk83mfwp.fsf@intel.com>
- <ZdyqAMfEfhyk6zm2@smile.fi.intel.com>
- <878r37me5k.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Kg4Ga9pq";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Kg4Ga9pq"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B221122093;
+	Mon, 26 Feb 2024 16:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1708965418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PsXJGZI9slwa6ZOo7UegHQyBDIXFrwYJPBC2yyVzFys=;
+	b=Kg4Ga9pqE6H4ZvZ3NdYBBCLMaLOZgg4V0Mhy25R7tPgZvUYbIHoG/xRwFxmjfdW+WZl56X
+	vwdIOZame8oO5Y9WJqp/CMpuuQuYEvrShxdoL2fAN5ZgqFnU645kgkaWPJm9V0XfYPOYLT
+	u+aDeufM/RuoeR9SN9VphkJ+U4zfTLM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1708965418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PsXJGZI9slwa6ZOo7UegHQyBDIXFrwYJPBC2yyVzFys=;
+	b=Kg4Ga9pqE6H4ZvZ3NdYBBCLMaLOZgg4V0Mhy25R7tPgZvUYbIHoG/xRwFxmjfdW+WZl56X
+	vwdIOZame8oO5Y9WJqp/CMpuuQuYEvrShxdoL2fAN5ZgqFnU645kgkaWPJm9V0XfYPOYLT
+	u+aDeufM/RuoeR9SN9VphkJ+U4zfTLM=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 97BE413A58;
+	Mon, 26 Feb 2024 16:36:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MeMOIiq+3GWqEgAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Mon, 26 Feb 2024 16:36:58 +0000
+Date: Mon, 26 Feb 2024 17:36:57 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CVE-2023-52451: powerpc/pseries/memhp: Fix access beyond end of
+ drmem array
+Message-ID: <Zdy-KbmSt0egNV3c@tiehlicka>
+References: <2024022257-CVE-2023-52451-7bdb@gregkh>
+ <Zdylmz28rZ-mCeiN@tiehlicka>
+ <2024022639-wronged-grafted-6777@gregkh>
+ <ZdytVTOgfvKBBvtn@tiehlicka>
+ <2024022652-defective-fretful-3d13@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <878r37me5k.fsf@intel.com>
-X-Patchwork-Hint: comment
+In-Reply-To: <2024022652-defective-fretful-3d13@gregkh>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-6.60 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[3];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLY(-4.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -6.60
 
-On Mon, Feb 26, 2024 at 05:35:51PM +0200, Jani Nikula wrote:
-> On Mon, 26 Feb 2024, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Feb 26, 2024 at 04:57:58PM +0200, Jani Nikula wrote:
-> >> On Fri, 23 Feb 2024, Ville Syrjälä <ville.syrjala@linux.intel.com> wrote:
-> >> > On Thu, Feb 22, 2024 at 04:46:12PM -0500, Rodrigo Vivi wrote:
-> >
-> > ...
-> >
-> >> > I think the proper solution would be to have actually
-> >> > sensible conversion specifiers in the format string.
-> >> > So instead of %<set of random characters> we'd have something
-> >> > more like %{drm_crtc} (or whatever color you want to throw
-> >> > on that particular bikeshed).
-> >> 
-> >> Personally I suck at remembering even the standard printf conversion
-> >> specifiers, let alone all the kernel extensions. I basically have to
-> >> look them up every time. I'd really love some %{name} format for named
-> >> pointer things. And indeed preferrably without the %p. Just %{name}.
-> >
-> > It will become something like %{name[:subextensions]}, where subextensions
-> > is what we now have with different letters/numbers after %pX (X is a letter
-> > which you proposed to have written as name AFAIU).
+On Mon 26-02-24 17:12:19, Greg KH wrote:
+> On Mon, Feb 26, 2024 at 04:25:09PM +0100, Michal Hocko wrote:
+> > On Mon 26-02-24 16:06:51, Greg KH wrote:
+> > > On Mon, Feb 26, 2024 at 03:52:11PM +0100, Michal Hocko wrote:
+> > > > On Thu 22-02-24 17:21:58, Greg KH wrote:
+> > > > > Description
+> > > > > ===========
+> > > > > 
+> > > > > In the Linux kernel, the following vulnerability has been resolved:
+> > > > > 
+> > > > > powerpc/pseries/memhp: Fix access beyond end of drmem array
+> > > > > 
+> > > > > dlpar_memory_remove_by_index() may access beyond the bounds of the
+> > > > > drmem lmb array when the LMB lookup fails to match an entry with the
+> > > > > given DRC index. When the search fails, the cursor is left pointing to
+> > > > > &drmem_info->lmbs[drmem_info->n_lmbs], which is one element past the
+> > > > > last valid entry in the array. The debug message at the end of the
+> > > > > function then dereferences this pointer:
+> > > > > 
+> > > > >         pr_debug("Failed to hot-remove memory at %llx\n",
+> > > > >                  lmb->base_addr);
+> > > > 
+> > > > While this is a reasonable fix and the stable material it is really
+> > > > unclear to me why it has gained a CVE. Memory hotplug is a privileged
+> > > > operation. Could you clarify please?
+> > > 
+> > > As you know, history has shown us that accessing out of your allocated
+> > > memory can cause problems, and we can not assume use-cases, as we don't
+> > > know how everyone uses our codebase, so marking places where we fix
+> > > out-of-bound memory accesses is resolving a weakness in the codebase,
+> > > hence a CVE assignment.
+> > 
+> > Does that mean that any potentially incorrect input provided by an admin is
+> > considered CVE now? I guess we would need to ban interfaces like
+> > /dev/mem and many others.
 > 
-> Thanks, I appreciate it, a lot!
+> If you have your system set up to prevent admins from accessing /dev/mem
+> (isn't there a config option for that), and you can access it, then yes,
+> that would be a CVE-worthy issue.
 > 
-> But could you perhaps try to go with just clean %{name} only instead of
-> adding [:subextensions] right away, please?
-> 
-> I presume the suggestion comes from an implementation detail, and I
-> guess it would be handy to reuse the current implementation for
-> subextension.
-> 
-> For example, %pb -> %{bitmap} and %pbl -> %{bitmap:l}. But really I
-> think the better option would be for the latter to become, say,
-> %{bitmap-list}. The goal here is to make them easy to remember and
-> understand, without resorting to looking up the documentation!
+> But if you configure your system to allow an admin access to /dev/mem
+> then you wanted that :)
 
-I was also wondering if we should have some kind of namespace
-thing in there. Eg. instead of %{drm_crtc} it could be something
-like %{drm:crtc}. Then it would be clear which subsystem (when that
-makes sense) "owns" that particular format. But I suppose using
-the C foo_ namespacing rule would also work since it should already
-be a thing for exported symbols anyway.
+OK, I thought we are having a serious discussion here. Now I am not
+really sure about that.
 
+> > > If your systems are not vulnerable to this specific issue, wonderful, no
+> > > need to take it, but why wouldn't you want to take a fix that resolves a
+> > > known weakness?
+> > 
+> > I have explicitly said, the fix is reasonable. I just do not see a point
+> > to mark it as CVE. I fail to see any thread model where this would
+> > matter as it would require untrusted privileged actor to trigger it
+> > AFAICS. I am happy to be proven wrong here.
+> 
+> We can not determine threat models when filing CVEs as we do not know
+> what your threat model is.  All we can do is determine if this resolves
+> a weakness in the system.  A use-after-free is a weakness and this
+> resolves that issue.
+
+Sure, you cannot make any assumptions and nobody questions that. We do
+have a certain common sense though. And if somebody comes up with a
+usecase that we haven't anticipated then we can surely assign a CVE.
+I though that level of control is exactly the reason to own the process
+by the community.
+
+All that being said I dispute the issue fixed here has any more security
+relevance than allowing untrusted user to control memory hotplug which
+could easily result in DoS of the system.
 -- 
-Ville Syrjälä
-Intel
+Michal Hocko
+SUSE Labs
