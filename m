@@ -1,113 +1,202 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C0F128839
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 13:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703C91AACC;
+	Mon, 26 Feb 2024 13:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708955187; cv=none; b=uxLYA8v6neRmpU+bjqEYBuPakbIeT3GZgootpynSvhoECWcWZKYrQp74mDBy6zIuCapEA1J8BNZsq+/3qAnkdK2shXUQGc98vXJBbwkRWBFMbIGou/BX15WQ0ZQ7/6nBAUxAABOKlFoRE+sWbNYURwOmAXnkei7TLp2Uiw94M1I=
+	t=1708955220; cv=none; b=uLoEPK8kpl0fEBXcGwUWN9wO463c9f1FbObDb4MbG/5F8nflInsyUX5mvUBvi8EQPW1W/q1G+PhKLgbW8q0P9Zu/UleGfWBNmnUioR4suUzYKxzEdjvySgoo2HRFBdrUEwsxP53qrcC86jbMKQdi8KDSdNkClB2pW9J1KM1qovU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708955187; c=relaxed/simple;
-	bh=x0tKBMBvabDged48OlDNnAqjAxWwHlmzi+vREigK+sU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JyKcc0XraiVke5+hdTwhFkMyCJftpmvOXiXCYDkMAmGRW/aayzIa/q0WPjcpF4zrhplsQD/3qcuWG4JcyLNMNQOggRGrgwgZ+E3cyD9kryfaR2z27gJNbgm/Gn1jISnLdGyZ9KienfpNwDP+FOeM2cqEseMg80XEX1Z9u8L1kPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85F2EDA7;
-	Mon, 26 Feb 2024 05:47:03 -0800 (PST)
-Received: from [10.57.67.4] (unknown [10.57.67.4])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 833013F762;
-	Mon, 26 Feb 2024 05:46:22 -0800 (PST)
-Message-ID: <71fa4302-2df6-4e55-a5a8-7609476c41d4@arm.com>
-Date: Mon, 26 Feb 2024 13:46:20 +0000
+	s=arc-20240116; t=1708955220; c=relaxed/simple;
+	bh=t8xGgFPpHaBkPG9nrZ91RhMmwokSR1SGGnL7zoAAxxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pi0jGMDtP773uoe8ZIpyGaXNWf1M2BXaOSkiponW2nT/315KMUsSO/ZmaZohiSBTqMMXGbaKysdzqriuSySNd6kWDNnl0k7LDYIjmR4utKUIVZrvK/ZTcKYLJPc2/EdhJMX3WkSvdrlmo7RReJ6kwh5+D5kUBtVlmwR2aLhMllA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UCObxW8I; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UCObxW8I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D384C433F1;
+	Mon, 26 Feb 2024 13:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708955220;
+	bh=t8xGgFPpHaBkPG9nrZ91RhMmwokSR1SGGnL7zoAAxxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UCObxW8IhVhB7iFy4s4au6DTqQ4x117qWNCzOLkEL+8NBTwVfPhM7p1Jb/Vk22fQa
+	 iYZ497ovZTNcvVthfLj2G9p8UXAHHJ4hfq0j4Kwu3/5w4jnyE34eiDumoKSL6x0xjz
+	 VTq+6MchiDz/U8iS82/FXxiK8kFlz+Ft5beLOnBm9kPZ1wCV8TEZLZQ2QDVJi/vsB1
+	 DqepAqJbgHbzM6S7i5iWgx+YR4OS2ltZRcl65P3tTePZp3zliiyrk9zAlRi3hhPORd
+	 QqwsCPKoz5Ifxq7fTf3fCo1uBZRQHs9lQGqXp2BFBHzgb0l+GgkZ36Y50UJ70ZVeQ+
+	 oTpragcWja96g==
+Date: Mon, 26 Feb 2024 14:46:53 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Xi Ruoyao <xry111@xry111.site>, Icenowy Zheng <uwu@icenowy.me>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, linux-api@vger.kernel.org, 
+	Kees Cook <keescook@chromium.org>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Xiaotian Wu <wuxiaotian@loongson.cn>, 
+	WANG Rui <wangrui@loongson.cn>, Miao Wang <shankerwangmiao@gmail.com>, 
+	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>, Linux-Arch <linux-arch@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Chromium sandbox on LoongArch and statx -- seccomp deep argument
+ inspection again?
+Message-ID: <20240226-halbwahrheiten-hoffnung-a7968115c795@brauner>
+References: <599df4a3-47a4-49be-9c81-8e21ea1f988a@xen0n.name>
+ <CAAhV-H4oW70y-2ZSp=b-Ed3A7Jrxfg6xvO8YpjED6To=PF0NwA@mail.gmail.com>
+ <f063e65df92228cac6e57b0c21de6b750cf47e42.camel@icenowy.me>
+ <24c47463f9b469bdc03e415d953d1ca926d83680.camel@xry111.site>
+ <61c5b883762ba4f7fc5a89f539dcd6c8b13d8622.camel@icenowy.me>
+ <3c396b7c-adec-4762-9584-5824f310bf7b@app.fastmail.com>
+ <6f7a8e320f3c2bd5e9b704bb8d1f311714cd8644.camel@xry111.site>
+ <b9fb0de1-bfb9-47a6-9730-325e7641c182@app.fastmail.com>
+ <20240226-graustufen-hinsehen-6c578a744806@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] madvise:madvise_cold_or_pageout_pte_range(): allow split
- while folio_estimated_sharers = 0
-Content-Language: en-GB
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
- Yin Fengwei <fengwei.yin@intel.com>, Yu Zhao <yuzhao@google.com>,
- David Hildenbrand <david@redhat.com>,
- Kefeng Wang <wangkefeng.wang@huawei.com>,
- Matthew Wilcox <willy@infradead.org>, Minchan Kim <minchan@kernel.org>,
- Vishal Moola <vishal.moola@gmail.com>, Yang Shi <shy828301@gmail.com>
-References: <20240221085036.105621-1-21cnbao@gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240221085036.105621-1-21cnbao@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240226-graustufen-hinsehen-6c578a744806@brauner>
 
-On 21/02/2024 08:50, Barry Song wrote:
-> From: Barry Song <v-songbaohua@oppo.com>
+On Mon, Feb 26, 2024 at 02:32:09PM +0100, Christian Brauner wrote:
+> On Mon, Feb 26, 2024 at 10:20:23AM +0100, Arnd Bergmann wrote:
+> > On Mon, Feb 26, 2024, at 08:09, Xi Ruoyao wrote:
+> > > On Mon, 2024-02-26 at 07:56 +0100, Arnd Bergmann wrote:
+> > >> On Mon, Feb 26, 2024, at 07:03, Icenowy Zheng wrote:
+> > >> > 在 2024-02-25星期日的 15:32 +0800，Xi Ruoyao写道：
+> > >> > > On Sun, 2024-02-25 at 14:51 +0800, Icenowy Zheng wrote:
+> > >> > > > My idea is this problem needs syscalls to be designed with deep
+> > >> > > > argument inspection in mind; syscalls before this should be
+> > >> > > > considered
+> > >> > > > as historical error and get fixed by resotring old syscalls.
+> > >> > > 
+> > >> > > I'd not consider fstat an error as using statx for fstat has a
+> > >> > > performance impact (severe for some workflows), and Linus has
+> > >> > > concluded
+> > >> > 
+> > >> > Sorry for clearance, I mean statx is an error in ABI design, not fstat.
+> > >
+> > > I'm wondering why we decided to use AT_EMPTY_PATH/"" instead of
+> > > "AT_NULL_PATH"/nullptr in the first place?
+> > 
+> > Not sure, but it's hard to change now since the libc
+> > implementation won't easily know whether using the NULL
+> > path is safe on a given kernel. It could check the kernel
+> > version number, but that adds another bit of complexity in
+> > the fast path and doesn't work on old kernels with the
+> > feature backported.
+> > 
+> > > But it's not irrational to pass a path to syscall, as long as we still
+> > > have the concept of file system (maybe in 2371 or some year we'll use a
+> > > 128-bit UUID instead of path).
+> > >
+> > >> The problem I see with the 'use use fstat' approach is that this
+> > >> does not work on 32-bit architectures, unless we define a new
+> > >> fstatat64_time64() syscall, which is one of the things that statx()
+> > >
+> > > "fstat64_time64".  Using statx for fstatat should be just fine.
+> > 
+> > Right. It does feel wrong to have only an fstat() variant but not
+> > fstatat() if we go there.
+> > 
+> > > Or maybe we can just introduce a new AT_something to make statx
+> > > completely ignore pathname but behave like AT_EMPTY_PATH + "".
+> > 
+> > I think this is better than going back to fstat64_time64(), but
+> > it's still not great because
+> > 
+> > - all the reserved flags on statx() are by definition incompatible
+> >   with existing kernels that return -EINVAL for any flag they do
+> >   not recognize.
+> > 
+> > - you still need to convince libc developers to actually use
+> >   the flag despite the backwards compatibility problem, either
+> >   with a fallback to the current behavior or a version check.
+> > 
+> > Using the NULL path as a fallback would solve the problem with
+> > seccomp, but it would not make the normal case any faster.
+> > 
+> > >> was trying to avoid.
+> > >
+> > > Oops.  I thought "newstat" should be using 64-bit time but it seems the
+> > > "new" is not what I'd expected...  The "new" actually means "newer than
+> > > Linux 0.9"! :(
+> > >
+> > > Let's not use "new" in future syscall names...
+> > 
+> > Right, we definitely can't ever succeed. On some architectures
+> > we even had "oldstat" and "stat" before "newstat" and "stat64",
+> > and on some architectures we mix them up. E.g. x86_64 has fstat()
+> > and fstatat64() with the same structure but doesn't define
+> > __NR_newfstat. On mips64, there is a 'newstat' but it has 32-bit
+> > timestamps unlike all other 64-bit architectures.
+> > 
+> > statx() was intended to solve these problems once and for all,
+> > and it appears that we have failed again.
 > 
-> The purpose is stopping splitting large folios whose mapcount are 2 or
-> above. Folios whose estimated_shares = 0 should be still perfect and
-> even better candidates than estimated_shares = 1.
+> New apis don't invalidate old apis necessarily. That's just not going to
+> work in an age where you have containerized workloads.
 > 
-> Consider a pte-mapped large folio with 16 subpages, if we unmap 1-15,
-> the current code will split folios and reclaim them while madvise goes
-> on this folio; but if we unmap subpage 0, we will keep this folio and
-> break. This is weird.
+> statx() is just the beginning of this. A container may have aritrary
+> seccomp profiles that return ENOSYS or even EPERM for whatever reason
+> for any new api that exists. So not implementing fstat() might already
+> break container workloads.
 > 
-> For pmd-mapped large folios, we can still use "= 1" as the condition
-> as anyway we have the entire map for it. So this patch doesn't change
-> the condition for pmd-mapped large folios.
-> This also explains why we had been using "= 1" for both pmd-mapped and
-> pte-mapped large folios before commit 07e8c82b5eff ("madvise: convert
-> madvise_cold_or_pageout_pte_range() to use folios"), because in the
-> past, we used the mapcount of the specific subpage, since the subpage
-> had pte present, its mapcount wouldn't be 0.
+> Another example: You can't just skip on implementing mount() and only
+> implement the new mount api for example. Because tools that look for api
+> simplicity and don't need complex setup will _always_ continue to use
+> mount() and have a right to do so.
 > 
-> The problem can be quite easily reproduced by writing a small program,
-> unmapping the first subpage of a pte-mapped large folio vs. unmapping
-> anyone other than the first subpage.
+> And fwiw, mount() isn't fully inspectable by seccomp since forever. The
+> list goes on and on.
 > 
-> Fixes: 2f406263e3e9 ("madvise:madvise_cold_or_pageout_pte_range(): don't use mapcount() against large folio for sharing check")
-> Cc: Yin Fengwei <fengwei.yin@intel.com>
-> Cc: Yu Zhao <yuzhao@google.com>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-> Cc: Yang Shi <shy828301@gmail.com>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> ---
->  mm/madvise.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> But let's look at the original mail. Why are they denying statx() and
+> what's that claim about it not being able to be rewritten to something
+> safe? Looking at:
 > 
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index cfa5e7288261..abde3edb04f0 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -453,7 +453,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
->  		if (folio_test_large(folio)) {
->  			int err;
->  
-> -			if (folio_estimated_sharers(folio) != 1)
-> +			if (folio_estimated_sharers(folio) > 1)
->  				break;
->  			if (pageout_anon_only_filter && !folio_test_anon(folio))
->  				break;
+> intptr_t SIGSYSFstatatHandler(const struct arch_seccomp_data& args,
+>                               void* fs_denied_errno) {
+>   if (args.nr == __NR_fstatat_default) {
+>     if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&
+>         args.args[3] == static_cast<uint64_t>(AT_EMPTY_PATH)) {
+>       return syscall(__NR_fstat_default, static_cast<int>(args.args[0]),
+>                      reinterpret_cast<default_stat_struct*>(args.args[2]));
+>     }
+>     return -reinterpret_cast<intptr_t>(fs_denied_errno);
+>   }
+> 
+> What this does it to rewrite fstatat() to fstat() if it was made with
+> AT_EMPTY_PATH and the path argument was "". That is easily doable for
+> statx() because it has the exact same AT_EMPTY_PATH semantics that
+> fstatat() has.
+> 
+> Plus, they can even filter on mask and rewrite that to something that
+> they think is safe. For example, STATX_BASIC_STATS which is equivalent
+> to what any fstat() call returns. So it's pretty difficult to understand
+> what their actual gripe with statx() is.
+> 
+> It can't be that statx() passes a struct because fstatat() and fstat()
+> do that too. So what exactly is that problem there?
+> 
+> What this tells me without knowing the exact reason is that they thought
+> "Oh, if we just return ENOSYS then the workload or glibc will just
+> always be able to fallback to fstat() or fstatat()". Which ultimately is
+> the exact same thing that containers often assume.
+> 
+> So really, just skipping on various system calls isn't going to work.
+> You can't just implement new system calls and forget about the rest
+> unless you know exactly what workloads your architecure will run on.
+> 
+> Please implement fstat() or fstatat() and stop inventing hacks for
+> statx() to make weird sandboxing rules work, please.
 
-I wonder if we should change all the instances:
+And fwiw, if they rewrite fstatat() to fstat() then they must be
+worrying about another thread racing and putting something in the second
+argument (the path argument) after they have inspected the system call
+arguments but before the system call continue.
 
-folio_estimated_sharers() != 1   ->   folio_estimated_sharers() > 1
-folio_estimated_sharers() == 1   ->   folio_estimated_sharers() <= 1
-
-It shouldn't cause a problem for the pmd case, and there are definitely other
-cases where it will help. e.g. madvise_free_pte_range().
-
-Regardless:
-
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-
-
+But if that is their worry then a new flag to statx() won't help at all.
+Because then they really want to use fstat(). IOW, one would have to add
+fstatx() which brings us back to square one. I'm mostly going by that
+code snippet of course.
