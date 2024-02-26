@@ -1,115 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1E71D531;
-	Mon, 26 Feb 2024 16:21:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10CC12BEA1;
+	Mon, 26 Feb 2024 16:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708964461; cv=none; b=qvkrosIu92KAFKPrC1DglxWyZ0gaw3+bX3MYJLzHbdeZkYs6SdfInaTT6C8/4Hib7L0tOX4kmk35wOvbvjQ9nU7yRHCbGfGeLZjWHtqnNPEU8jqMj2hq9pmXMNZOVKFq7ffFfsbT00HhZYsKHCi+QteHXbVXn62hvUQg8PNc4hM=
+	t=1708964480; cv=none; b=FcMXVJHyZXV/ZgINGYAtKakRnbiaNpzpBMreT5qcmqTUWVmv/usz3s+bdVHrlJJBwkXxRGFti7iGWuOulhQiSm5v+19xAKJDKJpayWx8aTYzCBIL7MeLJznNyKvLjyru9a6A8QPKBHIB2ndCqLcxYuiIfGPxxw5j7/CxI+PDfhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708964461; c=relaxed/simple;
-	bh=C6tE3K79M1feIkZlGioaGmywnXiz4aPQZcwoC8cUC6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ttMBFHEXwTj/B24IHg0GL3A/j5S6YJ8N5FJZ4ZEzvoho1/QaehI/ckBKrnq2IYq1GnEN78IYlHGdJKmB+sOCV8h7KrTprpLAAEJf5Jh2Yk5kVq4Zv4Cftly0rOLDYwK/1i6jx+diK6eBO9ti3ZzRDC4BSsG3WXYpavu8WWpu+g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fxo40mUJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1708964480; c=relaxed/simple;
+	bh=R6yxrXujX0jfOIll4TI/UYi3wy+Ea/LBT8jqilVrwiE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hKIK8JN3/VJqVyCZvHyVxx0LVGfQStFr8EK30C2tTuDTV0jM2ut3f2N78QcfJMOULf0umeRfAd8UP+e/scymdEaHmT98eiWwK7foWkTCK5tJbkg77GG3jzGuMthny8CngSitSDS2t7vLu+KpGM4wXI5pJCAWTRxGcaaJv28r7fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cF//Q6Fc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fxo40mUJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAF3DC433C7;
-	Mon, 26 Feb 2024 16:20:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cF//Q6Fc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F23C433F1;
+	Mon, 26 Feb 2024 16:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708964461;
-	bh=C6tE3K79M1feIkZlGioaGmywnXiz4aPQZcwoC8cUC6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fxo40mUJLCrHJrkY4ZRit37Q29j2FLt76QszjOvrsMRHUAjz/HROZcjCxrKA2DofT
-	 D7topPGgz52MhANrIij/057RhFKEvP3o6nvxan4UpcliGbZo6dzl0Q+IIPowITDDb2
-	 GaQYzbM21bq3vSw+1eGa//ZnkSS++aZhWoJ5x3VeFrygY8JkMtCDnOLeg3EbeKJbHX
-	 QV+COFG7T0QxdVveORNck1VkWFGnDbW7RVNsCofQOXicRuydjnIou2h7r7GZrtMWWE
-	 0fWfYJkdl8j/s90K97411LPDHMokeVk9D6ZEsVwherN/uUHYpIl6K6CaAPSR5eLg2Q
-	 OusjiKSSYUILA==
-Date: Mon, 26 Feb 2024 16:20:56 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: arm: fsl: add i.MX95 19x19 EVK board
-Message-ID: <20240226-sharpness-material-54a8e719ce91@spud>
-References: <20240226-imx95-dts-v2-0-00e36637b07e@nxp.com>
- <20240226-imx95-dts-v2-1-00e36637b07e@nxp.com>
+	s=k20201202; t=1708964479;
+	bh=R6yxrXujX0jfOIll4TI/UYi3wy+Ea/LBT8jqilVrwiE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cF//Q6FcrtHLiC6DHEAN7oNTERuKBhSi5/isIxW21Evf5p/DcR3/FuYyfUsvnsEkh
+	 qjA+Slr8PrLNa3alCeX4PjxGOc0utZt7bw+LtvgKb8/2JndUCDO7wkMz9m5TDK90/U
+	 ZwvGLkqdzLBBXsooZd7RcXs/x3WPLa0iMgl5W6yEThdYW+lld5YJ0t78le4PK2CSR4
+	 xyOcaAdFW8uzOB4Xjalvdf/YqwnmkKVuNsTXI1Z6qqD2LahZvXnmPqWl0QhcxAppw7
+	 RdfW1nOyPLerJL45Mzk6yahRE1I7A/CzTkVZt4xcTZH308RV3pG1KScy5P7auBRIJM
+	 pprr1F7/T2vew==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH 1/1] perf bpf: Check that the minimal vmlinux.h installed is the latest one
+Date: Mon, 26 Feb 2024 08:21:17 -0800
+Message-ID: <170896440864.1919080.11021929412128903940.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+In-Reply-To: <ZdoPrWg-qYFpBJbz@x1>
+References: <ZdoPrWg-qYFpBJbz@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rUkY2RhctmtN3G5T"
-Content-Disposition: inline
-In-Reply-To: <20240226-imx95-dts-v2-1-00e36637b07e@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+On Sat, 24 Feb 2024 12:47:57 -0300, Arnaldo Carvalho de Melo wrote:
+> When building BPF skels perf will, by default, install a minimalistic
+> vmlinux.h file with the types needed by the BPF skels in
+> tools/perf/util/bpf_skel/ in its build directory.
+> 
+> When 29d16de26df17e94 ("perf augmented_raw_syscalls.bpf: Move 'struct
+> timespec64' to vmlinux.h") was added, a type used in the augmented_raw_syscalls
+> BPF skel, 'struct timespec64' was not found when building from a pre-existing
+> build directory, because the vmlinux.h there didn't contain that type,
+> ending up with this error, spotted in linux-next:
+> 
+> [...]
 
---rUkY2RhctmtN3G5T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to perf-tools-next, thanks!
 
-On Mon, Feb 26, 2024 at 09:20:16PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> Add DT compatible string for NXP i.MX95 19x19 EVK board.
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-A passing comment, it feels like it'd be good to add a Link: pointing to
-the docs for this board. This is true generally, but doubly so when
-googling the name above doesn't give me anything other than LKML.
-
-Cheers,
-Conor.
-
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentati=
-on/devicetree/bindings/arm/fsl.yaml
-> index 39378879777b..42c6e8467dc5 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> @@ -1264,6 +1264,12 @@ properties:
->                - fsl,imx93-11x11-evk       # i.MX93 11x11 EVK Board
->            - const: fsl,imx93
-> =20
-> +      - description: i.MX95 based Boards
-> +        items:
-> +          - enum:
-> +              - fsl,imx95-19x19-evk       # i.MX95 19x19 EVK Board
-> +          - const: fsl,imx95
-> +
->        - description: i.MXRT1050 based Boards
->          items:
->            - enum:
->=20
-> --=20
-> 2.37.1
->=20
-
---rUkY2RhctmtN3G5T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdy6aAAKCRB4tDGHoIJi
-0gjOAP9Rgfuc3rAtLjLFrfH5OqhO2c+vaRrkr3viH+WrvvsSQAD/RqOHIWP+4NNY
-M4k1synCu0LAfkZEy7Ae2vTHkNXzXQs=
-=t3G2
------END PGP SIGNATURE-----
-
---rUkY2RhctmtN3G5T--
+Best regards,
+-- 
+Namhyung Kim <namhyung@kernel.org>
