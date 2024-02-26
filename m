@@ -1,56 +1,61 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F04C4D9E2;
-	Mon, 26 Feb 2024 10:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CD6200A0
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944229; cv=none; b=D57EY9qehJEPkcbAAT6uN6qkIeBb6Mi6oHdROU1fCVBx441KXQX51ehyP1N6sg31k05CMO0Zon4mu0l+4zbtyPdT29g8h39aVctMKWu1oCalBJXMFVW5+zOsyi64O78l60QFWYVYVgRgdpzqgG9PJY3a1P62Ebb49d0Gv3q3pQ8=
+	t=1708944240; cv=none; b=V5Ce4gp3Q67y18MTPoFo85qzwemxJffXBBSAew22mS7Zv7WCWRDLpxh0+iH4X7uYa4tr1UXSu+JXFfBRCahKJ3mP6EBArdWQEg38NMlN9kbrqVQMDbhZwTkGCc0ukg5MAIx1tVAGbEF1L5qLA4trdNm8AyfbfszqK3WziUqpt5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944229; c=relaxed/simple;
-	bh=vDtt1qad7d+14ut2THuDeEEY3FL6dIHf7i9adMicIZk=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NsQB0Q9TRUF1LR0ZsynDpuA91y7im7YF7DFJe9ur8TvfUjnfa13dMnWlyM31XhqeXiwJdS7NngFToJHLqaLAu/ZLXecqNP/ZDv7KYlSOJYJapekcTFvRM5HWvFKZy89K6U6Sjh8WywG74BY5PuUCjLg5lZbcqe2u2A7HwPs7fsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ccjhfYPR; arc=none smtp.client-ip=217.70.183.199
+	s=arc-20240116; t=1708944240; c=relaxed/simple;
+	bh=4G9c1LruoJnAwgurNIMzmmYSB6ZQBZFpXt8EnYFHE1M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CZjgTETx7s8l/DpOEjRiujWBSEhK3jTpj9byhRIfl2e684V5GEiEaGlSDyzY34pE5Woa+9IeAqPj/1nGQpBQiFjS6hwuTmgNjGuXIgaoiRG9eVCQK7HydaSI+0Eyt2FSFr0xupQ3GjOainr7PZ81A/rAJ3xkPrjeWPgEkolNNII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jq0JikuM; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ccjhfYPR"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C070AFF804;
-	Mon, 26 Feb 2024 10:43:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jq0JikuM"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BAD1F24000C;
+	Mon, 26 Feb 2024 10:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708944225;
+	t=1708944236;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pbuG9zKlK6ziqZGMdcv8Imk0IwSOjhpEoUUTm5M8p7I=;
-	b=ccjhfYPRzGq4Vk3DqllusYqNYAwB2BN5xggKYeKVaKP2EEWfNew/SZroBqrrz6vZ+ic8aV
-	gp67fl3aQKY4eT5Lr//50VQayl1gH5fnYrTiEPjiIEwBqEOybJOXe8vG0mG4opEisUnS5P
-	1Bu6HrhlrHGhhxjofOHJbT6FXQWtnEad3u4jsvbT5xKN2v2sdS3IkQETYsDxp6rYJQiOcf
-	dgquHrTFfyT1SG/nNqx0EPFjYZlnnnjhzDLz5q1SqqJN34Oq7sk2OZaR5PERjHKnbqfjSG
-	vh9F9rEQNYmOxtVHKeJ9KcHAL2yajQIfPDAZOHgdHJdi5ljQ8kSu8TdVuP0Z9g==
+	bh=sxwncBqF1qChlTGcNzhdeu4dak1hlGz+T1xYbis3nVE=;
+	b=jq0JikuMnQnPzXUbLe14yIF7SUov0LVLSA1b8GHSmwLsk/ScG6LAChVhvoUV23EHMSmsgI
+	QWfLAiogK3Gx2vpH7VUEoIh6rvmQ8qvUsIoOvE7y5Tj4/oT1X39RWa7Az8Ye3zoggRRvyO
+	7NrbSZXeuD38EIkD45v5VJK5M6Pdm0LtdV+MkxL9V/TrMewyemWaBl8G3qcOtapZgL/ToQ
+	Y60u6SPXqzfqbPRcsWLw4+uQAABn/tiEIPbKNHENp39n2m9NjK6mQ5Lu9pOwhy7LbqPH6d
+	+4EUk86u9as0t4hwb7KGsqeB4sUp/0IC+ZvsrbA0pV0/znaDDY1RynE4+l8pjw==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Varshini Rajendran <varshini.rajendran@microchip.com>,
-	tudor.ambarus@linaro.org,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	linux-mtd@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 08/39] dt-bindings: atmel-nand: add microchip,sam9x7-pmecc
-Date: Mon, 26 Feb 2024 11:43:44 +0100
-Message-Id: <20240226104344.489249-1-miquel.raynal@bootlin.com>
+To: William Zhang <william.zhang@broadcom.com>,
+	Linux MTD List <linux-mtd@lists.infradead.org>,
+	Linux ARM List <linux-arm-kernel@lists.infradead.org>,
+	Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	f.fainelli@gmail.com,
+	kursad.oney@broadcom.com,
+	joel.peshkin@broadcom.com,
+	anand.gore@broadcom.com,
+	dregan@mail.com,
+	kamal.dasu@broadcom.com,
+	tomer.yacoby@broadcom.com,
+	dan.beygelman@broadcom.com,
+	David Regan <dregan@broadcom.com>,
+	linux-kernel@vger.kernel.org,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Brian Norris <computersforpeace@gmail.com>,
+	Richard Weinberger <richard@nod.at>,
+	=?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Florian Fainelli <florian.fainelli@broadcom.com>
+Subject: Re: [PATCH v6 11/13] mtd: rawnand: brcmnand: Add BCMBCA read data bus interface
+Date: Mon, 26 Feb 2024 11:43:54 +0100
+Message-Id: <20240226104354.489350-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240223172520.671940-1-varshini.rajendran@microchip.com>
+In-Reply-To: <20240223034758.13753-12-william.zhang@broadcom.com>
 References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,15 +64,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'3c1f9b7fa20aed8b3227d4ed7ed630da6077304b'
+X-linux-mtd-patch-commit: b'c52c16d1bee5c3b074989e839eeceed2a0a8cc43'
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, 2024-02-23 at 17:25:20 UTC, Varshini Rajendran wrote:
-> Add microchip,sam9x7-pmecc to DT bindings documentation.
+On Fri, 2024-02-23 at 03:47:56 UTC, William Zhang wrote:
+> The BCMBCA broadband SoC integrates the NAND controller differently than
+> STB, iProc and other SoCs.  It has different endianness for NAND cache
+> data.
 > 
-> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Add a SoC read data bus shim for BCMBCA to meet the specific SoC need
+> and performance improvement using the optimized memcpy function on NAND
+> cache memory.
+> 
+> Signed-off-by: William Zhang <william.zhang@broadcom.com>
+> Reviewed-by: David Regan <dregan@broadcom.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
