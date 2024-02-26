@@ -1,131 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E217129A75;
-	Mon, 26 Feb 2024 14:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6829C129A60;
+	Mon, 26 Feb 2024 14:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708957035; cv=none; b=H2/igorI3HUWG9PE3CtrHo6RVhfusoOMmm4RFiIAMQjZb+Wz+TsBvib9iqYURvjwJ9PhBJohu9Lz+xrmHoF7JvJ+yddszElaSZc21lfr+VqfT37qHnS4hEkFCbGc+M7pNFTfQTmdMZ9jGc6VpB85PAOujkmqfpqhA08bj8iGZLM=
+	t=1708957318; cv=none; b=JChThJajkzq9nAbWH08z+WvI40IVtaFW6qJY9vni9DqfDRUdjrhSNUCHG24PNIWhu/nPHGLR1y7qOmaEsz7rEtt8OW2oSJ+vDIDJcqTIDV6s8m1Paor1j5fuPx+OQwjoYfpzx+aELS2WVrP7fW2qv3R4g6nWoyaqaVmrBQZgJgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708957035; c=relaxed/simple;
-	bh=HZlXZGpEZ0auGfIkoqRiKy72XZYfKXmXVmc4SJZWGJo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AAl0fRMvnnTyhadnN5JzNlLyfk4ha6ANIgn2pWRxd7XTwtoYc2C5BlLuJiQstRX6FQdpTImG6WC9j0ISpJGJErLJXH6Rl8Mp/E5UnBD1f6oGqv4WSb/Ql73GlsznL+JGw8HoFxjpAKGxQJA1TsPk+gfQtMSRavv+1hQ3bAPkKHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XLDWD9hK; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1708957318; c=relaxed/simple;
+	bh=8WvnMs1Oiazuwc6Dj/9PvxJnw9utvTorR83BBqq8Wqs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=XMcngifRfCFocLsYNdjnVOTYoNYSFpP1p9igCZGIr2lGzQH1jV37v5abqFV45R4olnYW72B8Co8IAm3hd2hlRHttGYiDeT73ljVsDqqxNKVJ5d43rX30RU0Vmcw59uon7NE9u4hWNOjdhU949So8VuJ3dfm0IzvxocgdzF3iiro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Di2Qs7Tr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NiEdbtvB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XLDWD9hK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708957035; x=1740493035;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HZlXZGpEZ0auGfIkoqRiKy72XZYfKXmXVmc4SJZWGJo=;
-  b=XLDWD9hKWSYS93+37BvlTXBZ6JM6TPO2yMqN8070OaF1NRVheRzy7aNh
-   C8+aBkPAeDa3JRuo//3OTkghATG1dNXAZjETuIcXLR3TP+cQdrocS38f7
-   J6xBn9Ls3gxQCKn92fLTM6foUg26500JT1tcbjMfzCKQ9giYPa99uRXL7
-   /JUOcfxPai348/cfF/y84SSZNT30zEuRGFfM8UlfdLpNHoAzBPFmvWY1R
-   ALlskxrfP3+PR4xvYS4oGQDxViRLcDoAGnyLGtx/4BaXHB4cz1KU7JNZh
-   l+25I4qtB65xEIzy+8e3uXlZ/++WDLpJuzg9TItX+fBVLotxpDDKIJfk5
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="7047436"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="7047436"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 06:17:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="913872291"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="913872291"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 06:17:07 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rebmx-00000007hRa-3oE3;
-	Mon, 26 Feb 2024 16:17:03 +0200
-Date: Mon, 26 Feb 2024 16:17:03 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-rpi-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linux-tegra@vger.kernel.org,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Al Cooper <alcooperx@gmail.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v1 02/14] serial: core: Add UPIO_UNSET constant for unset
- port type
-Message-ID: <ZdydX79GBaedFqku@smile.fi.intel.com>
-References: <20240221183442.4124354-1-andriy.shevchenko@linux.intel.com>
- <20240221183442.4124354-3-andriy.shevchenko@linux.intel.com>
- <5aeee02f-45a6-48e5-a6f4-e55b76d4b959@kernel.org>
- <ZddKaaB7HO0CyldD@smile.fi.intel.com>
- <fa46f220-a1c4-43f4-91e1-5929ff335be0@kernel.org>
- <ZdiyzKMZPlkN462G@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Di2Qs7Tr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NiEdbtvB"
+Date: Mon, 26 Feb 2024 14:21:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708957315;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gGUxh/MpWYF6modd4VritjfskWdY8aSRe1GkrlnbTQA=;
+	b=Di2Qs7TrAa2MgtDtmguDRlrZmdoIB89lLyOmDpnBfH9OltqDbh5wq16MUEVBKtDLTI3doi
+	oBYdJoKHM/YInW5JarZKTA+7dWUt7qOW1dbzrv2ETXG7V5I0+IPKG+BCQ0eSnru5uTU9GV
+	7cxId1os4xPbbMiEJhA4JSDIPU/4W87NfK8DJtWosZ85sC1vKLulfEDwfIq/xdIqXMYAET
+	XPkOlctdB+pqHF543t1M2EPkQxLYof8w9cYIwSVlFe4swEH/LlukekaxTvpIgVxhmWUKvo
+	J/mqsbb+PlfeAWJs5XbTaUzOir2j+lAALIbAZqKObzAxAll0L+rSEZH0BUsnPA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708957315;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gGUxh/MpWYF6modd4VritjfskWdY8aSRe1GkrlnbTQA=;
+	b=NiEdbtvBxmtCUquJSccOpFvW9AT/gTzjEHemVi8YHgmMusxlpeH3Y5pM9pmkX2+QC/T20T
+	pZZKajuszzxaOFBA==
+From: "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/msi] irqchip/riscv-intc: Fix low-level interrupt handler
+ setup for AIA
+Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240226040746.1396416-2-apatel@ventanamicro.com>
+References: <20240226040746.1396416-2-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZdiyzKMZPlkN462G@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Message-ID: <170895731463.398.6136319036686107784.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 23, 2024 at 04:59:25PM +0200, Andy Shevchenko wrote:
-> On Fri, Feb 23, 2024 at 06:42:15AM +0100, Jiri Slaby wrote:
-> > On 22. 02. 24, 14:21, Andy Shevchenko wrote:
-> > > On Thu, Feb 22, 2024 at 07:58:32AM +0100, Jiri Slaby wrote:
-> > > > On 21. 02. 24, 19:31, Andy Shevchenko wrote:
+The following commit has been merged into the irq/msi branch of tip:
 
-...
+Commit-ID:     1abea7339b404bd79bb26976471e3bf8e6080f47
+Gitweb:        https://git.kernel.org/tip/1abea7339b404bd79bb26976471e3bf8e6080f47
+Author:        Anup Patel <apatel@ventanamicro.com>
+AuthorDate:    Mon, 26 Feb 2024 09:37:37 +05:30
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 26 Feb 2024 15:17:11 +01:00
 
-> > > > >    	unsigned char		iotype;			/* io access style */
-> > > > > +#define UPIO_UNSET		((unsigned char)~0U)	/* UCHAR_MAX */
-> > > > 
-> > > > Perhaps making the var u8 and this U8_MAX then? It would make more sense to
-> > > > me.
-> > > 
-> > > WFM, should it be a separate change?
-> > 
-> > Likely.
-> 
-> Then I need a commit message, because I'm unable to justify this change myself.
-> 
-> > > Btw, how can I justify it?
-> > 
-> > Hmm, thinking about it, why is it not an enum?
-> 
-> Maybe, but it is a replica of UAPI definitions, do we want to see it as a enum?
-> To me it will be a bit ugly looking.
-> 
-> > But it could be also an u8 because you want it be exactly 8 bits as you want
-> > to be sure values up to 255 fit.
-> 
-> Depends on what we assume UAPI does with those flags. It maybe even less than
-> 8 bits, or great than, currently 8 bits is enough...
-> 
-> TL;DR: I would rather take a patch from you and incorporate into the series
-> than trying hard to invent a justification and proper type.
+irqchip/riscv-intc: Fix low-level interrupt handler setup for AIA
 
-Okay, I want to send a new version, for now I leave the type change for
-the next time. It looks that quirks as well will benefit from type clarifying.
+Use riscv_intc_aia_irq() as the low-level interrupt handler instead of the
+existing riscv_intc_irq() default handler to make demultiplexing work
+correctly.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Also print "using AIA" in the INTC boot banner when AIA is available.
 
+Fixes: c1be2ae5987a ("irqchip/riscv-intc: Add support for RISC-V AIA")
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240226040746.1396416-2-apatel@ventanamicro.com
+---
+ drivers/irqchip/irq-riscv-intc.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+index cccb653..f87aeab 100644
+--- a/drivers/irqchip/irq-riscv-intc.c
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -183,7 +183,10 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn, struct irq_ch
+ 		return -ENXIO;
+ 	}
+ 
+-	rc = set_handle_irq(&riscv_intc_irq);
++	if (riscv_isa_extension_available(NULL, SxAIA))
++		rc = set_handle_irq(&riscv_intc_aia_irq);
++	else
++		rc = set_handle_irq(&riscv_intc_irq);
+ 	if (rc) {
+ 		pr_err("failed to set irq handler\n");
+ 		return rc;
+@@ -191,8 +194,9 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn, struct irq_ch
+ 
+ 	riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
+ 
+-	pr_info("%d local interrupts mapped\n",
+-		riscv_isa_extension_available(NULL, SxAIA) ? 64 : riscv_intc_nr_irqs);
++	pr_info("%d local interrupts mapped%s\n",
++		riscv_isa_extension_available(NULL, SxAIA) ? 64 : riscv_intc_nr_irqs,
++		riscv_isa_extension_available(NULL, SxAIA) ? " using AIA" : "");
+ 	if (riscv_intc_custom_nr_irqs)
+ 		pr_info("%d custom local interrupts mapped\n", riscv_intc_custom_nr_irqs);
+ 
