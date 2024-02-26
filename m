@@ -1,84 +1,60 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5491912FF82;
-	Mon, 26 Feb 2024 14:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6DB12AAC5;
+	Mon, 26 Feb 2024 14:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708958406; cv=none; b=Ei0mvy+PXUb/nEimi9lx3atwd836vuzcxHv6waRv3Va1jk0iZ68UB+ejnxzHR6m7rYa+//INeJIgGqjgAKviDof0FDWZzDEyPC6z3lKoVKgnlNgcng7vlWzJOPMd1W2vy+T8UyAxRLwH8ThCgZ6eBTi8UweFlsEmTHrnvLXKng4=
+	t=1708958425; cv=none; b=tpzcGrrAaU8sewnT1b+2Ka1EGVlieRvQfKH0k0FI3M1HuWYJA8oxZO3wpFsz95W92TMFPNycfW20YNAlLFF0TX9TTBagDSSQtlOfKmKdwWHcMLWfkQ8V+jnQUlxPk74Ptjb9ZxolFbIVSju9jVp9d2cdbq6raNxiIdUB/yEMj9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708958406; c=relaxed/simple;
-	bh=qqbq3Bwm43dJh8id89W2TYXp5QH09UlcB6vdIL6AVDQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=POY5p6iMnY4fq/1jZPXLBK2pvc3J7U5k+JIu04CpnrZwNPYPvnREQ1dxzNmj8OV2nMTc8Cqei4fNKpcA7qfuOnt5Qyv1ONl/7Gf67TwONp8n868zSv/wS7zUbHCgH1q918zGfGuY8VBxw0tZmpZoUGFcVXEeSihz7l/w3W4yyoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I5zmQ07g; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708958425; c=relaxed/simple;
+	bh=XvQEtwLAKWGhgBGarB0Wr7PB20ORxGBoZaxk/dpNHoU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=poEwsmoPwPeh57o7q9Dc7HZWAhVG6B8+Hd893uj5ENXt+c5zK7h7i+EFddDw7SQTojga8OSwHCa8qAbhY8+bAgprFuXIxcXjyfuV2TZEeLfAWQf55DAFCt0C+yz76ASREwx4upaTeA6L+SK824pVLs6Dc6k9j8gGKr+TBThXNSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=P0Igz8a1; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5zmQ07g"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5a0919f2022so297194eaf.1;
-        Mon, 26 Feb 2024 06:40:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708958404; x=1709563204; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nuFgloaw/T98jLpJSXGJfxanwsQCbN3BvZjtpbYZY9M=;
-        b=I5zmQ07gPcROjHLJqzlY7T+TqWGFmh5r/xPRPl5gPKT39e+EE1C2z91kPpQyl0ic//
-         uinDm/fqztzbPAUPWKGnW5+MVDGmdcKXAr4qAHnjEfAOc0eKMGzz5EsAxeagfgXB+G1g
-         XcX7Yn3YAvHtLCXbpxdCNEdf/nrWrsXcXewC3JIv92Y/ujDNbIX++id5V0cqPtUYogf1
-         D3yJmRXV1c5oFDk1pgnHHKiogtZbfMKWUBGK4GSmJzyRuNm5PMzdotHRYjH+U/PZVs7o
-         lJ1bWPXgmsIIdPbBae0iOCe17JN9ZzIBb6F9tBqSOPlHW8u++oD5VWxAEzYbRGuOOSW5
-         eKwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708958404; x=1709563204;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nuFgloaw/T98jLpJSXGJfxanwsQCbN3BvZjtpbYZY9M=;
-        b=rAmbsfq6l2rnSwVZ/ZrsZWxFtRjW1kHb/U43d0Q+K+ai+E6etxNTW0zLaH2VoT1eAE
-         zglHjjHrbsYhok+vAbpERs3EjEWpMrtQBKGiLju3wmIP1CKv+H88sfO6LPFTz/9/JllO
-         YvzPOYLyrXSiYjWV16nX2FPJ0VkjFh5p/RreSDzPpBXXkBNDCKGZAsiou9O/ULAA0vUX
-         cPBfFaKGLEW3T/yqn01nlqkgFJkfC8O59r+L85akFaDspe250VTWDTDR5htdt27X0sVN
-         ph0K8O1tvuOiTVW7SmjUB6hECAXMRMcSLMKJN5GwUwL4sqLbFY9qXMPIflPxVIfhKrEc
-         BYVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqz0y6zgamjn4IXd9Z9uJKAK/BxhotOh18mOy/2gzA96I3J+OK8AnkUN50FXgvNiv4486gIjunkgC3D9rTlZ9dckoS
-X-Gm-Message-State: AOJu0YwuAImbKG18oPedZVuP4LYlhfsYuVC3+rsZgTL2wHRgqyyB5m0G
-	9B89qJJBpE/yehfJFycgdHUT0Hbf8Ie0Nl2FRNPpyA90U1bJlL4Bj/FFXB7t
-X-Google-Smtp-Source: AGHT+IGjgJBiYbBVOHtGYle9iWXhqY6cflLoOIZ20fo8AoJm+voj+6sWNjAMcfJ0VA4hKdsuB66yYQ==
-X-Received: by 2002:a05:6358:5e8a:b0:17b:56ad:6b14 with SMTP id z10-20020a0563585e8a00b0017b56ad6b14mr4467201rwn.2.1708958404049;
-        Mon, 26 Feb 2024 06:40:04 -0800 (PST)
-Received: from localhost ([47.254.32.37])
-        by smtp.gmail.com with ESMTPSA id z12-20020a634c0c000000b005e2b0671987sm3998766pga.51.2024.02.26.06.40.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Feb 2024 06:40:03 -0800 (PST)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Hou Wenlong <houwenlong.hwl@antgroup.com>,
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	kvm@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	x86@kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>
-Subject: [RFC PATCH 73/73] x86/pvm: Disable some unsupported syscalls and features
-Date: Mon, 26 Feb 2024 22:36:30 +0800
-Message-Id: <20240226143630.33643-74-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240226143630.33643-1-jiangshanlai@gmail.com>
-References: <20240226143630.33643-1-jiangshanlai@gmail.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P0Igz8a1"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41QDKxnB024671;
+	Mon, 26 Feb 2024 14:40:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2023-11-20; bh=PTxvjhul145awLzkBxJam1t2BqjccVZh9EDCquswOoY=;
+ b=P0Igz8a1yW+3uPXed8+DqynuwvtvJZ+qYT5WYjag0clIgCLSovk1madVXhtfNX2nKtiL
+ 2XU0lrnppHN/lB5A5joHDrL5SJO7m72uJN/T3T4McoZQ7Mlfmw+Eymg+r9Ektg/A/83r
+ l18gI8fgMVbIIBPIaGGtQu2UszXM2W9vGyD0DPrXlYzKyHpEXGbWkN08jE+oTKBKum8G
+ 7ZMetjcmZEsKYHsZFxuGTGu9wb8QivC7BHVsX9BR53i+87aoaJP2T+wcRARdM9rCEfA2
+ b+RlDgKPkvY33/A0k0AAdv8vBLa5JnM1CrXxi9/o88sY/+St8LHInFOeI0PO5Z3SUgjU iA== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wf7cccq00-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 Feb 2024 14:40:16 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41QEUvlN019220;
+	Mon, 26 Feb 2024 14:40:15 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wgbdhfsr1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 Feb 2024 14:40:15 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41QEeEMA040203;
+	Mon, 26 Feb 2024 14:40:14 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3wgbdhfspg-1;
+	Mon, 26 Feb 2024 14:40:14 +0000
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, dan.carpenter@linaro.org,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Subject: [PATCH] platform/x86/amd/pmf: Fix missing error code in amd_pmf_init_smart_pc()
+Date: Mon, 26 Feb 2024 06:40:10 -0800
+Message-ID: <20240226144011.2100804-1-harshit.m.mogalapalli@oracle.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,70 +62,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-26_10,2024-02-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402260111
+X-Proofpoint-ORIG-GUID: G1Uc1xhAlbV6aCXUu4JMFiz46PnnPrZj
+X-Proofpoint-GUID: G1Uc1xhAlbV6aCXUu4JMFiz46PnnPrZj
 
-From: Hou Wenlong <houwenlong.hwl@antgroup.com>
+On the error path, assign -ENOMEM to ret when memory allocation of
+"dev->prev_data" fails.
 
-n the PVM guest, the LDT won't be loaded into hardware, rendering it
-ineffective. Consequently, the modify_ldt() syscall should be disabled.
-Additionally, the VSYSCALL address is not within the allowed address
-range, making full emulation of the vsyscall page unsupported in the PVM
-guest. It is recommended to use XONLY mode instead. Furthermore,
-SYSENTER (Intel) and SYSCALL32 (AMD) are not supported by the
-hypervisor, so they should not be used in VDSO.
-
-Suggested-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+Fixes: e70961505808 ("platform/x86/amd/pmf: Fixup error handling for amd_pmf_init_smart_pc()")
+Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 ---
- arch/x86/entry/vsyscall/vsyscall_64.c | 4 ++++
- arch/x86/kernel/ldt.c                 | 3 +++
- arch/x86/kernel/pvm.c                 | 4 ++++
- 3 files changed, 11 insertions(+)
+This is based on static analysis with smatch, only compile tested
+---
+ drivers/platform/x86/amd/pmf/tee-if.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index f469f8dc36d4..dc6bc7fb490e 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -378,6 +378,10 @@ void __init map_vsyscall(void)
- 	extern char __vsyscall_page;
- 	unsigned long physaddr_vsyscall = __pa_symbol(&__vsyscall_page);
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index 8527dca9cf56..dcbe8f85e122 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -458,8 +458,10 @@ int amd_pmf_init_smart_pc(struct amd_pmf_dev *dev)
+ 	amd_pmf_hex_dump_pb(dev);
  
-+	/* Full emulation is not supported in PVM guest, use XONLY instead. */
-+	if (vsyscall_mode == EMULATE && boot_cpu_has(X86_FEATURE_KVM_PVM_GUEST))
-+		vsyscall_mode = XONLY;
-+
- 	/*
- 	 * For full emulation, the page needs to exist for real.  In
- 	 * execute-only mode, there is no PTE at all backing the vsyscall
-diff --git a/arch/x86/kernel/ldt.c b/arch/x86/kernel/ldt.c
-index adc67f98819a..d75815491d7e 100644
---- a/arch/x86/kernel/ldt.c
-+++ b/arch/x86/kernel/ldt.c
-@@ -669,6 +669,9 @@ SYSCALL_DEFINE3(modify_ldt, int , func , void __user * , ptr ,
- {
- 	int ret = -ENOSYS;
+ 	dev->prev_data = kzalloc(sizeof(*dev->prev_data), GFP_KERNEL);
+-	if (!dev->prev_data)
++	if (!dev->prev_data) {
++		ret = -ENOMEM;
+ 		goto error;
++	}
  
-+	if (cpu_feature_enabled(X86_FEATURE_KVM_PVM_GUEST))
-+		return (unsigned int)ret;
-+
- 	switch (func) {
- 	case 0:
- 		ret = read_ldt(ptr, bytecount);
-diff --git a/arch/x86/kernel/pvm.c b/arch/x86/kernel/pvm.c
-index 567ea19d569c..b172bd026594 100644
---- a/arch/x86/kernel/pvm.c
-+++ b/arch/x86/kernel/pvm.c
-@@ -457,6 +457,10 @@ void __init pvm_early_setup(void)
- 	setup_force_cpu_cap(X86_FEATURE_KVM_PVM_GUEST);
- 	setup_force_cpu_cap(X86_FEATURE_PV_GUEST);
- 
-+	/* Don't use SYSENTER (Intel) and SYSCALL32 (AMD) in vdso. */
-+	setup_clear_cpu_cap(X86_FEATURE_SYSENTER32);
-+	setup_clear_cpu_cap(X86_FEATURE_SYSCALL32);
-+
- 	/* PVM takes care of %gs when switching to usermode for us */
- 	pv_ops.cpu.load_gs_index = pvm_load_gs_index;
- 	pv_ops.cpu.cpuid = pvm_cpuid;
+ 	ret = amd_pmf_start_policy_engine(dev);
+ 	if (ret)
 -- 
-2.19.1.6.gb485710b
+2.39.3
 
