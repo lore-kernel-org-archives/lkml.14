@@ -1,39 +1,38 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632A75D464
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C945C912
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708937278; cv=none; b=YYBOoQtVR7e6n9qoyEqvU4JoOkRwMARnOtB7rlfMlIfxldsJpGqaKUEWIBXXFUyKjwMsnJc6MRwwdKbjvG/qK00cPmcnk+yQpDDmY+44pC5BczmdaM9y4TI05AwEpQtkMsoSe+y//nhmgv95twjKQQxmNgh2Ty8/yst+2SZptNk=
+	t=1708937276; cv=none; b=HU1N550Jg3u576q3XaA04C1/+fU4RPgt/pGv7ipzu2zmpN4Oq2TSCdwFPLs58+Q2iElFGySQyAhhvwbEf4PyZRsd28lxTdA5V/CzEN7BeqPOu/f0ulJxqbuRBOgyu+gTBMbWls/4SnTcfrMYA5j8fCKLvooogpRNC4d5XPBUBfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708937278; c=relaxed/simple;
-	bh=+DsmO8SGjkaXdS5jYLEBNm7wDQTKeBuOh6cIQzNvHU8=;
+	s=arc-20240116; t=1708937276; c=relaxed/simple;
+	bh=JhVpHvcG1J7Op/Mz7EjpBz41y28ABTRWkm10DWpYe4s=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ay1N+EiVJIE3gM4/NyHuWy875Mo61+6ISEf0W2CqlwefBkFFRL+UYMjXlygD/J6rY1ec9qa7easKqjAz6jsLvPcN92D1qvF80mcESntNJn3b3fpVmtSab6OlDa0klhKwT6MHQve74Lu1YFnkO6Yee2YS23bvev05gSYPIKFZGu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XrP9z8jx; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=MOhlqoQPAmaxgc3RYjm8NqRxLOFnfM/+yiZZZXeKDQm/ndjJj78h/s/ugD4xIiIwI1KqylbZaLIdSCwXol3BDleg7IaZ8NRhr4/tKKAkoDi+ZABR23Kp+vGem+6i9EqQYFYr3t0b1kiFidJdfsvXf5+UbYtXDgwInY39bVUYzXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dajiUpSt; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XrP9z8jx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 983CEE0005;
-	Mon, 26 Feb 2024 08:47:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dajiUpSt"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0EBFAE0015;
+	Mon, 26 Feb 2024 08:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708937268;
+	t=1708937272;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=U5UinReH6vUXNxBJ97EG+ZqktERoBQAcu/k8mtlmiaY=;
-	b=XrP9z8jxMI5xCnX8l+KmyX/OJHsT/QmOU1KSAK+/DiaCAEyrVNuShux4U9dRUB54aVXAP7
-	l+qtq7YRMZgS8LUJE+fwPiKyLRahcb33HpqHFvVFTcjuCtYikwmrYQWThab2/VWNhvBDdf
-	7oqUxYO03+mnag3bgcCnQDfGbSsRu9hzfvY8AWVbAureTm8PuQRb2bQEeJZJUDgmykTNk3
-	J1EpKhc9k08onD+9a4CC/aH6zhrtY/EayYnDXwL0MKR9PRAzE+aeJPIQrcet7l119OMd13
-	DAW8v0ZM0+gsuby5I1kw602HA1YcXpqATY5I/zvR04Wxv3nwtr1RnbJNPP/xCQ==
+	bh=wqScyvz6BCmvQG/RS9vkAw9u6UNxlYfQ0HUcNvrYX88=;
+	b=dajiUpSt8xq6QszajQz9nk4rNu0mjT18bGZMDy9SnbgzKOLQ0eVelLI7RXMKYZaJC314yj
+	CVfz76tKbYY8SevcLJrg9w5b3Ov53rBJhNQ8jTg4iljA+MuD8nvPpT7E7Lv7IRd5X8247N
+	swtrjoIZ+tGa88SUFd0K+Ei3V17x8GTJSpYGnVPQ9hHjjhbYHLCzCbWRFGqY1mXjbiDAsz
+	2+rQmYpBJO30Njw4u+RN3Ybly2jXsmeF0IGmhYIIhWGHxY13OGoKG7JkEUv/gSRdsoQ0bn
+	ncJOIWB5EtgUZowPJhUVaCydPP7g2MiO0qfdtvbNm0ymgF8+4sUeehsj61kR7g==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Mon, 26 Feb 2024 09:46:33 +0100
-Subject: [PATCH v3 3/9] drm/vkms: write/update the documentation for pixel
- conversion and pixel write functions
+Date: Mon, 26 Feb 2024 09:46:36 +0100
+Subject: [PATCH v3 6/9] drm/vkms: Add YUV support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240226-yuv-v3-3-ff662f0994db@bootlin.com>
+Message-Id: <20240226-yuv-v3-6-ff662f0994db@bootlin.com>
 References: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
 In-Reply-To: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -58,194 +57,515 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
  nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6432;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=17847;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=+DsmO8SGjkaXdS5jYLEBNm7wDQTKeBuOh6cIQzNvHU8=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl3FAtv6lG5Spu+Fvdk7/o9Z0JtjYZu9Zbw5ykTQz0
- 4KgnyCmJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZdxQLQAKCRAgrS7GWxAs4lHMEA
- CTqOSIvqzWg5SOoLw9sntXeUH/2RgSp5S7nC3yjRZwTmKFiYwQuFeBqvHeF3s8Ox7W/wA8g2SIdyD8
- LsciJq5x4mM2X7R6cbBw2z+C1SUlvBkmlNsNSsGTJiUGtcr1kc67uOa9MUdgUmA5VhaM+ArJpn6rGm
- cp5NYVDbNwGly5AmjhCdc5Xk/eGWs5SEp5GzA/6e4xcfc+/rRuj2kUZxnjhI+iRJp75UGWOaMBJvr3
- Yj1HyvriKQEYXrhVur/OnfTg33SnQa1JsQYzJ0ZFvGLznh0y9tcOm2rZSgm2hrCIiBchWxMLZGlosh
- fOZLNevfHm/+Mt3BjqYgCE3gR5dyFK+eAwCdt5kAlsXIbez4HYg+FkAFRF6gkBGhwvZBoElT6wTgIO
- K/KojwFD80ueszTcsrjO6NiqRnXkEYmggk34KiSMnKoJOBy3FBVCPUEgA3fnNIcLb8xCebFSkT+Gaz
- Lr6p7Hor6TaFf/NnVfNLbU42PZ8qh3u3C98xHjczi3zS8o8irXPPem3MBJ3jAcCxryYVMocWd9KWut
- IS4ieNPzs8xqCohPwI1DsWfrgMLP+dB8zyUoRltaVNfk6ck/epwBPD6dIwRq+C0kxhPLR/dsrDa/mx
- uOLb1eK2orxzDdvG9EBOTIEYSD0sg6PLo/KwCo+kIGIclzva83HZtfekC9Gw==
+ bh=AStEcdCTEBrDLs4u73eNybrGuidbYmC4mJdbZbvu8Zk=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl3FAuFAA64Tln4Nf39w/rPwVlGwC4/YLc/quMhSSQ
+ 3m3Sj5SJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZdxQLgAKCRAgrS7GWxAs4voZEA
+ CkhdDn37YlzwV7cd8/nqL9GaM1ERMdsat87SdP8H6UyjZ/XFaUa17OiE4yChd495C4XggO8tmSkj5p
+ OQACQwgJ0XuuiJMVR1vtfYkTQd+yjzypJW2Ck8USyd8zz9QkkbgqJPCPYw6HpyxJ2UTa1n39jasjhl
+ CfhDgRgfG3rSWXYOW5w4gmys5VVHPrTD57luYOyg+rrn2yv31TzUXMdaTxj+Z153+uHh7kSjlPwqDM
+ gIU9X44Thkb2OHQ7Be7Zbj4kvs4zAhKrv4JscrxQsB5hzYSlba+6LAtR4cSxX5Jiq4i83LkKuKsQlu
+ IYvAjeVQEnZJ0OmQyNV008rHfGB626UgdDWCAm/aWkG61vvCZi6nRb+97K5cap8O7KZ/fjt1lOovYN
+ jylro5VPjV1Sld+qd1D3qJSFhigN8OOs9Wvj5lZLTcVQXX02T4L70t9ZJ2WiyjN5ap7y0ne1c+TVPF
+ S5WZ5UnWdJNVLZARlBOzngYbMJZoHSgW7ukErRSuV47zje5O0cIlrggeOtsyeQc4o0BRq/AIc+O+co
+ CFtrik1CFRoi7KjfpSJLr4RiUWnlEjiSIxTvsZU80wLaEd8Ok0GUNz1Jk8vO0ma2Pq+8lxwTxn2NbX
+ mOLuMRGgpOJb/uKY+HwQkKejaLImu9jABK2hAw0ZcEUvd7QtdVI5GppaYicw==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-Add some documentation on pixel conversion functions.
-Update of outdated comments for pixel_write functions.
+From: Arthur Grillo <arthurgrillo@riseup.net>
 
+Add support to the YUV formats bellow:
+
+- NV12
+- NV16
+- NV24
+- NV21
+- NV61
+- NV42
+- YUV420
+- YUV422
+- YUV444
+- YVU420
+- YVU422
+- YVU444
+
+The conversion matrices of each encoding and range were obtained by
+rounding the values of the original conversion matrices multiplied by
+2^8. This is done to avoid the use of fixed point operations.
+
+Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
+[Louis Chauvet: Adapted Arthur's work and implemented the read_line_t
+callbacks for yuv formats]
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c |  4 +++
- drivers/gpu/drm/vkms/vkms_drv.h      | 13 ++++++++
- drivers/gpu/drm/vkms/vkms_formats.c  | 58 ++++++++++++++++++++++++++++++------
- 3 files changed, 66 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/vkms/vkms_composer.c |   2 +-
+ drivers/gpu/drm/vkms/vkms_drv.h      |   6 +-
+ drivers/gpu/drm/vkms/vkms_formats.c  | 289 +++++++++++++++++++++++++++++++++--
+ drivers/gpu/drm/vkms/vkms_formats.h  |   4 +
+ drivers/gpu/drm/vkms/vkms_plane.c    |  14 +-
+ 5 files changed, 295 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index c6d9b4a65809..5b341222d239 100644
+index e555bf9c1aee..54fc5161d565 100644
 --- a/drivers/gpu/drm/vkms/vkms_composer.c
 +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -189,6 +189,10 @@ static void blend(struct vkms_writeback_job *wb,
- 
- 	size_t crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
- 
-+	/*
-+	 * The planes are composed line-by-line. It is a necessary complexity to avoid poor
-+	 * blending performance.
-+	 */
- 	for (size_t y = 0; y < crtc_y_limit; y++) {
- 		fill_background(&background_color, output_buffer);
- 
+@@ -312,7 +312,7 @@ static void blend(struct vkms_writeback_job *wb,
+ 			 * buffer [1]
+ 			 */
+ 			current_plane->pixel_read_line(
+-				current_plane->frame_info,
++				current_plane,
+ 				x_start,
+ 				y_start,
+ 				direction,
 diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index b4b357447292..18086423a3a7 100644
+index 0bf49b3c435b..a825c36d458f 100644
 --- a/drivers/gpu/drm/vkms/vkms_drv.h
 +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -25,6 +25,17 @@
+@@ -75,6 +75,8 @@ enum pixel_read_direction {
+ 	READ_RIGHT
+ };
  
- #define VKMS_LUT_SIZE 256
- 
-+/**
-+ * struct vkms_frame_info - structure to store the state of a frame
-+ *
-+ * @fb: backing drm framebuffer
-+ * @src: source rectangle of this frame in the source framebuffer
-+ * @dst: destination rectangle in the crtc buffer
-+ * @map: see drm_shadow_plane_state@data
-+ * @rotation: rotation applied to the source.
-+ *
-+ * @src and @dst should have the same size modulo the rotation.
-+ */
- struct vkms_frame_info {
- 	struct drm_framebuffer *fb;
- 	struct drm_rect src, dst;
-@@ -52,6 +63,8 @@ struct vkms_writeback_job {
-  * vkms_plane_state - Driver specific plane state
-  * @base: base plane state
-  * @frame_info: data required for composing computation
-+ * @pixel_read: function to read a pixel in this plane. The creator of a vkms_plane_state must
-+ * ensure that this pointer is valid
++struct vkms_plane_state;
++
+ /**
+  * typedef pixel_read_line_t - These functions are used to read a pixel line in the source frame,
+  * convert it to `struct pixel_argb_u16` and write it to @out_pixel.
+@@ -86,8 +88,8 @@ enum pixel_read_direction {
+  * @out_pixel: Pointer where to write the pixel value. Pixels will be written between x_start and
+  *  x_end.
   */
- struct vkms_plane_state {
- 	struct drm_shadow_plane_state base;
+-typedef void (*pixel_read_line_t)(struct vkms_frame_info *frame_info, int x_start, int y_start, enum
+-	pixel_read_direction direction, int count, struct pixel_argb_u16 out_pixel[]);
++typedef void (*pixel_read_line_t)(struct vkms_plane_state *frame_info, int x_start, int y_start,
++	enum pixel_read_direction direction, int count, struct pixel_argb_u16 out_pixel[]);
+ 
+ /**
+  * vkms_plane_state - Driver specific plane state
 diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index 172830a3936a..cb7a49b7c8e7 100644
+index 46daea6d3ee9..515c80866a58 100644
 --- a/drivers/gpu/drm/vkms/vkms_formats.c
 +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -9,6 +9,17 @@
- 
- #include "vkms_formats.h"
- 
-+/**
-+ * packed_pixels_offset() - Get the offset of the block containing the pixel at coordinates x/y
-+ * in the first plane
-+ *
-+ * @frame_info: Buffer metadata
-+ * @x: The x coordinate of the wanted pixel in the buffer
-+ * @y: The y coordinate of the wanted pixel in the buffer
-+ *
-+ * The caller must be aware that this offset is not always a pointer to a pixel. If individual
-+ * pixel values are needed, they have to be extracted from the resulting block.
-+ */
- static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int y)
- {
- 	struct drm_framebuffer *fb = frame_info->fb;
-@@ -17,12 +28,13 @@ static size_t pixel_offset(const struct vkms_frame_info *frame_info, int x, int
- 			      + (x * fb->format->cpp[0]);
+@@ -33,7 +33,8 @@ static size_t packed_pixels_offset(const struct vkms_frame_info *frame_info, int
+ 	 */
+ 	return fb->offsets[plane_index] +
+ 	       (y / drm_format_info_block_width(format, plane_index)) * fb->pitches[plane_index] +
+-	       (x / drm_format_info_block_height(format, plane_index)) * format->char_per_block[plane_index];
++	       (x / drm_format_info_block_height(format, plane_index)) *
++	       format->char_per_block[plane_index];
  }
  
--/*
-- * packed_pixels_addr - Get the pointer to pixel of a given pair of coordinates
-+/**
-+ * packed_pixels_addr() - Get the pointer to the block containing the pixel at the given
-+ * coordinates
-  *
-  * @frame_info: Buffer metadata
-- * @x: The x(width) coordinate of the 2D buffer
-- * @y: The y(Heigth) coordinate of the 2D buffer
-+ * @x: The x(width) coordinate inside the plane
-+ * @y: The y(height) coordinate inside the plane
-  *
-  * Takes the information stored in the frame_info, a pair of coordinates, and
-  * returns the address of the first color channel.
-@@ -53,6 +65,13 @@ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, i
- 	return x;
- }
- 
-+/*
-+ * The following  functions take pixel data from the buffer and convert them to the format
-+ * ARGB16161616 in out_pixel.
-+ *
-+ * They are used in the `vkms_compose_row` function to handle multiple formats.
-+ */
-+
- static void ARGB8888_to_argb_u16(u8 *src_pixels, struct pixel_argb_u16 *out_pixel)
- {
- 	/*
-@@ -145,12 +164,11 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
- }
- 
- /*
-- * The following  functions take an line of argb_u16 pixels from the
-- * src_buffer, convert them to a specific format, and store them in the
-- * destination.
-+ * The following functions take one argb_u16 pixel and convert it to a specific format. The
-+ * result is stored in @dst_pixels.
-  *
-- * They are used in the `compose_active_planes` to convert and store a line
-- * from the src_buffer to the writeback buffer.
-+ * They are used in the `vkms_writeback_row` to convert and store a pixel from the src_buffer to
-+ * the writeback buffer.
-  */
- static void argb_u16_to_ARGB8888(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
- {
-@@ -216,6 +234,14 @@ static void argb_u16_to_RGB565(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel)
- 	*pixels = cpu_to_le16(r << 11 | g << 5 | b);
- }
- 
-+/**
-+ * Generic loop for all supported writeback format. It is executed just after the blending to
-+ * write a line in the writeback buffer.
-+ *
-+ * @wb: Job where to insert the final image
-+ * @src_buffer: Line to write
-+ * @y: Row to write in the writeback buffer
-+ */
- void vkms_writeback_row(struct vkms_writeback_job *wb,
- 			const struct line_buffer *src_buffer, int y)
- {
-@@ -229,6 +255,13 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
- 		wb->pixel_write(dst_pixels, &in_pixels[x]);
- }
- 
-+/**
-+ * Retrieve the correct read_pixel function for a specific format.
-+ * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
-+ * pointer is valid before using it in a vkms_plane_state.
-+ *
-+ * @format: 4cc of the format
-+ */
- void *get_pixel_conversion_function(u32 format)
- {
- 	switch (format) {
-@@ -247,6 +280,13 @@ void *get_pixel_conversion_function(u32 format)
+ /**
+@@ -84,6 +85,32 @@ static int get_step_1x1(struct drm_framebuffer *fb, enum pixel_read_direction di
  	}
  }
  
 +/**
-+ * Retrieve the correct write_pixel function for a specific format.
-+ * The returned pointer is NULL for unsupported pixel formats. The caller must ensure that the
-+ * pointer is valid before using it in a vkms_writeback_job.
-+ *
-+ * @format: 4cc of the format
++ * get_subsampling() - Get the subsampling value on a specific direction
 + */
- void *get_pixel_write_function(u32 format)
++static int get_subsampling(const struct drm_format_info *format,
++			   enum pixel_read_direction direction)
++{
++	if (direction == READ_LEFT || direction == READ_RIGHT)
++		return format->hsub;
++	else if (direction == READ_DOWN || direction == READ_UP)
++		return format->vsub;
++	return 1;
++}
++
++/**
++ * get_subsampling_offset() - Get the subsampling offset to use when incrementing the pixel counter
++ */
++static int get_subsampling_offset(const struct drm_format_info *format,
++				  enum pixel_read_direction direction, int x_start, int y_start)
++{
++	if (direction == READ_RIGHT || direction == READ_LEFT)
++		return x_start;
++	else if (direction == READ_DOWN || direction == READ_UP)
++		return y_start;
++	return 0;
++}
++
+ 
+ /*
+  * The following  functions take pixel data (a, r, g, b, pixel, ...), convert them to the format
+@@ -130,6 +157,87 @@ static void RGB565_to_argb_u16(struct pixel_argb_u16 *out_pixel, const u16 *pixe
+ 	out_pixel->b = drm_fixp2int_round(drm_fixp_mul(fp_b, fp_rb_ratio));
+ }
+ 
++static void ycbcr2rgb(const s16 m[3][3], u8 y, u8 cb, u8 cr, u8 y_offset, u8 *r, u8 *g, u8 *b)
++{
++	s32 y_16, cb_16, cr_16;
++	s32 r_16, g_16, b_16;
++
++	y_16 = y - y_offset;
++	cb_16 = cb - 128;
++	cr_16 = cr - 128;
++
++	r_16 = m[0][0] * y_16 + m[0][1] * cb_16 + m[0][2] * cr_16;
++	g_16 = m[1][0] * y_16 + m[1][1] * cb_16 + m[1][2] * cr_16;
++	b_16 = m[2][0] * y_16 + m[2][1] * cb_16 + m[2][2] * cr_16;
++
++	*r = clamp(r_16, 0, 0xffff) >> 8;
++	*g = clamp(g_16, 0, 0xffff) >> 8;
++	*b = clamp(b_16, 0, 0xffff) >> 8;
++}
++
++static void yuv_u8_to_argb_u16(struct pixel_argb_u16 *argb_u16, const struct pixel_yuv_u8 *yuv_u8,
++			       enum drm_color_encoding encoding, enum drm_color_range range)
++{
++	static const s16 bt601_full[3][3] = {
++		{ 256, 0,   359 },
++		{ 256, -88, -183 },
++		{ 256, 454, 0 },
++	};
++	static const s16 bt601[3][3] = {
++		{ 298, 0,    409 },
++		{ 298, -100, -208 },
++		{ 298, 516,  0 },
++	};
++	static const s16 rec709_full[3][3] = {
++		{ 256, 0,   408 },
++		{ 256, -48, -120 },
++		{ 256, 476, 0 },
++	};
++	static const s16 rec709[3][3] = {
++		{ 298, 0,   459 },
++		{ 298, -55, -136 },
++		{ 298, 541, 0 },
++	};
++	static const s16 bt2020_full[3][3] = {
++		{ 256, 0,   377 },
++		{ 256, -42, -146 },
++		{ 256, 482, 0 },
++	};
++	static const s16 bt2020[3][3] = {
++		{ 298, 0,   430 },
++		{ 298, -48, -167 },
++		{ 298, 548, 0 },
++	};
++
++	u8 r = 0;
++	u8 g = 0;
++	u8 b = 0;
++	bool full = range == DRM_COLOR_YCBCR_FULL_RANGE;
++	unsigned int y_offset = full ? 0 : 16;
++
++	switch (encoding) {
++	case DRM_COLOR_YCBCR_BT601:
++		ycbcr2rgb(full ? bt601_full : bt601,
++			  yuv_u8->y, yuv_u8->u, yuv_u8->v, y_offset, &r, &g, &b);
++		break;
++	case DRM_COLOR_YCBCR_BT709:
++		ycbcr2rgb(full ? rec709_full : rec709,
++			  yuv_u8->y, yuv_u8->u, yuv_u8->v, y_offset, &r, &g, &b);
++		break;
++	case DRM_COLOR_YCBCR_BT2020:
++		ycbcr2rgb(full ? bt2020_full : bt2020,
++			  yuv_u8->y, yuv_u8->u, yuv_u8->v, y_offset, &r, &g, &b);
++		break;
++	default:
++		pr_warn_once("Not supported color encoding\n");
++		break;
++	}
++
++	argb_u16->r = r * 257;
++	argb_u16->g = g * 257;
++	argb_u16->b = b * 257;
++}
++
+ /*
+  * The following functions are read_line function for each pixel format supported by VKMS.
+  *
+@@ -142,13 +250,13 @@ static void RGB565_to_argb_u16(struct pixel_argb_u16 *out_pixel, const u16 *pixe
+  * [1]: https://lore.kernel.org/dri-devel/d258c8dc-78e9-4509-9037-a98f7f33b3a3@riseup.net/
+  */
+ 
+-static void ARGB8888_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
++static void ARGB8888_read_line(struct vkms_plane_state *plane, int x_start, int y_start,
+ 			       enum pixel_read_direction direction, int count,
+ 			       struct pixel_argb_u16 out_pixel[])
  {
- 	switch (format) {
+-	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
++	u8 *src_pixels = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
+ 
+-	int step = get_step_1x1(frame_info->fb, direction, 0);
++	int step = get_step_1x1(plane->frame_info->fb, direction, 0);
+ 
+ 	while (count) {
+ 		u8 *px = (u8 *)src_pixels;
+@@ -160,13 +268,13 @@ static void ARGB8888_read_line(struct vkms_frame_info *frame_info, int x_start,
+ 	}
+ }
+ 
+-static void XRGB8888_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
++static void XRGB8888_read_line(struct vkms_plane_state *plane, int x_start, int y_start,
+ 			       enum pixel_read_direction direction, int count,
+ 			       struct pixel_argb_u16 out_pixel[])
+ {
+-	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
++	u8 *src_pixels = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
+ 
+-	int step = get_step_1x1(frame_info->fb, direction, 0);
++	int step = get_step_1x1(plane->frame_info->fb, direction, 0);
+ 
+ 	while (count) {
+ 		u8 *px = (u8 *)src_pixels;
+@@ -178,13 +286,13 @@ static void XRGB8888_read_line(struct vkms_frame_info *frame_info, int x_start,
+ 	}
+ }
+ 
+-static void ARGB16161616_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
++static void ARGB16161616_read_line(struct vkms_plane_state *plane, int x_start, int y_start,
+ 				   enum pixel_read_direction direction, int count,
+ 				   struct pixel_argb_u16 out_pixel[])
+ {
+-	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
++	u8 *src_pixels = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
+ 
+-	int step = get_step_1x1(frame_info->fb, direction, 0);
++	int step = get_step_1x1(plane->frame_info->fb, direction, 0);
+ 
+ 	while (count) {
+ 		u16 *px = (u16 *)src_pixels;
+@@ -196,13 +304,13 @@ static void ARGB16161616_read_line(struct vkms_frame_info *frame_info, int x_sta
+ 	}
+ }
+ 
+-static void XRGB16161616_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
++static void XRGB16161616_read_line(struct vkms_plane_state *plane, int x_start, int y_start,
+ 				   enum pixel_read_direction direction, int count,
+ 				   struct pixel_argb_u16 out_pixel[])
+ {
+-	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
++	u8 *src_pixels = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
+ 
+-	int step = get_step_1x1(frame_info->fb, direction, 0);
++	int step = get_step_1x1(plane->frame_info->fb, direction, 0);
+ 
+ 	while (count) {
+ 		u16 *px = (u16 *)src_pixels;
+@@ -214,13 +322,13 @@ static void XRGB16161616_read_line(struct vkms_frame_info *frame_info, int x_sta
+ 	}
+ }
+ 
+-static void RGB565_read_line(struct vkms_frame_info *frame_info, int x_start, int y_start,
++static void RGB565_read_line(struct vkms_plane_state *plane, int x_start, int y_start,
+ 			     enum pixel_read_direction direction, int count,
+ 			     struct pixel_argb_u16 out_pixel[])
+ {
+-	u8 *src_pixels = packed_pixels_addr(frame_info, x_start, y_start, 0);
++	u8 *src_pixels = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
+ 
+-	int step = get_step_1x1(frame_info->fb, direction, 0);
++	int step = get_step_1x1(plane->frame_info->fb, direction, 0);
+ 
+ 	while (count) {
+ 		u16 *px = (u16 *)src_pixels;
+@@ -232,6 +340,139 @@ static void RGB565_read_line(struct vkms_frame_info *frame_info, int x_start, in
+ 	}
+ }
+ 
++static void semi_planar_yuv_read_line(struct vkms_plane_state *plane, int x_start, int y_start,
++				      enum pixel_read_direction direction, int count,
++				      struct pixel_argb_u16 out_pixel[])
++{
++	u8 *y_plane = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
++	u8 *uv_plane = packed_pixels_addr(plane->frame_info,
++					  x_start / plane->frame_info->fb->format->hsub,
++					  y_start / plane->frame_info->fb->format->vsub,
++					  1);
++	struct pixel_yuv_u8 yuv_u8;
++	int step_y = get_step_1x1(plane->frame_info->fb, direction, 0);
++	int step_uv = get_step_1x1(plane->frame_info->fb, direction, 1);
++	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);
++	int subsampling_offset = get_subsampling_offset(plane->frame_info->fb->format, direction,
++							x_start, y_start); // 0
++
++	for (int i = 0; i < count; i++) {
++		yuv_u8.y = y_plane[0];
++		yuv_u8.u = uv_plane[0];
++		yuv_u8.v = uv_plane[1];
++
++		yuv_u8_to_argb_u16(out_pixel, &yuv_u8, plane->base.base.color_encoding,
++				   plane->base.base.color_range);
++		out_pixel += 1;
++		y_plane += step_y;
++		if ((i + subsampling_offset + 1) % subsampling == 0)
++			uv_plane += step_uv;
++	}
++}
++
++static void semi_planar_yvu_read_line(struct vkms_plane_state *plane, int x_start, int y_start,
++				      enum pixel_read_direction direction, int count,
++				      struct pixel_argb_u16 out_pixel[])
++{
++	u8 *y_plane = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
++	u8 *vu_plane = packed_pixels_addr(plane->frame_info,
++					  x_start / plane->frame_info->fb->format->hsub,
++					  y_start / plane->frame_info->fb->format->vsub,
++					  1);
++	struct pixel_yuv_u8 yuv_u8;
++	int step_y = get_step_1x1(plane->frame_info->fb, direction, 0);
++	int step_vu = get_step_1x1(plane->frame_info->fb, direction, 1);
++	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);
++	int subsampling_offset = get_subsampling_offset(plane->frame_info->fb->format, direction,
++							x_start, y_start);
++	for (int i = 0; i < count; i++) {
++		yuv_u8.y = y_plane[0];
++		yuv_u8.u = vu_plane[1];
++		yuv_u8.v = vu_plane[0];
++
++		yuv_u8_to_argb_u16(out_pixel, &yuv_u8, plane->base.base.color_encoding,
++				   plane->base.base.color_range);
++		out_pixel += 1;
++		y_plane += step_y;
++		if ((i + subsampling_offset + 1) % subsampling == 0)
++			vu_plane += step_vu;
++	}
++}
++
++static void planar_yuv_read_line(struct vkms_plane_state *plane, int x_start, int y_start,
++				 enum pixel_read_direction direction, int count,
++				 struct pixel_argb_u16 out_pixel[])
++{
++	u8 *y_plane = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
++	u8 *u_plane = packed_pixels_addr(plane->frame_info,
++					 x_start / plane->frame_info->fb->format->hsub,
++					 y_start / plane->frame_info->fb->format->vsub,
++					 1);
++	u8 *v_plane = packed_pixels_addr(plane->frame_info,
++					 x_start / plane->frame_info->fb->format->hsub,
++					 y_start / plane->frame_info->fb->format->vsub,
++					 2);
++	struct pixel_yuv_u8 yuv_u8;
++	int step_y = get_step_1x1(plane->frame_info->fb, direction, 0);
++	int step_u = get_step_1x1(plane->frame_info->fb, direction, 1);
++	int step_v = get_step_1x1(plane->frame_info->fb, direction, 2);
++	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);
++	int subsampling_offset = get_subsampling_offset(plane->frame_info->fb->format, direction,
++							x_start, y_start);
++
++	for (int i = 0; i < count; i++) {
++		yuv_u8.y = *y_plane;
++		yuv_u8.u = *u_plane;
++		yuv_u8.v = *v_plane;
++
++		yuv_u8_to_argb_u16(out_pixel, &yuv_u8, plane->base.base.color_encoding,
++				   plane->base.base.color_range);
++		out_pixel += 1;
++		y_plane += step_y;
++		if ((i + subsampling_offset + 1) % subsampling == 0) {
++			u_plane += step_u;
++			v_plane += step_v;
++		}
++	}
++}
++
++static void planar_yvu_read_line(struct vkms_plane_state *plane, int x_start, int y_start,
++				 enum pixel_read_direction direction, int count,
++				 struct pixel_argb_u16 out_pixel[])
++{
++	u8 *y_plane = packed_pixels_addr(plane->frame_info, x_start, y_start, 0);
++	u8 *v_plane = packed_pixels_addr(plane->frame_info,
++					 x_start / plane->frame_info->fb->format->hsub,
++					 y_start / plane->frame_info->fb->format->vsub,
++					 1);
++	u8 *u_plane = packed_pixels_addr(plane->frame_info,
++					 x_start / plane->frame_info->fb->format->hsub,
++					 y_start / plane->frame_info->fb->format->vsub,
++					 2);
++	struct pixel_yuv_u8 yuv_u8;
++	int step_y = get_step_1x1(plane->frame_info->fb, direction, 0);
++	int step_u = get_step_1x1(plane->frame_info->fb, direction, 1);
++	int step_v = get_step_1x1(plane->frame_info->fb, direction, 2);
++	int subsampling = get_subsampling(plane->frame_info->fb->format, direction);
++	int subsampling_offset = get_subsampling_offset(plane->frame_info->fb->format, direction,
++							x_start, y_start);
++
++	for (int i = 0; i < count; i++) {
++		yuv_u8.y = *y_plane;
++		yuv_u8.u = *u_plane;
++		yuv_u8.v = *v_plane;
++
++		yuv_u8_to_argb_u16(out_pixel, &yuv_u8, plane->base.base.color_encoding,
++				   plane->base.base.color_range);
++		out_pixel += 1;
++		y_plane += step_y;
++		if ((i + subsampling_offset + 1) % subsampling == 0) {
++			u_plane += step_u;
++			v_plane += step_v;
++		}
++	}
++}
++
+ /*
+  * The following functions take one argb_u16 pixel and convert it to a specific format. The
+  * result is stored in @dst_pixels.
+@@ -344,6 +585,22 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+ 		return &XRGB16161616_read_line;
+ 	case DRM_FORMAT_RGB565:
+ 		return &RGB565_read_line;
++	case DRM_FORMAT_NV12:
++	case DRM_FORMAT_NV16:
++	case DRM_FORMAT_NV24:
++		return &semi_planar_yuv_read_line;
++	case DRM_FORMAT_NV21:
++	case DRM_FORMAT_NV61:
++	case DRM_FORMAT_NV42:
++		return &semi_planar_yvu_read_line;
++	case DRM_FORMAT_YUV420:
++	case DRM_FORMAT_YUV422:
++	case DRM_FORMAT_YUV444:
++		return &planar_yuv_read_line;
++	case DRM_FORMAT_YVU420:
++	case DRM_FORMAT_YVU422:
++	case DRM_FORMAT_YVU444:
++		return &planar_yvu_read_line;
+ 	default:
+ 		return (pixel_read_line_t)NULL;
+ 	}
+diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
+index 8d2bef95ff79..5a3a9e1328d8 100644
+--- a/drivers/gpu/drm/vkms/vkms_formats.h
++++ b/drivers/gpu/drm/vkms/vkms_formats.h
+@@ -9,4 +9,8 @@ pixel_read_line_t get_pixel_read_line_function(u32 format);
+ 
+ pixel_write_t get_pixel_write_function(u32 format);
+ 
++struct pixel_yuv_u8 {
++	u8 y, u, v;
++};
++
+ #endif /* _VKMS_FORMATS_H_ */
+diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+index 58c1c74742b5..427ca67c60ce 100644
+--- a/drivers/gpu/drm/vkms/vkms_plane.c
++++ b/drivers/gpu/drm/vkms/vkms_plane.c
+@@ -17,7 +17,19 @@ static const u32 vkms_formats[] = {
+ 	DRM_FORMAT_XRGB8888,
+ 	DRM_FORMAT_XRGB16161616,
+ 	DRM_FORMAT_ARGB16161616,
+-	DRM_FORMAT_RGB565
++	DRM_FORMAT_RGB565,
++	DRM_FORMAT_NV12,
++	DRM_FORMAT_NV16,
++	DRM_FORMAT_NV24,
++	DRM_FORMAT_NV21,
++	DRM_FORMAT_NV61,
++	DRM_FORMAT_NV42,
++	DRM_FORMAT_YUV420,
++	DRM_FORMAT_YUV422,
++	DRM_FORMAT_YUV444,
++	DRM_FORMAT_YVU420,
++	DRM_FORMAT_YVU422,
++	DRM_FORMAT_YVU444
+ };
+ 
+ static struct drm_plane_state *
 
 -- 
 2.43.0
