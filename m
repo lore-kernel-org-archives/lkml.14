@@ -1,135 +1,207 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530C8F9C3;
-	Mon, 26 Feb 2024 02:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD7C15ACB
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708916149; cv=none; b=a6BahDLLzql8tUAlxRYkf3J5xz2iVXtsVSeTDUHujYXwwtew5v1aW2H6WOi0cthGi5zIzgrzWra1oDm8pSUx8/XdxH0XczyHJK9JzeX5eTo/0t40kImCXDvOrxnoVJ4rrEfWdrTTAVQMvg+dxeyMr90YqAK88I9vWjiKQkkQCbQ=
+	t=1708916155; cv=none; b=Q96tctGI0N513B/85mwRdrz5NX/0fx64KBCgyFQBSfMV0dxXUSwia9Bk3aNvmRN6bq9M25SVtQc4w3WVR3QcKZyIAC0XjN+PGBpCJ2gZfXYlXmVx4EmfrVtdfa4ASNyPKxdmufa3oJhxtdB95gSyhHc+bUeOCxj3eqbnWiRBrJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708916149; c=relaxed/simple;
-	bh=Ee5eROUXAl/pnz8Aoe3WfkGAh78ysaydeXO3dbLLwm8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KBe5UwUZIASDCIgWg+VvHk5yV4XWxzOouSCEbJATSuBWo5ZKYpR0pk8CkSE+Q+dKuRO6qweL+qEUlj2kxzi/nWl9P5C4p5JHbTnXoxwCGxrSS3IzlnYHuGahNPAU60CygNEeb3L67B6Cymor9dL7SzRJ/ZhKOUMRI9WKLZF41ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	s=arc-20240116; t=1708916155; c=relaxed/simple;
+	bh=rsarDI+hNwZN0pX3REbm4i46L5xfbAYfqDtfaWlSzoM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GVfGl6PkXGs5quT7sTFPiG17zLDu053gk/yrjFdPLK8G5u+CLnM9/9FlqHt8uyCRQ55JUkrFglIwvdNMGVu8hxD5+DbkqcoFrqN+YpU6Lkd3lqYB7YERvbn7jS9QZ9fp3T4PwTRHpnYj7dyBQrpexCTh466G8WCLCLnVYttpShY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TjlVH01YSz1S5HP;
-	Mon, 26 Feb 2024 10:50:46 +0800 (CST)
-Received: from dggpemd100002.china.huawei.com (unknown [7.185.36.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id BE15A1400D4;
-	Mon, 26 Feb 2024 10:55:43 +0800 (CST)
-Received: from huawei.com (10.67.174.33) by dggpemd100002.china.huawei.com
- (7.185.36.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Mon, 26 Feb
- 2024 10:55:43 +0800
-From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
-To: <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, Johannes Weiner
-	<hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Roman Gushchin
-	<roman.gushchin@linux.dev>, Shakeel Butt <shakeelb@google.com>, Muchun Song
-	<muchun.song@linux.dev>, Greg KH <gregkh@linuxfoundation.org>
-CC: <cgroups@vger.kernel.org>, <linux-mm@kvack.org>, Wang Weiyang
-	<wangweiyang2@huawei.com>, Xiu Jianfeng <xiujianfeng@huawei.com>
-Subject: [PATCH stable 4.19] mm: memcontrol: switch to rcu protection in drain_all_stock()
-Date: Mon, 26 Feb 2024 11:01:40 +0800
-Message-ID: <20240226030140.129822-1-gongruiqi1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4TjlbJ4zD0zqhdk;
+	Mon, 26 Feb 2024 10:55:08 +0800 (CST)
+Received: from kwepemm600020.china.huawei.com (unknown [7.193.23.147])
+	by mail.maildlp.com (Postfix) with ESMTPS id DA1D01400D3;
+	Mon, 26 Feb 2024 10:55:44 +0800 (CST)
+Received: from [10.174.179.160] (10.174.179.160) by
+ kwepemm600020.china.huawei.com (7.193.23.147) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 26 Feb 2024 10:55:43 +0800
+Message-ID: <a905dea7-018e-80c0-ab54-85766add8d96@huawei.com>
+Date: Mon, 26 Feb 2024 10:55:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemd100002.china.huawei.com (7.185.36.164)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2] filemap: avoid unnecessary major faults in
+ filemap_fault()
+To: "Huang, Ying" <ying.huang@intel.com>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<akpm@linux-foundation.org>, <willy@infradead.org>, <fengwei.yin@intel.com>,
+	<aneesh.kumar@linux.ibm.com>, <shy828301@gmail.com>, <hughd@google.com>,
+	<david@redhat.com>, <wangkefeng.wang@huawei.com>, Nanyong Sun
+	<sunnanyong@huawei.com>
+References: <20240206092627.1421712-1-zhangpeng362@huawei.com>
+ <87jznhypxy.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Language: en-US
+From: "zhangpeng (AS)" <zhangpeng362@huawei.com>
+In-Reply-To: <87jznhypxy.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600020.china.huawei.com (7.193.23.147)
 
-From: Roman Gushchin <guro@fb.com>
+On 2024/2/7 10:21, Huang, Ying wrote:
 
-commit e1a366be5cb4f849ec4de170d50eebc08bb0af20 upstream.
+> Peng Zhang <zhangpeng362@huawei.com> writes:
+>> From: ZhangPeng <zhangpeng362@huawei.com>
+>>
+>> The major fault occurred when using mlockall(MCL_CURRENT | MCL_FUTURE)
+>> in application, which leading to an unexpected performance issue[1].
+>>
+>> This caused by temporarily cleared PTE during a read+clear/modify/write
+>> update of the PTE, eg, do_numa_page()/change_pte_range().
+>>
+>> For the data segment of the user-mode program, the global variable area
+>> is a private mapping. After the pagecache is loaded, the private anonymous
+>> page is generated after the COW is triggered. Mlockall can lock COW pages
+>> (anonymous pages), but the original file pages cannot be locked and may
+>> be reclaimed. If the global variable (private anon page) is accessed when
+>> vmf->pte is zeroed in numa fault, a file page fault will be triggered.
+>>
+>> At this time, the original private file page may have been reclaimed.
+>> If the page cache is not available at this time, a major fault will be
+>> triggered and the file will be read, causing additional overhead.
+>>
+>> Fix this by rechecking the PTE without acquiring PTL in filemap_fault()
+>> before triggering a major fault.
+>>
+>> Testing file anonymous page read and write page fault performance in ext4
+>> and ramdisk using will-it-scale[2] on a x86 physical machine. The data
+>> is the average change compared with the mainline after the patch is
+>> applied. The test results are within the range of fluctuation, and there
+>> is no obvious difference. The test results are as follows:
+> You still claim that there's no difference in the test results.  If so,
+> why do you implement the patch?  IMHO, you need to prove your patch can
+> improve the performance in some cases.
 
-Commit 72f0184c8a00 ("mm, memcg: remove hotplug locking from try_charge")
-introduced css_tryget()/css_put() calls in drain_all_stock(), which are
-supposed to protect the target memory cgroup from being released during
-the mem_cgroup_is_descendant() call.
+I'm sorry that maybe I didn't express myself clearly.
 
-However, it's not completely safe.  In theory, memcg can go away between
-reading stock->cached pointer and calling css_tryget().
+The purpose of this patch is to fix the issue that major fault may still be triggered
+with mlockall(), thereby improving a little performance. This patch is more of a bugfix
+than a performance improvement patch.
 
-This can happen if drain_all_stock() races with drain_local_stock()
-performed on the remote cpu as a result of a work, scheduled by the
-previous invocation of drain_all_stock().
+This issue affects our traffic analysis service. The inbound traffic is heavy. If a major
+fault occurs, the I/O schedule is triggered and the original I/O is suspended. Generally,
+the I/O schedule is 0.7 ms. If other applications are operating disks, the system needs
+to wait for more than 10 ms. However, the inbound traffic is heavy and the NIC buffer is
+small. As a result, packet loss occurs. The traffic analysis service can't tolerate packet
+loss.
 
-The race is a bit theoretical and there are few chances to trigger it, but
-the current code looks a bit confusing, so it makes sense to fix it
-anyway.  The code looks like as if css_tryget() and css_put() are used to
-protect stocks drainage.  It's not necessary because stocked pages are
-holding references to the cached cgroup.  And it obviously won't work for
-works, scheduled on other cpus.
+To prevent packet loss, we use the mlockall() function to prevent I/O. It is unreasonable
+that major faults will still be triggered after mlockall() is used.
 
-So, let's read the stock->cached pointer and evaluate the memory cgroup
-inside a rcu read section, and get rid of css_tryget()/css_put() calls.
+In our service test environment, the baseline is 7 major faults/12 hours. After applied the
+unlock patch, the probability of triggering the major fault is 1 major faults/12 hours. After
+applied the lock patch, no major fault will be triggered. So only the locked patch can actually
+solve our problem.
 
-Link: http://lkml.kernel.org/r/20190802192241.3253165-1-guro@fb.com
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: stable@vger.kernel.org  # 4.19
-Fixes: cdec2e4265df ("memcg: coalesce charging via percpu storage")
-Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
----
+The test data provided is intended to prove that the patch does not have a major impact
+on the performance of the page fault itself.
 
-This patch [1] fixed a UAF problem in drain_all_stock() existed prior to
-5.9, and following discussions [2] mentioned that the fix depends on an
-RCU read protection to stock->cached (introduced in 5.4), which doesn't
-existed in 4.19. So backport this part to 4.19 as well.
+>> 	                 processes processes_idle threads threads_idle
+>> ext4    private file write: -1.14%  -0.08%         -1.87%   0.13%
+>> ext4    shared  file write:  0.14%  -0.53%          2.88%  -0.77%
+>> ext4    private file  read:  0.03%  -0.65%         -0.51%  -0.08%
+>> tmpfs   private file write: -0.34%  -0.11%          0.20%   0.15%
+>> tmpfs   shared  file write:  0.96%   0.10%          2.78%  -0.34%
+>> ramdisk private file write: -1.21%  -0.21%         -1.12%   0.11%
+>> ramdisk private file  read:  0.00%  -0.68%         -0.33%  -0.02%
+>>
+>> [1] https://lore.kernel.org/linux-mm/9e62fd9a-bee0-52bf-50a7-498fa17434ee@huawei.com/
+>> [2] https://github.com/antonblanchard/will-it-scale/
+>>
+>> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
+>> Suggested-by: Yin Fengwei <fengwei.yin@intel.com>
+>> Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>> v1->v2:
+>> - Add more test results per Huang, Ying
+>> - Add more comments before check PTE per Huang, Ying, David Hildenbrand
+>>    and Yin Fengwei
+>> - Change pte_offset_map_nolock to pte_offset_map as the ptl lock won't
+>>    be used
+>>
+>> RFC->v1:
+>> - Add error handling when ptep == NULL per Huang, Ying and Matthew
+>>    Wilcox
+>> - Check the PTE without acquiring PTL in filemap_fault(), suggested by
+>>    Huang, Ying and Yin Fengwei
+>> - Add pmd_none() check before PTE map
+>> - Update commit message and add performance test information
+>>
+>>   mm/filemap.c | 34 ++++++++++++++++++++++++++++++++++
+>>   1 file changed, 34 insertions(+)
+>>
+>> diff --git a/mm/filemap.c b/mm/filemap.c
+>> index 142864338ca4..a2c1a98bc771 100644
+>> --- a/mm/filemap.c
+>> +++ b/mm/filemap.c
+>> @@ -3238,6 +3238,40 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
+>>   			mapping_locked = true;
+>>   		}
+>>   	} else {
+>> +		if (!pmd_none(*vmf->pmd)) {
+>> +			pte_t *ptep;
+>> +
+>> +			ptep = pte_offset_map(vmf->pmd, vmf->address);
+>> +			if (unlikely(!ptep))
+>> +				return VM_FAULT_NOPAGE;
+>> +			/*
+>> +			 * Recheck PTE as the PTE can be cleared temporarily
+>> +			 * during a read+clear/modify/write update of the PTE,
+>> +			 * eg, do_numa_page()/change_pte_range(). This will
+>> +			 * trigger a major fault, even if we use mlockall,
+>> +			 * which may affect performance.
+>> +			 * We don't hold PTL here as acquiring PTL hurts
+>> +			 * performance. So the check is still racy, but
+>> +			 * the race window seems small enough.
+>> +			 *
+>> +			 * If we lose the race during the check, the page_fault
+>> +			 * will be triggered. Butthe page table entry lock
+>> +			 * still make sure the correctness:
+>> +			 * - If the page cache is not reclaimed, the page_fault
+>> +			 *   will work like the page fault was served already
+>> +			 *   and bail out.
+>> +			 * - If the page cache is reclaimed, the major fault
+>> +			 *   will be triggered, page cache is filled,
+>> +			 *   page_fault also work like the page fault was
+>> +			 *   served already and bail out.
+>> +			 */
+> IMHO, this is too long.  It can be shorten to like,
+>
+> If we lose the race, major fault may be triggered unnecessary.  This
+> hurts performance but not functionality.
 
-[1]: https://lore.kernel.org/all/20240221081801.69764-1-gongruiqi1@huawei.com/
-[2]: https://lore.kernel.org/all/ZdXLgjpUfpwEwAe0@tiehlicka/
+OK, I'll fix it in the next version.
 
- mm/memcontrol.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+>> +			if (unlikely(!pte_none(ptep_get_lockless(ptep))))
+>> +				ret = VM_FAULT_NOPAGE;
+>> +			pte_unmap(ptep);
+>> +			if (unlikely(ret))
+>> +				return ret;
+>> +		}
+>> +
+>>   		/* No page in the page cache at all */
+>>   		count_vm_event(PGMAJFAULT);
+>>   		count_memcg_event_mm(vmf->vma->vm_mm, PGMAJFAULT);
+> --
+> Best Regards,
+> Huang, Ying
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 8c04296df1c7..d187bfb43b1f 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2094,21 +2094,22 @@ static void drain_all_stock(struct mem_cgroup *root_memcg)
- 	for_each_online_cpu(cpu) {
- 		struct memcg_stock_pcp *stock = &per_cpu(memcg_stock, cpu);
- 		struct mem_cgroup *memcg;
-+		bool flush = false;
- 
-+		rcu_read_lock();
- 		memcg = stock->cached;
--		if (!memcg || !stock->nr_pages || !css_tryget(&memcg->css))
--			continue;
--		if (!mem_cgroup_is_descendant(memcg, root_memcg)) {
--			css_put(&memcg->css);
--			continue;
--		}
--		if (!test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
-+		if (memcg && stock->nr_pages &&
-+		    mem_cgroup_is_descendant(memcg, root_memcg))
-+			flush = true;
-+		rcu_read_unlock();
-+
-+		if (flush &&
-+		    !test_and_set_bit(FLUSHING_CACHED_CHARGE, &stock->flags)) {
- 			if (cpu == curcpu)
- 				drain_local_stock(&stock->work);
- 			else
- 				schedule_work_on(cpu, &stock->work);
- 		}
--		css_put(&memcg->css);
- 	}
- 	put_cpu();
- 	mutex_unlock(&percpu_charge_mutex);
 -- 
-2.25.1
+Best Regards,
+Peng
 
