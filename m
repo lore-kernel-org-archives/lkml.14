@@ -1,112 +1,98 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD851DA37;
-	Mon, 26 Feb 2024 11:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF99208B8;
+	Mon, 26 Feb 2024 11:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708948090; cv=none; b=NoP/pUYcrP5HHxvbPkdwlCu9W+jETK9iso93VXGxi2DZBSS/sMko/q4hFF+iI8QhRRJrAiYJua5CYYPIi4j8g6ca5UWxFehjT5pzid/FiOikESTSnVYauImL64jGcPsuTju+frs2HTlKJTq0BKeYw7w9kr5tiLpXr+gE8btcm7w=
+	t=1708948093; cv=none; b=jN9L0K7q2aYnUhQzxLpizwfkCmi3uBEAJx4oEPYeJOU/Jq+Qdr26Ze9TJAI8T1UCWX59g2S4+PyS7y5RHFMLpq3rElOfkuvjvCaHvZD8gxtOXf7reMsmZXbRs7Kq+jTwai/YP3q4BVTz7qiRpBrkqYw/Z5KbRMoNqFD36CRgIU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708948090; c=relaxed/simple;
-	bh=1AR5G2Y3CctUfpvnf3R9d3cYiYxgyB1npVkEX+6XiY4=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=WPZ1fo0q+WnAsjvr/RJxQzvSMSTx8bKXeUcT5bPrAaAMNOEtaPuDLcIVmpjCm8LJof2PZFX8ZmcnP756LxE/9MSq6q7lYlfG0HnfK8B10EyAzjerUhgMe7bdxXMmCsbqx4YXUEXwt4uDHUUb+vquhm8P9nVcD7CziV57fpf6kFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bWBMhZVj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PR7L31lf; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708948093; c=relaxed/simple;
+	bh=kFr3B/ULY+gMSkUP5N9M2ZZcd1AQsK+54aUGpEWndtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J0DF4TDdijSanv8RUV8VEmMUHP69jvxdwiANPSffQhnYPZiL7JFuoCqpxlQIOkwKvX6Eh7qt6RRFXHB2xsUsGP/I5d7moJiJGvOTat4r+nQ5+TcUfw900WXd2usuds3XRjZoSN1t9UfdK0W/VoiEVgMrlzVed2n1+dUlzQhF7pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=brVvD7gL; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bWBMhZVj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PR7L31lf"
-Date: Mon, 26 Feb 2024 11:48:06 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708948087;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=lQ4oXmAnkhL90TwdJmrliUNDTZIrHrUfs5PxAHjRVBg=;
-	b=bWBMhZVjC4y5RZGao6THZTfm3TGDXuYKEfjz2dQWWJecFYmT039ItX4KCr6IEn8NXny/3d
-	si3Pd7sGvSjpTESdnMXm8CqQmlCz1XG4JY3LShKgAPLOYHOgro2vssJEyLB8n0DSSubCYn
-	P3KPqUA8vu/JOT+DG0/biIU9bs2880T28Jfb3J42Mbu0i4d6jrGNzrvLjNBMzUHHbNyHhC
-	mBEhIaCti+LMJlmTETOHeeVaYxq8lD2aP93lVIiH6xSokC8JKn4mBsUF0cDNLNiW1YmXHO
-	qS6siQK809CxJFOhAM3ibMWjKBZKnHZa9WfefJeI2k+ClhwaYRSZ4UhDjdHw9A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708948087;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=lQ4oXmAnkhL90TwdJmrliUNDTZIrHrUfs5PxAHjRVBg=;
-	b=PR7L31lftixobQoItDL8d/jXi0nYvd60SisZGg9EvckRKAy8hHAlxEUv2XSM+EAm8OESfc
-	QaIvDIXCrkyUWFDw==
-From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/apic] smp: Provide 'setup_max_cpus' definition on UP too
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="brVvD7gL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Gw1YcQC9qtJ4/pe66V7YRq+GAf4l9U7OKSN0ldpLYSY=; b=brVvD7gLhZJfWAo8PU5vLdHgiY
+	kdXs2ki0PBjRk/pm7+3gkSDljK1QxtoBZeyd8T+RUXMw9AUUjEuYYJ+vLcSnbqtqk74jX6Xc4GE3x
+	XFX1+7DuIl4b7pTlP9DUxZvqxsMdrQ6/aAo5Yt5IyYF5DP+s36IinJu0HbOsg07TqnyCxHHgwX2Ky
+	HnGs5GLG8BPOhvHM94GvuLxrxxNGy3WuXv4ekVOpOZC/OrkT3kvOMssX3fh+QLX6ieE1pn1MQDhnL
+	JOis2meDoCyogwRu1Se4ystHBJPtbfLHPaoNB72w9rN9zygg7PMxSGBtjvAT3xrFex7WMTbppgRgj
+	yjfwBftQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56924)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1reZSY-0003A6-2J;
+	Mon, 26 Feb 2024 11:47:50 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1reZSS-0006P5-Tm; Mon, 26 Feb 2024 11:47:44 +0000
+Date: Mon, 26 Feb 2024 11:47:44 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	David Laight <David.Laight@aculab.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Helge Deller <deller@gmx.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Parisc List <linux-parisc@vger.kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v10] lib: checksum: Use aligned accesses for ip_fast_csum
+ and csum_ipv6_magic tests
+Message-ID: <Zdx6YMRdPmb595M2@shell.armlinux.org.uk>
+References: <20240223-fix_sparse_errors_checksum_tests-v10-1-b6a45914b7d8@rivosinc.com>
+ <7ae930a7-3b10-4470-94ee-89cb650b3349@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170894808668.398.2149303099223176501.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7ae930a7-3b10-4470-94ee-89cb650b3349@csgroup.eu>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-The following commit has been merged into the x86/apic branch of tip:
+On Mon, Feb 26, 2024 at 11:34:51AM +0000, Christophe Leroy wrote:
+> Le 23/02/2024 à 23:11, Charlie Jenkins a écrit :
+> > The test cases for ip_fast_csum and csum_ipv6_magic were not properly
+> > aligning the IP header, which were causing failures on architectures
+> > that do not support misaligned accesses like some ARM platforms. To
+> > solve this, align the data along (14 + NET_IP_ALIGN) bytes which is the
+> > standard alignment of an IP header and must be supported by the
+> > architecture.
+> 
+> I'm still wondering what we are really trying to fix here.
+> 
+> All other tests are explicitely testing that it works with any alignment.
+> 
+> Shouldn't ip_fast_csum() and csum_ipv6_magic() work for any alignment as 
+> well ? I would expect it, I see no comment in arm code which explicits 
+> that assumption around those functions.
 
-Commit-ID:     429bb0269058e2e1f4ab69a0d33d374933aa15b9
-Gitweb:        https://git.kernel.org/tip/429bb0269058e2e1f4ab69a0d33d374933aa15b9
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Mon, 26 Feb 2024 12:07:31 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 26 Feb 2024 12:13:40 +01:00
+No, these functions are explicitly *not* designed to be used with any
+alignment. They are for 16-bit alignment only.
 
-smp: Provide 'setup_max_cpus' definition on UP too
+I'm not sure where the idea that "any alignment" has come from, but it's
+never been the case AFAIK that we've supported that - or if we do now,
+that's something which has crept in under the radar.
 
-This was already defined locally by init/main.c, but let's make
-it generic, as arch/x86/kernel/cpu/topology.c is going to make
-use of it to have more uniform code.
-
-[ Keep it a C variable, not a define, because there's
-  some namespace overlap for the 'setup_max_cpus' token
-  in existing function argument names. ]
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
---
----
- include/linux/smp.h | 2 ++
- init/main.c         | 1 -
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/smp.h b/include/linux/smp.h
-index e87520d..5a5985f 100644
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -218,6 +218,8 @@ smp_call_function_any(const struct cpumask *mask, smp_call_func_t func,
- static inline void kick_all_cpus_sync(void) {  }
- static inline void wake_up_all_idle_cpus(void) {  }
- 
-+static const unsigned int setup_max_cpus = 0;
-+
- #ifdef CONFIG_UP_LATE_INIT
- extern void __init up_late_init(void);
- static inline void smp_init(void) { up_late_init(); }
-diff --git a/init/main.c b/init/main.c
-index e24b078..5644bb1 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -603,7 +603,6 @@ static int __init rdinit_setup(char *str)
- __setup("rdinit=", rdinit_setup);
- 
- #ifndef CONFIG_SMP
--static const unsigned int setup_max_cpus = NR_CPUS;
- static inline void setup_nr_cpu_ids(void) { }
- static inline void smp_prepare_cpus(unsigned int maxcpus) { }
- #endif
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
