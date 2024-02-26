@@ -1,185 +1,118 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E01B1CD08;
-	Mon, 26 Feb 2024 12:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24775B663;
+	Mon, 26 Feb 2024 12:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708949001; cv=none; b=TTP+P2o2JyXccecj73Vysk2Xg3QmeXK00iByZJYH1+zV0ym4bygLLiE9RvlddcsRWPKFq6G7EqzH+NTew/g+q/A+IphGKvCzBHb1wlpRXiVDKZb5GWyYsuUfwnWGJZT4kil9TGvb8FZF4mq/8VIQqSHsr0WndrMdg/3cNup/PqA=
+	t=1708949043; cv=none; b=P5i7Q2Ag95nsyEGx/3NJTfKzL2RCuaaG7nCmIgFCpbv71NahFpVwn5ZdJYHNXBN5uWPM5VZD+hUWpXoo6laS4BbpUbsB73hE7EDt3g8SVsHwKizem9kP3QzPMv+cUXLdUczYeMMVE1Brx74xhswuG7C9McK/uIMJjMvN7nuyit8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708949001; c=relaxed/simple;
-	bh=vRIEb/+D7M4j/nHK9fDGfbH9sUW39k0q7B5ZbffZKjw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y3SR1IwpVW92Q6/gL3hpTzceTc0LovI+8JtYSwXv5zBMSD5hL8z5Vgy8II86+ULvJY3F5mN+Tf8sXjcnvON4t3MJV5eH8zkwA9txO5WbGgSJHwXMV8v4qIAWq0ZjAiWaawtSdGG+UPTUd4SNUQfxodWaF6dZVZaCcb898sUX9J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kzG7Z1CL; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1708949043; c=relaxed/simple;
+	bh=bSIYi307UAifxZYKBFL5Z4FCz6CO5J9gTDCXhlKnU+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=osguSYYaaQXDiYYuMoeqArE3LOmHG1347rAiblypQV2IT08pEMXhGJZ+oh7CD3bsm+fIaxlB7RiPsLFUBZLPRaFsDuRP5mPbIJTseNAWp5+hlmtDKdUnVWDlv9YRDUxqhCv0SAA4Dk86tQJwYKchrrDaxjUZW1x7FGAQab2B5hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=IojTQrZd; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kzG7Z1CL"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41QC2mR0099398;
-	Mon, 26 Feb 2024 06:02:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708948968;
-	bh=+3AsQsaBHuAdklDpGOnvvIB16uuAzF8tgDh7ffFqkhY=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=kzG7Z1CL27dDBNkYo2tw7iZjIJPFaNvIU847qw0GQo0uVwMo1MBKX5cMH/pORS2V4
-	 H4t1PkdKa7j5T1kXRQH+nJFQc9l9KTioni/0nyQWp/DlrIYRmzNB0SPQ4CTbzy580C
-	 FV04F/xi3LJYmMN8WiwyuXf90xfPaRTq7klgspuE=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41QC2m0t104041
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 26 Feb 2024 06:02:48 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 26
- Feb 2024 06:02:48 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 26 Feb 2024 06:02:48 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41QC2lnH056462;
-	Mon, 26 Feb 2024 06:02:47 -0600
-Date: Mon, 26 Feb 2024 17:32:46 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel
-	<gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Marek Vasut
-	<marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda
-	<yoshihiro.shimoda.uh@renesas.com>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <mhi@lists.linux.dev>,
-        <s-vadapalli@ti.com>
-Subject: Re: [PATCH v3 1/5] PCI: dwc: Refactor dw_pcie_edma_find_chip() API
-Message-ID: <a3e4f9f9-e3c0-428c-913c-d777f3386556@ti.com>
-References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
- <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IojTQrZd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=O7pmyULB7JZRz8A9oI6WLG3NRUVeGhF0b+0ptpd76Fs=; b=IojTQrZdEhZrWdsSrZKnx/vZRV
+	VlpJkkFC9Dhu94mGJ6dM2h3W1X6jS012IEPNx0ZyOUN+WmivBv9se9HQqxdhcmaupG+rnB0k1KUDX
+	axg2z/ZFFtH5G9HSBtQ46pW3QWVLTeFMeCph0AiGiCkuzm5QNCgcJBTLu2jXDuEUkwAfwT3pjiHPn
+	+qVDZND4xtlwfUMnhIO4vKERiyhloEAQPm9kC0o029/AP0rZMjqs3/dJV+IBDw6i9rRjSWv9WkCAe
+	ixyTdJAjXWfUPqkU5Gfu88cc0o96Lri3cC5oRu7yF2rpaZI3koypVqmS8CyMdwERP/DfOhCCk5419
+	JuUGoIRQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39758)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1reZi1-0003F6-0X;
+	Mon, 26 Feb 2024 12:03:49 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1reZhz-0006PU-MT; Mon, 26 Feb 2024 12:03:47 +0000
+Date: Mon, 26 Feb 2024 12:03:47 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	David Laight <David.Laight@aculab.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Helge Deller <deller@gmx.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Parisc List <linux-parisc@vger.kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v10] lib: checksum: Use aligned accesses for ip_fast_csum
+ and csum_ipv6_magic tests
+Message-ID: <Zdx+I3V9ka3EbaHq@shell.armlinux.org.uk>
+References: <20240223-fix_sparse_errors_checksum_tests-v10-1-b6a45914b7d8@rivosinc.com>
+ <7ae930a7-3b10-4470-94ee-89cb650b3349@csgroup.eu>
+ <Zdx6YMRdPmb595M2@shell.armlinux.org.uk>
+ <96b3fcfd-6932-4987-9831-5abdad8d445c@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <96b3fcfd-6932-4987-9831-5abdad8d445c@csgroup.eu>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, Feb 26, 2024 at 05:07:26PM +0530, Manivannan Sadhasivam wrote:
-> In order to add support for Hyper DMA (HDMA), let's refactor the existing
-> dw_pcie_edma_find_chip() API by moving the common code to separate
-> functions.
+On Mon, Feb 26, 2024 at 11:57:24AM +0000, Christophe Leroy wrote:
 > 
-> No functional change.
 > 
-> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Le 26/02/2024 à 12:47, Russell King (Oracle) a écrit :
+> > On Mon, Feb 26, 2024 at 11:34:51AM +0000, Christophe Leroy wrote:
+> >> Le 23/02/2024 à 23:11, Charlie Jenkins a écrit :
+> >>> The test cases for ip_fast_csum and csum_ipv6_magic were not properly
+> >>> aligning the IP header, which were causing failures on architectures
+> >>> that do not support misaligned accesses like some ARM platforms. To
+> >>> solve this, align the data along (14 + NET_IP_ALIGN) bytes which is the
+> >>> standard alignment of an IP header and must be supported by the
+> >>> architecture.
+> >>
+> >> I'm still wondering what we are really trying to fix here.
+> >>
+> >> All other tests are explicitely testing that it works with any alignment.
+> >>
+> >> Shouldn't ip_fast_csum() and csum_ipv6_magic() work for any alignment as
+> >> well ? I would expect it, I see no comment in arm code which explicits
+> >> that assumption around those functions.
+> > 
+> > No, these functions are explicitly *not* designed to be used with any
+> > alignment. They are for 16-bit alignment only.
+> > 
+> > I'm not sure where the idea that "any alignment" has come from, but it's
+> > never been the case AFAIK that we've supported that - or if we do now,
+> > that's something which has crept in under the radar.
+> > 
+> 
+> Ok, 16-bit is fine for me, then there is no need to require a (14 + 
+> NET_IP_ALIGN) ie a 16-bytes (128-bit) alignment as this patch is doing.
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Looking again at these two functions, I'm mistaken - this was written for
+optimal use with 32-bit alignment, not 16-bit. However, the entire IP
+layer is written with the assumption that for maximum performance, the IP
+header will be 32-bit aligned.
 
-Regards,
-Siddharth.
+However, that may not always be the case for incoming packets, and what
+saves 32-bit Arm is the ability to do unaligned loads in later revisions
+of the architecture, or the alignment fault handler (slow) on older
+revisions.
 
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 52 +++++++++++++++++++++-------
->  1 file changed, 39 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 250cf7f40b85..193fcd86cf93 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -880,7 +880,17 @@ static struct dw_edma_plat_ops dw_pcie_edma_ops = {
->  	.irq_vector = dw_pcie_edma_irq_vector,
->  };
->  
-> -static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
-> +static void dw_pcie_edma_init_data(struct dw_pcie *pci)
-> +{
-> +	pci->edma.dev = pci->dev;
-> +
-> +	if (!pci->edma.ops)
-> +		pci->edma.ops = &dw_pcie_edma_ops;
-> +
-> +	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
-> +}
-> +
-> +static int dw_pcie_edma_find_mf(struct dw_pcie *pci)
->  {
->  	u32 val;
->  
-> @@ -900,24 +910,27 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
->  	else
->  		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
->  
-> -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
-> -		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
-> -
-> -		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> -	} else if (val != 0xFFFFFFFF) {
-> -		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
-> +	/* Set default mapping format here and update it below if needed */
-> +	pci->edma.mf = EDMA_MF_EDMA_LEGACY;
->  
-> +	if (val == 0xFFFFFFFF && pci->edma.reg_base)
-> +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
-> +	else if (val != 0xFFFFFFFF)
->  		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
-> -	} else {
-> +	else
->  		return -ENODEV;
-> -	}
->  
-> -	pci->edma.dev = pci->dev;
-> +	return 0;
-> +}
->  
-> -	if (!pci->edma.ops)
-> -		pci->edma.ops = &dw_pcie_edma_ops;
-> +static int dw_pcie_edma_find_channels(struct dw_pcie *pci)
-> +{
-> +	u32 val;
->  
-> -	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
-> +	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
-> +		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-> +	else
-> +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
->  
->  	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
->  	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-> @@ -930,6 +943,19 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
->  	return 0;
->  }
->  
-> +static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
-> +{
-> +	int ret;
-> +
-> +	dw_pcie_edma_init_data(pci);
-> +
-> +	ret = dw_pcie_edma_find_mf(pci);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return dw_pcie_edma_find_channels(pci);
-> +}
-> +
->  static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
->  {
->  	struct platform_device *pdev = to_platform_device(pci->dev);
-> 
-> -- 
-> 2.25.1
-> 
-> 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
