@@ -1,200 +1,123 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438A418AF8
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA6278662;
+	Mon, 26 Feb 2024 09:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938168; cv=none; b=TLcWT6nGkmzrMXTJXY3OEC18mRQy1sbG00tYdsZ1QTMNNAdfDd1P9drZXXozNILian8SdGckZtQWdBbI/31WEkrDtIFyvIsVg1X/hibKQOITW8Jf9GKNTXV2JsqDOp8QqQ4ej+oYL22yVJ+O1zYephkoNi6u8ndY9dxuvMHBocY=
+	t=1708938200; cv=none; b=HP9zVWDG7ythrn6s9ExZPF9ws6fSYxpF4x/Xww76X6UwqgamtaV+8QWClTGpcKWz+c15/UUtKsvqDfJ3qE4Ikbk9SP77huasoe3CY99e/bGnpp6tWfGnIyKoaFcLxxBpsz87inSjiuGxSF3zLmWeyeXXl5tiZV2kZ+koCA5wPac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938168; c=relaxed/simple;
-	bh=XbXVfHeOwDhV+PDLw6Hx0gES/Ce6Uc4JONajMf23QXo=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=FDgTCXD4LcFht9+NPKWW53z5Gc3MNY8kcaK4xMyDwHOn6QFNvA/d/R+40/VeImWO1QC3rM+FfiV+UQo1xvtm6a0dzJT9EObn6OZZ8i7gG23/7XUbwH45jQFRTFTDdiVNQHu1+pqI/B1m4f2Rx2urp/VygpsXlvhHPAnamjB2j1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=ks0FbFhi; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="ks0FbFhi"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a3e891b5e4eso314138766b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:02:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1708938163; x=1709542963; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
-         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DXJKtDALC3AllytrckFvRAF/ZRCMob4eWSKm4Ha7cls=;
-        b=ks0FbFhiJIhNZP+mFC4+YnxvuB1LLZ5tmUnlPi2j6nJGNwYBfwgbP+JRA33kMINLYn
-         0OXEkPIEv6k19TVZbhMKxTq9ng5lCX9CD8mjDkEWykdPMwxi/X5yTLeGzR6/dRpFhCHs
-         GFD8+9q2uBb4f2nK9HtWajwonLfY6kwDhvJCeIpkmC0yDdD4gDFj3MfOtvZdy+FAl5Cc
-         s315j8pSdXCbfxLKWJCrgXjNL+DNsHsk3dTaYyO+NtKO/RIsfW56iOg6YgSYJNetjaGc
-         x7FuwQZPIjsz2FCPL/q+V2lp56sFOLUJdhYNtp3NRPtX23C5DB7KCkTmGRwUIwgZt6G7
-         bbyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708938163; x=1709542963;
-        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
-         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DXJKtDALC3AllytrckFvRAF/ZRCMob4eWSKm4Ha7cls=;
-        b=cvGVk1v8CRlw+UEN1g8kJIcxVB/VrP8mvpLIMwanGaWOjvVzI6laltMVtJWuAx5/c0
-         BO1/HtDVfgTZktMvmh9D27FATgIcTRW0cVIKjRA5kcsIY2ywnqQlOFq8kEYt4V6j5WdD
-         kiNudxB83wD/3nKnK3s1TF7u14F6WXkRGnanYj2sLFy+WzDx5S1i5202H+bOpU9ZKnHq
-         zanDUk1pjinp7OZNlqs+rn2ICLpsEwmHFB7aV7ljnMgo3GcCJQSZNrt16OF7SDZ3I6+i
-         m5c+0AiC5eNZnUBAbBQznlq62KdRRcGnORPT4VnHb1/BaPqY4163jEuaQgfYpTdRQ/wE
-         NxQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2GIiMSKoJFQFvV9teX7gFcc+8BKToj+U6RYiJuoUmuiIoobZ7i/KbVhiEjdXNCxh9TlFusYs1ehr1RGT4pY3dThYzvti4TMi2EvWL
-X-Gm-Message-State: AOJu0Yxqsz2K9qZrMtweGX5+pPFrhEnrUcxxywAJ6bEGKy2cGn3gDFO1
-	ugGbkPCdJq5ERuqfMhqCSxv5IF3o5KzVtZrweclxOUKoW3PupSblGOcMJJpnAIY=
-X-Google-Smtp-Source: AGHT+IEABUyZM4Qr+FrrCNgluJIL+UvNGxn0b+EdUy4hbr938x99f18HccbJrZ69FJrZcZZVDCIEmg==
-X-Received: by 2002:a17:906:b7ca:b0:a3e:6038:42b8 with SMTP id fy10-20020a170906b7ca00b00a3e603842b8mr3801391ejb.39.1708938163246;
-        Mon, 26 Feb 2024 01:02:43 -0800 (PST)
-Received: from localhost ([194.62.217.1])
-        by smtp.gmail.com with ESMTPSA id un6-20020a170907cb8600b00a4386852da5sm1198ejc.83.2024.02.26.01.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 01:02:42 -0800 (PST)
-References: <20230503090708.2524310-7-nmi@metaspace.dk>
- <20230503120354.534136-1-aliceryhl@google.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Damien.LeMoal@wdc.com, alex.gaynor@gmail.com, axboe@kernel.dk,
- benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com,
- gary@garyguo.net, gost.dev@samsung.com, hare@suse.de, hch@lst.de,
- kbusch@kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, lsf-pc@lists.linux-foundation.org,
- ojeda@kernel.org, rust-for-linux@vger.kernel.org, wedsonaf@gmail.com,
- willy@infradead.org
-Subject: Re: [RFC PATCH 06/11] rust: apply cache line padding for `SpinLock`
-Date: Fri, 23 Feb 2024 12:29:40 +0100
-In-reply-to: <20230503120354.534136-1-aliceryhl@google.com>
-Message-ID: <87y1b7a994.fsf@metaspace.dk>
+	s=arc-20240116; t=1708938200; c=relaxed/simple;
+	bh=J1KT8GnwQs/4uWEXvCjHmvjMvN5a8ew6jtWQPjQ2muQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H6F4l5LIT7zsEOpLqaxlAZm2DDEQbFj9kTMN7cctRn0oRcTlk1hzR6BOCMqXk9kDyu+J/w1LF644YCG6EUKrzQNxlmlccIB6Cv0dJkE+kep+dPk1Q6ekfPbI/sBiD5TBvURX1LadF+XdgihBI5x4up+YINjkX8fUQF9Y7AAs358=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2EA7C433C7;
+	Mon, 26 Feb 2024 09:03:19 +0000 (UTC)
+Message-ID: <c8fa257a-5259-4f4a-99dd-6a277899f6a6@xs4all.nl>
+Date: Mon, 26 Feb 2024 10:03:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] em28xx-dvb: fix DVB adapter device name
+Content-Language: en-US, nl
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <cover.1708422122.git.mchehab@kernel.org>
+ <973f454413c31ba5b6464c289ee24b01465abaff.1708422122.git.mchehab@kernel.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <973f454413c31ba5b6464c289ee24b01465abaff.1708422122.git.mchehab@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Mauro,
 
-Hi Alice,
+On 20/02/2024 10:46, Mauro Carvalho Chehab wrote:
+> This will be used for uevent, so it needs to be filled with the
+> device name, and not with it's parent ID.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+> ---
+>  drivers/media/usb/em28xx/em28xx-dvb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/usb/em28xx/em28xx-dvb.c b/drivers/media/usb/em28xx/em28xx-dvb.c
+> index 9fce59979e3b..759c04fbd8cf 100644
+> --- a/drivers/media/usb/em28xx/em28xx-dvb.c
+> +++ b/drivers/media/usb/em28xx/em28xx-dvb.c
+> @@ -980,7 +980,7 @@ static int em28xx_register_dvb(struct em28xx_dvb *dvb, struct module *module,
+>  
+>  	/* register adapter */
+>  	result = dvb_register_adapter(&dvb->adapter,
+> -				      dev_name(&dev->intf->dev), module,
+> +				      em28xx_boards[dev->model].name, module,
 
-Alice Ryhl <aliceryhl@google.com> writes:
+It is not clear what the 'adapter name' should be: looking at how this is
+used today it is either the name of the card or the name of the driver module
+(KBUILD_MODNAME or a hardcoded string).
 
-> On Wed, 3 May 2023 11:07:03 +0200, Andreas Hindborg <a.hindborg@samsung.c=
-om> wrote:
->> The kernel `struct spinlock` is 4 bytes on x86 when lockdep is not enabl=
-ed. The
->> structure is not padded to fit a cache line. The effect of this for `Spi=
-nLock`
->> is that the lock variable and the value protected by the lock will share=
- a cache
->> line, depending on the alignment requirements of the protected value. Al=
-igning
->> the lock variable and the protected value to a cache line yields a 20%
->> performance increase for the Rust null block driver for sequential reads=
- to
->> memory backed devices at 6 concurrent readers.
->>=20
->> Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
->
-> This applies the cacheline padding to all spinlocks unconditionally.
-> It's not clear to me that we want to do that. Instead, I suggest using
-> `SpinLock<CachePadded<T>>` in the null block driver to opt-in to the
-> cache padding there, and let other drivers choose whether or not they
-> want to cache pad their locks.
+This driver appears to be the only one that uses dev_name, but I did not
+do an exhaustive search, so there may be more.
 
-I was going to write that this is not going to work because the compiler
-is going to reorder the fields of `Lock` and put the `data` field first,
-followed by the `state` field. But I checked the layout, and it seems
-that I actually get the `state` field first (with an alignment of 4), 60
-bytes of padding, and then the `data` field (with alignment 64).
+In any case, I think this should be consistent and documented somewhere.
 
-I am wondering why the compiler is not reordering these fields? Am I
-guaranteed that the fields will not be reordered? Looking at the
-definition of `Lock` there does not seem to be anything that prevents
-rustc from swapping `state` and `data`.
+Personally, I think using the model/card name would be best.
 
->
-> On Wed, 3 May 2023 11:07:03 +0200, Andreas Hindborg <a.hindborg@samsung.c=
-om> wrote:
->> diff --git a/rust/kernel/cache_padded.rs b/rust/kernel/cache_padded.rs
->> new file mode 100644
->> index 000000000000..758678e71f50
->> --- /dev/null
->> +++ b/rust/kernel/cache_padded.rs
->>=20
->> +impl<T> CachePadded<T> {
->> +    /// Pads and aligns a value to 64 bytes.
->> +    #[inline(always)]
->> +    pub(crate) const fn new(t: T) -> CachePadded<T> {
->> +        CachePadded::<T> { value: t }
->> +    }
->> +}
->
-> Please make this `pub` instead of just `pub(crate)`. Other drivers might
-> want to use this directly.
+But how does this relate to the name reported by FE_GET_INFO? Is it
+supposed to be the same name? Is that handled correctly or documented
+somewhere?
 
-Alright.
+Regards,
 
->
-> On Wed, 3 May 2023 11:07:03 +0200, Andreas Hindborg <a.hindborg@samsung.c=
-om> wrote:
->> diff --git a/rust/kernel/sync/lock/spinlock.rs b/rust/kernel/sync/lock/s=
-pinlock.rs
->> index 979b56464a4e..e39142a8148c 100644
->> --- a/rust/kernel/sync/lock/spinlock.rs
->> +++ b/rust/kernel/sync/lock/spinlock.rs
->> @@ -100,18 +103,20 @@ unsafe impl super::Backend for SpinLockBackend {
->>      ) {
->>          // SAFETY: The safety requirements ensure that `ptr` is valid f=
-or writes, and `name` and
->>          // `key` are valid for read indefinitely.
->> -        unsafe { bindings::__spin_lock_init(ptr, name, key) }
->> +        unsafe { bindings::__spin_lock_init((&mut *ptr).deref_mut(), na=
-me, key) }
->>      }
->>=20=20
->> +    #[inline(always)]
->>      unsafe fn lock(ptr: *mut Self::State) -> Self::GuardState {
->>          // SAFETY: The safety requirements of this function ensure that=
- `ptr` points to valid
->>          // memory, and that it has been initialised before.
->> -        unsafe { bindings::spin_lock(ptr) }
->> +        unsafe { bindings::spin_lock((&mut *ptr).deref_mut()) }
->>      }
->>=20=20
->> +    #[inline(always)]
->>      unsafe fn unlock(ptr: *mut Self::State, _guard_state: &Self::GuardS=
-tate) {
->>          // SAFETY: The safety requirements of this function ensure that=
- `ptr` is valid and that the
->>          // caller is the owner of the mutex.
->> -        unsafe { bindings::spin_unlock(ptr) }
->> +        unsafe { bindings::spin_unlock((&mut *ptr).deref_mut()) }
->>      }
->>  }
->
-> I would prefer to remain in pointer-land for the above operations. I
-> think that this leads to core that is more obviously correct.
->
-> For example:
->
-> ```
-> impl<T> CachePadded<T> {
->     pub const fn raw_get(ptr: *mut Self) -> *mut T {
->         core::ptr::addr_of_mut!((*ptr).value)
->     }
-> }
->
-> #[inline(always)]
-> unsafe fn unlock(ptr: *mut Self::State, _guard_state: &Self::GuardState) {
->     unsafe { bindings::spin_unlock(CachePadded::raw_get(ptr)) }
-> }
-> ```
+	Hans
 
-Got it =F0=9F=91=8D
-
-
-BR Andreas
+>  				      device, adapter_nr);
+>  	if (result < 0) {
+>  		dev_warn(&dev->intf->dev,
