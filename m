@@ -1,233 +1,270 @@
-Received: from hall.aurel32.net (hall.aurel32.net [195.154.113.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B6D12BF27;
-	Mon, 26 Feb 2024 19:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.154.113.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F1312FF64
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 19:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708974966; cv=none; b=pt9X7s+JsrzsgCugxdLOdWdJlA3GKI0D3YeQz1VAk9oHN9ZPUEtU3h4agku2Ra5loOHKcrEXSUWnryH1anbbBxWXnUD56Ow3gDHPgOmRpa8sU+wRvm1LdWZ5lqJNmZYDfr3aATceqlGqQ21Jl7VTdvtoQTw3p/7sQKqvJaoiqYE=
+	t=1708974971; cv=none; b=c4s7JrHz5QIHx6CC5haQrR7NQJfMTdBN8pv69+S66MCJC0OQm2GunZz1WeMZ0h2JI1uezeIEq5x2zwoH0c+k7kCJhj7o+zHINCxokPyLby5ROuzEt/GF7mHKR2dWwJQ8Cr/gXf4aZR8fCOJ7A44/w0jhP2pQ/yolVeC+Y+qr/m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708974966; c=relaxed/simple;
-	bh=O0ZIo6cxxJHxd5FG0ZXs1D3kPCmDGTjZpf2SePW4mK4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H1uuwnBnW1GX4cc1Q5iqSicrBDaIQdGQIZ5PU5gqVcf5IasZXO93FGADeCaqV0GF+yYcyIue75KWMf32+GzS5LsV9wRms9nE2uRJbYN9fcKK0828BjsYslBgXkyKMvsWKFxktikMIYUrMyIzW+s5/e90fJWrnkHJA0k64MP9QzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net; spf=pass smtp.mailfrom=aurel32.net; dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b=QyS7hGWI; arc=none smtp.client-ip=195.154.113.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aurel32.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aurel32.net
+	s=arc-20240116; t=1708974971; c=relaxed/simple;
+	bh=cmYQX0WXe1R7g50QoJI94WraHqbUsK8xpEDc1+xbeIw=;
+	h=Mime-Version:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:Content-Type; b=BsuFr/K1ZLAA7k6OupCGIJEREIo2/2QMfOUJ35YwaYTLk7ume0TSPiECvOccQLQjRUK6NT0g0JBkLXJUA/XpGbzJklhBF+IQH+Jd/HBBv0J2/kBbnuJgcQqPprFyFAf+MlN9mN+KqGD0P+YpPlnK/TP6bNGV/UR0w/2CLml8qps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Sg9MaEmO; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aurel32.net header.i=@aurel32.net header.b="QyS7hGWI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
-	; s=202004.hall; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:Reply-To:
-	Subject:Content-ID:Content-Description:X-Debbugs-Cc;
-	bh=OTrgJSJ1jDEPsGQxe8NHCf/xZH4XRsuoxTPG/b1FsiA=; b=QyS7hGWI1LCToHyw7V9iQMYHun
-	l7QpKUvlkFmqUnyTqBxsxezsPT4BE+q4DF+ZiOHNgkEOdd8bjWVEhO6cizyxFAEZD2mOdPidhrH+h
-	nQxqOMMVb51ZFFZwIrzRq1MkLntB29UnFBXaPsZhaCNAuay4/FZCAZ+le/Uw8oAVxwITbFd+zmCqc
-	g3N+RXuLRLwlgKmLTPF2bgYqVpcsH1tm/ZRxHby6c6AQlRinRmt9CSBuY/Bh8MX4iXWzL32pV3Ys+
-	74cpgV+eN6Wyzdbqmf88v1Y8Qc6qqD/eWTDsuAKtzWdrKACXsmtwDfRccbUmBuQxUVQVaQ/a+yBai
-	xAQaB4hw==;
-Received: from ohm.aurel32.net ([2001:bc8:30d7:111::2] helo=ohm.rr44.fr)
-	by hall.aurel32.net with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <aurelien@aurel32.net>)
-	id 1reflL-004AMc-1u;
-	Mon, 26 Feb 2024 19:31:39 +0100
-Date: Mon, 26 Feb 2024 19:31:38 +0100
-From: Aurelien Jarno <aurelien@aurel32.net>
-To: Minda Chen <minda.chen@starfivetech.com>
-Cc: David Abdurachmanov <david.abdurachmanov@gmail.com>,
-	Conor Dooley <conor@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v15 15/23] PCI: microchip: Add event irqchip field to
- host port and add PLDA irqchip
-Message-ID: <ZdzZClVcyHXKwsUJ@aurel32.net>
-Mail-Followup-To: Minda Chen <minda.chen@starfivetech.com>,
-	David Abdurachmanov <david.abdurachmanov@gmail.com>,
-	Conor Dooley <conor@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-References: <20240218101831.113469-1-minda.chen@starfivetech.com>
- <20240218101831.113469-2-minda.chen@starfivetech.com>
- <SHXPR01MB0863FCE82CA2155E52A3EB6FE650A@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
- <CAEn-LTphwFA6KgCZWsqiMMob2Xw4t4sCZ70U0u0z2=yJOpyGHA@mail.gmail.com>
- <SHXPR01MB0863DBBEB8C6AD12F3C0056DE657A@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Sg9MaEmO"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6de3141f041so2127172b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 11:16:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1708974969; x=1709579769; darn=vger.kernel.org;
+        h=to:references:message-id:cc:date:in-reply-to:from:subject
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2z8HdzzlldrzSXWl18PQfTNGb5pbDqTGOGC99h1P6kk=;
+        b=Sg9MaEmOkZuEYZoZC5hGYteAhvXRDI7X7AC36RUpMY3PRSB9rsRhPVTdIgpEPSX8Tu
+         R+7Zff6EWJyH43Nj+hTbsnHDEuuWclUYy8Ki6fs9VAmYhyCcqIiEIA+Mo2N9Mzg1x0dD
+         2gDVEDrPdPCdYRZE+aN57yxHyJ2iZTw7g40ck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708974969; x=1709579769;
+        h=to:references:message-id:cc:date:in-reply-to:from:subject
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2z8HdzzlldrzSXWl18PQfTNGb5pbDqTGOGC99h1P6kk=;
+        b=esPEFPDrJppklzW5bIdKqfifHqNeEjXvnoReUb8Y5dOQ0egZIEx2znNlkRpkLQ2EQt
+         ixRXu9tEdPp/KgDLMBpGF6BpgO6KTD921ydpk8I0LvN9q6qLTkJBxHMt46DN/kmcie++
+         2eIvUtu39hcZsumg4HLKv6dNKT6K7CF+2FUiZeOtFqICYovQZk7OczmKx2sZ45+1XfiN
+         e9U/E+wjrzgZCE0BfKqI2aD0YpSlSvJshbpFYzgnhuChJTYytuLbxWq8TubkmuP3/orK
+         W8NLlox+8GQB5fM3g9zsXHy4yn2zgzrUBm1L4+otnnRIbaP7btSD5aDCyk4Y19V35KoP
+         yAFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkhNnmQ0/FU/6JVdynUlBLS+couwJwnHwgtdUe27AbMqidvMgY8EdsmiXtMFwYIgZtJgDOfOLoHgGDn/v2Shmk9EHE5D0q3carXo7M
+X-Gm-Message-State: AOJu0YwHSHcioewqbx3lKNGokpRb8E6AQZ8dlL4j8vlnH9Cnbw4e/kmu
+	drFTXphJw/dXYS2wFky7ohZCGh3qP7Q84TtTLNDoGOpU9lWxu3jKimOIDqmLjrdE7ega4ywAjyM
+	0lWdrYJPi9aXW9n/m5zS336qDqHVzAVlDkrnKLEOSIJ9dmU/PtbI=
+X-Google-Smtp-Source: AGHT+IEC9JcNy1ADCfpu0I9QsDQVobDzbsCBdDLCxqHOFq5A/C9c5lpIZ4W48XqvV1fDuy5xvsauQw==
+X-Received: by 2002:a05:6a00:4f96:b0:6e5:31f5:94cd with SMTP id ld22-20020a056a004f9600b006e531f594cdmr3600759pfb.0.1708974968720;
+        Mon, 26 Feb 2024 11:16:08 -0800 (PST)
+Received: from smtpclient.apple ([128.177.82.146])
+        by smtp.gmail.com with ESMTPSA id r25-20020a62e419000000b006da96503d9fsm4386073pfh.109.2024.02.26.11.16.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Feb 2024 11:16:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <SHXPR01MB0863DBBEB8C6AD12F3C0056DE657A@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6.1.1\))
+Subject: Re: [PATCH v2] x86/kernel: skip ROM range scans and validation for
+ SEV-SNP guests
+From: Mike Stunes <mike.stunes@broadcom.com>
+In-Reply-To: <20240222202404.36206-1-kevinloughlin@google.com>
+Date: Mon, 26 Feb 2024 11:15:54 -0800
+Cc: acdunlap@google.com,
+ alexander.shishkin@linux.intel.com,
+ andrisaar@google.com,
+ ardb@kernel.org,
+ bhe@redhat.com,
+ Borislav Petkov <bp@alien8.de>,
+ Brijesh Singh <brijesh.singh@amd.com>,
+ dave.hansen@linux.intel.com,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ grobler@google.com,
+ hpa@zytor.com,
+ jacobhxu@google.com,
+ jpoimboe@kernel.org,
+ "Huang, Kai" <kai.huang@intel.com>,
+ linux-kernel@vger.kernel.org,
+ Michael Roth <michael.roth@amd.com>,
+ mingo@redhat.com,
+ peterz@infradead.org,
+ Peter Gonda <pgonda@google.com>,
+ ross.lagerwall@citrix.com,
+ sidtelang@google.com,
+ tglx@linutronix.de,
+ Thomas Lendacky <thomas.lendacky@amd.com>,
+ x86@kernel.org,
+ ytcoode@gmail.com
+Message-Id: <4463AFB9-58AC-4E65-BB04-EB2C9F2D9301@broadcom.com>
+References: <CAGdbjmK9WoOQSbKUvcTdLJDW-RB=qe2tHFDZ-MeD266xZOxh7w@mail.gmail.com>
+ <20240222202404.36206-1-kevinloughlin@google.com>
+To: Kevin Loughlin <kevinloughlin@google.com>
+X-Mailer: Apple Mail (2.3731.700.6.1.1)
+Content-Type: text/plain; charset="ISO-8859-1"
 
 Hi,
 
-On 2024-02-21 10:10, Minda Chen wrote:
->=20
->=20
-> >=20
-> > On Tue, Feb 20, 2024 at 1:02=E2=80=AFPM Minda Chen <minda.chen@starfive=
-tech.com>
-> > wrote:
-> > >
-> > >
-> > > >
-> > > > As PLDA dts binding doc(Documentation/devicetree/bindings/pci/
-> > > > plda,xpressrich3-axi-common.yaml) showed, PLDA PCIe contains an
-> > > > interrupt controller.
-> > > >
-> > > > Microchip PolarFire PCIE event IRQs includes PLDA interrupts and
-> > > > Polarfire their own interrupts. The interrupt irqchip ops includes
-> > > > ack/mask/unmask interrupt ops, which will write correct registers.
-> > > > Microchip Polarfire PCIe additional interrupts require to write
-> > > > Polarfire SoC self-defined registers. So Microchip PCIe event irqch=
-ip ops can
-> > not be re-used.
-> > > >
-> > > > To support PLDA its own event IRQ process, implements PLDA irqchip
-> > > > ops and add event irqchip field to struct pcie_plda_rp.
-> > > >
-> > > > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> > > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > > > ---
-> > > >  .../pci/controller/plda/pcie-microchip-host.c | 66 +++++++++++++++=
-+++-
-> > > >  drivers/pci/controller/plda/pcie-plda.h       |  3 +
-> > > >  2 files changed, 68 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c
-> > > > b/drivers/pci/controller/plda/pcie-microchip-host.c
-> > > > index b3df373a2141..beaf5c27da84 100644
-> > > > --- a/drivers/pci/controller/plda/pcie-microchip-host.c
-> > > > +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-> > > > @@ -770,6 +770,64 @@ static struct irq_chip mc_event_irq_chip =3D {
-> > > >       .irq_unmask =3D mc_unmask_event_irq,  };
-> > > >
-> > > Hi Thomas
-> > >   I think this patch code it is easy to review. If you busy, Could you
-> > > let other IRQ maintainer review? Thanks.
-> > >
-> > > Hi Lorenzo, Bjorn and Krzysztof
-> >=20
-> > Hi Minda,
-> >=20
-> > This patchset seems to have broken threading (lore, mailman). I have se=
-en other
-> > folks on IRC mentioning that too.
-> >=20
-> > I am not sure if that requires re-sending, but let's wait for others to=
- comment.
-> >=20
-> > Cheers,
-> > david
-> >=20
-> Do you mean the auto test error in linux-riscv?=20
-> I can see that. But In v14 resend version, There is no error. Version 15 =
-just add
-> a new patch. Other no change. It is very strange.
-> If not this error, I will waiting others comment.
+> On Feb 22, 2024, at 12:24 PM, Kevin Loughlin <kevinloughlin@google.com> wrote:
+> 
+> SEV-SNP requires encrypted memory to be validated before access.
+> Because the ROM memory range is not part of the e820 table, it is not
+> pre-validated by the BIOS. Therefore, if a SEV-SNP guest kernel wishes
+> to access this range, the guest must first validate the range.
+> 
+> The current SEV-SNP code does indeed scan the ROM range during early
+> boot and thus attempts to validate the ROM range in probe_roms().
+> However, this behavior is neither necessary nor sufficient.
+> 
+> With regards to sufficiency, if EFI_CONFIG_TABLES are not enabled and
+> CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK is set, the kernel will
+> attempt to access the memory at SMBIOS_ENTRY_POINT_SCAN_START (which
+> falls in the ROM range) prior to validation. The specific problematic
+> call chain occurs during dmi_setup() -> dmi_scan_machine() and results
+> in a crash during boot if SEV-SNP is enabled under these conditions.
+> 
+> With regards to necessity, SEV-SNP guests currently read garbage (which
+> changes across boots) from the ROM range, meaning these scans are
+> unnecessary. The guest reads garbage because the legacy ROM range
+> is unencrypted data but is accessed via an encrypted PMD during early
+> boot (where the PMD is marked as encrypted due to potentially mapping
+> actually-encrypted data in other PMD-contained ranges).
+> 
+> While one solution would be to overhaul the early PMD mapping to treat
+> the ROM region of the PMD as unencrypted, SEV-SNP guests do not rely on
+> data from the legacy ROM region during early boot (nor can they
+> currently, since the data would be garbage that changes across boots).
+> As such, this patch opts for the simpler approach of skipping the ROM
+> range scans (and the otherwise-necessary range validation) during
+> SEV-SNP guest early boot.
+> 
+> Ultimatly, the potential SEV-SNP guest crash due to lack of ROM range
+> validation is avoided by simply not accessing the ROM range.
+> 
+> Fixes: 9704c07bf9f7 ("x86/kernel: Validate ROM memory before accessing when SEV-SNP is active")
+> Signed-off-by: Kevin Loughlin <kevinloughlin@google.com>
+> ---
+> arch/x86/include/asm/sev.h   |  2 --
+> arch/x86/kernel/mpparse.c    |  7 +++++++
+> arch/x86/kernel/probe_roms.c | 11 ++++-------
+> arch/x86/kernel/sev.c        | 15 ---------------
+> drivers/firmware/dmi_scan.c  |  7 ++++++-
+> 5 files changed, 17 insertions(+), 25 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+> index 5b4a1ce3d368..474c24ba0f6f 100644
+> --- a/arch/x86/include/asm/sev.h
+> +++ b/arch/x86/include/asm/sev.h
+> @@ -203,7 +203,6 @@ void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long padd
+> unsigned long npages);
+> void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
+> unsigned long npages);
+> -void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op);
+> void snp_set_memory_shared(unsigned long vaddr, unsigned long npages);
+> void snp_set_memory_private(unsigned long vaddr, unsigned long npages);
+> void snp_set_wakeup_secondary_cpu(void);
+> @@ -227,7 +226,6 @@ static inline void __init
+> early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr, unsigned long npages) { }
+> static inline void __init
+> early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr, unsigned long npages) { }
+> -static inline void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op) { }
+> static inline void snp_set_memory_shared(unsigned long vaddr, unsigned long npages) { }
+> static inline void snp_set_memory_private(unsigned long vaddr, unsigned long npages) { }
+> static inline void snp_set_wakeup_secondary_cpu(void) { }
+> diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+> index b223922248e9..39ea771e2d4c 100644
+> --- a/arch/x86/kernel/mpparse.c
+> +++ b/arch/x86/kernel/mpparse.c
+> @@ -553,6 +553,13 @@ static int __init smp_scan_config(unsigned long base, unsigned long length)
+>    base, base + length - 1);
+> BUILD_BUG_ON(sizeof(*mpf) != 16);
+> 
+> + /*
+> + * Skip scan in SEV-SNP guest if it would touch the legacy ROM region,
+> + * as this memory is not pre-validated and would thus cause a crash.
+> + */
+> + if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP) && base < 0x100000 && base + length >= 0xC0000)
+> + return 0;
+> +
+> while (length > 0) {
+> bp = early_memremap(base, length);
+> mpf = (struct mpf_intel *)bp;
+> diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
+> index 319fef37d9dc..84ff4b052fc1 100644
+> --- a/arch/x86/kernel/probe_roms.c
+> +++ b/arch/x86/kernel/probe_roms.c
+> @@ -204,14 +204,11 @@ void __init probe_roms(void)
+> int i;
+> 
+> /*
+> - * The ROM memory range is not part of the e820 table and is therefore not
+> - * pre-validated by BIOS. The kernel page table maps the ROM region as encrypted
+> - * memory, and SNP requires encrypted memory to be validated before access.
+> - * Do that here.
+> + * These probes are skipped in SEV-SNP guests because the ROM range
+> + * is not pre-validated, meaning access would cause a crash.
+> */
+> - snp_prep_memory(video_rom_resource.start,
+> - ((system_rom_resource.end + 1) - video_rom_resource.start),
+> - SNP_PAGE_STATE_PRIVATE);
+> + if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+> + return;
+> 
+> /* video rom */
+> upper = adapter_rom_resources[0].start;
+> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+> index c67285824e82..d2362631da91 100644
+> --- a/arch/x86/kernel/sev.c
+> +++ b/arch/x86/kernel/sev.c
+> @@ -774,21 +774,6 @@ void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr
+> early_set_pages_state(vaddr, paddr, npages, SNP_PAGE_STATE_SHARED);
+> }
+> 
+> -void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op)
+> -{
+> - unsigned long vaddr, npages;
+> -
+> - vaddr = (unsigned long)__va(paddr);
+> - npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
+> -
+> - if (op == SNP_PAGE_STATE_PRIVATE)
+> - early_snp_set_memory_private(vaddr, paddr, npages);
+> - else if (op == SNP_PAGE_STATE_SHARED)
+> - early_snp_set_memory_shared(vaddr, paddr, npages);
+> - else
+> - WARN(1, "invalid memory op %d\n", op);
+> -}
+> -
+> static unsigned long __set_pages_state(struct snp_psc_desc *data, unsigned long vaddr,
+>       unsigned long vaddr_end, int op)
+> {
+> diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+> index 015c95a825d3..22e27087eb5b 100644
+> --- a/drivers/firmware/dmi_scan.c
+> +++ b/drivers/firmware/dmi_scan.c
+> @@ -703,7 +703,12 @@ static void __init dmi_scan_machine(void)
+> dmi_available = 1;
+> return;
+> }
+> - } else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK)) {
+> + } else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK) &&
+> + !cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
+> + /*
+> + * This scan is skipped in SEV-SNP guests because the ROM range
+> + * is not pre-validated, meaning access would cause a crash.
+> + */
+> p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
+> if (p == NULL)
+> goto error;
+> -- 
+> 2.44.0.rc0.258.g7320e95886-goog
+> 
+> 
 
-V15 is wrongly threaded:
-- Patch 2 has no In-Reply-To / In-Reply-To headers
-- Patch 3 to 13 reference patch 2 instead of the cover letter
-- Patch 14 has no In-Reply-To / In-Reply-To headers
-- Patch 15 references patch 14 instead of the cover letter
-- Patch 16 has no In-Reply-To / In-Reply-To headers
-- Patch 17 to 23 reference patch 17 instead of the cover letter
+In addition to these changes, I also had to skip pirq_find_routing_table if SEV-SNP is active.
 
-Said otherwise, the patches appears as (sorry for the long lines):
+Thanks!
+Mike
 
-[PATCH v15 00/23] Refactoring Microchip PCIe driver and add StarFive PCIe
-=E2=94=94=E2=94=80>[PATCH v15 01/23] dt-bindings: PCI: Add PLDA XpressRICH =
-PCIe host common properties
-[PATCH v15 02/23] PCI: microchip: Move pcie-microchip-host.c to plda direct=
-ory
-=E2=94=9C=E2=94=80>[PATCH v15 03/23] PCI: microchip: Move PLDA IP register =
-macros to pcie-plda.h
-=E2=94=9C=E2=94=80>[PATCH v15 04/23] PCI: microchip: Add bridge_addr field =
-to struct mc_pcie
-=E2=94=9C=E2=94=80>[PATCH v15 05/23] PCI: microchip: Rename two PCIe data s=
-tructures
-=E2=94=9C=E2=94=80>[PATCH v15 06/23] PCI: microchip: Move PCIe host data st=
-ructures to plda-pcie.h
-=E2=94=9C=E2=94=80>[PATCH v15 07/23] PCI: microchip: Rename two setup funct=
-ions
-=E2=94=9C=E2=94=80>[PATCH v15 08/23] PCI: microchip: Change the argument of=
- plda_pcie_setup_iomems()
-=E2=94=9C=E2=94=80>[PATCH v15 09/23] PCI: microchip: Move setup functions t=
-o pcie-plda-host.c
-=E2=94=9C=E2=94=80>[PATCH v15 10/23] PCI: microchip: Rename interrupt relat=
-ed functions
-=E2=94=9C=E2=94=80>[PATCH v15 11/23] PCI: microchip: Add num_events field t=
-o struct plda_pcie_rp
-=E2=94=9C=E2=94=80>[PATCH v15 12/23] PCI: microchip: Add request_event_irq(=
-) callback function
-=E2=94=94=E2=94=80>[PATCH v15 13/23] PCI: microchip: Add INTx and MSI event=
- num to struct plda_event
-[PATCH v15 14/23] PCI: microchip: Add get_events() callback and add PLDA ge=
-t_event()
-=E2=94=94=E2=94=80>[PATCH v15 15/23] PCI: microchip: Add event irqchip fiel=
-d to host port and add PLDA irqchip
-[PATCH v15 16/23] PCI: microchip: Move IRQ functions to pcie-plda-host.c
-=E2=94=9C=E2=94=80>[PATCH v15 17/23] PCI: plda: Add event bitmap field to s=
-truct plda_pcie_rp
-=E2=94=9C=E2=94=80>[PATCH v15 18/23] PCI: plda: Add host init/deinit and ma=
-p bus functions
-=E2=94=9C=E2=94=80>[PATCH v15 19/23] dt-bindings: PCI: Add StarFive JH7110 =
-PCIe controller
-=E2=94=9C=E2=94=80>[PATCH v15 20/23] PCI: Add PCIE_RESET_CONFIG_DEVICE_WAIT=
-_MS waiting time value
-=E2=94=9C=E2=94=80>[PATCH v15 21/23] PCI: starfive: Add JH7110 PCIe control=
-ler
-=E2=94=9C=E2=94=80>[PATCH v15 22/23] PCI: starfive: Offload the NVMe timeou=
-t workaround to host drivers.
-=E2=94=94=E2=94=80>[PATCH v15 23/23] riscv: dts: starfive: add PCIe dts con=
-figuration for JH7110
 
-I *think* it is the reason why some tools are not able to consider all
-the patches as a single patchset.
-
-Regards
-Aurelien
-
---=20
-Aurelien Jarno                          GPG: 4096R/1DDD8C9B
-aurelien@aurel32.net                     http://aurel32.net
+-- 
+This electronic communication and the information and any files transmitted 
+with it, or attached to it, are confidential and are intended solely for 
+the use of the individual or entity to whom it is addressed and may contain 
+information that is confidential, legally privileged, protected by privacy 
+laws, or otherwise restricted from disclosure to anyone else. If you are 
+not the intended recipient or the person responsible for delivering the 
+e-mail to the intended recipient, you are hereby notified that any use, 
+copying, distributing, dissemination, forwarding, printing, or copying of 
+this e-mail is strictly prohibited. If you received this e-mail in error, 
+please return the e-mail to the sender, delete it from your computer, and 
+destroy any printed copy of it.
