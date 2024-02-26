@@ -1,121 +1,148 @@
-Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBCD2E626;
-	Mon, 26 Feb 2024 12:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74C563113;
+	Mon, 26 Feb 2024 12:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708950618; cv=none; b=Q9Y2ZELsYafDVg1X6Hx4KsXKixf/wHGmPH6YZe7w0YkqWTCxyueTfdy4AS3px9jDzDBQe4cotdPi1OpvX96e9jFJqCDr39ZizoaHGG5AettgoTYBZ6t3IABXieExl6BQSGnvTpe1jHa47/gCOGj4DZTfLNEoBxx7jkha0qjcmA0=
+	t=1708950650; cv=none; b=cjg07qzRoULv804MX3O1j58+20PnOgkFa4Kn8JVRhEStSg9u8/j+V1w3FMrRDALTXHMps//Hj/m1ES5arcVgZ/iMs5p/Ot+n2NgSAyBzbksEZerxJAzFhxlfafB/FMf1YQSuqbPl2o4OCQD8cmVJWzAJFTA+b/V0g/eqWohNIn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708950618; c=relaxed/simple;
-	bh=jXFu1eR9b9KcNi39etPSmQnajolOhrEIf/LugG/HQY4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=K6TQHdZ/0BR2VXlJHGpaNG4nCsyImSb/WaFf8nXlfDmgah0Ecq9Dnx+krMVTauBgw2gE78b2jTK/em4q7jlz1Euq3HneZztVmpr4iFKZ/nBvfJ7Fk2ykApyGD+Sf2CGlO/kA7nwS5d2oRKm/LaCxzroSEgJjCapYh6juAGm9cNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=W4EI36qw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dpGuVNGy; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1708950650; c=relaxed/simple;
+	bh=367nRfM+AwkILElpi2M/PUviC5yCBObZdPSIGUNMP8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aFTOtLbshvuMX1HKI2oOqR2OFpEcyoLF4IvcGT6u6ewkdznlK79g/TuDxAFD1zrKAAai3So6WLEyivTT5pQDwvFFbOD8RaZwS3GHdKdpNOqhF+YecKF1kj5OHIdE2JWa4Q7VmUnSzvPUbpQBhEsZl0wSYTiS1NHCvxQNUSoGmok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=EPkqIIez; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="W4EI36qw";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dpGuVNGy"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 332E11140073;
-	Mon, 26 Feb 2024 07:30:15 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 26 Feb 2024 07:30:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708950615; x=1709037015; bh=kdqOYKJcLE
-	6gzPeiqYptNFwgezzfiyBuGgmOlyPpbC0=; b=W4EI36qwfvfjuQXPOo7T2wyWgM
-	p6It3fuaC+vlenQd31BWnMxCa900vWG/t5emmVmyM1IoyUARWdQhdCIgDtEv0LvR
-	b5Lv0jZcYTXrLxGCJkBIudk1Zp1Lndephw1Y/wHrKf/5oeBr49f2Q+Iw6dHhKjWT
-	H20kk1cYilaSfR7XPg0WDCZ81Vp6N8ozFpTAtuRB4PtPqxVhchBCmxOS869rgQJM
-	/RXU2wo+x2vXgGTN1HfIZE4DBw1EguLnPfwVloYSUQQ61XVScDUE8+IJllLqD1M9
-	IcwF192mr0nV0aZxnm8Q6El86dRYwsfC2eJFx+I+xPenUz0D6c4XKhiFJi/Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708950615; x=1709037015; bh=kdqOYKJcLE6gzPeiqYptNFwgezzf
-	iyBuGgmOlyPpbC0=; b=dpGuVNGy3GXs2Sv2da0+pTzLQ+bkZeYxKzNiiwkGTiGr
-	4axYfz0kQzfkE6rgAsveKCLrD2eTAvs/mYbYIRBedMEpQY3Pt2mLd+dRSGw9eZhQ
-	kYofoN7HywdTWMvvxSGN87eBok9hhfepVGfYflY4Cg2KMasGhQ3rwnM4YJeEdgZl
-	hwWa+1RizRzK9fDDNbpAH9DCjk5OghbZfubv2PYl8zgZhW5t41854TvcqgI8gg+m
-	AdT9ydG0uHH4qf/d5XbpiCR56QibxAuD/63+uy60Io4pTNMepHDm6YZIhbe6cWnD
-	rpiwmNqhE8jj3mAPu+eIUXOSvl2koZXKyHpJ8zpbiQ==
-X-ME-Sender: <xms:VoTcZUero4o1bZNMLtt4sOzb0nIBMw00J20PyStr30S9eHQdggkAWA>
-    <xme:VoTcZWPT-9KRT-06J1SxldUgDWQqylet4qdm6tkksP-eHn_SENSPMqm6iV53OtExe
-    FbcQzq0EsXk1HRichY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgedvgdeflecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:V4TcZVhLyMWGwXmoPQhezK37UX9STS0dR_oEPxPyDy8M8YGaLqLUlw>
-    <xmx:V4TcZZ-Q_DNTxyLQCS73jhLJZcA6Cfiq2xoAsTSAfcGn4s5Dobxnyg>
-    <xmx:V4TcZQsyUH0gtbPr1S78erM2VcRDltkHGHfKJozYbRar-jpPHoLlHw>
-    <xmx:V4TcZUhwfmKAp4Y1Z6vHjnPyjwi7oCJzDe9q2t5tgkd5lnH_Agz6xQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id DB1A6B6008D; Mon, 26 Feb 2024 07:30:14 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="EPkqIIez"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=9E9uFo1ZA4/GNHoSVHywi3ucQYA9wjLjy4y7D2QRVoQ=; b=EPkqIIez4XfxwdTWX1fAQshniD
+	FJKNTXjlGpDIVV5cx73AbQbU7Azp2+otOzvEDrCbsB1QB+UOdRraNjeC+SLcngtv5x07m/8qNxxEk
+	RFGK6TdhGxMHDTlogi9HFkwbumaJaAmi1/JIOxPj4WUSyekNPJzY70rmgEsMuxH/ga1KXbKOfLMGH
+	M4DCO2/SXb6kiAQzcWXAQL0Q0WNp1RqilelPemAmio440xzS6+9rI4r3ps1c/E4irVejK+hTBIedD
+	SFPxx2OLYHPYoYfP8T2JqQAV016Ngc6nrUsDZuyH4Nx3wzURyDeEYrR+RmUrkTBkKYVCfmB0OA9rX
+	BUDcgD0w==;
+Received: from [177.34.169.255] (helo=[192.168.0.139])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1rea7q-003YnI-Ph; Mon, 26 Feb 2024 13:30:31 +0100
+Message-ID: <1c91ff55-e6c6-4543-bbf5-c7543cc03979@igalia.com>
+Date: Mon, 26 Feb 2024 09:30:24 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <60e60313-3cc4-452f-a222-aadd7728183d@app.fastmail.com>
-In-Reply-To: 
- <simbnmm644ouv3kc3agsxiub6fzg6advihkqsbjzgmb44nmuxv@ktgkhn3kr43z>
-References: <20240226105427.7191-1-fancer.lancer@gmail.com>
- <20240226105427.7191-2-fancer.lancer@gmail.com>
- <34af21b5-a878-418e-a70b-299cab61b37e@app.fastmail.com>
- <y2lxeu5uvj7ezlv7kf6lox5e5xprmvrhqmf3gvzjsatlrrlub7@mvqzoyq5mnvd>
- <cc9e02b3-57df-4a7d-bd21-2d574bf4b878@app.fastmail.com>
- <simbnmm644ouv3kc3agsxiub6fzg6advihkqsbjzgmb44nmuxv@ktgkhn3kr43z>
-Date: Mon, 26 Feb 2024 13:29:54 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Serge Semin" <fancer.lancer@gmail.com>
-Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Alexey Malahov" <Alexey.Malahov@baikalelectronics.ru>,
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mips: cm: Convert __mips_cm_l2sync_phys_base() to weak
- function
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 30/36] drm/vc4: tests: Convert to plane creation helper
+Content-Language: en-US
+To: Maxime Ripard <mripard@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>,
+ Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>,
+ Sebastian Wick <sebastian.wick@redhat.com>,
+ =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+References: <20240222-kms-hdmi-connector-state-v7-0-8f4af575fce2@kernel.org>
+ <20240222-kms-hdmi-connector-state-v7-30-8f4af575fce2@kernel.org>
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+Autocrypt: addr=mcanal@igalia.com; keydata=
+ xjMEZIsaeRYJKwYBBAHaRw8BAQdAGU6aY8oojw61KS5rGGMrlcilFqR6p6ID45IZ6ovX0h3N
+ H01haXJhIENhbmFsIDxtY2FuYWxAaWdhbGlhLmNvbT7CjwQTFggANxYhBDMCqFtIvFKVRJZQ
+ hDSPnHLaGFVuBQJkixp5BQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQNI+cctoYVW5u
+ GAEAwpaC5rI3wD8zqETKwGVoXd6+AbmGfZuVD40xepy7z/8BAM5w95/oyPsHUqOsg/xUTlNp
+ rlbhA+WWoaOXA3XgR+wCzjgEZIsaeRIKKwYBBAGXVQEFAQEHQGoOK0jgh0IorMAacx6WUUWb
+ s3RLiJYWUU6iNrk5wWUbAwEIB8J+BBgWCAAmFiEEMwKoW0i8UpVEllCENI+cctoYVW4FAmSL
+ GnkFCQWjmoACGwwACgkQNI+cctoYVW6cqwD/Q9R98msvkhgRvi18fzUPFDwwogn+F+gQJJ6o
+ pwpgFkAA/R2zOfla3IT6G3SBoV5ucdpdCpnIXFpQLbmfHK7dXsAC
+In-Reply-To: <20240222-kms-hdmi-connector-state-v7-30-8f4af575fce2@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 26, 2024, at 13:20, Serge Semin wrote:
-> On Mon, Feb 26, 2024 at 01:04:33PM +0100, Arnd Bergmann wrote:
->> On Mon, Feb 26, 2024, at 12:27, Serge Semin wrote:
+On 2/22/24 15:14, Maxime Ripard wrote:
+> Now that we have a plane create helper for kunit mocked drivers, let's
+> convert to it in vc4.
 
-> I see your point now. Thanks for clarification. IMO it would be less
-> readable due to the ifdef-ery and the new config, and less
-> maintainable due to the conditional compilation, but would provide a
-> more performant solution since the compiler will be able to inline the
-> singly used static method. Basically you suggest to emulate the weak
-> implementation by an additional kernel config.
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
 
-I mean the kernel config that you already need here, since
-the strong version of the function is already optional.
+Best Regards,
+- Maíra
 
-> Not sure whether it would be better than a well-known
-> weak-attribute-based pattern. Anyway let's wait for the
-> Thomas' opinion about your suggestion. If he thinks
-> it would be better I'll update the patches.
-
-Weak functions are not used all that much outside of a
-couple of parts of the kernel. There is a lot of them
-in drivers/pci/, a little bit in acpi and efi, and
-then a bit in arch/*/, though most of that is in mips.
-
-Ifdef checks in .c files are not great, but at least they
-are much more common than __weak functions and self-documenting.
-
-     Arnd
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>   drivers/gpu/drm/vc4/tests/vc4_mock_plane.c | 34 +++++++-----------------------
+>   1 file changed, 8 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vc4/tests/vc4_mock_plane.c b/drivers/gpu/drm/vc4/tests/vc4_mock_plane.c
+> index 973f5f929097..14357db82238 100644
+> --- a/drivers/gpu/drm/vc4/tests/vc4_mock_plane.c
+> +++ b/drivers/gpu/drm/vc4/tests/vc4_mock_plane.c
+> @@ -1,43 +1,25 @@
+>   // SPDX-License-Identifier: GPL-2.0
+>   
+> -#include <drm/drm_atomic_state_helper.h>
+> -#include <drm/drm_fourcc.h>
+> -#include <drm/drm_modeset_helper_vtables.h>
+> +#include <drm/drm_kunit_helpers.h>
+>   #include <drm/drm_plane.h>
+>   
+>   #include <kunit/test.h>
+>   
+>   #include "vc4_mock.h"
+>   
+> -static const struct drm_plane_helper_funcs vc4_dummy_plane_helper_funcs = {
+> -};
+> -
+> -static const struct drm_plane_funcs vc4_dummy_plane_funcs = {
+> -	.atomic_destroy_state	= drm_atomic_helper_plane_destroy_state,
+> -	.atomic_duplicate_state	= drm_atomic_helper_plane_duplicate_state,
+> -	.reset			= drm_atomic_helper_plane_reset,
+> -};
+> -
+> -static const uint32_t vc4_dummy_plane_formats[] = {
+> -	DRM_FORMAT_XRGB8888,
+> -};
+> -
+>   struct drm_plane *vc4_dummy_plane(struct kunit *test, struct drm_device *drm,
+>   				  enum drm_plane_type type)
+>   {
+>   	struct drm_plane *plane;
+>   
+> -	plane = __drmm_universal_plane_alloc(drm, sizeof(struct drm_plane), 0,
+> -						 0,
+> -						 &vc4_dummy_plane_funcs,
+> -						 vc4_dummy_plane_formats,
+> -						 ARRAY_SIZE(vc4_dummy_plane_formats),
+> -						 NULL,
+> -						 DRM_PLANE_TYPE_PRIMARY,
+> -						 NULL);
+> +	KUNIT_ASSERT_EQ(test, type, DRM_PLANE_TYPE_PRIMARY);
+> +
+> +	plane = drm_kunit_helper_create_primary_plane(test, drm,
+> +						      NULL,
+> +						      NULL,
+> +						      NULL, 0,
+> +						      NULL);
+>   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, plane);
+>   
+> -	drm_plane_helper_add(plane, &vc4_dummy_plane_helper_funcs);
+> -
+>   	return plane;
+>   }
+> 
