@@ -1,124 +1,90 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E857712D761
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B3712D761;
+	Mon, 26 Feb 2024 17:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708969834; cv=none; b=bUTJnOqlZvnqr1Y3gU3OuAJLlhr88Opjol9h9e2pAtGEQ6ojlExYay6H7Pu8dJKvBRNTfz/QVz0HH5HCHXd87szcAHtU7lIBxDZd8SXXDQt9HM0gp217P/LuBu+HCAk2mDXKdBU+aqGEOSCIHM5Sma86xCetJU6E3GmktQNfFbE=
+	t=1708969870; cv=none; b=H/m6mrTo6caVdhK//SSXfIuc6HJiaTvSs3LxOphve3XpZXeloalg72Xk7z0LlK2iB1yG36v2hMLZISgfYD2vIpTCXb3mKhy3k4sKoloEym831YHjxpgnsFDWys1ntqT8WSjgJyMaMUCn2DBhtESFKAaU6Z28c3i4H/x1Q4kpo6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708969834; c=relaxed/simple;
-	bh=EXS+2F0aDDzXNyS557ArWDHbc0pW9PbkkG3BlGZzYDc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sB1xsXCXJ0c1HPF3ICElNnVJTcvLUMUS3bjDkn7yKirc804qkiLaZxjojB3z/6kCCuIKCkkFB/4jlYYLhJd/2oo1xciuQS+/IYcNSkOzlSQIHOPqMUMy8TvT+rzkCtQGblJqWMiUmu8jPJkKln8eNESOEOub/upDkqtqvS37W1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Knwrmv/n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZKGuHU/I; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708969870; c=relaxed/simple;
+	bh=owWO0s5BBeKOkXbuxjeZxkyZEXYg+69HBcHtLINwK3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TfR1dK+nEtrE1xjTFgldZtGonzU+56X9RQavLX3SHwUZqqIyNOZ8oA0sskno1irp6yaJ75s3OXewyHrDD6CpcWZRLY6bRtWre6aqC/Fc0Cl0dVKDEBlAc4H+u2+eP+jtBgXAk5iL45zduKk4Xe7d+hnyR3SwbX95fg3LOTgEBn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E4Btn5JY; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Knwrmv/n";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZKGuHU/I"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708969830;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oyT45bJy0NjlcqFeA1O9Jx+i3jRc/06dKDog6PI1l+4=;
-	b=Knwrmv/ne0GuLsaIkgP25WJhHcBK3CEuVrDHOY9iW6vUAONksfcKffr/5cZZWJvcgmFw5a
-	cc6M2e5t6QlVFSiLjMDH/PcPWw7X35Bhtfg0jQWLg9c8F9jTyC8XD2iWGRdEUuVxWZHjD/
-	iP3niE9tt2NHvH5Frwc2t5FZG+Q/pFlVX5AC7+4o+DavWJ1WLCfpXqeuei8I4AEwGXzsMD
-	tYHPpb0A/3aazMqgSBzCvYvH6fPq3Qu7itP/j09M8AJEhVmQxFo80lg47A2MedsCz88ywN
-	wa1I/RdLwnd1nTyQhmPPP1XoQPpZ5RA4FbHoo36x2IzD6wtr8/74spkoB2cxeQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708969830;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oyT45bJy0NjlcqFeA1O9Jx+i3jRc/06dKDog6PI1l+4=;
-	b=ZKGuHU/IWsEbqGm6dBb+ljqasEBd013J41hORt5AxNf/sfUz032h1Nm8NwzRXeoCGE4d5r
-	J7OfhzWWh1vFtPBQ==
-To: linux-kernel@vger.kernel.org
-Cc: Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnd Bergmann <arnd@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: [PATCH] vdso/datapage: Quick fix - use asm/page-def.h for ARM64
-Date: Mon, 26 Feb 2024 18:50:23 +0100
-Message-Id: <20240226175023.56679-1-anna-maria@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E4Btn5JY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708969869; x=1740505869;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=owWO0s5BBeKOkXbuxjeZxkyZEXYg+69HBcHtLINwK3I=;
+  b=E4Btn5JYOllVp5f1BlE2SG1zXBwXUSlqLHohKlaOsLtjVHNtQhCOWL3T
+   M91QqTTnTMPmgHaHCje5X7LLj+WZVi0P40IZlk8HpEqEAu1NSBJPXh8oA
+   aj9PSVHJQU8xm/ixB0QFzNt9gyd2doonDCY/c+RpJ/pBnRL0G8a+lqJuZ
+   8MJK/HvzAg32aBdfd46IsGXi2Qd6QxiKxp+LCvDzV5PxJWSNFWuP3YLov
+   OHxpYYG4r2pwLA4ES5YekWQHUiWv1eHGS3+a5vDoQrLD/hayWNoFN2xnN
+   yk5ipv42uRuO/5u1FXPhip1aYsX3wM68GTaiXRh8gugq61h+nVdTwytq5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="28708540"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="28708540"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 09:51:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="11319420"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 09:51:07 -0800
+Date: Mon, 26 Feb 2024 09:51:07 -0800
+From: Isaku Yamahata <isaku.yamahata@linux.intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+	erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH v18 002/121] x86/virt/tdx: Export SEAMCALL functions
+Message-ID: <20240226175107.GB177224@ls.amr.corp.intel.com>
+References: <cover.1705965634.git.isaku.yamahata@intel.com>
+ <88bcf53760c42dafb14cd9a92bf4f9243f597bbe.1705965634.git.isaku.yamahata@intel.com>
+ <CABgObfYo0OaSXUYjQbn188y8JOAZGzD56TabdyENXAW6_Ca0Hw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABgObfYo0OaSXUYjQbn188y8JOAZGzD56TabdyENXAW6_Ca0Hw@mail.gmail.com>
 
-The vdso rework for the generic union vdso_data_store broke compat VDSO on
-arm64:
+On Thu, Feb 08, 2024 at 02:30:40PM +0100,
+Paolo Bonzini <pbonzini@redhat.com> wrote:
 
-In file included from arch/arm64/include/asm/lse.h:5,
-		 from arch/arm64/include/asm/cmpxchg.h:14,
-		 from arch/arm64/include/asm/atomic.h:16,
-		 from include/linux/atomic.h:7,
-		 from include/asm-generic/bitops/atomic.h:5,
-		 from arch/arm64/include/asm/bitops.h:25,
-		 from include/linux/bitops.h:68,
-		 from arch/arm64/include/asm/memory.h:209,
-		 from arch/arm64/include/asm/page.h:46,
-		 from include/vdso/datapage.h:22,
-		 from lib/vdso/gettimeofday.c:5,
-		 from <command-line>:
-arch/arm64/include/asm/atomic_ll_sc.h:298:9: error: unknown type name 'u128'
-  298 |         u128 full;
-      |         ^~~~
-arch/arm64/include/asm/atomic_ll_sc.h:305:24: error: unknown type name 'u128'
-  305 | static __always_inline u128
-	 \
-      |
+> On Tue, Jan 23, 2024 at 12:54 AM <isaku.yamahata@intel.com> wrote:
+> >
+> > From: Kai Huang <kai.huang@intel.com>
+> >
+> > KVM will need to make SEAMCALLs to create and run TDX guests.  Export
+> > SEAMCALL functions for KVM to use.
+> >
+> > Also add declaration of SEAMCALL functions to <asm/asm-prototypes.h> to
+> > support CONFIG_MODVERSIONS=y.
+> >
+> > Signed-off-by: Kai Huang <kai.huang@intel.com>
+> 
+> I thought you were going to introduce builtin functions for SEAMCALLs
+> needed by KVM, instead?
 
-The reason is the include of asm/page.h which in turn includes headers
-which are outside the scope of compat VDSO. The only reason for the
-asm/page.h include is the required definition of PAGE_SIZE. But as arm64
-defines PAGE_SIZE in asm/page-def.h without extra header includes, this
-could be used instead.
-
-Caution: this is a quick fix only! The final fix is an upcoming cleanup of
-Arnd which consolidates PAGE_SIZE definition. After the cleanup, the
-include of asm/page.h to access PAGE_SIZE is no longer required.
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Fixes: a0d2fcd62ac2 ("vdso/ARM: Make union vdso_data_store available for all architectures")
-Link: https://lore.kernel.org/lkml/CA+G9fYtrXXm_KO9fNPz3XaRxHV7UD_yQp-TEuPQrNRHU+_0W_Q@mail.gmail.com/
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
----
-
-Patch applies on tip/timers/core and was tested with clang-14
-
----
- include/vdso/datapage.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index 7ba44379a095..5d5c0b8efff2 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -19,7 +19,11 @@
- #include <vdso/time32.h>
- #include <vdso/time64.h>
- 
-+#ifdef CONFIG_ARM64
-+#include <asm/page-def.h>
-+#else
- #include <asm/page.h>
-+#endif
- 
- #ifdef CONFIG_ARCH_HAS_VDSO_DATA
- #include <asm/vdso/data.h>
+After I talked with Kai, I concluded to use the common function.
+Probably for TDH.VP.ENTER, we'd like to use customized version to avoid
+shuffling registers between struct tdx_module_args and KVM regs.  We can do it
+later as optimization.
 -- 
-2.39.2
-
+Isaku Yamahata <isaku.yamahata@linux.intel.com>
