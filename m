@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284121350ED;
-	Mon, 26 Feb 2024 08:29:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A2413473E;
+	Mon, 26 Feb 2024 08:29:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936197; cv=none; b=Wj7FQY4c/ODxpccklwIrrEOvC214pPaWJ3Ks2QQ7JGNSJeZNCFq04utD3Gwk5P5CCjmNM+iYC0NbTOS6zc9UMm5SaHuF5LD84iEIK3C6/vGb+ig/HgSN3MrUPH3uCCvA7jFRPD3VDcBCXuoQaG2k5z9NPnT1gJzhPW1SMyaj2Us=
+	t=1708936195; cv=none; b=sqEInd7qTEAXhBKK/AxhsI95Fz7KtFjPrhc+IqMNKXKpGekBeSoMZ9RTDMkxRe+YM+jBSQnPKUIzKidu7pIXdCtA/A2MAh6uIJE6NUo4XjU8zZXV2NfbkradlHsvMFdGGS7sjvDS+4IcYOlOGCS793m+P739mv3GIPvVRsUHmzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936197; c=relaxed/simple;
-	bh=iJP1GahjgTaqNwfQyxqZGNYBnDS7wdW3RkKQ5eYOAAA=;
+	s=arc-20240116; t=1708936195; c=relaxed/simple;
+	bh=oeAEv4Gf0Qi57KYsvGTkKhwlHrVtXMsAmWfuZLQ9wrM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BLuGjs23YB8T0P6i2ZwGdHAqJtmn1oVjWq46Bp7eFv1fps+nT3sA3xYsYXPFwKTb2T0UQTSsQWUXO1QvSTXvrzCM7Er9hC5qc/ua/gFVbfQ9W7HQwN6GhP6wz+JQ3ihGgVuVF7JNx1UBfN0RB5N2IomSwNzsadDEOTEKsStzh8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XGeweEI6; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=rFfl8dlnreWLByN+3+zqqla+exmv/dzpZ/VNi6B5FJMOfu8iq/SfeCc4tWF03wKyrUzQFahnBoUT6nhdhEIdpzrNkJZs02i2W04a7RnAPEPaPQlpZHj9vcw8MSoay2TtQSCrQ9WUVPa6UZa+DvyGyqfa9xWt5pnrSycWDqYLyL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h4ssgUZN; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XGeweEI6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h4ssgUZN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936195; x=1740472195;
+  t=1708936193; x=1740472193;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=iJP1GahjgTaqNwfQyxqZGNYBnDS7wdW3RkKQ5eYOAAA=;
-  b=XGeweEI65Omao6z0vGui0nTyuXa4C6Z5SYIXKNeuyEnBqmg3OSBJKbUK
-   Tr6S9u2btfZII6QWktDVJZJO9tEsMdxQikp5pT6rF/085u38X+OepylXM
-   uhKKRc+v+Thm/uM8oePAWpKdcoIyERoIJ09TTQfUwbBDVKe23n+2LxVgb
-   nid0+GzAqn8A5n2ssx/VHTBPJrz5tFx66vPfFd/E4s/h9s9FqKvXruEB+
-   jkAbibsYDzssVqwSr62Xsj5AV0bw+k3rYNo1znYviatKePJpOMjiplwI4
-   bmJXpbFoFSoiFrXqoLFzCCmDtUybLcrq34Sp8pu3epJH+wU1PnwYsDDDc
+  bh=oeAEv4Gf0Qi57KYsvGTkKhwlHrVtXMsAmWfuZLQ9wrM=;
+  b=h4ssgUZNo37U6sabKJKqxnF2azUOS0D10lmEtbZyoCR24bN2uZXUmTxl
+   qX+uM2q1ol5kMsuB9ooZidpRNeI21LwiKptrAOQLINUSA048B9Gk75vR2
+   VVGcPI3TyM8bXvwHP86VVWeS1biRea+OQahf9/qs/pJSM4cXu8rcQjpwB
+   TMIhvz9b/Uz0buZ2AgTcvFCB4yXQsKSqGEhm1RRCVLUO2jCPGlwrLCyWF
+   9aBUvrr14PaRCDNP7bhsbY08iH80iMXrS8JKQR3uoleo9yg6D+1V981l7
+   ZE8B50cPbL2N02bVoF9xpFRaRXYpmUGcVnKUhVH4J9jS3DCBuHQSpJYoU
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14623336"
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14623328"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="14623336"
+   d="scan'208";a="14623328"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:37 -0800
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6519436"
+   d="scan'208";a="6519429"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:37 -0800
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:29:36 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v8 13/14] KVM: x86/mmu: Make kvm fault handler aware of large page of private memslot
-Date: Mon, 26 Feb 2024 00:29:27 -0800
-Message-Id: <30209eb4d65d1de3e09dc9fdb3fc0d3d3c96dc7e.1708933625.git.isaku.yamahata@intel.com>
+Subject: [PATCH v8 11/14] KVM: x86/tdp_mmu: Try to merge pages into a large page
+Date: Mon, 26 Feb 2024 00:29:25 -0800
+Message-Id: <fed13988718f66cdf24e5bb6479fa2281961e82f.1708933624.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933624.git.isaku.yamahata@intel.com>
 References: <cover.1708933624.git.isaku.yamahata@intel.com>
@@ -68,147 +68,358 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-struct kvm_page_fault.req_level is the page level which takes care of the
-faulted-in page size.  For now its calculation is only for the conventional
-kvm memslot by host_pfn_mapping_level() that traverses page table.
+When a large page is passed to the KVM page fault handler and some of sub
+pages are already populated, try to merge sub pages into a large page.
+This situation can happen when the guest converts small pages into shared
+and convert it back into private.
 
-However, host_pfn_mapping_level() cannot be used for private kvm memslot
-because private pages of private kvm memlost aren't mapped into user
-virtual address space.  Instead, page order is given when getting pfn.
-Remember it in struct kvm_page_fault and use it.
+When a large page is passed to KVM mmu page fault handler and the spte
+corresponding to the page is non-leaf (one or more of sub pages are already
+populated at lower page level), the current kvm mmu zaps non-leaf spte at a
+large page level, and populate a leaf spte at that level.  Thus small pages
+are converted into a large page.  However, it doesn't work for TDX because
+zapping and re-populating results in zeroing page content.  Instead,
+populate all small pages and merge them into a large page.
+
+Merging pages into a large page can fail when some sub pages are accepted
+and some are not.  In such case, with the assumption that guest tries to
+accept at large page size for performance when possible, don't try to be
+smart to identify which page is still pending, map all pages at lower page
+level, and let vcpu re-execute.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/kvm/mmu/mmu.c          | 27 ++++++++++++++-------------
- arch/x86/kvm/mmu/mmu_internal.h | 12 +++++++++++-
- arch/x86/kvm/mmu/tdp_mmu.c      |  2 +-
- 3 files changed, 26 insertions(+), 15 deletions(-)
+v7:
+- typo freezed => frozen
+- return 0 when page is merged into 2M large page instead of -EAGAIN
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index fa7fabc410c4..3c41861b4b3d 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3154,10 +3154,10 @@ static int host_pfn_mapping_level(struct kvm *kvm, gfn_t gfn,
+v5:
+- Fix memory leak
+
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+---
+ arch/x86/include/asm/kvm-x86-ops.h |   2 +
+ arch/x86/include/asm/kvm_host.h    |   4 +
+ arch/x86/kvm/mmu/tdp_iter.c        |  37 ++++--
+ arch/x86/kvm/mmu/tdp_iter.h        |   2 +
+ arch/x86/kvm/mmu/tdp_mmu.c         | 176 ++++++++++++++++++++++++++++-
+ 5 files changed, 211 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+index ada6865100ee..6741cc518dae 100644
+--- a/arch/x86/include/asm/kvm-x86-ops.h
++++ b/arch/x86/include/asm/kvm-x86-ops.h
+@@ -106,9 +106,11 @@ KVM_X86_OP(load_mmu_pgd)
+ KVM_X86_OP_OPTIONAL(link_private_spt)
+ KVM_X86_OP_OPTIONAL(free_private_spt)
+ KVM_X86_OP_OPTIONAL(split_private_spt)
++KVM_X86_OP_OPTIONAL(merge_private_spt)
+ KVM_X86_OP_OPTIONAL(set_private_spte)
+ KVM_X86_OP_OPTIONAL(remove_private_spte)
+ KVM_X86_OP_OPTIONAL(zap_private_spte)
++KVM_X86_OP_OPTIONAL(unzap_private_spte)
+ KVM_X86_OP(has_wbinvd_exit)
+ KVM_X86_OP(get_l2_tsc_offset)
+ KVM_X86_OP(get_l2_tsc_multiplier)
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 9c9742cc469c..a02b14be186c 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -147,6 +147,7 @@
+ #define KVM_MAX_HUGEPAGE_LEVEL	PG_LEVEL_1G
+ #define KVM_NR_PAGE_SIZES	(KVM_MAX_HUGEPAGE_LEVEL - PG_LEVEL_4K + 1)
+ #define KVM_HPAGE_GFN_SHIFT(x)	(((x) - 1) * 9)
++#define KVM_HPAGE_GFN_MASK(x)	(~((1UL << KVM_HPAGE_GFN_SHIFT(x)) - 1))
+ #define KVM_HPAGE_SHIFT(x)	(PAGE_SHIFT + KVM_HPAGE_GFN_SHIFT(x))
+ #define KVM_HPAGE_SIZE(x)	(1UL << KVM_HPAGE_SHIFT(x))
+ #define KVM_HPAGE_MASK(x)	(~(KVM_HPAGE_SIZE(x) - 1))
+@@ -1768,11 +1769,14 @@ struct kvm_x86_ops {
+ 				void *private_spt);
+ 	int (*split_private_spt)(struct kvm *kvm, gfn_t gfn, enum pg_level level,
+ 				  void *private_spt);
++	int (*merge_private_spt)(struct kvm *kvm, gfn_t gfn, enum pg_level level,
++				 void *private_spt);
+ 	int (*set_private_spte)(struct kvm *kvm, gfn_t gfn, enum pg_level level,
+ 				 kvm_pfn_t pfn);
+ 	int (*remove_private_spte)(struct kvm *kvm, gfn_t gfn, enum pg_level level,
+ 				    kvm_pfn_t pfn);
+ 	int (*zap_private_spte)(struct kvm *kvm, gfn_t gfn, enum pg_level level);
++	int (*unzap_private_spte)(struct kvm *kvm, gfn_t gfn, enum pg_level level);
  
- static int __kvm_mmu_max_mapping_level(struct kvm *kvm,
- 				       const struct kvm_memory_slot *slot,
--				       gfn_t gfn, int max_level, bool is_private)
-+				       gfn_t gfn, int max_level, int host_level,
-+				       bool is_private)
- {
- 	struct kvm_lpage_info *linfo;
--	int host_level;
+ 	bool (*has_wbinvd_exit)(void);
  
- 	max_level = min(max_level, max_huge_page_level);
- 	for ( ; max_level > PG_LEVEL_4K; max_level--) {
-@@ -3166,24 +3166,23 @@ static int __kvm_mmu_max_mapping_level(struct kvm *kvm,
- 			break;
- 	}
- 
--	if (is_private)
--		return max_level;
--
- 	if (max_level == PG_LEVEL_4K)
- 		return PG_LEVEL_4K;
- 
--	host_level = host_pfn_mapping_level(kvm, gfn, slot);
-+	if (!is_private) {
-+		WARN_ON_ONCE(host_level != PG_LEVEL_NONE);
-+		host_level = host_pfn_mapping_level(kvm, gfn, slot);
-+	}
-+	WARN_ON_ONCE(host_level == PG_LEVEL_NONE);
- 	return min(host_level, max_level);
+diff --git a/arch/x86/kvm/mmu/tdp_iter.c b/arch/x86/kvm/mmu/tdp_iter.c
+index 04c247bfe318..c4a18703f88a 100644
+--- a/arch/x86/kvm/mmu/tdp_iter.c
++++ b/arch/x86/kvm/mmu/tdp_iter.c
+@@ -71,6 +71,14 @@ tdp_ptep_t spte_to_child_pt(u64 spte, int level)
+ 	return (tdp_ptep_t)__va(spte_to_pfn(spte) << PAGE_SHIFT);
  }
  
- int kvm_mmu_max_mapping_level(struct kvm *kvm,
- 			      const struct kvm_memory_slot *slot, gfn_t gfn,
--			      int max_level)
-+			      int max_level, bool faultin_private)
- {
--	bool is_private = kvm_slot_can_be_private(slot) &&
--			  kvm_mem_is_private(kvm, gfn);
--
--	return __kvm_mmu_max_mapping_level(kvm, slot, gfn, max_level, is_private);
-+	return __kvm_mmu_max_mapping_level(kvm, slot, gfn, max_level,
-+					   PG_LEVEL_NONE, faultin_private);
- }
- 
- void kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-@@ -3208,7 +3207,8 @@ void kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 	 */
- 	fault->req_level = __kvm_mmu_max_mapping_level(vcpu->kvm, slot,
- 						       fault->gfn, fault->max_level,
--						       fault->is_private);
-+						       fault->host_level,
-+						       kvm_is_faultin_private(fault));
- 	if (fault->req_level == PG_LEVEL_4K || fault->huge_page_disallowed)
- 		return;
- 
-@@ -4349,6 +4349,7 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
- 	}
- 
- 	max_level = kvm_max_level_for_order(max_order);
-+	fault->host_level = max_level;
- 	r = static_call(kvm_x86_gmem_max_level)(vcpu->kvm, fault->pfn,
- 						fault->gfn, fault->is_private,
- 						&max_level);
-@@ -6818,7 +6819,7 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
- 		 */
- 		if (sp->role.direct &&
- 		    sp->role.level < kvm_mmu_max_mapping_level(kvm, slot, sp->gfn,
--							       PG_LEVEL_NUM)) {
-+							       PG_LEVEL_NUM, false)) {
- 			kvm_zap_one_rmap_spte(kvm, rmap_head, sptep);
- 
- 			if (kvm_available_flush_remote_tlbs_range())
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index 315c123affaf..9d56f9ab16f7 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -327,6 +327,9 @@ struct kvm_page_fault {
- 	 * is changing its own translation in the guest page tables.
- 	 */
- 	bool write_fault_to_shadow_pgtable;
-+
-+	/* valid only for private memslot && private gfn */
-+	enum pg_level host_level;
- };
- 
- int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault);
-@@ -421,7 +424,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 
- int kvm_mmu_max_mapping_level(struct kvm *kvm,
- 			      const struct kvm_memory_slot *slot, gfn_t gfn,
--			      int max_level);
-+			      int max_level, bool faultin_private);
- void kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault);
- void disallowed_hugepage_adjust(struct kvm_page_fault *fault, u64 spte, int cur_level);
- 
-@@ -439,4 +442,11 @@ static inline bool kvm_hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t g
- }
- #endif
- 
-+static inline bool kvm_is_faultin_private(const struct kvm_page_fault *fault)
++static void step_down(struct tdp_iter *iter, tdp_ptep_t child_pt)
 +{
-+	if (IS_ENABLED(CONFIG_KVM_GENERIC_PRIVATE_MEM))
-+		return fault->is_private && kvm_slot_can_be_private(fault->slot);
-+	return false;
++	iter->level--;
++	iter->pt_path[iter->level - 1] = child_pt;
++	iter->gfn = gfn_round_for_level(iter->next_last_level_gfn, iter->level);
++	tdp_iter_refresh_sptep(iter);
 +}
 +
- #endif /* __KVM_X86_MMU_INTERNAL_H */
+ /*
+  * Steps down one level in the paging structure towards the goal GFN. Returns
+  * true if the iterator was able to step down a level, false otherwise.
+@@ -92,14 +100,28 @@ static bool try_step_down(struct tdp_iter *iter)
+ 	if (!child_pt)
+ 		return false;
+ 
+-	iter->level--;
+-	iter->pt_path[iter->level - 1] = child_pt;
+-	iter->gfn = gfn_round_for_level(iter->next_last_level_gfn, iter->level);
+-	tdp_iter_refresh_sptep(iter);
+-
++	step_down(iter, child_pt);
+ 	return true;
+ }
+ 
++/* Steps down for frozen spte.  Don't re-read sptep because it was frozen. */
++void tdp_iter_step_down(struct tdp_iter *iter, tdp_ptep_t child_pt)
++{
++	WARN_ON_ONCE(!child_pt);
++	WARN_ON_ONCE(iter->yielded);
++	WARN_ON_ONCE(iter->level == iter->min_level);
++
++	step_down(iter, child_pt);
++}
++
++void tdp_iter_step_side(struct tdp_iter *iter)
++{
++	iter->gfn += KVM_PAGES_PER_HPAGE(iter->level);
++	iter->next_last_level_gfn = iter->gfn;
++	iter->sptep++;
++	iter->old_spte = kvm_tdp_mmu_read_spte(iter->sptep);
++}
++
+ /*
+  * Steps to the next entry in the current page table, at the current page table
+  * level. The next entry could point to a page backing guest memory or another
+@@ -117,10 +139,7 @@ static bool try_step_side(struct tdp_iter *iter)
+ 	    (SPTE_ENT_PER_PAGE - 1))
+ 		return false;
+ 
+-	iter->gfn += KVM_PAGES_PER_HPAGE(iter->level);
+-	iter->next_last_level_gfn = iter->gfn;
+-	iter->sptep++;
+-	iter->old_spte = kvm_tdp_mmu_read_spte(iter->sptep);
++	tdp_iter_step_side(iter);
+ 
+ 	return true;
+ }
+diff --git a/arch/x86/kvm/mmu/tdp_iter.h b/arch/x86/kvm/mmu/tdp_iter.h
+index a9c9cd0db20a..ca00db799a50 100644
+--- a/arch/x86/kvm/mmu/tdp_iter.h
++++ b/arch/x86/kvm/mmu/tdp_iter.h
+@@ -134,6 +134,8 @@ void tdp_iter_start(struct tdp_iter *iter, struct kvm_mmu_page *root,
+ 		    int min_level, gfn_t next_last_level_gfn);
+ void tdp_iter_next(struct tdp_iter *iter);
+ void tdp_iter_restart(struct tdp_iter *iter);
++void tdp_iter_step_side(struct tdp_iter *iter);
++void tdp_iter_step_down(struct tdp_iter *iter, tdp_ptep_t child_pt);
+ 
+ static inline union kvm_mmu_page_role tdp_iter_child_role(struct tdp_iter *iter)
+ {
 diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index 556974361d36..d6ce8496803f 100644
+index 0ac2a4911fd1..556974361d36 100644
 --- a/arch/x86/kvm/mmu/tdp_mmu.c
 +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -2183,7 +2183,7 @@ static void zap_collapsible_spte_range(struct kvm *kvm,
- 			continue;
+@@ -1205,6 +1205,180 @@ void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm, bool skip_private)
+ 	}
+ }
  
- 		max_mapping_level = kvm_mmu_max_mapping_level(kvm, slot,
--							      iter.gfn, PG_LEVEL_NUM);
-+							      iter.gfn, PG_LEVEL_NUM, false);
- 		if (max_mapping_level < iter.level)
- 			continue;
++static int tdp_mmu_iter_step_side(int i, struct tdp_iter *iter)
++{
++	i++;
++
++	/*
++	 * if i = SPTE_ENT_PER_PAGE, tdp_iter_step_side() results
++	 * in reading the entry beyond the last entry.
++	 */
++	if (i < SPTE_ENT_PER_PAGE)
++		tdp_iter_step_side(iter);
++
++	return i;
++}
++
++static int tdp_mmu_merge_private_spt(struct kvm_vcpu *vcpu,
++				     struct kvm_page_fault *fault,
++				     struct tdp_iter *iter, u64 new_spte)
++{
++	u64 *sptep = rcu_dereference(iter->sptep);
++	u64 old_spte = iter->old_spte;
++	struct kvm_mmu_page *child_sp;
++	struct kvm *kvm = vcpu->kvm;
++	struct tdp_iter child_iter;
++	int level = iter->level;
++	gfn_t gfn = iter->gfn;
++	tdp_ptep_t child_pt;
++	u64 child_spte;
++	int ret = 0;
++	int i;
++
++	/*
++	 * TDX KVM supports only 2MB large page.  It's not supported to merge
++	 * 2MB pages into 1GB page at the moment.
++	 */
++	WARN_ON_ONCE(fault->goal_level != PG_LEVEL_2M);
++	WARN_ON_ONCE(iter->level != PG_LEVEL_2M);
++	WARN_ON_ONCE(!is_large_pte(new_spte));
++
++	/* Freeze the spte to prevent other threads from working spte. */
++	if (!try_cmpxchg64(sptep, &iter->old_spte, REMOVED_SPTE))
++		return -EBUSY;
++
++	/*
++	 * Step down to the child spte.  Because tdp_iter_next() assumes the
++	 * parent spte isn't frozen, do it manually.
++	 */
++	child_pt = spte_to_child_pt(iter->old_spte, iter->level);
++	child_sp = sptep_to_sp(child_pt);
++	WARN_ON_ONCE(child_sp->role.level != PG_LEVEL_4K);
++	WARN_ON_ONCE(!kvm_mmu_page_role_is_private(child_sp->role));
++
++	/* Don't modify iter as the caller will use iter after this function. */
++	child_iter = *iter;
++	/* Adjust the target gfn to the head gfn of the large page. */
++	child_iter.next_last_level_gfn &= -KVM_PAGES_PER_HPAGE(level);
++	tdp_iter_step_down(&child_iter, child_pt);
++
++	/*
++	 * All child pages are required to be populated for merging them into a
++	 * large page.  Populate all child spte.
++	 */
++	for (i = 0; i < SPTE_ENT_PER_PAGE; i = tdp_mmu_iter_step_side(i, &child_iter)) {
++		int tmp;
++
++		WARN_ON_ONCE(child_iter.level != PG_LEVEL_4K);
++
++		if (is_shadow_present_pte(child_iter.old_spte)) {
++			/* TODO: relocate page for huge page. */
++			if (WARN_ON_ONCE(spte_to_pfn(child_iter.old_spte) !=
++					 spte_to_pfn(new_spte) + i)) {
++				if (!ret)
++					ret = -EAGAIN;
++				continue;
++			}
++			/*
++			 * When SEPT_VE_DISABLE=true and the page state is
++			 * pending, this case can happen.  Just resume the vcpu
++			 * again with the expectation for other vcpu to accept
++			 * this page.
++			 */
++			if (child_iter.gfn == fault->gfn) {
++				if (!ret)
++					ret = -EAGAIN;
++			}
++			continue;
++		}
++
++		child_spte = make_huge_page_split_spte(kvm, new_spte, child_sp->role, i);
++		/*
++		 * Because other thread may have started to operate on this spte
++		 * before freezing the parent spte,  Use atomic version to
++		 * prevent race.
++		 */
++		tmp = tdp_mmu_set_spte_atomic(vcpu->kvm, &child_iter, child_spte);
++		if (tmp == -EBUSY || tmp == -EAGAIN) {
++			/*
++			 * There was a race condition.  Populate remaining 4K
++			 * spte to resolve fault->gfn to guarantee the forward
++			 * progress.
++			 */
++			if (!ret)
++				ret = tmp;
++		} else if (tmp) {
++			ret = tmp;
++			goto out;
++		}
++	}
++	if (ret)
++		goto out;
++
++	/* Prevent the Secure-EPT entry from being used. */
++	ret = static_call(kvm_x86_zap_private_spte)(kvm, gfn, level);
++	if (ret)
++		goto out;
++	kvm_flush_remote_tlbs_range(kvm, gfn & KVM_HPAGE_GFN_MASK(level),
++				    KVM_PAGES_PER_HPAGE(level));
++
++	/* Merge pages into a large page. */
++	ret = static_call(kvm_x86_merge_private_spt)(kvm, gfn, level,
++						     kvm_mmu_private_spt(child_sp));
++	/*
++	 * Failed to merge pages because some pages are accepted and some are
++	 * pending.  Since the child page was mapped above, let vcpu run.
++	 */
++	if (ret) {
++		if (static_call(kvm_x86_unzap_private_spte)(kvm, gfn, level))
++			old_spte = SHADOW_NONPRESENT_VALUE |
++				(spte_to_pfn(old_spte) << PAGE_SHIFT) |
++				PT_PAGE_SIZE_MASK;
++		goto out;
++	}
++
++	/* Update stats manually as we don't use tdp_mmu_set_spte{, _atomic}(). */
++	kvm_update_page_stats(kvm, level - 1, -SPTE_ENT_PER_PAGE);
++	kvm_update_page_stats(kvm, level, 1);
++
++	/* Unfreeze spte. */
++	iter->old_spte = new_spte;
++	__kvm_tdp_mmu_write_spte(sptep, new_spte);
++
++	/*
++	 * Free unused child sp.  Secure-EPT page was already freed at TDX level
++	 * by kvm_x86_merge_private_spt().
++	 */
++	tdp_unaccount_mmu_page(kvm, child_sp);
++	tdp_mmu_free_sp(child_sp);
++	return 0;
++
++out:
++	iter->old_spte = old_spte;
++	__kvm_tdp_mmu_write_spte(sptep, old_spte);
++	return ret;
++}
++
++static int __tdp_mmu_map_handle_target_level(struct kvm_vcpu *vcpu,
++					     struct kvm_page_fault *fault,
++					     struct tdp_iter *iter, u64 new_spte)
++{
++	/*
++	 * The private page has smaller-size pages.  For example, the child
++	 * pages was converted from shared to page, and now it can be mapped as
++	 * a large page.  Try to merge small pages into a large page.
++	 */
++	if (fault->slot &&
++	    kvm_gfn_shared_mask(vcpu->kvm) &&
++	    iter->level > PG_LEVEL_4K &&
++	    kvm_is_private_gpa(vcpu->kvm, fault->addr) &&
++	    is_shadow_present_pte(iter->old_spte) &&
++	    !is_large_pte(iter->old_spte))
++		return tdp_mmu_merge_private_spt(vcpu, fault, iter, new_spte);
++
++	return tdp_mmu_set_spte_atomic(vcpu->kvm, iter, new_spte);
++}
++
+ /*
+  * Installs a last-level SPTE to handle a TDP page fault.
+  * (NPT/EPT violation/misconfiguration)
+@@ -1246,7 +1420,7 @@ static int tdp_mmu_map_handle_target_level(struct kvm_vcpu *vcpu,
  
+ 	if (new_spte == iter->old_spte)
+ 		ret = RET_PF_SPURIOUS;
+-	else if (tdp_mmu_set_spte_atomic(vcpu->kvm, iter, new_spte))
++	else if (__tdp_mmu_map_handle_target_level(vcpu, fault, iter, new_spte))
+ 		return RET_PF_RETRY;
+ 	else if (is_shadow_present_pte(iter->old_spte) &&
+ 		 !is_last_spte(iter->old_spte, iter->level))
 -- 
 2.25.1
 
