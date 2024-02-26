@@ -1,148 +1,191 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A9C129A72
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14688129A6E
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 09:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708938920; cv=none; b=RYQPfyQb6joWwteY+FQftvh2vdn/vzDkX5KBCFPJqPveBqoikeo6uxYJpQpk/xqkkXDlsFkHpP+Xp1EKDe4EvTsJjN/Ky5oD7GEnRq9ehSHqxUP3/ft2PhnLWndYos6FLgxM4wa9wdeJF5B/JOh+WkMItQz5A9d7R3tdPg1jfug=
+	t=1708938921; cv=none; b=Tyam7IJcQKhow5pIaq57YHs1sh9T4YWZUiE3b3P81NjEqhH+/8bJ1P4fjGXARHAIEXC1Zl7xm9lWS6IvISDsxy9Q9IZqQG6WZ+YGvu6FR8KaGP9som5t3SNX8dv32lX+gVImJw5+o8rKr9w9urASrgfZ5OIPbbhoB/ece4YFugQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708938920; c=relaxed/simple;
-	bh=G566LV+/F51/W9KYFln95LPDYYcArDHrm4mzHyYxoZ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u2nO6n3WPViV+lCsEgkcZRtP/1QL3Mu+gj3khta7Pg6Fq4KNVMh9Pl+t9Ib32gsBDCgrDzEF/JO83Dv+rqL2r+1o2SJLcBWFH8zCRsqt+ht7AEzrGcQHhJYhv7Pr+uxVKesTThq3C7oXXRe+LM9RVE/RZo21SgVft29eO2/5bjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rzmvm2gp; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708938921; c=relaxed/simple;
+	bh=1nsO2sbgy7HnxuG5nHFX9lFzO6oldSfWF1CTUMJTGLQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iFnMEtXv2VIZwixLuH0R2RIHfqjq49GIiro8I/FVSd9Ob9A78eRaljAgoUyBuwgMCv2s9GsDAVomUdm8CAmYIZy20Mht5sGWQHthKITu4xEqTzXebSpPDewzEM7muGdSWl4SwI0Yw9ajExOueIePFrSiuEHVKY3udPkdi5AtgZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=innosonix.de; spf=pass smtp.mailfrom=innosonix.de; dkim=pass (2048-bit key) header.d=innosonix-de.20230601.gappssmtp.com header.i=@innosonix-de.20230601.gappssmtp.com header.b=oF5JvOb2; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=innosonix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=innosonix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rzmvm2gp"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5655c7dd3b1so4408600a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:15:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=innosonix-de.20230601.gappssmtp.com header.i=@innosonix-de.20230601.gappssmtp.com header.b="oF5JvOb2"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55369c59708so947510a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 01:15:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708938917; x=1709543717; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wlH1Ter4o/LuhmUGIySGl8jfbKhW6NJPyE0QFDQ/6s4=;
-        b=rzmvm2gpLi5FHXiOATNBh0HPBz6oZK3tydPONzg486EPi+f+whxmorKHyAtJCQgihS
-         waGCktYzu1er1GADpg9n5pLevWKBJlwlxC8weJkbQtOCifNuGOq3a5KhzZad7gjedCyo
-         +lgMyZ3g7rxBGrOgnYDCeSyT0eBz0Vi6S6IXVBs2OvYnihxMHkFxaLL19g9YzkJR6mye
-         RsixNiZZ9zIPc293Rq6jkJD6WUaYd0tO/GSgychq79NUPetImQU6weoikR8qiiVflAeb
-         OYmkLfYGwr0/Diz36Vdv/QeGAyW3JWo8yV0HgHmGSv3Y77LCnx4VnhUvwDe4ZMEAfdZf
-         whsQ==
+        d=innosonix-de.20230601.gappssmtp.com; s=20230601; t=1708938916; x=1709543716; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QLITLxaZSB9SoVACx0xoHq4X5hT7/t8O6Nlq55OjBL0=;
+        b=oF5JvOb28kOnU7siFrSLTZd//3MvSrD3uL77MuhhC1Assbla0msmyOQtoY/BwRt/g1
+         M3PIMF2NyeqY2frO+oW/dZNJMDVym8P+16xjHDNOXfyFSTmaTWVQDdSgFDOGv7JiY6/Y
+         VNypMh1MmZRtKLefadOXsvAIfsswo/DyUeCL4Jg+mpCo7YGFRME6U3G85goDPMXwswWm
+         wKYMZkQHbdIMjRyDHlIg/D5+lyL2zUTRQ8RVh54WWv9A32KZcwzjXZTKA8Z3W/GO+e4S
+         rjD5y+7hGrZRtSLFugTnk/qjt3RTNUVrhBAEdR1LsH/VnOGBNfht9pwWNKR7p0COdADQ
+         dYWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708938917; x=1709543717;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wlH1Ter4o/LuhmUGIySGl8jfbKhW6NJPyE0QFDQ/6s4=;
-        b=MkKg3DRstSGlBh/ePV1yc1zCOlWuWxpYpwUf0r/BbARmzAlFf6NPieYMAx+XB/MYX6
-         5hujD1jWKDRHm0Go4n8NL1DBgB+evp2LdTvaMWvHHXTSePR8Gu0KeIHQ3p9WN0udtY9k
-         s2JG9uSlT+DbsNMsJXTckiyxQP6A5Jf7pV9TBgGgPr8GkFzmno05js7VibSIu2exnQPt
-         +gy+Tzp9A0SlVSVEwq6LjQcFS1NkMK+/tNDBlmCbVtKw7BZLxATuMrRLZ0jQIY1aD9pR
-         kUFaa+mix6H4zIGFpVLNLPILnYi463wtn00PP0sV0gsuUPv9L0sR8J03P8fwMp6q+1yk
-         7xNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYvG51WU8jK+1+4OVJn61d0gUERZL8uCe7YZFrDtjQkoLzfz7t2Q68yssfewjWAstvio2Yi4+EdmX4Kl4dmIdfZXMyw8xUi+hMfn8X
-X-Gm-Message-State: AOJu0Yzi1H4newCT/mCRhi/8phjBZHyVHXnnbEM0qWrdQWFPkFk8Q1Pq
-	QdQugLQOeL7N39EsbrYEK1FSIu7zLQ/eQzy+dPiuVz8OOABmpMOwYAB7f2+iy9o=
-X-Google-Smtp-Source: AGHT+IEXUVR/N8Ym4kzVlbEuwaD2lWsgOYP5/F36Su6nMdyWMJ//J8As/t2DKFX23EsFXq+ZVVEfZg==
-X-Received: by 2002:a17:906:1745:b0:a3f:2168:214b with SMTP id d5-20020a170906174500b00a3f2168214bmr5890928eje.1.1708938916861;
+        d=1e100.net; s=20230601; t=1708938916; x=1709543716;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QLITLxaZSB9SoVACx0xoHq4X5hT7/t8O6Nlq55OjBL0=;
+        b=ruGrGNfNnNPh85tf8fESKZMirSUKXCuWtFP/wal+w2Sdov7otliphwPGbWR3vHHvE+
+         dbAv15fVSEhsplQVHBCDgHbhRESMMqlXXCGrOzfYzCm90IxZ+JCeELxvRp3nybwmVjGz
+         uh20uvoSBLHtQwzkwJ8IeilhKAsuJjgID8IGLFdBTB4RTxviJb3WWXDnEfqQhdevOKFW
+         SZg9Ez1yerGSwgx3S+LNGg8TmYADSq5yyWOiyGyeT5ujDzKT/Z+5e0pYeUPkZDzFpajB
+         PC7acj+u8+xB3gn36jX9yfzIOvK4z0jZJy8+6ATkZGCay1kPs+cMyUrdHS+A4KAY8UQ4
+         KmXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIkFZJJ/troeO+O0NmBp16HJw2PneHOGmCmx9QH4zjP+O71yER7/eF0nESqzsU6W2g840NccXDL9t8o2DR/D4Bif5zyXDwQ6B+QmvR
+X-Gm-Message-State: AOJu0YyidUGCmUIPRgnPM2nXbpZcV9GF3b5IN1nXXl0HCjGipKl8fcCC
+	b53I7embIVgxpOt53LRF0sQWQUXn01DoeTa5rjU1cqV/sIZnLPAgLIpS9h0sGbB1Beb3XuFZ/IU
+	uaX1TKI9H6HpOUAbib+jRIlLjT3cvTW0SAUwu3prO/ilht+aebblxixxw47ZWRvRNBakJnfcOr2
+	TZ
+X-Google-Smtp-Source: AGHT+IHkKpbZCqodh34vjnigOw8aWudpn8lKFX/JMUhFn4B3kLN8ezmVMiTUWNIAvT9dGTIP6zELJQ==
+X-Received: by 2002:a50:d7c4:0:b0:565:dac5:3ef8 with SMTP id m4-20020a50d7c4000000b00565dac53ef8mr1968223edj.1.1708938916229;
         Mon, 26 Feb 2024 01:15:16 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id tl18-20020a170907c31200b00a437d3e975esm167009ejc.210.2024.02.26.01.15.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 01:15:16 -0800 (PST)
-Message-ID: <310cefcb-a4d5-4f4f-a482-ba2ff08a57f6@linaro.org>
-Date: Mon, 26 Feb 2024 10:15:14 +0100
+Received: from localhost.localdomain (p549da391.dip0.t-ipconnect.de. [84.157.163.145])
+        by smtp.gmail.com with ESMTPSA id bm17-20020a0564020b1100b00564c7454bf3sm2163206edb.8.2024.02.26.01.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 01:15:15 -0800 (PST)
+From: =?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>
+To: 
+Cc: Fabio Estevam <festevam@gmail.com>,
+	=?UTF-8?q?Steffen=20B=C3=A4tz?= <steffen@innosonix.de>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net 2/2] net: dsa: mv88e6xxx: 6320/21 read cmode on serdes ports
+Date: Mon, 26 Feb 2024 10:13:24 +0100
+Message-Id: <20240226091325.53986-2-steffen@innosonix.de>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240226091325.53986-1-steffen@innosonix.de>
+References: <20240226091325.53986-1-steffen@innosonix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 9/9] ARM: dts: chameleonv3: Add video device nodes
-Content-Language: en-US
-To: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, airlied@gmail.com,
- akpm@linux-foundation.org, conor+dt@kernel.org, daniel@ffwll.ch,
- dinguyen@kernel.org, hverkuil-cisco@xs4all.nl,
- krzysztof.kozlowski+dt@linaro.org, maarten.lankhorst@linux.intel.com,
- mchehab@kernel.org, mripard@kernel.org, robh+dt@kernel.org,
- tzimmermann@suse.de
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- chromeos-krk-upstreaming@google.com, ribalda@chromium.org
-References: <20240221160215.484151-1-panikiel@google.com>
- <20240221160215.484151-10-panikiel@google.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240221160215.484151-10-panikiel@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 21/02/2024 17:02, Paweł Anikiel wrote:
-> Add device nodes for the video system present on the Chameleon v3.
-> It consists of six framebuffers and two Intel Displayport receivers.
-> 
-> Signed-off-by: Paweł Anikiel <panikiel@google.com>
-> ---
+On the mv88e6320 and 6321 switch family, port 0/1 are serdes only ports.
+Modified the mv88e6352_get_port4_serdes_cmode function to pass a port
+number since the register set of the 6352 is equal on the 6320/21 families.
 
-...
+Signed-off-by: Steffen B=C3=A4tz <steffen@innosonix.de>
+---
+ drivers/net/dsa/mv88e6xxx/chip.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-> +		dprx_sst: dp-receiver@c0064000 {
-> +			compatible = "intel,dprx-20.0.1";
-> +			reg = <0xc0064000 0x800>;
-> +			interrupt-parent = <&dprx_sst_irq>;
-> +			interrupts = <0 IRQ_TYPE_EDGE_RISING>;
-> +			intel,max-link-rate = <0x1e>;
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/c=
+hip.c
+index 32b927b7c221..2d7361852d7e 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -589,12 +589,12 @@ static void mv88e6351_phylink_get_caps(struct mv88e6x=
+xx_chip *chip, int port,
+ 				   MAC_1000FD;
+ }
+=20
+-static int mv88e6352_get_port4_serdes_cmode(struct mv88e6xxx_chip *chip)
++static int mv88e63xx_get_port_serdes_cmode(struct mv88e6xxx_chip *chip, in=
+t port)
+ {
+ 	u16 reg, val;
+ 	int err;
+=20
+-	err =3D mv88e6xxx_port_read(chip, 4, MV88E6XXX_PORT_STS, &reg);
++	err =3D mv88e6xxx_port_read(chip, port, MV88E6XXX_PORT_STS, &reg);
+ 	if (err)
+ 		return err;
+=20
+@@ -603,16 +603,16 @@ static int mv88e6352_get_port4_serdes_cmode(struct mv=
+88e6xxx_chip *chip)
+ 		return 0xf;
+=20
+ 	val =3D reg & ~MV88E6XXX_PORT_STS_PHY_DETECT;
+-	err =3D mv88e6xxx_port_write(chip, 4, MV88E6XXX_PORT_STS, val);
++	err =3D mv88e6xxx_port_write(chip, port, MV88E6XXX_PORT_STS, val);
+ 	if (err)
+ 		return err;
+=20
+-	err =3D mv88e6xxx_port_read(chip, 4, MV88E6XXX_PORT_STS, &val);
++	err =3D mv88e6xxx_port_read(chip, port, MV88E6XXX_PORT_STS, &val);
+ 	if (err)
+ 		return err;
+=20
+ 	/* Restore PHY_DETECT value */
+-	err =3D mv88e6xxx_port_write(chip, 4, MV88E6XXX_PORT_STS, reg);
++	err =3D mv88e6xxx_port_write(chip, port, MV88E6XXX_PORT_STS, reg);
+ 	if (err)
+ 		return err;
+=20
+@@ -640,7 +640,7 @@ static void mv88e6352_phylink_get_caps(struct mv88e6xxx=
+_chip *chip, int port,
+ 		if (err <=3D 0)
+ 			return;
+=20
+-		cmode =3D mv88e6352_get_port4_serdes_cmode(chip);
++		cmode =3D mv88e63xx_get_port_serdes_cmode(chip, port);
+ 		if (cmode < 0)
+ 			dev_err(chip->dev, "p%d: failed to read serdes cmode\n",
+ 				port);
+@@ -660,6 +660,16 @@ static void mv88e632x_phylink_get_caps(struct mv88e6xx=
+x_chip *chip, int port,
+=20
+ 	config->mac_capabilities =3D MAC_SYM_PAUSE | MAC_10 | MAC_100 |
+ 				   MAC_1000FD;
++
++	/* Port 0/1 are serdes only ports */
++	if (port =3D=3D 0 || port =3D=3D 1) {
++		cmode =3D mv88e63xx_get_port_serdes_cmode(chip, port);
++		if (cmode < 0)
++			dev_err(chip->dev, "p%d: failed to read serdes cmode\n",
++				port);
++		else
++			mv88e6xxx_translate_cmode(cmode, supported);
++	}
+ }
+=20
+ static void mv88e6341_phylink_get_caps(struct mv88e6xxx_chip *chip, int po=
+rt,
+--=20
+2.34.1
 
-Rate is not in hex! Rate is in Hz, at least usually...
 
-Fix your bindings...
+--=20
 
-Best regards,
-Krzysztof
+
+*innosonix GmbH*
+Hauptstr. 35
+96482 Ahorn
+central: +49 9561 7459980
+www.innosonix.de <http://www.innosonix.de>
+
+innosonix GmbH
+Gesch=C3=A4ftsf=C3=BChrer:=20
+Markus B=C3=A4tz, Steffen B=C3=A4tz
+USt.-IdNr / VAT-Nr.: DE266020313
+EORI-Nr.:=20
+DE240121536680271
+HRB 5192 Coburg
+WEEE-Reg.-Nr. DE88021242
+
+--=20
 
