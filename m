@@ -1,161 +1,241 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2131.outbound.protection.partner.outlook.cn [139.219.146.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BAF1BDCE;
-	Mon, 26 Feb 2024 06:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.131
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708927501; cv=fail; b=NjGTDwQhE4Sa680Y/qUOAfpyAQx11Fs3a183eDsV/jQTBd8kUNKibPG5CXK4iqAr5sAEo52SfvLx0Q28uvn399XQWUUVDkvtgKVjsiGe3t/tzHMM4+AFeVyS8rAA3n8X8ffkQ02b88hQ2rBUKWWt3jTr07AllWV+1wuazYd7WAQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708927501; c=relaxed/simple;
-	bh=ijAC6DtRyHCS+TxvTSHdNenGPycAQt4/0/Eejk5ldi4=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=CEZUvyQCuqnuqTRtE+C7M7i6sTG97gockanMmRNhcOBggdMR4RWZYZo7vpVAay1iWe2RqjKIt5Wniy7NJ2dsIl7xXZVsZ7kxAVw82v3fHk59RSyDc971ayASHtmWxA20a8jIDRWXXAC4ZhQTIUZAxziakHUAEwcIpYSIK1pOT2E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AfEFJ5Y5leTBHTAgrbdaK8Uc0uLN4h+v/RvRCjOF1jKvWhdi0ks/MihqGhUlukDhqwmAclFSNopOYwdMMgvttoTzNRi1i+mqPNBQChVAxLc0uBT5OJSbJejZflJP11n8Zs6k69SOIG87+fBX9BWmiuwdltqHtSMC6N0xuwSAn/TC6sVwgUE/161D78ASnZI6Ewj4Kgd4wEj39mc2D8lnM7Rw+5NFSp8HZJ3sy8lc1JoQv2DGp58zYpOS6ajGTzcn+ALJLyGq9UzvW2bSZ42IiCF19nC5VBA5rF6tM/UKZ2O8QdNqVcIpalbPdtObk3nblMuHWrp0kg0Q6NhM1VKpgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X0wqzL9KCuENp2vmnM/R/u/DQnxZW72DkvivK6K5EGs=;
- b=h6C9vhNCdPeG7JZtvUcL1QJ/xirAkCgGyW7rLcurRkgJWo+62rFcCBZQJ8iXznN9D/KphlgFLnoIvOwpF4l526FuE0xezW5KCuJbv/ovKSJO3Ql80E3sX88tV5sfGG33wpRf1iE+eIee1qEdQaVB2pVD1Ad5+uVAYPY6ynveUR+GRVTV/tsIMhAwDbkVzl4St6ncHjINZvS+0VPJou2yXkQDw2jzHela3LsNNjTYXbF7ThF6hP7WGf+U3juM0hbusN6n5urpSn3dBNEpUYjM9LiG6guclKaHePuDdMkguX797uaHxWGIG5v8xxrPoO0KiIWiwJGwDit9+UMyTjzxXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10) by SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.42; Mon, 26 Feb
- 2024 05:50:33 +0000
-Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- ([fe80::b0af:4c9d:2058:a344]) by
- SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%6])
- with mapi id 15.20.7249.041; Mon, 26 Feb 2024 05:50:33 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Jack Zhu <jack.zhu@starfivetech.com>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v4 0/2] Add JH8100 external interrupt controller support
-Date: Sun, 25 Feb 2024 21:50:23 -0800
-Message-Id: <20240226055025.1669223-1-changhuang.liang@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SH0PR01CA0006.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:5::18) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6841A5AC
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 06:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708927599; cv=none; b=sJHwIdKk3ALg3ZKPfqCEo8X62B9HwcqeuK84gkph1mvTM/tugs/eN16R5wdZyPL6HN2FUIvtFCgfxLebODOn1l5lHuDSL++k1EkQfCpGYDmEpV0vyO1ZDWxYKtMaT8k/KWu3HA4j5va1eQtrfvjKlGtC7s3hhy1NJIAKQiWHMrE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708927599; c=relaxed/simple;
+	bh=IWRwZUmQYBIgvXHr5gj3H8ECbGXuQbEwHNX97+KVQBY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XUDAn6i8PDIXBGQ79HKWY9qZY+Nlv8X4OyATathAm/LUvyLG7enrlk5ViRGduq9pn5YFbu6eyJWeZ7NuB0s5wlw/VvYkLPHa8o9jTtQtR7jLWQ1kDoYWsmKkOZuM+kZBeXtzNyqB4P7x5rt28YZ9IGVI90yViOV6U1cEpqcy0BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTWbyVX8; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTWbyVX8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708927597; x=1740463597;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=IWRwZUmQYBIgvXHr5gj3H8ECbGXuQbEwHNX97+KVQBY=;
+  b=hTWbyVX80gowZzSoglVeZuydlyZqInamI01BqbEUCRxxQw1FI8ec6j3t
+   xD2S9s+Xou+h3Kbytum1spQiTLLvCNDpIMj/6Y68Eb2jy3wfek/JVEDTC
+   yUDyeSYNS+RKsk1izbTM6Y0TIWuAdbdPP8gxqUIkfSlDmi6KqPlAzkLzv
+   xwMUZs5hsroCOSml5wYNCJ/2AXetb02wKhB2rugXh171Glb+eqMQpBZ7L
+   N/lQHqGqdN6HeH8yRDJCviA+K2INgZT3worO8i5eplyF2BakYD/nAzUFl
+   2Sr7yoHVdSIXnDKTLz4xLVmppjNyhH7NvjZibDIaQWkges/qG0qYKPVGi
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3737680"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="3737680"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 22:06:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="11128153"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 22:06:33 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: "zhangpeng (AS)" <zhangpeng362@huawei.com>
+Cc: <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
+  <akpm@linux-foundation.org>,  <willy@infradead.org>,
+  <fengwei.yin@intel.com>,  <aneesh.kumar@linux.ibm.com>,
+  <shy828301@gmail.com>,  <hughd@google.com>,  <david@redhat.com>,
+  <wangkefeng.wang@huawei.com>,  Nanyong Sun <sunnanyong@huawei.com>
+Subject: Re: [PATCH v2] filemap: avoid unnecessary major faults in
+ filemap_fault()
+In-Reply-To: <a905dea7-018e-80c0-ab54-85766add8d96@huawei.com> (zhangpeng's
+	message of "Mon, 26 Feb 2024 10:55:43 +0800")
+References: <20240206092627.1421712-1-zhangpeng362@huawei.com>
+	<87jznhypxy.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<a905dea7-018e-80c0-ab54-85766add8d96@huawei.com>
+Date: Mon, 26 Feb 2024 14:04:38 +0800
+Message-ID: <87frxfhibt.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_
-X-MS-Office365-Filtering-Correlation-Id: 48ef64b8-860e-46b6-be76-08dc368ed8c9
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	VqyhRCosvruoweP3zFvRPg9TAGDGNEo6VOQcqjR+aDI13Uhqe37vhjv0zyswP5Q6z4YnZ2xiyQuTGpbDtlX+eEK4FcaKIhIM/nVSxt3yZwMsfyMm10VCNfA8b+/m1bbyMKBduzhI5K7Zjd4mxjlTVr7I8i5EkPADiXa3wedD4ghkgvzUyRksFYsCxk6DymN8wq2MMhJRcaD86SQYG9nvDTgcdPi2HwgQW3uT+gwW9IhrdZIxScublFjLlwsGujM7cmRLGXDIir6rC+rrvIEg20ShIW0OtW9OMA6zNB3xAu9zz4bjJbxmb5v9I48qHG3mlNXbpEODBBlpcvThUzEWVf+7JzYWBtnb8CITaCF0+/vOJXwLmmit8sK9lv0LQ5jSAephhmL5L1nYiRq+IUC98PdLwSuRmXvziHoemJQLZzcje4aHTx8YbVygrLjUST8goman75V75Kwe8nxd0TvdVA5SbnDqBOJMSabtiZxExGYJLxEK37Pa5IQAKFozgbp/ZngVg7/o3LdSPui3WXJGqalMZahbZ48d1uu9lpvsv+jVfUvps2tQc2j/6CniMt52U4I2TQMJxe2CdI4tFb/sG6z7dbKOsJe9BV39E5DTL3Xh1RfMJE1mnOXZSZo0Z8e5
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(230273577357003)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hLFhtELmrjhysrm6MEbw6TbCQljYvrRni4aGwnWszT6UJAqX0lrTa79X5oUJ?=
- =?us-ascii?Q?kd4lYvXx3UZBUHWRnVdEhr37aT6rc861OKKgl2OwWxHrctUnsnFW2nOANjfy?=
- =?us-ascii?Q?pNmMjZndVAsJPdYQSLWCLs1MRmTjCkTZGJ/WW+Al4n653gS9GRFQRLFijOv+?=
- =?us-ascii?Q?bOsyJZlaGo3+4LO7pNY1p+jnL1itTgjdAE6xwDgxnsXybHCoDZ2cXFYWgQoa?=
- =?us-ascii?Q?LlPlOmvQHG1ZV8cU3SEJrh7iWdTtBYjImtySk8wIWoFOiRJiljyj0qH7bU31?=
- =?us-ascii?Q?ivE1wApp6yHsYFt1XMdZYA/WI1BZZB+i0DFHyRSTwXl6DuM/7zKK/ORc0wFc?=
- =?us-ascii?Q?0uZdmy4/XmF18vDrgSKs/Fp+jFVS9LI1fo61YBh0Q76Nbho6NVd1Yxy9x7A4?=
- =?us-ascii?Q?3UB4buc6wlHsIANgFQx+DKoSs6HKr8Nybkfe979/w6HHczqRpACVjC23Msx8?=
- =?us-ascii?Q?sDUEy6I3KrEtoyuFVIwroV/EFiEaG4APQ2f5oUcl/8LKsSiJjfze+8r9A/lj?=
- =?us-ascii?Q?2gj5f5HPAbZQvk9BCwEm2QRX/69y4p9UTB8Ch2hggLC44U1o0X7WjFOqk/dJ?=
- =?us-ascii?Q?9pRzyMT1SDO19ifv780Quq/OP1nQNDCrp1rz9bqBYuHqUAPu5HnbXERKjyuX?=
- =?us-ascii?Q?lXBRFaMw9zthFn6P6/+o5hnCzCGRTEOn9PSnrgiJhsqdyLSC6JNOLmxXKFtC?=
- =?us-ascii?Q?mHhKKryEX3qOgetTbvGWvRAJ3MDWpAkw642wQx4/nU4tXmnOuhOe7NEJ+ACu?=
- =?us-ascii?Q?ueYM7zegjQz/o8eBeUZnt6ijcVV0ByWJfSQWAw6EqLTpmjsHmwrC/sDGiZOR?=
- =?us-ascii?Q?gOFfjFJFUPMLxDelIvZcpsoZuvCWZE2dkRelN5SJ5vsrsr/Gx0zvCP0NIEmu?=
- =?us-ascii?Q?cw8bJ0e7GTFjFhBxRpFPlWNkbjmFDmSSt6Quyo0PrjXvWtNe2wk9EbuBv9Md?=
- =?us-ascii?Q?j2UDAZl8jxt4Wen4f8aC9Is26cH+Z5SrETzHdL98qdT0EKDsKvh9THnwONoS?=
- =?us-ascii?Q?6qMBGbBD0j/1noO3GahrLxIx9yn1YBNNpxt9HHHhJ87Z9lEC2k6laUBY/Dn0?=
- =?us-ascii?Q?j/iJWkfJhUEfyoCqEueRq/NpqOM8cxLw5e0p/KvQ1zbf9KS21Vx9RAP1G4kJ?=
- =?us-ascii?Q?GHTyr60GJKxIHsoVVHusUVt1Nit7y2SkrerXK1Wci+r13tlituw7kEIT0LwN?=
- =?us-ascii?Q?19Iw3hvh8peO1WPE/TFM50yLdx1ulUiWKx7VDrUvIC2ZWYR7ZS2gjt1CsWav?=
- =?us-ascii?Q?yalTMhy7jPS3Y9oTZzGcTEKFBHmmjEPI4Ag3WwVdG6zLZDuNWPrHgMaEnIW5?=
- =?us-ascii?Q?QZoFVk8XpbwtwUhc/TRoXU+BcRXSCJssJ4ptYAbXB1tvGnUmVcCEmOa5Wuvr?=
- =?us-ascii?Q?U4nLIb0ysdT8KVpaxtJZ1gXNcRbXGGI/vq5O2N5uir92RWRx7IHmCwUSglk+?=
- =?us-ascii?Q?zll1Q4Lce2ZD8gCZDYnHZlp0Q4jOZuyyExzNyKgAYZsvj3qvMiamDMFnqy9M?=
- =?us-ascii?Q?1CZqjYnx8hJZ3WxnFKKfnA/k3pkN4GBcxB2/n36Tl2ByeIVunNlwBZgrx4RW?=
- =?us-ascii?Q?XZTCiam2KliIWoTNOzK4vqVJSFESZ2/13hjV+XDOJSfq/PK5VNm9BKoBfVc9?=
- =?us-ascii?Q?VeW44YJuxXnGwzslunMgPcI=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48ef64b8-860e-46b6-be76-08dc368ed8c9
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 05:50:33.1452
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hHod81AiHUng3QpyIxHUTSi2wxtBsgpBWu1OBFmg2JwNAS4qzvRlc9N09G8cSODC3iXLw9vTBnJQygaJq+SgFrEIS6oV6cubnyzSoWO94EuZASddnryeLal6fnHzTOpA
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0671
+Content-Type: text/plain; charset=ascii
 
-This patchset adds external interrupt controller driver for the StarFive
-JH81000 SoC. It can be used to handle high-level input interrupt signals.
-It also send the output interrupt signal to RISC-V PLIC.
+"zhangpeng (AS)" <zhangpeng362@huawei.com> writes:
 
-changes since v3:
-- Replaced "raw_spin_lock_irqsave" with "raw_spin_lock"
-- Replaced "raw_spin_unlock_irqsave" with "raw_spin_unlock"
-- Replaced "clear_bit" with "__clear_bit"
+> On 2024/2/7 10:21, Huang, Ying wrote:
+>
+>> Peng Zhang <zhangpeng362@huawei.com> writes:
+>>> From: ZhangPeng <zhangpeng362@huawei.com>
+>>>
+>>> The major fault occurred when using mlockall(MCL_CURRENT | MCL_FUTURE)
+>>> in application, which leading to an unexpected performance issue[1].
+>>>
+>>> This caused by temporarily cleared PTE during a read+clear/modify/write
+>>> update of the PTE, eg, do_numa_page()/change_pte_range().
+>>>
+>>> For the data segment of the user-mode program, the global variable area
+>>> is a private mapping. After the pagecache is loaded, the private anonymous
+>>> page is generated after the COW is triggered. Mlockall can lock COW pages
+>>> (anonymous pages), but the original file pages cannot be locked and may
+>>> be reclaimed. If the global variable (private anon page) is accessed when
+>>> vmf->pte is zeroed in numa fault, a file page fault will be triggered.
+>>>
+>>> At this time, the original private file page may have been reclaimed.
+>>> If the page cache is not available at this time, a major fault will be
+>>> triggered and the file will be read, causing additional overhead.
+>>>
+>>> Fix this by rechecking the PTE without acquiring PTL in filemap_fault()
+>>> before triggering a major fault.
+>>>
+>>> Testing file anonymous page read and write page fault performance in ext4
+>>> and ramdisk using will-it-scale[2] on a x86 physical machine. The data
+>>> is the average change compared with the mainline after the patch is
+>>> applied. The test results are within the range of fluctuation, and there
+>>> is no obvious difference. The test results are as follows:
+>> You still claim that there's no difference in the test results.  If so,
+>> why do you implement the patch?  IMHO, you need to prove your patch can
+>> improve the performance in some cases.
+>
+> I'm sorry that maybe I didn't express myself clearly.
+>
+> The purpose of this patch is to fix the issue that major fault may still be triggered
+> with mlockall(), thereby improving a little performance. This patch is more of a bugfix
+> than a performance improvement patch.
+>
+> This issue affects our traffic analysis service. The inbound traffic is heavy. If a major
+> fault occurs, the I/O schedule is triggered and the original I/O is suspended. Generally,
+> the I/O schedule is 0.7 ms. If other applications are operating disks, the system needs
+> to wait for more than 10 ms. However, the inbound traffic is heavy and the NIC buffer is
+> small. As a result, packet loss occurs. The traffic analysis service can't tolerate packet
+> loss.
+>
+> To prevent packet loss, we use the mlockall() function to prevent I/O. It is unreasonable
+> that major faults will still be triggered after mlockall() is used.
+>
+> In our service test environment, the baseline is 7 major faults/12 hours. After applied the
+> unlock patch, the probability of triggering the major fault is 1 major faults/12 hours. After
+> applied the lock patch, no major fault will be triggered. So only the locked patch can actually
+> solve our problem.
 
-v3: https://lore.kernel.org/all/20240221022647.5297-1-changhuang.liang@starfivetech.com/
+This is the data I asked for.
 
-changes since v2:
-- Rebased on tag v6.8-rc4.
-- Added raw_spinlock_t
-- Added irq_domain_remove free domain
-- Updated struct declarations and initializers
-- Updated variable declarations
-- Dropped store clk in struct starfive_irq_chip
-- Replaced "starfive_intc_mod" with "starfive_intc_bit_set&starfive_intc_bit_clear"
-- Replaced "struct irq_domain *root_domain" with "struct irq_domain *domain"
-- Added reset_control_assert&clk_disable_unprepare helper functions to error recover
+But, you said that this is a feature bug fix instead of performance
+improvement.  So, I checked the mlock(2), and found the following words,
 
-v2: https://lore.kernel.org/all/20240130055843.216342-1-changhuang.liang@starfivetech.com/
+"
+       mlockall() locks all pages mapped into the address space of the calling
+       process.  This includes the pages of the code, data, and stack segment,
+       as well as shared libraries, user space kernel data, shared memory, and
+       memory-mapped files.  All mapped pages are guaranteed to be resident in
+       RAM when the call returns successfully; the  pages  are  guaranteed  to
+       stay in RAM until later unlocked.
+"
 
-changes since v1:
-- Rebased on tag v6.8-rc1.
-- Dropped store reset_contorl.
-- Replaced "of_reset_control_get_by_index" with of_reset_control_get_exclusive
-- Printed the error code via %pe
+In theory, the locked page are in RAM.  So, IIUC, we don't violate the
+ABI.  But, in effect, we does do that.
 
-v1: https://lore.kernel.org/all/20240111023201.6187-1-changhuang.liang@starfivetech.com/
-
-
-Changhuang Liang (2):
-  dt-bindings: interrupt-controller: Add starfive,jh8100-intc
-  irqchip: Add StarFive external interrupt controller
-
- .../starfive,jh8100-intc.yaml                 |  61 ++++++
- MAINTAINERS                                   |   6 +
- drivers/irqchip/Kconfig                       |  11 +
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-starfive-jh8100-intc.c    | 207 ++++++++++++++++++
- 5 files changed, 286 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/starfive,jh8100-intc.yaml
- create mode 100644 drivers/irqchip/irq-starfive-jh8100-intc.c
+But, from git history, we have cleared the PTE during modification from
+2.6.12-rc2 at least.  I guess that because Linux isn't a hard real time
+OS, users don't expect that too.
 
 --
-2.25.1
+Best Regards,
+Huang, Ying
+
+> The test data provided is intended to prove that the patch does not have a major impact
+> on the performance of the page fault itself.
+>
+>>> 	                 processes processes_idle threads threads_idle
+>>> ext4    private file write: -1.14%  -0.08%         -1.87%   0.13%
+>>> ext4    shared  file write:  0.14%  -0.53%          2.88%  -0.77%
+>>> ext4    private file  read:  0.03%  -0.65%         -0.51%  -0.08%
+>>> tmpfs   private file write: -0.34%  -0.11%          0.20%   0.15%
+>>> tmpfs   shared  file write:  0.96%   0.10%          2.78%  -0.34%
+>>> ramdisk private file write: -1.21%  -0.21%         -1.12%   0.11%
+>>> ramdisk private file  read:  0.00%  -0.68%         -0.33%  -0.02%
+>>>
+>>> [1] https://lore.kernel.org/linux-mm/9e62fd9a-bee0-52bf-50a7-498fa17434ee@huawei.com/
+>>> [2] https://github.com/antonblanchard/will-it-scale/
+>>>
+>>> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
+>>> Suggested-by: Yin Fengwei <fengwei.yin@intel.com>
+>>> Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
+>>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>>> ---
+>>> v1->v2:
+>>> - Add more test results per Huang, Ying
+>>> - Add more comments before check PTE per Huang, Ying, David Hildenbrand
+>>>    and Yin Fengwei
+>>> - Change pte_offset_map_nolock to pte_offset_map as the ptl lock won't
+>>>    be used
+>>>
+>>> RFC->v1:
+>>> - Add error handling when ptep == NULL per Huang, Ying and Matthew
+>>>    Wilcox
+>>> - Check the PTE without acquiring PTL in filemap_fault(), suggested by
+>>>    Huang, Ying and Yin Fengwei
+>>> - Add pmd_none() check before PTE map
+>>> - Update commit message and add performance test information
+>>>
+>>>   mm/filemap.c | 34 ++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 34 insertions(+)
+>>>
+>>> diff --git a/mm/filemap.c b/mm/filemap.c
+>>> index 142864338ca4..a2c1a98bc771 100644
+>>> --- a/mm/filemap.c
+>>> +++ b/mm/filemap.c
+>>> @@ -3238,6 +3238,40 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
+>>>   			mapping_locked = true;
+>>>   		}
+>>>   	} else {
+>>> +		if (!pmd_none(*vmf->pmd)) {
+>>> +			pte_t *ptep;
+>>> +
+>>> +			ptep = pte_offset_map(vmf->pmd, vmf->address);
+>>> +			if (unlikely(!ptep))
+>>> +				return VM_FAULT_NOPAGE;
+>>> +			/*
+>>> +			 * Recheck PTE as the PTE can be cleared temporarily
+>>> +			 * during a read+clear/modify/write update of the PTE,
+>>> +			 * eg, do_numa_page()/change_pte_range(). This will
+>>> +			 * trigger a major fault, even if we use mlockall,
+>>> +			 * which may affect performance.
+>>> +			 * We don't hold PTL here as acquiring PTL hurts
+>>> +			 * performance. So the check is still racy, but
+>>> +			 * the race window seems small enough.
+>>> +			 *
+>>> +			 * If we lose the race during the check, the page_fault
+>>> +			 * will be triggered. Butthe page table entry lock
+>>> +			 * still make sure the correctness:
+>>> +			 * - If the page cache is not reclaimed, the page_fault
+>>> +			 *   will work like the page fault was served already
+>>> +			 *   and bail out.
+>>> +			 * - If the page cache is reclaimed, the major fault
+>>> +			 *   will be triggered, page cache is filled,
+>>> +			 *   page_fault also work like the page fault was
+>>> +			 *   served already and bail out.
+>>> +			 */
+>> IMHO, this is too long.  It can be shorten to like,
+>>
+>> If we lose the race, major fault may be triggered unnecessary.  This
+>> hurts performance but not functionality.
+>
+> OK, I'll fix it in the next version.
+>
+>>> +			if (unlikely(!pte_none(ptep_get_lockless(ptep))))
+>>> +				ret = VM_FAULT_NOPAGE;
+>>> +			pte_unmap(ptep);
+>>> +			if (unlikely(ret))
+>>> +				return ret;
+>>> +		}
+>>> +
+>>>   		/* No page in the page cache at all */
+>>>   		count_vm_event(PGMAJFAULT);
+>>>   		count_memcg_event_mm(vmf->vma->vm_mm, PGMAJFAULT);
+>> --
+>> Best Regards,
+>> Huang, Ying
