@@ -1,176 +1,99 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A86141988;
-	Mon, 26 Feb 2024 14:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67491420DF;
+	Mon, 26 Feb 2024 14:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708958235; cv=none; b=C28g9083lhhBAqOx7Q0XTfw4Ph7aUSNdVJQ/PeLAUw2nf5K+A5zFQXWls1NBZKVZWc5CftTrNarsD9vJn4hSFvLXSIOzrHgErEeyc2YckWNdHadbRjd732hRrXp+2xWu1mpU2/g3snZ4j+TtLthP93tT2OXwIs4uJoL/skPCMYg=
+	t=1708958240; cv=none; b=aesMy1QjzRTFW1pD025NyKrunwINcxv4XKOjljFO/4ZjJmo7WbFy/qAiGgE/jpYVgI5qIqIdADaRua7tU6UtBFbJcndgN11iWue0lZ9Cu1x801Dvf0TrxQboy4AyaxhKZn94HJec+k8FZrXt8hXW9kcP82Wa0IdHKcH32pnns80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708958235; c=relaxed/simple;
-	bh=yFTowSeo6zJ347eo3a63wiouXx/voA/dHD8YL405VJQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L1CxWFP+xkIYr3PzU/+xgnKL5zZKJRia11A6Nz95vTgodxVfEUE9ZzfUOwJY0y/cZsSYKAOldAxiLtcM9+x0DzzYnrJysfiIY+4YRpaJybUMJU6LpGZCVHVWo7y0xaCcE0OlhTV5q0kVMhjvtgtfoJw0tFhojB3HUvN3ILkpAk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FVCO6XNH; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708958240; c=relaxed/simple;
+	bh=ASCStbbadCwY+pa29PI3g+LnHSlVBBJ8vQnqpkE72ek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2QLn+hb5qVc2yeaxoWD4imMprYdXjN0h1rp5RmS8n6FsJBPYI+KhhrZdMk2BaHia4lma6zurUAwlDepSimoxcQZ1QQ/WjgqLKazVp3ZyamtjzgSC0IafAsYMWxq7aAEWYr5bkwgFMGRAtZ29dQGXJtX+tTmP9eRl8lWPNTAm3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d6rrwwPH; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVCO6XNH"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dc3b4b9b62so26747325ad.1;
-        Mon, 26 Feb 2024 06:37:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708958233; x=1709563033; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7XTvgh4XHyCc0kVcHAEtjm6YqaHRshQPoue6SNYuJFs=;
-        b=FVCO6XNHiXC7WQhTsUMklTYmkEvI2mHcjrx2e7rCyWEY8x0LQA01DCFFGz+rpCuoI+
-         amAaTMjZsJg1UGJV24mug2JP6DuLJglpsmVABqwWkNClXyeIk2oN3XMjgWIB/PYuMmfx
-         T6X3VkjSHeeOaAVWHGUN8Az7MSaRlc8mdaBKXKzfW8bJd6W/rgfJ8SkbUr7htx2QGlYZ
-         Sbuus0+r23xCcPp2zu8rSuUNO1JSY2FH1BGhf+j3iNZuSrTPkO+FBCfnc2HsNhfx+GMK
-         hh4dprnolUxKfct7FxDIDP/+zGFb7QSM6ZM2JlRm8FHC4a2XkPxmC8wPUYGilImHpLNB
-         3I7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708958233; x=1709563033;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7XTvgh4XHyCc0kVcHAEtjm6YqaHRshQPoue6SNYuJFs=;
-        b=IOXAo4+JcPeFi4y5QoXQbJ3LrJ+cO0SNjcsP5Gl5IE6vfJ3NQp6DbUyhBcj13zPKOq
-         bpWyNMpF0/doTs+ZWwuR+N80Khg+jEMWT7a0548+WSe8JL17A439LzI/6QkdEjm2bFX9
-         oBKJ2FuywE/zM4f7KkzaYWbHXcn8tXWPz3i4fIMC1YtbAUob3Uh6XFRdaTwcMCfMGvUf
-         acoSgEMwfB6cNjtgeFRrDjU5a/zNHb5dylgE5rzNB4vCoTYZQ5bbnNUpFA/YAIE+z5z0
-         TVVcOjzWBSovWYRRSspmLB5kBqBXCnhS4mw9BJGgeVNiBcalF56NshitJmBlxFsw3vF9
-         QQoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYxXffqtpiJF4ak3LHylkoBWoXqnwveuPPklX8bbKZt08JpAJIny9tHwh5Uuu06BRkYNRDYJxBl0c1AmqI0Ocps0h/
-X-Gm-Message-State: AOJu0YzA74egCDYz6Jdgw0kr0S40LWIEta5XC2yKQZs3rFY46sLYlnsC
-	wNkrgQaa8BllMRd1tiQu8pYs8pYnFsr6Q75tXUdqGsvj9HdqN0I7j6Sa4B3n
-X-Google-Smtp-Source: AGHT+IF5XSfJSZznMuAc9toziLAfWWGD+vFYIlYFoJV2gE5OD7aU82GBsy1OepFYT3Tcf3W2YRYEvw==
-X-Received: by 2002:a17:903:4303:b0:1db:9ff1:b59b with SMTP id jz3-20020a170903430300b001db9ff1b59bmr6876540plb.23.1708958233553;
-        Mon, 26 Feb 2024 06:37:13 -0800 (PST)
-Received: from localhost ([47.254.32.37])
-        by smtp.gmail.com with ESMTPSA id p6-20020a1709026b8600b001db7e3411f7sm3963697plk.134.2024.02.26.06.37.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 26 Feb 2024 06:37:13 -0800 (PST)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	Hou Wenlong <houwenlong.hwl@antgroup.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	kvm@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	x86@kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Juergen Gross <jgross@suse.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [RFC PATCH 48/73] KVM: x86/PVM: Implement system registers setting callbacks
-Date: Mon, 26 Feb 2024 22:36:05 +0800
-Message-Id: <20240226143630.33643-49-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240226143630.33643-1-jiangshanlai@gmail.com>
-References: <20240226143630.33643-1-jiangshanlai@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d6rrwwPH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708958239; x=1740494239;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ASCStbbadCwY+pa29PI3g+LnHSlVBBJ8vQnqpkE72ek=;
+  b=d6rrwwPHuqLetuP0Cu7WrLeAP+Psw6X2HTuXUBVOy3InMSUYvPP2ppv/
+   8Eo5TAlrg9bi4ilegrx17SgX1IoiPa5GrfeExTmQouhwD234RVTig+VgL
+   A96WmMoDtfm+XM1kevn2eXsmjUBR96hVbpUCXk6GFGnvU2kxzIbkxsYBG
+   9IQTh2Q0wdrgZxM0KVtGcgvFOG3LGdm88w9PsthlGKZdn3HGYE+1aUc6q
+   j/INP22U16CS6k4WWo2ltYSSmXxS5wTNSSA1JkMiidCTNNu+ZITCqxHbT
+   2NovjvwxfB19i1BxEolcUdi1ul9Kt90eLFzytE1AcFVwGcWAAyokAkctc
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14680281"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="14680281"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 06:37:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="913873542"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="913873542"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 06:37:16 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rec6T-00000007hmJ-1Rj4;
+	Mon, 26 Feb 2024 16:37:13 +0200
+Date: Mon, 26 Feb 2024 16:37:13 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Mike Looijmans <mike.looijmans@topic.nl>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 1/2] iio: adc: ti-ads1298: Fix error code in probe()
+Message-ID: <ZdyiGV1vKFMoC2DL@smile.fi.intel.com>
+References: <5f393a87-ca8b-4e68-a6f4-a79f75a91ccb@moroto.mountain>
+ <e315c126-619c-48a1-a5d8-001e5ed01930@topic.nl>
+ <20240224181354.76842da7@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240224181354.76842da7@jic23-huawei>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+On Sat, Feb 24, 2024 at 06:13:54PM +0000, Jonathan Cameron wrote:
+> On Thu, 22 Feb 2024 08:10:25 +0100
+> Mike Looijmans <mike.looijmans@topic.nl> wrote:
+> 
+> > Good catch on both patches.
+> > 
+> > If so desired, you have my
+> > 
+> > Acked-by: Mike Looijmans <mike.looijmans@topic.nl>
+> 
+> Dan, here is a classic example of why I think any series with more than
+> 1 patch could benefit from a cover letter. It gives somewhere for
+> reviewers to give tags for the lot in a fashion b4 can understand.
+> 
+> Otherwise great find and applied to the togreg branch of iio.git
+> with Mike's tag added to both of them!  Hopefully the fixes tags will
+> remain stable - whilst in theory that tree doesn't get rebased, in practice
+> it might if I messed anything up enough :( 
 
-In PVM, the hardware CR0, CR3, and EFER are fixed, and the value of the
-guest must match the fixed value; otherwise, the guest is not allowed to
-run on the CPU.
+I even added this to be automatically done when I use my script [1].
+Dunno if b4 relay (or what is there to send patch series?) can handle
+that.
 
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
----
- arch/x86/kvm/pvm/pvm.c | 51 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.sh
 
-diff --git a/arch/x86/kvm/pvm/pvm.c b/arch/x86/kvm/pvm/pvm.c
-index a32d2728eb02..b261309fc946 100644
---- a/arch/x86/kvm/pvm/pvm.c
-+++ b/arch/x86/kvm/pvm/pvm.c
-@@ -1088,6 +1088,51 @@ static int pvm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	return ret;
- }
- 
-+static void pvm_cache_reg(struct kvm_vcpu *vcpu, enum kvm_reg reg)
-+{
-+	/* Nothing to do */
-+}
-+
-+static int pvm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
-+{
-+	vcpu->arch.efer = efer;
-+
-+	return 0;
-+}
-+
-+static bool pvm_is_valid_cr0(struct kvm_vcpu *vcpu, unsigned long cr4)
-+{
-+	return true;
-+}
-+
-+static void pvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
-+{
-+	if (vcpu->arch.efer & EFER_LME) {
-+		if (!is_paging(vcpu) && (cr0 & X86_CR0_PG))
-+			vcpu->arch.efer |= EFER_LMA;
-+
-+		if (is_paging(vcpu) && !(cr0 & X86_CR0_PG))
-+			vcpu->arch.efer &= ~EFER_LMA;
-+	}
-+
-+	vcpu->arch.cr0 = cr0;
-+}
-+
-+static bool pvm_is_valid_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-+{
-+	return true;
-+}
-+
-+static void pvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-+{
-+	unsigned long old_cr4 = vcpu->arch.cr4;
-+
-+	vcpu->arch.cr4 = cr4;
-+
-+	if ((cr4 ^ old_cr4) & (X86_CR4_OSXSAVE | X86_CR4_PKE))
-+		kvm_update_cpuid_runtime(vcpu);
-+}
-+
- static void pvm_get_segment(struct kvm_vcpu *vcpu,
- 			    struct kvm_segment *var, int seg)
- {
-@@ -2912,13 +2957,19 @@ static struct kvm_x86_ops pvm_x86_ops __initdata = {
- 	.set_segment = pvm_set_segment,
- 	.get_cpl = pvm_get_cpl,
- 	.get_cs_db_l_bits = pvm_get_cs_db_l_bits,
-+	.is_valid_cr0 = pvm_is_valid_cr0,
-+	.set_cr0 = pvm_set_cr0,
- 	.load_mmu_pgd = pvm_load_mmu_pgd,
-+	.is_valid_cr4 = pvm_is_valid_cr4,
-+	.set_cr4 = pvm_set_cr4,
-+	.set_efer = pvm_set_efer,
- 	.get_gdt = pvm_get_gdt,
- 	.set_gdt = pvm_set_gdt,
- 	.get_idt = pvm_get_idt,
- 	.set_idt = pvm_set_idt,
- 	.set_dr7 = pvm_set_dr7,
- 	.sync_dirty_debug_regs = pvm_sync_dirty_debug_regs,
-+	.cache_reg = pvm_cache_reg,
- 	.get_rflags = pvm_get_rflags,
- 	.set_rflags = pvm_set_rflags,
- 	.get_if_flag = pvm_get_if_flag,
 -- 
-2.19.1.6.gb485710b
+With Best Regards,
+Andy Shevchenko
+
 
