@@ -1,158 +1,187 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2040.outbound.protection.outlook.com [40.107.6.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A692882C8D;
-	Mon, 26 Feb 2024 13:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708952428; cv=fail; b=NJs20H1QlRp4G2sH5Lti4Sk/NE78gV+ZiEiWG2Fwc72cud9n1S1gmBmqlZVIztCBNGC0yal3y1l72ZtXE1ygYznWYLrF251X0O07/Cz4fK7Qhyx3TAFEmTOkCon0BbpSSWJhOTQ4qSuPw0s1FEmlORElZ+Rl4QmwI35sehojQZA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708952428; c=relaxed/simple;
-	bh=KTScA5iNgIYRjBFV39Yu+GndLndqZqNZYgb3horfS8Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AFJXvZSkwMafpUNmkiP6PHrBwitlYD82qiD6c0FEB5AT+rLFKnwV06IfYSzot+DYlTTeSsb96LgRsOMki7Dc2oxJ/YEF0H2/ASdxDH3SYt9B2z/Ekg2GG6AQvn+hXnoYpKT5E+zNFJBFU5e78cyeW7psKDpxOzm0jDkDApViPwE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=DNCgVoqy; arc=fail smtp.client-ip=40.107.6.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="DNCgVoqy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iQEMtKWUEfE36fbb3v2TQlYSg+kMgw2JH/ibDjDyU0P+75uVvToRQUvGZ7ZwfcnC+3H5xd/kt0k2thpnAQ2zFR5Wr74sKl0VsLO10FcTNxpVBkPCVU6l9l19L0h1ebBwq55svssHrdm3Ir57IMQsclYUDb2APFeXGAc6LGHbe2lweqIM2vvI6LNo4D85gJCunpHPC4S4Ym9cMxte6wq/SWRnZ8fj2tnSiqbiPdwUgZ37bo2YsNs/H5nlvDP7+SNmhnMnAVJ5IFmdy3bAhi7cJmK3abaPOq3L4YIKH97IsIZXqv2Z4nDQ97esKG01Ovt9Ar9rtaLLNK8lv63T3I01wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tFvdRDUoO0cyMDlHCBxKHVprw3Af+OGIp872PkY53TY=;
- b=XXbO6e2hHQYnHqxCQwIZKE+jbeMpRR+vTOwwBPdUMeMV/y0Cp9VlCTTFzlJo6c1xr3zH0q7OAFH2l3v0lQK5W4cZ1a24qVFLfAov1lYhNigE3WR94nUyr+1NJ/VMSHvYgt2gA9Xo2p57eowvZ1gH7r1Ggh71UHoPm5+23Z4LNGwb70+pAnNPB2Ui+7EnPxPxTeXA3JvJUFNGvdkWuiGIjQiX6904hcRGd6l9K3gFMoD4FiAdjJKFQ1pOGcoi89RNVBfS7I7x2M3KDIlc7TN/AHVY+v/nzVIGutnPb58oMgT/vcEn9hpIz7VpfQRLZxRDXY9y+dgKZUYhfUmtYO0Gcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tFvdRDUoO0cyMDlHCBxKHVprw3Af+OGIp872PkY53TY=;
- b=DNCgVoqys1P7bQeST5MqIrnF2nw4rlxjjvb6UiOzriOeRC52DG9fy3GR7+ERu5MYSQdaqN2XAozI+p5nVF6YnDjcznJYgEfVISPFq3wc5TGUZ7PP5WFzoPtyifith1wkqekLxxKR7Th9CqMNK5tBkNf5jcsUpysONxbm4or2+dw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by AM0PR04MB6865.eurprd04.prod.outlook.com (2603:10a6:208:181::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Mon, 26 Feb
- 2024 13:00:23 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::1232:ed97:118f:72fd]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::1232:ed97:118f:72fd%4]) with mapi id 15.20.7316.034; Mon, 26 Feb 2024
- 13:00:23 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: haibo.chen@nxp.com,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de
-Cc: festevam@gmail.com,
-	linux-imx@nxp.com,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: imx93: drop the 4th interrupt for ADC
-Date: Mon, 26 Feb 2024 21:08:26 +0800
-Message-Id: <20240226130826.3824251-2-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20240226130826.3824251-1-peng.fan@oss.nxp.com>
-References: <20240226130826.3824251-1-peng.fan@oss.nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR03CA0113.apcprd03.prod.outlook.com
- (2603:1096:4:91::17) To DU0PR04MB9417.eurprd04.prod.outlook.com
- (2603:10a6:10:358::11)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C74F1CFA9
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 13:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708952461; cv=none; b=C/0M6OrxYsdRgH8PaXp71Hb6O6eerIiV/CoU6tA/ikzQTq8mESfKn+pX2d5l0Y0bx/4yUVO0Q+6dLc2d+ffVx0p2CK5A+CJ+uvJyfyUGVaFSVq7ka/Zp5ZX4zzY6EoqnysJQX+hjuimILuiCvS3TzlQ1a7P2e/KMp9DmJZ2PZ0Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708952461; c=relaxed/simple;
+	bh=gU02AqookQ/IsCX5PRVEZ+njILfZLiVpjGq7vt3Hgjc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ub4WtayR0PumMz7jBY5qjzXO+MtVuSwgXxih80kNU3VRNN+aSnqzAq+/AqFH0gcFGumtfGjyivu8hK6X9duf4sZ/Xou/aToOImXGiM/T6n/5hnbGwtJjWV/Izaxtey3wOWBXDmhMmzsZ4/BM5ICqG/ZngVnEtyKMkp5DFZkVwpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A033DA7;
+	Mon, 26 Feb 2024 05:01:37 -0800 (PST)
+Received: from [10.57.67.4] (unknown [10.57.67.4])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8574B3F762;
+	Mon, 26 Feb 2024 05:00:56 -0800 (PST)
+Message-ID: <c9d4fc77-0121-4415-a3f8-9fd7159992e2@arm.com>
+Date: Mon, 26 Feb 2024 13:00:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AM0PR04MB6865:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5dcda4d-3414-47ed-ff7b-08dc36cae4cf
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	hSnYC5numO4nMknEl9pQM+JtLI07raEaZrPdKx/q8LGWdlrxSqp8AxQPMzu1QHatjBFYgUtlSrjvcMZHdzCCGPIj+p0hkWhtK6vNTSY3gBGPxcQCydxl7JdIs0pLfMGj44Q7NFG+YkG7RNm57I9tzFr6BVJi/s9ncSJ+vL1SDPdT9Ig4wE8yoVia1F0CbyeqhJSB8AO2jxO+2tDULP6UBwwvXY1iFbgyHC6J1wwGhuqXCJG/BRfjzHAr8VRWAXURWfgoNiMEZDUWIG4Bu+9DdHQ7aXR392wZBiPQQfcqM0eaJY5LoyL8vmunGOZzMA27Ag75FqqHdQDoRl3EL3poox502eQNZ/Io6EiQqOsoCE2xshK/KfFr/uApAYN0LUg4tZolNmAXFu7W8kGDPEOn19L+XUFc0uOPZsj+t0NGpAsBJnmrZXrTwfbpGC7mxhgXO4K42U+OunstRERiuWMgLUCrZKTQMp2NFQWfCRNGJFmBfdvhacKcs5qawoi6u2heW9zC2OPsNudkfugpboyZfD8QDORdg/kaoOgTquPErT6Jl5h1Q4AD6tf/Khq2WHxK6pHWs2BKX75lN2UPkhQk0hPMO2xom7lFaPoDaal6Ii4JJDALK02zLT5td+oItldl5cd5YoCQGasmMj6eAPCMJTkvBMaEqJ1MZofVYeFHbVK/rmYOCC2FgJPMVQ55PVd3QD58WxfS3uFfnx2mOwcKpllniRLOGPkwZS5IVn2qCBQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fTa/ZIf3Wb36MRy0MKeRG1NJEiqU6rBYFQxQW0rOD8Qp+NDP6zK/ReKm+he6?=
- =?us-ascii?Q?49lcd6H18tk9T/MSfe++x/o0IV48lrFCKC4PWYpAvlBd7biuFJ/abrorFSwX?=
- =?us-ascii?Q?cSN5SP3rqmSGaSAeKv3+Dmp6wNopas2ol4YJ4Y7pe/MTD/eKJwp5AVmtfqVz?=
- =?us-ascii?Q?qa3jhNKQNbhDxZQmm/s06N6zva4B7P2FoMGyWkPvsT4UrJMzxIotvElW/Dom?=
- =?us-ascii?Q?GMGBeZe3hKKxtEp+hPnL/xYyeK02gmBfSLFk0/xNt4IhTmJRJDiijqMFAyx9?=
- =?us-ascii?Q?2g6A0rxM68TEG6R3TpKmVLUTb11uhgoFAYdvAxpLO2xSivL4ux3OTh/CjZNy?=
- =?us-ascii?Q?8mD7xBkBnR4JFc5QcoHcnWV08YRHj/HfCZSTo0neIBPl12IOPjrs+kuuOFqH?=
- =?us-ascii?Q?CyXXXBxupvDAzLtMy/bRG4t/EVUAhGSoBouQAmHfyterYlK04lrzXUvrk/1c?=
- =?us-ascii?Q?LqRgnVbPGFDPX8LMKuYX+AJQkKqY877DUjFmpzMCl2pQ1F01cQ0NvkbKZQVy?=
- =?us-ascii?Q?24TiGbmPNP7b8iIs6sjPvFwxoDqPfrXRGZvNRxP18KOJgTeYQcdutG+Hl0CB?=
- =?us-ascii?Q?FAbDOCYHjBuTurWiDiBx3mIEsQ4bxvFrmb2Uv1fVZRoIv/ogJbfBkTjHwx6u?=
- =?us-ascii?Q?+aC2Gb9D3+xG8D+cc36jwlrh207p7PZTsFanwFKXqlR4vGhDIneSLvGH4SCZ?=
- =?us-ascii?Q?jM430NN8bU+2etRI7D3pkoaya3Q/BeXr2BsGL2Yx4V1Yyl1mTpOLziJrQ2am?=
- =?us-ascii?Q?Ci+m/bQCwTgINfoXuCPFS+mTKvo+cOeEbkGakFnIzRStPJvP1g+oZDfydPZD?=
- =?us-ascii?Q?XuSdhcK1fM4Ln+B9GT76Bor1Il6/b3lP7kcA+Cu5FNKQ1PZlnzDECBL1HeeN?=
- =?us-ascii?Q?NJM4NTK0DfIKiM12C26UVs39JRGkS+nExWIlbTjw9NjrSm821YNVzLoEwWXr?=
- =?us-ascii?Q?BjZax//QI5lAPPZwa4TPbhoD22DtBRW1CNe3qR+9YP+j9W+M7qDelqsAbV6m?=
- =?us-ascii?Q?6ZYJF2JpcCz1WupajHjdbSnAdEiuufZtwAceOdoO6xzzfKzo3zlxrRIL2RNV?=
- =?us-ascii?Q?1gSo15xBLKdCPLNs3jAdpQsGHRtCKIRnDbLlW/L6RAmO32yb7u5Wguhq7U8o?=
- =?us-ascii?Q?KIx8KdOeyd4DlohP9AFt/aZ0KYdXhtaw2Vad/tTgGxiF7FpF/DLmWjfrI+gx?=
- =?us-ascii?Q?qr/A9dyT/rIbwHTzUBKMpi5SXd5BKaH8yfbIcse8wlvyBtWmY27904qn/m/y?=
- =?us-ascii?Q?23Sg04ZJtJEld6mHBeKMeWbCNQkBBpj5KqA3YLfJy6Fsx0dE/MlOawgz8xY8?=
- =?us-ascii?Q?zCyC7g2e448iJs0vT9+E6Ka6KIK42OxJGnLagQyE3870ETOcktDwDlZ01Ynu?=
- =?us-ascii?Q?sQZJ/4LlbKkc7MTiQlw4r6XiKnUrG/1fv5ifaRjIGQ6f/m7MAMU1uetj7Bj7?=
- =?us-ascii?Q?YnFu0mU36Qz3Oi04MI76yyF5bmM4InG1dEYHGGOIko9Mz3CxhV/RIVrIvmBW?=
- =?us-ascii?Q?GOJwUydDDWBu7bXyFzyNp3HwwdDXTVs5aW555HPbBBm6XS/dmraUBq0s22uN?=
- =?us-ascii?Q?obvVx95QXPJiIdgWa9K3E4hWWlvczknWx/mssk57?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5dcda4d-3414-47ed-ff7b-08dc36cae4cf
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 13:00:23.4909
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v1GFNcrqywRQUvcLbyAxJcJq8DSRoXJ4PkgTEjJUl+TeJN1zeXcevxHTTxyoO/r82Dnv484w5U/9FaV/PAeOow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6865
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] mm/madvise: enhance lazyfreeing with mTHP in
+ madvise_free
+Content-Language: en-GB
+To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
+Cc: zokeefe@google.com, shy828301@gmail.com, david@redhat.com,
+ mhocko@suse.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com,
+ peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240225123215.86503-1-ioworker0@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240225123215.86503-1-ioworker0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Peng Fan <peng.fan@nxp.com>
+Hi Lance,
 
-Per i.MX93 Reference Mannual Rev.4, 12/2023, there is no interrupt 268,
-drop it.
+Thanks for working on this!
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx93.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93.dtsi b/arch/arm64/boot/dts/freescale/imx93.dtsi
-index 601c94e1fac8..b8ef9b938856 100644
---- a/arch/arm64/boot/dts/freescale/imx93.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx93.dtsi
-@@ -509,8 +509,7 @@ adc1: adc@44530000 {
- 				reg = <0x44530000 0x10000>;
- 				interrupts = <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
--					     <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
--					     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
-+					     <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX93_CLK_ADC1_GATE>;
- 				clock-names = "ipg";
- 				#io-channel-cells = <1>;
--- 
-2.37.1
+On 25/02/2024 12:32, Lance Yang wrote:
+> This patch improves madvise_free_pte_range() to correctly
+> handle large folio that is smaller than PMD-size
+
+When you say "correctly handle" are you implying there is a bug with the current
+implementation or are you just saying you can optimize this to improve
+performance? I'm not convinced there is a bug, but I agree there is certainly
+room for performance improvement.
+
+Thanks,
+Ryan
+
+> (for example, 16KiB to 1024KiB[1]). It’s probably part of
+> the preparation to support anonymous multi-size THP.
+> 
+> Additionally, when the consecutive PTEs are mapped to
+> consecutive pages of the same large folio (mTHP), if the
+> folio is locked before madvise(MADV_FREE) or cannot be
+> split, then all subsequent PTEs within the same PMD will
+> be skipped. However, they should have been MADV_FREEed.
+> 
+> Moreover, this patch also optimizes lazyfreeing with
+> PTE-mapped mTHP (Inspired by David Hildenbrand[2]). We
+> aim to avoid unnecessary folio splitting if the large
+> folio is entirely within the given range.
+> 
+> On an Intel I5 CPU, lazyfreeing a 1GiB VMA backed by
+> PTE-mapped folios of the same size results in the following
+> runtimes for madvise(MADV_FREE) in seconds (shorter is better):
+> 
+> Folio Size  |    Old     |    New     |  Change
+> ----------------------------------------------
+>       4KiB  |  0.590251  |  0.590264  |     0%
+>      16KiB  |  2.990447  |  0.182167  |   -94%
+>      32KiB  |  2.547831  |  0.101622  |   -96%
+>      64KiB  |  2.457796  |  0.049726  |   -98%
+>     128KiB  |  2.281034  |  0.030109  |   -99%
+>     256KiB  |  2.230387  |  0.015838  |   -99%
+>     512KiB  |  2.189106  |  0.009149  |   -99%
+>    1024KiB  |  2.183949  |  0.006620  |   -99%
+>    2048KiB  |  0.002799  |  0.002795  |     0%
+> 
+> [1] https://lkml.kernel.org/r/20231207161211.2374093-5-ryan.roberts@arm.com
+> [2] https://lore.kernel.org/linux-mm/20240214204435.167852-1-david@redhat.com/
+> 
+> Signed-off-by: Lance Yang <ioworker0@gmail.com>
+> ---
+>  mm/madvise.c | 69 +++++++++++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 58 insertions(+), 11 deletions(-)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index cfa5e7288261..bcbf56595a2e 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -676,11 +676,43 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+>  		 */
+>  		if (folio_test_large(folio)) {
+>  			int err;
+> +			unsigned long next_addr, align;
+>  
+> -			if (folio_estimated_sharers(folio) != 1)
+> -				break;
+> -			if (!folio_trylock(folio))
+> -				break;
+> +			if (folio_estimated_sharers(folio) != 1 ||
+> +			    !folio_trylock(folio))
+> +				goto skip_large_folio;
+> +
+> +			align = folio_nr_pages(folio) * PAGE_SIZE;
+> +			next_addr = ALIGN_DOWN(addr + align, align);
+> +
+> +			/*
+> +			 * If we mark only the subpages as lazyfree,
+> +			 * split the large folio.
+> +			 */
+> +			if (next_addr > end || next_addr - addr != align)
+> +				goto split_large_folio;
+> +
+> +			/*
+> +			 * Avoid unnecessary folio splitting if the large
+> +			 * folio is entirely within the given range.
+> +			 */
+> +			folio_test_clear_dirty(folio);
+> +			folio_unlock(folio);
+> +			for (; addr != next_addr; pte++, addr += PAGE_SIZE) {
+> +				ptent = ptep_get(pte);
+> +				if (pte_young(ptent) || pte_dirty(ptent)) {
+> +					ptent = ptep_get_and_clear_full(
+> +						mm, addr, pte, tlb->fullmm);
+> +					ptent = pte_mkold(ptent);
+> +					ptent = pte_mkclean(ptent);
+> +					set_pte_at(mm, addr, pte, ptent);
+> +					tlb_remove_tlb_entry(tlb, pte, addr);
+> +				}
+> +			}
+> +			folio_mark_lazyfree(folio);
+> +			goto next_folio;
+> +
+> +split_large_folio:
+>  			folio_get(folio);
+>  			arch_leave_lazy_mmu_mode();
+>  			pte_unmap_unlock(start_pte, ptl);
+> @@ -688,13 +720,28 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+>  			err = split_folio(folio);
+>  			folio_unlock(folio);
+>  			folio_put(folio);
+> -			if (err)
+> -				break;
+> -			start_pte = pte =
+> -				pte_offset_map_lock(mm, pmd, addr, &ptl);
+> -			if (!start_pte)
+> -				break;
+> -			arch_enter_lazy_mmu_mode();
+> +
+> +			/*
+> +			 * If the large folio is locked before madvise(MADV_FREE)
+> +			 * or cannot be split, we just skip it.
+> +			 */
+> +			if (err) {
+> +skip_large_folio:
+> +				if (next_addr >= end)
+> +					break;
+> +				pte += (next_addr - addr) / PAGE_SIZE;
+> +				addr = next_addr;
+> +			}
+> +
+> +			if (!start_pte) {
+> +				start_pte = pte = pte_offset_map_lock(
+> +					mm, pmd, addr, &ptl);
+> +				if (!start_pte)
+> +					break;
+> +				arch_enter_lazy_mmu_mode();
+> +			}
+> +
+> +next_folio:
+>  			pte--;
+>  			addr -= PAGE_SIZE;
+>  			continue;
 
