@@ -1,39 +1,38 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5F55D720
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4765D74E
 	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:47:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708937279; cv=none; b=NIWbPGWw5q2QQLxILb9GzFfGLUd89LTztwpFwWacE8Pp4tskqncyV/U3uOqviz2EkBaErs82McF0Lpqt9LgESc4NUxVKsM6BANBb8cQSsYqY1DvwvKWAXKciE+XMsk23hPFFAhZ+4ISXbZGX8heqFRUz9/daWZH77ajVoIedzhM=
+	t=1708937280; cv=none; b=ivt3s0QuyiMQkV0Jdmm4uwCDeQiUFq0iX9IofFFi/FkkIJVkzWrJ1V1R/eMaK/eTKkPkPB05lGVL31NNXxXdi2HNCcWDI+TQbmuOwiGBv/5jXU659kpBEQIySvyGJBXwfso9wghc5CLx4Z18OZBiRgdCspDSKIfM6yLXHZpDejk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708937279; c=relaxed/simple;
-	bh=D4TC7GfNKrDRx6FBTflEjIvY9r2R7Bzpo66QJhUPBxk=;
+	s=arc-20240116; t=1708937280; c=relaxed/simple;
+	bh=zLfCmB2cOAi+rHOF4QFtEGgN1NdsdG4phUDjzA77YMo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OiGCq9klhGCLSQtkSEIKwiLB0pnAhBtKaJ3umStUcHYL6VEpCyG994LgGFgsxpMpthrsVOWdlhIsgd0DC4oFJD3hfnGUs/Ahq2375S5PY0YP/QhPvmk4sNYkuaUS+5o+8d6jWAOhWrhUtXsFWdUoJLHmtn3L4CoPwDtypEw8hPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nnsvRHFM; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=YncPZ4C1gWG0Me8WML/vtJzUvG08cOiyYEGTdlT0Wjt7b0Sh79urjtKCOkU7qr004CPYPOI0cQp6aW5XIrOnlOyeAA+vtiSLHDXUcCaiDKXYz4EPiBK5vMXrocCKi4LXXtHBl50J+rhI1W0vszCncilTv7GG6iUWx0EiJUw01Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dH0GSjK4; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nnsvRHFM"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C7DCDE000E;
-	Mon, 26 Feb 2024 08:47:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dH0GSjK4"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 018E2E0004;
+	Mon, 26 Feb 2024 08:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708937269;
+	t=1708937276;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FNrV5eCxkdETUulcpe7tOcXgNVakjWdt073qLmEHzKs=;
-	b=nnsvRHFMgEKRJoZyGAbi+AKZse9xv51B33lc1Z0J4zvaO782RYKUS7BMZifQk7d3TGKMwL
-	iXTWxUeZHwROSFL1Vgi31G9A4MqX3u9VhyymSETq79LCPahB3fNOqoidt/QZIApbvtxdbI
-	YLSmKNFHYTMDAe362bYGI3jT1KVIqncuKl9qdl9POP0L38Pv+q1KTZMivR8KI8vVTI18o8
-	Fw3NvWkdVv8AahYNsMpOiyOsDzns8hcB5VDXzZsbE4JZ+iRs5gV0VmuFvwY2HW+HbcCCuT
-	iIC8jxf1ONbYURLK9JQy429ZFPneQeHAtBLKcSkXh8rrLKsa8xdhEbDAzza4vg==
+	bh=6/uAsG5Jzk7tw7K+ro+IYvCPbIFvsjURySsIlhGEh+s=;
+	b=dH0GSjK4e4fkWHZQ/bHSXXM3pLkW8TQNEEZwXAUNwiCPRmsaKm6p5WKm7X8+7sYxT1uxaC
+	5P82E9L0ADTNIbkBLZcZHrQ7J3EjScLOJ06sWfTaNrs0EaduIdlG+ulT1oQvGQim9l+ZRk
+	RpEnHh2fJLFTtsa6FBCDN9FYtnWeFAakOSliyy7gmfpZSjq1RLORm0CF8NRFZTnL/4AaYe
+	4vYMnfvUD92CA0hThPulerMFhvAUSD7yUP0645ot0sjYpRq2AF2V6WJ7A250ptdGlllE2F
+	gk3ZUR4EQDa3bxvl5tO4LO26mel8xu0o84RHbMwI3ijuxkE+FtGEfxqN9ZkL3g==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Mon, 26 Feb 2024 09:46:34 +0100
-Subject: [PATCH v3 4/9] drm/vkms: Add typedef and documentation for
- pixel_read and pixel_write functions
+Date: Mon, 26 Feb 2024 09:46:39 +0100
+Subject: [PATCH v3 9/9] drm/vkms: Create KUnit tests for YUV conversions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240226-yuv-v3-4-ff662f0994db@bootlin.com>
+Message-Id: <20240226-yuv-v3-9-ff662f0994db@bootlin.com>
 References: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
 In-Reply-To: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -58,197 +57,278 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
  nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6217;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9589;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=D4TC7GfNKrDRx6FBTflEjIvY9r2R7Bzpo66QJhUPBxk=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl3FAuDkmkYvQPapjBzISBGHDQL2Jvr3QU1BL6VsCW
- Zw58MYqJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZdxQLgAKCRAgrS7GWxAs4gflD/
- 94FqaSHUckFIQxcpQWwMc103UBvVqGmWjfAwMClvrGQjNN+AHPCdAcjl29zng0i73vvTLT72wjxsul
- vLcPgPgsIPsaLG5+2LGDeaBSWsU8knlzYAj/SQ4faimx1i3+EvhCSM0in2herV+j7nb9V0jpv6JfLJ
- fLQ/fuzbYSt5nRDvLOs6VFXrXFHbVg3jNSLcLiWnM21gkT1r+ykQFtpYvaMnRfUZjmo0NAYSToxeEr
- qvVS44T/FnMoBNDiqKc7dWo3HUj073HK2XwbXpiLNLm4U91mdT/qwtuuISeFInI6U7mBJDQzjuyGRi
- ++MIFuvtj6LfMeYCKXIA4NGFFX+o9rMaxKt3qupag7Rp/QI0poiwdbUzwkZv+tLKL0zPrS/7e7ahe/
- 3QNHGhVMgMvOgHPO64YNzt22Fv3O+6biwFx7EHH/kFNeeRN3FZhotVpqj9nVcuuqGNfICbJknWvSL8
- mutkG+beH4TiSCR/XDw4anoNi+MENO6S7EJZ8xjTDiqIo/uGyxY2+OMbeCjS4B6iAtKmmvvZ8idCJf
- b1dp/zzxZrV+Dhhs6AUwXpIFQe7bWaERBQJdY6TS/JeRKdxUn527LkDcQIddpssN+3EMH6vetvV0zC
- bkEVviHKwB1qh/k532LrfHAYLZA0zo0KaHxwdqyOeYIipxkT87TL7wz3v1mg==
+ bh=6XGbmMJEqhgEJWTl1n4SZWXpBs90sgie29UDQGxwWdI=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBl3FAvEEnhg6zHcf91VHkxpZvnc+igqU9NvWEDOEU2
+ qmgridWJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZdxQLwAKCRAgrS7GWxAs4rYZD/
+ 9yRKyAKBE9mNJNDB9x+XcUj3pMp5hbsoHnwnVywLxWGdPWeWMyHpxewWET+xTTZovRHaqU9q5DT3d7
+ VtgU170wcbeh+fAVrAzU4xVS6DxpzyrPKn6r9/Rez4t3oZVlLef9MwrbroGFLQDcMcSpghKVPOIdy4
+ FbtBGTJjfXeIta/ktcOd0cT0O5NC8VbHQ3I8VA93ZRQuJ+3fGNYwdqsFoBAD/G6q7PMK/N2K177Y5P
+ 3IT+I522WvYWzMN78ET0+GrK3SgedWAkUWVb2NnDWqXybg2IvwTr2FeGStn87SNoxgdjn+T88Cs+24
+ SEbbRwdPm87M53w0rW0BvZ07Xp3M/Uv226IcolFLZgyp+IJ+Zx5t/z57N46e+o46iEh4NeZ9+i+9eG
+ jaQr0966oevFylG+LZENFbC+95vp6xtJtx2RIAFa0Qk/U3lHGHygrrHMU0fXitMLxAlsWSn/p1qkkV
+ zaJ7H9n5Lo+JHZhcQqol8Kk42Mix3fBgsnK4p/X6GFAc37JfiHZz2A38oJqW48ROW7gnnPZNuLAYo2
+ 07rvrfLp9tdZE6w4ag6NopAJAlvTQfX7P4RFqL2gc+r0UJclfaem60gmrPosuf9x+JHN0KRSPeN/Jo
+ rewMUXOfiYl3yiEH4lDOIikqUAZ5w91Ag5UEr0qwzHMGi+wDSH9ZUE2OBsfw==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-Introduce two typedefs: pixel_read_t and pixel_write_t. It allows the
-compiler to check if the passed functions take the correct arguments.
-Such typedefs will help ensuring consistency across the code base in
-case of update of these prototypes.
+From: Arthur Grillo <arthurgrillo@riseup.net>
 
-Introduce a check around the get_pixel_*_functions to avoid using a
-nullptr as a function.
+Create KUnit tests to test the conversion between YUV and RGB. Test each
+conversion and range combination with some common colors.
 
-Document for those typedefs.
-
+Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
+[Louis Chauvet: fix minor formating issues (whitespace, double line)]
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_drv.h       | 23 +++++++++++++++++++++--
- drivers/gpu/drm/vkms/vkms_formats.c   |  8 ++++----
- drivers/gpu/drm/vkms/vkms_formats.h   |  4 ++--
- drivers/gpu/drm/vkms/vkms_plane.c     |  9 ++++++++-
- drivers/gpu/drm/vkms/vkms_writeback.c |  9 ++++++++-
- 5 files changed, 43 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/vkms/Makefile                 |   1 +
+ drivers/gpu/drm/vkms/tests/.kunitconfig       |   4 +
+ drivers/gpu/drm/vkms/tests/Makefile           |   3 +
+ drivers/gpu/drm/vkms/tests/vkms_format_test.c | 155 ++++++++++++++++++++++++++
+ drivers/gpu/drm/vkms/vkms_formats.c           |   9 +-
+ drivers/gpu/drm/vkms/vkms_formats.h           |   5 +
+ 6 files changed, 175 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index 18086423a3a7..886c885c8cf5 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -53,12 +53,31 @@ struct line_buffer {
- 	struct pixel_argb_u16 *pixels;
- };
+diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
+index 1b28a6a32948..8d3e46dde635 100644
+--- a/drivers/gpu/drm/vkms/Makefile
++++ b/drivers/gpu/drm/vkms/Makefile
+@@ -9,3 +9,4 @@ vkms-y := \
+ 	vkms_writeback.o
  
-+/**
-+ * typedef pixel_write_t - These functions are used to read a pixel from a
-+ * `struct pixel_argb_u16*`, convert it in a specific format and write it in the @dst_pixels
-+ * buffer.
-+ *
-+ * @dst_pixel: destination address to write the pixel
-+ * @in_pixel: pixel to write
-+ */
-+typedef void (*pixel_write_t)(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel);
+ obj-$(CONFIG_DRM_VKMS) += vkms.o
++obj-$(CONFIG_DRM_VKMS_KUNIT_TESTS) += tests/
+diff --git a/drivers/gpu/drm/vkms/tests/.kunitconfig b/drivers/gpu/drm/vkms/tests/.kunitconfig
+new file mode 100644
+index 000000000000..70e378228cbd
+--- /dev/null
++++ b/drivers/gpu/drm/vkms/tests/.kunitconfig
+@@ -0,0 +1,4 @@
++CONFIG_KUNIT=y
++CONFIG_DRM=y
++CONFIG_DRM_VKMS=y
++CONFIG_DRM_VKMS_KUNIT_TESTS=y
+diff --git a/drivers/gpu/drm/vkms/tests/Makefile b/drivers/gpu/drm/vkms/tests/Makefile
+new file mode 100644
+index 000000000000..2d1df668569e
+--- /dev/null
++++ b/drivers/gpu/drm/vkms/tests/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
 +
- struct vkms_writeback_job {
- 	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
- 	struct vkms_frame_info wb_frame_info;
--	void (*pixel_write)(u8 *dst_pixels, struct pixel_argb_u16 *in_pixel);
-+	pixel_write_t pixel_write;
- };
- 
-+/**
-+ * typedef pixel_read_t - These functions are used to read a pixel in the source frame,
-+ * convert it to `struct pixel_argb_u16` and write it to @out_pixel.
-+ *
-+ * @src_pixels: Pointer to the pixel to read
-+ * @out_pixel: Pointer to write the converted pixel
-+ */
-+typedef void (*pixel_read_t)(u8 *src_pixels, struct pixel_argb_u16 *out_pixel);
++obj-$(CONFIG_DRM_VKMS_KUNIT_TESTS) += vkms_format_test.o
+diff --git a/drivers/gpu/drm/vkms/tests/vkms_format_test.c b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+new file mode 100644
+index 000000000000..cb6d32ff115d
+--- /dev/null
++++ b/drivers/gpu/drm/vkms/tests/vkms_format_test.c
+@@ -0,0 +1,155 @@
++// SPDX-License-Identifier: GPL-2.0+
 +
- /**
-  * vkms_plane_state - Driver specific plane state
-  * @base: base plane state
-@@ -69,7 +88,7 @@ struct vkms_writeback_job {
- struct vkms_plane_state {
- 	struct drm_shadow_plane_state base;
- 	struct vkms_frame_info *frame_info;
--	void (*pixel_read)(u8 *src_buffer, struct pixel_argb_u16 *out_pixel);
-+	pixel_read_t pixel_read;
- };
- 
- struct vkms_plane {
++#include <kunit/test.h>
++
++#include <drm/drm_fixed.h>
++#include <drm/drm_fourcc.h>
++#include <drm/drm_print.h>
++
++#include "../../drm_crtc_internal.h"
++
++#include "../vkms_drv.h"
++#include "../vkms_formats.h"
++
++#define TEST_BUFF_SIZE 50
++
++struct yuv_u8_to_argb_u16_case {
++	enum drm_color_encoding encoding;
++	enum drm_color_range range;
++	size_t n_colors;
++	struct format_pair {
++		char *name;
++		struct pixel_yuv_u8 yuv;
++		struct pixel_argb_u16 argb;
++	} colors[TEST_BUFF_SIZE];
++};
++
++static struct yuv_u8_to_argb_u16_case yuv_u8_to_argb_u16_cases[] = {
++	{
++		.encoding = DRM_COLOR_YCBCR_BT601,
++		.range = DRM_COLOR_YCBCR_FULL_RANGE,
++		.n_colors = 6,
++		.colors = {
++			{"white", {0xff, 0x80, 0x80}, {0x0000, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x80, 0x80, 0x80}, {0x0000, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x00, 0x80, 0x80}, {0x0000, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x4c, 0x55, 0xff}, {0x0000, 0xffff, 0x0000, 0x0000}},
++			{"green", {0x96, 0x2c, 0x15}, {0x0000, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x1d, 0xff, 0x6b}, {0x0000, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT601,
++		.range = DRM_COLOR_YCBCR_LIMITED_RANGE,
++		.n_colors = 6,
++		.colors = {
++			{"white", {0xeb, 0x80, 0x80}, {0x0000, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x7e, 0x80, 0x80}, {0x0000, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x10, 0x80, 0x80}, {0x0000, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x51, 0x5a, 0xf0}, {0x0000, 0xffff, 0x0000, 0x0000}},
++			{"green", {0x91, 0x36, 0x22}, {0x0000, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x29, 0xf0, 0x6e}, {0x0000, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT709,
++		.range = DRM_COLOR_YCBCR_FULL_RANGE,
++		.n_colors = 4,
++		.colors = {
++			{"white", {0xff, 0x80, 0x80}, {0x0000, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x80, 0x80, 0x80}, {0x0000, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x00, 0x80, 0x80}, {0x0000, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x35, 0x63, 0xff}, {0x0000, 0xffff, 0x0000, 0x0000}},
++			{"green", {0xb6, 0x1e, 0x0c}, {0x0000, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x12, 0xff, 0x74}, {0x0000, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT709,
++		.range = DRM_COLOR_YCBCR_LIMITED_RANGE,
++		.n_colors = 4,
++		.colors = {
++			{"white", {0xeb, 0x80, 0x80}, {0x0000, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x7e, 0x80, 0x80}, {0x0000, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x10, 0x80, 0x80}, {0x0000, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x3f, 0x66, 0xf0}, {0x0000, 0xffff, 0x0000, 0x0000}},
++			{"green", {0xad, 0x2a, 0x1a}, {0x0000, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x20, 0xf0, 0x76}, {0x0000, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT2020,
++		.range = DRM_COLOR_YCBCR_FULL_RANGE,
++		.n_colors = 4,
++		.colors = {
++			{"white", {0xff, 0x80, 0x80}, {0x0000, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x80, 0x80, 0x80}, {0x0000, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x00, 0x80, 0x80}, {0x0000, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x43, 0x5c, 0xff}, {0x0000, 0xffff, 0x0000, 0x0000}},
++			{"green", {0xad, 0x24, 0x0b}, {0x0000, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x0f, 0xff, 0x76}, {0x0000, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++	{
++		.encoding = DRM_COLOR_YCBCR_BT2020,
++		.range = DRM_COLOR_YCBCR_LIMITED_RANGE,
++		.n_colors = 4,
++		.colors = {
++			{"white", {0xeb, 0x80, 0x80}, {0x0000, 0xffff, 0xffff, 0xffff}},
++			{"gray",  {0x7e, 0x80, 0x80}, {0x0000, 0x8000, 0x8000, 0x8000}},
++			{"black", {0x10, 0x80, 0x80}, {0x0000, 0x0000, 0x0000, 0x0000}},
++			{"red",   {0x4a, 0x61, 0xf0}, {0x0000, 0xffff, 0x0000, 0x0000}},
++			{"green", {0xa4, 0x2f, 0x19}, {0x0000, 0x0000, 0xffff, 0x0000}},
++			{"blue",  {0x1d, 0xf0, 0x77}, {0x0000, 0x0000, 0x0000, 0xffff}},
++		},
++	},
++};
++
++static void vkms_format_test_yuv_u8_to_argb_u16(struct kunit *test)
++{
++	const struct yuv_u8_to_argb_u16_case *param = test->param_value;
++	struct pixel_argb_u16 argb;
++
++	for (size_t i = 0; i < param->n_colors; i++) {
++		const struct format_pair *color = &param->colors[i];
++
++		yuv_u8_to_argb_u16(&argb, &color->yuv, param->encoding, param->range);
++
++		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.a, color->argb.a), 257,
++				    "On the A channel of the color %s expected 0x%04x, got 0x%04x",
++				    color->name, color->argb.a, argb.a);
++		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.r, color->argb.r), 257,
++				    "On the R channel of the color %s expected 0x%04x, got 0x%04x",
++				    color->name, color->argb.r, argb.r);
++		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.g, color->argb.g), 257,
++				    "On the G channel of the color %s expected 0x%04x, got 0x%04x",
++				    color->name, color->argb.g, argb.g);
++		KUNIT_EXPECT_LE_MSG(test, abs_diff(argb.b, color->argb.b), 257,
++				    "On the B channel of the color %s expected 0x%04x, got 0x%04x",
++				    color->name, color->argb.b, argb.b);
++	}
++}
++
++static void vkms_format_test_yuv_u8_to_argb_u16_case_desc(struct yuv_u8_to_argb_u16_case *t,
++							  char *desc)
++{
++	snprintf(desc, KUNIT_PARAM_DESC_SIZE, "%s - %s",
++		 drm_get_color_encoding_name(t->encoding), drm_get_color_range_name(t->range));
++}
++
++KUNIT_ARRAY_PARAM(yuv_u8_to_argb_u16, yuv_u8_to_argb_u16_cases,
++		  vkms_format_test_yuv_u8_to_argb_u16_case_desc);
++
++static struct kunit_case vkms_format_test_cases[] = {
++	KUNIT_CASE_PARAM(vkms_format_test_yuv_u8_to_argb_u16, yuv_u8_to_argb_u16_gen_params),
++	{}
++};
++
++static struct kunit_suite vkms_format_test_suite = {
++	.name = "vkms-format",
++	.test_cases = vkms_format_test_cases,
++};
++
++kunit_test_suite(vkms_format_test_suite);
++
++MODULE_LICENSE("GPL");
 diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index cb7a49b7c8e7..1f5aeba57ad6 100644
+index 515c80866a58..20dd23ce9051 100644
 --- a/drivers/gpu/drm/vkms/vkms_formats.c
 +++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -262,7 +262,7 @@ void vkms_writeback_row(struct vkms_writeback_job *wb,
-  *
-  * @format: 4cc of the format
-  */
--void *get_pixel_conversion_function(u32 format)
-+pixel_read_t get_pixel_read_function(u32 format)
- {
- 	switch (format) {
- 	case DRM_FORMAT_ARGB8888:
-@@ -276,7 +276,7 @@ void *get_pixel_conversion_function(u32 format)
- 	case DRM_FORMAT_RGB565:
- 		return &RGB565_to_argb_u16;
- 	default:
--		return NULL;
-+		return (pixel_read_t)NULL;
- 	}
+@@ -7,6 +7,8 @@
+ #include <drm/drm_rect.h>
+ #include <drm/drm_fixed.h>
+ 
++#include <kunit/visibility.h>
++
+ #include "vkms_formats.h"
+ 
+ /**
+@@ -175,8 +177,10 @@ static void ycbcr2rgb(const s16 m[3][3], u8 y, u8 cb, u8 cr, u8 y_offset, u8 *r,
+ 	*b = clamp(b_16, 0, 0xffff) >> 8;
  }
  
-@@ -287,7 +287,7 @@ void *get_pixel_conversion_function(u32 format)
-  *
-  * @format: 4cc of the format
-  */
--void *get_pixel_write_function(u32 format)
-+pixel_write_t get_pixel_write_function(u32 format)
+-static void yuv_u8_to_argb_u16(struct pixel_argb_u16 *argb_u16, const struct pixel_yuv_u8 *yuv_u8,
+-			       enum drm_color_encoding encoding, enum drm_color_range range)
++VISIBLE_IF_KUNIT void yuv_u8_to_argb_u16(struct pixel_argb_u16 *argb_u16,
++					 const struct pixel_yuv_u8 *yuv_u8,
++					 enum drm_color_encoding encoding,
++					 enum drm_color_range range)
  {
- 	switch (format) {
- 	case DRM_FORMAT_ARGB8888:
-@@ -301,6 +301,6 @@ void *get_pixel_write_function(u32 format)
- 	case DRM_FORMAT_RGB565:
- 		return &argb_u16_to_RGB565;
- 	default:
--		return NULL;
-+		return (pixel_write_t)NULL;
- 	}
+ 	static const s16 bt601_full[3][3] = {
+ 		{ 256, 0,   359 },
+@@ -237,6 +241,7 @@ static void yuv_u8_to_argb_u16(struct pixel_argb_u16 *argb_u16, const struct pix
+ 	argb_u16->g = g * 257;
+ 	argb_u16->b = b * 257;
  }
++EXPORT_SYMBOL_IF_KUNIT(yuv_u8_to_argb_u16);
+ 
+ /*
+  * The following functions are read_line function for each pixel format supported by VKMS.
 diff --git a/drivers/gpu/drm/vkms/vkms_formats.h b/drivers/gpu/drm/vkms/vkms_formats.h
-index cf59c2ed8e9a..3ecea4563254 100644
+index 5a3a9e1328d8..4245a5c5e956 100644
 --- a/drivers/gpu/drm/vkms/vkms_formats.h
 +++ b/drivers/gpu/drm/vkms/vkms_formats.h
-@@ -5,8 +5,8 @@
+@@ -13,4 +13,9 @@ struct pixel_yuv_u8 {
+ 	u8 y, u, v;
+ };
  
- #include "vkms_drv.h"
- 
--void *get_pixel_conversion_function(u32 format);
-+pixel_read_t get_pixel_read_function(u32 format);
- 
--void *get_pixel_write_function(u32 format);
-+pixel_write_t get_pixel_write_function(u32 format);
- 
++#if IS_ENABLED(CONFIG_KUNIT)
++void yuv_u8_to_argb_u16(struct pixel_argb_u16 *argb_u16, const struct pixel_yuv_u8 *yuv_u8,
++			enum drm_color_encoding encoding, enum drm_color_range range);
++#endif
++
  #endif /* _VKMS_FORMATS_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index d5203f531d96..f68b1b03d632 100644
---- a/drivers/gpu/drm/vkms/vkms_plane.c
-+++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -106,6 +106,13 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
- 		return;
- 
- 	fmt = fb->format->format;
-+	pixel_read_t pixel_read = get_pixel_read_function(fmt);
-+
-+	if (!pixel_read) {
-+		DRM_WARN("Pixel format is not supported by VKMS planes. State is inchanged\n");
-+		return;
-+	}
-+
- 	vkms_plane_state = to_vkms_plane_state(new_state);
- 	shadow_plane_state = &vkms_plane_state->base;
- 
-@@ -124,7 +131,7 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
- 	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
- 			drm_rect_height(&frame_info->rotated), frame_info->rotation);
- 
--	vkms_plane_state->pixel_read = get_pixel_conversion_function(fmt);
-+	vkms_plane_state->pixel_read = pixel_read;
- }
- 
- static int vkms_plane_atomic_check(struct drm_plane *plane,
-diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
-index c8582df1f739..c92b9f06c4a4 100644
---- a/drivers/gpu/drm/vkms/vkms_writeback.c
-+++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-@@ -140,6 +140,13 @@ static void vkms_wb_atomic_commit(struct drm_connector *conn,
- 	if (!conn_state)
- 		return;
- 
-+	pixel_write_t pixel_write = get_pixel_write_function(wb_format);
-+
-+	if (!pixel_write) {
-+		DRM_WARN("Pixel format is not supported by VKMS writeback. State is inchanged\n");
-+		return;
-+	}
-+
- 	vkms_set_composer(&vkmsdev->output, true);
- 
- 	active_wb = conn_state->writeback_job->priv;
-@@ -150,7 +157,7 @@ static void vkms_wb_atomic_commit(struct drm_connector *conn,
- 	crtc_state->wb_pending = true;
- 	spin_unlock_irq(&output->composer_lock);
- 	drm_writeback_queue_job(wb_conn, connector_state);
--	active_wb->pixel_write = get_pixel_write_function(wb_format);
-+	active_wb->pixel_write = pixel_write;
- 	drm_rect_init(&wb_frame_info->src, 0, 0, crtc_width, crtc_height);
- 	drm_rect_init(&wb_frame_info->dst, 0, 0, crtc_width, crtc_height);
- }
 
 -- 
 2.43.0
