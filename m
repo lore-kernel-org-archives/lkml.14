@@ -1,134 +1,158 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B5F60B9F;
-	Mon, 26 Feb 2024 16:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE15B12CDB8;
+	Mon, 26 Feb 2024 16:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966178; cv=none; b=UV+p8mXZyF4rPJC7HWrO2HOSiqb1s+SGKUx4m86AAM9QfHv6BzQd1rh2u+dyjY8srIX7mdFjazzCBkTn2Y1lpMAoGSybV7ZudppIDbEhzFsjAPLn8TtEwR7H/ms5a9RmHi29PpVHSEA/K3rkaru89sQITGpDPxNxNgS2/3rwM7A=
+	t=1708966183; cv=none; b=HhnoibVq/854MVEe4AjrotlwnJ1p/uFJbNMO3iD4L+gGHrDhsG4dWkofMSqbN/NecMkcXSB/onwuTJYFhMLeh0Ik1pyxWExdSEklLB6pbfm4/i4fnLcbf+xojOhVJlPh0KB8JwYeQW2lM7lHZKbshmqdOV43Gc38Nj6scl7kzaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966178; c=relaxed/simple;
-	bh=qgSbrEvPXdgNiC/UJm11zFW9tgsbpt+8ylKHzAn/bhs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HR6m684adtXxOtAEjubArg48RXaO8Uy1GOm2XZlv9PBmtNsPSb8NefK8ln5IqN8VvV0HogugPNAvMxJDsM+tR1tHEkFQttOUQbK7+5t42CAdBEsfb3mhBKWFmiY2vOokzcj+8GYrfCWpYodxZFpHtaQ8+Nvnj3bu9MOl00IokOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O1Fo3E7g; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O1Fo3E7g"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41QGh0Rl003527;
-	Mon, 26 Feb 2024 16:47:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=UdqOq7Lx+mxt1cvwHHbViM4XUO6JWwWx781fxPxQPO8=;
- b=O1Fo3E7gRgmssVTQRm+zDcPE9BpTYK/yPOvocD7WgmNGodQHNg+OeqrNokSZNOiwyCp8
- m7ygfj4PjDSeAx6CMEaZJL8TVJwtfNTFzT80cUp2/1LQGU7jDOpev7yuP9kadDVYHM/x
- 4ozFtXiCDlvs4yXpt19HRFM66QF12FWV59nGIdfehej6zwCgZWcTuQ2uaV1cEamF5cCJ
- S9Lgn0cNvnfi0w5ld/FyXw9tUfAnatrm4+nVnlPT/0DAnbcurzsTRto8abt8NcJgfJpI
- R0UIkMuWAG+RwasK9nS2lYyfdL+DWTQXYMPN7hH5oNvYPtl8UhhL8fyjy/hBZ9UhKB+2 fg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wgxdfr3gg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 16:47:07 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41QGjEsc011226;
-	Mon, 26 Feb 2024 16:47:07 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wgxdfr3fu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 16:47:07 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41QF8J1a021278;
-	Mon, 26 Feb 2024 16:47:06 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfusntdaw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 Feb 2024 16:47:05 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41QGl14M24183328
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 Feb 2024 16:47:04 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CAC892004B;
-	Mon, 26 Feb 2024 16:47:01 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8799C20040;
-	Mon, 26 Feb 2024 16:47:00 +0000 (GMT)
-Received: from [9.171.38.134] (unknown [9.171.38.134])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 26 Feb 2024 16:47:00 +0000 (GMT)
-Message-ID: <f7f47717-276f-47f5-af7d-4117b2eb1338@linux.ibm.com>
-Date: Mon, 26 Feb 2024 17:47:00 +0100
+	s=arc-20240116; t=1708966183; c=relaxed/simple;
+	bh=CC8Bq496gBK0CbLLvpBBLkKHW8DXcXn0l6RFjvn84dI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dZ+HCN38WFQtRGwg54SLIRYSW6CjaJmF+LkcjwhujaJixykbFRnS1W2sHIeJqZCHpV878EoK+7iUKhTHLLXcjaLeetwnHtMZJQ/86qNB3ox/tbcFG/rnrvWF2zlgIKP9DTBifr+gJTICVhxngopan831Mz7bWthJT0b/qan4mwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-59fc31c57easo1118768eaf.1;
+        Mon, 26 Feb 2024 08:49:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708966181; x=1709570981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6auEU26+vrivbR5NR8j7v17Mmzz73LvUwHdwC5AeGQI=;
+        b=OAvrJH7nrH+LBpnk81rIE6CXBSzWAoLIm2SIwQq4Td8ZaibsTXUZVqmWpacwxDdjCo
+         5FJN3t8ifF9ptfm2IKTunY9aKKL8WenmrA3X56GRJ6Uj94672nklD8CrgZX4j59BNdWG
+         EPiaYei7SOhfmQXL50IiWqkMJ736gMdD+w4ceWLFkvj0IIcYaAq6HdpsKjmK+XExpKl2
+         ILKQJ3xXMKhxXoS2ZzCCe8xfPCH6Ow9ZhJYgJPO4qWSFsz2DAhLX8WgMee2N8eytE+z6
+         OGKW/Xfgsltz1ArZ/Ixlox9gFFZg1zXW72nLtKlVHmDKS3hh8E4bNO5UFQWI1w3gZXwT
+         IZEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgrAtDCHjAib0yfTYpF7QmOpFx/yKbLSzOStPpTxxpCVMjvTO81eS8OcSYhomh4yYeZTugt4epIjRWUnnYqQwmdnwA7O49ULXUnoc3
+X-Gm-Message-State: AOJu0YzgORBijK5sMRLtNxjz1/fXx1La/ZczLoTM3k34Ai9MWMUfzifC
+	ipuhGupJmM5ZqZStQ5JTmUvqehD4wo3EJRt5hdOus2l+laZJPz5bNVc0f6X5p3nSNDdP3pML1QF
+	+7fhrSEG6pzJ8J7otTWLb+k/hFZQ=
+X-Google-Smtp-Source: AGHT+IF2JQco6zQ78x+kKOkBl2hjfXBvWl2zy1rri4zCpwQhTQK5Go5bYKfIaVFZrCNjNDYo5dR0t5I1Qcxzy4qw5Ek=
+X-Received: by 2002:a4a:d996:0:b0:5a0:4216:c5f0 with SMTP id
+ k22-20020a4ad996000000b005a04216c5f0mr6957887oou.0.1708966180928; Mon, 26 Feb
+ 2024 08:49:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 06/13] net: Add struct kernel_ethtool_ts_info
-To: Kory Maincent <kory.maincent@bootlin.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
-        Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King
- <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Radu Pirea <radu-nicolae.pirea@oss.nxp.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Rahul Rameshbabu <rrameshbabu@nvidia.com>
-References: <20240226-feature_ptp_netnext-v9-0-455611549f21@bootlin.com>
- <20240226-feature_ptp_netnext-v9-6-455611549f21@bootlin.com>
-Content-Language: en-US
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <20240226-feature_ptp_netnext-v9-6-455611549f21@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: LQqKCQFvXnND9bQqkLWZGehnxJwN6suK
-X-Proofpoint-ORIG-GUID: GCCOKM-MW73RDG1Trk6kCKNNLXEvb2s1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_11,2024-02-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- adultscore=0 impostorscore=0 clxscore=1011 bulkscore=0 mlxscore=0
- malwarescore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402260127
+References: <6021126.lOV4Wx5bFT@kreacher> <2175138.irdbgypaU6@kreacher>
+In-Reply-To: <2175138.irdbgypaU6@kreacher>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 26 Feb 2024 17:49:29 +0100
+Message-ID: <CAJZ5v0hbSMQVaBry_hye9wrEOjMq2_anhbV0B48eTF8FWYpFXw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] ACPI: scan: Relocate acpi_bus_trim_one()
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	"Russell King (Oracle)" <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 26.02.24 14:39, Kory Maincent wrote:
-> In prevision to add new UAPI for hwtstamp we will be limited to the struct
-> ethtool_ts_info that is currently passed in fixed binary format through the
-> ETHTOOL_GET_TS_INFO ethtool ioctl. It would be good if new kernel code
-> already started operating on an extensible kernel variant of that
-> structure, similar in concept to struct kernel_hwtstamp_config vs struct
-> hwtstamp_config.
-> 
-> Since struct ethtool_ts_info is in include/uapi/linux/ethtool.h, here
-> we introduce the kernel-only structure in include/linux/ethtool.h.
-> The manual copy is then made in the function called by ETHTOOL_GET_TS_INFO.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+On Mon, Feb 26, 2024 at 5:47=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
+t> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Relocate acpi_bus_trim_one() (without modifications) so as to avoid the
+> need to add a forward declaration of it in a subsequent patch.
+>
+> No functional changes.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
+>
+> v1 -> v2: Add R-by from Jonathan.
 
-For drivers/s390/net/qeth_ethtool.c  :
-Acked-by: Alexandra Winter <wintera@linux.ibm.com>
+I actually forgot to add the R-bys, but let's assume they are here (no
+need to look at the first two patches again).
+
+> ---
+>  drivers/acpi/scan.c |   52 ++++++++++++++++++++++++++-------------------=
+-------
+>  1 file changed, 26 insertions(+), 26 deletions(-)
+>
+> Index: linux-pm/drivers/acpi/scan.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/acpi/scan.c
+> +++ linux-pm/drivers/acpi/scan.c
+> @@ -244,6 +244,32 @@ static int acpi_scan_try_to_offline(stru
+>         return 0;
+>  }
+>
+> +static int acpi_bus_trim_one(struct acpi_device *adev, void *not_used)
+> +{
+> +       struct acpi_scan_handler *handler =3D adev->handler;
+> +
+> +       acpi_dev_for_each_child_reverse(adev, acpi_bus_trim_one, NULL);
+> +
+> +       adev->flags.match_driver =3D false;
+> +       if (handler) {
+> +               if (handler->detach)
+> +                       handler->detach(adev);
+> +
+> +               adev->handler =3D NULL;
+> +       } else {
+> +               device_release_driver(&adev->dev);
+> +       }
+> +       /*
+> +        * Most likely, the device is going away, so put it into D3cold b=
+efore
+> +        * that.
+> +        */
+> +       acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
+> +       adev->flags.initialized =3D false;
+> +       acpi_device_clear_enumerated(adev);
+> +
+> +       return 0;
+> +}
+> +
+>  static int acpi_scan_hot_remove(struct acpi_device *device)
+>  {
+>         acpi_handle handle =3D device->handle;
+> @@ -2547,32 +2573,6 @@ int acpi_bus_scan(acpi_handle handle)
+>  }
+>  EXPORT_SYMBOL(acpi_bus_scan);
+>
+> -static int acpi_bus_trim_one(struct acpi_device *adev, void *not_used)
+> -{
+> -       struct acpi_scan_handler *handler =3D adev->handler;
+> -
+> -       acpi_dev_for_each_child_reverse(adev, acpi_bus_trim_one, NULL);
+> -
+> -       adev->flags.match_driver =3D false;
+> -       if (handler) {
+> -               if (handler->detach)
+> -                       handler->detach(adev);
+> -
+> -               adev->handler =3D NULL;
+> -       } else {
+> -               device_release_driver(&adev->dev);
+> -       }
+> -       /*
+> -        * Most likely, the device is going away, so put it into D3cold b=
+efore
+> -        * that.
+> -        */
+> -       acpi_device_set_power(adev, ACPI_STATE_D3_COLD);
+> -       adev->flags.initialized =3D false;
+> -       acpi_device_clear_enumerated(adev);
+> -
+> -       return 0;
+> -}
+> -
+>  /**
+>   * acpi_bus_trim - Detach scan handlers and drivers from ACPI device obj=
+ects.
+>   * @adev: Root of the ACPI namespace scope to walk.
+>
+>
+>
