@@ -1,245 +1,131 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2080.outbound.protection.outlook.com [40.107.7.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28AD13329A;
-	Mon, 26 Feb 2024 16:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966755; cv=fail; b=jOSFgPm0egHKgHAjIYmQugZSSJIRqVPEPOoGMZNm2XdglKceKwaXtuphcQaBNEPRlfCo+W+p3VPBoQ/g1Rq9EboHWDFynXbf3BmOOkMCzTjQK27f+2zZVbHxwqqctjX1kFvif8fMbPnt2RG3NB8n3yTbW8voA+Yp8S/DFjK14lQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966755; c=relaxed/simple;
-	bh=xryRZw20WvtTGLpfeLlmCFH779eS89kFp+E1behhcnc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=CprgDeTk/cwayDYSqr+Lwl0N37TH6w9PJQfuYjHIjOpp48KJKmBqHcN69ZcAH2FcbbtKQj0fjfzeWswowei+DKVV8VCYDCjpiyl27nF0q2dxO+uAGHN22Yc0vThcasoLM1RkxNmBxxz0CkTIIPBE1DfseF1lXW4BFc5VZ1TIXpo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=BQXNqjLC; arc=fail smtp.client-ip=40.107.7.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D43713EFEC
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708966760; cv=none; b=rGxZnXitIB5r4JPdF2IPGc1hqbAPC9wbV5ByF29tEpebLY/wTUK7NbYh5a+++eiVsy88vyDnf4dlsNC8OEkgl8F9l+nyAwRVZqCQMAEz8qljscldRlZRpl3Cz2hanwRXM238A8waw+28dpDORx8/jKJ4sWLL9wdCrH+ikqBZZn0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708966760; c=relaxed/simple;
+	bh=Er5kYmOwbzt4vnhThP5tnUWt8owS9wSl1gKtGt0Oo4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ifJ+rOu56KENjB+KmHS24eBZ8PCviHDav2dnT823sVYxJUBn9XnI6gr0J4Mq4SoHODpTJSTID61ZKI1TuwiiMFfZQnDD6h9XDEv197PdNbR2R+TNPQ71bK1MccMuTlUPXT7arfXHLlACw5wDPfKX3c8moOUgRkro3mdgZ1SXEsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MqEW7hdk; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BQXNqjLC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XQC1BiONsbiIYgKbj8tQy5vekQ39D8rkTvHsYDKPvkH1B2VpN5VPaHh0wX3iCLBJd7ILWPB5JnAbMKoeGs5B3v6AzLCO2rllf+e4MX7cr1o8c9mU0dPcrav5p7xIvI4mled1qN/pUZm1pRl0USqDZiPFUWcnrROBlc7FtEbOaYoO0/4nAwsKK/DS03PY5jufAHrotql0CxCEeifb4/T8cPZIA7VUEHFH8ysVfZGdZlDxTxAB5nU14zyNESX+MiaHWYvEJAsv91AaI+15F6ogM+ducgOw5DxgUqktwAonvSsXxzMwJx3YVYdA1y4/mI3iF7SAx8KSEv/UinLvQpOsdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RxnYoO6KlKEWzfj5f/hxd6meXhnIb0JaVQ0DTNRBz0E=;
- b=i+wtkTyhoC3xsEvKGt+a4k+oqA+ghCtXamPUqMn4wJj1sWDmNI/78gj8HIPD7mtDKaArmKF6vn0eRhdsjQdrNxnqM98wOCk/4RaS1XgA2C7cVa+mPB7lfeHIxPIKzezj5Fp5gXZ2sJA1lmRU3O099TqI1/SIf05yLylDOk067bUj8GB3yquEGv6y4vPTutQRujWrLdsi5rVLNouPjk/0z01ZyG+OVpcC0B5D7L6BY7rPyh8b3l/PDXY52xQA3L314tPS7V4f4mxcQJ9oWOr1hk88bmsyeLPUygXB8aCCPLC7j5dDdEpBpvfF4ffTHk4iWT9cs9ZltWkrOEe2nqoUyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RxnYoO6KlKEWzfj5f/hxd6meXhnIb0JaVQ0DTNRBz0E=;
- b=BQXNqjLC061hvL+stn8QElu19ZPCZEhtR9iVk5Po2sNI5rTPKXGZlSImsNwdCmrglNkOAFBwvPr3BghQdDwbl1F69VUST1Fcjm4q057yVKlSqbzjDtUFm0O6atq+4KiEqzezqdzvBoCHCVNn37x8k8vIEIH8uwKnj6MNFdCUNfM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DBBPR04MB7867.eurprd04.prod.outlook.com (2603:10a6:10:1e5::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.31; Mon, 26 Feb
- 2024 16:59:10 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9af4:87e:d74:94aa]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9af4:87e:d74:94aa%7]) with mapi id 15.20.7316.032; Mon, 26 Feb 2024
- 16:59:09 +0000
-Date: Mon, 26 Feb 2024 11:58:58 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v8 05/10] PCI: dwc: ep: Rename dw_pcie_ep_init_complete()
- to dw_pcie_ep_init_registers()
-Message-ID: <ZdzDUq8vWUTnoHnd@lizhi-Precision-Tower-5810>
-References: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
- <20240224-pci-dbi-rework-v8-5-64c7fd0cfe64@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240224-pci-dbi-rework-v8-5-64c7fd0cfe64@linaro.org>
-X-ClientProxiedBy: BYAPR05CA0063.namprd05.prod.outlook.com
- (2603:10b6:a03:74::40) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqEW7hdk"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33d90b322b0so863560f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:59:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708966757; x=1709571557; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eptKKzttKp+WY9FQ4xCv+8P8GHnHxpcwbYYbruZKAew=;
+        b=MqEW7hdkm8jgabZ31Ov0sQndiypvCO2eR+GEEhFEsNe9/cEAbGLKcQVU8wvuQ3QPxS
+         22S/0t8IDHR4OGqn0DYcfBUDvl+jR9LNr1XsWvVPKIg8Ip9HV0/mN+zFYHeg8MB5kAGd
+         iQ6dJhJqwhltpU8q+KNncCl/WBbcHktCxhniAExoNaLBv0lte02XRg5Rffn3LUb9ub2Z
+         7Fpl0uIsfEVhXzVM0pyamRJyge8cf066ZOSyMprCMBku0Oe34IWMODwq/QcJWYmos2VP
+         PsznyQm60wWABrMevIfuknTbbmwy8DUwS0qrqzHh+/R+iqgG+j9aRs1QCBOtNf9eq/wE
+         UskA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708966757; x=1709571557;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eptKKzttKp+WY9FQ4xCv+8P8GHnHxpcwbYYbruZKAew=;
+        b=jlySjCjIc7MKMLJcqmOjcEBeMBABIh3OotF94GEO9KBGiziB6oacfPkR31dPzuYmkT
+         ZbU301OY7QmaowdTVuqcsE7soXcSt9weIQRVovt4lZxM9VDf3mT70gxPmegY2indunYs
+         dL9yg8eaJ/or3DRCJvPOHBAtbM3kidNzrj3XZa5pWTAzYf+HIQA3dRPhLf/HaRF6meB7
+         073N/q6IZcKiTi/iRLc7FSi9juZcjfaxFrIRZIiHIoHGpVC12gCgwl7RqdYeR4oQl0Gg
+         Cjx6fDxwFOtNTWcP/Ak3xsAc1d9NiAEcd1kSKJH/a5ZBeW8DIJv2XA3+82qloSJ19afS
+         ld1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUk9KleduPKUKqV1HCsdT7MF7WnfpGP6rd71H3xbwSy3t32E44rmnm5/BHYsoITYDifz7ECr+wIvpoyrSL+MHahf0B7Wkx7wBmSD/GR
+X-Gm-Message-State: AOJu0YwBZGZK5zeJTkcxltQSPTxjkznZMBxvDbeTUS1T/s7d4OoX9Rdd
+	pv5/NxtLy+m8knlUnxhBep4R6eOEYrQO1lMHW47+Rn4Wz5GZesq0
+X-Google-Smtp-Source: AGHT+IHxRmyFfLI5Nxsic5nNOcezskF5ApgJeljJNXcoAx4s/4UwsRLvaSZxfN1YaExD612ZVRPu+Q==
+X-Received: by 2002:a05:6000:1e09:b0:33c:fa05:68b with SMTP id bj9-20020a0560001e0900b0033cfa05068bmr5217307wrb.0.1708966756773;
+        Mon, 26 Feb 2024 08:59:16 -0800 (PST)
+Received: from [192.168.0.104] (p54a07fa0.dip0.t-ipconnect.de. [84.160.127.160])
+        by smtp.gmail.com with ESMTPSA id by15-20020a056000098f00b0033da933b250sm8942363wrb.5.2024.02.26.08.59.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 08:59:16 -0800 (PST)
+Message-ID: <236c7275-c8db-4ed8-9568-dd21c5834fc9@gmail.com>
+Date: Mon, 26 Feb 2024 17:59:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7867:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1336876-c741-4897-abfa-08dc36ec4043
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	lECJoM4lDQaxlNkQTuxADwUO3YRl7GTmsRW+jS1cC3Ec3wX0tn9VEYtByKKkJdb7WRcrT+2UR9GzbcobaZjUUR4cwSf3iOiEiNUf8TYDfy+w+H0SArW4CxZx3ERtxJjnVzi2/C2RCYSt9LAmt/hyo0dhKznKdugG8Iw0oor7K1es4GaqVSP/1+aj/UktIL5WN/DAm/pLnStUAIWonsuafKH36e+bQa0arnOGHpbX99b87d3QqzFTFm/Inzt8+XJP4wwW/tvOgC5XzFmSniJNdjMb3m9MWwlKq/DSC0y3RcqGTsrd4vlUN1A+1m74HJF9UhooI2D3+too1n85UkGdrtFz3uDJ03IAOQJqdj3mwK61TkrkH/uUyrrF+yfW9lYU9XyIakY32hDRzDTdpemw0smUhkqxbaF0ZuSD0SCNdDgkeTVuuboKroVsX711DRq85S8oVZuTLLuyMqFcd8qPR6onnyXbVw2J2duw4UUkkvqrSF1VH1q7Ys0W0TXFyLeVgBt4WjCMupUcPDQpC7SeoFDT8GcV54eE8YOpDDTEzhy9MoFZReWc3yxGH+1nEM+gcyGByesU5nwga2aMpoP8BQDhM/rUsbN4QK6m4efjJ630CQtzkoxx4woUPVCWwf5bWfaho/jp5H/Dxi3mOjwNcznNgHlKNbT8O31ygjnmJHBFejaQoUB0MtAopFgfPxleEI68tvActuFfDnqU+3GZs3H90uQABXV3Q51miS9Nu3I=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?k7uWCshUUwsT+lM871dGjnuvMOYM2f+Gblr1Avt9fY8ZaQE66k4o3Wz8Bei0?=
- =?us-ascii?Q?fHRJg4ygePvW6R8/gfhZZW46AnnQ9BDrajyq4o8FDDoYYS4MHJydw6XXsrr+?=
- =?us-ascii?Q?rADYVkguh/ikWrtdpIKB5ZDgIaaqXh8G7VKfwnCgIGGTmnuJMBz42mRw6+wj?=
- =?us-ascii?Q?Ahusy7XY6ed1EerCpKnmFK2jIEcNv+mDWZGjIxFK2BFQAkhwyQ7p0rswwdbN?=
- =?us-ascii?Q?Z5LGk1kzr3xAEYG5qZ+qUXH1A3lyUh2by+CTCtkkg/pe0QRpMQKCXChv1te6?=
- =?us-ascii?Q?jvi68rSPLtNnLj6OH5Fh8bB0UeKECm7ylnkfm1M09fXdgjtpk82wzugNRfOk?=
- =?us-ascii?Q?LK5g/4JdlVuae8lPQkowTo8KaDcEJVf//orwiCFhdRRyc/0f8vObhZ1xmuEM?=
- =?us-ascii?Q?q4q77XklJlyTStBMZFvBks+7mN6f7SIGpjRkWQ54Jdv8U3G9QpWOTX9Yo6th?=
- =?us-ascii?Q?A8D6OWGTC+2RZZkDm4NK1OT12LUKYGEUgD7kMfy8wTwA2Iyc3DHLG0L0wiKJ?=
- =?us-ascii?Q?Xg4Rjn2H1XVMZWMONPSL5wQ9M2aExqr4i/zpdz9RH6dBjltTWZeOOQOtcW/S?=
- =?us-ascii?Q?9CpaCEs7Tf/lbJW6XAcQpX3HFpkQQszqZc1lerXi900djck3OqJw/uZ+QY7E?=
- =?us-ascii?Q?0wdMye+cqws62aHty3cggyDZdo8sV0uwj2g7pWUcdtm/zi5fi4pCELBWStnX?=
- =?us-ascii?Q?9vQTLiQLHEXa/jPSBq4kYB+zz3ukcDLT4bC6nqgy4FLqZNc6kxVwCounnynu?=
- =?us-ascii?Q?jzzy5DgXJAfnbNJgwE3zYtjzN2KjUcz0XOJMjNBjqjMK2y6RDX7noRLxId6N?=
- =?us-ascii?Q?+savGe1dGiOyDsi6UgZWv50xYB7qDyzeCi+TsOp43Hc5M7tndqMQNg58AOTt?=
- =?us-ascii?Q?gz0usMP6dHadFU8KvFYPrh/dRE98xZ6FT8ILJisBJSRuAfkuOzckO4TEHjLD?=
- =?us-ascii?Q?zepmFDLe9rsSdmchby1EWXCrGfofjBDbFV5EwDbvIhoFOwiQWqJATsDKhzmV?=
- =?us-ascii?Q?hA2XMTRDD3J0VZMik5tf6qaKwFJqh1yLvNl+2OPznATwyeWhq4AEiXl89Ijg?=
- =?us-ascii?Q?b8Qe+mRErrWRPyVjaPE+VB1v9XVXxeKDnIKYJpR6X6zMw9u1MIfiO3CRHDTC?=
- =?us-ascii?Q?7FhOktRijiINKE+rHSwjtDZZotsMrT8Nz5HvCCSQNojTagEgSHaphEK119s1?=
- =?us-ascii?Q?p9dHcUeXND9tv7R2/ipIJlaOr75NRrOhaHjuZoyCehn5AgeRHilrS9VYBit4?=
- =?us-ascii?Q?ih5M2w8NbvFNDHgT2kqJqzQv6JvZR5MlGjj3gwdSOK8F7+alwniwEDaLX2O5?=
- =?us-ascii?Q?Vc3wTwonJkPFvTJNtnbE61cKXmrkB5MrAjWqQHVIWaAEx9R7YbHItoRf02JA?=
- =?us-ascii?Q?gsGu5u0/EXCu8GStOhSnl7BYZChW1QFm+r6LWrbVbeXRqwHnKNdtM7C+N6vl?=
- =?us-ascii?Q?1u1kjxVbAgtBMWvdQx3w2kD3dhIST5/PeryYFpXRw3+fJV9pMGBrhGwtLpgv?=
- =?us-ascii?Q?sD3g2Gwa7EyV0waQqhwBbH+Tz93VDTbBvx9sqN7YgbcQdvyi1vBv82NsB5tI?=
- =?us-ascii?Q?1a8jWAxCWZw+YV8zM3Z4Ddp3ugnWqUzBQqc1HsJs?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1336876-c741-4897-abfa-08dc36ec4043
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 16:59:09.9246
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6ba0TCFmi0oRbHexaowphp9Cm40fQ6z85CzdO2mLS1Oc5aUpqPZXCgUIYHAczA3YLY7llbg6gjHghrAB5EeAdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7867
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/20] Staging: rtl8192e: Rename function
+ rtllib_rx_ADDBAReq()
+Content-Language: en-US
+To: Tree Davies <tdavies@darkphysics.net>, gregkh@linuxfoundation.org,
+ anjan@momi.ca
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240226035624.370443-1-tdavies@darkphysics.net>
+ <20240226035624.370443-2-tdavies@darkphysics.net>
+From: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+In-Reply-To: <20240226035624.370443-2-tdavies@darkphysics.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 24, 2024 at 12:24:11PM +0530, Manivannan Sadhasivam wrote:
-> The goal of the dw_pcie_ep_init_complete() API is to initialize the DWC
-> specific registers post registering the controller with the EP framework.
+On 2/26/24 04:56, Tree Davies wrote:
+> Rename function rtllib_rx_ADDBAReq to rtllib_rx_add_ba_req to fix checkpatch
+> warning Avoid CamelCase.
 > 
-> But the naming doesn't reflect its functionality and causes confusion. So,
-> let's rename it to dw_pcie_ep_init_registers() to make it clear that it
-> initializes the DWC specific registers.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-
+WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit 
+description?)
+#7:
+Rename function rtllib_rx_ADDBAReq to rtllib_rx_add_ba_req to fix checkpatch
+> Signed-off-by: Tree Davies <tdavies@darkphysics.net>
 > ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 6 +++---
->  drivers/pci/controller/dwc/pcie-designware.h    | 4 ++--
->  drivers/pci/controller/dwc/pcie-qcom-ep.c       | 2 +-
->  drivers/pci/controller/dwc/pcie-tegra194.c      | 2 +-
->  4 files changed, 7 insertions(+), 7 deletions(-)
+>   drivers/staging/rtl8192e/rtl819x_BAProc.c | 2 +-
+>   drivers/staging/rtl8192e/rtllib.h         | 2 +-
+>   drivers/staging/rtl8192e/rtllib_softmac.c | 2 +-
+>   3 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 99d66b0fa59b..ed1f2afd830a 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -603,7 +603,7 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
->  	return 0;
->  }
->  
-> -int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
-> +int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  	struct dw_pcie_ep_func *ep_func;
-> @@ -718,7 +718,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->  
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
-> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_registers);
->  
->  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  {
-> @@ -788,7 +788,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	 * (Ex: tegra194). Any hardware access on such platforms result
->  	 * in system hang.
->  	 */
-> -	ret = dw_pcie_ep_init_complete(ep);
-> +	ret = dw_pcie_ep_init_registers(ep);
->  	if (ret)
->  		goto err_free_epc_mem;
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 351d2fe3ea4d..f8e5431a207b 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -669,7 +669,7 @@ static inline void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus,
->  #ifdef CONFIG_PCIE_DW_EP
->  void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
->  int dw_pcie_ep_init(struct dw_pcie_ep *ep);
-> -int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
-> +int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep);
->  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
->  void dw_pcie_ep_deinit(struct dw_pcie_ep *ep);
->  void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep);
-> @@ -693,7 +693,7 @@ static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	return 0;
->  }
->  
-> -static inline int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
-> +static inline int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
->  {
->  	return 0;
->  }
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index 59b1c0110288..3697b4a944cc 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -463,7 +463,7 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
->  	      PARF_INT_ALL_LINK_UP | PARF_INT_ALL_EDMA;
->  	writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_MASK);
->  
-> -	ret = dw_pcie_ep_init_complete(&pcie_ep->pci.ep);
-> +	ret = dw_pcie_ep_init_registers(&pcie_ep->pci.ep);
->  	if (ret) {
->  		dev_err(dev, "Failed to complete initialization: %d\n", ret);
->  		goto err_disable_resources;
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 68bfeed3429b..264ee76bf008 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -1897,7 +1897,7 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
->  	val = (upper_32_bits(ep->msi_mem_phys) & MSIX_ADDR_MATCH_HIGH_OFF_MASK);
->  	dw_pcie_writel_dbi(pci, MSIX_ADDR_MATCH_HIGH_OFF, val);
->  
-> -	ret = dw_pcie_ep_init_complete(ep);
-> +	ret = dw_pcie_ep_init_registers(ep);
->  	if (ret) {
->  		dev_err(dev, "Failed to complete initialization: %d\n", ret);
->  		goto fail_init_complete;
-> 
-> -- 
-> 2.25.1
-> 
+> diff --git a/drivers/staging/rtl8192e/rtl819x_BAProc.c b/drivers/staging/rtl8192e/rtl819x_BAProc.c
+> index da7319c124e7..bd1d86e0323d 100644
+> --- a/drivers/staging/rtl8192e/rtl819x_BAProc.c
+> +++ b/drivers/staging/rtl8192e/rtl819x_BAProc.c
+> @@ -211,7 +211,7 @@ static void rtllib_send_DELBA(struct rtllib_device *ieee, u8 *dst,
+>   		netdev_dbg(ieee->dev, "Failed to generate DELBA packet.\n");
+>   }
+>   
+> -int rtllib_rx_ADDBAReq(struct rtllib_device *ieee, struct sk_buff *skb)
+> +int rtllib_rx_add_ba_req(struct rtllib_device *ieee, struct sk_buff *skb)
+>   {
+>   	struct ieee80211_hdr_3addr *req = NULL;
+>   	u16 rc = 0;
+> diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
+> index 348644998744..95a8e9416f61 100644
+> --- a/drivers/staging/rtl8192e/rtllib.h
+> +++ b/drivers/staging/rtl8192e/rtllib.h
+> @@ -1771,7 +1771,7 @@ u8 ht_c_check(struct rtllib_device *ieee, u8 *pFrame);
+>   void ht_reset_iot_setting(struct rt_hi_throughput *ht_info);
+>   bool is_ht_half_nmode_aps(struct rtllib_device *ieee);
+>   u16  tx_count_to_data_rate(struct rtllib_device *ieee, u8 nDataRate);
+> -int rtllib_rx_ADDBAReq(struct rtllib_device *ieee, struct sk_buff *skb);
+> +int rtllib_rx_add_ba_req(struct rtllib_device *ieee, struct sk_buff *skb);
+>   int rtllib_rx_add_ba_rsp(struct rtllib_device *ieee, struct sk_buff *skb);
+>   int rtllib_rx_DELBA(struct rtllib_device *ieee, struct sk_buff *skb);
+>   void rtllib_ts_init_add_ba(struct rtllib_device *ieee, struct tx_ts_record *ts,
+> diff --git a/drivers/staging/rtl8192e/rtllib_softmac.c b/drivers/staging/rtl8192e/rtllib_softmac.c
+> index 2545ac8963c4..f12ee685e989 100644
+> --- a/drivers/staging/rtl8192e/rtllib_softmac.c
+> +++ b/drivers/staging/rtl8192e/rtllib_softmac.c
+> @@ -1551,7 +1551,7 @@ static void rtllib_process_action(struct rtllib_device *ieee,
+>   	case ACT_CAT_BA:
+>   		switch (*act) {
+>   		case ACT_ADDBAREQ:
+> -			rtllib_rx_ADDBAReq(ieee, skb);
+> +			rtllib_rx_add_ba_req(ieee, skb);
+>   			break;
+>   		case ACT_ADDBARSP:
+>   			rtllib_rx_add_ba_rsp(ieee, skb);
+
