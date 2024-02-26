@@ -1,79 +1,120 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C12604CA;
-	Mon, 26 Feb 2024 12:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD35D6027E;
+	Mon, 26 Feb 2024 12:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708949539; cv=none; b=czsXzWF3W0UaXMcBoR8uDwphKN7Zo1QNQML/llehEO+yE+BsO2KVPkzKLdWlmXU3BDM9MG+dOJtSUtufinwXKpq36R/SM88lDP8YhbHRXGMJFhcSiIbyb3/xq3d6GPE1/wSBqxfBCssS9yJ4hIKdvEysqg7u5NdLnd56MtgIzq4=
+	t=1708949568; cv=none; b=ccQTjE3wmVyV/qAM9WidYAJDVpfpes1W31YGOUxnqtp/HYcGe7xl4pKgU4ziQTb8hLjZ0d0a1rMLjmXvx36IlcNecFlhUAQUEME9Tn+ya8uKOlBhhwfWOudV9PLYb0x6K2m/JczY+HlOyFBFY7kgTszh5W6HQhORo86YbFIZ8Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708949539; c=relaxed/simple;
-	bh=iuGzS6WlYi9TtdofL6bGGFT5c4OI29PZWGoXll9ZowM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A6RuP8qNUQZAc6ienTx8au2DCCULNjqQPi/wmW8NnchDdNc4ViZFOHMTwCjLJ06Sqnz/w55LbffM107jBO/2yPvI2Xr7yo1ICwOH7qcI5vjFDmajxKPYP1VmjCt5sPCVnkfd+9u+pB9lklwDtRQF3qlrkfnosnR9YIcRiJOpF1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=gFs4D2ZC; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1708949568; c=relaxed/simple;
+	bh=mWDVcYPf4K4buLKqQJVFqO0wcp+5c2TANsnglXeQUC8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QgonNLpWX9XB8SxRA7A/PbedFOE6dtI5u+tEZhWaE+y97XCqaeAZiEoC8r303Lsqst3DQw23qwRnFzH6O+EBx0BXoqIEBIDXjTFUCFlOpDURz4CEZunmAhDiTyBz9tk28kc00TpYz7Nz8h901BaFa6CAmhsex+ueEjUshCagRv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Px3a+r85; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DM7HSrcU; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="gFs4D2ZC"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 7531A604E8;
-	Mon, 26 Feb 2024 12:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1708949537;
-	bh=iuGzS6WlYi9TtdofL6bGGFT5c4OI29PZWGoXll9ZowM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gFs4D2ZCrYF/SWVPKAVRLsOfeKMzT0AaJNpC9WwLQdR7h20yN/u9x+LYHMzCO4cAD
-	 EQ6mcAig/6atIDcj3UkOQgj42nUoVl3vYzWEgVidQRPuf3RbEUIM5yFRK8Ahoz47ln
-	 vHRSfUpwapzWNiqpF5J3cZcff7INBpwekxhysLB9DdYVK4o6kTvdsMSGmKaQJc/6Q+
-	 o58CvFgQbjCAfIfyboAhuOEf0Yqh81d8iwfbx71fB4cF5DNAsy6HBsC2TeX1idpS8i
-	 3vRiq0bXo3i5yMrOGP/R84RSxP9fn5RzTt87Jp5mFrqz9OVpXV11qCgArKf8lehsKY
-	 tzuDnjjOknfjA==
-Date: Mon, 26 Feb 2024 14:11:56 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Lee Jones <lee@kernel.org>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, bcousson@baylibre.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: (subset) [PATCH v4 0/5] mfd: twl: system-power-controller
-Message-ID: <20240226121156.GA52537@atomide.com>
-References: <20240217082007.3238948-1-andreas@kemnade.info>
- <170870473441.1731639.3240676194817206962.b4-ty@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Px3a+r85";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DM7HSrcU"
+Date: Mon, 26 Feb 2024 12:12:44 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1708949565;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JdFo9kC6jinpYH6jRd2rYz38dFc64c3+PKmAeRxOHio=;
+	b=Px3a+r85l109dlvt0xH30pgaHRJC7AG15Qy7AwkSmYC6xob2vQsKeiDdvbch9IxMieOuXj
+	NM2/y8RRpqC1duaC5ZksWktdj9CQrCOAW9/cW8MlxjBhrLhw2SeX6PcPHG3/yXCcWIBEB4
+	7l7ntywJHZYl6cMNX5roMVLu3utbK5lcAiTCw2eqc5VX9RBli+zS7i1tVRE6/Pl5bNNCkk
+	RzF32EYK3XY7rZ5VYHPEjKvh/3ozv2qkmY+KNg+ckpKkvTjgp8mQzIwHdE8lNgcjtTV7fx
+	dfAFhdSFFeQ+qUrOjBvbqghCf3a9CacM2p+jbbetERLqDcrWvvBsC78RF6cbeQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1708949565;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JdFo9kC6jinpYH6jRd2rYz38dFc64c3+PKmAeRxOHio=;
+	b=DM7HSrcUQA2ia4rDdvcTwIjaDnnMg9vbahBTrdOYchOIZHKqCKCzk0GVe+BStICW+irsAw
+	sP0adkPlV18hRHCA==
+From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/boot] x86/boot/64: Use RIP_REL_REF() to access early page tables
+Cc: Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240221113506.2565718-23-ardb+git@google.com>
+References: <20240221113506.2565718-23-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170870473441.1731639.3240676194817206962.b4-ty@kernel.org>
+Message-ID: <170894956442.398.17374990463017406130.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-* Lee Jones <lee@kernel.org> [240223 16:12]:
-> On Sat, 17 Feb 2024 09:20:02 +0100, Andreas Kemnade wrote:
-> > Add system-power-controller property in the bindings and
-> > the corresponding implementation and use it where
-> > appropriate.
-> > Not all cases are hit yet, there has probably to be a
-> > separate series after going through with a brush.
-> > 
-> > Changes in v4:
-> > - fix spelling/grammar
-> > - drop twl4030 dts cleanup, it would need an IB
-> >   or be postponed till next release
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [1/5] dt-bindings: mfd: ti,twl: Document system-power-controller
->       commit: 0c7cc7497f6f62a65037e94cf0d885ab0af3c0d3
-> [2/5] twl-core: add power off implementation for twl603x
->       commit: ca9414a1d08756c8392f9219caee607e1b7bade1
-> [5/5] mfd: twl4030-power: accept standard property for power controller
->       commit: 8ba560ec14267af1169e1f5407fbce514fd4f6f6
+The following commit has been merged into the x86/boot branch of tip:
 
-Applying the two dts changes into omap-for-v6.9/dt thanks.
+Commit-ID:     eb54c2ae4a4825c42a6a2b4022926bda7448f735
+Gitweb:        https://git.kernel.org/tip/eb54c2ae4a4825c42a6a2b4022926bda7448f735
+Author:        Ard Biesheuvel <ardb@kernel.org>
+AuthorDate:    Wed, 21 Feb 2024 12:35:12 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Mon, 26 Feb 2024 12:58:35 +01:00
 
-Tony
+x86/boot/64: Use RIP_REL_REF() to access early page tables
+
+The early statically allocated page tables are populated from code that
+executes from a 1:1 mapping so it cannot use plain accesses from C.
+Replace the use of fixup_pointer() with RIP_REL_REF(), which is better
+and simpler.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20240221113506.2565718-23-ardb+git@google.com
+---
+ arch/x86/kernel/head64.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index e2573dd..7e2c9b5 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -215,13 +215,11 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 		p4d[511] += load_delta;
+ 	}
+ 
+-	pud = fixup_pointer(level3_kernel_pgt, physaddr);
+-	pud[510] += load_delta;
+-	pud[511] += load_delta;
++	RIP_REL_REF(level3_kernel_pgt)[PTRS_PER_PUD - 2].pud += load_delta;
++	RIP_REL_REF(level3_kernel_pgt)[PTRS_PER_PUD - 1].pud += load_delta;
+ 
+-	pmd = fixup_pointer(level2_fixmap_pgt, physaddr);
+ 	for (i = FIXMAP_PMD_TOP; i > FIXMAP_PMD_TOP - FIXMAP_PMD_NUM; i--)
+-		pmd[i] += load_delta;
++		RIP_REL_REF(level2_fixmap_pgt)[i].pmd += load_delta;
+ 
+ 	/*
+ 	 * Set up the identity mapping for the switchover.  These
+@@ -284,7 +282,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 	 * error, causing the BIOS to halt the system.
+ 	 */
+ 
+-	pmd = fixup_pointer(level2_kernel_pgt, physaddr);
++	pmd = &RIP_REL_REF(level2_kernel_pgt)->pmd;
+ 
+ 	/* invalidate pages before the kernel image */
+ 	for (i = 0; i < pmd_index((unsigned long)_text); i++)
