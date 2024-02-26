@@ -1,99 +1,89 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509EA12883D;
-	Mon, 26 Feb 2024 13:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258C912AAEA;
+	Mon, 26 Feb 2024 13:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708955285; cv=none; b=eHhH1p+yABy2/7zRS1qO55GuPO4R4iXKy6Hla+R/PzBnx2/2PgINbV8yZie/Xo7+G9GnFnwQauXcCKUQ8OU+EF3lbIvB8KwNmCbIvy/sQqrxczivVIopaYYMrMind5r3NAGtwI+SyioJddNAoOGspNo3Af2NoUCaZNj1gP5e8FI=
+	t=1708955287; cv=none; b=XsyvzOgo56twMHmqqP7UYwT/LGuAKuRUsdG75jH/NXJyjVE3nVIC8GfGLTIjwwXc28K93MgqMyjSagCmIGe3A02AUPz72wt1qYC+DI7ZnWCS7xFduO7o9xgNswUbnVGu67jvNyWi6WOZDSfcW3ZrOOXgBIMQ54I7aoJ5U4M/plg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708955285; c=relaxed/simple;
-	bh=haMUGAK+PJjKaqeqp8C9tQacXFq+vv7X9U/zyUTnK08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eMGTrWKYX3yXXxq+MgzWr3qwIgd0qErf/3tQ+yHTYagtkOyuPbckjPY4McA/VeDA5mrFido5P6BJSsvs0F/QgUas7N9FuMN2eSy5vcWCBPY3M/SXMaIjmYo12NFgtKi8XSjN4j3R/4XPYkC+QkccoeQ9u99isn74b7Q/BxAWgE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WJ2By5Ka; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1708955287; c=relaxed/simple;
+	bh=L67kHgGCs3Cvh/Ei0DU5lrJ2B7SBYL1CCN3r0aBSxi8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r0ZANzpe/QpX96eXSAgzCOxvhuLLk87qAaMCDAo/qpnRO8F4FEGaqTCNxfWXIRdcSzjgq/rIDQUcyV6Vfovhof2J+OtaIU5JR2Lp+6p5xXKtsj/SaWjDV6Ck0aSl2+ujkqFq0X0oHVR/o9tbZT04oDWdHHElXwCVkQrOlRnqIec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rutwcfwO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WJ2By5Ka"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41QDlcFC125492;
-	Mon, 26 Feb 2024 07:47:38 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708955258;
-	bh=haMUGAK+PJjKaqeqp8C9tQacXFq+vv7X9U/zyUTnK08=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=WJ2By5Ka6LaFKMX0UNbNxGskmu1pVNcKEJGDM2v2AvfvslSwzNpHX94PO0J66Ury7
-	 SGv7575ZrgBkv6mRtTOzpmodJvC5JnuN22Zcy4VmtZbLW6EbSFS6TeRI3RtK+vGXFj
-	 gFgsKj3nAbDgkob6pjJqxrGQcufkMpaXDvu8pCKk=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41QDlclv077861
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 26 Feb 2024 07:47:38 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 26
- Feb 2024 07:47:38 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 26 Feb 2024 07:47:38 -0600
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41QDlWPm074190;
-	Mon, 26 Feb 2024 07:47:33 -0600
-Message-ID: <aa180f33-9c42-4435-aff2-f23c42bcadea@ti.com>
-Date: Mon, 26 Feb 2024 19:17:31 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rutwcfwO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5260FC433C7;
+	Mon, 26 Feb 2024 13:48:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708955286;
+	bh=L67kHgGCs3Cvh/Ei0DU5lrJ2B7SBYL1CCN3r0aBSxi8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rutwcfwO+1mZuPVh6Ci4AcY7Ya4wOx1sky29F46LrI2lonSlcnrvFy9RjBONyMTwA
+	 k9va0k3b3hBTuoGx/ddvBD3XrePARb3WpZ56M+/YCXPxxQarwpfu/UBwfFU/pUj+RN
+	 Uc6barYERG9ipNDYsIp1+Fe/9erC3pLShGA+SyQNP88OYU5XtnMBJXcgRRfZY12fzE
+	 2P3Nur+CTXqYaRgZkNegjaYduiK59Y/Zqgpup2hnN452xKB2281z8LC2Ko0BmhzNZp
+	 vrPjbNjMSuXsKrs1H9/yft788udGXbcCLd3MBBmdMZvONR4Zg9RzBC/CGbCGsH6K59
+	 UgHUa1KFYjrDQ==
+Date: Mon, 26 Feb 2024 13:48:00 +0000
+From: Mark Brown <broonie@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>,
+	David Jander <david@protonic.nl>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Alain Volmat <alain.volmat@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] spi: add spi_optimize_message() APIs
+Message-ID: <4a593988-52bb-4013-84fb-d1a51c8005c3@sirena.org.uk>
+References: <20240219-mainline-spi-precook-message-v2-0-4a762c6701b9@baylibre.com>
+ <20240219-mainline-spi-precook-message-v2-1-4a762c6701b9@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] clk: keystone: sci-clk: Adding support for non
- contiguous clocks
-Content-Language: en-US
-To: Francesco Dolcini <francesco@dolcini.it>
-CC: <nm@ti.com>, <kristo@kernel.org>, <ssantosh@kernel.org>, <chandru@ti.com>,
-        <rishabh@ti.com>, <kamlesh@ti.com>, <vigneshr@ti.com>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-References: <20240213082640.457316-1-u-kumar1@ti.com>
- <20240226105435.GA11908@francesco-nb>
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20240226105435.GA11908@francesco-nb>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FPOaDaMVfIrc5CmE"
+Content-Disposition: inline
+In-Reply-To: <20240219-mainline-spi-precook-message-v2-1-4a762c6701b9@baylibre.com>
+X-Cookie: Nobody knows the trouble I've been.
 
 
-On 2/26/2024 4:24 PM, Francesco Dolcini wrote:
-> On Tue, Feb 13, 2024 at 01:56:40PM +0530, Udit Kumar wrote:
->> Most of clocks and their parents are defined in contiguous range,
->> But in few cases, there is gap in clock numbers[0].
->> Driver assumes clocks to be in contiguous range, and add their clock
->> ids incrementally.
->>
->> New firmware started returning error while calling get_freq and is_on
->> API for non-available clock ids.
-> Is this the kind of errors I should expect in such situation?
->
-> ti-sci-clk 44043000.system-controller:clock-controller: recalc-rate failed for dev=13, clk=7, ret=-19
->
-> If this is the case, I feel like this patch should be back-ported to
-> stable kernels.
+--FPOaDaMVfIrc5CmE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sure will send to stable@vger.kernel.org
+On Mon, Feb 19, 2024 at 04:33:18PM -0600, David Lechner wrote:
+> This adds a new spi_optimize_message() function that can be used to
+> optimize SPI messages that are used more than once. Peripheral drivers
+> that use the same message multiple times can use this API to perform SPI
+> message validation and controller-specific optimizations once and then
+> reuse the message while avoiding the overhead of revalidating the
+> message on each spi_(a)sync() call.
 
+This doesn't apply against current code, please check and resend.
 
-> Any malfunction because of these errors or just some noise in the logs?
+--FPOaDaMVfIrc5CmE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Error is noise in logs, no impact on function as these reserved clocks
+-----BEGIN PGP SIGNATURE-----
 
-are not used by drivers.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXclo8ACgkQJNaLcl1U
+h9DzSgf+L8IJqP9QTipdvVCKI4xrZNaK+TzwF6i23M+QYOOAK+4hq0fRRSva44uc
+kkh1+iGYBYbxuQpN35y3lMkueSvMVPQgUyBSe2q9SOVzykwxfrvIZKwv5I9eULi7
+itkQUHeceYVLOoH2nD5dKIA7Jd/p9W5z3tC6yh/xqXwFuldwT9+Y7eqM8SUISwXW
+d36mL+h1mj+ZerR70EsYYipUH0J8r/dJ035AeZRkWXV5YGicaHna9WJBT8hN5H5v
+73vjAsnxohg1/wS6B7KvfXg6NekWfTWcde7eWkgkaJqgz4eKzNgUgBDUdhfGRXNa
+4G15gBS0jIs/UHLyXcbalpTOdzH4Uw==
+=5Wju
+-----END PGP SIGNATURE-----
 
-
->
-> Francesco
->
+--FPOaDaMVfIrc5CmE--
