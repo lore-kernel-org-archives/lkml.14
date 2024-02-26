@@ -1,142 +1,60 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91A812C53D
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 18:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235FC12C53D;
+	Mon, 26 Feb 2024 18:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708973459; cv=none; b=PU1J6TxtZTMLecirdqKAbQ099+ej5KSU9URjkwZA55owwefJiuCVlPSH1aXrqrDAx4IpTcHOFgqiFTBQfZUmn3/fKanKAOB4c16udgF70bv0coqHDjOUplWbqKoQs7P5UGAjXF9Y4dUxLfVd4cympaGxyX1y13oPauhQHmUKIoY=
+	t=1708973531; cv=none; b=pzngrsuRnKSDtxbAE9DTA/+g/+qCoICNuR25Q+ULNFS8vvKFvqDwRZZWDC9uj1eI/sBF5+joqIdUSLZySpvhPwGunWS7c9PMxM765HrGJCenFoqScAgk1LTF8hbZgmF0dt1JuLT6HBvEHpQcNFPgVURp5hYc+NrPyPrb34e/xrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708973459; c=relaxed/simple;
-	bh=mR3iJeZnih0xL1L6otAWQA+ldA1EaLa1CgEyXe7SlYQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XD+pLrQPc6S/N3Lx6BKHIg8jq6JoFJRrxixqKgef7nyY9bxOC/9aMeHq+QJ2ZGWoHIMvz5XAaiykXHFjvf5d0NE0InaSEN68B9xE+6QDECiLw/AlXFLbnBrsYLY+zBP3ctZkOu9I/fW5mCz5f1f2n1FYq7tZd6lD9prc/bNTXEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Iyk8dnsj; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iyk8dnsj"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b267bf11so3709014276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:50:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708973457; x=1709578257; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gzHSVsSttEBs/IBwvNsGKixFyS/qBb/S7FRwS0QE9ng=;
-        b=Iyk8dnsjGS2u6CC0DyDExuu71WhihDXUhZGy4RM1oG0YZexvizSficmCpLZptJ9ZFh
-         /ct35NghAYuAclFZIblhm0JoZ4AU1z/NDRvSlmBzu2TyF3ilMrJNs+9jYRR4nF5ig4jP
-         imRvWXPUH5n25XbJZ13h/oFRmO29Vj/30ouNX1yV/in3qnLjQdipV8S1PwRPsSTPQFtr
-         Llce7W00B6UbNee6eIIwcKEYPw6ruxMds+MZKizrkIpuuAF9bHg5R1CAzQG6fDnGLNUX
-         eK0G0v6nR5UEJdelNQohULi4DxU+cWNT7neGG0SQpK1r48eV0j22GSs/K8Ht9RcGI7pm
-         GCxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708973457; x=1709578257;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gzHSVsSttEBs/IBwvNsGKixFyS/qBb/S7FRwS0QE9ng=;
-        b=a3a4XWvy2ri5K8Cz1nKifgAQmG5Yh+iQnVxMjpMdkU8phnZv+QUJP83JglYU5Mggaz
-         o03/y5NzSsNTyJTt7lpPjzIXSa54MJwVLDfctV7EHpTaHrdWQspLk+DsrupR6MWnxX+V
-         zzwgkY6tFod7NG+H9SX81Pp/YZgwsADgXJMAb19SZ4kiFcl8zOzSYbg/fQWmAcsHpESo
-         cBjacI66X+cjAKKIY82GEck8GhwQAzcSV+QgPMl/8jqq8mO4evo5qNnMvL+a0Jx65ZGA
-         LKkBPEZc3oVawsIA3ofunzdnbJyAt8WbRk2oRwBCUBaOPcLtLAMvMT2mj1uP9MeivluJ
-         /GcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVn2v0H+tK+7ubxEKWQh7nG7S7OLgj6qELrtsoU9/WeAwE78MCQ0xAjTYxVEzIFOr8YEwrrtQ10CResWrZqj2YH2LOjBXjNrZeHYmU7
-X-Gm-Message-State: AOJu0Yw84o3Z7VCDY5nTN9jtl6thBVgGlF1Bl7Do+GXJslGHCwAJqBvA
-	RURXR0eC6KXNILjYTbmM5lIaqb+np01OkLsEOApWZf9+UE6EexFq3lcfyfteAXStwf3KOk78Anf
-	tuw==
-X-Google-Smtp-Source: AGHT+IE3sxgoQOVKs/Aw4bLX2W3H+y8x4pf1nRDXIZJeaD0kFXZplENiuA4kqdUZmnHrG1B2dmvQUpBy5NI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1109:b0:dcd:59a5:7545 with SMTP id
- o9-20020a056902110900b00dcd59a57545mr187ybu.10.1708973456756; Mon, 26 Feb
- 2024 10:50:56 -0800 (PST)
-Date: Mon, 26 Feb 2024 10:50:55 -0800
-In-Reply-To: <20240226180712.GF177224@ls.amr.corp.intel.com>
+	s=arc-20240116; t=1708973531; c=relaxed/simple;
+	bh=3Gmla1nD+s6JL0VfGINBYQZbGiFVdJqDEG83H9jQ8uI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XPAcQImyXdffDIISkk/FGrQfmYZ0n4gZZQ28S30eLvQJFX72Y7gH0NCfKUXX8XtDPhJFdyDb9zGvG+QXHSZQURM/9+V/+gKOZm6RmhuVTG1p16bqLIV1D7N1Te+dK7/sljAEi2lI5wUdCVJrFw972V4R/1KdYYmA/2Z8Ht21VFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83819C433C7;
+	Mon, 26 Feb 2024 18:52:04 +0000 (UTC)
+Date: Mon, 26 Feb 2024 13:53:53 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linke li <lilinke99@qq.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ring-buffer: use READ_ONCE() to read
+ cpu_buffer->commit_page in concurrent environment
+Message-ID: <20240226135353.3103b360@gandalf.local.home>
+In-Reply-To: <20240225150302.23c3c3c2@rorschach.local.home>
+References: <lilinke99@qq.com>
+	<tencent_5EC64EB49686EE61593AE541DB14CE490A08@qq.com>
+	<20240225150302.23c3c3c2@rorschach.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
- <97bb1f2996d8a7b828cd9e3309380d1a86ca681b.1705965635.git.isaku.yamahata@intel.com>
- <Zbrj5WKVgMsUFDtb@google.com> <CALzav=diVvCJnJpuKQc7-KeogZw3cTFkzuSWu6PLAHCONJBwhg@mail.gmail.com>
- <20240226180712.GF177224@ls.amr.corp.intel.com>
-Message-ID: <Zdzdj6zcDqQJcrNx@google.com>
-Subject: Re: [PATCH v18 064/121] KVM: TDX: Create initial guest memory
-From: Sean Christopherson <seanjc@google.com>
-To: Isaku Yamahata <isaku.yamahata@linux.intel.com>
-Cc: David Matlack <dmatlack@google.com>, isaku.yamahata@intel.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com, 
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com, Sagi Shahar <sagis@google.com>, 
-	Kai Huang <kai.huang@intel.com>, chen.bo@intel.com, hang.yuan@intel.com, 
-	tina.zhang@intel.com, gkirkpatrick@google.com, 
-	Vipin Sharma <vipinsh@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 26, 2024, Isaku Yamahata wrote:
-> On Thu, Feb 01, 2024 at 03:06:46PM -0800,
-> David Matlack <dmatlack@google.com> wrote:
->=20
-> > +Vipin Sharma
-> >=20
-> > On Wed, Jan 31, 2024 at 4:21=E2=80=AFPM Sean Christopherson <seanjc@goo=
-gle.com> wrote:
-> > > On Mon, Jan 22, 2024, isaku.yamahata@intel.com wrote:
-> > >
-> > > The real reason for this drive-by pseudo-review is that I am hoping/w=
-ishing we
-> > > can turn this into a generic KVM ioctl() to allow userspace to pre-ma=
-p guest
-> > > memory[*].
-> > >
-> > > If we're going to carry non-trivial code, we might as well squeeze as=
- much use
-> > > out of it as we can.
-> > >
-> > > Beyond wanting to shove this into KVM_MEMORY_ENCRYPT_OP, is there any=
- reason why
-> > > this is a VM ioctl() and not a vCPU ioctl()?  Very roughly, couldn't =
-we use a
-> > > struct like this as input to a vCPU ioctl() that maps memory, and opt=
-ionally
-> > > initializes memory from @source?
-> > >
-> > >         struct kvm_memory_mapping {
-> > >                 __u64 base_gfn;
-> > >                 __u64 nr_pages;
-> > >                 __u64 flags;
-> > >                 __u64 source;
-> > >         }
-> > >
-> > > TDX would need to do special things for copying the source, but beyon=
-d that most
-> > > of the code in this function is generic.
-> > >
-> > > [*] https://lore.kernel.org/all/65262e67-7885-971a-896d-ad9c0a760907@=
-polito.it
-> >=20
-> > We would also be interested in such an API to reduce the guest
-> > performance impact of intra-host migration.
->=20
-> I introduce KVM_MEMORY_MAPPING and KVM_CAP_MEMORY_MAPPING with v19.
+On Sun, 25 Feb 2024 15:03:02 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-KVM_MEMORY_MAPPING is not a good ioctl() name.  There needs to be a verb in=
- there
-somewhere, e.g. KVM_MAP_MEMORY, KVM_FAULTIN_MEMORY, etc.
+> *But* looking at this deeper, the commit_page may need a READ_ONCE()
+> but not for the reason you suggested.
+> 
+>         commit_page = cpu_buffer->commit_page;
+>         commit_ts = commit_page->page->time_stamp;
+> 
+> The commit_page above *is* used again, and we want commit_ts to be part
+> of the commit_page that was originally read and not a second reading.
+> 
+> So, I think for the commit_page we do need a READ_ONCE() but that's
+> because it is referenced again just below it and we don't want the
+> compiler to read the memory location again for the second reference.
 
-> We can continue the discussion there.
+Care to send a v2 patch that just adds READ_ONCE() for the commit_page, and
+change the change log stating that it is to fix the possibility that the
+time_stamp may come from a different page.
 
-No, we absolutely cannot continue the conversation there.   That is not how=
- kernel
-development works.
-
-Enough is enough.  I am archiving v19 and not touching it.
-
-Please post an RFC for _just_ this functionality, and follow-up in existing=
-,
-pre-v19 conversations for anything else that changed between v18 and v19 an=
-d might
-need additional input/discussion.
+-- Steve
