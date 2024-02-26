@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4843D612E9;
-	Mon, 26 Feb 2024 08:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33518626A7;
+	Mon, 26 Feb 2024 08:28:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708936107; cv=none; b=dmVpCdUd9iZg9MoLK6YvHsgVEj0HAnzs4lwXEK+a+uU+gBzonhwM4xhkEY07tGyNFr3O+u+lVGhXT1OHze9KjEsZdVt0MmqBOAiC5Cb8YP9UHLw3G2RdAoIYf7Pvl3+oeXyFGm5mU60U9EYgFLCoWcpZvWa89QQTiUQRLd9dXLA=
+	t=1708936109; cv=none; b=XS5FBJ7wVGAbht0Ne6DC8ypofqUasDdVXH8kpBELWxGHxCtur2wTs/Pzy4DvAO7PJfn7BEpSdyBrx0Z0zYqv4ObwRjxmIFacm8/aOwmr3Np4UnJ11yPuDQjjjJntcYeu6L1ju5W2aAsn6WyfoCnLparP6OuMewx9Wty6u80mM88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708936107; c=relaxed/simple;
-	bh=wWbhRZCirvnTpoR7lG5s4eITsW63C8P/4FabG1p/CFY=;
+	s=arc-20240116; t=1708936109; c=relaxed/simple;
+	bh=ItvOXDST0y8Qvf46BwFZbHkP1zwOR0dJGkEPf5xC34E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vA9DtJmiF3Btqgxb5A0x0HAHaMG1V6EtFrsObdPKeLabL6r7PFgs+hIAG2tKdYbmouChRD8XM7OZN4upQQ/Lfq0S2kCno+NNctbrNX+8i2y8CfaoHGsrI+XuwD5yGlZFOWP+/HTTFdEKiaTMBI2bjhajCnICynjYmxjBZpyFJCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aIcQMgsv; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=QhczXVsQtosaGzGQzxGidfvxvsG3SQ4SjklY4yHQFwmra7COrU8KGc26YKjGkYLmoY9BQir1ShcrL90M+uzWMFmS0LgkbNjNcPC7vl7fmMllPklyY6Iz+fzNN3mKbKPH7TVXd41igvte3I6YJIrakXS4AhCDUTSdLFoa1EbBFAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JdCitgEa; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aIcQMgsv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JdCitgEa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708936106; x=1740472106;
+  t=1708936108; x=1740472108;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wWbhRZCirvnTpoR7lG5s4eITsW63C8P/4FabG1p/CFY=;
-  b=aIcQMgsvBi0xaOZk6Q8j+bmyuRUUHtNOiGzlDxQC05zUoik7puaubR/G
-   aZOjJSJOcmwfJrXBNhnBHPeIKLTB1qcBgfslfKTIoexJiTCJJMzOuyeU9
-   2OwZblamdyzE5BC35qErdsHabqWbvI2WoNniaABZuUFKdejtSd/s2X59t
-   QaxXEn6H4S1WNt/2jChBHIO5Ep5cliM12529Ap45RWup9AAgfJh482r+m
-   hjd08H6MCRo/FTtPwZVheCQD3ha7LoFIe4gttONSXvKSt7XeB/HeKiPqA
-   aRZFe1ZuQxqLaDAoijaq8S0fnH2kUEDxy9rIvBh/viUk/ugQwuffrrQIK
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3069454"
+  bh=ItvOXDST0y8Qvf46BwFZbHkP1zwOR0dJGkEPf5xC34E=;
+  b=JdCitgEaKrL00iRIetnhGe2THkHFOxpTszG4272V2pCojn9Qj8h3NbRX
+   DO9xxr54c6YMLB96uy9oe75XYLZLpHNg0pu/ibyqxXmhl7+H/ufrYoyPo
+   raim+waACoKB19wBbdHP8N6r8OmBTioEVxuy6j03eLJTDgdJk4OlB8hsD
+   2j+DyLIpcQ48VS/Q4rbWW+FTczQjT9enaY/JACy1V9uh0WyLuZphoiLQF
+   xroQghiB+XV8kskJnpVDUbY9MouqNZYSkymZULITrejF8twawoq/P4vyR
+   KR2x5cmp/lS9pqYZVYAVf1CJ1tyF1mEfRXAaqqumoQp3h3OrLwgDiugYS
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3069460"
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="3069454"
+   d="scan'208";a="3069460"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:25 -0800
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:27 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="11272356"
+   d="scan'208";a="11272394"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:25 -0800
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 00:28:26 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,11 +51,10 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com,
-	Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v19 067/130] KVM: TDX: Add load_mmu_pgd method for TDX
-Date: Mon, 26 Feb 2024 00:26:09 -0800
-Message-Id: <bef7033b687e75c5436c0aee07691327d36734ea.1708933498.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com
+Subject: [PATCH v19 069/130] KVM: TDX: Require TDP MMU and mmio caching for TDX
+Date: Mon, 26 Feb 2024 00:26:11 -0800
+Message-Id: <f6a80dd212e8c3fd14b40049eed33187008cf35a.1708933498.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1708933498.git.isaku.yamahata@intel.com>
 References: <cover.1708933498.git.isaku.yamahata@intel.com>
@@ -67,112 +66,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-For virtual IO, the guest TD shares guest pages with VMM without
-encryption.  Shared EPT is used to map guest pages in unprotected way.
+As TDP MMU is becoming main stream than the legacy MMU, the legacy MMU
+support for TDX isn't implemented.  TDX requires KVM mmio caching.  Disable
+TDX support when TDP MMU or mmio caching aren't supported.
 
-Add the VMCS field encoding for the shared EPTP, which will be used by
-TDX to have separate EPT walks for private GPAs (existing EPTP) versus
-shared GPAs (new shared EPTP).
-
-Set shared EPT pointer value for the TDX guest to initialize TDX MMU.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
-v19:
-- Add WARN_ON_ONCE() to tdx_load_mmu_pgd() and drop unconditional mask
----
- arch/x86/include/asm/vmx.h |  1 +
- arch/x86/kvm/vmx/main.c    | 13 ++++++++++++-
- arch/x86/kvm/vmx/tdx.c     |  6 ++++++
- arch/x86/kvm/vmx/x86_ops.h |  4 ++++
- 4 files changed, 23 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu/mmu.c  |  1 +
+ arch/x86/kvm/vmx/main.c | 13 +++++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index f703bae0c4ac..9deb663a42e3 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -236,6 +236,7 @@ enum vmcs_field {
- 	TSC_MULTIPLIER_HIGH             = 0x00002033,
- 	TERTIARY_VM_EXEC_CONTROL	= 0x00002034,
- 	TERTIARY_VM_EXEC_CONTROL_HIGH	= 0x00002035,
-+	SHARED_EPT_POINTER		= 0x0000203C,
- 	PID_POINTER_TABLE		= 0x00002042,
- 	PID_POINTER_TABLE_HIGH		= 0x00002043,
- 	GUEST_PHYSICAL_ADDRESS          = 0x00002400,
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 0e0321ad9ca2..b8d6ce02e66d 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -104,6 +104,7 @@ module_param_named(flush_on_reuse, force_flush_and_sync_on_reuse, bool, 0644);
+  * If the hardware supports that we don't need to do shadow paging.
+  */
+ bool tdp_enabled = false;
++EXPORT_SYMBOL_GPL(tdp_enabled);
+ 
+ static bool __ro_after_init tdp_mmu_allowed;
+ 
 diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index d0f75020579f..076a471d9aea 100644
+index 076a471d9aea..54df6653193e 100644
 --- a/arch/x86/kvm/vmx/main.c
 +++ b/arch/x86/kvm/vmx/main.c
-@@ -123,6 +123,17 @@ static void vt_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 	vmx_vcpu_reset(vcpu, init_event);
- }
+@@ -3,6 +3,7 @@
  
-+static void vt_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa,
-+			int pgd_level)
-+{
-+	if (is_td_vcpu(vcpu)) {
-+		tdx_load_mmu_pgd(vcpu, root_hpa, pgd_level);
-+		return;
+ #include "x86_ops.h"
+ #include "vmx.h"
++#include "mmu.h"
+ #include "nested.h"
+ #include "pmu.h"
+ #include "tdx.h"
+@@ -36,6 +37,18 @@ static __init int vt_hardware_setup(void)
+ 	if (ret)
+ 		return ret;
+ 
++	/* TDX requires KVM TDP MMU. */
++	if (enable_tdx && !tdp_enabled) {
++		enable_tdx = false;
++		pr_warn_ratelimited("TDX requires TDP MMU.  Please enable TDP MMU for TDX.\n");
 +	}
 +
-+	vmx_load_mmu_pgd(vcpu, root_hpa, pgd_level);
-+}
++	/* TDX requires MMIO caching. */
++	if (enable_tdx && !enable_mmio_caching) {
++		enable_tdx = false;
++		pr_warn_ratelimited("TDX requires mmio caching.  Please enable mmio caching for TDX.\n");
++	}
 +
- static int vt_mem_enc_ioctl(struct kvm *kvm, void __user *argp)
- {
- 	if (!is_td(kvm))
-@@ -256,7 +267,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.write_tsc_offset = vmx_write_tsc_offset,
- 	.write_tsc_multiplier = vmx_write_tsc_multiplier,
- 
--	.load_mmu_pgd = vmx_load_mmu_pgd,
-+	.load_mmu_pgd = vt_load_mmu_pgd,
- 
- 	.check_intercept = vmx_check_intercept,
- 	.handle_exit_irqoff = vmx_handle_exit_irqoff,
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 54e0d4efa2bd..143a3c2a16bc 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -453,6 +453,12 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 	 */
- }
- 
-+void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int pgd_level)
-+{
-+	WARN_ON_ONCE(root_hpa & ~PAGE_MASK);
-+	td_vmcs_write64(to_tdx(vcpu), SHARED_EPT_POINTER, root_hpa);
-+}
-+
- static int tdx_get_capabilities(struct kvm_tdx_cmd *cmd)
- {
- 	struct kvm_tdx_capabilities __user *user_caps;
-diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index f5820f617b2e..24161fa404aa 100644
---- a/arch/x86/kvm/vmx/x86_ops.h
-+++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -152,6 +152,8 @@ void tdx_vcpu_free(struct kvm_vcpu *vcpu);
- void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event);
- 
- int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp);
-+
-+void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int root_level);
- #else
- static inline int tdx_hardware_setup(struct kvm_x86_ops *x86_ops) { return -EOPNOTSUPP; }
- static inline void tdx_hardware_unsetup(void) {}
-@@ -173,6 +175,8 @@ static inline void tdx_vcpu_free(struct kvm_vcpu *vcpu) {}
- static inline void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event) {}
- 
- static inline int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp) { return -EOPNOTSUPP; }
-+
-+static inline void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int root_level) {}
- #endif
- 
- #endif /* __KVM_X86_VMX_X86_OPS_H */
+ 	enable_tdx = enable_tdx && !tdx_hardware_setup(&vt_x86_ops);
+ 	if (enable_tdx)
+ 		vt_x86_ops.vm_size = max_t(unsigned int, vt_x86_ops.vm_size,
 -- 
 2.25.1
 
