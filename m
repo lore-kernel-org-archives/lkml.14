@@ -1,181 +1,102 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC5812B153;
-	Mon, 26 Feb 2024 15:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3A812BE87
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708962297; cv=none; b=fyKn8f7wLo+AU/m9XIvbHCGtrkdI6zS6GCfeAFk5xakA5fHnQL9n1hzcX2Zusjx1qLyiWYe2pI/jN7tY9ThI+dsakFOghGvJbtKaym3opEz9MBMgCrK+NQPzYDvKOW54ws3+4cJWgS/36al7E+JRCZ45lavLx9wOKdXQeVSfxe0=
+	t=1708962338; cv=none; b=C3So+Ko/7XPQP7KfZL1W3EDjrr7V3Fy8l4KL3+2nwdfsLGj9TTHqyTHz8XITs+Mz8X767tzcEmLdViKJH2i23GrbS1D5mLVxgClBjqBLqtHfhX2TrGYzwe3N4FzTuWjCUK2uvj1mSGo4Kn00Mu6gfO7kUsQEBzEq03TmWkETcvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708962297; c=relaxed/simple;
-	bh=RLBFNkzP9GqTjvndlIET/xlLk5CJRmEdNX0X75l4ank=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fii1U14fTLN6EdW5c0UVJtn0C9N1eoZg3qWXHhN4WsISIzxj0YluXfUKGayAeNDfx0Zk7CnMtRwHfblrulK6rXWlDn/xoi/9VHVHXzfetI6qTzPkEu7zKxUU6MoYs/Z5X1b7BNbeDSK6Wm6mvzI4S/7fcUxYIq4Yg49d2yRFp0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NOETsR1/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=y1kEO+FP; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q25SrPtC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PG2cmVLD; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1708962338; c=relaxed/simple;
+	bh=VsH0ymrYLcRyJRnocuhbJuZDkMN1aFvJrkS1qBHwOqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NuXGm7Jh/peg09VTNJSZEDLc7hQ+ryVD2Zygs36bJcfpTuEbLpb+G4PeJpnPqA8BjGnjPPleTq5UbIKwg0YO0xfJg/wfUfg/HjLDVfxRPztdPdB6uKlrDvUKThPl0Pz3gQanEXiHErKfu1TKOynin+3lSDw/Te/yr+GP9678FEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9SY++mh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NOETsR1/";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="y1kEO+FP";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q25SrPtC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PG2cmVLD"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DB67A1FD17;
-	Mon, 26 Feb 2024 15:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708962293; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uO6nFRXFkR5BenyCu2zdHy6TynY7FaB2n2EEfF5vWuc=;
-	b=NOETsR1/coQP/da0HBqaD0qjl4DgUf+en6xj+srfFF+1uXTOn4+58dhn2yprDpczaFiAQr
-	2p7piU7RIh4Du1TBu8haQtMzsJDWm+HwEqQQDP6rAqmBMZpKbHd7OycRp1MVjfCZ/f1MPC
-	geFKKe27a31O8OQPpjlMDlB9/6f+yWw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708962293;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uO6nFRXFkR5BenyCu2zdHy6TynY7FaB2n2EEfF5vWuc=;
-	b=y1kEO+FPjFYcUBvJzauKLGMk+sf/NPUgzw8djkI0nt/EWKAIW/8hiTzV37R/6gZlhB9sSS
-	dN0FoMwSj4d4cDCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1708962292; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uO6nFRXFkR5BenyCu2zdHy6TynY7FaB2n2EEfF5vWuc=;
-	b=Q25SrPtCCHf76Rh616VtmtaJKZ8H33R+tYn4wpxCU1VSWMijjvei5aC5qPuEV4uLfS/6F1
-	TkD2vldaYqHVTh0wW3y2F45Bc53hkZd3ob2Tc1nWw1t+B2msiATKRtYg5stCDTzFlOnuVM
-	S4clmKoEGWAto1Re5Obt6f4HxlU92E0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1708962292;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uO6nFRXFkR5BenyCu2zdHy6TynY7FaB2n2EEfF5vWuc=;
-	b=PG2cmVLDF6FPZ1ud+0JyiNBt6cG/oYI4OaGXlS9u3C5MWNnPp+NYekSYA9fOaUxEM2Z2wZ
-	2h9o/cDJcA8f2xAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3E9C213A3A;
-	Mon, 26 Feb 2024 15:44:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Da2gDvSx3GU+BAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 26 Feb 2024 15:44:52 +0000
-Message-ID: <f68e7f17-c288-4dc9-9ae9-78015983f99c@suse.cz>
-Date: Mon, 26 Feb 2024 16:44:51 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9SY++mh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22787C433C7;
+	Mon, 26 Feb 2024 15:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708962337;
+	bh=VsH0ymrYLcRyJRnocuhbJuZDkMN1aFvJrkS1qBHwOqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s9SY++mhNAKw369O/4ET4NztG3dF+U4U2Fo2gCThAJHS4inmUjFIgWYn/UdttAMMf
+	 lVfeJGREmZ4uUbb0LcItayvC/EPlyKo0Z/n2lTJ6e/Ym1uDG+AFZipoqoKhR9iJzJH
+	 reBe+HZNyeza0I7xTpHvKx+zzPrhig6dO1/1NBcTXxHOi5ILswryo2YX2L+advZbET
+	 +jeaLLyhz4252rs456/kX7oJYss55jEz0OgKThg5yk97/bz5N1/lWH5h/zL0gTjq/5
+	 Sn61paoidyZIpP+v8eeIYhhOGkgd7dlDqkgp15DbPoEE2ZiO5NmumKBVDvqgF6w83f
+	 uaJ9/JtryeWTw==
+Date: Mon, 26 Feb 2024 16:45:33 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Tycho Andersen <tycho@tycho.pizza>
+Cc: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>, 
+	stgraber@stgraber.org, cyphar@cyphar.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] tests/pid_namespace: add pid_max tests
+Message-ID: <20240226-bewaffnen-kinokarten-94eb5abf727c@brauner>
+References: <20240222160915.315255-1-aleksandr.mikhalitsyn@canonical.com>
+ <20240222160915.315255-3-aleksandr.mikhalitsyn@canonical.com>
+ <Zdd8MAJJD3M11yeR@tycho.pizza>
+ <20240223-kantholz-knallen-558beba46c62@brauner>
+ <ZdoEavHorDs3IlF5@tycho.pizza>
+ <20240226-gestrafft-pastinaken-94ff0e993a51@brauner>
+ <Zdyumw6OfWBqQMTj@tycho.pizza>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/36] fs: Convert alloc_inode_sb() to a macro
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, mhocko@suse.com, hannes@cmpxchg.org,
- roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
- willy@infradead.org, liam.howlett@oracle.com,
- penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
- peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
- will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
- dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
- david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
- nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
- rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
- yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
- hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
- ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org,
- ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
- iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
- elver@google.com, dvyukov@google.com, shakeelb@google.com,
- songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
- minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, linux-arch@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
- cgroups@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20240221194052.927623-1-surenb@google.com>
- <20240221194052.927623-6-surenb@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20240221194052.927623-6-surenb@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: 0.18
-X-Spamd-Result: default: False [0.18 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 BAYES_HAM(-0.03)[55.68%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_GT_50(0.00)[75];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com,zeniv.linux.org.uk];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Zdyumw6OfWBqQMTj@tycho.pizza>
 
-On 2/21/24 20:40, Suren Baghdasaryan wrote:
-> From: Kent Overstreet <kent.overstreet@linux.dev>
+On Mon, Feb 26, 2024 at 08:30:35AM -0700, Tycho Andersen wrote:
+> On Mon, Feb 26, 2024 at 09:57:47AM +0100, Christian Brauner wrote:
+> > > > > A small quibble, but I wonder about the semantics here. "You can write
+> > > > > whatever you want to this file, but we'll ignore it sometimes" seems
+> > > > > weird to me. What if someone (CRIU) wants to spawn a pid numbered 450
+> > > > > in this case? I suppose they read pid_max first, they'll be able to
+> > > > > tell it's impossible and can exit(1), but returning E2BIG from write()
+> > > > > might be more useful.
+> > > > 
+> > > > That's a good idea. But it's a bit tricky. The straightforward thing is
+> > > > to walk upwards through all ancestor pid namespaces and use the lowest
+> > > > pid_max value as the upper bound for the current pid namespace. This
+> > > > will guarantee that you get an error when you try to write a value that
+> > > > you would't be able to create. The same logic should probably apply to
+> > > > ns_last_pid as well.
+> > > > 
+> > > > However, that still leaves cases where the current pid namespace writes
+> > > > a pid_max limit that is allowed (IOW, all ancestor pid namespaces are
+> > > > above that limit.). But then immediately afterwards an ancestor pid
+> > > > namespace lowers the pid_max limit. So you can always end up in a
+> > > > scenario like this.
+> > > 
+> > > I wonder if we can push edits down too? Or an render .effective file, like
+> > 
+> > I don't think that works in the current design? The pid_max value is per
+> > struct pid_namespace. And while there is a 1:1 relationship between a
+> > child pid namespace to all of its ancestor pid namespaces there's a 1 to
+> > many relationship between a pid namespace and it's child pid namespaces.
+> > IOW, if you change pid_max in pidns_level_1 then you'd have to go
+> > through each of the child pid namespaces on pidns_level_2 which could be
+> > thousands. So you could only do this lazily. IOW, compare and possibly
+> > update the pid_max value of the child pid namespace everytime it's read
+> > or written. Maybe that .effective is the way to go; not sure right now.
 > 
-> We're introducing alloc tagging, which tracks memory allocations by
-> callsite. Converting alloc_inode_sb() to a macro means allocations will
-> be tracked by its caller, which is a bit more useful.
+> I wonder then, does it make sense to implement this as a cgroup thing
+> instead, which is used to doing this kind of traversal?
 > 
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/fs.h | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 023f37c60709..08d8246399c3 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3010,11 +3010,7 @@ int setattr_should_drop_sgid(struct mnt_idmap *idmap,
->   * This must be used for allocating filesystems specific inodes to set
->   * up the inode reclaim context correctly.
->   */
-> -static inline void *
-> -alloc_inode_sb(struct super_block *sb, struct kmem_cache *cache, gfp_t gfp)
+> Or I suppose not, since the idea is to get legacy software that's
+> writing to pid_max to work?
 
-A __always_inline wouldn't have the same effect? Just wondering.
+My personal perspective is that this is not so important. The original
+motivation for this had been legacy workloads that expect to only get
+pid numbers up to a certain size which would otherwise break. And for
+them it doesn't matter whether that setting is applied through pid_max
+or via some cgroup setting. All that matters is that they don't get pids
+beyond what they expect.
 
-> -{
-> -	return kmem_cache_alloc_lru(cache, &sb->s_inode_lru, gfp);
-> -}
-> +#define alloc_inode_sb(_sb, _cache, _gfp) kmem_cache_alloc_lru(_cache, &_sb->s_inode_lru, _gfp)
->  
->  extern void __insert_inode_hash(struct inode *, unsigned long hashval);
->  static inline void insert_inode_hash(struct inode *inode)
-
+So yes, from my POV we could try and make this a cgroup property. But
+we should check with Tejun first whether he'd consider this a useful
+addition or not.
