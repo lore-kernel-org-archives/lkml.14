@@ -1,120 +1,220 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6829C129A60;
-	Mon, 26 Feb 2024 14:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32B41292F9;
+	Mon, 26 Feb 2024 14:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708957318; cv=none; b=JChThJajkzq9nAbWH08z+WvI40IVtaFW6qJY9vni9DqfDRUdjrhSNUCHG24PNIWhu/nPHGLR1y7qOmaEsz7rEtt8OW2oSJ+vDIDJcqTIDV6s8m1Paor1j5fuPx+OQwjoYfpzx+aELS2WVrP7fW2qv3R4g6nWoyaqaVmrBQZgJgc=
+	t=1708957526; cv=none; b=qLMz7TnrE61lXd9LqFU+zcLxXAM0f4jFxwDqc4HJNhgXxHRHSU36ZDld6axgw45vk38F9ilv/2FmNgKfXZz81B9UiG07BPGGuapz4aisbQx181Gcy5KIHJx0p/E07tVUWATzYylVgMkwfjZps03LbE/vnWbFs2HQxztfwcmGamw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708957318; c=relaxed/simple;
-	bh=8WvnMs1Oiazuwc6Dj/9PvxJnw9utvTorR83BBqq8Wqs=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=XMcngifRfCFocLsYNdjnVOTYoNYSFpP1p9igCZGIr2lGzQH1jV37v5abqFV45R4olnYW72B8Co8IAm3hd2hlRHttGYiDeT73ljVsDqqxNKVJ5d43rX30RU0Vmcw59uon7NE9u4hWNOjdhU949So8VuJ3dfm0IzvxocgdzF3iiro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Di2Qs7Tr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NiEdbtvB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1708957526; c=relaxed/simple;
+	bh=epusIY1XMLW5yDgqCMw/7B8Ke39NBboPe91THB/uUvU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RSp1kTO6QREs10TgDIb0K44Xnsk9MgqcY4C+KdR4NOZO9YAebYFtvKB0hMoypUzlacODBlY/S3UFKhinTslWXxsW2Wt8RbTfJRhXhdLMkXL7G/jjwO68G6MB9fT1afV5hibnhC4Swir5uJs+8PMmLYc+6ocnutwsAZpCoAVnOzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QQe6vPHG; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Di2Qs7Tr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NiEdbtvB"
-Date: Mon, 26 Feb 2024 14:21:54 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708957315;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gGUxh/MpWYF6modd4VritjfskWdY8aSRe1GkrlnbTQA=;
-	b=Di2Qs7TrAa2MgtDtmguDRlrZmdoIB89lLyOmDpnBfH9OltqDbh5wq16MUEVBKtDLTI3doi
-	oBYdJoKHM/YInW5JarZKTA+7dWUt7qOW1dbzrv2ETXG7V5I0+IPKG+BCQ0eSnru5uTU9GV
-	7cxId1os4xPbbMiEJhA4JSDIPU/4W87NfK8DJtWosZ85sC1vKLulfEDwfIq/xdIqXMYAET
-	XPkOlctdB+pqHF543t1M2EPkQxLYof8w9cYIwSVlFe4swEH/LlukekaxTvpIgVxhmWUKvo
-	J/mqsbb+PlfeAWJs5XbTaUzOir2j+lAALIbAZqKObzAxAll0L+rSEZH0BUsnPA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708957315;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gGUxh/MpWYF6modd4VritjfskWdY8aSRe1GkrlnbTQA=;
-	b=NiEdbtvBxmtCUquJSccOpFvW9AT/gTzjEHemVi8YHgmMusxlpeH3Y5pM9pmkX2+QC/T20T
-	pZZKajuszzxaOFBA==
-From: "tip-bot2 for Anup Patel" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/msi] irqchip/riscv-intc: Fix low-level interrupt handler
- setup for AIA
-Cc: Anup Patel <apatel@ventanamicro.com>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240226040746.1396416-2-apatel@ventanamicro.com>
-References: <20240226040746.1396416-2-apatel@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QQe6vPHG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708957525; x=1740493525;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=epusIY1XMLW5yDgqCMw/7B8Ke39NBboPe91THB/uUvU=;
+  b=QQe6vPHG8FBUbok2w0cv/Hsh9KqPn574GZcB0p6xFSCiYHFNVw/seIBG
+   4MAZO22nGUB08EbTtAPb/JaXWd2Vyb2XuD03owK/y9Oec7I2VkpPFt6ui
+   bMNyfJg4UFhL8Ai1746x/QpF7xilAqckNhUjqqifkDYmBOhZn1sTxZvxT
+   sE9N4yMLjtlUTvnwkNWxW7pTyZ0oJQ7lPxSWn6RBqQkv7Umk9FD+Kn3lm
+   rs8TuE0mooSOt9fFueY63TZhrOvlV+3XxlrQBmUKNMwqc21Kjjma/mR2b
+   ymFW7VBLUX09EZjQaxcrpameUbs+Aaahp0pP8TgjcUxYUB5sRTl8tJbtN
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3375130"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="3375130"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 06:25:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="937030140"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="937030140"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Feb 2024 06:25:17 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 348304C1; Mon, 26 Feb 2024 16:25:16 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andi Shyti <andi.shyti@linux.intel.com>
+Subject: [PATCH v2 04/14] serial: 8250_aspeed_vuart: Switch to use uart_read_port_properties()
+Date: Mon, 26 Feb 2024 16:19:20 +0200
+Message-ID: <20240226142514.1485246-5-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240226142514.1485246-1-andriy.shevchenko@linux.intel.com>
+References: <20240226142514.1485246-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170895731463.398.6136319036686107784.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the irq/msi branch of tip:
+Since we have now a common helper to read port properties
+use it instead of sparse home grown solution.
 
-Commit-ID:     1abea7339b404bd79bb26976471e3bf8e6080f47
-Gitweb:        https://git.kernel.org/tip/1abea7339b404bd79bb26976471e3bf8e6080f47
-Author:        Anup Patel <apatel@ventanamicro.com>
-AuthorDate:    Mon, 26 Feb 2024 09:37:37 +05:30
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 26 Feb 2024 15:17:11 +01:00
-
-irqchip/riscv-intc: Fix low-level interrupt handler setup for AIA
-
-Use riscv_intc_aia_irq() as the low-level interrupt handler instead of the
-existing riscv_intc_irq() default handler to make demultiplexing work
-correctly.
-
-Also print "using AIA" in the INTC boot banner when AIA is available.
-
-Fixes: c1be2ae5987a ("irqchip/riscv-intc: Add support for RISC-V AIA")
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240226040746.1396416-2-apatel@ventanamicro.com
+Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
 ---
- drivers/irqchip/irq-riscv-intc.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/tty/serial/8250/8250_aspeed_vuart.c | 50 +++++++--------------
+ 1 file changed, 15 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
-index cccb653..f87aeab 100644
---- a/drivers/irqchip/irq-riscv-intc.c
-+++ b/drivers/irqchip/irq-riscv-intc.c
-@@ -183,7 +183,10 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn, struct irq_ch
- 		return -ENXIO;
+diff --git a/drivers/tty/serial/8250/8250_aspeed_vuart.c b/drivers/tty/serial/8250/8250_aspeed_vuart.c
+index 8c2aaf7af7b7..2a4bc39b11af 100644
+--- a/drivers/tty/serial/8250/8250_aspeed_vuart.c
++++ b/drivers/tty/serial/8250/8250_aspeed_vuart.c
+@@ -419,8 +419,8 @@ static int aspeed_vuart_probe(struct platform_device *pdev)
+ 	struct aspeed_vuart *vuart;
+ 	struct device_node *np;
+ 	struct resource *res;
+-	u32 clk, prop, sirq[2];
+ 	int rc, sirq_polarity;
++	u32 prop, sirq[2];
+ 	struct clk *vclk;
+ 
+ 	np = pdev->dev.of_node;
+@@ -447,53 +447,35 @@ static int aspeed_vuart_probe(struct platform_device *pdev)
+ 	port.port.status = UPSTAT_SYNC_FIFO;
+ 	port.port.dev = &pdev->dev;
+ 	port.port.has_sysrq = IS_ENABLED(CONFIG_SERIAL_8250_CONSOLE);
++	port.port.flags = UPF_BOOT_AUTOCONF | UPF_IOREMAP | UPF_FIXED_PORT | UPF_FIXED_TYPE |
++			  UPF_NO_THRE_TEST;
+ 	port.bugs |= UART_BUG_TXRACE;
+ 
+ 	rc = sysfs_create_group(&vuart->dev->kobj, &aspeed_vuart_attr_group);
+ 	if (rc < 0)
+ 		return rc;
+ 
+-	if (of_property_read_u32(np, "clock-frequency", &clk)) {
++	rc = uart_read_port_properties(&port.port, true);
++	if (rc)
++		goto err_sysfs_remove;
++
++	/* Get clk rate through clk driver if present */
++	if (!port.port.uartclk) {
+ 		vclk = devm_clk_get_enabled(dev, NULL);
+ 		if (IS_ERR(vclk)) {
+ 			rc = dev_err_probe(dev, PTR_ERR(vclk), "clk or clock-frequency not defined\n");
+ 			goto err_sysfs_remove;
+ 		}
+ 
+-		clk = clk_get_rate(vclk);
++		port.port.uartclk = clk_get_rate(vclk);
  	}
  
--	rc = set_handle_irq(&riscv_intc_irq);
-+	if (riscv_isa_extension_available(NULL, SxAIA))
-+		rc = set_handle_irq(&riscv_intc_aia_irq);
-+	else
-+		rc = set_handle_irq(&riscv_intc_irq);
- 	if (rc) {
- 		pr_err("failed to set irq handler\n");
- 		return rc;
-@@ -191,8 +194,9 @@ static int __init riscv_intc_init_common(struct fwnode_handle *fn, struct irq_ch
+ 	/* If current-speed was set, then try not to change it. */
+ 	if (of_property_read_u32(np, "current-speed", &prop) == 0)
+-		port.port.custom_divisor = clk / (16 * prop);
++		port.port.custom_divisor = port.port.uartclk / (16 * prop);
  
- 	riscv_set_intc_hwnode_fn(riscv_intc_hwnode);
+-	/* Check for shifted address mapping */
+-	if (of_property_read_u32(np, "reg-offset", &prop) == 0)
+-		port.port.mapbase += prop;
+-
+-	/* Check for registers offset within the devices address range */
+-	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
+-		port.port.regshift = prop;
+-
+-	/* Check for fifo size */
+-	if (of_property_read_u32(np, "fifo-size", &prop) == 0)
+-		port.port.fifosize = prop;
+-
+-	/* Check for a fixed line number */
+-	rc = of_alias_get_id(np, "serial");
+-	if (rc >= 0)
+-		port.port.line = rc;
+-
+-	port.port.irq = irq_of_parse_and_map(np, 0);
+ 	port.port.handle_irq = aspeed_vuart_handle_irq;
+-	port.port.iotype = UPIO_MEM;
+ 	port.port.type = PORT_ASPEED_VUART;
+-	port.port.uartclk = clk;
+-	port.port.flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
+-		| UPF_FIXED_PORT | UPF_FIXED_TYPE | UPF_NO_THRE_TEST;
+-
+-	if (of_property_read_bool(np, "no-loopback-test"))
+-		port.port.flags |= UPF_SKIP_TEST;
  
--	pr_info("%d local interrupts mapped\n",
--		riscv_isa_extension_available(NULL, SxAIA) ? 64 : riscv_intc_nr_irqs);
-+	pr_info("%d local interrupts mapped%s\n",
-+		riscv_isa_extension_available(NULL, SxAIA) ? 64 : riscv_intc_nr_irqs,
-+		riscv_isa_extension_available(NULL, SxAIA) ? " using AIA" : "");
- 	if (riscv_intc_custom_nr_irqs)
- 		pr_info("%d custom local interrupts mapped\n", riscv_intc_custom_nr_irqs);
+ 	if (port.port.fifosize)
+ 		port.capabilities = UART_CAP_FIFO;
+@@ -503,7 +485,7 @@ static int aspeed_vuart_probe(struct platform_device *pdev)
  
+ 	rc = serial8250_register_8250_port(&port);
+ 	if (rc < 0)
+-		goto err_clk_disable;
++		goto err_sysfs_remove;
+ 
+ 	vuart->line = rc;
+ 	vuart->port = serial8250_get_port(vuart->line);
+@@ -529,7 +511,7 @@ static int aspeed_vuart_probe(struct platform_device *pdev)
+ 	rc = aspeed_vuart_set_lpc_address(vuart, prop);
+ 	if (rc < 0) {
+ 		dev_err_probe(dev, rc, "invalid value in aspeed,lpc-io-reg property\n");
+-		goto err_clk_disable;
++		goto err_sysfs_remove;
+ 	}
+ 
+ 	rc = of_property_read_u32_array(np, "aspeed,lpc-interrupts", sirq, 2);
+@@ -541,14 +523,14 @@ static int aspeed_vuart_probe(struct platform_device *pdev)
+ 	rc = aspeed_vuart_set_sirq(vuart, sirq[0]);
+ 	if (rc < 0) {
+ 		dev_err_probe(dev, rc, "invalid sirq number in aspeed,lpc-interrupts property\n");
+-		goto err_clk_disable;
++		goto err_sysfs_remove;
+ 	}
+ 
+ 	sirq_polarity = aspeed_vuart_map_irq_polarity(sirq[1]);
+ 	if (sirq_polarity < 0) {
+ 		rc = dev_err_probe(dev, sirq_polarity,
+ 				   "invalid sirq polarity in aspeed,lpc-interrupts property\n");
+-		goto err_clk_disable;
++		goto err_sysfs_remove;
+ 	}
+ 
+ 	aspeed_vuart_set_sirq_polarity(vuart, sirq_polarity);
+@@ -559,8 +541,6 @@ static int aspeed_vuart_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
+-err_clk_disable:
+-	irq_dispose_mapping(port.port.irq);
+ err_sysfs_remove:
+ 	sysfs_remove_group(&vuart->dev->kobj, &aspeed_vuart_attr_group);
+ 	return rc;
+-- 
+2.43.0.rc1.1.gbec44491f096
+
