@@ -1,108 +1,83 @@
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104F112BEA2
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 15:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C2A91BDDC;
+	Mon, 26 Feb 2024 15:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708962340; cv=none; b=tcLN4TmLaHHo0NSJ9pDxZlfMp+FATFmVrASPk2SAvoA32I7UjrDyfWszyi8OLPLa9oywRqRaDtntgYqmTqObztHmc/pLrQdBYBHwbQBTdpKsOjVN6RNu4cQDdOEGzvgVnNcpk9+KJ99JMGBdDM3mdjUOi1hTmyl0A75NGlgh8F4=
+	t=1708962360; cv=none; b=IIn3AjoxMCg3OtF/Z9srvktuNZML46un1KAhUqJS+4Ef5A+RBE0NAfJgN1Vre2suHkC+9+OvokIaUk+EzRAlY+C3bUy3UtlTkghAljI12WRrjCUBPFbMJfppDSlQp9rPHdwWnK6uKcxDzWVIRSIhCouWSeX+OmeBJzfgmf8pLnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708962340; c=relaxed/simple;
-	bh=7CXIMXtMPfI9H1HLbI6iz7FfltniQmJfgQ9Q9VbG/eo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=GljhNVwqlw0l1twqllVHmE+xOykLvjAYm6qqMn0ZmUliidy+L90egSve5KIP++NYwDR3v/mFhphfij/oDEpC2ntidpYCdzDFVpfwBc3UdKURn9R5W14DqbOiWe/Ze/40DzVJarz8p5RoELM29EvtK2tRhvHNhGmXK1Vkfie2qIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=HNEqAqL0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qlHi5a6f; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="HNEqAqL0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qlHi5a6f"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 05D3E11400B8;
-	Mon, 26 Feb 2024 10:45:34 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 26 Feb 2024 10:45:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1708962334; x=1709048734; bh=+w/dCCzGxZ
-	J2NH2QcsLQTSv5pe2kJ9fo4kQQPafe7Ao=; b=HNEqAqL0HeXfamJDzBnO7m6d5j
-	M0gkJ7ktSRJAL24kkiCAUHaLK1WAtks34CY+9t5BCPCUm/UWCZ/JmrCbT5YN0gWW
-	TYGjAy5EYQx9Qmvcwcrm0iPLS4SWN0bVWrU38qMxi/4ohgRF+/Hx9pQhlR+wiS8h
-	M6So4IV/pvFwnoCE0pH3y1sJH+RkjfliuR+xpxQxnsOxuSMxxaZLH07efEuuBEuw
-	L4Xus0e4HbEhJYCj8b0GkCfHcTmAUp8l2Mk9mabrD4lS64qecpZtu+nG03p9VuP4
-	ayAUHKgTpMD1bAdP7kjcqHhoYsFxWwekuuM928t0yT3CAsDREl5OFJxBkAQw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1708962334; x=1709048734; bh=+w/dCCzGxZJ2NH2QcsLQTSv5pe2k
-	J9fo4kQQPafe7Ao=; b=qlHi5a6fc6YzL+syHyOJopi7WiGwzgCmx7yCX8oPHBas
-	xdtvt2S0jQJgINIXsmoMg9t0hXnPkzqfW5XNf/mx+7gV3PQWRwx33C47Qdzh9IX/
-	nEdLsKAmBSiJHpXIzESMX33g7wz2LrNhrxRD2yi7rHo5MWo2CqiNTZmTVeK9r0Ye
-	sjgg6UGJhLl8Xm3TNBNPxLlMethJk1znjA+3SNqHUEWBqcq85btaDQRCqU+o+fBH
-	w7ComemVMSfy5vkPo6H2PL3xY/fpOjwCeL4w8rDvBHkT5bAyttOZQpV6WahFX9re
-	fWwx7J7A2EsXAfbeQS3ls1gVSST5kKWs2tji5rXNHw==
-X-ME-Sender: <xms:HbLcZYjDP3otViJhuEsudr2MG_qagS7ehdigdEJ3TwezarJYicPTSQ>
-    <xme:HbLcZRCNKND2_XeOd81DUr03gF04GS94RMBChcCQZ7BngPfW_I-pBAt05eVueNCnA
-    HNvb4oGkbyszWnLZCY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgedvgdejkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:HbLcZQHIIPJiQMJAAYvouHnPN-J8wMdiEbb8gGKX5VTq8psQ3ukxuQ>
-    <xmx:HbLcZZR6dQ8ziGydFmPZ4MWbsvXKKSLE6ViBQsgcxO8sWPktJMsX9A>
-    <xmx:HbLcZVzt2bXHn4frNZQtojf5m0nbGc-3Yu0PrG5bqvGV7ZVw-4th3A>
-    <xmx:HrLcZVdo7v8hBs3HvRdlKBRTixLj6B_sbFqHDX960R6xzft_PfoUGQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id CE1E9B6008D; Mon, 26 Feb 2024 10:45:33 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	s=arc-20240116; t=1708962360; c=relaxed/simple;
+	bh=bdJTfIlFy3ED3bBg1k1z8Me8BEsVndqCk6aPs/qgrVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a39wgW1+Hw+1btwCFEIrzoZ2gLafKFiu2dDNuek5MouahrSXUqZcBQpSOzMF+W3Vi1fug3Gjf0fWuUI6hMWna+jmWpaWbrLAbHbr5kS+gzmqlgS4M3UhirDw1Nl3Fx329H3ms2n6jB+xZCN37om1ml+jbp1zoGV9YHxyOfxN93Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4E93DA7;
+	Mon, 26 Feb 2024 07:46:36 -0800 (PST)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10D503F762;
+	Mon, 26 Feb 2024 07:45:55 -0800 (PST)
+Message-ID: <7e3c779e-09ae-4c87-855e-f0e6ae945169@arm.com>
+Date: Mon, 26 Feb 2024 15:45:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <17b57262-85ca-42d7-bc67-db2c77d6722a@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYvTtJm8mhQh=c9WL4Ef_7Mb79CbBjFVoujupXFMrNsa-w@mail.gmail.com>
-References: 
- <CA+G9fYtrXXm_KO9fNPz3XaRxHV7UD_yQp-TEuPQrNRHU+_0W_Q@mail.gmail.com>
- <0fe0add2-6b17-441f-a0e1-7c1ee9b0ea71@app.fastmail.com>
- <CA+G9fYvTtJm8mhQh=c9WL4Ef_7Mb79CbBjFVoujupXFMrNsa-w@mail.gmail.com>
-Date: Mon, 26 Feb 2024 16:45:13 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>
-Cc: "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
- "Anna-Maria Gleixner" <anna-maria@linutronix.de>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
- "Ard Biesheuvel" <ardb@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Kees Cook" <keescook@chromium.org>
-Subject: Re: arch/arm64/include/asm/atomic_ll_sc.h:298:9: error: unknown type name
- 'u128'
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 2/7] dma: avoid redundant calls for sync
+ operations
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Christoph Hellwig <hch@lst.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Magnus Karlsson <magnus.karlsson@intel.com>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Alexander Duyck <alexanderduyck@fb.com>, bpf@vger.kernel.org,
+ netdev@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240214162201.4168778-1-aleksander.lobakin@intel.com>
+ <20240214162201.4168778-3-aleksander.lobakin@intel.com>
+ <3a9dd580-1977-418f-a3f3-73003dd37710@arm.com>
+ <4d2678be-e36c-4726-83a5-ae9a3a0def55@intel.com>
+Content-Language: en-GB
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <4d2678be-e36c-4726-83a5-ae9a3a0def55@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 26, 2024, at 16:33, Naresh Kamboju wrote:
-> On Fri, 23 Feb 2024 at 14:56, Arnd Bergmann <arnd@arndb.de> wrote:
+On 19/02/2024 12:49 pm, Alexander Lobakin wrote:
+> From: Robin Murphy <robin.murphy@arm.com>
+> Date: Wed, 14 Feb 2024 17:55:23 +0000
+> 
+>> On 2024-02-14 4:21 pm, Alexander Lobakin wrote:
+> 
+> [...]
+> 
+>>> +        /*
+>>> +         * Synchronization is not possible when none of DMA sync ops
+>>> +         * is set. This check precedes the below one as it disables
+>>> +         * the synchronization unconditionally.
+>>> +         */
+>>> +        dev->dma_skip_sync = true;
+>>> +    else if (ops->flags & DMA_F_CAN_SKIP_SYNC)
+>>
+>> Personally I'd combine this into the dma-direct condition.
+> 
+> Please read the code comment a couple lines above :D
 
->> I have an older patch that I never merged to unify the
->> page size configuration in Kconfig, and could try to
->> dig that out if nobody has a better idea. If we do that,
->> we could introduce a CONFIG_PAGE_SIZE.
->
-> The 16K and 64k page size builds pass.
+And my point is that that logic is not actually useful, since it would 
+be nonsensical for ops to set DMA_F_CAN_SKIP_SYNC if they don't even 
+implement sync ops anyway.
 
-Those have compat mode disabled on arm64 for historic reasons.
-We should probably fix that, but that is a different problem.
+If the intent of DMA_F_CAN_SKIP_SYNC is to mean "behaves like 
+dma-direct", then "if (dma_map_direct(...) || ops->flags & 
+DMA_F_CAN_SKIP_SYNC)" is an entirely logical and expected condition.
 
-     Arnd
+Thanks,
+Robin.
