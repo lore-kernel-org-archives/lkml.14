@@ -1,220 +1,198 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9B412FF86;
-	Mon, 26 Feb 2024 19:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CA012FB3A;
+	Mon, 26 Feb 2024 19:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708976202; cv=none; b=NYVMvIQsHyIsyqqEYU6vxiPxdLWH/T9w7kuMaBegZP7Q3XJQSU0QbtAS1c/3t1hjLKExdg0TuhbdnCOSFFWG+vc3utXYggBUxwXKLbOnEjgrnhMQolKtakQMuDDC0HWPJVwg5yfx2WqSlosGkO0Jh2aWDv1Ij/LvD641/b4ZDqY=
+	t=1708976350; cv=none; b=mAcFhVMYaQv9NA+ZZQyn6oW7Rlc9BtoGAEqHOpQ45g70+JG4AM0CibcepQ1SIuS0f4uiJ4az414msVlY0Qb1ue5Cio4EK/l7axMAmeHaNqYqIWbVlF/baJjQwEM5Lg7QUnkbcGNPEG5Ekzjnc7iwLCRK6K6iZHSOIEXAixG/2XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708976202; c=relaxed/simple;
-	bh=2MBzDikgSPllH5SSceffq3hf3NNRNBuh2ZebYc9KLFU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OpRgGVqyrLTY9HDM6YQAPR44GCRit72d/IkgIcHSn0KMY3d/ZJ/omfIy2SjpkikR9QmFSPvA3UARm9SQY6uthU81Wiqj3MYH3+QdOcQkw7po0WoMmRJNC17wfNPA3AyyLbziJIEQndEZIGYnCFs2dvxv30Ah0lKb1LfdCh/dDKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Lnx+qlg+; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1708976350; c=relaxed/simple;
+	bh=LbcZ6qWq9CdIRdNMvzTM4cnq43tnvnfCY02gSxkWg6o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FrIcdbuQ282hq6Rw8Fuduno4P5UEQB6DI72PgnvcqUtfEPNJ1Mph6LmFlDz5bgdpMgnl5KeyGmTCAn9N27a286j4Uu+gxdypVtd7M//eYqZGf1XhPQLYKz7Xye0e9IHZtbu0SwjM3vD5AhFzfICNEkOV2BCZBvPDjE7TLDmfMwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TbT37zpY; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Lnx+qlg+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1708976167; x=1709580967; i=w_armin@gmx.de;
-	bh=2MBzDikgSPllH5SSceffq3hf3NNRNBuh2ZebYc9KLFU=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=Lnx+qlg+YSABALUHig+PYcEeS5yWicr2qSYBc+3Dn1SZI4de1bq1R7t+dtY4FiXi
-	 h2E7D4DEErhKnr3jgGCubZkGaAeAV45cORzjk4Nz/XAildW0TfeqobGgQiz3W2reS
-	 h9AFWJrNWkJctOEzL2xU6+CG1rGb5GAuEB1lHLUbp/UgjtkOrMfPMM16fvBALoIva
-	 BFcyNuiyWitMxxJvqIaR94macJd8ru7+vvwtQmn28h4+ewyhdG5Sqnj+V1iHPjbN6
-	 c/4RbsNn8EeHtViGotKVAmy9QiMZ+BW7c73E43W/3AO102VazHR6w0zh1khmSQ1IV
-	 7wVdM1W/I4lVXqW0qQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MQvD5-1rIN602xQl-00NvOl; Mon, 26 Feb 2024 20:36:07 +0100
-From: Armin Wolf <W_Armin@gmx.de>
-To: jithu.joseph@intel.com,
-	linux@weissschuh.net,
-	pali@kernel.org
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	Dell.Client.Kernel@dell.com,
-	jdelvare@suse.com,
-	linux@roeck-us.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] platform/x86: wmi: Do not instantiate older WMI drivers multiple times
-Date: Mon, 26 Feb 2024 20:35:56 +0100
-Message-Id: <20240226193557.2888-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240226193557.2888-1-W_Armin@gmx.de>
-References: <20240226193557.2888-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TbT37zpY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1708976346;
+	bh=LbcZ6qWq9CdIRdNMvzTM4cnq43tnvnfCY02gSxkWg6o=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=TbT37zpYPH5KAbLLpe855oKrwwrgqsQTCy4TiemFVOyKXSaJiWz2opdr8Nv6I6pkI
+	 qO3j1L259B+bCL8rDsIhIqIiihW5PBHv6znH/zNcJDLcP5yyW57KeIQ+4n9CyFUvyg
+	 HCOyP5tEaNXgn8x21wTBF9E0cUmGyxqbuaxj3GxdqYUo/d0ysHemRo0SiEndbYmygl
+	 4Syxih5KS0pDrQN5FvJoeaFcxuIjUy4SydreT2KygZe/yltMuEoQG196PuWEgdV4i/
+	 ezujIPTzItOBSZuly5GkFggB0LRyPIqhImuFe8NGtVEAUSndzLro9pNgBfyL9wLzb0
+	 i1dEGh3rUiIgQ==
+Received: from nicolas-tpx395.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5165937820AF;
+	Mon, 26 Feb 2024 19:39:04 +0000 (UTC)
+Message-ID: <a50530974d05fb9a625b4bf6fbf531035161f443.camel@collabora.com>
+Subject: Re: [PATCH v3,1/2] media: mediatek: vcodec: adding lock to protect
+ decoder context list
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Yunfei Dong <yunfei.dong@mediatek.com>, =?ISO-8859-1?Q?N=EDcolas?= "F .
+ R . A . Prado" <nfraprado@collabora.com>, Hans Verkuil
+ <hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
+ <benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>, 
+ Irui Wang <irui.wang@mediatek.com>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig
+ <frkoenig@chromium.org>,  Daniel Vetter <daniel@ffwll.ch>, Steve Cho
+ <stevecho@chromium.org>, linux-media@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ Project_Global_Chrome_Upstream_Group@mediatek.com, Steve Cho
+ <stevecho@google.com>
+Date: Mon, 26 Feb 2024 14:39:00 -0500
+In-Reply-To: <20240222092609.31382-2-yunfei.dong@mediatek.com>
+References: <20240222092609.31382-1-yunfei.dong@mediatek.com>
+	 <20240222092609.31382-2-yunfei.dong@mediatek.com>
+Autocrypt: addr=nicolas.dufresne@collabora.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zBmwMbmkDKMJpCljEU9J9fD9nRUvemHsPHKma7Mmdk+LWv3OhMh
- Uetj7RE1fu1JkwTWW3hBPPAAZt65KegTN+8EB4xgIfRKjnNFKIgQluhJqquriD+HEYMteUL
- XVGvalSIQr21FmJMMMDqF1z3PfR+y1SPhSFCwVLvUjTRmsxRXJPlYo2aAI+dKYktkiB2A/s
- yfjfV+hptNYouNS0GPp4Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lr/uKsM/SI8=;6nQ0TV7uXCpGzUwdCn1W69j6ImD
- oNilSyIzNr8wgRotQQ1hLHy+f972uYbv+Pdlwc20HP+d3SWHgs5L9XceAP/fmMmNna0qtzyij
- xNZ3zIa1jRASEAIaegrt9kKb0USGtcirwtiiAJpW49zoSmQRwh50KCZj9z4NA2ck2xLYGtb2p
- /HzbeKNg/BldgLMregyhZY0TTi8V2598LITzRU4cXRUBo+DjoFU5fpHd7m/FjX6XHxFpl3nro
- eco0o+P8VU6tTNYvKXuSr1BRCnHNOzqzCoq5Q3/okiKJ4Q9kDdjmGO+silMZaEj5PkmPsGJjP
- HCAmnpkFClsRzMv0fuC5x/KnF/fXgFzgmacyYlRjUSRZX5KPkpFxlUWwvOwyTaom8x9W243op
- w02qt8C93H/Y8vOmh+1mDDOLRJcdbZjTtE6BlHTHvHMurZklyfzxxpwt7AuOWELOLC4xhS46+
- obCdVyfqVlWGt7T/qzS2O1sBoYoYf9zTtbxE8nwLx9O6dCaRWNmAjPtR1Hbj+ZH7M7mRMmpWB
- B8ksX53kmuDXDBKehrGc1sBS6cATei73WzczQ0icfBxZN/Pmn56EuU2H5x0MG3KOzhuI4ywGh
- JKk30F5kzFbenYU3Abn4UYCXVR5vR+9NPGCiUUtHypdYteiLjwkcwXvxSnBY0hX4H2rgJRReu
- /CO8zRZ0JiIIB2YPz4D6RbKfPhEYU0yRjXKlRYEQq67hfhJ1zY2sALLW2qp9lT6Bshcuemhn3
- ReMasxI3y0Kfw8yua/YFeAU3jPwn90CSobl5GJjq/i8ZZ3Z/j+hv9ciedWjzO+rh3YLhtnJcm
- YkQke4BnqgHGJO+0c4biOzZv/S0cceGMR3+hKfUSrwzLA=
 
-Many older WMI drivers cannot be instantiated multiple times for
-two reasons:
+Hi,
 
-- they are using the legacy GUID-based WMI API
-- they are singletons (with global state)
+Le jeudi 22 f=C3=A9vrier 2024 =C3=A0 17:26 +0800, Yunfei Dong a =C3=A9crit=
+=C2=A0:
+> The ctx_list will be deleted when scp getting unexpected behavior, then t=
+he
+> ctx_list->next will be NULL, the kernel driver maybe access NULL pointer =
+in
+> function vpu_dec_ipi_handler when going through each context, then reboot=
+.
+>=20
+> Need to add lock to protect the ctx_list to make sure the ctx_list->next =
+isn't
+> NULL pointer.
 
-Prevent such WMI drivers from binding to WMI devices with a duplicated
-GUID, as this would mean that the WMI driver will be instantiated at
-least two times (one for the original GUID and one for the duplicated
-GUID).
-WMI drivers which can be instantiated multiple times can signal this
-by setting a flag inside struct wmi_driver.
+The cited crash no longer occurs for me, but it still sometimes crashes whi=
+le
+the SCP being rebooted. I think this patch can still go in, as it overall
+improves the situation.
 
-Tested on a ASUS Prime B650-Plus.
+Meanwhile, here's my stress test using GStreamer and stream downloaded by
+fluster. I call this script few times this way as it does not always crash.=
+ The
+test just keep starting decode sessions and terminate them after 2 seconds.=
+ It
+is highly parallel. Using too low number does not reproduce the crash, usin=
+g too
+high number leads to alloc failure, which wasn't the goal of this test.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/hwmon/dell-smm-hwmon.c                 |  1 +
- drivers/platform/x86/dell/dell-wmi-ddv.c       |  1 +
- drivers/platform/x86/intel/wmi/sbl-fw-update.c |  1 +
- drivers/platform/x86/intel/wmi/thunderbolt.c   |  1 +
- drivers/platform/x86/wmi-bmof.c                |  1 +
- drivers/platform/x86/wmi.c                     | 12 ++++++++++++
- include/linux/wmi.h                            |  2 ++
- 7 files changed, 19 insertions(+)
+./mtk-vcodec-crash.sh 100
 
-diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon=
-.c
-index 6d8c0f328b7b..168d669c4eca 100644
-=2D-- a/drivers/hwmon/dell-smm-hwmon.c
-+++ b/drivers/hwmon/dell-smm-hwmon.c
-@@ -1587,6 +1587,7 @@ static struct wmi_driver dell_smm_wmi_driver =3D {
- 	},
- 	.id_table =3D dell_smm_wmi_id_table,
- 	.probe =3D dell_smm_wmi_probe,
-+	.no_singleton =3D true,
- };
+Script code:
+***
+#!/bin/bash
 
- /*
-diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
-86/dell/dell-wmi-ddv.c
-index db1e9240dd02..0b2299f7a2de 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
-+++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
-@@ -882,6 +882,7 @@ static struct wmi_driver dell_wmi_ddv_driver =3D {
- 	},
- 	.id_table =3D dell_wmi_ddv_id_table,
- 	.probe =3D dell_wmi_ddv_probe,
-+	.no_singleton =3D true,
- };
- module_wmi_driver(dell_wmi_ddv_driver);
+test() {
+	gst-launch-1.0 --no-fault filesrc location=3DTILES_B_Cisco_1.bin ! h265par=
+se ! v4l2slh265dec ! fakevideosink &
+	pid=3D$!
 
-diff --git a/drivers/platform/x86/intel/wmi/sbl-fw-update.c b/drivers/plat=
-form/x86/intel/wmi/sbl-fw-update.c
-index 040153ad67c1..75c82c08117f 100644
-=2D-- a/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-+++ b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-@@ -131,6 +131,7 @@ static struct wmi_driver intel_wmi_sbl_fw_update_drive=
-r =3D {
- 	.probe =3D intel_wmi_sbl_fw_update_probe,
- 	.remove =3D intel_wmi_sbl_fw_update_remove,
- 	.id_table =3D intel_wmi_sbl_id_table,
-+	.no_singleton =3D true,
- };
- module_wmi_driver(intel_wmi_sbl_fw_update_driver);
+	sleep 2
+	kill $pid
+}
 
-diff --git a/drivers/platform/x86/intel/wmi/thunderbolt.c b/drivers/platfo=
-rm/x86/intel/wmi/thunderbolt.c
-index e2ad3f46f356..08df560a2c7a 100644
-=2D-- a/drivers/platform/x86/intel/wmi/thunderbolt.c
-+++ b/drivers/platform/x86/intel/wmi/thunderbolt.c
-@@ -63,6 +63,7 @@ static struct wmi_driver intel_wmi_thunderbolt_driver =
-=3D {
- 		.dev_groups =3D tbt_groups,
- 	},
- 	.id_table =3D intel_wmi_thunderbolt_id_table,
-+	.no_singleton =3D true,
- };
+for i in $(seq 1 $1)
+do
+	test &
+done
 
- module_wmi_driver(intel_wmi_thunderbolt_driver);
-diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bm=
-of.c
-index 644d2fd889c0..df6f0ae6e6c7 100644
-=2D-- a/drivers/platform/x86/wmi-bmof.c
-+++ b/drivers/platform/x86/wmi-bmof.c
-@@ -94,6 +94,7 @@ static struct wmi_driver wmi_bmof_driver =3D {
- 	.probe =3D wmi_bmof_probe,
- 	.remove =3D wmi_bmof_remove,
- 	.id_table =3D wmi_bmof_id_table,
-+	.no_singleton =3D true,
- };
+wait
+***
 
- module_wmi_driver(wmi_bmof_driver);
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 29dfe52eb802..349deced87e8 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -883,6 +883,18 @@ static int wmi_dev_probe(struct device *dev)
- 	struct wmi_driver *wdriver =3D drv_to_wdrv(dev->driver);
- 	int ret =3D 0;
-
-+	/* Some older WMI drivers will break if instantiated multiple times,
-+	 * so they are blocked from probing WMI devices with a duplicated GUID.
-+	 *
-+	 * New WMI drivers should support being instantiated multiple times.
-+	 */
-+	if (test_bit(WMI_GUID_DUPLICATED, &wblock->flags) && !wdriver->no_single=
-ton) {
-+		dev_warn(dev, "Legacy driver %s cannot be instantiated multiple times\n=
-",
-+			 dev->driver->name);
-+
-+		return -ENODEV;
-+	}
-+
- 	if (wdriver->notify) {
- 		if (test_bit(WMI_NO_EVENT_DATA, &wblock->flags) && !wdriver->no_notify_=
-data)
- 			return -ENODEV;
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index 781958310bfb..63cca3b58d6d 100644
-=2D-- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -49,6 +49,7 @@ u8 wmidev_instance_count(struct wmi_device *wdev);
-  * @driver: Driver model structure
-  * @id_table: List of WMI GUIDs supported by this driver
-  * @no_notify_data: Driver supports WMI events which provide no event dat=
-a
-+ * @no_singleton: Driver can be instantiated multiple times
-  * @probe: Callback for device binding
-  * @remove: Callback for device unbinding
-  * @notify: Callback for receiving WMI events
-@@ -59,6 +60,7 @@ struct wmi_driver {
- 	struct device_driver driver;
- 	const struct wmi_device_id *id_table;
- 	bool no_notify_data;
-+	bool no_singleton;
-
- 	int (*probe)(struct wmi_device *wdev, const void *context);
- 	void (*remove)(struct wmi_device *wdev);
-=2D-
-2.39.2
-
+The kernel Crash:
+[   93.261248] Unable to handle kernel NULL pointer dereference at virtual
+address 0000000000000008
+[   93.270056] Mem abort info:
+[   93.272880]   ESR =3D 0x0000000096000004
+[   93.276804]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+[   93.282233]   SET =3D 0, FnV =3D 0
+[   93.285372]   EA =3D 0, S1PTW =3D 0
+[   93.288561]   FSC =3D 0x04: level 0 translation fault
+[   93.293493] Data abort info:
+[   93.296424]   ISV =3D 0, ISS =3D 0x00000004, ISS2 =3D 0x00000000
+[   93.301920]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+[   93.306977]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+[   93.312321] user pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000168daf000
+[   93.318790] [0000000000000008] pgd=3D0000000000000000, p4d=3D00000000000=
+00000
+[   93.325588] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+[   93.331842] Modules linked in: mt7921e mt7921_common mt792x_lib
+mt76_connac_lib mt76 mac80211 btusb btintel mtk_vcodec_dec_hw btmtk btrtl
+mtk_vcodec_dec btbcm cfg80211 bluetooth snd_sof_mt8195 mtk_vcodec_enc
+mtk_adsp_common uvcvideo v4l2_vp9 snd_sof_xtensa_dsp v4l2_h264 mtk_vcodec_d=
+bgfs
+snd_sof_of snd_sof ecdh_generic mtk_vcodec_common ecc uvc elan_i2c
+videobuf2_vmalloc crct10dif_ce cros_ec_lid_angle cros_ec_sensors snd_sof_ut=
+ils
+cros_ec_sensors_core cros_usbpd_logger cros_usbpd_charger fuse ip_tables ip=
+v6
+[   93.376652] CPU: 5 PID: 3210 Comm: h265parse0:sink Tainted: G        W  =
+   =20
+6.8.0-rc4-next-20240212+ #14
+[   93.386463] Hardware name: Acer Tomato (rev3 - 4) board (DT)
+[   93.392107] pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=
+=3D--)
+[   93.399054] pc : vcodec_vpu_send_msg+0x4c/0x190 [mtk_vcodec_dec]
+[   93.405058] lr : vcodec_send_ap_ipi+0x78/0x170 [mtk_vcodec_dec]
+[   93.410968] sp : ffff80008750bc20
+[   93.414269] x29: ffff80008750bc20 x28: ffff1299f6d70000 x27: 00000000000=
+00000
+[   93.421391] x26: 0000000000000000 x25: 0000000000000000 x24: 00000000000=
+00000
+[   93.428512] x23: ffff80008750bc98 x22: 000000000000a003 x21: ffffd45c4cf=
+ae000
+[   93.435632] x20: 0000000000000010 x19: ffff1299fd668310 x18: 00000000000=
+0001a
+[   93.442753] x17: 000000040044ffff x16: ffffd45cb15dc648 x15: 00000000000=
+00000
+[   93.449874] x14: ffff1299c08da1c0 x13: ffffd45cb1f87a10 x12: ffffd45cb2f=
+5fe80
+[   93.456995] x11: 0000000000000001 x10: 0000000000001b30 x9 : ffffd45c4d1=
+2b488
+[   93.464116] x8 : 1fffe25339380d81 x7 : 0000000000000001 x6 : ffff1299c9c=
+06c00
+[   93.471236] x5 : 0000000000000132 x4 : 0000000000000000 x3 : 00000000000=
+00000
+[   93.478358] x2 : 0000000000000010 x1 : ffff80008750bc98 x0 : 00000000000=
+00000
+[   93.485479] Call trace:
+[   93.487914]  vcodec_vpu_send_msg+0x4c/0x190 [mtk_vcodec_dec]
+[   93.493563]  vcodec_send_ap_ipi+0x78/0x170 [mtk_vcodec_dec]
+[   93.499125]  vpu_dec_deinit+0x1c/0x30 [mtk_vcodec_dec]
+[   93.504254]  vdec_hevc_slice_deinit+0x30/0x98 [mtk_vcodec_dec]
+[   93.510076]  vdec_if_deinit+0x38/0x68 [mtk_vcodec_dec]
+[   93.515205]  mtk_vcodec_dec_release+0x20/0x40 [mtk_vcodec_dec]
+[   93.521027]  fops_vcodec_release+0x64/0x118 [mtk_vcodec_dec]
+[   93.526677]  v4l2_release+0x7c/0x100
+[   93.530245]  __fput+0x80/0x2d8
+[   93.533292]  __fput_sync+0x58/0x70
+[   93.536681]  __arm64_sys_close+0x40/0x90
+[   93.540590]  invoke_syscall+0x50/0x128
+[   93.544329]  el0_svc_common.constprop.0+0x48/0xf0
+[   93.549020]  do_el0_svc+0x24/0x38
+[   93.552323]  el0_svc+0x38/0xd8
+[   93.555367]  el0t_64_sync_handler+0xc0/0xc8
+[   93.559537]  el0t_64_sync+0x1a8/0x1b0
+[   93.563189] Code: d503201f f9401660 b900127f b900227f (f9400400)=20
+[   93.569268] ---[ end trace 0000000000000000 ]---
