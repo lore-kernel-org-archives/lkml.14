@@ -1,94 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD242433C4;
-	Mon, 26 Feb 2024 16:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABE81DFEA;
+	Mon, 26 Feb 2024 16:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708965654; cv=none; b=hPZwRctzKVUnYYFix0VR4bmcHGAqm0t7+t3Wroqacy3tpzGTzxDyj9B1YIRK/3TtkFjAjmTJ/bGTXsI+jTimWZOdMWsBjj0rBDnQ/uGySYW3j4EUcQFCnXQ49ODSlisAGYU58LOF5dXvQR6hYyHEawOZ2OURLht4SYVdTm4xHcA=
+	t=1708965733; cv=none; b=ofGEpo4OXrREnDdAa6IEDauWIwf1nn+UUKsS39QS6hPLQ+9Qt86UnEyQkBA6x5BABE27GUHsbShYoVo6E3I0hcga5SmOsXIJ0EIoTggPqUyqCITA356twMu9EvGZeSpQBW8eeUzfhXwhLqgUFML696MtgLj2OQbaqwSpOrdThsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708965654; c=relaxed/simple;
-	bh=tbrC+G2poxmPDlALZboFVqjxLPIIMR/BR+gc8VJamMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qn9q/Pzf2yaRza7/gf5lWAPSB8H/6PBrVNNM/4ECnI6dpZ+l3XO1HeCRvdMx+8NHAn7yeFgOJCVbSbB3F3F3BjkXHN1/AyEvP1NKisLExzgBM/uBfW1Biv4Ys+vi55HFSdxI/WvbDXvxusYycoj+AajBDzeL/rrffYO111b3Zbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="13903010"
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="13903010"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:40:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="913881452"
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="913881452"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 08:40:48 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1ree21-00000007jed-1KuH;
-	Mon, 26 Feb 2024 18:40:45 +0200
-Date: Mon, 26 Feb 2024 18:40:45 +0200
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: ojeda@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, andrew@lunn.ch, gregory.clement@bootlin.com,
-	sebastian.hesselbarth@gmail.com, geert@linux-m68k.org, pavel@ucw.cz,
-	lee@kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-leds@vger.kernel.org
-Subject: Re: [PATCH 0/3] auxdisplay: 7 segment LED display
-Message-ID: <Zdy_DRAJaHXY7xov@smile.fi.intel.com>
-References: <20240225213423.690561-1-chris.packham@alliedtelesis.co.nz>
- <CAHp75Vc9OBtxdKSmk9Uu9G3j+mfN8+9prTEVx3LyUcdBYFEqwg@mail.gmail.com>
+	s=arc-20240116; t=1708965733; c=relaxed/simple;
+	bh=yw07OWyD0LtGybRZCX/Yqm2aQwlLwnlMybFWhWjrytk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=MzzMl4wkY0PM8p806ehhGofzXvm2ndA/gVE4h4QJVy/N2ZeixiFIxi7ovFVx6mkhCe1c8RBAS4S2KXyjeOVbYfiJpUk3DXMc4OCo/qxjS4/q8G0ahqlbdtMwnP5JLDij7QZ3tXtZr1Ik12kDyOc9el3R60Ng/EoZgyO1ZVywM4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3V2VU9Y; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3V2VU9Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41460C43390;
+	Mon, 26 Feb 2024 16:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708965733;
+	bh=yw07OWyD0LtGybRZCX/Yqm2aQwlLwnlMybFWhWjrytk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=n3V2VU9YIFkybyzgFGadV160pUuRkp2plaLGHlaYeyQHlXcWr70M0e09RRifFEbht
+	 lweekPfQpw0KnMwogvAjS4Yd5+Yl9jggk84KE6IP+Q0MNPT1U08Q9GGHqR8mHMEVIj
+	 X7J/pKmfgLTXb39+YeEYE0VUSrmZyJQ/GyY+2wCFS/ahlfV39oaKj6Z0j6u5LHisrn
+	 JIT99tz4DEFL6st8vHeFZp+aoSCD0QGD9pOb2dSYPNR7f6sosIrwgN1h3Qalt7LR+j
+	 yICKTiRPwrZr5PzzsiSRc6UvhNxfjylF1HpoHVEytgpk88nqXpJfO9wahx5J9/Nqe/
+	 7cOdv1qoG5kog==
+From: Mark Brown <broonie@kernel.org>
+To: tiwai@suse.com, Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, 
+ linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+In-Reply-To: <20240221150507.1039979-1-rf@opensource.cirrus.com>
+References: <20240221150507.1039979-1-rf@opensource.cirrus.com>
+Subject: Re: [PATCH 0/9] ALSA: cs35l56: Apply calibration from EFI
+Message-Id: <170896573086.55097.17093703884740704115.b4-ty@kernel.org>
+Date: Mon, 26 Feb 2024 16:42:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vc9OBtxdKSmk9Uu9G3j+mfN8+9prTEVx3LyUcdBYFEqwg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-a684c
 
-On Mon, Feb 26, 2024 at 04:23:15AM +0200, Andy Shevchenko wrote:
-> On Sun, Feb 25, 2024 at 11:34 PM Chris Packham
-> <chris.packham@alliedtelesis.co.nz> wrote:
-> >
-> > This series adds a driver for a 7 segment LED display.
-> >
-> > I'd like to get some feedback on how this could be extended to support >1
-> > character. The driver as presented is sufficient for my hardware which only has
-> > a single character display but I can see that for this to be generically useful
-> > supporting more characters would be desireable.
-> >
-> > Earlier I posted an idea that the characters could be represended by
-> > sub-nodes[1] but there doesn't seem to be a way of having that and keeping the
-> > convenience of using devm_gpiod_get_array() (unless I've missed something).
+On Wed, 21 Feb 2024 15:04:58 +0000, Richard Fitzgerald wrote:
+> Factory calibration of the speakers stores the calibration information
+> into an EFI variable.
 > 
-> It seems you didn't know that the tree for auxdisplay has been changed.
-> Can you rebase your stuff on top of
-> https://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-auxdisplay.git/log/?h=for-next?
-> It will reduce your code base by ~50%.
+> This set of patches adds support for applying speaker calibration
+> data from that EFI variable.
+> 
+> Patch #1 and #2 are bugfixes that are prerequisites.
+> 
+> [...]
 
-I have just updated the branch so it adds one patch that changes the prototype
-of linedisp_register().
+Applied to
 
-> WRT subnodes, you can go with device_for_each_child_node() and
-> retrieve gpio array per digit. It means you will have an array of
-> arrays of GPIOs.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Btw, as Geert proposed for another 7-segment driver, we might gain from the
-display-width-chars property. But I think this property has to be parsed on
-top of line display library, no need to have it in each affected driver.
+Thanks!
 
-> > [1] - https://lore.kernel.org/lkml/2a8d19ee-b18b-4b7c-869f-7d601cea30b6@alliedtelesis.co.nz/
+[1/9] ASoC: wm_adsp: Fix missing mutex_lock in wm_adsp_write_ctl()
+      (no commit info)
+[2/9] ALSA: hda: hda_cs_dsp_ctl: Only call notify when a control has been added to a card
+      (no commit info)
+[3/9] ASoC: wm_adsp: Add wm_adsp_start() and wm_adsp_stop()
+      commit: 5519ac3a7164d5d1c31879bf5b0d279b58c8e88f
+[4/9] ASoC: cs-amp-lib: Add helpers for factory calibration data
+      commit: 1cad8725f2b98965ed3658bc917090b30adb14fa
+[5/9] ASoC: cs35l56: Add helper functions for amp calibration
+      commit: e1830f66f6c62d288d2c27a7ed18ab93caa0b253
+[6/9] ASoC: cs35l56: Apply amp calibration from EFI data
+      commit: 1326444e93c250ff99eba048f699313ba6acbf2f
+[7/9] ALSA: hda: hda_cs_dsp_ctl: Add helper function to write calibration
+      (no commit info)
+[8/9] ALSA: hda: cs35l56: Apply amp calibration from EFI data
+      commit: cfa43aaa7948be5a701ad4099588cf49d5a02708
+[9/9] ASoC: cs-amp-lib: Add KUnit test for calibration helpers
+      (no commit info)
 
--- 
-With Best Regards,
-Andy Shevchenko
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
