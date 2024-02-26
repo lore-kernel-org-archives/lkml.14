@@ -1,170 +1,170 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5B21BF3F
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC7B1C6A3
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 08:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708935747; cv=none; b=KDtk7e89/2NsdcQmT2+wJGJo2a4Q5AolzmgGA8b8xifJqRQbE8+6LWNSjYtwNhqB86Jnlgn3ocXlZyYZeWRNXY4lsXuXMS4GqK3WNxJPFgHNn9tZ0cK/StgAt7m3iWLIGv9sOj0WOawm+QEVmPgZ7lsaZ7CzTp9vtqmOrsl43DA=
+	t=1708935907; cv=none; b=QJ6ylM8CbDlFAzqx3DSkL08PomoGxD5cWKiDvaoaCCXbibyv3D23/hfXnu7ngutxSk7BWLGVs2osnDhwv61fedBaT/wfDTmTd4FamWGpzHPD5HTxTeBH7RUkmUjbwizIy3mCKty0tj1FlsNy8GGUcjaFZsKy46K5O1PgzoTMNzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708935747; c=relaxed/simple;
-	bh=BvBWMKwRTrQ7dFC+IvxV5WxyS6soTP9Il+To1EGI5FU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Uy8NnS8j5b84B3FLXRjKaV0Hi0lbThr196MbpZHiymRxPPiqqgxPMoW8j2tHCR3F8sdQu5OxJCbAuvhq/nWiRtSEWQ2nsjleUOZd9FVp3jeA0IQrBG15rq2O4V6zvhyzyXuQ3nOgS419mUlZE9++/48l3pazskhrcgQqXmEi0mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vv43oWry; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vv43oWry"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-412a51754c9so3128595e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 00:22:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708935744; x=1709540544; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0IEzXQ/hHU3BKY4OyByeyO401CW6mzN8A+jxoD/xKg8=;
-        b=Vv43oWryZJ1IYUZKttDhuy9Y6D6N2CYB2AEUtG4Nu85K5UZlr405B87HPbA5fOgFxn
-         sh3rvYDkUu+8GrYYKMsohHa3AwC8+eL09s8gaZYq5bqouhyCRUVed0/lseMUMcXSv47t
-         Gj13f9I3sIecZCbJ1gUH+a08YNeWVyN2ewJ376OuhH6dyaaYJYsAG1z1/otBk1cJ+N+D
-         UPVCWQJvWy13XEsoYYeR2ZiEqhnd7eE/eUFBDSEw2UY3TCNwXWKM4+gj7RhlE63IKp7X
-         6HgqWjngiBnSKkKEIx0vUZroSgZLGURt8BWVXzgKykPRrG3+zbrnX2uhzwmQpDIAj2wg
-         7BMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708935744; x=1709540544;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0IEzXQ/hHU3BKY4OyByeyO401CW6mzN8A+jxoD/xKg8=;
-        b=jepmmnVvbM4RxYLCNsmT6AUx+wg4Wmsy1lpfuaPO+Oe6XI2qOlisnDS+YQTdEy6T4I
-         YWnbKxVBxIHOqRtlsnVkhzIkBUL5eatNe0fcdmCaH8MkRZsNP3OiEflCJUfMQe/DRTlt
-         xMDDZZoGraCUa7Uq8r4Rr0N8Pf3ZnEwSQ/0ct0XiEFrJe4MQIfR5RamjF+sMrw1SPpBK
-         kTEUtFhAJOBYTos0OSdxneWdLMvxIaET2Spf75EdP2zE1dWPuanIFmx0+V/nI2yJvWUv
-         KIulWpCAgh+WH4/s3pakXHBnGTZGt5CkdogkkB3uF6wT8Jyu++ZWCJVFq5G90dh+uGjL
-         sz+A==
-X-Forwarded-Encrypted: i=1; AJvYcCViuC0l4XzHYH30csNCM3+ikcsif+J48PusVYOjrGNm3ndkwsyJeIBX62EMolGinN1bO2/MgRBGRw6VJnNjz7htSR63BqKY3iamZ988
-X-Gm-Message-State: AOJu0YxMaGVdfEkcjpY8wpDH2+WlOUv8UyhFsojckxNhTSKy9/76dMZZ
-	e6Fy+uyGn/fvzpZ1DtyOpBwya5QhxmQOhQclLxtDuEQ8g9pUEto+ijXELfXJPpc=
-X-Google-Smtp-Source: AGHT+IFRVFnL6GzUdLkAbp9WJAobrTEiAFwBC8dfGODSRUOoc8vdBhwELS9PJcHVhrwAZOFHzcytUA==
-X-Received: by 2002:a05:600c:5195:b0:412:a81a:cf9f with SMTP id fa21-20020a05600c519500b00412a81acf9fmr294589wmb.30.1708935744059;
-        Mon, 26 Feb 2024 00:22:24 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:6109:4c61:11d9:ed64? ([2a01:e0a:982:cbb0:6109:4c61:11d9:ed64])
-        by smtp.gmail.com with ESMTPSA id 19-20020a05600c249300b00411e1574f7fsm10999475wms.44.2024.02.26.00.22.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 00:22:23 -0800 (PST)
-Message-ID: <9f312920-92d1-4b83-9fd4-d9c70bcbde97@linaro.org>
-Date: Mon, 26 Feb 2024 09:22:23 +0100
+	s=arc-20240116; t=1708935907; c=relaxed/simple;
+	bh=ILUzmi0yWEnHp6QLN0s99nRQRgTcB6WDFt8VQe6DRwA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nJsglSFe6uY75dZUzk4wAv9l9mAiq326/UGWmQKsXx8qAev6OVfkGxUzFhzxUTI+xcQ3d+3ZLiPXHV9DsK/owSxL2FqP23zOEihiAIdvbTe+Abuvf9qH69NM4sjqs0oi9vo+GlOnZlhFhOC7cbroaDJ9kYBk4b0A4CYQrQMDs88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1reWIE-0001Gf-H9; Mon, 26 Feb 2024 09:24:58 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1reWID-002xJH-M7; Mon, 26 Feb 2024 09:24:57 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1reWID-00BVMf-1u;
+	Mon, 26 Feb 2024 09:24:57 +0100
+Date: Mon, 26 Feb 2024 09:24:57 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Leif Middelschulte <leif.middelschulte@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	NXP Linux Team <linux-imx@nxp.com>, Leif Middelschulte <Leif.Middelschulte@klsmartin.com>, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] pwm: imx27: fix race condition .apply,.get_state
+Message-ID: <jm73itlefa5dmqxhe35tbzohg3vr7pog6kt7ieuiw3a2q2p6ml@ngwtwz2aawyn>
+References: <20230906154215.4ikrrbx4xgx2nmu5@pengutronix.de>
+ <20240224112902.55539-1-Leif.Middelschulte@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 3/3] drm/panel: simple: add CMT430B19N00 LCD panel support
-Content-Language: en-US, fr
-To: =?UTF-8?B?SsOpcsOpbWllIERhdXRoZXJpYmVz?=
- <jeremie.dautheribes@bootlin.com>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Yen-Mei Goh <yen-mei.goh@keysight.com>
-References: <20240223134517.728568-1-jeremie.dautheribes@bootlin.com>
- <20240223134517.728568-4-jeremie.dautheribes@bootlin.com>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <20240223134517.728568-4-jeremie.dautheribes@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="c5aqstpagj445og2"
+Content-Disposition: inline
+In-Reply-To: <20240224112902.55539-1-Leif.Middelschulte@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 23/02/2024 14:45, Jérémie Dautheribes wrote:
-> Add support for Crystal Clear Technology CMT430B19N00 4.3" 480x272
-> TFT-LCD panel.
-> 
-> Signed-off-by: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
+
+--c5aqstpagj445og2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Leif,
+
+thanks for this new round addressing the identified issues.
+
+On Sat, Feb 24, 2024 at 12:29:00PM +0100, Leif Middelschulte wrote:
+> From: Leif Middelschulte <Leif.Middelschulte@klsmartin.com>
+>=20
+> With CONFIG_PWM_DEBUG=3Dy after writing a value to the PWMSAR
+> register in .apply(), the register is read in .get_state().
+> Unless a period completed in the meantime, this read yields the
+> previously used duty cycle configuration. As the PWM_DEBUG code
+> applies the read out configuration for testing purposes this
+> effectively undoes the intended effect by rewriting the previous
+> hardware state.
+>=20
+> Note that this change merely implements a sensible heuristic.
+> The i.MX has a 4 slot FIFO to configure the duty cycle. This FIFO
+> cannot be read back in its entirety. The "write x then read back
+> x from hw" semantics are therefore not easily applicable.
+> With this change, the .get_state() function tries to wait for some
+> stabilization in the FIFO (empty state). In this state it keeps
+> applying the last value written to the sample register.
+>=20
+> Signed-off-by: Leif Middelschulte <Leif.Middelschulte@klsmartin.com>
 > ---
->   drivers/gpu/drm/panel/panel-simple.c | 29 ++++++++++++++++++++++++++++
->   1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 20e3df1c59d4..b940220f56e2 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1457,6 +1457,32 @@ static const struct panel_desc boe_hv070wsa = {
->   	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->   };
->   
-> +static const struct drm_display_mode cct_cmt430b19n00_mode = {
-> +	.clock = 9000,
-> +	.hdisplay = 480,
-> +	.hsync_start = 480 + 43,
-> +	.hsync_end = 480 + 43 + 8,
-> +	.htotal = 480 + 43 + 8 + 4,
-> +	.vdisplay = 272,
-> +	.vsync_start = 272 + 12,
-> +	.vsync_end = 272 + 12 + 8,
-> +	.vtotal = 272 + 12 + 8 + 4,
-> +	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> +};
-> +
-> +static const struct panel_desc cct_cmt430b19n00 = {
-> +	.modes = &cct_cmt430b19n00_mode,
-> +	.num_modes = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 95,
-> +		.height = 53,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
-> +	.connector_type = DRM_MODE_CONNECTOR_DPI,
-> +};
-> +
->   static const struct drm_display_mode cdtech_s043wq26h_ct7_mode = {
->   	.clock = 9000,
->   	.hdisplay = 480,
-> @@ -4402,6 +4428,9 @@ static const struct of_device_id platform_of_match[] = {
->   	}, {
->   		.compatible = "boe,hv070wsa-100",
->   		.data = &boe_hv070wsa
-> +	}, {
-> +		.compatible = "cct,cmt430b19n00",
-> +		.data = &cct_cmt430b19n00,
->   	}, {
->   		.compatible = "cdtech,s043wq26h-ct7",
->   		.data = &cdtech_s043wq26h_ct7,
+>  drivers/pwm/pwm-imx27.c | 55 +++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 53 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> index 7d9bc43f12b0..cb564460b79c 100644
+> --- a/drivers/pwm/pwm-imx27.c
+> +++ b/drivers/pwm/pwm-imx27.c
+> @@ -75,6 +75,7 @@
+>  						   (x)) + 1)
+> =20
+>  #define MX3_PWM_SWR_LOOP		5
+> +#define MX3_PWM_FIFOAV_EMPTY_LOOP	4
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+This looks like a register definition, but it's only a number that
+defines the iterations waiting for the FIFO to empty. (The same critic
+applies to MX3_PWM_SWR_LOOP, though.)
+
+>  /* PWMPR register value of 0xffff has the same effect as 0xfffe */
+>  #define MX3_PWMPR_MAX			0xfffe
+> @@ -118,6 +119,31 @@ static void pwm_imx27_clk_disable_unprepare(struct p=
+wm_imx27_chip *imx)
+>  	clk_disable_unprepare(imx->clk_ipg);
+>  }
+> =20
+> +static int pwm_imx27_wait_fifo_empty(struct pwm_chip *chip,
+> +				     struct pwm_device *pwm)
+> +{
+> +	struct pwm_imx27_chip *imx =3D to_pwm_imx27_chip(chip);
+> +	struct device *dev =3D chip->dev;
+> +	unsigned int period_ms =3D DIV_ROUND_UP_ULL(pwm->state.period, NSEC_PER=
+_MSEC);
+
+Given that waiting here is unfortunate it would be nice so reduce the
+waiting as much as possible. So it might make sense to read the actual
+period from the hardware and use that as it might be smaller that
+pwm->state.period.
+
+> +	int tries =3D MX3_PWM_FIFOAV_EMPTY_LOOP;
+> +	int fifoav, previous_fifoav =3D INT_MAX;
+> +	u32 sr;
+
+Most variables can go into the while loop.
+
+> +	while (tries--) {
+> +		sr =3D readl(imx->mmio_base + MX3_PWMSR);
+> +		fifoav =3D FIELD_GET(MX3_PWMSR_FIFOAV, sr);
+> +		if (fifoav =3D=3D MX3_PWMSR_FIFOAV_EMPTY)
+> +			return 0;
+> +		/* if the FIFO value does not decrease, there is another problem */
+> +		if (previous_fifoav =3D=3D fifoav)
+> +			break;
+> +		previous_fifoav =3D fifoav;
+> +		msleep(period_ms);
+> +	}
+
+I wonder if a loop is necessary at all. Why not use
+msleep(FIELD_GET(MX3_PWMSR_FIFOAV, sr) * period_ms)?
+
+Maybe take PWMCNR into account to shorten the sleep a bit.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--c5aqstpagj445og2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXcStgACgkQj4D7WH0S
+/k4LJQf8C6hwy1sFY7yKjt5wCPoZpghfOG/zBrFyrz3Jqvu7i20/owaMN0m6BB+C
+r97/XMyUd/fCzXjrY0cFiwKHki35Q77xRGfHlpx317t4MnjHQ+RQf7L5sfhpbf3p
+1JCsDNp0Y3GJTgY5YsLzgfLIjdZyzcsN0Gsa2/5tW95Yg1Je0gDEToFTH8usggxp
+ijJ38OBCkf4qRpvNRRIVEmu2VEsS+5dLVgfS7dnX8CzRdWfo4Yhwlex58awCQZLw
+MT9DriSKhkPZXSClCkv7s3HdWRt6EQdWi0NIdsmKJsY1zZREvYDbtnSQrqW7/5xt
+D0/hgkLI8bIORFVZpF4Vi14glnLF1A==
+=TplP
+-----END PGP SIGNATURE-----
+
+--c5aqstpagj445og2--
