@@ -1,42 +1,112 @@
-Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0414112CD8E;
-	Mon, 26 Feb 2024 17:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6E612CD8E;
+	Mon, 26 Feb 2024 17:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966829; cv=none; b=DoGWO5vZPd9XfSDvFDcswfp7CQDatPchvOT0hbqgubNlprvdGATqDQjYEmSeLGq6a2ZEXKf6SLu9kJoVMw8N7/CY2yZtkzPPqPF+emD4brAYF4ttsMHM55A/ApvR3l7wAMfMQiLhF1502A+qgRqtHImJ9L2UmK36ZCZ9LJe1Jjc=
+	t=1708966834; cv=none; b=fwK/DLwab+p0vi2JMwpnY9wOomaRbmkRqlPt8+Nu7mSEW4MtVpAAmeVZnwFda56Wyragg8Nuf3KR6yssNac1v+AUMdqXJ4I6joJ3hcmr63zgo36k7BIH6ufz/qN1IY/5mTJ56rvYJk8E9Q43Qxj9RCYlShYFHcZFR62oQOaKgto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966829; c=relaxed/simple;
-	bh=sxy+LatajuR8Cqdw6yJ8oXQH6SsVfQp6uEG50xmQ4AE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U+8UVvx9KAFI4vKqo3kcCRZ8agraCllT3eoRCNRTezd0+IyQqEO/DtKbIEzspAixS7LvX1ncLdzOkMZtqO9yFRrbAtHL4omJETKCkpNYCA+w+35n5fp+vLybX2IAjgOO4ZprXiWLBG5zhkKsvk2bwMOdVpflMuyII30/fcVCAbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
-From: Daniil Dulov <d.dulov@aladdin.ru>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: Daniil Dulov <d.dulov@aladdin.ru>, Davidlohr Bueso <dave@stgolabs.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Triplett
-	<josh@joshtriplett.org>, Steven Rostedt <rostedt@goodmis.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
-	<jiangshanlai@gmail.com>, Joel Fernandes <joel@joelfernandes.org>,
-	<linux-kernel@vger.kernel.org>, <rcu@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH 5.10 0/1] rcutorture: Add missing return and use __func__ in warning
-Date: Mon, 26 Feb 2024 20:00:10 +0300
-Message-ID: <20240226170011.22798-1-d.dulov@aladdin.ru>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1708966834; c=relaxed/simple;
+	bh=o7v0UCT9OJMGkA8U7iwQfdvtLg8GUAcNkvD+ZlnbU24=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=DeNNRBhSLVIRS4hJ7tlr2y4AfO4qGdsS9hHIMUmIEUmD0atQiYDQGk5bhCJzV7z+enxc4afYBeR1zQdOaEpsz171T8aKpXi9LxSjOlZxFgnRJa6FPUD4QZMED2tV6KS3r+b6Cka/QzInzOcxHeAWNsWF6aknjoTiWCA5eW329Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyIxUsKG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyIxUsKG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4EADC433C7;
+	Mon, 26 Feb 2024 17:00:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708966834;
+	bh=o7v0UCT9OJMGkA8U7iwQfdvtLg8GUAcNkvD+ZlnbU24=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DyIxUsKGGPDAmjVcDmEACK0+SYqCLsCEN5Pvrv/hVkCVhiqVmMWpjrDX5QNXfk9dw
+	 PlKm10ffgHy6JyuJpdZGm5o/ETxm+cQD+aMgYDXJMEQ4jE0IR+TwJATYJ82t1scM6b
+	 mfySgmNWSO1it0+Pf8NbovTGCnx3GWcah+jCTYA06f5hLjRcEgos20ExHSyMJEU9mf
+	 itmqNwDXg3F75jbwx9K3G24zgczNPR6H/JDKfXX4OSgNOTJ7gRNpqaffOrauaVFrsc
+	 SIjvJTC2qxrWOCA9swBjLmVWazr7fHuYWrI10K+c5aCNkoz5RxfWI/RUDb8NNkbj6Z
+	 agj0RVgmeUpiw==
+Date: Mon, 26 Feb 2024 11:00:32 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sai Krishna Gajula <saikrishnag@marvell.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"richardcochran@gmail.com" <richardcochran@gmail.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+	"vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Sunil Kovvuri Goutham <sgoutham@marvell.com>,
+	Geethasowjanya Akula <gakula@marvell.com>,
+	Linu Cherian <lcherian@marvell.com>,
+	Hariprasad Kelam <hkelam@marvell.com>,
+	Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
+	Naveen Mamindlapalli <naveenm@marvell.com>
+Subject: Re: [net-next PATCH v2] octeontx2: Add PTP clock driver for Octeon
+ PTM clock.
+Message-ID: <20240226170032.GA202638@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EXCH-2016-01.aladdin.ru (192.168.1.101) To
- EXCH-2016-01.aladdin.ru (192.168.1.101)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BY3PR18MB470764DFFE3E532B8D1851E4A05A2@BY3PR18MB4707.namprd18.prod.outlook.com>
 
-Svacer reports a potential division by zero at rcu_torture_writer() in
-5.10 stable release. The problem has been fixed by the following patch
-that can be cleanly applied to 5.10 branches.
+On Mon, Feb 26, 2024 at 03:40:25PM +0000, Sai Krishna Gajula wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: Wednesday, February 14, 2024 10:59 PM
+> > ...
+> > On Wed, Feb 14, 2024 at 06:38:53PM +0530, Sai Krishna wrote:
+> > > The PCIe PTM(Precision time measurement) protocol provides precise
+> > > coordination of events across multiple components like PCIe host
+> > > clock, PCIe EP PHC local clocks of PCIe devices. This patch adds
+> > > support for ptp clock based PTM clock. We can use this PTP device to
+> > > sync the PTM time with CLOCK_REALTIME or other PTP PHC devices using
+> > > phc2sys.
+
+> > > +#define PCI_VENDOR_ID_CAVIUM			0x177d
+
+Already defined in pci_ids.h.
+
+> > > +static int __init ptp_oct_ptm_init(void) {
+> > > +	struct pci_dev *pdev = NULL;
+> > > +
+> > > +	pdev = pci_get_device(PCI_VENDOR_ID_CAVIUM,
+> > > +			      PCI_DEVID_OCTEONTX2_PTP, pdev);
+> > 
+> > pci_get_device() is a sub-optimal method for a driver to claim a device.
+> > pci_register_driver() is the preferred method.  If you can't use that, a
+> > comment here explaining why not would be helpful.
+> 
+> We just want to check the PTP device availability in the system as
+> one of the use case is to sync PTM time to PTP.
+
+This doesn't explain why you can't use pci_register_driver().  Can you
+clarify that?
+
+> > > +	ptm_ctl_addr = ioremap(PEMX_PTM_CTL, 8);
+> > 
+> > Hard-coded register addresses?  That can't be right.  Shouldn't
+> > this be discoverable either as a PCI BAR or via DT or similar
+> > firmware interface?
+> 
+> Ack, will explore the DT implementation for register addresses
+> access and submit patch V3. Thanks for the review.
+
+I assume the PCI_DEVID_OCTEONTX2_PTP device is a PCIe Endpoint, and
+this driver runs on the host?  I.e., this driver does not run as
+firmware on the Endpoint itself?  So if you run lspci on the host, you
+would see this device as one of the PCI devices?
+
+If that's the case, a driver would normally operate the device via
+MMIO accesses to regions described by PCI BARs.  "lspci -v" would show
+those addresses.
+
+Bjorn
