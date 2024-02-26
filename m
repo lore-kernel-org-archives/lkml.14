@@ -1,123 +1,134 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7976D3839E
-	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131DB1CD20
+	for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 10:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708944625; cv=none; b=fiDmdxqbfMURVTx3mPuhYtJaOynWaIALq+fycCmfdvNfBxoOIRStE3amWDrneiqDfE8Nvjq0EFh3pwBUD3wpLkT/15zFfYrheJQiwx8jPMv/u/BYkPBVCtTwrwuvjyaFXOLUYX31qLk88qyW47GnRsbcX5cYpS4/ExH+WbQo30o=
+	t=1708944748; cv=none; b=rkIhWaooABSpjaax2D37/b9mcJgA2fn2zd6G+qAfUes53qkFdW9hPMAQh4nlcOIct1U8bxQ+/wn819VyJB5hITGs29eWiYq4L/MCfeYyqy2hEkvtppJCtDUWiabKwngDp4oEbaGy8tafcfTUPGZJzF32Q/shSbeExJJr4dkylSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708944625; c=relaxed/simple;
-	bh=TnWezItpRX3QXk0vaU7tgxY0SF4ZWcKlx4yiMvYwytc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Q83rdQX5EEpaC1gYEjjwQODPgNvxVFFHb+IfgbWXiR+T5zF2WkxFTbITGvydP95nZZhWa3MdFi6OnXkZaLBBt7VGJiu4U5ThHSpa5KURzgiiXmP6MOFIgAcw8ElxPSzujg1vAFx/uwml0qLoqTZy5Y4BnHj16J31wxYd41fDv6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m0xcIq2V; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1708944748; c=relaxed/simple;
+	bh=c2O6WDeP39XIZazWyx1wY6XcxEQhb4xcHnEnf5E886M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=chUAOGSWDJQs8s32JB17jIaC7A6SKhrhO+6WObIOt7GAnXYUP53bCpWQ2JkhitAtBdx/fRjZB7DMKi2o+Ake6CBiQAa4ucEeSakSpE/UV0UZlCcwrSKddaUiaj66AFEzipz9SLeFfVVY8TmVo0z2pZSLk7tMi/S/TDdKQ3/C3Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W7cQKTeY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m0xcIq2V"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a3e8c1e4aa7so268408066b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 02:50:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708944622; x=1709549422; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=xBT9V29Fvhbl7QrG/iTPiZ9Bl8O04XdpPk2BEY7RJK0=;
-        b=m0xcIq2VWp3QnL66J2g0W7ZYW20h9X2X7Zhd96y+KjVeCiJKmq0PrNzslIvLEMx7mj
-         XtslPvVpG3qnQEEka1EHDRsA/epn/JwZHkwysW437YvV+xRtgs8yfGSl8IfagbEjwltv
-         3aW5FjhvbFj4ehou5JQZSYj8lCAgBRLVEUm+TEm9CTVEITyNTTuSqqdOhKdBQzBxgMgL
-         jQuFovKen4LnEJfcyjyEfF7AT1GzOlktbO1yw3GOJY1x/aiYLu2Zsqb+7ExqxNo84okd
-         p5Y8271OpByRKExl8793TcTuO+dGgfrmfF5KyV0jxFgp3Se5dLWIE1Mi6WqOyDUuZe2m
-         sZ0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708944622; x=1709549422;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xBT9V29Fvhbl7QrG/iTPiZ9Bl8O04XdpPk2BEY7RJK0=;
-        b=NwjBH2+aNzA+2gCnVyNt02ThR5jsINJrH+1dYP+ZEmfPNWJtNN/unNTas46CQfC2yi
-         zfw0loCQuLR7MPj7KfmvNvlSkRgXP9apOt6MexrZ9XlD8ZaANdNtp61mtMgKJVwuKzNV
-         EAzvYAkpp9G1Z1HFTLL0u7g9XrLOo3381mpfrD4TfMXjM8w1onPj6TMz1WZiCB8NOfsl
-         mgadD3S7W1t36km5iLkS0UOUXpSr0l/L3wstBHh4YwoLqPLdlcYsQk3R8LEf1mKC/vrl
-         vZ55Z2QSqbo4kSOef7bejUXFqRLNF6t9VtPHgxmByI6ZyhJSiUloLqH1l6k2j9EWGUy1
-         zAQg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHtA2GXAYp4pHLFXGTci4Z/ANF3S5/OUpHAlKo6CjtfFZbs1Y2r36tTxRGLNfn6K43kQcL64SYnP9ud7L1xE6FyNIvc2vwaKfujX0/
-X-Gm-Message-State: AOJu0YylxwWIZBAjTAlTmp/z6cBLuFbc3qshfFX6JFU3wjk9e1bwvh7w
-	CbYdF5ETLygOGxeovJn+t4OTOM8xaenj/SF+vAk/wBrzkeNQ1Rc2qe8f0JXKQSg=
-X-Google-Smtp-Source: AGHT+IFRWL4GcLMvA10Nigh3AuTwZ8smPM19YRAc/aZDjNZS/hLq6skJGqWSNeCccQE6GbJafPsKiA==
-X-Received: by 2002:a17:906:f28e:b0:a42:fcf2:1077 with SMTP id gu14-20020a170906f28e00b00a42fcf21077mr3227524ejb.23.1708944621871;
-        Mon, 26 Feb 2024 02:50:21 -0800 (PST)
-Received: from [192.168.105.72] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id hw21-20020a170907a0d500b00a432f3bc3a5sm1268890ejc.76.2024.02.26.02.50.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 02:50:21 -0800 (PST)
-Message-ID: <05fc36e3-534a-4e48-ad83-e86ed8d43ef3@linaro.org>
-Date: Mon, 26 Feb 2024 11:50:18 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W7cQKTeY"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41Q8sQa8030056;
+	Mon, 26 Feb 2024 10:52:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=tSxTylspEkmta+cjGIRyssujpelcjhz64guZWj8zSXA=; b=W7
+	cQKTeYk7gudTUnhseXNBIZ4UhieYnX2h7Ct3G4N+LfO3lMi/kIhfF8Yb1kTpE9ZS
+	wZILKh1Qc1EC0rd1b7oeC1EItPOZr+O7PQLYReevdKFGPlhQusMhTXvCIyPfB9hl
+	4La7b4aj4scjXRND0+rTmUTgUPuYxI7Dz0D3LevQNuw8dsms+eGYeISBi2Oihf1A
+	orVo+Nl0JN0gbDWHv6WbTCYpVm5L6sJ9Eqw+iWwkFLNlnPUpiYBMYijb/TvXf3k8
+	/BUHpG96mS3uXfxbiDUeMUy22DbMuG2CQjQxEflkLmYHwAZccrJDg/b8IL61+Pkt
+	qW6BtOReSFyqmprMmayQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wgkxq0nrf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Feb 2024 10:52:16 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41QAqEkh001408
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 Feb 2024 10:52:14 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 26 Feb
+ 2024 02:52:12 -0800
+Message-ID: <ed9f2b75-38d3-8562-0476-2200e201d4c9@quicinc.com>
+Date: Mon, 26 Feb 2024 16:22:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] leds: qcom-lpg: Add support for PMI8950 PWM
-To: Gianluca Boiano <morf3089@gmail.com>, Pavel Machek <pavel@ucw.cz>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <d17121a0-ca14-41fd-9802-bb4118629e34@linaro.org>
- <20240226093732.3478845-1-morf3089@gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH vRFC 3/8] treewide: rename firmware_request_platform()
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240226093732.3478845-1-morf3089@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+To: Greg KH <gregkh@linuxfoundation.org>, Luis Chamberlain <mcgrof@kernel.org>
+CC: <russ.weight@linux.dev>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <cocci@systeme.lip6.fr>
+References: <20240222180033.23775-1-quic_mojha@quicinc.com>
+ <20240222180033.23775-4-quic_mojha@quicinc.com>
+ <2024022347-ribcage-clench-37c4@gregkh>
+ <Zdi2odoYPBWywOXn@bombadil.infradead.org>
+ <2024022323-accustom-eradicate-8af4@gregkh>
+ <Zdj1K28NBfGfSJ-0@bombadil.infradead.org>
+ <2024022452-unwilling-pancake-3b2a@gregkh>
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <2024022452-unwilling-pancake-3b2a@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: kPn3zhOb-JH6bxccqXXZAzVAWZqKUM-l
+X-Proofpoint-GUID: kPn3zhOb-JH6bxccqXXZAzVAWZqKUM-l
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-26_07,2024-02-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 clxscore=1011
+ malwarescore=0 mlxlogscore=952 suspectscore=0 spamscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402260082
 
-On 26.02.2024 10:37, Gianluca Boiano wrote:
-> The PMI8950 PMIC contains 1 PWM channel
+
+
+On 2/24/2024 11:06 AM, Greg KH wrote:
+> On Fri, Feb 23, 2024 at 11:42:35AM -0800, Luis Chamberlain wrote:
+>> On Fri, Feb 23, 2024 at 04:33:40PM +0100, Greg KH wrote:
+>>> On Fri, Feb 23, 2024 at 07:15:45AM -0800, Luis Chamberlain wrote:
+>>>> On Fri, Feb 23, 2024 at 07:21:31AM +0100, Greg KH wrote:
+>>>>> On Thu, Feb 22, 2024 at 11:30:28PM +0530, Mukesh Ojha wrote:
+>>>>>> Rename firmware_request_platform() to request_firmware_platform()
+>>>>>> to be more concrete and align with the name of other request
+>>>>>> firmware family functions.
+>>>>>
+>>>>> Sorry, but no, it should be "noun_verb" for public functions.
+>>>>
+>>>> News to me, do we have this documented somewhere?
+>>>
+>>> Not really, but searching makes it nicer.
+>>>
+>>> And yes, I violated this in the past in places, and have regretted it...
+>>
+>> Care to share a few examples of regret?
 > 
-> Signed-off-by: Gianluca Boiano <morf3089@gmail.com>
-> ---
+> 	get_device()
+> 	put_device()
+> 	kill_device()
+> 
+> vs. a saner:
+> 	kobject_get()
+> 	kobject_put()
+> 	kobject_del()
+> 
+> Learn from the mistakes of my youth please :)
 
-Please don't send v2 as a reply to v1, start a new thread instead.
+Thanks for the history.,
+In that case, should we fix this verb_noun cases ?
 
-Konrad
+request_firmware()
+request_firmware_into_buf()
+request_firmware_nowarn()
+request_firmware_direct()
+request_firmware_cache()
+request_partial_firmware_into_buf()
+release_firmware()
+
+-Mukesh
+
+> 
+> thanks,
+> 
+> greg k-h
