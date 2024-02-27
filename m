@@ -1,132 +1,96 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA49136670
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A43A13666C
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709026243; cv=none; b=QxhMECVgCzBhMbJCJGski3YObBh1WPdY8Qwlm3z6CN3swkCO8cnf74BImxVX0S+P/Fhop2/ZKW0WKiebOLts/wdLaueVrdvsVP55+XdauxQQWGvfvPQtMs2RkSBvClvq/OT4nQRAwJU7N9b1XbbFxb8a3o9xleuiAO6nrBJ7bq8=
+	t=1709026338; cv=none; b=dOOaj+71WXBUCOUOSqEzVgElFbYieK08uDv4OxpnjrrEUVpziBrFiS+QtbRFZYYb7htHa8zI3bO77JyauB2a1fyzxBgTXS8mXUTY2FaMzFNCrmebW2GSO2uP5mApgs+SAiKOAalCcqpqtvP2/yUzxIZIDTo8diSIrUtoQeltfjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709026243; c=relaxed/simple;
-	bh=mRwf3yUhQ+xB3p8wBeDY+bHdCvZPGSe6I0Ta1aPezlY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lsNjY3Ivrj7W9EBug+wY46LUja/yL+ZTB6w3vw71/9HVGoFzR1aInBnld5Ue/JpWmZBRE8HquYgLnxWNrxUsJZIr3g83cYodlQQuJztjUQehiQv/AZb38e8D2hyJxeJ81ih2z8gdtyaBbaGGlQRPiFtGbtq4WHu9/xgR1IX4Jtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bKXLj5hL; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bKXLj5hL"
-Message-ID: <eec445a6-7024-40b6-9d4e-7fc2bc71cce7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1709026239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7NHq+KgqSjtKqYa5MxxZSSs2Nj7Yc813r6gQt4rO1/Q=;
-	b=bKXLj5hLSJUsNyeI/gMIBNFFhBRmsfvMo8OQ4DToqA/j8a4vYcW3pLL+jSyweVPYuLlVwt
-	wH14mGlA+eBwhXAH30k3y0ms5/A4Zx+QlQAUbeM0PURwjzlmkjHSqjn8dSPHXotfsByzZB
-	hXsYhKpe8xrWy5M4rTZt441EoFHTpiM=
-Date: Tue, 27 Feb 2024 17:30:31 +0800
+	s=arc-20240116; t=1709026338; c=relaxed/simple;
+	bh=3UlkW27UdpL5WFsTVdJEkJVMGLlMP+znlstRRekB9Ks=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=eTp0SrN2CgkjQVCLLSttnLOtxiZWwUa4Lxrfi9O7JXdjK2maG8oAAWqCR2LhkPDpI68/K8Jy5NmtO8YvTr+zb7cn5a8E7aHYSSnUcqhfzcsBGueT29rgB3Fo6M9V/WwTLAshYKdVLcxc0H34irR2aEw9tZh8xvrk4X9P9XAVnvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36424431577so35702535ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:32:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709026336; x=1709631136;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VSzEE+cK+nSRt2VzOCPLmcohDy07PYkHlPu8819BDPs=;
+        b=sjVLS/WLBdLEKAl75pUKsyw2ZpqSi1A8zr6P81B87d6RfUrac0sUIm5+UneiRImz4Y
+         tFYw7XWgFwEOX2Q5+iDb/IZtU6ZAGRitm9JO+fGKOgV/2c5aSh27Ujmya8Zb59G+KXVn
+         ZS3bjQoW44SzYs9MrOk56A1LzAsan36PaGgABS5v/q4ydcpHLbfQyoOjXJIST9aOeiRf
+         J2FuPfZH7vldaos3uT6NSXuSOx6eKCB8l+LZOuJAgQbbz+6tH6CPw0s+UxRYAadoCEoy
+         88kthymsnhNwOGK7bpuprgpsUIBCudcNezejjMbLQX+xMeYUzxzSvDgsUl/vbhnHot+D
+         3POw==
+X-Gm-Message-State: AOJu0Yw5n9xchAPNoXegDP1o+s0EEPiP0/o9IBiUxtpuy9Nmk/bLYkoY
+	c4nOzdKTNmQiwpFweAZ4chJtxl1CzkTdaEp1JhU8O+VUBQRRInAOdnnK0LPcuTrHIvBs9m70nRn
+	QU7t10cFx+IiaPVJDXqIZlqiXiIVYlh45bjMDcLY4At0BE2mmVR7bAtxWhg==
+X-Google-Smtp-Source: AGHT+IF5u+2XMHoOgvxvA91H49CoSBaKTt/P6Fn0gkG723u0iO2lQXX3Xy+RzGq2OaWY6vaJgF2BWL7HdRTjYBKOy+P0hnbLxnpq
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] slub: avoid scanning all partial slabs in get_slabinfo()
-Content-Language: en-US
-To: "Christoph Lameter (Ampere)" <cl@linux.com>,
- Vlastimil Babka <vbabka@suse.cz>
-Cc: David Rientjes <rientjes@google.com>,
- Jianfeng Wang <jianfeng.w.wang@oracle.com>, penberg@kernel.org,
- iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, roman.gushchin@linux.dev,
- 42.hyeyoo@gmail.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Chengming Zhou <zhouchengming@bytedance.com>
-References: <20240215211457.32172-1-jianfeng.w.wang@oracle.com>
- <6b58d81f-8e8f-3732-a5d4-40eece75013b@google.com>
- <fee76a21-fbc5-4ad8-b4bf-ba8a8e7cee8f@suse.cz>
- <55ccc92a-79fa-42d2-97d8-b514cf00823b@linux.dev>
- <6daf88a2-84c2-5ba4-853c-c38cca4a03cb@linux.com>
- <e924c39b-7636-4c34-bfe9-603cf07c21d3@linux.dev>
- <b8f393fb-2b1d-213c-9301-35d4ffca1f50@linux.com>
- <347b870e-a7d5-45df-84ba-4eee37b74ff6@linux.dev>
- <1a952209-fa22-4439-af27-bf102c7d742b@suse.cz>
- <cce26aef-ab3e-447b-8b33-5ecd78bf747d@linux.dev>
- <2744dd57-e76e-4d80-851a-02898f87f9be@suse.cz>
- <036f2bb4-b086-2988-e46d-86d399405687@linux.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <036f2bb4-b086-2988-e46d-86d399405687@linux.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6e02:2166:b0:365:afb3:e438 with SMTP id
+ s6-20020a056e02216600b00365afb3e438mr8229ilv.1.1709026336557; Tue, 27 Feb
+ 2024 01:32:16 -0800 (PST)
+Date: Tue, 27 Feb 2024 01:32:16 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b3d2ed061259b3b3@google.com>
+Subject: [syzbot] Monthly net report (Feb 2024)
+From: syzbot <syzbot+listaa3831d981acb8a56caa@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024/2/27 01:38, Christoph Lameter (Ampere) wrote:
-> On Fri, 23 Feb 2024, Vlastimil Babka wrote:
-> 
->> On 2/23/24 10:37, Chengming Zhou wrote:
->>> On 2024/2/23 17:24, Vlastimil Babka wrote:
->>>>
->>>>>>
->>>>>
->>>>> I think this is a better direction! We can use RCU list if slab can be freed by RCU.
->>>>
->>>> Often we remove slab from the partial list for other purposes than freeing -
->>>> i.e. to become a cpu (partial) slab, and that can't be handled by a rcu
->>>> callback nor can we wait a grace period in such situations.
->>>
->>> IMHO, only free_slab() need to use call_rcu() to delay free the slab,
->>> other paths like taking partial slabs from node partial list don't need
->>> to wait for RCU grace period.
->>>
->>> All we want is safely lockless iterate over the node partial list, right?
->>
->> Yes, and for that there's the "list_head slab_list", which is in union with
->> "struct slab *next" and "int slabs" for the cpu partial list. So if we
->> remove a slab from the partial list and rewrite the list_head for the
->> partial list purposes, it will break the lockless iterators, right? We would
->> have to wait a grace period between unlinking the slab from partial list (so
->> no new iterators can reach it), and reusing the list_head (so we are sure
->> the existing iterators stopped looking at our slab).
-> 
-> We could mark the state change (list ownership) in the slab metadata and then abort the scan if the state mismatches the list.
+Hello net maintainers/developers,
 
-It seems feasible, maybe something like below?
+This is a 31-day syzbot report for the net subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/net
 
-But this way needs all kmem_caches have SLAB_TYPESAFE_BY_RCU, right?
-Not sure if this is acceptable? Which may cause random delay of memory free.
+During the period, 10 new issues were detected and 12 were fixed.
+In total, 66 issues are still open and 1378 have been fixed so far.
 
-```
-retry:
-	rcu_read_lock();
+Some of the still happening issues:
 
-	h = rcu_dereference(list_next_rcu(&n->partial));
+Ref  Crashes Repro Title
+<1>  4149    Yes   KMSAN: uninit-value in eth_type_trans (2)
+                   https://syzkaller.appspot.com/bug?extid=0901d0cc75c3d716a3a3
+<2>  971     Yes   possible deadlock in __dev_queue_xmit (3)
+                   https://syzkaller.appspot.com/bug?extid=3b165dac15094065651e
+<3>  956     Yes   INFO: task hung in switchdev_deferred_process_work (2)
+                   https://syzkaller.appspot.com/bug?extid=8ecc009e206a956ab317
+<4>  835     Yes   INFO: task hung in rtnetlink_rcv_msg
+                   https://syzkaller.appspot.com/bug?extid=8218a8a0ff60c19b8eae
+<5>  831     Yes   INFO: task hung in rfkill_global_led_trigger_worker (2)
+                   https://syzkaller.appspot.com/bug?extid=2e39bc6569d281acbcfb
+<6>  473     Yes   unregister_netdevice: waiting for DEV to become free (8)
+                   https://syzkaller.appspot.com/bug?extid=881d65229ca4f9ae8c84
+<7>  437     Yes   WARNING in kcm_write_msgs
+                   https://syzkaller.appspot.com/bug?extid=52624bdfbf2746d37d70
+<8>  307     Yes   INFO: rcu detected stall in tc_modify_qdisc
+                   https://syzkaller.appspot.com/bug?extid=9f78d5c664a8c33f4cce
+<9>  270     No    INFO: task hung in linkwatch_event (3)
+                   https://syzkaller.appspot.com/bug?extid=d4b2f8282f84f54e87a1
+<10> 257     Yes   KMSAN: uninit-value in nci_rx_work
+                   https://syzkaller.appspot.com/bug?extid=d7b4dc6cd50410152534
 
-	while (h != &n->partial) {
-		slab = list_entry(h, struct slab, slab_list);
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-		/* Recheck slab with node list lock. */
-		spin_lock_irqsave(&n->list_lock, flags);
-		if (!slab_test_node_partial(slab)) {
-			spin_unlock_irqrestore(&n->list_lock, flags);
-			rcu_read_unlock();
-			goto retry;
-		}
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
-		/* Count this slab's inuse. */
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
-		/* Get the next pointer with node list lock. */
-		h = rcu_dereference(list_next_rcu(h));
-		spin_unlock_irqrestore(&n->list_lock, flags);
-	}
-
-	rcu_read_unlock();
-```
-
-> 
->> Maybe there's more advanced rcu tricks but this is my basic understanding
->> how this works.
-> 
-> This could get tricky but we already do similar things with RCU slabs objects/metadata where we allow the resuse of the object before the RCU period expires and there is an understanding that the user of those objects need to verify the type of object matching expectations when looking for objects.
-> 
+You may send multiple commands in a single email message.
