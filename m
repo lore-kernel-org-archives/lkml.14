@@ -1,109 +1,99 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AD554BC3
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EAF1BC40
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709000517; cv=none; b=mb/GQRPY4l65Tm3RsZcb2L7YLxHA8BycI9xwccVp99InkCPY4xEnrw9MQNQLkA6q2JrN14qP0Jq/BPOALRa2BGutS+wQbdS9XagMLmaemAafzB692lG8ntccn7Ub9tlenUSirSnl3ZJaMPEwvJleCweC45K81r03wX2h/qrAvuE=
+	t=1709000598; cv=none; b=tNrUkv23kPXza44dP3Bz6vz3tiIcIbrD6mMNOeqpEPVTV6gH+Ne8GL4/W2nSPk1aWu0muMYabe8T+WgxztDEm3sciKwgunuyQQAy5/f/5QIuAy3s/wWaQxMhbfV6YbrotfA8A1fwix6AR4ZJBjBBK/aCLf/6AsJqPAHfOMSjIus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709000517; c=relaxed/simple;
-	bh=SP3wECQuNsGizvBDLcQeElF0hhZLPHhC3anTjy4uCjs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DfX+iYofFqO+u1+anBqirtYUUEEIOnBaT56lDaeigaGCreZGXRNkxWw1e1vZjMlaIRwc9oRTcPJ2ugA4H2+FeTCBlwsQj81iYusIoK0/suUtvdsl3ekvBRC4VJzCz1L884afwMWCYXK9J4h9i66Wip+YdmaXXm4/qcECW0IcIuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IzwC5LgQ; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1709000598; c=relaxed/simple;
+	bh=lj+342i91tukvDJc+7mQyuceOT3OFF987/6AJGtJA74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vDWCT+VvqKZ9KTZMQYPe/5vC5BKq/sgx4skyJFTLxAV5BHDfyQSbWwOHxhLfaMtAO+LLsaVODhQm386lNcZhOQDxmwknPdoXxinXt/kBuODOg6Z4fp7wVmZTFjvzWWvmOkLMEXpEa2a7bZUET1GaHxTxCq7Lsda6Kb8ok8EiIXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=B+93MRha; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IzwC5LgQ"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60925cacbb7so4050887b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 18:21:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B+93MRha"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dc49b00bdbso32633635ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 18:23:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709000515; x=1709605315; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gD/GJ68X0cVQGr5FjGXj7WBsDK+In0culAJ288XBYzk=;
-        b=IzwC5LgQTEaLnY8mA9DN+WrSuS9nT+RJnDbNcQ7JeVTwIKnzzQG3xthKYAWQv85AZr
-         wsvElYD70g09r9mszAQ3aD7QlggVoBvwZEUcDInU2HFPjFneCBZqwdNCyPgWM0v3/3Vl
-         ESs484eOh4pfSBsvpN90oE0eth8LHDVs//fp9LFXsrI+EVqFhN8ptaJfGYYgZlwdBk4M
-         8FMoYF8gmprX93JkSgCufwHKxI252tfqZinv7TDE4IRs3hgldEnzYV78Ikeiwy4sRXXQ
-         zkMbZbCc/Tzm85/uwSdPlTqv9QQLqCyptaf9Q6ZaiiXtSbe18q3DmV/d6qUCelx89/iK
-         Uo6Q==
+        d=chromium.org; s=google; t=1709000596; x=1709605396; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=memibgJZNOyBXI4CIvwtBXRp9WBttR7QAtL1A6J1jew=;
+        b=B+93MRhafM3EcMzEgLJ2NrnA/NK+cO99KuZuBDVrK+lYY7WHQuw2ynskWHA9W27/yy
+         jrRdW+7LoCjBP448TErolBOSSL/H1RxM7t8UbTszbeZFeB3x6vOrkZ6KBny6O2KpQRB4
+         DeRUBKRg6cUUa5d1nB2tFG+31Q2FfQGs5h6Hw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709000515; x=1709605315;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gD/GJ68X0cVQGr5FjGXj7WBsDK+In0culAJ288XBYzk=;
-        b=naVHOl5qxCFvuuAUtBg1bdBujkwi3F4ikWOAbOgXQNv1jxa+x7QEpYirxzxXpCDmyn
-         YwigaMhw+cL1wgCmcS3UHTKfFLfMYMe+5xU2dzl4bSXN8PzEv3d4JV2neLfqDc3/NjU2
-         ljPYrTvG+zQfnZH25H/jAC5FWN5yO195IJlnk1hRdCssqFPk4gXAhqnH48RsBZ0/2l7d
-         GbKriFC1P9HM9nTSzy/SCmdPPKnwA05OSeZZsjXiptdIRdLTAVdXw+OrMGQ4RnkIwKrY
-         j8afrxoV4OC1z0+kB7A0i98P2OCZwE8b4ST1CwsrIeB3jk53If3neZwuPSODx6aZrhP7
-         jq8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXihNJwRJ6ZUsKKXmkvKKCVF3rF0nRDQVEd7+zvGlTsx9Qam1QJv/0/12cy4zdQj8yHTc9/hzcyct+1/gxX51zqTwrqBftwhlBHnUdx
-X-Gm-Message-State: AOJu0Yw+is/GLS2+s7iSQSlA2QrtO50kE/yEubgWb008H7+IC4qWL/NE
-	aP9Hx6lAVntb/VP11RrYabwbfMd5SwdwZq+D4rm/SPNcg3H5xw7HbV3SnmrSWbb1CXT1S2+U2h4
-	QKQ==
-X-Google-Smtp-Source: AGHT+IGySX71rsoZHQXEKCFWAzA8N1hjTbbEs4eGPFYiN/yqiIDehY1AvBVxznlEWhqTc915C808bTjpV/Q=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:84:b0:609:1fd9:f76 with SMTP id
- be4-20020a05690c008400b006091fd90f76mr201794ywb.0.1709000515502; Mon, 26 Feb
- 2024 18:21:55 -0800 (PST)
-Date: Mon, 26 Feb 2024 18:21:12 -0800
-In-Reply-To: <20240208204844.119326-1-thuth@redhat.com>
+        d=1e100.net; s=20230601; t=1709000596; x=1709605396;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=memibgJZNOyBXI4CIvwtBXRp9WBttR7QAtL1A6J1jew=;
+        b=rCPG6kztOdT4XfBwgnWjWZ7voeijpC8IaWXo2Jg8wvg8B1Zqa4Q35x6OqufYqJ8Zj4
+         2TayPARaWMlrlSQ6v/JhZW0pU40jFB1gzbZToOnOPLGQ1Xb9Iw6x5eBKwuB1rslrgwIo
+         yW+JWVt0iaYgTLDwP0TRjqS2VJfzg4kbT48Whv9EhT50B8wzFws6phzGJiOSLzqWDelu
+         MWKogkKkpHB65rvZ5PNBCdutfZFtS4QMxRD3VzrQZEN9hBOKAPB5fip/R3V2MxzDpdVj
+         tDioHafGYLr1Z1aG2h6rqPFfyIRRCwSPGrRFDQuviHe7LAcHmdfJc71HVEVtkVhsXJPn
+         Wz3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVuz2+UxqfWHBAjAMCJmnGnsdXnlSoTyczb4bF8MJ40/t1rcvm/cFNTo8O+yNWwL8pZcpdR37EJq1ge8uJpvkiPaH6YzUKWXDCUs1a0
+X-Gm-Message-State: AOJu0Yxrsu/ifXpaZT0PNHqQcECWc6YiNfREQPsHF7biqw3fhBuil2aT
+	nJEA4zZcXfX9tE4itd1XfHyCj757SCCVjWHa3464nwc3d5ktxpF901Iw13IRPPhbDHdfA1KDBXU
+	=
+X-Google-Smtp-Source: AGHT+IFplsJJIA7+1tesLzAlhF8/AJorGVOwn8v8Uyrd5ZzwmXskYJ3krHczx70GyhRbNqa7HaaPyg==
+X-Received: by 2002:a17:902:f542:b0:1dc:a40c:31c6 with SMTP id h2-20020a170902f54200b001dca40c31c6mr4656751plf.25.1709000596048;
+        Mon, 26 Feb 2024 18:23:16 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id mn12-20020a1709030a4c00b001dca6d1d574sm343800plb.302.2024.02.26.18.23.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 18:23:15 -0800 (PST)
+Date: Mon, 26 Feb 2024 18:23:15 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Jan Bujak <j@exia.io>
+Cc: Pedro Falcato <pedro.falcato@gmail.com>, ebiederm@xmission.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: Recent-ish changes in binfmt_elf made my program segfault
+Message-ID: <202402261821.F2812C9475@keescook>
+References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
+ <CAKbZUD2=W0Ng=rFVDn3UwSxtGQ5c13tRwkpqm54pPCJO0BraWA@mail.gmail.com>
+ <f2ee9602-0a32-4f0c-a69b-274916abe27f@exia.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240208204844.119326-1-thuth@redhat.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <170900036555.3692027.1057525433723685864.b4-ty@google.com>
-Subject: Re: [PATCH v3 0/8] Use TAP in some more x86 KVM selftests
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, Thomas Huth <thuth@redhat.com>
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andrew Jones <ajones@ventanamicro.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2ee9602-0a32-4f0c-a69b-274916abe27f@exia.io>
 
-On Thu, 08 Feb 2024 21:48:36 +0100, Thomas Huth wrote:
-> Basic idea of this series is now to use the kselftest_harness.h
-> framework to get TAP output in the tests, so that it is easier
-> for the user to see what is going on, and e.g. to be able to
-> detect whether a certain test is part of the test binary or not
-> (which is useful when tests get extended in the course of time).
+On Tue, Jan 23, 2024 at 12:23:27AM +0900, Jan Bujak wrote:
+> On 1/22/24 23:54, Pedro Falcato wrote:
+> > Hi!
+> > 
+> > Where did you get that linker script?
+> > 
+> > FWIW, I catched this possible issue in review, and this was already
+> > discussed (see my email and Eric's reply):
+> > https://lore.kernel.org/all/CAKbZUD3E2if8Sncy+M2YKncc_Zh08-86W6U5wR0ZMazShxbHHA@mail.gmail.com/
+> > 
+> > This was my original testcase
+> > (https://github.com/heatd/elf-bug-questionmark), which convinced the
+> > loader to map .data over a cleared .bss. Your bug seems similar, but
+> > does the inverse: maps .bss over .data.
+> > 
 > 
-> Since most tests also need a vcpu, we introduce our own macros
-> to define such tests, so we don't have to repeat this code all
-> over the place.
-> 
-> [...]
+> I wrote the linker script myself from scratch.
 
-OMG, you didn't tell me this allows sub-tests to run after a failed test!
-That alone is worth the conversion :-)
+Do you still need this addressed, or have you been able to adjust the
+linker script? (I ask to try to assess the priority of needing to fix
+this behavior change...)
 
-There's definitely a few enhancements we'll want to make, but this is more than
-good enough as a starting point.
+-Kees
 
-Applied to kvm-x86 selftests, thanks!
-
-[1/8] KVM: selftests: x86: sync_regs_test: Use vcpu_run() where appropriate
-      https://github.com/kvm-x86/linux/commit/e10086285659
-[2/8] KVM: selftests: x86: sync_regs_test: Get regs structure before modifying it
-      https://github.com/kvm-x86/linux/commit/221d65449453
-[3/8] KVM: selftests: Move setting a vCPU's entry point to a dedicated API
-      https://github.com/kvm-x86/linux/commit/8ef192609f14
-[4/8] KVM: selftests: Add a macro to define a test with one vcpu
-      https://github.com/kvm-x86/linux/commit/992178c7219c
-[5/8] KVM: selftests: x86: Use TAP interface in the sync_regs test
-      https://github.com/kvm-x86/linux/commit/04941eb15439
-[6/8] KVM: selftests: x86: Use TAP interface in the fix_hypercall test
-      https://github.com/kvm-x86/linux/commit/69fb12492005
-[7/8] KVM: selftests: x86: Use TAP interface in the vmx_pmu_caps test
-      https://github.com/kvm-x86/linux/commit/200f604dfd07
-[8/8] KVM: selftests: x86: Use TAP interface in the userspace_msr_exit test
-      https://github.com/kvm-x86/linux/commit/8fd14fc541c7
-
---
-https://github.com/kvm-x86/linux/tree/next
+-- 
+Kees Cook
