@@ -1,136 +1,182 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3620713B2A2;
-	Tue, 27 Feb 2024 13:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342C813AA51
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709039936; cv=none; b=BuPZUNq0U0aL94SWOjGS4P3vmeLf4leoNbKJRpFOFjx3SRq7Lnh2Xq7A7xFl+qtOHuti/EFYjpwjzH7L41C3Jhsc/FeaiP0oYGPRQ7DohMutP2vXArxZQRiYzl6nCfKw4LAliA9aFnvg19karYQiwNPAydoTKYg5gNLn0EY2H2o=
+	t=1709040012; cv=none; b=mGcQrgPnurv9DJTjkN/a5zoTfwWo6GY0DsZTuHJ8zJs4vt4akmtzhsobi8lTI4ZxYpLmSVGrsq0icyEbtYeGjyPZXAQcxCL5MmwDrYeQ0Oe2tD470+hWIhDD6ZVV5RiO/cbB8bKjqfBWzovCRSx6QG5IMyAxe8APNfxUK6zfFkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709039936; c=relaxed/simple;
-	bh=tYd0vCp6AbOyJoSfA2zmRq/u0mLMoAJKm0UC99IduH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dbOkluWYBYkqqpKJi3NZm/cOlg+d2kWbzPjcQ8iycWotHZ+/MMhbQ/bp8QZ3SX7dlmrqYxt6cG1YOLcwTyYbX/OaG6jdAgU3TevzZ1yYeR/6YQ1Oa7+doA3i4Y5H4C+Itvtx8DLUufmMbGRkPVCxWMMCt08PfKRL96pvCEiGGYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yx6oiN+s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3w+Qj6AJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yx6oiN+s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3w+Qj6AJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709040012; c=relaxed/simple;
+	bh=UCc+QXpK/pxCYv6oqRhkjlslZVn9Vi3dZm4sUsqmYXI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sZH23W7mMgaR3noOuhPK1uPp35MpqOvOYj+MRTB5k1QU6Y/EKhW67Ff0trMP96ncllQNFCrJhT8Pa4ly2UkOFIG0ydU4uFkV4BGEa4g64Ysf42kfek9zNgjrgSQn/knSCR3knNKBC1UQ5Ws5gy9RhuU74ggCVHuWLdTrThZ+y1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o8YEaViT; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yx6oiN+s";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3w+Qj6AJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yx6oiN+s";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3w+Qj6AJ"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E9551222B1;
-	Tue, 27 Feb 2024 13:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709039933; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gIlOSV0TQNSPsr1l71Sd7x8euobQck9HznkmkrefATM=;
-	b=yx6oiN+sMijyaPYzbp0Rej2X7EhWR2PcWGeWvw0NYeO/OexSzyP3GOILQih5OrmBXhhvp8
-	PaV8DkIHBoyR9T45X8tdhXKgvMFTWvHnsZq0oil8JtUVV9PriFVLk5XlH/hz8cRF7D4uhb
-	r1AYB+aUsyPOh6mbKM9nZblV8fKuNmY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709039933;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gIlOSV0TQNSPsr1l71Sd7x8euobQck9HznkmkrefATM=;
-	b=3w+Qj6AJm/UpKPmBO/3E8WUGUHQXKw4qny4WDEH6OR2otvFUUsSPS4z36zstCAZ0+Bvnyn
-	JxAq8SEXS+lhHlCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709039933; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gIlOSV0TQNSPsr1l71Sd7x8euobQck9HznkmkrefATM=;
-	b=yx6oiN+sMijyaPYzbp0Rej2X7EhWR2PcWGeWvw0NYeO/OexSzyP3GOILQih5OrmBXhhvp8
-	PaV8DkIHBoyR9T45X8tdhXKgvMFTWvHnsZq0oil8JtUVV9PriFVLk5XlH/hz8cRF7D4uhb
-	r1AYB+aUsyPOh6mbKM9nZblV8fKuNmY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709039933;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gIlOSV0TQNSPsr1l71Sd7x8euobQck9HznkmkrefATM=;
-	b=3w+Qj6AJm/UpKPmBO/3E8WUGUHQXKw4qny4WDEH6OR2otvFUUsSPS4z36zstCAZ0+Bvnyn
-	JxAq8SEXS+lhHlCw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 95FB313419;
-	Tue, 27 Feb 2024 13:18:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id OiUAITzh3WVmagAAn2gu4w
-	(envelope-from <clopez@suse.de>); Tue, 27 Feb 2024 13:18:52 +0000
-Message-ID: <084e7c38-ebce-4091-af40-42283e344ccc@suse.de>
-Date: Tue, 27 Feb 2024 14:18:51 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o8YEaViT"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d220e39907so67219641fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 05:20:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709040007; x=1709644807; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vlr5GxTuTyoOqcx2wy9fcrF4X1fQdHiiP+0pPjt3du4=;
+        b=o8YEaViTzRsCM3yNL6D38U0y955k1Yq82BaB9YXlSg8ZRhlEfoYE9bF5yO9LzfSiZa
+         FUY/+LEELHeuhqrfSBUvOu+0ubD99/MeqhAbm7qlt33PQGaC14YW6FDzSUrnc0WpLSO0
+         uLgE00EnIEivUFCR2hB3R2Kty2HbcWLkBbnex0Snw2nWhJHys8K77b0zpAhXeHPKEVT5
+         xT4vQO6e4Hn9XhLn7R6PhhbOO/9aDeo0vJXqf33aSKi2Wqjdjy8WnAiVEP2HtBCKbt4Q
+         x3H7G2ZUCbnQfwvBdBcI31dObwJY6ELxlq3FopP+A0yfQ1VYBRa49PhPLUR6ZBgIvyvL
+         hmVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709040007; x=1709644807;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vlr5GxTuTyoOqcx2wy9fcrF4X1fQdHiiP+0pPjt3du4=;
+        b=XZYNSxWi5lV60HpZW/juOAmNSJg4gjFKKEj9v9Cil9cvhEpVyPnrqLSHyiB/hd4E9M
+         2AdBY5IKPCygsc80PxFZNr108OW9H8R+t6gmvxvWdjw/nH2Q0LvaR0DS1tC+yCvhy3TV
+         +/QAZEPBTimGT/ekjle33nLtNEmUjPKtvwzoxQX10RAf8VXEr2hk0sysYCQQ20S+1Adj
+         fieT/tl+IYa3iG1zeJdgDgbVK5hkIuCLo04xgfXeMyeo2re1B++E41Us5M03fwafGEAh
+         Gb8ifE8TgI9Cwek8EuJUHBQGrKV+RkeclYfyym0hRpDJzBfWH8VREMj1tUyS4TjRlNK4
+         CDuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQfqjDdlgHXKiS06s2axNfE7RCUtAK09xZlI+7ifB3sZiES/S7AgwY4ZpzzP6Qf7e+PnNjzyd/epaZHvC25W1OwXjHwrEPijhUcxgo
+X-Gm-Message-State: AOJu0YwShnlzbUi3nys/XY200ifwCasRobLdr/zrT1z7KQnuDa27D78H
+	b9MLAMEYyYht0nw7QXT3nDUfQf39dPBZuvWy7+mf6gJ2EQMgjCdPHtx9nUBSAYKM8u1f7hUxwSp
+	37FDX5R1zl+UM5MjE0swc1MjkyXvb3dKzZkHtBA==
+X-Google-Smtp-Source: AGHT+IGQ5qKugw7EolCixjBBZt98DHlZp0AHzKrqvDtOPvC40Yids/u0deBUUEQVxTX4vweQHoEHToV3hUoy2m4wmRs=
+X-Received: by 2002:a05:651c:48c:b0:2d2:5cca:cf6f with SMTP id
+ s12-20020a05651c048c00b002d25ccacf6fmr5999084ljc.18.1709040007508; Tue, 27
+ Feb 2024 05:20:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: CVE-2023-52466: PCI: Avoid potential out-of-bounds read in
- pci_dev_for_each_resource()
-Content-Language: en-US
-To: cve@kernel.org, linux-kernel@vger.kernel.org,
- linux-cve-announce@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <2024022544-CVE-2023-52466-fea5@gregkh>
-From: =?UTF-8?Q?Carlos_L=C3=B3pez?= <clopez@suse.de>
-In-Reply-To: <2024022544-CVE-2023-52466-fea5@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -2.15
-X-Spamd-Result: default: False [-2.15 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-0.975];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-0.87)[85.61%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
+References: <20240215030002.281456-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20240215030002.281456-3-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <CAC_iWjJ_TS66KG7uGOQFiKGfZNKjnod6u7zua4LVK-EJHEUv8w@mail.gmail.com>
+ <7feb889f-f78e-4caa-a2f4-9d41acf6ca76@linux.intel.com> <CAC_iWj+9eWesWD62krdhLwj58fpjptpnnG5JpUJUpFsg7_GzOA@mail.gmail.com>
+ <3b8113ac-e44c-4b11-b494-9e473352037a@linux.intel.com>
+In-Reply-To: <3b8113ac-e44c-4b11-b494-9e473352037a@linux.intel.com>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Tue, 27 Feb 2024 15:19:31 +0200
+Message-ID: <CAC_iWjLXNBJz2RgRb3vbM_hetnw3hoWpG+sKM1gfiGo=z6tLxA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] efi/libstub: Add get_event_log() support for CC platforms
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Sat, 24 Feb 2024 at 09:31, Kuppuswamy Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+>
+> On 2/23/24 5:24 AM, Ilias Apalodimas wrote:
+> > Apologies for the late reply,
+> >
+> >
+> > On Mon, 19 Feb 2024 at 09:34, Kuppuswamy Sathyanarayanan
+> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> >> Hi Ilias,
+> >>
+> >> On 2/18/24 11:03 PM, Ilias Apalodimas wrote:
+> >>> On Thu, 15 Feb 2024 at 05:02, Kuppuswamy Sathyanarayanan
+> >>> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> >>>> To allow event log info access after boot, EFI boot stub extracts
+> >>>> the event log information and installs it in an EFI configuration
+> >>>> table. Currently, EFI boot stub only supports installation of event
+> >>>> log only for TPM 1.2 and TPM 2.0 protocols. Extend the same support
+> >>>> for CC protocol. Since CC platform also uses TCG2 format, reuse TPM2
+> >>>> support code as much as possible.
+> >>>>
+> >>>> Link: https://uefi.org/specs/UEFI/2.10/38_Confidential_Computing.html#efi-cc-measurement-protocol [1]
+> >>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> >>> [...]
+> >>>
+> >>>> +void efi_retrieve_eventlog(void)
+> >>>> +{
+> >>>> +       efi_physical_addr_t log_location = 0, log_last_entry = 0;
+> >>>> +       efi_guid_t cc_guid = EFI_CC_MEASUREMENT_PROTOCOL_GUID;
+> >>>> +       efi_guid_t tpm2_guid = EFI_TCG2_PROTOCOL_GUID;
+> >>>> +       int version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
+> >>>> +       efi_tcg2_protocol_t *tpm2 = NULL;
+> >>>> +       efi_cc_protocol_t *cc = NULL;
+> >>>> +       efi_bool_t truncated;
+> >>>> +       efi_status_t status;
+> >>>> +
+> >>>> +       status = efi_bs_call(locate_protocol, &tpm2_guid, NULL, (void **)&tpm2);
+> >>>> +       if (status == EFI_SUCCESS) {
+> >>>> +               status = efi_call_proto(tpm2, get_event_log, version, &log_location,
+> >>>> +                                       &log_last_entry, &truncated);
+> >>>> +
+> >>>> +               if (status != EFI_SUCCESS || !log_location) {
+> >>>> +                       version = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
+> >>>> +                       status = efi_call_proto(tpm2, get_event_log, version,
+> >>>> +                                               &log_location, &log_last_entry,
+> >>>> +                                               &truncated);
+> >>>> +                       if (status != EFI_SUCCESS || !log_location)
+> >>>> +                               return;
+> >>>> +               }
+> >>>> +
+> >>>> +               efi_retrieve_tcg2_eventlog(version, log_location, log_last_entry,
+> >>>> +                                          truncated);
+> >>>> +               return;
+> >>>> +       }
+> >>>> +
+> >>>> +       status = efi_bs_call(locate_protocol, &cc_guid, NULL, (void **)&cc);
+> >>>> +       if (status == EFI_SUCCESS) {
+> >>>> +               version = EFI_CC_EVENT_LOG_FORMAT_TCG_2;
+> >>>> +               status = efi_call_proto(cc, get_event_log, version, &log_location,
+> >>>> +                                       &log_last_entry, &truncated);
+> >>>> +               if (status != EFI_SUCCESS || !log_location)
+> >>>> +                       return;
+> >>>> +
+> >>>> +               efi_retrieve_tcg2_eventlog(version, log_location, log_last_entry,
+> >>>> +                                          truncated);
+> >>>> +               return;
+> >>>> +       }
+> >>>> +}
+> >>> [...]
+> >>>
+> >>> I haven't looked into CC measurements much, but do we always want to
+> >>> prioritize the tcg2 protocol? IOW if you have firmware that implements
+> >>> both, shouldn't we prefer the CC protocol for VMs?
+> >> According the UEFI specification, sec "Conidential computing", if a firmware implements
+> >> the TPM, then it should be used and CC interfaces should not be published. So I think
+> >> we should check for TPM first, if it does not exist then try for CC.
+> > Ok thanks, that makes sense. That document also says the services
+> > should be implemented on a virtual firmware.
+> > I am unsure at the moment though if it's worth checking that and
+> > reporting an error otherwise. Thoughts?
+>
+> IMO, it is not fatal for the firmware to implement both protocols. Although, it
+> violates the specification, does it makes sense to return error and skip
+> measurements? I think for such case, we can add a warning and proceed
+> with TPM if it exists.
 
-Hi,
+If you have a TPM, the current code wouldn't even look for CC (which
+we agreed is correct).
+The question is, should we care if a firmware exposes the CC protocol,
+but isn't virtualized
 
-On 25/2/24 9:16, Greg Kroah-Hartman wrote:
-> There is no actual issue right now because we have another check afterwards
-> and the out-of-bounds read is not being performed. In any case it's better
-> code with this fixed, hence the proposed change.
-
-Given that there is no actual security issue this looks more like a
-hardening, and thus not deserving of a CVE, no?
-
-Best,
-Carlos
-
--- 
-Carlos López
-Security Engineer
-SUSE Software Solutions
+Thanks
+/Ilias
+>
+> >
+> > Thanks
+> > /Ilias
+> >> https://uefi.org/specs/UEFI/2.10/38_Confidential_Computing.html#confidential-computing
+> >>
+> >>> Thanks
+> >>> /Ilias
+> >> --
+> >> Sathyanarayanan Kuppuswamy
+> >> Linux Kernel Developer
+> >>
+> --
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
+>
