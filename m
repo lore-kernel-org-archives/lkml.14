@@ -1,35 +1,35 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A691369A0;
-	Tue, 27 Feb 2024 09:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28A313699F;
+	Tue, 27 Feb 2024 09:40:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709026814; cv=none; b=gllcxbkZktgQ/wxF8vDbhcZ/TnoIvzlNk+pIVx7IiQDLlv2ho6fq6R+0MnmGATyAfkza4VAdj/xQNGvzr2Jcl+FUMmEVyAd7Pu+N4C9YPzkz0sJ+StBz4DSoTPCIb1ayFT1mQAU8zjlhPF/z92klqIcUtEtpuQQuAuyaDcacxuE=
+	t=1709026813; cv=none; b=t2osUZE5JD+pDlmGrag5UxONo0ILG/0Gww5g+uJBDFerDK0c1KtJm7ENfaf92jhPvBdbTyDNdkBlTXDaXOJSOEN8YIcLQ50cx/nDIGR4m4Jql6cI8n8HJbVUJ3PZaZCchGnCnjMg73f80omqhG6qamVGAClZqPVdxe3L46PGr8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709026814; c=relaxed/simple;
-	bh=9JjvHERcZ8YVK7b/Q4VF9ZW0OhQYLZLE7HJA4c4oEVs=;
+	s=arc-20240116; t=1709026813; c=relaxed/simple;
+	bh=uqtJGHKVHC/j4i5cKjZOrsQelhUV4vYr6TiYM/bYruQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gwO2nhf6+57jlIi6SJpSEGxGLxVqWLHgd/5CUrm0slzSb3lJNjjOy5X2AF6AiTG/FZ3O2JQwL5JdM4tbXioTSEu1YwD0k2F8WCIZz/tl0YL+l6cThvfRmc/8lr9YTCfUgQc6B43Z2xPXYp4pCyjcMAodM1LyyZjiNYubVxCFfKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l/BJeXbo; arc=none smtp.client-ip=217.70.183.201
+	 MIME-Version; b=aq7Hz5sq0u0JTToxLkV3axBr2EDpYTE0DMeDCHQdzuKzWD9Z+XREv+Y3z9kSuVeI9bNprTOKuCUjqkEJjUABBLMS2u1l6BMnOiZwv2kk6b6gUaesHzXfheKpw349kE7f0n1ikMyapE8FiZI7Le9fj01LaP7Cx8vl5H0sSVVE4BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LFhQM41E; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l/BJeXbo"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 5FCE91BF20C;
-	Tue, 27 Feb 2024 09:40:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LFhQM41E"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 01A8B1BF212;
+	Tue, 27 Feb 2024 09:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709026804;
+	t=1709026808;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lvm6/L2WXUvtdtliXYOUV1u9RT8vkw9obusEbpY4LHk=;
-	b=l/BJeXboAzq1t4BjFnD2es++LHkbZFXWmgrkX0aR4REVIzt4KMJ5FAFxCYspEGps/FbXDy
-	Z3bMV2puAky55syDyN/tQZVqDlJpRTClyqH5iFYlBOJaCZBIX2PJPZmXtg61O8ySCmGKUw
-	aBbY3IjojuuJORbqxR494qk/k86uhWSvZVcMHnTjmsU90YfnEomj6el5YsvqSQchk9Zj5b
-	+jbQkP78Uc3nBa/LDHnV6mqGpCQ8EkU3negzntm/hxKfo1pCZF7KNimfktC50nDvopfo+9
-	7ndMdXlLbiekglz8oPiJ5u98zOkFZptaU+VIJsYuTXCrhmH+FRzjWWy8RFdmYQ==
+	bh=FpCvRT3LuSD1Mcc/k7iKXm6hU1A4RCeIB4aBNCXWOa0=;
+	b=LFhQM41EcxzoRb4uelw7/FQMFlnzcKBFo75Y8VbXklZMIKxCtW7EgB3D7ah+XlO1xhtmzE
+	E9Mla+lSf+f1RypQ07S60o1BB2k2N0VlH6Zje+yNeKJEcTlhWf6qaE32hmzwuH0VWKL3lw
+	XjLlAxeoVjhAxYEmjYnOpsW0krn/a4v9dQvqI6yQ0cuEl6k3JeJG1mR1fohr8Q6Gsfrgc3
+	Vgh3nCxajIgBGz/QHnrRsRSJXzA/ZsKZOdKoZtLRU498V/1YX6CnssX3rpp+biOMPkncOs
+	BIhx+bRhb+Lhpf/WuxDLa5VW9CV4WYw2uiJFCyE4/lxXuRmkgozTppFZ3an33A==
 From: Bastien Curutchet <bastien.curutchet@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -53,9 +53,9 @@ Cc: linux-kernel@vger.kernel.org,
 	herve.codina@bootlin.com,
 	maxime.chevallier@bootlin.com,
 	christophercordahi@nanometrics.ca
-Subject: [PATCH v2 1/6] dt-bindings: net: Add bindings for PHY DP83640
-Date: Tue, 27 Feb 2024 10:39:40 +0100
-Message-ID: <20240227093945.21525-2-bastien.curutchet@bootlin.com>
+Subject: [PATCH v2 3/6] net: phy: DP83640: Add LED handling
+Date: Tue, 27 Feb 2024 10:39:42 +0100
+Message-ID: <20240227093945.21525-4-bastien.curutchet@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
 References: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
@@ -68,101 +68,255 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: bastien.curutchet@bootlin.com
 
-The DP83640 is a PTP PHY. Some of his features can be enabled by
-hardware straps. There is not binding yet.
+The PHY have three LED : Activity LED, Speed LED and Link LED. The PHY
+offers three configuration modes for them. The driver does not handle them.
 
-Add a device tree binding to be able to override the hardware strap
-configuration when needed.
+Add LED handling through the /sys/class/leds interface.
+On every mode the Speed LED indicates the speed (10Mbps or 100 Mbps) and
+the Link LED indicates whether the link is good or not. Link LED will also
+reflects link activity in mode 2 and 3. The Activity LED can reflect the
+link activity (mode 1), the link's duplex (mode 2) or collisions on the
+link (mode 3).
+Only the Activity LED can have its hardware configuration updated, it
+has an impact on Link LED as activity reflexion is added on it on modes
+2 and 3
 
 Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
 ---
- .../devicetree/bindings/net/ti,dp83640.yaml   | 77 +++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/ti,dp83640.yaml
+ drivers/net/phy/dp83640.c     | 176 ++++++++++++++++++++++++++++++++++
+ drivers/net/phy/dp83640_reg.h |  11 +++
+ 2 files changed, 187 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83640.yaml b/Documentation/devicetree/bindings/net/ti,dp83640.yaml
-new file mode 100644
-index 000000000000..db1dc909d5cb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ti,dp83640.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2024 Nanometrics Inc
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/ti,dp83640.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
+index 5c42c47dc564..c46c81ef0ad0 100644
+--- a/drivers/net/phy/dp83640.c
++++ b/drivers/net/phy/dp83640.c
+@@ -59,6 +59,22 @@
+ 				   MII_DP83640_MISR_SPD_INT |\
+ 				   MII_DP83640_MISR_LINK_INT)
+ 
++#define DP83640_ACTLED_IDX	0
++#define DP83640_LNKLED_IDX	1
++#define DP83640_SPDLED_IDX	2
++/* LNKLED = ON for Good Link, OFF for No Link */
++/* SPDLED = ON in 100 Mb/s, OFF in 10 Mb/s */
++/* ACTLED = ON for Activity, OFF for No Activity */
++#define DP83640_LED_MODE_1	1
++/* LNKLED = ON for Good Link, Blink for Activity */
++/* SPDLED = ON in 100 Mb/s, OFF in 10 Mb/s */
++/* ACTLED = ON for Collision, OFF for No Collision */
++#define DP83640_LED_MODE_2	2
++/* LNKLED = ON for Good Link, Blink for Activity */
++/* SPDLED = ON in 100 Mb/s, OFF in 10 Mb/s */
++/* ACTLED = ON for Full-Duplex, OFF for Half-Duplex */
++#define DP83640_LED_MODE_3	3
 +
-+title: TI DP83640 ethernet PHY
+ /* phyter seems to miss the mark by 16 ns */
+ #define ADJTIME_FIX	16
+ 
+@@ -1515,6 +1531,161 @@ static void dp83640_remove(struct phy_device *phydev)
+ 	kfree(dp83640);
+ }
+ 
++static int dp83640_led_brightness_set(struct phy_device *phydev, u8 index,
++				      enum led_brightness brightness)
++{
++	int val;
 +
-+allOf:
-+  - $ref: ethernet-controller.yaml#
++	if (index > DP83640_SPDLED_IDX)
++		return -EINVAL;
 +
-+maintainers:
-+  - Bastien Curutchet <bastien.curutchet@bootlin.com>
++	phy_write(phydev, PAGESEL, 0);
 +
-+description: |
-+  The DP83640 Precision PHYTER device is an Ethernet PHY providing PTP
-+  capabilities based on IEEE 1588 standard.
++	val = phy_read(phydev, LEDCR) & ~DP83640_LED_DIS(index);
++	val |= DP83640_LED_DRV(index);
++	if (brightness)
++		val |= DP83640_LED_VAL(index);
++	else
++		val &= ~DP83640_LED_VAL(index);
++	phy_write(phydev, LEDCR, val);
 +
-+  This device interfaces directly to the MAC layer through the
-+  IEEE 802.3 Standard Media Independent Interface (MII), or Reduced MII (RMII).
++	return 0;
++}
 +
-+  Specifications about the Ethernet PHY can be found at:
-+    https://www.ti.com/lit/gpn/dp83640
++/**
++ * dp83640_led_mode - Check the trigger netdev rules and compute the associated
++ *                    configuration mode
++ * @index: The targeted LED
++ * @rules: Rules to be checked
++ *
++ * Returns the mode that is to be set in LED_CFNG. If the rules are not
++ * supported by the PHY, returns -ENOTSUPP. If the rules are supported but don't
++ * impact the LED configuration, returns 0
++ */
++static int dp83640_led_mode(u8 index, unsigned long rules)
++{
++	/* Only changes on ACTLED have an impact on LED Mode configuration */
++	switch (index) {
++	case DP83640_ACTLED_IDX:
++		switch (rules) {
++		case BIT(TRIGGER_NETDEV_TX) | BIT(TRIGGER_NETDEV_RX):
++			return DP83640_LED_MODE_1;
++		case BIT(TRIGGER_NETDEV_COLLISION):
++			return DP83640_LED_MODE_2;
++		case BIT(TRIGGER_NETDEV_FULL_DUPLEX) |
++		     BIT(TRIGGER_NETDEV_HALF_DUPLEX):
++			return DP83640_LED_MODE_3;
++		default:
++			return -EOPNOTSUPP;
++		}
 +
-+properties:
-+  reg:
-+    maxItems: 1
++	case DP83640_SPDLED_IDX:
++		/* SPDLED has the same function in every mode */
++		switch (rules) {
++		case BIT(TRIGGER_NETDEV_LINK_10) | BIT(TRIGGER_NETDEV_LINK_100):
++			return 0;
++		default:
++			return -EOPNOTSUPP;
++		}
 +
-+  ti,fiber-mode:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum: [ disable, enable ]
-+    description: |
-+      If present, enables or disables the FX Fiber Mode.
-+       - disable  = FX Fiber Mode disabled
-+       - enable   = FX Fiber Mode enabled
-+      Fiber mode enabling can also be strapped. If the strap pin is not set
-+      correctly or not set at all then this can be used to configure it.
++	case DP83640_LNKLED_IDX:
++		/* LNKLED has the same function in every mode */
++		switch (rules) {
++		case BIT(TRIGGER_NETDEV_LINK):
++			return 0;
++		default:
++			return -EOPNOTSUPP;
++		}
++	default:
++		return -EINVAL;
++	}
++}
 +
-+  leds:
-+    type: object
-+    $ref: /schemas/leds/common.yaml#
-+    description: |
-+      Describes the three LEDs of the PHY.
++static int dp83640_led_hw_is_supported(struct phy_device *phydev, u8 index,
++				       unsigned long rules)
++{
++	int ret;
 +
-+required:
-+  - reg
++	ret = dp83640_led_mode(index, rules);
 +
-+unevaluatedProperties: false
++	if (ret < 0)
++		return ret;
 +
-+examples:
-+  - |
-+    mdio0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      ethphy0: ethernet-phy@0 {
-+        reg = <0>;
-+        ti,fiber-mode = "disable";
-+        leds {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
++	return 0;
++}
 +
-+          led@0 {
-+            reg = <0>;
-+            label = "activity";
-+          };
-+          led@1 {
-+            reg = <1>;
-+            label = "link";
-+          };
-+          led@2 {
-+            reg = <2>;
-+            label = "speed";
-+          };
-+        };
-+      };
-+    };
++static int dp83640_led_hw_control_set(struct phy_device *phydev, u8 index,
++				      unsigned long rules)
++{
++	int mode, val;
++
++	mode = dp83640_led_mode(index, rules);
++	if (mode < 0)
++		return mode;
++
++	if (mode) {
++		phy_write(phydev, PAGESEL, 0);
++		val = phy_read(phydev, PHYCR) & ~(LED_CNFG_1 | LED_CNFG_0);
++		switch (mode) {
++		case DP83640_LED_MODE_1:
++			val |= LED_CNFG_0;
++		break;
++		case DP83640_LED_MODE_2:
++			/* Keeping LED_CNFG_1 and LED_CNFG_0 unset */
++			break;
++		case DP83640_LED_MODE_3:
++			val |= LED_CNFG_1;
++			break;
++		default:
++			return -EINVAL;
++		}
++		phy_write(phydev, PHYCR, val);
++	}
++
++	val = phy_read(phydev, LEDCR);
++	val &= ~(DP83640_LED_DIS(index) | DP83640_LED_DRV(index));
++	phy_write(phydev, LEDCR, val);
++
++	return 0;
++}
++
++static int dp83640_led_hw_control_get(struct phy_device *phydev, u8 index,
++				      unsigned long *rules)
++{
++	int val;
++
++	switch (index) {
++	case DP83640_ACTLED_IDX:
++		phy_write(phydev, PAGESEL, 0);
++		val = phy_read(phydev, PHYCR);
++		if (val & LED_CNFG_0) {
++			/* Mode 1 */
++			*rules = BIT(TRIGGER_NETDEV_TX) | BIT(TRIGGER_NETDEV_RX);
++		} else if (val & LED_CNFG_1) {
++			/* Mode 3 */
++			*rules = BIT(TRIGGER_NETDEV_FULL_DUPLEX) |
++				 BIT(TRIGGER_NETDEV_HALF_DUPLEX);
++		} else {
++			/* Mode 2 */
++			*rules = BIT(TRIGGER_NETDEV_COLLISION);
++		}
++		break;
++
++	case DP83640_LNKLED_IDX:
++		*rules = BIT(TRIGGER_NETDEV_LINK);
++		break;
++
++	case DP83640_SPDLED_IDX:
++		*rules = BIT(TRIGGER_NETDEV_LINK_10) |
++			 BIT(TRIGGER_NETDEV_LINK_100);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static struct phy_driver dp83640_driver = {
+ 	.phy_id		= DP83640_PHY_ID,
+ 	.phy_id_mask	= 0xfffffff0,
+@@ -1526,6 +1697,11 @@ static struct phy_driver dp83640_driver = {
+ 	.config_init	= dp83640_config_init,
+ 	.config_intr    = dp83640_config_intr,
+ 	.handle_interrupt = dp83640_handle_interrupt,
++
++	.led_brightness_set = dp83640_led_brightness_set,
++	.led_hw_is_supported = dp83640_led_hw_is_supported,
++	.led_hw_control_set = dp83640_led_hw_control_set,
++	.led_hw_control_get = dp83640_led_hw_control_get,
+ };
+ 
+ static int __init dp83640_init(void)
+diff --git a/drivers/net/phy/dp83640_reg.h b/drivers/net/phy/dp83640_reg.h
+index daae7fa58fb8..09dd2d2527c7 100644
+--- a/drivers/net/phy/dp83640_reg.h
++++ b/drivers/net/phy/dp83640_reg.h
+@@ -6,6 +6,8 @@
+ #define HAVE_DP83640_REGISTERS
+ 
+ /* #define PAGE0                  0x0000 */
++#define LEDCR                     0x0018 /* PHY Control Register */
++#define PHYCR                     0x0019 /* PHY Control Register */
+ #define PHYCR2                    0x001c /* PHY Control Register 2 */
+ 
+ #define PAGE4                     0x0004
+@@ -50,6 +52,15 @@
+ #define PTP_GPIOMON               0x001e /* PTP GPIO Monitor Register */
+ #define PTP_RXHASH                0x001f /* PTP Receive Hash Register */
+ 
++/* Bit definitions for the LEDCR register */
++#define DP83640_LED_DIS(x)        BIT((x) + 9) /* Disable LED */
++#define DP83640_LED_DRV(x)        BIT((x) + 3) /* Force LED val to output */
++#define DP83640_LED_VAL(x)        BIT((x))     /* LED val */
++
++/* Bit definitions for the PHYCR register */
++#define LED_CNFG_0	          BIT(5)  /* LED configuration, bit 0 */
++#define LED_CNFG_1	          BIT(6)  /* LED configuration, bit 1 */
++
+ /* Bit definitions for the PHYCR2 register */
+ #define BC_WRITE                  (1<<11) /* Broadcast Write Enable */
+ 
 -- 
 2.43.0
 
