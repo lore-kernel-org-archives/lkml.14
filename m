@@ -1,166 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B0813B293;
-	Tue, 27 Feb 2024 13:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A7091332A7
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709040030; cv=none; b=cVEQs0nXx1AruRRQyJ680rKQGLJUtNlRdxYmCMpWlIWEj8R/pOD0IXXI2nG2Q3dDCNyJX9vMZpGW+4GuTIyjJ0+7szc8UB6Uiw8nvmTDBZUX21IlEXeyG5lhqh2uoOw7YLH/3EK8hed6mtLARUqKc0UsiwokY6+BHsGzAxGszjs=
+	t=1709040174; cv=none; b=A5u7e8godFVDTDqKl/r9RghQwNWiDHl3tN7SUmm6xnbHIi8v/1yflx/GbgrT5hTiP2O1lMMxkOEwr6QAldHHCdOMvfFG/A9drrDvJAh7PYCEOY33Fj8h0xhYRTl0orUJtVsOMljWI7jkJBdi+1zMVI19qAWo/bI0e0UU882VFIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709040030; c=relaxed/simple;
-	bh=EBs4betfL1RKBwgp2ebp0GSA1ZBOXqHaPeKzovpf0VQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=b7VL5I+WUKLIronVdBbRMJCncCVVNt8cabyBGp7+8AQ6UiEP6jNUsza868Xo2z18IaEN3pcvo8+wYaaSLApI21mdHJhY5Ato5J11Gd7ohaa5oVV+Iux36mwts5tfjqrbTYYLYNgF+nhj7cReLtAs3tc+TzVpiVKFwwAYUVmM10o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=knzFP1iE; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="knzFP1iE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709040029; x=1740576029;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=EBs4betfL1RKBwgp2ebp0GSA1ZBOXqHaPeKzovpf0VQ=;
-  b=knzFP1iEAzacT7ZcxRN6oDO9Vm+E2ld+63fRT/GmUZOwhZ+PSymWzuAe
-   hZ56HiryZ0mPcUJnejSca8Qy8gJqU10ALCU/x6FQo0hJ4RDEQL028ECGn
-   cqLY4Dxo9GqAQmKzBVTnMEHgOmRATWjoBlpiH7YX3gX/5knO1Z6I4abiv
-   TXDTn3xAzboj+7QlA5LlwdVOyrcQWqJ5iMS0tLQjnnI7+t4n6aE7SuNZ8
-   4m7s2S9HTuTQ0A9spt5R5slyAFrME56FeH99HYo0xcv1RC3eK5squwjyA
-   1OeDB3/KGo+QxAxfwBxxwSAHbKdw5SHMETocMQem1IE9o3wMVX8VwZo1r
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="13928489"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="13928489"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:20:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="11643767"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:20:25 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 27 Feb 2024 15:20:22 +0200 (EET)
-To: Luiz Capitulino <luizcap@redhat.com>
-cc: shravankr@nvidia.com, davthompson@nvidia.com, ndalvi@redhat.com, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 0/2] platform/mellanox: mlxbf-pmc: Fix module loading
-In-Reply-To: <eaef16d8-d43a-49c8-b1a0-450ab4c1ba9f@redhat.com>
-Message-ID: <4bb37259-5626-b32f-f21b-b88df52d4afb@linux.intel.com>
-References: <cover.1708635408.git.luizcap@redhat.com> <170895404513.2243.14840310263795846559.b4-ty@linux.intel.com> <def1a153-3cfb-431d-a7d2-a13bb7d65f4f@redhat.com> <29863354-4efe-d199-a9d4-7daf83f6cde9@linux.intel.com> <1608d86a-24e8-403b-b199-ce23f8411cfd@redhat.com>
- <8a05120e-fcdf-f7f2-6b60-22e3ee819d37@linux.intel.com> <eaef16d8-d43a-49c8-b1a0-450ab4c1ba9f@redhat.com>
+	s=arc-20240116; t=1709040174; c=relaxed/simple;
+	bh=lFl7whs//Mq1ga5t4xx9WBQo46JRkdrWTfODsqllbKA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BJkvjHhh39zIYcn5GuzZrRpRagH8tjJ0w8nzGcOiuv0gVo+uMMZ7s++Q6YgZpw/FAu0uMnya2wDwVdrFaQy2nuGA7OjrNUx5SDvL0GqhynIiXDzQ8hy51N9TviakNVvlN7Fdx6AYFuFQqmaTtKohfHjTX9We3BaI8zEzKgXQKjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EA8ADA7;
+	Tue, 27 Feb 2024 05:23:29 -0800 (PST)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C03BA3F73F;
+	Tue, 27 Feb 2024 05:22:49 -0800 (PST)
+Message-ID: <5a94049b-5527-4c05-bce5-e15edebd1b81@arm.com>
+Date: Tue, 27 Feb 2024 13:22:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1367976222-1709040022=:1099"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] iommu/dma: Force swiotlb_max_mapping_size on an
+ untrusted device
+Content-Language: en-GB
+To: Michael Kelley <mhklinux@outlook.com>, Will Deacon <will@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "kernel-team@android.com" <kernel-team@android.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ Petr Tesarik <petr.tesarik1@huawei-partners.com>,
+ Dexuan Cui <decui@microsoft.com>, Nicolin Chen <nicolinc@nvidia.com>
+References: <20240221113504.7161-1-will@kernel.org>
+ <20240221113504.7161-6-will@kernel.org>
+ <6be819d8-f1f9-4833-81c3-32220617f0c5@arm.com>
+ <SN6PR02MB4157CD26C1D9BAC64208D9D8D45A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <SN6PR02MB4157CD26C1D9BAC64208D9D8D45A2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 26/02/2024 9:11 pm, Michael Kelley wrote:
+> From: Robin Murphy <robin.murphy@arm.com> Sent: Monday, February 26, 2024 11:36 AM
+>>
+>> On 21/02/2024 11:35 am, Will Deacon wrote:
+>>> From: Nicolin Chen <nicolinc@nvidia.com>
+>>>
+>>> The swiotlb does not support a mapping size > swiotlb_max_mapping_size().
+>>> On the other hand, with a 64KB PAGE_SIZE configuration, it's observed that
+>>> an NVME device can map a size between 300KB~512KB, which certainly failed
+>>> the swiotlb mappings, though the default pool of swiotlb has many slots:
+>>>       systemd[1]: Started Journal Service.
+>>>    => nvme 0000:00:01.0: swiotlb buffer is full (sz: 327680 bytes), total 32768 (slots), used 32 (slots)
+>>>       note: journal-offline[392] exited with irqs disabled
+>>>       note: journal-offline[392] exited with preempt_count 1
+>>>
+>>> Call trace:
+>>> [    3.099918]  swiotlb_tbl_map_single+0x214/0x240
+>>> [    3.099921]  iommu_dma_map_page+0x218/0x328
+>>> [    3.099928]  dma_map_page_attrs+0x2e8/0x3a0
+>>> [    3.101985]  nvme_prep_rq.part.0+0x408/0x878 [nvme]
+>>> [    3.102308]  nvme_queue_rqs+0xc0/0x300 [nvme]
+>>> [    3.102313]  blk_mq_flush_plug_list.part.0+0x57c/0x600
+>>> [    3.102321]  blk_add_rq_to_plug+0x180/0x2a0
+>>> [    3.102323]  blk_mq_submit_bio+0x4c8/0x6b8
+>>> [    3.103463]  __submit_bio+0x44/0x220
+>>> [    3.103468]  submit_bio_noacct_nocheck+0x2b8/0x360
+>>> [    3.103470]  submit_bio_noacct+0x180/0x6c8
+>>> [    3.103471]  submit_bio+0x34/0x130
+>>> [    3.103473]  ext4_bio_write_folio+0x5a4/0x8c8
+>>> [    3.104766]  mpage_submit_folio+0xa0/0x100
+>>> [    3.104769]  mpage_map_and_submit_buffers+0x1a4/0x400
+>>> [    3.104771]  ext4_do_writepages+0x6a0/0xd78
+>>> [    3.105615]  ext4_writepages+0x80/0x118
+>>> [    3.105616]  do_writepages+0x90/0x1e8
+>>> [    3.105619]  filemap_fdatawrite_wbc+0x94/0xe0
+>>> [    3.105622]  __filemap_fdatawrite_range+0x68/0xb8
+>>> [    3.106656]  file_write_and_wait_range+0x84/0x120
+>>> [    3.106658]  ext4_sync_file+0x7c/0x4c0
+>>> [    3.106660]  vfs_fsync_range+0x3c/0xa8
+>>> [    3.106663]  do_fsync+0x44/0xc0
+>>>
+>>> Since untrusted devices might go down the swiotlb pathway with dma-iommu,
+>>> these devices should not map a size larger than swiotlb_max_mapping_size.
+>>>
+>>> To fix this bug, add iommu_dma_max_mapping_size() for untrusted devices to
+>>> take into account swiotlb_max_mapping_size() v.s. iova_rcache_range() from
+>>> the iommu_dma_opt_mapping_size().
+>>
+>> On the basis that this is at least far closer to correct than doing nothing,
+>>
+>> Acked-by: Robin Murphy <robin.murphy@arm.com>
+>>
+>> TBH I'm scared to think about theoretical correctness for all the
+>> interactions between the IOVA granule and min_align_mask, since just the
+>> SWIOTLB stuff is bad enough, even before you realise the ways that the
+>> IOVA allocation isn't necessarily right either. However I reckon as long
+>> as we don't ever see a granule smaller than IO_TLB_SIZE, and/or a
+>> min_align_mask larger than a granule, then this should probably work
+>> well enough as-is.
+>>
+> 
+> I'm not convinced.  The conditions you describe are reasonable
+> and reflect upstream code today. But there can still be a failure
+> due to attempting to allocate a "too large" swiotlb buffer. It
+> happens with a granule of 64K and min_align_mask of 4K - 1 (the
+> NVMe case) when the offset passed to iommu_dma_map_page()
+> is non-zero modulo 4K.  With this patch, the size passed into
+> iommu_dma_map_page() is limited to 252K, but it gets rounded
+> up to 256K.  Then swiotlb_tbl_map_single() adds the offset
+> modulo 4K.  The result exceeds the 256K limit in swiotlb and
+> the mapping fails.
+> 
+> The case I describe is a reasonable case that happens in the real
+> world.  As is, this patch will work most of the time because for
+> large xfers the offset is typically at least 4K aligned. But not always.
 
---8323328-1367976222-1709040022=:1099
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Indeed that's what my "probably [...] well enough" meant to imply.
 
-On Mon, 26 Feb 2024, Luiz Capitulino wrote:
+I think there's proving to be sufficient complexity here that if it 
+turns out we do manage to still hit real-world issues with the coarse 
+approximation, that will be the point when any further effort would be 
+better spent on finally tackling the thing that's always been on the 
+to-do list, where we'd only bounce the unaligned start and/or end 
+granules while mapping the rest of the buffer in place.
 
-> On 2024-02-26 11:59, Ilpo J=C3=A4rvinen wrote:
-> > On Mon, 26 Feb 2024, Luiz Capitulino wrote:
-> >=20
-> > > On 2024-02-26 11:04, Ilpo J=C3=A4rvinen wrote:
-> > > > On Mon, 26 Feb 2024, Luiz Capitulino wrote:
-> > > >=20
-> > > > > On 2024-02-26 08:27, Ilpo J=C3=A4rvinen wrote:
-> > > > > > On Thu, 22 Feb 2024 15:57:28 -0500, Luiz Capitulino wrote:
-> > > > > >=20
-> > > > > > > The mlxbf-pmc driver fails to load when the firmware reports =
-a new
-> > > > > > > but
-> > > > > > > not
-> > > > > > > yet implemented performance block. I can reproduce this today=
- with
-> > > > > > > a
-> > > > > > > Bluefield-3 card and UEFI version 4.6.0-18-g7d063bb-BId13035,
-> > > > > > > since
-> > > > > > > this
-> > > > > > > reports the new clock_measure performance block.
-> > > > > > >=20
-> > > > > > > This[1] patch from Shravan implements the clock_measure suppo=
-rt
-> > > > > > > and
-> > > > > > > will
-> > > > > > > solve the issue. But this series avoids the situation by igno=
-ring
-> > > > > > > and
-> > > > > > > logging unsupported performance blocks.
-> > > > > > >=20
-> > > > > > > [...]
-> > > > > >=20
-> > > > > >=20
-> > > > > > Thank you for your contribution, it has been applied to my loca=
-l
-> > > > > > review-ilpo branch. Note it will show up in the public
-> > > > > > platform-drivers-x86/review-ilpo branch only once I've pushed m=
-y
-> > > > > > local branch there, which might take a while.
-> > > > >=20
-> > > > > Thank you Ilpo and thanks Hans for the review.
-> > > > >=20
-> > > > > The only detail is that we probably want this merged for 6.8 sinc=
-e
-> > > > > the driver doesn't currently load with the configuration mentione=
-d
-> > > > > above.
-> > > >=20
-> > > > Oh, sorry, I missed the mention in the coverletter.
-> > > >=20
-> > > > So you'd want I drop these from review-ilpo branch as there they en=
-d
-> > > > up into for-next branch, and they should go through Hans instead wh=
-o
-> > > > handles fixes branch for this cycle?
-> > >=20
-> > > If that's the path to get this series merged for this cycle then yes,
-> > > but let's see if Hans agrees (sorry that I didn't know this before
-> > > posting).
-> > >=20
-> > > One additional detail is that this series is on top of linux-next, wh=
-ich
-> > > has two additional mlxbf-pmc changes:
-> > >=20
-> > > *
-> > > https://lore.kernel.org/lkml/
-39be055af3506ce6f843d11e45d71620f2a96e26.1707808180.git.shravankr@nvidia.co=
-m/
-> > > *
-> > > https://lore.kernel.org/lkml/d8548c70339a29258a906b2b518e5c48f669795c=
-=2E1707808180.git.shravankr@nvidia.com/
-> > >=20
-> > > Maybe those two should be included for 6.8 as well?
-> >=20
-> > Those look a new feature to me so they belong to for-next. So no, they
-> > will not end up into 6.8 (to fixes branch). If the 2 patches in this
-> > series do not apply without some for-next targetting dependencies, you
-> > should rebase on top of fixes branch and send a new version.
->=20
-> Understood.
->=20
-> > About those two patches, please also see my reply. I intentionally only=
- 2
-> > patches of that series because I wanted to see sysfs documentation firs=
-t
-> > so you should resend those two patches to for-next with sysfs
-> > documentation.
->=20
-> I'm actually not author of the other patches :)
-
-Ah, sorry. I didn't pay enough attention to that. :-)
-
-
---=20
- i.
-
---8323328-1367976222-1709040022=:1099--
+Cheers,
+Robin.
