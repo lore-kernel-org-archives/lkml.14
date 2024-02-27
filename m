@@ -1,122 +1,165 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0645338385
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709000503; cv=none; b=qvK00rTsqie5qqlgnzTrnbPlXYi/QvibM/ON9ZFXz9YtOhicCHdoL1mkwhCKxvyrATTroUSlgCIOcC/MaczCdfOeiIjioI8cWyJHJhkQ6sA3Mnq/fyNARujerHEuhKIg+p26ITJDtaHxc6jvGvmuNeMGlwqJ/AFG9oWg/XSpPjA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709000503; c=relaxed/simple;
-	bh=AJavhWKrBehCz7d+YW7b+29aWJ1wgMQjIIWm/3TmNUs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iEyu+G+QZKm3dCitpXK3MpHrveWsOUgYUhKzCyKIx7kiFiznJB2SQEL+IB7C6aoIAAPif36lV5ZZ6kgbPhwfjFZPJqgbvXChd6GGrYs4MQZ692W51kglyq8mzYOFDUYJS8r5aWzlTtZT4dpsNHIplsyk7q1Tn0aU1lmaLvomFAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OqMZU+1i; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9574EB4D;
+	Tue, 27 Feb 2024 02:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709000512; cv=fail; b=sW2BZykLyOFxBCldvqLiC5tO25huN+qcFWrR6O/uyleNFkfHdzbKXI1veG9kIe2A13RCKgFB7x8RWHmTK8MlvpRTv5l24bNwss6Z57CyekS/Od9qehO1NndbM6z8JNMKi2cwtPzphIbdHp4WNKS45pmSUhBlOdHwAZrJhCdLzB0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709000512; c=relaxed/simple;
+	bh=HH2l50jkiaNvhpjxwmsGswV1LLCp489UeGddV2sahJU=;
+	h=To:Cc:Subject:From:Message-ID:References:Date:In-Reply-To:
+	 Content-Type:MIME-Version; b=gMWaxlDzH+cLLDqElmsXtky7S5n5O4rsPBzpzn+fRM3EGWT62ZQGCAJ/WILKtU0X2qkUAhLBixqo8toSnkuYB/RHB4LT0fOgg4kEbHRkslyfFRDFZUaX42mbBZud3F+JyPjtKSKglIy1Qprc+APBwPYCgdTpzg2lhrB96V43cwk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=U/DBeq3a; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=mjpk+Jqo; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OqMZU+1i"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcc05887ee9so5299364276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 18:21:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U/DBeq3a";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="mjpk+Jqo"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41R1E015023354;
+	Tue, 27 Feb 2024 02:21:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2023-11-20;
+ bh=we106Q+dW9ZGtqXEnkMYNRE0UVvWUsBKd+1lXjRHbsk=;
+ b=U/DBeq3as6Q0gNxZCSnDM06MJUn+ww2J2gyFU2FQRSX209Wkie/gMjyALQpSRBVFBXMR
+ kDWOUg+1wlwQPmzxZus97uXdq0RVje1k0zCoyc1ia3+zFmuCEC+j65DvR3h4csrYsD+K
+ uoPIwdIn+PoDnmhjiXx1ZrUfUlfr/Iu+LtcpqEVf2UTf08zY0sCRILx5+s+wJkDoez1F
+ YpR4uKu+adH170HIbzuLJv9pyuW0SrAEN4BGnx4vsfLGRAAhu2cuZm2lMxKX0wa1rfXV
+ LQ7+tWXQB6jRaRG3vT2BtzBOSvLE9dAd8smXlwJFP4BXyhXaE3oU+3rJ9yuh3rIasXVn RA== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wf784e5qq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 Feb 2024 02:21:45 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41R0MqII025534;
+	Tue, 27 Feb 2024 02:21:44 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wf6wd00y0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 Feb 2024 02:21:44 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lQNeNO7mGgKYa47zSFlfFh3uJV/vYi6VGeUSu2iC22Ckj8KcVhjbMUzoxrH/v6GxrWIXSy7qv/OA88oomYihIKuoPALK4NLuaHJvvgxlaztKARUeKklTilykEL5+V75IeI1yR4QzqIAVkoZaE/EJHQRJCp7dN+ShmhzaaVyBisA2f6xVqVDs9ghOW0SdVcI6SR2ex43hu06HkvIeAza6mExIaufKgkl6qr7FtIdzNtWwUK3OwdN43JtejOrFRT/AqjTe99OnxkksVwFKDrIiHHZlzvM2Ug9GayPWvvfhqIVr1C7AhMLrsr2E8QGtI4qHWxkr500ZaCVfj5z5vKmbjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=we106Q+dW9ZGtqXEnkMYNRE0UVvWUsBKd+1lXjRHbsk=;
+ b=Pm/1I/fVSFi4fSlrbRN1ERbPLEsAzrNQbwqhD4IQA56mVF5T3E24aJtaV2pVQt0GPHhGT6TIsb/yH7XWdxgHw9+wy0yDGHe/MuMBNuQYwgZu6O8SvFVACA5ZlYJDUpjmpQ0Z1uRl9JRsnGQ9hGy6OHLAqDg1nex8gV8SV0k7HmixiaKXnHdXXeJ5f+X6QzN2779nYqLXsmCx/UCu9sCo9287cIdbGfqN+ac+Zmf61Uportebh1Cl8RUki8850kXOY3vPqhvpzlfaaxLNzBkzN1AomL6tBONIoVkHsD3O2cGRB4Yww5f6G0qJ897nZo/BrKzPkxMKL50UG7ScreWE3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709000500; x=1709605300; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ghn/tsXt4bBeTaeh+x2q+YtPRUVSTzvBJxsTub2q9Gk=;
-        b=OqMZU+1iOHJMr7DJDWExKqie+yZ6TrUgQmJssAgYPh5qJDb+KAqMT5sFjVZQH7DKnF
-         tLHNh4EJg5ykW/AqIf7IHbCdt8GzhgIGExYAciRjm5ViB9aT2PeWeIqi8eU/LqYQr4Ql
-         cXpVpmF0kaiEmrqBIror8Bt2ChMUrbTA+adZwKKpg5dcf8b9b+yLrkuDj8NkulhI0WqE
-         KiXNWFQ3+UaKF4dlpxr8uU5qWHb0bqXOwHL5xM9ekS91xUMCAre06OPahY2twyiV4uih
-         74rQFZF6NUC/cwX2P5SswnJ47gz+AW5HPxtuN/v6mFD9MkXlPx9jfaijSKsBCA6yAx9f
-         r6Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709000500; x=1709605300;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ghn/tsXt4bBeTaeh+x2q+YtPRUVSTzvBJxsTub2q9Gk=;
-        b=onaobN1Uyd2hLopSaKjjExwp0DVNqWThO6WYzOKhg5LBHRdcnNlUaLNNEqcRNnoveU
-         JxEDuChWOnPB4bmNq7ab3Dl7JjVkWnO4MF/UUZbWNNyaV46nrui0jBazl+ElhN+wPqM0
-         IaFgJNJ+uHAikCMic/HzxiSNgT6wMimK1XDp9n+NBQ0X69D8qxj/5ietFPlNiK5bsc4i
-         0sO9cM3J2gkzKC5k5NbRMXLZ3rbwRMtdEJTAPYzDcU+3k9di6UsW72//t2Bb6cMa8GQi
-         bs45wUw60/QNDYrdgUatohEHGk1Mw9Ky+SCN2D+7WxM0TE2ZIH0jlN0ZI09Qh105MbAJ
-         xM0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUpSnipgGvwtmty0I7iPcWHQgGWKNWrk7wWv1iD9RuO9zA/b0beYBURevX/JEARpLOrOsXwNxxZitPuHHFDVhbXAz0fycYfxiPjIcQN
-X-Gm-Message-State: AOJu0YzP5ojrQxWZ/hr1qlFSmxhFMqg6XU4iJGNv/PInre4UeyhF8hPN
-	ojlDJnHSsUTDyRvokcfPbluBR1IkkoNX5zfjwyKrehetrHoPECyE6RQhPIzNjdVtWkCNPfRkqtv
-	/yw==
-X-Google-Smtp-Source: AGHT+IFOi9/tmN8AF5ckfIwhjyqA6w0EovzljiE14qM4BRVcycQBgccSndGNhkATEmtZADwvG8qyMKYgWso=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:a89:b0:dcd:2f3e:4d18 with SMTP id
- cd9-20020a0569020a8900b00dcd2f3e4d18mr49885ybb.12.1709000499927; Mon, 26 Feb
- 2024 18:21:39 -0800 (PST)
-Date: Mon, 26 Feb 2024 18:21:10 -0800
-In-Reply-To: <20240223004258.3104051-1-seanjc@google.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=we106Q+dW9ZGtqXEnkMYNRE0UVvWUsBKd+1lXjRHbsk=;
+ b=mjpk+JqoHXgwe0Re6Z31phR4ypFW4ngDWcUI5a9jmkHROrQVTssZG3r86KiQKTWSPF8hoMgFoUOyJWFSZFSmiu70vjblMj73J2KfaQa1CyVn6sA5n2mhTLQgTu5QpEBEQ9TEn7ELAxD12G4kQMKj/sdNNowdVNm9oo6bkc4/I6w=
+Received: from CO1PR10MB4754.namprd10.prod.outlook.com (2603:10b6:303:91::24)
+ by BY5PR10MB4129.namprd10.prod.outlook.com (2603:10b6:a03:210::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Tue, 27 Feb
+ 2024 02:21:42 +0000
+Received: from CO1PR10MB4754.namprd10.prod.outlook.com
+ ([fe80::e542:e35:9ec8:7640]) by CO1PR10MB4754.namprd10.prod.outlook.com
+ ([fe80::e542:e35:9ec8:7640%4]) with mapi id 15.20.7316.035; Tue, 27 Feb 2024
+ 02:21:41 +0000
+To: Justin Stitt <justinstitt@google.com>
+Cc: Hannes Reinecke <hare@suse.de>,
+        "James E.J. Bottomley"
+ <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] scsi: libfc: replace deprecated strncpy with memcpy
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1zfvm4pg6.fsf@ca-mkp.ca.oracle.com>
+References: <20240221-strncpy-drivers-scsi-libfc-fc_encode-h-v2-1-019a0889c5ca@google.com>
+Date: Mon, 26 Feb 2024 21:21:39 -0500
+In-Reply-To: <20240221-strncpy-drivers-scsi-libfc-fc_encode-h-v2-1-019a0889c5ca@google.com>
+	(Justin Stitt's message of "Wed, 21 Feb 2024 23:50:26 +0000")
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR08CA0018.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::31) To CO1PR10MB4754.namprd10.prod.outlook.com
+ (2603:10b6:303:91::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240223004258.3104051-1-seanjc@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Message-ID: <170900037528.3692126.18029642068469384283.b4-ty@google.com>
-Subject: Re: [PATCH v9 00/11] KVM: selftests: Add SEV and SEV-ES smoke tests
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Vishal Annapurve <vannapurve@google.com>, Ackerley Tng <ackerleytng@google.com>, 
-	Andrew Jones <andrew.jones@linux.dev>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Michael Roth <michael.roth@amd.com>, Carlos Bilbao <carlos.bilbao@amd.com>, 
-	Peter Gonda <pgonda@google.com>, Itaru Kitayama <itaru.kitayama@fujitsu.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR10MB4754:EE_|BY5PR10MB4129:EE_
+X-MS-Office365-Filtering-Correlation-Id: 59f1285f-89bb-41f4-c67b-08dc373ad609
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	4ZlWM+wQxpD1jkRQTWif96P+yFps+b1Qrhd0OHAfN8IQDr81DlnYogPcPESqAVfeGWdJCm/P2jOwkg9ep0n0022KwCenMRXoUTkM577Bn0Mt9OermcVYW8EgWc6sOPvTMaiso8BR0aF1U7ef5YUaXYBJ5i3+X3NeCOdM09y/udAaWIDwiCYdH0q9bLBJiH3/Eo3Yesve80f/EY67aib3YzuaE8KH/V+tlwA/ekgUyftRzIp3jsbVSgusBSu2QTL3TkRXAZ3bt1xBAcwrHvDVCHX3nwQEBWAwjbwVlBPnfNuXLiJzAKlzdGZil7EIc/hThwChkyQIzFtq8GXl84DHW1AFvNprGJSBQa2AVpE7xOBDKijayUk8kdWex4HZQL7uPO62XHVUaoLaJANAknP+KQ4ncF4jVUzK5s43ESjQuoAdP9lxQZAc2imvKnqXjC90HNuH0Uw4UpSflKhBwahE0lc/3Ag8ncXcJfTc0ZhdmUbpMDIj1shMHXfaLo/faedQgKgYtzasKVonx19Ilhp++naCmlH/1ErfvzNRsVo3JpzeVnNuvBMW4TMkSu0n3u8GMufMSks6D11Im197UnfJorv1wTKsP3xihe8EyAMcHb59BeRYwdimmGiO1yy8/dfk5tAvjIk9bBDmIdzBEJBTpw==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4754.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?q4oFS73aQvSJ4ZdAAQUEkkjBt845d6JirDlrzyNdIEnV27jbiMaKuz++B3hd?=
+ =?us-ascii?Q?U95QGyfsq5oxTXu6sl0B+rI6SQPgmxWWxQ926y1PAm6Z69cVBnKk+Keve1S4?=
+ =?us-ascii?Q?D7x8k7F2lNO6yPFknCMBI20G5zeH4RxJjCa4prs9SUkO3pmrgAgVLDKKU6gU?=
+ =?us-ascii?Q?Xg1qUUf8KzgLPsLiGpnk9GuCXrYG5NO/T5yvwGh3F3DmQw3dI8PVtTKZJQSV?=
+ =?us-ascii?Q?eY7gGNyWZAkz9Wzxcw7UDNpkMEq6RfGVg4CzogpP3zAHTV7N1zzRdyOavycE?=
+ =?us-ascii?Q?80OkOHot/7SR2NfIb1VSV6eqx8FSmBWJn5Lh/I8AOqJyZQCbV2vKJCm2yGl3?=
+ =?us-ascii?Q?kfApC+vmH0KPvtsNXKQALGIyn9brAQsYu+xD/WuSARLaEKlSdxS1VawL5Nqc?=
+ =?us-ascii?Q?MsHcmcI/f2K+KuncUAEYdPiCmS3n87zOvSkZ9RPYKuhxv8WOVV7wgSYFEKvg?=
+ =?us-ascii?Q?TxOjnIrumcd5+wroXRU6bKmEXnegMmOjgMLOl6QFF9BTw9HKFBqAi5LhmhXe?=
+ =?us-ascii?Q?x/4bBEka7C4MFALjXQuNYGQwrgkVV6OJ2T0xjHck44FjAs02ALB4cDLJqPlr?=
+ =?us-ascii?Q?mnr0pDcnFya8PlrZCNwUPRDszmGDtXyNL7R/aDdlIhz4/mn12/RMKchuunZS?=
+ =?us-ascii?Q?ElR1Y/joJF1hFMUSdjYLMl2sRQR+b3OO9SWH13NeNRSmvRtupNbsazkMIyV9?=
+ =?us-ascii?Q?M7GYKw2H30ILlUyMqT8Qm4WBlI+5VDaowowdlL4vd18VSMdM/6u9DfVG4qbg?=
+ =?us-ascii?Q?9b7GTE8+ZCkB3jk20FdxG+PQQ4SGup4SQZivQlqUoSJx3sdwlF5Fdci4+Zer?=
+ =?us-ascii?Q?iS3eOF/Ipr1JcpznyBOisX/64Bj1xQL/JZo+Z32xShLiuCATIaMcXRk8IBCX?=
+ =?us-ascii?Q?t2Oro0pGUL2Hc+u/CRi0LKwWh74fOZZ2lkevml23p0tTKlk2OXkSQdG5F4rv?=
+ =?us-ascii?Q?a5R7clbbfG4SInImcUar6Pr7buhYQ0NHIP1V/DF0hCR9N2fbAvMErlLKXyQZ?=
+ =?us-ascii?Q?OkR7sXt0i64lA+oQEdrJyHfsFq1bHTeuaB021BdJyBsl1TDN7KzRkDFvvENV?=
+ =?us-ascii?Q?HCNOG/puZnE9y76+7TiZZf3rp0yWRYQ0foho96UxQsaTdby4Xe7DnxuJRZE8?=
+ =?us-ascii?Q?XlxGrjqFOYWwfYof6poT+GAZr6uQmU969JJunfjtBgc+gwEEy9tOn91VeOad?=
+ =?us-ascii?Q?XVMF50SdI+DkcJ0IArAwTp7SlxBd/4i0FFolzUJUlFKEQEBFuv504DkDarqy?=
+ =?us-ascii?Q?LTUzzkPDqESdcoJnD0rXPHtl6mLTx5JVlyf7alWDFUIh9t4kX2uLbVBdkTfX?=
+ =?us-ascii?Q?GWMzphRnFwAJ+E4moixBPIIScv/OM+OU/UnXPNHqRcl8wA6LC6Nzu08TVroI?=
+ =?us-ascii?Q?RbLjXwD0/LojtfuODcWQDkVJW4GTIChVivkT4THVFXmH2ShXmfa+QKn2FnF8?=
+ =?us-ascii?Q?bBqGFWZDKJ8B5IP75xcRRM4ZpgdHwuDDYuGXB0f5cATg28uVRT7C0V3anR1p?=
+ =?us-ascii?Q?ZRdabAwIYVS5IoX8CJz+2BcwpKp2kKOcWMg0h+B312xOR0K/YbQbxZv9PTCY?=
+ =?us-ascii?Q?L2yb1xeTpL2aO7u8rsQrG7s++w7KGyFz4wbki2CkLNogglVa1jWb4myAp1ub?=
+ =?us-ascii?Q?Dw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	3MwrUYTzyZwpHDUWF5VdWSoXlazRYSmEqDmQ6M2NX9pTJEe3vrPjyJQA16I9hFeNvF0ZgEqsQQXXXYX4EpfrBs/fsxCjowQFUq67Kxl4fkjZ5dkMfskEI+7UX7fcItMXWM8lCzbNOuQKpjFAsePYPSo4wD6VdxMDRsGKIkIliBnOemxvK2gtj1s+coiqr4fyXMx8dHQOuFKZyeRMXuXcq+nediFWrzXt+tYGvXCfiLq69aJSyIqzGs4487O7w/WRSV1tfWi28jKd7h5h5MbR8FtZyBcbxXVdjCmso9JFNcqMBEhg/tjxiIrhuZKgA8KyoMoW2PWcDA8S4hG/JdjbfPUgHO4jKW4HF315/ZTcCsc4DhQWNFmDWj+aCuwwWShj3ZsGOgonXNYgws3R63Xn9bOdQQi8vn0eyyqBOMQl7Lonqg8tisKIFaoym9usEd1g0tbTHuesUpPREM0cSA25IS4hXuBfLglSjU1fEO0z46wIj5pPYF/807Mv14Q0uhccjeser+ByiCtCj5mjzLMrVOJHtsNXBLnxuh6XlZgDoZfMe8yBc89YtYbRSt7hxgqbYMDD816tnGgTM9WDDshaZ98RNXyWI0egQQCwbCjDgKE=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59f1285f-89bb-41f4-c67b-08dc373ad609
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4754.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 02:21:41.9691
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mdYAPMS4z45OMPCtkWX/yT5pe98IaIRlIawn+z8xZqCxJVxgSPG7CQMsgJ7xR+rHbVA7/Da/hDaBaoCu7RJeu1kHWMpfQSQMQzZS/XIh2+4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4129
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-26_11,2024-02-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
+ adultscore=0 mlxlogscore=748 malwarescore=0 spamscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402270017
+X-Proofpoint-GUID: ICyF3VvM2DI7G7vKwbhCU2XvJdawVGzh
+X-Proofpoint-ORIG-GUID: ICyF3VvM2DI7G7vKwbhCU2XvJdawVGzh
 
-On Thu, 22 Feb 2024 16:42:47 -0800, Sean Christopherson wrote:
-> Add basic SEV and SEV-ES smoke tests.  Unlike the intra-host migration tests,
-> this one actually runs a small chunk of code in the guest.
-> 
-> Unless anyone strongly objects to the quick and dirty approach I've taken for
-> SEV-ES, I'll get all of this queued for 6.9 soon-ish.
-> 
-> As for _why_ I added the quick-and-dirty SEV-ES testcase, I have a series to
-> cleanup __svm_sev_es_vcpu_run(), and found out that apparently I have a version
-> of OVMF that doesn't quite have to the right <something> for SEV-ES, and so I
-> could even get a "real" VM to reach KVM_RUN.  I assumed (correctly, yay!) that
-> hacking together a selftest would be faster than figuring out what firmware
-> magic I am missing.
-> 
-> [...]
 
-Applied to kvm-x86 selftests, thanks!
+Justin,
 
-[01/11] KVM: selftests: Extend VM creation's @shape to allow control of VM subtype
-        https://github.com/kvm-x86/linux/commit/309d1ad7b6ff
-[02/11] KVM: selftests: Make sparsebit structs const where appropriate
-        https://github.com/kvm-x86/linux/commit/6077c3ce4021
-[03/11] KVM: selftests: Add a macro to iterate over a sparsebit range
-        https://github.com/kvm-x86/linux/commit/8811565ff68e
-[04/11] KVM: selftests: Add support for allocating/managing protected guest memory
-        https://github.com/kvm-x86/linux/commit/29e749e8faff
-[05/11] KVM: selftests: Add support for protected vm_vaddr_* allocations
-        https://github.com/kvm-x86/linux/commit/1e3af7cf984a
-[06/11] KVM: selftests: Explicitly ucall pool from shared memory
-        https://github.com/kvm-x86/linux/commit/5ef7196273b6
-[07/11] KVM: selftests: Allow tagging protected memory in guest page tables
-        https://github.com/kvm-x86/linux/commit/a8446cd81de8
-[08/11] KVM: selftests: Add library for creating and interacting with SEV guests
-        https://github.com/kvm-x86/linux/commit/f3ff1e9b2f9c
-[09/11] KVM: selftests: Use the SEV library APIs in the intra-host migration test
-        https://github.com/kvm-x86/linux/commit/0837ddb51f9b
-[10/11] KVM: selftests: Add a basic SEV smoke test
-        https://github.com/kvm-x86/linux/commit/5101f1e27683
-[11/11] KVM: selftests: Add a basic SEV-ES smoke test
-        https://github.com/kvm-x86/linux/commit/f3750b0c7f6e
+> strncpy() is deprecated [1] and as such we should use different apis to
+> copy string data.
 
---
-https://github.com/kvm-x86/linux/tree/next
+Applied to 6.9/scsi-staging, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
