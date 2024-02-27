@@ -1,176 +1,180 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36F9208AD;
-	Tue, 27 Feb 2024 16:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568B1208CE
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709052913; cv=none; b=X2AP3w3ZCruUoYidzTj3KFH0jhb6odjWgsAEjTXRHZcDIyfCzPaU1f+/EtLDmcreTumSScCBLmPD8i5FUq2/WaTvoeBDU9eu9wRQP3C3vOcvBFqetCTpN/ZHvqsN85eR1negfYzffo6rTn8mJHyRQjkHiLSB+X8opwFKzAH6wDQ=
+	t=1709052947; cv=none; b=qM6mXRzKKm1fa4HPRdLadDVrAwONHqneXJ8jTpu3EmJr1nui4gPdgKgGsmo+Z25AOpOv7vVRmIT5yjtyWVqsK4+QLlvwRe060lPqmohPgWXZiwjZmz3PoE6ahQpmVIdJ3sBrorc/+VgFP7G5CYzfm56q6o7ni8TAvkrbSWfd868=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709052913; c=relaxed/simple;
-	bh=E3P+/Pu/JFwXdRA5On7mNX59HYdJgkRhGHToAT9Vi40=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IIftaCQw4IxIu+kKRR7OwkSFN/bfZZKuO7l52yQ9kKQ4r3zdVZq9/kSTkZn7NPEGI3ar37br3KlV2Pl2/EDKnZBdQ6j8SA4zl7OagI++jMFD/fjog1TrBEWUgAogPRkcESbsnELOHx+APN8RjRV37ALmDg1A9hA5pF5IS1o41J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OfR4fyGL; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709052947; c=relaxed/simple;
+	bh=WING8+ifDIdPqWo/GgNARqwiCxM6QeK8N+15oiAYs8U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iXL3MCDqrLx1MKpvHUM9EiUqaOl7j+DctrhxFqwgQw5JM7SOwPgOICyfHzdAuNm6OZUUqcDqqJRx7RXTbquHIKsVYn1oTRwnABpDt64Ae1PEB4En0NYzpyE3EUVJ8oQZBFQtIKfqtaTUfhrTGCaH8Vaz1flLl7M3cs92BnGvLP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0bqFZOxi; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfR4fyGL"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3e7f7b3d95so520011166b.3;
-        Tue, 27 Feb 2024 08:55:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0bqFZOxi"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-60925c4235eso9423067b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:55:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709052910; x=1709657710; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=E3P+/Pu/JFwXdRA5On7mNX59HYdJgkRhGHToAT9Vi40=;
-        b=OfR4fyGLrFAeRcBLeeEvQsNEuKFogGR4t+r6qBZAlISDmKEvql+CS3cR2A/m+CF4TY
-         dh9ZctN53JDKMCir7iiyAm8XDJzpszu4AeyZHcqKUXukJRrvkD7oNtfXCMKQb3mzawqG
-         Q57E+R3eMl02RkejvgEtkqip3aTn5mrU/K/OWqEn+xktU/Ku/UZzS4FfsKBjuOMGitAP
-         aLKqoRiHKrhn61nJPj/A6h2L45dkcrbyCr68I+IV5N5SqFbkYOQYxPHdSDOLARkCHaT5
-         H9KWZIYT2R+0Krk9yO+BDcMaaNYpQalAG6tpQ+au/mtQODQddZjDJhSV5/SqDPOCGEpJ
-         Cbww==
+        d=google.com; s=20230601; t=1709052943; x=1709657743; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WING8+ifDIdPqWo/GgNARqwiCxM6QeK8N+15oiAYs8U=;
+        b=0bqFZOxifsJ5NMk/8m7O9TZYcXJ4ZOagI0CeK7ew9Up7vZXassuRVZgV3R/hAaURqv
+         yipQfkJyTGrMRfSjlRKrdq4rMXzq+EopO8mvVXBysaMoXgk8PNFQW+b8ncZMj9oYX/ug
+         4KoRGbpZ7K/nMqn/kBhm0MJzWddgZMP/DRsBPrqhGzjEW+JFM4cP38yDFRQZI5+Vhg5s
+         FiESy5ktg21UABE/kurAAaft0GtHZkORBxkm2W74qjQFqXkvTOvIvTBo3qiZg5Z1OXFV
+         pzPo+VVQkodHYXIDfqiADzhsKkEboRV1fWgLjk3rDQ3UyI8O19BWJwc5Ewki5YStBmlf
+         qemQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709052910; x=1709657710;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=E3P+/Pu/JFwXdRA5On7mNX59HYdJgkRhGHToAT9Vi40=;
-        b=MqKnrib9RIjl8SN/qFrpJZ/eXREWe2UhDtow1Lq72uImhDpTlMhh0HngLDjWQZZa8+
-         rE5r57mSFzqnLiosBhFXVXRES+x0pzSizI8eTinpl+lPMqa1ikE72FLVpzb5LuClN9ci
-         5zX4MQ+WPUd9OV3uH4brWhdsWHBQZnBzpTKf3P1jOS5kUEQxXyXAaqvv5UFMDu3uHy9E
-         bDNFZNxHb4/jYqkgMx4IHu+hU5E3PZF2Lj78qBI/d+4Q1rUldfuNZ1+niJ/niK6UWSo5
-         MksQ3LGTPusLYG8P9JY5+EySPkgm0VjmF23emx511hVFkiMfu3QAIMZI6I95qZSbb/Ro
-         AHEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGzq/yAYHZ1QDDeHHgmyftJ2GIpBInpO4uqqDx9YADHHrEXvNfmHp5X+O/tKmD0tWNQspF+LoX/0GYhxFFPGiC6gNrIUUqPvn9S7iu4rKeo0hhTlPVZtL9f9d4W7fEkguhmYkI8XfkVA==
-X-Gm-Message-State: AOJu0YzNA65qvJaBhs+8kIeivMvCP1Oy5huOCDphhOtygxdrQTHlGIs/
-	DHQnqX0qfxh5wMW8m73HaoGTJD1CW1xRP2DFZGy314HBV5Ec4UxC
-X-Google-Smtp-Source: AGHT+IGgkz9gMLdSkT1c2s4FwwOKv3tkCjUdASPcAvBHbgtmS2qxRRbHPVgNiBVanVURTKWSS9DoIQ==
-X-Received: by 2002:a17:907:b9c7:b0:a3f:da1c:ae4c with SMTP id xa7-20020a170907b9c700b00a3fda1cae4cmr7538523ejc.54.1709052910006;
-        Tue, 27 Feb 2024 08:55:10 -0800 (PST)
-Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
-        by smtp.gmail.com with ESMTPSA id o4-20020a170906358400b00a3ec0600ddasm938935ejb.148.2024.02.27.08.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 08:55:08 -0800 (PST)
-Message-ID: <86f2262d059db84070745e299d96dde3e6078220.camel@gmail.com>
-Subject: Re: [PATCH 2/2] of: overlay: Synchronize of_overlay_remove() with
- the devlink removals
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Herve Codina <herve.codina@bootlin.com>, Saravana Kannan
-	 <saravanak@google.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Nuno Sa
-	 <nuno.sa@analog.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand
- <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen
- <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini
- <stefano.stabellini@xilinx.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,  Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Android Kernel Team
- <kernel-team@android.com>
-Date: Tue, 27 Feb 2024 17:55:07 +0100
-In-Reply-To: <20240227162422.76a00f11@bootlin.com>
-References: <20231130174126.688486-1-herve.codina@bootlin.com>
-	 <20231130174126.688486-3-herve.codina@bootlin.com>
-	 <CAGETcx_zB95nyTpi-_kYW_VqnPqMEc8mS9sewSwRNVr0x=7+kA@mail.gmail.com>
-	 <20240227162422.76a00f11@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+        d=1e100.net; s=20230601; t=1709052943; x=1709657743;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WING8+ifDIdPqWo/GgNARqwiCxM6QeK8N+15oiAYs8U=;
+        b=gIMTKI9DyIIrFRsYJ6j5YukSi1AV4WnDoMJ+DxpcLILm3QoKDhusIBSxwU8y9db4by
+         2EnXhfX1VxwOx6yg9/ZxcFFhRHkXI5zi5B0NV8hMvMdijSYi1Wx3s++IDV8BNZVKuwdy
+         Pmmz+SjjWWDqWg+e7uUdm1xBP42eq2AklnaLkM4ZqhzkYSB7djpR8RECc4CqguMZz6HO
+         16ybrEr5Xj2LVACtWjyIr/i77uco2rBc9jDToYhWGXB7wdMQYPn0vPHegYYDvuEM9Yb1
+         2JfNqGXEWbgSfqrRVqUZ6OskOQP3Cz/qAgqhEgW+BQwmAL1Wjp6kaOs4HBEIGSxmhK+L
+         AcDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdSt7lv0BcTly3tn1F9cLIAzp5NdIkWmOMS5HlP+Iv0+ALd3w3vBvp37YPF2+MkuCxaas25Bp4UDqizddbESRF0sprosGWXjcAHP14
+X-Gm-Message-State: AOJu0YzlBxnRflS4BOZ/CTKt7zKKg1oCnMGXjRjan2lQhUD18Vz6b+hC
+	Cf53q3bL7Zl8ojmB3exPoNZrbx0MSLsyobq5hXIfyk83FJTiS7f4LOUNhjpoNsh3+g9DaQAndFC
+	uoazjnjpFB7rKlTIVP/iv6q2nxt6BMdx1ezKv
+X-Google-Smtp-Source: AGHT+IFx4IMLdqGd5Fz34j1UAm6oDJfltAQpGSG6yeY6HBGKjoGVypF3GR4a4leI/V5eKU8dpRmwS6ivB2dTqeub54A=
+X-Received: by 2002:a81:e245:0:b0:609:2857:af0 with SMTP id
+ z5-20020a81e245000000b0060928570af0mr1933120ywl.25.1709052942967; Tue, 27 Feb
+ 2024 08:55:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240221194052.927623-1-surenb@google.com> <20240221194052.927623-16-surenb@google.com>
+ <d6141a99-3409-447b-88ac-16c24b0a892e@suse.cz> <CAJuCfpGZ6W-vjby=hWd5F3BOCLjdeda2iQx_Tz-HcyjCAsmKVg@mail.gmail.com>
+ <72cc5f0b-90cc-48a8-a026-412fa1186acd@suse.cz>
+In-Reply-To: <72cc5f0b-90cc-48a8-a026-412fa1186acd@suse.cz>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 27 Feb 2024 08:55:32 -0800
+Message-ID: <CAJuCfpF=uwxH93BF6905FAcvaihYD0iyT=rJS-REe4u_1Km22w@mail.gmail.com>
+Subject: Re: [PATCH v4 15/36] lib: introduce support for page allocation tagging
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
+	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
+	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
+	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
+	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
+	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
+	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
+	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
+	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
+	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2024-02-27 at 16:24 +0100, Herve Codina wrote:
-> Hi Saravana, Luca, Nuno,
->=20
-> On Tue, 20 Feb 2024 16:37:05 -0800
-> Saravana Kannan <saravanak@google.com> wrote:
->=20
-> ...
->=20
-> > >=20
-> > > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> > > index a9a292d6d59b..5c5f808b163e 100644
-> > > --- a/drivers/of/overlay.c
-> > > +++ b/drivers/of/overlay.c
-> > > @@ -1202,6 +1202,12 @@ int of_overlay_remove(int *ovcs_id)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 goto out;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > >=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Wait for any ongoing de=
-vice link removals before removing some of
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * nodes
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device_link_wait_removal();
-> > > +=C2=A0=20
-> >=20
-> > Nuno in his patch[1] had this "wait" happen inside
-> > __of_changeset_entry_destroy(). Which seems to be necessary to not hit
-> > the issue that Luca reported[2] in this patch series. Is there any
-> > problem with doing that?
-> >=20
-> > Luca for some reason did a unlock/lock(of_mutex) in his test patch and
-> > I don't think that's necessary.
->=20
-> I think the unlock/lock in Luca's case and so in Nuno's case is needed.
->=20
-> I do the device_link_wait_removal() wihout having the of_mutex locked.
->=20
-> Now, suppose I do the device_link_wait_removal() call with the of_mutex l=
-ocked.
-> The following flow is allowed and a deadlock is present.
->=20
-> of_overlay_remove()
-> =C2=A0 lock(of_mutex)
-> =C2=A0=C2=A0=C2=A0=C2=A0 device_link_wait_removal()
->=20
-> And, from the workqueue jobs execution:
-> =C2=A0 ...
-> =C2=A0=C2=A0=C2=A0 device_put()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 some_driver->remove()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 of_overlay_remove() <--- The j=
-ob will never end.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 It is waiting for of_mutex.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Deadlock
->=20
+On Tue, Feb 27, 2024 at 1:30=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+>
+>
+>
+> On 2/26/24 18:11, Suren Baghdasaryan wrote:
+> > On Mon, Feb 26, 2024 at 9:07=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz=
+> wrote:
+> >>
+> >> On 2/21/24 20:40, Suren Baghdasaryan wrote:
+> >>> Introduce helper functions to easily instrument page allocators by
+> >>> storing a pointer to the allocation tag associated with the code that
+> >>> allocated the page in a page_ext field.
+> >>>
+> >>> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> >>> Co-developed-by: Kent Overstreet <kent.overstreet@linux.dev>
+> >>> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> >>
+> >> The static key usage seems fine now. Even if the page_ext overhead is =
+still
+> >> always paid when compiled in, you mention in the cover letter there's =
+a plan
+> >> for boot-time toggle later, so
+> >
+> > Yes, I already have a simple patch for that to be included in the next
+> > revision: https://github.com/torvalds/linux/commit/7ca367e80232345f471b=
+77b3ea71cf82faf50954
+>
+> This opt-out logic would require a distro kernel with allocation
+> profiling compiled-in to ship together with something that modifies
+> kernel command line to disable it by default, so it's not very
+> practical. Could the CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT be
+> turned into having 3 possible choices, where one of them would
+> initialize mem_profiling_enabled to false?
 
-We may need some input from Saravana (and others) on this. I might be missi=
-ng
-something but can a put_device() lead into a driver remove callback? Driver=
- code is
-not device code and put_device() leads to device_release() which will eithe=
-r call the
-device=C2=A0->release(), ->type->release() or the class ->dev_release(). An=
-d, IMO, calling
-of_overlay_remove() or something like that (like something that would lead =
-to
-unbinding a device from it's driver) in a device release callback would be =
-at the
-very least very questionable. Typically, what you see in there is of_node_p=
-ut() and
-things like kfree() of the device itself or any other data.
+I was thinking about a similar approach of having the early boot
+parameter to be a tri-state with "0 | 1 | Never". The default option
+would be "Never" if CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=3Dn
+and "1" if CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT=3Dy. Would that
+solve the problem for distributions?
 
-The driver remove callback should be called when unbinding the device from =
-it's
-drivers and devlinks should also be removed after device_unbind_cleanup() (=
-i.e, after
-the driver remove callback).
+>
+> Or, taking a step back, is it going to be a common usecase to pay the
+> memory overhead unconditionally, but only enable the profiling later
+> during runtime?
 
-Having said the above, the driver core has lots of subtleties so, again, I =
-can be
-missing something. But at this point I'm still not seeing any deadlock...
+I think that would be the option one would use in the early
+deployments, to be able to enable the feature on specific devices
+without a reboot. Pasha brought up also an option when we disable the
+feature initially (via early boot option) but can enable it and reboot
+the system that will come up with enabled option.
 
-- Nuno S=C3=A1
+As Kent mentioned, he has been working on a pointer compression
+mechanism to cut the overhead of each codtag reference from one
+pointer (8 bytes) to 2 bytes index. I'm yet to check the performance
+but if that works and we can fit this index into page flags, that
+would completely eliminate dependency on page_ext and this memory
+overhead will be gone. This mechanism is not mature enough and I don't
+want to include these optimizations into the initial patchset, that's
+why it's not included in this patchset.
 
+> Also what happens if someone would enable and disable it
+> multiple times during one boot? Would the statistics get all skewed
+> because some frees would be not accounted while it's disabled?
+
+Yes and this was discussed during last LSFMM when the runtime control
+was brought up for the first time. That loss of accounting while the
+feature is disabled seems to be expected and acceptable. One could
+snapshot the state before re-enabling the feature and then compare
+later results with the initial snapshot to figure out the allocation
+growth.
+
+>
+> >>
+> >> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> >
+> > Thanks!
+> >
+> >>
+> >>
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to kernel-team+unsubscribe@android.com.
+>
