@@ -1,95 +1,85 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB94137C4D
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE69A15D0;
+	Tue, 27 Feb 2024 09:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709026896; cv=none; b=TtX2QYKXIvUuI7yB5F7sYIdrZL9r6BXoI7xxN1K/8vO8XqH6LkxqE1Cwq5mvdCqyPPs0OceKfc2nStk9svopxwd3skJ+qc53J4tGGBhlO9H40idU9COtq6l/8D06mW2bkAwzwJND3nmO5lo7gdPe5BgPePHvOhGqhrRbQkPWcUs=
+	t=1709026966; cv=none; b=l+30gk9VpXQbzOGwfuMWgwZ5pD9pAEfVNXCJIB3eej9CRzaIXkZ07bU/MvvopjJBCex/9IkIZOKOpxlUesfg0d3fPuesbxq977NAHGRWLmPZuGiy1onuj8mGplbLcy516VwlfELMKuSxlfBfJ2cyhRtsGBB/Rj61FChCONh0NRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709026896; c=relaxed/simple;
-	bh=yHPFRl2mqSgcoxbtbCsPH8G6VO/2zl4zaTGrgQVkBF8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fuQ8KRPwnrAhawnusmnLfLnR6YDd4c2MKmzDlag9wdH0Cnj/+U81Ujf3q7WY8m7J7Rnf773lYzyOcmbrMnZat8Z22rutV01/rlQc2axFaYVmloN0l5S1f/xwcfvIcHFwG5nAftgZcKJV3wRIsixOi3IPl0PX44f0hIHi4D/KSQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gkJES54X; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gkJES54X"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso2002515276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:41:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709026893; x=1709631693; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yHPFRl2mqSgcoxbtbCsPH8G6VO/2zl4zaTGrgQVkBF8=;
-        b=gkJES54X6z2V6FfkRt94mZbhrUhv3HDpu1mp9xSGhDjpD7QsqhEndJFC45VCxMmWhN
-         xDxlQ6QAY6k3dK1qyBVYZLaekuHs7uKKqHFWWPyFBRYjBoXVpAiWM35vekbvOYUShyZT
-         wp8M0OHdWkqVaLimEN2RXtsnvD3TB/3KpeqiXhETLJtrj/Aw2T6m0sF0cgzut9qZ+/Cf
-         jVR55yYGp+xR7PBUing82MEGNrbaSnQquIDrhtu26fNkkdqyQogepxNIWuTWHTn3saRE
-         WYW0YItsGIYRxXEYgeWjXt/VZeCIbqmlmY+eVSMrO+M3iCrixaiNX7OLLkzQxLz+P8kK
-         sq3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709026893; x=1709631693;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yHPFRl2mqSgcoxbtbCsPH8G6VO/2zl4zaTGrgQVkBF8=;
-        b=jC0WlRu+ljsgzuH6NGA9dhB7+uMQG4tIPuKO/kzpfoMNnrKwG5K4sdKxk2TEgvIVVs
-         JRbaTqCGNSktBEzrytr23ds/D/4lLloBAUBXUViuc9OaOEpV8vfh9pXycSv63Wpub/9c
-         znXU158TdZkFPPfScC8ei7/cL6KUCSRbeXJ/cdOCLOs+EQKkrZSUh49P3b9vP8hk5ijK
-         NDnTEh/hneFhn+c9+MaKGmYo+L9Fx3ftXGEm/qYZph/UZa77HhcW/c9D0SmuZVuPIVsg
-         Xn7zTLNqym7nf8yuKpmHFfFGV6a2mhPflLg043zZDmCdLJqMu9ycPaKtHf/nd6uzNu1J
-         O66Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUuAdgMAb9SntYbsSFU5UBQR/7crSs8XgVS9xFlbYgwEv/WmdGqIC5nk0MgBsDwoGeQ+5Dcrn5773uRfckDgVK4WLUAku8y759L1ho2
-X-Gm-Message-State: AOJu0YxAa9Ud1N6IVgKzOGSZKqNhnrbCv4aLzRAQQY5vug1dJP/vDQ2o
-	SSoDlQpRmZ+f6vDqDtj6U9aXmzxwRVMvcVdtJOq1hblByPAjeoz+1ROXmWKkEwn3/MQguMPTj3l
-	arUzxlO6F7HpB+w/5hRXvtFn5IJfxpq2pKv8peg==
-X-Google-Smtp-Source: AGHT+IEGeQH9qBNerwILlDn6Yn5rwe8dUF3pjMomroMNj1UeWVIbZ4c4J0dTKPrCGJj9SepP+2/PIWhFlhbc5AL7NCI=
-X-Received: by 2002:a25:d60e:0:b0:dcc:3a3:9150 with SMTP id
- n14-20020a25d60e000000b00dcc03a39150mr1769321ybg.22.1709026893169; Tue, 27
- Feb 2024 01:41:33 -0800 (PST)
+	s=arc-20240116; t=1709026966; c=relaxed/simple;
+	bh=NltuXZkeIhA7SW+L8lNtMeXkelidiUwx3+LJjumtTHI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=l6wVw3Gb2Hh7euwn3C+5DS0fXK6I5he2IA3oFarwrvQqi6YPacuEhcdAUPTKXj/OSQiMsWr1+uokN9Zmrx5NQxMUBqKt222EirZShf5KMxkK68N4YsSl6cP+0sZOPitg6uXXhIyFrAkd4DhhDzlmq46kOcqrllTmBSGk2qzyVls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TkXTM4tntz1b13f;
+	Tue, 27 Feb 2024 17:37:43 +0800 (CST)
+Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
+	by mail.maildlp.com (Postfix) with ESMTPS id CD70B1A016C;
+	Tue, 27 Feb 2024 17:42:41 +0800 (CST)
+Received: from [10.67.120.108] (10.67.120.108) by
+ dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 27 Feb 2024 17:42:41 +0800
+Message-ID: <e95993da-db88-5db2-0aa8-f0c7589ce902@huawei.com>
+Date: Tue, 27 Feb 2024 17:42:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221213208.17914-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240221213208.17914-1-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 27 Feb 2024 10:41:21 +0100
-Message-ID: <CACRpkdY0jooZEZcyug7jKJC9TXnKNPt1u120nXE4dgCWQta-ag@mail.gmail.com>
-Subject: Re: [rfc, PATCH v1 1/1] gpiolib: Get rid of never false
- gpio_is_valid() calls
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH] scsi: libsas: Fix disk not being scanned in after being
+ removed
+Content-Language: en-CA
+To: John Garry <john.g.garry@oracle.com>, Jason Yan <yanaijie@huawei.com>,
+	<jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+	<damien.lemoal@opensource.wdc.com>
+CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
+	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
+References: <20240221073159.29408-1-yangxingui@huawei.com>
+ <d765d2c5-3451-4519-a5e1-9e8f28dcd6b3@oracle.com>
+ <cdf241a7-8504-5b87-2d18-d2a971f6ebb9@huawei.com>
+ <8dc34f04-943b-26fd-01bc-34fb98803503@huawei.com>
+ <b2ab5439-361b-4160-4e73-171026ecc486@huawei.com>
+ <8138ab55-1c43-8df1-dafd-95b16b7b3ce4@huawei.com>
+ <7d132b63-7336-4f59-a5f0-5ec37c3c34d3@oracle.com>
+From: yangxingui <yangxingui@huawei.com>
+In-Reply-To: <7d132b63-7336-4f59-a5f0-5ec37c3c34d3@oracle.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggpemm100006.china.huawei.com (7.185.36.196) To
+ dggpemd100001.china.huawei.com (7.185.36.94)
 
-On Wed, Feb 21, 2024 at 10:32=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Hi John,
 
-> In the cases when gpio_is_valid() is called with unsigned parameter
-> the result is always true in the GPIO library code, hence the check
-> for false won't ever be true. Get rid of such calls.
->
-> While at it, move GPIO device base to be unsigned to clearly show
-> it won't ever be negative. This requires a new definition for the
-> maximum GPIO number in the system.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On 2024/2/27 17:06, John Garry wrote:
+> On 27/02/2024 07:16, Jason Yan wrote:
+>>>>
+>>>> Can we directly set phy->negotiated_linkrate = SAS_PHY_DISABLED 
+>>>> here? For an empty PHY the other variables means nothing, so why 
+>>>> bother get and update them?
+>>> The value of the negotiated link rate has two possible values ​​in 
+>>> the current processing branch: SAS_LINK_RATE_UNKNOWN and 
+>>> SAS_PHY_DISABLED, and both come from disc_resp. If we do not use 
+>>> disc_resp, but set a fixed value SAS_PHY_DISABLED for it, it may not 
+>>> be appropriate.
+> 
+> But we know that the phy is disabled, right? It's our phy, isn't it?
+Yes, just like the previous submission, if we disable phy ourselves 
+through the sysfs node, we can configure the negotiation rate to 
+SAS_PHY_DISABLED by setting phy->phy->enable to 0. It might be better to 
+use sas_set_ex_phy() as you described before, it will refresh other phy 
+information synchronously, such as sas_address, device_type, 
+target_protocols, etc. If we only update the negotiation rate and 
+maintain the old information, is it because it is special? Is it better 
+to update phy information uniformly?
 
-Looks right to me:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-I guess it's related to the patch where we dropped <asm/gpio.h>
-and ARCH_NR_GPIOS because after that a lot if the semantics
-were removed from this function, but it's not quite a fix more of
-a cleanup.
-
-Yours,
-Linus Walleij
+Thanks,
+Xingui
