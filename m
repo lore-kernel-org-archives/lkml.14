@@ -1,55 +1,56 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B0157300
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:21:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0765730D
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:21:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709076070; cv=none; b=fhi+D3ZswuYt0rrjFYdVPlVZPcxvLwQwTiOuE9MPmjPu0uPA3ITzKLrQ9dyVO9e5qJia6q9RUPtpEQu6iT33imRV6ZCFKQoBsZf82SrrGzx3laY+MpEEndU7BR3JGl6fkAXypAffoKcHwbNuJqkyubbe3rmzFuEy5T+G37AaIno=
+	t=1709076070; cv=none; b=gfta8FVBU7BWHWjxClNQie0rBWpNPgT4BC1BlezUY3mJehb+5uXsMZVRNA0UjJKA4U0MUWX3Z5lrc+xz9L4D14Jd7YIxeChkEvNyUKUAhqqs4VbBBNt5es5dHk70K6fK7NFjKxcC0pYvCzW5MyPVMfLjy8YYZUKs6sAzJPSO+p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709076070; c=relaxed/simple;
-	bh=p/JP/QGMe6e0T/PI6DjPUbUZdUsMnpQL0OaG3VJunZI=;
+	bh=Xq5uW8rV6TjUmWfHQZGYhVIIKq7qjLsZpre/vZqpxPE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P70kDmnQ6it3vOS9AGUBM0w7/NwTSsoeUgpFba5nStkxhMfaqgMDfVeRIADkp4CzwZfC6ctuqwFCORaoZAlsjOhVg2/QzwOXHjfHO2CaTJfe+CaM/+opjOz9rQDUlSVfw+411/7n0rVYnqGlAKS6lNgkkeFsY/F/RbDctK65GDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E5e8faDK; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=SV0DInOIdw7J2hpFhOeVvBzSwepN84B0W9STw73jIP6AxiKfzsuFRhr8ngsYOm/dLZE/DV+hOZwsoWYs/feevXDpR1GpQiI4IvVZV5cGzHQhqDLTckArLwR9X6oUTzRWriQCRTZUkl2rw1Gwn7m22rSxXK0ZPGJNLMaP1R/zeJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EI77K5qT; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E5e8faDK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EI77K5qT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1709076067;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Gp15/1o40tx19f6g5lxcL1ZqsKDK8j34/b7p8btRGpA=;
-	b=E5e8faDKdX95wV+JWi05G4Iq6kCNVkEOJaXcs86uREeOME0fMp1bRKrOGQT/RbiRxYiooc
-	ZwjSpRpgWBIKzjoMdNso3zo3yOmYJEnn08o+GtqPMv9DyCqEHHIPZfFfGwCFDIk6DxjJPJ
-	EfgOhFcVJ3K5t6SfB4gJyioDlwaihFQ=
+	bh=yP7FPgxDoOexDyh5Qexk3wyBa3Ras1Oco07sQANBHZ8=;
+	b=EI77K5qTX/gjlepU0gG1dXINjOycFYVLmDW7e+7nuEMZoQFnoR/RyYO48SnkP+6pTrCyKQ
+	lKMaEA0B8NyZW/sB93aVJ1IbPLJHb3pRrupbi/l8QcfNXsTwi+KgF8exNYvY2u/PauxPYb
+	k9sL4TEZoy7MVABOTiqQFzWEOFe3OEY=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680-exvMBCBoPyGkfuGQOqaNvQ-1; Tue, 27 Feb 2024 18:21:05 -0500
-X-MC-Unique: exvMBCBoPyGkfuGQOqaNvQ-1
+ us-mta-622-Kcs_drJBNwKwcbEvDnCKLA-1; Tue, 27 Feb 2024 18:21:03 -0500
+X-MC-Unique: Kcs_drJBNwKwcbEvDnCKLA-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 41F3584AE40;
-	Tue, 27 Feb 2024 23:21:05 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 50E2F185A783;
+	Tue, 27 Feb 2024 23:21:03 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1512BC1596E;
-	Tue, 27 Feb 2024 23:21:05 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1F102C040F7;
+	Tue, 27 Feb 2024 23:21:03 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: seanjc@google.com,
 	michael.roth@amd.com,
 	isaku.yamahata@intel.com,
-	thomas.lendacky@amd.com
-Subject: [PATCH 19/21] KVM: guest_memfd: add API to undo kvm_gmem_get_uninit_pfn
-Date: Tue, 27 Feb 2024 18:20:58 -0500
-Message-Id: <20240227232100.478238-20-pbonzini@redhat.com>
+	thomas.lendacky@amd.com,
+	Ashish Kalra <ashish.kalra@amd.com>
+Subject: [PATCH 10/21] KVM: SEV: Use a VMSA physical address variable for populating VMCB
+Date: Tue, 27 Feb 2024 18:20:49 -0500
+Message-Id: <20240227232100.478238-11-pbonzini@redhat.com>
 In-Reply-To: <20240227232100.478238-1-pbonzini@redhat.com>
 References: <20240227232100.478238-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -62,77 +63,72 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-In order to be able to redo kvm_gmem_get_uninit_pfn, a hole must be punched
-into the filemap, thus allowing FGP_CREAT_ONLY to succeed again.  This will
-be used whenever an operation that follows kvm_gmem_get_uninit_pfn fails.
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
+In preparation to support SEV-SNP AP Creation, use a variable that holds
+the VMSA physical address rather than converting the virtual address.
+This will allow SEV-SNP AP Creation to set the new physical address that
+will be used should the vCPU reset path be taken.
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+Message-Id: <20231230172351.574091-26-michael.roth@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- include/linux/kvm_host.h |  7 +++++++
- virt/kvm/guest_memfd.c   | 28 ++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ arch/x86/kvm/svm/sev.c | 3 +--
+ arch/x86/kvm/svm/svm.c | 9 ++++++++-
+ arch/x86/kvm/svm/svm.h | 1 +
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 03bf616b7308..192c58116220 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2436,6 +2436,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		     gfn_t gfn, kvm_pfn_t *pfn, int *max_order);
- int kvm_gmem_get_uninit_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		            gfn_t gfn, kvm_pfn_t *pfn, int *max_order);
-+int kvm_gmem_undo_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-+			  gfn_t gfn, int order);
- #else
- static inline int kvm_gmem_get_pfn(struct kvm *kvm,
- 				   struct kvm_memory_slot *slot, gfn_t gfn,
-@@ -2452,6 +2454,11 @@ static inline int kvm_gmem_get_uninit_pfn(struct kvm *kvm,
- 	KVM_BUG_ON(1, kvm);
- 	return -EIO;
- }
-+
-+static inline int kvm_gmem_undo_get_pfn(struct kvm *kvm,
-+				        struct kvm_memory_slot *slot, gfn_t gfn,
-+				        int order)
-+{}
- #endif /* CONFIG_KVM_PRIVATE_MEM */
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index a9e2fcf494a2..2bde1ad6bcfd 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -3094,8 +3094,7 @@ static void sev_es_init_vmcb(struct vcpu_svm *svm)
+ 	 * the VMSA will be NULL if this vCPU is the destination for intrahost
+ 	 * migration, and will be copied later.
+ 	 */
+-	if (svm->sev_es.vmsa)
+-		svm->vmcb->control.vmsa_pa = __pa(svm->sev_es.vmsa);
++	svm->vmcb->control.vmsa_pa = svm->sev_es.vmsa_pa;
  
- #ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 7ec7afafc960..535ef1aa34fb 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -590,3 +590,31 @@ int kvm_gmem_get_uninit_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 	return __kvm_gmem_get_pfn(kvm, slot, gfn, pfn, max_order, false);
- }
- EXPORT_SYMBOL_GPL(kvm_gmem_get_uninit_pfn);
-+
-+int kvm_gmem_undo_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-+		          gfn_t gfn, int order)
-+{
-+	pgoff_t index = gfn - slot->base_gfn + slot->gmem.pgoff;
-+	struct kvm_gmem *gmem;
-+	struct file *file;
-+	int r;
-+
-+	file = kvm_gmem_get_file(slot);
-+	if (!file)
-+		return -EFAULT;
-+
-+	gmem = file->private_data;
-+
-+	if (WARN_ON_ONCE(xa_load(&gmem->bindings, index) != slot)) {
-+		r = -EIO;
-+		goto out_fput;
+ 	/* Can't intercept CR register access, HV can't modify CR registers */
+ 	svm_clr_intercept(svm, INTERCEPT_CR0_READ);
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index f4a750426b24..8893975826f1 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1459,9 +1459,16 @@ static int svm_vcpu_create(struct kvm_vcpu *vcpu)
+ 	svm->vmcb01.pa = __sme_set(page_to_pfn(vmcb01_page) << PAGE_SHIFT);
+ 	svm_switch_vmcb(svm, &svm->vmcb01);
+ 
+-	if (vmsa_page)
++	if (vmsa_page) {
+ 		svm->sev_es.vmsa = page_address(vmsa_page);
+ 
++		/*
++		 * Do not include the encryption mask on the VMSA physical
++		 * address since hardware will access it using the guest key.
++		 */
++		svm->sev_es.vmsa_pa = __pa(svm->sev_es.vmsa);
 +	}
 +
-+	r = kvm_gmem_punch_hole(file_inode(file), index << PAGE_SHIFT, PAGE_SHIFT << order);
-+
-+out_fput:
-+	fput(file);
-+
-+	return r;
-+}
-+EXPORT_SYMBOL_GPL(kvm_gmem_undo_get_pfn);
+ 	svm->guest_state_loaded = false;
+ 
+ 	return 0;
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 7a921acc534f..1812fd61ea56 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -198,6 +198,7 @@ struct vcpu_sev_es_state {
+ 	struct ghcb *ghcb;
+ 	u8 valid_bitmap[16];
+ 	struct kvm_host_map ghcb_map;
++	hpa_t vmsa_pa;
+ 	bool received_first_sipi;
+ 
+ 	/* SEV-ES scratch area support */
 -- 
 2.39.0
 
