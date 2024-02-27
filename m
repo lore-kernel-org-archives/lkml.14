@@ -1,265 +1,259 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054E614F961
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF2B14EFED
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709068971; cv=none; b=fwJihAueycZjAFma38+JKmuVIXsxzhsD459vuRbWEqTsIsdZQjHIeuSzH4ttQZEZUXuFIpi0HcVHKKaALvaYLy6TyEeW3Q29Ydr0X+jeivFnYkBELITqXd6zef8sI5NCHRxT6QkXTVLsBWm8YwRBsOimgxaU7QP9h1gkr/ESNR8=
+	t=1709068993; cv=none; b=dX/bVzvSNGHTAb7BjkWUrC7jszrWX2ulCvxCblpzhMJyHKXVEma/G8RpyTQsR5KwPe05TGBx2W8hxfFSIcQ5i9bqwSXOEJY3NIoANFODYWr5Tine4b3fDC4vAE4RLomj0/2bWbeqXSHw9SEXub65N24I1GiuBX3xHCtDso03sN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709068971; c=relaxed/simple;
-	bh=qzfiETCWDTDKCh2kO3rgSBlBWXrnzAF7pzLqrMmcF4Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gb6qkZqLiuUY50UfVhj52iQUgagwZGFFXgnsUQl1OhBG5Fiu8bjLnUdiXRb7CB4BNghx8E8a/YJ01Eybm/KIH0U0NJQR+FybFU8oQUlpQ6HryN+shs1zHyUBihj47hzrAEDIghDPV8Tux//UkK2QHS36J0TaRgYlp2b2ZAaZCHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=kXBsLGER; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1709068993; c=relaxed/simple;
+	bh=EbE0NpjDsX2f82kmxrArsWy71nW9ItuJ2Y3sA+HtFsE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pgmWPJuG95bvWu8T+DlEuCQjt8vbR/uqcNdcLHyyr1BRYz/5VOM1JfOyM5ni8OUuFi+kicD8XqMsbTyNEFyhbjsYlMPWeF15c/etAwUFhtNQumQrBAvUn6aq+Wn5ZDyEAZCtiCU88DIUa5HMgRwAyIr+c6pc9RLETAkXkSNg180=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=bRfHDvAC; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="kXBsLGER"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B306C2C02AB;
-	Wed, 28 Feb 2024 10:22:46 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1709068966;
-	bh=bmOeu545IlDEfWmGK3n3UhjYbFI/JyDlqa6BrnpO7w0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kXBsLGERG+uysYrZysHfrOnXr3yfKbmmDdtJrEmLtPiR8o0mU7p/xZ1fJdAgGKesP
-	 JuxhaERwRugwzv+rXQCHBil1/LmhghvPo8vbXox2RsWfpeiVQBKoCYjLFTvksQT7ef
-	 tUKnMEHmgwk7yS4ZWrYmH79iog3RJ5QE1A11S64oLa7a4Jq0BPuknnwwxC36y1FMAb
-	 bksStlvnFCYlzIKL4d5YOxsLDsNHLpOFkAcfezY/FzHtZUClzWYLKiL42Bt+uhSHaX
-	 oGtd7Cu6JnX2pozxMiUQfZYVediiFVtmlP5PWgw5RX6U145jO2bPPEVHuXbzuZstMm
-	 zzlrEB+OPO9Xg==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B65de52a60001>; Wed, 28 Feb 2024 10:22:46 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 619CE13EE4F;
-	Wed, 28 Feb 2024 10:22:46 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 5C74F280788; Wed, 28 Feb 2024 10:22:46 +1300 (NZDT)
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-To: andy@kernel.org,
-	geert@linux-m68k.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	andrew@lunn.ch,
-	gregory.clement@bootlin.com,
-	sebastian.hesselbarth@gmail.com,
-	ojeda@kernel.org,
-	tzimmermann@suse.de,
-	javierm@redhat.com,
-	robin@protonic.nl,
-	lee@kernel.org,
-	pavel@ucw.cz
-Cc: devicetree@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 1/4] auxdisplay: Add 7 segment LED display driver
-Date: Wed, 28 Feb 2024 10:22:41 +1300
-Message-ID: <20240227212244.262710-2-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240227212244.262710-1-chris.packham@alliedtelesis.co.nz>
-References: <20240227212244.262710-1-chris.packham@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="bRfHDvAC"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5654f700705so6326448a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:23:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1709068988; x=1709673788; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZhErYklq/EJPQHwU+q7yFPhN9tYP/IYN1YoBwGWgE3U=;
+        b=bRfHDvACxttR2PALUf0DnK+G3/FSee3l2zXGVIBjPH3Lh0E9DmrPLpfdJBBbNF4eQj
+         uxI0PqL+/RkxG7DF6CUwdYEI+mTmZezXjFtDic2we0khgK9m0EIvO4WBcpdnN4EtLFtw
+         XupYlgsGdZSdnodONJXdK2zMq/HKlj+ibH1P+c4AYIe0hGGKLhQr/OkfXRSZ6TJ2C7P9
+         jqfpvBe1ouhCzFWEIsmfuzglxUCbaQyTvt3km34xrTRQqfa2lcb3ENOE4VkgDk+pfcXF
+         fW3FAThtk28QgAH+Mv4ngfJVL4t31lDxFQwtZgeRjOXxbAetnuh6wqsk7Zk/7dTF9ngR
+         mtxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709068988; x=1709673788;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZhErYklq/EJPQHwU+q7yFPhN9tYP/IYN1YoBwGWgE3U=;
+        b=kJRkW6G7CPJlbFppzFvqz3O+ZOibJuh8AjYvNFusv1Oap7FTuTR9t+Jp9CdWV3A2I1
+         7C51/GFsXbNyyzRkBvYa3Sfsxn6h0kkc2cjYzSdXMkDGEJC7wx4CS2Jj6mFta+meNxCG
+         9tl65o8BbnNiVkUV4vufxq19egd9QwlmMDchyX/t7msUbrmklg5HFO0usQwqbd5JGzq1
+         w5MiZrFNo6vpLDYN5knVIWFCz/FJ6YKUFGys21jkjBIBjjeiO+C07YvrPIf/p4iK8cos
+         b/AaVJcs3K9hzrD3AMB4zHCmoxDAXp9+Vu5J/qmodXrXCm96Z9xVz+dePvopwZR/++Sx
+         ns2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVDq/oXRltfJWBLWasTG+N+qfA6Fevb4+i9CP1YOcVR8X6hfrnXOKt3BgQ6xu7da7AueGHhUssDJhbCaYCxaZ0Abt2t8DogbI06L8W6
+X-Gm-Message-State: AOJu0YwVHveOgGnl9u/a33PnXzyWcXTBUnI9LPoeGpaWgqpcWlEVNYKw
+	5gqjiSW/Iz3Gyr2EnB430gjnJvXZCYQQDd6559ehyOXBoVcAS3zRvAWZ92M7f0Mprag7s2PllDx
+	TWCF7t7O6eTpVdXFWF2vP313ahdmk3Qacj+CJVg==
+X-Google-Smtp-Source: AGHT+IHqc2xzkwbAvcr5fQRGREMJd5T6r7kytrtxnzTAlan3DZ9TQlMAdMMuov7gUcj7CaeWUm/8tYXHjdtK2PIKMfA=
+X-Received: by 2002:aa7:c456:0:b0:565:9fff:6046 with SMTP id
+ n22-20020aa7c456000000b005659fff6046mr6700370edr.3.1709068988451; Tue, 27 Feb
+ 2024 13:23:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <Zd4DXTyCf17lcTfq@debian.debian> <CANn89iJQX14C1Qb_qbTVG4yoG26Cq7Ct+2qK_8T-Ok2JDdTGEA@mail.gmail.com>
+ <d633c5b9-53a5-4cd6-9dbb-6623bb74c00b@paulmck-laptop>
+In-Reply-To: <d633c5b9-53a5-4cd6-9dbb-6623bb74c00b@paulmck-laptop>
+From: Yan Zhai <yan@cloudflare.com>
+Date: Tue, 27 Feb 2024 15:22:57 -0600
+Message-ID: <CAO3-Pbp8uhWOwszbBq75kpXm+=nQphZbej1xwGCtkxeG62ou5g@mail.gmail.com>
+Subject: Re: [PATCH] net: raise RCU qs after each threaded NAPI poll
+To: paulmck@kernel.org
+Cc: Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jiri Pirko <jiri@resnulli.us>, Simon Horman <horms@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Coco Li <lixiaoyan@google.com>, Wei Wang <weiwan@google.com>, 
+	Alexander Duyck <alexanderduyck@fb.com>, Hannes Frederic Sowa <hannes@stressinduktion.org>, 
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org, bpf@vger.kernel.org, 
+	kernel-team@cloudflare.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65de52a6 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=k7vzHIieQBIA:10 a=F0jKMMnsshfnaHI64i4A:9 a=3ZKOabzyN94A:10
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
 
-Add a driver for a 7 segment LED display. At the moment only one
-character is supported but it should be possible to expand this to
-support more characters and/or 14 segment displays in the future.
+On Tue, Feb 27, 2024 at 12:32=E2=80=AFPM Paul E. McKenney <paulmck@kernel.o=
+rg> wrote:
+>
+> On Tue, Feb 27, 2024 at 05:44:17PM +0100, Eric Dumazet wrote:
+> > On Tue, Feb 27, 2024 at 4:44=E2=80=AFPM Yan Zhai <yan@cloudflare.com> w=
+rote:
+> > >
+> > > We noticed task RCUs being blocked when threaded NAPIs are very busy =
+in
+> > > production: detaching any BPF tracing programs, i.e. removing a ftrac=
+e
+> > > trampoline, will simply block for very long in rcu_tasks_wait_gp. Thi=
+s
+> > > ranges from hundreds of seconds to even an hour, severely harming any
+> > > observability tools that rely on BPF tracing programs. It can be
+> > > easily reproduced locally with following setup:
+> > >
+> > > ip netns add test1
+> > > ip netns add test2
+> > >
+> > > ip -n test1 link add veth1 type veth peer name veth2 netns test2
+> > >
+> > > ip -n test1 link set veth1 up
+> > > ip -n test1 link set lo up
+> > > ip -n test2 link set veth2 up
+> > > ip -n test2 link set lo up
+> > >
+> > > ip -n test1 addr add 192.168.1.2/31 dev veth1
+> > > ip -n test1 addr add 1.1.1.1/32 dev lo
+> > > ip -n test2 addr add 192.168.1.3/31 dev veth2
+> > > ip -n test2 addr add 2.2.2.2/31 dev lo
+> > >
+> > > ip -n test1 route add default via 192.168.1.3
+> > > ip -n test2 route add default via 192.168.1.2
+> > >
+> > > for i in `seq 10 210`; do
+> > >  for j in `seq 10 210`; do
+> > >     ip netns exec test2 iptables -I INPUT -s 3.3.$i.$j -p udp --dport=
+ 5201
+> > >  done
+> > > done
+> > >
+> > > ip netns exec test2 ethtool -K veth2 gro on
+> > > ip netns exec test2 bash -c 'echo 1 > /sys/class/net/veth2/threaded'
+> > > ip netns exec test1 ethtool -K veth1 tso off
+> > >
+> > > Then run an iperf3 client/server and a bpftrace script can trigger it=
+:
+> > >
+> > > ip netns exec test2 iperf3 -s -B 2.2.2.2 >/dev/null&
+> > > ip netns exec test1 iperf3 -c 2.2.2.2 -B 1.1.1.1 -u -l 1500 -b 3g -t =
+100 >/dev/null&
+> > > bpftrace -e 'kfunc:__napi_poll{@=3Dcount();} interval:s:1{exit();}'
+> > >
+> > > Above reproduce for net-next kernel with following RCU and preempt
+> > > configuraitons:
+> > >
+> > > # RCU Subsystem
+> > > CONFIG_TREE_RCU=3Dy
+> > > CONFIG_PREEMPT_RCU=3Dy
+> > > # CONFIG_RCU_EXPERT is not set
+> > > CONFIG_SRCU=3Dy
+> > > CONFIG_TREE_SRCU=3Dy
+> > > CONFIG_TASKS_RCU_GENERIC=3Dy
+> > > CONFIG_TASKS_RCU=3Dy
+> > > CONFIG_TASKS_RUDE_RCU=3Dy
+> > > CONFIG_TASKS_TRACE_RCU=3Dy
+> > > CONFIG_RCU_STALL_COMMON=3Dy
+> > > CONFIG_RCU_NEED_SEGCBLIST=3Dy
+> > > # end of RCU Subsystem
+> > > # RCU Debugging
+> > > # CONFIG_RCU_SCALE_TEST is not set
+> > > # CONFIG_RCU_TORTURE_TEST is not set
+> > > # CONFIG_RCU_REF_SCALE_TEST is not set
+> > > CONFIG_RCU_CPU_STALL_TIMEOUT=3D21
+> > > CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=3D0
+> > > # CONFIG_RCU_TRACE is not set
+> > > # CONFIG_RCU_EQS_DEBUG is not set
+> > > # end of RCU Debugging
+> > >
+> > > CONFIG_PREEMPT_BUILD=3Dy
+> > > # CONFIG_PREEMPT_NONE is not set
+> > > CONFIG_PREEMPT_VOLUNTARY=3Dy
+> > > # CONFIG_PREEMPT is not set
+> > > CONFIG_PREEMPT_COUNT=3Dy
+> > > CONFIG_PREEMPTION=3Dy
+> > > CONFIG_PREEMPT_DYNAMIC=3Dy
+> > > CONFIG_PREEMPT_RCU=3Dy
+> > > CONFIG_HAVE_PREEMPT_DYNAMIC=3Dy
+> > > CONFIG_HAVE_PREEMPT_DYNAMIC_CALL=3Dy
+> > > CONFIG_PREEMPT_NOTIFIERS=3Dy
+> > > # CONFIG_DEBUG_PREEMPT is not set
+> > > # CONFIG_PREEMPT_TRACER is not set
+> > > # CONFIG_PREEMPTIRQ_DELAY_TEST is not set
+> > >
+> > > An interesting observation is that, while tasks RCUs are blocked,
+> > > related NAPI thread is still being scheduled (even across cores)
+> > > regularly. Looking at the gp conditions, I am inclining to cond_resch=
+ed
+> > > after each __napi_poll being the problem: cond_resched enters the
+> > > scheduler with PREEMPT bit, which does not account as a gp for tasks
+> > > RCUs. Meanwhile, since the thread has been frequently resched, the
+> > > normal scheduling point (no PREEMPT bit, accounted as a task RCU gp)
+> > > seems to have very little chance to kick in. Given the nature of "bus=
+y
+> > > polling" program, such NAPI thread won't have task->nvcsw or task->on=
+_rq
+> > > updated (other gp conditions), the result is that such NAPI thread is
+> > > put on RCU holdouts list for indefinitely long time.
+> > >
+> > > This is simply fixed by mirroring the ksoftirqd behavior: after
+> > > NAPI/softirq work, raise a RCU QS to help expedite the RCU period. No
+> > > more blocking afterwards for the same setup.
+> > >
+> > > Fixes: 29863d41bb6e ("net: implement threaded-able napi poll loop sup=
+port")
+> > > Signed-off-by: Yan Zhai <yan@cloudflare.com>
+> > > ---
+> > >  net/core/dev.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > diff --git a/net/core/dev.c b/net/core/dev.c
+> > > index 275fd5259a4a..6e41263ff5d3 100644
+> > > --- a/net/core/dev.c
+> > > +++ b/net/core/dev.c
+> > > @@ -6773,6 +6773,10 @@ static int napi_threaded_poll(void *data)
+> > >                                 net_rps_action_and_irq_enable(sd);
+> > >                         }
+> > >                         skb_defer_free_flush(sd);
+>
+> Please put a comment here stating that RCU readers cannot cross
+> this point.
+>
+> I need to add lockdep to rcu_softirq_qs() to catch placing this in an
+> RCU read-side critical section.  And a header comment noting that from
+> an RCU perspective, it acts as a momentary enabling of preemption.
+>
+Just to clarify, do you mean I should state that this polling function
+can not be called from within an RCU read critical section? Or do you
+mean any read critical sections need to end before raising this QS?
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+Yan
 
-Notes:
-    Changes in v2:
-    - Rebased on top of auxdisplay/for-next dropping unnecessary code for=
- 7
-      segment maps.
-    - Update for new linedisp_register() API
-    - Include headers based on actual usage
-    - Allow building as module
-    - Use compatible =3D "generic-gpio-7seg" to keep checkpatch.pl happy
-
- drivers/auxdisplay/Kconfig   |  10 +++
- drivers/auxdisplay/Makefile  |   1 +
- drivers/auxdisplay/seg-led.c | 119 +++++++++++++++++++++++++++++++++++
- 3 files changed, 130 insertions(+)
- create mode 100644 drivers/auxdisplay/seg-led.c
-
-diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
-index d4be0a3695ce..52a245ca0c8d 100644
---- a/drivers/auxdisplay/Kconfig
-+++ b/drivers/auxdisplay/Kconfig
-@@ -211,6 +211,16 @@ config ARM_CHARLCD
- 	  line and the Linux version on the second line, but that's
- 	  still useful.
-=20
-+config SEG_LED
-+	tristate "Generic 7 segment LED display"
-+	select LINEDISP
-+	help
-+	  This driver supports a generic 7 segment LED display made up
-+	  of GPIO pins connected to the individual segments.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called seg-led.
-+
- menuconfig PARPORT_PANEL
- 	tristate "Parallel port LCD/Keypad Panel support"
- 	depends on PARPORT
-diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
-index a725010ca651..744e354318ae 100644
---- a/drivers/auxdisplay/Makefile
-+++ b/drivers/auxdisplay/Makefile
-@@ -15,3 +15,4 @@ obj-$(CONFIG_PARPORT_PANEL)	+=3D panel.o
- obj-$(CONFIG_LCD2S)		+=3D lcd2s.o
- obj-$(CONFIG_LINEDISP)		+=3D line-display.o
- obj-$(CONFIG_MAX6959)		+=3D max6959.o
-+obj-$(CONFIG_SEG_LED)		+=3D seg-led.o
-diff --git a/drivers/auxdisplay/seg-led.c b/drivers/auxdisplay/seg-led.c
-new file mode 100644
-index 000000000000..7bb304fcaa6e
---- /dev/null
-+++ b/drivers/auxdisplay/seg-led.c
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for a 7 segment LED display
-+ *
-+ * The GPIOs are wired to the 7 segments in a clockwise fashion starting=
- from
-+ * the top.
-+ *
-+ *      -a-
-+ *     |   |
-+ *     f   b
-+ *     |   |
-+ *      -g-
-+ *     |   |
-+ *     e   c
-+ *     |   |
-+ *      -d-
-+ *
-+ * The decimal point LED present on some devices is currently not
-+ * supported.
-+ *
-+ * Copyright (C) Allied Telesis Labs
-+ */
-+
-+#include <linux/container_of.h>
-+#include <linux/errno.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/types.h>
-+#include <linux/workqueue.h>
-+
-+#include "line-display.h"
-+
-+struct seg_led_priv {
-+	struct gpio_descs *segment_gpios;
-+	struct delayed_work work;
-+	struct linedisp linedisp;
-+};
-+
-+static void seg_led_update(struct work_struct *work)
-+{
-+	struct seg_led_priv *priv =3D container_of(work, struct seg_led_priv, w=
-ork.work);
-+	struct linedisp_map *map =3D priv->linedisp.map;
-+	DECLARE_BITMAP(values, 8);
-+
-+	values[0] =3D map_to_seg7(&map->map.seg7, priv->linedisp.buf[0]);
-+
-+	gpiod_set_array_value_cansleep(priv->segment_gpios->ndescs, priv->segme=
-nt_gpios->desc,
-+				       priv->segment_gpios->info, values);
-+}
-+
-+static int seg_led_linedisp_get_map_type(struct linedisp *linedisp)
-+{
-+	return LINEDISP_MAP_SEG7;
-+}
-+
-+static void seg_led_linedisp_update(struct linedisp *linedisp)
-+{
-+	struct seg_led_priv *priv =3D container_of(linedisp, struct seg_led_pri=
-v, linedisp);
-+
-+	schedule_delayed_work(&priv->work, 0);
-+}
-+
-+static const struct linedisp_ops seg_led_linedisp_ops =3D {
-+	.get_map_type =3D seg_led_linedisp_get_map_type,
-+	.update =3D seg_led_linedisp_update,
-+};
-+
-+static const struct of_device_id seg_led_of_match[] =3D {
-+	{ .compatible =3D "generic-gpio-7seg"},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, seg_led_of_match);
-+
-+static int seg_led_probe(struct platform_device *pdev)
-+{
-+	struct seg_led_priv *priv;
-+	struct device *dev =3D &pdev->dev;
-+
-+	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	priv->segment_gpios =3D devm_gpiod_get_array(dev, "segment", GPIOD_OUT_=
-LOW);
-+	if (IS_ERR(priv->segment_gpios))
-+		return PTR_ERR(priv->segment_gpios);
-+
-+	INIT_DELAYED_WORK(&priv->work, seg_led_update);
-+
-+	return linedisp_register(&priv->linedisp, dev, 1, &seg_led_linedisp_ops=
-);
-+}
-+
-+static int seg_led_remove(struct platform_device *pdev)
-+{
-+	struct seg_led_priv *priv =3D platform_get_drvdata(pdev);
-+
-+	cancel_delayed_work_sync(&priv->work);
-+	linedisp_unregister(&priv->linedisp);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver seg_led_driver =3D {
-+	.probe =3D seg_led_probe,
-+	.remove =3D seg_led_remove,
-+	.driver =3D {
-+		.name =3D "seg-led",
-+		.of_match_table =3D seg_led_of_match,
-+	},
-+};
-+module_platform_driver(seg_led_driver);
-+
-+MODULE_AUTHOR("Chris Packham <chris.packham@alliedtelesis.co.nz>");
-+MODULE_DESCRIPTION("7 segment LED driver");
-+MODULE_LICENSE("GPL");
---=20
-2.43.2
-
+> > > +                       if (!IS_ENABLED(CONFIG_PREEMPT_RT))
+> > > +                               rcu_softirq_qs();
+> > > +
+> > >                         local_bh_enable();
+> > >
+> > >                         if (!repoll)
+> > > --
+> > > 2.30.2
+> > >
+> >
+> > Hmm....
+> > Why napi_busy_loop() does not have a similar problem ?
+> >
+> > It is unclear why rcu_all_qs() in __cond_resched() is guarded by
+> >
+> > #ifndef CONFIG_PREEMPT_RCU
+> >      rcu_all_qs();
+> > #endif
+>
+> The theory is that PREEMPT_RCU kernels have preemption, and get their
+> quiescent states that way.
+>
+> The more recent practice involves things like PREEMPT_DYNAMIC and maybe
+> soon PREEMPT_AUTO, which might require adjustments, so thank you for
+> pointing this out!
+>
+> Back on the patch, my main other concern is that someone somewhere might
+> be using something like synchronize_rcu() to wait for all in-progress
+> softirq handlers to complete.  But I don't know of such a thing, and if
+> there is, there are workarounds, including synchronize_rcu_tasks().
+>
+> So something to be aware of, not (as far as I know) something to block
+> this commit.
+>
+> With the added comment:
+>
+> Acked-by: Paul E. McKenney <paulmck@kernel.org>
+>
+>                                                         Thanx, Paul
