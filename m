@@ -1,107 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2437E138484;
-	Tue, 27 Feb 2024 10:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C0E138484;
+	Tue, 27 Feb 2024 10:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709029104; cv=none; b=jbzSijQtgdUZINne6j5CMRa122GRU9xCiqA0eKMQDvpMuMDIuyFgiDBNzK/7GHyLZFVCHNSXO/ziIusHCyxZd7Mz45/LSihYlS2+bVrqgt8lPLpZzJld9VK/lM6hotbdX/78cbBgaOWBWVzGGAtrXlrGdM4/SSWnwmtZOyey41c=
+	t=1709029134; cv=none; b=faLOVWTGVn8KJ/9dMrbr2iWhdyWhMVVTXpNr2TYyO1NlappalXJBSXuz0n6vrUahLQ3YiTRG8BvQwaw0Qi8mubAKCAeMU7s2pPdBv0l1mz4JruaWNheGIYPNc47NcPobp82hHQQBc8I7tP5Z/Cktm81M9FyD7Zu22Di2V6KaRGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709029104; c=relaxed/simple;
-	bh=+XdkE4DgIHAhgkKhHEoE2TV6/xi1f4rWmM/JoiflBKU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NPdkVfTwVlYgxWvEliAz90wtVlnwwi+Ozzs2MsRqFjk36YYtsMm8Oy7ITd7b6yvSzaH6/Uyx5WjXJWzCIEh42++kY5TXJ7DEtvvNeEU/BkB4CtUvWWe+QUvT/+S8P+nsT2ugMycLFJtIpVvx84AOxsuHgHciOpS/LMz/fQl1B/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lTXVqAEC; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709029134; c=relaxed/simple;
+	bh=1kT4IadTcD9s8wVa7TvXCimMRyY5zCB8d4SK3JfJKpI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qgKJ2Fm289+Puk/7nac/sGMJuaegQ8skLupDzr47ksHrGhQIS/WQeUD973FLkW51H3dRglAf+/y6/fk3KiQiH5A+Yqo/HAfdbbcdpObIkUWcwRT/Cd7CLDqZ9tMGxl4gCJsmbenq+vFxkgc5iTwhnIawoSu03xXn0vWe8OhkR+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cpyVIP79; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UuxALrSs; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cpyVIP79; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UuxALrSs; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lTXVqAEC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709029103; x=1740565103;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=+XdkE4DgIHAhgkKhHEoE2TV6/xi1f4rWmM/JoiflBKU=;
-  b=lTXVqAECt5ZgimA/0Njvzu5qUTE1M2S9PLdDhrxHsY7avgt6lD1P4FY5
-   NzfipyJ6GV4ati+Iv6Z9f5livT3GOXfFbH42OYnf53L750f55oMGnTBvl
-   k05dHRgR4WIKs9tq5YQ23TihubUkNp6jwXnVx0eYGzsxmg5FONr6h+gVO
-   h6vdokT3Hmko1rJDhZ5QpbyBUW9K5DXoRfr+KCwEMU0Vh9ftmmjy/oD7A
-   hX00gOoqrSO0uTalx9ioRrodXOXj+StOmJ0BXZDvGKIp/zqCjZjcCI4oy
-   PbIF6U11QRKGMALzNMvRL3S1u/FolakQYHR/JflqdMnipBEV03kE75vRj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3914919"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="3914919"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 02:18:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="6853286"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 02:18:20 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 27 Feb 2024 12:18:16 +0200 (EET)
-To: Szilard Fabian <szfabian@bluemarch.art>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    jwoithe@just42.net, Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de
-Subject: Re: [PATCH v4] platform/x86/fujitsu-laptop: Add battery charge
- control support
-In-Reply-To: <170834440647.4050.13047961348645894978.b4-ty@linux.intel.com>
-Message-ID: <a4b35e55-1f29-6c98-745c-df6896e49270@linux.intel.com>
-References: <20240129163502.161409-2-szfabian@bluemarch.art> <20240129175714.164326-2-szfabian@bluemarch.art> <20240207023031.56805-2-szfabian@bluemarch.art> <20240215203012.228758-2-szfabian@bluemarch.art>
- <170834440647.4050.13047961348645894978.b4-ty@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cpyVIP79";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UuxALrSs";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cpyVIP79";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UuxALrSs"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5FBE01F44F;
+	Tue, 27 Feb 2024 10:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1709029129; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q4pT87ICIgMrimfBYIsFt4403+jQ655os57F8M8rAV0=;
+	b=cpyVIP79rj0/sBrJvpdZDSi/YWGaVzMxOeOUTFZkxXRW5dBBpVG2nrSet3ziaxNcNhCRul
+	fsn2i6ZDMFIR8vZKMy1rHahvaELrlR9TdV1JOh9wud8P37gKHfMGsbCuw8Lz1zGjf4dOM9
+	gotsrvN12NpBYdL5ELH484nyYHkPZRY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1709029129;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q4pT87ICIgMrimfBYIsFt4403+jQ655os57F8M8rAV0=;
+	b=UuxALrSs0P8mLarP5bjo/PfJ0N2IwYv6LH6qdRMTKIyww8fRC4dOnMwu5xagQtZCCFsHZf
+	6lKfIVVRnWShjTBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1709029129; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q4pT87ICIgMrimfBYIsFt4403+jQ655os57F8M8rAV0=;
+	b=cpyVIP79rj0/sBrJvpdZDSi/YWGaVzMxOeOUTFZkxXRW5dBBpVG2nrSet3ziaxNcNhCRul
+	fsn2i6ZDMFIR8vZKMy1rHahvaELrlR9TdV1JOh9wud8P37gKHfMGsbCuw8Lz1zGjf4dOM9
+	gotsrvN12NpBYdL5ELH484nyYHkPZRY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1709029129;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q4pT87ICIgMrimfBYIsFt4403+jQ655os57F8M8rAV0=;
+	b=UuxALrSs0P8mLarP5bjo/PfJ0N2IwYv6LH6qdRMTKIyww8fRC4dOnMwu5xagQtZCCFsHZf
+	6lKfIVVRnWShjTBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B14DF13A65;
+	Tue, 27 Feb 2024 10:18:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id UH3gKQi33WXqfQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 27 Feb 2024 10:18:48 +0000
+Message-ID: <4e648451-31a8-4293-bc14-e7ea01c889b1@suse.cz>
+Date: Tue, 27 Feb 2024 11:19:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-957297465-1709028876=:1099"
-Content-ID: <8b80bf93-d78a-388a-e88d-a911f9418556@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 21/36] lib: add codetag reference into slabobj_ext
+Content-Language: en-US
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, hannes@cmpxchg.org,
+ roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
+ willy@infradead.org, liam.howlett@oracle.com,
+ penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
+ peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
+ rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
+ yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
+ hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
+ ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org,
+ ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
+ iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
+ elver@google.com, dvyukov@google.com, shakeelb@google.com,
+ songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
+ minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
+ cgroups@vger.kernel.org
+References: <20240221194052.927623-1-surenb@google.com>
+ <20240221194052.927623-22-surenb@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240221194052.927623-22-surenb@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Bar: /
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=cpyVIP79;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=UuxALrSs
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-0.02 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_GT_50(0.00)[74];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-0.02)[51.67%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,linux.dev:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FREEMAIL_CC(0.00)[linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Score: -0.02
+X-Rspamd-Queue-Id: 5FBE01F44F
+X-Spam-Flag: NO
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 2/21/24 20:40, Suren Baghdasaryan wrote:
+> To store code tag for every slab object, a codetag reference is embedded
+> into slabobj_ext when CONFIG_MEM_ALLOC_PROFILING=y.
+> 
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Co-developed-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 
---8323328-957297465-1709028876=:1099
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <20edec04-805c-ce6f-95c4-8d07e40e6e6f@linux.intel.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-On Mon, 19 Feb 2024, Ilpo J=E4rvinen wrote:
-
-> On Thu, 15 Feb 2024 20:31:43 +0000, Szilard Fabian wrote:
->=20
-> > This patch adds battery charge control support on Fujitsu notebooks
-> > via the S006 method of the FUJ02E3 ACPI device. With this method it's
-> > possible to set charge_control_end_threshold between 50 and 100%.
-> >=20
-> > Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
-> > patch on a dual battery one, but I didn't find any clue about
-> > independent battery charge control on dual battery Fujitsu notebooks
-> > either. And by that I mean checking the DSDT table of various Lifebook
-> > notebooks and reverse engineering FUJ02E3.dll.
-> >=20
-> > [...]
->=20
->=20
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo branch only once I've pushed my
-> local branch there, which might take a while.
->=20
-> The list of commits applied:
-> [1/1] platform/x86/fujitsu-laptop: Add battery charge control support
->       commit: 9b716ef48c90446b8d6d86726c6c3f0141e53091
-
-Hi,
-
-Can you please take a look at the two build failures LKP has brought up.=20
-They looked like some depends on and/or select clauses missing from=20
-Kconfig.
-
-I'll be merging the patches that fix those into the original commit so=20
-don't spend too much fine-tuning the commit message.
-
---=20
- i.
---8323328-957297465-1709028876=:1099--
+> ---
+>  include/linux/memcontrol.h | 5 +++++
+>  lib/Kconfig.debug          | 1 +
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index f3584e98b640..2b010316016c 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -1653,7 +1653,12 @@ unsigned long mem_cgroup_soft_limit_reclaim(pg_data_t *pgdat, int order,
+>   * if MEMCG_DATA_OBJEXTS is set.
+>   */
+>  struct slabobj_ext {
+> +#ifdef CONFIG_MEMCG_KMEM
+>  	struct obj_cgroup *objcg;
+> +#endif
+> +#ifdef CONFIG_MEM_ALLOC_PROFILING
+> +	union codetag_ref ref;
+> +#endif
+>  } __aligned(8);
+>  
+>  static inline void __inc_lruvec_kmem_state(void *p, enum node_stat_item idx)
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 7bbdb0ddb011..9ecfcdb54417 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -979,6 +979,7 @@ config MEM_ALLOC_PROFILING
+>  	depends on !DEBUG_FORCE_WEAK_PER_CPU
+>  	select CODE_TAGGING
+>  	select PAGE_EXTENSION
+> +	select SLAB_OBJ_EXT
+>  	help
+>  	  Track allocation source code and record total allocation size
+>  	  initiated at that code location. The mechanism can be used to track
