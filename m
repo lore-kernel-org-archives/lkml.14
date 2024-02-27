@@ -1,112 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86622137C2A;
-	Tue, 27 Feb 2024 10:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7191369BF
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709028086; cv=none; b=ALj70woPEIXD1A3rL9HzBMlkB5opz1Vca38aesx7b6Q/VtXduK9I0ukQjqmSPKcbmYtHX2GSnu4Czdx505W9ADE7+vpLVHDUrVBa18q+xitX6+P8SMfFKYBNI0g9pOGJrqy+hEs4kIi5Uagb4ecZNgyW+oWdFuSKJgBVrwpnYPY=
+	t=1709028101; cv=none; b=qVv8xeWV8gA650jWKQLK4+OI+n6VVvnFMPX+ukwbxefGAI6tV+EWNIe7EDBJ+enHKWaxFYvYS8kgklHXbjpPlnzWh2GV2kNOrbSzGT4sMjSSJWEWG5GEXpbSocVUqAGKdwiS9AQ4thfbFxZG7ZAPslp8T/IRyDXsnANJwOQR8H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709028086; c=relaxed/simple;
-	bh=t+Z8nkmnyZJiKo/g3DXuSPfon4RTeiLy3dhfd9t83Ik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ffvx6UwV88RdA2QdnwQ6KuV2P0FXBVxBse2hn7b5rh7fOC2diLHMtAT/LePr3Z7dThTx+r1XtpaHxb0WWLlZhpoVGfxpWwZvDZMckHZJFDfShSvsylMeH0Mn5rR6LQ8ueoMwMgGZyEsBVEGM1CuhAOGIwCmYUKCLXeuysIhZ7BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDJnUn2p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709028101; c=relaxed/simple;
+	bh=hSu6GQUrlUELr0ujJpDMY8Soy0EUcyEgxk4EicNrXlQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WX045BVDeukmpgtPQV2imDollJJvzAWB6AeYYoO5wDQ/Qa/GNm045AcZ4+QmceYA7a1qvxWMh3BPzvupIYJfECE/mbSv5j1eRNQO1XFg4kgc0fNpWS5m07uqR7ZTJUb+PFbsM65UIqRpOxnBBIPJHDNFmvHkEoImPGc+Ei63L5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gwpAvMES; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDJnUn2p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3533C433C7;
-	Tue, 27 Feb 2024 10:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709028086;
-	bh=t+Z8nkmnyZJiKo/g3DXuSPfon4RTeiLy3dhfd9t83Ik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KDJnUn2pu3CFVygPe9YqcwwYE9Py4DJP18zijdBQwwowz2wBPtV7l4/m8HPkkUr2M
-	 TV0wCGjoK4B3p8E5PPXHCv93VORXwFrr2kEFM+yqIbmnRV5vumY6UrbLDRN2s3DzRw
-	 zJhsr/cOi3QcjZUSyrrES1oNF43vlrjgvDR9AeHGGJHv72tzTVuilOwlVhYlrscNOs
-	 2DKBvdgqe0AQL8nrcuj7t1ZKOv/scxtYuDI8pvWgWRLY/VefMYOJuCvT606rb8UWV8
-	 0TZuyDKzNTIZfB7wRYe5chFSVdIlFNOIMfJrocvHSKWiqhhGCduH6vKtQbeh5hySx1
-	 bGYEF+WXNnTkg==
-Date: Tue, 27 Feb 2024 12:00:40 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Vijayanand Jitta <quic_vjitta@quicinc.com>, karahmed@amazon.de,
-	qperret@google.com, robh@kernel.org, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	robh+dt@kernel.org, frowand.list@gmail.com,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] mm: memblock: avoid to create memmap for memblock nomap
- regions
-Message-ID: <Zd2yyOuZNAUZgdac@kernel.org>
-References: <YnQBKPWtPa87y4NA@kernel.org>
- <42f28e7b-c001-7d01-1eb6-fe963491898e@quicinc.com>
- <Ynj+M9cRm6zdCMMi@kernel.org>
- <22aca197-8d18-2c9e-b3c4-f6fdc893ceb1@quicinc.com>
- <Yu1t8TpXT1f372v/@kernel.org>
- <76cb3b37-5887-404f-95b7-10a22a7ba65b@quicinc.com>
- <ZcxvKvSfJv6L2O9e@kernel.org>
- <CAA8EJpqpGN6yzd5pUs06aax=L5wDwPK6aM6R2X784y7ot+P-aQ@mail.gmail.com>
- <ZcyEzHva7pq-3Zav@kernel.org>
- <a44a435c-e52d-4ee5-b05e-9f43a071c479@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gwpAvMES"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so556839866b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:01:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709028098; x=1709632898; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aZZM4NSq/nxmGUIAt4bTEVFN1OMhtQBGxzph/8BH01M=;
+        b=gwpAvMESq7tbhhHJZynga261RT1vKqm3DYENMxwFA0+CKo137K44o5rjWccjQMkQ1U
+         OU1quODLYj1IrdbRsAO0Xtqk4zN5sYZMROnGNT8UmvdXltEKQY+z2jTaFCuu7t1wIVOf
+         i3GzdLODP/TT18AX239sNEjfnfG1MpiYB86h0Vj4RSNgGJs/4mSLhcMfU4OzhpZL8cA/
+         glMiw1odRSz88WQGgQiKuAudrViKQSZTB7v9MItMcBW1R7s3XUP5NrI7vUKFIrLFOxBC
+         28GkHLpwsYk7F2dQ1EIl6Oy4S4XOwAMGjxxXLF43fAWRpZs6r5pgT/ysQJZgUGSuKoWW
+         eX8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709028098; x=1709632898;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aZZM4NSq/nxmGUIAt4bTEVFN1OMhtQBGxzph/8BH01M=;
+        b=fqLaMO2/0fxO3hi8/bIJx+ovURvVtwFZWbUy8Ul/ndbfoGODdLKOrBcaMM7RpjIOIr
+         ysoqTAcdk+xUHOxqDnk6YlG4r5gDBohodtAp6THD0OBTqtAifpmYCzVIkKAZX1wWM0DQ
+         1Pq2csqGH6qyaorIEliHHS0Knb2IbX3umUQ4xJScI8Z6bq2ZwZ0gRXUiG8P4op3bys5N
+         BN+KXKMixUZpfFzGibmEMbrGA6BhwI1VPkhaAlLhU71lj5pkBYk6qHBVKN6DXCLjyuH2
+         kb7i8XP31vJKuBAu9qFfM0UdsumStSbSYACc+C/oloFbmBxwR0lc0MgziZZCoHsc8g3M
+         Zp9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVlGjTpd+5fDd0pjPXLHP218Udn538M1toA33ixCitLZfkVhNzKZAi1Qm8kq/ZOs5wyTQxqRuudh6xvNTBOuLl6gY2dvyyOXQ9BfUzn
+X-Gm-Message-State: AOJu0Yxhqnf/KnzNtgnRbJEorKV//EBCn9fA8eoTQlEOa2pClPWkdf8C
+	wYg6YiXnBOUlYz85sIu71CB8+XAtvVlfTXXNHvFfrGxvvPvpWYiVMDnwQZiUR0o=
+X-Google-Smtp-Source: AGHT+IFVT8Rj6Mzy8Y1fsiWH9oHDcxshYtN/fUBKkNV3LoZCiFUJHD/sJiFq4K0ZD19FWwQ+UB5N3g==
+X-Received: by 2002:a17:907:20ee:b0:a3f:8925:50bb with SMTP id rh14-20020a17090720ee00b00a3f892550bbmr6184136ejb.76.1709028098129;
+        Tue, 27 Feb 2024 02:01:38 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id x5-20020a170906710500b00a3e4673e7dbsm597176ejj.38.2024.02.27.02.01.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 02:01:37 -0800 (PST)
+Message-ID: <60d048df-9a54-4239-8a8b-a8eb9a59dde9@linaro.org>
+Date: Tue, 27 Feb 2024 11:01:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a44a435c-e52d-4ee5-b05e-9f43a071c479@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: aspeed: add ASUS X4TF board
+Content-Language: en-US
+To: Kelly Hung <ppighouse@gmail.com>, robh+dt@kernel.org
+Cc: krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
+ andrew@codeconstruct.com.au, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, kelly_hung@asus.com,
+ Allenyy_Hsu@asus.com
+References: <20240227092922.1734998-1-Kelly_Hung@asus.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240227092922.1734998-1-Kelly_Hung@asus.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 20, 2024 at 02:28:32PM +0800, Aiqun Yu (Maria) wrote:
-> > > > > Hi Mike,
-> > > > > 
-> > > > > We've put effort on bootloader side to implement the similar suggestion of
-> > > > > os bootloader to convey the reserved memory by omit the hole from
-> > > > > /memory@0{reg=[]} directly.
-> > > > > While there is a concern from device tree spec perspective, link [1]: "A
-> > > > > memory device node is required for all devicetrees and describes the
-> > > > > physical memory layout for the system. "
-> > > > > Do you have any idea on this pls?
-> > > > 
-> > > > I'm not sure I understand your concern. Isn't there a /memory node that
-> > > > describes the memory available to Linux in your devicetree?
-> > > 
-> > > That was the question. It looks like your opinion on /memory was that
-> > > it describes "memory available to Linux", while device tree spec
-> > > defines it as "physical memory layout".
-> > >
-> > I suggested a workaround that will allow to save memory map for the
-> > carveout.
-> > The memory map is a run time description of the physical memory layout and
-> > core mm relies on availability of struct page for every physical frame.
-> > Having only partial memory map will lead to subtle bugs and crashes, so
-> > it's not an option.
->
-> Any idea of a formal solution for this case?
-> It is a real use case for the commercial device. Memory saving is always a
-> good topic for commercial devices. So for a total 128MB memory, ~60MB for
-> kernel total available memory, and ~1M free memory saving is important from
-> OEM point of view.
+On 27/02/2024 10:29, Kelly Hung wrote:
+> Document the new compatibles used on ASUS X4TF.
 > 
-> There are 3 types of memory:
-> 1. used by firmware and not available to kernel at any time.
-> Either struct page can be avoided by kernel. Or bootloader not pass this
-> part of physical memory was discussed here.
-> Any good ideas?
+> Changelog
+> Changes in v3
+> - correct string to asus,x4tf-bmc
 
-As I said, struct page must exist for all physical memory known to kernel.
-If hiding the memory that is not available to kernel does not work for you
-I don't have other ideas.
+Changelog goes after ---.
 
-> 2. shared by firmware/subsystem, and can be read/write access by kernel.
-> Just as it is now. Struct page can be allocated inside kernel and also
-> reserved memory for this.
-> 3. freely used by kernel.
-> Just as it is now.
+Again: what happened with the tags? Why aren't you responding to
+comments you receive?
 
 
+Best regards,
+Krzysztof
 
--- 
-Sincerely yours,
-Mike.
