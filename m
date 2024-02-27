@@ -1,239 +1,202 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8014E1DD;
-	Tue, 27 Feb 2024 17:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D30B4E1A0
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709056450; cv=none; b=B2ytG3VCa5q90C6mYi7RHlKPc3j7Dqc32eiuRlOUvLwWfrlZkHRgEhn6zgolWhhYKXccbfk0csCwQLp+jD53N/SHxMdR2aQqxyjZUd7iq3uGObQWWsGchBYBu6nmJwdnaDFXZuOnPBQR/mjwrCYtAUUhwMTqGtzOJ7n+maEj41Y=
+	t=1709056495; cv=none; b=X8POIkx6kUwzzivaDs9A42mmodMtvCNmdaobgIPq2EGl5xiILH+2KZubntKdvnfKVdDXUQEuaEPtKS/VD/HT/B7t9eUZaHLcuzgoV72+2J7t9I9u6fpYK8C91vrzcnaLca1sHdwy7D9v1x/1E2Uhuo/o8KQuC4hwQ5lwVSPtHXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709056450; c=relaxed/simple;
-	bh=1etYNDmLTWxNyg10zfJWNbs2cfMwZwiwQn+hYpS/F+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g76QOGph1M7G/+CuIQs8zOMEGgX8DPWpgOJjuu44Rnck1lTUugwZ6FXjWHIuBYWIooBoq9FHUOmMVxIG0ZzVeL8GYX5tAFTP2vVUbt6VHYckC1Gv3xhDBkUpHSLSfvTd7Monrf1vnk8K1LKkvESoC43uRkx2XoMPFw8sJXVATjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=j8zkpGOh; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709056495; c=relaxed/simple;
+	bh=VUAaY8wxXr5bUffmJpFRqHV2oMwBf/vlf3I5G3UUTGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JHLyqNq7cui4VhHOZY3coagXGLRl3ICIwA3EaPBAXOiRkkwqq7epBDez/fbcPZG/zCn6XUdFYyhNf12lAOx/zq6f/GoS/fZgE5bY5yj22154Y1tsl7garJFVN2aLzV8OKNV0nj5RBzuMkouliO+ER5Cc2CamQsOx2BB9+LphNM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=TZyWEU8Y; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="j8zkpGOh"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E2071E000B;
-	Tue, 27 Feb 2024 17:54:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709056444;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=21cuP1kPkHgR667NVftezAjAjOqX7I5o+V+rsAaRLm8=;
-	b=j8zkpGOhPoabixKtsBz4NwB8zrF8LSq98jzjlfJDYVLRQk5g4KdhPQ3rNj5koxQ0eU5ZMa
-	C6hpiGriiyg0c926yW3Wsu5MlBaHQortZ83A9jDgtQ962j9nyQebonjxrH2dky5jNNczzt
-	IbDWEKPMaWkZM3nEDDOimLvhoGvLbujKx19P+PiWawGRiNMLmd7XE7rVHuQAVM+/jSxWU3
-	ZnrDBR1NKYMQK4au/qJbGtKTU8O7RKhMm8sj5TRsZSWdKN8TktBfaHc9M0dotj5votzekZ
-	4iHz6BNY8c76T4iVTkz0BZ7LrL+Ppx5JqQMROVNF2/7RtINNGipd7DTclxnfYA==
-Date: Tue, 27 Feb 2024 18:54:02 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: Saravana Kannan  <saravanak@google.com>, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Nuno Sa  <nuno.sa@analog.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand
- <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen
- <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini
- <stefano.stabellini@xilinx.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Android Kernel Team
- <kernel-team@android.com>
-Subject: Re: [PATCH 2/2] of: overlay: Synchronize of_overlay_remove() with
- the devlink removals
-Message-ID: <20240227185402.57a3b924@bootlin.com>
-In-Reply-To: <86f2262d059db84070745e299d96dde3e6078220.camel@gmail.com>
-References: <20231130174126.688486-1-herve.codina@bootlin.com>
-	<20231130174126.688486-3-herve.codina@bootlin.com>
-	<CAGETcx_zB95nyTpi-_kYW_VqnPqMEc8mS9sewSwRNVr0x=7+kA@mail.gmail.com>
-	<20240227162422.76a00f11@bootlin.com>
-	<86f2262d059db84070745e299d96dde3e6078220.camel@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="TZyWEU8Y"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5e4613f2b56so3154489a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:54:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709056493; x=1709661293; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kIdksP1jXgRqd1isvnR0Pk+ChLgtGPiZTFxnnPSsol0=;
+        b=TZyWEU8YoReS0giYCuMX1yk0jFICaJG4jcTNykPXsJyGXS0HB3e575BABK55a37ndj
+         RA9Jq1AZc9Fo0YiGhRES7wMMw1hd5DMFGHQmIbl+3dISOBQtnNoB1PIF0EwBR3Q4ud2U
+         OgUK7jkuXJnp3DaEEKtIqz8fwdYV34vv3uC4+Vykw0v/ZxuLe28u5alurmnyQyn44Lq8
+         SRgnrLEBF004FrIBQTzf3vQhDgxTy0TPu45xbgUTU1pqjb8FghAmkNybbnnA0NFBTSfS
+         +lGFOD9+hnorDVSbGrGzyNybkSBySiIWJ8WSecbsgA7IpVJR2kdD8lNv7Y1XqBwsAeaI
+         JMEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709056493; x=1709661293;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kIdksP1jXgRqd1isvnR0Pk+ChLgtGPiZTFxnnPSsol0=;
+        b=CVEoyd7TxUxl4z6L14UVzYIqnPo2jENwt3yuGtN6gV0Y0e1MjojuFsemztX7kznJuk
+         COGBT3YVx6NVuJc46cOs5++tVDi9B1uQ5ebm205IFuncGQZ0jB153cp90Gtvn4F8ucMb
+         3xcEuXwlOqXocdVHclpDmfefYrR3cJFvyWY9sd3wCsOUEaO8yFFLndoH/dNwjkQHAkBe
+         oT7OCi2DhIpepCHRuN9Vpw8o7tIS5n+K4fheee8khIuzm7sNzZd/5UOXx4O4piYw0Y7U
+         rKuPIyyoRSgJm1JlimpGR4+9YUKuC2G0cxqsU0aHgRn3yjcH7h3wSnmew1kEfHs7ehk8
+         97UA==
+X-Forwarded-Encrypted: i=1; AJvYcCWK6hy72TfFfR1m8obpbDnyyYuG3n9nSpPo3gTPAXmNmqFK5bxN0YCU+S7Sf+o2miTDzwOskeLgAJl4SYqrz4o3BW4erNO4v1qMaeey
+X-Gm-Message-State: AOJu0YwGG80xeIcmAEkMlsW9fSMWYqLSoYEgh/LXE0vZ1vMk2rEKG76S
+	Eq1zlx25xn6A/rrI73KgbavNPxwu66JnGKzdbHMdRkc9Y5lUE5het+ikaIg9JYk=
+X-Google-Smtp-Source: AGHT+IFz6f/uoaRRDlAo9FUesEjMdjsM1i3WorOHOm7Rgb/Bu93+PnLqfHQ9b5gv518bhE6IEAiu6A==
+X-Received: by 2002:a17:90a:6f01:b0:299:75aa:8949 with SMTP id d1-20020a17090a6f0100b0029975aa8949mr7822691pjk.22.1709056493179;
+        Tue, 27 Feb 2024 09:54:53 -0800 (PST)
+Received: from ghost (mobile-166-137-160-039.mycingular.net. [166.137.160.39])
+        by smtp.gmail.com with ESMTPSA id n15-20020a17090ade8f00b002995e9aca72sm6856207pjv.29.2024.02.27.09.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 09:54:52 -0800 (PST)
+Date: Tue, 27 Feb 2024 09:54:49 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+	Guenter Roeck <linux@roeck-us.net>,
+	David Laight <David.Laight@aculab.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Helge Deller <deller@gmx.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Parisc List <linux-parisc@vger.kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v10] lib: checksum: Use aligned accesses for ip_fast_csum
+ and csum_ipv6_magic tests
+Message-ID: <Zd4h6ZhvLSWfWJG/@ghost>
+References: <e11fea7a-e99e-4539-a489-0aa145ee65f0@roeck-us.net>
+ <ZdzPgSCTntY7JD5i@shell.armlinux.org.uk>
+ <ZdzZ5tk459bgUrgz@ghost>
+ <ZdzhRntTHApp0doV@shell.armlinux.org.uk>
+ <b13b8847977d4cfa99b6a0c9a0fcbbcf@AcuMS.aculab.com>
+ <Zd0b8SDT8hrG/0yW@ghost>
+ <cdd09f7a-83b2-41ba-a32c-9886dd79c43e@roeck-us.net>
+ <9b4ce664-3ddb-4789-9d5d-8824f9089c48@csgroup.eu>
+ <Zd25XWTkDPuIjpF8@shell.armlinux.org.uk>
+ <c8ddcc98-acb0-4d2d-828a-8dd12e771b5f@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+In-Reply-To: <c8ddcc98-acb0-4d2d-828a-8dd12e771b5f@csgroup.eu>
 
-Hi Nuno,
-
-On Tue, 27 Feb 2024 17:55:07 +0100
-Nuno Sá <noname.nuno@gmail.com> wrote:
-
-> On Tue, 2024-02-27 at 16:24 +0100, Herve Codina wrote:
-> > Hi Saravana, Luca, Nuno,
-> > 
-> > On Tue, 20 Feb 2024 16:37:05 -0800
-> > Saravana Kannan <saravanak@google.com> wrote:
-> > 
-> > ...
-> >   
-> > > > 
-> > > > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> > > > index a9a292d6d59b..5c5f808b163e 100644
-> > > > --- a/drivers/of/overlay.c
-> > > > +++ b/drivers/of/overlay.c
-> > > > @@ -1202,6 +1202,12 @@ int of_overlay_remove(int *ovcs_id)
-> > > >                 goto out;
-> > > >         }
-> > > > 
-> > > > +       /*
-> > > > +        * Wait for any ongoing device link removals before removing some of
-> > > > +        * nodes
-> > > > +        */
-> > > > +       device_link_wait_removal();
-> > > > +    
-> > > 
-> > > Nuno in his patch[1] had this "wait" happen inside
-> > > __of_changeset_entry_destroy(). Which seems to be necessary to not hit
-> > > the issue that Luca reported[2] in this patch series. Is there any
-> > > problem with doing that?
-> > > 
-> > > Luca for some reason did a unlock/lock(of_mutex) in his test patch and
-> > > I don't think that's necessary.  
-> > 
-> > I think the unlock/lock in Luca's case and so in Nuno's case is needed.
-> > 
-> > I do the device_link_wait_removal() wihout having the of_mutex locked.
-> > 
-> > Now, suppose I do the device_link_wait_removal() call with the of_mutex locked.
-> > The following flow is allowed and a deadlock is present.
-> > 
-> > of_overlay_remove()
-> >   lock(of_mutex)
-> >      device_link_wait_removal()
-> > 
-> > And, from the workqueue jobs execution:
-> >   ...
-> >     device_put()
-> >       some_driver->remove()
-> >         of_overlay_remove() <--- The job will never end.
-> >                                  It is waiting for of_mutex.
-> >                                  Deadlock
-> >   
+On Tue, Feb 27, 2024 at 11:32:19AM +0000, Christophe Leroy wrote:
 > 
-> We may need some input from Saravana (and others) on this. I might be missing
-> something but can a put_device() lead into a driver remove callback? Driver code is
-> not device code and put_device() leads to device_release() which will either call the
-> device ->release(), ->type->release() or the class ->dev_release(). And, IMO, calling
-> of_overlay_remove() or something like that (like something that would lead to
-> unbinding a device from it's driver) in a device release callback would be at the
-> very least very questionable. Typically, what you see in there is of_node_put() and
-> things like kfree() of the device itself or any other data.
+> 
+> Le 27/02/2024 � 11:28, Russell King (Oracle) a �crit�:
+> > On Tue, Feb 27, 2024 at 06:47:38AM +0000, Christophe Leroy wrote:
+> >>
+> >>
+> >> Le 27/02/2024 � 00:48, Guenter Roeck a �crit�:
+> >>> On 2/26/24 15:17, Charlie Jenkins wrote:
+> >>>> On Mon, Feb 26, 2024 at 10:33:56PM +0000, David Laight wrote:
+> >>>>> ...
+> >>>>>> I think you misunderstand. "NET_IP_ALIGN offset is what the kernel
+> >>>>>> defines to be supported" is a gross misinterpretation. It is not
+> >>>>>> "defined to be supported" at all. It is the _preferred_ alignment
+> >>>>>> nothing more, nothing less.
+> >>>>
+> >>>> This distinction is arbitrary in practice, but I am open to being proven
+> >>>> wrong if you have data to back up this statement. If the driver chooses
+> >>>> to not follow this, then the driver might not work. ARM defines the
+> >>>> NET_IP_ALIGN to be 2 to pad out the header to be on the supported
+> >>>> alignment. If the driver chooses to pad with one byte instead of 2
+> >>>> bytes, the driver may fail to work as the CPU may stall after the
+> >>>> misaligned access.
+> >>>>
+> >>>>>
+> >>>>> I'm sure I've seen code that would realign IP headers to a 4 byte
+> >>>>> boundary before processing them - but that might not have been in
+> >>>>> Linux.
+> >>>>>
+> >>>>> I'm also sure there are cpu which will fault double length misaligned
+> >>>>> memory transfers - which might be used to marginally speed up code.
+> >>>>> Assuming more than 4 byte alignment for the IP header is likely
+> >>>>> 'wishful thinking'.
+> >>>>>
+> >>>>> There is plenty of ethernet hardware that can only write frames
+> >>>>> to even boundaries and plenty of cpu that fault misaligned accesses.
+> >>>>> There are even cases of both on the same silicon die.
+> >>>>>
+> >>>>> You also pretty much never want a fault handler to fixup misaligned
+> >>>>> ethernet frames (or really anything else for that matter).
+> >>>>> It is always going to be better to check in the code itself.
+> >>>>>
+> >>>>> x86 has just made people 'sloppy' :-)
+> >>>>>
+> >>>>>  ����David
+> >>>>>
+> >>>>> -
+> >>>>> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,
+> >>>>> MK1 1PT, UK
+> >>>>> Registration No: 1397386 (Wales)
+> >>>>>
+> >>>>
+> >>>> If somebody has a solution they deem to be better, I am happy to change
+> >>>> this test case. Otherwise, I would appreciate a maintainer resolving
+> >>>> this discussion and apply this fix.
+> >>>>
+> >>> Agreed.
+> >>>
+> >>> I do have a couple of patches which add explicit unaligned tests as well as
+> >>> corner case tests (which are intended to trigger as many carry overflows
+> >>> as possible). Once I get those working reliably, I'll be happy to submit
+> >>> them as additional tests.
+> >>>
+> >>
+> >> The functions definitely have to work at least with and without VLAN,
+> >> which means the alignment cannot be greater than 4 bytes. That's also
+> >> the outcome of the discussion.
+> > 
+> > Thanks for completely ignoring what I've said. No. The alignment ends up
+> > being commonly 2 bytes.
+> > 
+> > As I've said several times, network drivers do _not_ have to respect
+> > NET_IP_ALIGN. There are 32-bit ARM drivers which have a DMA engine in
+> > them which can only DMA to a 32-bit aligned address. This means that
+> > the start of the ethernet header is placed at a 32-bit aligned address
+> > making the IP header misaligned to 32-bit.
+> > 
+> > I don't see what is so difficult to understand about this... but it
+> > seems that my comments on this are being ignored time and time again,
+> > and I can only think that those who are ignoring my comments have
+> > some alterior motive here.
+> > 
+> 
+> I'm sorry for this misunderstanding. I'm not ignoring what you said at 
+> all. I understood that ARM is able to handle unaligned accesses with 
+> some exception handlers at worst case and that DMA constraints may lead 
+> to the IP header beeing on a 2 bytes alignment only.
+> 
+> However I also understood from others that some architectures can't 
+> handle such a 2 bytes only alignments.
+> 
+> It's been suggested during the discussion that alignment tests should be 
+> added later in a follow-up patch. So for the time being I'm trying to 
+> find a compromise and get the existing tests working on all platforms 
+> but with a smaller alignment than the 16-bytes alignment brought by 
+> Charlie's v10 patch. And a 4 bytes alignment seemed to me to be a good 
+> compromise for this fix. The idea is also to make the fix as minimal as 
+> possible, unlike Charlie's patch that is churning up the tests quite 
+> heavily.
 
-I think that calling of_overlay_remove() in a device release callback makes
-sense. The overlay is used to declare sub-nodes from the device node. It
-does not add/remove the device node itself but sub-nodes.
+Do you have a list of platforms this is failing on? I haven't seen any
+reports that haven't been fixed.
 
-The use case is the use of DT overlays to describe PCI devices.
-https://lore.kernel.org/all/1692120000-46900-1-git-send-email-lizhi.hou@amd.com/
-https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
---- 8< ---
-The lan966x SoCs can be used in two different ways:
-
- - It can run Linux by itself, on ARM64 cores included in the SoC. This
-   use-case of the lan966x is currently being upstreamed, using a
-   traditional Device Tree representation of the lan996x HW blocks [1]
-   A number of drivers for the different IPs of the SoC have already
-   been merged in upstream Linux.
-
- - It can be used as a PCIe endpoint, connected to a separate platform
-   that acts as the PCIe root complex. In this case, all the devices
-   that are embedded on this SoC are exposed through PCIe BARs and the
-   ARM64 cores of the SoC are not used. Since this is a PCIe card, it
-   can be plugged on any platform, of any architecture supporting PCIe.
---- 8< ---
-
-This quite long story led to DT overlay support for PCI devices and so the
-unittest I mentioned:
-  https://elixir.bootlin.com/linux/v6.8-rc6/source/drivers/of/unittest.c#L3946
-
-
-So, I have a PCI driver that bind to the lan966x PCI board.
-This driver loads an overlay at probe() and unload it at remove().
-Also, this driver can be module. A simple rmmod leads to the remove() call.
-
-This driver is not yet upstream because I haven't yet fixed all the issues I
-encountered that's why of now, I can point only the unittest related to overlay
-support for PCI.
+- Charlie
 
 > 
-> The driver remove callback should be called when unbinding the device from it's
-> drivers and devlinks should also be removed after device_unbind_cleanup() (i.e, after
-> the driver remove callback).
-> 
-> Having said the above, the driver core has lots of subtleties so, again, I can be
-> missing something. But at this point I'm still not seeing any deadlock...
-> 
-
-I gave a wrong example.
-Based on Luca's sequence he gave in
-  https://lore.kernel.org/all/20231220181627.341e8789@booty/
-
-We can have the following: 
-
---- 8< ---
-int of_overlay_remove(int *ovcs_id)
-{
-    ...
-
-    device_link_wait_removal(); // proposed by this patch series
-
-    mutex_lock(&of_mutex);
-
-    ...
-
-    ret = __of_changeset_revert_notify(&ovcs->cset);
-    // this ends up calling (excerpt from a long stack trace):
-    // -> of_i2c_notify
-    // -> device_remove
-    // -> devm_regulator_release
-    // -> device_link_remove
-    // -> devlink_dev_release, which queues work for
-    //      device_link_release_fn, which in turn calls:
-    //      -> device_put
-    //      -> device_release
-    //      -> {platform,regulator,...}_dev*_release
-    //      -> of_node_put() [**]
-
-    ...
-
-    free_overlay_changeset(ovcs);
-    // calls:
-    // -> of_changeset_destroy
-    // -> __of_changeset_entry_destroy
-    // -> pr_err("ERROR: memory leak, expected refcount 1 instead of %d...
-    // The error appears or not, based on when the workqueue runs
-
-err_unlock:
-    mutex_unlock(&of_mutex);
-
-    ...
-}
---- 8< ---
-
-I think, on your side, you can have something similar.
-I was wrong (sorry for my mistake). the problem is not device_put() but
-device_remove().
-
-In my deadlog example, s/device_put()/device_remove()/
-
-Regards,
-Hervé
-
--- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> But maybe I misunderstood some of the discussion and indeed 2 bytes 
+> alignment would work on all platforms and only an odd alignment is 
+> problematic ?
