@@ -1,204 +1,141 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4703D17F8
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D3B1847;
+	Tue, 27 Feb 2024 00:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708995379; cv=none; b=KcV4/9W8SdnNeIVcvn4iaiMop0sd6G+pleNtcc2nIUal5gCElIFcjp4LVnGUaB7VOuXcShmbXmxl3xxjPbZUGhKD1AEIEH2FyhTdd9GHIKmEhjh9CcagjnLFcOF6UlM3wx7y4kyCzgIaX05yBx02Nn+rTo6WPjSH9oFv1P6mWRE=
+	t=1708995422; cv=none; b=DJ1nxYHXR/YboqfVBw49IpB5Spuf7D1Kl9FD6lmmytA6EsnX7cu5KN+sEsLNuWIo/gm5rhixa+HWHHY2OURQHCyxEermxg2uTPiMq91mJ3aBqUUlp55otmLVn9XrGCyRjAWmQfr8ttbb4oT9RiSE4zsYu6bhLLTTm363ouLZHKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708995379; c=relaxed/simple;
-	bh=GnasIGrmbP27zJ4MU+qdHIvvAAtB3198K396jnP6TQA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=jbJeJpvDIgO75SXZoSPsoxiCY8BW2uYqjGb0sV1wSIIbJiB5AZccLIOUDb7kzsnGwW2VQXunofFFbGyllmVPwq6/iL47DLdI81Zu8sI4LS0wnmGlFZURG9xrQGI6C4XO7YUgDbJRImxWd/qkqaho/8jgW+3AhjxOmhgAJtPQoLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7c0088dc494so243644439f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:56:18 -0800 (PST)
+	s=arc-20240116; t=1708995422; c=relaxed/simple;
+	bh=Rpstasz6qy5asuH/ldMOofvDaUhuD9+siwLcWOuJaC4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rh2SAKE0WziPvEOJTU9H1t6rmLKKrq0eHb0t9SxzDMcK/rf3bT5v9IMRKXXom2PbBn3OzLk3WGeu1JDnYdYwOH97vDNqun2EZuAy1l58GQnbmtTpKsTbpfK/ZdiXV4/PF6issGXOlPIryOh+Lnbh/GFW7SE0XBC46Ebf08dJGEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eXa000Oz; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXa000Oz"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5d3912c9a83so2799247a12.3;
+        Mon, 26 Feb 2024 16:57:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708995420; x=1709600220; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rWOqPITH8/D/rm9Piee283eHAkgF3ezgjvokn+PRZ8I=;
+        b=eXa000OzWsZE9/wtEOwGV3tJ2cQMYFnuFqQZtNT1kjEseq7uQllk9GKpzTlr0SY1jZ
+         nxhbfti5T9wClU6/nXktvR22QOkeVmzqnljQ156GfGA1kMibTPTJTI8ffLdiugIQVUo6
+         2FR/dhpvoy5pGU07x9ZZ8dl/zU8Js7yZikJ8R3/vRofnJQ3NfJMcn9fOuJseH2grK9bM
+         teb90nWYgQQZCOWg30S3egblVkr76UgM3A6UWQiFuJis2ub6RflCuF+vfby/L7ZLD69z
+         nKxeb3TQj1+DgM5x3k2WG0CAkMqGH5f0T7cQtUyy8zeBxcXiZaQpK/QF4DeAjij1MMO0
+         gK/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708995377; x=1709600177;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hGS+TsgiaJJB+YR8NChc905gWzRgJqAKHS8Fgnayr7Q=;
-        b=W+uJphD9R0igve6XclNi+BW9kDBASecNIHIG7F44EqnqkYy+fIyAtdsbosD9zZQHX8
-         2jU4vKr0jImim0TGE9dt3JlXBY8vRhnGbKzWHQMc9oDAxALzwfK7hfSoEpwOo6ch55ZG
-         a77YplBBSo1bJhxwqRV908j8+Ur0L7f38zSpkVVVt4K/X271KOD4kWDMwPY/FE3kp6Dp
-         OB71Z7CL5SfJgZ35BO/jLIAuddaigona1cS1cOG0LhWMB7gJrHmjkqvERm+x7Ed5kV8x
-         48geIRnj337mwK3S7L/P4YoHyNuvtrR7vBkbvNhkxhqrvK3TthxmnEB0uHtZCwfHAFKS
-         Urpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPplNZNu6J6v65a18m3nKFvT7p9nBCLNjd6e2GN4ynObzcTvvJsAj5RZ+Bbt0WGupKj/eWQhvRbDLLwNyhaDJZm1CTkDFHDf5WWaP1
-X-Gm-Message-State: AOJu0YwLGslFlOmciaONNok/StM9Xr/fmf0YiZIAFaoPI9LjcRfHi4rk
-	dFc1fIeDcoY22vgNJBVwcO8285KzpF5+3MVhPCacGl8DDpxdC/STDzAcvu5D8OzZq97kUKYulzS
-	tjVJeTLrjSUbL6RTut5JT70uGWiqmuj3cZRRFeFYBJjA/1gOSs/r8JQQ=
-X-Google-Smtp-Source: AGHT+IFibvy0HGfjK3AZXWzszHJz5KeM8HEX+Rxvjkem2/PuwSGEwNBwChjEBm3f99nfHReI8DxFZCj8O15rYvZWT1wvvUnO4QjO
+        d=1e100.net; s=20230601; t=1708995420; x=1709600220;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rWOqPITH8/D/rm9Piee283eHAkgF3ezgjvokn+PRZ8I=;
+        b=fksBdRnz8dYfkTMF2gN2szYukT0deK2s6i8Al4JyMDYEhPdPRemNtcUSsGGCt4Tmvo
+         ftCbCMhtk0JnITpnjH8rr14E9eHXXGhoI2lbq9cd2BAWLPXW7uDqkZwT+Xl4qxzmT+g5
+         Dwl20MT/xfF138whXPqh/2sn13sTofMATbf+t0/yKWnNlChPtDoezwp0jWuqq7oSztSp
+         5ZX+UJi96ibEEgVgLKTyEyKTyGfBSoNlFJUwggkpR2odqneJHKmAg7HDaJ9xvEOTet43
+         lOHNEoUzwKc305WbsQ2H9omUmpRx7NORg9UZImVGFddO/6NEvaNfemDcQPXnHS7yFXVe
+         E4Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCX2vRgl2f6G4oCa3cwPVlbALa1yHd9PeSF69FtQVAYj7Qi7p4EltHmVMYeoztVY4hT6oG85rm+FXTUCyWvvKJoeSqjyAqYbUsYxz+5LcCwIZRLKGsF3bYqxab734grzerLVyNyTmoUTcIA5pkFqhVDMEI50nPgPw3MyFYRHjFL65MqqNA==
+X-Gm-Message-State: AOJu0Yzh6veWx0gwexfm/S+2HorhC5qtWBtsTHiODgrlTo/ptHNBS2PR
+	MG4mneLdAuUhr8xLj/mhTjYdMtxXPecwVd9K9GbZU4YxH+nnjE/G
+X-Google-Smtp-Source: AGHT+IFi5e/RLc/BtrFNtrv1ceMqXDqLPgjk0Fze9Pvw/xHtkjf+4uFWRAv/dagnTOmwpr9Lwd2C2A==
+X-Received: by 2002:a17:902:f690:b0:1dc:5dc0:9ba with SMTP id l16-20020a170902f69000b001dc5dc009bamr9461638plg.26.1708995419555;
+        Mon, 26 Feb 2024 16:56:59 -0800 (PST)
+Received: from hcdev-d520mt2.. (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id t12-20020a170902e84c00b001db3361bc1dsm289253plg.102.2024.02.26.16.56.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 16:56:59 -0800 (PST)
+From: baneric926@gmail.com
+X-Google-Original-From: kcfeng0@nuvoton.com
+To: jdelvare@suse.com,
+	linux@roeck-us.net,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net
+Cc: linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	openbmc@lists.ozlabs.org,
+	kwliu@nuvoton.com,
+	kcfeng0@nuvoton.com,
+	DELPHINE_CHIU@wiwynn.com,
+	Bonnie_Lo@wiwynn.com,
+	naresh.solanki@9elements.com,
+	billy_tsai@aspeedtech.com
+Subject: [PATCH v4 0/3] hwmon: Driver for Nuvoton NCT7363Y
+Date: Tue, 27 Feb 2024 08:56:03 +0800
+Message-Id: <20240227005606.1107203-1-kcfeng0@nuvoton.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2b24:b0:474:7fd9:6bf7 with SMTP id
- fm36-20020a0566382b2400b004747fd96bf7mr130994jab.4.1708995377537; Mon, 26 Feb
- 2024 16:56:17 -0800 (PST)
-Date: Mon, 26 Feb 2024 16:56:17 -0800
-In-Reply-To: <0000000000000946190610bf7bd5@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000066a91a0612527e6d@google.com>
-Subject: Re: [syzbot] [dri?] [media?] inconsistent lock state in valid_state (2)
-From: syzbot <syzbot+a225ee3df7e7f9372dbe@syzkaller.appspotmail.com>
-To: christian.koenig@amd.com, dri-devel@lists.freedesktop.org, 
-	gustavo@padovan.org, linaro-mm-sig-bounces@lists.linaro.org, 
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, sumit.semwal@linaro.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+From: Ban Feng <kcfeng0@nuvoton.com>
 
-HEAD commit:    d206a76d7d27 Linux 6.8-rc6
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=12eea106180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fad652894fc96962
-dashboard link: https://syzkaller.appspot.com/bug?extid=a225ee3df7e7f9372dbe
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1537934a180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1704b3e2180000
+NCT7363Y is an I2C based hardware monitoring chip from Nuvoton.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6fa98109295d/disk-d206a76d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/613b4087d09d/vmlinux-d206a76d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d8cd6514daf9/bzImage-d206a76d.xz
+Changes since version 3:
+- Cherry-pick the fan-common.yaml in [1]
+- Fix "checkpatch --strict" report
+- Replace BIT_CHECK() with BIT()
+- Fix CamelCase defines or variables
+- Drop enum chips
+- Drop all local caching and just read values through regmap
+- Drop chip auto-detection since it increases boot time
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a225ee3df7e7f9372dbe@syzkaller.appspotmail.com
+[1]: https://patchwork.kernel.org/project/linux-hwmon/patch/
+     20240221104025.1306227-2-billy_tsai@aspeedtech.com/
 
-================================
-WARNING: inconsistent lock state
-6.8.0-rc6-syzkaller #0 Not tainted
---------------------------------
-inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
-syz-executor120/5070 [HC1[1]:SC0[0]:HE0:SE1] takes:
-ffffffff8ea8cd18 (sync_timeline_list_lock){?.+.}-{2:2}, at: sync_timeline_debug_remove+0x2c/0x150 drivers/dma-buf/sync_debug.c:31
-{HARDIRQ-ON-W} state was registered at:
-  trace_hardirqs_on+0x28/0x40 kernel/trace/trace_preemptirq.c:61
-  __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:159 [inline]
-  _raw_spin_unlock_irq+0x23/0x50 kernel/locking/spinlock.c:202
-  spin_unlock_irq include/linux/spinlock.h:401 [inline]
-  sync_print_obj drivers/dma-buf/sync_debug.c:118 [inline]
-  sync_info_debugfs_show+0x158/0x4d0 drivers/dma-buf/sync_debug.c:153
-  seq_read_iter+0x445/0xd60 fs/seq_file.c:230
-  seq_read+0x3a3/0x4f0 fs/seq_file.c:162
-  vfs_read+0x204/0xb70 fs/read_write.c:474
-  ksys_read+0x1a0/0x2c0 fs/read_write.c:619
-  do_syscall_64+0xf9/0x240
-  entry_SYSCALL_64_after_hwframe+0x6f/0x77
-irq event stamp: 9608
-hardirqs last  enabled at (9607): [<ffffffff8b71f113>] __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:159 [inline]
-hardirqs last  enabled at (9607): [<ffffffff8b71f113>] _raw_spin_unlock_irq+0x23/0x50 kernel/locking/spinlock.c:202
-hardirqs last disabled at (9608): [<ffffffff8b66faee>] sysvec_irq_work+0xe/0xb0 arch/x86/kernel/irq_work.c:17
-softirqs last  enabled at (9124): [<ffffffff81592641>] invoke_softirq kernel/softirq.c:427 [inline]
-softirqs last  enabled at (9124): [<ffffffff81592641>] __irq_exit_rcu+0xf1/0x1c0 kernel/softirq.c:632
-softirqs last disabled at (9119): [<ffffffff81592641>] invoke_softirq kernel/softirq.c:427 [inline]
-softirqs last disabled at (9119): [<ffffffff81592641>] __irq_exit_rcu+0xf1/0x1c0 kernel/softirq.c:632
+Changes since version 2:
+- Cherry-pick the fan-common.yaml in [1]
+- Fix nct736x typo and add unevaluatedProperties
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
+[1]: https://patchwork.kernel.org/project/linux-hwmon/patch/
+     20231107105025.1480561-2-billy_tsai@aspeedtech.com/
 
-       CPU0
-       ----
-  lock(sync_timeline_list_lock);
-  <Interrupt>
-    lock(sync_timeline_list_lock);
+Changes since version 1:
+- Modify NCT736X(nct736x) to NCT7363Y(nct7363)
+- Convert to devm_hwmon_device_register_with_info API
+- All ID tables are next to each other and should be consistent
+  between i2c_device_id and of_device_id
+- Ref. fan-common.yaml and modify properties (nuvoton,pwm-mask/
+  nuvoton,fanin-mask) to (pwms/tach-ch)
+- Convert to devm_regmap_init_i2c API
+- Remove unused function (watchdog timer)
+- Fix uninitialized symbol which is reported by kernel test robot
 
- *** DEADLOCK ***
+Ban Feng (2):
+  dt-bindings: hwmon: Add NCT7363Y documentation
+  hwmon: Driver for Nuvoton NCT7363Y
 
-no locks held by syz-executor120/5070.
+Naresh Solanki (1):
+  dt-bindings: hwmon: fan: Add fan binding to schema
 
-stack backtrace:
-CPU: 0 PID: 5070 Comm: syz-executor120 Not tainted 6.8.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
- valid_state+0x13a/0x1c0 kernel/locking/lockdep.c:4013
- mark_lock_irq+0xbb/0xc20 kernel/locking/lockdep.c:4216
- mark_lock+0x223/0x350 kernel/locking/lockdep.c:4678
- mark_usage kernel/locking/lockdep.c:4564 [inline]
- __lock_acquire+0xb8d/0x1fd0 kernel/locking/lockdep.c:5091
- lock_acquire+0x1e3/0x530 kernel/locking/lockdep.c:5754
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
- sync_timeline_debug_remove+0x2c/0x150 drivers/dma-buf/sync_debug.c:31
- sync_timeline_free drivers/dma-buf/sw_sync.c:125 [inline]
- kref_put include/linux/kref.h:65 [inline]
- sync_timeline_put drivers/dma-buf/sw_sync.c:137 [inline]
- timeline_fence_release+0x204/0x250 drivers/dma-buf/sw_sync.c:165
- kref_put include/linux/kref.h:65 [inline]
- dma_fence_put include/linux/dma-fence.h:297 [inline]
- dma_fence_array_release+0x13e/0x240 drivers/dma-buf/dma-fence-array.c:120
- irq_work_single+0xe1/0x240 kernel/irq_work.c:221
- irq_work_run_list kernel/irq_work.c:252 [inline]
- irq_work_run+0x18b/0x350 kernel/irq_work.c:261
- __sysvec_irq_work+0xa8/0x3e0 arch/x86/kernel/irq_work.c:22
- sysvec_irq_work+0x8f/0xb0 arch/x86/kernel/irq_work.c:17
- </IRQ>
- <TASK>
- asm_sysvec_irq_work+0x1a/0x20 arch/x86/include/asm/idtentry.h:674
-RIP: 0010:__raw_spin_unlock_irq include/linux/spinlock_api_smp.h:160 [inline]
-RIP: 0010:_raw_spin_unlock_irq+0x29/0x50 kernel/locking/spinlock.c:202
-Code: 90 f3 0f 1e fa 53 48 89 fb 48 83 c7 18 48 8b 74 24 08 e8 da 4b ff f5 48 89 df e8 92 8b 00 f6 e8 ad aa 28 f6 fb bf 01 00 00 00 <e8> 62 5c f2 f5 65 8b 05 e3 cd 91 74 85 c0 74 06 5b c3 cc cc cc cc
-RSP: 0018:ffffc90003a87b50 EFLAGS: 00000282
-RAX: 9ede7a61d4cee000 RBX: ffff888015fb5f30 RCX: ffffffff94485303
-RDX: dffffc0000000000 RSI: ffffffff8baab640 RDI: 0000000000000001
-RBP: ffff88807f87c63c R08: ffffffff8f8568af R09: 1ffffffff1f0ad15
-R10: dffffc0000000000 R11: fffffbfff1f0ad16 R12: ffff888015fb5f20
-R13: ffff88807f87c600 R14: dffffc0000000000 R15: ffff888015fb5ee0
- spin_unlock_irq include/linux/spinlock.h:401 [inline]
- sw_sync_debugfs_release+0x14b/0x1d0 drivers/dma-buf/sw_sync.c:359
- __fput+0x429/0x8a0 fs/file_table.c:376
- task_work_run+0x24e/0x310 kernel/task_work.c:180
- exit_task_work include/linux/task_work.h:38 [inline]
- do_exit+0xa2c/0x2740 kernel/exit.c:871
- do_group_exit+0x206/0x2c0 kernel/exit.c:1020
- __do_sys_exit_group kernel/exit.c:1031 [inline]
- __se_sys_exit_group kernel/exit.c:1029 [inline]
- __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1029
- do_syscall_64+0xf9/0x240
- entry_SYSCALL_64_after_hwframe+0x6f/0x77
-RIP: 0033:0x7fb8001b9f39
-Code: Unable to access opcode bytes at 0x7fb8001b9f0f.
-RSP: 002b:00007ffdaf45d478 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 000000000000000
-----------------
-Code disassembly (best guess):
-   0:	90                   	nop
-   1:	f3 0f 1e fa          	endbr64
-   5:	53                   	push   %rbx
-   6:	48 89 fb             	mov    %rdi,%rbx
-   9:	48 83 c7 18          	add    $0x18,%rdi
-   d:	48 8b 74 24 08       	mov    0x8(%rsp),%rsi
-  12:	e8 da 4b ff f5       	call   0xf5ff4bf1
-  17:	48 89 df             	mov    %rbx,%rdi
-  1a:	e8 92 8b 00 f6       	call   0xf6008bb1
-  1f:	e8 ad aa 28 f6       	call   0xf628aad1
-  24:	fb                   	sti
-  25:	bf 01 00 00 00       	mov    $0x1,%edi
-* 2a:	e8 62 5c f2 f5       	call   0xf5f25c91 <-- trapping instruction
-  2f:	65 8b 05 e3 cd 91 74 	mov    %gs:0x7491cde3(%rip),%eax        # 0x7491ce19
-  36:	85 c0                	test   %eax,%eax
-  38:	74 06                	je     0x40
-  3a:	5b                   	pop    %rbx
-  3b:	c3                   	ret
-  3c:	cc                   	int3
-  3d:	cc                   	int3
-  3e:	cc                   	int3
-  3f:	cc                   	int3
+ .../devicetree/bindings/hwmon/fan-common.yaml |  78 ++++
+ .../bindings/hwmon/nuvoton,nct7363.yaml       |  63 +++
+ Documentation/hwmon/index.rst                 |   1 +
+ Documentation/hwmon/nct7363.rst               |  33 ++
+ MAINTAINERS                                   |   8 +
+ drivers/hwmon/Kconfig                         |  11 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/nct7363.c                       | 412 ++++++++++++++++++
+ 8 files changed, 607 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/fan-common.yaml
+ create mode 100644 Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
+ create mode 100644 Documentation/hwmon/nct7363.rst
+ create mode 100644 drivers/hwmon/nct7363.c
 
+-- 
+2.34.1
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
