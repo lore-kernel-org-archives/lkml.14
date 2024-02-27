@@ -1,119 +1,148 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D80208BC;
-	Tue, 27 Feb 2024 16:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86CF249EE;
+	Tue, 27 Feb 2024 16:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709051787; cv=none; b=WQMiazr67OJh63CBn1BqX3MLxcTlp6Xi+VncPYcIklnbS4l2rdJ5vHqDf4qMdVrZ1WlKhY0O1c3s9ntH0UqBBg+g4OuRkAk/D6eZeROc/tMArobMLzlQpZUYVLJUHTJ4MxUYLV1WEFwmPp1U3nuPkhw+eWw0ajLMvkh8xSHqdwg=
+	t=1709051790; cv=none; b=FT2kqj2EP9n1PRCdQmzpdpApcuu4e4QFn5Alv4wwQiP33uz0s+iQ0FbEVWE+JH7C2ZeKAFO5ABhskDNSv6KZYxOBoI+EQ8en8Ra6XbAsndYbAMKoU8in75MfoU+D9jaDRAnsae2ymYy0o/Eqh1rtNFYQfohFp+q1agy6TpHOJgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709051787; c=relaxed/simple;
-	bh=56oLOLwk+0gzok5ycHglBLAXhW+Lr4Bu/G6v4VE4XZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UNaLLEWLjdPh7Oo1O6PVarRSUASwYfVnGxBvnwUWN9kxn5V6kUyOxHN2NdpH2+AeNNogkik01JAGsXOGAuWWlJrSu/a6HXkcbDleBmFsLh8FfXJ+Mko84XrXysCchhAF9VHHYYXgvlRWJhpxbOjScryZ1RVkLe97ZXDwEsVCg5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=zKnK8Qvr; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1709051790; c=relaxed/simple;
+	bh=9iq97HWcmCoTBXP6eMMJq8y9Em2ni06xkSEPi2bvfhw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ixM1TeMJqISCSb1zN9w8OaLBIA8MKYdijff6PHuil5JRsxKT0CgEpWJ7E7cJlu1hDzH4Aqo/e7v9lBN5qx844mKsxW60FN4BdArqr5RwQrprdNUnl13+hdxO5kR4YZ5PzLIbQV3VezdW3OXD4CHZy7kym5RjsKuRMbJKXzDUCIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Lk+vdFlk; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="zKnK8Qvr"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4TkjmH6yx6z9t2X;
-	Tue, 27 Feb 2024 17:36:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1709051776;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Lk+vdFlk"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6E59B20007;
+	Tue, 27 Feb 2024 16:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709051786;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jdhs1FEp5gPtmyBg0kWiOrlktwzBd+wjBwP3BuiHBaE=;
-	b=zKnK8QvrJXzjKjS+Q9MFJDjxT+rFc7LPUTwybsZgCYmh+0cbaj2tG/worixAKv8y4aKEDa
-	iOgWAHXgW/GJBVw6WFFvPMLjC3+cSK19SnWLTqzVLTUP+EYJuMp6WPdjWsv1YBY0YnqKho
-	3yhclwkoIJ+zqGRT2z0mt404JkTYzlMcPYUky816izVPVkbWS8TIW2wysjGImlec77RfBx
-	Ue/qAm/QpydURkP6ukM3f7U7LOMgMk4kvy+oIOd1hIbZT5VZo8EtscF44DxTobcl/MQ4aW
-	WMXPXrfJRQM6eIFBPFRoNxhxfsqIrnLZbS50St2ls0iYnh46cBTDgheaM0bmtg==
-Date: Tue, 27 Feb 2024 17:36:09 +0100
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Matthew Wilcox <willy@infradead.org>, linux-xfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, david@fromorbit.com, 
-	chandan.babu@oracle.com, akpm@linux-foundation.org, mcgrof@kernel.org, ziy@nvidia.com, 
-	hare@suse.de, djwong@kernel.org, gost.dev@samsung.com, linux-mm@kvack.org, 
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH 03/13] filemap: align the index to mapping_min_order in
- the page cache
-Message-ID: <aajarho6xwi4sphqirwvukofvqy3cl6llpe5fetomj5sz7rgzp@xo2iqdwingtf>
-References: <20240226094936.2677493-1-kernel@pankajraghav.com>
- <20240226094936.2677493-4-kernel@pankajraghav.com>
- <Zdyi6lFDAHXi8GPz@casper.infradead.org>
- <37kubwweih4zwvxzvjbhnhxunrafawdqaqggzcw6xayd6vtrfl@dllnk6n53akf>
- <hjrsbb34ghop4qbb6owmg3wqkxu4l42yrekshwfleeqattscqp@z2epeibc67lt>
+	bh=1HjaL0N4MQbpBEM8c6K7nKarXSwAV7+wRWAqTEQw6nQ=;
+	b=Lk+vdFlkAOtang21DjVUcPqXZ4xGmhzcxrPvzUf24IYp4biewuQduaZWoOtjhyxNcN62Rr
+	rwxOMoCoIRZX8wclegXOQ76VXTHyjapTr9IsP2t6ODUtGaiqRsLJbUwI44+vvfEXexbb94
+	9/bAnwyQ9P3XE+Euu4f/yR4u4RGs3y9WzvKTTIxXUmjR9YpE0MFyeN/1jw0p+Ze7kGCnuc
+	ldhXELyC5r7hPxbHFBp0ACq9Wy+swSTwc84hn7yW8M/Jmp37LYLF68PK2vHN8r1Z5B0iFn
+	/GIEHqOOyOX3wHmJ4ik/OXScGHoUIg1Cf9QcVlv/TtrPEjZgCwaeT5tqz5m43Q==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Elad Nachman <enachman@marvell.com>, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, andrew@lunn.ch,
+ sebastian.hesselbarth@gmail.com, huziji@marvell.com,
+ ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: enachman@marvell.com
+Subject: Re: [PATCH v2 2/2] arm64: dts: ac5: add mmc node and clock
+In-Reply-To: <20240103172803.1826113-3-enachman@marvell.com>
+References: <20240103172803.1826113-1-enachman@marvell.com>
+ <20240103172803.1826113-3-enachman@marvell.com>
+Date: Tue, 27 Feb 2024 17:36:25 +0100
+Message-ID: <871q8xkgom.fsf@BL-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <hjrsbb34ghop4qbb6owmg3wqkxu4l42yrekshwfleeqattscqp@z2epeibc67lt>
+Content-Type: text/plain
+X-GND-Sasl: gregory.clement@bootlin.com
 
-On Tue, Feb 27, 2024 at 11:22:24AM -0500, Kent Overstreet wrote:
-> On Tue, Feb 27, 2024 at 11:06:37AM +0100, Pankaj Raghav (Samsung) wrote:
-> > On Mon, Feb 26, 2024 at 02:40:42PM +0000, Matthew Wilcox wrote:
-> > > On Mon, Feb 26, 2024 at 10:49:26AM +0100, Pankaj Raghav (Samsung) wrote:
-> > > > From: Luis Chamberlain <mcgrof@kernel.org>
-> > > > 
-> > > > Supporting mapping_min_order implies that we guarantee each folio in the
-> > > > page cache has at least an order of mapping_min_order. So when adding new
-> > > > folios to the page cache we must ensure the index used is aligned to the
-> > > > mapping_min_order as the page cache requires the index to be aligned to
-> > > > the order of the folio.
-> > > 
-> > > This seems like a remarkably complicated way of achieving:
-> > > 
-> > > diff --git a/mm/filemap.c b/mm/filemap.c
-> > > index 5603ced05fb7..36105dad4440 100644
-> > > --- a/mm/filemap.c
-> > > +++ b/mm/filemap.c
-> > > @@ -2427,9 +2427,11 @@ static int filemap_update_page(struct kiocb *iocb,
-> > >  }
-> > >  
-> > >  static int filemap_create_folio(struct file *file,
-> > > -		struct address_space *mapping, pgoff_t index,
-> > > +		struct address_space *mapping, loff_t pos,
-> > >  		struct folio_batch *fbatch)
-> > >  {
-> > > +	pgoff_t index;
-> > > +	unsigned int min_order;
-> > >  	struct folio *folio;
-> > >  	int error;
-> > >  
-> > > @@ -2451,6 +2453,8 @@ static int filemap_create_folio(struct file *file,
-> > >  	 * well to keep locking rules simple.
-> > >  	 */
-> > >  	filemap_invalidate_lock_shared(mapping);
-> > > +	min_order = mapping_min_folio_order(mapping);
-> > > +	index = (pos >> (min_order + PAGE_SHIFT)) << min_order;
-> > 
-> > That is some cool mathfu. I will add a comment here as it might not be
-> > that obvious to some people (i.e me).
-> 
-> you guys are both wrong, just use rounddown()
+Hi Elad Nachman,
 
-Umm, what do you mean just use rounddown? rounddown to ...?
+> From: Elad Nachman <enachman@marvell.com>
+>
+> Add mmc and mmc clock nodes to ac5 and ac5x device tree files
+>
+> Signed-off-by: Elad Nachman <enachman@marvell.com>
 
-We need to get index that are in PAGE units but aligned to min_order
-pages.
+Applied on mvebu/dt64
 
-The original patch did this:
+Thanks,
 
-index = mapping_align_start_index(mapping, iocb->ki_pos >> PAGE_SHIFT);
+Gregory
 
-Which is essentially a rounddown operation (probably this is what you
-are suggesting?).
+> ---
+>  arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi | 31 ++++++++++++++++++-
+>  .../boot/dts/marvell/ac5-98dx35xx-rd.dts      |  4 +++
+>  2 files changed, 34 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi b/arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi
+> index b5e042b8e929..5591939e057b 100644
+> --- a/arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi
+> @@ -77,7 +77,6 @@ soc {
+>  		#address-cells = <2>;
+>  		#size-cells = <2>;
+>  		ranges;
+> -		dma-ranges;
+>  
+>  		internal-regs@7f000000 {
+>  			#address-cells = <1>;
+> @@ -204,6 +203,30 @@ gpio1: gpio@18140 {
+>  			};
+>  		};
+>  
+> +		mmc_dma: bus@80500000 {
+> +				compatible = "simple-bus";
+> +				ranges;
+> +				#address-cells = <0x2>;
+> +				#size-cells = <0x2>;
+> +				reg = <0x0 0x80500000 0x0 0x100000>;
+> +				dma-ranges = <0x0 0x0 0x2 0x0 0x0 0x80000000>;
+> +				dma-coherent;
+> +
+> +				sdhci: mmc@805c0000 {
+> +					compatible = "marvell,ac5-sdhci",
+> +						     "marvell,armada-ap806-sdhci";
+> +					reg = <0x0 0x805c0000 0x0 0x1000>;
+> +					interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+> +					clocks = <&emmc_clock>, <&cnm_clock>;
+> +					clock-names = "core", "axi";
+> +					bus-width = <8>;
+> +					non-removable;
+> +					mmc-ddr-1_8v;
+> +					mmc-hs200-1_8v;
+> +					mmc-hs400-1_8v;
+> +				};
+> +		};
+> +
+>  		/*
+>  		 * Dedicated section for devices behind 32bit controllers so we
+>  		 * can configure specific DMA mapping for them
+> @@ -335,5 +358,11 @@ nand_clock: nand-clock {
+>  			#clock-cells = <0>;
+>  			clock-frequency = <400000000>;
+>  		};
+> +
+> +		emmc_clock: emmc-clock {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <400000000>;
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm64/boot/dts/marvell/ac5-98dx35xx-rd.dts b/arch/arm64/boot/dts/marvell/ac5-98dx35xx-rd.dts
+> index f0ebdb84eec9..0c973d7a215a 100644
+> --- a/arch/arm64/boot/dts/marvell/ac5-98dx35xx-rd.dts
+> +++ b/arch/arm64/boot/dts/marvell/ac5-98dx35xx-rd.dts
+> @@ -99,3 +99,7 @@ parition@2 {
+>  		};
+>  	};
+>  };
+> +
+> +&sdhci {
+> +	status = "okay";
+> +};
+> -- 
+> 2.25.1
+>
 
-So what willy is proposing will do the same. To me, what I proposed is
-less complicated but to willy it is the other way around.
- 
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
