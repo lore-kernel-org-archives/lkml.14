@@ -1,300 +1,281 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF0754BFC;
-	Tue, 27 Feb 2024 12:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461F213A248
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 12:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709035407; cv=none; b=joFTdaEpwifWrx11x0/73WgiTwIx1FM5/Lp6QnCVqGNyLOtDxLheyP5HRhrFsXQfAV8gHqCnplKYGFyG7QVD8+XGc0R5HNiDdHaxOU7e8ru0hZX3KRgw5j/YfJQk4pApjlPxv4rxRhjqAhhuXp4Uv1ZNzZ98fruiJSZ0D8OlIfU=
+	t=1709035432; cv=none; b=nrBYBBsIqB1izEHO9NFVLL2AXts+Jtwce4vGgPtbnmcul0d+jOUwuToGVqmnqn5ucW0N3GrkLsbnLe02uqYM+S/ngNUXGVkdBW4S5/KqVW8S1mwTs9ICPDvvmxEYj11v6LauCwnL7+dLzm5w5BxQKmacO9h9dTaiwRcWw/wwyis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709035407; c=relaxed/simple;
-	bh=GsH6izNXdbmxh8NNvIFbshbJYlnz8b95wx2R16E4C6w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ny7AffIawM8hWipvSHDVc1HBJnr/5v46l440mMa5ZkZHpgCzcBGKLO9y0VS9eiFbUIX7i2eZIJuVTh59vDb7ZM2bZn+XPFyjyRltvY57XGA7zNYSiumiyQnu5dbT/GconsXGF9frFTPTycFFTJ7xVAcEnxJEPGjBIdZLH9l9gNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Z92COB6n; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709035432; c=relaxed/simple;
+	bh=Yp+DznaXdlwI6W6RpjWPkz4h3qaiymB8dpf7qdz03hw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wb3nZw6fUJpXfD8CYErXo1MYFZdr5FKXeTkwW4i1AzRRHtaF4nFH6W1l7IyUmkiJ+RopvneWXiUXxafx4nhAvjFBS9DJSOlPJpslHC4B7PYAUt7y3ym6GtM40qKrVDuflA8UdtdwfRKU15y1xqYcUwY7XrtHJEaVl5NXPcS4mJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NQP+/cX7; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z92COB6n"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41RC3CEL049078;
-	Tue, 27 Feb 2024 06:03:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709035392;
-	bh=MssOyU05YccTT8c6vbdsyXfwRvVXA7CqNRglTs3bjvQ=;
-	h=From:To:CC:Subject:Date;
-	b=Z92COB6n0fCKZlbejmoKFLEYucab64Y8iyi1ShAfLUZZhc6IuVAshyqlD40BvyW7b
-	 2eBlqv6ynKGAfwlrtES14VOq+UQfN5Dv3CSKoDsSGfu2tS3X2FgCJnkvoRV+NADQsC
-	 ySh2gLfPIN7lpr1PFA0Z1UX05Q1p4lpYAbqTHMio=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41RC3ClR000687
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 27 Feb 2024 06:03:12 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
- Feb 2024 06:03:11 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 27 Feb 2024 06:03:11 -0600
-Received: from localhost (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.177])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41RC3AkV090058;
-	Tue, 27 Feb 2024 06:03:11 -0600
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <tomi.valkeinen@ideasonboard.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <r-ravikumar@ti.com>,
-        <j-choudhary@ti.com>
-Subject: [PATCH] arm64: dts: ti: k3-j721e: Add overlay for J721E Infotainment Expansion Board
-Date: Tue, 27 Feb 2024 17:33:10 +0530
-Message-ID: <20240227120310.661579-1-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NQP+/cX7"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a3e891b5e4eso510643266b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 04:03:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709035428; x=1709640228; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdmhYqWKJvgYRzDJb5z1/6ZepC6GiDis6EIU13NeeC8=;
+        b=NQP+/cX7xO9+0aMz49n6xqeBhOoW5KCWY+feLK95mltZkwNayFPjIJSRssfT8Ni9fm
+         pJEReWOfgEhToYFrN7xStzjVOctyb825B8wHkV+o2nncIowesUhgHeDifkJzav/IE2HC
+         0Q3Q+lbuINKprGUwilwir2As4l7clsI/wmtqqLTzCZYDop5yK1mBbHI4VM0ZcgvK3N3O
+         5pfEDhJihZ3vRJwXY5NqQTv9qmPxDYuZZ+uJx84+mYtSE1HFFhpfgvwZuj8x5zCjrCWE
+         vX+OqzxgjMmj9qSX5sgsHPvaDpnD27HEw1c80ljAyYt51DTNgJpk9y91MEX74xFKEsPd
+         8DHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709035428; x=1709640228;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SdmhYqWKJvgYRzDJb5z1/6ZepC6GiDis6EIU13NeeC8=;
+        b=bpks7neDdWh8KrYYbEmHNRXUagIjaW6E8uR3d/Gr9j7dO4Ib4ERrZPjtDOrku1WVre
+         ukBSihv0NWZLJhh0xpUZaRVNqQTVoJsVqh4Hxo3+DNcYv2+7gv6Bdrf7dz2Etf59+0MY
+         ENdf5yG0l4p7R9sEAqSGmZ7Wi+OvixSEba5oSFb73+vxZ/7CPPxsyge7W62N02vvREMy
+         6mEBywe7RGvKKMKP3IbNGG93tl7pSfUXyHA8ghE97iY14og3NDDOXn61jVDiY2WOOP8/
+         QdR8PGkVTdCbPQ7tPjGz9SMAyJLnCwAUEx8CZ185ooXV/KBe9PWigZU6AfBp8QOrrlNy
+         ZD6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWZZYMp0JDPrv2QH78I1r/eINnYE6ZYxxEjVYXHHeP65d3eBMLjT8FN8GwmpnxSi0Oh6acMY6yKiuWdRlstXHOPORzKh1I5RXz8ELdB
+X-Gm-Message-State: AOJu0YzcRyZ0y9SZy+3ZGjr9X2ezosK1LEEXiQf7NSm8rIrYnJZHJ7DL
+	zuwQRBeCMPtXpvoRyU7K6fLrqVkRL3SERdQ+v+pAmvMPxoy8d2JT0zk73E83hEE=
+X-Google-Smtp-Source: AGHT+IHsAtRJ6+bGsc1WsZ/Dus5JfQO95zUKK+7AjiXj2FSedFW0f49lj8ER4VKxV0UAWiU2YRL71A==
+X-Received: by 2002:a17:906:3c05:b0:a3f:db30:8999 with SMTP id h5-20020a1709063c0500b00a3fdb308999mr7352750ejg.4.1709035428441;
+        Tue, 27 Feb 2024 04:03:48 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id g10-20020a1709063b0a00b00a412d3d509fsm697669ejf.181.2024.02.27.04.03.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 04:03:47 -0800 (PST)
+Message-ID: <796652d5-af57-4aca-87c2-10a7b0b55959@linaro.org>
+Date: Tue, 27 Feb 2024 13:03:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: display: atmel,lcdc: convert to dtschema
+To: Dharma Balasubiramani <dharma.b@microchip.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240223-lcdc-fb-v1-1-4c64cb6277df@microchip.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240223-lcdc-fb-v1-1-4c64cb6277df@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+On 23/02/2024 10:14, Dharma Balasubiramani wrote:
+> Convert the atmel,lcdc bindings to DT schema.
+> Changes during conversion: add missing clocks and clock-names properties.
+> 
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> ---
+>  .../devicetree/bindings/display/atmel,lcdc.txt     |  87 --------------
+>  .../devicetree/bindings/display/atmel,lcdc.yaml    | 133 +++++++++++++++++++++
+>  2 files changed, 133 insertions(+), 87 deletions(-)
 
-J721E common processor board can be interfaced with the infotainment
-expansion board[0] to enable the following audio/video interfaces in
-addition to the peripherals provided by the common processor board:
-- Two Audio codecs each with three Stereo Inputs and four Stereo Outputs
-- Audio input over FPD Link III
-- Digital Audio Interface TX/RX
-- HDMI/FPD LINK III Display out
-- LI/OV Camera input
+You have several patch errors... check your git repo (git show). You
+will easily spot them. Or just use decent text editor to clean it up.
+Run checkpatch...
 
-Add support for TFP410 HDMI bridge located on the Infotainment Expansion
-Board (connected to J46 & J51).
-Add a HDMI connector node and connect the endpoints as below:
-DSS => TFP410 bridge => HDMI connector
-Also add the pinmux data and board muxes for DPI.
+...
 
-[0]: <https://www.ti.com/lit/ug/spruit0a/spruit0a.pdf>
+> diff --git a/Documentation/devicetree/bindings/display/atmel,lcdc.yaml b/Documentation/devicetree/bindings/display/atmel,lcdc.yaml
+> new file mode 100644
+> index 000000000000..4a1de5a8d64b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/atmel,lcdc.yaml
+> @@ -0,0 +1,133 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/atmel,lcdc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip's LCDC Framebuffer
+> +
+> +maintainers:
+> +  - Nicolas Ferre <nicolas.ferre@microchip.com>
+> +  - Dharma Balasubiramani <dharma.b@microchip.com>
+> +
+> +description:
+> +  The LCDC works with a framebuffer, which is a section of memory that contains
+> +  a complete frame of data representing pixel values for the display. The LCDC
+> +  reads the pixel data from the framebuffer and sends it to the LCD panel to
+> +  render the image.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - atmel,at91sam9261-lcdc 
+> +      - atmel,at91sam9263-lcdc
+> +      - atmel,at91sam9g10-lcdc
+> +      - atmel,at91sam9g45-lcdc
+> +      - atmel,at91sam9g45es-lcdc
+> +      - atmel,at91sam9rl-lcdc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks: 
+> +    maxItems: 2
+> + 
+> +  clock-names:
+> +    items:
+> +      - const: hclk
+> +      - const: lcdc_clk
+> +
+> +  display:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: A phandle pointing to the display node.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-[j-choudhary@ti.com: minor cleanup]
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
----
+Phandle does not have properties. Didn't you want object?
 
-Testing log:
-<https://gist.github.com/Jayesh2000/c4164ba006dbddc9bbcb851d40e3c306>
+This cannot work - just test it. Change the properties in the example,
+remove or add something. Do you see errors? No, because it does not work
+at all.
 
-Patch is based on:
-<https://git.ti.com/cgit/ti-linux-kernel/ti-upstream-tools/commit/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso?id=da742e7e0043555c6705ea75dcda55c1d29a0520>
+I don't know what's this exactly, but if embedded display then maybe
+could be part of this device node. If some other display, then maybe you
+need another schema, with compatible? But first I would check how others
+are doing this.
 
- arch/arm64/boot/dts/ti/Makefile               |   4 +
- ...-j721e-common-proc-board-infotainment.dtso | 164 ++++++++++++++++++
- 2 files changed, 168 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso
 
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 9843b7656725..b570c4bd3379 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -78,6 +78,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j721e-evm-gesi-exp-board.dtbo
- dtb-$(CONFIG_ARCH_K3) += k3-j721e-evm-pcie0-ep.dtbo
- dtb-$(CONFIG_ARCH_K3) += k3-j721e-sk.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-j721e-sk-csi2-dual-imx219.dtbo
-+dtb-$(CONFIG_ARCH_K3) += k3-j721e-common-proc-board-infotainment.dtbo
- 
- # Boards with J721s2 SoC
- dtb-$(CONFIG_ARCH_K3) += k3-am68-sk-base-board.dtb
-@@ -132,6 +133,8 @@ k3-am68-sk-base-board-csi2-dual-imx219-dtbs := k3-am68-sk-base-board.dtb \
- 	k3-j721e-sk-csi2-dual-imx219.dtbo
- k3-am69-sk-csi2-dual-imx219-dtbs := k3-am69-sk.dtb \
- 	k3-j721e-sk-csi2-dual-imx219.dtbo
-+k3-j721e-common-proc-board-infotainment-dtbs := k3-j721e-common-proc-board.dtb \
-+	k3-j721e-common-proc-board-infotainment.dtbo
- k3-j721e-evm-pcie0-ep-dtbs := k3-j721e-common-proc-board.dtb \
- 	k3-j721e-evm-pcie0-ep.dtbo
- k3-j721e-sk-csi2-dual-imx219-dtbs := k3-j721e-sk.dtb \
-@@ -156,6 +159,7 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
- 	k3-am642-tqma64xxl-mbax4xxl-wlan.dtb \
- 	k3-am68-sk-base-board-csi2-dual-imx219-dtbs \
- 	k3-am69-sk-csi2-dual-imx219-dtbs \
-+	k3-j721e-common-proc-board-infotainment.dtb \
- 	k3-j721e-evm-pcie0-ep.dtb \
- 	k3-j721e-sk-csi2-dual-imx219-dtbs \
- 	k3-j721s2-evm-pcie1-ep.dtb
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso
-new file mode 100644
-index 000000000000..65a7e54f0884
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board-infotainment.dtso
-@@ -0,0 +1,164 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Infotainment Expansion Board for j721e-evm
-+ * User Guide: <https://www.ti.com/lit/ug/spruit0a/spruit0a.pdf>
-+ *
-+ * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+#include "k3-pinctrl.h"
-+
-+&{/} {
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+		type = "a";
-+		ddc-i2c-bus = <&main_i2c1>;
-+		digital;
-+		/* P12 - HDMI_HPD */
-+		hpd-gpios = <&exp6 10 GPIO_ACTIVE_HIGH>;
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&tfp410_out>;
-+			};
-+		};
-+	};
-+
-+	dvi-bridge {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "ti,tfp410";
-+		/* P10 - HDMI_PDn */
-+		powerdown-gpios = <&exp6 8 GPIO_ACTIVE_LOW>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			tfp410_in: endpoint {
-+				remote-endpoint = <&dpi_out0>;
-+				pclk-sample = <1>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			tfp410_out: endpoint {
-+				remote-endpoint =
-+					<&hdmi_connector_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&main_pmx0 {
-+	main_i2c1_exp6_pins_default: main-i2c1-exp6-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0x264, PIN_INPUT, 7) /* (T29) MMC2_DAT2.GPIO1_24 */
-+		>;
-+	};
-+
-+	dss_vout0_pins_default: dss-vout0-default-pins {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0x58, PIN_OUTPUT, 10) /* (AE22) PRG1_PRU1_GPO0.VOUT0_DATA0 */
-+			J721E_IOPAD(0x5c, PIN_OUTPUT, 10) /* (AG23) PRG1_PRU1_GPO1.VOUT0_DATA1 */
-+			J721E_IOPAD(0x60, PIN_OUTPUT, 10) /* (AF23) PRG1_PRU1_GPO2.VOUT0_DATA2 */
-+			J721E_IOPAD(0x64, PIN_OUTPUT, 10) /* (AD23) PRG1_PRU1_GPO3.VOUT0_DATA3 */
-+			J721E_IOPAD(0x68, PIN_OUTPUT, 10) /* (AH24) PRG1_PRU1_GPO4.VOUT0_DATA4 */
-+			J721E_IOPAD(0x6c, PIN_OUTPUT, 10) /* (AG21) PRG1_PRU1_GPO5.VOUT0_DATA5 */
-+			J721E_IOPAD(0x70, PIN_OUTPUT, 10) /* (AE23) PRG1_PRU1_GPO6.VOUT0_DATA6 */
-+			J721E_IOPAD(0x74, PIN_OUTPUT, 10) /* (AC21) PRG1_PRU1_GPO7.VOUT0_DATA7 */
-+			J721E_IOPAD(0x78, PIN_OUTPUT, 10) /* (Y23)  PRG1_PRU1_GPO8.VOUT0_DATA8 */
-+			J721E_IOPAD(0x7c, PIN_OUTPUT, 10) /* (AF21) PRG1_PRU1_GPO9.VOUT0_DATA9 */
-+			J721E_IOPAD(0x80, PIN_OUTPUT, 10) /* (AB23) PRG1_PRU1_GPO10.VOUT0_DATA10 */
-+			J721E_IOPAD(0x84, PIN_OUTPUT, 10) /* (AJ25) PRG1_PRU1_GPO11.VOUT0_DATA11 */
-+			J721E_IOPAD(0x88, PIN_OUTPUT, 10) /* (AH25) PRG1_PRU1_GPO12.VOUT0_DATA12 */
-+			J721E_IOPAD(0x8c, PIN_OUTPUT, 10) /* (AG25) PRG1_PRU1_GPO13.VOUT0_DATA13 */
-+			J721E_IOPAD(0x90, PIN_OUTPUT, 10) /* (AH26) PRG1_PRU1_GPO14.VOUT0_DATA14 */
-+			J721E_IOPAD(0x94, PIN_OUTPUT, 10) /* (AJ27) PRG1_PRU1_GPO15.VOUT0_DATA15 */
-+			J721E_IOPAD(0x30, PIN_OUTPUT, 10) /* (AF24) PRG1_PRU0_GPO11.VOUT0_DATA16 */
-+			J721E_IOPAD(0x34, PIN_OUTPUT, 10) /* (AJ24) PRG1_PRU0_GPO12.VOUT0_DATA17 */
-+			J721E_IOPAD(0x38, PIN_OUTPUT, 10) /* (AG24) PRG1_PRU0_GPO13.VOUT0_DATA18 */
-+			J721E_IOPAD(0x3c, PIN_OUTPUT, 10) /* (AD24) PRG1_PRU0_GPO14.VOUT0_DATA19 */
-+			J721E_IOPAD(0x40, PIN_OUTPUT, 10) /* (AC24) PRG1_PRU0_GPO15.VOUT0_DATA20 */
-+			J721E_IOPAD(0x44, PIN_OUTPUT, 10) /* (AE24) PRG1_PRU0_GPO16.VOUT0_DATA21 */
-+			J721E_IOPAD(0x24, PIN_OUTPUT, 10) /* (AJ20) PRG1_PRU0_GPO8.VOUT0_DATA22 */
-+			J721E_IOPAD(0x28, PIN_OUTPUT, 10) /* (AG20) PRG1_PRU0_GPO9.VOUT0_DATA23 */
-+			J721E_IOPAD(0x9c, PIN_OUTPUT, 10) /* (AC22) PRG1_PRU1_GPO17.VOUT0_DE */
-+			J721E_IOPAD(0x98, PIN_OUTPUT, 10) /* (AJ26) PRG1_PRU1_GPO16.VOUT0_HSYNC */
-+			J721E_IOPAD(0xa4, PIN_OUTPUT, 10) /* (AH22) PRG1_PRU1_GPO19.VOUT0_PCLK */
-+			J721E_IOPAD(0xa0, PIN_OUTPUT, 10) /* (AJ22) PRG1_PRU1_GPO18.VOUT0_VSYNC */
-+		>;
-+	};
-+};
-+
-+&exp1 {
-+	p14-hog {
-+		/* P14 - VINOUT_MUX_SEL0 */
-+		gpio-hog;
-+		gpios = <12 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "VINOUT_MUX_SEL0";
-+	};
-+
-+	p15-hog {
-+		/* P15 - VINOUT_MUX_SEL1 */
-+		gpio-hog;
-+		gpios = <13 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "VINOUT_MUX_SEL1";
-+	};
-+};
-+
-+&main_i2c1 {
-+	/* i2c1 is used for DVI DDC, so we need to use 100kHz */
-+	clock-frequency = <100000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	exp6: gpio@21 {
-+		compatible = "ti,tca6416";
-+		reg = <0x21>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&main_i2c1_exp6_pins_default>;
-+		interrupt-parent = <&main_gpio1>;
-+		interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		p11-hog {
-+			/* P11 - HDMI_DDC_OE */
-+			gpio-hog;
-+			gpios = <9 GPIO_ACTIVE_HIGH>;
-+			output-high;
-+			line-name = "HDMI_DDC_OE";
-+		};
-+	};
-+};
-+
-+&dss {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&dss_vout0_pins_default>;
-+};
-+
-+&dss_ports {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	port@1 {
-+		reg = <1>;
-+
-+		dpi_out0: endpoint {
-+			remote-endpoint = <&tfp410_in>;
-+		};
-+	};
-+};
--- 
-2.25.1
+> +
+> +    properties:
+> +      atmel,dmacon:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: dma controller configuration
+> +
+> +      atmel,lcdcon2:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: lcd controller configuration
+> +
+> +      atmel,guard-time:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: lcd guard time (Delay in frame periods)
+> +
+> +      bits-per-pixel:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: lcd panel bit-depth.
+> +
+> +      atmel,lcdcon-backlight: 
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +        description: enable backlight
+> +
+> +      atmel,lcdcon-backlight-inverted:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +        description: invert backlight PWM polarity
+> +
+> +      atmel,lcd-wiring-mode:
+> +        $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> +        description: lcd wiring mode "RGB" or "BRG"
+> +
+> +      atmel,power-control-gpio:
+> +        description: gpio to power on or off the LCD (as many as needed)
+> +
+> +    required:
+> +      - atmel,dmacon
+> +      - atmel,lcdcon2
+> +      - atmel,guard-time
+> +      - bits-per-pixel 
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - display
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/at91.h>
+> +    fb@500000 {
+> +      compatible = "atmel,at91sam9g45-lcdc";
+> +      reg = <0x00500000 0x1000>;
+> +      interrupts = <23 3 0>;
+
+Aren't here some standard interrupt flags?
+
+> +      pinctrl-names = "default";
+> +      pinctrl-0 = <&pinctrl_fb>;
+> +      clocks = <&pmc PMC_TYPE_PERIPHERAL 23>, <&pmc PMC_TYPE_PERIPHERAL 23>;
+> +      clock-names = "hclk", "lcdc_clk";
+> +      display = <&display0>;
+> +    };
+> +
+
+
+Best regards,
+Krzysztof
 
