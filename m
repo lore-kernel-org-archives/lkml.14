@@ -1,35 +1,35 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAA0137C3E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5521369B5;
 	Tue, 27 Feb 2024 09:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709026816; cv=none; b=g8BZ4aetZKarkLRkJBKmP+/5a3LCnNlo8DlVugRRSQcx8kYw4cArcbWZOgryX+DgI3oZuhfVteZ7KU8q9Y5C+WCShHxUprSti/ECAMz83z+HA4A61db3i5ikUQ9r1ZNaQsj6u1uRCL2GezYk96CGqyVZ6SfIORiLb3/m8ZWO+3U=
+	t=1709026817; cv=none; b=BkbLQhPNx7YrrqbRFUFQTQpUqh+OlrvQeceDCUUn+S3wLMyb4txRUzxH8VPsdyjh3pFhBoq9i9iomNt+RVeyK+85ZhqmELWY1AiisvxvPYjELxpOAdK/KNGFqiK+mWQ0/TRyqOQeAnn/mlt/ExQLlA7blQcT3Yfvukq+CO3Ohs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709026816; c=relaxed/simple;
-	bh=MrAC+0ugacDW+NQuPpEBMoPhZSOJdpkLAl75R2nIfps=;
+	s=arc-20240116; t=1709026817; c=relaxed/simple;
+	bh=NYYmMCzH7vimTij6Ubq0mii2fz8ZW2rnD23U4YlBxqA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U+vXpyqdsXB03XMtqEdkFFkVvij9BdFy69AoXlWBPKccLs60eFvnVD3t1f37VT/G7VAF4JrudAxzhSlva/GYunDXPEz5KmYDv/gdzJaSZy0PnwBZMkB0OALbf7K85tfNtNO9HDCypiIU1ayk93p5uamrlfhSN7LBlp8VlSXFvOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Toaf3mwm; arc=none smtp.client-ip=217.70.183.201
+	 MIME-Version; b=aiZpqu8U7I66rJ9EUqdn9XMPULXLZ62agEprEpUtGIg6s2F9CZ0LzUFfFLb1pLoC8sklR9CPxj9DOGRDG5qtxu33Pr9n5XZfvlaUr2wNCoI8HKMke1yyK3EimU43UWxDKMlyLzCN/oMK+HcMxE+UB1zfwr1gnH/OQ9DGi1eLKSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kWckHP8S; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Toaf3mwm"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 2EC051BF219;
-	Tue, 27 Feb 2024 09:40:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kWckHP8S"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 5C61B1BF216;
+	Tue, 27 Feb 2024 09:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709026806;
+	t=1709026811;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DlGBjihIRSEjSd8ST43CRqXi/gW9NM8DXJGmyMeDqgs=;
-	b=Toaf3mwmcXc+zhwAdXDEsfX60JOGqIVKuao1hV1NpjdNWwC3ZVN01Me//rXPGJ+eLYHcfL
-	kSMWLEnDollecV7xJfbPv2hjY6z+lZCSBr1pjiA4HrSa85czOC+xubyPYGRvx3MvRQBV89
-	eA4qj5Nz6XLAck1HzaOauJm2z5O+0HrUyH1x6H5UVsxRjycEbvcRzFBL5abB6HTMHTkqlU
-	lnRHLFqfTAaQ/cna+QuUQ5NeO/r/EQoSpUcAMQ6O+w91HwmJki6LT7vWy15hf6pyRt0QXq
-	rsqDf+6Po1Bwb5gyuzMfzbb9EUVSIqb/v8/OnU9GA1zMwwXiJk6JrCfj0LuXuA==
+	bh=OxjHn9p9H9NJifATQZkPfSnDEUUsarNIhRN6DP6TGhI=;
+	b=kWckHP8S+V229WSbjHSvoQVhZZJSxhIo6Cx4XFA6WBbIsuRM/rwpU8e2qqTX3IHOSbtaFY
+	XubWCr0zR3q6P5yS/iInceHN8S1Gott/NkhiIpu+AFeqdyH+/ltf7QKq7hUWyscU2xQo4K
+	TWNpsuhPRJ5jA7LuRV+avRLzdZwpOqTf1/tutTEG6s8GNU7THV/Eaizpnq5PEjaMD/qSMf
+	LS6ZcWGFGUic4J8E/KIsZBbLTN7pIjQOTdRTeYtSDtitd7gtNRZtYbEPwVOLr9a9/RKE4V
+	zdrXckJSWqMwjW8tJl60uZ7roThGxnfTxLTImMqdLuQnQvjQOF5YACgwtkxG1g==
 From: Bastien Curutchet <bastien.curutchet@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -53,9 +53,9 @@ Cc: linux-kernel@vger.kernel.org,
 	herve.codina@bootlin.com,
 	maxime.chevallier@bootlin.com,
 	christophercordahi@nanometrics.ca
-Subject: [PATCH v2 2/6] leds: trigger: Create a new LED netdev trigger for collision
-Date: Tue, 27 Feb 2024 10:39:41 +0100
-Message-ID: <20240227093945.21525-3-bastien.curutchet@bootlin.com>
+Subject: [PATCH v2 5/6] net: phy: DP83640: Explicitly disabling PHY Control Frames
+Date: Tue, 27 Feb 2024 10:39:44 +0100
+Message-ID: <20240227093945.21525-6-bastien.curutchet@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
 References: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
@@ -68,87 +68,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: bastien.curutchet@bootlin.com
 
-Collisions on link does not fit into one of the existing netdev triggers.
+The PHY offers a PHY control frame feature that allows to access PHY
+registers through the MAC transmit data interface. This functionality
+is not handled by the driver but can be enabled via hardware strap or
+register access.
 
-Add TRIGGER_NETDEV_COLLISION in the enum led_trigger_netdev_modes.
-Add its definition in Documentation.
-Add its handling in ledtrig-netdev, it can only be supported by hardware
-so no software fallback is implemented.
+Disable the feature in config_init() to save some latency on MII packets.
 
 Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
 ---
- .../ABI/testing/sysfs-class-led-trigger-netdev        | 11 +++++++++++
- drivers/leds/trigger/ledtrig-netdev.c                 |  4 ++++
- include/linux/leds.h                                  |  1 +
- 3 files changed, 16 insertions(+)
+ drivers/net/phy/dp83640.c     | 6 ++++++
+ drivers/net/phy/dp83640_reg.h | 4 ++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-led-trigger-netdev b/Documentation/ABI/testing/sysfs-class-led-trigger-netdev
-index a6c307c4befa..fbb2bc1d6108 100644
---- a/Documentation/ABI/testing/sysfs-class-led-trigger-netdev
-+++ b/Documentation/ABI/testing/sysfs-class-led-trigger-netdev
-@@ -178,3 +178,14 @@ Description:
- 		If set to 1, the LED's normal state reflects the link full
- 		duplex state of the named network device.
- 		Setting this value also immediately changes the LED state.
-+
-+What:		/sys/class/leds/<led>/collision
-+Date:		Feb 2024
-+KernelVersion:	6.8
-+Contact:	linux-leds@vger.kernel.org
-+Description:
-+		Signal collision of the named network device.
-+
-+		If set to 0 (default), the LED's normal state is off.
-+
-+		If set to 1, the LED's normal state reflects collisions.
-diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-index 8e5475819590..5c17b8e27d5c 100644
---- a/drivers/leds/trigger/ledtrig-netdev.c
-+++ b/drivers/leds/trigger/ledtrig-netdev.c
-@@ -318,6 +318,7 @@ static ssize_t netdev_led_attr_show(struct device *dev, char *buf,
- 	case TRIGGER_NETDEV_FULL_DUPLEX:
- 	case TRIGGER_NETDEV_TX:
- 	case TRIGGER_NETDEV_RX:
-+	case TRIGGER_NETDEV_COLLISION:
- 		bit = attr;
- 		break;
- 	default:
-@@ -352,6 +353,7 @@ static ssize_t netdev_led_attr_store(struct device *dev, const char *buf,
- 	case TRIGGER_NETDEV_FULL_DUPLEX:
- 	case TRIGGER_NETDEV_TX:
- 	case TRIGGER_NETDEV_RX:
-+	case TRIGGER_NETDEV_COLLISION:
- 		bit = attr;
- 		break;
- 	default:
-@@ -410,6 +412,7 @@ DEFINE_NETDEV_TRIGGER(half_duplex, TRIGGER_NETDEV_HALF_DUPLEX);
- DEFINE_NETDEV_TRIGGER(full_duplex, TRIGGER_NETDEV_FULL_DUPLEX);
- DEFINE_NETDEV_TRIGGER(tx, TRIGGER_NETDEV_TX);
- DEFINE_NETDEV_TRIGGER(rx, TRIGGER_NETDEV_RX);
-+DEFINE_NETDEV_TRIGGER(collision, TRIGGER_NETDEV_COLLISION);
+diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
+index 16c9fda50b19..b371dea23937 100644
+--- a/drivers/net/phy/dp83640.c
++++ b/drivers/net/phy/dp83640.c
+@@ -1120,6 +1120,7 @@ static int dp83640_config_init(struct phy_device *phydev)
+ {
+ 	struct dp83640_private *dp83640 = phydev->priv;
+ 	struct dp83640_clock *clock = dp83640->clock;
++	int val;
  
- static ssize_t interval_show(struct device *dev,
- 			     struct device_attribute *attr, char *buf)
-@@ -473,6 +476,7 @@ static struct attribute *netdev_trig_attrs[] = {
- 	&dev_attr_tx.attr,
- 	&dev_attr_interval.attr,
- 	&dev_attr_offloaded.attr,
-+	&dev_attr_collision.attr,
- 	NULL
- };
- ATTRIBUTE_GROUPS(netdev_trig);
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 4754b02d3a2c..8864d6ce8185 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -578,6 +578,7 @@ enum led_trigger_netdev_modes {
- 	TRIGGER_NETDEV_FULL_DUPLEX,
- 	TRIGGER_NETDEV_TX,
- 	TRIGGER_NETDEV_RX,
-+	TRIGGER_NETDEV_COLLISION,
+ 	if (clock->chosen && !list_empty(&clock->phylist))
+ 		recalibrate(clock);
+@@ -1135,6 +1136,11 @@ static int dp83640_config_init(struct phy_device *phydev)
+ 	ext_write(0, phydev, PAGE4, PTP_CTL, PTP_ENABLE);
+ 	mutex_unlock(&clock->extreg_lock);
  
- 	/* Keep last */
- 	__TRIGGER_NETDEV_MAX,
++	/* Disable unused PHY control frames */
++	phy_write(phydev, PAGESEL, 0);
++	val = phy_read(phydev, PCFCR) & ~PCF_EN;
++	phy_write(phydev, PCFCR, val);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/phy/dp83640_reg.h b/drivers/net/phy/dp83640_reg.h
+index bf34d422d91e..b5adb8958c08 100644
+--- a/drivers/net/phy/dp83640_reg.h
++++ b/drivers/net/phy/dp83640_reg.h
+@@ -10,6 +10,7 @@
+ #define PHYCR                     0x0019 /* PHY Control Register */
+ #define PHYCR2                    0x001c /* PHY Control Register 2 */
+ #define EDCR                      0x001D /* Energy Detect Control Register */
++#define PCFCR                     0x001F /* PHY Control Frames Control Register */
+ 
+ #define PAGE4                     0x0004
+ #define PTP_CTL                   0x0014 /* PTP Control Register */
+@@ -68,6 +69,9 @@
+ /* Bit definitions for the EDCR register */
+ #define ED_EN		          BIT(15) /* Enable Energy Detect Mode */
+ 
++/* Bit definitions for the PCFCR register */
++#define PCF_EN                    BIT(0)  /* Enable PHY Control Frames */
++
+ /* Bit definitions for the PTP_CTL register */
+ #define TRIG_SEL_SHIFT            (10)    /* PTP Trigger Select */
+ #define TRIG_SEL_MASK             (0x7)
 -- 
 2.43.0
 
