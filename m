@@ -1,127 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B674020DD3;
-	Tue, 27 Feb 2024 16:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1788E1DA37;
+	Tue, 27 Feb 2024 16:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709052822; cv=none; b=W/cDyk6Bw1rsxen8j876esu4VoPhaPAS5wtzY0wMIZfSPFm/Lrdx8/Pu8G8p7Ud8VyDBal/4hPxmJHJF6JgL0tYzQdc++ny/DoHIS2nmZmaiff2Mr3FpvCc0tMX1R75y048h1AI6KeWZlOL8Ur9GspytzAQMMXScZKgwynGDk1U=
+	t=1709052852; cv=none; b=iWHFTbalanI8oawGqskdAf4ZXthU81yLYqHJStINpbrhKC9RJYoCUlBfLOwO1Kq+XReGJ18pM2dBT/rqTii9daXAOwkuJd1WfzxWKk8GJxBu/PMSwlAdVss4/wkk7izDrjvx7CU0DDTHLVcPUarX/W1iq8RnodGQcgsfv/vGRj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709052822; c=relaxed/simple;
-	bh=rTVznIzRoo7ftBFMSk3M6Jhh3OfJTP2NXWI3JNzboA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b+KWG2vA5PCR7Fs4IEBAQAHtpfx9FvWwc/7b+qKn43rL6BLVC9mPHuvGKqL/YRUANWbgbw85SGQOatCDiZWdYmwOr0Txtxds3osmylRgJMWszEzPS+3+WZN9SP0FdHFEGgLT0MO+RVYpwlAACxIJkYSDYHTIvj7oy1QUORDu2yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L06IGUwV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709052852; c=relaxed/simple;
+	bh=AtI4DP0azihNEpN7fUHfrc9BC3U3/Ohts7IOMx4dGOg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SCXxwdn6++aFsfm7gZPljheS2TqhRu+KYc3/LeWfVtfh10pGKUrDugD/LvFIWnuCmEOfqOVCejD2CkKehUdxZre4o0FPBs//M+ijV4fcuYkP9r5XjUs7EID/sM7hOQMrkjsArXHlLOJmTLno41nZkCuEtkUGSB1kGD7JOGdDTYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RK26RgBc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L06IGUwV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C975BC433C7;
-	Tue, 27 Feb 2024 16:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709052822;
-	bh=rTVznIzRoo7ftBFMSk3M6Jhh3OfJTP2NXWI3JNzboA8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L06IGUwViZdc6tmmuKSKWefjzHwXE3dvZ/jMg0VJIpADs+24U8auHGPZTkVqHxhUu
-	 E4Y+aYrJKr+5615JhB3YpqECQ3sjv3ORArxjtuVWycDK2voWCiSVyUf77OAnJHWHGS
-	 Prf5TaX3JYyLLwie9Rny0/8NbFC/OjiluOZAlq056YVScw/U1ZFCdOPYtlukIfVqJO
-	 cU4sX/KZITTdg82DMiPrLshpB3IJZzrJGA7iPNxE2kooQAYwphqbM2ViFCM5HjhxVi
-	 yD9mI4Sl799Arp3ARhaQi+UfuUWbrYYZV602ZOiFXI/m+B9aYQ2tnpot5SaPWsmCoL
-	 Y1x1gkB+/wwBg==
-Date: Tue, 27 Feb 2024 10:53:39 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Gross <agross@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Elliot Berman <quic_eberman@quicinc.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Guru Das Srinagesh <quic_gurus@quicinc.com>, 
-	Andrew Halaney <ahalaney@redhat.com>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kernel@quicinc.com, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Deepti Jaggi <quic_djaggi@quicinc.com>
-Subject: Re: [PATCH v7 08/12] firmware: qcom: qseecom: convert to using the
- TZ allocator
-Message-ID: <odnisr4flot3rgwwqpjob3qtw63jow7hcj4guy6ao6spdz6fm4@wtcm62o3hgxm>
-References: <20240205182810.58382-1-brgl@bgdev.pl>
- <20240205182810.58382-9-brgl@bgdev.pl>
- <yu5uhamdlygti3jo73ipy3gxhcmgxrm5g6imgqg6ksleim4ton@npvzlex2j4xi>
- <CAMRc=Mctm-cyYPpu-Vb+fr1cWJPUW49shaa9HEXYp+rkF_CHUw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RK26RgBc"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41RGbNYp020484;
+	Tue, 27 Feb 2024 16:53:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=1ukAByU/Y6XIpyYRk5+z3AWPCyZlxizj7T5qOMn6Q/k=; b=RK
+	26RgBcBggnl9gsxZouO/v1vknWSgHRBq8j+/wbit20e+HNroM2B5ptMH3LZvBBsx
+	PNeeTK3R5ts0GTSckge0KdqGL9wgi5I2QY+rrFC47WNNo3ru3ek80SlsGRDoAbcN
+	LfJtuO8f8fBx5HMajUDmfX4pHUBvQoHQNYEgZWF1BmxcS+nl7p8K8OSbizsGWx5c
+	vrL3dJDYMN5SzUtxUmVzu5Ted/0FuR1HWe6FBsQv8qjK+EQX2PB/PvFQ4HhAOt9c
+	gtIhJSuSgPeFYyNWnD8udf0LS03dfrwyYCMUVixUvlnqRiQE+xrV0CgPLPE/YfCO
+	bkica+39w4bDQ/YUgMjw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3whkd5g1e1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Feb 2024 16:53:45 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41RGrjSg028353
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Feb 2024 16:53:45 GMT
+Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 27 Feb 2024 08:53:39 -0800
+From: Sibi Sankar <quic_sibis@quicinc.com>
+To: <dietmar.eggemann@arm.com>, <marcan@marcan.st>, <sven@svenpeter.dev>,
+        <alyssa@rosenzweig.io>, <rafael@kernel.org>, <viresh.kumar@linaro.org>,
+        <xuwei5@hisilicon.com>, <zhanjie9@hisilicon.com>
+CC: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_rgottimu@quicinc.com>, <linux-arm-kernel@lists.infradead.org>,
+        <asahi@lists.linux.dev>, <linux-pm@vger.kernel.org>,
+        Sibi Sankar
+	<quic_sibis@quicinc.com>
+Subject: [PATCH 1/2] cpufreq: Fix per-policy boost behavior on SoCs using cpufreq_boost_set_sw
+Date: Tue, 27 Feb 2024 22:23:08 +0530
+Message-ID: <20240227165309.620422-2-quic_sibis@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240227165309.620422-1-quic_sibis@quicinc.com>
+References: <20240227165309.620422-1-quic_sibis@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mctm-cyYPpu-Vb+fr1cWJPUW49shaa9HEXYp+rkF_CHUw@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: K89-2LrXOKUphU7Q81xYmYKPS4TaY0_6
+X-Proofpoint-ORIG-GUID: K89-2LrXOKUphU7Q81xYmYKPS4TaY0_6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-27_03,2024-02-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 bulkscore=0 spamscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402270130
 
-On Tue, Feb 20, 2024 at 10:54:02AM +0100, Bartosz Golaszewski wrote:
-> On Sun, Feb 18, 2024 at 4:08 AM Bjorn Andersson <andersson@kernel.org> wrote:
-> >
-> > On Mon, Feb 05, 2024 at 07:28:06PM +0100, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Drop the DMA mapping operations from qcom_scm_qseecom_app_send() and
-> > > convert all users of it in the qseecom module to using the TZ allocator
-> > > for creating SCM call buffers.
-> >
-> > This reads as if this is removal of duplication, now that we have the TZ
-> > allocation. But wasn't there something about you not being able to mix
-> > and match shmbridge and non-shmbridge allocations in the interface, so
-> > this transition is actually required? Or did I get that wrong and this
-> > just reduction in duplication?
-> >
-> 
-> What is the question exactly? Yes it is required because once we
-> enable SHM bridge, "normal" memory will no longer be accepted for SCM
-> calls.
-> 
+Incorporate per-policy boost flag in the policy->max calculus used in
+cpufreq_frequency_table_cpuinfo. This fixes the per-policy boost
+behavior on SoCs using cpufreq_boost_set_sw callback.
 
-This fact is not covered anywhere in the series.
+Fixes: 218a06a79d9a ("cpufreq: Support per-policy performance boost")
+Reported-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+---
+ drivers/cpufreq/cpufreq.c    | 15 +++++++++------
+ drivers/cpufreq/freq_table.c |  2 +-
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
-> > > Together with using the cleanup macros,
-> > > it has the added benefit of a significant code shrink.
-> >
-> > That is true, but the move to using cleanup macros at the same time as
-> > changing the implementation makes it unnecessarily hard to reason about
-> > this patch.
-> >
-> > This patch would be much better if split in two.
-> >
-> 
-> I disagree. If we have a better interface in place, then let's use it
-> right away, otherwise it's just useless churn.
-> 
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index ff69e9335645..76002aa3d12d 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -644,14 +644,16 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
+ 	if (policy->boost_enabled == enable)
+ 		return count;
+ 
++	policy->boost_enabled = enable;
++
+ 	cpus_read_lock();
+ 	ret = cpufreq_driver->set_boost(policy, enable);
+ 	cpus_read_unlock();
+ 
+-	if (ret)
++	if (ret) {
++		policy->boost_enabled = !policy->boost_enabled;
+ 		return ret;
+-
+-	policy->boost_enabled = enable;
++	}
+ 
+ 	return count;
+ }
+@@ -2791,11 +2793,12 @@ int cpufreq_boost_trigger_state(int state)
+ 
+ 	cpus_read_lock();
+ 	for_each_active_policy(policy) {
++		policy->boost_enabled = state;
+ 		ret = cpufreq_driver->set_boost(policy, state);
+-		if (ret)
++		if (ret) {
++			policy->boost_enabled = !policy->boost_enabled;
+ 			goto err_reset_state;
+-
+-		policy->boost_enabled = state;
++		}
+ 	}
+ 	cpus_read_unlock();
+ 
+diff --git a/drivers/cpufreq/freq_table.c b/drivers/cpufreq/freq_table.c
+index c4d4643b6ca6..c17dc51a5a02 100644
+--- a/drivers/cpufreq/freq_table.c
++++ b/drivers/cpufreq/freq_table.c
+@@ -40,7 +40,7 @@ int cpufreq_frequency_table_cpuinfo(struct cpufreq_policy *policy,
+ 	cpufreq_for_each_valid_entry(pos, table) {
+ 		freq = pos->frequency;
+ 
+-		if (!cpufreq_boost_enabled()
++		if ((!cpufreq_boost_enabled() || !policy->boost_enabled)
+ 		    && (pos->flags & CPUFREQ_BOOST_FREQ))
+ 			continue;
+ 
+-- 
+2.34.1
 
-The functional change and the use of cleanup macros, could be done
-independently of each other, each one fully beneficial on their own.
-
-As such I don't find it hard to claim that they are two independent
-changes.
-
-> > > As this is
-> > > largely a module separate from the SCM driver, let's use a separate
-> > > memory pool.
-> > >
-> >
-> > This module is effectively used to read and write EFI variables today.
-> > Is that worth statically removing 256kb of DDR for? Is this done solely
-> > because it logically makes sense, or did you choose this for a reason?
-> >
-> 
-> Well, it will stop working (with SHM bridge enabled) if we don't. We
-> can possibly release the pool once we know we'll no longer need to
-> access EFI variables but I'm not sure if that makes sense? Or maybe
-> remove the pool after some time of driver inactivity and create a new
-> one when it's needed again?
-> 
-
-Sounds like a good motivation to me, let's document it so that the next
-guy understand why this was done.
-
-Regards,
-Bjorn
-
-> Bart
-> 
-> [snip]
