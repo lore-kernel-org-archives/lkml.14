@@ -1,176 +1,153 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2992147A7D;
-	Tue, 27 Feb 2024 17:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39664EB42
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709056633; cv=none; b=s5AESyYtwic2okJbtwVy593txJO4U3T1L/W9mUMXC9fr68sD2tHwFfPsGjkVZ64wPJvbiEBugKSod79b77oVnWR1/7Z50i0PDYUj3j1RucXewm5gwRrnN4KqFY0JIxzWdLRDpS1jx91ur8oiyk+BtR7Ipwujx9g4hAYuknD62Rc=
+	t=1709056682; cv=none; b=NC02jJ2O2yAAUsfFwAfxWjHX2IYPNHne/nRXgxqDvaARjLgkftsjPIqjvPrfQSkq/8gnd0Y/eAr+DsPcvt+5aPH9fqhjuwYIIVuQPIxYJxqliFLqjJWCNlSseMDKDSBtIHdKYLAD+qhLCUyP6j8lWZp6/RbMm0C5dS933qV/y+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709056633; c=relaxed/simple;
-	bh=MCV2xfyzVsZTimxMp1nsJm3TnteiwzapMqfslGtknNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vEntb3hHV7iK6plALTH2ArugTA4f9TbmRAhFotQ+aZWcFBUI7PjSptKDLG4/ZsZDwhiemdcegLuk0m5Fx0L4tw39AsrBnCk/KkNgNte5gRhxv1j4MZPcg4SHIlMyqALMraZTqWZUzVLrdwjZkGoxinM7I7hmjd0PhKzmLEjmo1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BVO7+eVq; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709056682; c=relaxed/simple;
+	bh=+0OPAWAs3sfMdgF2nC2ThcDNMyrAtbB6XPH0ctrI4rY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=La1rwQETzNQEK7tKBOq5xcEhNAj53rncFvCnia254nZB8R6YU6xqvZlrjgGdKc4ASxB6ww4gL5TfLxkFCZ6zNMLQBKcdRq8itf1ZN5PN0YHyc49RtSLsmA8bKouHeMwdr7qAcvoYPVKq9RkvJ30DL2fbXRmOF6jzLtkFDZYfABc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iI0HGOXU; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVO7+eVq"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-21e9589d4ffso2834746fac.1;
-        Tue, 27 Feb 2024 09:57:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iI0HGOXU"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d95d67ff45so30418715ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:57:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709056631; x=1709661431; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2rvZtLZAsJQqV2EI/YljUxB6c8BBNJcwxJ+IMwUn94I=;
-        b=BVO7+eVq6zI07L3H1rM9b/tBAYjlSp5dcD/R/wfhKHcU8rfuD1ri8KXdMkmWjq5Yfx
-         yfwhnRwiFK35Ip1x0IVVPe7d5zo7zChMU1Au9Y4u4bD0cvWEEnSPeAa+xob1On4cFJeD
-         tYfd5z0o+5NnFadeEGcbcH/kIISy3G/pHMV0df76jgkVq4l/+Kkn4JeVtrHZ6XBqC7DV
-         oMxNCX4ledSno73kC/KpWKoZKCQ+z5Ji1QePCvUbBafTZirH16dVSPtSj5l5B1CALrx7
-         Wn3ZoT8x4BUYjMq/4pT7Myvgadh6WcYUML/50q1OXdmapBq+fZ41+mn6ueETezn6M630
-         9haQ==
+        d=chromium.org; s=google; t=1709056679; x=1709661479; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kC2wEvtOaFP3h4cQZlxM1jPUFNWCk373B+A/I3NBDq4=;
+        b=iI0HGOXU2IUzl9PCOIWsRp89rrH1tp5b9Ud7dp2+6OsbmRSAzfdEeTwj99+qjl37w5
+         VTnggMVM2q0obOBFcJDtNcK8q/Fsrah3G+nNT6KmbNf0i3PislmCdqEr7DsHHhgCLzth
+         9F6G/t8UO4MqlrrWH/V6dpaGr2NFDXaQXp9+U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709056631; x=1709661431;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2rvZtLZAsJQqV2EI/YljUxB6c8BBNJcwxJ+IMwUn94I=;
-        b=eLNflhP+KdvWDojd3QfBmNlCr6qk2I6xCwq5czfhK6W+gPQc7DwALgDmmAyyCmeAXo
-         B6nXer0H4rlrT9JKo7/gPUGRxKaShuJ6kwK6uNXVan8rOkXAiVQ5+Yo3iPgteGYBIJB/
-         fXru7LU/gfjqqfRBukIkbrYrIYoms1mVqi3SlOrn1d+u1D/cTuuFZMj06LgUZyC/HjBv
-         0gaVoc2xv49SqO/B9pOci4KNGMaEHH14GcNjkzgVdeNFqomDGXBJxWxgKVhQkxT098gz
-         mMf/vQd2fFWIjHMLehMv22nYTsEyq1Ft+rEFS+AU2OhvxbdilPMEoNRGhVOEN152KP5o
-         CE4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUoxmcCQTn5KsGcWHWEx21icY4/u4+ap6DysJB71E4UsCmNoCnJcp9cCVeXxhDAGzi16aZ8l4//yH9IMx/UBDauYe+In5520dGtXDaxO/68F3hanSobtbh357LjuVy2iRz0vENpLog=
-X-Gm-Message-State: AOJu0Yy7Y8KMIGprMCu+ls3no9p84CNI4X/gzXzfI4vT6ZLry+doR/ox
-	2dMiY5ywMt8gKAbKcDYJqmURRlKqLkyrFG93ofyb3W8Uw8rJmPIRxDFar80xIDo=
-X-Google-Smtp-Source: AGHT+IFGPd6I2/K6HlI1TytR7mWgfa8jok7atWE5+pWx/yt+JF49ojwwLtAkLyTTuVdMPe1wvNEoWQ==
-X-Received: by 2002:a05:6871:793:b0:21e:a63c:658d with SMTP id o19-20020a056871079300b0021ea63c658dmr9980599oap.21.1709056630836;
-        Tue, 27 Feb 2024 09:57:10 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id bj25-20020a05620a191900b007873306737fsm3807919qkb.87.2024.02.27.09.57.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 09:57:10 -0800 (PST)
-Message-ID: <7292dc5c-dff0-45f0-99b1-f1687451b23f@gmail.com>
-Date: Tue, 27 Feb 2024 09:57:05 -0800
+        d=1e100.net; s=20230601; t=1709056679; x=1709661479;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kC2wEvtOaFP3h4cQZlxM1jPUFNWCk373B+A/I3NBDq4=;
+        b=vsglrR+rUrnCH9o7zKlpcVuzU/33e+AcDn+Sp6iiCo/zq61rU/5J9DefjUNzyXslX2
+         y37ytHq4x3EgGS7UFHBmmYfJO67Hf+b1rNMFQUCd7cN58Dk1axWSPBBEW91xZM+JNPKC
+         QJ2itaZos9y0nfP2n42J+sXptrchYhvKmbFkpIZpls2wwVqTGE7wc0qYRjzni7xv0djy
+         e/eNvSx2Ub3jLyHpsjRYEnCuHz/UR1V0ZH7AvItAYPKIyE1jfCDuFnB0MeA+7pPH9xzQ
+         fiMBRbHWA7n2cTZsG7xcz5EU/Ks6X5m3iLAbIfquxuS6AryvWi4aMIqo1lNvefo/1BSn
+         z8Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCVh8VOp3AKMODHjB6AN5kdwR19r7bZB2Y86Yn3PFKtz1zN/HokTyr2uM+huIZJht06wDvgkSHNBWyGqaH+rWneAdpSqCA2Yo1gsNRd2
+X-Gm-Message-State: AOJu0YyWwc6Cd14XhV4rDPFSvkCcaOKQPB32ki4MBgb/1q+L1V3DLI33
+	HviKDI3AIe+4NjvO+D7Ro9FVGh7wlb1sVS6Z7Zx4nUy6Qp3MJ0POwI0d621Cdg==
+X-Google-Smtp-Source: AGHT+IHUUUP9/UmmHrjaYXTI+M7Y37qSM1X5UbcLLZGe58gX4f0lCcIEDgjF5IXEEtRaPtrm8FmQpg==
+X-Received: by 2002:a17:903:1111:b0:1dc:139:8488 with SMTP id n17-20020a170903111100b001dc01398488mr10689811plh.5.1709056679376;
+        Tue, 27 Feb 2024 09:57:59 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id o24-20020a170902779800b001dcc138d4afsm977717pll.34.2024.02.27.09.57.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 09:57:58 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kees Cook <keescook@chromium.org>,
+	Guixiong Wei <guixiongwei@gmail.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Kristen Carlson Accardi <kristen@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Jeremy Fitzhardinge <jeremy@xensource.com>,
+	Chris Wright <chrisw@sous-sol.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] x86, relocs: Ignore relocations in .notes section
+Date: Tue, 27 Feb 2024 09:57:54 -0800
+Message-Id: <20240227175746.it.649-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PM / core: conditionally skip system pm in
- device/driver model
-Content-Language: en-US
-To: Guan-Yu Lin <guanyulin@google.com>
-Cc: rafael@kernel.org, pavel@ucw.cz, len.brown@intel.com,
- gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
- rdunlap@infradead.org, james@equiv.tech, broonie@kernel.org,
- james.clark@arm.com, masahiroy@kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20240223143833.1509961-1-guanyulin@google.com>
- <a299118d-eeec-40b4-9a3d-48dc40f34e12@gmail.com>
- <CAOuDEK3wP6zhEwgUn5zSedtwTYVFaJeBfeXkSg897EhpGP9=ig@mail.gmail.com>
- <3208c5b9-5286-48d1-81ab-cc3b2bc4303e@gmail.com>
- <CAOuDEK39Bdru5wAbxW-g2c=POgRxZwdQzPO5uNXP96AfSyA6pw@mail.gmail.com>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <CAOuDEK39Bdru5wAbxW-g2c=POgRxZwdQzPO5uNXP96AfSyA6pw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2252; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=+0OPAWAs3sfMdgF2nC2ThcDNMyrAtbB6XPH0ctrI4rY=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl3iKiWcoAm/pK9IhJJhi0v/ve2Z+RTlBNhV4/B
+ 7Jqo6TYkDqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZd4iogAKCRCJcvTf3G3A
+ JgcrEACDAm+AhGqv9vV78y0ouPqZt08aHzKCsCeWI6lwhfwGgZe8ijuaongDeSFNCgnZ18wqT/E
+ Hh+z5QHgRKGysxtXWrTlNMPKTc0wUGMaRLOYF/M17JOawinba/Diinu5X9VHxZN60b+3hyNCmg7
+ 2GAsfefI+xOZUgdvpb/37o+UmF+B7IrR3RrOvMRWh5er9F+dQVKunxeaEjjwYqnCSRNNwf+PS6E
+ MXguEh49RMJjJ8C+2djWZg5x8eXSZXZldVsNHWqf216b0Hy1jFrTXru6ZJKztcxA8royqgN51YQ
+ bZjyr3I1yqM8WhfCIZ6czF2pNRwCBuyw/2zw4K2rCVgWeqqAxlKpgrXttfYzkihUWjql3iI8D5g
+ rnTZNwlpiq9UqP79/c6WJut4Ms746KGUpOeRh/8tarJ/m9XFXAsrAt6sSW9zPQzpsMeHRK/B1S2
+ UW55C8CLV5YcXV8D5271zrHoqlO7TBuaeqbEwkJNLkot9HZSGpzFnNZJs9CljTut5phGq6JLV29
+ FSJtFUmIwdj1hCu0+FjeDVlsgLqE/FwI1X94pFfNhyExNpqcpwdGm0vuy77wwYZCjaNzplrk/FY
+ HAdgO3sH/FJ+bLOo1DwDPotHjYNDLJPfkRD62xD9vkhzVhyE3nf7HRBeWBGRDqs7oBENd45BHLS
+ rWx8L8J AtZrqrQg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-On 2/27/24 00:56, Guan-Yu Lin wrote:
-> On Tue, Feb 27, 2024 at 2:40 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> On 2/26/24 02:28, Guan-Yu Lin wrote:
->>> On Sat, Feb 24, 2024 at 2:20 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>>
->>>> On 2/23/24 06:38, Guan-Yu Lin wrote:
->>>>> In systems with a main processor and a co-processor, asynchronous
->>>>> controller management can lead to conflicts.  One example is the main
->>>>> processor attempting to suspend a device while the co-processor is
->>>>> actively using it. To address this, we introduce a new sysfs entry
->>>>> called "conditional_skip". This entry allows the system to selectively
->>>>> skip certain device power management state transitions. To use this
->>>>> feature, set the value in "conditional_skip" to indicate the type of
->>>>> state transition you want to avoid.  Please review /Documentation/ABI/
->>>>> testing/sysfs-devices-power for more detailed information.
->>>>
->>>> This looks like a poor way of dealing with a lack of adequate resource
->>>> tracking from Linux on behalf of the co-processor(s) and I really do not
->>>> understand how someone is supposed to use that in a way that works.
->>>>
->>>> Cannot you use a HW maintained spinlock between your host processor and
->>>> the co-processor such that they can each claim exclusive access to the
->>>> hardware and you can busy-wait until one or the other is done using the
->>>> device? How is your partitioning between host processor owned blocks and
->>>> co-processor(s) owned blocks? Is it static or is it dynamic?
->>>> --
->>>> Florian
->>>>
->>>
->>> This patch enables devices to selectively participate in system power
->>> transitions. This is crucial when multiple processors, managed by
->>> different operating system kernels, share the same controller. One
->>> processor shouldn't enforce the same power transition procedures on
->>> the controller – another processor might be using it at that moment.
->>> While a spinlock is necessary for synchronizing controller access, we
->>> still need to add the flexibility to dynamically customize power
->>> transition behavior for each device. And that's what this patch is
->>> trying to do.
->>> In our use case, the host processor and co-processor are managed by
->>> separate operating system kernels. This arrangement is static.
->>
->> OK, so now the question is whether the peripheral is entirely visible to
->> Linux, or is it entirely owned by the co-processor, or is there a
->> combination of both and the usage of the said device driver is dynamic
->> between Linux and your co-processor?
->>
->> A sysfs entry does not seem like the appropriate way to described which
->> states need to be skipped and which ones can remain under control of
->> Linux, you would have to use your firmware's description for that (ACPI,
->> Device Tree, etc.) such that you have a more comprehensive solution that
->> can span a bigger scope.
->> --
->> Florian
->>
-> 
-> We anticipate that control of the peripheral (e.g., controller) will
-> be shared between operating system kernels. Each kernel will need its
-> own driver for peripheral communication. To accommodate different
-> tasks, the operating system managing the peripheral can change
-> dynamically at runtime.
+When building with CONFIG_XEN_PV=y, .text symbols are emitted into
+the .notes section so that Xen can find the "startup_xen" entry point.
+This information is used prior to booting the kernel, so relocations
+are not useful. In fact, performing relocations against the .notes
+section means that the KASLR base is exposed since /sys/kernel/notes
+is world-readable.
 
-OK, that seems like this ought to be resolved at various layer other 
-than just user-space, starting possibly with an 
-overarching/reconciliation layer between the various operating systems?
+To avoid leaking the KASLR base without breaking unprivileged tools that
+are expecting to read /sys/kernel/notes, skip performing relocations in
+the .notes section. The values readable in .notes are then identical to
+those found in System.map.
 
-> 
-> We dynamically select the operating system kernel controlling the
-> target peripheral based on the task at hand, which looks more like a
-> software behavior rather than hardware behavior to me. I agree that we
-> might need a firmware description for "whether another operating
-> system exists for this peripheral", but we also need to store the
-> information about "whether another operating system is actively using
-> this peripheral". To me, the latter one looks more like a sysfs entry
-> rather than a firmware description as it's not determined statically.
+Reported-by: Guixiong Wei <guixiongwei@gmail.com>
+Closes: https://lore.kernel.org/all/20240218073501.54555-1-guixiongwei@gmail.com/
+Fixes: 5ead97c84fa7 ("xen: Core Xen implementation")
+Fixes: da1a679cde9b ("Add /sys/kernel/notes")
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Kristen Carlson Accardi <kristen@linux.intel.com>
+ v2: switch to a SHT_NOTE check (jgross)
+ v1: https://lore.kernel.org/all/20240222171840.work.027-kees@kernel.org/
+---
+ arch/x86/tools/relocs.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I can understand why moving this sort of decisions to user-space might 
-sound appealing, but it also seems like if the peripheral is going to be 
-"stolen" away from Linux, then maybe Linux should not be managing it at 
-all, e.g.: unbind the device from its driver, and then rebind it when 
-Linux needs to use it. You would have to write your drivers such that 
-they can skip the peripheral's initialization if you need to preserve 
-state from the previous agent after an ownership change for instance?
-
-I do not think you are painting a full picture of your use case, 
-hopefully not intentionally but at first glance it sounds like you need 
-a combination of kernel-level changes to your drivers, and possibly more.
-
-Seems like more details need to be provided about the overall intended 
-use cases such that people can guide you with a fuller picture of the 
-use cases.
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index a3bae2b24626..b029fb81ebee 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -653,6 +653,14 @@ static void print_absolute_relocs(void)
+ 		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC)) {
+ 			continue;
+ 		}
++		/*
++		 * Do not perform relocations in .notes section; any
++		 * values there are meant for pre-boot consumption (e.g.
++		 * startup_xen).
++		 */
++		if (sec_applies->shdr.sh_type == SHT_NOTE) {
++			continue;
++		}
+ 		sh_symtab  = sec_symtab->symtab;
+ 		sym_strtab = sec_symtab->link->strtab;
+ 		for (j = 0; j < sec->shdr.sh_size/sizeof(Elf_Rel); j++) {
 -- 
-Florian
+2.34.1
 
