@@ -1,140 +1,113 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EC213AA47;
-	Tue, 27 Feb 2024 13:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D82113B7A2
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709039719; cv=none; b=cahpikHUVSx9ancYIW5eczor9e9giXd/Gln34E1uJmbEjU1wUYXtKobVMCZ91+8JtcCdXcWTANtdqlPrXGtsbjnnIZid/jIZVsc0oFxfjvXr7YtBy8/lY8ddtHqEVfsx4eRTXoAj1Aiv1gmfQ55ON18uWLpnnCdMvKf+nLKbx0A=
+	t=1709039727; cv=none; b=UJsnVMHnlRrO5kMzoVMMyJTsSFYYX3wOnXQyrCJzMRMnIq2s1awuILAcaXoLNTNruP8da5MSd+V35GW0nUjHoC3hCIylJ2Qu42/Jw3hDC9JxK0xDMubZtl2J7lP0dLKbkokQVGKrJpTBn65uqNLBiS6nG1vIq+UzQ2NhiBGkPFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709039719; c=relaxed/simple;
-	bh=FBp4MDnDC75gzPDqxDP5QxL3po+9KLgHyEoDNJ8jPX0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=jHTQSExsQIPmLOYxRt/3bC/sjdMdHcmyI3y1Za+x6lkq2/DqomLfgUoHrSKzx3hNVWRGZfV7oowfjBr6ScAk6LyEvACUGmKMYLWBFnDz44ekozwosdjkODyGuIs5uAHBZ3SEd5ICq1jrLrFM8YN5KhOT49IY7LkPynBaBu0pIgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=f2BOj/wU; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1709039727; c=relaxed/simple;
+	bh=FP6AjnY6lykXcHHYUiN/iTD0OoHVJjRqhJvevTgWu7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SWkJe0ANlK6AgMosKjlpEk98fJo7NrvlnpQ7kXjUwe+wNeJjlXUVE3weY5XOC0TLGB4/uKxa7COBuoEsHhI8y/0orCr1Z0+Zax20JrVMnsHpRNLLCcqicVAyhMPsjwjKvd4PTvtlvI68EO3Qxo0LtzHsXCeVXZJ+KHlQJ4gH5vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b=eCuzhSel; arc=none smtp.client-ip=185.136.65.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="f2BOj/wU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1709039695; x=1709644495; i=markus.elfring@web.de;
-	bh=FBp4MDnDC75gzPDqxDP5QxL3po+9KLgHyEoDNJ8jPX0=;
-	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
-	b=f2BOj/wUphPDnXxiqUYksZagtn/Jd4Md3BUDukbzbBpXnewv7EXlSUwIOcDVWVHj
-	 o63Gvz8DdKEttH1lIaNayIfJuVsTzfPjhUMGmraJQP3pkGj5q81mfpHR8lqKhElK6
-	 OUh+RJ5jM+3Al/Vx7dnmvXkR3L2hEDlPtmoCmrviEvCYXdBDRdG4lmZbZe53dPZX+
-	 b/jRZSLs/6QpI3TALw1WCO3XpiaQpoBDTmf4/35YCUg52T43Nm/OLN9z0EcGALe9M
-	 ZbJsgc/4hce7WDjQ/VCCIaRnP7XHHixMOrRh/BHE8rfEgyyn2Spuvq3JtE6GvcVC+
-	 L4xg8PQT6pVfEBPy3Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.82.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MActo-1rlWsR2EKe-00B2xL; Tue, 27
- Feb 2024 14:14:55 +0100
-Message-ID: <9b879c8d-4c28-4748-acf6-18dc69d8ebdf@web.de>
-Date: Tue, 27 Feb 2024 14:14:52 +0100
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b="eCuzhSel"
+Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 20240227131514b5d18e2db4e7cf0d04
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 27 Feb 2024 14:15:14 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=alexander.sverdlin@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=gx92jGR/bM3wlQtlpHTsHDgQzGr0Puey6WoEtzn4I0A=;
+ b=eCuzhSelNHUz20au0aROGtgres048/b9fq80IOQZyW7fUcqgF6IMwNn3u9rMYt3wZ5mvYX
+ ikQhMyy2f1Fwtg8aqH13f1l3tZ1gEB7L+jVatBQhuYMmlQ85+1hm1oZ6WhNtw+bT1OHyy7L+
+ vNbcsOUwgQcDp4EUro2PIoG60VOgw=;
+From: "A. Sverdlin" <alexander.sverdlin@siemens.com>
+To: linux-rtc@vger.kernel.org
+Cc: Lukas Stockmann <lukas.stockmann@siemens.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-kernel@vger.kernel.org,
+	Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Subject: [PATCH] rtc: pcf85063: do a SW reset after rtc power fail
+Date: Tue, 27 Feb 2024 14:14:32 +0100
+Message-ID: <20240227131436.3342807-1-alexander.sverdlin@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Madalin Bucur <madalin.bucur@nxp.com>,
- Paolo Abeni <pabeni@redhat.com>, Sean Anderson <sean.anderson@seco.com>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] net: fman: Use common error handling code in dtsec_init()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:uZyZ7wALjwGCm5kyUSIblzVfyzZ0lkUpsX745gNqt2IL/1JyiYR
- xKuLS5MHaSaWBKS5JZzmnUt9nZRkdLJiSywPZmJfNLYBmnrhaCuhtYmFUoZoxXbGEUOVVVd
- DT559PhNXUd6W0NwQFRSIkFLTQSM9tNxZlZAg0r6NoZzwBFjSlnO5QTdtUGkrzHcfIVEfI3
- X2Xd6wpKL7tasXzjcVdlQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MMHx4LFE7is=;DRqgI+61KeO1S7erGzNs44kiDPH
- VSaTx1zQSD+TWBMa5N3SsnNGpa5Qc+y2x0ZpyHgVo7m0y8hGVom5ru3EWVbXBSYZy02geUb82
- jpGIU+9p22o/I0LK6wvbnrk9xozleo9fLQEVJL+pYkIBkTRHPAE5XlCCtGni1hwdty1QQ+5sU
- kvQX22u9K7s5exwL9rjExyG5F3tD/lL6+rGyOgW4usuN92L4Ss8aGjEhEKY/+B8uy7Zm7cT1d
- UJl+sAOwn63nWxB+x1WNk/MLRgrQ8uArapuVbZu4dBhJe9tfNdHbJDyqFIkFQSO31cgTfsLUS
- 7ib0etfM7SK+TesulpXykuqzEXexgXkVc3IjlPBom6h+RoiS/GaCLxaL+vLENRD97G+DuVea0
- d54qKE79zpKM3BcQmSUxVL6CZ+jZGZi43pVJNZe1oUSwpuleK7fiHDTkn7pBuZav/x8BYq42x
- ObHmBUyEj+v0Nk7cyqmvHRkDV4CHO6c1kq2ishjXOMcM19HGud+BrJVGCrHmNBmRbwsPbDYRp
- B3nYWOyyrsZ7TGqoIc7IXe0d3u8KUTzk0HtW0N9Y5oNrXYfnjhV9clC5FWtvQsAJWfZ2O8vFC
- fgsMxjJDudnUI3gyPhbwdRZ+duDbDCoXMlzWkIkoX0ixazNo1UP+hwNCHr/VhLeG9Oir342Fo
- cATnqlDl25tXRPtKN/Z1tkNoE091WZKOZVxNWRNlFoCw+7Xhg9UTPDM4RgNJqy/uaw2moET1w
- //asaFl7VGJjuSaqI2fOjYctRT0LXkk/il1+A0GqWc73/pjma0FO1bH1kY3YnPijgGaO4Vlr3
- gZqTjxAlgGsyqNlEnK1sxN4Jp21vJKwiT9OWmXlWLPSrI=
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-456497:519-21489:flowmailer
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 27 Feb 2024 14:05:25 +0100
+From: Lukas Stockmann <lukas.stockmann@siemens.com>
 
-Adjust jump targets so that a bit of exception handling can be better
-reused at the end of this function implementation.
+From PCF85063A datasheet, section "Software reset":
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- .../net/ethernet/freescale/fman/fman_dtsec.c  | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+"There is a low probability that some devices will have corruption of the
+registers after the automatic power-on reset if the device is powered up
+with a residual VDD level. It is required that the VDD starts at zero volts
+at power up or upon power cycling to ensure that there is no corruption of
+the registers. If this is not possible, a reset must be initiated after
+power-up (i.e. when power is stable) with the software reset command"
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_dtsec.c b/drivers/ne=
-t/ethernet/freescale/fman/fman_dtsec.c
-index 3088da7adf0f..1de22400fd89 100644
-=2D-- a/drivers/net/ethernet/freescale/fman/fman_dtsec.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_dtsec.c
-@@ -1279,9 +1279,8 @@ static int dtsec_init(struct fman_mac *dtsec)
- 		   dtsec->max_speed, dtsec->addr, dtsec->exceptions,
- 		   dtsec->tbidev->addr);
+Trigger SW reset if a power loss is detected.
+
+Link: https://www.nxp.com/docs/en/data-sheet/PCF85063A.pdf
+Signed-off-by: Lukas Stockmann <lukas.stockmann@siemens.com>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+---
+ drivers/rtc/rtc-pcf85063.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
+index fdbc07f14036..edfd75d18e19 100644
+--- a/drivers/rtc/rtc-pcf85063.c
++++ b/drivers/rtc/rtc-pcf85063.c
+@@ -35,6 +35,7 @@
+ #define PCF85063_REG_CTRL1_CAP_SEL	BIT(0)
+ #define PCF85063_REG_CTRL1_STOP		BIT(5)
+ #define PCF85063_REG_CTRL1_EXT_TEST	BIT(7)
++#define PCF85063_REG_CTRL1_SWR		0x58
+ 
+ #define PCF85063_REG_CTRL2		0x01
+ #define PCF85063_CTRL2_AF		BIT(6)
+@@ -580,7 +581,7 @@ static int pcf85063_probe(struct i2c_client *client)
+ 
+ 	i2c_set_clientdata(client, pcf85063);
+ 
+-	err = regmap_read(pcf85063->regmap, PCF85063_REG_CTRL1, &tmp);
++	err = regmap_read(pcf85063->regmap, PCF85063_REG_SC, &tmp);
  	if (err) {
--		free_init_resources(dtsec);
- 		pr_err("DTSEC version doesn't support this i/f mode\n");
--		return err;
-+		goto free_resources;
- 	}
-
- 	/* Configure the TBI PHY Control Register */
-@@ -1296,23 +1295,21 @@ static int dtsec_init(struct fman_mac *dtsec)
- 	err =3D fman_set_mac_max_frame(dtsec->fm, dtsec->mac_id, max_frm_ln);
- 	if (err) {
- 		pr_err("Setting max frame length failed\n");
--		free_init_resources(dtsec);
--		return -EINVAL;
-+		err =3D -EINVAL;
-+		goto free_resources;
- 	}
-
- 	dtsec->multicast_addr_hash =3D
- 	alloc_hash_table(EXTENDED_HASH_TABLE_SIZE);
- 	if (!dtsec->multicast_addr_hash) {
--		free_init_resources(dtsec);
- 		pr_err("MC hash table is failed\n");
--		return -ENOMEM;
-+		goto e_nomem;
- 	}
-
- 	dtsec->unicast_addr_hash =3D alloc_hash_table(DTSEC_HASH_TABLE_SIZE);
- 	if (!dtsec->unicast_addr_hash) {
--		free_init_resources(dtsec);
- 		pr_err("UC hash table is failed\n");
--		return -ENOMEM;
-+		goto e_nomem;
- 	}
-
- 	/* register err intr handler for dtsec to FPM (err) */
-@@ -1326,6 +1323,12 @@ static int dtsec_init(struct fman_mac *dtsec)
- 	dtsec->dtsec_drv_param =3D NULL;
-
- 	return 0;
+ 		dev_err(&client->dev, "RTC chip is not present\n");
+ 		return err;
+@@ -590,6 +591,22 @@ static int pcf85063_probe(struct i2c_client *client)
+ 	if (IS_ERR(pcf85063->rtc))
+ 		return PTR_ERR(pcf85063->rtc);
+ 
++	/*
++	 * If a Power loss is detected, SW reset the device.
++	 * From PCF85063A datasheet:
++	 * There is a low probability that some devices will have corruption
++	 * of the registers after the automatic power-on reset...
++	 */
++	if (tmp & PCF85063_REG_SC_OS) {
++		dev_warn(&client->dev,
++			 "Power loss detected, send a SW reset to the device\n");
++		err = regmap_write(pcf85063->regmap, PCF85063_REG_CTRL1,
++				PCF85063_REG_CTRL1_SWR);
++		if (err < 0)
++			dev_err(&client->dev,
++				"SW reset failed, trying to continue\n");
++	}
 +
-+e_nomem:
-+	err =3D -ENOMEM;
-+free_resources:
-+	free_init_resources(dtsec);
-+	return err;
- }
-
- static int dtsec_free(struct fman_mac *dtsec)
-=2D-
+ 	err = pcf85063_load_capacitance(pcf85063, client->dev.of_node,
+ 					config->force_cap_7000 ? 7000 : 0);
+ 	if (err < 0)
+-- 
 2.43.2
 
