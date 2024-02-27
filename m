@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C933B5786A
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2E858106
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709076072; cv=none; b=VD3zSsSSPQkQVqo4277ZcsZf5+un+m6OAQFKAo8FcMLsUzj37TYDPQCaaNbNheyz7kKZCzk/CXKykshuLYawIpX3u5o3NoXQAl9LFdCw8Y3QgrokyfdrgBL5SKnacrQ9v2kqFoLDMC6QkcnFuGsTF7VgWjyHH6EKamUEJPceO5w=
+	t=1709076072; cv=none; b=Mdo9zggY11YmgYCtpoos9P5QRemfA4Mvvxu1Ut/+AH/gD6mTXM7QVpNnMTvqYwZoS/4v2WEBEYwq7rdNJYUwAxggMhLULI4Kx/a4oNX3rXBZvl11Hvlp48hSl1RABsRC/2JZFZDLdfFeUKgOcatToQ5qlwb6grJXUnuUCMYKW54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709076072; c=relaxed/simple;
-	bh=AJ+B0FrHSNRu31IBbfmm1tYsIiofE/NifalgqPDy/Ng=;
+	bh=S+uYhRirj57d50L93671lbfFFpK+UcWKuIe6fA+sLME=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fayO6sZaOvpZw33xsmilidcYw/6EVtSBk1su8eZnQSRMWmlJNf2GOPN46aUPctIxpq+ZV993lQ1KbAVHQMS0Nh68Dgl0aP/v3xtVvv1iE/qotsPkhjvnKM2/p51jcbHEeV5oNjcTG97+hagfco4/w0Ku95COT2eLcPXYhAY0FJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C/WRFAsj; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=Lvp5pGIKbtaXeV9UnUrExblyFaWqJwsyUXBS4vUKfHRHJQsbrmA1p5jyKA6piNYoc91eMpnWzkLy8YM8p6Q5wc+zazdzHsYt49lpCp/Gf0AbFN0NPTIlvRcO2JSunifOdWThaemVbRLEMG+Jqf2dVQcYYPpcRtB3u2xwhlsn240=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZFjgvgk6; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C/WRFAsj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZFjgvgk6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709076067;
+	s=mimecast20190719; t=1709076068;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fGS3MxnywIk2P3LLbijhge2gtItFefuPKT0i/X1AVBM=;
-	b=C/WRFAsj15Zy+2PtLsniaboCeKPetWhKp80UoPfpM+D7S8QEqGOGP/B0XbNSZhuBVjmlxX
-	ACO4RxSZ+N1B0kaH5lnRyNzYqVvG+MSFrXs1rzLblNBjgbBBG7uL8h9lJ+UzpTE+I80wmR
-	IUWvkOct6PZCELACLWu4aSZjjAgdwvA=
+	bh=b2AC1kWCQIdviuYJSL43BWVEXzcmh8/McQsHaI1LaBw=;
+	b=ZFjgvgk6YnxGz+suaEYbiWl8TZj0bml9iNQbXZGrprzmB5TYPtAD5VI716EUKdRzKQNwC0
+	7Q76tU4ButKMTmP6+BZc5n6MHXj9aOvxy2skkKlqL6cEM1Vg9ij+dF5uk5veU/ezaet/jf
+	HkW9/ZvgbQpdKSOiF8nKOD6yvSNJ1pg=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-gpFf_sLQNOebo87RdrLyXA-1; Tue,
- 27 Feb 2024 18:21:03 -0500
-X-MC-Unique: gpFf_sLQNOebo87RdrLyXA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-179-bY7PtkpjPjONcKbOO7aBxQ-1; Tue,
+ 27 Feb 2024 18:21:05 -0500
+X-MC-Unique: bY7PtkpjPjONcKbOO7aBxQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F33C13C13A87;
-	Tue, 27 Feb 2024 23:21:02 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 999A83C13A87;
+	Tue, 27 Feb 2024 23:21:04 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C65294EA55;
-	Tue, 27 Feb 2024 23:21:02 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6D272C0348F;
+	Tue, 27 Feb 2024 23:21:04 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -47,9 +47,9 @@ Cc: seanjc@google.com,
 	michael.roth@amd.com,
 	isaku.yamahata@intel.com,
 	thomas.lendacky@amd.com
-Subject: [PATCH 09/21] KVM: VMX: Modify NMI and INTR handlers to take intr_info as function argument
-Date: Tue, 27 Feb 2024 18:20:48 -0500
-Message-Id: <20240227232100.478238-10-pbonzini@redhat.com>
+Subject: [PATCH 16/21] KVM: guest_memfd: pass error up from filemap_grab_folio
+Date: Tue, 27 Feb 2024 18:20:55 -0500
+Message-Id: <20240227232100.478238-17-pbonzini@redhat.com>
 In-Reply-To: <20240227232100.478238-1-pbonzini@redhat.com>
 References: <20240227232100.478238-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -60,82 +60,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-From: Sean Christopherson <seanjc@google.com>
+Some SNP ioctls will require the page not to be in the pagecache, and as such they
+will want to return EEXIST to userspace.  Start by passing the error up from
+filemap_grab_folio.
 
-TDX uses different ABI to get information about VM exit.  Pass intr_info to
-the NMI and INTR handlers instead of pulling it from vcpu_vmx in
-preparation for sharing the bulk of the handlers with TDX.
-
-When the guest TD exits to VMM, RAX holds status and exit reason, RCX holds
-exit qualification etc rather than the VMCS fields because VMM doesn't have
-access to the VMCS.  The eventual code will be
-
-VMX:
-  - get exit reason, intr_info, exit_qualification, and etc from VMCS
-  - call NMI/INTR handlers (common code)
-
-TDX:
-  - get exit reason, intr_info, exit_qualification, and etc from guest
-    registers
-  - call NMI/INTR handlers (common code)
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Message-Id: <0396a9ae70d293c9d0b060349dae385a8a4fbcec.1705965635.git.isaku.yamahata@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ virt/kvm/guest_memfd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 3d8a7e4c8e37..8aedfe0fd78c 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7000,24 +7000,22 @@ static void handle_nm_fault_irqoff(struct kvm_vcpu *vcpu)
- 		rdmsrl(MSR_IA32_XFD_ERR, vcpu->arch.guest_fpu.xfd_err);
- }
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 0f4e0cf4f158..de0d5a5c210c 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -20,7 +20,7 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
+ 	/* TODO: Support huge pages. */
+ 	folio = filemap_grab_folio(inode->i_mapping, index);
+ 	if (IS_ERR_OR_NULL(folio))
+-		return NULL;
++		return folio;
  
--static void handle_exception_irqoff(struct vcpu_vmx *vmx)
-+static void handle_exception_irqoff(struct kvm_vcpu *vcpu, u32 intr_info)
- {
--	u32 intr_info = vmx_get_intr_info(&vmx->vcpu);
--
- 	/* if exit due to PF check for async PF */
- 	if (is_page_fault(intr_info))
--		vmx->vcpu.arch.apf.host_apf_flags = kvm_read_and_reset_apf_flags();
-+		vcpu->arch.apf.host_apf_flags = kvm_read_and_reset_apf_flags();
- 	/* if exit due to NM, handle before interrupts are enabled */
- 	else if (is_nm_fault(intr_info))
--		handle_nm_fault_irqoff(&vmx->vcpu);
-+		handle_nm_fault_irqoff(vcpu);
- 	/* Handle machine checks before interrupts are enabled */
- 	else if (is_machine_check(intr_info))
- 		kvm_machine_check();
- }
+ 	/*
+ 	 * Use the up-to-date flag to track whether or not the memory has been
+@@ -146,8 +146,8 @@ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
+ 		}
  
--static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
-+static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
-+					     u32 intr_info)
- {
--	u32 intr_info = vmx_get_intr_info(vcpu);
- 	unsigned int vector = intr_info & INTR_INFO_VECTOR_MASK;
- 	gate_desc *desc = (gate_desc *)host_idt_base + vector;
+ 		folio = kvm_gmem_get_folio(inode, index);
+-		if (!folio) {
+-			r = -ENOMEM;
++		if (IS_ERR_OR_NULL(folio)) {
++			r = folio ? PTR_ERR(folio) : -ENOMEM;
+ 			break;
+ 		}
  
-@@ -7040,9 +7038,9 @@ void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
- 		return;
- 
- 	if (vmx->exit_reason.basic == EXIT_REASON_EXTERNAL_INTERRUPT)
--		handle_external_interrupt_irqoff(vcpu);
-+		handle_external_interrupt_irqoff(vcpu, vmx_get_intr_info(vcpu));
- 	else if (vmx->exit_reason.basic == EXIT_REASON_EXCEPTION_NMI)
--		handle_exception_irqoff(vmx);
-+		handle_exception_irqoff(vcpu, vmx_get_intr_info(vcpu));
- }
- 
- /*
 -- 
 2.39.0
 
