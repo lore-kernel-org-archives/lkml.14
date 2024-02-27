@@ -1,128 +1,77 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CF853E00
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 06:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414CA5C82
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 06:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709017046; cv=none; b=Q3H/JQz1PhljtpwWdhhucmlH3vhLTtQLkeJRRzBo8f1q4IsDt6G8SeQcbDO9U7xMufLlJ1XaGe3ZjUCVv8gnQHQzwknW1KfRbr/AAntlQTXKuWKBaeqcV8cc7uS9dzvk6cMmfvqEoZCyB5krf0HOdJPo2RhSTwN2PbiKTs4wlh8=
+	t=1709017061; cv=none; b=Cm9gOcyDJ2wA0lMl46FMa0uPhkbMxk8x1XN+o8MMBjZfnzI+eR9OT4B6wxJ8j7m0L2RPG8kYV8nEmVIw2+C1XG2HEb/rospAmUFntoWqoL6gmh7ALsVdaGOjev4YNyX4QCIwoORhO/ON6YwDjAHXEjFpoGSVIt9b0WP9mDr6d4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709017046; c=relaxed/simple;
-	bh=CPG65n+GxI/uy0eM/O2KvuN3DhTq+x5b9cRnvJbLDFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ohQW9VTLDdnVcJNpc+zkY4fQToJUFuTiq/nq8O4wpbRFAamzmW6HaSJ8C9lzW/3I/0q/1PXOFtNAPWJLdrlFeb5d3UmWB6D7dLEGXdq7tTYfgV5ArkvxSkq8c89OXk9LmNJ+ACxkCg9u4IbKPR4tlciBAUudSo5q/tFfUoei7SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZxQ2axHO; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709017061; c=relaxed/simple;
+	bh=YvGZDgLgIVJF+BHE7Jc79utI2MU3LMX2wIjPPgVMfJQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=U4XB0385opC7zw9uhkKHneAv1FtMz3YCP4eD2sQLxdio3Pp2Vbl80yGn/ZVuLYpb7L2W5kON/cesuOA+2uccHjI0ENZN22XewekPnwZjfiIhKsrq18tHa78zvtRL0/Kdhw3+W13d1/dgYIAjHj7Am7237EgB6UJWML7VeeHvXb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IId5QlNo; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZxQ2axHO"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-512e39226efso5335572e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 22:57:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709017043; x=1709621843; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OYVZLW/axFzRuDYyrPmP2hajXo30/Cydh9CnWHBpngI=;
-        b=ZxQ2axHO8NG3FnItsxegruRxMRzZy+EUVf+HXidsq/+BjMhGTvbzrIl6IbpZz8WkpB
-         RzNvWKBWdlgT9p0YWwvZTVURNSCUGwpHfHEvj12KF93F2EoRISOGGItY0H+ZikqAc58N
-         badCtj8jWvVAIJ31jlQE9X2miT5UVvr4cPoJsq8qAVbxq1VraUtFB8RemyFZOIZYs1xu
-         XLlDYyfIzbZEyRj0hbS2mN93/DjKYbV8aM1AYYPpqPVm3s/s55pYPHt2qqrYiaUlwUTK
-         ypVVb8w14nVMLWkblcwaQW5YvvwBqbLHmMvpEadaBT5A/TWM1KF5lAH7isW9XjDjqBQ8
-         LUBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709017043; x=1709621843;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OYVZLW/axFzRuDYyrPmP2hajXo30/Cydh9CnWHBpngI=;
-        b=uyfsl3QrY79DsB1tyIUL7CpS14e8vE8kwkpiVJPDXQfVyh9fxYxBXnaLdDABgO5OqC
-         moIVfVoQ7BveM414cBgRWd4pJAYrSIh7iQYcq5t9xtb1AzyMSc/Es59q0kYcahO8U6BN
-         RXTuDPg+a2i6fy3vZ2QlZRqhnM/jjMmsfnaWYrfLQPJLiGAXJX4ocS7IhnWg4OI+T4hG
-         UejSeNDDGSwcpg+EJebSSJGMGJTfhtAHWmb7UGmrdjNVJn1DmJef4ozgkPOUWwX//UKi
-         N3aT3/99Fe34LStnhBE8RXUP4hhDMGMu/tFp8oPjs3na6blKLFqMNXon2HzwlJoeoWzc
-         Yjfg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGHaOQqfV4NNcvHD1ORPS8525lJDtP+FJdW7o10v/qFW05vLsQQzYzG6XamlhV7goCRPPi2K8f+y+rQJZ9BU2TJbmTWvqbdNMgIYTx
-X-Gm-Message-State: AOJu0YwGhJ0ELBpSWBIGa2ZA2cRtCJ9Y730IlV6IlaofBYzgh1PvnCLd
-	s7Xi2BC2/mvemcrkR06U3lsnIdTLmJpt5oiQM9GXZmMsY0iJJPWwYLwdXEZBcrycrcCa+XNGsv+
-	bO+/81qM4tyb3sMDGdMar9oVGxO03oPpj7QSgeYYmvV8hZng9Xmrb
-X-Google-Smtp-Source: AGHT+IF4r+KTMpwjEC8S0vMDfPTig3AUlP4fC1ph9rIWf4P50aRwWGKchYxwX6V4YHAUYeLPfpJ3I+D8/BQPTcdvGRQ=
-X-Received: by 2002:ac2:518f:0:b0:512:d713:1de2 with SMTP id
- u15-20020ac2518f000000b00512d7131de2mr5515712lfi.40.1709017042492; Mon, 26
- Feb 2024 22:57:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IId5QlNo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709017058; x=1740553058;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YvGZDgLgIVJF+BHE7Jc79utI2MU3LMX2wIjPPgVMfJQ=;
+  b=IId5QlNoPjDwC08tl04I8OwsBq6eAAi1MMgxhjbI8gHKnX2SzIYsHjRl
+   T+TdcGdeY+fwxvH2WbGGwpG6os9xoBSz3vWo5IZECOsFaSgNmz1w1Lu5C
+   bwGiG9YF8eh8oAm+yxFgB3Z7e4CTnihRiv0Xuo7TgBCG5Gt5SVW5IbpUR
+   b/6R7re18BTIz05jKLAhYstpZyWFk+C7ZjWlPI2SBPKq8fiGzINrVKBRu
+   7Eh/rHgs+k4NsssIR/K6cnLxWF0HpdbNit0wBoP467O0KIOq0qPFAeRD+
+   rkhjPCT1CvSdMkLE7TPKq2HQezYp+SWvRDRelEpcW/mYgGlaF9o/ur7P5
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14766526"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="14766526"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 22:57:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="7146296"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmviesa006.fm.intel.com with ESMTP; 26 Feb 2024 22:57:35 -0800
+Message-ID: <07bce1eb-85cb-48be-9e46-8e9d075f9452@linux.intel.com>
+Date: Tue, 27 Feb 2024 14:51:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206042408.224138-1-joychakr@google.com> <2024020647-submarine-lucid-ea7b@gregkh>
- <CAOSNQF3jk+85-P+NB-1w=nQwJr1BBO9OQuLbm6s8PiXrFMQdjg@mail.gmail.com>
- <2024020637-handpick-pamphlet-bacb@gregkh> <CAOSNQF2_qy51Z01DKO1MB-d+K4EaXGDkof1T4pHNO10U_Hm0WQ@mail.gmail.com>
- <2024020734-curliness-licking-44c1@gregkh> <CAOSNQF2WKang6DpGoVztybkEbtL=Uhc5J-WLvyfRhT3MGWgiaA@mail.gmail.com>
-In-Reply-To: <CAOSNQF2WKang6DpGoVztybkEbtL=Uhc5J-WLvyfRhT3MGWgiaA@mail.gmail.com>
-From: Joy Chakraborty <joychakr@google.com>
-Date: Tue, 27 Feb 2024 12:27:09 +0530
-Message-ID: <CAOSNQF2d27vYTtWwoDY8ALHWo3+eTeBz7e=koNodphVVmeThMQ@mail.gmail.com>
-Subject: Re: [PATCH v2] nvmem: rmem: Fix return value of rmem_read()
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, linux-kernel@vger.kernel.org, manugautam@google.com, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH rc] iommu/sva: Fix SVA handle sharing in multi device case
+Content-Language: en-US
+To: Zhangfei Gao <zhangfei.gao@linaro.org>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, jean-philippe <jean-philippe@linaro.org>,
+ Jason Gunthorpe <jgg@nvidia.com>, "Zhang, Tina" <tina.zhang@intel.com>,
+ kevin.tian@intel.com
+References: <20240227064821.128-1-zhangfei.gao@linaro.org>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240227064821.128-1-zhangfei.gao@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 7, 2024 at 8:33=E2=80=AFPM Joy Chakraborty <joychakr@google.com=
-> wrote:
->
-> On Wed, Feb 7, 2024 at 3:04=E2=80=AFPM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Feb 06, 2024 at 05:22:15PM +0530, Joy Chakraborty wrote:
-> > > > > Userspace will see a false error with nvmem cell reads from
-> > > > > nvmem_cell_attr_read() in current code, which should be fixed on
-> > > > > returning 0 for success.
-> > > >
-> > > > So maybe fix this all up to allow the read to return the actual amo=
-unt
-> > > > read?  That feels more "correct" to me.
-> > > >
-> > >
-> > > If I change the behavior of the nvmem_reg_read_t callback to negative
-> > > for error and number of bytes actually read for success then, other
-> > > than the core driver I would also have to change all the
-> > > nvmem-provider drivers.
-> > > Is it okay to do so ?
-> >
-> > Sure, why not?  That seems like the correct fix to me, right?
->
-> Sure, I can do that.
->
-> Is it okay to change the if checks on the return code to "if (rc < 0)"
-> instead of "if (rc)" as a fix for the immediate issue with how return
-> value from rmem is handled which can be applied to older kernels.
-> In a separate patch I can change the definition of nvmem_reg_read_t()
-> to return ssize_t instead of int and make corresponding changes to
-> nvmem-provider drivers.
->
-> Does that sound okay ?
+On 2/27/24 2:48 PM, Zhangfei Gao wrote:
+> iommu_sva_bind_device will directly goto out in multi-device
+> case when found existing domain, ignoring list_add handle,
+> which causes the handle to fail to be shared.
+> 
+> Fixes: 65d4418c5002 ("iommu/sva: Restore SVA handle sharing")
+> Signed-off-by: Zhangfei Gao<zhangfei.gao@linaro.org>
+> Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
 
-Hi Greg,
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-Sent a patch https://lore.kernel.org/all/20240219113149.2437990-2-joychakr@=
-google.com/
-to change the return type for read/write callbacks.
-Do I mark that with the "Fixes:" tag as well ?
-It affects a lot of files so might not be able to easily pick to an
-older kernel when needed.
-
-Thanks
-Joy
-
-> >
-> > thanks,
-> >
-> > greg k-h
->
-> Thanks
-> Joy
+Best regards,
+baolu
