@@ -1,84 +1,102 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881B4136670
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F257E136679
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709026338; cv=none; b=HvGijNblPdhn8B8lCr/qpRq3fouFutte/kB/S9wq3xCkjwJHsKdbnsmkyBptjuwzmzcoW/lIc3LuOJwYZXlNBKDsi3zeFg7nCdTgcENRzoYdVXZApFm+mho0Y2jWMA91if96leqGFI3pwEhtNnhUk1L04+Ft8O9Aql5wdKMeiEg=
+	t=1709026382; cv=none; b=MswD1JXUI11EONZ62+9xMAFL1mmZ4x7yndSlMlzzbOv+7x21Z23YNm0p97Hx6NOqfsQVEmpB8FHby4/b2eL+TWlMJ81DqfHhdaqkq2I1DAI2W15wTgGlCjF2HFX1Kd6I0dTcS2kMHcmvLnkGr2ugKlSgdMS5qvjOybnBq9SMpPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709026338; c=relaxed/simple;
-	bh=EorhoswHc0CHAHcYABw9rufbXmsLUHZ3Sa1Ab56+QxI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qjXatBYdJBVJDpagxfpoPRSUPsfKSHJLveIMiURcWgSa7KD5FqKYrDU1QTrDaaJpvAMkcwMnIvkfY3pU69yd6WQc6Rn6FBcpj8bfVqLX43fqCG1nZb3SOr5V3hwjiMYCzVKeYRmwlaw3ufbJ+tioe3g0sqI6t59EY7jPVu+Mrf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3657bb7b8e9so34920285ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:32:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709026337; x=1709631137;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LWlXwfIu7pmJUidfYjjj0Hw4GjENQdKqfI7wq4lCnDM=;
-        b=WiLy9rUvfJ0Phd5FqTiG29sA4jBu5cPDadebsUj1xKEz9zLJ7P2V8Rs1AK+SV0cEPs
-         u9Tmp6yF97WjoA9loD/jSChB7ugyrqFJxRWvO0sqAoRQNVbfIRU3/vR6yIUPhx52RxX1
-         iz89FzSimjBLZpQqGPrCTtBW3lfUOGKfk4QTlli0+wpPUKVRClTHF8/YsHO94VD1JmO7
-         8hJFL4lMZCkhy5aIkb7iezWhlG/49KlQJveH5K2T8cmwL9l1pM7UXjRsVWKb8lKuS0Tb
-         okTkUl5vvKELyjIxDm5zCFWGrVTOxUjRgf5vFcr75ZRhfCtxOcnzZUUELGgqcJkOTnbl
-         AjQA==
-X-Gm-Message-State: AOJu0YysguwIKTY9pPF7JlRnlJ7vaFpl83OLnCLniakWbST7QS/Hftb/
-	Gx0znF5N7E3KTzvfkv5iWb83M29D27o3G6Rxp+uqsgClPPre6dQFgo73E570jxPex3ip5kWT/H8
-	DnMZlC1+bSBVJDNKroSc4vT3THQSwvWSZcaLODtEhkwnmMy3dw09UC/OhCQ==
-X-Google-Smtp-Source: AGHT+IH+m/quQ4ts5DCidM8p7nMKajzanOtFbGs1o/fmnxB5Ms7XBrCXxhA2m+9Wtv4bJhquRMb6YIsmfH+uBKaAmNLS/Iydi6rW
+	s=arc-20240116; t=1709026382; c=relaxed/simple;
+	bh=2h0nx1cF+DwxLkNt5bJX8BNPfGrW589/B4rzt8Hzcsw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rzX4r8BuzqwuttETglQ8vYl7gXyVYPNz3/qZSwPxfQl/qVoWTvtA5XdraHvqkQ/d+YMe4tA3NRMVAFfo5z4V5x+JBqb/liSnCfM9+8yJ/edSxqnqDNifIcpAMqPajyfGpXLOlcCTbCKvhT/XLgVqKcY3xwhNVuAMe3AR4sAaCRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 04dd6100f9db49eca84d0368d5430b66-20240227
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:18887999-32c5-4984-a351-bdc40445c46d,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.37,REQID:18887999-32c5-4984-a351-bdc40445c46d,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6f543d0,CLOUDID:d9a243ff-c16b-4159-a099-3b9d0558e447,B
+	ulkID:240227111434QEHVDYUI,BulkQuantity:10,Recheck:0,SF:19|44|64|66|38|24|
+	17|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,
+	BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_OBB,
+	TF_CID_SPAM_SNR
+X-UUID: 04dd6100f9db49eca84d0368d5430b66-20240227
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 357849804; Tue, 27 Feb 2024 17:32:51 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 3BA63E000EBC;
+	Tue, 27 Feb 2024 17:32:51 +0800 (CST)
+X-ns-mid: postfix-65DDAC43-1699361025
+Received: from [172.20.15.254] (unknown [172.20.15.254])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 78E8EE000EBC;
+	Tue, 27 Feb 2024 17:32:47 +0800 (CST)
+Message-ID: <407d25db-6302-49bb-952b-c53739fc4202@kylinos.cn>
+Date: Tue, 27 Feb 2024 17:32:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b0e:b0:365:208c:e78f with SMTP id
- i14-20020a056e021b0e00b00365208ce78fmr550080ilv.1.1709026336818; Tue, 27 Feb
- 2024 01:32:16 -0800 (PST)
-Date: Tue, 27 Feb 2024 01:32:16 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b7ce42061259b389@google.com>
-Subject: [syzbot] Monthly trace report (Feb 2024)
-From: syzbot <syzbot+listb2c419343f446eb939a6@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/mm: Code cleanup for __hash_page_thp
+Content-Language: en-US
+To: Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+ christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
+ naveen.n.rao@linux.ibm.com
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20240125092624.537564-1-chentao@kylinos.cn>
+ <87h6hva4b0.fsf@mail.lhotse>
+ <f3b53f0e-58ce-4b2d-ba91-f347da73f9f3@kylinos.cn>
+ <87jzmq5tjr.fsf@mail.lhotse>
+From: Kunwu Chan <chentao@kylinos.cn>
+In-Reply-To: <87jzmq5tjr.fsf@mail.lhotse>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello trace maintainers/developers,
+Thanks for the reply.
+On 2024/2/27 14:07, Michael Ellerman wrote:
+> Kunwu Chan <chentao@kylinos.cn> writes:
+>> Thanks for the reply.
+>>
+>> On 2024/2/26 18:49, Michael Ellerman wrote:
+>>> Kunwu Chan <chentao@kylinos.cn> writes:
+>>>> This part was commented from commit 6d492ecc6489
+>>>> ("powerpc/THP: Add code to handle HPTE faults for hugepages")
+>>>> in about 11 years before.
+>>>>
+>>>> If there are no plans to enable this part code in the future,
+>>>> we can remove this dead code.
+>>>
+>>> I agree the code can go. But I'd like it to be replaced with a comment
+>>> explaining what the dead code was trying to say.
+> 
+>> Thanks, i'll update a new patch with the following comment:
+>>       /*
+>>       * No CPU has hugepages but lacks no execute, so we
+>>       * don't need to worry about cpu no CPU_FTR_COHERENT_ICACHE feature case
+>>       */
+> 
+> Maybe wait until we can get some input from Aneesh. I'm not sure the
+> code/comment are really up to date.
+I won't do anything until I get a reply.
+I'll wait for the latest msg.
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+> 
+> cheers
+-- 
+Thanks,
+   Kunwu
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 8 issues are still open and 29 have been fixed so far.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 8197    Yes   possible deadlock in task_fork_fair
-                  https://syzkaller.appspot.com/bug?extid=1a93ee5d329e97cfbaff
-<2> 279     Yes   WARNING in format_decode (3)
-                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
-<3> 26      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<4> 17      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
