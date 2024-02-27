@@ -1,81 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D408F4DA0C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 20:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34AD48CFC
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 20:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709067117; cv=none; b=etE3fVGRsnfVzMXEfY0vXaVbVzAfgI1zBSysnAknK7INEyu4hlKLzmvd3kR/9Y4lTj0SqKYKJ3yOW1+H9BWPfk13XR+SNAilrU6fniWiKG+YoWsKnMT7HPMSRGK84+bjsPEk7EUKWPeSlCOGzgR6Lo5GQBvtGsUzuT6uiEwCFm0=
+	t=1709067144; cv=none; b=DWKvcl5SxisuxxR/bUZByUpw31EUt5rYo0MHA2sySCwiA6GZbsOhA8SJ23Isiaj0EKeZyx2hkoaxI3BgCGgA5MNV0eIp2yIo39WT3AIGFryxD6uf0alTvoICl4+vh7BAdjer3rB2GuTHdOJXT101YR6CaigeaDKHZiVvFV9K3Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709067117; c=relaxed/simple;
-	bh=QhwLpnKe75p3FHs0ebjZdxIlXMliF5uLtZwMEXQcIOM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=s9/zArH++O9qYRy1ckBL26KSgN9hiHF0rSGistH67RVvbvKv0CePLFOIKIK8rEt//cu8ZlxTpQT3BY71cb2S/5hPFbSrW1y2VnPlLkqumfOW2sR1tYi+8KVf96P5C7hTUh1wpymKUb6/gCMrkQTMSMNb3IMPG9YD81R20W2M/Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eSh5QlaE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709067144; c=relaxed/simple;
+	bh=JsQ1nGdibb8WX0Sy1YuZgdzxR6vLTyCS9HB+mk8bneU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NJp+zN+flhBLTx0HnOzHK2y2ylUEfILdCGhKahQ3MgVXZgZkmov1CgTdjHmHHP5UBllpi/pfedM7C786E0odZHFFaqekvhdpPCiH2qv4hSNz9d3vNBQNmqGvhoNXLaeXyKgqOq/ZtkYIYqHhozR9siyU7y2iroJ/DTWiFKtJgng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=O/ACh58K; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSh5QlaE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B627C433F1;
-	Tue, 27 Feb 2024 20:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709067117;
-	bh=QhwLpnKe75p3FHs0ebjZdxIlXMliF5uLtZwMEXQcIOM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=eSh5QlaEklbj3USqjdl4SbrYSjThOhf0azwzjroNE7tRsAkFp/gXtAC5lPwk3f5RS
-	 A3MiP4ou6kXf2gIt7Y+wa9TKziO9wmAXIxO86SaEbyFrHqtsECmgqw8NBM1b9W9IFB
-	 I2ZrnJg3FsNVUBbOgwha7V/h3Td7Awa0fbkcnsbdKpsSA2iiU5qqFfeyQTFYnVakp6
-	 EeH4wObiMF9QrZAQbbJxD5PNOHDu1NUtx3qlbWL3rLIqos0LPHV9LKooUxzLCODgbI
-	 cEU6mKwtkvlfZ4uo4ac/AuCb5QBm+eLAB/X92Q8aXgqi/ZVhT/VhncTQ3fVi7ac+1b
-	 rwkdbJ4FYuKAA==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>
-Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, 
- linux-amlogic@lists.infradead.org
-In-Reply-To: <20240227150826.573581-1-jbrunet@baylibre.com>
-References: <20240227150826.573581-1-jbrunet@baylibre.com>
-Subject: Re: [PATCH v2] ASoC: meson: axg-fifo: use FIELD helpers
-Message-Id: <170906711616.430898.9659038339252148422.b4-ty@kernel.org>
-Date: Tue, 27 Feb 2024 20:51:56 +0000
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="O/ACh58K"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-33d28468666so4111205f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 12:52:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709067141; x=1709671941; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FzfPm4MGmy+twyI4zc1gm3KO2QTVwDkS4GmOlB/j8Xc=;
+        b=O/ACh58KQp//yOLDqxJlq9hSIMjQauD04mbLhyKQa6Yuo++Kb2Iz9bK2PdzpbqFeJ0
+         6aAQ4FBDq3F2h5zDizfBfla9HkeW6+mDU2Ib9HcZOOxbgWsIMHl3sVZAhOou9cAKdjoi
+         Z/7NS284XeCm2OMlg5XNAeFF6PpZI7+dTV7I18h8hK1dH7cw8COeGv6XxRNso0kq35V8
+         pL05BAka4XLOhQX/zgQyTvMuSQ4mejI2brh4HeAU2Al7DgbKx/7NJIgVycJaVcKHsKl6
+         6XxL07G1bMbUzzv/+5P4iBhqfUNnylxsfuhmyQtvXj7AwcDgkfVdbX7fguwjomyZVnlh
+         GwMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709067141; x=1709671941;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FzfPm4MGmy+twyI4zc1gm3KO2QTVwDkS4GmOlB/j8Xc=;
+        b=drNMlNIGnotrkoMUY5EzCODXu8J8mjcqePkEvFfZylbm4GDMSLcpSnvrAu/4DvUGMS
+         gBiDw0vnWENEr9aBOKMhj7sv5cY8sTuyIjGMN1AsvareBlpD3fwIpFKc3NATjnoy7wXO
+         nae5sxFnAo0FAmsxX9uUNm784I6yVGHnnxvCPw3a0f0lN0tvOpIJEbZStzMIXJBAjoJ7
+         GyLmdorZUwL0PPmYrBNqtmw23l77vDAAYyQdyL060vVQgQUVwbuTcEAJp57ARIZG9AS5
+         icvo5pIAQXYvaPkVraHhBR8/w4nfVwkbJkXdy6/R5u43yD03MWHHT3d2TDFXmUKxHEW8
+         r+Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7JytsczSdVMjDIJFRg0t6+Xj/wF/HdAwQxGvC4XDachiuXSSFVptOo9yz+6WIrm0F/Dst7ptqT86vbDq0rzdsa9zzcG2M949/uQ88
+X-Gm-Message-State: AOJu0Yz1GanSnoR0NQkfz2wXbw6sfNZxzNsBFUN1BZSRfU9KuwkcGqKC
+	39hKjo0Y474Mi8qx056PBdm87IdMPGJ6DKT7KgBMh+J9aeXdUdvVtrgO/yIqnS0=
+X-Google-Smtp-Source: AGHT+IFncYLlF2rT6hN0L/p/TQJ5LNx4aKQQWd8sjTrt7kQ6BYHBKX2Y0keQQEflI2wLg+Jl/BzNrA==
+X-Received: by 2002:adf:f08d:0:b0:33d:1eea:4346 with SMTP id n13-20020adff08d000000b0033d1eea4346mr7362784wro.37.1709067141078;
+        Tue, 27 Feb 2024 12:52:21 -0800 (PST)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id bw1-20020a0560001f8100b0033af3a43e91sm12539544wrb.46.2024.02.27.12.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 12:52:20 -0800 (PST)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Qinglin Pan <panqinglin2020@iscas.ac.cn>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH -fixes 2/2] riscv: Fix pte_leaf_size() for NAPOT
+Date: Tue, 27 Feb 2024 21:50:16 +0100
+Message-Id: <20240227205016.121901-3-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240227205016.121901-1-alexghiti@rivosinc.com>
+References: <20240227205016.121901-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-a684c
+Content-Transfer-Encoding: 8bit
 
-On Tue, 27 Feb 2024 16:08:25 +0100, Jerome Brunet wrote:
-> Use FIELD_GET() and FIELD_PREP() helpers instead of doing it manually.
-> 
-> 
+pte_leaf_size() must be reimplemented to add support for NAPOT mappings.
 
-Applied to
+Fixes: 82a1a1f3bfb6 ("riscv: mm: support Svnapot in hugetlb page")
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/include/asm/pgtable.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/1] ASoC: meson: axg-fifo: use FIELD helpers
-      commit: 9e6f39535c794adea6ba802a52c722d193c28124
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 0c94260b5d0c..89f5f1bd6e46 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -439,6 +439,10 @@ static inline pte_t pte_mkhuge(pte_t pte)
+ 	return pte;
+ }
+ 
++#define pte_leaf_size(pte)	(pte_napot(pte) ?				\
++					napot_cont_size(napot_cont_order(pte)) :\
++					PAGE_SIZE)
++
+ #ifdef CONFIG_NUMA_BALANCING
+ /*
+  * See the comment in include/asm-generic/pgtable.h
+-- 
+2.39.2
 
