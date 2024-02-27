@@ -1,155 +1,84 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267D11369AA;
-	Tue, 27 Feb 2024 09:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516B712FF98;
+	Tue, 27 Feb 2024 09:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709024608; cv=none; b=morcscWOzxEsHmRLXQmtqIZycQ8dXXbkC6pV6xs3JzhRKhUAs7qLxcCfenhvUKSu/0AyF7b6E5FxjFXvrML9nnIDKI3kyoZ2YeYv3i+Pm/IrFqdSgLc9xLZZ37WK84ms9/iR9tJBPOhT/Cqm9S9ZAl83tQ42jgde6zC/6Vp+0Zo=
+	t=1709024673; cv=none; b=mm2ZJjz0LtRp4cVue+u0QJ66ru+WU1uGrx5TXsFr8F91sG+JlwyLUjM5LurNtecV/acLSnTEbisTFE0samlCdXzA/WTUOZVhkDre3EIdRnsfHs8vKZVvJo0ccu3WBlkQpg9Eclegxw4m2c4Gso9X3UkWt9wekDgNDOeilfgE7is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709024608; c=relaxed/simple;
-	bh=rpAcgDu08eOYArumIDP3NkspxMrhkm+nJ8NzviuOPCg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BpbnqvzDh1PXx5uTkJRGs3ZwRxncz7sj4ASooTMPXZvPUqQIPL9XYPZvNmbEfWEvfXQzPok4feqi9S9IsbUkLN2J93fo/AFNBzVeLhVR/tzQ0W5++xgivQrH8CM0VqvypsggWOHBoUSUu1ptg07mQGCuInVaQgIJbsClFrZEubs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TkWbt2Lzdz1b12P;
-	Tue, 27 Feb 2024 16:58:18 +0800 (CST)
-Received: from dggpemd100001.china.huawei.com (unknown [7.185.36.94])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6FC3B1A016B;
-	Tue, 27 Feb 2024 17:03:16 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- dggpemd100001.china.huawei.com (7.185.36.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 27 Feb 2024 17:03:16 +0800
-From: Xingui Yang <yangxingui@huawei.com>
-To: <john.g.garry@oracle.com>, <yanaijie@huawei.com>, <jejb@linux.ibm.com>,
-	<martin.petersen@oracle.com>, <damien.lemoal@opensource.wdc.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
-	<chenxiang66@hisilicon.com>, <kangfenglong@huawei.com>
-Subject: [PATCH v2] scsi: libsas: Fix disk not being scanned in after being removed
-Date: Tue, 27 Feb 2024 09:01:49 +0000
-Message-ID: <20240227090149.29039-1-yangxingui@huawei.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1709024673; c=relaxed/simple;
+	bh=Oj6QUXhE3TKC5x3LLfgn9nU0BNYadHx45h5xMqCQBWw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kQ8MKm6VIymLDB2YGSDO4j+GVl/8hI2ZLzoVg+C+tdz1KYTwvpmrAwLbTyaQ8sFr4F5yuP1OsMJKOH9BW5FbE+RFTP/Jg9Ji4csjrMAdSJeYrzKDKLlX+DFyWEc3KQgYBlcqYceySqhsFGp6r0oe2kvSETMYG6kEvGHwnIbDDoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0LxqWWV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0LxqWWV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00964C433F1;
+	Tue, 27 Feb 2024 09:04:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709024672;
+	bh=Oj6QUXhE3TKC5x3LLfgn9nU0BNYadHx45h5xMqCQBWw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=o0LxqWWVPPhp0tiVjlSAHb6+NFMlL9oLj4So/V0Y4RFLIH8LcIryOqkkUP80dH7Y0
+	 d60V3DDtwpUeaTSAT2U36Db0UxT/0K9h+sgT7FT4+qUNeMOU2QOXhMJNnvp0pKGU1H
+	 wWC1y9uMyllpCvbcVSgvIlEC1F1CF4b6fCK7iBmcO9eBuEaJ0/Zu8n7UWBmn9mtBXY
+	 BGoldirESKzjvgdaFknqe0NtERnFasUxXq0fnZMAFjrBSFobBfMY4CcOk0KUflhFBH
+	 UGGNHNZalfNDOV3FkClCnk6AXu2jlb4AxjJKcpeAsZXUXFRf0KmUJf4gaf/WamZoFq
+	 zbIRpbC9EwQSg==
+From: Christian Brauner <brauner@kernel.org>
+To: chengming.zhou@linux.dev
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	vbabka@suse.cz,
+	roman.gushchin@linux.dev,
+	Xiongwei.Song@windriver.com,
+	Chengming Zhou <zhouchengming@bytedance.com>,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz
+Subject: Re: [PATCH] vfs: remove SLAB_MEM_SPREAD flag usage
+Date: Tue, 27 Feb 2024 10:04:24 +0100
+Message-ID: <20240227-westseite-kursziel-72040f653d65@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240224135315.830477-1-chengming.zhou@linux.dev>
+References: <20240224135315.830477-1-chengming.zhou@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemd100001.china.huawei.com (7.185.36.94)
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1035; i=brauner@kernel.org; h=from:subject:message-id; bh=Oj6QUXhE3TKC5x3LLfgn9nU0BNYadHx45h5xMqCQBWw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTeXTqjJYXp2L+gNUEP165uM11i9WqjiJ+i0vrkJ5d8D /xlW8p+pKOUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAiZ+8wMrxc05sS8WD6+gkX 5Sb+eD8jxpVfRpdrnaLZjeuz9/Nol3EwMlytfjfvw/aFlv67vrf96J7HI3+MoS/gelvUw7J810f PWtgA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-As of commit d8649fc1c5e4 ("scsi: libsas: Do discovery on empty PHY to
-update PHY info"), do discovery will send a new SMP_DISCOVER and update
-phy->phy_change_count. We found that if the disk is reconnected and phy
-change_count changes at this time, the disk scanning process will not be
-triggered.
+On Sat, 24 Feb 2024 13:53:15 +0000, chengming.zhou@linux.dev wrote:
+> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
+> its usage so we can delete it from slab. No functional change.
+> 
+> 
 
-So update the PHY info with the last query results.
+Commit message was updated to link to SLAB_MEM_SPREAD removal.
 
-Fixes: d8649fc1c5e4 ("scsi: libsas: Do discovery on empty PHY to update PHY info")
-Signed-off-by: Xingui Yang <yangxingui@huawei.com>
 ---
-v1 -> v2:
-Use sas_get_phy_discover() instead of sas_get_phy_attached_dev() in
-sas_rediscover_dev() and use disc_resp to update phy info.
----
- drivers/scsi/libsas/sas_expander.c | 37 ++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index a2204674b680..a75dcce7a9ba 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -1940,6 +1940,7 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
- 	struct expander_device *ex = &dev->ex_dev;
- 	struct ex_phy *phy = &ex->ex_phy[phy_id];
- 	enum sas_device_type type = SAS_PHY_UNUSED;
-+	struct smp_disc_resp *disc_resp;
- 	u8 sas_addr[SAS_ADDR_SIZE];
- 	char msg[80] = "";
- 	int res;
-@@ -1951,33 +1952,47 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
- 		 SAS_ADDR(dev->sas_addr), phy_id, msg);
- 
- 	memset(sas_addr, 0, SAS_ADDR_SIZE);
--	res = sas_get_phy_attached_dev(dev, phy_id, sas_addr, &type);
-+	disc_resp = alloc_smp_resp(DISCOVER_RESP_SIZE);
-+	if (!disc_resp)
-+		return -ENOMEM;
-+
-+	res = sas_get_phy_discover(dev, phy_id, disc_resp);
- 	switch (res) {
- 	case SMP_RESP_NO_PHY:
- 		phy->phy_state = PHY_NOT_PRESENT;
- 		sas_unregister_devs_sas_addr(dev, phy_id, last);
--		return res;
-+		goto out;
- 	case SMP_RESP_PHY_VACANT:
- 		phy->phy_state = PHY_VACANT;
- 		sas_unregister_devs_sas_addr(dev, phy_id, last);
--		return res;
-+		goto out;
- 	case SMP_RESP_FUNC_ACC:
- 		break;
- 	case -ECOMM:
- 		break;
- 	default:
--		return res;
-+		goto out;
-+	}
-+
-+	if (res == 0) {
-+		struct discover_resp *dr = &disc_resp->disc;
-+
-+		memcpy(sas_addr, dr->attached_sas_addr, SAS_ADDR_SIZE);
-+		type = to_dev_type(dr);
-+		if (type == 0)
-+			memset(sas_addr, 0, SAS_ADDR_SIZE);
- 	}
- 
- 	if ((SAS_ADDR(sas_addr) == 0) || (res == -ECOMM)) {
- 		phy->phy_state = PHY_EMPTY;
- 		sas_unregister_devs_sas_addr(dev, phy_id, last);
- 		/*
--		 * Even though the PHY is empty, for convenience we discover
--		 * the PHY to update the PHY info, like negotiated linkrate.
-+		 * Even though the PHY is empty, for convenience we update
-+		 * the PHY info, like negotiated linkrate.
- 		 */
--		sas_ex_phy_discover(dev, phy_id);
--		return res;
-+		if (res == 0)
-+			sas_set_ex_phy(dev, phy_id, disc_resp);
-+		goto out;
- 	} else if (SAS_ADDR(sas_addr) == SAS_ADDR(phy->attached_sas_addr) &&
- 		   dev_type_flutter(type, phy->attached_dev_type)) {
- 		struct domain_device *ata_dev = sas_ex_to_ata(dev, phy_id);
-@@ -1989,7 +2004,7 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
- 			action = ", needs recovery";
- 		pr_debug("ex %016llx phy%02d broadcast flutter%s\n",
- 			 SAS_ADDR(dev->sas_addr), phy_id, action);
--		return res;
-+		goto out;
- 	}
- 
- 	/* we always have to delete the old device when we went here */
-@@ -1998,7 +2013,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id,
- 		SAS_ADDR(phy->attached_sas_addr));
- 	sas_unregister_devs_sas_addr(dev, phy_id, last);
- 
-+	kfree(disc_resp);
- 	return sas_discover_new(dev, phy_id);
-+out:
-+	kfree(disc_resp);
-+	return res;
- }
- 
- /**
--- 
-2.17.1
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] vfs: remove SLAB_MEM_SPREAD flag usage
+      https://git.kernel.org/vfs/vfs/c/2b711faa0ee2
