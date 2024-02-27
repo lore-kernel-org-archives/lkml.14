@@ -1,137 +1,224 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FFC133285
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 11:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797D41386BF
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 11:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709034484; cv=none; b=M2REI26+OCXdtePlq9JfdaSrU8IcrQnadfbII8mUy4rgrI8eRYMBmb1VxzHudeFC1quJBP1zSGJhi0Vei3nk890klsWfiWugLBKXCUM2BDUQIOa41QC37B1HA1eLpu2n+MbgqkK12/hPQzHjPAyKe7UshrD/wy9tuvXouIkYc60=
+	t=1709034556; cv=none; b=qRg4cepNFVuM8Jw5FHxSZLtsjwC+z80eZqgU7QfuzsHhP2soVLxs+7zG38jj9nnlXv1QX4aSKIjAOahdqH0cppNz1skqzn9vd/qZsXj2oBlxCTbIamVYPYGNdWLKRwBQKimdsGjLGTZEPMeHXDEat0HT+4MHBssg691PAUoyknI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709034484; c=relaxed/simple;
-	bh=rqOKTEfdfcG4Ij6AAPk3XWIkqLCxrGvU0rlH+6YVYio=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hVDp+b9Bwn5GagAEYzxeKWJQ7Ke4+CrJ7yTmdqW7FSwrssgDyZ8X4bCfasfZ2LEA0Cc4ttsGhk8u2NkMkdbVn/bQPkLh54D4mc25fP9uTf9RVaYwp/+/Bowdc9pCfqbcWjWYGtr4VmTrtmPKenc5HZMM+5A/efzqYal4wyDcsvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=whKgNXxD; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1709034556; c=relaxed/simple;
+	bh=UousizaRBOkglhySSICITocpDyA5znlSJNJqP0CNqjM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O6u8JTNy96dHvzNJykb9447TAnxEHdOTUyY1uCjxui7UO1Vopcl2C6aymgVCcA8C/+AI1JUJjy8+eRS5i3fof2qgBuP8PEBRqlBHQzM3TbhGE5YjPDyi6uS5t7FxBc+R17/Q0t4vKHyVUtLruXYKQvKcJiWw4cp1G1YV/Z+oU4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fDzyBUfP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="whKgNXxD"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512f6f263a6so2181589e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 03:48:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1709034480; x=1709639280; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YDEwCDwla+ATU4OUPMAD+dyVfDQxnOaxyBUEQhnu7Tw=;
-        b=whKgNXxDwtVqLoUaepDmdueatkXQhC951QmQqYlSFAQsycDdl8mXO/4h9KXBqfg2M9
-         Zr03p+iyS+F2Fa4BapKXLrB+L2qi9XLB88ygacm0HX/WcvdiB9M4FUh9GiAeNTxwFCO/
-         gzDMRuGpDhyWyE7HyIAKx/DXY/QeiLyLVPQWrLNFO1ugE+CssmTm/tN3FwWlS/M4UNsY
-         3uEv21AjhlRSvV4ZG3EgqHvz1pYOmPL4NuAFFitC7U8y3Yubxc/VJeI/vuXKoT4D30GD
-         PYVCxFcPnYIw9TZTHSI+cVSvXzv781rNBD9oYS8TeZVWF+m+Cl6nkH+F7cqsmUJG4Hy9
-         so7w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fDzyBUfP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709034553;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0/IU59TzJPaZ/e/WhPBdoj8RUUDKdP5qN63RH8kPqgk=;
+	b=fDzyBUfPghsuIhLKL1r1ZJpQd520k8J44sYVYMW250OUMrK07ZpdO+KSHLQixW6KdB37hy
+	R8/x/qIAQJqIbb7Vgs/btZVJkrThduoSG+54TisbB/SgG8MnBwxFUyo84Y1UAP8sB/clL8
+	xoZDAKEc2FFrmvnlOXm4CCAFcZnfFK8=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-637-fgfl-BaXPK2AguLu1itOOg-1; Tue, 27 Feb 2024 06:49:12 -0500
+X-MC-Unique: fgfl-BaXPK2AguLu1itOOg-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-68fff28bec7so27919436d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 03:49:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709034480; x=1709639280;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YDEwCDwla+ATU4OUPMAD+dyVfDQxnOaxyBUEQhnu7Tw=;
-        b=Fq7i7uZHI5GMHVrROfd+eCwngK3Mzq5EatHSq8VaxqUK4AzE+CAQMLUp6hOGx86iN6
-         CE5WOLDEqiG+VodpLDQoxJCjS4DnQjIFyPk5wpza6oRUzGcvee4QadYUDpCL9M0KzoTq
-         EWAdl8fkRAmlRD3Q9k2Y+AeQtSTEIU1Cogv86ffNN5gq9OxU9qf0G2cCJvheDwwhYlXa
-         TINzc0BjPeVIrE7ekJSuGgx+gXepN5H66lqYQBuewZetpdkZ93ncm8PM6vLWmDbJZV45
-         wsoWCcDWHFfxTXJEIqttUq6+zm+oZwk6xmUYAsDKkk9k0TXIMHYnF6Fxx/Wz/dcvELO2
-         7YDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTaTRzBnSUZ+IVUAyLdyJj9qdQMntM1+ZyZwsGpfFqyqcIAf7zvD2/X/pHgg1hvTsHEv1sy4yMqzq+mGlDGlYBPm++FjtB33fRuYyt
-X-Gm-Message-State: AOJu0YwZk2T3KafhVXOGt5fi4pwCdzXCss1qJM5tNu92XFJlY1Jb5+l8
-	be/J44S6OFJJ8jKMsysC7fbblehLvH9pYoxJmm/nSMQ+Z+IOx6BTAzul4nUB/RM=
-X-Google-Smtp-Source: AGHT+IHXhvqLUhpZRvjTuEkke1Jw390Omi57V0IsWTpVChaZWkMYbHmweV6UQW9CZ7fl8axkMAKT2A==
-X-Received: by 2002:a05:6512:3e0d:b0:512:f53b:893c with SMTP id i13-20020a0565123e0d00b00512f53b893cmr6423497lfv.64.1709034480402;
-        Tue, 27 Feb 2024 03:48:00 -0800 (PST)
-Received: from fedora.fritz.box (aftr-82-135-80-35.dynamic.mnet-online.de. [82.135.80.35])
-        by smtp.gmail.com with ESMTPSA id r29-20020adfa15d000000b0033de7a30b4fsm2519818wrr.26.2024.02.27.03.47.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 03:47:59 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Wei Liu <wei.liu@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] x86/apic: Use div64_ul() instead of do_div()
-Date: Tue, 27 Feb 2024 12:43:34 +0100
-Message-ID: <20240227114333.1718-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.43.2
+        d=1e100.net; s=20230601; t=1709034551; x=1709639351;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0/IU59TzJPaZ/e/WhPBdoj8RUUDKdP5qN63RH8kPqgk=;
+        b=mRisbSK3Jd/iN4vVxIMC9VENUy2GQA1oBLR/cBgae8wBlQBBjj99zXTu1SWdvSA1o0
+         x3gUVplVYiOBIWgtsgfA74RNGI+NkXHxEnNvTKTGrRaoSNZ0IVUXsyzOIgk8c5Mwz881
+         WDxOxg937CkWYG29LtX9J/8x/9QEwW5CZXm+7kMCPpJOM8WCeU9Lc86VZLl7C3tkhYEz
+         mQBIpvCTvZvOGIN4F29WXEgjKooCDKmjxWPhVT+h4XGDCQcy1eyDnqsv9eUr85cF8SUu
+         t6P2mslYIU0CnXZDX/az1nQbXhbOYyuvc17xfojZdfL3HtEjlDyGEDiAvttXVW/j9Jm1
+         uEPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWVb2pc7OUQoZaS0OodK/5nCGckG0zgwjwuYekw5pcXfiGXpnMx7E5ngWfT3CJCfqA6m0dk2JL4Mb2y7eZ+emugRnRAt1qPtwXp5KQE
+X-Gm-Message-State: AOJu0Yyc8cCRzL1QmBguslHzi0WqXMG8pvJfwe1furS7UDlELmv4sCkZ
+	tknaK1dm356on1viDm540nok6yFO224Z7opOtkmGliY1hywY5zoNKG0YdgpyoksLihYKAAGjUDU
+	vjGUwaHiC66hps/uiDuxmzD4PKSN9aVbxUJlbtkuLewljSNpt8ZsS1lWvlT8yeu24+dpS
+X-Received: by 2002:a05:6214:509b:b0:68f:5ac3:8af3 with SMTP id kk27-20020a056214509b00b0068f5ac38af3mr1976402qvb.22.1709034550936;
+        Tue, 27 Feb 2024 03:49:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGKWbuU40rDlbdUvfIiKGDOizWmABM8HEsCdP8/vSZa8l8MnsDCfln+CVmlGikRiYl39wsyVA==
+X-Received: by 2002:a05:6214:509b:b0:68f:5ac3:8af3 with SMTP id kk27-20020a056214509b00b0068f5ac38af3mr1976386qvb.22.1709034550616;
+        Tue, 27 Feb 2024 03:49:10 -0800 (PST)
+Received: from [192.168.9.34] (net-2-34-30-118.cust.vodafonedsl.it. [2.34.30.118])
+        by smtp.gmail.com with ESMTPSA id qj24-20020a056214321800b0068f9fd1d688sm4037682qvb.21.2024.02.27.03.49.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 03:49:10 -0800 (PST)
+Message-ID: <ae3cd81b-82af-4977-91d7-fa809c6fc45a@redhat.com>
+Date: Tue, 27 Feb 2024 12:49:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v5 1/1] fpga: add an owner and use it to take the
+ low-level module's refcount
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+ Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Tull <atull@opensource.altera.com>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-fpga@vger.kernel.org
+References: <20240111160242.149265-1-marpagan@redhat.com>
+ <20240111160242.149265-2-marpagan@redhat.com>
+ <Zbh7iO9wlm9ekzB7@yilunxu-OptiPlex-7050>
+ <0720eb91-72f9-4781-8558-8a1b0a3691c2@redhat.com>
+ <Zb8dd9af0Ru/fzGi@yilunxu-OptiPlex-7050>
+ <4aaa131a-4b64-4b86-9548-68aef63c87b3@redhat.com>
+ <ZdHWaeU+/On6LmHX@yilunxu-OptiPlex-7050>
+ <9a9d4018-fd65-49be-9e0a-1eecc9cbf15d@redhat.com>
+ <ZdYKnZxdTCvu5THG@yilunxu-OptiPlex-7050>
+Content-Language: en-US
+From: Marco Pagani <marpagan@redhat.com>
+In-Reply-To: <ZdYKnZxdTCvu5THG@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fixes Coccinelle/coccicheck warnings reported by do_div.cocci.
 
-Change deltapm to unsigned long and replace do_div() with div64_ul()
-which doesn't implicitly cast the divisor and doesn't unnecessarily
-calculate the remainder.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- arch/x86/kernel/apic/apic.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On 2024-02-21 15:37, Xu Yilun wrote:
+> On Tue, Feb 20, 2024 at 12:11:26PM +0100, Marco Pagani wrote:
+>>
+>>
+>> On 2024-02-18 11:05, Xu Yilun wrote:
+>>> On Mon, Feb 05, 2024 at 06:47:34PM +0100, Marco Pagani wrote:
+>>>>
+>>>>
+>>>> On 2024-02-04 06:15, Xu Yilun wrote:
+>>>>> On Fri, Feb 02, 2024 at 06:44:01PM +0100, Marco Pagani wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 2024-01-30 05:31, Xu Yilun wrote:
+>>>>>>>> +#define fpga_mgr_register_full(parent, info) \
+>>>>>>>> +	__fpga_mgr_register_full(parent, info, THIS_MODULE)
+>>>>>>>>  struct fpga_manager *
+>>>>>>>> -fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info);
+>>>>>>>> +__fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
+>>>>>>>> +			 struct module *owner);
+>>>>>>>>  
+>>>>>>>> +#define fpga_mgr_register(parent, name, mops, priv) \
+>>>>>>>> +	__fpga_mgr_register(parent, name, mops, priv, THIS_MODULE)
+>>>>>>>>  struct fpga_manager *
+>>>>>>>> -fpga_mgr_register(struct device *parent, const char *name,
+>>>>>>>> -		  const struct fpga_manager_ops *mops, void *priv);
+>>>>>>>> +__fpga_mgr_register(struct device *parent, const char *name,
+>>>>>>>> +		    const struct fpga_manager_ops *mops, void *priv, struct module *owner);
+>>>>>>>> +
+>>>>>>>>  void fpga_mgr_unregister(struct fpga_manager *mgr);
+>>>>>>>>  
+>>>>>>>> +#define devm_fpga_mgr_register_full(parent, info) \
+>>>>>>>> +	__devm_fpga_mgr_register_full(parent, info, THIS_MODULE)
+>>>>>>>>  struct fpga_manager *
+>>>>>>>> -devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info);
+>>>>>>>> +__devm_fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *info,
+>>>>>>>> +			      struct module *owner);
+>>>>>>>
+>>>>>>> Add a line here. I can do it myself if you agree.
+>>>>>>
+>>>>>> Sure, that is fine by me. I also spotted a typo in the commit log body
+>>>>>> (in taken -> is taken). Do you want me to send a v6, or do you prefer
+>>>>>> to fix that in place?
+>>>>>
+>>>>> No need, I can fix it.
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>> There is still a RFC prefix for this patch. Are you ready to get it merged?
+>>>>>>> If yes, Acked-by: Xu Yilun <yilun.xu@intel.com>
+>>>>>>
+>>>>>> I'm ready for the patch to be merged. However, I recently sent an RFC
+>>>>>> to propose a safer implementation of try_module_get() that would
+>>>>>> simplify the code and may also benefit other subsystems. What do you
+>>>>>> think?
+>>>>>>
+>>>>>> https://lore.kernel.org/linux-modules/20240130193614.49772-1-marpagan@redhat.com/
+>>>>>
+>>>>> I suggest take your fix to linux-fpga/for-next now. If your try_module_get()
+>>>>> proposal is applied before the end of this cycle, we could re-evaluate
+>>>>> this patch.
+>>>>
+>>>> That's fine by me.
+>>>
+>>> Sorry, I still found issues about this solution.
+>>>
+>>> void fpga_mgr_unregister(struct fpga_manager *mgr)
+>>> {
+>>>         dev_info(&mgr->dev, "%s %s\n", __func__, mgr->name);
+>>>
+>>>         /*
+>>>          * If the low level driver provides a method for putting fpga into
+>>>          * a desired state upon unregister, do it.
+>>>          */
+>>>         fpga_mgr_fpga_remove(mgr);
+>>>
+>>>         mutex_lock(&mgr->mops_mutex);
+>>>
+>>>         mgr->mops = NULL;
+>>>
+>>>         mutex_unlock(&mgr->mops_mutex);
+>>>
+>>>         device_unregister(&mgr->dev);
+>>> }
+>>>
+>>> Note that fpga_mgr_unregister() doesn't have to be called in module_exit().
+>>> So if we do fpga_mgr_get() then fpga_mgr_unregister(), We finally had a
+>>> fpga_manager dev without mops, this is not what the user want and cause
+>>> problem when using this fpga_manager dev for other FPGA APIs.
+>>
+>> How about moving mgr->mops = NULL from fpga_mgr_unregister() to
+>> class->dev_release()? In that way, mops will be set to NULL only when the
+>> manager dev refcount reaches 0.
+> 
+> I'm afraid it doesn't help.  The lifecycle of the module and the fpga
+> mgr dev is different.
+> 
+> We use mops = NULL to indicate module has been freed or will be freed in no
+> time.  On the other hand mops != NULL means module is still there, so
+> that try_module_get() could be safely called.  It is possible someone
+> has got fpga mgr dev but not the module yet, at that time the module is
+> unloaded, then try_module_get() triggers crash.
+> 
+>>
+>> If fpga_mgr_unregister() is called from module_exit(), we are sure that nobody
+>> got the manager dev earlier using fpga_mgr_get(), or it would have bumped up
+> 
+> No, someone may get the manager dev but not the module yet, and been
+> scheduled out.
+>
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 4667bc4b00ab..facfb03ef5c8 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -699,7 +699,7 @@ static void __init lapic_cal_handler(struct clock_event_device *dev)
- }
- 
- static int __init
--calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
-+calibrate_by_pmtimer(unsigned long deltapm, long *delta, long *deltatsc)
- {
- 	const long pm_100ms = PMTMR_TICKS_PER_SEC / 10;
- 	const long pm_thresh = pm_100ms / 100;
-@@ -710,7 +710,7 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
- 	return -1;
- #endif
- 
--	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %ld\n", deltapm);
-+	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %lu\n", deltapm);
- 
- 	/* Check, if the PM timer is available */
- 	if (!deltapm)
-@@ -724,14 +724,14 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
- 		return 0;
- 	}
- 
--	res = (((u64)deltapm) *  mult) >> 22;
-+	res = (((u64)deltapm) * mult) >> 22;
- 	do_div(res, 1000000);
- 	pr_warn("APIC calibration not consistent "
- 		"with PM-Timer: %ldms instead of 100ms\n", (long)res);
- 
- 	/* Correct the lapic counter value */
- 	res = (((u64)(*delta)) * pm_100ms);
--	do_div(res, deltapm);
-+	res = div64_ul(res, deltapm);
- 	pr_info("APIC delta adjusted to PM-Timer: "
- 		"%lu (%ld)\n", (unsigned long)res, *delta);
- 	*delta = (long)res;
-@@ -739,7 +739,7 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
- 	/* Correct the tsc counter value */
- 	if (boot_cpu_has(X86_FEATURE_TSC)) {
- 		res = (((u64)(*deltatsc)) * pm_100ms);
--		do_div(res, deltapm);
-+		res = div64_ul(res, deltapm);
- 		apic_printk(APIC_VERBOSE, "TSC delta adjusted to "
- 					  "PM-Timer: %lu (%ld)\n",
- 					(unsigned long)res, *deltatsc);
--- 
-2.43.2
+You are right. Overall, it's a bad idea. How about then using an additional 
+bool flag instead of "overloading" the mops pointer? Something like:
+
+get:
+	if (!mgr->owner_valid || !try_module_get(mgr->mops_owner))
+
+remove:
+	mgr->owner_valid = false;
+
+Another possibility that comes to my mind would be to "overload" the owner
+pointer itself by using the ERR_PTR/IS_ERR macros. However, it looks ugly
+to me.
+
+Thanks,
+Marco
+
+
+[...]
 
