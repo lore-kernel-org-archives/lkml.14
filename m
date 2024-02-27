@@ -1,46 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E661E894;
-	Tue, 27 Feb 2024 19:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3749B50277;
+	Tue, 27 Feb 2024 19:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709060501; cv=none; b=Yki7BDVrnxoGPKHLrZxdhoZfFw7oOIaQixIWP28p+rHTTYVt5Z21K/wsMKpJvVejFZF5V3dHOQeHbQbzwg+vSB/WXW/1C/NhElf+6o7K/i5htLyYMhH6mn/OYFEohGkPtM+lMKrZXMpF/0jkKFd9+rqAnmho5WZYPplIDBWIPAg=
+	t=1709060501; cv=none; b=rnzamQj+mCFr0iJfS0x50kvkmJidIhLtH7BnMXwQ36OlY88jUK1D7TUSQXRjUUXByfUr+XUyZweW+4GRzG2DL5avtKRihz6mncM/TLjrQi5IXfefzyUNpfpP4NNiLlJwrGpgF9/ywgQTirA8HfP0FaH8hcE3CxhnWUHDfp3xZNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709060501; c=relaxed/simple;
-	bh=1jD16RvjY0XylQTcKSUd8r17c2C6yBRNbcx+ZdpItzc=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=HaTKWq3Lj/A/23hpiYsEkmnH7ey+lvQqYpKRs8PCVD2Psc7C7SyxxDAJAGjSHoT78F5xyl0sQ2pfKfmL3Xnby5XzO0ibfnAOB+WMSBhAFOoUsm4v5zYYlMFXJOAxP4TF3cz1Y4HkebPDS/z4CSTj4YL2qZyUm8+WRnHP3CWAQyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BYpMobqR; arc=none smtp.client-ip=198.175.65.20
+	bh=mPV8+XATiMCdPLjzfUpMB+cAZDzcYLpuh1vBO6V5R0A=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EG308cjb7KI79TI0tTS3xoQ1Pv8/FxSZIRalFtm6TBR9xMSUcuS39zW/wO+/t5jP8RECKyXHIar8uCTbfAbPu9EnydwMcWuq56HR92fiTiHLg2tTtucNAZdzikiycQ99lxuVSgM6h5oX5SbsvIQLZeWsPUWEnFTbHJAJtuK3L2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=evB+libN; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BYpMobqR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="evB+libN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709060499; x=1740596499;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1jD16RvjY0XylQTcKSUd8r17c2C6yBRNbcx+ZdpItzc=;
-  b=BYpMobqRBb8lTbnwTMiSVDLSo6H6dQyGfgaagka6JGMELGzHxNzH22t5
-   2eGVQ4gUS0jKBui0wI8PpW8I00GCAaw6VFJuE+SNWi3hDf+fwhH/1vhfC
-   sqBAMZyqvFn+h1FVK6lnPHu9w6atapLo19CPrbFz9vG/hHpluR6FhCcVE
-   44KfYzIj7Ax1frEZSZUH0KCaOWLrJGJl8RcgEMxAhR1IfzEI8RS1lBicI
-   peb98Ig8d30+4m2iUpOtz4KjC+g6AdPMm141H/R0OqfaqWedrIr4Ac1cF
-   0vYc7YDaQw5zmL22dfeY5WDQ8R2kGSxEX3b/2P+n7tNJyKOinqq1vrM2g
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3293079"
+  t=1709060500; x=1740596500;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=mPV8+XATiMCdPLjzfUpMB+cAZDzcYLpuh1vBO6V5R0A=;
+  b=evB+libNKX/c8RULx+IUS/8nGb88Mfk+e9PNyUfICTkkHR2DxFX6fiE9
+   ezHAVAnW88xhpJB20t3UgHSG3K2TjIQ35Rl9rzfwR3s7Spw2KsbdnVuT7
+   tVIKdPJuXx4zVkLU5nLYY3MtrnyiGP4ISz9Yph3hovbFZqMhq4Wg+Wa5b
+   LHwmMD04g7Fwf2KzqgAIZ8/g8MdJEwAZXT1mJiTlTc3s2fE//k7aUcKUR
+   RjdWVw7ubBZolUeNGetCLaAYw2c/jhap1LXYrKaptdlaFCOsfCUACx84z
+   P8xdqMo7WQg7O8mRzGQ2bQLmaS4HmhhTC0yuCPj6V84Xb4rnFMahRflhZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14063664"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="3293079"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:38 -0800
+   d="scan'208";a="14063664"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:38 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="11725838"
+   d="scan'208";a="7120055"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:37 -0800
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:37 -0800
 Received: from debox1-desk4.lan (unknown [10.251.6.149])
-	by linux.intel.com (Postfix) with ESMTP id D5D41580DEF;
-	Tue, 27 Feb 2024 11:01:36 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTP id 52C2B580B9A;
+	Tue, 27 Feb 2024 11:01:37 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: david.e.box@linux.intel.com,
 	rajvi.jingar@linux.intel.com,
@@ -49,10 +50,12 @@ To: david.e.box@linux.intel.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH V2 1/3] platform/x86/intel/vsec: Remove nuisance message
-Date: Tue, 27 Feb 2024 11:01:32 -0800
-Message-Id: <20240227190134.1592072-1-david.e.box@linux.intel.com>
+Subject: [PATCH V2 3/3] platform/x86/intel/pmc/arl: Put GNA device in D3
+Date: Tue, 27 Feb 2024 11:01:34 -0800
+Message-Id: <20240227190134.1592072-3-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240227190134.1592072-1-david.e.box@linux.intel.com>
+References: <20240227190134.1592072-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,39 +65,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-intel_vsec_walk_header() is used to configure features from devices that
-don't provide a PCI VSEC or DVSEC structure. Some of these features may
-be unsupported and fail to load. Ignore them silently as we do for
-unsupported features described by VSEC/DVSEC.
+As is the case on Meteor Lake, the Gaussian & Neural Accelerator (GNA)
+device is powered by BIOS to D0 by default. If no driver is loaded, this
+will cause the Package C state to be limited to PC2, leading to
+significant power consumption and decrease in batter life.  Put the GNA
+device in D3 by default if no driver is loaded for it.
 
+Fixes: 83f168a1a437 ("platform/x86/intel/pmc: Add Arrow Lake S support to intel_pmc_core driver")
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
 
-V2 - no changes
+V2 - Better explain the issue in the changelog and spell out GNA.
 
- drivers/platform/x86/intel/vsec.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/platform/x86/intel/pmc/arl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 778eb0aa3479..0fdfaf3a4f5c 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -236,10 +236,7 @@ static bool intel_vsec_walk_header(struct pci_dev *pdev,
+diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+index 683ae828276b..34b4cd23bfe5 100644
+--- a/drivers/platform/x86/intel/pmc/arl.c
++++ b/drivers/platform/x86/intel/pmc/arl.c
+@@ -673,6 +673,7 @@ static struct pmc_info arl_pmc_info_list[] = {
+ };
  
- 	for ( ; *header; header++) {
- 		ret = intel_vsec_add_dev(pdev, *header, info);
--		if (ret)
--			dev_info(&pdev->dev, "Could not add device for VSEC id %d\n",
--				 (*header)->id);
--		else
-+		if (!ret)
- 			have_devices = true;
- 	}
+ #define ARL_NPU_PCI_DEV			0xad1d
++#define ARL_GNA_PCI_DEV			0xae4c
+ /*
+  * Set power state of select devices that do not have drivers to D3
+  * so that they do not block Package C entry.
+@@ -680,6 +681,7 @@ static struct pmc_info arl_pmc_info_list[] = {
+ static void arl_d3_fixup(void)
+ {
+ 	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
++	pmc_core_set_device_d3(ARL_GNA_PCI_DEV);
+ }
  
-
-base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
+ static int arl_resume(struct pmc_dev *pmcdev)
 -- 
 2.34.1
 
