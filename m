@@ -1,122 +1,92 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE6E14831E
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ED2146E8A;
+	Tue, 27 Feb 2024 16:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709049707; cv=none; b=Go18bqZzxNOBOZu5Z0lmRGLf2vudjXGEbwVB1boDYLKVApJDkWH3eiNayj3T+If+fZ/HsqZ+Oda3We62AoGcK6JQnoHCuvDFMhSXWy13LHo+0BluOI9btPAoiIJz960dAHET3Tv+wojNXMKwYvGtnl8JPcQMGUFGXCNXOkMClGQ=
+	t=1709049789; cv=none; b=FMo5ecoUCPKF8H7A3qZKNCd7kVcg5ELoY/5nDb8orjFOvRDfkzDxL7J/EhlWoPkG62Y17JlDb6pJqsk5CCJmjAsY9mmPFpUM4wjSvYtaH+5AThTkRc1RcUES1vebp3fM+OerOAIzrkHDYA66x3dU8X6p4w2WipXM38PRMFeoFJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709049707; c=relaxed/simple;
-	bh=rj5M9NTOw+mlLPuNBzddxSdKcQk7qpqzonx/WQhvBg4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gvZCoOVxuhRAqgZCL85TW5Lye67tbyEGfArhKrrL5lvyx56i5ZsfNvzErzHgHZ53xA27ja6WG9MiGapWWLBCR9ph1ASnzC/+arikeKj/FYgveqX50k7nIDvXAUVy0/e/xFtDdi0cjWyyxRAGxsRbBg0EejDvDfU6EP+Imr14wcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjltX1F3; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709049789; c=relaxed/simple;
+	bh=D8fuIEf8rJNQDmLdQLIRRJcmZttD10RcRN0fcSH1sLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JcBo1KwjhCJlRe+yiZiTp2PCt9flFqpr0PSMvEGbiyl3Kj+lgTBrMcAanLGZjttRs0KsAVhldFAfXRDFs+HxHoDJat+CMlq/DxywwNsWHtzNk4hIbiJ6dcLt5XWakvjXDyzwCNOvsASI7JFkIX/A8NymfLpNtYV6sZ3h8EXH/Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=AWKWZeel; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjltX1F3"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d23d301452so61646541fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:01:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709049703; x=1709654503; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bw+xXvSI28q5RO1dOygG9JjocsqAHut9oZzvrKjoGSM=;
-        b=kjltX1F3ZjTf5cqd9xy6JeNw5OzwHRMjIT9BTV7xrhLoudnYYIKQ9SWZ2E0e+vjzPB
-         GJE65nq86X+ogoN1jrxY0yflcUzmJoI+WXOlaRV9kRhjvD/EBB4VGi0Y0TYpSUgvGh81
-         5/u3YjMgFzEwigf3NZA2aoxM7uMQM/ZTMDl0qzLD/IW7dRG4MaaTjZa6Aw716cWQTCDV
-         mnWQV38cRabB8grdieQcP2OeuXBWw8EbJIcEY5xllNJiD/tqiQz8TSVklDcSKESOBOJF
-         LtdOmIdJexLH+2eesJsUf6LN8YF3583UfOGF6tLGBt65bffhbo2KB7BXM8GzQQzDicfB
-         CFSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709049703; x=1709654503;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bw+xXvSI28q5RO1dOygG9JjocsqAHut9oZzvrKjoGSM=;
-        b=HY45z53qgVpP/xVtkqOnc7bDtsI4EU1OGsWWUd5fpSP2otqBHSS+7lyj5NMekXZgPB
-         Wh+QgBL0Ra+deWehyFA62KVT9YVxdJwd6Ho7Ir4CMaNtytG7tKM7OjS5smyVNcVNaT4Y
-         I+WVBTO4XQ67Jj4lM4xeWImXeedHuOM5ks8WyqgtjEnkQ5U5EdVLahHHbUEKURZfuctF
-         9cu4+g3+jFwUoxlHCF1nfhavNzWrPQ42O/u84gIqXBzeznJ2Vx2ZZ5zTBdd4feHDefna
-         Udx2NAR0AQBFPOizuRVF729XZLoFDs63T5oJcDep6SUt5ihy7NSqgb+oJ0TCfia+Y3GQ
-         MJZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHXEdeU8CI66UuCOFaLuAqcuwhpA6u7cI6eyensrlcu1xSBB0aPAGSSS+alAHVJVz1QoCTdfh4p817hOLvvdm/og6sDhsca9pe0QiO
-X-Gm-Message-State: AOJu0YwRIeixGT4LYfEIGIMhuK7zWLphks8eN1b/tdHGgnjKRDxk+SX1
-	f9LOGsVCxAxP9drYMy6WimaetsRMUuad2bhs5wBJmqFsybVHl4H5
-X-Google-Smtp-Source: AGHT+IEjjiHreFIpagJZhsvqT3vXcRrneODTErc9AB6tq16rbUuhBf8n8mhbKupYMkbTwMrDBvOdJw==
-X-Received: by 2002:a05:6512:2216:b0:513:16cd:1377 with SMTP id h22-20020a056512221600b0051316cd1377mr378703lfu.1.1709049703230;
-        Tue, 27 Feb 2024 08:01:43 -0800 (PST)
-Received: from localhost.localdomain (c83-255-24-248.bredband.tele2.se. [83.255.24.248])
-        by smtp.googlemail.com with ESMTPSA id x18-20020ac24892000000b005128d0e2a07sm1228190lfc.308.2024.02.27.08.01.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 08:01:42 -0800 (PST)
-From: Jonathan Bergh <bergh.jonathan@gmail.com>
-To: vireshk@kernel.org
-Cc: johan@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	Jonathan Bergh <bergh.jonathan@gmail.com>
-Subject: [PATCH 2/2] staging: greybus: Replaces directive __attribute__((packed)) by __packed as suggested by checkpatch
-Date: Tue, 27 Feb 2024 17:01:13 +0100
-Message-Id: <20240227160113.111264-2-bergh.jonathan@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240227160113.111264-1-bergh.jonathan@gmail.com>
-References: <20240227160113.111264-1-bergh.jonathan@gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AWKWZeel"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=IY2/g60Mhri+J9MAbXvnzzlU9k4+0F6po+5bYJBis5k=; b=AWKWZeelA7RQNAtpeq50GWuqhH
+	DndOuu8VHbgWp+B/i079vkiufoHy0dbHP1X+nqUIoz+fUWJr/qDw0yWUsahEdbLkfWCLsIuo6s5Db
+	vkgCtxwoBUuiwFZztZd6rzFaDIC5PSvRzxyYUTzJiw/Yaq4ioKNtZhEP16eKCKTqrbTM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rezvG-008rpE-4l; Tue, 27 Feb 2024 17:03:14 +0100
+Date: Tue, 27 Feb 2024 17:03:14 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	herve.codina@bootlin.com, maxime.chevallier@bootlin.com,
+	christophercordahi@nanometrics.ca
+Subject: Re: [PATCH v2 2/6] leds: trigger: Create a new LED netdev trigger
+ for collision
+Message-ID: <e6351d0c-15e2-47a9-be6c-6f21aee9ae90@lunn.ch>
+References: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
+ <20240227093945.21525-3-bastien.curutchet@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227093945.21525-3-bastien.curutchet@bootlin.com>
 
-This patch makes the following changes:
- * Replaces '__attribute__((packed))' by '__packed' to remove warning as
-   flagged by checkpatch
+On Tue, Feb 27, 2024 at 10:39:41AM +0100, Bastien Curutchet wrote:
+> Collisions on link does not fit into one of the existing netdev triggers.
+> 
+> Add TRIGGER_NETDEV_COLLISION in the enum led_trigger_netdev_modes.
+> Add its definition in Documentation.
+> Add its handling in ledtrig-netdev, it can only be supported by hardware
+> so no software fallback is implemented.
 
-Signed-off-by: Jonathan Bergh <bergh.jonathan@gmail.com>
----
- drivers/staging/greybus/greybus_firmware.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+How useful is collision? How did you test this? How did you cause
+collisions to see if the LED actually worked?
 
-diff --git a/drivers/staging/greybus/greybus_firmware.h b/drivers/staging/greybus/greybus_firmware.h
-index f68fd5e25321..b6042a82ada4 100644
---- a/drivers/staging/greybus/greybus_firmware.h
-+++ b/drivers/staging/greybus/greybus_firmware.h
-@@ -41,14 +41,14 @@ struct fw_mgmt_ioc_get_intf_version {
- 	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
- 	__u16 major;
- 	__u16 minor;
--} __attribute__ ((__packed__));
-+} __packed;
- 
- struct fw_mgmt_ioc_get_backend_version {
- 	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
- 	__u16 major;
- 	__u16 minor;
- 	__u8 status;
--} __attribute__ ((__packed__));
-+} __packed;
- 
- struct fw_mgmt_ioc_intf_load_and_validate {
- 	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
-@@ -56,12 +56,12 @@ struct fw_mgmt_ioc_intf_load_and_validate {
- 	__u8 status;
- 	__u16 major;
- 	__u16 minor;
--} __attribute__ ((__packed__));
-+} __packed;
- 
- struct fw_mgmt_ioc_backend_fw_update {
- 	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
- 	__u8 status;
--} __attribute__ ((__packed__));
-+} __packed;
- 
- #define FW_MGMT_IOCTL_BASE			'F'
- #define FW_MGMT_IOC_GET_INTF_FW			_IOR(FW_MGMT_IOCTL_BASE, 0, struct fw_mgmt_ioc_get_intf_version)
--- 
-2.40.1
+As far as i can see, this is just a normal 100Base-T PHY. Everybody
+uses that point-to-point nowadays. If it was an 100Base-T1, with a
+shared medium, good old CSMA/CD then collision might actually be
+useful.
 
+I also disagree with not having software fallback:
+
+ip -s link show eth0
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
+    link/ether 80:ee:73:83:60:27 brd ff:ff:ff:ff:ff:ff
+    RX:     bytes    packets errors dropped  missed   mcast           
+    4382213540983 2947876747      0       0       0  154890 
+    TX:     bytes    packets errors dropped carrier collsns           
+      18742773651  197507119      0       0       0       0
+
+collsns = 0. The information is there in a standard format. However,
+when did you last see it not 0?
+
+	Andrew
