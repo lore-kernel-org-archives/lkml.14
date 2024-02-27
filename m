@@ -1,202 +1,145 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D30B4E1A0
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EC91419B3;
+	Tue, 27 Feb 2024 17:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709056495; cv=none; b=X8POIkx6kUwzzivaDs9A42mmodMtvCNmdaobgIPq2EGl5xiILH+2KZubntKdvnfKVdDXUQEuaEPtKS/VD/HT/B7t9eUZaHLcuzgoV72+2J7t9I9u6fpYK8C91vrzcnaLca1sHdwy7D9v1x/1E2Uhuo/o8KQuC4hwQ5lwVSPtHXk=
+	t=1709056506; cv=none; b=k5KBGQxzmQI5uHaUPD1qbkzYYL5PUK/0UnVAWovlR2As8C6xfdC8d7msK5MtMwdvgzpYcnM7vky77GPwJStiFQWl3YHS2UsoGHH4gV0/gI2a2j871RrBIFESW7BH0xt+d8DOdKKtsTAnjXeWPUHyow6iyNcLsHpqPvUozEArW6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709056495; c=relaxed/simple;
-	bh=VUAaY8wxXr5bUffmJpFRqHV2oMwBf/vlf3I5G3UUTGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JHLyqNq7cui4VhHOZY3coagXGLRl3ICIwA3EaPBAXOiRkkwqq7epBDez/fbcPZG/zCn6XUdFYyhNf12lAOx/zq6f/GoS/fZgE5bY5yj22154Y1tsl7garJFVN2aLzV8OKNV0nj5RBzuMkouliO+ER5Cc2CamQsOx2BB9+LphNM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=TZyWEU8Y; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="TZyWEU8Y"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5e4613f2b56so3154489a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:54:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709056493; x=1709661293; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kIdksP1jXgRqd1isvnR0Pk+ChLgtGPiZTFxnnPSsol0=;
-        b=TZyWEU8YoReS0giYCuMX1yk0jFICaJG4jcTNykPXsJyGXS0HB3e575BABK55a37ndj
-         RA9Jq1AZc9Fo0YiGhRES7wMMw1hd5DMFGHQmIbl+3dISOBQtnNoB1PIF0EwBR3Q4ud2U
-         OgUK7jkuXJnp3DaEEKtIqz8fwdYV34vv3uC4+Vykw0v/ZxuLe28u5alurmnyQyn44Lq8
-         SRgnrLEBF004FrIBQTzf3vQhDgxTy0TPu45xbgUTU1pqjb8FghAmkNybbnnA0NFBTSfS
-         +lGFOD9+hnorDVSbGrGzyNybkSBySiIWJ8WSecbsgA7IpVJR2kdD8lNv7Y1XqBwsAeaI
-         JMEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709056493; x=1709661293;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kIdksP1jXgRqd1isvnR0Pk+ChLgtGPiZTFxnnPSsol0=;
-        b=CVEoyd7TxUxl4z6L14UVzYIqnPo2jENwt3yuGtN6gV0Y0e1MjojuFsemztX7kznJuk
-         COGBT3YVx6NVuJc46cOs5++tVDi9B1uQ5ebm205IFuncGQZ0jB153cp90Gtvn4F8ucMb
-         3xcEuXwlOqXocdVHclpDmfefYrR3cJFvyWY9sd3wCsOUEaO8yFFLndoH/dNwjkQHAkBe
-         oT7OCi2DhIpepCHRuN9Vpw8o7tIS5n+K4fheee8khIuzm7sNzZd/5UOXx4O4piYw0Y7U
-         rKuPIyyoRSgJm1JlimpGR4+9YUKuC2G0cxqsU0aHgRn3yjcH7h3wSnmew1kEfHs7ehk8
-         97UA==
-X-Forwarded-Encrypted: i=1; AJvYcCWK6hy72TfFfR1m8obpbDnyyYuG3n9nSpPo3gTPAXmNmqFK5bxN0YCU+S7Sf+o2miTDzwOskeLgAJl4SYqrz4o3BW4erNO4v1qMaeey
-X-Gm-Message-State: AOJu0YwGG80xeIcmAEkMlsW9fSMWYqLSoYEgh/LXE0vZ1vMk2rEKG76S
-	Eq1zlx25xn6A/rrI73KgbavNPxwu66JnGKzdbHMdRkc9Y5lUE5het+ikaIg9JYk=
-X-Google-Smtp-Source: AGHT+IFz6f/uoaRRDlAo9FUesEjMdjsM1i3WorOHOm7Rgb/Bu93+PnLqfHQ9b5gv518bhE6IEAiu6A==
-X-Received: by 2002:a17:90a:6f01:b0:299:75aa:8949 with SMTP id d1-20020a17090a6f0100b0029975aa8949mr7822691pjk.22.1709056493179;
-        Tue, 27 Feb 2024 09:54:53 -0800 (PST)
-Received: from ghost (mobile-166-137-160-039.mycingular.net. [166.137.160.39])
-        by smtp.gmail.com with ESMTPSA id n15-20020a17090ade8f00b002995e9aca72sm6856207pjv.29.2024.02.27.09.54.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 09:54:52 -0800 (PST)
-Date: Tue, 27 Feb 2024 09:54:49 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Guenter Roeck <linux@roeck-us.net>,
-	David Laight <David.Laight@aculab.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Helge Deller <deller@gmx.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Parisc List <linux-parisc@vger.kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v10] lib: checksum: Use aligned accesses for ip_fast_csum
- and csum_ipv6_magic tests
-Message-ID: <Zd4h6ZhvLSWfWJG/@ghost>
-References: <e11fea7a-e99e-4539-a489-0aa145ee65f0@roeck-us.net>
- <ZdzPgSCTntY7JD5i@shell.armlinux.org.uk>
- <ZdzZ5tk459bgUrgz@ghost>
- <ZdzhRntTHApp0doV@shell.armlinux.org.uk>
- <b13b8847977d4cfa99b6a0c9a0fcbbcf@AcuMS.aculab.com>
- <Zd0b8SDT8hrG/0yW@ghost>
- <cdd09f7a-83b2-41ba-a32c-9886dd79c43e@roeck-us.net>
- <9b4ce664-3ddb-4789-9d5d-8824f9089c48@csgroup.eu>
- <Zd25XWTkDPuIjpF8@shell.armlinux.org.uk>
- <c8ddcc98-acb0-4d2d-828a-8dd12e771b5f@csgroup.eu>
+	s=arc-20240116; t=1709056506; c=relaxed/simple;
+	bh=fEAAGW+WyZIqxwlQgw3mUs/pzzZX+uujTliQ839XUuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cNhgRKMW4YLxEh6DcOTpmFfeB1WBs3Ufs8B3R9MFD3i8upSkiKlLlxZMBiHOSdld1G/zQba+eiEXdA9aEOvOubhRKToRanfe9geJ4SXBE8Fq5ZmXkLNRC5/ZdA55eCOUe+SIuA9PcViiVUWqPsSou41t31u/Jim82MhtVlBETe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A28FFC433F1;
+	Tue, 27 Feb 2024 17:55:04 +0000 (UTC)
+Date: Tue, 27 Feb 2024 12:57:06 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Sachin Sant <sachinp@linux.ibm.com>
+Subject: [PATCH] tracing: Prevent trace_marker being bigger than unsigned
+ short
+Message-ID: <20240227125706.04279ac2@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c8ddcc98-acb0-4d2d-828a-8dd12e771b5f@csgroup.eu>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 27, 2024 at 11:32:19AM +0000, Christophe Leroy wrote:
-> 
-> 
-> Le 27/02/2024 à 11:28, Russell King (Oracle) a écrit :
-> > On Tue, Feb 27, 2024 at 06:47:38AM +0000, Christophe Leroy wrote:
-> >>
-> >>
-> >> Le 27/02/2024 à 00:48, Guenter Roeck a écrit :
-> >>> On 2/26/24 15:17, Charlie Jenkins wrote:
-> >>>> On Mon, Feb 26, 2024 at 10:33:56PM +0000, David Laight wrote:
-> >>>>> ...
-> >>>>>> I think you misunderstand. "NET_IP_ALIGN offset is what the kernel
-> >>>>>> defines to be supported" is a gross misinterpretation. It is not
-> >>>>>> "defined to be supported" at all. It is the _preferred_ alignment
-> >>>>>> nothing more, nothing less.
-> >>>>
-> >>>> This distinction is arbitrary in practice, but I am open to being proven
-> >>>> wrong if you have data to back up this statement. If the driver chooses
-> >>>> to not follow this, then the driver might not work. ARM defines the
-> >>>> NET_IP_ALIGN to be 2 to pad out the header to be on the supported
-> >>>> alignment. If the driver chooses to pad with one byte instead of 2
-> >>>> bytes, the driver may fail to work as the CPU may stall after the
-> >>>> misaligned access.
-> >>>>
-> >>>>>
-> >>>>> I'm sure I've seen code that would realign IP headers to a 4 byte
-> >>>>> boundary before processing them - but that might not have been in
-> >>>>> Linux.
-> >>>>>
-> >>>>> I'm also sure there are cpu which will fault double length misaligned
-> >>>>> memory transfers - which might be used to marginally speed up code.
-> >>>>> Assuming more than 4 byte alignment for the IP header is likely
-> >>>>> 'wishful thinking'.
-> >>>>>
-> >>>>> There is plenty of ethernet hardware that can only write frames
-> >>>>> to even boundaries and plenty of cpu that fault misaligned accesses.
-> >>>>> There are even cases of both on the same silicon die.
-> >>>>>
-> >>>>> You also pretty much never want a fault handler to fixup misaligned
-> >>>>> ethernet frames (or really anything else for that matter).
-> >>>>> It is always going to be better to check in the code itself.
-> >>>>>
-> >>>>> x86 has just made people 'sloppy' :-)
-> >>>>>
-> >>>>>      David
-> >>>>>
-> >>>>> -
-> >>>>> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,
-> >>>>> MK1 1PT, UK
-> >>>>> Registration No: 1397386 (Wales)
-> >>>>>
-> >>>>
-> >>>> If somebody has a solution they deem to be better, I am happy to change
-> >>>> this test case. Otherwise, I would appreciate a maintainer resolving
-> >>>> this discussion and apply this fix.
-> >>>>
-> >>> Agreed.
-> >>>
-> >>> I do have a couple of patches which add explicit unaligned tests as well as
-> >>> corner case tests (which are intended to trigger as many carry overflows
-> >>> as possible). Once I get those working reliably, I'll be happy to submit
-> >>> them as additional tests.
-> >>>
-> >>
-> >> The functions definitely have to work at least with and without VLAN,
-> >> which means the alignment cannot be greater than 4 bytes. That's also
-> >> the outcome of the discussion.
-> > 
-> > Thanks for completely ignoring what I've said. No. The alignment ends up
-> > being commonly 2 bytes.
-> > 
-> > As I've said several times, network drivers do _not_ have to respect
-> > NET_IP_ALIGN. There are 32-bit ARM drivers which have a DMA engine in
-> > them which can only DMA to a 32-bit aligned address. This means that
-> > the start of the ethernet header is placed at a 32-bit aligned address
-> > making the IP header misaligned to 32-bit.
-> > 
-> > I don't see what is so difficult to understand about this... but it
-> > seems that my comments on this are being ignored time and time again,
-> > and I can only think that those who are ignoring my comments have
-> > some alterior motive here.
-> > 
-> 
-> I'm sorry for this misunderstanding. I'm not ignoring what you said at 
-> all. I understood that ARM is able to handle unaligned accesses with 
-> some exception handlers at worst case and that DMA constraints may lead 
-> to the IP header beeing on a 2 bytes alignment only.
-> 
-> However I also understood from others that some architectures can't 
-> handle such a 2 bytes only alignments.
-> 
-> It's been suggested during the discussion that alignment tests should be 
-> added later in a follow-up patch. So for the time being I'm trying to 
-> find a compromise and get the existing tests working on all platforms 
-> but with a smaller alignment than the 16-bytes alignment brought by 
-> Charlie's v10 patch. And a 4 bytes alignment seemed to me to be a good 
-> compromise for this fix. The idea is also to make the fix as minimal as 
-> possible, unlike Charlie's patch that is churning up the tests quite 
-> heavily.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Do you have a list of platforms this is failing on? I haven't seen any
-reports that haven't been fixed.
+The trace_marker write goes into the ring buffer. A test was added to
+write a string as big as the sub-buffer of the ring buffer to see if it
+would work. A sub-buffer is typically PAGE_SIZE in length.
 
-- Charlie
+On PowerPC architecture, the ftrace selftest for trace_marker started to
+fail. This was due to PowerPC having a PAGE_SIZE of 65536 and not 4096. It
+would try to write a string that was around 63000 bytes in size. This gave
+the following warning:
 
-> 
-> But maybe I misunderstood some of the discussion and indeed 2 bytes 
-> alignment would work on all platforms and only an odd alignment is 
-> problematic ?
+------------[ cut here ]------------
+precision 63492 too large
+WARNING: CPU: 15 PID: 2538829 at lib/vsprintf.c:2721 set_precision+0x68/0xa4
+Modules linked in:
+CPU: 15 PID: 2538829 Comm: awk Tainted: G M O K 6.8.0-rc5-gfca7526b7d89 #1
+Hardware name: IBM,9080-HEX POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1060.00 (NH1060_018) hv:phyp pSeries
+NIP: c000000000f57c34 LR: c000000000f57c30 CTR: c000000000f5cdf0
+REGS: c000000a58e4f5f0 TRAP: 0700 Tainted: G M O K (6.8.0-rc5-gfca7526b7d89)
+MSR: 8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE> CR: 48000824 XER: 00000005
+CFAR: c00000000016154c IRQMASK: 0
+GPR00: c000000000f57c30 c000000a58e4f890 c000000001482800 0000000000000019
+GPR04: 0000000100011559 c000000a58e4f660 c000000a58e4f658 0000000000000027
+GPR08: c000000e84e37c10 0000000000000001 0000000000000027 c000000002a47e50
+GPR12: 0000000000000000 c000000e87bf7300 0000000000000000 0000000000000000
+GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+GPR20: c0000004a43ec590 0000000000400cc0 0000000000000003 c0000000012c3e65
+GPR24: c000000a58e4fa18 0000000000000025 0000000000000020 000000000001ff97
+GPR28: c0000001168a00dd c0000001168c0074 c000000a58e4f920 000000000000f804
+NIP [c000000000f57c34] set_precision+0x68/0xa4
+LR [c000000000f57c30] set_precision+0x64/0xa4
+Call Trace:
+[c000000a58e4f890] [c000000000f57c30] set_precision+0x64/0xa4 (unreliable)
+[c000000a58e4f900] [c000000000f5ccc4] vsnprintf+0x198/0x4c8
+[c000000a58e4f980] [c000000000f53228] seq_buf_vprintf+0x50/0xa0
+[c000000a58e4f9b0] [c00000000031cec0] trace_seq_printf+0x60/0xe0
+[c000000a58e4f9e0] [c00000000031b5f0] trace_print_print+0x78/0xa4
+[c000000a58e4fa60] [c0000000003133a4] print_trace_line+0x2ac/0x6d8
+[c000000a58e4fb20] [c0000000003145c0] s_show+0x58/0x2c0
+[c000000a58e4fba0] [c0000000005dfb2c] seq_read_iter+0x448/0x618
+[c000000a58e4fc70] [c0000000005dfe08] seq_read+0x10c/0x174
+[c000000a58e4fd10] [c00000000059a7e0] vfs_read+0xe0/0x39c
+[c000000a58e4fdc0] [c00000000059b59c] ksys_read+0x7c/0x140
+[c000000a58e4fe10] [c000000000035d74] system_call_exception+0x134/0x330
+[c000000a58e4fe50] [c00000000000d6a0] system_call_common+0x160/0x2e4
+
+The problem was that in trace_print_print() that reads the trace_marker
+write data had the following code:
+
+	int max = iter->ent_size - offsetof(struct print_entry, buf);
+
+	[..]
+	trace_seq_printf(s, ": %.*s", max, field->buf);
+
+Where "max" was the size of the entry. Now that the write to trace_marker
+can be as big as what the sub-buffer can hold, and the sub-buffer for
+powerpc is 64K in size, the "max" value was: 63492, and that was passed to
+trace_seq_printf() which eventually calls vsnprintf() with the same format
+and parameters.
+
+The max "precision" that "%.*s" can be is max signed short (32767) where
+63492 happens to be greater than.
+
+Prevent the max size written by trace_marker to be greater than what a
+signed short can hold.
+
+Link: https://lore.kernel.org/all/C7E7AF1A-D30F-4D18-B8E5-AF1EF58004F5@linux.ibm.com/
+
+Reported-by: Sachin Sant <sachinp@linux.ibm.com>
+Tested-by: Sachin Sant <sachinp@linux.ibm.com>
+Fixes: 8ec90be7f15f ("tracing: Allow for max buffer data size trace_marker writes")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8198bfc54b58..1606fa99367b 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7310,7 +7310,9 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ /* Used in tracing_mark_raw_write() as well */
+ #define FAULTED_STR "<faulted>"
+ #define FAULTED_SIZE (sizeof(FAULTED_STR) - 1) /* '\0' is already accounted for */
+-
++#ifndef SHORT_MAX
++#define SHORT_MAX	((1<<15) - 1)
++#endif
+ 	if (tracing_disabled)
+ 		return -EINVAL;
+ 
+@@ -7328,6 +7330,16 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ 	if (cnt < FAULTED_SIZE)
+ 		size += FAULTED_SIZE - cnt;
+ 
++	/*
++	 * trace_print_print() uses vsprintf() to determine the size via
++	 * the precision format "%.*s" which can not be greater than
++	 * a signed short.
++	 */
++	if (size > SHORT_MAX) {
++		cnt -= size - SHORT_MAX;
++		goto again;
++	}
++
+ 	if (size > TRACE_SEQ_BUFFER_SIZE) {
+ 		cnt -= size - TRACE_SEQ_BUFFER_SIZE;
+ 		goto again;
+-- 
+2.43.0
+
