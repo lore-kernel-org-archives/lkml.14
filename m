@@ -1,319 +1,141 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33738136659
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80984136659
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709048865; cv=none; b=lnHGWlN19CE9prDMLEtwJRxJY5cItIrcAEPDY/0CEqrYZy1hvpLtaEe66DkENRrTq4a7rLP5CNqq4LgMKKXm/ZFWZZllq8D1aeVxQMz2yav4zGHZVMlvGobUOtenfDh7IYjoK5gVtg+ivMl5b1OZ6V2hRS7hMnppK/RurK3g1BI=
+	t=1709048881; cv=none; b=eTHLC0sAvuIn38Il2IbvjuEY1e3kLszIUiF5I4e2nqDgd1JyDVNtTKIl3ucgcP4fcb4b5AueEmfWpTnPc5J4ZqHC1X0uoy9oosvUJyZawowAcUG+YflD8/45GuMQnGWsczjacnWOjpxum/zy5unHIa+5S9AEb7aGhbCNHHwP30M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709048865; c=relaxed/simple;
-	bh=BE2F/vJm7npHgcZSkvVdV4JKIJCe0hqUCkF0daAOUIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=emHzZYdSJGCqorMK/Rn2iicwcQNYaW9TQc+yQKPkH5/18n39Xpgs/DGbtFQ1ANp6G3xBW9D/t0Z0cvVsVz+WrrsJL8Opo5ok45JrDBvRAAw6NkR3zq8a8PIr5nmU2YMYKLYb8vagPtt1p/Lhmp4ZQVuCI0plv7su1yUIilNHZQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DzHc/JKb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709048881; c=relaxed/simple;
+	bh=zLP3Nh9re4oPL1rzSQYuUp+YFXQxBUvljv+R+0YwHQg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mggMZ/B1+BI4Gnqig/nk4NbWC8mhdEyy+O5VhI8UoTDhVqzjphE1FnKPe6WMALp/f8aDLdV1C3YCUQi84xFkqf5fxpybM5u4iWduQ75d23PK5j/1ni6SNNHCBPXVmiUbr/PAy7nbkMcK/TU+pLGJZlXZq4OsaW773XCJ0ZCOeqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=afAGtIxr; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DzHc/JKb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709048862;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ll57wroKwtPE/6JXM1AzKcZ0wkNzo7bP7d1PR49cpkY=;
-	b=DzHc/JKbenKvjxD1tA+E4WMFUpZeJ/RRdfBpEeiEXpHPcFxUvaduxk+mG83UTotU06FzNR
-	EzQvZKtZzz+7fjIHKl+EL6CmQt0d48x8+sR3iJiUgs9GAQpfo6r6/4Z8cYX5apqlbdrq3y
-	mm9wH0PCcFLaduwLO+GxVoXAQ4coul8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-630-gYruJO8oMziySlCdbjFLnA-1; Tue,
- 27 Feb 2024 10:47:37 -0500
-X-MC-Unique: gYruJO8oMziySlCdbjFLnA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 794DE3C100B1;
-	Tue, 27 Feb 2024 15:47:37 +0000 (UTC)
-Received: from bfoster (unknown [10.22.32.137])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 399032166B5D;
-	Tue, 27 Feb 2024 15:47:37 +0000 (UTC)
-Date: Tue, 27 Feb 2024 10:49:19 -0500
-From: Brian Foster <bfoster@redhat.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	djwong@kernel.org
-Subject: Re: [PATCH 01/21] bcachefs: KEY_TYPE_accounting
-Message-ID: <Zd4Ef49kHX3g69VT@bfoster>
-References: <20240225023826.2413565-1-kent.overstreet@linux.dev>
- <20240225023826.2413565-2-kent.overstreet@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="afAGtIxr"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a3e6f79e83dso518299966b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 07:47:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709048878; x=1709653678; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BUdQYoYhmZQWT1OkEsE7ybx8wYaMrIYDNQQCYx+YvLY=;
+        b=afAGtIxrY1GoB1UiIo/pvVhqTi25z0M0dqRJri+uYvWUInw8WIqLTMUS7t53BWRvMa
+         OsBPj2lYGvSn6YREmmP8Oc72BWTf4iuwJ4bXtrHXdi3rK2h5DAFWSKv1J92PGb3gQqhH
+         FjleHA1leGIEyXicBHj2pIwp7iVgDJv2cIli9R5M5CwaFXbB67M6+ZLIiILc6WJwPrFH
+         RueFuEEhZH3Qie2FzsQizeZZNb7mGzWO1BeqQrhmpR0ysqWQ2KnaXFWBnuvarI78iFJY
+         VVqWivau41f+yGL4PvcX2u0n4crQiQNhMsl5kXiimz9KHH8ygwOrsmUa3Q1yRv1+ml4o
+         xiWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709048878; x=1709653678;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BUdQYoYhmZQWT1OkEsE7ybx8wYaMrIYDNQQCYx+YvLY=;
+        b=pdlJcIrA7aeEj8S3Z4Tg6S45dGW8D16WBG1g3nfae7rR61cZS1A5dll+Vcoci8Pi1J
+         NaSKffERevqFfZgB/5AeojPjD9ftvJaf23XC4ywINaiznDcqY5dMDOxjopXiqpvUyqmC
+         rnC3MZfhmJVPJ9gzjvk3TK+oAfTPwlCvQ33tqqtpfnoqZU+yAKSEWieaVrlDmUO8Siu5
+         oEWcfVForQSpuV2jRwk/xBGoSe/n3SCo2DqVhU30/DjIJIfe4ZOeyTiSCHUiOW2mSqNc
+         ZN+lX9RaaLNku2arftDczCTs69a6AjRyDm110gQz86/phAI/GWBZqokyg9hLGpdlBEL9
+         voXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXppaKMLIeJcLskgv8Pxdf3txBx6NZJg9iOITpNZqLdxUgOuJN5FjfRTDe4LP5WS4J/0OJ2W9rjMCOv43W78fW1ElIc76nBnVL/lN+C
+X-Gm-Message-State: AOJu0YxYZUrEnwibjCs/BBCKXeCOUJ8zqFCOlVBeDaHoYWVTbk+hcYFk
+	zKoqIRzGJdOoKcAkWVpbBJus+qwA/+Eeih0VoWjiVpjKouqdv3WkLRFCpD4EN0Y=
+X-Google-Smtp-Source: AGHT+IG1N/evdsxiik1o5kVkAoCHQYDI76zYEkVSe5R90t1zo6aVmG8FqUOCqhTQjif7c4Oz185DUw==
+X-Received: by 2002:a17:906:1f56:b0:a43:88c0:7729 with SMTP id d22-20020a1709061f5600b00a4388c07729mr2487693ejk.56.1709048877919;
+        Tue, 27 Feb 2024 07:47:57 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id fj7-20020a1709069c8700b00a381ca0e589sm888216ejc.22.2024.02.27.07.47.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 07:47:57 -0800 (PST)
+Message-ID: <26feb928-55e8-4f6e-8727-44ef8e045b4c@linaro.org>
+Date: Tue, 27 Feb 2024 16:47:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240225023826.2413565-2-kent.overstreet@linux.dev>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] dt-bindings: arm: msm: Add llcc Broadcast_AND
+ register
+Content-Language: en-US
+To: Unnathi Chalicheemala <quic_uchalich@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <cover.1708551850.git.quic_uchalich@quicinc.com>
+ <93143410af20807c8451539db7fca7cddf31e7b4.1708551850.git.quic_uchalich@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <93143410af20807c8451539db7fca7cddf31e7b4.1708551850.git.quic_uchalich@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 24, 2024 at 09:38:03PM -0500, Kent Overstreet wrote:
-> New key type for the disk space accounting rewrite.
+On 23/02/2024 00:07, Unnathi Chalicheemala wrote:
+> The LLCC block in SM8450, SM8550 and SM8650 have a new register
+> space for Broadcast_AND region. This is used to check that all
+> channels have bit set to "1", mainly in SCID activation/deactivation.
 > 
->  - Holds a variable sized array of u64s (may be more than one for
->    accounting e.g. compressed and uncompressed size, or buckets and
->    sectors for a given data type)
+> Previously we were mapping only the Broadcast_OR region assuming
+> there was only one broadcast register region. Now we also map
+> Broadcast_AND region.
 > 
->  - Updates are deltas, not new versions of the key: this means updates
->    to accounting can happen via the btree write buffer, which we'll be
->    teaching to accumulate deltas.
-> 
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> ---
->  fs/bcachefs/Makefile                 |   3 +-
->  fs/bcachefs/bcachefs.h               |   1 +
->  fs/bcachefs/bcachefs_format.h        |  80 +++------------
->  fs/bcachefs/bkey_methods.c           |   1 +
->  fs/bcachefs/disk_accounting.c        |  70 ++++++++++++++
->  fs/bcachefs/disk_accounting.h        |  52 ++++++++++
->  fs/bcachefs/disk_accounting_format.h | 139 +++++++++++++++++++++++++++
->  fs/bcachefs/replicas_format.h        |  21 ++++
->  fs/bcachefs/sb-downgrade.c           |  12 ++-
->  fs/bcachefs/sb-errors_types.h        |   3 +-
->  10 files changed, 311 insertions(+), 71 deletions(-)
->  create mode 100644 fs/bcachefs/disk_accounting.c
->  create mode 100644 fs/bcachefs/disk_accounting.h
->  create mode 100644 fs/bcachefs/disk_accounting_format.h
->  create mode 100644 fs/bcachefs/replicas_format.h
-> 
-...
-> diff --git a/fs/bcachefs/disk_accounting_format.h b/fs/bcachefs/disk_accounting_format.h
-> new file mode 100644
-> index 000000000000..e06a42f0d578
-> --- /dev/null
-> +++ b/fs/bcachefs/disk_accounting_format.h
-> @@ -0,0 +1,139 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _BCACHEFS_DISK_ACCOUNTING_FORMAT_H
-> +#define _BCACHEFS_DISK_ACCOUNTING_FORMAT_H
-> +
-> +#include "replicas_format.h"
-> +
-> +/*
-> + * Disk accounting - KEY_TYPE_accounting - on disk format:
-> + *
-> + * Here, the key has considerably more structure than a typical key (bpos); an
-> + * accounting key is 'struct disk_accounting_key', which is a union of bpos.
-> + *
+> Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
 
-First impression.. I'm a little confused why the key type is a union of
-bpos. I'm possibly missing something fundamental/obvious, but could you
-elaborate more on why that is here?
+Why did you ignore the tags? Qualcomm upstreaming guide covers this
+case, so please read it before sending patches.
 
-Brian
-
-> + * This is a type-tagged union of all our various subtypes; a disk accounting
-> + * key can be device counters, replicas counters, et cetera - it's extensible.
-> + *
-> + * The value is a list of u64s or s64s; the number of counters is specific to a
-> + * given accounting type.
-> + *
-> + * Unlike with other key types, updates are _deltas_, and the deltas are not
-> + * resolved until the update to the underlying btree, done by btree write buffer
-> + * flush or journal replay.
-> + *
-> + * Journal replay in particular requires special handling. The journal tracks a
-> + * range of entries which may possibly have not yet been applied to the btree
-> + * yet - it does not know definitively whether individual entries are dirty and
-> + * still need to be applied.
-> + *
-> + * To handle this, we use the version field of struct bkey, and give every
-> + * accounting update a unique version number - a total ordering in time; the
-> + * version number is derived from the key's position in the journal. Then
-> + * journal replay can compare the version number of the key from the journal
-> + * with the version number of the key in the btree to determine if a key needs
-> + * to be replayed.
-> + *
-> + * For this to work, we must maintain this strict time ordering of updates as
-> + * they are flushed to the btree, both via write buffer flush and via journal
-> + * replay. This has complications for the write buffer code while journal replay
-> + * is still in progress; the write buffer cannot flush any accounting keys to
-> + * the btree until journal replay has finished replaying its accounting keys, or
-> + * the (newer) version number of the keys from the write buffer will cause
-> + * updates from journal replay to be lost.
-> + */
-> +
-> +struct bch_accounting {
-> +	struct bch_val		v;
-> +	__u64			d[];
-> +};
-> +
-> +#define BCH_ACCOUNTING_MAX_COUNTERS		3
-> +
-> +#define BCH_DATA_TYPES()		\
-> +	x(free,		0)		\
-> +	x(sb,		1)		\
-> +	x(journal,	2)		\
-> +	x(btree,	3)		\
-> +	x(user,		4)		\
-> +	x(cached,	5)		\
-> +	x(parity,	6)		\
-> +	x(stripe,	7)		\
-> +	x(need_gc_gens,	8)		\
-> +	x(need_discard,	9)
-> +
-> +enum bch_data_type {
-> +#define x(t, n) BCH_DATA_##t,
-> +	BCH_DATA_TYPES()
-> +#undef x
-> +	BCH_DATA_NR
-> +};
-> +
-> +static inline bool data_type_is_empty(enum bch_data_type type)
-> +{
-> +	switch (type) {
-> +	case BCH_DATA_free:
-> +	case BCH_DATA_need_gc_gens:
-> +	case BCH_DATA_need_discard:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static inline bool data_type_is_hidden(enum bch_data_type type)
-> +{
-> +	switch (type) {
-> +	case BCH_DATA_sb:
-> +	case BCH_DATA_journal:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +#define BCH_DISK_ACCOUNTING_TYPES()		\
-> +	x(nr_inodes,		0)		\
-> +	x(persistent_reserved,	1)		\
-> +	x(replicas,		2)		\
-> +	x(dev_data_type,	3)		\
-> +	x(dev_stripe_buckets,	4)
-> +
-> +enum disk_accounting_type {
-> +#define x(f, nr)	BCH_DISK_ACCOUNTING_##f	= nr,
-> +	BCH_DISK_ACCOUNTING_TYPES()
-> +#undef x
-> +	BCH_DISK_ACCOUNTING_TYPE_NR,
-> +};
-> +
-> +struct bch_nr_inodes {
-> +};
-> +
-> +struct bch_persistent_reserved {
-> +	__u8			nr_replicas;
-> +};
-> +
-> +struct bch_dev_data_type {
-> +	__u8			dev;
-> +	__u8			data_type;
-> +};
-> +
-> +struct bch_dev_stripe_buckets {
-> +	__u8			dev;
-> +};
-> +
-> +struct disk_accounting_key {
-> +	union {
-> +	struct {
-> +		__u8				type;
-> +		union {
-> +		struct bch_nr_inodes		nr_inodes;
-> +		struct bch_persistent_reserved	persistent_reserved;
-> +		struct bch_replicas_entry_v1	replicas;
-> +		struct bch_dev_data_type	dev_data_type;
-> +		struct bch_dev_stripe_buckets	dev_stripe_buckets;
-> +		};
-> +	};
-> +		struct bpos			_pad;
-> +	};
-> +};
-> +
-> +#endif /* _BCACHEFS_DISK_ACCOUNTING_FORMAT_H */
-> diff --git a/fs/bcachefs/replicas_format.h b/fs/bcachefs/replicas_format.h
-> new file mode 100644
-> index 000000000000..ed94f8c636b3
-> --- /dev/null
-> +++ b/fs/bcachefs/replicas_format.h
-> @@ -0,0 +1,21 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _BCACHEFS_REPLICAS_FORMAT_H
-> +#define _BCACHEFS_REPLICAS_FORMAT_H
-> +
-> +struct bch_replicas_entry_v0 {
-> +	__u8			data_type;
-> +	__u8			nr_devs;
-> +	__u8			devs[];
-> +} __packed;
-> +
-> +struct bch_replicas_entry_v1 {
-> +	__u8			data_type;
-> +	__u8			nr_devs;
-> +	__u8			nr_required;
-> +	__u8			devs[];
-> +} __packed;
-> +
-> +#define replicas_entry_bytes(_i)					\
-> +	(offsetof(typeof(*(_i)), devs) + (_i)->nr_devs)
-> +
-> +#endif /* _BCACHEFS_REPLICAS_FORMAT_H */
-> diff --git a/fs/bcachefs/sb-downgrade.c b/fs/bcachefs/sb-downgrade.c
-> index 3337419faeff..33db8d7ca8c4 100644
-> --- a/fs/bcachefs/sb-downgrade.c
-> +++ b/fs/bcachefs/sb-downgrade.c
-> @@ -52,9 +52,15 @@
->  	  BCH_FSCK_ERR_subvol_fs_path_parent_wrong)		\
->  	x(btree_subvolume_children,				\
->  	  BIT_ULL(BCH_RECOVERY_PASS_check_subvols),		\
-> -	  BCH_FSCK_ERR_subvol_children_not_set)
-> +	  BCH_FSCK_ERR_subvol_children_not_set)			\
-> +	x(disk_accounting_v2,					\
-> +	  BIT_ULL(BCH_RECOVERY_PASS_check_allocations),		\
-> +	  BCH_FSCK_ERR_accounting_mismatch)
->  
-> -#define DOWNGRADE_TABLE()
-> +#define DOWNGRADE_TABLE()					\
-> +	x(disk_accounting_v2,					\
-> +	  BIT_ULL(BCH_RECOVERY_PASS_check_alloc_info),		\
-> +	  BCH_FSCK_ERR_dev_usage_buckets_wrong)
->  
->  struct upgrade_downgrade_entry {
->  	u64		recovery_passes;
-> @@ -108,7 +114,7 @@ void bch2_sb_set_upgrade(struct bch_fs *c,
->  		}
->  }
->  
-> -#define x(ver, passes, ...) static const u16 downgrade_ver_##errors[] = { __VA_ARGS__ };
-> +#define x(ver, passes, ...) static const u16 downgrade_##ver##_errors[] = { __VA_ARGS__ };
->  DOWNGRADE_TABLE()
->  #undef x
->  
-> diff --git a/fs/bcachefs/sb-errors_types.h b/fs/bcachefs/sb-errors_types.h
-> index 0df4b0e7071a..383e13711001 100644
-> --- a/fs/bcachefs/sb-errors_types.h
-> +++ b/fs/bcachefs/sb-errors_types.h
-> @@ -264,7 +264,8 @@
->  	x(subvol_children_not_set,				256)	\
->  	x(subvol_children_bad,					257)	\
->  	x(subvol_loop,						258)	\
-> -	x(subvol_unreachable,					259)
-> +	x(subvol_unreachable,					259)	\
-> +	x(accounting_mismatch,					260)
->  
->  enum bch_sb_error_id {
->  #define x(t, n) BCH_FSCK_ERR_##t = n,
-> -- 
-> 2.43.0
-> 
+Best regards,
+Krzysztof
 
