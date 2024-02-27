@@ -1,276 +1,147 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F002138492
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D1A138485
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709029332; cv=none; b=Bk5uQwvofRS/QPW3hWmg+qGyDt+/sgefQueW4JBsr/VfsDkexGvVe9aoA7Bu7G/IVtS4Pcgm/Z+3Um09OnuTA3SyXrevD42R6xcnSwJY0lqv+rBqApC+PVaR2YegDoiZ6SG7Q6M0H2YemszEyHyGO2lPRdsoUhmVm5FrrC/ytm4=
+	t=1709029410; cv=none; b=hj62UOJdkMVxmCgMhFwVdoe8CCVpPyIo1lQt2OvN7m5oT6lX3X6J6VehKQ5/gnYVmpayN9RTidquVWgFisGd557f8IKrJT3N1UibsbguB4u8JLmRRMAPaWb22SGIksJd2zFiiBMKgMBsw3WG582zJ8Dl1KQHVeCUVeM5SuZ++Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709029332; c=relaxed/simple;
-	bh=cmWxvGCVhYTkbWiKq2bJiR26WUpAeY/TtzgpuaJj1/g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CP4MBJDV7oF2b+KdOqOOHqBPnCdTKwAGJQbehZ6xKPiG4Qrb3JAtgAPAWsTo0F2WuW5DSgGQ6tmA3hOPzRcZbXMFAjHCXoqKJwc7Cu4gLLT8uDehRWmr9ViXmI27kXJw0pZymwmkVUgzLogaKDBze76vyjja6S+HGs9V3/RJb4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WuAe0qpw; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709029410; c=relaxed/simple;
+	bh=2Q9KDrmM9tt6dM0nCK12JSvCihakXCdWBvUsQ+hydqc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=meNKRv0vJKryyRBVjMQeqRFSb0h14CGtIuTkJrLipI/Z9DMZiuPgw9KgCcT3GBPaHCPKpYqk59sVEB3OX/r3zqz9K/L8UidQQ6cO/5/uos37jrzrZmVL82BeW8KgYWAynJcxgHxeyY5KXLDwvUYrH1SLUPsTUTsdq20k/J7nz8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DiNtSMHw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WuAe0qpw"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcbc00f6c04so4159670276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:22:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709029329; x=1709634129; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RVqspSV8bn52+VvDaD9TtJ1YOvvJ6e4K2RuUE7mf/l4=;
-        b=WuAe0qpw7mLtky04XUCn4uwT/rEpOVdhVOUwzkWhBzM8bHAhVGrlqOS5nHzZvv72qU
-         UURqS8iyiVpukAAv7wgFFkITZ+qIH3BdN87Ipox5clI5C6kb9TZJnHqCYWywIyjNAjVi
-         /SaG80YhJgDRkrc7ALl3j2UGCHAB1Nr0Mc8VUsE2vKJ0B9fWSuoHYeMJwK9ryQJSu4IH
-         91gnuSYMZHSeGRc4hWYK7r/eo/XbpucLxonTnlJpLbto7WfOPxFi5kNNC4rZ/jTBc1LU
-         EYeiNUJc+vJhw7Lf4UwQK1snTbBaMiV932Y7DO8fBdMRplbSfpsIJxTs6HpzTWPByOXm
-         YYxQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DiNtSMHw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709029407;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=WtGehCEFfElimHD+TqShgtHsXC4dbFxlCmNc54Gi17M=;
+	b=DiNtSMHww6O/gV7Ta0ZGR4KSarrPv4KtoUwUDjkl+0zkaGfc6GfqJep9TrjDAOUp85o1SM
+	kt+C3+wec8ccd6js7tJSjGxrUniWYHft9ZMjyP0SovpqRhEpC0UkUVgyAKpMulw5Nw9hJu
+	mR5kIxJdMoh6dsQq8FwQpqUVtoJNq5o=
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
+ [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-163-M657GseyMFCT2827zj7Y0g-1; Tue, 27 Feb 2024 05:23:25 -0500
+X-MC-Unique: M657GseyMFCT2827zj7Y0g-1
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-21e5a8045ecso606955fac.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:23:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709029329; x=1709634129;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RVqspSV8bn52+VvDaD9TtJ1YOvvJ6e4K2RuUE7mf/l4=;
-        b=MgSCEbrq2WwbH1MD42cHVllFNrBrHioczqUjfrTpOq5klALKqrr2pEGGbVWzLF8XyJ
-         Fg3ytt1fT/44TGgJsQ3CyV3o2Z2rDIch34kBd4p025d+UUoL+hWXEm50xnUmYwIgMYNX
-         W2YJQukiJSYsiDpTmWc1DRUyjvHB5o0bZLGte+t8snBTNzEG02FokDit5tCUjxXbWXNr
-         hRP1c9Urc1uoC2YfeRF8xPFeSy8y37y3uOHKq/27J5VVCUPBwnI19ZEWa4+vvSf+Ev8U
-         ctj5ARqxaB0nuEoQXzuJxvLq2KSQaxS/5cS/bsU0KS0oEU3uZQKR9ReDm9H9hn1HY29z
-         ULXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVq1Q7+iB3p0W5No81jWkDdoJqVOEZm3sV4br93JS4I3V7vyhNK9YKlD8qb+JlAynRYdILsXg3wNFuc07e2AXa5HoP7RR3iNeCaes/Y
-X-Gm-Message-State: AOJu0Yw/16jXBpXft9CFHy+69rWgh+0V1M+0SVfwMZY8rozJv6XkAS1L
-	7AbEPz1YW6e3PYvzKZsI7yyWAjdZhYF64qu0WXmcN/vUA9PP5wtsvWR9flMSIoG4Rqpq8C/6T7p
-	RUF/1CQOsUA9A53aOgXr4GIf9bSU=
-X-Google-Smtp-Source: AGHT+IETJjY/UIWO4RH1eSLrcFb2JcXGvEThD2ZUfMF0v7Hk5cFqhNEY+0DG7mhX4z3+ttuEjHe+5usQfemEPH+/WTY=
-X-Received: by 2002:a25:dcc8:0:b0:dcc:f0a:e495 with SMTP id
- y191-20020a25dcc8000000b00dcc0f0ae495mr1512825ybe.3.1709029329482; Tue, 27
- Feb 2024 02:22:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709029405; x=1709634205;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WtGehCEFfElimHD+TqShgtHsXC4dbFxlCmNc54Gi17M=;
+        b=LSwm2QU4U2iGYbEHnCDIt3FtPdWIB6RJ0OE4ySRZ3SkopzxUR2RVfPvoV4qyvlBo9u
+         rMo0OFBVxN0irDfLJTPwz8AWspJ20TYhRAmRdO6wPN2p2TclTiF6G9xPMwC9N4ek/Kbk
+         vX6forRCszWbHKc/ecn+Yx3YhE76SM+rb6UaB17rc0gyY1nLK2+wYmhRqFw6/7PkyxSV
+         TFG8DQ8xEpYe9GHyV5C28v74ux3urVrg1/evSpJeJJ94cxRa8fD9ydK4Vk/8Fqxp6t0i
+         stFiqORtGIjQHARwHOjHPnVhRY5I3YNTuCS3NR8ju3CNmaqQTVx1Tgx2xhyyOod17c7l
+         JjxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUM5+iYeuiIFJWPQmg2zPnnmtK1JCIdmz8M6Jgab/cikb304Na1r0Q0E6o7HwZWvXHT018XEDMZOHOd5Gr3nbSS6wFOn5akIFIZoFZr
+X-Gm-Message-State: AOJu0YxZQwbVjbhiXaqEYNmPcQEGf1JHLcevntlXhK1H3fFIyG60ML3d
+	w3rwhKKVIm50AtaRO3C/B+vOs+huQBHi+dZEmJpgXuzG5ZQtcnRUl5PhSjnrEFzu3NHSJOY+Fk5
+	AzqMHZZaXDAahrRMQnHjXu+YnHX4OyoFmmG8XyuEqbPvpQ5lqzz2UZp4n0EraOg==
+X-Received: by 2002:a05:6871:7806:b0:21e:c50a:5e91 with SMTP id oy6-20020a056871780600b0021ec50a5e91mr10378086oac.0.1709029405169;
+        Tue, 27 Feb 2024 02:23:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEOrA1Nby4BCC+kPq5RbsZ68EDRxHVTjrQk/S01m5vEVtY4OYChDEowwg6U8GBImhvB3q18FA==
+X-Received: by 2002:a05:6871:7806:b0:21e:c50a:5e91 with SMTP id oy6-20020a056871780600b0021ec50a5e91mr10378065oac.0.1709029404831;
+        Tue, 27 Feb 2024 02:23:24 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-245-60.dyn.eolo.it. [146.241.245.60])
+        by smtp.gmail.com with ESMTPSA id r3-20020a056830134300b006e496865b32sm1128766otq.43.2024.02.27.02.23.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 02:23:23 -0800 (PST)
+Message-ID: <f656e38ff276f6c73d0b59eb301528cf3ae322e9.camel@redhat.com>
+Subject: Re: [PATCH net-next 1/6] net: ipa: don't bother aborting system
+ resume
+From: Paolo Abeni <pabeni@redhat.com>
+To: Alex Elder <elder@linaro.org>, davem@davemloft.net, edumazet@google.com,
+  kuba@kernel.org
+Cc: mka@chromium.org, andersson@kernel.org, quic_cpratapa@quicinc.com, 
+ quic_avuyyuru@quicinc.com, quic_jponduru@quicinc.com,
+ quic_subashab@quicinc.com,  elder@kernel.org, netdev@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Tue, 27 Feb 2024 11:23:18 +0100
+In-Reply-To: <20240223133930.582041-2-elder@linaro.org>
+References: <20240223133930.582041-1-elder@linaro.org>
+	 <20240223133930.582041-2-elder@linaro.org>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227024050.244567-1-21cnbao@gmail.com> <61b9dfc9-5522-44fd-89a4-140833ede8af@arm.com>
- <c95215b2-6ec5-4efb-a73b-7be92cda1c83@redhat.com>
-In-Reply-To: <c95215b2-6ec5-4efb-a73b-7be92cda1c83@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Tue, 27 Feb 2024 18:21:58 +0800
-Message-ID: <CAK1f24mOc+Y_UCA2nSC7VbNQMy0DahULz-6JsEPMqTyoAA+MoA@mail.gmail.com>
-Subject: Re: [PATCH] mm: export folio_pte_batch as a couple of modules might
- need it
-To: David Hildenbrand <david@redhat.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Barry Song <v-songbaohua@oppo.com>, Yin Fengwei <fengwei.yin@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024 at 5:14=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 27.02.24 10:07, Ryan Roberts wrote:
-> > On 27/02/2024 02:40, Barry Song wrote:
-> >> From: Barry Song <v-songbaohua@oppo.com>
-> >>
-> >> madvise and some others might need folio_pte_batch to check if a range
-> >> of PTEs are completely mapped to a large folio with contiguous physcia=
-l
-> >> addresses. Let's export it for others to use.
-> >>
-> >> Cc: Lance Yang <ioworker0@gmail.com>
-> >> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> >> Cc: David Hildenbrand <david@redhat.com>
-> >> Cc: Yin Fengwei <fengwei.yin@intel.com>
-> >> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> >> ---
-> >>   -v1:
-> >>   at least two jobs madv_free and madv_pageout depend on it. To avoid
-> >>   conflicts and dependencies, after discussing with Lance, we prefer
-> >>   this one can land earlier.
-> >
-> > I think this will also ultimately be useful for mprotect too, though I =
-haven't
-> > looked at it properly yet.
-> >
->
-> Yes, I think we briefly discussed that.
->
-> >>
-> >>   mm/internal.h | 13 +++++++++++++
-> >>   mm/memory.c   | 11 +----------
-> >>   2 files changed, 14 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/mm/internal.h b/mm/internal.h
-> >> index 13b59d384845..8e2bc304f671 100644
-> >> --- a/mm/internal.h
-> >> +++ b/mm/internal.h
-> >> @@ -83,6 +83,19 @@ static inline void *folio_raw_mapping(struct folio =
-*folio)
-> >>      return (void *)(mapping & ~PAGE_MAPPING_FLAGS);
-> >>   }
-> >>
-> >> +/* Flags for folio_pte_batch(). */
-> >> +typedef int __bitwise fpb_t;
-> >> +
-> >> +/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
-> >> +#define FPB_IGNORE_DIRTY            ((__force fpb_t)BIT(0))
-> >> +
-> >> +/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty=
- bit. */
-> >> +#define FPB_IGNORE_SOFT_DIRTY               ((__force fpb_t)BIT(1))
-> >> +
-> >> +extern int folio_pte_batch(struct folio *folio, unsigned long addr,
-> >> +            pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
-> >> +            bool *any_writable);
-> >> +
-> >>   void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
-> >>                                              int nr_throttled);
-> >>   static inline void acct_reclaim_writeback(struct folio *folio)
-> >> diff --git a/mm/memory.c b/mm/memory.c
-> >> index 1c45b6a42a1b..319b3be05e75 100644
-> >> --- a/mm/memory.c
-> >> +++ b/mm/memory.c
-> >> @@ -953,15 +953,6 @@ static __always_inline void __copy_present_ptes(s=
-truct vm_area_struct *dst_vma,
-> >>      set_ptes(dst_vma->vm_mm, addr, dst_pte, pte, nr);
-> >>   }
-> >>
-> >> -/* Flags for folio_pte_batch(). */
-> >> -typedef int __bitwise fpb_t;
-> >> -
-> >> -/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
-> >> -#define FPB_IGNORE_DIRTY            ((__force fpb_t)BIT(0))
-> >> -
-> >> -/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty=
- bit. */
-> >> -#define FPB_IGNORE_SOFT_DIRTY               ((__force fpb_t)BIT(1))
-> >> -
-> >>   static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags=
-)
-> >>   {
-> >>      if (flags & FPB_IGNORE_DIRTY)
-> >> @@ -982,7 +973,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_=
-t pte, fpb_t flags)
-> >>    * If "any_writable" is set, it will indicate if any other PTE besid=
-es the
-> >>    * first (given) PTE is writable.
-> >>    */
-> >
-> > David was talking in Lance's patch thread, about improving the docs for=
- this
-> > function now that its exported. Might be worth syncing on that.
->
-> Here is my take:
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Fri, 2024-02-23 at 07:39 -0600, Alex Elder wrote:
+> The IPA interrupt can fire if there is data to be delivered to a GSI
+> channel that is suspended.  This condition occurs in three scenarios.
+>=20
+> First, runtime power management automatically suspends the IPA
+> hardware after half a second of inactivity.  This has nothing
+> to do with system suspend, so a SYSTEM IPA power flag is used to
+> avoid calling pm_wakeup_dev_event() when runtime suspended.
+>=20
+> Second, if the system is suspended, the receipt of an IPA interrupt
+> should trigger a system resume.  Configuring the IPA interrupt for
+> wakeup accomplishes this.
+>=20
+> Finally, if system suspend is underway and the IPA interrupt fires,
+> we currently call pm_wakeup_dev_event() to abort the system suspend.
+>=20
+> The IPA driver correctly handles quiescing the hardware before
+> suspending it, so there's really no need to abort a suspend in
+> progress in the third case.  We can simply quiesce and suspend
+> things, and be done.
+>=20
+> Incoming data can still wake the system after it's suspended.
+> The IPA interrupt has wakeup mode enabled, so if it fires *after*
+> we've suspended, it will trigger a wakeup (if not disabled via
+> sysfs).
+>=20
+> Stop calling pm_wakeup_dev_event() to abort a system suspend in
+> progress in ipa_power_suspend_handler().
+>=20
+> Signed-off-by: Alex Elder <elder@linaro.org>
 > ---
->   mm/memory.c | 22 ++++++++++++++++++----
->   1 file changed, 18 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/memory.c b/mm/memory.c
-> index d0b855a1837a8..098356b8805ae 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -971,16 +971,28 @@ static inline pte_t __pte_batch_clear_ignored(pte_t=
- pte, fpb_t flags)
->         return pte_wrprotect(pte_mkold(pte));
->   }
->
-> -/*
-> +/**
-> + * folio_pte_batch - detect a PTE batch for a large folio
-> + * @folio: The large folio to detect a PTE batch for.
-> + * @addr: The user virtual address the first page is mapped at.
-> + * @start_ptep: Page table pointer for the first entry.
-> + * @pte: Page table entry for the first page.
+> Note: checkpatch warns: braces {} are not necessary...
+>=20
+>  drivers/net/ipa/ipa_power.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/net/ipa/ipa_power.c b/drivers/net/ipa/ipa_power.c
+> index 128a816f65237..694bc71e0a170 100644
+> --- a/drivers/net/ipa/ipa_power.c
+> +++ b/drivers/net/ipa/ipa_power.c
+> @@ -220,8 +220,9 @@ void ipa_power_suspend_handler(struct ipa *ipa, enum =
+ipa_irq_id irq_id)
+>  	 * system suspend, trigger a system resume.
+>  	 */
+>  	if (!__test_and_set_bit(IPA_POWER_FLAG_RESUMED, ipa->power->flags))
+> -		if (test_bit(IPA_POWER_FLAG_SYSTEM, ipa->power->flags))
+> -			pm_wakeup_dev_event(&ipa->pdev->dev, 0, true);
+> +		if (test_bit(IPA_POWER_FLAG_SYSTEM, ipa->power->flags)) {
+> +			;
+> +		}
 
-Nit:
+FTR, I would have dropped the whole 'if' statement above and the
+related comment in this patch, saving a few checkpatch warnings. Not a
+big deal since the the chunk is removed a few patches later.
 
-- * @pte: Page table entry for the first page.
-+ * @pte: Page table entry for the first page that must be the first subpag=
-e of
-+ *               the folio excluding arm64 for now.
+Cheers,
 
-IIUC, pte_batch_hint is always 1 excluding arm64 for now.
-I'm not sure if this modification will be helpful?
+Paolo
 
-Thanks,
-Lance
-
-> + * @max_nr: The maximum number of table entries to consider.
-> + * @flags: Flags to modify the PTE batch semantics.
-> + * @any_writable: Optional pointer to indicate whether any entry except =
-the
-> + *               first one is writable.
-> + *
->    * Detect a PTE batch: consecutive (present) PTEs that map consecutive
-> - * pages of the same folio.
-> + * pages of the same large folio.
->    *
->    * All PTEs inside a PTE batch have the same PTE bits set, excluding th=
-e PFN,
->    * the accessed bit, writable bit, dirty bit (with FPB_IGNORE_DIRTY) an=
-d
->    * soft-dirty bit (with FPB_IGNORE_SOFT_DIRTY).
->    *
-> - * If "any_writable" is set, it will indicate if any other PTE besides t=
-he
-> - * first (given) PTE is writable.
-> + * start_ptep must map any page of the folio. max_nr must be at least on=
-e and
-> + * must be limited by the caller so scanning cannot exceed a single page=
- table.
-> + *
-> + * Return: the number of table entries in the batch.
->    */
->   static inline int folio_pte_batch(struct folio *folio, unsigned long ad=
-dr,
->                 pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
-> @@ -996,6 +1008,8 @@ static inline int folio_pte_batch(struct folio *foli=
-o, unsigned long addr,
->                 *any_writable =3D false;
->
->         VM_WARN_ON_FOLIO(!pte_present(pte), folio);
-> +       VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, folio);
-> +       VM_WARN_ON_FOLIO(page_folio(pfn_to_page(pte_pfn(pte))) !=3D folio=
-, folio);
->
->         nr =3D pte_batch_hint(start_ptep, pte);
->         expected_pte =3D __pte_batch_clear_ignored(pte_advance_pfn(pte, n=
-r), flags);
-> --
-> 2.43.2
->
->
-> >
-> >> -static inline int folio_pte_batch(struct folio *folio, unsigned long =
-addr,
-> >> +int folio_pte_batch(struct folio *folio, unsigned long addr,
-> >
-> > fork() is very performance sensitive. Is there a risk we are regressing
-> > performance by making this out-of-line? Although its in the same compil=
-ation
-> > unit so the compiler may well inline it anyway?
->
-> Easy to verify by looking at the generated asm I guess?
->
-> >
-> > Either way, perhaps we are better off making it inline in the header? T=
-hat would
-> > avoid needing to rerun David's micro-benchmarks for fork() and munmap()=
-.
->
-> That way, the compiler can most certainly better optimize it also outside=
- of mm/memory.c
->
-> --
-> Cheers,
->
-> David / dhildenb
->
