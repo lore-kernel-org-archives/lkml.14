@@ -1,134 +1,127 @@
-Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [83.166.143.169])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87CD1386CF;
-	Tue, 27 Feb 2024 11:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BCC1386B9;
+	Tue, 27 Feb 2024 11:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709031976; cv=none; b=mp0QAo7RMBPQstTb02JEA8qeU3q9272C/3FOPHFLTtxe42LlyVDGyRt9SaEp1SoHOOs4YbfTvQaKywt0GgfaL3EyehOMcRlQzgDGXiKA1YTpNP8MOwsZP/hheafp58EgDNFlNsgVYYJpNnE6GKj+xVTuf4RfzVEx8eseSjKMpH0=
+	t=1709032083; cv=none; b=s8Pb6eQOssUad9OqwZBYl0h+9HPY+1VYvVIHrzRCydBBZo1yKOZZ+eS+8oqd60xMnxZMcC30hqx0hWu68gVez4rIsLwEhksQ68bDanRBaXlNnwyqb62/4rs/gfM8fL+h127kJyTIE5lBDA6bo0T+J9AcgeFAvboaS7A7ND69/14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709031976; c=relaxed/simple;
-	bh=jPUoWxQfL0gN4M9XnMPtb4OVmzxvQ8jhCx4n49IoT7U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gWgoNqp/EMPYDlzGfr/dm1v4s3jBOb1/etbsf2ujKFmgnnpOAFKdWQ97Uj0YU+L2tgKbKZ3+bFit66WnaKzmwjE0fXuNExH7nxU5+1Ho7KU2wd7MFYoYrjs4i1VBwSdwezv1yZkFTaUR0bS6L23BSvVI228PepjIchUCXn/V3qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=oCw/iF23; arc=none smtp.client-ip=83.166.143.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1709032083; c=relaxed/simple;
+	bh=91zHcn3MJxhMJjDwzdIUiuB3M2CKCuchs9SG2CkeaW8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzso4UM252QBjrPuoK9rzd4gSW+iJBYNhTwnyrnUPdwrOOEAzzKknHmmyTaBFWdcl20xOAMzXoHY1banCgeW8E/UpdlgsjRzuUPHvHyfOO53sFOqMazPigO6H0NZOzw3zT+W4cumKAtMu2jF3poXdNQoun4xZU0CPoFz7L5+4t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=aSOu/gAU; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="oCw/iF23"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TkZRL3hQgzfF;
-	Tue, 27 Feb 2024 12:06:06 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TkZRL0Ngrz3k;
-	Tue, 27 Feb 2024 12:06:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1709031966;
-	bh=jPUoWxQfL0gN4M9XnMPtb4OVmzxvQ8jhCx4n49IoT7U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oCw/iF23a34Rv0MBwr2Ia6cQ8m8h0jvHC8OAnyauVIncs0HoaFwNz47dPhVBwgEjw
-	 R5yruWwiqbByh+WzDRqxenUS46BMI9ak98EP9PcOxTd4ecJ/LXUlBEDCPa5K9iN5Qt
-	 hb3lJFSu+CT4yjc6FlcRhOYLyM3bfinMCILgyBUg=
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	Paul Moore <paul@paul-moore.com>,
-	"Serge E . Hallyn" <serge@hallyn.com>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-	Shervin Oloumi <enlightened@chromium.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	stable@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack3000@gmail.com>
-Subject: [PATCH v2 2/2] landlock: Warn once if a Landlock action is requested while disabled
-Date: Tue, 27 Feb 2024 12:05:50 +0100
-Message-ID: <20240227110550.3702236-2-mic@digikod.net>
-In-Reply-To: <20240227110550.3702236-1-mic@digikod.net>
-References: <20240227110550.3702236-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aSOu/gAU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709032081; x=1740568081;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=91zHcn3MJxhMJjDwzdIUiuB3M2CKCuchs9SG2CkeaW8=;
+  b=aSOu/gAU5Ra83maQjMsOhJ7PqR3PgFutLGdKf2J7bUrWCh0j4PkDOLaH
+   /wUz2la/dKPxCj520aXmrIZVX6mfY1NQP5VgmtUrqZ/RrqnOjNzSzMFBK
+   V07Z1xH3JEwFQs8plnVTI+jjmNgzo755jb3krej79SRPzv/qyWF53tfwb
+   xz9dLPumiR/iz0haPx0RTVFVvA5+US4SrguKok/oRYu/5Npl0oLgzfwyb
+   sDfO7q4LvGr6mT+r1CU8wCW5XOMb8hsW5keFluGEUeN7GspUCz9bTwZY3
+   Gu42bX1OXG9ffkEsdRDiHhsUfAJy24BHQCtfBmU2ZASgRYsFtEqKyRtvH
+   g==;
+X-CSE-ConnectionGUID: ISOzzPUQSGWIbJkVIBtfBA==
+X-CSE-MsgGUID: eG+1hg29Rg+lI88KmeakeQ==
+X-IronPort-AV: E=Sophos;i="6.06,187,1705388400"; 
+   d="asc'?scan'208";a="184154380"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2024 04:08:00 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 27 Feb 2024 04:08:00 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Tue, 27 Feb 2024 04:07:58 -0700
+Date: Tue, 27 Feb 2024 11:07:15 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Yangyu Chen <cyy@cyyself.name>
+CC: <linux-riscv@lists.infradead.org>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	<linux-kernel@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
+	Alexandre Ghiti <alex@ghiti.fr>, Rob Herring <robh+dt@kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2] riscv: dts: Move BUILTIN_DTB_SOURCE to common Kconfig
+Message-ID: <20240227-lifting-durable-484a2f1ddedc@wendy>
+References: <tencent_61DFA8E0B13696A3256E538C4BC856633406@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="k8Kp3dpRM3Rjn4tM"
+Content-Disposition: inline
+In-Reply-To: <tencent_61DFA8E0B13696A3256E538C4BC856633406@qq.com>
 
-Because sandboxing can be used as an opportunistic security measure,
-user space may not log unsupported features.  Let the system
-administrator know if an application tries to use Landlock but failed
-because it isn't enabled at boot time.  This may be caused by bootloader
-configurations with outdated "lsm" kernel's command-line parameter.
+--k8Kp3dpRM3Rjn4tM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: stable@vger.kernel.org
-Fixes: 265885daf3e5 ("landlock: Add syscall implementations")
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Günther Noack <gnoack3000@gmail.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
+On Sat, Feb 24, 2024 at 04:05:07AM +0800, Yangyu Chen wrote:
+> The BUILTIN_DTB_SOURCE is only configured for K210 before. Since
+> SOC_BUILTIN_DTB_DECLARE is removed at commit d5805af9fe9f ("riscv: Fix
+> builtin DTB handling") from patch [1], the kernel cannot choose one of the
+> dtbs from then on and always take the first one dtb to use. Then, another
+> commit 0ddd7eaffa64 ("riscv: Fix BUILTIN_DTB for sifive and microchip soc=
+")
+> from patch [2] supports BUILTIN_DTB_SOURCE for other SoCs. However, this
+> feature will only work if the Kconfig we use links the dtb we expected in
+> the first place as mentioned in the thread [3]. Thus, a config
+> BUILTIN_DTB_SOURCE is needed for all SoCs to choose one dtb to use.
+>=20
+> For some considerations, this patch also removes default y if XIP_KERNEL
+> for BUILTIN_DTB, as this requires setting a proper dtb to use on the
+> BUILTIN_DTB_SOURCE, else the kernel with XIP but does not set
+> BUILTIN_DTB_SOURCE or unselect BUILTIN_DTB will not boot.
+>=20
+> Also, this patch removes the default dtb string for k210 from Kconfig to
+> nommu_k210_defconfig and nommu_k210_sdcard_defconfig to avoid complex
+> Kconfig settings for other SoCs in the future.
+>=20
 
-Changes since v1:
-* Add Kees's and Günther's Reviewed-by.
-* Rename is_not_initialized() to not_initialized() and invert the logic,
-  as suggested by Günther.  This is a cosmetic change without global
-  behavioral changed.
-* Update link to point to a new subsection.
----
- security/landlock/syscalls.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+> Changes since v1:
+> - remove default y for BULTIN_DTB in any cases
+> - remove default DTB_SOURCE for k210 and moved to its defconfig file
+> - remove building dtb object file for other SoCs
+> - reword help message to say N if unsure for BUILTIN_DTB_SOURCE
+> - reword commit message
+> - v1: https://lore.kernel.org/linux-riscv/tencent_AB625442CC1BCFF86E04D7B=
+5891C43719109@qq.com/
 
-diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
-index 898358f57fa0..6788e73b6681 100644
---- a/security/landlock/syscalls.c
-+++ b/security/landlock/syscalls.c
-@@ -33,6 +33,18 @@
- #include "ruleset.h"
- #include "setup.h"
- 
-+static bool is_initialized(void)
-+{
-+	if (likely(landlock_initialized))
-+		return true;
-+
-+	pr_warn_once(
-+		"Disabled but requested by user space. "
-+		"You should enable Landlock at boot time: "
-+		"https://docs.kernel.org/userspace-api/landlock.html#boot-time-configuration\n");
-+	return false;
-+}
-+
- /**
-  * copy_min_struct_from_user - Safe future-proof argument copying
-  *
-@@ -173,7 +185,7 @@ SYSCALL_DEFINE3(landlock_create_ruleset,
- 	/* Build-time checks. */
- 	build_check_abi();
- 
--	if (!landlock_initialized)
-+	if (!is_initialized())
- 		return -EOPNOTSUPP;
- 
- 	if (flags) {
-@@ -398,7 +410,7 @@ SYSCALL_DEFINE4(landlock_add_rule, const int, ruleset_fd,
- 	struct landlock_ruleset *ruleset;
- 	int err;
- 
--	if (!landlock_initialized)
-+	if (!is_initialized())
- 		return -EOPNOTSUPP;
- 
- 	/* No flag for now. */
-@@ -458,7 +470,7 @@ SYSCALL_DEFINE2(landlock_restrict_self, const int, ruleset_fd, const __u32,
- 	struct landlock_cred_security *new_llcred;
- 	int err;
- 
--	if (!landlock_initialized)
-+	if (!is_initialized())
- 		return -EOPNOTSUPP;
- 
- 	/*
--- 
-2.44.0
+This section here (the changelog) should be below the --- line so that
+it does not get into the commit history.
 
+Otherwise
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+--k8Kp3dpRM3Rjn4tM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd3CYwAKCRB4tDGHoIJi
+0nqDAP9ZSWhGK0NbSy2naaZGv5BXsi+RLfI7+rTaQogrTDN45QD9F4Dn8U8zNXOG
+7jz12a3xzz+19gUbN2sU+O8G2vwdoQ8=
+=7IVR
+-----END PGP SIGNATURE-----
+
+--k8Kp3dpRM3Rjn4tM--
