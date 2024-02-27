@@ -1,104 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A775F4C63D;
-	Tue, 27 Feb 2024 17:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8664F1F6;
+	Tue, 27 Feb 2024 17:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709055308; cv=none; b=DdiVwXecPb1BEJKXSCRR5Tey4wsZdmXEy1ImsLELcnclY5aLwLe4kopKXO0lxYGVvXzgylRLj6KSnaeM5fayY6xG0cAWar1XBocuxEA1CPPA9Sy8B0Y1s+XlxmyQdMmwYu7FG1qSFoN0tzcYWOYwr+xIN4bKhWZirGrMcYN5e0U=
+	t=1709055316; cv=none; b=k2b16MG09lwG16IBuah4+9MRlBoTr6txhwYVuWTielIloHZyHKZZvs9+R2kinBuT8yJm0dEIXz7FaQG5HZiP47uNPzg0jYtO6rSPblHHj5Fa+UhnINPsJlX0LVC8E9Bir5FC0anMS9l5FYpt2xBxtpU9W4mfqwy/FOXdNJyWulQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709055308; c=relaxed/simple;
-	bh=hQ2ryKGeq/r38RlaFN/f0EoXXlr9M7MA/Gh4pDclvGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JPxDP0Q/IDEwbooYMwHJdaAAsf9oC6PEGWQnIIoD0hBHzPmZCyMpPjaVz62PQPjeCJP9aal/6QVlAXB2OqmD7HqzkKCux080q9tPihuhggZnQ2MQoya+ZrFAgpDro2yNl+W6DIx7Y4526Mpoz97iFCA1XA8/SCMcQ7C3+7g8dvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6984ADA7;
-	Tue, 27 Feb 2024 09:35:43 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.28.137])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFCFE3F73F;
-	Tue, 27 Feb 2024 09:35:02 -0800 (PST)
-Date: Tue, 27 Feb 2024 17:34:58 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-	devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v4 5/7] arm64: Unconditionally call
- unflatten_device_tree()
-Message-ID: <Zd4dQpHO7em1ji67@FVFF77S0Q05N.cambridge.arm.com>
-References: <20240217010557.2381548-1-sboyd@kernel.org>
- <20240217010557.2381548-6-sboyd@kernel.org>
- <20240223000317.GA3835346-robh@kernel.org>
- <20240223102345.GA10274@willie-the-truck>
- <CAL_JsqJSeSHeWV3YJE9n2NuY+s_iE6f7N5C_oguEJn7jTZ20xA@mail.gmail.com>
+	s=arc-20240116; t=1709055316; c=relaxed/simple;
+	bh=dqsTbryoapTyNINiG8Zoxt825Zz1wlKoATwOTdkD1UY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LMpbwPNY891hw8niVGqKQLOHfzSrpJfmKoHqD9xn2xayZZcNnu2OzSNjpnPEH1lQn5GQLcY/73OE/16uHh0umjHH3bX9KHLIOOTIbQq6vpa2GTvdDEtVb0EDvxHsaQFW7IlKqU2vnKFNHAAyooB8ulNxAbNEavaeaTJWGAEmipE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HmSeXu1R; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HmSeXu1R"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41RB6Rlp031968;
+	Tue, 27 Feb 2024 17:35:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=gnOLM//
+	6oup31n4aELkO7s8/iurVHdTwK3gYW1UY2N8=; b=HmSeXu1RFJ+8okktZLJhKsA
+	/NXzCnTE/5IFv96XTHXxApI066mYMOr5Y5CIZF/5OkbtmRayLNYJBO3KEgurg4Xu
+	X3W911pMPazWpgRWbU8rpTAkGAmqymNaIV3EdCL03LvvBDX2+kDAUWVnD7A1WYsQ
+	9jR6o1MJ6Bp5zQnZnRxyVzLlZ8mcKCKHkwcEr0NBEurQ9a3Z4FlbV4ja+qkYE/BH
+	rJaY1zKzHWrI03VRcqAPkRvBlYpVODrdcdbOru17+uVvGH2OmIaAWj5hIWfYxgGV
+	ADbgvsDnsXNnJO+anDrNRTZi+prZkVWoBI9QzFNr16rzB7VYJnx6Z6lIaOkN4qg=
+	=
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3whedvs0h6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Feb 2024 17:35:02 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41RHZ206004614
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Feb 2024 17:35:02 GMT
+Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 27 Feb 2024 09:34:57 -0800
+From: Sibi Sankar <quic_sibis@quicinc.com>
+To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <rafael@kernel.org>,
+        <viresh.kumar@linaro.org>, <morten.rasmussen@arm.com>,
+        <dietmar.eggemann@arm.com>, <lukasz.luba@arm.com>, <sboyd@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_mdtipton@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <nm@ti.com>,
+        Sibi Sankar
+	<quic_sibis@quicinc.com>
+Subject: [PATCH V2 0/3] cpufreq: scmi: Add boost frequency support
+Date: Tue, 27 Feb 2024 23:04:31 +0530
+Message-ID: <20240227173434.650334-1-quic_sibis@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqJSeSHeWV3YJE9n2NuY+s_iE6f7N5C_oguEJn7jTZ20xA@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3LwUWkYHFY7hKFllv9JJ5o5uw8NVJm_7
+X-Proofpoint-ORIG-GUID: 3LwUWkYHFY7hKFllv9JJ5o5uw8NVJm_7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-27_03,2024-02-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1011 bulkscore=0 mlxscore=0 lowpriorityscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2402270135
 
-On Fri, Feb 23, 2024 at 11:17:02AM -0700, Rob Herring wrote:
-> On Fri, Feb 23, 2024 at 3:23 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Thu, Feb 22, 2024 at 05:03:17PM -0700, Rob Herring wrote:
-> > > On Fri, Feb 16, 2024 at 05:05:54PM -0800, Stephen Boyd wrote:
-> > > > Call this function unconditionally so that we can populate an empty DTB
-> > > > on platforms that don't boot with a firmware provided or builtin DTB.
-> > > > When ACPI is in use, unflatten_device_tree() ignores the
-> > > > 'initial_boot_params' pointer so the live DT on those systems won't be
-> > > > whatever that's pointing to. Similarly, when kexec copies the DT data
-> > > > the previous kernel to the new one on ACPI systems,
-> > > > of_kexec_alloc_and_setup_fdt() will ignore the live DT (the empty root
-> > > > one) and copy the 'initial_boot_params' data.
-> > > >
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > > > Cc: Will Deacon <will@kernel.org>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: <linux-arm-kernel@lists.infradead.org>
-> > > > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> > > > ---
-> > > >  arch/arm64/kernel/setup.c | 3 +--
-> > > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
-> > > Catalin, Will, Can I get an ack on this so I can take the series via the
-> > > DT tree.
-> >
-> > Mark had strong pretty strong objections to this in version one:
-> 
-> Yes, I had concerns with it as well.
-> 
-> > https://lore.kernel.org/all/ZaZtbU9hre3YhZam@FVFF77S0Q05N/
-> >
-> > and this patch looks the same now as it did then. Did something else
-> > change?
-> 
-> Yes, that version unflattened the bootloader passed DT. Now within
-> unflatten_devicetree(), the bootloader DT is ignored if ACPI is
-> enabled and we unflatten an empty tree. That will prevent the kernel
-> getting 2 h/w descriptions if/when a platform does such a thing. Also,
-> kexec still uses the bootloader provided DT as before.
+This series adds provision to mark dynamic opps as boost capable and adds
+boost frequency support to the scmi cpufreq driver.
 
-That avoids the main instance of my concern, and means that this'll boot
-without issue, but IIUC this opens the door to dynamically instantiating DT
-devices atop an ACPI base system, which I think in general is something that's
-liable to cause more problems than it solves.
+V2:
+* Document boost flag. [Lukasz]
+* Remove sustained_freq check. [Pierre]
+* simplify sustained_freq_khz calculation. [Sudeep]
+* fix default per-policy state. [Dietmar]
+* fix typo in commit message in patch 3.
 
-I understand that's desireable for the selftests, though I still don't believe
-it's strictly necessary -- there are plenty of other things that only work if
-the kernel is booted in a specific configuration.
+Depends on:
+per-policy boost: https://patchwork.kernel.org/project/linux-arm-msm/cover/20240227165309.620422-1-quic_sibis@quicinc.com/
 
-Putting the selftests aside, why do we need to do this? Is there any other
-reason to enable this?
+Sibi Sankar (3):
+  OPP: Extend dev_pm_opp_data with turbo support
+  firmware: arm_scmi: Add support for marking certain frequencies as
+    boost
+  cpufreq: scmi: Enable boost support
 
-Mark.
+ drivers/cpufreq/scmi-cpufreq.c   | 23 ++++++++++++++++++++++-
+ drivers/firmware/arm_scmi/perf.c |  8 +++++++-
+ drivers/opp/core.c               |  1 +
+ include/linux/pm_opp.h           |  2 ++
+ 4 files changed, 32 insertions(+), 2 deletions(-)
+
+-- 
+2.34.1
+
