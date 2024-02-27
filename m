@@ -1,161 +1,136 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1BE1366
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2F4360
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708992139; cv=none; b=PUFIl485mYSpfQYm2dv9tXMlJSg/Ghucsk3pADYXcuYrE6twNiZGitqeI5wA3GN5SPMwVXJ10h2wkbUvEgI2sdcv1HMXsp5scuHnmOnYDNsusrMIavBvu9xSxs+WIww/7JgLfTSi0P2gDxs+hGmAEDTkruCzz9SVpgaEdnWy2Eg=
+	t=1708992669; cv=none; b=dYLz50dpJJaQZPCIXke9yjFbnn3iKAKTseLNMwQ07m2/+Eo3K6aFze9oAUW4FK9gFnwNiDOl/QaF2n8fiLIwWdr/lPuz3cWuHaI1enHeJnMpDbJELuqyx9p6PbArTtyJn3TuePu/WRWZl6KGVd4+86pW9SqeGDS90nUBgP8qQNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708992139; c=relaxed/simple;
-	bh=pd6yrnTC+hRr0/Z0yLyCvqH0hBN/UOqqiHViIEB2PNE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nCos0lY4TAOorQZvqPES0YcySIBlB1fvD10GgGTPWIY8UhMOKZJHbxq6bmp9ZMibZTJKLcWbey5ZayNDf0GVaHQA8DybvkjZECtYhKSIfw78gqzYf4HMT7PjI9PXkngByFYa2nojQozg26nd30T/hyQNIVx3wiiyJGmcJ/muuGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e+/WSWYb; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1708992669; c=relaxed/simple;
+	bh=+0HW0I+Sds5Zs5b5rGWRfw72kX6o58U/vNE4sJhB39k=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=II0Sz4GYtHOZXulDehE496Guw8SoPlxLl00xb0xANuVyfLG64wnP4/u5u33HeiOasxuzsHIq56TVkiedeYe/prYujuni9TJRXlKdfRrXzwhTPxazuLSuv1qdgndtBmViUVF0IS0W3CsbIpMkSF+FwpH5CFOdBNHUFE2yhU2N/Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iVg84o3j; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e+/WSWYb"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a26fa294e56so627886366b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:02:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iVg84o3j"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso5036847276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:11:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708992136; x=1709596936; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ra7j2veHt8ckgDfEUqJ6n9hg5jJXbYYJjjFPbVavXog=;
-        b=e+/WSWYb/DzBJ9b7k+Hpf5I6r/XPurn7d50AnX7ML1wRPAPjEhxBuMFYB1kE6qtJ0A
-         v7pfCtufGdnaeGDme7Uxe5R7UC9ROWbr0ZG/rGOooa1d84b7lxWA8ky2N5TODDtmgncA
-         tYwYLftxJLuiiQZ+IZMbg6WKZm6R6gCXNwVcM=
+        d=google.com; s=20230601; t=1708992666; x=1709597466; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6lCojt3BigDKF1Z6DNZEhqVi/bp1on2H69YUvcRX6rE=;
+        b=iVg84o3jTA0sEICa/8a1TjsEsQEmnmlEwwSm0wl3jpljNZnXCOQ/7GkoBDoXg30YJX
+         mZDb/bl6MksxgKfY4fn5jYCeWTKULA/2NhfcXOMpO0DfuZt14UxVwuDU7aduEIzCdlw1
+         VtL430VDUWxKgpCOr6i+E1VqLoCZj1ORloQb/v6hAV4ooeDHcJkI7ZgNAMzw62EBYFWK
+         ylb+C2gNLo2LJOOj0fGihCJSxUKASSZeiSTTk1Aro5DDW87EkT3dK4rFNUNqSSFSGHJX
+         CReumaOy727tnXbMpBSgu+NjX/ajHV6K7/WRGmeaH78DTFfv2P8e1uteFIQrSnPAyFR9
+         8rDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708992136; x=1709596936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ra7j2veHt8ckgDfEUqJ6n9hg5jJXbYYJjjFPbVavXog=;
-        b=O0MOnSRsqMq3Q07MwMad30PfbWkHtxsY1zcQdVu8CIuQhDkUZint8fmyzKXPgl7KVx
-         yDnUewnMe511rc9rYXHgK2sMf/74l+GolmJv2U8jvJbg/Wpo1Qo84aOI0q0a4SAQoSLR
-         z+f/c16YtXAyY5JMKDlRcnr9C3LNhsPkH2i7vvSPxHeWq2MgSlrQA6Qvjlr8+5ZifGFu
-         HlxO1bfTDb6+xp9Vzw0Vj8FTfJwRNhXGKY+u92tvO8RzaYEpVMSEz7MbD0RwrXlyXwxO
-         ZQQ3IcIyhmtRvkluUhEWVrWdGyBWO7klZscp61ihs4EOtftLg17LgaNVxdbAw2m8WIjc
-         mIQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzzbgtU2sGf+PLyrZATucHCrZywq8T9fLq1G/qIFUycl/bRLqGC2oHsIrz7fLiDBZ6pngvl8Ue+To6YwxZcNfUOz4Lx2b4hid+PmxW
-X-Gm-Message-State: AOJu0YxgAQjPK0rMAiLQi3wP4G7epRl9ulcmcqdjAgxP21tQe6ChnnSG
-	CViLiamNEx9PD175eb4AfOUDG6r1avpGtIpO/JIK3/3Fj9b6KM1S/gFyB2S/zuVcV4BifYAIZet
-	Lim1Y
-X-Google-Smtp-Source: AGHT+IHmTBAl0RCeGmgdikm0kdhd6bgLLQo+EV+iIRMa726ot8UULm8FJJGset2mN/VAB0RkJKC+uQ==
-X-Received: by 2002:a17:906:a046:b0:a43:35f1:944e with SMTP id bg6-20020a170906a04600b00a4335f1944emr3971959ejb.22.1708992135707;
-        Mon, 26 Feb 2024 16:02:15 -0800 (PST)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com. [209.85.128.43])
-        by smtp.gmail.com with ESMTPSA id m16-20020a170906235000b00a3d153fba90sm205910eja.220.2024.02.26.16.02.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 16:02:15 -0800 (PST)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-412a9f272f4so20565e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:02:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWYXp5FNslpCq5eqEo8AUDTTR2kznCjAZtnF5UdBQkXI4zfgbCvBdcIZ1odtueJAulB0P7YsDctDHrDO9HMwm9xoU6fMIrkNKJk/8+N
-X-Received: by 2002:a05:600c:501f:b0:412:5616:d3d with SMTP id
- n31-20020a05600c501f00b0041256160d3dmr41903wmr.7.1708991743417; Mon, 26 Feb
- 2024 15:55:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708992666; x=1709597466;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6lCojt3BigDKF1Z6DNZEhqVi/bp1on2H69YUvcRX6rE=;
+        b=Q6DjS/u8sWfv/GjqCqr2Nj6vpE6ALwaTN1utzH0C4lWIAAd4khUsycd+gyefmnWTJk
+         kDFDfAUZTj+zyFYh3Sv/7Px9kfKIOGkYW3i1F2OCPHO4gojisRq7iNi+uz9Fv9iQeA/l
+         M7p61UlSDXCjdgsIv9CruyHmTFRkz+3e44Yo0NUxpE0g5W1B3n43l6uAz95IgBRZ6xNI
+         jSSpZCeuuu6ilap2pR0yPi/To+eC7it4P+V+6EY8MyDryZ0MdLtOBb+c213Fc56fPF/a
+         nhg5QN9HtwQJkdEiTGBq39eD0xheeTMZaFKfnoCC/8z36BOuirgn6c1K3RjDhNt3+Y5h
+         ZMGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUk4gCdaQ8yC6AZXyyN9et1PsWtKmCUim7Ts9Bbu7xOYnCF4BGPIgSpRxFxfcPJ2Wx8fars1Cvh5cL8+cfpIqNu146ymg/jd08dYIkR
+X-Gm-Message-State: AOJu0Yzd/m88T6ATv1HiTdiJmvkmqxivad7g1BXpH87lZ3U0ru1y3DBf
+	rm1x1MhmT73pmBXTxs+43dAoovTkjTuNrYZp6NiZgtyfMeG8jGeQ4KViLxY0uA0k+zhU/0JcBWH
+	Hxw==
+X-Google-Smtp-Source: AGHT+IGoqOLH0Yj/filzZmuPfrAn41iSOW15YVUYnEsFixu/WDYss+uM9VgJXxhJpO/Xwg/X/XhhFa9WlCs=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:83ce:0:b0:dc6:519b:5425 with SMTP id
+ v14-20020a2583ce000000b00dc6519b5425mr200134ybm.11.1708992666356; Mon, 26 Feb
+ 2024 16:11:06 -0800 (PST)
+Date: Mon, 26 Feb 2024 16:11:04 -0800
+In-Reply-To: <585a36d2-6e46-44a0-8224-8d4cd54d0dd3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240205092626.v2.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid>
-In-Reply-To: <20240205092626.v2.1.Id9ad163b60d21c9e56c2d686b0cc9083a8ba7924@changeid>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 26 Feb 2024 15:55:28 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WgGuJLBWmXBOU5oHMvWP2M1cSMS201K8HpyXSYiBPJXQ@mail.gmail.com>
-Message-ID: <CAD=FV=WgGuJLBWmXBOU5oHMvWP2M1cSMS201K8HpyXSYiBPJXQ@mail.gmail.com>
-Subject: Re: [PATCH v2] regset: use kvzalloc() for regset_get_alloc()
-To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>, Oleg Nesterov <oleg@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, Matthew Wilcox <willy@infradead.org>, 
-	Eric Biederman <ebiederm@xmission.com>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20231206032054.55070-1-likexu@tencent.com> <ZcKKwSi7FdbSnexE@google.com>
+ <ZcKf3RvyoVJ77sUQ@google.com> <585a36d2-6e46-44a0-8224-8d4cd54d0dd3@gmail.com>
+Message-ID: <Zd0omLAgMu2P3lWX@google.com>
+Subject: Re: [PATCH v2] KVM: x86/intr: Explicitly check NMI from guest to
+ eliminate false positives
+From: Sean Christopherson <seanjc@google.com>
+To: Like Xu <like.xu.linux@gmail.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Andi Kleen <ak@linux.intel.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Hi,
+On Sun, Feb 18, 2024, Like Xu wrote:
+> On 7/2/2024 5:08 am, Sean Christopherson wrote:
+> > On Tue, Feb 06, 2024, Sean Christopherson wrote:
+> > Never mind, this causes KUT's pmu_pebs test to fail:
+> > 
+> >    FAIL: Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x1): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x2): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x4): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x1f000008): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+> >    FAIL: Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x1): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x1): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x2): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x2): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x4): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x4): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x1f000008): GP counter 0 (0xfffffffffffe): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x1f000008): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x1): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x2): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x4): Multiple (0x700000055): No OVF irq, none PEBS records.
+> >    FAIL: Adaptive (0x1f000008): Multiple (0x700000055): No OVF irq, none PEBS records.
+> > 
+> > It might be a test bug, but I have neither the time nor the inclination to
+> > investigate.
+> 
+> For PEBS ovf case, we have "in_nmi() = 0x100000" from the core kernel and
+> the following diff fixes the issue:
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 995760ba072f..dcf665251fce 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1891,7 +1891,7 @@ enum kvm_intr_type {
+>  /* Enable perf NMI and timer modes to work, and minimise false positives. */
+>  #define kvm_arch_pmi_in_guest(vcpu) \
+>  	((vcpu) && (vcpu)->arch.handling_intr_from_guest && \
+> -	 (in_nmi() == ((vcpu)->arch.handling_intr_from_guest == KVM_HANDLING_NMI)))
+> +	 (!!in_nmi() == ((vcpu)->arch.handling_intr_from_guest == KVM_HANDLING_NMI)))
+> 
+>  void __init kvm_mmu_x86_module_init(void);
+>  int kvm_mmu_vendor_module_init(void);
+> 
+> , does it help (tests passed on ICX) ?
 
-On Mon, Feb 5, 2024 at 9:27=E2=80=AFAM Douglas Anderson <dianders@chromium.=
-org> wrote:
->
-> While browsing through ChromeOS crash reports, I found one with an
-> allocation failure that looked like this:
->
->   chrome: page allocation failure: order:7,
->           mode:0x40dc0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO),
->           nodemask=3D(null),cpuset=3Durgent,mems_allowed=3D0
->   CPU: 7 PID: 3295 Comm: chrome Not tainted
->           5.15.133-20574-g8044615ac35c #1 (HASH:1162 1)
->   Hardware name: Google Lazor (rev3 - 8) with KB Backlight (DT)
->   Call trace:
->   ...
->   warn_alloc+0x104/0x174
->   __alloc_pages+0x5f0/0x6e4
->   kmalloc_order+0x44/0x98
->   kmalloc_order_trace+0x34/0x124
->   __kmalloc+0x228/0x36c
->   __regset_get+0x68/0xcc
->   regset_get_alloc+0x1c/0x28
->   elf_core_dump+0x3d8/0xd8c
->   do_coredump+0xeb8/0x1378
->   get_signal+0x14c/0x804
->   ...
->
-> An order 7 allocation is (1 << 7) contiguous pages, or 512K. It's not
-> a surprise that this allocation failed on a system that's been running
-> for a while.
->
-> More digging showed that it was fairly easy to see the order 7
-> allocation by just sending a SIGQUIT to chrome (or other processes) to
-> generate a core dump. The actual amount being allocated was 279,584
-> bytes and it was for "core_note_type" NT_ARM_SVE.
->
-> There was quite a bit of discussion [1] on the mailing lists in
-> response to my v1 patch attempting to switch to vmalloc. The overall
-> conclusion was that we could likely reduce the 279,584 byte allocation
-> by quite a bit and Mark Brown has sent a patch to that effect [2].
-> However even with the 279,584 byte allocation gone there are still
-> 65,552 byte allocations. These are just barely more than the 65,536
-> bytes and thus would require an order 5 allocation.
->
-> An order 5 allocation is still something to avoid unless necessary and
-> nothing needs the memory here to be contiguous. Change the allocation
-> to kvzalloc() which should still be efficient for small allocations
-> but doesn't force the memory subsystem to work hard (and maybe fail)
-> at getting a large contiguous chunk.
->
-> [1] https://lore.kernel.org/r/20240201171159.1.Id9ad163b60d21c9e56c2d686b=
-0cc9083a8ba7924@changeid
-> [2] https://lore.kernel.org/r/20240203-arm64-sve-ptrace-regset-size-v1-1-=
-2c3ba1386b9e@kernel.org
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v2:
-> - Use kvzalloc() instead of vmalloc().
-> - Update description based on v1 discussion.
->
->  fs/binfmt_elf.c | 2 +-
->  kernel/regset.c | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
+Yes, that resolves the issues I was seeing.  I'll get this applied with the above
+squashed.
 
-Just wanted to check in to see if there's anything else that I need to
-do here. Mark's patch to avoid the order 7 allocations [1] has landed,
-but we still want this kvzalloc() because the order 5 allocations
-can't really be avoided. I'm happy to sit tight for longer but just
-wanted to make sure it was clear that we still want my patch _in
-addition_ to Mark's patch and to see if there was anything else you
-needed me to do.
+I'll also see if the tip tree folks would be open to converting the in_{nmi,hardirq,...}()
+macros to functions that return bools (or at least casting to bools in the macros).
+I can't see any reason for in_nmi() to effectively return an int since it's just
+a wrapper to nmi_count(), and this seems like a disaster waiting to happen.
 
-Thanks!
+> > If you want any chance of your patches going anywhere but my trash folder, you
+> > need to change your upstream workflow to actually run tests.  I would give most
+> > people the benefit of the doubt, e.g. assume they didn't have the requisite
+> > hardware, or didn't realize which tests would be relevant/important.  But this
+> > is a recurring problem, and you have been warned, multiple times.
+> 
+> Sorry, my CI resources are diverted to other downstream projects.
+> But there's no doubt it's my fault and this behavior will be corrected.
 
-[1] https://lore.kernel.org/r/20240213-arm64-sve-ptrace-regset-size-v2-1-c7=
-600ca74b9b@kernel.org
+Thank you.
