@@ -1,328 +1,122 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4CB13A87C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6244E54FA5;
+	Tue, 27 Feb 2024 13:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709040216; cv=none; b=jjWZnO6eomLvtPxQIxJvwxHmhfvzYV5Wa+IUtuKt0WX5ycIOo1WrjfOjCn2umjO3wrflB/1CPharMnuNu3rw/b/DXD++ip7E6UZwwNVObvMO/xlTmVG8pIkoWCTfW4pIoZqOrrH0w9F/y0e6nY6KTGVGLCK2DZgxP1F2p/N8ydY=
+	t=1709040318; cv=none; b=uv0GMVAYRD9h9pC5V4w1PyP6UfA/dIR95/vCW0gfaAo6P3pGvsoWulmiT7fvS1SlWSI1k0nSmAQjowmpd4iF8LCjt308scCD4ajNinVLpx1RTN+poI3NMlZNOfgM0ioI03W64sfj8POrlNXTmNU/Qg/tVw+fCpYt6KrjvOK44nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709040216; c=relaxed/simple;
-	bh=xpxiqCQQ3K6pyTYrJI595L9Z2x7eviwccCbJdPeo4Vw=;
+	s=arc-20240116; t=1709040318; c=relaxed/simple;
+	bh=5sj9NXTrAoUjaPMj/9h4zOUnoupcAA5GHb0+0GioHCY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rRqeut91ps5axLQyrlxp9VvcrT6KJYZBaRvhLDbpJVlBqiUjsPAJh83zhin5sIYREx+bAITEDR0UjZ06qq3P0zOMTpHqZKtF4WHYazxlEptWLJc9/lLK9pPYMT10kzxQ38e297jGc/Ke7svJuUtZh7MpnihYWMRziHpLRWhhaYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rWW3cyIs; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=n6Sd4d4UhDpLJy6/4L6CjQY9bQfLl/Ii86INS2xAH0jreYSPFNb4lbSJyXpNDde5uVLIl496SzT5ij4YyGA1R0LGk/FqwIHjZ7KIChqo2nQClB5cTUAfFGFsagqqTzHVwhMidzveyCogRtjISFj1+OL3lynp89gn2Oc38x7z3+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P41mkqlZ; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rWW3cyIs"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d28e465655so25714431fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 05:23:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P41mkqlZ"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a3d5e77cfbeso757832666b.0;
+        Tue, 27 Feb 2024 05:25:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709040213; x=1709645013; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tION+eRfh44NM536dssXS05yQfBojvVk3yfrsfxB50E=;
-        b=rWW3cyIsI8i2DfrzOCBm2BBfH5TGNLHbqkUf19q2msR9KMnF26hxaPa1UmCwM57qWh
-         t5jXFWf7riRlMvuq1uGf1xsVVpmCjWbA0hAIH7RP3SS3bXXuxpehnw5naDOiOfT5UoKT
-         1hA7ETIcK1eZtPx1ue+W2pbZ2jvHv1noYDvuIDxgXcqvGfSyir4jljgwvt557Q1YP5yM
-         sKC6eC80D3w5Z5aUmKbnVGHsEP49ZhuIpqCEcjgMvxdPL2mvKdwyOMuefMLq7VQpFTEQ
-         oLzkmWLy0tmMFdRssQQYvajyrJWUZWFEEVTznoyohX+YqjoImE5pvtyHLeHfN5awXI97
-         jlWw==
+        d=gmail.com; s=20230601; t=1709040314; x=1709645114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7mfy+8kAD4Sg5cY1crfDT7qIqsKPJZTTBHdCAQaHu3Q=;
+        b=P41mkqlZ+inwX5x4hn86zkOs1SUlx8S2XkeEtvxHHC7CES/72E6qUlIrV2/d4jxvhu
+         nfT73dPMEZLcIw2B3kQeQzBvAB2mRQ8PJvULYL+g9uU/fv9/gLEA0MSI+PRQAuh9wSGM
+         hc9p4vUu7UvDREh0MFvXuh1iRe+xG4LL6gX1s9UseUFyC0tqCKT5ZmmzUW4Y0LFh/GeQ
+         qkF3ZKfYMB8kpaS0MXH99SUGadNimYccD+VzRKSm5BLtrfPT9Mubl/qmbZh5IyFhGhSn
+         AKFMr72EGY/IF3xvG4/Y/ea5dLqKjMNimhZyuEsiYz2uPsRGI20cCC4Ct6dB9cppZGhg
+         ojvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709040213; x=1709645013;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tION+eRfh44NM536dssXS05yQfBojvVk3yfrsfxB50E=;
-        b=umcTzksF5LT8wJswsvyJD+BM/XQWREfKQOifG62E20ICSxRrHZ0VICr+n1Diz2QStn
-         6RHkszP8DjzMbNk3FdMM0DqyNepg0zTokMy9YMmtiE/zV+E4e7EJwJywFbl3gaTEXnGq
-         9JxJTdIBOPOrfzpP8YiRyOQnds437M1pdXVNuI6yBA3/286uUGR8gvVWOqo1pKkqAgQQ
-         csUAHBnM47+iZylYSfnKwvtPrcPcwYl6UHrboYVoloyT1yttXePw4CuBOQ4jWWXSFaY8
-         ESazAeiQYKDWbISCWiRIEVohiINQDPBaNBs3LtpC5RoJzFrAZ1Tm8GXan/xigKaQjMBd
-         o+2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXfpelBT4vHyOK2KgxKwGgF5K+m5Gbw7Fq0FIK0tjuYs/dZEchINHMEAkDizUTj7OeJvFpOrA55sRgAM1HShJmC8gg3kR7VLv4keman
-X-Gm-Message-State: AOJu0Ywos/K21XMXKjNko5Qj8Ns8soCEwHuN71pNkhLXWlmRVCGaXw4P
-	aiu9WJBR8dEsZgP6q8mhYXPh1hOlFEw3cZntz9iX3wRd/6aPTeWd6qSYleg5kfnY/iFOnMwiPyX
-	TocFf8/EhqOBaRbo/KOuEa9iP5gsnLsifsmLLVg==
-X-Google-Smtp-Source: AGHT+IE/6ReSwzGYn3SyexSXV7z8MzYspaiUyckr5Y+U7BEy6L2CuW0SXzat8pmrO/gSPnsQi8KKJfxD7BeQvRTwCjE=
-X-Received: by 2002:a2e:a1cc:0:b0:2d2:6608:3d05 with SMTP id
- c12-20020a2ea1cc000000b002d266083d05mr5390365ljm.52.1709040213091; Tue, 27
- Feb 2024 05:23:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709040314; x=1709645114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7mfy+8kAD4Sg5cY1crfDT7qIqsKPJZTTBHdCAQaHu3Q=;
+        b=RZoI8uhjF0f8tn3nC6b7TEFOP/r3VRrQK9ynWfNDTY4I3vtZc9PUR4fIWsWMlQob34
+         MKmOPb3p1XGqs1vCDIXMApB+tEnMej2BWFxaI8vS8XPMe9OZsNx0QIsQtBSYuvqh2pSl
+         QElF1B2R+t81z7m86ut0YGQXCLdPLkaZsZ8i2bA768EoSDCPpGRzj281N7BIDnXgdox4
+         sSNWwrBxs5hMeI/sryK9sIjeLmsSL1o+tg/DRHf46ANM20CAd0nUua34eVef4i4EXHGW
+         bnD96T6qkjm/xinbE83OKT7C/TAlt4z/F8VcHrUTPCdpQgfC/tTl9ORgDZ5amK7Hwllj
+         0MVA==
+X-Forwarded-Encrypted: i=1; AJvYcCXiRugcD8T6ep/VQWVczvlzoBa3uy9Bs5gYQWW2u8VwIF4ZU5P7T+xTnFkuW8TqOUKk4FDiTaDJfEtGTV+A0e42Ttd5qqhPaj6a
+X-Gm-Message-State: AOJu0YzKopR3r3XVa+wl0xbwa/nA+Wgper/Rh+6K+jpf/8/rYHlhqQNF
+	npOqAyAqijfYNXzMfDb7wA0zN4uwzVp98FM23jEFViOP6vnm/WDac3lZmu1BHSYsPHfC1MdK4ig
+	HOYQwjOieGo4pliQ6SyuQ950hPqE=
+X-Google-Smtp-Source: AGHT+IHE4znenK09HkV6uURTuS9RBcOY3Hyzi9IIvKhH5QUyp/hHFLNoRLipHmm9xrihLpAqOjyebro5LUqfP2wuiDA=
+X-Received: by 2002:a17:906:2417:b0:a3e:ec63:8fa9 with SMTP id
+ z23-20020a170906241700b00a3eec638fa9mr9324108eja.16.1709040314372; Tue, 27
+ Feb 2024 05:25:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240215030002.281456-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20240215030002.281456-2-sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAC_iWj+p6gmcb4-_-f8Kr4Ds6EmSsq2D4GK1XymyybX7i1TMFw@mail.gmail.com> <7bd53417-af59-43a8-965e-f63dfc827f3c@linux.intel.com>
-In-Reply-To: <7bd53417-af59-43a8-965e-f63dfc827f3c@linux.intel.com>
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Tue, 27 Feb 2024 15:22:57 +0200
-Message-ID: <CAC_iWjK3sXq1O4tgR0vEr9n2erfrr+9hqU+xUqiMK-TQa0t-hg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] efi/libstub: Add Confidential Computing (CC)
- measurement support
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org
+References: <20240227131410.35269-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20240227131410.35269-1-lukas.bulwahn@gmail.com>
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date: Tue, 27 Feb 2024 14:25:03 +0100
+Message-ID: <CAKXUXMzejT7++UgpgE_eHbXTC+w0cz2-sPr3XawV6N2mCkupgw@mail.gmail.com>
+Subject: Re: [PATCH] docs: drop the version constraints for sphinx and dependencies
+To: Jonathan Corbet <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Vegard Nossum <vegard.nossum@oracle.com>, Akira Yokosawa <akiyks@gmail.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Randy Dunlap <rdunlap@infradead.org>, 
+	linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Feb 27, 2024 at 2:14=E2=80=AFPM Lukas Bulwahn <lukas.bulwahn@gmail.=
+com> wrote:
+>
+> As discussed (see Links), there is some inertia to move to the recent
+> Sphinx versions for the doc build environment.
+>
+> As first step, drop the version constraints and the related comments.
+> Then, the sphinx-pre-install script will fail though with:
+>
+>   Can't get default sphinx version from ./Documentation/sphinx/requiremen=
+ts.txt at ./scripts/sphinx-pre-install line 305.
+>
+> The script simply expects to parse a version constraint with Sphinx in th=
+e
+> requirements.txt. That version is used in the script for suggesting the
+> virtualenv directory name.
+>
+> To suggest a virtualenv directory name, when there is no version given in
+> the requirements.txt, one could try to guess the version that would be
+> downloaded with 'pip install -r Documentation/sphinx/requirements.txt'.
+> However, there seems no simple way to get that version without actually
+> setting up the venv and running pip. So, instead, name the directory with
+> the fixed name 'sphinx_latest'.
+>
+> Finally update the Sphinx build documentation to reflect this directory
+> name change.
+>
+> Link: https://lore.kernel.org/linux-doc/874jf4m384.fsf@meer.lwn.net/
+> Link: https://lore.kernel.org/linux-doc/20240226093854.47830-1-lukas.bulw=
+ahn@gmail.com/
+>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Thanks for taking a shot at this.
+Oops, I was a bit quick on sending this out, I wanted to add those
+remarks for the patch discussion:
 
-[...]
+This change seems to work for my setup, but I have really only dipped my
+toes into the waters of this sphinx-pre-install script.
 
-> >> +               return status;
-> >> +
-> >> +       evt->event_data = (struct efi_tcg2_event){
-> >> +               .event_size                     = size,
-> >> +               .event_header.header_size       = sizeof(evt->event_data.event_header),
-> >> +               .event_header.header_version    = EFI_TCG2_EVENT_HEADER_VERSION,
-> >> +               .event_header.pcr_index         = events[event].pcr_index,
-> >> +               .event_header.event_type        = EV_EVENT_TAG,
-> >> +       };
-> >> +
-> >> +       evt->tagged_event = (struct efi_tcg2_tagged_event){
-> >> +               .tagged_event_id                = events[event].event_id,
-> >> +               .tagged_event_data_size         = events[event].event_data_len,
-> >> +       };
-> >> +
-> >> +       memcpy(evt->tagged_event_data, events[event].event_data,
-> >> +              events[event].event_data_len);
-> >> +
-> >> +       status = efi_call_proto(tcg2, hash_log_extend_event, 0,
-> >> +                               load_addr, load_size, &evt->event_data);
-> > The struct filling/memcpying looks similar across the 2 functions.  I
-> > wonder if it makes sense to have a common function for that, with an
-> > argument for the event data type.
->
-> If we want to use helper function, the updated code looks like below.
->
-> Are you fine with this version? (compile-tested only)
->
-> +struct efi_tcg2_measured_event {
-> +       efi_tcg2_event_t        event_data;
-> +       efi_tcg2_tagged_event_t tagged_event;
-> +       u8                      tagged_event_data[];
-> +};
-> +
-> +struct efi_cc_measured_event {
-> +       efi_cc_event_t  event_data;
-> +       efi_tcg2_tagged_event_t tagged_event;
-> +       u8                      tagged_event_data[];
-> +};
-> +
-> +static void efi_tcg2_event_init(struct efi_tcg2_measured_event *evt,
-> +                               size_t size,
-> +                               enum efistub_event event)
-> +{
-> +       evt->event_data = (struct efi_tcg2_event){
-> +               .event_size                     = size,
-> +               .event_header.header_size       = sizeof(evt->event_data.event_header),
-> +               .event_header.header_version    = EFI_TCG2_EVENT_HEADER_VERSION,
-> +               .event_header.pcr_index         = events[event].pcr_index,
-> +               .event_header.event_type        = EV_EVENT_TAG,
-> +       };
-> +
-> +       evt->tagged_event = (struct efi_tcg2_tagged_event){
-> +               .tagged_event_id                = events[event].event_id,
-> +               .tagged_event_data_size         = events[event].event_data_len,
-> +       };
-> +
-> +       memcpy(evt->tagged_event_data, events[event].event_data,
-> +              events[event].event_data_len);
-> +}
-> +
-> +static efi_status_t tcg2_efi_measure(efi_tcg2_protocol_t *tcg2,
-> +                                    unsigned long load_addr,
-> +                                    unsigned long load_size,
-> +                                    enum efistub_event event)
-> +{
-> +       struct efi_tcg2_measured_event *evt;
-> +       efi_status_t status;
-> +       size_t size;
-> +
-> +       size = sizeof(*evt) + events[event].event_data_len;
-> +
-> +       status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, size,
-> +                            (void **)&evt);
-> +       if (status != EFI_SUCCESS)
-> +               return status;
-> +
-> +       efi_tcg2_event_init(evt, size, event);
-> +
-> +       status = efi_call_proto(tcg2, hash_log_extend_event, 0,
-> +                               load_addr, load_size, &evt->event_data);
-> +       efi_bs_call(free_pool, evt);
-> +
-> +       return status;
-> +}
->
-> +
-> +static efi_status_t cc_efi_measure(efi_cc_protocol_t *cc,
-> +                                  unsigned long load_addr,
-> +                                  unsigned long load_size,
-> +                                  enum efistub_event event)
-> +{
-> +       struct efi_cc_measured_event *evt;
-> +       efi_cc_mr_index_t mr;
-> +       efi_status_t status;
-> +       size_t size;
-> +
-> +       status = efi_call_proto(cc, map_pcr_to_mr_index, events[event].pcr_index, &mr);
-> +       if (status != EFI_SUCCESS) {
-> +               efi_debug("CC_MEASURE: PCR to MR mapping failed\n");
-> +               return status;
-> +       }
-> +
-> +       size = sizeof(*evt) + events[event].event_data_len;
-> +
-> +       status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, size, (void **)&evt);
-> +       if (status != EFI_SUCCESS)
-> +               return status;
-> +
-> +       efi_tcg2_event_init((struct efi_tcg2_measured_event *)evt, size, event);
-> +
-> +       evt->event_data = (struct efi_cc_event){
-> +               .event_header.header_size       = sizeof(evt->event_data.event_header),
-> +               .event_header.header_version    = EFI_CC_EVENT_HEADER_VERSION,
-> +               .event_header.mr_index          = mr,
-> +       };
-> +
-> +       status = efi_call_proto(cc, hash_log_extend_event, 0,
-> +                               load_addr, load_size, &evt->event_data);
-> +
-> +       efi_bs_call(free_pool, evt);
-> +
-> +       return status;
-> +}
->
+I only dropped the version constraints, but possibly one can even drop
+some of the packages in the requirements.txt, as they are pulled in
+automatically by Sphinx dependencies.
 
-Yes, I think looks cleaner. Ard thoughts?
+So, I am happy to get your feedback, but I am well aware about its
+potential to be improved and the lack of my deep knowledge about the
+script. I hope, though, you can test it in your setup and confirm if
+it works as expected and then we can discuss the details (e.g.,
+naming).
 
-Thanks
-/Ilias
->
-> >
-> >> +       efi_bs_call(free_pool, evt);
-> >> +
-> >> +       return status;
-> >> +}
-> >> +
-> >> +static efi_status_t cc_efi_measure(efi_cc_protocol_t *cc,
-> >> +                                  unsigned long load_addr,
-> >> +                                  unsigned long load_size,
-> >> +                                  enum efistub_event event)
-> >> +{
-> >> +       struct efi_measured_event {
-> >> +               efi_cc_event_t  event_data;
-> >> +               efi_tcg2_tagged_event_t tagged_event;
-> >> +               u8                      tagged_event_data[];
-> >> +       } *evt;
-> >> +       size_t size = sizeof(*evt) + events[event].event_data_len;
-> >> +       efi_cc_mr_index_t mr;
-> >> +       efi_status_t status;
-> >> +
-> >> +       status = efi_call_proto(cc, map_pcr_to_mr_index, events[event].pcr_index, &mr);
-> >> +       if (status != EFI_SUCCESS) {
-> >> +               efi_err("CC_MEASURE: PCR to MR mapping failed\n");
-> >> +               return status;
-> >> +       }
-> >> +
-> >> +       status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, size, (void **)&evt);
-> >> +       if (status != EFI_SUCCESS) {
-> >> +               efi_err("CC_MEASURE: Allocating event struct failed\n");
-> >> +               return status;
-> >> +       }
-> >> +
-> >> +       evt->event_data = (struct efi_cc_event){
-> >> +               .event_size                     = size,
-> >> +               .event_header.header_size       = sizeof(evt->event_data.event_header),
-> >> +               .event_header.header_version    = EFI_CC_EVENT_HEADER_VERSION,
-> >> +               .event_header.mr_index          = mr,
-> >> +               .event_header.event_type        = EV_EVENT_TAG,
-> >> +       };
-> >> +
-> >> +       evt->tagged_event = (struct efi_tcg2_tagged_event){
-> >> +               .tagged_event_id                = events[event].event_id,
-> >> +               .tagged_event_data_size         = events[event].event_data_len,
-> >> +       };
-> >> +
-> >> +       memcpy(evt->tagged_event_data, events[event].event_data,
-> >> +              events[event].event_data_len);
-> >> +
-> >> +       status = efi_call_proto(cc, hash_log_extend_event, 0,
-> >> +                               load_addr, load_size, &evt->event_data);
-> >> +
-> >> +       efi_bs_call(free_pool, evt);
-> >> +
-> >> +       return status;
-> >> +}
-> >>  static efi_status_t efi_measure_tagged_event(unsigned long load_addr,
-> >>                                              unsigned long load_size,
-> >>                                              enum efistub_event event)
-> >>  {
-> >>         efi_guid_t tcg2_guid = EFI_TCG2_PROTOCOL_GUID;
-> >> +       efi_guid_t cc_guid = EFI_CC_MEASUREMENT_PROTOCOL_GUID;
-> >> +       efi_cc_protocol_t *cc = NULL;
-> >>         efi_tcg2_protocol_t *tcg2 = NULL;
-> >>         efi_status_t status;
-> >>
-> >>         efi_bs_call(locate_protocol, &tcg2_guid, NULL, (void **)&tcg2);
-> >>         if (tcg2) {
-> >> -               struct efi_measured_event {
-> >> -                       efi_tcg2_event_t        event_data;
-> >> -                       efi_tcg2_tagged_event_t tagged_event;
-> >> -                       u8                      tagged_event_data[];
-> >> -               } *evt;
-> >> -               int size = sizeof(*evt) + events[event].event_data_len;
-> >> -
-> >> -               status = efi_bs_call(allocate_pool, EFI_LOADER_DATA, size,
-> >> -                                    (void **)&evt);
-> >> +               status = tcg2_efi_measure(tcg2, load_addr, load_size, event);
-> >>                 if (status != EFI_SUCCESS)
-> >>                         goto fail;
-> >>
-> >> -               evt->event_data = (struct efi_tcg2_event){
-> >> -                       .event_size                     = size,
-> >> -                       .event_header.header_size       = sizeof(evt->event_data.event_header),
-> >> -                       .event_header.header_version    = EFI_TCG2_EVENT_HEADER_VERSION,
-> >> -                       .event_header.pcr_index         = events[event].pcr_index,
-> >> -                       .event_header.event_type        = EV_EVENT_TAG,
-> >> -               };
-> >> -
-> >> -               evt->tagged_event = (struct efi_tcg2_tagged_event){
-> >> -                       .tagged_event_id                = events[event].event_id,
-> >> -                       .tagged_event_data_size         = events[event].event_data_len,
-> >> -               };
-> >> -
-> >> -               memcpy(evt->tagged_event_data, events[event].event_data,
-> >> -                      events[event].event_data_len);
-> >> -
-> >> -               status = efi_call_proto(tcg2, hash_log_extend_event, 0,
-> >> -                                       load_addr, load_size, &evt->event_data);
-> >> -               efi_bs_call(free_pool, evt);
-> >> +               return EFI_SUCCESS;
-> >> +       }
-> >>
-> >> +       efi_bs_call(locate_protocol, &cc_guid, NULL, (void **)&cc);
-> >> +       if (cc) {
-> >> +               status = cc_efi_measure(cc, load_addr, load_size, event);
-> >>                 if (status != EFI_SUCCESS)
-> >>                         goto fail;
-> >> +
-> >>                 return EFI_SUCCESS;
-> >>         }
-> >>
-> > [...]
-> >
-> > Thanks
-> > /Ilias
->
-> --
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
->
+Lukas
