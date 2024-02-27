@@ -1,118 +1,151 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DAD53366
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 07:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C676A54BC8;
+	Tue, 27 Feb 2024 07:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709019724; cv=none; b=AGufA2LOqd5AnVOz9Dpu9OW3XU1KwMMEFxSAyU2VIchQJobywfMX11egOZaEASdWt3/1wEOluR3oydcPfix4LJdDPqChHw0zZJEQkV3Y9HV6F6i0u4ObLGYd32GNyrvWytK2xgDu0UqSZkMJ4gJKwyBqvAaLmFhhbKEwdyxCCGc=
+	t=1709019741; cv=none; b=S8U9VGrEm+w0sYBIpbF4LF89mn//A6FuCi/g0HD4m/py1UrncTdl8ffd4I4dzUjtgoZj9hBlWlUO1/ZrCO2DKij8nza7q4RIJTqZgUNvLOg0m/BmwIV62vd10zbPjzLXgPJF5atIC/z/0kvYZNF+bxnnx7juV+g6njJLilaTbIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709019724; c=relaxed/simple;
-	bh=PRocj1N0mGG48q41v7UAxjcCgltfFv4sY0S/bF2PfVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LKENsBnfFBharxuOU9eRuYOgXFc/TWTCv/UQ9bhg/Ckpfv0s+yJBTSjVYJP3c2ybVWiJEIJrRFtMClB6ud5lfctSQuFXrgqVJdbMxfWxmge0ZzAOsUeT8C05KXy/7YQXa609Fl6ptzgjWansTLjC5pbcVcrZmBzbiNXWlWdmM3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-608d55ab7b0so26380887b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 23:42:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709019720; x=1709624520;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wFl5adFzYYsCMJUvAOgdtPjYk4mF+SvLHr40WscSKV8=;
-        b=LvM4q0uGlUFA2s/nNHe2AZ3deUL6wTWDG3hgY4tvDEhB6wNu4mnxkD6w//H9CjDlyx
-         6JexiDb9HipjgVIV5RjMt3yuGU2PI9/lOowl3LTSDHq4e53+zeKxmq9jKKQZdtPL0Hib
-         wHzDJ2cXE/eAJ2RR8JmhswfDXIfkGBve/bjaOBkEZ1/sRpkhW2kpiPGzbJ916xVfW5w1
-         qRSQf/7fDK+sAyVsNPnbT6ianoPGJdcC5MpEtUo1qRyNgo6zKwfrYKskP7ZaNVT0XHqf
-         ZFoZgesOhCtO8v0eV0f6lqltuZGKYSfjNMQ/rx64GtQMOcPUaobcqFIHatKRH3wlQL86
-         JvDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSD8V33B6NvuP4TpBUrSv+RPrd4MAg4vZNcy6cKa1DOPIKMhM+/ztbNDfEkznyZ7xV7s4542PNMi2OfNU7FrAvNWnE/qcvIYwE3HUq
-X-Gm-Message-State: AOJu0Yy1BJeOMpIFe5HjZ9VJ57P7gPveEfaLeMI0+SiT05RUOPDYJO5B
-	wacYZKtgrOAjIr+/UpkiWx2HnQcUNDlponJ2Y7X7PPsxyCUVTx6VMdr1yh9Ir4s=
-X-Google-Smtp-Source: AGHT+IEiYyQE2XqMzREHlUyEiPKioq2CGSV5hRAaWfX/NsFBCC2NDcK1MhjxwPAWZSfedX5fRDElog==
-X-Received: by 2002:a81:ee05:0:b0:5ff:c4b9:be5f with SMTP id l5-20020a81ee05000000b005ffc4b9be5fmr1110569ywm.47.1709019720083;
-        Mon, 26 Feb 2024 23:42:00 -0800 (PST)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
-        by smtp.gmail.com with ESMTPSA id i184-20020a0dc6c1000000b00607e72b478csm1641612ywd.133.2024.02.26.23.41.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 23:41:59 -0800 (PST)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dcd7c526cc0so3831045276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 23:41:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWs9/KR5wbBAPRjGvzYl/D+89/4Go3Br4QwTR0fYZRlNRQVeK3x4L7U/pd5g5PpoFNMgzrX3sRIwJEZPa3w3E+w72vslaMhUNzKV9aU
-X-Received: by 2002:a25:aa47:0:b0:dcc:4cdc:e98e with SMTP id
- s65-20020a25aa47000000b00dcc4cdce98emr1469633ybi.5.1709019719163; Mon, 26 Feb
- 2024 23:41:59 -0800 (PST)
+	s=arc-20240116; t=1709019741; c=relaxed/simple;
+	bh=HCCpPHfruMmNeDtopT91uaAx5seHuRXfQsl6Lt75Otw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MdDzo1dxltsPh/P7pnl23madvsoPMU2TWQ16bn9RvP9wXHg5Wsey65UZuSftAdAC0UCePbDkl+r5CZ612Hqn7VZAZuP7kG0fd5yYpCfD1cQtzS7q9jggcOwQ4j84rwpxzOoTA35e+rL0Z0eu8ENVdi2tyrqzeMgJMcxFLKJVnqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=qSbAZTdu; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="qSbAZTdu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1709019738; x=1740555738;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=r7JmSYlxsh14XOEmR0NelO63VSvY9OUGMgbj0LvjGzc=;
+  b=qSbAZTdupncGrlP7Z2kl2rr5zpC7wnPbIGNadsdCX6WQflZjtTKtWsGK
+   +EoUM2f4jInTxOhkqIpQr3r6QDnjL2fJUrehToEAMcEiF7mp9gf0RpKTJ
+   3FmyAe2xi29C7tSYcZEH3M54KvueipPjH4ema8phmTvOQXN7csdXLyk4D
+   9vOEFU5XvnCmRd71Vr0R+rX+O3L3bVyDQmM+2Nru2X4CnJQQtwqPqL/mi
+   G1JyacwbI0evswrgIlxUjCgABsaqOpGZLj3NES93VeVQA3z4DhIg9a1hx
+   BXnWtsDKT2vBs6QyQw3kinTGseQakaCQRiBIUZhMr/WVPa5bE/yOExu8l
+   w==;
+X-IronPort-AV: E=Sophos;i="6.06,187,1705359600"; 
+   d="scan'208";a="35608425"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 27 Feb 2024 08:42:15 +0100
+Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 28495280075;
+	Tue, 27 Feb 2024 08:42:15 +0100 (CET)
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH 3/3] arm64: dts: imx8qm-mek: add flexspi0 support
+Date: Tue, 27 Feb 2024 08:42:15 +0100
+Message-ID: <12393206.O9o76ZdvQC@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20240226203358.275986-3-Frank.Li@nxp.com>
+References: <20240226203358.275986-1-Frank.Li@nxp.com> <20240226203358.275986-3-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=whZ=iA6DhijePcW-pJjZ8YD4T5qLpLKVSUT+4gWNm_0sA@mail.gmail.com>
- <6bb3f88b-bf57-442a-8b46-cb4784dd4cab@roeck-us.net>
-In-Reply-To: <6bb3f88b-bf57-442a-8b46-cb4784dd4cab@roeck-us.net>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 27 Feb 2024 08:41:46 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVYjw9CEBUzxuJ-10wudK_mvJZgqP3gR4kuv-FDYBZ-Aw@mail.gmail.com>
-Message-ID: <CAMuHMdVYjw9CEBUzxuJ-10wudK_mvJZgqP3gR4kuv-FDYBZ-Aw@mail.gmail.com>
-Subject: Re: Linux 6.8-rc6
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kees Cook <keescook@chromium.org>, 
-	linux-m68k <linux-m68k@lists.linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-Hi G=C3=BCnter,
+Hi,
 
-CC Kees
+Am Montag, 26. Februar 2024, 21:33:57 CET schrieb Frank Li:
+> Add flexspi0 support for imx8qm-mek board.
+>=20
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qm-mek.dts | 38 ++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts b/arch/arm64/bo=
+ot/dts/freescale/imx8qm-mek.dts
+> index 800dcb67642b1..7077e394e855b 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
+> @@ -101,6 +101,23 @@ spidev0: spi@0 {
+>  	};
+>  };
+> =20
+> +&flexspi0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pinctrl_flexspi0>;
+> +	nxp,fspi-dll-slvdly =3D <4>;
+> +	status =3D "okay";
+> +
+> +	flash0: mt35xu512aba@0 {
+> +		reg =3D <0>;
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
 
-On Mon, Feb 26, 2024 at 6:52=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> =
-wrote:
-> stackinit
-> ---------
->
-> Seen with m68k:q800 emulation.
->
->     # test_char_array_zero: ASSERTION FAILED at lib/stackinit_kunit.c:333
->     Expected stackinit_range_contains(fill_start, fill_size, target_start=
-, target_size) to be true, but is false
-> stack fill missed target!? (fill 16 wide, target offset by -12)
->
->     # test_char_array_none: ASSERTION FAILED at lib/stackinit_kunit.c:343
->     Expected stackinit_range_contains(fill_start, fill_size, target_start=
-, target_size) to be true, but is false
-> stack fill missed target!? (fill 16 wide, target offset by -12)
->
-> Report:
-> https://lore.kernel.org/lkml/a0d10d50-2720-4ecd-a2c6-c2c5e5aeee65@roeck-u=
-s.net/
+Using '#address-cells' and '#size-cells' in mtd (and thus spi-nor )
+is deprecated, please refer to Documentation/devicetree/bindings/mtd/mtd.ya=
+ml.
 
-I don't think these have ever succeeded before, see
-https://lore.kernel.org/all/CAMuHMdX_g1tbiUL9PUQdqaegrEzCNN3GtbSvSBFYAL4Tzv=
-stFg@mail.gmail.com
+You need to add a partitions subnode instead:
+> partitions {
+> 	compatible =3D "fixed-partitions";
+> 	#address-cells =3D <1>;
+> 	#size-cells =3D <1>;
+> };
 
-> I suspect this may be caused by the test assuming that stack growth is
-> downward, but I don't really understand the test well enough to be sure.
-> I'll disable this set of tests for m68k going forward, so I am not going
-> to report the problem again in the future.
+Best regards,
+Alexander
 
-On m68k, the stack does grow downward.
-AFAIK only parisc has a stack that grows upward.
+> +		compatible =3D "jedec,spi-nor";
+> +		spi-max-frequency =3D <133000000>;
+> +		spi-tx-bus-width =3D <8>;
+> +		spi-rx-bus-width =3D <8>;
+> +	};
+> +};
+> +
+>  &fec1 {
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_fec1>;
+> @@ -199,6 +216,27 @@ IMX8QM_SPI2_CS0_LSIO_GPIO3_IO10		0x21
+>  		>;
+>  	};
+> =20
+> +	pinctrl_flexspi0: flexspi0grp {
+> +		fsl,pins =3D <
+> +			IMX8QM_QSPI0A_DATA0_LSIO_QSPI0A_DATA0     0x06000021
+> +			IMX8QM_QSPI0A_DATA1_LSIO_QSPI0A_DATA1     0x06000021
+> +			IMX8QM_QSPI0A_DATA2_LSIO_QSPI0A_DATA2     0x06000021
+> +			IMX8QM_QSPI0A_DATA3_LSIO_QSPI0A_DATA3     0x06000021
+> +			IMX8QM_QSPI0A_DQS_LSIO_QSPI0A_DQS         0x06000021
+> +			IMX8QM_QSPI0A_SS0_B_LSIO_QSPI0A_SS0_B     0x06000021
+> +			IMX8QM_QSPI0A_SS1_B_LSIO_QSPI0A_SS1_B     0x06000021
+> +			IMX8QM_QSPI0A_SCLK_LSIO_QSPI0A_SCLK       0x06000021
+> +			IMX8QM_QSPI0B_SCLK_LSIO_QSPI0B_SCLK       0x06000021
+> +			IMX8QM_QSPI0B_DATA0_LSIO_QSPI0B_DATA0     0x06000021
+> +			IMX8QM_QSPI0B_DATA1_LSIO_QSPI0B_DATA1     0x06000021
+> +			IMX8QM_QSPI0B_DATA2_LSIO_QSPI0B_DATA2     0x06000021
+> +			IMX8QM_QSPI0B_DATA3_LSIO_QSPI0B_DATA3     0x06000021
+> +			IMX8QM_QSPI0B_DQS_LSIO_QSPI0B_DQS         0x06000021
+> +			IMX8QM_QSPI0B_SS0_B_LSIO_QSPI0B_SS0_B     0x06000021
+> +			IMX8QM_QSPI0B_SS1_B_LSIO_QSPI0B_SS1_B     0x06000021
+> +		>;
+> +	};
+> +
+>  	pinctrl_lpuart0: lpuart0grp {
+>  		fsl,pins =3D <
+>  			IMX8QM_UART0_RX_DMA_UART0_RX				0x06000020
+>=20
 
-Gr{oetje,eeting}s,
 
-                        Geert
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
