@@ -1,137 +1,116 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B02613699F;
-	Tue, 27 Feb 2024 10:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148961369BF
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709028496; cv=none; b=CBPpsfNSWs0+NhfviOIpkV9GgXsV8f26lFxEF2/yQpxq6ZL2drl8ZWqXfboeowkt9/DNuatFuvIgLJxHi9NV+NUEEtT2tNp/5zNJWukCCuldV9MMTzRqqpOA/caDNXHvBojju0GJ3c7lfsAmDPJ1LpwXZXJPIlT5LeHZsx3YNKs=
+	t=1709028504; cv=none; b=lhC3Y7b7uNqQdjTRqrnJOpILLZMTiA6/KUxNUL1Np8nAEUoSGnVHrPCEeFru55VxmlOKoEVPJBpbJTd0EEVDIopMJO1KR45WbiujtWVVjQSRcEABAv2BjSjGX9UyJtuW2jcVHgE5wcc5Mkp0ZEvTwFPhXm8SN4uEy5KU3uk4qJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709028496; c=relaxed/simple;
-	bh=gayX3MThRtKAbxiT63s1KOxQeJc59MH4mNLhm21wvus=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H+VKAqoM62FmadKG8l7GM4+ymUCYjuhNDhRSQGtatYEw9oNH1OdlEpRByzM7aDEykKc5OZps2xH+HIfIkrV7JQGlqlWXwOFvxxZdjXU8nNt0d58hK92BODU8nL6Z/lZ0Yrgw5ER4okXPpoRMrKhYqS1e8zoPZl3aYU6I8K5nq+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Sm0n5pQF; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709028504; c=relaxed/simple;
+	bh=OI4MKF6CdNpT7v2xjTJZcmr2tJKCwXVfHLHQP+OK1IM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ekpN+SN8pV3FjKg8eZ3VSWTpVZJM9OScNyWrZeOjj7rjXlL0xJSZgMPPXS29OGvv4w6AE1rOpBpId/jYZu1M2XRWUQxwjCOAFL2+jwreWVic2GbYECxamnKiZPKDqJ4HhIh8pyYPOeCTHfgXeIpxr8k7njNzUcKdvynvasUyNyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MeRFFber; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Sm0n5pQF"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1B79C240008;
-	Tue, 27 Feb 2024 10:08:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709028486;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xvLaYo71E/i5pWv7T61eLjy9zgmIF4EWr3dIPInc76E=;
-	b=Sm0n5pQFxXJLkiaB1TAaCuo0oEs+Mv9KG/JGBjQ91ZO5oPkAegydRj38YtkVb6gEQ8TBGh
-	Obumgxy9ZP2JClMj0wIprCxMKrLtD29lZbBFNu28M5SXXAIA7WmTQlSepiTjtAQLUjuVGS
-	o2Xadk0RaiA/446C7RrtFdY6k1bGuhNfDT2LnpRmSZhKlfWR4Awkf1q7LGu3R31kltysjQ
-	j9H7+dpJUj6qS67T7BAy03eSeUkLRY8t9H3mK2smKAzwQJrbW1hNhgsYHhAZe8QEr7Sl7x
-	hQ9dJnLSqTGkOzOQaCofynCSP9bfxCY6/ZtUXDA8dN/3eMNMvsJqwL7nEM0uKg==
-Date: Tue, 27 Feb 2024 11:08:02 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, Richard Cochran
- <richardcochran@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-leds@vger.kernel.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
- christophercordahi@nanometrics.ca
-Subject: Re: [PATCH v2 5/6] net: phy: DP83640: Explicitly disabling PHY
- Control Frames
-Message-ID: <20240227110802.552bff55@device-28.home>
-In-Reply-To: <20240227093945.21525-6-bastien.curutchet@bootlin.com>
-References: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
-	<20240227093945.21525-6-bastien.curutchet@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MeRFFber"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5661b7b1f51so1824377a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:08:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709028501; x=1709633301; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ooc5SS3j03ORm6wAIXAzAUPoc8fJQ9XOTzT5/SJVA8Y=;
+        b=MeRFFberdKlzYsgoyxeKcHQ6ozmK+MMplb95efJQew4W7qlKcZkZ87JD40yTy3n+zQ
+         D0Vt+gMzHUCNV40OmTJSGr+8j8wwITJGtUJn14jzkduNHBS1QpA3coTb64w4mWGESBmj
+         Zpr+aJQSxt+A+9peqfq8F5e/n5ZX0TCexE+CFfjTUi2VBMO7QAdmqwelRhEIokO6z4R3
+         xaMCZpStaj7ps2qupOCuDkyebY1uayxr4yM9rSFovwHWGdPsGKDfokNVQ9Our8XmLws3
+         XMzJI8yW34J2QFtpeE9ST2ds/8xDW3zu3iYNFGsPK2WE/pm/ZVhIZM747utN1qaSC28b
+         gZEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709028501; x=1709633301;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ooc5SS3j03ORm6wAIXAzAUPoc8fJQ9XOTzT5/SJVA8Y=;
+        b=BLWEaceJEnPzkigOiX3ieYdMgpEmB1c8YAo3jlxObrdYZiLH9phulZwTNM71alwj/r
+         GOGrUu7hYi06biGGGcxJw9U6FzZdS73dPx3MJI7G5sRO8YRMoAd7HX3NzpTnvV1p8DDS
+         4talEOYWqPG5PUYaG/FrYO2OU/zMvyzL8shB2Ri/x4iYgQzmWEvCawFjfWuI7cLvsE7r
+         p8wcpQQVSFklSfcpy5o8dO/AqclTbD2ye34sLUNOX4oHrL9KPkTa87Rh0NAKqjROU+6y
+         fDYt2UC7vb5cwkDM7mRJObtx7lS9RsRKn5nYC7flfIxNoIFgXqhsRPpMLkqpvziPlLD4
+         ww4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWQAEaRCiLrSQQe9Vf5A1jZZ2nLlyEvutF3qFboGGizevGJJ/v1pJSf7BErC2KznmuGHHyLcxrEeSCPCBPhp8tAxXrJ9STm9pT+GOob
+X-Gm-Message-State: AOJu0YwOfBGiZrV+XFFKiZ8o7nR519Mp2ZwIRRFMGc+oUt7t8cU2M0IB
+	dzBgEHQgZDJ+nOCKJ/56sBxBN33yNtyeSLl2bOGCAMrowkjRM6aqb164jUjtu1g=
+X-Google-Smtp-Source: AGHT+IE1EiV8Igbb2EVKLcncUtmKcFbSvxFWmJNfpS/Isp1yWRgR1sxzZOpH5nj0WUOH1E7n+jeMtQ==
+X-Received: by 2002:a17:906:7d86:b0:a3c:36ae:6c96 with SMTP id v6-20020a1709067d8600b00a3c36ae6c96mr5271008ejo.42.1709028501368;
+        Tue, 27 Feb 2024 02:08:21 -0800 (PST)
+Received: from [192.168.2.107] ([79.115.63.202])
+        by smtp.gmail.com with ESMTPSA id tb16-20020a1709078b9000b00a43d1968921sm5696ejc.190.2024.02.27.02.08.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 02:08:20 -0800 (PST)
+Message-ID: <ddc5c922-8587-492c-93b0-9fd6f584d081@linaro.org>
+Date: Tue, 27 Feb 2024 10:08:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mtd: spi-nor: Add support for BoHong bh25q128as
+Content-Language: en-US
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Michael Walle <mwalle@kernel.org>, Pratyush Yadav <pratyush@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+ David Bauer <mail@david-bauer.net>
+References: <20240220200325.19089-1-ansuelsmth@gmail.com>
+ <f7c45e7b-993c-444b-8710-042da7512bbf@linaro.org>
+ <65d9d08f.df0a0220.988bb.3177@mx.google.com>
+ <CZEVS9033HET.1NPH0K6PQLR87@kernel.org>
+ <4d117770-6e0c-412f-ac1a-d9ba84b5b4ba@linaro.org>
+ <65ddac61.5d0a0220.a0c6e.35bf@mx.google.com>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <65ddac61.5d0a0220.a0c6e.35bf@mx.google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi Bastien,
 
-On Tue, 27 Feb 2024 10:39:44 +0100
-Bastien Curutchet <bastien.curutchet@bootlin.com> wrote:
 
-> The PHY offers a PHY control frame feature that allows to access PHY
-> registers through the MAC transmit data interface. This functionality
-> is not handled by the driver but can be enabled via hardware strap or
-> register access.
+On 2/27/24 09:33, Christian Marangi wrote:
+> On Mon, Feb 26, 2024 at 10:53:34AM +0200, Tudor Ambarus wrote:
+>>
+>>
+>> On 26.02.2024 10:51, Michael Walle wrote:
+>>> Hi,
+>>>
+>>> On Sat Feb 24, 2024 at 12:18 PM CET, Christian Marangi wrote:
+>>>> The user just tested this and It seems there is a problem in JEDEC id?
+>>>>
+>>>> [    0.726451] spi spi0.0: setup: ignoring unsupported mode bits a00
+>>>
+>>> What SPI controller is used in this case?
+>>>
+>>>> [    0.732850] spi-nor spi0.0: unrecognized JEDEC id bytes: 68 40 18 68 40 18
+>>>> [    0.739725] spi-nor: probe of spi0.0 failed with error -2
+>>>
+>>> And what kernel version is this? This should only happen if the SFDP
+>>> header is wrong, but according to your dump, it is correct.
+>>>
+>>
+>> I assume the test was done on an older kernel, where the identification
+>> of the flash based on SFDP is not yet available.
 > 
-> Disable the feature in config_init() to save some latency on MII packets.
+> The test has been done on 5.15 and 6.1. The support for this was
+> introduced later? Can you point me to the commits so I can backport
+> them?
 > 
-> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
-> ---
->  drivers/net/phy/dp83640.c     | 6 ++++++
->  drivers/net/phy/dp83640_reg.h | 4 ++++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-> index 16c9fda50b19..b371dea23937 100644
-> --- a/drivers/net/phy/dp83640.c
-> +++ b/drivers/net/phy/dp83640.c
-> @@ -1120,6 +1120,7 @@ static int dp83640_config_init(struct phy_device *phydev)
->  {
->  	struct dp83640_private *dp83640 = phydev->priv;
->  	struct dp83640_clock *clock = dp83640->clock;
-> +	int val;
->  
->  	if (clock->chosen && !list_empty(&clock->phylist))
->  		recalibrate(clock);
-> @@ -1135,6 +1136,11 @@ static int dp83640_config_init(struct phy_device *phydev)
->  	ext_write(0, phydev, PAGE4, PTP_CTL, PTP_ENABLE);
->  	mutex_unlock(&clock->extreg_lock);
->  
-> +	/* Disable unused PHY control frames */
-> +	phy_write(phydev, PAGESEL, 0);
-> +	val = phy_read(phydev, PCFCR) & ~PCF_EN;
-> +	phy_write(phydev, PCFCR, val);
 
-Use phy_modify instead, and you might also want to look at the paging.
-The ext_write before apparently does some page-management itself through
-the clock struct (?).
+Use git blame.
 
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/net/phy/dp83640_reg.h b/drivers/net/phy/dp83640_reg.h
-> index bf34d422d91e..b5adb8958c08 100644
-> --- a/drivers/net/phy/dp83640_reg.h
-> +++ b/drivers/net/phy/dp83640_reg.h
-> @@ -10,6 +10,7 @@
->  #define PHYCR                     0x0019 /* PHY Control Register */
->  #define PHYCR2                    0x001c /* PHY Control Register 2 */
->  #define EDCR                      0x001D /* Energy Detect Control Register */
-> +#define PCFCR                     0x001F /* PHY Control Frames Control Register */
->  
->  #define PAGE4                     0x0004
->  #define PTP_CTL                   0x0014 /* PTP Control Register */
-> @@ -68,6 +69,9 @@
->  /* Bit definitions for the EDCR register */
->  #define ED_EN		          BIT(15) /* Enable Energy Detect Mode */
->  
-> +/* Bit definitions for the PCFCR register */
-> +#define PCF_EN                    BIT(0)  /* Enable PHY Control Frames */
-> +
->  /* Bit definitions for the PTP_CTL register */
->  #define TRIG_SEL_SHIFT            (10)    /* PTP Trigger Select */
->  #define TRIG_SEL_MASK             (0x7)
-
-Thanks,
-
-Maxime
+773bbe104497 ("mtd: spi-nor: add generic flash driver")
