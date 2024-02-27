@@ -1,299 +1,161 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C747D13B29C;
-	Tue, 27 Feb 2024 13:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88B613B293;
+	Tue, 27 Feb 2024 13:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709039918; cv=none; b=J6HhOwqO8aLyhKHRzbqDAUW0XdAKFLlFrwtTYh0fAJumKPeRJFN8WJ3tnyHY+Ff2CEiBgBfSaveztJ8OQ+eP/kI3tsGId1FbiEiEzhQQq3AQroo2pqd535BgzHQz0HXNkBPNIgU+mVBT9T5G+Y/i5l9ySB7pyh4OzxVvyuawYaw=
+	t=1709039936; cv=none; b=KpoWvU7VTF3o6tftY4AYvJgKeNQWTe6lJ/z3fq/TUPWEVRHzWGAYyeTRpcBXHN8MqMTrcVqXi4JPGy1edbFdkRX9vxmP1B/cjuvkXaMhW8RAO4t4tUT+pxMwv2UEWozuxe/1hPRBeEVO9favWBpQ59JZJe4w53BoBQ8Ay0ByBPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709039918; c=relaxed/simple;
-	bh=3gcuV61t2Hf8iIU8GS9e4WnOjtwy66ob4TygKymP7vI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IrPhu2RKmpZTUucBCEEV2XJTBmLYYLnuOxs79OpuXnpQzbDUS75pI3Vo139VHtkzbe++WQ2ORJ/KcW67j6Z6Qt6/Brz+dTpZrI9Wh4zcsq5mXLNwCQwwKIOt6hWOsbKE9pnLjp+SCXFjBotoykA18TmkQYyeI7VvlS4qSX+quXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=t+9keHML; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=GRvXGAM1; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=F9IZKXKZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qeLIL82+; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1709039936; c=relaxed/simple;
+	bh=m0XFN8Tee5EPflDKGWSpbSuSJDww3Edcr17LM7LJoBE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=i6G8p7pCqOxlgsv/XQ6BqYFCESoQSxgUyXOn1iyL9a+Q3oxnDm7wZVQb1dDOY/ek0Iw3+R4k6JvVR1Mf4ONj0k72RUFt8elY9Uo7XZ36MZwEDxx7nuhrzoUxWlTsAPX0lYPCdU9c8lY4GgENA5vGWjxkpG0SsYfdJrLtcG6Glko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nx26+HnF; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="t+9keHML";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="GRvXGAM1";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="F9IZKXKZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qeLIL82+"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CD386222B1;
-	Tue, 27 Feb 2024 13:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709039914; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b5fxnH3MZSXNsSIAXZNKwmzfwaEYfCce0iXFeFygkQg=;
-	b=t+9keHMLh4mZ9U9FQ87VKQu8qlErdV098YFQ27/heTmhZppg6tdPU6yJ9Eo76VKzqONnnB
-	1DBPJEyQqJV/UxcctxZ22Xq3EhU0hSfd5ki6CR8KBtRG2fx3ZgjUmb8S2H5X+dAnVF5Svw
-	CMbh1JgO3q0lxv2gMts6lsIDlkbCUZg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709039914;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b5fxnH3MZSXNsSIAXZNKwmzfwaEYfCce0iXFeFygkQg=;
-	b=GRvXGAM18yVMX0BW2K+RwWRfUhc/w+IroW6mjGbZVcLNZgZY0hFKcOseHovdH82tnqfTto
-	OlaadaQpT0hAOkDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709039913; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b5fxnH3MZSXNsSIAXZNKwmzfwaEYfCce0iXFeFygkQg=;
-	b=F9IZKXKZt1gaRwhJRkHRlaQl1OHHL8G72P9VbBh9roM6E3f52yS+BVAhXmn3S2584WUvxJ
-	ENH/CybjETOcGt4IQKTDzjQUBrSJRyTn/xgopePYT59Kc+3X6u6ghbXOY8evc12MXdxiqu
-	DD9NtaFXXx+SvDohX/QhkhPtG+o3fsw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709039913;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b5fxnH3MZSXNsSIAXZNKwmzfwaEYfCce0iXFeFygkQg=;
-	b=qeLIL82+HCy8ZAeUFMjZFYLviW9bzTdgWX6Cj9qpRxpNfNN2rVWl2yY3EOP1Z6qmCjOMY8
-	DkkhqX5V+tGh6EAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 31E4C13A58;
-	Tue, 27 Feb 2024 13:18:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Pt1+Cyjh3WWwLAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 27 Feb 2024 13:18:32 +0000
-Message-ID: <ae4f9958-813a-42c8-8e54-4ef19fd36d6c@suse.cz>
-Date: Tue, 27 Feb 2024 14:19:04 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nx26+HnF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709039935; x=1740575935;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=m0XFN8Tee5EPflDKGWSpbSuSJDww3Edcr17LM7LJoBE=;
+  b=nx26+HnFe7Cp+otwS6OPf7Vg8g1aX4kCq/7jvXOqaqxmrwkEWqORaAGf
+   d0wyFLZFdhXyRSaluyJkYIanyj9uvbBOeyqvIxcSQ+KLQZqc495ez6TNK
+   CPjuR78xRFKcmaJRwz7Se5CjiGfy151Z7s/gF5fQJoXgecR4FEBiU27JT
+   FDGFrEoLybz3f/ZWmgWdMqxz9ov8ZtqsPwSvZDqYvS9QMQGc398ymkkVj
+   apalnyW+ybWQT7azP4sbxvaVf76gxERomsClXSYicSlQSFUtJzEPwrc2t
+   fN2y1PS3KuK/DYLBm7HbysliP73aRlWXFrZhEC1ojz6M4RDKYCT2KbW5g
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3496076"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="3496076"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:18:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="7080184"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:18:52 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 27 Feb 2024 15:18:48 +0200 (EET)
+To: Hans de Goede <hdegoede@redhat.com>
+cc: Luiz Capitulino <luizcap@redhat.com>, shravankr@nvidia.com, 
+    davthompson@nvidia.com, ndalvi@redhat.com, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 0/2] platform/mellanox: mlxbf-pmc: Fix module loading
+In-Reply-To: <eea32e56-2ea3-4a11-b1b9-8dd46dac7d72@redhat.com>
+Message-ID: <4f6169e5-dee6-2188-f0a5-601b516be5fe@linux.intel.com>
+References: <cover.1708635408.git.luizcap@redhat.com> <170895404513.2243.14840310263795846559.b4-ty@linux.intel.com> <def1a153-3cfb-431d-a7d2-a13bb7d65f4f@redhat.com> <29863354-4efe-d199-a9d4-7daf83f6cde9@linux.intel.com> <1608d86a-24e8-403b-b199-ce23f8411cfd@redhat.com>
+ <eea32e56-2ea3-4a11-b1b9-8dd46dac7d72@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 31/36] lib: add memory allocations report in show_mem()
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
-Cc: kent.overstreet@linux.dev, mhocko@suse.com, hannes@cmpxchg.org,
- roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
- willy@infradead.org, liam.howlett@oracle.com,
- penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
- peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
- will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
- dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
- david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
- nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
- rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
- yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
- hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
- ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org,
- ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
- iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
- elver@google.com, dvyukov@google.com, shakeelb@google.com,
- songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
- minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, linux-arch@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
- cgroups@vger.kernel.org
-References: <20240221194052.927623-1-surenb@google.com>
- <20240221194052.927623-32-surenb@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20240221194052.927623-32-surenb@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=F9IZKXKZ;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=qeLIL82+
-X-Spamd-Result: default: False [1.20 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BAYES_HAM(-0.00)[11.51%];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_GT_50(0.00)[74];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,linux.dev:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: 1.20
-X-Rspamd-Queue-Id: CD386222B1
-X-Spam-Level: *
-X-Spam-Flag: NO
-X-Spamd-Bar: +
+Content-Type: multipart/mixed; BOUNDARY="8323328-606387716-1708967518=:1203"
+Content-ID: <4d35180d-b1ce-72eb-222c-57381c067c0a@linux.intel.com>
 
-On 2/21/24 20:40, Suren Baghdasaryan wrote:
-> Include allocations in show_mem reports.
-> 
-> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+--8323328-606387716-1708967518=:1203
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <79410032-c4ee-96e4-c036-57960da3b45a@linux.intel.com>
 
-Nit: there's pr_notice() that's shorter than printk(KERN_NOTICE
+On Mon, 26 Feb 2024, Hans de Goede wrote:
 
-> ---
->  include/linux/alloc_tag.h |  7 +++++++
->  include/linux/codetag.h   |  1 +
->  lib/alloc_tag.c           | 38 ++++++++++++++++++++++++++++++++++++++
->  lib/codetag.c             |  5 +++++
->  mm/show_mem.c             | 26 ++++++++++++++++++++++++++
->  5 files changed, 77 insertions(+)
-> 
-> diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
-> index 29636719b276..85a24a027403 100644
-> --- a/include/linux/alloc_tag.h
-> +++ b/include/linux/alloc_tag.h
-> @@ -30,6 +30,13 @@ struct alloc_tag {
->  
->  #ifdef CONFIG_MEM_ALLOC_PROFILING
->  
-> +struct codetag_bytes {
-> +	struct codetag *ct;
-> +	s64 bytes;
-> +};
-> +
-> +size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count, bool can_sleep);
-> +
->  static inline struct alloc_tag *ct_to_alloc_tag(struct codetag *ct)
->  {
->  	return container_of(ct, struct alloc_tag, ct);
-> diff --git a/include/linux/codetag.h b/include/linux/codetag.h
-> index bfd0ba5c4185..c2a579ccd455 100644
-> --- a/include/linux/codetag.h
-> +++ b/include/linux/codetag.h
-> @@ -61,6 +61,7 @@ struct codetag_iterator {
->  }
->  
->  void codetag_lock_module_list(struct codetag_type *cttype, bool lock);
-> +bool codetag_trylock_module_list(struct codetag_type *cttype);
->  struct codetag_iterator codetag_get_ct_iter(struct codetag_type *cttype);
->  struct codetag *codetag_next_ct(struct codetag_iterator *iter);
->  
-> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-> index cb5adec4b2e2..ec54f29482dc 100644
-> --- a/lib/alloc_tag.c
-> +++ b/lib/alloc_tag.c
-> @@ -86,6 +86,44 @@ static const struct seq_operations allocinfo_seq_op = {
->  	.show	= allocinfo_show,
->  };
->  
-> +size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count, bool can_sleep)
-> +{
-> +	struct codetag_iterator iter;
-> +	struct codetag *ct;
-> +	struct codetag_bytes n;
-> +	unsigned int i, nr = 0;
-> +
-> +	if (can_sleep)
-> +		codetag_lock_module_list(alloc_tag_cttype, true);
-> +	else if (!codetag_trylock_module_list(alloc_tag_cttype))
-> +		return 0;
-> +
-> +	iter = codetag_get_ct_iter(alloc_tag_cttype);
-> +	while ((ct = codetag_next_ct(&iter))) {
-> +		struct alloc_tag_counters counter = alloc_tag_read(ct_to_alloc_tag(ct));
-> +
-> +		n.ct	= ct;
-> +		n.bytes = counter.bytes;
-> +
-> +		for (i = 0; i < nr; i++)
-> +			if (n.bytes > tags[i].bytes)
-> +				break;
-> +
-> +		if (i < count) {
-> +			nr -= nr == count;
-> +			memmove(&tags[i + 1],
-> +				&tags[i],
-> +				sizeof(tags[0]) * (nr - i));
-> +			nr++;
-> +			tags[i] = n;
-> +		}
-> +	}
-> +
-> +	codetag_lock_module_list(alloc_tag_cttype, false);
-> +
-> +	return nr;
-> +}
-> +
->  static void __init procfs_init(void)
->  {
->  	proc_create_seq("allocinfo", 0444, NULL, &allocinfo_seq_op);
-> diff --git a/lib/codetag.c b/lib/codetag.c
-> index b13412ca57cc..7b39cec9648a 100644
-> --- a/lib/codetag.c
-> +++ b/lib/codetag.c
-> @@ -36,6 +36,11 @@ void codetag_lock_module_list(struct codetag_type *cttype, bool lock)
->  		up_read(&cttype->mod_lock);
->  }
->  
-> +bool codetag_trylock_module_list(struct codetag_type *cttype)
-> +{
-> +	return down_read_trylock(&cttype->mod_lock) != 0;
-> +}
-> +
->  struct codetag_iterator codetag_get_ct_iter(struct codetag_type *cttype)
->  {
->  	struct codetag_iterator iter = {
-> diff --git a/mm/show_mem.c b/mm/show_mem.c
-> index 8dcfafbd283c..1e41f8d6e297 100644
-> --- a/mm/show_mem.c
-> +++ b/mm/show_mem.c
-> @@ -423,4 +423,30 @@ void __show_mem(unsigned int filter, nodemask_t *nodemask, int max_zone_idx)
->  #ifdef CONFIG_MEMORY_FAILURE
->  	printk("%lu pages hwpoisoned\n", atomic_long_read(&num_poisoned_pages));
->  #endif
-> +#ifdef CONFIG_MEM_ALLOC_PROFILING
-> +	{
-> +		struct codetag_bytes tags[10];
-> +		size_t i, nr;
-> +
-> +		nr = alloc_tag_top_users(tags, ARRAY_SIZE(tags), false);
-> +		if (nr) {
-> +			printk(KERN_NOTICE "Memory allocations:\n");
-> +			for (i = 0; i < nr; i++) {
-> +				struct codetag *ct = tags[i].ct;
-> +				struct alloc_tag *tag = ct_to_alloc_tag(ct);
-> +				struct alloc_tag_counters counter = alloc_tag_read(tag);
-> +
-> +				/* Same as alloc_tag_to_text() but w/o intermediate buffer */
-> +				if (ct->modname)
-> +					printk(KERN_NOTICE "%12lli %8llu %s:%u [%s] func:%s\n",
-> +					       counter.bytes, counter.calls, ct->filename,
-> +					       ct->lineno, ct->modname, ct->function);
-> +				else
-> +					printk(KERN_NOTICE "%12lli %8llu %s:%u func:%s\n",
-> +					       counter.bytes, counter.calls, ct->filename,
-> +					       ct->lineno, ct->function);
-> +			}
-> +		}
-> +	}
-> +#endif
->  }
+> Hi Luiz,
+>=20
+> On 2/26/24 17:10, Luiz Capitulino wrote:
+> > On 2024-02-26 11:04, Ilpo J=E4rvinen wrote:
+> >> On Mon, 26 Feb 2024, Luiz Capitulino wrote:
+> >>
+> >>> On 2024-02-26 08:27, Ilpo J=E4rvinen wrote:
+> >>>> On Thu, 22 Feb 2024 15:57:28 -0500, Luiz Capitulino wrote:
+> >>>>
+> >>>>> The mlxbf-pmc driver fails to load when the firmware reports a new =
+but not
+> >>>>> yet implemented performance block. I can reproduce this today with =
+a
+> >>>>> Bluefield-3 card and UEFI version 4.6.0-18-g7d063bb-BId13035, since=
+ this
+> >>>>> reports the new clock_measure performance block.
+> >>>>>
+> >>>>> This[1] patch from Shravan implements the clock_measure support and=
+ will
+> >>>>> solve the issue. But this series avoids the situation by ignoring a=
+nd
+> >>>>> logging unsupported performance blocks.
+> >>>>>
+> >>>>> [...]
+> >>>>
+> >>>>
+> >>>> Thank you for your contribution, it has been applied to my local
+> >>>> review-ilpo branch. Note it will show up in the public
+> >>>> platform-drivers-x86/review-ilpo branch only once I've pushed my
+> >>>> local branch there, which might take a while.
+> >>>
+> >>> Thank you Ilpo and thanks Hans for the review.
+> >>>
+> >>> The only detail is that we probably want this merged for 6.8 since
+> >>> the driver doesn't currently load with the configuration mentioned ab=
+ove.
+> >>
+> >> Oh, sorry, I missed the mention in the coverletter.
+> >>
+> >> So you'd want I drop these from review-ilpo branch as there they end
+> >> up into for-next branch, and they should go through Hans instead who
+> >> handles fixes branch for this cycle?
+> >=20
+> > If that's the path to get this series merged for this cycle then yes,
+> > but let's see if Hans agrees (sorry that I didn't know this before
+> > posting).
+>=20
+> Hmm, new hw enablement typically goes through -next and not to
+> the current fixes branch. And AFAICT this is new hw enablement,
+> not a regression / bug-fix.
+>=20
+> Is there any special reason why this needs to be in 6.8 ?
+
+To me it sounded like fix to 1a218d312e65 ("platform/mellanox: mlxbf-pmc:=
+=20
+Add Mellanox BlueField PMC driver") and 423c3361855c ("platform/mellanox:=
+=20
+mlxbf-pmc: Add support for BlueField-3") although not explicitly marked as=
+=20
+such.
+
+But I'm fine with taking these through for-next, it's relatively late into=
+=20
+the cycle already anyway.
+
+> For RHEL kernels you can cherry-pick patches from -next
+> as necessary.
+
+It's also possible to send them later directly to stable folks once=20
+Linus' tree has them after the next merge window if you feel they're=20
+useful for stable inclusion.
+
+> > One additional detail is that this series is on top of linux-next, whic=
+h
+> > has two additional mlxbf-pmc changes:
+> >=20
+> > * https://lore.kernel.org/lkml/39be055af3506ce6f843d11e45d71620f2a96e26=
+=2E1707808180.git.shravankr@nvidia.com/
+> > * https://lore.kernel.org/lkml/d8548c70339a29258a906b2b518e5c48f669795c=
+=2E1707808180.git.shravankr@nvidia.com/
+>=20
+> Hmm, those are not small patches, any other reason
+> why this really should go to -next IMHO.
+
+Those two linked patches are totally unrelated.
+
+
+--=20
+ i.
+--8323328-606387716-1708967518=:1203--
