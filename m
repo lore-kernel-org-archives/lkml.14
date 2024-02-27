@@ -1,90 +1,141 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F95FC0C;
-	Tue, 27 Feb 2024 16:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCB01F947;
+	Tue, 27 Feb 2024 16:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709051446; cv=none; b=fir6V0chqtmvp3Q9FVsBfjXtlFPXMbd4zgQtj5GCcmznQvme74ZJCAaief4LF0YE0lTgaU6x9vmbRmvdVtmbIq6enBnsl1bx/j08FkyxwpAoioOSupPsTDq+qaPD2qfBC8vKtYdVQEPY/7Deyl9Co2+HaWDOWXE0a/NJD8fyVLk=
+	t=1709051450; cv=none; b=fh7WmszSHWCjw6qnPkOPFklVePfMMM5JhYqiuTXrT/KjCqjNzVwRkC93eiNUNXqNg1pHGUYppy4GESX+qGv81jwexhtKzwYV7QNNOnNJ3+0IPRRSdTJF10u94JvQUOWdhgxBtkF0tnTjGCbCPe0WP4kDaqVegtoiAEIBk6Mb4Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709051446; c=relaxed/simple;
-	bh=KBTtlPCL4hk1PkKTBjxD4B7zdpjr8IXelQA+EBL3VnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GsC1slu26ijjKt8D2ldYzqGFJ8gyRSPFIx/phOU89v9QJPqhutY8VR6IDQIDBRT27hPsW5jj4VA+YGwwe84Q5tGnce5ewuk9rKVlvASYCecAGs0wi6EuU2FfYRXYCC+yqgLL41nP0aQSCiu/wLCzLwV5qPwMem/OTPc7M74HAB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UflHmV06; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1709051450; c=relaxed/simple;
+	bh=7UWytEjpvnuf7HyU7fycSpNmZ+Pkvdxbg2+CIsFkOyc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uy3905XSANCKDQh2eJNVJ7n5RB2gzdObnPb9EFyfBy/ezFHL9j+mLtOsaZxASSXPkFXtvQkZormahr+6h3o2YM3vjpVkYWvqvB4lSM6+YqTymDGAfXcYva7bSleYNpX3L4GgBUH/vcM4XBTd7V9Iaq48XU73m4GXC9zINP6eUeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Faq9Y1gF; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UflHmV06"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8Em3WrQ3rbqBswUK3H5v5TrX0P+gERz3y+yQCLjfY1o=; b=UflHmV06nWxmj5rJD5mToBCGK1
-	wHyE17Nv+e5oi7s5UasYKAceuiSW2TIHK+3FYS+ma6fZy8z4E4jWj7voaa7z47KoKSXdun/Vu+mXp
-	B/pKZYPpMAMSUQPjZuMa6cr8mnOz2EFR3eAs9ozna2kS52rFTxQBgSBiv7xSI1pFR4b0OBHwVL1cJ
-	EpRIgaQHUPnrdu9RRB6Lva9ZYXy0Yc7fZI6R6fH4XagM2IyyDH6ZPHgjCjGU02XUpTwFKLVjHz8+r
-	CCPHm6bUFt5+M6UVgphuqxo+ti6AHhK1zpGukmU3xNS3O3lCfEojlmkAm2xND48jDR8qoeEKHdWUn
-	E7yPcOrg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rf0Ls-00000005ytE-0MFf;
-	Tue, 27 Feb 2024 16:30:44 +0000
-Date: Tue, 27 Feb 2024 08:30:44 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Changbin Du <changbin.du@huawei.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Xiaoyi Su <suxiaoyi@huawei.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Luis Chamberlain <mcgrof@infradead.org>
-Subject: Re: [PATCH v4] modules: wait do_free_init correctly
-Message-ID: <Zd4ONMe5c_tdPyLW@bombadil.infradead.org>
-References: <20240227023546.2490667-1-changbin.du@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Faq9Y1gF"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d21cdbc85bso70362111fa.2;
+        Tue, 27 Feb 2024 08:30:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709051447; x=1709656247; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+DNzd2Y9Nsj2d3D65u6Z6DGyaZKDh+IjqLbOArWV8kY=;
+        b=Faq9Y1gFbR/wYpyoLPW5qvPHjrgaMObNHhSgcgt6WaPaPmulylZL9q+KKp2cmCelRo
+         RzFYdXKOb4WhFNmw4su4/l7SOg+1BF9gJCcFp4N3N/XJf4vAna8Q7WuXjFfdN4RjfWKO
+         BxYwqepOtzxL0XdAxS4i81/ycuaE/ss7ofCaMK7EonJjAgsFUixib6rYmArm2cNUmV1l
+         f7uDr7op4kz9yiRb8p7ItfNgs5NdsK2p/x/zcYQStDtH0Eff5cRCGq9+DdrmhI4Ju2QE
+         7AnOh4lebDOlQoVGxETKr3dkFPSNyeY9pu4egqhnH9HVA8vAz85fKxIL4Cx1/MpeFRZ1
+         CSHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709051447; x=1709656247;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+DNzd2Y9Nsj2d3D65u6Z6DGyaZKDh+IjqLbOArWV8kY=;
+        b=FusT7Yrq2y/igUHX2zTBZAliD7vURfPp3/bo2onO3BbaeTooslOVMZ7ApvMgYaO4Qc
+         SZS3W3yZpNc/9ghe0ewGu0dVjnILXxtu6z35ddG0RUKspEnGnQfN+yLrgLFfnu+eDHvM
+         7VgHiIDaypY10xwSkWOJQ4HhFf8MX6+HF1hsGcpJv3C5e1raWvs3P8DufaUjXC+Ce3gC
+         4DsdKsnxP6X2YvSAh5QRnBgZT3W0K7Rz7fnCRZVW0w7t6suD7bT/hEf7RH15iILtleFN
+         HnukE9i5WYLOOX2eAmgnOtMM3yK+3a5a5fl0hGOxfTLB6NrFemxrw9zza65trcuScH4o
+         2QaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzB0Vo7rKP4EAejiRx9PGmi6v5H4DwkBUCNQGgH4ZuPuxG2pyBfKPQ5ERsCejqx/W9K765LaXkl1LQQ8Lc4qAFy8u2XJJuumn/hG5wi4i4Qd5mlNWrAKPuHeam/GMqmpIBkle/x97beZs=
+X-Gm-Message-State: AOJu0YxiMrO8ioKReC8zIAdFpgwysU6DnpoSky7JZ+n0pyxTjx1fUSPl
+	CcemUM7zgEd08oqXpOGPY74FM4JGVP74C5IcR+h8sPpSkU86zBdl
+X-Google-Smtp-Source: AGHT+IFZISPRXql7yR19T4+1+qCYS8CjAfn3WPW92vxe0d6OZiu78rXX0C72mM0dLUkT/wBEGqAs6A==
+X-Received: by 2002:a05:651c:333:b0:2d2:3f13:52e7 with SMTP id b19-20020a05651c033300b002d23f1352e7mr5940035ljp.12.1709051446802;
+        Tue, 27 Feb 2024 08:30:46 -0800 (PST)
+Received: from localhost.localdomain (c83-255-24-248.bredband.tele2.se. [83.255.24.248])
+        by smtp.googlemail.com with ESMTPSA id n11-20020a2e904b000000b002d0b6eafa8csm1300712ljg.39.2024.02.27.08.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 08:30:46 -0800 (PST)
+From: Jonathan Bergh <bergh.jonathan@gmail.com>
+To: hdegoede@redhat.com
+Cc: mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jonathan Bergh <bergh.jonathan@gmail.com>
+Subject: [PATCH 1/3] staging: media: atomisp: Fix various multiline block comment formatting instances
+Date: Tue, 27 Feb 2024 17:30:41 +0100
+Message-Id: <20240227163043.112162-1-bergh.jonathan@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240227023546.2490667-1-changbin.du@huawei.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 27, 2024 at 10:35:46AM +0800, Changbin Du wrote:
-> The synchronization here is to ensure the ordering of freeing of a module
-> init so that it happens before W+X checking. It is worth noting it is not
-> that the freeing was not happening, it is just that our sanity checkers
-> raced against the permission checkers which assume init memory is already
-> gone.
-> 
-> Commit 1a7b7d922081 ("modules: Use vmalloc special flag") moved
-> calling do_free_init() into a global workqueue instead of relying on it
-> being called through call_rcu(..., do_free_init), which used to allowed us
-> call do_free_init() asynchronously after the end of a subsequent grace
-> period. The move to a global workqueue broke the gaurantees for code which
-> needed to be sure the do_free_init() would complete with rcu_barrier().
-> To fix this callers which used to rely on rcu_barrier() must now instead
-> use flush_work(&init_free_wq).
-> 
-> Without this fix, we still could encounter false positive reports in W+X
-> checking since the rcu_barrier() here can not ensure the ordering now.
-> 
-> Even worse, the rcu_barrier() can introduce significant delay. Eric Chanudet
-> reported that the rcu_barrier introduces ~0.1s delay on a PREEMPT_RT kernel.
-> 
->   [    0.291444] Freeing unused kernel memory: 5568K
->   [    0.402442] Run /sbin/init as init process
-> 
-> With this fix, the above delay can be eliminated.
-> 
-> Fixes: 1a7b7d922081 ("modules: Use vmalloc special flag")
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> Cc: Xiaoyi Su <suxiaoyi@huawei.com>
-> Cc: Eric Chanudet <echanude@redhat.com>
-> Cc: Luis Chamberlain <mcgrof@infradead.org>
-> Tested-by: Eric Chanudet <echanude@redhat.com>
+This patch makes the following fixes:
+ * Reformats a number of multiline block comments to ensure * and */ align
+   correctly
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Jonathan Bergh <bergh.jonathan@gmail.com>
+---
+ .../staging/media/atomisp/pci/atomisp_v4l2.c  | 34 ++++++++++---------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
 
-  Luis
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
+index 547e1444ad97..77809e88da83 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
+@@ -78,13 +78,15 @@ static char firmware_name[256];
+ module_param_string(firmware_name, firmware_name, sizeof(firmware_name), 0);
+ MODULE_PARM_DESC(firmware_name, "Firmware file name. Allows overriding the default firmware name.");
+ 
+-/*set to 16x16 since this is the amount of lines and pixels the sensor
+-exports extra. If these are kept at the 10x8 that they were on, in yuv
+-downscaling modes incorrect resolutions where requested to the sensor
+-driver with strange outcomes as a result. The proper way tot do this
+-would be to have a list of tables the specify the sensor res, mipi rec,
+-output res, and isp output res. however since we do not have this yet,
+-the chosen solution is the next best thing. */
++/*
++ * Set to 16x16 since this is the amount of lines and pixels the sensor
++ * exports extra. If these are kept at the 10x8 that they were on, in yuv
++ * downscaling modes incorrect resolutions where requested to the sensor
++ * driver with strange outcomes as a result. The proper way tot do this
++ * would be to have a list of tables the specify the sensor res, mipi rec,
++ * output res, and isp output res. however since we do not have this yet,
++ * the chosen solution is the next best thing.
++ */
+ int pad_w = 16;
+ module_param(pad_w, int, 0644);
+ MODULE_PARM_DESC(pad_w, "extra data for ISP processing");
+@@ -507,12 +509,12 @@ static int atomisp_mrfld_pre_power_down(struct atomisp_device *isp)
+ 	}
+ done:
+ 	/*
+-	* MRFLD WORKAROUND:
+-	* before powering off IUNIT, clear the pending interrupts
+-	* and disable the interrupt. driver should avoid writing 0
+-	* to IIR. It could block subsequent interrupt messages.
+-	* HW sighting:4568410.
+-	*/
++	 * MRFLD WORKAROUND:
++	 * before powering off IUNIT, clear the pending interrupts
++	 * and disable the interrupt. driver should avoid writing 0
++	 * to IIR. It could block subsequent interrupt messages.
++	 * HW sighting:4568410.
++	 */
+ 	pci_read_config_dword(pdev, PCI_INTERRUPT_CTRL, &irq);
+ 	irq &= ~BIT(INTR_IER);
+ 	pci_write_config_dword(pdev, PCI_INTERRUPT_CTRL, irq);
+@@ -525,9 +527,9 @@ static int atomisp_mrfld_pre_power_down(struct atomisp_device *isp)
+ }
+ 
+ /*
+-* WA for DDR DVFS enable/disable
+-* By default, ISP will force DDR DVFS 1600MHz before disable DVFS
+-*/
++ * WA for DDR DVFS enable/disable
++ * By default, ISP will force DDR DVFS 1600MHz before disable DVFS
++ */
+ static void punit_ddr_dvfs_enable(bool enable)
+ {
+ 	int reg;
+-- 
+2.40.1
+
