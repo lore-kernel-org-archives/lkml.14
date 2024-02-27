@@ -1,130 +1,115 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CE121386AE;
-	Tue, 27 Feb 2024 11:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1888C130ADF;
+	Tue, 27 Feb 2024 11:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709031715; cv=none; b=pohvIqVlkRT0KO1mwPqN3XIXReULA7XDNILyx1qurFc8bVdTpHTYyo2TowLnvIIzi0sRZ3Xg+/XQUXNiquWWbqxW1cvb3CGQ7fkAHvE/WRVyNEu/koImdxxBAlKANWanA+R5fS+8/+uvd6z0iBzp1Xabx55ECGI3VJ5VgQ+fCwY=
+	t=1709031847; cv=none; b=hepN/E1cwRJ0CJUHFGU2Gzud1Lk5Zjkiv7U8iIESI09XQKJnzK9rNvpDElpwxumW07735SjiNhfZk7cN2cMV3q0W+Yf3gdHSPQJ2DpvApoZU7zVXaEBDCOtYify4+4j7LlovJThM8ig36q6i/9hkHciPS+fw9kdKf+PxqnXSCGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709031715; c=relaxed/simple;
-	bh=MzzTNS9G71t2d0M0T7B+kJ7LHbvG1oqr4ucnMfdFsnU=;
-	h=From:To:Subject:Date:Message-Id; b=AIwpMJF0Ls/IU+pKmb6rUNug4oj9B3lpTdmktKU0niJsUxdhL3rKXair/Mi5+wMfUXeTSkXOMPFk8aBRo7zIevOgqt5387raBPjs1ugWzRm61pB9JxXm0uZxjci8CA/aHA2XCj3qJ+cdjmzmQoSBUY/tUMpjMRD1TwOlLQhaodw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=207.46.229.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from localhost.localdomain (unknown [39.174.92.167])
-	by mail-app3 (Coremail) with SMTP id cC_KCgD32TMDwd1lowWhAQ--.41758S4;
-	Tue, 27 Feb 2024 19:01:25 +0800 (CST)
-From: Lin Ma <linma@zju.edu.cn>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	idosch@nvidia.com,
-	razor@blackwall.org,
-	jiri@resnulli.us,
-	lucien.xin@gmail.com,
-	linma@zju.edu.cn,
-	edwin.peer@broadcom.com,
-	amcohen@nvidia.com,
-	pctammela@mojatatu.com,
-	liuhangbin@gmail.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net v1] rtnetlink: fix error logic of IFLA_BRIDGE_FLAGS writing back
-Date: Tue, 27 Feb 2024 19:01:13 +0800
-Message-Id: <20240227110113.573334-1-linma@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:cC_KCgD32TMDwd1lowWhAQ--.41758S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFW8WFWDXr1fWFy3ZFWrKrg_yoW5JFy3pF
-	WfKa47XF4DArn7ZrsrtF4DZa4avrs7GFW8ur4Ykw10yr1jqF1ruFWkKFyfuFyakFZ7AFy7
-	XF12kFW5W3ZxCFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUOv38UUUUU
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
+	s=arc-20240116; t=1709031847; c=relaxed/simple;
+	bh=S994xZS5hVn5DF9xj4V4VbvofR11fVlbVQtqyP9zaRE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uXdb2c+8AeW3fbJfhbJoi0qj/yhvgLuyUjruR3/arr6Xs8f62X8CGYRupDOG0irQoYSnc+gNulliLMBOC+g7//TLXvWDzk/wGQ1yxl9TeXjB4PWG2/hteIy/HHH0/SgWRQyLPzfiB+hdDIukVkCnfWJSFiSKi27SrFWSWiAcOf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bSyrW8bb; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSyrW8bb"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a3e7f7b3d95so466284366b.3;
+        Tue, 27 Feb 2024 03:04:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709031843; x=1709636643; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qB49JUidhnyE0DLnYhbcXl+mJdF4zQ+oZKR7iKk8odU=;
+        b=bSyrW8bbaKUY5Nzagj3x4z02pruLNlJ3s7jV805GNIhbuD97zlLo0b4ErBfpX2+Dcs
+         xRkpvcgWWFGskPaom5ZtslyV9BiGp/MnpnfccLpItALvfXKncgEMc1Zd+I9U0UwNqomF
+         QbWSWDU+YolZzyqijaW2XhlKh+38cBsstjwow12MHKD41LASWmL6z8X1/f1q6ZihMhQp
+         t0h1ZXX6N3orEiuGxqYZxeasovbeRAgFIbkwqIN20BtEL93ycJAMjRTB2hIrli92ZdtR
+         beRRRApKP1Wvv5XbPQg1mekCBQVZSHrPr9oL/ivQoioKUiKzi+b2cdDc50PpLxxhR+UI
+         E5zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709031843; x=1709636643;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qB49JUidhnyE0DLnYhbcXl+mJdF4zQ+oZKR7iKk8odU=;
+        b=t6LXRQAM06k4BEMkrRZRXM2cRSVmaF2Vt1mcMilU1fkC5AnfQ6fKvECKxCAesPJpLj
+         w/hCx2leKb805dS7ITQ2rDB5jKhnQsWBB+lswF4l3N2HGCwXwDcK29hXbc/nIgOiK31r
+         h1KfyePUhi3NQ9mmZunF5U0ld1Hy7Tua1o4+1pv50LSstMioAj5u5ZTnHk4rSskukibm
+         lXP1r9WvttujwRafzSvNlIhKGB0Q0MIX9ZJGjxj4OpiHsLcdPd7Qolywh2D05NAndUed
+         jFj6qYzeoGGUXUVDe12yvCReoH29imsHLJDTtcCYSYJlMCOIkaMKa6INcr3vIRluOQPm
+         w92Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUEFWSLW88i0sUqtf5Ez57gNLdXI2vsYldRzSOoMz/H2LgE82/zKT0u9xxom71ry6C/8q7MFFr096NP4/60/mdL3J01NNYDfKJCDU5IUTKPjWDflggsGhNsBMEyizkxVXf9tBLr2yFQHdHJBRhBwL/yYcNZfQEc5BzbGG9451IoD7TNyksWvyC//6w//FQZMwRBrolPUj40Vk2H68ca+7IncfW1
+X-Gm-Message-State: AOJu0Yx0qoIu26vdh41tUNd3v01FyufOzNcovTuq7+CePmSzcF3km2S5
+	+9FPA8X6kXaDfQyFT8ziWr7leIPW3LFh6Ol1Ze/C8v6z6vNZxy/bn3EK1A295+QrQdbyGSQmMO5
+	HqW6SQjv6g+M5y6kGKd2xwf2cbR23p8t+PUM=
+X-Google-Smtp-Source: AGHT+IE3mVEu8Iomgte4NRXBGNXbJaWUrcAateWi4bx3mG6CvQy7ZQHn2UaYBVCVJjiMbOFetlQdzCyMIV9Gr/e8tMM=
+X-Received: by 2002:a17:906:a049:b0:a43:3670:a2b7 with SMTP id
+ bg9-20020a170906a04900b00a433670a2b7mr4449686ejb.44.1709031843264; Tue, 27
+ Feb 2024 03:04:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240226104653.54877-1-lukas.bulwahn@gmail.com>
+ <43df625f-bd32-4dd9-a960-6d0f5c0304c7@infradead.org> <CAMuHMdUD94XuE_7UK3TEWbeZ2eMOPimDi-xoo9+43FhY3O2aDA@mail.gmail.com>
+In-Reply-To: <CAMuHMdUD94XuE_7UK3TEWbeZ2eMOPimDi-xoo9+43FhY3O2aDA@mail.gmail.com>
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date: Tue, 27 Feb 2024 12:03:51 +0100
+Message-ID: <CAKXUXMz66AzotSqzVHvXivdwhh0d34_GWqLu-hBgEq46AOOFSg@mail.gmail.com>
+Subject: Re: [PATCH] docs: submit-checklist: structure by category
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the commit d73ef2d69c0d ("rtnetlink: let rtnl_bridge_setlink checks
-IFLA_BRIDGE_MODE length"), an adjustment was made to the old loop logic
-in the function `rtnl_bridge_setlink` to enable the loop to also check
-the length of the IFLA_BRIDGE_MODE attribute. However, this adjustment
-removed the `break` statement and led to an error logic of the flags
-writing back at the end of this function.
+On Tue, Feb 27, 2024 at 9:57=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Randy,
+>
+> On Tue, Feb 27, 2024 at 1:41=E2=80=AFAM Randy Dunlap <rdunlap@infradead.o=
+rg> wrote:
+> > >   - Concerning checking with tools, checkpatch probably still makes s=
+ense;
+> > >     it pointed out in several places. If sparse and checkstack are re=
+ally
+> > >     the next two tools to point out, I am not so sure about.
+> >
+> > I doubt that ckeckstack is important since gcc & clang warn us about
+> > stack usage.
+>
+> True, but that would leave you without a tool to get figures when
+> there is no excess stack usage detected by the compiler.
+>
 
-if (have_flags)
-    memcpy(nla_data(attr), &flags, sizeof(flags));
-    // attr should point to IFLA_BRIDGE_FLAGS NLA !!!
+Geert,
 
-Before the mentioned commit, the `attr` is granted to be IFLA_BRIDGE_FLAGS.
-However, this is not necessarily true fow now as the updated loop will let
-the attr point to the last NLA, even an invalid NLA which could cause
-overflow writes.
+possibly, we can configure the compiler to report/warn on any stack
+usage from every invocation and then turn all those warnings into a
+readable format or some format that further visualization and analysis
+tools can process.
 
-This patch introduces a new variable `br_flag` to save the NLA pointer
-that points to IFLA_BRIDGE_FLAGS and uses it to resolve the mentioned
-error logic.
+If that works, we can remove the checkstack tool. It is not a
+massively large script, but it is certainly written with a very
+special purpose. I mean it basically does object-code
+reverse-engineering with a magic set of regular expressions in Perl.
+If our current compilers can emit the same information, we are
+probably better off just using the output from a compiler and
+postprocessing that.
 
-Fixes: d73ef2d69c0d ("rtnetlink: let rtnl_bridge_setlink checks IFLA_BRIDGE_MODE length")
-Signed-off-by: Lin Ma <linma@zju.edu.cn>
----
- net/core/rtnetlink.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+Anyways, I think it is worth investigating all that and then see if
+the checkstack.pl tool still has a unique functionality, or if there
+are other better ways to get this kind of information---well, it is
+marked as todo, so anyone is free to pick it up.
 
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index 9c4f427f3a50..e9f16e5e3515 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -5169,10 +5169,9 @@ static int rtnl_bridge_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	struct net *net = sock_net(skb->sk);
- 	struct ifinfomsg *ifm;
- 	struct net_device *dev;
--	struct nlattr *br_spec, *attr = NULL;
-+	struct nlattr *br_spec, *attr, *br_flag = NULL;
- 	int rem, err = -EOPNOTSUPP;
- 	u16 flags = 0;
--	bool have_flags = false;
- 
- 	if (nlmsg_len(nlh) < sizeof(*ifm))
- 		return -EINVAL;
-@@ -5190,11 +5189,11 @@ static int rtnl_bridge_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	br_spec = nlmsg_find_attr(nlh, sizeof(struct ifinfomsg), IFLA_AF_SPEC);
- 	if (br_spec) {
- 		nla_for_each_nested(attr, br_spec, rem) {
--			if (nla_type(attr) == IFLA_BRIDGE_FLAGS && !have_flags) {
-+			if (nla_type(attr) == IFLA_BRIDGE_FLAGS && !br_flag) {
- 				if (nla_len(attr) < sizeof(flags))
- 					return -EINVAL;
- 
--				have_flags = true;
-+				br_flag = attr;
- 				flags = nla_get_u16(attr);
- 			}
- 
-@@ -5238,8 +5237,8 @@ static int rtnl_bridge_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		}
- 	}
- 
--	if (have_flags)
--		memcpy(nla_data(attr), &flags, sizeof(flags));
-+	if (br_flag)
-+		memcpy(nla_data(br_flag), &flags, sizeof(flags));
- out:
- 	return err;
- }
--- 
-2.17.1
+Lukas
 
+Lukas
