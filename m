@@ -1,388 +1,140 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33E613A88A;
-	Tue, 27 Feb 2024 12:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9453A13A86C
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 12:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709036712; cv=none; b=bsiVao9InYCYXzTsx62jIXvfWq0rjUA9qMh6MtdlD1ONMOr23czZnFVxj3ebFU27qU4aQMgNjF+/SueExcnnl4ncqXcCrPRLtepBBk/Mry4qJDsNup4Lafqw+u6IB9FMHPVQTSrt1NX7KKnSmqHnXYUJ/K8R20xaZhRhb2sW99M=
+	t=1709036716; cv=none; b=ZgfzP8NaizU58PSMUf8tUGSU9ToAP6Yx4wLowMSxaTPu9qTRO8iVyVdm0gGi4TE9F5d7PA5x6rHGxoqtS0rPUJQ4wauYPPOQBcr14VNnnEa3LoybD92vNuwa34/HolzWPTCxZgnkTvn27AgyRdbOxjoCOONlUCuxxuIr9We+oEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709036712; c=relaxed/simple;
-	bh=UCJOwiTaHGY52rKrDmLCg6FyZYK7q6i3NOUWuRHZFmM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jvj4MEEjotUJuC0OS+EDHn2FwbMgcjlU4yL79n/vsl6yh2Hb9tna9cj5d0h3QfbI3sYkoUoD65RsQbUqDySuXxq5V18Zkq4++JpTfbgh3XhiE139U5utZRr/7KmC3g2R90IF3mUQ8rT4sE2tUG0OOyvfhrHPI/Xb96gqA2XpYQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QRXmKMDI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709036716; c=relaxed/simple;
+	bh=dQplQx4E0wVG3NVHNT8C6T1/LS/PKWtnC857Cl8NoKM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gdcLJLNOnLV9vBgnQ4eQDwFpm4izQJewjZoGO4DH18MU2d/xa0+jIRscwhnMiSB19csiWAVuF/2V4tp+fP+lZdArsV7+7ErtDwbgrknC8mKtmBLtb332kcvQLVJ0vHkmYNDpDmI+zt5pKM9FVMsECym3hiQ/w2ORiR+G+acZKlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=qPz2l0Fo; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QRXmKMDI"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41RBqLtN020990;
-	Tue, 27 Feb 2024 12:25:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=f6a3eetHvkHmoww30BMe6VjN3bbcNN4/E5AreBlPPBA=; b=QR
-	XmKMDIhwFd3Ki6ABowMq/3gYyrsJ9SRyNtsWRqZvCwxOqjZ70nEqD/5p/W/+XcSu
-	80JgGoRxK7dryhrL7bLeuzhGeGO7cEE24k+awishf7Sz7kZhTFc+WMBT1GiH3P9C
-	DoVaZjQXswMFBfuNdye1uT3Se2d+AxEBgasx8xCUjz5BFmCP5myIsz31bx1PNWbm
-	zihOhi2M9/75N6czNxCwIjuQ9gnbT6c0BMKaycgeVwISje1y5+tFcgrKRj6cYl7n
-	3xwvJldhVfOvZuCuwpI1pZ2VbqlcfHoSeueDCmAcjSzLBf6uNOQ646/q6Y6JHO8i
-	vw5u6yX2QHwKmAl7cUrg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3whedvr5g8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Feb 2024 12:25:04 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41RCP4JY013665
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Feb 2024 12:25:04 GMT
-Received: from grosikop.eu.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 27 Feb 2024 04:25:00 -0800
-From: Gjorgji Rosikopulos <quic_grosikop@quicinc.com>
-To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <laurent.pinchart@ideasonboard.com>,
-        <hverkuil-cisco@xs4all.nl>, <quic_hariramp@quicinc.com>
-Subject: [PATCH 7/9] media: qcom: camss: Split testgen, RDI and RX for CSID 170
-Date: Tue, 27 Feb 2024 14:24:13 +0200
-Message-ID: <20240227122415.491-8-quic_grosikop@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240227122415.491-1-quic_grosikop@quicinc.com>
-References: <20240227122415.491-1-quic_grosikop@quicinc.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qPz2l0Fo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709036714; x=1740572714;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dQplQx4E0wVG3NVHNT8C6T1/LS/PKWtnC857Cl8NoKM=;
+  b=qPz2l0FoaA8MM5gsFxk4kp6O9Ma5DL1aQfdg+MSM1uhm9TykfAR4JsTN
+   mqqEgxuBpf/M72QntxRCWZLFkZkx5n6+5N+XWok2lA+hZCZ5+1RgXsfO7
+   6NBwRrsR6ZFwp0rjVggDWT9aJUOrTMA58ENf4Fq0XcCQNkICdyWVT+23K
+   H9BiSWGS0tSzfCC17Jqmw3zZnvZUlvWRlYxwhE+ao12Tr+w6WqoI/OH1n
+   6eByxvkjCMrTiQQMDQlPWaj33Pdqu63cm6uC+HWVNr7RfO7bAaHEoAnb2
+   51LLOEiSiGfMAtzIRriOfftpDpCpKo0HlND29rdFi1TamFTt0TtrNsZnx
+   Q==;
+X-CSE-ConnectionGUID: yNBil63MQySjl9Tr6UCyNQ==
+X-CSE-MsgGUID: K1P+HCaqRuC24Pz8R5JQ1g==
+X-IronPort-AV: E=Sophos;i="6.06,187,1705388400"; 
+   d="asc'?scan'208";a="17415151"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2024 05:25:13 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 27 Feb 2024 05:24:53 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Tue, 27 Feb 2024 05:24:52 -0700
+Date: Tue, 27 Feb 2024 12:24:09 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+CC: Palmer Dabbelt <palmer@dabbelt.com>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] riscv: Allow NOMMU kernels to run in S-mode
+Message-ID: <20240227-seventh-overgrown-2fa453e8a775@wendy>
+References: <20240227003630.3634533-1-samuel.holland@sifive.com>
+ <20240227003630.3634533-5-samuel.holland@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7eMD5iN70PVw22f7g3L5OWCc30ZnrahS
-X-Proofpoint-ORIG-GUID: 7eMD5iN70PVw22f7g3L5OWCc30ZnrahS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_11,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=999 clxscore=1015 bulkscore=0 mlxscore=0 lowpriorityscore=0
- spamscore=0 priorityscore=1501 adultscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2402270097
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aaEsmCaWxcFXJwfC"
+Content-Disposition: inline
+In-Reply-To: <20240227003630.3634533-5-samuel.holland@sifive.com>
 
-From: Milen Mitkov <quic_mmitkov@quicinc.com>
+--aaEsmCaWxcFXJwfC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Split the RAW interface (RDI), the CSID receiver (RX)
-and test pattern generator (testgen), configurations
-for CSID on Titan 170
+On Mon, Feb 26, 2024 at 04:34:49PM -0800, Samuel Holland wrote:
+> For ease of testing, it is convenient to run NOMMU kernels in supervisor
+> mode. The only required change is to offset the kernel load address,
+> since the beginning of RAM is usually reserved for M-mode firmware.
+>=20
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> ---
+>=20
+>  arch/riscv/Kconfig | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index ef53c00470d6..0dc09b2ac2f6 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -64,7 +64,7 @@ config RISCV
+>  	select ARCH_WANTS_THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
+>  	select BINFMT_FLAT_NO_DATA_START_OFFSET if !MMU
+>  	select BUILDTIME_TABLE_SORT if MMU
+> -	select CLINT_TIMER if !MMU
+> +	select CLINT_TIMER if RISCV_M_MODE
+>  	select CLONE_BACKWARDS
+>  	select COMMON_CLK
+>  	select CPU_PM if CPU_IDLE || HIBERNATION || SUSPEND
+> @@ -220,8 +220,12 @@ config ARCH_MMAP_RND_COMPAT_BITS_MAX
+> =20
+>  # set if we run in machine mode, cleared if we run in supervisor mode
+>  config RISCV_M_MODE
+> -	bool
+> -	default !MMU
+> +	bool "Build a kernel that runs in machine mode"
+> +	depends on !MMU
+> +	default y
+> +	help
+> +	  Select this option if you want to run the kernel in M-mode,
+> +	  without the assistance of any other firmware.
+> =20
+>  # set if we are running in S-mode and can use SBI calls
+>  config RISCV_SBI
+> @@ -238,8 +242,9 @@ config MMU
+> =20
+>  config PAGE_OFFSET
+>  	hex
+> -	default 0xC0000000 if 32BIT && MMU
+> -	default 0x80000000 if !MMU
+> +	default 0x80000000 if !MMU && RISCV_M_MODE
+> +	default 0x80200000 if !MMU
+> +	default 0xc0000000 if 32BIT
+>  	default 0xff60000000000000 if 64BIT
 
-Signed-off-by: Milen Mitkov <quic_mmitkov@quicinc.com>
-Signed-off-by: Radoslav Tsvetkov <quic_rtsvetko@quicinc.com>
----
- .../platform/qcom/camss/camss-csid-gen2.c     | 252 ++++++++++--------
- 1 file changed, 139 insertions(+), 113 deletions(-)
+The first default seen with a passing condition is the default chosen,
+right?
 
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-gen2.c b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-index eb5dabe2639a..2d8398a91fc2 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-@@ -176,150 +176,176 @@
- #define		TPG_COLOR_BOX_CFG_MODE		0
- #define		TPG_COLOR_BOX_PATTERN_SEL	2
- 
--static void __csid_configure_stream(struct csid_device *csid, u8 enable, u8 vc)
-+static void __csid_configure_rx(struct csid_device *csid,
-+				struct csid_phy_config *phy, int vc)
- {
--	struct csid_testgen_config *tg = &csid->testgen;
--	u32 val;
--	u32 phy_sel = 0;
- 	u8 lane_cnt = csid->phy.lane_cnt;
--	/* Source pads matching RDI channels on hardware. Pad 1 -> RDI0, Pad 2 -> RDI1, etc. */
--	struct v4l2_mbus_framefmt *input_format = &csid->fmt[MSM_CSID_PAD_FIRST_SRC + vc];
--	const struct csid_format_info *format = csid_get_fmt_entry(csid->res->formats->formats,
--								   csid->res->formats->nformats,
--								   input_format->code);
-+	int val;
- 
- 	if (!lane_cnt)
- 		lane_cnt = 4;
- 
--	if (!tg->enabled)
--		phy_sel = csid->phy.csiphy_id;
-+	val = (lane_cnt - 1) << CSI2_RX_CFG0_NUM_ACTIVE_LANES;
-+	val |= phy->lane_assign << CSI2_RX_CFG0_DL0_INPUT_SEL;
-+	val |= phy->csiphy_id << CSI2_RX_CFG0_PHY_NUM_SEL;
-+	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG0);
- 
--	if (enable) {
--		/*
--		 * DT_ID is a two bit bitfield that is concatenated with
--		 * the four least significant bits of the five bit VC
--		 * bitfield to generate an internal CID value.
--		 *
--		 * CSID_RDI_CFG0(vc)
--		 * DT_ID : 28:27
--		 * VC    : 26:22
--		 * DT    : 21:16
--		 *
--		 * CID   : VC 3:0 << 2 | DT_ID 1:0
--		 */
--		u8 dt_id = vc & 0x03;
--
--		if (tg->enabled) {
--			/* configure one DT, infinite frames */
--			val = vc << TPG_VC_CFG0_VC_NUM;
--			val |= INTELEAVING_MODE_ONE_SHOT << TPG_VC_CFG0_LINE_INTERLEAVING_MODE;
--			val |= 0 << TPG_VC_CFG0_NUM_FRAMES;
--			writel_relaxed(val, csid->base + CSID_TPG_VC_CFG0);
--
--			val = 0x740 << TPG_VC_CFG1_H_BLANKING_COUNT;
--			val |= 0x3ff << TPG_VC_CFG1_V_BLANKING_COUNT;
--			writel_relaxed(val, csid->base + CSID_TPG_VC_CFG1);
--
--			writel_relaxed(0x12345678, csid->base + CSID_TPG_LFSR_SEED);
--
--			val = (input_format->height & 0x1fff) << TPG_DT_n_CFG_0_FRAME_HEIGHT;
--			val |= (input_format->width & 0x1fff) << TPG_DT_n_CFG_0_FRAME_WIDTH;
--			writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_0(0));
--
--			val = format->data_type << TPG_DT_n_CFG_1_DATA_TYPE;
--			writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_1(0));
--
--			val = (tg->mode - 1) << TPG_DT_n_CFG_2_PAYLOAD_MODE;
--			val |= 0xBE << TPG_DT_n_CFG_2_USER_SPECIFIED_PAYLOAD;
--			val |= format->decode_format << TPG_DT_n_CFG_2_ENCODE_FORMAT;
--			writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_2(0));
--
--			writel_relaxed(0, csid->base + CSID_TPG_COLOR_BARS_CFG);
--
--			writel_relaxed(0, csid->base + CSID_TPG_COLOR_BOX_CFG);
--		}
-+	val = 1 << CSI2_RX_CFG1_PACKET_ECC_CORRECTION_EN;
-+	if (vc > 3)
-+		val |= 1 << CSI2_RX_CFG1_VC_MODE;
-+	val |= 1 << CSI2_RX_CFG1_MISR_EN;
-+	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG1);
-+}
- 
--		val = 1 << RDI_CFG0_BYTE_CNTR_EN;
--		val |= 1 << RDI_CFG0_FORMAT_MEASURE_EN;
--		val |= 1 << RDI_CFG0_TIMESTAMP_EN;
--		/* note: for non-RDI path, this should be format->decode_format */
--		val |= DECODE_FORMAT_PAYLOAD_ONLY << RDI_CFG0_DECODE_FORMAT;
--		val |= format->data_type << RDI_CFG0_DATA_TYPE;
--		val |= vc << RDI_CFG0_VIRTUAL_CHANNEL;
--		val |= dt_id << RDI_CFG0_DT_ID;
--		writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
-+static void __csid_ctrl_rdi(struct csid_device *csid, int enable, u8 rdi)
-+{
-+	int val;
- 
--		/* CSID_TIMESTAMP_STB_POST_IRQ */
--		val = 2 << RDI_CFG1_TIMESTAMP_STB_SEL;
--		writel_relaxed(val, csid->base + CSID_RDI_CFG1(vc));
-+	if (enable)
-+		val = HALT_CMD_RESUME_AT_FRAME_BOUNDARY << RDI_CTRL_HALT_CMD;
-+	else
-+		val = HALT_CMD_HALT_AT_FRAME_BOUNDARY << RDI_CTRL_HALT_CMD;
-+	writel_relaxed(val, csid->base + CSID_RDI_CTRL(rdi));
-+}
- 
--		val = 1;
--		writel_relaxed(val, csid->base + CSID_RDI_FRM_DROP_PERIOD(vc));
-+static void __csid_configure_testgen(struct csid_device *csid, u8 enable, u8 vc)
-+{
-+	struct csid_testgen_config *tg = &csid->testgen;
-+	struct v4l2_mbus_framefmt *input_format = &csid->fmt[MSM_CSID_PAD_FIRST_SRC + vc];
-+	const struct csid_format_info *format = csid_get_fmt_entry(csid->res->formats->formats,
-+								   csid->res->formats->nformats,
-+								   input_format->code);
-+	u8 lane_cnt = csid->phy.lane_cnt;
-+	u32 val;
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_FRM_DROP_PATTERN(vc));
-+	if (!lane_cnt)
-+		lane_cnt = 4;
- 
--		val = 1;
--		writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PERIOD(vc));
-+	/* configure one DT, infinite frames */
-+	val = vc << TPG_VC_CFG0_VC_NUM;
-+	val |= INTELEAVING_MODE_ONE_SHOT << TPG_VC_CFG0_LINE_INTERLEAVING_MODE;
-+	val |= 0 << TPG_VC_CFG0_NUM_FRAMES;
-+	writel_relaxed(val, csid->base + CSID_TPG_VC_CFG0);
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PATTERN(vc));
-+	val = 0x740 << TPG_VC_CFG1_H_BLANKING_COUNT;
-+	val |= 0x3ff << TPG_VC_CFG1_V_BLANKING_COUNT;
-+	writel_relaxed(val, csid->base + CSID_TPG_VC_CFG1);
- 
--		val = 1;
--		writel_relaxed(val, csid->base + CSID_RDI_RPP_PIX_DROP_PERIOD(vc));
-+	writel_relaxed(0x12345678, csid->base + CSID_TPG_LFSR_SEED);
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_RPP_PIX_DROP_PATTERN(vc));
-+	val = (input_format->height & 0x1fff) << TPG_DT_n_CFG_0_FRAME_HEIGHT;
-+	val |= (input_format->width & 0x1fff) << TPG_DT_n_CFG_0_FRAME_WIDTH;
-+	writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_0(0));
- 
--		val = 1;
--		writel_relaxed(val, csid->base + CSID_RDI_RPP_LINE_DROP_PERIOD(vc));
-+	val = format->data_type << TPG_DT_n_CFG_1_DATA_TYPE;
-+	writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_1(0));
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_RPP_LINE_DROP_PATTERN(vc));
-+	val = (tg->mode - 1) << TPG_DT_n_CFG_2_PAYLOAD_MODE;
-+	val |= 0xBE << TPG_DT_n_CFG_2_USER_SPECIFIED_PAYLOAD;
-+	val |= format->decode_format << TPG_DT_n_CFG_2_ENCODE_FORMAT;
-+	writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_2(0));
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_CTRL(vc));
-+	writel_relaxed(0, csid->base + CSID_TPG_COLOR_BARS_CFG);
- 
--		val = readl_relaxed(csid->base + CSID_RDI_CFG0(vc));
--		val |=  1 << RDI_CFG0_ENABLE;
--		writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
--	}
-+	writel_relaxed(0, csid->base + CSID_TPG_COLOR_BOX_CFG);
- 
--	if (tg->enabled) {
--		val = enable << TPG_CTRL_TEST_EN;
--		val |= 1 << TPG_CTRL_FS_PKT_EN;
--		val |= 1 << TPG_CTRL_FE_PKT_EN;
--		val |= (lane_cnt - 1) << TPG_CTRL_NUM_ACTIVE_LANES;
--		val |= 0x64 << TPG_CTRL_CYCLES_BETWEEN_PKTS;
--		val |= 0xA << TPG_CTRL_NUM_TRAIL_BYTES;
--		writel_relaxed(val, csid->base + CSID_TPG_CTRL);
--	}
-+	val = enable << TPG_CTRL_TEST_EN;
-+	val |= 1 << TPG_CTRL_FS_PKT_EN;
-+	val |= 1 << TPG_CTRL_FE_PKT_EN;
-+	val |= (lane_cnt - 1) << TPG_CTRL_NUM_ACTIVE_LANES;
-+	val |= 0x64 << TPG_CTRL_CYCLES_BETWEEN_PKTS;
-+	val |= 0xA << TPG_CTRL_NUM_TRAIL_BYTES;
-+	writel_relaxed(val, csid->base + CSID_TPG_CTRL);
-+}
- 
--	val = (lane_cnt - 1) << CSI2_RX_CFG0_NUM_ACTIVE_LANES;
--	val |= csid->phy.lane_assign << CSI2_RX_CFG0_DL0_INPUT_SEL;
--	val |= phy_sel << CSI2_RX_CFG0_PHY_NUM_SEL;
--	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG0);
-+static void __csid_configure_rdi_stream(struct csid_device *csid, u8 enable, u8 vc)
-+{
-+	struct csid_testgen_config *tg = &csid->testgen;
-+	u32 val;
-+	u32 phy_sel = 0;
-+	/* Source pads matching RDI channels on hardware. Pad 1 -> RDI0, Pad 2 -> RDI1, etc. */
-+	struct v4l2_mbus_framefmt *input_format = &csid->fmt[MSM_CSID_PAD_FIRST_SRC + vc];
-+	const struct csid_format_info *format = csid_get_fmt_entry(csid->res->formats->formats,
-+								   csid->res->formats->nformats,
-+								   input_format->code);
- 
--	val = 1 << CSI2_RX_CFG1_PACKET_ECC_CORRECTION_EN;
--	if (vc > 3)
--		val |= 1 << CSI2_RX_CFG1_VC_MODE;
--	val |= 1 << CSI2_RX_CFG1_MISR_EN;
--	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG1);
-+	if (!tg->enabled)
-+		phy_sel = csid->phy.csiphy_id;
- 
--	if (enable)
--		val = HALT_CMD_RESUME_AT_FRAME_BOUNDARY << RDI_CTRL_HALT_CMD;
--	else
--		val = HALT_CMD_HALT_AT_FRAME_BOUNDARY << RDI_CTRL_HALT_CMD;
-+	/*
-+	 * DT_ID is a two bit bitfield that is concatenated with
-+	 * the four least significant bits of the five bit VC
-+	 * bitfield to generate an internal CID value.
-+	 *
-+	 * CSID_RDI_CFG0(vc)
-+	 * DT_ID : 28:27
-+	 * VC    : 26:22
-+	 * DT    : 21:16
-+	 *
-+	 * CID   : VC 3:0 << 2 | DT_ID 1:0
-+	 */
-+	u8 dt_id = vc & 0x03;
-+
-+	val = 1 << RDI_CFG0_BYTE_CNTR_EN;
-+	val |= 1 << RDI_CFG0_FORMAT_MEASURE_EN;
-+	val |= 1 << RDI_CFG0_TIMESTAMP_EN;
-+	/* note: for non-RDI path, this should be format->decode_format */
-+	val |= DECODE_FORMAT_PAYLOAD_ONLY << RDI_CFG0_DECODE_FORMAT;
-+	val |= format->data_type << RDI_CFG0_DATA_TYPE;
-+	val |= vc << RDI_CFG0_VIRTUAL_CHANNEL;
-+	val |= dt_id << RDI_CFG0_DT_ID;
-+	writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
-+
-+	/* CSID_TIMESTAMP_STB_POST_IRQ */
-+	val = 2 << RDI_CFG1_TIMESTAMP_STB_SEL;
-+	writel_relaxed(val, csid->base + CSID_RDI_CFG1(vc));
-+
-+	val = 1;
-+	writel_relaxed(val, csid->base + CSID_RDI_FRM_DROP_PERIOD(vc));
-+
-+	val = 0;
-+	writel_relaxed(val, csid->base + CSID_RDI_FRM_DROP_PATTERN(vc));
-+
-+	val = 1;
-+	writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PERIOD(vc));
-+
-+	val = 0;
-+	writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PATTERN(vc));
-+
-+	val = 1;
-+	writel_relaxed(val, csid->base + CSID_RDI_RPP_PIX_DROP_PERIOD(vc));
-+
-+	val = 0;
-+	writel_relaxed(val, csid->base + CSID_RDI_RPP_PIX_DROP_PATTERN(vc));
-+
-+	val = 1;
-+	writel_relaxed(val, csid->base + CSID_RDI_RPP_LINE_DROP_PERIOD(vc));
-+
-+	val = 0;
-+	writel_relaxed(val, csid->base + CSID_RDI_RPP_LINE_DROP_PATTERN(vc));
-+
-+	val = 0;
- 	writel_relaxed(val, csid->base + CSID_RDI_CTRL(vc));
-+
-+	val = readl_relaxed(csid->base + CSID_RDI_CFG0(vc));
-+	val |=  enable << RDI_CFG0_ENABLE;
-+	writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
- }
- 
- static void csid_configure_stream(struct csid_device *csid, u8 enable)
- {
-+	struct csid_testgen_config *tg = &csid->testgen;
- 	u8 i;
- 	/* Loop through all enabled VCs and configure stream for each */
- 	for (i = 0; i < MSM_CSID_MAX_SRC_STREAMS; i++)
--		if (csid->phy.en_vc & BIT(i))
--			__csid_configure_stream(csid, enable, i);
-+		if (csid->phy.en_vc & BIT(i)) {
-+			if (tg->enabled)
-+				__csid_configure_testgen(csid, enable, i);
-+
-+			__csid_configure_rdi_stream(csid, enable, i);
-+			__csid_configure_rx(csid, &csid->phy, i);
-+			__csid_ctrl_rdi(csid, enable, i);
-+		}
- }
- 
- static int csid_configure_testgen_pattern(struct csid_device *csid, s32 val)
--- 
-2.17.1
+Cheers,
+Conor.
 
+--aaEsmCaWxcFXJwfC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd3UaQAKCRB4tDGHoIJi
+0rWUAQCYj2VzMZqjloyCYlH/8rJ600bZ72PC8LQeVI1wa+TlaQD/U6N2RrPtWIEt
+9yhw7RZZXjwnLgcj/dY9G1ZI0rWF2QY=
+=ZJON
+-----END PGP SIGNATURE-----
+
+--aaEsmCaWxcFXJwfC--
