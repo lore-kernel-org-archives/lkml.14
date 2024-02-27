@@ -1,155 +1,219 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5741F77F28
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B1E7B3D3
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709022702; cv=none; b=qifDbLeajEOmsqqda9MvrDPzduXv1POH7ankBBuVAQszHFe9hbWmeHpQxx6aINZjiP9Pd/ggCA/WnLfAIGlEKRyXXtJ3m3/AIzwnR5BlsycREF17VKGECoBmr48cGkSNdU/Msw2ivOjC3+zs1qB8XZwId8GmiRW3c4B5t068DH8=
+	t=1709022815; cv=none; b=KIeegvXqwXOTE2Q1YUHmnDu7iwyeQd98HTFUdmj+0eTE5+QTmC0/DlWvbeiooHJuREhchhaQr2zTH+W0I+d9m0bQ/JzmbFkQw7NlBRkQx55xLHxkMYZZxmjIFzAbIsxjWoPD/+CclpAs3MtrWaR90WnRxigtDNGOnAer4MrlXJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709022702; c=relaxed/simple;
-	bh=jDcbjm051a2tWQp8mL4nW0pJ4OpF8SkO3jnpo60IyWI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V1hFY4Jsiyi8CmLbNvtUvT/k+KWWqpIBrxR/JoUbWiOy+qfC+coJDxybGGhR8Wg+bXw3uXuCivITRVOzMm72iAVfnidx/gE7n8C42T4lpXnYw8hrC1RX45Z0l13ryDhnOlKvXJopad6F14/JC4gXBmLyRDfv6Iv0oFzHhQ3tqNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FDMdmr3K; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FDMdmr3K"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3e5d82ad86so552281566b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:31:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709022699; x=1709627499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TWWjdMDDlRbFnAQIhSeSTyA3KAYjkYko4A1TtZtt+H4=;
-        b=FDMdmr3KSIObla6tr5cpWU8/WvK6jUhXBFd4fZ4PKjVrz7m7KR6REXxNEG2jm6r6ff
-         h8q8NvTaxF7SERE8CMYtoE9FQxSRtIRSn40uAeBtZIqPjfhltezD+3/DQu2I4MqAlmw4
-         J2ADb1hZT8SyrHVmtUnQHqjuORE7w+BgWvjQ0tOCGGjv3IdhVjJbGe5dO++mCJwH7yqG
-         BpaWcN+WR/kx9V2yCg+EA7Fg8Tmlx9j/Ht2dM6jAWQ1AKxST99qPZHzPD/e9TJaCYE2n
-         KRwHdw4NUAvTKM5dc3PtKYBHct8U4ob5tb49mJ3kkM2iZz/fchdarjVnTDsxGgYBJs4o
-         PdVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709022699; x=1709627499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TWWjdMDDlRbFnAQIhSeSTyA3KAYjkYko4A1TtZtt+H4=;
-        b=f4AFwbfWJ4jfKESrlTc3vshNgRtEO/JKZUBFFtDy3LRcA+jQgaQAtmfcoFvFkS54Bd
-         J9GAAEe1UC3A5eHFiKReBgorOXK9LQwHvPEt3Jg9W1vrla1HBMTLDLWhQGWuNzsRJKSz
-         vYm1LOEaYBBRDdNIbGLJzGk/5fCDxOGkkG9zqm6QH+StwzHbdRxv0VwGx4NS1ncpGpAv
-         8556Ez3dU6Ii1pB9tKEkJe2MpTAp8srrBpsI+cStTtg4/bu2FbcYboQ+D2plgJ6S/4gw
-         MEvvDQjeiagRKuAvZ37g++9Dd9kGFm+FeIQ4aU/aqpj0KvU1QjWRhhsBc8gmw+w9LiBE
-         eaoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVroT64QP45hwBXEtFzMPiWQ/ArM92x7h5bfgZpQzqqiD4LbYchxwYALSpyN+LT2oSctz2qp+ApW8v+19UymbmvTLfSuKJf3vU7jN06
-X-Gm-Message-State: AOJu0YzkO07GKUv1PUMcHvBYBNiCBMp0DLXFl6kI9IOgwteAPg+K9HNK
-	iIJkqdbW6Vn8bkpUqh9x6f6s3jxBg5xr6VirDw3qN9yfdEa/4hLAvXA3gIUQF4KSOXprscfm1tZ
-	VYKIUEVQRsU7NxXMrDJi2o0/WXJ3CAEjs4h9Z
-X-Google-Smtp-Source: AGHT+IEywMFCEF6R2EVKftvTDUWpnQPHNLoR6/60VpqwpXfH1fWVVUY+TrWJGh0aKLi+cUFG+WVi9V07kMYmfjg2/r8=
-X-Received: by 2002:a17:906:7243:b0:a43:a628:ff31 with SMTP id
- n3-20020a170906724300b00a43a628ff31mr909690ejk.26.1709022698526; Tue, 27 Feb
- 2024 00:31:38 -0800 (PST)
+	s=arc-20240116; t=1709022815; c=relaxed/simple;
+	bh=rW7fAbIhtIRH6uFf53KwWwv4BvDxmE1+BtDpctFXvJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BcHg0ELTaKxfkLlDBdjgxqcsJl/X3gyTEu1vSSYFhGrpg0U2hDqDcb6fGlZ+9/BWwkFYaz+mXFhKVU7oTClg9riAgKqk4wN6hH06Bf5NdKNfZXHD/7hUGEAL0cMeEgORfIKkvM/pW6j9jbWTuXUS8EJwGYYUUU5EK223Oq4J68g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1resta-0001UR-RL; Tue, 27 Feb 2024 09:33:02 +0100
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1restZ-0039fx-Ie; Tue, 27 Feb 2024 09:33:01 +0100
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1restZ-00AXPK-1V;
+	Tue, 27 Feb 2024 09:33:01 +0100
+Date: Tue, 27 Feb 2024 09:33:01 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org,
+	Marek Vasut <marex@denx.de>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+	imx@lists.linux.dev, Sascha Hauer <s.hauer@pengutronix.de>,
+	aford@beaconembedded.com, linux-kernel@vger.kernel.org,
+	Vinod Koul <vkoul@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	devicetree@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH V6 5/6] arm64: dts: imx8mp: add HDMI display pipeline
+Message-ID: <20240227083301.4saxxuv4n6aoqnl6@pengutronix.de>
+References: <20240226234532.80114-1-aford173@gmail.com>
+ <20240226234532.80114-6-aford173@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206042408.224138-1-joychakr@google.com> <2024020647-submarine-lucid-ea7b@gregkh>
- <CAOSNQF3jk+85-P+NB-1w=nQwJr1BBO9OQuLbm6s8PiXrFMQdjg@mail.gmail.com>
- <2024020637-handpick-pamphlet-bacb@gregkh> <CAOSNQF2_qy51Z01DKO1MB-d+K4EaXGDkof1T4pHNO10U_Hm0WQ@mail.gmail.com>
- <2024020734-curliness-licking-44c1@gregkh> <CAOSNQF2WKang6DpGoVztybkEbtL=Uhc5J-WLvyfRhT3MGWgiaA@mail.gmail.com>
- <CAOSNQF2d27vYTtWwoDY8ALHWo3+eTeBz7e=koNodphVVmeThMQ@mail.gmail.com> <2024022737-haiku-rental-5e7b@gregkh>
-In-Reply-To: <2024022737-haiku-rental-5e7b@gregkh>
-From: Joy Chakraborty <joychakr@google.com>
-Date: Tue, 27 Feb 2024 14:01:25 +0530
-Message-ID: <CAOSNQF1_7p61pgGBcb0QWmCLCBfNAk2-gQ4qFybfbbxON3n5pw@mail.gmail.com>
-Subject: Re: [PATCH v2] nvmem: rmem: Fix return value of rmem_read()
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, linux-kernel@vger.kernel.org, manugautam@google.com, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226234532.80114-6-aford173@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, Feb 27, 2024 at 1:02=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Feb 27, 2024 at 12:27:09PM +0530, Joy Chakraborty wrote:
-> > On Wed, Feb 7, 2024 at 8:33=E2=80=AFPM Joy Chakraborty <joychakr@google=
-.com> wrote:
-> > >
-> > > On Wed, Feb 7, 2024 at 3:04=E2=80=AFPM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Tue, Feb 06, 2024 at 05:22:15PM +0530, Joy Chakraborty wrote:
-> > > > > > > Userspace will see a false error with nvmem cell reads from
-> > > > > > > nvmem_cell_attr_read() in current code, which should be fixed=
- on
-> > > > > > > returning 0 for success.
-> > > > > >
-> > > > > > So maybe fix this all up to allow the read to return the actual=
- amount
-> > > > > > read?  That feels more "correct" to me.
-> > > > > >
-> > > > >
-> > > > > If I change the behavior of the nvmem_reg_read_t callback to nega=
-tive
-> > > > > for error and number of bytes actually read for success then, oth=
-er
-> > > > > than the core driver I would also have to change all the
-> > > > > nvmem-provider drivers.
-> > > > > Is it okay to do so ?
-> > > >
-> > > > Sure, why not?  That seems like the correct fix to me, right?
-> > >
-> > > Sure, I can do that.
-> > >
-> > > Is it okay to change the if checks on the return code to "if (rc < 0)=
-"
-> > > instead of "if (rc)" as a fix for the immediate issue with how return
-> > > value from rmem is handled which can be applied to older kernels.
-> > > In a separate patch I can change the definition of nvmem_reg_read_t()
-> > > to return ssize_t instead of int and make corresponding changes to
-> > > nvmem-provider drivers.
-> > >
-> > > Does that sound okay ?
-> >
-> > Hi Greg,
-> >
-> > Sent a patch https://lore.kernel.org/all/20240219113149.2437990-2-joych=
-akr@google.com/
-> > to change the return type for read/write callbacks.
-> > Do I mark that with the "Fixes:" tag as well ?
->
-> Is it actually fixing a bug?  Or just evolving the api to be more
-> correct over time?  I think the latter.
+Hi Adam,
 
-It is more of the latter i.e. evolving the API to be correct but
-indirectly it ends up fixing this bug where positive value returned by
-this rmem driver is treated as an error in nvmem core.
+thanks a lot for pushing this topic.
 
->
-> > It affects a lot of files so might not be able to easily pick to an
-> > older kernel when needed.
->
-> What is it fixing that older kernels need?
+On 24-02-26, Adam Ford wrote:
+> From: Lucas Stach <l.stach@pengutronix.de>
+> 
+> This adds the DT nodes for all the peripherals that make up the
+> HDMI display pipeline.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Tested-by: Marek Vasut <marex@denx.de>
+> Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> ---
+> V6:  Make LCDIF3 disabled by default
+> 
+> V5:  No change
+> 
+> V3:  Re-ordered the HDMI parts to properly come after irqstree_hdmi
+>      inside AIPS4.  Change size of LCDIF3 and PVI to match TRM sizes
+>      of 4KB.
+> 
+> V2:  I took this from Lucas' original submission with the following:
+>      Removed extra clock from HDMI-TX since it is now part of the
+>      power domain
+>      Added interrupt-parent to PVI
+>      Changed the name of the HDMI tranmitter to fsl,imx8mp-hdmi-tx
+>      Added ports to HDMI-tx
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 95 +++++++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> index 18bfa7d9aa7f..637b0265b0f1 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> @@ -1940,6 +1940,101 @@ irqsteer_hdmi: interrupt-controller@32fc2000 {
+>  				clock-names = "ipg";
+>  				power-domains = <&hdmi_blk_ctrl IMX8MP_HDMIBLK_PD_IRQSTEER>;
+>  			};
+> +
+> +			hdmi_pvi: display-bridge@32fc4000 {
+> +				compatible = "fsl,imx8mp-hdmi-pvi";
+> +				reg = <0x32fc4000 0x1000>;
+> +				interrupt-parent = <&irqsteer_hdmi>;
+> +				interrupts = <12>;
+> +				power-domains = <&hdmi_blk_ctrl IMX8MP_HDMIBLK_PD_PVI>;
 
-It is fixing the handling of a positive value returned by this rmem
-driver which will be treated as an error in older kernels as the nvmem
-core expects 0 on success without changing API behavior.
+this node should be 'status = "disabled";' as reported by Luca else this
+node will EPROBE_DEFER. With that beeing fixed you can add my:
 
->
-> And do not worry about stable kernels while doing development, only
-> take that into consideration after your changes are accepted.
+Tested-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Got it, thank you for your input .
+Regards,
+  Marco
 
->
-> thanks,
->
-> greg k-h
-
-Thanks
-Joy
+> +
+> +				ports {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					port@0 {
+> +						reg = <0>;
+> +						pvi_from_lcdif3: endpoint {
+> +							remote-endpoint = <&lcdif3_to_pvi>;
+> +						};
+> +					};
+> +
+> +					port@1 {
+> +						reg = <1>;
+> +						pvi_to_hdmi_tx: endpoint {
+> +							remote-endpoint = <&hdmi_tx_from_pvi>;
+> +						};
+> +					};
+> +				};
+> +			};
+> +
+> +			lcdif3: display-controller@32fc6000 {
+> +				compatible = "fsl,imx8mp-lcdif";
+> +				reg = <0x32fc6000 0x1000>;
+> +				interrupt-parent = <&irqsteer_hdmi>;
+> +				interrupts = <8>;
+> +				clocks = <&hdmi_tx_phy>,
+> +					 <&clk IMX8MP_CLK_HDMI_APB>,
+> +					 <&clk IMX8MP_CLK_HDMI_ROOT>;
+> +				clock-names = "pix", "axi", "disp_axi";
+> +				power-domains = <&hdmi_blk_ctrl IMX8MP_HDMIBLK_PD_LCDIF>;
+> +				status = "disabled";
+> +
+> +				port {
+> +					lcdif3_to_pvi: endpoint {
+> +						remote-endpoint = <&pvi_from_lcdif3>;
+> +					};
+> +				};
+> +			};
+> +
+> +			hdmi_tx: hdmi@32fd8000 {
+> +				compatible = "fsl,imx8mp-hdmi-tx";
+> +				reg = <0x32fd8000 0x7eff>;
+> +				interrupt-parent = <&irqsteer_hdmi>;
+> +				interrupts = <0>;
+> +				clocks = <&clk IMX8MP_CLK_HDMI_APB>,
+> +					 <&clk IMX8MP_CLK_HDMI_REF_266M>,
+> +					 <&clk IMX8MP_CLK_32K>,
+> +					 <&hdmi_tx_phy>;
+> +				clock-names = "iahb", "isfr", "cec", "pix";
+> +				assigned-clocks = <&clk IMX8MP_CLK_HDMI_REF_266M>;
+> +				assigned-clock-parents = <&clk IMX8MP_SYS_PLL1_266M>;
+> +				power-domains = <&hdmi_blk_ctrl IMX8MP_HDMIBLK_PD_HDMI_TX>;
+> +				reg-io-width = <1>;
+> +				status = "disabled";
+> +
+> +				ports {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					port@0 {
+> +						reg = <0>;
+> +
+> +						hdmi_tx_from_pvi: endpoint {
+> +							remote-endpoint = <&pvi_to_hdmi_tx>;
+> +						};
+> +					};
+> +
+> +					port@1 {
+> +						reg = <1>;
+> +						/* Point endpoint to the HDMI connector */
+> +					};
+> +				};
+> +			};
+> +
+> +			hdmi_tx_phy: phy@32fdff00 {
+> +				compatible = "fsl,imx8mp-hdmi-phy";
+> +				reg = <0x32fdff00 0x100>;
+> +				clocks = <&clk IMX8MP_CLK_HDMI_APB>,
+> +					 <&clk IMX8MP_CLK_HDMI_24M>;
+> +				clock-names = "apb", "ref";
+> +				assigned-clocks = <&clk IMX8MP_CLK_HDMI_24M>;
+> +				assigned-clock-parents = <&clk IMX8MP_CLK_24M>;
+> +				power-domains = <&hdmi_blk_ctrl IMX8MP_HDMIBLK_PD_HDMI_TX_PHY>;
+> +				#clock-cells = <0>;
+> +				#phy-cells = <0>;
+> +				status = "disabled";
+> +			};
+>  		};
+>  
+>  		pcie: pcie@33800000 {
+> -- 
+> 2.43.0
+> 
+> 
+> 
