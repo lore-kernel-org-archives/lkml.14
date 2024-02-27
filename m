@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C2915956C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AB615A493
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709069119; cv=none; b=hjoeuca9ip3JRJpG8ftBtM2E1GAtFcAG+oWdlyYqPrwIetQWDVTbL0MFqUpDisllnX3iYCZdgtTIxXXp8fRwgtNIK00VLdZCpr94z2mXqMRyZ+ErWZlxZGfk43pSfUj49lUQR1D6cSd5K0eO41fykZAKc0nSEqGjKtkP9tiJ/ps=
+	t=1709069121; cv=none; b=Jm3i8XuzpQ1/DMLLk7KEorR95awqrxlGT5Z+M7aPj2HnaCEJ187x5SUiaMJqrw6TLrAxzdu+7llxdB6xCA6+iz7QwGSHNnMwmxyxOXtLLxxN+5abyNXdLf/jDDAMDwweyquTwJaXSZxdpkYBkG6XVtJjRPgRj9e6LE+4j22l7nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709069119; c=relaxed/simple;
-	bh=R/jnQJ7PA5+pcFQcinQUmyRlg1Ef9fKzEGnFbhwA+qE=;
+	s=arc-20240116; t=1709069121; c=relaxed/simple;
+	bh=210lCphqYKumbsSKrHahIq5zl6lhgbzI8RmOuXqd25g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YZinVr64prEXImIYtaOGZoflRzzdK2Q2LsYVcg4DNjOfv2/JH8iNsn8Gqb+jr5l9G06vX7lv55W6c/LygFzKU0iwTd7IAc83lmCp6lMn5KjIPhrZNABcRuQWfwku7bgMOItRucR1YVGRk2v1Jnv3ghpFHkbYh2XkomJY/89WVxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d14EV88l; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=SXVS6MB+fMrQODa7N+/jPA75WO+V+w55J09PJmZYXEndRgGTHheemnqymOcHAO1/hGfiHAgJrl4k6kXJYoq/4GGZbAbawo5WEH0uygZyXXpWKl3RXTr5e9JluqzRs/+A7+KUcQibMBClbmX0kJ/E6tIxx3v905u/A3926TjH3DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tt2G7iS6; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d14EV88l"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tt2G7iS6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709069118; x=1740605118;
+  t=1709069120; x=1740605120;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=R/jnQJ7PA5+pcFQcinQUmyRlg1Ef9fKzEGnFbhwA+qE=;
-  b=d14EV88ld00Sulgujh7RLzaDyIjZZMRAe/LxaFg743yl50l/qfFAPkoT
-   86R+Cslc3MM/nXOtze3TbSo/2CNDLmjLoP5oai/Phr9VpOTrWLfGwuWDr
-   uIL2HLgogZgx/MVgDW6x7KGyZFvAWF6KEMVFtgvca1azjR3naML8WnAxu
-   vnblSDThzf+wi54HUy8epX2ECL4Iac+uTKNMACaS8av613+/EgEZJROlg
-   lyy8jIA/DgHIfzgmATbjbSMzQShOksRQNysq16DLrWGJUiFuwBizuWvaV
-   YDWi99jLtGapyX+l8HHmo79V7aLfRC5ABKI7Bc7H50EdIpaC4RLszfGRG
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3567071"
+  bh=210lCphqYKumbsSKrHahIq5zl6lhgbzI8RmOuXqd25g=;
+  b=Tt2G7iS6HS3REwU32awORFUUG1ePAAHoJNiQ9/dzgavUkMOG9NXvxze9
+   xumD8xsUcUdjGi72iQKS9SaA5Xf8CASphpS2UDkubZZu1XKWIkpXuNGH6
+   2dYdyzRz54OEMGr31pwtNGGBCUODzj9RbWigQZh8i25h//ouZY3ywLwxe
+   bywJqsRqKtzLiALHv3lnGotYqGv3pOt83jNjxRYfup6Naz8K2xZYq4Xar
+   3lfQm2k0lbKLk2lAcym3rJ6CHmyn4E+pRBkncIq1Htn0ukp/ndk2cLQ8h
+   7yuUGjsFaCMB1iz9awpChBGkZB9CQnWiK90x7wpUS3dQm3twuiTEmzVk1
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3567091"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="3567071"
+   d="scan'208";a="3567091"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:25:10 -0800
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:25:14 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937032922"
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937032929"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="937032922"
+   d="scan'208";a="937032929"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Feb 2024 13:25:02 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 27 Feb 2024 13:25:08 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 720C6B0D; Tue, 27 Feb 2024 23:24:56 +0200 (EET)
+	id C91C61210; Tue, 27 Feb 2024 23:24:56 +0200 (EET)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -63,11 +63,10 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	kexec@lists.infradead.org,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@intel.com>
-Subject: [PATCHv8 11/17] x86/mm: Make e820_end_ram_pfn() cover E820_TYPE_ACPI ranges
-Date: Tue, 27 Feb 2024 23:24:46 +0200
-Message-ID: <20240227212452.3228893-12-kirill.shutemov@linux.intel.com>
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv8 17/17] ACPI: tables: Print MULTIPROC_WAKEUP when MADT is parsed
+Date: Tue, 27 Feb 2024 23:24:52 +0200
+Message-ID: <20240227212452.3228893-18-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
 References: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
@@ -79,73 +78,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-e820__end_of_ram_pfn() is used to calculate max_pfn which, among other
-things, guides where direct mapping ends. Any memory above max_pfn is
-not going to be present in the direct mapping.
+When MADT is parsed, print MULTIPROC_WAKEUP information:
 
-e820__end_of_ram_pfn() finds the end of the ram based on the highest
-E820_TYPE_RAM range. But it doesn't includes E820_TYPE_ACPI ranges into
-calculation.
+ACPI: MP Wakeup (version[1], mailbox[0x7fffd000], reset[0x7fffe068])
 
-Despite the name, E820_TYPE_ACPI covers not only ACPI data, but also EFI
-tables and might be required by kernel to function properly.
-
-Usually the problem is hidden because there is some E820_TYPE_RAM memory
-above E820_TYPE_ACPI. But crashkernel only presents pre-allocated crash
-memory as E820_TYPE_RAM on boot. If the preallocated range is small, it
-can fit under the last E820_TYPE_ACPI range.
-
-Modify e820__end_of_ram_pfn() and e820__end_of_low_ram_pfn() to cover
-E820_TYPE_ACPI memory.
-
-The problem was discovered during debugging kexec for TDX guest. TDX
-guest uses E820_TYPE_ACPI to store the unaccepted memory bitmap and pass
-it between the kernels on kexec.
+This debug information will be very helpful during bring up.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/e820.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/acpi/tables.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index fb8cf953380d..99c80680dc9e 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -827,7 +827,7 @@ u64 __init e820__memblock_alloc_reserved(u64 size, u64 align)
- /*
-  * Find the highest page frame number we have available
-  */
--static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type type)
-+static unsigned long __init e820_end_ram_pfn(unsigned long limit_pfn)
- {
- 	int i;
- 	unsigned long last_pfn = 0;
-@@ -838,7 +838,8 @@ static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type
- 		unsigned long start_pfn;
- 		unsigned long end_pfn;
+diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+index b07f7d091d13..c59a3617bca7 100644
+--- a/drivers/acpi/tables.c
++++ b/drivers/acpi/tables.c
+@@ -198,6 +198,20 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
+ 		}
+ 		break;
  
--		if (entry->type != type)
-+		if (entry->type != E820_TYPE_RAM &&
-+		    entry->type != E820_TYPE_ACPI)
- 			continue;
- 
- 		start_pfn = entry->addr >> PAGE_SHIFT;
-@@ -864,12 +865,12 @@ static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type
- 
- unsigned long __init e820__end_of_ram_pfn(void)
- {
--	return e820_end_pfn(MAX_ARCH_PFN, E820_TYPE_RAM);
-+	return e820_end_ram_pfn(MAX_ARCH_PFN);
- }
- 
- unsigned long __init e820__end_of_low_ram_pfn(void)
- {
--	return e820_end_pfn(1UL << (32 - PAGE_SHIFT), E820_TYPE_RAM);
-+	return e820_end_ram_pfn(1UL << (32 - PAGE_SHIFT));
- }
- 
- static void __init early_panic(char *msg)
++	case ACPI_MADT_TYPE_MULTIPROC_WAKEUP:
++		{
++			struct acpi_madt_multiproc_wakeup *p =
++				(struct acpi_madt_multiproc_wakeup *)header;
++			u64 reset_vector = 0;
++
++			if (p->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1)
++				reset_vector = p->reset_vector;
++
++			pr_debug("MP Wakeup (version[%d], mailbox[%#llx], reset[%#llx])\n",
++				 p->version, p->mailbox_address, reset_vector);
++		}
++		break;
++
+ 	case ACPI_MADT_TYPE_CORE_PIC:
+ 		{
+ 			struct acpi_madt_core_pic *p = (struct acpi_madt_core_pic *)header;
 -- 
 2.43.0
 
