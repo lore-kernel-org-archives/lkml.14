@@ -1,114 +1,136 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2693478B61
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820992F2D;
+	Tue, 27 Feb 2024 13:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709041186; cv=none; b=ISukO8unwL+RpXMHPaA/j3OAxgpaIn0KGMuPJvyx7OMe1qi4vZ68oLnmn+2ceUiGwNiLwZRIx6AY2NrULVoA8RcFo5uKyrJnpD0Tj0Fl2NVQRNUF3sLd3uRO2uDkSM+2p5d/EQdeS1PzitO49jtmGPqLH7SMxwoZ8XtoiKr0r9c=
+	t=1709041294; cv=none; b=ayc3L4R1Gj+qUsPsLePjlb1m+Sf+ngrQyvBZmk8D7+UtTL/BYhCzh4RoyxlixFeXFXu1/Th3MQXM9dHNPi8kObCjdVtUF+3lFi3ZSWt/WKwHqGjYh5RSTvWVBJ1blufsAuAFSj6uh/ZzyA+Yv817Qq1s3pCB6KjZtgJcEO/ObiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709041186; c=relaxed/simple;
-	bh=8iPufcibBCJKG0q1/qGL+A/Ni1lovHs1ZR0Ajl86BBo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I7LLe05tdZmfIBkAjCn/p3wvJIZJIaX3eqnb39Ej6wu43nEKqPXAVAxUSNnWZCPAHNGzwHmzaAAgdV/Z3nfekgdKVJl3As1+FiiWVIXg7KMG1LAZcLEWEX/+m3nAzgCdzU/giKhT45V4ytOD4Jsnx3rhNlbc9a3Yzx6J506pW4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h9i/VkyK; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709041294; c=relaxed/simple;
+	bh=5u5tAoSnP+fgrFG9HWWLZrfA/Q1EvEkQTUTzPe58IaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SQ+LH7ZG1bhaO8m8Eo0/FWFVrmT9MspbIueby/LQfSzkHw9pT6WBp/OhTvNAlcLMIXql8g3O+BP3Kwc3v1YRaI5tuXO2Zs6VOVEOB6CEz9SQkiwUiiNeU/iKpf22jg116/B8HWXY3lYDwC1fx2Lshjm4OarGTEFmXu97uSevN04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=bBQMnjYS; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h9i/VkyK"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-db3a09e96daso3259484276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 05:39:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709041184; x=1709645984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eOWeidPv0GTdG2qvAOJJXPCS/uUkxL4qtXAn43lMC7g=;
-        b=h9i/VkyKODKVyT3q1RsX+zHm90unQ65F+/+Im5lYXh/aDcZfhQuk0r2hRPr6k7Tf6t
-         1dp5Pr8RXo4pVoJ0tl1YDaSwU/TEzbfFB/sO6ALUmpK9teqgmNAqFwlHK5br6+pM3NIz
-         840l3XuJ4CIVFPTqP+RznQ+wEHHsgtAljlFVc5lM2iLLOf8ZD0PnJAKccUO9TB4xZvA0
-         JJUYeyX29n/vq7eL9XT0gsnZgbns87eVkS/3821R1p92dBBxQNLAumteWyazSXsz7VIU
-         MXrDDlOKY+Jqei3pDgJWD4Lv0V8deRAlX/aDxcQPKFYfgm3CmwbS5m2Xpzq0xLo4r3+0
-         mZqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709041184; x=1709645984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eOWeidPv0GTdG2qvAOJJXPCS/uUkxL4qtXAn43lMC7g=;
-        b=SziZNXw1usMeot6xjdTIey53w0Errhjm4g4kaL2kGljZt+F0P+KGagIOb11MAHHlFJ
-         I83Y8k7LpZoRQ+QTG2ADrQTNw8j7WNNQmRBY21Z95wMEDWWhFBwOy1MhVNMPa0otLwR2
-         2AZjYdPVdzB7GoUhcFKQFYQt93ZqJjDESRRSwz9TUeB18dpxcaF7nbY7NAt1X4C4cnM8
-         rm+p7P1iuETZ+t7R1TIlMdHZOdYjDU30bo0hFfkU0ZYkRBoAwKhG9S6sBadzmvrF9gki
-         1xY82gce6cfzR7w25uUGUYZT+P+mC4syaSydBNby5ZNyKkELAu6hvlPEq/yaorfgv21v
-         GuiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUemQ7FoizGG5b5p6k0dZ8QtofmlDoCFY4WJ8n+SUoRqOnRW1MrOaezF3hg4HvSXFvT/XyS0NdLONvkN9QyV7zykeA5xsstD7hggSFj
-X-Gm-Message-State: AOJu0YyAA5lL702nfmAySZgfi4nXxc4G35gCoqUISbHYw2tzxCf//0o9
-	5yC9ua6I4yXEemUmlluCg4u5HjtoUO8MqrOpD3xUYoPRQYjUfMgVckFoV0KlPSdZXA+n7I+VOle
-	oTZTMGuIVRWO918IKamOaWFaHjw7inEK/oo4l
-X-Google-Smtp-Source: AGHT+IFK/VVwUhiGT2OlyOZOTeeMQ2mEbLEw6tyIu3zG0QccGmUrTQRKql4uWibkgraBEtRrXBYGwjqLNKKTY1ZiYWM=
-X-Received: by 2002:a25:d8d3:0:b0:dbf:23cd:c05c with SMTP id
- p202-20020a25d8d3000000b00dbf23cdc05cmr2126143ybg.13.1709041183917; Tue, 27
- Feb 2024 05:39:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="bBQMnjYS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709041281; x=1709646081; i=w_armin@gmx.de;
+	bh=5u5tAoSnP+fgrFG9HWWLZrfA/Q1EvEkQTUTzPe58IaM=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=bBQMnjYS9HssAUH49/ieREQwg7MvFi0AlG1ViLFcJvbKjCjfrjyIcjbqf16WaK3n
+	 yRwdR4I9v1gtYRW/zs0pNbRzU1EOIf25ND503yhv1U97D6KXq5Lk3IsY1BMS0CqCp
+	 xDV6n5A8IR0fjCo/Hz+0dOT1MCC4LHSHg7hDW9FC2VIrMZZ2AGbCb5JiE3h+eBAEN
+	 Ks9aT3Mk6ly1nHEfUT0oOR7ndLBLnRHQSDvYCR4HPHk4ESfeu6pyrrX9G1EMBYA4s
+	 tndjxlq2yFHBAFzTIcWkU7+bdpURcIqimVZq7I2rHy3scahlUop04WWWXBx+EtMiB
+	 1OEW3snGOzHxbnN8wg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8obG-1qrmkR0YQY-015pjB; Tue, 27
+ Feb 2024 14:41:21 +0100
+Message-ID: <9cdc844a-ba39-4215-b21e-1e1629edc549@gmx.de>
+Date: Tue, 27 Feb 2024 14:41:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208152808.3712149-1-howardyen@google.com>
- <20240213055426.GA22451@lst.de> <CAJDAHvZGnzKPLaovRcq_Os1Fcixp2o1kY9GFV8VXztrmKahejQ@mail.gmail.com>
- <20240220055241.GA7554@lst.de> <CAJDAHvbOnAvW5f6oJUnuy2_5-vS7uJc13GQSNX_Nc25GJXSp-Q@mail.gmail.com>
- <20240223063723.GB11004@lst.de>
-In-Reply-To: <20240223063723.GB11004@lst.de>
-From: Howard Yen <howardyen@google.com>
-Date: Tue, 27 Feb 2024 21:39:07 +0800
-Message-ID: <CAJDAHvZ4-mh8uMyq0NiPgWKGt=pS3teoJ0=ofCKZmLeqLXUVgA@mail.gmail.com>
-Subject: Re: [PATCH v3] dma-coherent: add support for multi coherent rmems per dev
-To: Christoph Hellwig <hch@lst.de>
-Cc: m.szyprowski@samsung.com, robin.murphy@arm.com, gregkh@linuxfoundation.org, 
-	andriy.shevchenko@linux.intel.com, rafael@kernel.org, broonie@kernel.org, 
-	james@equiv.tech, james.clark@arm.com, masahiroy@kernel.org, 
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] platform/x86/amd/pmf: Do not use readl() for
+ policy buffer access
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shyam-sundar.S-k@amd.com,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ sathyanarayanan.kuppuswamy@linux.intel.com,
+ Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240223163901.13504-1-W_Armin@gmx.de>
+ <20240223163901.13504-2-W_Armin@gmx.de>
+ <e2b81849-3435-3efb-f2da-b74ac7f99a50@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <e2b81849-3435-3efb-f2da-b74ac7f99a50@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JeUudHQ5pVWclUwEZ92R41Un4vqTi4Zt4ZM4rzRZQt+q/Ov/a0x
+ Y5ptzKU5OBaqr3s08JO5zz3d98FS15PUbBNGA0KKYgwC0rbICPePaKik8RXrKmp5pbU6ii6
+ qL2aWrfcT7ar2kI+PntWnGknT86kBp/Hd4/E/WqNxmtbqAQCofADl/9VnsNmdGg5Sa2qiwT
+ 23a25WLKXVIrmJ2dSOdAw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:jGXMkxGEvM8=;nEpE8Pav61acMaOjKg8A/6YVz9I
+ hcJitECHEWEGlY7MYueYYKm9DaIsBMWQfq3/Wnr+Ql3TERk+KI/vQAHcElpWP2uHuhnFVjGZ1
+ CSmiMWt2QWjoipA1LCOiki1YIbMtxqP6tw+ZORwNzVCRXfNUh40/E5bK3kR1uzUAi34Lun6FI
+ 8hjgpAOs3kJ4ffisIshU2TTRbgpyrnWeYNEYv80tNXr5RWgURCEmeEZD21L4LataEVhb4hqli
+ haLkxYcaCMPQYL98eIy4aYIxfQic6ceyDp3xFxMa1pQgolXyGZm8o/7NJ004HJ2FO3/GSM001
+ n6ijoJcoi9iJ3CN7iH0t74cQrcvjFU8JvFQ3bm4LUTll22Gvn/2SckJ6vSMZT/CqGMQYMhih0
+ ljOsRTu2dfHEX0xfhZvF13sOgq2DPPY6Bo/K8cs2cwR0wfy+C82qB4712GkbGE/n6Hjnhu4BA
+ rTguqaeL/rHrk7nIP1dUOR1CVxgAdvjA9InLaMlQrMYs/wwWFCRwSO2HfClZKCIUx+Gkpil9X
+ j1EOm4OLI+m7ACIGjvu98ezpidfFcBuu3M8Pb9EDJAJkLdl07sZoPrsZixY0uAgiR9IOHMsdW
+ UH55S/F0rA/tLvakWBYK9f2I6nP/zYebRpAQdPYUMR0yhy3nvmALz8QQjxv6wfAtltIdBKfRs
+ bMrCo+ihRp5f6mGX6fqSBIBC3/vIELRvEQdUvJ/ALlZgU+YrohRibZhBk8te5IXcnRxgM21DM
+ 1vPxtxHRq0Faegn3XqJR1NtG5M0irkB51A2HymwZaQZGiK202mddsv03ZxOc0mV4CeoB9GRFk
+ 8aFClDsdXcxWUz4RJ7/sEdybsy0SIxe7cuVpGHcx9kRLs=
 
-On Fri, Feb 23, 2024 at 2:37=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrot=
-e:
+Am 27.02.24 um 13:59 schrieb Ilpo J=C3=A4rvinen:
+
+> On Fri, 23 Feb 2024, Armin Wolf wrote:
 >
-> On Wed, Feb 21, 2024 at 05:27:58PM +0800, Howard Yen wrote:
-> > The reason why I tried to propose this patch is that in the system I'm
-> > working on, where the driver utilizes the coherent reserved memory in
-> > the subsystem for DMA, which has limited memory space as its primary
-> > usage. During the execution of the driver, there is a possibility of
-> > encountering memory depletion scenarios with the primary one.
-> >
-> > To address this issue, I tried to create a patch that enables the
-> > coherent reserved memory driver to support multiple coherent reserved
-> > memory regions per device. This modification aims to provide the
-> > driver with the ability to search for memory from a secondary region
-> > if the primary memory is exhausted, and so on.
+>> The policy buffer is allocated using normal memory allocation
+>> functions, so readl() should not be used on it.
+>>
+>> Use get_unaligned_le32() instead.
+>>
+>> Compile-tested only.
+>>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> ---
+>>   drivers/platform/x86/amd/pmf/tee-if.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x=
+86/amd/pmf/tee-if.c
+>> index 16973bebf55f..3220b6580270 100644
+>> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+>> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+>> @@ -11,6 +11,7 @@
+>>   #include <linux/debugfs.h>
+>>   #include <linux/tee_drv.h>
+>>   #include <linux/uuid.h>
+>> +#include <asm/unaligned.h>
+>>   #include "pmf.h"
+>>
+>>   #define MAX_TEE_PARAM	4
+>> @@ -249,8 +250,8 @@ static int amd_pmf_start_policy_engine(struct amd_p=
+mf_dev *dev)
+>>   	u32 cookie, length;
+>>   	int res;
+>>
+>> -	cookie =3D readl(dev->policy_buf + POLICY_COOKIE_OFFSET);
+>> -	length =3D readl(dev->policy_buf + POLICY_COOKIE_LEN);
+>> +	cookie =3D get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_OFFSET)=
+;
+>> +	length =3D get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_LEN);
+> I don't understand you need _unaligned_ here, the offsets should be dwor=
+d
+> aligned, no?
 >
-> This all seems pretty vague.  Can you point to your driver submission
-> and explain why it can't just use a larger region instead of multiple
-> smaller ones?
+> #define POLICY_COOKIE_OFFSET      0x10
+> #define POLICY_COOKIE_LEN         0x14
 >
+Hi,
 
-The reason why it needs multiple regions is that in my system there is
-an always-on subsystem which includes a small size memory, and several
-functions need to run and occupy the memory from the small memory if
-they need to run on the always-on subsystem. These functions must
-allocate the memory from the small memory region, so that they can get
-benefit from the always-on subsystem. So the small memory is split for
-multiple functions which are satisfied with their generic use cases.
-But in specific use cases, they required more memory than their
-pre-allocated memory region, so I tried to propose this patch to give
-it the ability to get the memory from another larger memory to solve
-the issue.
+you are right about this.
 
-I'll upload the next version to show the modification in the driver.
+However i just noticed that the driver does not validate that the policy b=
+uffer is big enough
+before accessing the data.
 
----
-Best Regards,
+I will prepare a separate patch series to address this.
 
-Howard
+Thanks,
+Armin Wolf
+
