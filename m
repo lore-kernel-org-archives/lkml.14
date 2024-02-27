@@ -1,169 +1,121 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507B15380F;
-	Tue, 27 Feb 2024 08:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437D85EE98
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709022394; cv=none; b=s7/2vwDJ2iPI68C13+fSwXqr0Zf++YPLvU4u0MX/zO7VnYYKN+b2S6lfj+vRi6OV6ddBQ+kxoNR0X2m2ozdTlg2niKyeLPN8BHS2iTECQuQIPNFZ93Ny52SGZPl7SrkXIyHlKZ2VVLDj3bkim3Fhiuui8zAFzfURxEE+S/z470A=
+	t=1709022410; cv=none; b=E+iO9ys47yqR1D+RMaoG1av44CSY89v1JT5T8wfg75Pm1YzGAZxlw2aEOQAw8qPuH4a4oaKa8IGR7AvcZO71L5Q5WaCREPEULVrVfdkI7mX506u2bJaUu8x7ehy5lfiZxxsAsKqTrn+lnXuUgswFftsKPdb58PHyDVGwDrY4T6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709022394; c=relaxed/simple;
-	bh=KAuIHPXGoMr08+UmMoqAbTtZUnHXBoqJWfTMLOUO4Kc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n/Sd9El+tx/X9mD+v4+H6l+QocoV1mi0fBB6t0gRUEdg/0KvSnIAgy5hHx9bqxtkAW1vk/JSCI80lKHsdurGgi7UzrHh5c5gsK3mBDicbKarMt2IV1bY1HTGdRPrPr7cd+8MsxjHT4VhDonqUhXLu4+3Jrri6vGHluyk772Q6yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HPa8SG1g; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1709022410; c=relaxed/simple;
+	bh=o2XMkzXMkwPFel/APz6jVJp+QxaW7CBccneLWcc1hPY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mAH2UKHYiVSJUZGXJnYl6PbaYDRC4xzzk6JgcDf2NTjDe9fzsGq5ieDDwBwieSC2VieEnfAS2K/1cZXLbta68FrEYm3SuNiQdK3FF9njuuiR0PRZqSqyaByfhg3kpCbsC6va9tuEq5QWYcO4i/1HTmWHI+xx7+evmx9mHkSpqaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Up/grDd8; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HPa8SG1g"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0695F4000C;
-	Tue, 27 Feb 2024 08:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709022388;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z0sG1VtgE73QC07jrlA2cghwd9sO1spHGldFaWOgSDY=;
-	b=HPa8SG1gzofjEXTtvQECub3nbC1pFlaSg/+s67PXpFqKkfoD5aZXRxT7+rPHBAbZvtOtI+
-	t7xUqR0wmGJ/+aA4w3C695A+NHZaOHZEjpMga2ndipUcx8aVuS90weh/0NKGhErr/APgmx
-	lc6gmcVj/U5zScde6aA5jTPJil8NCJYM1+URLMbFXt8/e0FD0FqV0ooXLpdQkoeYW36o4k
-	MWaoFQKo422hYYZYBCbx5u5Mnvi8fcaoI1QvofnjMRWP8911R/ZbKiH0STRRrG6Fj6qaT9
-	/okK8KNJe0tTPfYdnBsEj+5EF0FOKd9x4kK8Ng1lkQans63k8KVRMCBZD8iKDw==
-Date: Tue, 27 Feb 2024 09:26:27 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Saravana Kannan <saravanak@google.com>, Kent Gibson
- <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Luca Ceresoli
- <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/2] gpiolib: cdev: release IRQs when the gpio chip
- device is removed
-Message-ID: <20240227092627.23b883c5@bootlin.com>
-In-Reply-To: <CAGETcx_j4613QjHgX5AJ96Ux6MJSxxhT7DL36yzNv1JCsoxTAA@mail.gmail.com>
-References: <20240220111019.133697-1-herve.codina@bootlin.com>
-	<20240220111019.133697-3-herve.codina@bootlin.com>
-	<20240220142959.GA244726@rigel>
-	<20240222005744.GA3603@rigel>
-	<20240222010530.GA11949@rigel>
-	<CAMRc=MdCm4UXMkzvG17Vd=6ajE+feihgYc66qUNTTKXhN0--dA@mail.gmail.com>
-	<20240222123615.2cbada98@bootlin.com>
-	<CAMRc=McTkVPD-1_5vvPcM2Q15=w+ocki2xTmvQzU-o395A930w@mail.gmail.com>
-	<CAGETcx_j4613QjHgX5AJ96Ux6MJSxxhT7DL36yzNv1JCsoxTAA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Up/grDd8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709022409; x=1740558409;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=o2XMkzXMkwPFel/APz6jVJp+QxaW7CBccneLWcc1hPY=;
+  b=Up/grDd8f9sBt6le306w2tufo7JtDty3qrd2I4Q8TfkEXo0KzNrq4yDV
+   Wwwq5w+8BNjsbE/ltwg0d0/w5d8G2tGxBa0vDkKiiNmZcslXozU4f1MVQ
+   vwkKhKqbyLXsvgqL8OOM/9sMibjmYlhedTCP4xtTitCOWEuF4h/LziB3u
+   +l9dgRjhGfisOKDlp6HM7XrT2Kx/S/RZPX+uVlG0wbc/2Zl7JQ2sCXBPZ
+   Sd96sg0Y+xxPjtF6m/XELDqC0qBeBRrrbwA+qRIv0L+CRfCgATSGiQRDF
+   wKNhkye1bV3OvvLZB2vkJ85zv5nZ8owTYx/644SdejT4cjCwjilay7/pA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3510488"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="3510488"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 00:26:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="7112705"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 00:26:44 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
+  <linux-kernel@vger.kernel.org>,  <hannes@cmpxchg.org>,
+  <dan.j.williams@intel.com>,  <dave.jiang@intel.com>
+Subject: Re: [RFC 1/1] mm/mempolicy: introduce system default interleave
+ weights
+In-Reply-To: <Zd19JvKrhMho20Fg@memverge.com> (Gregory Price's message of "Tue,
+	27 Feb 2024 01:11:50 -0500")
+References: <20240220202529.2365-1-gregory.price@memverge.com>
+	<20240220202529.2365-2-gregory.price@memverge.com>
+	<87wmqxht4c.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZdgxaLSBznupVmJK@memverge.com>
+	<87sf1jh7es.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZdygZ8ZidfaORg8F@memverge.com>
+	<87edcyeo78.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<Zd10+G4XIrPoojJE@memverge.com>
+	<87a5nme9c1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<Zd19JvKrhMho20Fg@memverge.com>
+Date: Tue, 27 Feb 2024 16:24:49 +0800
+Message-ID: <875xyae2lq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=ascii
 
-Hi Bartosz
+Gregory Price <gregory.price@memverge.com> writes:
 
-On Thu, 22 Feb 2024 15:51:15 -0800
-Saravana Kannan <saravanak@google.com> wrote:
+> On Tue, Feb 27, 2024 at 01:59:26PM +0800, Huang, Ying wrote:
+>> Gregory Price <gregory.price@memverge.com> writes:
+>> 
+>> > I have to press this issue: Is this an actual, practical, concern?
+>> 
+>> I don't know who have large machine like that.  But I guess that it's
+>> possible in the long run.
+>>
+>
+> Certainly possible, although that seems like a hyper-specialized case of
+> a supercomputer.  I suppose still worth considering for a bit.
+>
+>> > I suppose another strategy is to calculate the interleave weights
+>> > un-bounded from the raw bandwidth - but continuously force reductions
+>> > (through some yet-undefined algorithm) until at least one node reaches a
+>> > weight of `1`.  This suffers from the opposite problem: what if the top
+>> > node has a value greater than 255? Do we just cap it at 255? That seems
+>> > the opposite form of problematic.
+>> >
+>> > (Large numbers are quite pointless, as it is essentially the antithesis
+>> > of interleave)
+>> 
+>> Yes.  So I suggest to use a relative small number as the default weight
+>> to start with for normal DRAM.  We will have to floor/ceiling the weight
+>> value.
+>
+> Yeah more concretely, I was thinking something like
+>
+> unsigned int *temp_weights; /* sizeof nr_node_ids */
+>
+> memcpy(temp_weights, node_bandwidth);
+> while min(temp_weights) > 1:
+>     - attempt GCD reduction
+>     - if failed (GCD=1), adjust all odd numbers to be even (+1), try again
+>
+> for weight in temp_weights:
+>     iw_table[N] = (weight > 255) ? 255 : (unsigned char)weight;
+>
+> Something like this.  Of course this breaks if you have two nodes with a
+> massively different bandwidth ratio (> 255:1), but that seems
+> unrealistic given the intent of the devices.
 
-> On Thu, Feb 22, 2024 at 4:21 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-...
-> > > >
-> > > > The fix for the user-space issue may be more-or-less correct but the problem is
-> > > > deeper and this won't fix it for in-kernel users.
-> > > >
-> > > > Herve: please consider the following DT snippet:
-> > > >
-> > > >       gpio0 {
-> > > >               compatible = "foo";
-> > > >
-> > > >               gpio-controller;
-> > > >               #gpio-cells = <2>;
-> > > >               interrupt-controller;
-> > > >               #interrupt-cells = <1>;
-> > > >               ngpios = <8>;
-> > > >       };
-> > > >
-> > > >       consumer {
-> > > >               compatible = "bar";
-> > > >
-> > > >               interrupts-extended = <&gpio0 0>;
-> > > >       };
-> > > >
-> > > > If you unbind the "gpio0" device after the consumer requested the interrupt,
-> > > > you'll get the same splat. And device links will not help you here (on that
-> > > > note: Saravana: is there anything we could do about it? Have you even
-> > > > considered making the irqchip subsystem use the driver model in any way? Is it
-> > > > even feasible?).  
-> 
-> I did add support to irqchip to use the driver model. See
-> IRQCHIP_PLATFORM_DRIVER_BEGIN() and uses of it.  So this makes sure
-> the probe ordering is correct.
-> 
-> But when I added that support, there was some pushback on making the
-> modules removable[1]. But that's why you'll see that the
-> IRQCHIP_PLATFORM_DRIVER_BEGIN() macro set .suppress_bind_attrs = true.
-> 
-> Do you have a way to unregister an interrupt controller in your
-> example? If so, how do you unregister it? It shouldn't be too hard to
-> extend those macros to add removal support. We could add a
-> IRQCHIP_MATCH2() that also takes in an exit() function op that gets
-> called on device unbind.
-> 
-> [1] - https://lore.kernel.org/lkml/86sghas7so.wl-maz@kernel.org/#t
-> 
-> > > >
-> > > > I would prefer this to be fixed at a lower lever than the GPIOLIB character
-> > > > device.  
-> > >
-> > > I think this use case is covered.
-> > > When the consumer device related to the consumer DT node is added, a
-> > > consumer/supplier relationship is created:
-> > > parse_interrupts() parses the 'interrups-extended' property
-> > >   https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/of/property.c#L1316
-> > > and so, of_link_to_phandle() creates the consumer/supplier link.
-> > >   https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/of/property.c#L1316
-> > >
-> > > We that link present, if the supplier is removed, the consumer is removed
-> > > before.
-> > > The consumer should release the interrupt during its remove process (i.e
-> > > explicit in its .remove() or explicit because of a devm_*() call).
-> > >
-> > > At least, it is my understanding.  
-> >
-> > Well, then it doesn't work, because I literally just tried it before
-> > sending my previous email.  
-> 
-> For your gpio0 device, can you see why __device_release_driver()
-> doesn't end up calling device_links_unbind_consumers()?
-> 
-> Also, can you look at
-> /sys/class/devlink/<bus:gpio0-devicename>--<consumer device name>
-> folders and see what the status file says before you try to unbind the
-> gpio0 device? It should say "active".
-> 
-> > Please try it yourself, you'll see.
-> >
-> > Also: an interrupt controller may not even have a device consuming its
-> > DT node (see IRQCHIP_DECLARE()), what happens then?  
-> 
-> Yeah, we are screwed in those cases. Ideally we are rejecting all
-> submissions for irqchip drivers that use IRQCHIP_DECLARE().
-> 
+Better to evaluate the maximum error introduced.  For example, for 3:2
+bandwidth, the result could be 2:1.  That appears not necessary.
 
-I have the feeling that this issue related to your gpio0 driver unbind is out of
-the scope of this series.
-
-Let move forward with the user-space fix (cdev) related to this series.
-I will sent the v2 to cover the cdev case.
-
-Regards,
-Hervé
-
--- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--
+Best Regards,
+Huang, Ying
