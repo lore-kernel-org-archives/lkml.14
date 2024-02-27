@@ -1,86 +1,74 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A43A13666C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881B4136670
 	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709026338; cv=none; b=dOOaj+71WXBUCOUOSqEzVgElFbYieK08uDv4OxpnjrrEUVpziBrFiS+QtbRFZYYb7htHa8zI3bO77JyauB2a1fyzxBgTXS8mXUTY2FaMzFNCrmebW2GSO2uP5mApgs+SAiKOAalCcqpqtvP2/yUzxIZIDTo8diSIrUtoQeltfjs=
+	t=1709026338; cv=none; b=HvGijNblPdhn8B8lCr/qpRq3fouFutte/kB/S9wq3xCkjwJHsKdbnsmkyBptjuwzmzcoW/lIc3LuOJwYZXlNBKDsi3zeFg7nCdTgcENRzoYdVXZApFm+mho0Y2jWMA91if96leqGFI3pwEhtNnhUk1L04+Ft8O9Aql5wdKMeiEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709026338; c=relaxed/simple;
-	bh=3UlkW27UdpL5WFsTVdJEkJVMGLlMP+znlstRRekB9Ks=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=eTp0SrN2CgkjQVCLLSttnLOtxiZWwUa4Lxrfi9O7JXdjK2maG8oAAWqCR2LhkPDpI68/K8Jy5NmtO8YvTr+zb7cn5a8E7aHYSSnUcqhfzcsBGueT29rgB3Fo6M9V/WwTLAshYKdVLcxc0H34irR2aEw9tZh8xvrk4X9P9XAVnvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+	bh=EorhoswHc0CHAHcYABw9rufbXmsLUHZ3Sa1Ab56+QxI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qjXatBYdJBVJDpagxfpoPRSUPsfKSHJLveIMiURcWgSa7KD5FqKYrDU1QTrDaaJpvAMkcwMnIvkfY3pU69yd6WQc6Rn6FBcpj8bfVqLX43fqCG1nZb3SOr5V3hwjiMYCzVKeYRmwlaw3ufbJ+tioe3g0sqI6t59EY7jPVu+Mrf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-36424431577so35702535ab.3
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3657bb7b8e9so34920285ab.0
         for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:32:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709026336; x=1709631136;
+        d=1e100.net; s=20230601; t=1709026337; x=1709631137;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VSzEE+cK+nSRt2VzOCPLmcohDy07PYkHlPu8819BDPs=;
-        b=sjVLS/WLBdLEKAl75pUKsyw2ZpqSi1A8zr6P81B87d6RfUrac0sUIm5+UneiRImz4Y
-         tFYw7XWgFwEOX2Q5+iDb/IZtU6ZAGRitm9JO+fGKOgV/2c5aSh27Ujmya8Zb59G+KXVn
-         ZS3bjQoW44SzYs9MrOk56A1LzAsan36PaGgABS5v/q4ydcpHLbfQyoOjXJIST9aOeiRf
-         J2FuPfZH7vldaos3uT6NSXuSOx6eKCB8l+LZOuJAgQbbz+6tH6CPw0s+UxRYAadoCEoy
-         88kthymsnhNwOGK7bpuprgpsUIBCudcNezejjMbLQX+xMeYUzxzSvDgsUl/vbhnHot+D
-         3POw==
-X-Gm-Message-State: AOJu0Yw5n9xchAPNoXegDP1o+s0EEPiP0/o9IBiUxtpuy9Nmk/bLYkoY
-	c4nOzdKTNmQiwpFweAZ4chJtxl1CzkTdaEp1JhU8O+VUBQRRInAOdnnK0LPcuTrHIvBs9m70nRn
-	QU7t10cFx+IiaPVJDXqIZlqiXiIVYlh45bjMDcLY4At0BE2mmVR7bAtxWhg==
-X-Google-Smtp-Source: AGHT+IF5u+2XMHoOgvxvA91H49CoSBaKTt/P6Fn0gkG723u0iO2lQXX3Xy+RzGq2OaWY6vaJgF2BWL7HdRTjYBKOy+P0hnbLxnpq
+        bh=LWlXwfIu7pmJUidfYjjj0Hw4GjENQdKqfI7wq4lCnDM=;
+        b=WiLy9rUvfJ0Phd5FqTiG29sA4jBu5cPDadebsUj1xKEz9zLJ7P2V8Rs1AK+SV0cEPs
+         u9Tmp6yF97WjoA9loD/jSChB7ugyrqFJxRWvO0sqAoRQNVbfIRU3/vR6yIUPhx52RxX1
+         iz89FzSimjBLZpQqGPrCTtBW3lfUOGKfk4QTlli0+wpPUKVRClTHF8/YsHO94VD1JmO7
+         8hJFL4lMZCkhy5aIkb7iezWhlG/49KlQJveH5K2T8cmwL9l1pM7UXjRsVWKb8lKuS0Tb
+         okTkUl5vvKELyjIxDm5zCFWGrVTOxUjRgf5vFcr75ZRhfCtxOcnzZUUELGgqcJkOTnbl
+         AjQA==
+X-Gm-Message-State: AOJu0YysguwIKTY9pPF7JlRnlJ7vaFpl83OLnCLniakWbST7QS/Hftb/
+	Gx0znF5N7E3KTzvfkv5iWb83M29D27o3G6Rxp+uqsgClPPre6dQFgo73E570jxPex3ip5kWT/H8
+	DnMZlC1+bSBVJDNKroSc4vT3THQSwvWSZcaLODtEhkwnmMy3dw09UC/OhCQ==
+X-Google-Smtp-Source: AGHT+IH+m/quQ4ts5DCidM8p7nMKajzanOtFbGs1o/fmnxB5Ms7XBrCXxhA2m+9Wtv4bJhquRMb6YIsmfH+uBKaAmNLS/Iydi6rW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2166:b0:365:afb3:e438 with SMTP id
- s6-20020a056e02216600b00365afb3e438mr8229ilv.1.1709026336557; Tue, 27 Feb
+X-Received: by 2002:a05:6e02:1b0e:b0:365:208c:e78f with SMTP id
+ i14-20020a056e021b0e00b00365208ce78fmr550080ilv.1.1709026336818; Tue, 27 Feb
  2024 01:32:16 -0800 (PST)
 Date: Tue, 27 Feb 2024 01:32:16 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b3d2ed061259b3b3@google.com>
-Subject: [syzbot] Monthly net report (Feb 2024)
-From: syzbot <syzbot+listaa3831d981acb8a56caa@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000b7ce42061259b389@google.com>
+Subject: [syzbot] Monthly trace report (Feb 2024)
+From: syzbot <syzbot+listb2c419343f446eb939a6@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello net maintainers/developers,
+Hello trace maintainers/developers,
 
-This is a 31-day syzbot report for the net subsystem.
+This is a 31-day syzbot report for the trace subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/net
+https://syzkaller.appspot.com/upstream/s/trace
 
-During the period, 10 new issues were detected and 12 were fixed.
-In total, 66 issues are still open and 1378 have been fixed so far.
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 8 issues are still open and 29 have been fixed so far.
 
 Some of the still happening issues:
 
-Ref  Crashes Repro Title
-<1>  4149    Yes   KMSAN: uninit-value in eth_type_trans (2)
-                   https://syzkaller.appspot.com/bug?extid=0901d0cc75c3d716a3a3
-<2>  971     Yes   possible deadlock in __dev_queue_xmit (3)
-                   https://syzkaller.appspot.com/bug?extid=3b165dac15094065651e
-<3>  956     Yes   INFO: task hung in switchdev_deferred_process_work (2)
-                   https://syzkaller.appspot.com/bug?extid=8ecc009e206a956ab317
-<4>  835     Yes   INFO: task hung in rtnetlink_rcv_msg
-                   https://syzkaller.appspot.com/bug?extid=8218a8a0ff60c19b8eae
-<5>  831     Yes   INFO: task hung in rfkill_global_led_trigger_worker (2)
-                   https://syzkaller.appspot.com/bug?extid=2e39bc6569d281acbcfb
-<6>  473     Yes   unregister_netdevice: waiting for DEV to become free (8)
-                   https://syzkaller.appspot.com/bug?extid=881d65229ca4f9ae8c84
-<7>  437     Yes   WARNING in kcm_write_msgs
-                   https://syzkaller.appspot.com/bug?extid=52624bdfbf2746d37d70
-<8>  307     Yes   INFO: rcu detected stall in tc_modify_qdisc
-                   https://syzkaller.appspot.com/bug?extid=9f78d5c664a8c33f4cce
-<9>  270     No    INFO: task hung in linkwatch_event (3)
-                   https://syzkaller.appspot.com/bug?extid=d4b2f8282f84f54e87a1
-<10> 257     Yes   KMSAN: uninit-value in nci_rx_work
-                   https://syzkaller.appspot.com/bug?extid=d7b4dc6cd50410152534
+Ref Crashes Repro Title
+<1> 8197    Yes   possible deadlock in task_fork_fair
+                  https://syzkaller.appspot.com/bug?extid=1a93ee5d329e97cfbaff
+<2> 279     Yes   WARNING in format_decode (3)
+                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
+<3> 26      Yes   WARNING in blk_register_tracepoints
+                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
+<4> 17      Yes   INFO: task hung in blk_trace_ioctl (4)
+                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
 
 ---
 This report is generated by a bot. It may contain errors.
