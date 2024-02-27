@@ -1,119 +1,91 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB3E1EB25;
-	Tue, 27 Feb 2024 12:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885291EB25;
+	Tue, 27 Feb 2024 12:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709038151; cv=none; b=p/Zvzy0SjBK9lGTeunEQTVuzJxDTaRawqyiZ87oF1wxaAqiS5nfK9NSekXCCCK3fkaSmiIsq/Tb1+fUOCSjL0HE4+59mkqoiawWAEiHQBg5kGteJfSyPiXV+1EEtp6Q9jC+1rifx279CIyuAiy7Xw3tUvfuQCoDOjBt61TYJ4Do=
+	t=1709038158; cv=none; b=kmeIERU9l5nZdSAIKoJnbZJYt6oVBPJX53dwq6T5H9tT2H4JT3pEhIXZRFNNMW9vuTWvhQVf05e/53fe/fBQW0ibFMltgBGcUyV1zfmkw9Dm61wKQchZqHMCioLS9Aj5Sd0SZujR6TSgGKAKMVwEwSXMS7szCEkEVOcsBm0aZA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709038151; c=relaxed/simple;
-	bh=aJN2MeGDZqp0rbRYo0c9XNa6DifuaXrgMmZP4MdDAMw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aEDlkZUUZcP03aCnGRKRWgEFV4cQwtnUrK1RxyYKw/EOEg+WWT9I7dKYklKGmNhRGZQldZXnhshjBg9rseJMtC+WbBBaPGI8wD40kAXyIbRXdTavusVaboG327oXs4rXoF2sx45oxFNaeS83hVTiGpxHQBFMefy6d3a4mzuJWqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1gxsZik; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709038158; c=relaxed/simple;
+	bh=oTWwoTX0hrUSfcNocfpLt3JaDWHEII50tRTkLPscP7Y=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=SBnLfI/VhHoBkwdVtSWzsX93hEf5Pjkr8fEkIR0Hnq/5UP9lB3RoWJDe2hEftAwQHFCKNc6csQBofkYiwyQu46rfV2LbO3T3NHzdpmiAVUvEG3APErc1dJvDjwTb4vmlYXTJZ870JShyQDs1FfNXuyJMulw8IDD8518BolP8J7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WVin+zwF; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1gxsZik"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-563c403719cso5247036a12.2;
-        Tue, 27 Feb 2024 04:49:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709038148; x=1709642948; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k5p1Edl1NH7byvXQfMcSs3cZtovHa/4E/zHLUVKkoBE=;
-        b=A1gxsZiklDSbTazHTe8/MLxTRxshgRAfJJ94D0vnOqIc4s5I2NOfxZFC89NVKxVdPH
-         TuatXJ2pfdewvUsXN7JA7IG/dhMSZuw2fQsLQDsYET5wnHG9GAdXAzTf3l+hnuAQjYlk
-         VykBIBTmwx3vfiPa/oLVSGlguS2Hl0JeBX1gekpH4GIOTv7o1yycS0SYpPLBz94i2MuV
-         z3tOPjpZoY9rPfb+qMGpWPGPxxQyiJZmbkXKuVT2oR3UacNfhJgOAxWdB3JbwLCxG4mr
-         kK5oA3jd6saAycLlCBcomHxCOonc8AM3ylqMNkp/pgNC0aGScruIBYz0jRVxQQM1H2Fi
-         zqaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709038148; x=1709642948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k5p1Edl1NH7byvXQfMcSs3cZtovHa/4E/zHLUVKkoBE=;
-        b=OP9Rw7GkOmyTcSPWsmNxZXRF3KGumBejjX90Lv+Gh9mCOC3a1BuDIsbQSXGWQw9Smc
-         mbgr3Q/a04yFoE5ozhaT3BWEz/FHHOXVgawicTVQoec1njxTTI1Ho1VKNzNLeXU+g2Kc
-         EVzQRK4i9eLCqDD1yIe8jF8LY8Xn6sAOSQuQFwRHbj+1/PH8yHkA28KKLRu/FXHIpNb/
-         i9708YdZCyL3CtsDgKcoXc+6rw+s3uJh2N2evKiF2I7EqC2xDd5iNcwcrOgn5ejh3Paf
-         ZoLxILDEg3QNbUvSgVNLHLFSK3/YxvM5w6jZyu6AyugRHM6QDZR7agYkUxY8ihtgt7Si
-         6pjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUfY+XoIt2FXxtc/NGV71xONCsEeJ/YakU0bn4a2dAaCXwYm+SDU33ANol6qh2XrJ14In+YqAwWv+mmJ/aFO3wHBl0deSJQWlo3CQK8Sb8ZptaeSmmTyrpu8Co9zjorLLiXHh6Km3f
-X-Gm-Message-State: AOJu0Yzv1AYdH/Q8MKVZJAo/uKsi4i57qCUX4IusUoyhKFpHVyc2fwFQ
-	+omdCMXD1R2aOd7D8+VAp+/El/edorBpFRMP/wSkE2e6wi58dWM9Av27VerSAY9aa73ueKwPER/
-	XkOeiyNbR151W7YttBaRAVq/o5/A=
-X-Google-Smtp-Source: AGHT+IFJY/Dc0FAemTrGn7dbCzMq1SVbHT1UbCSPNS1Va9TuSCF77jAwMf0Y1LLTilc0YfteM0PrAKPMqJuOxE+VeAU=
-X-Received: by 2002:a17:906:7243:b0:a43:a628:ff31 with SMTP id
- n3-20020a170906724300b00a43a628ff31mr1436136ejk.26.1709038148513; Tue, 27 Feb
- 2024 04:49:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WVin+zwF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709038156; x=1740574156;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=oTWwoTX0hrUSfcNocfpLt3JaDWHEII50tRTkLPscP7Y=;
+  b=WVin+zwFzNlFnApqpIDrX73fxjFNTPcP5Ctj84APDBtHFRV76tc3Kc9Y
+   nJsTUcWyfOFXp/I6PLxa+OkaNbXIfuwFx/CIX9/uHw7CtE3DwGcluLMQu
+   Z1iE0gYKoI1Oa+7yYGntM7g5Z9fEfryN/VRXdnBq+ISwGdqLf2hG6H/IP
+   a2VW/ENP6R67yQ4++5B3mY7jUOksw7hDZ/rFNy6fU4c6iwWu8MY1DzGEp
+   Jm70QM8AfIGT6c5HnaLazO+IiX8Rpmk9Rb3ZCF779suuK8P3HZZDX57UM
+   HUBHO8cb4043aF5sHh9xuL4TfBWrYQtoOsAjltQlfzIM9StlVWtcVOFA8
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14815031"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="14815031"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 04:49:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="7379971"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 04:49:14 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 27 Feb 2024 14:49:10 +0200 (EET)
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+cc: Reinette Chatre <reinette.chatre@intel.com>, fenghua.yu@intel.com, 
+    shuah@kernel.org, linux-kselftest@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 0/3] selftests/resctrl: Simplify test cleanup
+ functions
+In-Reply-To: <cover.1709018050.git.maciej.wieczor-retman@intel.com>
+Message-ID: <7b86f718-abfb-aa8f-5d4b-ebf5dd7b3e62@linux.intel.com>
+References: <cover.1709018050.git.maciej.wieczor-retman@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223-saradcv2-chan-mask-v1-0-84b06a0f623a@theobroma-systems.com>
- <20240223-saradcv2-chan-mask-v1-3-84b06a0f623a@theobroma-systems.com>
- <CAHp75VfVTJsQDwaPoPgGiT6jnymXAR3WpETqaKai8rXAC70iLw@mail.gmail.com>
- <6f76ffab-69fe-4afb-9d7e-d3cdfe37c28c@theobroma-systems.com>
- <CAHp75Vft3kJEF9JiuEqVsS3biQ6YsuDXON_P3FOZRjtb8NaB2w@mail.gmail.com> <d2a7954926e328cbf898aac0a42a6e24@manjaro.org>
-In-Reply-To: <d2a7954926e328cbf898aac0a42a6e24@manjaro.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 27 Feb 2024 14:48:32 +0200
-Message-ID: <CAHp75VcuRacheLt=sAJz27RMEZqvZ8CAZSPvxgUbSFS-dUAAOg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] iio: adc: rockchip_saradc: replace custom logic with devm_reset_control_get_optional_exclusive
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>, 
-	Quentin Schulz <foss+kernel@0leil.net>, Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Heiko Stuebner <heiko@sntech.de>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Shreeya Patel <shreeya.patel@collabora.com>, Simon Xue <xxm@rock-chips.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-157701625-1709038150=:1099"
 
-On Mon, Feb 26, 2024 at 10:31=E2=80=AFPM Dragan Simic <dsimic@manjaro.org> =
-wrote:
-> On 2024-02-23 15:39, Andy Shevchenko wrote:
-> > On Fri, Feb 23, 2024 at 3:10=E2=80=AFPM Quentin Schulz
-> > <quentin.schulz@theobroma-systems.com> wrote:
-> >> On 2/23/24 14:00, Andy Shevchenko wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-...
+--8323328-157701625-1709038150=:1099
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> >> I would still be reachable at that Cc address without having to modify
-> >> the .mailmap after the fact (which won't make it to an earlier version
-> >> of the kernel for example). Some maintainers don't really like this,
-> >> some don't mind, we'll see in which category the IIO maintainer(s)
-> >> fall
-> >> in :) (I don't mind either way just to be clear).
-> >
-> > My point is that Cc and other similar (non-real-tags) stuff is
-> > polluting commit messages. It means that this will be copied to the
-> > Git index to all kernel git repositories in the world from now and
-> > then, This is at bare minimum makes additional burden on git log (and
-> > parsing and so on) and moreover, wastes resources becoming less
-> > environment friendly (no jokes). Using --cc or moving to the behind
-> > the commit message will keep email copied with cleaner commit
-> > messages. Yet, all email tags are available in lore archive
-> > (lore.kernel.org). Please, really reconsider the commit messages
-> > content in the Linux kernel project and elsewhere, it will help to
-> > make the world more friendly.
->
-> Believe it or not, I'm working on some patches for Git that, I believe,
-> should help a lot when it comes to handling Cc: addresses.  Would you
-> like to be included in the list of recipients for those Git patches, so
-> you could, hopefully, provide some feeback?
+On Tue, 27 Feb 2024, Maciej Wieczor-Retman wrote:
 
-You may Cc me if you want to, but I can't guarantee I have time or
-valuable input to that.
+> Cleaning up after tests is implemented separately for individual tests
+> and called at the end of each test execution. Since these functions are
+> very similar and a more generalized test framework was introduced a
+> function pointer in the resctrl_test struct can be used to reduce the
+> amount of function calls.
+>=20
+> These functions are also all called in the ctrl-c handler because the
+> handler isn't aware which test is currently running. Since the handler
+> is implemented with a sigaction no function parameters can be passed
+> there but information about what test is currently running can be passed
+> with a global variable.
+>=20
+> Series applies cleanly on top of kselftests/next.
+
+Thanks. For the entire series:
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
 --=20
-With Best Regards,
-Andy Shevchenko
+ i.
+
+--8323328-157701625-1709038150=:1099--
