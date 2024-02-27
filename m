@@ -1,106 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86A913A88C;
-	Tue, 27 Feb 2024 13:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA4C135A43
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709039126; cv=none; b=IkCdo8evV8gHh7e6h0JUQSJJYar7d7qWF4P2FeNAJe+T8BnqmlBcCF9UlFWU108+7Jt4ePcwzRhVE40PBn0JllZHVY8d6/HDJSzCG1DUMdQ74ySLXkUAADCC2W1TSM1P11zS29aL0d5zA88mIEsqeMPtJqGtbEtI0PZA5NCexOM=
+	t=1709039181; cv=none; b=pRiESYMqZs3D3rR2GFwj52LfR/nrtAkodo6ndgXfa8ybwt+W2L2kZhypRUwJkKJ6uz0zNtMlrk8YSXtUxL66QLY9BWOhIqBVOOIrPVG88MhdBTgZQc8/03loWGfoXfo3ZKTEfuIz/aDTrj8hpftD8mUZew4W669WR3U/UxSC2Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709039126; c=relaxed/simple;
-	bh=NGxHsT//Fk7PPnSaeyki4VGAuhu1uUTpcQGSybWfVVA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jv4fNTvqqj4m5x8gPRC2Z9msx/0hMM3IgqLxdLCDriWFwuFVvQfd9QmdKHuELiPqSu3X4QzDHbjbaLI1LqXwNOpZt7KMrE55C8PhYa7E+6iEGgQMfV/b7u3iBYUTPE9lBGFspZZUXQ3lkP/Zn/+XyQ/OHptdBbJH6cD9zlsZEDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bp6R5fnG; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709039181; c=relaxed/simple;
+	bh=/uDylJuigd4d8kEq+ujZnBuzh0BMwt6INRnFR5uTzPE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ea7JE+J0u5FXZQOU1eZnM4mtQ6LZJ+ejAazisAjPO7Zk7nwqHyZPu7nKpqjyp7wvvBXErNu69T0zoZS+KarLh+GfjsqX1N1yJrHy9lFzrfkhz6LVapf8FP0ttDfB4KkiPJW+kUerrdzo8krV0c/hreEDmR6oCtsu6745yVG8xvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RsBLqD3D; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bp6R5fnG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709039125; x=1740575125;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=NGxHsT//Fk7PPnSaeyki4VGAuhu1uUTpcQGSybWfVVA=;
-  b=bp6R5fnGPSEMs2k5/Fx8wZqcvPJF4/eGdpoMn1AYUBVOo90WJUZ0CLAF
-   WFS3o7dLqFrAwKIJYvok1mrKQ4ZD3Ka8ouJyGaCIvJFiXcujBQWXJuYyC
-   Emz4Y0TjdFp0UXoULETQWaKerQ/XAALCGcDxH8U41pYZU6FPUBKKt3/uZ
-   oAAv5I3Ba7vCniT/1AXK5Jh0TZ5ILqgdrOwfXqlMeCGcZA/DSiwkZC8Op
-   TWjBZ5pXT849eyh+zamXytdyvLEtOTTYgVQsNV+C3EP3Vp8p9MSRAJJsh
-   uR3NU2/XhDD5oes4KD2vPyBnIv51qXu8/v8h9bz1QPbeW0tlqqnwwI+rx
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3247094"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="3247094"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:05:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="7001991"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:05:20 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 27 Feb 2024 15:05:15 +0200 (EET)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: jithu.joseph@intel.com, linux@weissschuh.net, pali@kernel.org, 
-    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
-    jdelvare@suse.com, linux@roeck-us.net, platform-driver-x86@vger.kernel.org, 
-    linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] platform/x86: wmi: Remove obsolete duplicate GUID
- allowlist
-In-Reply-To: <20240226193557.2888-3-W_Armin@gmx.de>
-Message-ID: <d1244489-6e0b-8209-5b2c-e2af7425e110@linux.intel.com>
-References: <20240226193557.2888-1-W_Armin@gmx.de> <20240226193557.2888-3-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RsBLqD3D"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6e4a803c72aso623211a34.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 05:06:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709039179; x=1709643979; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/uDylJuigd4d8kEq+ujZnBuzh0BMwt6INRnFR5uTzPE=;
+        b=RsBLqD3DF92BVLra4FErhxL0dMdS3NUuTswwG0RxZSyFI+eJUPu3PnXulJdqwvoLTa
+         iHycV1tHGEF13jJ7POhZZwedG58nHzNt6qiDKpTNA4JvCsJRQ/EbN8rnsa6TSDMmuIGs
+         Zs5TAnfCgXTAwL9xP0Hhplng03ALHNRHxbr1qK1ad7t/CK/UD/g62JmRwD0/96kS5tdw
+         vhR5k+S1ZvNdEMmPv2mbU+c+wQgnlpSXEhq3lLmVtZx7YIXmh8mJHalLMuclFmpHSSsz
+         k6LWEBjGJpOOCSEriC19u88++aw2Wd1o3raftA2e0vXu1/t3hcZDlJEVp+srRPgB+Ecf
+         POAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709039179; x=1709643979;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/uDylJuigd4d8kEq+ujZnBuzh0BMwt6INRnFR5uTzPE=;
+        b=DgRCavNv1nrfOo+vp5Mfx5C+Ce7C1mEt7fIj42JhwMLS0wmQV9aL52DGFLtgPpktvA
+         VMDe6nOMEa7fPa9xtk57oRvdsQhMN7nRN+vYFf2uEInQni7cjPemugz/0T12A8TBgwAQ
+         EuAkWdgbQ238Vs5nTQ3ueMh+W/GFyE0ZUf30IOQ1OdXkHR8N09zQE+jWkEUuucoFrp0Q
+         nJOJY0fxvfUz12ANoRHTlaRp9gH2cx2u6vWsUpoYQUzqg8+udw7b021HnD/W0Uvxpcoq
+         2RM6fDvxulqWhE01hW5OIJV7znEfygaaslZkl+gfvq+eHevsYFHJMA3kRnCw0SEoWB0E
+         6mKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWuTDRiv1XXyUQtEhhI5adSdAEsxEpGVXSUlVmn20pB1xGE2z1ryILuy0eSOoJ6dO1R+3SOH98JH4wKN+Q5tg/HsgF/8MlmabjNdzEf
+X-Gm-Message-State: AOJu0YzHjNGRjrkxjJfyWkjQC22snQSB1U0Z3jeiPzRAt2ui2Yrse0F2
+	0jHE8Fy8lE1BoeKFL0cnUFfTq1ioH692ssDfdUvqekmZ18WQ34t59HSgqGOer4KaIgvEdmp4QQm
+	iOerzfz0H98Ycgg80dfSIun/nvWEK7qQOXIjQEw==
+X-Google-Smtp-Source: AGHT+IHymsnTIzpxxyFaUH2TMYMIhZIuV1ZmmTokIhLJSPK8tB568uQzASfJBzQQOq6hn71h2+9vuxHhF3pkwDw32HM=
+X-Received: by 2002:a05:6808:10cf:b0:3c1:8039:c6a5 with SMTP id
+ s15-20020a05680810cf00b003c18039c6a5mr2062657ois.35.1709039178020; Tue, 27
+ Feb 2024 05:06:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20240221213208.17914-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240221213208.17914-1-andriy.shevchenko@linux.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 27 Feb 2024 14:06:05 +0100
+Message-ID: <CAMRc=Mfh-ojboNUELXfszKUbZRfeZn9vsN-HMTdMQv6my6ZrdQ@mail.gmail.com>
+Subject: Re: [rfc, PATCH v1 1/1] gpiolib: Get rid of never false
+ gpio_is_valid() calls
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 26 Feb 2024, Armin Wolf wrote:
-
-> The whitelist-based approach for preventing older WMI drivers from
-> being instantiated multiple times has many drawbacks:
-> 
-> - uses cannot see all available WMI devices (if not whitelisted)
-> - whitelisting a WMI driver requires changes in the WMI driver core
-> - maintenance burden for driver and subsystem developers
-> 
-> Since the WMI driver core already takes care that older WMI drivers
-> are not being instantiated multiple times, remove the now redundant
-> whitelist.
-> 
-> Tested on a ASUS Prime B650-Plus.
-> 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+On Wed, Feb 21, 2024 at 10:32=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> In the cases when gpio_is_valid() is called with unsigned parameter
+> the result is always true in the GPIO library code, hence the check
+> for false won't ever be true. Get rid of such calls.
+>
+> While at it, move GPIO device base to be unsigned to clearly show
+> it won't ever be negative. This requires a new definition for the
+> maximum GPIO number in the system.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/platform/x86/wmi.c | 39 --------------------------------------
->  1 file changed, 39 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 349deced87e8..1920e115da89 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -90,16 +90,6 @@ static const struct acpi_device_id wmi_device_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, wmi_device_ids);
-> 
-> -/* allow duplicate GUIDs as these device drivers use struct wmi_driver */
-> -static const char * const allow_duplicates[] = {
-> -	"05901221-D566-11D1-B2F0-00A0C9062910",	/* wmi-bmof */
-> -	"8A42EA14-4F2A-FD45-6422-0087F7A7E608",	/* dell-wmi-ddv */
-> -	"44FADEB1-B204-40F2-8581-394BBDC1B651",	/* intel-wmi-sbl-fw-update */
-> -	"86CCFD48-205E-4A77-9C48-2021CBEDE341",	/* intel-wmi-thunderbolt */
-> -	"F1DDEE52-063C-4784-A11E-8A06684B9B01",	/* dell-smm-hwmon */
-> -	NULL
-> -};
 
-Great work, thank you.
+It looks like a risky change that late in the release cycle. I want to
+avoid some CI problems at rc6. Please resend it once v6.9-rc1 is
+tagged.
 
-I've applied the series to review-ilpo.
-
--- 
- i.
-
+Bart
