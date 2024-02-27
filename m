@@ -1,247 +1,116 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F41E249F5
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233B747F60
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709053470; cv=none; b=FikmtguWqCM48+5ONbIMHXUWLFaVu91alAy8nmeJIiPRp9bqShb+jUj46HP79jEDEMwnTNJhFesGhs0QOKQwCVmuRF5PComIXCm/btfdtq2p16cPBobxYc3CcG0D3DckeQs/2vafGFsnM4GtMYPvIzReMBGv5HCb2scbjma6n20=
+	t=1709053495; cv=none; b=EG5zCzrJ4nqwxYPromq8tKoicHCW4DV56+0nhf6uPlBcFDuUcIYPNgUWxed3r4r9FTUzTS2U2E9136yO8yIswMn2BRwjiw2Wewx6DsUpoAGiyhj1B/0TU1QjXP8oHpYYsvRYJeW88nkYSqBq1sc6eu4nvZ+D85Tn7smNeRVab0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709053470; c=relaxed/simple;
-	bh=3Bc4JcS7h3uh1nH/uBs22YCORPrgVtcxn5c73BZBvQs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fowp4C+pwvC2jqYSmyIRzRpSC3VTbcpXXVJmO+cKU08DEJHw+3+HI8HeclvBxkOpOTiAcgCdOcbyY0ELNN9cEp12460DZmtTlwqSaaFAvRoWFbJDpstVnvKvH/jOcdN35Z/1mWl9/P8BzwQStH5eEYx6OMuZGjdpk9CSwwiXQCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=udima.es; spf=pass smtp.mailfrom=udima.es; dkim=pass (1024-bit key) header.d=udima.es header.i=@udima.es header.b=m4BDBgQa; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=udima.es
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=udima.es
+	s=arc-20240116; t=1709053495; c=relaxed/simple;
+	bh=nx3Al3sJLVHlvfnNiUefu/fSlBGWeq90iTuG8ElMJVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F4dJd2BfUYpRFLix5es0jl2RLq09ApEc0PcWhnNBNq/th2Ow3akBDt1FsCa5sM/ATUROhLeMX17BWxdO9zdlZrHokB+H2Evdh/oeYJH+NN6B5yFbVjC54W3HKVZuexHA75BwKtiqug5x5RwXk/O/gCJb6T2JIqphTRX2vieDrX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=RZWe+Ivl; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=udima.es header.i=@udima.es header.b="m4BDBgQa"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-412ad940fe8so6100165e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:04:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=udima.es; s=google; t=1709053466; x=1709658266; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=95wAwQRxYUW01FCwrYdkBVJ1oY3jiTOrAj5JhsuFKJA=;
-        b=m4BDBgQad81TVza+0OI/6wCY4KyKoA+RnRkwbPHmJtBa18ydRGofiWs4VL2hTQHU0X
-         dE+p887HVmMBmoLTWD5bcg+Uf2oTNfNG6c1AS2JVvOHY/S5ZU/9Qy5bm6Mx7S7OP1hq2
-         IaoM9mZ2I67UhPfioAlTexQrHSmQvA2ZLHqJ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709053466; x=1709658266;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=95wAwQRxYUW01FCwrYdkBVJ1oY3jiTOrAj5JhsuFKJA=;
-        b=tlK6dfg4Iu2pFoNtss4hywYqSBRX38tkZzEuiyDBIe57yHdEqV5Ee3bmuMUKLVBhs3
-         1fBJKfxBiNfyiLt35yVtiZUsIAIZ7/cXb/k7Ru5g8I9ta+qhsNntciAXmUCV+gkXiIh1
-         sxjrKLa6MA6Qj8GvbBiquM4EfXCSMkE7BXEgLoHmLCdzl1hcC9ejG5jrvqVtuShkYuBT
-         IlidUX7/0Trwng7Ej+x5rZ0mjoVTJyqZAW6QX6wLVwDbIEaRqOCYykvFOgh9aEv7s6CZ
-         bSPKp0S0u8Q4l9MposOBnbCHKymeKbJX1F1ckvq2AabzjQqUG1r8TesXXXqYatSLcqSU
-         lcAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTECNAxljAQ9Dy5J1OD9G4YI09Nc+hdgHiq9tm3in4NJvay6M5inCfsaMvEHCLXQd51JNMil+1lqUhxirBmuYtJX1yVktbAektkByL
-X-Gm-Message-State: AOJu0YyRhF183UHUfVmkIvmQvJdYbh2y9X0qHiIg5LXdNZh//2Xz772x
-	Yo09CWh69WTODrl76gg+YnK9QosKCGmU6RJ4j/cZ5ZQz0yfscZabGRlTi0DbDoQ=
-X-Google-Smtp-Source: AGHT+IGB1KvOAfDXWLVJwto/yIheyZ7CkEm/iZR711gDYwaMLA+8/p2ysr7MGqvci2mwbSoHCmzwMA==
-X-Received: by 2002:a05:600c:3508:b0:412:b0ed:f18f with SMTP id h8-20020a05600c350800b00412b0edf18fmr640238wmq.21.1709053466496;
-        Tue, 27 Feb 2024 09:04:26 -0800 (PST)
-Received: from portatil76.udima ([79.116.0.170])
-        by smtp.googlemail.com with ESMTPSA id j12-20020a05600c190c00b00412a5a24745sm6316878wmq.27.2024.02.27.09.04.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 09:04:26 -0800 (PST)
-From: =?UTF-8?q?Javier=20Garc=C3=ADa?= <javier.garcia.ta@udima.es>
-To: 
-Cc: daniel.baluta@nxp.com,
-	javier.garcia.ta@udima.es,
-	daniel.baluta@gmail.com,
-	broonie@kernel.org,
-	krzysztof.kozlowski@linaro.org,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="RZWe+Ivl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=nx3A
+	l3sJLVHlvfnNiUefu/fSlBGWeq90iTuG8ElMJVI=; b=RZWe+IvlEXiNRgwQBlBr
+	HkeuLQlomaOzt17btM8FfRjYYXz3GxFr9/zMIUUmAYdMi944hjqvJ6n1YYD/421j
+	IAJ0Fy4gEbKYmsPmAAwLkD9BlkG/fVGmFIEg0cx3oeWCRBJr4gfIZ6DeaPo7i7rU
+	hgyz3v8BnPUXTrABKnkLDBhaejAUAiV/qndSkX11xH0QRyV34l29hMAF6gN/Pxyt
+	kZIYL8ltx8O8ESK60+lQeYkJJyzijLo4Ge+qQm5/9PN7gX/37Zt4vYeNBZRZdlig
+	T9o2CB+cbVIyoVuE440kLAtcQ6NSNZisaw76X7iZOQuY4xoAHZ1qnXFozdWiq9FF
+	Iw==
+Received: (qmail 1670908 invoked from network); 27 Feb 2024 18:04:42 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Feb 2024 18:04:42 +0100
+X-UD-Smtp-Session: l3s3148p1@CKOvBWASTKUujnu9
+Date: Tue, 27 Feb 2024 18:04:41 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	alsa-devel@alsa-project.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] ASoC: dt-bindings: img,spdif-in: Convert to dtschema
-Date: Tue, 27 Feb 2024 18:03:56 +0100
-Message-ID: <20240227170400.705862-1-javier.garcia.ta@udima.es>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240227123602.258190-1-javier.garcia.ta@udima.es>
-References: <20240227123602.258190-1-javier.garcia.ta@udima.es>
+	Andi Shyti <andi.shyti@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-i3c@lists.infradead.org,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: i2c: Remove obsolete i2c.txt
+Message-ID: <Zd4WKY966qe4DC3i@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Rob Herring <robh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-i3c@lists.infradead.org,
+	linux-sound@vger.kernel.org
+References: <20240222174343.3482354-2-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="J5qK8c/j+dsQwcO0"
+Content-Disposition: inline
+In-Reply-To: <20240222174343.3482354-2-robh@kernel.org>
 
-Convert the Imagination Technologies SPDIF Input Controllerto DT schema.
 
-Signed-off-by: Javier García <javier.garcia.ta@udima.es>
----
-Changes since v1 and v2:
-  - re-written the subject inline to include relevant prefix
+--J5qK8c/j+dsQwcO0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  - Node name changed to spdif@18100e00 to be more generic
+On Thu, Feb 22, 2024 at 10:43:42AM -0700, Rob Herring wrote:
+> Everything in i2c.txt is covered by schemas/i2c/i2c-controller.yaml in
+> dtschema project, so remove i2c.txt and update links to it in the tree.
+>=20
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-  - Added maintainers from Documentation/devicetree/bindings/sound/ who
-    should be added to the maintainers list?
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-  - Drop reg description
 
-  - Drop resets description
+--J5qK8c/j+dsQwcO0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  - Added $ref for dai-common.yaml
+-----BEGIN PGP SIGNATURE-----
 
-  - Removed unused dt-bindigs/gpio/gpio.h include
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmXeFiUACgkQFA3kzBSg
+KbY1UxAAs23gIOVvLkCmeyrbAAN7i3d7cIQP2kzKq9Z4iouxjZavNTtUoLQI3Dkk
+i2BhJMPBbngmCwt4X+FDvI5qNRbBLNmX11fyuXpND15iRR6dPZ4jPm7VvMBxy62h
+CrNy9H6KK6ydfsaaRCKZvx6SuvcRcPd+rZeHSFLh6/3ESldx7JA/dAtCsFI6KUxF
+58lIqJZg++rAfqxaa2lJJFu180EMRcJzRmGx/c14ySOtYszfEU/KMnSFxdLlStBu
+S74TiQ8Aif+WUILLavWSCBiXJ3L6eiba+0fS0m+68z3x4UbpiMX8J1Zs4wq0TF+I
+wkPJl9iI0EhNZCy2T0l+iAFCBkLG84w9iyd3eQuTyp6Wl2y1jlbw7B4h57P/8CK+
+SWI/E6NdS3Gda5CwQw4zqAMlTv1VaJXpOlJv4MohCy1VfzaK/q/9bR9w9WVFOf0T
+N4ub2OU3EmKrLvxZfJPPbWgSNsS4zuDrZ1EoC7LYP7+Wx15ktYux9a8pRNC2RwhL
+xrRYAR7lPkZwz3IVgrhAFeIssOsWD0C4qOeXvX27cd2mqnDa9xWHIGd1ZEAaiLm7
+5tbuk7aF9qizAL35XAeM7/zZnIvGGNDPeu696we834v6Ud5ThnMqjVTnmDgdBT6h
+ftuE2WjABe5yP+zBZtKDrNFl0Cf1UtJ6DXn7TyDGkdV1GB0IYBk=
+=PXn7
+-----END PGP SIGNATURE-----
 
-  - Added reset and reset-names in the example
-
-  - changed example hex to be lowercase
-
- .../bindings/sound/img,spdif-in.txt           | 41 ----------
- .../bindings/sound/img,spdif-in.yaml          | 81 +++++++++++++++++++
- 2 files changed, 81 insertions(+), 41 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/img,spdif-in.txt
- create mode 100644 Documentation/devicetree/bindings/sound/img,spdif-in.yaml
-
-diff --git a/Documentation/devicetree/bindings/sound/img,spdif-in.txt b/Documentation/devicetree/bindings/sound/img,spdif-in.txt
-deleted file mode 100644
-index f7ea8c87bf34..000000000000
---- a/Documentation/devicetree/bindings/sound/img,spdif-in.txt
-+++ /dev/null
-@@ -1,41 +0,0 @@
--Imagination Technologies SPDIF Input Controller
--
--Required Properties:
--
--  - compatible : Compatible list, must contain "img,spdif-in"
--
--  - #sound-dai-cells : Must be equal to 0
--
--  - reg : Offset and length of the register set for the device
--
--  - dmas: Contains an entry for each entry in dma-names.
--
--  - dma-names: Must include the following entry:
--	"rx"
--
--  - clocks : Contains an entry for each entry in clock-names
--
--  - clock-names : Includes the following entries:
--	"sys"	The system clock
--
--Optional Properties:
--
--  - resets: Should contain a phandle to the spdif in reset signal, if any
--
--  - reset-names: Should contain the reset signal name "rst", if a
--	reset phandle is given
--
--  - interrupts : Contains the spdif in interrupt, if present
--
--Example:
--
--spdif_in: spdif-in@18100e00 {
--	compatible = "img,spdif-in";
--	reg = <0x18100E00 0x100>;
--	interrupts = <GIC_SHARED 20 IRQ_TYPE_LEVEL_HIGH>;
--	dmas = <&mdc 15 0xffffffff 0>;
--	dma-names = "rx";
--	clocks = <&cr_periph SYS_CLK_SPDIF_IN>;
--	clock-names = "sys";
--	#sound-dai-cells = <0>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/img,spdif-in.yaml b/Documentation/devicetree/bindings/sound/img,spdif-in.yaml
-new file mode 100644
-index 000000000000..ab8f96cc37cd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/img,spdif-in.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/img,spdif-in.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Imagination Technologies SPDIF Input Controller
-+
-+maintainers:
-+  - Liam Girdwood <lgirdwood@gmail.com>
-+  - Mark Brown <broonie@kernel.org>
-+
-+allOf:
-+  - $ref: dai-common.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - img,spdif-in
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+
-+  clocks:
-+    items:
-+      - description: The system clock
-+
-+  clock-names:
-+    items:
-+      - const: sys
-+
-+  '#sound-dai-cells':
-+    const: 0
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    items:
-+      - const: rst
-+
-+required:
-+  - compatible
-+  - reg
-+  - dmas
-+  - dma-names
-+  - clocks
-+  - clock-names
-+  - '#sound-dai-cells'
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/pistachio-clk.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/mips-gic.h>
-+    #include <dt-bindings/reset/pistachio-resets.h>
-+    spdif_in: spdif@18100e00 {
-+        compatible = "img,spdif-in";
-+        reg = <0x18100e00 0x100>;
-+        interrupts = <GIC_SHARED 20 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&mdc 15 0xffffffff 0>;
-+        dma-names = "rx";
-+        clocks = <&cr_periph SYS_CLK_SPDIF_IN>;
-+        clock-names = "sys";
-+        resets = <&pistachio_reset PISTACHIO_RESET_SPDIF_IN>;
-+        reset-names = "rst";
-+
-+        #sound-dai-cells = <0>;
-+    };
--- 
-2.43.0
-
+--J5qK8c/j+dsQwcO0--
