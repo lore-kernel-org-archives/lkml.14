@@ -1,125 +1,111 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00351EB25
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110281EB25
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709039685; cv=none; b=P0nJ7yPiMdzO2YTqaDOHoeVVb9YQCvFi2q+uF0nxG+Unm7rsg5yZFrLdxQ8ujZ1foBGTiHCFE/JjFdDFhIcNsSbF95F8vagu0xEgzgdOiNn8YxcrDH2YAXhrwm3sewTU4qGqeG0WDjnmf/DY6QIGBy/49bGFREqh4Y1UXucWr5c=
+	t=1709039695; cv=none; b=Ev4kcqWCSfaMQFJa2HvGB1nDBdRa1UsS2YiKK8VDCGL+tXygRWpM0eC8XRgakP8wzWhSuqV/mVOA0MoqSFTUJHFe1k3EQZLVrGKXE7VHsI2VHJ2u1yjx7Iqdqg1xqusr7ZGoipsymFS9gbhQCMYCcl5l2ooL11TDOHlhvnh6kQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709039685; c=relaxed/simple;
-	bh=rx8PCE5o6dFMSFR8vi+L7kexPHd420uWKw7zhq26y8s=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Svk6F6GlUxFBCsRvOTtqFpck7VXNO7qgN3Kdh6h0NK5FaTY0+zC3o6SCA64AD712+3zDfbBSHfG2lNEY7tXuzH8+oSHiGQ2W9U1+kX50sywNh5oUQgl205aBJ5BqfXRt6hGqtU5MWWFPOqe+viDwjn6C8XbeOX6vpDxPkBEEaio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=S5fE3bH+; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1709039695; c=relaxed/simple;
+	bh=2AMRMbVhNM06Hgp1X0TeGKqLaPQRtt3bhZ1iElXox58=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RuEjmWU26JM8l1m1WNkxHshXbu7LLhCZQQGQGX+zNo49oECkO5bbXjx9z7n8UYmR452/X7uLGOhDPwD5acd21BU+PkWnJnpfbYNFIBWHTqV5fr7euDuU1tLwXorlFIGSJrOsTqSDr/JOnN+w0T4XXVmwolN07VOaLGPJL9a8mq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qple0pkx; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="S5fE3bH+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=zndwy7274ndljkwkfrt7ypvhmq.protonmail; t=1709039667; x=1709298867;
-	bh=ZrJU4qMFbvDi4ufPStPJLjmeabfKg0P/vMjlkrx7MbI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=S5fE3bH+wdw2Dmpb8pSzPkeRDwJKlQqvoxzNGJVm5vMlgEjNnzy82BG5ydEem2Au3
-	 eMaciU8io8jQmN2q81+g1i9hP8NPodDaY2JAe2GsjomLnTerwN5Kj27BLRIOoWooO2
-	 2WSLxmm2l5pm3zxQRqlKvqbzIEK5GF3HlkerWh33RQJPWv8IRMQmEHVhVvEAxIf2sY
-	 OQ/YkcpQTHvEAWyYbM1G3nC2FkDCpXNe5aCIo5Q3fv5t6HkuSmL6hZsJi69Mu6sG4n
-	 FQKE3vjDU7ywCH2ak1YTH69L27DMdpFpucSjm8KcYMi8s0FP0HN+dxcf+zANImDNG8
-	 Tz5KlKlfKdV7Q==
-Date: Tue, 27 Feb 2024 13:14:18 +0000
-To: helgaas@kernel.org
-From: Edmund Raile <edmund.raile@proton.me>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Edmund Raile <edmund.raile@proton.me>
-Subject: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
-Message-ID: <20240227131401.17913-1-edmund.raile@proton.me>
-In-Reply-To: <20240226102354.86757-1-edmund.raile@proton.me>
-References: <20240226102354.86757-1-edmund.raile@proton.me>
-Feedback-ID: 45198251:user:proton
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qple0pkx"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7d6024b181bso2072903241.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 05:14:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709039693; x=1709644493; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2AMRMbVhNM06Hgp1X0TeGKqLaPQRtt3bhZ1iElXox58=;
+        b=qple0pkxnzJDd9Yn+9eMXeEhbx85nGc++HkFBgEW6ANDwHzduvps37G+TjRJCmE45U
+         cx1QxYQkn2HKg0nq9fT0Q2D70AMlUVHqrpapR/rqBYdAvmOJ+cx0Gch9hwTc9YmvhtgC
+         0UkIwgCq11oGB1PT3uMrKzPdEcF6eZJNjee4qaIJyaEuNdxoxD1so99pjcPJNqgmrMLU
+         fkxcxvW8ZWPxn6OZvkEKeHCSRmj8Sh3u5wmMO38xR/jy8Lx7a/MSXfWcMCti/2Fs984g
+         rVAEi4mmnhwt1YY+hGfFXRPeUnhDFUUXbljisVrsLBI4e2h/hS8e9qmQNUoq9NlbSr/6
+         X3aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709039693; x=1709644493;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2AMRMbVhNM06Hgp1X0TeGKqLaPQRtt3bhZ1iElXox58=;
+        b=jpjGqxQbDB7k7Re1YwrEoceubcKbEayfBZfb1QQeK03FHB3JrNY8kJZCki/PKGqxvc
+         +fdtv7pxOCkUDvFbhyOEDUvs8mGCnowwtyk0sdOHbbUFLsgkNFCbSraCrIs8asumBnb9
+         8kmpGZMs3CMwaND0zdSQiEKOtgZtamBvm+ZzXREkFVZ+024Ia/YyYzpJL/ztMNP1pjbZ
+         uJjbkuBPwk1hTkyh658URSwAn7JfxGU+UU9Zh62eeB/8kvNzPo/BbRU+As2HNdHfyLsC
+         T+bwS5H2RsUwsEPjO3VizpC7MdXCaoeNUXUoa1SSeEugA6e11kTnE7+l9rLY8k9P0ayf
+         ukNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMK7bnISETdPaNTMd72HahL7j79mo4LBikCrnYDvd8+XiTq3gWpIlzGA8IvRYjNK5yYD0cQWtXaHjNYAubpCRhlmB5K3TvDNde0l51
+X-Gm-Message-State: AOJu0YzOVrZ3YY49l7PF+Qau4hS66GYRN3TQ7i65+asq09qsUJ0wQXCI
+	Ip7Q0Q6U1r5inO7VgmuTo233c53ykfVsps2xEWWFkmOaCw6lmJ5o08yz1AGtPhBR7pv/55GXGEV
+	QfzGiMDW7Iq0J/sT/hoDMYmjo47rAb5wnJDCxbQ==
+X-Google-Smtp-Source: AGHT+IE+aoCuhINdmznTFe9JFtFLE74wM7BihxWVkNpvCU4rsgQWVYCbCscm8d1Rm4xX6DxB9G4niXzVUMF+EjPXSSU=
+X-Received: by 2002:a1f:ccc1:0:b0:4cd:b718:4b08 with SMTP id
+ c184-20020a1fccc1000000b004cdb7184b08mr6123482vkg.11.1709039691592; Tue, 27
+ Feb 2024 05:14:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20240226134656.608559-1-arturas.moskvinas@gmail.com>
+ <ZdyZnqS_jKelbs6G@smile.fi.intel.com> <3f629079-6809-4cae-bd4d-8b0ee4860196@gmail.com>
+In-Reply-To: <3f629079-6809-4cae-bd4d-8b0ee4860196@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 27 Feb 2024 14:14:40 +0100
+Message-ID: <CAMRc=McUsv9ic5aU7oAaJ06zWtpna0CkkxPWr2nqPhEig5vPOg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: 74x164: Enable output pins after registers are reset
+To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linus.walleij@linaro.org, 
+	u.kleine-koenig@pengutronix.de, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Using LSI / Agere FW643 with vfio-pci will exhaust all
-pci_reset_fn_methods, the bus reset at the end causes a broken link
-only recoverable by removing power
-(power-off / suspend + rescan).
-Prevent this bus reset.
-With this change, the device can be assigned to VMs with VFIO.
-Note that it will not be reset, resulting in leaking state between VMs
-and host.
+On Tue, Feb 27, 2024 at 7:58=E2=80=AFAM Arturas Moskvinas
+<arturas.moskvinas@gmail.com> wrote:
+>
+> Hello,
+>
+> On 2/26/24 16:01, Andy Shevchenko wrote:
+> > On Mon, Feb 26, 2024 at 03:46:56PM +0200, Arturas Moskvinas wrote:
+> >> Move output enabling after chip registers are cleared.
+> > Does this fix anything? If so, maybe elaborate a bit the potential beha=
+vioural
+> > changes on the real lines.
+>
+> Chip outputs are enabled[1] before actual reset is performed[2] which
+> might cause pin output value to flip flop if previous pin value was set
+> to 1 in chip. Change fixes that behavior by making sure chip is fully
+> reset before all outputs are enabled.
+>
+> Flip-flop can be noticed when module is removed and inserted again and
+> one of the pins was changed to 1 before removal. 100 microsecond
+> flipping is noticeable on oscilloscope (100khz SPI bus).
+>
+> For a properly reset chip - output is enabled around 100 microseconds
+> (on 100khz SPI bus) later during probing process hence should be
+> irrelevant behavioral change.
+>
+> [1] -
+> https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c=
+#L130
+> [2] -
+> https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c=
+#L150
+>
+> Arturas Moskvinas
 
-Signed-off-by: Edmund Raile <edmund.raile@proton.me>
+And this is precisely the kind of information that needs to go into
+commit messages. I can tell *what* you're doing by looking at the
+code. What I can't tell is *why*.
 
----
-
-I sincerely thank you for your patience and explaining
-the background of pci resets which I lacked.
-The commit message and comment now describe it correctly.
-The comment on leaking states was added.
-
-Usefulness:
-
-The LSI FW643 PCIe->FireWire 800 interface may be EOL but it is
-the only one that does not use a PCIe->PCI bridge.
-It is reliable and enables FireWire audio interfaces to be used
-on modern machines.
-
-Virtualization allows for flexible access to professional audio
-software.
-
-It has been used in at least the following Apple machines:
-MacBookPro10,1
-MacBookPro9,2
-MacBookPro6,2
-MacBookPro5,1
-Macmini6,1
-Macmini3,1
-iMac12,2
-iMac9,1
-iMac8,1
-
-Implementation:
-
-PCI_VENDOR_ID_ATT was reused as they are identical.
-
- drivers/pci/quirks.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d797df6e5f3e..e0e4ad9e6d50 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3765,6 +3765,19 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x00=
-3e, quirk_no_bus_reset);
-  */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset)=
-;
-=20
-+/*
-+ * Using LSI / Agere FW643 with vfio-pci will exhaust all
-+ * pci_reset_fn_methods, the bus reset at the end causes a broken link
-+ * only recoverable by removing power
-+ * (power-off / suspend + rescan).
-+ * Prevent this bus reset.
-+ * With this change, the device can be assigned to VMs with VFIO.
-+ * Note that it will not be reset, resulting in leaking state between VMs
-+ * and host.
-+ */
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5900, quirk_no_bus_reset);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5901, quirk_no_bus_reset);
-+
- /*
-  * Some TI KeyStone C667X devices do not support bus/hot reset.  The PCIES=
-S
-  * automatically disables LTSSM when Secondary Bus Reset is received and
---=20
-2.43.0
-
-
+Bartosz
