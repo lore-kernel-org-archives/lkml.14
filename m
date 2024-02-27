@@ -1,64 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7E95102E;
-	Tue, 27 Feb 2024 19:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE00E14AD20;
+	Tue, 27 Feb 2024 19:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709060505; cv=none; b=gQ9mDZstWECWRXSvuHDybSJAUzo2rfRkohVElDlpQ58pLT2rJgPbRoK24xOonzMLnkI3OtVt+qnIlJUOaQXZc6/S802jZmoiowSUPdfzG9uWbXY+P+TvCMZMwp58P2R4F8++m2uv+Up0lwUq+fYcWMVnSrpiMy+KdGpV6YsmVQw=
+	t=1709060511; cv=none; b=LAMWdLBtx12h7pzZXrAlVrC+NAqZ9TH6ylZ2PfkFHfPEV0pFgqHjGVUzozQbqyvgw3r2qOkwamkHK43fnpCQ0vAelsmdsPA2WupM4QqInGZrEUeLucV0ceXoWbBBRCBRuVP9rIXNYenT6JDyzZqdG/5GsdShPlpNeEDUbffZb2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709060505; c=relaxed/simple;
-	bh=o5w7oZIQE4oxT0QNjs9kj3UTnhmzFAHdqoFnmG1qGNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hg5WjitWTPjyD7NInbabPE9/Kby/FBMQ44MGCuJUFFSIbXojt+jGTvfVE8DPB4xUdv0Y8TCIJ9h/TH/8ja9CPPU4ZEwGD7VQv8uFHfkVyyfEEm50vMpXkpS4e9QATY0W7oLJeYVpagz7iVxgm4HsKP5UrsYXpIsmF1u95Z+pbmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGkZAgr9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709060511; c=relaxed/simple;
+	bh=51jtFFY8/geln0haK5sNAZr/aqnSILVfKwu6u7XLrMA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LP/a62P0lZnWBRs6z8v9rKt9FRxwHZ1G5mAQDNz2LCkbMsfrxo7AaxFCOw3IGCLIef9IsnHLvqeIBEeLln44kMMh/taeu3PcoV8J3J7SLcGJNGS525QiuctDqn9Ak/laamlfD3smDzAuwKOmfuiIXOxHfujmFvuaa6jcs5qfl6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gU8jpSnZ; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGkZAgr9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50C73C433A6;
-	Tue, 27 Feb 2024 19:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709060504;
-	bh=o5w7oZIQE4oxT0QNjs9kj3UTnhmzFAHdqoFnmG1qGNo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RGkZAgr9/wxKL2073jxmP6UrqwQwsbsuPKEz1Vtu46Fh16sClttuMKFoTA3H+/MPP
-	 cfxlqAiwcLmfrnP3YMKYLNxTz2qGQ+76EOCVUHJ+zD/esKLZeD15+2wsHPO7weCabQ
-	 esbHMiTbXbkaGYBIQEY1bZoV4JLXEekjY7CqnKBghP30L8B/HVPIJiZRiqyyJnIAJR
-	 aFDaoJeeab5kC89bA5g2SfEYno8uN0i99myh9Jo+x0VSm0jZGQTeiehf0C5w+Oz+Tt
-	 aoCGONljLtB2vc2CbTeuIvhIRSTJVcot0ULySH7Ncna30CKWTgZoMdRIPWMiJ2PLm7
-	 tCrV3VMZuambw==
-Date: Tue, 27 Feb 2024 19:01:40 +0000
-From: Simon Horman <horms@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Ariel Elior <aelior@marvell.com>,
-	Manish Chopra <manishc@marvell.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>, linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org
-Subject: Re: [PATCH net-next v5 2/9] net: usb: ax88179_178a: Use linkmode
- helpers for EEE
-Message-ID: <20240227190140.GK277116@kernel.org>
-References: <20240226-keee-u32-cleanup-v5-0-9e7323c41c38@lunn.ch>
- <20240226-keee-u32-cleanup-v5-2-9e7323c41c38@lunn.ch>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gU8jpSnZ"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7d5fce59261so2955143241.3;
+        Tue, 27 Feb 2024 11:01:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709060507; x=1709665307; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GXY/6TLcSg2JBPkZ750KSp3lrbwIelE9us8AkMM6UHk=;
+        b=gU8jpSnZLFjXyTPQAoH87Xl9oJ11GlVplfmNu12SbocFv2sei2g7BqkLLmt61reH+J
+         8Xhek2Bqhp9Dh6/sKSUQWLYsfUXLfMzAAVauvppddAEbQyd3F+1m3XnUpAi0pMiql2mZ
+         hjTDt5FftOjWJjT+1jHvC123XIXfDZX+KbArI4URc0d5CZ2/HGSBER8Hn1cHEVM9p/ry
+         qWN32p2/XRqSVo92L27SnUE4xqMr8Ci9ixQK6GEUvjPOTBep+maW4z2QquAw6FbjF+9s
+         w7C8zcQuwaEDJHXb7BYODyK5cNkCf+XXpIGERZREUrp8AkhjnbmNOpq6utnngDqZ6eZo
+         4YOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709060507; x=1709665307;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GXY/6TLcSg2JBPkZ750KSp3lrbwIelE9us8AkMM6UHk=;
+        b=PBKaEcFEDF0uTFR/vfgXwjYWPlnJ+9jHuRTpigo3i3UdkwHs0nsZw4MpGiTlLdrr+T
+         eAUVNRLt+trcQoEVBWS/e0ihntLz0izl1iW7T40Pasfnk7X/9F4eytczjZm2cUHchqeo
+         c2b8K1LOs1+vETXOeWya3XOjl7qAEOu5ewaqEfb/n56d9styFw5zw+7cHZgbVACMk1sJ
+         tPXho8ralBl8HcRRxRsg4dQXeK/Q5GP2KkI74rAB5LwJJD2cybY6WY7YvlG9+Ix4isB8
+         gMQGksZ77OsZPNrC0ujeDfm41GYbOlSgIuEKQGJ8+mSnYMnvlcAYlL5HQIUj643guEn+
+         b36A==
+X-Forwarded-Encrypted: i=1; AJvYcCXkKFr2ilXH5xOFo1oscrrjakYfFwo7UsAxNxTxtU7rMKEI6Z6SBI8hwuhQSlA0cqcKxZuFWuKHHzPwYMBBEFaGLvDI7IT+l8XPt2jL
+X-Gm-Message-State: AOJu0YxXXvnLpZg7uavktupYjJ2UoZEOFcq5V1ikMHFQAySJY3IWYW24
+	rLb2T08UBJq77h26qJIS8pFLDmQqv5iuJjVtdWlHBWLZzw+Lu1sRb2+86MD+tFBc8BROJN6otlr
+	qHJ77Y+zmkYanE8CYPCXhNOKDaMY=
+X-Google-Smtp-Source: AGHT+IFV6iRsZ58o/juvLumMNk6BhV1RC5rufpp/W8VxtAPU8kXRzSrpeZUNR9qwG0WgCSCniOJ+FoNzA/ZI0rxHhMQ=
+X-Received: by 2002:a1f:d704:0:b0:4d1:34a1:c896 with SMTP id
+ o4-20020a1fd704000000b004d134a1c896mr7413620vkg.8.1709060507358; Tue, 27 Feb
+ 2024 11:01:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226-keee-u32-cleanup-v5-2-9e7323c41c38@lunn.ch>
+References: <20240227131630.636392135@linuxfoundation.org>
+In-Reply-To: <20240227131630.636392135@linuxfoundation.org>
+From: Allen <allen.lkml@gmail.com>
+Date: Tue, 27 Feb 2024 11:01:33 -0800
+Message-ID: <CAOMdWSJyXm3+3nunLTNdAhoQX2qqj3Ftszi6LpN-Uj_yyK8G9g@mail.gmail.com>
+Subject: Re: [PATCH 6.7 000/334] 6.7.7-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 26, 2024 at 07:29:08PM -0600, Andrew Lunn wrote:
-> Make use of the existing linkmode helpers for converting PHY EEE
-> register values into links modes, now that ethtool_keee uses link
-> modes, rather than u32 values.
-> 
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> This is the start of the stable review cycle for the 6.7.7 release.
+> There are 334 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 29 Feb 2024 13:15:36 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.7-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Compiled and booted on my x86_64 and ARM64 test systems. No errors or
+regressions.
 
+Tested-by: Allen Pais <apais@linux.microsoft.com>
+
+Thanks.
