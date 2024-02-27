@@ -1,35 +1,30 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F7054F8A;
-	Tue, 27 Feb 2024 07:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC2D554FA6;
+	Tue, 27 Feb 2024 07:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709020373; cv=none; b=uB9UIi46qlpffNTUnXzaL6IZv/VLZKRaeZw1j2F/ZIIjN20lyuQEcanpD4zZEFAYsmSyZKVkxS78mzpL6kkEY8H6zb9SHz8gYctGaP3HmWQ6quEkPuMMsPhM8TkvStnlusAcdTaXRkE0txGUulh3E1+SYVm7miniPQoXMwjE3Jk=
+	t=1709020375; cv=none; b=CiybxGFQMIQCFASwpKlB+3Dob+Ra3d4gXZL23K+dGKWoOu04hDX7E/DZzefnx7+MTK6xkFb/dVWcc1m3UaeEzulhvGZwZyqUfAu+pQHE5WlCOC9h1XcEC4na0t6fhn+ajSbeLvFBtfnvJSq+OJJ3Dx1ZLxdFmTmIpRG6Re3S8Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709020373; c=relaxed/simple;
-	bh=rM5Amilsj86n+rDVaxHQye/6y7/8IQuzFzrGrKh23Iw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hX+PxNI9IEqxnjOAMGRq4H6/Jg8wijVnXtXGnljXbX98NWxHUnTj3X/+dOWT/XoEBBsVw13VsV+9ZRMA4fdu2gpMOcTZVLomdXEu73/GRXfPmqL0G/5beBXOU5AUM984RNPKeD8XXgmmrcTYvIAYKSgFKXwB3vFjivez3kF+N5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=HOkk93Ix; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+	s=arc-20240116; t=1709020375; c=relaxed/simple;
+	bh=d10zgy4neqJ3ueg8XosuA6C9v5ZcqlEmDmszYPd2sbA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k6b2wZANw5evKj18uxPL16HHr2jFMpB8W/qCUWAmKLc2Xbys/CqpdC01el/CV2EgrG8UcAsMl2XflIIP0RksAgt8pUAUSUGV9aCLfPGpZFUSPzF7XnVk+ZHX13brE0EtWTd8SugksT5IygqeUCBEnBLSUgCvtwJCfMZZQIcOK88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=U4Is6RTm; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="HOkk93Ix"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1709020369; bh=rM5Amilsj86n+rDVaxHQye/6y7/8IQuzFzrGrKh23Iw=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=HOkk93Ixf+EXfa+wrwsxgBtyXbhDpxeNtEqgk+dbNSORf5f65bzErFKW2k2zV4U8/
-	 ZyYNW1jyQswLvGo85MKCzX2HaRC4DhQvcQ+OQoXyl+JxVrY+u0H56d6B+90h4EHGhY
-	 gkf4UtRedo6hFBN5MPhxnzqdUZfpHnWNWiuh1/10=
-Received: from [28.0.0.1] (unknown [101.230.251.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 9674C6012F;
-	Tue, 27 Feb 2024 15:52:48 +0800 (CST)
-Message-ID: <48fd3c4d-9b72-4515-9a95-d241857915b4@xen0n.name>
-Date: Tue, 27 Feb 2024 15:52:47 +0800
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="U4Is6RTm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=q49RmB2IAyp4hUQXDCmAUSmSnBjebnDcngrqPkKrLcI=;
+	b=U4Is6RTmWrIlT64AZWufkJFalusLdotPc7BZ/JNnkOYQ0Le41r11iu7ZJE/58t
+	jpJSEnBb6xW06nGbqCYJMALUFroBQUVAWZfZEMuU6zc17JHg6oehimPHXxqbfJtw
+	z7r8vd+vrg6ggrWKIUNbMylSfR8pzpd7XdvMpatxNY+x4=
+Received: from [192.168.198.19] (unknown [175.2.16.90])
+	by gzga-smtp-mta-g1-0 (Coremail) with SMTP id _____wD3f8x+lN1lIsQ4AA--.10558S2;
+	Tue, 27 Feb 2024 15:51:41 +0800 (CST)
+Message-ID: <3399d2af-3d42-4ac1-9b74-8475bec25f7f@163.com>
+Date: Tue, 27 Feb 2024 15:51:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,90 +32,141 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] loongarch/crypto: Clean up useless assignment operations
+Subject: Re: [PATCH] PM: hibernate: Fix level3 translation fault in
+ swsusp_save()
 Content-Language: en-US
-From: WANG Xuerui <kernel@xen0n.name>
-To: WangYuli <wangyuli@uniontech.com>, herbert@gondor.apana.org.au,
- davem@davemloft.net, chenhuacai@kernel.org
-Cc: linux-crypto@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, Guan Wentao <guanwentao@uniontech.com>
-References: <20240226080328.334021-1-wangyuli@uniontech.com>
- <48afa638-9145-40ee-9868-fa82a1fce271@xen0n.name>
-In-Reply-To: <48afa638-9145-40ee-9868-fa82a1fce271@xen0n.name>
+To: Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@redhat.com>
+Cc: rafael@kernel.org, pavel@ucw.cz, len.brown@intel.com,
+ keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+ akpm@linux-foundation.org, ardb@kernel.org, wangkefeng.wang@huawei.com,
+ catalin.marinas@arm.com, will@kernel.org, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Yaxiong Tian <tianyaxiong@kylinos.cn>, xiongxin <xiongxin@kylinos.cn>
+References: <20240226034225.48689-1-13327272236@163.com>
+ <8d70939f-ca14-4167-9647-b8f44ddcbb98@redhat.com>
+ <ZdxWcG2XCqBum3_R@kernel.org>
+From: Yaxiong Tian <13327272236@163.com>
+In-Reply-To: <ZdxWcG2XCqBum3_R@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3f8x+lN1lIsQ4AA--.10558S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtr1UJF4DWFy5Aw47uF1xZrb_yoWxXr1DpF
+	4UGF1DKws7AF17Ar48tFW5ur18Xw4avanxJr1UJws7JF17Cr15Xr1UKryYgFyDtw4rArsF
+	qFZ8tw4FyFn8GaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07juD73UUUUU=
+X-CM-SenderInfo: jprtjjaxsxjjitw6il2tof0z/1tbiRQ6RJWXAkomgpwAAsG
 
-On 2/26/24 16:15, WANG Xuerui wrote:
-> On 2/26/24 16:03, WangYuli wrote:
->> Both crc32 and crc32c hw accelerated funcs will calculate the
->> remaining len. Those codes are derived from
->> arch/mips/crypto/crc32-mips.c and "len -= sizeof(u32)" is not
->> necessary for 64-bit CPUs.
 
-It's ultimately unrelated to the width of the running CPU, but rather 
-the LoongArch ISA specification. You should mention that because the 
-LoongArch ISA manual implies that CRC instructions are only available on 
-LA64-compatible implementations, the code can assume 64-bit operation, 
-so the 32-bit codepath can be guaranteed to execute only once.
-
+在 2024/2/26 17:14, Mike Rapoport 写道:
+> On Mon, Feb 26, 2024 at 09:37:06AM +0100, David Hildenbrand wrote:
+>> On 26.02.24 04:42, Yaxiong Tian wrote:
+>>> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+>>>
+>>> On ARM64 machines using UEFI, if the linear map is not set (can_set_direct_map()
+>>> return false), swsusp_save() will fail due to can't finding the map table
+>>> under the nomap memory.such as:
+> can_set_direct_map() has nothing to do with presence or absence of the
+> linear map.
+>
+> Do you mean that kernel_page_present() presumes that a page is present when
+> can_set_direct_map() returns false even for NOMAP ranges?
+Yes， in swsusp_save()->copy_data_pages()->page_is_saveable(),
+kernel_page_present() presumes that a page is present when 
+can_set_direct_map()
+returns false even for NOMAP ranges.So NOMAP pages will saved in 
+after,and then
+cause level3 translation fault in this pages.
+>>> [   48.532162] Unable to handle kernel paging request at virtual address ffffff8000000000
+>>> [   48.532162] Mem abort info:
+>>> [   48.532162]   ESR = 0x0000000096000007
+>>> [   48.532162]   EC = 0x25: DABT (current EL), IL = 32 bits
+>>> [   48.532162]   SET = 0, FnV = 0
+>>> [   48.532162]   EA = 0, S1PTW = 0
+>>> [   48.532162]   FSC = 0x07: level 3 translation fault
+>>> [   48.532162] Data abort info:
+>>> [   48.532162]   ISV = 0, ISS = 0x00000007, ISS2 = 0x00000000
+>>> [   48.532162]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>>> [   48.532162]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+>>> [   48.532162] swapper pgtable: 4k pages, 39-bit VAs, pgdp=00000000eeb0b000
+>>> [   48.532162] [ffffff8000000000] pgd=180000217fff9803, p4d=180000217fff9803, pud=180000217fff9803, pmd=180000217fff8803, pte=0000000000000000
+>>> [   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+>>> [   48.532162] Internal error: Oops: 0000000096000007 [#1] SMP
+>>> [   48.532162] Modules linked in: xt_multiport ipt_REJECT nf_reject_ipv4 xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c iptable_filter bpfilter rfkill at803x snd_hda_codec_hdmi snd_hda_intel snd_intel_dspcfg dwmac_generic stmmac_platform snd_hda_codec stmmac joydev pcs_xpcs snd_hda_core phylink ppdev lp parport ramoops reed_solomon ip_tables x_tables nls_iso8859_1 vfat multipath linear amdgpu amdxcp drm_exec gpu_sched drm_buddy hid_generic usbhid hid radeon video drm_suballoc_helper drm_ttm_helper ttm i2c_algo_bit drm_display_helper cec drm_kms_helper drm
+>>> [   48.532162] CPU: 0 PID: 3663 Comm: systemd-sleep Not tainted 6.6.2+ #76
+>>> [   48.532162] Source Version: 4e22ed63a0a48e7a7cff9b98b7806d8d4add7dc0
+>>> [   48.532162] Hardware name: Greatwall GW-XXXXXX-XXX/GW-XXXXXX-XXX, BIOS KunLun BIOS V4.0 01/19/2021
+>>> [   48.532162] pstate: 600003c5 (nZCv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>>> [   48.532162] pc : swsusp_save+0x280/0x538
+>>> [   48.532162] lr : swsusp_save+0x280/0x538
+>>> [   48.532162] sp : ffffffa034a3fa40
+>>> [   48.532162] x29: ffffffa034a3fa40 x28: ffffff8000001000 x27: 0000000000000000
+>>> [   48.532162] x26: ffffff8001400000 x25: ffffffc08113e248 x24: 0000000000000000
+>>> [   48.532162] x23: 0000000000080000 x22: ffffffc08113e280 x21: 00000000000c69f2
+>>> [   48.532162] x20: ffffff8000000000 x19: ffffffc081ae2500 x18: 0000000000000000
+>>> [   48.532162] x17: 6666662074736420 x16: 3030303030303030 x15: 3038666666666666
+>>> [   48.532162] x14: 0000000000000b69 x13: ffffff9f89088530 x12: 00000000ffffffea
+>>> [   48.532162] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffffffc08193f0d0
+>>> [   48.532162] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 0000000000000001
+>>> [   48.532162] x5 : ffffffa0fff09dc8 x4 : 0000000000000000 x3 : 0000000000000027
+>>> [   48.532162] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 000000000000004e
+>>> [   48.532162] Call trace:
+>>> [   48.532162]  swsusp_save+0x280/0x538
+>>> [   48.532162]  swsusp_arch_suspend+0x148/0x190
+>>> [   48.532162]  hibernation_snapshot+0x240/0x39c
+>>> [   48.532162]  hibernate+0xc4/0x378
+>>> [   48.532162]  state_store+0xf0/0x10c
+>>> [   48.532162]  kobj_attr_store+0x14/0x24
+>>>
+>>> QEMU ARM64 using UEFI also has the problem by setting can_set_direct_map()
+>>> return false.
+> Huh?
+> Why would you do that?
+I discovered this problem when upgrading from 5.4 to 6.6 using the 5.4 
+configuration.
+So I using latest linux-next code,find the problem still exist.To rule 
+out the effects
+of a particular machine，I also use qemu to check it.
+>
+>>> Since the NOMAP regions are now marked as PageReserved(), pfn walkers
+>>> and the rest of core mm will treat them as unusable memory. So this
+>>> regions should not saved in hibernation.
+>>>
+>>> This problem may cause by changes to pfn_valid() logic in commit
+>>> a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()").
+>>>
+>>> So to fix it, we add pfn_is_map_memory() check in saveable_page(). It
+>>> make such regisons don't save in hibernation.
+>>>
+>>> Fixes: a7d9f306ba70 ("arm64: drop pfn_valid_within() and simplify pfn_valid()")
+>>> Co-developed-by: xiongxin <xiongxin@kylinos.cn>
+>>> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
+>>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+>>> ---
+>>>    kernel/power/snapshot.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+>>> index 0f12e0a97e43..a06e3b1869d2 100644
+>>> --- a/kernel/power/snapshot.c
+>>> +++ b/kernel/power/snapshot.c
+>>> @@ -1400,7 +1400,7 @@ static struct page *saveable_page(struct zone *zone, unsigned long pfn)
+>>>    		return NULL;
+>>>    	if (PageReserved(page)
+>>> -	    && (!kernel_page_present(page) || pfn_is_nosave(pfn)))
+>>> +	    && (!kernel_page_present(page) || pfn_is_nosave(pfn) || !pfn_is_map_memory(pfn)))
+> I think adding the check for !pfn_is_map_memory() to arm64::pfn_is_nosave()
+> is the best way to fix this.
+Thinks, I also think this is the best modification.
+>>>    		return NULL;
+>>>    	if (page_is_guard(page))
+>> On top of which tree does this apply?
 >>
->> Removing it can make context code style more unified and improve
->> code readability.
-
-"Remove it to improve readability." should do it?
-
+>> All occurrences of pfn_is_map_memory() are in arch/arm64, how does this
+>> compile on other architectures?
 >>
->> Suggested-by: Guan Wentao <guanwentao@uniontech.com>
->> Signed-off-by: WangYuli <wangyuli@uniontech.com>
->> ---
->>   arch/loongarch/crypto/crc32-loongarch.c | 2 --
->>   1 file changed, 2 deletions(-)
+>> -- 
+>> Cheers,
 >>
->> diff --git a/arch/loongarch/crypto/crc32-loongarch.c 
->> b/arch/loongarch/crypto/crc32-loongarch.c
->> index a49e507af38c..3eebea3a7b47 100644
->> --- a/arch/loongarch/crypto/crc32-loongarch.c
->> +++ b/arch/loongarch/crypto/crc32-loongarch.c
->> @@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, 
->> unsigned int len)
->>           CRC32(crc, value, w);
->>           p += sizeof(u32);
->> -        len -= sizeof(u32);
->>       }
->>       if (len & sizeof(u16)) {
->> @@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 
->> *p, unsigned int len)
->>           CRC32C(crc, value, w);
->>           p += sizeof(u32);
->> -        len -= sizeof(u32);
->>       }
->>       if (len & sizeof(u16)) {
-> 
-> Sure, but IIRC Loongson still has hopes in having 32-bit-only models 
-> support upstream? The possibility cannot be ruled out because from 
-> public information (e.g. the 2023-11-28 news event), Loongson is known 
-> to be actively licensing their reduced 32-bit-only IP cores to third 
-> parties.
-> 
-> Ultimately whether we want to imply 64-bit operation with the crc32 
-> module is up to Loongson to decide, and I think Huacai may have 
-> something to add, but IMO at least we could gate the statement with 
-> #ifdef's so we don't outright lose 32-bit compatibility with this code.
-> 
-
-I was wrong in assuming that LA32 must contain CRC insns that operate on 
-at most 32 bits. In fact this is wrong -- the LA32 subset omits a lot of 
-32-bit operations for no apparent reason (perhaps implementation 
-simplicity but outsiders cannot confirm). So by definition the code 
-cannot be ported to LA32, and the changes are correct.
-
-But for the same reason, the commit message is misleading. See above.
-And with the nits addressed:
-
-Reviewed-by: WANG Xuerui <git@xen0n.name>
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+>> David / dhildenb
+>>
 
