@@ -1,200 +1,156 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5AE55E68
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB5B5644F
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709022230; cv=none; b=MC7DLX3x1D7Gvw1mHrKpJf/MQiLQkYeGpHen2sZCIB5ife6y3NqVUjfQ9K3uo8TeF6YQ/4S5aQsGu/N/VjTzxuhvvd2woxGqF4pXfDq9qvj8fTCn2H6mynTA2K/EU2bqd32I6IQj5nlX8uRJsdF0yxEidbLX+s7hS6osur+H2cA=
+	t=1709022304; cv=none; b=IeCtEDD/s9b+JOhxlRupAHthE80IqPFikopIYikKGKCux6MnhspcTyg4JQl9r+V9Ic2yoNVUqZPYxwfYsiJiXBmPJZlJ6HF8qBVMYsFrUrHOTpbw6Srb8qhSZiwZoNOk8BtsRW0KrT7riV1FFLa3SUCFvx/meAYGOksl7r1yrPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709022230; c=relaxed/simple;
-	bh=3+NYbfL02EAe7Dr9dGgMTiO2H3guLGEqi7s1WiNud3w=;
+	s=arc-20240116; t=1709022304; c=relaxed/simple;
+	bh=EVI7vz5Qsf5hXRlkN8Ggko0P8CCIhLHJjlFi+HodR6Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fCruw7ei8GVyTXM8PYNC3mL7GxoyB9ZHXRNMf7Cvt2QHFpVr9JuevxfFVIkigvuq6M9PinXo3EHpcA4DD5z1FSxg+2QT1YnAPX7aAXEXHX4LZR7739pc/nxpVYHrRc130+MUdYwUdTe1LMd7bvj1FwBsXv3/aKD7ilelRXe+32g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IPZUxZm2; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=SRMRr9d+P1yqs3WnUhLsnv1KYClJfERZEQ69DIzNJazCKKyLsy+rU7jW3Sc1QR6N9IU7Lv5jqivUWd8zlNoH+nYcnhbfq9N1mRjr5fFAoL6q1+epQLDe/5XjKu6ihagoflgwWR6wwdYZAD3D8yIp+wtaFefcjhOYT285tr0gu8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dHrfEq1v; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPZUxZm2"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-608d490a64aso28996477b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:23:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dHrfEq1v"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4d331ba6078so17979e0c.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:25:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709022228; x=1709627028; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709022301; x=1709627101; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6B8RP6a8YyuQVMWpLc3aNKulJBA75T/Z2hdZPd6pvYc=;
-        b=IPZUxZm2IsLtriaIoWfrAdoFjZ40yudBIEmlfauZe16FUCmap8JZFw+iw5cwQfnjX3
-         sk8mQOdH6YxNiQLa33DdO/jyb8DOSu8SX3SXw/0ATFKX7oJ9jDL3FdYH6XqFwBW85ACC
-         +jUQcS3ww5TefPbiHwnmzw5XocKMj7PUMk8N4f1xLM9kNfiK/DhgoQHEe9Loe/BK+noj
-         IQNTctKQJjRfMgKyZyXmQZ3AV/H7fB5frsNGzChhM5DOtDNDhb4M3sSs7+QUkHT8WDCp
-         xLERL4N7eIXX25HG/YikjpHOE1AV9VIh2c2C03QhUdKRvt9YS9u+6Hu67CVoPWPoL7SR
-         r1JA==
+        bh=F3oEZ83ksqzh/6Sv0YNt9LyEJ4eUjhxHm5FyNz/Llm4=;
+        b=dHrfEq1v4rBba3ZnKS0wVcQQiTW55EgwCtGAN0kx2vMV/85Pn+nvuyqSYz4xq33lgQ
+         6pyS9PrGpxFNt+wLtsGljCD+0sJf0qo5/rgsOWjDK/c78uorH5V+6s3QyCqUm+mhlCRz
+         eGX5ZMegOvavZ2xckr+Ezwy3Ph8RzfAFuRimACpqUqumvzR/KbvDFoKBcjiQMD1VeZTy
+         QHoztsVcZT57sGJQ36WG36Zi2QNUgLPk1/XXb92dT9Q4KcNnHC7DhDS7L2t/+b/c/jpx
+         4lkFTWRVGanm3NFK23xlLyxHgy8885aLEbWCn7GVbNHGB7Rrugf17gHuQiayHBgmW3vy
+         1WgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709022228; x=1709627028;
+        d=1e100.net; s=20230601; t=1709022301; x=1709627101;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6B8RP6a8YyuQVMWpLc3aNKulJBA75T/Z2hdZPd6pvYc=;
-        b=imQRj9ROuxBXK5EFwiAOADzsFXM8xCzvWdqwgnO/jTR/kGbU+KNF15s/rKbzYRbyAG
-         mkFkSwaD8ptbTYzcu5umSkkp7b13Y510gsBHYg/LTgKt9wIXVmjFUcIm81AIJUzwjiCo
-         4zqz24+dAJPIKKu1YbsJZF1xCL4eLYP7/0O3407sH4m0iyjmCDNNzwRBeyRqOwocmdlA
-         Hgv2nc52yDR1agOosWi9ZOb1huWVl93FFVsjq2d8CHqAGnaNJsp18hlEFULbUSvMnZxl
-         uoamcifmSSryiyq3WL/7JxXXmpbi8pdb72eYdjesI9+9DU16JFtewrJQsCRIlIVGtAy/
-         tFVg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgrqHve0nnlCfUhZTWIk0Lb9Wand5BQwib/PJyUO6ZbHsrks2w+tpvYhH+VilEQ2+7xUq7pyJuUfw1F+tWY1kOFOoLgSB6T3w9ZgFu
-X-Gm-Message-State: AOJu0YxITlpJUNueeSlV2RP+TbF35XsHYs92SfI6EOV4rl/1R1naAnIh
-	MqP9f+SUtFXbZOGvixYV6ty/lVJimrnOjNe/XLNp2i2bNQVvF2zH43JslVO4w+cGFBplCrIP+Y7
-	RNIU7fRwHtfGQJQwCDdbHeEI5T5tgetukvLVQvrg2
-X-Google-Smtp-Source: AGHT+IEjnTYxfirewIQ1lX56xzcoZLgRN10ewnue+kjoxb7KArMYmYjXx7GE732BsCGyKbWCp/wFaYPAj3bW4A8q/no=
-X-Received: by 2002:a0d:d68c:0:b0:607:6fe9:f55a with SMTP id
- y134-20020a0dd68c000000b006076fe9f55amr1451239ywd.35.1709022228290; Tue, 27
- Feb 2024 00:23:48 -0800 (PST)
+        bh=F3oEZ83ksqzh/6Sv0YNt9LyEJ4eUjhxHm5FyNz/Llm4=;
+        b=urmUoTZTf/2pf5pT7V0nQXO2Odhc5l9889TNdZFpcY0K5SU/Fcec/QzjByxZ2n6qy6
+         +5sFmYFVWQhzIEQMvq30ZHw01KBh5AWCzgQf4q2+aWo7D4DvzbGCcDp0oPJ+etUrZ0zs
+         OflxkGTPDtlmP+1CVRv3Mfgd8CvNPBZqqSpuOMXIsTl2FG83e5aeLMbAwrX07HNA4o/k
+         5dsGPp6EysRgwyalFOUApZ0vQkFTPPwBbebu1lNmtyL/UllPRwWrzma6RHhn/13gNhKX
+         XWP+tsbq/gjabpPgeUF7K9CaaiPwSZlRXQiSK872vd1nQhP6b3YFKBtcKT83d15k2uYE
+         Nolg==
+X-Forwarded-Encrypted: i=1; AJvYcCUOI0YRDwl4ok6wb5oUK/uv8ob1xYQ4eo12H7cOhaQJGtha5ini7VaQGsTnT93ZCaeIodnwNCvUlsxJ/ktpHLbeO89Lhg39ptpfvq7F
+X-Gm-Message-State: AOJu0YxUX491oOJeUXjxjfNOhVb6zVSaDyKnNizSCSm6b2tbvoLNHI7d
+	CS1Z8GXjk82guyWR7+Ew7VTUND0rb96rje1dvv0q8XvGb/5lUysq4g189A9/UOmJJ8DUhblHKTk
+	p9aczYrabn/TKdVt4pV2NjFfCtaNvnrEux8BNKg==
+X-Google-Smtp-Source: AGHT+IGfKT0WSHnAi9Z8ZhGjHZH5g4Gvo7KWsZdo46pVngPbJr7w6ihyB9HdDw37XGWSuSg0MNM0ZD4/shwz7CPfuAo=
+X-Received: by 2002:a1f:da41:0:b0:4cb:2662:3653 with SMTP id
+ r62-20020a1fda41000000b004cb26623653mr5475489vkg.9.1709022301389; Tue, 27 Feb
+ 2024 00:25:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227070418.62292-1-ioworker0@gmail.com> <90471b2f-826e-4275-a9a3-ec673c3e6af8@redhat.com>
-In-Reply-To: <90471b2f-826e-4275-a9a3-ec673c3e6af8@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Tue, 27 Feb 2024 16:23:36 +0800
-Message-ID: <CAK1f24nr=giiYW2CVtbpuUxNshb9ksLhtY_v-SK1_AVvQPUEdQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/memory: Fix boundary check for next PFN in folio_pte_batch()
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, 21cnbao@gmail.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240205182810.58382-1-brgl@bgdev.pl> <20240205182810.58382-3-brgl@bgdev.pl>
+ <tnylagkmj36lve2ub5voumtkqjdy6j3hr6yyk4mqkaabvc3gdv@voaiu2oqi73o>
+ <CAMRc=McmfufqqEvouRCjY1ukVB_ie1r5QEocqRUK0VBheEq5Hg@mail.gmail.com>
+ <CAMRc=Mc_iwMzKznfUknm+RwS3jN_GimpirdTDVCPtnYYS_1PNg@mail.gmail.com> <20240226102955.GA19256@hu-kuldsing-hyd.qualcomm.com>
+In-Reply-To: <20240226102955.GA19256@hu-kuldsing-hyd.qualcomm.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 27 Feb 2024 09:24:50 +0100
+Message-ID: <CAMRc=MdfU0=JBrAJMkeg8XV6SWPybY+rDMG5_Cei1haGGsHmpw@mail.gmail.com>
+Subject: Re: [PATCH v7 02/12] firmware: qcom: scm: enable the TZ mem allocator
+To: Kuldeep Singh <quic_kuldsing@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Elliot Berman <quic_eberman@quicinc.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Guru Das Srinagesh <quic_gurus@quicinc.com>, Andrew Halaney <ahalaney@redhat.com>, 
+	Maximilian Luz <luzmaximilian@gmail.com>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kernel@quicinc.com, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Deepti Jaggi <quic_djaggi@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hey David,
-
-Thanks for taking time to review!
-
-On Tue, Feb 27, 2024 at 3:30=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
+On Mon, Feb 26, 2024 at 11:30=E2=80=AFAM Kuldeep Singh
+<quic_kuldsing@quicinc.com> wrote:
 >
-> On 27.02.24 08:04, Lance Yang wrote:
-> > Previously, in folio_pte_batch(), only the upper boundary of the
-> > folio was checked using '>=3D' for comparison. This led to
-> > incorrect behavior when the next PFN exceeded the lower boundary
-> > of the folio, especially in corner cases where the next PFN might
-> > fall into a different folio.
->
-> Which commit does this fix?
->
-> The introducing commit (f8d937761d65c87e9987b88ea7beb7bddc333a0e) is
-> already in mm-stable, so we would need a Fixes: tag. Unless, Ryan's
-> changes introduced a problem.
->
-> BUT
->
-> I don't see what is broken. :)
->
-> Can you please give an example/reproducer?
-
-For example1:
-
-PTE0 is present for large folio1.
-PTE1 is present for large folio1.
-PTE2 is present for large folio1.
-PTE3 is present for large folio1.
-
-folio_nr_pages(folio1) is 4.
-folio_nr_pages(folio2) is 4.
-
-pte =3D *start_ptep =3D PTE0;
-max_nr =3D folio_nr_pages(folio2);
-
-If folio_pfn(folio1) < folio_pfn(folio2),
-the return value of folio_pte_batch(folio2, start_ptep, pte, max_nr)
-will be 4(Actually it should be 0).
-
-For example2:
-
-PTE0 is present for large folio2.
-PTE1 is present for large folio1.
-PTE2 is present for large folio1.
-PTE3 is present for large folio1.
-
-folio_nr_pages(folio1) is 4.
-folio_nr_pages(folio2) is 4.
-
-pte =3D *start_ptep =3D PTE0;
-max_nr =3D folio_nr_pages(folio1);
-
-If max_nr=3D4, the return value of folio_pte_batch(folio1, start_ptep,
-pte, max_nr)
-will be 1(Actually it should be 0).
-
-folio_pte_batch() will soon be exported, and IMO, these corner cases may ne=
-ed
-to be handled.
-
-Thanks,
-Lance
-
->
-> We know that the first PTE maps the folio. By incrementing the PFN using
-> pte_next_pfn/pte_advance_pfn, we cannot suddenly get a lower PFN.
->
-> So how would pte_advance_pfn(folio_start_pfn + X) suddenly give us a PFN
-> lower than folio_start_pfn?
->
-> Note that we are not really concerned about any kind of
-> pte_advance_pfn() overflow that could generate PFN=3D0. I convinces mysel=
-f
-> that that that is something we don't have to worry about.
->
->
-> [I also thought about getting rid of the pte_pfn(pte) >=3D folio_end_pfn
-> and instead limiting end_ptep. But that requires more work before the
-> loop and feels more like a micro-optimization.]
->
+> > > > As we're not moving from the callers freely allocating what they ne=
+ed,
+> > > > to a fixed sized pool of 256kb. Please document why 256kb was choos=
+en,
+> > > > so that we have something to fall back on when someone runs out of =
+this
+> > > > space, or wonders "why not 128kb?".
+> > > >
+> > >
+> > > If you worry about these pools being taken out of the total memory an=
+d
+> > > prefer to have a way to avoid it, I was thinking about another
+> > > build-time mode for the allocator - one where there's no pool but it
+> > > just allocates chunks using dma_alloc_coherent() like before and pool
+> > > size is ignored. Does it sound good?
+> > >
 > >
-> > Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> > ---
-> >   mm/memory.c | 7 +++++--
-> >   1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index 642b4f2be523..e5291d1e8c37 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -986,12 +986,15 @@ static inline int folio_pte_batch(struct folio *f=
-olio, unsigned long addr,
-> >               pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
-> >               bool *any_writable)
-> >   {
-> > -     unsigned long folio_end_pfn =3D folio_pfn(folio) + folio_nr_pages=
-(folio);
-> > +     unsigned long folio_start_pfn, folio_end_pfn;
-> >       const pte_t *end_ptep =3D start_ptep + max_nr;
-> >       pte_t expected_pte, *ptep;
-> >       bool writable;
-> >       int nr;
-> >
-> > +     folio_start_pfn =3D folio_pfn(folio);
-> > +     folio_end_pfn =3D folio_start_pfn + folio_nr_pages(folio);
-> > +
-> >       if (any_writable)
-> >               *any_writable =3D false;
-> >
-> > @@ -1015,7 +1018,7 @@ static inline int folio_pte_batch(struct folio *f=
-olio, unsigned long addr,
-> >                * corner cases the next PFN might fall into a different
-> >                * folio.
-> >                */
-> > -             if (pte_pfn(pte) >=3D folio_end_pfn)
-> > +             if (pte_pfn(pte) >=3D folio_end_pfn || pte_pfn(pte) < fol=
-io_start_pfn)
-> >                       break;
-> >
-> >               if (any_writable)
+> > Or we could even have an argument for the initial size of the pool and
+> > then once it's exhausted, we'd add a new chunk (maybe twice the size?)
+> > and so on.
 >
-> --
-> Cheers,
+> Hi Bartosz,
 >
-> David / dhildenb
+> Thanks for shmbridge patch series. Few questions.
 >
+>         1. With current design of every client maintaining it's own pool,
+>         For any target, we might end up occupying lot more space by
+>         different clients than we actually need.
+>
+
+Technically there are only up to two, three in the future with scminvoke.
+
+>         2. Also, there's no option to configure pool size for each client=
+ at
+>         runtime level and a fixed 256K value is chosen for qcom_scm/qseec=
+om.
+
+You mean via a module parameter?
+
+>         Pool size will be same for each target and thus making it less
+>         scalabale if there's adjustment needed at target specific level.
+>         Ex: For a low DDR memory target, pool size should scale down acco=
+rdingly
+>         as 256K will become a big ask but there's no way to choose specif=
+ic pool
+>         size for just one target.
+
+Do we really have any low-DDR platforms that would be affected by this
+change? Even for db401c the 256K is a tiny fraction of the total
+memory.
+
+>                 2.1 One way to do configure custom pool size value is to =
+add new
+>                 property in qcom_scm/qseecom or client DT node and then c=
+reate
+>                 pool of size with this provided value. Though there are w=
+ays to
+>                 tackle this, but still clients specifying it's own pool s=
+ize
+>                 will always fetch more CMA region than what is actually n=
+eeded.
+>
+> Can you please share your ideas as well for upcoming version.
+>
+
+I will propose a new solution with several configuration options for
+pools. Including scaling the pool size as needed. I hope to send it
+this week.
+
+Bart
+
+> Regards
+> Kuldeep
