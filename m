@@ -1,92 +1,106 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294E0135A5C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 12:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA931EA7A;
+	Tue, 27 Feb 2024 12:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709038667; cv=none; b=Fwnu8AdyW9CHJePQOS8uYdzUbgSVS5RWzDMca472WKuhUmGaKIKF4k58tsog3l5w0Q5fjnyRVyyqZ7dKM32N66CWmibJnjlU+4K9l+1MWXQ8QHdD+WEXukAlR/N26NBhoXW+0OFs6WFAjk5PoO9wGGM0IbUljuxnjyCz6px1CWE=
+	t=1709038772; cv=none; b=m7Y+X6G1gmpWdP278j2AJps7Rf2HsPwFIfhdLHEDVDBVeRUdd3wxHlD9YN1ca9JIpdx8lgu18A6CcPm1i9TlxtN41TUUWS8HzXWIEF8Icgi6UD3lXKSnW3bI5KwzWOQc8RrxWFddH2/HetOKlZKVuRh0kYIHc7WKIAco6nC3vpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709038667; c=relaxed/simple;
-	bh=rLuWRYY4nrBUkzXuyIyoCtcyMvzxxNjHaMWHuiSTGqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R84fzr3nZRt/1ZqfLq6ljmcc7+4mZKdBqZUk+ZRNDhTNMNLJU1Pk2v9+HidOZ+xwFxXyqz6Kaq+YZtgr12FsQ0bAKzdvq/7xrxkZcwnYDATru2rFLPVnQ1bxOPyz3SbzCuk+Y1Fi2dgiiiW6jmVnjPPG+lMTxMwe8CD8GcB1LP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1rex1I-0004YG-2F;
-	Tue, 27 Feb 2024 12:57:16 +0000
-Date: Tue, 27 Feb 2024 12:57:07 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Zhihao Cheng <chengzhihao1@huawei.com>
-Cc: Richard Weinberger <richard@nod.at>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: ubi: fix NVMEM over UBI volumes on 32-bit systems
-Message-ID: <Zd3cIw5NZOW2KtXe@makrotopia.org>
-References: <186fa96ae25f7033ff8b6f0f7fcfb1e602f556fc.1708971705.git.daniel@makrotopia.org>
- <ab2b4573-58ce-d895-0aae-69e3647e0a68@huawei.com>
+	s=arc-20240116; t=1709038772; c=relaxed/simple;
+	bh=wiU20DrGryX1NTjOXTqiYvpUtgqll5ToH7wjB9oLF/U=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Km8TpQ3ehAGqEqHYy5Ss+yDLTu8/5fbJZo4IegOU0vJ+qIM9sOdHafHxv4gADgZYJcbwFz61129XVSmnuqAMV7XiYnGwDKWILEmn1pnUFySrewUe+JEdzpcCvDGOgOJ72fJ4bLnHE9xjLf+EVat9E5/8hcHFVc+36q7ebdr6Z4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NjK9FRpX; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NjK9FRpX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709038772; x=1740574772;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=wiU20DrGryX1NTjOXTqiYvpUtgqll5ToH7wjB9oLF/U=;
+  b=NjK9FRpXMWjumcgOIW4lCUcGOF6zWTd9MAHqGhslhZwKImFgPBlFN6xb
+   kVRqBhHLXZosVhqfRjzpG+MyEPgbF1/IWjDJP2p+mdYSJTYaGLTew+ZZY
+   stMCn5Dms4Vg8eB08dErr3hUQlvdplTI36Hfm6IBCyErI1JpM8xMweyY0
+   ALAeJWyYAOm6A9BV/KAB+BSoMVBtaNBngLCrcNiqs4VekTbTYW+JSg5uk
+   mtM3jdWNGURMZyMHkjCNZ4gO1qNXMeH/X2jz1xp8Ng4rxIzszXN3ft9Rn
+   NzKUuKi4eD+sCli/8URE6S7bKEj/eUqji0nUOPtDcotGoJmGVGOEThtO2
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="25840411"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="25840411"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 04:59:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="7456140"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 04:59:27 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 27 Feb 2024 14:59:23 +0200 (EET)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: Shyam-sundar.S-k@amd.com, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    sathyanarayanan.kuppuswamy@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] platform/x86/amd/pmf: Do not use readl() for
+ policy buffer access
+In-Reply-To: <20240223163901.13504-2-W_Armin@gmx.de>
+Message-ID: <e2b81849-3435-3efb-f2da-b74ac7f99a50@linux.intel.com>
+References: <20240223163901.13504-1-W_Armin@gmx.de> <20240223163901.13504-2-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ab2b4573-58ce-d895-0aae-69e3647e0a68@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Feb 27, 2024 at 10:23:17AM +0800, Zhihao Cheng wrote:
-> 在 2024/2/27 2:23, Daniel Golle 写道:
-> > A compiler warning related to sizeof(int) != 8 when calling do_div()
-> > is triggered when building on 32-bit platforms.
-> > Address this by using integer types having a well-defined size where
-> > appropriate.
-> > 
-> > Fixes: 3ce485803da1 ("mtd: ubi: provide NVMEM layer over UBI volumes")
-> > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> > ---
-> >   drivers/mtd/ubi/nvmem.c | 5 ++++-
-> >   1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mtd/ubi/nvmem.c b/drivers/mtd/ubi/nvmem.c
-> > index b7a93c495d172..5820a170d2512 100644
-> > --- a/drivers/mtd/ubi/nvmem.c
-> > +++ b/drivers/mtd/ubi/nvmem.c
-> > @@ -23,14 +23,17 @@ struct ubi_nvmem {
-> >   static int ubi_nvmem_reg_read(void *priv, unsigned int from,
-> >   			      void *val, size_t bytes)
-> >   {
-> > -	int err = 0, lnum = from, offs, bytes_left = bytes, to_read;
-> > +	uint32_t bytes_left, offs, to_read;
-> >   	struct ubi_nvmem *unv = priv;
-> >   	struct ubi_volume_desc *desc;
-> > +	uint64_t lnum = from;
-> > +	int err = 0;
-> >   	desc = ubi_open_volume(unv->ubi_num, unv->vol_id, UBI_READONLY);
-> >   	if (IS_ERR(desc))
-> >   		return PTR_ERR(desc);
-> > +	bytes_left = bytes;
-> The 'bytes' is a size_t type, which has 64 bits on 64-bit platforms. This
-> assignment will lead a type truncation, so should we add a explicit type
-> conversion here to avoid compiler warning?
+On Fri, 23 Feb 2024, Armin Wolf wrote:
 
-Oh right. I reckon the best is to declare 'bytes' as 'size_t' type as well
-then. I will send v2 with that change shortly.
-
-
-> >   	offs = do_div(lnum, unv->usable_leb_size);
-> >   	while (bytes_left) {
-> >   		to_read = unv->usable_leb_size - offs;
-> > 
+> The policy buffer is allocated using normal memory allocation
+> functions, so readl() should not be used on it.
 > 
+> Use get_unaligned_le32() instead.
 > 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> Compile-tested only.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/amd/pmf/tee-if.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+> index 16973bebf55f..3220b6580270 100644
+> --- a/drivers/platform/x86/amd/pmf/tee-if.c
+> +++ b/drivers/platform/x86/amd/pmf/tee-if.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/tee_drv.h>
+>  #include <linux/uuid.h>
+> +#include <asm/unaligned.h>
+>  #include "pmf.h"
+> 
+>  #define MAX_TEE_PARAM	4
+> @@ -249,8 +250,8 @@ static int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev)
+>  	u32 cookie, length;
+>  	int res;
+> 
+> -	cookie = readl(dev->policy_buf + POLICY_COOKIE_OFFSET);
+> -	length = readl(dev->policy_buf + POLICY_COOKIE_LEN);
+> +	cookie = get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_OFFSET);
+> +	length = get_unaligned_le32(dev->policy_buf + POLICY_COOKIE_LEN);
+
+I don't understand you need _unaligned_ here, the offsets should be dword 
+aligned, no?
+
+#define POLICY_COOKIE_OFFSET      0x10
+#define POLICY_COOKIE_LEN         0x14
+
+-- 
+ i.
+
