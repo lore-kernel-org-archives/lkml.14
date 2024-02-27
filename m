@@ -1,321 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E3056470
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709022832; cv=fail; b=Ce2rZVW0XmomNgNasYwctEPBhORzDNquBOOYU8WrW0nCZ0Cmay+npe5mYJevlM5/KKgxfh40V9YWapjOcn4Y96dYLXvna2QOlICC5xOm9wuIH+pTgYn3qOh98+3L7guz2HF3IPyv0r9uFD9N2Cq0n42tccqVtLfTijGsFvHXm0k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709022832; c=relaxed/simple;
-	bh=Hs8cfyDloYJje84/RHGAz6QPjeNZU/JWkkD0JX+FCsY=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nNWQEMgfTmE3d5dieERDKyDsIvIDuBrdjVWml2xonwckZxBdPcngVDMIatPBbtPy3l384QrwTkjSEYC4uCr0Hw48HP8FiLfXMj2+YT0t+6tEHSZOJlin75ESgYjI0VRXUxPPQf+9JPKiC+PG5Odwah8HPZnSGZ31r04Q8d4ZFeQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7ixFMo3; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7ixFMo3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709022830; x=1740558830;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Hs8cfyDloYJje84/RHGAz6QPjeNZU/JWkkD0JX+FCsY=;
-  b=k7ixFMo3fk+2pYk0L/33aU1QvGefLRvUcF/XapuMjYoQO/uRtil8DnIe
-   QAVteGX3F+bzPGF3vndBO1BiafqXMnr4/hXMu/r2LhhJBLB7e8HIcgMZu
-   +40S04vLDfXOxcBPZhWfCCcBpdOMEeGJQsnEXb73MWSxFW+iJek0ptZLu
-   nO7Svkm1fE58tOVYlpA1EXSw1isk+lFTr/M0GFAJbVDOIqR+kN1E5SGws
-   qjn1J1RdjXh3oyNRONsKciP29HFZlRZPLbS0yxmwaqQ2r7DN9WuGeUiIS
-   d2sCAmmPzLCvcXKspLvFwVypoSN/oJlWTN1UI5wuaWpptMkrsqWuEU2b/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3514879"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="3514879"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 00:33:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="6900883"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Feb 2024 00:33:44 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 27 Feb 2024 00:33:43 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 27 Feb 2024 00:33:43 -0800
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 27 Feb 2024 00:33:43 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NBZqvC/h1bg48NJ3Oo+qHuQ+yTRGyuC8n+iQfglVbyuR3DNYfLCAV/vd1qHgKR/yjgGpm+NmAN5HfyPzMPHBPzm7SDN3oDupRpqfWBEmEKdfyGrtooZmgUBh0X0/0cPZW7awOq46l1f/b676OEiie0FY1K+ZC2rT0tASenTkEHZO426BiFeo0jPzUTjVztRGs4DHeIkLSnQtlKQlBjU7xcjQAfT0sNpTLOC/vdyg/DJYnR0hx+YMDstFcoAmKnISqCaiH908GTTv+LuyEnnNf4otsGitvV/2fn6ULFQvcj6EUt16L5kWv+q/gfR4CeTcXcUCDYXWqNvrA3svyoy1dA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Oi0glK20awEU3yRj2jwXghH02cLtY3jsNFNA98RZgB8=;
- b=DJLyrtBklnUaUM4xcLKOpdIVxToKgdN85vYFDRSIVJILAbhktTE0yJm1hNvNKRN8ppcvdMUgCXgYD38ch2NXjgZiCu2+HqeqDjfOBuN4pQ0F33DNb/O7Y3gI22AgKPAWxMnNREslqbH8obY9pDRfyhUZmPsVN9YBzzSpK77E7/S0lr5XAZjcjVTl1/eAU60LzBlGa7aMWr4oS3pME4qeFY3Tc0GDipWNBN6kvHnh5iNM+BL2C6u7Q7VuO313AfLrv76mQeEGSYrJ5f4cOGdY7bj4+u1MDJI/qFvhfhlKaZzTc80wvWQsQJ/5oKGKmVVx1swrdqQ3pmz+qsMBqtQ7jQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CO1PR11MB4820.namprd11.prod.outlook.com (2603:10b6:303:6f::8)
- by CY5PR11MB6283.namprd11.prod.outlook.com (2603:10b6:930:21::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.25; Tue, 27 Feb
- 2024 08:33:40 +0000
-Received: from CO1PR11MB4820.namprd11.prod.outlook.com
- ([fe80::65ce:9835:2c02:b61b]) by CO1PR11MB4820.namprd11.prod.outlook.com
- ([fe80::65ce:9835:2c02:b61b%7]) with mapi id 15.20.7339.022; Tue, 27 Feb 2024
- 08:33:40 +0000
-Message-ID: <05f2d04c-333d-4298-8c7a-d5adeac5df82@intel.com>
-Date: Tue, 27 Feb 2024 16:33:33 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] mm/madvise: enhance lazyfreeing with mTHP in
- madvise_free
-Content-Language: en-US
-To: Barry Song <21cnbao@gmail.com>
-CC: Ryan Roberts <ryan.roberts@arm.com>, Lance Yang <ioworker0@gmail.com>,
-	David Hildenbrand <david@redhat.com>, <akpm@linux-foundation.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <mhocko@suse.com>,
-	<minchan@kernel.org>, <peterx@redhat.com>, <shy828301@gmail.com>,
-	<songmuchun@bytedance.com>, <wangkefeng.wang@huawei.com>,
-	<zokeefe@google.com>
-References: <CAGsJ_4zera4+bWuXHKjdU3QdiR3sqcUQB3gF08DPD49OCT4S9w@mail.gmail.com>
- <20240226083714.26187-1-ioworker0@gmail.com>
- <9bcf5141-7376-441e-bbe3-779956ef28b9@redhat.com>
- <CAK1f24mdwjz2J5VmeYSDwb4jMbrXUVCSF_0pOcWSVt1cfa0FhQ@mail.gmail.com>
- <318be511-06de-423e-8216-af869f27f849@arm.com>
- <CAGsJ_4z+0yXUDYwxKNAqYwxAAYpfKpKd2u_dVTDP3b-KPOQT1g@mail.gmail.com>
- <19758162-be5f-4dc4-b316-77b0115d12ce@intel.com>
- <CAGsJ_4wx72KOazANBvnGcjdZse8W9+PW5_fspP9=QuX3X_7msg@mail.gmail.com>
- <3c56d7b8-b76d-4210-b431-ee6431775ba7@intel.com>
- <CAGsJ_4xu1kz5VD-CcNFvP0A1nPKDojV8Gy1HPvNKuQ_RAw=26g@mail.gmail.com>
- <6ea0020a-8f4b-44d1-a3b2-7c2905d32772@intel.com>
- <CAGsJ_4x6Otb9LUvnxAaPLnQ2MPPng0xpG-vJmFL7pNm10FDhZA@mail.gmail.com>
- <CAGsJ_4xndYM8=7v+EV_aWX+_qgA1UPmm38n+ujbQXJLzCPKfog@mail.gmail.com>
- <009e5633-decb-4c21-b5fc-58984fbade96@intel.com>
- <CAGsJ_4yftgfD7MsNd5iej8_wTrYeTsAFfW7xmqrj-Q_w8-oqMg@mail.gmail.com>
-From: Yin Fengwei <fengwei.yin@intel.com>
-In-Reply-To: <CAGsJ_4yftgfD7MsNd5iej8_wTrYeTsAFfW7xmqrj-Q_w8-oqMg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR02CA0013.apcprd02.prod.outlook.com
- (2603:1096:4:194::21) To CO1PR11MB4820.namprd11.prod.outlook.com
- (2603:10b6:303:6f::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF95955E71;
+	Tue, 27 Feb 2024 08:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709022867; cv=none; b=aRLab2V0Q9uJkHABGph/20PxaV576xUwej9FlMHRiOhU9RgjBRDAgIHY6wERYmxXsiOA8R9NrQj62uyCxuY4oWVJ84sAqBxJTpNuWvmW2/sRSAL7GnTyP/3/38cctnd1PCiy+f2NP3d0n9rQp82NnI8Zq8imV8ETCzZOSTQaZ9k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709022867; c=relaxed/simple;
+	bh=utCTJOb3P+nxUodc++rYOPw2aXIo3wE3SFoyoLIYgqM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SKMjptJNjhjlaHGhpBdIEcji2bdFbO7s0HZiRi4gnlG2aZEN2GBtdMTW5w83SKk7AUwUcwYYQiXHr8b2i2XsrSfKS7relqRice6MV3yXrNK8t5bSEtcshqG3VuU/lqtE4Z1WSPPdaLO4xYlH5AutKG5wVrzovxYdM98VgQQnVk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23D9C433F1;
+	Tue, 27 Feb 2024 08:34:22 +0000 (UTC)
+Message-ID: <d8a6f227-4a64-4baa-adfa-cdd49be388d8@xs4all.nl>
+Date: Tue, 27 Feb 2024 09:34:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR11MB4820:EE_|CY5PR11MB6283:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2832f4c7-41aa-4cc4-7396-08dc376ecccc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yHr4xNzg4cbAImEBpnuyD+6XxMxE5h/GgxCZBTGJzPxJD8987v45K4wNSbC1UXHxK8GH0sb+893x4LgY5Z6Dhzn8pzOTqn6phgiTUMMCrocOiHVLSaRYXyLF+Sej3OKOOVxjGm8R08W7IceTgx0kV2HJw8Yl2u2pEbuerGFuZU/nvUmDt2HfZ3zA7AAY6qM6UOkWeFq02SE+bBjhTtIO55w5iE5y/ZiLj0kZBtr7I1ZRKVEwez47fwuk3To3bg5JitxodQUHJlQtu1g6aVWvmMPpQHxYW8LmAw+hPBkT3fDOd+7HBfnBa8ErkZijCWhhA71fyHMYV+BgtwlbsecvWGYoCYHays+NVu0Qz9p+1XmMMmWOAx3ifUAAIDzoSyXu5HJluowh6Pr6UJRrdIPFz78TUTXnJATkspkj2oTyCPjOJPk5dyQxkfLkYnD+NazEbfOBsaR/frsO2cuGPDHkj1eGDf9zSuaE5239RgeVKga4yHwUBVS/SSHOr50hGIGj9LMAdnK4Fcb2HJ5bKr32koub2SXqd2S33/8yP1pyTgQme+KyRDKaaw9dhGOZ6Gayi2D0mF2Ktx904aNphCnuSim63l1YGZYGuOoJyBo+sS6lXSz5R5rXMwvs8wRwdroM
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB4820.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d3JjTGpDMU1WanIrUG42Y1dkQ05DdTFzNm1XSk55WTFibWlmc3VQYWdMTEQx?=
- =?utf-8?B?d3lOZDVNVUhOcGtEOW1vdlk0NmdQYVo5QVFrdkZoNUJENHYwQ0xWb3Y5d0dE?=
- =?utf-8?B?LzF2TjJuS3F4TytOTlpZQmtDSUlzYUIydTBCWVJyUEZFVXNTb0FNd21aWWlt?=
- =?utf-8?B?RjVoNjY1anJRb3R3M2RjRHVwcXBaSVc3UzZ4cXR5bGZYdlVrdHFmZnBDQkhF?=
- =?utf-8?B?OXdYNndTZ2cxMEJtOGt4M2dZSWpYY0dITWZZZCthWWVjNm5ha0thUGErc2Uv?=
- =?utf-8?B?UnZZVTRKZkRPbmxtK0pvdHhCOUt3NnZLL0lDa1F0dGwrWHZEalRoM3dOUGw3?=
- =?utf-8?B?V1NEV0JFUzd5NUVFK0lmeCtJTkJtK2FsV0JmL1I3T3V4ZTNnR3p6TU5KbjBV?=
- =?utf-8?B?T2hLbkJyc2hjNzUrcHhOWENRUC9oSVZacWhxcDdzZ1IwZzdMa1MvUGJhT3Y2?=
- =?utf-8?B?U2gxd1JteFZkQVNlUDEyZDV1M0NjM1dEV0pGWDdXdVFYTlhnZjNDeFV1bWc1?=
- =?utf-8?B?YXZEWDV2ejJPMkVSTFY1R0JMcjVkTXlyeHNZZ0NqZytmT0ZGZzRvSW11M2I4?=
- =?utf-8?B?cmR0MkZldTR4ajhJeWI0NjZoMFN4bnUraGs4Z01WMnhDQldiY1ZoS3QwTzNX?=
- =?utf-8?B?MGorc3hZODU5aE0vdXBmaHQyelRJSmNIYmd2Nk5GY0o3c2VSR25OdUgrYWJP?=
- =?utf-8?B?MFVxdExzdlpQU0RmOWU3OEdMWWd6dTdHNUtkQTNaSlZtTXkxc0Vwa2N4bWYz?=
- =?utf-8?B?MDZqN1g2QWVDSmlvMXFIR2ZNWFBOdDdqYjlqVXoxM1BxUnRwZys5TGdseUt0?=
- =?utf-8?B?ak5xSlVyWmtkUlMvWWoyMEhYNk10eEc1VUVNeUZFTjNialN4d1dPdFF6Sjgz?=
- =?utf-8?B?ZURTRUhYZTFHaTVWT0hScGhDeUhRTHlsVThWcjZ5ZFozcHNMS2tFZStpNnJV?=
- =?utf-8?B?azVQWUxsWWd0SUpqb1prY3dhNVhJbGlvdENjTzZMYnd0dXd4MHRHVGZoZDRO?=
- =?utf-8?B?Vk5jcWt4V0JtV3B3cWpGQWlld21KaUtmb1NZT3czZUpSTmJ1VXRRdTFTZDZ0?=
- =?utf-8?B?TytkckRxYzljbHAyWGczZ3ZhVWdCbWE0T3BxRnp0Y0FURmpNcXpoUEg2OEN5?=
- =?utf-8?B?SHNrTFFGUmF1NW9KS1MraW5FOUdHMUM5dlc5R2lzSnRnclRuMFl4YWVSalNT?=
- =?utf-8?B?bEtCNkhQNHdqOCtlR2d0eWsxWld0TVZxbk5mSVN3UUxJSUp1TXZNWE90dDVz?=
- =?utf-8?B?VXpxdDFWaXJPalBTUTF5YjFxSGNCWExrcHFnUlloVldyZFh1QU44eGpSK1lm?=
- =?utf-8?B?ZzJwNWhXQWFWaENvNmEvdGg4ZFljTUJZdC9qNFlMVk44OTdXTnZjRlY3REZ4?=
- =?utf-8?B?ajJZVWxpRU5ONVN5V1BLT2Y0ZE5BcUZKSGxvNTM4U0RHRVRMQWJJeTZPbVNG?=
- =?utf-8?B?UEcwWDVsTmsvUEc4bDJzcE1Oam1xMC9MR2xhK280VFZaSU01VzNyMVFzc2kr?=
- =?utf-8?B?ZldOVXNVVStLSVpsWDg3aVV5NTRUSjJuQnBhUkhTMWRMcWZ3UFdwTW5pOXVk?=
- =?utf-8?B?NVdlOTRkNzllQy9tNjR3bTZxMnIwbWJ0T3VhY0tDSFNhNUhFVE5mS2FtVnNr?=
- =?utf-8?B?UEZ2b1krTUdXMXU1NkJWdzZwQWoyU2NmdEhjSEViZ3hqTEhXNEhHaDhKOGl1?=
- =?utf-8?B?UkMwbEVyZGxadUlmaFJPbldIVmVpTkcrNVVrWTNPSCtlczUzM3lLT2Npdjhu?=
- =?utf-8?B?RlNxZThUM2NkZWliRGVDY0xFVjR6V3RKZkw2NHk0NHhTdzJtNXNVYjFEVDlS?=
- =?utf-8?B?SHl1OWJwKzUxaUVUbTByWFJDcUkzYk90Z2ZscEFFY2x2MVJIOHhqUW9XWVBT?=
- =?utf-8?B?andLd1JUcHkwZ0N0emlodkFtdVlTbFhqRDVtbzFpNWRUZUZLS0NsMENOU0VN?=
- =?utf-8?B?bG40OW9GYUtHakRGMlhhYWdKaDRPZkdMSUVKdUdWZEY4UHZnSlhMcmJaSHVX?=
- =?utf-8?B?cWw5bVp1Q1BPaVJlcFVLWjRlRkhsS1prOHV0SkNBNnRPRDBlSTVrQzk5cDVn?=
- =?utf-8?B?TVJia3NuMDNrTW50eVc1VSszZnlsS0U4QzhObmcvWWJpa3ljVnYzK0JrSUJv?=
- =?utf-8?B?Y1VNU2M0TWVZaVowVDBzQzFnTzg1MGIzeUh1UDN2ZWoyM1lxelJUZWlhWWFX?=
- =?utf-8?B?T1E9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2832f4c7-41aa-4cc4-7396-08dc376ecccc
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB4820.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 08:33:40.4087
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dbe0mINgjwx8C98rxoaHgreY6p9CW7V8xcMXVLrf8z5GRb5PRNF1bIxldCPAR6ym7Z++FDdZmq2T3lQEjMKwlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6283
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 09/16] media: uapi: Define audio sample format fourcc
+ type
+Content-Language: en-US, nl
+To: Shengjiu Wang <shengjiu.wang@gmail.com>,
+ Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, sakari.ailus@iki.fi,
+ tfiga@chromium.org, m.szyprowski@samsung.com, mchehab@kernel.org,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Xiubo.Lee@gmail.com, festevam@gmail.com, nicoleotsuka@gmail.com,
+ lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+ alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+References: <1708936109-11587-1-git-send-email-shengjiu.wang@nxp.com>
+ <1708936109-11587-10-git-send-email-shengjiu.wang@nxp.com>
+ <71c860869caf899a72ebc547608220074c5939b1.camel@ndufresne.ca>
+ <CAA+D8AMEMr_PSsfuSByxd0Sxv1zXJoQjEkJEWEpk59kmLGOD1Q@mail.gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ xsFNBFQ84W0BEAC7EF1iL4s3tY8cRTVkJT/297h0Hz0ypA+ByVM4CdU9sN6ua/YoFlr9k0K4
+ BFUlg7JzJoUuRbKxkYb8mmqOe722j7N3HO8+ofnio5cAP5W0WwDpM0kM84BeHU0aPSTsWiGR
+ yw55SOK2JBSq7hueotWLfJLobMWhQii0Zd83hGT9SIt9uHaHjgwmtTH7MSTIiaY6N14nw2Ud
+ C6Uykc1va0Wqqc2ov5ihgk/2k2SKa02ookQI3e79laOrbZl5BOXNKR9LguuOZdX4XYR3Zi6/
+ BsJ7pVCK9xkiVf8svlEl94IHb+sa1KrlgGv3fn5xgzDw8Z222TfFceDL/2EzUyTdWc4GaPMC
+ E/c1B4UOle6ZHg02+I8tZicjzj5+yffv1lB5A1btG+AmoZrgf0X2O1B96fqgHx8w9PIpVERN
+ YsmkfxvhfP3MO3oHh8UY1OLKdlKamMneCLk2up1Zlli347KMjHAVjBAiy8qOguKF9k7HOjif
+ JCLYTkggrRiEiE1xg4tblBNj8WGyKH+u/hwwwBqCd/Px2HvhAsJQ7DwuuB3vBAp845BJYUU3
+ 06kRihFqbO0vEt4QmcQDcbWINeZ2zX5TK7QQ91ldHdqJn6MhXulPKcM8tCkdD8YNXXKyKqNl
+ UVqXnarz8m2JCbHgjEkUlAJCNd6m3pfESLZwSWsLYL49R5yxIwARAQABzSFIYW5zIFZlcmt1
+ aWwgPGh2ZXJrdWlsQHhzNGFsbC5ubD7CwZUEEwECACgFAlQ84W0CGwMFCRLMAwAGCwkIBwMC
+ BhUIAgkKCwQWAgMBAh4BAheAACEJEL0tYUhmFDtMFiEEBSzee8IVBTtonxvKvS1hSGYUO0wT
+ 7w//frEmPBAwu3OdvAk9VDkH7X+7RcFpiuUcJxs3Xl6jpaA+SdwtZra6W1uMrs2RW8eXXiq/
+ 80HXJtYnal1Y8MKUBoUVhT/+5+KcMyfVQK3VFRHnNxCmC9HZV+qdyxAGwIscUd4hSlweuU6L
+ 6tI7Dls6NzKRSTFbbGNZCRgl8OrF01TBH+CZrcFIoDgpcJA5Pw84mxo+wd2BZjPA4TNyq1od
+ +slSRbDqFug1EqQaMVtUOdgaUgdlmjV0+GfBHoyCGedDE0knv+tRb8v5gNgv7M3hJO3Nrl+O
+ OJVoiW0G6OWVyq92NNCKJeDy8XCB1yHCKpBd4evO2bkJNV9xcgHtLrVqozqxZAiCRKN1elWF
+ 1fyG8KNquqItYedUr+wZZacqW+uzpVr9pZmUqpVCk9s92fzTzDZcGAxnyqkaO2QTgdhPJT2m
+ wpG2UwIKzzi13tmwakY7OAbXm76bGWVZCO3QTHVnNV8ku9wgeMc/ZGSLUT8hMDZlwEsW7u/D
+ qt+NlTKiOIQsSW7u7h3SFm7sMQo03X/taK9PJhS2BhhgnXg8mOa6U+yNaJy+eU0Lf5hEUiDC
+ vDOI5x++LD3pdrJVr/6ZB0Qg3/YzZ0dk+phQ+KlP6HyeO4LG662toMbFbeLcBjcC/ceEclII
+ 90QNEFSZKM6NVloM+NaZRYVO3ApxWkFu+1mrVTXOwU0EVDzhbQEQANzLiI6gHkIhBQKeQaYs
+ p2SSqF9c++9LOy5x6nbQ4s0X3oTKaMGfBZuiKkkU6NnHCSa0Az5ScRWLaRGu1PzjgcVwzl5O
+ sDawR1BtOG/XoPRNB2351PRp++W8TWo2viYYY0uJHKFHML+ku9q0P+NkdTzFGJLP+hn7x0RT
+ DMbhKTHO3H2xJz5TXNE9zTJuIfGAz3ShDpijvzYieY330BzZYfpgvCllDVM5E4XgfF4F/N90
+ wWKu50fMA01ufwu+99GEwTFVG2az5T9SXd7vfSgRSkzXy7hcnxj4IhOfM6Ts85/BjMeIpeqy
+ TDdsuetBgX9DMMWxMWl7BLeiMzMGrfkJ4tvlof0sVjurXibTibZyfyGR2ricg8iTbHyFaAzX
+ 2uFVoZaPxrp7udDfQ96sfz0hesF9Zi8d7NnNnMYbUmUtaS083L/l2EDKvCIkhSjd48XF+aO8
+ VhrCfbXWpGRaLcY/gxi2TXRYG9xCa7PINgz9SyO34sL6TeFPSZn4bPQV5O1j85Dj4jBecB1k
+ z2arzwlWWKMZUbR04HTeAuuvYvCKEMnfW3ABzdonh70QdqJbpQGfAF2p4/iCETKWuqefiOYn
+ pR8PqoQA1DYv3t7y9DIN5Jw/8Oj5wOeEybw6vTMB0rrnx+JaXvxeHSlFzHiD6il/ChDDkJ9J
+ /ejCHUQIl40wLSDRABEBAAHCwXwEGAECAA8FAlQ84W0CGwwFCRLMAwAAIQkQvS1hSGYUO0wW
+ IQQFLN57whUFO2ifG8q9LWFIZhQ7TA1WD/9yxJvQrpf6LcNrr8uMlQWCg2iz2q1LGt1Itkuu
+ KaavEF9nqHmoqhSfZeAIKAPn6xuYbGxXDrpN7dXCOH92fscLodZqZtK5FtbLvO572EPfxneY
+ UT7JzDc/5LT9cFFugTMOhq1BG62vUm/F6V91+unyp4dRlyryAeqEuISykhvjZCVHk/woaMZv
+ c1Dm4Uvkv0Ilelt3Pb9J7zhcx6sm5T7v16VceF96jG61bnJ2GFS+QZerZp3PY27XgtPxRxYj
+ AmFUeF486PHx/2Yi4u1rQpIpC5inPxIgR1+ZFvQrAV36SvLFfuMhyCAxV6WBlQc85ArOiQZB
+ Wm7L0repwr7zEJFEkdy8C81WRhMdPvHkAIh3RoY1SGcdB7rB3wCzfYkAuCBqaF7Zgfw8xkad
+ KEiQTexRbM1sc/I8ACpla3N26SfQwrfg6V7TIoweP0RwDrcf5PVvwSWsRQp2LxFCkwnCXOra
+ gYmkrmv0duG1FStpY+IIQn1TOkuXrciTVfZY1cZD0aVxwlxXBnUNZZNslldvXFtndxR0SFat
+ sflovhDxKyhFwXOP0Rv8H378/+14TaykknRBIKEc0+lcr+EMOSUR5eg4aURb8Gc3Uc7fgQ6q
+ UssTXzHPyj1hAyDpfu8DzAwlh4kKFTodxSsKAjI45SLjadSc94/5Gy8645Y1KgBzBPTH7Q==
+In-Reply-To: <CAA+D8AMEMr_PSsfuSByxd0Sxv1zXJoQjEkJEWEpk59kmLGOD1Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 27/02/2024 04:44, Shengjiu Wang wrote:
+> On Mon, Feb 26, 2024 at 9:55 PM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+>>
+>> Le lundi 26 février 2024 à 16:28 +0800, Shengjiu Wang a écrit :
+>>> The audio sample format definition is from alsa,
+>>> the header file is include/uapi/sound/asound.h, but
+>>> don't include this header file directly, because in
+>>> user space, there is another copy in alsa-lib.
+>>> There will be conflict in userspace for include
+>>> videodev2.h & asound.h and asoundlib.h
+>>>
+>>> Here still use the fourcc format.
+>>
+>> I'd like to join Mauro's voice that duplicating the audio formats is a bad idea.
+>> We have the same issues with video formats when you look at V4L2 vs DRM. You're
+>> rationale is that videodev2.h will be ambiguous if it includes asound.h, but
+>> looking at this change, there is no reason why you need to include asound.h in
+>> videodev2.h at all. The format type can be abstracted out with a uint32 in the
+>> API, and then it would be up to the users to include and use the appropriate
+>> formats IDs.
+>>
+> 
+> Resend for the plain text issue
+> 
+> Thanks.
+> 
+> There is another reason mentioned by Hans:
+> 
+> "
+> The problem is that within V4L2 we use fourcc consistently to describe a
+> format, including in VIDIOC_ENUM_FMT. And the expectation is that the fourcc
+> can be printed to a human readable string (there is even a printk format for
+> that these days).
+> 
+> But the pcm values are all small integers (and can even be 0!), and
+> printing the fourcc will give garbage. It doesn't work well at all
+> with the V4L2 API. But by having a straightforward conversion between the
+> pcm identifier and a fourcc it was really easy to deal with this.
+> 
+> There might even be applications today that call VIDIOC_ENUM_FMT to see
+> what is supported and fail if it is not a proper fourcc is returned.
+> 
+> It will certainly report nonsense in v4l_print_fmtdesc() (v4l2-ioctl.c).
+> 
+> One of the early versions of this patch series did precisely what you request,
+> but it just doesn't work well within the V4L2 uAPI.
+> "
 
+Right, and remember that the fourcc codes are really meant to be shown as
+characters. v4l2-ctl and friends all use this, and we all talk about them
+as such (NV12, YUYV, etc.). If I would just stick in the standard PCM IDs,
+then they would all show up as '....'.
 
-On 2/27/24 15:54, Barry Song wrote:
-> On Tue, Feb 27, 2024 at 8:42 PM Yin Fengwei <fengwei.yin@intel.com> wrote:
->>
->>
->>
->> On 2/27/24 15:21, Barry Song wrote:
->>> On Tue, Feb 27, 2024 at 8:11 PM Barry Song <21cnbao@gmail.com> wrote:
->>>>
->>>> On Tue, Feb 27, 2024 at 8:02 PM Yin Fengwei <fengwei.yin@intel.com> wrote:
->>>>>
->>>>>
->>>>>
->>>>> On 2/27/24 14:40, Barry Song wrote:
->>>>>> On Tue, Feb 27, 2024 at 7:14 PM Yin Fengwei <fengwei.yin@intel.com> wrote:
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> On 2/27/24 10:17, Barry Song wrote:
->>>>>>>>> Like if we hit folio which is partially mapped to the range, don't split it but
->>>>>>>>> just unmap the mapping part from the range. Let page reclaim decide whether
->>>>>>>>> split the large folio or not (If it's not mapped to any other range,it will be
->>>>>>>>> freed as whole large folio. If part of it still mapped to other range,page reclaim
->>>>>>>>> can decide whether to split it or ignore it for current reclaim cycle).
->>>>>>>> Yes, we can. but we still have to play the ptes check game to avoid adding
->>>>>>>> folios multiple times to reclaim the list.
->>>>>>>>
->>>>>>>> I don't see too much difference between splitting in madvise and splitting
->>>>>>>> in vmscan.  as our real purpose is avoiding splitting entirely mapped
->>>>>>>> large folios. for partial mapped large folios, if we split in madvise, then
->>>>>>>> we don't need to play the game of skipping folios while iterating PTEs.
->>>>>>>> if we don't split in madvise, we have to make sure the large folio is only
->>>>>>>> added in reclaimed list one time by checking if PTEs belong to the
->>>>>>>> previous added folio.
->>>>>>>
->>>>>>> If the partial mapped large folio is unmapped from the range, the related PTE
->>>>>>> become none. How could the folio be added to reclaimed list multiple times?
->>>>>>
->>>>>> in case we have 16 PTEs in a large folio.
->>>>>> PTE0 present
->>>>>> PTE1 present
->>>>>> PTE2 present
->>>>>> PTE3  none
->>>>>> PTE4 present
->>>>>> PTE5 none
->>>>>> PTE6 present
->>>>>> ....
->>>>>> the current code is scanning PTE one by one.
->>>>>> while scanning PTE0, we have added the folio. then PTE1, PTE2, PTE4, PTE6...
->>>>> No. Before detect the folio is fully mapped to the range, we can't add folio
->>>>> to reclaim list because the partial mapped folio shouldn't be added. We can
->>>>> only scan PTE15 and know it's fully mapped.
->>>>
->>>> you never know PTE15 is the last one mapping to the large folio, PTE15 can
->>>> be mapping to a completely different folio with PTE0.
->>>>
->>>>>
->>>>> So, when scanning PTE0, we will not add folio. Then when hit PTE3, we know
->>>>> this is a partial mapped large folio. We will unmap it. Then all 16 PTEs
->>>>> become none.
->>>>
->>>> I don't understand why all 16PTEs become none as we set PTEs to none.
->>>> we set PTEs to swap entries till try_to_unmap_one called by vmscan.
->>>>
->>>>>
->>>>> If the large folio is fully mapped, the folio will be added to reclaim list
->>>>> after scan PTE15 and know it's fully mapped.
->>>>
->>>> our approach is calling pte_batch_pte while meeting the first pte, if
->>>> pte_batch_pte = 16,
->>>> then we add this folio to reclaim_list and skip the left 15 PTEs.
->>>
->>> Let's compare two different implementation, for partial mapped large folio
->>> with 8 PTEs as below,
->>>
->>> PTE0 present for large folio1
->>> PTE1 present for large folio1
->>> PTE2 present for another folio2
->>> PTE3 present for another folio3
->>> PTE4 present for large folio1
->>> PTE5 present for large folio1
->>> PTE6 present for another folio4
->>> PTE7 present for another folio5
->>>
->>> If we don't split in madvise(depend on vmscan to split after adding
->>> folio1), we will have
->> Let me clarify something here:
->>
->> I prefer that we don't split large folio here. Instead, we unmap the
->> large folio from this VMA range (I think you missed the unmap operation
->> I mentioned).
-> 
-> I don't understand why we unmap as this is a MADV_PAGEOUT not
-> an unmap. unmapping totally changes the semantics. Would you like
-> to show pseudo code?
-Oh. Yes. MADV_PAGEOUT is not suitable.
+<snip>
 
-What about MADV_FREE?
+>>> +/*
+>>> + * Audio-data formats
+>>> + * All these audio formats use a fourcc starting with 'AU'
+>>> + * followed by the SNDRV_PCM_FORMAT_ value from asound.h.
+>>> + */
+>>> +#define V4L2_AUDIO_FMT_S8                    v4l2_fourcc('A', 'U', '0', '0')
+>>> +#define V4L2_AUDIO_FMT_S16_LE                        v4l2_fourcc('A', 'U', '0', '2')
+>>> +#define V4L2_AUDIO_FMT_U16_LE                        v4l2_fourcc('A', 'U', '0', '4')
+>>> +#define V4L2_AUDIO_FMT_S24_LE                        v4l2_fourcc('A', 'U', '0', '6')
+>>> +#define V4L2_AUDIO_FMT_U24_LE                        v4l2_fourcc('A', 'U', '0', '8')
+>>> +#define V4L2_AUDIO_FMT_S32_LE                        v4l2_fourcc('A', 'U', '1', '0')
+>>> +#define V4L2_AUDIO_FMT_U32_LE                        v4l2_fourcc('A', 'U', '1', '2')
+>>> +#define V4L2_AUDIO_FMT_FLOAT_LE                      v4l2_fourcc('A', 'U', '1', '4')
+>>> +#define V4L2_AUDIO_FMT_IEC958_SUBFRAME_LE    v4l2_fourcc('A', 'U', '1', '8')
+>>> +#define V4L2_AUDIO_FMT_S24_3LE                       v4l2_fourcc('A', 'U', '3', '2')
+>>> +#define V4L2_AUDIO_FMT_U24_3LE                       v4l2_fourcc('A', 'U', '3', '4')
+>>> +#define V4L2_AUDIO_FMT_S20_3LE                       v4l2_fourcc('A', 'U', '3', '6')
+>>> +#define V4L2_AUDIO_FMT_U20_3LE                       v4l2_fourcc('A', 'U', '3', '8')
+>>> +
+>>> +#define v4l2_fourcc_to_audfmt(fourcc)        \
+>>> +     (__force snd_pcm_format_t)(((((fourcc) >> 16) & 0xff) - '0') * 10  \
+>>> +                                + ((((fourcc) >> 24) & 0xff) - '0'))
+>>> +
 
-> 
-> for MADV_PAGEOUT on swap-out, the last step is writing swap entries
-> to replace PTEs which are present. I don't understand how an unmap
-> can be involved in this process.
-> 
+We did add a #define to go from a fourcc to an audio format.
+
+Would it help to add a corresponding v4l2_audfmt_to_fourcc define as well?
+
+#define v4l2_audfmt_to_fourcc(audfmt) \
+	v4l2_fourcc('A', 'U', '0' + (audfmt) / 10, '0' + (audfmt) % 10)
+
+I would have no problem with that.
+
+The mapping between the audio format and the fourcc is very simple, it is just
+converted to something that can be safely shown as ASCII characters.
+
+Regards,
+
+	Hans
+
+>>>  /* priv field value to indicates that subsequent fields are valid. */
+>>>  #define V4L2_PIX_FMT_PRIV_MAGIC              0xfeedcafe
+>>>
 >>
->> The intention is trying best to avoid splitting the large folio. If
->> the folio is only partially mapped to this VMA range, it's likely it
->> will be reclaimed as whole large folio. Which brings benefit for lru
->> and zone lock contention comparing to splitting large folio.
-> 
-> which also brings negative side effects such as redundant I/O.
-> For example, if you have only one subpage left in a large folio,
-> pageout will still write nr_pages subpages into swap, then immediately
-> free them in swap.
-> 
->>
->> The thing I am not sure is unmapping from specific VMA range is not
->> available and whether it's worthy to add it.
-> 
-> I think we might have the possibility to have some complex code to
-> add folio1, folio2, folio3, folio4 and folio5 in the above example into
-> reclaim_list while avoiding splitting folio1. but i really don't understand
-> how unmap will work.
-> 
->>
->>> to make sure folio1, folio2, folio3, folio4, folio5 are added to
->>> reclaim_list by doing a complex
->>> game while scanning these 8 PTEs.
->>>
->>> if we split in madvise, they become:
->>>
->>> PTE0 present for large folioA  - splitted from folio 1
->>> PTE1 present for large folioB - splitted from folio 1
->>> PTE2 present for another folio2
->>> PTE3 present for another folio3
->>> PTE4 present for large folioC - splitted from folio 1
->>> PTE5 present for large folioD - splitted from folio 1
->>> PTE6 present for another folio4
->>> PTE7 present for another folio5
->>>
->>> we simply add the above 8 folios into reclaim_list one by one.
->>>
->>> I would vote for splitting for partial mapped large folio in madvise.
->>>
-> 
-> Thanks
-> Barry
+
