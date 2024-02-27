@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B822E57864
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F7758136
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709076072; cv=none; b=k/uYV838HJqp6cDhlwFva77UwnDnSS51K0HeuR/9YdNF404HKDhUK6m/Mz7a/+wB1XR5SBz/g+QJzk+Htiznz1c8Heg+qjTUQ86W6YqlgFVSM0nMVP/gx/AuytopwuGUKfdbg8EgASGbx0Q3tC6sJcdBnBoHWkTD/HSRFG8Jokc=
+	t=1709076074; cv=none; b=gNADp4A4dVg+Js3ivPxdHiSIuug3AD281ljkk2JwKU0OgPU8TYyQukBZZTsZkqnwbebd0dfQw2ABBzcPCLA/RygjIFqnL3hceskG/5aXDd2tZmmAVg5ZtoQv8HTrE4xoEuZKn8vxLlG7/wpJr9aCardI5coEnThWjZ/yjCNfS+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709076072; c=relaxed/simple;
-	bh=kWYSK/y8A3N1bcHYrd3SkpiC/aeaRRMYM+yy30GVT24=;
+	s=arc-20240116; t=1709076074; c=relaxed/simple;
+	bh=rJ+0CMX/DI45udGZgNZqTlQKuapoycVU2cowegxlNxo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gtrm6E/zZPzJK3r8YjZOKQA7lpxMa1eHdXQ7i1Gc4rtKTn2FmdYTEIejijCm0lc3tBRnpJFG5YhCk10rYkla3ETZDHn3ujdyWy/WnfoMnVhDAJF5YwWDUz8SjDCOA00Xs7/X1pKhLnpxaU9QEGLL7WrjB6FSEfpmjyGdTkmvG54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aVlcdYN/; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=PmDOpFHsKw5fLd/b1ERPIQ0vMRGx707qEHUbmAUh4lTJZg04TyrCoFfDmqfOBkmk1FlnJIb1aMLTOp/XnNLb6C1LDe/maVejpwtESZtUYKIjpKSXnO/F9OTg6Yx6xDdLQqm3MpW7ETn/7Js2DbeuFdIL5iHK8h3hU+8pUzN9QsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JBWM+ec2; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aVlcdYN/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JBWM+ec2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709076067;
+	s=mimecast20190719; t=1709076069;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=F55eKI/iY9zJN0lTCjOYXx1EuutOv5sWb51ipeBlsjg=;
-	b=aVlcdYN/snR5W6LbKH4GSjSmMAcFSYbWJobSYtMzfUvz1uw995p+WGLxedqT+aTDtbGZDU
-	tR3Z2c5BKHJuix4dw5RPACur4L7v1+nuyoS6HsvgGQpqQj07/IAVJltbbPmVbri4QFsTa2
-	ckfPH0JI8mIoFRN2ZKug1jvaNvyVXe0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-112-v0D68xP3OMO2FLKE-exLcw-1; Tue,
- 27 Feb 2024 18:21:04 -0500
-X-MC-Unique: v0D68xP3OMO2FLKE-exLcw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	bh=T8A/JfH64nTOH0V0ceFUqpMW1k22o4T4wPuWKt4c/d4=;
+	b=JBWM+ec2VaHe74a0ygL0kjaM2JpX0ZUXqRDFQar8OnBe4C+8F8Gi+yQjbbSXV4AziaR64o
+	lbQAQIeAvRU65ClFrbTSrUveS6qPJXTj4XoHuWEeTMfzW4XpDpd22aBgFhGkdstc96kfzx
+	0YHsWg1TVgtBiatN9/VTn59/4yIy7po=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-393-2HVa7PztN72zcSYx2dj5sA-1; Tue, 27 Feb 2024 18:21:06 -0500
+X-MC-Unique: 2HVa7PztN72zcSYx2dj5sA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F25593C13A89;
-	Tue, 27 Feb 2024 23:21:03 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 905CB85A58B;
+	Tue, 27 Feb 2024 23:21:05 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C5889C040F7;
-	Tue, 27 Feb 2024 23:21:03 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 621FE492BCF;
+	Tue, 27 Feb 2024 23:21:05 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -47,9 +47,9 @@ Cc: seanjc@google.com,
 	michael.roth@amd.com,
 	isaku.yamahata@intel.com,
 	thomas.lendacky@amd.com
-Subject: [PATCH 13/21] KVM: x86/mmu: Pass around full 64-bit error code for KVM page faults
-Date: Tue, 27 Feb 2024 18:20:52 -0500
-Message-Id: <20240227232100.478238-14-pbonzini@redhat.com>
+Subject: [PATCH 20/21] KVM: x86: Add gmem hook for invalidating memory
+Date: Tue, 27 Feb 2024 18:20:59 -0500
+Message-Id: <20240227232100.478238-21-pbonzini@redhat.com>
 In-Reply-To: <20240227232100.478238-1-pbonzini@redhat.com>
 References: <20240227232100.478238-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -60,95 +60,126 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Michael Roth <michael.roth@amd.com>
 
-In some cases the full 64-bit error code for the KVM page fault will be
-needed to determine things like whether or not a fault was for a private
-or shared guest page, so update related code to accept the full 64-bit
-value so it can be plumbed all the way through to where it is needed.
+In some cases, like with SEV-SNP, guest memory needs to be updated in a
+platform-specific manner before it can be safely freed back to the host.
+Wire up arch-defined hooks to the .free_folio kvm_gmem_aops callback to
+allow for special handling of this sort when freeing memory in response
+to FALLOC_FL_PUNCH_HOLE operations and when releasing the inode, and go
+ahead and define an arch-specific hook for x86 since it will be needed
+for handling memory used for SEV-SNP guests.
 
-The use of lower_32_bits() moves from kvm_mmu_page_fault() to
-FNAME(page_fault), since walking is independent of the data in the
-upper bits of the error code.
-
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Link: https://lore.kernel.org/kvm/20230612042559.375660-1-michael.roth@amd.com/T/#mbd0b20c9a2cf50319d5d2a27b63f73c772112076
-[mdr: drop references/changes to code not in current gmem tree, update
-      commit message]
 Signed-off-by: Michael Roth <michael.roth@amd.com>
-Message-Id: <20231230172351.574091-7-michael.roth@amd.com>
+Message-Id: <20231230172351.574091-6-michael.roth@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu.c          | 3 +--
- arch/x86/kvm/mmu/mmu_internal.h | 4 ++--
- arch/x86/kvm/mmu/mmutrace.h     | 2 +-
- arch/x86/kvm/mmu/paging_tmpl.h  | 2 +-
- 4 files changed, 5 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/kvm-x86-ops.h |  1 +
+ arch/x86/include/asm/kvm_host.h    |  1 +
+ arch/x86/kvm/x86.c                 |  7 +++++++
+ include/linux/kvm_host.h           |  4 ++++
+ virt/kvm/Kconfig                   |  4 ++++
+ virt/kvm/guest_memfd.c             | 14 ++++++++++++++
+ 6 files changed, 31 insertions(+)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 195e46a1f00f..f58ca6cb789a 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5869,8 +5869,7 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
- 	}
+diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+index adfaad15e7e6..42474acb7375 100644
+--- a/arch/x86/include/asm/kvm-x86-ops.h
++++ b/arch/x86/include/asm/kvm-x86-ops.h
+@@ -140,6 +140,7 @@ KVM_X86_OP(vcpu_deliver_sipi_vector)
+ KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
+ KVM_X86_OP_OPTIONAL(get_untagged_addr)
+ KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
++KVM_X86_OP_OPTIONAL(gmem_invalidate)
  
- 	if (r == RET_PF_INVALID) {
--		r = kvm_mmu_do_page_fault(vcpu, cr2_or_gpa,
--					  lower_32_bits(error_code), false,
-+		r = kvm_mmu_do_page_fault(vcpu, cr2_or_gpa, error_code, false,
- 					  &emulation_type);
- 		if (KVM_BUG_ON(r == RET_PF_INVALID, vcpu->kvm))
- 			return -EIO;
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index 0669a8a668ca..21f55e8b4dc6 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -190,7 +190,7 @@ static inline bool is_nx_huge_page_enabled(struct kvm *kvm)
- struct kvm_page_fault {
- 	/* arguments to kvm_mmu_do_page_fault.  */
- 	const gpa_t addr;
--	const u32 error_code;
-+	const u64 error_code;
- 	const bool prefetch;
+ #undef KVM_X86_OP
+ #undef KVM_X86_OP_OPTIONAL
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 6d873d08f739..e523b204697d 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1805,6 +1805,7 @@ struct kvm_x86_ops {
  
- 	/* Derived from error_code.  */
-@@ -280,7 +280,7 @@ enum {
+ 	gva_t (*get_untagged_addr)(struct kvm_vcpu *vcpu, gva_t gva, unsigned int flags);
+ 	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
++	void (*gmem_invalidate)(kvm_pfn_t start, kvm_pfn_t end);
  };
  
- static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
--					u32 err, bool prefetch, int *emulation_type)
-+					u64 err, bool prefetch, int *emulation_type)
- {
- 	struct kvm_page_fault fault = {
- 		.addr = cr2_or_gpa,
-diff --git a/arch/x86/kvm/mmu/mmutrace.h b/arch/x86/kvm/mmu/mmutrace.h
-index ae86820cef69..195d98bc8de8 100644
---- a/arch/x86/kvm/mmu/mmutrace.h
-+++ b/arch/x86/kvm/mmu/mmutrace.h
-@@ -260,7 +260,7 @@ TRACE_EVENT(
- 	TP_STRUCT__entry(
- 		__field(int, vcpu_id)
- 		__field(gpa_t, cr2_or_gpa)
--		__field(u32, error_code)
-+		__field(u64, error_code)
- 		__field(u64 *, sptep)
- 		__field(u64, old_spte)
- 		__field(u64, new_spte)
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index bebd73cd61bb..ed2923d9a934 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -787,7 +787,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 	 * The bit needs to be cleared before walking guest page tables.
- 	 */
- 	r = FNAME(walk_addr)(&walker, vcpu, fault->addr,
--			     fault->error_code & ~PFERR_RSVD_MASK);
-+			     lower_32_bits(fault->error_code) & ~PFERR_RSVD_MASK);
+ struct kvm_x86_nested_ops {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index eff532ea59c9..9d5603adf542 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13605,6 +13605,13 @@ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_ord
+ }
+ #endif
  
++#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
++void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end)
++{
++	static_call_cond(kvm_x86_gmem_invalidate)(start, end);
++}
++#endif
++
+ int kvm_spec_ctrl_test_value(u64 value)
+ {
  	/*
- 	 * The page is not mapped by the guest.  Let the guest handle it.
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 192c58116220..3835732491b9 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2465,4 +2465,8 @@ static inline int kvm_gmem_undo_get_pfn(struct kvm *kvm,
+ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order);
+ #endif
+ 
++#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
++void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end);
++#endif
++
+ #endif
+diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+index dcce0c3b5b13..39356f5babbd 100644
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -115,3 +115,7 @@ config KVM_GENERIC_PRIVATE_MEM
+ config HAVE_KVM_GMEM_PREPARE
+        bool
+        depends on KVM_PRIVATE_MEM
++
++config HAVE_KVM_GMEM_INVALIDATE
++       bool
++       depends on KVM_PRIVATE_MEM
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index 535ef1aa34fb..74e19170af8a 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -345,10 +345,24 @@ static int kvm_gmem_error_folio(struct address_space *mapping, struct folio *fol
+ 	return MF_DELAYED;
+ }
+ 
++#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
++static void kvm_gmem_free_folio(struct folio *folio)
++{
++	struct page *page = folio_page(folio, 0);
++	kvm_pfn_t pfn = page_to_pfn(page);
++	int order = folio_order(folio);
++
++	kvm_arch_gmem_invalidate(pfn, pfn + (1ul << order));
++}
++#endif
++
+ static const struct address_space_operations kvm_gmem_aops = {
+ 	.dirty_folio = noop_dirty_folio,
+ 	.migrate_folio	= kvm_gmem_migrate_folio,
+ 	.error_remove_folio = kvm_gmem_error_folio,
++#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
++	.free_folio = kvm_gmem_free_folio,
++#endif
+ };
+ 
+ static int kvm_gmem_getattr(struct mnt_idmap *idmap, const struct path *path,
 -- 
 2.39.0
 
