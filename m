@@ -1,39 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FFA13B2B4;
-	Tue, 27 Feb 2024 14:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99996146909;
+	Tue, 27 Feb 2024 14:43:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709044999; cv=none; b=EFtxUNTOfTobtlMvYnD5eAci8e8+HaKsCOJR94u+lTIrGQkU3B5HjIOEZ8qFIFxH51Q4MbMsThuHuYm1VHKiCBOr7EipIFaLSP4bQ1jlvSfQz5soRG9AIVPgBotGiyY1cU3c3mnw9qmON13R9dE//D5xQG1QeMfJOQZX9U8AFLo=
+	t=1709045001; cv=none; b=qWdOHPvyuYVnOcime1lwf2wHlfv+HagyxsE2cuLX+ypxMx+ytHoHaDVazjuzjowTxlRgGhLCtlUYOm6DzC7IEvHNnItBMrBUYangUFh25Uyek3OF2lISl3nA9iOQKbJCr2iIGBeMY8mXFLc6+k2SXYM9dFMO+550CPZwTYSIU14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709044999; c=relaxed/simple;
-	bh=srhZSGHJfqjamOi38mDY3sqIKVh91zvLP9E2PCX7pZw=;
+	s=arc-20240116; t=1709045001; c=relaxed/simple;
+	bh=SuHBK+hWYbTwqGf1JIYxmzYvFaoSV53Aa9fztIrCmxk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jMOa7c5BQ03rkdvt428X4QxHluDfqNK3c/5J+XQixrLcDOcHAf5AjwrvVxg2j8WUX21Cjtokmvh3ZyD+mdqUUCb8l5kqhDhlyaSmzSIHDeMM2S3Q/reJkIfC85w/lnFCVUNJFxho6Ed2ggfYombRQRaY92uIjVVKw7ZmmxvkieM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n51Vs6tL; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=EvJkpbx/BoBGGQFAzyzfEHE7zbRNouOrmzokqQmVZuTIH+W9yqTwlycapTytpFuX1dnd0TW8ogXyH/c0QoE95ZKq5nzi84kXNokXkL/T9woLmxGYNbwEEbPXR5lmh+FN+tWJ57eChp2XGOE1MTbl8wASOMbgs78d368FN21ta30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fzbK1FnQ; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n51Vs6tL"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7667D20008;
-	Tue, 27 Feb 2024 14:43:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fzbK1FnQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E7DE120017;
+	Tue, 27 Feb 2024 14:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709044994;
+	t=1709044997;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=duNhzLlF0+xqYz4mZG+pOzHJttp5EnGEWcAEv3AyFYY=;
-	b=n51Vs6tL+qv3/ny7CmGighUDi5RG9B+OKfWpnnLvhxWcmxnAJFZpn+eB+5EX6On9AaE3tv
-	0ciVt4vgJuUlkSDkPAB7OzR58uTW+r96jm5nDFW7qHMOKktA1MDTc7FBSJMyOHrJy46aTX
-	djZvtxVcCntrJUqYsEmuFRiUkANWnmUK5VShciE7JkREB1PPNmrZq7dA2mcw11xPVdnlw2
-	hB8G/WNL9CZtfsG5rlJY7HE87vGTPwS0jtKBn0bQtY6fVmLmLTvBtdHG9y6MXchsDFYd5R
-	rNKdhFqZPi3xKA1llPMeKsDIp5HYLpw4ALHBiYVJ5YT1vznH7ykoGhb4R911rg==
+	bh=XwVZ1kFaP4gpOaz1jMw0As8dbSIleQ9gERJ6osP639w=;
+	b=fzbK1FnQNUcMxXojhTGGr80Wtnpiee/q6kFwtsVqOPugWxDW8IIMnehilepEkRTOb3WAJL
+	kWaNKkcXk2vRdJFn+8YwFchUpUbOghXYIDjMEu/glg8JYl3SyMzUv1tu1YBm/WopvqHYyU
+	tsYGexkQqwwTB1sS8puATq10ecZe0K9zcTh5VkDuiFcd4n4+y541fvLJEfDT47IdxMMXTE
+	UyekIuw5Fqo+Sy7JWNBsf48VJT7YtCDtSzYQ5lYZ4Zp7whDiw3xl0om30jFMnGdKwK1fF4
+	Smu4/3Zz2a0pBHJOgJBmM5MUHs7vn1AqL09zJsbTb3bPqISxJtzR0c9d0vE1yA==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 27 Feb 2024 15:42:49 +0100
-Subject: [PATCH net-next v5 07/17] netlink: specs: Modify pse attribute
- prefix
+Date: Tue, 27 Feb 2024 15:42:51 +0100
+Subject: [PATCH net-next v5 09/17] MAINTAINERS: Add myself to pse
+ networking maintainer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240227-feature_poe-v5-7-28f0aa48246d@bootlin.com>
+Message-Id: <20240227-feature_poe-v5-9-28f0aa48246d@bootlin.com>
 References: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
 In-Reply-To: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -64,8 +64,8 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Remove podl from the attribute prefix to prepare the support of PoE pse
-netlink spec.
+As I add support for PoE in PSE networking subsystem it seems legitimate
+to be added to the maintainers.
 
 This patch is sponsored by Dent Project <dentproject@linuxfoundation.org>.
 
@@ -73,56 +73,24 @@ Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
-Changes in v2:
-- Add the ethtool auto generated code.
-
 Changes in v3:
-- Remove the ethtool auto generated code.
+- New patch
 ---
- Documentation/netlink/specs/ethtool.yaml | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 197208f419dc..33e81fa189ca 100644
---- a/Documentation/netlink/specs/ethtool.yaml
-+++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -878,17 +878,17 @@ attribute-sets:
-         type: nest
-         nested-attributes: header
-       -
--        name: admin-state
-+        name: podl-pse-admin-state
-         type: u32
--        name-prefix: ethtool-a-podl-pse-
-+        name-prefix: ethtool-a-
-       -
--        name: admin-control
-+        name: podl-pse-admin-control
-         type: u32
--        name-prefix: ethtool-a-podl-pse-
-+        name-prefix: ethtool-a-
-       -
--        name: pw-d-status
-+        name: podl-pse-pw-d-status
-         type: u32
--        name-prefix: ethtool-a-podl-pse-
-+        name-prefix: ethtool-a-
-   -
-     name: rss
-     attributes:
-@@ -1571,9 +1571,9 @@ operations:
-         reply:
-           attributes: &pse
-             - header
--            - admin-state
--            - admin-control
--            - pw-d-status
-+            - podl-pse-admin-state
-+            - podl-pse-admin-control
-+            - podl-pse-pw-d-status
-       dump: *pse-get-op
-     -
-       name: pse-set
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4f9b554f79da..43d26b766936 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17692,6 +17692,7 @@ F:	net/psample
+ 
+ PSE NETWORK DRIVER
+ M:	Oleksij Rempel <o.rempel@pengutronix.de>
++M:	Kory Maincent <kory.maincent@bootlin.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/net/pse-pd/
 
 -- 
 2.25.1
