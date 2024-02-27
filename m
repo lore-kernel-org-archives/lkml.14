@@ -1,76 +1,92 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18FB148300;
-	Tue, 27 Feb 2024 16:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296F81482FA;
+	Tue, 27 Feb 2024 16:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709051298; cv=none; b=adqVTe2OF4WQP9WkAwQhKZ5KhW0zbm2U8230rXEdU/R/hB63JQj/TMCS/6CfxHPLt3gNmjwmw8EtyauA8fdUCSTpxa+/4jA8zBXgExVogbxzfA3mSp+ayfnqbY7uaubw0xkwbXr82C1y0BDcw5iMzBsNYw8zDpIw84oUT4lqsn0=
+	t=1709051366; cv=none; b=RVIl4XrmZ2J/YbSPIq6iVr7wZlIoojFX4X1RiQFs/Q96qbQTvmYHG+VTpCfBg3+Y3av5eEOfEnJwkdWuS52nAsF4apZrW/bluKJ/OBxtYlU4Ijt8tW/fJkhrwhymcgqXyb310xf4vgmX/t+Z0sI2ycRrDDrtbD2NeA3ogZNI5nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709051298; c=relaxed/simple;
-	bh=zBoRncRpaabg/PphISSG21C84uO5bjeWeT18G6pOYKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LvCvLblF8Ni5w0hRxmXZaBWhRzaKLhbkbWREN+dFk2BfdEgzwCxPcKSwDkPUTbr63VHnkkelv6mWOFI2Hmgk2+RCUc8JiOYyQxLALnVCRog5zTmjJBF3WiXAKlUtj0LW+ahK/57+cxVikynlUOxm4Yz7Nx0CSf4nwsBwD/GVxdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=FNRfL+9U; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1709051366; c=relaxed/simple;
+	bh=1+st7Vsl9nppqGUn+eFiygHcZ/ILhnmpv5MjcmPXPmU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HEnzX9pDkl1nHaYshD3LhX+ym3+pmzl/I1WyqoRUimF+Teq1ydJQhfjEXBSOky12JuNPiKu9GM4CNdzU6j167CS9jCiQr0huopGhhCjgXCbygpQI9ng/cM+jHelXIRqsLWrvpc1p1JPXTVas4iTdd8RlEvVdDF4HJoDQI4/K2JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kgak8rgL; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FNRfL+9U"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ieaqldWYxlts8vxb1oirRiS9OuCsnlGmA+e1W7mof58=; b=FNRfL+9UCjzORcduefVPxbH4Zp
-	mAgLGcE0Gz4hkr4nWBKxWYtIgwbszvE1/Q1mR+pSTZMTIdnI0077bhHaP/vWk5ojJ8W5VIxgxPxjq
-	UDtOqr8DMn0PKTSxpryfZqw7IwmVuHF7TKC/NK+054c/s3EjmbNMp3Jaax5u3IG2EfBRwb4omu91c
-	0BdLh6R+LtdhQOnuwwNK3I0i3nGWlJbTzdTLi9JiSRx6b/u0+NbJ7o/J40upfEXE0nxRCPLq2ruNV
-	BcGapW0kpYiC0pZOcyIZdPDdOpqHiHTGnXOo3dIj5C/pMeBfem8dpixeQ3mHVKBYkrip+u3w9EHDO
-	QVzgxMRQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50536)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rf0JN-0000eA-1d;
-	Tue, 27 Feb 2024 16:28:09 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rf0JM-0007Wi-JB; Tue, 27 Feb 2024 16:28:08 +0000
-Date: Tue, 27 Feb 2024 16:28:08 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Robert Marko <robimarko@gmail.com>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, andersson@kernel.org,
-	konrad.dybcio@linaro.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ansuelsmth@gmail.com
-Subject: Re: [PATCH net-next 1/2] net: phy: qcom: qca808x: add helper for
- checking for 1G only model
-Message-ID: <Zd4NmB/RLRXFDpjh@shell.armlinux.org.uk>
-References: <20240227162030.2728618-1-robimarko@gmail.com>
- <20240227162030.2728618-2-robimarko@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kgak8rgL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709051365; x=1740587365;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1+st7Vsl9nppqGUn+eFiygHcZ/ILhnmpv5MjcmPXPmU=;
+  b=Kgak8rgL/bYlwGffYfvkfBOQXDJuiYKyLAn2Y+95cfQAaZYDcGewy8nJ
+   L5//GhjSChPRRxWtx4dSZ24wfUouwKkXjtkG3q02QKimpWohb8AEPwPBy
+   THygfD6IOT3OoPViydr4RHPdOgy7HNyjJamACAeqfWV9HN1252U2cGpXS
+   gtOEZdAeKpA1OwCYMNp8cYlaHJ0fbV9GuJltdszDv12zzVjcQlOGmEPyT
+   vdVxDxhoPm0wh0ivjzY/PaQvRML0S0RT2SOe/tsSNSJcwdFYopDIpn5wh
+   ddtHmllDBccVqYUfVEq78yLONsPaPOoSKcgEpphdN9xzRsw5wqmR1+dgy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14040462"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="14040462"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 08:29:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="44608181"
+Received: from pbackus-mobl1.amr.corp.intel.com (HELO [10.246.114.227]) ([10.246.114.227])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 08:29:23 -0800
+Message-ID: <b9966efa-8efe-4de7-b962-a6edcf2f6904@intel.com>
+Date: Tue, 27 Feb 2024 09:29:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240227162030.2728618-2-robimarko@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dax: remove SLAB_MEM_SPREAD flag usage
+Content-Language: en-US
+To: chengming.zhou@linux.dev, dan.j.williams@intel.com,
+ vishal.l.verma@intel.com
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
+ roman.gushchin@linux.dev, Xiongwei.Song@windriver.com,
+ Chengming Zhou <zhouchengming@bytedance.com>
+References: <20240224134728.829289-1-chengming.zhou@linux.dev>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240224134728.829289-1-chengming.zhou@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 27, 2024 at 05:19:28PM +0100, Robert Marko wrote:
-> +	if (QCA808X_PHY_CHIP_TYPE_1G & ret)
-> +		return true;
-> +	else
-> +		return false;
 
-	return !!(QCA808X_PHY_CHIP_TYPE_1G & ret);
 
-is a shorter way to write that.
+On 2/24/24 6:47 AM, chengming.zhou@linux.dev wrote:
+> From: Chengming Zhou <zhouchengming@bytedance.com>
+> 
+> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
+> its usage so we can delete it from slab. No functional change.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Can you please provide a Link tag to the lore post that indicates SLAB_MEM_SPREAD flag is now a no-op?
+> 
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> ---
+>  drivers/dax/super.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> index 54e528779877..cff0a15b7236 100644
+> --- a/drivers/dax/super.c
+> +++ b/drivers/dax/super.c
+> @@ -547,7 +547,7 @@ static int dax_fs_init(void)
+>  
+>  	dax_cache = kmem_cache_create("dax_cache", sizeof(struct dax_device), 0,
+>  			(SLAB_HWCACHE_ALIGN|SLAB_RECLAIM_ACCOUNT|
+> -			 SLAB_MEM_SPREAD|SLAB_ACCOUNT),
+> +			 SLAB_ACCOUNT),
+>  			init_once);
+>  	if (!dax_cache)
+>  		return -ENOMEM;
