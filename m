@@ -1,82 +1,83 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A64A13A251
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175D913AA4A
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709031258; cv=none; b=Z2TWg2r7eMo3QQpm2fsivmm6g8ZcFE8Nw70UVzPwU1JUkec+OYJ2uviQaP8qjZdqcxum3eX3D4SBzXNuluEMIgZy3MF+Z4nEgCkf77YmLrY8LJKeSfc892buNXZw60owXbkYoe0HvowlIipNK5ltWVg3gtT7Z9Pz1ReRywYTUi0=
+	t=1709031267; cv=none; b=LkUPoQhXgY30bOCs/h9bBrKfAx7B9JisKZPaF63IrjymeMUIyXuZcdPcES0kQmVfFjLqec+FxvBpAnzw8Gz42i3Np8Aq7jrrZpTX/WwPBlAq+s5IGvk/ZjVyf1RmDz2FqrKcocMqoOomKCUlgHneaZl0yubxPQNnUrR3DeyjUe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709031258; c=relaxed/simple;
-	bh=Zcgijc5vPPptdctl+wg2B12sHDKGtr2xobNvuM+Whrw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aH4gW4Fc1lZyJGjC2pHUK7XyDmmNjah4is2uzpsJh2N+1eToW+DiZk/m7Zr8ydTKoiLtqFjCxQVTdvA8QG8ccQMi/nCdFRsFEwDgjK98pc6h5dxhzd4zZc4xPdSE7H84Ok+3hnd33q57zoj+kYv6a6ZYx3NgdV1ZtoOS4asnXi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=kfImgNVg; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1709031267; c=relaxed/simple;
+	bh=Ien1MAZxVCekAISXfiL/0KSTQDGPU/3AIJR+J8RGIQQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=upz1F6DgMVYplTMs6hx/r+gBp7njdUINSDng+OPVZiVQPcY2bGDrVdyKAkoNN0cdKZfKNP98ufMUBdD6PEr3/Uirzqr5fJgb9NkOegijxR3sDblKboMBwVTCGm9qkqFMvi+m1ue0pNaGTaEA594WWZzWqqL0ZwtqCAkfoy/6Tu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1fH9cOH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="kfImgNVg"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A80FA40E0196;
-	Tue, 27 Feb 2024 10:54:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 9OAj06JUKUQb; Tue, 27 Feb 2024 10:54:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709031251; bh=PUQwc0dEBkTywhDKpsFReUB5uxk2BgEqJwvA+nNQ3z8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kfImgNVghkBePQQdPtGbtA3b1QLrVOVgAtZpQsUCPnvx8CkVYF7HL0DIVg5yGS0CX
-	 Ta4+mc5WOKHL7ZgRzN1XbWt9GKrlasOmLWevqBEhHtSTbrPQpoFIaOzLD5YIv+Yhxc
-	 3hoeWt8CmcZItW1y/BUKBcvvqMmujjL2XuBGI8JeinccS9LeyrEdVBLRiHhZsfBxem
-	 JGSUklrv9S38nAnJ0ACaVLiWTy5AFigkiIrbnWO9njaHH3zDyO689ijRsMAfiYXUNP
-	 1fAhLuPj4E/yLaU5978DsP9IseyQhr+mZ/cDh3oUf7AylqjfzvC6VRqN2En1qj9ypn
-	 4gaaFm3+OxhD9jLGck3mydLP0dGSMaz6jPhR6jttzHXGfPBmmj8dsreK4t0gdjOVnu
-	 2mJJGm3Drq06jiuqnrlp2dpWAyu1aMLuTHtro/wlr5pskZou196o7VmCsj9GW/Xff7
-	 eDsXYg1utp447TCHsAITFVphojOuJrDpATP/QrqAScbvQXe5uTt9AzpBLQzdPoJdJF
-	 Vb6JMKgY9USCU2gO9Rhr9iXqc+k//3CXtTt+/8BSIwS7gK/FDjfIcUNTtPZpE/+BEN
-	 OgthfqOpJOz0s9PZb4Rz4s4FPpL8x1xvU6GZcZYqv/Mt4xumGgshaGlqU3SUNNLWKp
-	 r7CZRtz4rUKR6sZDs1lSv62g=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 591AC40E016C;
-	Tue, 27 Feb 2024 10:54:02 +0000 (UTC)
-Date: Tue, 27 Feb 2024 11:53:56 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: intel-gfx@lists.freedesktop.org, ville.syrjala@linux.intel.com,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: BUG: sleeping function called from invalid context at
- drivers/gpu/drm/i915/gem/i915_gem_pages.c:526
-Message-ID: <20240227105356.GBZd2_RL9hjC_LupZB@fat_crate.local>
-References: <20240227100342.GAZd2zfmYcPS_SndtO@fat_crate.local>
- <87jzmqjir5.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1fH9cOH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CDDAC433F1;
+	Tue, 27 Feb 2024 10:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709031266;
+	bh=Ien1MAZxVCekAISXfiL/0KSTQDGPU/3AIJR+J8RGIQQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Q1fH9cOHAEhe7lvjbLWTfOLNgfV6pS9O4SHZG1qXmCV5eje7iqBAaT9/Gf0BeE8ME
+	 ABZO5fwUCWsK6bDOZ11oWgxFwmai0H01nvte6ixzmAR3vdEa0cp1KA/9AdQTbKmAfb
+	 Gm/x1CX7M2crBI7T4+ZDiZ1yYxV6wieZ7tQnFIgyqSIKZRzi8RztLTN+g2ZxoLwSps
+	 8Zf9owXsMHHltSIC5QUdUYZmF1zZjohugo3RokqeBwaxuuRpGuTn66wFAMsoklUtab
+	 7EKZzKnX0Dv7eGe9w4f6g7r5Xx6oisCaUYuAE5E73fpRzC2MD8XFZaSyzqXbwOMlCk
+	 RJol+uimoeiEA==
+From: Christian Brauner <brauner@kernel.org>
+To: jlayton@kernel.org,
+	jack@suse.cz,
+	zhouchengming@bytedance.com,
+	chengming.zhou@linux.dev
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	vbabka@suse.cz,
+	roman.gushchin@linux.dev,
+	Xiongwei.Song@windriver.com
+Subject: Re: [PATCH] sysv: remove SLAB_MEM_SPREAD flag usage
+Date: Tue, 27 Feb 2024 11:52:52 +0100
+Message-ID: <20240227-fungieren-groschen-60f2174931ab@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240224135158.830266-1-chengming.zhou@linux.dev>
+References: <20240224135158.830266-1-chengming.zhou@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87jzmqjir5.fsf@intel.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1022; i=brauner@kernel.org; h=from:subject:message-id; bh=Ien1MAZxVCekAISXfiL/0KSTQDGPU/3AIJR+J8RGIQQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTe3S+pw3qE544Usw1X/sZAvntubhrybur5wdpVp5YUx 1973BzfUcrCIMbFICumyOLQbhIut5ynYrNRpgbMHFYmkCEMXJwCMBFVB4Z/9mv9fUOtClY/cUw7 3i+2+Y68fs3sxrfuPU+Uvk+ZvHvSI4b/Doa3fauqnvc4mHr/N9x7490OgydHuEpVvpYs0vsjrM3 JDQA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 27, 2024 at 12:37:02PM +0200, Jani Nikula wrote:
-> Is this a recent regression?
+On Sat, 24 Feb 2024 13:51:58 +0000, chengming.zhou@linux.dev wrote:
+> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
+> its usage so we can delete it from slab. No functional change.
+> 
+> 
 
-Yeah, no clue. Hadn't booted that machine since 6.7-rc1... I can bisect
-if you want me to.
+Updated commit message to point to slab removal.
 
--- 
-Regards/Gruss,
-    Boris.
+---
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
+
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] sysv: remove SLAB_MEM_SPREAD flag usage
+      https://git.kernel.org/vfs/vfs/c/8d6e17b745c2
