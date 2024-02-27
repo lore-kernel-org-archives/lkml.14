@@ -1,124 +1,91 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C311386D4
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 11:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE7E1386C3;
+	Tue, 27 Feb 2024 11:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.96.220.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709034790; cv=none; b=r46mJv02Idr2n8UoFHoK/EeL4OwN9RBw1ni2rQ/H46V2nTYrbVIyIH6AH5IPHRp2rRfWene9EBWVWBntyyOubggcbmLcG2HlCG20gNsjteJroxZNC4gTfowNNT6AQD64dfx167m3mT/K9b8ZAK0yOtxLZ6pwz/qMK2UqCX1FFA8=
+	t=1709034878; cv=none; b=bF1XvnzA7qLBVjaH4dmDTG/Jwc5tALPqgJE4M3Yu9/pGBh2h4p0i56bEqOduSyt0aykAtEnXU4lcTJHcAnvlcMJ3nSswJe95IROdpVpn1cidlFGmCi8W/wwrBxP7bvdQJKVNmo0xBVNHjp0A3PR0sAz83KMSgIVMdIkaKh68UWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709034790; c=relaxed/simple;
-	bh=QpM2Gj+iE1842oLmR/JSz14T461jLNYwC4WotBRHz8w=;
+	s=arc-20240116; t=1709034878; c=relaxed/simple;
+	bh=VZ9Rjqf5D/gy+R9Y+MTa3mzy8ZRUWGvxwXfxWHRoepM=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r4a4qcQGk0jv+VM57MUXo8TIoAmGlGZ2ogKD9davfpzSA+Z5IiV87U6Ro+Rx2Rx3uvHKBdmHeVdto/AiDFT5H6IV295aFPCk4bOWnB+qZ6no0GBGCypYwzqLyWjEBpomjtUwjgNNRhf5k4ub+7L5/XVeadfv+9DWYcgYC/4JlDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ZTsDYbfT; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fOx6BgxQn4ML73z6d2Y1bH8DxGu8eCFICLz+RzgcM8OOrHyusdG73PprXYUIdoCp8Z1QdhEnNUI7LI4Mka4evpY2fEsHN6h05YEnu68hTb/oe7XOfAUDXxJZxhfLlVVeRAzkBD/RGEFhrTzca/Osp1dPLYek8nCmGi/TYee7g2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com; spf=pass smtp.mailfrom=secunet.com; dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b=uA9GZEu+; arc=none smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=secunet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZTsDYbfT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709034789; x=1740570789;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QpM2Gj+iE1842oLmR/JSz14T461jLNYwC4WotBRHz8w=;
-  b=ZTsDYbfTO+AsrHOaIejSbOlZ+tDEZ2deusk0O/Ki7tO9jD9Rw0BD70E0
-   t/bk1b5SLcdLbDIAnv9gYef5+ZIXyfU+9qVU+UkIMk0LJH5NhPFf8U5Jt
-   FvbDZVokMfyy0Tqm1jKgbj437fWHhALRzGshyZItrJwy8ByUZr7g8Zena
-   oRjT62sMwEfEl2P6tYIsGFNuRGnmCMydRN5ojRbAQFtWFcEJA9SSNgzfP
-   ccTsu3RETNefv/NzRJ+7jV7+p7SjifDnlOsWACm8U3dQQA93CtdL/6Eot
-   kvVHjsbdnlMwunlgjFWE+AJkOE8HEM8/wH4jz6ac5Tf8Tm9rspw9dOZ5a
-   w==;
-X-CSE-ConnectionGUID: OPUfXbZxS9CqWDIW5F1xSQ==
-X-CSE-MsgGUID: RWzb322QQCeBS6neIPwO3w==
-X-IronPort-AV: E=Sophos;i="6.06,187,1705388400"; 
-   d="asc'?scan'208";a="16885482"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2024 04:53:08 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b="uA9GZEu+"
+Received: from localhost (localhost [127.0.0.1])
+	by a.mx.secunet.com (Postfix) with ESMTP id 929592074F;
+	Tue, 27 Feb 2024 12:54:33 +0100 (CET)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id vk_j11-XYB_f; Tue, 27 Feb 2024 12:54:33 +0100 (CET)
+Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by a.mx.secunet.com (Postfix) with ESMTPS id 1B45020190;
+	Tue, 27 Feb 2024 12:54:33 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 1B45020190
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=secunet.com;
+	s=202301; t=1709034873;
+	bh=fXF1dOEZbO19a6vXcblB4Cq2Xvv4zWKbK7s9IvVHto4=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To:From;
+	b=uA9GZEu+DpQUxfnDGpNDsodPd0EF78qy8WLsMHMjMAYdPaZ1lqkZeILFmt6nhpjzt
+	 g1EZY/w4XjS4n9afx6nOhaWLbW6xEsVDL5r1iMySw/NW5/B+c4dNmndwUu0/v0uh2z
+	 I0sK0o11HsKsV0VONddaOm829d+ZjEO9FxDGhsYp67gimLUHcI6f/TNhqdMjGdWfzw
+	 XbpyDYLBAm1lwahRflHIZYKo8f5px0L+b9iLtC979zsK/R2ajn80pltZr7y3HPaCl+
+	 ThXJtu+WmYiEhg6D02zaaez4obzaaBV8yzSZSRI7m/gHy5OjwxJ8N+sfFxK15e0egL
+	 9h1tLh4W9hQog==
+Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
+	by mailout2.secunet.com (Postfix) with ESMTP id 0BB7780004A;
+	Tue, 27 Feb 2024 12:54:33 +0100 (CET)
+Received: from mbx-essen-02.secunet.de (10.53.40.198) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 27 Feb 2024 04:52:42 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Tue, 27 Feb 2024 04:52:41 -0700
-Date: Tue, 27 Feb 2024 11:51:58 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-CC: Palmer Dabbelt <palmer@dabbelt.com>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] riscv: Remove MMU dependency from Zbb and Zicboz
-Message-ID: <20240227-bonehead-stonework-d56052265b35@wendy>
-References: <20240227003630.3634533-1-samuel.holland@sifive.com>
- <20240227003630.3634533-4-samuel.holland@sifive.com>
+ 15.1.2507.35; Tue, 27 Feb 2024 12:54:32 +0100
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-02.secunet.de
+ (10.53.40.198) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 27 Feb
+ 2024 12:54:32 +0100
+Received: by gauss2.secunet.de (Postfix, from userid 1000)
+	id 6274B318297D; Tue, 27 Feb 2024 12:54:32 +0100 (CET)
+Date: Tue, 27 Feb 2024 12:54:32 +0100
+From: Steffen Klassert <steffen.klassert@secunet.com>
+To: Breno Leitao <leitao@debian.org>
+CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
+	<edumazet@google.com>, Herbert Xu <herbert@gondor.apana.org.au>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <horms@kernel.org>
+Subject: Re: [PATCH net-next] xfrm: Do not allocate stats in the driver
+Message-ID: <Zd3NeDB9PbWlrhNe@gauss3.secunet.de>
+References: <20240222144117.1370101-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MVkIfoCLD1B37PLh"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240227003630.3634533-4-samuel.holland@sifive.com>
+In-Reply-To: <20240222144117.1370101-1-leitao@debian.org>
+X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
+ mbx-essen-02.secunet.de (10.53.40.198)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 
---MVkIfoCLD1B37PLh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 22, 2024 at 06:41:17AM -0800, Breno Leitao wrote:
+> With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+> convert veth & vrf"), stats allocation could be done on net core
+> instead of this driver.
+> 
+> With this new approach, the driver doesn't have to bother with error
+> handling (allocation failure checking, making sure free happens in the
+> right spot, etc). This is core responsibility now.
+> 
+> Remove the allocation in the xfrm driver and leverage the network
+> core allocation.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-On Mon, Feb 26, 2024 at 04:34:48PM -0800, Samuel Holland wrote:
-> The Zbb and Zicboz ISA extensions have no dependency on an MMU and are
-> equally useful on NOMMU kernels.
->=20
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
-> ---
->=20
->  arch/riscv/Kconfig | 2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index bffbd869a068..ef53c00470d6 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -581,7 +581,6 @@ config TOOLCHAIN_HAS_ZBB
->  config RISCV_ISA_ZBB
->  	bool "Zbb extension support for bit manipulation instructions"
->  	depends on TOOLCHAIN_HAS_ZBB
-> -	depends on MMU
->  	depends on RISCV_ALTERNATIVE
->  	default y
->  	help
-> @@ -613,7 +612,6 @@ config RISCV_ISA_ZICBOM
-> =20
->  config RISCV_ISA_ZICBOZ
->  	bool "Zicboz extension support for faster zeroing of memory"
-> -	depends on MMU
->  	depends on RISCV_ALTERNATIVE
->  	default y
->  	help
-> --=20
-> 2.43.0
->=20
-
---MVkIfoCLD1B37PLh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd3M3gAKCRB4tDGHoIJi
-0iVOAP4xnKemNhs85COxEne/mehKUX1aV+ACJN779DXpaUB2ywD+KRmu/SwerYwl
-Ooozck02olX3pPxzIw9S73glhdreTA4=
-=1ooj
------END PGP SIGNATURE-----
-
---MVkIfoCLD1B37PLh--
+Applied to ipsec-next, thanks Breno!
