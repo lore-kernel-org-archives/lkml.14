@@ -1,188 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF95955E71;
-	Tue, 27 Feb 2024 08:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD687B3D3
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709022867; cv=none; b=aRLab2V0Q9uJkHABGph/20PxaV576xUwej9FlMHRiOhU9RgjBRDAgIHY6wERYmxXsiOA8R9NrQj62uyCxuY4oWVJ84sAqBxJTpNuWvmW2/sRSAL7GnTyP/3/38cctnd1PCiy+f2NP3d0n9rQp82NnI8Zq8imV8ETCzZOSTQaZ9k=
+	t=1709022988; cv=none; b=HWPYb76hs92WcATLRgnfkekg82sBYWTS2WRdRntxlBzHKxDWbvU2GXLzK6SeDnZQrpH2jchRq79iiQexUu1nmYmfoJO0ZI4tEySKsFhtmNj26rsIZ4z88tZ4tYt0CNZ1UlHh9QD/rWx4afiIViuopuAkFQimCGXhh9GaMYIZ52g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709022867; c=relaxed/simple;
-	bh=utCTJOb3P+nxUodc++rYOPw2aXIo3wE3SFoyoLIYgqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SKMjptJNjhjlaHGhpBdIEcji2bdFbO7s0HZiRi4gnlG2aZEN2GBtdMTW5w83SKk7AUwUcwYYQiXHr8b2i2XsrSfKS7relqRice6MV3yXrNK8t5bSEtcshqG3VuU/lqtE4Z1WSPPdaLO4xYlH5AutKG5wVrzovxYdM98VgQQnVk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23D9C433F1;
-	Tue, 27 Feb 2024 08:34:22 +0000 (UTC)
-Message-ID: <d8a6f227-4a64-4baa-adfa-cdd49be388d8@xs4all.nl>
-Date: Tue, 27 Feb 2024 09:34:20 +0100
+	s=arc-20240116; t=1709022988; c=relaxed/simple;
+	bh=tBm5IIGFhkgiqabszftedxFLBNT4N4zs7aN7ZnS5cF0=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=pfiBgV69CzBUO2NAfy6m9NPhLt3CzynwyQNi6p6CUXPm1wYHqzyA8rGC5ueyclPnrd6XTAtEUAKzG0jA9nce18kpWjLxHlYUZdf745JW4EPYLoXunVXHyfsJW5W5blgos0iTvPskIxeu0ZCt89nTeNH+arSPbpqx5KBoAsVg5ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=p3MkRpx5; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="p3MkRpx5"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a3e8c1e4aa7so388869466b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:36:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1709022984; x=1709627784; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=tBm5IIGFhkgiqabszftedxFLBNT4N4zs7aN7ZnS5cF0=;
+        b=p3MkRpx5VREXJOooask2Br8TOUkyDZYl/l0UMQyjnwqe4Ky7hzSk7soSnuZaNmnGFP
+         TOGRx1rW8rZwuXgnvAUF16AifvepYlW5SiFjiz9gUWXZkbw4O+5OrRrs8yRwYLdGD1Ax
+         oDseHewatyh8+ZG0iwtA6vdcC28bCXguxcsTHWXMv1+WgQP0NFgd6UMInRNBLODDNCJi
+         yazVQHrbPIWFm6YUyn0ypsmjwZrLGUUnNquVAYHg6vVABS3ddMFP/T1W1GTe/NIjyFA/
+         juU7cnmPfdTDXEH700c+XXWIOefma1P0YwG3sFiKCUDqEllPSXwG5Ed0ZiX7L96WPvUT
+         6G9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709022984; x=1709627784;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tBm5IIGFhkgiqabszftedxFLBNT4N4zs7aN7ZnS5cF0=;
+        b=RguamruRBwifhaGp5fHxxWT3tMOfg6ZYZEF87ZhI/PWv8vqVC4LpaQhsK6TYlNcyu8
+         ZWeHjOZz9n4J5WgpE9Vk9/caXd/Vh0rTAHNQ6/eVYKCz6Gud+UsSd8ZU3Ou9gMgBKwcO
+         J6QGSXhB3RM8cshyu+ZD52SrUCtgOKDNJL78zEyHKX3MusXpsBxxpPjbNZJ6ZgiUPKVM
+         Y5B4pCLgccJFdYXDsW9t/pznqCF2kHtleraioFjU4mOgKT+DbEhX01yZsfWwx92IuRHK
+         SwYAyhZFIgfQal6hTSIO6o9glNEme7uPM0D6di5j6rwujD6cGCuOP9/weA8Xf3KgobQl
+         Ifbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqpKMiQLJVWYnKuqk8f+dikrr1mEgbIniZy47owlCqpxJAVyUGBV2vsC9vr9JcE5L5NWap8hrNlhpFYaCOCakoTZs76WELryaRuTyP
+X-Gm-Message-State: AOJu0YyQwla0atOWOL4RbQFICALh63FsX7YJd5Z4sYdR/60rtkxAiC4y
+	UXSybf/aB52kjEbVcQAclE9Qt+Csu+NxbnevF5wrWVTIffynviYSXh931d7e380=
+X-Google-Smtp-Source: AGHT+IEmSlqSqeopobEyVgC92+uCi8Y34RHVrtsYAkNKK7bVxD/WCyfc9qMKmBQUExQLWATnFTHthg==
+X-Received: by 2002:a17:906:c7d4:b0:a43:20c0:6f7a with SMTP id dc20-20020a170906c7d400b00a4320c06f7amr4112372ejb.48.1709022984519;
+        Tue, 27 Feb 2024 00:36:24 -0800 (PST)
+Received: from localhost ([79.142.230.34])
+        by smtp.gmail.com with ESMTPSA id hu11-20020a170907a08b00b00a3fcbd4eb2esm532864ejc.1.2024.02.27.00.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 00:36:24 -0800 (PST)
+References: <20240208-alice-mm-v2-0-d821250204a6@google.com>
+ <20240208-alice-mm-v2-4-d821250204a6@google.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Andreas Hindborg <nmi@metaspace.dk>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
+ <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn?=
+ Roy Baron
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Kees
+ Cook <keescook@chromium.org>, Al Viro <viro@zeniv.linux.org.uk>, Andrew
+ Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=
+ <arve@android.com>, Todd Kjos
+ <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes
+ <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren
+ Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2 4/4] rust: add abstraction for `struct page`
+Date: Tue, 27 Feb 2024 09:32:27 +0100
+In-reply-to: <20240208-alice-mm-v2-4-d821250204a6@google.com>
+Message-ID: <87h6hu9udb.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 09/16] media: uapi: Define audio sample format fourcc
- type
-Content-Language: en-US, nl
-To: Shengjiu Wang <shengjiu.wang@gmail.com>,
- Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, sakari.ailus@iki.fi,
- tfiga@chromium.org, m.szyprowski@samsung.com, mchehab@kernel.org,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- Xiubo.Lee@gmail.com, festevam@gmail.com, nicoleotsuka@gmail.com,
- lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
- alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
-References: <1708936109-11587-1-git-send-email-shengjiu.wang@nxp.com>
- <1708936109-11587-10-git-send-email-shengjiu.wang@nxp.com>
- <71c860869caf899a72ebc547608220074c5939b1.camel@ndufresne.ca>
- <CAA+D8AMEMr_PSsfuSByxd0Sxv1zXJoQjEkJEWEpk59kmLGOD1Q@mail.gmail.com>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <CAA+D8AMEMr_PSsfuSByxd0Sxv1zXJoQjEkJEWEpk59kmLGOD1Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 27/02/2024 04:44, Shengjiu Wang wrote:
-> On Mon, Feb 26, 2024 at 9:55 PM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
->>
->> Le lundi 26 février 2024 à 16:28 +0800, Shengjiu Wang a écrit :
->>> The audio sample format definition is from alsa,
->>> the header file is include/uapi/sound/asound.h, but
->>> don't include this header file directly, because in
->>> user space, there is another copy in alsa-lib.
->>> There will be conflict in userspace for include
->>> videodev2.h & asound.h and asoundlib.h
->>>
->>> Here still use the fourcc format.
->>
->> I'd like to join Mauro's voice that duplicating the audio formats is a bad idea.
->> We have the same issues with video formats when you look at V4L2 vs DRM. You're
->> rationale is that videodev2.h will be ambiguous if it includes asound.h, but
->> looking at this change, there is no reason why you need to include asound.h in
->> videodev2.h at all. The format type can be abstracted out with a uint32 in the
->> API, and then it would be up to the users to include and use the appropriate
->> formats IDs.
->>
-> 
-> Resend for the plain text issue
-> 
-> Thanks.
-> 
-> There is another reason mentioned by Hans:
-> 
-> "
-> The problem is that within V4L2 we use fourcc consistently to describe a
-> format, including in VIDIOC_ENUM_FMT. And the expectation is that the fourcc
-> can be printed to a human readable string (there is even a printk format for
-> that these days).
-> 
-> But the pcm values are all small integers (and can even be 0!), and
-> printing the fourcc will give garbage. It doesn't work well at all
-> with the V4L2 API. But by having a straightforward conversion between the
-> pcm identifier and a fourcc it was really easy to deal with this.
-> 
-> There might even be applications today that call VIDIOC_ENUM_FMT to see
-> what is supported and fail if it is not a proper fourcc is returned.
-> 
-> It will certainly report nonsense in v4l_print_fmtdesc() (v4l2-ioctl.c).
-> 
-> One of the early versions of this patch series did precisely what you request,
-> but it just doesn't work well within the V4L2 uAPI.
-> "
 
-Right, and remember that the fourcc codes are really meant to be shown as
-characters. v4l2-ctl and friends all use this, and we all talk about them
-as such (NV12, YUYV, etc.). If I would just stick in the standard PCM IDs,
-then they would all show up as '....'.
+Hi Alice,
 
-<snip>
+Alice Ryhl <aliceryhl@google.com> writes:
 
->>> +/*
->>> + * Audio-data formats
->>> + * All these audio formats use a fourcc starting with 'AU'
->>> + * followed by the SNDRV_PCM_FORMAT_ value from asound.h.
->>> + */
->>> +#define V4L2_AUDIO_FMT_S8                    v4l2_fourcc('A', 'U', '0', '0')
->>> +#define V4L2_AUDIO_FMT_S16_LE                        v4l2_fourcc('A', 'U', '0', '2')
->>> +#define V4L2_AUDIO_FMT_U16_LE                        v4l2_fourcc('A', 'U', '0', '4')
->>> +#define V4L2_AUDIO_FMT_S24_LE                        v4l2_fourcc('A', 'U', '0', '6')
->>> +#define V4L2_AUDIO_FMT_U24_LE                        v4l2_fourcc('A', 'U', '0', '8')
->>> +#define V4L2_AUDIO_FMT_S32_LE                        v4l2_fourcc('A', 'U', '1', '0')
->>> +#define V4L2_AUDIO_FMT_U32_LE                        v4l2_fourcc('A', 'U', '1', '2')
->>> +#define V4L2_AUDIO_FMT_FLOAT_LE                      v4l2_fourcc('A', 'U', '1', '4')
->>> +#define V4L2_AUDIO_FMT_IEC958_SUBFRAME_LE    v4l2_fourcc('A', 'U', '1', '8')
->>> +#define V4L2_AUDIO_FMT_S24_3LE                       v4l2_fourcc('A', 'U', '3', '2')
->>> +#define V4L2_AUDIO_FMT_U24_3LE                       v4l2_fourcc('A', 'U', '3', '4')
->>> +#define V4L2_AUDIO_FMT_S20_3LE                       v4l2_fourcc('A', 'U', '3', '6')
->>> +#define V4L2_AUDIO_FMT_U20_3LE                       v4l2_fourcc('A', 'U', '3', '8')
->>> +
->>> +#define v4l2_fourcc_to_audfmt(fourcc)        \
->>> +     (__force snd_pcm_format_t)(((((fourcc) >> 16) & 0xff) - '0') * 10  \
->>> +                                + ((((fourcc) >> 24) & 0xff) - '0'))
->>> +
+> Adds a new struct called `Page` that wraps a pointer to `struct page`.
+> This struct is assumed to hold ownership over the page, so that Rust
+> code can allocate and manage pages directly.
 
-We did add a #define to go from a fourcc to an audio format.
+<cut>
 
-Would it help to add a corresponding v4l2_audfmt_to_fourcc define as well?
+> +/// A bitwise shift for the page size.
+> +pub const PAGE_SHIFT: usize = bindings::PAGE_SHIFT as usize;
+> +/// The number of bytes in a page.
+> +pub const PAGE_SIZE: usize = 1 << PAGE_SHIFT;
 
-#define v4l2_audfmt_to_fourcc(audfmt) \
-	v4l2_fourcc('A', 'U', '0' + (audfmt) / 10, '0' + (audfmt) % 10)
+For consistency, could we get page size from bindings as well? The folio
+patches already do this [1].
 
-I would have no problem with that.
+BR Andreas
 
-The mapping between the audio format and the fourcc is very simple, it is just
-converted to something that can be safely shown as ASCII characters.
 
-Regards,
-
-	Hans
-
->>>  /* priv field value to indicates that subsequent fields are valid. */
->>>  #define V4L2_PIX_FMT_PRIV_MAGIC              0xfeedcafe
->>>
->>
-
+[1] https://lore.kernel.org/rust-for-linux/20231018122518.128049-10-wedsonaf@gmail.com/
