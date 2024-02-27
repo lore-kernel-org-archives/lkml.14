@@ -1,140 +1,348 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9453A13A86C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 12:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E01913B2BE;
+	Tue, 27 Feb 2024 12:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709036716; cv=none; b=ZgfzP8NaizU58PSMUf8tUGSU9ToAP6Yx4wLowMSxaTPu9qTRO8iVyVdm0gGi4TE9F5d7PA5x6rHGxoqtS0rPUJQ4wauYPPOQBcr14VNnnEa3LoybD92vNuwa34/HolzWPTCxZgnkTvn27AgyRdbOxjoCOONlUCuxxuIr9We+oEM=
+	t=1709036716; cv=none; b=I2FAJZGnNZaq8L8QlkhaZyL0KYPsRyte9K7bCbhHNEVQ5yqFsFzxP4Olaz2UgcU27H7r1eWRyOsuzQuvV6RNc328/r9L7D64uxBS/NjrDa5VT1dc+oy5NkTuk4p447iDoL7JyvaKKhy+Y/au6jcMOvSCP5s+eClxvePe36lKuFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709036716; c=relaxed/simple;
-	bh=dQplQx4E0wVG3NVHNT8C6T1/LS/PKWtnC857Cl8NoKM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gdcLJLNOnLV9vBgnQ4eQDwFpm4izQJewjZoGO4DH18MU2d/xa0+jIRscwhnMiSB19csiWAVuF/2V4tp+fP+lZdArsV7+7ErtDwbgrknC8mKtmBLtb332kcvQLVJ0vHkmYNDpDmI+zt5pKM9FVMsECym3hiQ/w2ORiR+G+acZKlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=qPz2l0Fo; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	bh=A3hEtv4nzQIvISWTrx5mPfcc1VbsK/y66rk0Z5IcGKg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tetLfMrYr0gO7xTnYShtdosMTrjpXGN2r1i9f7txkw5D4DM+0V4TuU+7AWOM7VLcNuvBEWJCxAd6wbi0nqHZ8YBV9tM5bTOi0tu3o9LedEyoU+gxN7Jqs9YtwAromkXhddTQcz9L9W4loii4TB6YQH34MZJmDec+7f1fKo+iwzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ksrij+U8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qPz2l0Fo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709036714; x=1740572714;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dQplQx4E0wVG3NVHNT8C6T1/LS/PKWtnC857Cl8NoKM=;
-  b=qPz2l0FoaA8MM5gsFxk4kp6O9Ma5DL1aQfdg+MSM1uhm9TykfAR4JsTN
-   mqqEgxuBpf/M72QntxRCWZLFkZkx5n6+5N+XWok2lA+hZCZ5+1RgXsfO7
-   6NBwRrsR6ZFwp0rjVggDWT9aJUOrTMA58ENf4Fq0XcCQNkICdyWVT+23K
-   H9BiSWGS0tSzfCC17Jqmw3zZnvZUlvWRlYxwhE+ao12Tr+w6WqoI/OH1n
-   6eByxvkjCMrTiQQMDQlPWaj33Pdqu63cm6uC+HWVNr7RfO7bAaHEoAnb2
-   51LLOEiSiGfMAtzIRriOfftpDpCpKo0HlND29rdFi1TamFTt0TtrNsZnx
-   Q==;
-X-CSE-ConnectionGUID: yNBil63MQySjl9Tr6UCyNQ==
-X-CSE-MsgGUID: K1P+HCaqRuC24Pz8R5JQ1g==
-X-IronPort-AV: E=Sophos;i="6.06,187,1705388400"; 
-   d="asc'?scan'208";a="17415151"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2024 05:25:13 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 27 Feb 2024 05:24:53 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Tue, 27 Feb 2024 05:24:52 -0700
-Date: Tue, 27 Feb 2024 12:24:09 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-CC: Palmer Dabbelt <palmer@dabbelt.com>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] riscv: Allow NOMMU kernels to run in S-mode
-Message-ID: <20240227-seventh-overgrown-2fa453e8a775@wendy>
-References: <20240227003630.3634533-1-samuel.holland@sifive.com>
- <20240227003630.3634533-5-samuel.holland@sifive.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ksrij+U8"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41R9Xs3r001292;
+	Tue, 27 Feb 2024 12:25:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=CMT6xSqpB/zSKkSjg9BbqEZg5VC0/ZeO2OqSy+JWKz0=; b=Ks
+	rij+U8cmJg+SbxE0wz8bi9okGnDw20cA79ddQKtGMxXIN66zB5JhyvSElaQAAM3M
+	LW3R3TB+tRAcuZpQO5l98Z9hg2oELiLLK3BP+a+Bubl1rwnr7X52mapS4iRbUAmr
+	U/FuEZwP3R/3qweaaMu7AGSvpV6kjmPRO2vM1GkhY0EnwzDZb9v4kHEfYfR9SpQf
+	DF0typmVhDXEvBzF2H56182pyf8AivzKkNydYgmd0LwfVI69iGT3j7fiOlstA/dg
+	2OL+ADB3BJgJ87GgChviJ0D/JeielrQjjEOhp8utIx5uS5QbpCS38/8BRLxYhgom
+	DWhdi6nHjjeeVz3yG3oQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wh64qh8b4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Feb 2024 12:25:08 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41RCP7Gr013108
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Feb 2024 12:25:07 GMT
+Received: from grosikop.eu.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 27 Feb 2024 04:25:04 -0800
+From: Gjorgji Rosikopulos <quic_grosikop@quicinc.com>
+To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <laurent.pinchart@ideasonboard.com>,
+        <hverkuil-cisco@xs4all.nl>, <quic_hariramp@quicinc.com>
+Subject: [PATCH 8/9] media: qcom: camss: Decompose register and link operations
+Date: Tue, 27 Feb 2024 14:24:14 +0200
+Message-ID: <20240227122415.491-9-quic_grosikop@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240227122415.491-1-quic_grosikop@quicinc.com>
+References: <20240227122415.491-1-quic_grosikop@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aaEsmCaWxcFXJwfC"
-Content-Disposition: inline
-In-Reply-To: <20240227003630.3634533-5-samuel.holland@sifive.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: -aodAE1is8MmR_XMSDvPvd-Qdru0uZHm
+X-Proofpoint-GUID: -aodAE1is8MmR_XMSDvPvd-Qdru0uZHm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-26_11,2024-02-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402270097
 
---aaEsmCaWxcFXJwfC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Atanas Filipov <quic_afilipov@quicinc.com>
 
-On Mon, Feb 26, 2024 at 04:34:49PM -0800, Samuel Holland wrote:
-> For ease of testing, it is convenient to run NOMMU kernels in supervisor
-> mode. The only required change is to offset the kernel load address,
-> since the beginning of RAM is usually reserved for M-mode firmware.
->=20
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
->=20
->  arch/riscv/Kconfig | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
->=20
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index ef53c00470d6..0dc09b2ac2f6 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -64,7 +64,7 @@ config RISCV
->  	select ARCH_WANTS_THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
->  	select BINFMT_FLAT_NO_DATA_START_OFFSET if !MMU
->  	select BUILDTIME_TABLE_SORT if MMU
-> -	select CLINT_TIMER if !MMU
-> +	select CLINT_TIMER if RISCV_M_MODE
->  	select CLONE_BACKWARDS
->  	select COMMON_CLK
->  	select CPU_PM if CPU_IDLE || HIBERNATION || SUSPEND
-> @@ -220,8 +220,12 @@ config ARCH_MMAP_RND_COMPAT_BITS_MAX
-> =20
->  # set if we run in machine mode, cleared if we run in supervisor mode
->  config RISCV_M_MODE
-> -	bool
-> -	default !MMU
-> +	bool "Build a kernel that runs in machine mode"
-> +	depends on !MMU
-> +	default y
-> +	help
-> +	  Select this option if you want to run the kernel in M-mode,
-> +	  without the assistance of any other firmware.
-> =20
->  # set if we are running in S-mode and can use SBI calls
->  config RISCV_SBI
-> @@ -238,8 +242,9 @@ config MMU
-> =20
->  config PAGE_OFFSET
->  	hex
-> -	default 0xC0000000 if 32BIT && MMU
-> -	default 0x80000000 if !MMU
-> +	default 0x80000000 if !MMU && RISCV_M_MODE
-> +	default 0x80200000 if !MMU
-> +	default 0xc0000000 if 32BIT
->  	default 0xff60000000000000 if 64BIT
+Split link and register operations.
+Add dedicated link callback according to SoC identifier.
 
-The first default seen with a passing condition is the default chosen,
-right?
+Signed-off-by: Atanas Filipov <quic_afilipov@quicinc.com>
+Signed-off-by: Radoslav Tsvetkov <quic_rtsvetko@quicinc.com>
+---
+ drivers/media/platform/qcom/camss/camss.c | 140 ++++++++++++----------
+ drivers/media/platform/qcom/camss/camss.h |   1 +
+ 2 files changed, 80 insertions(+), 61 deletions(-)
 
-Cheers,
-Conor.
+diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
+index fc9940e883c5..244849db39dc 100644
+--- a/drivers/media/platform/qcom/camss/camss.c
++++ b/drivers/media/platform/qcom/camss/camss.c
+@@ -1452,72 +1452,30 @@ static int camss_init_subdevices(struct camss *camss)
+ }
+ 
+ /*
+- * camss_register_entities - Register subdev nodes and create links
++ * camss_link_entities - Register subdev nodes and create links
+  * @camss: CAMSS device
+  *
+  * Return 0 on success or a negative error code on failure
+  */
+-static int camss_register_entities(struct camss *camss)
++static int camss_link_entities(struct camss *camss)
+ {
+ 	int i, j, k;
+ 	int ret;
+ 
+-	for (i = 0; i < camss->res->csiphy_num; i++) {
+-		ret = msm_csiphy_register_entity(&camss->csiphy[i],
+-						 &camss->v4l2_dev);
+-		if (ret < 0) {
+-			dev_err(camss->dev,
+-				"Failed to register csiphy%d entity: %d\n",
+-				i, ret);
+-			goto err_reg_csiphy;
+-		}
+-	}
+-
+-	for (i = 0; i < camss->res->csid_num; i++) {
+-		ret = msm_csid_register_entity(&camss->csid[i],
+-					       &camss->v4l2_dev);
+-		if (ret < 0) {
+-			dev_err(camss->dev,
+-				"Failed to register csid%d entity: %d\n",
+-				i, ret);
+-			goto err_reg_csid;
+-		}
+-	}
+-
+-	ret = msm_ispif_register_entities(camss->ispif,
+-					  &camss->v4l2_dev);
+-	if (ret < 0) {
+-		dev_err(camss->dev, "Failed to register ispif entities: %d\n",
+-		ret);
+-		goto err_reg_ispif;
+-	}
+-
+-	for (i = 0; i < camss->res->vfe_num; i++) {
+-		ret = msm_vfe_register_entities(&camss->vfe[i],
+-						&camss->v4l2_dev);
+-		if (ret < 0) {
+-			dev_err(camss->dev,
+-				"Failed to register vfe%d entities: %d\n",
+-				i, ret);
+-			goto err_reg_vfe;
+-		}
+-	}
+-
+ 	for (i = 0; i < camss->res->csiphy_num; i++) {
+ 		for (j = 0; j < camss->res->csid_num; j++) {
+-			ret = media_create_pad_link(
+-				&camss->csiphy[i].subdev.entity,
+-				MSM_CSIPHY_PAD_SRC,
+-				&camss->csid[j].subdev.entity,
+-				MSM_CSID_PAD_SINK,
+-				0);
++			ret = media_create_pad_link(&camss->csiphy[i].subdev.entity,
++						    MSM_CSIPHY_PAD_SRC,
++						    &camss->csid[j].subdev.entity,
++						    MSM_CSID_PAD_SINK,
++						    0);
+ 			if (ret < 0) {
+ 				dev_err(camss->dev,
+ 					"Failed to link %s->%s entities: %d\n",
+ 					camss->csiphy[i].subdev.entity.name,
+ 					camss->csid[j].subdev.entity.name,
+ 					ret);
+-				goto err_link;
++				return ret;
+ 			}
+ 		}
+ 	}
+@@ -1525,19 +1483,18 @@ static int camss_register_entities(struct camss *camss)
+ 	if (camss->ispif) {
+ 		for (i = 0; i < camss->res->csid_num; i++) {
+ 			for (j = 0; j < camss->ispif->line_num; j++) {
+-				ret = media_create_pad_link(
+-					&camss->csid[i].subdev.entity,
+-					MSM_CSID_PAD_SRC,
+-					&camss->ispif->line[j].subdev.entity,
+-					MSM_ISPIF_PAD_SINK,
+-					0);
++				ret = media_create_pad_link(&camss->csid[i].subdev.entity,
++							    MSM_CSID_PAD_SRC,
++							    &camss->ispif->line[j].subdev.entity,
++							    MSM_ISPIF_PAD_SINK,
++							    0);
+ 				if (ret < 0) {
+ 					dev_err(camss->dev,
+ 						"Failed to link %s->%s entities: %d\n",
+ 						camss->csid[i].subdev.entity.name,
+ 						camss->ispif->line[j].subdev.entity.name,
+ 						ret);
+-					goto err_link;
++					return ret;
+ 				}
+ 			}
+ 		}
+@@ -1559,7 +1516,7 @@ static int camss_register_entities(struct camss *camss)
+ 							ispif->entity.name,
+ 							vfe->entity.name,
+ 							ret);
+-						goto err_link;
++						return ret;
+ 					}
+ 				}
+ 	} else {
+@@ -1580,15 +1537,67 @@ static int camss_register_entities(struct camss *camss)
+ 							csid->entity.name,
+ 							vfe->entity.name,
+ 							ret);
+-						goto err_link;
++						return ret;
+ 					}
+ 				}
+ 	}
+ 
++	return 0;
++}
++
++/*
++ * camss_register_entities - Register subdev nodes and create links
++ * @camss: CAMSS device
++ *
++ * Return 0 on success or a negative error code on failure
++ */
++static int camss_register_entities(struct camss *camss)
++{
++	int i;
++	int ret;
++
++	for (i = 0; i < camss->res->csiphy_num; i++) {
++		ret = msm_csiphy_register_entity(&camss->csiphy[i],
++						 &camss->v4l2_dev);
++		if (ret < 0) {
++			dev_err(camss->dev,
++				"Failed to register csiphy%d entity: %d\n",
++				i, ret);
++			goto err_reg_csiphy;
++		}
++	}
++
++	for (i = 0; i < camss->res->csid_num; i++) {
++		ret = msm_csid_register_entity(&camss->csid[i],
++					       &camss->v4l2_dev);
++		if (ret < 0) {
++			dev_err(camss->dev,
++				"Failed to register csid%d entity: %d\n",
++				i, ret);
++			goto err_reg_csid;
++		}
++	}
++
++	ret = msm_ispif_register_entities(camss->ispif,
++					  &camss->v4l2_dev);
++	if (ret < 0) {
++		dev_err(camss->dev, "Failed to register ispif entities: %d\n", ret);
++		goto err_reg_ispif;
++	}
++
++	for (i = 0; i < camss->res->vfe_num; i++) {
++		ret = msm_vfe_register_entities(&camss->vfe[i],
++						&camss->v4l2_dev);
++		if (ret < 0) {
++			dev_err(camss->dev,
++				"Failed to register vfe%d entities: %d\n",
++				i, ret);
++			goto err_reg_vfe;
++		}
++	}
++
+ 	return 0;
+ 
+-err_link:
+-	i = camss->res->vfe_num;
+ err_reg_vfe:
+ 	for (i--; i >= 0; i--)
+ 		msm_vfe_unregister_entities(&camss->vfe[i]);
+@@ -1908,6 +1917,10 @@ static int camss_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_v4l2_device_unregister;
+ 
++	ret = camss->res->link_entities(camss);
++	if (ret < 0)
++		goto err_register_subdevs;
++
+ 	if (num_subdevs) {
+ 		camss->notifier.ops = &camss_subdev_notifier_ops;
+ 
+@@ -1987,6 +2000,7 @@ static const struct camss_resources msm8916_resources = {
+ 	.csiphy_num = ARRAY_SIZE(csiphy_res_8x16),
+ 	.csid_num = ARRAY_SIZE(csid_res_8x16),
+ 	.vfe_num = ARRAY_SIZE(vfe_res_8x16),
++	.link_entities = camss_link_entities
+ };
+ 
+ static const struct camss_resources msm8996_resources = {
+@@ -1998,6 +2012,7 @@ static const struct camss_resources msm8996_resources = {
+ 	.csiphy_num = ARRAY_SIZE(csiphy_res_8x96),
+ 	.csid_num = ARRAY_SIZE(csid_res_8x96),
+ 	.vfe_num = ARRAY_SIZE(vfe_res_8x96),
++	.link_entities = camss_link_entities
+ };
+ 
+ static const struct camss_resources sdm660_resources = {
+@@ -2009,6 +2024,7 @@ static const struct camss_resources sdm660_resources = {
+ 	.csiphy_num = ARRAY_SIZE(csiphy_res_660),
+ 	.csid_num = ARRAY_SIZE(csid_res_660),
+ 	.vfe_num = ARRAY_SIZE(vfe_res_660),
++	.link_entities = camss_link_entities
+ };
+ 
+ static const struct camss_resources sdm845_resources = {
+@@ -2019,6 +2035,7 @@ static const struct camss_resources sdm845_resources = {
+ 	.csiphy_num = ARRAY_SIZE(csiphy_res_845),
+ 	.csid_num = ARRAY_SIZE(csid_res_845),
+ 	.vfe_num = ARRAY_SIZE(vfe_res_845),
++	.link_entities = camss_link_entities
+ };
+ 
+ static const struct camss_resources sm8250_resources = {
+@@ -2032,6 +2049,7 @@ static const struct camss_resources sm8250_resources = {
+ 	.csiphy_num = ARRAY_SIZE(csiphy_res_8250),
+ 	.csid_num = ARRAY_SIZE(csid_res_8250),
+ 	.vfe_num = ARRAY_SIZE(vfe_res_8250),
++	.link_entities = camss_link_entities
+ };
+ 
+ static const struct of_device_id camss_dt_match[] = {
+diff --git a/drivers/media/platform/qcom/camss/camss.h b/drivers/media/platform/qcom/camss/camss.h
+index 5abde7481caf..fb997b94fd70 100644
+--- a/drivers/media/platform/qcom/camss/camss.h
++++ b/drivers/media/platform/qcom/camss/camss.h
+@@ -105,6 +105,7 @@ struct camss_resources {
+ 	const unsigned int csiphy_num;
+ 	const unsigned int csid_num;
+ 	const unsigned int vfe_num;
++	int (*link_entities)(struct camss *camss);
+ };
+ 
+ struct camss {
+-- 
+2.17.1
 
---aaEsmCaWxcFXJwfC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd3UaQAKCRB4tDGHoIJi
-0rWUAQCYj2VzMZqjloyCYlH/8rJ600bZ72PC8LQeVI1wa+TlaQD/U6N2RrPtWIEt
-9yhw7RZZXjwnLgcj/dY9G1ZI0rWF2QY=
-=ZJON
------END PGP SIGNATURE-----
-
---aaEsmCaWxcFXJwfC--
