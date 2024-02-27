@@ -1,380 +1,160 @@
-Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5ADF1386B8;
-	Tue, 27 Feb 2024 10:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9837E1386C7;
+	Tue, 27 Feb 2024 10:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709029738; cv=none; b=DDv9Ab7bCf41i6pmYbitNpt3Iorj9SgqkaXHJ2GV4y/9jBl4iMSj+NtlawQ0T8/twziUI0QelX2MdRkWIFE3De+tz8Gl2vqJqWfsZBdp/p1xg+RTfgr+EYt1jz5/XP6XFg89ulvbrKWq5btQsO2OjLj2vPT8kwPlaVOEU+3jXQ8=
+	t=1709029743; cv=none; b=hFjLIb00hpu/FR5eVPCvhMSqSjmBALpArWttLPVhI/cosj3VpODeoBswQ5rgeo6gbP8xGcCzJIu45WTHCLwL+u/9QPTXBP295Kp9hAU6iuA/qFKcywbza030tPzmBhsTNZ86fkI+fFgpDumCd2AQm9352Wk0IMagyLe6XPHxF6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709029738; c=relaxed/simple;
-	bh=o8YIeJU+n/G7IXYLjmkc4hcOPkZILpLoQGQUS0tBt1M=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:Mime-Version:
-	 References:In-Reply-To; b=R3Za22wi2BcFaHyyq+5zntHv0OWNME6jRKh5CTYwgmLiStcVgk+vlJad7eMHCjh/4jb8OjHSPOTzoNCL3pNrob4FGf30RDYBDl0qXSiNgA1uY3pD03bjIZvqtdSqBX8k3aijG1rkNBJ5wDyKZt2Og1lgeUQ3liKO3jPqjeohsMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=HkhlJ2wu; arc=none smtp.client-ip=195.201.215.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
+	s=arc-20240116; t=1709029743; c=relaxed/simple;
+	bh=2nSH7ifbYm3tqDkxI8g0ViATvBk6HRIg3r24rsscvwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLHJjBiIYM5JCY0QxQpOhTz3dSUm30/rhSSuz0G2lizuM8sw31beIq6WCX0a4e46KSCe0uo2ZrUdUVdy1qgGSidXePOEEK/qQ5RX+MdhEP6UGdn4UCC6HqWIp1yGkcxLJWQtftc7dsmIoulY8NqfWZTEGoCca1c663pDUP9Q00k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=nJOIxtZ5; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="HkhlJ2wu"
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="nJOIxtZ5"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=folker-schwesinger.de; s=default2212; h=In-Reply-To:References:
-	Content-Transfer-Encoding:Mime-Version:To:From:Cc:Subject:Message-Id:Date:
-	Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=DV0hhtLlv0q18AeIA77X31I3Oe8+chKq2Az9f3uPrR0=; b=HkhlJ2wuYDyg2CmhZG0ynsdxcv
-	Tcr467UnQkXegZVcKUIRvP3xlNfPEkXJqA7G+B5Nem70WrbOgI+opbkavcPe9/HFq7lJaO5CmYATj
-	ijcc8i/cBK8tJ12CnyGw76pSrf7MTWqnHyW67GhBhSUUCjLJMv3G0f4OmJ5WsqwQy3S/XMN2yPbBe
-	zZVMH8uDn3eugUI7Gaiw88vzrxhs/xwaipch6C4oBurPivAZYuCn1L9GBqe+/GMTYUclt2l3l8Bg7
-	maqZ2PRku/CRmR30wJ5gZnz3jyYP3Lr5+E8IaPZ7iK8EYw2aJGwkNMLfxvv2ssrqmx2NjHTjDRVlI
-	7LLrhbdg==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1reuRH-0004q3-AJ; Tue, 27 Feb 2024 11:11:55 +0100
-Received: from [141.24.82.26] (helo=localhost)
-	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=AaMsMZWiwvSaJp1atd6FKd0pROFWF3fPGtmIY0iqYYs=; b=nJOIxtZ52FqIAVUFl2d7cP0vTC
+	F1ANU0h5omGFVqaHz+i1HZQ/9eCovQVlWBEKYvHWcTgj/WlJK5s9ngZ2ESModv77AqFeEFgfOYNhM
+	WuunX11xsvZ1EFu00Byzj9MB2hE2+TuhPu6d9p6pJcC4XIZ7tcmnEOZdLNgYiubkOCbQxMEt1a2wR
+	l5lRgW/fVcaLTA6xaKpEElQO/kDQrISXdGzbUm3M4GGs3itlVmricP/bMq29RcArGak8WDOnK3xyi
+	7KK4fDE0xQatqYO1vGATvNtgxUAr8Wj3DEWWPkYSbrodbniRmVPfY0Kap03XGhONynL7yldslsE1S
+	lXYyXE9w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55912)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1reuRA-00EtiY-1v;
-	Tue, 27 Feb 2024 11:11:54 +0100
-Content-Type: multipart/signed;
- boundary=fb2c8dd55ef9719f9d11be5e04c0ac8d4ca5dd24af240fce5463600e99f0;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Tue, 27 Feb 2024 10:11:48 +0000
-Message-Id: <CZFS45VOLIKW.2VS3M3VOMBT8V@folker-schwesinger.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: add enable-strobe-pulldown to
- emmc phy on rk3399
-Cc: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "Rob Herring"
- <robh+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Vinod Koul" <vkoul@kernel.org>,
- "Chris Ruehl" <chris.ruehl@gtsys.com.hk>, "Brian Norris"
- <briannorris@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>, "Linux ARM"
- <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..."
- <linux-rockchip@lists.infradead.org>, "LKML"
- <linux-kernel@vger.kernel.org>, "Kishon Vijay Abraham I"
- <kishon@kernel.org>, "Christopher Obbard" <chris.obbard@collabora.com>
-From: "Folker Schwesinger" <dev@folker-schwesinger.de>
-To: "Alban Browaeys" <alban.browaeys@gmail.com>, "Doug Anderson"
- <dianders@chromium.org>, "Jensen Huang" <jensenhuang@friendlyarm.com>
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1reuhc-0007lc-2j;
+	Tue, 27 Feb 2024 10:28:48 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1reuhZ-0007JB-VJ; Tue, 27 Feb 2024 10:28:46 +0000
+Date: Tue, 27 Feb 2024 10:28:45 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Guenter Roeck <linux@roeck-us.net>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	David Laight <David.Laight@aculab.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Helge Deller <deller@gmx.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Parisc List <linux-parisc@vger.kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v10] lib: checksum: Use aligned accesses for ip_fast_csum
+ and csum_ipv6_magic tests
+Message-ID: <Zd25XWTkDPuIjpF8@shell.armlinux.org.uk>
+References: <20240223-fix_sparse_errors_checksum_tests-v10-1-b6a45914b7d8@rivosinc.com>
+ <7ae930a7-3b10-4470-94ee-89cb650b3349@csgroup.eu>
+ <e11fea7a-e99e-4539-a489-0aa145ee65f0@roeck-us.net>
+ <ZdzPgSCTntY7JD5i@shell.armlinux.org.uk>
+ <ZdzZ5tk459bgUrgz@ghost>
+ <ZdzhRntTHApp0doV@shell.armlinux.org.uk>
+ <b13b8847977d4cfa99b6a0c9a0fcbbcf@AcuMS.aculab.com>
+ <Zd0b8SDT8hrG/0yW@ghost>
+ <cdd09f7a-83b2-41ba-a32c-9886dd79c43e@roeck-us.net>
+ <9b4ce664-3ddb-4789-9d5d-8824f9089c48@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.17.0-67-g66bbc5303578
-References: <20220822074139.3810-1-jensenhuang@friendlyarm.com>
- <23552842.6Emhk5qWAg@diego>
- <CAD=FV=W-ajJDfYcP3P8Jyk_KgsUAbdTtmwiNXqJ=Ab2ojgrUGw@mail.gmail.com>
- <CAMpZ1qEe7xFr+XaXsS_hWDLnGGA8PfzQiToOjY1N_1ctyQ+KxA@mail.gmail.com>
- <CAD=FV=U-=2GpQTb0N1p3Qe2TAb=JhyZJw2V8T-qbLs5TYhW7qA@mail.gmail.com>
- <7873090c4aad382813a65e35157d8684e8842974.camel@gmail.com>
-In-Reply-To: <7873090c4aad382813a65e35157d8684e8842974.camel@gmail.com>
-X-Authenticated-Sender: dev@folker-schwesinger.de
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27197/Mon Feb 26 10:31:34 2024)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9b4ce664-3ddb-4789-9d5d-8824f9089c48@csgroup.eu>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
---fb2c8dd55ef9719f9d11be5e04c0ac8d4ca5dd24af240fce5463600e99f0
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Tue, Feb 27, 2024 at 06:47:38AM +0000, Christophe Leroy wrote:
+> 
+> 
+> Le 27/02/2024 à 00:48, Guenter Roeck a écrit :
+> > On 2/26/24 15:17, Charlie Jenkins wrote:
+> >> On Mon, Feb 26, 2024 at 10:33:56PM +0000, David Laight wrote:
+> >>> ...
+> >>>> I think you misunderstand. "NET_IP_ALIGN offset is what the kernel
+> >>>> defines to be supported" is a gross misinterpretation. It is not
+> >>>> "defined to be supported" at all. It is the _preferred_ alignment
+> >>>> nothing more, nothing less.
+> >>
+> >> This distinction is arbitrary in practice, but I am open to being proven
+> >> wrong if you have data to back up this statement. If the driver chooses
+> >> to not follow this, then the driver might not work. ARM defines the
+> >> NET_IP_ALIGN to be 2 to pad out the header to be on the supported
+> >> alignment. If the driver chooses to pad with one byte instead of 2
+> >> bytes, the driver may fail to work as the CPU may stall after the
+> >> misaligned access.
+> >>
+> >>>
+> >>> I'm sure I've seen code that would realign IP headers to a 4 byte
+> >>> boundary before processing them - but that might not have been in
+> >>> Linux.
+> >>>
+> >>> I'm also sure there are cpu which will fault double length misaligned
+> >>> memory transfers - which might be used to marginally speed up code.
+> >>> Assuming more than 4 byte alignment for the IP header is likely
+> >>> 'wishful thinking'.
+> >>>
+> >>> There is plenty of ethernet hardware that can only write frames
+> >>> to even boundaries and plenty of cpu that fault misaligned accesses.
+> >>> There are even cases of both on the same silicon die.
+> >>>
+> >>> You also pretty much never want a fault handler to fixup misaligned
+> >>> ethernet frames (or really anything else for that matter).
+> >>> It is always going to be better to check in the code itself.
+> >>>
+> >>> x86 has just made people 'sloppy' :-)
+> >>>
+> >>>     David
+> >>>
+> >>> -
+> >>> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, 
+> >>> MK1 1PT, UK
+> >>> Registration No: 1397386 (Wales)
+> >>>
+> >>
+> >> If somebody has a solution they deem to be better, I am happy to change
+> >> this test case. Otherwise, I would appreciate a maintainer resolving
+> >> this discussion and apply this fix.
+> >>
+> > Agreed.
+> > 
+> > I do have a couple of patches which add explicit unaligned tests as well as
+> > corner case tests (which are intended to trigger as many carry overflows
+> > as possible). Once I get those working reliably, I'll be happy to submit
+> > them as additional tests.
+> > 
+> 
+> The functions definitely have to work at least with and without VLAN, 
+> which means the alignment cannot be greater than 4 bytes. That's also 
+> the outcome of the discussion.
 
-Hi,
+Thanks for completely ignoring what I've said. No. The alignment ends up
+being commonly 2 bytes.
 
-On Tue Feb 27, 2024 at 3:05 AM CET, Alban Browaeys wrote:
-> Le mercredi 24 ao=C3=BBt 2022 =C3=A0 07:57 -0700, Doug Anderson a =C3=A9c=
-rit=C2=A0:
-> > On Tue, Aug 23, 2022 at 8:11 PM Jensen Huang
-> > <jensenhuang@friendlyarm.com> wrote:
-> > > I realized that only some devices may be affected, so I considered
-> > > modifying rk3399-nanopi4.dtsi only,
-> > > but other boards without external pull-down should still need this
-> > > patch.
-> >=20
-> > I guess the other alternative would be to change how the dt property
-> > works. You could say:
-> >=20
-> > 1. If `enable-strobe-pulldown` is set then enable the strobe
-> > pulldown.
-> >=20
-> > 2. If `enable-strobe-pulldown` is not set then don't touch the pin in
-> > the kernel.
-> >=20
-> > 3. If someone later needs to explicitly disable the strobe pulldown
-> > they could add a new property like `disable-strobe-pulldown`.
-> >=20
-> >=20
-> > Obviously there are tradeoffs between that and what you've done and
-> > I'm happy to let others make the call of which they'd prefer.
-> >=20
->
-> Christopher could you try "ROCK Pi 4" and "ROCK Pi 4+" with=20
-> "enable-strobe-pulldown" instead of disabling HS400 as you did in July
-> 2023?
->
+As I've said several times, network drivers do _not_ have to respect
+NET_IP_ALIGN. There are 32-bit ARM drivers which have a DMA engine in
+them which can only DMA to a 32-bit aligned address. This means that
+the start of the ethernet header is placed at a 32-bit aligned address
+making the IP header misaligned to 32-bit.
 
-with the following applied, the EMMC related errors are gone. dmesg only
-shows "Purging ... bytes" during my tests:
+I don't see what is so difficult to understand about this... but it
+seems that my comments on this are being ignored time and time again,
+and I can only think that those who are ignoring my comments have
+some alterior motive here.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi b/arch/arm6=
-4/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-index f2279aa6ca9e..ae0fb87e1a8b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-@@ -647,8 +647,10 @@ &saradc {
- &sdhci {
-        max-frequency =3D <150000000>;
-        bus-width =3D <8>;
--       mmc-hs200-1_8v;
-+       mmc-hs400-1_8v;
-+       mmc-hs400-enhanced-strobe;
-        non-removable;
-+       rockchip,enable-strobe-pulldown;
-        status =3D "okay";
- };
-
-For testing I ran dd three times in a row:
-
-dd if=3D/dev/zero of=3D./zero.bin bs=3D1M count=3D5000
-
-I tested this on both a Rock 4SE board and a Rock Pi 4B+ board with the
-same results.
-
->
-> Could the behavior be reverted to let the vendor kernel default for the
-> default case (ie enable pulldown)?
->
->
->
->
-> I believe 99% of the boards are now broken with this new internal
-> pulldown behavior (all  these with internal pulldown). More on that
-> later but to sum up, nobody  complained because downstream kernels like
-> Armbian all disabled HS400 for all boards, at least for rk3399.
->
->
-> Do we really want to ask 99% of the board dts to add this "enable-
-> strobe-pulldown" in their dts?
-> Chris, was your custom board not working with the vender kernel default
-> to enable unconditionaly?
-> What was the rationale to  choose the opposite default from the vendor
-> kernel one?
->
->
-> As told in the commit that introduced this new behavior the default for
-> the vendor kernel was the opposite of what was introduced in the Linux
-> kernel:
-> "
-> https://github.com/torvalds/linux/commit/8b5c2b45b8f0a11c9072da0f7baf9ee9=
-86d3151e
->
-> commit 8b5c2b45b8f0a11c9072da0f7baf9ee986d3151e
-> Author: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> Date:   Sun Nov 29 13:44:14 2020 +0800
->
-> phy: rockchip: set pulldown for strobe line in dts
->
-> This patch add support to set the internal pulldown via dt property
-> and allow simplify the board design for the trace from emmc-phy to
-> the eMMC chipset.
-> Default to not set the pull-down.
->
-> This patch was inspired from the 4.4 tree of the
-> Rockchip SDK, where it is enabled unconditional.
-> The patch had been tested with our rk3399 customized board.
-> "
->
->
->
-> For RK3588 I see this commit which makes me believe the internal
-> pulldown case is the most common "
-> commit 37f3d6108730713c411827ab4af764909f4dfc78
-> Author: Sam Edwards <cfsworks@gmail.com>
-> Date:   Tue Dec 5 12:29:00 2023 -0800
->
->
-> arm64: dts: rockchip: Fix eMMC Data Strobe PD on rk3588
->
-> JEDEC standard JESD84-B51 defines the eMMC Data Strobe line, which is
-> currently used only in HS400 mode, as a device->host clock signal that
-> "is used only in read operation. The Data Strobe is always High-Z (not
-> driven by the device and pulled down by RDS) or Driven Low in write
-> operation, except during CRC status response." RDS is a pull-down
-> resistor specified in the 10K-100K ohm range. Thus per the standard,
-> the
-> Data Strobe is always pulled to ground (by the eMMC and/or RDS) during
-> write operations.
->
-> Evidently, the eMMC host controller in the RK3588 considers an active
-> voltage on the eMMC-DS line during a write to be an error.
->
-> The default (i.e. hardware reset, and Rockchip BSP) behavior for the
-> RK3588 is to activate the eMMC-DS pin's builtin pull-down. As a result,
-> many RK3588 board designers do not bother adding a dedicated RDS
-> resistor, instead relying on the RK3588's internal bias. The current
-> devicetree, however, disables this bias (`pcfg_pull_none`), breaking
-> HS400-mode writes for boards without a dedicated RDS, but with an eMMC
-> chip that chooses to High-Z (instead of drive-low) the eMMC-DS line.
-> (The Turing RK1 is one such board.)
->
-> Fix this by changing the bias in the (common) emmc_data_strobe case to
-> reflect the expected hardware/BSP behavior. This is unlikely to cause
-> regressions elsewhere: the pull-down is only relevant for High-Z eMMCs,
-> and if this is redundant with a (dedicated) RDS resistor, the effective
-> result is only a lower resistance to ground -- where the range of
-> tolerance is quite high. If it does, it's better fixed in the specific
-> devicetrees.
-> "
->
->
->
->
->
->
-> Lately two other upstream dts disabled HS400 due to this new behavior I
-> believe:
-> "
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/a=
-rch/arm64/boot/dts/rockchip?id=3D2bd1d2dd808c60532283e9cf05110bf1bf2f9079
-> author	Christopher Obbard <chris.obbard@collabora.com>	2023-
-> 07-05 15:42:55 +0100
-> committer	Heiko Stuebner <heiko@sntech.de>	2023-07-10
-> 15:43:24 +0200
-> commit	2bd1d2dd808c60532283e9cf05110bf1bf2f9079 (patch)
-> tree	57cbf7eaa91deb68f143577d5d1dbc0d9141480e
-> /arch/arm64/boot/dts/rockchip
-> parent	cee572756aa2cb46e959e9797ad4b730b78a050b (diff)
-> download	linux-2bd1d2dd808c60532283e9cf05110bf1bf2f9079.tar.gz
-> arm64: dts: rockchip: Disable HS400 for eMMC on ROCK 4C+
->
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/a=
-rch/arm64/boot/dts/rockchip?id=3Dcee572756aa2cb46e959e9797ad4b730b78a050b
-> author	Christopher Obbard <chris.obbard@collabora.com>	2023-
-> 07-05 15:42:54 +0100
-> committer	Heiko Stuebner <heiko@sntech.de>	2023-07-10
-> 15:43:24 +0200
-> commit	cee572756aa2cb46e959e9797ad4b730b78a050b (patch)
-> tree	cf3ed8ff6230cbde04353503417c1a75ba15c249
-> /arch/arm64/boot/dts/rockchip
-> parent	5ce6971e5279c569defc2f2ac800692049bbaa90 (diff)
-> download	linux-cee572756aa2cb46e959e9797ad4b730b78a050b.tar.gz
-> arm64: dts: rockchip: Disable HS400 for eMMC on ROCK Pi 4
-> "
->
->
-> All Armbian RK3399 boards, as far as I know, had to disable HS400, I
-> also believe due to this commit.
->
-> You can also search google for "running cqe recovery rk3399 armbian".
->
->
-> This was never reported upstream though. But as HS400 is disabled
-> everywhere nobody notice the regression nowadays.
->
->
-> >=20
-> > > BR,
-> > > Jensen
-> > >=20
-> > > On Tue, Aug 23, 2022 at 10:13 PM Doug Anderson
-> > > <dianders@chromium.org> wrote:
-> > > >=20
-> > > > Hi,
-> > > >=20
-> > > > On Tue, Aug 23, 2022 at 4:53 AM Heiko St=C3=BCbner <heiko@sntech.de=
->
-> > > > wrote:
-> > > > >=20
-> > > > > Am Montag, 22. August 2022, 09:41:39 CEST schrieb Jensen Huang:
-> > > > > > Internal pull-down for strobe line (GRF_EMMCPHY_CON2[9]) was
-> > > > > > disabled
-> > > > > > by commit 8b5c2b45b8f0, which causes I/O error in HS400 mode.
-> > > > > >=20
-> > > > > > Tested on NanoPC-T4.
-> > > > > >=20
-> > > > > > Fixes: 8b5c2b45b8f0 ("phy: rockchip: set pulldown for strobe
-> > > > > > line in dts")
-> > > > > > Signed-off-by: Jensen Huang <jensenhuang@friendlyarm.com>
-> > > > >=20
-> > > > > ok, so this looks like it restores previous functionality.
-> > > > >=20
-> > > > > I'm just wondering as the "offending" patch is from 2020, why
-> > > > > this
-> > > > > only turns up now. Any ideas?
-> > > >=20
->
-> Probbaly because the introduction of PROBE_DEFERRED in regulator core
-> before that (in 5.10.60) already broke at least my board HS400 due to
-> double init. Thus why it took me so long to see this new pulldown
-> behavior commit. I was testing every regulator core double init fixup
-> patchset while not understanding why reverting the PROBE_DEFERRED
-> commit on 5.10.60 worked but not on newer kernels (ie this new pulldown
-> behavior was introduced in 5.11...).
->
->
->
->
-> > > > Ah, I see. So before the offending patch we used to just leave
-> > > > the
-> > > > pull state at whatever the default was when the kernel was
-> > > > booted.
-> > > > After the offending patch we chose a default.
-> > > >=20
-> > > > On kevin I see an external pull down on this line. Enabling both
-> > > > the
-> > > > internal and external is probably not a huge deal, it'll just
-> > > > affect
-> > > > the strength of the pull.
-> > > >=20
-> > > > On bob I _think_ the external pull down is also stuffed.
-> > > >=20
-> > > > ...so I guess that would explain why it didn't cause a problem
-> > > > for at
-> > > > least those two boards?
-> > > >=20
-> > > > -Doug
->
->
-> In my opinion it is about these board already being broken by the
-> regulator core change, so nobody noticed the second regression. When
-> the first regression was fixed, it was very hard to correlate the still
-> broken behavior to the second regression.
->
->
-> I confirm that on Helios64, setting "enable-strobe-pulldown" fixes the
-> EMMC error I had when writing with HS400ES enabled:
-> mmc1: running CQE recovery=20
-> mmc1: cqhci: spurious TCN for tag 12
->
-> It also took me so long to report upstream as my board code (rk3399-
-> kobol-helios64.dts) is not completely upstreamed yet so I use an
-> Armbian patched kernel.
->
->
->
-> Alban
->
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
-
---fb2c8dd55ef9719f9d11be5e04c0ac8d4ca5dd24af240fce5463600e99f0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJAEABYKADgWIQQFbmi0A2l3pTuK+esCQHEyPYq7fQUCZd21ZBocZGV2QGZvbGtl
-ci1zY2h3ZXNpbmdlci5kZQAKCRACQHEyPYq7ffAYAP468MofYR9FFvB2pB7XR7Fh
-73JXWpLb04W35HufTd50+gEArlC52Kj/w0WATTmOjmJN37mBeTIsw6b1ypE3dkFj
-KAU=
-=cvJ2
------END PGP SIGNATURE-----
-
---fb2c8dd55ef9719f9d11be5e04c0ac8d4ca5dd24af240fce5463600e99f0--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
