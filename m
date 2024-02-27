@@ -1,86 +1,116 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAAC250F8;
-	Tue, 27 Feb 2024 18:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81DD25757;
+	Tue, 27 Feb 2024 18:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709058229; cv=none; b=MVdfaNMgnLD1NPOwgNMyM00s1N4jJE4mX3JBs4WwGZxnZ3f+8str2U3A79FaAUoXiYUIa7F5ui1sSrL8vE6Ug8d/9qJ10yqHLsBY1g6XqNS/D3oZJv4/w1IjY1sOoFM1LBBdnw4ULlPQXFeUAIKu17Ftv1F2L0xEnwHi6a2Ke80=
+	t=1709058252; cv=none; b=J6eSSz70P07fRKcRGOq8n2fckHfVqXAR1dPfhIXmDi/kntChZmZ9NRG5GAfT74qiwO1ZXU9mrYATh5Up/7yctP6WPmOyRKQJ7NW1wEEjrXYffWABvFcZy+rDl9ZhCpo60OWplYSrY8L2T1Q5l1jGECy2xZpFytACTM1k+dBQl6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709058229; c=relaxed/simple;
-	bh=wXeL6xRn84YW+yVox2D0U7SPKqNkdMbmGVqHUOm4hqY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NjXNIub1ojYGycLzAbJQbbmnKjMINAW6x1pGY2Al/ZZajGBZAqLYbywFHKAKYLyXVNtyMx6giexUZCQ1FFetxX4hElFMH2mLAT63Q3sahS96CYOzsh7nQhPqvEirHDmO/chwbk4Mz/ZzhqK3WhV07R+ARm65iEnNUi8A+UresL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWCE4U4d; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709058252; c=relaxed/simple;
+	bh=cDF3mXGEW5pin9U2a6M5esBI1SUIsMfuCrh97q573Lk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V+g9buXC7WK7xCPErO9vGORkIPqZplmJJFgbvw1nBRmaU/rSUW3Trcf6TCXkV6J4Pca/+OpcTjF4evBc2NBBn4A0sRfirtWDxpjpinomPX7s2pS8+Cu96L5zXgcbRtQ63j706r7YGpY1AYYQBtWVXyNzCUEOwUXGKEDutrYhupM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bA1hRpnB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWCE4U4d"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso4979883a12.3;
-        Tue, 27 Feb 2024 10:23:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709058226; x=1709663026; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wXeL6xRn84YW+yVox2D0U7SPKqNkdMbmGVqHUOm4hqY=;
-        b=OWCE4U4d1+dc55OhhBca0DGlsd9N4L1r86dJfdV6J+GjO/dD2bJ6tKdT5bZ7AeppYt
-         obazORb7F7kf+Qkej8dVFLWUuSFmJ2ME7B8JMn2sON2qhGvxLDfG9vhhVWQA4tH1JAE2
-         0A+vq+8i74e9rLVITvvmhCyykAMhLUgRoQ3vAMUu5uIKkWx2Fo0zRs5KaTT2BsvqI3Cy
-         Xyjy6Pt1daMRDjtIy8Luhl2RevndHHO79RGSmR4cRt2VKHD7OUpQn5BtgbI65A3y2Maz
-         Bnv9EhMw3oF51Syo+N7OF08IWJc6trZuID3JJfsTezol0JfG5HqUX0/VUOz2vV782oeH
-         48MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709058226; x=1709663026;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wXeL6xRn84YW+yVox2D0U7SPKqNkdMbmGVqHUOm4hqY=;
-        b=G/8txCYFarU9g3403+1B08TqCdzjQzchYD0u0SU7tqPTMG95wKKCTawkuhxMhmj8UW
-         Xvli7dnxFGQ2SRqgr8/zZZxV0MXRdvpWMdkbd0pgxJdo4K2DqSQlCvQVEdqk8ydhsSYE
-         w1c13aFGIl8pIY6wZ3Vbow+WHeSOdOQse63G4YOgz+h/lZJKSKaeNr9PzUkUzoKNbpzJ
-         wTOi/Ldaax8tcm5UfTv43Pd9SUjLFu1EzlmykO+Lrz9m2jUCJdC+SLe2kZk3ulAwWR59
-         AhuqE8lswmujz8xMXsv4B2WIhZBAFKQ/Rwn7k6eyGUGdCLAPlhzCoUe+NyEAVPLNIAVm
-         24Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCXht517tNM7lewtb+BrHIrUUldz1AumaW0EobyhYpxnVLjalP8JIJlByLYhqunLxhoFmnausLPfkxvMx73qbpvYfKKgMnIWw+64ZAmPhP9smZz6ocMD7iGbr1ijcEz/sOTT7j1XSIgf+0a21uNK
-X-Gm-Message-State: AOJu0Yy7FiQ7VmH6qdEj6vP5u9G8nhfhXvBDVA9SEOs20VOCPwz1AnWf
-	9vNQSthiNxZgD7g1mvR44ICxoG70gpEFFm8YqSFLNfsKO6GSIroAt32xxpIvaZ8BnNlflQqsKOQ
-	4nNWu59P4/fyTBc3YdPsBAwI/YMyN2xbC1j0ZEg==
-X-Google-Smtp-Source: AGHT+IGrAmqMg8fWhmS7yIJja0CR7J8G/1TxTj98sEPqZYocLYGLvz+cuN3UIYHjYR7ZvhzVbIV4LoTflOXek003zkA=
-X-Received: by 2002:a17:906:1e93:b0:a3f:6942:a213 with SMTP id
- e19-20020a1709061e9300b00a3f6942a213mr7010301ejj.32.1709058226431; Tue, 27
- Feb 2024 10:23:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bA1hRpnB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB4AC433C7;
+	Tue, 27 Feb 2024 18:24:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709058252;
+	bh=cDF3mXGEW5pin9U2a6M5esBI1SUIsMfuCrh97q573Lk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bA1hRpnBJ3qCAhZXhUlSgF8QuX7KuxIqPL/kQnsGozEYJ3SfUi3/yApOT+QLPA9za
+	 TfYOGP9Y5Tdu6SlJ2yCBjSfLsFjYjme/PQZZWNfQL4Ftut0SpK2HDdBMKzEy/whZa3
+	 PDuoNZxsv34B9Z3u49bMxr8csHUfS4SqVGjk+EIbSwWHUUSV+usGwyALtb7SV1jh15
+	 IUspdokrAhaTrbwRawkGlPhjLjv/t2/LxG5tO3WdDSJZytnWzupKbQ62WzUPDh8R4Q
+	 W9med3/S8RjdcL5uAJc3GyqPEtV/XmdMn5xZmVah/XRnwckx/iIUNTvyVa14sK0/9H
+	 QIQp6amHKLdMQ==
+Date: Tue, 27 Feb 2024 18:24:06 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	linux-riscv@lists.infradead.org, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, rust-for-linux@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v2 2/3] scripts: generate_rust_target: enable building on
+ RISC-V
+Message-ID: <20240227-aside-limeade-497fb182a5bd@spud>
+References: <20240223-employee-pessimism-03ba0b58db6b@spud>
+ <CANiq72ngEZskjH0f=8+cJuQsFTK227bGCxe5G0STMHuPbZYnXg@mail.gmail.com>
+ <20240227-resolved-deceit-4a59a6af5b71@wendy>
+ <CANiq72mwM+4Oh-H5WmRoqQ_nE1w-eJ1wn-nEwS=BR9JRwzxMMQ@mail.gmail.com>
+ <20240227-glove-underwire-f562a56cf2c7@wendy>
+ <CANiq72=f03_bw9B8ww8UxHkVyP2F7ZPyvC+KWCyhO3Nk1yqdaw@mail.gmail.com>
+ <20240227-swarm-serpent-2010b255f68a@wendy>
+ <CANiq72=69uBBhKMrw5P8K6eDHPiwAw_Oj8g1aYcywEYhhUG8OA@mail.gmail.com>
+ <20240227-timothy-jailbreak-01a9c29f3607@spud>
+ <CANiq72kQ8===wFLQNCR-XAo9KdtPr44UKvyi2074J88vh3kvyg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240207143825.986-1-lukas.bulwahn@gmail.com> <20240227154424.GB15319@lst.de>
-In-Reply-To: <20240227154424.GB15319@lst.de>
-From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date: Tue, 27 Feb 2024 19:23:36 +0100
-Message-ID: <CAKXUXMxctfDVt=+UHNrFfQFMhRitiQVQ1DBu-X0gtuM-WZYJgA@mail.gmail.com>
-Subject: Re: [PATCH] dma-contiguous: remove debug code to removed CONFIG_CMA_DEBUG
-To: Christoph Hellwig <hch@lst.de>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev, 
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="D1EopDYvcEeT6CSG"
+Content-Disposition: inline
+In-Reply-To: <CANiq72kQ8===wFLQNCR-XAo9KdtPr44UKvyi2074J88vh3kvyg@mail.gmail.com>
+
+
+--D1EopDYvcEeT6CSG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024 at 4:44=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrot=
-e:
->
-> Thanks,
->
-> added to the dma-mapping for-next branch.
->
+On Tue, Feb 27, 2024 at 07:11:17PM +0100, Miguel Ojeda wrote:
+> On Tue, Feb 27, 2024 at 6:48=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
+rote:
 
-Christoph, please drop this patch in your for-next branch if possible.
+> For instance, to disable the compressed instructions, from what I can
+> tell, the flag I mentioned seems to work, so that is fine.
 
-Andrew has picked this patch already and squashed it together with the
-commit "mm/cma: drop CONFIG_CMA_DEBUG" in the mm tree. So, you do not
-need to add it anymore.
+To me, using flags is a good fit given that's what we do elsewhere,
+and there won't be a mix of stuff that is done conditionally in a
+script and conditionally in a Makefile.
 
-Lukas
+> However,
+> for something like tweaking the data layout for `n64` instead of
+> `n32:64`, I am not aware of a way to do so via a flag (but I see newer
+> LLVM uses `n32:64`, so that may be the better one anyway:
+> https://godbolt.org/z/Eh4cfdeMr).
+
+Yeah, I had looked at the blame for the targets earlier today and
+noticed that it had been changed. Sadly rustc's commit is lacking
+any justification whatsoever for the change, so I was not going to
+really comment on that until I had looked.
+
+> So it all depends on whether you are happy with what the flags
+> approach already give you.
+>=20
+> I hope that clarifies a bit!
+
+Ye, thanks. I'll give it a go when I have a bit of time this week.
+
+--D1EopDYvcEeT6CSG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd4oxgAKCRB4tDGHoIJi
+0tm5AQDR5I+m1Asy6DGQhAa4NBVf8TGEm4mWhvmKqUunPVp7UAD/Uv/pYmT+0Zzr
+j8fw2SaUOY4F5yKafkbQHmmA9iYdZQQ=
+=qBac
+-----END PGP SIGNATURE-----
+
+--D1EopDYvcEeT6CSG--
