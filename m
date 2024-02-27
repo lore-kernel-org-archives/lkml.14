@@ -1,694 +1,179 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD7E55E72;
-	Tue, 27 Feb 2024 07:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7907A52F92;
+	Tue, 27 Feb 2024 07:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709020263; cv=none; b=BNe3VrkiHZTOhUvKr6XtL/U3ut7DN7YTy6cHjJBevXZmrVCuFOS7SDGjQ8kDl2iYjjXrBLH35cB+sRJs/DZeFKlm8ZJKL1tzixVoKJf9fqyrSbl/BDk12Zqz/yAQb3xVQrg/1bj5a5gJs9jIa/Lioi2IyP7JIriWfGriXVC/U/I=
+	t=1709020312; cv=none; b=BXmDxCV9bdlEaCfh+WRSw5AW0slddfXdVtchcQ2L3y9M1xJKO+lnfoNIpmSI8ElGtwk/ZBJuUNLw3acQg71DOGMWZ57EZ/ZYhpnyuaPJcNKPtGWiCqVcmj+bJhKV9Yw4FUcjGTAuS/Rie5EsKe3FJx5HhL8iv3MDBVzCF+SDt34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709020263; c=relaxed/simple;
-	bh=MSOJ8ZFDhKFgkirQrVH/2GJCpiRPNubVm7xYZjelF1Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DqCaXiJTYCE2bPwL+PJfMxmvueQeBPM/GiuSok/hJL/UOIamc0N1nx5PPbCJLTW0lZRYXOPEEYCl5b/zHcntSBjWAN2T8I2bam4THbyRqaNex3jv2gNoDoL4ENvDRXuy3vArVlY8c9lI+b0mLcLEhLyj7xfT3NqzeVMSl9/W9v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fVLDMNd5; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVLDMNd5"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1dcad814986so11891135ad.0;
-        Mon, 26 Feb 2024 23:51:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709020261; x=1709625061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r2VYVXJnj9cKclestkfNf6hcU+oqGaERfKkHy/xWa9k=;
-        b=fVLDMNd5+BRTIiN1sAp1cqenMgOMUt5Vt4ecB5o84hZz1fYhA8Kg5jRMep9oJxnNmo
-         XYJm86mFMP4kRKxOuTCqOQG/KAHVlnDPyTnWNMD8Kgsan4PRP2iXKYgRwqASZ6MzJ9/k
-         DI7KPQyQLyZJMzA6criaTN8lHYR3tOAcI8dii6+ZLV4Mja55nVne8iHMaSrU1tDwfw+I
-         D671mHPkfYOwfsqR6B5nLf7zmJuBHOqBuHPhy+RCH6ir7d38ev6yepwCG9/IQXANKwUL
-         Vv1XjIRO2C8PEyK22g4ZfV8Nr8rt4axLElxJYGFmK22r7ZM0wekmsy/hzatFazEeVDjN
-         kyGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709020261; x=1709625061;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r2VYVXJnj9cKclestkfNf6hcU+oqGaERfKkHy/xWa9k=;
-        b=ZeInfXwrLPlY/W9QXaxCwfkiwwnipwH34mGsqanbwpLzT9OuFdK3AJGJFaqOGY69aJ
-         MiYBiwkNUlbn52/TOjxtdD1yUh7rc/LBkIQu7O6stGpzQp6Q/EX0GUSKYX03A8/mf4yt
-         G3PwlnKQA+qRr/7iqh1ZTU3/FgmX3HBYhstwi/v2SE3ctdSqSvkK8aM13pMvsfJIQx5/
-         EJpdJUKlfFVamgIkxfTfK8m3bqfsCy7UDdwKnzXjzZvg4pgnIS8UiTmRv2pcHS3ghcVL
-         gIyeXstSUVDxDvgQ7H1O2noSfFczMt2vQ4jgubN2RBeC/MX80xApUn1nL/OiPTe18jKg
-         OiEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkvzNyJClCGl+R7vcH3WyIXy/T1Ti4jPVZ8ukqAi41xg2JRDoN4MRog+m4qpBG8HT2hSUnABH21HODdQ8xsmTmoIkRjTonk1pSBtwgwjWZuXl9qEVZPNr8A78+DD4J+9hVDpDR9ovCug==
-X-Gm-Message-State: AOJu0Ywr85veql6WBYNjjusgX34T7dgTuis2tKZdLOT/K0LduBv6zInJ
-	labyKyE2lziVafl4k/6ldvOP+H9p208c3bRt6bf0P62DTvYr9qq/
-X-Google-Smtp-Source: AGHT+IHJkGnDC/kKrOo5Q6JHbF0bAE2OAkej8TjluSp9sJRo5Ivq7jx8HJkWBzaRXADQiycTobfnCQ==
-X-Received: by 2002:a17:903:1246:b0:1dc:2f2e:139f with SMTP id u6-20020a170903124600b001dc2f2e139fmr12523357plh.39.1709020261048;
-        Mon, 26 Feb 2024 23:51:01 -0800 (PST)
-Received: from localhost.localdomain (125-229-150-10.hinet-ip.hinet.net. [125.229.150.10])
-        by smtp.gmail.com with ESMTPSA id ja13-20020a170902efcd00b001dc8db3150asm892658plb.199.2024.02.26.23.50.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 23:51:00 -0800 (PST)
-From: Kelly Hung <ppighouse@gmail.com>
-X-Google-Original-From: Kelly Hung <Kelly_Hung@asus.com>
-To: robh+dt@kernel.org
-Cc: krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	joel@jms.id.au,
-	andrew@codeconstruct.com.au,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org,
-	kelly_hung@asus.com,
-	Allenyy_Hsu@asus.com,
-	Kelly Hung <Kelly_Hung@asus.com>
-Subject: [PATCH v3 2/2] ARM: dts: aspeed: x4tf: Add dts for asus x4tf project
-Date: Tue, 27 Feb 2024 15:50:51 +0800
-Message-Id: <20240227075051.1577877-2-Kelly_Hung@asus.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240227075051.1577877-1-Kelly_Hung@asus.com>
-References: <20240227075051.1577877-1-Kelly_Hung@asus.com>
+	s=arc-20240116; t=1709020312; c=relaxed/simple;
+	bh=TFqOwc2aOQP4CIgMGbjw84ou/9XfyykH27j7p3Ed0r0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aLHfmgjQ7H+T98xk+6DLYRSuq89iARjQzo6zea5gRmeWERubGK6yeR50hzFy0qMuR8PV3M+emYhCKifh0R42j5NMH0EhUQNkhb+DlQG4SD5WBaSG2/hl5ujXu1nxo5k3CX/rIrbXecyMMbZkEX2ZmNY8WENd37QjAF/+dkGI70o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TkV4W6FSlz1h0B8;
+	Tue, 27 Feb 2024 15:49:31 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id B24E71400F4;
+	Tue, 27 Feb 2024 15:51:45 +0800 (CST)
+Received: from [10.174.177.174] (10.174.177.174) by
+ dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 27 Feb 2024 15:51:45 +0800
+Message-ID: <d957454e-6516-f7e5-57fb-63f4687325ed@huawei.com>
+Date: Tue, 27 Feb 2024 15:51:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH] ext4: fix uninitialized ratelimit_state->lock access in
+ __ext4_fill_super()
+To: <linux-ext4@vger.kernel.org>
+CC: <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <jack@suse.cz>,
+	<ritesh.list@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, <yukuai3@huawei.com>, Baokun
+ Li <libaokun1@huawei.com>
+References: <20240102133730.1098120-1-libaokun1@huawei.com>
+Content-Language: en-US
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <20240102133730.1098120-1-libaokun1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
-Base on aspeed-g6.dtsi and can boot into BMC console.
+A gentle ping.
 
-Signed-off-by: Kelly Hung <Kelly_Hung@asus.com>
----
- arch/arm/boot/dts/aspeed/Makefile             |   1 +
- .../boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts  | 581 ++++++++++++++++++
- 2 files changed, 582 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts
+On 2024/1/2 21:37, Baokun Li wrote:
+> In the following concurrency we will access the uninitialized rs->lock:
+>
+> ext4_fill_super
+>    ext4_register_sysfs
+>     // sysfs registered msg_ratelimit_interval_ms
+>                               // Other processes modify rs->interval to
+>                               // non-zero via msg_ratelimit_interval_ms
+>    ext4_orphan_cleanup
+>      ext4_msg(sb, KERN_INFO, "Errors on filesystem, "
+>        __ext4_msg
+>          ___ratelimit(&(EXT4_SB(sb)->s_msg_ratelimit_state)
+>            if (!rs->interval)  // do nothing if interval is 0
+>              return 1;
+>            raw_spin_trylock_irqsave(&rs->lock, flags)
+>              raw_spin_trylock(lock)
+>                _raw_spin_trylock
+>                  __raw_spin_trylock
+>                    spin_acquire(&lock->dep_map, 0, 1, _RET_IP_)
+>                      lock_acquire
+>                        __lock_acquire
+>                          register_lock_class
+>                            assign_lock_key
+>                              dump_stack();
+>    ratelimit_state_init(&sbi->s_msg_ratelimit_state, 5 * HZ, 10);
+>      raw_spin_lock_init(&rs->lock);
+>      // init rs->lock here
+>
+> and get the following dump_stack:
+>
+> =========================================================
+> INFO: trying to register non-static key.
+> The code is fine but needs lockdep annotation, or maybe
+> you didn't initialize this object before use?
+> turning off the locking correctness validator.
+> CPU: 12 PID: 753 Comm: mount Tainted: G E 6.7.0-rc6-next-20231222 #504
+> [...]
+> Call Trace:
+>   dump_stack_lvl+0xc5/0x170
+>   dump_stack+0x18/0x30
+>   register_lock_class+0x740/0x7c0
+>   __lock_acquire+0x69/0x13a0
+>   lock_acquire+0x120/0x450
+>   _raw_spin_trylock+0x98/0xd0
+>   ___ratelimit+0xf6/0x220
+>   __ext4_msg+0x7f/0x160 [ext4]
+>   ext4_orphan_cleanup+0x665/0x740 [ext4]
+>   __ext4_fill_super+0x21ea/0x2b10 [ext4]
+>   ext4_fill_super+0x14d/0x360 [ext4]
+> [...]
+> =========================================================
+>
+> Normally interval is 0 until s_msg_ratelimit_state is initialized, so
+> ___ratelimit() does nothing. But registering sysfs precedes initializing
+> rs->lock, so it is possible to change rs->interval to a non-zero value
+> via the msg_ratelimit_interval_ms interface of sysfs while rs->lock is
+> uninitialized, and then a call to ext4_msg triggers the problem by
+> accessing an uninitialized rs->lock. Therefore register sysfs after all
+> initializations are complete to avoid such problems.
+>
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> ---
+>   fs/ext4/super.c | 22 ++++++++++------------
+>   1 file changed, 10 insertions(+), 12 deletions(-)
+>
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 0980845c8b8f..1db23b0e8a4f 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -5564,19 +5564,15 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+>   	if (err)
+>   		goto failed_mount6;
+>   
+> -	err = ext4_register_sysfs(sb);
+> -	if (err)
+> -		goto failed_mount7;
+> -
+>   	err = ext4_init_orphan_info(sb);
+>   	if (err)
+> -		goto failed_mount8;
+> +		goto failed_mount7;
+>   #ifdef CONFIG_QUOTA
+>   	/* Enable quota usage during mount. */
+>   	if (ext4_has_feature_quota(sb) && !sb_rdonly(sb)) {
+>   		err = ext4_enable_quotas(sb);
+>   		if (err)
+> -			goto failed_mount9;
+> +			goto failed_mount8;
+>   	}
+>   #endif  /* CONFIG_QUOTA */
+>   
+> @@ -5602,7 +5598,7 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+>   		ext4_msg(sb, KERN_INFO, "recovery complete");
+>   		err = ext4_mark_recovery_complete(sb, es);
+>   		if (err)
+> -			goto failed_mount10;
+> +			goto failed_mount9;
+>   	}
+>   
+>   	if (test_opt(sb, DISCARD) && !bdev_max_discard_sectors(sb->s_bdev))
+> @@ -5619,15 +5615,17 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+>   	atomic_set(&sbi->s_warning_count, 0);
+>   	atomic_set(&sbi->s_msg_count, 0);
+>   
+> +	/* Register sysfs after all initializations are complete. */
+> +	err = ext4_register_sysfs(sb);
+> +	if (err)
+> +		goto failed_mount9;
+> +
+>   	return 0;
+>   
+> -failed_mount10:
+> +failed_mount9:
+>   	ext4_quotas_off(sb, EXT4_MAXQUOTAS);
+> -failed_mount9: __maybe_unused
+> +failed_mount8: __maybe_unused
+>   	ext4_release_orphan_info(sb);
+> -failed_mount8:
+> -	ext4_unregister_sysfs(sb);
+> -	kobject_put(&sbi->s_kobj);
+>   failed_mount7:
+>   	ext4_unregister_li_request(sb);
+>   failed_mount6:
 
-diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
-index d3ac20e31..32c41f3d9 100644
---- a/arch/arm/boot/dts/aspeed/Makefile
-+++ b/arch/arm/boot/dts/aspeed/Makefile
-@@ -10,6 +10,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-arm-stardragon4800-rep2.dtb \
- 	aspeed-bmc-asrock-e3c246d4i.dtb \
- 	aspeed-bmc-asrock-romed8hm3.dtb \
-+	aspeed-bmc-asus-x4tf.dtb \
- 	aspeed-bmc-bytedance-g220a.dtb \
- 	aspeed-bmc-delta-ahe50dc.dtb \
- 	aspeed-bmc-facebook-bletchley.dtb \
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts
-new file mode 100644
-index 000000000..7bf23f395
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts
-@@ -0,0 +1,581 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright 2024 ASUS Corp.
-+
-+/dts-v1/;
-+
-+#include "aspeed-g6.dtsi"
-+#include "aspeed-g6-pinctrl.dtsi"
-+#include <dt-bindings/i2c/i2c.h>
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "ASUS-X4TF";
-+	compatible = "asus,x4tf-bmc", "aspeed,ast2600";
-+
-+	aliases {
-+		serial4 = &uart5;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial4:115200n8";
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x40000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		video_engine_memory: video {
-+			size = <0x04000000>;
-+			alignment = <0x01000000>;
-+			compatible = "shared-dma-pool";
-+			reusable;
-+		};
-+	};
-+
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc0 0>, <&adc0 1>, <&adc0 2>, <&adc0 3>,
-+				<&adc0 4>, <&adc0 5>, <&adc0 6>, <&adc0 7>,
-+				<&adc1 0>, <&adc1 1>, <&adc1 2>, <&adc1 3>,
-+				<&adc1 4>, <&adc1 5>, <&adc1 6>, <&adc1 7>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-heartbeat {
-+			gpios = <&gpio0 ASPEED_GPIO(P, 7) GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led-uid {
-+			gpios = <&gpio0 ASPEED_GPIO(P, 1) (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-+			default-state = "off";
-+		};
-+
-+		led-status_Y {
-+			gpios = <&gpio1 ASPEED_GPIO(B, 1) GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		led-sys_boot_status {
-+			gpios = <&gpio1 ASPEED_GPIO(B, 0) GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&adc0 {
-+	vref = <2500>;
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default &pinctrl_adc1_default
-+		&pinctrl_adc2_default &pinctrl_adc3_default
-+		&pinctrl_adc4_default &pinctrl_adc5_default
-+		&pinctrl_adc6_default &pinctrl_adc7_default>;
-+};
-+
-+&adc1 {
-+	vref = <2500>;
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc8_default &pinctrl_adc9_default
-+		&pinctrl_adc10_default &pinctrl_adc11_default
-+		&pinctrl_adc12_default &pinctrl_adc13_default
-+		&pinctrl_adc14_default &pinctrl_adc15_default>;
-+};
-+
-+&peci0 {
-+	status = "okay";
-+};
-+
-+&lpc_snoop {
-+	snoop-ports = <0x80>;
-+	status = "okay";
-+};
-+
-+&mac2 {
-+	status = "okay";
-+	phy-mode = "rmii";
-+	use-ncsi;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii3_default>;
-+};
-+
-+&mac3 {
-+	status = "okay";
-+	phy-mode = "rmii";
-+	use-ncsi;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii4_default>;
-+};
-+
-+&fmc {
-+	status = "okay";
-+
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "bmc";
-+		spi-max-frequency = <50000000>;
-+#include "openbmc-flash-layout-64.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+
-+	flash@0 {
-+		status = "okay";
-+		label = "bios";
-+		spi-max-frequency = <50000000>;
-+	};
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+
-+	temperature-sensor@48 {
-+		compatible = "ti,tmp75";
-+		reg = <0x48>;
-+	};
-+
-+	temperature-sensor@49 {
-+		compatible = "ti,tmp75";
-+		reg = <0x49>;
-+	};
-+
-+	pca9555_4_20: gpio@20 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	pca9555_4_22: gpio@22 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x22>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	pca9555_4_24: gpio@24 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x24>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names =
-+		/*A0 - A3 0*/	"", "STRAP_BMC_BATTERY_GPIO1", "", "",
-+		/*A4 - A7 4*/	"", "", "", "",
-+		/*B0 - B7 8*/	"", "", "", "", "", "", "", "";
-+	};
-+
-+	pca9555_4_26: gpio@26 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x26>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	i2c-mux@70 {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel_1: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		channel_2: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		channel_3: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_4: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+
-+	pca9555_5_24: gpio@24 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x24>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	i2c-mux@70  {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x70 >;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel_5: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			pca9555_5_5_20: gpio@20 {
-+				compatible = "nxp,pca9555";
-+				reg = <0x20>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio-line-names =
-+					"", "", "", "", "", "", "", "",
-+					"", "", "SYS_FAN6", "SYS_FAN5",
-+					"SYS_FAN4", "SYS_FAN3",
-+					"SYS_FAN2", "SYS_FAN1";
-+			};
-+
-+			pca9555_5_5_21: gpio@21 {
-+				compatible = "nxp,pca9555";
-+				reg = <0x21>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+			};
-+
-+			power-monitor@44 {
-+				compatible = "ti,ina219";
-+				reg = <0x44>;
-+				shunt-resistor = <2>;
-+			};
-+		};
-+
-+		channel_6: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		channel_7: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_8: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+
-+	pca9555_6_27: gpio@27 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x27>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	pca9555_6_20: gpio@20 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names =
-+		/*A0 0*/	"", "", "", "", "", "", "", "",
-+		/*B0 8*/	"Drive_NVMe1", "Drive_NVMe2", "", "",
-+		/*B4 12*/	"", "", "", "";
-+	};
-+
-+	pca9555_6_21: gpio@21 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x21>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+
-+	i2c-mux@70 {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		idle-state = <1>;
-+
-+		channel_9: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			temperature-sensor@48 {
-+				compatible = "ti,tmp75";
-+				reg = <0x48>;
-+			};
-+
-+			temperature-sensor@49 {
-+				compatible = "ti,tmp75";
-+				reg = <0x49>;
-+			};
-+
-+			power-monitor@40 {
-+				compatible = "ti,ina219";
-+				reg = <0x40>;
-+				shunt-resistor = <2>;
-+			};
-+
-+			power-monitor@41 {
-+				compatible = "ti,ina219";
-+				reg = <0x41>;
-+				shunt-resistor = <5>;
-+			};
-+		};
-+
-+		channel_10: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		channel_11: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_12: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+
-+	i2c-mux@71 {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x71>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;
-+
-+		channel_13: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		channel_14: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		channel_15: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_16: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+
-+	i2c-mux@70 {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;
-+
-+		channel_17: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		channel_18: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			temperature-sensor@48 {
-+				compatible = "ti,tmp75";
-+				reg = <0x48>;
-+			};
-+
-+			power-monitor@41 {
-+				compatible = "ti,ina219";
-+				reg = <0x41>;
-+				shunt-resistor = <5>;
-+			};
-+		};
-+
-+		channel_19: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_20: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+};
-+
-+&i2c14 {
-+	status = "okay";
-+	multi-master;
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c08";
-+		reg = <0x50>;
-+	};
-+
-+	eeprom@51 {
-+		compatible = "atmel,24c08";
-+		reg = <0x51>;
-+	};
-+};
-+
-+&sgpiom0 {
-+	status = "okay";
-+	ngpios = <128>;
-+};
-+
-+&video {
-+	status = "okay";
-+	memory-region = <&video_engine_memory>;
-+};
-+
-+&sdc {
-+	status = "okay";
-+};
-+
-+&lpc_snoop {
-+	status = "okay";
-+	snoop-ports = <0x80>;
-+};
-+
-+&kcs1 {
-+	aspeed,lpc-io-reg = <0xca0>;
-+	status = "okay";
-+};
-+
-+&kcs2 {
-+	aspeed,lpc-io-reg = <0xca8>;
-+	status = "okay";
-+};
-+
-+&kcs3 {
-+	aspeed,lpc-io-reg = <0xca2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&uart_routing {
-+	status = "okay";
-+};
-+
-+&vhub {
-+	status = "okay";
-+};
-+
-+&gpio0 {
-+	gpio-line-names =
-+	/*A0 0*/	"", "", "", "", "", "", "", "",
-+	/*B0 8*/	"", "", "", "", "", "", "PS_PWROK", "",
-+	/*C0 16*/	"", "", "", "", "", "", "", "",
-+	/*D0 24*/	"", "", "", "", "", "", "", "",
-+	/*E0 32*/	"", "", "", "", "", "", "", "",
-+	/*F0 40*/	"", "", "", "", "", "", "", "",
-+	/*G0 48*/	"", "", "", "", "", "", "", "",
-+	/*H0 56*/	"", "", "", "", "", "", "", "",
-+	/*I0 64*/	"", "", "", "", "", "", "", "",
-+	/*J0 72*/	"", "", "", "", "", "", "", "",
-+	/*K0 80*/	"", "", "", "", "", "", "", "",
-+	/*L0 88*/	"", "", "", "", "", "", "", "",
-+	/*M0 96*/	"", "", "", "", "", "", "", "",
-+	/*N0 104*/	"", "", "", "",
-+	/*N4 108*/	"POST_COMPLETE", "ESR1_GPIO_AST_SPISEL", "", "",
-+	/*O0 112*/	"", "", "", "", "", "", "", "",
-+	/*P0 120*/	"ID_BUTTON", "ID_OUT", "POWER_BUTTON", "POWER_OUT",
-+	/*P4 124*/	"RESET_BUTTON", "RESET_OUT", "", "HEARTBEAT",
-+	/*Q0 128*/	"", "", "", "", "", "", "", "",
-+	/*R0 136*/	"", "", "", "", "", "", "", "",
-+	/*S0 144*/	"", "", "", "", "", "", "", "",
-+	/*T0 152*/	"", "", "", "", "", "", "", "",
-+	/*U0 160*/	"", "", "", "", "", "", "", "",
-+	/*V0 168*/	"", "", "", "", "", "", "", "",
-+	/*W0 176*/	"", "", "", "", "", "", "", "",
-+	/*X0 184*/	"", "", "", "", "", "", "", "",
-+	/*Y0 192*/	"", "", "", "", "", "", "", "",
-+	/*Z0 200*/	"", "", "", "", "", "", "", "";
-+};
--- 
-2.25.1
 
