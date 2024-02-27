@@ -1,266 +1,151 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0B11487D3
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FCA149007
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709047184; cv=none; b=daY1RcXB1AJOo17GCNadDXZRXxt1g1MMjlR+StADVGkRGX2sNl8eRnVqt33w20z9cFVOp7NiO1j7uDTs4yPWdCoxtauoe/UMM24V1ht9zkLBSSkRkbByyd29mHf8n3o8F10UHm353jYJMlEcsUQIP+qZWzQbiJF9sPpCHFYb2+E=
+	t=1709047188; cv=none; b=cqkUuMVkOqYHJ1em+P/F4CMzgQgobASJtUOVXStg0eXSDiylca64g+dHfBBcCr4sUtAL+zlzwXF1/F4kffu/uQzxj3J3bi08YXaW2nzrk/RkyE1zWYb+RgIWIoTyOgSVmVj7yNkEHumywrliEIuzA0wiFi//7rM3LH5/tABuQq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709047184; c=relaxed/simple;
-	bh=6uCfH14imCu/66Z1+Fy+FGTIoV3qpsx11QnjUiEPzRU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LhJ1Qx1XfzwcfLmOL2nmoYvcPxbz/9nEE14KMQ54rmY0MSd6tDLu68s6K65Smz9LpoCDrjt/VtqkSRDfIHCXNdr6fWaRmt0BQqjj8yj29KprwHXwaoUZ3Z702ibx21+h2aRs8GTIks4HTPV2BzDA7QtrortBn88LaMs8o23ur7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XxXr6N5J; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1709047188; c=relaxed/simple;
+	bh=1eNIzp2hVyu86ifPWamS4GJF+6ehiaBwAfMIgJI98O0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tKw64lt+BwNI5Jas4od1AlsGkKkRw2XnSf3LXFCqkN34IlACQON2Kg/ESws72dAh11Eq1ii8jHmN+IlHZOsm4lrE6HjjQhNxx59LtVT0VpZeqg6TZempq9L6CqWVAD+8BjHapSo8+tY5ZrSKHwWL6UrCn7JINxayDbEFJl/aBGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aE64fVmN; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XxXr6N5J"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60810219282so52993047b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 07:19:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aE64fVmN"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-608c40666e0so31978797b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 07:19:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709047181; x=1709651981; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UkoA/X/6iL1vFPkw1X4qRiTS802RjEN54BVOjq0PpUU=;
-        b=XxXr6N5JFHCCCrMqDeowftOILg0K1Y02uPTFfPWmveqE+FnLjdTYBa78+9dj8E3iju
-         l4ttlpW8GZh3uyEzFDMbvRFSvODVu5+r2h8NgO6kXSSmuZrl28OJ2TBcuF6JQf+cLZKj
-         3azqSCnzYTPHP1xhnMCWm8NIpHH63X6NzN2+D3lMEEeZ3T2uPY1CQV7MhO+J14/Kj1Ik
-         uDGeGbPWYdx2bzrZ20PFhqL8z7f6sAC6kFEBEGRq7p9oi6hN4riioMh0K24/OIQ0N5ga
-         vQMv7xfZIvbHv4JBq/N+nzPxD/el9FxyNAt9F5UGjAk/kxEP6TIQ5Qp27O+tAP+bICC2
-         M0UQ==
+        d=linaro.org; s=google; t=1709047185; x=1709651985; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2SQHtHx9/7D+RJHlwNQ3ZmvXdbc7JG9vTHxtAChltzg=;
+        b=aE64fVmNGIjZhNMl20RnJ1Z2vNik3IIUBO1amccpbHT4pH8oEB8ulxHSOO2WoN4mLr
+         ADGwefDOnlhk8Fse/HYl12Woa+Utw+/A9hfexP96r2pmuYqRf4wJSZod4y5G0SGcmT4a
+         kj/+Pe0Dv6odiC7qWIGjLA9N9htLUbOZvTNxxc3xE3SCOj/jWnDWoZF7Y/iKzX9CRntn
+         gCeobmLT4nrL+zeuFT1Z3Jq/Psw5IgHaw7n2C615nTNK7jVcSCS5eo08ZzjpRBx0TSBk
+         DKH/pCCIeOlh6FUt8k672fmorGBEcqNlHU2bPsm01Jl5GOOd7CkCByoIXD8YQvxxV5dG
+         OpVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709047181; x=1709651981;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UkoA/X/6iL1vFPkw1X4qRiTS802RjEN54BVOjq0PpUU=;
-        b=VR/MdYSyozxz9jt31fZd3tb/XKe9V5Sj40G6VaW5QouBdDIQnJU3T7t4S3wbzMj8XF
-         n+pOUdNGoFS5ojLkjx5Lii8rhsEKdpTwvIUZjRmXixqqFrTUzMLCk6A5mpfFCc5UDopx
-         +AK+jcr5nrgnTRUUEjvoULjbEsQ5Do5XjU0NFyBqAdSbE70+4GGKDa8wIHcFMMw1fNPF
-         lfiW2YU6WyDiVQDtRHjV5NP7K+W5vVK5uIXXlF175kvZTHu59wr5GAu8U6x5b5Mts/vy
-         T9iUAzV6S3NCQE0ttqogRpy/m7YE0nStBRyTVPo+ilq71vgXJzm9NbFVVpN4TwJ8wx/u
-         ZrcA==
-X-Gm-Message-State: AOJu0Yxl8QoDupJmpysr/mI4b4Cojbp1vbieEl3I9D3FOOlqyjqvTBuN
-	cpigZIvZa3T/5Dp7rR6E15YxgHq52c1iafqlge60BO1XDAGh+JMbtVLpIPpPKq/CQLwvUNSEMDj
-	r49tgN1YAGglj6H9JYhqwbSF8NJC52obWZXQPzSp+TwFk2attCOdMtKe3qp3vLBq+36Z2JTMcRH
-	gJFQ+bH9sNmAWr2qI8usgcMuME/dko/g==
-X-Google-Smtp-Source: AGHT+IGDK2XBQSdveRnuxclAW+nINrx435sRojEoCnC21IFKS0zN/HBO3lLil/JoTpf1l6Z085EZo/OM
-X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
- (user=ardb job=sendgmr) by 2002:a05:6902:1889:b0:dc6:e20f:80cb with SMTP id
- cj9-20020a056902188900b00dc6e20f80cbmr97731ybb.3.1709047181682; Tue, 27 Feb
- 2024 07:19:41 -0800 (PST)
-Date: Tue, 27 Feb 2024 16:19:16 +0100
-In-Reply-To: <20240227151907.387873-11-ardb+git@google.com>
+        d=1e100.net; s=20230601; t=1709047185; x=1709651985;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2SQHtHx9/7D+RJHlwNQ3ZmvXdbc7JG9vTHxtAChltzg=;
+        b=Yk8v7l7O78Vg2enZ9LoCoNiLa35GtCsC+WnWGifCvRSj3hkcMGzTL8ewFtDM4oDZDP
+         +h4+3MucgPhhyHiMjI+7t/Og3jJ5BMbeH/rkoVZAI9hG9BBNj5k2fqRDv7E4wX6b3Gy5
+         zfbY3QUcEL42mm0Zhq8I/BBwYVhohNHyUPPL/ZyDIIO6P+tmQBLfOJUOQ5DjLCEWgWbG
+         D1isffDHCJarrAYjqeO2VE8qHfT3PR8UA0KIP5MIrgRGo47uDoyuDNQZyLvAUZseFTYJ
+         UZVyc7000Cqt5yeQIeYQ7Vx8CWLFVJf1CB7goKK6bfWD5UtW+bzw0sQ0d40pbXyRU0qK
+         zO5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUqSTigIxd9P0rWcFdYEyKeHyQOn/RWOTMcCoV3fBV4mzF9gEpbS+2Qeku7XswzoDYINlg+pIjk14SIj0JPL+p/tnZ9KfGiEfRTJgBY
+X-Gm-Message-State: AOJu0YxxDFgbW0HIec2ywzADl2R/BCLbpL4lsRukbp0xhuAybvcp7DAQ
+	nZ82AQe4l9K86Y0/DIav/im6ODbwNuj4qObYezCVUmTxdiOf3pWl81sjUf8E6d6Yu71NxkBHJxh
+	PaTP/U3viSsaHUgyMCyk019Tf/s+k6sbRagJoEA==
+X-Google-Smtp-Source: AGHT+IGb/gVl0DDdpeDrbG9O373vERg8t5XzgPbPswqg0c18k4mhJ043qddt56IRCGHrvdFkGSVOxmCdtVn3OngFE5w=
+X-Received: by 2002:a81:5d84:0:b0:609:23fd:a3b5 with SMTP id
+ r126-20020a815d84000000b0060923fda3b5mr2212466ywb.40.1709047184552; Tue, 27
+ Feb 2024 07:19:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240227151907.387873-11-ardb+git@google.com>
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Message-ID: <20240227151907.387873-19-ardb+git@google.com>
-Subject: [PATCH v7 8/9] x86/sev: Move early startup code into .head.text section
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Dionna Glaze <dionnaglaze@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Brian Gerst <brgerst@gmail.com>
+MIME-Version: 1.0
+References: <20240221-b4-mmc-hi3798mv200-v6-0-bc41bf6a9769@outlook.com>
+In-Reply-To: <20240221-b4-mmc-hi3798mv200-v6-0-bc41bf6a9769@outlook.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 27 Feb 2024 16:19:08 +0100
+Message-ID: <CAPDyKFoq=MXVdUP9hqMgOYN84aog1htYeWQzd9v0vWcU-TfVdQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/5] mmc: add hi3798mv200 specific extensions of DWMMC
+To: forbidden405@outlook.com
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Joel Stanley <joel@jms.id.au>, Igor Opaniuk <igor.opaniuk@linaro.org>, 
+	tianshuliang <tianshuliang@hisilicon.com>, David Yang <mmyangfl@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On Wed, 21 Feb 2024 at 13:45, Yang Xiwen via B4 Relay
+<devnull+forbidden405.outlook.com@kernel.org> wrote:
+>
+> it's modified from hi3798cv200 driver, but quite a lot of code gets
+> rewritten because of the hardware differences. Actually cv200 DWMMC core
+> is called HIMCIV200 while mv200 DWMMC core is called HIMCIV300 in
+> downstream.
+>
+> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 
-In preparation for implementing rigorous build time checks to enforce
-that only code that can support it will be called from the early 1:1
-mapping of memory, move SEV init code that is called in this manner to
-the .head.text section.
+Please re-order the patches in the series so the changes to the DT
+bindings come prior to the driver changes that use the new bindings.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/boot/compressed/sev.c |  3 +++
- arch/x86/include/asm/sev.h     | 10 ++++-----
- arch/x86/kernel/sev-shared.c   | 23 +++++++++-----------
- arch/x86/kernel/sev.c          | 14 +++++++-----
- 4 files changed, 26 insertions(+), 24 deletions(-)
+Other than the above and the few comments I had on patch3, this looks
+good to me.
 
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 073291832f44..bea0719d70f2 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -116,6 +116,9 @@ static bool fault_in_kernel_space(unsigned long address)
- #undef __init
- #define __init
- 
-+#undef __head
-+#define __head
-+
- #define __BOOT_COMPRESSED
- 
- /* Basic instruction decoding support needed */
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index bed95e1f4d52..cf671138feef 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -213,16 +213,16 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
- struct snp_guest_request_ioctl;
- 
- void setup_ghcb(void);
--void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
--					 unsigned long npages);
--void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
--					unsigned long npages);
-+void early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
-+				  unsigned long npages);
-+void early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
-+				 unsigned long npages);
- void __init snp_prep_memory(unsigned long paddr, unsigned int sz, enum psc_op op);
- void snp_set_memory_shared(unsigned long vaddr, unsigned long npages);
- void snp_set_memory_private(unsigned long vaddr, unsigned long npages);
- void snp_set_wakeup_secondary_cpu(void);
- bool snp_init(struct boot_params *bp);
--void __init __noreturn snp_abort(void);
-+void __noreturn snp_abort(void);
- int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct snp_guest_request_ioctl *rio);
- void snp_accept_memory(phys_addr_t start, phys_addr_t end);
- u64 snp_get_unsupported_features(u64 status);
-diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-index ae79f9505298..0bd7ccbe8732 100644
---- a/arch/x86/kernel/sev-shared.c
-+++ b/arch/x86/kernel/sev-shared.c
-@@ -93,7 +93,8 @@ static bool __init sev_es_check_cpu_features(void)
- 	return true;
- }
- 
--static void __noreturn sev_es_terminate(unsigned int set, unsigned int reason)
-+static void __head __noreturn
-+sev_es_terminate(unsigned int set, unsigned int reason)
- {
- 	u64 val = GHCB_MSR_TERM_REQ;
- 
-@@ -330,13 +331,7 @@ static int sev_cpuid_hv(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid
-  */
- static const struct snp_cpuid_table *snp_cpuid_get_table(void)
- {
--	void *ptr;
--
--	asm ("lea cpuid_table_copy(%%rip), %0"
--	     : "=r" (ptr)
--	     : "p" (&cpuid_table_copy));
--
--	return ptr;
-+	return &RIP_REL_REF(cpuid_table_copy);
- }
- 
- /*
-@@ -395,7 +390,7 @@ static u32 snp_cpuid_calc_xsave_size(u64 xfeatures_en, bool compacted)
- 	return xsave_size;
- }
- 
--static bool
-+static bool __head
- snp_cpuid_get_validated_func(struct cpuid_leaf *leaf)
- {
- 	const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
-@@ -532,7 +527,8 @@ static int snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
-  * Returns -EOPNOTSUPP if feature not enabled. Any other non-zero return value
-  * should be treated as fatal by caller.
-  */
--static int snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
-+static int __head
-+snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
- {
- 	const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
- 
-@@ -574,7 +570,7 @@ static int snp_cpuid(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_le
-  * page yet, so it only supports the MSR based communication with the
-  * hypervisor and only the CPUID exit-code.
-  */
--void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
-+void __head do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
- {
- 	unsigned int subfn = lower_bits(regs->cx, 32);
- 	unsigned int fn = lower_bits(regs->ax, 32);
-@@ -1025,7 +1021,8 @@ struct cc_setup_data {
-  * Search for a Confidential Computing blob passed in as a setup_data entry
-  * via the Linux Boot Protocol.
-  */
--static struct cc_blob_sev_info *find_cc_blob_setup_data(struct boot_params *bp)
-+static __head
-+struct cc_blob_sev_info *find_cc_blob_setup_data(struct boot_params *bp)
- {
- 	struct cc_setup_data *sd = NULL;
- 	struct setup_data *hdr;
-@@ -1052,7 +1049,7 @@ static struct cc_blob_sev_info *find_cc_blob_setup_data(struct boot_params *bp)
-  * mapping needs to be updated in sync with all the changes to virtual memory
-  * layout and related mapping facilities throughout the boot process.
-  */
--static void __init setup_cpuid_table(const struct cc_blob_sev_info *cc_info)
-+static void __head setup_cpuid_table(const struct cc_blob_sev_info *cc_info)
- {
- 	const struct snp_cpuid_table *cpuid_table_fw, *cpuid_table;
- 	int i;
-diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index 1ef7ae806a01..33c14aa1f06c 100644
---- a/arch/x86/kernel/sev.c
-+++ b/arch/x86/kernel/sev.c
-@@ -25,6 +25,7 @@
- #include <linux/psp-sev.h>
- #include <uapi/linux/sev-guest.h>
- 
-+#include <asm/init.h>
- #include <asm/cpu_entry_area.h>
- #include <asm/stacktrace.h>
- #include <asm/sev.h>
-@@ -682,8 +683,9 @@ static u64 __init get_jump_table_addr(void)
- 	return ret;
- }
- 
--static void early_set_pages_state(unsigned long vaddr, unsigned long paddr,
--				  unsigned long npages, enum psc_op op)
-+static void __head
-+early_set_pages_state(unsigned long vaddr, unsigned long paddr,
-+		      unsigned long npages, enum psc_op op)
- {
- 	unsigned long paddr_end;
- 	u64 val;
-@@ -739,7 +741,7 @@ static void early_set_pages_state(unsigned long vaddr, unsigned long paddr,
- 	sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PSC);
- }
- 
--void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
-+void __head early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
- 					 unsigned long npages)
- {
- 	/*
-@@ -2062,7 +2064,7 @@ bool __init handle_vc_boot_ghcb(struct pt_regs *regs)
-  *
-  * Scan for the blob in that order.
-  */
--static __init struct cc_blob_sev_info *find_cc_blob(struct boot_params *bp)
-+static __head struct cc_blob_sev_info *find_cc_blob(struct boot_params *bp)
- {
- 	struct cc_blob_sev_info *cc_info;
- 
-@@ -2088,7 +2090,7 @@ static __init struct cc_blob_sev_info *find_cc_blob(struct boot_params *bp)
- 	return cc_info;
- }
- 
--bool __init snp_init(struct boot_params *bp)
-+bool __head snp_init(struct boot_params *bp)
- {
- 	struct cc_blob_sev_info *cc_info;
- 
-@@ -2110,7 +2112,7 @@ bool __init snp_init(struct boot_params *bp)
- 	return true;
- }
- 
--void __init __noreturn snp_abort(void)
-+void __head __noreturn snp_abort(void)
- {
- 	sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
- }
--- 
-2.44.0.rc1.240.g4c46232300-goog
+Kind regards
+Uffe
 
+
+> ---
+> Changes in v6:
+> - apply the comments to the first patch, add their trailers
+> - Link to v5: https://lore.kernel.org/r/20240220-b4-mmc-hi3798mv200-v5-0-f506c55f8e43@outlook.com
+>
+> Changes in v5:
+> - pick the dependant patch: https://lore.kernel.org/all/20240215-mmc_phase-v1-1-f27644ee13e4@outlook.com/
+>   to fix the bot build error.
+> - edit the semantic meaning of hisilicon,sap-dll-reg property (Rob Herring)
+>   The suggestion is from the CRG driver side:
+>   https://lore.kernel.org/all/20240218205741.GA1561527-robh@kernel.org/
+> - Link to v4: https://lore.kernel.org/r/20240217-b4-mmc-hi3798mv200-v4-0-0fdd9bd48532@outlook.com
+>
+> Changes in v4:
+> - rename dw_mmc-hi3798 back to hi3798cv200 - Suggested by Krzysztof Kozlowski.
+> - add r-bs to patch 1 and 2 - Reviewed by Krzysztof Kozlowski.
+> - Link to v3: https://lore.kernel.org/r/20240217-b4-mmc-hi3798mv200-v3-0-f15464176947@outlook.com
+>
+> Changes in v3:
+> - dw_mmc-hi3798: fix bot error (Rob Herring)
+> - Link to v2: https://lore.kernel.org/r/20240216-b4-mmc-hi3798mv200-v2-0-010d63e6a1d5@outlook.com
+>
+> Changes in v2:
+> - dw_mmc-hi3798mv200: use dev_err_probe() helper - Suggested by Krzysztof Kozlowski.
+> - dw_mmc-hi3798mv200: add missing err=0;
+> - dw_mmc-hi3798c(m)v200: remove unused MODULE_ALIAS() - Suggested by Krzysztof Kozlowski.
+> - binding: rename the binding, a lot of tweaks suggested by Krzysztof Kozlowski.
+> - Link to v1: https://lore.kernel.org/r/20240216-b4-mmc-hi3798mv200-v1-0-7d46db845ae6@outlook.com
+>
+> ---
+> Yang Xiwen (5):
+>       mmc: host: mmc_of_parse_clk_phase(): Pass struct device * instead of mmc_host *
+>       mmc: dw_mmc-hi3798cv200: remove MODULE_ALIAS()
+>       mmc: dw_mmc: add support for hi3798mv200
+>       dt-bindings: mmc: dw-mshc-hi3798cv200: convert to YAML
+>       dt-bindings: mmc: hisilicon,hi3798cv200-dw-mshc: add Hi3798MV200 binding
+>
+>  .../bindings/mmc/hi3798cv200-dw-mshc.txt           |  40 ----
+>  .../mmc/hisilicon,hi3798cv200-dw-mshc.yaml         |  97 +++++++++
+>  drivers/mmc/core/host.c                            |   4 +-
+>  drivers/mmc/host/Kconfig                           |   9 +
+>  drivers/mmc/host/Makefile                          |   1 +
+>  drivers/mmc/host/dw_mmc-hi3798cv200.c              |   1 -
+>  drivers/mmc/host/dw_mmc-hi3798mv200.c              | 239 +++++++++++++++++++++
+>  drivers/mmc/host/sdhci-of-aspeed.c                 |   2 +-
+>  include/linux/mmc/host.h                           |   2 +-
+>  9 files changed, 349 insertions(+), 46 deletions(-)
+> ---
+> base-commit: 8d3dea210042f54b952b481838c1e7dfc4ec751d
+> change-id: 20240121-b4-mmc-hi3798mv200-a5730edf122c
+>
+> Best regards,
+> --
+> Yang Xiwen <forbidden405@outlook.com>
+>
