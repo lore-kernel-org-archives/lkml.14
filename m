@@ -1,182 +1,123 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5841EEEA;
-	Tue, 27 Feb 2024 04:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61572B9A7;
+	Tue, 27 Feb 2024 04:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709007915; cv=none; b=Sa8eS59fzHL5jK0KpVzdQhK9MQe/Eoo7w05Bn4k9ZQpDR4GUdMuLMQeFVh9ibnphKnzhkHiJGMTKTW/Oefcz9n/Ym6JBSDJbXv7oa2dRpfrOItIlkQr1wjFOjy8pluam10NMwXfQwaqdgQ2GYkDiffz0qMgRsyCJs3LEObof2II=
+	t=1709008484; cv=none; b=ML6/ZVkEncOTUqmSYiYXGb7SfuJXhFjfJY8b/XRQ2nIGeh+uNZUcgwqt45/txgLChr6n67paJ1F4JGl78zlGS7OYfm445bmqlQgoHk4RgyUpGWkMCUs8sF9ZiL7bYhGFadhqbd6aLuDLiqNEJzgy3ws88RV4e1+YE0Bh3fwwneE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709007915; c=relaxed/simple;
-	bh=FKx34NGx56OfaqqlnsM4Id57tKe3ZjT0UUYkPNqbYHM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JtrWRpvVSB2kJioHjSANSg+DxO3mh4CWyv9BhTKsoMW8sRzFtOg5pA4vOk6fiRE1GYhxp4t/ph/Lt0JwZkH2z9KmOB8Dv5xBPppxzMuNhKmjXnTtw84kk8rmWTNskvlCnxIA3jy/MlviUgh4HzdQrXFU2yoOizUC3EbKQI8woXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Dpq+4pku; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709008484; c=relaxed/simple;
+	bh=cuj1qUMwkwqal3wJi++jUQc8HyxAwqdh0KK9n4dY4AQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=elcdTtICWKRfCp63PmPcuySufg1D+YryrcglK1KXGDjtcuL2j9YNgMghAs4D8W8YbYI3+EDtTWutiJ6KeyugM1FSdnr/RKq/YVkiY8hsTZGFWyxJw9XvcM+F9mMaj7cqryWP5SHBvrB9BSP7fAhKBhm6Rk/tWnOLblnoRey8AMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=F4Sm18lO; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dpq+4pku"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41R4OdoS033202;
-	Mon, 26 Feb 2024 22:24:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709007879;
-	bh=lLf2MHGq1G+iPHOKjhL3F0LbLV6mSmAfmkVSCh2uWNk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Dpq+4pku6oqrWEHcenPaq4SqrU18W/ebYfWi9ZY1axN7c6e8AyQtHItaBVQmvuQ9P
-	 ffpBvmc0+00mKNxWWjkDpbAN/CCGUtOp0Xq5ULCfuDUO8a4k7nunOOBkvRnRDgRTvv
-	 D5u2h63VZ591yN06t5HMJgx3JLATF1FxgRzn1df0=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41R4Odgu004999
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 26 Feb 2024 22:24:39 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 26
- Feb 2024 22:24:39 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 26 Feb 2024 22:24:39 -0600
-Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41R4OWTk077058;
-	Mon, 26 Feb 2024 22:24:33 -0600
-Message-ID: <37ab0886-0cd1-4188-9177-8b7ef0ad9eca@ti.com>
-Date: Tue, 27 Feb 2024 09:54:30 +0530
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F4Sm18lO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1709008478;
+	bh=ZubsrjAWW/NJzZZIwHM2+7xSQE59xmHAfiJ9B/Vsi7c=;
+	h=Date:From:To:Cc:Subject:From;
+	b=F4Sm18lO7JaX7OKKGNtETXD5g46ahQoOji04n8nkYoh5xLtpp9ECrB5cd7iIc/qw7
+	 PoWbo0d+ZeZN/vZT8hLwFbfvTTAM+/uHantKCygN4bJrqmqgKWGiCdYkYGKCY/Hw1l
+	 QP9L9AOKvraBoypBJFsKgd5qIonIsgIxdbi3x+TkM54gPkeuo9+qeT5pzwps6kua8r
+	 3JpyzLreuYnfqONXR4APEEKKG9SME4aF/vsIanXcvsxYZnAKbhFHto9JhtRj0wFFw/
+	 oru5SEqFkLtu9WtftLmBxJp+JDSJnGSRWd5PSo1aqhl2esjlrShGqHFdgcWhqJwtqZ
+	 KvYUnC+VcGZzA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TkPld6jF6z4wb1;
+	Tue, 27 Feb 2024 15:34:37 +1100 (AEDT)
+Date: Tue, 27 Feb 2024 15:34:36 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>, Christian Brauner
+ <brauner@kernel.org>
+Cc: Bart Van Assche <bvanassche@acm.org>, Christoph Hellwig <hch@lst.de>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the scsi-mkp tree with the vfs-brauner
+ tree
+Message-ID: <20240227153436.33b48d59@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] dt-bindings: usb: ti,j721e-usb: drop useless
- compatible list
-Content-Language: en-US
-To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
-        Conor Dooley
-	<conor.dooley@microchip.com>
-CC: Conor Dooley <conor@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Roger Quadros <rogerq@kernel.org>,
-        Peter Chen
-	<peter.chen@kernel.org>,
-        Pawel Laszczak <pawell@cadence.com>, Nishanth Menon
-	<nm@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Thomas Petazzoni
-	<thomas.petazzoni@bootlin.com>,
-        =?UTF-8?Q?Gr=C3=A9gory_Clement?=
-	<gregory.clement@bootlin.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Alan Stern
-	<stern@rowland.harvard.edu>, <linux-usb@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20240223-j7200-usb-suspend-v3-0-b41c9893a130@bootlin.com>
- <20240223-j7200-usb-suspend-v3-1-b41c9893a130@bootlin.com>
- <20240223-clarity-variably-206b01b7276a@spud>
- <CZEXXXQDZZWB.1M5CTZAFVO4YP@bootlin.com>
- <20240226-portable-rockslide-e501667a0d9a@wendy>
- <CZF33W51MC4M.3GUBZFQXT39DB@bootlin.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-In-Reply-To: <CZF33W51MC4M.3GUBZFQXT39DB@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/MeiyNFOgM8tiHX4pUpn/CjE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/MeiyNFOgM8tiHX4pUpn/CjE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 26/02/24 20:05, Théo Lebrun wrote:
-> Hello,
-> 
-> On Mon Feb 26, 2024 at 12:56 PM CET, Conor Dooley wrote:
->> On Mon, Feb 26, 2024 at 11:33:06AM +0100, Théo Lebrun wrote:
->>> Hello Conor,
->>>
->>> On Fri Feb 23, 2024 at 7:12 PM CET, Conor Dooley wrote:
->>>> On Fri, Feb 23, 2024 at 05:05:25PM +0100, Théo Lebrun wrote:
->>>>> Compatible can be A or B, not A or B or A+B. Remove last option.
->>>>> A=ti,j721e-usb and B=ti,am64-usb.
->>>>>
->>>>> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml | 9 +++------
->>>>>  1 file changed, 3 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
->>>>> index 95ff9791baea..949f45eb45c2 100644
->>>>> --- a/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
->>>>> +++ b/Documentation/devicetree/bindings/usb/ti,j721e-usb.yaml
->>>>> @@ -11,12 +11,9 @@ maintainers:
->>>>>  
->>>>>  properties:
->>>>>    compatible:
->>>>> -    oneOf:
->>>>> -      - const: ti,j721e-usb
->>>>> -      - const: ti,am64-usb
->>>>> -      - items:
->>>>> -          - const: ti,j721e-usb
->>>>> -          - const: ti,am64-usb
->>>>
->>>> Correct, this makes no sense. The devices seem to be compatible though,
->>>> so I would expect this to actually be:
->>>> oneOf:
->>>>   - const: ti,j721e-usb
->>>>   - items:
->>>>       - const: ti,am64-usb
->>>>       - const: ti,j721e-usb
->>>
->>> I need your help to grasp what that change is supposed to express? Would
->>> you mind turning it into english sentences?
->>> A=ti,j721e-usb and B=ti,am64-usb. My understanding of your proposal is
->>> that a device can either be compat with A or B. But B is compatible
->>> with A so you express it as a list of items. If B is compat with A then
->>> A is compat with B. Does the order of items matter?
->>
->> The two devices are compatible with each other, based on an inspection of
->> the driver and the existing "A+B" setup. If this was a newly submitted
->> binding, "B" would not get approved because "A+B" allows support without
->> software changes and all that jazz.
->>
->> Your patch says that allowing "A", "B" and "A+B" makes no sense and you
->> suggest removing "A+B". I am agreeing that it makes no sense to allow
->> all 3 of these situations.
->>
->> What I also noticed is other problems with the binding. What should have
->> been "A+B" is actually documented as "B+A", but that doesn't make sense
->> when the originally supported device is "A".
->>
->> Therefore my suggestion was to only allow "A" and "A+B", which is what
->> we would (hopefully) tell you to do were you submitting the am64 support
->> as a new patch today.
-> 
-> Thank you for the in-depth explanation! It makes much more sense now,
-> especially the handling of historic stuff that ideally wouldn't have
-> been done this way but that won't be changed from now on.
-> 
+Today's linux-next merge of the scsi-mkp tree got a conflict in:
 
-IIRC, idea behind adding new compatible for AM64 even though register
-map is very much compatible is just being future proof as AM64 and J721e
-belong to different product groups and thus have differences wrt SoC
-level integration etc which may need SoC specific handling later on.
+  fs/iomap/buffered-io.c
 
-I don't see any DT (now or in the past) using
+between commits:
 
-compatible = B,A or compatible = A,B
+  dec3a7b3aa45 ("iomap: move the iomap_sector sector calculation out of iom=
+ap_add_to_ioend")
+  ae5535efd8c4 ("iomap: don't chain bios")
 
-So do we really need A+B to be supported by binding?
+from the vfs-brauner tree and commit:
 
-Also, note that AM64 SoC support was added long after J721e. So ideally
-should be B+A if at all we need a fallback compatible.
+  449813515d3e ("block, fs: Restore the per-bio/request data lifetime field=
+s")
 
-Regards
-Vignesh
--- 
-Regards
-Vignesh
+from the scsi-mkp tree.
+
+I fixed it up (I think - see below) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/iomap/buffered-io.c
+index ae4e2026e59e,18e1fef53fbc..000000000000
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@@ -1687,11 -1666,11 +1687,12 @@@ static struct iomap_ioend *iomap_alloc_
+  	bio =3D bio_alloc_bioset(wpc->iomap.bdev, BIO_MAX_VECS,
+  			       REQ_OP_WRITE | wbc_to_write_flags(wbc),
+  			       GFP_NOFS, &iomap_ioend_bioset);
+ -	bio->bi_iter.bi_sector =3D sector;
+ +	bio->bi_iter.bi_sector =3D iomap_sector(&wpc->iomap, pos);
+ +	bio->bi_end_io =3D iomap_writepage_end_bio;
++ 	bio->bi_write_hint =3D inode->i_write_hint;
+  	wbc_init_bio(wbc, bio);
+ =20
+ -	ioend =3D container_of(bio, struct iomap_ioend, io_inline_bio);
+ +	ioend =3D iomap_ioend_from_bio(bio);
+  	INIT_LIST_HEAD(&ioend->io_list);
+  	ioend->io_type =3D wpc->iomap.type;
+  	ioend->io_flags =3D wpc->iomap.flags;
+
+--Sig_/MeiyNFOgM8tiHX4pUpn/CjE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXdZlwACgkQAVBC80lX
+0GzcSgf/UxYFTALdqUp3ahMgXH5MFOhQKx3OQynlTtdxcjwy2bQjwMdnZIBOXwnN
+ynd49GXuuJ9NeJF7ry8lUcq1FD+Hl6lEPU1tVI6wiID8R3zFdZ25t93NvyzwwyOv
+dShK2WTlZyXgcd4oOZom2uRr19EZWJWu+99r7FhEWJ+/irsh22Z91r4vg7si5lLB
+Np0XOuIdiIyu6yZW/U+TtJJ959hVpepHiv8/JobXXn7z6aXDyZq0tXZEr+D7mRDi
+BjyOTDZ42k2Fwhc1GbNA+o4QxoQQuVrXV1GvDy/PCng9BAd2LuNZ4VLkQHKvZPMJ
+1loVJ02lQ+5knNCK9U9kjVJWj0QJlA==
+=1moF
+-----END PGP SIGNATURE-----
+
+--Sig_/MeiyNFOgM8tiHX4pUpn/CjE--
