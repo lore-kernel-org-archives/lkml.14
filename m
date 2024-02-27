@@ -1,107 +1,72 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E191B200A0;
-	Tue, 27 Feb 2024 02:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2706B2260A
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709002055; cv=none; b=pYfrtCnbdcg2L5BXMnHQIKgPTvmI+Vz9KTsw51pYr4CAVLFAVCbgzGSWoGl5nSFFHs26XTBOonN8ANgABghuX95GJ1BvQd9F82PKWSNs6IiePJjvj18TM0TCKx/aMaVocsOEBy3Lda3H3PtGACp2qso3fiQJR6Nng1cLaWbZ1Cg=
+	t=1709002084; cv=none; b=LI8+4cCZRhgyl7NtG3UbPNY1pvYLxJyN90v+9iG3PIwRnQ3WAsaTAwVFmFWXiWoxZw0tG8NvXz+7i0POt6TkT4sfBz1QRb5FOs9i5pt9gHU6SrzKQuQKPkTjDO/Lq1SZyxtHMxHRhWnvi+SW4cNPY8Q1tbLvhn05D8wQr89CTJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709002055; c=relaxed/simple;
-	bh=M1eMfPgInHxhL59jpRH9kAh1NkkGlq74g37M2D+wdKE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZkmMj0e3hTHoetbvWFvPpcC6oP6aanYT7O1L0jBNbkcdn3giVwxWBMZlXb7RHLH8d5a6KALU3VP9lltjqCWUPSbEjjH+5AwyNp7r3TXaTQL2T70ahJZIWhXV4sgRTaqGz3zSUNh1H4uuY6kOjA8+UQ3HcP0mQwlyQyQHqtezkS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=iOZyNEfM; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iOZyNEfM"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41R1FYZK025669;
-	Tue, 27 Feb 2024 02:47:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-11-20;
- bh=wKC+omDhh5DOKXN9cJ0C8fmf93fsonG/WWT1GB8nEIM=;
- b=iOZyNEfMlN9KkSPRiy66KJkArs1ZuX4h5F7MddQ8qxrBqBOh9Wrevc9N5POtJo8Xm2y3
- 6jtdtwea6/fyDaHx3bia1PPfjcP6wKG9sdAw7nmiK5jR+SnVR7DiKynFDv87dN+42nTM
- gWfbgezx3xxJ9TMyML6rJlypXsYXdFc6w7tT65j9mJa1KPWkK2QyOEcajpXkeR9lIt2F
- kxiEgaIDQ7nyxquB5WA64Ftdqt3GND8REmnA6ZBWMrLJORlnHd65iRawR72bMjecpUm4
- XOUCF+soLc3zYPILiM8X01nCy3XfeWmQJrHMBxAHqigUqTsUypIr/4UzJwg8XiI/Ahzz +Q== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wf82u6002-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 Feb 2024 02:47:25 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41R0MMFD025490;
-	Tue, 27 Feb 2024 02:47:24 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wf6wd0n2m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 Feb 2024 02:47:24 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41R2lNAe026317;
-	Tue, 27 Feb 2024 02:47:23 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3wf6wd0n28-1;
-	Tue, 27 Feb 2024 02:47:23 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Arnd Bergmann <arnd@kernel.org>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ranjan Kumar <ranjan.kumar@broadcom.com>,
-        Tomas Henzl <thenzl@redhat.com>,
-        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] scsi: mpi3mr: reduce stack usage in mpi3mr_refresh_sas_ports()
-Date: Mon, 26 Feb 2024 21:47:14 -0500
-Message-ID: <170900202640.3669151.3772018788684563610.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <20240123130754.2011469-1-arnd@kernel.org>
-References: <20240123130754.2011469-1-arnd@kernel.org>
+	s=arc-20240116; t=1709002084; c=relaxed/simple;
+	bh=QBa8dkJ9GlA6xvpAmZYy9lueVtALhB5J4toOaigjbII=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=poPBxvLYkgKLQpVxmsaqIx+Y8tqTf9nhF5yKIlR6ZTMv0Ujw703B5Bypr21+UbvXRE0PBhLQV+H5NLXI5QaU4uuiBs58lHatkyhXhO1s5WSrcc0XBr6UY7y+5/J8CV3gNveD1v1EBf9ZMx8N/MxVCXI1DoZ/635Ic0AZd8YkElg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TkML204DHz1h0jW;
+	Tue, 27 Feb 2024 10:45:46 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id A16071A0178;
+	Tue, 27 Feb 2024 10:47:59 +0800 (CST)
+Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
+ (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 27 Feb
+ 2024 10:47:59 +0800
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+To: <richard@nod.at>
+CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<lkp@intel.com>
+Subject: [PATCH -next] ubifs: add_or_start_queue: fix kernel-doc warning
+Date: Tue, 27 Feb 2024 10:42:04 +0800
+Message-ID: <20240227024204.1080739-1-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_11,2024-02-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
- adultscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402270021
-X-Proofpoint-GUID: vRSAya9COKBLyudmFgJeiroVLsZZAUo8
-X-Proofpoint-ORIG-GUID: vRSAya9COKBLyudmFgJeiroVLsZZAUo8
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-On Tue, 23 Jan 2024 14:07:36 +0100, Arnd Bergmann wrote:
+Fix kernel-doc warning found when using "W=1":
+  fs/ubifs/journal.c:369: warning: expecting prototype for
+  wake_up_reservation(). Prototype was for add_or_start_queue() instead.
 
-> Doubling the number of PHYs also doubled the stack usage of this function,
-> exceeding the 32-bit limit of 1024 bytes:
-> 
-> drivers/scsi/mpi3mr/mpi3mr_transport.c: In function 'mpi3mr_refresh_sas_ports':
-> drivers/scsi/mpi3mr/mpi3mr_transport.c:1818:1: error: the frame size of 1636 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
-> 
-> Since the sas_io_unit_pg0 structure is already allocated dynamically, use
-> the same method here. The size of the allocation can be smaller based on the
-> actual number of phys now, so use this as an upper bound.
-> 
-> [...]
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202402261912.yAxZePRG-lkp@intel.com/
+Fixes: 556c19f563b6 ("ubifs: Queue up space reservation tasks if retrying many times")
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ fs/ubifs/journal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied to 6.8/scsi-fixes, thanks!
-
-[1/1] scsi: mpi3mr: reduce stack usage in mpi3mr_refresh_sas_ports()
-      https://git.kernel.org/mkp/scsi/c/5cc2da0b60e5
-
+diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
+index 74aee92433d7..f997a85bcdce 100644
+--- a/fs/ubifs/journal.c
++++ b/fs/ubifs/journal.c
+@@ -359,7 +359,7 @@ static void wake_up_reservation(struct ubifs_info *c)
+ }
+ 
+ /**
+- * wake_up_reservation - add current task in queue or start queuing.
++ * add_or_start_queue - add current task in queue or start queuing.
+  * @c: UBIFS file-system description object
+  *
+  * This function starts queuing if queuing is not started, otherwise adds
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.39.2
+
