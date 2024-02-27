@@ -1,77 +1,121 @@
-Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6170C1EB40
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841FD2032D;
+	Tue, 27 Feb 2024 17:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709053599; cv=none; b=WgnRCL0hwHI/SqDhftHSz225o8iixNfDto9AfWH+HoXyR3kco6soHBTDSZg9TK/1J5iNlDqYU82FuYfIhxLF3FxsMR0TyRXi1skppEBogQzk2dBzJwWH7xVICL3ly+zaP9xU2VVT/5MVTVXE8j/yjl4xB7Ub5atMTxoFxjnVgsE=
+	t=1709053673; cv=none; b=BPgxJ12Pwc2ozZcFOh41YKfklaP91zZbE4tU4xywCp3pvjZz1lFCJ93xAv1VyVyFy59ZEUOLtZYhtRfktQ7+jq//SqXBzFEGBLh70a+NsTAZVknPlA4nFJuSMADErKKZhCUWKLx6dA6dwJOeiqdO72nybuRBFP6VRn15liCE964=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709053599; c=relaxed/simple;
-	bh=MebS9n5ZiCS4+c+fVej6vKE1hD4/nz20mid32q2t1s0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZvzDSpVyGondt/EnKsgGe0FCDLfCsSCogOw5weAoFrauh05XC4UBHiyAS57SnV/dpJ4WG72y9fdyylfHRDX4n+EvMlSDnd2CymUAYEQQnz1luHrhbjtObbH0BlIjFrhJGOQEWZ1f9dlGBnN9P5lMibgoYEZ2qdUc7s++fn7P880=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=syntacore.com; spf=fail smtp.mailfrom=syntacore.com; dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b=odVUulp4; dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b=QEUyMi2g; arc=none smtp.client-ip=89.207.88.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=syntacore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=syntacore.com
+	s=arc-20240116; t=1709053673; c=relaxed/simple;
+	bh=ZeJc8F1uJuWbjXK4VVGQdxZ+8idBvr+K++iQcOg5o38=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q4pBYH+z0fvlA6l3nznE/12nU/2Kjju8EfF7bdR751jv0V71VMf0/dK4oCGv3Jm/5pePSTZOjzaTMjh6G+htd4C+bdOqmvyCjr3F8wGdrAOrJYLYVJcjihAVbIfGfmotDYvg2xwTdyFRspUOCTOyAGQdPFoiSaVsg9aSsFHzv8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jbKvmj1z; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b="odVUulp4";
-	dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b="QEUyMi2g"
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 6DE4CC002E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=syntacore.com;
-	s=mta-04; t=1709053260;
-	bh=MD+Aeir3B6NSv5VxdWchXqnIlbEpAOLGX4DiWLdrVQs=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=odVUulp4NTJadskyMmbqTctpkueG6DuJQskXWlApGq9Of11jwpjc+jZO5lNzUvULZ
-	 4bvfaTF5pihBqOcBZ4aR1kVPpxK3+yOftUV9Evv2ArDHGzfXGP8h5xdCEuxag8myTE
-	 WBMEn60qMbaRZ36RLeTEVg53ecVqA2XHm/qYjJXvWiiszQrlAWsqGXp1F49zjZyms7
-	 WBneShy6r8Q7lxT6xk9iXwBjR3ULiwe7TDnEKO3cjXmxrS02y0HjSbtWsq3TqCdqJW
-	 dPEJpGGPAn6mCorXzK6eHLDuJp+0rfipZ6axfB4js2nRdXVYBK4So8wUrpdbhKvKdB
-	 I5k50oiX+0Z/Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=syntacore.com;
-	s=mta-03; t=1709053260;
-	bh=MD+Aeir3B6NSv5VxdWchXqnIlbEpAOLGX4DiWLdrVQs=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=QEUyMi2grJRDP+vJgy1S9AD4Dh5Bl9f2gqJEX8jl10Wj0syR3GLEoi6sPoXtklDhj
-	 XD13tipkqxWH2MiC965NxNSKfSN62lyCnhxs0syGb0uRvwMlJJWQtvEra1MvVUKTuu
-	 hsFnLrLpSfxujVW8WsnZpGzdgClB5jnO1BcYFTQ5W8l8fIQkkzlIuzu1zDGLBrU2Xo
-	 hYPC3LEVZbPKM0zzDEEc43vVfzcFbxk83TkYIpdlRJkI9kG/4+nPhkQGZfYDqVkWLv
-	 vwHeE+HZK+9YUrsgeGEd9vgTEe7qQb1EE0tRlYdCZ0vMoCshElQrt3Pg4ShrDtaC74
-	 qyXKMNMXXb/8w==
-From: Vadim Shakirov <vadim.shakirov@syntacore.com>
-To: <linux-riscv@lists.infradead.org>
-CC: Vadim Shakirov <vadim.shakirov@syntacore.com>, Atish Patra
-	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Will Deacon
-	<will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2,RESEND 0/2] drivers: perf: fix crash with the legacy riscv driver
-Date: Tue, 27 Feb 2024 20:00:00 +0300
-Message-ID: <20240227170002.188671-1-vadim.shakirov@syntacore.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbKvmj1z"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so3707427a12.1;
+        Tue, 27 Feb 2024 09:07:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709053672; x=1709658472; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=99jfUjuSInpmxbhq4i5jzlqwDHbrA15fgcjI2V7Oals=;
+        b=jbKvmj1zc9qWpdruJudh/hR+hxG3T9Bn4wnJi5RoUW4LWDrg+zZe3VIfvoCHx72TM6
+         lzwe/jJqkppP7fOBoXuIFKNYyHWfzLxEusLGFSodTPM8UDFh4A3IZXw1IFwijZ+Xub3S
+         yp+WpwUccC0e7XAOgGAtEqf/gRd3Eb2LhAtYnQF79z3hTEIpLF1uauoY4yqxYIggrlTI
+         87JgK01u9N+n9emYQQdyQLZAu5Tzx/5laG7nOREaS4hFFAN1P3wsuNt61kjf2VuTMOh2
+         baQc9y9zaPryCxdmKR8kNpo0Ar3gOhyV2bVl/5kRIjSWkJ0WB4q5Id8dk6+8LV5XgNxB
+         Dl2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709053672; x=1709658472;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=99jfUjuSInpmxbhq4i5jzlqwDHbrA15fgcjI2V7Oals=;
+        b=P/UE8tUrqz8ltYFQFRdVTUKvSzcUD0/QvSXh82hqwp4uJA+qpyRH0JkFz/uTYmxNWb
+         XPXbZSUoGLYdpSFxQv7XdrHMNQw40qjG/Di4uGSRYgMVqskWJa6Mm8GJoHShn+qTJVtq
+         dZu24JbAOCQKQuaRHkHMkUYeKhLv1Gnr3WhWDDW7e6u/kHw+CdruoBF1t4v5YR9S/XjF
+         bdq/+IzelOXOpihwqSD0Y4BNj8lDZn0VW9GlPg8Uty/KmNxY32w4a9T3CTjzvabz7B3O
+         /SvRVv1UaLgPmtwPVH+BPkeRt70o1mVvtPdnxvW0fGze3W8iFdNQiZ6Q62PfV54yGFKx
+         rlmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxYddWJDt3H2/qSLI2DDqF22A+rAWDMEyXmZ3pqFXjg/P+h7WgXFrfBpR4K/RS4hkg+jskgs3Jg3rNHOEKmF2Q04A9
+X-Gm-Message-State: AOJu0YyzIRFlEH62VCPlrjqEgAM7zRnpjCl3bipcAOest1p0etXE2La1
+	AO6uvY8yIIw5WZOjOKId3raRLY3JYgFlOfl+TZww1CTlu4Cwe9TfJW/z34EoCtJp3lcZuyhEpbq
+	EFJVz/Q9q+7IWjQolH6Bo7aGjlUs=
+X-Google-Smtp-Source: AGHT+IHTBLSoZTfa3M5/2UvGsTYIpeCfQhJ06lMLp5v4/09xfG85K0T6kpDQRVpfBDGQ03DtwlARkFL1clgMtD/yIFY=
+X-Received: by 2002:a17:90b:8d8:b0:299:3e54:83fe with SMTP id
+ ds24-20020a17090b08d800b002993e5483femr8471960pjb.36.1709053671772; Tue, 27
+ Feb 2024 09:07:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: T-Exch-05.corp.yadro.com (172.17.10.109) To
- S-Exch-01.corp.yadro.com (10.78.5.241)
+References: <20240226143630.33643-1-jiangshanlai@gmail.com>
+ <20240226143630.33643-16-jiangshanlai@gmail.com> <Zd34GHtHlnpPtg5v@infradead.org>
+In-Reply-To: <Zd34GHtHlnpPtg5v@infradead.org>
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+Date: Wed, 28 Feb 2024 01:07:40 +0800
+Message-ID: <CAJhGHyDdsm3BT4fL3Z_H5-_m4VpDi9FnG6GCcrup6YfMr_MBCw@mail.gmail.com>
+Subject: Re: [RFC PATCH 15/73] mm/vmalloc: Add a helper to reserve a
+ contiguous and aligned kernel virtual area
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
+	Lai Jiangshan <jiangshan.ljs@antgroup.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Sean Christopherson <seanjc@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
+	Kees Cook <keescook@chromium.org>, Juergen Gross <jgross@suse.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Uladzislau Rezki <urezki@gmail.com>, 
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This series fix crash with the legacy riscv driver when configs:
-CONFIG_RISCV_PMU_LEGACY=y and CONFIG_RISCV_PMU_SBI=n and you try
-to perf record
+Hello
 
-Vadim Shakirov (2):
-  drivers: perf: added capabilities for legacy PMU
-  drivers: perf: ctr_get_width function for legacy is not defined
+On Tue, Feb 27, 2024 at 10:56=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
+rg> wrote:
+>
+> On Mon, Feb 26, 2024 at 10:35:32PM +0800, Lai Jiangshan wrote:
+> > From: Hou Wenlong <houwenlong.hwl@antgroup.com>
+> >
+> > PVM needs to reserve a contiguous and aligned kernel virtual area for
+>
+> Who is "PVM", and why does it need aligned virtual memory space?
 
- drivers/perf/riscv_pmu.c        | 18 +++++-------------
- drivers/perf/riscv_pmu_legacy.c | 10 +++++++++-
- 2 files changed, 14 insertions(+), 14 deletions(-)
+PVM stands for Pagetable-based Virtual Machine. It is a new pure
+software-implemented virtualization solution. The details are in the
+cover letter:
+https://lore.kernel.org/lkml/20240226143630.33643-1-jiangshanlai@gmail.com/
 
--- 
-2.34.1
+I'm sorry for not CC'ing you on the cover letter (I haven't made/found a pr=
+oper
+script to generate all cc-recipients for the cover letter.) nor elaborating
+the reason in the changelog.
 
+One of the core designs in PVM is the "Exclusive address space separation",
+with which in the higher half of the address spaces (where the most signifi=
+cant
+bits in the addresses are 1s), the address ranges that a PVM guest is
+allowed are exclusive from the host kernel.  So PVM hypervisor has to use
+get_vm_area_align() to reserve a huge range (normally 16T) with the
+alignment 512G (PGDIR_SIZE) for all the guests to accommodate the
+whole guest kernel space. The reserved range cannot be used by the
+host.
+
+The rationale of this core design is also in the cover letter.
+
+Thanks
+Lai
+
+>
+> > +extern struct vm_struct *get_vm_area_align(unsigned long size, unsigne=
+d long align,
+>
+> No need for the extern here.
+>
