@@ -1,157 +1,115 @@
-Received: from flow5-smtp.messagingengine.com (flow5-smtp.messagingengine.com [103.168.172.140])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34771482E3;
-	Tue, 27 Feb 2024 15:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F62A1482E3
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709048933; cv=none; b=ZBg4CWtSrc8LmWfWL8jKQzXFNh/Dw9OcRqvuW6VD/4BqJGzckUxQbw2IVyTGU8GEM3J5IACSdAKKIltD4i2Hahu8uDffPKib9D7eSBaE2uBUsLoUAkYSsgwl39M0AaX4cTWvxnD4sYSe/Iwc1LzQQvGxzGvURlMaUrdiq7WLCsQ=
+	t=1709048939; cv=none; b=t9wHXJE0aE2VBIcJuqh5qupjcNS9Cm4rI7caPdk3j3S44wNOPTV7ZVSf33IDK/ZPPWBer0fdv+ACUz3AFZ07TWoX0sPRlX7oao4tKmZGfDkN1hpz1u1RDHYoL7kPuPsIAtwrlbrImg3qOXEqrZ/u01Sg7ilq4fYDtFiR5Bow3SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709048933; c=relaxed/simple;
-	bh=2jqupzrqvGkM46I6Bvk5B+arL4luMkNH22lQhJoirTk=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=B1LamLEP3lgcYXgwJTylSDWCOlmt8mcjzNEjswsfFjE+h0l1LuR//3hKCGEvbRL6ESl46U5j4qwyBXvp+6+HYD3ZHf3SoLtI5BIobLNevdjNYfPADKIvM7mp1cjXJQTm2NtUISQbqS7D7s/OmNqkDcb55umtmqAhqk+WeceT5Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Uj8nTtuX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hY1txy5S; arc=none smtp.client-ip=103.168.172.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709048939; c=relaxed/simple;
+	bh=up+DCN5ChGl/E+3j2L4zs+YPx9EtncoGLVBvu8pAspA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O0Ks2kp3bLiK2U8fHUOXKtjTNgQJrMkxYmTeErgipAH4evvHE/YKoBmCdlCEFNzW+pKDQvwWXkPglKJHUweEK0+P/BHxHUz89SiMdyJWqQfIOj/cqeddAnL8tCj5f+5j2kERR0Pl8Va9Y7SvdZOnglMC92WEAZ/vVBa32sSlvqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YO5g2sSg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Uj8nTtuX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hY1txy5S"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailflow.nyi.internal (Postfix) with ESMTP id 0E22F200094;
-	Tue, 27 Feb 2024 10:48:51 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 27 Feb 2024 10:48:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1709048931;
-	 x=1709056131; bh=ybbnN0+SobfyxbHHH4ZELWrRQvYBzt/PThTgohkZVK8=; b=
-	Uj8nTtuXWeEi/jXfJb5n+JbsF1HSR0x3KgfCm6wqbBwTdbvkhRqJ3Yq98CMAeG5r
-	D/GO+gsxXcyWzUSYVXbRGbhBL/Z62QpHxQL4Nwm51CeelVfQrM0VsRmYU5oQiksk
-	K0/XMoHjN3ofZ1Z5lt03aTV2rHIKloqb+z/hoNnTFtklsNNfr3RZjbgENs0es2gb
-	IDGbBSGW0xc7Je2i9GyV0TikqeTQ8ZIH5rJ4x5Zc8k491PIy0z0afqdlN46J0Dyh
-	GwV1UL/IypRhnck5jK4xrsxLBGUV4OhZP+DMMw5EqYb3GTEee00bKrSNOVOQW2Of
-	C/8GqY9nA4ZbWGv/r1HmIQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1709048931; x=
-	1709056131; bh=ybbnN0+SobfyxbHHH4ZELWrRQvYBzt/PThTgohkZVK8=; b=h
-	Y1txy5S4iu4CgzO1d33RQRTVdIFEUhjhCu5bud7oeKr3YK+aS49Q7U3ClfbHqdDi
-	1Qn/NXLKPd6IvD9u+mdo6jUi/KerXGwKqXU19Z54fEINfjHSApkWghFTcS4W/D9z
-	bsuvJAFYYdOULYWSgsXdENf8NuVwaZV5nSsSdhul8qQvwBokhTpI/C4zH6thcdJh
-	bnr/GHXwlUup2+3kPL1y1HI4RcBsijL0XYOj/FHZT6izdSVL9jmjE+Sv7hDo4FzA
-	ReVIikHX+Zzdb6tpZ5dMHS/HBnj9HUKp1GKOSPqZGRRmEAJNIjOaV9BN4ViQqd2y
-	/UEth2/MdcbGXPG2wRf0g==
-X-ME-Sender: <xms:YgTeZTjQ2h_cNZ8jalaG9yLuQqXC07isf9GGcrOmBfNOKOEulyuU8A>
-    <xme:YgTeZQAU0_LLiTKPpNYMDEOZ3KF4sj8-pyoo1S0mcZ4WuXW9vxRtrWSOshLIwEkGN
-    rSu-Vae63C6tVsVR-A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgeehgdehiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:YgTeZTHcN2-Yez8UX5mfvZ1mSJnr_0tSCCXpqVxUG-IHqIPIoNvmcg>
-    <xmx:YgTeZQQzrErr268F2CxBpd9lwv9mwfSPdqVRsNCxYMDirZwuyZpTug>
-    <xmx:YgTeZQwVGz3Yu09b5df-6afMzKl0E5RnQicJLgSLEI6srfnAno_efg>
-    <xmx:YwTeZaeeqww0pq-Uj1Spmu0Q0w5FIsyXzvjrxIQzMA-5KGL3vLMjzLwEdE0>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 407DCB6008F; Tue, 27 Feb 2024 10:48:50 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YO5g2sSg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709048937;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/xbnPq7RXIvNg+PfYUQ/SxQLN6DLHw3idVYtn+kLNDc=;
+	b=YO5g2sSgOA9ZUeviweCeFCQ4DH0bxYJCawiNTNqm0voftXnIsfR1qJVAVEHMRrCJ427qG6
+	39PGcW0pYoPvkFmHQIl/SeZY0sAGoFtXWXm8OHkWvM9pGNspHNnMrM5Be82GBym1yMH9WT
+	3uLjAXEE1CU9fN9DGZnmR5zFclMe1MQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-256-ndtj2l53OwmyEkRUSmQ0xA-1; Tue, 27 Feb 2024 10:48:55 -0500
+X-MC-Unique: ndtj2l53OwmyEkRUSmQ0xA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-33d29de76abso2335288f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 07:48:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709048934; x=1709653734;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/xbnPq7RXIvNg+PfYUQ/SxQLN6DLHw3idVYtn+kLNDc=;
+        b=JrvqiBDQDYea/odTYU1WfQ2tkILCx3ojG3KFpfTUgGOcXif2RrrR0qa1bFO7KX0YEP
+         7RVyfVVB7niKB097nNyf8MfrO5NmwjdkakZmT+QNPWAkclbY3+rW/tCJBohOqiAS37WL
+         Gug9Lf6oVR3EypmkptTqMrj1sBTDl8WHCuZ9dLtczCAsbHos3cfGljlfAzHLaceSaIY7
+         dTwN4EDqaTFmm9eaeH4F95C9NZVLM5oufeVUEXPRvxcMz9jFIk2ZLs817wycvCtZVf2u
+         x7cUd5exubs1svgV+Dg1M0bmfL8yuGs4yA8BEGO2pCwyMiBFbG5TkpRf9ScfgUPvnTuW
+         AlAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWrEqvSimlgGnZ+pV6vDFPTx7ivYiDJEtljBM2dwmpPVnAGegAJ1FaZQsl4G8g98jQymwWakcJ1x8QnQjFOcu/XVKY9LSUPZpQPoZo6
+X-Gm-Message-State: AOJu0Yyijkkx1tvamq2Hly1CCWfHrSF1Azho8nBDnsXptWixa3ceHczZ
+	tIl2AOmAukio7nmVefkOLttcf6nRnOnGmBteE1HDGLzNsydo42gFnNj2B5YSqwbCEUTuwNwHIvh
+	uad5uDYY9W4IssyBQewynv2a84b7wlqoFjCd8dLlforK5GScv0LhABVNWc+9Orw==
+X-Received: by 2002:adf:e702:0:b0:33d:509c:5692 with SMTP id c2-20020adfe702000000b0033d509c5692mr7613812wrm.31.1709048934563;
+        Tue, 27 Feb 2024 07:48:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHhhMpgy8POimkjUANc+4RteuVbX4FX4SRQYH18i2c3XpSnO3gd/o0FCmDM1lLUaZunxWosww==
+X-Received: by 2002:adf:e702:0:b0:33d:509c:5692 with SMTP id c2-20020adfe702000000b0033d509c5692mr7613789wrm.31.1709048934215;
+        Tue, 27 Feb 2024 07:48:54 -0800 (PST)
+Received: from redhat.com ([2.52.10.44])
+        by smtp.gmail.com with ESMTPSA id t9-20020adfeb89000000b0033dbeb2eb4dsm11575355wrn.110.2024.02.27.07.48.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 07:48:53 -0800 (PST)
+Date: Tue, 27 Feb 2024 10:48:49 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Cindy Lu <lulu@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Xie Yongji <xieyongji@bytedance.com>,
+	Maxime Coquelin <maxime.coquelin@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] vduse: Fix off by one in vduse_dev_mmap()
+Message-ID: <20240227104743-mutt-send-email-mst@kernel.org>
+References: <e26476e0-68ae-412d-a5d9-4996bc30d038@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <1b857914-bc1d-4b9a-b3f1-4eabd8db9810@app.fastmail.com>
-In-Reply-To: <b737a088-c811-45eb-b143-d24e6cdf7eea@csgroup.eu>
-References: <20240226161414.2316610-1-arnd@kernel.org>
- <20240226161414.2316610-2-arnd@kernel.org>
- <764fafb0-2206-4ab1-84ea-ebb7848c8ff2@sifive.com>
- <83450530-c908-4abc-bab7-88c50a3143ff@app.fastmail.com>
- <b737a088-c811-45eb-b143-d24e6cdf7eea@csgroup.eu>
-Date: Tue, 27 Feb 2024 16:48:29 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Samuel Holland" <samuel.holland@sifive.com>,
- "Arnd Bergmann" <arnd@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
- "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
- "Kees Cook" <keescook@chromium.org>,
- "Anna-Maria Gleixner" <anna-maria@linutronix.de>
-Cc: "x86@kernel.org" <x86@kernel.org>,
- "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
- "Andreas Larsson" <andreas@gaisler.com>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- "Max Filippov" <jcmvbkbc@gmail.com>, guoren <guoren@kernel.org>,
- "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
- "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "Jan Kiszka" <jan.kiszka@siemens.com>,
- "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
- "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
- "Richard Weinberger" <richard@nod.at>, "Helge Deller" <deller@gmx.de>,
- "Huacai Chen" <chenhuacai@kernel.org>,
- "Russell King" <linux@armlinux.org.uk>,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Vineet Gupta" <vgupta@kernel.org>, "Matt Turner" <mattst88@gmail.com>,
- "linux-snps-arc@lists.infradead.org"
- <linux-snps-arc@lists.infradead.org>,
- "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
- "Kieran Bingham" <kbingham@kernel.org>,
- "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
- "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
- "Andy Lutomirski" <luto@kernel.org>,
- "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "Brian Cain" <bcain@quicinc.com>,
- "Michal Simek" <monstr@monstr.eu>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
- "linux-openrisc@vger.kernel.org" <linux-openrisc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH 1/4] arch: consolidate existing CONFIG_PAGE_SIZE_*KB definitions
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e26476e0-68ae-412d-a5d9-4996bc30d038@moroto.mountain>
 
-On Tue, Feb 27, 2024, at 16:44, Christophe Leroy wrote:
-> Le 27/02/2024 =C3=A0 16:40, Arnd Bergmann a =C3=A9crit=C2=A0:
->> On Mon, Feb 26, 2024, at 17:55, Samuel Holland wrote:
->
->
-> For 256K pages, powerpc has the following help. I think you should hav=
-e=20
-> it too:
->
-> 	  The kernel will only be able to run applications that have been
-> 	  compiled with '-zmax-page-size' set to 256K (the default is 64K) us=
-ing
-> 	  binutils later than 2.17.50.0.3, or by patching the ELF_MAXPAGESIZE
-> 	  definition from 0x10000 to 0x40000 in older versions.
+On Tue, Feb 27, 2024 at 06:21:46PM +0300, Dan Carpenter wrote:
+> The dev->vqs[] array has "dev->vq_num" elements.  It's allocated in
+> vduse_dev_init_vqs().  Thus, this > comparison needs to be >= to avoid
+> reading one element beyond the end of the array.
+> 
+> Fixes: 316ecd1346b0 ("vduse: Add file operation for mmap")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-I don't think we need to mention pre-2.18 binutils any more, but the
-rest seems useful, changed the text now to
 
-config PAGE_SIZE_256KB
-        bool "256KiB pages"
-        depends on HAVE_PAGE_SIZE_256KB
-        help
-          256KiB pages have little practical value due to their extreme
-          memory usage.  The kernel will only be able to run applications
-          that have been compiled with '-zmax-page-size' set to 256KiB
-          (the default is 64KiB or 4KiB on most architectures).
+Oh wow and does this not come from userspace? If yes we
+need the speculation magic macro when using the index, do we not?
 
-      Arnd
+> ---
+>  drivers/vdpa/vdpa_user/vduse_dev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/vduse_dev.c
+> index b7a1fb88c506..9150c8281953 100644
+> --- a/drivers/vdpa/vdpa_user/vduse_dev.c
+> +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
+> @@ -1532,7 +1532,7 @@ static int vduse_dev_mmap(struct file *file, struct vm_area_struct *vma)
+>  	if ((vma->vm_flags & VM_SHARED) == 0)
+>  		return -EINVAL;
+>  
+> -	if (index > dev->vq_num)
+> +	if (index >= dev->vq_num)
+>  		return -EINVAL;
+>  
+>  	vq = dev->vqs[index];
+> -- 
+> 2.43.0
+
