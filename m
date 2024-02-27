@@ -1,46 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A7614F967
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F6414F991
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:25:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709069106; cv=none; b=s6rexnzvxYLkPSyff7VzbgDKdRUcmb4gh7d8lnTVheqtWKql333P5+LrytJ+0yfXZa9C9w4VRd8Uk5WNwLwxAQlxKmiE0XYTiDDN1jrOmqT8aADADsuBZYGPXK02iBgv4kJxDES+0AXJYKZHVppLe4bZymGAjrb2fzvKxn0gu4s=
+	t=1709069107; cv=none; b=FL+i8loLVlCLmSOWJhbXHwWt1z5lOtoEUgikpm6EL2uQ0yVzM35faFD4MDM0Z7Zdo+w1UtMo9yYjUqlMzN7xdHPHmUQYiRRp7+HDjklPfWznewRoFROQVaqlkp7s7T6siNUhH5N59HdSgxQXLZuH57WJKTpqG8pBwyNHUdr8wa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709069106; c=relaxed/simple;
-	bh=64tis8o8RXufqu0cEuVboxG22Ht7TUb72IO1KzTcEvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rbvEN1FrpnCrWo2ck5S0gfXsf+JOFX0e69OnbYBhuVDOCxAyUNmgpVi1bW1BrMdZGMwab1HFTeekLRQ5GOs6PQFG7WNcUHpNWdxCxl0WV9c8gElCOJ2eWVtU8VQnGMdFaK6x6idiQa1deLh7qSwrms+QNmeieeBruz07EXyCg/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MFHGNTsP; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1709069107; c=relaxed/simple;
+	bh=YLm/cL+dHPnuzS6G3vl9X6RCyiyNqBmXpbxGqPOhV1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=V7Rf9WaDBj4VUmO226/1Zu1P3gsnIIoovjc1LEhDFz4sKS8fWM/iHB6zrcamuKgZB35OsP3Y8d6fBlRwzQMXYVIaEKGem/slL864QwsmQxYTZXjGVA+RTlq6BFb++HVc8ktYJcFckI1Lnf23FYSTzMZsHUKgCIBRGrmRib/5kdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MEasphmp; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MFHGNTsP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MEasphmp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709069105; x=1740605105;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=64tis8o8RXufqu0cEuVboxG22Ht7TUb72IO1KzTcEvA=;
-  b=MFHGNTsPKxpoDwSvtLYhUu4V9RRDfpYcmX/nCmdIAh0pcm/Ht4P6zyu3
-   pun52bkXorFEYzpPvXsNeKrKLK6+F9GriZKe3jW4cT3tm6KiR7SdHQsUg
-   DM9hXvuoGDJSLNgfWWYk9EJYJjOAwjjSyWj2OeInZQ3nX+/rUZQ8UPdEB
-   CzXd7rri+5DYwjEL2O5pG92/hD0pLlFGfaARvObLkGryfoxvcuMibUNc6
-   Gc5wxLnFSxnXl+KOZJUJZlodiAcYI3Og8oEPTjASbzghyYIJ54hB0aFVc
-   JjKnUi6ASQOj1nA/IQhjU+nS8xLlM5AreSuyaANHy1SCPHDJ/IaNJMbXr
+  t=1709069107; x=1740605107;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=YLm/cL+dHPnuzS6G3vl9X6RCyiyNqBmXpbxGqPOhV1s=;
+  b=MEasphmpA6dV5qLkyxYnitimEcN3wqJ3Lsz7U6G2REvX1j+/Ht8XpcsM
+   j3imYxV0v7jOq0rJ/5a+rmSrptWkvwk4y4Zrkikiwqjtr2/jqBPC6oqNB
+   j+nDiBbxGnjFhyK5r8N/y26guTIWQaelpnjEHeZMSmKlwHH2PQEezXY1Y
+   odRhIxil7nL9MEOXB2l7BsCLjYWEOJUScIcE5IyZDpnWFGcKQQ0wkDDDP
+   ziGRqJWCaB2WEpR3EG4+hLR0tTPsqEHBEYvi7/V6PJgsP7h1brOY2sfRI
+   w+UussrHbfztuKH73Q1VbVN+M8BfN4h0nihgN/ziaDeO31rmfeSJ86BiC
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3566935"
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3566941"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="3566935"
+   d="scan'208";a="3566941"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:25:03 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937032890"
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937032892"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="937032890"
+   d="scan'208";a="937032892"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Feb 2024 13:24:56 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 27 Feb 2024 13:24:57 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id C58B02E6; Tue, 27 Feb 2024 23:24:55 +0200 (EET)
+	id 0D322537; Tue, 27 Feb 2024 23:24:56 +0200 (EET)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -63,10 +64,12 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv8 00/17, CORRECTED] x86/tdx: Add kexec support
-Date: Tue, 27 Feb 2024 23:24:35 +0200
-Message-ID: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv8 04/17] cpu/hotplug, x86/acpi: Disable CPU offlining for ACPI MADT wakeup
+Date: Tue, 27 Feb 2024 23:24:39 +0200
+Message-ID: <20240227212452.3228893-5-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
+References: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,129 +78,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The patchset adds bits and pieces to get kexec (and crashkernel) work on
-TDX guest.
+ACPI MADT doesn't allow to offline CPU after it got woke up.
 
-The last patch implements CPU offlining according to the approved ACPI
-spec change poposal[1]. It unlocks kexec with all CPUs visible in the target
-kernel. It requires BIOS-side enabling. If it missing we fallback to booting
-2nd kernel with single CPU.
+Currently CPU hotplug is prevented based on the confidential computing
+attribute which is set for Intel TDX. But TDX is not the only possible
+user of the wake up method.
 
-Please review. I would be glad for any feedback.
+Disable CPU offlining on ACPI MADT wakeup enumeration.
 
-[1] https://lore.kernel.org/all/13356251.uLZWGnKmhe@kreacher
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/coco/core.c               |  1 -
+ arch/x86/kernel/acpi/madt_wakeup.c |  3 +++
+ include/linux/cc_platform.h        | 10 ----------
+ kernel/cpu.c                       |  3 +--
+ 4 files changed, 4 insertions(+), 13 deletions(-)
 
-v8:
-  - Rework serialization of around conversion memory back to private;
-  - Print ACPI_MADT_TYPE_MULTIPROC_WAKEUP in acpi_table_print_madt_entry();
-  - Drop debugfs interface to dump info on shared memory;
-  - Adjust comments and commit messages;
-  - Reviewed-bys by Baoquan, Dave and Thomas;
-v7:
-  - Call enc_kexec_stop_conversion() and enc_kexec_unshare_mem() after shutting
-    down IO-APIC, lapic and hpet. It meets AMD requirements.
-  - Minor style changes;
-  - Add Acked/Reviewed-bys;
-v6:
-  - Rebased to v6.8-rc1;
-  - Provide default noop callbacks from .enc_kexec_stop_conversion and
-    .enc_kexec_unshare_mem;
-  - Split off patch that introduces .enc_kexec_* callbacks;
-  - asm_acpi_mp_play_dead(): program CR3 directly from RSI, no MOV to RAX
-    required;
-  - Restructure how smp_ops.stop_this_cpu() hooked up in crash_nmi_callback();
-  - kvmclock patch got merged via KVM tree;
-v5:
-  - Rename smp_ops.crash_play_dead to smp_ops.stop_this_cpu and use it in
-    stop_this_cpu();
-  - Split off enc_kexec_stop_conversion() from enc_kexec_unshare_mem();
-  - Introduce kernel_ident_mapping_free();
-  - Add explicit include for alternatives and stringify.
-  - Add barrier() after setting conversion_allowed to false;
-  - Mark cpu_hotplug_offline_disabled __ro_after_init;
-  - Print error if failed to hand over CPU to BIOS;
-  - Update comments and commit messages;
-v4:
-  - Fix build for !KEXEC_CORE;
-  - Cleaner ATLERNATIVE use;
-  - Update commit messages and comments;
-  - Add Reviewed-bys;
-v3:
-  - Rework acpi_mp_crash_stop_other_cpus() to avoid invoking hotplug state
-    machine;
-  - Free page tables if reset vector setup failed;
-  - Change asm_acpi_mp_play_dead() to pass reset vector and PGD as arguments;
-  - Mark acpi_mp_* variables as static and __ro_after_init;
-  - Use u32 for apicid;
-  - Disable CPU offlining if reset vector setup failed;
-  - Rename madt.S -> madt_playdead.S;
-  - Mark tdx_kexec_unshare_mem() as static;
-  - Rebase onto up-to-date tip/master;
-  - Whitespace fixes;
-  - Reorder patches;
-  - Add Reviewed-bys;
-  - Update comments and commit messages;
-v2:
-  - Rework how unsharing hook ups into kexec codepath;
-  - Rework kvmclock_disable() fix based on Sean's;
-  - s/cpu_hotplug_not_supported()/cpu_hotplug_disable_offlining()/;
-  - use play_dead_common() to implement acpi_mp_play_dead();
-  - cond_resched() in tdx_shared_memory_show();
-  - s/target kernel/second kernel/;
-  - Update commit messages and comments;
-
-Kirill A. Shutemov (17):
-  x86/acpi: Extract ACPI MADT wakeup code into a separate file
-  x86/apic: Mark acpi_mp_wake_* variables as __ro_after_init
-  cpu/hotplug: Add support for declaring CPU offlining not supported
-  cpu/hotplug, x86/acpi: Disable CPU offlining for ACPI MADT wakeup
-  x86/kexec: Keep CR4.MCE set during kexec for TDX guest
-  x86/mm: Make x86_platform.guest.enc_status_change_*() return errno
-  x86/mm: Return correct level from lookup_address() if pte is none
-  x86/tdx: Account shared memory
-  x86/mm: Adding callbacks to prepare encrypted memory for kexec
-  x86/tdx: Convert shared memory back to private on kexec
-  x86/mm: Make e820_end_ram_pfn() cover E820_TYPE_ACPI ranges
-  x86/acpi: Rename fields in acpi_madt_multiproc_wakeup structure
-  x86/acpi: Do not attempt to bring up secondary CPUs in kexec case
-  x86/smp: Add smp_ops.stop_this_cpu() callback
-  x86/mm: Introduce kernel_ident_mapping_free()
-  x86/acpi: Add support for CPU offlining for ACPI MADT wakeup method
-  ACPI: tables: Print MULTIPROC_WAKEUP when MADT is parsed
-
- arch/x86/Kconfig                     |   7 +
- arch/x86/coco/core.c                 |   1 -
- arch/x86/coco/tdx/tdx.c              |  99 ++++++++-
- arch/x86/hyperv/ivm.c                |   9 +-
- arch/x86/include/asm/acpi.h          |   7 +
- arch/x86/include/asm/init.h          |   3 +
- arch/x86/include/asm/pgtable.h       |   5 +
- arch/x86/include/asm/pgtable_types.h |   1 +
- arch/x86/include/asm/set_memory.h    |   3 +
- arch/x86/include/asm/smp.h           |   1 +
- arch/x86/include/asm/x86_init.h      |   6 +-
- arch/x86/kernel/acpi/Makefile        |  11 +-
- arch/x86/kernel/acpi/boot.c          |  86 +-------
- arch/x86/kernel/acpi/madt_playdead.S |  28 +++
- arch/x86/kernel/acpi/madt_wakeup.c   | 292 +++++++++++++++++++++++++++
- arch/x86/kernel/crash.c              |   6 +
- arch/x86/kernel/e820.c               |   9 +-
- arch/x86/kernel/process.c            |   7 +
- arch/x86/kernel/reboot.c             |  18 ++
- arch/x86/kernel/relocate_kernel_64.S |   5 +
- arch/x86/kernel/x86_init.c           |   8 +-
- arch/x86/mm/ident_map.c              |  73 +++++++
- arch/x86/mm/mem_encrypt_amd.c        |   8 +-
- arch/x86/mm/pat/set_memory.c         |  60 ++++--
- drivers/acpi/tables.c                |  14 ++
- include/acpi/actbl2.h                |  19 +-
- include/linux/cc_platform.h          |  10 -
- include/linux/cpu.h                  |   2 +
- kernel/cpu.c                         |  12 +-
- 29 files changed, 663 insertions(+), 147 deletions(-)
- create mode 100644 arch/x86/kernel/acpi/madt_playdead.S
- create mode 100644 arch/x86/kernel/acpi/madt_wakeup.c
-
+diff --git a/arch/x86/coco/core.c b/arch/x86/coco/core.c
+index d07be9d05cd0..19614302e0c4 100644
+--- a/arch/x86/coco/core.c
++++ b/arch/x86/coco/core.c
+@@ -20,7 +20,6 @@ static bool noinstr intel_cc_platform_has(enum cc_attr attr)
+ {
+ 	switch (attr) {
+ 	case CC_ATTR_GUEST_UNROLL_STRING_IO:
+-	case CC_ATTR_HOTPLUG_DISABLED:
+ 	case CC_ATTR_GUEST_MEM_ENCRYPT:
+ 	case CC_ATTR_MEM_ENCRYPT:
+ 		return true;
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index cf79ea6f3007..d222be8d7a07 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ #include <linux/acpi.h>
++#include <linux/cpu.h>
+ #include <linux/io.h>
+ #include <asm/apic.h>
+ #include <asm/barrier.h>
+@@ -76,6 +77,8 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+ 
+ 	acpi_mp_wake_mailbox_paddr = mp_wake->base_address;
+ 
++	cpu_hotplug_disable_offlining();
++
+ 	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+ 
+ 	return 0;
+diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
+index cb0d6cd1c12f..d08dd65b5c43 100644
+--- a/include/linux/cc_platform.h
++++ b/include/linux/cc_platform.h
+@@ -80,16 +80,6 @@ enum cc_attr {
+ 	 * using AMD SEV-SNP features.
+ 	 */
+ 	CC_ATTR_GUEST_SEV_SNP,
+-
+-	/**
+-	 * @CC_ATTR_HOTPLUG_DISABLED: Hotplug is not supported or disabled.
+-	 *
+-	 * The platform/OS is running as a guest/virtual machine does not
+-	 * support CPU hotplug feature.
+-	 *
+-	 * Examples include TDX Guest.
+-	 */
+-	CC_ATTR_HOTPLUG_DISABLED,
+ };
+ 
+ #ifdef CONFIG_ARCH_HAS_CC_PLATFORM
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index ac6af196c6f5..dde8e8472897 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1531,8 +1531,7 @@ static int cpu_down_maps_locked(unsigned int cpu, enum cpuhp_state target)
+ 	 * If the platform does not support hotplug, report it explicitly to
+ 	 * differentiate it from a transient offlining failure.
+ 	 */
+-	if (cc_platform_has(CC_ATTR_HOTPLUG_DISABLED) ||
+-	    cpu_hotplug_offline_disabled)
++	if (cpu_hotplug_offline_disabled)
+ 		return -EOPNOTSUPP;
+ 	if (cpu_hotplug_disabled)
+ 		return -EBUSY;
 -- 
 2.43.0
 
