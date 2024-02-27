@@ -1,95 +1,203 @@
-Received: from mail-out.aladdin-rd.ru (mail-out.aladdin-rd.ru [91.199.251.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D2213849F;
-	Tue, 27 Feb 2024 10:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.199.251.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4288F138480
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709029601; cv=none; b=FwO8/XnsMtQMbO3nMQBLQql5b025gPMJuX2qw2Bn7ciRa00TSH/XY9V0cEhfYm/JZo7UFU2F/WM8zGSj++kfQHIF5+efFp66qRHQauuSD/JGO1e1IP0FlEOpL5T6VqtcqHQ/Yq5ksIl+Pl83UnipeP8pog9vG5i74l6sahLw7s4=
+	t=1709029637; cv=none; b=IGa0dpGSyLC/86ICf8yPAfZQzPaUZwLDsIr/yw41uvOlz6o6arJk19ELFXasIkYCuJu1aW5FpPq8b/TfdY15tgEDN6gsVQQBx+K27CcMp//7mXmbDSGzs80OKGMBaef3+DcQ3eDondmOimf7kBwadZfEKxsMh03XX4xJTmXcRJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709029601; c=relaxed/simple;
-	bh=2V6msSSOGznnB/lFtzfEFRZx43Zk7T3DtjKa16ZisKg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rI6n4HaWk9zcqCVYJhGdoSrwYR8bDuy0Me4D46Pm4JIvDvaBkxNphD/+6cUD+gTURRE5Ya6xfGTNjRU+UniGOIOaj4BWgSmVi2NaJ4/BGBZg0cCrarpY/WESPCmd/BrZU4eg2ksc6N1XxdSYbrCv8ShrVkteLeBKf27vfZIArQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru; spf=pass smtp.mailfrom=aladdin.ru; arc=none smtp.client-ip=91.199.251.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aladdin.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aladdin.ru
-From: Daniil Dulov <d.dulov@aladdin.ru>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: Daniil Dulov <d.dulov@aladdin.ru>, Davidlohr Bueso <dave@stgolabs.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Josh Triplett
-	<josh@joshtriplett.org>, Steven Rostedt <rostedt@goodmis.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
-	<jiangshanlai@gmail.com>, Joel Fernandes <joel@joelfernandes.org>,
-	<linux-kernel@vger.kernel.org>, <rcu@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, David Vernet <void@manifault.com>
-Subject: [PATCH 5.15 1/1] rcutorture: Add missing return and use __func__ in warning
-Date: Tue, 27 Feb 2024 13:22:22 +0300
-Message-ID: <20240227102222.29584-2-d.dulov@aladdin.ru>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240227102222.29584-1-d.dulov@aladdin.ru>
-References: <20240227102222.29584-1-d.dulov@aladdin.ru>
+	s=arc-20240116; t=1709029637; c=relaxed/simple;
+	bh=9oQUf5HtHLbBgNp93aBOqPZ+Lw8npwFe56RH4fdl4fM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jQKB2pBO6pW2XXNYXrQZu1KunoIMsnYsMA8NpSmxA59Pl01p2p8OC6MnHpc4m18ZdlH+4whQtxDM6+Gt7x83RTa1hRe1itGIbUfif027+lp+XVDHBMHwVWTHisuCbSX9aH/+T6eXlqiHLXr/c9kASE8I0XWxT5qjukU2vurQt9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B9p0gjWx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B9p0gjWx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709029635;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gQu9FLk/3cBXcFdzQEmdwe1pIwKjfdRR38sSE0OqhrQ=;
+	b=B9p0gjWx+cKVY+ic7nMCR1IcW/JraU77EafwVwXEK+YXH6b/w51j1ASxBw+Q8nXRKNSPPT
+	O+TXtpvmo3hguezujj5RsjoMN9rcRdXyPj/x8RHo3u6/yuFJ9Fg5clPLYoJTjiHHB1oCP9
+	jnk79TpE9Q8XwusKwbdEdZiD8GX67TU=
+Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com
+ [209.85.160.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-454-9ze-NtA7P32fmlsrPuCQiQ-1; Tue, 27 Feb 2024 05:27:13 -0500
+X-MC-Unique: 9ze-NtA7P32fmlsrPuCQiQ-1
+Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-21fde24a4d7so2496047fac.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:27:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709029633; x=1709634433;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gQu9FLk/3cBXcFdzQEmdwe1pIwKjfdRR38sSE0OqhrQ=;
+        b=S2TgwJvMrtiph3pkPY+46NDxqzWoqvIINrc5WRsfCPfBDXJi/udmTFI9eFMHv9MTfO
+         OSBRkgZYRQWB60fAW7uo/DQQ4Nw0GjQxftr8J+s/mIHxO3L1bin+ZD+hTc7BQHMq4NKZ
+         MUrW1eqTjFYXG20wcidg+rnG9/Ec0NsUHIF2uCEQqaO08dJfxzLr/GMZnWF4nzislss1
+         HsJYmsPCF0CRv9yyVJuFvqDwBbtk+GyR5SiKcsX+8NKO55Le7ojhSPqiumpXNPs4eE1C
+         9hUqemcrJbyB2Mckh/mesG/vOeoB4kv/ufM3p77U6sRIQ6lbg+9xSfFZIL4/c0SKaB5t
+         MKXA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/t8JDJaVrwIL4SKit1CTUIe07IY6U97bEJIClPQFTedaqQ1Rl0mBdiiLYBJdUX8bBOBjyvEY74AITs8EjrfwPtjKG3xU6VWr0Kn/2
+X-Gm-Message-State: AOJu0Yw6DDvW40lsv96X/r52WFcezeBc/oQDenrYux7tevZfXNapoVXD
+	67H0mRbDspBvqs0twu1A/MtRcyyHIKdPelUOTFyAvE4DZCXJBPXkyvO6YhmPDn4YiYGq49M0CUn
+	uef5YjhwVcRN1D3RAU7wW4QlT7roPB/pLKIpfUkYYQwOspUEY4Y4B3QykEmQ0/A==
+X-Received: by 2002:a05:6871:152:b0:21e:95dd:b212 with SMTP id z18-20020a056871015200b0021e95ddb212mr10831629oab.57.1709029633181;
+        Tue, 27 Feb 2024 02:27:13 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEuYm+F2VGPZSJNEZUnoABzHJO2xHUmHprAk8tZITwrmte+ZXCg73IBeXoBZXMsTUu67pLzeA==
+X-Received: by 2002:a05:6871:152:b0:21e:95dd:b212 with SMTP id z18-20020a056871015200b0021e95ddb212mr10831622oab.57.1709029632857;
+        Tue, 27 Feb 2024 02:27:12 -0800 (PST)
+Received: from ?IPV6:2003:cb:c707:7600:5c18:5a7d:c5b7:e7a9? (p200300cbc70776005c185a7dc5b7e7a9.dip0.t-ipconnect.de. [2003:cb:c707:7600:5c18:5a7d:c5b7:e7a9])
+        by smtp.gmail.com with ESMTPSA id z20-20020aa785d4000000b006e4c3a6da36sm5546717pfn.202.2024.02.27.02.27.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 02:27:12 -0800 (PST)
+Message-ID: <abb00aef-378c-481a-a885-327a99aa7b09@redhat.com>
+Date: Tue, 27 Feb 2024 11:27:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] vfio/type1: unpin PageReserved page
+Content-Language: en-US
+To: Alex Williamson <alex.williamson@redhat.com>,
+ Yisheng Xie <ethan.xys@linux.alibaba.com>, akpm@linux-foundation.org
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20240226160106.24222-1-ethan.xys@linux.alibaba.com>
+ <20240226091438.1fc37957.alex.williamson@redhat.com>
+ <e10ace3f-78d3-4843-8028-a0e1cd107c15@linux.alibaba.com>
+ <20240226103238.75ad4b24.alex.williamson@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240226103238.75ad4b24.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EXCH-2016-04.aladdin.ru (192.168.1.104) To
- EXCH-2016-01.aladdin.ru (192.168.1.101)
 
-From: David Vernet <void@manifault.com>
+On 26.02.24 18:32, Alex Williamson wrote:
+> On Tue, 27 Feb 2024 01:14:54 +0800
+> Yisheng Xie <ethan.xys@linux.alibaba.com> wrote:
+> 
+>> 在 2024/2/27 00:14, Alex Williamson 写道:
+>>> On Tue, 27 Feb 2024 00:01:06 +0800
+>>> Yisheng Xie<ethan.xys@linux.alibaba.com>  wrote:
+>>>   
+>>>> We meet a warning as following:
+>>>>    WARNING: CPU: 99 PID: 1766859 at mm/gup.c:209 try_grab_page.part.0+0xe8/0x1b0
+>>>>    CPU: 99 PID: 1766859 Comm: qemu-kvm Kdump: loaded Tainted: GOE  5.10.134-008.2.x86_64 #1
+>>>                                                                      ^^^^^^^^
+>>>
+>>> Does this issue reproduce on mainline?  Thanks,
+>>
+>> I have check the code of mainline, the logical seems the same as my
+>> version.
+>>
+>> so I think it can reproduce if i understand correctly.
+> 
+> I obviously can't speak to what's in your 5.10.134-008.2 kernel, but I
+> do know there's a very similar issue resolved in v6.0 mainline and
+> included in v5.10.146 of the stable tree.  Please test.  Thanks,
 
-commit 80dcee695143255261f30c7cc2a041ba413717a4 upstream.
+This commit, to be precise:
 
-The rcutorture module has an rcu_torture_writer task that repeatedly
-performs writes, synchronizations, and deletes. There is a corner-case
-check in rcu_torture_writer() wherein if nsynctypes is 0, a warning is
-issued and the task waits to be stopped via a call to
-torture_kthread_stopping() rather than performing any work.
+commit 873aefb376bbc0ed1dd2381ea1d6ec88106fdbd4
+Author: Alex Williamson <alex.williamson@redhat.com>
+Date:   Mon Aug 29 21:05:40 2022 -0600
 
-There should be a return statement following this call to
-torture_kthread_stopping(), as the intention with issuing the call to
-torture_kthread_stopping() in the first place is to avoid the
-rcu_torture_writer task from performing any work. Some of the work may even
-be dangerous to perform, such as potentially causing a #DE due to
-nsynctypes being used in a modulo operator when querying for sync updates
-to issue.
+     vfio/type1: Unpin zero pages
+     
+     There's currently a reference count leak on the zero page.  We increment
+     the reference via pin_user_pages_remote(), but the page is later handled
+     as an invalid/reserved page, therefore it's not accounted against the
+     user and not unpinned by our put_pfn().
+     
+     Introducing special zero page handling in put_pfn() would resolve the
+     leak, but without accounting of the zero page, a single user could
+     still create enough mappings to generate a reference count overflow.
+     
+     The zero page is always resident, so for our purposes there's no reason
+     to keep it pinned.  Therefore, add a loop to walk pages returned from
+     pin_user_pages_remote() and unpin any zero pages.
 
-This patch adds the missing return call.  As a bonus, it also fixes a
-checkpatch warning that was emitted due to the WARN_ONCE() call using the
-name of the function rather than __func__.
 
-Signed-off-by: David Vernet <void@manifault.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
----
- kernel/rcu/rcutorture.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+BUT
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index d820ef615475..a76399bd43b9 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -1165,7 +1165,7 @@ rcu_torture_writer(void *arg)
- 			 " GP expediting controlled from boot/sysfs for %s.\n",
- 			 torture_type, cur_ops->name);
- 	if (WARN_ONCE(nsynctypes == 0,
--		      "rcu_torture_writer: No update-side primitives.\n")) {
-+		      "%s: No update-side primitives.\n", __func__)) {
- 		/*
- 		 * No updates primitives, so don't try updating.
- 		 * The resulting test won't be testing much, hence the
-@@ -1173,6 +1173,7 @@ rcu_torture_writer(void *arg)
- 		 */
- 		rcu_torture_writer_state = RTWS_STOPPING;
- 		torture_kthread_stopping("rcu_torture_writer");
-+		return 0;
- 	}
- 
- 	do {
+in the meantime, we also have
+
+commit c8070b78751955e59b42457b974bea4a4fe00187
+Author: David Howells <dhowells@redhat.com>
+Date:   Fri May 26 22:41:40 2023 +0100
+
+     mm: Don't pin ZERO_PAGE in pin_user_pages()
+     
+     Make pin_user_pages*() leave a ZERO_PAGE unpinned if it extracts a pointer
+     to it from the page tables and make unpin_user_page*() correspondingly
+     ignore a ZERO_PAGE when unpinning.  We don't want to risk overrunning a
+     zero page's refcount as we're only allowed ~2 million pins on it -
+     something that userspace can conceivably trigger.
+     
+     Add a pair of functions to test whether a page or a folio is a ZERO_PAGE.
+
+
+So the unpin_user_page_* won't do anything with the shared zeropage.
+
+(likely, we could revert 873aefb376bbc0ed1dd2381ea1d6ec88106fdbd4)
+
 -- 
-2.25.1
+Cheers,
+
+David / dhildenb
 
