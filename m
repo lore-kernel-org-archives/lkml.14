@@ -1,100 +1,90 @@
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907DC13EFED
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A61D13B79F;
+	Tue, 27 Feb 2024 13:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709040960; cv=none; b=PQ27z4uv4YbLoVRxaJSwWg4G+CGM06hOyrIADy/TMitjcWBeCvnEW2BnVBzoUOeomy6yMZ1kPdGSQXUkhHMH6mnK9IHbZBmLS8mF7Yxjt2ocWVPdiJGHjv3neN4MWSexl/0SSSwZhjWUjNI2zSM8racxpf4y3MTqK6wgBBSLHhs=
+	t=1709041039; cv=none; b=P3l97krUudpeqsbFfdg4m1PWMSA5BsXOem/SCnPjRJmTeJTFHRDBjucRjJ5k0cMQJhy8oHDy+OjUVk41rNHx04nAh+zxdu+lA8gT7Rn7wT3k+y0NBu3DzQB8dWmisa5oeo1Rfgxk68ckya0GK0Hps3E8yXEQyQExV7f9mUgn06w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709040960; c=relaxed/simple;
-	bh=2wdaSkoK4RlUYZqlfmfs/iKPXvB1JGP+8YFvkQgfVnE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ubp3UGpFfu8rXgS+KqhOPXIEAvrDVHdKRhLa7VmEh8d8IZ5pqU+VWo7/ppuh8crSNpNDUOjPZeMBgYI6JT/K7RVuORWAa3OlBsNl4QvJEb0+YAjGXwyaEwPCecbIloMMRyeg2TzJLlzcjIYYWujUUS0geRdcib8q8uY7eIYFbPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1709040952-086e2316ed00600001-xx1T2L
-Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx1.zhaoxin.com with ESMTP id DpE5ORzyURXSjUcG (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 27 Feb 2024 21:35:52 +0800 (CST)
-X-Barracuda-Envelope-From: WeitaoWang-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX2.zhaoxin.com
- (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 27 Feb
- 2024 21:35:52 +0800
-Received: from [10.29.8.21] (10.29.8.21) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 27 Feb
- 2024 21:35:51 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Message-ID: <594c4e2f-74c4-42dd-9b7c-c3468a55c7ee@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.21
-Date: Wed, 28 Feb 2024 05:35:50 +0800
+	s=arc-20240116; t=1709041039; c=relaxed/simple;
+	bh=H1c/bi5IfYB1iSUBfPU6PzkgJpun/PjAJmV416IBnMo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E4ffLRmMZJs/wTS27sJ7I28BQ8gTp9FtxwfMtn8dBNUFTELJjZj2sLNlZjzStt+w5zUBa+SXwpSuxkcu3SKW7ClWWyVWGGCT2tgIAPBZEHI0JnciD9VCEcxNasObYp0vJy+hoNjpND7bC7VwoqRtnKRqfkqtajvePhXgr8eAP/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGUhtyOl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGUhtyOl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05AD9C433A6;
+	Tue, 27 Feb 2024 13:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709041039;
+	bh=H1c/bi5IfYB1iSUBfPU6PzkgJpun/PjAJmV416IBnMo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oGUhtyOleFDlVprD+BHiw5msYy/xXs7n8MPnqXIQXA7gm9Hx35qZCdT4MhSOkx4hP
+	 rz+kq2hfyJ9mFuFg2rQVbGqBXf+nptZOB8OM7UT6xaUH3iMMaxxSmajFqxPHBnzAR2
+	 Z9GJJwS9G96S3zO0litfHxufug7uCe1lCZFFT56C87WkeQDL+I4v4QXuX8grK9DK9D
+	 3pWJdu1qsuFeWnfa5CV7khEuxTM+E2w8PI8eWAJ2bCM15KQYtu69N3jg2cCT2OyII3
+	 zJcPL97J4E6ztRARi9eXcpjCj5XiuknpZeMhbq6LZztKrzW9e2bfKWRYyIWLElKDeT
+	 ca9EXgFPfgyVw==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d299b4ad6aso6253751fa.1;
+        Tue, 27 Feb 2024 05:37:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVgNfEOMMgUcZ8yAb6NZ8shSj9KY9s0ABYFaEi7uD7kPospD1lnx4ZSNAefMnvc/t+sMkndaZp2/AoJmmm2KJ0CFN+0wTI2vxBcEo6UtaLioKehCGJMJZgBUrFp99G53tRc8SEQFbHCtuZnHdVOhmLQR7SeALudoOQn/MAX3gSdabBvhGrg4fveyM3Nn30+OVkJ67Se7Ej7AWcM0akpaBZDA0dH
+X-Gm-Message-State: AOJu0YyXmFy4A9xiTp1WE9AbjH6NS0kh5XVFQejDAI9s4b/wZG3KzF+8
+	xJsAiqytGo9z7N4s2VyOC7IsaO5dl8MZH3VdMe8pNgD0z7dykXzb+zRNShNb7Wzc3Ln9XLHU4lB
+	iVkT9Xu7T68Vq8/JfhbOM7IzQIQ==
+X-Google-Smtp-Source: AGHT+IG5QHJKq6z8x6+mL6APDMaMcHT+R6XCLzJCa5meAUVodTB8s4RdbL4+VxRoHLTrkZTvWB3wRm4Tes8nApxV0wo=
+X-Received: by 2002:a05:6512:1317:b0:512:f4f6:9343 with SMTP id
+ x23-20020a056512131700b00512f4f69343mr3796213lfu.26.1709041037258; Tue, 27
+ Feb 2024 05:37:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] USB:UAS:return ENODEV when submit urbs fail with device
- not attached.
-Content-Language: en-US
-X-ASG-Orig-Subj: Re: [PATCH] USB:UAS:return ENODEV when submit urbs fail with device
- not attached.
-To: Oliver Neukum <oneukum@suse.com>, <stern@rowland.harvard.edu>,
-	<gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-	<usb-storage@lists.one-eyed-alien.net>
-CC: <WeitaoWang@zhaoxin.com>
-References: <20240222165441.6148-1-WeitaoWang-oc@zhaoxin.com>
- <3ff16f34-07a9-4b7e-b51d-b7220f08d88d@suse.com>
- <41daf1a9-590a-e220-84a3-648eb895272b@zhaoxin.com>
- <8f4fe820-2385-40e7-a3c6-51102e57acad@suse.com>
-From: "WeitaoWang-oc@zhaoxin.com" <WeitaoWang-oc@zhaoxin.com>
-In-Reply-To: <8f4fe820-2385-40e7-a3c6-51102e57acad@suse.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
-X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
-X-Barracuda-Start-Time: 1709040952
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 819
-X-Barracuda-BRTS-Status: 0
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: 1.09
-X-Barracuda-Spam-Status: No, SCORE=1.09 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=DATE_IN_FUTURE_06_12, DATE_IN_FUTURE_06_12_2
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.121398
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
-	0.01 DATE_IN_FUTURE_06_12   Date: is 6 to 12 hours after Received: date
-	3.10 DATE_IN_FUTURE_06_12_2 DATE_IN_FUTURE_06_12_2
+References: <20240129092512.23602-1-quic_tengfan@quicinc.com> <20240129092512.23602-2-quic_tengfan@quicinc.com>
+In-Reply-To: <20240129092512.23602-2-quic_tengfan@quicinc.com>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Tue, 27 Feb 2024 07:37:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJfsWaj9OPkvc34rBvx7W_3v9+1kZqNu6QKDsA=iWAA4w@mail.gmail.com>
+Message-ID: <CAL_JsqJfsWaj9OPkvc34rBvx7W_3v9+1kZqNu6QKDsA=iWAA4w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: update compatible name
+ for match with driver
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, linus.walleij@linaro.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/2/27 17:05, Oliver Neukum wrote:
-> 
+On Mon, Jan 29, 2024 at 3:25=E2=80=AFAM Tengfei Fan <quic_tengfan@quicinc.c=
+om> wrote:
+>
+> Use compatible name "qcom,sm4450-tlmm" instead of "qcom,sm4450-pinctrl"
+> to match the compatible name in sm4450 pinctrl driver.
+>
+> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.y=
+aml b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+> index bb08ca5a1509..bb675c8ec220 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+> @@ -17,7 +17,7 @@ allOf:
+>
+>  properties:
+>    compatible:
+> -    const: qcom,sm4450-pinctrl
+> +    const: qcom,sm4450-tlmm
 
-> On 22.02.24 21:06, WeitaoWang-oc@zhaoxin.com wrote:
-> 
->> Maybe, my description was not accurate enough, here not add new return
->> value to scsi layer,it just add a case to tell device is gone in the uas
->> driver internal and the ENODEV error code not return to scsi layer.
->> Here just notify SCSI layer of device loss through flag DID_NO_CONNECT.
->> This is also hope to fix this issue in the uas driver internal.
-> 
-> Hi,
-> 
-> sorry for the delay. OK, I see what you are aiming at. Could you redo
-> the patch with a better description, like:
-> 
-> We need to translate -ENODEV to DID_NOT_CONNECT for the SCSI layer.
-> 
-Okay, Thanks for your suggestion. And I'll improve this patch
-description in the next version.
+I think you forgot to update the example:
 
-Thanks & Best regards,
-Weitao
+Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.example.dtb:
+/example-0/pinctrl@f100000: failed to match any schema with
+compatible: ['qcom,sm4450-tlmm']
