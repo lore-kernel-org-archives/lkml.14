@@ -1,113 +1,111 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D9F14F9FC
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A37314EFF3
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709069013; cv=none; b=lQZaFLsFyqwBBkZEYTLikDM5q+f+41ZlP3pHMB8GdEwHPINASO+PQRY7JV1aSHD5+WOZin+rP9ejmLwJGRV9SkLvG7bKqICWhJSK2b+j1zTL6MwINIFoLNm3z469+urvpPSkgLxO1vDkrOkKHy2hTKOy9gz3kd02T6nsORd1WS8=
+	t=1709069104; cv=none; b=VzUGD4NcFDkj5tOqIPZ20naHRMGddL2nTj4tOY9s8N30XgL8oEjC44HzfBIx+Tl4K/Q34H2EWiDhZRtVYVhLkKgDfxMWUMGg17NlHl8I9QXtOYPv84F98yCeOXvg1SxwXpVbkmAs/3OCvkr/uHLjRYeOjpafyBHfzQveqHRFeqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709069013; c=relaxed/simple;
-	bh=x0k9KPWxpMjPpZo+FkyIevXhBqRIFk50MHuqVr7KDaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WcfLhmGGluKrPRzTK31CWx04LMmzd1WKR+G+jVFSK9mMT0+Thl6LczHDcYHeNGK0nNm9ubx5+WAXZ0I/372fZgAfPHn1+08L93SgauNm1+j8NKYEPbOxbKqyL9iASSDr9Yz+QGU0RmeyaEZx/jyNQ0rSgC9ysNjTtkSZ9HJjW9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZNOB4uOg; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1709069104; c=relaxed/simple;
+	bh=xIprGuZ+wzLEKGSqnVchQykT8aBwBOBoQqpTJEhq/2g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=P4hv1MjJ/4+yBaZayLac9pjICBv1bOAZhvT3FDfcQaVBltWmm/WyXbkQgFWToEQfvfzKSIL0DI1fm6nY6CYDtWDsIoB2DWXyzlM8AZOlGl4R3iVz95tIgUHVIyfONg01z2JG79e5sY5oOIA2Je9wHvJJXv32hzstbjV+/iglyBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MeqskkXT; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZNOB4uOg"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7bff8f21b74so45635739f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:23:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1709069011; x=1709673811; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DbGdkLlpvK16N0hfZoWh5Gw9/QwXnepLBQjOEcjQHHM=;
-        b=ZNOB4uOgno+VpIO2W4PY1beOucE+SHUoDmzXisJWwdwQ+IUsoQ4sF4GepJZyx3g2tO
-         C87f+kflSg4ivpCjlD/8eb09Qsh37gaJzgN67dTMBXrZ5TxJ766ybe9cpAOY5xWD252T
-         Zs3+lWGB8C4nAuZaqg6GLmi4YYHOAZRu1Hv4c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709069011; x=1709673811;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DbGdkLlpvK16N0hfZoWh5Gw9/QwXnepLBQjOEcjQHHM=;
-        b=qD6A2URX3NE8nIoqDWmaabrLjmh8jxfixlJUuzwpJKtjV81NqAuzYRlNdqnIIWGcpy
-         kojNSXIZ9UFiqtUXQKyoBzDClMCNX1WEjmSsLbl4ZmkirqbCAhH/Z917HCcB8dFE4SRU
-         ITNN/+lzBKXl37Rnmj2TTaODWoompwZxICRv/Md4rxeMMWLE8YW/nSiOopuPCr4batlk
-         BFDWqvvKBKo0816PqsML9iTh0lL7mDtoAPvirO9hEMAW+6ndYPx5RhagR/3opPy+SeP7
-         Tl27PTf7m417pFF0n7tZX7yinuX1fLbhbkgnZJp9kTeJxEgYfkDiUOyGAecJVMzyy0Uw
-         MuRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWz+BCD2QlgZsDYgnjrBqFSHT0kc5HbZY+N90Pv2eCXAxcjts6CoSrjhWyk6jZhREZqACzRA8w9sfZS3UL1+Wrdqi6zLF1QPy5fCJUT
-X-Gm-Message-State: AOJu0Yz+eQECinY106/F8nN0hsYJmDLnAKk8jPg7SBzuA79+LlbYXMMG
-	O1YSvX6JtwDptfPsaQ7s+HYVUQvlWy00CUyrKjEJjf70UsgqYuTzRfVVHydQUNw=
-X-Google-Smtp-Source: AGHT+IFc3RgJRdGVkP2NPs5Y/GfM+e2c3LeD0bxO2noPvCmHIWJaDhFOLsvOZQ0IljP20IzU/UY25Q==
-X-Received: by 2002:a05:6e02:214d:b0:365:3fb7:f77 with SMTP id d13-20020a056e02214d00b003653fb70f77mr11217673ilv.3.1709069010744;
-        Tue, 27 Feb 2024 13:23:30 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id bf19-20020a056e02309300b0036524b8c632sm2413353ilb.0.2024.02.27.13.23.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 13:23:30 -0800 (PST)
-Message-ID: <56680d34-59f1-460c-a835-f1258abf4569@linuxfoundation.org>
-Date: Tue, 27 Feb 2024 14:23:29 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MeqskkXT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709069103; x=1740605103;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xIprGuZ+wzLEKGSqnVchQykT8aBwBOBoQqpTJEhq/2g=;
+  b=MeqskkXTRNlbjkpntg1p94Y+DoBTAyh1DWj/WzGj9LpJOApmIglEUEOh
+   byP4AXDGVP3/JZaYrcRRfGHWzAl1cvFUyib/ittv+GSFHwxaRsBJA4fkJ
+   beI4+/K8D0AUVvG0+SHiZTF11mG8K9GkLCgjI0AJbAvkoR6VVwSfNXXs7
+   g9XgtE0L3BBrE9clD1lLlh8wHG+lwja2KNHIRPXQtks8GXFOj89FNv1ID
+   n5hB4CkL/jK7KIKthj+sSUm87/EpJeKzaHYUkAKzRHuSf8/KJHH+kzK9F
+   bfhsprqIlmPu7USWbEZ65GrOVnF6sEhoO1G+ulGsE1AeLTlM0IgL3JARu
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3566906"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="3566906"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:25:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937032886"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="937032886"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Feb 2024 13:24:56 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id E4DB44C5; Tue, 27 Feb 2024 23:24:55 +0200 (EET)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv8 02/17] x86/apic: Mark acpi_mp_wake_* variables as __ro_after_init
+Date: Tue, 27 Feb 2024 23:24:37 +0200
+Message-ID: <20240227212452.3228893-3-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
+References: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/9] rtc: test: Fix invalid format specifier.
-Content-Language: en-US
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
- David Gow <davidgow@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>,
- Matthew Auld <matthew.auld@intel.com>,
- Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Kees Cook <keescook@chromium.org>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Willem de Bruijn <willemb@google.com>, Florian Westphal <fw@strlen.de>,
- Cassio Neri <cassio.neri@gmail.com>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Arthur Grillo <arthur.grillo@usp.br>,
- Brendan Higgins <brendan.higgins@linux.dev>,
- Daniel Latypov <dlatypov@google.com>, Stephen Boyd <sboyd@kernel.org>,
- David Airlie <airlied@gmail.com>, Maxime Ripard <mripard@kernel.org>,
- "David S . Miller" <davem@davemloft.net>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org,
- linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, linux-hardening@vger.kernel.org,
- netdev@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240221092728.1281499-1-davidgow@google.com>
- <20240221092728.1281499-6-davidgow@google.com>
- <20240227203243070e7d85@mail.local>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240227203243070e7d85@mail.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/27/24 13:32, Alexandre Belloni wrote:
-> Hello,
-> 
-> On 21/02/2024 17:27:18+0800, David Gow wrote:
->> 'days' is a s64 (from div_s64), and so should use a %lld specifier.
->>
->> This was found by extending KUnit's assertion macros to use gcc's
->> __printf attribute.
->>
->> Fixes: 1d1bb12a8b18 ("rtc: Improve performance of rtc_time64_to_tm(). Add tests.")
->> Signed-off-by: David Gow <davidgow@google.com>
-> 
-> Who do you expect to take this patch?
-> 
+acpi_mp_wake_mailbox_paddr and acpi_mp_wake_mailbox initialized once
+during ACPI MADT init and never changed.
 
-I am going to be applying this series to linux-kselftest kunit next
-in just a bit. Would you like to ack the pacth?
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: Kai Huang <kai.huang@intel.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/acpi/madt_wakeup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-thanks,
--- Shuah
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index 7f164d38bd0b..cf79ea6f3007 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -6,10 +6,10 @@
+ #include <asm/processor.h>
+ 
+ /* Physical address of the Multiprocessor Wakeup Structure mailbox */
+-static u64 acpi_mp_wake_mailbox_paddr;
++static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
+ 
+ /* Virtual address of the Multiprocessor Wakeup Structure mailbox */
+-static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox;
++static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox __ro_after_init;
+ 
+ static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
+ {
+-- 
+2.43.0
 
