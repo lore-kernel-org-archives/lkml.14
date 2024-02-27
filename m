@@ -1,302 +1,318 @@
-Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1E2135A75;
-	Tue, 27 Feb 2024 09:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=91.207.212.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709026535; cv=fail; b=L4tnhX3OCufYeZfKj8kwXF74pt9z3nCgvoXyOuT5P6Id0879jHxfgifQqcxfxNBl9ZPMB7g9raoJrqv5AwjMKJt4XmWyx8qNPifzC3kyYgOn8flDNRW619x+7YxpMOvSjY/z7RlQS7xvBCWAMVVviqrvOtBbsjcbteS+MqpqYf0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709026535; c=relaxed/simple;
-	bh=uvlsDByLg7mZn/iH/uQFBnoxfJ0zcFp9tZIIWdtlpyI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NqVqjBVZVCQnGSzbJLVfcxInCsFvCIAROdD+y/uKotZuBG9g9SeA4wQMaESDj7A1/a5mjcJvQcnXOsr/2JlNEpfXuHkayheXZac9uzqIAUJaxbbNcie8WQJYUNtjR36iry8pwVGNEixUae5S8uiJAq0OCxrHV7+hJnt0b3yR3pY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=C5sevCx1; dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b=KVVJ85mQ; arc=fail smtp.client-ip=91.207.212.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0884A135A75
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709026610; cv=none; b=Lxqo75GIm1KFHyv+Ydszv3w/tOgBHq4v5zuULbC6kmhoiOCUAADwMhkt3PfuF7X8PkcvQZOxz/OLu4WW/wQsBDc+MxQ9CpA4qz5kCIRUIYxYc85JPphR6Bo4w42Eqdq9HJYpd2QX25Rwu2G7APv4r/eTqE2VJIRJiOgdwgxcmEA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709026610; c=relaxed/simple;
+	bh=IA4jXxU6MJ/W/qpXgS/1CKOVND0eKixNSN67gqPANlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=edEGaisoia4I/8CYl4K/E3mpyM9dLqPYbGMuZ/Ksolh8QoKQua+sOQN2ot3HZsMmBZkMZ8hnpQuDsb4XS179AcaaPDQs4BwKvKXGsZhg7bSqMul19bTlN0Vc/ft71HYNupvahPbDzmY3LFJ3ddMjmkJojRXAgxOfpdOCLioYoew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xu9Lb3v8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="C5sevCx1";
-	dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b="KVVJ85mQ"
-Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41R8u9BG015987;
-	Tue, 27 Feb 2024 09:31:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:mime-version; s=dk201812; bh=S65yxxeBWkGGmdVnq7hzU
-	VyJJNCJliz5dTPTf1T7UD0=; b=C5sevCx1+v7QGYWU5MHLn1AT3TMRJ6kQJfsGi
-	EP89Nvr2huv5VxAkZEiPL0LF5hgGZ/Zxrzh1QVFni13l4qy/jTE1NwYs8d4/0sde
-	CCNLhWHbRcTQZT/RpdJWD+KNIbyspfTD/qWdIsdRl84ftLqX+2YKvN5HNpdaoGlS
-	O4Djww/GG9EF5OggxAC27dRuCm1ZgtKSlM+JFdArPrWoE8C6iHcpmyFS0eeLXRm/
-	SC0r8al+7LuGw5m1x4n4lUY4Djhpf74r0CxdcWFkM0LxIpIrk+X9A4ngd4Ac07Ca
-	1f/VVkoCtN5xhNzIRKsGvajcegHybBMiZKjR/bypyrOZTkXtQ==
-Received: from hhmail05.hh.imgtec.org ([217.156.249.195])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 3wf7kstcn9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 27 Feb 2024 09:31:25 +0000 (GMT)
-Received: from HHMAIL05.hh.imgtec.org (10.100.10.120) by
- HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 27 Feb 2024 09:31:24 +0000
-Received: from GBR01-LO4-obe.outbound.protection.outlook.com (104.47.85.105)
- by email.imgtec.com (10.100.10.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 27 Feb 2024 09:31:24 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VdaNq2ZM0da7PH0EXPiKvI94kDJZg9wsa9/YpVwaVFgcN1jjuJ6Vw8XI9WQ055lLObxYNoRX2fd0gx6ECYy9Fy20yH+UeZOxv8wqqDMSFwmzn+ufHf9y4SNjKBUoKRfdgaksc6GbCVBWQdVgVGNEpn3obhmA2bRFrJwhEkCfJxzv/cb/TsbNknIy4osT9+A5MQBCxrDlO6aLT/x+gP9l/cnqKtaJjPiSON10U3rhidtkAlEDs3k2jswGZmIT/3tsvJlswoHdWU1OxxwS1jyK8QNgsubkTmnBytToE0l9zffn8900P1Jvlg1iJqvmjgLGIiVxdb6P7TKL4DD0rHCHgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S65yxxeBWkGGmdVnq7hzUVyJJNCJliz5dTPTf1T7UD0=;
- b=CwTbaKPbwKf1MItiTGpIKwxAnZjh3QuO8b9zJrUVatH0g6rIHHevEQ/B3EA6XWX8sf7mIpYUZt4idJCjOR04mpb1iTFmycSCUPHD4WUAiYdF0f6kJUWNykbT8Qq8S3buBChEXeIWFX+dpe9Vs4CAYleH1RDhO9m7NkEEve3G+2PhDvnwfUE59iIyH0ztI2za8bD/eIG7gKqyLa5zf15uA0gFjugQg1EXMQuRkGLRlqm1/qKTSQNSE3aTIv4g72FUF8e6BZ6J4zorXcqn+Z+BkhS693htRqBfKcQMtOs6+W1cMcp0BNf9zIy5RRgZuQpxJZkXAz4TRF/dJl6MqdmcoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=imgtec.com; dmarc=pass action=none header.from=imgtec.com;
- dkim=pass header.d=imgtec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=IMGTecCRM.onmicrosoft.com; s=selector2-IMGTecCRM-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S65yxxeBWkGGmdVnq7hzUVyJJNCJliz5dTPTf1T7UD0=;
- b=KVVJ85mQ77JCdUcJNl2qI0WMq16CVL7xFPylGXrraXBl1IYU0NyD78Ju8vc6NAC3m1mq505seuNlzkgw5c49KBgUUpPBEno0Fxk8TZUK7rMR8n1+CJFkdteNBVupnOwZcaKDFB8zFHW3t3tMiv9/Pa2H00YBEtni7e13kDwka4E=
-Received: from LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:16c::5)
- by CWXP265MB5491.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:159::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Tue, 27 Feb
- 2024 09:31:22 +0000
-Received: from LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM
- ([fe80::4b5c:d51f:da10:2626]) by LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM
- ([fe80::4b5c:d51f:da10:2626%5]) with mapi id 15.20.7316.035; Tue, 27 Feb 2024
- 09:31:22 +0000
-From: Matt Coster <Matt.Coster@imgtec.com>
-To: Adam Ford <aford173@gmail.com>,
-        "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>,
-        "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>
-CC: Adam Ford <aford@beaconembedded.com>,
-        Frank Binns
-	<Frank.Binns@imgtec.com>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter
-	<daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm
-	<magnus.damm@gmail.com>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/6] arm64: dts: renesas: r8a774a1: Enable GPU
-Thread-Topic: [PATCH 2/6] arm64: dts: renesas: r8a774a1: Enable GPU
-Thread-Index: AQHaaV+5Tgg+LkpwAUmauR/SMCWjxw==
-Date: Tue, 27 Feb 2024 09:31:22 +0000
-Message-ID: <39aead3b-b809-4c9c-8a5d-c0be2b36ea47@imgtec.com>
-References: <20240227034539.193573-1-aford173@gmail.com>
- <20240227034539.193573-3-aford173@gmail.com>
-In-Reply-To: <20240227034539.193573-3-aford173@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LO0P265MB3404:EE_|CWXP265MB5491:EE_
-x-ms-office365-filtering-correlation-id: 2d28296d-70ff-487a-97aa-08dc3776dc7a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: D7IEqc8J9lRLj499qLRSLqJfr2RUzrDvcU67wuK8ZRfQcHfPH/jYxFpbxIjlRAetWnpEu9/w8CeeQ3YnaxcWsPC3JOaNsFftSHs0BK7AQealzhLNsw3OMbO28G7IWF4wPK6OiAxhuH++usFWTFq4wOkDKS8qJu3aecDOq7seN1H+a8C4sXVHfXN8FlggMi90rwi18ALgSFGi0lbE4pJAokPCzlmRscOrDeh+LlE+4L1MESnm2EdDeHrL8Q388BIMJCWgQ3HIDWgGeTZLdMbRZb1QITTg2ebpu69UG4f6LDmLlfsmm2nrQVHkwT6PB6/Tp1OAstYSpOd0gX1tFjfTYPyG1aqYv5Vxbt+q+xsrksBSnk+WLkSoCtT9CqJSqeiewn0xikQbP/a4eUlghxMlgwZfw0gAc9p2kF4vPH9u2fVD+QMUyAXNb+K/MGOpp2AUjvQaRQk3yQAkvNcfc+kq+ruf8H18HB8kd2LBE3olLEy8mzRCyVCi7cOec2VYRrMEnePW/rzBf9xmw00h9BwLiPCBX4uSvtlI/ZZ0W/sgJ3XQGUES09kdir4A2RddUoDWO0HiYzJ7f+OFWE0Hy/ChRs0IvuH0HZv2RE3C3ZxKBcL4vrgpn+Uf95J6Uztay6koGKMVYTOUkC4a7BL1aV90lBsLcsPlalKc87G7/yc79E/FhyRZ3h6S11wIALqScbKhiKB87nHfkzcXGIMAo7Wjbw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eGsxWHJaRkRpWWtsOGJ2ak40b3oxeDZTQURsN21EZUp0ZzZKRnFVZnBobjUx?=
- =?utf-8?B?amRvTko1MExUMGRvZmxkbWV0NVA4ZHFDVGlFVFZ1dlZXRE5JUVhzVUM3eXM5?=
- =?utf-8?B?YS9HUUdJcGdFb1ptZDZQVDA2by91OStlZEtOTnBiU1RGYkNKdlV4SnMwK3Br?=
- =?utf-8?B?bTVRUVc1eFd4VzhydlBFVUpPSjNhamx4MGd4dFZUMjR3RHZydlVOU2dEcWNh?=
- =?utf-8?B?bkVuRUQzd0YvUW9QTGVTdDQ4VG83MWdrZnNBcmNPMFZRdnZGTFB6cmdiUkZt?=
- =?utf-8?B?REJlU2ZnR1lrZ2dma1pZRlBDaWdjOTAxS3JrVm1QWjNNRzI3ZU9HQkZnVWdw?=
- =?utf-8?B?ZWdTSXF0SjhER0tzTFhoYm1mS1p2dEl0UDhNU2RORnVHcDQyMklOcWd6THlq?=
- =?utf-8?B?U1NRZnNJQTdBU3VFbFA0eHBwYXg0NmcrUDV2NEMvTDNGaTcxNjBIWVF0VUU0?=
- =?utf-8?B?eHYwZGM1bkxBMkhpMTR3TG51dUgrUnJ1ekd5VGhlWXhBRjI2M1ZVVVdPTVdi?=
- =?utf-8?B?cllIQzB4Q2JJUFF4NWMxMUZIaStDcGVmcjJMeE1aTktxMmp5dFdHSG15ZXQx?=
- =?utf-8?B?a3R1L0kwRVBqdmFQczFxY3hVWDd5TFY3eFVDMldtRVBvQ0tGK0xIZnJaUmVY?=
- =?utf-8?B?TVFPaTF2RlFiMVdCQkNaeG1YNGFNZlppRThjRlFOZW9XbjA4Ulh4RFZVSEtT?=
- =?utf-8?B?amVzRnpqTnhvcUluZkhHdlpaSmhPdnBCb3pvN1BkOERZc1Judlh4K2QvdnI4?=
- =?utf-8?B?R3dwOG1CR3hPakhUamtZYkRlaTdzUHFIdVhyVmJDZkRKS3FFR1hCVE1ySGF3?=
- =?utf-8?B?cnFtdXdJcVErWklOVkUvandMNGRSbW9zakVmcEJrcmp0QVpSdmYrTUpTT0hY?=
- =?utf-8?B?RVBxcDRMN3hKaVVOZUd6dE56UlBpOExtcGQ4MHlwZVN1WWFhaksvY3M1TjVG?=
- =?utf-8?B?a05NUDhkbitMUXI0b1d6a2drNmdTeGpBV1dza2krMWZObFI0UDJjeE9CTW14?=
- =?utf-8?B?NUI1dkNzS3VjQUMrZnhGZVBCUDkrRVlxbVlLdjlsQWZTK0tUN1JXYTRYcWsv?=
- =?utf-8?B?WjljQkRiVzBqZW9aMU1NeGxBdHNyOWx5MVM2eUEwVVU0bG0ydG5vL1pSN2t3?=
- =?utf-8?B?Q2RrTUxLRWlraXJvMkxhMHFPWm82aDBKODhkbkxHOUd5TjBTQ3JyVVJtMkVO?=
- =?utf-8?B?U0h1SGpKMFlIMjBVNVQyeUcySE5jckVGbkJPM0ViYTVKeXNKSC9qU2NzVUNB?=
- =?utf-8?B?emloeG9xNGhzYXlFTS8yOWZ6SXBRUkgrN2xJazJoSHcwLzdZNDdZejA1U3Bl?=
- =?utf-8?B?V2FkTWRtZlBvd0IzeGFTditzZForbW1xTHRnbEw1YzNKWnp4c0xvWDJkY1BJ?=
- =?utf-8?B?ZmQ5U1IrZkdMZm9DSUwxVVlwNU5FeFk2eEUzZEJHc3gvalgwZnNHU0JVNHk1?=
- =?utf-8?B?VG5YMGVZWWdROGZmMDdxWjNLUUdCblZWTWNaVElOKzdhb0xnQjBoR01obEZC?=
- =?utf-8?B?Z25uQ0tXRzBGVExmVW9pQjhlK2paY0ZaR083cVZndk5xM01qZDlURDBHbndl?=
- =?utf-8?B?empmTDZHSmYzVG95dXdXejY4VHFCRW5VTEZIcGNJVlg2K25vR1hlK003dTlY?=
- =?utf-8?B?dzFacGp6dnNFUXlETjVpK1VPc29NKy9MallRUDluR3RJQisyZEdIZmJmVHZs?=
- =?utf-8?B?ZThjdGVMTmdVQTJscjRSdUxGaUlORC9rT2xNRENBTjg4Q3RVd0czYitCazBw?=
- =?utf-8?B?MFhjODZPa0xLbXA3UEJlQUpEOVFPWFJvRWQxQ3REMHd4emtoVFlwWS9NRXln?=
- =?utf-8?B?aW9wSTNOdEJIWitESXZFemFCZlRHVDMwNzE0NkVucnpWZTJ3elNINDFnSjVx?=
- =?utf-8?B?TUYxazNLNFZBTDJHTGR4VXUvQndQS2FnKzk2NFIzSmxvUVlNWmQxR1U4REtQ?=
- =?utf-8?B?SEx0MEcwd2xxMk0rQSszbytJZkJ5Z1JzT2VTR2FXQzhFdW14SndWdE1HeGRI?=
- =?utf-8?B?N01mNzlZZnZBZHpTdk9UM3Y4aHNJbUd2R3NEZmVSL0tjcE1rbk1EakFHMy9E?=
- =?utf-8?B?VUh1ZmdyTDBPQ3VySEZ1TStqSnJlZlZ2VmdKcHlLcGN1VE9WMDZzNFIzMnp2?=
- =?utf-8?B?NVp6blBZSGNJVFpmWWFiVWcxbnVraHF3OTBQVHJ0aDUwZ1dLQnhVY3FGbGtn?=
- =?utf-8?B?TFE9PQ==?=
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------YyZSrtIgnQPAf68GePbjaRAS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xu9Lb3v8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709026606;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=rFrtZB6Qy6FQZw76onOMTtbfujJrxXsMEz/j5WTBBdE=;
+	b=Xu9Lb3v8bvZCkRnUzFtIqhthqOLTW7z0syNH61GSTRjkm+wF5J0DfKKRIl0b20XZlG2L7k
+	RYMRO7dXyrpyRMv6mlJb6Z3jpjR27l4kBQAStoooZ6/n3DvTd9uSCvU1psiR8BIIKE4vUz
+	UgPPjS7294xZ9nltOG2vw5iOR3kP7+I=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-656-Ax3rW-dKORq8Iy3HsoSYsA-1; Tue, 27 Feb 2024 04:36:45 -0500
+X-MC-Unique: Ax3rW-dKORq8Iy3HsoSYsA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-33dcd5d117fso922339f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:36:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709026604; x=1709631404;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rFrtZB6Qy6FQZw76onOMTtbfujJrxXsMEz/j5WTBBdE=;
+        b=k/9AfeAxpFAAHCtmRm9+KjbbLeet6YDQrg85QKo9NgX77NY2/OZ5VDgN1uAlt/npnu
+         rFG33gj19g7QY6DVQeSRI2g6RsROLF1NWLSv3uMGg72w9meXXAeElRNlePjpUTwars98
+         VlzVcmtPL5EOSmJyxUBAfiNWrFfW6PfjNWfyphaFSS1GMG0+UZxahuTG57qdtx5TzCDy
+         qjK5G8Rik2JB+rWmg+CDmMDP2C0poTqNUo6pTV3dpANRevFjV2z6mA+OMeYFANSZUoyM
+         5F+U7F5YaFqglsuYAlMdmYhKhR7YBD8fjUtIxfhs1KLKF9yYX4doGgt7mTvqdV0rfmyI
+         MEkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzV1QBaiGDv6yuTnlBgkKlgvo6GdbFjosVu51UKF0ULQBJ9Crc6gtetrfQphpeTORtGyuM2QMvnICMCZkJ6Gl8vaTDYISUtr5La0A7
+X-Gm-Message-State: AOJu0YzW95/V7mX9ZKGw/OC9xHuB1XO3EIdUFOQkBM93F5+E5dBRLDGf
+	7byVuu7QcZ089UtnOxKOvM1FFzYULAaSpGqCueUZX+X0GTVPzffYwHek1tAVLxPlKHGZrzJhyad
+	N+YeucP1vWxfzb98L9u/Swrea60lPhfdrr4wfGlCmvxhyMoSdUlluZqhUSSGQh8tdqBe76Q==
+X-Received: by 2002:a5d:64e4:0:b0:33d:d843:ecd2 with SMTP id g4-20020a5d64e4000000b0033dd843ecd2mr6232936wri.24.1709026604293;
+        Tue, 27 Feb 2024 01:36:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGDsUgDSopD1fVRnJyEr5SXJwldCqWCCOnD+fLPGhaDnBcJi/DaDdazKJ9JDmkli96dYKhRDw==
+X-Received: by 2002:a5d:64e4:0:b0:33d:d843:ecd2 with SMTP id g4-20020a5d64e4000000b0033dd843ecd2mr6232906wri.24.1709026603868;
+        Tue, 27 Feb 2024 01:36:43 -0800 (PST)
+Received: from ?IPV6:2003:cb:c707:7600:5c18:5a7d:c5b7:e7a9? (p200300cbc70776005c185a7dc5b7e7a9.dip0.t-ipconnect.de. [2003:cb:c707:7600:5c18:5a7d:c5b7:e7a9])
+        by smtp.gmail.com with ESMTPSA id bj29-20020a0560001e1d00b0033d81d9c44esm10925634wrb.70.2024.02.27.01.36.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 01:36:43 -0800 (PST)
+Message-ID: <42ffe7cf-8371-433d-a9bf-1a23c902f3f9@redhat.com>
+Date: Tue, 27 Feb 2024 10:36:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LO0P265MB3404.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d28296d-70ff-487a-97aa-08dc3776dc7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2024 09:31:22.4114
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d5fd8bb-e8c2-4e0a-8dd5-2c264f7140fe
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VPwlsEuXLeKEqkk8icMlVH45rHaPxyCzzbvVK6k+aGpVhZ7+viwBrGuSqWZpJgYWlLy2K4mJCu3tGM5iq9//hg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWXP265MB5491
-X-OriginatorOrg: imgtec.com
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-GUID: oNxJ70SX80QJruDLGZEtQuHb55g9PSAC
-X-Proofpoint-ORIG-GUID: oNxJ70SX80QJruDLGZEtQuHb55g9PSAC
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: export folio_pte_batch as a couple of modules might
+ need it
+Content-Language: en-US
+To: Barry Song <21cnbao@gmail.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Barry Song <v-songbaohua@oppo.com>, Lance Yang <ioworker0@gmail.com>,
+ Yin Fengwei <fengwei.yin@intel.com>
+References: <20240227024050.244567-1-21cnbao@gmail.com>
+ <61b9dfc9-5522-44fd-89a4-140833ede8af@arm.com>
+ <c95215b2-6ec5-4efb-a73b-7be92cda1c83@redhat.com>
+ <CAGsJ_4z3dbqnN5nkKgm2_zyLHK0gqMugzPYMkPpRMK4ypBVJNw@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAGsJ_4z3dbqnN5nkKgm2_zyLHK0gqMugzPYMkPpRMK4ypBVJNw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---------------YyZSrtIgnQPAf68GePbjaRAS
-Content-Type: multipart/mixed; boundary="------------EfAO01f9Y4wfebJn0Zgur0Tw";
- protected-headers="v1"
-From: Matt Coster <matt.coster@imgtec.com>
-To: Adam Ford <aford173@gmail.com>, dri-devel@lists.freedesktop.org,
- linux-renesas-soc@vger.kernel.org
-Cc: Adam Ford <aford@beaconembedded.com>, Frank Binns
- <frank.binns@imgtec.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <39aead3b-b809-4c9c-8a5d-c0be2b36ea47@imgtec.com>
-Subject: Re: [PATCH 2/6] arm64: dts: renesas: r8a774a1: Enable GPU
-References: <20240227034539.193573-1-aford173@gmail.com>
- <20240227034539.193573-3-aford173@gmail.com>
-In-Reply-To: <20240227034539.193573-3-aford173@gmail.com>
+On 27.02.24 10:27, Barry Song wrote:
+> On Tue, Feb 27, 2024 at 10:14 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 27.02.24 10:07, Ryan Roberts wrote:
+>>> On 27/02/2024 02:40, Barry Song wrote:
+>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>
+>>>> madvise and some others might need folio_pte_batch to check if a range
+>>>> of PTEs are completely mapped to a large folio with contiguous physcial
+>>>> addresses. Let's export it for others to use.
+>>>>
+>>>> Cc: Lance Yang <ioworker0@gmail.com>
+>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>>>> Cc: David Hildenbrand <david@redhat.com>
+>>>> Cc: Yin Fengwei <fengwei.yin@intel.com>
+>>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>>>> ---
+>>>>    -v1:
+>>>>    at least two jobs madv_free and madv_pageout depend on it. To avoid
+>>>>    conflicts and dependencies, after discussing with Lance, we prefer
+>>>>    this one can land earlier.
+>>>
+>>> I think this will also ultimately be useful for mprotect too, though I haven't
+>>> looked at it properly yet.
+>>>
+>>
+>> Yes, I think we briefly discussed that.
+>>
+>>>>
+>>>>    mm/internal.h | 13 +++++++++++++
+>>>>    mm/memory.c   | 11 +----------
+>>>>    2 files changed, 14 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/mm/internal.h b/mm/internal.h
+>>>> index 13b59d384845..8e2bc304f671 100644
+>>>> --- a/mm/internal.h
+>>>> +++ b/mm/internal.h
+>>>> @@ -83,6 +83,19 @@ static inline void *folio_raw_mapping(struct folio *folio)
+>>>>       return (void *)(mapping & ~PAGE_MAPPING_FLAGS);
+>>>>    }
+>>>>
+>>>> +/* Flags for folio_pte_batch(). */
+>>>> +typedef int __bitwise fpb_t;
+>>>> +
+>>>> +/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
+>>>> +#define FPB_IGNORE_DIRTY            ((__force fpb_t)BIT(0))
+>>>> +
+>>>> +/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
+>>>> +#define FPB_IGNORE_SOFT_DIRTY               ((__force fpb_t)BIT(1))
+>>>> +
+>>>> +extern int folio_pte_batch(struct folio *folio, unsigned long addr,
+>>>> +            pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
+>>>> +            bool *any_writable);
+>>>> +
+>>>>    void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
+>>>>                                               int nr_throttled);
+>>>>    static inline void acct_reclaim_writeback(struct folio *folio)
+>>>> diff --git a/mm/memory.c b/mm/memory.c
+>>>> index 1c45b6a42a1b..319b3be05e75 100644
+>>>> --- a/mm/memory.c
+>>>> +++ b/mm/memory.c
+>>>> @@ -953,15 +953,6 @@ static __always_inline void __copy_present_ptes(struct vm_area_struct *dst_vma,
+>>>>       set_ptes(dst_vma->vm_mm, addr, dst_pte, pte, nr);
+>>>>    }
+>>>>
+>>>> -/* Flags for folio_pte_batch(). */
+>>>> -typedef int __bitwise fpb_t;
+>>>> -
+>>>> -/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
+>>>> -#define FPB_IGNORE_DIRTY            ((__force fpb_t)BIT(0))
+>>>> -
+>>>> -/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
+>>>> -#define FPB_IGNORE_SOFT_DIRTY               ((__force fpb_t)BIT(1))
+>>>> -
+>>>>    static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+>>>>    {
+>>>>       if (flags & FPB_IGNORE_DIRTY)
+>>>> @@ -982,7 +973,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+>>>>     * If "any_writable" is set, it will indicate if any other PTE besides the
+>>>>     * first (given) PTE is writable.
+>>>>     */
+>>>
+>>> David was talking in Lance's patch thread, about improving the docs for this
+>>> function now that its exported. Might be worth syncing on that.
+>>
+>> Here is my take:
+>>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>    mm/memory.c | 22 ++++++++++++++++++----
+>>    1 file changed, 18 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index d0b855a1837a8..098356b8805ae 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -971,16 +971,28 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+>>          return pte_wrprotect(pte_mkold(pte));
+>>    }
+>>
+>> -/*
+>> +/**
+>> + * folio_pte_batch - detect a PTE batch for a large folio
+>> + * @folio: The large folio to detect a PTE batch for.
+>> + * @addr: The user virtual address the first page is mapped at.
+>> + * @start_ptep: Page table pointer for the first entry.
+>> + * @pte: Page table entry for the first page.
+>> + * @max_nr: The maximum number of table entries to consider.
+>> + * @flags: Flags to modify the PTE batch semantics.
+>> + * @any_writable: Optional pointer to indicate whether any entry except the
+>> + *               first one is writable.
+>> + *
+>>     * Detect a PTE batch: consecutive (present) PTEs that map consecutive
+>> - * pages of the same folio.
+>> + * pages of the same large folio.
+>>     *
+>>     * All PTEs inside a PTE batch have the same PTE bits set, excluding the PFN,
+>>     * the accessed bit, writable bit, dirty bit (with FPB_IGNORE_DIRTY) and
+>>     * soft-dirty bit (with FPB_IGNORE_SOFT_DIRTY).
+>>     *
+>> - * If "any_writable" is set, it will indicate if any other PTE besides the
+>> - * first (given) PTE is writable.
+>> + * start_ptep must map any page of the folio. max_nr must be at least one and
+>> + * must be limited by the caller so scanning cannot exceed a single page table.
+>> + *
+>> + * Return: the number of table entries in the batch.
+>>     */
+>>    static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+>>                  pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
+>> @@ -996,6 +1008,8 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+>>                  *any_writable = false;
+>>
+>>          VM_WARN_ON_FOLIO(!pte_present(pte), folio);
+>> +       VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, folio);
+>> +       VM_WARN_ON_FOLIO(page_folio(pfn_to_page(pte_pfn(pte))) != folio, folio);
+>>
+>>          nr = pte_batch_hint(start_ptep, pte);
+>>          expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
+>> --
+>> 2.43.2
+>>
+>>
+>>>
+>>>> -static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+>>>> +int folio_pte_batch(struct folio *folio, unsigned long addr,
+>>>
+>>> fork() is very performance sensitive. Is there a risk we are regressing
+>>> performance by making this out-of-line? Although its in the same compilation
+>>> unit so the compiler may well inline it anyway?
+>>
+>> Easy to verify by looking at the generated asm I guess?
+> 
+> my aarch64-linux-gnu-gcc didn't inline it
 
---------------EfAO01f9Y4wfebJn0Zgur0Tw
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+I think on x86-64 it would inline it with "gcc (GCC) 13.2.1 20231205 
+(Red Hat 13.2.1-6)"
 
-Hi Adam,
+> 
+> $ aarch64-linux-gnu-gcc --version
+> aarch64-linux-gnu-gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+> Copyright (C) 2021 Free Software Foundation, Inc.
+> 
+> $ nm -S -s vmlinux.a | grep  folio_pte_batch
+> 0000000000003818 0000000000000204 T folio_pte_batch
+> 
 
-Thanks for these patches! I'll just reply to this one patch, but my
-comments apply to them all.
+As it's only used on the folio_test_large() "slower" paths, likely 
+optimizing out the "writable" check (and possibly the flags) might not 
+be that important.
 
-On 27/02/2024 03:45, Adam Ford wrote:
-> The GPU on the RZ/G2M is a Rogue GX6250 which uses firmware
-> rogue_4.45.2.58_v1.fw available from Imagination.
->=20
-> When enumerated, it appears as:
->   powervr fd000000.gpu: [drm] loaded firmware powervr/rogue_4.45.2.58_v=
-1.fw
->   powervr fd000000.gpu: [drm] FW version v1.0 (build 6513336 OS)
+>>
+>>>
+>>> Either way, perhaps we are better off making it inline in the header? That would
+>>> avoid needing to rerun David's micro-benchmarks for fork() and munmap().
+> 
+> actually tried this before trying extern, the problem is that we have to add
+> others into internal.h, for example __pte_batch_clear_ignored, which
+> seems not API. are we comfortable to move that one to internal.h too?
 
-These messages are printed after verifying the firmware blob=E2=80=99s he=
-aders,
-*before* attempting to upload it to the device. Just because they appear
-in dmesg does *not* imply the device is functional beyond the handful of
-register reads in pvr_load_gpu_id().
+Yes, that shouldn't stop us.
 
-Since Mesa does not yet have support for this GPU, there=E2=80=99s not a =
-lot
-that can be done to actually test these bindings.
-
-When we added upstream support for the first GPU (the AXE core in TI=E2=80=
-=99s
-AM62), we opted to wait until userspace was sufficiently progressed to
-the point it could be used for testing. This thought process still
-applies when adding new GPUs.
-
-Our main concern is that adding bindings for GPUs implies a level of
-support that cannot be tested. That in turn may make it challenging to
-justify UAPI changes if/when they=E2=80=99re needed to actually make thes=
-e GPUs
-functional.
-
-> Signed-off-by: Adam Ford <aford173@gmail.com>
->=20
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boo=
-t/dts/renesas/r8a774a1.dtsi
-> index a8a44fe5e83b..8923d9624b39 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> @@ -2352,6 +2352,16 @@ gic: interrupt-controller@f1010000 {
->  			resets =3D <&cpg 408>;
->  		};
-> =20
-> +		gpu: gpu@fd000000 {
-> +			compatible =3D "renesas,r8a774a1-gpu", "img,img-axe";
-
-The GX6250 is *not* an AXE core - it shouldn=E2=80=99t be listed as compa=
-tible
-with one. For prior art, see [1] where we added support for the MT8173
-found in Elm Chromebooks R13 (also a Series6XT GPU).
-
-> +			reg =3D <0 0xfd000000 0 0x20000>;
-> +			clocks =3D <&cpg CPG_MOD 112>;
-> +			clock-names =3D "core";
-
-Series6XT cores have three clocks (see [1] again). I don=E2=80=99t have a=
-
-Renesas TRM to hand =E2=80=93 do you know if their docs go into detail on=
- the
-GPU integration?
-
-> +			interrupts =3D <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +			power-domains =3D <&sysc R8A774A1_PD_3DG_B>;
-> +			resets =3D <&cpg 112>;
-> +		};
-> +
->  		pciec0: pcie@fe000000 {
->  			compatible =3D "renesas,pcie-r8a774a1",
->  				     "renesas,pcie-rcar-gen3";
-
-As you probably expect by this point, I have to nack this series for
-now. I appreciate your effort here and I=E2=80=99ll be happy to help you =
-land
-these once Mesa gains some form of usable support to allow testing.
-
+-- 
 Cheers,
-Matt
 
-[1]: https://gitlab.freedesktop.org/imagination/linux/-/blob/b3506b8bc45e=
-d6d4005eb32a994df0e33d6613f1/arch/arm64/boot/dts/mediatek/mt8173.dtsi#L99=
-3-1006
+David / dhildenb
 
---------------EfAO01f9Y4wfebJn0Zgur0Tw--
-
---------------YyZSrtIgnQPAf68GePbjaRAS
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQS4qDmoJvwmKhjY+nN5vBnz2d5qsAUCZd2r6gUDAAAAAAAKCRB5vBnz2d5qsFgg
-AQCiNxLMpvBRmyPQFb2pfg/LcsovWXmpGMrp48m6eZryuwD/Tvm6H7MEvMq1g/rWxSTOCPEoci2t
-FYDgBFHHQserRA4=
-=Xtw1
------END PGP SIGNATURE-----
-
---------------YyZSrtIgnQPAf68GePbjaRAS--
