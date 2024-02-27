@@ -1,97 +1,109 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE00E14AD20;
-	Tue, 27 Feb 2024 19:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF1914A4C5
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 19:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709060511; cv=none; b=LAMWdLBtx12h7pzZXrAlVrC+NAqZ9TH6ylZ2PfkFHfPEV0pFgqHjGVUzozQbqyvgw3r2qOkwamkHK43fnpCQ0vAelsmdsPA2WupM4QqInGZrEUeLucV0ceXoWbBBRCBRuVP9rIXNYenT6JDyzZqdG/5GsdShPlpNeEDUbffZb2M=
+	t=1709060514; cv=none; b=cmLDOzv4TvwkVH5o5HGTdl2kC1lf9SZIve0nJzU/mb2ga4lo6+gj87Pa4sYEWHJpBXLr706RzOj97M3VS2Ds6cU45+wfWogAfncIewuVfw9mpuc0dnaY03p8MTRAHPapiEtniZZlV/T+Q2DvUIrRT9kmOFDrnbHknJsgfHgWpMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709060511; c=relaxed/simple;
-	bh=51jtFFY8/geln0haK5sNAZr/aqnSILVfKwu6u7XLrMA=;
+	s=arc-20240116; t=1709060514; c=relaxed/simple;
+	bh=Rx+0X1wSqJUpMVKZm9J8XVb9jpuLH2CRv1pKzGbSCkw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LP/a62P0lZnWBRs6z8v9rKt9FRxwHZ1G5mAQDNz2LCkbMsfrxo7AaxFCOw3IGCLIef9IsnHLvqeIBEeLln44kMMh/taeu3PcoV8J3J7SLcGJNGS525QiuctDqn9Ak/laamlfD3smDzAuwKOmfuiIXOxHfujmFvuaa6jcs5qfl6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gU8jpSnZ; arc=none smtp.client-ip=209.85.222.46
+	 To:Cc:Content-Type; b=bSQTrbJ139lKeAIFAsehHqcWiUBQmwJ6vUirhgy6tmHnbeN/+jkZSt7FypsP3lccBKZGCdtuCS72TSVQeLLBk+32QYza//nVyuPfm+opJn5hUIqRur8ofRFTRjb2bc3itE/ZkwQsACNM+R14B0PyEnfihfhNmIi6+YE+1bJ2yyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7j13T3W; arc=none smtp.client-ip=209.85.221.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gU8jpSnZ"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7d5fce59261so2955143241.3;
-        Tue, 27 Feb 2024 11:01:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7j13T3W"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4cb26623d8dso770111e0c.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 11:01:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709060507; x=1709665307; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GXY/6TLcSg2JBPkZ750KSp3lrbwIelE9us8AkMM6UHk=;
-        b=gU8jpSnZLFjXyTPQAoH87Xl9oJ11GlVplfmNu12SbocFv2sei2g7BqkLLmt61reH+J
-         8Xhek2Bqhp9Dh6/sKSUQWLYsfUXLfMzAAVauvppddAEbQyd3F+1m3XnUpAi0pMiql2mZ
-         hjTDt5FftOjWJjT+1jHvC123XIXfDZX+KbArI4URc0d5CZ2/HGSBER8Hn1cHEVM9p/ry
-         qWN32p2/XRqSVo92L27SnUE4xqMr8Ci9ixQK6GEUvjPOTBep+maW4z2QquAw6FbjF+9s
-         w7C8zcQuwaEDJHXb7BYODyK5cNkCf+XXpIGERZREUrp8AkhjnbmNOpq6utnngDqZ6eZo
-         4YOw==
+        d=gmail.com; s=20230601; t=1709060511; x=1709665311; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WfFFXzSpX0Mc4KzxGc+Bs2TXLtROHHndagwLfCtpLgk=;
+        b=C7j13T3Wbu4FlEkB4/5mku1lnEEnpzd6yzGlZJrRC7zMdim+Pa2WUu0LQJCjwjnR6L
+         UC7scjjBG6lc5drVFkZVE+Sn2YnBn6ZY6OQ7MFFSB51YywaY4JcoFQWdw83X8rmd911E
+         RnC1/S9dNxiolRevVlm4Jl+3aH2tuxFqFSDWgAUFGBKnkxaHVUkuDj+vUoL+ikzztjQN
+         HrXbQwAWw4Qx1NmsuK8GmEL48tTmwfFs4i8yJ6dyCJNipYlCnIyI80eV0bbQe6tUTtL0
+         VbyFIWorBEY18ROcZlNLg10c9Mj85xdDj505q2tN+WEwu1wjN5QwrTvFM1JgJO4W+ElL
+         8htw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709060507; x=1709665307;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GXY/6TLcSg2JBPkZ750KSp3lrbwIelE9us8AkMM6UHk=;
-        b=PBKaEcFEDF0uTFR/vfgXwjYWPlnJ+9jHuRTpigo3i3UdkwHs0nsZw4MpGiTlLdrr+T
-         eAUVNRLt+trcQoEVBWS/e0ihntLz0izl1iW7T40Pasfnk7X/9F4eytczjZm2cUHchqeo
-         c2b8K1LOs1+vETXOeWya3XOjl7qAEOu5ewaqEfb/n56d9styFw5zw+7cHZgbVACMk1sJ
-         tPXho8ralBl8HcRRxRsg4dQXeK/Q5GP2KkI74rAB5LwJJD2cybY6WY7YvlG9+Ix4isB8
-         gMQGksZ77OsZPNrC0ujeDfm41GYbOlSgIuEKQGJ8+mSnYMnvlcAYlL5HQIUj643guEn+
-         b36A==
-X-Forwarded-Encrypted: i=1; AJvYcCXkKFr2ilXH5xOFo1oscrrjakYfFwo7UsAxNxTxtU7rMKEI6Z6SBI8hwuhQSlA0cqcKxZuFWuKHHzPwYMBBEFaGLvDI7IT+l8XPt2jL
-X-Gm-Message-State: AOJu0YxXXvnLpZg7uavktupYjJ2UoZEOFcq5V1ikMHFQAySJY3IWYW24
-	rLb2T08UBJq77h26qJIS8pFLDmQqv5iuJjVtdWlHBWLZzw+Lu1sRb2+86MD+tFBc8BROJN6otlr
-	qHJ77Y+zmkYanE8CYPCXhNOKDaMY=
-X-Google-Smtp-Source: AGHT+IFV6iRsZ58o/juvLumMNk6BhV1RC5rufpp/W8VxtAPU8kXRzSrpeZUNR9qwG0WgCSCniOJ+FoNzA/ZI0rxHhMQ=
-X-Received: by 2002:a1f:d704:0:b0:4d1:34a1:c896 with SMTP id
- o4-20020a1fd704000000b004d134a1c896mr7413620vkg.8.1709060507358; Tue, 27 Feb
- 2024 11:01:47 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709060511; x=1709665311;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WfFFXzSpX0Mc4KzxGc+Bs2TXLtROHHndagwLfCtpLgk=;
+        b=RkXQ+9f1Ihfy6BylFcKHKL5FNjedC/GgrzZWHDx0BSYvr/5oeWaOUl8jbskfg5MomR
+         4MskcD+YeZtP+Q6ldU87nxB1rP7skOV3GXKpp9eAKCiPQE4ZsqFH6WBulELJnxKk4+MI
+         +eSqlBW0+ZWTPzZq2bcclR2qOCnKw2CmadXtiqp7Rbfb/2r7SThQyQDgFAmQfoqr0J1U
+         PQMRCoHNUkMQGXezLGL2wKAaAz/wwYWpRSnrOrURYgdoKBoYSQuQCqT5vcBPU5R9h41m
+         hedWFFx5vbcENz1VyPursAZpjQ5ca8YD9NK8Q7DVEflbqACSMHYrX224acEc+zLhZOT1
+         UJPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpcktEuUTMM0fykADYXPxgN25evVlUD8+9pfzxUdkHMHTw0e0RjJ9QsuKnGyVUTJoa2SuzVF3t31IYMaRFb4b4SLMY/3vFKKcPicf0
+X-Gm-Message-State: AOJu0YzGF2BaxOozvNV6SDohwHlTUB/8bmJO4NOKM1L1v9XQW7/jtuci
+	OABBdwm34gJiPgo4uhB1ECU1/r4jUGvSYZMYreIbcF6pGhT6PrwzsfiCT62Xv779R/XUAwKT66y
+	abYSRn+64209H38M6imW/k8nYozc2skYhXBoxjA==
+X-Google-Smtp-Source: AGHT+IEeakGXngQCMim18TnOJiecyRkKHreCK/SntmFGZkjnj7s5owwh/pYnzNyyAQ8cB8qjcq7plWYQixSZBYqlppY=
+X-Received: by 2002:a1f:6681:0:b0:4d3:384e:937c with SMTP id
+ a123-20020a1f6681000000b004d3384e937cmr610147vkc.8.1709060511570; Tue, 27 Feb
+ 2024 11:01:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227131630.636392135@linuxfoundation.org>
-In-Reply-To: <20240227131630.636392135@linuxfoundation.org>
-From: Allen <allen.lkml@gmail.com>
-Date: Tue, 27 Feb 2024 11:01:33 -0800
-Message-ID: <CAOMdWSJyXm3+3nunLTNdAhoQX2qqj3Ftszi6LpN-Uj_yyK8G9g@mail.gmail.com>
-Subject: Re: [PATCH 6.7 000/334] 6.7.7-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org
+References: <20240227024050.244567-1-21cnbao@gmail.com> <Zd4HEjS6vpIvwfR9@infradead.org>
+In-Reply-To: <Zd4HEjS6vpIvwfR9@infradead.org>
+From: Barry Song <21cnbao@gmail.com>
+Date: Wed, 28 Feb 2024 08:01:40 +1300
+Message-ID: <CAGsJ_4xTtLzUKSY7EzEK0Ho61mWH35kHkidBRpjLd+_3_yOaUQ@mail.gmail.com>
+Subject: Re: [PATCH] mm: export folio_pte_batch as a couple of modules might
+ need it
+To: Christoph Hellwig <hch@infradead.org>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
+	Lance Yang <ioworker0@gmail.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	David Hildenbrand <david@redhat.com>, Yin Fengwei <fengwei.yin@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> This is the start of the stable review cycle for the 6.7.7 release.
-> There are 334 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Feb 28, 2024 at 5:00=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
+g> wrote:
 >
-> Responses should be made by Thu, 29 Feb 2024 13:15:36 +0000.
-> Anything received after that time might be too late.
+> On Tue, Feb 27, 2024 at 03:40:50PM +1300, Barry Song wrote:
+> > From: Barry Song <v-songbaohua@oppo.com>
+> >
+> > madvise and some others might need folio_pte_batch to check if a range
+> > of PTEs are completely mapped to a large folio with contiguous physcial
+> > addresses. Let's export it for others to use.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.7-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
-> and the diffstat can be found below.
+> It doesn't look exported to me in the patch (and that's a good thing!).
 >
-> thanks,
->
-> greg k-h
->
+> But even for making it non-static you probably want to include that in
+> the series actually making use of it.
 
-Compiled and booted on my x86_64 and ARM64 test systems. No errors or
-regressions.
+at least two parallel jobs[1][2] (maybe more ) need it right now.
+Getting this one pulled in early
+will help build a common base for them and avoid duplicates&conflicts in th=
+em.
 
-Tested-by: Allen Pais <apais@linux.microsoft.com>
+[1] https://lore.kernel.org/linux-mm/20240118111036.72641-7-21cnbao@gmail.c=
+om/
+[2] https://lore.kernel.org/linux-mm/20240225123215.86503-1-ioworker0@gmail=
+.com/
+>
+> > +extern int folio_pte_batch(struct folio *folio, unsigned long addr,
+> > +             pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
+> > +             bool *any_writable);
+>
+> no need for the extern here.
 
-Thanks.
+Yes. this has been moved to internal.h as "static inline" in v2:
+https://lore.kernel.org/linux-mm/20240227104201.337988-1-21cnbao@gmail.com/
+
+Thanks
+Barry
