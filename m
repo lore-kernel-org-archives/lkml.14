@@ -1,272 +1,224 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA29814830E
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E615B1474A5
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709050355; cv=none; b=a+Hiejjb+Q1OMR3pw6Yu4HPf4IvfRnMHum46ytr+Jd+ONL2rjOk1eGjnYXUgPRfMAnDTliCImgsIa9HaagKLEInI5Tj5rS3ESiFD9ZXkzOkd6xExg8FyUf6qCElzUEBPzcwyxkD7X015XaMAkeY79v0t6dgGydIIFs1SsMNdlEA=
+	t=1709050398; cv=none; b=hFPc3ALiMMYH8zbc8q2Li1ZsfBC4+3raN4sMxbnBAOUdbunZv5seC4+wBCU35gbA1Iafq2c/K73HJHXN+HBwZpOmU95BQZwqqla7thOrskxvtb0WWLwxYIOz1uiwA8iamXuigkhu+ZHTUS6YsZ6ZVYKEAjvZAvhsF6nCZTJLRn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709050355; c=relaxed/simple;
-	bh=ZWFzHKUaRbx0c3fmxooFMoXF2H6+yVg0x+0ZAiLEH/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jyn1thZcDAPWzdurwzMaEmOF9hNwHEHOC6F/nx2fdSSFM+H8tUQ5dbFgixC5EklPjjyIMb2GaxUSmNgUZxj3usbsapUlKpjHfD7tTLGbQZFYCzlIUAZVUioogiaDS2IjTjSP/NCGAX8+Sh8roJ9nzmK8aw+5wQb/FcEd8m/LvD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QHN1Ubxp; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709050398; c=relaxed/simple;
+	bh=GgMIs7CnGsj0Oiwid0N1vSiT6igOmfDfHV3du4XW2XM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pYUhuKz/LBp4VGmFRfPr4sCjQGva3JioZzGdsisRrX4KSpD5pIvE1VsOcAZnNmukIO+gIoamr7wpbvwRSJE2/m8+G7+A7lcxaYIw6g0wWLAS0NbNV6OVzJ/RoMud6PEJSGjdu2esWsFvLbTMiNX5K9FfniGxlA8DDVUyFeREH3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=00Xx+0Oi; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QHN1Ubxp"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6084e809788so29665517b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:12:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="00Xx+0Oi"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-512b700c8ebso5567898e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:13:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709050353; x=1709655153; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dNhcz6LZWcGFo7q9Dz7N+i5BDAre97NpDL4CFWNtFMg=;
-        b=QHN1UbxpzgSeKc+xCb/D6hZEL5COzuERYGzTNe/SAYmBpmqTw4EdWtnzIf632kLNqI
-         Y6ElVv/hOUQcOvffPi/xkTsVsRaEAetrTMOjNpnNAP0Y38HKVx7oeBVVpxPFMzGGMtrc
-         H7d6NyuK3ROKjbJiiZu1FTajS7dFD5u/ghLUwzKypFQfk95XusKRUKLfU64vaaZd61mG
-         hq62+HFKVYF/OD3cCQuPRnofl2wNkiW05c0PlngCCbLARiV11ps1DZ7z+CFHW2dHosUk
-         k8jA3l2d+/l5dJuSItG3Leda3GFMpG4wvlrVHap/hN47/brGsJGR7KVDWmRu4n4PhEMw
-         nWsw==
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1709050394; x=1709655194; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=U0zlUbDRUti/0fQkXKr609F+U7sVS+VPdTOuFz0F/Bk=;
+        b=00Xx+0Oi1EXJ3i4nM0YKBbQitPdIU0owy6WyMLxh2HPwX67VUy5/50bLkDmQoJtVY7
+         ZttcMohwTP0XbjfHr8JC8L7pIqGrTD++5WZcYlMbgqVFTXeOslg/NMLY8BG2IiS9XBxR
+         KAHKNrbSuhXa4wuU2OJy8E8g78iVISLH2/7z39U/07BKuWjM/pwHaK/Creb9NPxjfl9R
+         ppWrbSs1hRHQjc+ZHJOfsKv4PAJ7Xy6R7YB5FPf0tweM8VcUJIXvQpXBEMVGAPCa4RyV
+         bTvo3IEqnprR/3trdhGSjw9cL7hzGzxA/6P6GNEX2Fl0tLHqa3jhbdAiFZTG19sTHpl+
+         P55A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709050353; x=1709655153;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dNhcz6LZWcGFo7q9Dz7N+i5BDAre97NpDL4CFWNtFMg=;
-        b=eNsOnlkkQierxSowtyXL93hNS0AWjIzJUC7XRq5i8I9o99wtACBVQ4OBBDtJjwqcoz
-         B96nyocU4k+6vMl74Xwui3jY8uAVBbY8/Wn6lRWxQAmNEnOQKyUCOTEdE/yFHrQUmVNw
-         udJhRjAo6MNIZsdb7r9IDzvPfyN9/QuDYqfRdoUul721xrQ4zZ93UzQHDwYkZkCDU6M7
-         /nsFSdaN4V+zi0YkeqR1tiWJxglYUfUpB4We2PgAy1yASGDBr7P/skBPENWCULyg36kY
-         oLQhTfYogIBlA2wquL+p6p04wpVOMEnd0+toLbEPtPsXlGWZjgwvx2HE9FE3Tjr2eHG1
-         C3lw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDAzDf5ErHmmXSyQ8bYvivmZ8tw987KrialLm1zkysvxNl8va4oF+bv53iuGlFqaGlRekwEa09fphEfe2zEuDJ/HvCx5tgJktzz+z0
-X-Gm-Message-State: AOJu0Yy3KWlmqSLAVe9TQAMGnVyfSnpO2TB990/4Y1e3OXOR62ZZHsYk
-	tRy94FGqA3SLW36iBdNqX/q0fzlm/bcOR8YPrPD9BxYXLmWvxe8AHFLfPo//Ng59rDmG9bWsAJ4
-	DmMGN1oFOOVk0c6X5axsUCbBjfip+022gjL/x
-X-Google-Smtp-Source: AGHT+IE3Ib/dLAymrmwvQkYDzdp8TQ37Go/G2wnHE4Xm/9+fqP9Mn0SYQYjmra6zLBDtJRxXpTmBRSRRYI9tV7m3olM=
-X-Received: by 2002:a25:c501:0:b0:dc2:2f3f:2148 with SMTP id
- v1-20020a25c501000000b00dc22f3f2148mr1714724ybe.29.1709050352173; Tue, 27 Feb
- 2024 08:12:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709050394; x=1709655194;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U0zlUbDRUti/0fQkXKr609F+U7sVS+VPdTOuFz0F/Bk=;
+        b=Ow6hRvwQ9M+4lzZPYX3tL5duKSd6g9ab5v51HcZAyvXHbVMA8BZCV1IPNLgr92wAf8
+         +MFZaDQdsabF8J1Od6Ib40L/JaDxFVmfuI4wS0PmNbd5d6VYk04tPJOSzg1Ml+xeTgRh
+         cLLbI1Cj3hKRhE6Trn41hE4RHG5oeSMnjnjSX7KGNJMb6Clmi8ogAEE3ur2qFRo6chNo
+         T7Rbh4Qgk7+B/zFc4KisudtdK1fhAsYAUlX9jJFivl+7sXOtEu1LHb8VGLsAs5AyJ2kq
+         MWdUKUuhDK4vrPyksOpxD3clI6IVnF+3dmx8kfg4EPXqR+WriUF8pZyqJuNNK8kfxGbx
+         oB/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXGE8DmE8rZX4I0Yx/kCDoJtKfJTTS7qmJjkET+W+RFtolZzOX8HE83l3IcYWDybEIrQIsgR2zrRzXWpQfLTUFhqmVU883jhWhC6a7b
+X-Gm-Message-State: AOJu0YwoDkakucmNqDBTpcM3J2UVdQO6CUmM7htyC9i6hYviLM8WArw5
+	Cz4l/cnGFJrXcpL4GqFxSMPbrrjf49oaHRjeGqfZxm6XPWbQYH8yY5/wzegIq0ypwfhV7+Dg6YF
+	l
+X-Google-Smtp-Source: AGHT+IGdncA4Y+RRQwxvVBuwQR7ctR1zSWoNVd6L0U1b5mZoDC5tYdlxznJIjlJBo0jpK+3MajGWdg==
+X-Received: by 2002:ac2:5e3c:0:b0:512:a959:af3d with SMTP id o28-20020ac25e3c000000b00512a959af3dmr5733841lfg.52.1709050394044;
+        Tue, 27 Feb 2024 08:13:14 -0800 (PST)
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id k2-20020a5d6d42000000b0033b79d385f6sm11694326wri.47.2024.02.27.08.13.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 08:13:12 -0800 (PST)
+Date: Tue, 27 Feb 2024 17:13:09 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Karthik Sundaravel <ksundara@redhat.com>
+Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	pmenzel@molgen.mpg.de, michal.swiatkowski@linux.intel.com,
+	rjarry@redhat.com, aharivel@redhat.com, vchundur@redhat.com,
+	cfontain@redhat.com
+Subject: Re: [PATCH v4] ice: Add get/set hw address for VFs using devlink
+ commands
+Message-ID: <Zd4KFZINps0CloD-@nanopsycho>
+References: <20240224124406.11369-1-ksundara@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221194052.927623-1-surenb@google.com> <20240221194052.927623-32-surenb@google.com>
- <ae4f9958-813a-42c8-8e54-4ef19fd36d6c@suse.cz>
-In-Reply-To: <ae4f9958-813a-42c8-8e54-4ef19fd36d6c@suse.cz>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 27 Feb 2024 08:12:21 -0800
-Message-ID: <CAJuCfpFnqGLj2L5QdnMWYxX6ENqc0Gnkc3pjURu7CmGtNMhE1g@mail.gmail.com>
-Subject: Re: [PATCH v4 31/36] lib: add memory allocations report in show_mem()
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
-	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
-	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
-	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
-	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
-	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
-	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240224124406.11369-1-ksundara@redhat.com>
 
-On Tue, Feb 27, 2024 at 5:18=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
+Sat, Feb 24, 2024 at 01:44:06PM CET, ksundara@redhat.com wrote:
+>Changing the MAC address of the VFs are not available
+>via devlink. Add the function handlers to set and get
+>the HW address for the VFs.
 >
-> On 2/21/24 20:40, Suren Baghdasaryan wrote:
-> > Include allocations in show_mem reports.
-> >
-> > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+>Signed-off-by: Karthik Sundaravel <ksundara@redhat.com>
+>---
+> drivers/net/ethernet/intel/ice/ice_devlink.c | 88 +++++++++++++++++++-
+> 1 file changed, 87 insertions(+), 1 deletion(-)
 >
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
->
-> Nit: there's pr_notice() that's shorter than printk(KERN_NOTICE
+>diff --git a/drivers/net/ethernet/intel/ice/ice_devlink.c b/drivers/net/ethernet/intel/ice/ice_devlink.c
+>index 80dc5445b50d..c3813edd6a76 100644
+>--- a/drivers/net/ethernet/intel/ice/ice_devlink.c
+>+++ b/drivers/net/ethernet/intel/ice/ice_devlink.c
+>@@ -1576,6 +1576,91 @@ void ice_devlink_destroy_pf_port(struct ice_pf *pf)
+> 	devlink_port_unregister(&pf->devlink_port);
+> }
+> 
+>+/**
+>+ * ice_devlink_port_get_vf_mac_address - .port_fn_hw_addr_get devlink handler
+>+ * @port: devlink port structure
+>+ * @hw_addr: MAC address of the port
+>+ * @hw_addr_len: length of MAC address
+>+ * @extack: extended netdev ack structure
+>+ *
+>+ * Callback for the devlink .port_fn_hw_addr_get operation
+>+ * Return: zero on success or an error code on failure.
+>+ */
+>+
+>+static int ice_devlink_port_get_vf_mac_address(struct devlink_port *port,
+>+					       u8 *hw_addr, int *hw_addr_len,
+>+					       struct netlink_ext_ack *extack)
+>+{
+>+	struct devlink_port_attrs *attrs = &port->attrs;
+>+	struct devlink_port_pci_vf_attrs *pci_vf;
+>+	struct devlink *devlink = port->devlink;
+>+	struct ice_pf *pf;
+>+	struct ice_vf *vf;
+>+	int vf_id;
+>+
+>+	pf = devlink_priv(devlink);
+>+	if (attrs->flavour == DEVLINK_PORT_FLAVOUR_PCI_VF) {
+>+		pci_vf = &attrs->pci_vf;
+>+		vf_id = pci_vf->vf;
+>+	} else {
+>+		NL_SET_ERR_MSG_MOD(extack, "Unable to get the vf id");
+>+		return -EADDRNOTAVAIL;
+>+	}
+>+	vf = ice_get_vf_by_id(pf, vf_id);
+>+	if (!vf) {
+>+		NL_SET_ERR_MSG_MOD(extack, "Unable to get the vf");
+>+		return -EINVAL;
+>+	}
+>+	ether_addr_copy(hw_addr, vf->dev_lan_addr);
+>+	*hw_addr_len = ETH_ALEN;
+>+
+>+	ice_put_vf(vf);
+>+	return 0;
+>+}
+>+
+>+/**
+>+ * ice_devlink_port_set_vf_mac_address - .port_fn_hw_addr_set devlink handler
+>+ * @port: devlink port structure
+>+ * @hw_addr: MAC address of the port
+>+ * @hw_addr_len: length of MAC address
+>+ * @extack: extended netdev ack structure
+>+ *
+>+ * Callback for the devlink .port_fn_hw_addr_set operation
+>+ * Return: zero on success or an error code on failure.
+>+ */
+>+static int ice_devlink_port_set_vf_mac_address(struct devlink_port *port,
 
-I used printk() since other parts of show_mem() used it but I can
-change if that's preferable.
+Better to have "fn" in the name of the function, so it is clear this
+sets the mac of function itself.
 
->
-> > ---
-> >  include/linux/alloc_tag.h |  7 +++++++
-> >  include/linux/codetag.h   |  1 +
-> >  lib/alloc_tag.c           | 38 ++++++++++++++++++++++++++++++++++++++
-> >  lib/codetag.c             |  5 +++++
-> >  mm/show_mem.c             | 26 ++++++++++++++++++++++++++
-> >  5 files changed, 77 insertions(+)
-> >
-> > diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
-> > index 29636719b276..85a24a027403 100644
-> > --- a/include/linux/alloc_tag.h
-> > +++ b/include/linux/alloc_tag.h
-> > @@ -30,6 +30,13 @@ struct alloc_tag {
-> >
-> >  #ifdef CONFIG_MEM_ALLOC_PROFILING
-> >
-> > +struct codetag_bytes {
-> > +     struct codetag *ct;
-> > +     s64 bytes;
-> > +};
-> > +
-> > +size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count, b=
-ool can_sleep);
-> > +
-> >  static inline struct alloc_tag *ct_to_alloc_tag(struct codetag *ct)
-> >  {
-> >       return container_of(ct, struct alloc_tag, ct);
-> > diff --git a/include/linux/codetag.h b/include/linux/codetag.h
-> > index bfd0ba5c4185..c2a579ccd455 100644
-> > --- a/include/linux/codetag.h
-> > +++ b/include/linux/codetag.h
-> > @@ -61,6 +61,7 @@ struct codetag_iterator {
-> >  }
-> >
-> >  void codetag_lock_module_list(struct codetag_type *cttype, bool lock);
-> > +bool codetag_trylock_module_list(struct codetag_type *cttype);
-> >  struct codetag_iterator codetag_get_ct_iter(struct codetag_type *cttyp=
-e);
-> >  struct codetag *codetag_next_ct(struct codetag_iterator *iter);
-> >
-> > diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-> > index cb5adec4b2e2..ec54f29482dc 100644
-> > --- a/lib/alloc_tag.c
-> > +++ b/lib/alloc_tag.c
-> > @@ -86,6 +86,44 @@ static const struct seq_operations allocinfo_seq_op =
-=3D {
-> >       .show   =3D allocinfo_show,
-> >  };
-> >
-> > +size_t alloc_tag_top_users(struct codetag_bytes *tags, size_t count, b=
-ool can_sleep)
-> > +{
-> > +     struct codetag_iterator iter;
-> > +     struct codetag *ct;
-> > +     struct codetag_bytes n;
-> > +     unsigned int i, nr =3D 0;
-> > +
-> > +     if (can_sleep)
-> > +             codetag_lock_module_list(alloc_tag_cttype, true);
-> > +     else if (!codetag_trylock_module_list(alloc_tag_cttype))
-> > +             return 0;
-> > +
-> > +     iter =3D codetag_get_ct_iter(alloc_tag_cttype);
-> > +     while ((ct =3D codetag_next_ct(&iter))) {
-> > +             struct alloc_tag_counters counter =3D alloc_tag_read(ct_t=
-o_alloc_tag(ct));
-> > +
-> > +             n.ct    =3D ct;
-> > +             n.bytes =3D counter.bytes;
-> > +
-> > +             for (i =3D 0; i < nr; i++)
-> > +                     if (n.bytes > tags[i].bytes)
-> > +                             break;
-> > +
-> > +             if (i < count) {
-> > +                     nr -=3D nr =3D=3D count;
-> > +                     memmove(&tags[i + 1],
-> > +                             &tags[i],
-> > +                             sizeof(tags[0]) * (nr - i));
-> > +                     nr++;
-> > +                     tags[i] =3D n;
-> > +             }
-> > +     }
-> > +
-> > +     codetag_lock_module_list(alloc_tag_cttype, false);
-> > +
-> > +     return nr;
-> > +}
-> > +
-> >  static void __init procfs_init(void)
-> >  {
-> >       proc_create_seq("allocinfo", 0444, NULL, &allocinfo_seq_op);
-> > diff --git a/lib/codetag.c b/lib/codetag.c
-> > index b13412ca57cc..7b39cec9648a 100644
-> > --- a/lib/codetag.c
-> > +++ b/lib/codetag.c
-> > @@ -36,6 +36,11 @@ void codetag_lock_module_list(struct codetag_type *c=
-ttype, bool lock)
-> >               up_read(&cttype->mod_lock);
-> >  }
-> >
-> > +bool codetag_trylock_module_list(struct codetag_type *cttype)
-> > +{
-> > +     return down_read_trylock(&cttype->mod_lock) !=3D 0;
-> > +}
-> > +
-> >  struct codetag_iterator codetag_get_ct_iter(struct codetag_type *cttyp=
-e)
-> >  {
-> >       struct codetag_iterator iter =3D {
-> > diff --git a/mm/show_mem.c b/mm/show_mem.c
-> > index 8dcfafbd283c..1e41f8d6e297 100644
-> > --- a/mm/show_mem.c
-> > +++ b/mm/show_mem.c
-> > @@ -423,4 +423,30 @@ void __show_mem(unsigned int filter, nodemask_t *n=
-odemask, int max_zone_idx)
-> >  #ifdef CONFIG_MEMORY_FAILURE
-> >       printk("%lu pages hwpoisoned\n", atomic_long_read(&num_poisoned_p=
-ages));
-> >  #endif
-> > +#ifdef CONFIG_MEM_ALLOC_PROFILING
-> > +     {
-> > +             struct codetag_bytes tags[10];
-> > +             size_t i, nr;
-> > +
-> > +             nr =3D alloc_tag_top_users(tags, ARRAY_SIZE(tags), false)=
-;
-> > +             if (nr) {
-> > +                     printk(KERN_NOTICE "Memory allocations:\n");
-> > +                     for (i =3D 0; i < nr; i++) {
-> > +                             struct codetag *ct =3D tags[i].ct;
-> > +                             struct alloc_tag *tag =3D ct_to_alloc_tag=
-(ct);
-> > +                             struct alloc_tag_counters counter =3D all=
-oc_tag_read(tag);
-> > +
-> > +                             /* Same as alloc_tag_to_text() but w/o in=
-termediate buffer */
-> > +                             if (ct->modname)
-> > +                                     printk(KERN_NOTICE "%12lli %8llu =
-%s:%u [%s] func:%s\n",
-> > +                                            counter.bytes, counter.cal=
-ls, ct->filename,
-> > +                                            ct->lineno, ct->modname, c=
-t->function);
-> > +                             else
-> > +                                     printk(KERN_NOTICE "%12lli %8llu =
-%s:%u func:%s\n",
-> > +                                            counter.bytes, counter.cal=
-ls, ct->filename,
-> > +                                            ct->lineno, ct->function);
-> > +                     }
-> > +             }
-> > +     }
-> > +#endif
-> >  }
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to kernel-team+unsubscribe@android.com.
+
+>+					       const u8 *hw_addr,
+>+					       int hw_addr_len,
+>+					       struct netlink_ext_ack *extack)
+>+{
+>+	struct net_device *netdev = port->type_eth.netdev;
+>+	struct devlink_port_attrs *attrs = &port->attrs;
+>+	struct devlink_port_pci_vf_attrs *pci_vf;
+>+	u8 mac[ETH_ALEN];
+>+	int vf_id;
+>+
+>+	if (attrs->flavour == DEVLINK_PORT_FLAVOUR_PCI_VF) {
+>+		pci_vf = &attrs->pci_vf;
+>+		vf_id = pci_vf->vf;
+>+	} else {
+>+		NL_SET_ERR_MSG_MOD(extack, "Unable to get the vf id");
+
+How exactly this can happen? I'm pretty sure it can't.
+
+
+>+		return -EADDRNOTAVAIL;
+>+	}
+>+
+>+	if (!netdev) {
+
+How exactly this can happen? I'm pretty sure it can't.
+
+
+>+		NL_SET_ERR_MSG_MOD(extack, "Unable to get the netdev");
+>+		return -EADDRNOTAVAIL;
+>+	}
+>+	ether_addr_copy(mac, hw_addr);
+>+
+>+	return ice_set_vf_mac(netdev, vf_id, mac);
+
+It's misleading to call ice_set_vf_mac like this. It is originally used
+by legacy ip vf api, where the netdev is the PF netdev. Here you pass
+devlink port representor netdev. Internally ice_set_vf_mac() gets
+pointer to struct ice_pf.
+
+Could you please use:
+struct ice_pf *pf = devlink_priv(devlink);
+and pass it to some variant of ice_set_vf_mac() function?
+
+
+pw-bot: cr
+
+
+>+}
+>+
+>+static const struct devlink_port_ops ice_devlink_vf_port_ops = {
+>+	.port_fn_hw_addr_get = ice_devlink_port_get_vf_mac_address,
+>+	.port_fn_hw_addr_set = ice_devlink_port_set_vf_mac_address,
+>+};
+>+
+> /**
+>  * ice_devlink_create_vf_port - Create a devlink port for this VF
+>  * @vf: the VF to create a port for
+>@@ -1611,7 +1696,8 @@ int ice_devlink_create_vf_port(struct ice_vf *vf)
+> 	devlink_port_attrs_set(devlink_port, &attrs);
+> 	devlink = priv_to_devlink(pf);
+> 
+>-	err = devlink_port_register(devlink, devlink_port, vsi->idx);
+>+	err = devlink_port_register_with_ops(devlink, devlink_port,
+>+					     vsi->idx, &ice_devlink_vf_port_ops);
+> 	if (err) {
+> 		dev_err(dev, "Failed to create devlink port for VF %d, error %d\n",
+> 			vf->vf_id, err);
+>-- 
+>2.39.3 (Apple Git-145)
 >
