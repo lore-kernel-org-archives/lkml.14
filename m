@@ -1,195 +1,95 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436CF14A4C1;
-	Tue, 27 Feb 2024 15:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FA21474AB
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709046453; cv=none; b=fJUv12b8Gu/pqU87vm84gEsFlRozl4u4InuNjv7LW7ORiyvaYsIrsZn43cHyDUHoNWeIJ76XvYaXpoEyeaRIIXSha9suvnN3Mobd74KM+h+FziEkljmt22XU4cOXk45GzvO348oZoOiGA/1pBWdvPVKdNNT++SmZMTuEF4d8iZ0=
+	t=1709046466; cv=none; b=bDq1sN7QqeJiEpayiAogTIu1GP24H68gq+0PY0QzlwWIVA3txR5wKMEwl3zQ5nMpXhoDiCz9ZEmLhWbLN7sezZFSidc/fstOhuNBFz3ExhRkg2Kf5e+D9T7vZvROXH2uW6vQ7z5K7ZTZnc7JFgGvG2UQgNDLgHY6MMxwDmAaERk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709046453; c=relaxed/simple;
-	bh=nbBHPd7hWnt+9fYQpHo+4Cb/SCBb82djYs8mBUn7M3s=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=b0NmLj+y1MXJOXdSHAPBv12ugay1lig64DKfyosXwmMXIoe4OYl9ELHJgodfDJUE0Zkor0K/JPtnscrEeuAO6WdLbyjw5kVqlLuoZGResu1eQCVjcK0Je/EPq9yp5H6Nw7QlU0Ev1im93JuXpqf5K5QlJsFh1I63cErQLSjGXoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LlOiVQRF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709046466; c=relaxed/simple;
+	bh=dEWy7wLEKGq1ouT0iXQhr1lr4MchUw+lzS97J7XS4zI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Cz7P7BkBkiGKPgm42iKTK3Wq6MLbbqnj+TwNIvsrIhxKhFjO/an2qL421eXMB9OYQNmJJBb5ePNGp+Pn4WfWI2N/I8fQJMm2cxy9Inz+6jFllF6/gPCUBBexCNqY0l0ZCU9K5k2niBcOXYOFzt5oweK89xzn9CqdmsL6bhFW55A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0FoZU6z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LlOiVQRF"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41RBjuWF011343;
-	Tue, 27 Feb 2024 15:07:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=u9sTptxpOGNQHmo+HL35UVlPPUynBEERtiX8yI981Ko=; b=Ll
-	OiVQRFHPm/nyxkkAPb8BD/BVtUdTA1VVFij/PheD0+xu8Ux2Yr3p7L2C9gTL3SQF
-	KSBhl+k8G1Y1DbD4T4BsJw3C/3Zw6c29fuLBhENUtWqsyZh6xDHT9528ELrR1+r5
-	YR4fPZrz8biPemT4XkP0cu76Vs+k+pkQhbjkNUfVCz+xrLL6rf9RAAO+n4btn03y
-	6Y7RQHgA9S/Ezlsnl78Hm5zQrqtGZWUc6g05dmnWV8ohPEXkTv05ut92bIkCipMI
-	+cmBR+GekmpJCwsbpYc7Oct6TamabQ0HtQ/iQRNJvc/z+yhw4tUAfaSlzBLGu7qU
-	XK+oLcfqntKWmreJo0+g==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3whd7b0s58-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Feb 2024 15:07:15 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41RF74Pp021840
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Feb 2024 15:07:04 GMT
-Received: from [10.216.43.248] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 27 Feb
- 2024 07:07:01 -0800
-Message-ID: <9f084781-2233-4b36-8b1c-db1fa9a9db49@quicinc.com>
-Date: Tue, 27 Feb 2024 20:36:56 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0FoZU6z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF7FAC433C7;
+	Tue, 27 Feb 2024 15:07:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709046466;
+	bh=dEWy7wLEKGq1ouT0iXQhr1lr4MchUw+lzS97J7XS4zI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=M0FoZU6ziI1hCULE1HJ5T1LCchSD7qQIbU/onUvipS9xFKgfjRH2pnikIdG2R78wC
+	 dg4YAHH7a3odiKHJi5nc13YguQHtD7If+4P40yq6rJDcZfTHoTGefHOQdpOJB6tHAk
+	 EzFLSVvLZB/rpQArwL2ITIi+ylTNX69NnCH4Tz2yndbqcTq91OMlgpsUUb1HU1Rz6a
+	 NRmGK2UoDeRIkYu+AmPwW8sO0URXF/6cJzQoUb7cBnHXjWg0CLeszvemvR7wE646qS
+	 K7+Y/XFf8RAA7vv8TeHxcxY3UgoS7o1AZx2qSx73jbAvn0AZ82BmU4OKQ60VwDrYaI
+	 guP6FE+XJ3ypw==
+Date: Tue, 27 Feb 2024 09:07:44 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Carlos =?utf-8?B?TMOzcGV6?= <clopez@suse.de>, cve@kernel.org,
+	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Jonas Gorski <jonas.gorski@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: CVE-2023-52466: PCI: Avoid potential out-of-bounds read in
+ pci_dev_for_each_resource()
+Message-ID: <20240227150744.GA235367@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] watchdog: qcom: fine tune the max timeout value
- calculation
-Content-Language: en-US
-From: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-To: Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Wim Van
- Sebroeck <wim@linux-watchdog.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240116-wdt-v2-1-501c7694c3f0@quicinc.com>
- <2c4f9829-138d-41a5-8810-d13cf749fded@roeck-us.net>
- <67ed3805-40cb-4f00-9d0d-b0fd012d6221@quicinc.com>
-In-Reply-To: <67ed3805-40cb-4f00-9d0d-b0fd012d6221@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: eq9d10-VwcsDL5E0n_LL7x96ZGksmBKy
-X-Proofpoint-ORIG-GUID: eq9d10-VwcsDL5E0n_LL7x96ZGksmBKy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-27_01,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- mlxlogscore=999 priorityscore=1501 spamscore=0 adultscore=0 malwarescore=0
- mlxscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2402270117
+In-Reply-To: <2024022709-magazine-handshake-50da@gregkh>
 
+[+cc Mika, author of 09cc90063240]
 
-
-On 2/3/2024 12:07 PM, Kathiravan Thirumoorthy wrote:
+On Tue, Feb 27, 2024 at 02:26:26PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Feb 27, 2024 at 02:18:51PM +0100, Carlos López wrote:
+> > On 25/2/24 9:16, Greg Kroah-Hartman wrote:
+> > > There is no actual issue right now because we have another check
+> > > afterwards and the out-of-bounds read is not being performed. In
+> > > any case it's better code with this fixed, hence the proposed
+> > > change.
+> > 
+> > Given that there is no actual security issue this looks more like a
+> > hardening, and thus not deserving of a CVE, no?
 > 
-> 
-> On 1/16/2024 8:32 PM, Guenter Roeck wrote:
->> On 1/16/24 00:22, Kathiravan Thirumoorthy wrote:
->>> To determine the max_timeout value, the below calculation is used.
->>>
->>>     max_timeout = 0x10000000 / clk_rate
->>>
->>> cat 
->>> /sys/devices/platform/soc@0/b017000.watchdog/watchdog/watchdog0/max_timeout
->>> 8388
->>>
->>> However, this is not valid for all the platforms. IPQ SoCs starting from
->>> IPQ40xx and recent Snapdragron SoCs also has the bark and bite time 
->>> field
->>> length of 20bits, which can hold max up to 32 seconds if the clk_rate is
->>> 32KHz.
->>>
->>> If the user tries to configure the timeout more than 32s, then the value
->>> will be truncated and the actual value will not be reflected in the HW.
->>>
->>> To avoid this, lets add a variable called max_tick_count in the 
->>> device data,
->>> which defines max counter value of the WDT controller. Using this, 
->>> max-timeout
->>> will be calculated in runtime for various WDT contorllers.
->>>
->>> With this change, we get the proper max_timeout as below and restricts
->>> the user from configuring the timeout higher than this.
->>>
->>> cat 
->>> /sys/devices/platform/soc@0/b017000.watchdog/watchdog/watchdog0/max_timeout
->>> 32
->>>
->>> Signed-off-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> 
-> Guenter / Will, Can this be picked for v6.9? I don't see this in linux- 
-> next yet, so please consider this as a gentle reminder!
+> This was a tricky one, I think it's needed as we do not know how people
+> are really using these macros, right?  If the PCI maintainer agrees (on
+> the cc:), I'll be glad to revoke it, it's their call.
 
+09cc90063240 ("PCI: Introduce pci_dev_for_each_resource()") added
+pci_dev_for_each_resource(), which expands to:
 
-Guenter / Will, Gentle Reminder... is this change queued for v6.9?
+  for (...; res = (&(dev)->resource[(bar)]), bar < PCI_NUM_RESOURCES; ...)
 
+We compute "res" before the bounds-check of "bar", so the pointer may
+be out-of-bounds, but the body of the pci_dev_for_each_resource() loop
+is never executed with that out-of-bounds value.
 
-> 
->>
->>> ---
->>> Changes in v2:
->>> - drop the minimum timeout change from 30s to 32s
->>> - Link to v1: 
->>> https://lore.kernel.org/r/20240111-wdt-v1-1-28c648b3b1f3@quicinc.com
->>> ---
->>>   drivers/watchdog/qcom-wdt.c | 7 +++++--
->>>   1 file changed, 5 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
->>> index 9e790f0c2096..006f9c61aa64 100644
->>> --- a/drivers/watchdog/qcom-wdt.c
->>> +++ b/drivers/watchdog/qcom-wdt.c
->>> @@ -41,6 +41,7 @@ static const u32 reg_offset_data_kpss[] = {
->>>   struct qcom_wdt_match_data {
->>>       const u32 *offset;
->>>       bool pretimeout;
->>> +    u32 max_tick_count;
->>>   };
->>>   struct qcom_wdt {
->>> @@ -177,11 +178,13 @@ static const struct watchdog_info 
->>> qcom_wdt_pt_info = {
->>>   static const struct qcom_wdt_match_data match_data_apcs_tmr = {
->>>       .offset = reg_offset_data_apcs_tmr,
->>>       .pretimeout = false,
->>> +    .max_tick_count = 0x10000000U,
->>>   };
->>>   static const struct qcom_wdt_match_data match_data_kpss = {
->>>       .offset = reg_offset_data_kpss,
->>>       .pretimeout = true,
->>> +    .max_tick_count = 0xFFFFFU,
->>>   };
->>>   static int qcom_wdt_probe(struct platform_device *pdev)
->>> @@ -236,7 +239,7 @@ static int qcom_wdt_probe(struct platform_device 
->>> *pdev)
->>>        */
->>>       wdt->rate = clk_get_rate(clk);
->>>       if (wdt->rate == 0 ||
->>> -        wdt->rate > 0x10000000U) {
->>> +        wdt->rate > data->max_tick_count) {
->>>           dev_err(dev, "invalid clock rate\n");
->>>           return -EINVAL;
->>>       }
->>> @@ -260,7 +263,7 @@ static int qcom_wdt_probe(struct platform_device 
->>> *pdev)
->>>       wdt->wdd.ops = &qcom_wdt_ops;
->>>       wdt->wdd.min_timeout = 1;
->>> -    wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
->>> +    wdt->wdd.max_timeout = data->max_tick_count / wdt->rate;
->>>       wdt->wdd.parent = dev;
->>>       wdt->layout = data->offset;
->>>
->>> ---
->>> base-commit: 9e21984d62c56a0f6d1fc6f76b646212cfd7fe88
->>> change-id: 20240111-wdt-5bd079ecf14d
->>>
->>> Best regards,
->>
-> 
+So I don't think this is a security issue, no matter how
+pci_dev_for_each_resource() is used, unless the mere presence of an
+invalid address in a register is an issue.
+
+The same address computation is used for "pci_resource_start(dev,
+bar)", which is used in hundreds of places where drivers supply the
+BAR index, and the index is not checked.
+
+We could consider adding a bounds check in pci_resource_n() to turn a
+potential out-of-bounds reference into a NULL pointer dereference,
+e.g.,
+
+  #define pci_resource_n(dev, bar) (bar < PCI_NUM_RESOURCES ?
+      &(dev)->resource[(bar)] : NULL)
+
+But of course, there's nothing stopping drivers from computing
+"&dev->resource[junk]" themselves.
+
+Bjorn
