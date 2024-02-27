@@ -1,98 +1,126 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5EC1487D1
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCF1148314;
+	Tue, 27 Feb 2024 16:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709051139; cv=none; b=Fs1xX6mRILcGBkRY2ZrIwD46an1f75kJVoJWzTocF1F80VBsGdAMhM2R9oIKevP6lreCB89Z0K2xDVzaXZj7x2inkjfoy3EeKpt9R2h3UsRNAh/eknQ167/K1wMvFbAgyOiSdo/WdXW/ZRxryKwX2wMLe0K2B+PXVxLlsR9O30c=
+	t=1709051147; cv=none; b=g+bL5xMvZupyi2kqdXbDopmVYR/nrRSj4fP0UdT44FrnWOcTBVTtRnxAMz/5t7W5mNCkyOZAttGTpyeuYguD5ueU93DXHbdREEcDnHQR0DQWGzxlGzhJqBDHw+mfU30BrFaNNFyKK2ar3BxwH6vqN51SuxFBSUryu0NPefFr8sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709051139; c=relaxed/simple;
-	bh=pkZ/Ma+F35kpsJXp5Oo5SAPDn31tbUEPaH0ALeTfOao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pCbds8boe4w3Mbr7ExSA3F8qRgr2ili8aOUJZY4Ujq91ODS5EQzREfPForqDq6YIpDWe5FeOUb5Q0IZAU/tFChrEwcH3DEAKVusOHVcFIEyFBIcF6YOnx5CAQYdtuYQitok1puXmScseM2Z/hSJUdqXV1DJBhh4fiJTT8EL4yBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=muR8M2/P; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709051147; c=relaxed/simple;
+	bh=dNU5NFxvimoHiIWcnfxSEUmX/gJDpUSnZiLZ6SQE0MM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o00N+3Luudij+OgsROZtbi2yDeH8GUOIje1GOZXmIVvCvE5VlQxTY/obTTQVqvrRW6DRYsgiwER9OqLn4s4O7Taf1NdSbdvqeAlzGsjwNWwPQepn8Y5wpkaVtpxfG9QP1lPBog7YbE36uua8ZxGi7PfUNrPLRbB/GxOgEHUBgC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=qCDVfIYv; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="muR8M2/P"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-7d5bfdd2366so2314964241.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:25:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709051137; x=1709655937; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pkZ/Ma+F35kpsJXp5Oo5SAPDn31tbUEPaH0ALeTfOao=;
-        b=muR8M2/P+xoE3ENrcveGlKFUDLvK1cpFGjYG4A5BMicJFgRuZ8BiygwdLDf6guf3/P
-         z3Mcs6ixIVRu5w4KHlZW+pPGqEASi8+JdhikrHzds+/rYxEia+6Bz/MaQIcCGeh9gAtH
-         ZN3w2QN+Unhl/qEsQ7A0enUZGx0QKo84jVHEEmniFQmOt6LfPaa3m9lNo7YEVlZA0X81
-         bCr8ylPgHjgOQEcf33wL/4n9+LQzEwSsnPlfUvh5f4KTrai/pYJussJfOdePn+g++pdI
-         3cy6xdpRommElqtUXgYcBfuKfoI2k0bN1/DzolF6RnFTXFRWdwoiF0IQN/b6NJuIdfR/
-         XrcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709051137; x=1709655937;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pkZ/Ma+F35kpsJXp5Oo5SAPDn31tbUEPaH0ALeTfOao=;
-        b=sIEJyAzuR1ICvuc7JrZrqiHDSRgKGFUuDhyeE17LxUAbtzCwmWr193DtGsC7EF9Gqk
-         1E50A4WHckm2WApQ1qoBQuq0xgSCjnMdyX4ykSQrovVInpb6XFZatVCe7VKUsanZgmm9
-         N6dqGj8sGLCSz5ftddpc4mGe4dsweVRE6tVuCGzuxNwf16VigEVP/zHgYVTl2Nt3nSgU
-         6YL3gpB4p3KVyBgtX1lQveJL8KCla89pYfo6PhuwvIXfbisV+a8tac00gFI3kmZL9Sbb
-         voLsoOa1s6LWBEYqfXjDnSwTQuk/HCzIM01Ank6behRl28ZrafWOOLZQum3ays+NbPPs
-         jwLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSAdD0XFc+VP32Vo3/RtV8Y9iV2cX0M/RC2LoPk7z+4s3PTZuUhV9Z0WI9pIBQBInSW0wF7nT2ZKpRq+A2pG0oewMX2V2yMGHwFtCs
-X-Gm-Message-State: AOJu0Yzw1qOFqn0p9ujOST41DSiZTOtWukGDndoHDovQwdcxCNRZ8FTG
-	dVPLLRQ8oGVg0To89PD48BPrMQY8V/X+g41MBS2xVlwoO0kNpJyZTvAjdh2OwN6rJdKv239XXUS
-	9r5nqOIOIj9v3jDBdCXKX6PivGhvn6ZVuMqoMnQ==
-X-Google-Smtp-Source: AGHT+IHIiOUa0KuY6detsdQWZ3j3zaeaOiBoMcz4YliWAIChJzD7EWH2q+D4ztPSG1obNLA6ao+7kAFn0lpTjtkv/xE=
-X-Received: by 2002:a05:6102:1158:b0:470:7af5:7973 with SMTP id
- j24-20020a056102115800b004707af57973mr6655661vsg.29.1709051137000; Tue, 27
- Feb 2024 08:25:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="qCDVfIYv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=/DK9w3brhIW1NFxvU2xPXZWqVBRQidC0n6TtYYYTxoU=;
+	t=1709051144; x=1709483144; b=qCDVfIYv1kqJIjpZ6XnZOl0gO7WAdAHpll4cPgmcZitXerI
+	xwP5qMJy2N0C9U3UKRfwQ5QoCbuFm3BpSPCJzIxSyG9QSZ07ttogw87yZKBrESQfvbMPQy/qAfO5H
+	vgiBJIXPhvJ5rl7dmLHF91vVFIGZfSzQGFE5SHEZloh1StNhiabljZmkZf/+pakWp51hvfgQoA2WX
+	5tNRFRbAoWAmOw6HiuLQnY0kQpWpzfDVmlQ/cT79zMtFnuLo0N6/biBU1vLXe1NJvGcUEh46Q9eyY
+	uyGSufdYwi0P5YAcRLNnsSZ8pdLbB9999buzTgZ9/9juUDCtT4vF1Yvh1YQQSIbw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rf0Gv-0007OS-RH; Tue, 27 Feb 2024 17:25:37 +0100
+Message-ID: <1d8226cd-df43-4ef6-8425-2db01d513b32@leemhuis.info>
+Date: Tue, 27 Feb 2024 17:25:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227080943.13032-1-michaelharriscode@gmail.com> <da4ff70d-6c64-40b6-aae4-3aab87da2a1c@moroto.mountain>
-In-Reply-To: <da4ff70d-6c64-40b6-aae4-3aab87da2a1c@moroto.mountain>
-From: Michael Harris <michaelharriscode@gmail.com>
-Date: Tue, 27 Feb 2024 08:25:25 -0800
-Message-ID: <CAHXWO3Rm+Vn=Jzb6=mcCbUhE36KveaNfusBBGz6bWVcu3WturA@mail.gmail.com>
-Subject: Re: [PATCH] Staging: rtl8723bs: hal_btcoex: fixed styling issues
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: gregkh@linuxfoundation.org, hdegoede@redhat.com, Larry.Finger@lwfinger.net, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH regression fix] misc: lis3lv02d_i2c: Fix regulators
+ getting en-/dis-abled twice on suspend/resume
+Content-Language: en-US, de-DE
+To: Hans de Goede <hdegoede@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Eric Piel <eric.piel@tremplin-utc.net>,
+ linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+References: <20240220190035.53402-1-hdegoede@redhat.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240220190035.53402-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709051144;b6afc3ea;
+X-HE-SMSGID: 1rf0Gv-0007OS-RH
 
-On Tue, Feb 27, 2024 at 12:55=E2=80=AFAM Dan Carpenter <dan.carpenter@linar=
-o.org> wrote:
+On 20.02.24 20:00, Hans de Goede wrote:
+> When not configured for wakeup lis3lv02d_i2c_suspend() will call
+> lis3lv02d_poweroff() even if the device has already been turned off
+> by the runtime-suspend handler and if configured for wakeup and
+> the device is runtime-suspended at this point then it is not turned
+> back on to serve as a wakeup source.
 >
-> On Tue, Feb 27, 2024 at 12:09:43AM -0800, Michael Harris wrote:
-> > Fixed various checkpatch.pl styling issues: spaces before tabs, constan=
-ts being on left side of comparisons, unnecessary braces, etc.
-> >
-> > Signed-off-by: Michael Harris <michaelharriscode@gmail.com>
+> [...]
 >
-> Please run checkpatch.pl on your patches.
->
-> WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit de=
-scription?)
-> #12:
-> Fixed various checkpatch.pl styling issues: spaces before tabs, constants=
- being on left side of comparisons, unnecessary braces, etc.
->
-> regards,
-> dan carpenter
->
+> Fixes: b1b9f7a49440 ("misc: lis3lv02d_i2c: Add missing setting of the reg_ctrl callback")
+> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Closes: https://lore.kernel.org/regressions/5fc6da74-af0a-4aac-b4d5-a000b39a63a5@molgen.mpg.de/
+> Cc: stable@vger.kernel.org
+> Cc: regressions@lists.linux.dev
 
-Thank you for letting me know.
+Paul, did you maybe test this? I suppose Greg had no time to review this
+yet due to all the CVE stuff and stable tree maintenance; but with a bit
+of luck a "Tested-by" from your side might motivate him or somebody else
+to look into this.
 
-I will break down my patch into a sequence of patches and run checkpatch.pl
-on it before resubmitting.
+Ciao, Thorsten
 
-Thanks,
-Michael Harris
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/misc/lis3lv02d/lis3lv02d_i2c.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
+> index c6eb27d46cb0..15119584473c 100644
+> --- a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
+> +++ b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
+> @@ -198,8 +198,14 @@ static int lis3lv02d_i2c_suspend(struct device *dev)
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
+>  
+> -	if (!lis3->pdata || !lis3->pdata->wakeup_flags)
+> +	/* Turn on for wakeup if turned off by runtime suspend */
+> +	if (lis3->pdata && lis3->pdata->wakeup_flags) {
+> +		if (pm_runtime_suspended(dev))
+> +			lis3lv02d_poweron(lis3);
+> +	/* For non wakeup turn off if not already turned off by runtime suspend */
+> +	} else if (!pm_runtime_suspended(dev))
+>  		lis3lv02d_poweroff(lis3);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -208,13 +214,12 @@ static int lis3lv02d_i2c_resume(struct device *dev)
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  	struct lis3lv02d *lis3 = i2c_get_clientdata(client);
+>  
+> -	/*
+> -	 * pm_runtime documentation says that devices should always
+> -	 * be powered on at resume. Pm_runtime turns them off after system
+> -	 * wide resume is complete.
+> -	 */
+> -	if (!lis3->pdata || !lis3->pdata->wakeup_flags ||
+> -		pm_runtime_suspended(dev))
+> +	/* Turn back off if turned on for wakeup and runtime suspended*/
+> +	if (lis3->pdata && lis3->pdata->wakeup_flags) {
+> +		if (pm_runtime_suspended(dev))
+> +			lis3lv02d_poweroff(lis3);
+> +	/* For non wakeup turn back on if not runtime suspended */
+> +	} else if (!pm_runtime_suspended(dev))
+>  		lis3lv02d_poweron(lis3);
+>  
+>  	return 0;
