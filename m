@@ -1,170 +1,98 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC621384B2;
-	Tue, 27 Feb 2024 10:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6191138493;
+	Tue, 27 Feb 2024 10:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709029158; cv=none; b=ffRYTdBoLVJ6led6zz6jLFRsc6fSMpyXb1IrrnZifbC5KWoTtNo6A4+lL46iiePNIqHFv78TzPI1bCkjm8APMmCQcmUSmEWhJaHHK5bAFuUVGEVZAFgXa8FsfdPM2UnOAKWxLtE6Rb7PkM8CY2hypYLiNyxgEFL1FWsDBsN/XbY=
+	t=1709029218; cv=none; b=PWbXC5QAQof5Jm9IH+/6sU6xubKH0f0tWJtrjMRW+o3Lh1EdC4hVl24E4aUyjOHKQVt+UBZdklhdeCQkdZk7jFWrUkPldVihx1h+wfv/poNfQuaJGcZUg4M87R9hkufgA3liSFmNbwd8pQeTPdjQY0iWLdA5wWY0+WY/Kmk5reU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709029158; c=relaxed/simple;
-	bh=5sc9exolwsywzwMysiUeFzXsXrPi7FzwPMd2B6e7iUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i3Oy4B7t0wTEQ/wwXw4vzQyoRnFY0IvljJdkxiqli88+B13wi3Il0rPnMxs7oWC0FSPrOndVMjFKr5F4dhs2EWkvh7kmT044QSRdg0a2AAtIOPGUyo6V43owv+Si3g0NuDAMciu9ZkGfpgBFW9oc23vCDC9MqvTHTHGnZfQvsKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=tffeR8d1; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+	s=arc-20240116; t=1709029218; c=relaxed/simple;
+	bh=2jY/Q1QEdmyK669q6iJw5r6Thx2kyp1FRQuFTYB/9Iw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExvY4Zf7GWacYrMsB9NKAr7sQMNjkB31jnWGpbmnNdUjFgqGAcNkXMEhTa7nPU3adA5lTP26DDPjQSNGCMoD9dQ+EUMfe8kjPUhFcfiid0skPf00eGcPziivEqlBNms8KnpoSks4SCGXz/CL0ijG6wbh96sj3z/5khRM4p0KBrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f9wkRx0F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="tffeR8d1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1709029150; bh=5sc9exolwsywzwMysiUeFzXsXrPi7FzwPMd2B6e7iUY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tffeR8d1ZzdwRnjSiWrkYFvpX3d4HLSjHQ3sTPsEVs8BVq9o/Y1zdlByr5Z/hdKAT
-	 n/2hX6ox08LvFhIwV5llcB2iIro+K/jAiVXOEm9QZiJETQ6UyAS/tHnJdpEQJbnn3v
-	 hdlrI2QJ4mTlPtVm3UdAARIg1qEF3AhBTDQ92vMc=
-Received: from [28.0.0.1] (unknown [101.230.251.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 3489160121;
-	Tue, 27 Feb 2024 18:19:10 +0800 (CST)
-Message-ID: <431111f3-d84a-4311-986d-eebd91559cd3@xen0n.name>
-Date: Tue, 27 Feb 2024 18:19:09 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f9wkRx0F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67763C433C7;
+	Tue, 27 Feb 2024 10:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709029217;
+	bh=2jY/Q1QEdmyK669q6iJw5r6Thx2kyp1FRQuFTYB/9Iw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f9wkRx0FWSM2Wi52xH7nRkker4XhCGXaRgHzeCLII7LrF1VubvPUlD6iDr8kXVXXk
+	 f3PQo3/+5cpsS8bcUPnrQjSwUwMxm1/cUo3NiIndBLIefEUsJLD1Fq0+PW4PR/LtLh
+	 4V2Xe+InmM6OLon5IMkmoYZpChSCOspnGsyZKVkVcaAOOxcySK/ZLW8MYkc/YTwJg5
+	 SEQSVjEYDmaySbhHzheqltJDyyo55JuTkFQUInllIMR9bOvgiBzoazVRJ/FbHAu9g2
+	 B/1/wrQB4Zdxr4cg89M3DUSdfmh5umaOIVC7tPWU07bY3kPGec5cnjQl/yWUipyIKc
+	 sJqnpu3EJGBGg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1reuZQ-000000004LH-1P1i;
+	Tue, 27 Feb 2024 11:20:20 +0100
+Date: Tue, 27 Feb 2024 11:20:20 +0100
+From: Johan Hovold <johan@kernel.org>
+To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Linux regressions report  for mainline [2024-02-25]
+Message-ID: <Zd23ZKlNnDKPaU9I@hovoldconsulting.com>
+References: <170886726066.1516351.14377022830495300698@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/6] LoongArch: KVM: Add cpucfg area for kvm hypervisor
-Content-Language: en-US
-To: maobibo <maobibo@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: Tianrui Zhao <zhaotianrui@loongson.cn>, Juergen Gross <jgross@suse.com>,
- Paolo Bonzini <pbonzini@redhat.com>, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org
-References: <20240222032803.2177856-1-maobibo@loongson.cn>
- <20240222032803.2177856-4-maobibo@loongson.cn>
- <CAAhV-H5eqXMqTYVb6cAVqOsDNcEDeP9HzaMKw69KFQeVaAYEdA@mail.gmail.com>
- <d1a6c424-b710-74d6-29f6-e0d8e597e1fb@loongson.cn>
- <CAAhV-H7p114hWUVrYRfKiBX3teG8sG7xmEW-Q-QT3i+xdLqDEA@mail.gmail.com>
- <06647e4a-0027-9c9f-f3bd-cd525d37b6d8@loongson.cn>
- <85781278-f3e9-4755-8715-3b9ff714fb20@app.fastmail.com>
- <0d428e30-07a8-5a91-a20c-c2469adbf613@loongson.cn>
- <327808dd-ac34-4c61-9992-38642acc9419@xen0n.name>
- <62cc24fd-025a-53c6-1c8e-2d20de54d297@loongson.cn>
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <62cc24fd-025a-53c6-1c8e-2d20de54d297@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170886726066.1516351.14377022830495300698@leemhuis.info>
 
-On 2/27/24 18:12, maobibo wrote:
+On Sun, Feb 25, 2024 at 01:21:46PM +0000, Regzbot (on behalf of Thorsten Leemhuis) wrote:
+
+> Johan Hovold also deals with multiple issues affecting Lenovo ThinkPad
+> X13s, but he send out patch series to fix some or all of those[1], so
+> with a bit of luck those issues will soon be fixed as well.
+> https://lore.kernel.org/lkml/ZctVmLK4zTwcpW3A@hovoldconsulting.com/
+
+> [1]
+> https://lore.kernel.org/lkml/20240217150228.5788-1-johan+linaro@kernel.org/
+
+This series addresses a use-after-free in the PMIC glink driver caused
+by DRM bridge changes in rc1 and which can result in the internal
+display not showing up on boot.
+
+The DRM/SoC fixes here have now been merged to drm-misc for 6.8.
+
+> https://lore.kernel.org/lkml/20240223152124.20042-1-johan+linaro@kernel.org/
+
+This series is unrelated to the DRM regressions and deals with PCIe ASPM
+issues.
+
+> [ *NEW* ] drm/msm/dp: runtime PM cause internal eDP display on the Lenovo ThinkPad X13s to not always show up on boot (2/2 regressions)
+> ---------------------------------------------------------------------------------------------------------------------------------------
+> https://linux-regtracking.leemhuis.info/regzbot/regression/lore/faad839a-4c28-449f-bd87-845b47a1a6a1@leemhuis.info/
+> https://lore.kernel.org/regressions/faad839a-4c28-449f-bd87-845b47a1a6a1@leemhuis.info/
 > 
-> 
-> On 2024/2/27 下午5:10, WANG Xuerui wrote:
->> On 2/27/24 11:14, maobibo wrote:
->>>
->>>
->>> On 2024/2/27 上午4:02, Jiaxun Yang wrote:
->>>>
->>>>
->>>> 在2024年2月26日二月 上午8:04，maobibo写道：
->>>>> On 2024/2/26 下午2:12, Huacai Chen wrote:
->>>>>> On Mon, Feb 26, 2024 at 10:04 AM maobibo <maobibo@loongson.cn> wrote:
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> On 2024/2/24 下午5:13, Huacai Chen wrote:
->>>>>>>> Hi, Bibo,
->>>>>>>>
->>>>>>>> On Thu, Feb 22, 2024 at 11:28 AM Bibo Mao <maobibo@loongson.cn> 
->>>>>>>> wrote:
->>>>>>>>>
->>>>>>>>> Instruction cpucfg can be used to get processor features. And 
->>>>>>>>> there
->>>>>>>>> is trap exception when it is executed in VM mode, and also it is
->>>>>>>>> to provide cpu features to VM. On real hardware cpucfg area 0 - 20
->>>>>>>>> is used.  Here one specified area 0x40000000 -- 0x400000ff is used
->>>>>>>>> for KVM hypervisor to privide PV features, and the area can be 
->>>>>>>>> extended
->>>>>>>>> for other hypervisors in future. This area will never be used for
->>>>>>>>> real HW, it is only used by software.
->>>>>>>> After reading and thinking, I find that the hypercall method 
->>>>>>>> which is
->>>>>>>> used in our productive kernel is better than this cpucfg method.
->>>>>>>> Because hypercall is more simple and straightforward, plus we don't
->>>>>>>> worry about conflicting with the real hardware.
->>>>>>> No, I do not think so. cpucfg is simper than hypercall, hypercall 
->>>>>>> can
->>>>>>> be in effect when system runs in guest mode. In some scenario 
->>>>>>> like TCG
->>>>>>> mode, hypercall is illegal intruction, however cpucfg can work.
->>>>>> Nearly all architectures use hypercall except x86 for its historical
->>>>> Only x86 support multiple hypervisors and there is multiple hypervisor
->>>>> in x86 only. It is an advantage, not historical reason.
->>>>
->>>> I do believe that all those stuff should not be exposed to guest 
->>>> user space
->>>> for security reasons.
->>> Can you add PLV checking when cpucfg 0x40000000-0x400000FF is 
->>> emulated? if it is user mode return value is zero and it is kernel 
->>> mode emulated value will be returned. It can avoid information leaking.
->>
->> I've suggested this approach in another reply [1], but I've rechecked 
->> the manual, and it turns out this behavior is not permitted by the 
->> current wording. See LoongArch Reference Manual v1.10, Volume 1, 
->> Section 2.2.10.5 "CPUCFG":
->>
->>  > CPUCFG 访问未定义的配置字将读回全 0 值。
->>  >
->>  > Reads of undefined CPUCFG configuration words shall return all-zeroes.
->>
->> This sentence mentions no distinction based on privilege modes, so it 
->> can only mean the behavior applies universally regardless of privilege 
->> modes.
->>
->> I think if you want to make CPUCFG behavior PLV-dependent, you may 
->> have to ask the LoongArch spec editors, internally or in public, for a 
->> new spec revision.
-> No, CPUCFG behavior between CPUCFG0-CPUCFG21 is unchanged, only that it 
-> can be defined by software since CPUCFG 0x400000000 is used by software.
+> By Johan Hovold; 2 days ago; 5 activities, latest 2 days ago.
+> Introduced in 5814b8bf086a (v6.8-rc1)
 
-The 0x40000000 range is not mentioned in the manuals. I know you've 
-confirmed privately with HW team but this needs to be properly 
-documented for public projects to properly rely on.
+> Noteworthy links:
+> * drm/msm: Second DisplayPort regression in 6.8-rc1
+>   https://lore.kernel.org/lkml/ZdMwZa98L23mu3u6@hovoldconsulting.com/
+>   6 days ago, by Johan Hovold; thread monitored.
 
->> (There are already multiple third-party LoongArch implementers as of 
->> late 2023, so any ISA-level change like this would best be 
->> coordinated, to minimize surprises.)
-> With document Vol 4-23
-> https://www.intel.com/content/dam/develop/external/us/en/documents/335592-sdm-vol-4.pdf
-> 
-> There is one line "MSR address range between 40000000H - 400000FFH is 
-> marked as a specially reserved range. All existing and
-> future processors will not implement any features using any MSR in this 
-> range."
+This regression is the most severe one as it triggers hard resets on
+boot occasionally (I just tried updating the regzbot title).
 
-Thanks for providing this info, now at least we know why it's this 
-specific range of 0x400000XX that's chosen.
+This turned out to be due to a long-standing issue in a Qualcomm PM
+domain driver. Bjorn A posted a fix over night which addresses this:
 
-> 
-> It only says that it is reserved, it does not say detailed software 
-> behavior. Software behavior is defined in hypervisor such as:
-> https://github.com/MicrosoftDocs/Virtualization-Documentation/blob/main/tlfs/Requirements%20for%20Implementing%20the%20Microsoft%20Hypervisor%20Interface.pdf
-> https://kb.vmware.com/s/article/1009458
-> 
-> If hypercall method is used, there should be ABI also like aarch64:
-> https://documentation-service.arm.com/static/6013e5faeee5236980d08619
+	https://lore.kernel.org/linux-arm-msm/20240226-rpmhpd-enable-corner-fix-v1-1-68c004cec48c@quicinc.com/T/#u
 
-Yes proper documentation of public API surface is always necessary 
-*before* doing real work. Because right now the hypercall provider is 
-Linux KVM, maybe we can document the existing and planned hypercall 
-usage and ABI in the kernel docs along with code changes.
+But also with these fixes, there are still a couple of regressions
+related to the Qualcomm DRM runtime PM rework in 6.8-rc1. I'll send
+separate reports to track those.
 
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+Johan
