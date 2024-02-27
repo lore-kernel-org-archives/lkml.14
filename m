@@ -1,178 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BF81B28D
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0FF11CBA
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709000455; cv=none; b=f41NkDsHQic/Rk17Bdcq6gwxbARyRXnB51NtWch8XM0dv8dNr2srXbhKwxfIU7fENxxwiz4Yuz3NVp2K9uL05LWMQtDPjelXerx6Pjn27hsVahdof0i8EANog3suKCKVTvogfuDZ/IFOUQmb1uulvLbg48i8HjsaG512IjOmyB8=
+	t=1709000492; cv=none; b=tBj2kZahZOz5Z4ZXxc6u0slYub67eewuxk4BFb185wZBJhgy4jtqoX5wt9Q9K8HOXClr043zDX/SWRgOgnd19R3rtEQWdIqusUrBdZlLueXiUvpmcOtBzR5L7N3VsF9PJswmHiOXkrfHFo3Amg0VQp7SLv+iicJYHaPP/Nb7wSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709000455; c=relaxed/simple;
-	bh=SurMc55kkassQxYbbRkJIwr+dzuElbnFozRuUzPEssU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rWXL/Kjj2Mi8LyIX/57wDUoShByszctvD2w5jsUBa1A7XEFAVMkCJU7LEsaqNTESvZSnuygQX7U8pgts/8EYUcYZcpKiYOdrniqBVL/8KBE/14Xdbev7khxf1ZT3G+QJS7/6TU9L4P7lso7X7ZB7ibDmZkGAsvadsNR+FMTHCho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NNWt2Zwd; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709000492; c=relaxed/simple;
+	bh=+YacietmDdx37o43mg8/La+LvNYamHizPwJan7obEho=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=TTq/yoN70A7xIDhBRdMvkdhB9vY2mEt5P2AcAQbiTjpC12s+4SXDEr1evDruD0bQrdrsRr8aizrNeVh3BFP22wTWZKuRAtfLNAk+DifY0CH2eldWZq7jGYK/Ai+DR5UX0dLJW/VcoPVoAET3PUaunnb8sZvyxJsQbEWpmF7NouE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1oBGGjV/; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NNWt2Zwd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709000454; x=1740536454;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SurMc55kkassQxYbbRkJIwr+dzuElbnFozRuUzPEssU=;
-  b=NNWt2ZwdDAPScJ0Y0kozc/R+5CHBNJqpvQdwzRyMY5Sv6rH9+EETtweG
-   b4xLBEwhFjxCsAs+pJtzac9onxUwhHTplNCFBRLZqbI0eI/Pla/X5kCXW
-   BnSKukUzp0MeCb3li26jcgqFwYYHXtd7E+mGM60NTXqV32E3oh3ssJcaH
-   +7gL93xtETFV/ZpaTcEq5iEYIvgpNdUbBTq0hQjb5t+vVCe2Watw32kjP
-   5NQ/90zGcUmrGid23Qjtbb0jdC6K+dVev3XczkY5nir2UpGQaNZk+WzTI
-   VMdOD2JinBzUYs2X+MMVSRfNJ3ZaacIlDt3eKQ5QaxktHJcXv2QfofBBM
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="6273134"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="6273134"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 18:20:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="7418310"
-Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by orviesa008.jf.intel.com with ESMTP; 26 Feb 2024 18:20:52 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Tina Zhang <tina.zhang@intel.com>,
-	Erick Archer <erick.archer@gmx.com>,
-	Jingqi Liu <Jingqi.liu@intel.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] iommu/vt-d: Use device rbtree in iopf reporting path
-Date: Tue, 27 Feb 2024 10:14:41 +0800
-Message-Id: <20240227021441.50434-9-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240227021441.50434-1-baolu.lu@linux.intel.com>
-References: <20240227021441.50434-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1oBGGjV/"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso5215521276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 18:21:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709000490; x=1709605290; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/3+1C6nI5i+vIvuA4wiJkN7/yRM+ojEerrFpT9yS6ak=;
+        b=1oBGGjV///1Gt1JBBChw4afY53c006mIC++KhhjtFRjKdsKL+Jy68yiNHb8mySyXWz
+         C6wcqsMsESIPWXT1X9Q5CwNFjvPzAXSH6/O4Eqlf3kqPwppRKM8IQWRxCKn+bvtX1Nhg
+         FWvY/fo+qTardTjgsdHgg0xKN7WMXtwPqweaD6zJT0cz09QAQ2nC9QHT6fKKtOPmWtjI
+         rXEjXq6A/uAtZxY5IbyTw+q/ZGfMXZeSKdM4xXN4dA7PC58k1+kdsKMQ1+hAL2nGWfad
+         JzA13Gbh49fyD6BuszJm6UL4dI4e5Fi0nRu+dBa03QqRg8K/s/1OWFlUH8E63JmXS6WU
+         1O/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709000490; x=1709605290;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/3+1C6nI5i+vIvuA4wiJkN7/yRM+ojEerrFpT9yS6ak=;
+        b=E8yINkk4K6+8Qaw7nR3tt/hx9mL/MFN6ZZ4mUEDthbIk/VltuGGsYM3DzPuA0DazGb
+         FF6J3M1bREZIj5DL/FDTdq1qYBzRz+uYv8FvL1bMKuipObpSX1C1j80+5j/yFXIcueLE
+         e0nQ30I+tkd0p3PiLNtTum/4yoe4SW0T833pwcH6GWKKOe7jbN3uc5t1fnncXzL/8bzs
+         eQOtl7oyQjRpY288vmMr2LMyePcuzynDYxz95jWZtYY+7f6KCFiSU6+D10LfIo/OoFeC
+         KoRX2KBPPTs2EpZz6PzL4r4SxDA2vlIi8wjIQ3CgkjDswGhgMWgAj2mhZ9fjhbZKa6UC
+         oetQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXCS8RkKVT6B0pbMxaLj53b2R0E2dB2FdiS1pg/6fDjlzlM1jtZ0ibYrCg2rdUy7pm2auWJsL+oxQQwXXdCRaCe10XctpjS1ZyS9BDN
+X-Gm-Message-State: AOJu0YxsNOq3JFlx5PxQ7e/J1tqsKMaqqFFAeIVKJA8XF+3Oe/nWgD5w
+	2rv9wQLscJ4Ng+M8ujousXkjMz871PzSFlKtL6G3+dKQdyaIFwmbXhTmRygCqpQJYFR48M/17OD
+	UhA==
+X-Google-Smtp-Source: AGHT+IFpUCSFOLm9aL3Cxkphq0+0QUTbHVsfTTGSbdM6HRraKXrkbwRgLY4K/CdMaPM6Nhty2PQkXvHxUpo=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:114a:b0:dbd:b165:441 with SMTP id
+ p10-20020a056902114a00b00dbdb1650441mr282713ybu.0.1709000490276; Mon, 26 Feb
+ 2024 18:21:30 -0800 (PST)
+Date: Mon, 26 Feb 2024 18:21:08 -0800
+In-Reply-To: <20231206032054.55070-1-likexu@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20231206032054.55070-1-likexu@tencent.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Message-ID: <170899198226.3637605.729140637406873438.b4-ty@google.com>
+Subject: Re: [PATCH v2] KVM: x86/intr: Explicitly check NMI from guest to
+ eliminate false positives
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Like Xu <like.xu.linux@gmail.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Andi Kleen <ak@linux.intel.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-The existing I/O page fault handler currently locates the PCI device by
-calling pci_get_domain_bus_and_slot(). This function searches the list
-of all PCI devices until the desired device is found. To improve lookup
-efficiency, replace it with device_rbtree_find() to search the device
-within the probed device rbtree.
+On Wed, 06 Dec 2023 11:20:54 +0800, Like Xu wrote:
+> Explicitly checking the source of external interrupt is indeed NMI and not
+> other types in the kvm_arch_pmi_in_guest(), which prevents perf-kvm false
+> positive samples generated in perf/core NMI mode after vm-exit but before
+> kvm_before_interrupt() from being incorrectly labelled as guest samples:
+> 
+> # test: perf-record + cpu-cycles:HP (which collects host-only precise samples)
+> # Symbol                                   Overhead       sys       usr  guest sys  guest usr
+> # .......................................  ........  ........  ........  .........  .........
+> #
+> # Before:
+>   [g] entry_SYSCALL_64                       24.63%     0.00%     0.00%     24.63%      0.00%
+>   [g] syscall_return_via_sysret              23.23%     0.00%     0.00%     23.23%      0.00%
+>   [g] files_lookup_fd_raw                     6.35%     0.00%     0.00%      6.35%      0.00%
+> # After:
+>   [k] perf_adjust_freq_unthr_context         57.23%    57.23%     0.00%      0.00%      0.00%
+>   [k] __vmx_vcpu_run                          4.09%     4.09%     0.00%      0.00%      0.00%
+>   [k] vmx_update_host_rsp                     3.17%     3.17%     0.00%      0.00%      0.00%
+> 
+> [...]
 
-The I/O page fault is initiated by the device, which does not have any
-synchronization mechanism with the software to ensure that the device
-stays in the probed device tree. Theoretically, a device could be released
-by the IOMMU subsystem after device_rbtree_find() and before
-iopf_get_dev_fault_param(), which would cause a use-after-free problem.
+Applied to kvm-x86 pmu, with the !!in_nmi() fixup squashed.  Thanks!
 
-Add a mutex to synchronize the I/O page fault reporting path and the IOMMU
-release device path. This lock doesn't introduce any performance overhead,
-as the conflict between I/O page fault reporting and device releasing is
-very rare.
+[1/1] KVM: x86/intr: Explicitly check NMI from guest to eliminate false positives
+      https://github.com/kvm-x86/linux/commit/812d432373f6
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Link: https://lore.kernel.org/r/20240220065939.121116-3-baolu.lu@linux.intel.com
----
- drivers/iommu/intel/iommu.h |  2 ++
- drivers/iommu/intel/dmar.c  |  1 +
- drivers/iommu/intel/iommu.c |  3 +++
- drivers/iommu/intel/svm.c   | 17 +++++++++--------
- 4 files changed, 15 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index df00240ebe90..cd267ba64eda 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -719,6 +719,8 @@ struct intel_iommu {
- #endif
- 	struct iopf_queue *iopf_queue;
- 	unsigned char iopfq_name[16];
-+	/* Synchronization between fault report and iommu device release. */
-+	struct mutex iopf_lock;
- 	struct q_inval  *qi;            /* Queued invalidation info */
- 	u32 iommu_state[MAX_SR_DMAR_REGS]; /* Store iommu states between suspend and resume.*/
- 
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index f9b63c2875f7..d14797aabb7a 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -1097,6 +1097,7 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
- 	iommu->segment = drhd->segment;
- 	iommu->device_rbtree = RB_ROOT;
- 	spin_lock_init(&iommu->device_rbtree_lock);
-+	mutex_init(&iommu->iopf_lock);
- 	iommu->node = NUMA_NO_NODE;
- 
- 	ver = readl(iommu->reg + DMAR_VER_REG);
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 5568f17d867f..eaa648c6c389 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -4427,8 +4427,11 @@ static struct iommu_device *intel_iommu_probe_device(struct device *dev)
- static void intel_iommu_release_device(struct device *dev)
- {
- 	struct device_domain_info *info = dev_iommu_priv_get(dev);
-+	struct intel_iommu *iommu = info->iommu;
- 
-+	mutex_lock(&iommu->iopf_lock);
- 	device_rbtree_remove(info);
-+	mutex_unlock(&iommu->iopf_lock);
- 	dmar_remove_one_dev_info(dev);
- 	intel_pasid_free_table(dev);
- 	intel_iommu_debugfs_remove_dev(info);
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 1dd56d4eb88c..bdf3584ca0af 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -643,7 +643,7 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 	struct intel_iommu *iommu = d;
- 	struct page_req_dsc *req;
- 	int head, tail, handled;
--	struct pci_dev *pdev;
-+	struct device *dev;
- 	u64 address;
- 
- 	/*
-@@ -689,23 +689,24 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 		if (unlikely(req->lpig && !req->rd_req && !req->wr_req))
- 			goto prq_advance;
- 
--		pdev = pci_get_domain_bus_and_slot(iommu->segment,
--						   PCI_BUS_NUM(req->rid),
--						   req->rid & 0xff);
- 		/*
- 		 * If prq is to be handled outside iommu driver via receiver of
- 		 * the fault notifiers, we skip the page response here.
- 		 */
--		if (!pdev)
-+		mutex_lock(&iommu->iopf_lock);
-+		dev = device_rbtree_find(iommu, req->rid);
-+		if (!dev) {
-+			mutex_unlock(&iommu->iopf_lock);
- 			goto bad_req;
-+		}
- 
--		if (intel_svm_prq_report(iommu, &pdev->dev, req))
-+		if (intel_svm_prq_report(iommu, dev, req))
- 			handle_bad_prq_event(iommu, req, QI_RESP_INVALID);
- 		else
--			trace_prq_report(iommu, &pdev->dev, req->qw_0, req->qw_1,
-+			trace_prq_report(iommu, dev, req->qw_0, req->qw_1,
- 					 req->priv_data[0], req->priv_data[1],
- 					 iommu->prq_seq_number++);
--		pci_dev_put(pdev);
-+		mutex_unlock(&iommu->iopf_lock);
- prq_advance:
- 		head = (head + sizeof(*req)) & PRQ_RING_MASK;
- 	}
--- 
-2.34.1
-
+--
+https://github.com/kvm-x86/linux/tree/next
