@@ -1,124 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124B514EFE1
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242F514EFE1
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709069425; cv=none; b=UiOwYhYfT6ORS0MmbHcqBbtIJN0tvKjG1rTOSSu/NJLYKdqhYfqC5HL6jQJMRN+jpWumJGv35MCVu2WjgH3YtZS8Z5OEom5ziykIkY/lidrlX3EJprSJewgCNo2aAatixzg2XAVKJq2gWepdPOflm/Kj646dwsG7KyXTpcTfccY=
+	t=1709069433; cv=none; b=ZglEmEtDz2PtWqZ1oTwFzJxBS/O1D0Kgd4JGLJnQpzHVfm/95TLUHU+lv68Wbkj21jctn3HWcCYl7NVVGqzuVFYJCKIp2/2eC6VqKhE6+lPa5stbSOyqXQTQtLl8KdPceg6j9G09Q/VscmRLT90UhGw+/NKy+/caqAgTq5Aurzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709069425; c=relaxed/simple;
-	bh=Kt1BM64JLKYhxqKzFk1QlF0sWJtyh5KPS1EkSRV/ehg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V2vVE4KjXg+OLCj3In6AnD1Pdlg5rO9qzY7oUIhi3v2zBvdId1i3EcxvEiVgcYppeqiJN5/APkoOGxZaW8oHdo0Ja0ob5uUbuxEnmSao6lNI4Y16X6zkGQQwnDH+gsZlXdIJCHobHHqROp7hJAmrkrQpcP187yYAT56mirvdwD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SlBvRJ59; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709069433; c=relaxed/simple;
+	bh=pYEtL1LENAwOGgUH2s4ntndLZN6SXZc/BAgEp69OOYs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=TcjVI2M2TTeO9SAibVN4BUy2XpDA21flJzqyf2pS9m4cZ/t3NQJyCEz1e9QcxbF5B/vL//PxgDW4g6Mh04cfdlviCuAySxaNOOcjpwWZUGW+GYAEBdBESoPCmWY/tCU14lzYvGyIgk859dBg6yl7Bri0x8mRWfWRAmyVvD93YLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DUX70fav; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SlBvRJ59"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709069424; x=1740605424;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Kt1BM64JLKYhxqKzFk1QlF0sWJtyh5KPS1EkSRV/ehg=;
-  b=SlBvRJ594yAXrLr7dexgHBzYMSQkA6EMm7c32PyUQHuEVaxfVkJdTtEb
-   eKK/33NSBvzZJ1lsGp4JrHMn+KlyL1VUXI5/HiW9ARBpf7RdOjag19jaM
-   FgFTRJq27fgG0fEI1LdKb3ChdQgLF0QS3mDAKs0ORt+wiWULjCbtqvD3b
-   uBguEaoM2ITAwpdyWKFmHvXFmP8OCE5XJIs3xguEcl4f0aAbrX1Ane5Jr
-   tVaBdBwk6TC7ecEL95WCnqM1r+Rh9IaKGrKMGNI9GlxxpyS3Z+iqEaFPd
-   qJ66ni0C6hl2gRXnJj/Xgr4504RSBVsI2LQPZxFh3zIwl/qKn3zXa/d3H
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3299744"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="3299744"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:30:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="11805368"
-Received: from dschro4x-mobl.amr.corp.intel.com (HELO [10.212.137.190]) ([10.212.137.190])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:30:22 -0800
-Message-ID: <fb1279da-d6b1-4341-977d-44c9db94d063@linux.intel.com>
-Date: Tue, 27 Feb 2024 13:30:21 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DUX70fav"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60925cacbb7so23032367b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:30:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709069431; x=1709674231; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BiLhRWlBWb+am2iEgrEdgOVU5le4qM5JlbZDBxZ2Je8=;
+        b=DUX70favEb4LI+qq02RxZuXYPIeN+e+6+UcRGGNTssdUrDJsnP8PlUOQ+fgGvkMI5N
+         YLzajNGt/j0sOHGvmRkztns+tUeymPtZdSyuvac7Fh449dcDZxvxRROXWrwUZMTzD27a
+         yHS4Pvb9wG5tBwOGTM5pK+FgcuXZqeqU3l0P/h418co5DTK1GcKRmtKRQVqLIvev2JnY
+         TpOL0PvW4+ol6soohtq94VoDc/I4KxjKdz1AliCIKd2aBg3S1cHNHyT72m0BVMlcAuwO
+         VP8VooHtap0fXfLzq37HwDF/x0coPIaMhfDXkwTGyCfYRqpn58vJA3DnQsYaDZYNjf7B
+         b7VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709069431; x=1709674231;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BiLhRWlBWb+am2iEgrEdgOVU5le4qM5JlbZDBxZ2Je8=;
+        b=sdwhf13xtotE2BEugN+BBLLKyPHdV59S7XrOxVrdQwlsO+ApKTczkII2op6vjb0oVE
+         BEwcZ1gNTY6YnH3pYuw/sqwsQmT7IyUiGL+4lcAC3SFjyQ5NNXSukiIXrgXwMaGUQ+3m
+         uLfZAJRynH8Fq1GZP4v7+Fh2h2Q5rQi6d+Mh0ltCn/pKNHp+g6Xt254k+6fnFW7xT4wE
+         IoXBgbBd8MHQ77lPrBPPTWTSNnq92N5UIJI4+MNsfo8jPiRwc/Y7SHP1w6mBAboxqaRJ
+         pfG4Uofmi4MjBzZJHJCoWlKlQeZ065S4TExy80H+bTNaSTfOkNIgbWs+0xeIIpHaQtj6
+         P1uQ==
+X-Gm-Message-State: AOJu0YwEsFfMRnKoeL6GY2me7WJt+pP/sFIseuzKFs13TzWoS50PeT26
+	mqmgAVDASrMBxybx49s3IGcO//HGoLFjvEiY9QJectrWC3t2INU3OmmFBIzz1S18bOKvU+b81dk
+	iaA==
+X-Google-Smtp-Source: AGHT+IEsVcbgBeMscIwHllTsPaeKtX9AI8tlu8w0p7g8fFe/K/ym+PfroFIgpk0isSIhGHblduZI8+6IxqA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:188f:b0:dc6:e20f:80cb with SMTP id
+ cj15-20020a056902188f00b00dc6e20f80cbmr31913ybb.3.1709069431295; Tue, 27 Feb
+ 2024 13:30:31 -0800 (PST)
+Date: Tue, 27 Feb 2024 13:28:18 -0800
+In-Reply-To: <20240213192340.2023366-1-avagin@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv8 17/17] ACPI: tables: Print MULTIPROC_WAKEUP when MADT is
- parsed
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Elena Reshetova <elena.reshetova@intel.com>,
- Jun Nakajima <jun.nakajima@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
- <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
- "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
- <20240227212452.3228893-18-kirill.shutemov@linux.intel.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240227212452.3228893-18-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240213192340.2023366-1-avagin@google.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Message-ID: <170906349657.3809281.8603439312604083486.b4-ty@google.com>
+Subject: Re: [PATCH v3] kvm/x86: allocate the write-tracking metadata on-demand
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andrei Vagin <avagin@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhi Wang <zhi.a.wang@intel.com>, 
+	Yan Zhao <yan.y.zhao@intel.com>, Yongwei Ma <yongwei.ma@intel.com>
+Content-Type: text/plain; charset="utf-8"
 
+Added a few more KVM-GT folks.  FYI, this changes KVM to allocate metadata for
+write-tracking on-demand, i.e. when KVM-GT first registers with KVM.  I tested
+by hacking in usage of the external APIs, to register/unregister a node on every
+vCPU before/after vcpu_run(), so I am fairly confident that it's functionally
+correct.  But just in case you see issues in linux-next... :-)
 
-On 2/27/24 1:24 PM, Kirill A. Shutemov wrote:
-> When MADT is parsed, print MULTIPROC_WAKEUP information:
->
-> ACPI: MP Wakeup (version[1], mailbox[0x7fffd000], reset[0x7fffe068])
->
-> This debug information will be very helpful during bring up.
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Baoquan He <bhe@redhat.com>
-> ---
+On Tue, 13 Feb 2024 11:23:40 -0800, Andrei Vagin wrote:
+> The write-track is used externally only by the gpu/drm/i915 driver.
+> Currently, it is always enabled, if a kernel has been compiled with this
+> driver.
+> 
+> Enabling the write-track mechanism adds a two-byte overhead per page across
+> all memory slots. It isn't significant for regular VMs. However in gVisor,
+> where the entire process virtual address space is mapped into the VM, even
+> with a 39-bit address space, the overhead amounts to 256MB.
+> 
+> [...]
 
-Looks good to me.
+Applied to kvm-x86 mmu, thanks!
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+[1/1] kvm/x86: allocate the write-tracking metadata on-demand
+      https://github.com/kvm-x86/linux/commit/a364c014a2c1
 
->  drivers/acpi/tables.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-> index b07f7d091d13..c59a3617bca7 100644
-> --- a/drivers/acpi/tables.c
-> +++ b/drivers/acpi/tables.c
-> @@ -198,6 +198,20 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
->  		}
->  		break;
->  
-> +	case ACPI_MADT_TYPE_MULTIPROC_WAKEUP:
-> +		{
-> +			struct acpi_madt_multiproc_wakeup *p =
-> +				(struct acpi_madt_multiproc_wakeup *)header;
-> +			u64 reset_vector = 0;
-> +
-> +			if (p->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1)
-> +				reset_vector = p->reset_vector;
-> +
-> +			pr_debug("MP Wakeup (version[%d], mailbox[%#llx], reset[%#llx])\n",
-> +				 p->version, p->mailbox_address, reset_vector);
-> +		}
-> +		break;
-> +
->  	case ACPI_MADT_TYPE_CORE_PIC:
->  		{
->  			struct acpi_madt_core_pic *p = (struct acpi_madt_core_pic *)header;
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+--
+https://github.com/kvm-x86/linux/tree/next
