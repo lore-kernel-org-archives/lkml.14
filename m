@@ -1,144 +1,327 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB23D1419A0
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 14:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0892145B22;
+	Tue, 27 Feb 2024 14:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709045735; cv=none; b=OG/fyZbtYDEiGRmFArUPVN7Th3y1CMG7ZpCLhD2QBkmTTxkQ8oAzVLB+VyM5indvsEfma5qoiLz3h8lEcrY14FlaljtvXi78iTh2pQSBtmFh63pkF3wKYymHx4aK+QVzESgbWF3yrapm5FJFljL+yqd4sYpSDFFmVMS00TQ4xHA=
+	t=1709045738; cv=none; b=mWhAtMM7cLHElW088nRbXwp4KKeNxCUeE7QM9FeH0jdY39LG10vhVKPo2FARckUhSn6R6iiRCdXtac0FxJL2LDTDlZwTy5UBhxLOQXV5KvMH6D9ZwavvOfV+ROT68h+0Tj9OyRkKAj7wGAVzwn/N+WawQbfd1YCPM5xWh37su7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709045735; c=relaxed/simple;
-	bh=ds8/9433ZYz3tmpn+R2cXzGsm5jsDoRzmZrqieGcGd8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fbhwlOLMNwbv2D7WuIRH+fylNCsavVthqC7Q+u4SDjxhRjBh3G8pBdAmPsLu1kkIB88ShUw2/1P6AwRRkPYH6ILxeSI7tzzAWYzV/y6bpTjAL0IfnGcDhei8QcYZU5cbFqb1HMLm6VvCF2KSHFYVVP63UH2YySFhpLJCpdTzMMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUfmyHML; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709045738; c=relaxed/simple;
+	bh=o2mZBK2W8clAuxXSK0aNevbq2I0V4okV+dJUeXzBEjA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bfcDyEMHcCg70jM4RGWCpFZzXoVwsZ9fAPCJtnJxPoEWf9NJf0JwK+prvmpXCTfT3ICCJKBQTmm6udy5sJjc5wo+Co/foGyL434Uqkvn26sbrpsVDTuwiWVspTvQBWOt30u0YDh/RMDXhg2GuN9Qy4tuaVGu0XgnyZNpuzMw/+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LHC6y6hV; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUfmyHML"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB63C43609
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 14:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709045734;
-	bh=ds8/9433ZYz3tmpn+R2cXzGsm5jsDoRzmZrqieGcGd8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mUfmyHML1CDFZyyw9O6ENeNgLt8jXIwqQiNC1Fb+IMwk2gL11ZJwroCbhfrIoCex1
-	 wziGyFp5yTg39LFBC+AeReTdDUZJKv7ejmiZo2oR5R4g/FEeNe0/AGUosumSUxk6rb
-	 6ZxkylFRn8H0lZ3reC17AhrpuADxgRaNs9xOFhn9xmiYbZj/0XsbGlni0NjGnk/kuT
-	 4EBJNZo6VnUrq9iZaEoCkyIQmZlrjZNP50CqDrBkffG1AG08CrJpXm5rW4tm+rd7b0
-	 DR6bEV6vacqLjSHJxe+jfcigbmQGYD2RNiFTam87MkKsF560n5mMjA79b/UCp6QNzg
-	 OHnruzh1v02zw==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-512bc0e8ce1so4537451e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 06:55:34 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVE+daA4zEw8GLbc6zzR/Q2QlHjxtsx4R2qNcalMnYV+7YN+l9497kUtos8oVbYFo36spCLYNCLWvct47pQnpC98q8DjLXSq6Ns/oTK
-X-Gm-Message-State: AOJu0YzHbnmWLZnKtaLca7s4akOXFseaottBO5teCbXi2vN2ytY50yTx
-	umMx7vMpitvcN3r4sSUUb1H8twC112rHlEkgwcaAXL4YSuzBJDnIFDrLT0e71ix7w6fZ6Hnl1dv
-	4c9WnHUKXQPJbCIlPX6YmUJDCIm0=
-X-Google-Smtp-Source: AGHT+IFFivXC04IrthwNf/B6kmRqj3Y+E406GsG0DFdyric4Qksl/jWQr9a52gO7g35IkgOfAc87/rQ3XueK6D5g57U=
-X-Received: by 2002:a05:6512:308a:b0:512:e57d:c9c9 with SMTP id
- z10-20020a056512308a00b00512e57dc9c9mr7931763lfd.13.1709045732557; Tue, 27
- Feb 2024 06:55:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LHC6y6hV"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4DB6E2000B;
+	Tue, 27 Feb 2024 14:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709045734;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3TnnY6g3sNy0FWzO3GADHdVRE63acXHnGSyvm/LdPfU=;
+	b=LHC6y6hVQ9J6R+IyYI4C0Oyg80zE513rZnJ5HMI/ldQn+ZTXeOKbL/oJDq1DPlEOiK4u8Q
+	n8KWXTnIDP+ZkGPcHS9pdGcucDoAVOnEFtfaQZZhAbuqFxhE39RRQIYf5elZQGxizZS8/R
+	RAq4gMM5b4PIv3eba1KJI8JMlbkliHQiuRNodu1oKdNKOAeS+T6MlNU04deJloa7G9wPqc
+	ixMe/Rs7Hnc9IrlfNeehI2/9xUVuq52jUXiHXFoi8E0kwLmNY5oT2F0hN30+O6GB/6XXqU
+	kgn1DO6szDRSuGBqc+N7806/tJsHVTuo4+NCFhYQHYERUveVQRtguOoo34BbTw==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Tue, 27 Feb 2024 15:55:22 +0100
+Subject: [PATCH v8 01/10] dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add
+ bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240226142952.64769-12-ardb+git@google.com> <20240226142952.64769-17-ardb+git@google.com>
- <229aaa22-5e69-4f18-b5f7-fec83109bb53@amd.com>
-In-Reply-To: <229aaa22-5e69-4f18-b5f7-fec83109bb53@amd.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 27 Feb 2024 15:55:20 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGRTO=HupSKtGhpCpMt4nNpQLzuAUzRj8Qvdfnc2E=W5g@mail.gmail.com>
-Message-ID: <CAMj1kXGRTO=HupSKtGhpCpMt4nNpQLzuAUzRj8Qvdfnc2E=W5g@mail.gmail.com>
-Subject: Re: [PATCH v6 05/10] x86/sme: Avoid SME/SVE related checks on
- non-SME/SVE platforms
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	Kevin Loughlin <kevinloughlin@google.com>, Dionna Glaze <dionnaglaze@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Brian Gerst <brgerst@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240227-mbly-clk-v8-1-c57fbda7664a@bootlin.com>
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+In-Reply-To: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Rob Herring <robh@kernel.org>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Mon, 26 Feb 2024 at 22:38, Tom Lendacky <thomas.lendacky@amd.com> wrote:
->
-> On 2/26/24 08:29, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Reorganize the early SME/SVE init code so that SME/SVE related calls are
->
-> I'm assuming you mean SEV here and in the subject line.
->
+Add dt-schema type bindings for the Mobileye EyeQ5 pin controller.
 
-Yes.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+ .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 242 +++++++++++++++++++++
+ 1 file changed, 242 insertions(+)
 
-> > deferred until it has been determined that the platform actually
-> > supports this, and so those calls could actually make sense.
-> >
-> > This removes logic from the early boot path that executes from the 1:1
-> > mapping when booting a CONFIG_AMD_MEM_ENCRYPT=y kernel on a system that
-> > does not implement that (i.e., 99% of distro kernels)
->
-> Maybe I'm missing something but I don't see how this has changed anything
-> other than moving the call to sme_encrypt_kernel() within the if statement
-> (which means the check at the beginning of sme_encrypt_kernel() could be
-> changed do just check for SEV now).
->
+diff --git a/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
+new file mode 100644
+index 000000000000..5f00604bf48c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
+@@ -0,0 +1,242 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/mobileye,eyeq5-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mobileye EyeQ5 pin controller
++
++description: >
++  The EyeQ5 pin controller handles the two pin banks of the system. It belongs
++  to a system-controller block called OLB.
++
++  Pin control is about bias (pull-down, pull-up), drive strength and muxing. Pin
++  muxing supports two functions for each pin: first is GPIO, second is
++  pin-dependent.
++
++  Pins and groups are bijective.
++
++maintainers:
++  - Grégory Clement <gregory.clement@bootlin.com>
++  - Théo Lebrun <theo.lebrun@bootlin.com>
++  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
++
++$ref: pinctrl.yaml#
++
++properties:
++  compatible:
++    enum:
++      - mobileye,eyeq5-pinctrl
++
++  reg:
++    maxItems: 1
++
++patternProperties:
++  "-pins?$":
++    type: object
++    description: Pin muxing configuration.
++    $ref: pinmux-node.yaml#
++    additionalProperties: false
++    properties:
++      pins: true
++      function:
++        enum: [gpio,
++               # Bank A
++               timer0, timer1, timer2, timer5, uart0, uart1, can0, can1, spi0,
++               spi1, refclk0,
++               # Bank B
++               timer3, timer4, timer6, uart2, can2, spi2, spi3, mclk0]
++      bias-disable: true
++      bias-pull-down: true
++      bias-pull-up: true
++      drive-strength: true
++    required:
++      - pins
++      - function
++    allOf:
++      - if:
++          properties:
++            function:
++              const: gpio
++        then:
++          properties:
++            pins:
++              items: # PA0 - PA28, PB0 - PB22
++                pattern: '^(P(A|B)1?[0-9]|PA2[0-8]|PB2[0-2])$'
++      - if:
++          properties:
++            function:
++              const: timer0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA0, PA1]
++      - if:
++          properties:
++            function:
++              const: timer1
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA2, PA3]
++      - if:
++          properties:
++            function:
++              const: timer2
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA4, PA5]
++      - if:
++          properties:
++            function:
++              const: timer5
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA6, PA7, PA8, PA9]
++      - if:
++          properties:
++            function:
++              const: uart0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA10, PA11]
++      - if:
++          properties:
++            function:
++              const: uart1
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA12, PA13]
++      - if:
++          properties:
++            function:
++              const: can0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA14, PA15]
++      - if:
++          properties:
++            function:
++              const: can1
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA16, PA17]
++      - if:
++          properties:
++            function:
++              const: spi0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA18, PA19, PA20, PA21, PA22]
++      - if:
++          properties:
++            function:
++              const: spi1
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA23, PA24, PA25, PA26, PA27]
++      - if:
++          properties:
++            function:
++              const: refclk0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA28]
++      - if:
++          properties:
++            function:
++              const: timer3
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PB0, PB1]
++      - if:
++          properties:
++            function:
++              const: timer4
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PB2, PB3]
++      - if:
++          properties:
++            function:
++              const: timer6
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PB4, PB5, PB6, PB7]
++      - if:
++          properties:
++            function:
++              const: uart2
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PB8, PB9]
++      - if:
++          properties:
++            function:
++              const: can2
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PB10, PB11]
++      - if:
++          properties:
++            function:
++              const: spi2
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PB12, PB13, PB14, PB15, PB16]
++      - if:
++          properties:
++            function:
++              const: spi3
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PB17, PB18, PB19, PB20, PB21]
++      - if:
++          properties:
++            function:
++              const: mclk0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PB22]
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
 
-The idea of this change is to avoid calls into SME/SEV related code,
-in a way that can easily be backported to -stable kernels.
+-- 
+2.44.0
 
-The reason is that the SME/SEV code has changed much more than the
-rest of the code, and so backporting this entire series is going to be
-messy, as well as unnecessary given that those kernels are not
-expected to get all the latest SEV related changes anyway. We do tend
-to try and keep those -stable kernels building with recent Clang
-versions, and so keeping the SME/SEV code out of the boot path
-entirely would help running into codegen issues such as the ones this
-series is working around in code that is substantially different from
-the latest revision.
-
-However, I decided to drop this patch anyway. The mainline code should
-be obviously correct, and introducing potential problems this way does
-not justify the goal of easier -stable backports.
-
-...
-> > diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-> > index 0166ab1780cc..7ddcf960e92a 100644
-> > --- a/arch/x86/mm/mem_encrypt_identity.c
-> > +++ b/arch/x86/mm/mem_encrypt_identity.c
-> > @@ -45,6 +45,7 @@
-> >   #include <asm/sections.h>
-> >   #include <asm/cmdline.h>
-> >   #include <asm/coco.h>
-> > +#include <asm/init.h>
-> >   #include <asm/sev.h>
-> >
-> >   #include "mm_internal.h"
-> > @@ -502,18 +503,15 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
-> >       native_write_cr3(__native_read_cr3());
-> >   }
-> >
-> > -void __init sme_enable(struct boot_params *bp)
-> > +void __head sme_enable(struct boot_params *bp)
-> >   {
-> >       const char *cmdline_ptr, *cmdline_arg, *cmdline_on;
-> >       unsigned int eax, ebx, ecx, edx;
-> >       unsigned long feature_mask;
-> >       unsigned long me_mask;
-> >       char buffer[16];
-> > -     bool snp;
-> >       u64 msr;
-> >
-> > -     snp = snp_init(bp);
->
-> The snp_init() call is here because the SNP CPUID table needs to be
-> established before the below CPUID instruction is executed. This can't be
-> moved.
->
-
-Yeah, good point. I didn't spot this in my SEV-SNP boot testing,
-presumably because the firmware's VC handler is still active in my
-case, but this isn't guaranteed, e.g., when booting via the
-decompressor, or when using 5-level paging.
-
-Thanks for the review.
