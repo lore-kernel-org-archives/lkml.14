@@ -1,39 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7E113A279;
-	Tue, 27 Feb 2024 14:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1913A1EEE6;
+	Tue, 27 Feb 2024 14:43:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709044996; cv=none; b=f4hSC/hnn7fGlGGOWPRsTkxiiwzpqq8AU/ixjbUgcjtBXryTFJO1J4xb4JmrjAsncTBEA4Sd5bI5WkccoIyhD9pWYNmn5MuBqTRFuELUlg7LSjxmA4NJA/lStyQwIhfug6sFMGn3eIdKnKgmKhjddS/yQzgJQiKlWV9mDvmSTTU=
+	t=1709044997; cv=none; b=Zfs/nKUPvnvjVFW7wTztQGAcpeMlGBPrmKHWCCqihzbn3CoA4O21f7baIzwtinvGLTAOSjXKpPFXpjDmXUGDGFLLRbOo5Ba2oEtZMzdpgYcjbUnRxCJNktP+rk9lgA/WoAHVEuxTsvh/HrInQeLmI3ROhmyc0kxU7PX8JdTo4Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709044996; c=relaxed/simple;
-	bh=jAR3BHhfrw2BRN1d42tiIJQ4X2fRoSUuWrmnOP0e7ss=;
+	s=arc-20240116; t=1709044997; c=relaxed/simple;
+	bh=WpIWaIitdu21Ks1J/Y+EEHxZixdcva6v+wiNxRdH9VY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nUVeCl9E1bOGO/HoBCikHrkucnOtblf5bJE+O+M51W61zJm+jYYtdyIH8COGPtoZ3vdOC7MIdC3IkavQCNL+nUnefRleS528P4syDYTMRZjs5Vmcgxp0YNRnbzCzQs2jXxptzQaeuXJqpClRLfAEUKo9aBDjyOGfSdVISX3rx28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TOy4i8yU; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=SNhKLxxuCX4rlcht4FInq04TDig8/t73yH7VarowT7d375wI52Dc7FvIUtRa0b0JxwYp0FdUs3ALAWS7Fteg5slp8XyZgGXJ+RM3SW5VEQZ6iJWEBs3ubJ6AB2dbKP19aSx0VK0cUKqwcQ2SgwTIa6KBWz3X6pgD6ybtH1XQvhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fCjHrlHF; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TOy4i8yU"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E984420016;
-	Tue, 27 Feb 2024 14:43:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fCjHrlHF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DCD6A20013;
+	Tue, 27 Feb 2024 14:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709044992;
+	t=1709044987;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8BYHxif2hH79RI4L4+701H9bjerbW4Ed50dyCXZYfEU=;
-	b=TOy4i8yUvhTC6ID1+9p6QoUa8svUL0JGgbSl3oICCWMtmK+lIzTtAhfXX/3K0YhPpiPt0o
-	vOopmW/zw4/2OiyEF8jc+eNwwsJw97vryJdlHIP7ssVmdyCmoir9hW3mJJbHLVNAmTbi5s
-	9SNyIdUL3SBzJmG1CCLSmHWFF4bCG11VFtHuTzz/bvSp4dD++DzVvfiwwx3b9ylZLSkRWP
-	U9SBNGd//S2nAht2RSXGqctcTaVIW/v7sv67mVmoIQldjXPb5sQRyyuooEzMfBprdXGphx
-	o3y+SeSN+qICQs/22UV0CmwGCygMonHZAz0P4KJhI4Kz9nClRvDCMn7OtdL86A==
+	bh=kEfi3iPlEEkOJpn9aGHgkThAMUfvgHQbNS7bH/pxoj0=;
+	b=fCjHrlHFlK1cggB2QuXQPZtvcHWS5X4o63ixyMIzSICCYlQh0t19CSoOw6v84saUzxI7Qj
+	Xxxq6t8E+7AdxeX7+USecAe4FFYc4krUFPU2yfo0v49z02gdUj6VnJOS8eqKw2iXeqt7rF
+	fL81KkJzzVR6oTfH7BKic1vKPOHWHm0GNyA2FvDFuYPgTeDbP45804d8IsCOdWXyFauE8b
+	YWRgcjVfwlfCwJJx9TNUn3cHBnC8I2hVHo3o6/Bwe+ajsFk5xo2ws9hjw4FBrt5OASRtAg
+	ZNGI+M66kFKLvvchRZmnoMIv4sP19n/wcNSy8AOINFnlFtTSUY54Nom0EL+zvA==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 27 Feb 2024 15:42:47 +0100
-Subject: [PATCH net-next v5 05/17] net: pse-pd: Introduce PSE types
- enumeration
+Date: Tue, 27 Feb 2024 15:42:43 +0100
+Subject: [PATCH net-next v5 01/17] MAINTAINERS: net: Add Oleksij to pse-pd
+ maintainers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240227-feature_poe-v5-5-28f0aa48246d@bootlin.com>
+Message-Id: <20240227-feature_poe-v5-1-28f0aa48246d@bootlin.com>
 References: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
 In-Reply-To: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -64,136 +64,39 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Introduce an enumeration to define PSE types (C33 or PoDL),
-utilizing a bitfield for potential future support of both types.
-Include 'pse_get_types' helper for external access to PSE type info.
+Oleksij was the first to add support for pse-pd net subsystem.
+Add himself to the maintainers seems logical.
 
 This patch is sponsored by Dent Project <dentproject@linuxfoundation.org>.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
-Changes in v2:
-- Rename PSE_POE to PSE_C33 to have naming consistency.
-- Use "static inline" instead of simple static in the header
-
 Changes in v3:
-- Move the pse_type enum in uapi.
-- Replace pse_get_types helper by pse_has_podl and pse_has_c33.
-
-Changes in v5:
-- Move the pse types enum in ethtool.
-- Add ethtool prefix to the value.
+- New patch
 ---
- drivers/net/pse-pd/pse_core.c      | 12 ++++++++++++
- drivers/net/pse-pd/pse_regulator.c |  1 +
- include/linux/pse-pd/pse.h         | 15 +++++++++++++++
- include/uapi/linux/ethtool.h       | 12 ++++++++++++
- 4 files changed, 40 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
-index 146b81f08a89..fed006cbc185 100644
---- a/drivers/net/pse-pd/pse_core.c
-+++ b/drivers/net/pse-pd/pse_core.c
-@@ -312,3 +312,15 @@ int pse_ethtool_set_config(struct pse_control *psec,
- 	return err;
- }
- EXPORT_SYMBOL_GPL(pse_ethtool_set_config);
-+
-+bool pse_has_podl(struct pse_control *psec)
-+{
-+	return psec->pcdev->types & ETHTOOL_PSE_PODL;
-+}
-+EXPORT_SYMBOL_GPL(pse_has_podl);
-+
-+bool pse_has_c33(struct pse_control *psec)
-+{
-+	return psec->pcdev->types & ETHTOOL_PSE_C33;
-+}
-+EXPORT_SYMBOL_GPL(pse_has_c33);
-diff --git a/drivers/net/pse-pd/pse_regulator.c b/drivers/net/pse-pd/pse_regulator.c
-index 1dedf4de296e..547af384764b 100644
---- a/drivers/net/pse-pd/pse_regulator.c
-+++ b/drivers/net/pse-pd/pse_regulator.c
-@@ -116,6 +116,7 @@ pse_reg_probe(struct platform_device *pdev)
- 	priv->pcdev.owner = THIS_MODULE;
- 	priv->pcdev.ops = &pse_reg_ops;
- 	priv->pcdev.dev = dev;
-+	priv->pcdev.types = ETHTOOL_PSE_PODL;
- 	ret = devm_pse_controller_register(dev, &priv->pcdev);
- 	if (ret) {
- 		dev_err(dev, "failed to register PSE controller (%pe)\n",
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index be4e5754eb24..19589571157f 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -77,6 +77,7 @@ struct pse_control;
-  *            device tree to id as given to the PSE control ops
-  * @nr_lines: number of PSE controls in this controller device
-  * @lock: Mutex for serialization access to the PSE controller
-+ * @types: types of the PSE controller
-  */
- struct pse_controller_dev {
- 	const struct pse_controller_ops *ops;
-@@ -89,6 +90,7 @@ struct pse_controller_dev {
- 			const struct of_phandle_args *pse_spec);
- 	unsigned int nr_lines;
- 	struct mutex lock;
-+	enum ethtool_pse_types types;
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cfe44a876d8a..4f9b554f79da 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17690,6 +17690,13 @@ F:	include/net/psample.h
+ F:	include/uapi/linux/psample.h
+ F:	net/psample
  
- #if IS_ENABLED(CONFIG_PSE_CONTROLLER)
-@@ -108,6 +110,9 @@ int pse_ethtool_set_config(struct pse_control *psec,
- 			   struct netlink_ext_ack *extack,
- 			   const struct pse_control_config *config);
- 
-+bool pse_has_podl(struct pse_control *psec);
-+bool pse_has_c33(struct pse_control *psec);
++PSE NETWORK DRIVER
++M:	Oleksij Rempel <o.rempel@pengutronix.de>
++L:	netdev@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/net/pse-pd/
++F:	drivers/net/pse-pd/
 +
- #else
- 
- static inline struct pse_control *of_pse_control_get(struct device_node *node)
-@@ -133,6 +138,16 @@ static inline int pse_ethtool_set_config(struct pse_control *psec,
- 	return -ENOTSUPP;
- }
- 
-+static inline bool pse_has_podl(struct pse_control *psec)
-+{
-+	return false;
-+}
-+
-+static inline bool pse_has_c33(struct pse_control *psec)
-+{
-+	return false;
-+}
-+
- #endif
- 
- #endif
-diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-index d35f044e88eb..f63fdeb422e8 100644
---- a/include/uapi/linux/ethtool.h
-+++ b/include/uapi/linux/ethtool.h
-@@ -752,6 +752,18 @@ enum ethtool_module_power_mode {
- 	ETHTOOL_MODULE_POWER_MODE_HIGH,
- };
- 
-+/**
-+ * enum - Types of PSE controller.
-+ * @ETHTOOL_PSE_UNKNOWN: Type of PSE controller is unknown
-+ * @ETHTOOL_PSE_PODL: PSE controller which support PoDL
-+ * @ETHTOOL_PSE_C33: PSE controller which support Clause 33 (PoE)
-+ */
-+enum ethtool_pse_types {
-+	ETHTOOL_PSE_UNKNOWN =	1 << 0,
-+	ETHTOOL_PSE_PODL =	1 << 1,
-+	ETHTOOL_PSE_C33 =	1 << 2,
-+};
-+
- /**
-  * enum ethtool_c33_pse_admin_state - operational state of the PoDL PSE
-  *	functions. IEEE 802.3-2022 30.9.1.1.2 aPSEAdminState
+ PSTORE FILESYSTEM
+ M:	Kees Cook <keescook@chromium.org>
+ R:	Tony Luck <tony.luck@intel.com>
 
 -- 
 2.25.1
