@@ -1,104 +1,137 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A325B148FF4;
-	Tue, 27 Feb 2024 18:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DA425757;
+	Tue, 27 Feb 2024 18:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709058413; cv=none; b=O1ZbebTFir86D9VIgqsw/JO2pfwrVtkMQTI9xUverUYqHw9/zesrcDrKGHr//z7blO5bFf9y7dYVdjzsHjksY/UTeH5dtxSHjE5W4D91WVmLy6yPTkcr3ixLpe6wkpBbx66bkZnm1A5sIXBK2djiae/sP41VKdRtREW5FFuB2XQ=
+	t=1709058443; cv=none; b=cMYdCF/Au+9cpYY4QOdF2P5xPwyrpduYiChiuAVocXzQpOKTZxVIM1/HF9au+c97vPYpyBDR+D7v+4n1w0Z9fzqgdUn1OEoCC8WnWY2gg60jYSfByw2orr97mZk48y8tItcZFxxpGwps9/ZqLqX+0qFO5jVJ369Yc7CSkRo9zfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709058413; c=relaxed/simple;
-	bh=8XWj6PM1lzfc8uwHWAFHpI9lOjKvzxk1lGQOsb+8dyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B5CvtqDjhaAG0hbooYwLC/sJCm6Ua4vce9rYblFgTLTd2zWqz8O5oK3ukFmEC5z6YeBZPRhqw1SJ4FYxz0JZcf8KMmQWcIAUdE/pBYzMFxdq1jcQ6n1UhuDxc+cez9uWRl/C8DKQAg5dthB5gsQeJ/msoRGqvSQ5cHiKX7/DhnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBtKHZ/B; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1709058443; c=relaxed/simple;
+	bh=uO+QAb9CNhOXbeAPWDtH2HJL7jsZQvvk4tKvYfP5lKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G1HQQuJdeI+peXDF8mxyLG3O4tOPS/QeM17acjbyFSKLFOi8TcFv9H65/Wn9GzzGxRiYrdqZam/WFNrIry8dEcuaeQoTVtJND17vKosRqLpvKVJujSBJbA1Ypu8bOdiygHnllrdv6S93pxEZ7E0MvS8zOLBJdTTQmI85N2fmgUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBtKHZ/B"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so3748697a12.1;
-        Tue, 27 Feb 2024 10:26:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709058411; x=1709663211; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6Z76EBq7m1t1xBOj0ctPbx9Wsemqc1cbGv8gFCHa6F4=;
-        b=hBtKHZ/B1TNIImyGJYFs0VHvOAPtSUPPLjgUMYHoBmZtMpSCiEs1OOW4salAwL+1hj
-         hv8/yo/zrAabGZsiIpyeN1fKjoeBmRoDuA9e3Va7n12/yMZ2609hmmESlJSu2t0/7Iqz
-         eQz2hxQ24kpXGnbNto2B1zOYuEdK/DLKLNErM53pPrtZa5PsK8YT9EntApL82O/VcF8Q
-         9lVKDe0jfxYdGgJhtwszUSMa+lt3VsE4OmO4e6M5od6JGKfBoK/V3RwgFFFdTZkf30T4
-         Jr/r2k7lQbs47GIe4LvWsDVbJNcwe4QlXONt5xNkKhL0PuXTWfE069NtMnDEEW20Li0b
-         dWaw==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d24a727f78so64487591fa.0;
+        Tue, 27 Feb 2024 10:27:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709058411; x=1709663211;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Z76EBq7m1t1xBOj0ctPbx9Wsemqc1cbGv8gFCHa6F4=;
-        b=bMUyZqNpZlVHCC03SOZR8MO2FXWvb+eW3Ox7/Y8vBkJlhXMwRuZWCIDA74LFAIy7R0
-         +2N765vCR1DxcUFQhKURKYPJkjwIEWE2P7XpaZ4LtuO8fN6kj8VCHGJn45ue3/VuVdAP
-         g/6gc3NtHDvNXZ7TA/2r5fty6YrkeFU97Mix8KNLysp9WqjM+CtlInRVMVabDQOx9E2F
-         QUkv6FB7FRMA5Zt4xtUCJ9oBqOjAhuoZJednCTI8XTHAEPPb3XTV1p6QIUwCKiXxHhie
-         wPGslEbp36Dlc3BAWC8/vz1/DxbTuhwZSm0P81q24bShHi6Va8yjg6JSpcXMbZ0X8gxf
-         SlHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVksPG3mrk2Xz3qbUYP+6aSt4cz4HgRJzi4l6KDWxatpZsWJGSUBjWYUZd4mbtK7edU8f0YFG0/ODzFyi+VDSxVaqrf8wJXk6KEd9gltn604al49CJ8BwN2ATs1x1cYHKP6aVRJ
-X-Gm-Message-State: AOJu0Yz52xtpUxcN0l+R5JSkGFrrc/vszlUSEKT5ki+7zcW6DraLHgv9
-	kj2Wm5/WlotE7SnDNXpoRtQIPNVy434cPNhN+gKA5J+T2codwd6F
-X-Google-Smtp-Source: AGHT+IFdU7nmUgVPR3ujHtXkL/DO8Zjq5jDL4faVgix98nSdwlnODv1Ahp1XImqWmFlIZKq64EYHsA==
-X-Received: by 2002:a17:902:f690:b0:1db:f03b:6f5b with SMTP id l16-20020a170902f69000b001dbf03b6f5bmr14903685plg.56.1709058410715;
-        Tue, 27 Feb 2024 10:26:50 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id lc13-20020a170902fa8d00b001d911dd145esm1807639plb.219.2024.02.27.10.26.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 10:26:49 -0800 (PST)
-Message-ID: <ae07fe47-15cd-42d3-9992-cd5c5a3d57c6@gmail.com>
-Date: Tue, 27 Feb 2024 10:26:45 -0800
+        d=1e100.net; s=20230601; t=1709058440; x=1709663240;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BYvzYko0Is+SAP/w3hqBwCLet2Nqsl8SFgKdmiGU1T4=;
+        b=QomaE3IKCt2eKFkSlknGy+xuk8My/4R33j4SmsSrVDj13cMjuo/g8s3jsLNWHqC4nc
+         jj2Gx5Evn7+ubTqNJXkEMG+il44WYHL4owS/KgNxylIsela2kaY29pyPjC6EPATsgFB+
+         VBKjbcvLrkLzNMcmRJNB8adfMfZEPvwtWIde3AgAHMqHo8AlT0Yewhrc1yGv9/25MKww
+         saR+0MZvKIpgvrXBvfnylDGVgDLLphbTmRAzD4XPyJemgnXirbSZOUT2nV+H1E+ozsBw
+         aMCK2U4tYKv4b2A3pIXDRee3FA1TT4DH7by9ABubKGY1Ex32pEmDoUDbH6kBhUKE5v4C
+         G44g==
+X-Forwarded-Encrypted: i=1; AJvYcCVts9PgUJrBykEfUEQu/W8iTG3/kNHKQOsvUlon7lddiVusdyHL99TX8nJoC+NMovB/1juZfixp5zZoi2E057nbHhgEN0VHBFdoWYid
+X-Gm-Message-State: AOJu0YyFTZPx9KWFEHOa7Uh7vKrZjMnMjIxtZdIOHPrgm2s2VnffORSX
+	2BX6DiguHfFBGTi31zMEpR/brYWVzMCSrjlFKVdUEIFuWF6PFmU9pgUgu/Sp
+X-Google-Smtp-Source: AGHT+IEUwtTbXJECoVbN5asUL5J5WG/LHgYO68BFG1pCrUGnFaCZjVTJp4FqoJhJXBMYuqLO4LYYaA==
+X-Received: by 2002:a05:6512:33d5:b0:512:fe39:5d0e with SMTP id d21-20020a05651233d500b00512fe395d0emr5433262lfg.9.1709058439803;
+        Tue, 27 Feb 2024 10:27:19 -0800 (PST)
+Received: from localhost (fwdproxy-lla-000.fbsv.net. [2a03:2880:30ff::face:b00c])
+        by smtp.gmail.com with ESMTPSA id u11-20020aa7db8b000000b005653f390f77sm1001546edt.10.2024.02.27.10.27.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 10:27:19 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	Roopa Prabhu <roopa@nvidia.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	horms@kernel.org,
+	bridge@lists.linux.dev (open list:ETHERNET BRIDGE)
+Subject: [PATCH net-next 1/2] net: bridge: Do not allocate stats in the driver
+Date: Tue, 27 Feb 2024 10:23:36 -0800
+Message-ID: <20240227182338.2739884-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.4 00/84] 5.4.270-rc1 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, allen.lkml@gmail.com
-References: <20240227131552.864701583@linuxfoundation.org>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240227131552.864701583@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/27/24 05:26, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.270 release.
-> There are 84 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 29 Feb 2024 13:15:36 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.270-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+convert veth & vrf"), stats allocation could be done on net core
+instead of this driver.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+With this new approach, the driver doesn't have to bother with error
+handling (allocation failure checking, making sure free happens in the
+right spot, etc). This is core responsibility now.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Remove the allocation in the bridge driver and leverage the network
+core allocation.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ net/bridge/br_device.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
+diff --git a/net/bridge/br_device.c b/net/bridge/br_device.c
+index 874cec75a818..4f636f7b0555 100644
+--- a/net/bridge/br_device.c
++++ b/net/bridge/br_device.c
+@@ -113,26 +113,18 @@ static int br_dev_init(struct net_device *dev)
+ 	struct net_bridge *br = netdev_priv(dev);
+ 	int err;
+ 
+-	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
+-	if (!dev->tstats)
+-		return -ENOMEM;
+-
+ 	err = br_fdb_hash_init(br);
+-	if (err) {
+-		free_percpu(dev->tstats);
++	if (err)
+ 		return err;
+-	}
+ 
+ 	err = br_mdb_hash_init(br);
+ 	if (err) {
+-		free_percpu(dev->tstats);
+ 		br_fdb_hash_fini(br);
+ 		return err;
+ 	}
+ 
+ 	err = br_vlan_init(br);
+ 	if (err) {
+-		free_percpu(dev->tstats);
+ 		br_mdb_hash_fini(br);
+ 		br_fdb_hash_fini(br);
+ 		return err;
+@@ -140,7 +132,6 @@ static int br_dev_init(struct net_device *dev)
+ 
+ 	err = br_multicast_init_stats(br);
+ 	if (err) {
+-		free_percpu(dev->tstats);
+ 		br_vlan_flush(br);
+ 		br_mdb_hash_fini(br);
+ 		br_fdb_hash_fini(br);
+@@ -159,7 +150,6 @@ static void br_dev_uninit(struct net_device *dev)
+ 	br_vlan_flush(br);
+ 	br_mdb_hash_fini(br);
+ 	br_fdb_hash_fini(br);
+-	free_percpu(dev->tstats);
+ }
+ 
+ static int br_dev_open(struct net_device *dev)
+@@ -496,6 +486,7 @@ void br_dev_setup(struct net_device *dev)
+ 	dev->hw_features = COMMON_FEATURES | NETIF_F_HW_VLAN_CTAG_TX |
+ 			   NETIF_F_HW_VLAN_STAG_TX;
+ 	dev->vlan_features = COMMON_FEATURES;
++	dev->pcpu_stat_type = NETDEV_PCPU_STAT_TSTATS;
+ 
+ 	br->dev = dev;
+ 	spin_lock_init(&br->lock);
 -- 
-Florian
+2.43.0
 
