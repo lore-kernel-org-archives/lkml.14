@@ -1,122 +1,78 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7EC1847
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475D646AF
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708996043; cv=none; b=bjCyM4Ss6Gu4dE/Bei06RGwNOWbKJ3uHhW3hDPRq7z4hLHrl46fLo5I1PcmXuup9rX0z/qKKAUghZ5aY4xTnko/6m7AvssYNIVKnPGgU1DDAj//c2jF+/Grl3WTGMTQ+GM0TTtu9uuDruIjsHVsuoQLg32zJy/pKG/ef/uUuXDU=
+	t=1708996144; cv=none; b=Mw5o3ZWVVqD5C5gfr9uJODT8hcM7M8bK35ANnmyGazVyT/4L6GRtyJhZ0jsX7DBTufmDnM3acrYR3ZoanSrUaBXVlXPv1Jlodr5vKsu8P3RA8GzFao3GcPIkw3ph3hIKeubKnJQxuqjQExggIVgnAQeZOn6M0NqGmw8aKFlRVIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708996043; c=relaxed/simple;
-	bh=xlhrIQ+W/f+848er0yzcAblrCEsNA61Nvlr2TS/B7n4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TQOYJgukM7/Hg4mRrb/QQKHtjbNzUNX1AieyJ0il4ihrbQgqS1wpsw3q46HWlQiBWaEzh2UjKpGSn/zKo8GAAwudgZA5ThwEDv7r6dzijU8tSpTUgCdZBCG66Txfn3b1PsA3tz2ZpfKNOBHaTL1doPlfnFiN5y0k0+vRLK1npi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cXs8LYse; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cXs8LYse"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51197ca63f5so5623370e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:07:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708996040; x=1709600840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xlhrIQ+W/f+848er0yzcAblrCEsNA61Nvlr2TS/B7n4=;
-        b=cXs8LYseEzX/FIxwW+BDKfTXS/SOcFTn8bNBwLZIJvOxry1TewdpxIgELqJMrLoVgi
-         bEa4NMZR+HfRJ4gEeL5MSXKbAC6ltGWOR26E5goJY5282kXiCm4BQ0x/r0BJgxT8aS83
-         wYVe6PC9wHVUfDfKRcPzhs84UeG+K+GGYPgsE=
+	s=arc-20240116; t=1708996144; c=relaxed/simple;
+	bh=kzoRrXh08bElKHfj1aPeK5wEZBKK/c9vqPFeUCMIWnA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=oafhKke5pJp6TLJlcoYU+tK0pU6TaZ9oux9uDCVppAOkgaAawzfr5b87i/K3ek5JGwqlFHziD3ufvy/IIawM5DkFKw4eeDEwMENSVq5Go9Y0sA2An+6378r0Tn6uhvnKv8eTMORlBsLqKLwJCaFE1chyDUJBhUF+PzjNUEcPLEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3657cf730a0so37934045ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:09:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708996040; x=1709600840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xlhrIQ+W/f+848er0yzcAblrCEsNA61Nvlr2TS/B7n4=;
-        b=jWpJ7AvyPGuMgXBalDwsMgIYKxnYlw9j4jMLb6Ejg1Fyh/sl+1a2YIjAZB/dDCYDUr
-         sNpDDxMD78FbOxLPOqXSLW6ciC7PwkdGn4fXW5zsydJfr4Isxgd8OkbkzLttd1xTsC9W
-         F2wLEg7QaIuMgdjW8rdgBlj2uq8xAtdPxinKIKGaeR1lSSVvFHDzVy8iWUfYEdR+C4F/
-         okWqNnktt1FKzpHLu6zz2DdI66hxABy9LUpjfi5vZXyrFvWteDfyDFHD/7BMm4IxTUyR
-         SCteogdENfnnpzqYJjb1Z8pcZ3egHl/WJySgYNyfaMQUCxJKTGeO+1Pz8VV743pX9agR
-         a1Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXfGvPaenan6G9J/qPSwx3lchPPNxw/wdtsXM11uPfhKEGky+6z+2+QBb4eYWfx8NqaODtSMEsY99xC9Y2Ir+hbp9Q/vytqDcvaACy4
-X-Gm-Message-State: AOJu0Yx+d9bZqZjsF/LKQ+1Z+RQezzm+rjKN2macznpqlOzJEv1GJjc4
-	rL7sETvMNkfmtcT0BuZfgMYpiG/FKzQx+Uwo2ew3e+eOwhW7xbXIneL1tiObkVlIpz5V4jN8Rll
-	4Ocm8
-X-Google-Smtp-Source: AGHT+IGmhfnrZhfJ1xCOqQh1hVOm7IDVEwETvcsgXPoGBXiiO0Sam/2uVEZJ/8YK1/UaKUqLR1Jogw==
-X-Received: by 2002:a17:906:a893:b0:a43:9780:9492 with SMTP id ha19-20020a170906a89300b00a4397809492mr819788ejb.5.1708995626462;
-        Mon, 26 Feb 2024 17:00:26 -0800 (PST)
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
-        by smtp.gmail.com with ESMTPSA id gl18-20020a170906e0d200b00a3f9949743dsm237410ejb.209.2024.02.26.17.00.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 17:00:25 -0800 (PST)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-565223fd7d9so2509a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:00:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVXl8CuBi3dMXfWz99TEYD97bsz4fxJEoRwizVfmAxGZPq19mvqJ1//fK0mvNwSe7mApqLsMi3mTa3U11b9DOkz32lz1HIZGGJSbCCu
-X-Received: by 2002:a50:d650:0:b0:566:1390:6329 with SMTP id
- c16-20020a50d650000000b0056613906329mr59190edj.1.1708995625011; Mon, 26 Feb
- 2024 17:00:25 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708996142; x=1709600942;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Aktuv2KRKCqLRwq94WSyQgX3rAr6mzRgiYzRkrGsztc=;
+        b=UwlGUxqyYJBhUMTtpC24qmD1L7ze2xaIG45+yOnLjC7Nd96rVYnNjJsWnmSJMpv1FV
+         odMUPmgGeUhTc5pgbrkkQTFRUoqE3IBKdvu39Ns5q4GjdQY0sM6sUdUE7I+z+NyKMQgr
+         YbVr+zIbqHvB/KjqKzzBDxB/4Du03qt21RqnzTEmAhxh+lZGWZldaqPzdzAq5aSV6IIH
+         6iu41T4w51Fi5yqdBr58L3rH/4Q8qRfo2d4ODdfW66wdagox9ks4u8TkXPKON/W+xBwU
+         CSU2UoCdotRAB5DEouuB3TmZBW6R5ZjBgJ9J+J0+MMqGFzwEGVi/HroLIDuCCzApGGft
+         G2bw==
+X-Forwarded-Encrypted: i=1; AJvYcCX75oLhdjOYW/y8rn0kiRVqKB3jrmC5TMPoKF6gPojYOdd5GL6H8HAUGwKidxs2TDYXv5sVzivaLifdBr8DflENmSfOSjrhirk6lUxU
+X-Gm-Message-State: AOJu0Ywh+7g2dC8RGdCWe97W8T1mdoFOsx/o6OaVdsBC/qwhc6LF+OCU
+	FCv8vmDJ5U0V1bSw6ryT3Eqis70vY5C1fe49eLJJwxrjTp4uKe/3Kh+uHehvW6UXt6NNtD7FjXl
+	uhI2Nv57p2VnJbXG0LiyLMfSDRlmgtes0NR/f4O5ngLex3pztOOK6iaY=
+X-Google-Smtp-Source: AGHT+IE1wkVsYou1Utkg829CH1m2uRacrTIEQTXsrl5dubL6Fav7LdHQpDU/SJebyUC6BahX5BA+F53OQcjQF6i4WPT/D5AWRTlZ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223223958.3887423-1-hsinyi@chromium.org> <CAA8EJpre_HOY1xzOZPv5gPiJ-kEZEJiEm8oyYzXTiPj66vY8aw@mail.gmail.com>
-In-Reply-To: <CAA8EJpre_HOY1xzOZPv5gPiJ-kEZEJiEm8oyYzXTiPj66vY8aw@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 26 Feb 2024 17:00:08 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WjZZfHBdMVG3R_iT9bskP3AyHrRsSK6Hfw9h4tEZBHFg@mail.gmail.com>
-Message-ID: <CAD=FV=WjZZfHBdMVG3R_iT9bskP3AyHrRsSK6Hfw9h4tEZBHFg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Match panel hash for overridden mode
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Received: by 2002:a05:6638:358a:b0:474:96f7:a3a1 with SMTP id
+ v10-20020a056638358a00b0047496f7a3a1mr45049jal.0.1708996142473; Mon, 26 Feb
+ 2024 17:09:02 -0800 (PST)
+Date: Mon, 26 Feb 2024 17:09:02 -0800
+In-Reply-To: <000000000000cc261105f10682eb@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fea5b1061252ab7d@google.com>
+Subject: Re: [syzbot] [ntfs3?] KASAN: use-after-free Read in ntfs_lookup_inode_by_name
+From: syzbot <syzbot+3625b78845a725e80f61@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, anton@tuxera.com, 
+	axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-ntfs-dev@lists.sourceforge.net, ntfs3@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+syzbot suspects this issue was fixed by commit:
 
-On Mon, Feb 26, 2024 at 4:37=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Sat, 24 Feb 2024 at 00:40, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> >
-> > This series is a follow up for 1a5e81de180e ("Revert "drm/panel-edp: Ad=
-d
-> > auo_b116xa3_mode""). It's found that 2 different AUO panels use the sam=
-e
-> > product id. One of them requires an overridden mode, while the other sh=
-ould
-> > use the mode directly from edid.
-> >
-> > Since product id match is no longer sufficient, EDP_PANEL_ENTRY2 is ext=
-ended
-> > to check the crc hash of the entire edid base block.
->
-> Do you have these EDIDs posted somewhere? Can we use something less
-> cryptic than hash for matching the panel, e.g. strings from Monitor
-> Descriptors?
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-We could try it if need be. I guess I'm worried that if panel vendors
-ended up re-using the panel ID for two different panels that they
-might also re-use the name field too. Hashing the majority of the
-descriptor's base block makes us more likely not to mix two panels up.
-In general it feels like the goal is that if there is any doubt that
-we shouldn't override the mode and including more fields in the hash
-works towards that goal.
+    fs: Block writes to mounted block devices
 
-I guess one thing that might help would be to make it a policy that
-any time a panel is added to this list that a full EDID is included in
-the commit message. That would mean that if we ever needed to change
-things we could. What do you think?
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16ae7a30180000
+start commit:   cc3c44c9fda2 Merge tag 'drm-fixes-2023-05-12' of git://ano..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=38526bf24c8d961b
+dashboard link: https://syzkaller.appspot.com/bug?extid=3625b78845a725e80f61
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16eae776280000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d273ea280000
 
-That being said, if everyone thinks that the "name" field is enough,
-we could do it. I think that in the one case that we ran into it would
-have been enough...
+If the result looks correct, please mark the issue as fixed by replying with:
 
--Doug
+#syz fix: fs: Block writes to mounted block devices
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
