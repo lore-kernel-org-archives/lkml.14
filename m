@@ -1,254 +1,158 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2055.outbound.protection.outlook.com [40.107.6.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2097B14F996;
-	Tue, 27 Feb 2024 17:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709054551; cv=fail; b=CIbyQxN7nyxAOw3Hx3dFDqkblfeI7nooNunlY3MulSwuFLLCXow+wZPIaHPtVmZXnB/agTL4YSpr+vIEMD8UnCS9kkgsP6u/HYPubsGrJD2xwoJsCBDkMu5mCCutadV6CrHHYWlLXyhb0ntNN1y+mi9Tk/006E/u6x4PREImWyU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709054551; c=relaxed/simple;
-	bh=sVHqn6H+sRc+UeESOOt1xPOX/umNA7g2fhLtywnubOI=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=YZKPv5DcONGgPBbxVCwkfrrWu5UgJmNWR2a3mCvqwhtfbTqcJY2Y5SQxh2bVyweZOW3BFiZw8a0yX3KiuFQDxKyDHdOlWgIQ7sfPdF+CoyrnIpw+kSHj5mbvbXVYAkbnJOywVP8eyelJZSjYaMCjnxst0wcM8zl1pnotbWt4MQM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=sjoFHTA9; arc=fail smtp.client-ip=40.107.6.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D408454F8D
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709054562; cv=none; b=XZF/PcYoKb2Uz01DHKzi5pbbBj4j/BCY17C477BwgquWgHeHz6ycRvOvu/SxXToV+hIwNkvpSXyf49v074VbsEVBZ+Q1LLhqbYGmwVl3rALyMCzJfAzFe0NFeK4ZvG+ESQry/rnNFGySlJhGrPAhTW2IL90x1lU+H0cqL+nqQQo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709054562; c=relaxed/simple;
+	bh=ZdYSOcXMrGX3m2+orVkqUmLPJ7u+bym3zBa/753fpK4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ObqZcj4oTNEValleed3BNkKyOGZ6IyasezUVNCChvuU5gKPPNkOY3dWO4TZ+d8syg25eHHtiZ2qo9mkM5REoECsBLEZuNYkGtwhjE8+J36AbXJTe1eOPxXI+FWcyC2/+zXJutLjv/MxROzOrmcfe1OIS9i+/QmblOu+UdNXHrLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nCcUC0pG; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sjoFHTA9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BPp6ZYQaU8aK5aRRMqb8zgMyeB3QAwQtCYd0RQupr3MmwiuOJeEcyPlzQjJYbiVrSwt10rH1wGdKAuHI7+I9ikoTg4rekRFpHqgtn2tm5eFyQa4OQhH6K6PQcaf4yAUGDAwsP2ckrNwN238LrM6LOzGEhfXCoBEU00vlgFfu29LdU27WItY8bvlbyWq/8CKkUIWdyhUJ5DmiYwZ4Wh0hvw4yf/Py/LI3FBPV6O+S74XboRDeHtCzycS3z0Qzy7XMgRPtPrAc0+WUlpbsY5M3XE3uQG6YuBAYgaE0R9etEqh51bWxqwYeDqk9rTXRMTkzWj6iebv9jMV6rHwAQE/gGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xiz0Rtwc5CT1HzkoGwV9jE8Y6y1f6whfBWTv6CN9GT8=;
- b=BrEZToLtSS5uQuV1QsOTTPqxAh5h5+z5OOTXWce+xjV8MRNW/urKSt3bi8b2LY+7Iy/z+c/ovOBEn7oc7GtV+3w7nH/Y4cG851D6lQPTA+XNiv6GGWdnuh5hmxpgHznkmppoPWwm4iIHhX14cyz89O/FZa5lAYfCLIDfxMRZs4YAajZgFu2cuFWhGQI3ff8LWy+ykvz+ff9yB3t/C2YYkFTKxeId0sPvg2jsCUQ/7aHNyzsCvNMe3wzHXzHGV3p6+qL9p4HnR0Tcyv8WbQBn9bABA9A1N1z1ed2+w5E3+6vDRAhRx+9ji6RiYDD+5bJPvTgOv8VfsNV31Tr6djTS3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xiz0Rtwc5CT1HzkoGwV9jE8Y6y1f6whfBWTv6CN9GT8=;
- b=sjoFHTA9pEtmEZaHhTfblPXNgUYZlfNT3MSjV4YtLoB29o/coVkq6kpHabQe7yObJeF8xDMHjJeLPorOISRXtLdC3sei8wF1K3GGpeJ+ACPAK/C4cnWlaMn+qeKcuiskCp98UgqEaZMKm+IrNDKrNoSwg+unS4fGdvzy1Ov96jo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS1PR04MB9408.eurprd04.prod.outlook.com (2603:10a6:20b:4d8::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Tue, 27 Feb
- 2024 17:22:26 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9af4:87e:d74:94aa]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9af4:87e:d74:94aa%7]) with mapi id 15.20.7316.035; Tue, 27 Feb 2024
- 17:22:26 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Tue, 27 Feb 2024 12:21:57 -0500
-Subject: [PATCH 5/5] dmaengine: fsl-edma: add i.MX8ULP edma support
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240227-8ulp_edma-v1-5-7fcfe1e265c2@nxp.com>
-References: <20240227-8ulp_edma-v1-0-7fcfe1e265c2@nxp.com>
-In-Reply-To: <20240227-8ulp_edma-v1-0-7fcfe1e265c2@nxp.com>
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>
-Cc: imx@lists.linux.dev, dmaengine@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Frank Li <Frank.Li@nxp.com>, Joy Zou <joy.zou@nxp.com>
-X-Mailer: b4 0.13-dev-c87ef
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709054529; l=4648;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=mZwQhUw7aTNjqUrbP8MTrIFtWNHaiIzM6PH4ott4At8=;
- b=32fZs/BoUq6FgwF3ehMYDXUqeS+dYDwR6nmJEohFku+B08QJtrLumrdeHlpC78Mwo6o8x6Hie
- 2578i5CqksrBcTZQd6XihtkMXzjzIdL8xfYQlLl4WebwSWltE1oWUhs
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SJ0PR13CA0059.namprd13.prod.outlook.com
- (2603:10b6:a03:2c2::34) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nCcUC0pG"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-299b92948a6so3141661a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:22:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709054557; x=1709659357; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IUVk9tfv2/TEKzQQvdgVWT/1BpblCVMDABxz0woItG4=;
+        b=nCcUC0pGVAHyXX1Lqi0sIdd5eB4yOJHatGI35TAURJ5FJgJxZNViQZkiUevMrcef5w
+         8CSu64042KapO/HfA4A6YiV+vdUBT3gXB3697VE2U8GwmGYisAj0p/ULzTYkhpYrKG3T
+         bA89zJR5pDXSadakbvnO23D1AWUFWk0+zEBo4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709054557; x=1709659357;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IUVk9tfv2/TEKzQQvdgVWT/1BpblCVMDABxz0woItG4=;
+        b=LFBpFMXuMTrnr3B7k7Vr7nGU17zdpP6jOzh+oZr+aLc71DQz3AFZG8k9eVXX2UBwls
+         jqcyCYWCnWKkzhWo5uTUOnVqpfOtlm6C/jzZT2bhSrxkfSsBss1B/wOdpinP5yBGHYDY
+         5zj/jQRCJc2aon2bgz70Xk9rVayy7bUZ0sOmzGX755LTWPpAiD+hCjkdIyDkl8BlaQm2
+         1lf2Y7r7qLQa0s8x2qiX9207MSWU99hY+0+XZxvb1pFWbJLiwGKjtJ6jNlF21rbEtjEI
+         I7+LHZ3VSPpGkHQAkdQkHfLqHCf1YAzNaBjvbvmVVG0CWLEGpVEoZ7oLJm2qKWF63jy3
+         NUFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKzyLQ/BJ+KREgAysWNRxWFU2Imj9Bw4GMIWCZRcCXGSwhLVtII7DIObPwtjS3/YE5nDWMUgzgVmje7Y3K+vTEdI0dtoZPbrRhRmTt
+X-Gm-Message-State: AOJu0YzSr3T3VBDnpDHOTp+DOF5A2MA5UHrpPY8VNtwlbuU96KbBOiB8
+	Ig0ZieHviGsDxvx0lML9aj97kn66p+vQ43MI2XJYGFUYSjtShwtjenVCvv29Dg==
+X-Google-Smtp-Source: AGHT+IFJl/Kx/RszupPCRJKfaJbO35UqIx2NyIF5Jao1TcmzBVFuX2aec/PdN2rwgRMAQpvLp7NtlQ==
+X-Received: by 2002:a17:90a:8c0b:b0:29a:be15:9c90 with SMTP id a11-20020a17090a8c0b00b0029abe159c90mr6250776pjo.34.1709054557201;
+        Tue, 27 Feb 2024 09:22:37 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id x92-20020a17090a6c6500b00298d8804ba8sm9585587pjj.46.2024.02.27.09.22.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 09:22:36 -0800 (PST)
+Date: Tue, 27 Feb 2024 09:22:35 -0800
+From: Kees Cook <keescook@chromium.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Jan Bujak <j@exia.io>, Pedro Falcato <pedro.falcato@gmail.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	viro@zeniv.linux.org.uk, brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: Recent-ish changes in binfmt_elf made my program segfault
+Message-ID: <202402270911.961702D7D6@keescook>
+References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
+ <CAKbZUD2=W0Ng=rFVDn3UwSxtGQ5c13tRwkpqm54pPCJO0BraWA@mail.gmail.com>
+ <f2ee9602-0a32-4f0c-a69b-274916abe27f@exia.io>
+ <202402261821.F2812C9475@keescook>
+ <878r35rkc4.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS1PR04MB9408:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7b578e85-6f1a-4ec6-165a-08dc37b8ab09
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	aQTxf46dAKi/h46gt02ViiY3MZEuhCTzfp2/ohsIyIhuOY2YPg4TkzhITVH9XESCyuvKSbxnSPGEOu+opA9cIw8mxmuoYzlmCjapMuqRrfdj7UC7180y1nlvNMZMFbyXV5lk6zh3g6F21NyWIG12trKwiLXyAsHYMpxFVBJGrE73UmOZoEinkAtkWvOaDxWlGqKSqj/fuucYxGJznkijnYexextwF81H1GlD6yiEnoCLXggjI/jFLIJTpN3XFfW94IJ1rxdp45rKcCJFO8elT6Lm+nblTqTVzIZx9Pw1ag8GitLL+yfWsnUx4j8NHiTOubQARfhtyp4ZdH9e+fogj8r9netFF5B6NSJ+31oV43xEfD/bKQ30SCSuAwbLtLZ9eW5Adbp5vg1yBvbn+1rT9BTSS8Bv/8YEW1U/x4lS6ycCtpEtnC13DP3c8kVsAukMf2qYNdSWeyg49rAwGEkJlk5RheVm28fsup9AsItWaXeuw+ZnaOdqGm+bZVoIuu8gglmeKqYsDMEGU5TJVyoNxxvXUWEkT9iOZpxVDlevGPTUKsKmu5lts1FPbGaIOPViMercSIzMHpBR6pOZoXXEpPARA3vbTe8EExeU0yCSCVcJxqKq0bnBPyI4fpldxQVZbCwGgpx6qJKKYXiKhS8X5dLTOErrCT/4W31hsNoebN7kEWwmzf3futnDAziMIlLMtipphsDEmjLRTp2qkEf1gzRY37BeOIE+ac9q2pa0uzo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cFNDTWlKUjhIZ1ExUlBjMzV5V1F3WC80TFkzcmJLK2ZrcStTZzJLN1NIOVh0?=
- =?utf-8?B?dWQ4TWdrOWo4SzYzT0ZQNCtXVUU1emg0TDFJTFMzeVA4QzdHdTlWbnFzTWxK?=
- =?utf-8?B?UGltWGxIcHMxQW1aZDZKWnZScit5azcvOGtOdlg0NGNla2dxWEllSXhPVWF3?=
- =?utf-8?B?NEZsWlhLSkVZd05rNVpEaE9jajRJSktOTUtLRWJuQWFEUjhuSGgzVktVOUQz?=
- =?utf-8?B?MWdhemtkZXQyOXp4R055dVVBMW14NjA5VitvY3llRTdaK2Y3aHo2cEJ2aUlJ?=
- =?utf-8?B?d3FiNk1yZ1RkOUVMMWQ3MGsxbkx2SjZ3Z01aMkJiOVd3ZWtWdGtVMjJuc2Zo?=
- =?utf-8?B?cUZ0NE1FQlgxbzRER3dxSndPYkdHdjY4Y0lNcy9ZTDVsNVdpTFdvc25LbW5C?=
- =?utf-8?B?eFRMeWlFSWJPWUx0SHdPSFI2Wmc4ZWo0Q0gyVzNqTFArNmRMazdudS9qZDM0?=
- =?utf-8?B?ZU96ZDZoRWtvdkdDYWMxOTQ2ZW1oSjdLTGNONXhCK2ZTZlFqWFJqOEJKTmVZ?=
- =?utf-8?B?Ymt3M0lQQkdMTFJVSDdjTFVXbWcrRHhZM1VXRWp5eGlPUVV1aDVFWDUyRmJk?=
- =?utf-8?B?eU9KV0Y2RStuUm5IbkZOVU5tVXZBb040WXNqVmNxTmJSamo5emNlYnhaekdX?=
- =?utf-8?B?R3pwTnNzRmlSM2h6M2F2d3RSNWdJZXhXNXhQd2E1MHNyOXptT0QxbEx3Z1Bs?=
- =?utf-8?B?Z1NTVmYxSHBoOGtzaEtBVzFKclBLY2JMelpNUm9JaFJLMTBNM1FLWThITzRV?=
- =?utf-8?B?ZHhvMmdDbzFjUUlKOVJPRk1XbEx2TGh3MnFBTlkyNnB4RzZuMk5vTVJjeDdT?=
- =?utf-8?B?U2VxenJJMk90QXJ2M3MzYWd1K3VQT3FOaHBrUzEwMnQ4eW5hOXd2aDBEdFNZ?=
- =?utf-8?B?L0xNWHc3L2hRYlFrclVuWVRDY0wrcGdRc2dPNUFCSk4xTk5OcE84SzlTd29T?=
- =?utf-8?B?Q1M4YUNOMyttcE1JaE1CdWMyVmZWUTZKRkZMRFdidzRCa0l6TmZIaUJac3BE?=
- =?utf-8?B?ejZmbGpXc3BvNHRwbHU1dVoyejcwQ1Z6Z004eVppbWFJSFI0R2ZhRnpzeFQr?=
- =?utf-8?B?TklIVVFsNkhpZHBDaTVMamFsQk1yeVZ3eUU5WWhJR3h0WHNvaExXU2xpZGYx?=
- =?utf-8?B?dWdnaDhlV1JsZkZDMVlCMFdJMVFScUxoYkUwb1l0dHVteFUySHV1L2IwcVUr?=
- =?utf-8?B?SnhlNjFzM0dxQ1duK29iSlgwOTV6MllzTC9TcDFCT0I2ZlJGZ0tvV2xlTGNI?=
- =?utf-8?B?OXpTNU9iMk4wWC9XQ1N0WFBFR212RVJYZmdYWXJVYkdWSVJMa21VV0VXcVRp?=
- =?utf-8?B?dEt6WUQ3ZzZLbzczZ0dtQWFaMjRBWXRDNis1anpxL0pqQURMMVRCd0ZCVHRw?=
- =?utf-8?B?cG82b0l2bGlIYTh3bWZZMEl0eURidGRNYkJPeERGTVFGR1crUFVVdU9xOEUx?=
- =?utf-8?B?d1ZISFVlOG02WTBQY2ZPS3JIMkgwYlRYN1ZsVGV6YmlFdTh4K2JvcHZTVm1n?=
- =?utf-8?B?ZHZueFJNa25nbWlJei9kRkxLV2lrSWtxbHZOanYwaDYxZmtuTTFWb2E0Rnlv?=
- =?utf-8?B?OUpYUGJ5K3RoQWYwK1dPWDYreCtweVFmTGFLcWRET21LZjJUWVR4SkR2c3VB?=
- =?utf-8?B?NFpHakh4dEx5L01DWkg3dWRZMmRwcXdxNHhWYTJDZUtNM1M0ZndZNExaRkVj?=
- =?utf-8?B?a09CejVHTFM4eUNhWnFWZk12d1ZWWmx2YVAvNUVrbnFLbDMzVWJmTktQQ3hM?=
- =?utf-8?B?UFkvb1VZRlNudGgydnhOYXZJaFBWc010aDdaUkQ2RCtFQStjd0F0Z3BBdzgx?=
- =?utf-8?B?M1N5azVWemtBZXl2dHFIMWlUOEtyaGtlSzJ5S1U2bGJkTk05K2gwbk9rS1p6?=
- =?utf-8?B?bEY5VUwyQURVcWQzMFZpWEtQMGRZMU8yWFo0N1NFWVlOYmI4VGRLZkdVWk1O?=
- =?utf-8?B?Vk9Pb3p6THlMdXNJbUZkZ2JPUmZtRXlCbk9meDFYR0lhNURNY0lKY2dWOGor?=
- =?utf-8?B?ZmdNbytNbU5tRHhKakV3NGZnTC8yU0ZtMVlwMjRpNlczZVRiKzY3VlRPZ29W?=
- =?utf-8?B?N3BsVDZWbzh5UklNclV3MUwzR0hOODF6VDBBT3Z5dk1ocXRUeVdIS1B5bkdh?=
- =?utf-8?Q?0h88dwATJWEfxSX1yPcKtmKDe?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b578e85-6f1a-4ec6-165a-08dc37b8ab09
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 17:22:26.3660
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YXcdlwG3XPSzEWoatWTfzn02cB4fUfQALFLkDFdD93zyJ2m2Y4kD/Ix15CdgRUd4kH/eiV/EAvJpAfebXuFOeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9408
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <878r35rkc4.fsf@email.froward.int.ebiederm.org>
 
-From: Joy Zou <joy.zou@nxp.com>
+On Tue, Feb 27, 2024 at 09:35:39AM -0600, Eric W. Biederman wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> 
+> > On Tue, Jan 23, 2024 at 12:23:27AM +0900, Jan Bujak wrote:
+> >> On 1/22/24 23:54, Pedro Falcato wrote:
+> >> > Hi!
+> >> > 
+> >> > Where did you get that linker script?
+> >> > 
+> >> > FWIW, I catched this possible issue in review, and this was already
+> >> > discussed (see my email and Eric's reply):
+> >> > https://lore.kernel.org/all/CAKbZUD3E2if8Sncy+M2YKncc_Zh08-86W6U5wR0ZMazShxbHHA@mail.gmail.com/
+> >> > 
+> >> > This was my original testcase
+> >> > (https://github.com/heatd/elf-bug-questionmark), which convinced the
+> >> > loader to map .data over a cleared .bss. Your bug seems similar, but
+> >> > does the inverse: maps .bss over .data.
+> >> > 
+> >> 
+> >> I wrote the linker script myself from scratch.
+> >
+> > Do you still need this addressed, or have you been able to adjust the
+> > linker script? (I ask to try to assess the priority of needing to fix
+> > this behavior change...)
+> 
+> Kees, I haven't had a chance to test this yet but it occurred to me
+> that there is an easy way to handle this.  In our in-memory copy
+> of the elf program headers we can just merge the two segments
+> together.
+> 
+> I believe the diff below accomplishes that, and should fix issue.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index 5397b552fbeb..01df7dd1f3b4 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -924,6 +926,31 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  	elf_ppnt = elf_phdata;
+>  	for (i = 0; i < elf_ex->e_phnum; i++, elf_ppnt++)
+>  		switch (elf_ppnt->p_type) {
+> +		case PT_LOAD:
+> +		{
+> +			/*
+> +			 * Historically linux ignored all but the
+> +			 * final .bss segment.  Now that linux honors
+> +			 * all .bss segments, a .bss segment that
+> +			 * logically is not overlapping but is
+> +			 * overlapping when it's edges are rounded up
+> +			 * to page size causes programs to fail.
+> +			 *
+> +			 * Handle that case by merging .bss segments
+> +			 * into the segment they follow.
+> +			 */
+> +			if (((i + 1) >= elf_ex->e_phnum) ||
+> +			    (elf_ppnt[1].p_type != PT_LOAD) ||
+> +			    (elf_ppnt[1].p_filesz != 0))
+> +				continue;
+> +			unsigned long end =
+> +				elf_ppnt[0].p_vaddr + elf_ppnt[0].p_memsz;
+> +			if (elf_ppnt[1].p_vaddr != end)
+> +				continue;
+> +			elf_ppnt[0].p_memsz += elf_ppnt[1].p_memsz;
+> +			elf_ppnt[1].p_type = PT_NULL;
+> +			break;
+> +		}
+>  		case PT_GNU_STACK:
+>  			if (elf_ppnt->p_flags & PF_X)
+>  				executable_stack = EXSTACK_ENABLE_X;
 
-Add support for the i.MX8ULP platform to the eDMA driver. Introduce the use
-of the correct FSL_EDMA_DRV_HAS_CHCLK flag to handle per-channel clock
-configurations.
+I don't think this is safe -- it isn't looking at flags, etc. e.g.,
+something like this could break:
 
-Signed-off-by: Joy Zou <joy.zou@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/dma/fsl-edma-common.c |  6 ++++++
- drivers/dma/fsl-edma-common.h |  1 +
- drivers/dma/fsl-edma-main.c   | 22 ++++++++++++++++++++++
- 3 files changed, 29 insertions(+)
+  Type  Offset   VirtAddr  PhysAddr  FileSiz  MemSiz   Flg Align
+  LOAD  0x003000 0x12000   0x12000   0x001000 0x001000 R E 0x1000
+  LOAD  0x004000 0x13000   0x13000   0x000000 0x001000 RW  0x1000
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index b18faa7cfedb9..f9144b0154396 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -3,6 +3,7 @@
- // Copyright (c) 2013-2014 Freescale Semiconductor, Inc
- // Copyright (c) 2017 Sysam, Angelo Dureghello  <angelo@sysam.it>
- 
-+#include <linux/clk.h>
- #include <linux/dmapool.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -810,6 +811,9 @@ int fsl_edma_alloc_chan_resources(struct dma_chan *chan)
- {
- 	struct fsl_edma_chan *fsl_chan = to_fsl_edma_chan(chan);
- 
-+	if (fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_HAS_CHCLK)
-+		clk_prepare_enable(fsl_chan->clk);
-+
- 	fsl_chan->tcd_pool = dma_pool_create("tcd_pool", chan->device->dev,
- 				fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_TCD64 ?
- 				sizeof(struct fsl_edma_hw_tcd64) : sizeof(struct fsl_edma_hw_tcd),
-@@ -838,6 +842,8 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan)
- 	fsl_chan->tcd_pool = NULL;
- 	fsl_chan->is_sw = false;
- 	fsl_chan->srcid = 0;
-+	if (fsl_edma_drvflags(fsl_chan) & FSL_EDMA_DRV_HAS_CHCLK)
-+		clk_disable_unprepare(fsl_chan->clk);
- }
- 
- void fsl_edma_cleanup_vchan(struct dma_device *dmadev)
-diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index 532f647e540e7..01157912bfd5f 100644
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -192,6 +192,7 @@ struct fsl_edma_desc {
- #define FSL_EDMA_DRV_WRAP_IO		BIT(3)
- #define FSL_EDMA_DRV_EDMA64		BIT(4)
- #define FSL_EDMA_DRV_HAS_PD		BIT(5)
-+#define FSL_EDMA_DRV_HAS_CHCLK		BIT(6)
- #define FSL_EDMA_DRV_HAS_CHMUX		BIT(7)
- /* imx8 QM audio edma remote local swapped */
- #define FSL_EDMA_DRV_QUIRK_SWAPPED	BIT(8)
-diff --git a/drivers/dma/fsl-edma-main.c b/drivers/dma/fsl-edma-main.c
-index 41c71c360ff1f..0837535aa7548 100644
---- a/drivers/dma/fsl-edma-main.c
-+++ b/drivers/dma/fsl-edma-main.c
-@@ -356,6 +356,16 @@ static struct fsl_edma_drvdata imx8qm_audio_data = {
- 	.setup_irq = fsl_edma3_irq_init,
- };
- 
-+static struct fsl_edma_drvdata imx8ulp_data = {
-+	.flags = FSL_EDMA_DRV_HAS_CHMUX | FSL_EDMA_DRV_HAS_CHCLK | FSL_EDMA_DRV_HAS_DMACLK |
-+		 FSL_EDMA_DRV_EDMA3,
-+	.chreg_space_sz = 0x10000,
-+	.chreg_off = 0x10000,
-+	.mux_off = 0x10000 + offsetof(struct fsl_edma3_ch_reg, ch_mux),
-+	.mux_skip = 0x10000,
-+	.setup_irq = fsl_edma3_irq_init,
-+};
-+
- static struct fsl_edma_drvdata imx93_data3 = {
- 	.flags = FSL_EDMA_DRV_HAS_DMACLK | FSL_EDMA_DRV_EDMA3,
- 	.chreg_space_sz = 0x10000,
-@@ -388,6 +398,7 @@ static const struct of_device_id fsl_edma_dt_ids[] = {
- 	{ .compatible = "fsl,imx7ulp-edma", .data = &imx7ulp_data},
- 	{ .compatible = "fsl,imx8qm-edma", .data = &imx8qm_data},
- 	{ .compatible = "fsl,imx8qm-adma", .data = &imx8qm_audio_data},
-+	{ .compatible = "fsl,imx8ulp-edma", .data = &imx8ulp_data},
- 	{ .compatible = "fsl,imx93-edma3", .data = &imx93_data3},
- 	{ .compatible = "fsl,imx93-edma4", .data = &imx93_data4},
- 	{ .compatible = "fsl,imx95-edma5", .data = &imx95_data5},
-@@ -441,6 +452,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
- 	struct fsl_edma_engine *fsl_edma;
- 	const struct fsl_edma_drvdata *drvdata = NULL;
- 	u32 chan_mask[2] = {0, 0};
-+	char clk_name[36];
- 	struct edma_regs *regs;
- 	int chans;
- 	int ret, i;
-@@ -550,11 +562,21 @@ static int fsl_edma_probe(struct platform_device *pdev)
- 				+ i * drvdata->chreg_space_sz + drvdata->chreg_off + len;
- 		fsl_chan->mux_addr = fsl_edma->membase + drvdata->mux_off + i * drvdata->mux_skip;
- 
-+		if (drvdata->flags & FSL_EDMA_DRV_HAS_CHCLK) {
-+			snprintf(clk_name, sizeof(clk_name), "CH%02d-clk", i);
-+			fsl_chan->clk = devm_clk_get_enabled(&pdev->dev,
-+							     (const char *)clk_name);
-+
-+			if (IS_ERR(fsl_chan->clk))
-+				return PTR_ERR(fsl_chan->clk);
-+		}
- 		fsl_chan->pdev = pdev;
- 		vchan_init(&fsl_chan->vchan, &fsl_edma->dma_dev);
- 
- 		edma_write_tcdreg(fsl_chan, cpu_to_le32(0), csr);
- 		fsl_edma_chan_mux(fsl_chan, 0, false);
-+		if (fsl_chan->edma->drvdata->flags & FSL_EDMA_DRV_HAS_CHCLK)
-+			clk_disable_unprepare(fsl_chan->clk);
- 	}
- 
- 	ret = fsl_edma->drvdata->setup_irq(pdev, fsl_edma);
+Hmm
 
 -- 
-2.34.1
-
+Kees Cook
