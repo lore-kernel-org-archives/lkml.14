@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AA4153BCD
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 22:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A421586D8
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 22:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709071332; cv=none; b=HeFDIi/eDCln2Hid5BZ2qG+nivS8ZG18iYQstb+yiALw5DrUywk88CWNfEewC2lsuz1nULwPzjWLRwyriatzxSvfZ6BY1yJuH4/pKm25/OC59fuotg1Vv2XvfR70vw2OTOa2Bz/5m0vvNtB0T1kN9d/btAqjo4CKl0IzA2CUQTE=
+	t=1709071338; cv=none; b=lBKbvWSwESAOEvOaZtGEY4uhbbEtwudtfcPm2UrfdDdA7CzPB3BBBzPbzRje+T343GNSzHukU2madJN8cgJkf53+1VRL024+/dS5oIc6blsGBP7lgVOEEITjyIqbFeb84r61Rwszzmijxc5/rMclk7eeFn0PBrBgWNTkDrpEpYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709071332; c=relaxed/simple;
-	bh=/yGeJM1MC3xrnGlw+YrOzjUeVSCpkNh+lS2W25QBImY=;
+	s=arc-20240116; t=1709071338; c=relaxed/simple;
+	bh=upLg+yhe8A2OZg6p8OFlrhH2yLDrE7BI//l8P1Vylms=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=D64A8+mMkY3LzB25EwDAQWyaazk5RJo7v9vlKS6i+vAlVnyscg5Ge3RHv9lOLH0+q+5lk00G6jGmDDbuQRJoPqlohJ3e75I+d1RgHGBi6kNQmmXNVvi6YNvB/XmEX1dHfPfT1SPEmsFr/TynYB/ZFHZzsSs8LIM2+6VY4M77lFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4dleXVlg; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=pqyLHTrrjGbQ00RchUxraYd6c6gAvL0DBjILF6gWxAlW2psDGK3kutau1ZdVPGmOTyE62sY5kb5IXMu8o1QdYrPhjhR8id/bYvWAzAnY5xqFxiZKiMDRvXpR+NCUT/lS+9sXL5r0O6PAUbhBqWHq3nBnvvM1Ae134HZ24IwzDCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s9gcvNa9; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4dleXVlg"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-608ad239f8fso82021337b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 14:02:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s9gcvNa9"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26ce0bbso9048506276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 14:02:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709071329; x=1709676129; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1709071336; x=1709676136; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LLvFhK5uL/QCeGE47QDYifrDggRxdFdeVaa+ektv4Ks=;
-        b=4dleXVlggqGls83VLDgVmaAYqUTq7J/uiSL0iJc+KNyKLNICbsipEW97LvJweK32Hv
-         XCGViPHcDRN0RZ9MzTlYCKWgog99NebLaguxMTvpcQJxNJf/Nwo7FWdzlMiE0VSMyvut
-         RcNvasddobo2cv9jO/pwsLSS5swYhqMc1N/EhvgjCp7YmAyg/nkN8JGo82rYbHN+EKGa
-         H3sdYTUZPFJdYf0nJOi8GloAulR6WFLIo114Gm1Ovwt5e7K6/iXsHgXSbm+N2VpDXrkN
-         Sa0jJEbxXjdsnmU0bpuECXAJkR0DYXJT+5lKwsBNkRRtJ+Qo5Aq7NXTALOoh0FZxcOHH
-         2stA==
+        bh=vCV6R+NKRLMYoVC59mA+bYuzdEe0EtrTOitlrlnnMsA=;
+        b=s9gcvNa9lW/PIzWihQTBqJP0VhTkZpQ2bDTsbEkPcpPLqGv6NTqfIF9gX+jC0MYySl
+         osPkLoPBNizf3K41BZSSLigRaSaGT1Qgn9qYm59CQODGL5LG0zYf6iSoQuyc1c5XWaTT
+         TGaQukHZ1EJmX6+JatByB8EPKyCCGxF/6W4NW2krDMsZyfSS0Puzq9ziNCM9koeX4+bd
+         a3m6oPYQDeFKyHAykaE2jJN3Ub+EOmpJqxC+j5xjSvgVUIi+U8m0pv6MByvY5wiwAWxH
+         thikawX9Nj/Nm83tyMYSPhDXLrrW1TrwDhQ0TjXJs84drugGC6t1l/sekw811eMQguc/
+         ZjEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709071329; x=1709676129;
+        d=1e100.net; s=20230601; t=1709071336; x=1709676136;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LLvFhK5uL/QCeGE47QDYifrDggRxdFdeVaa+ektv4Ks=;
-        b=UchK9s/7rOwtSBbuy32P9LElPH4slwQdYwGl1EpjARRq2CASkUzIBhXLOiBYkDmcIm
-         EQbJAXU36MUesYOZZIoja7d8hd3qqeq4uqF9kb8/D8xEBP+pxGeIbGVzC6y7IUrqq/5z
-         TsNrPNwcXwULEB6XZhNnPV5jUIZ5ZxNplzX0zZ8C1of4sNZPvJ9L13LRxXxBFYe8WAwx
-         PsrgqAYc6mRXz8TudcWJvdCMtipmcdBQlVNSpdPqymZrX0jiMUJ58dyLkDMymQvOtpV7
-         amJ9wa7EDE1isrHES1TbYEVDAl4NFRQIT8KgZtW12DrjbUGuk6ztp4TgrzNaW2sWOJ3N
-         BjeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmCLFl7BqQowC3P0Pvw47Fi4ZYn1MLrr1u35EAnbeXolhK54WRzflyScP0dKq/TZBgWp/WXncYojP7AdP90TdtarwCpWAeIiLcIKdX
-X-Gm-Message-State: AOJu0YwSHi8AHnCZKlbxfIveBTlDa4KGbMJlGLI8EXWESCENHVT0kyw9
-	veHBioEvmCzReQX4JL6y27f2E1RBfAd9RhHD6ZbSmSRHjDbTyNdHm2A3btm13QimhLTTrIb9Uw/
-	rxeidjg==
-X-Google-Smtp-Source: AGHT+IGZSMnaIsAQtX/ldCpU/7po8oMpdQxnfEczmc5sne5RHle1yvyEtqmQ/soBLtduA34btzf9Vr/IMJAe
+        bh=vCV6R+NKRLMYoVC59mA+bYuzdEe0EtrTOitlrlnnMsA=;
+        b=TuCGVLZGBMMjIzrwm5aTz8fvWfUzCGFDtb1tkLAQlyNJ9RgUitKxkxEFzhZ0zj8Zjb
+         sW5hmNOJFx4PntZBuNqKFTSdg4G1TNDjFxqoGty2rjjo5gizHGiaizj+PJrMD8cLInjK
+         C610vH0gbGU8cOxhPlZCjBbnbbdXCx5g3hVSejI2zVy1C7liUcpASJf4z40MiXVvUra8
+         nYETtHvchs1eL2ZjAJHO49SrG4TzA/eqnYL4qDMrdsu9+P0cWA8AjHQZGdlt26uTGJgI
+         DDnvTq63LoQ2pVO0H2bxtGhUNJxVdBA76kQwZ8HceZm4P2S7LeZLsFndPOwx3MaAos/E
+         RaSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWGOFdr6iIIcn9SkUvWRCkzR7cn4SYo/p7nEDmG1QouUEADxUQMSPCqCLTEKIYKM1LKjekI34vBA85UpmrU1yniVp7/jNqO1zto6u3
+X-Gm-Message-State: AOJu0YwXcQaVN8i6kAmF3TsrYyukjn3Pgnf8Nyy18E+r3cfU3k4uYtzC
+	+xuOjoISYUNIfHiUAJVJ3UCoDrn9ty/PimqSK5NhcPYO5L3uJ963OqZS15mm+zM1BIK/k2PIW3j
+	yO9ECGA==
+X-Google-Smtp-Source: AGHT+IGEhA+c0sAKulaM8RvsHp0DR9xq8SYgR2yBjBN+6kuK+8Tuz+x8EH8gmVr1C3hn6lBPKxh3uS12sCNZ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4ff1:8af6:9e1a:6382])
- (user=irogers job=sendgmr) by 2002:a81:a08f:0:b0:608:e711:5a5a with SMTP id
- x137-20020a81a08f000000b00608e7115a5amr807524ywg.1.1709071328756; Tue, 27 Feb
- 2024 14:02:08 -0800 (PST)
-Date: Tue, 27 Feb 2024 14:01:47 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:1204:b0:dc6:cd85:bcd7 with SMTP
+ id s4-20020a056902120400b00dc6cd85bcd7mr220673ybu.3.1709071335967; Tue, 27
+ Feb 2024 14:02:15 -0800 (PST)
+Date: Tue, 27 Feb 2024 14:01:50 -0800
 In-Reply-To: <20240227220150.3876198-1-irogers@google.com>
-Message-Id: <20240227220150.3876198-4-irogers@google.com>
+Message-Id: <20240227220150.3876198-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240227220150.3876198-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Subject: [PATCH v2 3/6] perf machine: Move fprintf to for_each loop and a callback
+Subject: [PATCH v2 6/6] perf threads: Reduce table size from 256 to 8
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,79 +72,33 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid exposing the threads data structure by switching to the callback
-machine__for_each_thread approach. machine__fprintf is only used in
-tests and verbose >3 output so don't turn to list and sort. Add
-machine__threads_nr to be refactored later.
-
-Note, all existing *_fprintf routines ignore fprintf errors.
+The threads data structure is an array of hashmaps, previously
+rbtrees. The two levels allows for a fixed outer array where access is
+guarded by rw_semaphores. Commit 91e467bc568f ("perf machine: Use
+hashtable for machine threads") sized the outer table at 256 entries
+to avoid future scalability problems, however, this means the threads
+struct is sized at 30,720 bytes. As the hashmaps allow O(1) access for
+the common find/insert/remove operations, lower the number of entries
+to 8. This reduces the size overhead to 960 bytes.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c | 43 ++++++++++++++++++++++++---------------
- 1 file changed, 27 insertions(+), 16 deletions(-)
+ tools/perf/util/threads.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 7872ce92c9fc..e072b2115b64 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1113,29 +1113,40 @@ size_t machine__fprintf_vmlinux_path(struct machine *machine, FILE *fp)
- 	return printed;
- }
+diff --git a/tools/perf/util/threads.h b/tools/perf/util/threads.h
+index d03bd91a7769..da68d2223f18 100644
+--- a/tools/perf/util/threads.h
++++ b/tools/perf/util/threads.h
+@@ -7,7 +7,7 @@
  
--size_t machine__fprintf(struct machine *machine, FILE *fp)
-+struct machine_fprintf_cb_args {
-+	FILE *fp;
-+	size_t printed;
-+};
-+
-+static int machine_fprintf_cb(struct thread *thread, void *data)
- {
--	struct rb_node *nd;
--	size_t ret;
--	int i;
-+	struct machine_fprintf_cb_args *args = data;
+ struct thread;
  
--	for (i = 0; i < THREADS__TABLE_SIZE; i++) {
--		struct threads *threads = &machine->threads[i];
-+	/* TODO: handle fprintf errors. */
-+	args->printed += thread__fprintf(thread, args->fp);
-+	return 0;
-+}
+-#define THREADS__TABLE_BITS	8
++#define THREADS__TABLE_BITS	3
+ #define THREADS__TABLE_SIZE	(1 << THREADS__TABLE_BITS)
  
--		down_read(&threads->lock);
-+static size_t machine__threads_nr(const struct machine *machine)
-+{
-+	size_t nr = 0;
- 
--		ret = fprintf(fp, "Threads: %u\n", threads->nr);
-+	for (int i = 0; i < THREADS__TABLE_SIZE; i++)
-+		nr += machine->threads[i].nr;
- 
--		for (nd = rb_first_cached(&threads->entries); nd;
--		     nd = rb_next(nd)) {
--			struct thread *pos = rb_entry(nd, struct thread_rb_node, rb_node)->thread;
-+	return nr;
-+}
- 
--			ret += thread__fprintf(pos, fp);
--		}
-+size_t machine__fprintf(struct machine *machine, FILE *fp)
-+{
-+	struct machine_fprintf_cb_args args = {
-+		.fp = fp,
-+		.printed = 0,
-+	};
-+	size_t ret = fprintf(fp, "Threads: %zu\n", machine__threads_nr(machine));
- 
--		up_read(&threads->lock);
--	}
--	return ret;
-+	machine__for_each_thread(machine, machine_fprintf_cb, &args);
-+	return ret + args.printed;
- }
- 
- static struct dso *machine__get_kernel(struct machine *machine)
+ struct threads_table_entry {
 -- 
 2.44.0.rc1.240.g4c46232300-goog
 
