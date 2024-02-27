@@ -1,701 +1,187 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FC0136996;
-	Tue, 27 Feb 2024 09:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC49A13666C;
+	Tue, 27 Feb 2024 09:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709026174; cv=none; b=cNziGU/b2Iv8BjU5dLki4ydN7zGW/IMehrwkc4fKozayqBzNEi1zPC1KoFXo3lCTt2R0/SE/PbGFDxGlRguL/m/2ZwzbdjWUtO6Zwy2FNsWuVYp63enD7mopftKRYeCz1LqqcZlDsaQoO6dJ2zgn8vgi7aHxQAg6qp5P3A+8Q2I=
+	t=1709026226; cv=none; b=drXh6wcpussbbufYADZA/iRclTTL582kwyj54XwIrb+HGF1X7co2qACs1Ol/PLYU4O33F6KhRHrMV/EjAKSx93JUiNlBjGINV2uEl21JUvlWWDORW9+PZs6GpBTXOepLvSik6Dprz7mJ9tWKBEQn6aGkvmjlSSvNUWC6q5/bUeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709026174; c=relaxed/simple;
-	bh=F1op4PodB1Y9ykR4s8Ki7tuJ2iPjzlNmorQ3UhwsFME=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jyXRzBBcHdqQJz6J0029i8QMy14c1cKoTCn2UbOmneAGEKIcDPwTo9Tifc/dJLTO3w6m+79GP2wNVl3vu5+HRc0rEaYp8j+sddLiUeFW7z438CqiY8AGPm2yzzNuVmMEkh4AvI9bzH0e0fyiSIfHIfcs19Qk0ozYw9S8Clp91So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZBfdhT68; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709026226; c=relaxed/simple;
+	bh=V8bBaiplfc/wVHe6wlfGo3JD6VOdJZwSExMn/u7zeBA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lJ+U0v/ydk0CPSIrlTHKn0xrLx7LZnNN83Tut8NEJ8QN5Bl4anATE3EzLdjGiN7Pu23TDDstUJZG+lhtCqEi6liVtRMSFHX40Tn+JMn8IuzzN/B+mZ4KCUck6NPvvhBJo/owIS7vvMEssNEgCSmARSOsJ8fuVgWKXoBhU0JClb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0+Xj01Kk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a5suGYZ0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0+Xj01Kk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a5suGYZ0; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBfdhT68"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e4d48a5823so3258339b3a.1;
-        Tue, 27 Feb 2024 01:29:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709026171; x=1709630971; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7W4e8AZAFm9xL67FboXl1/rtOni5F6zTnMXTQChB2TQ=;
-        b=ZBfdhT68NbuvFE8v4/jbHLR1Bs/E6ZxGM1xc/ZhRdbZXkOkIeQ5benLGzixCfTHb5Q
-         5Tp9c/XGeCBBnaQZBnXOJd3Msq6tpI8+bG7hj/Jeh3Prz1MFL8l+9KUi5tUxwo60zMnm
-         MXPnVwxagloFnVF5pJci/nYEna7cKk2KvlcY4/3EtbH7DN1cT40uGV4/YInAcGI2v3ep
-         aHD17TOGtp0d5CxAP0ZEL/DcwAA2HW8aeDNL62XoFfSVcK0y5ni8Pid8XtQ7g4vNhkOK
-         dIDdAZwJOKDhbo/MvOwVRyW+Mj4PlKh6xynHDEPqRpxeXATIcvTCUaU36ED5cb2wn/hn
-         hHXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709026171; x=1709630971;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7W4e8AZAFm9xL67FboXl1/rtOni5F6zTnMXTQChB2TQ=;
-        b=JxrHlvi0X1enMGXdmpdxy1K5mgVK5Qn/q12T8+yFDN34kzXMU1g6CovtE8P3OrY+9g
-         9Q4JTopyQ7qH2/x4yZkVAYAFKtnCTJ3EST8QZDN+mkryx6jfkhUmuSQUvOSc+bhYbCEJ
-         wGcEHROPfXe1FpG4+zPOMielkLTuffN8xpSfMLY7kIvsx3fqHdFCVNhP7ySCU4CYAqCA
-         oP+gfBW2+dZE78Y/lTvKAxBkII8A611jeuhgZKcSO1hr5h4XbJNyqi9pgHVG3awoC7me
-         GpIGEUnGzLKSo+saB25OXcSqxPzE9x9+fTCVFFM9aG5In0e0xAzfqCjq8Ru4q0wTgKPV
-         503g==
-X-Forwarded-Encrypted: i=1; AJvYcCWM7W/dIjoVdvYsZU2NfcEVl69Z4Nb/LM4ir4nx4fqpJnCxvfaIBPsucFf2rSclNIL94+/NKQnCADp3rcivcdsFNndRJ6G0SCuT5dAWN5UfGHDV1FxDmFr+qrqxST2QcdZp1ddQZcVNhw==
-X-Gm-Message-State: AOJu0YxYgm9f2m8HV6m6HvsY5r14+xD5dxqt1+X3TQnScwDu9sRuN5tY
-	6kZ+ySBTfYMA8T6fU0fzOIS3VF2NbUFPgcT6p9SnhFO9u/BreMFd
-X-Google-Smtp-Source: AGHT+IHA+LHNx2cAZSMkPlvOLaQogdx0PKNtHD0VcqxHMFyAtgnNL9JfSdLTWf+Qg207NNXVVYsfuQ==
-X-Received: by 2002:a05:6a00:3d53:b0:6e4:f49f:bc9 with SMTP id lp19-20020a056a003d5300b006e4f49f0bc9mr10031294pfb.20.1709026171401;
-        Tue, 27 Feb 2024 01:29:31 -0800 (PST)
-Received: from localhost.localdomain (125-229-150-10.hinet-ip.hinet.net. [125.229.150.10])
-        by smtp.gmail.com with ESMTPSA id g6-20020a62f946000000b006e53cc789c3sm2167169pfm.107.2024.02.27.01.29.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 01:29:31 -0800 (PST)
-From: Kelly Hung <ppighouse@gmail.com>
-X-Google-Original-From: Kelly Hung <Kelly_Hung@asus.com>
-To: robh+dt@kernel.org
-Cc: krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	joel@jms.id.au,
-	andrew@codeconstruct.com.au,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org,
-	kelly_hung@asus.com,
-	Allenyy_Hsu@asus.com,
-	Kelly Hung <Kelly_Hung@asus.com>
-Subject: [PATCH v3 2/2] ARM: dts: aspeed: x4tf: Add dts for asus x4tf project
-Date: Tue, 27 Feb 2024 17:29:22 +0800
-Message-Id: <20240227092922.1734998-2-Kelly_Hung@asus.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240227092922.1734998-1-Kelly_Hung@asus.com>
-References: <20240227092922.1734998-1-Kelly_Hung@asus.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0+Xj01Kk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a5suGYZ0";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0+Xj01Kk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a5suGYZ0"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0888121F39;
+	Tue, 27 Feb 2024 09:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1709026222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2tfyNx8Ewzx9RhyM+EFV+xT647ehMQIa9lFPRNlyECQ=;
+	b=0+Xj01KkKvhGJdcjtMAWzvJi7m2CYOxjq5YrvrR72FrAbBnNksgWTG3mO/sjQJxliG0g07
+	y5XsdIYk5XIw4V9w/uFGbV+ho5g2Z79tZZHX9Z5MisAFZaNbg0ho00u47ApDjRWrG0I7x9
+	LSiAQEtP8rShQ5r3WMB7RTCprO6zAnM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1709026222;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2tfyNx8Ewzx9RhyM+EFV+xT647ehMQIa9lFPRNlyECQ=;
+	b=a5suGYZ0cgpf5Gj/Tn3aV8oNvMw4mA2P70HXJT8NNRif7MsKFvRRBqOmJe+FSffjbyvyAG
+	BTUMPoP/9cEiW9CQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1709026222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2tfyNx8Ewzx9RhyM+EFV+xT647ehMQIa9lFPRNlyECQ=;
+	b=0+Xj01KkKvhGJdcjtMAWzvJi7m2CYOxjq5YrvrR72FrAbBnNksgWTG3mO/sjQJxliG0g07
+	y5XsdIYk5XIw4V9w/uFGbV+ho5g2Z79tZZHX9Z5MisAFZaNbg0ho00u47ApDjRWrG0I7x9
+	LSiAQEtP8rShQ5r3WMB7RTCprO6zAnM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1709026222;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2tfyNx8Ewzx9RhyM+EFV+xT647ehMQIa9lFPRNlyECQ=;
+	b=a5suGYZ0cgpf5Gj/Tn3aV8oNvMw4mA2P70HXJT8NNRif7MsKFvRRBqOmJe+FSffjbyvyAG
+	BTUMPoP/9cEiW9CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B04E513A58;
+	Tue, 27 Feb 2024 09:30:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QuGyKq2r3WW8cgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 27 Feb 2024 09:30:21 +0000
+Message-ID: <72cc5f0b-90cc-48a8-a026-412fa1186acd@suse.cz>
+Date: Tue, 27 Feb 2024 10:30:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 15/36] lib: introduce support for page allocation
+ tagging
+Content-Language: en-US
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com,
+ hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de,
+ dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
+ penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
+ peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
+ rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
+ yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
+ hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
+ ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org,
+ ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
+ iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
+ elver@google.com, dvyukov@google.com, shakeelb@google.com,
+ songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
+ minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
+ cgroups@vger.kernel.org
+References: <20240221194052.927623-1-surenb@google.com>
+ <20240221194052.927623-16-surenb@google.com>
+ <d6141a99-3409-447b-88ac-16c24b0a892e@suse.cz>
+ <CAJuCfpGZ6W-vjby=hWd5F3BOCLjdeda2iQx_Tz-HcyjCAsmKVg@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAJuCfpGZ6W-vjby=hWd5F3BOCLjdeda2iQx_Tz-HcyjCAsmKVg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [1.39 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BAYES_HAM(-0.02)[52.97%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_GT_50(0.00)[74];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Level: *
+X-Spam-Score: 1.39
+X-Spam-Flag: NO
 
-Base on aspeed-g6.dtsi and can boot into BMC console.
 
-Changelog
-Changes in v3
-- fmc lable change to bmc.
-- use 64M partition layout.
-- rename spi1 label to bios.
-- remove bios partition section.
 
-Signed-off-by: Kelly Hung <Kelly_Hung@asus.com>
----
- arch/arm/boot/dts/aspeed/Makefile             |   1 +
- .../boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts  | 581 ++++++++++++++++++
- 2 files changed, 582 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts
+On 2/26/24 18:11, Suren Baghdasaryan wrote:
+> On Mon, Feb 26, 2024 at 9:07 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+>>
+>> On 2/21/24 20:40, Suren Baghdasaryan wrote:
+>>> Introduce helper functions to easily instrument page allocators by
+>>> storing a pointer to the allocation tag associated with the code that
+>>> allocated the page in a page_ext field.
+>>>
+>>> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+>>> Co-developed-by: Kent Overstreet <kent.overstreet@linux.dev>
+>>> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+>>
+>> The static key usage seems fine now. Even if the page_ext overhead is still
+>> always paid when compiled in, you mention in the cover letter there's a plan
+>> for boot-time toggle later, so
+> 
+> Yes, I already have a simple patch for that to be included in the next
+> revision: https://github.com/torvalds/linux/commit/7ca367e80232345f471b77b3ea71cf82faf50954
 
-diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
-index d3ac20e31..32c41f3d9 100644
---- a/arch/arm/boot/dts/aspeed/Makefile
-+++ b/arch/arm/boot/dts/aspeed/Makefile
-@@ -10,6 +10,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-arm-stardragon4800-rep2.dtb \
- 	aspeed-bmc-asrock-e3c246d4i.dtb \
- 	aspeed-bmc-asrock-romed8hm3.dtb \
-+	aspeed-bmc-asus-x4tf.dtb \
- 	aspeed-bmc-bytedance-g220a.dtb \
- 	aspeed-bmc-delta-ahe50dc.dtb \
- 	aspeed-bmc-facebook-bletchley.dtb \
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts
-new file mode 100644
-index 000000000..7bf23f395
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-asus-x4tf.dts
-@@ -0,0 +1,581 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright 2024 ASUS Corp.
-+
-+/dts-v1/;
-+
-+#include "aspeed-g6.dtsi"
-+#include "aspeed-g6-pinctrl.dtsi"
-+#include <dt-bindings/i2c/i2c.h>
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "ASUS-X4TF";
-+	compatible = "asus,x4tf-bmc", "aspeed,ast2600";
-+
-+	aliases {
-+		serial4 = &uart5;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial4:115200n8";
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x40000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		video_engine_memory: video {
-+			size = <0x04000000>;
-+			alignment = <0x01000000>;
-+			compatible = "shared-dma-pool";
-+			reusable;
-+		};
-+	};
-+
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc0 0>, <&adc0 1>, <&adc0 2>, <&adc0 3>,
-+				<&adc0 4>, <&adc0 5>, <&adc0 6>, <&adc0 7>,
-+				<&adc1 0>, <&adc1 1>, <&adc1 2>, <&adc1 3>,
-+				<&adc1 4>, <&adc1 5>, <&adc1 6>, <&adc1 7>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-heartbeat {
-+			gpios = <&gpio0 ASPEED_GPIO(P, 7) GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led-uid {
-+			gpios = <&gpio0 ASPEED_GPIO(P, 1) (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-+			default-state = "off";
-+		};
-+
-+		led-status_Y {
-+			gpios = <&gpio1 ASPEED_GPIO(B, 1) GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		led-sys_boot_status {
-+			gpios = <&gpio1 ASPEED_GPIO(B, 0) GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&adc0 {
-+	vref = <2500>;
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default &pinctrl_adc1_default
-+		&pinctrl_adc2_default &pinctrl_adc3_default
-+		&pinctrl_adc4_default &pinctrl_adc5_default
-+		&pinctrl_adc6_default &pinctrl_adc7_default>;
-+};
-+
-+&adc1 {
-+	vref = <2500>;
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc8_default &pinctrl_adc9_default
-+		&pinctrl_adc10_default &pinctrl_adc11_default
-+		&pinctrl_adc12_default &pinctrl_adc13_default
-+		&pinctrl_adc14_default &pinctrl_adc15_default>;
-+};
-+
-+&peci0 {
-+	status = "okay";
-+};
-+
-+&lpc_snoop {
-+	snoop-ports = <0x80>;
-+	status = "okay";
-+};
-+
-+&mac2 {
-+	status = "okay";
-+	phy-mode = "rmii";
-+	use-ncsi;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii3_default>;
-+};
-+
-+&mac3 {
-+	status = "okay";
-+	phy-mode = "rmii";
-+	use-ncsi;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii4_default>;
-+};
-+
-+&fmc {
-+	status = "okay";
-+
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "bmc";
-+		spi-max-frequency = <50000000>;
-+#include "openbmc-flash-layout-64.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+
-+	flash@0 {
-+		status = "okay";
-+		label = "bios";
-+		spi-max-frequency = <50000000>;
-+	};
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+
-+	temperature-sensor@48 {
-+		compatible = "ti,tmp75";
-+		reg = <0x48>;
-+	};
-+
-+	temperature-sensor@49 {
-+		compatible = "ti,tmp75";
-+		reg = <0x49>;
-+	};
-+
-+	pca9555_4_20: gpio@20 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	pca9555_4_22: gpio@22 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x22>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	pca9555_4_24: gpio@24 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x24>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names =
-+		/*A0 - A3 0*/	"", "STRAP_BMC_BATTERY_GPIO1", "", "",
-+		/*A4 - A7 4*/	"", "", "", "",
-+		/*B0 - B7 8*/	"", "", "", "", "", "", "", "";
-+	};
-+
-+	pca9555_4_26: gpio@26 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x26>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	i2c-mux@70 {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel_1: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		channel_2: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		channel_3: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_4: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+
-+	pca9555_5_24: gpio@24 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x24>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	i2c-mux@70  {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x70 >;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel_5: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			pca9555_5_5_20: gpio@20 {
-+				compatible = "nxp,pca9555";
-+				reg = <0x20>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				gpio-line-names =
-+					"", "", "", "", "", "", "", "",
-+					"", "", "SYS_FAN6", "SYS_FAN5",
-+					"SYS_FAN4", "SYS_FAN3",
-+					"SYS_FAN2", "SYS_FAN1";
-+			};
-+
-+			pca9555_5_5_21: gpio@21 {
-+				compatible = "nxp,pca9555";
-+				reg = <0x21>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+			};
-+
-+			power-monitor@44 {
-+				compatible = "ti,ina219";
-+				reg = <0x44>;
-+				shunt-resistor = <2>;
-+			};
-+		};
-+
-+		channel_6: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		channel_7: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_8: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+
-+	pca9555_6_27: gpio@27 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x27>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	pca9555_6_20: gpio@20 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names =
-+		/*A0 0*/	"", "", "", "", "", "", "", "",
-+		/*B0 8*/	"Drive_NVMe1", "Drive_NVMe2", "", "",
-+		/*B4 12*/	"", "", "", "";
-+	};
-+
-+	pca9555_6_21: gpio@21 {
-+		compatible = "nxp,pca9555";
-+		reg = <0x21>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+
-+	i2c-mux@70 {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		idle-state = <1>;
-+
-+		channel_9: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			temperature-sensor@48 {
-+				compatible = "ti,tmp75";
-+				reg = <0x48>;
-+			};
-+
-+			temperature-sensor@49 {
-+				compatible = "ti,tmp75";
-+				reg = <0x49>;
-+			};
-+
-+			power-monitor@40 {
-+				compatible = "ti,ina219";
-+				reg = <0x40>;
-+				shunt-resistor = <2>;
-+			};
-+
-+			power-monitor@41 {
-+				compatible = "ti,ina219";
-+				reg = <0x41>;
-+				shunt-resistor = <5>;
-+			};
-+		};
-+
-+		channel_10: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		channel_11: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_12: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+
-+	i2c-mux@71 {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x71>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;
-+
-+		channel_13: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		channel_14: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+
-+		channel_15: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_16: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+
-+	i2c-mux@70 {
-+		compatible = "nxp,pca9546";
-+		status = "okay";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-mux-idle-disconnect;
-+
-+		channel_17: i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+		};
-+
-+		channel_18: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			temperature-sensor@48 {
-+				compatible = "ti,tmp75";
-+				reg = <0x48>;
-+			};
-+
-+			power-monitor@41 {
-+				compatible = "ti,ina219";
-+				reg = <0x41>;
-+				shunt-resistor = <5>;
-+			};
-+		};
-+
-+		channel_19: i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		channel_20: i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+};
-+
-+&i2c14 {
-+	status = "okay";
-+	multi-master;
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c08";
-+		reg = <0x50>;
-+	};
-+
-+	eeprom@51 {
-+		compatible = "atmel,24c08";
-+		reg = <0x51>;
-+	};
-+};
-+
-+&sgpiom0 {
-+	status = "okay";
-+	ngpios = <128>;
-+};
-+
-+&video {
-+	status = "okay";
-+	memory-region = <&video_engine_memory>;
-+};
-+
-+&sdc {
-+	status = "okay";
-+};
-+
-+&lpc_snoop {
-+	status = "okay";
-+	snoop-ports = <0x80>;
-+};
-+
-+&kcs1 {
-+	aspeed,lpc-io-reg = <0xca0>;
-+	status = "okay";
-+};
-+
-+&kcs2 {
-+	aspeed,lpc-io-reg = <0xca8>;
-+	status = "okay";
-+};
-+
-+&kcs3 {
-+	aspeed,lpc-io-reg = <0xca2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&uart_routing {
-+	status = "okay";
-+};
-+
-+&vhub {
-+	status = "okay";
-+};
-+
-+&gpio0 {
-+	gpio-line-names =
-+	/*A0 0*/	"", "", "", "", "", "", "", "",
-+	/*B0 8*/	"", "", "", "", "", "", "PS_PWROK", "",
-+	/*C0 16*/	"", "", "", "", "", "", "", "",
-+	/*D0 24*/	"", "", "", "", "", "", "", "",
-+	/*E0 32*/	"", "", "", "", "", "", "", "",
-+	/*F0 40*/	"", "", "", "", "", "", "", "",
-+	/*G0 48*/	"", "", "", "", "", "", "", "",
-+	/*H0 56*/	"", "", "", "", "", "", "", "",
-+	/*I0 64*/	"", "", "", "", "", "", "", "",
-+	/*J0 72*/	"", "", "", "", "", "", "", "",
-+	/*K0 80*/	"", "", "", "", "", "", "", "",
-+	/*L0 88*/	"", "", "", "", "", "", "", "",
-+	/*M0 96*/	"", "", "", "", "", "", "", "",
-+	/*N0 104*/	"", "", "", "",
-+	/*N4 108*/	"POST_COMPLETE", "ESR1_GPIO_AST_SPISEL", "", "",
-+	/*O0 112*/	"", "", "", "", "", "", "", "",
-+	/*P0 120*/	"ID_BUTTON", "ID_OUT", "POWER_BUTTON", "POWER_OUT",
-+	/*P4 124*/	"RESET_BUTTON", "RESET_OUT", "", "HEARTBEAT",
-+	/*Q0 128*/	"", "", "", "", "", "", "", "",
-+	/*R0 136*/	"", "", "", "", "", "", "", "",
-+	/*S0 144*/	"", "", "", "", "", "", "", "",
-+	/*T0 152*/	"", "", "", "", "", "", "", "",
-+	/*U0 160*/	"", "", "", "", "", "", "", "",
-+	/*V0 168*/	"", "", "", "", "", "", "", "",
-+	/*W0 176*/	"", "", "", "", "", "", "", "",
-+	/*X0 184*/	"", "", "", "", "", "", "", "",
-+	/*Y0 192*/	"", "", "", "", "", "", "", "",
-+	/*Z0 200*/	"", "", "", "", "", "", "", "";
-+};
--- 
-2.25.1
+This opt-out logic would require a distro kernel with allocation
+profiling compiled-in to ship together with something that modifies
+kernel command line to disable it by default, so it's not very
+practical. Could the CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT be
+turned into having 3 possible choices, where one of them would
+initialize mem_profiling_enabled to false?
 
+Or, taking a step back, is it going to be a common usecase to pay the
+memory overhead unconditionally, but only enable the profiling later
+during runtime? Also what happens if someone would enable and disable it
+multiple times during one boot? Would the statistics get all skewed
+because some frees would be not accounted while it's disabled?
+
+>>
+>> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+> Thanks!
+> 
+>>
+>>
