@@ -1,59 +1,59 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA2C136657
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D200B135A77
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709025118; cv=none; b=J6NVl4ftRFx18q9BcuBgfBnlCQhCtEUqlZgz12KG033UdnVQHGxg7SWgmUT3V9IYbTDdZC523w9GKG5NOarVAnQdFp8ey1hd/oxFuHjtTUJQZPwV0MJ7FOyMVbZpv1KnVMQurwpQoTWHQlxw4NadCX8ZGTXHnn8LLtcYAky9WCY=
+	t=1709025157; cv=none; b=gIXc0ON75/dQIiaYPWXC94bi9pqi6MkGpCuAT3eVisX0GdwI+n5suw3rdxKkpLP0wUV0qGKpP6KwIxL07BdC/BuYbLAYs5MvrR8l67t3ZnhNjJWG4RZ9LJML9Oz5Eg9i2fb6vMGakCl4iPHZNLC5mzLLxav7Ff3wkAa0LSDUP1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709025118; c=relaxed/simple;
-	bh=oDlesCYRQ+W+skiSLRxgDIQGbf/zMO64VKoY9TJLA2Y=;
+	s=arc-20240116; t=1709025157; c=relaxed/simple;
+	bh=H6Ys0IjDoxwO7xXcxkmYoIA84T8dKEObnksYVhBSBCk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XTQ9Y7Yq3p3nX8fDl1RixS35JVhArLuOoU8GyADN+kBFAn1nEKeDbZgeS9WwpPhZJxlrQwArmHRK7aLzHg4vthnZCwNrX4O7bhA4DGyuhFYz/6VL07U0p7Mihub/V3bHXxaaFXGTtRx306jqdkzj0Kr+k/cthAXLBJOOGmUljEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VwFNZ9b9; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 In-Reply-To:Content-Type; b=KHngadjvPc3C/9nKamMXQrpl2jlgvOwz9hRKIbHNIzlBMADkQzKzCSo3xVROoQ7MLijgqtDVvGEy8ip6Gk4vtHvq+qyFyL8a/egE4Il+brp6m5hN1DTB2ROAAtDhU2aFK4QgNlL0hICh6A0avb0xlGGLd6EaeRDjqvuPfUtEblw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hIAxl+VN; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VwFNZ9b9"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6e495e7d697so771087a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:11:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hIAxl+VN"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a3d484a58f6so564126166b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:12:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709025115; x=1709629915; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1709025154; x=1709629954; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Iqmg1xIpurv53FgVspQqGn5e7v8oRKUqp2bPRQGCv1w=;
-        b=VwFNZ9b91bCyca8XnK+dkWiuaA2T0w8Nk+MGf+tXO2ckt98jsDsxj4IKGAsy7rVJOH
-         W9k56OJhT7jW4brzlK5GDLINqHTSmizV1FTqtCKK9GKAXzorn+Y6ZN75ANLJWkcVkYWh
-         vC08bZoP09jLCAd7k8Bb6+bTxcl1rB8bEeAgTuWfzODdST8W4laWKVqUjvxC872mi90D
-         aopzQJtzi8Lhd6ELCBWMiYjPoUII0FVcu/JkwbSv7rUJxh4YQlUveZRO5qyMGwjqboPR
-         Qc/6eWm7XPz5CxawYmQ2HEdLG/t73HWfn5/8OcX6WPqqyaSbiQfZ4DuDC4fQVNBr6zbE
-         2mlw==
+        bh=noyYY3Gfx3pR2gEQGXou1lh0FPp5xaoQVBZrG/2rV+k=;
+        b=hIAxl+VN8gwxAm/LRleThIUhpGKTVHBkHEXFM7FX4DWhpKsz7iJHb4m/3KdtWOHXNL
+         gACYszVNljQVCxCszBCM+rNY7WpYAr3ZiHtRY5wbOFotzbC3ySTWM4Bg8/ZNMAYHSJ+k
+         wyym3KxM6CZQ0z+X8KkedqRK71Jw2mgJHvw3ZgzLLaKQux3UtJkH01BZIyIob4wHISny
+         fMYlr2oxvtnK9+Y2DwnBrkkbc/IJAunxNZygH//9T3c4EFsxqurcyUuQTf92cE+lTjC2
+         6U+OJNzExE29G2SteCUUyaSGZZ5Tth9o93KOLLkBjgYbHkqLIx6wYJOpxX35vTIOQP3w
+         /llg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709025115; x=1709629915;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1709025154; x=1709629954;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Iqmg1xIpurv53FgVspQqGn5e7v8oRKUqp2bPRQGCv1w=;
-        b=NJQA1gYCN/O/K8sq0Hhins6LfGu3pLGakzCFuW+67tmU/QtLDx88rGYSBdRy2kjUaM
-         4Ro4/uLx/4WX9wAsv2ORgtMdg6kODmS7vmVJhNY8N7yMIKIZrFwK9Hbtha9Z3pR/hi6U
-         kqfUH4yHSvEMo6zVjFeH4tXgjJVmCV4x9h4PhmwdK/569pdixyHG+Lns/DjHLA+l4t0X
-         8DVFyAZrTjwJMfA9UJPCG/TqEW8njTEBIsLy5CxTjc2ERGVaphmzj1mL23oYPhhpFS6y
-         pnNzs2cREeVHD+QOECOYa6HcohYRfs8CY2e3o2z/H84psaXc42cyE6GYAhgRuIFd34h+
-         RCGg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8XVrUDVPkqI+AkiVgWfRpJ89zkfaXO82K3vOqfv2qf/2Jeiqnmikug021VBP6nl16Iuu8Lp0nEzeBxuAn2opa8g0NB93yvqolGMtd
-X-Gm-Message-State: AOJu0YwxbQY7dT7DU/9Ns17Qlc8TzNWIrwWlxLEh/Bf4mzKXaixV/nau
-	Cw+AxbAv1RW/mQ3k4Dz6t0uYAb2fR/tZdDI2SPC53TAlDgGHQJ2/51D7vJ52oOM=
-X-Google-Smtp-Source: AGHT+IHl56rwr930B3wadTCG40VLh8Pqx/IvnBbhnZLNnBMwNU6D0iq/HaPHH32q8T7UEoPk01A0xw==
-X-Received: by 2002:a4a:d0d4:0:b0:5a0:3aeb:ae3f with SMTP id u20-20020a4ad0d4000000b005a03aebae3fmr9524072oor.0.1709025115072;
-        Tue, 27 Feb 2024 01:11:55 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:999:a3a0:bf35:904f:7a0e:6c9a? ([2a01:e0a:999:a3a0:bf35:904f:7a0e:6c9a])
-        by smtp.gmail.com with ESMTPSA id fa29-20020a056a002d1d00b006e47b5b67d1sm979347pfb.77.2024.02.27.01.11.47
+        bh=noyYY3Gfx3pR2gEQGXou1lh0FPp5xaoQVBZrG/2rV+k=;
+        b=eR0w6C613Gpcd4n2mazR/wWD7FA5t6Y4Z97YUovwyyIGJftARiyQEcLw99HdKwpno8
+         2tKTZGx0DblJjg/8jD7HkplCcLwNYz0PKT+GZRyAGkCDfo3ur0M/6cdjmKc8yOqg/Vwq
+         npVFGMTVgCg+O3YOn9SccDU8r99qMAwMsRhuL2ZuUbKtaQw3wJ50QNb6Tf4CgtnsPugf
+         f5AGm2hUbOoBoWY4zWioRNZFywLLFiTtGP8Gx0iLKn8PpOpJhrXVM29erQxWtK+inM4N
+         90Lc7lLgY4xy0qxuMorzC+3IOEpBew1aiCbUq9jmwOMWI2SMWc/ZuY1piyJIHVFcY0Rl
+         4Qag==
+X-Forwarded-Encrypted: i=1; AJvYcCWLw2JuGJt6//VYvEezsKvrK5NLkCUNGVcpJaQi0Pag9lIVtf30nf3CQts8iQybgIdaMQuvdDfjpHyoBUrnSRPmdklD+ULzkrmkZH8G
+X-Gm-Message-State: AOJu0Yz3Slu871jBDvQ66hCg/JM/9VQJ3rEjtWqgkLnUlRJACxUhFHzo
+	/RBMDEDdLOuutPsrEMnknFjvL4wg4AH0QjKs0BEh/j2nupv9nC2YUKKlOf2JrA0=
+X-Google-Smtp-Source: AGHT+IGzf/LPIh7sQZ8sP/iXtmh3RQl0WN6D3f2Wk7At5USPEo9zIhQr/VzsJdOzpH5kabUcc1UIaA==
+X-Received: by 2002:a17:906:528c:b0:a3f:db30:872a with SMTP id c12-20020a170906528c00b00a3fdb30872amr6026550ejm.66.1709025154206;
+        Tue, 27 Feb 2024 01:12:34 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id kt3-20020a170906aac300b00a3e70fec6a0sm559461ejb.171.2024.02.27.01.12.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 01:11:54 -0800 (PST)
-Message-ID: <a49546e8-6749-4458-98da-67fd37b7df18@rivosinc.com>
-Date: Tue, 27 Feb 2024 10:11:41 +0100
+        Tue, 27 Feb 2024 01:12:33 -0800 (PST)
+Message-ID: <27a2ebb8-cfed-471b-89bc-62442bb0118a@linaro.org>
+Date: Tue, 27 Feb 2024 10:12:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,87 +61,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: deprecate CONFIG_MMU=n
-To: Charles Lohr <lohr85@gmail.com>, Conor Dooley <conor@kernel.org>
-Cc: Samuel Holland <samuel.holland@sifive.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Conor Dooley <conor.dooley@microchip.com>,
- Andrew Jones <ajones@ventanamicro.com>, Damien Le Moal <dlemoal@kernel.org>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
- Atish Patra <atishp@rivosinc.com>
-References: <20240226140649.293254-1-cleger@rivosinc.com>
- <40dee2c1-ff24-40b2-a13c-6934139ba869@sifive.com>
- <ea356036-5a0b-47ea-aafb-f9813cc6ec9b@rivosinc.com>
- <20240226-pajamas-okay-51e16426b0f5@spud>
- <CAGu26P_v9FjYq9Bncvfd-dBhdHQevvN3HpO1nqjA2hYFCpG7hg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: aspeed: add ASUS X4TF board
 Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <CAGu26P_v9FjYq9Bncvfd-dBhdHQevvN3HpO1nqjA2hYFCpG7hg@mail.gmail.com>
+To: Kelly Hung <ppighouse@gmail.com>, robh+dt@kernel.org
+Cc: krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
+ andrew@codeconstruct.com.au, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, kelly_hung@asus.com,
+ Allenyy_Hsu@asus.com
+References: <20240227075051.1577877-1-Kelly_Hung@asus.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240227075051.1577877-1-Kelly_Hung@asus.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-
-On 26/02/2024 20:00, Charles Lohr wrote:
-> WOAH! Please DO NOT deprecate NOMMU. I use the NOMMU build constantly
-> and NOMMU Linux on RISC-V is the avenue used by many FPGA soft cores
-> for Linux, as well as some limited systems.
+On 27/02/2024 08:50, Kelly Hung wrote:
+> Document the new compatibles used on ASUS X4TF.
 > 
-> I get new copies of the kernel when there are releases and test them
-> frequently to make sure everything is still working as expected.
-> 
-> For us we just don't care about XIP. I mean if someone did push it
-> through to fruition, I'd also test and use it, but I urge you please
-> do not deprecate this.  While it's sometimes needed a bit of a
-> creative build to get everything working, I've never needed to patch
-> anything in the kernel beyond patching in a custom console for serial
-> output.
-> 
+> Signed-off-by: Kelly Hung <Kelly_Hung@asus.com>
+> ---
 
-Hey Charles,
+No changelog, no explanation what happened with reviews or with this
+patchset.
 
-No worries, we actually did not expected NOMMU to have *so many* users.
-I guess deprecating stuff is a good way to have immediate feedback ;).
-Having FDPIC psABI to be merged upstream could also probably be a
-positive point toward a better NOMMU support.
+I am confused.
 
-> I am happy to discuss the possibility of me and or one of the other
-> RISC-V soft (FPGA) core people stepping up to try to be more active,
-> but so far we've just been very well serviced by the current NOMMU
-> Linux setup.
+Best regards,
+Krzysztof
 
-It could probably be nice to have some feedback/Tested-by: from NOMMU
-users for new releases then.
-
-Thanks,
-
-Clément
-
-> 
-> Charles
-> 
-> 
-> On Mon, Feb 26, 2024 at 8:03 AM Conor Dooley <conor@kernel.org> wrote:
->>
->> On Mon, Feb 26, 2024 at 04:25:24PM +0100, Clément Léger wrote:
->>> I guess I could also mark XIP as deprecated.
->>
->> I'm not so sure, people recently added XIP support to QEMU (and sent
->> kernel fixes in December). XIP is also not nearly as much of a problem
->> to support, there's far less that it does differently, the main barrier
->> was the inability to test it which is no longer the case.
->> That said, XIP is gonna kill itself off I feel as it does not support
->> runtime patching and therefore is extremely limited on extensions, given
->> we use alternatives for all of that (although I suppose if someone has a
->> usecase they could make nasty macros worse and implement a compiletime
->> switch in the alternatives too).
->>
->> Cheers,
->> Conor.
->>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
