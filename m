@@ -1,426 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC3115AAA3
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709069123; cv=none; b=naN4HidrbgBgO3QeSdy6ZECNWdhnAGTO8PkSqgWzSOXy7C9Onu0EUspxajAms3eX/Ce1vUyZubTWdSKRkC5H69Suupf30nhmxB8he0g+FRDybw20ZxhUALEav1q4FpiBSNYSiPq1OTiBalbFqUYDqjc0lWRUQW1M3q2qBEkGzrI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709069123; c=relaxed/simple;
-	bh=txRUFpMSxXg5LAXaF41EiCvBKfa8Uy7Uc4euvd58Ye4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pf4o3eMXsMVS/8ZQZfnatUwuZhD7ACDGXLGH9BvcMp+U63SUt4jVj7x2g+35wnurLtASHYS+n5OMnszac5yFShTzvff5jY4VTZdLix7yoWSOhqkYvALgqeIiZserDDLodb8Xqs5K6Dm6BOzu0j8rVXit0R4bg1+4Te8uKErHq/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TeePp4Ay; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F68A4DA0C
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709069237; cv=fail; b=cVgY02OB7vHBdsC9Id9m6lPRIsWlbTdmZjRb095AFcPV/ClEOEjO4REJGlMoA11Tl6KnVP0ITigLG9XO/jB+8eiApQAfPaRoaVanD//i71w9bZ9LpD0yPO9bf/b0nLWeG8mwzIS27g/USj/3/R00TsqHp9ZdvB82o7/JEC1nKPU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709069237; c=relaxed/simple;
+	bh=f/RHzN87XE+4qTYW3TRUzE/g/m4ir3zv6IyKewOGS9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=umrtdRNUzjRd8WKgV+q+foKk2zcSDE/AF5F1d+DtcjlRMSfRKsl/T+hFcYqh0nnkPeQc3zafZJnKAMwj4l1DB1gJP98TSvVnTXmknlz+UvbDXRWTQfiB9hR1Ez18jRQeAjwsnomP1hrbZ+/M/X7Xu7pIALcb5G7mfHuTAs2GQzw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hjdJrH2n; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=tGzRkvab; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TeePp4Ay"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709069121; x=1740605121;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=txRUFpMSxXg5LAXaF41EiCvBKfa8Uy7Uc4euvd58Ye4=;
-  b=TeePp4AyW6pKcFQqkcR6VSzq27ha6ATMFSpNRkxCVLdfTtvUfOQBxy/N
-   fu++2YopBpqYq2s1ez9MTsse4LZV6CPh/eNywaVw5evRCpnsHWwZALPyu
-   znPV5x8YvogT3w2Ok4DiPDDfSgXUhgBHdInD0uvvpPfxm49b3ZHLFSeYI
-   HoLi4V2u46kHfkq0E2GXMuarLfmXtsug7JQr/puCveiqefBbmWrkHH7/t
-   VVaZ4xsYQ1TENdb/7+BdsmTDJsk7icosOJnbmg+vCFGSLPpkrBQ8kO3ZD
-   DK3tKJXSOKk77qlPI3bCGJGeMAUgnZPRtJQ3/5ptoNXXQPoy3MOj9uRe+
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3567110"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="3567110"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:25:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937032933"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="937032933"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Feb 2024 13:25:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id BC9521207; Tue, 27 Feb 2024 23:24:56 +0200 (EET)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv8 16/17] x86/acpi: Add support for CPU offlining for ACPI MADT wakeup method
-Date: Tue, 27 Feb 2024 23:24:51 +0200
-Message-ID: <20240227212452.3228893-17-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
-References: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hjdJrH2n";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="tGzRkvab"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41RKJZh7020580;
+	Tue, 27 Feb 2024 21:26:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=Hea20h7qhnI1NZEd8D6dowDhq4RlRDv2OkDxJ4DO8ew=;
+ b=hjdJrH2ngcHYLUozauCPFlTuTdiltN47o/77Ooi+v2dXFBjw2V+p0QjA4CZ/pBCaIlpx
+ K8ZvCBeCU6zyK9+/V1y34D2NNixgc8a/pCehmxqx/T+C/DOzUjP2Gc6sZ2BPxB7906iw
+ 0l/UsZmxhgDsy2gcS0k8kNwgqMrk4tRaLUf0OXKlSA2QXiKaz/hepErnk3ptRiEowD0/
+ sPMwjVe/t2yeYfYLgT2fiPky1+jU/Kouhqi5kl5AJt2cYYIhK0F0AaE3/WIDyQk8cpxj
+ rbxHi4Q5vmakeTLHqd0cN+Kv28Cl9NlnMeHsph17nmKUovd15kaBQ3SpdU3CNSApz4TC Ig== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wf90v8esg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 Feb 2024 21:26:46 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41RKU7p2019175;
+	Tue, 27 Feb 2024 21:26:45 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2168.outbound.protection.outlook.com [104.47.73.168])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wgbdkr145-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 Feb 2024 21:26:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=btGz0ohSlWtI+MLOQz4rs79od3pk5EInpWSY88Cm98RirD/1+HveTDlJNgnrxSprokF5vk5yCZYH1CS7o09TVt2aOQEQoDLbO7lzzs18ohx+8x7LK5nHZ/PBcaqrAjAHEaQ6x6JmeqXodAQWH5Yy0dzu4HSgSYqDLTMW9Mx6WSQrC3ezLHlC1G6Y4p1lrfk29/K6TTrtapK6p3AGExBXUZ0s/9PizfilbW/nKbmu10AfODBIk7PtsHfQdKpPAeA7Wx7j/qIBHpB7UdlauLrWW5BaNgxfa8m7S1Z1MuQNZexgob3Z0Nosk8E+MbsarN1Bs4qqV7eM6BWDi01VMtOpTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Hea20h7qhnI1NZEd8D6dowDhq4RlRDv2OkDxJ4DO8ew=;
+ b=m5OLSk4DJ2tOWa6HbAlk5tlylfaUlsY1YTB1G0skP0ov/m403a1Vz+b1XX5azE2fJ6vBXX9YoH142YvGjlTWbVJ11ksDl4bG6PtGUG8Ika3+mHjUdL7lHg7n3CJCkbbwl2boWQ8DGf7EWSUigKrpnZZb9efLV0PDFErFh/5HZMuclHoZQFD900Rd3bgbkCIpUyq9ywfK9anusVnSxdQ2B5WFWp+TGAC9UtaEFxtcQljjWTAqoUx68o4kgJOa89R8JSN57T3cWMLcPm5yfqQdw9DfDL3wKGsUVFTPhXPjJvbXi7t2aV5NVJkXmFzFzKOb4pmGTcORRIwGhmf2IS6IOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hea20h7qhnI1NZEd8D6dowDhq4RlRDv2OkDxJ4DO8ew=;
+ b=tGzRkvab8yaIJy/Bjz+bMpUp+kCkV0RFTC8QHcuwTYUQ848hyB9S8TNM6wP9S1jB/fjVQtIVM+c9sveZWle59GROCSMgBAcbCx38OL8n/M9TqNVd85IlzhVYZnSgTuJAQxWJZl1psA+erjfoFnHT5DA2CayS1Okwj1nZz48yU8c=
+Received: from SA1PR10MB5711.namprd10.prod.outlook.com (2603:10b6:806:23e::20)
+ by BLAPR10MB4961.namprd10.prod.outlook.com (2603:10b6:208:332::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Tue, 27 Feb
+ 2024 21:26:42 +0000
+Received: from SA1PR10MB5711.namprd10.prod.outlook.com
+ ([fe80::16e6:c4e2:745:a0ec]) by SA1PR10MB5711.namprd10.prod.outlook.com
+ ([fe80::16e6:c4e2:745:a0ec%4]) with mapi id 15.20.7292.036; Tue, 27 Feb 2024
+ 21:26:42 +0000
+Date: Tue, 27 Feb 2024 16:26:39 -0500
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
+To: Gang Li <gang.li@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Muchun Song <muchun.song@linux.dev>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, ligang.bdlg@bytedance.com
+Subject: Re: [PATCH v6 5/8] padata: downgrade padata_do_multithreaded to
+ serial execution for non-SMP
+Message-ID: <e44cv3c7lafc2a5p4wkhxjaipq4hgclzuceignzzp37kl4l2pj@t7bgio7s7p4q>
+References: <20240222140422.393911-1-gang.li@linux.dev>
+ <20240222140422.393911-6-gang.li@linux.dev>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240222140422.393911-6-gang.li@linux.dev>
+X-ClientProxiedBy: BLAPR03CA0051.namprd03.prod.outlook.com
+ (2603:10b6:208:32d::26) To SA1PR10MB5711.namprd10.prod.outlook.com
+ (2603:10b6:806:23e::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR10MB5711:EE_|BLAPR10MB4961:EE_
+X-MS-Office365-Filtering-Correlation-Id: fe05a9f5-28b2-4757-4b6b-08dc37daca8d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	NXxku/ClqERppJrNCOZEsHHnS/IoRMaiyDwmEoDmUF/z8fr6C8gGJirpTGyS1ruBEyD25hsHZG2KvHDzHRBwB2xuIsbmPcPyIcHV4aF+Ds5SPv0pD51VPTT0WRMap7lWgcSJTMNzYpOq5rHufO06XfbG7kIEm5uQEi2LmEQ+sHGxapzELDAo2+GrHcSvVjKIKbCmZB/sT4Qs3+Jm00tdxqfYXNZ15hTD+GC6QzIFqCb0WsLoOuc01e4u6bD7425feoOS7URHnxpVCnc18r8xrjWv1OYdPCCMoDm0iH1UuMii8nLY5fTcpKmzN/oZIVhS/jR68s4afnrOL3RguSt4JvDSq6pVjnhSLR6FY6SYXT2ukhM9PidLYkax5XW6+fT+tG3GgInFxG7m74a0o4MfBuW49TexGm2ZX8JYucC/ioqjY0g4Xsza7y4YYhsX/rwqV7GnrtwR+B4AVFQO4gh3wCSQQdMW6mPU06OlwRY4FvgnzPJT5qrdgiGQul0YNZCiMTLWXaRFFOzYcQZ0Fwk+9PFs/dN+2wXFm3bX8ith0l6r4QbUaK/TZcY9gtQVRF7eXHvMh3/7+d9jlbGsycQ+2dT149yLipw3eNjNM47SAJFiTQC/3vql3cPbw0Zqd6yxyPhVZ0yoAEWYl+/kJmQEPg==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB5711.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?vihJOUquaBpNexnrF3Zipa8IDEP4WOwNjrEci9yKOjy5FbRgsiKczj5APh8J?=
+ =?us-ascii?Q?ZHzCdcqHnXN9p0l4moA/WRssUQRYZAQ7eqvfnc8a5kgMY5hgVfQGp1u455EZ?=
+ =?us-ascii?Q?5A0WSTqraX78JXV8tOYkVfHUkN6b1WCbFKG4QOr30zH9ESrPFiLqoilI05fv?=
+ =?us-ascii?Q?cOiZiYwo/y0qcHTHjuptfXkKoqwPbIqIY8JXo+vj1tdiEUcCNAYGq77PoaOb?=
+ =?us-ascii?Q?cjYvXsm7KKnNfH6snbS6jX11Bh1ABbdRz00SNf6ABz6dF1vNXY/JnldUAxbK?=
+ =?us-ascii?Q?WGE/dcAlcyD3zkyrkjluzZ5054GZVyC8Sx6CUyfiJ300lrQYSUnlh5Z/pnTw?=
+ =?us-ascii?Q?a4AtrxnyWBApVHhkfDQh5C8FqS5ixNSug0fCuTaCGxIJrAvohxAD5ztKzYLD?=
+ =?us-ascii?Q?223M5zM45tu2TtpGt6jK90LaFRXptH2enDmpuUZ6AI2k7cSMcvvK7iqqI1+0?=
+ =?us-ascii?Q?zW31DQFwjRwvaImxL4/31YW9P1qxC9FZTSZnxLOgrrwo0SIVbESJB4MeW7BU?=
+ =?us-ascii?Q?9zWVdJR1ZwPsoGnp7RCSEoR5G47B3UAyV/YCbSvJPAekRqKDhBj8jnaKoNsk?=
+ =?us-ascii?Q?vLQfIVAK8IC2dAfRV41FPtyPNbDRnaUXq05EatPmTBuCEUtfxLMWfz3Zdub1?=
+ =?us-ascii?Q?836GbwYzu2bC8gDPZMeM/LV5+RVZKbENiCWwssz9+cVDuXfdaY/xRmtooZpS?=
+ =?us-ascii?Q?MnD927r7IqVIhVzSSoQnkxlOjK7+Usb1qikPtP3c+DY8QTsBYEewUXmcR+ec?=
+ =?us-ascii?Q?aQwrh/78dpCrtsaVXxXGUOKkJ2c0Dy2dRGtsrOHPiwoDF9q/i5juraG8H2Rq?=
+ =?us-ascii?Q?QjQnbLFJHvTLDDezd5sL1y48o+4SatXBQrNtYmxQG2lYEB/U3fBdVNChNKRT?=
+ =?us-ascii?Q?gmPM1dyyyf+O/KmPa4jiXtrvdjRRplcd/JUrJe76hy/l4buMSP9toePsWaM8?=
+ =?us-ascii?Q?BGjwvIVayIKoc6rCBzxZ1wzGMpDDwG/3dHwNOQ8iqt/aWyTjlDMQqu/OJ39h?=
+ =?us-ascii?Q?MYaH/6WYqfXtVvxUKHAvUnJhvguaO6fiRDpSmL5m3i/tpOh/rfVVd+7OtOv1?=
+ =?us-ascii?Q?okXeWmZIJuw+0Qo2eIj8TRPd3xLYAKdBV4Re7T8gcae9ktpzWE4dqKQh5tbA?=
+ =?us-ascii?Q?WZtnncYeF59QfDxuzxdFwHwPvaB+kpkxB0M957gsH9jSHiNr14OvafqgWTDy?=
+ =?us-ascii?Q?rTwnbQpi9CkebRNbQsvcqKocTOxeDZC7kQnvzt+ARi371tJzAEm9vDEGXkd/?=
+ =?us-ascii?Q?6Nzrx8n62Tk/xu8T6mitQyrwOMaqOlMfkfvT6cJR/OGjVcVTXnInjo24HPUj?=
+ =?us-ascii?Q?APbuDCQw/tVCGFAyafZO89a5+DiEUBZAPa3pgC7iMdxpqR4wuKXnvJ8CMcy3?=
+ =?us-ascii?Q?/1ZG3VpwcVtjoLVUiTI1TGMJkXSTSb+FWbMdKzuvEiwzj8dY7uP/65bEydy8?=
+ =?us-ascii?Q?TIjBO8Vskv56eiMvYQQnOmoCZgDPHGC2/7pp3VndEqJ7BpF1VqGCyIiOKSru?=
+ =?us-ascii?Q?TzM7HBLYlifwnT6VKSqjZ08ydUeYx1AkKkNOoItxGSCQSh7QR3pUUiVvNniX?=
+ =?us-ascii?Q?MNGtzY3tiFPZ3NzvRGpi+fBuqIMrfkFZHhEgVbux0q1kizc0kIVfuLCdubZ/?=
+ =?us-ascii?Q?UQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	LbCkmUoXJcGQ6l+U869htG8SiGKNlhI73SIfJ54D/MGcn7tb0yyVnNBzSKF0oegFXDMBRTEdP4AvOGGmuA8OFqoKd9tKHgEa4Wbc9+4fiBkxwo3est+SSYblYRNEIPeJqqeteARIj+a4bR46Gb8pChVtGhr/qI7+WlYYIrefyB2BgEVH8E+oCAlilYGd+A6IDZJXyVAX78wiU8L6zHrm77UTd63CIVtNUMRsBdl3AR5Q6VZx+jSDI98AZSaMcS992L9UP+8B/khQknEedqJ1rhYaPkuhEW5ofoJxIiCtHb1059cLN7WqnjMtw925nkHK0d/tFYzm0g5jzdSdBbM1NEGDBNANXf+B9Rvbt+dIrk3pAZ5AFn+wolYKJXAtmhpyHAxSs3ZpOH9TKhHRcSjla9CVawWjE/IrJu3bd/w4o0TENOz4jzuhljc5KWy6fD8bZB6re6XjQwXs13Z1WX/N9gXITc/JL9aH0n/6uLUwSzPl+nbGWX4kvc9jfmUx6zEREcSTGOf9DVz7GV0w3OSB65yAW3Sdb8nylzhBkYCpEuOXDzmV3oqN4LlkVNzuoA/fa4E3X24cWH7bDzchm8Z/YZBkg0MARE4ujyiKWfgAETQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe05a9f5-28b2-4757-4b6b-08dc37daca8d
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR10MB5711.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 21:26:42.1958
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iyOG72du24LNyq7qP2FevwV2iLsdt1gaOJmZ2qa7ZcBuaMdw3c6mlfCCUJMgFkFi5BYFu+6nYdHNg3ewatkcxK4zq54S3CVhXSRxVlOK67A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4961
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-27_09,2024-02-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402270164
+X-Proofpoint-GUID: ILH-E7pJbBaIXxcYh0IZd9xbmaeKLwmd
+X-Proofpoint-ORIG-GUID: ILH-E7pJbBaIXxcYh0IZd9xbmaeKLwmd
 
-MADT Multiprocessor Wakeup structure version 1 brings support of CPU
-offlining: BIOS provides a reset vector where the CPU has to jump to
-for offlining itself. The new TEST mailbox command can be used to test
-whether the CPU offlined itself which means the BIOS has control over
-the CPU and can online it again via the ACPI MADT wakeup method.
+On Thu, Feb 22, 2024 at 10:04:18PM +0800, Gang Li wrote:
+> hugetlb parallelization depends on PADATA, and PADATA depends on SMP.
+> 
+> PADATA consists of two distinct functionality: One part is
+> padata_do_multithreaded which disregards order and simply divides
+> tasks into several groups for parallel execution. Hugetlb
+> init parallelization depends on padata_do_multithreaded.
+> 
+> The other part is composed of a set of APIs that, while handling data in
+> an out-of-order parallel manner, can eventually return the data with
+> ordered sequence. Currently Only `crypto/pcrypt.c` use them.
+> 
+> All users of PADATA of non-SMP case currently only use
+> padata_do_multithreaded. It is easy to implement a serial one in
+> include/linux/padata.h. And it is not necessary to implement another
+> functionality unless the only user of crypto/pcrypt.c does not depend on
+> SMP in the future.
+> 
+> Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
+> Tested-by: Paul E. McKenney <paulmck@kernel.org>
+> ---
+>  include/linux/padata.h | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/padata.h b/include/linux/padata.h
+> index 8f418711351bc..0146daf344306 100644
+> --- a/include/linux/padata.h
+> +++ b/include/linux/padata.h
+> @@ -180,10 +180,6 @@ struct padata_instance {
+>  
+>  #ifdef CONFIG_PADATA
+>  extern void __init padata_init(void);
+> -#else
+> -static inline void __init padata_init(void) {}
+> -#endif
+> -
+>  extern struct padata_instance *padata_alloc(const char *name);
+>  extern void padata_free(struct padata_instance *pinst);
+>  extern struct padata_shell *padata_alloc_shell(struct padata_instance *pinst);
+> @@ -194,4 +190,12 @@ extern void padata_do_serial(struct padata_priv *padata);
+>  extern void __init padata_do_multithreaded(struct padata_mt_job *job);
+>  extern int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
+>  			      cpumask_var_t cpumask);
+> +#else
+> +static inline void __init padata_init(void) {}
+> +static inline void __init padata_do_multithreaded(struct padata_mt_job *job)
+> +{
 
-Add CPU offling support for the ACPI MADT wakeup method by implementing
-custom cpu_die(), play_dead() and stop_this_cpu() SMP operations.
+An early return here for zero-sized jobs is consistent with the
+CONFIG_PADATA version and avoids hugetlb_pages_alloc_boot taking a lock
+and flushing the tlb when there's no work to do.
 
-CPU offlining makes is possible to hand over secondary CPUs over kexec,
-not limiting the second kernel to a single CPU.
+With that,
 
-The change conforms to the approved ACPI spec change proposal. See the
-Link.
+Acked-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Link: https://lore.kernel.org/all/13356251.uLZWGnKmhe@kreacher
-Acked-by: Kai Huang <kai.huang@intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/include/asm/acpi.h          |   2 +
- arch/x86/kernel/acpi/Makefile        |   2 +-
- arch/x86/kernel/acpi/madt_playdead.S |  28 ++++
- arch/x86/kernel/acpi/madt_wakeup.c   | 184 ++++++++++++++++++++++++++-
- include/acpi/actbl2.h                |  15 ++-
- 5 files changed, 227 insertions(+), 4 deletions(-)
- create mode 100644 arch/x86/kernel/acpi/madt_playdead.S
-
-diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
-index 2625b915ae7f..021cafa214c2 100644
---- a/arch/x86/include/asm/acpi.h
-+++ b/arch/x86/include/asm/acpi.h
-@@ -81,6 +81,8 @@ union acpi_subtable_headers;
- int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
- 			      const unsigned long end);
- 
-+void asm_acpi_mp_play_dead(u64 reset_vector, u64 pgd_pa);
-+
- /*
-  * Check if the CPU can handle C2 and deeper
-  */
-diff --git a/arch/x86/kernel/acpi/Makefile b/arch/x86/kernel/acpi/Makefile
-index 8c7329c88a75..37b1f28846de 100644
---- a/arch/x86/kernel/acpi/Makefile
-+++ b/arch/x86/kernel/acpi/Makefile
-@@ -4,7 +4,7 @@ obj-$(CONFIG_ACPI)			+= boot.o
- obj-$(CONFIG_ACPI_SLEEP)		+= sleep.o wakeup_$(BITS).o
- obj-$(CONFIG_ACPI_APEI)			+= apei.o
- obj-$(CONFIG_ACPI_CPPC_LIB)		+= cppc.o
--obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+= madt_wakeup.o
-+obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+= madt_wakeup.o madt_playdead.o
- 
- ifneq ($(CONFIG_ACPI_PROCESSOR),)
- obj-y					+= cstate.o
-diff --git a/arch/x86/kernel/acpi/madt_playdead.S b/arch/x86/kernel/acpi/madt_playdead.S
-new file mode 100644
-index 000000000000..4e498d28cdc8
---- /dev/null
-+++ b/arch/x86/kernel/acpi/madt_playdead.S
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <linux/linkage.h>
-+#include <asm/nospec-branch.h>
-+#include <asm/page_types.h>
-+#include <asm/processor-flags.h>
-+
-+	.text
-+	.align PAGE_SIZE
-+
-+/*
-+ * asm_acpi_mp_play_dead() - Hand over control of the CPU to the BIOS
-+ *
-+ * rdi: Address of the ACPI MADT MPWK ResetVector
-+ * rsi: PGD of the identity mapping
-+ */
-+SYM_FUNC_START(asm_acpi_mp_play_dead)
-+	/* Turn off global entries. Following CR3 write will flush them. */
-+	movq	%cr4, %rdx
-+	andq	$~(X86_CR4_PGE), %rdx
-+	movq	%rdx, %cr4
-+
-+	/* Switch to identity mapping */
-+	movq	%rsi, %cr3
-+
-+	/* Jump to reset vector */
-+	ANNOTATE_RETPOLINE_SAFE
-+	jmp	*%rdi
-+SYM_FUNC_END(asm_acpi_mp_play_dead)
-diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
-index 30820f9de5af..6cfe762be28b 100644
---- a/arch/x86/kernel/acpi/madt_wakeup.c
-+++ b/arch/x86/kernel/acpi/madt_wakeup.c
-@@ -1,10 +1,19 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- #include <linux/acpi.h>
- #include <linux/cpu.h>
-+#include <linux/delay.h>
- #include <linux/io.h>
-+#include <linux/kexec.h>
-+#include <linux/memblock.h>
-+#include <linux/pgtable.h>
-+#include <linux/sched/hotplug.h>
- #include <asm/apic.h>
- #include <asm/barrier.h>
-+#include <asm/init.h>
-+#include <asm/intel_pt.h>
-+#include <asm/nmi.h>
- #include <asm/processor.h>
-+#include <asm/reboot.h>
- 
- /* Physical address of the Multiprocessor Wakeup Structure mailbox */
- static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
-@@ -12,6 +21,154 @@ static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
- /* Virtual address of the Multiprocessor Wakeup Structure mailbox */
- static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox __ro_after_init;
- 
-+static u64 acpi_mp_pgd __ro_after_init;
-+static u64 acpi_mp_reset_vector_paddr __ro_after_init;
-+
-+static void acpi_mp_stop_this_cpu(void)
-+{
-+	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr, acpi_mp_pgd);
-+}
-+
-+static void acpi_mp_play_dead(void)
-+{
-+	play_dead_common();
-+	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr, acpi_mp_pgd);
-+}
-+
-+static void acpi_mp_cpu_die(unsigned int cpu)
-+{
-+	u32 apicid = per_cpu(x86_cpu_to_apicid, cpu);
-+	unsigned long timeout;
-+
-+	/*
-+	 * Use TEST mailbox command to prove that BIOS got control over
-+	 * the CPU before declaring it dead.
-+	 *
-+	 * BIOS has to clear 'command' field of the mailbox.
-+	 */
-+	acpi_mp_wake_mailbox->apic_id = apicid;
-+	smp_store_release(&acpi_mp_wake_mailbox->command,
-+			  ACPI_MP_WAKE_COMMAND_TEST);
-+
-+	/* Don't wait longer than a second. */
-+	timeout = USEC_PER_SEC;
-+	while (READ_ONCE(acpi_mp_wake_mailbox->command) && --timeout)
-+		udelay(1);
-+
-+	if (!timeout)
-+		pr_err("Failed to hand over CPU %d to BIOS\n", cpu);
-+}
-+
-+/* The argument is required to match type of x86_mapping_info::alloc_pgt_page */
-+static void __init *alloc_pgt_page(void *dummy)
-+{
-+	return memblock_alloc(PAGE_SIZE, PAGE_SIZE);
-+}
-+
-+static void __init free_pgt_page(void *pgt, void *dummy)
-+{
-+	return memblock_free(pgt, PAGE_SIZE);
-+}
-+
-+/*
-+ * Make sure asm_acpi_mp_play_dead() is present in the identity mapping at
-+ * the same place as in the kernel page tables. asm_acpi_mp_play_dead() switches
-+ * to the identity mapping and the function has be present at the same spot in
-+ * the virtual address space before and after switching page tables.
-+ */
-+static int __init init_transition_pgtable(pgd_t *pgd)
-+{
-+	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
-+	unsigned long vaddr, paddr;
-+	p4d_t *p4d;
-+	pud_t *pud;
-+	pmd_t *pmd;
-+	pte_t *pte;
-+
-+	vaddr = (unsigned long)asm_acpi_mp_play_dead;
-+	pgd += pgd_index(vaddr);
-+	if (!pgd_present(*pgd)) {
-+		p4d = (p4d_t *)alloc_pgt_page(NULL);
-+		if (!p4d)
-+			return -ENOMEM;
-+		set_pgd(pgd, __pgd(__pa(p4d) | _KERNPG_TABLE));
-+	}
-+	p4d = p4d_offset(pgd, vaddr);
-+	if (!p4d_present(*p4d)) {
-+		pud = (pud_t *)alloc_pgt_page(NULL);
-+		if (!pud)
-+			return -ENOMEM;
-+		set_p4d(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
-+	}
-+	pud = pud_offset(p4d, vaddr);
-+	if (!pud_present(*pud)) {
-+		pmd = (pmd_t *)alloc_pgt_page(NULL);
-+		if (!pmd)
-+			return -ENOMEM;
-+		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
-+	}
-+	pmd = pmd_offset(pud, vaddr);
-+	if (!pmd_present(*pmd)) {
-+		pte = (pte_t *)alloc_pgt_page(NULL);
-+		if (!pte)
-+			return -ENOMEM;
-+		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
-+	}
-+	pte = pte_offset_kernel(pmd, vaddr);
-+
-+	paddr = __pa(vaddr);
-+	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
-+
-+	return 0;
-+}
-+
-+static int __init acpi_mp_setup_reset(u64 reset_vector)
-+{
-+	struct x86_mapping_info info = {
-+		.alloc_pgt_page = alloc_pgt_page,
-+		.free_pgt_page	= free_pgt_page,
-+		.page_flag      = __PAGE_KERNEL_LARGE_EXEC,
-+		.kernpg_flag    = _KERNPG_TABLE_NOENC,
-+	};
-+	pgd_t *pgd;
-+
-+	pgd = alloc_pgt_page(NULL);
-+	if (!pgd)
-+		return -ENOMEM;
-+
-+	for (int i = 0; i < nr_pfn_mapped; i++) {
-+		unsigned long mstart, mend;
-+
-+		mstart = pfn_mapped[i].start << PAGE_SHIFT;
-+		mend   = pfn_mapped[i].end << PAGE_SHIFT;
-+		if (kernel_ident_mapping_init(&info, pgd, mstart, mend)) {
-+			kernel_ident_mapping_free(&info, pgd);
-+			return -ENOMEM;
-+		}
-+	}
-+
-+	if (kernel_ident_mapping_init(&info, pgd,
-+				      PAGE_ALIGN_DOWN(reset_vector),
-+				      PAGE_ALIGN(reset_vector + 1))) {
-+		kernel_ident_mapping_free(&info, pgd);
-+		return -ENOMEM;
-+	}
-+
-+	if (init_transition_pgtable(pgd)) {
-+		kernel_ident_mapping_free(&info, pgd);
-+		return -ENOMEM;
-+	}
-+
-+	smp_ops.play_dead = acpi_mp_play_dead;
-+	smp_ops.stop_this_cpu = acpi_mp_stop_this_cpu;
-+	smp_ops.cpu_die = acpi_mp_cpu_die;
-+
-+	acpi_mp_reset_vector_paddr = reset_vector;
-+	acpi_mp_pgd = __pa(pgd);
-+
-+	return 0;
-+}
-+
- static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
- {
- 	if (!acpi_mp_wake_mailbox_paddr) {
-@@ -97,14 +254,37 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
- 	struct acpi_madt_multiproc_wakeup *mp_wake;
- 
- 	mp_wake = (struct acpi_madt_multiproc_wakeup *)header;
--	if (BAD_MADT_ENTRY(mp_wake, end))
-+
-+	/*
-+	 * Cannot use the standard BAD_MADT_ENTRY() to sanity check the @mp_wake
-+	 * entry.  'sizeof (struct acpi_madt_multiproc_wakeup)' can be larger
-+	 * than the actual size of the MP wakeup entry in ACPI table because the
-+	 * 'reset_vector' is only available in the V1 MP wakeup structure.
-+	 */
-+	if (!mp_wake)
-+		return -EINVAL;
-+	if (end - (unsigned long)mp_wake < ACPI_MADT_MP_WAKEUP_SIZE_V0)
-+		return -EINVAL;
-+	if (mp_wake->header.length < ACPI_MADT_MP_WAKEUP_SIZE_V0)
- 		return -EINVAL;
- 
- 	acpi_table_print_madt_entry(&header->common);
- 
- 	acpi_mp_wake_mailbox_paddr = mp_wake->mailbox_address;
- 
--	acpi_mp_disable_offlining(mp_wake);
-+	if (mp_wake->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1 &&
-+	    mp_wake->header.length >= ACPI_MADT_MP_WAKEUP_SIZE_V1) {
-+		if (acpi_mp_setup_reset(mp_wake->reset_vector)) {
-+			pr_warn("Failed to setup MADT reset vector\n");
-+			acpi_mp_disable_offlining(mp_wake);
-+		}
-+	} else {
-+		/*
-+		 * CPU offlining requires version 1 of the ACPI MADT wakeup
-+		 * structure.
-+		 */
-+		acpi_mp_disable_offlining(mp_wake);
-+	}
- 
- 	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
- 
-diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-index e1a395af7591..2aedda70ef88 100644
---- a/include/acpi/actbl2.h
-+++ b/include/acpi/actbl2.h
-@@ -1120,8 +1120,20 @@ struct acpi_madt_multiproc_wakeup {
- 	u16 version;
- 	u32 reserved;		/* reserved - must be zero */
- 	u64 mailbox_address;
-+	u64 reset_vector;
- };
- 
-+/* Values for Version field above */
-+
-+enum acpi_madt_multiproc_wakeup_version {
-+	ACPI_MADT_MP_WAKEUP_VERSION_NONE = 0,
-+	ACPI_MADT_MP_WAKEUP_VERSION_V1 = 1,
-+	ACPI_MADT_MP_WAKEUP_VERSION_RESERVED = 2, /* 2 and greater are reserved */
-+};
-+
-+#define ACPI_MADT_MP_WAKEUP_SIZE_V0	16
-+#define ACPI_MADT_MP_WAKEUP_SIZE_V1	24
-+
- #define ACPI_MULTIPROC_WAKEUP_MB_OS_SIZE        2032
- #define ACPI_MULTIPROC_WAKEUP_MB_FIRMWARE_SIZE  2048
- 
-@@ -1134,7 +1146,8 @@ struct acpi_madt_multiproc_wakeup_mailbox {
- 	u8 reserved_firmware[ACPI_MULTIPROC_WAKEUP_MB_FIRMWARE_SIZE];	/* reserved for firmware use */
- };
- 
--#define ACPI_MP_WAKE_COMMAND_WAKEUP    1
-+#define ACPI_MP_WAKE_COMMAND_WAKEUP	1
-+#define ACPI_MP_WAKE_COMMAND_TEST	2
- 
- /* 17: CPU Core Interrupt Controller (ACPI 6.5) */
- 
--- 
-2.43.0
-
+> +	job->thread_fn(job->start, job->start + job->size, job->fn_arg);
+> +}
+> +#endif
+> +
+>  #endif
+> -- 
+> 2.20.1
+> 
