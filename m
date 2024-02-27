@@ -1,99 +1,89 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EAF1BC40
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A681EA6E
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709000598; cv=none; b=tNrUkv23kPXza44dP3Bz6vz3tiIcIbrD6mMNOeqpEPVTV6gH+Ne8GL4/W2nSPk1aWu0muMYabe8T+WgxztDEm3sciKwgunuyQQAy5/f/5QIuAy3s/wWaQxMhbfV6YbrotfA8A1fwix6AR4ZJBjBBK/aCLf/6AsJqPAHfOMSjIus=
+	t=1709000604; cv=none; b=AOros9TNJQxgkXbQwPThbDSNKGwtpYkBI0A5fjjIgEDbWp6dphsjk2pjGd2sVg6NUlyoqcBFZGnxoWYp52+DocE4XtO/B1pkHtv21qEjuiGYIGb3ILduaSJt2xEvN4HQWwi2YJDcMUOw7Nkc0KBycmBQTxE+mg1tj8Gf6JdqFUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709000598; c=relaxed/simple;
-	bh=lj+342i91tukvDJc+7mQyuceOT3OFF987/6AJGtJA74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vDWCT+VvqKZ9KTZMQYPe/5vC5BKq/sgx4skyJFTLxAV5BHDfyQSbWwOHxhLfaMtAO+LLsaVODhQm386lNcZhOQDxmwknPdoXxinXt/kBuODOg6Z4fp7wVmZTFjvzWWvmOkLMEXpEa2a7bZUET1GaHxTxCq7Lsda6Kb8ok8EiIXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=B+93MRha; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B+93MRha"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dc49b00bdbso32633635ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 18:23:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709000596; x=1709605396; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=memibgJZNOyBXI4CIvwtBXRp9WBttR7QAtL1A6J1jew=;
-        b=B+93MRhafM3EcMzEgLJ2NrnA/NK+cO99KuZuBDVrK+lYY7WHQuw2ynskWHA9W27/yy
-         jrRdW+7LoCjBP448TErolBOSSL/H1RxM7t8UbTszbeZFeB3x6vOrkZ6KBny6O2KpQRB4
-         DeRUBKRg6cUUa5d1nB2tFG+31Q2FfQGs5h6Hw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709000596; x=1709605396;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=memibgJZNOyBXI4CIvwtBXRp9WBttR7QAtL1A6J1jew=;
-        b=rCPG6kztOdT4XfBwgnWjWZ7voeijpC8IaWXo2Jg8wvg8B1Zqa4Q35x6OqufYqJ8Zj4
-         2TayPARaWMlrlSQ6v/JhZW0pU40jFB1gzbZToOnOPLGQ1Xb9Iw6x5eBKwuB1rslrgwIo
-         yW+JWVt0iaYgTLDwP0TRjqS2VJfzg4kbT48Whv9EhT50B8wzFws6phzGJiOSLzqWDelu
-         MWKogkKkpHB65rvZ5PNBCdutfZFtS4QMxRD3VzrQZEN9hBOKAPB5fip/R3V2MxzDpdVj
-         tDioHafGYLr1Z1aG2h6rqPFfyIRRCwSPGrRFDQuviHe7LAcHmdfJc71HVEVtkVhsXJPn
-         Wz3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVuz2+UxqfWHBAjAMCJmnGnsdXnlSoTyczb4bF8MJ40/t1rcvm/cFNTo8O+yNWwL8pZcpdR37EJq1ge8uJpvkiPaH6YzUKWXDCUs1a0
-X-Gm-Message-State: AOJu0Yxrsu/ifXpaZT0PNHqQcECWc6YiNfREQPsHF7biqw3fhBuil2aT
-	nJEA4zZcXfX9tE4itd1XfHyCj757SCCVjWHa3464nwc3d5ktxpF901Iw13IRPPhbDHdfA1KDBXU
-	=
-X-Google-Smtp-Source: AGHT+IFplsJJIA7+1tesLzAlhF8/AJorGVOwn8v8Uyrd5ZzwmXskYJ3krHczx70GyhRbNqa7HaaPyg==
-X-Received: by 2002:a17:902:f542:b0:1dc:a40c:31c6 with SMTP id h2-20020a170902f54200b001dca40c31c6mr4656751plf.25.1709000596048;
-        Mon, 26 Feb 2024 18:23:16 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id mn12-20020a1709030a4c00b001dca6d1d574sm343800plb.302.2024.02.26.18.23.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 18:23:15 -0800 (PST)
-Date: Mon, 26 Feb 2024 18:23:15 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Jan Bujak <j@exia.io>
-Cc: Pedro Falcato <pedro.falcato@gmail.com>, ebiederm@xmission.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: Recent-ish changes in binfmt_elf made my program segfault
-Message-ID: <202402261821.F2812C9475@keescook>
-References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
- <CAKbZUD2=W0Ng=rFVDn3UwSxtGQ5c13tRwkpqm54pPCJO0BraWA@mail.gmail.com>
- <f2ee9602-0a32-4f0c-a69b-274916abe27f@exia.io>
+	s=arc-20240116; t=1709000604; c=relaxed/simple;
+	bh=xwcfyNthPN1RaCRQZcjS0Np3XzkQ2lmusAvZoIpRo/Y=;
+	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=e5WRRnEdUtcdWTWrM9x5B5uuTWY8geYM9+nOKO+EniwsDbGpfT4ybqThsvjKaju56dBJkrrkhX8X3yz7qjAOD3cERIH/KD5DQEEnCMIvNvArzAk8yfesC/rIjyisTz9Xq/uCVSOebznNY/fCo4Cct+6ehWKl4ugkHTtOA794z18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TkLnY2Rb2z2Bdhq;
+	Tue, 27 Feb 2024 10:21:05 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 294F4180060;
+	Tue, 27 Feb 2024 10:23:19 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 27 Feb 2024 10:23:18 +0800
+Subject: Re: [PATCH] mtd: ubi: fix NVMEM over UBI volumes on 32-bit systems
+To: Daniel Golle <daniel@makrotopia.org>, Richard Weinberger <richard@nod.at>,
+	Miquel Raynal <miquel.raynal@bootlin.com>, Vignesh Raghavendra
+	<vigneshr@ti.com>, <linux-mtd@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+References: <186fa96ae25f7033ff8b6f0f7fcfb1e602f556fc.1708971705.git.daniel@makrotopia.org>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <ab2b4573-58ce-d895-0aae-69e3647e0a68@huawei.com>
+Date: Tue, 27 Feb 2024 10:23:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f2ee9602-0a32-4f0c-a69b-274916abe27f@exia.io>
+In-Reply-To: <186fa96ae25f7033ff8b6f0f7fcfb1e602f556fc.1708971705.git.daniel@makrotopia.org>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-On Tue, Jan 23, 2024 at 12:23:27AM +0900, Jan Bujak wrote:
-> On 1/22/24 23:54, Pedro Falcato wrote:
-> > Hi!
-> > 
-> > Where did you get that linker script?
-> > 
-> > FWIW, I catched this possible issue in review, and this was already
-> > discussed (see my email and Eric's reply):
-> > https://lore.kernel.org/all/CAKbZUD3E2if8Sncy+M2YKncc_Zh08-86W6U5wR0ZMazShxbHHA@mail.gmail.com/
-> > 
-> > This was my original testcase
-> > (https://github.com/heatd/elf-bug-questionmark), which convinced the
-> > loader to map .data over a cleared .bss. Your bug seems similar, but
-> > does the inverse: maps .bss over .data.
-> > 
+ÔÚ 2024/2/27 2:23, Daniel Golle Ð´µÀ:
+> A compiler warning related to sizeof(int) != 8 when calling do_div()
+> is triggered when building on 32-bit platforms.
+> Address this by using integer types having a well-defined size where
+> appropriate.
 > 
-> I wrote the linker script myself from scratch.
+> Fixes: 3ce485803da1 ("mtd: ubi: provide NVMEM layer over UBI volumes")
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+>   drivers/mtd/ubi/nvmem.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/ubi/nvmem.c b/drivers/mtd/ubi/nvmem.c
+> index b7a93c495d172..5820a170d2512 100644
+> --- a/drivers/mtd/ubi/nvmem.c
+> +++ b/drivers/mtd/ubi/nvmem.c
+> @@ -23,14 +23,17 @@ struct ubi_nvmem {
+>   static int ubi_nvmem_reg_read(void *priv, unsigned int from,
+>   			      void *val, size_t bytes)
+>   {
+> -	int err = 0, lnum = from, offs, bytes_left = bytes, to_read;
+> +	uint32_t bytes_left, offs, to_read;
+>   	struct ubi_nvmem *unv = priv;
+>   	struct ubi_volume_desc *desc;
+> +	uint64_t lnum = from;
+> +	int err = 0;
+>   
+>   	desc = ubi_open_volume(unv->ubi_num, unv->vol_id, UBI_READONLY);
+>   	if (IS_ERR(desc))
+>   		return PTR_ERR(desc);
+>   
+> +	bytes_left = bytes;
+The 'bytes' is a size_t type, which has 64 bits on 64-bit platforms. 
+This assignment will lead a type truncation, so should we add a explicit 
+type conversion here to avoid compiler warning?
+>   	offs = do_div(lnum, unv->usable_leb_size);
+>   	while (bytes_left) {
+>   		to_read = unv->usable_leb_size - offs;
+> 
 
-Do you still need this addressed, or have you been able to adjust the
-linker script? (I ask to try to assess the priority of needing to fix
-this behavior change...)
-
--Kees
-
--- 
-Kees Cook
