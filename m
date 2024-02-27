@@ -1,59 +1,78 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4949137C21
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFC0137C4D;
+	Tue, 27 Feb 2024 10:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709028766; cv=none; b=Kj3DAkTiy9eR1siyWgQYNWlPFT5Do8TxCQswRtnHnu1X+ALaWJ+Tnhnv9+ZlE52uduHUQOmbh6v8exbj2eDOoSe7xIPlii+UhXFGg15TFKkdEIm9GEW/ByONLTK8OIEzL7ix6tPNQ5AklqOvz2rGRmqc7BP5bfexVWJjCaeExUE=
+	t=1709029054; cv=none; b=MH2rAUbnnLFDJeGWicsWypl47ExQJFrR9qHNdpwHYt9v6j/0KLsA3mb18tZjpsXQRHDrstFsHJZCtnGo9PwlD0ywwxUg+AJ+IoCwmC9wWq3JeBIWTwprA4P/V6ABiahd6MFX5jeu9L+/1s9gHGO58HdMCYxT50ec5FR3gHZ1O/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709028766; c=relaxed/simple;
-	bh=RPCuL5Zw1DFBhHuejMGcZGxtCQR3v1sWQkrzuFlOItw=;
+	s=arc-20240116; t=1709029054; c=relaxed/simple;
+	bh=uAT8fOjHimP1s8p52C/iiBFIjHSNXhLdNgmVkCGq/SM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VQD5+qM1Lj3D//0Za64tf5ZlhlksBZht0YH+zbDP5bWk4RL9MNs3N4aPGTxjof/m9JBxc0FwKZpcabe9xCfcjMzqMRysMIZkBEcWfnxHOBVdwIpAUgwW2lbNJTaADfEHFxBQhqN2cpC2vCX0I6dSFQOxXr+pZ205Br0c9P6CclU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kB89Gxti; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=Fab0nSI6baoxsnA61c8VS4+Ha5fAz8vazIgc+7wtxItlJv6fewEGlQJVF0LYEr5m3DHIPHj9Mr86txP2ncy/ASAmJ1KRg2mCrAHmrZdstr5YnMwxkqt6VkvDm8GDtUd1Tbw5jbmPNZ3t4yN3ULu0/np7kV2jracaXCLI4ECF1nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YYsNtmEp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2SXuPYm8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YYsNtmEp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2SXuPYm8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kB89Gxti"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-513031cff23so757345e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:12:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709028763; x=1709633563; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xdcTuKOvy0EUhMzr/avSzwKVXZwTIOQgOR4V6+G/+Rk=;
-        b=kB89Gxtic681XuWzwVRiaaSR5JV8/Qh2YIUtDwLeVvGUBCgYgCZ//l9iHV28/FaGyK
-         wlLB61x0NGBDbnOaDyRd486jCLFfRX4cxHpsgt6qzC+MttknQMEUbY91AFLtbikTOrYI
-         EXXldOwRk67Jj4PTBp7vd1VMNrmqmGyy6BwGdWxqDaLogzQXlDyFvKlbQ8HqVL9Xg6N+
-         5QUesUgq7ycp6M3gKV5CrKzNuTmNXc40J8AGdjBd3KgY4RuVVk/J2HlRIolpPLpu/a9/
-         OWvAZRdEn6lP/7M8C4syQV9AJ7a/dS/PJW3tC4MYfV6EXK2x/O7zktC2EQCA7hNIQbYO
-         86xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709028763; x=1709633563;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xdcTuKOvy0EUhMzr/avSzwKVXZwTIOQgOR4V6+G/+Rk=;
-        b=wZ4QbRC6WUAJjbfQbqSMJm0tTP4aO9VPdEmmHG4GYo6HPpsSO/YP8XRA3+pKSNGK+Y
-         P3c2h118J8tw3XK5Y83lFzE3GT7l/WpM/RqbwJTdBQenUWZbtFcRi8wcaUxjje0R6ee8
-         5miqpmlOo6st+ndSz3D48KttuZ4CNZ0it5ZhYs2VvwT2fTAL6b0WR6jz9qgfzSy1NleY
-         4ONf9imPLhbaESIKonf683SsvQsKPpa2CepSCeNMjlVX6IkSBSiK1cS2ubaKurGKmdTv
-         B8ttX9eX860yooAz9ToMhPC4uzi4cykUtlgNvq5YSSPPTCgbY0zW3n6K4nMr7Dobx9LR
-         dQCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQj9eCdKSbs8JEX8mGc07TxR7YVMEE4JJHtEAHu25uFnx7UdjrXpjJl6YFZkBm1ZRST84qaHBYcE3zoGH93nP2SDGuoMHVj1gNUk5N
-X-Gm-Message-State: AOJu0YxT2XLvtHvkVAL30UaKvovuvqSNvI+ZZCasO960yHJv3ZodYEjM
-	koCiiiO9W/LOlC2QB2zVvPOF6gy3s49XVaXMM3YGTtFOOCQ3rQRTIiXoiFRCcRs=
-X-Google-Smtp-Source: AGHT+IEuX+LAvgGR0dujrY6Se1xlvX+40UrwavICTj8b1/cNQL1xPoiOn1bdI5jJdrL4sEXbMeapyQ==
-X-Received: by 2002:a05:6512:11cf:b0:512:f389:d6e0 with SMTP id h15-20020a05651211cf00b00512f389d6e0mr2702097lfr.4.1709028763072;
-        Tue, 27 Feb 2024 02:12:43 -0800 (PST)
-Received: from [172.30.204.241] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id x18-20020ac24892000000b005128d0e2a07sm1136919lfc.308.2024.02.27.02.12.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 02:12:42 -0800 (PST)
-Message-ID: <f5b373cf-79fb-4d62-9d3f-9a9ffbfb5d8a@linaro.org>
-Date: Tue, 27 Feb 2024 11:12:37 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YYsNtmEp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2SXuPYm8";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YYsNtmEp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2SXuPYm8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7A41F22722;
+	Tue, 27 Feb 2024 10:17:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1709029050; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CWojS/ZBMHmeYzh+o2egixF9yHAOBC8s1LHQ5pVRk5E=;
+	b=YYsNtmEpB6yRtMeGZZynoZ9Gj6zOZN0ULuXprkdjnd3ebaDESlEU2nLaRURpU8A+daBzAj
+	q5qsf17lVyVqjSa9FjAf9H7PJ0EsGhR3WKCEVnnJptbgqi/r1Loqr9T7gw3THvUs+fzbz/
+	VcQDuFxYk7woWEtGLS3UcznYheAjCKY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1709029050;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CWojS/ZBMHmeYzh+o2egixF9yHAOBC8s1LHQ5pVRk5E=;
+	b=2SXuPYm80fYChAQrn/4DmTfrCVV9IvIAJ/vSXwLtFn07gSD61WET7VJEU8BHJ+hWwQda1g
+	PUlKDb6Vwsq+CuAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1709029050; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CWojS/ZBMHmeYzh+o2egixF9yHAOBC8s1LHQ5pVRk5E=;
+	b=YYsNtmEpB6yRtMeGZZynoZ9Gj6zOZN0ULuXprkdjnd3ebaDESlEU2nLaRURpU8A+daBzAj
+	q5qsf17lVyVqjSa9FjAf9H7PJ0EsGhR3WKCEVnnJptbgqi/r1Loqr9T7gw3THvUs+fzbz/
+	VcQDuFxYk7woWEtGLS3UcznYheAjCKY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1709029050;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CWojS/ZBMHmeYzh+o2egixF9yHAOBC8s1LHQ5pVRk5E=;
+	b=2SXuPYm80fYChAQrn/4DmTfrCVV9IvIAJ/vSXwLtFn07gSD61WET7VJEU8BHJ+hWwQda1g
+	PUlKDb6Vwsq+CuAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2F5E913A65;
+	Tue, 27 Feb 2024 10:17:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oUVMCrq23WXqfQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 27 Feb 2024 10:17:30 +0000
+Message-ID: <49c33680-2a08-4d59-86ba-72f8850099a5@suse.cz>
+Date: Tue, 27 Feb 2024 11:18:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,45 +80,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] A702 support
-To: Will Deacon <will@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Clark <robdclark@gmail.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org
-References: <20240219-topic-rb1_gpu-v2-0-2d3d6a0db040@linaro.org>
- <20240227101055.GA13753@willie-the-truck>
+Subject: Re: [PATCH v4 20/36] mm/page_ext: enable early_page_ext when
+ CONFIG_MEM_ALLOC_PROFILING_DEBUG=y
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240227101055.GA13753@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, hannes@cmpxchg.org,
+ roman.gushchin@linux.dev, mgorman@suse.de, dave@stgolabs.net,
+ willy@infradead.org, liam.howlett@oracle.com,
+ penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com,
+ peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com,
+ dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com,
+ david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+ nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev,
+ rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com,
+ yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com,
+ hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org,
+ ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org,
+ ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
+ iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
+ elver@google.com, dvyukov@google.com, shakeelb@google.com,
+ songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com,
+ minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
+ cgroups@vger.kernel.org
+References: <20240221194052.927623-1-surenb@google.com>
+ <20240221194052.927623-21-surenb@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20240221194052.927623-21-surenb@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -0.09
+X-Spamd-Result: default: False [-0.09 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 XM_UA_NO_VERSION(0.01)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 BAYES_HAM(-0.30)[75.07%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_GT_50(0.00)[74];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux.dev,suse.com,cmpxchg.org,suse.de,stgolabs.net,infradead.org,oracle.com,i-love.sakura.ne.jp,lwn.net,manifault.com,redhat.com,arm.com,kernel.org,arndb.de,linutronix.de,linux.intel.com,kernel.dk,soleen.com,google.com,gmail.com,chromium.org,linuxfoundation.org,linaro.org,goodmis.org,linux.com,lge.com,bytedance.com,akamai.com,android.com,vger.kernel.org,lists.linux.dev,kvack.org,googlegroups.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
 
-
-
-On 2/27/24 11:10, Will Deacon wrote:
-> On Fri, Feb 23, 2024 at 10:21:36PM +0100, Konrad Dybcio wrote:
->> Bit of a megaseries, bunched together for your testing convenience..
->> Needs mesa!27665 [1] on the userland part, kmscube happily spins.
->>
->> I'm feeling quite lukewarm about the memory barriers in patch 3..
->>
->> Patch 1 for Will/smmu, 5-6 for drm/msm, rest for qcom
+On 2/21/24 20:40, Suren Baghdasaryan wrote:
+> For all page allocations to be tagged, page_ext has to be initialized
+> before the first page allocation. Early tasks allocate their stacks
+> using page allocator before alloc_node_page_ext() initializes page_ext
+> area, unless early_page_ext is enabled. Therefore these allocations will
+> generate a warning when CONFIG_MEM_ALLOC_PROFILING_DEBUG is enabled.
+> Enable early_page_ext whenever CONFIG_MEM_ALLOC_PROFILING_DEBUG=y to
+> ensure page_ext initialization prior to any page allocation. This will
+> have all the negative effects associated with early_page_ext, such as
+> possible longer boot time, therefore we enable it only when debugging
+> with CONFIG_MEM_ALLOC_PROFILING_DEBUG enabled and not universally for
+> CONFIG_MEM_ALLOC_PROFILING.
 > 
-> I'm guessing you don't really expect me to take the clock bindings?!
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 
-Sorry, I didn't remove this hunk from v1 (where it was smmu changes
-that you already took)!
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Konrad
+> ---
+>  mm/page_ext.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/mm/page_ext.c b/mm/page_ext.c
+> index 3c58fe8a24df..e7d8f1a5589e 100644
+> --- a/mm/page_ext.c
+> +++ b/mm/page_ext.c
+> @@ -95,7 +95,16 @@ unsigned long page_ext_size;
+>  
+>  static unsigned long total_usage;
+>  
+> +#ifdef CONFIG_MEM_ALLOC_PROFILING_DEBUG
+> +/*
+> + * To ensure correct allocation tagging for pages, page_ext should be available
+> + * before the first page allocation. Otherwise early task stacks will be
+> + * allocated before page_ext initialization and missing tags will be flagged.
+> + */
+> +bool early_page_ext __meminitdata = true;
+> +#else
+>  bool early_page_ext __meminitdata;
+> +#endif
+>  static int __init setup_early_page_ext(char *str)
+>  {
+>  	early_page_ext = true;
