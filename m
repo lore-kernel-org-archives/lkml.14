@@ -1,98 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0F42032D;
-	Tue, 27 Feb 2024 16:40:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BFA4EB34;
+	Tue, 27 Feb 2024 16:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709052029; cv=none; b=tJo7DQJgx2xcnMa0GctEF2Su1Rhl18lCir/tTK+/bMLwcLM/iVmPUUDztSJ4/THDvHa4qIAup/En+NEzODboRul15MeQuy3skkO5HamXACh9huMFMZI0F598NgxUl9tmSbxZfizv6zKdbzKx7H3GKEtnk84ihSOpwut/kUri9JI=
+	t=1709052042; cv=none; b=UA5JqnJeDrQsA6EkkEuzswBYN0HZ+O4fPayx05Igpwg2vg8ABZHPJB+mepx6aTQb+6p7mnPfOe07pm/hIlqpyiMKZet9fMr6oem4bfOxFUZ/sojuuQ8FdX4a9wPSoFGbWL3AoUcSokp41KYG9cwIrmyUoU/X6CYQCJrxSXsnT9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709052029; c=relaxed/simple;
-	bh=lyJEfgXF40+Zl2Lt0OH31UrkHavvA/lS30Emq/LKxrQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=OGCqw8esP5X/xlhF87PGk3nlxtzHrDHOqjenP0M5iA7Rt2oNdIBiVkbyCSxoeyxQ9kZTin6G+p5sp57QVG2lR2jjRxP2+1CB6eSoOrLm0brYAALe19spXjhTpVvVJMJQ034+v+pbeojhIg8uUbyYEtLmvQN7VLglZpngUhnChow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1hOr4QW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709052042; c=relaxed/simple;
+	bh=HIakpDWozBMuOguxGlB8/IWi2fuUJlBZQtFYT81dH88=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=TVTOvuGZO+HZ29WQtLwqyEbkci+lUkDBley5Xwfhn88nbxY57ugYwdUs21LqrFUgBPysYsyNL9rwm06+AbYSRxqZ/cCV9a4qgq8bsK4iwf97xIFeDZNM76f2VuhXpz8ZMnPq4LvonRqHDkN+Dbb4sE6NSlJNgIXncjCNe/juH6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpphTSnT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1hOr4QW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B4FB1C43394;
-	Tue, 27 Feb 2024 16:40:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpphTSnT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77AD7C433C7;
+	Tue, 27 Feb 2024 16:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709052028;
-	bh=lyJEfgXF40+Zl2Lt0OH31UrkHavvA/lS30Emq/LKxrQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=r1hOr4QWlD6HELxjz6BMcjfJ0DZv2eLIv9AxyL167YHDCm1ix1f6HF1tzUpsVG6pa
-	 KclvtSy+35RrcGnopBuTZIjPdMh9VBi/bGAfxFvfqEx9782HRsAHdxW3qTrbuyrmWq
-	 ByCWuXG9E2HK1M3Ux7zFRlXUZBUDjDS+PJclF3NewBwSblsUDrLd1b9zJWKrxdqGON
-	 Tc1TlSQoVzP4bkY2MyKhJuicbqNMgNQgPtg3H0ySqG2MLtCYlXxX5/bvarShQlzaEy
-	 eFLQVWzhOdIfTsKT6AOtzncQxwR3ZdCT6Z9/ESYYJQSH9upVo0WeqmNOuYBpyRzU4E
-	 pMwRgO6OtAJpQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9676ED84BC5;
-	Tue, 27 Feb 2024 16:40:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1709052041;
+	bh=HIakpDWozBMuOguxGlB8/IWi2fuUJlBZQtFYT81dH88=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=bpphTSnTg/V43P9LN4bQEQQs0ghOxW5kq6M9KogBQzu2uFu/QNmcR9iAKAZ9x17jH
+	 Bxz8FIDFd2aZwPBPskBihQV8EJZzgJOmuXsVeTH63+c3SljZIA8/vOcu+rwtGkkG1h
+	 AbX5uMltxZ4H7wN834vYBq9tOCWmNzXIheROk19KdKwfMHOxyAccvR+4b2QGnEhTRY
+	 3SwbQPtRSuixNoAQ8L/OzJm109kauWw+C/ZTQ8JUsfFZ8pyJoNqZfnhOH58Hykyhv3
+	 TDMaKNfjUeIAxuChjxyUfvwg2Z3T62UKVg3tFk06E08ruSAcz+y/pr6c2Suyw3kOMF
+	 kiTL87jTWVOmg==
+Date: Tue, 27 Feb 2024 17:40:42 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Max Staudt <max@enpas.org>
+cc: Roderick Colenbrander <roderick.colenbrander@sony.com>, 
+    Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+    linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] HID: playstation: DS4: LED bugfix, third-party
+ gamepad support
+In-Reply-To: <20240207163647.15792-1-max@enpas.org>
+Message-ID: <nycvar.YFH.7.76.2402271740260.21798@cbobk.fhfr.pm>
+References: <20240207163647.15792-1-max@enpas.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] bnxt_en: fix accessing vnic_info before allocating
- it
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170905202861.21868.12725398276813095379.git-patchwork-notify@kernel.org>
-Date: Tue, 27 Feb 2024 16:40:28 +0000
-References: <20240226144911.1297336-1-aleksander.lobakin@intel.com>
-In-Reply-To: <20240226144911.1297336-1-aleksander.lobakin@intel.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, michael.chan@broadcom.com, somnath.kotur@broadcom.com,
- pavan.chebbi@broadcom.com, kalesh-anakkur.purayil@broadcom.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
 
-Hello:
+On Thu, 8 Feb 2024, Max Staudt wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Mon, 26 Feb 2024 15:49:11 +0100 you wrote:
-> bnxt_alloc_mem() dereferences ::vnic_info in the variable declaration
-> block, but allocates it much later. As a result, the following crash
-> happens on my setup:
+> Dear hid-playstation maintainers,
 > 
->  BUG: kernel NULL pointer dereference, address: 0000000000000090
->  fbcon: Taking over console
->  #PF: supervisor write access in kernel mode
->  #PF: error_code (0x0002) - not-present page
->  PGD 12f382067 P4D 0
->  Oops: 8002 [#1] PREEMPT SMP NOPTI
->  CPU: 47 PID: 2516 Comm: NetworkManager Not tainted 6.8.0-rc5-libeth+ #49
->  Hardware name: Intel Corporation M50CYP2SBSTD/M58CYP2SBSTD, BIOS SE5C620.86B.01.01.0088.2305172341 05/17/2023
->  RIP: 0010:bnxt_alloc_mem+0x1609/0x1910 [bnxt_en]
->  Code: 81 c8 48 83 c8 08 31 c9 e9 d7 fe ff ff c7 44 24 Oc 00 00 00 00 49 89 d5 e9 2d fe ff ff 41 89 c6 e9 88 00 00 00 48 8b 44 24 50 <80> 88 90 00 00 00 Od 8b 43 74 a8 02 75 1e f6 83 14 02 00 00 80 74
->  RSP: 0018:ff3f25580f3432c8 EFLAGS: 00010246
->  RAX: 0000000000000000 RBX: ff15a5cfc45249e0 RCX: 0000002079777000
->  RDX: ff15a5dfb9767000 RSI: 0000000000000000 RDI: 0000000000000000
->  RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
->  R10: ff15a5dfb9777000 R11: ffffff8000000000 R12: 0000000000000000
->  R13: 0000000000000000 R14: 0000000000000020 R15: ff15a5cfce34f540
->  FS:  000007fb9a160500(0000) GS:ff15a5dfbefc0000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CRO: 0000000080050033
->  CR2: 0000000000000090 CR3: 0000000109efc00Z CR4: 0000000000771ef0
->  DR0: 0000000000000000 DR1: 0000000000000000 DRZ: 0000000000000000
->  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->  PKRU: 55555554
+> Here is v2 of my patch series, with the discussed changes.
 > 
-> [...]
+> 
+> Differences since v1:
+>  - Dropped patch for 7545:0104 (SZ-MYPOWER controllers)
+>  - Dropped patch for DS4 clones without a MAC address on USB
+>  - Changed hid_err() to hid_warn() where things are no longer fatal
+>  - Simplified goto as return in minimal report parsing
+> 
+> 
+> I've included the patch to simplify the PID/VID mapping to controller
+> types, since the previous discussion made it sound useful for future
+> support of second-party controllers. Please feel free to drop it if you
+> don't think it's relevant now.
+> 
+> 
+> Thanks for your feedback!
+> 
+> Max
+> 
+> 
+> Patches in this series:
+>   [PATCH v2 1/5] HID: playstation: DS4: Fix LED blinking
+>   [PATCH v2 2/5] HID: playstation: DS4: Don't fail on FW/HW version
+>   [PATCH v2 3/5] HID: playstation: DS4: Don't fail on calibration data
+>   [PATCH v2 4/5] HID: playstation: DS4: Parse minimal report 0x01
+>   [PATCH v2 5/5] HID: playstation: Simplify device type ID
 
-Here is the summary with links:
-  - [net-next] bnxt_en: fix accessing vnic_info before allocating it
-    https://git.kernel.org/netdev/net-next/c/c4b04a802d8e
+Roderick, any word on this series please?
 
-You are awesome, thank you!
+Thanks,
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Jiri Kosina
+SUSE Labs
 
