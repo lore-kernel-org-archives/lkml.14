@@ -1,193 +1,230 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C621DA4D
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1901C697;
+	Tue, 27 Feb 2024 16:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709051552; cv=none; b=FXi8RAIzR291NHWI30LAMtQUkRI7xt5u3JxrQDpifxfmorg1wlxBu06uuixL68megobHlgZ1icrM+4X2sW4XSzV9IJIBhXNDYOnx0q1qsOnk+jZtHfx+8iGrPie4RMmWiEVjZ897KToUg59zLI+o5zW1hoSlYclELLcBOxNCQko=
+	t=1709051578; cv=none; b=FYmXWaZ0T1gk7WG40K1CY5r0vfFvPuylWriMLZMO2f09Esd6rkjjqxNMczj4BagKgGgDsG+iJ1x2LjabZPZjMK/FYeIWB2SSCoVuONZXgla8za9va+x68HY2AR09MwY2xKSCfYdMWt17J1IqhOkITWAe1ceDcY49jK/vnlwu5j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709051552; c=relaxed/simple;
-	bh=VwaM4TGE7WzbXuL2owqLIfl8UDopXMwoZLqlae/zpt4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=pSk4MqxKEwHegef3xvpCSZm3+XgEul2GyI2s7KOv+gm6BdrGGGqYMp/dWfM5UHIIUDUayOKLgrQjZiZNf7JkcjRlFzKSnz9GFK3XFhhGu/zJVoDkjFZlkfHx3kO42wDqdY0/2G1M9YJ1Mr1G7kdlmORrUUGmJnssMJA6OKWXb3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zwGig5jZ; arc=none smtp.client-ip=209.85.218.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
+	s=arc-20240116; t=1709051578; c=relaxed/simple;
+	bh=t9pqBmZVkQ/Fpn1eD9/FTS+0fHOWuP1ehf9RwlvwGww=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lUwaLnQvEjKIimabc0F6j/NhuSsoCnobCWPbNppn7DQCw3ufTLsbR1j7aBsvfGxaTQ1VKm+/P7MafpJg3tGJV9IvM57rfPQAWnR7toQCUKxvCp4zf84+MYKCsnUSWREtfz/J/YxXH+AC61uWnMh6yi4pGyEPL02BtMGkWT5bNIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R0+sMRFv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mfiDY1/j; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zwGig5jZ"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-a3fb52f121eso225399666b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:32:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709051548; x=1709656348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oGLM6msTnPiYGE047U6w31wTMpGKpq/ku8c4CLDd44M=;
-        b=zwGig5jZorXZGIC12BzDvn5cDFT7Z9W/cCQkpirwon1zXRWMFBExID67fTwyAe8w5E
-         dZ46uC2JK5F0o8MufLNukhcsWvHj2tPPaHLmKZXMS1smYppF6JU/E338pCMwkies+2c8
-         K8hofQSFfPDa1VTGSXJXXomiVtZzZjk9clYRBLq7SqhZl/udxtZD+xsOhYIcEbScZKr4
-         Zb50je3XZ2lIfPpLbjyYGHyM0v9MQxBpRgFmdagmCWmCz94Blj+gywvMEAlY0ilaQvcm
-         YgblPRsWv2z4fQEKBozUFz++qGwZle5bvlwfmE2kOlMMufTcPW0UWJd74zAHhfxXP3O5
-         QoTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709051548; x=1709656348;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oGLM6msTnPiYGE047U6w31wTMpGKpq/ku8c4CLDd44M=;
-        b=Yd2G/Vhd4+p+TZG6AO3r46m6vXbaOEn6X6+ZOG6XWITuTR0a9bsb9pb7h7kbDTouKS
-         8JeDgDwiDjl9W3kWi3qMFI2U+Pb0jk/WbtHhfceOOki4ogltWzUmC8MMTy25NTa1s/61
-         HmPHh8x9ibManbnEk4udRLb7fgIznFmcp5HJd7VHg2ObyRA3CDS5MhR2tymYeSxOqbmA
-         7mrGmXjn689WwBWK1tTRJzES39zZof5hwIAD44GQJg7BX7s8VWZo68V/6X/N/WFwIAmn
-         4S+XKNx4HZRjQEfQ3sfCcqcov6Mg+boQ3/8rFV+ImuEsf5O+NvQQ825boWL76q4w+dtt
-         kNUg==
-X-Forwarded-Encrypted: i=1; AJvYcCXhLvxebwmvNzuYOdkeQKF9pq6RmB+6x148/L0hx0Z23FjtsNvB/nxWLFoYHpN7tlE0Mw/5z0M41Kfit0E2NTU+BAt+kJHD5HbmOX18
-X-Gm-Message-State: AOJu0Yw6bZQFHeuZcXyxtUwNOuaiqPrQYmc/kO2lTPLnUph8RqPqmhkx
-	qz1udGs2GPRnEBrtriNP4IJauGXSZ1C2APONlHodBe0AopH0AFkeRKo6bUCFxsBecDrKafesXWo
-	zrQ==
-X-Google-Smtp-Source: AGHT+IHxiYuri1W9KUnm7rvgXvnst0dfGu9BH35r2xYwG5xmzTBUc7nx+APscQ4Xryj8t9ypMETY6Vr2jqQ=
-X-Received: from sport.zrh.corp.google.com ([2a00:79e0:9d:4:a340:5a1b:3a37:50cc])
- (user=gnoack job=sendgmr) by 2002:a17:906:9c88:b0:a3e:81de:78c0 with SMTP id
- fj8-20020a1709069c8800b00a3e81de78c0mr31089ejc.3.1709051548382; Tue, 27 Feb
- 2024 08:32:28 -0800 (PST)
-Date: Tue, 27 Feb 2024 17:32:20 +0100
-In-Reply-To: <20240227110550.3702236-1-mic@digikod.net>
-Message-Id: <Zd4OlL1G3t1D3TgC@google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R0+sMRFv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mfiDY1/j"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1709051574;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SyV9bHeQYh2STSu1Aki+bC1PiR0RG4rZPyWUkh6MdoI=;
+	b=R0+sMRFv9b8X+E5PlHqAnffQ9ul2R0l+89oJsQQqPEMzobmGax2CGW1kgeoxp2g7FE7y/H
+	ZduHQ6oyjWkm9ZA5CLqotQqDCEtKhwhNagXbhtZj6x2P+eXwHgq8bn9YKdtPqmPMLZ9XkY
+	0M9kSqf3ORH7ZF9SDePLRmHMbqIQkX3kvhftVrbUGqMyDdK+NZuwrz7YR5i9fjoBUyHlEZ
+	SK+iNEKoWW3HFdwTwutyndjzwqx2Aso9GloWF+coyojZ7RwUTRw16z46SpvLt8Du7dXC26
+	ttqFrpCCC/bMioXhJFtXB4Q09O1kXf9MzyxWlYi+Q24GgLZuajw5i7BshrGUfw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1709051574;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SyV9bHeQYh2STSu1Aki+bC1PiR0RG4rZPyWUkh6MdoI=;
+	b=mfiDY1/jYFYVkT3N2Y3yq9fwkvbnzRzZ3jJHlKwl01nm/DAsIpCmKZZwXdjDRmVLCuGQl6
+	9QNGSBRBpVnBP7Cg==
+To: Xingyu Wu <xingyu.wu@starfivetech.com>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>, Emil Renner Berthing
+ <emil.renner.berthing@canonical.com>, Christophe JAILLET
+ <christophe.jaillet@wanadoo.fr>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Rob
+ Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, Walker
+ Chen <walker.chen@starfivetech.com>, Xingyu Wu
+ <xingyu.wu@starfivetech.com>, linux-kernel@vger.kernel.org, Conor Dooley
+ <conor@kernel.org>
+Subject: Re: [PATCH v8 2/3] clocksource: Add JH7110 timer driver
+In-Reply-To: <20231219145402.7879-3-xingyu.wu@starfivetech.com>
+References: <20231219145402.7879-1-xingyu.wu@starfivetech.com>
+ <20231219145402.7879-3-xingyu.wu@starfivetech.com>
+Date: Tue, 27 Feb 2024 17:32:54 +0100
+Message-ID: <877cipamvd.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240227110550.3702236-1-mic@digikod.net>
-Subject: Re: [PATCH v2 1/2] landlock: Extend documentation for kernel support
-From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
-To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
-Cc: Paul Moore <paul@paul-moore.com>, "Serge E . Hallyn" <serge@hallyn.com>, 
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Shervin Oloumi <enlightened@chromium.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, Feb 27, 2024 at 12:05:49PM +0100, Micka=C3=ABl Sala=C3=BCn wrote:
-> Extend the kernel support section with one subsection for build time
-> configuration and another for boot time configuration.
->=20
-> Extend the boot time subsection with a concrete example.
->=20
-> Update the journalctl command to include the boot option.
->=20
-> Cc: G=C3=BCnther Noack <gnoack@google.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> ---
->=20
-> Changes since v1:
-> * New patch, suggested by Kees Cook.
-> ---
->  Documentation/userspace-api/landlock.rst | 57 +++++++++++++++++++++---
->  1 file changed, 51 insertions(+), 6 deletions(-)
->=20
-> diff --git a/Documentation/userspace-api/landlock.rst b/Documentation/use=
-rspace-api/landlock.rst
-> index 2e3822677061..838cc27db232 100644
-> --- a/Documentation/userspace-api/landlock.rst
-> +++ b/Documentation/userspace-api/landlock.rst
-> +Boot time configuration
-> +-----------------------
+On Tue, Dec 19 2023 at 22:54, Xingyu Wu wrote:
 > +
->  If the running kernel does not have ``landlock`` in ``CONFIG_LSM``, then=
- we can
-> -still enable it by adding ``lsm=3Dlandlock,[...]`` to
-> +enable Landlock by adding ``lsm=3Dlandlock,[...]`` to
->  Documentation/admin-guide/kernel-parameters.rst thanks to the bootloader
->  configuration.
-
-I would suggest: s/thanks to/in/
-
-> +For example, if the current built-in configuration is:
+> +struct jh7110_clkevt {
+> +	struct clk *clk;
+> +	struct reset_control *rst;
+> +	void __iomem *base;
+> +	u32 reload_val;
+> +	int irq;
+> +	char name[sizeof("jh7110-timer.chX")];
+> +};
 > +
-> +.. code-block:: console
-> +
-> +    $ zgrep -h "^CONFIG_LSM=3D" "/boot/config-$(uname -r)" /proc/config.=
-gz 2>/dev/null
-> +    CONFIG_LSM=3D"lockdown,yama,integrity,apparmor"
-> +
-> +...and if the cmdline doesn't contain ``landlock`` either:
-> +
-> +.. code-block:: console
-> +
-> +    $ sed -n 's/.*\(\<lsm=3D\S\+\).*/\1/p' /proc/cmdline
-> +    lsm=3Dlockdown,yama,integrity,apparmor
-> +
-> +...we should configure the bootloader to set a cmdline extending the ``l=
-sm``
-> +list with the ``landlock,`` prefix::
+> +struct jh7110_timer_priv {
+> +	struct reset_control *prst;
+> +	struct device *dev;
+> +	struct jh7110_clkevt clkevt[JH7110_TIMER_CH_MAX];
+> +};
 
-Nit: Is the double colon at the end of this line accidental?
-(It does not appear before the previous code block.)
+Please format your data structures according to documentation:
 
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct-declarations-and-initializers
+
+> +/* IRQ handler for the timer */
+> +static irqreturn_t jh7110_timer_interrupt(int irq, void *data)
+> +{
+> +	struct clock_event_device *evt = data;
+> +	struct jh7110_clkevt *clkevt = &jh7110_timer_info.clkevt[0];
+> +	u8 cpu_id = smp_processor_id();
+> +	u32 reg = readl(clkevt->base + JH7110_TIMER_INT_STATUS);
+
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#variable-declarations
+
+> +	/* Check interrupt status and channel(cpu) ID */
+> +	if (!(reg & BIT(cpu_id)))
+> +		return IRQ_NONE;
 > +
-> +  lsm=3Dlandlock,lockdown,yama,integrity,apparmor
+> +	clkevt = &jh7110_timer_info.clkevt[cpu_id];
+> +	writel(JH7110_TIMER_INT_CLR_ENA, (clkevt->base + JH7110_TIMER_INT_CLR));
 > +
-> +After a reboot, we can check that Landlock is up and running by looking =
-at
-> +kernel logs:
+> +	if (evt->event_handler)
+> +		evt->event_handler(evt);
 > +
-> +.. code-block:: console
+> +	return IRQ_HANDLED;
+> +}
 > +
-> +    # dmesg | grep landlock || journalctl -kb -g landlock
-> +    [    0.000000] Command line: [...] lsm=3Dlandlock,lockdown,yama,inte=
-grity,apparmor
-> +    [    0.000000] Kernel command line: [...] lsm=3Dlandlock,lockdown,ya=
-ma,integrity,apparmor
-> +    [    0.000000] LSM: initializing lsm=3Dlockdown,capability,landlock,=
-yama,integrity,apparmor
-> +    [    0.000000] landlock: Up and running.
+> +static int jh7110_timer_set_periodic(struct clock_event_device *evt)
+> +{
+> +	struct jh7110_clkevt *clkevt = JH7110_PERCPU_GET_CLKEVT;
 > +
-> +Note that according to the built time kernel configuration,
-
-s/built time/build time/
-                 ^
-
-It feels like the phrase "according to" could be slightly more specific her=
-e.
-
-To paraphrase Alejandro Colomar, "Note that" is usually redundant.
-https://lore.kernel.org/all/0aafcdd6-4ac7-8501-c607-9a24a98597d7@gmail.com/
-
-I'd suggest:
-
-  The kernel may be configured at build time to always load the ``lockdown`=
-` and
-  ``capability`` LSMs.  In that case, these LSMs will appear at the beginni=
-ng of
-  the ``LSM: initializing`` log line as well, even if they are not configur=
-ed in
-  the boot loader.
-
-> +``lockdown,capability,`` may always stay at the beginning of the ``LSM:
-> +initializing lsm=3D`` list even if they are not configured with the boot=
-loader,
-
-Nit: The man pages spell this in two words as "boot loader".
-
-
-> +which is OK.
+> +	writel(JH7110_TIMER_MODE_CONTIN, clkevt->base + JH7110_TIMER_CTL);
+> +	return 0;
+> +}
 > +
-> +Network support
-> +---------------
+> +static int jh7110_timer_set_oneshot(struct clock_event_device *evt)
+> +{
+> +	struct jh7110_clkevt *clkevt = JH7110_PERCPU_GET_CLKEVT;
 > +
->  To be able to explicitly allow TCP operations (e.g., adding a network ru=
-le with
->  ``LANDLOCK_ACCESS_NET_BIND_TCP``), the kernel must support TCP
->  (``CONFIG_INET=3Dy``).  Otherwise, sys_landlock_add_rule() returns an
->=20
-> base-commit: b4007fd27206c478a4b76e299bddf4a71787f520
-> --=20
-> 2.44.0
->=20
+> +	writel(JH7110_TIMER_MODE_SINGLE, clkevt->base + JH7110_TIMER_CTL);
+> +	return 0;
+> +}
+> +
+> +static int jh7110_timer_set_next_event(unsigned long next,
+> +				       struct clock_event_device *evt)
+> +{
+> +	struct jh7110_clkevt *clkevt = JH7110_PERCPU_GET_CLKEVT;
+> +
+> +	writel(JH7110_TIMER_MODE_SINGLE, clkevt->base + JH7110_TIMER_CTL);
+> +	writel(next, clkevt->base + JH7110_TIMER_LOAD);
+> +
+> +	return jh7110_timer_start(clkevt);
+> +}
+> +
+> +static DEFINE_PER_CPU(struct clock_event_device, jh7110_clock_event) = {
+> +	.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
+> +	.rating = JH7110_CLOCKEVENT_RATING,
+> +	.set_state_shutdown = jh7110_timer_shutdown,
+> +	.set_state_periodic = jh7110_timer_set_periodic,
+> +	.set_state_oneshot = jh7110_timer_set_oneshot,
+> +	.set_state_oneshot_stopped = jh7110_timer_shutdown,
+> +	.tick_resume = jh7110_timer_tick_resume,
+> +	.set_next_event = jh7110_timer_set_next_event,
+> +	.suspend = jh7110_timer_suspend,
+> +	.resume = jh7110_timer_resume,
+> +};
 
-Reviewed-by: G=C3=BCnther Noack <gnoack@google.com>
+See formatting rules.
+
+> +static int jh7110_timer_starting_cpu(unsigned int cpu)
+> +{
+> +	struct clock_event_device *evt = per_cpu_ptr(&jh7110_clock_event, cpu);
+> +	struct jh7110_timer_priv *priv = &jh7110_timer_info;
+> +	int ret;
+> +	u32 rate;
+> +
+> +	if (cpu >= JH7110_TIMER_CH_MAX)
+> +		return -ENOMEM;
+> +
+> +	ret = clk_prepare_enable(priv->clkevt[cpu].clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = reset_control_deassert(priv->clkevt[cpu].rst);
+> +	if (ret)
+> +		return ret;
+> +
+> +	rate = clk_get_rate(priv->clkevt[cpu].clk);
+> +	evt->cpumask = cpumask_of(cpu);
+> +	evt->irq = priv->clkevt[cpu].irq;
+> +	evt->name = priv->clkevt[cpu].name;
+> +	clockevents_config_and_register(evt, rate, JH7110_TIMER_MIN_TICKS,
+> +					JH7110_TIMER_MAX_TICKS);
+> +
+> +	ret = devm_request_irq(priv->dev, evt->irq, jh7110_timer_interrupt,
+> +			       IRQF_TIMER | IRQF_IRQPOLL,
+> +			       evt->name, evt);
+
+How is this all supposed to work from a CPU hotplug state callback which
+runs in the early bringup phase with interrupts disabled? clk_prepare()
+which is invoked from clk_prepare_enable() can sleep and
+devm_request_irq() can sleep too.
+
+Did you ever test this with the required debug config options enabled?
+
+  https://www.kernel.org/doc/html/latest/process/submit-checklist.html
+
+Obviously not.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = irq_set_affinity(evt->irq, cpumask_of(cpu));
+> +	if (ret)
+> +		return ret;
+> +	/* Use one-shot mode */
+> +	writel(JH7110_TIMER_MODE_SINGLE, (priv->clkevt[cpu].base + JH7110_TIMER_CTL));
+> +
+> +	return jh7110_timer_start(&priv->clkevt[cpu]);
+> +}
+> +
+> +static void jh7110_timer_release(void *data)
+> +{
+> +	struct jh7110_timer_priv *priv = data;
+> +	int i;
+> +
+> +	for (i = 0; i < JH7110_TIMER_CH_MAX; i++) {
+> +		/* Disable each channel of timer */
+> +		if (priv->clkevt[i].base)
+> +			writel(JH7110_TIMER_DIS, priv->clkevt[i].base + JH7110_TIMER_ENABLE);
+> +
+> +		/* Avoid no initialization in the loop of the probe */
+> +		if (!IS_ERR_OR_NULL(priv->clkevt[i].rst))
+> +			reset_control_assert(priv->clkevt[i].rst);
+> +
+> +		if (!IS_ERR_OR_NULL(priv->clkevt[i].clk))
+> +			clk_disable_unprepare(priv->clkevt[i].clk);
+
+Same problem. And of course this does not undo the other steps of
+jh7110_timer_starting_cpu() so if you offline a CPU and then online it
+again the callback will fail because the clockevent is already
+registered and the interrupt requested. Clearly untested too.
+
+Thanks,
+
+        tglx
+
+
