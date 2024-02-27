@@ -1,265 +1,103 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F614F896
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 18:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01C21EB20
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 18:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709059759; cv=none; b=luJVHeLH1zphXGJU6vPfWekSuz+dytHLQFW9WNGG6IPduTE9Y7Py+4VMPTljKRm05I5RUMioaAbzsBZSqjdITH4VjSGcRsVcF3ZIjQg3nKyn593eezwbkLOcDCdLYbp5zAfEM1kse8RSSSi8BNtvUZRHCVrRv/iHqORdQ1fx17Y=
+	t=1709059868; cv=none; b=hghYVIAS952VzNqTx6E6ULXEpNDDtgj7wGoAesIRXFJfNloPYUvVNaie1KUpGICrX8TCHR4xrAeLY6IvcaOX9rtJ5UHt6eOxAktTd4PNWVBxM77Z6mFTYfwpIzUzeWh+Sz6sYyvijMQT04aqV69d0aV1Y8iJXrJ8MhEPb7v99QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709059759; c=relaxed/simple;
-	bh=Wskn9MnZrYrzXjLH65blgzx/lnGt7j6wJWlwXZRwF2Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UmV0mi9TFmeIXMJRyhZ5Nsvd7937UAmGN8rOvQu2lykn+KALcWkRJYBOxT7Qy6NQf1oaAUFsOzTO6tmYh11kCWu7GuJUoOSNZ+dGN3L6lLTEHudEhv5NCBdrLv7Ds79jgZKTApcWIDJfiGktMTyVXuxwcBkmWSXmI0UhbqQ1i+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ZADZZWsc; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1709059868; c=relaxed/simple;
+	bh=YlWm0lELQ5xDSf+iW/m9/mgQRvjaHGGY0PFUNvAPAEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d0v/jorJ0Bi0Ao2/YbWJ2wbvzhOYpqI0Zh+DAyvR5JO1Mi0a1rpgWXPL5BdmBvnK3nLMLR1mNBQiDjNru2GB4MjQtGomjrZWsYKchE4sV2DdamzlmId1LWR3Ai2NuBdj3RumKkwIHuWTAxQFX9UEGRVoXrOu6JLACRamXanL56g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=KGyOJPxa; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ZADZZWsc"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5129e5b8cecso5683094e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:49:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KGyOJPxa"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7c403dbf3adso244319739f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:51:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709059756; x=1709664556; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nDjOQKI5OUPcR0csLb2CoPXgDI3ZkfKtFyr9oAeRrX0=;
-        b=ZADZZWscfZFEf6SZBpfr+kTeFheMk1GsdD5ZcpkWdMYNyED5IxJEL8ymSvcm1rWu5R
-         rUmNDCzLR25LFDvfxL3y1qHiqv/xr75e1TBv+IcDLm7QXFImrOfQYgw5ocL6OxcGtMjT
-         eEuNCiXvzxiYHZD+2JBUu9eZqZ9iw1XYm1JsP8E2Cofzc1RbOkv/TV51JjyGixGDSrFv
-         rs1HBPwu0Y3aEA0LXKUgTi8XgHrJJiOAWoaoyCYbcEz9KfIx7sDkfs7wDDb9bV5vM0Ub
-         XzRP7KmMY2yrUlBzS7t2Orzp91pJPqgqndyKIgrW1g1NbKHgbX3rYIjj12xgO7BuaIC8
-         M67A==
+        d=sifive.com; s=google; t=1709059866; x=1709664666; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=drJreYx4pAFp2nnVZ0PvEgVW3Uejo7zf3o/ymgjKE2M=;
+        b=KGyOJPxaaxir0gV2fLzRLzcO9v3woPpCC8ApZ6FsSuu62e6P0LD/bDzr+TwhE8dz3O
+         1AweMEdq1IjnqlXvvDBVJz/Crb2thUOAV833Vpjf7oFHisUmFphr9OTMED5KySDpLWJ5
+         QozsAFSGOUOgwowCTDX92RE7Rs+wC8VSdZ6VPZVHvesnyKI+lpXVMu0ayHzu6kNrotoo
+         9O6plb5nekJj22INIVD3DxwEH98dp5RGWfoWkjvE040WoQRtb53uBcm9XC90PQX7zDcp
+         KjMRtjULxUXjG8n15WN6Kpsm0HV45euWvWC8iUsKDRJgXkLLDxZx10bYPriJE5gYY+Da
+         oQxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709059756; x=1709664556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nDjOQKI5OUPcR0csLb2CoPXgDI3ZkfKtFyr9oAeRrX0=;
-        b=YR0xuNDRO0suyor02gUxnqY2KlE3KPQ3iF2/R13ds/qY94SCfhlES6t0hC83kDvX4h
-         vGHZrT/yOxVC0D1gAzM98mJhm/J3mx3OZpCJoztVhgB+ut3dv4fvxGxnKu+Md3max6HX
-         LrtaAr+qfbgw5c7B5ErKUHmJwjLcFFEGHh5pV1OWeYjfm4rMmV7KFiKBWADOtbNd7f4M
-         wyVDc9anL5/OoCMtwDQG1AwvWaDcVZUDt6ZZf2DOtGOTCk8NQexdcurDf+AePTryAF2n
-         +4vgWDUS6aY4g1kbcsUxxRSRDSMjtzHozudxUkYVMSnO9GhfI4NHmVQHcAQXQHvMhoDk
-         FA5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVhyaHuHTEm68dbOeTDExtCV9RjvadOmUkt/qn1DQSgagosZcveslQvVbGp+aiW+is+qIaylHITLDisgi2Z1RD9H41nv82MqEqdsahG
-X-Gm-Message-State: AOJu0YwXVDmzYO7VhDs1IxDotYOId8z0GKDYAWFWaTztoiYZJrgjdikc
-	nAKTROObFyVgxY5aR8mSvwb9nMD7aO2fC1NyJ3C+mqydumjgUOby7N9AbgnBup9MUfBBTs/o0H0
-	svhu/kvluweAIXa71di6kNjRmsyojWcK0skp83g==
-X-Google-Smtp-Source: AGHT+IGhoAGg3KXVeQLuKpSIzH4loVOc3iAMsXp0MlWz1G0OVJXs9DIjcf6Dbc7pioXt/CUX2vIvELHtTdxxrq1jps4=
-X-Received: by 2002:a19:7619:0:b0:512:d907:3161 with SMTP id
- c25-20020a197619000000b00512d9073161mr6510496lff.66.1709059755729; Tue, 27
- Feb 2024 10:49:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709059866; x=1709664666;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=drJreYx4pAFp2nnVZ0PvEgVW3Uejo7zf3o/ymgjKE2M=;
+        b=SOBdttYMh0Bc8AMZ7e3bVm1pW1vERaW9ZijZzCOSif1Utr3GECR92/ZOTR+k4GePmB
+         rA/KyrsNx8PAe7kof+SlQvJ6UR8uy0L2qRckZ5J9cTQnamqIRbzh+pbdevqWi/sjRgxt
+         4rRh/1Fwpb2qLsackBTeybWDppcKoDfCpmT4W5xKkKWTT8AqTn2miev7yjqwi1mhp6+3
+         LmFBZZs/qLkSr84mRIr887bAAgcQysAiCp/gp5ANZKSgY0Cvmzh16DGOZLOYOq+ZruwW
+         iWWykHWKtgrCYfUnO4UdCJOhBt1IvFmY/dj+wddcX+dP95+Ps7+dsa7iMcbNrDF+6PEy
+         ZmWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYS4/ymR416m7kP9vzpDbejVJ0JmZdiy9jdeYLNLK3imE1XeKY4hK+R0M5bj/7CRBo+bkIsX8Isk7nfuD+ElDrEKX1lk5KQeQxO9Jd
+X-Gm-Message-State: AOJu0YxFeY9NMhEeWWS6yk/7/7RPa24TaHVj9TKn9b9nC2DLzBDC3g1J
+	vn7P9Sw/lUbsqOJtk7v8wy53YUZe9lTR67EuOeGPEFZnAbaG6tDhxL0KUa04xxU=
+X-Google-Smtp-Source: AGHT+IHGhL7UOJoJ/kl7lKOY8POXqisT6wepMEGy8eV2MwZHoopmjBN5qT0lMDUZs6Oa7UBaxHoQAw==
+X-Received: by 2002:a5d:9606:0:b0:7c7:ef39:97dc with SMTP id w6-20020a5d9606000000b007c7ef3997dcmr1397618iol.15.1709059866084;
+        Tue, 27 Feb 2024 10:51:06 -0800 (PST)
+Received: from [100.64.0.1] ([170.85.6.200])
+        by smtp.gmail.com with ESMTPSA id x20-20020a056638249400b004747c4f663dsm1602054jat.0.2024.02.27.10.51.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 10:51:05 -0800 (PST)
+Message-ID: <e07f9c83-1d57-45aa-98eb-982371d1d02e@sifive.com>
+Date: Tue, 27 Feb 2024 12:51:04 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240216-disable_misaligned_probe_config-v4-0-dc01e581c0ac@rivosinc.com>
- <20240216-disable_misaligned_probe_config-v4-2-dc01e581c0ac@rivosinc.com>
- <20240227-condone-impeach-9469dffc6b47@wendy> <Zd4nMa+x28omuhiF@ghost>
-In-Reply-To: <Zd4nMa+x28omuhiF@ghost>
-From: Evan Green <evan@rivosinc.com>
-Date: Tue, 27 Feb 2024 10:48:39 -0800
-Message-ID: <CALs-HstdXnRZUaYxHF-a4e+A6-X30RFWP7PKu-6rKBMUVUxs0g@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] riscv: Set unalignment speed at compile time
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Jisheng Zhang <jszhang@kernel.org>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Eric Biggers <ebiggers@kernel.org>, Elliot Berman <quic_eberman@quicinc.com>, 
-	Charles Lohr <lohr85@gmail.com>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] riscv: 64-bit NOMMU fixes and enhancements
+Content-Language: en-US
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240227003630.3634533-1-samuel.holland@sifive.com>
+ <20240227-footage-porridge-949a43ee8ecb@wendy>
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <20240227-footage-porridge-949a43ee8ecb@wendy>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 27, 2024 at 10:17=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.=
-com> wrote:
->
-> On Tue, Feb 27, 2024 at 11:39:25AM +0000, Conor Dooley wrote:
-> > On Fri, Feb 16, 2024 at 12:33:19PM -0800, Charlie Jenkins wrote:
-> > > Introduce Kconfig options to set the kernel unaligned access support.
-> > > These options provide a non-portable alternative to the runtime
-> > > unaligned access probe.
-> > >
-> > > To support this, the unaligned access probing code is moved into it's
-> > > own file and gated behind a new RISCV_PROBE_UNALIGNED_ACCESS_SUPPORT
-> > > option.
-> > >
-> > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > ---
-> > >  arch/riscv/Kconfig                          |  58 +++++-
-> > >  arch/riscv/include/asm/cpufeature.h         |  30 +++-
-> > >  arch/riscv/kernel/Makefile                  |   6 +-
-> > >  arch/riscv/kernel/cpufeature.c              | 255 ------------------=
---------
-> > >  arch/riscv/kernel/misaligned_access_speed.c | 265 ++++++++++++++++++=
-++++++++++
-> > >  arch/riscv/kernel/probe_emulated_access.c   |  64 +++++++
-> > >  arch/riscv/kernel/sys_hwprobe.c             |  25 +++
-> > >  arch/riscv/kernel/traps_misaligned.c        |  54 +-----
-> > >  8 files changed, 442 insertions(+), 315 deletions(-)
-> > >
-> > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > > index bffbd869a068..3cf700adc43b 100644
-> > > --- a/arch/riscv/Kconfig
-> > > +++ b/arch/riscv/Kconfig
-> > > @@ -690,25 +690,71 @@ config THREAD_SIZE_ORDER
-> > >  config RISCV_MISALIGNED
-> >
-> >
-> > Why can we not make up our minds on what to call this? The majority of
-> > users are "unaligned" but the file you add and this config option are
-> > "misaligned."
->
-> We have both everywhere, maybe we (I?) should go in and standardize the
-> wording everywhere. I personally prefer "misaligned" which means
-> "incorrectly aligned" over "unaligned" which means "not aligned" because
-> a 7-bit alignment is still "aligned" along a 7-bit boundary, but it is
-> certainly incorrectly aligned.
->
-> >
-> > >     bool "Support misaligned load/store traps for kernel and userspac=
-e"
-> > >     select SYSCTL_ARCH_UNALIGN_ALLOW
-> > > +   depends on RISCV_PROBE_UNALIGNED_ACCESS || RISCV_EMULATED_UNALIGN=
-ED_ACCESS
-> > >     default y
-> > >     help
-> > >       Say Y here if you want the kernel to embed support for misalign=
-ed
-> > >       load/store for both kernel and userspace. When disable, misalig=
-ned
-> > >       accesses will generate SIGBUS in userspace and panic in kernel.
-> > >
-> > > +choice
-> > > +   prompt "Unaligned Accesses Support"
-> > > +   default RISCV_PROBE_UNALIGNED_ACCESS
-> > > +   help
-> > > +     This selects the hardware support for unaligned accesses. This
-> > > +     information is used by the kernel to perform optimizations. It =
-is also
-> > > +     exposed to user space via the hwprobe syscall. The hardware wil=
-l be
-> > > +     probed at boot by default.
-> > > +
-> > > +config RISCV_PROBE_UNALIGNED_ACCESS
-> > > +   bool "Probe for hardware unaligned access support"
-> > > +   help
-> > > +     During boot, the kernel will run a series of tests to determine=
- the
-> > > +     speed of unaligned accesses. This is the only portable option. =
-This
-> > > +     probing will dynamically determine the speed of unaligned acces=
-ses on
-> > > +     the boot hardware.
-> > > +
-> > > +config RISCV_EMULATED_UNALIGNED_ACCESS
-> > > +   bool "Assume the CPU expects emulated unaligned memory accesses"
-> > > +   depends on NONPORTABLE
-> >
-> > This is portable too, right?
->
-> I guess so? I think I would prefer to have the probing being the only
-> portable option.
->
-> >
-> > > +   select RISCV_MISALIGNED
-> > > +   help
-> > > +     Assume that the CPU expects emulated unaligned memory accesses.
-> > > +     When enabled, this option notifies the kernel and userspace tha=
-t
-> > > +     unaligned memory accesses will be emulated by the kernel.
-> >
-> > > To enforce
-> > > +     this expectation, RISCV_MISALIGNED is selected by this option.
-> >
-> > Drop this IMO, let Kconfig handle displaying the dependencies.
-> >
->
-> I was debating if Kconfig handling was enough, so I am glad it is, I
-> will remove this.
->
-> > > +
-> > > +config RISCV_SLOW_UNALIGNED_ACCESS
-> > > +   bool "Assume the CPU supports slow unaligned memory accesses"
-> > > +   depends on NONPORTABLE
-> > > +   help
-> > > +     Assume that the CPU supports slow unaligned memory accesses. Wh=
-en
-> > > +     enabled, this option improves the performance of the kernel on =
-such
-> > > +     CPUs.
-> >
-> > Does it? Are you sure that generating unaligned accesses on systems
-> > where they are slow is a performance increase?
-> > That said, I don't really see this option actually doing anything other
-> > than setting the value for hwprobe, so I don't actually know what the
-> > effect of this option actually is on the kernel's performance.
-> >
-> > Generally I would like to suggest a change from "CPU" to "system" here,
-> > since the slow cases that exist are mostly because the unaligned access
-> > is actually emulated in firmware.
->
-> It would be ideal if "emulated" was used for any case of emulated
-> accesses (firmware or in the kernel).  Doing emulated accesses will be
-> orders of magnitude slower than a processor that "slowly" handles the
-> accesses.
->
-> So even if the processor performs a "slow" access, it could still be
-> beneficial for the kernel to do the misaligned access rather than manual
-> do the alignment.
->
-> Currently there is no place that takes into account this "slow" option
-> but I wanted to leave it open for future optimizations.
->
-> >
-> > > However, the kernel will run much more slowly, or will not be
-> > > +     able to run at all, on CPUs that do not support unaligned memor=
-y
-> > > +     accesses.
-> > > +
-> > >  config RISCV_EFFICIENT_UNALIGNED_ACCESS
-> > >     bool "Assume the CPU supports fast unaligned memory accesses"
-> > >     depends on NONPORTABLE
-> > >     select DCACHE_WORD_ACCESS if MMU
-> > >     select HAVE_EFFICIENT_UNALIGNED_ACCESS
-> > >     help
-> > > -     Say Y here if you want the kernel to assume that the CPU suppor=
-ts
-> > > -     efficient unaligned memory accesses.  When enabled, this option
-> > > -     improves the performance of the kernel on such CPUs.  However, =
-the
-> > > -     kernel will run much more slowly, or will not be able to run at=
- all,
-> > > -     on CPUs that do not support efficient unaligned memory accesses=
-.
-> > > +     Assume that the CPU supports fast unaligned memory accesses. Wh=
-en
-> > > +     enabled, this option improves the performance of the kernel on =
-such
-> > > +     CPUs.  However, the kernel will run much more slowly, or will n=
-ot be
-> > > +     able to run at all, on CPUs that do not support efficient unali=
-gned
-> > > +     memory accesses.
-> > > +
-> > > +config RISCV_UNSUPPORTED_UNALIGNED_ACCESS
-> >
-> > This option needs to be removed. The uabi states that unaligned access
-> > is supported in userspace, if the cpu or firmware does not implement
-> > unaligned access then the kernel must emulate it.
->
-> Should it removed from hwprobe as well then?
+Hi Conor,
 
-We had added it as a hwprobe value in this discussion:
-https://lore.kernel.org/lkml/Y+1VOXyKDDHEuejJ@spud/
+On 2024-02-27 6:13 AM, Conor Dooley wrote:
+> On Mon, Feb 26, 2024 at 04:34:45PM -0800, Samuel Holland wrote:
+>> This series aims to improve support for NOMMU, specifically by making it
+>> easier to test NOMMU kernels in QEMU and on various widely-available
+>> hardware (errata permitting). After all, everything supports Svbare...
+>>
+>> After applying this series, a NOMMU kernel based on defconfig (changing
+>> only the three options below*) boots to userspace on QEMU when passed as
+>> -kernel.
+>>
+>>   # CONFIG_RISCV_M_MODE is not set
+>>   # CONFIG_MMU is not set
+>>   CONFIG_NONPORTABLE=y
+>>
+>> *if you are using LLD, you must also disable BPF_SYSCALL and KALLSYMS,
+>> because LLD bails on out-of-range references to undefined weak symbols.
+> 
+> That's not new to these patches though, right? IIRC that's an existing
+> issue.
 
-Personally I like it as a possible hwprobe value, even if it is in
-conflict with the uabi. I can't fully defend it, other than as a very
-forward looking possibility, and as a nice value for people doing
-weird things off the beaten path. My preference would be to keep it in
-hwprobe, but I'm fine with not having a Kconfig for it.
+Yes, that's correct. I see that arch/riscv/configs/nommu_* have KALLSYMS
+disabled already; this may be the reason.
 
--Evan
+Regards,
+Samuel
+
