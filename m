@@ -1,98 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEF4146008;
-	Tue, 27 Feb 2024 14:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71992145FF9;
+	Tue, 27 Feb 2024 14:29:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709044070; cv=none; b=UD5KF89Q9M+Ad2RaSyD1QCWDXNgrW3D3dSg7VsCtgp9HMMtY/ZsFF9yoFw0NlDPwzXD9T++lUvawypa5nn0naO50GGKTG2QJNuGtihu5gLr2fQc/DAxrqut12Smgb3n8yottfL8bCCsS/Rl6UWlBWxzNngZPBhZVzwuSV7/9SXc=
+	t=1709044153; cv=none; b=rVviKp4YL8MBuVPdoTxRlRBkJO+K2DIQEBtZINDI93wCPe47XpNUJy72B5gtBLHFKvvQPUMy5+AZ271yjireVQ+k6NgLxV4mim+gG3ugpupXMGv2dBitPQnejkVZlCpeU0ditARn5QqfEdswc9fiyA16r3a+0HhraEt03taiybg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709044070; c=relaxed/simple;
-	bh=vJ/n9mcTPOlux9gF800dhfBrTx6jxXg61HNCrSy8pyc=;
+	s=arc-20240116; t=1709044153; c=relaxed/simple;
+	bh=BeuKeRmCI8fl+4Mky6qTDE0ESLxkqayEq8heDHUciIc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=amPdFoIGgaHLvSNKUn3oSGG6BUNv3Q4l+PekbEQyjGtFTIrsZYMswvy7Ar5W933tGy9aQTePZb0M+bfSy+UvvoP/ZUIee3LXU3NSTjhNYlUsjRLtaVGPyinou5F4CIkJkEwOq6CQ6I2bUT/dfoHN4EP4dNWFcNO6Fyvq59fxEpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtouzCBP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R1vlyfTIEhhDx+NrrCDLla3+KcSIeW5VgJ+zSrqzPy59to4T1+OihuRQOtessErjmQSq/yu9e4rcEz+jejfJRH3px4n2eOm35RDHK+qEhB4h4KBSSaNMtOoICN3Rq73ChOsyyAxwoFZx2/ielFfkbAf8VY8tEZbW6Sxmr5cj3bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7zrkFUJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtouzCBP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AF3EC433F1;
-	Tue, 27 Feb 2024 14:27:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7zrkFUJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEB05C43390;
+	Tue, 27 Feb 2024 14:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709044070;
-	bh=vJ/n9mcTPOlux9gF800dhfBrTx6jxXg61HNCrSy8pyc=;
+	s=k20201202; t=1709044153;
+	bh=BeuKeRmCI8fl+4Mky6qTDE0ESLxkqayEq8heDHUciIc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KtouzCBPEQ+Mnmh0hwnvSoMh31ymfs8np+NhfXaydpOPNJ3HZ8uSyFm0QiUm8WQjp
-	 V75YuTQUyun/ztJ/a+7b+TYSE2j7BnM2I72IzINHQBB3ZYWnA8yIFJEsO9wcbP5pYz
-	 q8hHbV9VH8xksKLBm+LtnWUgXMv3GMYqqfcn4UUPkCoCZGSqF6baai4Kf1rcT0mLW9
-	 KOpqPlw0W3M+TP95P+DDT54nPwIQh4hOlpwOHii2XpjqWf6lw5nExc/6aD9WqgMlaG
-	 Wg6vW/xinP1ASs1vLgD1RYmsZMcnzaybixRMRWYTYD2a9qaPaybTcRV571NcaXrtB2
-	 4K3cnzASZbNYw==
-Date: Tue, 27 Feb 2024 15:27:42 +0100
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Eduard Zingerman <eddyz87@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC bpf-next v3 04/16] bpf/helpers: introduce sleepable
- bpf_timers
-Message-ID: <3jtqytxfqymfx2fenqby2x3zzra63tj7jrxrmunqsk6l7dqyip@jt7kdhxeb4np>
-References: <20240221-hid-bpf-sleepable-v3-0-1fb378ca6301@kernel.org>
- <20240221-hid-bpf-sleepable-v3-4-1fb378ca6301@kernel.org>
- <818e43447651af1a659993897c14d05fec5038e4.camel@gmail.com>
+	b=e7zrkFUJjNkuT6ejQss+PGilg6MNPyI006Dx1xx8Zoe39qoMrNhJei7Ymxa34PjBb
+	 XXEnchbRee8ptxfWLoZirWVOzrypkJuJN831n7y8aYviicaZZkbm+K+6LgaO8GRodf
+	 axaBwr1hpp/O4zsmtbMqRFCMz0fc/Bskw7Pa1KxBm8uKJbKWG3qPPaTTAVv2M1bfVm
+	 ZEc1BIqE6o2uzkwBPWVH3HjI46Kt9VBq12B5U+pPIDmsPZW7eVb2W4vmdytNSbU8P6
+	 hTbFCfJ7AxhuU5WdnavbGLC8XrL90TYMhcDVVgjnjns8L6ETTmUknj8su/EcURMCGE
+	 ia+RFHnjoLtnA==
+Date: Tue, 27 Feb 2024 08:29:11 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?utf-8?B?UGF3ZcWC?= Anikiel <panikiel@google.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, airlied@gmail.com,
+	akpm@linux-foundation.org, conor+dt@kernel.org, daniel@ffwll.ch,
+	dinguyen@kernel.org, hverkuil-cisco@xs4all.nl,
+	krzysztof.kozlowski+dt@linaro.org,
+	maarten.lankhorst@linux.intel.com, mchehab@kernel.org,
+	mripard@kernel.org, tzimmermann@suse.de, devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, chromeos-krk-upstreaming@google.com,
+	ribalda@chromium.org
+Subject: Re: [PATCH v2 8/9] media: dt-bindings: Add Intel Displayport RX IP
+Message-ID: <20240227142911.GB3863852-robh@kernel.org>
+References: <20240221160215.484151-1-panikiel@google.com>
+ <20240221160215.484151-9-panikiel@google.com>
+ <13aeb2ff-72f4-49d9-b65e-ddc31569a936@linaro.org>
+ <CAM5zL5q0oKoTMR0jSwYVAChCOJ9iKYPRFiU1vH4qDqhHALKz4w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <818e43447651af1a659993897c14d05fec5038e4.camel@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM5zL5q0oKoTMR0jSwYVAChCOJ9iKYPRFiU1vH4qDqhHALKz4w@mail.gmail.com>
 
-On Feb 23 2024, Eduard Zingerman wrote:
-> On Wed, 2024-02-21 at 17:25 +0100, Benjamin Tissoires wrote:
+On Mon, Feb 26, 2024 at 11:59:42AM +0100, Paweł Anikiel wrote:
+> On Mon, Feb 26, 2024 at 10:13 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+> >
+> > On 21/02/2024 17:02, Paweł Anikiel wrote:
+> > > The Intel Displayport RX IP is a part of the DisplayPort Intel FPGA IP
+> > > Core. It implements a DisplayPort 1.4 receiver capable of HBR3 video
+> > > capture and Multi-Stream Transport. The user guide can be found here:
+> > >
+> > > https://www.intel.com/programmable/technical-pdfs/683273.pdf
+> > >
+> > > Signed-off-by: Paweł Anikiel <panikiel@google.com>
+> > > ---
+> > >  .../devicetree/bindings/media/intel,dprx.yaml | 160 ++++++++++++++++++
+> > >  1 file changed, 160 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/intel,dprx.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/intel,dprx.yaml b/Documentation/devicetree/bindings/media/intel,dprx.yaml
+> > > new file mode 100644
+> > > index 000000000000..31025f2d5dcd
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/intel,dprx.yaml
+> > > @@ -0,0 +1,160 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/intel,dprx.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Intel DisplayPort RX IP
+> > > +
+> > > +maintainers:
+> > > +  - Paweł Anikiel <panikiel@google.com>
+> > > +
+> > > +description: |
+> > > +  The Intel Displayport RX IP is a part of the DisplayPort Intel FPGA IP
+> > > +  Core. It implements a DisplayPort 1.4 receiver capable of HBR3 video
+> > > +  capture and Multi-Stream Transport.
+> > > +
+> > > +  The IP features a large number of configuration parameters, found at:
+> > > +  https://www.intel.com/content/www/us/en/docs/programmable/683273/23-3-20-0-1/sink-parameters.html
+> > > +
+> > > +  The following parameters have to be enabled:
+> > > +    - Support DisplayPort sink
+> > > +    - Enable GPU control
+> > > +  The following parameters' values have to be set in the devicetree:
+> > > +    - RX maximum link rate
+> > > +    - Maximum lane count
+> > > +    - Support MST
+> > > +    - Max stream count (only if Support MST is enabled)
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: intel,dprx-20.0.1
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  intel,max-link-rate:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: Max link rate configuration parameter
+> >
+> > Please do not duplicate property name in description. It's useless.
+> > Instead explain what is this responsible for.
+> >
+> > Why max-link-rate would differ for the same dprx-20.0.1? And why
+> > standard properties cannot be used?
+> >
+> > Same for all questions below.
 > 
-> [...]
-> 
-> > @@ -1282,7 +1333,7 @@ BPF_CALL_3(bpf_timer_start, struct bpf_timer_kern *, timer, u64, nsecs, u64, fla
-> >  
-> >  	if (in_nmi())
-> >  		return -EOPNOTSUPP;
-> > -	if (flags & ~(BPF_F_TIMER_ABS | BPF_F_TIMER_CPU_PIN))
-> > +	if (flags & ~(BPF_F_TIMER_ABS | BPF_F_TIMER_CPU_PIN | BPF_F_TIMER_SLEEPABLE))
-> >  		return -EINVAL;
-> >  	__bpf_spin_lock_irqsave(&timer->lock);
-> >  	t = timer->timer;
-> > @@ -1299,7 +1350,10 @@ BPF_CALL_3(bpf_timer_start, struct bpf_timer_kern *, timer, u64, nsecs, u64, fla
-> >  	if (flags & BPF_F_TIMER_CPU_PIN)
-> >  		mode |= HRTIMER_MODE_PINNED;
-> >  
-> > -	hrtimer_start(&t->timer, ns_to_ktime(nsecs), mode);
-> > +	if (flags & BPF_F_TIMER_SLEEPABLE)
-> > +		schedule_work(&t->work);
-> > +	else
-> > +		hrtimer_start(&t->timer, ns_to_ktime(nsecs), mode);
-> 
-> It looks like nsecs is simply ignored for sleepable timers.
-> Should this be hrtimer_start() that waits nsecs and schedules work,
-> or schedule_delayed_work()? (but it takes delay in jiffies, which is
-> probably too coarse). Sorry if I miss something.
+> These four properties are the IP configuration parameters mentioned in
+> the device description. When generating the IP core you can set these
+> parameters, which could make them differ for the same dprx-20.0.1.
+> They are documented in the user guide, for which I also put a link in
+> the description. Is that enough? Or should I also document these
+> parameters here?
 
-Yeah, I agree it's confusing, but as mentioned by Toke in his reply, we
-should return -EINVAL if a timer value is provided (for now).
+Use the standard properties: link-frequencies and data-lanes. Those go 
+under the port(s) because they are inheritly per logical link.
 
-Alexei mentioned[0] that he didn't want to mix delays in hrtimers with
-workqueue as they are non deterministic. So AFAIU, I should add the only
-guarantee we can provide: a sleepable context, and proper delays in
-sleepable contexts will be added once we have a better workqueue
-selection available.
-
-Cheers,
-Benjamin
-
-[0] https://lore.kernel.org/bpf/CAO-hwJKz+eRA+BFLANTrEqz2jQAOANTE3c7eqNJ6wDqJR7jMiQ@mail.gmail.com/T/#md15e431cbcddec9fcaddf1c305234523ed26f7ce
+Rob
