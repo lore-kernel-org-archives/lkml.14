@@ -1,268 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC794D5A2
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 20:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF371D6A8;
+	Tue, 27 Feb 2024 20:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709064959; cv=none; b=SkGYrVtOzlM7KoJ7EBxd9YuV2tdWh7+Adz55lfHNXxUoeJ6QpJufJMr44Jc+zZCVenrfrA0XC/zY5pxpgHWDujpC7KS90eTyyD7S9gz9SqitCy5soR9n8soUmEtUi3K4JxYRCPTXihJLZU5+l4y2eYtuyYpvK+smEN3QqvrNSOg=
+	t=1709065117; cv=none; b=IoBbq9RPeIgOV4EGhmuTujRsRe4dkhNCHFimLDCbZMn+8rSMC7gpQOqqkglBO4+4CnJiZLfrf+NdtZM4YrHFYLdviteX7Axy4+DDLNujYeFdKWt92ljqOJmNIGjLBosB7dT1XA4OFt5XWNFADqQWcJX7/oSpvoUb2/Z0HVY5tws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709064959; c=relaxed/simple;
-	bh=VK5ZLickJUjOy7+jY9XOUhZboq1Ll5OCYEdvttHFqc8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tSecLwc1ZURD3cVymyKWA6QSKLkCIROid3Nai1D0zsBgkfpU67TpDSBofZJB0kDSu369OiZcFlBj9UowkRpvBUVRCwe/IVkcx95k2TdVlQNuFi4FrXWsQ9ra1Y0ItCVUl7kJ3Pzsekn1+nyJSD8AKjFC+GQp53LI1+0+6shCuoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hLPA0oQr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709065117; c=relaxed/simple;
+	bh=Omw2AFlabYc6Uv/pPNvj6uwfjg7jm6qsUDunD9xzfyU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwXVVEJQnO6+rSxn9DgiDo4cnAXPGoCFIt58yd9oaW3lAqkk7DV0b8bi/ro9X9eaSg8cpl6jkabU0U3wVeQ1oAEhOpcXqk3uo2sHz3crC+bqAnKkgbFgg7B8KoybuHd01u2fNNv+2WBYUsejIP8B/QzKMwjYoQUyqu1F22LPGbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pv5xJnwr; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hLPA0oQr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709064955;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Autf58lTUMoeQMpAqwvW0HpwA5+93miRhkjagXxn3PE=;
-	b=hLPA0oQrcyBuQp8nt/82hII/S3MUdHa7aw+llG3E8Wk5lyaAyHtMUJH5U4y4LLMsea2CSl
-	qYl29NOCsq6N44jH9K0Kk4XZz7oFRbpqVCacjKNkBJu8WmK1rXwo/AGodRTDw7739SB/ea
-	cSHUJMwFLaZNGcjxD7O+SR9IUPNmiHY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-224-1EfyVbW4OGWoPUVT6EhhTg-1; Tue, 27 Feb 2024 15:15:51 -0500
-X-MC-Unique: 1EfyVbW4OGWoPUVT6EhhTg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B4272811E81;
-	Tue, 27 Feb 2024 20:15:50 +0000 (UTC)
-Received: from t14s.fritz.box (unknown [10.39.192.77])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0F08A40C122C;
-	Tue, 27 Feb 2024 20:15:48 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Barry Song <v-songbaohua@oppo.com>,
-	Vishal Moola <vishal.moola@gmail.com>,
-	Ryan Roberts <ryan.roberts@arm.com>
-Subject: [PATCH v1] mm: convert folio_estimated_sharers() to folio_likely_mapped_shared()
-Date: Tue, 27 Feb 2024 21:15:48 +0100
-Message-ID: <20240227201548.857831-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pv5xJnwr"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41RJviMO007057;
+	Tue, 27 Feb 2024 20:18:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=e2w7ryFE/HSd9HuCDuAjH
+	wUSM1goBIdC5YFc2t7i9nY=; b=pv5xJnwr1jLGI/BxHi+Uk0C3cV9Si1liSYy2G
+	4rXAIvnAQLtEPd30g74LT8t7p2jnITD2fIRdNQe3wh3iAXQJ/izHs1+GPHIx9QcU
+	qamy2nFBNY5pcRn0hDLPw7DQYpSZxKDMqYPenFEP037Ujxso41xyTUCoQ4ClTYOR
+	IfpArBzjFP3RmDdKLo2bcmqUQdsyjU7rF4Vcw4vKHklXnN5PgWXhJblOlm0yHZJJ
+	3AdfXgVpDHaJFrSe+U236OSd8KajqaWmb6edZiunjA2VsgdycDAEXga+zNnAs4AG
+	SLelrJAj5TZWPhP1u29m6I72RfRNvY66uTEG5n4vQGA/Z02NQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3whccw9mma-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Feb 2024 20:18:10 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41RKI93B005443
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 Feb 2024 20:18:09 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 27 Feb 2024 12:18:09 -0800
+Date: Tue, 27 Feb 2024 12:18:07 -0800
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+To: Abel Vesa <abel.vesa@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Johan Hovold <johan@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] drm/msm/dp: Add support for setting the eDP mode
+ from devicetree
+Message-ID: <20240227201807.GA3552737@hu-bjorande-lv.qualcomm.com>
+References: <20240222-x1e80100-display-refactor-connector-v2-0-bd4197dfceab@linaro.org>
+ <20240222-x1e80100-display-refactor-connector-v2-2-bd4197dfceab@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240222-x1e80100-display-refactor-connector-v2-2-bd4197dfceab@linaro.org>
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 7Y-y7cA2TCkDyHCOXdCQNmI9ecLK4unI
+X-Proofpoint-ORIG-GUID: 7Y-y7cA2TCkDyHCOXdCQNmI9ecLK4unI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-27_07,2024-02-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ spamscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402270158
 
-Callers of folio_estimated_sharers() only care about "mapped shared vs.
-mapped exclusively", not the exact estimate of sharers. Let's consolidate
-and unify the condition users are checking. While at it clarify the
-semantics and extend the discussion on the fuzziness.
+On Thu, Feb 22, 2024 at 05:55:07PM +0200, Abel Vesa wrote:
+> Instead of relying on different compatibles for eDP and DP, use
+> the is-edp property from DT to figure out the connector type and
+> then pass on that information to the PHY.
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 
-Use the "likely mapped shared" terminology to better express what the
-(adjusted) function actually checks.
+Reviewed-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-Whether a partially-mappable folio is more likely to not be partially
-mapped than partially mapped is debatable. In the future, we might be able
-to improve our estimate for partially-mappable folios, though.
+Regards,
+Bjorn
 
-Note that we will now consistently detect "mapped shared" only if the
-first subpage is actually mapped multiple times. When the first subpage
-is not mapped, we will consistently detect it as "mapped exclusively".
-This change should currently only affect the usage in
-madvise_free_pte_range() and queue_folios_pte_range() for large folios: if
-the first page was already unmapped, we would have skipped the folio.
-
-Cc: Barry Song <v-songbaohua@oppo.com>
-Cc: Vishal Moola (Oracle) <vishal.moola@gmail.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- include/linux/mm.h | 46 ++++++++++++++++++++++++++++++++++++----------
- mm/huge_memory.c   |  2 +-
- mm/madvise.c       |  6 +++---
- mm/memory.c        |  2 +-
- mm/mempolicy.c     | 14 ++++++--------
- mm/migrate.c       |  8 ++++----
- 6 files changed, 51 insertions(+), 27 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6f4825d829656..795c89632265f 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2147,21 +2147,47 @@ static inline size_t folio_size(struct folio *folio)
- }
- 
- /**
-- * folio_estimated_sharers - Estimate the number of sharers of a folio.
-+ * folio_likely_mapped_shared - Estimate if the folio is mapped into the page
-+ *				tables of more than one MM
-  * @folio: The folio.
-  *
-- * folio_estimated_sharers() aims to serve as a function to efficiently
-- * estimate the number of processes sharing a folio. This is done by
-- * looking at the precise mapcount of the first subpage in the folio, and
-- * assuming the other subpages are the same. This may not be true for large
-- * folios. If you want exact mapcounts for exact calculations, look at
-- * page_mapcount() or folio_total_mapcount().
-+ * This function checks if the folio is currently mapped into more than one
-+ * MM ("mapped shared"), or if the folio is only mapped into a single MM
-+ * ("mapped exclusively").
-  *
-- * Return: The estimated number of processes sharing a folio.
-+ * As precise information is not easily available for all folios, this function
-+ * estimates the number of MMs ("sharers") that are currently mapping a folio
-+ * using the number of times the first page of the folio is currently mapped
-+ * into page tables.
-+ *
-+ * For small anonymous folios (except KSM folios) and anonymous hugetlb folios,
-+ * the return value will be exactly correct, because they can only be mapped
-+ * at most once into an MM, and they cannot be partially mapped.
-+ *
-+ * For other folios, the result can be fuzzy:
-+ * (a) For partially-mappable large folios (THP), the return value can wrongly
-+ *     indicate "mapped exclusively" (false negative) when the folio is
-+ *     only partially mapped into at least one MM.
-+ * (b) For pagecache folios (including hugetlb), the return value can wrongly
-+ *     indicate "mapped shared" (false positive) when two VMAs in the same MM
-+ *     cover the same file range.
-+ * (c) For (small) KSM folios, the return value can wrongly indicate "mapped
-+ *     shared" (false negative), when the folio is mapped multiple times into
-+ *     the same MM.
-+ *
-+ * Further, this function only considers current page table mappings that
-+ * are tracked using the folio mapcount(s). It does not consider:
-+ * (1) If the folio might get mapped in the (near) future (e.g., swapcache,
-+ *     pagecache, temporary unmapping for migration).
-+ * (2) If the folio is mapped differently (VM_PFNMAP).
-+ * (3) If hugetlb page table sharing applies. Callers might want to check
-+ *     hugetlb_pmd_shared().
-+ *
-+ * Return: Whether the folio is estimated to be mapped into more than one MM.
-  */
--static inline int folio_estimated_sharers(struct folio *folio)
-+static inline bool folio_likely_mapped_shared(struct folio *folio)
- {
--	return page_mapcount(folio_page(folio, 0));
-+	return page_mapcount(folio_page(folio, 0)) > 1;
- }
- 
- #ifndef HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 50d146eb248ff..4d10904fef70c 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1829,7 +1829,7 @@ bool madvise_free_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 	 * If other processes are mapping this folio, we couldn't discard
- 	 * the folio unless they all do MADV_FREE so let's skip the folio.
- 	 */
--	if (folio_estimated_sharers(folio) != 1)
-+	if (folio_likely_mapped_shared(folio))
- 		goto out;
- 
- 	if (!folio_trylock(folio))
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 44a498c94158c..32a534d200219 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -366,7 +366,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 		folio = pfn_folio(pmd_pfn(orig_pmd));
- 
- 		/* Do not interfere with other mappings of this folio */
--		if (folio_estimated_sharers(folio) != 1)
-+		if (folio_likely_mapped_shared(folio))
- 			goto huge_unlock;
- 
- 		if (pageout_anon_only_filter && !folio_test_anon(folio))
-@@ -453,7 +453,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 		if (folio_test_large(folio)) {
- 			int err;
- 
--			if (folio_estimated_sharers(folio) > 1)
-+			if (folio_likely_mapped_shared(folio))
- 				break;
- 			if (pageout_anon_only_filter && !folio_test_anon(folio))
- 				break;
-@@ -677,7 +677,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
- 		if (folio_test_large(folio)) {
- 			int err;
- 
--			if (folio_estimated_sharers(folio) != 1)
-+			if (folio_likely_mapped_shared(folio))
- 				break;
- 			if (!folio_trylock(folio))
- 				break;
-diff --git a/mm/memory.c b/mm/memory.c
-index 1c45b6a42a1b9..8394a9843ca06 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -5173,7 +5173,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
- 	 * Flag if the folio is shared between multiple address spaces. This
- 	 * is later used when determining whether to group tasks together
- 	 */
--	if (folio_estimated_sharers(folio) > 1 && (vma->vm_flags & VM_SHARED))
-+	if (folio_likely_mapped_shared(folio) && (vma->vm_flags & VM_SHARED))
- 		flags |= TNF_SHARED;
- 
- 	nid = folio_nid(folio);
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index f60b4c99f1302..0b92fde395182 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -642,12 +642,11 @@ static int queue_folios_hugetlb(pte_t *pte, unsigned long hmask,
- 	 * Unless MPOL_MF_MOVE_ALL, we try to avoid migrating a shared folio.
- 	 * Choosing not to migrate a shared folio is not counted as a failure.
- 	 *
--	 * To check if the folio is shared, ideally we want to make sure
--	 * every page is mapped to the same process. Doing that is very
--	 * expensive, so check the estimated sharers of the folio instead.
-+	 * See folio_likely_mapped_shared() on possible imprecision when we
-+	 * cannot easily detect if a folio is shared.
- 	 */
- 	if ((flags & MPOL_MF_MOVE_ALL) ||
--	    (folio_estimated_sharers(folio) == 1 && !hugetlb_pmd_shared(pte)))
-+	    (!folio_likely_mapped_shared(folio) && !hugetlb_pmd_shared(pte)))
- 		if (!isolate_hugetlb(folio, qp->pagelist))
- 			qp->nr_failed++;
- unlock:
-@@ -1032,11 +1031,10 @@ static bool migrate_folio_add(struct folio *folio, struct list_head *foliolist,
- 	 * Unless MPOL_MF_MOVE_ALL, we try to avoid migrating a shared folio.
- 	 * Choosing not to migrate a shared folio is not counted as a failure.
- 	 *
--	 * To check if the folio is shared, ideally we want to make sure
--	 * every page is mapped to the same process. Doing that is very
--	 * expensive, so check the estimated sharers of the folio instead.
-+	 * See folio_likely_mapped_shared() on possible imprecision when we
-+	 * cannot easily detect if a folio is shared.
- 	 */
--	if ((flags & MPOL_MF_MOVE_ALL) || folio_estimated_sharers(folio) == 1) {
-+	if ((flags & MPOL_MF_MOVE_ALL) || !folio_likely_mapped_shared(folio)) {
- 		if (folio_isolate_lru(folio)) {
- 			list_add_tail(&folio->lru, foliolist);
- 			node_stat_mod_folio(folio,
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 73a052a382f13..35d376969f8b9 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2568,11 +2568,11 @@ int migrate_misplaced_folio(struct folio *folio, struct vm_area_struct *vma,
- 	/*
- 	 * Don't migrate file folios that are mapped in multiple processes
- 	 * with execute permissions as they are probably shared libraries.
--	 * To check if the folio is shared, ideally we want to make sure
--	 * every page is mapped to the same process. Doing that is very
--	 * expensive, so check the estimated mapcount of the folio instead.
-+	 *
-+	 * See folio_likely_mapped_shared() on possible imprecision when we
-+	 * cannot easily detect if a folio is shared.
- 	 */
--	if (folio_estimated_sharers(folio) != 1 && folio_is_file_lru(folio) &&
-+	if (folio_likely_mapped_shared(folio) && folio_is_file_lru(folio) &&
- 	    (vma->vm_flags & VM_EXEC))
- 		goto out;
- 
--- 
-2.43.2
-
+> ---
+>  drivers/gpu/drm/msm/dp/dp_ctrl.c    | 11 +++++++++++
+>  drivers/gpu/drm/msm/dp/dp_ctrl.h    |  1 +
+>  drivers/gpu/drm/msm/dp/dp_display.c | 17 ++++++++++++++---
+>  3 files changed, 26 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+> index 320f17fce9a6..bd81cc6bd5e3 100644
+> --- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
+> +++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+> @@ -1533,6 +1533,17 @@ void dp_ctrl_set_psr(struct dp_ctrl *dp_ctrl, bool enter)
+>  	}
+>  }
+>  
+> +int dp_ctrl_phy_set_mode(struct dp_ctrl *dp_ctrl, int submode)
+> +{
+> +	struct dp_ctrl_private *ctrl;
+> +	struct phy *phy;
+> +
+> +	ctrl = container_of(dp_ctrl, struct dp_ctrl_private, dp_ctrl);
+> +	phy = ctrl->phy;
+> +
+> +	return phy_set_mode_ext(phy, PHY_MODE_DP, submode);
+> +}
+> +
+>  void dp_ctrl_phy_init(struct dp_ctrl *dp_ctrl)
+>  {
+>  	struct dp_ctrl_private *ctrl;
+> diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.h b/drivers/gpu/drm/msm/dp/dp_ctrl.h
+> index fa014cee7e21..a10d1b19d172 100644
+> --- a/drivers/gpu/drm/msm/dp/dp_ctrl.h
+> +++ b/drivers/gpu/drm/msm/dp/dp_ctrl.h
+> @@ -32,6 +32,7 @@ struct dp_ctrl *dp_ctrl_get(struct device *dev, struct dp_link *link,
+>  			struct phy *phy);
+>  
+>  void dp_ctrl_reset_irq_ctrl(struct dp_ctrl *dp_ctrl, bool enable);
+> +int dp_ctrl_phy_set_mode(struct dp_ctrl *dp_ctrl, int mode);
+>  void dp_ctrl_phy_init(struct dp_ctrl *dp_ctrl);
+>  void dp_ctrl_phy_exit(struct dp_ctrl *dp_ctrl);
+>  void dp_ctrl_irq_phy_exit(struct dp_ctrl *dp_ctrl);
+> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+> index e4433891becb..e01b41ad2e2a 100644
+> --- a/drivers/gpu/drm/msm/dp/dp_display.c
+> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
+> @@ -1229,6 +1229,7 @@ static int dp_display_probe(struct platform_device *pdev)
+>  	int rc = 0;
+>  	struct dp_display_private *dp;
+>  	const struct msm_dp_desc *desc;
+> +	bool is_edp;
+>  
+>  	if (!pdev || !pdev->dev.of_node) {
+>  		DRM_ERROR("pdev not found\n");
+> @@ -1243,13 +1244,17 @@ static int dp_display_probe(struct platform_device *pdev)
+>  	if (!desc)
+>  		return -EINVAL;
+>  
+> +	is_edp = (desc->connector_type == DRM_MODE_CONNECTOR_eDP) ||
+> +		 of_property_read_bool(pdev->dev.of_node, "is-edp");
+> +
+>  	dp->dp_display.pdev = pdev;
+>  	dp->name = "drm_dp";
+>  	dp->id = desc->id;
+> -	dp->dp_display.connector_type = desc->connector_type;
+> +	dp->dp_display.connector_type = is_edp ?
+> +					DRM_MODE_CONNECTOR_eDP :
+> +					DRM_MODE_CONNECTOR_DisplayPort;
+>  	dp->wide_bus_en = desc->wide_bus_en;
+> -	dp->dp_display.is_edp =
+> -		(dp->dp_display.connector_type == DRM_MODE_CONNECTOR_eDP);
+> +	dp->dp_display.is_edp = is_edp;
+>  
+>  	rc = dp_init_sub_modules(dp);
+>  	if (rc) {
+> @@ -1257,6 +1262,12 @@ static int dp_display_probe(struct platform_device *pdev)
+>  		return -EPROBE_DEFER;
+>  	}
+>  
+> +	rc = dp_ctrl_phy_set_mode(dp->ctrl, is_edp ? PHY_SUBMODE_EDP : PHY_SUBMODE_DP);
+> +	if (rc) {
+> +		DRM_ERROR("setting PHY submode failed\n");
+> +		goto err;
+> +	}
+> +
+>  	/* setup event q */
+>  	mutex_init(&dp->event_mutex);
+>  	init_waitqueue_head(&dp->event_q);
+> 
+> -- 
+> 2.34.1
+> 
