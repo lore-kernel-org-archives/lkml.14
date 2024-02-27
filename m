@@ -1,171 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE632421D;
-	Tue, 27 Feb 2024 17:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373C21D54A
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709053217; cv=none; b=BgyM/NQyKzeDRInc9zSwkfL6EqS5Qzwgli+NHPgrJHldJ/yASPD7IivseeLOQAaoyBNTHwY7bGfnI1FqupxNYu7iO3iT3OG1aYw0xYmyxJgYQYV3tGFVu6eOIt9Emjv6ftc7Et6SBnj5fGDT/B2sQlRR6jkuB6zZhOpId+xldhw=
+	t=1709053277; cv=none; b=uaHuesXcOS+dzvKlhNP7HKBSRYS3aOlVA+jetL7mXECPyv5lCCUGH/yRxrm6ntW0NsrQDhZH8xuzQ8T8XYWTnMWwY7BmpHxlYZN3Erj6f47v+P5mj0EZ8UuDJN22qVpsQ2t0w45Vn+nOgy1J+IaRg6WC1qZJa5oZyNdTBbGoTfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709053217; c=relaxed/simple;
-	bh=Rtg/wJB+BwOfbLpXE7ewLdRK21mvIkgnQ8NFpKpylzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uuhj1ExzJvovrYUwgzsKyufpsEiaYyj41b/bCFqHxrs7zNHPLNyhX4Iga/tZzF9luL3ha3rAOtfC0GnhlvOHKjzkht2/85tX/OCoQ6vGFYreJb058FyNYYXEpoP3uhWHsN1ewPbVAVlv2cPIwvJ48I3TJiJeGUttGC4LheFAeDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEZVkleo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709053277; c=relaxed/simple;
+	bh=bznWHDXOpwAbmVELiNtkF+Zamo+nMl6cy7ms9jMVmTI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rbpff0ZYvVCQ2FBojk2ujoPXQNulFh5d8HpmyCyXOAEi9//y/a/A0TgnAu/fwtLFvgfmh/mpZbNXBE2YYu5fpsG1YwgGjw/pr1VnzqPs1isCuCuv228KJCGKr27sYYfBpaWflCbipPilua+LU8Ccs4009+1NHlpAYCbGuAJLD8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=syntacore.com; spf=fail smtp.mailfrom=syntacore.com; dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b=ss/rCZVI; dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b=Ac+HUnNY; arc=none smtp.client-ip=89.207.88.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=syntacore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=syntacore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEZVkleo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99DA7C433F1;
-	Tue, 27 Feb 2024 17:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709053217;
-	bh=Rtg/wJB+BwOfbLpXE7ewLdRK21mvIkgnQ8NFpKpylzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mEZVkleoAOhydHqEWHg/rQfg/pNdE3CSGBgWQPF8/NJIv8K3UrpYePZbTNCCm2uNf
-	 A07aYmhkG2OxxOI4hy+BI4cpj0H/6nQjkSCQ9JiFfrvfzldGbQ3VKf/eHzx9cPSWhq
-	 J/w/GXftvQZYCfEutbIu7/HIeJhwiKZU8f4EaWp7YdeRh0AH+SKWnPvUO30c7lvUzz
-	 vZrO1FKHgPBXGn/vr2dpjcBaqVAqx+0x3ytQV1y5OyR3GXUVfBMfTFs/Rmf1xu8ULY
-	 24WLz6N4GqSW3UaH+/AJCULFkhFmaLKgJK2dhTNUfaDEJt/3qnHhwWsD5C/Byhl+Gq
-	 yw1U2w14cQlLg==
-Date: Tue, 27 Feb 2024 17:00:12 +0000
-From: Simon Horman <horms@kernel.org>
-To: Piotr Wejman <piotrwejman90@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: stmmac: fix rx queue priority assignment
-Message-ID: <20240227170012.GC277116@kernel.org>
-References: <20240226093144.31965-1-piotrwejman90@gmail.com>
+	dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b="ss/rCZVI";
+	dkim=pass (2048-bit key) header.d=syntacore.com header.i=@syntacore.com header.b="Ac+HUnNY"
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 219C4C002E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=syntacore.com;
+	s=mta-04; t=1709053273;
+	bh=mczoY9NKf5IBt5T4Xh9ynOn0nMrRnFZ+wXSkQuHkLYM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=ss/rCZVIbpEiLw/81MIs41zgCIYwQ7eO1waUK8E2lC8XV1bPZ/ADFEl5i9RCdVgQn
+	 NVgXiB2dxEOFXWIKocoDXNdcQ+2ppyHptremx/GYff26TGVX6GRbvNeIWq329bsEcI
+	 XulHE91KC1Oj9t/Wb+cDtuvFR2oD13+CZd7wHbiH5dFfRx797j4UOCCsGy+p+yG4UH
+	 Sv7JIk/FNsJzUVcdNGIKyYsXSwav/yKU9qqMTUEyzTYlCrBl4aG6epatfU/yYXgdcx
+	 DTmEnXn7rAKjOaIxBvQxaYWh+AXP4XiOx3HHj6wqal3uhghxS37F+2xk4PNEbb+FC6
+	 mFvMoAegilq5A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=syntacore.com;
+	s=mta-03; t=1709053273;
+	bh=mczoY9NKf5IBt5T4Xh9ynOn0nMrRnFZ+wXSkQuHkLYM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=Ac+HUnNYE6GR09eK4K4fDoSgzTYJDSzmjFTWbF4DHCLei8ZJ7/ZyhmedErh8tfw/i
+	 ouFn25bFeAJZgIzuSuoykv3pDYUCflzkbH6U8QlAqtW91cdxy81wrCSF9EiXM2TfeY
+	 C9o+l/5J39JIugvNl1fy+cxk7SYW88+zIyh7Wut7B+P4/c5hDjf4i++9/lRgLOIlES
+	 /DEqtjTlehyFThpiclkVrSV4eKqotjf2z0f/8pwTDZ1H5z6ktgfNd0CKiUB3Nlt5PS
+	 EG22pwa7H5Ytcv4YEx+XLMI0F6XLVE/XPzEiu+fI8+C8duGJUJ5V1PkM22tR1q1E7F
+	 UqQTU2G4Q4SXQ==
+From: Vadim Shakirov <vadim.shakirov@syntacore.com>
+To: <linux-riscv@lists.infradead.org>
+CC: Vadim Shakirov <vadim.shakirov@syntacore.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Will Deacon
+	<will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v2,RESEND 1/2] drivers: perf: added capabilities for legacy PMU
+Date: Tue, 27 Feb 2024 20:00:01 +0300
+Message-ID: <20240227170002.188671-2-vadim.shakirov@syntacore.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240227170002.188671-1-vadim.shakirov@syntacore.com>
+References: <20240227170002.188671-1-vadim.shakirov@syntacore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226093144.31965-1-piotrwejman90@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: T-Exch-05.corp.yadro.com (172.17.10.109) To
+ S-Exch-01.corp.yadro.com (10.78.5.241)
 
-On Mon, Feb 26, 2024 at 10:31:44AM +0100, Piotr Wejman wrote:
-> The driver should ensure that same priority is not mapped to multiple
-> rx queues. Currently rx_queue_priority() function is adding
-> priorities for a queue without clearing them from others.
-> 
-> >From DesignWare Cores Ethernet Quality-of-Service
-> Databook, section 17.1.29 MAC_RxQ_Ctrl2:
-> "[...]The software must ensure that the content of this field is
-> mutually exclusive to the PSRQ fields for other queues, that is,
-> the same priority is not mapped to multiple Rx queues[...]"
-> 
-> After this patch, rx_queue_priority() function will:
-> - assign desired priorities to a queue
-> - remove those priorities from all other queues
-> The write sequence of CTRL2 and CTRL3 registers is done in the way to
-> ensure this order.
-> 
-> Signed-off-by: Piotr Wejman <piotrwejman90@gmail.com>
-> ---
-> Changes in v2:
->   - Add some comments
->   - Apply same changes to dwxgmac2_rx_queue_prio()
->   - Revert "Rename prio argument to prio_mask"
->   - Link to v1: https://lore.kernel.org/netdev/20240219102405.32015-1-piotrwejman90@gmail.com/T/#u
-> 
->  .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 42 +++++++++++++++----
->  .../ethernet/stmicro/stmmac/dwxgmac2_core.c   | 40 ++++++++++++++----
->  2 files changed, 66 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-> index 6b6d0de09619..76ec0c1da250 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-> @@ -92,19 +92,43 @@ static void dwmac4_rx_queue_priority(struct mac_device_info *hw,
->  				     u32 prio, u32 queue)
->  {
->  	void __iomem *ioaddr = hw->pcsr;
-> -	u32 base_register;
-> -	u32 value;
-> +	u32 clear_mask = 0;
-> +	u32 ctrl2, ctrl3;
-> +	int i;
->  
-> -	base_register = (queue < 4) ? GMAC_RXQ_CTRL2 : GMAC_RXQ_CTRL3;
-> -	if (queue >= 4)
-> -		queue -= 4;
-> +	ctrl2 = readl(ioaddr + GMAC_RXQ_CTRL2);
-> +	ctrl3 = readl(ioaddr + GMAC_RXQ_CTRL3);
-> +	
-> +	/* The software must ensure that the same priority
-> +	 * is not mapped to multiple Rx queues.
-> +	 */
-> +	for (i = 0; i < 4; i++)
-> +		clear_mask |= ((prio << GMAC_RXQCTRL_PSRQX_SHIFT(i)) &
-> +						GMAC_RXQCTRL_PSRQX_MASK(i));
->  
-> -	value = readl(ioaddr + base_register);
-> +	ctrl2 &= ~clear_mask;
-> +	ctrl3 &= ~clear_mask;
->  
-> -	value &= ~GMAC_RXQCTRL_PSRQX_MASK(queue);
-> -	value |= (prio << GMAC_RXQCTRL_PSRQX_SHIFT(queue)) &
-> +	/* Assign new priorities to a queue and
-> +	 * clear them from others queues.
-> +	 * The CTRL2 and CTRL3 registers write sequence is done
-> +	 * in the way to ensure this order.
-> +	 */
-> +	if (queue < 4) {
-> +		ctrl2 |= (prio << GMAC_RXQCTRL_PSRQX_SHIFT(queue)) &
->  						GMAC_RXQCTRL_PSRQX_MASK(queue);
-> -	writel(value, ioaddr + base_register);
-> +
-> +		writel(ctrl2, ioaddr + GMAC_RXQ_CTRL2);
-> +		writel(ctrl3, ioaddr + GMAC_RXQ_CTRL3);
-> +	} else {
-> +		queue -= 4;
-> +
-> +		ctrl3 |= (prio << GMAC_RXQCTRL_PSRQX_SHIFT(queue)) &
-> +						GMAC_RXQCTRL_PSRQX_MASK(queue);
-> +
-> +		writel(ctrl3, ioaddr + GMAC_RXQ_CTRL3);
-> +		writel(ctrl2, ioaddr + GMAC_RXQ_CTRL2);
-> +	}
->  }
+Added the PERF_PMU_CAP_NO_INTERRUPT flag because the legacy pmu driver
+does not provide sampling capabilities
 
-Hi Piotr,
+Added the PERF_PMU_CAP_NO_EXCLUDE flag because the legacy pmu driver
+does not provide the ability to disable counter incrementation in
+different privilege modes
 
-Sorry if I am on the wrong track here, but this seems a little odd to me.
+Suggested-by: Atish Patra <atishp@rivosinc.com>
+Signed-off-by: Vadim Shakirov <vadim.shakirov@syntacore.com>
+---
+ drivers/perf/riscv_pmu_legacy.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-My reading is that each byte of GMAC_RXQ_CTRL2 and GMAC_RXQ_CTRL3
-hold the priority value - an integer in the range of 0-255 - for
-each of 8 queues.
-
-This corresponds with the way that the queue is set both before and
-after this patch.
-
-But the code immediately above treats these bytes as bit fields.
-
-Consider the case where all queues are initialised to 0
-(I have no idea if this is valid queue values).
-
-Now suppose we wish to set Queue 0 to Priority 7.
-Then my my reading we will end up with.
-
-clear_mask = 0x07070707
-ctrl0 = (0x00000000 & ~clear_mask) | 0x00000007 = 0x00000007
-ctrl3 =  0x00000000 & ~clear_mask               = 0x00000000
-
-So far so good, but now suppose we now wish to set Queue 1 to Priority 9.
-Then we get:
-
-clear_mask = 0x09090909
-ctrl0 = (0x00000007 & ~clear_mask) | 0x00000900 = 0x00000906
-ctrl3 =  0x00000000 & ~clear_mask               = 0x00000000
-
-Now queue 0 seems to have priority 6.
-
-...
+diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
+index 79fdd667922e..a85fc9a15f03 100644
+--- a/drivers/perf/riscv_pmu_legacy.c
++++ b/drivers/perf/riscv_pmu_legacy.c
+@@ -117,6 +117,8 @@ static void pmu_legacy_init(struct riscv_pmu *pmu)
+ 	pmu->event_mapped = pmu_legacy_event_mapped;
+ 	pmu->event_unmapped = pmu_legacy_event_unmapped;
+ 	pmu->csr_index = pmu_legacy_csr_index;
++	pmu->pmu.capabilities |= PERF_PMU_CAP_NO_INTERRUPT;
++	pmu->pmu.capabilities |= PERF_PMU_CAP_NO_EXCLUDE;
+ 
+ 	perf_pmu_register(&pmu->pmu, "cpu", PERF_TYPE_RAW);
+ }
+-- 
+2.34.1
 
