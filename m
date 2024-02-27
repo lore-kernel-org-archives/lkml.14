@@ -1,153 +1,157 @@
-Received: from flow3-smtp.messagingengine.com (flow3-smtp.messagingengine.com [103.168.172.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FA81E867;
-	Tue, 27 Feb 2024 13:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE2C2F2D;
+	Tue, 27 Feb 2024 13:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709038824; cv=none; b=floBqBEwV/4D3sYFi7OOXuwVO5S9Mx/HODW03CckAv9nbdQYAha79iHDYy8IJaBupXUqLWpVMJqY6qxcT8qIp3y5MudwQQqnDO/9arqcIwL0DIGV0AKMtqxGKgOke4P6Jd0Ob+PYlEa0GXJNpGvq5N4+vMQAj9QrpipHcGlK8+E=
+	t=1709038898; cv=none; b=EI8EV8h4L8Xh/nuOgyWq7El0sujSj2Vo3vf7dJuBx4xLOI1U0pI+2GJj/1Svj408BD5bwj+UwWZ/3WVLm16Fco6wCz8UCyGkeR9rjBSadmD6TedwDYiXIAQTYIwbwDZlHJjy/xQsck/pJ/8sdMUHAdn9ex8ZHkUXGPYySe2sOpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709038824; c=relaxed/simple;
-	bh=48fVYdZIAfrNMXN/Ees34xjBvsXwLRNhCIA/vmywld4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=k6VPBsQM0TOjPVnS9HuyEC/yOAx3uxC6+7oYjQGV7AAGoV+TW/c2vPspEXPvkk1C3SX0V+9sNQGC+3GgvB8jAGGLSoNZbT+SHia7U7vQWwXO47nWwTboCGKbdlcAeVquSD+pPi1565LZXEX3zykWJTEjq5pjrbRcIAWgCnGu0uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=doMEcxip; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iJjpvobV; arc=none smtp.client-ip=103.168.172.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709038898; c=relaxed/simple;
+	bh=hVPtSdJtYddAG+EIclbX7xD+HPT6FRQSRfWO26yzzGA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=eTeQU7zY0XQj2YkzFxUR0qOOq1cHSHTSg4ArrQFgVzFGXNDg8gxsQlxbi2WjEk4V1kX5ih+qNPIjk6oRfE31ev+18zaDTKYHqtxiftuSA4268WVK0Qpj6LE387mQFJa2ZmjfOAHum+DXEJ8L6d13JJJo1XTAdo1U7xJwhf9s9uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WmB6Myd9; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="doMEcxip";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iJjpvobV"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailflow.nyi.internal (Postfix) with ESMTP id E922820017E;
-	Tue, 27 Feb 2024 08:00:21 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 27 Feb 2024 08:00:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709038821; x=1709046021; bh=qPhWauWFG9
-	Eq5yPAsXD3zB/CxlDkLHGeIaX5cUViM3k=; b=doMEcxipmJOZYakN3E69jPQTdJ
-	35sJW+eMxDEU8wKW5gL+aFVD9Lr2+/edhVCxEueBE4SjPQOOss9i9kkMWRN8dYRs
-	0cHV1uSXJYAAVbYRiGTlv5y2d1eXgfQkS91+dtyGHqyfZajToxSHp5gJGx4NU/cw
-	9Pjc1gWLfwK3f32OZwnzMAv5Y4kiAxJvPqbJvqJ5St9yq9p8Od3wmm+ZnmOXrZ2n
-	/Dfr6WSnp4B0ELzxOcQBhJnu7CO1t0Bmf/SZIojeTgenD+MPZl3P3xlv1Ajwu5qC
-	HucusYS22u1ijyfs8TDmYhuB/7drh5dT8Sf2P6Gc3IbZx259GkWereX/KiYQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709038821; x=1709046021; bh=qPhWauWFG9Eq5yPAsXD3zB/CxlDk
-	LHGeIaX5cUViM3k=; b=iJjpvobV8lNMXdJ3c9X5ZoAAm/tB04RwJ+tFspixbk+l
-	hz3A64T3SgGeYuk55UvKXWvbIKHLgmy0TG3nY3NQz+m6bxzoKx/2HPz9ihZrkCno
-	jADwgmVs0EptdeWMszSZvRVT4CySjCnvCVU2Siw4tNNrNWCGvGlOnNdI5B8VCa22
-	otMigDXjT17c5/6vcf6B+tuoh+MaMCpLqriInSba2m0fOuHXAzr5a7Qz2mPTA2V4
-	EDlo+WH2ug6p4Yx9jIAo6bHwYGKKVYDt54ZNLyUkqeyMkGP1KCzP1HK/L7NaPJES
-	QCcr4Lc1WL2dYkWeNgepRALAxeizpyhylJ/nShJOtg==
-X-ME-Sender: <xms:5NzdZZGAK9VhWesFRNNqNkG96wMflx-scjSiaMqTXVDS0j51JzogHQ>
-    <xme:5NzdZeUfqmTtfxQafXKrGTwTvt8V7k5ITBoIQIPmeawTFgAFAztj4QHDvouWN5p__
-    VB6rgcxw95y3Gke9qY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgeehgddvfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeeiteejheekhfdttefhieffjefgvdelhfelueffueffveehfeelleelffeuvedt
-    teenucffohhmrghinheplhhinhhugihtvhdrohhrghdpkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegr
-    rhhnuggsrdguvg
-X-ME-Proxy: <xmx:5NzdZbKqk6nDm5QR8YNCcucQCZU_V6L7yapRoyhF3aavtDGeVCBaJg>
-    <xmx:5NzdZfEFN9zLKP1x3Bx_sC-jOfni3oqSjeCUGUDiapdNwL9sL4b7Hg>
-    <xmx:5NzdZfXRM-fbGooB_ZPCBUQpYnWgH9phi_pNy8oHELaSWMS_O0Fiig>
-    <xmx:5dzdZc1qsknl85aTY6dDAmAkBxVQUtq9_xxQMiHx6UwxsCloMWfgT5zYEJ8>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 84657B6008D; Tue, 27 Feb 2024 08:00:20 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-153-g7e3bb84806-fm-20240215.007-g7e3bb848
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WmB6Myd9"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a3f893ad5f4so603076166b.2;
+        Tue, 27 Feb 2024 05:01:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709038895; x=1709643695; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UikzpkujjXwCtreWrXfmmEcvmx/a1ETRiTxhijrjC1Y=;
+        b=WmB6Myd9gQ+wtlgDVse3Rtv19VyY9RF9oPksLHlmw44u9wke31zPi63wJYnwg2X6IM
+         aPxac8Im3X7UnmZB71cqjvsH8g8JS6vPT1QPJ3LcZ4Cdk8ydxzL+/72QFY3fXKEqCBul
+         IIj6n5jQLvXAn82+o69mCtW47QUMlKnxGVY+7PP4rkJlU9Ek6Rscxj0nIXkeXQ56bUzl
+         I3crMTTKa5++qWuePOwEknlN2p+rk0Hk6C38L5Z6UjiPdCGsxUZ4Yd18a1KF+GRRpSkA
+         MvHaLs43MvBpLnuxF0RnveJUwtmbdgOtfipsDRQXEOLyHtBiEfjzxeqsvXiHuyqna/AS
+         ZaXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709038895; x=1709643695;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UikzpkujjXwCtreWrXfmmEcvmx/a1ETRiTxhijrjC1Y=;
+        b=NKvzdGC+xHDxsxeVkz6bMP+ce1CskrPQOb8dDkZ3uBsFyJtK3AZd3r8vjFm+ivdQz0
+         d49Uwfde+euqR9OlryejXaJjdZuoh8Hm5cz8J1f4JQUyoqMowxhBMRLVzObqpSawlfc7
+         QRVK5iRzWgnB7xMXyNW/QRD/+zMPpGDmuEUUW/blEAh6pb83ArmPqn7Fdc7N0Vz8ZErL
+         Kbx2cwcYhyuuMurPSHhm5b3OrcGX31BsQpMw8YWKXTrK9xeZnTkDUjyWsk6TjJZ5Kq81
+         MdydKoiVVr/IQcWIfvI4pokEMkThn27A/GZZlyz0WEMo93WAtxDej6xFuvmu8hwHGpyg
+         FskQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoRU9F1Le0Dq2n/6RIGQUQECCZociqVyJpzP2+HO2IVyLpZy4WcBAuQvT2pKGcBUadoh2RsDTgKHtdyz9YSeqMDycWKRAaErt59H+CUdnrTKBghR3eEIwFWwjbYRM1ToWfXoJ40vUD+sO58iDGEAZNejKqAFMZe2cAcpi754lSrxzcJ10=
+X-Gm-Message-State: AOJu0YzJwMBEtajklC7qnwEN6gHQnnP7dV8e4lQb9GVXuFiOejyZPg/R
+	sP8tZbvCSsaVMb0WbDHzISOFmAo6Db2Z3OSFuuvP27Qg5H0fMcSA37ryjl1QdqK83tfc3Fnu36G
+	jIugmtzHKhOnSDo90d3Zq3CChpS0=
+X-Google-Smtp-Source: AGHT+IHb++aO+WH0LPzz8cPRkyvMXG9JIS7JDxPe6iL2Dh7/MmMI+nRWcQtgev94gQgJ4/smhdGR0UO1XtOlfDYiQRk=
+X-Received: by 2002:a17:906:1b43:b0:a3f:1c10:5a63 with SMTP id
+ p3-20020a1709061b4300b00a3f1c105a63mr6925228ejg.38.1709038894414; Tue, 27 Feb
+ 2024 05:01:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <8e3e7d82-a9e7-4697-8147-d3800f0307db@app.fastmail.com>
-In-Reply-To: 
- <CANiDSCsMVR7gqzwrhPCWb7dQcezWbcHxkPNLZJrW=TWaAn+kXA@mail.gmail.com>
-References: <20240226-fix-clang-warnings-v2-0-fa1bc931d17e@chromium.org>
- <20240226-fix-clang-warnings-v2-3-fa1bc931d17e@chromium.org>
- <c25638af-d40d-4dbc-a179-efb6f29c38aa@xs4all.nl>
- <CANiDSCsMVR7gqzwrhPCWb7dQcezWbcHxkPNLZJrW=TWaAn+kXA@mail.gmail.com>
-Date: Tue, 27 Feb 2024 13:59:59 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ricardo Ribalda" <ribalda@chromium.org>,
- "Hans Verkuil" <hverkuil@xs4all.nl>
-Cc: "Mauro Carvalho Chehab" <mchehab@kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
- "Mike Isely at pobox" <isely@pobox.com>,
- "Tiffany Lin" <tiffany.lin@mediatek.com>,
- "Andrew-CT Chen" <andrew-ct.chen@mediatek.com>,
- "Yunfei Dong" <yunfei.dong@mediatek.com>,
- "Matthias Brugger" <matthias.bgg@gmail.com>,
- "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- "Bjorn Andersson" <andersson@kernel.org>,
- "Mathieu Poirier" <mathieu.poirier@linaro.org>,
- "Sebastian Fricke" <sebastian.fricke@collabora.com>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-remoteproc@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] media: mediatek: vcodedc: Fix Wcast-function-type-strict
- warnings
-Content-Type: text/plain
+References: <20240225213423.690561-1-chris.packham@alliedtelesis.co.nz>
+ <20240226-scabby-fiber-87d5d6e45028@thorsis.com> <fd1c8657-62e6-449c-b47f-a2c3223b405c@alliedtelesis.co.nz>
+ <20240227-married-amulet-da532c0a70d3@thorsis.com>
+In-Reply-To: <20240227-married-amulet-da532c0a70d3@thorsis.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 27 Feb 2024 15:00:58 +0200
+Message-ID: <CAHp75Vd3aza1192YpRHvi6y7oEsrAoYA3+Qcja7Fw22c9+xhRQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] auxdisplay: 7 segment LED display
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, 
+	"ojeda@kernel.org" <ojeda@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, 
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>, 
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>, 
+	"gregory.clement@bootlin.com" <gregory.clement@bootlin.com>, 
+	"sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, 
+	"andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "geert@linux-m68k.org" <geert@linux-m68k.org>, 
+	"pavel@ucw.cz" <pavel@ucw.cz>, "lee@kernel.org" <lee@kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024, at 12:35, Ricardo Ribalda wrote:
-> On Tue, 27 Feb 2024 at 12:17, Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> Ricardo,
->>
->> First of all, note the typo in theo subject line: vcodedc -> vcodec.
->>
->> There is also a similar (but not identical!) patch from Arnd:
->>
->> https://patchwork.linuxtv.org/project/linux-media/patch/20240224121059.1806691-1-arnd@kernel.org/
->>
->> That patch and yours share the change to common/mtk_vcodec_fw_vpu.c but otherwise
->> they are different, which is a bit odd.
->>
->> Can you take a look at Arnd's patch and see if you need to incorporate his changes
->> into your patch?
+On Tue, Feb 27, 2024 at 10:43=E2=80=AFAM Alexander Dahl <ada@thorsis.com> w=
+rote:
+> Am Mon, Feb 26, 2024 at 08:10:07PM +0000 schrieb Chris Packham:
+> > On 27/02/24 05:04, Alexander Dahl wrote:
+> > > Am Mon, Feb 26, 2024 at 10:34:20AM +1300 schrieb Chris Packham:
+> > >> This series adds a driver for a 7 segment LED display.
+> > >>
+> > >> I'd like to get some feedback on how this could be extended to suppo=
+rt >1
+> > >> character. The driver as presented is sufficient for my hardware whi=
+ch only has
+> > >> a single character display but I can see that for this to be generic=
+ally useful
+> > >> supporting more characters would be desireable.
+> > >>
+> > >> Earlier I posted an idea that the characters could be represended by
+> > >> sub-nodes[1] but there doesn't seem to be a way of having that and k=
+eeping the
+> > >> convenience of using devm_gpiod_get_array() (unless I've missed some=
+thing).
+> > >>
+> > >> [1] - https://scanmail.trustwave.com/?c=3D20988&d=3Dtrbc5eARVo-5gepR=
+nwbAKbQmiGk1bOSpqZDQx9bx7w&u=3Dhttps%3a%2f%2flore%2ekernel%2eorg%2flkml%2f2=
+a8d19ee-b18b-4b7c-869f-7d601cea30b6%40alliedtelesis%2eco%2enz%2f
+> > > Read that thread out of curiosity and I'm sorry if I'm late to the
+> > > party, but I wondered why this is limited to LEDs connected to GPIOs?
+> > >
+> > > Would it be possible to somehow stack this on top of some existing
+> > > LEDs?  I mean you could wire a 7 segment device to almost any LED
+> > > driver IC with enough channels, couldn't you?
+> >
+> > Mainly because the GPIO version is the hardware I have. I do wonder how
+> > this might work with something like the pca9551 which really is just a
+> > fancy version of the pca9554 on my board. A naive implementation would
+> > be to configure all the pca9551 pins as GPIOs and use what I have as-is=
+.
 >
-> We went separate paths :), I tried to make everything const (and
-> therefore the remoteproc changes) and he removed the const.
+> My idea was to do it on top of the LED abstraction, not on top of the
+> GPIO abstraction.  Currently you are using the GPIO consumer interface
+> and group 7 gpios which are supplied by that pca9554 in your case, but
+> could also be coming from a SoC or a 74hc595 etc.
+>
+> Why not put it a level of abstraction higher, and let it consume LEDs
+> instead of GPIOs?  Your usecase would still be possible then.
+>
+> As far as I could see the concept of a LED consumer can be done, the
+> leds-group-multicolor driver in
+> drivers/leds/rgb/leds-group-multicolor.c does that, introduced with
+> kernel v6.6 not so long ago.  It sets the sysfs entries of the LEDs
+> part of the group to readonly so they are not usable on their own
+> anymore and one would not disturb the grouped multicolor LED.
+>
+> This would allow to use LEDs as a 7 segment group driven by any LED
+> driver including leds-gpio.
 
-I had the same patch 3 originally but there was still a
-warning or a cast from const to non-const pointer, so I
-went with the simpler approach that I posted. 
+7-segment LEDs are not just a bunch of leds, they have explicit
+meaning and using LED infrastructure is an obscuration of what's going
+on (too many unrelated details are exposed, too hard to achieve what
+user needs). In the auxdisplay we have already the concept of "line
+display" with a 7-segment, or 14 (that are two main standards) with
+respective character mapping in case somebody wants to print more than
+hexadecimal digits on them. If I am mistaken, I would like to see the
+concept in the example here on how user space will take care of
+displaying (an arbitrary) data. Can you provide a draft of (user-side)
+documentation before we even start going this direction?
 
-Without that regression, your patch would be nicer, but I
-think the version you sent has the same regression that
-I ran into.
+> > Making a line display out of LED triggers might be another way of doing
+> > it but not something I really want to pursue.
+>
+> Fair enough.  I just wanted to share my idea.  Didn't want to pressure
+> you in any direction. :-)
 
-> His patch looks good to me. Shall I resend the series without this
-> patch or you can ignore 3/3 and take 1 and 2?
 
-I also sent your patches 1 and 2 with minor differences in
-whitespace. Both of these are already in linux-next, so I think
-you don't have to resend anything here.
-
-I sent a whole lot of -Wcast-function-type-strict warning fixes
-to address all randconfig builds on arm64, arm and x86, all but
-three are now merged. Aside from the mediatek vcodec, the only
-missing ones are
-
-https://lore.kernel.org/all/20240213095631.454543-1-arnd@kernel.org/
-https://lore.kernel.org/all/20240213100238.456912-1-arnd@kernel.org/
-
-I also had one patch for s390 but none of the other architectures.
-I think once Hans applies the vcodec patch, I'll resend the
-last two patches together with a patch to enable the warning by
-default.
-
-     Arnd
+--=20
+With Best Regards,
+Andy Shevchenko
