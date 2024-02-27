@@ -1,133 +1,276 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11698136659
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155B41474B1
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709048923; cv=none; b=DPeGRNdFrAfpmOIw9OSeoV8i9qckIFlgFd0lcnr/eZzruHJxTEDV3hL3s1NU3brPQk8aBsBtYlnk5z5hpgHEuk92oIyDux3+2CJkutpwg8wz3PCuy+77nmVBLzZa6hLKTW04DVGY+GdoSmgfCGW4S7ud8+kZFmDifZY0RcqLSD4=
+	t=1709048928; cv=none; b=BLLvpOjgxe+1EywTuoSDsI6bsNwCKlAyW/nDsMJ7JygvHIan205ZSD9LkKvYG7ls+gozSZhHg2MPDc9UhQe/5ZT1Uq6Y+knkvRdTxNwqUUQ24ZY4nlWfs0HGKfyhmHlcWTK+gw/SQIYs8mUY4f000B82k9rSa3VqEqQt2ouy3X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709048923; c=relaxed/simple;
-	bh=xseDL8aqwJ3pS83U9vW3Z+KU8J4IQwtrHyBSKAu00NU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cruo+7eUQxjN+bFNLvUof0fCMz7LG8kGtGTRwxaWrnaCu2xfhbMLmcogPPg9vUwT3W9OdCASXzweIx4fbRBnMceLR6e4e7Tb/fDj5CmG3Cb99EgDNx4asAenTcYANcv/dQJKNQN/aCsCRrerjdyHBIkulemOQAredHnmbFd91hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yWiLmoTM; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709048928; c=relaxed/simple;
+	bh=i9u+dH97zSEs1MAnJLs4Et4BvaFS2eYMv/edXCLeuA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N5rmkF34dx3xT6IINqH3dFA4JkOARAax9T8ueYAD7cINbyU8C2ZmJItbdSIBN9nJKaPkt/BhngoqH00BIFR2Bk8i+YO+OJ7ZYn6+kjTVTdj7P2UNgQzsPaIMg+dyEloRXg6NAlVMSbPgPDw2yjNELvo3ykwGptbJMTUHOgos9S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IERhslfA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yWiLmoTM"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso4750984a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 07:48:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709048920; x=1709653720; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QXrScq6tyripMTKkpGLAH5gv8RQMW4EU8tt1ciIiraQ=;
-        b=yWiLmoTMnPitBId+2OCuMv04e1MI82G2YUpdygiif5YQjREflCM9iUO1+5lsYetAgT
-         k6wmnJLtwt9yWgQzAKqYxwuYNY/lSu04/NLWZiFf7DWEZdzpP0j9HT/F3DDxdvqcfkA7
-         GTgaWplE2U5B1dRDH7a8P2VymZl1lDbyGJcP4N8ayJR2QBzpyh2BVlC1bGDZP+6hQSPZ
-         zAhdlEVSDRn1LIluGzzPClOJd3HewdSLdv+JHhk5m740xsKbvkMYv49QQmSQ4bNHsWVX
-         YD660DWq8jL+1pT95pmKrVSRiLeQfvr8AXsya84DEtsAcpXTCvPyAIMkvxWcBIL6yPo5
-         3m+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709048920; x=1709653720;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QXrScq6tyripMTKkpGLAH5gv8RQMW4EU8tt1ciIiraQ=;
-        b=OBQVXuWefoLjqHRyq2qJCG0FOUEqlLZ7SwG5Dvp+nOvmYkzbpR+5SCgNX7EWH3E1y4
-         yYokMUDLz58CtZsVCXosKFIgTs+jYB3mGzgvMNSZPoQxgmy64Rc5sg76TtgCoTnSY+og
-         mNH0SAasDx5QGcXpmnAi+a6Hznao9RULZjgeesl4YrovSD2bvQQhxOHX780tvRNStwrJ
-         dPsYOWcT9aDg58bpZqnitERBTKCk2FxEmW++JsVQyiYSYE1sII9euFfqsBmHI5otr7FJ
-         AYJDQIgKrRP3PrBiPf5Q1/OSc517rmjXzs5mRX1IzMoYHfqMxKKor62qIgmyQ8fVPXjO
-         U4vg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7In8F3CGYHmPb5GkXQTGYInesXNPDVAlhuQhR+uNu/Sgyfyn918WRJzyXlDsjIwXOrgzrcRPPxd4k5LQTS4Qu1x6RP8zW1gxKzTl8
-X-Gm-Message-State: AOJu0YymUKzmihmAlEcQWarpdUBe6kKi0rhYx1TUDY1g3mBAsJemTcSM
-	1krC5YjMeeFdJNvu/qFcxFfeqaUQEZbm6FBIdjP0ZAQYrMSeNGoVLtZAMDkCw9U=
-X-Google-Smtp-Source: AGHT+IFR3w95iw5UhtQURQsjMKyr5sxMjOTCvWOcPwiqQuMI6ALcY+8//FtAoUMBN8eZyDhwcIZj5Q==
-X-Received: by 2002:a17:906:140f:b0:a3f:c932:9c67 with SMTP id p15-20020a170906140f00b00a3fc9329c67mr7007741ejc.68.1709048920465;
-        Tue, 27 Feb 2024 07:48:40 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id fj7-20020a1709069c8700b00a381ca0e589sm888216ejc.22.2024.02.27.07.48.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 07:48:40 -0800 (PST)
-Message-ID: <7bcd0a62-becc-40dc-8ff2-710bfde41c46@linaro.org>
-Date: Tue, 27 Feb 2024 16:48:39 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IERhslfA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709048924;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wlhecyX4wcvqsYqsTlIlSWKDqo0GLSZ3uSP1tPTi8UA=;
+	b=IERhslfAZ7cihYEZWSmK1KfWiPHVK3pYqxG/142ScPwsZn+abzj2D63xpnEap6mv8ef8No
+	RCh/ONJDfWdPm8krztYRKERpLaGhIAzANuACTX3AsBvyUluQaD0a00FkltqyxAgfjjRGK/
+	evWchOAZ0SvLtMCu2k6ShJrzOhy/DSY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-222-ymtI2wXdMNyMZSVJv2jKPg-1; Tue, 27 Feb 2024 10:48:43 -0500
+X-MC-Unique: ymtI2wXdMNyMZSVJv2jKPg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5102F84ACA3;
+	Tue, 27 Feb 2024 15:48:42 +0000 (UTC)
+Received: from bfoster (unknown [10.22.32.137])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 12BA52166B33;
+	Tue, 27 Feb 2024 15:48:42 +0000 (UTC)
+Date: Tue, 27 Feb 2024 10:50:23 -0500
+From: Brian Foster <bfoster@redhat.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	djwong@kernel.org
+Subject: Re: [PATCH 03/21] bcachefs: btree write buffer knows how to
+ accumulate bch_accounting keys
+Message-ID: <Zd4Ev8XPzn5AJ8K9@bfoster>
+References: <20240225023826.2413565-1-kent.overstreet@linux.dev>
+ <20240225023826.2413565-4-kent.overstreet@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] arm64: dts: qcom: sm8450: Add mapping to llcc
- Broadcast_AND region
-Content-Language: en-US
-To: Unnathi Chalicheemala <quic_uchalich@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@quicinc.com
-References: <cover.1708551850.git.quic_uchalich@quicinc.com>
- <8b626c328bfb3ae297a228a6821471c4fcc2ec70.1708551850.git.quic_uchalich@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <8b626c328bfb3ae297a228a6821471c4fcc2ec70.1708551850.git.quic_uchalich@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240225023826.2413565-4-kent.overstreet@linux.dev>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-On 23/02/2024 00:07, Unnathi Chalicheemala wrote:
-> Mapping Broadcast_AND region for LLCC in SM8450.
+On Sat, Feb 24, 2024 at 09:38:05PM -0500, Kent Overstreet wrote:
+> Teach the btree write buffer how to accumulate accounting keys - instead
+> of having the newer key overwrite the older key as we do with other
+> updates, we need to add them together.
 > 
+> Also, add a flag so that write buffer flush knows when journal replay is
+> finished flushing accounting, and teach it to hold accounting keys until
+> that flag is set.
+> 
+> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> ---
+>  fs/bcachefs/bcachefs.h           |  1 +
+>  fs/bcachefs/btree_write_buffer.c | 66 +++++++++++++++++++++++++++-----
+>  fs/bcachefs/recovery.c           |  3 ++
+>  3 files changed, 61 insertions(+), 9 deletions(-)
+> 
+...
+> diff --git a/fs/bcachefs/btree_write_buffer.c b/fs/bcachefs/btree_write_buffer.c
+> index b77e7b382b66..002a0762fc85 100644
+> --- a/fs/bcachefs/btree_write_buffer.c
+> +++ b/fs/bcachefs/btree_write_buffer.c
+> @@ -5,6 +5,7 @@
+>  #include "btree_update.h"
+>  #include "btree_update_interior.h"
+>  #include "btree_write_buffer.h"
+> +#include "disk_accounting.h"
+>  #include "error.h"
+>  #include "journal.h"
+>  #include "journal_io.h"
+> @@ -123,7 +124,9 @@ static noinline int wb_flush_one_slowpath(struct btree_trans *trans,
+>  
+>  static inline int wb_flush_one(struct btree_trans *trans, struct btree_iter *iter,
+>  			       struct btree_write_buffered_key *wb,
+> -			       bool *write_locked, size_t *fast)
+> +			       bool *write_locked,
+> +			       bool *accounting_accumulated,
+> +			       size_t *fast)
+>  {
+>  	struct btree_path *path;
+>  	int ret;
+> @@ -136,6 +139,16 @@ static inline int wb_flush_one(struct btree_trans *trans, struct btree_iter *ite
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (!*accounting_accumulated && wb->k.k.type == KEY_TYPE_accounting) {
+> +		struct bkey u;
+> +		struct bkey_s_c k = bch2_btree_path_peek_slot_exact(btree_iter_path(trans, iter), &u);
+> +
+> +		if (k.k->type == KEY_TYPE_accounting)
+> +			bch2_accounting_accumulate(bkey_i_to_accounting(&wb->k),
+> +						   bkey_s_c_to_accounting(k));
 
-Nothing improved here.
+So it looks like we're accumulating from the btree key into the write
+buffer key. Is this so the following code will basically insert a new
+btree key based on the value of the write buffer key?
 
-Best regards,
-Krzysztof
+> +	}
+> +	*accounting_accumulated = true;
+> +
+>  	/*
+>  	 * We can't clone a path that has write locks: unshare it now, before
+>  	 * set_pos and traverse():
+> @@ -248,8 +261,9 @@ static int bch2_btree_write_buffer_flush_locked(struct btree_trans *trans)
+>  	struct journal *j = &c->journal;
+>  	struct btree_write_buffer *wb = &c->btree_write_buffer;
+>  	struct btree_iter iter = { NULL };
+> -	size_t skipped = 0, fast = 0, slowpath = 0;
+> +	size_t overwritten = 0, fast = 0, slowpath = 0, could_not_insert = 0;
+>  	bool write_locked = false;
+> +	bool accounting_replay_done = test_bit(BCH_FS_accounting_replay_done, &c->flags);
+>  	int ret = 0;
+>  
+>  	bch2_trans_unlock(trans);
+> @@ -284,17 +298,29 @@ static int bch2_btree_write_buffer_flush_locked(struct btree_trans *trans)
+>  
+>  	darray_for_each(wb->sorted, i) {
+>  		struct btree_write_buffered_key *k = &wb->flushing.keys.data[i->idx];
+> +		bool accounting_accumulated = false;
+
+Should this live within the interior flush loop?
+
+>  
+>  		for (struct wb_key_ref *n = i + 1; n < min(i + 4, &darray_top(wb->sorted)); n++)
+>  			prefetch(&wb->flushing.keys.data[n->idx]);
+>  
+>  		BUG_ON(!k->journal_seq);
+>  
+> +		if (!accounting_replay_done &&
+> +		    k->k.k.type == KEY_TYPE_accounting) {
+> +			slowpath++;
+> +			continue;
+> +		}
+> +
+>  		if (i + 1 < &darray_top(wb->sorted) &&
+>  		    wb_key_eq(i, i + 1)) {
+>  			struct btree_write_buffered_key *n = &wb->flushing.keys.data[i[1].idx];
+>  
+> -			skipped++;
+> +			if (k->k.k.type == KEY_TYPE_accounting &&
+> +			    n->k.k.type == KEY_TYPE_accounting)
+> +				bch2_accounting_accumulate(bkey_i_to_accounting(&n->k),
+> +							   bkey_i_to_s_c_accounting(&k->k));
+> +
+> +			overwritten++;
+>  			n->journal_seq = min_t(u64, n->journal_seq, k->journal_seq);
+>  			k->journal_seq = 0;
+>  			continue;
+> @@ -325,7 +351,8 @@ static int bch2_btree_write_buffer_flush_locked(struct btree_trans *trans)
+>  				break;
+>  			}
+>  
+> -			ret = wb_flush_one(trans, &iter, k, &write_locked, &fast);
+> +			ret = wb_flush_one(trans, &iter, k, &write_locked,
+> +					   &accounting_accumulated, &fast);
+>  			if (!write_locked)
+>  				bch2_trans_begin(trans);
+>  		} while (bch2_err_matches(ret, BCH_ERR_transaction_restart));
+> @@ -361,8 +388,15 @@ static int bch2_btree_write_buffer_flush_locked(struct btree_trans *trans)
+>  			if (!i->journal_seq)
+>  				continue;
+>  
+> -			bch2_journal_pin_update(j, i->journal_seq, &wb->flushing.pin,
+> -						bch2_btree_write_buffer_journal_flush);
+> +			if (!accounting_replay_done &&
+> +			    i->k.k.type == KEY_TYPE_accounting) {
+> +				could_not_insert++;
+> +				continue;
+> +			}
+> +
+> +			if (!could_not_insert)
+> +				bch2_journal_pin_update(j, i->journal_seq, &wb->flushing.pin,
+> +							bch2_btree_write_buffer_journal_flush);
+
+Hmm.. so this is sane because the slowpath runs in journal sorted order,
+right?
+
+>  
+>  			bch2_trans_begin(trans);
+>  
+> @@ -375,13 +409,27 @@ static int bch2_btree_write_buffer_flush_locked(struct btree_trans *trans)
+>  					btree_write_buffered_insert(trans, i));
+>  			if (ret)
+>  				goto err;
+> +
+> +			i->journal_seq = 0;
+> +		}
+> +
+
+		/*
+		 * Condense the remaining keys <reasons reasons>...??
+		 */
+
+> +		if (could_not_insert) {
+> +			struct btree_write_buffered_key *dst = wb->flushing.keys.data;
+> +
+> +			darray_for_each(wb->flushing.keys, i)
+> +				if (i->journal_seq)
+> +					*dst++ = *i;
+> +			wb->flushing.keys.nr = dst - wb->flushing.keys.data;
+>  		}
+>  	}
+>  err:
+> +	if (ret || !could_not_insert) {
+> +		bch2_journal_pin_drop(j, &wb->flushing.pin);
+> +		wb->flushing.keys.nr = 0;
+> +	}
+> +
+>  	bch2_fs_fatal_err_on(ret, c, "%s: insert error %s", __func__, bch2_err_str(ret));
+> -	trace_write_buffer_flush(trans, wb->flushing.keys.nr, skipped, fast, 0);
+> -	bch2_journal_pin_drop(j, &wb->flushing.pin);
+> -	wb->flushing.keys.nr = 0;
+> +	trace_write_buffer_flush(trans, wb->flushing.keys.nr, overwritten, fast, 0);
+
+I feel like the last time I looked at the write buffer stuff the flush
+wasn't reentrant in this way. I.e., the flush switched out the active
+buffer and so had to process all entries in the current buffer (or
+something like that). Has something changed or do I misunderstand?
+
+>  	return ret;
+>  }
+>  
+> diff --git a/fs/bcachefs/recovery.c b/fs/bcachefs/recovery.c
+> index 6829d80bd181..b8289af66c8e 100644
+> --- a/fs/bcachefs/recovery.c
+> +++ b/fs/bcachefs/recovery.c
+> @@ -228,6 +228,8 @@ static int bch2_journal_replay(struct bch_fs *c)
+>  			goto err;
+>  	}
+>  
+> +	set_bit(BCH_FS_accounting_replay_done, &c->flags);
+> +
+
+I assume this ties into the question on the previous patch..
+
+Related question.. if the write buffer can't flush during journal
+replay, is there concern/risk of overflowing it?
+
+Brian
+
+>  	/*
+>  	 * First, attempt to replay keys in sorted order. This is more
+>  	 * efficient - better locality of btree access -  but some might fail if
+> @@ -1204,6 +1206,7 @@ int bch2_fs_initialize(struct bch_fs *c)
+>  	 * set up the journal.pin FIFO and journal.cur pointer:
+>  	 */
+>  	bch2_fs_journal_start(&c->journal, 1);
+> +	set_bit(BCH_FS_accounting_replay_done, &c->flags);
+>  	bch2_journal_set_replay_done(&c->journal);
+>  
+>  	ret = bch2_fs_read_write_early(c);
+> -- 
+> 2.43.0
+> 
 
