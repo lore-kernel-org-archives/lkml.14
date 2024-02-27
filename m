@@ -1,39 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADB41EEE6;
-	Tue, 27 Feb 2024 14:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121FC143C4B;
+	Tue, 27 Feb 2024 14:43:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709045004; cv=none; b=WBKU+NuQMC0uI5yhgqqPprvBLtrEuJpDNvjqrFn2ghyRFliCHPsE5pKeWnJp0bsQV/SkFQpidqZgFAdpgA8V/O839FkZ5csmA9sVKJLyhawQOyRTGnSxs4LLBmtLM8CHIY+hx2ghVK3sg0BFPuleSHOpwGELTpCZghSJzkCeIM0=
+	t=1709045008; cv=none; b=suH2uhOEwfsDWWHzC+o8VQTu3hELSKco/rzlQlnBL+Pq2Ibk4ZAudjLeRw+CbMFaNDNTvA63zAClq9A7nt5h+GdHV8DAd1eVH6UtLjWq1T9Dt/40HSKCpKnEjjv2IaZHxKvR4uNh/KZaD7Fi664VIFW9Hxaw32CjIthwdh6ZdCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709045004; c=relaxed/simple;
-	bh=uVNVKDE+Q8uouBYHgxRgACVal1G/pzzf4sCuaoUxbRk=;
+	s=arc-20240116; t=1709045008; c=relaxed/simple;
+	bh=lRrzBKrIw6IMk/zPqmDErJImxs2WJpQRTm7lYiDzG6w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eLzHjt+7v4S/FV5mmD7csY3AhzlQgbMYemjy+8Sk9GngT8y2YlkA89gTRn4vbxwjRg1xE6o/4mO6Zo8MKj5Ji0snr4tVz/YH3ClvTcZydEM3C31inNBx6kZZmZNrnGNH7sOPRmuZ0w0QM8pIeZYz7+jRCsdbYc8HKDmb+gdYPRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o81A2Gob; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=mocZITBJHT31lr3WXo1G/RRLUREXh1PDdJAbkJa5hs/v+fXSwXIm7bCfOSquYa12IlhVbPyZFfSCZaumboG2Dk7wJRzZr97rGDBPsOXloXxvOBD6iD0RKJ0z4Qqx5Lj5iNqpaN2MNDpU1P3FKhgs2ZJtWcWprCPmr3MhDwiNRIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C1KmzpMf; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o81A2Gob"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8E0852000D;
-	Tue, 27 Feb 2024 14:43:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C1KmzpMf"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 67EC72000F;
+	Tue, 27 Feb 2024 14:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709044999;
+	t=1709045003;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f2fkJXH11MYpToi/ZucTTv0HJIKz1iH1FGurjdxLDR0=;
-	b=o81A2GobnRl2aZEalcNlc6wLUK25/Q7djlugJ3Iik8WNvvCeCOadruHbKYFfimy+QYes3N
-	+PSkPkGdWXnd0wAfGNLT+JIVqrqG0opSzoEGP0A844Fbt59GBQqGdZX1M/I8MNToyyQ/LX
-	Mydc/qYBvu4X3txzUnkA1WEkn1abeRTgnOeIqingg0yY4ieJ6pYW9BEgOsGI772C1NOzY7
-	VgBf/JpmaMTxWJepYWmeJ6XMm7BY7JtNpTIsdMabnY9I0g3lHAY09z2Mmf/SJMQsolX++b
-	NOnDnkGEz3vFddnik3POHh+dwDNOP346tJPHNTOTbTbaJMWjV2TrSOo/jtLjkg==
+	bh=0qrNbHLth7t+TYb+eQgmfnSldjVrF0ZiF7hWZnRUVGI=;
+	b=C1KmzpMfQqxaYBK33bRPlZd2HERbaur4zLz8kisGdClxoaRjN/EPz3IdW22YsPasOPh+qp
+	qBjEnDhrGWtU+nGBNlV5s8QsoYyqIlRzUhL3jQA59GEQn8kFD0dDRu1otrfE6gE2VmhRm8
+	u6AfYXMIc4DZe3zCVTpZZin5a8dZkdoFv8XRZZLlx1IyLCszR+as3ltmZ8BQD5Umr/tFUA
+	hD96q7OxpVH1YHxC5ejKn2zXe7y6uA1wh8rGxA6i6Imo5nTSsLlKLeOEBn2wtWOphc5WhO
+	R9FOqGbOxMWkYoh4jJ/Xdt3VmnCpN0aBZW23QlG+1NmgcvEJVbvPkx3GxdllgQ==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 27 Feb 2024 15:42:53 +0100
-Subject: [PATCH net-next v5 11/17] dt-bindings: net: pse-pd: Add another
- way of describing several PSE PIs
+Date: Tue, 27 Feb 2024 15:42:56 +0100
+Subject: [PATCH net-next v5 14/17] dt-bindings: net: pse-pd: Add bindings
+ for PD692x0 PSE controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +41,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240227-feature_poe-v5-11-28f0aa48246d@bootlin.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240227-feature_poe-v5-14-28f0aa48246d@bootlin.com>
 References: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
 In-Reply-To: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -64,69 +64,76 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: kory.maincent@bootlin.com
 
-PSE PI setup may encompass multiple PSE controllers or auxiliary circuits
-that collectively manage power delivery to one Ethernet port.
-Such configurations might support a range of PoE standards and require
-the capability to dynamically configure power delivery based on the
-operational mode (e.g., PoE2 versus PoE4) or specific requirements of
-connected devices. In these instances, a dedicated PSE PI node becomes
-essential for accurately documenting the system architecture. This node
-would serve to detail the interactions between different PSE controllers,
-the support for various PoE modes, and any additional logic required to
-coordinate power delivery across the network infrastructure.
-
-The old usage of "#pse-cells" is unsuficient as it carries only the PSE PI
-index information.
+Add the PD692x0 I2C Power Sourcing Equipment controller device tree
+bindings documentation.
 
 This patch is sponsored by Dent Project <dentproject@linuxfoundation.org>.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
-Changes in v3:
-- New patch
+Changes in v2:
+- Enhance ports-matrix description.
+- Replace additionalProperties by unevaluatedProperties.
+- Drop i2c suffix.
 
-Changes in v4:
-- Remove $def
-- Fix pairset-names item list
-- Upgrade few properties description
-- Update the commit message
+Changes in v3:
+- Remove ports-matrix parameter.
+- Add description of all physical ports and managers.
+- Add pse_pis subnode moving to the API of pse-controller binding.
+- Remove the MAINTAINERS section for this driver as I will be maintaining
+  all pse-pd subsystem.
 
 Changes in v5:
-- Fix yamllint error.
-- Replace underscore by dash in properties names.
-- Add polarity-supported property.
+- Remove defs used only once.
+- Replace underscore by dash.
+- Add description.
 ---
- .../bindings/net/pse-pd/pse-controller.yaml        | 100 ++++++++++++++++++++-
- 1 file changed, 97 insertions(+), 3 deletions(-)
+ .../bindings/net/pse-pd/microchip,pd692x0.yaml     | 158 +++++++++++++++++++++
+ 1 file changed, 158 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml b/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
-index 2d382faca0e6..76a301463b48 100644
---- a/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
-+++ b/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
-@@ -13,6 +13,7 @@ description: Binding for the Power Sourcing Equipment (PSE) as defined in the
- 
- maintainers:
-   - Oleksij Rempel <o.rempel@pengutronix.de>
+diff --git a/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml b/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml
+new file mode 100644
+index 000000000000..62ea4363cba3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml
+@@ -0,0 +1,158 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/pse-pd/microchip,pd692x0.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip PD692x0 Power Sourcing Equipment controller
++
++maintainers:
 +  - Kory Maincent <kory.maincent@bootlin.com>
- 
- properties:
-   $nodename:
-@@ -22,11 +23,104 @@ properties:
-     description:
-       Used to uniquely identify a PSE instance within an IC. Will be
-       0 on PSE nodes with only a single output and at least 1 on nodes
--      controlling several outputs.
-+      controlling several outputs which are not described in the pse-pis
-+      subnode. This property is deprecated, please use pse-pis instead.
-     enum: [0, 1]
- 
--required:
--  - "#pse-cells"
-+  pse-pis:
++
++allOf:
++  - $ref: pse-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - microchip,pd69200
++      - microchip,pd69210
++      - microchip,pd69220
++
++  reg:
++    maxItems: 1
++
++  managers:
 +    type: object
 +    description:
-+      Overview of the PSE PIs provided by the controller.
++      List of the PD69208T4/PD69204T4/PD69208M PSE managers. Each manager
++      have 4 or 8 physical ports according to the chip version. No need to
++      specify the SPI chip select as it is automatically detected by the
++      PD692x0 PSE controller. The PSE managers have to be described from
++      the lowest chip select to the greatest one, which is the detection
++      behavior of the PD692x0 PSE controller. The PD692x0 support up to
++      12 PSE managers which can expose up to 96 physical ports. All
++      physical ports available on a manager have to be described in the
++      incremental order even if they are not used.
 +
 +    properties:
 +      "#address-cells":
@@ -140,86 +147,115 @@ index 2d382faca0e6..76a301463b48 100644
 +      - "#size-cells"
 +
 +    patternProperties:
-+      "^pse-pi@[0-9a-f]+$":
-+        type: object
++      "^manager@0[0-9]|1[0-2]$":
++        $ref: /schemas/graph.yaml#/properties/ports
 +        description:
-+          PSE PI for power delivery via pairsets, compliant with IEEE
-+          802.3-2022, Section 145.2.4. Each pairset comprises a positive and
-+          a negative VPSE pair, adhering to the pinout configurations
-+          detailed in the standard.
-+          See Documentation/networking/pse-pd/pse-pi.rst for details.
++          PD69208T4/PD69204T4/PD69208M PSE manager exposing 4 or 8 physical
++          ports.
 +
 +        properties:
 +          reg:
 +            description:
-+              Address describing the PSE PI index.
++              Incremental index of the PSE manager starting from 0, ranging
++              from lowest to highest chip select, up to 12.
 +            maxItems: 1
 +
-+          "#pse-cells":
-+            const: 0
-+
-+          pairset-names:
-+            $ref: /schemas/types.yaml#/definitions/string-array
-+            description:
-+              Names of the pairsets as per IEEE 802.3-2022, Section 145.2.4.
-+              Valid values are "alternative-a" and "alternative-b". Each name
-+              should correspond to a phandle in the 'pairset' property
-+              pointing to the power supply for that pairset.
-+            minItems: 1
-+            maxItems: 2
-+            items:
-+              enum:
-+                - alternative-a
-+                - alternative-b
-+
-+          pairsets:
-+            $ref: /schemas/types.yaml#/definitions/phandle-array
-+            description:
-+              List of phandles, each pointing to the power supply for the
-+              corresponding pairset named in 'pairset-names'. This property
-+              aligns with IEEE 802.3-2022, Section 33.2.3 and 145.2.4.
-+              PSE Pinout Alternatives (as per IEEE 802.3-2022 Table 145–3)
-+              | Conductor | Alternative A (MDI-X) | Alternative A (MDI) | Alternative B(X) | Alternative B(S) |
-+              |-----------|-----------------------|---------------------|------------------|------------------|
-+              | 1         | Negative VPSE         | Positive VPSE       | —                | —                |
-+              | 2         | Negative VPSE         | Positive VPSE       | —                | —                |
-+              | 3         | Positive VPSE         | Negative VPSE       | —                | —                |
-+              | 4         | —                     | —                   | Negative VPSE    | Positive VPSE    |
-+              | 5         | —                     | —                   | Negative VPSE    | Positive VPSE    |
-+              | 6         | Positive VPSE         | Negative VPSE       | —                | —                |
-+              | 7         | —                     | —                   | Positive VPSE    | Negative VPSE    |
-+              | 8         | —                     | —                   | Positive VPSE    | Negative VPSE    |
-+            minItems: 1
-+            maxItems: 2
-+
-+          polarity-supported:
-+            $ref: /schemas/types.yaml#/definitions/string-array
-+            description:
-+              Polarity configuration supported by the PSE PI pairsets.
-+            minItems: 1
-+            maxItems: 4
-+            items:
-+              enum:
-+                - MDI-X
-+                - MDI
-+                - X
-+                - S
++        patternProperties:
++          '^port@[0-7]$':
++            type: object
++            required:
++              - reg
 +
 +        required:
 +          - reg
-+          - "#pse-cells"
-+          - pairset-names
-+          - pairsets
-+          - polarity-supported
 +
-+oneOf:
-+  - required:
-+      - "#pse-cells"
-+  - required:
-+      - pse-pis
- 
- additionalProperties: true
- 
++required:
++  - compatible
++  - reg
++  - pse-pis
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      ethernet-pse@3c {
++        compatible = "microchip,pd69200";
++        reg = <0x3c>;
++
++        managers {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          manager@0 {
++            reg = <0>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            phys0: port@0 {
++              reg = <0>;
++            };
++
++            phys1: port@1 {
++              reg = <1>;
++            };
++
++            phys2: port@2 {
++              reg = <2>;
++            };
++
++            phys3: port@3 {
++              reg = <3>;
++            };
++          };
++
++          manager@1 {
++            reg = <1>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            phys4: port@0 {
++              reg = <0>;
++            };
++
++            phys5: port@1 {
++              reg = <1>;
++            };
++
++            phys6: port@2 {
++              reg = <2>;
++            };
++
++            phys7: port@3 {
++              reg = <3>;
++            };
++          };
++        };
++
++        pse-pis {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pse_pi0: pse-pi@0 {
++            reg = <0>;
++            #pse-cells = <0>;
++            pairset-names = "alternative-a", "alternative-b";
++            pairsets = <&phys0>, <&phys1>;
++            polarity-supported = "MDI", "S";
++          };
++          pse_pi1: pse-pi@1 {
++            reg = <1>;
++            #pse-cells = <0>;
++            pairset-names = "alternative-a";
++            pairsets = <&phys2>;
++            polarity-supported = "MDI";
++          };
++        };
++      };
++    };
 
 -- 
 2.25.1
