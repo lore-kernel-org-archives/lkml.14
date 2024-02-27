@@ -1,25 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8265136657
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA2C136657
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709025100; cv=none; b=TxqzIvoXr+qvg9uq3YFNQ8pZVaZcaxqUvuBrJRGpkKpSG4YZPXX3bo9uJkyf3fZ+jCnMY49hr8qlw+UtwjJsX9TKb5i3kjgYt+tjv0t1A7bxWtw79VITJ1TOrkLomId7uCbRQ5eT+i1l55amuyRUpuOp9mRszno30t1KSuOmgi8=
+	t=1709025118; cv=none; b=J6NVl4ftRFx18q9BcuBgfBnlCQhCtEUqlZgz12KG033UdnVQHGxg7SWgmUT3V9IYbTDdZC523w9GKG5NOarVAnQdFp8ey1hd/oxFuHjtTUJQZPwV0MJ7FOyMVbZpv1KnVMQurwpQoTWHQlxw4NadCX8ZGTXHnn8LLtcYAky9WCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709025100; c=relaxed/simple;
-	bh=qMLHym6yNvFLmUfm3UsVaWLkuqL0S1B5ZeBX1KCN1VA=;
+	s=arc-20240116; t=1709025118; c=relaxed/simple;
+	bh=oDlesCYRQ+W+skiSLRxgDIQGbf/zMO64VKoY9TJLA2Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=meNAQsRIUOdpyijGy40kCVluJNaupELcV1267j3ZAgN9VRaBo34BC6D0FJDbLX7lszyuwkDtE2wGsa+yGqf7egWxRt8S/Wo9zHMY0f+wtwwhKr0lTQ3imx31JiDghhjxvppJJFMnHkZmnCT0TmbM/LulIdwkc/kBsTDdu4n21tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C163DA7;
-	Tue, 27 Feb 2024 01:12:15 -0800 (PST)
-Received: from [10.57.67.4] (unknown [10.57.67.4])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB49E3F762;
-	Tue, 27 Feb 2024 01:11:35 -0800 (PST)
-Message-ID: <4c3d1891-e784-4599-9640-4ff092ba7a31@arm.com>
-Date: Tue, 27 Feb 2024 09:11:35 +0000
+	 In-Reply-To:Content-Type; b=XTQ9Y7Yq3p3nX8fDl1RixS35JVhArLuOoU8GyADN+kBFAn1nEKeDbZgeS9WwpPhZJxlrQwArmHRK7aLzHg4vthnZCwNrX4O7bhA4DGyuhFYz/6VL07U0p7Mihub/V3bHXxaaFXGTtRx306jqdkzj0Kr+k/cthAXLBJOOGmUljEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VwFNZ9b9; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VwFNZ9b9"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6e495e7d697so771087a34.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:11:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709025115; x=1709629915; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Iqmg1xIpurv53FgVspQqGn5e7v8oRKUqp2bPRQGCv1w=;
+        b=VwFNZ9b91bCyca8XnK+dkWiuaA2T0w8Nk+MGf+tXO2ckt98jsDsxj4IKGAsy7rVJOH
+         W9k56OJhT7jW4brzlK5GDLINqHTSmizV1FTqtCKK9GKAXzorn+Y6ZN75ANLJWkcVkYWh
+         vC08bZoP09jLCAd7k8Bb6+bTxcl1rB8bEeAgTuWfzODdST8W4laWKVqUjvxC872mi90D
+         aopzQJtzi8Lhd6ELCBWMiYjPoUII0FVcu/JkwbSv7rUJxh4YQlUveZRO5qyMGwjqboPR
+         Qc/6eWm7XPz5CxawYmQ2HEdLG/t73HWfn5/8OcX6WPqqyaSbiQfZ4DuDC4fQVNBr6zbE
+         2mlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709025115; x=1709629915;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Iqmg1xIpurv53FgVspQqGn5e7v8oRKUqp2bPRQGCv1w=;
+        b=NJQA1gYCN/O/K8sq0Hhins6LfGu3pLGakzCFuW+67tmU/QtLDx88rGYSBdRy2kjUaM
+         4Ro4/uLx/4WX9wAsv2ORgtMdg6kODmS7vmVJhNY8N7yMIKIZrFwK9Hbtha9Z3pR/hi6U
+         kqfUH4yHSvEMo6zVjFeH4tXgjJVmCV4x9h4PhmwdK/569pdixyHG+Lns/DjHLA+l4t0X
+         8DVFyAZrTjwJMfA9UJPCG/TqEW8njTEBIsLy5CxTjc2ERGVaphmzj1mL23oYPhhpFS6y
+         pnNzs2cREeVHD+QOECOYa6HcohYRfs8CY2e3o2z/H84psaXc42cyE6GYAhgRuIFd34h+
+         RCGg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8XVrUDVPkqI+AkiVgWfRpJ89zkfaXO82K3vOqfv2qf/2Jeiqnmikug021VBP6nl16Iuu8Lp0nEzeBxuAn2opa8g0NB93yvqolGMtd
+X-Gm-Message-State: AOJu0YwxbQY7dT7DU/9Ns17Qlc8TzNWIrwWlxLEh/Bf4mzKXaixV/nau
+	Cw+AxbAv1RW/mQ3k4Dz6t0uYAb2fR/tZdDI2SPC53TAlDgGHQJ2/51D7vJ52oOM=
+X-Google-Smtp-Source: AGHT+IHl56rwr930B3wadTCG40VLh8Pqx/IvnBbhnZLNnBMwNU6D0iq/HaPHH32q8T7UEoPk01A0xw==
+X-Received: by 2002:a4a:d0d4:0:b0:5a0:3aeb:ae3f with SMTP id u20-20020a4ad0d4000000b005a03aebae3fmr9524072oor.0.1709025115072;
+        Tue, 27 Feb 2024 01:11:55 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:999:a3a0:bf35:904f:7a0e:6c9a? ([2a01:e0a:999:a3a0:bf35:904f:7a0e:6c9a])
+        by smtp.gmail.com with ESMTPSA id fa29-20020a056a002d1d00b006e47b5b67d1sm979347pfb.77.2024.02.27.01.11.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 01:11:54 -0800 (PST)
+Message-ID: <a49546e8-6749-4458-98da-67fd37b7df18@rivosinc.com>
+Date: Tue, 27 Feb 2024 10:11:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,113 +61,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: export folio_pte_batch as a couple of modules might
- need it
-Content-Language: en-GB
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org, David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
- Lance Yang <ioworker0@gmail.com>, Yin Fengwei <fengwei.yin@intel.com>
-References: <20240227024050.244567-1-21cnbao@gmail.com>
- <CAGsJ_4yF+kuTtN4YmtwSvfcCRqixvzL5qT0BLLfTg9nLLsReZg@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAGsJ_4yF+kuTtN4YmtwSvfcCRqixvzL5qT0BLLfTg9nLLsReZg@mail.gmail.com>
+Subject: Re: [PATCH] riscv: deprecate CONFIG_MMU=n
+To: Charles Lohr <lohr85@gmail.com>, Conor Dooley <conor@kernel.org>
+Cc: Samuel Holland <samuel.holland@sifive.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Andrew Jones <ajones@ventanamicro.com>, Damien Le Moal <dlemoal@kernel.org>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+ Atish Patra <atishp@rivosinc.com>
+References: <20240226140649.293254-1-cleger@rivosinc.com>
+ <40dee2c1-ff24-40b2-a13c-6934139ba869@sifive.com>
+ <ea356036-5a0b-47ea-aafb-f9813cc6ec9b@rivosinc.com>
+ <20240226-pajamas-okay-51e16426b0f5@spud>
+ <CAGu26P_v9FjYq9Bncvfd-dBhdHQevvN3HpO1nqjA2hYFCpG7hg@mail.gmail.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <CAGu26P_v9FjYq9Bncvfd-dBhdHQevvN3HpO1nqjA2hYFCpG7hg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 27/02/2024 03:18, Barry Song wrote:
-> On Tue, Feb 27, 2024 at 3:41 PM Barry Song <21cnbao@gmail.com> wrote:
->>
->> From: Barry Song <v-songbaohua@oppo.com>
->>
->> madvise and some others might need folio_pte_batch to check if a range
->> of PTEs are completely mapped to a large folio with contiguous physcial
->> addresses. Let's export it for others to use.
->>
->> Cc: Lance Yang <ioworker0@gmail.com>
->> Cc: Ryan Roberts <ryan.roberts@arm.com>
->> Cc: David Hildenbrand <david@redhat.com>
-> 
-> Hi David, Ryan,
-> 
-> Sorry, I realize I just made a mistake and your tags should be both
-> Suggested-by. Please feel
-> free to review the patch and give comments. I will fix the tags
-> together with addressing your
-> review comments in v2.
 
-Don't worry about it. Don't feel you need to update it on my account.
+
+On 26/02/2024 20:00, Charles Lohr wrote:
+> WOAH! Please DO NOT deprecate NOMMU. I use the NOMMU build constantly
+> and NOMMU Linux on RISC-V is the avenue used by many FPGA soft cores
+> for Linux, as well as some limited systems.
+> 
+> I get new copies of the kernel when there are releases and test them
+> frequently to make sure everything is still working as expected.
+> 
+> For us we just don't care about XIP. I mean if someone did push it
+> through to fruition, I'd also test and use it, but I urge you please
+> do not deprecate this.  While it's sometimes needed a bit of a
+> creative build to get everything working, I've never needed to patch
+> anything in the kernel beyond patching in a custom console for serial
+> output.
+> 
+
+Hey Charles,
+
+No worries, we actually did not expected NOMMU to have *so many* users.
+I guess deprecating stuff is a good way to have immediate feedback ;).
+Having FDPIC psABI to be merged upstream could also probably be a
+positive point toward a better NOMMU support.
+
+> I am happy to discuss the possibility of me and or one of the other
+> RISC-V soft (FPGA) core people stepping up to try to be more active,
+> but so far we've just been very well serviced by the current NOMMU
+> Linux setup.
+
+It could probably be nice to have some feedback/Tested-by: from NOMMU
+users for new releases then.
+
+Thanks,
+
+Clément
 
 > 
->> Cc: Yin Fengwei <fengwei.yin@intel.com>
->> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->> ---
->>  -v1:
->>  at least two jobs madv_free and madv_pageout depend on it. To avoid
->>  conflicts and dependencies, after discussing with Lance, we prefer
->>  this one can land earlier.
->>
->>  mm/internal.h | 13 +++++++++++++
->>  mm/memory.c   | 11 +----------
->>  2 files changed, 14 insertions(+), 10 deletions(-)
->>
->> diff --git a/mm/internal.h b/mm/internal.h
->> index 13b59d384845..8e2bc304f671 100644
->> --- a/mm/internal.h
->> +++ b/mm/internal.h
->> @@ -83,6 +83,19 @@ static inline void *folio_raw_mapping(struct folio *folio)
->>         return (void *)(mapping & ~PAGE_MAPPING_FLAGS);
->>  }
->>
->> +/* Flags for folio_pte_batch(). */
->> +typedef int __bitwise fpb_t;
->> +
->> +/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
->> +#define FPB_IGNORE_DIRTY               ((__force fpb_t)BIT(0))
->> +
->> +/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
->> +#define FPB_IGNORE_SOFT_DIRTY          ((__force fpb_t)BIT(1))
->> +
->> +extern int folio_pte_batch(struct folio *folio, unsigned long addr,
->> +               pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
->> +               bool *any_writable);
->> +
->>  void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
->>                                                 int nr_throttled);
->>  static inline void acct_reclaim_writeback(struct folio *folio)
->> diff --git a/mm/memory.c b/mm/memory.c
->> index 1c45b6a42a1b..319b3be05e75 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -953,15 +953,6 @@ static __always_inline void __copy_present_ptes(struct vm_area_struct *dst_vma,
->>         set_ptes(dst_vma->vm_mm, addr, dst_pte, pte, nr);
->>  }
->>
->> -/* Flags for folio_pte_batch(). */
->> -typedef int __bitwise fpb_t;
->> -
->> -/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
->> -#define FPB_IGNORE_DIRTY               ((__force fpb_t)BIT(0))
->> -
->> -/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
->> -#define FPB_IGNORE_SOFT_DIRTY          ((__force fpb_t)BIT(1))
->> -
->>  static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
->>  {
->>         if (flags & FPB_IGNORE_DIRTY)
->> @@ -982,7 +973,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
->>   * If "any_writable" is set, it will indicate if any other PTE besides the
->>   * first (given) PTE is writable.
->>   */
->> -static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
->> +int folio_pte_batch(struct folio *folio, unsigned long addr,
->>                 pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
->>                 bool *any_writable)
->>  {
->> --
->> 2.34.1
->>
+> Charles
 > 
-> Thanks
-> Barry
-
+> 
+> On Mon, Feb 26, 2024 at 8:03 AM Conor Dooley <conor@kernel.org> wrote:
+>>
+>> On Mon, Feb 26, 2024 at 04:25:24PM +0100, Clément Léger wrote:
+>>> I guess I could also mark XIP as deprecated.
+>>
+>> I'm not so sure, people recently added XIP support to QEMU (and sent
+>> kernel fixes in December). XIP is also not nearly as much of a problem
+>> to support, there's far less that it does differently, the main barrier
+>> was the inability to test it which is no longer the case.
+>> That said, XIP is gonna kill itself off I feel as it does not support
+>> runtime patching and therefore is extremely limited on extensions, given
+>> we use alternatives for all of that (although I suppose if someone has a
+>> usecase they could make nasty macros worse and implement a compiletime
+>> switch in the alternatives too).
+>>
+>> Cheers,
+>> Conor.
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
