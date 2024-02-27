@@ -1,173 +1,74 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DC412FB18
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F338A1350FB;
+	Tue, 27 Feb 2024 08:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709023538; cv=none; b=AxNpaC+X/laWjmU9mYvb5UUZ7fv16HSvQIZF9wG5IN1x7G1NqxyX7NczLYwn/obN/fvlMLjZLSuj0+70HgAJYaMQovU6WAdBZp440SoWa5FDn2wozPUqkJja1F0dW/IBL4Co5qzfC2S2XuCKRfnC0d9pOHQtHSYZzkgI5l2OF4Y=
+	t=1709023545; cv=none; b=rJPeTfY4yQcU79AnUBokwFZ8azZmaQuVxrZS5QjPbFNIN5ym1sKOHktEJMgJa26ZucWTMnLC2OpGcwCG2C0cvLJQ6Sn+83zVNeXWqtL/cWEImibpwNco6cw8KI7mp7gPxw4MrNRv6LG1nbCiPAql8W8wTAL+C8LoPLsNdMLdIhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709023538; c=relaxed/simple;
-	bh=NQXAMJy/2J5czV1DsPsort/y7A38ChaDbSJa0ZjsrqA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eliUCS6bXIcI23GHgePNa5mrpJOxZ2fs/EXaipk927yH2nI9zSkuBUsNnf02NzrUMpk8mVvfPg4Wmzlu8QqFd3oeLO8T3c5mbW7g1mktCCs6gsAtZCDM2uk1eqzBo0bps55J4obAm0gEn77mK+S3bUe6DKfESz6PEsM0bGVSolw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q8eARM5l; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q8eARM5l"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6087d1355fcso23062047b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:45:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709023536; x=1709628336; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NQXAMJy/2J5czV1DsPsort/y7A38ChaDbSJa0ZjsrqA=;
-        b=Q8eARM5lHcq5PCvQS9DG11UHsm+w+fw8T1Rb7MUAqYzWA1OzExq2Y74pAxdxZtBPEX
-         RIB/KLUBvzIbI6Rzdx4ZhWqzSOlp4/qknVya7lCZO9oLRTmMSpc5yAWgTf6A+hBFdMoH
-         QL4PQfnk9TIzm3L9jvhPU2SrtrP/tbH6kbYfFvdwjSk+zcblVfVvmuj+ZCzdOrI+j3Ee
-         VYx4OLqBQJBeO+s3uTK60ShAti4BuktQscPlnvf3g9A8pFw49FMC3f7dxIJAdwzk59Ks
-         QmjJjhMSObeGtORiRkQsaJCB2CFkY67LrW99I/RXGMy4T86ljfVeSDHRIw1x/RUU9XsO
-         PwQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709023536; x=1709628336;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NQXAMJy/2J5czV1DsPsort/y7A38ChaDbSJa0ZjsrqA=;
-        b=OtED7WrMeJG9X6lQGtq+5qjVpKFwcoSvrOHIgPo2nHWTb8isl/fgNcbDhsg72Snd+s
-         h3SORZR5akbD6KgE09Opc3EK0tqr+bPahin/4C9LCW+Ttnk8lAWEnQg+K54PmFtPi9k4
-         7ukfTk0+Epy88uW826cDepn6Zz0IyGGwjtIa1w2lCJSex7XUIG6vFa0RpCZAgu577zfi
-         dh+qdra4WOfgiVepmUwOTXacxPSR6lA85X2gd8RWGYyzcQfVvSvkZ7xQ9QqtNRjpbdvW
-         YxGVENp1ZDb5lqe/0Do9BSZuVM65nXhwfFFxxaIRVHORVZs/p+JPPBA43o4Y8Ht+/X7X
-         2QEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXnVpJ4RoTv2/ONQsrx22xty39fTK5YznIqZInp8xp3SxtQmy0uBYXKAhBz5B4I5UWtbz/oBS/qpojpb0zoVYXEr6v2M+Rfxloj5YRp
-X-Gm-Message-State: AOJu0YxtfOXTWRpCy45NbF5VYWpDTDDxfhP18xSpJIXX+F8JuAgpVd9H
-	FnsiC1ES5WQlfJs14LVzUOyqCF40ZWmGBhc1suis+Uq2SJ1sUx+7qZGmNMZeZAr/2ieGMJbSGOa
-	DNr8g9xZossIpvCcWBT9MPAklGM8=
-X-Google-Smtp-Source: AGHT+IGERW1IeD22ep/7ZxNjLmYxShr7IfSgZW0Lwc1Ew0CHS2TcDv1xLiHW7OYMeA/oZxsrKaAuo11kQGqHXiE0so4=
-X-Received: by 2002:a81:6cc7:0:b0:608:3c43:9186 with SMTP id
- h190-20020a816cc7000000b006083c439186mr1571872ywc.45.1709023534709; Tue, 27
- Feb 2024 00:45:34 -0800 (PST)
+	s=arc-20240116; t=1709023545; c=relaxed/simple;
+	bh=CCn0CZhTswxO8dDtG9PzR8GZNoyxR230uzKtsvN3+pM=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=TOTzHgtUI/wKUwb7Ib51FsByc8ckgq28gu9AKed2J6ZecRuL4IQpCxs/MlunAxdvPJnTb4zjYNCLH1UYGc7ndKQMBaWTIZoc4+c3smXf22n4ZXTSgenWUlzU8fExFSQGBKTSZ0kjehugsDlmV2+kXwMd7ZLSVyGXm3kXRktrrNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-FEAT: hfxFW6oFtjtalW1lY5E2j+3Epj1A5pO4GIQu5QBhQ8URGybqh4mPiCEHjxSio
+	u3D4RQd4twFzZVqkXVZ1JqAsbqiTavYmLc9PcNQwiDx+76AiybIyEaKTeaup2zni/AHFKkW
+	dLmzjXjIM8MUEFLGRdn9sjyhA5lOvIOI+onaJCRWpLK6vEx5RmxPkWKEsH0Rcb/u7ZXb19R
+	iFkaryPj0KYRHJjSRBn0DF/G6nYalllrGsmJ42DRddrxkt9mWnykLMDguJ3WsSnpWRSvGio
+	9u5XtLWc/PKrBAAo1S1j8erD0zGWUZEgisCiH9OpFb/JgOmIG/M/qvAshr6ZTiNQTYE0obm
+	DdlSjjXCtzwGWxwU/hWIkRhIvlc1KHRnDsRBktxkN540pUj3g5oV42FraK+zw==
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: J9wt3V2enXy6+o2IMVQUP6Ji5KRVJGddXFirrQ2Sc5w=
+X-QQ-STYLE: 
+X-QQ-mid: t5gz7a-2t1709023492t9054922
+From: "=?utf-8?B?5YWz5paH5rab?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?V0FORyBYdWVydWk=?=" <kernel@xen0n.name>, "=?utf-8?B?546L5pix5Yqb?=" <wangyuli@uniontech.com>, "=?utf-8?B?ZGF2ZW0=?=" <davem@davemloft.net>, "=?utf-8?B?Y2hlbmh1YWNhaQ==?=" <chenhuacai@kernel.org>
+Cc: "=?utf-8?B?bGludXgtY3J5cHRv?=" <linux-crypto@vger.kernel.org>, "=?utf-8?B?bG9vbmdhcmNo?=" <loongarch@lists.linux.dev>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] loongarch/crypto: Clean up useless assignment operations
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240227070418.62292-1-ioworker0@gmail.com> <90471b2f-826e-4275-a9a3-ec673c3e6af8@redhat.com>
- <CAK1f24nr=giiYW2CVtbpuUxNshb9ksLhtY_v-SK1_AVvQPUEdQ@mail.gmail.com> <2aa8b0f0-4fd4-469a-ba72-82fe01d37f15@redhat.com>
-In-Reply-To: <2aa8b0f0-4fd4-469a-ba72-82fe01d37f15@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Tue, 27 Feb 2024 16:45:23 +0800
-Message-ID: <CAK1f24mVT7ucbUQZVnFQqN4KrgwTYHQ0q2ySXjq1UYW3s1m9SQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] mm/memory: Fix boundary check for next PFN in folio_pte_batch()
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, 21cnbao@gmail.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Tue, 27 Feb 2024 08:44:52 +0000
+X-Priority: 3
+Message-ID: <tencent_1407D9AC6F6B4411233FEAD6@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <20240226080328.334021-1-wangyuli@uniontech.com>
+	<48afa638-9145-40ee-9868-fa82a1fce271@xen0n.name>
+	<48fd3c4d-9b72-4515-9a95-d241857915b4@xen0n.name>
+In-Reply-To: <48fd3c4d-9b72-4515-9a95-d241857915b4@xen0n.name>
+X-QQ-ReplyHash: 4040909372
+X-BIZMAIL-ID: 17922161660482131816
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Tue, 27 Feb 2024 16:44:54 +0800 (CST)
+Feedback-ID: t:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-0
 
-On Tue, Feb 27, 2024 at 4:33=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 27.02.24 09:23, Lance Yang wrote:
-> > Hey David,
-> >
-> > Thanks for taking time to review!
-> >
-> > On Tue, Feb 27, 2024 at 3:30=E2=80=AFPM David Hildenbrand <david@redhat=
-.com> wrote:
-> >>
-> >> On 27.02.24 08:04, Lance Yang wrote:
-> >>> Previously, in folio_pte_batch(), only the upper boundary of the
-> >>> folio was checked using '>=3D' for comparison. This led to
-> >>> incorrect behavior when the next PFN exceeded the lower boundary
-> >>> of the folio, especially in corner cases where the next PFN might
-> >>> fall into a different folio.
-> >>
-> >> Which commit does this fix?
-> >>
-> >> The introducing commit (f8d937761d65c87e9987b88ea7beb7bddc333a0e) is
-> >> already in mm-stable, so we would need a Fixes: tag. Unless, Ryan's
-> >> changes introduced a problem.
-> >>
-> >> BUT
-> >>
-> >> I don't see what is broken. :)
-> >>
-> >> Can you please give an example/reproducer?
-> >
-> > For example1:
-> >
-> > PTE0 is present for large folio1.
-> > PTE1 is present for large folio1.
-> > PTE2 is present for large folio1.
-> > PTE3 is present for large folio1.
-> >
-> > folio_nr_pages(folio1) is 4.
-> > folio_nr_pages(folio2) is 4.
-> >
-> > pte =3D *start_ptep =3D PTE0;
-> > max_nr =3D folio_nr_pages(folio2);
-> >
-> > If folio_pfn(folio1) < folio_pfn(folio2),
-> > the return value of folio_pte_batch(folio2, start_ptep, pte, max_nr)
-> > will be 4(Actually it should be 0).
-> >
-> > For example2:
-> >
-> > PTE0 is present for large folio2.
-> > PTE1 is present for large folio1.
-> > PTE2 is present for large folio1.
-> > PTE3 is present for large folio1.
-> >
-> > folio_nr_pages(folio1) is 4.
-> > folio_nr_pages(folio2) is 4.
-> >
-> > pte =3D *start_ptep =3D PTE0;
-> > max_nr =3D folio_nr_pages(folio1);
-> >
->
-> In both cases, start_ptep does not map the folio.
->
-> It's a BUG in your caller unless I am missing something important.
+T2theSwgc29tZWhvdyBpIHRoaW5rIFl1bGkgdGhlIG9yaWdpbiBjb21taXQgbWVzc2FnZSBz
+b21lIG1pc2xlYWRpbmcNCnRoaW5ncyx0aGUgd2hvbGUgc3RvcnkgZXhwYW5kIHRoYXQgb3Jp
+Z2luIG1pcHMvY3J5cHRvL2NyYzMyLW1pcHMuYyBjb2RlIA0KImxlbiAtPSBzaXplb2YodTMy
+KTsiIG5lY2Vzc2FyeSBvbmx5IGluICIhQ09ORklHXzY0QklUIiBtYWNybyBkZWZpbmUsDQp0
+aGV5IGFyZSBqdXN0IGEgImJpbmFyeSBiaXQiIGdhbWUgYXMgd2UgdHJhbiB0aGUgbnVtYmVy
+IHRvIGJpbmFyeSBiaXQsDQp3aGlsZSBsZXNzIGFuZCBsZXNzIG9uZSBpbiA2NGJpdCAsdGhl
+IGxlc3MgdGhpbmcgd2UgZG8gaWYgPj0zMmJpdCBkbyBvbmNlLA0KPj0xNmJpdCBkbyBvbmNl
+IC4uLiBldGMuLi4gSWYgd2UgZGVsZXRlIHRoZSB1c2VsZXNzIGNvZGUgbGluZSwgaXQgaXMg
+dmVyeSBjb29sLA0KYW5kIHVucmVsYXRlZCB0byBzcGVjaWZpYyBJU0EuIFdlIGFsc28gdGhp
+bmsgbWF5YmUgd2UgbmVlZCB0byBhZGQgDQoiI2lmbmVmIENPTkZJR182NEJJVCJpbiBvcmln
+aW4gbWlwcy9jcnlwdG8vY3JjMzItbWlwcy5jICJsZW4gLT0gc2l6ZW9mKHUzMik7IiwNCmJ1
+dCBpdCBhZGQgY29kZSBpbnN0ZWFkIG9mIGRlbGV0ZSBjb2RlLi4uDQoNClRoYW5rcy4NCkd1
+YW4gV2VudGFv
 
-Sorry, I understood.
-
-Thanks for your clarification!
-Lance
-
->
->
-> > If max_nr=3D4, the return value of folio_pte_batch(folio1, start_ptep,
-> > pte, max_nr)
-> > will be 1(Actually it should be 0).
-> >
-> > folio_pte_batch() will soon be exported, and IMO, these corner cases ma=
-y need
-> > to be handled.
->
-> No, you should fix your caller.
->
-> The function cannot possibly do something reasonable if start_ptep does
-> not map the folio.
->
-> nr =3D pte_batch_hint(start_ptep, pte);
-> ...
-> ptep =3D start_ptep + nr; /* nr is >=3D 1 */
-> ...
-> return min(ptep - start_ptep, max_nr); /* will return something > 0 */
->
-> Which would return > 0 for something that does not map that folio.
->
->
-> I was trying to avoid official kernel docs for this internal helper,
-> maybe we have to improve it now.
->
-> --
-> Cheers,
->
-> David / dhildenb
->
