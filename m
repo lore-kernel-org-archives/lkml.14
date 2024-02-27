@@ -1,170 +1,115 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A609145B0C;
-	Tue, 27 Feb 2024 16:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EA8145B09
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709049640; cv=none; b=JbWSHp+jpE+OAxnwC7OZawqJNv5m8H8JXuQAuGMR5o892/vwWxxLY9nK/k16duyNJeci5GLRtSuEMsA3xkRbTfTfSvpPUIk9IJz9EuRihVMtQ89PNUYFIUfHegzz/zkoGML3cGiQqi7wvNL7GafJm5jgQbwdALf50Rn66dLlU0U=
+	t=1709049698; cv=none; b=WhuPuHnGYHRiJmFhQCmlVhHM/bnqXVnclnyHszlUTfLokLtIiVLvtXjyUmbs9H0fA/WRnCvDFL118RvB4M84Q5Vpiw7y4VEFJaHXMsvX2Refs6QxUEjfLtA5B80BREYMH8sm/ihG3S0NxElcpHxptSTAF7Z4I/pcCY6u9LnklC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709049640; c=relaxed/simple;
-	bh=eiMVjMY2eJZ0WHua7P/FmW7E68ijkTKDc8/jZWDrrtQ=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=b9OBsVOqBHAjLy/Pk4OToYs0EKZDFPP62GVqyZ+gaBSFQYDlY6G42jFxmFLcrdqbfWQUifCRX7GtpouCIWfeJgnL7hJqb50I2UA73AATpEy+JUXbu92cfc6uQHX6xs9xlpmRcpgf8ZC+egx+WtxSIgwjKnE1d55ADS5LyMxLD4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=ubQN3Jar; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1709049698; c=relaxed/simple;
+	bh=YcbXQMW6orIGD2J32M5lewwEx24IkTPl43MiFtSywpA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GP1X/04Otlax0g3AMSZRopEamNfA/Wb7SUD3OpIOXm3euvZUd5mlyYlbe0QchN+I1gWOCwp/g+5uuK8hHFh5r4OjKd4xGf/bD6WXYUMy/hgDhD3VHZaqW9vmP6PVFoDAHlSWqvsTtku4jtMNuNJX2uF+HipjX5AbZ+1KroUhVFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=I4mwwlWB; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="ubQN3Jar"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="I4mwwlWB"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bbbc6e51d0so3428623b6e.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:01:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1709049695; x=1709654495; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ac+DW6WihzpCoOAFiLjFcHhP6f2iYTwciWP36cUV4HM=;
+        b=I4mwwlWBWiZMVsYyZri+BrABvznzJdfpLDhkf6bWJYaTPX71+h5/owfxnSjWNfpkAY
+         nPAdR0wGWT1lxu/+UQb3/bQyhQWeavbcexWPhORfXfQR6jV0GV5VtR3ENgGtuv7WXUCA
+         la/fYWCwguC0k9foii7UY+o/2LPWd66tZP2LUIEnpfv1m208fqfjrBKVelMIO4mU9P/G
+         2yppWWb5N/tKS4kfxQfQoRWaeK0L5rHiu1aC7I8zhzQ9lE7CNPfetjuk5eVJwmU3KXVB
+         IJhTc2PzPUuylsC0lz9KYnBBhdGFEUzrwK+UEKqtz6nVjEvUcwYdMx1OlyaKC1QPOz7S
+         Vp7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709049695; x=1709654495;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ac+DW6WihzpCoOAFiLjFcHhP6f2iYTwciWP36cUV4HM=;
+        b=vBxxBMIbrpMIz6bfwDlOWUrB52fUtbYq99kECp+l9SOFc7xn/2omzaoj3A79oUZ46P
+         WrLWkNSj3235n+tPDoydb/+mBlDSOoYx7On2HdHsPdSJ9OJQ9ZqaBocCrjUgCPoOD98N
+         GJpKgQKGwL3WuUhZCRoa7fHPvmvsS+TqxmX77jfzPTiauUe1eptgj8MY93WiNLvrFx1k
+         cR2yvHtL3ASPqDovsvC+uXau3otgOucgnhn6q76dH+OcQDgr/lFbwRLXKYpSHrC+JZsN
+         geiKkBAWRdrJaZNxzgVTwEOo1YasZSgrHtaD3NsftTqK6Oh/JJApB4vsgpmA2qBa4/YA
+         IwfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5DeMWqaKYVrW9CtQdcJYClTdoRxpVIYqS/hU4UPhlnuRaLZoslmmEaek8OLR6tIG2OCltk1IjdGDJEuX8ilSD27iZDbz+poQPNXlH
+X-Gm-Message-State: AOJu0YxGPbvMOkL8hxIu0oP1cEHG21DfrOwCL1AoRt5cipBWwQOiOBA9
+	uujjnZ0Lwl/9Vx1SqnKCGvq6jwrucuQJd1dfthSzIN2KQUSbjG8KekCTa+jChDLO3LIycK/z7NF
+	kX2dGvBRD0MbwGf/xBuuxLijrImJLicUxWQ49
+X-Google-Smtp-Source: AGHT+IE9MdMFU9x6FoxeTlyyLtbrwrCH54o03/D8XMEA7Si2aBMN5Aya/Dkp9vESrpYl2ue09rzvpreM73e0UemlMqU=
+X-Received: by 2002:a05:6358:5e8c:b0:17b:5d21:e86e with SMTP id
+ z12-20020a0563585e8c00b0017b5d21e86emr12410573rwn.3.1709049694861; Tue, 27
+ Feb 2024 08:01:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1709049634;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S0ScTYlEOMm7KmQCkQkjYPl7d36pL1WA+3JbO05QOqI=;
-	b=ubQN3Jar96vFnIYInc7ImePz/0CkVCFsr74WzTjjQdPtwsi60iNnB6cRKzrHdG1qgUwYp7
-	+HHx/D9waAvr2uAC/VMpdmpH3hEWLK5qN8ycT6DLK11gHLgxDnTad92LiZ6CdNZE5q+sjS
-	Now4X4w1N+hgQmQ1GEZ/85EHSfPI3kXOS6OAGpeg5AgUf5RQp1zPDH8ikupOF3HM1b1TOa
-	m6QfN2IpgGTWpwLotmL/uhQgQLjGex3j6LnA2XzNbqfS+BZ68s8dGYG7ZcF1iyle+QpvDp
-	5OMHpDbdXhv/o+20dnda6iO1DfNY4J2Do0+4v41OaHbBh/yghGugRNUeFYMBwg==
-Date: Tue, 27 Feb 2024 17:00:31 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: Christopher Obbard <chris.obbard@collabora.com>
-Cc: Folker Schwesinger <dev@folker-schwesinger.de>, Alban Browaeys
- <alban.browaeys@gmail.com>, Doug Anderson <dianders@chromium.org>, Jensen
- Huang <jensenhuang@friendlyarm.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Vinod Koul <vkoul@kernel.org>, Chris
- Ruehl <chris.ruehl@gtsys.com.hk>, Brian Norris <briannorris@chromium.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, Linux ARM
- <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..."
- <linux-rockchip@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: add enable-strobe-pulldown to emmc
- phy on rk3399
-In-Reply-To: <eafd8d8c0cbcaca1b190f84ec17a1dcd7aec0306.camel@collabora.com>
-References: <20220822074139.3810-1-jensenhuang@friendlyarm.com>
- <23552842.6Emhk5qWAg@diego>
- <CAD=FV=W-ajJDfYcP3P8Jyk_KgsUAbdTtmwiNXqJ=Ab2ojgrUGw@mail.gmail.com>
- <CAMpZ1qEe7xFr+XaXsS_hWDLnGGA8PfzQiToOjY1N_1ctyQ+KxA@mail.gmail.com>
- <CAD=FV=U-=2GpQTb0N1p3Qe2TAb=JhyZJw2V8T-qbLs5TYhW7qA@mail.gmail.com>
- <7873090c4aad382813a65e35157d8684e8842974.camel@gmail.com>
- <CZFS45VOLIKW.2VS3M3VOMBT8V@folker-schwesinger.de>
- <eafd8d8c0cbcaca1b190f84ec17a1dcd7aec0306.camel@collabora.com>
-Message-ID: <ca5b7cad01f645c7c559ab26a8db8085@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+References: <20240223190546.3329966-1-mic@digikod.net> <20240223190546.3329966-2-mic@digikod.net>
+ <CAHC9VhQGLmeL4Buh3ZzS3LuZ9Grut9s7KEq2q04DYUMCftrVkg@mail.gmail.com> <CAHC9VhTUux1j9awg8pBhHv_4-ZZH0_txnEp5jQuiRpAcZy79uQ@mail.gmail.com>
+In-Reply-To: <CAHC9VhTUux1j9awg8pBhHv_4-ZZH0_txnEp5jQuiRpAcZy79uQ@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 27 Feb 2024 11:01:24 -0500
+Message-ID: <CAHC9VhQHpZZDOoPcCqRQJeDc_DOh8XGvhFF3M2wZse4ygCXZJA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] AppArmor: Fix lsm_get_self_attr()
+To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	John Johansen <john.johansen@canonical.com>
+Cc: Casey Schaufler <casey@schaufler-ca.com>, James Morris <jmorris@namei.org>, 
+	"Serge E . Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, Feb 26, 2024 at 2:59=E2=80=AFPM Paul Moore <paul@paul-moore.com> wr=
+ote:
+> On Fri, Feb 23, 2024 at 4:07=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
+wrote:
+> > On Fri, Feb 23, 2024 at 2:06=E2=80=AFPM Micka=C3=ABl Sala=C3=BCn <mic@d=
+igikod.net> wrote:
+> > >
+> > > aa_getprocattr() may not initialize the value's pointer in some case.
+> > > As for proc_pid_attr_read(), initialize this pointer to NULL in
+> > > apparmor_getselfattr() to avoid an UAF in the kfree() call.
+> > >
+> > > Cc: Casey Schaufler <casey@schaufler-ca.com>
+> > > Cc: John Johansen <john.johansen@canonical.com>
+> > > Cc: Paul Moore <paul@paul-moore.com>
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: 223981db9baf ("AppArmor: Add selfattr hooks")
+> > > Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> > > ---
+> > >  security/apparmor/lsm.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > If you like John, I can send this up to Linus with the related SELinux
+> > fix, I would just need an ACK from you.
+>
+> Reviewed-by: Paul Moore <paul@paul-moore.com>
+>
+> This patch looks good to me, and while we've still got at least two
+> (maybe three?) more weeks before v6.8 is tagged, I think it would be
+> good to get this up to Linus ASAP.  I'll hold off for another day, but
+> if we don't see any comment from John I'll go ahead and merge this and
+> send it up to Linus with the SELinux fix; I'm sure John wouldn't be
+> happy if v6.8 went out the door without this fix.
 
-On 2024-02-27 11:38, Christopher Obbard wrote:
-> On Tue, 2024-02-27 at 10:11 +0000, Folker Schwesinger wrote:
->> On Tue Feb 27, 2024 at 3:05 AM CET, Alban Browaeys wrote:
->> > Le mercredi 24 août 2022 à 07:57 -0700, Doug Anderson a écrit :
->> > > On Tue, Aug 23, 2022 at 8:11 PM Jensen Huang
->> > > <jensenhuang@friendlyarm.com> wrote:
->> > > > I realized that only some devices may be affected, so I considered
->> > > > modifying rk3399-nanopi4.dtsi only,
->> > > > but other boards without external pull-down should still need this
->> > > > patch.
->> > >
->> > > I guess the other alternative would be to change how the dt property
->> > > works. You could say:
->> > >
->> > > 1. If `enable-strobe-pulldown` is set then enable the strobe
->> > > pulldown.
->> > >
->> > > 2. If `enable-strobe-pulldown` is not set then don't touch the pin in
->> > > the kernel.
->> > >
->> > > 3. If someone later needs to explicitly disable the strobe pulldown
->> > > they could add a new property like `disable-strobe-pulldown`.
->> > >
->> > >
->> > > Obviously there are tradeoffs between that and what you've done and
->> > > I'm happy to let others make the call of which they'd prefer.
->> > >
->> >
->> > Christopher could you try "ROCK Pi 4" and "ROCK Pi 4+" with
->> > "enable-strobe-pulldown" instead of disabling HS400 as you did in July
->> > 2023?
->> >
->> 
->> with the following applied, the EMMC related errors are gone. dmesg 
->> only
->> shows "Purging ... bytes" during my tests:
->> 
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
->> index f2279aa6ca9e..ae0fb87e1a8b 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
->> @@ -647,8 +647,10 @@ &saradc {
->>  &sdhci {
->>         max-frequency = <150000000>;
->>         bus-width = <8>;
->> -       mmc-hs200-1_8v;
->> +       mmc-hs400-1_8v;
->> +       mmc-hs400-enhanced-strobe;
->>         non-removable;
->> +       rockchip,enable-strobe-pulldown;
->>         status = "okay";
->>  };
->> 
->> For testing I ran dd three times in a row:
->> 
->> dd if=/dev/zero of=./zero.bin bs=1M count=5000
->> 
->> I tested this on both a Rock 4SE board and a Rock Pi 4B+ board with 
->> the
->> same results.
-> 
-> Just for the record, all Rock 4 board schematics have no external 
-> strobe
-> pulldown resistor on the board, so we should be good to enable this.
-> 
-> I wonder what other boards this could be enabled for ?
-> 
-> It seemed to be the case on some eMMC it would work, others it 
-> wouldn't.
-> 
-> I haven't yet tested the above diff here as yet, but I can do that this 
-> week
-> on multiple boards & eMMC combos.
-> 
-> The diff above is also missing a fixes tag (and also be fixed for 
-> rk3399-rock-
-> 4c-plus.dts).
+I just merged this into lsm/stable-6.8 and once the automated
+build/test has done it's thing and come back clean I'll send this,
+along with the associated SELinux fix, up to Linus.  Thanks all.
 
-When it comes to HS400 support on the RockPro64 and the Pinebook Pro,
-they're unfortunately miswired in a hopeless way, causing the DATA
-STROBE signal from the eMMC chip (i.e. the eMMC module) not to even
-reach the right ball on the RK3399 SoC.
+John, if this commit is problematic please let me know and I'll send a
+fix or a revert.
 
-Here are a few screenshots from the schematics that illustrate this
-issue (the first one is from the eMMC module schematic, the remaining
-two are from the RockPro64 schematic, which are pretty much exactly
-the same in the Pinebook Pro schematic):
-
-- https://i.imgur.com/MqD7rcG.png
-- https://i.imgur.com/hrlQBck.png
-- https://i.imgur.com/mtYvc9s.png
-
-There have been some Pine64 community attempts to have this fixed in
-new RockPro64 and Pinebook Pro hardware revisions, but such attempts
-unfortunately failed. :/
-
-Thus, we'll unfortunately have to deal with the whole thing on the
-board level, instead of making changes on the SoC level.
+--=20
+paul-moore.com
