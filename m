@@ -1,47 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55ED24EB43;
-	Tue, 27 Feb 2024 19:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E661E894;
+	Tue, 27 Feb 2024 19:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709060500; cv=none; b=eUST9RROtQ+OOuD0z6Qr5PJx7JSYZiScyW11yiAa4MqwrHewvIIS5hcZlL+zkzzAMOCdrOb1xD+c2Muc35cWLYUPlVT3e0Fk6F2F2437kJeZEJkZ+nlA/E2s7PHmp7pMVpyp6x1tS7omvEhI48SiJjAe6kthma07bAgVdHnMGnU=
+	t=1709060501; cv=none; b=Yki7BDVrnxoGPKHLrZxdhoZfFw7oOIaQixIWP28p+rHTTYVt5Z21K/wsMKpJvVejFZF5V3dHOQeHbQbzwg+vSB/WXW/1C/NhElf+6o7K/i5htLyYMhH6mn/OYFEohGkPtM+lMKrZXMpF/0jkKFd9+rqAnmho5WZYPplIDBWIPAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709060500; c=relaxed/simple;
-	bh=UN6pem+oLYyRIAcDV+Q1d6G66CsBA01ua732dNvWsiU=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IeXAYzzwVu5F6Gs8zLW0jGNpTBogj7ppmu+GZ/o/VtGyZm93TKXei7kHakSgEN6V5L0+n+0H1ZxDWUYwF4miivlgdc3P+cynAPYO4OkHKCsi14T3fw0nKlAe2uDx+j8c4Zk7o9KTdZvo7mTM/T3rWvBITkd9YbqhDWaqMX6iNV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h4qU3V5Q; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1709060501; c=relaxed/simple;
+	bh=1jD16RvjY0XylQTcKSUd8r17c2C6yBRNbcx+ZdpItzc=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=HaTKWq3Lj/A/23hpiYsEkmnH7ey+lvQqYpKRs8PCVD2Psc7C7SyxxDAJAGjSHoT78F5xyl0sQ2pfKfmL3Xnby5XzO0ibfnAOB+WMSBhAFOoUsm4v5zYYlMFXJOAxP4TF3cz1Y4HkebPDS/z4CSTj4YL2qZyUm8+WRnHP3CWAQyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BYpMobqR; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h4qU3V5Q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BYpMobqR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709060498; x=1740596498;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=UN6pem+oLYyRIAcDV+Q1d6G66CsBA01ua732dNvWsiU=;
-  b=h4qU3V5Q4gjliL3G2X1QhUjJcT+BjFySFDUI+8E/s0A71r07/oNsj7GI
-   zLVVw0g7T8SRqHroCNj0I2eUMdtVh0rJS8+5FiWFkp3qiRO5h9x/e4aDq
-   5sXVheqqs+R08DihM2D9L431EDofHLX1vWaD5/rFXfhP3wGxw1Knrw+Gv
-   yfqjK62NfQyYceeQvLOa0irTuU+/07lP3iPhzlMSFDOdHSa2YHLpOiCKW
-   FuGu7grT4dBFsSjMiokNINP5+ohXQ2f0usHPLtvRRdXRF/kU5kF6+6u+i
-   YiPEyzqkz7VKzGrkWy1N11Tq674UKMHyBojT3CqldyKtWd0fJtJYsmu0Q
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14063661"
+  t=1709060499; x=1740596499;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1jD16RvjY0XylQTcKSUd8r17c2C6yBRNbcx+ZdpItzc=;
+  b=BYpMobqRBb8lTbnwTMiSVDLSo6H6dQyGfgaagka6JGMELGzHxNzH22t5
+   2eGVQ4gUS0jKBui0wI8PpW8I00GCAaw6VFJuE+SNWi3hDf+fwhH/1vhfC
+   sqBAMZyqvFn+h1FVK6lnPHu9w6atapLo19CPrbFz9vG/hHpluR6FhCcVE
+   44KfYzIj7Ax1frEZSZUH0KCaOWLrJGJl8RcgEMxAhR1IfzEI8RS1lBicI
+   peb98Ig8d30+4m2iUpOtz4KjC+g6AdPMm141H/R0OqfaqWedrIr4Ac1cF
+   0vYc7YDaQw5zmL22dfeY5WDQ8R2kGSxEX3b/2P+n7tNJyKOinqq1vrM2g
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3293079"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="14063661"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:38 -0800
+   d="scan'208";a="3293079"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:38 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="7120052"
+   d="scan'208";a="11725838"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:37 -0800
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 11:01:37 -0800
 Received: from debox1-desk4.lan (unknown [10.251.6.149])
-	by linux.intel.com (Postfix) with ESMTP id 1EDFA580DF5;
-	Tue, 27 Feb 2024 11:01:37 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTP id D5D41580DEF;
+	Tue, 27 Feb 2024 11:01:36 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: david.e.box@linux.intel.com,
 	rajvi.jingar@linux.intel.com,
@@ -50,12 +49,10 @@ To: david.e.box@linux.intel.com,
 	sathyanarayanan.kuppuswamy@linux.intel.com,
 	hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
-Subject: [PATCH V2 2/3] platform/x86/intel/pmc/lnl: Remove SSRAM support
-Date: Tue, 27 Feb 2024 11:01:33 -0800
-Message-Id: <20240227190134.1592072-2-david.e.box@linux.intel.com>
+Subject: [PATCH V2 1/3] platform/x86/intel/vsec: Remove nuisance message
+Date: Tue, 27 Feb 2024 11:01:32 -0800
+Message-Id: <20240227190134.1592072-1-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240227190134.1592072-1-david.e.box@linux.intel.com>
-References: <20240227190134.1592072-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,95 +62,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-A recent PMC firmware change in Lunar Lake caused the pmc_core driver to
-fail to probe. This is due to a change in the GUID for PMC telemetry coming
-from the SSRAM device. Until a final release is ready this value may
-change again. In the meantime, disable the SSRAM support for Lunar Lake so
-the driver can load and provide some basic functionality.
+intel_vsec_walk_header() is used to configure features from devices that
+don't provide a PCI VSEC or DVSEC structure. Some of these features may
+be unsupported and fail to load. Ignore them silently as we do for
+unsupported features described by VSEC/DVSEC.
 
-Fixes: 3748dfdae2a6 ("platform/x86/intel/pmc: Add Lunar Lake M support to intel_pmc_core driver")
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
 
-V2 - Removed non-imperative language in changelog.
+V2 - no changes
 
- drivers/platform/x86/intel/pmc/lnl.c | 38 +++-------------------------
- 1 file changed, 4 insertions(+), 34 deletions(-)
+ drivers/platform/x86/intel/vsec.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
-index abad17cdd3d7..068d72504683 100644
---- a/drivers/platform/x86/intel/pmc/lnl.c
-+++ b/drivers/platform/x86/intel/pmc/lnl.c
-@@ -13,21 +13,6 @@
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
+index 778eb0aa3479..0fdfaf3a4f5c 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -236,10 +236,7 @@ static bool intel_vsec_walk_header(struct pci_dev *pdev,
  
- #include "core.h"
- 
--#define SOCM_LPM_REQ_GUID	0x11594920
--
--#define PMC_DEVID_SOCM	0xa87f
--
--static const u8 LNL_LPM_REG_INDEX[] = {0, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20};
--
--static struct pmc_info lnl_pmc_info_list[] = {
--	{
--		.guid	= SOCM_LPM_REQ_GUID,
--		.devid	= PMC_DEVID_SOCM,
--		.map	= &lnl_socm_reg_map,
--	},
--	{}
--};
--
- const struct pmc_bit_map lnl_ltr_show_map[] = {
- 	{"SOUTHPORT_A",		CNP_PMC_LTR_SPA},
- 	{"SOUTHPORT_B",		CNP_PMC_LTR_SPB},
-@@ -490,7 +475,6 @@ const struct pmc_reg_map lnl_socm_reg_map = {
- 	.lpm_sts = lnl_lpm_maps,
- 	.lpm_status_offset = MTL_LPM_STATUS_OFFSET,
- 	.lpm_live_status_offset = MTL_LPM_LIVE_STATUS_OFFSET,
--	.lpm_reg_index = LNL_LPM_REG_INDEX,
- };
- 
- #define LNL_NPU_PCI_DEV		0x643e
-@@ -517,33 +501,19 @@ static int lnl_resume(struct pmc_dev *pmcdev)
- int lnl_core_init(struct pmc_dev *pmcdev)
- {
- 	int ret;
--	int func = 2;
--	bool ssram_init = true;
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_SOC];
- 
- 	lnl_d3_fixup();
- 
- 	pmcdev->suspend = cnl_suspend;
- 	pmcdev->resume = lnl_resume;
--	pmcdev->regmap_list = lnl_pmc_info_list;
--	ret = pmc_core_ssram_init(pmcdev, func);
- 
--	/* If regbase not assigned, set map and discover using legacy method */
--	if (ret) {
--		ssram_init = false;
--		pmc->map = &lnl_socm_reg_map;
--		ret = get_primary_reg_base(pmc);
+ 	for ( ; *header; header++) {
+ 		ret = intel_vsec_add_dev(pdev, *header, info);
 -		if (ret)
--			return ret;
--	}
-+	pmc->map = &lnl_socm_reg_map;
-+	ret = get_primary_reg_base(pmc);
-+	if (ret)
-+		return ret;
+-			dev_info(&pdev->dev, "Could not add device for VSEC id %d\n",
+-				 (*header)->id);
+-		else
++		if (!ret)
+ 			have_devices = true;
+ 	}
  
- 	pmc_core_get_low_power_modes(pmcdev);
- 
--	if (ssram_init) {
--		ret = pmc_core_ssram_get_lpm_reqs(pmcdev);
--		if (ret)
--			return ret;
--	}
--
- 	return 0;
- }
+
+base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
 -- 
 2.34.1
 
