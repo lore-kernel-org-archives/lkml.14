@@ -1,54 +1,39 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDF414CAAB
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED8B14CAA9;
+	Tue, 27 Feb 2024 15:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709046143; cv=none; b=AZjHzZg0inHdTOkTP4dEGcJq8GAuShzFfVMuRgt7Mq3e2+y9zsLnC/AwJhuLmd0ZUZyL/RbX07PZxbe1F50pn3f0wRIG/BA3Ny5Qf4n4c46ztcd4x+ofPHQlCGW/hQey9Lqdh3eJ/iVa5r7ZO1k2y9921E0xWNIvfWMDGK3uqyU=
+	t=1709046143; cv=none; b=qgGub+t3tftdVfdfvLsq/GyX4wN14ixn5O5yHU94pAMs7gUR6128AQk1Ymaj4BK47HaCPHIj/VbpG9m6HobMMguYRY1j++sNdJQbSCterHwlUVMnjp7E8NuSoC6p0GTzVdBV0dwqubzsaLQQozIwxgLNNm9XDPxv6VKjGhN0qkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709046143; c=relaxed/simple;
-	bh=VcmHARxCTfpmttLyfdAWI77rYXCBMJ5BgfJh3npQ1Rg=;
+	bh=4qVm3us+Sfxczu0Xf/pdA5CwlojidJdRpadimZaDyKA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWXwLsmg30/cEZ5JDPVyM6lPNU+dvV047j9MWyxlXlXoRB9dySMTTVcvKwvwuj0ei9xypXDrIATzUQCVLwO7aH7CFFfIJGi9CV2ycjHWMBtZx97gsc9PsgmcpaNf33a1GR+9gXdHIuKgYtf9M7IeI0kIWQgZrMCjgv94fA6pvNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S5S8wzPZ; arc=none smtp.client-ip=217.70.183.195
+	 Content-Type:Content-Disposition:In-Reply-To; b=e8ODisnwl4Czs7FQbKILDRCsJXaQQwE1xSgg7oinrK3XrwYFJDPT+M1+Oj+UhB6v2eOL9k+WFiF6E+vDlYLuJIKqpll5r1nvbthtzHzLs+C/NGDw1rzQUUZ0ztbSCyfzQdc5rp9ou9BabP9lRzGIAQoXfl28wAAjfjs34Ey08Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RrfO2EL7; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S5S8wzPZ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1025860014;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RrfO2EL7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 76F63FF80E;
 	Tue, 27 Feb 2024 15:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
 	t=1709046134;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wD53UKuw4zxoHOpXnQGMSfTDv9JExg1coPAv+jx4svI=;
-	b=S5S8wzPZTwAnzhPdNHgvBSpPuxeFMNddFlI5FAvIXkIC0bw7wE2XCOGWOPB6c/l0WaAtqB
-	Vap+q7sezl/pplwp2lQcyef0WDcrVNuKR32vUa3PDa1ZG3j2wVuca5GDHV3bHeHvyyautT
-	qFN2zChzidAtscR/dxNmGhZc3JWylWv70vnrY/zDcoVY8GhZXrWIkKbLM4di3gDPSaBb3m
-	mpjTVRBBchwaDTfxdScq7JQl4aBwkpELhdziP118IQJi9WzcxIyWercVM7JE6Z59kA5Wv2
-	0qW/bQyNVRg8csjClDzQW9wvJf5hf/gcFwEsLunYuGxwUAg9RfUe6NCEq83TqQ==
+	bh=JNtXj8btr6ZXcKUJn2VlnNEyAxe3orLsIqZIYppH3/k=;
+	b=RrfO2EL76ErJEz4mcELQOUW9PBv8nvs2QhLqMC5NU3tH8ikZcoaDNfmei8rmLfJDqFR2c7
+	lkuM5n5CABHegTvPTs+hvgUyk6H8wKSylR6ZBv3AV/a5DYpqBKDozmnmP1SnBavr2DG7xJ
+	3fHCcNYPVUeXzjfn5OAEKYTqGQzbG3l94+TLIaRKY3q9OSn5ND3piP882T/V1nzK8qUA+4
+	Czx6J5yH3xg+L2GHC+MtpogwUPScm9qhpJ8biQr/DnhbnsE1YA9mtKPTjehLfDSCuFDUC+
+	CXFnB6lKA6pfgpFqk+qbKYpy022Aiwy1jZNnr2pUkQPB/f07NbCNFtdHJfLkaA==
 Date: Tue, 27 Feb 2024 16:02:11 +0100
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: Arthur Grillo <arthurgrillo@riseup.net>
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-	pekka.paalanen@haloniitty.fi, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
-	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
-	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
-Subject: Re: [PATCH v3 4/9] drm/vkms: Add typedef and documentation for
- pixel_read and pixel_write functions
-Message-ID: <Zd35c1dTf8AAxen4@localhost.localdomain>
-Mail-Followup-To: Arthur Grillo <arthurgrillo@riseup.net>,
+To: Pekka Paalanen <pekka.paalanen@collabora.com>
+Cc: Arthur Grillo <arthurgrillo@riseup.net>,
 	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 	Melissa Wen <melissa.srw@gmail.com>,
 	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
@@ -58,97 +43,167 @@ Mail-Followup-To: Arthur Grillo <arthurgrillo@riseup.net>,
 	Maxime Ripard <mripard@kernel.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-	pekka.paalanen@haloniitty.fi, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
-	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
-	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
-References: <20240226-yuv-v3-0-ff662f0994db@bootlin.com>
- <20240226-yuv-v3-4-ff662f0994db@bootlin.com>
- <848f2690-2f20-4a92-82ff-64cdee8cb2ee@riseup.net>
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/vkms: Add information on how to benchmark
+Message-ID: <Zd35c5TLS6ygc_Pr@localhost.localdomain>
+Mail-Followup-To: Pekka Paalanen <pekka.paalanen@collabora.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20240226-bench-vkms-v1-1-515ef91b11c8@riseup.net>
+ <20240227111941.061a2892.pekka.paalanen@collabora.com>
+ <8ac7bf91-fbce-4403-a801-9dfee39ea802@riseup.net>
+ <20240227135545.62dd5f57.pekka.paalanen@collabora.com>
+ <0892593d-0fd9-4381-b2bd-843627bd2723@riseup.net>
+ <20240227152639.6426c401.pekka.paalanen@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <848f2690-2f20-4a92-82ff-64cdee8cb2ee@riseup.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240227152639.6426c401.pekka.paalanen@collabora.com>
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-[...]
-
-> > diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-> > index d5203f531d96..f68b1b03d632 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_plane.c
-> > +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-> > @@ -106,6 +106,13 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
-> >  		return;
-> >  
-> >  	fmt = fb->format->format;
-> > +	pixel_read_t pixel_read = get_pixel_read_function(fmt);
-> > +
-> > +	if (!pixel_read) {
-> > +		DRM_WARN("Pixel format is not supported by VKMS planes. State is inchanged\n");
+Le 27/02/24 - 15:26, Pekka Paalanen a écrit :
+> On Tue, 27 Feb 2024 09:29:58 -0300
+> Arthur Grillo <arthurgrillo@riseup.net> wrote:
 > 
-> s/inchanged/unchanged/
+> > On 27/02/24 08:55, Pekka Paalanen wrote:
+> > > On Tue, 27 Feb 2024 08:44:52 -0300
+> > > Arthur Grillo <arthurgrillo@riseup.net> wrote:
+> > >   
+> > >> On 27/02/24 06:19, Pekka Paalanen wrote:  
+> > >>> On Mon, 26 Feb 2024 17:42:11 -0300
+> > >>> Arthur Grillo <arthurgrillo@riseup.net> wrote:
+> > >>>     
+> > >>>> Now that we have a defined benchmark for testing the driver, add
+> > >>>> documentation on how to run it.
+> > >>>>
+> > >>>> Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
+> > >>>> ---
+> > >>>>  Documentation/gpu/vkms.rst | 6 ++++++
+> > >>>>  1 file changed, 6 insertions(+)
+> > >>>>
+> > >>>> diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
+> > >>>> index ba04ac7c2167..6d07f79f77ff 100644
+> > >>>> --- a/Documentation/gpu/vkms.rst
+> > >>>> +++ b/Documentation/gpu/vkms.rst
+> > >>>> @@ -89,6 +89,12 @@ You can also run subtests if you do not want to run the entire test::
+> > >>>>    sudo ./build/tests/kms_flip --run-subtest basic-plain-flip --device "sys:/sys/devices/platform/vkms"
+> > >>>>    sudo IGT_DEVICE="sys:/sys/devices/platform/vkms" ./build/tests/kms_flip --run-subtest basic-plain-flip
+> > >>>>  
+> > >>>> +If you are developing features that may affect performance, you can run the kms_fb_stress    
+> > >>>
+> > >>> s/can/must/
+> > >>>     
+> > >>>> +benchmark::    
+> > >>>
+> > >>> before and after, and report the numbers.    
+> > >>
+> > >> Did you mean to write the benchmarks logs here?  
+> > > 
+> > > I mean people should be required tell their before and after numbers in
+> > > either commit message (my preference) or in series cover letter (if
+> > > benchmarking commits is not useful).
+> > > 
+> > > With the addition of YUV support in VKMS, maybe the benchmark needs to  
+> > 
+> > With the upcoming addition, I've sent a patch to arbitrarily change the
+> > formats on the benchmark via command-line options. It's not adding a new
+> > case, but maybe just this could already help.
+> > 
+> > https://lore.kernel.org/all/20240226-kms_fb_stress-dev-v1-0-1c14942b1244@riseup.net/
+> 
+> In that case you would need to document exactly what command line
+> options to use, and ask people to report the numbers of each test
+> case.
+> 
+> That works. Alternatively or additionally, the test cases could be
+> built in to the benchmark, and it just reports numbers for all of them
+> in a single invocation. Then people running the standard benchmark do
+> not need to worry about getting the command line options right, or
+> running multiple cases. And reviewers do not need to ask to re-run with
+> the correct options.
+> 
+> I suppose rotations might get added, too.
+> 
+> Or maybe you'd provide a script that covers all the standard
+> performance test cases?
 
-Thanks for this correction. See my answer to [1], I changed the message a 
-bit.
-[1]: https://lore.kernel.org/dri-devel/20240226133646.174d3fb2.pekka.paalanen@collabora.com/
+I agree with Pekka, it would be nice to have a simple "bench everything" 
+tool. Like kms_rotation is a test for all rotations, kms_plane for color 
+conversions... kms_fb_test can run a few combinations (rgb+norotation, 
+rgb+yuv, rgb+rotation...) and report a "global result" (this way it's easy 
+to spot a regression not related directly to your changes).
+
+I don't know the IGT benchmark API, but I think there is a way to create 
+"sub-benchmarks" so you can run a specific benchmark when developping and 
+the whole thing before pushing your series.
 
 Kind regards,
 Louis Chauvet
 
-> > +		return;
-> > +	}
-> > +
-> >  	vkms_plane_state = to_vkms_plane_state(new_state);
-> >  	shadow_plane_state = &vkms_plane_state->base;
-> >  
-> > @@ -124,7 +131,7 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
-> >  	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
-> >  			drm_rect_height(&frame_info->rotated), frame_info->rotation);
-> >  
-> > -	vkms_plane_state->pixel_read = get_pixel_conversion_function(fmt);
-> > +	vkms_plane_state->pixel_read = pixel_read;
-> >  }
-> >  
-> >  static int vkms_plane_atomic_check(struct drm_plane *plane,
-> > diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
-> > index c8582df1f739..c92b9f06c4a4 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_writeback.c
-> > +++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-> > @@ -140,6 +140,13 @@ static void vkms_wb_atomic_commit(struct drm_connector *conn,
-> >  	if (!conn_state)
-> >  		return;
-> >  
-> > +	pixel_write_t pixel_write = get_pixel_write_function(wb_format);
-> > +
-> > +	if (!pixel_write) {
-> > +		DRM_WARN("Pixel format is not supported by VKMS writeback. State is inchanged\n");
 > 
-> Same here
+> Thanks,
+> pq
 > 
-> Best Regards,
-> ~Arthur Grillo
+> > > start printing YUV numbers separately as a new case.
+> > > 
+> > > 
+> > > Thanks,
+> > > pq
+> > >   
+> > >>  
+> > >>>     
+> > >>>> +
+> > >>>> +  sudo ./build/benchmarks/kms_fb_stress --device "sys:/sys/devices/platform/vkms"
+> > >>>> +  sudo IGT_DEVICE="sys:/sys/devices/platform/vkms" ./build/benchmarks/kms_fb_stress    
+> > >>>
+> > >>> Do people need to run both commands?    
+> > >>
+> > >> No, they don't, just two options.
+> > >>
+> > >> Best Regards,
+> > >> ~Arthur Grillo
+> > >>  
+> > >>>
+> > >>> Anyway, a good idea.
+> > >>>
+> > >>> Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
+> > >>>
+> > >>>
+> > >>> Thanks,
+> > >>> pq
+> > >>>     
+> > >>>> +
+> > >>>>  TODO
+> > >>>>  ====
+> > >>>>  
+> > >>>>
+> > >>>> ---
+> > >>>> base-commit: eeb8e8d9f124f279e80ae679f4ba6e822ce4f95f
+> > >>>> change-id: 20240226-bench-vkms-5b8b7aab255e
+> > >>>>
+> > >>>> Best regards,    
+> > >>>     
+> > >   
 > 
-> > +		return;
-> > +	}
-> > +
-> >  	vkms_set_composer(&vkmsdev->output, true);
-> >  
-> >  	active_wb = conn_state->writeback_job->priv;
-> > @@ -150,7 +157,7 @@ static void vkms_wb_atomic_commit(struct drm_connector *conn,
-> >  	crtc_state->wb_pending = true;
-> >  	spin_unlock_irq(&output->composer_lock);
-> >  	drm_writeback_queue_job(wb_conn, connector_state);
-> > -	active_wb->pixel_write = get_pixel_write_function(wb_format);
-> > +	active_wb->pixel_write = pixel_write;
-> >  	drm_rect_init(&wb_frame_info->src, 0, 0, crtc_width, crtc_height);
-> >  	drm_rect_init(&wb_frame_info->dst, 0, 0, crtc_width, crtc_height);
-> >  }
-> > 
+
+
 
 -- 
 Louis Chauvet, Bootlin
