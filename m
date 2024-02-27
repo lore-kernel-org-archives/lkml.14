@@ -1,123 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77571448C7;
-	Tue, 27 Feb 2024 18:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAAC250F8;
+	Tue, 27 Feb 2024 18:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709058159; cv=none; b=ZPvJvK/GQkNYyOFiPomhVApOg735T3vxjo6PYNpWbFgsxOAjkbxayyAD8CVSVuaszOjY8jPpJ6wCLXpqK9ZqF6M4UU573fGm58CmFTyxMEC9QA4diMYlsGUkXa1qaScp8m8OtZtBSLHi6jSlWSWOeEI1yMq6dbJzKOC6qL32jks=
+	t=1709058229; cv=none; b=MVdfaNMgnLD1NPOwgNMyM00s1N4jJE4mX3JBs4WwGZxnZ3f+8str2U3A79FaAUoXiYUIa7F5ui1sSrL8vE6Ug8d/9qJ10yqHLsBY1g6XqNS/D3oZJv4/w1IjY1sOoFM1LBBdnw4ULlPQXFeUAIKu17Ftv1F2L0xEnwHi6a2Ke80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709058159; c=relaxed/simple;
-	bh=t2X04j+6tfN8ZmDHgEQnpC0hzPKjfflCDkJqlGYzc7o=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Vtben52FNEpNcDzKqrjX8Tn88+oaN7VKHJBsKc4H+0/lymyypwDaZ+6ArgPfaV8eQiPEBvan3CYuot1eTh/Ja8lvm+bxYFCUDf13bw20U+6BQa2yAcEXWfV5oOrTtzzbOl3JNa/+SO/I48JXXI7khV2BdCF8uWUlM88FacJloDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+xS4utr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709058229; c=relaxed/simple;
+	bh=wXeL6xRn84YW+yVox2D0U7SPKqNkdMbmGVqHUOm4hqY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NjXNIub1ojYGycLzAbJQbbmnKjMINAW6x1pGY2Al/ZZajGBZAqLYbywFHKAKYLyXVNtyMx6giexUZCQ1FFetxX4hElFMH2mLAT63Q3sahS96CYOzsh7nQhPqvEirHDmO/chwbk4Mz/ZzhqK3WhV07R+ARm65iEnNUi8A+UresL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWCE4U4d; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+xS4utr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2636C433C7;
-	Tue, 27 Feb 2024 18:22:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709058158;
-	bh=t2X04j+6tfN8ZmDHgEQnpC0hzPKjfflCDkJqlGYzc7o=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=t+xS4utrMWntP2B/9DJJ/zz8WsOFQeKVMpDXoItRXCD93ze4LlLHJxBMnpyqTOq4v
-	 Xy0Hqil1rSY+mZO5DUY7uO9MqmpzbVvvb/6MMXJj9qPU6uDh7V56tIQJVdk6YCbNRo
-	 CYQ4sP+Iyo8E2VaBK9UgCb0ERsdnLipW3uk1yA28ABCiBNGbfLpa2f64iMyVFyI8DC
-	 v7g9cldhUXk6C9XaST/V1xcUe/zvUiT9qNYVJcGP8FR8Ljc5o2r8h19rzXYn1+PxIN
-	 FoND9OVZuw0oYNiBsD6v77Fd8ipNN2dtY74Tle4ssrT+5tVPSdwgfTKovI7SQ9BA/O
-	 BSYdUTxLAQjEg==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWCE4U4d"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso4979883a12.3;
+        Tue, 27 Feb 2024 10:23:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709058226; x=1709663026; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wXeL6xRn84YW+yVox2D0U7SPKqNkdMbmGVqHUOm4hqY=;
+        b=OWCE4U4d1+dc55OhhBca0DGlsd9N4L1r86dJfdV6J+GjO/dD2bJ6tKdT5bZ7AeppYt
+         obazORb7F7kf+Qkej8dVFLWUuSFmJ2ME7B8JMn2sON2qhGvxLDfG9vhhVWQA4tH1JAE2
+         0A+vq+8i74e9rLVITvvmhCyykAMhLUgRoQ3vAMUu5uIKkWx2Fo0zRs5KaTT2BsvqI3Cy
+         Xyjy6Pt1daMRDjtIy8Luhl2RevndHHO79RGSmR4cRt2VKHD7OUpQn5BtgbI65A3y2Maz
+         Bnv9EhMw3oF51Syo+N7OF08IWJc6trZuID3JJfsTezol0JfG5HqUX0/VUOz2vV782oeH
+         48MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709058226; x=1709663026;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wXeL6xRn84YW+yVox2D0U7SPKqNkdMbmGVqHUOm4hqY=;
+        b=G/8txCYFarU9g3403+1B08TqCdzjQzchYD0u0SU7tqPTMG95wKKCTawkuhxMhmj8UW
+         Xvli7dnxFGQ2SRqgr8/zZZxV0MXRdvpWMdkbd0pgxJdo4K2DqSQlCvQVEdqk8ydhsSYE
+         w1c13aFGIl8pIY6wZ3Vbow+WHeSOdOQse63G4YOgz+h/lZJKSKaeNr9PzUkUzoKNbpzJ
+         wTOi/Ldaax8tcm5UfTv43Pd9SUjLFu1EzlmykO+Lrz9m2jUCJdC+SLe2kZk3ulAwWR59
+         AhuqE8lswmujz8xMXsv4B2WIhZBAFKQ/Rwn7k6eyGUGdCLAPlhzCoUe+NyEAVPLNIAVm
+         24Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCXht517tNM7lewtb+BrHIrUUldz1AumaW0EobyhYpxnVLjalP8JIJlByLYhqunLxhoFmnausLPfkxvMx73qbpvYfKKgMnIWw+64ZAmPhP9smZz6ocMD7iGbr1ijcEz/sOTT7j1XSIgf+0a21uNK
+X-Gm-Message-State: AOJu0Yy7FiQ7VmH6qdEj6vP5u9G8nhfhXvBDVA9SEOs20VOCPwz1AnWf
+	9vNQSthiNxZgD7g1mvR44ICxoG70gpEFFm8YqSFLNfsKO6GSIroAt32xxpIvaZ8BnNlflQqsKOQ
+	4nNWu59P4/fyTBc3YdPsBAwI/YMyN2xbC1j0ZEg==
+X-Google-Smtp-Source: AGHT+IGrAmqMg8fWhmS7yIJja0CR7J8G/1TxTj98sEPqZYocLYGLvz+cuN3UIYHjYR7ZvhzVbIV4LoTflOXek003zkA=
+X-Received: by 2002:a17:906:1e93:b0:a3f:6942:a213 with SMTP id
+ e19-20020a1709061e9300b00a3f6942a213mr7010301ejj.32.1709058226431; Tue, 27
+ Feb 2024 10:23:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240207143825.986-1-lukas.bulwahn@gmail.com> <20240227154424.GB15319@lst.de>
+In-Reply-To: <20240227154424.GB15319@lst.de>
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date: Tue, 27 Feb 2024 19:23:36 +0100
+Message-ID: <CAKXUXMxctfDVt=+UHNrFfQFMhRitiQVQ1DBu-X0gtuM-WZYJgA@mail.gmail.com>
+Subject: Re: [PATCH] dma-contiguous: remove debug code to removed CONFIG_CMA_DEBUG
+To: Christoph Hellwig <hch@lst.de>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev, 
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 Feb 2024 20:22:34 +0200
-Message-Id: <CZG2JXJ83L7K.32PU7BZTQNHLV@kernel.org>
-Cc: "Jason Gunthorpe" <jgg@ziepe.ca>, "Mimi Zohar" <zohar@linux.ibm.com>,
- "Peter Huewe" <peterhuewe@gmx.de>, <linux-integrity@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Update W's for KEYS/KEYRINGS_INTEGRITY and
- TPM DEVICE RIVER
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "James Bottomley" <James.Bottomley@HansenPartnership.com>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240226062245.2279635-1-jarkko@kernel.org>
- <eaa5107ac4f982b6fd6e80b522643a591e719dc9.camel@HansenPartnership.com>
- <CZEWILFMZ5L1.2TCZXVS7GTDKZ@suppilovahvero>
- <3bae009a24a55902d93e4055ecd13f9f54cdbb37.camel@HansenPartnership.com>
-In-Reply-To: <3bae009a24a55902d93e4055ecd13f9f54cdbb37.camel@HansenPartnership.com>
 
-On Mon Feb 26, 2024 at 12:11 PM EET, James Bottomley wrote:
-> On Mon, 2024-02-26 at 11:26 +0200, Jarkko Sakkinen wrote:
-> > On Mon Feb 26, 2024 at 8:49 AM EET, James Bottomley wrote:
-> > > On Mon, 2024-02-26 at 08:22 +0200, Jarkko Sakkinen wrote:
-> > > > Add TPM driver test suite URL to the MAINTAINERS files and move
-> > > > the
-> > > > wiki
-> > > > URL to more appropriate location.
-> > > >=20
-> > > > Link: https://gitlab.com/jarkkojs/linux-tpmdd-test
-> > > > Link: https://kernsec.org/wiki/index.php/Linux_Kernel_Integrity
-> > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > > Cc: Mimi Zohar <zohar@linux.ibm.com>
-> > > > Cc: Peter Huewe <peterhuewe@gmx.de>
-> > > > Cc: linux-integrity@vger.kernel.org
-> > > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > ---
-> > > > =C2=A0MAINTAINERS | 3 ++-
-> > > > =C2=A01 file changed, 2 insertions(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index bf77be03fb2b..6380c1109b86 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -11947,6 +11947,7 @@ M:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Mimi =
-Zohar <zohar@linux.ibm.com>
-> > > > =C2=A0L:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0linux-integrity@vger.kernel.o=
-rg
-> > > > =C2=A0L:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0keyrings@vger.kernel.org
-> > > > =C2=A0S:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Supported
-> > > > +W:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0https://kernsec.org/wiki/index.php=
-/inux_Kernel_Integrity
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 Missing L
-> > >=20
-> > > James
-> >=20
-> > Thanks! I'll fixup that.
-> >=20
-> > "linux-tpmdd-test" is the suite that I'm using to test your patch
-> > set. It has swtpm integrated. I wonder if there was easy to way to
-> > tweak swtpm to emulate "interposer", i.e. reset its state while it is
-> > running (preferably not by restarting it).
+On Tue, Feb 27, 2024 at 4:44=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrot=
+e:
 >
-> The way I do it is to use a qemu patch
+> Thanks,
 >
-> https://lore.kernel.org/qemu-devel/20231004184219.6594-1-jejb@linux.ibm.c=
-om/
+> added to the dma-mapping for-next branch.
 >
-> which allows qemu to connect to the mssim (or ibmswtpm2) TPM over an
-> inet socket which means I can execute TPM commands from the host (like
-> resetting the TPM) as well as the guest and snoop the TPM traffic.
 
-To which exact and most recent possible QEMU version I can apply that
-cleanly?
+Christoph, please drop this patch in your for-next branch if possible.
 
-My build configuration builds both QEMU and swtpm [1] for every build so
-I could pick that patch, copy it to board/qemu/patches/qemu, and set the
-version in the BuildRoot configuration appropriately.
+Andrew has picked this patch already and squashed it together with the
+commit "mm/cma: drop CONFIG_CMA_DEBUG" in the mm tree. So, you do not
+need to add it anymore.
 
-[1]
-https://gitlab.com/jarkkojs/linux-tpmdd-test/-/tree/main/package/libtpms
-https://gitlab.com/jarkkojs/linux-tpmdd-test/-/tree/main/package/swtpm
-
-BR, Jarkko
+Lukas
