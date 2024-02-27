@@ -1,103 +1,114 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B6113A877;
-	Tue, 27 Feb 2024 12:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45A813957E;
+	Tue, 27 Feb 2024 12:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709035986; cv=none; b=BEWCLxQWV1bwA18tKItZc0C2q2omtN6GUGOBVw66QBjqmaS6Bdu95UnwbpU4LpRgE4NcGC5BLE614gGrdZ6nkr56OetKqE2RIhnO1qhsdkp/+bfEFFgLsPaiM6A++aJtUDrJ9K/MUdGimO+FVdkr4ANp6ET+tYX59FKjINxX2Bk=
+	t=1709036072; cv=none; b=I+nSjS46lL9wB/af9FiHOr2IpW/Jy7lLyQareCPWjxlH1okuY9UE2naq3fB7uCqm2qDh9+3JRHiR8Z+GVPoRx8ZOHGXRy1uTKaSCy7y8zJ42nD435X01esCbsNB+fufS+GpU7L+mPCOYpJUiXCd3PlRGi6j4IYOU4x7nY92nqL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709035986; c=relaxed/simple;
-	bh=PNfuFy5Ba+D5qLkPXV/F9tZVKt/ke8CC3TLHGloyd2k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mgM1DsJkUa9/Tdtri+bw0ikMfdU0rrAF1xxfxPAxvkCv66W9KfSgQc+nxnfYATv2gkExG5p6WkIWZG2MhN0oUHQAMwjjPQMIsAYp6qnLquicrOtkoULgkAHjY7ZRv+97aJmt80Hw5Eml8kqJxh2smgnjz+QQvjuQTiiHf91qpDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A7RzuOTH; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709036072; c=relaxed/simple;
+	bh=MNBdJ8ynd91q3yNgGWy7eWN2H5Og6NctVsNLSrm0mDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lOKNIqdDvUjhGdZRAJME9auz2WhpMeEJTsEPfTMgeeNL1tVyKDBtqrSg4Wp9PKLU642qVaO5qHpxPd5j2lyr4Y+9vT+a2ZoJtw0n0lhnBBPRX/4XsfmOc1slBLs778neBmPMziY/25tG0dcxJh9l6+IhCPEGzppbpJ8hx3HLvT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jd6qTlbe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7RzuOTH"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso3310671a12.2;
-        Tue, 27 Feb 2024 04:13:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709035984; x=1709640784; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PNfuFy5Ba+D5qLkPXV/F9tZVKt/ke8CC3TLHGloyd2k=;
-        b=A7RzuOTHT5lz7H92/ApnlKWkrpzABYAqTtBJob3puaeqDP3j8uvkkM9vaZcbzzr4hP
-         cve7C/GSu3+ilq18saUNgNNoPyo3fSND4ON7zrzCnc77KlD1aNtaaFlxBe/YvKrJbco7
-         56zQGnTMnTS9FITUmEqIhGQrbrnAkqXk4I1h7AbLgAe3cJMHuQzUUfvsPp9JUICBaehF
-         epGbY+0dzpdC45ddGFmVVt87yy3LJZx0B9GHy7Ncr1ssIexs51tiL0Qi4aWzhp+Bv7wS
-         mnV16H+SW6GonNihM0Lx3jRvgCUhrX3l1s/2ciKaOGi3iWfjSx8l9b8fQYps+b0cshkd
-         gSUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709035984; x=1709640784;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PNfuFy5Ba+D5qLkPXV/F9tZVKt/ke8CC3TLHGloyd2k=;
-        b=vn+5+BZ52UbCI2vApJKwl06WFhO14jP+mpeKw5CD4NQ6B0F7Fuv/gsj2H82N/hAMpI
-         DyXKoRBxRqfKEcVLy3f+I5chlujJHQz1NEeOesNLz6DpAfpUf1d00HLEQ5feKi8gtvAI
-         gg+t8dV9yY4LtdMCxZqVYw9PxgOMTqy0rfzka2F1Fata0+UnLqhTcrrU8EhVa04EOj8c
-         XEx5dv/QYnwMs2Ev63MeeumVUw1xmu0mQ5tApEoFiNVYKx22ElZAWC+xsgsubBg4Rcwg
-         0t3Y37aGy9ob+HK66SKWfDY1XoaEJcUKrpiDhyVT3/llgaUzRBCMFjVs6U5dMpmZQGsC
-         wVug==
-X-Forwarded-Encrypted: i=1; AJvYcCVWi65WapItJITmttdmeB1zFHEUfmoBDk9a9wLxlScZ9L7BS9v8si3N4yn9llAGxIw6xMaYJdaaXkLbWgU3yZnrT0UWYcbveGY5uHELGC3YB9fQT8mVsxgE1HLaAWSMyUX+jKM+Ha0+ez+r5lyyVV+Gn+C31eCgNCChtxZKiH6ylplaccNxzzU=
-X-Gm-Message-State: AOJu0YwiBLOXS/XAMfAdjMPcFdTgyi2eVrTGGumAW09QTQ2vubzkw3mb
-	bX4dHtDYNX4f75/nBGhHhobzspqLKciQ80zqG2m7SVE7AP5hvynq68DHjGomewkrTWZ3mW/CQjk
-	TQkfQFin9zpvbC7EDDpjxu5R1ZOk=
-X-Google-Smtp-Source: AGHT+IEZrxxC5KTd1mUmyNpa02ckU0dvc0XT6naKz7W71hSie5HLJAV5L6JVbDjYli/t99gdzmOA0c0J+BbxKw9TRZg=
-X-Received: by 2002:a17:90a:1b85:b0:299:6a7f:3f55 with SMTP id
- w5-20020a17090a1b8500b002996a7f3f55mr6019384pjc.45.1709035984277; Tue, 27 Feb
- 2024 04:13:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jd6qTlbe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9E7CC433C7;
+	Tue, 27 Feb 2024 12:14:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709036071;
+	bh=MNBdJ8ynd91q3yNgGWy7eWN2H5Og6NctVsNLSrm0mDg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jd6qTlberk/kGxBOED8pcbAmtgSvDFQzjM6u+xO5Oq//PaNH6aIBCVAreCSUhgTr7
+	 hKlpPsooyoAfhJ4p5NgipQRMYF2WSvhVw/i2hMK9IBVEG71zDvfTqtES6wI8sp+X4J
+	 4vI5vq1ZOImg0yKS83SO4LCOJpGG1UA/pCPN2en/t9JvkDJoraQG+9xIwhpg+4vJud
+	 On5Q0sJw8+BKci0a2NAsMsVFcYDfPu6Y5DplkRX1CzmCd3wfI6aFN6Xp5WuOIg4Zkv
+	 kUEfwrv6wEezf0T0AFJLUxyqThh0r7I5mzANUlpvU7tDN/AgLxXURvAx8S+yepZuIE
+	 RaKrcbJNp1tLg==
+Date: Tue, 27 Feb 2024 13:14:28 +0100
+From: Wolfram Sang <wsa@kernel.org>
+To: =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Subject: Re: [PATCH 09/13] i2c: nomadik: fetch timeout-usecs property from
+ devicetree
+Message-ID: <Zd3SJMBp23ybgdsJ@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	=?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+References: <20240215-mbly-i2c-v1-0-19a336e91dca@bootlin.com>
+ <20240215-mbly-i2c-v1-9-19a336e91dca@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223-leverage-walmart-5424542cd8bd@spud> <20240223-employee-pessimism-03ba0b58db6b@spud>
- <CANiq72ngEZskjH0f=8+cJuQsFTK227bGCxe5G0STMHuPbZYnXg@mail.gmail.com>
- <20240227-resolved-deceit-4a59a6af5b71@wendy> <CANiq72mwM+4Oh-H5WmRoqQ_nE1w-eJ1wn-nEwS=BR9JRwzxMMQ@mail.gmail.com>
- <20240227-glove-underwire-f562a56cf2c7@wendy>
-In-Reply-To: <20240227-glove-underwire-f562a56cf2c7@wendy>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 27 Feb 2024 13:12:51 +0100
-Message-ID: <CANiq72=f03_bw9B8ww8UxHkVyP2F7ZPyvC+KWCyhO3Nk1yqdaw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] scripts: generate_rust_target: enable building on RISC-V
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="l9/qv/BPwfFxGsXr"
+Content-Disposition: inline
+In-Reply-To: <20240215-mbly-i2c-v1-9-19a336e91dca@bootlin.com>
 
-On Tue, Feb 27, 2024 at 12:05=E2=80=AFPM Conor Dooley
-<conor.dooley@microchip.com> wrote:
->
-> My point though was more
-> that either this was acceptable for v6.9 or would be v6.10 material
-> with the same mechanism as arm64. Rebasing after v6.9-rc1 but not
-> adapting to that way of doing things is what seemed silly to me, since
-> if a resend is required then the other improvements should be carried
-> out at the same time.
 
-If avoiding the `target.json` is possible, definitely.
+--l9/qv/BPwfFxGsXr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I didn't want to assume it is, though -- e.g. the native integer
-widths you have is 64 but the built-in targets use 32:64 (perhaps
-there is a way to tweak it with an LLVM param via `-Cllvm-args`, but I
-don't see any obvious way from a quick look; `opt` does have it,
-though).
 
-(That is why we supported `target.json`, since it gives the most
-freedom in the beginning.)
+> +	/* Slave response timeout */
+> +	if (!of_property_read_u32(np, "timeout-usecs", &timeout_usecs))
+> +		priv->timeout_usecs = timeout_usecs;
+> +	else
+> +		priv->timeout_usecs = 200 * USEC_PER_MSEC;
 
-Cheers,
-Miguel
+I could imagine to add 'transfer_timeout_us' to struct i2c_timings.
+Then, you could use 'i2c_parse_fw_timings' to obtain the value. What
+values/value range do you use here? I can't find them in the DTS
+additions.
+
+
+--l9/qv/BPwfFxGsXr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmXd0iAACgkQFA3kzBSg
+KbZx1A/9Hn3nig9zw0s6qvC2FrKzAOepBjzkFqAjpqgK4uUcsXVZ0Gfhk0lVkYtx
+XOjWnyYadJYToHFj97q/Ruabu2HhE/XZktuWhenAFOla7UbYMAUzxKSCrnJrT+l5
+SmmSaco3Tvje0tGv3yHbqNX12ge9EqkbO8Y+qv4ftbiKOcMGuUoIavZvyQ6GTWM+
+ZBdocOy77UwFXru/oirdRxKj99M8CKIMaQ1QsPUxr3H4hTADgjRv60GhiQVfZKUn
+vdaoEiRVe8VAxj6oTEmIm6zZSw4zls4QH2vSXTEDufU6VeAKS+Xrqh7XLC8K9T/V
+qgcYANSP+6sKVP8eWcaWwaAP1px/zE2oZ9SmTJKqkELEwpahagaWxQ6Hxgb1xCLa
+r3vukZ8+cNGKXBAQeaucmiYbSvILfuTBniJsAkuhz7ex9N6M3ervF2xUpsI3jBm0
+uvok3LtFqBxtIlxwMSV/nelJmO4R5sYHojtkuri/rxuDQ6lSCFvh40hWeb5ereE2
+r7VRqrNrRbz0Gyi/6XJqTKSXPtz8YF3efTzuI1JydYlvtaRtyK0UGCceQfL4brZJ
+DYW2s6hGM7ZKEgZ4wI3aW/Vz1QA3vxkmi2KyXZaWlzBLTQ/chlx+L2jB5N4LaTob
+kJEXKchldbVmVf43xyzr36PNySUiIC8xumknTEskp2+aetFHRD0=
+=7Ca2
+-----END PGP SIGNATURE-----
+
+--l9/qv/BPwfFxGsXr--
