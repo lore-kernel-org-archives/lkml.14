@@ -1,51 +1,66 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88A4130AF8;
-	Tue, 27 Feb 2024 08:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA66A3D68
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 08:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709024020; cv=none; b=X4GnoTZGQYl9EwZWL97NuO8UEh2DJn8pyA6xFTyVu66BLnhqEluMG8VH8kXUifxnxq/C309xpSVvxLQOZ0el5X29mCllHslSiOsjS5eMep6EgxNGTz9X2CoFR4RTALsuIpYaZKdcV7BhGsFDBbJyWvlfTughcDyZw8YrAFLAOQs=
+	t=1709024102; cv=none; b=dRWmQ3mZFj3Ba/NitJR5+yXUI93CIyM4L1vzP2EnbtpuN2j21HmI8xJlMF83ssRvgfDYXxsxMKae2XDZdN9mmlkYd7HOxSxguZauCFr3yaef0xWflz103daDMxdRKf3iDrzfviJ0HuytoQf30bWyn+a6e+tuUo8dD/i6RLbEn94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709024020; c=relaxed/simple;
-	bh=lzCwQyJEpw1qZT/9M5wpgWtO9LJVM/qhBJBKrIpwRL4=;
+	s=arc-20240116; t=1709024102; c=relaxed/simple;
+	bh=e65miCkicj1NdvFVKAgHu/VbuyPfNh0KeRITNON5WD8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbc77wNoq4K0a2DsomzqTx8TIHrBrbAOKK6ZnKwVvIhvh2W5r+9+uTypLWolg2OV2YGMA224/w3JtGaznXWp9qLmryA2WE8byp+ZT7+vkYHpgmuxxmGD+8IEnA3x7uyNMCdLsZV0Ius22JkRRBuO1TziNZ8XpoGxmicpa/iq3XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=bwkd6Fsd; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XKr+w6/94jM/oGUd09gx9odTz6GRsgpzJIU1zb6nQK6xCDzcwR/k+XpvvttBNRBNg9LnLQBfIBcz6oNdoElF0RGGZ7jtcU0PkKtBYSCWDGoNlcTxCPXdswxDCGPg2MtyniILCtDDGXry432ZUQOiVpYwMsbSllZwYNz9/28j7iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QC/kb2no; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="bwkd6Fsd"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4TkWVR1BWbz9sq8;
-	Tue, 27 Feb 2024 09:53:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1709024015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xG7fSz4uiTp34cw0D1g4RsXUHnXCjcPMxUY/Xls6pRo=;
-	b=bwkd6Fsd51NLXnw7/z4WN4Vs9Rq95oo0ECbijUAdGiZjRV8oRKfHkJ+OlRoEwAYUgii4pS
-	MJ6N8K30jVn6Q2b2nLufYhRyspVwGc571+3xnbsWTGqyQylWKNt3/WAB4+3jj22X+uXNGp
-	er7tF/crJ2UnX2wo0x2jAtNDMop+kVMFZZoocmy0PIlDCVAHiGHsq6Xj4hsygm0AemiHN5
-	81IoGf4NY68rYwbeGrdPcrCypTL6kXf9Aq/uHW/fN7QnjwTfj2ooIhy0VjwxMNpP0fLB15
-	6sEDSjk7gxfDiRshE2FVkzv1AJ6fy03HKMgo+Ks7Ky8MNax3pJbMCjpHC+WUYw==
-Date: Tue, 27 Feb 2024 09:53:31 +0100
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, chandan.babu@oracle.com, akpm@linux-foundation.org, 
-	mcgrof@kernel.org, ziy@nvidia.com, hare@suse.de, djwong@kernel.org, 
-	gost.dev@samsung.com, linux-mm@kvack.org, willy@infradead.org, 
-	Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH 11/13] xfs: expose block size in stat
-Message-ID: <4ojxfvnqw6d5dytkcw55olpbdcbwy2pgs7d6mchg6nmgt3icbi@rvzrifqb5x3k>
-References: <20240226094936.2677493-1-kernel@pankajraghav.com>
- <20240226094936.2677493-12-kernel@pankajraghav.com>
- <ZdyHoOHBQ19JJap2@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QC/kb2no"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-412a3ebad2aso15295075e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:55:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709024099; x=1709628899; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HoOFxtqK/5ZaKWmPUt4ourSkgleZpPjmZJgHHXaK8e8=;
+        b=QC/kb2noP3iC4aPpTCHslNJtkbdFwLDhz1MVQhG9YrNYCfVihVayu7gwpa2+/LS4ys
+         AA7U2tR2PG80iWlrgpf3wKJERUKsaYoEfQglS6tcFqykYSo8+0zh5rg+BNIQch/BNu0A
+         MIyjqTlBjF5CNSH1gLQCC0FEMYSNIi09Tw+jONgEAL20XzzGPygm3s/X6HABPRH9rrzP
+         7Zcu27tspztJ2spU/LzAx0qE+BUut6wmDRkG+KdqmjrzWPJUnvjhd73F3jGX3zOmpnsE
+         I00sH/NwhNl2UiwwT9YSSiWgLaJXHFcuqy+YPEX4Z/E5ibKRGxFnyxDmXoyxM6cFvmZX
+         mZDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709024099; x=1709628899;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HoOFxtqK/5ZaKWmPUt4ourSkgleZpPjmZJgHHXaK8e8=;
+        b=rtM74d4h+NCbOODj/BIh5IYpIPKl9zT6l483KqA7likoNosu0tKVS5+tDquVKMuB3E
+         Al34lJr50nLV1ZgnSCTwlR9/O3e/t5d73J67d+ea7zTq6gFb1rbMo/N5y3d6mh+RDjnt
+         nwCIF5121aRjmagcKS/ckyZ6OGYxtFzZcfREaZW0FI78SEf7m4Al3OY0J9SrEoATz/6Z
+         5VaO9cmOxHIK539a/T0gpnZsCPTWo7kiSXXtDxez8cCsIiZmLzLMa+Q2vH9lwj4uBih8
+         yqhvVYv31+5ZnSQzMEjF7GrMFI3g1HdEQTizxLUcS8NlIOaYoGVJ7RUOqxkC2LRbeWyG
+         bK6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUwV/crAa8qyOsOKtG0bwDcqmTqsgW65asyYuQJF/BDDb2Of45KnyrCLUwokH3ahQZ1UJ8xIDP8OHY5U7l1l4uO9NkbgAyWXWngqh53
+X-Gm-Message-State: AOJu0Yx+izJde6WQ3eaMv0Pxrc8WQRVaC5k/PQixNcBcoXJjxGzKsvzW
+	ea43IDPPYStK/EJzBxLf68BZiozF715U68TP8mOEPehOr/E/cyo142VIiKHMSYg/Cqvwtsusiqg
+	y
+X-Google-Smtp-Source: AGHT+IEcssd0DZn1GwRIx6uxtu/6p9Ar/DTRb8JebvM7osNUBQzyWw5I8ki+RUWt518g6UqWWYW8cg==
+X-Received: by 2002:a5d:468d:0:b0:33d:14a7:c4b with SMTP id u13-20020a5d468d000000b0033d14a70c4bmr6212734wrq.40.1709024099075;
+        Tue, 27 Feb 2024 00:54:59 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id u14-20020a056000038e00b0033dca6f8b44sm8036668wrf.16.2024.02.27.00.54.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 00:54:58 -0800 (PST)
+Date: Tue, 27 Feb 2024 11:54:54 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Michael Harris <michaelharriscode@gmail.com>
+Cc: gregkh@linuxfoundation.org, hdegoede@redhat.com,
+	Larry.Finger@lwfinger.net, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: rtl8723bs: hal_btcoex: fixed styling issues
+Message-ID: <da4ff70d-6c64-40b6-aae4-3aab87da2a1c@moroto.mountain>
+References: <20240227080943.13032-1-michaelharriscode@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,62 +69,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZdyHoOHBQ19JJap2@dread.disaster.area>
-X-Rspamd-Queue-Id: 4TkWVR1BWbz9sq8
+In-Reply-To: <20240227080943.13032-1-michaelharriscode@gmail.com>
 
-On Mon, Feb 26, 2024 at 11:44:16PM +1100, Dave Chinner wrote:
-> On Mon, Feb 26, 2024 at 10:49:34AM +0100, Pankaj Raghav (Samsung) wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > For block size larger than page size, the unit of efficient IO is
-> > the block size, not the page size. Leaving stat() to report
-> > PAGE_SIZE as the block size causes test programs like fsx to issue
-> > illegal ranges for operations that require block size alignment
-> > (e.g. fallocate() insert range). Hence update the preferred IO size
-> > to reflect the block size in this case.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > dd2d535e3fb29d ("xfs: cleanup calculating the stat optimal I/O size")]
-> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+On Tue, Feb 27, 2024 at 12:09:43AM -0800, Michael Harris wrote:
+> Fixed various checkpatch.pl styling issues: spaces before tabs, constants being on left side of comparisons, unnecessary braces, etc.
 > 
-> Something screwed up there, and you haven't put your own SOB on
-> this.
-Oops. I will add it.
+> Signed-off-by: Michael Harris <michaelharriscode@gmail.com>
 
-> 
-> > ---
-> >  fs/xfs/xfs_iops.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> > index a0d77f5f512e..1b4edfad464f 100644
-> > --- a/fs/xfs/xfs_iops.c
-> > +++ b/fs/xfs/xfs_iops.c
-> > @@ -543,7 +543,7 @@ xfs_stat_blksize(
-> >  			return 1U << mp->m_allocsize_log;
-> >  	}
-> >  
-> > -	return PAGE_SIZE;
-> > +	return max_t(unsigned long, PAGE_SIZE, mp->m_sb.sb_blocksize);
-> >  }
-> 
-> This function returns a uint32_t, same type as
-> mp->m_sb.sb_blocksize. The comparision should use uint32_t casts,
-> not unsigned long.
-> 
-Yeah. Something like this instead of using unsigned long:
+Please run checkpatch.pl on your patches.
 
-return max_t(uint32_t, PAGE_SIZE, mp->m_sb.sb_blocksize);
+WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+#12: 
+Fixed various checkpatch.pl styling issues: spaces before tabs, constants being on left side of comparisons, unnecessary braces, etc.
 
-> ALso, this bears no resemblence to the original patch I wrote back in
-> 2018. Please remove my SOB from it - you can state that "this change
-> is based on a patch originally from Dave Chinner" to credit the
-> history of it, but it's certainly not the patch I wrote 6 years ago
-> and so my SOB does not belong on it.
-Ok.
+regards,
+dan carpenter
 
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
