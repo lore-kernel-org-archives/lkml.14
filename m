@@ -1,72 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F05E51C4C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0541514EFF0
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709068907; cv=none; b=Qb5oFmaga0OxHL2CznntxAs1iNr46YDmzNw1MypxsK9kL0awiv0hxjAFkZazNk/fLR91gOYMrIDFtJc0iqSUPkvt+OJYML7FWX+ww8hHTdwuH4nMGJ3BQKyxpFBsCf4ttfUoK0/b8SgYedC8/pi9RAwdeghzoC9zRLybzXMmBdk=
+	t=1709068971; cv=none; b=jNtauTh00F8IKBw8yRCpBCwIPpLLHyRK+U7qRWYOj7WWwlwyWWlDE6MmRuYKNMTvBw9BpnomnipJYA/rpLapin1nDvoHbkH9wYkafjKoS/xzQi6qhYSST4y+GLS90Od27ORmkF1ymNDx1QhNt1KBYKyg4MCj2w+0CNuKZLiNxUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709068907; c=relaxed/simple;
-	bh=3yo6NVAS2DQ8uW8SbPYTo+nl5dHAveFgn5FWpm9zTbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WmkHdn4RlifgUWOLXTq2XqVFwPL05nqh/HpKHJfwvDJjon7gbxX0kl2Dw+1KROb7mrKSexD0UL7pJNIyezxV3P7cIRC9Gd74t838z6Q3duobLFMS++gKJG5VGAuVoHedsRwcRQQ4ogd2dynSb7Ou8xB0nL0A6+sPIXbWTupntnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PhFEbu9g; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709068971; c=relaxed/simple;
+	bh=VZaJSLBAvjIIjiBkUk207ZF5DNLe5yVrF+Vh/8Da/yU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Nj2J2PTZKZ7LeUmw2n0QzEA75gg2DSyhUgSQXGWyqPdNd0gps17iuAOOWmT48ePQWqLaHvj60uTn/Zyl4PADcIGhLV1rwXg74iSpovOQzTjdaFoCYQ8I0oOLbqsualwzS6r4fSS4soSkyNxKhsx/uYjSCi3b4AXET+mMiGOtYaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=VT8BiIwW; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PhFEbu9g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709068907; x=1740604907;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3yo6NVAS2DQ8uW8SbPYTo+nl5dHAveFgn5FWpm9zTbU=;
-  b=PhFEbu9gziJkgbSo/VD1FOaLK/4Y73BJi02Z+8sYDhivXHGY/DZCCpW3
-   sl7/8TLz+vdcL5pGhBm1QtFa8rMNBRhRyz/GAW9f8gbcmhqONnww5xISB
-   HZff1EYLipdZlFfyO8FL1gYPdCznqE7rBtMg0OpaGG/jVn/NrEj7qjsfC
-   oFeU9q7asUgP0aaVAiEl7cglqN+l/doEUP/dfe4lk0sD3hgn/yqdvkgmh
-   cCGnFeiRDMoam3ZP6bYo1gCtrfPMry/0XIraZgxL7eVpIrTwXxNNQAs2E
-   Hj0dmnY8dMgIIx2zmc71PKNebjaihj3b2MeAra0ufRbpAI8cebLFhmJmp
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3566519"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="3566519"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:21:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937032879"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="937032879"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Feb 2024 13:21:40 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id B0AE12E6; Tue, 27 Feb 2024 23:21:39 +0200 (EET)
-Date: Tue, 27 Feb 2024 23:21:39 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv8 00/16] x86/tdx: Add kexec support
-Message-ID: <cael54ieynou5fskoeea72wjt4yfttwv23emgog2gopl7j4mq2@tis765ccaqpm>
-References: <20240227181616.3032032-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VT8BiIwW"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E72852C05E7;
+	Wed, 28 Feb 2024 10:22:46 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1709068966;
+	bh=3gVimorvGq76t5HgY8x6KoiKr8dAvSvtX0ygiIDP6To=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VT8BiIwWMqGHBPBvp7nGS5j8sIWMEtYSUijWWSDfg+LjY6N2ul8KQnVS1Lh4EEqzQ
+	 v06ALVAHcWXBwyuYmOnH3SN00os7rZrlnDYGY4YdKo22rxUzOl/35Jfdfthp7e2qj7
+	 QZLgNsmQ4ZV6l448JAsQfhkm80IJphryAjzHATsmUYw3fCQpdM1Cy6IDBR6oXaDVpB
+	 w++cThZC1uTq3GxetQndkAtrfNfNbf3WnJs5RFnLY8vaWdgAVWL4R4FriTTDGgPVwL
+	 C3kj1pXRFoHRDvrtcc+kbrby0IK9tY56kNdEQx/BJjkTuKPvhrFWAGYJXHxb56pVcF
+	 CE6OSCKDOYG1Q==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B65de52a60004>; Wed, 28 Feb 2024 10:22:46 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+	by pat.atlnz.lc (Postfix) with ESMTP id 6DEE713EDA8;
+	Wed, 28 Feb 2024 10:22:46 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+	id 6B9E0280AFE; Wed, 28 Feb 2024 10:22:46 +1300 (NZDT)
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: andy@kernel.org,
+	geert@linux-m68k.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	andrew@lunn.ch,
+	gregory.clement@bootlin.com,
+	sebastian.hesselbarth@gmail.com,
+	ojeda@kernel.org,
+	tzimmermann@suse.de,
+	javierm@redhat.com,
+	robin@protonic.nl,
+	lee@kernel.org,
+	pavel@ucw.cz
+Cc: devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 4/4] ARM: dts: marvell: Indicate USB activity on x530
+Date: Wed, 28 Feb 2024 10:22:44 +1300
+Message-ID: <20240227212244.262710-5-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240227212244.262710-1-chris.packham@alliedtelesis.co.nz>
+References: <20240227212244.262710-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240227181616.3032032-1-kirill.shutemov@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65de52a6 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=k7vzHIieQBIA:10 a=f9q4IQp7et2z0Ui1RocA:9 a=3ZKOabzyN94A:10 a=zZCYzV9kfG8A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-Please disregard. I've sent old patches by mistake.
+Use the dot on the 7 segment LED block to indicate USB access on the
+x530.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+
+Notes:
+    Change in v2:
+    - New
+
+ arch/arm/boot/dts/marvell/armada-385-atl-x530.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm/boot/dts/marvell/armada-385-atl-x530.dts b/arch/arm=
+/boot/dts/marvell/armada-385-atl-x530.dts
+index f55a3dc6b6de..94ae9f4ebe1c 100644
+--- a/arch/arm/boot/dts/marvell/armada-385-atl-x530.dts
++++ b/arch/arm/boot/dts/marvell/armada-385-atl-x530.dts
+@@ -54,6 +54,15 @@ &led_7seg_gpio 4 GPIO_ACTIVE_LOW
+ 				 &led_7seg_gpio 5 GPIO_ACTIVE_LOW
+ 				 &led_7seg_gpio 6 GPIO_ACTIVE_LOW>;
+ 	};
++
++	leds {
++		compatible =3D "gpio-leds";
++		led-0 {
++			label =3D "usb";
++			gpios =3D  <&led_7seg_gpio 7 GPIO_ACTIVE_LOW>;
++			linux,default-trigger =3D "usb-host";
++		};
++	};
+ };
+=20
+ &pciec {
+--=20
+2.43.2
+
