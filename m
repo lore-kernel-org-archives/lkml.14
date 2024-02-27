@@ -1,38 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD171487D6;
-	Tue, 27 Feb 2024 14:55:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF65149E08;
+	Tue, 27 Feb 2024 14:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709045744; cv=none; b=sTgHCgDWfvyA4e4H+TS+mOfawwUw7WJGKQ4SVrLJHEMlpNxBggSnE2RLvGT2Fs1b/sYHI5FybwTJWvypeb46egM5fOka5wMucAetvDT/CEJbSeQeTDT0PnxSrbbemAlnE+/m/goK9hxP6ElrAyCBxSOoe9/k2klNzLmOnw6AFyc=
+	t=1709045746; cv=none; b=PI+sWMyyAHVr2nHmTTWfTGETYywvmD0JkxKrVexCLh5ZLBqe9SiApJTZedKK2H+uXAzzX2Pg93CaF2s4QUGVFiTzEnDCIjFkZZlaSd0vyzRSpx+b0qIl8mgRqA8BHwm5m+Ob7L8Rzu1O5U9GdlJXCv0/z66v5K9aG3EB+sW2hvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709045744; c=relaxed/simple;
-	bh=na5iUFUdCcxo/XeKMDsWD2m8gyrN1SLEJxFdOBZFpes=;
+	s=arc-20240116; t=1709045746; c=relaxed/simple;
+	bh=Q1vQNvApTuVLdHGNKf+3ksoWjYkeKzGyOW6P0xmAFi4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SnDZqUPda1asElFAd4oV/iI2HTKIe0N3ml8njD2w3/sXjoPj7NuSXleuKkETSF0bT0OsKrRUEIXs83Ff2m/C6Jmuq8ZG0KpQRwV18Acj+wEXYX5uOulirUaiS9ETKa4bOAQJLZEGD+Xyv/cjXHfk5iFAILUaocWg/LYSDnAduDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CA5TOEJG; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=Ld2wd1ttW0vqJIcAIgDw7YiWD/i+KFdU7UN+9MwV8siTMv2ba1Cx69Z6dKppVAcAPIl88uxLaxfUsJdWuS3a8qIUaKdEFiM2G2Aww3Laf/VvJWmK5GRAmZVzu/DZGUrG1aiASRaNg8/40fVtgPwCTD9dBgq0zWWDCbvHfcISBHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hljU5tjA; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CA5TOEJG"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 627FB20002;
-	Tue, 27 Feb 2024 14:55:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hljU5tjA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5C0CE2000B;
+	Tue, 27 Feb 2024 14:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709045740;
+	t=1709045742;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YnALdwStqz9eKISqFy6qQHCMwj31QlMpXRX8xAVY3EI=;
-	b=CA5TOEJGwdunwWTZTWjVnvvQlRANwYYWeXzmQU9H6pkot6bVEJXg8BWt7wwvq+Lz/wI0Bp
-	qNVE45M4wOrZQC3AMgfonszmOCCBS3r4k414ucDRW8CKejiHULFfq3zEuNFI0eUpA9ZMp4
-	TV6bqv1bkdiKXr23oPaHrIW7RZmRA9RO1LNLOfMoFH0HHwY9WP8VrYFopTkZIkY9roE8F3
-	vizvdk3MawZ3YeqthUcJCF/TvKTuifuwego8XSUG9O3hLDw37G2HZqLBAjJe0RZmbYtAns
-	U6ywAkbwpjstvzfnt6TN2639uScwAVUkIAO1FkDeKNaINbM83eGOonCJfwLj+A==
+	bh=RkkcturGDH6iyLvdo+o7gBVlQfQ+pKB/Y+IIwDxn5RM=;
+	b=hljU5tjA+AfpVSbyzTYEK2b4b1L3p9OOW6Gzxlz5rqMqjgGMG3RczOlxgOSNVvu+tdBTTX
+	FFRkIJOqqWBCaTJKusO5JPsF9nV8b/fHAOGIOW6/pSkGKU/JfzrSOkeGJmhS2qjkc4RYTb
+	drrHxA03pJJAlGb0eIyMuRCg+pheeX6ww+AfS5R+cUO6FSfMBWyx5nDq2Krf1oyELYPMgr
+	04olqEZIKQm/5fBIMWAnUNgLx2y1em2BD3SBiKjnD2aPTwrSAyNwn4pA6on7Zv4uqYIYnI
+	eAzPXVNl26MbL00HNpWP25QhLkZTm7c01M4WTYKsTwLw7LANcIMUdakCbuVpTw==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Tue, 27 Feb 2024 15:55:28 +0100
-Subject: [PATCH v8 07/10] MIPS: mobileye: eyeq5: add OLB syscon node
+Date: Tue, 27 Feb 2024 15:55:30 +0100
+Subject: [PATCH v8 09/10] MIPS: mobileye: eyeq5: add OLB reset controller
+ node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240227-mbly-clk-v8-7-c57fbda7664a@bootlin.com>
+Message-Id: <20240227-mbly-clk-v8-9-c57fbda7664a@bootlin.com>
 References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
 In-Reply-To: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
 To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
@@ -62,34 +63,59 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-The OLB ("Other Logic Block") is a syscon region hosting the clock,
-reset and pin controllers. It contains registers such as I2C speed mode
-that need to be accessible by other nodes.
+Add the devicetree node for the reset controller on the Mobileye EyeQ5
+platform. It appears as a subnode to the OLB syscon as its registers
+are located in this shared register region.
+
+Add reset phandles to UART nodes.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- arch/mips/boot/dts/mobileye/eyeq5.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-index 6cc5980e2fa1..e82d2a57f6da 100644
+index 1a65b43e13b1..76935f237ab5 100644
 --- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
 +++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-@@ -100,6 +100,14 @@ uart2: serial@a00000 {
+@@ -78,6 +78,7 @@ uart0: serial@800000 {
+ 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks  = <&uart_clk>, <&occ_periph>;
  			clock-names = "uartclk", "apb_pclk";
++			resets = <&reset 0 10>;
  		};
  
-+		olb: system-controller@e00000 {
-+			compatible = "mobileye,eyeq5-olb", "syscon", "simple-mfd";
-+			reg = <0 0xe00000 0x0 0x400>;
-+			ranges = <0x0 0x0 0xe00000 0x400>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+		};
+ 		uart1: serial@900000 {
+@@ -88,6 +89,7 @@ uart1: serial@900000 {
+ 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks  = <&uart_clk>, <&occ_periph>;
+ 			clock-names = "uartclk", "apb_pclk";
++			resets = <&reset 0 11>;
+ 		};
+ 
+ 		uart2: serial@a00000 {
+@@ -98,6 +100,7 @@ uart2: serial@a00000 {
+ 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks  = <&uart_clk>, <&occ_periph>;
+ 			clock-names = "uartclk", "apb_pclk";
++			resets = <&reset 0 12>;
+ 		};
+ 
+ 		olb: system-controller@e00000 {
+@@ -107,6 +110,13 @@ olb: system-controller@e00000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
++			reset: reset-controller@e00000 {
++				compatible = "mobileye,eyeq5-reset";
++				reg = <0x000 0x0c>, <0x200 0x34>, <0x120 0x04>;
++				reg-names = "d0", "d1", "d2";
++				#reset-cells = <2>;
++			};
 +
- 		gic: interrupt-controller@140000 {
- 			compatible = "mti,gic";
- 			reg = <0x0 0x140000 0x0 0x20000>;
+ 			clocks: clock-controller@e0002c {
+ 				compatible = "mobileye,eyeq5-clk";
+ 				reg = <0x02c 0x50>, <0x11c 0x04>;
 
 -- 
 2.44.0
