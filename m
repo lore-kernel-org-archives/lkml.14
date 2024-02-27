@@ -1,55 +1,53 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6F914DFF6
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93E314E2CB
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:00:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709067621; cv=none; b=WW70G8QHdgTPDmS7v9HseX5n16SR4fXnLM1RUfmaUIyDC0OMX/kqCir5N+iug9dNUjftpyN/ABKoH359LadVKZ7Osw2KSI+aFZyWojrYcccFDvyZwKwVQEAl0JIlPDO6KMBh/KvzThZLFsLw0K7jDfpZ+bTkPmOyoUW1JVZ6oTY=
+	t=1709067622; cv=none; b=fOVk70fzi3JVp5SAGpnhyafqOvMROd81LkU/TUUTPLplhduPE39UBIqQQn2f/G26x6E0HBAJFDNXsV9ctcT5R/byDL3+E0G7zGNQxiadr2+YATKgMutyMM6QAjp5KadVXnHYpi3DyKT0yjevqcIG+X5cP/3ZXa5i4NdJAU0OSak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709067621; c=relaxed/simple;
-	bh=g5hSKz8PPuysfPZ2UMVY6d54ATC/Id6iUngulkNyu8w=;
+	s=arc-20240116; t=1709067622; c=relaxed/simple;
+	bh=AIkMM1NMy91FDgmfFFaJ0HxHDsRelsqEiKUcFIg+iw8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b5qs2QgJZpOY6RVcQDiOx6saHox4vCmfOnoxQXRhmGyTn54IKFC10mHgA3wIToYbcagIaB8MYn3DwYxI63dUuk6E12RMkXPjSfGT+jf+saAxsw4O+JzvhEttwRyMRSfUFKHAUowNWGpbxw7woujaysVo4/qVE3xprzSY3Tpf7tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VEspGJRd; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=vEY6m4H5vngLIJAmFIl5YDopt2LxVNAGQ/4ZWCKdnqCFqJODIdtuqAVizHO3SdPggU+mXmf7gQdNmlf0etT8HbzFgr0uYoinKAF0MGTwrXHzkwtIAxrXeXa/0ynWk8GKXpCBpZqT2mCdRtKJfkKIbp78edBkiYvD7yLutk1BTCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FNWniD1z; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VEspGJRd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FNWniD1z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709067620; x=1740603620;
+  t=1709067621; x=1740603621;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=g5hSKz8PPuysfPZ2UMVY6d54ATC/Id6iUngulkNyu8w=;
-  b=VEspGJRd7t8nQYINgeb6iZGx8NTPivmeK7KBTc6F/BZyA9WWSKrPr8fN
-   F6HH0um1kj6wWlHtBar55BLkno2X7EfV3k3SPQe6nQ0BQh9L2X4DTFGsC
-   T80VdzZTSDyhfPBHhp171ZeI88GZO4twNV5iPdeAiUXKui+rvP/2KJa/s
-   jow8eObI2HmtCWrugfZZ9icnK2UoMMYanhAYgQFqL5Vzf//wVHoakZ/dd
-   tmoQkhICypcpQGqOQuVlXa5/M51IVXubFQ+PyWSMyy/FZQsyEBJHwwV5m
-   wdqxUOgm+M/xUD7rgr/cT89V6D0u/JTiTAIIj+sHPSpT84NPLMu7iCrw+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14858445"
+  bh=AIkMM1NMy91FDgmfFFaJ0HxHDsRelsqEiKUcFIg+iw8=;
+  b=FNWniD1zrr9PoKOCcGiMrAj2+KWZxw26DhT1sCDcBpk1XLKobm7brJhV
+   3+AryNna8+FNQaKdowZN+ucUXMUPk9ldGBt127k7WLu+0uMi7TPOzVTEM
+   ZZUeZY8+V8LHBl+x94LbvW7aqCrzWx/MKYa6K9LV1dIRbMZWINU5Mr4zY
+   PuMlJs1svdmB7waivjv8BwTlIqSS55WC3Jb0x1UXink0zXcge3Pd6Xrbt
+   fu2AAE8UWrrI3qnUSn/dD/ew+EWfKMQzZ7OefaPeKA9ipSroQ8yFKEIZq
+   4/13L78axYeqJmZGYlnteq0I4JRE7N3eHIzuDowEWhzsqdKiFPvlBVD9U
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14858450"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="14858445"
+   d="scan'208";a="14858450"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:00:19 -0800
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:00:21 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="7150417"
+   d="scan'208";a="7150425"
 Received: from josouza-mobl2.bz.intel.com ([10.87.243.88])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:00:17 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 13:00:19 -0800
 From: =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>
 To: linux-kernel@vger.kernel.org,
 	intel-xe@lists.freedesktop.org
 Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Mukesh Ojha <quic_mojha@quicinc.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
 	Jonathan Cavitt <jonathan.cavitt@intel.com>,
 	=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>
-Subject: [PATCH 2/4] devcoredump: Add dev_coredump_timeout_set()
-Date: Tue, 27 Feb 2024 13:00:06 -0800
-Message-ID: <20240227210008.182904-2-jose.souza@intel.com>
+Subject: [PATCH 3/4] drm/xe: Remove devcoredump during driver release
+Date: Tue, 27 Feb 2024 13:00:07 -0800
+Message-ID: <20240227210008.182904-3-jose.souza@intel.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240227210008.182904-1-jose.souza@intel.com>
 References: <20240227210008.182904-1-jose.souza@intel.com>
@@ -62,79 +60,93 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add function to set a custom coredump timeout.
+This will remove devcoredump from file system and free its resources
+during driver unload.
 
-Current 5-minute timeout may be too short for users to search and
-understand what needs to be done to capture coredump to report bugs.
+This fix the driver unload after gpu hang happened, otherwise this
+it would report that Xe KMD is still in use and it would leave the
+kernel in a state that Xe KMD can't be unload without a reboot.
 
 Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Mukesh Ojha <quic_mojha@quicinc.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
 Cc: Jonathan Cavitt <jonathan.cavitt@intel.com>
 Signed-off-by: José Roberto de Souza <jose.souza@intel.com>
 ---
- drivers/base/devcoredump.c  | 23 +++++++++++++++++++++++
- include/linux/devcoredump.h |  6 ++++++
- 2 files changed, 29 insertions(+)
+ drivers/gpu/drm/xe/xe_devcoredump.c | 13 ++++++++++++-
+ drivers/gpu/drm/xe/xe_devcoredump.h |  5 +++++
+ drivers/gpu/drm/xe/xe_device.c      |  4 ++++
+ 3 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/devcoredump.c b/drivers/base/devcoredump.c
-index e96427411b87c..2857ceb3eb3aa 100644
---- a/drivers/base/devcoredump.c
-+++ b/drivers/base/devcoredump.c
-@@ -326,6 +326,29 @@ void dev_coredump_put(struct device *dev)
+diff --git a/drivers/gpu/drm/xe/xe_devcoredump.c b/drivers/gpu/drm/xe/xe_devcoredump.c
+index 68d3d623a05bf..3fef81396fe8a 100644
+--- a/drivers/gpu/drm/xe/xe_devcoredump.c
++++ b/drivers/gpu/drm/xe/xe_devcoredump.c
+@@ -9,6 +9,8 @@
+ #include <linux/devcoredump.h>
+ #include <generated/utsrelease.h>
+ 
++#include <drm/drm_managed.h>
++
+ #include "xe_device.h"
+ #include "xe_exec_queue.h"
+ #include "xe_force_wake.h"
+@@ -231,5 +233,14 @@ void xe_devcoredump(struct xe_sched_job *job)
+ 	dev_coredumpm(xe->drm.dev, THIS_MODULE, coredump, 0, GFP_KERNEL,
+ 		      xe_devcoredump_read, xe_devcoredump_free);
  }
- EXPORT_SYMBOL_GPL(dev_coredump_put);
+-#endif
  
-+/**
-+ * dev_coredump_timeout_set - set coredump timeout
-+ * @dev: the struct device for the crashed device
-+ * @secs_timeout: new timeout in seconds
-+ *
-+ * If giving device has a coredump this sets a new timeout for coredump.
-+ */
-+void dev_coredump_timeout_set(struct device *dev, unsigned long secs_timeout)
++static void xe_driver_devcoredump_fini(struct drm_device *drm, void *arg)
 +{
-+	struct device *existing;
-+	struct devcd_entry *devcd;
-+
-+	existing = class_find_device(&devcd_class, NULL, dev,
-+				     devcd_match_failing);
-+	if (!existing)
-+		return;
-+
-+	devcd = dev_to_devcd(existing);
-+	mod_delayed_work(system_wq, &devcd->del_wk, HZ * secs_timeout);
-+	put_device(existing);
++	dev_coredump_put(drm->dev);
 +}
-+EXPORT_SYMBOL_GPL(dev_coredump_timeout_set);
 +
- /**
-  * dev_coredumpm - create device coredump with read/free methods
-  * @dev: the struct device for the crashed device
-diff --git a/include/linux/devcoredump.h b/include/linux/devcoredump.h
-index c8f7eb6cc1915..70fe72a5c6d36 100644
---- a/include/linux/devcoredump.h
-+++ b/include/linux/devcoredump.h
-@@ -65,6 +65,7 @@ void dev_coredumpsg(struct device *dev, struct scatterlist *table,
- 		    size_t datalen, gfp_t gfp);
++int xe_devcoredump_init(struct xe_device *xe)
++{
++	return drmm_add_action_or_reset(&xe->drm, xe_driver_devcoredump_fini, xe);
++}
++#endif
+diff --git a/drivers/gpu/drm/xe/xe_devcoredump.h b/drivers/gpu/drm/xe/xe_devcoredump.h
+index df8671f0b5eb2..9eba67f37234f 100644
+--- a/drivers/gpu/drm/xe/xe_devcoredump.h
++++ b/drivers/gpu/drm/xe/xe_devcoredump.h
+@@ -11,10 +11,15 @@ struct xe_sched_job;
  
- void dev_coredump_put(struct device *dev);
-+void dev_coredump_timeout_set(struct device *dev, unsigned long secs_timeout);
+ #ifdef CONFIG_DEV_COREDUMP
+ void xe_devcoredump(struct xe_sched_job *job);
++int xe_devcoredump_init(struct xe_device *xe);
  #else
- static inline void dev_coredumpv(struct device *dev, void *data,
- 				 size_t datalen, gfp_t gfp)
-@@ -90,6 +91,11 @@ static inline void dev_coredumpsg(struct device *dev, struct scatterlist *table,
- static inline void dev_coredump_put(struct device *dev)
+ static inline void xe_devcoredump(struct xe_sched_job *job)
  {
  }
-+
-+static inline void dev_coredump_timeout_set(struct device *dev,
-+					    unsigned long secs_timeout)
++static inline int xe_devcoredump_init(struct xe_device *xe)
 +{
++	return 0;
 +}
- #endif /* CONFIG_DEV_COREDUMP */
+ #endif
  
- #endif /* __DEVCOREDUMP_H */
+ #endif
+diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+index 919ad88f0495a..22be76537c7da 100644
+--- a/drivers/gpu/drm/xe/xe_device.c
++++ b/drivers/gpu/drm/xe/xe_device.c
+@@ -20,6 +20,7 @@
+ #include "regs/xe_regs.h"
+ #include "xe_bo.h"
+ #include "xe_debugfs.h"
++#include "xe_devcoredump.h"
+ #include "xe_dma_buf.h"
+ #include "xe_drm_client.h"
+ #include "xe_drv.h"
+@@ -502,6 +503,9 @@ int xe_device_probe(struct xe_device *xe)
+ 			return err;
+ 	}
+ 
++	err = xe_devcoredump_init(xe);
++	if (err)
++		return err;
+ 	err = drmm_add_action_or_reset(&xe->drm, xe_driver_flr_fini, xe);
+ 	if (err)
+ 		return err;
 -- 
 2.44.0
 
