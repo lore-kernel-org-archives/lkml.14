@@ -1,157 +1,245 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE2C2F2D;
-	Tue, 27 Feb 2024 13:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEEB13329D
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709038898; cv=none; b=EI8EV8h4L8Xh/nuOgyWq7El0sujSj2Vo3vf7dJuBx4xLOI1U0pI+2GJj/1Svj408BD5bwj+UwWZ/3WVLm16Fco6wCz8UCyGkeR9rjBSadmD6TedwDYiXIAQTYIwbwDZlHJjy/xQsck/pJ/8sdMUHAdn9ex8ZHkUXGPYySe2sOpc=
+	t=1709038956; cv=none; b=IErD1q3WMrxGn3IOJKdKCf9wBLiIty3qex8jOR+Qaa5cCmjwihOcXENnjQIMq8EjoH4Hd01dgdocgWQSImRTUvIjywycihJFSMzjew41zOjyWF5eG0XlcfykHXCgCWBJ7Px0/F/6dnxUJLvZYto1i7+5O+SnaJkFgtIiexuXkVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709038898; c=relaxed/simple;
-	bh=hVPtSdJtYddAG+EIclbX7xD+HPT6FRQSRfWO26yzzGA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=eTeQU7zY0XQj2YkzFxUR0qOOq1cHSHTSg4ArrQFgVzFGXNDg8gxsQlxbi2WjEk4V1kX5ih+qNPIjk6oRfE31ev+18zaDTKYHqtxiftuSA4268WVK0Qpj6LE387mQFJa2ZmjfOAHum+DXEJ8L6d13JJJo1XTAdo1U7xJwhf9s9uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WmB6Myd9; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709038956; c=relaxed/simple;
+	bh=1DGhBNmrZTCICXupF0kYCHRi/acNN+BanrZF6uhGHZc=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=P4eiH/n9YXtfSBCkXnLmacFRpLQBlKL7sgWP/z1g7cbMR8SwkX7xGSQCjGF50/TuTTDS1GGDQ5Cdo8NzfA2ZnEE3zxHX3bdNEoFvrmAR9NNrmmpChOYsD0GoeG22sCEE1XhEY7u593r/YlStvrjVcNZIF5LVzHB3YTUT/zpOglI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IBKjVF3X; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WmB6Myd9"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a3f893ad5f4so603076166b.2;
-        Tue, 27 Feb 2024 05:01:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709038895; x=1709643695; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UikzpkujjXwCtreWrXfmmEcvmx/a1ETRiTxhijrjC1Y=;
-        b=WmB6Myd9gQ+wtlgDVse3Rtv19VyY9RF9oPksLHlmw44u9wke31zPi63wJYnwg2X6IM
-         aPxac8Im3X7UnmZB71cqjvsH8g8JS6vPT1QPJ3LcZ4Cdk8ydxzL+/72QFY3fXKEqCBul
-         IIj6n5jQLvXAn82+o69mCtW47QUMlKnxGVY+7PP4rkJlU9Ek6Rscxj0nIXkeXQ56bUzl
-         I3crMTTKa5++qWuePOwEknlN2p+rk0Hk6C38L5Z6UjiPdCGsxUZ4Yd18a1KF+GRRpSkA
-         MvHaLs43MvBpLnuxF0RnveJUwtmbdgOtfipsDRQXEOLyHtBiEfjzxeqsvXiHuyqna/AS
-         ZaXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709038895; x=1709643695;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UikzpkujjXwCtreWrXfmmEcvmx/a1ETRiTxhijrjC1Y=;
-        b=NKvzdGC+xHDxsxeVkz6bMP+ce1CskrPQOb8dDkZ3uBsFyJtK3AZd3r8vjFm+ivdQz0
-         d49Uwfde+euqR9OlryejXaJjdZuoh8Hm5cz8J1f4JQUyoqMowxhBMRLVzObqpSawlfc7
-         QRVK5iRzWgnB7xMXyNW/QRD/+zMPpGDmuEUUW/blEAh6pb83ArmPqn7Fdc7N0Vz8ZErL
-         Kbx2cwcYhyuuMurPSHhm5b3OrcGX31BsQpMw8YWKXTrK9xeZnTkDUjyWsk6TjJZ5Kq81
-         MdydKoiVVr/IQcWIfvI4pokEMkThn27A/GZZlyz0WEMo93WAtxDej6xFuvmu8hwHGpyg
-         FskQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoRU9F1Le0Dq2n/6RIGQUQECCZociqVyJpzP2+HO2IVyLpZy4WcBAuQvT2pKGcBUadoh2RsDTgKHtdyz9YSeqMDycWKRAaErt59H+CUdnrTKBghR3eEIwFWwjbYRM1ToWfXoJ40vUD+sO58iDGEAZNejKqAFMZe2cAcpi754lSrxzcJ10=
-X-Gm-Message-State: AOJu0YzJwMBEtajklC7qnwEN6gHQnnP7dV8e4lQb9GVXuFiOejyZPg/R
-	sP8tZbvCSsaVMb0WbDHzISOFmAo6Db2Z3OSFuuvP27Qg5H0fMcSA37ryjl1QdqK83tfc3Fnu36G
-	jIugmtzHKhOnSDo90d3Zq3CChpS0=
-X-Google-Smtp-Source: AGHT+IHb++aO+WH0LPzz8cPRkyvMXG9JIS7JDxPe6iL2Dh7/MmMI+nRWcQtgev94gQgJ4/smhdGR0UO1XtOlfDYiQRk=
-X-Received: by 2002:a17:906:1b43:b0:a3f:1c10:5a63 with SMTP id
- p3-20020a1709061b4300b00a3f1c105a63mr6925228ejg.38.1709038894414; Tue, 27 Feb
- 2024 05:01:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IBKjVF3X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709038954; x=1740574954;
+  h=date:from:to:cc:subject:message-id;
+  bh=1DGhBNmrZTCICXupF0kYCHRi/acNN+BanrZF6uhGHZc=;
+  b=IBKjVF3XnKkaid2UdLyTDASFNvmF0cjpMdDD2BcVnKcwnPX4dNdwOM6C
+   rP2hpPVOzpjs7pyKAnqwxxIeYrfhgFR6XV8aMQO9ZlHzHCE4rIlE7bh+O
+   vVhp2OFUksXOhKTL2+7msgdV27KC0z0gr8ltlh+952Y7TFDRnsFwOm6qa
+   5ExOJAgZm+qztpyoJjt3/AhLhGX2+TZRoidWy5vAOrlshRQnzyksch2da
+   TWA5w+vMcMUnVAIA0jz2ldCVlsH+SgiSg6x17g6auls3fxNnbPiX3+N8S
+   3FSR8WlvhGxQZLc71cFbg69ylnYqvFcg8BbY5iT4V4cGzgnXkVJIejIWN
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3220159"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="3220159"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 05:02:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="30206344"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 27 Feb 2024 05:02:32 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rex3P-000BDT-2D;
+	Tue, 27 Feb 2024 13:00:13 +0000
+Date: Tue, 27 Feb 2024 20:58:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/boot] BUILD SUCCESS
+ 533568e06b157b175912a960efe5ebce8710b4f9
+Message-ID: <202402272044.Zq3621IL-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240225213423.690561-1-chris.packham@alliedtelesis.co.nz>
- <20240226-scabby-fiber-87d5d6e45028@thorsis.com> <fd1c8657-62e6-449c-b47f-a2c3223b405c@alliedtelesis.co.nz>
- <20240227-married-amulet-da532c0a70d3@thorsis.com>
-In-Reply-To: <20240227-married-amulet-da532c0a70d3@thorsis.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 27 Feb 2024 15:00:58 +0200
-Message-ID: <CAHp75Vd3aza1192YpRHvi6y7oEsrAoYA3+Qcja7Fw22c9+xhRQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] auxdisplay: 7 segment LED display
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>, 
-	"ojeda@kernel.org" <ojeda@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, 
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>, 
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>, 
-	"gregory.clement@bootlin.com" <gregory.clement@bootlin.com>, 
-	"sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, 
-	"andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "geert@linux-m68k.org" <geert@linux-m68k.org>, 
-	"pavel@ucw.cz" <pavel@ucw.cz>, "lee@kernel.org" <lee@kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024 at 10:43=E2=80=AFAM Alexander Dahl <ada@thorsis.com> w=
-rote:
-> Am Mon, Feb 26, 2024 at 08:10:07PM +0000 schrieb Chris Packham:
-> > On 27/02/24 05:04, Alexander Dahl wrote:
-> > > Am Mon, Feb 26, 2024 at 10:34:20AM +1300 schrieb Chris Packham:
-> > >> This series adds a driver for a 7 segment LED display.
-> > >>
-> > >> I'd like to get some feedback on how this could be extended to suppo=
-rt >1
-> > >> character. The driver as presented is sufficient for my hardware whi=
-ch only has
-> > >> a single character display but I can see that for this to be generic=
-ally useful
-> > >> supporting more characters would be desireable.
-> > >>
-> > >> Earlier I posted an idea that the characters could be represended by
-> > >> sub-nodes[1] but there doesn't seem to be a way of having that and k=
-eeping the
-> > >> convenience of using devm_gpiod_get_array() (unless I've missed some=
-thing).
-> > >>
-> > >> [1] - https://scanmail.trustwave.com/?c=3D20988&d=3Dtrbc5eARVo-5gepR=
-nwbAKbQmiGk1bOSpqZDQx9bx7w&u=3Dhttps%3a%2f%2flore%2ekernel%2eorg%2flkml%2f2=
-a8d19ee-b18b-4b7c-869f-7d601cea30b6%40alliedtelesis%2eco%2enz%2f
-> > > Read that thread out of curiosity and I'm sorry if I'm late to the
-> > > party, but I wondered why this is limited to LEDs connected to GPIOs?
-> > >
-> > > Would it be possible to somehow stack this on top of some existing
-> > > LEDs?  I mean you could wire a 7 segment device to almost any LED
-> > > driver IC with enough channels, couldn't you?
-> >
-> > Mainly because the GPIO version is the hardware I have. I do wonder how
-> > this might work with something like the pca9551 which really is just a
-> > fancy version of the pca9554 on my board. A naive implementation would
-> > be to configure all the pca9551 pins as GPIOs and use what I have as-is=
-.
->
-> My idea was to do it on top of the LED abstraction, not on top of the
-> GPIO abstraction.  Currently you are using the GPIO consumer interface
-> and group 7 gpios which are supplied by that pca9554 in your case, but
-> could also be coming from a SoC or a 74hc595 etc.
->
-> Why not put it a level of abstraction higher, and let it consume LEDs
-> instead of GPIOs?  Your usecase would still be possible then.
->
-> As far as I could see the concept of a LED consumer can be done, the
-> leds-group-multicolor driver in
-> drivers/leds/rgb/leds-group-multicolor.c does that, introduced with
-> kernel v6.6 not so long ago.  It sets the sysfs entries of the LEDs
-> part of the group to readonly so they are not usable on their own
-> anymore and one would not disturb the grouped multicolor LED.
->
-> This would allow to use LEDs as a 7 segment group driven by any LED
-> driver including leds-gpio.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/boot
+branch HEAD: 533568e06b157b175912a960efe5ebce8710b4f9  x86/boot/64: Use RIP_REL_REF() to access early_top_pgt[]
 
-7-segment LEDs are not just a bunch of leds, they have explicit
-meaning and using LED infrastructure is an obscuration of what's going
-on (too many unrelated details are exposed, too hard to achieve what
-user needs). In the auxdisplay we have already the concept of "line
-display" with a 7-segment, or 14 (that are two main standards) with
-respective character mapping in case somebody wants to print more than
-hexadecimal digits on them. If I am mistaken, I would like to see the
-concept in the example here on how user space will take care of
-displaying (an arbitrary) data. Can you provide a draft of (user-side)
-documentation before we even start going this direction?
+elapsed time: 1465m
 
-> > Making a line display out of LED triggers might be another way of doing
-> > it but not something I really want to pursue.
->
-> Fair enough.  I just wanted to share my idea.  Didn't want to pressure
-> you in any direction. :-)
+configs tested: 172
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
---=20
-With Best Regards,
-Andy Shevchenko
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240227   gcc  
+arc                   randconfig-002-20240227   gcc  
+arm                               allnoconfig   clang
+arm                                 defconfig   clang
+arm                        keystone_defconfig   gcc  
+arm                        multi_v7_defconfig   gcc  
+arm                   randconfig-001-20240227   gcc  
+arm                   randconfig-002-20240227   gcc  
+arm                   randconfig-003-20240227   gcc  
+arm                   randconfig-004-20240227   gcc  
+arm                           tegra_defconfig   gcc  
+arm                    vt8500_v6_v7_defconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240227   clang
+arm64                 randconfig-002-20240227   gcc  
+arm64                 randconfig-003-20240227   gcc  
+arm64                 randconfig-004-20240227   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240227   gcc  
+csky                  randconfig-002-20240227   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240227   clang
+hexagon               randconfig-002-20240227   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240226   clang
+i386         buildonly-randconfig-002-20240226   gcc  
+i386         buildonly-randconfig-003-20240226   clang
+i386         buildonly-randconfig-004-20240226   clang
+i386         buildonly-randconfig-005-20240226   clang
+i386         buildonly-randconfig-006-20240226   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240226   clang
+i386                  randconfig-002-20240226   gcc  
+i386                  randconfig-003-20240226   clang
+i386                  randconfig-004-20240226   gcc  
+i386                  randconfig-005-20240226   clang
+i386                  randconfig-006-20240226   clang
+i386                  randconfig-011-20240226   gcc  
+i386                  randconfig-012-20240226   gcc  
+i386                  randconfig-013-20240226   gcc  
+i386                  randconfig-014-20240226   gcc  
+i386                  randconfig-015-20240226   gcc  
+i386                  randconfig-016-20240226   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240227   gcc  
+loongarch             randconfig-002-20240227   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         amcore_defconfig   gcc  
+m68k                       bvme6000_defconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                       bmips_be_defconfig   gcc  
+mips                           ci20_defconfig   clang
+mips                         cobalt_defconfig   gcc  
+mips                     loongson2k_defconfig   gcc  
+mips                      malta_kvm_defconfig   gcc  
+mips                malta_qemu_32r6_defconfig   gcc  
+mips                           xway_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240227   gcc  
+nios2                 randconfig-002-20240227   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240227   gcc  
+parisc                randconfig-002-20240227   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240227   clang
+powerpc               randconfig-002-20240227   gcc  
+powerpc               randconfig-003-20240227   clang
+powerpc                     tqm8548_defconfig   clang
+powerpc64             randconfig-001-20240227   clang
+powerpc64             randconfig-002-20240227   gcc  
+powerpc64             randconfig-003-20240227   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240227   gcc  
+riscv                 randconfig-002-20240227   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240227   gcc  
+s390                  randconfig-002-20240227   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240227   gcc  
+sh                    randconfig-002-20240227   gcc  
+sh                           sh2007_defconfig   gcc  
+sh                        sh7757lcr_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240227   gcc  
+sparc64               randconfig-002-20240227   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240227   clang
+um                    randconfig-002-20240227   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240227   clang
+x86_64       buildonly-randconfig-002-20240227   gcc  
+x86_64       buildonly-randconfig-003-20240227   clang
+x86_64       buildonly-randconfig-004-20240227   clang
+x86_64       buildonly-randconfig-005-20240227   clang
+x86_64       buildonly-randconfig-006-20240227   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240227   clang
+x86_64                randconfig-002-20240227   clang
+x86_64                randconfig-003-20240227   gcc  
+x86_64                randconfig-004-20240227   gcc  
+x86_64                randconfig-005-20240227   gcc  
+x86_64                randconfig-006-20240227   gcc  
+x86_64                randconfig-011-20240227   gcc  
+x86_64                randconfig-012-20240227   gcc  
+x86_64                randconfig-013-20240227   clang
+x86_64                randconfig-014-20240227   gcc  
+x86_64                randconfig-015-20240227   gcc  
+x86_64                randconfig-016-20240227   gcc  
+x86_64                randconfig-071-20240227   gcc  
+x86_64                randconfig-072-20240227   clang
+x86_64                randconfig-073-20240227   gcc  
+x86_64                randconfig-074-20240227   clang
+x86_64                randconfig-075-20240227   clang
+x86_64                randconfig-076-20240227   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240227   gcc  
+xtensa                randconfig-002-20240227   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
