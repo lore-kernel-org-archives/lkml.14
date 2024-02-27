@@ -1,125 +1,182 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D742B13A24B;
-	Tue, 27 Feb 2024 12:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8607C13A89F;
+	Tue, 27 Feb 2024 12:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709035784; cv=none; b=QCMSVOzSsKjK7riCj+ScTRWtTEyhoxhKNqsbitdU6w4cNtPucneV33TxK86hwiCGjqIzotHqv1Zk78Kce87shkfB5fj7zzEsPbxEp6EF00TQdPRaFP5HsYoIyIf+WjgTc3VRdY/+drmT/a4VrwLBO/wXzgUF1e8dHq2RoQQdd2k=
+	t=1709035813; cv=none; b=LL9hJLefCuogYa9nTcRoGwzRtZJF2hafQe3w19n7uUPlLbKCCK83WvsgHoiR+wzGUAfoGYld7u0Q8qVYZuoVsO8JIv5uKo+VsZdaujY/ikUryF92j75viX+cTz8yzx5VgV0IBdZAOKRQK23OPKy00W7r/yOsW3Bc4bm4Pjcz85Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709035784; c=relaxed/simple;
-	bh=AkU8U39Dvaa4sQVIMczcI/j0GnygEDtYp/2dJjdVtbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FAcr0ytAXf4n1aHl5omPW3MN39fu4HqYendJMSSNK5a2Po1QNEHUdQ7WRP0laUQHG5MIJIXHdtnqvL2sbrkVSfq76+8o0xxzuQebQJKiHd/MM5E+OFIUSH694yB4sAXuifbYCOy4bTaSOXzSHsP6GuDxDHmiBm5hsvUQT8kuR2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=PtD8UcFy; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1709035813; c=relaxed/simple;
+	bh=lC8iX2KU7tRIxTdsRwIKJVpK8yVv7zPRfikH6dLURbE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g6BkoRiGyNqycVJqNs/A8EZZ3yiYv/6iAO+nVJldFwf2BD7wO61aDr1N/dqZD4graXScobePCgPlILPZxBrRNz+E4ruy+QoZDEVaIDzQyTRA3+tKx0NvB+2wxUmSMNk4nn+zZSb5i7lkSJhTWlzXA6uqPmXeFrTtqI1ysDwG+gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ljMaw76L; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="PtD8UcFy"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ljMaw76L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709035809;
+	bh=lC8iX2KU7tRIxTdsRwIKJVpK8yVv7zPRfikH6dLURbE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ljMaw76LQ2rUG/CVAwHU3rcYo7/G6YqsiB4NCcjtxG7iZGosTH0mnBTK3jbHNVryc
+	 KqIQJ0+DTZvT1ehtJy2kaMH2ujoMuLpxKOpEsHFADO3YOImf4arICn7DJ+FOThak/8
+	 KQSoQT/GxAE81k4VMh8giMMtqjZtX5Nb2Ai6HQBlvJv8fe0I0JLHZ6KgBCiznLaVdv
+	 u6HBaMIN0UvOTBA9JMFS1p9izblk7bODgSvbRBuN0QTHDrOEiK+81zYhXz0CvVhatR
+	 7FZfxb71Q08/3Mf2x0JguUyzimgAYCzoTTLWbdAfZSwdTuk0lqShwoTFtq4XqD4pIm
+	 GiF8NiUPzpmTw==
+Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4TkbrY3xjCz9stD;
-	Tue, 27 Feb 2024 13:09:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1709035773;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CfDncH9SZJfkOzhOAZvW+P0qSEBgSmxkFRXj5ACGhgU=;
-	b=PtD8UcFyy7iY2qmUohVq8BmQ1q8to/u2N55TFbcIsQ2cqKPL1hD/DwpxrgeM4kK1hMZ2YH
-	sMqQYlpYDSvKZI0w3HIC4rxH2NtK1/G/rDvgMgVGoKGquNbKMaVS8TwOslxea33wQ65X0x
-	Z2KLCGuPJpHKkKiSivIPM8KnSOBbOWSHpmFdqsYjJCxdqEiyiogFSiPYLUYmgtj4apqwhi
-	rstSxqpTx2lpgd2gsAxir2QfXmy2jXRRzGJp8Xu6cJckPyB4oITGEK9M47WXJbn8Y00TYy
-	6j3mF16KRkcJZiS8iQ/0uGOVJGgcLw06ngOSNhNOKXPDwQoR8p6QyKCBpmF7Dw==
-Date: Tue, 27 Feb 2024 13:09:27 +0100
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, david@fromorbit.com, chandan.babu@oracle.com, 
-	akpm@linux-foundation.org, mcgrof@kernel.org, ziy@nvidia.com, hare@suse.de, 
-	djwong@kernel.org, gost.dev@samsung.com, linux-mm@kvack.org, 
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH 04/13] filemap: use mapping_min_order while allocating
- folios
-Message-ID: <ddosz7msf7aayvalbgyz3lecl4no3mavjcqxot2akqv75wrtqv@orcsmfoae5cc>
-References: <20240226094936.2677493-1-kernel@pankajraghav.com>
- <20240226094936.2677493-5-kernel@pankajraghav.com>
- <ZdykhSuPbe6knu89@casper.infradead.org>
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E4B4537820CC;
+	Tue, 27 Feb 2024 12:10:06 +0000 (UTC)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: broonie@kernel.org
+Cc: wenst@chromium.org,
+	lgirdwood@gmail.com,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	trevor.wu@mediatek.com,
+	maso.huang@mediatek.com,
+	xiazhengqiao@huaqin.corp-partner.google.com,
+	arnd@arndb.de,
+	kuninori.morimoto.gx@renesas.com,
+	shraash@google.com,
+	amergnat@baylibre.com,
+	nicolas.ferre@microchip.com,
+	u.kleine-koenig@pengutronix.de,
+	dianders@chromium.org,
+	frank.li@vivo.com,
+	allen-kh.cheng@mediatek.com,
+	eugen.hristev@collabora.com,
+	claudiu.beznea@tuxon.dev,
+	jarkko.nikula@bitmer.com,
+	jiaxin.yu@mediatek.com,
+	alpernebiyasak@gmail.com,
+	ckeepax@opensource.cirrus.com,
+	zhourui@huaqin.corp-partner.google.com,
+	nfraprado@collabora.com,
+	alsa-devel@alsa-project.org,
+	shane.chien@mediatek.com,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	kernel@collabora.com,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH 00/22] ASoC: Cleanup MediaTek soundcard machine drivers
+Date: Tue, 27 Feb 2024 13:09:17 +0100
+Message-ID: <20240227120939.290143-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZdykhSuPbe6knu89@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 26, 2024 at 02:47:33PM +0000, Matthew Wilcox wrote:
-> On Mon, Feb 26, 2024 at 10:49:27AM +0100, Pankaj Raghav (Samsung) wrote:
-> > Add some additional VM_BUG_ON() in page_cache_delete[batch] and
-> > __filemap_add_folio to catch errors where we delete or add folios that
-> > has order less than min_order.
-> 
-> I don't understand why we need these checks in the deletion path.  The
-> add path, yes, absolutely.  But the delete path?
-I think we initially added it to check if some split happened which
-might mess up the page cache with min order support. But I think it is
-not super critical anymore because of the changes in the split_folio
-path. I will remove the checks.
+This series performs a cleanup of most of the MediaTek AFE drivers and
+soundcard machine drivers, reducing code duplication and setting a base
+to be consistent with their devicetree bindings, as many of those are
+using different properties and nodes for no good reason.
 
-> 
-> > @@ -896,6 +900,8 @@ noinline int __filemap_add_folio(struct address_space *mapping,
-> >  			}
-> >  		}
-> >  
-> > +		VM_BUG_ON_FOLIO(folio_order(folio) < mapping_min_folio_order(mapping),
-> > +				folio);
-> 
-> But I don't understand why you put it here, while we're holding the
-> xa_lock.  That seems designed to cause maximum disruption.  Why not put
-> it at the beginning of the function with all the other VM_BUG_ON_FOLIO?
+Summarizing:
+ - Commonizes functions and ops where possible
+ - Adds a common probe mechanism, increasing maintainability of
+   soundcard drivers for older MediaTek SoCs
+ - Migrates all drivers to support the new bindings
+   - Obviously retains compatibility with old device trees
+ - Reduces machine-specific parameters hardcoding in drivers
+   - Can now set machine-specific params in device tree
+   - Uses the `audio-routing` and `dai-link` nodes like some
+     other non-MediaTek SoC sound drivers
+ - Imposes consistency between MediaTek ASoC machine soundcard
+   drivers bindings
+ - Reduces code size and greatly reduces the amount of code that
+   will be required for newer drivers (retaining compatibility with
+   the old bindings was costly in terms of code size, otherwise
+   this series would've removed ~1000 more lines, or something
+   along that line).
 
-Yeah. That makes sense as the folio itself is not changing.
+This series was (manually) tested on MT8173, MT8192, MT8195 and MT8186
+Chromebooks.
 
-> 
-> > @@ -1847,6 +1853,9 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
-> >  		fgf_t fgp_flags, gfp_t gfp)
-> >  {
-> >  	struct folio *folio;
-> > +	unsigned int min_order = mapping_min_folio_order(mapping);
-> > +
-> > +	index = mapping_align_start_index(mapping, index);
-> 
-> I would not do this here.
-> 
-> >  repeat:
-> >  	folio = filemap_get_entry(mapping, index);
-> > @@ -1886,7 +1895,7 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
-> >  		folio_wait_stable(folio);
-> >  no_page:
-> >  	if (!folio && (fgp_flags & FGP_CREAT)) {
-> > -		unsigned order = FGF_GET_ORDER(fgp_flags);
-> > +		unsigned int order = max(min_order, FGF_GET_ORDER(fgp_flags));
-> >  		int err;
-> 
-> Put it here instead.
-> 
-> >  		if ((fgp_flags & FGP_WRITE) && mapping_can_writeback(mapping))
-> > @@ -1912,8 +1921,13 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
-> >  			gfp_t alloc_gfp = gfp;
-> >  
-> >  			err = -ENOMEM;
-> > +			if (order < min_order)
-> > +				order = min_order;
-> >  			if (order > 0)
-> >  				alloc_gfp |= __GFP_NORETRY | __GFP_NOWARN;
-> > +
-> > +			VM_BUG_ON(index & ((1UL << order) - 1));
-> 
-> Then you don't need this BUG_ON because it's obvious you just did it.
-> And the one in filemap_add_folio() would catch it anyway.
+AngeloGioacchino Del Regno (22):
+  ASoC: mediatek: mt8192-afe-pcm: Convert to devm_pm_runtime_enable()
+  ASoC: mediatek: mt8192-afe-pcm: Simplify with dev_err_probe()
+  ASoC: mediatek: Commonize ADDA rate transform functions and enums
+  ASoC: mediatek: Assign dummy when codec not specified for a DAI link
+  ASoC: mediatek: Add common machine soundcard driver probe mechanism
+  ASoC: mediatek: common: Constify struct mtk_sof_priv
+  ASoC: mediatek: mt8188: Migrate to mtk_soundcard_common_probe
+  ASoC: mediatek: mt8195: Migrate to mtk_soundcard_common_probe
+  ASoC: mediatek: mt8192: Migrate to mtk_soundcard_common_probe
+  ASoC: mediatek: mt8186: Migrate to mtk_soundcard_common_probe
+  ASoC: mediatek: Add common snd_soc_ops .startup() callback
+  ASoC: mediatek: mt8195: Migrate to the common mtk_soundcard_startup
+  ASoC: mediatek: mt8192: Migrate to the common mtk_soundcard_startup
+  ASoC: mediatek: mt8186-rt1019: Migrate to the common
+    mtk_soundcard_startup
+  ASoC: mediatek: Add common mtk_afe_component_probe callback
+  ASoC: mediatek: Use common mtk_afe_pcm_platform with common probe cb
+  ASoC: mediatek: mt8186: Unify mt8186-mt6366 machine drivers
+  ASoC: dt-bindings: mt8195: Document audio-routing and dai-link subnode
+  ASoC: dt-bindings: mt8192: Document audio-routing and dai-link subnode
+  ASoC: dt-bindings: mt8186: Document audio-routing and dai-link subnode
+  arm64: dts: mediatek: mt8195-cherry: Specify sound DAI links and
+    routing
+  arm64: dts: mediatek: mt8186-corsola: Specify sound DAI links and
+    routing
 
-I agree. I will change it in the next revision.
+ .../sound/mt8186-mt6366-da7219-max98357.yaml  |  112 +-
+ .../sound/mt8186-mt6366-rt1019-rt5682s.yaml   |  112 +-
+ .../sound/mt8192-mt6359-rt1015-rt5682.yaml    |  129 +-
+ .../bindings/sound/mt8195-mt6359.yaml         |  123 ++
+ .../boot/dts/mediatek/mt8186-corsola.dtsi     |   42 +-
+ .../boot/dts/mediatek/mt8195-cherry.dtsi      |   45 +
+ sound/soc/mediatek/Kconfig                    |   24 +-
+ sound/soc/mediatek/common/Makefile            |    2 +
+ .../mediatek/common/mtk-afe-platform-driver.c |   18 +
+ .../soc/mediatek/common/mtk-dai-adda-common.c |   70 +
+ .../soc/mediatek/common/mtk-dai-adda-common.h |   45 +
+ .../soc/mediatek/common/mtk-dsp-sof-common.c  |   15 +-
+ .../soc/mediatek/common/mtk-dsp-sof-common.h  |    1 -
+ sound/soc/mediatek/common/mtk-soc-card.h      |    7 +-
+ .../mediatek/common/mtk-soundcard-driver.c    |  205 ++-
+ .../mediatek/common/mtk-soundcard-driver.h    |   42 +
+ sound/soc/mediatek/mt6797/mt6797-afe-pcm.c    |   14 +-
+ sound/soc/mediatek/mt6797/mt6797-dai-adda.c   |   85 +-
+ sound/soc/mediatek/mt7986/mt7986-afe-pcm.c    |   14 +-
+ sound/soc/mediatek/mt8183/mt8183-afe-pcm.c    |   14 +-
+ sound/soc/mediatek/mt8183/mt8183-dai-adda.c   |   90 +-
+ sound/soc/mediatek/mt8186/Makefile            |    3 +-
+ sound/soc/mediatek/mt8186/mt8186-afe-pcm.c    |   19 +-
+ sound/soc/mediatek/mt8186/mt8186-dai-adda.c   |   94 +-
+ .../mt8186/mt8186-mt6366-da7219-max98357.c    | 1189 -----------------
+ ...t6366-rt1019-rt5682s.c => mt8186-mt6366.c} |  578 ++++----
+ sound/soc/mediatek/mt8188/mt8188-afe-pcm.c    |   21 +-
+ sound/soc/mediatek/mt8188/mt8188-dai-adda.c   |   89 +-
+ sound/soc/mediatek/mt8188/mt8188-mt6359.c     |  203 +--
+ sound/soc/mediatek/mt8192/mt8192-afe-pcm.c    |  114 +-
+ sound/soc/mediatek/mt8192/mt8192-dai-adda.c   |   90 +-
+ .../mt8192/mt8192-mt6359-rt1015-rt5682.c      |  301 ++---
+ sound/soc/mediatek/mt8195/mt8195-afe-pcm.c    |   21 +-
+ sound/soc/mediatek/mt8195/mt8195-dai-adda.c   |   90 +-
+ sound/soc/mediatek/mt8195/mt8195-mt6359.c     |  487 +++----
+ 35 files changed, 1739 insertions(+), 2769 deletions(-)
+ create mode 100644 sound/soc/mediatek/common/mtk-dai-adda-common.c
+ create mode 100644 sound/soc/mediatek/common/mtk-dai-adda-common.h
+ delete mode 100644 sound/soc/mediatek/mt8186/mt8186-mt6366-da7219-max98357.c
+ rename sound/soc/mediatek/mt8186/{mt8186-mt6366-rt1019-rt5682s.c => mt8186-mt6366.c} (72%)
+
+-- 
+2.44.0
+
