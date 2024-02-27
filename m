@@ -1,77 +1,149 @@
-Received: from 5.mo582.mail-out.ovh.net (5.mo582.mail-out.ovh.net [46.105.54.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0154A0A
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.54.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC55C125D5
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 02:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709001638; cv=none; b=fS7P5AFzVr5tGcukp4kNiRGDYPI0RxhWQiGJJ4UfKDRRQEn6GqLYDhCHtvK/UObD9kLd3OVO0Snpe7f5hYxfIToPBcD4mhqm9vNSDnvu+Tzt1Aa1KcfgEl7TDgXTWeft2l93wbOORBrc8XTmUSQfs11at4bnq0cYC7VxgrAmyjk=
+	t=1709001666; cv=none; b=FoPIOGpUc3Q0O4qmPKo++79kcpYrThP6wb0vHJrPamQh8fbuMKx9OA3nszMKsi5xsmUotBWK4kFqeS20Q8WHBkjaGpJQcWBCEzdqSg3aFf0xtI/XZ+RBjKldRdJcwX0VXD8UzcsohSNhCj6t8N87YLl7GkvHi3n6hHU8G0+bVZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709001638; c=relaxed/simple;
-	bh=b0rYrIvZ2PxxtMVqAv6cvqq7svsw2UjpEiw6r+xa4/E=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QUsBCmihN5bwteUONh7Kq2YNd5dRYxjG8iP2+7FTbtf1/q8CxsutY3dU4AHCz0I4tvqGV4A6kr2+WLFaQaAlaehwidoirrJoLxHQ906x0Yh309j/MMqsSKBk+K6nFiIhUkZhNLtJVrN/vbueWvijPwOWujCAQVosEmsj0veiub8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=46.105.54.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director2.ghost.mail-out.ovh.net (unknown [10.108.9.128])
-	by mo582.mail-out.ovh.net (Postfix) with ESMTP id 4TkKSy4Yf8z19RF
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:21:38 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-ktckq (unknown [10.110.113.175])
-	by director2.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 445E91FD7C;
-	Tue, 27 Feb 2024 01:21:35 +0000 (UTC)
-Received: from etezian.org ([37.59.142.105])
-	by ghost-submission-6684bf9d7b-ktckq with ESMTPSA
-	id 3bEUDh853WW1TAkA7T8CUA
-	(envelope-from <andi@etezian.org>); Tue, 27 Feb 2024 01:21:35 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-105G0061aec5354-f92c-4587-a66e-e47a930129e2,
-                    9285090D84508773EC2C25A4099646E261C64314) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: wsa+renesas@sang-engineering.com, aisheng.dong@nxp.com, 
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
- festevam@gmail.com, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: linux-imx@nxp.com, linux-i2c@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
- Conor Dooley <conor.dooley@microchip.com>
-In-Reply-To: <20240226070910.3379108-1-peng.fan@oss.nxp.com>
-References: <20240226070910.3379108-1-peng.fan@oss.nxp.com>
-Subject: Re: [PATCH V2] dt-bindings: i2c: imx-lpi2c: add i.MX95 LPI2C
-Message-Id: <170899689466.412407.9784756949191982375.b4-ty@kernel.org>
-Date: Tue, 27 Feb 2024 02:21:34 +0100
+	s=arc-20240116; t=1709001666; c=relaxed/simple;
+	bh=GdjVbuKlyr67H96AYnoupjDwfylD1+PwoQv5H1kB2HI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CGRCz2gGw0NmtB33rfZAdJpkai7bdiFHvWvvZxAZNdp/q2C9pZxNGGqcXgAHp8BtDIF6rBajDj1J0R14GOIQ12pVT8lOJADs/tKiAcIrIhwBCKfYDVhhPmBslOLLMwNaFsbzACR2ltEKFNGB1yLNsWpmlIlplQUcOwp8Yw28Va0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FHvch6Ac; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHvch6Ac"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e53f76898fso609987b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 18:41:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709001664; x=1709606464; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+9kPnEQQtmu12UoNhoLVM4of9Nt6V7crsGL0uVHcTJA=;
+        b=FHvch6AcijXBrDSMxajB8xxJUdZDpEtEDPt3krGMz05wZYeKdCHvpCbqWSGSDXsOVD
+         gSiTzQnW5YoXdx4JWvJ9w/EvTQsLGj1BRTKo4STQJxPN3lYdQrYxAryRd/UrFiIRXgBe
+         Q2OESHGtzeh3f08YHjE8rd2ySA+iUcX0useMFj+xNZIHOzcbh0Hqe0cBRPCCxe76OBYt
+         +S/u9DWIEEeFC0yfiogB2fU/+rIDUZnYewQCklebfdjmW/uMAC0bjH2AyMOeVDVDOaib
+         FlQrytUzOIYzYY5kwhy9l3MlIkJJPVPXAQZ9ZNVD1+e3GAZYU0q4X791kStwqbr4B8a7
+         mmIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709001664; x=1709606464;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+9kPnEQQtmu12UoNhoLVM4of9Nt6V7crsGL0uVHcTJA=;
+        b=tYcH8LeiZtFLfo1ssx58HwYpjiDHHuiZz7BZp8mFfUKYp18Z+kTOoMPUyLwl3BWgyz
+         6u83kYBNa+bkBztzHaIXBhPv7XQsa6B5lPZBQN3ANuPmOTjZwPq+f6Qc5IcXM6KvGdPG
+         iu1s5o7pDvhDs1ioPALYpWaWf0OScUrNYJAIc+EnSmlkm25N8iivWsGj9WlVfUxkkCpm
+         vKXjktZU49BmhrumP9GwvraS/fSY5TiAofZNm5OuuxS9nmALjYMVXNLykrMKIAV8b3+X
+         6WUcvNu2TkvMr1DPJ/HkdIrRQY0F9qsFiPFomuVnvlOS2EDC3SLyylCdEDaPFuiWHtWM
+         5BRQ==
+X-Gm-Message-State: AOJu0Yy6w5k4fyYn7i8SczQDjvAQUB69vlzm0S84E77mec+YlqJHx355
+	DaHKqhdHRecK2li5ZHZkitx/g+anfe+yPzIa333MBO4wOXfntPif
+X-Google-Smtp-Source: AGHT+IGiB0yNLS+947SzPqW5TZ7PC1hIalQTf7qMGyIVa2Qhsl/G3WdYUU1A+6vXBy5lSjliOsUZ7w==
+X-Received: by 2002:a17:902:6847:b0:1dc:a834:5e1c with SMTP id f7-20020a170902684700b001dca8345e1cmr3256626pln.11.1709001663911;
+        Mon, 26 Feb 2024 18:41:03 -0800 (PST)
+Received: from barry-desktop.hub ([2407:7000:8942:5500:fae4:3bff:fecb:410])
+        by smtp.gmail.com with ESMTPSA id i3-20020a170902c94300b001d706e373a9sm358616pla.292.2024.02.26.18.41.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 18:41:03 -0800 (PST)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	Lance Yang <ioworker0@gmail.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Yin Fengwei <fengwei.yin@intel.com>
+Subject: [PATCH] mm: export folio_pte_batch as a couple of modules might need it
+Date: Tue, 27 Feb 2024 15:40:50 +1300
+Message-Id: <20240227024050.244567-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 4116853009816291852
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrgeefgdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpkeelrddvudejrddutdelrdduieelpdefjedrheelrddugedvrddutdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekvddpmhhouggvpehsmhhtphhouhht
+Content-Transfer-Encoding: 8bit
 
-Hi
+From: Barry Song <v-songbaohua@oppo.com>
 
-On Mon, 26 Feb 2024 15:09:10 +0800, Peng Fan (OSS) wrote:
-> Add i.MX95 LPI2C compatible entry, same as i.MX93 compatible
-> with i.MX7ULP.
-> 
-> 
+madvise and some others might need folio_pte_batch to check if a range
+of PTEs are completely mapped to a large folio with contiguous physcial
+addresses. Let's export it for others to use.
 
-Applied to i2c/i2c-host on
+Cc: Lance Yang <ioworker0@gmail.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Yin Fengwei <fengwei.yin@intel.com>
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+---
+ -v1:
+ at least two jobs madv_free and madv_pageout depend on it. To avoid
+ conflicts and dependencies, after discussing with Lance, we prefer
+ this one can land earlier.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
+ mm/internal.h | 13 +++++++++++++
+ mm/memory.c   | 11 +----------
+ 2 files changed, 14 insertions(+), 10 deletions(-)
 
-Thank you,
-Andi
-
-Patches applied
-===============
-[1/1] dt-bindings: i2c: imx-lpi2c: add i.MX95 LPI2C
-      commit: 2a8d18cd63dc5175c67a42fe8cb7cd3cd465d845
+diff --git a/mm/internal.h b/mm/internal.h
+index 13b59d384845..8e2bc304f671 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -83,6 +83,19 @@ static inline void *folio_raw_mapping(struct folio *folio)
+ 	return (void *)(mapping & ~PAGE_MAPPING_FLAGS);
+ }
+ 
++/* Flags for folio_pte_batch(). */
++typedef int __bitwise fpb_t;
++
++/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
++#define FPB_IGNORE_DIRTY		((__force fpb_t)BIT(0))
++
++/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
++#define FPB_IGNORE_SOFT_DIRTY		((__force fpb_t)BIT(1))
++
++extern int folio_pte_batch(struct folio *folio, unsigned long addr,
++		pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
++		bool *any_writable);
++
+ void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
+ 						int nr_throttled);
+ static inline void acct_reclaim_writeback(struct folio *folio)
+diff --git a/mm/memory.c b/mm/memory.c
+index 1c45b6a42a1b..319b3be05e75 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -953,15 +953,6 @@ static __always_inline void __copy_present_ptes(struct vm_area_struct *dst_vma,
+ 	set_ptes(dst_vma->vm_mm, addr, dst_pte, pte, nr);
+ }
+ 
+-/* Flags for folio_pte_batch(). */
+-typedef int __bitwise fpb_t;
+-
+-/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
+-#define FPB_IGNORE_DIRTY		((__force fpb_t)BIT(0))
+-
+-/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
+-#define FPB_IGNORE_SOFT_DIRTY		((__force fpb_t)BIT(1))
+-
+ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+ {
+ 	if (flags & FPB_IGNORE_DIRTY)
+@@ -982,7 +973,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+  * If "any_writable" is set, it will indicate if any other PTE besides the
+  * first (given) PTE is writable.
+  */
+-static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
++int folio_pte_batch(struct folio *folio, unsigned long addr,
+ 		pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
+ 		bool *any_writable)
+ {
+-- 
+2.34.1
 
