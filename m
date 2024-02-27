@@ -1,184 +1,130 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D07E5DDB8
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3100D1386CE
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709031190; cv=none; b=UqczvkIqQeYaZenvhAdiIMXSuwgIjVirrOUwnpq5dlNebKcJKcIdoB6OC0XsS9JoSVSq/CanmN1UZSQ4h8u55JK7C8hn1TcZDNpdlyGKGyoTkrnPSaSXUBYa7qRs9M1GLoXUvEqYXHGMZAcWguMfr93Hm2ih5C03sQAyvfIYCJw=
+	t=1709031192; cv=none; b=Sap2Dkj6yJ0yWFtEFvgoUfRzCo2A93uYK0G8O4C0yunOT61N4bDJAVfN8zh1MXSFHtWSO5S2GoeYFHFBbdGMTJXM1BS605yeGXczHvRyQD2Xijmoh83oAxwDO0tA4oPbzT4eM2eQbj2kCXirhomFRC+B3EtE8SE1Mej8aDCpB+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709031190; c=relaxed/simple;
-	bh=4173aevZicLQ7+bQhgyhKa7Q3an6+yhm2Hu3Jx4RqZA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YRNCGKbGE1Sz0k/6gQbiJHRhvbrWi2VkprrKtwyBV1ZSEmkDJsPiHpjzMWSzDlzsypGMnw1k1iKbkGswbBC8+6jOiOFGk40USEIxY/i2/LyljjnhV1TDBOMnXb1DxSHYkTs8WK+6oJ1EreCTTVvKfkaSxTpjp1vx/YkX5UCKT74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA6DBFEC;
-	Tue, 27 Feb 2024 02:53:45 -0800 (PST)
-Received: from [10.1.30.188] (XHFQ2J9959.cambridge.arm.com [10.1.30.188])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8F5F3F6C4;
-	Tue, 27 Feb 2024 02:53:05 -0800 (PST)
-Message-ID: <dc2ac3e5-a354-4447-a7da-26cae0c57b0d@arm.com>
-Date: Tue, 27 Feb 2024 10:53:03 +0000
+	s=arc-20240116; t=1709031192; c=relaxed/simple;
+	bh=1e54Ewk7dKSI2j2rLaGO4VOlLiMm104HLmVcrEPRgZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mrkY8ke/PF955PFSvgFbdZLdYZk+zoO+K1LV9tNFbw7TyODX2wsM2K7wOxl97SOmiLbyJIz7iBLa4bf/WaBOuLdQHePfQwM35x7BaSxnbxlsnah+r9THZkIQPFt8FGiXygJXZdORoH49ja9VzGbyNrZB0VAjuaYei2ANM3EWklQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GzM7CDvo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GzM7CDvo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709031189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1/R0zYYMzMrd102J3JgHM4IsC1fahdOwS+2IaXy3PeY=;
+	b=GzM7CDvoX4hH3SCYJfL9BKwe9rvqrymoAJpuUmiCViApwToLZYGanC5gvAhUcofVAcjlrm
+	5V39+14uquxj+E/ytqRh91M9vTY8kzRnmozoVt0jAI4I9vtA5eBPtXynny82TD6Aitk/YR
+	slmZzR9ffIwcEE04uSG9Dbs5o8sRLiM=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-96-3FvsOudxP5y2P_M0yYeEmA-1; Tue,
+ 27 Feb 2024 05:53:06 -0500
+X-MC-Unique: 3FvsOudxP5y2P_M0yYeEmA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A73F33C1E9C4;
+	Tue, 27 Feb 2024 10:53:05 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 74B271C06713;
+	Tue, 27 Feb 2024 10:53:01 +0000 (UTC)
+Date: Tue, 27 Feb 2024 18:52:57 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	Kexec-ml <kexec@lists.infradead.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH linux-next v2 1/3] kexec/kdump: make struct crash_mem
+ available without CONFIG_CRASH_DUMP
+Message-ID: <Zd2/CRHtB4kETwtp@MiWiFi-R3L-srv>
+References: <20240226103010.589537-1-hbathini@linux.ibm.com>
+ <20240226103010.589537-2-hbathini@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: export folio_pte_batch as a couple of modules might
- need it
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>, Lance Yang <ioworker0@gmail.com>
-Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Barry Song <v-songbaohua@oppo.com>, Yin Fengwei <fengwei.yin@intel.com>
-References: <20240227024050.244567-1-21cnbao@gmail.com>
- <61b9dfc9-5522-44fd-89a4-140833ede8af@arm.com>
- <c95215b2-6ec5-4efb-a73b-7be92cda1c83@redhat.com>
- <CAK1f24mOc+Y_UCA2nSC7VbNQMy0DahULz-6JsEPMqTyoAA+MoA@mail.gmail.com>
- <dbce43b4-cf69-41d0-af6c-fdfc3032fedb@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <dbce43b4-cf69-41d0-af6c-fdfc3032fedb@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226103010.589537-2-hbathini@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-On 27/02/2024 10:30, David Hildenbrand wrote:
-> On 27.02.24 11:21, Lance Yang wrote:
->> On Tue, Feb 27, 2024 at 5:14 PM David Hildenbrand <david@redhat.com> wrote:
->>>
->>> On 27.02.24 10:07, Ryan Roberts wrote:
->>>> On 27/02/2024 02:40, Barry Song wrote:
->>>>> From: Barry Song <v-songbaohua@oppo.com>
->>>>>
->>>>> madvise and some others might need folio_pte_batch to check if a range
->>>>> of PTEs are completely mapped to a large folio with contiguous physcial
->>>>> addresses. Let's export it for others to use.
->>>>>
->>>>> Cc: Lance Yang <ioworker0@gmail.com>
->>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
->>>>> Cc: David Hildenbrand <david@redhat.com>
->>>>> Cc: Yin Fengwei <fengwei.yin@intel.com>
->>>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->>>>> ---
->>>>>    -v1:
->>>>>    at least two jobs madv_free and madv_pageout depend on it. To avoid
->>>>>    conflicts and dependencies, after discussing with Lance, we prefer
->>>>>    this one can land earlier.
->>>>
->>>> I think this will also ultimately be useful for mprotect too, though I haven't
->>>> looked at it properly yet.
->>>>
->>>
->>> Yes, I think we briefly discussed that.
->>>
->>>>>
->>>>>    mm/internal.h | 13 +++++++++++++
->>>>>    mm/memory.c   | 11 +----------
->>>>>    2 files changed, 14 insertions(+), 10 deletions(-)
->>>>>
->>>>> diff --git a/mm/internal.h b/mm/internal.h
->>>>> index 13b59d384845..8e2bc304f671 100644
->>>>> --- a/mm/internal.h
->>>>> +++ b/mm/internal.h
->>>>> @@ -83,6 +83,19 @@ static inline void *folio_raw_mapping(struct folio *folio)
->>>>>       return (void *)(mapping & ~PAGE_MAPPING_FLAGS);
->>>>>    }
->>>>>
->>>>> +/* Flags for folio_pte_batch(). */
->>>>> +typedef int __bitwise fpb_t;
->>>>> +
->>>>> +/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
->>>>> +#define FPB_IGNORE_DIRTY            ((__force fpb_t)BIT(0))
->>>>> +
->>>>> +/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
->>>>> +#define FPB_IGNORE_SOFT_DIRTY               ((__force fpb_t)BIT(1))
->>>>> +
->>>>> +extern int folio_pte_batch(struct folio *folio, unsigned long addr,
->>>>> +            pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
->>>>> +            bool *any_writable);
->>>>> +
->>>>>    void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
->>>>>                                               int nr_throttled);
->>>>>    static inline void acct_reclaim_writeback(struct folio *folio)
->>>>> diff --git a/mm/memory.c b/mm/memory.c
->>>>> index 1c45b6a42a1b..319b3be05e75 100644
->>>>> --- a/mm/memory.c
->>>>> +++ b/mm/memory.c
->>>>> @@ -953,15 +953,6 @@ static __always_inline void __copy_present_ptes(struct
->>>>> vm_area_struct *dst_vma,
->>>>>       set_ptes(dst_vma->vm_mm, addr, dst_pte, pte, nr);
->>>>>    }
->>>>>
->>>>> -/* Flags for folio_pte_batch(). */
->>>>> -typedef int __bitwise fpb_t;
->>>>> -
->>>>> -/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
->>>>> -#define FPB_IGNORE_DIRTY            ((__force fpb_t)BIT(0))
->>>>> -
->>>>> -/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
->>>>> -#define FPB_IGNORE_SOFT_DIRTY               ((__force fpb_t)BIT(1))
->>>>> -
->>>>>    static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
->>>>>    {
->>>>>       if (flags & FPB_IGNORE_DIRTY)
->>>>> @@ -982,7 +973,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_t
->>>>> pte, fpb_t flags)
->>>>>     * If "any_writable" is set, it will indicate if any other PTE besides the
->>>>>     * first (given) PTE is writable.
->>>>>     */
->>>>
->>>> David was talking in Lance's patch thread, about improving the docs for this
->>>> function now that its exported. Might be worth syncing on that.
->>>
->>> Here is my take:
->>>
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>> ---
->>>    mm/memory.c | 22 ++++++++++++++++++----
->>>    1 file changed, 18 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/mm/memory.c b/mm/memory.c
->>> index d0b855a1837a8..098356b8805ae 100644
->>> --- a/mm/memory.c
->>> +++ b/mm/memory.c
->>> @@ -971,16 +971,28 @@ static inline pte_t __pte_batch_clear_ignored(pte_t
->>> pte, fpb_t flags)
->>>          return pte_wrprotect(pte_mkold(pte));
->>>    }
->>>
->>> -/*
->>> +/**
->>> + * folio_pte_batch - detect a PTE batch for a large folio
->>> + * @folio: The large folio to detect a PTE batch for.
->>> + * @addr: The user virtual address the first page is mapped at.
->>> + * @start_ptep: Page table pointer for the first entry.
->>> + * @pte: Page table entry for the first page.
->>
->> Nit:
->>
->> - * @pte: Page table entry for the first page.
->> + * @pte: Page table entry for the first page that must be the first subpage of
->> + *               the folio excluding arm64 for now.
->>
->> IIUC, pte_batch_hint is always 1 excluding arm64 for now.
->> I'm not sure if this modification will be helpful?
+On 02/26/24 at 04:00pm, Hari Bathini wrote:
+> struct crash_mem defined under include/linux/crash_core.h represents
+> a list of memory ranges. While it is used to represent memory ranges
+> for kdump kernel, it can also be used for other kind of memory ranges.
+> In fact, KEXEC_FILE_LOAD syscall in powerpc uses this structure to
+> represent reserved memory ranges and exclude memory ranges needed to
+> find the right memory regions to load kexec kernel. So, make the
+
+We may be able to refactor code to make struct crash_mem only used for
+crash handling, or get another data structure for loading kexec kernel.
+Anyway, for the time being, this is the simplest way we can take. Thanks
+for the work on ppc to make crash split out from the kexec code.
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
+> definition of crash_mem structure available for !CONFIG_CRASH_DUMP
+> case too.
 > 
-> IIRC, Ryan made sure that this also works when passing another subpage, after
-> when cont-pte is set. Otherwise this would already be broken for fork/zap.
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> ---
 > 
-> So I don't think this comment would actually be correct.
-
-Indeed, the spec for the function is exactly the same for arm64 as for other
-arches. It's just that arm64 can accelerate the implementation by skipping
-forward to the next contpte boundary when the current pte is part of a contpte
-block.
-
-There is no requirement for pte (or addr or start_ptep) to point to the first
-subpage of a folio - they can point to any subpage.
-
-pte, addr and start_ptep must all refer to the same entry, but I think that's
-clear from the existing text.
-
+> * No changes in v2.
+> 
+>  include/linux/crash_core.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 23270b16e1db..d33352c2e386 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -8,6 +8,12 @@
+>  
+>  struct kimage;
+>  
+> +struct crash_mem {
+> +	unsigned int max_nr_ranges;
+> +	unsigned int nr_ranges;
+> +	struct range ranges[] __counted_by(max_nr_ranges);
+> +};
+> +
+>  #ifdef CONFIG_CRASH_DUMP
+>  
+>  int crash_shrink_memory(unsigned long new_size);
+> @@ -51,12 +57,6 @@ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+>  /* Alignment required for elf header segment */
+>  #define ELF_CORE_HEADER_ALIGN   4096
+>  
+> -struct crash_mem {
+> -	unsigned int max_nr_ranges;
+> -	unsigned int nr_ranges;
+> -	struct range ranges[] __counted_by(max_nr_ranges);
+> -};
+> -
+>  extern int crash_exclude_mem_range(struct crash_mem *mem,
+>  				   unsigned long long mstart,
+>  				   unsigned long long mend);
+> -- 
+> 2.43.2
+> 
 
