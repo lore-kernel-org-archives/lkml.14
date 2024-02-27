@@ -1,109 +1,96 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF1914A4C5
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 19:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC37524D0
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 19:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709060514; cv=none; b=cmLDOzv4TvwkVH5o5HGTdl2kC1lf9SZIve0nJzU/mb2ga4lo6+gj87Pa4sYEWHJpBXLr706RzOj97M3VS2Ds6cU45+wfWogAfncIewuVfw9mpuc0dnaY03p8MTRAHPapiEtniZZlV/T+Q2DvUIrRT9kmOFDrnbHknJsgfHgWpMg=
+	t=1709060526; cv=none; b=sYT1VFFySH+MCjLEaoJvo9LQNAgRxnYl6H57R3pyFRUi4m983e71j6KS0lijpGw2SWXrc+vWXriTWA2gGWnEABbEA+uFRE4r+aTqs2VNK9Rgb2CdDgStvXQeWJNEHBBZY1f8V1NZ7+PV8qKjl/oim+CEa22Bgwz/+pR2Nm+JS5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709060514; c=relaxed/simple;
-	bh=Rx+0X1wSqJUpMVKZm9J8XVb9jpuLH2CRv1pKzGbSCkw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bSQTrbJ139lKeAIFAsehHqcWiUBQmwJ6vUirhgy6tmHnbeN/+jkZSt7FypsP3lccBKZGCdtuCS72TSVQeLLBk+32QYza//nVyuPfm+opJn5hUIqRur8ofRFTRjb2bc3itE/ZkwQsACNM+R14B0PyEnfihfhNmIi6+YE+1bJ2yyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7j13T3W; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709060526; c=relaxed/simple;
+	bh=N5TI/RT7tSbHAzXpAE0y0CqGtG2+EVcPfWJWRQP7swc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sknbQb4dQKB32210ACJbA7dQuJmqcHq3RRZXFxoPhKchRAidFCqRd8JBsyArgeX0v66gZbCAr9OFf27YMdvlZwu8KH6UqkeW95YjKfapQLHQJM40C1VPRxxsbUqxY5ZS7URJ/kjXT0h+G5Y3aYWanMozzAS2K+N9LsQittt+/NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=Y5EXjVsb; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7j13T3W"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4cb26623d8dso770111e0c.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 11:01:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="Y5EXjVsb"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a437a2a46b1so248697566b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 11:02:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709060511; x=1709665311; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WfFFXzSpX0Mc4KzxGc+Bs2TXLtROHHndagwLfCtpLgk=;
-        b=C7j13T3Wbu4FlEkB4/5mku1lnEEnpzd6yzGlZJrRC7zMdim+Pa2WUu0LQJCjwjnR6L
-         UC7scjjBG6lc5drVFkZVE+Sn2YnBn6ZY6OQ7MFFSB51YywaY4JcoFQWdw83X8rmd911E
-         RnC1/S9dNxiolRevVlm4Jl+3aH2tuxFqFSDWgAUFGBKnkxaHVUkuDj+vUoL+ikzztjQN
-         HrXbQwAWw4Qx1NmsuK8GmEL48tTmwfFs4i8yJ6dyCJNipYlCnIyI80eV0bbQe6tUTtL0
-         VbyFIWorBEY18ROcZlNLg10c9Mj85xdDj505q2tN+WEwu1wjN5QwrTvFM1JgJO4W+ElL
-         8htw==
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1709060523; x=1709665323; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m1q+1nHGeN9JstdRCnM0oUNgt0RBGVjhiHcZGWKHHuo=;
+        b=Y5EXjVsbMexqaWIYoQNT522i1UhtL0lOdTP8kzjbUDPrl2+DY3kwGBOZ6UyYfhQog1
+         +SR9kSzqiIx1Z7Jz4s7jhtclrIYt/zfKThOAKMHSIX5AQtDkwgZ9SAOt3T1TiTFzBL1z
+         T6DwVkqExuOicgwYdJ+SK2ctSY6HW9SVxlwGO9uo+fBaOANxFDI14fY+R0Vs/B+fvQFf
+         omtC+DVWb2ubGWMuEKFJ3jVzJi+/dSfE8PL3IS8JJqyOB4BmfcXNPx29A8ugqWL+y14w
+         HMWFzSdD5nkDJJCACUlRhIT47TQLKXq74YiHnOuXpVJDKFnJxun/RciUmmI45jShv9hA
+         dcoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709060511; x=1709665311;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WfFFXzSpX0Mc4KzxGc+Bs2TXLtROHHndagwLfCtpLgk=;
-        b=RkXQ+9f1Ihfy6BylFcKHKL5FNjedC/GgrzZWHDx0BSYvr/5oeWaOUl8jbskfg5MomR
-         4MskcD+YeZtP+Q6ldU87nxB1rP7skOV3GXKpp9eAKCiPQE4ZsqFH6WBulELJnxKk4+MI
-         +eSqlBW0+ZWTPzZq2bcclR2qOCnKw2CmadXtiqp7Rbfb/2r7SThQyQDgFAmQfoqr0J1U
-         PQMRCoHNUkMQGXezLGL2wKAaAz/wwYWpRSnrOrURYgdoKBoYSQuQCqT5vcBPU5R9h41m
-         hedWFFx5vbcENz1VyPursAZpjQ5ca8YD9NK8Q7DVEflbqACSMHYrX224acEc+zLhZOT1
-         UJPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpcktEuUTMM0fykADYXPxgN25evVlUD8+9pfzxUdkHMHTw0e0RjJ9QsuKnGyVUTJoa2SuzVF3t31IYMaRFb4b4SLMY/3vFKKcPicf0
-X-Gm-Message-State: AOJu0YzGF2BaxOozvNV6SDohwHlTUB/8bmJO4NOKM1L1v9XQW7/jtuci
-	OABBdwm34gJiPgo4uhB1ECU1/r4jUGvSYZMYreIbcF6pGhT6PrwzsfiCT62Xv779R/XUAwKT66y
-	abYSRn+64209H38M6imW/k8nYozc2skYhXBoxjA==
-X-Google-Smtp-Source: AGHT+IEeakGXngQCMim18TnOJiecyRkKHreCK/SntmFGZkjnj7s5owwh/pYnzNyyAQ8cB8qjcq7plWYQixSZBYqlppY=
-X-Received: by 2002:a1f:6681:0:b0:4d3:384e:937c with SMTP id
- a123-20020a1f6681000000b004d3384e937cmr610147vkc.8.1709060511570; Tue, 27 Feb
- 2024 11:01:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709060523; x=1709665323;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m1q+1nHGeN9JstdRCnM0oUNgt0RBGVjhiHcZGWKHHuo=;
+        b=n3w81AAf6jArdc/vifbpzU7YPp7NLi/oaD/Cg31ewWGkO/69LdNPIEYRAVqyRB7PF7
+         lE1aAbyxgm6peS9X8Ihj1NWJYI1HitfI4t3nz+rDLbV2DrIMxPZdRzkHt6ewAZWHINxs
+         5vOBH8XWDkO5zM+HsEHUWw4XJGapId15EACczmcgg1QpEN0iweqFJS4bdvTQUQmR7Nen
+         jkgCw713KV/vDe7T4OLPeUG2WSw9j5Abha/1IoPX7J62U8hvFTx4byrXSsenwyia8uGr
+         Gpn26H139zHB1zR4RAqRzm3DnzchqYSCk5/AHM4Hypq/KIrPEaBuwAmecFrXckyr8iGJ
+         OwAg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+Tmty61iLR3sTZOck2xNwmGDkHAfwnjeKkYAqXUS7lOCK/t55ye82p4lTXTbMtc0ry0yFmR+yiWMXuQEXYb19/sLjbkhtbZLhWmXF
+X-Gm-Message-State: AOJu0Yzcg2ggehBrIBC6bgJPVitbli0qfsG8BTb7+5sk9PHGAA/Wk00V
+	DTPNaZ428hXgGbBOAKqk+EW/mEtchMtgrJdW5uD/ex5Qq1eLqhE9fw/v5HX1isI=
+X-Google-Smtp-Source: AGHT+IE1XNkbUpSjMjOpcuNNOXVkGSXvQ7nVK4Av1jceNHUmxdsvrz5REIHtRQD4V8RvdGQwkhuNgQ==
+X-Received: by 2002:a17:906:a38b:b0:a3f:721f:a7ac with SMTP id k11-20020a170906a38b00b00a3f721fa7acmr7129987ejz.45.1709060523141;
+        Tue, 27 Feb 2024 11:02:03 -0800 (PST)
+Received: from [192.168.0.106] (176.111.183.96.kyiv.volia.net. [176.111.183.96])
+        by smtp.gmail.com with ESMTPSA id rf20-20020a1709076a1400b00a43e6c2e107sm91703ejc.189.2024.02.27.11.02.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 11:02:02 -0800 (PST)
+Message-ID: <a7d6e651-998a-4996-9b03-40d95edc84b5@blackwall.org>
+Date: Tue, 27 Feb 2024 21:02:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227024050.244567-1-21cnbao@gmail.com> <Zd4HEjS6vpIvwfR9@infradead.org>
-In-Reply-To: <Zd4HEjS6vpIvwfR9@infradead.org>
-From: Barry Song <21cnbao@gmail.com>
-Date: Wed, 28 Feb 2024 08:01:40 +1300
-Message-ID: <CAGsJ_4xTtLzUKSY7EzEK0Ho61mWH35kHkidBRpjLd+_3_yOaUQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: export folio_pte_batch as a couple of modules might
- need it
-To: Christoph Hellwig <hch@infradead.org>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	Lance Yang <ioworker0@gmail.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	David Hildenbrand <david@redhat.com>, Yin Fengwei <fengwei.yin@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 1/2] net: bridge: Do not allocate stats in the
+ driver
+Content-Language: en-US
+To: Breno Leitao <leitao@debian.org>, kuba@kernel.org, davem@davemloft.net,
+ pabeni@redhat.com, edumazet@google.com, Roopa Prabhu <roopa@nvidia.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, horms@kernel.org,
+ "open list:ETHERNET BRIDGE" <bridge@lists.linux.dev>
+References: <20240227182338.2739884-1-leitao@debian.org>
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <20240227182338.2739884-1-leitao@debian.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 28, 2024 at 5:00=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
-g> wrote:
->
-> On Tue, Feb 27, 2024 at 03:40:50PM +1300, Barry Song wrote:
-> > From: Barry Song <v-songbaohua@oppo.com>
-> >
-> > madvise and some others might need folio_pte_batch to check if a range
-> > of PTEs are completely mapped to a large folio with contiguous physcial
-> > addresses. Let's export it for others to use.
->
-> It doesn't look exported to me in the patch (and that's a good thing!).
->
-> But even for making it non-static you probably want to include that in
-> the series actually making use of it.
+On 2/27/24 20:23, Breno Leitao wrote:
+> With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+> convert veth & vrf"), stats allocation could be done on net core
+> instead of this driver.
+> 
+> With this new approach, the driver doesn't have to bother with error
+> handling (allocation failure checking, making sure free happens in the
+> right spot, etc). This is core responsibility now.
+> 
+> Remove the allocation in the bridge driver and leverage the network
+> core allocation.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>   net/bridge/br_device.c | 13 ++-----------
+>   1 file changed, 2 insertions(+), 11 deletions(-)
+> 
 
-at least two parallel jobs[1][2] (maybe more ) need it right now.
-Getting this one pulled in early
-will help build a common base for them and avoid duplicates&conflicts in th=
-em.
+Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
 
-[1] https://lore.kernel.org/linux-mm/20240118111036.72641-7-21cnbao@gmail.c=
-om/
-[2] https://lore.kernel.org/linux-mm/20240225123215.86503-1-ioworker0@gmail=
-.com/
->
-> > +extern int folio_pte_batch(struct folio *folio, unsigned long addr,
-> > +             pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
-> > +             bool *any_writable);
->
-> no need for the extern here.
-
-Yes. this has been moved to internal.h as "static inline" in v2:
-https://lore.kernel.org/linux-mm/20240227104201.337988-1-21cnbao@gmail.com/
-
-Thanks
-Barry
