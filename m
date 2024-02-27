@@ -1,306 +1,162 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2105.outbound.protection.outlook.com [40.92.53.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47402525E
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708998168; cv=none; b=MxYMu0s7TtfCBJ3npHYlN7i0nnt0oyo18gT1ZKDbvGdGp4Auzrl+LOEoAEhPCfeillonBYj/xfNAP37FmKqt0nVvSgQ1keR/VAd3gpRk+A+/cUpectoQSCjHpdjJ3GmzP7Im/A+SMZBsAp6cbIOj7znBwvtihc9yMFV27V5CPHo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708998168; c=relaxed/simple;
-	bh=8/lN/s6wZZCZwmm8YocYDJ6JlmhxJ/7EX/J+MLIBITg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=edHy2IEzN7jMwpd1TJQvhQZ4SPxu12+g69LAh49fEywWzt57nDodJYnF4y5MV4l9k80iCQh+sTgbxjiCAoBuG0AhkJ6Sd8aOHCIX6N9RYiD1C3a/8Da0BVt9tEtun9r7a3n/9QqLOtDzNcr+YCW8yaNX0ACBMyhOTqZRLW8+Wzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ebUesuIW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220DC36E;
+	Tue, 27 Feb 2024 01:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.53.105
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708998230; cv=fail; b=NN96qw4ZhYagZGwZdKzdSJTOyu0qkJbReq5oHV9W8qVZ5ucpJDGPqXKp+RsSQPSrYX7rbTwjQLPzcqHRjFe5RS15IKplwBG7h/mQxO4IGgs43jwofYL0X5eYEa67xIsn0caqUryHSXlTe9NnBnl6MnGssnQYj3GSRqh97OAc1mM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708998230; c=relaxed/simple;
+	bh=tHsTQvs6hevESFuALIBYkmxmBNDIIUPi8hcEFBzrg70=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QR4V5bMkWZpRNOhFNEaUxl8cN+NKMVHXompvi+XFU0L0KQuz6ybE6w4APkApTT5XS1JK/eJZ4JfKJuKI+w+ZYDE89GI2tTzWqMvmO0pWI7EOho/RUDCbTsiYBslEjmvFL2b2MeEog5GVT2h7fVIUEMx14aG95jccILNTq22iF3U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=U5uncJFb; arc=fail smtp.client-ip=40.92.53.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ebUesuIW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708998165;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GSzkNQ2ybBAJU6H8pAUDZHXTzCD4MIxGThMlIRlQGM0=;
-	b=ebUesuIWvDvFQT+FqXRj28jvMC3dmUYLIHlvwj/lPlCbhhjbD42/Zx2O5XApbP0g6fYBqc
-	aA6A2DQtIdiVfHeMsbkPK/nvmI13YTmogmvUyx8F3iuVyCOKU7zPCmKoDD0Zv4wZaKJvds
-	TaQiYcq2N+6pdB1jF1EpMHPD3rrQf2o=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-341-JHF_BVUSOp60VhpOLlxoDw-1; Mon, 26 Feb 2024 20:42:43 -0500
-X-MC-Unique: JHF_BVUSOp60VhpOLlxoDw-1
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5d8bdadc79cso3655272a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:42:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708998162; x=1709602962;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GSzkNQ2ybBAJU6H8pAUDZHXTzCD4MIxGThMlIRlQGM0=;
-        b=emIhyzuokQxA2Gwu+gkmXSNXPsM74fRlmstgnayTT4dI7R8T6ifrsA6n5D0p3L5Orc
-         /CJY9FP2NLpTxeUo/JfB2RdXSrdSPlP7sMEuhdyxb38AtVLj5I5Dvv6N+xLQ2JKf8dSm
-         MoNBJAKJc5XbWcnWOjUmzkCtHtTE927NEr8UpCPA95n0QZmaGFTPFTBa/UPb9+VSkapf
-         sVRJiUWLukDUI9AcmyrxHensb82v7fv0lhAqQJwkwCXzTIdhpOvBnIs+LvjRWriwMCJz
-         SG9XLJaF5nb2Lu/z2RHuqXzSJ0YfKXurf69seLf5jZ5VFa3b3VrYL5SgUVccTeFMbqIG
-         EOZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPPiR4pp5y1Es16riuD/QlBgVxZYTD/qc6QErrKIM9SGSGbhHIIF0qH1aJBx8yNs6pu2MdeHjS5cEHfrjZL6qjXYZvEc1p4MMEijKH
-X-Gm-Message-State: AOJu0YxPtz/COB3GGQ5Kc9mgCkLNLJqdkv+/QIA++GXIbV+xRQDL5sfL
-	+9169I33UtyFv77BoPquTgg83Ml836ZBFKema5pv7pEMtpI9RTuo832EV72lJZfQ+xRbuSNicDh
-	X70b46XYPoOjoQX6LYbWiUbn88Gqw6254IQs8a5hIrSdzCtuusgWL1wkaV5yUA4r7riuIpYBSK2
-	cN09lz72hwk+8jw+Z8PVX8vKhsnL/kpyDHaYsd
-X-Received: by 2002:a17:902:6505:b0:1dc:a837:7e19 with SMTP id b5-20020a170902650500b001dca8377e19mr3012078plk.16.1708998162335;
-        Mon, 26 Feb 2024 17:42:42 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHNkrm797RMGihxLLDh7fquZ8LUsJPZszisKdsZUHK+vtFZEGeyhllggrlxJCSNafyNLGciYVPiVeHfqaS/ERQ=
-X-Received: by 2002:a17:902:6505:b0:1dc:a837:7e19 with SMTP id
- b5-20020a170902650500b001dca8377e19mr3012070plk.16.1708998162001; Mon, 26 Feb
- 2024 17:42:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="U5uncJFb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TSCbVJRqyXFayPkBnpeW799HaL2Y6YQnckQSYYb90axcDoUhCukxd8iKqu6EOIma1u82HkOePd/RqlfyzxJAvvYzYZdgwy74iErp9tG1wJA1ASwWLm4JRKvfvhN8GvnSVUOb5Wl9EZ68S1nmh6RcmAP0HxM0yPjRnPJEssCL2Vp3K6qUzTbfs1uKXiWlfzQihCcZyK2ALuAlOAoB2iC3amrX8kl55T2FrfR9wfWTkNElsIHZlTvj/GmMyf+GgW/Rl43LRCTBQh0fqDrZMS4AS38zfPe6RjFWkVRQdpCPU7qmOyA31N4EEDZ1FA2JA/dHyZq6JN9Eh0ROnMmfuGnz4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KHQkY8OYY0bqi3wEIM6ERHxbGwJP5tO06q6RvEb9Y90=;
+ b=ijuvVyDlMi4Z89WLLyhA7YnbNZKo7qP16pxdizYvYcTdz4Mm0DS+ov/2psg+x2R1sifg7Q42ziwtWEH9ozxbgNkWwuYaOw8XxGuSz+ojjo2CcWbag5HebYoh1LtobwOk5ta8AmJ+bjbpz9tbSE+V1iJp9Nm1zMvl0/NtSVF/Jy83m1y28fGgZyyTIbA1JgnqmL6WsZ7ILyW5E7tugDEyn5olDQWIaM9HpGsLixO3Ftfjd6NORraRRWvs7JkYHpcT0zKCxvefkhmM4pg6AwXVC9uUhfYfj1mLp5/8IZd9CgLhuOns3QWPO8RP3xrn3ulzhioKKH4/vzv2Oi0MOZtfmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KHQkY8OYY0bqi3wEIM6ERHxbGwJP5tO06q6RvEb9Y90=;
+ b=U5uncJFbhjdLWUYkZ2OMizLDPXdXLQcjgr1Q9CNpvEJ70xxh/HoOENICBawqHAuymaR3wIwaOA8CtrWRzSIwL7Dy2KXL5zKm8H+JdhBgPN046B0AOMrkjS7chVJ0aGCd+R6FrEJMujbCURMkjSUtkq1+4zNW1w3GGYZeBdm0TP+cDarVxxuLPrkqqbj9NPGdv9axKKEhP+Ua+5PcBr5/MimqZBze90Q+gknjEcfnkd0Dneh7ZYBvvmhpyMLm6U9R66jrP6jYE6JmD9PA5ULpcB6EBaizIqXWfVfH3BxCAGUBxr5RP7UDuzfD9mBLnTPQEieAFxyQP6Qde/ZWIwNiZQ==
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com (2603:1096:101:1ed::14)
+ by TYZPR06MB7073.apcprd06.prod.outlook.com (2603:1096:405:3f::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.31; Tue, 27 Feb
+ 2024 01:43:42 +0000
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::53da:a8a:83cb:b9ad]) by SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::53da:a8a:83cb:b9ad%4]) with mapi id 15.20.7316.035; Tue, 27 Feb 2024
+ 01:43:42 +0000
+Message-ID:
+ <SEZPR06MB695901BB60F786D7E209EAAC96592@SEZPR06MB6959.apcprd06.prod.outlook.com>
+Date: Tue, 27 Feb 2024 09:43:34 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 3/6] dt-bindings: net: remove outdated
+ hisilicon-femac
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta
+ <salil.mehta@huawei.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20240222-net-v4-0-eea68f93f090@outlook.com>
+ <20240222-net-v4-3-eea68f93f090@outlook.com>
+ <c3f3d276-46a5-4cc7-ab79-e1ca3262abdf@linaro.org>
+From: Yang Xiwen <forbidden405@outlook.com>
+In-Reply-To: <c3f3d276-46a5-4cc7-ab79-e1ca3262abdf@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TMN: [A1Hg+HI8nXyBtQIK+XdlBvfB3cwU4lNBOg4JLxGfp4BbQQ/1U0f1HLhHbVOpL96A]
+X-ClientProxiedBy: SI2PR01CA0019.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::12) To SEZPR06MB6959.apcprd06.prod.outlook.com
+ (2603:1096:101:1ed::14)
+X-Microsoft-Original-Message-ID:
+ <d01fdc0f-ed73-454d-bd8a-1633a0ebe257@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222075806.1816400-1-yukuai1@huaweicloud.com>
- <20240222075806.1816400-7-yukuai1@huaweicloud.com> <CALTww2-ypx2YJOeXTzj7Y0EtXMkfrTOAJzzmDnnUK=1irspWtQ@mail.gmail.com>
- <4f2ae964-5030-907e-bc06-4d9e1fc8f3e8@huaweicloud.com> <CALTww2_q3XG5HFCYm3Wp7=fjM04cdWZy34R6MsDVLz-82iO88Q@mail.gmail.com>
-In-Reply-To: <CALTww2_q3XG5HFCYm3Wp7=fjM04cdWZy34R6MsDVLz-82iO88Q@mail.gmail.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Tue, 27 Feb 2024 09:42:30 +0800
-Message-ID: <CALTww296uye5UY8g-rhqdwO=Wcz0=CH0ySNzk2=eNePY8DJU1w@mail.gmail.com>
-Subject: Re: [PATCH md-6.9 06/10] md/raid1: factor out read_first_rdev() from read_balance()
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: paul.e.luse@linux.intel.com, song@kernel.org, neilb@suse.com, shli@fb.com, 
-	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB6959:EE_|TYZPR06MB7073:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f542af6-b5fa-4397-40f1-08dc37358703
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	9Azh9Ls4VyZk607KbdiOUrRNKNyEx3Iyc79kq5gyvhF6L8sQ4bUWY4M6rTReXrvBoagzJE01lTpSljRP7KH1n8sVcZpiITdVjTrW7iXVwzULiP+2IN6YuyztYBFGQYGJtDAcfHjaznSLwGd6frPW6SPknZTkwufPe/JdwiADA+1AL2ajKEz2ou5LLkWJsnWldDXqD29C68z4qZ9xvKI8TB6x9RwsRkMw9mz+r9m4eRHAd37bB5eBJCA2dflfMiThyIodeYILqkwzdfRH3sjqk4Nrl5rJnCu6CG9tsiuPOG7OpkR7UGPUi1MfMnOTlqCvJ2TnzD3gahx4RldvuEJTjONUJP7k5uYlAw+qJoy+MB11iuYuk98p7f3np4tjeNzmJn2DXnmgPGEDIY7Co7RKHSp3N5rduDtZNly4O9KZyIdIDmpG3KKdY0PCvzrY3FmSWHkzH0wJZkkMNs1fXlhGxxud7cpDB5QAVPHcFZaKIzfxdpk8JfXefO7BycN4GjNCE7/hJgvWpjnA4IzG+1kTXGCgpWOxHRYWSdcH7RvhpY6o5NffKdxNqDQv+HtYH4aN
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ajZIY090MTd3OUpPNDBNK2NEbW5wNGM0UmpmcE9ROHp4aHFBTUlWUzdMUWly?=
+ =?utf-8?B?RCs5N2FTU1hwTzhaY2NsdmVYZXZCQzUvL2FFWFgwd3lBTkpLeDBjWnBDSk1W?=
+ =?utf-8?B?YnVCYWJMWURqcTlQdGoxRDZjaGtXYWxDWk43a0V3M0dFMndPYWY4VmlWc0Fy?=
+ =?utf-8?B?bHBTYzhvM0NENFdMT2RMV1lWT0tpWWdwMWJsWHpMbENRUjFSUTlka0JwWjky?=
+ =?utf-8?B?dTg2c3lpcnZqMFJJR1liNXMwWVRieEUzVi83OTNHYXQyYjY5cDM2ak51eUJp?=
+ =?utf-8?B?a3BVbkZXaTRZU3Z4VDlsTUtob0FjbVMyemVWY1Vkek9zYXRzejlCank4N0tn?=
+ =?utf-8?B?aFFlZzc3a3hKU3d2SnlNS2VoYkVZbHhwc0dRUUMzVGoyYVBIS3FnU1M1UzVV?=
+ =?utf-8?B?WGlKU01WeVZlRUprN2JKVmQ0Q29zRHFtSU00eG1EYm0zYjZQWCtKYkJZZmli?=
+ =?utf-8?B?RnJJVkZhYm1OSkFRN1hDb2dmK1NUQWxJWi9UWm1BdnRQb3NiT2tQbWE4NTFG?=
+ =?utf-8?B?bEN3THArcGd5UzlJd05Lam56cWVMcE4xK1hnNFBBbWo1ZGkxcVlyT0d1UDda?=
+ =?utf-8?B?bDFPUmNSTzVNY3hod0xBdExDQTkzMThRbTQ1T1lEczI0MkwvVDFpYTlwL2Vp?=
+ =?utf-8?B?NjRzczVsdUhLemlqYy91UEN5WDZucHI1RTErUGQ0dExvNEQwbGV4cnB4Zm5j?=
+ =?utf-8?B?NEs1R2RDbTFYMGFndlhlYnFHZ1pCaWtzTGtRcUh3eDFwMzdHcWZvQUxCRkd3?=
+ =?utf-8?B?Kzd4UUtvaTNvMGpiaUNHbWNIS2wxVHJPL1EyUnJlZU01S3BCYmpWSDMrTjhF?=
+ =?utf-8?B?dEo0TWkxMU1xeVFqa3MwUDk1TVJPOWhObEVLaGJEcnlBS2tkN2FxdHNsVzR5?=
+ =?utf-8?B?aVR1MlIvNkhSYVprc1ltK0VvVXorZlFLYjdHOS9xeTRkYVE4Kzh4dWU2cmpE?=
+ =?utf-8?B?cURiMk5JNGo1UnRUb05vMnJjMEZ5MGJjcUxIaU9TNHN0M1RnN1RCenZVMU1I?=
+ =?utf-8?B?NDFEWDlicXh4aGZTNzN1d2NJWjZVa1FCQ3ZUeGZwSUhBYmVUSy8zK0VGdG5t?=
+ =?utf-8?B?bGsxQnNOTkZSL0J0N0pUZjZpT3BRU3JJbUdOaEtCZ3F3Q1JGTW1VcFJ4bEx3?=
+ =?utf-8?B?dHM0ZEthV1pEbWk2UlB0NmdtTE9GOHJPWHRSK1M2OXR6N2M4Q0xGQStnb3E2?=
+ =?utf-8?B?TmRtYlhPNk01NjFoZzVxdWJLUGxPZEFKT3Q0ejUyUEtHS1I1NnVFelJjOER3?=
+ =?utf-8?B?bDZpNUVHaDEveU1OY0RDMDRTWG54SmJoeTk0ZWEzK1VoZks0czlwZzV2SkVW?=
+ =?utf-8?B?UlJQU2JOTlpYODFxd3ZGdkhZVDRWZS92cjM5eXpzYUNxeFkrbXBHQTJ1V1BI?=
+ =?utf-8?B?QWp2aEl3QkVNOHR3MHdvenNkdTRRdEsrbUVEZXkveThrZTFzVUVMQm5aRUZQ?=
+ =?utf-8?B?OVUvVnkydmd4Zy9MTGxHMzFLN090NWVVcjZnWkl6cGZFMVpzUk4rMU5yWFpO?=
+ =?utf-8?B?YlI3TGY5eGh4N04xOXBQSGlTdVpwSkxQVjVEWVRGK1ZPS0hXeUI2OTRMTGFa?=
+ =?utf-8?B?QjlzMndhbDFCWGl2SzMvRloxTDYyM3prbWg3MHVQbm9RSzRDSEt6b2cwVkMv?=
+ =?utf-8?B?WVl4ZVBEeFNPVlFSUlAwRHF4SlN4QVNmV0RHZkgxRGZMT25vdUV0bGIzZTE5?=
+ =?utf-8?B?elJHUllEbmFSWGtHQ1k3V01yKytVMWh1cGw1U2lkN081TFJHL1oxTXBVZGhk?=
+ =?utf-8?Q?AZTh1FxnX0oTBd9KDIfh7wNLJLhJGxpgdbIGi/p?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f542af6-b5fa-4397-40f1-08dc37358703
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB6959.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 01:43:41.9599
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB7073
 
-On Tue, Feb 27, 2024 at 9:23=E2=80=AFAM Xiao Ni <xni@redhat.com> wrote:
->
-> On Tue, Feb 27, 2024 at 9:06=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com>=
- wrote:
-> >
-> > Hi,
-> >
-> > =E5=9C=A8 2024/02/26 22:16, Xiao Ni =E5=86=99=E9=81=93:
-> > > On Thu, Feb 22, 2024 at 4:04=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.=
-com> wrote:
-> > >>
-> > >> From: Yu Kuai <yukuai3@huawei.com>
-> > >>
-> > >> read_balance() is hard to understand because there are too many stat=
-us
-> > >> and branches, and it's overlong.
-> > >>
-> > >> This patch factor out the case to read the first rdev from
-> > >> read_balance(), there are no functional changes.
-> > >>
-> > >> Co-developed-by: Paul Luse <paul.e.luse@linux.intel.com>
-> > >> Signed-off-by: Paul Luse <paul.e.luse@linux.intel.com>
-> > >> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> > >> ---
-> > >>   drivers/md/raid1.c | 63 +++++++++++++++++++++++++++++++++---------=
-----
-> > >>   1 file changed, 46 insertions(+), 17 deletions(-)
-> > >>
-> > >> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> > >> index 8089c569e84f..08c45ca55a7e 100644
-> > >> --- a/drivers/md/raid1.c
-> > >> +++ b/drivers/md/raid1.c
-> > >> @@ -579,6 +579,47 @@ static sector_t align_to_barrier_unit_end(secto=
-r_t start_sector,
-> > >>          return len;
-> > >>   }
-> > >>
-> > >> +static void update_read_sectors(struct r1conf *conf, int disk,
-> > >> +                               sector_t this_sector, int len)
-> > >> +{
-> > >> +       struct raid1_info *info =3D &conf->mirrors[disk];
-> > >> +
-> > >> +       atomic_inc(&info->rdev->nr_pending);
-> > >> +       if (info->next_seq_sect !=3D this_sector)
-> > >> +               info->seq_start =3D this_sector;
-> > >> +       info->next_seq_sect =3D this_sector + len;
-> > >> +}
-> > >> +
-> > >> +static int choose_first_rdev(struct r1conf *conf, struct r1bio *r1_=
-bio,
-> > >> +                            int *max_sectors)
-> > >> +{
-> > >> +       sector_t this_sector =3D r1_bio->sector;
-> > >> +       int len =3D r1_bio->sectors;
-> > >> +       int disk;
-> > >> +
-> > >> +       for (disk =3D 0 ; disk < conf->raid_disks * 2 ; disk++) {
-> > >> +               struct md_rdev *rdev;
-> > >> +               int read_len;
-> > >> +
-> > >> +               if (r1_bio->bios[disk] =3D=3D IO_BLOCKED)
-> > >> +                       continue;
-> > >> +
-> > >> +               rdev =3D conf->mirrors[disk].rdev;
-> > >> +               if (!rdev || test_bit(Faulty, &rdev->flags))
-> > >> +                       continue;
-> > >> +
-> > >> +               /* choose the first disk even if it has some bad blo=
-cks. */
-> > >> +               read_len =3D raid1_check_read_range(rdev, this_secto=
-r, &len);
-> > >> +               if (read_len > 0) {
-> > >> +                       update_read_sectors(conf, disk, this_sector,=
- read_len);
-> > >> +                       *max_sectors =3D read_len;
-> > >> +                       return disk;
-> > >> +               }
-> > >
-> > > Hi Kuai
-> > >
-> > > It needs to update max_sectors even if the bad block starts before
-> > > this_sector. Because it can't read more than bad_blocks from other
-> > > member disks. If it reads more data than bad blocks, it will cause
-> > > data corruption. One rule here is read from the primary disk (the
-> > > first readable disk) if it has no bad block and read the
-> > > badblock-data-length data from other disks.
-> >
-> > Noted that raid1_check_read_range() will return readable length from
-> > this rdev, hence if bad block starts before this_sector, 0 is returned,
-> > and 'len' is updated to the length of badblocks(if not exceed read
-> > range), and following iteration will find the first disk to read update=
-d
-> > 'len' data and update max_sectors.
->
-> Hi Kuai
->
-> The problem is that choose_first_rdev doesn't return 'len' from
-> max_sectors when bad blocks start before this_sector. In the following
-> iteration, it can't read more than 'len' from other disks to avoid
-> data corruption. I haven't read all the patches. To this patch, it
-> resets best_good_sectors to sectors when it encounters a good member
-> disk without bad blocks.
+On 2/26/2024 3:50 PM, Krzysztof Kozlowski wrote:
+> On 22/02/2024 13:43, Yang Xiwen via B4 Relay wrote:
+>> From: Yang Xiwen <forbidden405@outlook.com>
+>>
+>> The user documented(Hi3516) is not found in current kernel anymore. And
+>> it seems this SoC has been EOL for a long time. While at it, Remove this
+>> binding entirely due to recent driver changes.
+> 
+> This removes documented compatibles, which:
+> 1. should cause checkpatch issues,
+> 2. is not what we want.
+> 
+> Driver is still there, so first the driver would have to be removed...
+> but then why do you add it immediately back? No, it does not work like that.
 
-Sorry, I missed one thing. Beside the point I mentioned above, it
-needs to update 'sectors' which is the the read region to 'len'
-finally. It looks like the raid1_check_read_range needs to modify to
-achieve this.
+I has downloaded TRM for this old Hi3519 SoC. So i think with the new
+driver, it still works for Hi3519 FEMAC controller. So i'll rewrite
+these 3 patches and describe the whole thing in commit logs. i.e. the
+old binding is wrong, inconsistent with real hardware, etc..
 
-Regards
-Xiao
->
-> Regards
-> Xiao
-> >
-> > Thanks,
-> > Kuai
-> >
-> > >
-> > > Best Regards
-> > > Xiao
-> > >
-> > >> +       }
-> > >> +
-> > >> +       return -1;
-> > >> +}
-> > >> +
-> > >>   /*
-> > >>    * This routine returns the disk from which the requested read sho=
-uld
-> > >>    * be done. There is a per-array 'next expected sequential IO' sec=
-tor
-> > >> @@ -603,7 +644,6 @@ static int read_balance(struct r1conf *conf, str=
-uct r1bio *r1_bio, int *max_sect
-> > >>          sector_t best_dist;
-> > >>          unsigned int min_pending;
-> > >>          struct md_rdev *rdev;
-> > >> -       int choose_first;
-> > >>
-> > >>    retry:
-> > >>          sectors =3D r1_bio->sectors;
-> > >> @@ -613,10 +653,11 @@ static int read_balance(struct r1conf *conf, s=
-truct r1bio *r1_bio, int *max_sect
-> > >>          best_pending_disk =3D -1;
-> > >>          min_pending =3D UINT_MAX;
-> > >>          best_good_sectors =3D 0;
-> > >> -       choose_first =3D raid1_should_read_first(conf->mddev, this_s=
-ector,
-> > >> -                                              sectors);
-> > >>          clear_bit(R1BIO_FailFast, &r1_bio->state);
-> > >>
-> > >> +       if (raid1_should_read_first(conf->mddev, this_sector, sector=
-s))
-> > >> +               return choose_first_rdev(conf, r1_bio, max_sectors);
-> > >> +
-> > >>          for (disk =3D 0 ; disk < conf->raid_disks * 2 ; disk++) {
-> > >>                  sector_t dist;
-> > >>                  sector_t first_bad;
-> > >> @@ -662,8 +703,6 @@ static int read_balance(struct r1conf *conf, str=
-uct r1bio *r1_bio, int *max_sect
-> > >>                                   * bad_sectors from another device.=
-.
-> > >>                                   */
-> > >>                                  bad_sectors -=3D (this_sector - fir=
-st_bad);
-> > >> -                               if (choose_first && sectors > bad_se=
-ctors)
-> > >> -                                       sectors =3D bad_sectors;
-> > >>                                  if (best_good_sectors > sectors)
-> > >>                                          best_good_sectors =3D secto=
-rs;
-> > >>
-> > >> @@ -673,8 +712,6 @@ static int read_balance(struct r1conf *conf, str=
-uct r1bio *r1_bio, int *max_sect
-> > >>                                          best_good_sectors =3D good_=
-sectors;
-> > >>                                          best_disk =3D disk;
-> > >>                                  }
-> > >> -                               if (choose_first)
-> > >> -                                       break;
-> > >>                          }
-> > >>                          continue;
-> > >>                  } else {
-> > >> @@ -689,10 +726,6 @@ static int read_balance(struct r1conf *conf, st=
-ruct r1bio *r1_bio, int *max_sect
-> > >>
-> > >>                  pending =3D atomic_read(&rdev->nr_pending);
-> > >>                  dist =3D abs(this_sector - conf->mirrors[disk].head=
-_position);
-> > >> -               if (choose_first) {
-> > >> -                       best_disk =3D disk;
-> > >> -                       break;
-> > >> -               }
-> > >>                  /* Don't change to another disk for sequential read=
-s */
-> > >>                  if (conf->mirrors[disk].next_seq_sect =3D=3D this_s=
-ector
-> > >>                      || dist =3D=3D 0) {
-> > >> @@ -760,13 +793,9 @@ static int read_balance(struct r1conf *conf, st=
-ruct r1bio *r1_bio, int *max_sect
-> > >>                  rdev =3D conf->mirrors[best_disk].rdev;
-> > >>                  if (!rdev)
-> > >>                          goto retry;
-> > >> -               atomic_inc(&rdev->nr_pending);
-> > >> -               sectors =3D best_good_sectors;
-> > >> -
-> > >> -               if (conf->mirrors[best_disk].next_seq_sect !=3D this=
-_sector)
-> > >> -                       conf->mirrors[best_disk].seq_start =3D this_=
-sector;
-> > >>
-> > >> -               conf->mirrors[best_disk].next_seq_sect =3D this_sect=
-or + sectors;
-> > >> +               sectors =3D best_good_sectors;
-> > >> +               update_read_sectors(conf, disk, this_sector, sectors=
-);
-> > >>          }
-> > >>          *max_sectors =3D sectors;
-> > >>
-> > >> --
-> > >> 2.39.2
-> > >>
-> > >>
-> > >
-> > > .
-> > >
-> >
+So you mean conversion to YAML first, in a separate commit. And then do
+necessary edition to match the real hardware? I believe Hi3519 FEMAC and
+Hi3798MV200 FEMAC are compatible in hardware. So the old binding is
+wrong, missing critical hardware resources.
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
+-- 
+Best regards,
+Yang Xiwen
 
