@@ -1,84 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F51413AA20;
-	Tue, 27 Feb 2024 12:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF1955E63
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 12:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709038435; cv=none; b=QeHOzdM6k8P1Q1vDQ74wYfySuxhcViOxFup1GrynS+6L7ilTSFPX86isMyWAMy7B2PU1T5ZB+DUyr6sLlsVq3wK/d1yOTk59ft+56m2taNiMsuLKwGRMFv/6vxEG6KiQ40hQwswTSga056a0fRT/tb5+Ri5fXzA+/hW342kRUVk=
+	t=1709038452; cv=none; b=OBsYgiqJmcsYfJuh+Ys37yJmh46U0ITJ9NJfCrWQMa5+09p5CLCny5oXsrE0mSeFruezZnrsCLFF+wLN06bARBLKeYa6EpKUqqZhlP0+Ws36MAPcF7tJfglOPQBSSUzRHCoCuboor/02dZ+W0FounKKsMHOMna3TBv3D1DJu8BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709038435; c=relaxed/simple;
-	bh=9fNjD41K3hBKyAANYYkPJsBtf97N81Pzxj9XAun8H0c=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AH+8r23DdoW2D8RsTnhRaqjE7mwiPnyg23g4fxuifgOmraRxPsQmVBnTkjy6kzW7+oeAyxahYf0v/L8SQpn7Eia6x75D/rnX7dniOXpT+ncmgGluaQ6ZDpOy2Af6o6fNivykcNlrG01BrUnNmx/CmKLeRy4eOahzE1LofV82cHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NJdNs6LS; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NJdNs6LS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709038434; x=1740574434;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9fNjD41K3hBKyAANYYkPJsBtf97N81Pzxj9XAun8H0c=;
-  b=NJdNs6LSyxdrGtfVAqw+kGNs/cF4528uxnUxY4CnzCZyG9mEcRmZD8wq
-   zKR8gOb/bwnaf5p/Swi0hyDWySd3+G3IYcvCaflwYcTHop+ema3Eh2rDf
-   1btxf7P6w1j1AMKvZ7dg2nuAPZjbk/YF78+Av5fUGHKCneudJkxcrjQrb
-   EYDEqNBzGtmzxtH4EFA/cU2cr5HKMhF+aWG9nauneluQ/ophXmpLiSIAU
-   7gUOLfxTeQquGutfHwZYrwyxsZgQDXuRMi0PhcQUGyuxPyPpHDY3btHXj
-   HEoEcEYw6v1lphxFN7D3zk49fUKxi5uoJMHW2atuF+W6ZWGy7m85yYePx
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="6323974"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="6323974"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 04:53:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="11801003"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.61])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 04:53:51 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 27 Feb 2024 14:53:47 +0200 (EET)
-To: Szilard Fabian <szfabian@bluemarch.art>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    jwoithe@just42.net, Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de
-Subject: Re: [PATCH v5] platform/x86/fujitsu-laptop: Add battery charge
- control support
-In-Reply-To: <20240227120435.429687-2-szfabian@bluemarch.art>
-Message-ID: <b797d581-a2a7-b95c-4853-b874667c1df5@linux.intel.com>
-References: <20240129163502.161409-2-szfabian@bluemarch.art> <20240129175714.164326-2-szfabian@bluemarch.art> <20240207023031.56805-2-szfabian@bluemarch.art> <20240215203012.228758-2-szfabian@bluemarch.art> <20240227120435.429687-2-szfabian@bluemarch.art>
+	s=arc-20240116; t=1709038452; c=relaxed/simple;
+	bh=DDg8SNYYRHT/ZFNymojeroVxG1EQZrDGaP+SnpQoRVo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jXE6nRivyePub7YwFWeB5H/ELHGw9116uwRwvw5/hhOoLpSdr9I6bKebVrQi1E6vRooyDn3oLfbANccUTGSGn51QAO0cMSC8HVeCYOjq8uvY+lnoYnhwY1IFe3xDM5eO+5WzsHN5WF1ElVAYRjTQH9rwvo+NBUUmSg5TAJZwhHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TkcnM4TnRz1h0gk;
+	Tue, 27 Feb 2024 20:51:51 +0800 (CST)
+Received: from dggpeml500002.china.huawei.com (unknown [7.185.36.158])
+	by mail.maildlp.com (Postfix) with ESMTPS id A2E5518005F;
+	Tue, 27 Feb 2024 20:54:05 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpeml500002.china.huawei.com (7.185.36.158) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 27 Feb 2024 20:54:05 +0800
+From: Junhao He <hejunhao3@huawei.com>
+To: <will@kernel.org>, <jonathan.cameron@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linuxarm@huawei.com>, <yangyicong@huawei.com>, <prime.zeng@hisilicon.com>,
+	<hejunhao3@huawei.com>
+Subject: [PATCH v2] drivers/perf: hisi: Enable HiSilicon Erratum 162700402 quirk for HIP09
+Date: Tue, 27 Feb 2024 20:52:31 +0800
+Message-ID: <20240227125231.53127-1-hejunhao3@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500002.china.huawei.com (7.185.36.158)
 
-On Tue, 27 Feb 2024, Szilard Fabian wrote:
+HiSilicon UC PMU v2 suffers the erratum 162700402 that the PMU counter
+cannot be set due to the lack of clock under power saving mode. This will
+lead to error or inaccurate counts. The clock can be enabled by the PMU
+global enabling control.
 
-> This patch adds battery charge control support on Fujitsu notebooks
-> via the S006 method of the FUJ02E3 ACPI device. With this method it's
-> possible to set charge_control_end_threshold between 50 and 100%.
-> 
-> Tested on Lifebook E5411 and Lifebook U728. Sadly I can't test this
-> patch on a dual battery one, but I didn't find any clue about
-> independent battery charge control on dual battery Fujitsu notebooks
-> either. And by that I mean checking the DSDT table of various Lifebook
-> notebooks and reverse engineering FUJ02E3.dll.
-> 
-> Signed-off-by: Szilard Fabian <szfabian@bluemarch.art>
-> ---
-> v5:
-> * add ACPI_BATTERY dependency into Kconfig
+This patch tries to fix this by set the UC PMU enable before set event
+period to turn on the clock, and then restore the UC PMU configuration.
+The counter register can hold its value without a clock.
 
-Thanks. My intention was that you'd send a new patch on top of what is 
-already applied. But it doesn't matter anymore, I took the relevant line 
-out of it and squashed it into the original commit.
+Signed-off-by: Junhao He <hejunhao3@huawei.com>
+---
 
+Changes since V1:
+- Updated the comment regarding the quirk function.
+- Extract write counter normal to a helper function.
+Link: https://lore.kernel.org/all/20240207094245.34195-1-hejunhao3@huawei.com/
 
+ drivers/perf/hisilicon/hisi_uncore_uc_pmu.c | 42 ++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/perf/hisilicon/hisi_uncore_uc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_uc_pmu.c
+index 636fb79647c8..481dcc9e8fbf 100644
+--- a/drivers/perf/hisilicon/hisi_uncore_uc_pmu.c
++++ b/drivers/perf/hisilicon/hisi_uncore_uc_pmu.c
+@@ -287,12 +287,52 @@ static u64 hisi_uc_pmu_read_counter(struct hisi_pmu *uc_pmu,
+ 	return readq(uc_pmu->base + HISI_UC_CNTR_REGn(hwc->idx));
+ }
+ 
+-static void hisi_uc_pmu_write_counter(struct hisi_pmu *uc_pmu,
++static bool hisi_uc_pmu_get_glb_en_state(struct hisi_pmu *uc_pmu)
++{
++	u32 val;
++
++	val = readl(uc_pmu->base + HISI_UC_EVENT_CTRL_REG);
++	return !!FIELD_GET(HISI_UC_EVENT_GLB_EN, val);
++}
++
++static void hisi_uc_pmu_write_counter_normal(struct hisi_pmu *uc_pmu,
+ 				      struct hw_perf_event *hwc, u64 val)
+ {
+ 	writeq(val, uc_pmu->base + HISI_UC_CNTR_REGn(hwc->idx));
+ }
+ 
++static void hisi_uc_pmu_write_counter_quirk_v2(struct hisi_pmu *uc_pmu,
++				      struct hw_perf_event *hwc, u64 val)
++{
++	hisi_uc_pmu_start_counters(uc_pmu);
++	hisi_uc_pmu_write_counter_normal(uc_pmu, hwc, val);
++	hisi_uc_pmu_stop_counters(uc_pmu);
++}
++
++static void hisi_uc_pmu_write_counter(struct hisi_pmu *uc_pmu,
++				      struct hw_perf_event *hwc, u64 val)
++{
++	bool enable = hisi_uc_pmu_get_glb_en_state(uc_pmu);
++	bool erratum = uc_pmu->identifier == HISI_PMU_V2;
++
++	/*
++	 * HiSilicon UC PMU v2 suffers the erratum 162700402 that the
++	 * PMU counter cannot be set due to the lack of clock under power
++	 * saving mode. This will lead to error or inaccurate counts.
++	 * The clock can be enabled by the PMU global enabling control.
++	 * The irq handler and pmu_start() will call the function to set
++	 * period. If the function under irq context, the PMU has been
++	 * enabled therefore we set counter directly. Other situations
++	 * the PMU is disabled, we need to enable it to turn on the
++	 * counter clock to set period, and then restore PMU enable
++	 * status, the counter can hold its value without a clock.
++	 */
++	if (enable || !erratum)
++		hisi_uc_pmu_write_counter_normal(uc_pmu, hwc, val);
++	else
++		hisi_uc_pmu_write_counter_quirk_v2(uc_pmu, hwc, val);
++}
++
+ static void hisi_uc_pmu_enable_counter_int(struct hisi_pmu *uc_pmu,
+ 					   struct hw_perf_event *hwc)
+ {
 -- 
- i.
+2.33.0
 
