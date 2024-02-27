@@ -1,115 +1,216 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2264D4F896;
-	Tue, 27 Feb 2024 18:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D0F50271
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 18:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709059706; cv=none; b=YLLPKGjvNGtfqe6En1Kt+QT7ZvIeHAagE5BGVTtXnb9ExDYIMKWy9AEbsE2C3YQ0drXkx1Zf6jyr2POqTxY+DmzDlyAVq8OnhCJRNBDelHB+6lXl5NOWmi13jWShWUwFUZUauDL5BbboNP/AdIczO37ygYyfBmc8SVfl72wEbiY=
+	t=1709059739; cv=none; b=F1YWe6Axx11h2u1+qiR4+xnQkrOkHNKKr0JgPBVNJN79ehHCDh+/2UJWHBgXPuic9G1TvvqqWJflBYyNWdYeFWs5DzXC5WN/GdvBaIJKnc4/Yj09onoLdtCF3JHSLH+dSOXGTGcJwQ/DuXe46iMEanEN+QcONsPhoqfofMdndqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709059706; c=relaxed/simple;
-	bh=K6sBGdbZzNVAu30o0m9zj5R6b0ZvSIScFMAacNUig9k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A9L8f+yCZiWrsb9KFzREKfCR9sCKBAgVji3Y2ouVkSSIBu0BUatdVNH9K9JNvfIRINxvuaQIgo2se0RQ792Ypy7pa3E16+nSKk/XZuY0a5/lQCcxA1qSJo8gYWpsgic6ATP7+KIQZTo8eRsXxOGZI3zThVdxV1vOSmVtfYxmZ4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-607e54b6cf5so636757b3.0;
-        Tue, 27 Feb 2024 10:48:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709059703; x=1709664503;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZBLgqi5po9yo82z/olqeDeT73/ia9ZIG/TwGXRPLny8=;
-        b=duqhZPgkWmeoxbNs7ktjq+XRA1m9gLxuWC99Ub1nfIbCpbiohp88opEaFLo/haU3L7
-         7pAMS52PDb6kwRYcmk2P0EckVMrTw58qhZZN1Mkd0kV8c9YOUJjQfkqBVm+v9ZnMa01c
-         sGO3Dxtsn4FGRxpEkt4VTt3f8SIQRqZPk1ClMCh4wF2Z4rbJl9Ch5jb3hVIlN6hUK9QX
-         bb1VnYXh42KcjJrvk/c0uPVLDjMzDPETwrERa4M629O0LrPufFbIa+zK5Ljov/wdR1MW
-         yBkTU9jFYsZXa62aukcdgsO3ty5ulYVMxwLQ40FsZJg2pS8tAgyvhuPxVCXEzPw0qmWk
-         rCmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWu7F2I90K4SWitxrjT90gyrCacDx0G9zUeRvajk8JusIFZj3CT2sDk0VgoVSZk7u8zUf4EXpZTpmFxVVcu4BuofNYWplGVMeeauFIxmTiEIFh2b69Y94WZzFtpWJOQKv8MXduGzS5mugpVsq1WA4n1302hVeS08nxRo33RXV1xNuivKJwVoRc1XwyjZYttQNQTiJy8CH+GhVfZiHJKq+B5mfiPWV4U42WEofHVe8CD6wjENqnVKJCNRSbDRUzyphPveQwpqtdUTlpEDsILjKXGedwCJpJKB2k0Lb4nfBaDjlUaqN0JvpX0xWLZa5kkbcoK1gAeFzg7YjEjvTODzNis7AlCNH88bEuZ6qwcyUsz6OEGEwMEbGo=
-X-Gm-Message-State: AOJu0YxW6cXm9QGzKfil3bq9p9KV44qxAz2yeSDQBprfSlR+t0INSkIm
-	KtJgkItIbKgqdA9Ys0846GGIF4vMxK9hah65qk2QLV3enx+p2+A2M9JiojLThQc9ww==
-X-Google-Smtp-Source: AGHT+IHp4ttFqyGxEuYRKTECeut2dpV2OBGlwHOfXPHFmeefIycTWfO9rwvdcCsBB23ujkYLAW1KtA==
-X-Received: by 2002:a81:84d7:0:b0:609:106b:5bbb with SMTP id u206-20020a8184d7000000b00609106b5bbbmr183556ywf.9.1709059703123;
-        Tue, 27 Feb 2024 10:48:23 -0800 (PST)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id d199-20020a0ddbd0000000b0060867d09de2sm1909370ywe.29.2024.02.27.10.48.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 10:48:23 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dbed179f0faso56062276.1;
-        Tue, 27 Feb 2024 10:48:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXfuBPDJb2rm861gPTQwoiwXHdP1paOOqnalj+4pZEw0ubdMsjI0JKEuYXJAFnyQ2XOAP78A2M/j3AFM9Q5B8oIvzRfTIXTy1F0rQ0YDw4VsHPad8VRXx8jN+A682GpBQgC7XVuF+IbnX7hx3ttVRqvdWzvWnTZIxlpJPrr8nscLSlTl9/EsRNtQWA3eRh9aZjC8VODywahcnXGX2hmNJItGTEgMFjravnW2YOdwmgHitMo8EIL2JeGyE6KYFH/YIJZXQM96KLW9LXWrGoxzmuvVf4ny74n3JEasqbyXWws0UKPeFp6IDnqfOSTORYkzcNDilElpLtNSuwOvuVBIx0/ZL2jN0dXSh9cDdNthCM39asos+vE2mc=
-X-Received: by 2002:a25:414a:0:b0:dc7:494e:ff33 with SMTP id
- o71-20020a25414a000000b00dc7494eff33mr220625yba.7.1709059702806; Tue, 27 Feb
- 2024 10:48:22 -0800 (PST)
+	s=arc-20240116; t=1709059739; c=relaxed/simple;
+	bh=3bZUA0mL+b5Ms2RdOItLD/BcXnPrmdEm8B0J9fdbpro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MmIv6SKT4uF9zCnBxKRnBAUpcWzpxbj1yQXo96voo7UZDVHe3KUhss4p+jFfT9dzPEL5CHzwb7sas3AZiFqow1yPeDc6vlXjpVXqQL6r7HJOIZlcwHly6iBixkb6P0TlmZu4dLUzRBPbfczG2brS+2L20PpymYNpwN6d2AHiHPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQfCeqYa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQfCeqYa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A742C433C7;
+	Tue, 27 Feb 2024 18:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709059739;
+	bh=3bZUA0mL+b5Ms2RdOItLD/BcXnPrmdEm8B0J9fdbpro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tQfCeqYal5q1ALky8inZXZXX8AxgIO96wdUR0M2z3O0ev720Vtt8aoVETZ6CZS+h8
+	 sxnDorXrg+c4E3Mzp2KVs8Deu6OHA0Xzzm2Vo//3oCNDovwj7NMXp5t5kDShnrb/uh
+	 RomFQQ4oiW1kumVYVHVEKlgUqxkxnQ2f91bdhNbdPpS9epECSpRjZcjYvCmDKA5DOl
+	 xLNQhaMDwFpx9Bd5SiQR2FRroM6jYcOQMVU6zUybdX20+qLYI0+DjfCx7ayFta6iZq
+	 0CFXb/A59MtJRRLjXjq8lB08vtaSUN7khXLuneo1/efVjlzh9duveIFJtjhSxZmZ0T
+	 IxbE33UdY6+cw==
+Date: Tue, 27 Feb 2024 18:48:54 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
+	Eric Biggers <ebiggers@kernel.org>, Evan Green <evan@rivosinc.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	linux-riscv@lists.infradead.org, Charles Lohr <lohr85@gmail.com>
+Subject: Re: [PATCH v4 2/2] riscv: Set unalignment speed at compile time
+Message-ID: <20240227-citable-scanning-1fd48c96b758@spud>
+References: <20240216-disable_misaligned_probe_config-v4-0-dc01e581c0ac@rivosinc.com>
+ <20240216-disable_misaligned_probe_config-v4-2-dc01e581c0ac@rivosinc.com>
+ <20240227-condone-impeach-9469dffc6b47@wendy>
+ <Zd4nMa+x28omuhiF@ghost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1704788539.git.ysato@users.sourceforge.jp> <f1f58604dd76520005c12479fada0b70ac210f89.1704788539.git.ysato@users.sourceforge.jp>
-In-Reply-To: <f1f58604dd76520005c12479fada0b70ac210f89.1704788539.git.ysato@users.sourceforge.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 27 Feb 2024 19:48:10 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUxZzBD0WRhx07MYdLvamg+1twRvAxGMRM5+4-pYeDTRQ@mail.gmail.com>
-Message-ID: <CAMuHMdUxZzBD0WRhx07MYdLvamg+1twRvAxGMRM5+4-pYeDTRQ@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v6 34/37] sh: Add dtbs target support.
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
-	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="A7lTG7rB6ssaDl7T"
+Content-Disposition: inline
+In-Reply-To: <Zd4nMa+x28omuhiF@ghost>
+
+
+--A7lTG7rB6ssaDl7T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 9, 2024 at 9:24=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+On Tue, Feb 27, 2024 at 10:17:21AM -0800, Charlie Jenkins wrote:
+> On Tue, Feb 27, 2024 at 11:39:25AM +0000, Conor Dooley wrote:
+> > On Fri, Feb 16, 2024 at 12:33:19PM -0800, Charlie Jenkins wrote:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > +config RISCV_EMULATED_UNALIGNED_ACCESS
+> > > +	bool "Assume the CPU expects emulated unaligned memory accesses"
+> > > +	depends on NONPORTABLE
+> >=20
+> > This is portable too, right?
+>=20
+> I guess so? I think I would prefer to have the probing being the only
+> portable option.
 
-Gr{oetje,eeting}s,
+I dunno, I think there could be value to someone in always emulating
+this in the kernel and I don't think that should relegate them to the
+naughty step, given it can work everywhere.
 
-                        Geert
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+> > > +config RISCV_SLOW_UNALIGNED_ACCESS
+> > > +	bool "Assume the CPU supports slow unaligned memory accesses"
+> > > +	depends on NONPORTABLE
+> > > +	help
+> > > +	  Assume that the CPU supports slow unaligned memory accesses. When
+> > > +	  enabled, this option improves the performance of the kernel on su=
+ch
+> > > +	  CPUs.
+> >=20
+> > Does it? Are you sure that generating unaligned accesses on systems
+> > where they are slow is a performance increase?
+> > That said, I don't really see this option actually doing anything other
+> > than setting the value for hwprobe, so I don't actually know what the
+> > effect of this option actually is on the kernel's performance.
+> >=20
+> > Generally I would like to suggest a change from "CPU" to "system" here,
+> > since the slow cases that exist are mostly because the unaligned access
+> > is actually emulated in firmware.
+>=20
+> It would be ideal if "emulated" was used for any case of emulated
+> accesses (firmware or in the kernel).  Doing emulated accesses will be
+> orders of magnitude slower than a processor that "slowly" handles the
+> accesses.
+>=20
+> So even if the processor performs a "slow" access, it could still be
+> beneficial for the kernel to do the misaligned access rather than manual
+> do the alignment.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Right. But, at least from a probing perspective, SLOW is what gets
+selected when firmware emulates the unaligned access so to userspace
+seeing slow means that the performance could be horrifically bad:
+
+|     rzfive:
+|         cpu0: Ratio of byte access time to unaligned word access is
+| 1.05, unaligned accesses are fast
+|=20
+|     icicle:
+|=20
+|         cpu1: Ratio of byte access time to unaligned word access is
+| 0.00, unaligned accesses are slow
+|         cpu2: Ratio of byte access time to unaligned word access is
+| 0.00, unaligned accesses are slow
+|         cpu3: Ratio of byte access time to unaligned word access is
+| 0.00, unaligned accesses are slow
+|=20
+|         cpu0: Ratio of byte access time to unaligned word access is
+| 0.00, unaligned accesses are slow
+|=20
+|     k210:
+|=20
+|         cpu1: Ratio of byte access time to unaligned word access is
+| 0.02, unaligned accesses are slow
+|         cpu0: Ratio of byte access time to unaligned word access is
+| 0.02, unaligned accesses are slow
+|=20
+|     starlight:
+|=20
+|         cpu1: Ratio of byte access time to unaligned word access is
+| 0.01, unaligned accesses are slow
+|         cpu0: Ratio of byte access time to unaligned word access is
+| 0.02, unaligned accesses are slow
+|=20
+|     vexriscv/orangecrab:
+|=20
+|         cpu0: Ratio of byte access time to unaligned word access is
+| 0.00, unaligned accesses are slow
+ https://lore.kernel.org/all/CAMuHMdVtXGjP8VFMiv-7OMFz1XvfU1cz=3DFw4jL3fcp4=
+wO1etzQ@mail.gmail.com/
+
+> Currently there is no place that takes into account this "slow" option
+> but I wanted to leave it open for future optimizations.
+
+I don't think you can really do much optimisation if you detect that it
+is slow, and since this option is analogous to detecting slow I dunno if
+you can do anything here either? This option really just seems to me to
+mean "don't do any optimisations for unaligned being fast but also don't
+emulate it in the kernel".
+
+> > > However, the kernel will run much more slowly, or will not be
+> > > +	  able to run at all, on CPUs that do not support unaligned memory
+> > > +	  accesses.
+> > > +
+> > >  config RISCV_EFFICIENT_UNALIGNED_ACCESS
+> > >  	bool "Assume the CPU supports fast unaligned memory accesses"
+> > >  	depends on NONPORTABLE
+> > >  	select DCACHE_WORD_ACCESS if MMU
+> > >  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+> > >  	help
+> > > -	  Say Y here if you want the kernel to assume that the CPU supports
+> > > -	  efficient unaligned memory accesses.  When enabled, this option
+> > > -	  improves the performance of the kernel on such CPUs.  However, the
+> > > -	  kernel will run much more slowly, or will not be able to run at a=
+ll,
+> > > -	  on CPUs that do not support efficient unaligned memory accesses.
+> > > +	  Assume that the CPU supports fast unaligned memory accesses. When
+> > > +	  enabled, this option improves the performance of the kernel on su=
+ch
+> > > +	  CPUs.  However, the kernel will run much more slowly, or will not=
+ be
+> > > +	  able to run at all, on CPUs that do not support efficient unalign=
+ed
+> > > +	  memory accesses.
+> > > +
+> > > +config RISCV_UNSUPPORTED_UNALIGNED_ACCESS
+> >=20
+> > This option needs to be removed. The uabi states that unaligned access
+> > is supported in userspace, if the cpu or firmware does not implement
+> > unaligned access then the kernel must emulate it.
+>=20
+> Should it removed from hwprobe as well then?
+
+No, I actually suggested that it be documented etc. Originally
+"UNSUPPORTED" was "UNKNOWN" and nothing more than the default value but
+I suggested that it be documented since that would allow a system that
+did not have the same uabi problem to use all the same defines.
+Technically it is possible for unaligned access to be unsupported, if
+you have a kernel that does not have the emulator but does have the
+hwprobe stuff supported. I think there was about a 6 month period where
+this was the case, so combine that with firmware that does not do the
+emulation and unaligned accesses are unsupported.
+
+Cheers,
+Conor.
+
+--A7lTG7rB6ssaDl7T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd4ulgAKCRB4tDGHoIJi
+0kuJAP9MYXtRJnS8kVEPM3J3GBXPiW1BrtrqVqpMeqaykH3O9AEAp8BCDPdp8oIV
+kh1+j1M36s5fTlWCuPBx975g86gHVwk=
+=Gp5I
+-----END PGP SIGNATURE-----
+
+--A7lTG7rB6ssaDl7T--
