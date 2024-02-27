@@ -1,126 +1,122 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869875644F
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CA855E48;
+	Tue, 27 Feb 2024 23:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709076901; cv=none; b=alNswBx+bjxrf9LGnX3MsXbilnCmM0Hl+7HBUrkjicPaxCGSIg+nnzM69a9gpOuWPjEoW5kqU87PT2UaHYlBpVgdXDmoxR6eEYkXfBJHt1jW0+g2/8L+Ukoj7HNE3SlCFHnOKbPX+yRZb6rj5OR5bGCKT7r2w594Ym8xnnAeprk=
+	t=1709076999; cv=none; b=Q0/cdxHNN6zFS9nuvGSuNmsH8a0+Pj9egVB1hISb/XsdQzdnqYR4oleVoGA97xnQOhyxrItQdRF2daxjXzNtlszr0vJzfS82cxShX6xtMuIlEHKcBNDr16pb9BV7D3IJahzCf2QMSPTG6YSFMEdS7cXXimaI8JtYjfH0yoHSL1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709076901; c=relaxed/simple;
-	bh=gRC6j0K7LFqSQU/6DlrnOPqvA92Esl5PB0v8SpJNck4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R1XmmRFlrjgySnk+to+Aq+CQP7kMp6eU0/+0l+IFpWiH7efnYpZQ86xg82OnjTPIojbz9EtTi3pkzIVnsL8Xj0tyKnFeHthsqVXHVirxuvRIj99tSH7aFS08h3J3ZxgpLHdpHzd2Sr8VwDQCaBtjob9Qrp6RjwNTE08Zq/ACYzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=CmbxMUtl; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1709076999; c=relaxed/simple;
+	bh=/VRb4MzHv0+QTH7GnhhfKoUNkiWk+9BsaZq59IGyA5M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=FnTkZc1B3HyKbtlfITSxRmz5dei1Q3krUygj7ApE/ZFRTRao0XVfBPDB2nZl03rrzk3YOvQWGvY0l7FvCPH35jkrDOpOO4KrfEljjUE2VSazdl/7usUUb7OMrdPFZ6W+S91QlxIi7KSKMFVAhIqCgsHO8r3HWYWu6pSTaq5qLzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=InXp1LE2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="CmbxMUtl"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-412b434effaso79865e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:34:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1709076898; x=1709681698; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QGIQk7rXip9tFvcYlcm0hZ25TTGnFG/+FGuOb/CLIyI=;
-        b=CmbxMUtl/oc5YY4bbtYxNsqdh9qAfRL8e3u+xNX4TbtQasqC5OyvT/WrXuNMyUd1+5
-         AzqViT0hENn8MCVD4oCfU32ED0/0tDUZ9zHCdkN68ZYO0PLj7sYOxg5nP9r0aD+WQVVd
-         vGLu9UqFLgcLZCn6ZMlH7bttnqzM53yHkO4vo84xCilqItqf2qTby6XJGqht1XNnEY/Z
-         LvYrzwHfDTQTF0gk0zpZQZf4B5AseEle0qUs7BN6EUV+pdidi3KaM0LPfdjDzLAVRUGM
-         NNIht1+nIj7BHYeWzawh0vFIlAadhy6fXThdAJWOVgAusbKRvssG6BHLDi1CwIC3bgzH
-         8THQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709076898; x=1709681698;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QGIQk7rXip9tFvcYlcm0hZ25TTGnFG/+FGuOb/CLIyI=;
-        b=a9EAR7y7MP/QVuLE9ye9cwp7+vymc/fd/5yaFjpJk2xTsfOJkR8MbG2GEDICyItN9y
-         ci4iIDl7YPJg7n0hYlHOCtn6YeSH0WDqscYjrSQR72TUjk63iowlcqMBHrfJGFVyohjI
-         sSb8nji5yEYt9xBYzrW1Pat2byN9pk8aF7BKj95i+ZAAGGpgqxbq9lWDiSH/EmEnHIw/
-         YiSMf1QRJ1W6HGnUWNObT+ToNXcjJviJ7MjCVRpk06v4T9edE3jhUSkw3585KcDkV2lE
-         KulwEGXnc7M7edpTyYf9fdF0hOISxkS8NCm8n9sr18vb9Wh5t/+LYYVl4KtW5lFyLmaP
-         RoaA==
-X-Gm-Message-State: AOJu0YzelwNWngZm7pBiRYCNFvWKt+0t6zz5LSStWvFcr4JN85A/U3PC
-	8gHFwhDfOl6/0fud3eXbnpilKtQocgZeeqBCE/6hUPEDcvmgPRoUnKHfwCkMhQA=
-X-Google-Smtp-Source: AGHT+IGg1FSvvzccob9cPmft0pC6SQzWbuVqjhsNI3ds3NgQAIKqZvkwXFy5iTWYwDXmIfcb7BxZGg==
-X-Received: by 2002:a05:600c:4f55:b0:412:880e:7659 with SMTP id m21-20020a05600c4f5500b00412880e7659mr8060055wmq.32.1709076897700;
-        Tue, 27 Feb 2024 15:34:57 -0800 (PST)
-Received: from airbuntu.. (host109-154-46-208.range109-154.btcentralplus.com. [109.154.46.208])
-        by smtp.gmail.com with ESMTPSA id k7-20020a7bc407000000b004126e26f756sm220756wmi.43.2024.02.27.15.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 15:34:57 -0800 (PST)
-From: Qais Yousef <qyousef@layalina.io>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	"Pierre Gondois" <Pierre.Gondois@arm.com>,
-	Qais Yousef <qyousef@layalina.io>,
-	Pierre Gondois <pierre.gondois@arm.com>
-Subject: [PATCH] cpufreq: Honour transition_latency over transition_delay_us
-Date: Tue, 27 Feb 2024 23:34:52 +0000
-Message-Id: <20240227233452.405852-1-qyousef@layalina.io>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240222233947.sl435tvhhpe5iqzw@airbuntu>
-References: <20240222233947.sl435tvhhpe5iqzw@airbuntu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="InXp1LE2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C0F5C433C7;
+	Tue, 27 Feb 2024 23:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709076998;
+	bh=/VRb4MzHv0+QTH7GnhhfKoUNkiWk+9BsaZq59IGyA5M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=InXp1LE2ZQE4DIutfgEWvLKJ1q/QXKsCzvoLz5Sb8i7MsnequWVpZkW5heGmHn/rg
+	 vGWFHT87IHzlXUfF9/VZ1jFjnYf7FCbABCnU4fWZ+y/up/O6b18GslbL5wLVm/6tb6
+	 vuLLE7YELsaHU82jfvBkXUtFOl1OuA6mrSaHbnGvU8AwqjHzLbJ6bkVUfebNXqxnc2
+	 aDmuc05+egn0HoxKyQM0nBNyonBqIC5JeTeOioABy5POiMeMlzU6pU7/yNmEvsfkmk
+	 P5f+DqNMGGQlE52BnipoK1QWEYfhbHVNk1lcKtyBj85moaWQjauhEe7NGpgo6zaWWv
+	 pqqAqCRMU6Niw==
+Date: Tue, 27 Feb 2024 17:36:36 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Brian Masney <bmasney@redhat.com>,
+	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, vireshk@kernel.org,
+	quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_parass@quicinc.com
+Subject: Re: [PATCH v7 7/7] PCI: qcom: Add OPP support to scale performance
+ state of power domain
+Message-ID: <20240227233636.GA250826@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240223-opp_support-v7-7-10b4363d7e71@quicinc.com>
 
-Some platforms like Arm's Juno can have a high transition latency that
-can be larger than the 2ms cap introduced. If a driver report
-a transition_latency that is higher than the cap, then use it as-is.
+On Fri, Feb 23, 2024 at 08:18:04PM +0530, Krishna chaitanya chundru wrote:
+> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
+> maintains hardware state of a regulator by performing max aggregation of
+> the requests made by all of the clients.
+> 
+> PCIe controller can operate on different RPMh performance state of power
+> domain based up on the speed of the link. And this performance state varies
+> from target to target.
 
-Update comment s/10/2/ to reflect the new cap of 2ms.
+s/up on/on/ (or "upon" if you prefer) (also below)
 
-Reported-by: Pierre Gondois <pierre.gondois@arm.com>
-Signed-off-by: Qais Yousef <qyousef@layalina.io>
----
- drivers/cpufreq/cpufreq.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+I understand changing the performance state based on the link speed,
+but I don't understand the variation from target to target.  Do you
+mean just that the link speed may vary based on the rates supported by
+the downstream device?
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 66cef33c4ec7..926a51cb7e52 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -576,8 +576,17 @@ unsigned int cpufreq_policy_transition_delay_us(struct cpufreq_policy *policy)
- 
- 	latency = policy->cpuinfo.transition_latency / NSEC_PER_USEC;
- 	if (latency) {
-+		unsigned int max_delay_us = 2 * MSEC_PER_SEC;
-+
-+		/*
-+		 * If the platform already has high transition_latency, use it
-+		 * as-is.
-+		 */
-+		if (latency > max_delay_us)
-+			return latency;
-+
- 		/*
--		 * For platforms that can change the frequency very fast (< 10
-+		 * For platforms that can change the frequency very fast (< 2
- 		 * us), the above formula gives a decent transition delay. But
- 		 * for platforms where transition_latency is in milliseconds, it
- 		 * ends up giving unrealistic values.
-@@ -586,7 +595,7 @@ unsigned int cpufreq_policy_transition_delay_us(struct cpufreq_policy *policy)
- 		 * a reasonable amount of time after which we should reevaluate
- 		 * the frequency.
- 		 */
--		return min(latency * LATENCY_MULTIPLIER, (unsigned int)(2 * MSEC_PER_SEC));
-+		return min(latency * LATENCY_MULTIPLIER, max_delay_us);
- 	}
- 
- 	return LATENCY_MULTIPLIER;
--- 
-2.34.1
+> It is manadate to scale the performance state based up on the PCIe speed
+> link operates so that SoC can run under optimum power conditions.
 
+It sounds like it's more power efficient, but not actually
+*mandatory*.  Maybe something like this?
+
+  The SoC can be more power efficient if we scale the performance
+  state based on the aggregate PCIe link speed.
+
+> Add Operating Performance Points(OPP) support to vote for RPMh state based
+> upon the speed link is operating.
+
+Space before open paren, e.g., "Points (OPP)".
+
+"... based on the link speed."
+
+> OPP can handle ICC bw voting also, so move ICC bw voting through OPP
+> framework if OPP entries are present.
+> 
+> In PCIe certain speeds like GEN1x2 & GEN2x1 or GEN3x2 & GEN4x1 use
+> same bw and frequency and thus the OPP entry, so use frequency based
+> search to reduce number of entries in the OPP table.
+
+GEN1x2, GEN2x1, etc are not "speeds".  I would say:
+
+  Different link configurations may share the same aggregate speed,
+  e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link have the same speed
+  and share the same OPP entry.
+
+> Don't initialize ICC if OPP is supported.
+
+Because?  Maybe this should say something about OPP including the ICC
+voting?
+
+> +		ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
+
+Wrap to fit in 80 columns.
+
+> +	 * Use highest OPP here if the OPP table is present. At the end of the probe(),
+> +	 * OPP will be updated using qcom_pcie_icc_opp_update().
+
+Wrap to fit in 80 columns.
+
+> +	/* Skip ICC init if OPP is supported as ICC bw vote is handled by OPP framework */
+
+Wrap to fit in 80 columns.
