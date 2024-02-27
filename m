@@ -1,133 +1,103 @@
-Received: from zg8tmtu5ljg5lje1ms4xmtka.icoremail.net (zg8tmtu5ljg5lje1ms4xmtka.icoremail.net [159.89.151.119])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76F911420C4;
-	Tue, 27 Feb 2024 12:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.89.151.119
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B6113A877;
+	Tue, 27 Feb 2024 12:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709035924; cv=none; b=cD2Vt1M3OBeCIMo9gtqPeHZdELYwRavsVG+HD1vwW/LhK4sILgyiWaA1Of2mk9lI5+cu1FzYZ7oaLXzddu4jwN3BWj2T4PcbyAmv76tgqAF5a/S/0cCoBWJep3B9QffoN6/E2TsOazIcdyt3fGBG17zP9m3qnCXY4ea3ivesvus=
+	t=1709035986; cv=none; b=BEWCLxQWV1bwA18tKItZc0C2q2omtN6GUGOBVw66QBjqmaS6Bdu95UnwbpU4LpRgE4NcGC5BLE614gGrdZ6nkr56OetKqE2RIhnO1qhsdkp/+bfEFFgLsPaiM6A++aJtUDrJ9K/MUdGimO+FVdkr4ANp6ET+tYX59FKjINxX2Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709035924; c=relaxed/simple;
-	bh=PRbPf7BCbHwK2buRz5uodWE7f30oFbcZYo5Q4brrAI0=;
-	h=From:To:Subject:Date:Message-Id; b=iAC/sgcYIPoNB4azTdQN6Sfbo8vSrb9jFCUqiYs+n9ysRj7V6+gLp6vK14PJoFMHcuoa9nkhtyx2xz4gQ0BcR1HcnxXvsFo7c8jg3yQK+H2Bb1fQRv50kMDfWdLQ7/+gOiWhj6wnUiSmbJ6edCL/2aT0Q8MFuqCObO7ZzREZ8l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=159.89.151.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from localhost.localdomain (unknown [125.120.153.166])
-	by mail-app2 (Coremail) with SMTP id by_KCgCXTa550d1lORdMAg--.22855S4;
-	Tue, 27 Feb 2024 20:11:38 +0800 (CST)
-From: Lin Ma <linma@zju.edu.cn>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	idosch@nvidia.com,
-	razor@blackwall.org,
-	jiri@resnulli.us,
-	lucien.xin@gmail.com,
-	linma@zju.edu.cn,
-	edwin.peer@broadcom.com,
-	amcohen@nvidia.com,
-	pctammela@mojatatu.com,
-	liuhangbin@gmail.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net v2] rtnetlink: fix error logic of IFLA_BRIDGE_FLAGS writing back
-Date: Tue, 27 Feb 2024 20:11:28 +0800
-Message-Id: <20240227121128.608110-1-linma@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:by_KCgCXTa550d1lORdMAg--.22855S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr4ftw47Cw4fWr4xuFyDWrg_yoW5Gw18pF
-	4rKa42qF4kJrn7Zr47JF4UZayavrs7GFW8Cr4Yyw10yr1aqF1ruFZ7KFy3uFyayFZrAr17
-	XF1qyFW5XanxCFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUQID7UUUUU=
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
+	s=arc-20240116; t=1709035986; c=relaxed/simple;
+	bh=PNfuFy5Ba+D5qLkPXV/F9tZVKt/ke8CC3TLHGloyd2k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mgM1DsJkUa9/Tdtri+bw0ikMfdU0rrAF1xxfxPAxvkCv66W9KfSgQc+nxnfYATv2gkExG5p6WkIWZG2MhN0oUHQAMwjjPQMIsAYp6qnLquicrOtkoULgkAHjY7ZRv+97aJmt80Hw5Eml8kqJxh2smgnjz+QQvjuQTiiHf91qpDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A7RzuOTH; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7RzuOTH"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso3310671a12.2;
+        Tue, 27 Feb 2024 04:13:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709035984; x=1709640784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PNfuFy5Ba+D5qLkPXV/F9tZVKt/ke8CC3TLHGloyd2k=;
+        b=A7RzuOTHT5lz7H92/ApnlKWkrpzABYAqTtBJob3puaeqDP3j8uvkkM9vaZcbzzr4hP
+         cve7C/GSu3+ilq18saUNgNNoPyo3fSND4ON7zrzCnc77KlD1aNtaaFlxBe/YvKrJbco7
+         56zQGnTMnTS9FITUmEqIhGQrbrnAkqXk4I1h7AbLgAe3cJMHuQzUUfvsPp9JUICBaehF
+         epGbY+0dzpdC45ddGFmVVt87yy3LJZx0B9GHy7Ncr1ssIexs51tiL0Qi4aWzhp+Bv7wS
+         mnV16H+SW6GonNihM0Lx3jRvgCUhrX3l1s/2ciKaOGi3iWfjSx8l9b8fQYps+b0cshkd
+         gSUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709035984; x=1709640784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PNfuFy5Ba+D5qLkPXV/F9tZVKt/ke8CC3TLHGloyd2k=;
+        b=vn+5+BZ52UbCI2vApJKwl06WFhO14jP+mpeKw5CD4NQ6B0F7Fuv/gsj2H82N/hAMpI
+         DyXKoRBxRqfKEcVLy3f+I5chlujJHQz1NEeOesNLz6DpAfpUf1d00HLEQ5feKi8gtvAI
+         gg+t8dV9yY4LtdMCxZqVYw9PxgOMTqy0rfzka2F1Fata0+UnLqhTcrrU8EhVa04EOj8c
+         XEx5dv/QYnwMs2Ev63MeeumVUw1xmu0mQ5tApEoFiNVYKx22ElZAWC+xsgsubBg4Rcwg
+         0t3Y37aGy9ob+HK66SKWfDY1XoaEJcUKrpiDhyVT3/llgaUzRBCMFjVs6U5dMpmZQGsC
+         wVug==
+X-Forwarded-Encrypted: i=1; AJvYcCVWi65WapItJITmttdmeB1zFHEUfmoBDk9a9wLxlScZ9L7BS9v8si3N4yn9llAGxIw6xMaYJdaaXkLbWgU3yZnrT0UWYcbveGY5uHELGC3YB9fQT8mVsxgE1HLaAWSMyUX+jKM+Ha0+ez+r5lyyVV+Gn+C31eCgNCChtxZKiH6ylplaccNxzzU=
+X-Gm-Message-State: AOJu0YwiBLOXS/XAMfAdjMPcFdTgyi2eVrTGGumAW09QTQ2vubzkw3mb
+	bX4dHtDYNX4f75/nBGhHhobzspqLKciQ80zqG2m7SVE7AP5hvynq68DHjGomewkrTWZ3mW/CQjk
+	TQkfQFin9zpvbC7EDDpjxu5R1ZOk=
+X-Google-Smtp-Source: AGHT+IEZrxxC5KTd1mUmyNpa02ckU0dvc0XT6naKz7W71hSie5HLJAV5L6JVbDjYli/t99gdzmOA0c0J+BbxKw9TRZg=
+X-Received: by 2002:a17:90a:1b85:b0:299:6a7f:3f55 with SMTP id
+ w5-20020a17090a1b8500b002996a7f3f55mr6019384pjc.45.1709035984277; Tue, 27 Feb
+ 2024 04:13:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240223-leverage-walmart-5424542cd8bd@spud> <20240223-employee-pessimism-03ba0b58db6b@spud>
+ <CANiq72ngEZskjH0f=8+cJuQsFTK227bGCxe5G0STMHuPbZYnXg@mail.gmail.com>
+ <20240227-resolved-deceit-4a59a6af5b71@wendy> <CANiq72mwM+4Oh-H5WmRoqQ_nE1w-eJ1wn-nEwS=BR9JRwzxMMQ@mail.gmail.com>
+ <20240227-glove-underwire-f562a56cf2c7@wendy>
+In-Reply-To: <20240227-glove-underwire-f562a56cf2c7@wendy>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 27 Feb 2024 13:12:51 +0100
+Message-ID: <CANiq72=f03_bw9B8ww8UxHkVyP2F7ZPyvC+KWCyhO3Nk1yqdaw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] scripts: generate_rust_target: enable building on RISC-V
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the commit d73ef2d69c0d ("rtnetlink: let rtnl_bridge_setlink checks
-IFLA_BRIDGE_MODE length"), an adjustment was made to the old loop logic
-in the function `rtnl_bridge_setlink` to enable the loop to also check
-the length of the IFLA_BRIDGE_MODE attribute. However, this adjustment
-removed the `break` statement and led to an error logic of the flags
-writing back at the end of this function.
+On Tue, Feb 27, 2024 at 12:05=E2=80=AFPM Conor Dooley
+<conor.dooley@microchip.com> wrote:
+>
+> My point though was more
+> that either this was acceptable for v6.9 or would be v6.10 material
+> with the same mechanism as arm64. Rebasing after v6.9-rc1 but not
+> adapting to that way of doing things is what seemed silly to me, since
+> if a resend is required then the other improvements should be carried
+> out at the same time.
 
-if (have_flags)
-    memcpy(nla_data(attr), &flags, sizeof(flags));
-    // attr should point to IFLA_BRIDGE_FLAGS NLA !!!
+If avoiding the `target.json` is possible, definitely.
 
-Before the mentioned commit, the `attr` is granted to be IFLA_BRIDGE_FLAGS.
-However, this is not necessarily true fow now as the updated loop will let
-the attr point to the last NLA, even an invalid NLA which could cause
-overflow writes.
+I didn't want to assume it is, though -- e.g. the native integer
+widths you have is 64 but the built-in targets use 32:64 (perhaps
+there is a way to tweak it with an LLVM param via `-Cllvm-args`, but I
+don't see any obvious way from a quick look; `opt` does have it,
+though).
 
-This patch introduces a new variable `br_flag` to save the NLA pointer
-that points to IFLA_BRIDGE_FLAGS and uses it to resolve the mentioned
-error logic.
+(That is why we supported `target.json`, since it gives the most
+freedom in the beginning.)
 
-Fixes: d73ef2d69c0d ("rtnetlink: let rtnl_bridge_setlink checks IFLA_BRIDGE_MODE length")
-Signed-off-by: Lin Ma <linma@zju.edu.cn>
----
-v1 -> v2: rename the br_flag to br_flags_attr which offers better
-          description suggested by Nikolay.
-
- net/core/rtnetlink.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-index 9c4f427f3a50..ae86f751efc3 100644
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -5169,10 +5169,9 @@ static int rtnl_bridge_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	struct net *net = sock_net(skb->sk);
- 	struct ifinfomsg *ifm;
- 	struct net_device *dev;
--	struct nlattr *br_spec, *attr = NULL;
-+	struct nlattr *br_spec, *attr, *br_flags_attr = NULL;
- 	int rem, err = -EOPNOTSUPP;
- 	u16 flags = 0;
--	bool have_flags = false;
- 
- 	if (nlmsg_len(nlh) < sizeof(*ifm))
- 		return -EINVAL;
-@@ -5190,11 +5189,11 @@ static int rtnl_bridge_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 	br_spec = nlmsg_find_attr(nlh, sizeof(struct ifinfomsg), IFLA_AF_SPEC);
- 	if (br_spec) {
- 		nla_for_each_nested(attr, br_spec, rem) {
--			if (nla_type(attr) == IFLA_BRIDGE_FLAGS && !have_flags) {
-+			if (nla_type(attr) == IFLA_BRIDGE_FLAGS && !br_flags_attr) {
- 				if (nla_len(attr) < sizeof(flags))
- 					return -EINVAL;
- 
--				have_flags = true;
-+				br_flags_attr = attr;
- 				flags = nla_get_u16(attr);
- 			}
- 
-@@ -5238,8 +5237,8 @@ static int rtnl_bridge_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		}
- 	}
- 
--	if (have_flags)
--		memcpy(nla_data(attr), &flags, sizeof(flags));
-+	if (br_flags_attr)
-+		memcpy(nla_data(br_flags_attr), &flags, sizeof(flags));
- out:
- 	return err;
- }
--- 
-2.17.1
-
+Cheers,
+Miguel
