@@ -1,191 +1,119 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFB51EB40;
-	Tue, 27 Feb 2024 17:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709053729; cv=fail; b=UwtBLEKx/75PaT6Pobt2GJLNPPotqq3jsSMo/59paIuDc85KbR6t0OrFVpHaENoust1gFC/4Dx1CwiC91sW6MXMpzGH0Q/WYSsa+CThqjCYGruyFgz1MJ7sNww72gVmTV1Xq0Cgz612CUc3mcPH+sJTHi81wIS5dblJfWLiwIMM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709053729; c=relaxed/simple;
-	bh=/5pyNx3GN9mTyGJvJVwuj6hpiNsHfAvm+cqVb3MwIDE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NFUGsBkZQXm7KoYaWrDawM69T/kUznb+zHXrArMPACH6ki4fCe5toTVPhFOrp6ZBiyCSEWE+yD+memAfG7HsL2krVQVV9Vw/Ymo2tA5av+Qt5nXpaxlItG+xVyNYDyqGVi0TSbOLdfhvXN6LA6sChI2FpVPIL0nJG7lEsAFXGO0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QDepQeNF; arc=fail smtp.client-ip=40.107.243.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3233E480
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709053731; cv=none; b=Tgc3Kk9B5gi7Y5qCAhFIszIVV+FmZ8X1iZ3sodZbiPZiOlukeZwvSkpYYfAYTF1BxdFWUtmQc0OarOLmJLWVHGxj0rYwK6BbPd/THIKb6/EIWsLmWeCe+JMKw6kmYBybAQwAG2b/8MvEcFomsKr1wDwuflsVqLZpdzz8u0XjyPU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709053731; c=relaxed/simple;
+	bh=LyIC2a8YCi8H35J3OmUP2FanwA/jMrbgvLb5jpkEIFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BdH2Or2FQoovkqmysLcIXDLS234t4Fr2WL++hbjkH8GHd5gItHHYRdUZTYHtIBt7nMtN3BVbOLvK0yyJlR0koB9X/tNcRskClGkoz62gSDZJqiXZlSL7thvCmQbSeLwbc2YX74i9XIcoINquw0kw2CFxQQwuyq+3LsPJz7+z0Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OV1FbHlu; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QDepQeNF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H3RMd1DRP5IO+XCcVBzE20/EGsT51tq86Pv1VsOdPBbvJ82i6UtGPZheQ50F0aElPU+uniSuowakEmfI5ircmzFmpxkEHnq/wtoyyOfQi8snw3bgjetxKbDTvPlxMsiYBdRJg0C0zSQOr4QDa5W0N+fc4/4BMZkRYWwJga1q31zaqKfkLwd+pzeeBHJIACG0FJXefJITXjAtrZM4KQtDgNUbI1+ZueqLx36O+LvX49zFm0BNDowcP5DKLol2RYpc2bMuC8cPt6emmKSHEJvOPUfl3I9FB1sf4ifmd4qU3BUcoA3vCI6n52fajkwuU+1WuZRT75IPdWMOGTK1Uv0otA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r9lTy8Eh99mrMkUF+FkPuPWHRmJIkmluTdBGkCEyUiw=;
- b=ahl+YiBPBCH9GShIKejajolDPbBG00KV1ugv9CH/OypsjB+6mA7rhj8aR1A1UJWxcqcy4gKE7N3fer1GJRVOEd/twnseatiJA9Nwl7MOCHjaZpLmyl5cgjsNWyCdGWNhgkjPsVO0Caac/VQhXEmnjoKcj5uJC8eiU8RU14AcCtDqwW0cWesDOfxcfb55hM9mriQfnWYQtQfEGgA0cy58NaSxvtIdsuAAifwrHxsLX8vug7/VSezCI2Tc7Yk4v/bYnfb+6B+KIZAPKo+eqTk6uhcf9UCS3Yby/bbHOsIBzpV6oslR8UntisHBoWJ+8qqhLz+9sqR0htE9Uz5QXrJnKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r9lTy8Eh99mrMkUF+FkPuPWHRmJIkmluTdBGkCEyUiw=;
- b=QDepQeNFCke8wa7wdbVcLtiCVtnXZL3IXCQ29GXokypc18rjP6koXLb5zwgF88I/m96np2VY7k7S4SUpR6B6zDfi1XypGDd/vC+VOUpkwjYOtigMi6i2mCuxzVq4ljwbrOxMbyK7rvKixDpOVHbiSCtC1r8cUtmXqHV66YUTnkk=
-Received: from BN9PR03CA0334.namprd03.prod.outlook.com (2603:10b6:408:f6::9)
- by DS7PR12MB5861.namprd12.prod.outlook.com (2603:10b6:8:78::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Tue, 27 Feb
- 2024 17:08:44 +0000
-Received: from BN2PEPF000044A8.namprd04.prod.outlook.com
- (2603:10b6:408:f6:cafe::b0) by BN9PR03CA0334.outlook.office365.com
- (2603:10b6:408:f6::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.49 via Frontend
- Transport; Tue, 27 Feb 2024 17:08:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN2PEPF000044A8.mail.protection.outlook.com (10.167.243.102) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Tue, 27 Feb 2024 17:08:44 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 27 Feb
- 2024 11:08:43 -0600
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 27 Feb
- 2024 11:08:43 -0600
-Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Tue, 27 Feb 2024 11:08:42 -0600
-From: Lizhi Hou <lizhi.hou@amd.com>
-To: <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Lizhi Hou <lizhi.hou@amd.com>, <nishads@amd.com>, <sonal.santan@amd.com>,
-	<max.zhen@amd.com>
-Subject: [PATCH V9 0/2] AMD QDMA driver
-Date: Tue, 27 Feb 2024 09:08:27 -0800
-Message-ID: <1709053709-33742-1-git-send-email-lizhi.hou@amd.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OV1FbHlu"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5d8b276979aso3506354a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:08:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709053729; x=1709658529; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lmc3sjc8em17oChCJSQpaOzbhd1qpZMy7Z0nwlTPyEc=;
+        b=OV1FbHluXUQPzO7NWQ4faDtrR1AkKEeiRAfRi/Yoqt1b9ql8Ne85nQy1UPWVbl91lv
+         AdZpy+i78t4JRIivHJDth32osYdT9Nv+OJ7DCro5zZFlHp0+9cj7raWYuD5wgfgW4w6B
+         0e5ONboExYxPEjlR//w5nvSveC7Nn1DlZBcu73j35kPznjlDSAu5ezY9HNxOp+P29rNZ
+         Nw4Xm5SJTlxNtawSsP6ZJqqlclKODCgezbhSLwy/CEnSZxJO7H9yTNSFc9MsT9u0aOKB
+         ONoyzPGs8Ab+kTrRnrbwdGLc3kT6/tVW4HnEcnKyN9I6le7xE6uGOAhxTdWi1xdDEChi
+         bSFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709053729; x=1709658529;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lmc3sjc8em17oChCJSQpaOzbhd1qpZMy7Z0nwlTPyEc=;
+        b=Nd7YvdRpqUGASH7ned9OgPzOw3JaIZawTtFga/4oLOQENGFWss1+KbmmE1kMLCia9F
+         sB5qN+pJWZLF4BMcYrtQ1vR1ZR6NtnMqg+VUkhXRO/FWg9CD3YuJMaiagNxrWWqt9L8S
+         g2qp326t6V4igaBT+hw7hw3YT+wV6zClJPJdNcrezfsAQbQ0mLGf+b4xsdSokKN5Eaz/
+         U535UoUbSVQrwXiXudMnl5R8vhJ1IQ+F9Yt7+3czG2HlyEZnZnTxtyjrTqpDatpRd8Pm
+         0FWCpuLWgsVz8NNv85WM9SIRKyXCa4qWwPoLzUVoPWzUUGb7zeN6lkx0XQG+RSFSMnfP
+         FNjA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6+z8FmHTL9DNvZft2tzSbNCGNZhohaEDv9PlLZHiwxgMd9z6j9g5EC54CGsOUoArbJW0RVLuIiAkCBZz2TmzDPCdjmIacndUuRLj9
+X-Gm-Message-State: AOJu0YySSpJd0Bz2nh2NGtvdLmmtdKfP/kApEsLrTKAy6a80sZDcN9ua
+	8NmJfslsKBs1eO59yLy/lkWgjVkDfXurY77d2mFpUqvMUgwlnmqA+FEnRSczKQ==
+X-Google-Smtp-Source: AGHT+IHfCTuVOr5Vdon+2BmyjsKL8DKicx4h9TEm+qIcTGywS1ZZGmFjLcn17HKfB8h/qvkApA/qPA==
+X-Received: by 2002:a17:902:6b49:b0:1d9:8832:f800 with SMTP id g9-20020a1709026b4900b001d98832f800mr9202931plt.8.1709053729485;
+        Tue, 27 Feb 2024 09:08:49 -0800 (PST)
+Received: from thinkpad ([117.213.97.177])
+        by smtp.gmail.com with ESMTPSA id d1-20020a170902c18100b001c407fac227sm1765279pld.41.2024.02.27.09.08.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 09:08:48 -0800 (PST)
+Date: Tue, 27 Feb 2024 22:38:40 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Add D3 support for PCI bridges in DT based
+ platforms
+Message-ID: <20240227170840.GR2587@thinkpad>
+References: <20240227073057.GF2587@thinkpad>
+ <20240227162535.GA239073@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: lizhi.hou@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044A8:EE_|DS7PR12MB5861:EE_
-X-MS-Office365-Filtering-Correlation-Id: bbaec3d0-bd68-4eb8-4091-08dc37b6c0f9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	PAciJrppV1X+Tsc1QEYbdxxr7CvBmC1J9EWQlQjP/sFr9pBIpK9/ul7XbteqWgx7gzHTMOtPDhHPD5hllMHcBV1B3LYkAnXZVt0IIad5jMyKLymWdxrZEYq5W9soKAuN1bzh65g1/KhLy68GFjObT6hTFqjWqF/8YqHp2XHsAKBLLJRvMnRax5/qpp2UD3g4rZU9VpjCBTBo3dMauZmr7sl+P9NdXrPsNGR984Cb0vlSwLX9dSb9PM+yNzBB7drVCDFOEZG07SpTTo61lS235pZ1YOaISlp7eDHdOU8PUG1SsksQTbcz/GPuLdHYxKhA3frWx+ForDPej6/Rb/7rsOKrv3PF+gTTsC+LyFHHvfultLKJdmGUF1vOaewiOIdymwIa9VmhyinVEaj/ELU0HAIb1zx8Vr3jheEMW4e3StvrqhzG5ccG3e9s6WhEXtPAIaoehwc4igkwQ/6BnNMz8QsDtsEJ5MN52MGwp9G2eQPJj35ikZpbbQjiK7h3KtBfTQ10VwOF4Y20Ek6NKyYbbLXsCdvWEhUrkD5BdHIIfJ+vIwZSctDHLn4fn+9olk60JTTStrk7XhIkNFvc0qc4mYZKe5HM8egXEPBXa+IVIXKa+hZkVENApKUk5wqR7XgH6WMrVmEBCa3dI4r+AYGE+oVeVijEyoRSta9HS2snjhvbFh4bD3PFisEEHM4ZWnDeVTZljTvnhjYJP42on30wt3SUcfC4kYwfKpRhb3ePedQ=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(230273577357003)(36860700004)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 17:08:44.0435
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbaec3d0-bd68-4eb8-4091-08dc37b6c0f9
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044A8.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5861
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240227162535.GA239073@bhelgaas>
 
-Hello,
+On Tue, Feb 27, 2024 at 10:25:35AM -0600, Bjorn Helgaas wrote:
 
-The QDMA subsystem is used in conjunction with the PCI Express IP block
-to provide high performance data transfer between host memory and the
-card's DMA subsystem.
+[...]
 
-            +-------+       +-------+       +-----------+
-   PCIe     |       |       |       |       |           |
-   Tx/Rx    |       |       |       |  AXI  |           |
- <=======>  | PCIE  | <===> | QDMA  | <====>| User Logic|
-            |       |       |       |       |           |
-            +-------+       +-------+       +-----------+
+> > Ok, I got the issue. TBH, I added the device tree property based on
+> > the existing quirks for the ACPI devices. But none of the DT based
+> > platforms I'm aware of (even the legacy Qcom MSM8996 chipset
+> > released in early 2016) doesn't have any issue with D3hot. But I'm
+> > just nervous to assume it is the case for all the DT based platforms
+> > in the wild.
+> > 
+> > But to proceed further, what is your preference? Should we ammend
+> > the DT property to make it explicit that the propery only focuses on
+> > the D3hot capability of the bridge and it works as per the spec
+> > (PMCSR) or bite the bullet and enable D3hot for all the non-ACPI
+> > platforms?
+> > 
+> > We can add quirks for the bridges later on if we happen to receive
+> > any bug report.
+> 
+> I would assume all devices support D3hot via PMCSR per spec.  We can
+> add quirks if we discover something that doesn't.
+> 
 
-Comparing to AMD/Xilinx XDMA subsystem,
-    https://lore.kernel.org/lkml/Y+XeKt5yPr1nGGaq@matsya/
-the QDMA subsystem is a queue based, configurable scatter-gather DMA
-implementation which provides thousands of queues, support for multiple
-physical/virtual functions with single-root I/O virtualization (SR-IOV),
-and advanced interrupt support. In this mode the IP provides AXI4-MM and
-AXI4-Stream user interfaces which may be configured on a per-queue basis.
+When you say "all devices", are you referring to bridges in DT platforms or the
+bridges across all platforms?
 
-The QDMA has been used for Xilinx Alveo PCIe devices.
-    https://www.xilinx.com/applications/data-center/v70.html
+- Mani
 
-This patch series is to provide the platform driver for AMD QDMA subsystem
-to support AXI4-MM DMA transfers. More functions, such as AXI4-Stream
-and SR-IOV, will be supported by future patches.
-
-The device driver for any FPGA based PCIe device which leverages QDMA can
-call the standard dmaengine APIs to discover and use the QDMA subsystem
-without duplicating the QDMA driver code in its own driver.
-
-Changes since v8:
-- Replaced dma_alloc_coherent() with dmam_alloc_coherent()
-
-Changes since v7:
-- Fixed smatch warnings
-
-Changes since v6:
-- Added a patch to create amd/ and empty Kconfig/Makefile for AMD drivers
-- Moved source code under amd/qdma/
-- Minor changes for code review comments
-
-Changes since v5:
-- Add more in patch description.
-
-Changes since v4:
-- Convert to use platform driver callback .remove_new()
-
-Changes since v3:
-- Minor changes in Kconfig description.
-
-Changes since v2:
-- A minor change from code review comments.
-
-Changes since v1:
-- Minor changes from code review comments.
-- Fixed kernel robot warning.
-
-Lizhi Hou (1):
-  dmaengine: amd: Add empty Kconfig and Makefile for AMD drivers
-
-Nishad Saraf (1):
-  dmaengine: amd: qdma: Add AMD QDMA driver
-
- MAINTAINERS                            |    8 +
- drivers/dma/Kconfig                    |    2 +
- drivers/dma/Makefile                   |    1 +
- drivers/dma/amd/Kconfig                |   14 +
- drivers/dma/amd/Makefile               |    6 +
- drivers/dma/amd/qdma/Makefile          |    8 +
- drivers/dma/amd/qdma/qdma-comm-regs.c  |   64 ++
- drivers/dma/amd/qdma/qdma.c            | 1162 ++++++++++++++++++++++++
- drivers/dma/amd/qdma/qdma.h            |  265 ++++++
- include/linux/platform_data/amd_qdma.h |   36 +
- 10 files changed, 1566 insertions(+)
- create mode 100644 drivers/dma/amd/Kconfig
- create mode 100644 drivers/dma/amd/Makefile
- create mode 100644 drivers/dma/amd/qdma/Makefile
- create mode 100644 drivers/dma/amd/qdma/qdma-comm-regs.c
- create mode 100644 drivers/dma/amd/qdma/qdma.c
- create mode 100644 drivers/dma/amd/qdma/qdma.h
- create mode 100644 include/linux/platform_data/amd_qdma.h
+> If we add annotations that "this device works correctly", we're
+> digging a hole for ourselves because it's impossible to remove those
+> annotations and they complicate all future maintenance.
+> 
+> Bjorn
 
 -- 
-2.34.1
-
+மணிவண்ணன் சதாசிவம்
