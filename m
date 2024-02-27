@@ -1,45 +1,45 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F7758136
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:21:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737C858ACB
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:21:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709076074; cv=none; b=gNADp4A4dVg+Js3ivPxdHiSIuug3AD281ljkk2JwKU0OgPU8TYyQukBZZTsZkqnwbebd0dfQw2ABBzcPCLA/RygjIFqnL3hceskG/5aXDd2tZmmAVg5ZtoQv8HTrE4xoEuZKn8vxLlG7/wpJr9aCardI5coEnThWjZ/yjCNfS+o=
+	t=1709076074; cv=none; b=H8uQYsAgCl7WdTPLcnBui7s7A1dAQk1iNWHvd5Jf2XmC4Pglx0WTN3m6Te677J5GoelQDc9plApVObvmdZLKTb7fp8S5hiA9IpGot5VSF6MLHR1X9nJqo8Tw+a9mDE5wz+08Wdio5rCqW4ckJHzv13vI9xoWCxsSNxWPZu3PG3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709076074; c=relaxed/simple;
-	bh=rJ+0CMX/DI45udGZgNZqTlQKuapoycVU2cowegxlNxo=;
+	bh=kAGvldVSSgs/cuGA2UhZHAoRzsM3NNWHqjWVGuiXJcU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PmDOpFHsKw5fLd/b1ERPIQ0vMRGx707qEHUbmAUh4lTJZg04TyrCoFfDmqfOBkmk1FlnJIb1aMLTOp/XnNLb6C1LDe/maVejpwtESZtUYKIjpKSXnO/F9OTg6Yx6xDdLQqm3MpW7ETn/7Js2DbeuFdIL5iHK8h3hU+8pUzN9QsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JBWM+ec2; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=A172QhQKXwx3Jb3vNpdFhI40kw2kOCx4wocNurD+g/xIY4kwv9gC1B7epC62gc0TBMo2ByW3YpT4j4+9S1ALgS0gmV9zQnRXGhC5irag8Uq69HvjdPqPE2wYY6YCI3NqY2jyvjrHOc31/dRhvAVnFP5eKVZ7BrtdkYx9HSuP5zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ww8BEP2F; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JBWM+ec2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ww8BEP2F"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709076069;
+	s=mimecast20190719; t=1709076071;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T8A/JfH64nTOH0V0ceFUqpMW1k22o4T4wPuWKt4c/d4=;
-	b=JBWM+ec2VaHe74a0ygL0kjaM2JpX0ZUXqRDFQar8OnBe4C+8F8Gi+yQjbbSXV4AziaR64o
-	lbQAQIeAvRU65ClFrbTSrUveS6qPJXTj4XoHuWEeTMfzW4XpDpd22aBgFhGkdstc96kfzx
-	0YHsWg1TVgtBiatN9/VTn59/4yIy7po=
+	bh=ItA4hweoRhWLy+GIQ/7oXHP94HCpIoNmoXorWKs0+NI=;
+	b=Ww8BEP2FciCV76Bk0uT/M71Iy5AlMvauX1wG+XHZbduVUqZsUyE2P6PyzdJU4QlwZ83Z+P
+	/pFHKWuSl9e5KADxAOfhDAzRlQVJDA7CNVDGqKUzLzVdR2xm+xY/UlYZs0XEV6w41sdiSW
+	c5FUelE+JcANPWjojMXAIR5om7f0tbI=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-393-2HVa7PztN72zcSYx2dj5sA-1; Tue, 27 Feb 2024 18:21:06 -0500
-X-MC-Unique: 2HVa7PztN72zcSYx2dj5sA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+ us-mta-169-tuhU7xeHM2uf3DRJImU8EQ-1; Tue, 27 Feb 2024 18:21:04 -0500
+X-MC-Unique: tuhU7xeHM2uf3DRJImU8EQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 905CB85A58B;
-	Tue, 27 Feb 2024 23:21:05 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 65E90800074;
+	Tue, 27 Feb 2024 23:21:04 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 621FE492BCF;
-	Tue, 27 Feb 2024 23:21:05 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 395F3C0348F;
+	Tue, 27 Feb 2024 23:21:04 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -47,9 +47,9 @@ Cc: seanjc@google.com,
 	michael.roth@amd.com,
 	isaku.yamahata@intel.com,
 	thomas.lendacky@amd.com
-Subject: [PATCH 20/21] KVM: x86: Add gmem hook for invalidating memory
-Date: Tue, 27 Feb 2024 18:20:59 -0500
-Message-Id: <20240227232100.478238-21-pbonzini@redhat.com>
+Subject: [PATCH 15/21] KVM: x86/mmu: Use PFERR_GUEST_ENC_MASK to indicate fault is private
+Date: Tue, 27 Feb 2024 18:20:54 -0500
+Message-Id: <20240227232100.478238-16-pbonzini@redhat.com>
 In-Reply-To: <20240227232100.478238-1-pbonzini@redhat.com>
 References: <20240227232100.478238-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -60,126 +60,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-From: Michael Roth <michael.roth@amd.com>
+SEV-SNP defines PFERR_GUEST_ENC_MASK (bit 34) in page-fault error bits to
+represent the guest page is encrypted.  Use the bit to designate that the
+page fault is private and that it requires looking up memory attributes.
 
-In some cases, like with SEV-SNP, guest memory needs to be updated in a
-platform-specific manner before it can be safely freed back to the host.
-Wire up arch-defined hooks to the .free_folio kvm_gmem_aops callback to
-allow for special handling of this sort when freeing memory in response
-to FALLOC_FL_PUNCH_HOLE operations and when releasing the inode, and go
-ahead and define an arch-specific hook for x86 since it will be needed
-for handling memory used for SEV-SNP guests.
+The vendor kvm page fault handler should set PFERR_GUEST_ENC_MASK bit based
+on their fault information.  It may or may not use the hardware value
+directly or parse the hardware value to set the bit.
 
-Signed-off-by: Michael Roth <michael.roth@amd.com>
-Message-Id: <20231230172351.574091-6-michael.roth@amd.com>
+Based on a patch by Isaku Yamahata.
+
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/kvm-x86-ops.h |  1 +
- arch/x86/include/asm/kvm_host.h    |  1 +
- arch/x86/kvm/x86.c                 |  7 +++++++
- include/linux/kvm_host.h           |  4 ++++
- virt/kvm/Kconfig                   |  4 ++++
- virt/kvm/guest_memfd.c             | 14 ++++++++++++++
- 6 files changed, 31 insertions(+)
+	Compared to what is in the Intel TDX tree, I am dropping the
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index adfaad15e7e6..42474acb7375 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -140,6 +140,7 @@ KVM_X86_OP(vcpu_deliver_sipi_vector)
- KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
- KVM_X86_OP_OPTIONAL(get_untagged_addr)
- KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
-+KVM_X86_OP_OPTIONAL(gmem_invalidate)
- 
- #undef KVM_X86_OP
- #undef KVM_X86_OP_OPTIONAL
+		if (vcpu->kvm->arch.vm_type == KVM_X86_SW_PROTECTED_VM)
+			return RET_PF_RETRY;
+
+	change in __kvm_faultin_pfn().  It is not well documented why it
+	is needed and selftests seem to pass.
+
+	Also, checking has_private_mem is needed so as not to break SEV-ES.
+
+ arch/x86/include/asm/kvm_host.h | 2 ++
+ arch/x86/kvm/mmu/mmu.c          | 9 +++++++++
+ arch/x86/kvm/mmu/mmu_internal.h | 2 +-
+ 3 files changed, 12 insertions(+), 1 deletion(-)
+
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 6d873d08f739..e523b204697d 100644
+index 24e30ca2ca8f..7de8a3f2a118 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1805,6 +1805,7 @@ struct kvm_x86_ops {
+@@ -264,6 +264,7 @@ enum x86_intercept_stage;
+ #define PFERR_SGX_BIT 15
+ #define PFERR_GUEST_FINAL_BIT 32
+ #define PFERR_GUEST_PAGE_BIT 33
++#define PFERR_GUEST_ENC_BIT 34
+ #define PFERR_IMPLICIT_ACCESS_BIT 48
  
- 	gva_t (*get_untagged_addr)(struct kvm_vcpu *vcpu, gva_t gva, unsigned int flags);
- 	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
-+	void (*gmem_invalidate)(kvm_pfn_t start, kvm_pfn_t end);
- };
+ #define PFERR_PRESENT_MASK	BIT(PFERR_PRESENT_BIT)
+@@ -275,6 +276,7 @@ enum x86_intercept_stage;
+ #define PFERR_SGX_MASK		BIT(PFERR_SGX_BIT)
+ #define PFERR_GUEST_FINAL_MASK	BIT_ULL(PFERR_GUEST_FINAL_BIT)
+ #define PFERR_GUEST_PAGE_MASK	BIT_ULL(PFERR_GUEST_PAGE_BIT)
++#define PFERR_GUEST_ENC_MASK	BIT_ULL(PFERR_GUEST_ENC_BIT)
+ #define PFERR_IMPLICIT_ACCESS	BIT_ULL(PFERR_IMPLICIT_ACCESS_BIT)
  
- struct kvm_x86_nested_ops {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index eff532ea59c9..9d5603adf542 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -13605,6 +13605,13 @@ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_ord
- }
- #endif
- 
-+#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
-+void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end)
-+{
-+	static_call_cond(kvm_x86_gmem_invalidate)(start, end);
-+}
-+#endif
-+
- int kvm_spec_ctrl_test_value(u64 value)
+ #define PFERR_NESTED_GUEST_PAGE (PFERR_GUEST_PAGE_MASK |	\
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index c9890e5b6e4c..6b4cb71668df 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5846,6 +5846,7 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
  {
+ 	int r, emulation_type = EMULTYPE_PF;
+ 	bool direct = vcpu->arch.mmu->root_role.direct;
++	struct kvm *kvm = vcpu->kvm;
+ 
  	/*
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 192c58116220..3835732491b9 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2465,4 +2465,8 @@ static inline int kvm_gmem_undo_get_pfn(struct kvm *kvm,
- int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order);
- #endif
+ 	 * IMPLICIT_ACCESS is a KVM-defined flag used to correctly perform SMAP
+@@ -5861,6 +5862,14 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
+ 	if (WARN_ON_ONCE(!VALID_PAGE(vcpu->arch.mmu->root.hpa)))
+ 		return RET_PF_RETRY;
  
-+#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
-+void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end);
-+#endif
++	/*
++	 * There is no vendor code that can set PFERR_GUEST_ENC_MASK for
++	 * software-protected VMs.  Compute it here.
++	 */
++	if (kvm->arch.vm_type == KVM_X86_SW_PROTECTED_VM &&
++	    kvm_mem_is_private(kvm, cr2_or_gpa >> PAGE_SHIFT))
++		error_code |= PFERR_GUEST_ENC_MASK;
 +
- #endif
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index dcce0c3b5b13..39356f5babbd 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -115,3 +115,7 @@ config KVM_GENERIC_PRIVATE_MEM
- config HAVE_KVM_GMEM_PREPARE
-        bool
-        depends on KVM_PRIVATE_MEM
-+
-+config HAVE_KVM_GMEM_INVALIDATE
-+       bool
-+       depends on KVM_PRIVATE_MEM
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 535ef1aa34fb..74e19170af8a 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -345,10 +345,24 @@ static int kvm_gmem_error_folio(struct address_space *mapping, struct folio *fol
- 	return MF_DELAYED;
- }
+ 	r = RET_PF_INVALID;
+ 	if (unlikely(error_code & PFERR_RSVD_MASK)) {
+ 		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index 21f55e8b4dc6..154aa44eeb33 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -290,6 +290,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 		.present = err & PFERR_PRESENT_MASK,
+ 		.rsvd = err & PFERR_RSVD_MASK,
+ 		.user = err & PFERR_USER_MASK,
++		.is_private = vcpu->kvm->arch.has_private_mem && (err & PFERR_GUEST_ENC_MASK),
+ 		.prefetch = prefetch,
+ 		.is_tdp = likely(vcpu->arch.mmu->page_fault == kvm_tdp_page_fault),
+ 		.nx_huge_page_workaround_enabled =
+@@ -298,7 +299,6 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 		.max_level = KVM_MAX_HUGEPAGE_LEVEL,
+ 		.req_level = PG_LEVEL_4K,
+ 		.goal_level = PG_LEVEL_4K,
+-		.is_private = kvm_mem_is_private(vcpu->kvm, cr2_or_gpa >> PAGE_SHIFT),
+ 	};
+ 	int r;
  
-+#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
-+static void kvm_gmem_free_folio(struct folio *folio)
-+{
-+	struct page *page = folio_page(folio, 0);
-+	kvm_pfn_t pfn = page_to_pfn(page);
-+	int order = folio_order(folio);
-+
-+	kvm_arch_gmem_invalidate(pfn, pfn + (1ul << order));
-+}
-+#endif
-+
- static const struct address_space_operations kvm_gmem_aops = {
- 	.dirty_folio = noop_dirty_folio,
- 	.migrate_folio	= kvm_gmem_migrate_folio,
- 	.error_remove_folio = kvm_gmem_error_folio,
-+#ifdef CONFIG_HAVE_KVM_GMEM_INVALIDATE
-+	.free_folio = kvm_gmem_free_folio,
-+#endif
- };
- 
- static int kvm_gmem_getattr(struct mnt_idmap *idmap, const struct path *path,
 -- 
 2.39.0
 
