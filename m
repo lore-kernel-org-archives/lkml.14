@@ -1,46 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414CA5C82
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 06:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4680537145;
+	Tue, 27 Feb 2024 06:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709017061; cv=none; b=Cm9gOcyDJ2wA0lMl46FMa0uPhkbMxk8x1XN+o8MMBjZfnzI+eR9OT4B6wxJ8j7m0L2RPG8kYV8nEmVIw2+C1XG2HEb/rospAmUFntoWqoL6gmh7ALsVdaGOjev4YNyX4QCIwoORhO/ON6YwDjAHXEjFpoGSVIt9b0WP9mDr6d4E=
+	t=1709017101; cv=none; b=mSZFi8GGeGT/D5tnE0mocV7XmiixRO6NAdPEJWTMdOg6yy5Ui+YJeQmNibC2SKkLvUr3tX0gKONfdpQngJFAO9HImHqz0gMZxJ+OnqMKQ3sp4Th4dXQz4PMGRfQ009WmRqqULBGe+iY2iCh8zUQyLxwityw9Iv4yLdiFkhbN8hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709017061; c=relaxed/simple;
-	bh=YvGZDgLgIVJF+BHE7Jc79utI2MU3LMX2wIjPPgVMfJQ=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=U4XB0385opC7zw9uhkKHneAv1FtMz3YCP4eD2sQLxdio3Pp2Vbl80yGn/ZVuLYpb7L2W5kON/cesuOA+2uccHjI0ENZN22XewekPnwZjfiIhKsrq18tHa78zvtRL0/Kdhw3+W13d1/dgYIAjHj7Am7237EgB6UJWML7VeeHvXb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IId5QlNo; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709017101; c=relaxed/simple;
+	bh=WtF19yLgcWljmZ+iyA1mPaSgemYf7xN//8nTZWsmsII=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dQ8YAq2wzFZZK0o2XgQb88BMWNlM1DugQa1NGivD91exmyvwTMPjFYWHqwpMH9rNLbngn3tbygtjBM23VZzBYGfwQN6ERQ4VjrXLgcMBtcKbY3FkfVIbZ3rQ5NFnMRLSl63hjV+qZB3kR0hIHC1iOL1KAmyYStM+weFAIQO+tpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LA4AB5KD; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IId5QlNo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709017058; x=1740553058;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YvGZDgLgIVJF+BHE7Jc79utI2MU3LMX2wIjPPgVMfJQ=;
-  b=IId5QlNoPjDwC08tl04I8OwsBq6eAAi1MMgxhjbI8gHKnX2SzIYsHjRl
-   T+TdcGdeY+fwxvH2WbGGwpG6os9xoBSz3vWo5IZECOsFaSgNmz1w1Lu5C
-   bwGiG9YF8eh8oAm+yxFgB3Z7e4CTnihRiv0Xuo7TgBCG5Gt5SVW5IbpUR
-   b/6R7re18BTIz05jKLAhYstpZyWFk+C7ZjWlPI2SBPKq8fiGzINrVKBRu
-   7Eh/rHgs+k4NsssIR/K6cnLxWF0HpdbNit0wBoP467O0KIOq0qPFAeRD+
-   rkhjPCT1CvSdMkLE7TPKq2HQezYp+SWvRDRelEpcW/mYgGlaF9o/ur7P5
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14766526"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="14766526"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 22:57:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="7146296"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa006.fm.intel.com with ESMTP; 26 Feb 2024 22:57:35 -0800
-Message-ID: <07bce1eb-85cb-48be-9e46-8e9d075f9452@linux.intel.com>
-Date: Tue, 27 Feb 2024 14:51:40 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LA4AB5KD"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so595892066b.0;
+        Mon, 26 Feb 2024 22:58:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709017098; x=1709621898; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+6Wuj7eZKvpR0/h7AmWg9U26NtZOIIFRnTuYstw2M8A=;
+        b=LA4AB5KDE4zANvxEIQBcJzeXX5CaaGV4McmZp8a95CJzo+1UPTnOjAuoteqiwzbc+k
+         fQehdntBAv5aIwVKTIQ95X2Ag9QCZpl/C3KB2vg51Yf3I1gbilmZT7co1uZVLuhq8pHN
+         KpoHThYeMtZLeU5Mg4QqTvfcxRj5QGzrzvi8DZY8loA8DabWRVHklgxX5VKqKjqJC0Ol
+         ZHGIzA2IrcOQmAmns8o60TuwD2x7XNqa4BeM9Fx68c/68rV9InIAGiDokV9q5Zr1KTfD
+         q4DboF5iaf3uBlgM5/+alYe8BszrAW/rqwA56czeHrhdYMxhHMQMJgEAmTg0jUoQlZQq
+         zUTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709017098; x=1709621898;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+6Wuj7eZKvpR0/h7AmWg9U26NtZOIIFRnTuYstw2M8A=;
+        b=QQC7HHOTFgYjnpZ12eZgFrKGevicpXKa+Kzm1m3cayE0yApm8f/gnLikk3wYu1Z4Db
+         7uLY1hmYJxXsgpk+HepZu8rsKe54dqhYqlIeVezagGjMPR6O/OoclyWew+4XRduAymGy
+         y7swZHyLsAHBK5WJFXt5vt5af1DmtLWjIDvtZ0f7mKXEjJ+5JV0RrDELy7v4yDKbtuM8
+         +3C4un6WeZhqWi+h9T/+cv172aLjszuam8uogzxOZy06qxb5tEU/JP2aUaQJy0eSMwGn
+         VvGbjQBOoYvyBIyIFOBr07M9gJY3i8Q8YzMYwd7TBSfUoJDkP+jzMEcahxy6kfRU5X1I
+         tDYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAHutBPuki0TRtptzHB5ks28LrxYXKue3WtkDjg3cR3yu1M/VTeR0vMvV6VdThoSJVnqwdajJXAhd+zPQyiLx9A4JIMyHZBPh2X1E9WH0InZjYHMK7Vn5KMgW9wCXU8D06l07cwDN5YQ==
+X-Gm-Message-State: AOJu0YwmLByWHK+jr7aL1j/w9CO9aiNMb7FTd9aaH9GYJgu0RI8h5cF/
+	1LCPg9mT6yYzhXlcx2xVcHBqqa5KTBGDqxD1X8YTtFBTvhwNx6fL
+X-Google-Smtp-Source: AGHT+IGpHfRMSHULnORjFlnpR1xNs3zY8fsQONJ/NXogsHFRrBuYKu2sEJmESEmUMGp1mUYjiifsVQ==
+X-Received: by 2002:a17:907:9813:b0:a43:ab6f:ef6b with SMTP id ji19-20020a170907981300b00a43ab6fef6bmr910378ejc.32.1709017098442;
+        Mon, 26 Feb 2024 22:58:18 -0800 (PST)
+Received: from [192.168.3.110] (IN-84-15-189-254.bitemobile.lt. [84.15.189.254])
+        by smtp.gmail.com with ESMTPSA id pw11-20020a17090720ab00b00a3f963c66a8sm454038ejb.121.2024.02.26.22.58.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Feb 2024 22:58:18 -0800 (PST)
+Message-ID: <3f629079-6809-4cae-bd4d-8b0ee4860196@gmail.com>
+Date: Tue, 27 Feb 2024 08:58:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,30 +61,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH rc] iommu/sva: Fix SVA handle sharing in multi device case
+Subject: Re: [PATCH] gpio: 74x164: Enable output pins after registers are
+ reset
 Content-Language: en-US
-To: Zhangfei Gao <zhangfei.gao@linaro.org>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, jean-philippe <jean-philippe@linaro.org>,
- Jason Gunthorpe <jgg@nvidia.com>, "Zhang, Tina" <tina.zhang@intel.com>,
- kevin.tian@intel.com
-References: <20240227064821.128-1-zhangfei.gao@linaro.org>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240227064821.128-1-zhangfei.gao@linaro.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, u.kleine-koenig@pengutronix.de,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240226134656.608559-1-arturas.moskvinas@gmail.com>
+ <ZdyZnqS_jKelbs6G@smile.fi.intel.com>
+From: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+In-Reply-To: <ZdyZnqS_jKelbs6G@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/27/24 2:48 PM, Zhangfei Gao wrote:
-> iommu_sva_bind_device will directly goto out in multi-device
-> case when found existing domain, ignoring list_add handle,
-> which causes the handle to fail to be shared.
-> 
-> Fixes: 65d4418c5002 ("iommu/sva: Restore SVA handle sharing")
-> Signed-off-by: Zhangfei Gao<zhangfei.gao@linaro.org>
-> Reviewed-by: Jason Gunthorpe<jgg@nvidia.com>
+Hello,
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+On 2/26/24 16:01, Andy Shevchenko wrote:
+> On Mon, Feb 26, 2024 at 03:46:56PM +0200, Arturas Moskvinas wrote:
+>> Move output enabling after chip registers are cleared.
+> Does this fix anything? If so, maybe elaborate a bit the potential behavioural
+> changes on the real lines.
 
-Best regards,
-baolu
+Chip outputs are enabled[1] before actual reset is performed[2] which 
+might cause pin output value to flip flop if previous pin value was set 
+to 1 in chip. Change fixes that behavior by making sure chip is fully 
+reset before all outputs are enabled.
+
+Flip-flop can be noticed when module is removed and inserted again and 
+one of the pins was changed to 1 before removal. 100 microsecond 
+flipping is noticeable on oscilloscope (100khz SPI bus).
+
+For a properly reset chip - output is enabled around 100 microseconds 
+(on 100khz SPI bus) later during probing process hence should be 
+irrelevant behavioral change.
+
+[1] - 
+https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L130
+[2] - 
+https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L150
+
+Arturas Moskvinas
