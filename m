@@ -1,120 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7352149DED
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 14:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F3C1474D7;
+	Tue, 27 Feb 2024 14:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709045875; cv=none; b=tlk9s3XglzEn51C0ikyR03eZF3ikqA08rwHbKgYKrQnRhDp2YpMJhUlcv5T0/eI6yFynph+RgxQ1LEFa7IkAv19AsCErAWwfqY2AUz1h0H9oSmXHcD7lSCy8PjN6TL3IEa7GmXXl8TtYsPT4bsjZV6bmgqQ/D0UTfHzFeV4O5MY=
+	t=1709045885; cv=none; b=A+b9eM5dGPaX4/p4hT0zaOnLrDiw1b1SQvK1DGGLw1cmA6Edx8pjtnRgzWxs/c2oygudTiF2YyUo5U2uaVMLK8HPZRwO5j/cXjDTcQ0wBWc1WQz8qfsBnJjj9329dg/J8F3tANBaxuqZt/jUB1zRdAYdylLIOwAhW68nAn6TRA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709045875; c=relaxed/simple;
-	bh=ZiS0Y8N/JNHPCRbZw5+rrcFF3RECZft2ksh+TkOABqw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qu2jYg2KM3+NtiqVOqI3QuLSN+Zdqrhl8butTkAgsLXQNdVlmGFzXNYmU+lkE74df3s3VQROsrjJOWECPdua+7l61WMj8YO2pjKGAl+Il0ipmX8QODJD3DQxVZQ8jw/Tqly3B6vEie/s/OMALIXQecaamN2RGrudqYQ9BhOVkFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UUs9dr7x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709045885; c=relaxed/simple;
+	bh=y1Ygv47ECIb/VfxJUSJLmULU1TrWL/0eo2q14QVsgbw=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=qSdtThfUbQh13PrQ/90MOrUmmCBjXsKP4n6CrB35ggrelsia4f3Ql8EwI71vZdfMtq2Z0zcdSjIQmu3+4WcpdaHzjhddRWx4n0oEx5zjo82ittEPY+hWuab4I3oCNo7aSPyA8TKJ0OzAQ2MvnITWaSmeMYrMDGMaIiI62hMBWhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=DoNs7ATA; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UUs9dr7x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B60C433F1
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 14:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709045875;
-	bh=ZiS0Y8N/JNHPCRbZw5+rrcFF3RECZft2ksh+TkOABqw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UUs9dr7x5w4S2+mheN0Uu/lGmDjtCEatSMfcKIYJMY7q3NtxfskvrvnzuviFWkxBc
-	 8yTOGeZ/AmMBjhvNLSZsGcFcC+VaMTSJ/7P4qidUBIOymRdvngM5HJ2NLFg+Sqv9/8
-	 0JbmSDJ7ET5LIYXTRExJh2ZJwnjA+gkgQSDRkxtOFLY/IixIg2E0/Wsn9bgyvz9h4B
-	 tkdu2jl3+iFHPQ5MPXmP3NHXxkYYPXsc/suk/hPUYGMYROub4hBnu+aLVqlBGcqynY
-	 Fe0vrbhOpOMsY1z176OekD9vujRn7+tUjoGosn8iOn/ulIe7B1VM2hlTaL2eOyKEPJ
-	 qAZo3bSE4hH6w==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-512b29f82d1so5948880e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 06:57:55 -0800 (PST)
-X-Gm-Message-State: AOJu0YwT2/1lnm75XRfhIZMekcnc/ZmGOhnezYfImD7kQHk4Ke0hbGHB
-	IF/gyioVN1aWUHktK8lh1tJdjYJMde7w0UDg+vK18rJOHgSxQ1cjeoSJEDCQusS3pCqfuu5pp4h
-	LByFny2nknlVkamGOXgP3EbuUqGg=
-X-Google-Smtp-Source: AGHT+IEBtZiOSKHjneY8t6UpoP/k94IlS+DjNiD4lxwXJGkkHU9IyTuJ8HDry0UCvIzjL0tqyNF0k6mfGwDK8K0JmV4=
-X-Received: by 2002:ac2:4833:0:b0:512:ccd2:5cb0 with SMTP id
- 19-20020ac24833000000b00512ccd25cb0mr6502413lft.29.1709045873616; Tue, 27 Feb
- 2024 06:57:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="DoNs7ATA"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240226220544.70769-1-brgerst@gmail.com>
-In-Reply-To: <20240226220544.70769-1-brgerst@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 27 Feb 2024 15:57:42 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXEphGynUGVhsv3f3kk7qveg5LpVSguVRG7ntTDukk48Ng@mail.gmail.com>
-Message-ID: <CAMj1kXEphGynUGVhsv3f3kk7qveg5LpVSguVRG7ntTDukk48Ng@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/boot/64: Load kernel GDT in early boot
-To: Brian Gerst <brgerst@gmail.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1709045880;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JTZuVi0d9uvRZL4My10OcZy9FBePsZQVwsZhJKzdOL4=;
+	b=DoNs7ATAI7kNuKmqWQm1bN1fJwd8ZKY0K+/yD1DzuW7xgfvgw085ZOa2rLbXEDfuKVk5eg
+	srCPtSdxKNKeetNpEEgERqTKNRJhl01qdjIWrF6mqwLnL911EQzC9pOB2B0RB+RhwGfI+V
+	aClodNXyGmn3uX4EbE1IaAdiJWLtv8l0sFoBva7b/FMoo/kEbvZNDXIKly3UXMPftKJCA3
+	LiOFFyDaOYXrbbcvBKBC+Ea9cL63jHxLMlniykE9TxQWcgADEZg2IPCCc77GRE4P5HcYUN
+	aq/ErBLdPaNAPly9K2A59/SrjU2IsgIiVHHqLGWNkvBc9IzHVL0bVtOb9MVyuA==
+Date: Tue, 27 Feb 2024 15:58:00 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: dts: rockchip: Add cache information to the
+ Rockchip RK3566 and RK3568 SoC
+In-Reply-To: <CANAwSgQnoBx+th6s254sML+Zw+RZQC6WU9TjfMoWgHxmCqbDcw@mail.gmail.com>
+References: <20240226182310.4032-1-linux.amoon@gmail.com>
+ <8ceea100f2ef7cce296943ce1397161a@manjaro.org>
+ <CANAwSgQnoBx+th6s254sML+Zw+RZQC6WU9TjfMoWgHxmCqbDcw@mail.gmail.com>
+Message-ID: <4676da62ec0fc0fe89318baea0678e0c@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Mon, 26 Feb 2024 at 23:05, Brian Gerst <brgerst@gmail.com> wrote:
->
-> Instead of loading a duplicate GDT just for early boot, load the kernel
-> GDT from its physical address.
->
-> Signed-off-by: Brian Gerst <brgerst@gmail.com>
-> ---
-> v2: Updated to latest tip tree
->
+On 2024-02-27 13:49, Anand Moon wrote:
+> On Tue, 27 Feb 2024 at 00:39, Dragan Simic <dsimic@manjaro.org> wrote:
+>> On 2024-02-26 19:23, Anand Moon wrote:
+>> > As per RK3568 Datasheet and TRM add missing cache information to
+>> > the Rockchip RK3566 and RK3568 SoC.
+>> >
+>> > - Each Cortex-A55 core has 32KB of L1 instruction cache available and
+>> >       32KB of L1 data cache available with ECC.
+>> > - Along with 512KB Unified L3 cache with ECC.
+>> >
+>> > With adding instruction cache and data cache and a write buffer to
+>> > reduce the effect of main memory bandwidth and latency on data
+>> > access performance.
+>> >
+>> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>> 
+>> I was about to send my own patch that adds the same missing cache
+>> information, so please allow me to describe the proposed way to move
+>> forward.
+>> 
+>> The way I see it, your commit summary and description need a rather
+>> complete rewrite, to be more readable, more accurate, and to avoid
+>> including an irrelevant (and slightly misleading) description of the
+>> general role of caches.
+>> 
+>> Also, the changes to the dtsi file would benefit from small touch-ups
+>> here and there, for improved consistency, etc.
+>> 
+>> With all that in mind, I propose that you withdraw your patch and let
+>> me send my patch that will addresses all these issues, of course with
+>> a proper tag that lists you as a co-developer.  I think that would
+>> save us a fair amount of time going back and forth.
+>> 
+>> I hope you agree.
+> 
+> I have no issue with this,.If you have a better version plz share this.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-
->  arch/x86/include/asm/desc.h |  1 +
->  arch/x86/kernel/head64.c    | 13 ++-----------
->  2 files changed, 3 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
-> index ec95fe44fa3a..62dc9f59ea76 100644
-> --- a/arch/x86/include/asm/desc.h
-> +++ b/arch/x86/include/asm/desc.h
-> @@ -46,6 +46,7 @@ struct gdt_page {
->  } __attribute__((aligned(PAGE_SIZE)));
->
->  DECLARE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page);
-> +DECLARE_INIT_PER_CPU(gdt_page);
->
->  /* Provide the original GDT */
->  static inline struct desc_struct *get_cpu_gdt_rw(unsigned int cpu)
-> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-> index 72351c3121a6..fd77a266f29d 100644
-> --- a/arch/x86/kernel/head64.c
-> +++ b/arch/x86/kernel/head64.c
-> @@ -68,15 +68,6 @@ unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
->  EXPORT_SYMBOL(vmemmap_base);
->  #endif
->
-> -/*
-> - * GDT used on the boot CPU before switching to virtual addresses.
-> - */
-> -static struct desc_struct startup_gdt[GDT_ENTRIES] __initdata = {
-> -       [GDT_ENTRY_KERNEL32_CS]         = GDT_ENTRY_INIT(DESC_CODE32, 0, 0xfffff),
-> -       [GDT_ENTRY_KERNEL_CS]           = GDT_ENTRY_INIT(DESC_CODE64, 0, 0xfffff),
-> -       [GDT_ENTRY_KERNEL_DS]           = GDT_ENTRY_INIT(DESC_DATA64, 0, 0xfffff),
-> -};
-> -
->  #ifdef CONFIG_X86_5LEVEL
->  static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
->  {
-> @@ -589,8 +580,8 @@ void __head startup_64_setup_gdt_idt(void)
->         void *handler = NULL;
->
->         struct desc_ptr startup_gdt_descr = {
-> -               .address = (unsigned long)&RIP_REL_REF(startup_gdt),
-> -               .size    = sizeof(startup_gdt) - 1,
-> +               .address = (unsigned long)&RIP_REL_REF(init_per_cpu_var(gdt_page.gdt)),
-> +               .size    = GDT_SIZE - 1,
->         };
->
->         /* Load GDT */
->
-> base-commit: afb9cce6ad6e808cf659f43925941be96f61b9c9
-> --
-> 2.43.2
->
+Thank you, I'll send my patch within the next couple of days.
