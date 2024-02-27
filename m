@@ -1,55 +1,57 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF2013A89E
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF47145B1D
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709047905; cv=none; b=oZ4vEkfYOQXe0F7AFPf2ghZGkB6+QjpsnEz+T2OQ16WxERnT0aWI1324Qyg6L6yBmM6h8uAz1Qn0T623YZwvwDxeGAEiYUXqQEmIMn2A0kIcKXo8Kbc2xXef8jz6olzSFVXpj0S6+/sDCs+YKaO8lIJPgV5FXh36/N0QqDOy8hw=
+	t=1709047908; cv=none; b=Xs7h+KZtruHnBkxspM1oAs7QNhBGtrEn9uUjcSGUQ0VMo5V82zFVpFIp+HDD8XpXH4rCHXHn0+0iqFKHbcKR9TdpTr8EHI/3Yonb1cCt5wbx05y/ngLgsnwVMnLOsSEUZXyF5JVtw3M4kKJLGSkzZ9fhL3c8Ga86lSdisQTm/pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709047905; c=relaxed/simple;
-	bh=v6yybQAjFJ2C3zsbW/Boip9BqVfFpCyinrgWkMgqJaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cmJ5LqBbMqp9poXsZSykfa21N+4QjicP8YI5YY2hzGjREt2sdm+pZPYECiJvplZXJBBouHnUQYaVsXzhzwZtf6/lBORhiXETVmI7sNXIC3J546zXuI8Jo4pfXy0IUZ58fQz5XFjGNTg4cP6PXypOJFnR0ia1Ty9szBQvp8+QJq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YKUVIYfB; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1709047908; c=relaxed/simple;
+	bh=1dJ5KMO115zjWy3uSjyJd8Z3pSKqxO7u/Ndcu01pUro=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gvOxWxcnjrat1hxqfyj8+mgSq6MSM+h66wuIzTkizkzMsqBkoUMPBT32Sns2HS/ILESRyqx0nEwdYr4ZidGl9CXQ3VgAf2mKne1aeDoPlwoixmL5x6+QGgArN24steU/wZgLxIQiJtOuFozNWvWXf6sKSqwTqGE1dT1xUDtYTck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uBLgjC1d; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YKUVIYfB"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-512ed314881so4534710e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 07:31:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uBLgjC1d"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51316d6e026so196380e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 07:31:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709047901; x=1709652701; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/QqPwg+3i18/ioCqaGI7I8uzwIulXGfxqfDO8uVoxw8=;
-        b=YKUVIYfBSVeAGdMInBjkz/newNIRmogr0RtEo+tHNdHbuak2PlXf2BZO3CQ5dQ+hS/
-         fbkRkVdVK0vv7NjUAPlFtMU0+z74PtqSrHahSFtwwJ6kUe0qCDTcmFLriAAURkcp7lXO
-         jeDIghntJVuOANQT9ESrdJzhIxybTjhLc5MKAP/icu5ZZuV0jXCcqUMVA2I7y26KKQrV
-         Ky4WQjBiIcoiwZw+hZFFgHn6sHXZVM1nYIalf1L8F0Ozg7wCd1R+Ds8J3dHwB4IAtJLk
-         oR691TfiKAvQlaxvO7Vq3y4AXEHyoAfKCFaLxG+FIxc+ztpHSy6FMuwT0GPg/VPTD5rn
-         c8kA==
+        d=linaro.org; s=google; t=1709047905; x=1709652705; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wv9SZmk5WjM4EeRmP21EiIvOKib0FvHdz7yfzOH1038=;
+        b=uBLgjC1dF9G+iWKmNFJRKgz8tVPRZNOE2nbgWSvYxIJDYJCFDSCGnRAChykoCIzlQ1
+         mG5hfbMRyfLH48U0CR160y1+koqFMSvUSiHpFVE/DG/zwn78MW8dwH63UdyC+fYL+WBU
+         HDSizMkDTblfxbOkR73mLUI0OM79jlnbJHx2q7k08RPVanH+2PNnRyDf1FHXZ87rtCgq
+         MiiMMDzZ2cd4JNb7fdszL57pWZs1BdbUO+oW6OvTDZbuQ1xZhVX+ouS9JXOwKJ06746g
+         EsmXaGZozePHIcmDFmfUgEB6ak9cOG+WefcvCEPWHg/clzXzpCLCY011iDz/A5btbN1O
+         fbFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709047901; x=1709652701;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/QqPwg+3i18/ioCqaGI7I8uzwIulXGfxqfDO8uVoxw8=;
-        b=Cwx+rbhJL8w6RG3xOYuZ/n22ldQZLwp90rJIQTcq+mM461x1E4jnOuOl5QKuTAzYBU
-         1fLd82q3SIRhxqtuq5mWex4HZFiylDh7Az5Xm9xn3K2bUu8o4yRNbVFr6gkTHrGhNl1q
-         2PuZkkKzq5xRwy/VcpiFCoi8FMzzhwVQd7FG8LwtRFPTMGl01ka9fTOt0q150jxOrt5L
-         tmvPf3vpUgYI6Q1ry0FBiVqoUvbjg9FtkAvEn/cObu3CirPD7YaTYqJipX2EECdTbspE
-         agyUmuPn7WxjJahpaPb87S5kEe4iEoTIOCyxkxRVmb2v9wIEUluFeSPjEdjNnkVQydaM
-         Lffg==
-X-Gm-Message-State: AOJu0YxBxcMjZl5VqU0A+vms9N4+DF843sCivZ6MUhMjUYsQQgpf/MZF
-	y5wWtN/+tvH8tZ7S/Krw2BA4vHFv1gOMehWuv87c6ZVrYXHY1XAvfKG06fTKPjqq5SlSSs8OUE2
-	+
-X-Google-Smtp-Source: AGHT+IEDSSiCUlmzoKgRQY8s7Pefw6eYs9eb8X4BYTdKNJWvCvgFckZVp7kIYiwX3e9kXw9nvzmzlA==
-X-Received: by 2002:a05:6512:33cd:b0:512:f650:d968 with SMTP id d13-20020a05651233cd00b00512f650d968mr5995411lfg.42.1709047901175;
-        Tue, 27 Feb 2024 07:31:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709047905; x=1709652705;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wv9SZmk5WjM4EeRmP21EiIvOKib0FvHdz7yfzOH1038=;
+        b=ZKMD6K0n1QrpwrToVdA7kh4UwMkmNUaY7G4mHD8rBkwOr4YturSX9R47B+fIzV4Vxd
+         rjs7S+sWi3+jKk9K711OKE+WDIC3Th4YL1961TVpi/LvroTxfCz22LjwHbX4K8uAzraV
+         wVdf7uT7KQ2zQ5c4rm0Raul3WNsfNBYJZDhXHyiheAPHcC0eNURdtyFy5ZYxGOP1zyop
+         4fmesFvzF8DZAsVcb/uVOlvRyTn6tjkujwWZHy5Bs4BXOnCk9D0V6U1/HgdXYLJavUw6
+         8QLzrxXWtddRPd5ikNN6l9Npt0GJEttXNCK5J3NExpShDnl7UDT/zkU5DAPQPPU7T/QR
+         ZOlA==
+X-Gm-Message-State: AOJu0YzzrNOKSNXtq9PlflHBUTnG966sEGXR+21tRghqpamBZNaw20Pj
+	95p8LM151uIofMmY1mHKAuyaVDbja48d6/RZVZwf6Gpb+g0rihspf/B872Nm2tIigrrT5fstNZT
+	Z
+X-Google-Smtp-Source: AGHT+IHNwUqs1cPWaVopSE/f1g19skmrCJLZSyaU451AlUG/Tqwe5uQsCczyUlFRws1vB4qwF9Mj1A==
+X-Received: by 2002:a05:6512:2820:b0:512:ba41:51f with SMTP id cf32-20020a056512282000b00512ba41051fmr7593969lfb.50.1709047904687;
+        Tue, 27 Feb 2024 07:31:44 -0800 (PST)
 Received: from localhost.localdomain (h-217-31-164-171.A175.priv.bahnhof.se. [217.31.164.171])
-        by smtp.gmail.com with ESMTPSA id h18-20020a19ca52000000b00513003b8ebesm586969lfj.135.2024.02.27.07.31.39
+        by smtp.gmail.com with ESMTPSA id h18-20020a19ca52000000b00513003b8ebesm586969lfj.135.2024.02.27.07.31.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 07:31:40 -0800 (PST)
+        Tue, 27 Feb 2024 07:31:44 -0800 (PST)
 From: Jens Wiklander <jens.wiklander@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	linux-mmc@vger.kernel.org,
@@ -64,122 +66,266 @@ Cc: Shyam Saini <shyamsaini@linux.microsoft.com>,
 	Ard Biesheuvel <ardb@kernel.org>,
 	Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v3 0/3] Replay Protected Memory Block (RPMB) subsystem
-Date: Tue, 27 Feb 2024 16:31:29 +0100
-Message-Id: <20240227153132.2611499-1-jens.wiklander@linaro.org>
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Tomas Winkler <tomas.winkler@intel.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>
+Subject: [PATCH v3 2/3] mmc: block: register RPMB partition with the RPMB subsystem
+Date: Tue, 27 Feb 2024 16:31:31 +0100
+Message-Id: <20240227153132.2611499-3-jens.wiklander@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240227153132.2611499-1-jens.wiklander@linaro.org>
+References: <20240227153132.2611499-1-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Register eMMC RPMB partition with the RPMB subsystem and provide
+an implementation for the RPMB access operations abstracting
+the actual multi step process.
 
-This patch set introduces a new RPMB subsystem, based on patches from [1],
-[2], and [3]. The RPMB subsystem aims at providing access to RPMB
-partitions to other kernel drivers, in particular the OP-TEE driver. A new
-user space ABI isn't needed, we can instead continue using the already
-present ABI when writing the RPMB key during production.
+Add a callback to extract the needed device information at registration
+to avoid accessing the struct mmc_card at a later stage as we're not
+holding a reference counter for this struct.
 
-I've added and removed things to keep only what is needed by the OP-TEE
-driver. Since the posting of [3], there has been major changes in the MMC
-subsystem so "mmc: block: register RPMB partition with the RPMB subsystem"
-is in practice completely rewritten.
+Taking the needed reference to md->disk in mmc_blk_alloc_rpmb_part()
+instead of in mmc_rpmb_chrdev_open(). This is needed by the
+route_frames() function pointer in struct rpmb_ops.
 
-With this OP-TEE can access RPMB during early boot instead of having to
-wait for user space to become available as in the current design [4].
-This will benefit the efi variables [5] since we wont rely on userspace as
-well as some TPM issues [6] that were solved.
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+---
+ drivers/mmc/core/block.c | 153 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 151 insertions(+), 2 deletions(-)
 
-The OP-TEE driver finds the correct RPMB device to interact with by
-iterating over available devices until one is found with a programmed
-authentication matching the one OP-TEE is using. This enables coexisting
-users of other RPMBs since the owner can be determined by who knows the
-authentication key.
-
-I've put myself as a maintainer for the RPMB subsystem as I have an
-interest in the OP-TEE driver to keep this in good shape. However, if you'd
-rather see someone else taking the maintainership that's fine too. I'll
-help keep the subsystem updated regardless.
-
-[1] https://lore.kernel.org/lkml/20230722014037.42647-1-shyamsaini@linux.microsoft.com/
-[2] https://lore.kernel.org/lkml/20220405093759.1126835-2-alex.bennee@linaro.org/
-[3] https://lore.kernel.org/linux-mmc/1478548394-8184-2-git-send-email-tomas.winkler@intel.com/
-[4] https://optee.readthedocs.io/en/latest/architecture/secure_storage.html#rpmb-secure-storage
-[5] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c44b6be62e8dd4ee0a308c36a70620613e6fc55f
-[6] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7269cba53d906cf257c139d3b3a53ad272176bca
-
-Thanks,
-Jens
-
-Changes since v2:
-* "rpmb: add Replay Protected Memory Block (RPMB) subsystem"
-  - Fixing documentation issues
-  - Adding a "depends on MMC" in the Kconfig
-  - Removed the class-device and the embedded device, struct rpmb_dev now
-    relies on the parent device for reference counting as requested
-  - Removed the now unneeded rpmb_ops get_resources() and put_resources()
-    since references are already taken in mmc_blk_alloc_rpmb_part() before
-    rpmb_dev_register() is called
-  - Added rpmb_interface_{,un}register() now that
-    class_interface_{,un}register() can't be used ay longer
-* "mmc: block: register RPMB partition with the RPMB subsystem"
-  - Adding the missing error cleanup in alloc_idata()
-  - Taking the needed reference to md->disk in mmc_blk_alloc_rpmb_part()
-    instead of in mmc_rpmb_chrdev_open() and rpmb_op_mmc_get_resources()
-* "optee: probe RPMB device using RPMB subsystem"
-  - Registering to get a notification when an RPMB device comes online
-  - Probes for RPMB devices each time an RPMB device comes online, until
-    a usable device is found
-  - When a usable RPMB device is found, call
-    optee_enumerate_devices(PTA_CMD_GET_DEVICES_RPMB)
-  - Pass type of rpmb in return value from OPTEE_RPC_CMD_RPMB_PROBE_NEXT
-
-Changes since Shyam's RFC:
-* Removed the remaining leftover rpmb_cdev_*() function calls
-* Refactored the struct rpmb_ops with all the previous ops replaced, in
-  some sense closer to [3] with the route_frames() op
-* Added rpmb_route_frames()
-* Added struct rpmb_frame, enum rpmb_op_result, and enum rpmb_type from [3]
-* Removed all functions not needed in the OP-TEE use case
-* Added "mmc: block: register RPMB partition with the RPMB subsystem", based
-  on the commit with the same name in [3]
-* Added "optee: probe RPMB device using RPMB subsystem" for integration
-  with OP-TEE
-* Moved the RPMB driver into drivers/misc/rpmb-core.c
-* Added my name to MODULE_AUTHOR() in rpmb-core.c
-* Added an rpmb_mutex to serialize access to the IDA
-* Removed the target parameter from all rpmb_*() functions since it's
-  currently unused
-
-Jens Wiklander (3):
-  rpmb: add Replay Protected Memory Block (RPMB) subsystem
-  mmc: block: register RPMB partition with the RPMB subsystem
-  optee: probe RPMB device using RPMB subsystem
-
- MAINTAINERS                       |   7 +
- drivers/misc/Kconfig              |  10 ++
- drivers/misc/Makefile             |   1 +
- drivers/misc/rpmb-core.c          | 258 ++++++++++++++++++++++++++++++
- drivers/mmc/core/block.c          | 153 +++++++++++++++++-
- drivers/tee/optee/core.c          |  55 +++++++
- drivers/tee/optee/ffa_abi.c       |   7 +
- drivers/tee/optee/optee_private.h |  16 ++
- drivers/tee/optee/optee_rpc_cmd.h |  35 ++++
- drivers/tee/optee/rpc.c           | 233 +++++++++++++++++++++++++++
- drivers/tee/optee/smc_abi.c       |   6 +
- include/linux/rpmb.h              | 195 ++++++++++++++++++++++
- 12 files changed, 974 insertions(+), 2 deletions(-)
- create mode 100644 drivers/misc/rpmb-core.c
- create mode 100644 include/linux/rpmb.h
-
-
-base-commit: 41bccc98fb7931d63d03f326a746ac4d429c1dd3
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 32d49100dff5..f35c99638eb2 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -33,6 +33,7 @@
+ #include <linux/cdev.h>
+ #include <linux/mutex.h>
+ #include <linux/scatterlist.h>
++#include <linux/string.h>
+ #include <linux/string_helpers.h>
+ #include <linux/delay.h>
+ #include <linux/capability.h>
+@@ -40,6 +41,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/idr.h>
+ #include <linux/debugfs.h>
++#include <linux/rpmb.h>
+ 
+ #include <linux/mmc/ioctl.h>
+ #include <linux/mmc/card.h>
+@@ -163,6 +165,7 @@ struct mmc_rpmb_data {
+ 	int id;
+ 	unsigned int part_index;
+ 	struct mmc_blk_data *md;
++	struct rpmb_dev *rdev;
+ 	struct list_head node;
+ };
+ 
+@@ -2672,7 +2675,6 @@ static int mmc_rpmb_chrdev_open(struct inode *inode, struct file *filp)
+ 
+ 	get_device(&rpmb->dev);
+ 	filp->private_data = rpmb;
+-	mmc_blk_get(rpmb->md->disk);
+ 
+ 	return nonseekable_open(inode, filp);
+ }
+@@ -2682,7 +2684,6 @@ static int mmc_rpmb_chrdev_release(struct inode *inode, struct file *filp)
+ 	struct mmc_rpmb_data *rpmb = container_of(inode->i_cdev,
+ 						  struct mmc_rpmb_data, chrdev);
+ 
+-	mmc_blk_put(rpmb->md);
+ 	put_device(&rpmb->dev);
+ 
+ 	return 0;
+@@ -2703,10 +2704,147 @@ static void mmc_blk_rpmb_device_release(struct device *dev)
+ {
+ 	struct mmc_rpmb_data *rpmb = dev_get_drvdata(dev);
+ 
++	rpmb_dev_unregister(rpmb->rdev);
++	mmc_blk_put(rpmb->md);
+ 	ida_simple_remove(&mmc_rpmb_ida, rpmb->id);
+ 	kfree(rpmb);
+ }
+ 
++static void free_idata(struct mmc_blk_ioc_data **idata, unsigned int cmd_count)
++{
++	unsigned int n;
++
++	for (n = 0; n < cmd_count; n++)
++		kfree(idata[n]);
++	kfree(idata);
++}
++
++static struct mmc_blk_ioc_data **alloc_idata(struct mmc_rpmb_data *rpmb,
++					     unsigned int cmd_count)
++{
++	struct mmc_blk_ioc_data **idata;
++	unsigned int n;
++
++	idata = kcalloc(cmd_count, sizeof(*idata), GFP_KERNEL);
++	if (!idata)
++		return NULL;
++
++	for (n = 0; n < cmd_count; n++) {
++		idata[n] = kcalloc(1, sizeof(**idata), GFP_KERNEL);
++		if (!idata[n]) {
++			free_idata(idata, n);
++			return NULL;
++		}
++		idata[n]->rpmb = rpmb;
++	}
++
++	return idata;
++}
++
++static void set_idata(struct mmc_blk_ioc_data *idata, u32 opcode,
++		      int write_flag, u8 *buf, unsigned int buf_bytes)
++{
++	idata->ic.opcode = opcode;
++	idata->ic.flags = MMC_RSP_R1 | MMC_CMD_ADTC;
++	idata->ic.write_flag = write_flag;
++	idata->ic.blksz = sizeof(struct rpmb_frame);
++	idata->ic.blocks = buf_bytes /  idata->ic.blksz;
++	idata->buf = buf;
++	idata->buf_bytes = buf_bytes;
++}
++
++static int rpmb_op_mmc_route_frames(struct device *dev, bool write, u8 *req,
++				    unsigned int req_len, u8 *resp,
++				    unsigned int resp_len)
++{
++	struct mmc_rpmb_data *rpmb = dev_get_drvdata(dev);
++	struct mmc_blk_data *md = rpmb->md;
++	struct mmc_blk_ioc_data **idata;
++	unsigned int cmd_count;
++	struct request *rq;
++	int ret;
++
++	if (write)
++		cmd_count = 3;
++	else
++		cmd_count = 2;
++
++	if (IS_ERR(md->queue.card))
++		return PTR_ERR(md->queue.card);
++
++	idata = alloc_idata(rpmb, cmd_count);
++	if (!idata)
++		return -ENOMEM;
++
++	if (write) {
++		struct rpmb_frame *frm = (struct rpmb_frame *)resp;
++
++		/* Send write request frame(s) */
++		set_idata(idata[0], MMC_WRITE_MULTIPLE_BLOCK,
++			  1 | MMC_CMD23_ARG_REL_WR, req, req_len);
++
++		/* Send result request frame */
++		memset(frm, 0, sizeof(*frm));
++		frm->req_resp = cpu_to_be16(RPMB_RESULT_READ);
++		set_idata(idata[1], MMC_WRITE_MULTIPLE_BLOCK, 1, resp,
++			  resp_len);
++
++		/* Read response frame */
++		set_idata(idata[2], MMC_READ_MULTIPLE_BLOCK, 0, resp, resp_len);
++	} else {
++		/* Send write request frame(s) */
++		set_idata(idata[0], MMC_WRITE_MULTIPLE_BLOCK, 1, req, req_len);
++
++		/* Read response frame */
++		set_idata(idata[1], MMC_READ_MULTIPLE_BLOCK, 0, resp, resp_len);
++	}
++
++	rq = blk_mq_alloc_request(md->queue.queue, REQ_OP_DRV_OUT, 0);
++	if (IS_ERR(rq)) {
++		ret = PTR_ERR(rq);
++		goto out;
++	}
++
++	req_to_mmc_queue_req(rq)->drv_op = MMC_DRV_OP_IOCTL_RPMB;
++	req_to_mmc_queue_req(rq)->drv_op_result = -EIO;
++	req_to_mmc_queue_req(rq)->drv_op_data = idata;
++	req_to_mmc_queue_req(rq)->ioc_count = cmd_count;
++	blk_execute_rq(rq, false);
++	ret = req_to_mmc_queue_req(rq)->drv_op_result;
++
++	blk_mq_free_request(rq);
++
++out:
++	free_idata(idata, cmd_count);
++	return ret;
++}
++
++static int rpmb_op_mmc_set_dev_info(struct device *dev, struct rpmb_dev *rdev)
++{
++	struct mmc_rpmb_data *rpmb = dev_get_drvdata(dev);
++	struct mmc_card *card = rpmb->md->queue.card;
++	unsigned int n;
++	u32 cid[4];
++
++	for (n = 0; n < 4; n++)
++		cid[n] = be32_to_cpu(card->raw_cid[n]);
++
++	rdev->dev_id = kmemdup(cid, sizeof(cid), GFP_KERNEL);
++	if (!rdev->dev_id)
++		return -ENOMEM;
++	rdev->dev_id_len = sizeof(cid);
++	rdev->reliable_wr_count = card->ext_csd.raw_rpmb_size_mult;
++	rdev->capacity = card->ext_csd.rel_sectors;
++
++	return 0;
++}
++
++static struct rpmb_ops rpmb_mmc_ops = {
++	.type = RPMB_TYPE_EMMC,
++	.route_frames = rpmb_op_mmc_route_frames,
++	.set_dev_info = rpmb_op_mmc_set_dev_info,
++};
++
+ static int mmc_blk_alloc_rpmb_part(struct mmc_card *card,
+ 				   struct mmc_blk_data *md,
+ 				   unsigned int part_index,
+@@ -2741,6 +2879,7 @@ static int mmc_blk_alloc_rpmb_part(struct mmc_card *card,
+ 	rpmb->dev.release = mmc_blk_rpmb_device_release;
+ 	device_initialize(&rpmb->dev);
+ 	dev_set_drvdata(&rpmb->dev, rpmb);
++	mmc_blk_get(md->disk);
+ 	rpmb->md = md;
+ 
+ 	cdev_init(&rpmb->chrdev, &mmc_rpmb_fileops);
+@@ -2751,6 +2890,14 @@ static int mmc_blk_alloc_rpmb_part(struct mmc_card *card,
+ 		goto out_put_device;
+ 	}
+ 
++	rpmb->rdev = rpmb_dev_register(&rpmb->dev, &rpmb_mmc_ops);
++	if (IS_ERR(rpmb->rdev)) {
++		pr_err("%s: could not register RPMB device\n", rpmb_name);
++		ret = PTR_ERR(rpmb->rdev);
++		rpmb->rdev = NULL;
++		goto out_cdev_device_del;
++	}
++
+ 	list_add(&rpmb->node, &md->rpmbs);
+ 
+ 	string_get_size((u64)size, 512, STRING_UNITS_2,
+@@ -2762,6 +2909,8 @@ static int mmc_blk_alloc_rpmb_part(struct mmc_card *card,
+ 
+ 	return 0;
+ 
++out_cdev_device_del:
++	cdev_device_del(&rpmb->chrdev, &rpmb->dev);
+ out_put_device:
+ 	put_device(&rpmb->dev);
+ 	return ret;
 -- 
 2.34.1
 
