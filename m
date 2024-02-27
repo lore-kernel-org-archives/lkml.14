@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E4514F993
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 18:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5284314F9D5
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 18:17:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709057829; cv=none; b=jgQs78L+9Gn+wQPUnZIKLT2l1PIWxCnZwYRnV6NfTjxVZ+Up8RuTwFt5NYPNlEkRtor+ZHyitarLI7n5VIRnTSketXVNrje2tIbeS6bxzeavuhLnRZ/e0N2zlNoNgL/hzbibY+N2pwgsrTr3YzdPtKYiR4zPd/7aNA19q0TUll0=
+	t=1709057829; cv=none; b=cILM9sj3t086uY10x97mIKbQ5IUexS1MwpNauiY4sll8ObHJoynLJ+EiZGPSMQjStkSeH1s8KXMmlIqCX2Tulz8UKttKz2bxPwbnO1EMu4Bfpet75UegoYvIkjVnhsTj2amKGnnZOLeEXgaPu8x2vg1vlORJz5rX5vKwRD4nPkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709057829; c=relaxed/simple;
-	bh=ELiZbW2ZqeUSKS5G3i8R2dwq9KKRIDZ8Css9qS0iE1E=;
+	bh=5rPhka26cuxx92EnGqjwsdfPdCSUmQ6iGaqaueVO7cw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S07m6mdiqORodzeV3D5hATJQl4t9Zj5Gj8DGHHNJiBVWEImoe7B3FpKJt7MX8qKc9204oB4fxumMQJv0h7YlklEC7cjwLRLcIaGCAXrjc18osTIOMPkXGjTvFc/1/5jkyAqi/AX0bTEs+7DHZxJl8bLBPG0psDivPEweJSgnSlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RsGdbVSz; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=uYi3YwfO8u3NkxKcrdbje1zAhp+uNF+6ZVzcQc5DT06IXczO3Gq9MkI2htQz1aKJin/TGpxOinc8eiGjUnNx1OR1Gf6R2Jac9qLn8E/pwZgDto6bM60zZqUASC2DbrRieCVjsJwt+Q9iMGBO8I+G9UUMU3Ki76yZSDcvo5iyvm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BYL0uyvc; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RsGdbVSz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BYL0uyvc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709057826; x=1740593826;
+  t=1709057827; x=1740593827;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ELiZbW2ZqeUSKS5G3i8R2dwq9KKRIDZ8Css9qS0iE1E=;
-  b=RsGdbVSzen+KIogIp0VL72owEBwLAmr+wpLxKon0ux8+uLIap9p7MRdW
-   vy9Md97XE7BJiil+QaqjIDkhxTL5hCcyJNzZPJVfvjbPew0RwhqKOhpz5
-   6lKxmv4OzESBsduVYB8D3LTJhjJ1Ras6AcuHoDpNdMb940CyUqUACyaEZ
-   ei8VG1M33+5i1BvZz8nx/uOI5uFx0VSoq2itGMHBGAlLLLGU0CO9fYcys
-   /Q2C+P9VcJw635YuYOUe8o/oNy05WbemRaO1e1d+Rw4gnoLjBMLhXVmVt
-   E+TMRA/p6avMOog6ebahWdQy91pO6Y6bMw0vBjiIx38JJIsHgAKEPnH5a
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="20966179"
+  bh=5rPhka26cuxx92EnGqjwsdfPdCSUmQ6iGaqaueVO7cw=;
+  b=BYL0uyvc/9mXOvamAqc1FHulzt5dYVYw7zVXJGhzf08yt5GlJ82tSJt5
+   psgx9+DdN620mtEOrTqxsN7IQ4kvYZO6rqEewsFB1HjA//ZpsNhRaVy8J
+   6eN+1qzLoRW0IyISIW2H3oDRPipO7hklW9hmylHeEmJX9CGLSDt6Fpfyc
+   o926osupYDojPffUzvRbPtNuZRxH68zf1T3dHrvgkLSXxtcjeSkE8m+U0
+   uxOPaIKEz7+TRc7geROdaSP4EBjbUJJdyXdDY29lSh8gwWBNdFncnPXqf
+   0C+JkEZSUSdXm0Mnwjrz0eo7OrxbpCwdSKX4j8jPNzlzM3h/1dmP7euw5
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="20966218"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="20966179"
+   d="scan'208";a="20966218"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 10:16:31 -0800
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 10:16:36 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937032741"
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="937032749"
 X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="937032741"
+   d="scan'208";a="937032749"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Feb 2024 10:16:26 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 27 Feb 2024 10:16:31 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 87EE74D7; Tue, 27 Feb 2024 20:16:19 +0200 (EET)
+	id 0FA48B0A; Tue, 27 Feb 2024 20:16:20 +0200 (EET)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -64,9 +64,9 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv8 06/16] x86/mm: Make x86_platform.guest.enc_status_change_*() return errno
-Date: Tue, 27 Feb 2024 20:16:06 +0200
-Message-ID: <20240227181616.3032032-7-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv8 16/16] x86/acpi: Add support for CPU offlining for ACPI MADT wakeup method
+Date: Tue, 27 Feb 2024 20:16:16 +0200
+Message-ID: <20240227181616.3032032-17-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240227181616.3032032-1-kirill.shutemov@linux.intel.com>
 References: <20240227181616.3032032-1-kirill.shutemov@linux.intel.com>
@@ -78,198 +78,348 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-TDX is going to have more than one reason to fail
-enc_status_change_prepare().
+MADT Multiprocessor Wakeup structure version 1 brings support of CPU
+offlining: BIOS provides a reset vector where the CPU has to jump to
+for offlining itself. The new TEST mailbox command can be used to test
+whether the CPU offlined itself which means the BIOS has control over
+the CPU and can online it again via the ACPI MADT wakeup method.
 
-Change the callback to return errno instead of assuming -EIO;
-enc_status_change_finish() changed too to keep the interface symmetric.
+Add CPU offling support for the ACPI MADT wakeup method by implementing
+custom cpu_die(), play_dead() and stop_this_cpu() SMP operations.
+
+CPU offlining makes is possible to hand over secondary CPUs over kexec,
+not limiting the second kernel to a single CPU.
+
+The change conforms to the approved ACPI spec change proposal. See the
+Link.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Link: https://lore.kernel.org/all/13356251.uLZWGnKmhe@kreacher
+Acked-by: Kai Huang <kai.huang@intel.com>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- arch/x86/coco/tdx/tdx.c         | 20 +++++++++++---------
- arch/x86/hyperv/ivm.c           |  9 +++------
- arch/x86/include/asm/x86_init.h |  4 ++--
- arch/x86/kernel/x86_init.c      |  4 ++--
- arch/x86/mm/mem_encrypt_amd.c   |  8 ++++----
- arch/x86/mm/pat/set_memory.c    |  9 +++++----
- 6 files changed, 27 insertions(+), 27 deletions(-)
+ arch/x86/include/asm/acpi.h          |   2 +
+ arch/x86/kernel/acpi/Makefile        |   2 +-
+ arch/x86/kernel/acpi/madt_playdead.S |  28 ++++
+ arch/x86/kernel/acpi/madt_wakeup.c   | 184 ++++++++++++++++++++++++++-
+ include/acpi/actbl2.h                |  15 ++-
+ 5 files changed, 227 insertions(+), 4 deletions(-)
+ create mode 100644 arch/x86/kernel/acpi/madt_playdead.S
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index c1cb90369915..26fa47db5782 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -798,28 +798,30 @@ static bool tdx_enc_status_changed(unsigned long vaddr, int numpages, bool enc)
- 	return true;
- }
+diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
+index 2625b915ae7f..021cafa214c2 100644
+--- a/arch/x86/include/asm/acpi.h
++++ b/arch/x86/include/asm/acpi.h
+@@ -81,6 +81,8 @@ union acpi_subtable_headers;
+ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+ 			      const unsigned long end);
  
--static bool tdx_enc_status_change_prepare(unsigned long vaddr, int numpages,
--					  bool enc)
-+static int tdx_enc_status_change_prepare(unsigned long vaddr, int numpages,
-+					 bool enc)
- {
- 	/*
- 	 * Only handle shared->private conversion here.
- 	 * See the comment in tdx_early_init().
- 	 */
--	if (enc)
--		return tdx_enc_status_changed(vaddr, numpages, enc);
--	return true;
-+	if (enc && !tdx_enc_status_changed(vaddr, numpages, enc))
-+		return -EIO;
++void asm_acpi_mp_play_dead(u64 reset_vector, u64 pgd_pa);
++
+ /*
+  * Check if the CPU can handle C2 and deeper
+  */
+diff --git a/arch/x86/kernel/acpi/Makefile b/arch/x86/kernel/acpi/Makefile
+index 8c7329c88a75..37b1f28846de 100644
+--- a/arch/x86/kernel/acpi/Makefile
++++ b/arch/x86/kernel/acpi/Makefile
+@@ -4,7 +4,7 @@ obj-$(CONFIG_ACPI)			+= boot.o
+ obj-$(CONFIG_ACPI_SLEEP)		+= sleep.o wakeup_$(BITS).o
+ obj-$(CONFIG_ACPI_APEI)			+= apei.o
+ obj-$(CONFIG_ACPI_CPPC_LIB)		+= cppc.o
+-obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+= madt_wakeup.o
++obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+= madt_wakeup.o madt_playdead.o
+ 
+ ifneq ($(CONFIG_ACPI_PROCESSOR),)
+ obj-y					+= cstate.o
+diff --git a/arch/x86/kernel/acpi/madt_playdead.S b/arch/x86/kernel/acpi/madt_playdead.S
+new file mode 100644
+index 000000000000..4e498d28cdc8
+--- /dev/null
++++ b/arch/x86/kernel/acpi/madt_playdead.S
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <linux/linkage.h>
++#include <asm/nospec-branch.h>
++#include <asm/page_types.h>
++#include <asm/processor-flags.h>
++
++	.text
++	.align PAGE_SIZE
++
++/*
++ * asm_acpi_mp_play_dead() - Hand over control of the CPU to the BIOS
++ *
++ * rdi: Address of the ACPI MADT MPWK ResetVector
++ * rsi: PGD of the identity mapping
++ */
++SYM_FUNC_START(asm_acpi_mp_play_dead)
++	/* Turn off global entries. Following CR3 write will flush them. */
++	movq	%cr4, %rdx
++	andq	$~(X86_CR4_PGE), %rdx
++	movq	%rdx, %cr4
++
++	/* Switch to identity mapping */
++	movq	%rsi, %cr3
++
++	/* Jump to reset vector */
++	ANNOTATE_RETPOLINE_SAFE
++	jmp	*%rdi
++SYM_FUNC_END(asm_acpi_mp_play_dead)
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index 30820f9de5af..6cfe762be28b 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -1,10 +1,19 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ #include <linux/acpi.h>
+ #include <linux/cpu.h>
++#include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/kexec.h>
++#include <linux/memblock.h>
++#include <linux/pgtable.h>
++#include <linux/sched/hotplug.h>
+ #include <asm/apic.h>
+ #include <asm/barrier.h>
++#include <asm/init.h>
++#include <asm/intel_pt.h>
++#include <asm/nmi.h>
+ #include <asm/processor.h>
++#include <asm/reboot.h>
+ 
+ /* Physical address of the Multiprocessor Wakeup Structure mailbox */
+ static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
+@@ -12,6 +21,154 @@ static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
+ /* Virtual address of the Multiprocessor Wakeup Structure mailbox */
+ static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox __ro_after_init;
+ 
++static u64 acpi_mp_pgd __ro_after_init;
++static u64 acpi_mp_reset_vector_paddr __ro_after_init;
++
++static void acpi_mp_stop_this_cpu(void)
++{
++	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr, acpi_mp_pgd);
++}
++
++static void acpi_mp_play_dead(void)
++{
++	play_dead_common();
++	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr, acpi_mp_pgd);
++}
++
++static void acpi_mp_cpu_die(unsigned int cpu)
++{
++	u32 apicid = per_cpu(x86_cpu_to_apicid, cpu);
++	unsigned long timeout;
++
++	/*
++	 * Use TEST mailbox command to prove that BIOS got control over
++	 * the CPU before declaring it dead.
++	 *
++	 * BIOS has to clear 'command' field of the mailbox.
++	 */
++	acpi_mp_wake_mailbox->apic_id = apicid;
++	smp_store_release(&acpi_mp_wake_mailbox->command,
++			  ACPI_MP_WAKE_COMMAND_TEST);
++
++	/* Don't wait longer than a second. */
++	timeout = USEC_PER_SEC;
++	while (READ_ONCE(acpi_mp_wake_mailbox->command) && --timeout)
++		udelay(1);
++
++	if (!timeout)
++		pr_err("Failed to hand over CPU %d to BIOS\n", cpu);
++}
++
++/* The argument is required to match type of x86_mapping_info::alloc_pgt_page */
++static void __init *alloc_pgt_page(void *dummy)
++{
++	return memblock_alloc(PAGE_SIZE, PAGE_SIZE);
++}
++
++static void __init free_pgt_page(void *pgt, void *dummy)
++{
++	return memblock_free(pgt, PAGE_SIZE);
++}
++
++/*
++ * Make sure asm_acpi_mp_play_dead() is present in the identity mapping at
++ * the same place as in the kernel page tables. asm_acpi_mp_play_dead() switches
++ * to the identity mapping and the function has be present at the same spot in
++ * the virtual address space before and after switching page tables.
++ */
++static int __init init_transition_pgtable(pgd_t *pgd)
++{
++	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
++	unsigned long vaddr, paddr;
++	p4d_t *p4d;
++	pud_t *pud;
++	pmd_t *pmd;
++	pte_t *pte;
++
++	vaddr = (unsigned long)asm_acpi_mp_play_dead;
++	pgd += pgd_index(vaddr);
++	if (!pgd_present(*pgd)) {
++		p4d = (p4d_t *)alloc_pgt_page(NULL);
++		if (!p4d)
++			return -ENOMEM;
++		set_pgd(pgd, __pgd(__pa(p4d) | _KERNPG_TABLE));
++	}
++	p4d = p4d_offset(pgd, vaddr);
++	if (!p4d_present(*p4d)) {
++		pud = (pud_t *)alloc_pgt_page(NULL);
++		if (!pud)
++			return -ENOMEM;
++		set_p4d(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
++	}
++	pud = pud_offset(p4d, vaddr);
++	if (!pud_present(*pud)) {
++		pmd = (pmd_t *)alloc_pgt_page(NULL);
++		if (!pmd)
++			return -ENOMEM;
++		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
++	}
++	pmd = pmd_offset(pud, vaddr);
++	if (!pmd_present(*pmd)) {
++		pte = (pte_t *)alloc_pgt_page(NULL);
++		if (!pte)
++			return -ENOMEM;
++		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
++	}
++	pte = pte_offset_kernel(pmd, vaddr);
++
++	paddr = __pa(vaddr);
++	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
 +
 +	return 0;
- }
- 
--static bool tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
-+static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
- 					 bool enc)
- {
- 	/*
- 	 * Only handle private->shared conversion here.
- 	 * See the comment in tdx_early_init().
- 	 */
--	if (!enc)
--		return tdx_enc_status_changed(vaddr, numpages, enc);
--	return true;
-+	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc))
-+		return -EIO;
++}
++
++static int __init acpi_mp_setup_reset(u64 reset_vector)
++{
++	struct x86_mapping_info info = {
++		.alloc_pgt_page = alloc_pgt_page,
++		.free_pgt_page	= free_pgt_page,
++		.page_flag      = __PAGE_KERNEL_LARGE_EXEC,
++		.kernpg_flag    = _KERNPG_TABLE_NOENC,
++	};
++	pgd_t *pgd;
++
++	pgd = alloc_pgt_page(NULL);
++	if (!pgd)
++		return -ENOMEM;
++
++	for (int i = 0; i < nr_pfn_mapped; i++) {
++		unsigned long mstart, mend;
++
++		mstart = pfn_mapped[i].start << PAGE_SHIFT;
++		mend   = pfn_mapped[i].end << PAGE_SHIFT;
++		if (kernel_ident_mapping_init(&info, pgd, mstart, mend)) {
++			kernel_ident_mapping_free(&info, pgd);
++			return -ENOMEM;
++		}
++	}
++
++	if (kernel_ident_mapping_init(&info, pgd,
++				      PAGE_ALIGN_DOWN(reset_vector),
++				      PAGE_ALIGN(reset_vector + 1))) {
++		kernel_ident_mapping_free(&info, pgd);
++		return -ENOMEM;
++	}
++
++	if (init_transition_pgtable(pgd)) {
++		kernel_ident_mapping_free(&info, pgd);
++		return -ENOMEM;
++	}
++
++	smp_ops.play_dead = acpi_mp_play_dead;
++	smp_ops.stop_this_cpu = acpi_mp_stop_this_cpu;
++	smp_ops.cpu_die = acpi_mp_cpu_die;
++
++	acpi_mp_reset_vector_paddr = reset_vector;
++	acpi_mp_pgd = __pa(pgd);
 +
 +	return 0;
- }
- 
- void __init tdx_early_init(void)
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 7dcbf153ad72..49b4f427268f 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -510,13 +510,12 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
-  * with host. This function works as wrap of hv_mark_gpa_visibility()
-  * with memory base and size.
-  */
--static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bool enc)
-+static int hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bool enc)
++}
++
+ static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
  {
- 	enum hv_mem_host_visibility visibility = enc ?
- 			VMBUS_PAGE_NOT_VISIBLE : VMBUS_PAGE_VISIBLE_READ_WRITE;
- 	u64 *pfn_array;
- 	int ret = 0;
--	bool result = true;
- 	int i, pfn;
+ 	if (!acpi_mp_wake_mailbox_paddr) {
+@@ -97,14 +254,37 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+ 	struct acpi_madt_multiproc_wakeup *mp_wake;
  
- 	pfn_array = kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
-@@ -530,17 +529,15 @@ static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bo
- 		if (pfn == HV_MAX_MODIFY_GPA_REP_COUNT || i == pagecount - 1) {
- 			ret = hv_mark_gpa_visibility(pfn, pfn_array,
- 						     visibility);
--			if (ret) {
--				result = false;
-+			if (ret)
- 				goto err_free_pfn_array;
--			}
- 			pfn = 0;
- 		}
- 	}
+ 	mp_wake = (struct acpi_madt_multiproc_wakeup *)header;
+-	if (BAD_MADT_ENTRY(mp_wake, end))
++
++	/*
++	 * Cannot use the standard BAD_MADT_ENTRY() to sanity check the @mp_wake
++	 * entry.  'sizeof (struct acpi_madt_multiproc_wakeup)' can be larger
++	 * than the actual size of the MP wakeup entry in ACPI table because the
++	 * 'reset_vector' is only available in the V1 MP wakeup structure.
++	 */
++	if (!mp_wake)
++		return -EINVAL;
++	if (end - (unsigned long)mp_wake < ACPI_MADT_MP_WAKEUP_SIZE_V0)
++		return -EINVAL;
++	if (mp_wake->header.length < ACPI_MADT_MP_WAKEUP_SIZE_V0)
+ 		return -EINVAL;
  
-  err_free_pfn_array:
- 	kfree(pfn_array);
--	return result;
-+	return ret;
- }
+ 	acpi_table_print_madt_entry(&header->common);
  
- static bool hv_vtom_tlb_flush_required(bool private)
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index c878616a18b8..c9503fe2d13a 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -150,8 +150,8 @@ struct x86_init_acpi {
-  * @enc_cache_flush_required	Returns true if a cache flush is needed before changing page encryption status
-  */
- struct x86_guest {
--	bool (*enc_status_change_prepare)(unsigned long vaddr, int npages, bool enc);
--	bool (*enc_status_change_finish)(unsigned long vaddr, int npages, bool enc);
-+	int (*enc_status_change_prepare)(unsigned long vaddr, int npages, bool enc);
-+	int (*enc_status_change_finish)(unsigned long vaddr, int npages, bool enc);
- 	bool (*enc_tlb_flush_required)(bool enc);
- 	bool (*enc_cache_flush_required)(void);
+ 	acpi_mp_wake_mailbox_paddr = mp_wake->mailbox_address;
+ 
+-	acpi_mp_disable_offlining(mp_wake);
++	if (mp_wake->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1 &&
++	    mp_wake->header.length >= ACPI_MADT_MP_WAKEUP_SIZE_V1) {
++		if (acpi_mp_setup_reset(mp_wake->reset_vector)) {
++			pr_warn("Failed to setup MADT reset vector\n");
++			acpi_mp_disable_offlining(mp_wake);
++		}
++	} else {
++		/*
++		 * CPU offlining requires version 1 of the ACPI MADT wakeup
++		 * structure.
++		 */
++		acpi_mp_disable_offlining(mp_wake);
++	}
+ 
+ 	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+ 
+diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+index e1a395af7591..2aedda70ef88 100644
+--- a/include/acpi/actbl2.h
++++ b/include/acpi/actbl2.h
+@@ -1120,8 +1120,20 @@ struct acpi_madt_multiproc_wakeup {
+ 	u16 version;
+ 	u32 reserved;		/* reserved - must be zero */
+ 	u64 mailbox_address;
++	u64 reset_vector;
  };
-diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-index a37ebd3b4773..f0f54e109eb9 100644
---- a/arch/x86/kernel/x86_init.c
-+++ b/arch/x86/kernel/x86_init.c
-@@ -131,8 +131,8 @@ struct x86_cpuinit_ops x86_cpuinit = {
  
- static void default_nmi_init(void) { };
++/* Values for Version field above */
++
++enum acpi_madt_multiproc_wakeup_version {
++	ACPI_MADT_MP_WAKEUP_VERSION_NONE = 0,
++	ACPI_MADT_MP_WAKEUP_VERSION_V1 = 1,
++	ACPI_MADT_MP_WAKEUP_VERSION_RESERVED = 2, /* 2 and greater are reserved */
++};
++
++#define ACPI_MADT_MP_WAKEUP_SIZE_V0	16
++#define ACPI_MADT_MP_WAKEUP_SIZE_V1	24
++
+ #define ACPI_MULTIPROC_WAKEUP_MB_OS_SIZE        2032
+ #define ACPI_MULTIPROC_WAKEUP_MB_FIRMWARE_SIZE  2048
  
--static bool enc_status_change_prepare_noop(unsigned long vaddr, int npages, bool enc) { return true; }
--static bool enc_status_change_finish_noop(unsigned long vaddr, int npages, bool enc) { return true; }
-+static int enc_status_change_prepare_noop(unsigned long vaddr, int npages, bool enc) { return 0; }
-+static int enc_status_change_finish_noop(unsigned long vaddr, int npages, bool enc) { return 0; }
- static bool enc_tlb_flush_required_noop(bool enc) { return false; }
- static bool enc_cache_flush_required_noop(void) { return false; }
- static bool is_private_mmio_noop(u64 addr) {return false; }
-diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-index 70b91de2e053..d314e577836d 100644
---- a/arch/x86/mm/mem_encrypt_amd.c
-+++ b/arch/x86/mm/mem_encrypt_amd.c
-@@ -283,7 +283,7 @@ static void enc_dec_hypercall(unsigned long vaddr, unsigned long size, bool enc)
- #endif
- }
+@@ -1134,7 +1146,8 @@ struct acpi_madt_multiproc_wakeup_mailbox {
+ 	u8 reserved_firmware[ACPI_MULTIPROC_WAKEUP_MB_FIRMWARE_SIZE];	/* reserved for firmware use */
+ };
  
--static bool amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc)
-+static int amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc)
- {
- 	/*
- 	 * To maintain the security guarantees of SEV-SNP guests, make sure
-@@ -292,11 +292,11 @@ static bool amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool
- 	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP) && !enc)
- 		snp_set_memory_shared(vaddr, npages);
+-#define ACPI_MP_WAKE_COMMAND_WAKEUP    1
++#define ACPI_MP_WAKE_COMMAND_WAKEUP	1
++#define ACPI_MP_WAKE_COMMAND_TEST	2
  
--	return true;
-+	return 0;
- }
+ /* 17: CPU Core Interrupt Controller (ACPI 6.5) */
  
- /* Return true unconditionally: return value doesn't matter for the SEV side */
--static bool amd_enc_status_change_finish(unsigned long vaddr, int npages, bool enc)
-+static int amd_enc_status_change_finish(unsigned long vaddr, int npages, bool enc)
- {
- 	/*
- 	 * After memory is mapped encrypted in the page table, validate it
-@@ -308,7 +308,7 @@ static bool amd_enc_status_change_finish(unsigned long vaddr, int npages, bool e
- 	if (!cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT))
- 		enc_dec_hypercall(vaddr, npages << PAGE_SHIFT, enc);
- 
--	return true;
-+	return 0;
- }
- 
- static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index e9b448d1b1b7..f92da8c9a86d 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2152,8 +2152,9 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
- 		cpa_flush(&cpa, x86_platform.guest.enc_cache_flush_required());
- 
- 	/* Notify hypervisor that we are about to set/clr encryption attribute. */
--	if (!x86_platform.guest.enc_status_change_prepare(addr, numpages, enc))
--		return -EIO;
-+	ret = x86_platform.guest.enc_status_change_prepare(addr, numpages, enc);
-+	if (ret)
-+		return ret;
- 
- 	ret = __change_page_attr_set_clr(&cpa, 1);
- 
-@@ -2168,8 +2169,8 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
- 
- 	/* Notify hypervisor that we have successfully set/clr encryption attribute. */
- 	if (!ret) {
--		if (!x86_platform.guest.enc_status_change_finish(addr, numpages, enc))
--			ret = -EIO;
-+		ret = x86_platform.guest.enc_status_change_finish(addr,
-+								  numpages, enc);
- 	}
- 
- 	return ret;
 -- 
 2.43.0
 
