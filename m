@@ -1,336 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2119.outbound.protection.partner.outlook.cn [139.219.146.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE21D53E;
-	Tue, 27 Feb 2024 02:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709000205; cv=none; b=WTjlMw8lvomLmyGeGQD41XvLgKzicweOWbQlQLm6vXS6O0yzR/ac9aR6cc2dqqVErZ6G2Shnf6GHx7I3scdJyOvT2GVk075sWnzt/1J0Too31n1dUqHbRGMVAtj32MzBTcQ02QtLNGNflt8mJ3qn7oSPthkesTUHQIkngPerN/A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709000205; c=relaxed/simple;
-	bh=mz/u9EkJffHeBU02kRBjhD8lvvMu6QEI/4vnSpJmJj0=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=U99/dQzAg6XBuNDDyAJF04XLtKdXJKusJH3t5/uHYkhw0fWyDWEZCAHvxnNlb61RTab0HayImGjVhZZs5kuajwX482uicwhyti/rYXx//DNBjCRVR1+JiHs5yRVwwgwb9y2uhQW3h/kYw8QRHaHS5e+m1uSjRyTXayWwTiCjkmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CywA2/DA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CywA2/DA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C62C433C7;
-	Tue, 27 Feb 2024 02:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709000204;
-	bh=mz/u9EkJffHeBU02kRBjhD8lvvMu6QEI/4vnSpJmJj0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=CywA2/DAZwzu+/tDJyr3guEOo4GnOwjqx+Ae1taXeq3By1uEqJwEsxOi3rZnpThOL
-	 tEhbcdZ6G8LUDbw44Q23Oc0h8vThcqB8HB/qIDco6TYOEi5qm4URaz8XXjE8FJv+F0
-	 W/mQi/oqZAkq6B5o09PJ9WT+KtlaWD1D1i0aIK9quwgANHto9aAVJ/uqjFGdceczrf
-	 B7aNRP2gB48oEzRL18cX9HtW6kCTtMvGN/jPIr9T+oMk20B/xDlPIYEB92jFOHwX1k
-	 WK82WXV7p2zgN15notE+FQhlaXpfD7MmRcQ9EWOxm8nX2qUXceaZzjnfQAri2CeVAs
-	 FVlP6BySPBvWg==
-Date: Mon, 26 Feb 2024 20:16:43 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DD74A2D;
+	Tue, 27 Feb 2024 02:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.119
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709000228; cv=fail; b=HbDhCZR4pgrWT+w+7T/70gw8bTh0E8SV4VF9f4rkd63eVsbyT18q1Rf/16hXWfCJZa0CCT/rVqMYyK4SMWZagegwxoXz8kv7z0IZIlQx3axZ4AJU/WM9V3futFAikadDsZ0I5FPeV+X21otP0zZ5oi82pFVP4X6NLZHJJt68BG4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709000228; c=relaxed/simple;
+	bh=uP/uCjvH8rULe/GeZo6TBM8HDRbxNQedOIwo23BFRqI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jOr7C+sOO4ZbzbBRfJLtM078NVshICJSdgw+gnKt2KtyHPbKoWKFJrGO940+xO370OxNmeOSW4MD+Unxx+OPNj5Q+iA05kPaPSUb3RNXFqpkLDKESiiAjkt7wYPQ8jeORQmR9Qm9uT6HZ699jVdTDtQSuEoPtF/bphiAaqR/xAY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GJG9ecQIg9BoowzmRPvbSTBUS/2l4xo+uU3Q3EKa/bIsvi5Gaarh1QtARuqZqcN0pW+oj4qzgkBIZcZdXm47MjiH/vuzAgQBCA9ISfDYI0VjzZoyUvR36midWKwua1WyqWrc/utw3MxDCskT8yDqMgiTEIHWSkaJpSn7uK6wJoyY9a9H/O9Ew2dVLCT8nQ09DIZ5kntcIxxeyvkBS6LRrCZQBcpG9VOfS91utNTzox2bLgQk6bg4rUA6ftQZ4RQu5ev7ZZJLR8IGr5dCYniI8EugDnrw66w/lQONWR2oFQqaCKkH3Uy+cmycUQHrcO5ulDDqAgAzy0G8gcKCuT0ztg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uP/uCjvH8rULe/GeZo6TBM8HDRbxNQedOIwo23BFRqI=;
+ b=UgPHHBfP5Q4mKSq+IdmS72tKrLAU8pnqCzI3Pg261Iav1NvNq1AQfyA3jy0T+/LhiUscXkaXqZGp0fX5Y/jgrRKJW4RJtMnwH6FIF+UQjwUa1HcjR9Rq91Ak/f17UasuHluOpTtO32ixq/JWpljup41LTeJ+OdPjVehWg8pZC5eymdJH8ap1ee2XYltimbDlvw3RKLBie2gdeK9Vl+V/AxEgY/JPHtOQTmVe2wOhVVVAqo5FMne9fiG2WogzgIa756RQhEG4Pg9j32sWxhdOuBblqGg8FE0KfhhRZcOblwPBkAFBRjP3kaoVq3yNQYYHFYXqRJW3eFi15ykjW+ad4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6) by ZQ0PR01MB1304.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Tue, 27 Feb
+ 2024 02:01:11 +0000
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ ([fe80::d0fb:daf7:3f8b:868c]) by
+ ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn ([fe80::d0fb:daf7:3f8b:868c%3])
+ with mapi id 15.20.7270.047; Tue, 27 Feb 2024 02:01:11 +0000
+From: JiSheng Teoh <jisheng.teoh@starfivetech.com>
+To: Conor Dooley <conor.dooley@microchip.com>,
+	=?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+CC: Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
+	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>, William Qiu <william.qiu@starfivetech.com>, Leyfoon
+ Tan <leyfoon.tan@starfivetech.com>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>
+Subject: RE: [PATCH] dt-bindings: pwm: opencores: Add compatible for StarFive
+ JH8100
+Thread-Topic: [PATCH] dt-bindings: pwm: opencores: Add compatible for StarFive
+ JH8100
+Thread-Index: AQHaaGW7VzRQ9wtUqUKZWkKdga1H6rEcRfqAgAAecoCAAQwPkA==
+Date: Tue, 27 Feb 2024 02:01:11 +0000
+Message-ID:
+ <ZQ0PR01MB11608585A27081C61ACB93F8EB59A@ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn>
+References: <20240226033945.816974-1-jisheng.teoh@starfivetech.com>
+ <opzxowacxsagwgw3l33p6y7omzjokus2bi3ol5wizfwjwi2s44@3p5frb4ysji7>
+ <20240226-greasily-balcony-cee5014f5b8b@wendy>
+In-Reply-To: <20240226-greasily-balcony-cee5014f5b8b@wendy>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1304:EE_
+x-ms-office365-filtering-correlation-id: 1296ecae-ee53-4433-d698-08dc3737f877
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ IK5Tbh1sxvxZn26uJxcxnJM7ZL4SlLvHrzKExe0ML2CDv/NfMNEpDsg75RaqmBoVk3zBp8AmL7YK0MvfmtypLyZwa5LH6b1z2rR8N8cOCPnX4anH7Blok2E207EYQcgr+LRG0cerauKo6BeWRhls0MSfQXIr5lFPztpZkyT0kRNdhQGOy1dYjetxuoRiE2MNVwUQa3Nlj0y7NoczmcKzO2LdnOIc2fJfKaju5t4p/qpCyMjTVB1DbSRq2XnwQWwndJDEoF+ZuhS8d7FzA47atxIhhQLLXZ/kLkfsbriGEBUlrISSBmg3aJ/g05jGcMV/O9iedrfZMV1EsZNKEFYprdDb4J/oEvB6WJVqkxt0HMWz3DDxSUvnS0BpxRra/WSwwKiLMzl/+kDF6P8LtFcm2gum/MPUXNd+5vuSaLiAkTfKHVaTmqs2IjnetmNpR27L9Kzsi7vztWRvQx3/Tf+D6C7f64feVDzWpCjNrgy5N/Gc2Z3nFoxNg2BREf6nMxskCwxKaZQ3fOD1zepkpvJloj0XGU9ERL99yIIB77MRDzOrxhGzdhzVjEvfgDA5qcsZ2cYmaYqlRQZKHpPjBmwxNoBfxPhPvBw3T5ckeofqdnL3CxIJoEAr9eg6xkR1oukQ
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?XEoGErlho1AAYwB0dDidiqhs1+Y6e1cUZeTMYVw9KHepCsR0b290LfpRXj?=
+ =?iso-8859-1?Q?Ez6eLPoQiqQCzUedHBDS29GRLhSQGwTSCA4IHTuIvuw2bihFjEGauVmzWa?=
+ =?iso-8859-1?Q?UfOR26Ru06QU/W6CnmHoyQsS16LaT9MS5CDzOp+F1T+i+Q28WM1Eb3NCZJ?=
+ =?iso-8859-1?Q?PoZfO7SvT1NnoXwFLDf9kd0Vv7WKJgeQjDKw6xvq3bsi+iewhIl5m2rUJI?=
+ =?iso-8859-1?Q?pg3MVA8QmGghXVfr3livsfBwETWSo6S6YrAiDeVXXHlGeCsqT2x9Uc4ZCf?=
+ =?iso-8859-1?Q?q8hqr28klkSmcklCTqigjVGzt35zYQ4OcZck4h1CcL19cXjpV3cfH5R6Cg?=
+ =?iso-8859-1?Q?nPanzc6QqTsDiK7f36H405AcRT8pov/MbJcRLPQ2Fa3QCJfvegsHWisslM?=
+ =?iso-8859-1?Q?HEVGdSpV9/uPj6pAFgva8b/p3NGfgUm/gq+ttULlFJmOBVLyS+nXtvmmc3?=
+ =?iso-8859-1?Q?ArwhsNAbEdqKRY1IRdh5Tha6Z+Pe+DF5IIX45VgMqRvd8ZuNfGNZ4eJtHF?=
+ =?iso-8859-1?Q?iVEd6CCkKZAlDHZUlGZiIEq1vbw7ATJzynbaC1uu4kzCr8cRPjuC7WSUw8?=
+ =?iso-8859-1?Q?EAAXDOktLei8woulHC3kJkWqHq1zhwg7FCoko1viUW9eOoFdinZkFuWRXE?=
+ =?iso-8859-1?Q?1a8Wi0DVk8RPsUp5ARsWaka/JxMjG4Pu7jr75NxsvD6esfp+/I10eZtjSY?=
+ =?iso-8859-1?Q?QErTLbJF1I21xdtVtYy/3QSC1eZ1KNGmmtuNXkyt1p8Vw+/UMq31q1Hwbn?=
+ =?iso-8859-1?Q?F9Boa1V9A0G2jcq+5dMeNHLhdrvSpH5T5aIz2ncTysde9p3aDcEwnf1B7u?=
+ =?iso-8859-1?Q?cM9H7UZHsMPEhrjtGQPh8BdMok6Vc/sH2iIIGsq6Trr2+oAtVfZU836GNd?=
+ =?iso-8859-1?Q?HQzhmcoEr8Z/LsnGbkngTw6OlCp7dg/V91WCzeFPyJi8FDdKO7ysaRWwI/?=
+ =?iso-8859-1?Q?R9SwWq3yUFKoYEVCQrzLOkqEuHb0CXcPLIaIV9C38+kkl0hfyLL8OTs5wA?=
+ =?iso-8859-1?Q?XvH5lOw9eGJA2NYpAbiKA4KZc26n/+qyeblhKfhutZkGyyXA5zkGzP7/tN?=
+ =?iso-8859-1?Q?WYpugOA9TUQYCODKNc97H7IMS6Cs+z356XkT4CGzNsyFXcy2fuA6I9NnVM?=
+ =?iso-8859-1?Q?R6Wim7ztR2id3ZMbN0oCbz/adoIWCR3pMy1UtNGUfUJC736RHb4FbZ9ldh?=
+ =?iso-8859-1?Q?/NYEpVEoSgQziDUcqFqNFDT0NYh7BC91dSppG1oJARtuFm6KcCTUi/ZU2v?=
+ =?iso-8859-1?Q?Y/JqUG+MSIFVr+vfJlHwyQsotiM178W5Lscuq76aA6+N4p3mXfa1lt9F5Y?=
+ =?iso-8859-1?Q?w6UZtBMHmGnkjHKRd/pZs5Dur9sF99aMWRXVvPbs6qZOg280kY1xxeRvRQ?=
+ =?iso-8859-1?Q?MYKk3/0jfOIfxw8b6uo3lFb9zA6f46WMhV94icTBbLxjEwka+xb/t6RkW7?=
+ =?iso-8859-1?Q?VbkUiOQ4NuYRE8Iepbvac/FWaB/mm7hLI4K6SXqFX2M+k3YwNPQpC+08e1?=
+ =?iso-8859-1?Q?GHSPBcJm0psYDWgfxJzoM+CBGGDXurlb1muLD3iP6+BJ0WzpG692yUhqy6?=
+ =?iso-8859-1?Q?P+68AqWqbEKhtIstPn8Wi7bnf5NxJKrHZlAib8NeFbkFYdBDtITXbuDo+f?=
+ =?iso-8859-1?Q?H08aQMPoQKYaB/tB5UOszG9uqczfd0kClfRmSBWpFr9dWTAKS3iAnfuA?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: joel@jms.id.au, krzysztof.kozlowski+dt@linaro.org, 
- linux-aspeed@lists.ozlabs.org, brgl@bgdev.pl, 
- linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, 
- linus.walleij@linaro.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, conor+dt@kernel.org
-In-Reply-To: <20240227004414.841391-1-andrew@codeconstruct.com.au>
-References: <20240227004414.841391-1-andrew@codeconstruct.com.au>
-Message-Id: <170900020204.2360855.790404478830111761.robh@kernel.org>
-Subject: Re: [PATCH v4] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to
- DT schema
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1296ecae-ee53-4433-d698-08dc3737f877
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2024 02:01:11.0983
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8jAt54IDIELoJSMHu2ZclQgbHUlAiS3QNhpgrF9wiEDPyCmdRl8kaC9V2bi9esCk+ZNT0Fu0+cSa82q1WPK+IiPnWc6YXmTIVDWyP5ey0D8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1304
 
+> On Mon, Feb 26, 2024 at 09:11:23AM +0100, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >
+> > On Mon, Feb 26, 2024 at 11:39:45AM +0800, Ji Sheng Teoh wrote:
+> > > StarFive JH8100 uses the same OpenCores PWM controller as JH7110.
+> > > Mark JH8100 as compatible to the OpenCores PWM controller.
+> > >
+> > > Signed-off-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
+> > > Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+> > >
+> > > ---
+> > >
+> > > This patch depends on patch [1] ("dt-bindings: pwm: Add bindings for
+> > > OpenCores PWM Controller") in Conor's riscv-dt-for-next branch.
+> > > [1]
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/comm
+> > > it/?h=3Driscv-dt-for-next&id=3D2529085831b01fcd02ff58ab4e2596d3b31bcf=
+80
+> >
+> > I recommend to make use of git format-patch's --base parameter to
+> > additionally(!) make this information available to the build bots.
+>=20
+> I like the "additionally" :)
 
-On Tue, 27 Feb 2024 11:14:14 +1030, Andrew Jeffery wrote:
-> Squash warnings such as:
-> 
-> ```
-> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,ast2400-gpio']
-> ```
-> 
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
-> v4: Add constraints for gpio-line-names, ngpios as requested by Krzysztof:
->     https://lore.kernel.org/all/458becdb-fb1e-4808-87b6-3037ec945647@linaro.org/
-> 
->     Add more examples to exercise constraints.
-> 
-> v3: https://lore.kernel.org/all/20240226051645.414935-1-andrew@codeconstruct.com.au/
-> 
->     Base on v6.8-rc6, fix yamllint warning
-> 
->     Rob's bot picked the missing `#interrupt-cells` in the example on v2[1]. The
->     patch was based on v6.8-rc1, and going back over my shell history I missed
->     the following output from `make dt_binding_check`:
-> 
->     ```
->     ...
->       LINT    Documentation/devicetree/bindings
->       usage: yamllint [-h] [-] [-c CONFIG_FILE | -d CONFIG_DATA] [--list-files] [-f {parsable,standard,colored,github,auto}] [-s] [--no-warnings] [-v] [FILE_OR_DIR ...]
->       yamllint: error: one of the arguments FILE_OR_DIR - is required
->     ...
->     ```
-> 
->     I've rebased on v6.8-rc6 and no-longer see the issue with the invocation
->     of `yamllint`.
-> 
-> [1]: https://lore.kernel.org/all/170892197611.2260479.15343562563553959436.robh@kernel.org/
-> 
-> v2: https://lore.kernel.org/all/20240226031951.284847-1-andrew@codeconstruct.com.au/
-> 
->     Address feedback from Krzysztof:
->     https://lore.kernel.org/all/0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org/
-> 
-> v1: https://lore.kernel.org/all/20240220052918.742793-1-andrew@codeconstruct.com.au/
-> 
->  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 149 ++++++++++++++++++
->  .../devicetree/bindings/gpio/gpio-aspeed.txt  |  39 -----
->  2 files changed, 149 insertions(+), 39 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> 
+Alright, I will take note of that. Thanks=20
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-In file included from Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.example.dts:91:
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:14: warning: "ASPEED_CLK_GATE_LCLK" redefined
-   14 | #define ASPEED_CLK_GATE_LCLK            6
-      | 
-In file included from Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.example.dts:56:
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:14: note: this is the location of the previous definition
-   14 | #define ASPEED_CLK_GATE_LCLK            8
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:15: warning: "ASPEED_CLK_GATE_LHCCLK" redefined
-   15 | #define ASPEED_CLK_GATE_LHCCLK          7
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:29: note: this is the location of the previous definition
-   29 | #define ASPEED_CLK_GATE_LHCCLK          23
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:17: warning: "ASPEED_CLK_GATE_D1CLK" redefined
-   17 | #define ASPEED_CLK_GATE_D1CLK           8
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:16: note: this is the location of the previous definition
-   16 | #define ASPEED_CLK_GATE_D1CLK           10
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:18: warning: "ASPEED_CLK_GATE_YCLK" redefined
-   18 | #define ASPEED_CLK_GATE_YCLK            9
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:17: note: this is the location of the previous definition
-   17 | #define ASPEED_CLK_GATE_YCLK            11
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:23: warning: "ASPEED_CLK_GATE_ESPICLK" redefined
-   23 | #define ASPEED_CLK_GATE_ESPICLK         12
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:22: note: this is the location of the previous definition
-   22 | #define ASPEED_CLK_GATE_ESPICLK         16
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:25: warning: "ASPEED_CLK_GATE_USBUHCICLK" redefined
-   25 | #define ASPEED_CLK_GATE_USBUHCICLK      13
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:15: note: this is the location of the previous definition
-   15 | #define ASPEED_CLK_GATE_USBUHCICLK      9
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:26: warning: "ASPEED_CLK_GATE_USBPORT1CLK" redefined
-   26 | #define ASPEED_CLK_GATE_USBPORT1CLK     14
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:18: note: this is the location of the previous definition
-   18 | #define ASPEED_CLK_GATE_USBPORT1CLK     12
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:27: warning: "ASPEED_CLK_GATE_USBPORT2CLK" redefined
-   27 | #define ASPEED_CLK_GATE_USBPORT2CLK     15
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:13: note: this is the location of the previous definition
-   13 | #define ASPEED_CLK_GATE_USBPORT2CLK     7
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:29: warning: "ASPEED_CLK_GATE_RSACLK" redefined
-   29 | #define ASPEED_CLK_GATE_RSACLK          16
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:25: note: this is the location of the previous definition
-   25 | #define ASPEED_CLK_GATE_RSACLK          19
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:32: warning: "ASPEED_CLK_GATE_MAC1CLK" redefined
-   32 | #define ASPEED_CLK_GATE_MAC1CLK         18
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:23: note: this is the location of the previous definition
-   23 | #define ASPEED_CLK_GATE_MAC1CLK         17
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:33: warning: "ASPEED_CLK_GATE_MAC2CLK" redefined
-   33 | #define ASPEED_CLK_GATE_MAC2CLK         19
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:24: note: this is the location of the previous definition
-   24 | #define ASPEED_CLK_GATE_MAC2CLK         18
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:37: warning: "ASPEED_CLK_GATE_UART1CLK" redefined
-   37 | #define ASPEED_CLK_GATE_UART1CLK        22
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:19: note: this is the location of the previous definition
-   19 | #define ASPEED_CLK_GATE_UART1CLK        13
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:38: warning: "ASPEED_CLK_GATE_UART2CLK" redefined
-   38 | #define ASPEED_CLK_GATE_UART2CLK        23
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:20: note: this is the location of the previous definition
-   20 | #define ASPEED_CLK_GATE_UART2CLK        14
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:39: warning: "ASPEED_CLK_GATE_UART3CLK" redefined
-   39 | #define ASPEED_CLK_GATE_UART3CLK        24
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:26: note: this is the location of the previous definition
-   26 | #define ASPEED_CLK_GATE_UART3CLK        20
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:40: warning: "ASPEED_CLK_GATE_UART4CLK" redefined
-   40 | #define ASPEED_CLK_GATE_UART4CLK        25
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:27: note: this is the location of the previous definition
-   27 | #define ASPEED_CLK_GATE_UART4CLK        21
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:41: warning: "ASPEED_CLK_GATE_UART5CLK" redefined
-   41 | #define ASPEED_CLK_GATE_UART5CLK        26
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:21: note: this is the location of the previous definition
-   21 | #define ASPEED_CLK_GATE_UART5CLK        15
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:51: warning: "ASPEED_CLK_GATE_SDCLK" redefined
-   51 | #define ASPEED_CLK_GATE_SDCLK           35
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:28: note: this is the location of the previous definition
-   28 | #define ASPEED_CLK_GATE_SDCLK           22
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:63: warning: "ASPEED_CLK_HPLL" redefined
-   63 | #define ASPEED_CLK_HPLL                 46
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:30: note: this is the location of the previous definition
-   30 | #define ASPEED_CLK_HPLL                 24
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:64: warning: "ASPEED_CLK_MPLL" redefined
-   64 | #define ASPEED_CLK_MPLL                 47
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:40: note: this is the location of the previous definition
-   40 | #define ASPEED_CLK_MPLL                 34
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:68: warning: "ASPEED_CLK_AHB" redefined
-   68 | #define ASPEED_CLK_AHB                  51
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:31: note: this is the location of the previous definition
-   31 | #define ASPEED_CLK_AHB                  25
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:71: warning: "ASPEED_CLK_BCLK" redefined
-   71 | #define ASPEED_CLK_BCLK                 54
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:39: note: this is the location of the previous definition
-   39 | #define ASPEED_CLK_BCLK                 33
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:74: warning: "ASPEED_CLK_LHCLK" redefined
-   74 | #define ASPEED_CLK_LHCLK                57
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:37: note: this is the location of the previous definition
-   37 | #define ASPEED_CLK_LHCLK                31
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:75: warning: "ASPEED_CLK_UART" redefined
-   75 | #define ASPEED_CLK_UART                 58
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:33: note: this is the location of the previous definition
-   33 | #define ASPEED_CLK_UART                 27
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:77: warning: "ASPEED_CLK_SDIO" redefined
-   77 | #define ASPEED_CLK_SDIO                 60
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:34: note: this is the location of the previous definition
-   34 | #define ASPEED_CLK_SDIO                 28
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:79: warning: "ASPEED_CLK_ECLK" redefined
-   79 | #define ASPEED_CLK_ECLK                 62
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:35: note: this is the location of the previous definition
-   35 | #define ASPEED_CLK_ECLK                 29
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:80: warning: "ASPEED_CLK_ECLK_MUX" redefined
-   80 | #define ASPEED_CLK_ECLK_MUX             63
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:36: note: this is the location of the previous definition
-   36 | #define ASPEED_CLK_ECLK_MUX             30
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:84: warning: "ASPEED_CLK_MAC1RCLK" redefined
-   84 | #define ASPEED_CLK_MAC1RCLK             67
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:42: note: this is the location of the previous definition
-   42 | #define ASPEED_CLK_MAC1RCLK             36
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:85: warning: "ASPEED_CLK_MAC2RCLK" redefined
-   85 | #define ASPEED_CLK_MAC2RCLK             68
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:43: note: this is the location of the previous definition
-   43 | #define ASPEED_CLK_MAC2RCLK             37
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:91: warning: "ASPEED_RESET_ADC" redefined
-   91 | #define ASPEED_RESET_ADC                55
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:47: note: this is the location of the previous definition
-   47 | #define ASPEED_RESET_ADC                2
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:106: warning: "ASPEED_RESET_PWM" redefined
-  106 | #define ASPEED_RESET_PWM                37
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:50: note: this is the location of the previous definition
-   50 | #define ASPEED_RESET_PWM                5
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:107: warning: "ASPEED_RESET_PECI" redefined
-  107 | #define ASPEED_RESET_PECI               36
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:51: note: this is the location of the previous definition
-   51 | #define ASPEED_RESET_PECI               6
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:109: warning: "ASPEED_RESET_I2C" redefined
-  109 | #define ASPEED_RESET_I2C                34
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:52: note: this is the location of the previous definition
-   52 | #define ASPEED_RESET_I2C                7
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:119: warning: "ASPEED_RESET_JTAG_MASTER" redefined
-  119 | #define ASPEED_RESET_JTAG_MASTER        22
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:48: note: this is the location of the previous definition
-   48 | #define ASPEED_RESET_JTAG_MASTER        3
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:125: warning: "ASPEED_RESET_HACE" redefined
-  125 | #define ASPEED_RESET_HACE               4
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:55: note: this is the location of the previous definition
-   55 | #define ASPEED_RESET_HACE               10
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:126: warning: "ASPEED_RESET_AHB" redefined
-  126 | #define ASPEED_RESET_AHB                1
-      | 
-./scripts/dtc/include-prefixes/dt-bindings/clock/aspeed-clock.h:53: note: this is the location of the previous definition
-   53 | #define ASPEED_RESET_AHB                8
-      | 
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240227004414.841391-1-andrew@codeconstruct.com.au
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> >
+> > Looks fine to me.
+> >
+> > Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >
+> > Coner: If you're happy with this patch, please apply it in the same
+> > way as the initial OpenCores PWM Controller binding patch.
+>=20
+> Ye, I can do. Although, I suppose this is an example of why the driver ma=
+intainers applying the bindings is preferred, even if the driver
+> patch itself isn't ready or there is no driver patch.
+>=20
+> Cheers,
+> Conor.
