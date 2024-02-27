@@ -1,101 +1,91 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061B82557F
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9630520B38
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709053377; cv=none; b=EMRClSz4cphcKtgTXZQtRdxV5+dug2dg/M5ho9XZl42aNAMuX0V4wLfmSEp/0KHgzXRCUNmSOraxc1XiXIFNPD9nIPEwL1cfNKnEqT+ei0PjcNP9db8cbVeVLwvBKEDtBl7tT4Tu1nupGu6nRUY2zjxIum2Hm2LywWJi3xFHAqQ=
+	t=1709053392; cv=none; b=Ta2/WSXGRHIEWXfQckRbvxl1EagWIKteFtNXC5ldkMuvH16zactCOPShtosUBMiYxa8v1Q7j99MtlxJh7rwiyINXizNzwDE7QPfakUCpEW5XrBrwW32vTBagv2G/7es/Tkq2GqQOYp3iyXwTYnH7fAZiJgnSvW48vMNfA4EHN/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709053377; c=relaxed/simple;
-	bh=fYmViQBsuq3KWkkQSjDassbD/MSa99mQLTE6HIwVoXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SLPOV+0oAEsEvnkKxFN0kuTR1OZnc24SnOjje1rk1vTyj1c8o/4+yNQTo2amDpea3CACxx8PmigjDmVw3bgb7o+rQ5GtqYJp4L+lTAngG9BbelxO76oI8hUEQcu2gwiT220OxHSa9k4hRY4Ciie28okbc3UjG75rlZ4n/E3QJn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Zwzw8Db3; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1709053392; c=relaxed/simple;
+	bh=l5e8ml4REQQUTX3sdXHOM7YXsSKlUkKAscSC883nVrg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FTzaJ1qwf8BOg7cRQJiQHYMR4Q9qd2gmSIasIbkDPMk3VDb6VjXV4nfp9nCOZuZqZ39Evcy4mWy8BSHotPOXKrfzO0+20gWVZQSijreCGZPdFNMaYFqSt78B4CdvCTSA4xZhyQTUV6P3SNJSK0k4YbDNpJfvL7/rmIhFLfGqH30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=08SNpyQv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=schyaOoT; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Zwzw8Db3"
-Date: Tue, 27 Feb 2024 12:02:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1709053374;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="08SNpyQv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="schyaOoT"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1709053387;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=L7UKNUBGlTpDM+CMJiwE59d0Y/y96axVL+XtjpcRUAA=;
-	b=Zwzw8Db3LDsRNenY3gGa6Tbi9kd/j+4+EG0yzxqltzcHBRhreGIzqWUegudphiZIy7OVqz
-	eO//SmJ5XmyEQXUl1CgTYL41h6t2FLjxJGpkdi9zUiUudSS6P9f4h3G9UAmDgDo9owgxi7
-	mkil4OFoWnUlRblZaE0G4d99LhmFBfA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: Matthew Wilcox <willy@infradead.org>, linux-xfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, david@fromorbit.com, 
-	chandan.babu@oracle.com, akpm@linux-foundation.org, mcgrof@kernel.org, ziy@nvidia.com, 
-	hare@suse.de, djwong@kernel.org, gost.dev@samsung.com, linux-mm@kvack.org, 
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH 03/13] filemap: align the index to mapping_min_order in
- the page cache
-Message-ID: <na2k4nnvkseh2yh27eqkbfyouf7vnerd6i7pt4z7f7xsjsm6pu@ry5tvdcr2ggw>
-References: <20240226094936.2677493-1-kernel@pankajraghav.com>
- <20240226094936.2677493-4-kernel@pankajraghav.com>
- <Zdyi6lFDAHXi8GPz@casper.infradead.org>
- <37kubwweih4zwvxzvjbhnhxunrafawdqaqggzcw6xayd6vtrfl@dllnk6n53akf>
- <hjrsbb34ghop4qbb6owmg3wqkxu4l42yrekshwfleeqattscqp@z2epeibc67lt>
- <aajarho6xwi4sphqirwvukofvqy3cl6llpe5fetomj5sz7rgzp@xo2iqdwingtf>
- <vsy43j4pwgh4thcqbhmotap7rgzg5dnet42gd5z6x4yt3zwnu4@5w4ousyue36m>
- <4zpsfvy3e4hkc4avvjjr34rgo7ggpd6hpflptmiauvxwm3dpvk@5wulihwpwbyp>
+	bh=5l/z5niNWmPcrTzUn5sccV50+EwR7ocb+Kg+fSadhTg=;
+	b=08SNpyQvlIQU2jDRMfIsTN3MWypAwK0VUGYT42tEBQgFLalrgvtfjw6UYXQVej2Ynh4ktb
+	5Fk4PQ1exCmD8hEkfA4vrrKFpZNWQ1AO3HA3SOinAlt+rWo2xwFY3/wZ4SgDpWCFL1WpVQ
+	3Ui4gjSwZIE6e4msvl5V/U6twYA1bl7qqqwSy4rvbFeY2tm46uoYWMhDEYq394TrR6uYZl
+	vyY759M+v3TaLN6BSUKcNv5ijbkpmhowBrO7U9XpbEd6b6qCRHNIBjq4sBKqSlm/CRti8t
+	+xDkOUF+Kz4koFfCmAS4TKjW+HgSAGy+/eSlmUdGDeyzosfVbk/gwAEqza17pA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1709053387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5l/z5niNWmPcrTzUn5sccV50+EwR7ocb+Kg+fSadhTg=;
+	b=schyaOoT6pP96CHkQtz1KlTYOnuJapoTYgyTGeAbfVUt5j0qYE5viIyMTjwapWp7ij9Uiz
+	Tq5mM+uFan0hgUAA==
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, Charles
+ Keepax <ckeepax@opensource.cirrus.com>, kernel@pengutronix.de, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, NXP Linux Team <linux-imx@nxp.com>, Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>, patches@opensource.cirrus.com, Fabio
+ Estevam <festevam@gmail.com>, Gregory Clement
+ <gregory.clement@bootlin.com>, linux-arm-kernel@lists.infradead.org,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 00/13] irqchip: Convert to platform remove callback
+ returning void
+In-Reply-To: <knhwqxhouaiehmnnz5oxaxibhq7usokefztae4pplqypwuzgye@mke2irokres4>
+References: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
+ <knhwqxhouaiehmnnz5oxaxibhq7usokefztae4pplqypwuzgye@mke2irokres4>
+Date: Tue, 27 Feb 2024 18:03:07 +0100
+Message-ID: <874jdtalh0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4zpsfvy3e4hkc4avvjjr34rgo7ggpd6hpflptmiauvxwm3dpvk@5wulihwpwbyp>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024 at 05:55:35PM +0100, Pankaj Raghav (Samsung) wrote:
-> > > > 
-> > > > you guys are both wrong, just use rounddown()
-> > > 
-> > > Umm, what do you mean just use rounddown? rounddown to ...?
-> > > 
-> > > We need to get index that are in PAGE units but aligned to min_order
-> > > pages.
-> > > 
-> > > The original patch did this:
-> > > 
-> > > index = mapping_align_start_index(mapping, iocb->ki_pos >> PAGE_SHIFT);
-> > > 
-> > > Which is essentially a rounddown operation (probably this is what you
-> > > are suggesting?).
-> > > 
-> > > So what willy is proposing will do the same. To me, what I proposed is
-> > > less complicated but to willy it is the other way around.
-> > 
-> > Ok, I just found the code for mapping_align_start_index() - it is just a
-> > round_down().
-> > 
-> > Never mind; patch looks fine (aside from perhaps some quibbling over
-> > whether the round_down()) should be done before calling readahead or
-> > within readahead; I think that might have been more what willy was
-> > keying in on)
-> 
-> Yeah, exactly.
-> 
-> I have one question while I have you here. 
-> 
-> When we have this support in the page cache, do you think bcachefs can make
-> use of this support to enable bs > ps in bcachefs as it already makes use 
-> of large folios? 
+On Thu, Feb 15 2024 at 22:03, Uwe Kleine-K=C3=B6nig wrote:
+> On Fri, Dec 22, 2023 at 11:50:31PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+>> this series converts all drivers below drivers/irqchip to use
+>> .remove_new(). See commit 5c5a7680e67b ("platform: Provide a remove
+>> callback that returns no value") for an extended explanation and the
+>> eventual goal. The TL;DR; is to make it harder for driver authors to
+>> leak resources.
+>>=20
+>> The drivers touched here are all fine though and don't return early in
+>> .remove(). So all conversions in this series are trivial.
+>
+> I'm still waiting for this series to go in (or get review feedback). Is
+> this still on your radar? You're the right maintainer to take this
+> series, aren't you?
 
-Yes, of course.
+I am and it fell through my christmas crack. I don't even try to catch
+up with email after being almost 3 weeks AFK. For two decades I rely on
+submitters to ping me after a couple of weeks or month in this case :)
 
-> Do you think it is just a simple mapping_set_large_folios ->
-> mapping_set_folio_min_order(.., block_size order) or it requires more
-> effort?
+Thanks,
 
-I think that's all that would be required. There's very little in the
-way of references to PAGE_SIZE in bcachefs.
+        tglx
+
