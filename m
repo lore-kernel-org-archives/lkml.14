@@ -1,265 +1,134 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7654F5576E;
-	Tue, 27 Feb 2024 23:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A565731A
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709076787; cv=none; b=Yq4Hsi5aJHlqD01tDC3k1KX03tDZzYbss3s//flxfVLIhL4pQiekeTf19EI1WtUjtflI7SQtVA1LnQt2KHfm+JtbzuPHdCbcy9r53TBjlEUuuUA1Ciy5RroxOtHGOJdRSMl9o3sN5ihpBNVRctlGuLRnwnqZBoHkIM+0yPr6U0g=
+	t=1709076796; cv=none; b=KHg2sSP6cFq7WLoFnckw5KMFLRtXvK7RFyS64OQBSeQ/1ilfKryvS7YdsbJGCODq3sUpVph2Bw+M/boWxvYG5f5lmsGv6tJ/CD8IsCsLm/5ROllf1+YJfXUQJAK0mOQW4X940j1Q8sT1cahSV9OZLZbZHZKbN7vsBGnSzgz5xuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709076787; c=relaxed/simple;
-	bh=rVI+xSd8FYJi7TzLJ7Ikl21QrMCLhmodA6y/Pc5d06c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bCq+/UhVc8L83hMLqsDdoop5LF5//pGWoarW+v3V55ACQv2QqT+28qvb+faroTgb/HeROI/e6tD3x7EjYHjorz3ZPYZFzUCewyQ2qQKpeLH2A3/befSOLPfvKt9gzJZBzJObxW0twbFt4nFEAzXITLfpj1agDD/8bHbTK1Ty8KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xQ8f1Ns3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=L0Kim+WT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xQ8f1Ns3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=L0Kim+WT; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1709076796; c=relaxed/simple;
+	bh=SFRHkKuAvhPnxhLSoc+CC/6wY38Yh/tJ0nMg5XjotO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lfEdUUONBtrsKuTUCMt+r4yrDJ2O8Y0b5H+CXgSa8wVcnlxk2YrGyo+82u6YCRix2pNdxMhFNVnTFrk6TdKcnaMjpPEoRApDR4iNljFGKMA1tXAsdl5/BXunahK+cBNO2YGOOrCQYBe/gXBxdFnIHAr8aPbfIYw3xwsHBP4fglE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=QMmV3GI0; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xQ8f1Ns3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="L0Kim+WT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xQ8f1Ns3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="L0Kim+WT"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7055022299;
-	Tue, 27 Feb 2024 23:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709076783; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1XcCT6OIixHhjBjRbIEMhs9CTkZAbGq3CBxIJeInpl0=;
-	b=xQ8f1Ns3iGPxbm0Sj6jv30DtRJppv+f317F+9awYDiAjwjn6FnIlWRA+vNCxa1HCGUxm3s
-	yJX0sbF3PYVO+9O7EZE3/moFHfstEPKxL2U0wA8RpMg+JeGc6f3fwppTTVwaq0vTJbZ4s8
-	Ubz4zZTKdqnPkfmJ+w0spkoaKiY/nUw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709076783;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1XcCT6OIixHhjBjRbIEMhs9CTkZAbGq3CBxIJeInpl0=;
-	b=L0Kim+WTB0aMM3EOz4MBC7ESAUEX7JhLQSDLvgTuYYlWjODdBE2wVs3fpr1RIkTGn+dn5H
-	pbN0FK3QlGkx17Aw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1709076783; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1XcCT6OIixHhjBjRbIEMhs9CTkZAbGq3CBxIJeInpl0=;
-	b=xQ8f1Ns3iGPxbm0Sj6jv30DtRJppv+f317F+9awYDiAjwjn6FnIlWRA+vNCxa1HCGUxm3s
-	yJX0sbF3PYVO+9O7EZE3/moFHfstEPKxL2U0wA8RpMg+JeGc6f3fwppTTVwaq0vTJbZ4s8
-	Ubz4zZTKdqnPkfmJ+w0spkoaKiY/nUw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1709076783;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1XcCT6OIixHhjBjRbIEMhs9CTkZAbGq3CBxIJeInpl0=;
-	b=L0Kim+WTB0aMM3EOz4MBC7ESAUEX7JhLQSDLvgTuYYlWjODdBE2wVs3fpr1RIkTGn+dn5H
-	pbN0FK3QlGkx17Aw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 32DF213ABA;
-	Tue, 27 Feb 2024 23:33:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id DCM3Bi9x3mUnNgAAD6G6ig
-	(envelope-from <krisman@suse.de>); Tue, 27 Feb 2024 23:33:03 +0000
-From: Gabriel Krisman Bertazi <krisman@suse.de>
-To: Eugen Hristev <eugen.hristev@collabora.com>
-Cc: tytso@mit.edu,  adilger.kernel@dilger.ca,  linux-ext4@vger.kernel.org,
-  jaegeuk@kernel.org,  chao@kernel.org,
-  linux-f2fs-devel@lists.sourceforge.net,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  kernel@collabora.com,
-  viro@zeniv.linux.org.uk,  brauner@kernel.org,  jack@suse.cz,  Gabriel
- Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [PATCH v12 3/8] libfs: Introduce case-insensitive string
- comparison helper
-In-Reply-To: <20240220085235.71132-4-eugen.hristev@collabora.com> (Eugen
-	Hristev's message of "Tue, 20 Feb 2024 10:52:30 +0200")
-Organization: SUSE
-References: <20240220085235.71132-1-eugen.hristev@collabora.com>
-	<20240220085235.71132-4-eugen.hristev@collabora.com>
-Date: Tue, 27 Feb 2024 18:32:58 -0500
-Message-ID: <875xy95vpx.fsf@mailhost.krisman.be>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="QMmV3GI0"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3566c0309fso555130566b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 15:33:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech.se; s=google; t=1709076791; x=1709681591; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mvdatF57+DwZfGKp/9/tGtAF0GxYgl6ZeAoM6d92QEw=;
+        b=QMmV3GI0km8t9GejV9uYWUX7UoVlhXm7EBm3qkGDYoE9U1tHmz+zRINPBZ3aqmMgz3
+         IGk+rX1cP+P5EZlFml+E3Dyrh9CiuVtQ82vX72ERgzbi1sD+SLT6KNICU0QuDB0zcrK3
+         vjGrtigR2rexQkJjnNJfPZ79zMkAUDdLFd+NkBPn8X9C8FN8sxA/FD7cKRFW0S2aYy7j
+         sK6i8cFkH8rFTUHZ3sEb6lNQAxVvoOcsGOM4VI/+cuAx6h+5en6bwl+L2mFTw7Q4suHd
+         2fSMVSwHpJIRYu1s5A7Jshjnom1bjBDMwIiH+/Ow5aL02nOw391Xfp2BHYdX1S57kKyZ
+         Hg/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709076791; x=1709681591;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mvdatF57+DwZfGKp/9/tGtAF0GxYgl6ZeAoM6d92QEw=;
+        b=VizLS2yIT21hMuntqbwSfArh1B54VQRZILJhNKNCVCfh5Fv07aHNpRnwGpIrSgL3sf
+         DJB9lh7FMasEVZz11jsEWaaorb+6rNuB5cdSuiMRRKDvVojZm9K3EG4SqgfPkdi1rkm/
+         EuUNav0JHPtmuInFdu9lW94ISW+xXPkX7s0/U///RFdXqZ5q3R8L9hahAw/eTedE7vMo
+         F07ZnUjnF1Boj+3icOws9YbCWfeQpR38gbQoB1R0z0SaA/i/5YZZJ1P0Uf5yoSWHjmpk
+         muUzs/0jWHZ0HFLczAUTlf+6okznqxP1iAtSGe/lmqrZb8b6X/dFlLgcSXGBD9SLdSk3
+         R/7g==
+X-Forwarded-Encrypted: i=1; AJvYcCX24x6dFDGk99DdBDCV+jEjPsmSgmIRvI3oqOOqJFiWzO5vJemGMvRm6FedOhfdKc3rpg/3CqToJwdn1OaWtJp+oXdKlK8cbNBKpn+r
+X-Gm-Message-State: AOJu0YyE/WXnKjz5nm6vBbQBmibWP0gZxIPJ9BZ4GRch/mg8H4rJZHA5
+	rtxtC4smQ23INnXN3VuxgIDQgUUaFfwx38klqVCyWP7SW+w++7XqKFHACiljIp0=
+X-Google-Smtp-Source: AGHT+IHUxYiTUOAIdFJuNOd1TsjJLg7fc9fdpCeaHmuv1zqUOJxgJ/60Y/qdkRcca5p2NFr3DFjPLQ==
+X-Received: by 2002:a17:906:2518:b0:a3f:c8ce:d268 with SMTP id i24-20020a170906251800b00a3fc8ced268mr7632871ejb.65.1709076791528;
+        Tue, 27 Feb 2024 15:33:11 -0800 (PST)
+Received: from localhost (p4fcc8c6a.dip0.t-ipconnect.de. [79.204.140.106])
+        by smtp.gmail.com with ESMTPSA id jp11-20020a170906f74b00b00a437b467c92sm1246641ejb.177.2024.02.27.15.33.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 15:33:11 -0800 (PST)
+Date: Wed, 28 Feb 2024 00:33:10 +0100
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH] dt-bindings: soc: renesas: renesas-soc: Add pattern for
+ gray-hawk
+Message-ID: <20240227233310.GB1002886@ragnatech.se>
+References: <20240227220930.213703-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -4.29
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 HAS_ORG_HEADER(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.19)[-0.965];
-	 RCPT_COUNT_TWELVE(0.00)[14];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240227220930.213703-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Eugen Hristev <eugen.hristev@collabora.com> writes:
+Hi Prabhakar,
 
-> From: Gabriel Krisman Bertazi <krisman@collabora.com>
->
-> generic_ci_match can be used by case-insensitive filesystems to compare
-> strings under lookup with dirents in a case-insensitive way.  This
-> function is currently reimplemented by each filesystem supporting
-> casefolding, so this reduces code duplication in filesystem-specific
-> code.
+Thanks for your work.
 
-Just a note that this conflicts with the other patchset to generic
-helpers that I just applied.  The conflict is trivial, If you could base
-the next iteration on top of my for-next, it would be helpful.
+On 2024-02-27 22:09:30 +0000, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> Add pattern for Renesas Gray Hawk Single board (based on R-Car V4M SoC)
+> to fix the below dtbs_check issue:
+> 
+> arch/arm64/boot/dts/renesas/r8a779h0-gray-hawk-single.dtb: /: compatible:0: 'anyOf' conditional failed, one must be fixed:
+> 4695 'renesas,gray-hawk-single' does not match '^renesas,(emev2|r(7s|8a|9a)[a-z0-9]+|rcar|rmobile|rz[a-z0-9]*|sh(7[a-z0-9]+)?|mobile)-[a-z0-9-]+$'
+> 4696 'renesas,gray-hawk-single' does not match '^renesas,(condor|falcon|gr-peach|salvator|sk-rz|smar(c(2)?)?|spider|white-hawk)(.*)?$'
+> 4697 'renesas,gray-hawk-single' does not match '^renesas,(can|cpg|dmac|du|(g)?ether(avb)?|gpio|hscif|(r)?i[i2]c|imr|intc|ipmmu|irqc|jpu|mmcif|msiof|mtu2|pci(e)?|pfc|pwm|[rq]spi|rcar_sound|sata|scif[ab]*|sdhi|thermal|tmu|tpu|usb(2|hs)?|vin|xhci)-[a-z0-9-]+$'
+> 4698 'renesas,gray-hawk-single' does not match '^renesas,(d|s)?bsc(3)?-(r8a73a4|r8a7740|sh73a0)$'
+> 4699 'renesas,gray-hawk-single' does not match '^renesas,em-(gio|sti|uart)$'
+> 4700 'renesas,gray-hawk-single' does not match '^renesas,fsi2-(r8a7740|sh73a0)$'
+> 4701 'renesas,gray-hawk-single' does not match '^renesas,hspi-r8a777[89]$'
+> 4702 'renesas,gray-hawk-single' does not match '^renesas,sysc-(r8a73a4|r8a7740|rmobile|sh73a0)$'
+> 4703 'renesas,gray-hawk-single' is not one of ['renesas,imr-lx4', 'renesas,mtu2-r7s72100']
+> 4704 'renesas,gray-hawk-single' is not one of ['renesas,smp-sram']
+> 4705 'renesas,gray-hawk-single' does not match '^(?!renesas,.+-.+).+$'
+> 4706 from schema $id: http://devicetree.org/schemas/soc/renesas/renesas-soc.yaml#
 
->
-> Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-> [eugen.hristev@collabora.com: rework to first test the exact match]
-> Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
+The change is correct, but I don't think you need to phrase the commit 
+message as fixing an error. This change extends renesas-soc.yaml with 
+support for gray-hawk.
+
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  fs/libfs.c         | 85 ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/fs.h |  4 +++
->  2 files changed, 89 insertions(+)
->
-> diff --git a/fs/libfs.c b/fs/libfs.c
-> index bb18884ff20e..65e2fb17a2b6 100644
-> --- a/fs/libfs.c
-> +++ b/fs/libfs.c
-> @@ -1773,6 +1773,91 @@ static const struct dentry_operations generic_ci_dentry_ops = {
->  	.d_hash = generic_ci_d_hash,
->  	.d_compare = generic_ci_d_compare,
->  };
-> +
-> +/**
-> + * generic_ci_match() - Match a name (case-insensitively) with a dirent.
-> + * This is a filesystem helper for comparison with directory entries.
-> + * generic_ci_d_compare should be used in VFS' ->d_compare instead.
-> + *
-> + * @parent: Inode of the parent of the dirent under comparison
-> + * @name: name under lookup.
-> + * @folded_name: Optional pre-folded name under lookup
-> + * @de_name: Dirent name.
-> + * @de_name_len: dirent name length.
-> + *
-> + * Test whether a case-insensitive directory entry matches the filename
-> + * being searched.  If @folded_name is provided, it is used instead of
-> + * recalculating the casefold of @name.
-> + *
-> + * Return: > 0 if the directory entry matches, 0 if it doesn't match, or
-> + * < 0 on error.
-> + */
-> +int generic_ci_match(const struct inode *parent,
-> +		     const struct qstr *name,
-> +		     const struct qstr *folded_name,
-> +		     const u8 *de_name, u32 de_name_len)
-> +{
-> +	const struct super_block *sb = parent->i_sb;
-> +	const struct unicode_map *um = sb->s_encoding;
-> +	struct fscrypt_str decrypted_name = FSTR_INIT(NULL, de_name_len);
-> +	struct qstr dirent = QSTR_INIT(de_name, de_name_len);
-> +	int res, match = 0;
-> +
-> +	if (IS_ENCRYPTED(parent)) {
-> +		const struct fscrypt_str encrypted_name =
-> +			FSTR_INIT((u8 *) de_name, de_name_len);
-> +
-> +		if (WARN_ON_ONCE(!fscrypt_has_encryption_key(parent)))
-> +			return -EINVAL;
-> +
-> +		decrypted_name.name = kmalloc(de_name_len, GFP_KERNEL);
-> +		if (!decrypted_name.name)
-> +			return -ENOMEM;
-> +		res = fscrypt_fname_disk_to_usr(parent, 0, 0, &encrypted_name,
-> +						&decrypted_name);
-> +		if (res < 0)
-> +			goto out;
-> +		dirent.name = decrypted_name.name;
-> +		dirent.len = decrypted_name.len;
-> +	}
-> +
-> +	/*
-> +	 * Attempt a case-sensitive match first. It is cheaper and
-> +	 * should cover most lookups, including all the sane
-> +	 * applications that expect a case-sensitive filesystem.
-
-> +	 * This comparison is safe under RCU because the caller
-> +	 * guarantees the consistency between str and len. See
-> +	 * __d_lookup_rcu_op_compare() for details.
-
-As I mentioned in the previous review, there's no RCU here. This comment
-makes no sense here.
-
-> +	 */
-> +	if (folded_name->name) {
-> +		if (dirent.len == folded_name->len &&
-> +		    !memcmp(folded_name->name, dirent.name, dirent.len)) {
-> +			match = 1;
-> +			goto out;
-> +		}
-> +		res = utf8_strncasecmp_folded(um, folded_name, &dirent);
-> +	} else {
-> +		if (dirent.len == name->len &&
-> +		    !memcmp(name->name, dirent.name, dirent.len) &&
-> +		    (!sb_has_strict_encoding(sb) || !utf8_validate(um, name))) {
-> +			match = 1;
-> +			goto out;
-> +		}
-> +		res = utf8_strncasecmp(um, name, &dirent);
-> +	}
-> +
-> +out:
-
-> +	kfree(decrypted_name.name);
-> +	if (match) /* matched by direct comparison */
-> +		return 1;
-> +	else if (!res) /* matched by utf8 comparison */
-> +		return 1;
-> +	else if (res < 0) /* error on utf8 comparison */
-> +		return res;
-> +	return 0; /* no match */
-> +}
-
-It can be simplified to
-
-if (res < 0)
-   return res;
-return (match || !res);
-
+>  Documentation/devicetree/bindings/soc/renesas/renesas-soc.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas-soc.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas-soc.yaml
+> index a5fcd471983d..5ddd31f30f26 100644
+> --- a/Documentation/devicetree/bindings/soc/renesas/renesas-soc.yaml
+> +++ b/Documentation/devicetree/bindings/soc/renesas/renesas-soc.yaml
+> @@ -37,7 +37,7 @@ properties:
+>        anyOf:
+>          # Preferred naming style for compatibles of SoC components
+>          - pattern: "^renesas,(emev2|r(7s|8a|9a)[a-z0-9]+|rcar|rmobile|rz[a-z0-9]*|sh(7[a-z0-9]+)?|mobile)-[a-z0-9-]+$"
+> -        - pattern: "^renesas,(condor|falcon|gr-peach|salvator|sk-rz|smar(c(2)?)?|spider|white-hawk)(.*)?$"
+> +        - pattern: "^renesas,(condor|falcon|gr-peach|gray-hawk|salvator|sk-rz|smar(c(2)?)?|spider|white-hawk)(.*)?$"
 >  
->  #ifdef CONFIG_FS_ENCRYPTION
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 820b93b2917f..7af691ff8d44 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3296,6 +3296,10 @@ extern int generic_file_fsync(struct file *, loff_t, loff_t, int);
->  extern int generic_check_addressable(unsigned, u64);
->  
->  extern void generic_set_encrypted_ci_d_ops(struct dentry *dentry);
-> +extern int generic_ci_match(const struct inode *parent,
-> +			    const struct qstr *name,
-> +			    const struct qstr *folded_name,
-> +			    const u8 *de_name, u32 de_name_len);
->  
->  static inline bool sb_has_encoding(const struct super_block *sb)
->  {
+>          # Legacy compatibles
+>          #
+> -- 
+> 2.34.1
+> 
 
 -- 
-Gabriel Krisman Bertazi
+Kind Regards,
+Niklas Söderlund
