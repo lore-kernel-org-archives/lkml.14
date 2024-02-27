@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D9EF149DE1;
-	Tue, 27 Feb 2024 19:48:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 257DA14CAD1;
+	Tue, 27 Feb 2024 19:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709063341; cv=none; b=iP7VcJS9REdJSgGW9FF8a+A9mWoTEDPiT2eWe/sagTxurVu8M1pfBvNvVZ2d/GH6WAhhB/1vSEmJgzdk5fEjbtZb/SVoreT4afcoU3QygryYxSZaS8HjmSisdvHcbtKRXRZGuD4R3KGMJGmxVA+9YZ0incStcUh6aTEBTSlB4wY=
+	t=1709063343; cv=none; b=UhyY6m1CwdPaRJGV+XDWXNP9sWLYh+xgJpnz1hx7g96Smw+HP+sdNeYnpVWipZT2CMdLhc8DwBIGWAGlmmSLZ+oDTIG1HmACAsYld1U0Ha8UnBtvI9m/5B0oxsvVcy1Z2xVruFa3+8GQ93HUOiIXl9WJfKtTkTai8yhsTlGHj3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709063341; c=relaxed/simple;
-	bh=wAQ5DpWIMEk/AKt1aTsBb2sccdq8gkiwLmigUoYGSt8=;
+	s=arc-20240116; t=1709063343; c=relaxed/simple;
+	bh=kyoC3QjAGJnw2ltWGrVe82yoB+HRlUgN+egixJlg/3A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qHqJ3Q+lVG9bIIY6+hQuQifVcNFyvFsWy8CzexVTa6JxpD7ZB0srCl3jMm5sMRpAufN093Rxg59plX0nXkktJmOREOl1IIniAEeo/RLgK94MUXqabCsquSj+kqDztfanj5RfnNH8AiZ6y5IYzuyuhmpg/VPkgoLvQS0mz+pppSE=
+	 MIME-Version; b=ndg+KjvDPijxfFcYc4B48ziB14cyyfyGmVWwLug/eOQpMumtDqH7FumP2o6aulEeSmdI9SU41d6yuYVuhLSWw+Mz7aQLKDxPD8GSNOXwsaPQBS1pJM16JEwkMOQNnqElwJMVXbQ0PfFc1AWM3v4H13hX0h3+5K8pwPI2j0t4jGQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CDC8DA7;
-	Tue, 27 Feb 2024 11:49:37 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B87CFEC;
+	Tue, 27 Feb 2024 11:49:40 -0800 (PST)
 Received: from pluto.. (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 490503F762;
-	Tue, 27 Feb 2024 11:48:56 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CE243F762;
+	Tue, 27 Feb 2024 11:48:59 -0800 (PST)
 From: Cristian Marussi <cristian.marussi@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
@@ -34,9 +34,9 @@ Cc: sudeep.holla@arm.com,
 	souvik.chakravarty@arm.com,
 	Cristian Marussi <cristian.marussi@arm.com>,
 	linux-clk@vger.kernel.org
-Subject: [PATCH 3/5] clk: scmi: Add support for rate change restricted clocks
-Date: Tue, 27 Feb 2024 19:48:10 +0000
-Message-ID: <20240227194812.1209532-4-cristian.marussi@arm.com>
+Subject: [PATCH 4/5] clk: scmi: Add support for re-parenting restricted clocks
+Date: Tue, 27 Feb 2024 19:48:11 +0000
+Message-ID: <20240227194812.1209532-5-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240227194812.1209532-1-cristian.marussi@arm.com>
 References: <20240227194812.1209532-1-cristian.marussi@arm.com>
@@ -48,8 +48,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some exposed SCMI Clocks could be marked as non-supporting rate changes.
-Configure a clk_ops descriptors which does not provide the rate change
+Some exposed SCMI Clocks could be marked as non-supporting re-parenting
+changes.
+Configure a clk_ops descriptor which does not provide the re-parenting
 callbacks for such clocks when registering with CLK framework.
 
 CC: Michael Turquette <mturquette@baylibre.com>
@@ -61,33 +62,33 @@ Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
-index fc9603988d91..d20dcc60f9d1 100644
+index d20dcc60f9d1..87e968b6c095 100644
 --- a/drivers/clk/clk-scmi.c
 +++ b/drivers/clk/clk-scmi.c
-@@ -19,6 +19,7 @@
- enum scmi_clk_feats {
+@@ -20,6 +20,7 @@ enum scmi_clk_feats {
  	SCMI_CLK_ATOMIC_SUPPORTED,
  	SCMI_CLK_STATE_CTRL_FORBIDDEN,
-+	SCMI_CLK_RATE_CTRL_FORBIDDEN,
+ 	SCMI_CLK_RATE_CTRL_FORBIDDEN,
++	SCMI_CLK_PARENT_CTRL_FORBIDDEN,
  	SCMI_CLK_MAX_FEATS
  };
  
-@@ -248,7 +249,8 @@ scmi_clk_ops_alloc(struct device *dev, unsigned long feats_key)
- 	ops->recalc_rate = scmi_clk_recalc_rate;
- 	ops->round_rate = scmi_clk_round_rate;
- 	ops->determine_rate = scmi_clk_determine_rate;
--	ops->set_rate = scmi_clk_set_rate;
-+	if (!(feats_key & BIT(SCMI_CLK_RATE_CTRL_FORBIDDEN)))
-+		ops->set_rate = scmi_clk_set_rate;
+@@ -254,7 +255,8 @@ scmi_clk_ops_alloc(struct device *dev, unsigned long feats_key)
  
  	/* Parent ops */
  	ops->get_parent = scmi_clk_get_parent;
-@@ -296,6 +298,9 @@ scmi_clk_ops_select(struct scmi_clk *sclk, bool atomic_capable,
- 	if (ci->state_ctrl_forbidden)
- 		feats_key |= BIT(SCMI_CLK_STATE_CTRL_FORBIDDEN);
+-	ops->set_parent = scmi_clk_set_parent;
++	if (!(feats_key & BIT(SCMI_CLK_PARENT_CTRL_FORBIDDEN)))
++		ops->set_parent = scmi_clk_set_parent;
  
-+	if (ci->rate_ctrl_forbidden)
-+		feats_key |= BIT(SCMI_CLK_RATE_CTRL_FORBIDDEN);
+ 	return ops;
+ }
+@@ -301,6 +303,9 @@ scmi_clk_ops_select(struct scmi_clk *sclk, bool atomic_capable,
+ 	if (ci->rate_ctrl_forbidden)
+ 		feats_key |= BIT(SCMI_CLK_RATE_CTRL_FORBIDDEN);
+ 
++	if (ci->parent_ctrl_forbidden)
++		feats_key |= BIT(SCMI_CLK_PARENT_CTRL_FORBIDDEN);
 +
  	/* Lookup previously allocated ops */
  	ops = clk_ops_db[feats_key];
