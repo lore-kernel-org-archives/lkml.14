@@ -1,63 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECEDD1369AE
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 09:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C565513699A;
+	Tue, 27 Feb 2024 09:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709026798; cv=none; b=MPctsVtiXWAgkq6nYOrWr81VGA4WgitEMV563lYcQ2qIP6mif30Eu1wgMi5lqEFbjU5cB0HgpqFVpzSLYkT4sfe05R+0bRV9DjvxSioLDwriyA3u+MloipHDm8Uf0w84/23i00+i03rzHugmeIgdf229Af/4VqKzZGj8+khDEqc=
+	t=1709026812; cv=none; b=kE7p7+sex8DLj5DNbPYLwvZTbkLEb/5v8df2g5AAjnkztPWmw/T19nq8naD5HWHHigKJVs8RtIfHkOVFSF71yYEj4j3QB9In8jyTtJjlGMunBRKvnebP40F3LykM+9REkctzqcGmBzxSu8cTVPum4yIUweujyWQW9YQrUYWywEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709026798; c=relaxed/simple;
-	bh=WLikBwdKRgfqzN0Fv6VtBzyq5SN5Elqbqt34MJQaPhA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZfV+O20bG74dSuTRpjfZMs8uWdiNx+8lJKkwxXH8ZLV48B6tFDqYVXgAQfsGIGTsSSkQB1LiQMo4dUBOdWbxuBJ4iU9oVujlooSeqCE6WUrbeLHxePz8gIjqGaHA8ZmKwzWFwlzBNfIOLRWRk0zL8MQzDh8Ps5p97pikk0kOs7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5933DDA7;
-	Tue, 27 Feb 2024 01:40:34 -0800 (PST)
-Received: from [10.163.48.107] (unknown [10.163.48.107])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6BB13F762;
-	Tue, 27 Feb 2024 01:39:53 -0800 (PST)
-Message-ID: <9f20e601-a5b8-48be-8364-3ea9b45d0940@arm.com>
-Date: Tue, 27 Feb 2024 15:09:51 +0530
+	s=arc-20240116; t=1709026812; c=relaxed/simple;
+	bh=8r24iKPhibOS40zxMGUMNspSc4hHZnzNSAnmzkFnOuQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u5wupXkC8BC1x4zgsJl/LkEHziJWfIt889GUNw6ZVROqogDNYlHDkF6WP/CQaglQdH893uv1IoN6PmqS2Sgq0bKyXSB4MV+HkaeqTdeXTFdEdqymuHKZVG4wUf/LUJCyfurOolMbfrB1qHfXx0rSqpod/1tEJvkG6fsbWBV6hTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TxJJHgRB; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TxJJHgRB"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 2F16A1BF20D;
+	Tue, 27 Feb 2024 09:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709026801;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6AJf+zzN7UHsiDVB1kdGMfmPws28cjDW3HCy8ItyxK8=;
+	b=TxJJHgRBlziCllHZOJT4RWWHW7gaP3x6pfe/Ui3GaJsL45Xar59xbK+U5IWRw5W6t1GCid
+	AWjoJB8O5pXFF4NIjfuHb78p/K/JgkOXAufKjW49BLNuqZh1GQ2wikgW6rNTmxI38A8JaY
+	ZqYTfx5rN4nrh4g/g0URnJ0majjlVNsVROBWVtca43tea+0oTmnuZSZ5JGQYFs2+jWYJGy
+	fCxZpLdrQq1IshfWDlv/xP3ZDKNM8TZAhVmiDgZobjyMehuPRfb6I0ySq7bCSOffyDnaWM
+	rQBbkukWN3Fi3ElTonkCO4jDt6Ng1pELeivZsBhXiptLzCW1Fxno7sHuy6aghA==
+From: Bastien Curutchet <bastien.curutchet@bootlin.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Bastien Curutchet <bastien.curutchet@bootlin.com>
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	herve.codina@bootlin.com,
+	maxime.chevallier@bootlin.com,
+	christophercordahi@nanometrics.ca
+Subject: [PATCH v2 0/6] net: phy: Add TI's DP83640 device tree binding
+Date: Tue, 27 Feb 2024 10:39:39 +0100
+Message-ID: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/hw_breakpoint: Determine lengths from generic perf
- breakpoint macros
-Content-Language: en-US
-To: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- linux-arm-kernel@lists.infradead.org, broonie@kernel.org,
- Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org
-References: <20240223113102.4027779-1-anshuman.khandual@arm.com>
- <20240223125224.GC10641@willie-the-truck>
- <1901fadb-1d71-4374-be8c-00935bb27854@arm.com>
- <ZdxwTkUALQfqjagf@FVFF77S0Q05N>
- <c37bd84e-d4f7-42df-a333-f2ad6ebc9527@arm.com>
- <20240227090529.GA13359@willie-the-truck>
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20240227090529.GA13359@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: bastien.curutchet@bootlin.com
 
+Hi everyone,
 
+This patch series adds small features to the TI PHY DP83640 :
+  - Add LED handling through /sys/class/leds to use the three
+    configuration modes offered by PHY.
+  - Add Energy Detect Mode handling through ethtool's
+    {get/set}_phy_tunable()
+  - Add a device tree attribute to be able to override the hardware
+    strap configuration if needed. This attribute allows to
+    enable/disable fiber mode.
 
-On 2/27/24 14:35, Will Deacon wrote:
-> On Tue, Feb 27, 2024 at 11:01:54AM +0530, Anshuman Khandual wrote:
->> On 2/26/24 16:34, Mark Rutland wrote:
->>> I don't think this needs to change, and can be left as-is.
->>
->> Fair enough, but just wondering how about deriving len_in_bytes from
->> hweight_long(ARM_BREAKPOINT_LEN_*) instead ? This also drops the hard
->> coding using the platform macros itself, without going to user ABI.
-> 
-> Please leave this code alone. It's fine like it is and there are plenty of
-> other things that would actually benefit from your attention. The BRBE
-> series, for example.
+Change log v1 -> v2 :
+  - LED Configuration is now done through /sys/class/leds insted of DT
+  - Energy Detect Mode is done from {set/get}_phy_tunable() instead of DT
+  - The DT property to enable/disable PHY control frames is dropped,
+    the feature is disabled directly in driver as it is not handled
+    anyway.
+  - The CLK_OUT pin handling has been dropped.
 
-Sure, no problem, will drop this patch.
+Bastien Curutchet (6):
+  dt-bindings: net: Add bindings for PHY DP83640
+  leds: trigger: Create a new LED netdev trigger for collision
+  net: phy: DP83640: Add LED handling
+  net: phy: DP83640: Add EDPD management
+  net: phy: DP83640: Explicitly disabling PHY Control Frames
+  net: phy: DP83640: Add fiber mode enabling/disabling from device tree
+
+ .../testing/sysfs-class-led-trigger-netdev    |  11 +
+ .../devicetree/bindings/net/ti,dp83640.yaml   |  77 +++++
+ drivers/leds/trigger/ledtrig-netdev.c         |   4 +
+ drivers/net/phy/dp83640.c                     | 299 ++++++++++++++++++
+ drivers/net/phy/dp83640_reg.h                 |  24 ++
+ include/linux/leds.h                          |   1 +
+ 6 files changed, 416 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,dp83640.yaml
+
+-- 
+2.43.0
+
