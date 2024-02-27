@@ -1,147 +1,107 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8601B1DFF0;
-	Tue, 27 Feb 2024 10:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57D11DFF0
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709030076; cv=none; b=YDWxLdQisWVxGY0QY0U44gp0ZAx0w/KefpkmDRDeUWZFd8VLlHxZIU2KAvEye39R54OxBa/a3oWEtVR0+4DvUvwMUkJCqO4avL0gffO+98yG9f9vbJSy2ix3BfCkwDX7VdhqRIYo0Bl/G48F7vGmjG0iPZ6gdBO+vQclnxM0Rkg=
+	t=1709030185; cv=none; b=TQthU3tsptni/wwR4zNSJNQeJXjrVEFSkjUynL3gN1R+JmTRwnFAo5tHGuHFSfucGyLCrxIb0ux0FNazCWBh6citMLJQj5JE8HJl6zeharfLEvbA7lvGON/tI6yGKCTRN6h+I4jwYO61NWyW1rZfpMuiBAAFkTBsqGPmT8zVsII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709030076; c=relaxed/simple;
-	bh=rq30rbnIvctTRtsZdN+r5jwNIkoDDZRInFyNbgXLyHo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UcekGOgyS/NsUj86wjFlNa3HrVh5szNXCHX4rCJC+hz1XwdyyU1NzXvb0KGLCQC18TYfZG0gYbOPkcUk3KR3o1QuN1tLl9wl6GsqOCss0w097wJ7Hy8XffFN7+LNPVYpAZzVheAQ3K6TOUnvWpEQMjbKeqhjVtBZqshsb0pherA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TkYdS29fTz6J9Zy;
-	Tue, 27 Feb 2024 18:29:48 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id F26F614058E;
-	Tue, 27 Feb 2024 18:34:24 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 27 Feb
- 2024 10:34:24 +0000
-Date: Tue, 27 Feb 2024 10:34:23 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: John Groves <John@groves.net>
-CC: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, "Dan
- Williams" <dan.j.williams@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Alexander
- Viro" <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Jan
- Kara" <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <john@jagalactic.com>, Dave Chinner
-	<david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>,
-	<dave.hansen@linux.intel.com>, <gregory.price@memverge.com>
-Subject: Re: [RFC PATCH 09/20] famfs: Add super_operations
-Message-ID: <20240227103423.0000510e@Huawei.com>
-In-Reply-To: <z3tnfxbbvhtbyantbm3yr3yv2qsih7darbm3p5pwwdsknuxlqa@rvexwleaixiy>
-References: <cover.1708709155.git.john@groves.net>
-	<537f836056c141ae093c42b9623d20de919083b1.1708709155.git.john@groves.net>
-	<20240226125136.00002e64@Huawei.com>
-	<z3tnfxbbvhtbyantbm3yr3yv2qsih7darbm3p5pwwdsknuxlqa@rvexwleaixiy>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1709030185; c=relaxed/simple;
+	bh=9Bpp2Gd+7XHS00/UjCwPlkxD2VRPK1P6HYvdF543+d4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hmc/PNMB+wiWWVGTNCSrzHMgRwGXZ31BnhW2nX28NCB+wq0XBHuGW5RfQz/3DjGaSn9bSYNEENb7JFXjfmDsDc6cjQ75baiKVuBsMtgx9c+1iK5Y7Gw+q5Ld6WkX+gKIPptZ7XprZmpjeLbstfFoLS43Q2ts15PDyy/D/0GZTDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 313881BF218;
+	Tue, 27 Feb 2024 10:36:17 +0000 (UTC)
+Message-ID: <e9524709-96b2-4008-815f-4d48ba5d48d9@ghiti.fr>
+Date: Tue, 27 Feb 2024 11:36:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf: RISCV: Fix panic on pmu overflow handler
+To: Fei Wu <fei2.wu@intel.com>, atishp@atishpatra.org, anup@brainfault.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240227030731.2560035-1-fei2.wu@intel.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240227030731.2560035-1-fei2.wu@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-GND-Sasl: alex@ghiti.fr
 
-On Mon, 26 Feb 2024 15:47:53 -0600
-John Groves <John@groves.net> wrote:
+Hi Fei,
 
-> On 24/02/26 12:51PM, Jonathan Cameron wrote:
-> > On Fri, 23 Feb 2024 11:41:53 -0600
-> > John Groves <John@Groves.net> wrote:
-> >   
-> > > Introduce the famfs superblock operations
-> > > 
-> > > Signed-off-by: John Groves <john@groves.net>
-> > > ---
-> > >  fs/famfs/famfs_inode.c | 72 ++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 72 insertions(+)
-> > >  create mode 100644 fs/famfs/famfs_inode.c
-> > > 
-> > > diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
-> > > new file mode 100644
-> > > index 000000000000..3329aff000d1
-> > > --- /dev/null
-> > > +++ b/fs/famfs/famfs_inode.c
-> > > @@ -0,0 +1,72 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * famfs - dax file system for shared fabric-attached memory
-> > > + *
-> > > + * Copyright 2023-2024 Micron Technology, inc
-> > > + *
-> > > + * This file system, originally based on ramfs the dax support from xfs,
-> > > + * is intended to allow multiple host systems to mount a common file system
-> > > + * view of dax files that map to shared memory.
-> > > + */
-> > > +
-> > > +#include <linux/fs.h>
-> > > +#include <linux/pagemap.h>
-> > > +#include <linux/highmem.h>
-> > > +#include <linux/time.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/string.h>
-> > > +#include <linux/backing-dev.h>
-> > > +#include <linux/sched.h>
-> > > +#include <linux/parser.h>
-> > > +#include <linux/magic.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/uaccess.h>
-> > > +#include <linux/fs_context.h>
-> > > +#include <linux/fs_parser.h>
-> > > +#include <linux/seq_file.h>
-> > > +#include <linux/dax.h>
-> > > +#include <linux/hugetlb.h>
-> > > +#include <linux/uio.h>
-> > > +#include <linux/iomap.h>
-> > > +#include <linux/path.h>
-> > > +#include <linux/namei.h>
-> > > +#include <linux/pfn_t.h>
-> > > +#include <linux/blkdev.h>  
-> > 
-> > That's a lot of header for such a small patch.. I'm going to guess
-> > they aren't all used - bring them in as you need them - I hope
-> > you never need some of these!  
-> 
-> I didn't phase in headers in this series. Based on these recommendations,
-> the next version of this series is gonna have to be 100% constructed from
-> scratch, but okay. My head hurts just thinking about it. I need a nap...
-> 
-> I've been rebasing for 3 weeks to get this series out, and it occurs to
-> me that maybe there are tools I'm not aware of that make it eaiser? I'm
-> just typing "rebase -i..." 200 times a day. Is there a less soul-crushing way?
+On 27/02/2024 04:07, Fei Wu wrote:
+> Sign extension of (1 << idx) from int is not desired when setting bits
+> in unsigned long overflowed_ctrs, kernel panics if 31 is a valid lidx.
+> This panic happens when 'perf record -e branches' on a sophgo machine.
+>
+> [  212.845953] epc : ffffffff80afc288 ra : ffffffff80afd310 sp : fffffff6e36928f0
+> [  212.853474]  gp : ffffffff821f7f48 tp : ffffffd9033b9900 t0 : 0000002ad69e9978
+> [  212.861069]  t1 : 000000000000002a t2 : ffffffff801764d2 s0 : fffffff6e3692ab0
+> [  212.868637]  s1 : 0000000000000020 a0 : 0000000000000000 a1 : 0000000000000015
+> [  212.876021]  a2 : 0000000000000000 a3 : 0000000000000015 a4 : 0000000000000020
+> [  212.883482]  a5 : ffffffd7ff880640 a6 : 000000000005a569 a7 : ffffffffffffffd5
+> [  212.891191]  s2 : 000000000000ffff s3 : 0000000000000000 s4 : ffffffd7ff880540
+> [  212.898707]  s5 : 0000000000504d55 s6 : ffffffd902443000 s7 : ffffffff821fe1f8
+> [  212.906329]  s8 : 000000007fffffff s9 : ffffffd7ff880540 s10: ffffffd9147a1098
+> [  212.914151]  s11: 0000000080000000 t3 : 0000000000000003 t4 : ffffffff80186226
+> [  212.921773]  t5 : ffffffff802455ca t6 : ffffffd9058900e8
+> [  212.927300] status: 0000000200000100 badaddr: 0000000000000098 cause: 000000000000000d
+> [  212.935575] [<ffffffff80afc288>] riscv_pmu_ctr_get_width_mask+0x8/0x60
+> [  212.942391] [<ffffffff80079922>] handle_percpu_devid_irq+0x98/0x1e8
+> [  212.948855] [<ffffffff80073d06>] generic_handle_domain_irq+0x28/0x36
+> [  212.955521] [<ffffffff80481444>] riscv_intc_irq+0x36/0x4e
+> [  212.961269] [<ffffffff80ca5fce>] handle_riscv_irq+0x4a/0x74
+> [  212.967270] [<ffffffff80ca6afc>] do_irq+0x60/0x90
+> [  212.972284] Code: b580 60a2 6402 5529 0141 8082 0013 0000 0013 0000 (6d5c) b783
+> [  212.980036] ---[ end trace 0000000000000000 ]---
+> [  212.984874] Kernel panic - not syncing: Fatal exception in interrupt
+> [  212.991506] SMP: stopping secondary CPUs
+> [  212.995964] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+>
+> Signed-off-by: Fei Wu <fei2.wu@intel.com>
+> ---
+>   drivers/perf/riscv_pmu_sbi.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 16acd4dcdb96..c87c459e52de 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -731,14 +731,14 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>   		/* compute hardware counter index */
+>   		hidx = info->csr - CSR_CYCLE;
+>   		/* check if the corresponding bit is set in sscountovf */
+> -		if (!(overflow & (1 << hidx)))
+> +		if (!(overflow & (1UL << hidx)))
+>   			continue;
+>   
+>   		/*
+>   		 * Keep a track of overflowed counters so that they can be started
+>   		 * with updated initial value.
+>   		 */
+> -		overflowed_ctrs |= 1 << lidx;
+> +		overflowed_ctrs |= 1UL << lidx;
+>   		hw_evt = &event->hw;
+>   		riscv_pmu_event_update(event);
+>   		perf_sample_data_init(&data, 0, hw_evt->last_period);
 
-Hmm. There are things that make it easier to pick and chose parts of a
-big diff for different patches.  Some combination of 
-git reset HEAD~1
-and one of the 'graphical' tools like tig that let you pick lines.
 
-That lets you quickly break up a patch where you want to move things, then
-you can reorder the patches to put them next to where you want to move
-changes to and rely on git rebase -i with f or s to squash them.
+That's a good catch. Do you mind using the BIT macro instead? And I see 
+2 other instances of "1 <<" in this file, I think they are safe since we 
+only have 32 hw perf counters, but I may be missing something: @Atish WDYT?
 
-Figuring out optimum path to the eventual break up you want is
-a skill though.  When doing this sort of mangling I tend to get it wrong
-and shout at my computer a few times a day ;)
-Then git rebase --abort and try again.
+Thanks,
 
-End result is that you end up with coherent series and it looks like
-you wrote perfect code in nice steps from the start!
-
-Jonathan
+Alex
 
 
