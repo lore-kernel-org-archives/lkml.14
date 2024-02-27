@@ -1,103 +1,82 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D7915CB
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4956F7FF
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708994246; cv=none; b=U++8+CXXDpxHBXtzjMn9jgszKD97NtrxwAKqZM8AmB59sM7kkqXao67ngHNzRgfLq5AfNf9eXcHAER6qfehA6WgUnMFTzF0+uwEjy5mjtaM2QhIlgBjt/7A2GD1tk2M+D5aP+GWhQB/zdPN1EPNegIiQrRHr95+/8srvOI49ljQ=
+	t=1708994348; cv=none; b=saSpLdhEltK2ps+5+RTKoGA2VVOFStHO+DJw1tZVSQf1LbF+rtAwUSfOZX5F3YTNtjLk0iIaUFc+5Q6pn9FxWZm11DQUuASkOC9PHbbNWjjAGA/ng1DYCHOLzWkJl3mxyGZ4HejfbDEUwEXPVsVUaaufA5bHQigHS7QwJhRWmPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708994246; c=relaxed/simple;
-	bh=A+TmjsnY+cysgEex+j7n1tyrma6IdjkmyS79+Ldw3EY=;
+	s=arc-20240116; t=1708994348; c=relaxed/simple;
+	bh=AhrhA0X8avLtGyybofw8r1o+S07uog51OtbaDma0OpA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=urtzSVNTSy3YWvJqROAiWbbZjZ6OtOx+hxuHh/3xt6BJhWv/lMV8pKp7nNbX3WDRMZ30L29VHujNO8Rw08NVXQth8EEoioGFf5HivkXbO91rLjWTL6bh0zOxBC399Mpz/sX71sOW2n9NimReVGKIJ/pQk3e7Ol+/2jBtQSeNBTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ddxu9HRQ; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=bL4U1XPjr7DMBhkhp3JfW0vBqanJle3v3Z0fsZpe0IMD7kEmq7ENNVIbfA0erXe1hUmeFrw6jNNgwPc4EFcx3DUVeYQAmaU5UOaF4Vawyw402pnD50pBpopvlbQBj07tJLnS3HomODAQQOOtsYYgxPXGzyqfqhCXhPS/4sm+/1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UxEr2dFE; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ddxu9HRQ"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-607c5679842so37523647b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:37:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UxEr2dFE"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-412a2c2ce88so13335e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 16:39:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708994244; x=1709599044; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1708994346; x=1709599146; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0iKNjUWW7iRYO9A2SIeCUXKezp5MA/FCeIQBi7AX+V8=;
-        b=Ddxu9HRQAh+gIk/CtD/ibj0yG6yB/pDuh0tPhohkop+ej1S77d7UF6PUDNv5WqcdsB
-         s+yq9oyutTtDe7zNzM2wzx/ZB9EzKzVP42hCfVEOgQeE/oYibmVqILGsEGskp9pimCtK
-         VIJzbfqDz9y5QxaW7QgueqTuRpPBneFUaEiTQOqoGglaFf9FvesE5y543s8jkwmoV1yT
-         eDwrK1ImPvlrjacOlHGYzx3HQvxt8LBsWY8SFFMniGgavGJKkXdZDMpsy+ElS6hrUkX0
-         Iq/DFqiYEbIoTxpxL4qLtIcjMDrUtuOqsLMSDtK5cgtOL8g2rGe5SZAd6Lb6Fuxob1dt
-         S5Og==
+        bh=AhrhA0X8avLtGyybofw8r1o+S07uog51OtbaDma0OpA=;
+        b=UxEr2dFEwcUavdUPR8MIesb1pyxx7G1tkQKMfQUrDoxs0C5+rAyCWK/HlXoX+AUryZ
+         ZRcXlUMXuyus5SfvYo/9wlW9/NhMfebjUzMFYHICx9hYFGgTt5StAiYhM1UDpPHG1IW4
+         V1HawqvwXp+gxx9Q8hYWcri+ST97kRKPImhLkrZTHRGKSYww6H2I0vcwKgqexdoOzDp1
+         ztQNP7nX9uaPoHT7PqmtoWQrqMVlpw4aELlDyBaGf/OGMbov/SV/lZrxLqsNVASXreeS
+         Y49KekUN7gZsX8hjrjLVZkE3vACciVRtxkbk1rS1JBamTZDx+25qlg0iN6bG4YmKSUWj
+         WTGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708994244; x=1709599044;
+        d=1e100.net; s=20230601; t=1708994346; x=1709599146;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0iKNjUWW7iRYO9A2SIeCUXKezp5MA/FCeIQBi7AX+V8=;
-        b=q715o0PqUmGETacr0yoBhNmfX043GYrqve6mIyk+ehpGwDuP/oNvgKUqkjjwDktiRR
-         8/Gm1gUd8a7JA4mdV5aCSk6cayyCivzi7Wi2UNvuXU6aJ+0yXh23FCHrc8DJ+uZVblJs
-         Ya8emBysUdjTV/KGKtXgWuv1WBH0fMEvel1e4o3pcwtU73QNCfALz0fu6NipkzXHClAl
-         Rr7qNHq97LXla/G+v2crXmiX4cVgWn1C+YQtkn/9T8mqZv+QNFsj7fwvp1LHotzrJ7Ol
-         9jr4CWiFSOo54Bn1mWwFumih/0+sYOt4w73KGXAGg/wxiGGK4jTo2pE9OVvP4ngLxBfb
-         kPVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvfqpc50gH2vpAcdADlhTuxdQ0RcHN1GBjjftpD7GlGnFNdblrKCvF2Yaox8X6rHQrO0r/IhFvFCkg5wVuVefojRt96yNzzYmfzz1d
-X-Gm-Message-State: AOJu0YxYP+eUJUWFcIY9IOYxBQjA1sC/NzgAH+m/qLB8UTyfq9YK6cL7
-	jmG3A121KIT1Zr4SuA7Bj8PaDG8Tseb6cTLVzLPjItYYbLFVuySvK+XB+Ob+USP6YZQ/vNSI8p7
-	Ak/EQwJrVuzVnp4FYrDgFesribGSnkx4egDLpTQ==
-X-Google-Smtp-Source: AGHT+IE4df8EejmK1GYtnYYIrilUdBgPMb7hN2YbBWwQO1DFK1I89UwkIg2NUUy1NEoZP4PPArIQGcOaiQ/Mu43T4Vk=
-X-Received: by 2002:a5b:752:0:b0:dcd:b034:b500 with SMTP id
- s18-20020a5b0752000000b00dcdb034b500mr889012ybq.43.1708994243773; Mon, 26 Feb
- 2024 16:37:23 -0800 (PST)
+        bh=AhrhA0X8avLtGyybofw8r1o+S07uog51OtbaDma0OpA=;
+        b=Po4O2xupiDZ2/1cQYpXOfvKtPQxF55oQ73zadZgIl7gTs7Nl5DL6HlHhPA+Aq7tqZY
+         I6rnO1tqzBBr1lW0xuB9dBG6LW1mOPtG4trVSxXJ6dvbAm8cRIW9olA6nRxCxkNGlHz8
+         fop0EroPXyV8kqvKzCPDwLoTWG5we74wTVF9jNlXUzeyC1pKilKOYIDhfyN5wwX1HsDY
+         PxB9vNPAqrOuHlTQeiT/KI8OhCNrEheNBr8n3bNXQOak2FsnJq54rq6/14Xg70srJbxv
+         /vlbUrpTWBuhnKu0qKMm2l++Lf2jzlGMo961WLlOHEerjM37VnRLmzDfdzWm1t5iTdp/
+         9I6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX1lS5mySs2Y6zE/qof3zX/uJqTi5YIDt235qsweJq2ot7nKdrk3UQHkE2V0Xee1iox1Svm+oNbtI4fna2QU6GstvEZgdWa8rC5BzWQ
+X-Gm-Message-State: AOJu0Yxf/WWm7gUwmVci5+nT2Si3eiAThzwyYRVTrur2HGS2+Hnws4r9
+	8ujEN/Rsl4Sd04KFlhi5YkvIrxy/r3rb19IMEXkPD4pUAu3zA91ljdslEXaMUPLi01tZSIk4Sxi
+	UOCIgTQzsMm9F3H+UwUsmKdYkjnf956oly7RU
+X-Google-Smtp-Source: AGHT+IEnyBDnhYmsBfNFkYuwY2a3M5LFXYnqw6HaS9U6td/mUiCJUzbjhRP86gOsUbFbHfGuNU8aNOrZNbdM0Ay62/M=
+X-Received: by 2002:a05:600c:518d:b0:412:a390:3440 with SMTP id
+ fa13-20020a05600c518d00b00412a3903440mr49520wmb.3.1708994345708; Mon, 26 Feb
+ 2024 16:39:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223223958.3887423-1-hsinyi@chromium.org>
-In-Reply-To: <20240223223958.3887423-1-hsinyi@chromium.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 27 Feb 2024 02:37:12 +0200
-Message-ID: <CAA8EJpre_HOY1xzOZPv5gPiJ-kEZEJiEm8oyYzXTiPj66vY8aw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Match panel hash for overridden mode
-To: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Douglas Anderson <dianders@chromium.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240223010328.2826774-1-jthies@google.com> <20240223010328.2826774-4-jthies@google.com>
+ <CACeCKacHYxdvdzaRxRMREeXWfbunhSy-3q+sSKHbJ+u9XXQukQ@mail.gmail.com>
+In-Reply-To: <CACeCKacHYxdvdzaRxRMREeXWfbunhSy-3q+sSKHbJ+u9XXQukQ@mail.gmail.com>
+From: Jameson Thies <jthies@google.com>
+Date: Mon, 26 Feb 2024 16:38:53 -0800
+Message-ID: <CAMFSARdAOTbPpiah=aqk6DFoNLWahdquSrPNXQmAiALKOCAxhg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] usb: typec: ucsi: Register SOP/SOP' Discover Identity Responses
+To: Prashant Malani <pmalani@chromium.org>
+Cc: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org, 
+	bleung@google.com, abhishekpandit@chromium.org, andersson@kernel.org, 
+	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com, 
+	gregkh@linuxfoundation.org, hdegoede@redhat.com, neil.armstrong@linaro.org, 
+	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 24 Feb 2024 at 00:40, Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> This series is a follow up for 1a5e81de180e ("Revert "drm/panel-edp: Add
-> auo_b116xa3_mode""). It's found that 2 different AUO panels use the same
-> product id. One of them requires an overridden mode, while the other should
-> use the mode directly from edid.
->
-> Since product id match is no longer sufficient, EDP_PANEL_ENTRY2 is extended
-> to check the crc hash of the entire edid base block.
+> Please consider using two commands to retrieve the data. This will
+> allow you to support UCSI 1.x too.
 
-Do you have these EDIDs posted somewhere? Can we use something less
-cryptic than hash for matching the panel, e.g. strings from Monitor
-Descriptors?
+> Nit: I'd probably call memset before setting con->cable to NULL.
 
->
-> Hsin-Yi Wang (2):
->   drm_edid: Add a function to get EDID base block
->   drm/panel: panel-edp: Match with panel hash for overridden modes
->
->  drivers/gpu/drm/drm_edid.c        | 55 +++++++++++++++-------------
->  drivers/gpu/drm/panel/panel-edp.c | 60 ++++++++++++++++++++++++++-----
->  include/drm/drm_edid.h            |  3 +-
->  3 files changed, 84 insertions(+), 34 deletions(-)
->
-> --
-> 2.44.0.rc0.258.g7320e95886-goog
->
+> And the same here.
 
-
--- 
-With best wishes
-Dmitry
+Thanks for your feedback. I'll apply these changes in a v2 version of
+this series.
