@@ -1,124 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952A6137C21
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 18:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DAEEEDD;
+	Tue, 27 Feb 2024 18:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709056944; cv=none; b=WdJWOqyPIaKe/2A/E8Whmxp2UmN2nng7sweuLEM1zwswaA7ebuCc8MGUUXUiPJLvbfnFGz24CLMooL64kRLhFUhJKqnjhF0lSc2CjgMq1tnzOZhkGyqgbA1FF94c4jKZYDfjaBaGXslmA/7JIXcRMcCyQ/MmSLg+i6c7fCVwtM4=
+	t=1709057031; cv=none; b=d5cRm5VAcQ1er+7oodnxlHxbOCH9hXnH2iNWC0tHh2KPYIGtuEkazOlRiYRaJ4jvCAf41ydCAD2eOktnDZNz6k3Eb8AfAkkIN9HXz8lUTTLwh8nhesgfoz6n9CQCnEY4iPNBObNr9dBxpYf5Bz0BTLGIJja2xXmkZS6ZI164WY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709056944; c=relaxed/simple;
-	bh=9srZA86tRQ0Lc6f+G5Z/wjNPWsbOftV358BYgV3yd4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c4WTT/id6vge8Tz1hhV9Itk4ZD2faAQrJj7P2wE5oJq96WMh0YadZTus26FaimGfcJ/mWTEKJgYgjfn7NLurX+bjafxJF974A8NtfvwQ0DPImR7y2WqpWfLo6he1t+bWFpJ0stvyj84w3K0vg5DFQjkukAKbrLPFgpzoiB6Jocg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qgxzm8eT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709057031; c=relaxed/simple;
+	bh=dmMdDLN3YgL1qMEqV22WwccWKGPvTDnUyQtKaq9KA84=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=XtvGynPG73P+xCqITvo2PrSRiL7b7xe+xDrksh4/u5csqXD9dD0bWp7FHYvxwwuqNDRbtzhZDE7xJScQj9pA1HSIW1jttpKc1XXr/AExgGLSVb6AihJgCNmEZi70f8U7JiR8JdPkHF9b6AQg7zJMHs8Vsveg0jRyM3yqjkec9XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=LdPcER21; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qgxzm8eT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709056941;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RxNc/aFVnNDKr6nzABJwfQofcGO3o2pWudIkQ0RdBpM=;
-	b=Qgxzm8eTbqbiBfcHN74hOMw5zgVhAbDGRzfifj84WtSPm4JEFwedN6hfaP2D6ET6Rx17/L
-	FMCFTUcgq7cMwBJ7drH/GA3kRuVey5u9eox0zQUomzVYwoaIkGJO2+juEVCXvYjXufdM/G
-	xoGS5ziZr6QGznShF/Fc6RgTpr7+qJc=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-617-CtbRc6R1MnGXnmM2P36Yfw-1; Tue, 27 Feb 2024 13:02:17 -0500
-X-MC-Unique: CtbRc6R1MnGXnmM2P36Yfw-1
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-42e7b88bfa5so24836451cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 10:02:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709056937; x=1709661737;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RxNc/aFVnNDKr6nzABJwfQofcGO3o2pWudIkQ0RdBpM=;
-        b=DiH3hMjQScBD3a1pW/v3BYXaZjFGv+l/7XQ+J2zcKD57FrSnzxHAyKsV7HN0AibKrA
-         YuwwBN3+/LGRVT8cBkNVrSMYmi38i1GBqt9Vlnxu5IQlA71XrfsNaKbqCGunvLpSzENY
-         HjPCsH6wfpjAzyndN8nAIgQrrJEQ7W/e6gUhuIglUU1CHrKJHIWJd1dA9dggH+VXNv0+
-         HKqeVja0h24UMRmQMIx/kF3pon+kaJNvV5xSVDvwaLusRE6K0p6RQbGst1fhsoLXlmJu
-         IUYFr1Il/A3X3wbLw2qng7KZEyk2iNSv/vxwwlb588zkMQhkN9VrW3W66ZZLwEkIAh7Q
-         EP6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU3nSHu8KBmadUEonfhIT72HhtqXRGOStjNqzFQy605280t1c0yIfsTaplcuo4zeEDHL0Lui4q7LV/7BeDa8QFzqMKT1T5uQiev/6Yk
-X-Gm-Message-State: AOJu0YxUk3ZzmsUo6vw1BnQRSKG7ykuDzurr3vCftbYOXeLREvrR28pc
-	S3IngvIE5vwzVCk3RC6rHC/X+IKQt8qGuWiVL6NTFjm4rnGMAVmMaKHFBH+fDwcKdU82lFnx+w9
-	fZz3aOA2izEYbYth4C0ylXJO5W5do0bH42Z067jndBnz8g4+nBDNYuvOsswSD1g==
-X-Received: by 2002:a05:622a:1a97:b0:42e:a717:cbca with SMTP id s23-20020a05622a1a9700b0042ea717cbcamr802343qtc.41.1709056936764;
-        Tue, 27 Feb 2024 10:02:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFdFPNupQsoGCNMoyarnVyVV+samDOQcNLB9zEJi7UDBBSyn6KQpoOrEG/VbkkBYeBv36V0Uw==
-X-Received: by 2002:a05:622a:1a97:b0:42e:a717:cbca with SMTP id s23-20020a05622a1a9700b0042ea717cbcamr802291qtc.41.1709056936129;
-        Tue, 27 Feb 2024 10:02:16 -0800 (PST)
-Received: from fedora ([2600:1700:1ff0:d0e0::37])
-        by smtp.gmail.com with ESMTPSA id f12-20020a05622a1a0c00b0042c7b9abef7sm3766020qtb.96.2024.02.27.10.02.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 10:02:15 -0800 (PST)
-Date: Tue, 27 Feb 2024 12:02:13 -0600
-From: Andrew Halaney <ahalaney@redhat.com>
-To: Sarosh Hasan <quic_sarohasa@quicinc.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, Prasad Sodagudi <psodagud@quicinc.com>, 
-	Rob Herring <robh@kernel.org>, kernel@quicinc.com, Sneh Shah <quic_snehshah@quicinc.com>, 
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>
-Subject: Re: [PATCH net-next v2] net: stmmac: dwmac-qcom-ethqos: Update link
- clock rate only for RGMII
-Message-ID: <3refwt5x2xplibxkne5sae4ybic7inzmfwna4vkhprpf3nyqom@lwng6mkbe3gc>
-References: <20240226094226.14276-1-quic_sarohasa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="LdPcER21"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1709057026; x=1709661826; i=rwarsow@gmx.de;
+	bh=dmMdDLN3YgL1qMEqV22WwccWKGPvTDnUyQtKaq9KA84=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
+	b=LdPcER21e1OgRbRUHraPYNKN3kvMQQx1XT3prCz7AsJeDW8IYc4+DBtVnc733qQp
+	 vhpISzyW/7TpUHFfJ4XvosYo7ETw1y1RNCxSZLuKuMNposGch0V3h6pNxZyKHe5/r
+	 /+YXdvwZFc/9QC696rFQYn51ac3ayHzdDipI7IkEsag1a0dv9pf/7r1MqzLEwQNXY
+	 k6UNf81FDHLHsaCkiWZe1/rDdEalMjNuy9tzLwlbMG7RM0OZx9TPutefCBAO7pFIK
+	 ObznwIVKjyUYbOq0AeSom57ZjZPRZnhwCHdVz6Khi7+3zhyDvw/VS8NkEIkEIA/vb
+	 hmSFbcrRh6Ds87Sn/A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.100.20] ([46.142.34.255]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M2wGi-1rbjUD4AbE-003OOm; Tue, 27
+ Feb 2024 19:03:46 +0100
+Message-ID: <3c7a1942-44a9-4211-ad5d-53bd7f1ca7b3@gmx.de>
+Date: Tue, 27 Feb 2024 19:03:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226094226.14276-1-quic_sarohasa@quicinc.com>
+User-Agent: Mozilla Thunderbird
+From: Ronald Warsow <rwarsow@gmx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Language: de-DE, en-US
+Subject: Re: [PATCH 6.7 000/334] 6.7.7-rc1 review
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:bVmj9tepv6wPyW6HA9HBKMcNO6C37FkNuoJcQNkIvsBP205SgEn
+ MsoVmdeLzo77beZLT8UZ8yJOH6og79z17IYdDQWb9L9EUs+kYsuT/FssbaAr0KtH1x+ntm5
+ pqTTeYFrd/Cb8vSK72yox7Z4A/ZAIdDMhWXSynX9D4MGBJI6uWJ2utiZ090+GK2O7GihQ0M
+ WJvKpqwqAAityy8ohVg1Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zv9euh28s8g=;yTFb0hyn3nt1PDC1OBPAHET3ETG
+ qMZxiO1vhYag+pzetChTJyEUVP3QNAa0OPq8a9YvE3fE/kCW3o1J8OHTirDCFEu5rAjMKrHu8
+ 1ywi4oPxigWIj+1WQxGJAbUvDpScRZNxdDSwVOYQQO0+URg0ZWU/TE4FXN9NxxfJl2Kgl/dVg
+ vusi+WVLy+Nk+Cv8F/SLFh9HEkcMDNsJwOg51OhFgEcUQWjUc//clXjb1amP0p3usXJar2VJd
+ gnAw1V3qDvSGK26bddiGbNcDtXM+dy7AejOKROogTFYG9u/rNKJQVxEMVFMCKHk+yddux13Je
+ u8756wbwLXnd3g3MLJgVD/WtIGwIN3cOcVpj9W+cZnWYFd/lmBaWAIzSIVpvSFf7Rhz2qKgq+
+ 6eKGBZ4Hy1BqBWfGpbPf9r/bhsQRMK72aVCekrS1/6k3GkEwLquVpZ2qhaNNxIpOELO7TAVMe
+ jbTPP738KroHNRip02GgOE4/yrOYoEt0eRwqbrR69oS/TxHnjERMN0aKxgi8QUoOO/FNbKuIC
+ QYXjsUeI7KWXucNZm59QHeN5M6PdcTbNYVAk8Wuxs++a2NXWgISL2z3Ne1Spj24NUiFrGDkUn
+ 4aAPp4nEFlnJwxDwQSPrNNo54/0ZNnKq9GQS/kJmz6Skht1LnVPomGwaTpMMMiM/m9lD8BdzG
+ K1+eoJ9GojbHaAP2IyCiM2rfbSGI3VbKC41VQT+ivUhthl+Ee5auJJzDEhIUmU0AMarLejnZ6
+ cbMtSKe2KUgpiIZSLVTXAY3ucE7Q7ihXJw7UaJ5TyjujzSyWmUO5ZfzU50Qo96CzHRXzE1XcF
+ /UOO2l9YTh2gkhckOWgU8mkvLXCt+Htb7xPUt5Fz4Qn94=
 
-On Mon, Feb 26, 2024 at 03:12:26PM +0530, Sarosh Hasan wrote:
-> Updating link clock rate for different speeds is only needed when
-> using RGMII, as that mode requires changing clock speed when the link
-> speed changes. Let's restrict updating the link clock speed in
-> ethqos_update_link_clk() to just RGMII. Other modes such as SGMII
-> only need to enable the link clock (which is already done in probe).
-> 
-> Signed-off-by: Sarosh Hasan <quic_sarohasa@quicinc.com>
+Hi Greg
 
-Reviewed-by: Andrew Halaney <ahalaney@redhat.com>
-Tested-by: Andrew Halaney <ahalaney@redhat.com> # sa8775p-ride
+*no* regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-> ---
-> v2 changelog:
-> - Addressed Konrad Dybcio comment on optimizing the patch
-> ---
->  drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> index 31631e3f89d0..c182294a6515 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-> @@ -169,6 +169,9 @@ static void rgmii_dump(void *priv)
->  static void
->  ethqos_update_link_clk(struct qcom_ethqos *ethqos, unsigned int speed)
->  {
-> +	if (!phy_interface_mode_is_rgmii(ethqos->phy_mode))
-> +		return;
-> +
->  	switch (speed) {
->  	case SPEED_1000:
->  		ethqos->link_clk_rate =  RGMII_1000_NOM_CLK_FREQ;
-> -- 
-> 2.17.1
-> 
+Thanks
+
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
 
