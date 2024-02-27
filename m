@@ -1,102 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28DE14EFF4;
-	Tue, 27 Feb 2024 21:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8D014EFDF
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709068300; cv=none; b=BJy3A3SKUHObRuWP+jLyz9b8W05Dc5uvwSfH+4etr5nRD0JEiiCgLQG9srQXn3pOfuiqYjbqZe/LN4V77Iq9qSENf61aQzwSREAwSryP2Jt26seQZ+zA3lVG/2JPKobkEfuQMZbnw9c628Z3hdIgtQsFqI9MJnM/FZlEOrd5UI8=
+	t=1709068321; cv=none; b=TVgkzTsmIefMiO0wkfu+s/enpIaFw8P2ihJImszhkSIMR0JpZPGs9sFzEbvxO6hSKOh/nmgEWngvaiRsXdRqS/1tp1lc/PuX3G+5riUbM4NAHUFZx4UxjlMfdmbkKhuCVQaLzbN2iSrRFmJo4F0Y3PR5ykve5CtLlNE44b6T4u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709068300; c=relaxed/simple;
-	bh=3GOPQWzlpl/NCJMRQDoGYUrGg6h8l1hMdmnNxjsJtqE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t3VW9xJrbO6Vvn/KKPevAOSFoDrVYH2L0eLC6HhaeTnE5TAUcjsEfFD4156ZBqfeGkByj0ovit8QQYzamychjuGhog9bxz0lFzOYjZAEmSVt62cehezV2IB51fsO7tfzFElYyMmalYewFdbhRhqvwZYXQ3KI+i8Pmz/P+ZWHo90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjcvql2q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709068321; c=relaxed/simple;
+	bh=hEk9QDFeu1YKNa8wvXHA4VBVHU0myYC6K9alzCsgJxs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=omOqh7DtWnaHUsL8p3oAjchMZyd7BFhWGli04K9ERyMERSG7/Kw7kg1O9KnJa1FogUd4FU/9yzhBsHOmZtmFXu31+DMZ7dGwf+r0rCMt33VtvgAZRNEzfPmftRTjwR1LtH18xJEsfLjsFxj9GV97t345xLUksNqcj5mVUmZ+gfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=CEEvFTez; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjcvql2q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E7FC43390;
-	Tue, 27 Feb 2024 21:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709068300;
-	bh=3GOPQWzlpl/NCJMRQDoGYUrGg6h8l1hMdmnNxjsJtqE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tjcvql2qES5K0OIzzeGu/5anJPBD1HIMPUD0G6LlAGYpGN5CU+R8NSTlhGNHSaAtV
-	 Dp/vpm+NM0VoeUxzIeVV1+Q37c2CYjeZRENnPZDs04ZAGm7p8lrONQxDjeCWcDPZq4
-	 g3ciWDXOFpYGEBtjbpy1Lk6YjOqwIc0eYjMkDPWVFTFL4I6tB0tYrLCukYd27iUhG0
-	 Q9o+EcWtAJErVGwxTKnteqGZ/AXnn/eGuw0GiWa/nxSX1NGZ199rI1H2UvD3Qbxwgv
-	 KCUtUW7jAmirWVunN837Ak6YBlCPrgH6POGxWTLm5pWozfA4A4jPc+8Op0nifhf2Tb
-	 s9xaO4tiJm9OA==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-513143d3c42so1060909e87.3;
-        Tue, 27 Feb 2024 13:11:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW+/qE3JZo7Wud566cuB2wyA9S5e7a+N6m2G3U5/pKJlFXfFN1h5FdT1GI7uU6knG5zKun6xFmntnw0hpHeHWTRmRAFpmTLZC+6vUGQ+6JvxDmUYLdU+pd1rev1VR55nMQTV9QDVPNDBA==
-X-Gm-Message-State: AOJu0YyP+qAViFyTgDwiWW56rbeC4By20HbpES6K2puSoF/o2pJSSOgM
-	4HSjGTFC39w38W9uhkDn7B+6De5UPjfrRq184H2TXPF0Z+7LBd46cGdo8J2+31fwsTIZfA9DEb7
-	7OuN6Hdb8oQ4l/KOV2QMv4rVbHjc=
-X-Google-Smtp-Source: AGHT+IFCCAMw+/0CQY67zz5dcFZZA6Oh2/9pIcTZvE3Y3RQnHeGnPMR/zOtcUoABuvX2PbDAaFYrfzKiGj90QUOP9aY=
-X-Received: by 2002:ac2:5dd4:0:b0:513:17bf:87d5 with SMTP id
- x20-20020ac25dd4000000b0051317bf87d5mr474653lfq.63.1709068298248; Tue, 27 Feb
- 2024 13:11:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="CEEvFTez"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-55b5a37acb6so1830143a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 13:11:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1709068317; x=1709673117; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZPE+oqeP/gO+8e/ieSDDfq6bOx9XZ+PWeSTcgAFWM9g=;
+        b=CEEvFTezO13TATFk+aNsE9vWHxszrx/0ND8oGCoz2z6r9nc7o6Pd6Gdne8DKG9Dlzz
+         +oBsOI8r45glX0rJqQ9CJ7CAhdlEFCWpEl7JGVMWu09xk082A+shih1KGHiu5NrOp+4g
+         NBS7F4gEqEvvuWio0hMJjdm0pXGG2CNQlrtXTV9u6lfwpsUM3svkcsegx0mHZwrAkjBZ
+         B6tYSWmFKFc8cu8hGrtWllfACxwJEw96btujcJs2DJqkK8TxDYrj8xlDI5QQGmDRZ8YU
+         e0Mt6j03vfBE+hmHfvjMPTZaA+gbG88G/aiZkv1D47zPQ7PxetRWlHJb+iRIxNpeFl00
+         msiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709068317; x=1709673117;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZPE+oqeP/gO+8e/ieSDDfq6bOx9XZ+PWeSTcgAFWM9g=;
+        b=EoAxd4CWaaL87oMK3jfTQGpz9VEO8Uz12DcXwif8pJV0o48jqzcIZI+mH/fPh8IVKV
+         fLPWqGYFwzzy6I38QdCEA+Yg9q4g/s0Zs2xXD3b3/hG2bADqgCFUlMq3AXX/1AAdW0MX
+         Syw8hZOwjCQ6ZArvrDTxgANPifMh9sf67/1Ro1aAt+g1/gpdfe9gjBTwNxuwUbvJ7zk+
+         oxt2VS62S8lSFsZFxgPDAQEZ4ZKeNIrDVkJmcIL/MSbEFA6qgquD+PwjfH0y9VX/j6kZ
+         dsXVHn/GOijy0QSL8IZj+wbTxD5+9Fh1s7IogPZrWyU2gtPHp0WVLqGRY5Z+16trXdFV
+         0FGg==
+X-Gm-Message-State: AOJu0YzXvgmJaH8RyTl+6gqZmbrHDNRabghqycfBG2tOUsmG4gblA8s7
+	O/dQM18CXyyeutSmRbHYp7cwfdkzWtBD+FtxTIjywO9OjuQe/QyD7YrWgQy0pRAmwItV/DVmHSp
+	T
+X-Google-Smtp-Source: AGHT+IEJhtqoL43ymbF+y0F4k/K7S8yFPVZI0cy2P12AZQXzF8mAHoPal6G9no2oFfdEgEPlFmqwzg==
+X-Received: by 2002:a05:6a00:1384:b0:6e5:4abe:fd4c with SMTP id t4-20020a056a00138400b006e54abefd4cmr2833451pfg.3.1709068316753;
+        Tue, 27 Feb 2024 13:11:56 -0800 (PST)
+Received: from localhost.localdomain ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id u8-20020a056a00098800b006e5557128efsm735390pfg.133.2024.02.27.13.11.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 13:11:56 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com
+Subject: [PATCHSET v2 0/2] Split iowait into two states
+Date: Tue, 27 Feb 2024 14:06:01 -0700
+Message-ID: <20240227211152.1099534-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227120327.1432511-1-yukuai1@huaweicloud.com>
-In-Reply-To: <20240227120327.1432511-1-yukuai1@huaweicloud.com>
-From: Song Liu <song@kernel.org>
-Date: Tue, 27 Feb 2024 13:11:26 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW4PRcbQbjoXQ_F=V4DxAJp9v_ybWHgwueCLA+iU52J7mQ@mail.gmail.com>
-Message-ID: <CAPhsuW4PRcbQbjoXQ_F=V4DxAJp9v_ybWHgwueCLA+iU52J7mQ@mail.gmail.com>
-Subject: Re: [PATCH md-6.9 v2 00/10] md/raid1: refactor read_balance() and
- some minor fix
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, paul.e.luse@linux.intel.com, shli@fb.com, neilb@suse.com, 
-	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, yukuai3@huawei.com, 
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 27, 2024 at 4:09=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> From: Yu Kuai <yukuai3@huawei.com>
->
-> Changes in v2:
->  - add new conter in conf for patch 2;
->  - fix the case choose next idle while there is no other idle disk in
->  patch 3;
->  - add some review tag from Xiao Ni for patch 1, 4-8
->
-> The original idea is that Paul want to optimize raid1 read
-> performance([1]), however, we think that the original code for
-> read_balance() is quite complex, and we don't want to add more
-> complexity. Hence we decide to refactor read_balance() first, to make
-> code cleaner and easier for follow up.
->
-> Before this patchset, read_balance() has many local variables and many
-> branches, it want to consider all the scenarios in one iteration. The
-> idea of this patch is to divide them into 4 different steps:
->
-> 1) If resync is in progress, find the first usable disk, patch 5;
-> Otherwise:
-> 2) Loop through all disks and skipping slow disks and disks with bad
-> blocks, choose the best disk, patch 10. If no disk is found:
-> 3) Look for disks with bad blocks and choose the one with most number of
-> sectors, patch 8. If no disk is found:
-> 4) Choose first found slow disk with no bad blocks, or slow disk with
-> most number of sectors, patch 7.
->
-> Note that step 3) and step 4) are super code path, and performance
-> should not be considered.
->
-> And after this patchset, we'll continue to optimize read_balance for
-> step 2), specifically how to choose the best rdev to read.
->
-> [1] https://lore.kernel.org/all/20240102125115.129261-1-paul.e.luse@linux=
-.intel.com/
+Hi,
 
-v2 looks good to me. Thanks! I will give Xiao some more time to review
-it one more time before pushing it to md-6.9.
+This is v2 of the patch posted yesterday, where the current in_iowait
+state is split into two parts:
 
-Song
+1) The "task is sleeping waiting on IO", and would like cpufreq goodness
+   in terms of sleep and wakeup latencies.
+2) The above, and also accounted as such in the iowait stats.
+
+The current ->in_iowait covers both, with this series we have ->in_iowait
+for step 1 above, and ->in_iowait_acct for step 2. You cannot be
+->in_iowait_acct without also having ->in_iowait set.
+
+Patch 1 is a prep patch, that turns rq->nr_iowait into an unsigned int
+rather than an atomic_t. Reasons given in that patch.
+
+Patch 2 adds the ->in_iowait_acct stage inside the current ->in_iowait
+setting.
+
+I haven't been able to properly benchmark patch 1, as the atomics are
+noise in any workloads that approximate normality. I can certainly
+concoct a synthetic test case if folks are interested. My gut says that
+we're trading 3 fast path atomics for none, and with the 4th case
+_probably_ being way less likely. There we grab the rq lock.
+
+Comments welcome! Peter, CC'ing you since I did in the previous, feel
+free to ignore.
+
+Since v1:
+- Add prep patch 1, switching nr_iowait to an unsigned int
+- Modify patch 2 to not use atomic_t as well, no changes otherwise
+
+ arch/s390/appldata/appldata_base.c |  2 +-
+ arch/s390/appldata/appldata_os.c   |  2 +-
+ fs/proc/stat.c                     |  2 +-
+ include/linux/sched.h              |  6 ++++
+ include/linux/sched/stat.h         | 10 ++++--
+ kernel/sched/core.c                | 55 +++++++++++++++++++++++-------
+ kernel/sched/cputime.c             |  2 +-
+ kernel/sched/sched.h               |  3 +-
+ kernel/time/tick-sched.c           |  6 ++--
+ 9 files changed, 66 insertions(+), 22 deletions(-)
+
+-- 
+Jens Axboe
+
