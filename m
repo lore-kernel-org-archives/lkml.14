@@ -1,260 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F76A7FF
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 00:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD18C136A;
+	Tue, 27 Feb 2024 00:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708994419; cv=none; b=nNX2v1y6oWqqOdSb2+iW/a+NyWrFgZ8nb6gdHnlRn3AhuvXKSCT8qnRLELvKdtHtp0ZA1rjEpXEOO0SVjT/dniP/0H+Az/ZTZOgBnYMTOjUuEYkLEkda2iRgr0VrYCt9U2M8l/aNfZW6s6DkLeJgEJK3lS2yzhfzod6V6pQLPpU=
+	t=1708994500; cv=none; b=SPEwa4LPvoQz9LQZyFVaHUEXFjxVVo79NUuC42VthElamH5E2bHxa4WZwyRe6UaBeZHcaUtoHIrOfewvzdI4+J4gxtFmCfkUwgOH27u4D3McJPYEXgfUwxKwdtwIPwupJkpVY+iK+blP98+D9YZXeZJ+ER12ho6+NKeU6PJMAwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708994419; c=relaxed/simple;
-	bh=XQrJcpKgxIV+gtw9yVUIUl0OVoNPwIVzq5HXcRyo620=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gHLZoe+YB36ntx4KhpaimPgOpBnO4QXdbrjSevZy1mhReekoOaY5YGtiPnPg1lyBdijn0GxCaoBxS5PAVUXwCmIdc32i3gkiDEMmlzTzvTMS6davHxy02/+yey65kSVVBqTSPjFzN2MrOJgNpUaU0qgZs2fdGRHjC++zszjSBUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VF2NvWj5; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1708994500; c=relaxed/simple;
+	bh=OCMg9lVSRi1dM4mQ/dHVKSvIT2dNp6Xad44VFS/XxqA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C7iy0I6PwV0N3QUS5+N4hTY5cSKH6FzZ+gUuqwBEvI7vIPGLAWR1FUPnT201w+CAsPy4+HLsxvhITf5mgp0CPBIi1X/rumd+SjuPq3oh92X03dStYFLmV1hVZhz8wPkye+/48QxNS87eZfTCjFla5fkgYIYufHp5TCO2ilyKhhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=E9Pw2iwk; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VF2NvWj5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708994417; x=1740530417;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=XQrJcpKgxIV+gtw9yVUIUl0OVoNPwIVzq5HXcRyo620=;
-  b=VF2NvWj5IZsIUiM713z9/qloRcuoYlQEA06HY2IM3M2SMyKhl263NJW6
-   Eq2ZOuxlteuX5ISF4AYB+ckElH79rK8xeZiQlK+Q6XaC/aiyfzLUq36Ui
-   FCLmGzmXTW65uPo1Gr94RK2S1XOUBOL1BVmHmaApOqbDWYnl+AkFfT4vq
-   Zb5ND6PEcQBYncW07xyd+mu0MOigWG5U4jXnNCvyg5Rc6Oa54GZ1lWH0s
-   oeCUUDJRAQK3IVSytH5o24IKnsRFDmfD+IroQeu8BNvmCU0FEfXTNCJ5/
-   PQghVxomL7tjSilSvj9iLC8/0OzGQDIX++259twwYv0/iIah/zyU/VoZB
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="7101518"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="7101518"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 16:40:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="6729837"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 16:40:14 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
-  <linux-kernel@vger.kernel.org>,  <hannes@cmpxchg.org>,
-  <dan.j.williams@intel.com>,  <dave.jiang@intel.com>
-Subject: Re: [RFC 1/1] mm/mempolicy: introduce system default interleave
- weights
-In-Reply-To: <ZdygZ8ZidfaORg8F@memverge.com> (Gregory Price's message of "Mon,
-	26 Feb 2024 09:29:59 -0500")
-References: <20240220202529.2365-1-gregory.price@memverge.com>
-	<20240220202529.2365-2-gregory.price@memverge.com>
-	<87wmqxht4c.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZdgxaLSBznupVmJK@memverge.com>
-	<87sf1jh7es.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZdygZ8ZidfaORg8F@memverge.com>
-Date: Tue, 27 Feb 2024 08:38:19 +0800
-Message-ID: <87edcyeo78.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E9Pw2iwk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=E3yLeoY54L7an1gZ4crtQOnqHhnFkPcsPYy0GYM/xeQ=; b=E9Pw2iwkGDsfhccy5Lx+Hx4Mlg
+	70ogJLDoMrg4GWhsksRjSilxhaGGnPUV9B0gNqASn5zii8g91A1xK/BiMkQge0f3CvchoM2ifOUTA
+	rV7oYrED8mzqWgjAiArJdUZF2AyUc2gMfrI4WaHMWNj+BpA0EtnYQz7F4COSKeX3YoKtx+mLMkWcZ
+	61mtJJyNA/6QYOLjRYnpD7t1gEPXBOa+L7JXPQG8hs1tWtdu4/ksWYVEBHrIH7n9SDw9mIAitqJrR
+	qFVz9dVCE1rakSnVmhDSR5WJIT+OopKjwuMSfFk56SnUy7GjmT1GoOyFGzKEpCzpWOjoTRhSqWwg+
+	Kj7ixWXA==;
+Received: from [50.53.50.0] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1relXN-000000038CT-14fW;
+	Tue, 27 Feb 2024 00:41:37 +0000
+Message-ID: <43df625f-bd32-4dd9-a960-6d0f5c0304c7@infradead.org>
+Date: Mon, 26 Feb 2024 16:41:36 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: submit-checklist: structure by category
+Content-Language: en-US
+To: Lukas Bulwahn <lukas.bulwahn@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>, workflows@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240226104653.54877-1-lukas.bulwahn@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240226104653.54877-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Gregory Price <gregory.price@memverge.com> writes:
+Hi Lukas,
 
-> On Fri, Feb 23, 2024 at 05:11:23PM +0800, Huang, Ying wrote:
->> Gregory Price <gregory.price@memverge.com> writes:
->>
->
-> (sorry for the re-send, error replying to list)
->
->> >> > +	/* If node is not set or has < 1% of total bw, use minimum value of 1 */
->> >> > +	for (i = 0; i < nr_node_ids; i++) {
->> >> > +		if (new_bw[i])
->> >> > +			new_iw[i] = max((100 * new_bw[i] / ttl_bw), 1);
->> 
->> IIUC, the sum of interleave weights of all nodes will be 100.  If there
->> are more than 100 nodes in the system, this doesn't work properly.  How
->> about use some fixed number like "16" for DRAM node?
->>
->
-> I suppose we could add a "type" value into the interface that says
-> what approximate "tier" a node is in, or we could ask the tiering
-> component for that information.  But what does this actually change?
->
-> You still calculate the percentage of bandwidth provided by each node,
-> and then just apply that to the larger default number. I don't see the
-> point in that - if each node provides less than 1% of the overall system
-> bandwidth, and larger numbers won't do much. In fact, we want smaller
-> numbers to spread spacially local data out more aggressively.
->
-> More important question: In what world is a large numa system liabile
-> to use this interface to any real benefit?
->
->
-> I'd briefly considered this, but I strayed away from supporting that
-> case.  Probably worth documenting, at the very least.
->
-> We had the cross-socket interleave discussion previously in the prior
-> series.  The question above simplifies (complicates?) to:  How useful
-> is interleave (weighted or not) in cross-socket workloads.
->
-> Consider the following configuration:
->
->
->  ---------   A  --------    C    -------- D  ---------
->  | DRAM0 | ---- | cpu0 |---UPI---| cpu1 |----| DRAM1 |
->  ---------      --------         --------    ---------
-> 	           | B              | E
->                 --------         --------
->                 | cxl0 |         | cxl1 |
->                 --------         --------
->
-> Theoretical throughputs
->
-> A&D: 512GB/s  (8 channel DDR5)
-> B&E: 64GB/s   (1 CXL/PCIe5 link)
-> C  : 62.4GB/s (3x UPI links)
->
-> Where are the 100 nodes coming from?
+I'll review the file changes separately. This is just replying
+to the patch description comments.
 
-If you have a real large machine with more than 100 nodes, and some of
-them are CXL memory nodes, then it's possible that most nodes will have
-interleave weight "1" because the sum of all interleave weights is
-"100".  Then, even if you use only one socket, the interleave weight of
-DRAM and CXL MEM could be all "1", lead to useless default value.  So, I
-suggest don't cap the sum of interleave weights.
 
-> If it's across interconnects (UPI), then the throughput to remote
-> DRAM is better described by C, not A or D. However, we don't have
-> that information (maybe we should?).  More importantly... is
-> interleaving across these links even useful?  I suppose if you did
-> sub-numa clustering stuff and had an ultra-super-numa-aware piece
-> of software capable of keeping certain chunks of memory in certain
-> cores that might be useful.... but then you probably actually want
-> task-local weights as opposed to using the system default.
->
-> Otherwise, does a UPI link actually get the full throughput? Probably
-> only if the remote memory bus is unloaded.  If the remote bus is
-> loaded, then link C performance information is basically a lie.
->
-> I've been convinced (so far) that cross-socket interconnect
-> interleaving is not a real use-case unless you intend to only run
-> your software on a single socket and use the remote socket for
-> whatever you can swipe over the interconnect. In that case, you're
-> probably smart enough to set the interleave weights manually.
->
->
-> So what if the nodes are coming from many memory sources down one
-> or more local CXL links (link B from cpu0).
->
->  ---------   A  --------
->  | DRAM0 | ---- | cpu0 |
->  ---------      --------
-> 	           | B 
->       ----------------------------
->       |                          |
->   --------                    --------
->   | cxl0 |       ......       | cxlN |
->   --------                    --------
->
-> In that case it would be better for many reasons to reconfigure the
-> system to combine those nodes into fewer nodes via a hardware interleave
-> set.  This can be done in hardware (at a switch), in BIOS (at the root
-> complex), or by the CXL Driver.  The result is fewer nodes, and the real
-> performance of that node can be calculated by the drivers and repoted
-> accordingly.
->
->
->
-> So coming back to this code:  Then why am I doing GCD across all
-> nodes, rather than taking the full topology into account?  Mostly
-> because the topological information is not easily available, would
-> be complex to communicate across components, and the full reduction
-> is a decent approximation anyway.
->
-> Example from above using real HMAT reported numbers
->
-> A&D: 176100
-> B&E: 60000
-> C:   Not a node, no information available.
->
-> Produces Node Weights
->
-> Calculating total system weighted averagee
-> A:37  D:37  B:12  E:12  (37 is prime so no reductions possible)
->
-> Calculating local-node relationships only
-> A:74--B:25  D:74--E:25  (GCD is 1, so no reductions possible)
->
-> Notice that 12+37 = 49 -  12/49 = 24%
->
-> So the ratios end up working out basically the same anyway, but
-> the smaller numbers produced by averaging over the entire system
-> are preferable to the "topologically aware" numbers anyway.
->
->
-> Obviously this breaks in a "large numa system" - but again...
-> is this even useful for those systems anyway? I contend: No.
->
->
-> This is still reasonable accurate in non-hogeneous systems
->
->  ---------   A  --------    C    -------- D  ---------
->  | DRAM0 | ---- | cpu0 |---UPI---| cpu1 |----| DRAM1 |
->  ---------      --------         --------    ---------
-> 	           | B
->                 --------
->                 | cxl0 |
->                 --------
->
-> In this system the numbers work out to:
->
-> Global:  A:42  B:14  D: 42  (GCD: 14)
-> Reduce:  A:3   B:1   D: 3
->
-> A user doing `-w --interleave=A,B` will get a ratio of 3:1, which
-> is pretty much spot on.
->
->
-> So, long winded winded way of saying:
-> - Could we use a larger default number? Yes.
-> - Does that actually help us? Not really, we want smaller numbers.
+On 2/26/24 02:46, Lukas Bulwahn wrote:
+> While going through the submit checklist, the list order seemed rather
+> random, probably just by historical coincidences of always adding yet the
+> next point someone thought of at the end of the list.
 
-The larger number will be reduced after GCD.
+Probably.
 
-> - Does this reduce to normal-interleave under large-numa systems? Yes.
-> - Does that matter? Probably not. It doesn't seem like a real use case.
-> - What if it is?  The workloads probably want task-local weights anyway.
->
->> >
->> > In this scenario, I'm not sure what to do.  We must have a non-0 value
->> > for that device (to avoid div-by-0), but setting an abitrarily large
->> > value also seems bad.
->> 
->> I think that it's kind of reasonable to use DRAM bandwidth for device
->> without data.  If there are only DRAM nodes and nodes without data, this
->> will make interleave weight to "1".
->>
->
-> Yes, those nodes would reduce to 1.  Which is pretty much the best we can
-> do without accounting for interconnects - which as discussed above is not
-> really useful anyway.
->
->
->
-> I think I'll draft up an LSF/MM chat to see if we can garner more input.
-> If large-numa systems are a real issue, then yes we need to address it.
+> Structure and order them by the category of such activity,
+> reviewing, documenting, checking with tools, building and testing.
+> 
+> As the diff of the reordering is large:
+> Review code now includes previous points 1, 5 and 22.
+> Review Kconfig includes previous 6, 7 and 8.
+> Documenting includes previous 11, 15, 16, 17, 18 and 23.
+> Checking with tools includes previous 5, 9 and 10.
+> Building includes previous 2, 3, 20 and 24.
+> Testing includes previous 12, 13, 14, 19 and 21.
+> 
+...
 
-Sounds good to me!
+> 
+> The recommendation to test with the -mm patchset (previous 21, now
+> testing, point 5) was updated to the current state of affairs to test with
+> a recent tag of linux-next.
 
---
-Best Regards,
-Huang, Ying
+ack.
 
-> ~Gregory
+> Note that the previous first point still remains the first list even after
+> reordering. Based on some vague memory, the first point was important to
+> Randy to stay the first one in any reordering.
+
+Yes, I have said that. Stephen Rothwell wanted it to be first in the list.
+
+
+> While at it, the reference to CONFIG_SLUB_DEBUG was replaced by
+> CONFIG_DEBUG_SLAB.
+
+I don't understand this comment. DEBUG_SLAB is gone.
+I think those 2 symbols might be reversed in your comments. ?
+
+
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> So far, no point disappeared and nothing new was added.
+> 
+
+That's a good start IMO.
+
+> Points/Ideas for further improvements (based on my knowledge and judgement):
+> 
+>   - The Review Kconfig changes makes sense, but I am not sure if they are
+>     so central during review. If we keep it, let us see if there are other
+>     parts for review that are also important similar to Kconfig changes.
+>    
+>   - Concerning checking with tools, checkpatch probably still makes sense;
+>     it pointed out in several places. If sparse and checkstack are really
+>     the next two tools to point out, I am not so sure about.
+
+I doubt that ckeckstack is important since gcc & clang warn us about
+stack usage.
+
+>     sparse has a lot of false positives nowadays, and many things are not
+>     fixed just because sparse complains about it.
+>     And I have never used make checkstack and have not found much
+>     documentation about it.
+>     So, maybe other tools deserve to be mentioned here instead?
+> 
+> I am happy to get feedback---I will work through submitting-patches next
+> and do some clean-up there. While doing that, I might learn what really
+> should go into a better future 'submit-checklist' documentation.
+> 
+>  Documentation/process/submit-checklist.rst | 157 +++++++++++----------
+>  1 file changed, 84 insertions(+), 73 deletions(-)
+
+
+-- 
+#Randy
