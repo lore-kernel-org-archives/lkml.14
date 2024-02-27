@@ -1,154 +1,292 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982BC4C89
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB984A31
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 01:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708996912; cv=none; b=AG084nZWSsyc1JxLVaUvEn3bpak5OFFPJFt5gZxhvwtLnEzygrO2hbqMewuJViH2X/Y6jtSlwNKjL2OrNXmBkQbvTIiEFmsg+MNyCsT3fN3VpUogyMZjPwfDPReJaTQtoQoKOPImgxSrSKXuyxYjMGeMUMgc06dQ6uhKNmjhRIQ=
+	t=1708997020; cv=none; b=SBpJ5ZuoWuJuTPXhBiPXigZVEsd5nvrPx2g4KRefF2gcYteztiNqzaY0j83mt0olbZNNO0KE0iYc+hTHJptPVWPI6+OeVgT+WKWGQqNNM++rA3W9Iudp/oEbFldOqzADRxB6YajbMqRqjGTspL/1x7WLsQjLAwQkpQXgWHb1gJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708996912; c=relaxed/simple;
-	bh=Y0XIMj4mA5VfF53wEN3qO0FtYomkGiP9Da1oZbODWUQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UBLXZLcpEjaZsEANBDh4Rtu2Bmvcjog9z4HmYUOsU37sUWH39f08a+9v2sWvXfvaTAAoOt/zzLTnLVrCcC6CnKd8PgQRO2e3ex3o8AOrwmaObI/NU6U8xeaEUTfUBEDX4bT1DiWtf8xu4a37NMebACuiZiiOEMmvk+DXomZX7ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJENvd1T; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1708997020; c=relaxed/simple;
+	bh=xA6TRf8xFUdVGBiWZV0mZL3GHgEK06cehbHFgElkPJs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b8iBOpEuV2PF7m+s7mRDuOof3M1vcdretAiW0FNYjXAACXRE+fyN2laXVYh2XoJeMsMtkGxUw0GL5GGxIm7Uzsij5yNFP6n0lNAoPJStf+jecy68ktEeDsHAhNBj/caQeRad0lywuWmO3qiYyH8QFeKhOGMI8Gxlkz8XSTDiseI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ODn27Gxs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJENvd1T"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c17ac08a38so1659610b6e.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:21:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708996909; x=1709601709; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4bXxNqwNbJD6O5GdbT9Dy1UrrTpDaUAcZ2ZskrOJNpI=;
-        b=JJENvd1Ty3bw/zNYvF+JDpAA+qj1w0uxVJd0NHlDLdFrRKXkjrQJKaozXzEwrDu4DK
-         VP0O3o07J4bRTSI3YGhka+t6nPycE/FpTwadFInRe0zFBOoXlFpl4A97r3HDA85fRZHF
-         GOTzMxtB0CHKU4UgHKHCscTcVlK1VinPUevyTgiJRXgGe4J7qjd4Paz91y8ySDwGoCQs
-         P8RgIN3SoXycSz8wkO38UwT5N8LxTT/Hd448PYgaCJyr6J/OApfjcZrJIMOJEU2+MX5T
-         zYoXU5+ZwTrsSxvoWfTsqsJT9gA4pSB5w1A1rhHvdCaK8Zve3C7v5KGvu5w1axXqcqwL
-         wFXg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ODn27Gxs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708997016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wEIn87M+hn2S554hVGnIEt51wunIM1SmI8tOlR3X8NU=;
+	b=ODn27Gxs92n37VIR/SIQ5TxBeuouwmMNqn3eCi3ebcIGd6cK3DDyUug+Z8DrlEUVT5/xAm
+	cOY065ngncqooSgjeoKpq7Fis7ogz97PeG3649EAGT/BIYFIt2LWNBBLHm3K5YdFTUaqx0
+	LaUu2cEstw8Rr1XSwtbXSV8lnkMPP74=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-177-y3zyXYiGPGuUT46hEgit0w-1; Mon, 26 Feb 2024 20:23:35 -0500
+X-MC-Unique: y3zyXYiGPGuUT46hEgit0w-1
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1dcbb9dc3b6so410875ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 Feb 2024 17:23:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708996909; x=1709601709;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1708997014; x=1709601814;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4bXxNqwNbJD6O5GdbT9Dy1UrrTpDaUAcZ2ZskrOJNpI=;
-        b=miUHv7TNsz4JwUAlX9ZOt28o45Namf6CgkxUkQzzSDBlcnJpWo72CDRUa48qa+G5NE
-         1aLA2MdZzGNLSMudgp/EwitFeezNESF7ePMaB4MTt9HYDE0FcaaduQAUQIubgS97GbsA
-         CJ++YuufvcMv/TInOiTTjoTTzZpnNE3IXhn5qzZoyHWAMzRFkI9g3+giKhmyhhyUtCCp
-         BKuV7pir15o33lPAVWAF+1NsCw5FcneOl0aOd4rfHoj47/aU8H3PLEX6D/J17UsB3uTL
-         ZD3zjeyf3cgi9JqyDlKxvm66EHbdE8MVx24wWg1dXoka97lPvj7GqiiZkHc5jfkDai8c
-         Htjg==
-X-Forwarded-Encrypted: i=1; AJvYcCU19ZavKZKl1QaqO/J7T8Gk9JukLfJhzuD0DVlybBMGnJMHOa9YHrvz5SEDqEtX4x6PCX4Hc9wkySL3RklTFy9sb41jN5zilaKx6mfQ
-X-Gm-Message-State: AOJu0YzkVH2Y/er2DXhun1T0JkrH8B9fYsq8vwlEJr3kW2aaQiN9Qbuu
-	t7Of7D3TXiuDoYry/pLIjhpfoI7MlOLonwLzV8M2Kmq/53EDVukG
-X-Google-Smtp-Source: AGHT+IEAFbS0ijHradPh292tBUy4SUWjp4a7H3ckhLynTw9fXePax/uKvPyiULegyBA1S8XpT1d6dQ==
-X-Received: by 2002:a05:6808:d48:b0:3c1:1398:9eca with SMTP id w8-20020a0568080d4800b003c113989ecamr969656oik.28.1708996909531;
-        Mon, 26 Feb 2024 17:21:49 -0800 (PST)
-Received: from barry-desktop.hub ([2407:7000:8942:5500:fae4:3bff:fecb:410])
-        by smtp.gmail.com with ESMTPSA id hy11-20020a056a006a0b00b006e146124ae7sm4733847pfb.186.2024.02.26.17.21.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 17:21:49 -0800 (PST)
-From: Barry Song <21cnbao@gmail.com>
-To: ioworker0@gmail.com
-Cc: 21cnbao@gmail.com,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	fengwei.yin@intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	mhocko@suse.com,
-	minchan@kernel.org,
-	peterx@redhat.com,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	songmuchun@bytedance.com,
-	wangkefeng.wang@huawei.com,
-	zokeefe@google.com,
-	Barry Song <v-songbaohua@oppo.com>
-Subject: Re: [PATCH 1/1] mm/madvise: enhance lazyfreeing with mTHP in madvise_free
-Date: Tue, 27 Feb 2024 14:21:27 +1300
-Message-Id: <20240227012127.174048-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CAK1f24=yWPQnYuQYgc3cXdBC0HoR1yAwY59Xs2DYPAC4DQzw0A@mail.gmail.com>
-References: <CAK1f24=yWPQnYuQYgc3cXdBC0HoR1yAwY59Xs2DYPAC4DQzw0A@mail.gmail.com>
+        bh=wEIn87M+hn2S554hVGnIEt51wunIM1SmI8tOlR3X8NU=;
+        b=qYp+4/CL8mKgUcS9pcuwlspJvNcsF49Md+6QY9iyRtaQ1rEPptMKno1+8Hr+DQqw8x
+         yg45Y9iyVT9+3XngJqf5fAOLHotBZeKtS5HiRQ6eGsz0pLtsHE/5KQqukTt+5KLhr8ye
+         0vz1r+4GpW5JBvNZeRrOphh6vvqVMipxAMBiJqqyFpNbdiKBvN32fJ4KNbQ0lYN5HRxr
+         6BXcxZysioeEwsFkPHM2868knH3qWjli5fsgVwaJhoZDvM5hDdR3kbrDSVHnYDmUc2Oc
+         lfO9SI7TF2iOjR46kKLj+qUMaaBQw81jWWXsQe5K4bCM7DmOqmRB+y/nsZkkjazB7ndr
+         J5og==
+X-Forwarded-Encrypted: i=1; AJvYcCXuUZzk8xCfOZ3cUg5Lu1Jp0kfg+c2yn/oGaIAMhd4ObzKAmFPHdXZztVv54PuOcjzpDQYmgrcARufxZii6rFv1+i6j+MDHCTmyfrmu
+X-Gm-Message-State: AOJu0Yzq2n2ogAFrcmT5ImWd/US3Ctu4D4yQryXqthz/eXMVg4hs9gEZ
+	jQLQ59ObYphcSHoNdAUG8AjIzMGjK9fE77MfTyPeJfHvxz36/HxmAUkhgr2Cvmu4nekOjOtnEem
+	D6Esll2XMsHYlJOHkA7jjn3GcQZ3XpVwV0iW5Dlje4dZ1IwvH9UUuEu8gJnuQLfza49e0RUxHgw
+	vyXlMvamSgVn9L5m3bPvtY8mYi09hWoO9gHKhS
+X-Received: by 2002:a17:903:32c6:b0:1dc:b3bb:480a with SMTP id i6-20020a17090332c600b001dcb3bb480amr1982774plr.49.1708997014074;
+        Mon, 26 Feb 2024 17:23:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFrp3LCl0rRWJjmtM9o8k+hcFDHSYcqPeUM2EFp3Ta84bpAOLpV/2X8Pdy0A/XbEp0OTzf//G1f2Zq8D0NOucM=
+X-Received: by 2002:a17:903:32c6:b0:1dc:b3bb:480a with SMTP id
+ i6-20020a17090332c600b001dcb3bb480amr1982756plr.49.1708997013734; Mon, 26 Feb
+ 2024 17:23:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240222075806.1816400-1-yukuai1@huaweicloud.com>
+ <20240222075806.1816400-7-yukuai1@huaweicloud.com> <CALTww2-ypx2YJOeXTzj7Y0EtXMkfrTOAJzzmDnnUK=1irspWtQ@mail.gmail.com>
+ <4f2ae964-5030-907e-bc06-4d9e1fc8f3e8@huaweicloud.com>
+In-Reply-To: <4f2ae964-5030-907e-bc06-4d9e1fc8f3e8@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Tue, 27 Feb 2024 09:23:22 +0800
+Message-ID: <CALTww2_q3XG5HFCYm3Wp7=fjM04cdWZy34R6MsDVLz-82iO88Q@mail.gmail.com>
+Subject: Re: [PATCH md-6.9 06/10] md/raid1: factor out read_first_rdev() from read_balance()
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: paul.e.luse@linux.intel.com, song@kernel.org, neilb@suse.com, shli@fb.com, 
+	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Thanks for your suggestion. I'll use folio_pte_batch() in v2.
+On Tue, Feb 27, 2024 at 9:06=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> Hi,
+>
+> =E5=9C=A8 2024/02/26 22:16, Xiao Ni =E5=86=99=E9=81=93:
+> > On Thu, Feb 22, 2024 at 4:04=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.co=
+m> wrote:
+> >>
+> >> From: Yu Kuai <yukuai3@huawei.com>
+> >>
+> >> read_balance() is hard to understand because there are too many status
+> >> and branches, and it's overlong.
+> >>
+> >> This patch factor out the case to read the first rdev from
+> >> read_balance(), there are no functional changes.
+> >>
+> >> Co-developed-by: Paul Luse <paul.e.luse@linux.intel.com>
+> >> Signed-off-by: Paul Luse <paul.e.luse@linux.intel.com>
+> >> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> >> ---
+> >>   drivers/md/raid1.c | 63 +++++++++++++++++++++++++++++++++-----------=
+--
+> >>   1 file changed, 46 insertions(+), 17 deletions(-)
+> >>
+> >> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> >> index 8089c569e84f..08c45ca55a7e 100644
+> >> --- a/drivers/md/raid1.c
+> >> +++ b/drivers/md/raid1.c
+> >> @@ -579,6 +579,47 @@ static sector_t align_to_barrier_unit_end(sector_=
+t start_sector,
+> >>          return len;
+> >>   }
+> >>
+> >> +static void update_read_sectors(struct r1conf *conf, int disk,
+> >> +                               sector_t this_sector, int len)
+> >> +{
+> >> +       struct raid1_info *info =3D &conf->mirrors[disk];
+> >> +
+> >> +       atomic_inc(&info->rdev->nr_pending);
+> >> +       if (info->next_seq_sect !=3D this_sector)
+> >> +               info->seq_start =3D this_sector;
+> >> +       info->next_seq_sect =3D this_sector + len;
+> >> +}
+> >> +
+> >> +static int choose_first_rdev(struct r1conf *conf, struct r1bio *r1_bi=
+o,
+> >> +                            int *max_sectors)
+> >> +{
+> >> +       sector_t this_sector =3D r1_bio->sector;
+> >> +       int len =3D r1_bio->sectors;
+> >> +       int disk;
+> >> +
+> >> +       for (disk =3D 0 ; disk < conf->raid_disks * 2 ; disk++) {
+> >> +               struct md_rdev *rdev;
+> >> +               int read_len;
+> >> +
+> >> +               if (r1_bio->bios[disk] =3D=3D IO_BLOCKED)
+> >> +                       continue;
+> >> +
+> >> +               rdev =3D conf->mirrors[disk].rdev;
+> >> +               if (!rdev || test_bit(Faulty, &rdev->flags))
+> >> +                       continue;
+> >> +
+> >> +               /* choose the first disk even if it has some bad block=
+s. */
+> >> +               read_len =3D raid1_check_read_range(rdev, this_sector,=
+ &len);
+> >> +               if (read_len > 0) {
+> >> +                       update_read_sectors(conf, disk, this_sector, r=
+ead_len);
+> >> +                       *max_sectors =3D read_len;
+> >> +                       return disk;
+> >> +               }
+> >
+> > Hi Kuai
+> >
+> > It needs to update max_sectors even if the bad block starts before
+> > this_sector. Because it can't read more than bad_blocks from other
+> > member disks. If it reads more data than bad blocks, it will cause
+> > data corruption. One rule here is read from the primary disk (the
+> > first readable disk) if it has no bad block and read the
+> > badblock-data-length data from other disks.
+>
+> Noted that raid1_check_read_range() will return readable length from
+> this rdev, hence if bad block starts before this_sector, 0 is returned,
+> and 'len' is updated to the length of badblocks(if not exceed read
+> range), and following iteration will find the first disk to read updated
+> 'len' data and update max_sectors.
 
-Hi Lance,
-Obviously, we both need this. While making large folio swap-in
-v2, I am exporting folio_pte_batch() as below,
+Hi Kuai
 
-From: Barry Song <v-songbaohua@oppo.com>
-Date: Tue, 27 Feb 2024 14:05:43 +1300
-Subject: [PATCH] mm: export folio_pte_batch as a couple of modules need it
+The problem is that choose_first_rdev doesn't return 'len' from
+max_sectors when bad blocks start before this_sector. In the following
+iteration, it can't read more than 'len' from other disks to avoid
+data corruption. I haven't read all the patches. To this patch, it
+resets best_good_sectors to sectors when it encounters a good member
+disk without bad blocks.
 
-MADV_FREE, MADV_PAGEOUT and some other modules might need folio_pte_batch
-to check if a range of PTEs are completely mapped to a large folio with
-contiguous physcial offset.
-
-Cc: Lance Yang <ioworker0@gmail.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
----
- mm/internal.h | 13 +++++++++++++
- mm/memory.c   |  2 +-
- 2 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/mm/internal.h b/mm/internal.h
-index 36c11ea41f47..7e11aea3eda9 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -83,6 +83,19 @@ static inline void *folio_raw_mapping(struct folio *folio)
- 	return (void *)(mapping & ~PAGE_MAPPING_FLAGS);
- }
- 
-+/* Flags for folio_pte_batch(). */
-+typedef int __bitwise fpb_t;
-+
-+/* Compare PTEs after pte_mkclean(), ignoring the dirty bit. */
-+#define FPB_IGNORE_DIRTY		((__force fpb_t)BIT(0))
-+
-+/* Compare PTEs after pte_clear_soft_dirty(), ignoring the soft-dirty bit. */
-+#define FPB_IGNORE_SOFT_DIRTY		((__force fpb_t)BIT(1))
-+
-+extern int folio_pte_batch(struct folio *folio, unsigned long addr,
-+		pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
-+		bool *any_writable);
-+
- void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
- 						int nr_throttled);
- static inline void acct_reclaim_writeback(struct folio *folio)
-diff --git a/mm/memory.c b/mm/memory.c
-index 6378f6bc22c5..dd9bd67f037a 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -989,7 +989,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
-  * If "any_writable" is set, it will indicate if any other PTE besides the
-  * first (given) PTE is writable.
-  */
--static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
-+int folio_pte_batch(struct folio *folio, unsigned long addr,
- 		pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
- 		bool *any_writable)
- {
--- 
-2.34.1 
-
-> Best,
-> Lance
-
-Thanks
-Barry
+Regards
+Xiao
+>
+> Thanks,
+> Kuai
+>
+> >
+> > Best Regards
+> > Xiao
+> >
+> >> +       }
+> >> +
+> >> +       return -1;
+> >> +}
+> >> +
+> >>   /*
+> >>    * This routine returns the disk from which the requested read shoul=
+d
+> >>    * be done. There is a per-array 'next expected sequential IO' secto=
+r
+> >> @@ -603,7 +644,6 @@ static int read_balance(struct r1conf *conf, struc=
+t r1bio *r1_bio, int *max_sect
+> >>          sector_t best_dist;
+> >>          unsigned int min_pending;
+> >>          struct md_rdev *rdev;
+> >> -       int choose_first;
+> >>
+> >>    retry:
+> >>          sectors =3D r1_bio->sectors;
+> >> @@ -613,10 +653,11 @@ static int read_balance(struct r1conf *conf, str=
+uct r1bio *r1_bio, int *max_sect
+> >>          best_pending_disk =3D -1;
+> >>          min_pending =3D UINT_MAX;
+> >>          best_good_sectors =3D 0;
+> >> -       choose_first =3D raid1_should_read_first(conf->mddev, this_sec=
+tor,
+> >> -                                              sectors);
+> >>          clear_bit(R1BIO_FailFast, &r1_bio->state);
+> >>
+> >> +       if (raid1_should_read_first(conf->mddev, this_sector, sectors)=
+)
+> >> +               return choose_first_rdev(conf, r1_bio, max_sectors);
+> >> +
+> >>          for (disk =3D 0 ; disk < conf->raid_disks * 2 ; disk++) {
+> >>                  sector_t dist;
+> >>                  sector_t first_bad;
+> >> @@ -662,8 +703,6 @@ static int read_balance(struct r1conf *conf, struc=
+t r1bio *r1_bio, int *max_sect
+> >>                                   * bad_sectors from another device..
+> >>                                   */
+> >>                                  bad_sectors -=3D (this_sector - first=
+_bad);
+> >> -                               if (choose_first && sectors > bad_sect=
+ors)
+> >> -                                       sectors =3D bad_sectors;
+> >>                                  if (best_good_sectors > sectors)
+> >>                                          best_good_sectors =3D sectors=
+;
+> >>
+> >> @@ -673,8 +712,6 @@ static int read_balance(struct r1conf *conf, struc=
+t r1bio *r1_bio, int *max_sect
+> >>                                          best_good_sectors =3D good_se=
+ctors;
+> >>                                          best_disk =3D disk;
+> >>                                  }
+> >> -                               if (choose_first)
+> >> -                                       break;
+> >>                          }
+> >>                          continue;
+> >>                  } else {
+> >> @@ -689,10 +726,6 @@ static int read_balance(struct r1conf *conf, stru=
+ct r1bio *r1_bio, int *max_sect
+> >>
+> >>                  pending =3D atomic_read(&rdev->nr_pending);
+> >>                  dist =3D abs(this_sector - conf->mirrors[disk].head_p=
+osition);
+> >> -               if (choose_first) {
+> >> -                       best_disk =3D disk;
+> >> -                       break;
+> >> -               }
+> >>                  /* Don't change to another disk for sequential reads =
+*/
+> >>                  if (conf->mirrors[disk].next_seq_sect =3D=3D this_sec=
+tor
+> >>                      || dist =3D=3D 0) {
+> >> @@ -760,13 +793,9 @@ static int read_balance(struct r1conf *conf, stru=
+ct r1bio *r1_bio, int *max_sect
+> >>                  rdev =3D conf->mirrors[best_disk].rdev;
+> >>                  if (!rdev)
+> >>                          goto retry;
+> >> -               atomic_inc(&rdev->nr_pending);
+> >> -               sectors =3D best_good_sectors;
+> >> -
+> >> -               if (conf->mirrors[best_disk].next_seq_sect !=3D this_s=
+ector)
+> >> -                       conf->mirrors[best_disk].seq_start =3D this_se=
+ctor;
+> >>
+> >> -               conf->mirrors[best_disk].next_seq_sect =3D this_sector=
+ + sectors;
+> >> +               sectors =3D best_good_sectors;
+> >> +               update_read_sectors(conf, disk, this_sector, sectors);
+> >>          }
+> >>          *max_sectors =3D sectors;
+> >>
+> >> --
+> >> 2.39.2
+> >>
+> >>
+> >
+> > .
+> >
+>
 
