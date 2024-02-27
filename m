@@ -1,118 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DA93D988
-	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 03:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 294FE17727
+	for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 03:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709003006; cv=none; b=i0ZDB3JwHEWvCuy5PF36l/SE1M/Odturdvqk2rbgUV80V1BSt1i3lQiAs9dXEZNFfRq/kV6vsbJ8GSckWih0othPISp6/xy301d88cgb0OqZuvAohBGcQDHiYI/QZXvCVlc2HJO0S7U53ULk0Hx5UdRVcKqIGqmtYD360jOxzqM=
+	t=1709003109; cv=none; b=CvqFfZgbOSkPitorkQcQg17ELucUtDXOZ8wxmg+k1scI0VaAY9YVROBULrXlP553abWqXaf4DclCdX9GaPnvyO4Uhp4+dOZ32eMJ2vY/i5g25xxXG69scWttsFkrD1jQqARyHwcvU+ceN4XOc335GzJbSE7aZJvac7AcfGar8zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709003006; c=relaxed/simple;
-	bh=zdJ2ODkJR0n1OAeFgqhQcdgBH8wAu0+3mGhii83TXAY=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=dAfuYWjTie4wQ39Zol3PIPAa6IQXvbKmri2x8ueU5Z5hHW0D75OGtVBluHCiKkEnVYc8KzNRORuvvJM3TRQ6g0vfgUW22ql2zvo9TaBTErZtk9Ijhju4ficbh8CImo+AfkWau/XKKxtyceJdo9zSXMCripdQJOw0ZsbNUysTCsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QAKrDy5d; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QAKrDy5d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709003005; x=1740539005;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zdJ2ODkJR0n1OAeFgqhQcdgBH8wAu0+3mGhii83TXAY=;
-  b=QAKrDy5dPAKunSc0dVyS7nt0AmqOxMaGf3DhLq9QO9ccuy1p6ZzulzbL
-   NQeqxjZ3kdvGPFVtZTKo8q24X6h0mnR5Y/2ZX/Qpx3ib3CRrddzBg/ocy
-   TVoOKkiCiD9bP9ojDfHLNRA9cJl3NRv/Ag/AqFsbzdB24W3MX0I9V7VPs
-   Zpn1rjrb0pc7/3BfBQ7WfbO2I6un6N1BXhrQ6uFCyXpu/q1xRukyGEmWa
-   zTHx4uhfpcXgelkxyoQIiFY19BWCH9FSTFLPJRTRWvPUm5vu9i0Rd5ysm
-   uwmiSM3rOdyEN9NiySW/v5/JmnwXCZgnw9wJYljRa+Gujsh84b8hf9/gV
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3201119"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="3201119"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 19:03:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="44385470"
-Received: from wufei-optiplex-7090.sh.intel.com ([10.239.158.51])
-  by orviesa001.jf.intel.com with ESMTP; 26 Feb 2024 19:03:20 -0800
-From: Fei Wu <fei2.wu@intel.com>
-To: atishp@atishpatra.org,
-	anup@brainfault.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	fei2.wu@intel.com
-Subject: [PATCH] perf: RISCV: Fix panic on pmu overflow handler
-Date: Tue, 27 Feb 2024 11:07:31 +0800
-Message-Id: <20240227030731.2560035-1-fei2.wu@intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709003109; c=relaxed/simple;
+	bh=flJpjWg4G590GoBdzqL83kC4185Wq8tCMo9iI0foqpo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=usRpvHHzwkbP4fRsceyYj0XMSUCL+VQ7hSb8vwosIqw2VcFe+AX9EmmwN7ECWRYoccSQSj7TEVP4q7XywjnTE+Dk+3Rv0Mz4zlFubkZt45Qts3a1+MMGgoh6ewpW9iWBOpVwkaldZY1Vx8fADDUVVHGEGPCvCsy+IMEUwrUzqSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 753798 invoked by uid 1000); 26 Feb 2024 22:05:06 -0500
+Date: Mon, 26 Feb 2024 22:05:06 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Oliver Neukum <oneukum@suse.com>,
+  syzbot <syzbot+28748250ab47a8f04100@syzkaller.appspotmail.com>,
+  bvanassche@acm.org, emilne@redhat.com, gregkh@linuxfoundation.org,
+  linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+  syzkaller-bugs@googlegroups.com, tasos@tasossah.com,
+  usb-storage@lists.one-eyed-alien.net
+Subject: Re: [syzbot] [usb-storage?] divide error in isd200_ata_command
+Message-ID: <11ec2091-71c2-4dfb-be36-0cc21be32109@rowland.harvard.edu>
+References: <0000000000003eb868061245ba7f@google.com>
+ <99b0fb1b-37b3-4da4-8129-e502ed8e479a@suse.com>
+ <9bbc5b63-33e3-44de-8bce-4c59dcce5e92@rowland.harvard.edu>
+ <yq1cysi4obq.fsf@ca-mkp.ca.oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq1cysi4obq.fsf@ca-mkp.ca.oracle.com>
 
-Sign extension of (1 << idx) from int is not desired when setting bits
-in unsigned long overflowed_ctrs, kernel panics if 31 is a valid lidx.
-This panic happens when 'perf record -e branches' on a sophgo machine.
+On Mon, Feb 26, 2024 at 09:46:39PM -0500, Martin K. Petersen wrote:
+> 
+> Alan,
+> 
+> >> in isd200_scsi_to_ata() because it must not be called before
+> >> isd200_get_inquiry_data() has completed.
+> >
+> > It can't be; isd200_get_inquiry_data is called by
+> > isd200_Initialization during probe before any SCSI commands are
+> > transmitted.
+> 
+> How do we end up with bad inquiry data (or rather bad ATA ID data)?
 
-[  212.845953] epc : ffffffff80afc288 ra : ffffffff80afd310 sp : fffffff6e36928f0
-[  212.853474]  gp : ffffffff821f7f48 tp : ffffffd9033b9900 t0 : 0000002ad69e9978
-[  212.861069]  t1 : 000000000000002a t2 : ffffffff801764d2 s0 : fffffff6e3692ab0
-[  212.868637]  s1 : 0000000000000020 a0 : 0000000000000000 a1 : 0000000000000015
-[  212.876021]  a2 : 0000000000000000 a3 : 0000000000000015 a4 : 0000000000000020
-[  212.883482]  a5 : ffffffd7ff880640 a6 : 000000000005a569 a7 : ffffffffffffffd5
-[  212.891191]  s2 : 000000000000ffff s3 : 0000000000000000 s4 : ffffffd7ff880540
-[  212.898707]  s5 : 0000000000504d55 s6 : ffffffd902443000 s7 : ffffffff821fe1f8
-[  212.906329]  s8 : 000000007fffffff s9 : ffffffd7ff880540 s10: ffffffd9147a1098
-[  212.914151]  s11: 0000000080000000 t3 : 0000000000000003 t4 : ffffffff80186226
-[  212.921773]  t5 : ffffffff802455ca t6 : ffffffd9058900e8
-[  212.927300] status: 0000000200000100 badaddr: 0000000000000098 cause: 000000000000000d
-[  212.935575] [<ffffffff80afc288>] riscv_pmu_ctr_get_width_mask+0x8/0x60
-[  212.942391] [<ffffffff80079922>] handle_percpu_devid_irq+0x98/0x1e8
-[  212.948855] [<ffffffff80073d06>] generic_handle_domain_irq+0x28/0x36
-[  212.955521] [<ffffffff80481444>] riscv_intc_irq+0x36/0x4e
-[  212.961269] [<ffffffff80ca5fce>] handle_riscv_irq+0x4a/0x74
-[  212.967270] [<ffffffff80ca6afc>] do_irq+0x60/0x90
-[  212.972284] Code: b580 60a2 6402 5529 0141 8082 0013 0000 0013 0000 (6d5c) b783
-[  212.980036] ---[ end trace 0000000000000000 ]---
-[  212.984874] Kernel panic - not syncing: Fatal exception in interrupt
-[  212.991506] SMP: stopping secondary CPUs
-[  212.995964] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+The data doesn't come from an actual ISD200 device.  It's from a 
+deliberately faulty (for the obvious reason) emulation in userspace, 
+created by the syzbot test code.
 
-Signed-off-by: Fei Wu <fei2.wu@intel.com>
----
- drivers/perf/riscv_pmu_sbi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 16acd4dcdb96..c87c459e52de 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -731,14 +731,14 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
- 		/* compute hardware counter index */
- 		hidx = info->csr - CSR_CYCLE;
- 		/* check if the corresponding bit is set in sscountovf */
--		if (!(overflow & (1 << hidx)))
-+		if (!(overflow & (1UL << hidx)))
- 			continue;
- 
- 		/*
- 		 * Keep a track of overflowed counters so that they can be started
- 		 * with updated initial value.
- 		 */
--		overflowed_ctrs |= 1 << lidx;
-+		overflowed_ctrs |= 1UL << lidx;
- 		hw_evt = &event->hw;
- 		riscv_pmu_event_update(event);
- 		perf_sample_data_init(&data, 0, hw_evt->last_period);
--- 
-2.34.1
-
+Alan Stern
