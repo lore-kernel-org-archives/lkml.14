@@ -1,108 +1,83 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227BF73509;
-	Wed, 28 Feb 2024 11:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB4773507
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 12:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709121503; cv=none; b=RbJMHh+bE2n6P5Aa/vv60IuOWgeVuLTFuDfSXY0AnHLiWYLjovAT4IGRnTENN4/d8QJKENDyH3ICK1775elOn0/PBoGJHyU0dDkoYdX/u7RbwXd8QaMR3/XCjZ4HlQDhofl1bKYx5j86lMR2OdeXduMoIuJpjM6nqjhXyYrwr/c=
+	t=1709121669; cv=none; b=SU+SSN/no5+RJ/uDpuJ0c5SGEhbO4J20jLsT6S20VJZqQyOfYCg7K481Euw0AmbMxmfJUzqDk5HSEC/PMUbH8kV8s7kE9yVfS/mt3sgc04egJPVC7fDm/r3CQFB9ip0KEEVtYF/b9I23Me4JaAw/y7PUDF4XtU0T7QyCuf/MaFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709121503; c=relaxed/simple;
-	bh=bmJVxea+oEzT3EtoYlqAmW+AUuUsUmFi5hATLsmQHjI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=XYOYiuj/jMVfKu/7ZjL1gJPHjb5A0cXDMgAYdBXHXk1ewGcso6iCMvBI/5rxpM5nbIx3l37MLCA3GrkxxyuiAQQ7jQZR8Cf/Dx8xMOr0RHH/XJV5i85JWxImyeSmQeVKLLZMumllijgsMIZ+YXn6gYNX5ZfftZiIS0bdGQtmnCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HwbBgPwl; arc=none smtp.client-ip=217.70.178.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HwbBgPwl"
-Received: from relay1-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::221])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id 255A0C3B08;
-	Wed, 28 Feb 2024 11:44:19 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1A1BC240010;
-	Wed, 28 Feb 2024 11:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709120650;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bmJVxea+oEzT3EtoYlqAmW+AUuUsUmFi5hATLsmQHjI=;
-	b=HwbBgPwlUGwdkKqhxPs0I6nUKj3VWccKez2XcK0QCJRc1E5t+YCDn6NmazS+VoH+UYgi81
-	7OWOMPQ6f+vavnK5g2BIgbR/LB0rBSZcyik1mHXAvwWnxAPJtEAKl45Ic74VkP8JHM8bD+
-	J/Qa20DdB8EK6mbrj+f6aFPqevmHv3KZHgiGoOYPyHBoyogseRFUwazKRn9nvoq87yfVWr
-	u1fo5QuK+MOiX3zstLjuf5jzJnHQgJLhwrXmpb74ingV3ccMfqVHASR/J8SyS8IzxKDd1Q
-	HYiOqUCybVVa8cFJHv7NDK4j87ys693VUgMOwKel7/h25ksp9Tnkabl2a8LlBA==
+	s=arc-20240116; t=1709121669; c=relaxed/simple;
+	bh=FrU6YwsdY8xv+w1+Fi+52JvqnVCKxp8qLyZLX9ksaLs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tMja0hK9XEewAfg0+PRuZIBfWcqY44WlZhJkgmwM2C98z+AcT/QARAVAx7Vld9cdgQ4bQPrnENioNPZvFJ2QxzDTjdJjDhN1szRjiXyBaY603hT2zqHX9UijLzftfmtJbwGPE3yMQYH8qtN8XJES4sQc0B+4EJ+DAXBFWGRiFZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 41SC05ID098352;
+	Wed, 28 Feb 2024 20:00:05 +0800 (+08)
+	(envelope-from Zhiguo.Niu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TlCZF1jW3z2KpclH;
+	Wed, 28 Feb 2024 19:59:17 +0800 (CST)
+Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
+ BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Wed, 28 Feb 2024 20:00:04 +0800
+From: Zhiguo Niu <zhiguo.niu@unisoc.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+        <niuzhiguo84@gmail.com>, <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
+        <hongyu.jin@unisoc.com>
+Subject: [PATCH] f2fs: fix to do sanity check in update_sit_entry
+Date: Wed, 28 Feb 2024 19:59:54 +0800
+Message-ID: <1709121594-22314-1-git-send-email-zhiguo.niu@unisoc.com>
+X-Mailer: git-send-email 1.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 Feb 2024 12:44:09 +0100
-Message-Id: <CZGOPF51JA1R.2YN65K6WUH9N4@bootlin.com>
-Cc: "Paul Burton" <paulburton@kernel.org>, <linux-mips@vger.kernel.org>,
- "Jiaxun Yang" <jiaxun.yang@flygoat.com>, "Rob Herring"
- <robh+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>, "Alexandre Belloni"
- <alexandre.belloni@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-To: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v8 00/14] Add support for the Mobileye EyeQ5 SoC
-X-Mailer: aerc 0.15.2
-References: <20240216174227.409400-1-gregory.clement@bootlin.com>
- <ZdSst3fM3EOQGH03@alpha.franken.de>
-In-Reply-To: <ZdSst3fM3EOQGH03@alpha.franken.de>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+X-MAIL:SHSQR01.spreadtrum.com 41SC05ID098352
 
-Hello Thomas,
+If GET_SEGNO return NULL_SEGNO for some unecpected case,
+update_sit_entry will access invalid memory address,
+cause system crash. It is better to do sanity check about
+GET_SEGNO just like update_segment_mtime & locate_dirty_segment.
 
-On Tue Feb 20, 2024 at 2:44 PM CET, Thomas Bogendoerfer wrote:
-> On Fri, Feb 16, 2024 at 06:42:09PM +0100, Gregory CLEMENT wrote:
-> > Hello,
-> >=20
-> > The EyeQ5 SoC from Mobileye is based on the MIPS I6500 architecture
-> > and features multiple controllers such as the classic UART, I2C, SPI,
-> > as well as CAN-FD, PCIe, Octal/Quad SPI Flash interface, Gigabit
-> > Ethernet, MIPI CSI-2, and eMMC 5.1. It also includes a Hardware
-> > Security Module, Functional Safety Hardware, and MJPEG encoder.
+Also remove some redundant judgment code.
 
-[...]
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+---
+ fs/f2fs/segment.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> series applied to mips-next.
->
-> I've fixed generic|ingenic|realtek builds by adding select MACH_GENERIC_C=
-ORE
-> in arch/mips/Kconfig.
-
-Would it be possible to provide an immutable branch containing the two
-series? I've got quite a few series that depend on them as they target
-EyeQ5 devicetrees and defconfig.
-
-It's been a request from Bartosz for the GPIO series, see [0].
-
-Series are:
- - Jiaxun's "Unify register numbering macros for uasm" [1];
- - Gr=C3=A9gory's "Add support for the Mobileye EyeQ5 SoC".
-
-Have a nice day,
-
-[0]: https://lore.kernel.org/lkml/CAMRc=3DMfLXCDXBiKKuEPZRjNoNiFN+gvhu+GjZk=
-Z1SQuF1s4=3DUQ@mail.gmail.com/
-[1]: https://lore.kernel.org/linux-mips/20240209-regname-v1-0-2125efa016ef@=
-flygoat.com/
-[2]: https://lore.kernel.org/lkml/20240216174227.409400-1-gregory.clement@b=
-ootlin.com/
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index c616e7a..f8a823f 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -2407,6 +2407,8 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
+ #endif
+ 
+ 	segno = GET_SEGNO(sbi, blkaddr);
++	if (segno == NULL_SEGNO)
++		return;
+ 
+ 	se = get_seg_entry(sbi, segno);
+ 	new_vblocks = se->valid_blocks + del;
+@@ -3504,8 +3506,7 @@ int f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+ 	 * since SSR needs latest valid block information.
+ 	 */
+ 	update_sit_entry(sbi, *new_blkaddr, 1);
+-	if (GET_SEGNO(sbi, old_blkaddr) != NULL_SEGNO)
+-		update_sit_entry(sbi, old_blkaddr, -1);
++	update_sit_entry(sbi, old_blkaddr, -1);
+ 
+ 	/*
+ 	 * If the current segment is full, flush it out and replace it with a
+-- 
+1.9.1
 
