@@ -1,53 +1,54 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2101.outbound.protection.outlook.com [40.107.21.101])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2105.outbound.protection.outlook.com [40.107.6.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0A714F98F;
-	Wed, 28 Feb 2024 13:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7B815A48A;
+	Wed, 28 Feb 2024 13:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.105
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709128307; cv=fail; b=uXrqsTxlRpxqcWEq7fw1bHADc8k1kohi87eei0a4THslYNglnGDBQLqlcSOExtYq54VZAjn2LwZ5VZO9/J+S5lq4AyHojIvzHyFTsuNFmpmCRaznUeWIyFFapyzhnDqig8q9cwP6lrpjqN/M8REffIv1SlHQ9DxZx/uv7r1E4kg=
+	t=1709128316; cv=fail; b=U/Ep3lDIuZ5iseG/2fQrersThGKI2DRsl9luDppiXug4NVNkn/J3He65R6r7aiyuDcNb1rlUI1ED1uFQTVFFvnDS1Qon7fhYZmfsWAgVdqEHadUA4kZhGW3pgoFpBME8nVqpGLy4ygvDFnXAKXWm0H82V1pK7BPejbywXNSwQp4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709128307; c=relaxed/simple;
-	bh=ENqXJ468M++pJ3P8ig6/C12Pe+MqcuxPPUvXDMi4dCc=;
+	s=arc-20240116; t=1709128316; c=relaxed/simple;
+	bh=rrF8Q2LYwFLaBUHIvIcp23yKN8GEsR4HPVSTq8weH24=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=cF8LhrShy4oyPmwSPxCp3eeWcSpvEHjMLxfi8sd+xh4qIckbieYYUvcxGRWfqnO4pX78gpUooXTvFYSp0SBREDwZcADfNZDMy9ZHkaUrdBU1tjFvmFCoSRj3KWoTaaDOPDBfJ624gAvryjnPRdLXMmrrNj5SecvkN5YMAhQUjgs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=N6y3d0mZ; arc=fail smtp.client-ip=40.107.21.101
+	 To:Cc:MIME-Version; b=WIoeiwdD2EL0YLms5Cw7jYQVViU03etPV3fz6e4xqOeKHAbW5YpWMmbIzg2WQ5yTN/FDOBA2yItl29iaVEBhZgzVRNQplJR0UhkY9+EMGtnrhHAB0ID7ukrpSx2Bh1pDSQBVn1k02rv/F7jCeIObl5RD0xEWTFl5kPYsbhuLdpo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=nIIafiJf; arc=fail smtp.client-ip=40.107.6.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="N6y3d0mZ"
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="nIIafiJf"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DrHnbLeuZb/De2pLVwSUSDuOEAPjmDlao3ORHmwdYcTpNmKRlupdN82jNOzGmeOEcRa2ML3xEBMFGttychmWUmt9ZFf5N+OM92d6twe7htAFT5QL39FodTqi564oOS+uUF3EU5F4WGGveWGRuxWVFHtULjQ6behqoGWvV8MZcRxL2rjrDDb+dgDpp/IKuRYxUyh2Wxc99QseAsS0PwUfAZ6X0tXUjTwjvLhJur6uwi/+hNweczg4Bvzc21Dy/lviMOfKgtl2WvcY7sZekoI2o0UO8Shz4RvCS9wM70qoHjW45wh41uE97SoQNJP7w7wiKIsvwmZJuhmCeLfsYitqgA==
+ b=HmwDZx0FQypwvRFfPJjrSo63lwrWLopb1XMxIbGA/NqdDPLa/SmcF9dtPfw1/yYG2Wej0UrsYsQ15r92NdJt3T21pBXM4mG59kO39C2Cc+vxwSUSvPX47rI94Z9DJjXQ/T7aTiR2Aq3twGvfet9bs6xy/KAKN9Huds2vjIXV8wljsgzvUtjxrjJ9nh+zW5Dp8oLdMMclPvLV8EOm/GST+wyFUXI5IO8RKOFBYfGAoYOdqVgmFaa06M0Lr+X/KHpmKynwS0lcwqEliBJbO+I9IXHWPWSwUQZp8oz3ZZ1OeP9GJA3e5P4rvKUz+0lVrUyKFX2SoXXPBxZpIupC2Renwg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PfuyLToV7eR4QIR+o+IgvioD+qm918boKG6NO5BM1/Q=;
- b=Cn2KhyO9zQKJOHnQoCQM5iDcnwvINiL93zMgasf2hQKTSUuTwrE/83QAecGMQn4ijFISTisfkYV047NfkNzzz5Ed4bVmy+9DODrwj8P8uUMwtHFO0HO7ofrFOWDsUI5PjYAl8UZB+Zrrmo8W/OQ943r1ezh/xZKr555XOjymzjqGtqaEveU6M93okAsXHb5swfAhL3UL1T0QOQ5+bbLflWhXt/Sb1Syq8/mhHHAmd8eEKjWABFSdkw/3Z1bss1FT1BIRwSr41hs97/F+qqqY9/zOkZJeMMWZNUHc+migSTqML0ogaYGPFJxWtG7FwP0vzrL03/mzQQICvL//UzN31Q==
+ bh=wngdV70IOdXxwG/t4ulJ5gsPc03FZIHAJnqJg9zDh+M=;
+ b=OptgRq/tf9lTsngAVB16HIjn+s/9Wei4xiq2LzYMcFo1CRC5Y//zwHLLg8DR9uiLUUwstgiLOyiy6zbO2STHCk3qmrQDLWU7ApNsOIs1ik9otNQOO+j9bacL1VrzJEBtKJJQiG1zdcw53tozSqX0iNz8/RvC9fDiSnPncf8AsEFtYAEI299Yi7kZxrM25rsupVEXPWrGv75qFbXBwpT906oHvn4oJ9knE9tw7+oIRWMVxkDDvxWaoJHdmRHUsCufmNFLqD0w2syip1+FoS/I/Xbtv9/NL/iLzUBh8XbfrPSR09l5U6OjWLauPn621fGgwFfUpxtVgmybMD5cJUChsg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wolfvision.net; dmarc=pass action=none
  header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PfuyLToV7eR4QIR+o+IgvioD+qm918boKG6NO5BM1/Q=;
- b=N6y3d0mZPaKv1JQSQqFO536CTHWjxxRbSuiVKIquzjZbhCEChM4itFyUF8PfFES1mDNbuMboo2zWHyt/AZo4yFRkxEgdEe+Rj9A8VwOV8jlmR6oTBCJclTF3ufUGOCLKy5OiQicqHNqgVOmgboU6Gg7gsysHHA+fUeRdT/Rsmmg=
+ bh=wngdV70IOdXxwG/t4ulJ5gsPc03FZIHAJnqJg9zDh+M=;
+ b=nIIafiJfhqAvxT4RlrjHWrhDpFQnRvYZ+yu5XI7VMT3h3nxrwPMu0s4QRYi3D8KgF73Elw1eShH+JJzJmqSijQ9BqYmieO7Othuc+HPBogurtyvOjiuExWcrixYe1JNJOmnmhC3Bk0ddkF3hEksmHbLBP8HkRCsRyBBKbu2pbNM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=wolfvision.net;
 Received: from VE1PR08MB4974.eurprd08.prod.outlook.com (2603:10a6:803:111::15)
  by GV1PR08MB10523.eurprd08.prod.outlook.com (2603:10a6:150:16a::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.40; Wed, 28 Feb
- 2024 13:51:37 +0000
+ 2024 13:51:44 +0000
 Received: from VE1PR08MB4974.eurprd08.prod.outlook.com
  ([fe80::9e35:6de9:e4fc:843f]) by VE1PR08MB4974.eurprd08.prod.outlook.com
  ([fe80::9e35:6de9:e4fc:843f%6]) with mapi id 15.20.7316.035; Wed, 28 Feb 2024
- 13:51:37 +0000
+ 13:51:44 +0000
 From: Javier Carrasco <javier.carrasco@wolfvision.net>
-Date: Wed, 28 Feb 2024 14:51:29 +0100
-Subject: [PATCH v5 2/8] usb: misc: onboard_hub: rename to onboard_dev
+Date: Wed, 28 Feb 2024 14:51:34 +0100
+Subject: [PATCH v5 7/8] ASoC: dt-bindings: xmos,xvf3500: add XMOS XVF3500
+ voice processor
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240228-onboard_xvf3500-v5-2-76b805fd3fe6@wolfvision.net>
+Message-Id: <20240228-onboard_xvf3500-v5-7-76b805fd3fe6@wolfvision.net>
 References: <20240228-onboard_xvf3500-v5-0-76b805fd3fe6@wolfvision.net>
 In-Reply-To: <20240228-onboard_xvf3500-v5-0-76b805fd3fe6@wolfvision.net>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -64,13 +65,14 @@ To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
 Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
  dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- Javier Carrasco <javier.carrasco@wolfvision.net>
+ Javier Carrasco <javier.carrasco@wolfvision.net>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709128293; l=32054;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709128293; l=2130;
  i=javier.carrasco@wolfvision.net; s=20230509; h=from:subject:message-id;
- bh=ENqXJ468M++pJ3P8ig6/C12Pe+MqcuxPPUvXDMi4dCc=;
- b=c0fRw/d7o1Uf0P727NIAw66Q5RZm33OklRk1Fwjh+xya2TUGONITcyhPCPxsyKTe+AMWgDOsy
- pBvyRRwTBD9Ak+V1d6M4m+cA3ERbRssROAYhaz69Lm1bDw1JGhthjWN
+ bh=rrF8Q2LYwFLaBUHIvIcp23yKN8GEsR4HPVSTq8weH24=;
+ b=UzauIOpsKUfwQwer3RbntJs5Bp7eUgfsvYEmriJ2gaVuc6bqU7iy3ABXYXuKNMwcS/ExRFrWY
+ ZdtXDxEL2z2AHwZJlALxCqjRhPIeLQ3Lc6/+rBIfMa4I+SBcwgKjR6N
 X-Developer-Key: i=javier.carrasco@wolfvision.net; a=ed25519;
  pk=tIGJV7M+tCizagNijF0eGMBGcOsPD+0cWGfKjl4h6K8=
 X-ClientProxiedBy: FR3P281CA0184.DEUP281.PROD.OUTLOOK.COM
@@ -84,1029 +86,147 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: VE1PR08MB4974:EE_|GV1PR08MB10523:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebbd8e94-adb3-4934-e479-08dc38646244
+X-MS-Office365-Filtering-Correlation-Id: 0db46445-2f8a-48f0-2774-08dc38646637
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	NlbEd0M54mL9ZANs9eShOdXziUDXvaucglS+tTKWNv+y2tR8YthEvDWSmS7Aa85v+0uMGj7BpyjBFc10vDK0ZFXK32+4V5T2xtPwXnkDHYBFF9yONiD61GvtXhMBlWeDDr5da6zUY+FqbdPX2h3IIcuA6MpoRbRXQ+spM6KZ7YA9hXSLGsaxzgtpvJz0ZuBRD/X5QDcbFLPoCd71DLP5NSKZ4e0EENRweueafV4hRDex+Bj4hdPVYRHUdjh24kaVlA1/X9llR65RsVPAlVKhgeTMPpjks4sib9KQK4DwyOp+0B4hUwZUPC6fwVjmMFNbQuf0I5v5kU1Q0/7lsJwMQ/mNmsrrrlIMnUK7e9sjJOVjxuVtDunl11E/DHbJK57TPYstAUCWvAQzZh4poW59SMadOIEB+yAalHiywyleijakWIcb6XLPjRwr3UoTf0wRbc2csjxrbBxQXF7nmzgL9j7Fk9P5VO5pXDN6XB3QulK4uoRapepWIBoEY9eRfMyhtl6LcSUH5CZGAPWzvuPI1jRc/K5Nz+JHasj63U9lSbnftzZjG0/s1u6tr4OpaqpqIgpay+ZJa9ESzrXBxl9GcKLwcNouHq+Zkx1DLTR9k4nNJJaYx9fmPWQRV5Ga/zZO6EDtI+miFTNqJNymslnzn5x3oMZrS60o4cr5AY6xN4LR6bwN7eJwWlBiDgmoZSy8ordm2bqt+c9C0TxY//BJjjtT8f+gF7j0wZwmymkRs7I=
+	gHluEKnXwqNstruL5T/a5Zsij9HCmKeLk1Tafh8ebMLuLLfimijfcvre4Rk5kuTGgF+SBEt2TiKY1lc02mV7jsY6MhQI8CQoWIJvEfp3qktKlmfrPT4PlGHYblpmGPtVgY5RHlD+rn2DRB0wMzjlqs+RbJd+l1S+OlObxcBYOfr4y2W+JWyxe+W90e3NrGG+1TD93aKJEgVfqUvSvqhgUeQbsOUq8VXcIVw/M7lDovm67xPyq6ryc/dFNktqFh1IjZcFbAyZqC3xs6yfH6D4HDlpC+bKsZE5KL5m3ewpeSGJaMV9J8xjOVbgcmZOe3YHqYt3FY3MPOI0h1hKHE0h379TPHqh67tiUhgAEiIMvihcB9H/PHgeZeug8h1tk1DwzJuKmqksScZrJ07fsZZ4XL9g8f4LDFTfc6qr8zDy0/7+T6X+NkdO6hZfc7CDyteNjRlzRL72ANzz3WG2oUqZ6wBXX/Sd7xyQaVBJd7pKLh4KEyscBBZDOq8ciFQU00xUmOMvsKWBDgeQaq2OGl7S318N4zS8nK4Ss3MXDdmbTK/FsBtjmyNmpnM7UzxT/mZFrD0kFZMvHxxCQCMrl8j3rVscNEnbBah3EEv+IXRaBnyCBF0QjDs2ioDblvVxha67lwg535uem1zxYThzPUXmY/Hrs1XinGSF6QJMFFoZise85vZxr1LSEcEBvJBEA+N0rj4ZxjfERtEkfxcAIDsoTFUG2UrkPkEEDh+KUcqMq64=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4974.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?REc3SUtJaitlVmU3MFF5UU90V3NmNnhMdWhoMUlEcEUyYXhicDgwbFhEeFA0?=
- =?utf-8?B?TmxobnZpRVR5SjZSNng0QVRiZzJ5RWRnbytTdlZLdllMZ0RtS0M4U1d2YVNr?=
- =?utf-8?B?aTdXUmtFSFBwZ1JzOVJpMlYrT0ZTMXFVZUY0K1ByNFY5N2NodVl0SUZxYTNq?=
- =?utf-8?B?Y1h5MDRndDI2eEJMR21GK0JYQVNNK01ZUjc0VG1LSkcwa0I5UnlkV2I1VEg3?=
- =?utf-8?B?OGFsWWlEeHpVVTlTUmw1em1vVlB0cHlFUkRQdHI2QUJVdEd0RXBCMUtQQUJU?=
- =?utf-8?B?a2sxNHRzMlJaT1pJa1pUR0ErcG5ieXBKWDFEMVp6cmJJYVF4L0M4V1dMdUx6?=
- =?utf-8?B?c2g3RGt3U3AzaUFqaGhwTXNkSjN3VnVJcnpDVitNUUlZTnoybEF0THA5bnEr?=
- =?utf-8?B?N1MwZFpSMXgxVTNqVmxmQVk2aVRxY0FEQ2hoRkNhS2ZpS29WK2tjMTNUczM3?=
- =?utf-8?B?UXFnb09OUjFnaUFkUkdWVVJkbVZzVFNocGFORFUydC8yWlpXb3k1cVR4ajVP?=
- =?utf-8?B?YUltWXViOHd1dDNZMzdzNnhlUTBBNWZvU2Q5NjNHaW94ZWVDSE00SU93bmx1?=
- =?utf-8?B?bkRhVUJ5YTBFQnl6NHZqWEhWVmc1THhucjVzK1F0eHQyWVpqRFcwOWxUU04r?=
- =?utf-8?B?SVk0ZTA4U2F1eS9SS0MycGM4SkZEVEFUNVJJTVozK2JockV6WVRPMWk3UWRC?=
- =?utf-8?B?OEF2L3BzSit1eGllaW5MWGxiL1JHazk1NmhjcVQwdWVFSW5rWU5VeXF1ejJP?=
- =?utf-8?B?YW8rd25WWkdvcVpvR2J3ZEZnNmJvRkM5UDFLV1paUmtjdm1tL2ZyUTdVUFND?=
- =?utf-8?B?bDNlak9vb05abWFRLzlyc1RWZ3dsVm1iODJGQks0dTRGQzNvU09SdGlwVVpz?=
- =?utf-8?B?SUQ3bHBLaEVxenlNYktJYUZkME80M3NVL0FmZW1xSlByWjFNWHRtcE5iYXVy?=
- =?utf-8?B?Unk3TlBHMWF5NnlFZHYrQ3NuUU12clFxbkpvMDg0dmtWbEJtbXFYVGJ1OXIx?=
- =?utf-8?B?SkdHVnZWYW1ncEhkYWNBRTRwMjFhYTEyQm16b1NTMUtlYkVzaDVUc29BVXBC?=
- =?utf-8?B?OGRwdkFzOTQ0OFgvelh3RldUMW84RU9aSEc4M29OZUF0ODEwZVRlN1pZU2l6?=
- =?utf-8?B?YXJXUERTZFhBTjBJNnE5bzdEVEpRWDgrUzk3aThVNk9pb0JlVEhxOEhyeU91?=
- =?utf-8?B?VU0yR2hvMHhxNDFIRHhaTDZUak5RbTdIWW8rOGJIL1Zoekh4d1JGY0tPalIz?=
- =?utf-8?B?Nnh0TlMwTFZpTEdDdlBUZjk0T0pjaU91WjUrTWlEdVNqNmlGLzBsVDlaSU1H?=
- =?utf-8?B?OGJ6Sm1nVWJrdVRQdjFCQlFybndRR1VGTXJSTVc0Tk1HNVh6Unk4b0JBSUlM?=
- =?utf-8?B?NU1SckN6aGdMTCtZbTJ2U0NsNW5abThxaWxaUWI4VDU3L2d0akUyTFdDWGw2?=
- =?utf-8?B?bjF5NDBwbWVzbzNRYVFBMjVmQnNreFBJaXFYMnlnVFZZdWhzYUp5UWl3NWtE?=
- =?utf-8?B?Q1BVZU9OUW5GNURzTkhTMDFuRXcvOEI2T3BrYXlsbWpwODY2L2Nwa3pEL3VF?=
- =?utf-8?B?RFEzUjRUbTdsWFdSVHhvM1JBNndGN1B2UG5RZUZqUzgvTEZLUEliRDZvN1ov?=
- =?utf-8?B?b21oZDVJVDlFK2haOFB2OVd4dUVtSXczQjhvby9zYW9qcnJXcktiVVVjRGZn?=
- =?utf-8?B?bkpiMHB5TmU0RTBSYmJ3blEvQXhMWXNVTlpzbnMzenF1KzlTU1kyWUo5RVIr?=
- =?utf-8?B?b01aYlgrRDJCYldhV2VZYm94eWdjdy9YK3M0M0d6TXpYMFBxT3ZiTlVYMXZ2?=
- =?utf-8?B?K1drOHBtZzAwRzIwaGZ2RUY2eXdmaDZRQ2VDVm1nQ2V2VjBkdU1KdENaMzRi?=
- =?utf-8?B?Z0RJdmVvMThGd2NBS2xKUk9HTHFYSkxqSHArQjlFVUJRekhBdnJ3a285b0ZU?=
- =?utf-8?B?TkZjOHJsZTFaMWtNYW5ZYVpzc0JTMmxvRG1ucTN6YmE4ZlhtVGZGSWxzZjd1?=
- =?utf-8?B?aVMxV1NvaEV0dFBVcDZPTWwvQlJXc1p2eVFaSHR4UEpqL1MzS3dxc3pYa0FG?=
- =?utf-8?B?YS9QK1lhczdNcmpxRlBBd1dWZjdsMzE0a05hL2JxN1hXa1RPbWdhbTNsZWU5?=
- =?utf-8?B?UVhmRWNZdGlEWDJPaHBZTGV6UnI2TTZRVmh1NkovMG5KR2E5UDlwdkNTS1NX?=
- =?utf-8?Q?su8ZDdu4+I4FzsgXbGRr2l0=3D?=
+	=?utf-8?B?SjB5MmJ5ZXB0OElKU0RPVzBXdFoxdTZvM1BuVXNRK25LNzZWcCt2S0JxcXg1?=
+ =?utf-8?B?ZjR1dzRoL1RRRk1ZTG8vTUNDdmFXMDZZM2pYOW5TOC9JWWhtMzZ6MGoxZEdk?=
+ =?utf-8?B?cmNGNHgxQTc1SUVjV0xjTzhFb1BIU0RoU2JVYlFLVDV2WnhFSkIvZEJhdDJV?=
+ =?utf-8?B?dUZpaDQrZktJME9yMStCVm1ic2JQd2xkK2NGRE9SK3I5RU1CcllvcFlrMmRE?=
+ =?utf-8?B?RGtYU0FQUTBBOXVsSGV5bnpNQlBiSmtPdFVLRFZHcE1tYVY3VlpjcFA1RlJW?=
+ =?utf-8?B?TW5jQ2NOYjZta1JHWG1yek1SZVNTQTVNRlJHZTl2NmlIQm16b2s3NUlmNUda?=
+ =?utf-8?B?THpMNjJBbFJyRVhubGZOZUpiUzlvcXdxZHBhUlhqWEkxTVZaZ1l1aXFna1Rn?=
+ =?utf-8?B?UERJbkJGY2FKSVNieG5pbEN3VUJWeklFWWxtU3krQ3V3RUVsTXUrakpRaWg4?=
+ =?utf-8?B?SzArc0xTTDYxdThWamI3a01tbzNrVEJ0RDRQVHpCcmFMSkJYNEtwVWVtcHZN?=
+ =?utf-8?B?UmhLUDdnTE1yWmFybUxMU2VzRzBBeUZqWTYwU09lQ3hac1FZa2cxU2NkY01H?=
+ =?utf-8?B?VU5mOWs1RUlMeWZURURmKzVYZlBEOS9EdkZybS94SllZK0VRVitnQ1lHYWxY?=
+ =?utf-8?B?eXh1SzU5MGwwSWNvTDRaSGVPUm9lMTcyZjJkWG15SncwMVZXaU1sN1pYMlNn?=
+ =?utf-8?B?SXZXUlgzUnZpVnZFZDk1U2FCdUcyRnluOHJxekJERWszdVRXMWtFL2hvZWNN?=
+ =?utf-8?B?ejVXTk04bVgrUWJTQjhIbzdYYzUyamp3Z3FJNGwvaHYyZ3pWS0V0WExkYnhk?=
+ =?utf-8?B?VmZnUnozeXBEcmpaZ2Q1ZHp5eHorbFhCcFBqZWxjTXBwSDZLWW9DZ090RFFG?=
+ =?utf-8?B?RERDYnFwcUthRFh2UzRuSGdxOUxjTDljMjJFMmZUY054RjlOOG0xYXl0RjBC?=
+ =?utf-8?B?Uk1tS1pCS1hkSG52MXBHNHoxR0J0SnM1R3FwR2hiWkQ3VjBOK2xNSUFxS2hZ?=
+ =?utf-8?B?ZXJIU1pEUUxwaE9vUldvRHNocGkzWGhpOTJRS1FtNjk4emhqYkVVZXVKYnp4?=
+ =?utf-8?B?Mk5vSG04Q0Mvbk9OWGYzK2JWYVp6MkVuSjJSNThEL2hpdlk4V0F3bHhZUFRo?=
+ =?utf-8?B?bERhRHRpbTZWUXdDZmpySzVrdGhHSFlIbUFYbWF3Uk0xNG1tUFBqMVVhQm9C?=
+ =?utf-8?B?MGJ4M2JvNkcvSXo3OHdwZ1huYnBnMmx2ODJJSmhWb0o1RU10cUhFS2tiK2Zh?=
+ =?utf-8?B?WjI3SFN3cGZHbWxsS3NXVmZ3Y216R2pPODJ0TG5KWUMwdlNKTTVUcEtZUDNj?=
+ =?utf-8?B?dGRqNUFXMFpqRlZ5cjhrWkdnTS9qeGs5aGRPNFlocWZTMFgxK2gvd0haVUlw?=
+ =?utf-8?B?OHN0ZmlpNW9VaTVidHlyUXkwR1BHWjdjc1ZVTU5PQ1ZJRHp2ZHl2M25NOXpR?=
+ =?utf-8?B?eTRQRHhCZy9ZbVJiWlB0RDhwYnBveXgyY3lZNDRUeDRUS0NTdlFabzJkYlFt?=
+ =?utf-8?B?R25Tc1JXbDNHZEdKS25IK2lFQ2wwUzVqMUZSNTBpZXNUWDBEZG0vUmxydnVP?=
+ =?utf-8?B?b2VrZnl4VnBjbFFZRmN2OGkxcG95dUR4RUFHN2pYWkdYSUU2WVM4TlNLL0Vm?=
+ =?utf-8?B?UU1namFHRE1uOTBaY1pSRmJNRkYyNEJNWGFzK0JpL2FQbUxUMzhmUGhJeE0x?=
+ =?utf-8?B?alUxeWhJN1NEMnlLSnhmQ1E1MmpYeCtYaVdDNkdNMUdGNm5OZFJFWDZqNnhx?=
+ =?utf-8?B?MkFVb3g5WmEvejJrUTFEdnJMM1BuQzdObk9nOWE3TXE3TjB1TXBSbnlkTzIw?=
+ =?utf-8?B?cC9BeDVmaDI2UGl1WU5Dd2Jqby94eUJ3SENNVkMwT0QrZzBJU3JGVHR1M1RV?=
+ =?utf-8?B?TWsrYnBxSW5FNnBEN0kzV2VvTVl5eGhEblhzb2YzanIva2pNSGxVMFh2dmxL?=
+ =?utf-8?B?MWV2R3pWRjFBV2pITUVLdE9lazZNZnBHQStNc203NzFRblJtYlptblJlRlRw?=
+ =?utf-8?B?ays5TURZQVl4dTc5K2pnblMweFlNbzZmeHJmRmtXdW5EQ3kvM1pPd2Mrc3d4?=
+ =?utf-8?B?RUg5cHBERFZxaTFRVEtxQ21DcWpkQURWRW0wK0pvWkFLNFhEQUVVRE1mcVBE?=
+ =?utf-8?B?c2gvZ1FMUGFwRDBCUmNQSUJQbDFRR0U2dlkxcHZOVWtOT2tzR1JxVFV0Y0RW?=
+ =?utf-8?Q?nO2Pk2GneO0GZdIJWSdPlfM=3D?=
 X-OriginatorOrg: wolfvision.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebbd8e94-adb3-4934-e479-08dc38646244
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0db46445-2f8a-48f0-2774-08dc38646637
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR08MB4974.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 13:51:37.7772
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 13:51:44.3650
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Rjkhoneft7Be5gjxjYMwMRtSd11OfDe9Ri8NpRnzC6y+WJw232Z3lHhaFUd7QzJAyRPgBIZszSrjG1H0AwmTLqJ5iH3VwRjemfzewxvufVs=
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gf2U0v/kzSgp7XCA3Fmw1wPsg54ilOWXzkYBt/vzJ2/V9n1UINStLcMthWw87sOUybWsRodqtuR6jOYxzT4beGGcUHjlyVSR53+uzJJLGJI=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB10523
 
-This patch prepares onboad_hub to support non-hub devices by renaming
-the driver files and their content, the headers and their references.
+The XMOS XVF3500 VocalFusion Voice Processor[1] is a low-latency, 32-bit
+multicore controller for voice processing.
 
-The comments and descriptions have been slightly modified to keep
-coherence and account for the specific cases that only affect onboard
-hubs (e.g. peer-hub).
+Add new bindings to define the device properties.
 
-The "hub" variables in functions where "dev" (and similar names) variables
-already exist have been renamed to onboard_dev for clarity, which adds a
-few lines in cases where more than 80 characters are used.
+[1] https://www.xmos.com/xvf3500/
 
-No new functionality has been added.
-
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
 ---
- ...-usb-hub => sysfs-bus-platform-onboard-usb-dev} |   3 +-
- MAINTAINERS                                        |   4 +-
- drivers/usb/core/Makefile                          |   4 +-
- drivers/usb/core/hub.c                             |   8 +-
- drivers/usb/core/hub.h                             |   2 +-
- drivers/usb/misc/Kconfig                           |  16 +-
- drivers/usb/misc/Makefile                          |   2 +-
- drivers/usb/misc/onboard_usb_dev.c                 | 519 +++++++++++++++++++++
- .../misc/{onboard_usb_hub.h => onboard_usb_dev.h}  |  28 +-
- ...ard_usb_hub_pdevs.c => onboard_usb_dev_pdevs.c} |  47 +-
- include/linux/usb/onboard_dev.h                    |  18 +
- include/linux/usb/onboard_hub.h                    |  18 -
- 12 files changed, 595 insertions(+), 74 deletions(-)
+ .../devicetree/bindings/sound/xmos,xvf3500.yaml    | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-platform-onboard-usb-hub b/Documentation/ABI/testing/sysfs-bus-platform-onboard-usb-dev
-similarity index 74%
-rename from Documentation/ABI/testing/sysfs-bus-platform-onboard-usb-hub
-rename to Documentation/ABI/testing/sysfs-bus-platform-onboard-usb-dev
-index 42deb0552065..b06a48c3c85a 100644
---- a/Documentation/ABI/testing/sysfs-bus-platform-onboard-usb-hub
-+++ b/Documentation/ABI/testing/sysfs-bus-platform-onboard-usb-dev
-@@ -5,4 +5,5 @@ Contact:	Matthias Kaehlcke <matthias@kaehlcke.net>
- 		linux-usb@vger.kernel.org
- Description:
- 		(RW) Controls whether the USB hub remains always powered
--		during system suspend or not.
-\ No newline at end of file
-+		during system suspend or not. This attribute is not
-+		available for non-hub devices.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8999497011a2..7ad556ecca40 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16297,8 +16297,8 @@ ONBOARD USB HUB DRIVER
- M:	Matthias Kaehlcke <mka@chromium.org>
- L:	linux-usb@vger.kernel.org
- S:	Maintained
--F:	Documentation/ABI/testing/sysfs-bus-platform-onboard-usb-hub
--F:	drivers/usb/misc/onboard_usb_hub.c
-+F:	Documentation/ABI/testing/sysfs-bus-platform-onboard-usb-dev
-+F:	drivers/usb/misc/onboard_usb_dev.c
- 
- ONENAND FLASH DRIVER
- M:	Kyungmin Park <kyungmin.park@samsung.com>
-diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-index 7d338e9c0657..ac006abd13b3 100644
---- a/drivers/usb/core/Makefile
-+++ b/drivers/usb/core/Makefile
-@@ -12,8 +12,8 @@ usbcore-$(CONFIG_OF)		+= of.o
- usbcore-$(CONFIG_USB_PCI)		+= hcd-pci.o
- usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
- 
--ifdef CONFIG_USB_ONBOARD_HUB
--usbcore-y			+= ../misc/onboard_usb_hub_pdevs.o
-+ifdef CONFIG_USB_ONBOARD_DEV
-+usbcore-y			+= ../misc/onboard_usb_dev_pdevs.o
- endif
- 
- obj-$(CONFIG_USB)		+= usbcore.o
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index ffd7c99e24a3..f85b3e928a35 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -23,7 +23,7 @@
- #include <linux/usb.h>
- #include <linux/usbdevice_fs.h>
- #include <linux/usb/hcd.h>
--#include <linux/usb/onboard_hub.h>
-+#include <linux/usb/onboard_dev.h>
- #include <linux/usb/otg.h>
- #include <linux/usb/quirks.h>
- #include <linux/workqueue.h>
-@@ -1776,7 +1776,7 @@ static void hub_disconnect(struct usb_interface *intf)
- 	if (hub->quirk_disable_autosuspend)
- 		usb_autopm_put_interface(intf);
- 
--	onboard_hub_destroy_pdevs(&hub->onboard_hub_devs);
-+	onboard_dev_destroy_pdevs(&hub->onboard_devs);
- 
- 	kref_put(&hub->kref, hub_release);
- }
-@@ -1895,7 +1895,7 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 	INIT_DELAYED_WORK(&hub->leds, led_work);
- 	INIT_DELAYED_WORK(&hub->init_work, NULL);
- 	INIT_WORK(&hub->events, hub_event);
--	INIT_LIST_HEAD(&hub->onboard_hub_devs);
-+	INIT_LIST_HEAD(&hub->onboard_devs);
- 	spin_lock_init(&hub->irq_urb_lock);
- 	timer_setup(&hub->irq_urb_retry, hub_retry_irq_urb, 0);
- 	usb_get_intf(intf);
-@@ -1925,7 +1925,7 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 	}
- 
- 	if (hub_configure(hub, &desc->endpoint[0].desc) >= 0) {
--		onboard_hub_create_pdevs(hdev, &hub->onboard_hub_devs);
-+		onboard_dev_create_pdevs(hdev, &hub->onboard_devs);
- 
- 		return 0;
- 	}
-diff --git a/drivers/usb/core/hub.h b/drivers/usb/core/hub.h
-index 43ce21c96a51..3820703b11d8 100644
---- a/drivers/usb/core/hub.h
-+++ b/drivers/usb/core/hub.h
-@@ -74,7 +74,7 @@ struct usb_hub {
- 	spinlock_t		irq_urb_lock;
- 	struct timer_list	irq_urb_retry;
- 	struct usb_port		**ports;
--	struct list_head        onboard_hub_devs;
-+	struct list_head        onboard_devs;
- };
- 
- /**
-diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
-index c510af7baa0d..50b86d531701 100644
---- a/drivers/usb/misc/Kconfig
-+++ b/drivers/usb/misc/Kconfig
-@@ -316,18 +316,18 @@ config BRCM_USB_PINMAP
- 	  signals, which are typically on dedicated pins on the chip,
- 	  to any gpio.
- 
--config USB_ONBOARD_HUB
--	tristate "Onboard USB hub support"
-+config USB_ONBOARD_DEV
-+	tristate "Onboard USB device support"
- 	depends on OF
- 	help
--	  Say Y here if you want to support discrete onboard USB hubs that
--	  don't require an additional control bus for initialization, but
--	  need some non-trivial form of initialization, such as enabling a
--	  power regulator. An example for such a hub is the Realtek
--	  RTS5411.
-+	  Say Y here if you want to support discrete onboard USB devices
-+	  that don't require an additional control bus for initialization,
-+	  but need some non-trivial form of initialization, such as
-+	  enabling a power regulator. An example for such device is the
-+	  Realtek RTS5411 hub.
- 
- 	  This driver can be used as a module but its state (module vs
- 	  builtin) must match the state of the USB subsystem. Enabling
- 	  this config will enable the driver and it will automatically
- 	  match the state of the USB subsystem. If this driver is a
--	  module it will be called onboard_usb_hub.
-+	  module it will be called onboard_usb_dev.
-diff --git a/drivers/usb/misc/Makefile b/drivers/usb/misc/Makefile
-index 0bc732bcb162..0cd5bc8f52fe 100644
---- a/drivers/usb/misc/Makefile
-+++ b/drivers/usb/misc/Makefile
-@@ -33,4 +33,4 @@ obj-$(CONFIG_USB_CHAOSKEY)		+= chaoskey.o
- obj-$(CONFIG_USB_SISUSBVGA)		+= sisusbvga/
- obj-$(CONFIG_USB_LINK_LAYER_TEST)	+= lvstest.o
- obj-$(CONFIG_BRCM_USB_PINMAP)		+= brcmstb-usb-pinmap.o
--obj-$(CONFIG_USB_ONBOARD_HUB)		+= onboard_usb_hub.o
-+obj-$(CONFIG_USB_ONBOARD_DEV)		+= onboard_usb_dev.o
-diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
+diff --git a/Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml b/Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml
 new file mode 100644
-index 000000000000..e1779bd2d126
+index 000000000000..fb77a61f1350
 --- /dev/null
-+++ b/drivers/usb/misc/onboard_usb_dev.c
-@@ -0,0 +1,519 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Driver for onboard USB devices
-+ *
-+ * Copyright (c) 2022, Google LLC
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/export.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+#include <linux/suspend.h>
-+#include <linux/sysfs.h>
-+#include <linux/usb.h>
-+#include <linux/usb/hcd.h>
-+#include <linux/usb/onboard_dev.h>
-+#include <linux/workqueue.h>
-+
-+#include "onboard_usb_dev.h"
-+
-+static void onboard_dev_attach_usb_driver(struct work_struct *work);
-+
-+static struct usb_device_driver onboard_dev_usbdev_driver;
-+static DECLARE_WORK(attach_usb_driver_work, onboard_dev_attach_usb_driver);
-+
-+/************************** Platform driver **************************/
-+
-+struct usbdev_node {
-+	struct usb_device *udev;
-+	struct list_head list;
-+};
-+
-+struct onboard_dev {
-+	struct regulator_bulk_data supplies[MAX_SUPPLIES];
-+	struct device *dev;
-+	const struct onboard_dev_pdata *pdata;
-+	struct gpio_desc *reset_gpio;
-+	bool always_powered_in_suspend;
-+	bool is_powered_on;
-+	bool going_away;
-+	struct list_head udev_list;
-+	struct mutex lock;
-+	struct clk *clk;
-+};
-+
-+static int onboard_dev_get_regulator_bulk(struct device *dev,
-+					  struct onboard_dev *onboard_dev)
-+{
-+	unsigned int i;
-+	int err;
-+
-+	const char * const *supply_names = onboard_dev->pdata->supply_names;
-+
-+	if (onboard_dev->pdata->num_supplies > MAX_SUPPLIES)
-+		return dev_err_probe(dev, -EINVAL, "max %d supplies supported!\n",
-+				     MAX_SUPPLIES);
-+
-+	for (i = 0; i < onboard_dev->pdata->num_supplies; i++)
-+		onboard_dev->supplies[i].supply = supply_names[i];
-+
-+	err = devm_regulator_bulk_get(dev, onboard_dev->pdata->num_supplies,
-+				      onboard_dev->supplies);
-+	if (err)
-+		dev_err(dev, "Failed to get regulator supplies: %pe\n",
-+			ERR_PTR(err));
-+
-+	return err;
-+}
-+
-+static int onboard_dev_power_on(struct onboard_dev *onboard_dev)
-+{
-+	int err;
-+
-+	err = clk_prepare_enable(onboard_dev->clk);
-+	if (err) {
-+		dev_err(onboard_dev->dev, "failed to enable clock: %pe\n",
-+			ERR_PTR(err));
-+		return err;
-+	}
-+
-+	err = regulator_bulk_enable(onboard_dev->pdata->num_supplies,
-+				    onboard_dev->supplies);
-+	if (err) {
-+		dev_err(onboard_dev->dev, "failed to enable supplies: %pe\n",
-+			ERR_PTR(err));
-+		return err;
-+	}
-+
-+	fsleep(onboard_dev->pdata->reset_us);
-+	gpiod_set_value_cansleep(onboard_dev->reset_gpio, 0);
-+
-+	onboard_dev->is_powered_on = true;
-+
-+	return 0;
-+}
-+
-+static int onboard_dev_power_off(struct onboard_dev *onboard_dev)
-+{
-+	int err;
-+
-+	gpiod_set_value_cansleep(onboard_dev->reset_gpio, 1);
-+
-+	err = regulator_bulk_disable(onboard_dev->pdata->num_supplies,
-+				     onboard_dev->supplies);
-+	if (err) {
-+		dev_err(onboard_dev->dev, "failed to disable supplies: %pe\n",
-+			ERR_PTR(err));
-+		return err;
-+	}
-+
-+	clk_disable_unprepare(onboard_dev->clk);
-+
-+	onboard_dev->is_powered_on = false;
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused onboard_dev_suspend(struct device *dev)
-+{
-+	struct onboard_dev *onboard_dev = dev_get_drvdata(dev);
-+	struct usbdev_node *node;
-+	bool power_off = true;
-+
-+	if (onboard_dev->always_powered_in_suspend)
-+		return 0;
-+
-+	mutex_lock(&onboard_dev->lock);
-+
-+	list_for_each_entry(node, &onboard_dev->udev_list, list) {
-+		if (!device_may_wakeup(node->udev->bus->controller))
-+			continue;
-+
-+		if (usb_wakeup_enabled_descendants(node->udev)) {
-+			power_off = false;
-+			break;
-+		}
-+	}
-+
-+	mutex_unlock(&onboard_dev->lock);
-+
-+	if (!power_off)
-+		return 0;
-+
-+	return onboard_dev_power_off(onboard_dev);
-+}
-+
-+static int __maybe_unused onboard_dev_resume(struct device *dev)
-+{
-+	struct onboard_dev *onboard_dev = dev_get_drvdata(dev);
-+
-+	if (onboard_dev->is_powered_on)
-+		return 0;
-+
-+	return onboard_dev_power_on(onboard_dev);
-+}
-+
-+static inline void get_udev_link_name(const struct usb_device *udev, char *buf,
-+				      size_t size)
-+{
-+	snprintf(buf, size, "usb_dev.%s", dev_name(&udev->dev));
-+}
-+
-+static int onboard_dev_add_usbdev(struct onboard_dev *onboard_dev,
-+				  struct usb_device *udev)
-+{
-+	struct usbdev_node *node;
-+	char link_name[64];
-+	int err;
-+
-+	mutex_lock(&onboard_dev->lock);
-+
-+	if (onboard_dev->going_away) {
-+		err = -EINVAL;
-+		goto error;
-+	}
-+
-+	node = kzalloc(sizeof(*node), GFP_KERNEL);
-+	if (!node) {
-+		err = -ENOMEM;
-+		goto error;
-+	}
-+
-+	node->udev = udev;
-+
-+	list_add(&node->list, &onboard_dev->udev_list);
-+
-+	mutex_unlock(&onboard_dev->lock);
-+
-+	get_udev_link_name(udev, link_name, sizeof(link_name));
-+	WARN_ON(sysfs_create_link(&onboard_dev->dev->kobj, &udev->dev.kobj,
-+				  link_name));
-+
-+	return 0;
-+
-+error:
-+	mutex_unlock(&onboard_dev->lock);
-+
-+	return err;
-+}
-+
-+static void onboard_dev_remove_usbdev(struct onboard_dev *onboard_dev,
-+				      const struct usb_device *udev)
-+{
-+	struct usbdev_node *node;
-+	char link_name[64];
-+
-+	get_udev_link_name(udev, link_name, sizeof(link_name));
-+	sysfs_remove_link(&onboard_dev->dev->kobj, link_name);
-+
-+	mutex_lock(&onboard_dev->lock);
-+
-+	list_for_each_entry(node, &onboard_dev->udev_list, list) {
-+		if (node->udev == udev) {
-+			list_del(&node->list);
-+			kfree(node);
-+			break;
-+		}
-+	}
-+
-+	mutex_unlock(&onboard_dev->lock);
-+}
-+
-+static ssize_t always_powered_in_suspend_show(struct device *dev,
-+					      struct device_attribute *attr,
-+					      char *buf)
-+{
-+	const struct onboard_dev *onboard_dev = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", onboard_dev->always_powered_in_suspend);
-+}
-+
-+static ssize_t always_powered_in_suspend_store(struct device *dev,
-+					       struct device_attribute *attr,
-+					       const char *buf, size_t count)
-+{
-+	struct onboard_dev *onboard_dev = dev_get_drvdata(dev);
-+	bool val;
-+	int ret;
-+
-+	ret = kstrtobool(buf, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	onboard_dev->always_powered_in_suspend = val;
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(always_powered_in_suspend);
-+
-+static struct attribute *onboard_dev_attrs[] = {
-+	&dev_attr_always_powered_in_suspend.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(onboard_dev);
-+
-+static void onboard_dev_attach_usb_driver(struct work_struct *work)
-+{
-+	int err;
-+
-+	err = driver_attach(&onboard_dev_usbdev_driver.driver);
-+	if (err)
-+		pr_err("Failed to attach USB driver: %pe\n", ERR_PTR(err));
-+}
-+
-+static int onboard_dev_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct onboard_dev *onboard_dev;
-+	int err;
-+
-+	onboard_dev = devm_kzalloc(dev, sizeof(*onboard_dev), GFP_KERNEL);
-+	if (!onboard_dev)
-+		return -ENOMEM;
-+
-+	onboard_dev->pdata = device_get_match_data(&pdev->dev);
-+	if (!onboard_dev->pdata)
-+		return -EINVAL;
-+
-+	err = onboard_dev_get_regulator_bulk(dev, onboard_dev);
-+	if (err)
-+		return err;
-+
-+	onboard_dev->clk = devm_clk_get_optional(dev, NULL);
-+	if (IS_ERR(onboard_dev->clk))
-+		return dev_err_probe(dev, PTR_ERR(onboard_dev->clk),
-+				     "failed to get clock\n");
-+
-+	onboard_dev->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-+							  GPIOD_OUT_HIGH);
-+	if (IS_ERR(onboard_dev->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(onboard_dev->reset_gpio),
-+				     "failed to get reset GPIO\n");
-+
-+	onboard_dev->dev = dev;
-+	mutex_init(&onboard_dev->lock);
-+	INIT_LIST_HEAD(&onboard_dev->udev_list);
-+
-+	dev_set_drvdata(dev, onboard_dev);
-+
-+	err = onboard_dev_power_on(onboard_dev);
-+	if (err)
-+		return err;
-+
-+	/*
-+	 * The USB driver might have been detached from the USB devices by
-+	 * onboard_dev_remove() (e.g. through an 'unbind' by userspace),
-+	 * make sure to re-attach it if needed.
-+	 *
-+	 * This needs to be done deferred to avoid self-deadlocks on systems
-+	 * with nested onboard hubs.
-+	 */
-+	schedule_work(&attach_usb_driver_work);
-+
-+	return 0;
-+}
-+
-+static void onboard_dev_remove(struct platform_device *pdev)
-+{
-+	struct onboard_dev *onboard_dev = dev_get_drvdata(&pdev->dev);
-+	struct usbdev_node *node;
-+	struct usb_device *udev;
-+
-+	onboard_dev->going_away = true;
-+
-+	mutex_lock(&onboard_dev->lock);
-+
-+	/* unbind the USB devices to avoid dangling references to this device */
-+	while (!list_empty(&onboard_dev->udev_list)) {
-+		node = list_first_entry(&onboard_dev->udev_list,
-+					struct usbdev_node, list);
-+		udev = node->udev;
-+
-+		/*
-+		 * Unbinding the driver will call onboard_dev_remove_usbdev(),
-+		 * which acquires onboard_dev->lock. We must release the lock
-+		 * first.
-+		 */
-+		get_device(&udev->dev);
-+		mutex_unlock(&onboard_dev->lock);
-+		device_release_driver(&udev->dev);
-+		put_device(&udev->dev);
-+		mutex_lock(&onboard_dev->lock);
-+	}
-+
-+	mutex_unlock(&onboard_dev->lock);
-+
-+	onboard_dev_power_off(onboard_dev);
-+}
-+
-+MODULE_DEVICE_TABLE(of, onboard_dev_match);
-+
-+static const struct dev_pm_ops __maybe_unused onboard_dev_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(onboard_dev_suspend, onboard_dev_resume)
-+};
-+
-+static struct platform_driver onboard_dev_driver = {
-+	.probe = onboard_dev_probe,
-+	.remove_new = onboard_dev_remove,
-+
-+	.driver = {
-+		.name = "onboard-usb-dev",
-+		.of_match_table = onboard_dev_match,
-+		.pm = pm_ptr(&onboard_dev_pm_ops),
-+		.dev_groups = onboard_dev_groups,
-+	},
-+};
-+
-+/************************** USB driver **************************/
-+
-+#define VENDOR_ID_CYPRESS	0x04b4
-+#define VENDOR_ID_GENESYS	0x05e3
-+#define VENDOR_ID_MICROCHIP	0x0424
-+#define VENDOR_ID_REALTEK	0x0bda
-+#define VENDOR_ID_TI		0x0451
-+#define VENDOR_ID_VIA		0x2109
-+
-+/*
-+ * Returns the onboard_dev platform device that is associated with the USB
-+ * device passed as parameter.
-+ */
-+static struct onboard_dev *_find_onboard_dev(struct device *dev)
-+{
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+	struct onboard_dev *onboard_dev;
-+
-+	pdev = of_find_device_by_node(dev->of_node);
-+	if (!pdev) {
-+		np = of_parse_phandle(dev->of_node, "peer-hub", 0);
-+		if (!np) {
-+			dev_err(dev, "failed to find device node for peer hub\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		pdev = of_find_device_by_node(np);
-+		of_node_put(np);
-+
-+		if (!pdev)
-+			return ERR_PTR(-ENODEV);
-+	}
-+
-+	onboard_dev = dev_get_drvdata(&pdev->dev);
-+	put_device(&pdev->dev);
-+
-+	/*
-+	 * The presence of drvdata indicates that the platform driver finished
-+	 * probing. This handles the case where (conceivably) we could be
-+	 * running at the exact same time as the platform driver's probe. If
-+	 * we detect the race we request probe deferral and we'll come back and
-+	 * try again.
-+	 */
-+	if (!onboard_dev)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	return onboard_dev;
-+}
-+
-+static int onboard_dev_usbdev_probe(struct usb_device *udev)
-+{
-+	struct device *dev = &udev->dev;
-+	struct onboard_dev *onboard_dev;
-+	int err;
-+
-+	/* ignore supported devices without device tree node */
-+	if (!dev->of_node)
-+		return -ENODEV;
-+
-+	onboard_dev = _find_onboard_dev(dev);
-+	if (IS_ERR(onboard_dev))
-+		return PTR_ERR(onboard_dev);
-+
-+	dev_set_drvdata(dev, onboard_dev);
-+
-+	err = onboard_dev_add_usbdev(onboard_dev, udev);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static void onboard_dev_usbdev_disconnect(struct usb_device *udev)
-+{
-+	struct onboard_dev *onboard_dev = dev_get_drvdata(&udev->dev);
-+
-+	onboard_dev_remove_usbdev(onboard_dev, udev);
-+}
-+
-+static const struct usb_device_id onboard_dev_id_table[] = {
-+	{ USB_DEVICE(VENDOR_ID_CYPRESS, 0x6504) }, /* CYUSB33{0,1,2}x/CYUSB230x 3.0 */
-+	{ USB_DEVICE(VENDOR_ID_CYPRESS, 0x6506) }, /* CYUSB33{0,1,2}x/CYUSB230x 2.0 */
-+	{ USB_DEVICE(VENDOR_ID_CYPRESS, 0x6570) }, /* CY7C6563x 2.0 */
-+	{ USB_DEVICE(VENDOR_ID_GENESYS, 0x0608) }, /* Genesys Logic GL850G USB 2.0 */
-+	{ USB_DEVICE(VENDOR_ID_GENESYS, 0x0610) }, /* Genesys Logic GL852G USB 2.0 */
-+	{ USB_DEVICE(VENDOR_ID_GENESYS, 0x0620) }, /* Genesys Logic GL3523 USB 3.1 */
-+	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x2412) }, /* USB2412 USB 2.0 */
-+	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x2514) }, /* USB2514B USB 2.0 */
-+	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x2517) }, /* USB2517 USB 2.0 */
-+	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x2744) }, /* USB5744 USB 2.0 */
-+	{ USB_DEVICE(VENDOR_ID_MICROCHIP, 0x5744) }, /* USB5744 USB 3.0 */
-+	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x0411) }, /* RTS5411 USB 3.1 */
-+	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x5411) }, /* RTS5411 USB 2.1 */
-+	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x0414) }, /* RTS5414 USB 3.2 */
-+	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x5414) }, /* RTS5414 USB 2.1 */
-+	{ USB_DEVICE(VENDOR_ID_TI, 0x8140) }, /* TI USB8041 3.0 */
-+	{ USB_DEVICE(VENDOR_ID_TI, 0x8142) }, /* TI USB8041 2.0 */
-+	{ USB_DEVICE(VENDOR_ID_VIA, 0x0817) }, /* VIA VL817 3.1 */
-+	{ USB_DEVICE(VENDOR_ID_VIA, 0x2817) }, /* VIA VL817 2.0 */
-+	{}
-+};
-+MODULE_DEVICE_TABLE(usb, onboard_dev_id_table);
-+
-+static struct usb_device_driver onboard_dev_usbdev_driver = {
-+	.name = "onboard-usb-dev",
-+	.probe = onboard_dev_usbdev_probe,
-+	.disconnect = onboard_dev_usbdev_disconnect,
-+	.generic_subclass = 1,
-+	.supports_autosuspend =	1,
-+	.id_table = onboard_dev_id_table,
-+};
-+
-+static int __init onboard_dev_init(void)
-+{
-+	int ret;
-+
-+	ret = usb_register_device_driver(&onboard_dev_usbdev_driver, THIS_MODULE);
-+	if (ret)
-+		return ret;
-+
-+	ret = platform_driver_register(&onboard_dev_driver);
-+	if (ret)
-+		usb_deregister_device_driver(&onboard_dev_usbdev_driver);
-+
-+	return ret;
-+}
-+module_init(onboard_dev_init);
-+
-+static void __exit onboard_dev_exit(void)
-+{
-+	usb_deregister_device_driver(&onboard_dev_usbdev_driver);
-+	platform_driver_unregister(&onboard_dev_driver);
-+
-+	cancel_work_sync(&attach_usb_driver_work);
-+}
-+module_exit(onboard_dev_exit);
-+
-+MODULE_AUTHOR("Matthias Kaehlcke <mka@chromium.org>");
-+MODULE_DESCRIPTION("Driver for discrete onboard USB devices");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/usb/misc/onboard_usb_hub.h b/drivers/usb/misc/onboard_usb_dev.h
-similarity index 74%
-rename from drivers/usb/misc/onboard_usb_hub.h
-rename to drivers/usb/misc/onboard_usb_dev.h
-index ea24bd6790f0..470736483cdf 100644
---- a/drivers/usb/misc/onboard_usb_hub.h
-+++ b/drivers/usb/misc/onboard_usb_dev.h
-@@ -3,72 +3,72 @@
-  * Copyright (c) 2022, Google LLC
-  */
- 
--#ifndef _USB_MISC_ONBOARD_USB_HUB_H
--#define _USB_MISC_ONBOARD_USB_HUB_H
-+#ifndef _USB_MISC_ONBOARD_USB_DEV_H
-+#define _USB_MISC_ONBOARD_USB_DEV_H
- 
- #define MAX_SUPPLIES 2
- 
--struct onboard_hub_pdata {
-+struct onboard_dev_pdata {
- 	unsigned long reset_us;		/* reset pulse width in us */
- 	unsigned int num_supplies;	/* number of supplies */
- 	const char * const supply_names[MAX_SUPPLIES]; /* use the real names */
- };
- 
--static const struct onboard_hub_pdata microchip_usb424_data = {
-+static const struct onboard_dev_pdata microchip_usb424_data = {
- 	.reset_us = 1,
- 	.num_supplies = 1,
- 	.supply_names = { "vdd" },
- };
- 
--static const struct onboard_hub_pdata microchip_usb5744_data = {
-+static const struct onboard_dev_pdata microchip_usb5744_data = {
- 	.reset_us = 0,
- 	.num_supplies = 2,
- 	.supply_names = { "vdd", "vdd2" },
- };
- 
--static const struct onboard_hub_pdata realtek_rts5411_data = {
-+static const struct onboard_dev_pdata realtek_rts5411_data = {
- 	.reset_us = 0,
- 	.num_supplies = 1,
- 	.supply_names = { "vdd" },
- };
- 
--static const struct onboard_hub_pdata ti_tusb8041_data = {
-+static const struct onboard_dev_pdata ti_tusb8041_data = {
- 	.reset_us = 3000,
- 	.num_supplies = 1,
- 	.supply_names = { "vdd" },
- };
- 
--static const struct onboard_hub_pdata cypress_hx3_data = {
-+static const struct onboard_dev_pdata cypress_hx3_data = {
- 	.reset_us = 10000,
- 	.num_supplies = 2,
- 	.supply_names = { "vdd", "vdd2" },
- };
- 
--static const struct onboard_hub_pdata cypress_hx2vl_data = {
-+static const struct onboard_dev_pdata cypress_hx2vl_data = {
- 	.reset_us = 1,
- 	.num_supplies = 1,
- 	.supply_names = { "vdd" },
- };
- 
--static const struct onboard_hub_pdata genesys_gl850g_data = {
-+static const struct onboard_dev_pdata genesys_gl850g_data = {
- 	.reset_us = 3,
- 	.num_supplies = 1,
- 	.supply_names = { "vdd" },
- };
- 
--static const struct onboard_hub_pdata genesys_gl852g_data = {
-+static const struct onboard_dev_pdata genesys_gl852g_data = {
- 	.reset_us = 50,
- 	.num_supplies = 1,
- 	.supply_names = { "vdd" },
- };
- 
--static const struct onboard_hub_pdata vialab_vl817_data = {
-+static const struct onboard_dev_pdata vialab_vl817_data = {
- 	.reset_us = 10,
- 	.num_supplies = 1,
- 	.supply_names = { "vdd" },
- };
- 
--static const struct of_device_id onboard_hub_match[] = {
-+static const struct of_device_id onboard_dev_match[] = {
- 	{ .compatible = "usb424,2412", .data = &microchip_usb424_data, },
- 	{ .compatible = "usb424,2514", .data = &microchip_usb424_data, },
- 	{ .compatible = "usb424,2517", .data = &microchip_usb424_data, },
-@@ -92,4 +92,4 @@ static const struct of_device_id onboard_hub_match[] = {
- 	{}
- };
- 
--#endif /* _USB_MISC_ONBOARD_USB_HUB_H */
-+#endif /* _USB_MISC_ONBOARD_USB_DEV_H */
-diff --git a/drivers/usb/misc/onboard_usb_hub_pdevs.c b/drivers/usb/misc/onboard_usb_dev_pdevs.c
-similarity index 68%
-rename from drivers/usb/misc/onboard_usb_hub_pdevs.c
-rename to drivers/usb/misc/onboard_usb_dev_pdevs.c
-index ed22a18f4ab7..722504752ce3 100644
---- a/drivers/usb/misc/onboard_usb_hub_pdevs.c
-+++ b/drivers/usb/misc/onboard_usb_dev_pdevs.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * API for creating and destroying USB onboard hub platform devices
-+ * API for creating and destroying USB onboard platform devices
-  *
-  * Copyright (c) 2022, Google LLC
-  */
-@@ -15,29 +15,30 @@
- #include <linux/usb.h>
- #include <linux/usb/hcd.h>
- #include <linux/usb/of.h>
--#include <linux/usb/onboard_hub.h>
-+#include <linux/usb/onboard_dev.h>
- 
--#include "onboard_usb_hub.h"
-+#include "onboard_usb_dev.h"
- 
- struct pdev_list_entry {
- 	struct platform_device *pdev;
- 	struct list_head node;
- };
- 
--static bool of_is_onboard_usb_hub(const struct device_node *np)
-+static bool of_is_onboard_usb_dev(struct device_node *np)
- {
--	return !!of_match_node(onboard_hub_match, np);
-+	return !!of_match_node(onboard_dev_match, np);
- }
- 
- /**
-- * onboard_hub_create_pdevs -- create platform devices for onboard USB hubs
-- * @parent_hub	: parent hub to scan for connected onboard hubs
-- * @pdev_list	: list of onboard hub platform devices owned by the parent hub
-+ * onboard_dev_create_pdevs -- create platform devices for onboard USB devices
-+ * @parent_hub	: parent hub to scan for connected onboard devices
-+ * @pdev_list	: list of onboard platform devices owned by the parent hub
-  *
-- * Creates a platform device for each supported onboard hub that is connected to
-- * the given parent hub. The platform device is in charge of initializing the
-- * hub (enable regulators, take the hub out of reset, ...) and can optionally
-- * control whether the hub remains powered during system suspend or not.
-+ * Creates a platform device for each supported onboard device that is connected
-+ * to the given parent hub. The platform device is in charge of initializing the
-+ * device (enable regulators, take the device out of reset, ...). For onboard
-+ * hubs, it can optionally control whether the device remains powered during
-+ * system suspend or not.
-  *
-  * To keep track of the platform devices they are added to a list that is owned
-  * by the parent hub.
-@@ -50,9 +51,9 @@ static bool of_is_onboard_usb_hub(const struct device_node *np)
-  * node. That means the root hubs of the primary and secondary HCD share the
-  * same device tree node (the HCD node). As a result this function can be called
-  * twice with the same DT node for root hubs. We only want to create a single
-- * platform device for each physical onboard hub, hence for root hubs the loop
-- * is only executed for the root hub of the primary HCD. Since the function
-- * scans through all child nodes it still creates pdevs for onboard hubs
-+ * platform device for each physical onboard device, hence for root hubs the
-+ * loop is only executed for the root hub of the primary HCD. Since the function
-+ * scans through all child nodes it still creates pdevs for onboard devices
-  * connected to the root hub of the secondary HCD if needed.
-  *
-  * Further there must be only one platform device for onboard hubs with a peer
-@@ -63,7 +64,7 @@ static bool of_is_onboard_usb_hub(const struct device_node *np)
-  * the function processes the nodes of both peers. A platform device is only
-  * created if the peer hub doesn't have one already.
-  */
--void onboard_hub_create_pdevs(struct usb_device *parent_hub, struct list_head *pdev_list)
-+void onboard_dev_create_pdevs(struct usb_device *parent_hub, struct list_head *pdev_list)
- {
- 	int i;
- 	struct usb_hcd *hcd = bus_to_hcd(parent_hub->bus);
-@@ -82,7 +83,7 @@ void onboard_hub_create_pdevs(struct usb_device *parent_hub, struct list_head *p
- 		if (!np)
- 			continue;
- 
--		if (!of_is_onboard_usb_hub(np))
-+		if (!of_is_onboard_usb_dev(np))
- 			goto node_put;
- 
- 		npc = of_parse_phandle(np, "peer-hub", 0);
-@@ -104,7 +105,7 @@ void onboard_hub_create_pdevs(struct usb_device *parent_hub, struct list_head *p
- 		pdev = of_platform_device_create(np, NULL, &parent_hub->dev);
- 		if (!pdev) {
- 			dev_err(&parent_hub->dev,
--				"failed to create platform device for onboard hub '%pOF'\n", np);
-+				"failed to create platform device for onboard dev '%pOF'\n", np);
- 			goto node_put;
- 		}
- 
-@@ -121,16 +122,16 @@ void onboard_hub_create_pdevs(struct usb_device *parent_hub, struct list_head *p
- 		of_node_put(np);
- 	}
- }
--EXPORT_SYMBOL_GPL(onboard_hub_create_pdevs);
-+EXPORT_SYMBOL_GPL(onboard_dev_create_pdevs);
- 
- /**
-- * onboard_hub_destroy_pdevs -- free resources of onboard hub platform devices
-- * @pdev_list	: list of onboard hub platform devices
-+ * onboard_dev_destroy_pdevs -- free resources of onboard platform devices
-+ * @pdev_list	: list of onboard platform devices
-  *
-  * Destroys the platform devices in the given list and frees the memory associated
-  * with the list entry.
-  */
--void onboard_hub_destroy_pdevs(struct list_head *pdev_list)
-+void onboard_dev_destroy_pdevs(struct list_head *pdev_list)
- {
- 	struct pdev_list_entry *pdle, *tmp;
- 
-@@ -140,4 +141,4 @@ void onboard_hub_destroy_pdevs(struct list_head *pdev_list)
- 		kfree(pdle);
- 	}
- }
--EXPORT_SYMBOL_GPL(onboard_hub_destroy_pdevs);
-+EXPORT_SYMBOL_GPL(onboard_dev_destroy_pdevs);
-diff --git a/include/linux/usb/onboard_dev.h b/include/linux/usb/onboard_dev.h
-new file mode 100644
-index 000000000000..b79db6d193c8
---- /dev/null
-+++ b/include/linux/usb/onboard_dev.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __LINUX_USB_ONBOARD_DEV_H
-+#define __LINUX_USB_ONBOARD_DEV_H
-+
-+struct usb_device;
-+struct list_head;
-+
-+#if IS_ENABLED(CONFIG_USB_ONBOARD_DEV)
-+void onboard_dev_create_pdevs(struct usb_device *parent_dev, struct list_head *pdev_list);
-+void onboard_dev_destroy_pdevs(struct list_head *pdev_list);
-+#else
-+static inline void onboard_dev_create_pdevs(struct usb_device *parent_dev,
-+					    struct list_head *pdev_list) {}
-+static inline void onboard_dev_destroy_pdevs(struct list_head *pdev_list) {}
-+#endif
-+
-+#endif /* __LINUX_USB_ONBOARD_DEV_H */
-diff --git a/include/linux/usb/onboard_hub.h b/include/linux/usb/onboard_hub.h
-deleted file mode 100644
-index d9373230556e..000000000000
---- a/include/linux/usb/onboard_hub.h
-+++ /dev/null
-@@ -1,18 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--
--#ifndef __LINUX_USB_ONBOARD_HUB_H
--#define __LINUX_USB_ONBOARD_HUB_H
--
--struct usb_device;
--struct list_head;
--
--#if IS_ENABLED(CONFIG_USB_ONBOARD_HUB)
--void onboard_hub_create_pdevs(struct usb_device *parent_hub, struct list_head *pdev_list);
--void onboard_hub_destroy_pdevs(struct list_head *pdev_list);
--#else
--static inline void onboard_hub_create_pdevs(struct usb_device *parent_hub,
--					    struct list_head *pdev_list) {}
--static inline void onboard_hub_destroy_pdevs(struct list_head *pdev_list) {}
--#endif
--
--#endif /* __LINUX_USB_ONBOARD_HUB_H */
++++ b/Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/xmos,xvf3500.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: XMOS XVF3500 VocalFusion Voice Processor
++
++maintainers:
++  - Javier Carrasco <javier.carrasco@wolfvision.net>
++
++description:
++  The XMOS XVF3500 VocalFusion Voice Processor is a low-latency, 32-bit
++  multicore controller for voice processing.
++  https://www.xmos.com/xvf3500/
++
++allOf:
++  - $ref: /schemas/usb/usb-device.yaml#
++
++properties:
++  compatible:
++    const: usb20b1,0013
++
++  reg: true
++
++  reset-gpios:
++    maxItems: 1
++
++  vdd-supply:
++    description:
++      Regulator for the 1V0 supply.
++
++  vddio-supply:
++    description:
++      Regulator for the 3V3 supply.
++
++required:
++  - compatible
++  - reg
++  - reset-gpios
++  - vdd-supply
++  - vddio-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    usb {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        voice_processor: voice-processor@1 {
++            compatible = "usb20b1,0013";
++            reg = <1>;
++            reset-gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
++            vdd-supply = <&vcc1v0>;
++            vddio-supply = <&vcc3v3>;
++        };
++    };
++
++...
 
 -- 
 2.40.1
