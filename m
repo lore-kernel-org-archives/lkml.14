@@ -1,97 +1,135 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D401DDD5
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 02:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7913C1FDA
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 02:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709086640; cv=none; b=Ndah7WNch/S3boCyWh10U7RdMJxD7VJhY8O9MLMMSFJnIfDnBttoNi4uyYH41MePqgnV9nzKwxmBImMTy6r9HFaUvZXO19xyHEN5IfdQe/rtLqZ1yv99FYcY++CvxQt7aOaA1zgOKZnxpEF5RH5OcwyM90eMNcfdSTuRLRDTnVo=
+	t=1709086695; cv=none; b=DgxbWO1oDFyRvEPLDA1pFir93H6fhupY3XsgJ3v94TWd9wAKyj5Z++n1q/MiG+/RvOVKH3XMlyVRBwwTCUcXuVUlKW+Rldg5krdjITCxiGwld3Mhh5qZJLDn4xH5/R2uu5axbzLkhZbK7b5TolZ61d9Q/9M9wIyxrxQXvITmwVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709086640; c=relaxed/simple;
-	bh=uNhrJRNRsgPai4bqJiTa1qH96jrhz8tds9TebSfLmdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OuGkRXS1O4lhh5K+6H4VT5paz4rTGgNkEU/UwKGZ3JqD1asNfhCi2ojQ6OjJ6RapgQruRg9fYQ6BeiLiGp3Sov97TldgCToBuzsqTWtq0nJuL9UKRAqmbh9e13IuGVDNPsx7+dmOReg7tf1rVALYMmazwzDcyTz2kyZlbEr8A4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=THc50Ii4; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1709086695; c=relaxed/simple;
+	bh=wAJMP/rjGSTVeulk/izYYwgmW/lGJuNoksrR8Forbog=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m/xl95W4zMmmZP2pWRWKQ+DuDyZtNdON6n0Z4p+xWO0gMdDxv51ljetiJ6LU7oB5nfph8agKOc5jvv0X4K3ImMiScyw88sQIOOW3avysqyMkfOwLXo4UUWK/Bn2Ze1L6oAPqslmGONi5ev2Y209xBoHmO1n0rmwm70L5DStpNXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ppEAyUak; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="THc50Ii4"
-Message-ID: <d7611a8f-c266-4545-b0d9-a5e6ef3abf0e@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1709086636;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ic7ZEF6fNvJnl0rUWJu3yuWTnO+lxbv0p/6gX1wuoYU=;
-	b=THc50Ii4eNRMF6sen2/5KpQKcrkkcQYGdj+Hu9Bce5nQaqb6q1FAFMpnifomS3ameWp9Y1
-	8F1nT93q66cmUZAeS6ApkNQdQwWXMgNBxIz3E7O3l6ELgMVxjU78QZWh/WtVeJ444izKcp
-	KEnhQ81K2MVCipdddH6dpCZa9y2yRvM=
-Date: Wed, 28 Feb 2024 10:17:02 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ppEAyUak"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-565ef8af2f5so3549989a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 18:18:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709086692; x=1709691492; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mnovH/WwqoUfUjM68lvOHqxD1r2xoiTwaBE2RBdRmeQ=;
+        b=ppEAyUak2msSbz0GDvZoh8d+j7zul/4gR+KjBlqqEFZvzY9IVaJxCTPb+O3NgqFWIL
+         LbRkCciGEEoDZh2XmdUUJpctWN7PGih0Tky99SnIW9ZWNvL2ZC+6X5GYSlJPrNbxyKiX
+         8+/spiuRQVywK+gmQCUO4yFxiYh2MPrqMynE/uEuHbvrMgyyMcjmchDZxyErze+6otb5
+         o/Vn4edZssixeJaST6EJtLyRnQjgXfNfxqlWB9zvARV33nCdzrNMBcSk5J0ppqvVs5tV
+         vU2SX088K5YMZKp5XUg53UG8ZxY1Xf6Qm/ucrOy7co6xjIwYv8p2n17o0UZgKIAFAtDi
+         As7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709086692; x=1709691492;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mnovH/WwqoUfUjM68lvOHqxD1r2xoiTwaBE2RBdRmeQ=;
+        b=kvTQ9pyyLfrwihx4mXDDtYyUmAEcJmc5xlCg/VhzUo3ZyDBPRCzxMslwllSR67B93o
+         xu4TB/iDJtvAn2FzueelY2Lm08oHP3Jm9kSFK3UNO/IncwP3zxK83x3KhOdz08v9rY/o
+         jhfP2qXm9/jZsVC2L/eOpPo7XGEoi2d9LDEJYa7wN325BTBuQVKaL84kE617tynTwgH3
+         CbDnEPykiEkkGYtHHGx2pO0k1mB6GbAdnC8ojykaWQUXsAlubPPhZVo7SM9kN2qw6TRK
+         8EZKdvoXiQDSTS6rFe9nQoHG482ao2PqfYuD7w2dVC4NsQVCrSrBe/eoWJtKQ+6gncdU
+         8kig==
+X-Forwarded-Encrypted: i=1; AJvYcCU72FwdMumSI+3Jfh8Mmox0fhbH60RS1HujEPdqqi1oBfxo4WO5pUiNFIrx9Nlkg7FuPZZKIrSYjEPMxMe+fX1Tb9ibJ703ipexMPdT
+X-Gm-Message-State: AOJu0Ywdu1buchpqv6Y6FXchRPi48OA6IM0QXxLx3NaGwFaQgIPr3Bhz
+	M3xhYyxN3Xjes71k2aKVlwB6w/i2jwhNP2tE+qi4o7ddfnYhc/pkGupSUdxlmLoZPqj3pjvkokN
+	9XC0SOTFoADrRhw/kOW+jlhRWHp2Uium58DHu
+X-Google-Smtp-Source: AGHT+IHQZZ3zPmlSGvwEFJE+4UsPeBBcNupU3Pyfe+fYGWNJx1MOqwEHgIODePoyh3qPMjbtY9EfahMZlzE8HUkFmM0=
+X-Received: by 2002:a17:906:4809:b0:a3f:1b49:c92b with SMTP id
+ w9-20020a170906480900b00a3f1b49c92bmr7585886ejq.48.1709086691753; Tue, 27 Feb
+ 2024 18:18:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm/zsmalloc: don't need to save tag bit in handle
-Content-Language: en-US
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: minchan@kernel.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
- nphamcs@gmail.com, yosryahmed@google.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>
-References: <20240227030045.3443702-1-chengming.zhou@linux.dev>
- <20240227075209.GA11972@google.com>
- <b54646e3-44bd-4937-a2dd-4b88ca7ab672@linux.dev>
- <20240228015437.GB11972@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240228015437.GB11972@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20240227232100.478238-1-pbonzini@redhat.com> <20240227232100.478238-18-pbonzini@redhat.com>
+ <Zd6W-aLnovAI1FL3@google.com>
+In-Reply-To: <Zd6W-aLnovAI1FL3@google.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Tue, 27 Feb 2024 18:17:34 -0800
+Message-ID: <CAJD7tkapC6es9qjaOf=SmE9XYUdbh_fAperjSe9hy=_iqdB0wQ@mail.gmail.com>
+Subject: Re: [PATCH 17/21] filemap: add FGP_CREAT_ONLY
+To: Sean Christopherson <seanjc@google.com>, Matthew Wilcox <willy@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	michael.roth@amd.com, isaku.yamahata@intel.com, thomas.lendacky@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/2/28 09:54, Sergey Senozhatsky wrote:
-> On (24/02/27 16:16), Chengming Zhou wrote:
->> On 2024/2/27 15:52, Sergey Senozhatsky wrote:
->>> On (24/02/27 03:00), chengming.zhou@linux.dev wrote:
->>>>
->>>> We only need to save the position (pfn + obj_idx) in the handle, don't
->>>> need to save tag bit in handle. So one more bit can be used as obj_idx.
->>>
->>> [..]
->>>
->>>> mm/zsmalloc: don't need to save tag bit in handle
->>>
->>> Does this mean "don't need to reserve LSB for tag"?
->> The head of object still need to reverve LSB, to save (handle | OBJ_ALLOCATED_TAG),
->> only the handle doesn't need to reserve LSB, which save (pfn | obj_idx).
-> 
-> Correct.
-> 
->>> We still save allocated tag in the handle, that's what
->>>
->>> 	handle |= OBJ_ALLOCATED_TAG;
->>
->> Yes, this result will be saved in the head of each allocated object.
-> 
-> Right, that's what I was talking about.
-> 
->>>> Actually, the tag bit is only useful in zspage's memory space, to tell
->>>> if an object is allocated or not.
->>>
->>> I'm not completely sure if I follow this sentence.
->>
->> What I mean is that only the head of each allocated object need to reverve LSB,
->> which is used to check if allocated or not.
->>
->> handle address -> handle (pfn + obj_idx) -> object: (handle | tag), real_object start
->>
->> I'm not sure if this makes it clearer?
-> 
-> Yes, thanks. I think separating handle and object header in the commit
-> message will be helpful.
+On Tue, Feb 27, 2024 at 6:15=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> On Tue, Feb 27, 2024, Paolo Bonzini wrote:
+>
+> This needs a changelog, and also needs to be Cc'd to someone(s) that can =
+give it
+> a thumbs up.
 
-Right, I will improve the commit message and send v2.
++Matthew Wilcox
 
-Thanks!
+>
+> > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> >  include/linux/pagemap.h | 2 ++
+> >  mm/filemap.c            | 4 ++++
+> >  2 files changed, 6 insertions(+)
+> >
+> > diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> > index 2df35e65557d..e8ac0b32f84d 100644
+> > --- a/include/linux/pagemap.h
+> > +++ b/include/linux/pagemap.h
+> > @@ -586,6 +586,7 @@ pgoff_t page_cache_prev_miss(struct address_space *=
+mapping,
+> >   * * %FGP_CREAT - If no folio is present then a new folio is allocated=
+,
+> >   *   added to the page cache and the VM's LRU list.  The folio is
+> >   *   returned locked.
+> > + * * %FGP_CREAT_ONLY - Fail if a folio is not present
+> >   * * %FGP_FOR_MMAP - The caller wants to do its own locking dance if t=
+he
+> >   *   folio is already in cache.  If the folio was allocated, unlock it
+> >   *   before returning so the caller can do the same dance.
+> > @@ -606,6 +607,7 @@ typedef unsigned int __bitwise fgf_t;
+> >  #define FGP_NOWAIT           ((__force fgf_t)0x00000020)
+> >  #define FGP_FOR_MMAP         ((__force fgf_t)0x00000040)
+> >  #define FGP_STABLE           ((__force fgf_t)0x00000080)
+> > +#define FGP_CREAT_ONLY               ((__force fgf_t)0x00000100)
+> >  #define FGF_GET_ORDER(fgf)   (((__force unsigned)fgf) >> 26) /* top 6 =
+bits */
+> >
+> >  #define FGP_WRITEBEGIN               (FGP_LOCK | FGP_WRITE | FGP_CREAT=
+ | FGP_STABLE)
+> > diff --git a/mm/filemap.c b/mm/filemap.c
+> > index 750e779c23db..d5107bd0cd09 100644
+> > --- a/mm/filemap.c
+> > +++ b/mm/filemap.c
+> > @@ -1854,6 +1854,10 @@ struct folio *__filemap_get_folio(struct address=
+_space *mapping, pgoff_t index,
+> >               folio =3D NULL;
+> >       if (!folio)
+> >               goto no_page;
+> > +     if (fgp_flags & FGP_CREAT_ONLY) {
+> > +             folio_put(folio);
+> > +             return ERR_PTR(-EEXIST);
+> > +     }
+> >
+> >       if (fgp_flags & FGP_LOCK) {
+> >               if (fgp_flags & FGP_NOWAIT) {
+> > --
+> > 2.39.0
+> >
+> >
+>
