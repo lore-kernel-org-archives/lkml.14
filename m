@@ -1,122 +1,226 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7700515B109
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 15:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2334152E14;
+	Wed, 28 Feb 2024 15:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709134875; cv=none; b=FJaQ6uE/aaVb9GdvnZZyOxt8FHL1hcEeuDRj+5ENwe7YdaDUEwwmfEOw3MtTqjU0CW2q8wcikPYGJKX9WPB1hnxxiiOHYlv8LSzFtkXF4z6gSwkMEi07utfEqIBkjd2JgQofn0ZSnj3DVwkpJ4wcZfKiC47qDGM8mG2a7LtPzgo=
+	t=1709134895; cv=none; b=Su68aWoIjPbsDF8tF81nuZ5LEoZAturgMnZHoSNpxqjHuAROTrDx6jssH7lkGaskAbFc370/CBapxD5ftuiSp2LzTmHsnkbqPH/sWYuwvJMaK2LpElyqeznM5bmdLvw5bMdf7z0Ov3CdEFhzhWSGCGoViEfYJzp3sop7PrfHICE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709134875; c=relaxed/simple;
-	bh=QHQxcBODUYiQb1yYM36IqEt4dgIYDC9UqJta385YNF4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a3Lxo3Tkb/s+89PPnwCFRintQRoP20t0tZggvtNnKa4E7xQF5YkdjuIa5x6JtAXc4NBzNgV+Set6hux+fX9Em8SFyczH87q/ECFqtNBndCF4mRdhHIQZVh6c/7/d4NZBcxWhm81Sdod9RsVA3vhPdCfRwDd5Ybofhad+u+kIsuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lMP16Zwf; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709134895; c=relaxed/simple;
+	bh=9i1q127oWjdJ+t9z1pQacKuTLS2LK+k8327gtEih0HE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qCtNGdx9l7ZzIdaFdDxYGlYcVVzmx57S7Hws3ujTcso00iNbx3p/7lPaUROZmGP+aAYQJpolxG+9BoUdk512rGGfufrKwZvwMEC5IcUIMYrJeaTvoPf+gzl2O5Y8qAOtUnAuUUcNGxrsWXE4au+v+znz26iyEFkcMndhF60KpQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z6kTsMcX; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lMP16Zwf"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-564372fb762so7890197a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 07:41:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6kTsMcX"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a3fb8b0b7acso707448466b.2;
+        Wed, 28 Feb 2024 07:41:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709134872; x=1709739672; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2tRApMKF3yJM+F82njXYmgcbTLvVNudocV6GcXTSm5g=;
-        b=lMP16ZwfkwxT8itu7zCia8qjCyHhISvyKHBg9WrhqJmhgSFGCgE5eivwNA9R1vyV07
-         ls0pgeMgSWkgXHFx1Cri+FdVFG9FYGruhs3JhUqHMVNmp8D4QvBgIGsFbksU8y4qW9+z
-         zTBLSbdyzuh7Kfjluf4VS2eAc/hh44W8M5LGCN1iy3MbuW1tfCbIcFB8/FJdQ9QafNrY
-         SYE7gTUcRBjM3qaJo+ICdsfPRU6rSqwSY/T0mtPJZlm2qnNktDGDGakEJXC0tXnI6Kzp
-         qWhYNviSP2+wtn6i03sgY6c+/8B+5fm8hZwLoK1hBO8NauQrvm4mfIxEEqbGyWDi30Mq
-         4KkQ==
+        d=gmail.com; s=20230601; t=1709134892; x=1709739692; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O6ajv5WB4Bbxg+l7rcG1Skw2klg4SLTom1IzidWxyp0=;
+        b=Z6kTsMcXBtXnYuKk5Id3G7PrfRKhyGG0W0dKNeKN0lilI9ikslsZNXC8c++ekppZIg
+         J6hq5rft2AjJIkdLnQAPzIgL38xf5Gwy94RIU/OqBU+eQXajdOlzmiWll3oiDwaxdXEp
+         3YppJ8YrG5yber4UFd5YDOQPGz5WWv210IhzxfTXb+0bpQMAhcteOkWAefgG5iAfhNlV
+         8Rt2FyXK3WeRjn+NhAojfcyk3+pGeUP0Rh3qIF1CBCH4iGi4We1NAYx8KMGXq5Sgvmvb
+         +TcSEi4KklQ+5Fr/jJ4aHzKJhU4cUeMiK8TPUyvoRvUc1iGd1G99BI5tczKYK9rIAXBF
+         BBZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709134872; x=1709739672;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2tRApMKF3yJM+F82njXYmgcbTLvVNudocV6GcXTSm5g=;
-        b=nmc/Jl7bHAURUJ8DR7G7tVb++w4aVJ/1aA7PzqHkP0vO7zT0oAMoe0I7lB+OLpkn0q
-         VpnCfRaCoGwuk3gMjB8KtMUnzZxRlVRwR8tWDkREJ5IhJTiajM3OvO3nMzE7DbOCGhCo
-         el6vJ5ktqXO+zLgsPM0BXHMKOE45DR+qPhYZnkLLkcFVwVWeb/XbI2OvBtNYlInkfmBC
-         6Se6YyMB07ED0xLML46WFaiAM+PWwhmz/thLwAuLyXgnaNajOYz4o1JpCogla7PmOD1B
-         +R/zccIVFuqvaPUpLjJEOZN9smT9B5MmXGRHjhQq9mBL97u1WbeWmrKIC2X6zSPGU7tx
-         r+Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBGN03KXsArg1jtz06/u7PI9KMAxTAASCMPu6x7149l+iCFSRvyrZtieeESiAFV8yX7zoL7Etm8uuAdAArKthoOqIUHrc81G+U2dPv
-X-Gm-Message-State: AOJu0YxBt1fvokPdd4Sjn8DvIPNAFALQOPXc9HqKy5kPcdC4hhCMv0Tw
-	F5pJHTpn5+xUBWOmDBIM4A4zDWYgK9WiWS0C8aBWDU928QwsRevgKzq14qqOTwFA/6W99mkzPu8
-	BSu+pJS/XbMgJP9XkUEdASNE3e/QZ5WBN1P2bFQ==
-X-Google-Smtp-Source: AGHT+IG365oga5w7zDBtHPazj2hxzm3EgUC8YA/EU30cur5ZUa1DEDy6fvESfJjz4iWUOKjXuivekncmBzXJyaua22s=
-X-Received: by 2002:a05:6402:3456:b0:564:3b2e:2a2e with SMTP id
- l22-20020a056402345600b005643b2e2a2emr8870854edc.9.1709134871902; Wed, 28 Feb
- 2024 07:41:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709134892; x=1709739692;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O6ajv5WB4Bbxg+l7rcG1Skw2klg4SLTom1IzidWxyp0=;
+        b=SCp/MJTQ0RhO1zPwDgcST/wGrR0avnAb6mtgb3L+lDspVKzS7C0pvKsRtHK9cYvwQE
+         UtcWJ76M2T3kvTEzAdoMQXsa9pVMb4V+DuaDq1F+OI24apkjL2LrGOz15FdLvG+q8P36
+         oME9thfNAjN5vk4RIY23H/IeO9dAPeLR0F+W6kKC5MmmwzXUbRS9GxieQWzyCYj9yhcl
+         gQUjuVKX8L5SHsBFcB9YqDST3OPaa6f5dTkYDUldWHL564MN5n8Sy4A3N/lUfOQndUfB
+         VinjN3ooxSqGzw1LJpss5MCTpz1Qcme26a9T/mfOIrHga3x6CYyn+yrCLhBNx791IJXE
+         EHtw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzkE3Z4Lu8Xkc02mmIFrkZ8SV2qQL3SWNlJ/BnvWr4h+8Xa9Eu6A5liMneVG3rgT8KbsWyH/uyZCrcik+wtpYV0QaYPWHQQCiUS/i7P775ac/jf6l5gktOLzoE18zLBLI8ZzH37c8ny9B8UQsUYZcHZ9oImgVr2NfCpLTcYILNi6+LMw==
+X-Gm-Message-State: AOJu0YyePrW+MgiFWxHK+ab9Fcmz4WVSvp1AxwYSVBCJzmaU79OCxlEF
+	N99A0Rs40cJBZeD7df15Qw1IfbD/EfeJuVHlp1ZVbd6J20CSpInuX0i643dW
+X-Google-Smtp-Source: AGHT+IHSpViTIZ64bBjjRxqqZXU7O0E93QpwOrVzZct6s/wb3v0mbHX9WV7MhgL/Mp0j+kpqsEs5fg==
+X-Received: by 2002:a17:906:b58:b0:a43:ff8c:6d9c with SMTP id v24-20020a1709060b5800b00a43ff8c6d9cmr48027ejg.56.1709134892125;
+        Wed, 28 Feb 2024 07:41:32 -0800 (PST)
+Received: from debian ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id cu13-20020a170906ba8d00b00a43215bff13sm1975290ejd.117.2024.02.28.07.41.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 07:41:31 -0800 (PST)
+Date: Wed, 28 Feb 2024 16:41:29 +0100
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: add support for MC33XS2410
+Message-ID: <20240228154129.GA749753@debian>
+References: <20240228133236.748225-1-dima.fedrau@gmail.com>
+ <20240228133236.748225-2-dima.fedrau@gmail.com>
+ <6dd18b29-6e45-4c35-8f7e-5248b057449d@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240217-init_level-v1-0-bde9e11f8317@quicinc.com> <20240217-init_level-v1-1-bde9e11f8317@quicinc.com>
-In-Reply-To: <20240217-init_level-v1-1-bde9e11f8317@quicinc.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 28 Feb 2024 16:40:35 +0100
-Message-ID: <CAPDyKFogCeyMKU4iPeAHcx1J6nWrO-43yb9_2xYmXm202V-p3g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] soc: qcom: Update init level to core_initcall() for
- cmd-db and rpmh-rsc
-To: Maulik Shah <quic_mkshah@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	quic_lsrao@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6dd18b29-6e45-4c35-8f7e-5248b057449d@linaro.org>
 
-On Sat, 17 Feb 2024 at 14:57, Maulik Shah <quic_mkshah@quicinc.com> wrote:
+Am Wed, Feb 28, 2024 at 02:59:48PM +0100 schrieb Krzysztof Kozlowski:
+> On 28/02/2024 14:32, Dimitri Fedrau wrote:
+> > Adding documentation for MC33XS2410 pwm driver.
+> 
+> Driver as Linux driver? If so, please rephrase to describe hardware.
+> 
+Will fix it.
+> > 
+> > Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+> > ---
+> >  .../bindings/pwm/nxp,mc33xs2410.yaml          | 105 ++++++++++++++++++
+> >  1 file changed, 105 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> > new file mode 100644
+> > index 000000000000..bd387dbe69be
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.yaml
+> > @@ -0,0 +1,105 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/nxp,mc33xs2410.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: MC33XS2410 PWM driver
+> 
+> Driver as Linux driver? If so, please rephrase to describe hardware.
 >
-> cmd-db and rpmh-rsc are used by clients like regulators, interconnects and
-> clocks for resource voting. These clients are in core_initcall() while
-> cmd-db and rpmh-rsc are in arch_initcall(). Update init level for these
-> drivers also to core_initcall() to avoid unnecessary probe defer during
-> boot up.
->
-> Signed-off-by: Maulik Shah <quic_mkshah@quicinc.com>
-
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
-
-> ---
->  drivers/soc/qcom/cmd-db.c   | 2 +-
->  drivers/soc/qcom/rpmh-rsc.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
-> index a5fd68411bed..c344107bc36c 100644
-> --- a/drivers/soc/qcom/cmd-db.c
-> +++ b/drivers/soc/qcom/cmd-db.c
-> @@ -362,7 +362,7 @@ static int __init cmd_db_device_init(void)
->  {
->         return platform_driver_register(&cmd_db_dev_driver);
->  }
-> -arch_initcall(cmd_db_device_init);
-> +core_initcall(cmd_db_device_init);
->
->  MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Command DB Driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index a021dc71807b..c4c7aad957e6 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -1154,7 +1154,7 @@ static int __init rpmh_driver_init(void)
->  {
->         return platform_driver_register(&rpmh_driver);
->  }
-> -arch_initcall(rpmh_driver_init);
-> +core_initcall(rpmh_driver_init);
->
->  MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPMh Driver");
->  MODULE_LICENSE("GPL v2");
->
-> --
-> 2.22.0
->
+Will fix it.
+> > +
+> > +maintainers:
+> > +  - Dimitri Fedrau <dima.fedrau@gmail.com>
+> > +
+> > +allOf:
+> > +  - $ref: pwm.yaml#
+> > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: nxp,mc33xs2410
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  spi-max-frequency:
+> > +    maximum: 10000000
+> > +
+> > +  spi-cpha: true
+> > +
+> > +  spi-cs-setup-delay-ns:
+> > +    minimum: 100
+> > +    default: 100
+> > +
+> > +  spi-cs-hold-delay-ns:
+> > +    minimum: 10
+> > +    default: 10
+> > +
+> > +  spi-cs-inactive-delay-ns:
+> > +    minimum: 300
+> > +    default: 300
+> > +
+> > +  reset-gpios:
+> > +    description:
+> > +      GPIO connected to the active low reset pin.
+> > +    maxItems: 1
+> > +
+> > +  "#pwm-cells":
+> > +    const: 3
+> > +
+> > +  pwms:
+> > +    description:
+> > +      Direct inputs(di0-3) are used to directly turn-on or turn-off the
+> > +      outputs. The external PWM clock can be used if the internal clock
+> > +      doesn't meet timing requirements.
+> 
+> pwm is input for pwm?
+> 
+Yes.
+> > +    maxItems: 5
+> > +
+> > +  pwm-names:
+> > +    items:
+> > +      - const: di0
+> > +      - const: di1
+> > +      - const: di2
+> > +      - const: di3
+> > +      - const: ext_clk
+> 
+> Aren't these clocks?
+> 
+di0-3 are PWM input signals which are translated to output voltage "vpwr".
+ext_clk is described as PWM clock in the datasheet. Didn't used it, just
+mentioned it here for completeness.
+> > +
+> > +  vdd-supply:
+> > +    description:
+> > +      Logic supply voltage
+> > +
+> > +  vspi-supply:
+> > +    description:
+> > +      Supply voltage for SPI
+> > +
+> > +  vpwr-supply:
+> > +    description:
+> > +      Power switch supply
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+> 
+> Instead:
+> unevaluatedProperties: false
+> 
+Will fix it.
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    spi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +       pwm@0 {
+> > +           compatible = "nxp,mc33xs2410";
+> > +           reg = <0x0>;
+> > +           spi-max-frequency = <4000000>;
+> > +           spi-cpha;
+> > +           spi-cs-setup-delay-ns = <100>;
+> > +           spi-cs-hold-delay-ns = <10>;
+> > +           spi-cs-inactive-delay-ns = <300>;
+> > +           reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
+> > +           #pwm-cells = <3>;
+> 
+> Make example complete, so provide all properties, like interrupts, pwms
+> and whatever you have in the binding.
+> 
+I could make the binding complete, but I haven't used all properties nor
+does the driver supports them.
+> Best regards,
+> Krzysztof
+> 
+Best regards,
+Dimitri
