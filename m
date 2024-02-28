@@ -1,251 +1,202 @@
-Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A142D05B;
-	Wed, 28 Feb 2024 09:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FD92E419;
+	Wed, 28 Feb 2024 09:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709110814; cv=none; b=VI9toq4Dq1az3uLlUAi38emx7Y4UMsEwJecmjexRWSO4wGKL8Z1eTBsXZBKMdBxATXOFe+V1LBhUdj2YFTEBiqORxBlYhmn5ypeSKSrfhKixoCAZ+3stANGFP9VPhxZg9ijaLD+uM6Su58v09UrdlHAW8ZzixOLq/E8qWy1dyko=
+	t=1709110818; cv=none; b=D7p6bkxxqeX9gPdhxwNm929XdZHc59CZjDs9QHTe3KI778iM8TN/p2j67x33vyz/aT2scMXhRnnS0iXplNxqsuho8aw3wntF1bOELPuv5KqJgLA2rlaNnJSPLoCIfov7VqCKtLDoIgs/PQA+BpdYZxfpI3ZgESiWPSO4t8LMrW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709110814; c=relaxed/simple;
-	bh=NC4eJqy+tWfGOlFYPyPnq1rTK8KHis1P8cHnzIvCX2g=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=I1BuVHZC0FtIUllRaY70FiqmEH20vLznm5QTpSsOOHLkA2ykkiRPi071V4VwT7hoj9O/4nC5zAzJXdkb/4u1zvZ+I4Bs1LMSwQ7TvusT32ZKpP1uOCvBSUTOXVATTHUYrJkOg8a345Jt5vfym2Adbjw1czE2Kk2JzgNdN2PK+S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=AU9xdpZF; arc=none smtp.client-ip=203.205.221.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1709110818; c=relaxed/simple;
+	bh=vsh9jGxQjjvBWK3B4oQcW0pqzFbEoSreLHkQicRRkn8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XqbSYHmtI/d4Tys9la7W1jF2p00xaxPm/3Ghvge9UjKiYIquv1WL4nZ5A4lNH/Gq5w572AY5g3JAmaIEVRB34DoLCwS3IxN0p7Ohz0HbpAvTbXQj1g3ewYTchezQyiiI6+v9JE0n/0il1sYKDirisU5wGLzoKHhSAt+zMYlt44Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LaSmTbZ9; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="AU9xdpZF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1709110500; bh=OJERieRX8TNnv9pPvsXYVZQyy3A2qdrTGojUlwVAUuY=;
-	h=From:To:Cc:Subject:Date;
-	b=AU9xdpZFuk/EWLDKSuBQTXt6Y3LUwI1ZT2JhB/ou9vDuLBBx+FP40mePzsbsVvKSo
-	 Iw7hf/T8OR8FYac8bnQwSj9fOfOJBPsyBXxqtZ1NGqXdRG1SUqRDQCO8B57tSa9leo
-	 knSIyjYtuZEoA9yHgl9zJ9uRyxyu/3N30fnGEynA=
-Received: from cyy-pc.lan ([240e:379:2240:e500:994d:62ab:74a6:932b])
-	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
-	id D8722820; Wed, 28 Feb 2024 16:54:07 +0800
-X-QQ-mid: xmsmtpt1709110447t2alhx9za
-Message-ID: <tencent_88FEE0A2C5E0852436A2F1A1087E6803380A@qq.com>
-X-QQ-XMAILINFO: MllZffuBkEb5+DdQxOt7EblMGQYPjfWa7qBxdA9axrezMMfQnz09MBeCkgeptN
-	 juxzBBrmwXkR+fTdxjyixdPFQ7e2+HvZENJn2O5o48CSwHT9PpAJMgzJLa2XcJFQWrSXvgMBrDLr
-	 qPkyzwbGhowYlM5MYTw0V0wIYBgvL/KtFlIrdJ2UNfoKEujhrv37N8TXxvRgPfF8UUqz69WAsnjR
-	 ykQY9yAQ02kbyPDeYfYNupxd1G4X0U2Ov3ZTovTaGqDzhJuUsjyt+wWLTfA+P0e37PZc4Xl4hK7m
-	 z2YtSpJ/YJHyArBYr2/25l5o9dfZW6TS3L7SrrlOCY75R/8PkkiVy25JYUqw7Hk18zzqGPYlcQDk
-	 ARf5mjWKer5ALTTQbQWYALlHMLEji6psiVYzDY72Ra/dX4RHq3ZAyfuOmPoqeWumW3mWGmDIamsf
-	 +lsltrC5vw/5kqgFCtvtfBfnbd0YWxLkqf0ppnEDx60TZ0igo9qpKatwv0UB+npfOnAO0tHXVZOx
-	 N+6E7OwGimKXM/mjPjqUsg3bp+Kjkr7ppqoMWPWOvHtnpl8i8C5S7Ckp+BIfmCDNIvvi4p2Fgutd
-	 hGql7p0D4BQXU13YsHCZa3fu2sl/dAJ6WIgK+dfYuYKRijIOC5Yba+UNpsx/kbFR0nLbAC08g+Ps
-	 6b2DjOYuZboFLBlhh4FXGOfqgYZIr2/vKUgo/M8SSlgISLa6kW7sxgK7naMUTrhVTdcEEd0Dg5Be
-	 NrgAQZdCDvf2bdufRB3e0c41nLKTdZbZCzbbkBK8OuwC0fqbCbOxdHtRqyX7DGRz8uu9wMdackNp
-	 QjeGVcFLF8TWP5zT6ZCknr15oSNJPzEPUKvP0VgZHHq4KI6nXXrVCQJgjC3ebx85Vhc41uvwnGYe
-	 nvlu0FOB2y39G1f/PREijNSVlLD7eV9h56JoG0+J6Q8k6IaawX/5vcVd4+38+GTcRnXjmTPQ/sYk
-	 1hzed3cA3DcRPZAv8C3E8jD6MLJ9xF9CbwBHCsEupVice/uOadSay41srGnvETYnUaq6M6QF//U4
-	 9hXQ0C6Q==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Yangyu Chen <cyy@cyyself.name>
-To: linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Rob Herring <robh+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v3] riscv: dts: Move BUILTIN_DTB_SOURCE to common Kconfig
-Date: Wed, 28 Feb 2024 16:52:54 +0800
-X-OQ-MSGID: <20240228085255.201092-1-cyy@cyyself.name>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LaSmTbZ9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709110816; x=1740646816;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vsh9jGxQjjvBWK3B4oQcW0pqzFbEoSreLHkQicRRkn8=;
+  b=LaSmTbZ9SBV3mflqI845r+3zLA8QyMSxE4v3mNpFY3IYyc6cTcI7+BJu
+   el755Ws326R1VlwsOWV+MaS+nxSt2SadeL/hnsY21gF3Kbdhpxy4DJ3OR
+   8aD6b8S9bsV3K9raqG6mfRzMCqmsp2DOZDf/W0zwaue+o5JfljG2M1P/L
+   gkI1cSVjgIG+kjPPG2vD8hgq7YaS/Iq2d4L4+Z0salhDesgE8F0GZiRAC
+   HXLExSWG1cwHLKBIMrDkoIN5qi8i1aL34gLVRS7DWWGL7h0tevYa4Enzk
+   +wfiogOPgTtSNSNx7PaloJAKFGIxARHqNC1+cORh5vwbKzNCILIVu1bh0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3421075"
+X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
+   d="scan'208";a="3421075"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 01:00:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
+   d="scan'208";a="7396998"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 01:00:12 -0800
+Message-ID: <eac3e9e7-657f-4de2-b9ed-878ffc2b93cb@linux.intel.com>
+Date: Wed, 28 Feb 2024 17:00:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 3/3] iommu/vt-d: improve ITE fault handling if target
+ device isn't valid
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, baolu.lu@linux.intel.com,
+ bhelgaas@google.com, robin.murphy@arm.com, jgg@ziepe.ca,
+ kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org, lukas@wunner.de,
+ yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20240226225234.GA211745@bhelgaas>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <20240226225234.GA211745@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The BUILTIN_DTB_SOURCE was only configured for K210 before. Since
-SOC_BUILTIN_DTB_DECLARE was removed at commit d5805af9fe9f ("riscv: Fix
-builtin DTB handling") from patch [1], the kernel cannot choose one of the
-dtbs from then on and always take the first one dtb to use. Then, another
-commit 0ddd7eaffa64 ("riscv: Fix BUILTIN_DTB for sifive and microchip soc")
-from patch [2] supports BUILTIN_DTB_SOURCE for other SoCs. However, this
-feature will only work if the Kconfig we use links the dtb we expected in
-the first place as mentioned in the thread [3]. Thus, a config
-BUILTIN_DTB_SOURCE is needed for all SoCs to choose one dtb to use.
+On 2/27/2024 6:52 AM, Bjorn Helgaas wrote:
+> On Fri, Feb 23, 2024 at 10:29:28AM +0800, Ethan Zhao wrote:
+>> On 2/22/2024 7:24 PM, Dan Carpenter wrote:
+>>> On Thu, Feb 22, 2024 at 04:02:51AM -0500, Ethan Zhao wrote:
+>>>> Because surprise removal could happen anytime, e.g. user could request safe
+>>>> removal to EP(endpoint device) via sysfs and brings its link down to do
+>>>> surprise removal cocurrently. such aggressive cases would cause ATS
+>>>> invalidation request issued to non-existence target device, then deadly
+>>>> loop to retry that request after ITE fault triggered in interrupt context.
+>>>> this patch aims to optimize the ITE handling by checking the target device
+>>>> presence state to avoid retrying the timeout request blindly, thus avoid
+>>>> hard lockup or system hang.
+>>>>
+>>>> Devices are valid ATS invalidation request target only when they reside
+>>>> in the iommu->device_rbtree (probed, not released) and present.
+>>> "valid invalidation" is awkward wording.  Can we instead say:
+>> If you read them together, sounds like tongue twister. but here "ATS
+>> invalidation request target" is one term in PCIe spec.
+> "ATS invalidation request target" does not appear in the PCIe spec.  I
+> think you're trying to avoid sending ATS Invalidate Requests when you
+> know they will not be completed.
+>
+> It is impossible to reliably determine whether a device will be
+> present and able to complete an Invalidate Request.  No matter what
+> you check to determine that a device is present *now*, it may be
+> removed before an Invalidate Request reaches it.
+>
+> If an Invalidate Request to a non-existent device causes a "deadly
+> loop" (I'm not sure what that means) or a hard lockup or a system
+> hang, something is wrong with the hardware.  There should be a
 
-For some considerations, this patch also removes default y if XIP_KERNEL
-for BUILTIN_DTB, as this requires setting a proper dtb to use on the
-BUILTIN_DTB_SOURCE, else the kernel with XIP but does not set
-BUILTIN_DTB_SOURCE or unselect BUILTIN_DTB will not boot.
+The hardware might be innocent, here in the qi_submit_sync() &
+qi_check_fault() will retry the timeout request forever if the
+target device is gone or the target device always takes too much
+time to reponse. there is dead loop here.
 
-Also, this patch removes the default dtb string for k210 from Kconfig to
-nommu_k210_defconfig and nommu_k210_sdcard_defconfig to avoid complex
-Kconfig settings for other SoCs in the future.
+This patch aims to break the dead loop for case device is not
+present anymore.
 
-[1] https://lore.kernel.org/linux-riscv/20201208073355.40828-5-damien.lemoal@wdc.com/
-[2] https://lore.kernel.org/linux-riscv/20210604120639.1447869-1-alex@ghiti.fr/
-[3] https://lore.kernel.org/linux-riscv/CAK7LNATt_56mO2Le4v4EnPnAfd3gC8S_Sm5-GCsfa=qXy=8Lrg@mail.gmail.com/
+But for those devices takes too much time to complete. I am
+working on other patches, not in this patchset.
 
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
----
-Changes since v2:
-- some fixes on format and grammar
-- v2: https://lore.kernel.org/linux-riscv/tencent_61DFA8E0B13696A3256E538C4BC856633406@qq.com/
 
-Changes since v1:
-- remove default y for BULTIN_DTB in any cases
-- remove default DTB_SOURCE for k210 and moved to its defconfig file
-- remove building dtb object file for other SoCs
-- reword help message to say N if unsure for BUILTIN_DTB_SOURCE
-- reword commit message
-- v1: https://lore.kernel.org/linux-riscv/tencent_AB625442CC1BCFF86E04D7B5891C43719109@qq.com/
+Thanks,
+Ethan
 
----
- arch/riscv/Kconfig                            | 14 +++++++-
- arch/riscv/Kconfig.socs                       | 32 -------------------
- arch/riscv/boot/dts/Makefile                  |  2 +-
- arch/riscv/boot/dts/canaan/Makefile           |  2 --
- arch/riscv/boot/dts/microchip/Makefile        |  1 -
- arch/riscv/boot/dts/sifive/Makefile           |  1 -
- arch/riscv/configs/nommu_k210_defconfig       |  2 ++
- .../riscv/configs/nommu_k210_sdcard_defconfig |  2 ++
- 8 files changed, 18 insertions(+), 38 deletions(-)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 85c899d0133a..3d6d93d71257 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -1000,7 +1000,19 @@ config RISCV_ISA_FALLBACK
- config BUILTIN_DTB
- 	bool "Built-in device tree"
- 	depends on OF && NONPORTABLE
--	default y if XIP_KERNEL
-+	help
-+	  Build a device tree into the Linux image.
-+	  This option should be selected if no bootloader is being used.
-+	  If unsure, say N.
-+
-+
-+config BUILTIN_DTB_SOURCE
-+	string "Built-in device tree source"
-+	depends on BUILTIN_DTB
-+	help
-+	  DTS file path (without suffix, relative to arch/riscv/boot/dts)
-+	  for the DTS file that will be used to produce the DTB linked into the
-+	  kernel.
- 
- endmenu # "Boot options"
- 
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index e08e91c49abe..623de5f8a208 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -84,36 +84,4 @@ config SOC_CANAAN
- 	help
- 	  This enables support for Canaan Kendryte K210 SoC platform hardware.
- 
--if ARCH_CANAAN
--
--config ARCH_CANAAN_K210_DTB_BUILTIN
--	def_bool SOC_CANAAN_K210_DTB_BUILTIN
--
--config SOC_CANAAN_K210_DTB_BUILTIN
--	bool "Builtin device tree for the Canaan Kendryte K210"
--	depends on ARCH_CANAAN
--	default y
--	select OF
--	select BUILTIN_DTB
--	help
--	  Build a device tree for the Kendryte K210 into the Linux image.
--	  This option should be selected if no bootloader is being used.
--	  If unsure, say Y.
--
--config ARCH_CANAAN_K210_DTB_SOURCE
--	string
--	default SOC_CANAAN_K210_DTB_SOURCE
--
--config SOC_CANAAN_K210_DTB_SOURCE
--	string "Source file for the Canaan Kendryte K210 builtin DTB"
--	depends on ARCH_CANAAN
--	depends on ARCH_CANAAN_K210_DTB_BUILTIN
--	default "k210_generic"
--	help
--	  Base name (without suffix, relative to arch/riscv/boot/dts/canaan)
--	  for the DTS file that will be used to produce the DTB linked into the
--	  kernel.
--
--endif # ARCH_CANAAN
--
- endmenu # "SoC selection"
-diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-index 72030fd727af..fdae05bbf556 100644
---- a/arch/riscv/boot/dts/Makefile
-+++ b/arch/riscv/boot/dts/Makefile
-@@ -8,4 +8,4 @@ subdir-y += sophgo
- subdir-y += starfive
- subdir-y += thead
- 
--obj-$(CONFIG_BUILTIN_DTB) := $(addsuffix /, $(subdir-y))
-+obj-$(CONFIG_BUILTIN_DTB) := $(addsuffix .dtb.o, $(CONFIG_BUILTIN_DTB_SOURCE))
-diff --git a/arch/riscv/boot/dts/canaan/Makefile b/arch/riscv/boot/dts/canaan/Makefile
-index 520623264c87..987d1f0c41f0 100644
---- a/arch/riscv/boot/dts/canaan/Makefile
-+++ b/arch/riscv/boot/dts/canaan/Makefile
-@@ -5,5 +5,3 @@ dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maix_bit.dtb
- dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maix_dock.dtb
- dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maix_go.dtb
- dtb-$(CONFIG_ARCH_CANAAN) += sipeed_maixduino.dtb
--
--obj-$(CONFIG_ARCH_CANAAN_K210_DTB_BUILTIN) += $(addsuffix .dtb.o, $(CONFIG_ARCH_CANAAN_K210_DTB_SOURCE))
-diff --git a/arch/riscv/boot/dts/microchip/Makefile b/arch/riscv/boot/dts/microchip/Makefile
-index 45adc4926e79..e177815bf1a2 100644
---- a/arch/riscv/boot/dts/microchip/Makefile
-+++ b/arch/riscv/boot/dts/microchip/Makefile
-@@ -4,4 +4,3 @@ dtb-$(CONFIG_ARCH_MICROCHIP_POLARFIRE) += mpfs-m100pfsevp.dtb
- dtb-$(CONFIG_ARCH_MICROCHIP_POLARFIRE) += mpfs-polarberry.dtb
- dtb-$(CONFIG_ARCH_MICROCHIP_POLARFIRE) += mpfs-sev-kit.dtb
- dtb-$(CONFIG_ARCH_MICROCHIP_POLARFIRE) += mpfs-tysom-m.dtb
--obj-$(CONFIG_BUILTIN_DTB) += $(addsuffix .o, $(dtb-y))
-diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
-index 6a5fbd4ed96a..495bf760a909 100644
---- a/arch/riscv/boot/dts/sifive/Makefile
-+++ b/arch/riscv/boot/dts/sifive/Makefile
-@@ -1,4 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_SIFIVE) += hifive-unleashed-a00.dtb \
- 			     hifive-unmatched-a00.dtb
--obj-$(CONFIG_BUILTIN_DTB) += $(addsuffix .o, $(dtb-y))
-diff --git a/arch/riscv/configs/nommu_k210_defconfig b/arch/riscv/configs/nommu_k210_defconfig
-index 146c46d0525b..7e75200543f4 100644
---- a/arch/riscv/configs/nommu_k210_defconfig
-+++ b/arch/riscv/configs/nommu_k210_defconfig
-@@ -33,6 +33,8 @@ CONFIG_SMP=y
- CONFIG_NR_CPUS=2
- CONFIG_CMDLINE="earlycon console=ttySIF0"
- CONFIG_CMDLINE_FORCE=y
-+CONFIG_BUILTIN_DTB=y
-+CONFIG_BUILTIN_DTB_SOURCE="canaan/k210_generic"
- # CONFIG_SECCOMP is not set
- # CONFIG_STACKPROTECTOR is not set
- # CONFIG_GCC_PLUGINS is not set
-diff --git a/arch/riscv/configs/nommu_k210_sdcard_defconfig b/arch/riscv/configs/nommu_k210_sdcard_defconfig
-index 95d8d1808f19..0ba353e9ca71 100644
---- a/arch/riscv/configs/nommu_k210_sdcard_defconfig
-+++ b/arch/riscv/configs/nommu_k210_sdcard_defconfig
-@@ -25,6 +25,8 @@ CONFIG_SMP=y
- CONFIG_NR_CPUS=2
- CONFIG_CMDLINE="earlycon console=ttySIF0 root=/dev/mmcblk0p1 rootwait ro"
- CONFIG_CMDLINE_FORCE=y
-+CONFIG_BUILTIN_DTB=y
-+CONFIG_BUILTIN_DTB_SOURCE="canaan/k210_generic"
- # CONFIG_SECCOMP is not set
- # CONFIG_STACKPROTECTOR is not set
- # CONFIG_GCC_PLUGINS is not set
--- 
-2.43.0
-
+> mechanism to recover from a timeout in that situation.
+>
+> You can avoid sending Invalidate Requests to devices that have been
+> removed, and that will reduce the number of timeout cases.  But if you
+> rely on a check like pci_device_is_present() or
+> pci_dev_is_disconnected(), there is *always* an unavoidable race
+> between a device removal and the Invalidate Request.
+>
+>>>> @@ -1273,6 +1273,9 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>    {
+>>>>    	u32 fault;
+>>>>    	int head, tail;
+>>>> +	u64 iqe_err, ite_sid;
+>>>> +	struct device *dev = NULL;
+>>>> +	struct pci_dev *pdev = NULL;
+>>>>    	struct q_inval *qi = iommu->qi;
+>>>>    	int shift = qi_shift(iommu);
+>>>> @@ -1317,6 +1320,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>    		tail = readl(iommu->reg + DMAR_IQT_REG);
+>>>>    		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
+>>>> +		/*
+>>>> +		 * SID field is valid only when the ITE field is Set in FSTS_REG
+>>>> +		 * see Intel VT-d spec r4.1, section 11.4.9.9
+>>>> +		 */
+>>>> +		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
+>>>> +		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
+>>>> +
+>>>>    		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
+>>>>    		pr_info("Invalidation Time-out Error (ITE) cleared\n");
+>>>> @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>    			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+>>>>    		} while (head != tail);
+>>>> +		/*
+>>>> +		 * If got ITE, we need to check if the sid of ITE is one of the
+>>>> +		 * current valid ATS invalidation target devices, if no, or the
+>>>> +		 * target device isn't presnet, don't try this request anymore.
+>>>> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
+>>>> +		 */
+>>> This comment is kind of confusing.
+>> Really confusing ? this is typo there, resnet-> "present"
+>>
+>>> /*
+>>>    * If we have an ITE, then we need to check whether the sid of the ITE
+>>>    * is in the rbtree (meaning it is probed and not released), and that
+>>>    * the PCI device is present.
+>>>    */
+>>>
+>>> My comment is slightly shorter but I think it has the necessary
+>>> information.
+>>>
+>>>> +		if (ite_sid) {
+>>>> +			dev = device_rbtree_find(iommu, ite_sid);
+>>>> +			if (!dev || !dev_is_pci(dev))
+>>>> +				return -ETIMEDOUT;
+>>> -ETIMEDOUT is weird.  The callers don't care which error code we return.
+>>> Change this to -ENODEV or something
+>> -ETIMEDOUT means prior ATS invalidation request hit timeout fault, and the
+>> caller really cares about the returned value.
+>>
+>>>> +			pdev = to_pci_dev(dev);
+>>>> +			if (!pci_device_is_present(pdev) &&
+>>>> +				ite_sid == pci_dev_id(pci_physfn(pdev)))
+>>> The && confused me, but then I realized that probably "ite_sid ==
+>>> pci_dev_id(pci_physfn(pdev))" is always true.  Can we delete that part?
+>> Here is the fault handling, just double confirm nothing else goes wrong --
+>> beyond the assumption.
+>>
+>>> 		pdev = to_pci_dev(dev);
+>>> 		if (!pci_device_is_present(pdev))
+>>> 			return -ENODEV;
+>>>
+>>>
+>>>> +				return -ETIMEDOUT;
+>>> -ENODEV.
+>> The ATS invalidation request could be sent from userland in later code,
+>> the userland code will care about the returned value,  -ENODEV is one aspect
+>> of the fact (target device not present), while -ETIMEDOUT is another
+>> (timeout happened). we couldn't return them both.
+>>
+>>>> +		}
+>>>>    		if (qi->desc_status[wait_index] == QI_ABORT)
+>>>>    			return -EAGAIN;
+>>>>    	}
+>>> Sorry, again for nit picking a v13 patch.  I'm not a domain expert but
+>>> this patchset seems reasonable to me.
+>> Though this is the v13, it is based on new rbtree code, you are welcome.
+>>
+>> Thanks,
+>> Ethan
+>>
+>>> regards,
+>>> dan carpenter
