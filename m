@@ -1,86 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BB473513;
-	Wed, 28 Feb 2024 12:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D672F73501
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 12:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709121791; cv=none; b=NYEdKm1RgrFrAFpaqZaKycmRup0m2ZKG9fe5XG0Kt7ta7zLYbKovuMQpPryO3AyObfLUDpTXrDsjv/FOZUt9ls4e+cz2So9irppmEqX/7QL+X6Oy/J8XyGgVN81+w67J0vD4MTnlPyrYh4l5qola60RecsJlpKIrDkwN6FUvI1U=
+	t=1709121860; cv=none; b=JZb99jtRJyWWdCWG4eTQCbgb22wZ+mQG5mjt/KADK0XuxQWgjA1rRbhHvlCVvMIDiXoPTEMCP4V9oqLSD3vjLMmKAbCDL4L3oXeprYeFBPtxp5KfC+Qaiejz3+mY2HblmyhInr/YuXwBxHEPprzonVdcdOmsfeQpi4Z1MOFYXYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709121791; c=relaxed/simple;
-	bh=MpZ+7FpSdhy1jX1Eb1448QYNsWBInrp8KzudyioVXOg=;
+	s=arc-20240116; t=1709121860; c=relaxed/simple;
+	bh=jov2Pibp8j5fYySB7FhWN7chymr34ARm/zfn03U14jY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l96OjoPCkSM+F1K27gRfXbTz43/Hugc2ZrO5pv+bRo2ZWVh7jFZZsjKu3sJmP42yzIWe7PD4QhTU2g/Qjr2hcuL/ns7822fEfaPPOJB5NX6AKdCK+hw6ZwEUE+aK7oxZ+JjZ2hG3LbxPxi2uTwC01BN/oQHZwuoyC5ZKwnSmElA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QFvTkSYC; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VctcKILFmW9qd/FRCxiWKYPP1jcnKv9AlJOHCr61rOyH2+e3p9nesH5cshwXtyxOWsQi7nLAipASUE5dpZIQo09ydoCY8UJVeoNDJPVqt7N4y/xHNQ5s3HgTDX2nAyEwpixCjzcBYN3ga1ORQcKtLEzf4IoBWdAXT7iIMXAYoKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=msGnkbfw; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=UDTgWxQH; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QFvTkSYC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709121790; x=1740657790;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MpZ+7FpSdhy1jX1Eb1448QYNsWBInrp8KzudyioVXOg=;
-  b=QFvTkSYCwaQm67HcG888SC1czCDCyQW5SVbKfl9LjzvAXIPqXRdQlIwO
-   r3I8aRLVQux9u3dcGVyLczCExjf6wbmovhuzQLLC2A2ffbqEW42NMKTLH
-   NN68f75I4w07J9Gdl3y8W0E1/a3xBltRQ2tl/lUe2g7pjKdv7HmLKmKAG
-   MjhXZ4RDUmU19IwxJBkMs+sX/SMDKXhHEFQbijmiVXQnYODowSrdoe4ER
-   u3YfY5qMKxIyB5DaLUXKKZ3z5zjhKRHd/DrOnFnZEebIpu0KNvMS5H/Px
-   WivespjbZEMdZIbFALRlFa7OKXqjp5rxAFZuNx/dYyzAIpQkJnJ3AAZXq
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="7297436"
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="7297436"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 04:03:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="11988943"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 04:03:02 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id F167911F855;
-	Wed, 28 Feb 2024 14:02:59 +0200 (EET)
-Date: Wed, 28 Feb 2024 12:02:59 +0000
-From: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Zhi Mao =?utf-8?B?KOavm+aZuik=?= <zhi.mao@mediatek.com>,
-	"heiko@sntech.de" <heiko@sntech.de>,
-	"tomi.valkeinen@ideasonboard.com" <tomi.valkeinen@ideasonboard.com>,
-	"robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"yunkec@chromium.org" <yunkec@chromium.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"dan.scally@ideasonboard.com" <dan.scally@ideasonboard.com>,
-	"gerald.loacker@wolfvision.net" <gerald.loacker@wolfvision.net>,
-	Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= <shengnan.wang@mediatek.com>,
-	"hdegoede@redhat.com" <hdegoede@redhat.com>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	Yaya Chang =?utf-8?B?KOW8tembhea4hSk=?= <Yaya.Chang@mediatek.com>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"jacopo.mondi@ideasonboard.com" <jacopo.mondi@ideasonboard.com>,
-	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"bingbu.cao@intel.com" <bingbu.cao@intel.com>,
-	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	"10572168@qq.com" <10572168@qq.com>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
-	"macromorgan@hotmail.com" <macromorgan@hotmail.com>
-Subject: Re: [PATCH v6 2/2] media: i2c: Add GC08A3 image sensor driver
-Message-ID: <Zd8g81wBXyfMvPhB@kekkonen.localdomain>
-References: <20240227013221.21512-1-zhi.mao@mediatek.com>
- <20240227013221.21512-3-zhi.mao@mediatek.com>
- <CAHp75VciCJuoOwC8ozanWYqSCM=vWpiaqymJ2-gQfrSt5Ts6fQ@mail.gmail.com>
- <b4889fad324ec88eb3a22f51b0aa512cc93bd2cb.camel@mediatek.com>
- <CAHp75Vd=X9e4rOJabF4AbzGRZAF4BiNJa-C4ivOoQb7kAMy3vQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="msGnkbfw";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="UDTgWxQH"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D1814223DF;
+	Wed, 28 Feb 2024 12:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709121855; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4pjkTaxzkgu+DE54ztxTNhryxVp6opyUnmdJ9nk8fyY=;
+	b=msGnkbfw8KUUnldAYtKLQAp1eR+taag/zkMPk8su5Q5HmrDJ1j9KPiP6y8ALvStlw8nQXN
+	s+bghodKCOmo7sJx2Xwt8YYUVPaOewBPeFnY6cUADR2y0jcDAAXyCnCiYZ6WFTTisyBdhI
+	bZrNN1ZjZKejkGK7DlGIuk9O6iKjjKg=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1709121854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4pjkTaxzkgu+DE54ztxTNhryxVp6opyUnmdJ9nk8fyY=;
+	b=UDTgWxQH8bJe0NuObwxRDEmE4UWd8aiHTnv2rAkqsDsEB/W44klpuDL+Sp5uEjVVfaYCZC
+	1HwwRfqZsB2TxqrtBTAXY9ywuu6jCZnwSjjRQl9iO1YbpQs06t4T0t0Sryl/YmZM6shjHt
+	UHur+rl1dF2/sXRKZnteuYaubmRSKPQ=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B666813A5D;
+	Wed, 28 Feb 2024 12:04:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3EjwKD4h32X9UAAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Wed, 28 Feb 2024 12:04:14 +0000
+Date: Wed, 28 Feb 2024 13:04:14 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, cve@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: CVE-2023-52451: powerpc/pseries/memhp: Fix access beyond end of
+ drmem array
+Message-ID: <Zd8hPpP_6q_o8uQW@tiehlicka>
+References: <2024022257-CVE-2023-52451-7bdb@gregkh>
+ <Zdylmz28rZ-mCeiN@tiehlicka>
+ <2024022639-wronged-grafted-6777@gregkh>
+ <ZdytVTOgfvKBBvtn@tiehlicka>
+ <202402271029.FD67395@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,38 +70,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vd=X9e4rOJabF4AbzGRZAF4BiNJa-C4ivOoQb7kAMy3vQ@mail.gmail.com>
+In-Reply-To: <202402271029.FD67395@keescook>
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=UDTgWxQH
+X-Spamd-Result: default: False [-3.81 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_LOW(-1.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D1814223DF
+X-Spam-Level: 
+X-Spam-Score: -3.81
+X-Spam-Flag: NO
 
-Hi Andy, Zhi,
-
-On Wed, Feb 28, 2024 at 11:22:13AM +0200, Andy Shevchenko wrote:
-> > Another, I also reviewed some other sensor driver code(such as
-> > gc0a08/gc2145 and imx/ov), they are all the same.
+On Tue 27-02-24 10:35:40, Kees Cook wrote:
+> On Mon, Feb 26, 2024 at 04:25:09PM +0100, Michal Hocko wrote:
+[...]
+> > Does that mean that any potentially incorrect input provided by an admin is
+> > considered CVE now?
 > 
-> They are also problematic. So what?
+> Yes. Have you seen what USER_NS does? There isn't a way to know how
+> deployments are using Linux, and this is clearly a "weakness" as defined
+> by CVE. It is better to be over zealous than miss things.
 
-The situation is the same in a large number of drivers, also outside the
-media tree. It's also not trivial to figure out which header should be
-included and it tends to be that if it compiles without warnings,
-developers won't bother trying to figure out what should still be changed.
+If we are over zealous to the point when almost any fix is marked CVE
+then the special marking simply stops making any sense IMHO.
 
-I wonder if this could be automated by using the C pre-processor and a
-small Perl script. :-)
-
-> > Can we keep this coding style and follow with most of those
-> > image sensor driver?
+> > I guess we would need to ban interfaces like /dev/mem and many others.
 > 
-> Why? We do NOT want to continue developers to avoid decreasing their
-> technical debts.
+> Yes. Absolutely. :) Have you seen CONFIG_STRICT_DEVMEM,
+> CONFIG_IO_STRICT_DEVMEM, etc? Many deployments keep a bright line
+> between root and kernel. There is a whole subsystem (lockdown) for
+> working to enforce this.
 
-I agree. People tend to copy the code from existing drivers and argue "it's
-just a driver, why bother?". That code will be soon found in a dozen other
-new driver patchsets and every time must brought up in review and fixed,
-leading to extra work for reviewers and developers. We've had quite a lot
-of work improving the current (sensor etc.) drivers and fixing up the use
-of bad patterns but this area has so far received little attention.
+Are you confusing hardening with security relevant fixes here? It makes
+a lot of sense to reduce the attack space by sacrificing functionality
+for some usecases but in general a large part of the kernel is built
+around a "root can do anything" philosophy. Whether we like it or not.
+And that means that we do not even pretend to protect dubious
+configurations by root/CAP_SYSADMIN which could effectivelly DoS the
+system (just consider hotplug/hotremove as an example - try to run your
+workload when most CPUs or memory is offlined). Some operations are
+simply not suited for untrusted entity.
 
+[...]
+
+> There's no harm in marking fixes for weaknesses as CVEs, so why the
+> push back?
+
+Because assigning CVEs nilly willy was the main downside of the prior
+process and I was hoping that the new one, in hands of kernel people,
+could be better and we could be getting more relevant CVEs.
 -- 
-Regards,
-
-Sakari Ailus
+Michal Hocko
+SUSE Labs
