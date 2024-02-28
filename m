@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108E21DDD5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A78E1DDF6;
 	Wed, 28 Feb 2024 03:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709090432; cv=none; b=Qo7fMjrC9CMYH9FFIcwSbg3aEF+aPUyRlVZmIgwdh+NR1V9j8OY/Y7DbKapJKMBp6uJ4kflkdCPjVWQYDPh94jd0FuqqX++yez/YsCtPtKXzswOMX2riGKuFLJ6lEvNk/4TtW/RNWt5ZMgiczhib/MsAAJkLtph+8orQhjfaZSM=
+	t=1709090432; cv=none; b=HO8z9ItWvmonooJWbONsqZ9EiU1rtnK7fK18h46Skjt31+swYKbShkqhfIlPnTifaL4ZmYEyHfbFRqA8ep/QLOmomi9/gH1wDclA5qF2N0o0UE1ST95SiNQ2xrZ9FN9VXSm+MDnLiQMZBRKAqmHN2qQwdx/jf99JzxAaP/uZFzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709090432; c=relaxed/simple;
-	bh=u0axjAWtAcxEr7ZjPkE5IqKAR+IemnMqd88N4WKuBBM=;
+	bh=32Xrl8Cj1A/94tqRjyWRZ2bTOcduHcS83VXeg3Snfas=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QXmUlXHVioqRozNDgOjJO6TaMtRjbg672kN3MLP1EH78TrAuJTP+mjeaQP76BsitPzk2lmHZwQ1YhVk+Ml6PGfMnubKQVyjYjmj3AKsef8Dak4ZPNN5TqIN/QUXUVy9wEo2sW5Vs7/n35Wq8ci3NGBQofzqWzwj0Rew3B0kdvBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhYAR4Th; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=UHinRFjr6bFDFxwIva3sTspIk0vc9Z69pQv+V7NkUMQFpL7db1eL+fbv/i8ss8WEZo8oyZ95cfoFWjkpCl8259Flr9xMcC7AL8aPFrGED0BalYywDrIA85CxssyqvR/4FQrfPhSAmVpNS9CdMaZ1YUzFYUcZCUtjtx22tYHef20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLEvg6Dq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhYAR4Th"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A10ADC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLEvg6Dq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B71CCC43394;
 	Wed, 28 Feb 2024 03:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709090431;
-	bh=u0axjAWtAcxEr7ZjPkE5IqKAR+IemnMqd88N4WKuBBM=;
+	bh=32Xrl8Cj1A/94tqRjyWRZ2bTOcduHcS83VXeg3Snfas=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=NhYAR4ThtSche8nUOdqUa04SsV+s72UyCuiyQo02gy5DxLiaOuj1wNrONe0Z7phE4
-	 +8iGJvqcleo0pKN7mmt75OFNkZeq2XdbDaiNtSQe08OCU9RdLNqbnb8zgA8fVRGP6W
-	 GUHDy2Y+jNDWPpM9+iE44TronIoxJlkI9uH6vV6czwondDIkOmdek3xIWnUCoB4Jpn
-	 hGz803xQ8v2+W7Jb5o84Qv10PxVFWv8P6r3F2dqz8B5mEkAJFgM6BqqWZBH+w2CF9i
-	 NLi/CNDFHgGa82DWB9bHyIv1yeHLWihIuwDyr0Nnm6AJ5NNsmkbt07z+XlF90EJ6Bw
-	 Mtr0iq1zVDe8g==
+	b=qLEvg6Dq+AAwsEe/RKGr66ICa0LcMW30SiXMYNs//FQ0Tay96yGq7nCEG/jomR1AO
+	 CKdnuEOqzq/ur8QVpO1HBErXmqzp9MtMdN3D4Aq84tu6IDlhh9NOel6zwIm2OcVM/l
+	 +e1wFJUocVDyEIOZtuK528FR+7++RMfWoEOKobSRqgzcWJVuIwtmeBW2MrUNYgYJhV
+	 IGkKxj6D1BcOq3t+U8vPr17QnJ8G5WmiomSlettBCLjdUMYaQxESOuckazhbhu22CA
+	 euQiTeqHv5WmTdZhiU24GQrBXZ/60NtCluwKkrjfzakh10ZI898JG5eNF7NOFIP7DR
+	 Z/izOEabF2d9w==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 87DA6D88FB6;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 945C8D88FB4;
 	Wed, 28 Feb 2024 03:20:31 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,40 +37,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: usb: dm9601: fix wrong return value in
- dm9601_mdio_read
+Subject: Re: [PATCH net v1 1/1] net: lan78xx: fix "softirq work is pending" error
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170909043155.27277.1060670387014071329.git-patchwork-notify@kernel.org>
+ <170909043160.27277.10700634687974290743.git-patchwork-notify@kernel.org>
 Date: Wed, 28 Feb 2024 03:20:31 +0000
-References: <20240225-dm9601_ret_err-v1-1-02c1d959ea59@gmail.com>
-In-Reply-To: <20240225-dm9601_ret_err-v1-1-02c1d959ea59@gmail.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: peter@korsgaard.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240226110820.2113584-1-o.rempel@pengutronix.de>
+In-Reply-To: <20240226110820.2113584-1-o.rempel@pengutronix.de>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, woojung.huh@microchip.com, kernel@pengutronix.de,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ UNGLinuxDriver@microchip.com
 
 Hello:
 
 This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sun, 25 Feb 2024 00:20:06 +0100 you wrote:
-> The MII code does not check the return value of mdio_read (among
-> others), and therefore no error code should be sent. A previous fix to
-> the use of an uninitialized variable propagates negative error codes,
-> that might lead to wrong operations by the MII library.
+On Mon, 26 Feb 2024 12:08:20 +0100 you wrote:
+> Disable BH around the call to napi_schedule() to avoid following
+> error:
+> NOHZ tick-stop error: local softirq work is pending, handler #08!!!
 > 
-> An example of such issues is the use of mii_nway_restart by the dm9601
-> driver. The mii_nway_restart function does not check the value returned
-> by mdio_read, which in this case might be a negative number which could
-> contain the exact bit the function checks (BMCR_ANENABLE = 0x1000).
+> Fixes: ec4c7e12396b ("lan78xx: Introduce NAPI polling support")
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > 
 > [...]
 
 Here is the summary with links:
-  - net: usb: dm9601: fix wrong return value in dm9601_mdio_read
-    https://git.kernel.org/netdev/net/c/c68b2c9eba38
+  - [net,v1,1/1] net: lan78xx: fix "softirq work is pending" error
+    https://git.kernel.org/netdev/net/c/e3d5d70cb483
 
 You are awesome, thank you!
 -- 
