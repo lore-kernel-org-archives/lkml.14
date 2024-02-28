@@ -1,126 +1,153 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF22364A0;
-	Wed, 28 Feb 2024 09:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE71C31A83
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709113078; cv=none; b=NPiOqPK/sQCLmqr0cDpDVVjYl6Uzwg28pcUHMuaFQrmsYS9aSHStgWp5Q++yd28YiUvP4BpIfFbG4imXO4Hj0LAzYlEAsZtjZszXUFa3JpB7UxqBGtDMb2uPd9oRV2bu08kcHakKjDZfHuCxNSNa0gyxR//NZV+jUqvtvNomzPw=
+	t=1709113104; cv=none; b=OY717gpldjFcIdbi9EuBClzGsP9zCWuQN2CxNKpAozHPqcWz+L7pFwKq+YInhaGtkmTJqV7VQIwPeO8i4XC7vFMVXJfA6/eu7sSSOKZdTS5ELbhgZ6moqgv5ORu7Ok03XpfUaPZOcXkgJOz8qVEK02k6Vy2atX26qZlSlFV79EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709113078; c=relaxed/simple;
-	bh=ETYaCSTCkH/+x6alJrxspdKAkwPcQ5ZuvtIHKFHEJkk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rzc1Xk+ZBhbuhCFYkzmOlxsbp5BtRgu1DfSRx4ogMSj70K03M1OaUjvveLYFWIo92UgLaRGgVstE7tZsYhWgILWCsZU+JhAZinyuV/9VPBe37iwjlsuUmqN3U0xi1JdNbq73seejEPmMC8H7xtKZbyVJpKuwt6uDbfSl13nvjVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp73t1709112824t9cd232h
-X-QQ-Originating-IP: uiXyMgKtLbN8VY9dRXG13TTDgCSMYnB8CAd8jAB8A5w=
-Received: from localhost ( [112.22.30.30])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 28 Feb 2024 17:33:43 +0800 (CST)
-X-QQ-SSF: 01400000000000505000000A0000000
-X-QQ-FEAT: /+iK7ZpVlLRnFYQIv5bPn+DA7FSTSA0wbVyC272BNntqVw2UrL9cwcKu3+z6A
-	aVv48q8z6t+BdRrZGMo4S6UlZcH2ug2GU4lMmWcvlL3AvbatMnx+U1xVSFOrwoYKPmGP5Ha
-	pp3A6rvbKpwF/9UzxXCOXTIK+mKmFsE8bVy9x5W1BN1swglw3hxyajbrQ9mYED7hkqbyCgo
-	PRuyOXxsRZfn3MN6LGExtwarMGz3QrE+GoqYPzMp+uiqv5BzzPg0oAkPYS0op0TpP95TjRn
-	2IbRZ28bFFDbfO5b90nFT0QYI/TiDnOL6mKBVJcUrY5Mr5Hi+jIlYJ9eMQh0D/w5CGuwlNF
-	vCg8GMr6mhOrtrGjDzFyJThHrohZAN8R0rl7zSLt/dImC6WM4n7aXX0o+gRMyc226sejq8s
-	9AKO3UT4kFs=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 12801957611283966463
-Date: Wed, 28 Feb 2024 17:33:42 +0800
-From: Dawei Li <dawei.li@shingroup.cn>
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: geert@linux-m68k.org, gerg@snapgear.com,
-	linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-	set_pte_at@outlook.com, stable@vger.kernel.org
-Subject: Re: [PATCH] mk68k: Fix broken THREAD_SIZE_ORDER
-Message-ID: <673EAB52C5659E99+Zd799lrOHAVIdm3S@centos8>
-References: <20240228085824.74639-1-dawei.li@shingroup.cn>
- <754c3acb-538d-45a1-84a1-0bebd02fd945@kernel.org>
+	s=arc-20240116; t=1709113104; c=relaxed/simple;
+	bh=PsR1pfhQj1+YctW/5hj7cA5FYtAGn3Ht2yBzNPBY4EE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AHBvYPEsj1wYbaN2Q2ZsV1YXuy6efCDP4HOwDCOEGRygXu0HVTMVvTJB+51IKymYdwpsnTCKddaTNhokgtxFlEEylepgMZQj0CEGA7HKCyi8IB1+srYXxrwjM1uIs4GeUvc48fdnhdV5fPMNnnw7xbPBT/wqONAVlfWyxVIh31s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gVi3yfe+; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gVi3yfe+"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412b3f88132so3090005e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:38:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709113100; x=1709717900; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=n4+AKRmkmBFEoLIViqECwVqYHAu9t9L66Ay6/6CX5qk=;
+        b=gVi3yfe+1CPYCHnSX5oOnMw9+afsQSsePxQoXFmUVM8+A9WuU73DJES0ZMQbo2Gyvp
+         r6zv7Z2tnKpfu6cFCi0sofVQWVywqqOEPkzwsrKs10GSGz2NveIux/Q9ifDDpnsglPhS
+         gew3zqnGI1EfjhLDi9WrJT2MdEN5HXPCcuV2Kpqh2r+jkg1Bqui5fPNqmC6LmVSf5z7L
+         /6kfGH3Wmxxaowb+zQYntrgHRK1MZpYG5LsAzl8tSTGJuH4sDr9HWmGPokSHDnb/2D3U
+         lnwDiHYc1vR7/hSsekFnK7uO+L1ylq+srkn+B+hEt7sy5kIwzBCvy1fmW0ecDy4qfbTc
+         +28g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709113100; x=1709717900;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n4+AKRmkmBFEoLIViqECwVqYHAu9t9L66Ay6/6CX5qk=;
+        b=Q0Zr8CQ00DV+jMPJTRkbL2MbEsgShh1iHNTndWXtsuDcOzuOCJmb+hyA/ukOoEFhvo
+         0XKST95HlI5FJrJHZMpwD5uBbTNoi+1/J16GWMSK3wRV5tW8wk47WkvHY53hTVy1qPGb
+         2QPgczbj03Ub3j0q5zwl2AL6aWVW5qnrcUD+DdVtdyZOkLFBpQVCnLLxeWGZ26e2CP/E
+         QOwtCcRQutKdMI8AJjxis0oDkqdVNG3gDbpO2R+aeM7KbTGgrmPGSgcRSOq0EaborXbO
+         uxnTfrtCRvWisL1kuWktv6KhUyk2yH5LEXVx3QFJnEq97h42J43t2fqjeH7z6w9VKg6R
+         ITsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdjqSRaNBtYOspzmQuybR1FNW3g7y2S6VDMMrHOEbi14oul9RGsIU+20YoakAHU8hCr3UVg7Y4iUgnNqMpe2aBPAdazX87PMbh0Ih+
+X-Gm-Message-State: AOJu0YxH9+fvlzITE8ZBi98BXDywFy9zsAbJssTzxo+NbtnOw6Lu4rap
+	zJPRalWaxrtlNszlfPaoKnxrHc+BocYYtYxPSoNduHMDWLYdflQ89BGyKUfGgBk=
+X-Google-Smtp-Source: AGHT+IHOp1pxzWYsSZdgMk9fzN4/wRCtOOeXX9R3/XcarEOcYQuEj1WE1Pi4WYyJuSqwQHpUbVzypA==
+X-Received: by 2002:a05:600c:a4c:b0:412:77cb:ae28 with SMTP id c12-20020a05600c0a4c00b0041277cbae28mr10799118wmq.11.1709113100097;
+        Wed, 28 Feb 2024 01:38:20 -0800 (PST)
+Received: from [172.20.10.10] ([213.233.108.239])
+        by smtp.gmail.com with ESMTPSA id o8-20020a056000010800b0033d202abf01sm13843461wrx.28.2024.02.28.01.38.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 01:38:19 -0800 (PST)
+Message-ID: <557f369c-e6f9-4794-8d80-bda5c149db5e@linaro.org>
+Date: Wed, 28 Feb 2024 09:38:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <754c3acb-538d-45a1-84a1-0bebd02fd945@kernel.org>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 16/39] spi: dt-bindings: atmel,at91rm9200-spi: remove
+ 9x60 compatible from list
+To: Varshini.Rajendran@microchip.com, broonie@kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+ claudiu.beznea@tuxon.dev, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
+ <20240223172638.672366-1-varshini.rajendran@microchip.com>
+ <19da0e57-379b-4db3-ba8e-db7efe336e15@linaro.org>
+ <98fedd3f-b55d-4ad1-b2ca-1efef0a19505@microchip.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <98fedd3f-b55d-4ad1-b2ca-1efef0a19505@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Jiri,
 
-Thanks for quick review.
 
-On Wed, Feb 28, 2024 at 10:11:05AM +0100, Jiri Slaby wrote:
-> On 28. 02. 24, 9:58, Dawei Li wrote:
-> > Current THREAD_SIZE_ORDER implementation for m68k is incorrect, fix it
-> > by ilog2().
+On 2/28/24 09:28, Varshini.Rajendran@microchip.com wrote:
+> Hi Tudor,
 > 
-> This is not a good commit log. Incorrect in what way and why is the fixed
+> On 26/02/24 2:39 pm, Tudor Ambarus wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On 23.02.2024 19:26, Varshini Rajendran wrote:
+>>> Remove microchip,sam9x60-spi compatible from the list as the driver used
+>>> has the compatible atmel,at91rm9200-spi and sam9x60 devices also use the
+>>> same compatible as fallback. So removing the microchip,sam9x60-spi
+>>> compatible from the list since it is not needed.
+>>>
+>>
+>> I find this wrong. I though we shall add compatibles for each SoC. Are
+>> the registers and fields the same for the SPI IPs in these 2 SoCs? Even
+>> if they are the same, are you sure the IPs are integrated in the same way?
+> 
+> Which two SoCs are you referring to ?
+> I am not removing the device specific compatible. I am only removing the 
+> additional fallback compatible.
+> 
 
-Agreed.
+ah, I read it wrong, sorry
+> As in,
+> 
+> compatible = "microchip,sam9x7-spi", "atmel,at91rm9200-spi";
+> 
+> instead of,
+> 
+> compatible = "microchip,sam9x7-spi", "microchip,sam9x60-spi", 
+> "atmel,at91rm9200-spi";
+> 
+> for the sam9x7 devices.
+> 
+> Hope this is clear. If I have it wrong please let me know.
 
-> version correct? And what is affected? Note you're referring to a change
-> which was done 14 years ago. It definitely must not be that incorrect (for
-> everybody).
+it's clear now, thanks.
 
-It's 'right' just for current PAGE_SIZE & THREAD_SIZE configs:
+I see in the driver that microchip,sam9x60-spi compatible is not yet
+used, thus removing the fallback to "microchip,sam9x60-spi" brings no
+functional change. Would have made a difference if sam9x60-spi
+implemented additional support that sam9x7-spi could have used as a
+fallback. If you think that sam9x7-spi will not fallback to sam9x60-spi
+in the future then:
 
-// arch/m68k/include/asm/thread_info.h
-#if PAGE_SHIFT < 13
-#ifdef CONFIG_4KSTACKS
-#define THREAD_SIZE     4096
-#else
-#define THREAD_SIZE     8192
-#endif
-#else
-#define THREAD_SIZE     PAGE_SIZE
-#endif
-#define THREAD_SIZE_ORDER       ((THREAD_SIZE / PAGE_SIZE) - 1)
-
-// arch/m68k/include/asm/page.h
-#if defined(CONFIG_SUN3) || defined(CONFIG_COLDFIRE)
-#define PAGE_SHIFT      13
-#else
-#define PAGE_SHIFT      12
-#endif
-#define PAGE_SIZE       (_AC(1, UL) << PAGE_SHIFT)
-#define PAGE_MASK       (~(PAGE_SIZE-1))
-#define PAGE_OFFSET     (PAGE_OFFSET_RAW)
-
-But it's incorrect in generic/mathematical way.
-
-Thanks,
-
-    Dawei
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 
 > 
-> > Fixes: cddafa3500fd ("m68k/m68knommu: merge MMU and non-MMU thread_info.h")
-> > Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
-> > Cc: stable@vger.kernel.org
-> > ---
-> >   arch/m68k/include/asm/thread_info.h | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/m68k/include/asm/thread_info.h b/arch/m68k/include/asm/thread_info.h
-> > index 31be2ad999ca..50faecd6fc5f 100644
-> > --- a/arch/m68k/include/asm/thread_info.h
-> > +++ b/arch/m68k/include/asm/thread_info.h
-> > @@ -19,7 +19,8 @@
-> >   #else
-> >   #define THREAD_SIZE	PAGE_SIZE
-> >   #endif
-> > -#define THREAD_SIZE_ORDER	((THREAD_SIZE / PAGE_SIZE) - 1)
-> > +
-> > +#define THREAD_SIZE_ORDER	ilog2(THREAD_SIZE / PAGE_SIZE)
-> >   #ifndef __ASSEMBLY__
-> 
-> -- 
-> js
-> suse labs
-> 
+>>
+>>> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+>>> ---
+>>> Changes in v4:
+>>> - Elaborated the explanation in the commit message to justify the patch
+>>> ---
+>>>   Documentation/devicetree/bindings/spi/atmel,at91rm9200-spi.yaml | 1 -
+>>>   1 file changed, 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/spi/atmel,at91rm9200-spi.yaml b/Documentation/devicetree/bindings/spi/atmel,at91rm9200-spi.yaml
+>>> index 58367587bfbc..32e7c14033c2 100644
+>>> --- a/Documentation/devicetree/bindings/spi/atmel,at91rm9200-spi.yaml
+>>> +++ b/Documentation/devicetree/bindings/spi/atmel,at91rm9200-spi.yaml
+>>> @@ -22,7 +22,6 @@ properties:
+>>>             - const: atmel,at91rm9200-spi
+>>>         - items:
+>>>             - const: microchip,sam9x7-spi
+>>> -          - const: microchip,sam9x60-spi
+>>>             - const: atmel,at91rm9200-spi
+>>>
+>>>     reg:
 > 
