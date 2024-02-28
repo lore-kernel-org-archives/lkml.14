@@ -1,208 +1,109 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03744210EC
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB24F4A1A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709098051; cv=none; b=UJohvyaOyEsL3l+tG19ROwQx2cUgzt7VuRVoWQsL/LKa5FVejudUSB3VOGk2vvmgZRVQYcpFzjzA+nU5s/0TfQsnxRsKfmvC0LpdkQKywP65/UNFRejz6ba3ObishUOMgw1/xRcN/YGkiLDXuonUKkKjSRiR4qjPSWAnnkSPQHw=
+	t=1709098153; cv=none; b=P5U1MZVGMTFcYJn3arQUw1mkSkM9XD0dWUacws4j2Wuv2nDK5nUpmmljB0Sfj3gs7R4YhwEckV65YJHmqfEHUDfQ1vTTYnycJIQil22YxQYjfjzd+IuC9f35AI4+zDSiqJNj0bbZXMRGuefQyyjnLlLH6i2PaGfjnNciW5PlGM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709098051; c=relaxed/simple;
-	bh=f91w+0QC3qP9EU7d+4+laz201VJZGD/uwQ2hj2v9Y8s=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=oYiKIxUfmc6aABrKawzRqZktRnk1ULevNQ5n7Qo5Ilpqp6mTViD0MPaMPm+QBZU09l0fnzFGENqy4300ujAYUUkMsuai0uYp5N57EwYU+RcdqcAP2JSqr5nZyhyjIzYdGnIPa8XpxtOo9SyyKNygTy3J4afMW8JS2huGv/TG1Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K8deY+mg; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
+	s=arc-20240116; t=1709098153; c=relaxed/simple;
+	bh=WVOsekD0YlciUNDmos1PUGyY/as40Tb7Hp31obpuQjQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CqlhBv6dEYr79WVZHlojJa7UTLKppqT8HXST/S2DEnQMiVqHYZqzA5k+ROaIgd/e6AoyluVEyxJ34ey53cU41Lx+dQnC98ihwcrv6DTsrqHX69tNO9bCh6s3DR1wDPXhOrS4qEWnHWamK1QvbQwUOzEauTu8fV74nO6pZEAucfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QUlPnuYr; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K8deY+mg"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26845cdso7448595276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:27:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QUlPnuYr"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e4b03f0903so554466a34.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:29:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709098049; x=1709702849; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3qlQXkJNmXY3V9U5JrSaKD9CZoD39fkjGBycAj3A9pQ=;
-        b=K8deY+mgb02H7CYEmxZXBGFs4WVQKH/MEe+c3P5i+FDd8GJ6ua0QFFz9FdQT6ct8jR
-         t9EV+hZp/q+xlJBJO+P+4HRhYC0x1eS9YebKf8EASYhp0zLdNGe6UDIKptVHUBbJ+XiG
-         Gi9nYw5ptGX7bum5lMYyM3YP6WoTaY50Mjz58e+ykUyszNqtBk8dgI8SKmMKBOTDZU/M
-         C7xPd1IPWVaXUvMSMvbrGDqEUNe7U/npR3pYKZSMFIt6DUy4MRtWhVxAHOtK24o9T17e
-         L6o55kilsL/C6NcSLv/ZbjZsGYYmRtT7Wld7/KdcWkG8L+h/hl3+l9K8tLBa9JDJveV/
-         pRAw==
+        d=chromium.org; s=google; t=1709098151; x=1709702951; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xmmc3lSEBpnb8JOhy5dmt1TkGfOTvRv7m9E2Kxyp/to=;
+        b=QUlPnuYrt4DmFrRWe7cUw2/0nrmj2iUPxI/Oubmt4BJeInIB1lMOwNY7EJrf4LMF+6
+         UWbcxhy2OUyNbEwMazl4JCkdiQfcO/zBrCuIbZWP380a84q5SlYkGWPPrjzxCDlYGlAZ
+         1+l0qfg1uhU8sRoC6WdnFZUjLdd4p5+2xy6h0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709098049; x=1709702849;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1709098151; x=1709702951;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3qlQXkJNmXY3V9U5JrSaKD9CZoD39fkjGBycAj3A9pQ=;
-        b=ZdA6XM0K2mITeOz/jSYa9kKaHmeSdg7phtcCi5YxoSHGVA8GYURnWESh05Bt4YP3vD
-         r8j5nLqDwqigMTek6QUDacyBqyrrm9xOVcierWEzNQ1X/fpO3r6JAfoAQwvkysw86M+I
-         nwAluQNkNw7IEjuG6OKBPAte4Cga/C94VkAT77Qkph2eEnB1Nd5bCBGjwGlnpehmah4L
-         MHDOMeWoCuuy7EBCWNWi63mSvojaYIamtTcfob/AJP8O+v18fYXJa4KqwdtSmpxdd5OL
-         do1/ooop7LBMkABwNtSMIMf77nNwQ6uL53DT3tiAr1XHgTGJz7zuJm1PPZVjqExaapbr
-         Lrng==
-X-Forwarded-Encrypted: i=1; AJvYcCVXJTEbbA+Ddo6r8TKGo/IEi3Nw/3gc5vYwnb23TQ8IgcobcjFQYBeCHzl6LZN1vSooNisqQaiqHeYZiitIph9h4G4LJVlMu6S3UfsU
-X-Gm-Message-State: AOJu0YxvScBRx6O9naDtuZNzMQkEuffnR9s5Oj/t0i8nT58zIk0znTS+
-	7EBj3h+oZYdywaL4JlcTujxzwsRsA6rI5/J14f6H0IT/ptrZZoRgKgbquBvBuVehfLsGD6mW+Ji
-	mU+qnM5eqTg==
-X-Google-Smtp-Source: AGHT+IH+/qGhGDq3Yovyrglwb4bcFyvgK7xysDbRhlcFNgma2qcuZmmIjriDyKoazNpJafEO07qRx6QW2gm0kA==
-X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a25:b341:0:b0:dcb:bc80:8333 with SMTP id
- k1-20020a25b341000000b00dcbbc808333mr455657ybg.13.1709098049017; Tue, 27 Feb
- 2024 21:27:29 -0800 (PST)
-Date: Wed, 28 Feb 2024 13:27:20 +0800
+        bh=Xmmc3lSEBpnb8JOhy5dmt1TkGfOTvRv7m9E2Kxyp/to=;
+        b=DIpHmDxtbDg0mcX4VFayEVbMgVsEFcWWy7Q1berCrP/I0DkeuCt+69mkdGQzlv5gAW
+         ip7Q738iefUwrd9TPSYIyOeBmqDBY1kOw23f4PhsmzFcbd5m0jVOZUqOehlgDzvrgHad
+         uIQM/l9/4cteboWZXrw8euUJOmKxLmsgS1/ZIx95CkhhQZp1yAg1h5Vzs372+1F5v8nh
+         i3hapiluCl23fjaQG0tAZ1UZfpyktl0bROwkRu3WKu8aVbdeQoSFrYGTqmzuOWl/Bom1
+         rs4/fEG2GgykNYTopn8YcIo544SgO3h8L++iMEDY1uxQrnu4E0w8Wvxc2HfpvqMbw15y
+         ncew==
+X-Forwarded-Encrypted: i=1; AJvYcCWarKnsz93ThClLdu9ZTkAbAZyhK50eoxv018c/nUVS5AIjvx2IYc3qC6k3akZd41YfbFbwdt9Nmq5+ZlNmhNYYKH4g0MhaHtahBGaF
+X-Gm-Message-State: AOJu0YzQ6gluvR5NSNgfl80Xx2FBvw3M5RXPbqu6LNbXmVCTRxGbWS5f
+	XXZSxyF+VfHHb/91dNJswr7gs047NTYFE3DdHaRkjVZZvTXDbm+le0xmuB3KXQ==
+X-Google-Smtp-Source: AGHT+IH+DD0XmnpARsicdXrncyIxsAW7NXvLB3VQEMd/cq4Y3AnNu4PK07nBXV6d2cSB2AbtnlsuOg==
+X-Received: by 2002:a05:6808:1a1e:b0:3c1:adf7:c169 with SMTP id bk30-20020a0568081a1e00b003c1adf7c169mr4598680oib.4.1709098150902;
+        Tue, 27 Feb 2024 21:29:10 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:50c1:1ad2:3268:cacd])
+        by smtp.gmail.com with ESMTPSA id du15-20020a056a002b4f00b006e4bcdcff43sm6905919pfb.78.2024.02.27.21.29.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 21:29:10 -0800 (PST)
+Date: Wed, 28 Feb 2024 14:29:06 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Chengming Zhou <zhouchengming@bytedance.com>, yosryahmed@google.com,
+	hannes@cmpxchg.org, nphamcs@gmail.com,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH 1/2] mm/zsmalloc: don't hold locks of all pages when
+ free_zspage()
+Message-ID: <20240228052906.GI11972@google.com>
+References: <20240226-zsmalloc-zspage-rcu-v1-0-456b0ef1a89d@bytedance.com>
+ <20240226-zsmalloc-zspage-rcu-v1-1-456b0ef1a89d@bytedance.com>
+ <20240228043358.GF11972@google.com>
+ <5a556476-05b2-483e-8875-eeb3e2a51151@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Message-ID: <20240228052722.409679-1-davidgow@google.com>
-Subject: [PATCH v2] drm: tests: Fix invalid printf format specifiers in KUnit tests
-From: David Gow <davidgow@google.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Rae Moar <rmoar@google.com>, 
-	Matthew Auld <matthew.auld@intel.com>, 
-	Arunpravin Paneer Selvam <arunpravin.paneerselvam@amd.com>, 
-	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, 
-	"=?UTF-8?q?Ma=C3=ADra=20Canal?=" <mcanal@igalia.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Javier Martinez Canillas <javierm@redhat.com>, 
-	Arthur Grillo <arthur.grillo@usp.br>
-Cc: David Gow <davidgow@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Daniel Latypov <dlatypov@google.com>, David Airlie <airlied@gmail.com>, 
-	Maxime Ripard <mripard@kernel.org>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a556476-05b2-483e-8875-eeb3e2a51151@linux.dev>
 
-The drm_buddy_test's alloc_contiguous test used a u64 for the page size,
-which was then updated to be an 'unsigned long' to avoid 64-bit
-multiplication division helpers.
+On (24/02/28 13:14), Chengming Zhou wrote:
+> On 2024/2/28 12:33, Sergey Senozhatsky wrote:
+> > On (24/02/27 03:02), Chengming Zhou wrote:
+> > [..]
+> >> @@ -978,10 +974,11 @@ static struct zspage *alloc_zspage(struct zs_pool *pool,
+> >>  		pages[i] = page;
+> >>  	}
+> >>  
+> >> -	create_page_chain(class, zspage, pages);
+> >>  	init_zspage(class, zspage);
+> >>  	zspage->pool = pool;
+> >>  	zspage->class = class->index;
+> >> +	/* RCU set_zspage() after zspage initialized. */
+> >> +	create_page_chain(class, zspage, pages);
+> > 
+> > So this hasn't been tested, has it?
+> I have tested it in my test vm, but it hasn't KASAN enabled. I tested the
+> kernel build in tmpfs with zswap enabled using zsmalloc pool, not sure
+> why the kernel didn't crash then...
 
-However, the variable is logged by some KUNIT_ASSERT_EQ_MSG() using the
-'%d' or '%llu' format specifiers, the former of which is always wrong,
-and the latter is no longer correct now that ps is no longer a u64. Fix
-these to all use '%lu'.
+I hit the problem on non-kasan-enabled kernel.  KASAN was enabled
+later on.
 
-Also, drm_mm_test calls KUNIT_FAIL() with an empty string as the
-message. gcc and clang warns if a printf format string is empty, so
-give these some more detailed error messages, which should be more
-useful anyway.
+[..]
 
-Fixes: a64056bb5a32 ("drm/tests/drm_buddy: add alloc_contiguous test")
-Fixes: fca7526b7d89 ("drm/tests/drm_buddy: fix build failure on 32-bit targ=
-ets")
-Fixes: fc8d29e298cf ("drm: selftest: convert drm_mm selftest to KUnit")
-Reviewed-by: Matthew Auld <matthew.auld@intel.com>
-Acked-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-Signed-off-by: David Gow <davidgow@google.com>
----
+> > So when init_zspage() calls get_first_page() it gets NULL zspage->first_page
+> > which we then use in is_first_page(first_page)->PagePrivate(page). As far as
+> > I can tell.
+>
+> Thanks! I will fix it and test throughly before send an update.
 
-Changes since v1:
-https://lore.kernel.org/linux-kselftest/20240221092728.1281499-8-davidgow@g=
-oogle.com/
-- Split this patch out, as the others have been applied already.
-- Rebase on 6.8-rc6
-- Add everyone's {Reviewed,Acked,Tested}-by tags. Thanks!
-
----
- drivers/gpu/drm/tests/drm_buddy_test.c | 14 +++++++-------
- drivers/gpu/drm/tests/drm_mm_test.c    |  6 +++---
- 2 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/tests/drm_buddy_test.c b/drivers/gpu/drm/tests=
-/drm_buddy_test.c
-index 2f32fb2f12e7..3dbfa3078449 100644
---- a/drivers/gpu/drm/tests/drm_buddy_test.c
-+++ b/drivers/gpu/drm/tests/drm_buddy_test.c
-@@ -55,30 +55,30 @@ static void drm_test_buddy_alloc_contiguous(struct kuni=
-t *test)
- 		KUNIT_ASSERT_FALSE_MSG(test,
- 				       drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							      ps, ps, list, 0),
--				       "buddy_alloc hit an error size=3D%u\n",
-+				       "buddy_alloc hit an error size=3D%lu\n",
- 				       ps);
- 	} while (++i < n_pages);
-=20
- 	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							   3 * ps, ps, &allocated,
- 							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc didn't error size=3D%u\n", 3 * ps);
-+			       "buddy_alloc didn't error size=3D%lu\n", 3 * ps);
-=20
- 	drm_buddy_free_list(&mm, &middle);
- 	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							   3 * ps, ps, &allocated,
- 							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc didn't error size=3D%u\n", 3 * ps);
-+			       "buddy_alloc didn't error size=3D%lu\n", 3 * ps);
- 	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							   2 * ps, ps, &allocated,
- 							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc didn't error size=3D%u\n", 2 * ps);
-+			       "buddy_alloc didn't error size=3D%lu\n", 2 * ps);
-=20
- 	drm_buddy_free_list(&mm, &right);
- 	KUNIT_ASSERT_TRUE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							   3 * ps, ps, &allocated,
- 							   DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc didn't error size=3D%u\n", 3 * ps);
-+			       "buddy_alloc didn't error size=3D%lu\n", 3 * ps);
- 	/*
- 	 * At this point we should have enough contiguous space for 2 blocks,
- 	 * however they are never buddies (since we freed middle and right) so
-@@ -87,13 +87,13 @@ static void drm_test_buddy_alloc_contiguous(struct kuni=
-t *test)
- 	KUNIT_ASSERT_FALSE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							    2 * ps, ps, &allocated,
- 							    DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc hit an error size=3D%u\n", 2 * ps);
-+			       "buddy_alloc hit an error size=3D%lu\n", 2 * ps);
-=20
- 	drm_buddy_free_list(&mm, &left);
- 	KUNIT_ASSERT_FALSE_MSG(test, drm_buddy_alloc_blocks(&mm, 0, mm_size,
- 							    3 * ps, ps, &allocated,
- 							    DRM_BUDDY_CONTIGUOUS_ALLOCATION),
--			       "buddy_alloc hit an error size=3D%u\n", 3 * ps);
-+			       "buddy_alloc hit an error size=3D%lu\n", 3 * ps);
-=20
- 	total =3D 0;
- 	list_for_each_entry(block, &allocated, link)
-diff --git a/drivers/gpu/drm/tests/drm_mm_test.c b/drivers/gpu/drm/tests/dr=
-m_mm_test.c
-index 1eb0c304f960..f37c0d765865 100644
---- a/drivers/gpu/drm/tests/drm_mm_test.c
-+++ b/drivers/gpu/drm/tests/drm_mm_test.c
-@@ -157,7 +157,7 @@ static void drm_test_mm_init(struct kunit *test)
-=20
- 	/* After creation, it should all be one massive hole */
- 	if (!assert_one_hole(test, &mm, 0, size)) {
--		KUNIT_FAIL(test, "");
-+		KUNIT_FAIL(test, "mm not one hole on creation");
- 		goto out;
- 	}
-=20
-@@ -171,14 +171,14 @@ static void drm_test_mm_init(struct kunit *test)
-=20
- 	/* After filling the range entirely, there should be no holes */
- 	if (!assert_no_holes(test, &mm)) {
--		KUNIT_FAIL(test, "");
-+		KUNIT_FAIL(test, "mm has holes when filled");
- 		goto out;
- 	}
-=20
- 	/* And then after emptying it again, the massive hole should be back */
- 	drm_mm_remove_node(&tmp);
- 	if (!assert_one_hole(test, &mm, 0, size)) {
--		KUNIT_FAIL(test, "");
-+		KUNIT_FAIL(test, "mm does not have single hole after emptying");
- 		goto out;
- 	}
-=20
---=20
-2.44.0.rc1.240.g4c46232300-goog
-
+I'm curious if we want to add RCU to the picture, given that zsmalloc
+is quite often run under memory pressure.
