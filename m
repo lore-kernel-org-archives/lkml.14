@@ -1,165 +1,207 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10olkn2054.outbound.protection.outlook.com [40.92.41.54])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B142B44391
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.41.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709192171; cv=fail; b=Sl915QqiZpykxSnTK1Alp3O96D2uTveMhcb31xLzaJFR6VIaanK7B0MlYGzZn07FZRcKsobpLpwN+EYx8d5+0+eMRT+rIX8G/FjOk8fd3lEmLHW/Ttts85kXVLJRVzPYYJ0Kke8eWKeX6RaPgT2SzIst3SRTqVdzDFJQMH6wNoc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709192171; c=relaxed/simple;
-	bh=KS3y+96FU0MWaX4D9C7Fi3Bqsn+8Xpv+YubQvc0tCkM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Rc5HwYAvNdAS60cBpP/9sE6zN/KBRlWuArCIWKzqp5q77bKtJGV4HLB9F0DLunYBGJm8AVhPKcc7iSjvLbjPHhDDkGBOdFqgr+QqlQdBAmecx6bHgU78841IFCfkPNQBn+ahH6hPsyjkbQBpYNSq43n3Gy0rbSLAVC7LtTgc1OE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=aP5UV2zC; arc=fail smtp.client-ip=40.92.41.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DE744C86
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709192292; cv=none; b=bB43ePO44EqafZHwXaHCQAosUm+JGDbtHYmLE7OMq/mghD+DxXHt/4kGEMBVjYnFL1j+Pe91cr54UoQ3ze9UgYHBWJdp6bBRrWHZBWQO0LtMabcxQQaRyGW2D87bUNt+Y5te2fq+/014jACXji9EhJgIloL4ynbOES3UP9L1Kz8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709192292; c=relaxed/simple;
+	bh=Qcg10EfbIdNpPgAu51XQ097CGQYYZjZe9r5v3xd1sAI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
+	 References; b=EuLNKc2kodEerO9TwH//j5xpYTgR4n/+iU6GWcKDV4g0vlJj4LwzToytehymeVNQtewFs2dRCmDWP/vHmBoLMF3XehxeycY9ZmNN1LObmJWjWFdfpXu3yrLOPMj0lJ5DZa9C11g9gEfLDLr8cvbwkbWyb4kyGh7taQnL5PWd09Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=gTP8kfs4; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="aP5UV2zC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UnPYAOGPa3pWqcdgpBesmwHi8fnIq5jgPBUIEQ10InCTFZZZj60we9GVsgL7wbJMIoRNP9Gl9d2U4AksUb1mgHmXXCD7qsJVIY5xCrC1mD+XFLCGyNLRqXRBdZ3BuR4LnFvRi6mDn8YeLW+waqpwPTNzTeuVWpT7C+Qb0IQTZX4SbwRQh+Ut5KybeGGCtA0Z/HpE+d+vcU/b0FIjbcOnVfucpRgIC1wj70ptNb+yR2Cknqwf7memjgbZbnO48DPmPR4cf5T3FXa2UMsB6bYEexSOJgWnQXl2coIC7aSlL2B9E1YK9t0z+0KuUihZ+hO38ZKMjxUICC9x8OaKW+JgKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iO4YTlOOjtAWTRt0Dbwct8P58rd4w2p8QseRByuYVZc=;
- b=OeqMZ4ko2Vr4VDrnihXSsgkvn5Io+1M/RvBT5Lah8RTrhzstNBuaIqb5UYI+v5Cq+YammZCVm4ZXL9WTS51Bx+D2emDUEtyiHHgUblI0DDmYLKng5TEho0WmRhO2Bc9Ueffb12ghnwb1hga18UTWOSqhOFW71EZe932AKpbHPKvPiaZQFG22jf+eG/GLHj6SuTj5/cQ9nsRc9xsNrTZIkrQoq2OCG0NO/VcRZcex/e6n2A1UX+Ug+6nIKnHhOVipJ68pbHT5y14b2ZvJXiWds/jRdgr/0of3kUYnTB/tGTbFTsFGpcA0/SyoWyigk5KJUmqvK1OwQeEMz5ne2z4O6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iO4YTlOOjtAWTRt0Dbwct8P58rd4w2p8QseRByuYVZc=;
- b=aP5UV2zCEukPmgoYRlJGdWohIs+ir0uxlzSjD7ZGm6U2IAalicaESZOazeuOgO9pwanvH9zY2zo1/wW4E48RA8NQ6YmQGGwEKpNlLyJ+hzArZnAJW67cygei5Do+pty2T6nBo9aDq3cxKeT4HUmyM7RcU60ihq735Zpl8ChbiWNyBJYBc8r4D3GBZwuzvDx6hRumGYgBajQA9TBSXxsHoBM0zAoCAxZhtisn7nLcndXQPD7GM4jDx7Bj0ePV5aIDXzJUdDXjjbZaqAfA6yHkvvQnglBgCBw8CqGVOYQpp8M4PwzuCUIrcoEFxd5povbF4RngU4paRdTAPEO2Z8oWAA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by DM8PR02MB8022.namprd02.prod.outlook.com (2603:10b6:8:17::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
- 2024 07:36:06 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7316.037; Thu, 29 Feb 2024
- 07:36:05 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Will Deacon <will@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Petr Tesarik
-	<petr.tesarik1@huawei-partners.com>
-CC: "kernel-team@android.com" <kernel-team@android.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, Christoph Hellwig
-	<hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy
-	<robin.murphy@arm.com>, Petr Tesarik <petr.tesarik1@huawei-partners.com>,
-	Dexuan Cui <decui@microsoft.com>, Nicolin Chen <nicolinc@nvidia.com>
-Subject: RE: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
- allocations >= PAGE_SIZE
-Thread-Topic: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
- allocations >= PAGE_SIZE
-Thread-Index: AQHaakuep9s0mIf3eE+om+sQlmyZtbEg06/QgAAR1sA=
-Date: Thu, 29 Feb 2024 07:36:05 +0000
-Message-ID:
- <SN6PR02MB41577D09E97B1D9645369D58D45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20240228133930.15400-1-will@kernel.org>
- <20240228133930.15400-7-will@kernel.org>
- <SN6PR02MB4157A62353559DA8DB8BC4ADD45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To:
- <SN6PR02MB4157A62353559DA8DB8BC4ADD45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tmn: [JjVH26CSkS77Hu1bhHR4k2X5/jjNX+H5]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM8PR02MB8022:EE_
-x-ms-office365-filtering-correlation-id: c51196c4-7580-4fa7-4db3-08dc38f91670
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 5hTREnYf2Fm4YrNv5hzF7TYqXKbsqPjUjqdnU9PdlU33sO7qjpfnRQ0wlkAmrXa7qYuQydYIvSeVw9dIA/FQckPVNfoBPGaWvh7fnSxEtlvZQ0f2/CGVKhxYXLWLqfKiFPWTtGa97iS8pHNmh/pX/IS7xp4RlJMrTL2Zh+96YRrJCQYTo4QsGD8XYDIrP9G9WLXn2iFUQnlUtGf8AaCat5shE/kkmyHAxSzkAsLGORKGwEUowddBptGQ288hftccZWpBXzSuORm3zd31yfV1JO8mNJW16E7asgEhSo7DHSwU7n1AcMu+UecxYQMNYy8ECOEE5AlAlKYRTb4oI3R3TMB4bo/v5Jy2pdRsIEG59rSTkQzlj8pqOGQkSAj6utTiInKA8ukL+Z4J6enX16bye44VtdlQisULDySJnj+6JYnU9FhhHiUCEs49b55ELNWBuqZVXxZkUfYD354zFSNzSzSyrNxTeAe7xjquSSMYpmZvJi6pxpXIMPeUXauEBYluBjvypvV+bPLA5Xp6SsEJOPvrqs4PqZs2UfncYI+eP4mUsL35G5ov96kIiIVbb0J4
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Wk5AEgXsaiOIzdsBB6bjKxrKdulyQOFErOCnkwIVy1fO8m+qLW9nm5d/+q49?=
- =?us-ascii?Q?hgsGMigGP3Xh54+kNVbItUQo1yORp7cEZJX7ci40nmEEA4e2kIs71z8NIKPZ?=
- =?us-ascii?Q?9oD7dZVK6dRi8T2T0aJ1UgqOZl2Zxbave6yU6At5DkHePgsDqrBuNJK5sC3F?=
- =?us-ascii?Q?nrnDgFOH8qkDYrt7CDYa1tuTf6l4Np0iyolO2SQT+v2QPxZSujWTOv16KAhK?=
- =?us-ascii?Q?CnB8Y0ryhzAzXNBb/FHx1cNJQ4LWsi60G1aqXks6RPI5Y6Zj3WSYNAcHXrtE?=
- =?us-ascii?Q?rtA8GAMYaDtzLZBiJwdWfD++ZDJHnmB6RP/JRDxjQfH14i5JuUCZH7Q5AwhN?=
- =?us-ascii?Q?28SJ2XuwELMXv8usHKGlNEQotbyycKf3/0I5d2zSu0Er7T9HbL2m3jsywY3R?=
- =?us-ascii?Q?bn5pLgr6e5cLbTyQaiUluWL9zhUNByLXHmIeiNjfWaZ1ANFZU6WAX3/mOEHM?=
- =?us-ascii?Q?lxyKHc2831obYJYRG7YjHo8U8CsG+zA9suAeeGDLSkHKinEiqCPHF35QPiP0?=
- =?us-ascii?Q?j+FRXQvB9kqPe/p3lEB/dZtXu3wLDnTGaeSx4wFWEYQRGc5O8AKhYaVHThEm?=
- =?us-ascii?Q?YT/b6FbYlx8G/oFWL5VDdmrG1DulS2sCMIHcTPj+JDdg4l+WXr1RELEtDVpa?=
- =?us-ascii?Q?NkPDEtaJ+9dnY6QcjS30Hg1FX2iD8/1pgXqgtHsC6i4Ab5oWcy6iOKG0a9TZ?=
- =?us-ascii?Q?99s4XijrIVooq4OAolm85/u4ngqCzZN1oME4AsUDf0neArVXwuEtrGXcDa0H?=
- =?us-ascii?Q?qEcPXvsR7Vmvw9HHFGfqKzvpEBe/L/IBuBhvBeySCsjOPBza1V5oJdG+8xRB?=
- =?us-ascii?Q?kMk/SecBmtohoNFRThEz2WYIxCUGyu+VwUjGXcpKWQpof4gfJXKTYXQSXxvw?=
- =?us-ascii?Q?NPK1r99ux0J+5MfQRKAeZ69nJFPo6sAy1AB/3d/NH/Bq+v5L7lnA+jRBxZf2?=
- =?us-ascii?Q?ljqWTYfKXsEzagbjmZR07/GCFCqqvXN1mxdaS297FTDhrTfPdF7LnxiH4ZyE?=
- =?us-ascii?Q?LZM802id2iujW+3vQ7wUdjxWWjAsBNkBrgEskbzjWjHNDu+0jni8ezu0+BOx?=
- =?us-ascii?Q?RTwSw1c6OLrp8l1o6hkyV43PboMW2vM38Ki+zKIIHFcmErIupOCq6I5ULjoG?=
- =?us-ascii?Q?YMjerIXTcdEzrUWAHMC/ixMjtbK6ghB1LbiMWM+m6i35drhsonznvz7zMV/H?=
- =?us-ascii?Q?dAkzJCOgPqF3odFnIPpBz05sXWf4eMRTrJWMKg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gTP8kfs4"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240229073801epoutp0351e6b44f491cf0918faec6eb4462cf64~4RVMYT9Vs1145811458epoutp03Q
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:38:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240229073801epoutp0351e6b44f491cf0918faec6eb4462cf64~4RVMYT9Vs1145811458epoutp03Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1709192281;
+	bh=NMRnIeTdMH1QaXB4w+BjaNz5iINjYFDjL1ixEPJsvT8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gTP8kfs4bgdu7pxNGr9FtXOnh9Y6wuDV3IXnmn23Kz4XogBtlJpapYLjq3UGu8gpY
+	 XXsMPKzw5ZdoFPiddYogBGiGWywwMJbDWX5DR4rzzW4q8y0zsnplXov4hXoZ2L7qNY
+	 hz7k7fZAwe45GYQEN6VpeuOD599CKWE73pCjoies=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20240229073801epcas5p3459bfeefc6142a1e8b6b8335c9a67026~4RVL4A-8O1405014050epcas5p3I;
+	Thu, 29 Feb 2024 07:38:01 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.183]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4TljkH2dwGz4x9Q9; Thu, 29 Feb
+	2024 07:37:59 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	44.A1.19369.45430E56; Thu, 29 Feb 2024 16:37:56 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240228134451epcas5p1b974d61fcab67fb5f52a7b291cf85966~4CsMmnDn80371603716epcas5p1d;
+	Wed, 28 Feb 2024 13:44:51 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240228134451epsmtrp2f506c8122a543112b11e536ca19de064~4CsMl7nM52244022440epsmtrp2P;
+	Wed, 28 Feb 2024 13:44:51 +0000 (GMT)
+X-AuditID: b6c32a50-9e1ff70000004ba9-86-65e03454b60a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	4B.37.08817.3D83FD56; Wed, 28 Feb 2024 22:44:51 +0900 (KST)
+Received: from cheetah.sa.corp.samsungelectronics.net (unknown
+	[107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240228134450epsmtip12ff7dfd1b362aaad2db74bbd9cfc30f6~4CsK__dlL1554615546epsmtip1b;
+	Wed, 28 Feb 2024 13:44:50 +0000 (GMT)
+From: Shradha Todi <shradha.t@samsung.com>
+To: lchen.firstlove@zohomail.com
+Cc: lpieralisi@kernel.org, kw@linux.com, mani@kernel.org, kishon@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, pankaj.dubey@samsung.com
+Subject: RE: [PATCH v4] PCI: endpoint: Add prefetch BAR support
+Date: Wed, 28 Feb 2024 19:14:48 +0530
+Message-Id: <20240228134448.56372-1-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <17e7ad65ff5.d9de88b4962.1109678039880040918@zohomail.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHKsWRmVeSWpSXmKPExsWy7bCmhm6IyYNUg5sduhZLmjIsjrb+Z7Zo
+	6PnNavH75wMWi8u75rBZnJ13nM2i5U8Li8WBD6sYLRZt/cLuwOmxYFOpx6ZVnWweT65MZ/Lo
+	27KK0ePzJjmP37OPMQawRWXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXm
+	ptoqufgE6Lpl5gDdpKRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMCnQK07MLS7N
+	S9fLSy2xMjQwMDIFKkzIzmhauZ+9YJ50xdxP05kaGI+LdTFyckgImEi0XtnA3MXIxSEksIdR
+	oqdlEhuE84lR4vTkg4wgVUIC3xgl5s6ShOl4vPUqVMdeRom+vb9YIZxWJon5HbeYQarYBLQk
+	Gr92gdkiAgoSLc+3gxUxC2xnlGj/0s0CkhAWsJc4276PCcRmEVCVmLjiPVicV8BKYs63RkaI
+	dfISqzccABvEKeAucWnvZTaI+D12iZfr6iBsF4n3u75C1QtLvDq+hR3ClpL4/G4vVH26xMrN
+	M5gh7ByJb5uXMEHY9hIHrswB2ssBdJymxPpd+hBhWYmpp9aBlTAL8En0/n4CVc4rsWMejK0s
+	8eXvHhYIW1Ji3rHLrBC2h8TFtjfskECZxSjx9/dLtgmMcrMQVixgZFzFKJVaUJybnppsWmCo
+	m5daDo+25PzcTYzghKcVsINx9Ya/eocYmTgYDzFKcDArifDKCN5NFeJNSaysSi3Kjy8qzUkt
+	PsRoCgzAicxSosn5wJSbVxJvaGJpYGJmZmZiaWxmqCTO+7p1boqQQHpiSWp2ampBahFMHxMH
+	p1QDU0rHCi2HlF2CNd6v9Za8T9hRznF53XzrxurON3P2bttd8tcmmnmLZO7t4wyT5kY079LS
+	Nno4dfbKh113t25by9O3PuR/oqrb2iNtLyUez7KoerW2R3nzBq67jZ8FA6OY595I4utS1plk
+	4ugsL66r9eTFJa/jcvuPmM2atfnTQf9NTjvCBT7K9lfcdIqWYy+omD3lcMQij3sS2a+k0rV4
+	b2rNXs72v2pJRPfswy/5lFefOfNh8tm/EcqRTk4r4/SyduyX+Jxx4vJN/RO3LKYfkN1pvLBY
+	XNXrUVNHoP+J3tkKs2U0L66UsM+aZJ11+4De/WNHo3Jkb10/PXexjYO44LEpjx5n2vccLFz7
+	+PzGvjNKLMUZiYZazEXFiQDXq+haAQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCLMWRmVeSWpSXmKPExsWy7bCSnO5li/upBh8P6VksacqwONr6n9mi
+	oec3q8Xvnw9YLC7vmsNmcXbecTaLlj8tLBYHPqxitFi09Qu7A6fHgk2lHptWdbJ5PLkyncmj
+	b8sqRo/Pm+Q8fs8+xhjAFsVlk5Kak1mWWqRvl8CV0bRyP3vBPOmKuZ+mMzUwHhfrYuTkkBAw
+	kXi89SpzFyMXh5DAbkaJdd+OsUEkJCU+X1zHBGELS6z895wdoqiZSWLegidgCTYBLYnGr13M
+	ILaIgIJEy/PtrCBFzAIHGSXe3P/CCJIQFrCXONu+D6yBRUBVYuKK9ywgNq+AlcScb42MEBvk
+	JVZvOAA2iFPAXeLS3stAV3AAbXOTmNmZPYGRbwEjwypGydSC4tz03GLDAqO81HK94sTc4tK8
+	dL3k/NxNjOCA1NLawbhn1Qe9Q4xMHIyHGCU4mJVEeGUE76YK8aYkVlalFuXHF5XmpBYfYpTm
+	YFES5/32ujdFSCA9sSQ1OzW1ILUIJsvEwSnVwFTz/ndd1OXeW1PZ9Hd4buX0blc8uVQlr57r
+	xiOn+f8/L66Im8RTbZrHMC8ptX2i5KctWeJ2h6/V1u1Z+H5SB29GhGeokp/vnrqI+6Uv/iy9
+	eOZ108E4p31fGN9cX3LW2fn/9kldyZfmf+G65f76P+/3db7zJafdMX3pbNkjzBh0b5L4RVn1
+	1+65nUslElazFkaY3b458VPHBtYJcRsfzGj6p/aMQ+fMbPXPTsuU8mZe31ohX6x68biEnEBn
+	cU5vUJik3407c3+7zJY/fnjL+yVCj0XP3N65KuSQuZuo6u2dqyed5792af0Ew3nWmv2lW4Ku
+	qazx8w07xlKwib9qklv3LL8VnAd02HSOcqmrzt2gxFKckWioxVxUnAgAsz4J3LcCAAA=
+X-CMS-MailID: 20240228134451epcas5p1b974d61fcab67fb5f52a7b291cf85966
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240228134451epcas5p1b974d61fcab67fb5f52a7b291cf85966
+References: <17e7ad65ff5.d9de88b4962.1109678039880040918@zohomail.com>
+	<CGME20240228134451epcas5p1b974d61fcab67fb5f52a7b291cf85966@epcas5p1.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c51196c4-7580-4fa7-4db3-08dc38f91670
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2024 07:36:05.3677
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR02MB8022
 
-> From: Will Deacon <will@kernel.org> Sent: Wednesday, February 28, 2024 5:=
-40 AM
-> >
-> > For swiotlb allocations >=3D PAGE_SIZE, the slab search historically
-> > adjusted the stride to avoid checking unaligned slots. However, this is
-> > no longer needed now that the code around it has evolved and the
-> > stride is calculated from the required alignment.
-> >
-> > Either 'alloc_align_mask' is used to specify the allocation alignment o=
-r
-> > the DMA 'min_align_mask' is used to align the allocation with 'orig_add=
-r'.
-> > At least one of these masks is always non-zero.
->=20
-> I think the patch is correct, but this justification is not.  alloc_align=
-_mask
-> and the DMA min_align_mask are often both zero.  While the NVMe
-> PCI driver sets min_align_mask, SCSI disk drivers do not (except for the
-> Hyper-V synthetic SCSI driver).   When both are zero, presumably
-> there are no alignment requirements, so a stride of 1 is appropriate.
->=20
+Reviewed-by: Shradha Todi <shradha.t@samsung.com>
 
-I did additional checking into the history of page alignment for alloc
-sizes of a page or greater. The swiotlb code probably made sense
-prior to commit 0eee5ae10256. This commit has this change:
+This patch looks useful. Can we revisit this and get it merged?
 
-        slot_base =3D area_index * mem->area_nslabs;
--       index =3D wrap_area_index(mem, ALIGN(area->index, stride));
-+       index =3D area->index;
-
-        for (slots_checked =3D 0; slots_checked < mem->area_nslabs; ) {
-                slot_index =3D slot_base + index;
-
-In the old code, once the PAGE_SIZE was factored into the stride, the
-stride was used to align the starting index, so that the first slot checked
-would be page aligned. But commit 0eee5ae10256 drops that use
-of the stride and puts the page alignment in iotlb_align_mask, for
-reasons explained in the commit message. But in Will's Patch 1
-when the page alignment is no longer incorporated into
-iotlb_align_mask (for good reason), page aligning the stride then
-doesn't do anything useful, resulting in this patch.
-
-If there *is* a requirement for page alignment of page-size-or-greater
-requests, even when alloc_align_mask and min_align_mask are zero,
-we need to think about how to do that correctly, as that requirement
-is no longer met after Patch 1 of this series.
-
-Michael
+>Date:   Fri, 21 Jan 2022 12:12:56 +0800
+>From:   Li Chen <lchen.firstlove@zohomail.com>
+>To:     "Bjorn Helgaas" <helgaas@kernel.org>
+>Cc:     "Kishon Vijay Abraham I" <kishon@ti.com>,
+>        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+>        "Bjorn Helgaas" <bhelgaas@google.com>,
+>        "linux-pci" <linux-pci@vger.kernel.org>,
+>        "linux-kernel" <linux-kernel@vger.kernel.org>
+>Message-ID: <17e7ad65ff5.d9de88b4962.1109678039880040918@zohomail.com>
+>In-Reply-To: 
+>Subject: [PATCH v4] PCI: endpoint: Add prefetch BAR support
+>MIME-Version: 1.0
+>Content-Type: text/plain; charset="UTF-8"
+>Content-Transfer-Encoding: 7bit
+>Importance: Medium
+>User-Agent: Zoho Mail
+>X-Mailer: Zoho Mail
+>Precedence: bulk
+>List-ID: <linux-pci.vger.kernel.org>
+>X-Mailing-List: linux-pci@vger.kernel.org
+>
+>From: Li Chen <lchen@ambarella.com>
+>
+>Before this commit, epf cannot set BAR to be prefetchable.
+>Prefetchable BAR can also help epf device to use bridge's
+>prefetch memory window.
+>
+>Signed-off-by: Li Chen <lchen@ambarella.com>
+>---
+>Changes in v2:
+>Remove Gerrit Change-id
+>Changes in v3:
+>capitalize "BAR" in the subject and commit log as suggested by Bjorn.
+>Changes in v4:
+>This patch context doesn't change but resend with my Zoho mail account in that previous
+>company mail will contain un-removeable proprietary messages. 
+>Add "From:" to the first line of the message body.
+>
+> drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++++
+> include/linux/pci-epc.h                       | 2 ++
+> 2 files changed, 6 insertions(+)
+>
+>diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+>index 90d84d3bc868..96489cfdf58d 100644
+>--- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>@@ -817,15 +817,19 @@ static void pci_epf_configure_bar(struct pci_epf *epf,
+> {
+> 	struct pci_epf_bar *epf_bar;
+> 	bool bar_fixed_64bit;
+>+	bool bar_prefetch;
+> 	int i;
+> 
+> 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> 		epf_bar = &epf->bar[i];
+> 		bar_fixed_64bit = !!(epc_features->bar_fixed_64bit & (1 << i));
+>+		bar_prefetch = !!(epc_features->bar_prefetch & (1 << i));
+> 		if (bar_fixed_64bit)
+> 			epf_bar->flags |= PCI_BASE_ADDRESS_MEM_TYPE_64;
+> 		if (epc_features->bar_fixed_size[i])
+> 			bar_size[i] = epc_features->bar_fixed_size[i];
+>+		if (bar_prefetch)
+>+			epf_bar->flags |= PCI_BASE_ADDRESS_MEM_PREFETCH;
+> 	}
+> }
+> 
+>diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+>index a48778e1a4ee..825632d581d0 100644
+>--- a/include/linux/pci-epc.h
+>+++ b/include/linux/pci-epc.h
+>@@ -161,6 +161,7 @@ struct pci_epc {
+>  * @msix_capable: indicate if the endpoint function has MSI-X capability
+>  * @reserved_bar: bitmap to indicate reserved BAR unavailable to function driver
+>  * @bar_fixed_64bit: bitmap to indicate fixed 64bit BARs
+>+ * @bar_prefetch: bitmap to indicate prefetchable BARs
+>  * @bar_fixed_size: Array specifying the size supported by each BAR
+>  * @align: alignment size required for BAR buffer allocation
+>  */
+>@@ -171,6 +172,7 @@ struct pci_epc_features {
+> 	unsigned int	msix_capable : 1;
+> 	u8	reserved_bar;
+> 	u8	bar_fixed_64bit;
+>+	u8	bar_prefetch;
+> 	u64	bar_fixed_size[PCI_STD_NUM_BARS];
+> 	size_t	align;
+> };
+>-- 
+>2.34.1
+>
+>
+>
