@@ -1,213 +1,131 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C8215C8
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F9F3610A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:10:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709111406; cv=none; b=W3/v0Vw2yOXUIioyVU1s2s9Skv4sJifMLKzGJvCgf/1dMuViRKWElKUZvEU8O21NbvjCmrZvPXB5HVOnjAPZChPNvpYx8b7Bn71GY0O18XPVvDPisHGzDfKk5WaIOgxrHwv+bU4pfU8mi4sHSwH/9JHioQglYWlxE1CJexKlVLk=
+	t=1709111437; cv=none; b=T+IzWoomwyxOpjNDpi9wshofZ7fUpI8PbNocfRELTjhTZP+vH4H/4evJe9yWx9ZfxN039ndD8B3AEMjlDujXeoHDzOAcOWvoQgZWoGb2gkUZnjw6SczBsmYfHG6ZAbZAvqUwarAmVxvxiEooSc/KRxaLPait0onaGnDQqNLZLQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709111406; c=relaxed/simple;
-	bh=C4DMvGkpUakZWIjw3aTNdIJrzEuIUMIctVOczHho8oA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=rkteCrXutZN7gJ8+nZtNigEo/MebrrQ4RLAcgetepwKgfPAxzKHMANkUZiWV9IHrSAb1/z2ko+F7JU0JcdsC8VNKHp5nFmUHsR0BVbt4t758+oa05WsU21AkVuubyxyamIIJ18DvYXcAOa4a71k3qInhfrFtuEZm11QgL/HE8kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=G63OxGy3; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G63OxGy3"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240228091001epoutp03bde716e287294d144ba39aeae95d6a6f~3_8OSVNjz1895118951epoutp03I
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:10:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240228091001epoutp03bde716e287294d144ba39aeae95d6a6f~3_8OSVNjz1895118951epoutp03I
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1709111401;
-	bh=jC0Eo3T7+Csn3U7VEHidoDHQpeC6gUpWqwhzqBteH0k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G63OxGy3EoLTPZizki2oykSDaR4yu/FF2Skwrpa5H9luTTAmwEwtT2f7/gG9+CC27
-	 8VTyhl7FJM8qmsm+wOE5Bu7GB+kbevop92xItjnwx6hNBgx3NUM30rkalS2X2i6AyU
-	 +Jxd5LC5XTsII4ZvReT6SVyeYyilebhFmBinlltg=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20240228091000epcas5p40677d44658c339411e142a4c7525ae5d~3_8N2kJAp1546215462epcas5p4F;
-	Wed, 28 Feb 2024 09:10:00 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4Tl7pv16zwz4x9Q6; Wed, 28 Feb
-	2024 09:09:59 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	03.22.10009.768FED56; Wed, 28 Feb 2024 18:09:59 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240228090948epcas5p2d7efbaa6c9a80b3e4d18755674c08178~3_8DAiwKl0638706387epcas5p2m;
-	Wed, 28 Feb 2024 09:09:48 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240228090948epsmtrp17df2df5c8ce5f8daa5f43841c04bb424~3_8C-qHQ90773907739epsmtrp1z;
-	Wed, 28 Feb 2024 09:09:48 +0000 (GMT)
-X-AuditID: b6c32a4a-261fd70000002719-11-65def867274e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D5.07.08755.C58FED56; Wed, 28 Feb 2024 18:09:48 +0900 (KST)
-Received: from testpc118124.samsungds.net (unknown [109.105.118.124]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240228090947epsmtip1473112094ce462968a1e7ba838828049~3_8BhxACf0291702917epsmtip1e;
-	Wed, 28 Feb 2024 09:09:47 +0000 (GMT)
-From: Xiaobing Li <xiaobing.li@samsung.com>
-To: axboe@kernel.dk
-Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
-	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
-	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
-	ruyi.zhang@samsung.com, xiaobing.li@samsung.com, cliang01.li@samsung.com,
-	xue01.he@samsung.com
-Subject: Re: [PATCH v10] io_uring: Statistics of the true utilization of sq
- threads.
-Date: Wed, 28 Feb 2024 17:09:42 +0800
-Message-Id: <20240228090942.511087-1-xiaobing.li@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240228085154.193363-1-xiaobing.li@samsung.com>
+	s=arc-20240116; t=1709111437; c=relaxed/simple;
+	bh=aR+cXcaI0S9JSIHt8xgiRYYHaN66SQJElfrLEEHVaOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r7FBmD8wiDmcnSmZ3y8CFIAq1X/xBGu3xgj+8VV7FbH/q01kchb3qb3WlFFF0XS8GUKoFfmO4QZEdVE98A2WuY+KFcb9LEUFneXJnxSqhf36yYqcwT9a1B+y/YGovm2HLR7qKWLRIpfjZlQQoWnPx9UvGZTMeNoHzTjJ0g2xvcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 681B72000F;
+	Wed, 28 Feb 2024 09:10:29 +0000 (UTC)
+Message-ID: <108c8828-5a64-4bfd-8183-f75261ed10d7@ghiti.fr>
+Date: Wed, 28 Feb 2024 10:10:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDJsWRmVeSWpSXmKPExsWy7bCmlm76j3upBn+bWS3mrNrGaLH6bj+b
-	xem/j1ks3rWeY7E4+v8tm8Wv7ruMFlu/fGW1uLxrDpvFs72cFl8Of2e3ODvhA6vF1C07mCw6
-	Wi4zWnRdOMXmwOexc9Zddo/LZ0s9+rasYvT4vEkugCUq2yYjNTEltUghNS85PyUzL91WyTs4
-	3jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMH6EQlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5x
-	ia1SakFKToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbGwyuX2QrOSlSsWbqctYFxkUgXIweH
-	hICJxN67il2MXBxCArsZJU4t2MsG4XxilPj7eyMLhPONUWLf9MNsMB2tmwMg4nsZJc58uMQK
-	4fxilPi/bhZjFyMnB5uAtsT1dV2sILaIgLDE/o5WsEnMAuuYJD7taGMHSQgLhEnMXXUCbCqL
-	gKrErxNVIGFeAVuJfT+b2EBsCQF5if0HzzKD2JwCdhLLWq8zQdQISpyc+YQFxGYGqmneOpsZ
-	ZL6EwEQOic2rfzBDNLtI9H+6zQJhC0u8Or6FHcKWknjZ3wZlF0sc6fnOCtHcwCgx/fZVqIS1
-	xL8re1hAjmMW0JRYv0sfIiwrMfXUOiaIxXwSvb+fMEHEeSV2zIOxVSVWX3oItVda4nXDb6i4
-	h8TTR8cYIaE1kVHizozjTBMYFWYheWgWkodmIaxewMi8ilEytaA4Nz212LTAKC+1HB7Lyfm5
-	mxjByVbLawfjwwcf9A4xMnEwHmKU4GBWEuGVEbybKsSbklhZlVqUH19UmpNafIjRFBjgE5ml
-	RJPzgek+ryTe0MTSwMTMzMzE0tjMUEmc93Xr3BQhgfTEktTs1NSC1CKYPiYOTqkGptgp33sf
-	vly35rPM7rYOzrtvZoQfu5nczT6vwkzd78ziJU3rj/zzVTn30F2w9nj1WwPzqd9da3/EOc/f
-	e8nkguNq1SLVvfy9datqQ11Pf1L937aboawz/Dr/ammVvgnbryjPqt17f9+MQ975vTd33Vdc
-	dOhhs8LL1PIk9vnfTqjw7D2T8Nbb5ablhmK3quDOlWzSczgzHwVcVfJevTdqI/NHhbn+7bpH
-	n+6PkMtvtlZ+cFkjUEDRo9N8V0nk4VN1TJ5rz0VJsc7SONPPbcM9g+P2j/SWyNk/Vt26qlgw
-	/1LzpLYr5eKTZ0qt2OT5tiHz2xX7ivXVVzpj7SM/divP7jW4yym357J937TAzkXRP5VYijMS
-	DbWYi4oTARDsXEQ/BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsWy7bCSnG7Mj3upBlNuGFjMWbWN0WL13X42
-	i9N/H7NYvGs9x2Jx9P9bNotf3XcZLbZ++cpqcXnXHDaLZ3s5Lb4c/s5ucXbCB1aLqVt2MFl0
-	tFxmtOi6cIrNgc9j56y77B6Xz5Z69G1ZxejxeZNcAEsUl01Kak5mWWqRvl0CV8bDK5fZCs5K
-	VKxZupy1gXGRSBcjB4eEgIlE6+aALkYuDiGB3YwSx/+vYoSIS0v8+VPexcgJZApLrPz3nB2i
-	5gejxJ6GCSwgCTYBbYnr67pYQWwRoKL9Ha0sIEXMAnuYJN5N+wyWEBYIkVhwcSszyFAWAVWJ
-	XyeqQMK8ArYS+342sUEskJfYf/AsM4jNKWAnsaz1OhNIuRBQzaaZsRDlghInZz4BW8sMVN68
-	dTbzBEaBWUhSs5CkFjAyrWKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECI4ELc0djNtX
-	fdA7xMjEwXiIUYKDWUmEV0bwbqoQb0piZVVqUX58UWlOavEhRmkOFiVxXvEXvSlCAumJJanZ
-	qakFqUUwWSYOTqkGpk1fKhrPFe/J8vzQZzBR6qHNk2y7VqkvM+wVIhWfdF95bpTxc5La/1Zm
-	W41DwYxX5bQPSSYwZ3Z08Z10dtX5vMZv37yD0qd/VVcK8Khu7tWxfPX9RXPZikkPOg4KHnB5
-	qJNfXGUonq5c9iU47ZNBhVf59YffRHV+m/zgmFb5e2XkmvvuBpsDhINPS6vvN/l+9r/0hWfS
-	ZnnWL547OJjsDOVc8TKvybD8GGc9X1TPfuH/DDK7whO2nupbuvjyueUfohY9VhD7aXDq9pRT
-	SmfTefmkXkx/6HvW+77q1qytK+Zwc33Laly5jGW94jfHZvkpW+/u65l0/PO8x4UVK0883nu8
-	mzczNKNvOdPz1SvM65VYijMSDbWYi4oTAeNPbrjzAgAA
-X-CMS-MailID: 20240228090948epcas5p2d7efbaa6c9a80b3e4d18755674c08178
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240228090948epcas5p2d7efbaa6c9a80b3e4d18755674c08178
-References: <20240228085154.193363-1-xiaobing.li@samsung.com>
-	<CGME20240228090948epcas5p2d7efbaa6c9a80b3e4d18755674c08178@epcas5p2.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf: RISCV: Fix panic on pmu overflow handler
+Content-Language: en-US
+To: Fei Wu <fei2.wu@intel.com>, atishp@atishpatra.org, anup@brainfault.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Atish Patra <atishp@rivosinc.com>
+References: <20240228082752.2612302-1-fei2.wu@intel.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240228082752.2612302-1-fei2.wu@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
-On 2/28/24 16:51, Xiaobing Li wrote:
->diff --git a/io_uring/fdinfo.c b/io_uring/fdinfo.c
->index 976e9500f651..42b449e53535 100644
->--- a/io_uring/fdinfo.c
->+++ b/io_uring/fdinfo.c
->@@ -64,6 +64,7 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
-> 	unsigned int sq_shift = 0;
-> 	unsigned int sq_entries, cq_entries;
-> 	int sq_pid = -1, sq_cpu = -1;
->+	u64 sq_total_time = 0, sq_work_time = 0;
-> 	bool has_lock;
-> 	unsigned int i;
-> 
->@@ -147,10 +148,15 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
-> 
-> 		sq_pid = sq->task_pid;
-> 		sq_cpu = sq->sq_cpu;
->+		getrusage(sq->thread, RUSAGE_SELF, &sq_usage);
->+		sq_total_time = sq_usage.ru_stime.tv_sec * 1000000 + sq_usage.ru_stime.tv_usec;
->+		sq_work_time = sq->work_time;
-> 	}
-> 
-> 	seq_printf(m, "SqThread:\t%d\n", sq_pid);
-> 	seq_printf(m, "SqThreadCpu:\t%d\n", sq_cpu);
->+	seq_printf(m, "SqTotalTime:\t%llu\n", sq_total_time);
->+	seq_printf(m, "SqWorkTime:\t%llu\n", sq_work_time);
-> 	seq_printf(m, "UserFiles:\t%u\n", ctx->nr_user_files);
-> 	for (i = 0; has_lock && i < ctx->nr_user_files; i++) {
-> 		struct file *f = io_file_from_index(&ctx->file_table, i);
->diff --git a/io_uring/sqpoll.c b/io_uring/sqpoll.c
->index 82672eaaee81..363052b4ea76 100644
->--- a/io_uring/sqpoll.c
->+++ b/io_uring/sqpoll.c
->@@ -253,11 +253,23 @@ static bool io_sq_tw_pending(struct llist_node *retry_list)
-> 	return retry_list || !llist_empty(&tctx->task_list);
-> }
-> 
->+static void io_sq_update_worktime(struct io_sq_data *sqd, struct rusage *start)
->+{
->+	struct rusage end;
->+
->+	getrusage(current, RUSAGE_SELF, &end);
->+	end.ru_stime.tv_sec -= start->ru_stime.tv_sec;
->+	end.ru_stime.tv_usec -= start->ru_stime.tv_usec;
->+
->+	sqd->work_time += end.ru_stime.tv_usec + end.ru_stime.tv_sec * 1000000;
->+}
->+
-> static int io_sq_thread(void *data)
-> {
-> 	struct llist_node *retry_list = NULL;
-> 	struct io_sq_data *sqd = data;
-> 	struct io_ring_ctx *ctx;
->+	struct rusage start;
-> 	unsigned long timeout = 0;
-> 	char buf[TASK_COMM_LEN];
-> 	DEFINE_WAIT(wait);
->@@ -286,6 +298,7 @@ static int io_sq_thread(void *data)
-> 		}
-> 
-> 		cap_entries = !list_is_singular(&sqd->ctx_list);
->+		getrusage(current, RUSAGE_SELF, &start);
-> 		list_for_each_entry(ctx, &sqd->ctx_list, sqd_list) {
-> 			int ret = __io_sq_thread(ctx, cap_entries);
-> 
->@@ -296,8 +309,10 @@ static int io_sq_thread(void *data)
-> 			sqt_spin = true;
-> 
-> 		if (sqt_spin || !time_after(jiffies, timeout)) {
->-			if (sqt_spin)
->+			if (sqt_spin) {
->+				io_sq_update_worktime(sqd, &start);
-> 				timeout = jiffies + sqd->sq_thread_idle;
->+			}
-> 			if (unlikely(need_resched())) {
-> 				mutex_unlock(&sqd->lock);
-> 				cond_resched();
->diff --git a/io_uring/sqpoll.h b/io_uring/sqpoll.h
->index 8df37e8c9149..4171666b1cf4 100644
->--- a/io_uring/sqpoll.h
->+++ b/io_uring/sqpoll.h
->@@ -16,6 +16,7 @@ struct io_sq_data {
-> 	pid_t			task_pid;
-> 	pid_t			task_tgid;
-> 
->+	u64			work_time;
-> 	unsigned long		state;
-> 	struct completion	exited;
-> };
- 
-Sorry, please ignore this patch, I will resend a v10.
+Hi Fei,
 
---
-Xiaobing Li
+On 28/02/2024 09:27, Fei Wu wrote:
+> (1 << idx) of int is not desired when setting bits in unsigned long
+> overflowed_ctrs, use BIT() instead. This panic happens when running
+> 'perf record -e branches' on sophgo sg2042.
+>
+> [  273.311852] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000098
+> [  273.320851] Oops [#1]
+> [  273.323179] Modules linked in:
+> [  273.326303] CPU: 0 PID: 1475 Comm: perf Not tainted 6.6.0-rc3+ #9
+> [  273.332521] Hardware name: Sophgo Mango (DT)
+> [  273.336878] epc : riscv_pmu_ctr_get_width_mask+0x8/0x62
+> [  273.342291]  ra : pmu_sbi_ovf_handler+0x2e0/0x34e
+> [  273.347091] epc : ffffffff80aecd98 ra : ffffffff80aee056 sp : fffffff6e36928b0
+> [  273.354454]  gp : ffffffff821f82d0 tp : ffffffd90c353200 t0 : 0000002ade4f9978
+> [  273.361815]  t1 : 0000000000504d55 t2 : ffffffff8016cd8c s0 : fffffff6e3692a70
+> [  273.369180]  s1 : 0000000000000020 a0 : 0000000000000000 a1 : 00001a8e81800000
+> [  273.376540]  a2 : 0000003c00070198 a3 : 0000003c00db75a4 a4 : 0000000000000015
+> [  273.383901]  a5 : ffffffd7ff8804b0 a6 : 0000000000000015 a7 : 000000000000002a
+> [  273.391327]  s2 : 000000000000ffff s3 : 0000000000000000 s4 : ffffffd7ff8803b0
+> [  273.398773]  s5 : 0000000000504d55 s6 : ffffffd905069800 s7 : ffffffff821fe210
+> [  273.406139]  s8 : 000000007fffffff s9 : ffffffd7ff8803b0 s10: ffffffd903f29098
+> [  273.413660]  s11: 0000000080000000 t3 : 0000000000000003 t4 : ffffffff8017a0ca
+> [  273.421022]  t5 : ffffffff8023cfc2 t6 : ffffffd9040780e8
+> [  273.426437] status: 0000000200000100 badaddr: 0000000000000098 cause: 000000000000000d
+> [  273.434512] [<ffffffff80aecd98>] riscv_pmu_ctr_get_width_mask+0x8/0x62
+> [  273.441169] [<ffffffff80076bd8>] handle_percpu_devid_irq+0x98/0x1ee
+> [  273.447562] [<ffffffff80071158>] generic_handle_domain_irq+0x28/0x36
+> [  273.454151] [<ffffffff8047a99a>] riscv_intc_irq+0x36/0x4e
+> [  273.459659] [<ffffffff80c944de>] handle_riscv_irq+0x4a/0x74
+> [  273.465442] [<ffffffff80c94c48>] do_irq+0x62/0x92
+> [  273.470360] Code: 0420 60a2 6402 5529 0141 8082 0013 0000 0013 0000 (6d5c) b783
+> [  273.477921] ---[ end trace 0000000000000000 ]---
+> [  273.482630] Kernel panic - not syncing: Fatal exception in interrupt
+>
+> Reviewed-by: Atish Patra <atishp@rivosinc.com>
+> Signed-off-by: Fei Wu <fei2.wu@intel.com>
+> ---
+>   drivers/perf/riscv_pmu_sbi.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 16acd4dcdb96..452aab49db1e 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -512,7 +512,7 @@ static void pmu_sbi_set_scounteren(void *arg)
+>   
+>   	if (event->hw.idx != -1)
+>   		csr_write(CSR_SCOUNTEREN,
+> -			  csr_read(CSR_SCOUNTEREN) | (1 << pmu_sbi_csr_index(event)));
+> +			  csr_read(CSR_SCOUNTEREN) | BIT(pmu_sbi_csr_index(event)));
+>   }
+>   
+>   static void pmu_sbi_reset_scounteren(void *arg)
+> @@ -521,7 +521,7 @@ static void pmu_sbi_reset_scounteren(void *arg)
+>   
+>   	if (event->hw.idx != -1)
+>   		csr_write(CSR_SCOUNTEREN,
+> -			  csr_read(CSR_SCOUNTEREN) & ~(1 << pmu_sbi_csr_index(event)));
+> +			  csr_read(CSR_SCOUNTEREN) & ~BIT(pmu_sbi_csr_index(event)));
+>   }
+>   
+>   static void pmu_sbi_ctr_start(struct perf_event *event, u64 ival)
+> @@ -731,14 +731,14 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>   		/* compute hardware counter index */
+>   		hidx = info->csr - CSR_CYCLE;
+>   		/* check if the corresponding bit is set in sscountovf */
+> -		if (!(overflow & (1 << hidx)))
+> +		if (!(overflow & BIT(hidx)))
+>   			continue;
+>   
+>   		/*
+>   		 * Keep a track of overflowed counters so that they can be started
+>   		 * with updated initial value.
+>   		 */
+> -		overflowed_ctrs |= 1 << lidx;
+> +		overflowed_ctrs |= BIT(lidx);
+>   		hw_evt = &event->hw;
+>   		riscv_pmu_event_update(event);
+>   		perf_sample_data_init(&data, 0, hw_evt->last_period);
+
+
+You can add:
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
