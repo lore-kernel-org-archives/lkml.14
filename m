@@ -1,54 +1,54 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A594879E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E0B4C619
 	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709115527; cv=none; b=JwehL1CYvOKLXQI+x0U1FeZmhPlnqqqOZHGYNeatU6j/M7nKzlcBUp4GkUtF4EmD2dtRi2+LIbHMgqqXvaeeo+kpJl2Fr5YuoeiNiTDFx3OjZJ4y2opNBujznnHKOHz4iTFK1bM31aPXusLy2G7ic6wFOu+0/DIhVAjz88RDq4M=
+	t=1709115527; cv=none; b=MN544N4bqdvo71RIK7pUGdwCQKdyXH9agTVD5ssN1qeQdGIHdnUbDCCXwpRQBb5yTlZnbbMumMH6PFKmuvGrIcgJON/fly5+lp9OTZN3bXfYWJ8Vx2VdllqAG7M4BEUcpvGsosiju2vetWBtIIdqiq7sdkG7gKIRMt9klI6pKAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709115527; c=relaxed/simple;
-	bh=9GX/XMY+qWHH5f0/ts7l5PYv9fa6tTvpHvjq3I6ksOA=;
+	bh=MmAxZeXm6ySHX8QqZPQEg5xdtw2UlmdNm+MH9FdZFl4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xkca4uKfs6cRskPgj3innd+HkDLidZMSQ5tQSK48W2P8eG+vAsZtX45y+To8pKvKt5J0viQJUdJBo+5K41mkewRHADq4WUxnA8h+/iahNeyLXZvF1SG8ym9dxToQ5JdUt1xLPoN/+3ZrbZYv8bYokfxGxNOZrGu+mlGWxNhUTJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BwyB4Wvd; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=k2r9Qewge0bksyo16cU4XZxBs5Rip7HXVxuW5e5EnKdPMgBjX18W0fTdhUJuZmPaG9fSbQme+yt4f8Adb8HCzZ7K0sWY7yKKudGZuD+mmKEc4IaQKO7yWvzsSQTR2xbKjrlncC602xQSXUr41TavMyWSlCDPxIet2KJsX1cdleY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KY+YIkIj; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BwyB4Wvd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KY+YIkIj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1709115524;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Tru+vVOx4RxykInR0Cy5aul0KMpFDZJO5JqglFuDZAM=;
-	b=BwyB4WvdtdzfJ3fgcbGkhXeyaSMs2evtNnkaQSnqPhGdge2VYkbTH6fIx5oU/juyByT+HU
-	OYPjpjt0lCt+2/V6hi5uR4XYMqa5ZnmjsP4aHUpAzptdpM9LzGawKu9YZfEUMrFgKnOvz1
-	fg+1cdFqgi3mv46kl2nSOJ+4rwBAxX0=
+	bh=15m+OfdU4bOi0nHIjrNzMXNbHQ8G8Ha+jOqgfdqoMVA=;
+	b=KY+YIkIjAMCCPva+rA/M7996UcrnvMPutW5pif2jYirw8k34VSwytLJGQsKi1RFlEejcUD
+	qJ1FoiWrXZKJn/DdD4gZSYbYQQos5clEMFRiIY7rQhWfUHSvb8MDfZHAPvtG+TAfrHt6yt
+	b04XEQy2+zG90puBa+oFyd0wTqV/X5c=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-0bEoAZwaNEu0p7SajveeqA-1; Wed,
- 28 Feb 2024 05:18:40 -0500
-X-MC-Unique: 0bEoAZwaNEu0p7SajveeqA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-80-UaQ4UnogOLe-SZLVay7y2w-1; Wed,
+ 28 Feb 2024 05:18:43 -0500
+X-MC-Unique: UaQ4UnogOLe-SZLVay7y2w-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8A77F28AC1D3;
-	Wed, 28 Feb 2024 10:18:40 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E6B6F3C11A14;
+	Wed, 28 Feb 2024 10:18:42 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.226.93])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 999AD8177;
-	Wed, 28 Feb 2024 10:18:39 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 015D98177;
+	Wed, 28 Feb 2024 10:18:41 +0000 (UTC)
 From: Vitaly Kuznetsov <vkuznets@redhat.com>
 To: kvm@vger.kernel.org,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	Sean Christopherson <seanjc@google.com>
 Cc: Li RongQing <lirongqing@baidu.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] KVM: x86: Introduce __kvm_get_hypervisor_cpuid() helper
-Date: Wed, 28 Feb 2024 11:18:35 +0100
-Message-ID: <20240228101837.93642-2-vkuznets@redhat.com>
+Subject: [PATCH 3/3] KVM: selftests: Check that KVM_FEATURE_PV_UNHALT is cleared with KVM_X86_DISABLE_EXITS_HLT
+Date: Wed, 28 Feb 2024 11:18:37 +0100
+Message-ID: <20240228101837.93642-4-vkuznets@redhat.com>
 In-Reply-To: <20240228101837.93642-1-vkuznets@redhat.com>
 References: <20240228101837.93642-1-vkuznets@redhat.com>
 Precedence: bulk
@@ -61,54 +61,76 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Similar to kvm_find_kvm_cpuid_features()/__kvm_find_kvm_cpuid_features(),
-introduce a helper to search for the specific hypervisor signature in any
-struct kvm_cpuid_entry2 array, not only in vcpu->arch.cpuid_entries.
+KVM_FEATURE_PV_UNHALT is expected to get cleared from KVM PV feature CPUID
+data when KVM_X86_DISABLE_EXITS_HLT is enabled. Add the corresponding test
+to kvm_pv_test.
 
-No functional change intended.
+Note, the newly added code doesn't actually test KVM_FEATURE_PV_UNHALT and
+KVM_X86_DISABLE_EXITS_HLT features.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/kvm/cpuid.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ .../selftests/kvm/x86_64/kvm_pv_test.c        | 42 +++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index adba49afb5fe..0e1e3e5df6dd 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -189,15 +189,15 @@ static int kvm_cpuid_check_equal(struct kvm_vcpu *vcpu, struct kvm_cpuid_entry2
- 	return 0;
+diff --git a/tools/testing/selftests/kvm/x86_64/kvm_pv_test.c b/tools/testing/selftests/kvm/x86_64/kvm_pv_test.c
+index 9e2879af7c20..60399454b45e 100644
+--- a/tools/testing/selftests/kvm/x86_64/kvm_pv_test.c
++++ b/tools/testing/selftests/kvm/x86_64/kvm_pv_test.c
+@@ -133,6 +133,46 @@ static void enter_guest(struct kvm_vcpu *vcpu)
+ 	}
  }
  
--static struct kvm_hypervisor_cpuid kvm_get_hypervisor_cpuid(struct kvm_vcpu *vcpu,
--							    const char *sig)
-+static struct kvm_hypervisor_cpuid __kvm_get_hypervisor_cpuid(struct kvm_cpuid_entry2 *entries,
-+							      int nent, const char *sig)
- {
- 	struct kvm_hypervisor_cpuid cpuid = {};
- 	struct kvm_cpuid_entry2 *entry;
- 	u32 base;
- 
- 	for_each_possible_hypervisor_cpuid_base(base) {
--		entry = kvm_find_cpuid_entry(vcpu, base);
-+		entry = cpuid_entry2_find(entries, nent, base, KVM_CPUID_INDEX_NOT_SIGNIFICANT);
- 
- 		if (entry) {
- 			u32 signature[3];
-@@ -217,6 +217,13 @@ static struct kvm_hypervisor_cpuid kvm_get_hypervisor_cpuid(struct kvm_vcpu *vcp
- 	return cpuid;
- }
- 
-+static struct kvm_hypervisor_cpuid kvm_get_hypervisor_cpuid(struct kvm_vcpu *vcpu,
-+							    const char *sig)
++static void test_pv_unhalt(void)
 +{
-+	return __kvm_get_hypervisor_cpuid(vcpu->arch.cpuid_entries,
-+					  vcpu->arch.cpuid_nent, sig);
++	struct kvm_vcpu *vcpu;
++	struct kvm_vm *vm;
++	struct kvm_cpuid_entry2 *ent;
++	u32 kvm_sig_old;
++
++	pr_info("testing KVM_FEATURE_PV_UNHALT\n");
++
++	TEST_REQUIRE(KVM_CAP_X86_DISABLE_EXITS);
++
++	/* KVM_PV_UNHALT test */
++	vm = vm_create_with_one_vcpu(&vcpu, guest_main);
++	vcpu_set_cpuid_feature(vcpu, X86_FEATURE_KVM_PV_UNHALT);
++
++	ent = vcpu_get_cpuid_entry(vcpu, KVM_CPUID_FEATURES);
++
++	TEST_ASSERT(ent->eax & (1 << KVM_FEATURE_PV_UNHALT),
++		    "Enabling X86_FEATURE_KVM_PV_UNHALT had no effect");
++
++	/* Make sure KVM clears vcpu->arch.kvm_cpuid */
++	ent = vcpu_get_cpuid_entry(vcpu, KVM_CPUID_SIGNATURE);
++	kvm_sig_old = ent->ebx;
++	ent->ebx = 0xdeadbeef;
++	vcpu_set_cpuid(vcpu);
++
++	vm_enable_cap(vm, KVM_CAP_X86_DISABLE_EXITS, KVM_X86_DISABLE_EXITS_HLT);
++	ent = vcpu_get_cpuid_entry(vcpu, KVM_CPUID_SIGNATURE);
++	ent->ebx = kvm_sig_old;
++	vcpu_set_cpuid(vcpu);
++	ent = vcpu_get_cpuid_entry(vcpu, KVM_CPUID_FEATURES);
++
++	TEST_ASSERT(!(ent->eax & (1 << KVM_FEATURE_PV_UNHALT)),
++		    "KVM_FEATURE_PV_UNHALT is set with KVM_CAP_X86_DISABLE_EXITS");
++
++	/* FIXME: actually test KVM_FEATURE_PV_UNHALT feature */
++
++	kvm_vm_free(vm);
 +}
 +
- static struct kvm_cpuid_entry2 *__kvm_find_kvm_cpuid_features(struct kvm_vcpu *vcpu,
- 					      struct kvm_cpuid_entry2 *entries, int nent)
+ int main(void)
  {
+ 	struct kvm_vcpu *vcpu;
+@@ -151,4 +191,6 @@ int main(void)
+ 
+ 	enter_guest(vcpu);
+ 	kvm_vm_free(vm);
++
++	test_pv_unhalt();
+ }
 -- 
 2.43.0
 
