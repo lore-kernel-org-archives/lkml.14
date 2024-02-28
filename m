@@ -1,28 +1,28 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957DFFBEA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E9AF9F7;
 	Wed, 28 Feb 2024 01:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709083395; cv=none; b=YFfTV2aGjVda5esK1rfU+5FzsTVj0zTV+9jAxhIBCpuOhonJ1DAUDG2rkiGjVPU6TZJ0Ldi/jAMnTfX7It/7w9DOTDlzs5J9WaeEuSh7kNXMIt1wGuPELbygg+/mRqR5Y70H61e/9myZQLzk4iu1hO3R8OMrxqDWJIkjJ9LBOdk=
+	t=1709083395; cv=none; b=atP9zetar42mMKs/OhJW7DwWXW9+DaPhrVDYD+d2RSlE6lBxDmeOWmUTsCDP6b7eLmVarIWkJDnuoio63rU46+PC+pGSJJR2kU8m6DTxuGzgo3DsTIs8+0pbjb289aZhRuk7Cgo7rudUoAv7SDBdhNtBwuFceeJe1QdujJRYsZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709083395; c=relaxed/simple;
-	bh=T+yVge9mGzkBG9/MMKYIx3R2pe6wng5e7vxmjci1zjY=;
+	bh=p9MYk0CCIVQD2VoyNlRvo5eEoCALxgQBIh8yNfbihSE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AHQx0WvIj/IcQHGB8KYJCEzf9FsZnyvznc6CKNUj7eCRANggemOSCbj4b3wOLAMV/y9jqsTAspMd2sEr6vRPKAK8EzlFwYt13lbbkb5UW4iFrI2whQxlZ8ClM+wm6XFKuwbSxMPs1UZ4uscoFxQOCsF+309fyNnIXK1rV8+SbEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=gnAB72w3mhY/gH8d5Nx9DVM0URqeuOsy2/abyfCIzBLHGqSxLs+62F8/h9UlRAhvaPAYSyXjt7BzrY81qn8EdY8keRH3WLfVBqWnI3R3lTUXvvBAkelkYEtiVBzdP5ZcAYcCW2CJTZRy67ipMnEfXGGLn/thNXh/1Qp2v41ggQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TkxS94jBdz4f3kFH;
-	Wed, 28 Feb 2024 09:23:05 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TkxS648Rqz4f3m76;
+	Wed, 28 Feb 2024 09:23:02 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id DB3F61A0283;
-	Wed, 28 Feb 2024 09:23:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id E06021A0DEB;
+	Wed, 28 Feb 2024 09:23:09 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP1 (Coremail) with SMTP id cCh0CgDX8gv7it5lqQx6FQ--.57137S7;
-	Wed, 28 Feb 2024 09:23:10 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgDX8gv7it5lqQx6FQ--.57137S4;
+	Wed, 28 Feb 2024 09:23:09 +0800 (CST)
 From: Kemeng Shi <shikemeng@huaweicloud.com>
 To: viro@zeniv.linux.org.uk,
 	brauner@kernel.org,
@@ -30,9 +30,9 @@ To: viro@zeniv.linux.org.uk,
 	tim.c.chen@linux.intel.com
 Cc: linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/6] fs/writeback: correct comment of __wakeup_flusher_threads_bdi
-Date: Wed, 28 Feb 2024 17:19:57 +0800
-Message-Id: <20240228091958.288260-6-shikemeng@huaweicloud.com>
+Subject: [PATCH v2 2/6] fs/writeback: bail out if there is no more inodes for IO and queued once
+Date: Wed, 28 Feb 2024 17:19:54 +0800
+Message-Id: <20240228091958.288260-3-shikemeng@huaweicloud.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20240228091958.288260-1-shikemeng@huaweicloud.com>
 References: <20240228091958.288260-1-shikemeng@huaweicloud.com>
@@ -43,50 +43,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDX8gv7it5lqQx6FQ--.57137S7
-X-Coremail-Antispam: 1UD129KBjvdXoWrZFy8Zw4kZr4xXr45ZFykAFb_yoWfZwb_XF
-	W8tr4DCrZI9Fn8Ja4xZ3Z3tFyvg3ykCF15uF4fKF98J3WY9rn7Zr4kZFWDGr1j9ayUuFWx
-	G3srXr4jyrZI9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
-	xGYIkIc2x26280x7IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC
-	64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM2
-	8EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq
-	3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jstxDUUUUU=
+X-CM-TRANSID:cCh0CgDX8gv7it5lqQx6FQ--.57137S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr1rArW7Kw4DGr13ur1xKrg_yoW8GrW7pF
+	45tryUtrWjv3yxurykCa42qw15Kw4DtFW7XFyxua17trn3XFWj9Fy0gw10yr48J39xuFWI
+	vrsYyrW8Jr1Iy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK
+	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4
+	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
+	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU3K9-UUUUU
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Commit e8e8a0c6c9bfc ("writeback: move nr_pages == 0 logic to one
-location") removed parameter nr_pages of __wakeup_flusher_threads_bdi
-and we try to writeback all dirty pages in __wakeup_flusher_threads_bdi
-now. Just correct stale comment.
+For case there is no more inodes for IO in io list from last wb_writeback,
+We may bail out early even there is inode in dirty list should be written
+back. Only bail out when we queued once to avoid missing dirtied inode.
+
+This is from code reading...
 
 Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 Reviewed-by: Jan Kara <jack@suse.cz>
 ---
- fs/fs-writeback.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/fs-writeback.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index c98684e9e6ba..7e344a4e727e 100644
+index 4e6166e07eaf..6fa623277d75 100644
 --- a/fs/fs-writeback.c
 +++ b/fs/fs-writeback.c
-@@ -2332,8 +2332,7 @@ void wb_workfn(struct work_struct *work)
- }
+@@ -2076,6 +2076,7 @@ static long wb_writeback(struct bdi_writeback *wb,
+ 	struct inode *inode;
+ 	long progress;
+ 	struct blk_plug plug;
++	bool queued = false;
  
- /*
-- * Start writeback of `nr_pages' pages on this bdi. If `nr_pages' is zero,
-- * write back the whole world.
-+ * Start writeback of all dirty pages on this bdi.
-  */
- static void __wakeup_flusher_threads_bdi(struct backing_dev_info *bdi,
- 					 enum wb_reason reason)
+ 	blk_start_plug(&plug);
+ 	for (;;) {
+@@ -2118,8 +2119,10 @@ static long wb_writeback(struct bdi_writeback *wb,
+ 			dirtied_before = jiffies;
+ 
+ 		trace_writeback_start(wb, work);
+-		if (list_empty(&wb->b_io))
++		if (list_empty(&wb->b_io)) {
+ 			queue_io(wb, work, dirtied_before);
++			queued = true;
++		}
+ 		if (work->sb)
+ 			progress = writeback_sb_inodes(work->sb, wb, work);
+ 		else
+@@ -2142,7 +2145,7 @@ static long wb_writeback(struct bdi_writeback *wb,
+ 		/*
+ 		 * No more inodes for IO, bail
+ 		 */
+-		if (list_empty(&wb->b_more_io)) {
++		if (list_empty(&wb->b_more_io) && queued) {
+ 			spin_unlock(&wb->list_lock);
+ 			break;
+ 		}
 -- 
 2.30.0
 
