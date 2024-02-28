@@ -1,226 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8B986275
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 21:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709155175; cv=fail; b=Mn+lomQii7zK7Y0vFLDk00JpzWvgcoFTIeRybl0LHvj7KBWkA5cENVC9zyY1EircOcscCyHsYW4LRw110WHCzJsa2GehhuzlAMLY9NLMcUvKlGklgut6KWk4bymC0N8RcxHpVxA1ux6feKF7nQVn916YRawAhCzLwPZHlqtkl5w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709155175; c=relaxed/simple;
-	bh=nt44DkolKzsUPoJxyNmiJIHee98QaZKlCYjowzDbJUU=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=t5/py5In9VGepUx19SguybPbJQgpUitLjQLPNE2OXTWP45rbA6cXA/mY5hX/g3zt+vniRmb7PoFOHAwZvTMW4THzqXzJiGFtAdezFCITD39QritxejE4vEKqVQbx+pTV5gO70Hw+LyIPdDd28xNmNPz4u8vSdpFNpy+rj/v0FfI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RKUdOhmA; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693E370027
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 21:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709155193; cv=none; b=B/v1G7GMdBghir/ptJKyV8POVLCrjLtDUm1UYtOEx/zmFDcE3haJH5tsXqT/bQ9OsYXBCajuqPM34WnYW0eAQd9gs5/5Fw7a34hruRqh1dEHNRxoACTXQl4xXNIgyPr0gQySjKPp+m7eakCy8wHsYAeRcakBj+4WeP9142wTS3k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709155193; c=relaxed/simple;
+	bh=gk/MrBtcV7Nj4M6X2sQOVcKzwLMPmaE9N2JN751XURU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uqRvBqhGWyYAiGrRMWdyf3kkPAp9AzH9ilzqlvcKKqnuemfOp0m37V74pgOuBvzwYm9sj3mtn7k6l1SmHLIbOyBIPUiYa+Yc61qaObSZTnDmLb2iIWlZG7y1ijCofdhN5Wmot482lDI1yra7I3RNCBO7s1XTdN5Z1AParOVy9dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=poRPXhfs; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RKUdOhmA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709155172; x=1740691172;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=nt44DkolKzsUPoJxyNmiJIHee98QaZKlCYjowzDbJUU=;
-  b=RKUdOhmAbVQeXJqTgwXILZYDnvJESchDIv//StypcueGO4jUGMcwtUNC
-   6KLoZ3Y7jDIlohtZx5vkrbqsUdu8P/S14oxLz22efb9fDhA+NN4p7bqcx
-   OYf2Qc/fLYA3GVVzQBXXKs8+sTgJXxeKUvmNkOtmdVipwmyFTXeutEJ+g
-   2pguD/8N8AgxLlIzGYuDbMSONnu9BdGzexv+3l3c60RSMQCEBvB4TNOAi
-   M76kA4C38dd2iJsLsZ7MyLz7o6Ib4MgQ/UKhR1XDHR5nHP3Gc7C2UYuXk
-   zw4sBzrub+dahCT4DrVXPXxkbXNPj3aoBTeb+ZQWWyAUbuJVYbgZ+LpjM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="14226471"
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="14226471"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 13:19:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="7447965"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Feb 2024 13:19:31 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 28 Feb 2024 13:19:30 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 28 Feb 2024 13:19:30 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 28 Feb 2024 13:19:30 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 28 Feb 2024 13:19:29 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lv0Fplg61Gvd+9FgdT3s9eIDmW8qezjIYpwDL3pHIrrcykTWex5osu55cFapwAFeL7vyKZeJPAQOohg6FnFPdPXGiirfQH//5iiaoP072RLYpSQ0s8MnVR4XwDcS2wJ1bRIKxjXkAyL7z/MqTmH/u1vteqkqahOuSBBda47pD4gCj/PtZqk+Qp2eABMnNqkp/h5Ik3A8w+xkNAIB5jRODtmeZJ7LBiXFBWyZFHUABmI2vTySHTZql69w5muzjW/12Wx0NzuITdIrnTf1slKpd2RK4JMVuQHjaxE4ETAEs6YvyMkEVO6mOgBH+Za6JAqYimWT+EyYd6YjfzhElWYtCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=59ggcYnHLabUuTSdrBUf73qwpGvRFJPemKbEXJqY/aI=;
- b=axRSkN2bwMDo9vPiSYK1v57mseqXaB56hL0EyQO0uWO40WgDFCL0CniiwX/lIUpVEpN7DUc+cv4rhuuZvPS2ISr1prpNWbJCyiMXzLrg4jkVMsCUj6Qm/aB+LD9CAPwVkFvA744ziQvOFr2W0wDs7Sjm/3R26Fwv1wQ4AkzyKTNEq3snc9taj9n16RlSvice6QkJ0KMbx6269F5MimsrdSB6m06tXuT6nzTMe6jo+nvCGErfE/zPm3kOVg6eSIxQ/bQNwlMD7aNdcaDowrkurE+9/xAUEp4dkJX8GqRFCB3HiDoBZkwGFysSr/d25AXCDv1tzxqMXO55/+yzQ/PFIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by SN7PR11MB7603.namprd11.prod.outlook.com (2603:10b6:806:32b::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.25; Wed, 28 Feb
- 2024 21:19:24 +0000
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ef2c:d500:3461:9b92]) by BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ef2c:d500:3461:9b92%4]) with mapi id 15.20.7339.024; Wed, 28 Feb 2024
- 21:19:24 +0000
-Message-ID: <2f8c2032-d8ac-4be2-a409-9880c310aead@intel.com>
-Date: Thu, 29 Feb 2024 10:19:11 +1300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv8 17/17] ACPI: tables: Print MULTIPROC_WAKEUP when MADT is
- parsed
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, "Kuppuswamy
- Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, "Elena
- Reshetova" <elena.reshetova@intel.com>, Jun Nakajima
-	<jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, Tom
- Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>,
-	"Sean Christopherson" <seanjc@google.com>, Baoquan He <bhe@redhat.com>,
-	<kexec@lists.infradead.org>, <linux-coco@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-References: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
- <20240227212452.3228893-18-kirill.shutemov@linux.intel.com>
- <0a633c22-8426-42cf-9572-7812ffc75d0a@intel.com>
- <3jgmzzbjmwtf2rtrbiulhwjj5xwzc3icf4gxcmugyyq5n7pg5m@ua3poay4gmku>
-Content-Language: en-US
-From: "Huang, Kai" <kai.huang@intel.com>
-In-Reply-To: <3jgmzzbjmwtf2rtrbiulhwjj5xwzc3icf4gxcmugyyq5n7pg5m@ua3poay4gmku>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW2PR2101CA0030.namprd21.prod.outlook.com
- (2603:10b6:302:1::43) To BL1PR11MB5978.namprd11.prod.outlook.com
- (2603:10b6:208:385::18)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="poRPXhfs"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60966f363c1so1477547b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 13:19:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709155190; x=1709759990; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I3lMvE57lAGMOn/5i5GUfHlWgJVlKCqOgZHHFIXT5YI=;
+        b=poRPXhfsYkCniLxu2SKdSpdTc8kxYQFx268+jR6EGsyEEsUNkBSLHbI8qy4ZXOAELO
+         Ygn0BdGKwB3A70aIzf1JPMv7vBbEFE8Re1J5rwL+kfhdMazmI/71c+ySjWteu/kEzZED
+         dEmyXtOUe3gve0NgqXtGvDTppaVDyEv+r/DMj49nqVo6+lMCLonzFiL5vSQ2njXdSLuh
+         yYd3bOsrd4eDJhAeSAHjtMX3qXkrVU1XlCGWvEvnBTzzcNiH46/KNb6R5KJSMSyP2pJE
+         dyglx+6TLSZ/0mRg2ZnavTNyvDbv+0RWf3CI3fy5CmiwQihdR/PeI89ajk9MpWIcona9
+         Z4PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709155190; x=1709759990;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=I3lMvE57lAGMOn/5i5GUfHlWgJVlKCqOgZHHFIXT5YI=;
+        b=kqvqDKp8kaksB7meUfG3PnJW8pT8bLX0Wv5YDOgaukMGKZ7bpO1eWKwbdJaGMuZWUC
+         7ruE8t6NGcw3VImIlJWotlnj+i3Wri2xMECFmp9xaHfk2UIent3z3T/B+f5qHWBUVmFr
+         HRcVaGNMnndZ2UZ+RbEhnclfB3CR5QoQXDO6EejvdMKqEqFmulTrd7UcnPRPw4x+90Ys
+         oDgYK3chC2Bd/tSvIY4JGncdYfaa/nZ2iUVgwepCSgacsv2J22Vr0EV8p9Ow4c/HMZ6Q
+         d/38O0+EfXpEElXfGyHE9l2FdVla426jnI+Si9Q2zAaYSBatuf9f9ldxnNBZQUxAfNnW
+         QfzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuHlWQUOyfp3wpqMxvCjX7dttWOdstqEJKRO0YvBkLVxRY6bUz0AuSLJcL7rZbzyvlwL4/Vu3KyVSnIEj7OYJFsoQvJijf1adYzFtK
+X-Gm-Message-State: AOJu0YzYfQX2AsVQLx4SGjT9JJH/KjHlf0wf0MrzcB4mW8t4angd0zHM
+	4KiuU3fp/vkVra/OJdAhHDN/dK6DWENON/asyBl3RDxSqkZ1dpNCVT/f1jOuELxlw2rTbnAdgt5
+	DgQ==
+X-Google-Smtp-Source: AGHT+IGIb2EDaA1Xfc5xFJEWOVFhVtRT96S9AFF70n2hacpd3aAGkhz27VZdHFJQY6yEoiJnM3glwUpknsM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:690c:338b:b0:609:22ea:f95e with SMTP id
+ fl11-20020a05690c338b00b0060922eaf95emr59391ywb.4.1709155190409; Wed, 28 Feb
+ 2024 13:19:50 -0800 (PST)
+Date: Wed, 28 Feb 2024 13:19:48 -0800
+In-Reply-To: <Zd-JjBNCpFG5iDul@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR11MB5978:EE_|SN7PR11MB7603:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5614ea36-3207-403c-d761-08dc38a2eff3
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1+b6dMlqtG3CQgm+9lP7dRlHKKxat/p4ucjVSChI0xuVXqyrXF2B10x43kk2VDCI8PnBPouUTN2Huj77WXcFmLuiJkCj6A9iXeZ57iw+Cxv9Lwni7w3Qk9E6CgcLuFKBLFWI/9ETyHcQwrt9Zoqk9LoZY7kqNA6Hh4bcFmphotcje3Z9yUqS/7kn6zwMEN0lwrLHWy0DbZ0Lwh/aruoGzXD+UCt01Bm9zvj/xWkhCXxBB67ft35vgiuOey5EOjS2pNSZW2yxj9Fn9/WMmsAF7IiqI68k/Oua35S60X1/ZgkFL1KgoaSifKqcDQ9O+lo7sc8/mh30V4C8a8uZs0G4Gsvgs9boWbMu4MJS2kxypNPKsGBwX7w2BNgBta9OdKryaKE8HZYo7Zs1oXiBSClGasFVOAsAJsqP8prCrxZkF19sK/oDnHB3AmwsHiGna1hPFBQjUnPPhZFM15y0zDvSvX7P/+wuHP2SwpSLhqNFqvy+RAP2faEzySQL154e9RebV12l5Cv8m6mo+XTg+E5oiDENadBuCYNMxBuLPERdx8Pkpl+yhE560YKOgYoQVzlZ1fK+t3hB9e18Ic2RCuv3zYB8/cj+OPDBeozAYRESf44PuTlGWLIX1KzWh5sgjoS9+xhyMnuKSOBKB6lLNjJihg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VVByV2RKbFlGbkFNL1dsei9oQ1ZEKy90bmpZR0xSSUVRZVJVUGNDOHlDVktB?=
- =?utf-8?B?ZHg1Rll4NVhnSFZjRUtZVHpidUtaOElDajZ3Q2Ezd2I5V2NnTC8yenk1N0tO?=
- =?utf-8?B?WGNqQ3JIRCt0RVc5R3I1NWFFUjAzS1JMaTRaVU53L2lGck5tQnk3MExJbzU3?=
- =?utf-8?B?UzRrNVh1TGRrai8vTitpZ1NBYVdnVURoeUs5enR2NzVoWmhHK3R1K25tQlNk?=
- =?utf-8?B?ajI3UE1aOXV1S3NTYWpWbjhBMGsxZG9hdFlBZW16MjJ4YjlEQU1SL3dSMlc4?=
- =?utf-8?B?WWx3Z0N0N3hDTHFtOGdFdUZ0a3NDWFFPdnowNWpFZjk2cGI3eVMwWnVWTUF5?=
- =?utf-8?B?bkZWdHhJNjh4eUZQQ2FHcy9RWStLcStldnBhM2w1djkweTNZanZ2a013cGhx?=
- =?utf-8?B?dXZKcmZ3VFA3bXhiK0YzeDY1VGJJa0pEQ1NTM1llbXVpV0hnOVdzSGJQT3BL?=
- =?utf-8?B?enhOTkhHQU5qVlM2UXhURnFUMkwzMUVObVRWUm9vamd0TWxmTlpFVzU4SnZn?=
- =?utf-8?B?Si9DdzE4QmFxcGpncWhaam91TjNlWXoxRm5oOTBXVHY0RUJIRmhWN05ieFhs?=
- =?utf-8?B?OVpndUU0cjBqS2I0WGFDdTN5M1d3QTM0S2Y4Y3h4aGZUN05DSUlNVTd6VVpW?=
- =?utf-8?B?T2YvTzE2Q09QSmxIdmNha1JldUtWQnRFSVVLMVQ4RkMxcndjY0Y1OXlIeWFM?=
- =?utf-8?B?TFloSHBYSDFoREZrdUpDaHlWQWpVMWVhSlV2ZUFJL283azFVYW9HNjB2THI4?=
- =?utf-8?B?YkUwTlpjNml0M28xaVplem9sbzRZeVdkNnE2eXphcm9QM1lpUnVsOGhCMmtP?=
- =?utf-8?B?cE1NS1NrRko0MkNNL1pOd0FsdTBrZ25FMnpMS0JzaFRRQ2RJUlY4em9VQXgx?=
- =?utf-8?B?RTFiTlFwbU5CT2xDOGtGbTE3c011UHlZcUxkUkNqL3hleVFia3Q0Sm14ZHYz?=
- =?utf-8?B?UURlUERmNTlZdGRwU2ZIY1R3Q3pEbkxKRGNjZUlXVWhnakl4TmUxcjgxSXpX?=
- =?utf-8?B?SjZ0aUs2ZG4wSmxKVXNkU056Z2lmeVhTWVIrekNHMk9yTmdRVzRlelhjV3lV?=
- =?utf-8?B?cmpaQmdJUndncitiV2lhWGxXTk10bWNrYUJiNU1FY0Q3eTc4WTBiNHp0NEZa?=
- =?utf-8?B?azZ3RFdkbVB2WU9BaGVQaFJDM0FFanYwRU00c1JZemdqNklJdnZkSnNNVGNa?=
- =?utf-8?B?dkJJTlBwR09aK0NnTVBZZmJaVzRVVUJVTzBsTld2akNLSWhJYVFWbVVWTmZr?=
- =?utf-8?B?RVo0RjRweDhwVXdoTW5abGNSR0RZRGdyVHhDZUxHd2puUnRoTmNrUi8wdzlV?=
- =?utf-8?B?QkhvY0ZScnVSSHdjS2dCR3N0ZCtmc1BEY1NybTAwZUpZVHdiV1NSQjJsRW5i?=
- =?utf-8?B?eExhbisxdnkwRExrQk9TVFYvdkxBT1JIZVIrcGQwYTIraHlIOHplSVR1RWhS?=
- =?utf-8?B?L2RHRk11U3R5MWRyT0QxQ3BVS0duZGlDcW5DU1ZHS1c0Q1o4eGJUWkZkbWhU?=
- =?utf-8?B?Y0tSZFQxOFI2cmRjbWRhS051SGR4QmNBd2Jra1MveVZVY3kvVjIwVXY1ZUVS?=
- =?utf-8?B?aS9ieGVaV2xUVE9NbXVGZk10ZjNWU3hJODE5NFQwOC9GZ3N5bjhzTkttdElp?=
- =?utf-8?B?L2UyTEY4R2UxMUVqdkEzNUprMjB6Z2NTdmxuc0ZicHNqSTVKeUw5WEhXcVFz?=
- =?utf-8?B?d3FpMlFyZEFZRzNTZHIwcVgwaGJwVTN6Tm9qMHpHNnpmUTJCSU5hc3Rhd3JT?=
- =?utf-8?B?MjZTOTFySjQ5T3dsdjVUYjY0OU9zOS92OWlyZnVhV1A0bXJ0NDZ4bEVSdFJU?=
- =?utf-8?B?Z3d6bjMxWkFOeTl0Zk44ZFJDWWtHSTl3OWxoTkRYeVdLb3RqRThSV0x4ek1H?=
- =?utf-8?B?NUJqTEFkTWhJR3NxOGwvN3ZIc1puSjEzRVFVK01sU0pnbkNFRzgxZ3FidmdS?=
- =?utf-8?B?bUN5VGwxZ2pSR2F0cUtEMXdET2JhQTZoSnp6Wkh3dmllOUpxdzltM0Y2Nmho?=
- =?utf-8?B?OTRzalE1NjR4MWJYeHgxUFpuRTd4MTR4OFFYUEhBOW4rK29BZFoyS1UxQ1ph?=
- =?utf-8?B?UWRhei9zMnk0ZW9lVlNNMS9nc0ViRzc5bTJEQUxYdGR0alI3ekhVVDRndDBB?=
- =?utf-8?Q?aybAdkEmLWyFeu2HU/bqHVns/?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5614ea36-3207-403c-d761-08dc38a2eff3
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 21:19:24.3211
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZbZZMEitphRh2orjKemTRan7HDQOPSYZYg8QcnhOXsP/OD+TtBMx7GwRC2fZzzO7r34vYQSyc+q3/BwqkfWGpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7603
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+References: <20240208204844.119326-1-thuth@redhat.com> <20240208204844.119326-4-thuth@redhat.com>
+ <501ac94d-11ab-4765-a25d-75013c021be6@sirena.org.uk> <Zd-JjBNCpFG5iDul@google.com>
+Message-ID: <Zd-jdAtI_C_d_fp4@google.com>
+Subject: Re: [PATCH v3 3/8] KVM: selftests: Move setting a vCPU's entry point
+ to a dedicated API
+From: Sean Christopherson <seanjc@google.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Aishwarya TCV <aishwarya.tcv@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Oliver and/or Marc, question for y'all towards the bottom.
+
+On Wed, Feb 28, 2024, Sean Christopherson wrote:
+> On Wed, Feb 28, 2024, Mark Brown wrote:
+> > On Thu, Feb 08, 2024 at 09:48:39PM +0100, Thomas Huth wrote:
+> > > From: Sean Christopherson <seanjc@google.com>
+> > >=20
+> > > Extract the code to set a vCPU's entry point out of vm_arch_vcpu_add(=
+) and
+> > > into a new API, vcpu_arch_set_entry_point().  Providing a separate AP=
+I
+> > > will allow creating a KVM selftests hardness that can handle tests th=
+at
+> > > use different entry points for sub-tests, whereas *requiring* the ent=
+ry
+> > > point to be specified at vCPU creation makes it difficult to create a
+> > > generic harness, e.g. the boilerplate setup/teardown can't easily cre=
+ate
+> > > and destroy the VM and vCPUs.
+> >=20
+> > With today's -next I'm seeing most of the KVM selftests failing on an
+> > arm64 defconfig with:
+> >=20
+> > # =3D=3D=3D=3D Test Assertion Failure =3D=3D=3D=3D
+> > #   include/kvm_util_base.h:677: !ret
+> > #   pid=3D735 tid=3D735 errno=3D9 - Bad file descriptor
+> > #      1	0x0000000000410937: vcpu_set_reg at kvm_util_base.h:677 (discr=
+iminator 4)
+> > #      2	 (inlined by) vcpu_arch_set_entry_point at processor.c:370 (di=
+scriminator 4)
+> > #      3	0x0000000000407bab: vm_vcpu_add at kvm_util_base.h:981
+> > #      4	 (inlined by) __vm_create_with_vcpus at kvm_util.c:419
+> > #      5	 (inlined by) __vm_create_shape_with_one_vcpu at kvm_util.c:43=
+2
+> > #      6	0x000000000040187b: __vm_create_with_one_vcpu at kvm_util_base=
+.h:892
+> > #      7	 (inlined by) vm_create_with_one_vcpu at kvm_util_base.h:899
+> > #      8	 (inlined by) main at aarch32_id_regs.c:158
+> > #      9	0x0000007fbcbe6dc3: ?? ??:0
+> > #     10	0x0000007fbcbe6e97: ?? ??:0
+> > #     11	0x0000000000401f2f: _start at ??:?
+> > #   KVM_SET_ONE_REG failed, rc: -1 errno: 9 (Bad file descriptor)
+> >=20
+> > and a bisect pointed to this commit which does look plausibly relevant.
+> >=20
+> > Note that while this was bisected with plain arm64 defconfig and the KV=
+M
+> > selftests fragment was not enabled, but enabling the KVM fragment gave
+> > the same result as would be expected based on the options enabled by th=
+e
+> > fragment.  We're also seeing an alternative failure pattern where the
+> > tests segfault when run in a different environment, I'm also tracking
+> > that down but I suspect these are the same issue.
+>=20
+> Gah, my bad, I should have at least tested on ARM since I have easy acces=
+s to
+> such hardware.  If I can't figure out what's going wrong in the next few =
+hours,
+> I'll drop this series and we can try again for 6.10.
+>=20
+> Sorry :-/
+
+/facepalm
+
+The inner helper doesn't return the vCPU, and by dumb (bad) luck, selftests=
+ end
+up trying to use fd=3D0.
+
+diff --git a/tools/testing/selftests/kvm/lib/aarch64/processor.c b/tools/te=
+sting/selftests/kvm/lib/aarch64/processor.c
+index ed4ab29f4fad..a9eb17295be4 100644
+--- a/tools/testing/selftests/kvm/lib/aarch64/processor.c
++++ b/tools/testing/selftests/kvm/lib/aarch64/processor.c
+@@ -386,6 +386,7 @@ static struct kvm_vcpu *__aarch64_vcpu_add(struct kvm_v=
+m *vm, uint32_t vcpu_id,
+        aarch64_vcpu_setup(vcpu, init);
+=20
+        vcpu_set_reg(vcpu, ARM64_CORE_REG(sp_el1), stack_vaddr + stack_size=
+);
++       return vcpu;
+ }
+=20
+ struct kvm_vcpu *aarch64_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
+
+I'll squash the above and force push.
 
 
+In my defense, I would have caught this when build-testing, as the compiler=
+ does
+warn...
 
-On 29/02/2024 4:22 am, Kirill A. Shutemov wrote:
-> On Wed, Feb 28, 2024 at 11:08:38AM +1300, Huang, Kai wrote:
->>
->>
->> On 28/02/2024 10:24 am, Kirill A. Shutemov wrote:
->>> When MADT is parsed, print MULTIPROC_WAKEUP information:
->>>
->>> ACPI: MP Wakeup (version[1], mailbox[0x7fffd000], reset[0x7fffe068])
->>>
->>> This debug information will be very helpful during bring up.
->>>
->>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->>> Reviewed-by: Baoquan He <bhe@redhat.com>
->>> ---
->>>    drivers/acpi/tables.c | 14 ++++++++++++++
->>>    1 file changed, 14 insertions(+)
->>>
->>> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
->>> index b07f7d091d13..c59a3617bca7 100644
->>> --- a/drivers/acpi/tables.c
->>> +++ b/drivers/acpi/tables.c
->>> @@ -198,6 +198,20 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
->>>    		}
->>>    		break;
->>> +	case ACPI_MADT_TYPE_MULTIPROC_WAKEUP:
->>> +		{
->>> +			struct acpi_madt_multiproc_wakeup *p =
->>> +				(struct acpi_madt_multiproc_wakeup *)header;
->>> +			u64 reset_vector = 0;
->>> +
->>> +			if (p->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1)
->>> +				reset_vector = p->reset_vector;
->>> +
->>> +			pr_debug("MP Wakeup (version[%d], mailbox[%#llx], reset[%#llx])\n",
->>> +				 p->version, p->mailbox_address, reset_vector);
->>> +		}
->>> +		break;
->>> +
->>
->> Hmm.. I hate to say, but maybe it is better to put this patch at some early
->> place in this series w/o mailbox version and reset_vector, and add
->> incremental changes where mailbox/reset_vector is introduced in this series.
->>
->> The advantage is in this way someone can just backport this patch to the old
->> kernel if they care -- this should be part of commit f39642d0dbacd
->> ("x86/acpi/x86/boot: Add multiprocessor wake-up support") anyway.
-> 
-> It is not subject for backporting. It is just a cosmetics fix (or debug
-> facility). Any new MADT type would generate a warning. Nothing wrong with
-> it.
-> 
+  lib/aarch64/processor.c -o /usr/local/google/home/seanjc/go/src/kernel.or=
+g/nox/tools/testing/selftests/kvm/lib/aarch64/processor.o
+  lib/aarch64/processor.c: In function =E2=80=98__aarch64_vcpu_add=E2=80=99=
+:
+  lib/aarch64/processor.c:389:1: warning: no return statement in function r=
+eturning non-void [-Wreturn-type]
+    389 | }
+        | ^
+  At top level:
+  cc1: note: unrecognized command-line option =E2=80=98-Wno-gnu-variable-si=
+zed-type-not-at-end=E2=80=99 may have been intended to silence earlier diag=
+nostics
 
-OK fine to me.  Thanks.
+but due to a different issue that is fixed in the kvm-arm tree[*], but not =
+in mine,
+I built without -Werror and didn't see the new warn in the sea of GUEST_PRI=
+NTF
+warnings.
+
+Ugh, and I still can't enable -Werror, because there are unused functions i=
+n
+aarch64/vpmu_counter_access.c
+
+  aarch64/vpmu_counter_access.c:96:20: error: unused function 'enable_count=
+er' [-Werror,-Wunused-function]
+  static inline void enable_counter(int idx)
+                   ^
+  aarch64/vpmu_counter_access.c:104:20: error: unused function 'disable_cou=
+nter' [-Werror,-Wunused-function]
+  static inline void disable_counter(int idx)
+                   ^
+  2 errors generated.
+  make: *** [Makefile:278: /usr/local/google/home/seanjc/go/src/kernel.org/=
+nox/tools/testing/selftests/kvm/aarch64/vpmu_counter_access.o] Error 1
+  make: *** Waiting for unfinished jobs....
+
+  Commit 49f31cff9c533d264659356b90445023b04e10fb failed to build with 'mak=
+e-clang make-arm make -j128'.
+
+Oliver/Marc, any thoughts on how you want to fix the unused function warnin=
+gs?
+As evidenced by this goof, being able to compile with -Werror is super help=
+ful.
+
+And another question: is there any reason to not force -Werror for selftest=
+s?
+
+[*] https://lore.kernel.org/all/20240202234603.366925-1-seanjc@google.com
