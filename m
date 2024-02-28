@@ -1,260 +1,140 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2086.outbound.protection.outlook.com [40.107.241.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E56325601;
-	Wed, 28 Feb 2024 07:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709106862; cv=fail; b=Z5MM9a4J9rt9X8HRyDhI2iejClC/dApThxlf+Ea1/iI6h851j/A7e8gzRF0Gn1FfVxnfvnUbD3uPIWhWxdtuacg2eS/nWhyyeRrFAtzU7M4qKVNqemzoeJ95NKmEmCkPaJSw0gmejECNko8CuUhMAFLEjRJkDxNajRhUbVyWNF0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709106862; c=relaxed/simple;
-	bh=7T4oqUF6i9Q/x9MdnygCOLI1NTHWA2oSpbU3WGltD8g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=gjMfs1SiNkwgPG+lqAstibjbzcqm/N/e9KG4WbUIlyur9lV9H+NO0SPn3TT9rVv80+ytgMaqhtu1IUYsguki7ug+tldWdyJ9zkKepRV5vfkMyhe+Nb2gw3IJUSGDNmTg2wa1ZfvJJiHHozWXOA/XkAhur8y9rs8/mZyWxGDYHQM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=asVjiphB; arc=fail smtp.client-ip=40.107.241.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="asVjiphB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fOkjrpRXMkijFFa9j6SIA0C1m7c2Tuf+pGaNNIRgLVXxKbsVsFOd5TNqvuT4W1t4zHXzWJuLHzIs1zFRb7FXU/X+hu9Yob63cgmhAfx+kzQAqKjDvrmAa7rlzuoRTeXIZc6gXBXIcZlSiiMol5UpAdzZLyJcp+wh91O9wkccztwtmR4AoW+2z1li7/8/maiQat/Mqsv6k53+kWW22Edun+m7vXJWI0EwZG5swsyDHb62iyQsdFqQYtSgnsE8NBPXlgPMIk0phuDs+XOBZmP/58x04EpGR2X+ZjSTivJcfEbnkfieMn7b2Pqno46wmY1cqy4BnDOnGUw6wCO8B/pNNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K5mGuGUOJgJVRcrl/TpyMvYc/kkL4gVcx1B8zsnbbkQ=;
- b=lOQS2exuLPHvmPo3WG1iHRN2UrDmoTSedcbJm93o1a9FllNbAAHFqg4puHIRypfxFowDQJw5LiEPYOArgXH49JwHirHnljfHsEXt/fKyxio5cAbKAb+I/UzJQJ659pNdqfD1+3H++4nzOpZ++59kpiA3j7bkZKhGLOdevJzqStO368P4Lvm6zQ+hU0YJcxGys+2r9HqmIXsNHiyXleootNCsqTrVQPerleqlLCHou11s3Yx3jJQGU4l4K1lKq7Gn8MERlU5drY8LQc0xAYEbAPlzuv10zgTdy8giMJkXnDOLiLdtxTk/Mtvntof6KgrrabfZjX630S1yTxeA3PElMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K5mGuGUOJgJVRcrl/TpyMvYc/kkL4gVcx1B8zsnbbkQ=;
- b=asVjiphBpbIrJcdBEzE7sl02Q/rdt2qbvUV8p5AJ++JAu6P5u2rXY+NWxW4ISLHJsxdWxwOzVkSYPGwjRFTGdN16I/HmxOtd831hl0Y9rBoGxg5+9Js+mbs34iniToP6Z9ycSgc9FQzajBzikhfWXRL95LtJsrCp0BOTR7T2Y/Y=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by PAWPR04MB9885.eurprd04.prod.outlook.com (2603:10a6:102:391::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Wed, 28 Feb
- 2024 07:54:17 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::1232:ed97:118f:72fd]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::1232:ed97:118f:72fd%4]) with mapi id 15.20.7316.034; Wed, 28 Feb 2024
- 07:54:17 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>, Abel Vesa <abelvesa@kernel.org>, Michael Turquette
-	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
-	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-CC: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/2] dt-bindindgs: clock: support NXP i.MX95 BLK CTL
- module
-Thread-Topic: [PATCH v2 1/2] dt-bindindgs: clock: support NXP i.MX95 BLK CTL
- module
-Thread-Index: AQHaagfdonzElS9QB0ar9CNUieP0DLEfYCWAgAABgsA=
-Date: Wed, 28 Feb 2024 07:54:17 +0000
-Message-ID:
- <DU0PR04MB9417459448EDB8A674827DD588582@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240228-imx95-blk-ctl-v2-0-ffb7eefb6dcd@nxp.com>
- <20240228-imx95-blk-ctl-v2-1-ffb7eefb6dcd@nxp.com>
- <1ad77c33-71de-4bc8-a53e-1e74a5096079@linaro.org>
-In-Reply-To: <1ad77c33-71de-4bc8-a53e-1e74a5096079@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|PAWPR04MB9885:EE_
-x-ms-office365-filtering-correlation-id: 378e3b2f-ec97-44d0-cdc6-08dc383276ec
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- iwkJA62Tc63SuwSmcyXt67IYLqJbSD1pF6s/+hezeQDLghlRl/G0hzrdMJvbxAlS0tfYyjEFUTaT8x/mn9s5yZhklcWneuHzVmL2ws4u3xUc/p9qHrUJEpEaqvCNH6K8ArWfml2jbndW6/nYskre0RBqsv246xUyb8rdTzdA4g9tgqva2XkJ8gTLmIj1xOp6gwZrfa5BJsmZS2TgQYMx9VJ51qUqunoMlbsnpVlFlpoyOpGI4WVryhFOYNsYixDjc4vsTGf2xl9a7WAV5MYTkCJ0j0UWw7/NBfOwS0UM98igH5b8yUBR9n07zixzzAAgKcv1TPByn8u++MVWiCY6xhyV4aauWt+gSl686I+/Zilf78hOyRlzsVhLVYd179c2+BO1kCj18m3X47/aUHj4G4XzUQ5+VGE5ZfWZsuDcMXWppSJOOUUuqGYfLtNnI8r2FN4DeizVoQsppKEFzlSKHqtLA4z2PrNPZaZLSbd7SKExT+tCXEvLOUba/WTjMskM5DT1O5tJeO7yw9xx97dzT02yEgHnW5prA/USXaYRe+Lao9kGHhNFhz/PjFt4EXBryiqAnq6pWOsst0QmvjXrlwtWuRpvF4iiv1+V/68gzi8hexxX6mjF+YtD11HNMlPgR40IfFe+uNa2e9I/p8Vy4YQ4MnTIXd96QzvnlLx1YgIj6grImLzj9i4ViwOeAnSQu5pvnVeX5TrWUeUg9Y5zq+slA7Q8L1n04CBIIUBMaig=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?UmFNsrDZzDxtHBRB5XVF6mMI6XRtIFMgtGg99NHkiIYJuFvj50+QkH3Dhflc?=
- =?us-ascii?Q?CtBl3we25BZD4fd6S4+D/gsWoF03WGSeij30ofZ14RwZtvd8gi5EUAhddMTO?=
- =?us-ascii?Q?8SdRRApi04bj+jYXNAvOY1+Ro4EvGhUjLiBbQzUWo/mdiaP9O2fV2GPSPcBu?=
- =?us-ascii?Q?0MWvxK8EVbZAWJI+BEMnRvWf1TGMw2Mvb55xtQ+wmHo0uq/FrxbMkJlzULlS?=
- =?us-ascii?Q?mOhTXuMpy75ivwfRUp6vqgvdiyLnCV1MVgvAq+dN7YxLmYvvG9BsFeVVNKe5?=
- =?us-ascii?Q?Jgu0KprEWnavp671oGtDHn36D7umwdjzuwlbZu5iVxMygzFVbvCPRSSjZX8o?=
- =?us-ascii?Q?CXU2pZXBMiluk2lJk7WRdmr5Y6tG0iB7xh090QozfS6CyYenQDRvVa0HqNEV?=
- =?us-ascii?Q?MG7gyWBptwOwusdT/Nz1Q6WdafOo7D1yrw2KDNhYrR8M9f0CCbPRA2bzPiW0?=
- =?us-ascii?Q?sNlQRE3Xzjmh6ONdOcRdNhHFkkFCVj4hZX7yfh3rcAmmuJ7I+qvIdB3X958L?=
- =?us-ascii?Q?G4e8Sfr6RFZApDPJUL0NkNPoP1o8E3RfEovMyFQuthoK9/FmqyOowUx32s8i?=
- =?us-ascii?Q?NPUpgjuinhB6gwZQdD9/99b1KLpN3JnDkCRKamS9wjseNe4eBe3wSZ13Q6rV?=
- =?us-ascii?Q?GVXpbJrylAgHGY/WyFzsfmCVbYjN6sa4GfFuBDiCkh7wGuVmC2gv8BHZGMg6?=
- =?us-ascii?Q?3+ZAxyHUDwhB9fwtHcuM6hM/8UNcTtaLabAXZxUAm/H8KIFYajbK0ptADCWM?=
- =?us-ascii?Q?pBRW0xFpeoN18tLDqV7AUyvAgP/PYrGuXXpTfMyDS7ntx01s2LETDl8dbO+Y?=
- =?us-ascii?Q?MjoRwZ0p+2rHZ2n8iaromdL8eLtBT07JeAgcwnaGooXBsYudGr4JPbBPZfQz?=
- =?us-ascii?Q?d6HqIhvjSxeFp2z1IvGbbd3IqAcaKYY1nbiXSXC05sDB5AD8JbzIXx20rO6c?=
- =?us-ascii?Q?r+HNzSm62KBNgEjEEaos3PN5DJFrPnk7jfnsc4CPLhvTx20FTA+v4RcciVCG?=
- =?us-ascii?Q?BmXQJiJEv0iSyehZVD+i3ccWuRrqKP0p1PNvaNOrjxpdALgmE2Gu4W/VlXZQ?=
- =?us-ascii?Q?uQBFvmwo3HZNPaQZY0JstQyQm/Lyol/jv2FWoHPSBXDME3CJUCvUQmeemJHi?=
- =?us-ascii?Q?Vn/CpG889DFZv26IdEBPKfbgpBEHxGmDGiFATa65VzDEX15Z8eIg9ssKI2Jr?=
- =?us-ascii?Q?n/ioTxFegvXJ1ys9cno3G+nPs+M99xWCRvXPfNjPjWqWIpO07Nyv3Wx+TMP3?=
- =?us-ascii?Q?aWapLTOHioMRZPsyn/cTmZBerQj1tgEveiAwY2QTFRbY0EGuShjTRrEmYLRk?=
- =?us-ascii?Q?F2C65OOfjCv3QLn4z8ejqJD+c6fmKr1wXrAJzLM4/vUZppfhpdufhF7+9Fqx?=
- =?us-ascii?Q?Z4TWxOpvWhklkgcnB5og0XsRn/nW1THcv7NSG0vI7qMpydztxAKqxV5D5vyf?=
- =?us-ascii?Q?5TaW8jMT0dX2WTHYGbslPGQUJNh8sWr521S4bu5wGH1p05xWhWtzYyeuIfhm?=
- =?us-ascii?Q?GX6zt2oJX9UG134qqDNn1cAR0h/y2oWmDmLOnsbeXbPgGCN01CFD/9VylaI0?=
- =?us-ascii?Q?8Bwl8KLamd/P1SdL1sU=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91422560F;
+	Wed, 28 Feb 2024 07:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709106897; cv=none; b=SGxC/VJyyysl4gqwJZW92dfOgW0eKfe8Zmg1fDDU3Ht3AWp92a0uMvnoLLKye8b6K30PocEUFHltFExgyg4TM2HnauNb1XTPqpZPMemCaX3+e0FTlxqQjMz96ygMDRJI+pvEEPE5j1irl2rBesrL8SOFJpWu6NpkG0V8GMuk9U0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709106897; c=relaxed/simple;
+	bh=PLJ1oCKc7KvGjVx9RjB4Z+3NrgeF4CXKh5GJbfneNd0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MwzfZLl+scb8LdmWHdq3+JeXbKKm/8/jfDigFJf59P2nyTQSi0PRmnuE+X/nkU/XJDUWPBSoOZjsR45zP2HyPSI2ApKexDqyCtluNPlzp4NkWkSMFAI0/jzqA//64GSXAv9VuyopmpVV6zYmY+CUB2r/nld2eGos993c+B0LSB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44095C433F1;
+	Wed, 28 Feb 2024 07:54:53 +0000 (UTC)
+Message-ID: <de48fffa-4b1c-465a-aa63-b2b6372ac5e6@xs4all.nl>
+Date: Wed, 28 Feb 2024 08:54:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 378e3b2f-ec97-44d0-cdc6-08dc383276ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2024 07:54:17.4155
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wIKRtsED47Ib18US8PE3k4unkNy6I7lHFZZ8EcWJgwp3h6MSc3lUdND9QasNhXhQkiJFmm0zjjBr/NK64PqdcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9885
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] media: pci: sta2x11: Fix
+ Wcast-function-type-strict warnings
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Mike Isely <isely@pobox.com>, Tiffany Lin <tiffany.lin@mediatek.com>,
+ Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+ Yunfei Dong <yunfei.dong@mediatek.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-remoteproc@vger.kernel.org
+References: <20240226-fix-clang-warnings-v2-0-fa1bc931d17e@chromium.org>
+ <20240226-fix-clang-warnings-v2-1-fa1bc931d17e@chromium.org>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <20240226-fix-clang-warnings-v2-1-fa1bc931d17e@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> Subject: Re: [PATCH v2 1/2] dt-bindindgs: clock: support NXP i.MX95 BLK C=
-TL
-> module
->=20
-> On 28/02/2024 06:43, Peng Fan (OSS) wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > i.MX95 includes BLK CTL module in several MIXes, such as VPU_CSR in
-> > VPUMIX, BLK_CTRL_NETCMIX in NETCMIX, CAMERA_CSR in CAMERAMIX
-> and etc.
-> >
-> > The BLK CTL module is used for various settings of a specific MIX,
-> > such as clock, QoS and etc.
-> >
-> > This patch is to add some BLK CTL modules that has clock features.
->=20
-> Please use subject prefixes matching the subsystem. You can get them for
-> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory yo=
-ur
-> patch is touching.
->=20
-> There are some typos, so you miss my filters...
+On 26/02/2024 18:32, Ricardo Ribalda wrote:
+> Building with LLVM=1 throws the following warning:
+> drivers/media/pci/sta2x11/sta2x11_vip.c:1057:6: warning: cast from 'irqreturn_t (*)(int, struct sta2x11_vip *)' (aka 'enum irqreturn (*)(int, struct sta2x11_vip *)') to 'irq_handler_t' (aka 'enum irqreturn (*)(int, void *)') converts to incompatible function type [-Wcast-function-type-strict]
+> 
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-Ah.. ok, will check more. Please ignore V3.
+Arnd's patch for this has already been merged:
 
->=20
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  .../devicetree/bindings/clock/imx95-blk-ctl.yaml   | 61
-> ++++++++++++++++++++++
-> >  include/dt-bindings/clock/nxp,imx95-clock.h        | 32 ++++++++++++
-> >  2 files changed, 93 insertions(+)
-> >
+https://lore.kernel.org/linux-media/20240213095451.454142-1-arnd@kernel.org/
 
-[....]
->=20
-> Filename like compatible. We talked about this.
+So I'm marking your patch as 'Obsolete' in patchwork.
 
-ok, will use nxp,imx95-blk-ctl.yaml.
->=20
-> > +$schema:
-> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
-i
-> > +cetree.org%2Fmeta-
-> schemas%2Fcore.yaml%23&data=3D05%7C02%7Cpeng.fan%40nx
-> >
-> +p.com%7Ca6ed8c5ca4a745204f0e08dc38313f37%7C686ea1d3bc2b4c6fa9
-> 2cd99c5c
-> >
-> +301635%7C0%7C0%7C638447031362290549%7CUnknown%7CTWFpbGZs
-> b3d8eyJWIjoiM
-> >
-> +C4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7
-> C%7C%7
-> >
-> +C&sdata=3DDWrWMkSOrl%2FfCdEf%2BcTFjunNM66q3hHkPFGCzk1%2FsHo%3
-> D&reserved
-> > +=3D0
-> > +
-> > +title: NXP i.MX95 Block Control
-> > +
-> > +maintainers:
-> > +  - Peng Fan <peng.fan@nxp.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - nxp,imx95-cameramix-csr
-> > +          - nxp,imx95-display-master-csr
-> > +          - nxp,imx95-dispmix-lvds-csr
-> > +          - nxp,imx95-dispmix-csr
-> > +          - nxp,imx95-netcmix-blk-ctrl
-> > +          - nxp,imx95-vpumix-csr
-> > +      - const: syscon
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  '#clock-cells':
-> > +    const: 1
-> > +    description:
-> > +      The clock consumer should specify the desired clock by having th=
-e
-> clock
-> > +      ID in its "clocks" phandle cell. See
-> > +      include/dt-bindings/clock/nxp,imx95-clock.h
-> > +
-> > +  mux-controller:
-> > +    type: object
-> > +    $ref: /schemas/mux/reg-mux.yaml
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - '#clock-cells'
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  # Clock Control Module node:
-> > +  - |
-> > +    #include <dt-bindings/clock/nxp,imx95-clock.h>
-> > +
-> > +    syscon@4c410000 {
-> > +      compatible =3D "fsl,imx95-vpumix-csr", "syscon";
-> > +      reg =3D <0x4c410000 0x10000>;
-> > +      #clock-cells =3D <1>;
->=20
-> Incomplete example. Add here mux controller and power domains.
+Regards,
 
-ok. But since the power is managed by SCMI FW, and no
-header such as nxp,imx95-power.h, so I will use the number,
-such as <&scmi_devpd 0x5>.
+	Hans
 
-Thanks,
-Peng.
->=20
->=20
-> Best regards,
-> Krzysztof
+> ---
+>  drivers/media/pci/sta2x11/sta2x11_vip.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/pci/sta2x11/sta2x11_vip.c b/drivers/media/pci/sta2x11/sta2x11_vip.c
+> index e4cf9d63e926d..a6456673be3f6 100644
+> --- a/drivers/media/pci/sta2x11/sta2x11_vip.c
+> +++ b/drivers/media/pci/sta2x11/sta2x11_vip.c
+> @@ -757,7 +757,7 @@ static const struct video_device video_dev_template = {
+>  /**
+>   * vip_irq - interrupt routine
+>   * @irq: Number of interrupt ( not used, correct number is assumed )
+> - * @vip: local data structure containing all information
+> + * @data: local data structure containing all information
+>   *
+>   * check for both frame interrupts set ( top and bottom ).
+>   * check FIFO overflow, but limit number of log messages after open.
+> @@ -767,8 +767,9 @@ static const struct video_device video_dev_template = {
+>   *
+>   * IRQ_HANDLED, interrupt done.
+>   */
+> -static irqreturn_t vip_irq(int irq, struct sta2x11_vip *vip)
+> +static irqreturn_t vip_irq(int irq, void *data)
+>  {
+> +	struct sta2x11_vip *vip = data;
+>  	unsigned int status;
+>  
+>  	status = reg_read(vip, DVP_ITS);
+> 
 
