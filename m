@@ -1,75 +1,119 @@
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5459D6EEE1
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74496EEE1
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709137293; cv=none; b=FtDiblMJ/1i3k+LI5aT+x3DCkQhf2RdrgUxDWodKF0rKWoR+DoJC1nqfJyGWfb3zdoinCqlTamqhsVpj2GdFsx4fynf0UnGc38bC76erwhEsrL87fFI3AA5NO4jSevwPFfghbe921aMeBCQ5/On/2gisjLSm4QBnfJ674Ezp8kI=
+	t=1709137346; cv=none; b=jiutgrTqxUBwTdHGn113eesBvIRJS0LbRlhprp+1bnq/2i/CjChVPVBkK0rro2iZrCy2/xJ38xJpxjSbOfONqynV3GQ4qa3UfkbgI+i70bayjLaNfbXsNvY7MFaFQGCiVj96XEHdMUmrKwXx7r9a0lUceAa45ramjriAw6GCqCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709137293; c=relaxed/simple;
-	bh=nm0QIhozGeokRZEeYOZ32vlq1g1dRDypTQbyfbboVlY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=MsoeUBcIK/smajn74TNaBXCIQkOeeq4BMbooTyqwnVDuusBgWcb6HyjMomS4A0S84wu/D70g8mMDPj9kVwrLafSFTf7IJq2OkrwbHQCAKVu+UbGxlAe4SMpUKirh/SeeuONAGAF5fUoZjAHIuGEoT0K8Fl31MptDei65OE0Zrrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.160.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-42e520c4283so17678561cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 08:21:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709137291; x=1709742091;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D2+BZjLMLPbTol5136AECdswnej6ENJrpqcO+Did4T8=;
-        b=q5DvoeU8jM6nDMn9J8Iy86iZ17h7FASpmRh+XQrkRcVLYpI0q0iqSlEy/nnNsQG48a
-         A5NP78fxnVwkZZB8PD6j+or8K4Rg7QGsbbBiM0KaHzYMgNv4ds2JyyYCtjfJGjSO7Y0r
-         10kllScL/yz++1KMGVCBrvOvLpt1rlQlegvywZF3m7sFYl9Lhd+YN3L0xZQ6zKy68pTt
-         swIO8cQv9LVk4T0PFAMSVaRMvYUwNT/jwF/0gxD02FPrdVJ/n0UCXbRO7DHlOOvzelVw
-         PpVCVFCMl6tLvN+1w3S5UNGMB85MAvXTiF5ElUARZhF7kP6z2lw96KWlMzkXODgt+h2i
-         baCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWgckBXL85ARYv82wI6sDLj8adW0dvOB2O/jOcjNx6mv750Yi+8cnqWoiLwywz01RYXux+mk4QpCFkxvyJ2GhCYbGokuDb9tYPy2/Lr
-X-Gm-Message-State: AOJu0YzNSh31p2GGZA+z4zgYS+K1jbQ6w9E2D9NHe/NX6yS4kxNyuS6L
-	/jCaV2FOox+4rwIHLGTs7pxRXnJ63slxvp0YrMjk4KV6lyVTjIpRIC9hDjYLGlbb0E3ISsFr4Ml
-	ws4QfERFIpMN0dNNHY3r36WOBJ3W+Da5bgD+mbMflRrqgU0ZOeMFL2rk=
-X-Google-Smtp-Source: AGHT+IGlkaQCxb15VvCvtUjD5hXCn8zkfnnfuqU3idRbfSsF7m5N12Lg7/fsFG9dW79vLkDmOEpPcnTFxjGJeXE5lxUifLJZwae7
+	s=arc-20240116; t=1709137346; c=relaxed/simple;
+	bh=/3zDOS2PejvTm0xV78aQExrLl1BoCDLR7sm/RYS9aU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l4I4gHGd7jMOmBpuuhZPHf9bm3nwq+7OyPNwkT+xXqxzRHemMVUkCxdsql4Prv1qyAEitwIVrcp51zpwfxDE/RoBfbdYd2rx/ZxZowPGILMmpgUEcZ4qX3HjzMFXLmyo8RuFvCeFO8VrjopTdLsioJkJZ4s9+RUNOoZ/4L2oZzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lgbztTkG; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lgbztTkG"
+Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C86496B3;
+	Wed, 28 Feb 2024 17:22:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1709137330;
+	bh=/3zDOS2PejvTm0xV78aQExrLl1BoCDLR7sm/RYS9aU8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lgbztTkGoUfv9hR8sP0de8pZbHV8zgzqNLgzwcLeXuzKGUCAZtbrDLWDLbDcxItVb
+	 e2PtaJwF00ogqLWm9f6jS4V+DBz/Q4hq9Wywj/LHPgN2eIWxAn0+1nf/EzCRz2n6pj
+	 4PUdWySeVm86re+/9+nBTi00iw8P2sWZiD5KQz0A=
+Date: Wed, 28 Feb 2024 18:22:24 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Rohit Visavalia <rohit.visavalia@amd.com>
+Cc: gregkh@linuxfoundation.org, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	daniel@ffwll.ch, michal.simek@amd.com,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: xlnx: dp: Reset DisplayPort IP
+Message-ID: <20240228162224.GG9863@pendragon.ideasonboard.com>
+References: <20240216124043.1226713-1-rohit.visavalia@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:9a:b0:365:616c:59dc with SMTP id
- bc26-20020a056e02009a00b00365616c59dcmr28337ilb.2.1709136784996; Wed, 28 Feb
- 2024 08:13:04 -0800 (PST)
-Date: Wed, 28 Feb 2024 08:13:04 -0800
-In-Reply-To: <13add23d-af18-4f84-9f1a-043932a9712b@rowland.harvard.edu>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f1426a0612736a90@google.com>
-Subject: Re: [syzbot] [usb-storage?] divide error in isd200_ata_command
-From: syzbot <syzbot+28748250ab47a8f04100@syzkaller.appspotmail.com>
-To: bvanassche@acm.org, emilne@redhat.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	martin.petersen@oracle.com, stern@rowland.harvard.edu, 
-	syzkaller-bugs@googlegroups.com, tasos@tasossah.com, 
-	usb-storage@lists.one-eyed-alien.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240216124043.1226713-1-rohit.visavalia@amd.com>
 
-Hello,
+Hello Rohit,
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Thank you for the patch.
 
-failed to checkout kernel repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ on commit f2e367d6ad3b: failed to run ["git" "fetch" "--force" "--tags" "7b440d1b40dd93ea98b5af6bba55ffca63425216" "f2e367d6ad3b"]: exit status 128
-fatal: couldn't find remote ref f2e367d6ad3b
+On Fri, Feb 16, 2024 at 04:40:43AM -0800, Rohit Visavalia wrote:
+> Assert DisplayPort reset signal before deasserting,
+> it is to clear out any registers programmed before booting kernel.
+> 
+> Signed-off-by: Rohit Visavalia <rohit.visavalia@amd.com>
+> ---
+>  drivers/gpu/drm/xlnx/zynqmp_dp.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> index 1846c4971fd8..5a40aa1d4283 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> @@ -1714,6 +1714,10 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
+>  		goto err_free;
+>  	}
+>  
+> +	ret = zynqmp_dp_reset(dp, true);
+> +	if (ret < 0)
+> +		return ret;
+> +
 
+This looks fine to me, so
 
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Tested on:
+However, looking at zynqmp_dp_reset(), we have
 
-commit:         [unknown 
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ f2e367d6ad3b
-kernel config:  https://syzkaller.appspot.com/x/.config?x=eff9f3183d0a20dd
-dashboard link: https://syzkaller.appspot.com/bug?extid=28748250ab47a8f04100
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=164aa516180000
+static int zynqmp_dp_reset(struct zynqmp_dp *dp, bool assert)
+{
+	unsigned long timeout;
 
+	if (assert)
+		reset_control_assert(dp->reset);
+	else
+		reset_control_deassert(dp->reset);
+
+	/* Wait for the (de)assert to complete. */
+	timeout = jiffies + msecs_to_jiffies(RST_TIMEOUT_MS);
+	while (!time_after_eq(jiffies, timeout)) {
+		bool status = !!reset_control_status(dp->reset);
+
+		if (assert == status)
+			return 0;
+
+		cpu_relax();
+	}
+
+	dev_err(dp->dev, "reset %s timeout\n", assert ? "assert" : "deassert");
+	return -ETIMEDOUT;
+}
+
+That doesn't seem quite right. Aren't reset_control_assert() and
+reset_control_deassert() supposed to be synchronous ? If so there should
+be no need to wait, and if there's a need to wait, it could be a bug in
+the reset controller driver. This should be fixed, and then the code in
+probe could be replaced with a call to reset_control_reset().
+
+>  	ret = zynqmp_dp_reset(dp, false);
+>  	if (ret < 0)
+>  		goto err_free;
+
+-- 
+Regards,
+
+Laurent Pinchart
