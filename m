@@ -1,47 +1,47 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3D515E5DD;
-	Wed, 28 Feb 2024 16:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B40515F316;
+	Wed, 28 Feb 2024 16:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709136264; cv=none; b=WFDvYLIB9r8S4zsMOVV7nvAlBzq3VENk0HcqmJDFxQFajEwuquOcYW80O//WxDJbt3KOUjtZrWY/nyaMNzhZbF0MRinsB/Lwaj9UiymeBnXzbqTZihNc7wQYgChqh7/KhxdzaN+n0IVdcgcuQEAEr/ZouGe8F6V3FK8bQUwYIRM=
+	t=1709136266; cv=none; b=k23oYlnQ6VLkPtZ56vygT0N+VIHTMktz8kI/sBWmHBjzdIxZ9WAjYTGGOReV+c3SAf3rK+Ct+Mb4OT2kEsZGh8Hc6Nc+jGB146GUxTCz6CBWSTLvqL2DX+9u2V1yOlrg63zsaXA+tmOqRzroT701fl6Qx+XPnsK83QUiJxZrqR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709136264; c=relaxed/simple;
-	bh=uZmeeZD3VWIvcaruww88Mst1ibscMXXKLJg4+styrpY=;
+	s=arc-20240116; t=1709136266; c=relaxed/simple;
+	bh=Bjrp1tTlD6ezzWfPdYM+Tqz2X4qeW6q9D/krqY8Q3+k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mNpEmRmPongRRYWcy4U7qbJQGsKp4vXuDrzJsezdsCQFpWN2LA+/Px3R4vtf/etkTnr8Ay8bOovoAG8dHxt0FuinSdLqKGY3jMw1B4Dkui3VRS5m1kztKiaWArOiJwJJ5ZmmjapCsV6XqQk4Qzjc6CnlVLeNUGtOwTVYbI20zdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lI0S+4B7; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=Hq4p5Rv0eAxEuAQdD4ph+cgjhfAVpYjdzPKPkoZun0P/R3PxE1G2t8oIXkPdw7M3zPcCN6zZm6VxWTPwVZ7EvifiioP/A6YoUBpm1qXpPE5Wb1PIwZ0aBv+BDpDDRfFXMdMwEHCrE2pLpBwN+qaRkjs1qj1SHI84HGYfHczmQ5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aoCYPUHg; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lI0S+4B7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aoCYPUHg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709136262; x=1740672262;
+  t=1709136264; x=1740672264;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=uZmeeZD3VWIvcaruww88Mst1ibscMXXKLJg4+styrpY=;
-  b=lI0S+4B7cxeuLuzbA68hlJ6rLR0LXZYOFQcjhBs6T76QVLTKbdKoIIcJ
-   Ywc2LW8ymOHgwGAT56dNUki9XlViBxVWgB500Scy65Lk5NubMT2JPwWIb
-   4DV2/wzaOPSs2D/y2I4BNhBRkSuI1CuKe9t0Z7pinvTCUKEAqTlM/qCD+
-   suXQeSir30CzLnAKJyXQSlN9328205k74J/KD1H/wgUeBaKpOxahUA4ii
-   0YQ0N3llMtoDjiwM5VGEa5IxFRq9YWxuPOBy+++ZfxjLjd1FGYplv03s6
-   Xur3CsSQvfqBqajR4Sz/XXmFoz6b0xsRFkOLoAlAM9rxvLXBySMe/ldKo
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3706623"
+  bh=Bjrp1tTlD6ezzWfPdYM+Tqz2X4qeW6q9D/krqY8Q3+k=;
+  b=aoCYPUHgwnZd05PMTrhcI8yQ9mIdLjJsI6ae/CC9rk8IQ8vuSSXjp2qJ
+   h9nTrctbQqVGZYkZBSiig4jKXwlO4uCFQolEJJrfnm/ssvKQYn8Wizqmd
+   wlpVpojaNy9P1GOxwUSc9HjgRWsSCKQrS3xfGJ4ie7d2dGzF643maEafq
+   G+rVJ0e0z4YgXqzNb7cQd7Z4TYMzrV5fYlrKuanSoqvdy4z19s4pf+kFM
+   T+YGHD/Xk++4V1HN7gTKIUCdd2dLcOBFOeJuGC9ULvH5wfSpfBdFvbHwx
+   Zj9IxzjqPWVLR7K30uu8bmBmBzGiJYZ3PUW6rsAq0I7U/Qt/ZUjEA4hdZ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3706637"
 X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="3706623"
+   d="scan'208";a="3706637"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 08:04:20 -0800
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 08:04:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="7527778"
+   d="scan'208";a="7527818"
 Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orviesa009.jf.intel.com with ESMTP; 28 Feb 2024 08:04:14 -0800
+  by orviesa009.jf.intel.com with ESMTP; 28 Feb 2024 08:04:18 -0800
 Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 0D7E536820;
-	Wed, 28 Feb 2024 16:04:11 +0000 (GMT)
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id 87BD536825;
+	Wed, 28 Feb 2024 16:04:15 +0000 (GMT)
 From: Larysa Zaremba <larysa.zaremba@intel.com>
 To: intel-wired-lan@lists.osuosl.org
 Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
@@ -61,9 +61,9 @@ Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Pawel Chmielewski <pawel.chmielewski@intel.com>,
 	Jesse Brandeburg <jesse.brandeburg@intel.com>
-Subject: [PATCH iwl-net 3/5] ice: Do not add LLDP-specific filter
-Date: Wed, 28 Feb 2024 16:59:47 +0100
-Message-ID: <20240228155957.408036-4-larysa.zaremba@intel.com>
+Subject: [PATCH iwl-net 5/5] ice: Implement VF LLDP TX support for VF
+Date: Wed, 28 Feb 2024 16:59:49 +0100
+Message-ID: <20240228155957.408036-6-larysa.zaremba@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240228155957.408036-1-larysa.zaremba@intel.com>
 References: <20240228155957.408036-1-larysa.zaremba@intel.com>
@@ -75,138 +75,276 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 34295a3696fbd0d90ee7 ("ice: implement new LLDP filter command")
-has introduced the ability to use LLDP-specific filter that directs all
-LLDP traffic to a single VSI. However, current goal is for all trusted VFs
-to be able to see LLDP neighbors. Therefore, replace the functionality with
-previously used generic ethernet protocol filter.
+From: Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
 
-The command was added as a way to solve an "issue with some NVMs where an
-already existent LLDP filter is blocking the creation of a filter to allow
-LLDP packets". Preserve this utility and remove LLDP-specific filter
-before configuring another one.
+Add option to enable transmit LLDP on single trusted VF via a sysfs entry,
+for example:
 
+echo '1' > /sys/class/net/<PF_IFNAME>/device/virtfn0/transmit_lldp
+
+Signed-off-by: Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
+Co-developed-by: Jakub Buchocki <jakubx.buchocki@intel.com>
+Signed-off-by: Jakub Buchocki <jakubx.buchocki@intel.com>
 Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
 ---
- .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  1 -
- drivers/net/ethernet/intel/ice/ice_common.c   | 26 ---------------
- drivers/net/ethernet/intel/ice/ice_common.h   |  2 --
- drivers/net/ethernet/intel/ice/ice_lib.c      | 33 +++++++++++++++----
- 4 files changed, 26 insertions(+), 36 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_lib.c    |   3 +
+ drivers/net/ethernet/intel/ice/ice_sriov.c  |   4 +
+ drivers/net/ethernet/intel/ice/ice_vf_lib.c | 163 ++++++++++++++++++++
+ drivers/net/ethernet/intel/ice/ice_vf_lib.h |  14 ++
+ 4 files changed, 184 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-index 8040317c9561..2855c955d8b4 100644
---- a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-+++ b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-@@ -1883,7 +1883,6 @@ struct ice_aqc_lldp_stop_start_specific_agent {
- /* LLDP Filter Control (direct 0x0A0A) */
- struct ice_aqc_lldp_filter_ctrl {
- 	u8 cmd_flags;
--#define ICE_AQC_LLDP_FILTER_ACTION_ADD		0x0
- #define ICE_AQC_LLDP_FILTER_ACTION_DELETE	0x1
- 	u8 reserved1;
- 	__le16 vsi_num;
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
-index 9266f25a9978..f5cca0e2ead6 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.c
-+++ b/drivers/net/ethernet/intel/ice/ice_common.c
-@@ -5911,32 +5911,6 @@ bool ice_fw_supports_lldp_fltr_ctrl(struct ice_hw *hw)
- 				     ICE_FW_API_LLDP_FLTR_PATCH);
- }
- 
--/**
-- * ice_lldp_fltr_add_remove - add or remove a LLDP Rx switch filter
-- * @hw: pointer to HW struct
-- * @vsi_num: absolute HW index for VSI
-- * @add: boolean for if adding or removing a filter
-- */
--int
--ice_lldp_fltr_add_remove(struct ice_hw *hw, u16 vsi_num, bool add)
--{
--	struct ice_aqc_lldp_filter_ctrl *cmd;
--	struct ice_aq_desc desc;
--
--	cmd = &desc.params.lldp_filter_ctrl;
--
--	ice_fill_dflt_direct_cmd_desc(&desc, ice_aqc_opc_lldp_filter_ctrl);
--
--	if (add)
--		cmd->cmd_flags = ICE_AQC_LLDP_FILTER_ACTION_ADD;
--	else
--		cmd->cmd_flags = ICE_AQC_LLDP_FILTER_ACTION_DELETE;
--
--	cmd->vsi_num = cpu_to_le16(vsi_num);
--
--	return ice_aq_send_cmd(hw, &desc, NULL, 0, NULL);
--}
--
- /**
-  * ice_lldp_execute_pending_mib - execute LLDP pending MIB request
-  * @hw: pointer to HW struct
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.h b/drivers/net/ethernet/intel/ice/ice_common.h
-index 32fd10de620c..900926e6414c 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.h
-+++ b/drivers/net/ethernet/intel/ice/ice_common.h
-@@ -267,8 +267,6 @@ int
- ice_aq_set_lldp_mib(struct ice_hw *hw, u8 mib_type, void *buf, u16 buf_size,
- 		    struct ice_sq_cd *cd);
- bool ice_fw_supports_lldp_fltr_ctrl(struct ice_hw *hw);
--int
--ice_lldp_fltr_add_remove(struct ice_hw *hw, u16 vsi_num, bool add);
- int ice_lldp_execute_pending_mib(struct ice_hw *hw);
- int
- ice_aq_read_i2c(struct ice_hw *hw, struct ice_aqc_link_topo_addr topo_addr,
 diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index 60e0d824195e..a774bcdcc0c4 100644
+index 19f08f2e0139..32b1ed74bfa4 100644
 --- a/drivers/net/ethernet/intel/ice/ice_lib.c
 +++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -2039,6 +2039,27 @@ static void ice_vsi_set_tc_cfg(struct ice_vsi *vsi)
- 	ice_vsi_set_dcb_tc_cfg(vsi);
+@@ -2062,6 +2062,9 @@ void ice_dis_sw_lldp(struct ice_pf *pf)
+ 
+ 		if (vsi && vsi->rx_lldp_ena)
+ 			ice_cfg_sw_lldp(vsi, false, false);
++
++		if (vf->transmit_lldp)
++			ice_handle_vf_tx_lldp(vf, false);
+ 	}
  }
  
-+/**
-+ * ice_lldp_fltr_remove_from_port - Remove a LLDP Rx filter from the port
-+ * @hw: port
-+ *
-+ * Remove a LLDP Rx switch filter from the port. For some NVMs,
-+ * such leftover filter can prevent us from configuring another one.
-+ */
-+static void ice_lldp_fltr_remove_from_port(struct ice_hw *hw)
+diff --git a/drivers/net/ethernet/intel/ice/ice_sriov.c b/drivers/net/ethernet/intel/ice/ice_sriov.c
+index a94a1c48c3de..0fe07330cc1a 100644
+--- a/drivers/net/ethernet/intel/ice/ice_sriov.c
++++ b/drivers/net/ethernet/intel/ice/ice_sriov.c
+@@ -832,6 +832,10 @@ static int ice_create_vf_entries(struct ice_pf *pf, u16 num_vfs)
+ 		vf->vfdev = vfdev;
+ 		vf->vf_sw_id = pf->first_sw;
+ 
++		err = ice_init_vf_sysfs(vf);
++		if (err)
++			goto err_free_entries;
++
+ 		pci_dev_get(vfdev);
+ 
+ 		/* set default number of MSI-X */
+diff --git a/drivers/net/ethernet/intel/ice/ice_vf_lib.c b/drivers/net/ethernet/intel/ice/ice_vf_lib.c
+index 2de6ef3661cf..244d0ac7c9c4 100644
+--- a/drivers/net/ethernet/intel/ice/ice_vf_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_vf_lib.c
+@@ -577,6 +577,165 @@ void ice_ena_all_vfs_rx_lldp(struct ice_pf *pf)
+ 	}
+ }
+ 
++static bool ice_is_transmit_lldp_enabled(struct ice_pf *pf)
 +{
-+	struct ice_aqc_lldp_filter_ctrl *cmd;
-+	struct ice_aq_desc desc;
++	struct ice_vf *vf;
++	unsigned int bkt;
 +
-+	cmd = &desc.params.lldp_filter_ctrl;
++	ice_for_each_vf(pf, bkt, vf) {
++		if (vf->transmit_lldp)
++			return true;
++	}
 +
-+	ice_fill_dflt_direct_cmd_desc(&desc, ice_aqc_opc_lldp_filter_ctrl);
++	return false;
++}
 +
-+	cmd->cmd_flags = ICE_AQC_LLDP_FILTER_ACTION_DELETE;
++/**
++ * ice_handle_vf_tx_lldp - enable/disable LLDP TX on VF
++ * @vf: VF to configure Tx LLDP for
++ * @ena: Enable or disable Tx LLDP switch rule
++ *
++ * Configure Tx filters for VF to transmit LLDP
++ */
++int ice_handle_vf_tx_lldp(struct ice_vf *vf, bool ena)
++{
++	void (*allow_override)(struct ice_vsi_ctx *ctx);
++	struct ice_vsi *vsi, *main_vsi;
++	struct ice_pf *pf = vf->pf;
++	struct device *dev;
++	bool prev_ena;
 +
-+	ice_aq_send_cmd(hw, &desc, NULL, 0, NULL);
++	dev = ice_pf_to_dev(pf);
++	vsi = ice_get_vf_vsi(vf);
++	main_vsi = ice_get_main_vsi(pf);
++	if (!vsi || !main_vsi)
++		return -ENOENT;
++
++	if (ena && test_bit(ICE_FLAG_FW_LLDP_AGENT, pf->flags)) {
++		dev_err(dev, "Transmit LLDP VF is only allowed when FW LLDP Agent is disabled");
++		return -EPERM;
++	}
++
++	if (ena && ice_is_transmit_lldp_enabled(pf)) {
++		dev_err(dev, "Only a single VF per port is allowed to transmit LLDP packets, ignoring the settings");
++		return -EPERM;
++	}
++
++	allow_override = ena ? ice_vsi_ctx_set_allow_override
++			     : ice_vsi_ctx_clear_allow_override;
++	prev_ena = vsi->info.sec_flags & ICE_AQ_VSI_SEC_FLAG_ALLOW_DEST_OVRD;
++
++	if (ice_vsi_update_security(vsi, allow_override))
++		return -ENOENT;
++
++	/* If VF can transmit LLDP, then PF cannot and vice versa */
++	allow_override = ena ? ice_vsi_ctx_clear_allow_override
++			     : ice_vsi_ctx_set_allow_override;
++
++	if (ice_vsi_update_security(main_vsi, allow_override)) {
++		allow_override = prev_ena  ? ice_vsi_ctx_set_allow_override
++					   : ice_vsi_ctx_clear_allow_override;
++		ice_vsi_update_security(vsi, allow_override);
++		return -ENOENT;
++	}
++
++	vf->transmit_lldp = ena;
++	return 0;
++}
++
++static ssize_t ice_transmit_lldp_vf_attr_show(struct device *dev,
++					      struct device_attribute *attr,
++					      char *buf)
++{
++	struct ice_vf *vf = ice_get_vf_by_dev(dev);
++
++	if (!vf)
++		return -ENOENT;
++
++	return sysfs_emit(buf, "%u\n", vf->transmit_lldp);
++}
++
++static ssize_t ice_transmit_lldp_vf_attr_store(struct device *dev,
++					       struct device_attribute *attr,
++					       const char *buf, size_t count)
++{
++	struct pci_dev *vfdev = container_of(dev, struct pci_dev, dev);
++	struct ice_vf *vf = ice_get_vf_by_dev(dev);
++	struct pci_dev *pdev = vfdev->physfn;
++	struct ice_pf *pf;
++	bool ena;
++	int err;
++
++	if (!vf)
++		return -ENOENT;
++
++	pf = pci_get_drvdata(pdev);
++	if (!pf)
++		return -ENOENT;
++
++	err = kstrtobool(buf, &ena);
++	if (err)
++		return -EINVAL;
++
++	if (ena == vf->transmit_lldp) {
++		dev_dbg(dev, "Transmit LLDP value already set for VF %d",
++			vf->vf_id);
++		return count;
++	}
++
++	err = ice_handle_vf_tx_lldp(vf, ena);
++	if (err)
++		return err;
++
++	return count;
++}
++
++static int ice_init_vf_transmit_lldp_sysfs(struct ice_vf *vf)
++{
++	struct device_attribute tmp = __ATTR(transmit_lldp, 0644,
++					     ice_transmit_lldp_vf_attr_show,
++					     ice_transmit_lldp_vf_attr_store);
++
++	vf->transmit_lldp_attr = tmp;
++
++	return device_create_file(&vf->vfdev->dev, &vf->transmit_lldp_attr);
++}
++
++/**
++ * ice_init_vf_sysfs - Initialize sysfs entries for a VF
++ * @vf: VF to init sysfs for
++ *
++ * Initialize sysfs entries (accessible from the host) for a VF
++ */
++int ice_init_vf_sysfs(struct ice_vf *vf)
++{
++	struct device *dev = ice_pf_to_dev(vf->pf);
++	int err = 0;
++
++	if (!vf->vfdev) {
++		dev_err(dev, "%s: no vfdev", __func__);
++		return -ENOENT;
++	}
++
++	err = ice_init_vf_transmit_lldp_sysfs(vf);
++	if (err)
++		dev_err(dev, "could not init transmit_lldp sysfs entry, err: %d",
++			err);
++
++	return err;
++}
++
++static int ice_vf_apply_tx_lldp(struct ice_vf *vf)
++{
++	if (!vf->transmit_lldp)
++		return 0;
++
++	/* Disable it so it can be applied again. */
++	vf->transmit_lldp = false;
++
++	return ice_handle_vf_tx_lldp(vf, true);
 +}
 +
  /**
-  * ice_cfg_sw_lldp - Config switch rules for LLDP packet handling
-  * @vsi: the VSI being configured
-@@ -2060,13 +2081,11 @@ void ice_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create)
- 		status = eth_fltr(vsi, ETH_P_LLDP, ICE_FLTR_TX,
- 				  ICE_DROP_PACKET);
- 	} else {
--		if (ice_fw_supports_lldp_fltr_ctrl(&pf->hw)) {
--			status = ice_lldp_fltr_add_remove(&pf->hw, vsi->vsi_num,
--							  create);
--		} else {
--			status = eth_fltr(vsi, ETH_P_LLDP, ICE_FLTR_RX,
--					  ICE_FWD_TO_VSI);
--		}
-+		if (create && ice_fw_supports_lldp_fltr_ctrl(&pf->hw))
-+			ice_lldp_fltr_remove_from_port(&vsi->back->hw);
-+
-+		status = eth_fltr(vsi, ETH_P_LLDP, ICE_FLTR_RX,
-+				  ICE_FWD_TO_VSI);
- 	}
+  * ice_vf_rebuild_host_cfg - host admin configuration is persistent across reset
+  * @vf: VF to rebuild host configuration on
+@@ -607,6 +766,10 @@ static void ice_vf_rebuild_host_cfg(struct ice_vf *vf)
+ 		dev_err(dev, "failed to rebuild spoofchk configuration for VF %d\n",
+ 			vf->vf_id);
  
- 	if (status)
++	if (ice_vf_apply_tx_lldp(vf))
++		dev_err(dev, "failed to rebuild transmit LLDP configuration for VF %d\n",
++			vf->vf_id);
++
+ 	/* rebuild aggregator node config for main VF VSI */
+ 	ice_vf_rebuild_aggregator_node_cfg(vsi);
+ }
+diff --git a/drivers/net/ethernet/intel/ice/ice_vf_lib.h b/drivers/net/ethernet/intel/ice/ice_vf_lib.h
+index 81f734f2ae41..63e53591541e 100644
+--- a/drivers/net/ethernet/intel/ice/ice_vf_lib.h
++++ b/drivers/net/ethernet/intel/ice/ice_vf_lib.h
+@@ -104,9 +104,11 @@ struct ice_vf {
+ 	struct ice_vlan port_vlan_info;	/* Port VLAN ID, QoS, and TPID */
+ 	struct virtchnl_vlan_caps vlan_v2_caps;
+ 	struct ice_mbx_vf_info mbx_info;
++	struct device_attribute transmit_lldp_attr;
+ 	u8 pf_set_mac:1;		/* VF MAC address set by VMM admin */
+ 	u8 trusted:1;
+ 	u8 spoofchk:1;
++	u8 transmit_lldp:1;
+ 	u8 link_forced:1;
+ 	u8 link_up:1;			/* only valid if VF link is forced */
+ 	/* VSI indices - actual VSI pointers are maintained in the PF structure
+@@ -234,6 +236,8 @@ void ice_reset_all_vfs(struct ice_pf *pf);
+ struct ice_vsi *ice_get_vf_ctrl_vsi(struct ice_pf *pf, struct ice_vsi *vsi);
+ void ice_ena_all_vfs_rx_lldp(struct ice_pf *pf);
+ int ice_ena_vf_rx_lldp(struct ice_vf *vf);
++int ice_init_vf_sysfs(struct ice_vf *vf);
++int ice_handle_vf_tx_lldp(struct ice_vf *vf, bool ena);
+ #else /* CONFIG_PCI_IOV */
+ static inline struct ice_vf *ice_get_vf_by_id(struct ice_pf *pf, u16 vf_id)
+ {
+@@ -313,6 +317,16 @@ ice_get_vf_ctrl_vsi(struct ice_pf *pf, struct ice_vsi *vsi)
+ static inline void ice_ena_all_vfs_rx_lldp(struct ice_pf *pf)
+ {
+ }
++
++static inline int ice_handle_vf_tx_lldp(struct ice_vf *vf, bool ena)
++{
++	return -EOPNOTSUPP;
++}
++
++static inline int ice_init_vf_sysfs(struct ice_vf *vf)
++{
++	return 0;
++}
+ #endif /* !CONFIG_PCI_IOV */
+ 
+ #endif /* _ICE_VF_LIB_H_ */
 -- 
 2.43.0
 
