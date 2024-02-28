@@ -1,197 +1,192 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from isilmar-4.linta.de (isilmar-4.linta.de [136.243.71.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8419A15DBC1
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 17:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A318122F1E;
+	Wed, 28 Feb 2024 17:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.243.71.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709142665; cv=none; b=TexMYNaYWFDLHRq1PWFJs5PeNLj1lHS23v+lm89NYRr/5xAO0y+sKSL0MRnXbP/o8TlJfimBcIT+EwY5oM68TjvPIOtqnN4EQum6uRM4LhuDglXnSkCPGoTyKPmlqDQyynkKBKhACCNWOv8JpYnNi0AE76YWDh3wWGIYynHBMPE=
+	t=1709142683; cv=none; b=qSs/lLLZfL26EztiLJ45RUEgvIE8WtD2ZTpJBIuGMl0+f/wvPb7XQfWLfIE5cElOQ+QHa/J4QXPvILOed+ncxkworvbf9rZoWqCB4kDFghRN1CzGQ02eXp0CwP04pUUDcLAbWYEnS9Xsi4B0+2AmlsYcO9NN6EGW5jgsJ4+DiIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709142665; c=relaxed/simple;
-	bh=Kjp9e87qYUvuVJ7M2OXAg9wWZf/QwADaOftlAlqHnSs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cr96pchn8cufAj+Fsbrv9AjVgj0fAuuk3fEOBL+60NdonNwgHAhGxV0pPJGADusUid+5zbPWgZoj2yuHHakGdvuPnywdX5Y1dFk6Y3NUxxwJ68XmdOwUWz33OY/vBF0UuFdYo9xjY5uG53Lq/AbmmbA67y5rEC3doyrHwG3y01I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AGtlO26T; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AGtlO26T"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-60925c4235eso52217b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:51:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709142662; x=1709747462; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VnQ/ab/JPnAloJ9klQyh8nICmNuzmA4WCeR9lmsJM4M=;
-        b=AGtlO26T+doUb5WQH6HpuNAonMJHI1VctQ6KnGaUDOiepgfP1rGunEp2EG/fAzIzgt
-         2jIqPjRYCt79wlj1VIm88MH5ngDdryRQHoOSIW2yXrvW1+SEYeglvKzZTlJ6Zf3g/NR7
-         uajrrj2JBMIzyvm4bcgTu6gTY4LlDUQLRpGFp6MlqBhwozTTw/lZe9bQDIwrGKZkUtgn
-         hPfl50UdRGiSn7mkOc+n1IoWaEdBdeo8HszJPN0zZK0RacuYwh86fvoEl2VZa9Ghun5O
-         Eyu7Yuo/iy5/V3RQoVduxsSei9kZcZMcu1t7C8S+2OXNwWpAE5Z+mfaF2ZnbZCtJATm6
-         590w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709142662; x=1709747462;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VnQ/ab/JPnAloJ9klQyh8nICmNuzmA4WCeR9lmsJM4M=;
-        b=rYt4f2KwukaglxIt1Che8esyIFWTuOqGvS1+9uxez9NqXCxCl7Q6uS++bnC4zGDt1E
-         oaBI5v4hOCR0pK1JDbYLqTQCz6jNK67yK+8ZDv7cBRbwpao2N+mKJrgVgtG0dvy7xBPt
-         F1dPLGIfjuonADGzmH2hbaIdU1fDSQ+MZa7sQBr6lcio9t5+MDE38gOkBRGV+Dq9YmiO
-         rb5y4GATM3Mf6GlThNOuWYgnbGMgCPWcxUo8VMV8rpEneWlklwEKL6E0iWasBiy3jndQ
-         W3TwBXK+Zw72jY8y8CYaY+57LQMTrLz5a7EV7cobZAYMO1PbTW3qJ3nKfnTN0xKZRVto
-         p4Ww==
-X-Forwarded-Encrypted: i=1; AJvYcCW5ws8l8oZwUu0buYkXalrWyiIKikA6g7hz4dnzGsopG5bGESbswqh6emNxTtVhnZM9oapFFDziRSVpYlxIL6Yaqq0KqN5vzA5JVLh4
-X-Gm-Message-State: AOJu0YzGWthDmik/3zI5XnO2InJRKYbqrQrS/jdCpoAsURpXDgT73YVr
-	5R03cE0cUFELN5QC6In1JovSCkPplkdZJii9woSv/tAqs0Or5iE54zndth7IlNqpsaAyk0GbAuA
-	6u+IhsBZCjXjmC7JYOBtkfau/b2oaYbtSGyoM
-X-Google-Smtp-Source: AGHT+IG/EeCjxcbMnwV3xlMkTlCAxh5CrdaPO3GQcKcWzYKjyw1uLk52luOW0XOEQwoUYKADdxDUo6eSBLFJyH16/wI=
-X-Received: by 2002:a25:9c08:0:b0:dcb:bff0:72b with SMTP id
- c8-20020a259c08000000b00dcbbff0072bmr3550ybo.31.1709142661963; Wed, 28 Feb
- 2024 09:51:01 -0800 (PST)
+	s=arc-20240116; t=1709142683; c=relaxed/simple;
+	bh=YE/j5Jd5RYyGUXRifgV24q+iH63wNhZlxzUbWcESwek=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VYCGvjYYuiuH0wddyu/DmKaABJXV2EhBWMr3lfteBYGStseY4ATTmAYoYFNolDTtUIMLMVHi5NDR2SpCI0lzdQLBo5EZW5z6wi4uB26+HXskF1n/ggesBBithswNKDao4Q6Ivt3fEySfbNHYuTruiJ4Nh6KA55Nfdyb+wjLWUjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net; spf=pass smtp.mailfrom=dominikbrodowski.net; arc=none smtp.client-ip=136.243.71.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dominikbrodowski.net
+Received: from shine.dominikbrodowski.net (shine.brodo.linta [10.2.0.112])
+	by isilmar-4.linta.de (Postfix) with ESMTPSA id 51BA32000CE;
+	Wed, 28 Feb 2024 17:43:48 +0000 (UTC)
+Received: by shine.dominikbrodowski.net (Postfix, from userid 1000)
+	id DCE9CA0086; Wed, 28 Feb 2024 18:41:38 +0100 (CET)
+Date: Wed, 28 Feb 2024 18:41:38 +0100
+From: Dominik Brodowski <linux@dominikbrodowski.net>
+To: tomas.winkler@intel.com, mchehab@kernel.org, wentong.wu@intel.com
+Cc: sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: v6.8.0-rc6: mei_ace_probe / mei_vsc_probe: do not call blocking ops
+ when !TASK_RUNNING
+Message-ID: <Zd9wUv1zSJ59WS8i@shine.dominikbrodowski.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221194052.927623-1-surenb@google.com> <20240221194052.927623-20-surenb@google.com>
- <2daf5f5a-401a-4ef7-8193-6dca4c064ea0@suse.cz> <CAJuCfpGt+zfFzfLSXEjeTo79gw2Be-UWBcJq=eL1qAnPf9PaiA@mail.gmail.com>
- <6db0f0c8-81cb-4d04-9560-ba73d63db4b8@suse.cz>
-In-Reply-To: <6db0f0c8-81cb-4d04-9560-ba73d63db4b8@suse.cz>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 28 Feb 2024 17:50:50 +0000
-Message-ID: <CAJuCfpEgh1OiYNE_uKG-BqW2x97sOL9+AaTX4Jct3=WHzAv+kg@mail.gmail.com>
-Subject: Re: [PATCH v4 19/36] mm: create new codetag references during page splitting
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
-	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
-	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
-	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
-	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
-	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
-	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
-	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
-	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
-	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
-	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
-	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
-	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
-	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
-	cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Feb 28, 2024 at 12:47=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> w=
-rote:
->
-> On 2/27/24 17:38, Suren Baghdasaryan wrote:
-> > On Tue, Feb 27, 2024 at 2:10=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz=
-> wrote:
-> >>
-> >> On 2/21/24 20:40, Suren Baghdasaryan wrote:
-> >> > When a high-order page is split into smaller ones, each newly split
-> >> > page should get its codetag. The original codetag is reused for thes=
-e
-> >> > pages but it's recorded as 0-byte allocation because original codeta=
-g
-> >> > already accounts for the original high-order allocated page.
-> >>
-> >> This was v3 but then you refactored (for the better) so the commit log
-> >> could reflect it?
-> >
-> > Yes, technically mechnism didn't change but I should word it better.
-> > Smth like this:
-> >
-> > When a high-order page is split into smaller ones, each newly split
-> > page should get its codetag. After the split each split page will be
-> > referencing the original codetag. The codetag's "bytes" counter
-> > remains the same because the amount of allocated memory has not
-> > changed, however the "calls" counter gets increased to keep the
-> > counter correct when these individual pages get freed.
->
-> Great, thanks.
-> The concern with __free_pages() is not really related to splitting, so fo=
-r
-> this patch:
->
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
->
-> >
-> >>
-> >> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> >>
-> >> I was going to R-b, but now I recalled the trickiness of
-> >> __free_pages() for non-compound pages if it loses the race to a
-> >> speculative reference. Will the codetag handling work fine there?
-> >
-> > I think so. Each non-compoud page has its individual reference to its
-> > codetag and will decrement it whenever the page is freed. IIUC the
-> > logic in  __free_pages(), when it loses race to a speculative
-> > reference it will free all pages except for the first one and the
->
-> The "tail" pages of this non-compound high-order page will AFAICS not hav=
-e
-> code tags assigned, so alloc_tag_sub() will be a no-op (or a warning with
-> _DEBUG).
+Hi,
 
-Yes, that is correct.
+thanks for your work getting the Intel IPU6 camera system - such as found
+within my Dell Inc. XPS 9315 - to work with an upstream kernel. Much
+appreciated!
 
->
-> > first one will be freed when the last put_page() happens. If prior to
-> > this all these pages were split from one page then all of them will
-> > have their own reference which points to the same codetag.
->
-> Yeah I'm assuming there's no split before the freeing. This patch about
-> splitting just reminded me of that tricky freeing scenario.
+On Linux 6.8.0-rc6+ (as of this morning, HEAD is at cf1182944c7c), though,
+I get the following warning during boot with everything built into the
+kernel:
 
-Ah, I see. I thought you were talking about a page that was previously spli=
-t.
+------------[ cut here ]------------
+do not call blocking ops when !TASK_RUNNING; state=2 set at [<000000003688dc79>] prepare_to_wait_event+0x54/0x1a0
+WARNING: CPU: 5 PID: 122 at kernel/sched/core.c:10099 __might_sleep+0x59/0x60
+Modules linked in:
+CPU: 5 PID: 122 Comm: kworker/u24:3 Tainted: G                T  6.8.0-rc6+ #2
+Hardware name: Dell Inc. XPS 9315/00KRKP, BIOS 1.1.3 05/11/2022
+Workqueue: events_unbound deferred_probe_work_func
+RIP: 0010:__might_sleep+0x59/0x60
+Code: ee 48 89 df 5b 31 d2 5d e9 24 fd ff ff 48 8b 90 80 15 00 00 48 c7 c7 a8 3f e3 a7 c6 05 03 9f 47 03 01 48 89 d1 e8 27 6b fb ff <0f> 0b eb d1 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffafd10122fa48 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffffffffa7d97bd7 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000eaa R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: ffffa27506339628 R14: ffffa27505df3028 R15: 000000000122fb00
+FS:  0000000000000000(0000) GS:ffffa27c6f680000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f44ac3df460 CR3: 0000000114480000 CR4: 0000000000f50ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ? __might_sleep+0x59/0x60
+ ? __warn+0x80/0x170
+ ? __might_sleep+0x59/0x60
+ ? report_bug+0x182/0x1b0
+ ? handle_bug+0x40/0x80
+ ? exc_invalid_op+0x17/0x80
+ ? asm_exc_invalid_op+0x1a/0x20
+ ? __might_sleep+0x59/0x60
+ ? __might_sleep+0x59/0x60
+ gpiod_get_value_cansleep+0x19/0x60
+ vsc_tp_xfer+0x177/0x570
+ ? __pfx_autoremove_wake_function+0x10/0x10
+ mei_vsc_write+0xe5/0x1d0
+ mei_hbm_cl_connect_req+0x7d/0xd0
+ mei_cl_connect+0x399/0x460
+ mei_cldev_enable+0x97/0x1a0
+ mei_ace_probe+0x103/0x390
+ ? kernfs_add_one+0x146/0x180
+ ? really_probe+0x166/0x300
+ really_probe+0x166/0x300
+ ? __pfx___device_attach_driver+0x10/0x10
+ __driver_probe_device+0x6e/0x120
+ driver_probe_device+0x1a/0x90
+ __device_attach_driver+0x8e/0xd0
+ bus_for_each_drv+0x90/0xf0
+ __device_attach+0xac/0x1a0
+ ? process_one_work+0x19c/0x500
+ bus_probe_device+0x93/0xb0
+ ? process_one_work+0x19c/0x500
+ deferred_probe_work_func+0x96/0xd0
+ process_one_work+0x205/0x500
+ worker_thread+0x1dc/0x3e0
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0xea/0x120
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x2c/0x50
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1b/0x30
+ </TASK>
+irq event stamp: 1179
+hardirqs last  enabled at (1185): [<ffffffffa50b61d8>] console_unlock+0x118/0x170
+hardirqs last disabled at (1190): [<ffffffffa50b61bd>] console_unlock+0xfd/0x170
+softirqs last  enabled at (558): [<ffffffffa5012f8e>] irq_exit_rcu+0x7e/0xa0
+softirqs last disabled at (551): [<ffffffffa5012f8e>] irq_exit_rcu+0x7e/0xa0
+---[ end trace 0000000000000000 ]---
+mei intel_vsc-5db76cf6-0a68-4ed6-9b78-0361635e2447: deferred probe pending: (reason unknown)
+mei intel_vsc-92335fcf-3203-4472-af93-7b4453ac29da: deferred probe pending: (reason unknown)
 
->
-> So IIUC the "else if (!head)" path of __free_pages() will do nothing abou=
-t
-> the "tail" pages wrt code tags as there are no code tags.
-> Then whoever took the speculative "head" page reference will put_page() a=
-nd
-> free it, which will end up in alloc_tag_sub(). This will decrement calls
-> properly, but bytes will become imbalanced, because that put_page() will
-> pass order-0 worth of bytes - the original order is lost.
 
-Yeah, that's true. put_page() will end up calling
-free_unref_page(&folio->page, 0) even if the original order was more
-than 0.
+Using modules for mei[_*], ivsc_ace and ivsc_csi, I get a slightly different
+trace pointing to mei_vsc_probe():
 
->
-> Now this might be rare enough that it's not worth fixing if that would be
-> too complicated, just FYI.
 
-Yeah. We can fix this by subtracting the "bytes" counter of the "head"
-page for all free_the_page(page + (1 << order), order) calls we do
-inside __free_pages(). But we can't simply use pgalloc_tag_sub()
-because the "calls" counter will get over-decremented (we allocated
-all of these pages with one call). I'll need to introduce a new
-pgalloc_tag_sub_bytes() API and use it here. I feel it's too targeted
-of a solution but OTOH this is a special situation, so maybe it's
-acceptable. WDYT?
+------------[ cut here ]------------
+do not call blocking ops when !TASK_RUNNING; state=2 set at [<00000000cd4cced5>] prepare_to_wait_event+0x54/0x1a0
+WARNING: CPU: 3 PID: 335 at kernel/sched/core.c:10099 __might_sleep+0x59/0x60
+Modules linked in: mei_vsc mei_hdcp mei_pxp mei_me mei mei_vsc_hw
+CPU: 3 PID: 335 Comm: kworker/u24:5 Tainted: G                T  6.8.0-rc6+ #1
+Hardware name: Dell Inc. XPS 9315/00KRKP, BIOS 1.1.3 05/11/2022
+Workqueue: events_unbound async_run_entry_fn
+RIP: 0010:__might_sleep+0x59/0x60
+Code: ee 48 89 df 5b 31 d2 5d e9 24 fd ff ff 48 8b 90 b8 15 00 00 48 c7 c7 38 b7 62 a9 c6 05 43 9b 47 03 01 48 89 d1 e8 67 6b fb ff <0f> 0b eb d1 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffff9c2a86fa7b40 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffffffffa9590070 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000eaa R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: ffff8fe0c6413028 R14: ffff8fe0ce4f2028 R15: 0000000086fa7c00
+FS:  0000000000000000(0000) GS:ffff8fe82f580000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005559a7dbc010 CR3: 000000031385c000 CR4: 0000000000f50ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ? __might_sleep+0x59/0x60
+ ? __warn+0x80/0x170
+ ? __might_sleep+0x59/0x60
+ ? report_bug+0x182/0x1b0
+ ? handle_bug+0x40/0x80
+ ? exc_invalid_op+0x17/0x80
+ ? asm_exc_invalid_op+0x1a/0x20
+ ? __might_sleep+0x59/0x60
+ gpiod_get_value_cansleep+0x19/0x60
+ vsc_tp_xfer+0x177/0x570 [mei_vsc_hw]
+ ? mei_me_cl_rm_all+0x25/0x90 [mei]
+ ? __pfx_autoremove_wake_function+0x10/0x10
+ mei_vsc_write+0xe5/0x1d0 [mei_vsc]
+ mei_hbm_start_req+0x83/0xf0 [mei]
+ mei_reset+0x2af/0x4b0 [mei]
+ ? mei_start+0x1c/0x110 [mei]
+ ? rcu_read_lock_sched_held+0x42/0x80
+ mei_start+0x72/0x110 [mei]
+ mei_vsc_probe+0x9a/0x140 [mei_vsc]
+ platform_probe+0x3c/0x90
+ really_probe+0x166/0x300
+ ? process_one_work+0x19c/0x500
+ __driver_probe_device+0x6e/0x120
+ driver_probe_device+0x1a/0x90
+ __driver_attach_async_helper+0x50/0xa0
+ async_run_entry_fn+0x24/0xc0
+ ? process_one_work+0x19c/0x500
+ process_one_work+0x205/0x500
+ worker_thread+0x1dc/0x3e0
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0xea/0x120
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x2c/0x50
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1b/0x30
+ </TASK>
+irq event stamp: 1113943
+hardirqs last  enabled at (1113949): [<ffffffffa68b6308>] console_unlock+0x118/0x170
+hardirqs last disabled at (1113954): [<ffffffffa68b62ed>] console_unlock+0xfd/0x170
+softirqs last  enabled at (1113130): [<ffffffffa68130be>] irq_exit_rcu+0x7e/0xa0
+softirqs last disabled at (1113125): [<ffffffffa68130be>] irq_exit_rcu+0x7e/0xa0
+---[ end trace 0000000000000000 ]---
 
->
->
-> > Every time
-> > one of these pages are freed that codetag's "bytes" and "calls"
-> > counters will be decremented. I think accounting will work correctly
-> > irrespective of where these pages are freed, in __free_pages() or by
-> > put_page().
-> >
->
+
+
+Any ideas?
+
+Best,
+	Dominik
