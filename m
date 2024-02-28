@@ -1,109 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A3F4A1A
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32BBCA7D;
+	Wed, 28 Feb 2024 01:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709083387; cv=none; b=GPLZjargb8WPPKGlpDM8TzWsrhkRDOWqawee9K102U+790pOmn1YBceqMSh78Hc3EukGT5yHaA9QhCt1YdxcBYDUhKiWLXc7BItz8tEMnaDuybz+R5BTYl7pkKdB8ddkdIBAoe7KaWK3xVNPuiekN3le2FMiD3daLwpllzK2VQ8=
+	t=1709083394; cv=none; b=EW60zTFQ7fsw+8ucUwkADDGFtlSvn5rW+oUWV3Gq4v61BY9Ni/pPfWDbFyUV+OlJ0T5D/IhhmbSUY6PmGaRScWXm+fFZ+rHUAq8CvmPpoPr0SpVAoyl4xclJVz6KemfItA/xdFMX+snSNuv4yhuGPc/aI3lT9T645w1CgRXNnA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709083387; c=relaxed/simple;
-	bh=4RHgr8hwDvio26ZjrRIEjc1o1G4N6nvQ/z/qnal8zlo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uDsvC5tMwsDbqMqxeq828hHOxUrUQXylLcxdttGv4YNTXBxAJG1RdglxTbwmKnngUfyEXeLz84R4RK/D1y+zbryfU7q8AEHYvWZrSBe0evYytbm40X0Bx2jFpZKEqKAEc4hEFpH3j9/N+imx0u9pw9UDDxpwpIljBHoldBDghr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hFf2d9Um; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hFf2d9Um"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B199CC433C7;
-	Wed, 28 Feb 2024 01:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709083386;
-	bh=4RHgr8hwDvio26ZjrRIEjc1o1G4N6nvQ/z/qnal8zlo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hFf2d9Um1oLNPRpQKwnRWsQgSWfnZfclDq0mK6uTwtQon9JUl+0N2jeaceBhPe05M
-	 +vNnLXQX+wCmKoVURItJ/yK7HRp19OAihBvkFMe8jFpp1a1FCRuhh+hykv+OI25i/A
-	 de/BQ+qe6lWSR0IaGtrEME3ITZTIky0q/fBaDXjBmaB0zjcH2J4vEmKl0fFC1UFD8b
-	 sfbiirOm495Y+vaDUJ9XwIYvUiw6kin3Ou81XN8YGvgX61zUILXkQbjtieERJ5QJKB
-	 iC//ROnMNLxAaqwr801NkdP2V93BnnPpunLHarxr1USwTjfEw6HrgcfoNOhjO9esy1
-	 ch64RekLx9hmw==
-Message-ID: <bdacbc3c-87c0-42b7-980b-9f9830ab994c@kernel.org>
-Date: Wed, 28 Feb 2024 09:23:05 +0800
+	s=arc-20240116; t=1709083394; c=relaxed/simple;
+	bh=ySnKkkmIyF0nM+QoFS34jQb3+OjGr4X7xBd2KkCkhSs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sxIQagL1yVqw6xfHR7jYdpAl0D7bALY8V8OTeZFzmDmFVgzKf+RUUte2kqGQnVXvvgu6K3Ib5eWrmXak6k/E82prZWnn7GOlVW9T5Mgz6WAzUcvsFcVqbBCsaG7dKHEGZGCZjVM4vOhQTNEObPI5duQgLXNGSFt5yHiHNLuF47Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TkxS80Gn7z4f3jsY;
+	Wed, 28 Feb 2024 09:23:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 4580C1A0DDE;
+	Wed, 28 Feb 2024 09:23:09 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+	by APP1 (Coremail) with SMTP id cCh0CgDX8gv7it5lqQx6FQ--.57137S2;
+	Wed, 28 Feb 2024 09:23:09 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	tim.c.chen@linux.intel.com
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] Fixes and cleanups to fs-writeback
+Date: Wed, 28 Feb 2024 17:19:52 +0800
+Message-Id: <20240228091958.288260-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] f2fs: fix to don't call f2fs_stop_checkpoint in
- spinlock coverage
-Content-Language: en-US
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <20240222121851.883141-1-chao@kernel.org>
- <20240222121851.883141-2-chao@kernel.org> <Zd4g2SgQn3v_ZJMj@google.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <Zd4g2SgQn3v_ZJMj@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDX8gv7it5lqQx6FQ--.57137S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr1DCF17CF4rXFy7ZFyrJFb_yoWfuwb_ZF
+	WkJFyDJwnrXF17JayI9FnxJFyqkw4UXF15JF15CFs8Ar1Skrs8Zrs5ArWDXr1UXFy7uan8
+	Gw17Ww48JrsFgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb2xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
+	AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWD
+	JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gc
+	CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
+	r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87
+	Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IY
+	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
+	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
+	vE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUsBMNUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On 2024/2/28 1:50, Jaegeuk Kim wrote:
-> On 02/22, Chao Yu wrote:
->> f2fs_stop_checkpoint(, false) is complex and it may sleep, so we should
->> move it outside segmap_lock spinlock coverage in get_new_segment().
-> 
-> Chao, I merged this patch into
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git/commit/?h=dev-test&id=f3b576d209983b5d6e1cb130bfc8ca1f0bbcad6d
+v1->v2:
+-Filter non-expired in requeue_inode in patch "fs/writeback: avoid to
+writeback non-expired inode in kupdate writeback"
+-Wrap the comment at 80 columns in patch "fs/writeback: only calculate
+dirtied_before when b_io is empty"
+-Abandon patch "fs/writeback: remove unneeded check in
+writeback_single_inode"
+-Collect RVB from Jan and Tim
 
-It's fine to me.
+Kemeng Shi (6):
+  fs/writeback: avoid to writeback non-expired inode in kupdate
+    writeback
+  fs/writeback: bail out if there is no more inodes for IO and queued
+    once
+  fs/writeback: remove unused parameter wb of finish_writeback_work
+  fs/writeback: only calculate dirtied_before when b_io is empty
+  fs/writeback: correct comment of __wakeup_flusher_threads_bdi
+  fs/writeback: remove unnecessary return in writeback_inodes_sb
 
-Thanks,
+ fs/fs-writeback.c | 57 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 33 insertions(+), 24 deletions(-)
 
-> 
->>
->> Signed-off-by: Chao Yu <chao@kernel.org>
->> ---
->>   fs/f2fs/segment.c | 12 +++++++++---
->>   1 file changed, 9 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->> index d0209ea77dd2..8edc42071e6f 100644
->> --- a/fs/f2fs/segment.c
->> +++ b/fs/f2fs/segment.c
->> @@ -2646,6 +2646,7 @@ static void get_new_segment(struct f2fs_sb_info *sbi,
->>   	unsigned int old_zoneno = GET_ZONE_FROM_SEG(sbi, *newseg);
->>   	bool init = true;
->>   	int i;
->> +	int ret = 0;
->>   
->>   	spin_lock(&free_i->segmap_lock);
->>   
->> @@ -2671,9 +2672,8 @@ static void get_new_segment(struct f2fs_sb_info *sbi,
->>   		secno = find_first_zero_bit(free_i->free_secmap,
->>   							MAIN_SECS(sbi));
->>   		if (secno >= MAIN_SECS(sbi)) {
->> -			f2fs_stop_checkpoint(sbi, false,
->> -				STOP_CP_REASON_NO_SEGMENT);
->> -			f2fs_bug_on(sbi, 1);
->> +			ret = -ENOSPC;
->> +			goto out_unlock;
->>   		}
->>   	}
->>   	segno = GET_SEG_FROM_SEC(sbi, secno);
->> @@ -2704,7 +2704,13 @@ static void get_new_segment(struct f2fs_sb_info *sbi,
->>   	f2fs_bug_on(sbi, test_bit(segno, free_i->free_segmap));
->>   	__set_inuse(sbi, segno);
->>   	*newseg = segno;
->> +out_unlock:
->>   	spin_unlock(&free_i->segmap_lock);
->> +
->> +	if (ret) {
->> +		f2fs_stop_checkpoint(sbi, false, STOP_CP_REASON_NO_SEGMENT);
->> +		f2fs_bug_on(sbi, 1);
->> +	}
->>   }
->>   
->>   static void reset_curseg(struct f2fs_sb_info *sbi, int type, int modified)
->> -- 
->> 2.40.1
+-- 
+2.30.0
+
