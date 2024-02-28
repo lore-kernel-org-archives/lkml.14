@@ -1,102 +1,95 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AECEDD
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3D7111E
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709082697; cv=none; b=AxWgvF3n/mbr7M/NW/jUx7enzR7O7dPM9//bWkYXr9c/MKi7fTUBsW22RirrHZcp7NKeV82uot7ra0/vcj6vhTpP2KO0WXh/ssjH++8xoLdU8nQff5rllPkChFknf0/a3z7xsDpnsStXoLUmBdFkYNgsOLiqbAavQa/C+dOAdOs=
+	t=1709082699; cv=none; b=NDe/D+CQx93xogIxz9LxJGKBq0UAcf7YE4coZQ67xHauweqkMst00j/WAr93tr8+f3nmigdmAJReXeAxCNikPCT/1m0FpwrsSyu7hn/20jNLKFo0p8Pfbnoa5tFONR9CaGqX9SY61IEa5U8g0HmD7OROsWu90sPMzo9Y1JZldNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709082697; c=relaxed/simple;
-	bh=IcRzNIfL75SA47x9dzDBtcF3lyp2M6OmXVZB7D3m9dc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=tAOQl9tFfEaN9YvI8rUVRxHt+oiRK55Ie9PWg05tPDkR65iNM10PBLf3/Ie5WGBYjIhDhe6wDcXJK/HABBXX2ST1q0i3BQivITbM4ZgUxOe7SUiCksNWPNHvrjFZYW8ASrujzbPHhYxt0Y3DipRI7rVeZKL7YsAYK3HmabRfZr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=UJfLddb0; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1709082699; c=relaxed/simple;
+	bh=K2+cQMqQu0eaS0de3IxPWO1JWc7t415OLftE4xj9Ahw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eP6XIbbYTFY3MfRW6DwhmBt2PCXt1judtipWLlTlj325k51Nan/DlGAD9p0KOzIb6IIFvmWn1V/AlW0lqmJ30bhu8LnZX76bNGc4lRcFWYpaGQDtHot4naCNCZ0suYNkwSg6F+g256/UPWMzpqwMwiIj8RJ6K4aFyGCAY6mlBEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AWlcWOiT; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="UJfLddb0"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7DAF02C05BB;
-	Wed, 28 Feb 2024 14:11:28 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1709082688;
-	bh=IcRzNIfL75SA47x9dzDBtcF3lyp2M6OmXVZB7D3m9dc=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=UJfLddb03bXbdcmUuCfhIUk73jt5iH9CV3YekUNnyySQVtc5OzrEhvc9MAR4bFeHq
-	 1hqFh+aqupeaB7UyOcGgMyImXpOPaNkrzqjLqwGOVk2wIYmVKx61XWjIBsBeAZegx8
-	 ebBqG1I8xmQL8feeHP913s/Mnje2TaR6vNDQqEoWL6cMF0VUA37FW8rSFfdPAJmk1g
-	 xu5C54Wb2ktHp59wj0fdhp4Khjn6b67j72WGjBDYl6/o98raL7kSi16km9obrFhaXO
-	 dmYxuCjckQCHapi6oBGfGTrnCB+9AGauA7WvqJgQgyiPFMLRIh6NirnJJoUfYqLFKI
-	 AaJsM81XF8saA==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B65de8840000a>; Wed, 28 Feb 2024 14:11:28 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1118.40; Wed, 28 Feb 2024 14:11:28 +1300
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with Microsoft
- SMTP Server (TLS) id 15.0.1497.48; Wed, 28 Feb 2024 14:11:28 +1300
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1118.040; Wed, 28 Feb 2024 14:11:27 +1300
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-CC: "andy@kernel.org" <andy@kernel.org>, "geert@linux-m68k.org"
-	<geert@linux-m68k.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "andrew@lunn.ch"
-	<andrew@lunn.ch>, "gregory.clement@bootlin.com"
-	<gregory.clement@bootlin.com>, "sebastian.hesselbarth@gmail.com"
-	<sebastian.hesselbarth@gmail.com>, "ojeda@kernel.org" <ojeda@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>, "javierm@redhat.com"
-	<javierm@redhat.com>, "robin@protonic.nl" <robin@protonic.nl>,
-	"lee@kernel.org" <lee@kernel.org>, "pavel@ucw.cz" <pavel@ucw.cz>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: marvell: Indicate USB activity on x530
-Thread-Topic: [PATCH v2 4/4] ARM: dts: marvell: Indicate USB activity on x530
-Thread-Index: AQHaacMbtvQKrwfF6E+AeUPYWRr7/7EeB2qAgAARPYA=
-Date: Wed, 28 Feb 2024 01:11:27 +0000
-Message-ID: <dec8e014-ebd4-46bb-a7e1-421a65008a38@alliedtelesis.co.nz>
-References: <20240227212244.262710-1-chris.packham@alliedtelesis.co.nz>
- <20240227212244.262710-5-chris.packham@alliedtelesis.co.nz>
- <CAHp75VfGfwxh_VVa8N_rYb-MK9AsufqtLRXvquuJwBGnEqh+gw@mail.gmail.com>
-In-Reply-To: <CAHp75VfGfwxh_VVa8N_rYb-MK9AsufqtLRXvquuJwBGnEqh+gw@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4468C1D113BACB4EBDFC78153780225A@atlnz.lc>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AWlcWOiT"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dcb3e6ff3fso16992845ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:11:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709082697; x=1709687497; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M5Amh+qBo3n8SZ1SFRORiYxCnsIvquzWzeGyrkguO0Y=;
+        b=AWlcWOiTlYX3Gd44zEbVMCnE1g0X/BlV+zxulWGl89WfP8OrSMG+NP30f2XpP7QAXJ
+         G4BQ5k1FilmjrF7QcUb+B1iCzjjN8P/I/AIqf/DsEzQSuSYRKjs6qKGaKL/0O8yTTSnB
+         Ddu9rX5803O2OQis+tM2L98wJACik9esKZPW0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709082697; x=1709687497;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M5Amh+qBo3n8SZ1SFRORiYxCnsIvquzWzeGyrkguO0Y=;
+        b=gaed4+kcGyjHOBqMFw+ZT+xpM7f5mD0Q6sQp2R9LBFaBoq9/M+VRQHZOSmqsvNAhs/
+         4k1GlaBMtTLwu/SvHyiq/sveXPNGeysVdCQeZFnS8l0IaQlEOccU6OxsdBNPbpK/UALx
+         At/hMDIlYUBlA7ALIxBAMbTkzWFICMO13ZWetV6a1TghKJrG728hQ8rjQVqRQihr4f9D
+         wuOE+m9Ex33CB18ARr7TyFU+225Wxxaqi2Pp//q+drI3gsX/7e3cUm/4jpVJdUIG/4Ya
+         +mYsW07hCbd5HfiuCUDEdMp3yCa+vuUG7fxnhtmQXrKuWnTGDSSh3m+S9ifJE24xqzcG
+         UYvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVkU+7OTIembt+WbQa9iA5cl1EH6NJfJMAgw0/K+V0LLMTZmz2FP4IRdT8N+/m+vGNlGbreaqBezXteQ3v5l3fjvEjb0t5rJmyW2ds
+X-Gm-Message-State: AOJu0Yx9RCQS7hA1UN27QnRmxoBWsTlba7ox0bHu75KZ1hPLQCdffB2/
+	ec+vf6BJAB19YJma3OyJDdEITde/VA7Lsj7CFyCF8Xg1JCw1Rhhn1ECcMVhRRg==
+X-Google-Smtp-Source: AGHT+IFOFY88+LTSShatdwzqVAAC52XPnhIZWlpmq8/WxiTnE6WOCWIgXgVJWb5hCTv/yF5NF+ZYbw==
+X-Received: by 2002:a17:902:c946:b0:1dc:7ca:36de with SMTP id i6-20020a170902c94600b001dc07ca36demr13094236pla.9.1709082697093;
+        Tue, 27 Feb 2024 17:11:37 -0800 (PST)
+Received: from hsinyi.sjc.corp.google.com ([2620:15c:9d:2:87d1:e95d:b670:4783])
+        by smtp.gmail.com with ESMTPSA id kl14-20020a170903074e00b001db4b3769f6sm2131529plb.280.2024.02.27.17.11.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 17:11:36 -0800 (PST)
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] Match panel with id and name
+Date: Tue, 27 Feb 2024 17:05:57 -0800
+Message-ID: <20240228011133.1238439-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65de8840 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=Oe2OvPflw9Sbgrn8BdcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
-X-SEG-SpamProfiler-Score: 0
+Content-Transfer-Encoding: 8bit
 
-DQpPbiAyOC8wMi8yNCAxMzowOSwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiBPbiBUdWUsIEZl
-YiAyNywgMjAyNCBhdCAxMToyMuKAr1BNIENocmlzIFBhY2toYW0NCj4gPGNocmlzLnBhY2toYW1A
-YWxsaWVkdGVsZXNpcy5jby5uej4gd3JvdGU6DQo+PiBVc2UgdGhlIGRvdCBvbiB0aGUgNyBzZWdt
-ZW50IExFRCBibG9jayB0byBpbmRpY2F0ZSBVU0IgYWNjZXNzIG9uIHRoZQ0KPj4geDUzMC4NCj4g
-Tm90IHN1cmUgaWYgaXQncyBhIGdvb2QgaWRlYS4gSSBoYXZlIHNvbWUgcGxhbnMgZm9yIHRoZSBj
-b21wcmVzc2VkDQo+IGZvcm1hdCwgaS5lLiB1c2UgRFAgZm9yIGRvdHMgKG9yIGNvbXBhdGlibGUg
-cGllY2VzKSBzbyB3ZSBtYXkgcHJpbnQgdXANCj4gdG8gZG91YmxlIGNoYXJhY3RlcnMgd2l0aCB0
-aGF0IChlLmcuLCAnNi40LjUuMy4nIGFzIGEgc2luZ2xlIHN0cmluZyBvbg0KPiBhIDQtZGlnaXQg
-ZGlzcGxheSkuDQo+DQo+IFRoYXQgc2FpZCwgSSB3b3VsZCBsaWtlIHRvIGRlZmVyIHRoaXMgZm9y
-IGEgd2hpbGUuDQo+DQpJbiBvdXIgY2FzZSB0aGlzIGlzIGhvdyB3ZSd2ZSBtYXRjaGVkIHVwIG90
-aGVyIGRldmljZXMgd2hpY2ggaGF2ZSBhIDMgDQpMRUQgdG93ZXIgZm9yICJwb3dlciIsICJmYXVs
-dCIgYW5kICJ1c2IiIHdpdGggZGV2aWNlcyB3aGljaCBoYXZlIGEgDQo3LXNlZ21lbnQgTEVEIGlu
-c3RlYWQuIEkganVzdCB3YW50ZWQgdG8gcmVmbGVjdCByZWFsaXR5IGluIHRoZSB1cHN0cmVhbSBk
-dHMuDQoNCkl0IGFsc28gYW5zd2VycyB0aGUgcXVlc3Rpb24gIndoYXQgYWJvdXQgdGhlIERQIExF
-RCI/DQo=
+This series is a follow up for 1a5e81de180e ("Revert "drm/panel-edp: Add
+auo_b116xa3_mode""). It's found that 2 different AUO panels use the same
+product id. One of them requires an overridden mode, while the other should
+use the mode directly from edid.
+
+Match the panel for both name and id. If not found, fallback to match id.
+
+v1: https://lore.kernel.org/lkml/20240223223958.3887423-1-hsinyi@chromium.org/T/
+
+Hsin-Yi Wang (3):
+  drm_edid: Support getting EDID through ddc without connector
+  drm/panel: panel-edp: Match edp_panels with panel name
+  drm/panel: panel-edp: Fix AUO 0x405c panel naming and add a variant
+
+ drivers/gpu/drm/drm_edid.c        | 114 ++++++++++++------------------
+ drivers/gpu/drm/panel/panel-edp.c |  61 ++++++++++++++--
+ include/drm/drm_edid.h            |   3 +-
+ 3 files changed, 104 insertions(+), 74 deletions(-)
+
+-- 
+2.44.0.rc1.240.g4c46232300-goog
+
