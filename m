@@ -1,106 +1,233 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7104915D5AE
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 17:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624FB3FB80
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 17:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709139959; cv=none; b=H/Kr1zqLKqXgeKMJkryUAfJPFQNeThg7uWN/J9MXW4ZRea2Kln68bJdH9UgGiycmi5qEPIoEVghrF6jj6MN/xwOyBq1EBKKksszPCXaKJN3OuvKPvjpyLoqOo6LOA+xHB7YcMg5QgyjwGjwyQ5a9vpyIMLUsIzICDLNgM27YNZc=
+	t=1709140015; cv=none; b=Ee+xGim5fNG8lpwdU3PYM4FdWRQkxV7LXNO7GxzWKwNvTEmKGZRBTNtrP4ErsBXjJYeQoRD2mYBxgrB2Ex+c25A7eDLFyL8p7/j5E6LyFkcrWtk4TVL3RJjl0iHY4bivfUOFn5CUlSjCAX4A5qKrPcHX8kgOMdBgNeS19pn1rJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709139959; c=relaxed/simple;
-	bh=xsjOnfV9ueS/E2C/cSWGm39SXO3D/7ApeGNI6RuZo9g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sI0y1MoOueHOKFI1Kg3TJpTythxbM6vcP2yT0LMARRj0kKiPrVy7hypzSWqEaT1Z2HS2uf7ExbixO6TsMvGYXQCQ5X4bqiixzmJxKXsBO38nYLJPTVlCuCHYqYXbGc4pNkc1GVBo3kaEedpJEZENvmEkpO4isv+15uMK34KC4Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=sZl8QxOi; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1709140015; c=relaxed/simple;
+	bh=UVR4EaMABM/htDkI/YWpKQyt6BMrH6EoY3lZhCa5nyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bh8tAZ4atFA5HfaElSJPtrdUcqDcfd750ElvMQP20owJPawQoI47cNHcHy9+poVjc7FcmPyXkWxDO31h49vS22s5ejUVtlAtYPb6alILTOKuotE/p91WBf1qaph9qJQwqXIr0xNBOWjKW+7QfQs6lXUqZdarzGIZe/aXnm5PDmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iBqh9oS8; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="sZl8QxOi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=mBC3pgi3Jdc2YKejyvmMgNdf8EHNn5L2lgfo9Ko6DEA=;
-	t=1709139956; x=1710349556; b=sZl8QxOiLktsZggT9NnLdc473yvUOYZ7hjLq9kqBwuuZyd8
-	dOMANhSSttAk6bAuQv24zBuM7rvv0OHIOexmxLgUc1dPZUT2D3XG1ww//xhDn+YOgYFhkqpXU6eUd
-	J1b/4u+U0yrDnCfqGFNMIpJVM4j0Ljyjvy58Ohta45PYGlHlsE9R4jfXcZS8sv9rF6Xu1LC91Bg7Q
-	Tjw0ljh1HWiioic+YZP3PXmykSetIHn/vOGpMbl3n1ERSoh75Y6bFW5Ww48Vzs5UUw/6dp0axoZO1
-	q88ZDduEg9qrxfsHDSJrtCS98z7Tl4hoZl3/LHI+3d07IiJbBWGa6A3JiYGhmuAQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rfNNQ-0000000CIq1-2nGv;
-	Wed, 28 Feb 2024 18:05:52 +0100
-Message-ID: <84e4f0d70c5552dd7fa350c61c28de9637628ee6.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 2/4] devcoredump: Add dev_coredumpm_timeout()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: =?ISO-8859-1?Q?Jos=E9?= Roberto de Souza <jose.souza@intel.com>, 
-	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>, Mukesh Ojha
- <quic_mojha@quicinc.com>,  Jonathan Cavitt <jonathan.cavitt@intel.com>
-Date: Wed, 28 Feb 2024 18:05:51 +0100
-In-Reply-To: <20240228165709.82089-2-jose.souza@intel.com>
-References: <20240228165709.82089-1-jose.souza@intel.com>
-	 <20240228165709.82089-2-jose.souza@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iBqh9oS8"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e332bc65b3so3268889b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:06:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709140013; x=1709744813; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WFHtXFDlDHWgb7x7MqqruvZua5+x537Mh1k3qADbpRw=;
+        b=iBqh9oS8g6uIGO0VkioGAP4SYIH/wMp4Z3KEJFA5KtR6rLKwPB53dEzLpXpZQhbmi8
+         AgikK6RXoGlQSKXnRRNX7aV31WIuQAVbAMywuJolOX0Z0429FiX+NMtWxKZCNN0G1c3o
+         MM/nBegclqmyLxGbLk7QaF9Osi8F2B4EIoTQinom11C15pZiUMAp3KvagEJAQZ738dw/
+         LnXRQGu2Trz+AHoeotr/HUsn42Mk0Tt6Pr8tq00AGuHScuD9KPuc/7GxTqXM7rx7pcRR
+         MICEMTvYzlXkTR5O9az5Rcx+UBSCp/UWXU6NyZssnfLVpTXBPqKdozQK8YTzQSgCZIkG
+         QiBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709140013; x=1709744813;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WFHtXFDlDHWgb7x7MqqruvZua5+x537Mh1k3qADbpRw=;
+        b=JTbsK8hbSKufAp344GQblUIQ8gnr83Q7WJP+X/uQAxcTMY0Zt0EGa3czLQV8TgQKF5
+         41SG1QUKifChJETeUSbTlCpvVcUOgcrxUHds584xIX/qY1HxCD/dw21yOPpwAzIkH+++
+         te6C4zauCEq2ntp8gEXE0SdVfp+d9BvJvQ3mcOQPqzKaohSnyODcHs+jwIgEYQ6o6Kow
+         veC4zA+YPToq7GSal6u9yG3T5YP686xxZwMAqbZWVIDk/T6+n4+5aL73IOciz8Mhb9D7
+         2RdoykpgrmXyVwqXCaaFLJjyOdgD0rEnAj9RBbAfA2eerwWn4qWf2jPqbAb5J8HdqXiS
+         9t7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCULnBsXlRrvjZ8cWi9pAqcKY4OhJxa2OfNw7xJQeNzOnZxEq8NOkZylmCeYckAJDPW1Zmguw1ioR90gsVyhzAn1x/Tgu1w1dwKMw7fH
+X-Gm-Message-State: AOJu0Yx8IQbP0UsodMBINT/V5hmFSPDUKMmx4btyp5je3OpXpFUvoNY6
+	dGsSokAazDhMeRNITtyEicfp4nKJ4z5WS6hoOXzENtf2ltdmKJntkYYy1GnRJ9Y=
+X-Google-Smtp-Source: AGHT+IGUTrBosSI6pOEiV0utU/zlSRWcLnNKLdB5bs5Ix02glwI99H7F4D1FM8jhoLoO8E3LE4syxA==
+X-Received: by 2002:aa7:93a1:0:b0:6e4:b4ca:992b with SMTP id x1-20020aa793a1000000b006e4b4ca992bmr187287pff.21.1709140012679;
+        Wed, 28 Feb 2024 09:06:52 -0800 (PST)
+Received: from p14s ([2604:3d09:148c:c800:96d9:3aed:533c:8c94])
+        by smtp.gmail.com with ESMTPSA id x125-20020a626383000000b006e4d8687f44sm8422772pfb.102.2024.02.28.09.06.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 09:06:52 -0800 (PST)
+Date: Wed, 28 Feb 2024 10:06:49 -0700
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Tanmay Shah <tanmay.shah@amd.com>
+Cc: andersson@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	michal.simek@amd.com, ben.levinsky@amd.com,
+	linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 4/4] remoteproc: zynqmp: parse TCM from device tree
+Message-ID: <Zd9oKWz073OJxKwp@p14s>
+References: <20240219174437.3722620-1-tanmay.shah@amd.com>
+ <20240219174437.3722620-10-tanmay.shah@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240219174437.3722620-10-tanmay.shah@amd.com>
 
-> Current 5-minute timeout may be too short for users to search and
-> understand what needs to be done to capture coredump to report bugs.
+On Mon, Feb 19, 2024 at 09:44:37AM -0800, Tanmay Shah wrote:
+> ZynqMP TCM information was fixed in driver. Now ZynqMP TCM information
+> is available in device-tree. Parse TCM information in driver
+> as per new bindings.
+> 
+> Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
+> ---
+> 
+> Changes in v11:
+>   - Remove redundant initialization of the variable
+>   - return correct error code if memory allocation failed
 
-Conceptually, I'm not sure I understand this. Users should probably have
-a script to capture coredumps to a file in the filesystem, possibly with
-additional data such as 'dmesg' at the time of the dump.
+Where is that?  I looked really hard but couldn't find it.
 
-Having this stick around longer in core kernel memory (not even
-swappable) seems like a bad idea?
-
-What kind of timeout were you thinking? Maybe you'd want 10 minutes? An
-hour?
-
-Also, then, why should the timeout be device-specific? If the user is
-going to need time to find stuff, then surely that applies regardless of
-the device?
-
-So ... I guess I don't really like this, and don't really see how it
-makes sense. Arguably, 5 minutes even is too long, not too short,
-because you should have scripting that captures it, writes it to disk,
-and all that can happen in the space of seconds, rather than minutes.
-It's trivial to write such a script with a udev trigger or similar.
-
-If we wanted to, we could even have a script that not only captures it
-to disk, but also deletes it again from disk after a day or something,
-so if you didn't care you don't get things accumulating. But I don't see
-why the kernel should need to hang on to all the (possibly big) core
-dump in RAM, for whatever time. And I also don't like the device-
-dependency very much, TBH.
-
-
-
-But if we do go there eventually:
-
-> +void dev_coredumpm(struct device *dev, struct module *owner,
-> +		   void *data, size_t datalen, gfp_t gfp,
-> +		   ssize_t (*read)(char *buffer, loff_t offset, size_t count,
-> +				   void *data, size_t datalen),
-> +		   void (*free)(void *data))
+> 
+>  drivers/remoteproc/xlnx_r5_remoteproc.c | 112 ++++++++++++++++++++++--
+>  1 file changed, 107 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
+> index 42b0384d34f2..d4a22caebaad 100644
+> --- a/drivers/remoteproc/xlnx_r5_remoteproc.c
+> +++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
+> @@ -74,8 +74,8 @@ struct mbox_info {
+>  };
+>  
+>  /*
+> - * Hardcoded TCM bank values. This will be removed once TCM bindings are
+> - * accepted for system-dt specifications and upstreamed in linux kernel
+> + * Hardcoded TCM bank values. This will stay in driver to maintain backward
+> + * compatibility with device-tree that does not have TCM information.
+>   */
+>  static const struct mem_bank_data zynqmp_tcm_banks_split[] = {
+>  	{0xffe00000UL, 0x0, 0x10000UL, PD_R5_0_ATCM, "atcm0"}, /* TCM 64KB each */
+> @@ -757,6 +757,103 @@ static struct zynqmp_r5_core *zynqmp_r5_add_rproc_core(struct device *cdev)
+>  	return ERR_PTR(ret);
+>  }
+>  
+> +static int zynqmp_r5_get_tcm_node_from_dt(struct zynqmp_r5_cluster *cluster)
 > +{
-> +	dev_coredumpm_timeout(dev, owner, data, datalen, gfp, read, free,
-> +			      DEVCD_TIMEOUT);
+> +	int i, j, tcm_bank_count, ret, tcm_pd_idx, pd_count;
+> +	struct of_phandle_args out_args;
+> +	struct zynqmp_r5_core *r5_core;
+> +	struct platform_device *cpdev;
+> +	struct mem_bank_data *tcm;
+> +	struct device_node *np;
+> +	struct resource *res;
+> +	u64 abs_addr, size;
+> +	struct device *dev;
+> +
+> +	for (i = 0; i < cluster->core_count; i++) {
+> +		r5_core = cluster->r5_cores[i];
+> +		dev = r5_core->dev;
+> +		np = r5_core->np;
+> +
+> +		pd_count = of_count_phandle_with_args(np, "power-domains",
+> +						      "#power-domain-cells");
+> +
+> +		if (pd_count <= 0) {
+> +			dev_err(dev, "invalid power-domains property, %d\n", pd_count);
+> +			return -EINVAL;
+> +		}
+> +
+> +		/* First entry in power-domains list is for r5 core, rest for TCM. */
+> +		tcm_bank_count = pd_count - 1;
+> +
+> +		if (tcm_bank_count <= 0) {
+> +			dev_err(dev, "invalid TCM count %d\n", tcm_bank_count);
+> +			return -EINVAL;
+> +		}
+> +
+> +		r5_core->tcm_banks = devm_kcalloc(dev, tcm_bank_count,
+> +						  sizeof(struct mem_bank_data *),
+> +						  GFP_KERNEL);
+> +		if (!r5_core->tcm_banks)
+> +			return -ENOMEM;
+> +
+> +		r5_core->tcm_bank_count = tcm_bank_count;
+> +		for (j = 0, tcm_pd_idx = 1; j < tcm_bank_count; j++, tcm_pd_idx++) {
+> +			tcm = devm_kzalloc(dev, sizeof(struct mem_bank_data),
+> +					   GFP_KERNEL);
+> +			if (!tcm)
+> +				return -ENOMEM;
+> +
+> +			r5_core->tcm_banks[j] = tcm;
+> +
+> +			/* Get power-domains id of TCM. */
+> +			ret = of_parse_phandle_with_args(np, "power-domains",
+> +							 "#power-domain-cells",
+> +							 tcm_pd_idx, &out_args);
+> +			if (ret) {
+> +				dev_err(r5_core->dev,
+> +					"failed to get tcm %d pm domain, ret %d\n",
+> +					tcm_pd_idx, ret);
+> +				return ret;
+> +			}
+> +			tcm->pm_domain_id = out_args.args[0];
+> +			of_node_put(out_args.np);
+> +
+> +			/* Get TCM address without translation. */
+> +			ret = of_property_read_reg(np, j, &abs_addr, &size);
+> +			if (ret) {
+> +				dev_err(dev, "failed to get reg property\n");
+> +				return ret;
+> +			}
+> +
+> +			/*
+> +			 * Remote processor can address only 32 bits
+> +			 * so convert 64-bits into 32-bits. This will discard
+> +			 * any unwanted upper 32-bits.
+> +			 */
+> +			tcm->da = (u32)abs_addr;
+> +			tcm->size = (u32)size;
+> +
+> +			cpdev = to_platform_device(dev);
+> +			res = platform_get_resource(cpdev, IORESOURCE_MEM, j);
+> +			if (!res) {
+> +				dev_err(dev, "failed to get tcm resource\n");
+> +				return -EINVAL;
+> +			}
+> +
+> +			tcm->addr = (u32)res->start;
+> +			tcm->bank_name = (char *)res->name;
+> +			res = devm_request_mem_region(dev, tcm->addr, tcm->size,
+> +						      tcm->bank_name);
+> +			if (!res) {
+> +				dev_err(dev, "failed to request tcm resource\n");
+> +				return -EINVAL;
+> +			}
+> +		}
+> +	}
+> +
+> +	return 0;
 > +}
->  EXPORT_SYMBOL_GPL(dev_coredumpm);
-
-This could be a trivial static inline now, if you just put DEVCD_TIMEOUT
-into the header file. Seems better than exporting another whole function
-for it. Then you also don't need the no-op version of it.
-
-johannes
-
+> +
+>  /**
+>   * zynqmp_r5_get_tcm_node()
+>   * Ideally this function should parse tcm node and store information
+> @@ -835,9 +932,14 @@ static int zynqmp_r5_core_init(struct zynqmp_r5_cluster *cluster,
+>  	struct zynqmp_r5_core *r5_core;
+>  	int ret, i;
+>  
+> -	ret = zynqmp_r5_get_tcm_node(cluster);
+> -	if (ret < 0) {
+> -		dev_err(dev, "can't get tcm node, err %d\n", ret);
+> +	r5_core = cluster->r5_cores[0];
+> +	if (of_find_property(r5_core->np, "reg", NULL))
+> +		ret = zynqmp_r5_get_tcm_node_from_dt(cluster);
+> +	else
+> +		ret = zynqmp_r5_get_tcm_node(cluster);
+> +
+> +	if (ret) {
+> +		dev_err(dev, "can't get tcm, err %d\n", ret);
+>  		return ret;
+>  	}
+>  
+> -- 
+> 2.25.1
+> 
