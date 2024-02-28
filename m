@@ -1,39 +1,39 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCD612EBF4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4120D12EBF2;
 	Wed, 28 Feb 2024 11:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709119701; cv=none; b=MycEEsABjeYNYC5Y6TI8K8W9ydIS6tyeIlPf2jCqVhN+i67bHEYtn+9Qr0iXjCWDO84njniq1MnUDwPEWKCcFOqWNIABLZBJ8GojtOBSD+VhsE6KRaNh5tQYj3ZfL8RuWkbQVDa50rMvgOe3y1g7VwRcPrtyTCvyWsYKIfkhrNg=
+	t=1709119701; cv=none; b=DjjOM7RHiiF0ShxwxZwnOVueTretlzHzORZJyFb+HVKTmF5Hg1uLhKxzEmKkJVUnjgqOb+4g21X6R00neVmq+s2yZHPtLOZapYFuz6Zrwvk6LvYH0Ige+8GsNexUSaUeaEZ8jtwlc16Zv5B1GGyj+uuQNcSQVIB+NBrOT5avre8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709119701; c=relaxed/simple;
-	bh=NUu8zN6xqrju2bNcfPvo4/Zo8f0Ipw0pbnNHUKylwzM=;
+	bh=Vz9SPJE8farhIihvENIryv9IAcRYm/mAPepMAz2P3kE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=X3mmt+XF6noWc/24ZQZB6c6cjdv6H3wCMjeScEroJ+J4aEds1u52TJM9Qm7SlaXwCbMW1D6B19RReEBQodHnNdxLHR+gDIRi3Wd//zlfanwnAWxB4YVEwYRig58rlIzHs/pI2T78Pg2I6Pyg08Tdq+GlAesG7vrpKWn1Wphum/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gPghGJ2l; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=u5jdQZ4omk0J9FBa1kB+LoYCjIgnwCi1l8QNtw1V69JHG/cuI3TZN+x36jIiMIISmd0/EAgtHeGLBxXOgtjseV/lrL52Nm/112DrUyTAL50sST+CNioDVzlnW+cJ/5TWT5o3ju0iF+4urRoVTr4Jwo9i4PEuyGgEjGxjpMn//Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pBoQZ29x; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gPghGJ2l"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DE5261BF216;
-	Wed, 28 Feb 2024 11:28:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pBoQZ29x"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CD8DC1BF204;
+	Wed, 28 Feb 2024 11:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709119697;
+	t=1709119691;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7uQzyRzXBi1cM/sDEW5ZhksCKgQRrZdcLK2Y5fiRh7o=;
-	b=gPghGJ2likpuh6bn3kGEI10IWheNaKjcSOf+/rMK/FnqFTWFDFtHZSGRxS84PSHtjTrTje
-	Xw2ExCe6nBHnQp/5U97ND92n2LfvXmgsV+/d8+/bbdx2+wilCAvBRdRReyik4jsYxNpjTT
-	qbfXcZRKlsTy140Iga9TKjZU7e0GwhoDR1dboDSf1mIQ4mzVM+OUAynXh80t7r2t+ob85S
-	YpDLl7CiZIAXcb6iKSN5fS4u4tYExLRIX5uT0qspwvcX5T/f+7BH+6tMd5fmhGWpD7YY+F
-	Q847SWHnWM+MDaT1c2MdeN6dPzF6MycwJdQI2QFA9HjLy/cZ6i9zNlQn3Lipiw==
+	bh=d+8O51qGAeyL9mM1QtsKVOAqzV8blYa5X3FlS/3MyRU=;
+	b=pBoQZ29x7JzynEauavVMcRHTUx9I2fRW982GdqGJnzY/EjCA6mKjSCCPNY/asIg7JqOvm4
+	XDmMdt43MthuDDY4qNbXXD/P3pAwlbROlOJ1L8DfmkbFJ0GChOpVoX9+oBU9q+HWM2zKIh
+	93YM5GN7rcjOMQ8eAaQsMMaG95uhVO8StoeB85At8TVNB8JGvRAelV3wkinqtJmEgfq4S0
+	ZD4s63d4UzZK21L/UvohgUdv7kI53Lg3sorcQJLtvny3fvAd+R05/YJYNxbus1wDwjG/To
+	WMGBJXV8RLWl9p7ZA2/uIONLA0UZmSJ9/932z8u7XJ8UcZtDfxPPq9oH843YEg==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 28 Feb 2024 12:28:07 +0100
-Subject: [PATCH v2 09/30] pinctrl: nomadik: fix build warning
- (-Wpointer-to-int-cast)
+Date: Wed, 28 Feb 2024 12:27:59 +0100
+Subject: [PATCH v2 01/30] dt-bindings: gpio: nomadik: convert into yaml
+ format
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240228-mbly-gpio-v2-9-3ba757474006@bootlin.com>
+Message-Id: <20240228-mbly-gpio-v2-1-3ba757474006@bootlin.com>
 References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com>
 In-Reply-To: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -60,38 +60,151 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Fix compiler warning found in the pinctrl-nomadik platform driver. GCC
-message is as such:
+Create gpio/st,nomadik-gpio.yaml json-schema dt-bindings file as a
+direct translation from gpio-nmk.txt. Remove the txt file.
 
-drivers/pinctrl/nomadik/pinctrl-nomadik.c:1169:12: warning: cast from
-pointer to integer of different size [-Wpointer-to-int-cast]
+Add clocks and gpio-ranges properties which were missing and are being
+used in Nomadik devicetrees.
 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/pinctrl/nomadik/pinctrl-nomadik.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/gpio/gpio-nmk.txt          | 31 ---------
+ .../devicetree/bindings/gpio/st,nomadik-gpio.yaml  | 76 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 3 files changed, 77 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index 1be0c48712b7..c8d2699be985 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -1176,14 +1176,14 @@ static int nmk_pinctrl_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct device_node *prcm_np;
- 	struct nmk_pinctrl *npct;
--	unsigned int version = 0;
-+	uintptr_t version = 0;
- 	int i;
- 
- 	npct = devm_kzalloc(&pdev->dev, sizeof(*npct), GFP_KERNEL);
- 	if (!npct)
- 		return -ENOMEM;
- 
--	version = (unsigned int)device_get_match_data(&pdev->dev);
-+	version = (uintptr_t)device_get_match_data(&pdev->dev);
- 
- 	/* Poke in other ASIC variants here */
- 	if (version == PINCTRL_NMK_STN8815)
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-nmk.txt b/Documentation/devicetree/bindings/gpio/gpio-nmk.txt
+deleted file mode 100644
+index 8315ac7780ef..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-nmk.txt
++++ /dev/null
+@@ -1,31 +0,0 @@
+-Nomadik GPIO controller
+-
+-Required properties:
+-- compatible            : Should be "st,nomadik-gpio".
+-- reg                   : Physical base address and length of the controller's registers.
+-- interrupts            : The interrupt outputs from the controller.
+-- #gpio-cells           : Should be two:
+-                            The first cell is the pin number.
+-                            The second cell is used to specify optional parameters:
+-                              - bits[3:0] trigger type and level flags:
+-                                  1 = low-to-high edge triggered.
+-                                  2 = high-to-low edge triggered.
+-                                  4 = active high level-sensitive.
+-                                  8 = active low level-sensitive.
+-- gpio-controller       : Marks the device node as a GPIO controller.
+-- interrupt-controller  : Marks the device node as an interrupt controller.
+-- gpio-bank             : Specifies which bank a controller owns.
+-- st,supports-sleepmode : Specifies whether controller can sleep or not
+-
+-Example:
+-
+-                gpio1: gpio@8012e080 {
+-                        compatible = "st,nomadik-gpio";
+-                        reg =  <0x8012e080 0x80>;
+-                        interrupts = <0 120 0x4>;
+-                        #gpio-cells = <2>;
+-                        gpio-controller;
+-                        interrupt-controller;
+-                        st,supports-sleepmode;
+-                        gpio-bank = <1>;
+-                };
+diff --git a/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
+new file mode 100644
+index 000000000000..69774f36e03f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/st,nomadik-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Nomadik GPIO controller
++
++description:
++  The Nomadik GPIO driver handles Nomadik SoC GPIO blocks. This block has also
++  been called ST STA2X11. On the Nomadik platform, this driver is intertwined
++  with pinctrl-nomadik.
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++properties:
++  $nodename:
++    pattern: "^gpio@[0-9a-f]+$"
++
++  compatible:
++    const: st,nomadik-gpio
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  gpio-bank:
++    description: System-wide GPIO bank index.
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  st,supports-sleepmode:
++    description: Whether the controller can sleep or not.
++    $ref: /schemas/types.yaml#/definitions/flag
++
++  clocks:
++    maxItems: 1
++
++  gpio-ranges:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#gpio-cells"
++  - gpio-controller
++  - interrupt-controller
++  - gpio-bank
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    gpio1: gpio@8012e080 {
++        compatible = "st,nomadik-gpio";
++        reg =  <0x8012e080 0x80>;
++        interrupts = <0 120 0x4>;
++        #gpio-cells = <2>;
++        gpio-controller;
++        interrupt-controller;
++        st,supports-sleepmode;
++        gpio-bank = <1>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 73bd2851eb4c..854b41ee4dcc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2465,6 +2465,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
+ F:	Documentation/devicetree/bindings/arm/ste-*
+ F:	Documentation/devicetree/bindings/arm/ux500.yaml
+ F:	Documentation/devicetree/bindings/arm/ux500/
++F:	Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
+ F:	Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml
+ F:	arch/arm/boot/dts/st/ste-*
+ F:	arch/arm/mach-nomadik/
 
 -- 
 2.44.0
