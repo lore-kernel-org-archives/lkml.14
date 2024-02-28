@@ -1,122 +1,125 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433F9208C5;
-	Wed, 28 Feb 2024 03:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E159E2030F
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 03:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709091960; cv=none; b=QopvdrNk3kuJMcHsTMEULmPxfmx0xZL6noB09OqyWXacwYgLYrSbltKWzmrnJHervHnjCflEwo6aSefIsuc1e4MB+YR6ngPM5/8EO6yFv+rL8iPNhv+Ff7FDutw3xB7V/JpGczQcAqQ4q40c+HS4hUgahgxZyuv4qdylx5yioLY=
+	t=1709092060; cv=none; b=QNRy1GvqsssaS/oRa3AylIJgMQsRw5WfQjv5YmFy616Y1B7+ncLvLpV0mGPU1ycI53ND5okczvekwmLcs2WNZMfodBd4x6HbDlejug/xQ+1/9ba5XENyEuPwPe6i9Isv8y7tPoru6Pwov1yqWE3lBTxqU2F9gYFzorg1LWyy4W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709091960; c=relaxed/simple;
-	bh=EPW3rG3kqLWmQW9DnapYjEt7ibW3jPvJkUwuGnNnWvk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=e/QCPFqBi2KR56bO/lwk7ZCl3b1Ww/EsBGXspT4RyEiGh6MgjIxLzhtdu2VhWv9Iiw1v+u8p2Lj9ZgCKX8BerjfNZrbcul1ybtztHmMeUelEqy7nQfIpvPFNMj6+FGP/GAkylR/tC/bsOJM5Ki0xzbaz7WTZne78m4uz1oqMGp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 784FA1A0950;
-	Wed, 28 Feb 2024 04:45:52 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 422441A092C;
-	Wed, 28 Feb 2024 04:45:52 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 58BDA183ACAC;
-	Wed, 28 Feb 2024 11:45:50 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: shengjiu.wang@gmail.com
-Subject: [PATCH v3 3/3] arm64: dts: imx8mp-evk: Add PDM micphone sound card support
-Date: Wed, 28 Feb 2024 11:30:13 +0800
-Message-Id: <1709091013-14026-4-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1709091013-14026-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1709091013-14026-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1709092060; c=relaxed/simple;
+	bh=hNd1sEyWTTY5ZxqPlN2W7+wtXuPmALSQyS5Oy6bqxsc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G113WyO9V5XNP9DL3/S+x80LwxPsQyJ0oSKV04nH8NMf2weNA3ADIx6VS0SHJ5sUNrIcsqSMGouCPk4sBzydXZ0QF+jhUdrfcsOxxDPDX355FbMFGqyZRn+4QJSmqyALNNb1xDTwUpAH4jskpxU7SFOyI/3HPEZUeY4WtE228kY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jDY73s4k; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jDY73s4k"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7da6e0fc90eso253009241.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 19:47:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709092057; x=1709696857; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+QnH1oJZ3yFoqGeTtQaz7Mg98UaDYu9X6FwsvJH2uCg=;
+        b=jDY73s4kbsVAWkbZDQ6ZgnCVLqevlTW5+yYEA2GoQLTaOkFMe7JJ9GWy4GDDhWhnmk
+         HSmcNNuhLVKASLfy5tIYBfntosmJyvwIEKnqv5SZfsQHVynzJPRpBATYghG8iYwXxfUC
+         Z8rCQbNdbFwqQvqTEWbBeDpNNVUGTg2RtbRe/mtUQAGlUKR1LJW9OezLUtkhrM/yXsmo
+         APkbE8pJXObD68iD0sJZt6n0jzTV9u26E8rjGiBIhATFxpilqNNIIp0fG0mswcwgkVe4
+         lDGuaSCzgxMqm8uUa2MAD4a42xc4DeByGpEJE/rmPwcLMlK6SAIuEL6l3fkvC4WLOFnw
+         6mDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709092057; x=1709696857;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+QnH1oJZ3yFoqGeTtQaz7Mg98UaDYu9X6FwsvJH2uCg=;
+        b=HyYK4wOgJfUJ3+xmxHGTZPUErG1RH6w9y66KJf8mPbcBfvdmg3ogsYBVu+lkg9mou2
+         UCDwvrVT29vWOM8Mv57S5Lp4vWZeTVv3HlnrS9CiAZspxPFTiyVL7HoR3lNibgQ1X/lz
+         KAh6c7seFoEqDZdbJEuQKnDb6n0e2P/6PEn5sFvVznFkRQkhdxfHDfJRTPBYl3u2+hng
+         K5R+mkKKalZRikHAIriXQiznUCmDTmtNa8heQSbi/63yKj8l71KDwrYs9QvqpbaYsApZ
+         pM5AXoHgIBzQajnMDt8d6EsOiXXXyL/JneN4gDh0903Eo1t6T5EPHtSOHQ/6cuBEbaDs
+         F53w==
+X-Gm-Message-State: AOJu0YzbXDiGBVbhKWBSBs/GPccehjLYZD9YWCPU4JwGdSNl8MeZpc4z
+	PMYdiQsgQN1vMrqCRIH1MwnfmOWyYh56aBYmg4+4uQ77ULxg7zk8Y94GeAqfCRMt+ywRO9XVQh1
+	z3WJD9oHG4brcdUa6uCkMjnt2r2OU0gmYDag=
+X-Google-Smtp-Source: AGHT+IGfLX2EZzehjczg/V4rHJkkVz/cAZAB4YX34jxqN/1Owyl+Nblq+rWJobsxdyU2j0JF2yBfefhXMBTXuIQSrkQ=
+X-Received: by 2002:a1f:6201:0:b0:4c8:a2c6:c2be with SMTP id
+ w1-20020a1f6201000000b004c8a2c6c2bemr1046000vkb.8.1709092057664; Tue, 27 Feb
+ 2024 19:47:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240223205535.307307-1-jaegeuk@kernel.org> <20240223205535.307307-5-jaegeuk@kernel.org>
+ <CACOAw_xdBY5Rg1J4jUTaH0UxVrdZ+CCVQj72q_cMxyCHuCTy_Q@mail.gmail.com> <Zd0VBo3ilwRq4BJy@google.com>
+In-Reply-To: <Zd0VBo3ilwRq4BJy@google.com>
+From: Daeho Jeong <daeho43@gmail.com>
+Date: Tue, 27 Feb 2024 19:47:26 -0800
+Message-ID: <CACOAw_z+ouZ1Pv0P=LPiwbOKFaBYO-8OKNsU7b62MLwi=Qp4wA@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH 5/5] f2fs: allow to mount if cap is 100
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add PDM micphone sound card support, configure the pinmux.
+On Mon, Feb 26, 2024 at 2:47=E2=80=AFPM Jaegeuk Kim <jaegeuk@kernel.org> wr=
+ote:
+>
+> On 02/26, Daeho Jeong wrote:
+> > On Fri, Feb 23, 2024 at 12:56=E2=80=AFPM Jaegeuk Kim <jaegeuk@kernel.or=
+g> wrote:
+> > >
+> > > Don't block mounting the partition, if cap is 100%.
+> > >
+> > > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > > ---
+> > >  fs/f2fs/segment.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > > index 6d586ae8b55f..f11361152d2a 100644
+> > > --- a/fs/f2fs/segment.c
+> > > +++ b/fs/f2fs/segment.c
+> > > @@ -904,6 +904,9 @@ int f2fs_disable_cp_again(struct f2fs_sb_info *sb=
+i, block_t unusable)
+> > >  {
+> > >         int ovp_hole_segs =3D
+> > >                 (overprovision_segments(sbi) - reserved_segments(sbi)=
+);
+> > > +
+> > > +       if (F2FS_OPTION(sbi).unusable_cap_perc =3D=3D 100)
+> > > +               return 0;
+> >
+> > With this, f2fs will not execute GC. What is this 100
+> > unusable_cap_perc used for?
+>
+> Theoritically, it won't, but I was hitting a GC loop, and I suspected a w=
+rong
+> section/segment layout. So, I posted the below, and guess we need this pa=
+tch
+> as workaround.
+>
+> https://patchwork.kernel.org/project/f2fs/patch/20240224011411.3820719-1-=
+jaegeuk@kernel.org/
 
-This sound card supports recording sound from PDM micphone
-and convert the PDM format data to PCM data.
+Reviewed-by: Daeho Jeong <daehojeong@google.com>
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 34 ++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-index 0fc6c0d21cd6..97a3198f2b59 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-@@ -145,6 +145,20 @@ sound-hdmi {
- 		hdmi-out;
- 	};
- 
-+	sound-micfil {
-+		compatible = "fsl,imx-audio-card";
-+		model = "micfil-audio";
-+
-+		pri-dai-link {
-+			link-name = "micfil hifi";
-+			format = "i2s";
-+
-+			cpu {
-+				sound-dai = <&micfil>;
-+			};
-+		};
-+	};
-+
- 	reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-@@ -526,6 +540,16 @@ &lcdif1 {
- 	status = "okay";
- };
- 
-+&micfil {
-+	#sound-dai-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pdm>;
-+	assigned-clocks = <&clk IMX8MP_CLK_PDM>;
-+	assigned-clock-parents = <&clk IMX8MP_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <196608000>;
-+	status = "okay";
-+};
-+
- &mipi_dsi {
- 	samsung,esc-clock-frequency = <10000000>;
- 	status = "okay";
-@@ -792,6 +816,16 @@ MX8MP_IOMUXC_SD1_DATA4__GPIO2_IO06	0x40
- 		>;
- 	};
- 
-+	pinctrl_pdm: pdmgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI5_RXC__AUDIOMIX_PDM_CLK		0xd6
-+			MX8MP_IOMUXC_SAI5_RXD0__AUDIOMIX_PDM_BIT_STREAM00	0xd6
-+			MX8MP_IOMUXC_SAI5_RXD1__AUDIOMIX_PDM_BIT_STREAM01	0xd6
-+			MX8MP_IOMUXC_SAI5_RXD2__AUDIOMIX_PDM_BIT_STREAM02	0xd6
-+			MX8MP_IOMUXC_SAI5_RXD3__AUDIOMIX_PDM_BIT_STREAM03	0xd6
-+		>;
-+	};
-+
- 	pinctrl_pmic: pmicgrp {
- 		fsl,pins = <
- 			MX8MP_IOMUXC_GPIO1_IO03__GPIO1_IO03	0x000001c0
--- 
-2.34.1
-
+>
+> >
+> > >         if (unusable > F2FS_OPTION(sbi).unusable_cap)
+> > >                 return -EAGAIN;
+> > >         if (is_sbi_flag_set(sbi, SBI_CP_DISABLED_QUICK) &&
+> > > --
+> > > 2.44.0.rc0.258.g7320e95886-goog
+> > >
+> > >
+> > >
+> > > _______________________________________________
+> > > Linux-f2fs-devel mailing list
+> > > Linux-f2fs-devel@lists.sourceforge.net
+> > > https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
