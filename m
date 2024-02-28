@@ -1,108 +1,156 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26521381D9
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5B736133;
+	Wed, 28 Feb 2024 09:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709112860; cv=none; b=FjE2i+0HnQOzgSNucHi6t5U+gBgLAoTUF37gJk0rXIhaXhWNzK6Pdc3iNYXr42kI9x/tbWYSQQr4iO/ehrxg4VJuVy2Yv+tfEbda4h3PWuQoL6/xVHNcIGR8mc+XLtr3infkbTku6gJWF+RlktsgReos+01tETrvSIJGfR71S7Q=
+	t=1709112880; cv=none; b=ovzRqh7SuH2rPisC8kjXe2pyXmMFXPSiEEBilau9A/C040ANdyO/8H2TbriN2c0J2NtFL6Ho+vru42Pf2hp0bCV93pfHyfOGhQeFq7uJNjDs8yUSe1e5tvu9mQLUTfRF57i8g3yInT7mLU1BZ4tQ+wZHLXtdrj8f0/CKDZ2gUaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709112860; c=relaxed/simple;
-	bh=GFVNR/zlWJslKz1dioQtSnYIsd3zA6B9GH6xfvmWywE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pex670m8kLn3+S4Ks/FDL28uhPzU8+bzgktcWj3Fgy7rSlPZF3jegZqN2q+/4ANDfX/jEWJ/vImWfGZlG3ltdK0NJQsUOTtOVWdWk366PO1ZWjJ6jFY+0rQtr5YXGysuuVfhK/6GSPps7+h9+fcFvCOKoSqhL36ptCNCrRjWgto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BYTrXii3; arc=none smtp.client-ip=209.85.222.52
+	s=arc-20240116; t=1709112880; c=relaxed/simple;
+	bh=Cf7Ab1S5Azi7ftJlAgSjDp6AD00chiKeVOaFhJkgUqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fIsqipA/KKwzQMx9SPmmmZ4p5HFR5/o3fvajeqD4fDFh8yX6udCt/SncWHsxAUOO7dMULSBPaKzeI3aRWhrouq5j1wdvGtMWm7WrWq4W3arOfQaCfGXjs3Dq/JX5btc95Q45UXRJN/RCXhFyvz8T7+IM3HqIjEjeOm2QXz+Nisc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hrGJahEJ; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYTrXii3"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7dad2d1c9edso527345241.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:34:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrGJahEJ"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso4905606a12.1;
+        Wed, 28 Feb 2024 01:34:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709112858; x=1709717658; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JrofktxwInA3vcID9wwrk0HbtLWVMB1feXE92jqNChU=;
-        b=BYTrXii3O+7No5bFL1pM+uqSoWav+cSJ7XsD0w1uHWISAjAhylO5L8sKI11aA4CbF3
-         Gpjj6WfvAvPQ5aI+h2YpFzAV0/Ece6qo4rOyTroldtQNza3W6vErhSevlV7Ej1TTLX0M
-         svZ/BAL7aCkn3ThYiZuBDPIFBk/ads67JM0j7Z1DWEL2g7Zh8JbAWkXd+8/5AvdeX5qk
-         +WhCMYutC8To9WAHEZQS7Z1Y1+/YPPiQnNJDJWZky0CsRjXVdPpTAytLxuhJgXSKVHWZ
-         FyQNgvyxrZeO5goMBtpjmChSvcyTclSdZr3s8ClE2K0MXYi6j6k5xWzBf3x5k5ibraPC
-         DZkQ==
+        d=gmail.com; s=20230601; t=1709112878; x=1709717678; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BnTxzgDB4D6z5X/XWZgAEvdqEsYIyodUJ23UluDAgo8=;
+        b=hrGJahEJja+59nTNLV8vTZpK5nHU2IWAh/hfK58Fwewtfy0la4gn6b5vC43Df9ybx9
+         oTa/ea6wsUI7shS0sUl/F2TQYAIlYdUHqMmqwaaQUPDmL0z5eBuSNDkGkNtrdmFapUEv
+         iaRGYDc8zlmkztVHWuAOLJQEPAR4+FlVALMMKjrslPaREuScwnS1WtD6+FLQQV4lB0l+
+         u3CU1HpUlu1WqfBgu/GinA90JyTbs8oX5vzjPJBvSm1ereLbyvfjORLumwyIdez4G8U2
+         ynTJEk6JJ6SxAYdX5TVe35DgWQ/V+vMxtWYUiKFd91tKjp+6ysIJNinwU2mN0f5x9o4y
+         cdew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709112858; x=1709717658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JrofktxwInA3vcID9wwrk0HbtLWVMB1feXE92jqNChU=;
-        b=e0eTh0vQ1NK2+YRl89pmod9JEc/qPxXCg4jHixYhfg+yXMe+PKfFXgQ1PdEQkJetn4
-         Y/uFfa8wSwAx2jk0L52Jy3fLsO11ivo/rR2c3C88GXmjpGPfikz11qwFdr5prsQ73BPa
-         k0uz/gJEzHl7kyYGl8ZAHjQyc8vdmjEeUh9pFgfPAjzXcXw4ym3XhnR6JaTyFVpl1cOc
-         n2XBdJ/3VS7Uo7tRzfnTiTHLI7s2TOAsfw6ln86qfpQrAcDN34hYZD4Zmp08AmdKIIf7
-         WsHCEQj9mc+UolLd+R4NbDho28EKSjDmuSgiCWRUdLOuMETaN74TbVlAgV6FsyhR+W6e
-         8E/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUMoH6MFiqmgT3jeH/B89IlcN3BKRaDBzvdL0IpBSQEhP3/bTUwBRNdasPzVM6e+gc7puTX63zV2izcxFInO9k9+8+Aki9dW9cQNwrP
-X-Gm-Message-State: AOJu0YwOccmVChymtzpBeoYdOPo5ATbO+mI034mCNodCVKK+6ekddvtE
-	9o660L5DNozkwPEtT5wDoPHgA4qEkogxw7eGiv47MhyudisUVxObZ35Kq8jtTWLEAab9DPuFH8Z
-	komi6txhllrX+jjD0jUDAHCXcrZ0=
-X-Google-Smtp-Source: AGHT+IF0+UYaaN6m0QRKJndax7JXEHR+fygNk1XN64sj9tDZQvEktqzoxCNdUl67Oa9NtNbY9GdEofhoM8AuRFGfE3s=
-X-Received: by 2002:a1f:cdc3:0:b0:4b8:383e:8266 with SMTP id
- d186-20020a1fcdc3000000b004b8383e8266mr8069276vkg.11.1709112858035; Wed, 28
- Feb 2024 01:34:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709112878; x=1709717678;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BnTxzgDB4D6z5X/XWZgAEvdqEsYIyodUJ23UluDAgo8=;
+        b=YRG8rpYwLpVB3pwSRXANdox2pfISfFBfY5R+rHnWG1BRPdTvHQA4Swc/AftlebsSPX
+         9/z2hgprGPF4mY7miXjCv4YAuS6jyHix6kK8AobYEtUi7ISO9eElHJnJdWE0OyElBP0Y
+         c1x/U81rieL5zItFagqI0ZFvXukXroqkx/WxwsX+wj+DNhBbrsSBucCKrpUp+cqYDPk1
+         SgzfNrZN3RnRPA67JhbpPDP84YVcKWe3T0VcObY/WhxtnXopWa4AEURkkkbiP49x94+Q
+         75rjJBbP5k85k8swhgtk9hz5ES82UUDMAd6MGxeGId2OjZXElWFEuaIKXP+2/1k1aF1i
+         8d0g==
+X-Forwarded-Encrypted: i=1; AJvYcCXSVrcGem6ulktbKxBBvXrqTHuAQtwqdS7CROayk01qI5dFuuXM6bZzbocI0s9aFYsHfcvcQyHri2Azn1uwkaWwC6toQsWEnvG5JxspdnviZAR3Tn7nvokIW6GYFHPX5APb
+X-Gm-Message-State: AOJu0Yx23xKd6rt74p+AIzztaDqtwS6EPToUPREP707lPPbQAV+NJQip
+	qs66AbvZ4RE/Gz7QNHp/EsAQxqCEFWbtDoCh6tJ1wWfGShzz91M1
+X-Google-Smtp-Source: AGHT+IGuQ8W5px8wKjurGo44FSp62ASDSBPR2Tehpe/JisAe2FtfFe9UEtCIaamJIUbV1mDvADh8YA==
+X-Received: by 2002:a05:6a20:c116:b0:1a0:fc33:17b8 with SMTP id bh22-20020a056a20c11600b001a0fc3317b8mr3634526pzb.24.1709112878380;
+        Wed, 28 Feb 2024 01:34:38 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id f19-20020a17090aa79300b0029ab73a80a2sm1104370pjq.22.2024.02.28.01.34.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 01:34:37 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 6442518515716; Wed, 28 Feb 2024 16:34:34 +0700 (WIB)
+Date: Wed, 28 Feb 2024 16:34:33 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: seanjc@google.com, michael.roth@amd.com, aik@amd.com
+Subject: Re: [PATCH v3 05/15] Documentation: kvm/sev: separate description of
+ firmware
+Message-ID: <Zd7-KWFGOXGs_iOu@archie.me>
+References: <20240226190344.787149-1-pbonzini@redhat.com>
+ <20240226190344.787149-6-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <84d7cd03-1cf8-401a-8edf-2524db0bd6d5@oppo.com>
-In-Reply-To: <84d7cd03-1cf8-401a-8edf-2524db0bd6d5@oppo.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Wed, 28 Feb 2024 22:34:06 +1300
-Message-ID: <CAGsJ_4w_itxmZR7ytu7HnptQNZQzM-vAJhE_zSZrTAH1iqBV6g@mail.gmail.com>
-Subject: Re: [PATCH] mm/vmalloc: Fix return value check for vb_alloc
-To: =?UTF-8?B?5YiY5rW36b6ZKExhb0xpdSk=?= <liuhailong@oppo.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "urezki@gmail.com" <urezki@gmail.com>, 
-	"hch@infradead.org" <hch@infradead.org>, "lstoakes@gmail.com" <lstoakes@gmail.com>, 
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="eUPRBjCtZiK17fws"
+Content-Disposition: inline
+In-Reply-To: <20240226190344.787149-6-pbonzini@redhat.com>
+
+
+--eUPRBjCtZiK17fws
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 28, 2024 at 9:51=E2=80=AFPM =E5=88=98=E6=B5=B7=E9=BE=99(LaoLiu)=
- <liuhailong@oppo.com> wrote:
->
-> If vm_map_ram(page, 0, 0) would cause panic by vmap_pages_range_noflush, =
-so
-> change IS_ERR to IS_ERR_OR_NULL to fix this.
->
-> Signed-off-by: Hailong.Liu <liuhailong@oppo.com>
-> ---
->  mm/vmalloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index d12a17fc0c17..109732006cf7 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -2387,7 +2387,7 @@ void *vm_map_ram(struct page **pages, unsigned int
-> count, int node)
->
->         if (likely(count <=3D VMAP_MAX_ALLOC)) {
->                 mem =3D vb_alloc(size, GFP_KERNEL);
-> -               if (IS_ERR(mem))
-> +               if (IS_ERR_OR_NULL(mem))
+On Mon, Feb 26, 2024 at 02:03:34PM -0500, Paolo Bonzini wrote:
+> +``KVM_MEMORY_ENCRYPT_OP`` API
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
-it seems the only case for vb_alloc to return NULL is size =3D 0, isn't
-it a bug of
-caller?
+Nit: I think to be consistent, with command names in section headings below,
+the API name heading above should not be inlined.
 
->                         return NULL;
->                 addr =3D (unsigned long)mem;
->         } else {
-> --
-> 2.34.1
+> =20
+>  The main ioctl to access SEV is KVM_MEMORY_ENCRYPT_OP.  If the argument
+>  to KVM_MEMORY_ENCRYPT_OP is NULL, the ioctl returns 0 if SEV is enabled
+> @@ -87,10 +81,6 @@ guests, such as launching, running, snapshotting, migr=
+ating and decommissioning.
+>  The KVM_SEV_INIT command is used by the hypervisor to initialize the SEV=
+ platform
+>  context. In a typical workflow, this command should be the first command=
+ issued.
+> =20
+> -The firmware can be initialized either by using its own non-volatile sto=
+rage or
+> -the OS can manage the NV storage for the firmware using the module param=
+eter
+> -``init_ex_path``. If the file specified by ``init_ex_path`` does not exi=
+st or
+> -is invalid, the OS will create or override the file with output from PSP.
+> =20
+>  Returns: 0 on success, -negative on error
+> =20
+> @@ -434,6 +424,21 @@ issued by the hypervisor to make the guest ready for=
+ execution.
+> =20
+>  Returns: 0 on success, -negative on error
+> =20
+> +Firmware Management
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +The SEV guest key management is handled by a separate processor called t=
+he AMD
+> +Secure Processor (AMD-SP). Firmware running inside the AMD-SP provides a=
+ secure
+> +key management interface to perform common hypervisor activities such as
+> +encrypting bootstrap code, snapshot, migrating and debugging the guest. =
+For more
+> +information, see the SEV Key Management spec [api-spec]_
+> +
+> +The AMD-SP firmware can be initialized either by using its own non-volat=
+ile
+> +storage or the OS can manage the NV storage for the firmware using
+> +parameter ``init_ex_path`` of the ``ccp`` module. If the file specified
+> +by ``init_ex_path`` does not exist or is invalid, the OS will create or
+> +override the file with PSP non-volatile storage.
+> +
 
-Thanks
-Barry
+This one LGTM.
+
+Other than the nit,
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--eUPRBjCtZiK17fws
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZd7+IAAKCRD2uYlJVVFO
+o162AQCcn8Ku0qmJzR0aVZhAlymyxJjRteYpeKWfN7U4NfghawEAkNBc12XmmmJP
+8LB8u3zNlnOBbkVipGKxB+YnRI5WQQ8=
+=Hybi
+-----END PGP SIGNATURE-----
+
+--eUPRBjCtZiK17fws--
