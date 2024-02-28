@@ -1,231 +1,290 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2065.outbound.protection.outlook.com [40.107.243.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6A340848;
-	Wed, 28 Feb 2024 17:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709143150; cv=none; b=XMMy1fNGmho45hODFqMP6I4iO6cCqChvEBLoUDlnl2FNxgRUitKx7GsBG8YhjhJ68gNRjv1rl7pGsSJi40uD+Ofy2IvF9CVjHtCP6O+hB+BO0xgRZ0lMBz2NfVEJij4t11a35XV1clIM0uezwGKzM+iMvmsFD5oACgFWwfFb4c4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709143150; c=relaxed/simple;
-	bh=27q+sAVMCpGXyOO7+Xz/rmsZjZDRkPVkgGNbIybUR0c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KlN7AbxzKEtGJkF+WP42vRGdsAcXYPRa38EW5kaGCZ/Hmd0kAT/Lk8Dtbt/zj/TKtRAB3HYt0N470B7c/JH/h8cLcsWjQgfvNUBb1/ziiXF9/qD21FTxrrHouo4eOXawSWHlzpSAYdzjNJpbMpZinnhomjVgycOAKo77OHCcb70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4TlMCR6PYXz9y4yV;
-	Thu, 29 Feb 2024 01:43:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 522CC1407C8;
-	Thu, 29 Feb 2024 01:58:55 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwBnXxhJdN9li+FkAw--.41826S2;
-	Wed, 28 Feb 2024 18:58:54 +0100 (CET)
-Message-ID: <d1b88a1d2affbfb89ccd9131357d84580f107360.camel@huaweicloud.com>
-Subject: Re: [RFC 6/8] KEYS: PGP data parser
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Petr Tesarik <petrtesarik@huaweicloud.com>, Dave Hansen
- <dave.hansen@intel.com>, Petr =?UTF-8?Q?Tesa=C5=99=C3=ADk?=
- <petr@tesarici.cz>,  Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "maintainer:X86
- ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin"
- <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,  Oleg Nesterov
- <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Xin Li
- <xin3.li@intel.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton
- <akpm@linux-foundation.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Kees Cook <keescook@chromium.org>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, Pengfei Xu <pengfei.xu@intel.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Ze Gao <zegao2021@gmail.com>, "Kirill A. Shutemov"
- <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, David
- Woodhouse <dwmw@amazon.co.uk>, Brian Gerst <brgerst@gmail.com>, Jason
- Gunthorpe <jgg@ziepe.ca>,  Joerg Roedel <jroedel@suse.de>, "Mike Rapoport
- (IBM)" <rppt@kernel.org>, Tina Zhang <tina.zhang@intel.com>,  Jacob Pan
- <jacob.jun.pan@linux.intel.com>, "open list:DOCUMENTATION"
- <linux-doc@vger.kernel.org>,  open list <linux-kernel@vger.kernel.org>,
- David Howells <dhowells@redhat.com>, Petr Tesarik
- <petr.tesarik1@huawei-partners.com>
-Date: Wed, 28 Feb 2024 18:58:30 +0100
-In-Reply-To: <5b0ce7ef-3f4e-4c1b-a0b7-bf48e8169c4e@huaweicloud.com>
-References: <fb4a40c7-af9a-406a-95ab-406595f3ffe5@intel.com>
-	 <20240216152435.1575-1-petrtesarik@huaweicloud.com>
-	 <20240216152435.1575-7-petrtesarik@huaweicloud.com>
-	 <Zc-Q5pVHjngq9lpX@casper.infradead.org>
-	 <5916fa3ac3d0ce2ade71e7ed1c9eb6923e374c1f.camel@huaweicloud.com>
-	 <Zc-s-42WoZhW_2c8@casper.infradead.org>
-	 <5b0ce7ef-3f4e-4c1b-a0b7-bf48e8169c4e@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069214087B;
+	Wed, 28 Feb 2024 17:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709143169; cv=fail; b=qq4sfyib26zFfg8Dwij5V2W8cJ1a+JYnck4oHuEV05QWnf//opYEkdppR1tRtg0OjKA7rqThbRgOaxfrJ93fXFJ2ORczbnQHCF8BkatG/OkgGAc+FoPz3M+qxdTNb/6HzJ8UqqyON+jcqVNRsQv64cuD5j2IqWv0HfnrDdLOHww=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709143169; c=relaxed/simple;
+	bh=74XubRKg6pQNSoH9b/+VkeHKLLL5WrGoT8mCUJ/xY+o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ib5CXIrHY7TnJrl7yuvs7PQivNsuESr3dMpR+/ZM/ZBIT5eIfH8SVLusYkdZGupHpfw1eDiIPYrXILDTBXbhaouDt62TM7J2p2urDp6jChED/Yyi2/Hv1ZeOFKFGQpiLjnjkRaHwdKe7bHV+PqJx7Q4pMdNuXMq+obe5BFeApYA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ss5Ea+Ua; arc=fail smtp.client-ip=40.107.243.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ss5Ea+Ua"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GoHzEc41E7dtwB/xl/gG7cTsBnRuB90Qbh/dYH97BrtZkjKaWZv5XDcZMAMaQ8U/y/MgyOvgNUb8IQbXymcM9TXqyvjnp/sBCniMIIX0Fasxg8GT5RamoA7k0Aw2Ft+a5xKXBGkf0U+AIYITinCzVukHEk1t9yCT05kjkTjN/8r4TBVIx4+w624ApjCzQmRoZ27VxvAN784oFUBv4DkuEUNGOfQNF4qinyHINGaED3gBJGaFv54r2jwKrfMgevAC9mp5q638IeNhvOWbDZmd6juluCJP2wlw/cZscIeH3c11Ds2INe9oKJwby7/tuuOQGUAPV67UYNcZrJGdcZ+oTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TicALnHLiYjyXJ5DviCRdCMfq/ctJ/NZBipP3GUhuxU=;
+ b=EQo0C6pLSleY1ednqCPpLn7w7xAD83LmeWiMsPv6WgrCNX6B4diYaKzU33aVXxQVKetOWaeRccz6ANAh8zmfiayKLX3TZSomELimECKBTzZQvFNNkk+2N0efxNyQiAxj5apMK4JB0feIIBd7TwlDyibC9S6E5av021GBjIm9GRrlJBGxcdwogYTW7mVsR9eYEBc7RKMhMyZertwg7CwQhNJFenwJCm0CIjuUGMwCX7gKvN7ZURQIbrbys8XLe6iA5lkrFlmKA0FA3MBqv49H9D8pDWQeUorXPpUCXevOp9cUXmcp5/iENRUC/8wpv9dDreGhclCNDknS3JBlJRi6FQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TicALnHLiYjyXJ5DviCRdCMfq/ctJ/NZBipP3GUhuxU=;
+ b=Ss5Ea+UajYyK1NcPz5007UTYUkjro3QqSoLrg7o9m0b9DWifSou+uox+R96zRn7rUV7pvzoChCxEZS8lANuxagHWJHeDu+3s7UiOUib2Foxe8XzQK8crekaVD8iQ+qFzseEa0+Z4A4D61gYA1BbeI0Pu2v4T5NtXtrs51OAp//A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+ by MN0PR12MB5786.namprd12.prod.outlook.com (2603:10b6:208:375::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Wed, 28 Feb
+ 2024 17:59:23 +0000
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b49d:bb81:38b6:ce54]) by MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b49d:bb81:38b6:ce54%4]) with mapi id 15.20.7316.039; Wed, 28 Feb 2024
+ 17:59:23 +0000
+Message-ID: <5ddb7031-a828-4001-bfdf-5477cb85e9ed@amd.com>
+Date: Wed, 28 Feb 2024 11:59:19 -0600
+User-Agent: Mozilla Thunderbird
+Reply-To: babu.moger@amd.com
+Subject: Re: [PATCH v2 00/17] x86/resctrl : Support AMD Assignable Bandwidth
+ Monitoring Counters (ABMC)
+Content-Language: en-US
+To: Reinette Chatre <reinette.chatre@intel.com>,
+ James Morse <james.morse@arm.com>, corbet@lwn.net, fenghua.yu@intel.com,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com
+Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, rdunlap@infradead.org,
+ tj@kernel.org, peterz@infradead.org, yanjiewtw@gmail.com,
+ kim.phillips@amd.com, lukas.bulwahn@gmail.com, seanjc@google.com,
+ jmattson@google.com, leitao@debian.org, jpoimboe@kernel.org,
+ rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
+ jithu.joseph@intel.com, kai.huang@intel.com, kan.liang@linux.intel.com,
+ daniel.sneddon@linux.intel.com, pbonzini@redhat.com, sandipan.das@amd.com,
+ ilpo.jarvinen@linux.intel.com, peternewman@google.com,
+ maciej.wieczor-retman@intel.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, eranian@google.com
+References: <20231201005720.235639-1-babu.moger@amd.com>
+ <cover.1705688538.git.babu.moger@amd.com>
+ <2f373abf-f0c0-4f5d-9e22-1039a40a57f0@arm.com>
+ <474ebe02-2d24-4ce3-b26a-46c520efd453@amd.com>
+ <b6bb6a59-67c2-47bc-b8d3-04cf8fd21219@intel.com>
+ <3fe3f235-d8a6-453b-b69d-6b7f81c07ae1@amd.com>
+ <9b94b97e-4a8c-415e-af7a-d3f832592cf9@intel.com>
+ <1ae73c9a-cec4-4496-86c6-3ffcef7940d6@amd.com>
+ <32a588e2-7b09-4257-b838-4268583a724d@intel.com>
+ <088878bd-7533-492d-838c-6b39a93aad4d@amd.com>
+ <9b20589b-6220-4ae7-bfc4-4a826b7114b1@intel.com>
+From: "Moger, Babu" <babu.moger@amd.com>
+In-Reply-To: <9b20589b-6220-4ae7-bfc4-4a826b7114b1@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7P222CA0018.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:124::27) To MW3PR12MB4553.namprd12.prod.outlook.com
+ (2603:10b6:303:2c::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwBnXxhJdN9li+FkAw--.41826S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFyfuFyrGFWDKF48Zw15CFg_yoW7Jr4DpF
-	WSka4YkF4qqr1Sk3Wqyw4xuFyFvrs3tF15W3s5JryfA3Z0gF12yryIka1jgF9rCr4kK3W2
-	yr4jyF9xCa4kA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIE
-	c7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
-	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-	6rWY6r4UJwCIccxYrVCFb41lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_
-	WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjxUUtCzDUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAHBF1jj5bMogABsJ
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|MN0PR12MB5786:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9b44aee-8959-40d9-a8ec-08dc3886fecf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	VuZi1cqUGVXhzSaIFi/hDuZHHTRzjpLG9mbp+8M3CtJ7TkyImpHrNppti03L+Hz2ihJ0z8COqNJNmFCmlO/FvwfY2NF5UDYbTY8JjIpJo2wxtUgke7AR/rMiURbA8vhKjldT1Ftmsj8ZMVojxr9eMt5f6lqZxQv6AzDyJtFlhaOH3RuciEkSS7tHa6BIBhwNjIYXUzEsoy5FLZiheHGd9HA/1dC2HjY0RFdFwoRlJfTF13hgjYrcLJq/nn9Cnwc1vO5NWI0fUCi5QSyaVtSIgO+VtiYBalsgnM9YhSwpguMdVelUz75vsb4i7DlgRbONYIYugzItSfBBhGKki+8AiKSEVQknOjTdRHUBx53i/WV5GEuTj+lyf95C0JF+NqDBMtCTcgubEX4d3TJh/P2vDAaZNyT1ShkSRyOf+bKygOcw2SkslcdDs1EDISdCwMf2El+QrQ1Qc82rD6pj+2WS1ir/MTaSOevAZBt/ezrgHGMTZyumB9pL48EjTy3YuaLp9TnTUrByoV00E6Vig6WUnCPX1KX1+PH46okBWmPT1v4T3aJsWTr5AAdoJCCDu/XSUbBzE70G1OpRPZIKVx+E7yNJkg9Mxt8+AudvHLRz4W9VDRcrNXZ8s3XW3xLVsibc/lKc3Wdu+5wPlZwko/fwvw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NEVLbGZ6ZXhHU1J6NUZBNlhodWZBSURhV1B4M0RaSFVSRFI4OW5NYU9EbVFJ?=
+ =?utf-8?B?Wk5zcGpiVExpSWtGYlVrMU1EL3pPWHVUcmVJRFlsUTE4aHhpd1VNS25jYUhX?=
+ =?utf-8?B?ckpTcUhzVURGdldzaHdkejhRREMva3l6bHFoeTVSWWVJNURjbitYRGc3a2NI?=
+ =?utf-8?B?L29rRysxZUpINVJwTnk3WURrbm16a2R3T0FxNGJnSWtydHhEZHJDK0hJQXd6?=
+ =?utf-8?B?M01DRFozdUtxY2VmU1ZFVEhrc09CYWRDZ21ldW9FWWVQbHc0bGVRL1lWZXZC?=
+ =?utf-8?B?RTNyMUJtOTYzQ1V6RGJEM3JZQUM3TG5yWWZwQmpBU2NUcEsrUWZhZUp2R0k5?=
+ =?utf-8?B?ZzFjbGxGMzRLbEFJNGw0QjFtd3YyTTVySTdBOXZuMzhXNU80Sll1NmJRcmla?=
+ =?utf-8?B?UVpQVnI3MHphWGZHaVdsQ29yaE9ibXRZQmoxMHRPdjRBV2gvdzg5aGI3T0sy?=
+ =?utf-8?B?dll2R2Q4M3FoMTFXRHVnSlFzSmhMQ3VpcmM1emQ0bjNwQ1B3VTNYcEpRcW15?=
+ =?utf-8?B?RWlweGtLaDVKMWwxWFhhR1BiOEdLMGJpeDJ1dldXUERRREZwT2QxOWtWM291?=
+ =?utf-8?B?Z0lqYUs4S2FPeVdsSEtCb244SXpwcnlxemtOQnNjODZKTkRKQ3Q1aGJhZU1q?=
+ =?utf-8?B?UzgySDdrRUt3UjVGNmFWeExZTlRHR3VIQzJicENZdWoraS9pb2x1NHVObGZL?=
+ =?utf-8?B?S2Zmdk4wSWtFTWdadnN4ZWZLYjNiNHl3TzQ5TmZ6L1JMenFjZE9MTTRjeDRW?=
+ =?utf-8?B?YlNXaEk1UDlUUnJzNWo0WnE3bjRFYk9TbWVTaEdyYVd2VG8xd2VKTTFxMDgw?=
+ =?utf-8?B?d08rbUlMNk51cktwUGlIOHNvbkFIOThLeFBTcEoySFJ1SDR6OEwydkIyamh3?=
+ =?utf-8?B?OG8xdnphTVpGYjZ5TU5LTStJOEI0WXlyczZ0WVZVWWsvQ0lNR2JxRm1GWjcz?=
+ =?utf-8?B?Q0hsaEU5RUUzdmRPNlNaOEFwVHdFUnUyN0pjdWpHSFB2UzJsQ1FrdVNQMEMr?=
+ =?utf-8?B?K1lrcnBzZ2lKaXVMOTJEL1B3cFlYd0JTYW1PRlRBQ3ZFMTlBaFNaZ2tyRmZS?=
+ =?utf-8?B?dHBaZVpLVEhlUjVPWHVtR1M4ODF2bE9HaGVjWHplaUhJaFhaYkZWN3dhdWhE?=
+ =?utf-8?B?NGNySGVRbmJodE5Rc1dTUytWd3pTVEc2Qy8vUFBGRTQ3M3dhRnpWQ3J4M25m?=
+ =?utf-8?B?c0VrckFXOVdMSUMzRENIOFVHMGJNYkVVejlpd2FycU1abktoaitrcFZjVjZY?=
+ =?utf-8?B?NFZLT1hlWTM4Zy9MamRGQkw0a1FXY0ZCbmZhMk1SMzVjZ1V4SjM3alRRK0Vk?=
+ =?utf-8?B?L1dEaERYVVdwU09iR0ZLdVRDOHRUcVdUdzZyU1NQaUlvcUtReTM2M2VQTHpX?=
+ =?utf-8?B?NFIybTRTdFNpaEdKRjl4V1pYVDVTNnJ4SGpPdTVIQnBYckdzdG5QRFN1ZDVE?=
+ =?utf-8?B?ZVgrT0tNMFdYZ09aYkV6RGFjSlZMdXNBT25RTGJuL1U0KzJZZUFsWkc0V2cr?=
+ =?utf-8?B?WDQrcGZ3UWlYWXg3cGJaQVlFNGFSTnpXU3ZjNkJkNzVFUXdnUUdRYkVIU25S?=
+ =?utf-8?B?OGtPNVZzVytFbEFCQm5SNlVERkVtcUZiZklUZCtLK1dvTlU3dmJqeithQ0p0?=
+ =?utf-8?B?R1BpVnpNK1Zjcmt2WWpTUjdmeWxGeTJKK0hWbjBGRHdCY0FvNktXa2hVdVI2?=
+ =?utf-8?B?K1A5S1ZuVUFKMFpRNHpuaTFLM3h2WnFscE1MNFVEMkNudk9MczRjRnRuWER6?=
+ =?utf-8?B?N21NUUs4UjZXR01UNVpXR1lTSGRRVFV3TDdFQnVzS1BlRjhsNmFvREZKRlNa?=
+ =?utf-8?B?VkdhQzNOSmpqb0daTTJSRUFEeXM5eWhFNXlNT2xJelJPOHFMemlZV1hNU2gr?=
+ =?utf-8?B?SW52anBoOXBBOTZOMlpXdVNqVG15V1BrOFY0QlM5TkFscDUwT0J5STB6ZnFV?=
+ =?utf-8?B?N0QvUjJIc3pVcStaNWVFMUNTay95UlRzOXRGQTFoYVJmOWVibWJzQlNBdjBN?=
+ =?utf-8?B?MzBRUkVwN0p3bmFlM28ra29JNTFGQkttK0FmS29lWjRvUm5QbjlKNkxxTS9N?=
+ =?utf-8?B?YTVqR0tDcHE5eXlOTHVIeEFFZ2VYQjZDbEtjanVIN252blBFMExVRDlaU0xj?=
+ =?utf-8?Q?siBY=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9b44aee-8959-40d9-a8ec-08dc3886fecf
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 17:59:23.3263
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QNXhSwyU6ujYZBCkzumpLh7alvFKux33xRVQcdqUf/AjPoj4fxtdvEsPW14WCBIe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5786
 
-On Fri, 2024-02-16 at 20:54 +0100, Roberto Sassu wrote:
-> On 2/16/2024 7:44 PM, Matthew Wilcox wrote:
-> > On Fri, Feb 16, 2024 at 05:53:01PM +0100, Roberto Sassu wrote:
-> > > On Fri, 2024-02-16 at 16:44 +0000, Matthew Wilcox wrote:
-> > > > On Fri, Feb 16, 2024 at 04:24:33PM +0100, Petr Tesarik wrote:
-> > > > > From: David Howells <dhowells@redhat.com>
-> > > > >=20
-> > > > > Implement a PGP data parser for the crypto key type to use when
-> > > > > instantiating a key.
-> > > > >=20
-> > > > > This parser attempts to parse the instantiation data as a PGP pac=
-ket
-> > > > > sequence (RFC 4880) and if it parses okay, attempts to extract a =
-public-key
-> > > > > algorithm key or subkey from it.
-> > > >=20
-> > > > I don't understand why we want to do this in-kernel instead of in
-> > > > userspace and then pass in the actual key.
-> > >=20
-> > > Sigh, this is a long discussion.
-> >=20
-> > Well, yes.  When you don't lay out why this is of value, it turns into =
-a
-> > long discussion.  This isn't fun for me either.
-> >=20
-> > > PGP keys would be used as a system-wide trust anchor to verify RPM
-> > > package headers, which already contain file digests that can be used =
-as
-> > > reference values for kernel-enforced integrity appraisal.
-> >=20
-> > The one example we have of usage comes in patch 7 of this series and is=
-:
-> >=20
-> > gpg --dearmor < <PGP key> | keyctl padd asymmetric "" @u
-> >=20
-> > And you're already using two userspace programs there.  Why not a third=
-?
->=20
-> I think this is very easy to answer. Why not extracting the public key=
-=20
-> from an x509 certificate in user space, sending it to the kernel, and=20
-> using it for kernel module verification?
->=20
-> > gpg --dearmor < <PGP key> | ./scripts/parse-pgp-packets | keyctl padd a=
-symmetric "" @u
-> >=20
-> > > With the assumptions that:
-> > >=20
-> > > - In a locked-down system the kernel has more privileges than root
-> > > - The kernel cannot offload this task to an user space process due to
-> > >    insufficient isolation
-> > >=20
-> > > the only available option is to do it in the kernel (that is what I g=
-ot
-> > > as suggestion).
-> >=20
-> > This sounds like there's some other way of getting the key into the
-> > kernel which doesn't rely on userspace.  Or are you assuming that nobod=
-y
-> > bothered to trojan 'cat'?
->=20
-> Apologies for not providing the full information at once. I'm worried=20
-> that would be too long, and pieces can be lost in the way. If it is not=
-=20
-> a problem, I'm going to clarify on request.
->=20
-> Ok, so, I'm not going to use cat to upload the PGP keys. These will be=
-=20
-> embedded in the kernel image, when the Linux distribution vendors build=
-=20
-> their kernel.
->=20
-> This works for both secure boot and trusted boot, since the kernel image=
-=20
-> can be measured/verified by the boot loader.
->=20
-> Another source for keys is the MOK database, since users might want the=
-=20
-> ability to verify their own software, which does not come from the Linux=
-=20
-> distribution.
->=20
-> I briefly anticipated the full picture, but I will tell it more explicitl=
-y.
->=20
-> The kernel, with the embedded PGP keys, will be able to verify the=20
-> signature of the RPM package headers.
->=20
-> A component that I recently developed, the digest_cache LSM, has the=20
-> ability to extract file digests from RPM headers and provide a simple=20
-> interface for IMA, IPE, BPF LSM and any other component to query the=20
-> calculated digest of files being accessed, and allow/deny access to them=
-=20
-> depending on whether the query is successful or not.
+Hi Reinette,
 
-Not the proper thread, but since we talked about it...
+On 2/27/24 17:50, Reinette Chatre wrote:
+> Hi Babu,
+> 
+> On 2/27/2024 10:12 AM, Moger, Babu wrote:
+>> On 2/26/24 15:20, Reinette Chatre wrote:
+>>> On 2/26/2024 9:59 AM, Moger, Babu wrote:
+>>>> On 2/23/24 16:21, Reinette Chatre wrote:
+> 
+>>>>> Apart from the "default behavior" there are two options to consider ...
+>>>>> (a) the "original" behavior(? I do not know what to call it) - this would be
+>>>>>     where user space wants(?) to have the current non-ABMC behavior on an ABMC
+>>>>>     system, where the previous "num_rmids" monitor groups can be created but
+>>>>>     the counters are reset unpredictably ... should this still be supported
+>>>>>     on ABMC systems though?
+>>>>
+>>>> I would say yes. For some reason user(hardware or software issues) is not
+>>>> able to use ABMC mode, they have an option to go back to legacy mode.
+>>>
+>>> I see. Should this perhaps be protected behind the resctrl "debug" mount option?
+>>
+>> The debug option gives wrong impression. It is better to keep the option
+>> open to enable the feature in normal mode.
+> 
+> You mentioned that it would only be needed when there are hardware or
+> software issues ... so debug does sound appropriate. Could you please give
+> an example of how debug option gives wrong impression? Why would you want
+> users to keep using "legacy" mode on an ABMC system?
 
-I finally put together the PGP key and signature parser, the
-digest_cache LSM and the IMA integration patch sets, and built three
-openSUSE Tumbleweed packages (kernel, digest-cache-tools, dracut),
-which basically enable the integrity features that the kernel (IMA)
-supports:
+I don't have a strong argument here. I am fine as long as there is a way
+to go back to legacy mode if required. We can provide legacy option in
+debug mode.
 
-- IMA measurement list with RPM headers and (eventually) unknown files=20
-  that are not from Tumbleweed;
+> 
+> ...
+> 
+>>> For example, if I understand correctly, theoretically, when ABMC is enabled then
+>>> "num_rmids" can be U32_MAX (after a quick look it is not clear to me why r->num_rmid
+>>> is not unsigned, tbd if number of directories may also be limited by kernfs).
+>>> User space could theoretically create more monitor groups than the number of
+>>> rmids that a resource claims to support using current upstream enumeration.
+>>
+>> CPU or task association still uses PQR_ASSOC(MSR C8Fh). There are only 11
+>> bits(depends on specific h/w) to represent RMIDs. So, we cannot create
+>> more than this limit(r->num_rmid).
+>>
+>> In case of ABMC, h/w uses another counter(mbm_assignable_counters) with
+>> RMID to assign the monitoring. So, assignment limit is
+>> mbm_assignable_counters. The number of mon groups limit is still r->num_rmid.
+> 
+> I see. Thank you for clarifying. This does make enabling simpler and one
+> less user interface item that needs changing.
+> 
+> ...
+> 
+>>>> 2. /sys/fs/resctrl/monitor_state.
+>>>> This can used to individually assign or unassign the counters in each group.
+>>>>
+>>>> When assigned:
+>>>> #cat /sys/fs/resctrl/monitor_state
+>>>> 0=total-assign,local-assign;1=total-assign,local-assign
+>>>>
+>>>> When unassigned:
+>>>> #cat /sys/fs/resctrl/monitor_state
+>>>> 0=total-unassign,local-unassign;1=total-unassign,local-unassign
+>>>>
+>>>>
+>>>> Thoughts?
+>>>
+>>> How do you expect this interface to be used? I understand the mechanics
+>>> of this interface but on a higher level, do you expect user space to
+>>> once in a while assign a new counter to a single event or monitor group
+>>> (for which a fine grained interface works) or do you expect user space to
+>>> shift multiple counters across several monitor events at intervals?
+>>
+>> I think we should provide both the options. I was thinking of providing
+>> fine grained interface first.
+> 
+> Could you please provide a motivation for why two interfaces, one inefficient
+> and one not, should be created and maintained? Users can still do fine grained
+> assignment with a global assignment interface.
 
-- Ability to obtain a deterministic TPM PCR value, suitable for sealing
-  of TPM keys
+Lets consider one by one.
 
-- Out of the box integrity enforcement on executable code, based on the
-  provenance from openSUSE Tumbleweed; nothing else is required other
-  than those three packages
+1. Fine grained assignment.
 
-An introduction and a guide with configuration steps can be found at:
+It will be part of the mongroup(or control mongroup). User has the access
+to the group and can query the group's current status before assigning or
+unassigning.
 
-https://github.com/linux-integrity/digest-cache-tools
+   $cd /sys/fs/resctrl/ctrl_mon1
+   $cat /sys/fs/resctrl/ctrl_mon1/monitor_state
+       0=total-unassign,local-unassign;1=total-unassign,local-unassign;
 
-I would also appreciate your comments.
+Assign the total event
 
+  $echo 0=total-assign > /sys/fs/resctrl/ctrl_mon1/monitor_state
+
+Assign the local event
+
+   $echo 0=local-assign > /sys/fs/resctrl/ctrl_mon1/monitor_state
+
+Assign both events:
+
+   $echo 0=total-assign,local-assign > /sys/fs/resctrl/ctrl_mon1/monitor_state
+
+Check the assignment status.
+
+   $cat /sys/fs/resctrl/ctrl_mon1/monitor_state
+       0=total-assign,local-assign;1=total-unassign,local-unassign;
+
+-User interface is simple.
+
+-Assignment will fail if all the h/w counters are exhausted. User needs to
+unassign a counter from another group and use that counter here. This can
+be done just querying the monitor state of another group.
+
+-Monitor group's details(cpus, tasks) are part of the group. So, it is
+better to have assignment state inside the group.
+
+Note: Used interface names here just to give example.
+
+
+2. global assignment:
+
+I would assume the interface file will be in /sys/fs/resctrl/info/L3_MON/
+directory.
+
+In case there are 100 mongroups, we need to have a way to list current
+assignment status for these groups. I am not sure how to list status of
+these 100 groups.
+
+If user is wants to assign the local event(or total) in a specific group
+in this list of 100 groups, I am not sure how to provide interface for
+that. Should we pass the name of mongroup? That will involve looping
+through using the call kernfs_walk_and_get. This may be ok if we are
+dealing with very small number of groups.
+
+-- 
 Thanks
-
-Roberto
-
-> I already anticipate the question, if you have the problem parsing PGP=
-=20
-> keys, why don't you have the problem parsing RPM package headers?
->=20
-> I started finding a solution before this became available, and the only=
-=20
-> alternative I found was to formally verify my code. So, I took Frama-C,=
-=20
-> wrote the assertions, and verified that not only the code is=20
-> functionally correct for correct sequences of bytes, but that there is=
-=20
-> no illegal memory access for any arbitrary sequence (unfortunately, I=20
-> can prove for a small buffer size).
->=20
-> So, I'm probably going to do the same for the PGP parser, if this does=
-=20
-> not fly. But, we were very optimistic that this could be a valid=20
-> alternative!
->=20
-> Roberto
-
+Babu Moger
