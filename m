@@ -1,166 +1,150 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3396136B0A;
-	Wed, 28 Feb 2024 10:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343F8374C2
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709114968; cv=none; b=fRl6vDZRnh95QoipNGIBfgmPOuNVyAuc3XONiTTELTrFqPfUpkwqtFgPFkZXAxBj2N6K6Q8g18CpW+Hy9UqmdvokfVa1ofC41mpVUp0btHgbHFmr/Z1SPPxucF99AtQAcnvUQsf7EfstIHRhTDatZq7JqDBuqqoWZRWmz2MXzfs=
+	t=1709114996; cv=none; b=dFfQCgLcQH5ShsvPGBVKTwRUtsPsjuv8V9YelaDkIV6jcbsOVaJxEQd+ShffC+7oimPV1YS52ZoN61z9+/thiOmdsSQGc57nOgf7VYuWJT/3ZLu8+0laDr02klgrH+mWzqs7fbv+p0f+g2eByIeOIxH6D93S7PIgCAOiw0v0LG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709114968; c=relaxed/simple;
-	bh=S66s19ilvDHTNIulMAImsMB6AkaPAi9N9/xnkhBU13k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tJuFBAxaFhYtqKLTRw5R2q00CGHqDWOZXEg/JaN6LOjU+fXO0WEZ3AY8sdMXWVKy2Rnggj/TRajCkZextXqYN9DYIpUJxtyljLmLN6XNXMs6AKPteOzZ8SLLxUoBra5dn552v+kAZhY0QxahaMUTIDEV7lQKalGRLBLffVJFG8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Skew+2LO; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709114996; c=relaxed/simple;
+	bh=xDkKjxQpRUj82ppPpFRdT86UyQry3guk02MGD+qyIKw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B4mPD80RuCqZFgJXewxknMsqvLWrkvhH8y58/Uu5O0WOxFuQErZMFX/zsYWTCxECEv1I9CywIfZT7Q5M6yx9G58hWZshikxhGp8I39o2weeHsYH0e6bn+WUngCmrxU+z0J70qcaLUL/ofg+FFLLWT/F8G9cTTHTJ6lDGc44F2sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ToUa9jT5; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Skew+2LO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709114964;
-	bh=S66s19ilvDHTNIulMAImsMB6AkaPAi9N9/xnkhBU13k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Skew+2LOY7JbHwKpTbn8YnEJTYP2G50KkkHUgi6mQv0GLQVie8KLptOh2ijMyWp25
-	 4aFi6QD8QSXodCbY/qyo7t1nSTF1XHcmytnnAhaZ+x3pc3pKGKasqgVigmzCsjnEHr
-	 kolcyRw7M+mEU5aA+Ta1zv4ft/DYLLt5LDgcVRDfXcz4h7TAyeoGZSO0q8lnnzZabE
-	 DhEeUV14LG5nJLEbnE4d793Dy1nRzHAuFkEtFTrHF6BWWdEzU6s7ZZnRDpscnsjjS3
-	 FiZ6L7D4Xsqe7aCd2SJPdL9WPxmDh5y7n5NSzqGrKJg4u3AB1n4ckYgq87Y2/+A8qh
-	 Ggcq2RaJdmgAw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AE5D937820CB;
-	Wed, 28 Feb 2024 10:09:23 +0000 (UTC)
-Message-ID: <e7d57472-08f9-4e71-8c42-2f95d9a81f75@collabora.com>
-Date: Wed, 28 Feb 2024 11:09:23 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToUa9jT5"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4704c69a3d9so829210137.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 02:09:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709114994; x=1709719794; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BkbZnM4zUKTeRZ6grRhqdDU4kcmxS6+jabdIxX7mZ+8=;
+        b=ToUa9jT5iXLoWFlco3+Zzs5yAIdWhjD3kUjzLAhiTRJxerN0m6OyWCxEjnRaIkK7F+
+         sNoEq0Km+e+TOr2ywFmzCq+JJ31f62jf4rlyrVYg6g6/lbrfv4XRGGleep8XzvM9WpR6
+         RIhJhOiIB/TnHSUx/pNW9u6nMx892LRW919QhOY2o/O+LuCIya02GRoO8BJPRj4xfN7o
+         TIpSyHbE3KPaa6BddoOpmTwW6VVvi7Qc3Nqf0aQvPw6+cI9g4O89iGKC9T+h1lZqt6mt
+         scOg+zvrCyUZHI+YTdkutmCR5zDcgU2crmMFw4LzJTbu25EAcvwgC50wB2FhRMbn0OU0
+         89/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709114994; x=1709719794;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BkbZnM4zUKTeRZ6grRhqdDU4kcmxS6+jabdIxX7mZ+8=;
+        b=RiVzxrqpu1AWry2mjpaxWQn4lqRef5wERKPHRP7zGoqCH3LrHLADsAVxq9yHRUHirT
+         duj3Celt6NdSf3zXWE4XHypBM5A06K8Zi/IiBkDsmADDOlOTlOa+v4gEtjRIQ8Dp53wY
+         1sH0jFQFlmzE1QWmBhvcuu04oglrUw5W6jYUvSRYqAUL1qumD9xQckpew8tXY4Hfzize
+         EfIA8lssHUzaXQCcS6FiaSJoNSYiua6lGAlHdMv4BSCHQa7xsAbXtledCRTA37yiTSeD
+         Mh6dttNxwjbBB+ATT6NJ/zGmkPXkotAxDYmyuxpCbQIwvFAmUPsgi1wece/s4dgZmLX3
+         fhKw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0he1YsQ84l6i31keLAvDf6DpHZGE/NsiAAOrsC9hSym8N4Mdgn9Gt/zVqj13G/WvlUBPU/H5ucAmKBCtYBmQjNbjr8/DFRJIb7Bv1
+X-Gm-Message-State: AOJu0YxG8TUJ5B5NhKlt/gye0XqdsDPh6ciNCNUhhxgCqU0QdQp4HxcI
+	G39W6sR5YKj/ym9/EpFuEvcdUnbiRwhSwcgZijFWxXucM0aDdjxxlHcVBd1um3q+fRwQ92UyfyZ
+	xFD4IbUKdqruev6VRgE2KlyzIaY4=
+X-Google-Smtp-Source: AGHT+IF/SEs+hX15r1XGp/VDiYdDgU0ARaAjEu/4Jr+jiImJahk5OhxM1h5WTeI+Kzyuae0ylWCRvDOq9tjbqwZ3aas=
+X-Received: by 2002:a05:6102:1942:b0:472:5572:fe32 with SMTP id
+ jl2-20020a056102194200b004725572fe32mr3525827vsb.13.1709114994045; Wed, 28
+ Feb 2024 02:09:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: mediatek: vcodec: Fix oops when HEVC init fails
-Content-Language: en-US
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Tiffany Lin <tiffany.lin@mediatek.com>,
- Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
- Yunfei Dong <yunfei.dong@mediatek.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240226211954.400891-1-nicolas.dufresne@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240226211954.400891-1-nicolas.dufresne@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <84d7cd03-1cf8-401a-8edf-2524db0bd6d5@oppo.com>
+ <CAGsJ_4w_itxmZR7ytu7HnptQNZQzM-vAJhE_zSZrTAH1iqBV6g@mail.gmail.com> <fd71a174-e4cf-425c-a619-0d7c15cd91f7@oppo.com>
+In-Reply-To: <fd71a174-e4cf-425c-a619-0d7c15cd91f7@oppo.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Wed, 28 Feb 2024 23:09:42 +1300
+Message-ID: <CAGsJ_4xpJ2FtLRxJT1fORHXzEiajiUJ6q_Pz8pwjYmVOmnaP5Q@mail.gmail.com>
+Subject: Re: [PATCH] mm/vmalloc: Fix return value check for vb_alloc
+To: =?UTF-8?B?5YiY5rW36b6ZKExhb0xpdSk=?= <liuhailong@oppo.com>
+Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "urezki@gmail.com" <urezki@gmail.com>, 
+	"hch@infradead.org" <hch@infradead.org>, "lstoakes@gmail.com" <lstoakes@gmail.com>, 
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Il 26/02/24 22:19, Nicolas Dufresne ha scritto:
-> In stateless HEVC case, the instance pointer was saved in the
-> context regardless if the initialization worked. As the pointer
-> is freed in failure, this resulted in use after free in the
-> deinit function.
-> 
+On Wed, Feb 28, 2024 at 11:02=E2=80=AFPM =E5=88=98=E6=B5=B7=E9=BE=99(LaoLiu=
+) <liuhailong@oppo.com> wrote:
+>
+> On 2024/2/28 17:34, Barry Song wrote:
+> > On Wed, Feb 28, 2024 at 9:51=E2=80=AFPM =E5=88=98=E6=B5=B7=E9=BE=99(Lao=
+Liu) <liuhailong@oppo.com> wrote:
+> >>
+> >> If vm_map_ram(page, 0, 0) would cause panic by vmap_pages_range_noflus=
+h, so
+> >> change IS_ERR to IS_ERR_OR_NULL to fix this.
+> >>
+> >> Signed-off-by: Hailong.Liu <liuhailong@oppo.com>
+> >> ---
+> >>  mm/vmalloc.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> >> index d12a17fc0c17..109732006cf7 100644
+> >> --- a/mm/vmalloc.c
+> >> +++ b/mm/vmalloc.c
+> >> @@ -2387,7 +2387,7 @@ void *vm_map_ram(struct page **pages, unsigned i=
+nt
+> >> count, int node)
+> >>
+> >>         if (likely(count <=3D VMAP_MAX_ALLOC)) {
+> >>                 mem =3D vb_alloc(size, GFP_KERNEL);
+> >> -               if (IS_ERR(mem))
+> >> +               if (IS_ERR_OR_NULL(mem))
+> >
+> > it seems the only case for vb_alloc to return NULL is size =3D 0, isn't
+> > it a bug of
+> > caller?
+> vb_alloc had already checked the size =3D=3D 0, so it should be return NU=
+LL
+> to caller or not panic here.
+>
+> In fact, we encounter z_erofs_lz4_decompress issue.
+>
+> [54032.383633][T25392]  vmap_pages_range_noflush+0x790/0x8f8
+> [54032.383637][T25392]  vm_map_ram+0x1c8/0x10b0
+> [54032.383642][T25392]  z_erofs_lz4_decompress+0x60/0x1e8
+> [54032.383648][T25392]  z_erofs_decompress_pcluster+0x624/0x9fc
+> [54032.383653][T25392]  z_erofs_decompress_kickoff+0x18c/0x224
+> [54032.383658][T25392]  z_erofs_decompressqueue_endio+0x1a8/0x1e0
+> [54032.383663][T25392]  bio_endio+0x188/0x47c
+> [54032.383667][T25392]  clone_endio+0x1a0/0x550
+> [54032.383674][T25392]  bio_endio+0x14c/0x47c
+> [54032.383678][T25392]  verity_work.60258+0x7c/0x13c
+> [54032.383682][T25392]  process_one_work+0x1b8/0xa98
+> [54032.383687][T25392]  worker_thread+0x160/0x6c0
+> [54032.383691][T25392]  kthread+0x15c/0x1d0
+> [54032.383696][T25392]  ret_from_fork+0x10/0x20
+>
+> z_erofs_lz4_decompress has checked the return value, so it's reasonable
+> to return NULL if size =3D=3D 0.
 
- From what I understand, "the pointer" that is freed is struct vdec_vpu_inst; is
-that correct?
+I agree. but there is no reason to activate a WARN_ON in vb_alloc as
+obviously it doesn't like it. so fix it earlier.
 
-Since you do have a way to easily reproduce the issue on your side, can we resolve
-the safety/reliability root issue as well as making this correct?
+I even feel z_erofs_lz4_decompress is a better place than vm_map_ram
+according to your description. but at least vm_map_ram is better than
+checking a vb_alloc's ret after it gives a parameter obviously hated and
+causes complaints.
 
-The idea is being able to avoid a kernel panic in the situation that you describe
-in this fix, but throw an error message (read: throw a big "wtf!") when this does
-happen, and handle that with returning an error code (avoiding a kernel crash).
+>
+> Brs,
+> Hailong.
+> >
+> >>                         return NULL;
+> >>                 addr =3D (unsigned long)mem;
+> >>         } else {
+> >> --
+> >> 2.34.1
+> >
 
-Let's cut it short - please try this:
-
-In functions
-   - int vpu_vdec_start()
-   - int vpu_dec_get_param()
-   - int vcodec_send_ap_ipi()
-
-at the beginning, perform this check:
-
-	if (unlikely(!vpu)) {
-		/* Write a scarier message if this is not scary enough */
-		mtk_vdec_err("FIXME!! - VPU is NULL. This is unexpected.\n");
-		return -EINVAL; /* or something else if more meaningful */
-	}
-
-Unless I've misunderstood what's NULL, that'll work. :-)
-
-
-Meanwhile, for this fix:
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Cheers,
-Angelo
-
->   Hardware name: Acer Tomato (rev3 - 4) board (DT)
->   pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->   pc : vcodec_vpu_send_msg+0x4c/0x190 [mtk_vcodec_dec]
->   lr : vcodec_send_ap_ipi+0x78/0x170 [mtk_vcodec_dec]
->   sp : ffff80008750bc20
->   x29: ffff80008750bc20 x28: ffff1299f6d70000 x27: 0000000000000000
->   x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
->   x23: ffff80008750bc98 x22: 000000000000a003 x21: ffffd45c4cfae000
->   x20: 0000000000000010 x19: ffff1299fd668310 x18: 000000000000001a
->   x17: 000000040044ffff x16: ffffd45cb15dc648 x15: 0000000000000000
->   x14: ffff1299c08da1c0 x13: ffffd45cb1f87a10 x12: ffffd45cb2f5fe80
->   x11: 0000000000000001 x10: 0000000000001b30 x9 : ffffd45c4d12b488
->   x8 : 1fffe25339380d81 x7 : 0000000000000001 x6 : ffff1299c9c06c00
->   x5 : 0000000000000132 x4 : 0000000000000000 x3 : 0000000000000000
->   x2 : 0000000000000010 x1 : ffff80008750bc98 x0 : 0000000000000000
->   Call trace:
->    vcodec_vpu_send_msg+0x4c/0x190 [mtk_vcodec_dec]
->    vcodec_send_ap_ipi+0x78/0x170 [mtk_vcodec_dec]
->    vpu_dec_deinit+0x1c/0x30 [mtk_vcodec_dec]
->    vdec_hevc_slice_deinit+0x30/0x98 [mtk_vcodec_dec]
->    vdec_if_deinit+0x38/0x68 [mtk_vcodec_dec]
->    mtk_vcodec_dec_release+0x20/0x40 [mtk_vcodec_dec]
->    fops_vcodec_release+0x64/0x118 [mtk_vcodec_dec]
->    v4l2_release+0x7c/0x100
->    __fput+0x80/0x2d8
->    __fput_sync+0x58/0x70
->    __arm64_sys_close+0x40/0x90
->    invoke_syscall+0x50/0x128
->    el0_svc_common.constprop.0+0x48/0xf0
->    do_el0_svc+0x24/0x38
->    el0_svc+0x38/0xd8
->    el0t_64_sync_handler+0xc0/0xc8
->    el0t_64_sync+0x1a8/0x1b0
->   Code: d503201f f9401660 b900127f b900227f (f9400400)
-> 
-> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> Fixes: 2674486aac7d ("media: mediatek: vcodec: support stateless hevc decoder")
-> ---
->   .../mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c       | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c
-> index 06ed47df693bf..21836dd6ef85a 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_hevc_req_multi_if.c
-> @@ -869,7 +869,6 @@ static int vdec_hevc_slice_init(struct mtk_vcodec_dec_ctx *ctx)
->   	inst->vpu.codec_type = ctx->current_codec;
->   	inst->vpu.capture_type = ctx->capture_fourcc;
->   
-> -	ctx->drv_handle = inst;
->   	err = vpu_dec_init(&inst->vpu);
->   	if (err) {
->   		mtk_vdec_err(ctx, "vdec_hevc init err=%d", err);
-> @@ -898,6 +897,7 @@ static int vdec_hevc_slice_init(struct mtk_vcodec_dec_ctx *ctx)
->   	mtk_vdec_debug(ctx, "lat hevc instance >> %p, codec_type = 0x%x",
->   		       inst, inst->vpu.codec_type);
->   
-> +	ctx->drv_handle = inst;
->   	return 0;
->   error_free_inst:
->   	kfree(inst);
-
+Thanks
+Barry
