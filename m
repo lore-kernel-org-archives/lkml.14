@@ -1,138 +1,100 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5192E84B;
-	Wed, 28 Feb 2024 09:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB82219FD
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709113455; cv=none; b=I5GKu2qytsGcCQqeW3jMbUBaY2TuEqk8cEClYMiqBsROUDiM5HOOj9pwjbFaLB18sn9xhHLloyrCw/xrVdsWAZFvwM0rS+HGwAi+KasiOKiSWHpNXcDVHpJXZSp0MG3uVQAGyIsFbQU2IWgxyp3kUECHpOzYMothOJSrmuEOAlA=
+	t=1709113510; cv=none; b=aRp6/K0X7mh0t9Ezaat4CzVVnG2dNgwOttCQQfa5ISw3l0TWtTLHP3J08Tdy7FZSSJM7mGLoZhnSzrFDGzxKDrOAWEUq8Yu7rBCCn/9Na4lHe9Xno4R1bngGRGPpbfoU1ajZM6vtfGo0xcv03I1OgVhRoscv1dqUKdXc841VzFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709113455; c=relaxed/simple;
-	bh=lRVKIKjBIcOPEo6Xr+dAqUMb9zwLpThSLnQ3kHz+dUE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SjaoWpSXN4t0/xt6q5iSSd7gNHOhfoGkvq3E3i6Rgpai50nBGXrF7cKnowwII5RsP7PffcwlQB/b3PGk/1SxyrcPBnRYUCHyJSTvhiX0HOtmnJ+R+KeMmJDOdOH9LlG+WJPjUJl53KZ1p1q8zPwSpMKRq8P9A4eAdzEzUg+ovic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LG9h3AQj; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709113510; c=relaxed/simple;
+	bh=6GGeF04HQWYOOVgF8emoialS5Ml60103rSnFJpOnveo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LoyUw8BcWdGXDh6pXiMEMbMX66Y/SyOU7a5kyItGSKByB4+fJwBdgqGc/NdxH6S9/Gg6cN5v9HlHjsuZ/u2fJTjvQRfH10YIatyxgVNJSzBVJ182Q2OB71YnQ4kOkrJF/rwu7c5zJRufMgQ+fE1gzhfElIo+jR+TqWLdHf/cSZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fQMEz4/y; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LG9h3AQj"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4d332d0db9cso338870e0c.3;
-        Wed, 28 Feb 2024 01:44:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fQMEz4/y"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dba177c596so4662665ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:45:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709113453; x=1709718253; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EigGEravrSBB3kVIXSapPAOk2V/j1XFYrgJgPBVd5DA=;
-        b=LG9h3AQjKM9qUE6XJW8WtaoVHgGHYV3okpaiNJgUUiWg6beR2qYC2T0es+bZDRnzoW
-         6iWiTnAMW5r87CTB4aL4TgmFudW0kz0a3veCrUOqzU7glazC4PsfM1dGs7cZpVBjUskN
-         lh6H7QolnRkCE9nbGVFVL6vKCDzcICvS4+UgZZTgccglxp/P7gfk+jinjbFSL5P0TQYv
-         Y+Jxt+oxCGiaih1E6CbohVx51EO1KQwHteXQ+loi7n51LtjqJyslpTNROfY4IqiCEQvb
-         glrG/NOSwz3MdXcD1Eb17LFdvXL7qLNKUUIainYWm1BnOTSvF6Sl36imJk+0BMB+L22Z
-         9lCQ==
+        d=bytedance.com; s=google; t=1709113507; x=1709718307; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bdtDjYqbHw4N9R6tFKPHGKX5xI8wlaodQ+T0JbRKQBg=;
+        b=fQMEz4/yBonSCOyIyoRpwbYWK9akUTshzY9c0DElnYxMNyp0xZAxoGJJEhMZ1CjrMR
+         oeKH0yel2sPRxOu3g8ISMOhN4Q3KTtmr0v7XzaEPl3lgqtc1zgkz5AgbpVh1HDnhS9Bl
+         bd2st93YyLodbngupiJqGhyyNgDluV697zQNAm8ADcwBqFP6bcGksjfMztOk5INHkl+A
+         ko59tycwnSJr1gdvrv5v+UVMh0DO9qT4BePm/xzVarsd1jlfReRNp5avDIFrKkKDKiEF
+         B7Sd1mdVYW9S561A28IWUXrpWTm0LhiFZXrFE2NoB12mWRhhWv0VizvqUXWsG/1+s7z3
+         1wNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709113453; x=1709718253;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EigGEravrSBB3kVIXSapPAOk2V/j1XFYrgJgPBVd5DA=;
-        b=g1g+9fVnhF7MzLGTVCwYs61uZwIAeL8E97gE7vJX2h5LztlAC4I/ugpp14ExN4cTuL
-         PUG4tJNYdn9SuL9gt3HBXvk61wAuFAHLMvsU20ZCGgA9KmWTdpkodDFL5KBXx0hTrKcb
-         AnEcRNuXDpz/WYBflDb7+AbC8nKS1F+g11jMYlQS2WoGHy+1qVUIhvHGkGh94QGgqa55
-         FddhzppnK6AkmVaixcmiNZ3KW2a9IA2QGHpRH+cY8mZ2HJ1Bkco8IljB86RMxBcmdYhc
-         x/peqDpD88hU+fSPcli0YdqOR9bOnteziN/1LRdI4a6Yb5oIcY9oXimLyoE6jByQVnIy
-         TRfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNlszEXQaStDl1itHLLl5TaKt/1i051FO+RIPsyld/hem/MnXwZcdBANZYgex93HRDPbViXoAfF6+KMqHvUtp7dNNJpHBVLIPYcBqJKwUxvYwc6ZIna3+LIguQgPLmk/YLt7tYILXmPp1iaEMZIUGdfNpLIaUlsXI37UIeA2xogYNJ1PL1T8mvQ3X4
-X-Gm-Message-State: AOJu0YxPSwANih7wYe2mptoOxv423imVc9l37p0pbUvdMkbjK8Eo7E4k
-	ehXSCmC17VkoZoJmZFDuc/wGxL7evDk81FnBS8AujedTDAgpILav5FlxKpqOlAxdoEhLREalPci
-	0NdMj8quoGeRPwypaIy2McmIA6/FTdMMU
-X-Google-Smtp-Source: AGHT+IHe2DUCCldJvUgC7hikB8+SCQ+sM3Oqi3/DV8PYhNOgZo6s01p0sEz3T8mp/3aAJxXtjzhExGxpJ4FIl3IIGyM=
-X-Received: by 2002:a1f:e401:0:b0:4d3:37d1:5a70 with SMTP id
- b1-20020a1fe401000000b004d337d15a70mr2313505vkh.7.1709113453037; Wed, 28 Feb
- 2024 01:44:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709113507; x=1709718307;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bdtDjYqbHw4N9R6tFKPHGKX5xI8wlaodQ+T0JbRKQBg=;
+        b=uAQRTr+lI7p0kwcbnardGsLJglOAVaMYXq7y2+oGwCPQwimMoaYKSe60MBFYe0vCo4
+         9gWd9qg6L8Q34T8arlvSEkTqv6MPkrGEhRLuj8BZ9mM7s6rk+bwBm6GCEd3tn3vrDC4y
+         6OYbKV2S+bpAAVmXzR/fFBVmJAUJ3j6/fDDUatHzUqS4PaFtK91yUKnS1nmZShHN4/FS
+         yeTUwLNqEJgRGDkfautVHyQeIEln+JQQ7zpqRdwKSqOo8VAFvJagMye22R+LlmyKfMFz
+         IaOtL7gI/ZsU2+p1/K9HiGEsgdYZsPG990homlN1a8adyM9oPe0P3lML4SwbyIihrfen
+         qViA==
+X-Forwarded-Encrypted: i=1; AJvYcCXL2P+nBL7z1ea0F1FzTjOdbKUHvBuTKwM0lDkfqhcwyThfcwjr/r+4hxOYiVkjRrJyR65TfPnLWQF4BjFtFgYONQcdZQMI6a2zSIm7
+X-Gm-Message-State: AOJu0YyyXsfxSFJ6AlzKz/TCh9NqCJ0uLR10+/eoFUsICs+VHZDaQUUp
+	yQFEi7EPsTeLg7cRm/ZufqXl0NRUzJiC6tAqlvm0QXS5aKA38AzAA2vOpLip+KU=
+X-Google-Smtp-Source: AGHT+IHfOpB9FG4OVBJ1p/m39z+7wpIGQENZumzD77mzjtCwGXkGUX3WR5Pro7qqZmQtj5dSXQqwUQ==
+X-Received: by 2002:a17:902:f544:b0:1dc:b6ef:e237 with SMTP id h4-20020a170902f54400b001dcb6efe237mr2203762plf.31.1709113507533;
+        Wed, 28 Feb 2024 01:45:07 -0800 (PST)
+Received: from [10.254.95.105] ([139.177.225.237])
+        by smtp.gmail.com with ESMTPSA id bb8-20020a170902bc8800b001dca3a65200sm2882479plb.228.2024.02.28.01.45.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 01:45:07 -0800 (PST)
+Message-ID: <d2a988e3-892d-4dd8-b75f-96d76c89ee6b@bytedance.com>
+Date: Wed, 28 Feb 2024 17:45:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227232531.218159-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240227232531.218159-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <8e4e05f9-5bd1-4f31-a2ae-fc1567405c11@linaro.org>
-In-Reply-To: <8e4e05f9-5bd1-4f31-a2ae-fc1567405c11@linaro.org>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 28 Feb 2024 09:43:22 +0000
-Message-ID: <CA+V-a8vSCif-JXGFtn9k-JRBsV3sKH4YoGJzQbum0DV1JS5hmg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: arm: renesas: Document Renesas
- RZ/V2H(P) System Controller
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/zsmalloc: move get_zspage_lockless into #ifdef
+Content-Language: en-US
+To: Arnd Bergmann <arnd@kernel.org>, Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Nhat Pham <nphamcs@gmail.com>,
+ Domenico Cerasuolo <cerasuolodomenico@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240228094036.2267912-1-arnd@kernel.org>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <20240228094036.2267912-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,
+On 2024/2/28 17:40, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> It's only used from inside of an #ifdef section, causing a warning otherwise:
+> 
+> mm/zsmalloc.c:735:23: error: unused function 'get_zspage_lockless' [-Werror,-Wunused-function]
+>   735 | static struct zspage *get_zspage_lockless(struct page *page)
+>       |                       ^~~~~~~~~~~~~~~~~~~
+> 
+> Move it down into that block to avoid adding another #ifdef.
+> 
+> Fixes: 2258bdebb55e ("mm/zsmalloc: don't hold locks of all pages when free_zspage()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Thank you for the review.
+Hello Arnd,
 
-On Wed, Feb 28, 2024 at 7:49=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 28/02/2024 00:25, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add DT binding documentation for System Controller (SYS) found on
-> > RZ/V2H(P) ("R9A09G057") SoC's.
-> >
-> > SYS block contains the SYS_LSI_DEVID register which can be used to
-> > retrieve SoC version information.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > ---
-> > v1 -> v2
-> > - Dropped extal_clk node from example
-> > - Replaced RZ/V2H{P} -> RZ/V2H(P)
-> > - Dropped description for clocks & resets properties
-> > - used <cpg 1> for clocks in example node
-> > ---
-> >  .../soc/renesas/renesas,r9a09g057-sys.yaml    | 51 +++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/renesas/renes=
-as,r9a09g057-sys.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas,r9a0=
-9g057-sys.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas,r9a0=
-9g057-sys.yaml
-> > new file mode 100644
-> > index 000000000000..72bf8e733dcd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/renesas/renesas,r9a09g057-s=
-ys.yaml
-> > @@ -0,0 +1,51 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/soc/renesas/renesas,r9a09g057-sys.y=
-aml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Renesas RZ/V2H(P) System Controller (SYS)
-> > +
-> > +maintainers:
-> > +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> > +
-> > +description:
->
-> You need | to preserve formatting
->
-Sure I will add "|". On that note some bindings have "|+" and some "|"
-what is the preferred one?
+Thanks for your fix! But this series has problem and should be removed by Andrew later[1][2].
 
-Cheers,
-Prabhakar
+[1] https://lore.kernel.org/all/20240228043534.GG11972@google.com/
+[2] https://lore.kernel.org/all/20240228035403.GE11972@google.com/
+
+Thanks!
+
