@@ -1,76 +1,105 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id F1A7F71EB3
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 19:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3764134CDE
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 19:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709148207; cv=none; b=KvlZaFGa3d80JjlCxJEaDQl0CB8t/g6kc5qdc7CxfTvVR5GPY0p5zd+WYEhIkIRAPnPEwG3awwYcn31Mc/e4ntupktBTVTEh7jd48+9uaCLGKgpUpMYv6bi1xmxSvVEqTQYT18b4tyQ5WoWhigBloM6XPtGF1z3raahxvFIHSP8=
+	t=1709148244; cv=none; b=M1spQp6oeMCKQlYjVia51jus84pFB41uVuu7+CvjQeO0yTE1nwzEN16ZBEVXd3P3jp4qqNhXTU5NQKQA00UUaS+7I4KaoaTOROZ30kcKhZ6f1fW72kaBRA/3+/eSm2SZxFF76NuKQSSzvX6nOCEqfa00iJSsIXyXOljq/YDDYqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709148207; c=relaxed/simple;
-	bh=/ob7M7yrfVFKdy3ZAyUsgLJVGAIkaDCnpFHpEHTPS/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AUY1Zx6qhne/8fjmnuDKcrr0zINHl0NgwIyAuNRZm6WwOSuWr18IRLgsEqWTl6j0EXHqWDOUKBonkoelHoGyOvWFj1RdX4M6wO8z7BeYwGd6xsi3K+uB3Z3zp9izpbWVgzVGRSmku27S3g+oFiUZAj9lGel08Wk4LYRHh2URm4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 803267 invoked by uid 1000); 28 Feb 2024 14:23:25 -0500
-Date: Wed, 28 Feb 2024 14:23:25 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Oliver Neukum <oneukum@suse.com>
-Cc: syzbot <syzbot+28748250ab47a8f04100@syzkaller.appspotmail.com>,
-  bvanassche@acm.org, emilne@redhat.com, gregkh@linuxfoundation.org,
-  linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-  martin.petersen@oracle.com, syzkaller-bugs@googlegroups.com,
-  tasos@tasossah.com, usb-storage@lists.one-eyed-alien.net
-Subject: Re: [syzbot] [usb-storage?] divide error in isd200_ata_command
-Message-ID: <d5328312-4cd0-426f-8db4-29d67790c213@rowland.harvard.edu>
-References: <0000000000003eb868061245ba7f@google.com>
- <99b0fb1b-37b3-4da4-8129-e502ed8e479a@suse.com>
- <9bbc5b63-33e3-44de-8bce-4c59dcce5e92@rowland.harvard.edu>
- <12b30393-0b4b-400e-828b-231901d8933b@suse.com>
+	s=arc-20240116; t=1709148244; c=relaxed/simple;
+	bh=wDldj/L9sldGrmGC63Ask+odB9JANp2O8Lythy3yAt4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oOciVfPpo0fG9Fzb2swayn4qw8ybmzQRAvxG0JlFqs8f2zpQtkXhYrQU3vBcRL1Gr474lOK/SGSHVvQIOBEJ1cEGm3MFy6z7yd/YtGA/9luUBOAakFJhGMeG7QBga7LvTZRWgnJXuptTt5fipn2LjTCKd11Rr6I2GqmkiHjOGR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=MnkH5c2Y; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="MnkH5c2Y"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5dc8961f5a9so8690a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 11:24:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1709148240; x=1709753040; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DemoB3+IC+42EmKa1d98XsfOh62nKrZDSBCsbO4iPSc=;
+        b=MnkH5c2Ysvxm41NiZuR56Xx9NrxpcwB/8Tc1nmpYsXprJz2RI2wi2DAai/HQTCz0mv
+         oAZ3NMBCysa4vcyvu1dFb8CNPjFBLnVbyv9GXPkevaaTQdbxQ2eQVk24+9DnyJNREA+g
+         M1jHMgpq4HSJfKxwTPO7VmL3V3S3y1WF0YiQ6IZKHOKmNcX2uw7HnC69g8KWPOE7ZW02
+         W0expWhlScG/6fzc3Q24m5AoNqf+YT1HTUTdCSJaqSoZHfFQnMYMIuWoL+X7OCvonKrM
+         lD0YBcYnAUh1MnOTgUQlwnfIiEX/znsd47Fr68mYvOgg08vrcLJDO/nlXyuQsjAQPhA5
+         INoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709148240; x=1709753040;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DemoB3+IC+42EmKa1d98XsfOh62nKrZDSBCsbO4iPSc=;
+        b=lvVF2lfyXMpEwFCTyrAIZGdIqCpyMlT+fvI2c+ySkEdnxwqusPAi0HRHd/YvaYwDxs
+         kfuiG8QG66W0cYTr1X2ePYVgv46WZm2QCcIDYTNKoUbMiYrSs9LO2G2TYAd+Mod1fMuB
+         vITPz0Q8hJlhHkwGBZkjN2jigpCAo4+NfKRjXIVYcN0QHq5cq049I3OdTHaonpqdV+bx
+         SYTS4cKmri3gWLQVg0hUKCjvgf97o+PWGdSvIavMDwbDOS6HB/ZAdyzSLB+pct7zYbdu
+         AEbJ7118VBfmnpFV9Rt2MIResqXsnhDTbSskhexra/1gX02U7jcjHm9l5X+wGzpOHERT
+         PcEQ==
+X-Gm-Message-State: AOJu0Yy3az5A+Zo6+6evLULwcy/D/hw2eo733fFgmyuN70TPXw4bxHVX
+	xgkkmkyyb9uOv/pf3QpuapiqIKCG7HXB7BAS3kAkfHC/jKZHgJ4//4EuIG7AyZWq5o63gIEMSBI
+	L
+X-Google-Smtp-Source: AGHT+IFzMSbFLYKI8r1963+D1i7PRMiM89/YPh6I6yMlja4PmocWiOS5BMIUjwchFI6TS97IHayB0A==
+X-Received: by 2002:a17:90b:3906:b0:299:1ae1:51b2 with SMTP id ob6-20020a17090b390600b002991ae151b2mr79255pjb.4.1709148239799;
+        Wed, 28 Feb 2024 11:23:59 -0800 (PST)
+Received: from localhost.localdomain ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id b10-20020a17090a550a00b00298f2ad430csm4230pji.0.2024.02.28.11.23.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 11:23:58 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com
+Subject: [PATCHSET v3 0/2] Split iowait into two states
+Date: Wed, 28 Feb 2024 12:16:55 -0700
+Message-ID: <20240228192355.290114-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12b30393-0b4b-400e-828b-231901d8933b@suse.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 28, 2024 at 05:20:29PM +0100, Oliver Neukum wrote:
-> On 26.02.24 19:13, Alan Stern wrote:
-> 
-> > > It oopses here:
-> > > 
-> > > 		} else {
-> > > 			if (!id[ATA_ID_SECTORS] || !id[ATA_ID_HEADS])
-> > > 				goto too_early;
-> > 
-> > Those two lines are debugging code you added, right?
-> 
-> Yes, sorry about that.
-> 
-> > 
-> > > 			sectnum = (u8)((lba % id[ATA_ID_SECTORS]) + 1);
-> > > 			cylinder = (u16)(lba / (id[ATA_ID_SECTORS] *
-> > > 					id[ATA_ID_HEADS]));
-> > > 
-> > > in isd200_scsi_to_ata() because it must not be called before isd200_get_inquiry_data()
-> > > has completed.
-> > 
-> > It can't be; isd200_get_inquiry_data is called by isd200_Initialization
-> > during probe before any SCSI commands are transmitted.
-> 
-> So, you are concluding that the bisection is spurious because
-> without that patch the SCSI layer would see a capacity of zero
-> and not even try to read anything?
+Hi,
 
-I don't know.  My guess is that without this patch, the test would fail 
-for some reason before the SCSI layer has a chance to issue a READ command.  
-Maybe because of a zero capacity, like you said, or maybe something 
-else.
+This is v3 of the patchset where the current in_iowait state is split
+into two parts:
 
-Whatever the reason, it looks like Martin's commit merely exposed a 
-problem which has existed all along.
+1) The "task is sleeping waiting on IO", and would like cpufreq goodness
+   in terms of sleep and wakeup latencies.
+2) The above, and also accounted as such in the iowait stats.
 
-Alan Stern
+The current ->in_iowait covers both, with this series we have ->in_iowait
+for step 1 above, and ->in_iowait_acct for step 2. You cannot be
+->in_iowait_acct without also having ->in_iowait set.
+
+Patch 1 is a prep patch, that turns rq->nr_iowait into an int rather than
+an atomic_t. Reasons given in that patch. This patch can stand alone, as
+it should not have any functional changes, outside of improving the
+handling of iowait a bit.
+
+Patch 2 adds the ->in_iowait_acct stage inside the current ->in_iowait
+setting.
+
+I wasn't super happy with the need to grab the rq lock for the one case
+where we still need it, and woke up with a better idea of how to do this.
+It's all in patch 1. Nice part here is that we get rid of atomics for
+3 out of the 4 iowait inc/dec. Patch just follows the same principle.
+
+Comments welcome! Peter, CC'ing you since I did on the previous posting,
+feel free to ignore.
+
+Since v2:
+- Drop need for rq lock for the remote case by turning both nr_iowait
+  and nr_iowait_acct into the difference between a remote atomic count
+  and the local non-atomic one.
+
+-- 
+Jens Axboe
+
