@@ -1,106 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DD786241;
-	Wed, 28 Feb 2024 21:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6227586245;
+	Wed, 28 Feb 2024 21:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709154965; cv=none; b=IVpxgG1lODtDcaqKk6jHyKua4Cr3npYSlaTKuhU6pFYrIw0pOnjoHYALeOH6rAVIQMdH6QzZ38KgLDxvdzayRK8H23c7Q7r2vAY0bCG/RQHvHdLvoaGE2pIdtBQhgRNTpgW7R1AveHdQSBmmrJDPlY67KC929HC5nH6D/Cl6UQs=
+	t=1709155166; cv=none; b=YbX1sGIQd87ZvZdl5TssyrMGqdkZf4pmEB9o5bscmlvTbLTfSH28Io75FKL024gB3blGQzGzL5rIZsr+dze/n6geYYSXYOBih1O4OmGFLMtBAtQcw3iDoFhI3C86okYX0aU13Ivr3t4MzoUwpEEzEEw2xLLPDscAkAXe/KNYEo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709154965; c=relaxed/simple;
-	bh=tLkK7HiFrVQn53zl701UulLerP36hjLPt8SmsC1MkTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KhuBxgI40V+cAA2fSKEzUi2atsf3CIkv6AYXOraXIIoN/1HlcdejsxLp5dRmNpysWGeuC0KvbXmyFWIdhmuPreANLU3bMSc3fQq3mnW90toZ5nCCKdKwPsby3LnPWgKzDO3jwzTwgkw+9MDVn+Z84vqzikEu05yjhBmNQqBdKPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MyfdGmBe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MyfdGmBe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2F01C433C7;
-	Wed, 28 Feb 2024 21:16:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709154964;
-	bh=tLkK7HiFrVQn53zl701UulLerP36hjLPt8SmsC1MkTk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=MyfdGmBeVBLalf5giO0n+MQrpOq+iPNQHM0R+9NNdIYnulltiV2k/RVRaeirND7S/
-	 sU58XtolspGI+RdnAPDRwdavPOJsTfJX5tc3rmldx94VMtIsXb93MikONH+uOLi7OI
-	 BMaas0mlsjstsLgRoPUOcsXDUV7PlCv+YyJD39bXMpIH/Whg+3l0RVS34tv2bikh38
-	 cZPvsenq2CSl/i2jbGlGTMdq1e+/aPKobzYGidKboKXuz3D8lsrVxxFZk6Oa0VuQET
-	 5oZBFCCa96atXwe6I2se2DGPNfXyB7We4rtkpc2Ty0c2fBsCTD4/32+xTY3aCfgSk4
-	 non/64E3Ik7yg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 4A0C3CE03F3; Wed, 28 Feb 2024 13:16:04 -0800 (PST)
-Date: Wed, 28 Feb 2024 13:16:04 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>, kernel-team@meta.com
-Subject: Re: [PATCH RFC ftrace] Chose RCU Tasks based on TASKS_RCU rather
- than PREEMPTION
-Message-ID: <b5acdc28-0441-49ca-9e8d-50d6ac40c395@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <f6507b10-5bb5-4407-bd4d-c547193a5a28@paulmck-laptop>
- <20240228152236.7a4c9eec@gandalf.local.home>
+	s=arc-20240116; t=1709155166; c=relaxed/simple;
+	bh=84mYdSwdVbiEdNMN4g4S3x8nNzL8dNcpsA8MTb/tf3s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IUJkoDrsaBZCrDXmXjLb13uo3KWX9xI+unFKG0yMgFJTXamfZfQrp6+yAw/Xa0Wgg9PSvjypjuz5bII5WfoZbk/tsDbuh4D+XovwGqsxV/ZV/6wXGebgoePi821xGixo6lHy4fYwxAbUjp/vAcKL5cHMhtNBJlIYbwiCZdhq5v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29a858a0981so117555a91.0;
+        Wed, 28 Feb 2024 13:19:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709155164; x=1709759964;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=00Zq06Xjz2j6uN/B4pNbgpBaeoAZi9AJgD48sQwk6os=;
+        b=PvnqYEX2HCwpSz308ErIQ/tMRt0QDNFrHkWsj93Z9doiVrgG9QxEc/BzRFGOSt/gvm
+         q0KWFwdJz+aBBUyyxNOjq/ElMuoktHCoOPloR2jvPoEHN85vvA7dQjAD+/mViSjN/ltY
+         pZS8EyCwydW/ukqC4OLvzw+ZkUw6H3Yo8PaQjKAZnw6zqZbKyfna/HICAqoAqR6EyM4Z
+         hGRKUvs/fa5WvBd+NUZQWPp+F8q+ZAF/SLzfPcdtFK5ruCRSIoF1EuMgENN3HTtiiaWn
+         61/qCeG0KFeACZLsCBy+yR/Wt089UYc/7VcjA/xj8TafY/rhEQpXxBiPLY+m+DMf6m0Y
+         qrPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWC6nzT1f021qE1RqfEzMPmeEDzWTywTcK4wE+FxC7GLVH4pUR3KvtVJLZMTq8aT/kgUj7MaZB0srB/jZh3An35rxxFOQlqiD6KIwO3oY8R8H6g+z07eOadqx2MmC3alkmpH0pogh9n6nNxLOcXCQ2evWnPkV7AjWy+8gQmrI6vP+iZGw==
+X-Gm-Message-State: AOJu0YyzQzzFGEwLbTC4P2F9MHNbXMMNK1OPbLoJUCXJfF9Ojg/BjzUP
+	rkAkvSL2g1CFolS9enYN2cVeBBmOn0p0OJy1wv6Y7qK+7x9Z0wf8MSQ67NQJ2/BbQMZGHdqDr2M
+	B2KnarPsLh0vsikcPAipQAvWFYUJDGBAa
+X-Google-Smtp-Source: AGHT+IFcW0lACQ0CndQCJr/f6bGON76AtKLM+nfx1xi+BTyeE3WaBGZEXzjCb+VwMIz56N9QsBGrOqFpzV7QUNqHOZI=
+X-Received: by 2002:a17:90b:4cc7:b0:29b:a2d:1ac with SMTP id
+ nd7-20020a17090b4cc700b0029b0a2d01acmr100043pjb.7.1709155164539; Wed, 28 Feb
+ 2024 13:19:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240228152236.7a4c9eec@gandalf.local.home>
+References: <20240228053335.312776-1-namhyung@kernel.org> <Zd8lkcb5irCOY4-m@x1>
+ <CAM9d7cicRtxCvMWu4pk6kdZAqT2pt3erpzL4_Jdt1pKLLYoFgQ@mail.gmail.com> <Zd-UmcqV0mbrKnd0@x1>
+In-Reply-To: <Zd-UmcqV0mbrKnd0@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 28 Feb 2024 13:19:12 -0800
+Message-ID: <CAM9d7cg-M_8V0O2rv_gx+1u=axpRmCp4XcBkkqsiGmDgeU2xZw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf lock contention: Account contending locks too
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 28, 2024 at 03:22:36PM -0500, Steven Rostedt wrote:
-> On Wed, 28 Feb 2024 11:38:29 -0800
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > The advent of CONFIG_PREEMPT_AUTO, AKA lazy preemption, will mean that
-> > even kernels built with CONFIG_PREEMPT_NONE or CONFIG_PREEMPT_VOLUNTARY
-> > might see the occasional preemption, and that this preemption just might
-> > happen within a trampoline.
-> > 
-> > Therefore, update ftrace_shutdown() to invoke synchronize_rcu_tasks()
-> > based on CONFIG_TASKS_RCU instead of CONFIG_PREEMPTION.
-> > 
-> > Only build tested.
-> > 
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Cc: Ankur Arora <ankur.a.arora@oracle.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: <linux-trace-kernel@vger.kernel.org>
-> > 
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index 2da4eaa2777d6..c9e6c69cf3446 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -3156,7 +3156,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
-> >  		 * synchronize_rcu_tasks() will wait for those tasks to
-> >  		 * execute and either schedule voluntarily or enter user space.
-> >  		 */
-> > -		if (IS_ENABLED(CONFIG_PREEMPTION))
-> > +		if (IS_ENABLED(CONFIG_TASKS_RCU))
-> >  			synchronize_rcu_tasks();
-> 
-> What happens if CONFIG_TASKS_RCU is not enabled? Does
-> synchronize_rcu_tasks() do anything? Or is it just a synchronize_rcu()?
+On Wed, Feb 28, 2024 at 12:16=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Wed, Feb 28, 2024 at 12:01:55PM -0800, Namhyung Kim wrote:
+> > On Wed, Feb 28, 2024 at 4:22=E2=80=AFAM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > On Tue, Feb 27, 2024 at 09:33:35PM -0800, Namhyung Kim wrote:
+> > > > Currently it accounts the contention using delta between timestamps=
+ in
+> > > > lock:contention_begin and lock:contention_end tracepoints.  But it =
+means
+> > > > the lock should see the both events during the monitoring period.
+> > > >
+> > > > Actually there are 4 cases that happen with the monitoring:
+> > > >
+> > > >                 monitoring period
+> > > >             /                       \
+> > > >             |                       |
+> > > >  1:  B------+-----------------------+--------E
+> > > >  2:    B----+-------------E         |
+> > > >  3:         |           B-----------+----E
+> > > >  4:         |     B-------------E   |
+> > > >             |                       |
+> > > >             t0                      t1
+> > > >
+> > > > where B and E mean contention BEGIN and END, respectively.  So it o=
+nly
+> > > > accounts the case 4 for now.  It seems there's no way to handle the=
+ case
+> > > > 1.  The case 2 might be handled if it saved the timestamp (t0), but=
+ it
+> > > > lacks the information from the B notably the flags which shows the =
+lock
+> > > > types.  Also it could be a nested lock which it currently ignores. =
+ So
+> > > > I think we should ignore the case 2.
+> > >
+> > > Perhaps have a separate output listing locks that were found to be wi=
+th
+> > > at least tE - t0 time, with perhaps a backtrace at that END time?
+> >
+> > Do you mean long contentions in case 3?  I'm not sure what do
+> > you mean by tE, but they started after t0 so cannot be greater
+>
+> case 2
+>
+>                 monitoring period
+>             /                       \
+>             |                       |
+>  2:    B----+-------------E         |
+>             |             |         |
+>             t0            tE        t1
+>
+> We get a notification for event E, right? We don=C2=B4t have one for B,
+> because it happened before we were monitoring.
 
-It is just a synchronize_rcu().
+Ah, ok.  But there should be too many events in case 2 and
+I don't think users want to see them all.  And they don't have
+flags.  But maybe we can update the flag when it sees exactly
+the same callstack later.
 
-> If that's the case, perhaps just remove the if statement and make it:
-> 
-> 	synchronize_rcu_tasks();
-> 
-> Not sure an extra synchronize_rcu() will hurt (especially after doing a
-> synchronize_rcu_tasks_rude() just before hand!
-
-That would work for me.  If there are no objections, I will make this
-change.
-
-							Thanx, Paul
+Thanks,
+Namhyung
