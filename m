@@ -1,124 +1,178 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F784A32
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8D6EDD
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709083235; cv=none; b=J2eiuqZgYWq0wroHfrWE1D1hNkNrI46t3lo4XwJIEmtM694fbvZm25SN2c3zxt6ZTa+Iozs6QSQLWphXlv1vVSd6JTkYdKCtHExDLtQgBkqJ7J+N3obSP18zU+vpUndIGS7yluXTrXO4YyU+8G5VoUCGIVZiwTsd4XfZKi4s83Q=
+	t=1709083290; cv=none; b=s1T/G+5e/rwwHXl1v3m6o4H8wxc1uO9fHHvbQ1g9cqwz3NOnmLmvLLTUeYnBr0hYYrF+rbhraPyunSkDi8YnH3L4HLBQVcaL/4Jm/pLtlo+03sbHtSFajTzysIPkE3QNucwyF2t4/Z3nEp9nLf/ea4yGmh2uFjLrByvH+W2bQ4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709083235; c=relaxed/simple;
-	bh=f8TZMnSkvdvr8lU7/b4OziAB9m4g7TVwlFVIH7WadGc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=URBFRppQcy3WWRzcgmzM36xYDxeG694BoK8U1FK2C/SHH8Q2w5XvLdGoQ+ykI1yxciuWArIXNCAyGFcbzdXBDFvo9rjdY/UYKHtguWpwSp0WtWVqMUpH6PUyOkbyptMPkD/Cev63kySWMvCo7ncWvjeOdWGSLzy4rK1/V1Gzx5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GtnjBG4u; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709083290; c=relaxed/simple;
+	bh=xbDh3NL+tZVp1UyHoiJ9+BKG31EbR4SOQpOg0CSDafg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oFlyScehwKp7G5BpV6Dt8QvM06VDLgTvBBBxEjuOw+C6qKiC5uRjGlYo5qqQBWa3yDKAaJlYEahQO3/EWgzAqSV5RwnHiFdx+5GT/dbrTFlV9+4DwFkIqRVAwdcvNoQyadK5ocz0tS5VRvYh/qh5O9pYwOuVP0fY7P+sKjPOlKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ife+onZu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GtnjBG4u"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dc744f54d0so92815ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 17:20:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709083233; x=1709688033; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vdT0x3HibO/pzSmdrgIYWiv8FmuIQF8zXY+TeseC7sM=;
-        b=GtnjBG4ued0/3Wglc80zQFw7gd9rH4lN4TWnRIzyjBJFQgPy/PL5H+zyz4aWoQkES9
-         iu5PewLUB+eGkhqMCuiJstyqj7bW0M7fNuUuBRRW5M+tkcm4elfKNeOX37CMTtpsBn53
-         3VL/JGFX8CNMvfVKupyl7luFYtn4hF7j1U3aksxS5ALU3tr2hLF5ergj8hWcL7gcoPLe
-         QYv7/TWICuu6XeWN+IJglD2rJSl83D6rs5mhUZcbav2PB3brDnw2/SK/VOb35zFx6GFX
-         PNcqTNSrM668Mm8aQgIBf0uw0ESlitttZ8JhUUgJul2H4IM2Fbw1GABmYzf3NwwyCJc2
-         wKKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709083233; x=1709688033;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vdT0x3HibO/pzSmdrgIYWiv8FmuIQF8zXY+TeseC7sM=;
-        b=jeXoUtoZ0hSzIXP88sCL9e7BQ0RR0BBqyPuVtkxZORuBsyDCpsCC+jvl24I/QHURwk
-         L0AgDhjsunBAPllAfGS/hhijXtCH9hLz2QBx6GOXhWYFPoOM/89Vmtm7IWKzCwUJIqhT
-         nixwPMrWfKh1A8SZ4Jh3S/LzzCupgQRB3X6OxrK3dvAEs5F5EknSs+figID1WW9DkPTe
-         lAITS0/lGS6IivVp/iMGckmxYTXJafnwbw+/bRDZm7/RAfy6B89j/lWEyzInotoGoNUq
-         AIAWih28uyQ0/yvyjY/f9NUBKQ3NKmbR3V5TO3VpY93u/JfFrzSj99QIZ1sQPYeNTnOc
-         KJ3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVCDbuxkVcAYHcetvFuVEF/LauTdan7Ft8PJyQgMRMrKiKWZGJcHyzw+wEHngNAri1SyhtK6aBaWMHmE0gJAOpTFxfLYJpY748Sj/91
-X-Gm-Message-State: AOJu0YwcqUV1Wl39PKd1vms4zS5JUIkwhisTweFJokgEiNiA0gI/AcHp
-	SsS1zyobgxxNrzhZnaQs6pG6hLnSlvb3MNIxHlKS8Yy6B/RYVTAv6SmU0mUr8RqNlqvwbKMooSC
-	NneLwbDFd/wcAArahWR/smC/DBH1Dj/Kvoj9z
-X-Google-Smtp-Source: AGHT+IExJXBPQ3GF+J+ug86UWIg39ZhcnQ8sj9sPYlXuoBEeaVUgwPP/10AdRfGAu/tgNqj+8duppB4y7xFFMF15R7E=
-X-Received: by 2002:a17:902:fa08:b0:1dc:8fac:929b with SMTP id
- la8-20020a170902fa0800b001dc8fac929bmr9738plb.15.1709083232928; Tue, 27 Feb
- 2024 17:20:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ife+onZu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 771BBC433F1;
+	Wed, 28 Feb 2024 01:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709083290;
+	bh=xbDh3NL+tZVp1UyHoiJ9+BKG31EbR4SOQpOg0CSDafg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ife+onZuQUz70GgqxLfbizZLJsArG7Kkqc9+5dR4MXnVNJAH0fbewtJVQYpd828jP
+	 cc1QErW+Y12QtmlXiUePwI01zPk1b5vkSQb1ujOg9cbEcJRY/qOq3gD64sfgzto71L
+	 YknoaVHk7DX+dYHku7VYAmgwz/BCCQ5KsJqB+Ut6WiNdXvGaoQxFOOXhPMpC4Hm0Xz
+	 UIUM4AxC9U8n/fdGhFhgY+1ixhhEmuUSvmeGGuRCI3RLuc+AtEz0abITYnVcOavZt/
+	 u1Ziw3B0gJgz7BdqqdaynKSPuL0kW1ENKV9mHWIGhg9EsQGQIn2KkjOXBTwFdc4mGY
+	 2l7z1YA8HQ4qA==
+Message-ID: <f188ef53-b74e-4173-9d34-5f04c620fc2b@kernel.org>
+Date: Wed, 28 Feb 2024 09:21:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228005230.287113-1-namhyung@kernel.org>
-In-Reply-To: <20240228005230.287113-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 27 Feb 2024 17:20:21 -0800
-Message-ID: <CAP-5=fUK-P-4n46DjjGt48z_sivJ+HawsFP3e_C-mx5dW9JP8w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] perf annotate: Improve memory usage for symbol histogram
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] f2fs: fix panic issue in small capacity device
+Content-Language: en-US
+To: Jaegeuk Kim <jaegeuk@kernel.org>, Zhiguo Niu <niuzhiguo84@gmail.com>
+Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>,
+ linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ ke.wang@unisoc.com, hongyu.jin@unisoc.com
+References: <1707271264-5551-1-git-send-email-zhiguo.niu@unisoc.com>
+ <88459a22-a21c-4c3d-8371-31d7d713b536@kernel.org>
+ <CAHJ8P3KYY27M3v=9Lu-yD2ufxU1fdG-bg=G92AbpnLUx0zLz3g@mail.gmail.com>
+ <f36ef5d0-8922-449e-b19c-de009c89e712@kernel.org>
+ <CAHJ8P3KS2YAXm=GND8DknZqvGqTvm38Nv_9z1nEq4cTJjir-sA@mail.gmail.com>
+ <Zd03RHMKBqv1f6GF@google.com>
+ <CAHJ8P3Lj_1pa=npkAsMfeStEY3nWgf591tFndKTT_skFYLv+GQ@mail.gmail.com>
+ <Zd4ZTokbVPkj5gy4@google.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <Zd4ZTokbVPkj5gy4@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 27, 2024 at 4:52=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello,
->
-> This is another series of memory optimization in perf annotate.
->
-> When perf annotate (or perf report/top with TUI) processes samples, it
-> needs to save the sample period (overhead) at instruction level.  For
-> now, it allocates an array to do that for the whole symbol when it
-> hits any new symbol.  This comes with a lot of waste since samples can
-> be very few and instructions span to multiple bytes.
->
-> For example, when a sample hits symbol 'foo' that has size of 100 and
-> that's the only sample falls into the symbol.  Then it needs to
-> allocate a symbol histogram (sym_hist) and the its size would be
->
->   16 (header) + 16 (sym_hist_entry) * 100 (symbol_size) =3D 1616
->
-> But actually it just needs 32 (header + sym_hist_entry) bytes.  Things
-> get worse if the symbol size is bigger (and it doesn't have many
-> samples in different places).  Also note that it needs separate
-> histogram for each event.
->
-> Let's split the sym_hist_entry and have it in a hash table so that it
-> can allocate only necessary entries.
->
-> No functional change intended.
->
-> Thanks,
-> Namhyung
->
->
-> Namhyung Kim (4):
->   perf annotate: Add a hashmap for symbol histogram
->   perf annotate: Calculate instruction overhead using hashmap
->   perf annotate: Remove sym_hist.addr[] array
->   perf annotate: Add comments in the data structures
+On 2024/2/28 1:18, Jaegeuk Kim wrote:
+> On 02/27, Zhiguo Niu wrote:
+>> On Tue, Feb 27, 2024 at 9:13 AM Jaegeuk Kim <jaegeuk@kernel.org> wrote:
+>>>
+>>> On 02/26, Zhiguo Niu wrote:
+>>>> Dear Chao,
+>>>>
+>>>> On Fri, Feb 23, 2024 at 10:38 AM Chao Yu <chao@kernel.org> wrote:
+>>>>>
+>>>>> On 2024/2/23 10:01, Zhiguo Niu wrote:
+>>>>>>
+>>>>>>
+>>>>>> On Thu, Feb 22, 2024 at 8:30 PM Chao Yu <chao@kernel.org <mailto:chao@kernel.org>> wrote:
+>>>>>>
+>>>>>>      On 2024/2/7 10:01, Zhiguo Niu wrote:
+>>>>>>       > A panic issue happened in a reboot test in small capacity device
+>>>>>>       > as following:
+>>>>>>       > 1.The device size is 64MB, and main area has 24 segments, and
+>>>>>>       > CONFIG_F2FS_CHECK_FS is not enabled.
+>>>>>>       > 2.There is no any free segments left shown in free_segmap_info,
+>>>>>>       > then another write request cause get_new_segment get a out-of-bound
+>>>>>>       > segment with segno 24.
+>>>>>>       > 3.panic happen in update_sit_entry because access invalid bitmap
+>>>>>>       > pointer.
+>>>>>>
+>>>>>>      Zhiguo,
+>>>>>>
+>>>>>>      Can you please try below patch to see whether it can fix your problem?
+>>>>>>
+>>>>>>      https://lore.kernel.org/linux-f2fs-devel/20240222121851.883141-3-chao@kernel.org <https://lore.kernel.org/linux-f2fs-devel/20240222121851.883141-3-chao@kernel.org>
+>>>>>>
+>>>>>>      Thanks,
+>>>>>>
+>>>>>>
+>>>>>> Dear Chao,
+>>>>>> I need to coordinate the testing resources. The previous testing has been stopped because it was fixed with the current patch. In addition, this requires stability testing to reproduce, so it will take a certain amount of time. If there is any situation, I will tell you in time.
+>>>>>
+>>>>> Zhiguo, thank you!
+>>>>
+>>>> We tested this patch  this weekend on the previous version with
+>>>> problem, and it can not reproduce panic issues,
+>>>> so this patch should fix the original issue.
+>>>> thanks！
+>>>
+>> Dear Jaegeuk,
+>>> Hey, do you guys please point out which patches were tested without what?
+>> This problem occurred during our platform stability testing.
+>> it can be fixed by my  this patch set, mainly be fixed by:
+>> f2fs: fix panic issue in update_sit_entry & f2fs: enhance judgment
+>> conditions of GET_SEGNO
+>> and Chao's patch can also fix this problems testing without my patch
+>>> IOWs, which patches should I remove and keep Chao's patch?
+>> I think chao's patch is more reasonable, it does error handling more complete.
+>> but my patch just do some sanity check for return value of GET_SEGNO
+>> Same as other codes(update_segment_mtime)
+>> and i think it also needed except this part:
+> 
+> Thanks for confirmation. It seems it'd be better to revert yours and apply
+> Chao's patch first. If you think there's something to improve on top of it,
+> could you please send another patch afterwards?
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Agreed.
 
 Thanks,
-Ian
 
->  tools/perf/ui/gtk/annotate.c |  14 ++++-
->  tools/perf/util/annotate.c   | 114 ++++++++++++++++++++++-------------
->  tools/perf/util/annotate.h   |  86 +++++++++++++++++++++++---
->  3 files changed, 158 insertions(+), 56 deletions(-)
->
-> --
-> 2.44.0.rc1.240.g4c46232300-goog
->
+> 
+>>
+>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+>> index 3bf2ce46fa0907..bb22feeae1cfcb 100644
+>> --- a/fs/f2fs/segment.h
+>> +++ b/fs/f2fs/segment.h
+>> @@ -96,7 +96,8 @@ static inline void sanity_check_seg_type(struct
+>> f2fs_sb_info *sbi,
+>> (GET_SEGOFF_FROM_SEG0(sbi, blk_addr) & (BLKS_PER_SEG(sbi) - 1))
+>> #define GET_SEGNO(sbi, blk_addr) \
+>> - ((!__is_valid_data_blkaddr(blk_addr)) ? \
+>> + ((!__is_valid_data_blkaddr(blk_addr) || \
+>> + !f2fs_is_valid_blkaddr(sbi, blk_addr, DATA_GENERIC)) ? \
+>> NULL_SEGNO : GET_L2R_SEGNO(FREE_I(sbi), \
+>> GET_SEGNO_FROM_SEG0(sbi, blk_addr)))
+>> #define CAP_BLKS_PER_SEC(sbi)
+>> because Chao's patch let new_addr=null_addr when  get_new_segment
+>> returns NOSPACE,
+>> so I think this can be reverted and it also saves code running time.
+>> How about Chao's opinions?
+>> thanks!
+>>>
+>>>>
+>>>>>
+>>>>> BTW, I've tested this patch for a while, and it looks there is no issue w/
+>>>>> FAULT_NO_SEGMENT fault injection is on.
+>>>>>
+>>>>>> btw, Why can’t I see this patch on your branch^^?
+>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git/log/?h=dev-test <https://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git/log/?h=dev-test>
+>>>>>
+>>>>> Too lazy to push patches in time, will do it in this weekend. :P
+>>>>>
+>>>>>> thanks！
+>>>>>>
+>>>>>>
+>>>>>>       >
+>>>>>>       > More detail shown in following patch sets.
+>>>>>>       > The three patches are splited here because the modifications are
+>>>>>>       > relatively independent and more readable.
+>>>>>>       >
+>>>>>>       > ---
+>>>>>>       > Changes of v2: stop checkpoint when get a out-of-bound segment
+>>>>>>       > ---
+>>>>>>       >
+>>>>>>       > Zhiguo Niu (4):
+>>>>>>       >    f2fs: correct counting methods of free_segments in __set_inuse
+>>>>>>       >    f2fs: fix panic issue in update_sit_entry
+>>>>>>       >    f2fs: enhance judgment conditions of GET_SEGNO
+>>>>>>       >    f2fs: stop checkpoint when get a out-of-bounds segment
+>>>>>>       >
+>>>>>>       >   fs/f2fs/file.c          |  7 ++++++-
+>>>>>>       >   fs/f2fs/segment.c       | 21 ++++++++++++++++-----
+>>>>>>       >   fs/f2fs/segment.h       |  7 ++++---
+>>>>>>       >   include/linux/f2fs_fs.h |  1 +
+>>>>>>       >   4 files changed, 27 insertions(+), 9 deletions(-)
+>>>>>>       >
+>>>>>>
