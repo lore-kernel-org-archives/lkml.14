@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C84932C89;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D22531A83;
 	Wed, 28 Feb 2024 09:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709110947; cv=none; b=fZOtva4697n74/rQ3CeaxXdrHIBObONNALpy0ZbuPihS1eZ5ZD7JWX+/9b1h+Q28SBjC4N7yzElGk99JYyxXSqd8U/WmQZLcnT/qRw8Ufub4LSAMEaUkXf5YYlWX8Fb84ra+DZDZvkzU7DWwL7MyX7AwYzLx2DVLCsuW6FWBmJk=
+	t=1709110947; cv=none; b=dg56972apL/Ju2Dl7501nxLLVC4iUby264Fll14zjAF1w3YOwmjh56TpcnRjCJmljah5pYZ18qHMK7PfgVKeRRijUTDmGmGrk+97vFQdIu/8PXkgB1LxGeERusGnnoxtdshWXDBo0EQS6Lr6YaufiVyCz6L0YPMDVQM1M8ur89U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709110947; c=relaxed/simple;
-	bh=ywfgATgm0aypyBAKMXF/GcEFRJ1Eq1C35G1C0msdK2A=;
+	bh=AwiWhyYYPQ6J5Nsxc1RcXcfAeBDJwdSxCWFxnx8UpOE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mpy1Ka5SuA5xoUybyewOXXmGUOwxl+/kI89mTgoNnL3kTMQIiaU+yF+UggR2XlxLl2quHT+VAes7vrfD0RCyvh79t6ih/al3bkvwIMIHaE4fVc2OlI5us4T3MaxIo9pLrXQCCqgpK9Q+Nt7GNANCxlL1AmpfUsYpbsTl23uS8KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iMnus8JN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=L0iQA0MYenj0Gbf3zVvAlU+cIRbwAODbT3FbVCA2D3mwIhh2hjIjSczcx82BmsDHwn5Ti8TWKeIBGWHKgtuycdq7BR0aqPl54lXoCk/GDTP6cv9PB3q3jMBTbQvlNJgmI0KYDtSC2EJKZF00JL3lX8vHACnM3DWgM52XE9VLtVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TxXoc0Eo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iMnus8JN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1B007C41639;
-	Wed, 28 Feb 2024 09:02:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxXoc0Eo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EB21EC4167E;
+	Wed, 28 Feb 2024 09:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709110947;
-	bh=ywfgATgm0aypyBAKMXF/GcEFRJ1Eq1C35G1C0msdK2A=;
+	bh=AwiWhyYYPQ6J5Nsxc1RcXcfAeBDJwdSxCWFxnx8UpOE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=iMnus8JNl8hg8ghv241W0MXxME+nwlsS9jPgyRefGyYH1O6n+mrOSPD3c+y172cVS
-	 Iu95099nB0Z5Ngv/Roltazjdykd79TpU6oh+1O0I1F1XMEk3a5FcWMn2AJa3QbICAu
-	 zl4NIqY11I9fkKNimn0VH6ysIUNFC377HEUKmw+xxm9uh1/0rainVQaRCkkh2JzGfG
-	 7cxsNlRdtMpzL3BUfqIb1sszp2CvrimzZewA8AVxqHzY81Sb/Ti6KB/+6kAEv9zeE+
-	 NFX2fhQsxL7NCws7e1qGRYkz/yll99aNsrwT7oIpdhKZudWAzMCFDBoFNDX2LkWcmD
-	 BCGEnqB9TtlPg==
+	b=TxXoc0EoB29C+ytOFAg+pPsjhb+xBC0jvwepynh3cX7mMnlIg5/h8qEs8K0KZkxjP
+	 2oO4igRgVtceE5KwMf8iTNccByS9bufsyICws3sA4d9+amE09GLLlO5+OEoFyIB2Dy
+	 +ZVG7UlY9xRxAkHfugCqz8wjENQeT8C0VUq3VBpLygLXSYU2MQR6KNi+7JK7RJtuVo
+	 GEIfuP9rXJlH5lr2rUD07ZmGwyjdC+emCItOn6G2uiniqFbG77v4/o1TcRGTzKqXwt
+	 4aO2y/aMM1H/bRAiArLEkyDLjY0iYxAoz2Om4zYD+ZcwTRA71XtsWHC+ThbqBRMlnY
+	 xv5arJzybeZHw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0C9C54E41;
-	Wed, 28 Feb 2024 09:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB361C54E55;
+	Wed, 28 Feb 2024 09:02:26 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Wed, 28 Feb 2024 17:02:34 +0800
-Subject: [PATCH net-next v6 10/11] net: hisi_femac: remove unused
- compatible strings
+Date: Wed, 28 Feb 2024 17:02:31 +0800
+Subject: [PATCH net-next v6 07/11] dt-bindings: net: hisi-femac: replace
+ deprecated phy-mode with recommended phy-connection-type
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240228-net-v6-10-6d78d3d598c1@outlook.com>
+Message-Id: <20240228-net-v6-7-6d78d3d598c1@outlook.com>
 References: <20240228-net-v6-0-6d78d3d598c1@outlook.com>
 In-Reply-To: <20240228-net-v6-0-6d78d3d598c1@outlook.com>
 To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
@@ -56,11 +56,11 @@ To: Yisen Zhuang <yisen.zhuang@huawei.com>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709110945; l=925;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709110945; l=1121;
  i=forbidden405@outlook.com; s=20240228; h=from:subject:message-id;
- bh=XyfB6lrJfMVpxxuFf+mKc/YVrgV78wZeT48FTY5wNC4=;
- b=KmG/XzGwjdslAfqMDhYtttbOdzJ8IZPE82McrlvVeKESHLF+ri2yhsn6ce4awRZJjXiMLciG4
- pmefFAqTF/ICav9k6kucrhy9DsT2/ku/kLq3viPYG/vv/1jcSpvI+CM
+ bh=UkM6cazLUUcGm7V+UelgyTmRZYNnC9CwRUbl7j+gA44=;
+ b=f5Z5JfMhFzIZrioziMkhpJB/CbSksX9sZDGw/4dP0dQYJHzTEaL2jb0GFBOtYQQ1738WyKZ4X
+ GWICiPgPUFOCNGnp3xFLFHiUbPWx0lzBribGIcCjE8z3ivD+rsr8FPV
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=KAWv6ZzFsT54MGllOczJgFiWB+DuayEmyn24iiVVThU=
 X-Endpoint-Received:
@@ -70,28 +70,36 @@ Reply-To: <forbidden405@outlook.com>
 
 From: Yang Xiwen <forbidden405@outlook.com>
 
-It's hard to get the version number for each FEMAC core and it's unknown
-how the version can be used. Remove them until it's really needed.
+The old property "phy-mode" should be replaced with the latest
+"phy-connection-type".
 
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- drivers/net/ethernet/hisilicon/hisi_femac.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hisi_femac.c b/drivers/net/ethernet/hisilicon/hisi_femac.c
-index 2406263c9dd3..3c5c095dad05 100644
---- a/drivers/net/ethernet/hisilicon/hisi_femac.c
-+++ b/drivers/net/ethernet/hisilicon/hisi_femac.c
-@@ -945,8 +945,7 @@ static int hisi_femac_drv_resume(struct platform_device *pdev)
- #endif
+diff --git a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+index ba207f2c9ae4..6c5888897876 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
++++ b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+@@ -66,7 +66,7 @@ required:
+   - clocks
+   - resets
+   - reset-names
+-  - phy-mode
++  - phy-connection-type
+   - phy-handle
+   - hisilicon,phy-reset-delays-us
  
- static const struct of_device_id hisi_femac_match[] = {
--	{.compatible = "hisilicon,hisi-femac-v1",},
--	{.compatible = "hisilicon,hisi-femac-v2",},
-+	{.compatible = "hisilicon,hisi-femac",},
- 	{.compatible = "hisilicon,hi3516cv300-femac",},
- 	{},
- };
+@@ -83,7 +83,7 @@ examples:
+         resets = <&crg 0xec 0>, <&crg 0xec 3>;
+         reset-names = "mac", "phy";
+         mac-address = [00 00 00 00 00 00];
+-        phy-mode = "mii";
++        phy-connection-type = "mii";
+         phy-handle = <&fephy>;
+         hisilicon,phy-reset-delays-us = <10000 20000 20000>;
+     };
 
 -- 
 2.43.0
