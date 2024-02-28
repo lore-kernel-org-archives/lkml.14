@@ -1,126 +1,146 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1E26CDB4;
-	Wed, 28 Feb 2024 11:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3028B6CDD9
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 11:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709120972; cv=none; b=Lx0a/H45ZbfvQ4Br24wUtaLzkjGnMxmGfpnsFYavLR63uzcjdZY5K9HkWSxVo7iMKvbHvP7JhOUCUDZpAxAOupsdNRo8bPBfxSWW3oFtdCvRDNF2X5RgrOavpdQe8ArTTHsipn8LIpg43ISLlBfKPdnf9uZq8HQ5jQEc61VG1Rw=
+	t=1709120978; cv=none; b=cSqtxlkBiZnOw47jgubH/Tvxr0DUfeLKZPxBG8maghNloYonQsiOMx7TOW3d9t1/wlL/17QNFgDK7eWMGfWb1+5JYpAD/XMVCpbWarAE88Ty+T1VJlXDASIjhr9qCrlkshUQwGuSJ7vW9qIZ5PCVX8pPAFwChyn4R7AQKBcmrUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709120972; c=relaxed/simple;
-	bh=/w24V+PXVv7nPqoQT7WsaK3wYnXvCIO7OBWGZHwW8PI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dAIKtd36uEhc8wpPQNEhUZnkQ1J1OfSSS5EWor7hGlNaZMR6GM4DuAaVC6BJrgHmyUJhClTNVeQhS8nnadyJcJv7neRT/wnucG1nhG9FWqogPIHZhVBxiQ++N43coHJsT9+naDJSKOg2te0uCEeKOh0gY7X37wWIJaC8CyjNniw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y/ZZiIUC; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709120978; c=relaxed/simple;
+	bh=Qcal8Ty64aIwuJm9sMzxN+fh8PzyQM8kaqQ/aZv5CWY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R07pMxpv+olhpOAtSflu2JlRMHMagdipPQ4JSVmmN1WCSaeQT1JOHNmevNqNIn7/DvwwAc8tZqJYmoIS/6UwtNg9N3zeDdApGS2Z81ddahDkGk6zLIf4X5MJO6/qmDZvScnSC5TnxpZQJIbJQUwp39HEy72XJXlvGnVbOuNoQ1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gl4HU8aJ; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/ZZiIUC"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4d3424f38b5so66447e0c.0;
-        Wed, 28 Feb 2024 03:49:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709120970; x=1709725770; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NSH/3EQOGAkXnTXQt9hkTv9AvhuSZN0bOwj9TQDsTjc=;
-        b=Y/ZZiIUCaYYwMQopzLBogFyRJj36Eea5Jb7V62Kk4KAC1CHHElQX5CslyLHTglgdGJ
-         RDPiIkJRq79BhFbp4wq0kxVIL+jq1muCo5Gqkgq+PqdKqd8COGATsJ2gODxXpUY6sZst
-         XE5auQySPS6RdYRdquTKKJvsfB9cRjCl1W8MzCDUt+Gx91vF2ll/GwYNaMvQFivKfuy8
-         8qdUZaTA+oy+4w375ZbZ+kgzPlmSSbdNYFiH2qNaPQt50aebonQxUPbX3N7y0eGf7uQ6
-         BuMr5P4EfNhKvzREgiMuew6a64fGWmvixOub8T3q7oMou6GELomdcRyU0joaCcNGBB3P
-         P8tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709120970; x=1709725770;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NSH/3EQOGAkXnTXQt9hkTv9AvhuSZN0bOwj9TQDsTjc=;
-        b=mOOwQ5Arlpwm1aLRcxrWiQ9rtD7i1uX7Dc0Ib6YMiYmu1TwlJ/dfAc3fYFAh/0e1Ky
-         mEk9VujtiOcmCpXynbVb8peY/s/fzf2w4ZWtDftnxENYnr/MlgtAnwL/0LAdj5tpJ6B6
-         C7pCeviuakqH+a2Si4ZSAKCTVAqn3zGCI+DFgYlG95eJj8sxGB7MLKKo7UJROvF3z1BG
-         iuRIa2K2zJLpDOv0k1Di9Rorn/9ZqZW+a136OI5pJG6C5uFA8n9S8WmbrTx1m4iRpKsf
-         gu+nhVQSrqXkWoWYCfSTsWcAkLryZPNrK+cdv8TOVe7Iovi7WFJf6QMknIhUxq6FgiKp
-         Weyg==
-X-Forwarded-Encrypted: i=1; AJvYcCVwp92AHqDcaAnRzn4xcGY5+VfnpTrDUo6yS/4DG6B5aBpAa5VLOoLcZjcLf7QMTAhh28laELazsHEYfKufuRchQFfr9KNt8ikXy5lddHkRYm1S47v8BFBQMO7yTeyMiSjRNH08a+S2CZjMzOdsIFykvtckjbb298R5DRKI/f/uG4g1ZiRldW803PtZ
-X-Gm-Message-State: AOJu0YzPcqoLvTRyy3cPehqkrr65Xl1W2lAP1CsuuGLC2orvfES6hXiS
-	nXRhQhUvEM7eizF+PBGWbws9oZSwF2awnmHo9hmCIBxuiWb60KrHoY0KTbLyc75OgkDVeyRRRD/
-	XypzoWKRQaO0wOQzPXTHOAfbBTM0=
-X-Google-Smtp-Source: AGHT+IFsBAkSa3bHoD2Kmhrd56AGOJvRHtrn2KaFSdCZypfo1h1iG+hKJI7qkeO5Rd7m0N9ikpbEnHQ5SuzfqZVrvxg=
-X-Received: by 2002:a1f:4982:0:b0:4ca:615e:1b6b with SMTP id
- w124-20020a1f4982000000b004ca615e1b6bmr8560191vka.1.1709120970157; Wed, 28
- Feb 2024 03:49:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gl4HU8aJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709120976; x=1740656976;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Qcal8Ty64aIwuJm9sMzxN+fh8PzyQM8kaqQ/aZv5CWY=;
+  b=Gl4HU8aJ3hyusOlSYuJ/PI+Rkt2iY/at+VmtnaVwKC+1TUcvv7YYsFX6
+   aC/vmy+Rkci9yZSiIs5ujZsbGyO7huEni/EJjQUM0sneIlzA/CliQZMzD
+   ixRJPEYPIuEdyd7AlIuWPp/qX5J6NttSpyjPrUmOFcm/HVe5R2RjBDEOB
+   H23Kn4BGjJ0iJeO+zMODRnjyZJJtW0ioHMCUx/rI6VQuvOswZyPlPlu6h
+   +qV72tGABx8W5MgRA47yUj596p77xBeXe4REAy3t0jQo6y8Y7O+qVjUS+
+   7noxAprhBmXvzgntznx9GcRfDZN24xZx71T9pNhQsjdWAJLwbicquXB5R
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3633242"
+X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
+   d="scan'208";a="3633242"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 03:49:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
+   d="scan'208";a="7619107"
+Received: from wufei-optiplex-7090.sh.intel.com ([10.239.158.51])
+  by fmviesa006.fm.intel.com with ESMTP; 28 Feb 2024 03:49:32 -0800
+From: Fei Wu <fei2.wu@intel.com>
+To: atishp@atishpatra.org,
+	anup@brainfault.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: Fei Wu <fei2.wu@intel.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v4] perf: RISCV: Fix panic on pmu overflow handler
+Date: Wed, 28 Feb 2024 19:54:25 +0800
+Message-Id: <20240228115425.2613856-1-fei2.wu@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227232531.218159-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240227232531.218159-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVD3DoFnTO_2a-UAoDQvRTd9CBdA62KG0ye9Gpwbi9G0w@mail.gmail.com>
-In-Reply-To: <CAMuHMdVD3DoFnTO_2a-UAoDQvRTd9CBdA62KG0ye9Gpwbi9G0w@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 28 Feb 2024 11:48:39 +0000
-Message-ID: <CA+V-a8v6Srj11xo35uP5xY-JKbDQB-3gipAcFmWttMvHc_yBfw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: arm: renesas: Document Renesas
- RZ/V2H(P) System Controller
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 28, 2024 at 11:34=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> On Wed, Feb 28, 2024 at 12:26=E2=80=AFAM Prabhakar <prabhakar.csengg@gmai=
-l.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add DT binding documentation for System Controller (SYS) found on
-> > RZ/V2H(P) ("R9A09G057") SoC's.
-> >
-> > SYS block contains the SYS_LSI_DEVID register which can be used to
-> > retrieve SoC version information.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > ---
-> > v1 -> v2
-> > - Dropped extal_clk node from example
-> > - Replaced RZ/V2H{P} -> RZ/V2H(P)
-> > - Dropped description for clocks & resets properties
-> > - used <cpg 1> for clocks in example node
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-devel for v6.10, ...
->
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/renesas/renesas,r9a09g057-s=
-ys.yaml
-> > @@ -0,0 +1,51 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/soc/renesas/renesas,r9a09g057-sys.y=
-aml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Renesas RZ/V2H(P) System Controller (SYS)
-> > +
-> > +maintainers:
-> > +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> > +
-> > +description:
->
-> with "|" added.
->
-Thank you Geert for taking care of this.
+(1 << idx) of int is not desired when setting bits in unsigned long
+overflowed_ctrs, use BIT() instead. This panic happens when running
+'perf record -e branches' on sophgo sg2042.
 
-Cheers,
-Prabhakar
+[  273.311852] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000098
+[  273.320851] Oops [#1]
+[  273.323179] Modules linked in:
+[  273.326303] CPU: 0 PID: 1475 Comm: perf Not tainted 6.6.0-rc3+ #9
+[  273.332521] Hardware name: Sophgo Mango (DT)
+[  273.336878] epc : riscv_pmu_ctr_get_width_mask+0x8/0x62
+[  273.342291]  ra : pmu_sbi_ovf_handler+0x2e0/0x34e
+[  273.347091] epc : ffffffff80aecd98 ra : ffffffff80aee056 sp : fffffff6e36928b0
+[  273.354454]  gp : ffffffff821f82d0 tp : ffffffd90c353200 t0 : 0000002ade4f9978
+[  273.361815]  t1 : 0000000000504d55 t2 : ffffffff8016cd8c s0 : fffffff6e3692a70
+[  273.369180]  s1 : 0000000000000020 a0 : 0000000000000000 a1 : 00001a8e81800000
+[  273.376540]  a2 : 0000003c00070198 a3 : 0000003c00db75a4 a4 : 0000000000000015
+[  273.383901]  a5 : ffffffd7ff8804b0 a6 : 0000000000000015 a7 : 000000000000002a
+[  273.391327]  s2 : 000000000000ffff s3 : 0000000000000000 s4 : ffffffd7ff8803b0
+[  273.398773]  s5 : 0000000000504d55 s6 : ffffffd905069800 s7 : ffffffff821fe210
+[  273.406139]  s8 : 000000007fffffff s9 : ffffffd7ff8803b0 s10: ffffffd903f29098
+[  273.413660]  s11: 0000000080000000 t3 : 0000000000000003 t4 : ffffffff8017a0ca
+[  273.421022]  t5 : ffffffff8023cfc2 t6 : ffffffd9040780e8
+[  273.426437] status: 0000000200000100 badaddr: 0000000000000098 cause: 000000000000000d
+[  273.434512] [<ffffffff80aecd98>] riscv_pmu_ctr_get_width_mask+0x8/0x62
+[  273.441169] [<ffffffff80076bd8>] handle_percpu_devid_irq+0x98/0x1ee
+[  273.447562] [<ffffffff80071158>] generic_handle_domain_irq+0x28/0x36
+[  273.454151] [<ffffffff8047a99a>] riscv_intc_irq+0x36/0x4e
+[  273.459659] [<ffffffff80c944de>] handle_riscv_irq+0x4a/0x74
+[  273.465442] [<ffffffff80c94c48>] do_irq+0x62/0x92
+[  273.470360] Code: 0420 60a2 6402 5529 0141 8082 0013 0000 0013 0000 (6d5c) b783
+[  273.477921] ---[ end trace 0000000000000000 ]---
+[  273.482630] Kernel panic - not syncing: Fatal exception in interrupt
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Signed-off-by: Fei Wu <fei2.wu@intel.com>
+---
+ drivers/perf/riscv_pmu_sbi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 16acd4dcdb96..452aab49db1e 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -512,7 +512,7 @@ static void pmu_sbi_set_scounteren(void *arg)
+ 
+ 	if (event->hw.idx != -1)
+ 		csr_write(CSR_SCOUNTEREN,
+-			  csr_read(CSR_SCOUNTEREN) | (1 << pmu_sbi_csr_index(event)));
++			  csr_read(CSR_SCOUNTEREN) | BIT(pmu_sbi_csr_index(event)));
+ }
+ 
+ static void pmu_sbi_reset_scounteren(void *arg)
+@@ -521,7 +521,7 @@ static void pmu_sbi_reset_scounteren(void *arg)
+ 
+ 	if (event->hw.idx != -1)
+ 		csr_write(CSR_SCOUNTEREN,
+-			  csr_read(CSR_SCOUNTEREN) & ~(1 << pmu_sbi_csr_index(event)));
++			  csr_read(CSR_SCOUNTEREN) & ~BIT(pmu_sbi_csr_index(event)));
+ }
+ 
+ static void pmu_sbi_ctr_start(struct perf_event *event, u64 ival)
+@@ -731,14 +731,14 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+ 		/* compute hardware counter index */
+ 		hidx = info->csr - CSR_CYCLE;
+ 		/* check if the corresponding bit is set in sscountovf */
+-		if (!(overflow & (1 << hidx)))
++		if (!(overflow & BIT(hidx)))
+ 			continue;
+ 
+ 		/*
+ 		 * Keep a track of overflowed counters so that they can be started
+ 		 * with updated initial value.
+ 		 */
+-		overflowed_ctrs |= 1 << lidx;
++		overflowed_ctrs |= BIT(lidx);
+ 		hw_evt = &event->hw;
+ 		riscv_pmu_event_update(event);
+ 		perf_sample_data_init(&data, 0, hw_evt->last_period);
+-- 
+2.34.1
+
