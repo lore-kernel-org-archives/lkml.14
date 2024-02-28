@@ -1,85 +1,146 @@
-Received: from relay161.nicmail.ru (relay161.nicmail.ru [91.189.117.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE15279B79
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.117.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF7E71EAE
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709145522; cv=none; b=St0U6VfDpMkL4WWjyTpiQ6+fQgZDV6Jq7lV9ZhDdt4NK5zOCm5iOpd7RpWuRrM9XjROtILVafBNuvPuVbUqwJyL3Jk4fgiGv0Ccz/5usU6IzBqTYyUMyBl8uGvmTyisJI9aUX3Du6F4EpmTGfo5U4XLpQZt95cww/FpuKxTu4sQ=
+	t=1709145546; cv=none; b=cH/Dx7LThMgCp0IMNlDPUAZyyp7iZ2pZXponUOriUAuPnrk6QsWPQ5Jz0u5Vt8cUSq3/uWHJzjkIY4/Ij7rAPnfVPgO1xtROKU+8Kp5z8Ha3EFumRTcWxEvvuAWd/2PHGWR7ZuyOAYh/Q9kl6bBYxKrt+JlP17wALIC9GaSvj4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709145522; c=relaxed/simple;
-	bh=MsJjh7TXS8JgWzGdB0v4jRwOparhSbtOtRlvrf4J/gU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:References:To:Cc:
-	 In-Reply-To:Content-Type; b=A2LGTywGplfT0AX8CmV0yTt9tEFv+uSUod+qkAIjo1tWu3miBF+6C3oOqGZq4BnMYHIabkIHLlTcXWG26rWMefMFM5Wix9qhEvZJz6I2A10vgJydg3Xiq9tOZXO0uavHF+Jvhl6kRgG35v0GF8OcGz9DHbT4L6NWqiYuGhdnj3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru; spf=pass smtp.mailfrom=ancud.ru; arc=none smtp.client-ip=91.189.117.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ancud.ru
-Received: from [10.28.138.149] (port=32378 helo=[192.168.95.111])
-	by relay.hosting.mail.nic.ru with esmtp (Exim 5.55)
-	(envelope-from <kiryushin@ancud.ru>)
-	id 1rfOja-00034v-6A;
-	Wed, 28 Feb 2024 21:32:51 +0300
-Received: from [87.245.155.195] (account kiryushin@ancud.ru HELO [192.168.95.111])
-	by incarp1102.mail.hosting.nic.ru (Exim 5.55)
-	with id 1rfOja-000Yz9-2h;
-	Wed, 28 Feb 2024 21:32:50 +0300
-Message-ID: <79c92cfa-cf5a-4a23-8a93-11c1af7432fc@ancud.ru>
-Date: Wed, 28 Feb 2024 21:32:47 +0300
+	s=arc-20240116; t=1709145546; c=relaxed/simple;
+	bh=7iqFBA+LWwnU3gwgoROsymeSLKp/pJPiwqlUMLON2K8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tfq9OL+iz5FNxt6FDNkrL/KfS1FJu55xXAkwV6K0IFCnItB/kh8lQ83K9BYM85hKm7iLfechF0N4lpF9bUwSQFnbIeX439u/inK/tnW7QazmdpxbS7DNANuUmF0+Uq0qk6eOYf+BkJIBivlBQDqSp8iDPBfZxKEDPfanlU3SNf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bZRYLvOc; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bZRYLvOc"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-60938adfed8so787247b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:39:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709145544; x=1709750344; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7iqFBA+LWwnU3gwgoROsymeSLKp/pJPiwqlUMLON2K8=;
+        b=bZRYLvOcuSQJ7yTTsyjqu0vwk3flVlQP1DkzZ/201fIwY1LLOW6TSNF6BYYEq7oYih
+         1Cl/Df6h2RV0hl63dNEtntv3f0hZjvN14lRZSYwmLl6hBmIvAn8BJrmsnKFHiRyYxvSy
+         1wr5QF6lFsds62i4Y8iuXFqdO0/MBLf6T7/+JSj90jrAlTfxy6GUL+48TvD+WOQc65TS
+         PDOLJlrQzICYzz+uFhAZmzzcJl2jXbwZ8tb34Kwjdq/CreXpKKumqlKO+WPcgXvIqXBq
+         8HDEcoozgv8zib5X41FWRrwsnVv8RmgjkKKUEW/eb3ulqmH/IChjCZdd7xJUHNqnSmlQ
+         Y4AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709145544; x=1709750344;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7iqFBA+LWwnU3gwgoROsymeSLKp/pJPiwqlUMLON2K8=;
+        b=osozuG1rBbojK6brua5qWSVRU6RH/4U0KYluVHY2eNBZsn2/t5pCQzJfB/wyPCkWBH
+         23esmxiN0hMuitTNbZo7qlppL3wOWswHEdshwBOOEtVlgo9tHH+YVUD5X53b1mXEW0of
+         3Kss/B4sc/Pty0grhc+85VCVviM/0SUft3areggw9/B93o8p5tPYN3O1gOfpjl2om0uq
+         frjo49bKZkaBcqtzFDLCJxuzGJfNwtqwZ0CstezG/yVwFYG5wy32yWKvL75NPPfp7v8O
+         HLbuJd/CO6Fxk3kffP4IbBLvZlJBD7RNOhQ6zPQDZB1wyG86FyCDhrRuNpViu1xUBWTu
+         MmPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGNICuqlqTTchd7xeIV8JXz0zeOk5p4zyKn2Nld9q9afPEMCykEwwUrMc9fwN2O4iAImrHg/60VWJVGKQmOubGxc7C86GPZ0PebiGl
+X-Gm-Message-State: AOJu0YzLKfXyexYl3OgAAssqpfV2hI4Ob6+tZNkAebQOnw+ZmNs30V8g
+	LxrYAhUUK/5MLse+KRL6uZdqTtNqWA0qABNRrMzR/yUL0XHVCI6CQ5SVvd5KBFV4psWc1k5B33X
+	2+NUaao+BcGeIhlAcjVb3rByf23OoQeb86Lz+
+X-Google-Smtp-Source: AGHT+IGPWnLmF2TVmBJmUMEp5oMR8c6WgnFtjjNeDdqebhJZ+NPAbFsWrA/RAsFNPaaO16thY7f2/GzzgeasEYFaVaU=
+X-Received: by 2002:a5b:f45:0:b0:dc6:e75d:d828 with SMTP id
+ y5-20020a5b0f45000000b00dc6e75dd828mr48009ybr.18.1709145543730; Wed, 28 Feb
+ 2024 10:39:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Nikita Kiryushin <kiryushin@ancud.ru>
-Subject: [PATCH] drm/i915: Remove unneeded double drm_rect_visible call in
- check_overlay_dst
-Reply-To: Nikita Kiryushin <kiryushin@ancud.ru>
-References: <>
-Content-Language: en-US
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Manasi Navare <manasi.d.navare@intel.com>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- project@linuxtesting.org
-In-Reply-To: <>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MS-Exchange-Organization-SCL: -1
+References: <20240221194052.927623-1-surenb@google.com> <20240221194052.927623-20-surenb@google.com>
+ <2daf5f5a-401a-4ef7-8193-6dca4c064ea0@suse.cz> <CAJuCfpGt+zfFzfLSXEjeTo79gw2Be-UWBcJq=eL1qAnPf9PaiA@mail.gmail.com>
+ <6db0f0c8-81cb-4d04-9560-ba73d63db4b8@suse.cz> <CAJuCfpEgh1OiYNE_uKG-BqW2x97sOL9+AaTX4Jct3=WHzAv+kg@mail.gmail.com>
+ <f494b8e5-f1ca-4b95-a8aa-01b9c4395523@suse.cz>
+In-Reply-To: <f494b8e5-f1ca-4b95-a8aa-01b9c4395523@suse.cz>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 28 Feb 2024 10:38:49 -0800
+Message-ID: <CAJuCfpHJoPa_pQNPrcWNZyU7V7=UA4deGFMxh9_aZPyiP0bFSw@mail.gmail.com>
+Subject: Re: [PATCH v4 19/36] mm: create new codetag references during page splitting
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
+	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
+	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, tj@kernel.org, muchun.song@linux.dev, 
+	rppt@kernel.org, paulmck@kernel.org, pasha.tatashin@soleen.com, 
+	yosryahmed@google.com, yuzhao@google.com, dhowells@redhat.com, 
+	hughd@google.com, andreyknvl@gmail.com, keescook@chromium.org, 
+	ndesaulniers@google.com, vvvvvv@google.com, gregkh@linuxfoundation.org, 
+	ebiggers@google.com, ytcoode@gmail.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	bristot@redhat.com, vschneid@redhat.com, cl@linux.com, penberg@kernel.org, 
+	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com, 
+	elver@google.com, dvyukov@google.com, shakeelb@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, rientjes@google.com, 
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-arch@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 28, 2024 at 10:28=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> w=
+rote:
+>
+> On 2/28/24 18:50, Suren Baghdasaryan wrote:
+> > On Wed, Feb 28, 2024 at 12:47=E2=80=AFAM Vlastimil Babka <vbabka@suse.c=
+z> wrote:
+> >
+> >>
+> >> Now this might be rare enough that it's not worth fixing if that would=
+ be
+> >> too complicated, just FYI.
+> >
+> > Yeah. We can fix this by subtracting the "bytes" counter of the "head"
+> > page for all free_the_page(page + (1 << order), order) calls we do
+> > inside __free_pages(). But we can't simply use pgalloc_tag_sub()
+> > because the "calls" counter will get over-decremented (we allocated
+> > all of these pages with one call). I'll need to introduce a new
+> > pgalloc_tag_sub_bytes() API and use it here. I feel it's too targeted
+> > of a solution but OTOH this is a special situation, so maybe it's
+> > acceptable. WDYT?
+>
+> Hmm I think there's a problem that once you fail put_page_testzero() and
+> detect you need to do this, the page might be already gone or reallocated=
+ so
+> you can't get to the tag for decrementing bytes. You'd have to get it
+> upfront (I guess for "head && order > 0" cases) just in case it happens.
+> Maybe it's not worth the trouble for such a rare case.
 
-check_overlay_dst for clipped is called 2 times: in drm_rect_intersect 
-and than directly. Change second call for check of drm_rect_intersect 
-result to save some time (in locked code section).
+Yes, that hit me when I tried to implement it but there is a simple
+solution around that. I can obtain alloc_tag before doing
+put_page_testzero() and then decrement bytes counter directly as
+needed.
+Not sure if it is a rare enough case that we can ignore it but if the
+fix is simple enough then might as well do it?
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 8d8b2dd3995f ("drm/i915: Make the PIPESRC rect relative to the 
-entire bigjoiner area")
-Signed-off-by: Nikita Kiryushin <kiryushin@ancud.ru>
----
-  drivers/gpu/drm/i915/display/intel_overlay.c | 3 +--
-  1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_overlay.c 
-b/drivers/gpu/drm/i915/display/intel_overlay.c
-index 2b1392d5a902..1cda1c163a92 100644
---- a/drivers/gpu/drm/i915/display/intel_overlay.c
-+++ b/drivers/gpu/drm/i915/display/intel_overlay.c
-@@ -972,9 +972,8 @@ static int check_overlay_dst(struct intel_overlay 
-*overlay,
-  		      rec->dst_width, rec->dst_height);
-   	clipped = req;
--	drm_rect_intersect(&clipped, &crtc_state->pipe_src);
-  -	if (!drm_rect_visible(&clipped) ||
-+	if (!drm_rect_intersect(&clipped, &crtc_state->pipe_src) ||
-  	    !drm_rect_equals(&clipped, &req))
-  		return -EINVAL;
-  -- 2.34.1
-
+>
+> >>
+> >>
+> >> > Every time
+> >> > one of these pages are freed that codetag's "bytes" and "calls"
+> >> > counters will be decremented. I think accounting will work correctly
+> >> > irrespective of where these pages are freed, in __free_pages() or by
+> >> > put_page().
+> >> >
+> >>
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to kernel-team+unsubscribe@android.com.
+>
