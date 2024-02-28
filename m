@@ -1,170 +1,123 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF41320DC8;
-	Wed, 28 Feb 2024 06:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76D21E501;
+	Wed, 28 Feb 2024 06:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709101222; cv=none; b=EyJ8ezycKddmLd0I13ZbLi9P//IyouAiDpxdDbhmhpFZqkJFoAbpYKA3KxUq6VxaBjVYBQMa+OaBoKTylHdbbSFcaclAfVc1ODzbLZreMIAFzZ9na9ii0q40miFEVR92yJhW7wK9KBY4tZ234LaCgZKGBh0P42rJGMnbZJ7um9c=
+	t=1709101838; cv=none; b=gwyGag/1KCEapp7mwXiT8nIcVylW1P/E+WVwrpssfM+Pc3maKnFS9ia19Rm9vJgEHnQf9MOBy2HhD5/JsQMFSTkJQS6ClB280bBpzipKHCo+rATMzd+ODsY4Gpsxq324oq7yF71Lkvg0gK23YbJ5h5HOA6A+gs2vfFCXCmGta/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709101222; c=relaxed/simple;
-	bh=KM3IFL7VBvfv0H/qsM6GNcfHmm/qg0ho1w04RZ/MwvM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oWU9aI6zVkNujIHgRdrEBrZsAIyCd86s2mvjbMIr8b+5dwn6Emoh70IDa4OaejD4dlnMjyVq16qHBvxBSFAfK8s2wzCjHxMoMkwzPQCsz351tUszmNHscnJfWhnPgFzeaOMXm6bXsnl0KCqjupJF2Ix4kBSgkjJWn1bSbW/xXew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=a7ASRwun; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1709101838; c=relaxed/simple;
+	bh=5zgtvBb7ybGOTydt2Y9kLwJt/b4q5aA+RidLp5++cRE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KdRguY0WBiceU7pVyOKGKvmTVNQUsizagCVAEzIotmFc3AizIYGBW73VqVSRfPkEP9n5Qf/GHzX3pXwwNqmn3tOy4EEq5+Kgcste+/wd8KKz+ngJfFqKh/X/a3A7cVHkWL7KjVi0aABVZbGufa2O0n6Yyvb3HYGF5uBTvhPE4N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=XY3v6iB3; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="a7ASRwun"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:Reply-To:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=Tis/Y5P1c6986WEgqGUJ7LAnUXHIukbiwL2Ll2OtVE0=;
-	t=1709101219; x=1709533219; b=a7ASRwuniBuydrELW5EpoamZweLc4G/Bq45P+Mwhoz5Owgu
-	928gKnc/f4z5XX2jvr6840/CVJEU64ZH1J7FRf7gZ37lGJfSA6JdGjxJKXQyTOp6uUNShX7OcZm45
-	ac+s5osril0pRk1jnkCrkQW9AT8fwN0DECm0QuZT/S+Fh7BlU94qpoHyH0x3nsWwXp9Vblcc+xOBW
-	LeXjVT1E/QJFOVS/HBpMF27MDjdMk2Z8B2NkgCMl4mOItG7E4wlNbhxxaEdnKEX7bWlBJVAzSgq/9
-	L2hr5C+Ava/VlZWygSUiOxaJVKrR7D57OKYgvH803yuKrAw4kyZj/ngR4LPFbj2Q==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rfDIN-0008F8-3u; Wed, 28 Feb 2024 07:19:59 +0100
-Message-ID: <a3749d3f-ced1-4c48-adaf-348c8dee7610@leemhuis.info>
-Date: Wed, 28 Feb 2024 07:19:56 +0100
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="XY3v6iB3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709101837; x=1740637837;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=5zgtvBb7ybGOTydt2Y9kLwJt/b4q5aA+RidLp5++cRE=;
+  b=XY3v6iB3THpVPlwDcG2WiRyYL8JhtEhSa8CEx8MVpATCxtdjQbJ9uk/5
+   g4QqtiqIsT6PGOnR9uj/TiaNnPFA4H+ZkGU9Y6AGaCNxSEcae5A6ocA/H
+   A8h5LIgazX/tDZ8lh+u4Yg1Cl1aytrrfAtJfAs5PS20ktFKwJT21oQPS8
+   yOIJR/CkOb6Bh9VQdqIz09cAdegYM6nH+CJE1YEpzemQ3Iu7sZaGwWiI3
+   WvX4vl5K09KbujUuI+cX1cuOX3vh4TQobLcu79E4pftDxa1pkBa/zU0dx
+   d7lYs6KtOxKXYtM0S8WdGc+a6Eoc56V+eTP8zidUv2Tbly9n9fzekT0kE
+   g==;
+X-CSE-ConnectionGUID: WwtfXDcGT3ekg/b+aiH4Eg==
+X-CSE-MsgGUID: vk/89F6YQJOYQKdIPkjbaA==
+X-IronPort-AV: E=Sophos;i="6.06,190,1705388400"; 
+   d="scan'208";a="247685634"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2024 23:30:35 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 27 Feb 2024 23:30:06 -0700
+Received: from DEN-DL-M31836.microsemi.net (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 27 Feb 2024 23:30:04 -0700
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<UNGLinuxDriver@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net-next 1/2] net: phy: micrel: lan8814 led errata
+Date: Wed, 28 Feb 2024 07:28:12 +0100
+Message-ID: <20240228062813.1007138-2-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240228062813.1007138-1-horatiu.vultur@microchip.com>
+References: <20240228062813.1007138-1-horatiu.vultur@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH net v3] net: stmmac: protect updates of 64-bit statistics
- counters
-Content-Language: en-US, de-DE
-To: Eric Dumazet <edumazet@google.com>, "David S. Miller"
- <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Petr Tesarik <petr@tesarici.cz>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- "open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:ARM/Allwinner sunXi SoC support" <linux-sunxi@lists.linux.dev>,
- Marc Haber <mh+netdev@zugschlus.de>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <f.fainelli@gmail.com>, stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- alexis.lothore@bootlin.com, Guenter Roeck <linux@roeck-us.net>
-References: <20240203190927.19669-1-petr@tesarici.cz>
- <ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net>
- <Zct5qJcZw0YKx54r@xhacker>
- <CANn89i+4tVWezqr=BYZ5AF=9EgV2EPqhdHun=u=ga32CEJ4BXQ@mail.gmail.com>
- <20d94512-c4f2-49f7-ac97-846dc24a6730@roeck-us.net>
- <CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <CANn89iL1piwsbsBx4Z=kySUfmPa9LbZn-SNthgA+W6NEnojgSQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1709101219;0a885a42;
-X-HE-SMSGID: 1rfDIN-0008F8-3u
+Content-Type: text/plain
 
-Net maintainers, chiming in here, as it seems handling this regression
-stalled.
+Lan8814 phy led behavior is not correct. It was noticed that the led
+still remains ON when the cable is unplugged while there was traffic
+passing at that time.
 
-On 13.02.24 16:52, Eric Dumazet wrote:
-> On Tue, Feb 13, 2024 at 4:26 PM Guenter Roeck <linux@roeck-us.net> wrote:
->> On Tue, Feb 13, 2024 at 03:51:35PM +0100, Eric Dumazet wrote:
->>> On Tue, Feb 13, 2024 at 3:29 PM Jisheng Zhang <jszhang@kernel.org> wrote:
->>>> On Sun, Feb 11, 2024 at 08:30:21PM -0800, Guenter Roeck wrote:
->>>>> On Sat, Feb 03, 2024 at 08:09:27PM +0100, Petr Tesarik wrote:
->>>>>> As explained by a comment in <linux/u64_stats_sync.h>, write side of struct
->>>>>> u64_stats_sync must ensure mutual exclusion, or one seqcount update could
->>>>>> be lost on 32-bit platforms, thus blocking readers forever. Such lockups
->>>>>> have been observed in real world after stmmac_xmit() on one CPU raced with
->>>>>> stmmac_napi_poll_tx() on another CPU.
->>>>>>
->>>>>> To fix the issue without introducing a new lock, split the statics into
->>>>>> three parts:
->>>>>>
->>>>>> 1. fields updated only under the tx queue lock,
->>>>>> 2. fields updated only during NAPI poll,
->>>>>> 3. fields updated only from interrupt context,
->>>>>>
->>>>>> Updates to fields in the first two groups are already serialized through
->>>>>> other locks. It is sufficient to split the existing struct u64_stats_sync
->>>>>> so that each group has its own.
->>>>>>
->>>>>> Note that tx_set_ic_bit is updated from both contexts. Split this counter
->>>>>> so that each context gets its own, and calculate their sum to get the total
->>>>>> value in stmmac_get_ethtool_stats().
->>>>>>
->>>>>> For the third group, multiple interrupts may be processed by different CPUs
->>>>>> at the same time, but interrupts on the same CPU will not nest. Move fields
->>>>>> from this group to a newly created per-cpu struct stmmac_pcpu_stats.
->>>>>>
->>>>>> Fixes: 133466c3bbe1 ("net: stmmac: use per-queue 64 bit statistics where necessary")
->>>>>> Link: https://lore.kernel.org/netdev/Za173PhviYg-1qIn@torres.zugschlus.de/t/
->>>>>> Cc: stable@vger.kernel.org
->>>>>> Signed-off-by: Petr Tesarik <petr@tesarici.cz>
->>>>>
->>>>> This patch results in a lockdep splat. Backtrace and bisect results attached.
->>>>>
->>>>> ---
->>>>> [   33.736728] ================================
->>>>> [   33.736805] WARNING: inconsistent lock state
->>>>> [   33.736953] 6.8.0-rc4 #1 Tainted: G                 N
->>>>> [   33.737080] --------------------------------
->>>>> [   33.737155] inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
->>>>> [   33.737309] kworker/0:2/39 [HC1[1]:SC0[2]:HE0:SE0] takes:
->>>>> [   33.737459] ef792074 (&syncp->seq#2){?...}-{0:0}, at: sun8i_dwmac_dma_interrupt+0x9c/0x28c
->>>>> [   33.738206] {HARDIRQ-ON-W} state was registered at:
->>>>> [   33.738318]   lock_acquire+0x11c/0x368
->>>>> [   33.738431]   __u64_stats_update_begin+0x104/0x1ac
->>>>> [   33.738525]   stmmac_xmit+0x4d0/0xc58
->>>>
->>>> interesting lockdep splat...
->>>> stmmac_xmit() operates on txq_stats->q_syncp, while the
->>>> sun8i_dwmac_dma_interrupt() operates on pcpu's priv->xstats.pcpu_stats
->>>> they are different syncp. so how does lockdep splat happen.
->>>
->>> Right, I do not see anything obvious yet.
->>
->> Wild guess: I think it maybe saying that due to
->>
->>         inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
->>
->> the critical code may somehow be interrupted and, while handling the
->> interrupt, try to acquire the same lock again.
-> 
-> This should not happen, the 'syncp' are different. They have different
-> lockdep classes.
-> 
-> One is exclusively used from hard irq context.
-> 
-> The second one only used from BH context.
+The fix consists in clearing bit 10 of register 0x38, in this way the
+led behaviour is correct and gets OFF when there is no link.
 
-Alexis Lothoré hit this now as well, see yesterday report in this
-thread; apart from that nothing seem to have happened for two weeks now.
-The change recently made it to some stable/longterm kernels, too. Makes
-me wonder:
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
+ drivers/net/phy/micrel.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-What's the plan forward here? Is this considered to be a false positive?
-Or a real problem? Or a kind of situation along the lines of "that
-commit should not cause the problem we are seeing, so it might have
-exposed a older bug in the code, but nobody looked closer yet to check"?
-Or something else?
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 9b69735819896..5a0cc89eaebdd 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -114,6 +114,9 @@
+ #define LAN8814_INTR_CTRL_REG_POLARITY		BIT(1)
+ #define LAN8814_INTR_CTRL_REG_INTR_ENABLE	BIT(0)
+ 
++#define LAN8814_EEE_STATE			0x38
++#define LAN8814_EEE_STATE_MASK2P5P		BIT(10)
++
+ /* Represents 1ppm adjustment in 2^32 format with
+  * each nsec contains 4 clock cycles.
+  * The value is calculated as following: (1/1000000)/((2^-32)/4)
+@@ -3288,6 +3291,19 @@ static int lan8814_release_coma_mode(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++static void lan8814_errata_fixes(struct phy_device *phydev)
++{
++	u16 val;
++
++	/* It was noticed that when traffic is passing through the PHY and the
++	 * cable is removed then the LED was still one even though there is no
++	 * link
++	 */
++	val = lanphy_read_page_reg(phydev, 2, LAN8814_EEE_STATE);
++	val &= ~LAN8814_EEE_STATE_MASK2P5P;
++	lanphy_write_page_reg(phydev, 2, LAN8814_EEE_STATE, val);
++}
++
+ static int lan8814_probe(struct phy_device *phydev)
+ {
+ 	const struct kszphy_type *type = phydev->drv->driver_data;
+@@ -3323,6 +3339,7 @@ static int lan8814_probe(struct phy_device *phydev)
+ 	}
+ 
+ 	lan8814_ptp_init(phydev);
++	lan8814_errata_fixes(phydev);
+ 
+ 	return 0;
+ }
+-- 
+2.34.1
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
