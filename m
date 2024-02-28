@@ -1,89 +1,106 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B441170F;
-	Wed, 28 Feb 2024 01:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9904A219FC
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709083395; cv=none; b=uYOpAnveepAsoGxiyxLeBBfsSRSjc03+Hxy9fPf98vYIo+L9zQgMWBJL0oEkK6NuC/9hOHETmn/ubtDEYzUz2aqbzhwfhEr1r8Qedb0rUzJWJ/y8hG7wbmn2kGfU2yLwNi9MTiTpHD6hVyGSL/LsKgCTXQnMYRaSKGAUCYHH3NE=
+	t=1709083410; cv=none; b=l/19cx5e6DzfSJ05P7sQGzcBfIokUETtNeQ6dhIwBajPx41gHYzrhLUJdBKFSneO/r6KvEsfWV/jwl4mXF9VNpsg1f/h6oCHgTowWMGeCMbMxEsRdAoA3sNUvK3XysB4RGfrG5pWgMo+fy30SFfQz0o8z+7VnyxPrbPUAnvyP0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709083395; c=relaxed/simple;
-	bh=70fgOT0vFPjiubuyATTULGAqEv4jfeGA/T40KZH9Jt8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=evkXuxo8zNdVDUUCzUxSUF+EKK7L0EqSpKkV2c5C43w5cwDRgRNL04aT3qQ+5VjiNRXOGj//ugD0rEiiW5abjzt6rd9YXSXMSgWpu8rRvXz2KUbdO8PO8IPPwGT4vcJSueZVbUIe/CRqGMzNctEkM7tsqYctRsP8Udu3B0e9Rkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TkxSB013Rz4f3kFQ;
-	Wed, 28 Feb 2024 09:23:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 39A701A0283;
-	Wed, 28 Feb 2024 09:23:11 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP1 (Coremail) with SMTP id cCh0CgDX8gv7it5lqQx6FQ--.57137S8;
-	Wed, 28 Feb 2024 09:23:11 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	tim.c.chen@linux.intel.com
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] fs/writeback: remove unnecessary return in writeback_inodes_sb
-Date: Wed, 28 Feb 2024 17:19:58 +0800
-Message-Id: <20240228091958.288260-7-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240228091958.288260-1-shikemeng@huaweicloud.com>
-References: <20240228091958.288260-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1709083410; c=relaxed/simple;
+	bh=Az2cipqHRNZc9bmqhUQ857rmevnLZPQ1P1i+RozUbh8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=kVwG9Ypj799yScuEcqRAqKWi7H1OcfSFDik43Wxmu0roB6muWiRwRgfc7GPTzanoaQ/sg0kKnBSbnehuTZ+5fFb5hy2TLWzOe8Pop7MehzjVj3NUHTKb5E4Dy4YFPFJ5v9gBoww7VVSUEbIvsDJ5KcX7VpNQshO1mS4iFFsCVAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: dcfdaf20806d478f87296c71c8e60693-20240228
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:175b7b38-df8f-4664-8453-a39aa8b672c6,IP:20,
+	URL:0,TC:0,Content:-25,EDM:-30,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,
+	ACTION:release,TS:-50
+X-CID-INFO: VERSION:1.1.37,REQID:175b7b38-df8f-4664-8453-a39aa8b672c6,IP:20,UR
+	L:0,TC:0,Content:-25,EDM:-30,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:-50
+X-CID-META: VersionHash:6f543d0,CLOUDID:4e456484-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:2402280923195D8PB1H9,BulkQuantity:0,Recheck:0,SF:19|44|66|38|24|17|1
+	02,TC:nil,Content:0,EDM:2,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
+	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: dcfdaf20806d478f87296c71c8e60693-20240228
+X-User: yaolu@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.169)] by mailgw
+	(envelope-from <yaolu@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 816934123; Wed, 28 Feb 2024 09:23:16 +0800
+From: Lu Yao <yaolu@kylinos.cn>
+To: frank.binns@imgtec.com,
+	donald.robson@imgtec.com,
+	matt.coster@imgtec.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Lu Yao <yaolu@kylinos.cn>
+Subject: [PATCH] drm/imagination: Kconfig: add 'PAGE_SIZE=4K' dependency
+Date: Wed, 28 Feb 2024 09:23:13 +0800
+Message-Id: <20240228012313.5934-1-yaolu@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDX8gv7it5lqQx6FQ--.57137S8
-X-Coremail-Antispam: 1UD129KBjvdXoW7Jry8Cw4UGw18KF45Kr4kJFb_yoW3WFb_XF
-	15JFs2yFsFqF4xA3y8ZasxtF4v9F1rCF1rJF1akas8J3WY9r97Zr4vyw4DJryv9a47ZFWD
-	Gw1fXrW2yrZY9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
-	xGYIkIc2x26280x7IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC
-	64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM2
-	8EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq
-	3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jstxDUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-writeback_inodes_sb doesn't have return value, just remove unnecessary
-return in it.
+When 'PAGE_SIZE=64K',the following compilation error occurs:
+"
+  ../drivers/gpu/drm/imagination/pvr_fw_mips.c: In function
+‘pvr_mips_fw_process’:
+  ../drivers/gpu/drm/imagination/pvr_fw_mips.c:140:60: error: array
+subscript 0 is outside the bounds of an interior zero-length array
+‘dma_addr_t[0]’ {aka ‘long long unsigned int[]’}
+[-Werror=zero-length-bounds]
+  140 |   boot_data->pt_phys_addr[page_nr] =
+mips_data->pt_dma_addr[src_page_nr] +
+~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+  In file included from ../drivers/gpu/drm/imagination/pvr_fw_mips.c:6:
+  ../drivers/gpu/drm/imagination/pvr_fw_mips.h:30:13: note: while
+referencing ‘pt_dma_addr’
+   30 |  dma_addr_t pt_dma_addr[PVR_MIPS_PT_PAGE_COUNT];
+"
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
+This is because 'PVR_MIPS_PT_PAGE_COUNT' is defined as
+'(ROGUE_MIPSFW_MAX_NUM_PAGETABLE_PAGES * ROGUE_MIPSFW_PAGE_SIZE_4K) \
+>> PAGE_SHIFT', and under the above conditions, 'PAGE_SHIFT' is '16',
+'ROGUE_MIPSFW_MAX_NUM_PAGETABLE_PAGES' is '4','ROGUE_MIPSFW_PAGE_SIZE_4K'
+is '4096',so 'PVR_MIPS_PT_PAGE_COUNT' is '0' causing the member
+'pt_dma_addr' to be incorrectly defined.
+
+Signed-off-by: Lu Yao <yaolu@kylinos.cn>
 ---
- fs/fs-writeback.c | 2 +-
+ drivers/gpu/drm/imagination/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 7e344a4e727e..362a5409f92e 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -2735,7 +2735,7 @@ EXPORT_SYMBOL(writeback_inodes_sb_nr);
-  */
- void writeback_inodes_sb(struct super_block *sb, enum wb_reason reason)
- {
--	return writeback_inodes_sb_nr(sb, get_nr_dirty_pages(), reason);
-+	writeback_inodes_sb_nr(sb, get_nr_dirty_pages(), reason);
- }
- EXPORT_SYMBOL(writeback_inodes_sb);
+diff --git a/drivers/gpu/drm/imagination/Kconfig b/drivers/gpu/drm/imagination/Kconfig
+index 3bfa2ac212dc..e585922f634d 100644
+--- a/drivers/gpu/drm/imagination/Kconfig
++++ b/drivers/gpu/drm/imagination/Kconfig
+@@ -3,7 +3,7 @@
  
+ config DRM_POWERVR
+ 	tristate "Imagination Technologies PowerVR (Series 6 and later) & IMG Graphics"
+-	depends on ARM64
++	depends on (ARM64 && ARM64_PAGE_SHIFT=12)
+ 	depends on DRM
+ 	depends on PM
+ 	select DRM_EXEC
 -- 
-2.30.0
+2.25.1
 
