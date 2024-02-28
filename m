@@ -1,98 +1,266 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F147924A06
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 07:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C57B24214
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 07:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709105178; cv=none; b=cfccY+FB1zdJ49vYJg/D4MuzksUbaJMX5e3MyNaJf+qArXFx5vkvrCdlB9BZy5WjCJUvvT+pqO+YK+RdUouVorzze25b81bFapk2a2LF1jFsRr77HPZrFbl3VpF/ZrogCvv0HGXeKRZvxP//1Ilj9OElHyjIDtFwjRcFX2P69rQ=
+	t=1709105291; cv=none; b=qI6Rw078YHWsk9j5Bn5ZJMePstgOceekcVGfVErpDjnV47CfWAZ4/4j46lidENOR6RN8RuNJVn9+gta2j2Oq+jR0PG3moVfI/bPVtBQ9Zo3wp9srJzNkzhzH7eIznV2zhHH7xe9UquGDiSPY0aRsSMdg9WMVex1TbOd9RZ58wB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709105178; c=relaxed/simple;
-	bh=asjFfwYuPjymOdYYLQoZSQr0W4mVkOPufOpRClHRK74=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BZp6l5ZhVXVJRdbUayR+yZU21c73OWELgjbRz9/mYc9Tia0G0iGmNd0JeqkJBPNS5iRXGIp40mV+3Yo6gDAjSx+xZjVV46BKGq4D+O+0RbhsCXqrsKc8j4N7ojn+I7cX4fX2laoywRbe1i+NTyFex04LiKxOaVz3KnRA+kOCAfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PGQ6sFfj; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709105291; c=relaxed/simple;
+	bh=7ey5g7zO7vsPThLxFqRRla5M4J4jK/rW388FMFA42pw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SPlKcz9UyvWgj35/lZFXppPjCHxhKsPOn0lkrSISU9XjTdKmMkeLUxWlWhRdlfQfuRj9/D5x06e/NFxHt1GM6ESqVaNcPZ7quYF+9Ebh+LgsuhKkZjITC2fMpowI+x7op8Vx50ZINnb2OzHCr/yy2IxIBYGytmxSiKfLrH9E/PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=km/Hm0N5; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGQ6sFfj"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-412b4a12bbaso1637505e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:26:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="km/Hm0N5"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-564a53b8133so4330616a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:28:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709105175; x=1709709975; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O4qmpRXQDJZ+dKyhU210IX58ZV5gg5CCPG3QCEGwT80=;
-        b=PGQ6sFfjp0kmrDeupv4LRFPomPOkh3WlVhgDkWpKRYOlrkols0Bf9B6URMCrQmM8fm
-         Ha8D/AzTVPIc93bxMUjNsmjtpRAmcYwdplAyxjxvv1+60fbWYgkEvstiTw3WoX/fkHtr
-         +gZBVhacVcnaYprevLBVTCmV/ZVChdOnLX/2uk8lU3/yqHPH9NFKyXHX8sZKGvzUzEGh
-         eLZfBt6u3US1fjxbzUoc2dcZAcRFx+hVS0YUPNUZO7ElphTW91YY8jCYnHikA4pHMKUH
-         0vCeiTBGb60CkfZwRsIFMHWbRb9vQaTdbPmBePG2nIKR2e0q+FLB6Ot/iiGKXzbpWt9p
-         Krvw==
+        d=linaro.org; s=google; t=1709105288; x=1709710088; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WFLcJJee259JIrk4DVS+FE6qZgBM9LZf/wuGod93q6E=;
+        b=km/Hm0N5ptvZotk8WCVsYp7DnkDJDYQaf04l+pRGmCfR//Q+3NLxiLdP/Z+28oquGo
+         xn6DVBgKaH2FDnFjVDEjT50VEWaNCnvOTX/ab3cKjqY30nYBRHI1uLrkUYveIrEZ/mBb
+         S1uL1EjR2kvAadxqzLRAIc+T4QYQXwW59SR04KflXj1ssKwJVzvWC3T1sehZ0qMdzkZP
+         om46hO8nBj+9R3A3/fq1+7usrs48ekRfCmT0Flz8Im1WK7h5D3ODGhzLDgOEwaNxk5g4
+         9oGCtHTp4+H4j4Al3MFIfynLNBm2TeflKOhUNkbZ5dex3lEfcQ6H6phRo1ra2KVsk9yp
+         iPRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709105175; x=1709709975;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O4qmpRXQDJZ+dKyhU210IX58ZV5gg5CCPG3QCEGwT80=;
-        b=sTGZnwQ4bWkROxSsG2SK3/cKNSKs+mTlD6O0/afFx0T9Bh6JVN3soM0tFF3KvJywdv
-         uTAiFwQ56CBqIMJtIGLNqR/WmAss4Bxlf2jIRpQpQVXmJi0TBL9APGlAATFG9dF27l9U
-         1m8mDh73PJ3UTbt7/Lv7op8nPzZqpuLildF5m4322AYUDiE2ArFSQKPaB188Mnx1nvqH
-         Hw1a5uxEvPz3eZLCve/nLyLCYnFGSDZjV8+dsjsm37XIZ2/I9fZKJxV/vG+gaAdCv/Z9
-         6hv5kVUFftmxak+uFi14JpLirC4j9fW8ytBCcJRshkhyRoi4H4bx950GxOaJstteFXXm
-         fRfA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBV4s1XDcI4V92QJFwlKEXNLw1eDAnGj6O/cdtRNYrgDUOXogPJ0jaEavhgnzSMDNmJRMMHYGmUtKxiWHXO1TPttSW6lQW1mUgsYoN
-X-Gm-Message-State: AOJu0YwjZQr7MukGsPCwBsPNlEAvj+6J9Husbq24wNqjNEd04R+fiaWm
-	UgZREcKgnb1cIbZZNnMnNmvh5hyil67QiAcXb23teC5YtDb/KZKM
-X-Google-Smtp-Source: AGHT+IGqgAcMdec3GgCn6K3wUoxK78jFOqYzkRWw+67awvXsZwIBcMadsUraraDWAGDT9sIxLJKbrQ==
-X-Received: by 2002:a05:600c:a0b:b0:412:892c:7eea with SMTP id z11-20020a05600c0a0b00b00412892c7eeamr8674264wmp.37.1709105175155;
-        Tue, 27 Feb 2024 23:26:15 -0800 (PST)
-Received: from ubuntu2004.cynet.local (vpn1382.cynet.com. [84.110.53.106])
-        by smtp.gmail.com with ESMTPSA id n2-20020a05600c4f8200b00412b56aa46bsm663566wmq.13.2024.02.27.23.26.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 23:26:14 -0800 (PST)
-From: Ariel Silver <arielsilver77@gmail.com>
-To: gregkh@linuxfoundation.org,
-	philipp.g.hortmann@gmail.com,
-	yogi.kernel@gmail.com,
-	dan.carpenter@linaro.org,
-	straube.linux@gmail.com,
-	garyrookard@fastmail.org
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ariel Silver <arielsilver77@gmail.com>
-Subject: [PATCH] Staging: rtl8192e: Sparse warning regarding variable declaration
-Date: Wed, 28 Feb 2024 09:25:53 +0200
-Message-Id: <20240228072553.11740-1-arielsilver77@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1709105288; x=1709710088;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WFLcJJee259JIrk4DVS+FE6qZgBM9LZf/wuGod93q6E=;
+        b=nCXFXiI5v+18UxJNnG9RuYinpH4szK7M99u7GBCZmlOhVyG3xtzxaZr6ZIokAL63dc
+         lvD9CuWjMDaXJNcxI1e1vyBbBrflXtTnFS7zvjbkpH7QryfwSFJEEJ4j4+qlaof1U7Bm
+         CllVN6OGC0ER4J9Nas2ussx4OL5tQC1f6jde8E+QsuyJZR8LoVKpWYO7QgrpvBDeR8XJ
+         RtkfvGfn4TjHZutE5PxPL2vD2NjaQPQGPadxdUPekZukL9HIKAHs5tXxpeX8JO3UgXKg
+         ENqfMZ+TkYbya04R7DyAhDqp/tKjl5cTQnu23aPWE14/0q8K9UEgels0SHRXZMbEgH59
+         i03w==
+X-Forwarded-Encrypted: i=1; AJvYcCWJqqPBNkeP3KUHsZcYHshya+VZ4N3km0abojV02jNsfOg8/PtLAKCK3DsxV6c+rb4c7gsiMuKo/fSb+EgZUQbc3o2afSj2hsDIJfb7
+X-Gm-Message-State: AOJu0YxT696Z+To9CIeLH9dbJhbY3djllqPzrPRRY+gcSCPxGjYsuWbg
+	KtdfsC6egZYhfXtGIRBuQNvahRdMs8ZkKCRTnvv1A6qodDcX8KIfu2gXGlGCZ56nvX2SAK1IwiE
+	f
+X-Google-Smtp-Source: AGHT+IH2GW07nyyPZlJBIhQlHwDOvgu3sHI8ZoZanWd7zoQ1boLFcvCer/d4+r5wraTosaLmy2C5rQ==
+X-Received: by 2002:a05:6402:1606:b0:565:ffa5:becd with SMTP id f6-20020a056402160600b00565ffa5becdmr5196923edv.37.1709105288573;
+        Tue, 27 Feb 2024 23:28:08 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id p15-20020aa7cc8f000000b005667629f6e1sm133626edt.39.2024.02.27.23.28.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 23:28:08 -0800 (PST)
+Message-ID: <bd4bf6ae-350e-4ee6-a924-7dd31b2c6034@linaro.org>
+Date: Wed, 28 Feb 2024 08:28:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/18] ASoC: dt-bindings: mediatek,mt8365-afe: Add audio
+ afe document
+Content-Language: en-US
+To: Alexandre Mergnat <amergnat@baylibre.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20240226-audio-i350-v1-0-4fa1cea1667f@baylibre.com>
+ <20240226-audio-i350-v1-1-4fa1cea1667f@baylibre.com>
+ <ce5f71a9-1b5f-4724-89db-dae2f64e8008@linaro.org>
+ <eeb3329b-0558-4237-8343-4e11f65a6a35@baylibre.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <eeb3329b-0558-4237-8343-4e11f65a6a35@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fixed sparse warning: "'dm_rx_path_sel_table' was not declared. Should it be static?"
-As dm_rx_path_sel_table is used only in rtl_dm.c it should be static.
+On 27/02/2024 16:18, Alexandre Mergnat wrote:
+>>
+>>> +    type: boolean
+>>> +
+>>> +  mediatek,dmic-iir-on:
+>>> +    description:
+>>> +      Boolean which specifies whether the DMIC IIR is enabled.
+>>> +      If this property is not present the IIR is disabled.
+>>
+>> "is enabled" or "enable it"?
+>>
+>> You described the desired Linux feature or behavior, not the actual
+>> hardware. The bindings are about the latter, so instead you need to
+>> rephrase the property and its description to match actual hardware
+>> capabilities/features/configuration etc.
+> 
+> I will rephrase:
+> 
+> True to enable the Infinite Impulse Response (IIR) filter
+> on the digital microphone inputs.
 
-Signed-off-by: Ariel Silver <arielsilver77@gmail.com>
----
- drivers/staging/rtl8192e/rtl8192e/rtl_dm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I still don't know why this is DT-specific. You still tell driver what
+to do...
 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-index 92143c50c149..850ee6ae1f02 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-@@ -144,7 +144,7 @@ const u8 dm_cck_tx_bb_gain_ch14[CCK_TX_BB_GAIN_TABLE_LEN][8] = {
- /*------------------------Define global variable-----------------------------*/
- struct dig_t dm_digtable;
- 
--struct drx_path_sel dm_rx_path_sel_table;
-+static struct drx_path_sel dm_rx_path_sel_table;
- /*------------------------Define global variable-----------------------------*/
- 
- 
--- 
-2.25.1
+> 
+>>
+>>> +    type: boolean
+>>> +
+>>> +  mediatek,dmic-irr-mode:
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description:
+>>> +      Selects stop band of IIR DC-removal filter.
+>>> +      0 = Software programmable custom coeff loaded by the driver.
+>>
+>> Bindings are for hardware, not drivers. Why is this a property of board DTS?
+> 
+> Actually this is a hardware feature. Mode 1 t 5 are predefined filters. 
+> Mode 0, the HW will read some "coef filter registers" to setup the 
+> custom filter. the "coef filter regs" are written by the driver. 
+> Currently the coef values are hardcoded in the driver.
+
+You don't get the point. Just because you choose some mode it does not
+mean is hardware feature for DT. Sampling frequency done by hardware is
+also "hardware feature", but do you put it to DT? No.
+
+Explain why this is board-specific, not runtime configuration.
+
+> 
+>>
+>>> +      1 = 5Hz if 48KHz mode.
+>>> +      2 = 10Hz if 48KHz mode.
+>>> +      3 = 25Hz if 48KHz mode.
+>>> +      4 = 50Hz if 48KHz mode.
+>>> +      5 = 65Hz if 48KHz mode.
+>>
+>> Use proper unit suffixes - hz.
+>>
+>>
+>>> +    enum:
+>>> +      - 0
+>>> +      - 1
+>>> +      - 2
+>>> +      - 3
+>>> +      - 4
+>>> +      - 5
+>>> +
+>>> +  mediatek,dmic-two-wire-mode:
+>>> +    description:
+>>> +      Boolean which turns on digital microphone for two wire mode.
+>>> +      If this property is not present the two wire mode is disabled.
+>>
+>> This looks like hardware property, but the naming looks like SW. Again
+>> you instruct what driver should do. Standard disclaimer:
+>>
+>> You described the desired Linux feature or behavior, not the actual
+>> hardware. The bindings are about the latter, so instead you need to
+>> rephrase the property and its description to match actual hardware
+>> capabilities/features/configuration etc.
+> 
+> Actually this is a hardware feature. This is ALL I have to describe the 
+> HW behavior from the datasheet:
+> "
+> bit name: ul_dmic_two_wire_ctl
+> Turns on digital microphone for two wire mode.
+> 0: Turn off
+> 1: Turn on
+
+That's rather suggestion it is not a description of hardware but you
+want driver to do something...
+
+> "
+> 
+> On the board schematic, SoC and DMIC and linked by 3 pins:
+> - clk
+> - data0
+> - data1
+> 
+> IMHO, "two-wire-mode" means the HW use 2 pins for data, and the SoC must 
+> be aware of that by reading the register value written by the driver, 
+> using the value found in the DTS.
+
+So this depends on type of connection of DMIC? Then rephrase description
+property like this.
+
+> 
+> I don't get why you think it wouldn't be hardware behavior.
+
+Because telling what to write to the registers which is typical sign of
+people stuffing to DT whatever they need to configure the hardware.
+
+> 
+> Rephrase description:
+> "True to enable the two wire mode of the digital microphone"
+> Is it better ?
+
+No, because again you describe some sort of mode. If you insist on such
+description, then my answer is: it's runtime, so not suitable for DT.
+Instead describe what is the hardware problem/configuration, e.g. "DMIC
+is connected with only CLK and DATA0, without third pin" etc.
+
+> 
+> About the property name, "mediatek,dmic-two-wire-ctl" sound better for you ?
+
+To sound more like a register less like physical characteristic of the
+board? No. The name can stay, I don't have better ideas.
+
+
+Best regards,
+Krzysztof
 
