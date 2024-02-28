@@ -1,99 +1,94 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3FF15A4A8;
-	Wed, 28 Feb 2024 11:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7087D135A65;
+	Wed, 28 Feb 2024 11:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709120127; cv=none; b=q/4UyLbJLltsO+T1M4YATa1qiU/Fu87LUqMK12+w5GT70NI5La3v91eo0nsp2WkzWwdUY6TkocJWw6bloctRXql90exiDXl9h5WirqdG2Vfj4T5uCrhXCViltXL82toJqXyc9NYlpxeCuYiK9QMeU+v3+zAVQOIRD2LFfgMig8E=
+	t=1709120254; cv=none; b=i2HpnDyzPuJJQiuHvIb6sn1KqsEeGmJVwB2n+F1owR0yDCTanD8nFnyvJJE173KiSAYbp/gq/5xo9BixHbsaEeXSTR9ypK7IRuzzHdn1NmdxtBq8yaZX6BQ6SRffwCk0+MA8jPNP+JQjLEhmxZhKah/pP5Z3ZexKyjEpRlknrXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709120127; c=relaxed/simple;
-	bh=hFyaNw/njpQrUj1QHO73Wtedb/1YZ47LtV0a+piXmqg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qb2pSGoYI7CixWODn/JoK1EPeeAbmnMGaLlAaZ/T7MyQLlbBVQlDkvqOyBsVBJUwsZP9g4KzJRWkVYumgYcuks3poZoPPwUAhK88LOr+tg3Y1eOUjRjXnt6y5SCVduVmzurmU2vWaPhqplCo5lC5x3gkLwjIKKS7WQvbMLr1zcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-608cf2e08f9so49293997b3.0;
-        Wed, 28 Feb 2024 03:35:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709120123; x=1709724923;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KX17BVNMfLjxXbuR6mT+yo104g+C4/26AtxcjQgFKOw=;
-        b=Z7eCROt1NQx7bnuzhKfjiuWHtHWQQRYJM2tKecYPPn4LgdUbhYfi2G4GKcdS14+hYN
-         vlJzGFWCCHEwrOmjGLiYZiV2YsM1cY/0TeX+bdBac9EKnKloidrqAntcSxqcq/+MlDR3
-         ZVIEi8CGYbNTXePPGT+Obrr/iSdekZc4rGWAPVi2mI44RqOMxFEXD2bfMskC1EH1WXwj
-         PQiHYFaSS7vNQXSdGlRJVeeyxZvrcGIbPHC6fxqNMWB3tbxROzO7nzTlD/8QPQQ+tS7h
-         vjDwUbHvrNfI2HJdj3aqpsR2JfNwyejydSX4shdvmWz91aMcB13fjY7wODG/XRs7/uQr
-         CEdg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8NA0xMI2u54GuylwPi++FjShmBPNw5IX6L4pi+M3xnBQh9XsGtlbXLi9ITVdO+dWi5nh+3fJCizR6PeZgEbOjOUrcrESr3IEeQuSLjcvjzdi6WR8NpFKQ2UpB2zl3jgcMAkzExIPwr+fdAocSv1yRyF2vwnZ7MBru8V8UgmG9Hm+Qr4OgEikFgs81
-X-Gm-Message-State: AOJu0YzLg9m68KfuLH1IyxbxJB+ZVLA8zsRW6a3UfMXQuPeU2/K5f/Yi
-	m5iM7habOCm4HwWGO3VfgAI6ivKmmRyRhNNFkPVvtaR9HRyo7TD9RwWa/oaXpXudcw==
-X-Google-Smtp-Source: AGHT+IGYZ5GwXzVNYiYMD5J7mMjdrkpObdHo3gXoklW9sFTyhX7KG5ofofoE5lH7z7KyTb5E9TSWPw==
-X-Received: by 2002:a05:690c:97:b0:608:d599:e078 with SMTP id be23-20020a05690c009700b00608d599e078mr5377566ywb.24.1709120123636;
-        Wed, 28 Feb 2024 03:35:23 -0800 (PST)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id a11-20020a81bb4b000000b006049167ccffsm2251177ywl.65.2024.02.28.03.35.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 03:35:23 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc6d8bd618eso5605970276.3;
-        Wed, 28 Feb 2024 03:35:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWNXgfgH66cnxKBDyasGEhX2DeqY8DOeUwqcvH8bGZ1h3XMTUXh9Wf2dW02qseoyiu6b9AefVVBd3UJgeEEgL1v8g4rGWhFhBAFUc3XdZV0tMdA7xvnXTThYvRSbax9jSTX0saeleBXiFuI+ISA23BjO8iQId0cBebtGnS49njoBwji17xxOhcn+bfh
-X-Received: by 2002:a5b:d49:0:b0:dc6:aebb:168e with SMTP id
- f9-20020a5b0d49000000b00dc6aebb168emr1909145ybr.26.1709120123183; Wed, 28 Feb
- 2024 03:35:23 -0800 (PST)
+	s=arc-20240116; t=1709120254; c=relaxed/simple;
+	bh=Tvp+p5Xk3fozdO2g75WRBimh75zt30LHNGCj/0SSdbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=su8JHHfAWQ/tLfMzGOgVI6+TnaAnbM80NvEtrY3W3nPZWcLbs58TjlVhqQ9A11OFzPpMJudaXF1N8c1q+qSxOvaCKm0g8r/MdrtRWDiu4mUaI4cdU/1gjM3PgN9PQlAXwwqGKLu8o56lLl2AodpGJfM4W9x2FQhNO68l3uPCwKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=toBiZAO1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="toBiZAO1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C09EBC433F1;
+	Wed, 28 Feb 2024 11:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709120253;
+	bh=Tvp+p5Xk3fozdO2g75WRBimh75zt30LHNGCj/0SSdbs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=toBiZAO1mdqQnmskk4C+PYBSfjXMIfnVrtT2NTtUjHhEeSQvE+Av5vHpg8HXTO36o
+	 dJiawL2eo+Gm/tiOMru6MS7M0a2UnN2v3i1s5Zg6pAbfBjaPzMHXlIh1CYlr/4Z/4M
+	 bi7VrXlnTSyMHU7EegxNhoxcZX6CkovTsPrNGjyJJGh0MG5zq7a68pgGRZvYJ6ZNuS
+	 FeKhIQdiGtIqHjVYM3uPmjSvGVyzY+Nss1yer9rOTyfiyedkd+1uyNHIzAZao6WSB4
+	 WLXajK0dwvBFDYR2XNY6MgiSSVd+O91TzVnlMeh3SlkYN2bNOrMFwXFp0k2PoYAGsT
+	 RUSED7kUYVlmA==
+Date: Wed, 28 Feb 2024 11:37:27 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	herve.codina@bootlin.com, maxime.chevallier@bootlin.com,
+	christophercordahi@nanometrics.ca
+Subject: Re: [PATCH v2 1/6] dt-bindings: net: Add bindings for PHY DP83640
+Message-ID: <20240228-maroon-wrinkle-1f0d2aa7c186@spud>
+References: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
+ <20240227093945.21525-2-bastien.curutchet@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227232531.218159-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240227232531.218159-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240227232531.218159-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 28 Feb 2024 12:35:11 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdW2KXruusuoqJQ-9H+mpqggyz-VihYp_NfgRtmFGQbfLA@mail.gmail.com>
-Message-ID: <CAMuHMdW2KXruusuoqJQ-9H+mpqggyz-VihYp_NfgRtmFGQbfLA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] arm64: defconfig: Enable R9A09G057 SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XgYe8bqBfCjZqdEt"
+Content-Disposition: inline
+In-Reply-To: <20240227093945.21525-2-bastien.curutchet@bootlin.com>
+
+
+--XgYe8bqBfCjZqdEt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 28, 2024 at 12:26=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.=
-com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Enable support for the Renesas RZ/V2H (R9A09G057) SoC in the ARM64
-> defconfig.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v1 -> v2
-> - Included RB tag
+On Tue, Feb 27, 2024 at 10:39:40AM +0100, Bastien Curutchet wrote:
+> The DP83640 is a PTP PHY. Some of his features can be enabled by
+> hardware straps. There is not binding yet.
+>=20
+> Add a device tree binding to be able to override the hardware strap
+> configuration when needed.
+>=20
+> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
 
-Thanks for the update, will queue in renesas-devel for v6.10.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Gr{oetje,eeting}s,
+Cheers,
+Conor.
 
-                        Geert
+--XgYe8bqBfCjZqdEt
+Content-Type: application/pgp-signature; name="signature.asc"
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+-----BEGIN PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd8a9wAKCRB4tDGHoIJi
+0hbmAQCKk+K3MdOEb8IqasR55iD/+VrgCTPjSqIMqvkGdC8X7wEA4Yf9lr7hn2u/
+lhgbMZwQ4tJDtbpTSFyODKxmlorwAwk=
+=zfhz
+-----END PGP SIGNATURE-----
+
+--XgYe8bqBfCjZqdEt--
