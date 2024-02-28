@@ -1,667 +1,134 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2123.outbound.protection.partner.outlook.cn [139.219.17.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8F6374D3;
-	Wed, 28 Feb 2024 09:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709112732; cv=none; b=XU4T78WkAxktTjoh6iuVYB7S+maPRB3KTuYrVnxrlKtRnYIM5I3wiyjr6cihsmJ1By6jrprfZeD92912+1eXOS3daUxnqDGC/JWGsZdhXJVusAi8JvPGAZp1HK96CHGBy9WxyMQ+JUo6HJoLcu8osNhbzq7iFYE1yDLgo9dw9Z4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709112732; c=relaxed/simple;
-	bh=9XS9MLMpKBUOGCXu0yNvQkNInCb9xS3H/47pxcLSp/E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mZ5mCFk4a5yZN/9GEa9iK52ku6aHaFtS+1TgWj1ErX9LfyZO9TbSHw9AC1rXwA9DoQMyfbg+VTA1RTrZO19MHFWBSL3eIlE5XLyLrfwv+/ynZxQFPqNJM3DISB379maGKneUMVKivGPKS2HhMxwgScI9fPNmzOLoMfGnjA4EpEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Tl8Fq6gdrz2Bdv9;
-	Wed, 28 Feb 2024 17:29:51 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id DFBB11402CC;
-	Wed, 28 Feb 2024 17:32:06 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 28 Feb 2024 17:32:06 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
-	<jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	<virtualization@lists.linux.dev>
-Subject: [PATCH net-next v6 5/5] tools: virtio: introduce vhost_net_test
-Date: Wed, 28 Feb 2024 17:30:12 +0800
-Message-ID: <20240228093013.8263-6-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240228093013.8263-1-linyunsheng@huawei.com>
-References: <20240228093013.8263-1-linyunsheng@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB9831A82;
+	Wed, 28 Feb 2024 09:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709112763; cv=fail; b=EiQ8yiz0iHQhP0BBNfeVZS2iw4tEoM39wrCPuTJnN3OSdQsHqMEgCafOCcQTX5FFILHsv1Eb9YceJxfefobqfpvDMSqNnnRaXwfc9drY4mltZiYHP8R1dhEUWF/c6w7B1KCBREv4IJT8oiZczQfVz2SjbcElcMz8PvnV1qp9BPw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709112763; c=relaxed/simple;
+	bh=Ktp6i+vzAGi9KMS7ElSt/5gi1mSyxkmW6NMcocHoMho=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IUqOUIwCTQfAC1htuiNME+06JSnPA3DdZucggQiynKp5Q9TkQiAKzqzxtIQEEQjc4NTJCaH1aiHnzC8qqTqPrqYsfH9F6WnLD1Br4p2yZ+LS5GgVZH3jrjUPgAYB9LFx3r5MiQetrWR6psD4s+7XNe+V2Vy/XuF+K+a7nbWLVSA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bznelYdTdVO28lKKdHuysGOm8NnHec3ntixHIv4sGccnX9curlYJLKGeBm+3gKUroVn3S30gB+rmj0L76YlvPfRuJZQbNYlkp9kJpc980teKQtGFVMx+4y/9o3HOr6hmT6qTihC6687cKg2B13rIjs+MJ5VxKHnPiskEzZOEJQVSIruergN7bTFOU+NasiPAsyX1hgzqh8+MHIAxvopqsNpavsXOLvhIppGBdW5kWJ46+CPZZwFUR3/5/ZNWR/V3xmcQU40U4HF6tri5H7rrCRk2Hy1uv3DYNJKUNomx1Bqqy8qoLZGGW7PwJmgkIM1kDUjC1d+dgP0FK9QIxZP+mQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8p0EvvubVnMbFoSdHvAeJxsEmdSrtjrVA1r0BbscUjE=;
+ b=mzNnAovUVEQ5XKfMX8XEHI5yxiWN8awqpWmlZcNKv3pBu8Sd4PxiGrDy2xSuG4H2Crb/hsoVCWiCokK6YJF3e/A5oPQNLVGHBraAro5WR4GNQk4eKFy3TL3iOm35g9TPr/54cfcr7XiLs1/bKxyNuQ6vSXiNWt0K6SCdZVtyx8+9Y1RYoEH6Nae8JJ/P5wvTrbB8lZvMZ7TvUNS0LSBBe2XDTXn0GRV2J/bRhiG6+ZmzxN1patCn9Azd0Qx0WnjOzDwMQ33kNUYPepBAy6Z0Y4tMiyJsqyj/cm7gFiLPMBK68oJkI857HuH6Oz3cDTLHe5NgTSfc0GVDC20hfNYl6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6) by ZQ0PR01MB1158.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Wed, 28 Feb
+ 2024 08:58:36 +0000
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ ([fe80::d0fb:daf7:3f8b:868c]) by
+ ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn ([fe80::d0fb:daf7:3f8b:868c%3])
+ with mapi id 15.20.7270.047; Wed, 28 Feb 2024 08:58:36 +0000
+From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Eng Lee Teh <englee.teh@starfivetech.com>
+Subject: [PATCH] i2c: cadence: Add RISCV architecture support
+Date: Wed, 28 Feb 2024 16:56:13 +0800
+Message-ID: <20240228085613.3935476-1-jisheng.teoh@starfivetech.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0011.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510::20) To ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1158:EE_
+X-MS-Office365-Filtering-Correlation-Id: c6c8eac7-3e79-4308-6228-08dc383b730a
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	WfLYuLluDrdPc1+t0okHBLwtIv2/xs87APQj2pbj63TM/b8Vkyl9g5YWk/QLjFz7EvanQ0Kg9Lz2WtwqU4v3Wx1y8cKxglUpJPPWpFScUPzgIwLpIYBlOaQfcj+jrOr+wck4M2ZGcyiCqgsqyIeEzv6FZIbMwm5RATgEE6s7COp/ESH1eekBtjKork4Gg72J+Gd7voLcTvNa4UD3IowXDcggiyPIiOtBhjZy9c99jVhh6JpxjCN5aIrHLjhoK2M/ROEz1GZlYe4xkp4BxX7phHXvmPHsa4MvEibhAuvASLnFGqNUvZN21rdnKfWK8VrDvSXa+ZrmS3kDHafSbAPdVtPoJ2+JTgRW+hutTVEmsjh5Uf6QRVrcC5qFlLEXWPB6Xzam4bpVRak73UKY8xu7so99l747nnmQqIy9zzUfR55HQlU9MVVWeUNqZYkaj0WZs3Md++GZIWwOEeYM+H4neWcU0Rj/o36Tz/ClxQYcP1Ny5XpbWwTe7Ii8vuDF0ufMW+KaWHit96KluLgOC5qwgyg/qBukDFjXIaVP0NGTkPKMZO5qTQU2s9IWEYVpLPAJ/0jJZIfMP6Wb6f3EvNUi4DoX2Fbr4AYlHpp6PeXdVK50r0/2vp9WrfdWLpaGGMB8
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?2cQZGHsie/yf/nGIZka0gokeIuWnUAoSZhVLpfDErrnpoon3eaXXedq3gAfT?=
+ =?us-ascii?Q?BurDadtf4pF6IrFRoqNkaCSr2m3Nkz/YjYYHo3YGg/qn5wOD5QvXQo1W3YL+?=
+ =?us-ascii?Q?iAPN28c+ZRPmpXdJyu8IFlSxF0spcgAuoB7LHH220Q8h6EXdmCnQuktKk/pr?=
+ =?us-ascii?Q?rhpOpGFpxVjbHejueT9bqLB+fBH6Bapp63ulaH65e/LSwVCFLF8H28HOChJ2?=
+ =?us-ascii?Q?FHtuKetSByZoHnnqdK9li4TuyW59dhySDbuRm9c1zLBG6E3o62V5g4Rd0pVQ?=
+ =?us-ascii?Q?f42DBp/Ocz5prdMnBCFLdcMTHsT9CaJtp/HlCfeMdT/4Jbkr/noWhjAStbas?=
+ =?us-ascii?Q?wZ4uhHOkN3hH25IBEvBpaOYwZMa8CFzzFDiyQNF+sMRY26dzkhJUzSOngq0E?=
+ =?us-ascii?Q?aTSt7ZeuDy4Vor1oGaL7h9LuSYLPiF2J4Kt+shqZ6ksVtPPT/zvdX7Q1EMA6?=
+ =?us-ascii?Q?n129kjNLAuwJU3V9hbO8nL25fYsW0qivHLtBoCFSuR3wPb7yxlBETnJybguN?=
+ =?us-ascii?Q?wuaGsztbPew0QnuIkI1uKsfWp7BSeG0TkgK28RoPzP9eRyaO8g1EbvRy3bqk?=
+ =?us-ascii?Q?RMEB3aPVzCXFTQQO5+ZJUOOnmJGrGc9Kiew79/4RCqusOr3waFhUX/GzZdoS?=
+ =?us-ascii?Q?QruVnmFu0B+X1FcKoW+YDwuDTZN/5EogUQhzIa4Ie157boUK4dc3Y5hL5ncH?=
+ =?us-ascii?Q?QjJn/H0sQBmQqEzaHh0NwJRMUO73fnPBI+7rLu41rahfdimYMEoYg6czqvIc?=
+ =?us-ascii?Q?TpP5RCl4B3KoN9R6rx2fVFMPn9dwkU3bfU8lz+iA4KafBTC45QJvMkSWr9IX?=
+ =?us-ascii?Q?4bDZ38PyYwQ0syfZn5eTGIbKhtWYUCA1Lu0qMlvz1fMEYp7j+HvdYGrpdVv0?=
+ =?us-ascii?Q?hvPKrNilJbMem9dvyyv4naZH8Zpjnu8b7hKJ/witr6wOouWe+3isRDCG2JA2?=
+ =?us-ascii?Q?SIn1Iz9j1LrNYEs4fXTNIPXOnADZBSGQ4YmFiblmv2v+JPzA1b3E/NIjOxls?=
+ =?us-ascii?Q?V+j3vyQqyPkZofKWKx/olg3hKSbgM4R9vTd9Tn3EucpOwi6pdrHNEG0rGNW8?=
+ =?us-ascii?Q?AzbujQ/esgGSXF04RbVG174f/I7sDgAmhEGD7VaqRMy7WE8PD/Nk5mIsMXHu?=
+ =?us-ascii?Q?YpcrQWWCISv2rnhLi0l6YRSRCEsQcvHcYiRyXnqMpHkBPn83yJQxLf0hRBbL?=
+ =?us-ascii?Q?c4JUCo2pSvPLmWnlrSkRh2zs5/5bK36tXjF6rJmHwesE8GLFV+lmvb+isNY5?=
+ =?us-ascii?Q?woubT6IEaiOIQxqWE7Ukd99gZDu0pbHWbipo66LIwzXEoEKgbr2bmfBLDVzI?=
+ =?us-ascii?Q?W4Ghe8Wi7o09vjJnQARo9MX9GekrhLQSubpy/phyxlqLBquRPlQO1aaHZdSX?=
+ =?us-ascii?Q?pJbU+gxf4t9/Apruh7J1BIPxkTTRexBk6nWksC4CR0LG0d7iBOCZmkQzG+Ae?=
+ =?us-ascii?Q?soAkpUechSEk4x6qFtWQpmGSmVysCRD9UkkC/dX/FA0y2CKE6XvC1LbbA8od?=
+ =?us-ascii?Q?cVXVMHUz2q0nh7OgyAkPpGTFOTz6t2N+75lLW3WIH43eF+cbEPKRYhBGQic+?=
+ =?us-ascii?Q?mDrZtO11ajMjF4lUqi7Ft/u4T2dLqsOvoRtoUveTbi7S8GqM75alfH5OlJah?=
+ =?us-ascii?Q?uA=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6c8eac7-3e79-4308-6228-08dc383b730a
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 08:58:36.6217
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b6jQkzNpSinx3FmQzWKhD/CIN3Q2K3+C2SEQtBDd2CJY85/050vVOAmGpK5M+u6cmmC5e14BJ6RX+Sh5qoYqPjAGrImbgWRwRDx9wg+dXNo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1158
 
-introduce vhost_net_test for both vhost_net tx and rx basing
-on virtio_test to test vhost_net changing in the kernel.
+Add RISCV support to Cadence I2C Kconfig which is used in platform
+such as the StarFive JH8100.
 
-Steps for vhost_net tx testing:
-1. Prepare a out buf.
-2. Kick the vhost_net to do tx processing.
-3. Do the receiving in the tun side.
-4. verify the data received by tun is correct.
-
-Steps for vhost_net rx testing:
-1. Prepare a in buf.
-2. Do the sending in the tun side.
-3. Kick the vhost_net to do rx processing.
-4. verify the data received by vhost_net is correct.
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Eng Lee Teh <englee.teh@starfivetech.com>
+Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
 ---
- tools/virtio/.gitignore            |   1 +
- tools/virtio/Makefile              |   8 +-
- tools/virtio/linux/virtio_config.h |   4 +
- tools/virtio/vhost_net_test.c      | 532 +++++++++++++++++++++++++++++
- 4 files changed, 542 insertions(+), 3 deletions(-)
- create mode 100644 tools/virtio/vhost_net_test.c
+ drivers/i2c/busses/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/virtio/.gitignore b/tools/virtio/.gitignore
-index 9934d48d9a55..7e47b281c442 100644
---- a/tools/virtio/.gitignore
-+++ b/tools/virtio/.gitignore
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- *.d
- virtio_test
-+vhost_net_test
- vringh_test
- virtio-trace/trace-agent
-diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
-index d128925980e0..e25e99c1c3b7 100644
---- a/tools/virtio/Makefile
-+++ b/tools/virtio/Makefile
-@@ -1,8 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
- all: test mod
--test: virtio_test vringh_test
-+test: virtio_test vringh_test vhost_net_test
- virtio_test: virtio_ring.o virtio_test.o
- vringh_test: vringh_test.o vringh.o virtio_ring.o
-+vhost_net_test: virtio_ring.o vhost_net_test.o
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 28eb48dd5b32..0f47413ce7b7 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -500,7 +500,7 @@ config I2C_BRCMSTB
  
- try-run = $(shell set -e;		\
- 	if ($(1)) >/dev/null 2>&1;	\
-@@ -49,6 +50,7 @@ oot-clean: OOT_BUILD+=clean
- 
- .PHONY: all test mod clean vhost oot oot-clean oot-build
- clean:
--	${RM} *.o vringh_test virtio_test vhost_test/*.o vhost_test/.*.cmd \
--              vhost_test/Module.symvers vhost_test/modules.order *.d
-+	${RM} *.o vringh_test virtio_test vhost_net_test vhost_test/*.o \
-+              vhost_test/.*.cmd vhost_test/Module.symvers \
-+              vhost_test/modules.order *.d
- -include *.d
-diff --git a/tools/virtio/linux/virtio_config.h b/tools/virtio/linux/virtio_config.h
-index 2a8a70e2a950..42a564f22f2d 100644
---- a/tools/virtio/linux/virtio_config.h
-+++ b/tools/virtio/linux/virtio_config.h
-@@ -1,4 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef LINUX_VIRTIO_CONFIG_H
-+#define LINUX_VIRTIO_CONFIG_H
- #include <linux/virtio_byteorder.h>
- #include <linux/virtio.h>
- #include <uapi/linux/virtio_config.h>
-@@ -95,3 +97,5 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
- {
- 	return __cpu_to_virtio64(virtio_is_little_endian(vdev), val);
- }
-+
-+#endif
-diff --git a/tools/virtio/vhost_net_test.c b/tools/virtio/vhost_net_test.c
-new file mode 100644
-index 000000000000..389d99a6d7c7
---- /dev/null
-+++ b/tools/virtio/vhost_net_test.c
-@@ -0,0 +1,532 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <getopt.h>
-+#include <limits.h>
-+#include <string.h>
-+#include <poll.h>
-+#include <sys/eventfd.h>
-+#include <stdlib.h>
-+#include <assert.h>
-+#include <unistd.h>
-+#include <sys/ioctl.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <fcntl.h>
-+#include <stdbool.h>
-+#include <linux/vhost.h>
-+#include <linux/if.h>
-+#include <linux/if_tun.h>
-+#include <linux/in.h>
-+#include <linux/if_packet.h>
-+#include <linux/virtio_net.h>
-+#include <netinet/ether.h>
-+
-+#define HDR_LEN		sizeof(struct virtio_net_hdr_mrg_rxbuf)
-+#define TEST_BUF_LEN	256
-+#define TEST_PTYPE	ETH_P_LOOPBACK
-+#define DESC_NUM	256
-+
-+/* Used by implementation of kmalloc() in tools/virtio/linux/kernel.h */
-+void *__kmalloc_fake, *__kfree_ignore_start, *__kfree_ignore_end;
-+
-+struct vq_info {
-+	int kick;
-+	int call;
-+	int idx;
-+	long started;
-+	long completed;
-+	struct pollfd fds;
-+	void *ring;
-+	/* copy used for control */
-+	struct vring vring;
-+	struct virtqueue *vq;
-+};
-+
-+struct vdev_info {
-+	struct virtio_device vdev;
-+	int control;
-+	struct vq_info vqs[2];
-+	int nvqs;
-+	void *buf;
-+	size_t buf_size;
-+	char *test_buf;
-+	char *res_buf;
-+	struct vhost_memory *mem;
-+	int sock;
-+	int ifindex;
-+	unsigned char mac[ETHER_ADDR_LEN];
-+};
-+
-+static int tun_alloc(struct vdev_info *dev, char *tun_name)
-+{
-+	struct ifreq ifr;
-+	int len = HDR_LEN;
-+	int fd, e;
-+
-+	fd = open("/dev/net/tun", O_RDWR);
-+	if (fd < 0) {
-+		perror("Cannot open /dev/net/tun");
-+		return fd;
-+	}
-+
-+	memset(&ifr, 0, sizeof(ifr));
-+
-+	ifr.ifr_flags = IFF_TAP | IFF_NO_PI | IFF_VNET_HDR;
-+	strncpy(ifr.ifr_name, tun_name, IFNAMSIZ);
-+
-+	e = ioctl(fd, TUNSETIFF, &ifr);
-+	if (e < 0) {
-+		perror("ioctl[TUNSETIFF]");
-+		close(fd);
-+		return e;
-+	}
-+
-+	e = ioctl(fd, TUNSETVNETHDRSZ, &len);
-+	if (e < 0) {
-+		perror("ioctl[TUNSETVNETHDRSZ]");
-+		close(fd);
-+		return e;
-+	}
-+
-+	e = ioctl(fd, SIOCGIFHWADDR, &ifr);
-+	if (e < 0) {
-+		perror("ioctl[SIOCGIFHWADDR]");
-+		close(fd);
-+		return e;
-+	}
-+
-+	memcpy(dev->mac, &ifr.ifr_hwaddr.sa_data, ETHER_ADDR_LEN);
-+	return fd;
-+}
-+
-+static void vdev_create_socket(struct vdev_info *dev, char *tun_name)
-+{
-+	struct ifreq ifr;
-+
-+	dev->sock = socket(AF_PACKET, SOCK_RAW, htons(TEST_PTYPE));
-+	assert(dev->sock != -1);
-+
-+	strncpy(ifr.ifr_name, tun_name, IFNAMSIZ);
-+	assert(ioctl(dev->sock, SIOCGIFINDEX, &ifr) >= 0);
-+
-+	dev->ifindex = ifr.ifr_ifindex;
-+
-+	/* Set the flags that bring the device up */
-+	assert(ioctl(dev->sock, SIOCGIFFLAGS, &ifr) >= 0);
-+	ifr.ifr_flags |= (IFF_UP | IFF_RUNNING);
-+	assert(ioctl(dev->sock, SIOCSIFFLAGS, &ifr) >= 0);
-+}
-+
-+static void vdev_send_packet(struct vdev_info *dev)
-+{
-+	char *sendbuf = dev->test_buf + HDR_LEN;
-+	struct sockaddr_ll saddrll = {0};
-+	int sockfd = dev->sock;
-+	int ret;
-+
-+	saddrll.sll_family = PF_PACKET;
-+	saddrll.sll_ifindex = dev->ifindex;
-+	saddrll.sll_halen = ETH_ALEN;
-+	saddrll.sll_protocol = htons(TEST_PTYPE);
-+
-+	ret = sendto(sockfd, sendbuf, TEST_BUF_LEN, 0,
-+		     (struct sockaddr *)&saddrll,
-+		     sizeof(struct sockaddr_ll));
-+	assert(ret >= 0);
-+}
-+
-+static bool vq_notify(struct virtqueue *vq)
-+{
-+	struct vq_info *info = vq->priv;
-+	unsigned long long v = 1;
-+	int r;
-+
-+	r = write(info->kick, &v, sizeof(v));
-+	assert(r == sizeof(v));
-+
-+	return true;
-+}
-+
-+static void vhost_vq_setup(struct vdev_info *dev, struct vq_info *info)
-+{
-+	struct vhost_vring_addr addr = {
-+		.index = info->idx,
-+		.desc_user_addr = (uint64_t)(unsigned long)info->vring.desc,
-+		.avail_user_addr = (uint64_t)(unsigned long)info->vring.avail,
-+		.used_user_addr = (uint64_t)(unsigned long)info->vring.used,
-+	};
-+	struct vhost_vring_state state = { .index = info->idx };
-+	struct vhost_vring_file file = { .index = info->idx };
-+	int r;
-+
-+	state.num = info->vring.num;
-+	r = ioctl(dev->control, VHOST_SET_VRING_NUM, &state);
-+	assert(r >= 0);
-+
-+	state.num = 0;
-+	r = ioctl(dev->control, VHOST_SET_VRING_BASE, &state);
-+	assert(r >= 0);
-+
-+	r = ioctl(dev->control, VHOST_SET_VRING_ADDR, &addr);
-+	assert(r >= 0);
-+
-+	file.fd = info->kick;
-+	r = ioctl(dev->control, VHOST_SET_VRING_KICK, &file);
-+	assert(r >= 0);
-+}
-+
-+static void vq_reset(struct vq_info *info, int num, struct virtio_device *vdev)
-+{
-+	if (info->vq)
-+		vring_del_virtqueue(info->vq);
-+
-+	memset(info->ring, 0, vring_size(num, 4096));
-+	vring_init(&info->vring, num, info->ring, 4096);
-+	info->vq = vring_new_virtqueue(info->idx, num, 4096, vdev, true, false,
-+				       info->ring, vq_notify, NULL, "test");
-+	assert(info->vq);
-+	info->vq->priv = info;
-+}
-+
-+static void vq_info_add(struct vdev_info *dev, int idx, int num, int fd)
-+{
-+	struct vhost_vring_file backend = { .index = idx, .fd = fd };
-+	struct vq_info *info = &dev->vqs[idx];
-+	int r;
-+
-+	info->idx = idx;
-+	info->kick = eventfd(0, EFD_NONBLOCK);
-+	r = posix_memalign(&info->ring, 4096, vring_size(num, 4096));
-+	assert(r >= 0);
-+	vq_reset(info, num, &dev->vdev);
-+	vhost_vq_setup(dev, info);
-+
-+	r = ioctl(dev->control, VHOST_NET_SET_BACKEND, &backend);
-+	assert(!r);
-+}
-+
-+static void vdev_info_init(struct vdev_info *dev, unsigned long long features)
-+{
-+	struct ether_header *eh;
-+	int i, r;
-+
-+	dev->vdev.features = features;
-+	INIT_LIST_HEAD(&dev->vdev.vqs);
-+	spin_lock_init(&dev->vdev.vqs_list_lock);
-+
-+	dev->buf_size = (HDR_LEN + TEST_BUF_LEN) * 2;
-+	dev->buf = malloc(dev->buf_size);
-+	assert(dev->buf);
-+	dev->test_buf = dev->buf;
-+	dev->res_buf = dev->test_buf + HDR_LEN + TEST_BUF_LEN;
-+
-+	memset(dev->test_buf, 0, HDR_LEN + TEST_BUF_LEN);
-+	eh = (struct ether_header *)(dev->test_buf + HDR_LEN);
-+	eh->ether_type = htons(TEST_PTYPE);
-+	memcpy(eh->ether_dhost, dev->mac, ETHER_ADDR_LEN);
-+	memcpy(eh->ether_shost, dev->mac, ETHER_ADDR_LEN);
-+
-+	for (i = sizeof(*eh); i < TEST_BUF_LEN; i++)
-+		dev->test_buf[i + HDR_LEN] = (char)i;
-+
-+	dev->control = open("/dev/vhost-net", O_RDWR);
-+	assert(dev->control >= 0);
-+
-+	r = ioctl(dev->control, VHOST_SET_OWNER, NULL);
-+	assert(r >= 0);
-+
-+	dev->mem = malloc(offsetof(struct vhost_memory, regions) +
-+			  sizeof(dev->mem->regions[0]));
-+	assert(dev->mem);
-+	memset(dev->mem, 0, offsetof(struct vhost_memory, regions) +
-+	       sizeof(dev->mem->regions[0]));
-+	dev->mem->nregions = 1;
-+	dev->mem->regions[0].guest_phys_addr = (long)dev->buf;
-+	dev->mem->regions[0].userspace_addr = (long)dev->buf;
-+	dev->mem->regions[0].memory_size = dev->buf_size;
-+
-+	r = ioctl(dev->control, VHOST_SET_MEM_TABLE, dev->mem);
-+	assert(r >= 0);
-+
-+	r = ioctl(dev->control, VHOST_SET_FEATURES, &features);
-+	assert(r >= 0);
-+
-+	dev->nvqs = 2;
-+}
-+
-+static void wait_for_interrupt(struct vq_info *vq)
-+{
-+	unsigned long long val;
-+
-+	poll(&vq->fds, 1, 100);
-+
-+	if (vq->fds.revents & POLLIN)
-+		read(vq->fds.fd, &val, sizeof(val));
-+}
-+
-+static void verify_res_buf(char *res_buf)
-+{
-+	int i;
-+
-+	for (i = ETHER_HDR_LEN; i < TEST_BUF_LEN; i++)
-+		assert(res_buf[i] == (char)i);
-+}
-+
-+static void run_tx_test(struct vdev_info *dev, struct vq_info *vq,
-+			bool delayed, int bufs)
-+{
-+	long long spurious = 0;
-+	struct scatterlist sl;
-+	unsigned int len;
-+	int r;
-+
-+	for (;;) {
-+		long started_before = vq->started;
-+		long completed_before = vq->completed;
-+
-+		virtqueue_disable_cb(vq->vq);
-+		do {
-+			while (vq->started < bufs &&
-+			       (vq->started - vq->completed) < 1) {
-+				sg_init_one(&sl, dev->test_buf, HDR_LEN + TEST_BUF_LEN);
-+				r = virtqueue_add_outbuf(vq->vq, &sl, 1,
-+							 dev->test_buf + vq->started,
-+							 GFP_ATOMIC);
-+				if (unlikely(r != 0))
-+					break;
-+
-+				++vq->started;
-+
-+				if (unlikely(!virtqueue_kick(vq->vq))) {
-+					r = -1;
-+					break;
-+				}
-+			}
-+
-+			if (vq->started >= bufs)
-+				r = -1;
-+
-+			/* Flush out completed bufs if any */
-+			while (virtqueue_get_buf(vq->vq, &len)) {
-+				int n;
-+
-+				n = recvfrom(dev->sock, dev->res_buf, TEST_BUF_LEN, 0, NULL, NULL);
-+				assert(n == TEST_BUF_LEN);
-+				verify_res_buf(dev->res_buf);
-+
-+				++vq->completed;
-+				r = 0;
-+			}
-+		} while (r == 0);
-+
-+		if (vq->completed == completed_before && vq->started == started_before)
-+			++spurious;
-+
-+		assert(vq->completed <= bufs);
-+		assert(vq->started <= bufs);
-+		if (vq->completed == bufs)
-+			break;
-+
-+		if (delayed) {
-+			if (virtqueue_enable_cb_delayed(vq->vq))
-+				wait_for_interrupt(vq);
-+		} else {
-+			if (virtqueue_enable_cb(vq->vq))
-+				wait_for_interrupt(vq);
-+		}
-+	}
-+	printf("TX spurious wakeups: 0x%llx started=0x%lx completed=0x%lx\n",
-+	       spurious, vq->started, vq->completed);
-+}
-+
-+static void run_rx_test(struct vdev_info *dev, struct vq_info *vq,
-+			bool delayed, int bufs)
-+{
-+	long long spurious = 0;
-+	struct scatterlist sl;
-+	unsigned int len;
-+	int r;
-+
-+	for (;;) {
-+		long started_before = vq->started;
-+		long completed_before = vq->completed;
-+
-+		do {
-+			while (vq->started < bufs &&
-+			       (vq->started - vq->completed) < 1) {
-+				sg_init_one(&sl, dev->res_buf, HDR_LEN + TEST_BUF_LEN);
-+
-+				r = virtqueue_add_inbuf(vq->vq, &sl, 1,
-+							dev->res_buf + vq->started,
-+							GFP_ATOMIC);
-+				if (unlikely(r != 0))
-+					break;
-+
-+				++vq->started;
-+
-+				vdev_send_packet(dev);
-+
-+				if (unlikely(!virtqueue_kick(vq->vq))) {
-+					r = -1;
-+					break;
-+				}
-+			}
-+
-+			if (vq->started >= bufs)
-+				r = -1;
-+
-+			/* Flush out completed bufs if any */
-+			while (virtqueue_get_buf(vq->vq, &len)) {
-+				struct ether_header *eh;
-+
-+				eh = (struct ether_header *)(dev->res_buf + HDR_LEN);
-+
-+				/* tun netdev is up and running, only handle the
-+				 * TEST_PTYPE packet.
-+				 */
-+				if (eh->ether_type == htons(TEST_PTYPE)) {
-+					assert(len == TEST_BUF_LEN + HDR_LEN);
-+					verify_res_buf(dev->res_buf + HDR_LEN);
-+				}
-+
-+				++vq->completed;
-+				r = 0;
-+			}
-+		} while (r == 0);
-+
-+		if (vq->completed == completed_before && vq->started == started_before)
-+			++spurious;
-+
-+		assert(vq->completed <= bufs);
-+		assert(vq->started <= bufs);
-+		if (vq->completed == bufs)
-+			break;
-+	}
-+
-+	printf("RX spurious wakeups: 0x%llx started=0x%lx completed=0x%lx\n",
-+	       spurious, vq->started, vq->completed);
-+}
-+
-+static const char optstring[] = "h";
-+static const struct option longopts[] = {
-+	{
-+		.name = "help",
-+		.val = 'h',
-+	},
-+	{
-+		.name = "event-idx",
-+		.val = 'E',
-+	},
-+	{
-+		.name = "no-event-idx",
-+		.val = 'e',
-+	},
-+	{
-+		.name = "indirect",
-+		.val = 'I',
-+	},
-+	{
-+		.name = "no-indirect",
-+		.val = 'i',
-+	},
-+	{
-+		.name = "virtio-1",
-+		.val = '1',
-+	},
-+	{
-+		.name = "no-virtio-1",
-+		.val = '0',
-+	},
-+	{
-+		.name = "delayed-interrupt",
-+		.val = 'D',
-+	},
-+	{
-+		.name = "no-delayed-interrupt",
-+		.val = 'd',
-+	},
-+	{
-+		.name = "buf-num",
-+		.val = 'n',
-+		.has_arg = required_argument,
-+	},
-+	{
-+		.name = "batch",
-+		.val = 'b',
-+		.has_arg = required_argument,
-+	},
-+	{
-+	}
-+};
-+
-+static void help(int status)
-+{
-+	fprintf(stderr, "Usage: vhost_net_test [--help]"
-+		" [--no-indirect]"
-+		" [--no-event-idx]"
-+		" [--no-virtio-1]"
-+		" [--delayed-interrupt]"
-+		" [--buf-num]"
-+		"\n");
-+
-+	exit(status);
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	unsigned long long features = (1ULL << VIRTIO_RING_F_INDIRECT_DESC) |
-+		(1ULL << VIRTIO_RING_F_EVENT_IDX) | (1ULL << VIRTIO_F_VERSION_1);
-+	char tun_name[IFNAMSIZ];
-+	long nbufs = 0x100000;
-+	struct vdev_info dev;
-+	bool delayed = false;
-+	int o, fd;
-+
-+	for (;;) {
-+		o = getopt_long(argc, argv, optstring, longopts, NULL);
-+		switch (o) {
-+		case -1:
-+			goto done;
-+		case '?':
-+			help(2);
-+		case 'e':
-+			features &= ~(1ULL << VIRTIO_RING_F_EVENT_IDX);
-+			break;
-+		case 'h':
-+			help(0);
-+		case 'i':
-+			features &= ~(1ULL << VIRTIO_RING_F_INDIRECT_DESC);
-+			break;
-+		case '0':
-+			features &= ~(1ULL << VIRTIO_F_VERSION_1);
-+			break;
-+		case 'D':
-+			delayed = true;
-+			break;
-+		case 'n':
-+			nbufs = strtol(optarg, NULL, 10);
-+			assert(nbufs > 0);
-+			break;
-+		default:
-+			assert(0);
-+			break;
-+		}
-+	}
-+
-+done:
-+	memset(&dev, 0, sizeof(dev));
-+	snprintf(tun_name, IFNAMSIZ, "tun_%d", getpid());
-+
-+	fd = tun_alloc(&dev, tun_name);
-+	assert(fd >= 0);
-+
-+	vdev_info_init(&dev, features);
-+	vq_info_add(&dev, 0, DESC_NUM, fd);
-+	vq_info_add(&dev, 1, DESC_NUM, fd);
-+	vdev_create_socket(&dev, tun_name);
-+
-+	run_rx_test(&dev, &dev.vqs[0], delayed, nbufs);
-+	run_tx_test(&dev, &dev.vqs[1], delayed, nbufs);
-+
-+	return 0;
-+}
+ config I2C_CADENCE
+ 	tristate "Cadence I2C Controller"
+-	depends on ARCH_ZYNQ || ARM64 || XTENSA || COMPILE_TEST
++	depends on ARCH_ZYNQ || ARM64 || XTENSA || RISCV || COMPILE_TEST
+ 	help
+ 	  Say yes here to select Cadence I2C Host Controller. This controller is
+ 	  e.g. used by Xilinx Zynq.
 -- 
-2.33.0
+2.43.0
 
