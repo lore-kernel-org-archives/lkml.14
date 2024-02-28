@@ -1,50 +1,41 @@
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [195.130.132.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03534145341
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 14:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54DD148FFC
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 14:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709129113; cv=none; b=IXiCBRUz+gERNynz5Gfd3URB//7bcLnVVACa1XmRxjQCRb129nlMwUlPPBhdV0tIG5mKrB8pHs55lVFXPZFDO5IgQEt9yA26O9LjqdXkIh/+xyKQzlCEPGlbwIe/pT9N9Cw17bbHj9SmnwIgW4464UU0Gzd9nQ+7Fg/rLVcLQ5k=
+	t=1709129141; cv=none; b=CDtpAQizAlZHHsfbJHVM2kC3/b861zIMNczBa/TVHgkD+eQ2TCL2HoWJeAvC8iYJMxkYvQzAf3PeDHABTv7z2ms8UFRVTjDghaEKiuG+tA1ehZVZ/Ji47EBRxEEaIHhFiQHIZkFvsQlewOUqR9CD8BLB3HPd1UngO8by8A7doDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709129113; c=relaxed/simple;
+	s=arc-20240116; t=1709129141; c=relaxed/simple;
 	bh=L3K4rtzy6gxBJUGpTTcskVWOegBL2LVnvlohsA27NJs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PfbOzvfpdWWxVqKLNRGuoLnwtUejpb/mQ8Ij37avd850+Dn3YaQEOpHKdO5m6gbX4GcJ+TsmBUZUzG1yi4mBD25BDiY8ubTLL231wnXQQObGLdNAI7Zpt6jWJHdsmDQ10fExjv5bsejsuFb3DCjZcS+zT7cCwpTL8wVliAbyzFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G0Fsfqy6j9qtWkYrqtfFV93rNvJs4L5aWRfaTwc2SpM8rYHPPfGY/SwRkXzU7FAW8XITJRzBCtFEe3Gabtgi+GjCwxT69H6S6ffkgqPODHlwGOtyf95QdEon5OE45Iz3K6XgyRm57pjotsgCzlLMkBUNSknEGUS3QNb1s/B90R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:48c4:26a9:d9ec:22cb])
-	by andre.telenet-ops.be with bizsmtp
-	id se542B0064gWvPH01e54PF; Wed, 28 Feb 2024 15:05:10 +0100
+	by baptiste.telenet-ops.be with bizsmtp
+	id se5X2B00W4gWvPH01e5YVc; Wed, 28 Feb 2024 15:05:32 +0100
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rfKYI-001tZa-F6;
-	Wed, 28 Feb 2024 15:05:04 +0100
+	id 1rfKYk-001tZf-Ar;
+	Wed, 28 Feb 2024 15:05:31 +0100
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rfKYR-006hqA-UZ;
-	Wed, 28 Feb 2024 15:05:03 +0100
+	id 1rfKYt-006hqr-PP;
+	Wed, 28 Feb 2024 15:05:31 +0100
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Chris Down <chris@chrisdown.name>,
-	Petr Mladek <pmladek@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jessica Yu <jeyu@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Jim Cromie <jim.cromie@gmail.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Xiubo Li <xiubli@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
 Subject: [PATCH net-next] Simplify net_dbg_ratelimited() dummy
-Date: Wed, 28 Feb 2024 15:05:02 +0100
-Message-Id: <5d75ce122b5cbfe62b018a7719960e34cfcbb1f2.1709128975.git.geert+renesas@glider.be>
+Date: Wed, 28 Feb 2024 15:05:29 +0100
+Message-ID: <5d75ce122b5cbfe62b018a7719960e34cfcbb1f2.1709128975.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,6 +44,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Message-ID: <20240228140529.Cum5df0XnvcY6kKWWAxY6ttglkoqtjul9xjrn_l1jQs@z>
 
 There is no need to wrap calls to the no_printk() helper inside an
 always-false check, as no_printk() already does that internally.
