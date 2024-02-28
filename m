@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7492D05B;
-	Wed, 28 Feb 2024 09:02:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7B02DF9D;
+	Wed, 28 Feb 2024 09:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709110947; cv=none; b=R5XMmYUMzAFZ+0TRPfca94buN9/v25ZiIlM5cuFc1HWP4az6R5kIoqsOHn9pioozwBXGbGQjPjJW4S55oAXf5xkNPLkR7q1pC7HwgHQ1aT7xqGjGLwc7wsGBHQAb+U2vdpCpw6OjMrNH7Sb5IcUGc638jGgoeo6F7VOYFrCw43E=
+	t=1709110947; cv=none; b=nFjhR+wxdMoZhXK+CVrz0lSn1fYR9ihYF/RcDprLXcoNgfiVPdKAXh3T02SengoycLVFeBDlUbWOsQ+nvF50n93BZEBZskW4N6e6c5ySBtJjV4jfItoOnxF8GTdbyQCxdtGSybWoh+oWPYtZsLYPHkNS89U3BVOzA5V1AF+mbNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709110947; c=relaxed/simple;
-	bh=7PtIg95ncCvxMHh4b5Xw5GAtbDAZ3d89g3e/YJ0Tj88=;
+	bh=tOs31KYTqoxrPKz/Y05lViH2DSx10Kk1ejHawTz0Dtk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ne2ZgfVMhUnveQWewRNVjU/Q2aCX5g77mlu3DXrVSqwV7FMPoqQPmHhwAN377bZ/4pOD0uuLUQ0PmdqQPkPDfZTDsUr2RNpDC9rACuPG0XiU5yt7SVOdkYj8bTLBplTn1MZsDlZt15yNNHJNzXOlaiO/ZSD/GcT3EiXze+nklxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRbbelZu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=kA2l+/8ICXIoKYykx1OlR1K24PKStjkh+UI34CXsCptjA8oG033Iibl5N/1sbYMPfqfdOmzYDA17EGHQhkeX74W3ViGyiVgRmfycLgi4ZpPikNspHMHe3MlyaNry+Ybyb2CbqrL4+J1nQi/hqSIK38MtXny3wWY4ZQYPEpj7Uoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a39FbhhC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRbbelZu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AC6F5C43394;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a39FbhhC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E08C8C4167D;
 	Wed, 28 Feb 2024 09:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1709110946;
-	bh=7PtIg95ncCvxMHh4b5Xw5GAtbDAZ3d89g3e/YJ0Tj88=;
+	bh=tOs31KYTqoxrPKz/Y05lViH2DSx10Kk1ejHawTz0Dtk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KRbbelZu2r8ZCHAd5jUeZ0yh67kw68WtN+YvbLpk9GJCnngaw/UBY/ZADgK1fXATW
-	 SU5KoIRzdPAryS2LN7Ok1cA9jl2gIORohYINRJkoeTbWUUZl70ymTcarR2CUzGQPk4
-	 HG1XMF78w2Vb0vQof3vqjtRW/WJYMg64hpWR8iFUgoBwYBlMHHFV7JsAaV8VNE7O7o
-	 t3wUJkl1aFr2aPLptb02+oQLsvLfroorRrWuzDxSlKrnO65gzxMerSvXZnVm4EJPsE
-	 cUPOT94exHCXaDgEIYUWNewqXRwckFH6UgtwUpgswBm8IuX+8jc8E85FTGowKvaUP4
-	 z21U7ICLuvgwg==
+	b=a39FbhhCU3m6ABccgExQ2FPaKnG/4JoDw7vn0E6zJK85qhFTZGu8wIHiCPS4jjNhF
+	 8WYVQBysghItmUtaFb2tCIVpQhCWohuweNlMt7LKqSpKE5xAvUUdAhLyFvruOvsDbE
+	 D90y3rp9ZAhV4Jb8tbcpIZDGq/o5wMjZ+bNpG+R9EhUD00LG25wWGinUGoOAUr5aDf
+	 oSAMAQmQao36I1N8rB44ZRkyYdvWMt3K+g/lmyNH3A+OQ8cKop4STD/P2GOONfcICp
+	 s0QtTEQD2fqwABg6eTojSioeeJLpSgQaMdB2wKeiu3PcGQ8ZB0qiIA2dbxXZw38G/K
+	 ZofJCT5rm0Txw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947DFC54E41;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE782C54E41;
 	Wed, 28 Feb 2024 09:02:26 +0000 (UTC)
 From: Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>
-Date: Wed, 28 Feb 2024 17:02:26 +0800
-Subject: [PATCH net-next v6 02/11] dt-bindings: net:
- hisilicon,hisi-femac-mdio: remove clocks
+Date: Wed, 28 Feb 2024 17:02:30 +0800
+Subject: [PATCH net-next v6 06/11] dt-bindings: net: hisi-femac: add
+ missing clocks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240228-net-v6-2-6d78d3d598c1@outlook.com>
+Message-Id: <20240228-net-v6-6-6d78d3d598c1@outlook.com>
 References: <20240228-net-v6-0-6d78d3d598c1@outlook.com>
 In-Reply-To: <20240228-net-v6-0-6d78d3d598c1@outlook.com>
 To: Yisen Zhuang <yisen.zhuang@huawei.com>, 
@@ -54,14 +54,13 @@ To: Yisen Zhuang <yisen.zhuang@huawei.com>,
  Heiner Kallweit <hkallweit1@gmail.com>, 
  Russell King <linux@armlinux.org.uk>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ devicetree@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709110945; l=1118;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709110945; l=1390;
  i=forbidden405@outlook.com; s=20240228; h=from:subject:message-id;
- bh=zFRj07D287wM/dCKue4SsEqnuuC7qPQ9ydZbNJ2lxsQ=;
- b=wccrlFqnkY16QlFTzC49WXlslqsmco/SZT7/gLpofD10XQu6VgR2J4xCkaDkluMduEWYG/6pp
- 2YAoLrTNZSVAutvsGFHiNX4r76Gf7flSLqzD45CUlrqNZpViWR6tCgV
+ bh=SAqU1dlvXmk1RmH1J0egzZj4SE6kA1y4eeXVDLyRO28=;
+ b=MGeGh9vcJucfrOUy4UwkspwQpi6g+ejOsZjXYNkCGbkGxi9GrfpIG3GLwKNpiugvRIWqvDzaP
+ POnOPWZIkENBl/NuvWCi2MNDZF/rqcDOSrXw5JMfyzs/kW8gyXs7teC
 X-Developer-Key: i=forbidden405@outlook.com; a=ed25519;
  pk=KAWv6ZzFsT54MGllOczJgFiWB+DuayEmyn24iiVVThU=
 X-Endpoint-Received:
@@ -71,41 +70,43 @@ Reply-To: <forbidden405@outlook.com>
 
 From: Yang Xiwen <forbidden405@outlook.com>
 
-This integrated MDIO bus does not have a dedicated clock. Remove it. The
-old binding is wrong.
+A few clocks are missing in old binding file. Add them to match the real
+hardware.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
 ---
- Documentation/devicetree/bindings/net/hisilicon,hisi-femac-mdio.yaml | 5 -----
- 1 file changed, 5 deletions(-)
+ .../devicetree/bindings/net/hisilicon,hisi-femac.yaml         | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac-mdio.yaml b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac-mdio.yaml
-index 36def9d5eecd..dea1bcc27381 100644
---- a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac-mdio.yaml
-+++ b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac-mdio.yaml
-@@ -19,13 +19,9 @@ properties:
-   reg:
-     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+index be8e34b48243..ba207f2c9ae4 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
++++ b/Documentation/devicetree/bindings/net/hisilicon,hisi-femac.yaml
+@@ -30,6 +30,14 @@ properties:
+   clocks:
+     items:
+       - description: MAC main clock
++      - description: MAC bus interface clock
++      - description: PHY clock
++
++  clock-names:
++    items:
++      - const: mac
++      - const: macif
++      - const: phy
  
--  clocks:
--    maxItems: 1
--
- required:
-   - compatible
-   - reg
--  - clocks
- 
- unevaluatedProperties: false
- 
-@@ -34,7 +30,6 @@ examples:
-     mdio@10091100 {
-         compatible = "hisilicon,hisi-femac-mdio";
-         reg = <0x10091100 0x20>;
--        clocks = <&clk_mdio>;
-         #address-cells = <1>;
-         #size-cells = <0>;
- 
+   resets:
+     items:
+@@ -70,7 +78,8 @@ examples:
+         compatible = "hisilicon,hi3516cv300-femac", "hisilicon,hisi-femac";
+         reg = <0x10090000 0x1000>, <0x10091300 0x200>;
+         interrupts = <12>;
+-        clocks = <&clk_femac>;
++        clocks = <&clk_femac>, <&clk_femacif>, <&clk_fephy>;
++        clock-names = "mac", "macif", "phy";
+         resets = <&crg 0xec 0>, <&crg 0xec 3>;
+         reset-names = "mac", "phy";
+         mac-address = [00 00 00 00 00 00];
 
 -- 
 2.43.0
