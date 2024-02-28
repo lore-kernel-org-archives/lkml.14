@@ -1,192 +1,150 @@
-Received: from isilmar-4.linta.de (isilmar-4.linta.de [136.243.71.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A318122F1E;
-	Wed, 28 Feb 2024 17:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.243.71.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E429222F1E;
+	Wed, 28 Feb 2024 17:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709142683; cv=none; b=qSs/lLLZfL26EztiLJ45RUEgvIE8WtD2ZTpJBIuGMl0+f/wvPb7XQfWLfIE5cElOQ+QHa/J4QXPvILOed+ncxkworvbf9rZoWqCB4kDFghRN1CzGQ02eXp0CwP04pUUDcLAbWYEnS9Xsi4B0+2AmlsYcO9NN6EGW5jgsJ4+DiIE=
+	t=1709142688; cv=none; b=ntaKPTuCyCmBty0yva8GVPZ4gAPoghRSuAMChRGEFkiI3xFa7rpsaQuw5ITJwr7Qr8WFXOzipcq6NX1uGGCkuj325X4hZnAars57OK689aszQdlG4EHSNWQ5MlQ8BO6jLGJQ/N3od5Y1YRrDr4zxjKO/2J0xDwSQUcSZv78kHQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709142683; c=relaxed/simple;
-	bh=YE/j5Jd5RYyGUXRifgV24q+iH63wNhZlxzUbWcESwek=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VYCGvjYYuiuH0wddyu/DmKaABJXV2EhBWMr3lfteBYGStseY4ATTmAYoYFNolDTtUIMLMVHi5NDR2SpCI0lzdQLBo5EZW5z6wi4uB26+HXskF1n/ggesBBithswNKDao4Q6Ivt3fEySfbNHYuTruiJ4Nh6KA55Nfdyb+wjLWUjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net; spf=pass smtp.mailfrom=dominikbrodowski.net; arc=none smtp.client-ip=136.243.71.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dominikbrodowski.net
-Received: from shine.dominikbrodowski.net (shine.brodo.linta [10.2.0.112])
-	by isilmar-4.linta.de (Postfix) with ESMTPSA id 51BA32000CE;
-	Wed, 28 Feb 2024 17:43:48 +0000 (UTC)
-Received: by shine.dominikbrodowski.net (Postfix, from userid 1000)
-	id DCE9CA0086; Wed, 28 Feb 2024 18:41:38 +0100 (CET)
-Date: Wed, 28 Feb 2024 18:41:38 +0100
-From: Dominik Brodowski <linux@dominikbrodowski.net>
-To: tomas.winkler@intel.com, mchehab@kernel.org, wentong.wu@intel.com
-Cc: sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: v6.8.0-rc6: mei_ace_probe / mei_vsc_probe: do not call blocking ops
- when !TASK_RUNNING
-Message-ID: <Zd9wUv1zSJ59WS8i@shine.dominikbrodowski.net>
+	s=arc-20240116; t=1709142688; c=relaxed/simple;
+	bh=X0SFgac44AGTtRt3bpXGtzG9V/AziVxJderyrCtjMW4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZVgSQ8jRTejhjrQHXwu21CoKTElCpyi0+W0ble2V8O+khRJBEahUGlAP0y6Cx/ce11Qeg9tkptUm9NAOhTRUZz+jaq1LIY45IGPh9ZUHI74RMBLm91uSMsgfFKKUwUVj+5apWVK1iSp/GV2RHJ8ukx9PLw4AYTBgxup8Pqe0WY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YS3tbMlM; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YS3tbMlM"
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7d6024b181bso2876106241.2;
+        Wed, 28 Feb 2024 09:51:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709142686; x=1709747486; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+FSxoYCjI8KHEKvT+a2H+wwDJ3Fc0JNH4HEuSuWDa0o=;
+        b=YS3tbMlMLKldW4cWRRZKzDBIHd7Cf+OhO/WEZMfwOxT9ocN9DUYggZ0JBnWDwd0fb0
+         AucfsXHs2CFSk8aZeFNPRdxDVEMGdnNWWkU9K6B/QXWz/E2HEQNDzXVlZtOlRPKrA57a
+         cYdbQLsG4PKoTOEZfj+3Gcf7eSMpPPq9fUTzMqvRjD0+PbyiMqXsH4YRYfK8e+ue7A5g
+         Vlri25OI2LJZHENvCGXQIbIgLUMfur+bYCpZlDGBKuj2M5W9I23I7v+xYiV+3No79vCy
+         O48GNQDlAZoBEkjCy5mPDqPMC2dGCj99jClAanFfGMvKdiwkPGpygMaGWIbxqy29TGOb
+         Nbsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709142686; x=1709747486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+FSxoYCjI8KHEKvT+a2H+wwDJ3Fc0JNH4HEuSuWDa0o=;
+        b=ikKRNXwpmqePqkD2CUUxQiE5PUnimwjL6ZyAbE0FQjSfHs7438GBh46Tkg0vuqTiW0
+         hfLfUsJIWAYaxKQN2BBXEtQWpvOh7VAZA8H7RYlTuYs3CDke61RmOkCCW6hrelTeHe0m
+         r5Y0oCMJ/jcbqSxnHC85DlGlrEeLlpTviO8UcUyRw5d2LiEjI4IlhdS4BSE5KBzpiHmZ
+         kwHWTETHkro7TYuaCHDamz3C8VTzW7CnxcHbyE1yiq/+0tJF3j67RcyF0a01UOX+Byq8
+         15r9dduSB/6M+N3snRBXGIGLc1tT2yY9FwvqOWTERwUbSuF7QXegwSOGVJkoaeyf4HE9
+         ICMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKm2roe+3pciqbHb2WsR7APSe/mD+IfCc2iAGiVz9oytso3R2HInsaXsVFt7BZifKb/PoLC8VroyxMV+K5WOrXsQRAtCY8wEdFFmJrL5PmvrwAD/z0FO5DAZEzlXlUbcWm2/oZ
+X-Gm-Message-State: AOJu0Yzn3ANxgcrETfrJpU1d0fdarl5iAlGrraeaxm8rnSHU7II0nyXV
+	p/28tFE1PPdTVuseci+vbwo564ralhQbwQF8QNcy8tegSm38kaBsfJRn5+EsRn3+FJ6WueVNoS4
+	NvLL7EiRfdxKcSM+L6LPgq8GFEZA=
+X-Google-Smtp-Source: AGHT+IGucqGCPOj4OwzGw3o5YGuCjVzCIuIxy9Vz1LlGyTtV0gAAR0EVqbRMIlHOsZttATj1JLjjxl/G0nOm/rrquOk=
+X-Received: by 2002:a05:6102:55a1:b0:470:4e67:3b38 with SMTP id
+ dc33-20020a05610255a100b004704e673b38mr372791vsb.14.1709142685683; Wed, 28
+ Feb 2024 09:51:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <df300a49-7811-4126-a56a-a77100c8841b@gmail.com>
+ <79a8ba83-86bf-4c22-845c-8f285c2d1396@gmail.com> <CAHsH6GvX7zYSoA7JVemRtunWWSaew1S11Y996WAGt6B9d8=cOA@mail.gmail.com>
+ <aa5f1c11-4528-4d53-91f3-5ce8c02363ac@gmail.com>
+In-Reply-To: <aa5f1c11-4528-4d53-91f3-5ce8c02363ac@gmail.com>
+From: Eyal Birger <eyal.birger@gmail.com>
+Date: Wed, 28 Feb 2024 09:51:14 -0800
+Message-ID: <CAHsH6GspzSsSJX2Xuerp3NApJnobv7_eoNdwMSX=Mqw3EVhAzg@mail.gmail.com>
+Subject: Re: [PATCH net-next 2/2] net: geneve: enable local address bind for
+ geneve sockets
+To: Richard Gobert <richardbgobert@gmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, idosch@nvidia.com, razor@blackwall.org, amcohen@nvidia.com, 
+	petrm@nvidia.com, jbenc@redhat.com, b.galvani@gmail.com, bpoirier@nvidia.com, 
+	gavinl@nvidia.com, martin.lau@kernel.org, daniel@iogearbox.net, 
+	herbert@gondor.apana.org.au, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Feb 27, 2024 at 1:03=E2=80=AFAM Richard Gobert <richardbgobert@gmai=
+l.com> wrote:
+>
+> Eyal Birger wrote:
+> > Hi,
+> >
+> > On Thu, Feb 22, 2024 at 12:54=E2=80=AFPM Richard Gobert
+> > <richardbgobert@gmail.com> wrote:
+> >>
+> >> This patch adds support for binding to a local address in geneve socke=
+ts.
+> >
+> > Thanks for adding this.
+> >
+> >> It achieves this by adding a geneve_addr union to represent local addr=
+ess
+> >> to bind to, and copying it to udp_port_cfg in geneve_create_sock.
+> >
+> > AFICT in geneve_sock_add(), geneve_socket_create() is only called if th=
+ere's
+> > no existing open socket with the GENEVE destination port. As such, woul=
+dn't
+> > this bind work only for the first socket in the namespace?
+> >
+> > If that is the case, then perhaps binding the socket isn't the right
+> > approach, and instead geneve_lookup() should search for the tunnel base=
+d on
+> > both the source and destination IPs.
+> >
+> > Am I missing something?
+> >
+> > Eyal
+>
+> You are right, I missed it.
+> Binding the socket is the main reason for the patch, to prevent exposing
+> the geneve port on all interfaces.
 
-thanks for your work getting the Intel IPU6 camera system - such as found
-within my Dell Inc. XPS 9315 - to work with an upstream kernel. Much
-appreciated!
+I see. The use case I had in mind is allowing to differentiate between
+tunnels based on local IP, but not exposing the port sounds like
+a good use case too.
 
-On Linux 6.8.0-rc6+ (as of this morning, HEAD is at cf1182944c7c), though,
-I get the following warning during boot with everything built into the
-kernel:
+> I think it should be searched in geneve{6}_lookup and in geneve_find_sock=
+:
 
-------------[ cut here ]------------
-do not call blocking ops when !TASK_RUNNING; state=2 set at [<000000003688dc79>] prepare_to_wait_event+0x54/0x1a0
-WARNING: CPU: 5 PID: 122 at kernel/sched/core.c:10099 __might_sleep+0x59/0x60
-Modules linked in:
-CPU: 5 PID: 122 Comm: kworker/u24:3 Tainted: G                T  6.8.0-rc6+ #2
-Hardware name: Dell Inc. XPS 9315/00KRKP, BIOS 1.1.3 05/11/2022
-Workqueue: events_unbound deferred_probe_work_func
-RIP: 0010:__might_sleep+0x59/0x60
-Code: ee 48 89 df 5b 31 d2 5d e9 24 fd ff ff 48 8b 90 80 15 00 00 48 c7 c7 a8 3f e3 a7 c6 05 03 9f 47 03 01 48 89 d1 e8 27 6b fb ff <0f> 0b eb d1 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffafd10122fa48 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffffffa7d97bd7 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000eaa R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffffa27506339628 R14: ffffa27505df3028 R15: 000000000122fb00
-FS:  0000000000000000(0000) GS:ffffa27c6f680000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f44ac3df460 CR3: 0000000114480000 CR4: 0000000000f50ef0
-PKRU: 55555554
-Call Trace:
- <TASK>
- ? __might_sleep+0x59/0x60
- ? __warn+0x80/0x170
- ? __might_sleep+0x59/0x60
- ? report_bug+0x182/0x1b0
- ? handle_bug+0x40/0x80
- ? exc_invalid_op+0x17/0x80
- ? asm_exc_invalid_op+0x1a/0x20
- ? __might_sleep+0x59/0x60
- ? __might_sleep+0x59/0x60
- gpiod_get_value_cansleep+0x19/0x60
- vsc_tp_xfer+0x177/0x570
- ? __pfx_autoremove_wake_function+0x10/0x10
- mei_vsc_write+0xe5/0x1d0
- mei_hbm_cl_connect_req+0x7d/0xd0
- mei_cl_connect+0x399/0x460
- mei_cldev_enable+0x97/0x1a0
- mei_ace_probe+0x103/0x390
- ? kernfs_add_one+0x146/0x180
- ? really_probe+0x166/0x300
- really_probe+0x166/0x300
- ? __pfx___device_attach_driver+0x10/0x10
- __driver_probe_device+0x6e/0x120
- driver_probe_device+0x1a/0x90
- __device_attach_driver+0x8e/0xd0
- bus_for_each_drv+0x90/0xf0
- __device_attach+0xac/0x1a0
- ? process_one_work+0x19c/0x500
- bus_probe_device+0x93/0xb0
- ? process_one_work+0x19c/0x500
- deferred_probe_work_func+0x96/0xd0
- process_one_work+0x205/0x500
- worker_thread+0x1dc/0x3e0
- ? __pfx_worker_thread+0x10/0x10
- kthread+0xea/0x120
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x2c/0x50
- ? __pfx_kthread+0x10/0x10
- ret_from_fork_asm+0x1b/0x30
- </TASK>
-irq event stamp: 1179
-hardirqs last  enabled at (1185): [<ffffffffa50b61d8>] console_unlock+0x118/0x170
-hardirqs last disabled at (1190): [<ffffffffa50b61bd>] console_unlock+0xfd/0x170
-softirqs last  enabled at (558): [<ffffffffa5012f8e>] irq_exit_rcu+0x7e/0xa0
-softirqs last disabled at (551): [<ffffffffa5012f8e>] irq_exit_rcu+0x7e/0xa0
----[ end trace 0000000000000000 ]---
-mei intel_vsc-5db76cf6-0a68-4ed6-9b78-0361635e2447: deferred probe pending: (reason unknown)
-mei intel_vsc-92335fcf-3203-4472-af93-7b4453ac29da: deferred probe pending: (reason unknown)
+If the socket is bound to a specific IP, i'm not sure you'd need to
+change geneve{6}_lookup() - only packets matching that IP would arrive
+there no? In that case I think the change you suggested to geneve_find_sock=
+()
+should be enough.
 
+>
+> static struct geneve_sock *geneve_find_sock(struct geneve_net *gn,
+>                                             sa_family_t family,
+>                                             union geneve_addr *saddr)
+>  {
+>         struct geneve_sock *gs;
+>
+>         list_for_each_entry(gs, &gn->sock_list, list) {
+>                 struct inet_sock *inet =3D inet_sk(gs->sock->sk);
+>
+>                 if (inet->inet_sport =3D=3D dst_port && geneve_get_sk_fam=
+ily(gs) =3D=3D family) {
+>                         if (family =3D=3D AF_INET && inet->inet_rcv_saddr=
+ =3D=3D saddr->sin.sin_addr.s_addr)
+>                                 return gs;
+>         ...
+>
+> This is also true for VXLAN
 
-Using modules for mei[_*], ivsc_ace and ivsc_csi, I get a slightly different
-trace pointing to mei_vsc_probe():
+I haven't looked at the VXLAN code, but if the lookup is similar there
+I would guess the same.
 
-
-------------[ cut here ]------------
-do not call blocking ops when !TASK_RUNNING; state=2 set at [<00000000cd4cced5>] prepare_to_wait_event+0x54/0x1a0
-WARNING: CPU: 3 PID: 335 at kernel/sched/core.c:10099 __might_sleep+0x59/0x60
-Modules linked in: mei_vsc mei_hdcp mei_pxp mei_me mei mei_vsc_hw
-CPU: 3 PID: 335 Comm: kworker/u24:5 Tainted: G                T  6.8.0-rc6+ #1
-Hardware name: Dell Inc. XPS 9315/00KRKP, BIOS 1.1.3 05/11/2022
-Workqueue: events_unbound async_run_entry_fn
-RIP: 0010:__might_sleep+0x59/0x60
-Code: ee 48 89 df 5b 31 d2 5d e9 24 fd ff ff 48 8b 90 b8 15 00 00 48 c7 c7 38 b7 62 a9 c6 05 43 9b 47 03 01 48 89 d1 e8 67 6b fb ff <0f> 0b eb d1 0f 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffff9c2a86fa7b40 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffffffa9590070 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000eaa R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffff8fe0c6413028 R14: ffff8fe0ce4f2028 R15: 0000000086fa7c00
-FS:  0000000000000000(0000) GS:ffff8fe82f580000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005559a7dbc010 CR3: 000000031385c000 CR4: 0000000000f50ef0
-PKRU: 55555554
-Call Trace:
- <TASK>
- ? __might_sleep+0x59/0x60
- ? __warn+0x80/0x170
- ? __might_sleep+0x59/0x60
- ? report_bug+0x182/0x1b0
- ? handle_bug+0x40/0x80
- ? exc_invalid_op+0x17/0x80
- ? asm_exc_invalid_op+0x1a/0x20
- ? __might_sleep+0x59/0x60
- gpiod_get_value_cansleep+0x19/0x60
- vsc_tp_xfer+0x177/0x570 [mei_vsc_hw]
- ? mei_me_cl_rm_all+0x25/0x90 [mei]
- ? __pfx_autoremove_wake_function+0x10/0x10
- mei_vsc_write+0xe5/0x1d0 [mei_vsc]
- mei_hbm_start_req+0x83/0xf0 [mei]
- mei_reset+0x2af/0x4b0 [mei]
- ? mei_start+0x1c/0x110 [mei]
- ? rcu_read_lock_sched_held+0x42/0x80
- mei_start+0x72/0x110 [mei]
- mei_vsc_probe+0x9a/0x140 [mei_vsc]
- platform_probe+0x3c/0x90
- really_probe+0x166/0x300
- ? process_one_work+0x19c/0x500
- __driver_probe_device+0x6e/0x120
- driver_probe_device+0x1a/0x90
- __driver_attach_async_helper+0x50/0xa0
- async_run_entry_fn+0x24/0xc0
- ? process_one_work+0x19c/0x500
- process_one_work+0x205/0x500
- worker_thread+0x1dc/0x3e0
- ? __pfx_worker_thread+0x10/0x10
- kthread+0xea/0x120
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x2c/0x50
- ? __pfx_kthread+0x10/0x10
- ret_from_fork_asm+0x1b/0x30
- </TASK>
-irq event stamp: 1113943
-hardirqs last  enabled at (1113949): [<ffffffffa68b6308>] console_unlock+0x118/0x170
-hardirqs last disabled at (1113954): [<ffffffffa68b62ed>] console_unlock+0xfd/0x170
-softirqs last  enabled at (1113130): [<ffffffffa68130be>] irq_exit_rcu+0x7e/0xa0
-softirqs last disabled at (1113125): [<ffffffffa68130be>] irq_exit_rcu+0x7e/0xa0
----[ end trace 0000000000000000 ]---
-
-
-
-Any ideas?
-
-Best,
-	Dominik
+Eyal.
