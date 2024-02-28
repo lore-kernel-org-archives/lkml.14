@@ -1,120 +1,80 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE64315B113;
-	Wed, 28 Feb 2024 14:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365DC15B0F4;
+	Wed, 28 Feb 2024 14:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709131945; cv=none; b=MFuWEVGS0JeYqAxbIUHmpb2C8Pj3tOLSKkSNxQ3xXxe7HE8DJWhSePYGmzZs1tIpk0D0YzOHwrz2pyz8WbE3ztnaELGIrwF9rWG/p030IuEcXOl8MgiyjK27T75Vn5dvAZCsVOitZFfiJd5FsTDRcIuAMCeDkcSeYyPO+o0poOI=
+	t=1709131967; cv=none; b=Yog2wAZeftL5sa19ZNdVxy6BeMaYT5imgGzTuQ9MCQRpNZhLK6uuERT5MYbEkiQo7WDLhAwNJjIGyzQwnWQCuMlvqGOmsBp5zS0nILzefe2I8Pw+1HBEIjdvNZEcjPEjjNAzL6h+NQR7h+Tcjyy3dLPk4/SeQnbelJOH4zU7abQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709131945; c=relaxed/simple;
-	bh=+Bh/rzOUQYQjoRBz1tCM6eJd5AX3o0mJIXpOYRL1V3U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=D97IJwtfMGN3TNuCr8SyADZXdOK2wInMnj4BVuh1omLL00THfZvzRH8CjZsBQsJ2peTi1hMV8yjaFxX0mTOfHC4yfZ1W1XE50Ntpqnghhq0mAA03xk+zirp62TRtPzt6IW544A42PNVY6wDuBdMlprzuOy10M0/G5/mF7ZOzrSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gglpHa51; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709131967; c=relaxed/simple;
+	bh=WT3pxg7oGg8f/ufZlqyjKxqYBdjk1b9KOgBvbggFMxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WzPb15wWhBP7YGgLy9ORjSiP3V/vGfZs0V+tGyEEw8bhJPNLDdavprzqnN2JuGoJslN1HG05Bp2TX/1Nn7sumXn7t1clDiXX6wGxc/eKsz0RigGCP+AiZSUKnUKWUWcaHSW/cglQQdflsr1YMtKbUkWVYe6aaI8DFGHf7IAjgTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hmbv3RQ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gglpHa51"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41SDWDum011876;
-	Wed, 28 Feb 2024 14:52:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=cd0MKC/SARQEghTf3CVRPtwVClnow0+J4u81o5zMyMA
-	=; b=gglpHa511U2lM6Op6hs4GgkW+ZdijK5T57JsL1g/ZZOZphRKXVzgKGNfRYm
-	E6zkvdNwJ2b8XVWF34/is4BwoFv2RkUO1KmxWlRtdZm68sQzg+m4R5H7Mc2TOTAo
-	pwZMD59i7hBSGvttjbMlcTMpHgCGGxhG2vXi2JB0UZcyY4gbS96mgETbJjHFBSK2
-	b9Z1bMH5pftXdCYGNolN2v73qXRwRm+9Qy1rD7aOKpc7VB1ywLMqLlsbMP1Hw8AG
-	bsecX/JOMGVUFwbpphrDqxx7UeXqn6Lz1PeTYaqBr/XNRuRgIckhZQ6z7o166mSW
-	0MPyaVT9AJju0vJyQxTrMwiub9g==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wj5t1877h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Feb 2024 14:52:20 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41SEqDj4015107
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Feb 2024 14:52:13 GMT
-Received: from hu-kathirav-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 28 Feb 2024 06:52:09 -0800
-From: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-Date: Wed, 28 Feb 2024 20:21:51 +0530
-Subject: [PATCH 3/3] cpufreq: qcom-nvmem: add support for IPQ5321
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hmbv3RQ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5B7C433C7;
+	Wed, 28 Feb 2024 14:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709131966;
+	bh=WT3pxg7oGg8f/ufZlqyjKxqYBdjk1b9KOgBvbggFMxM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hmbv3RQ5UwsopK/NmeHO0lXeHgJT/hExnR8UYF5MMHwUV4KZaZeywaOUH1UTYCo+Z
+	 QaTj8l7oBLLObdgWRrdmrTt0HXIpgT7f1iNPtgIRX2MGiK3xo9lUgRfYrA6a1JEPJj
+	 EaOIaNvBkPBVT7Bc1w+RTcg9GxnyAaRksyW4u2acgKH8dLPRi9g3GOGeqvn2srqECI
+	 /xIFO+Y5iCm03Qt7x+6uyS2BPVMx/2xq1iavucElr/Ay3nMWh6EDGA5PKTDgDSDjYS
+	 fUaWqJkB1Kld+KnQiIhINwsyuoRpXjrIA20ePlDBQbuk7+B5RpqSNDdTyTpB1i1C9E
+	 JnkTcNh15Sxgg==
+Date: Wed, 28 Feb 2024 14:52:41 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	allen.lkml@gmail.com
+Subject: Re: [PATCH 6.7 000/334] 6.7.7-rc1 review
+Message-ID: <20240228-manila-coleslaw-038ec8d464cf@spud>
+References: <20240227131630.636392135@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240228-ipq5321-sku-support-v1-3-14e4d4715f4b@quicinc.com>
-References: <20240228-ipq5321-sku-support-v1-0-14e4d4715f4b@quicinc.com>
-In-Reply-To: <20240228-ipq5321-sku-support-v1-0-14e4d4715f4b@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
-        "Rafael J. Wysocki"
-	<rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        "Kathiravan
- Thirumoorthy" <quic_kathirav@quicinc.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709131917; l=806;
- i=quic_kathirav@quicinc.com; s=20230906; h=from:subject:message-id;
- bh=+Bh/rzOUQYQjoRBz1tCM6eJd5AX3o0mJIXpOYRL1V3U=;
- b=iQHn7SORR7fGJbg7G2BFTZJe9rFJ48raS8QEcKkbbtL4w8zOq/HbRMuqC/UkGV4kINrckGNFc
- Lev3JcSsvlyAXArfUiQ9FZOhYXEAlT8QdFWCbrjgqsd3ad0zdD+Sv2l
-X-Developer-Key: i=quic_kathirav@quicinc.com; a=ed25519;
- pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: y4rOsiHSEyVHLkdbF5bME0o4lqjsj-zB
-X-Proofpoint-GUID: y4rOsiHSEyVHLkdbF5bME0o4lqjsj-zB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-28_07,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 clxscore=1015 malwarescore=0 spamscore=0
- priorityscore=1501 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402280118
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aMnH5bQ2nuBGaW2I"
+Content-Disposition: inline
+In-Reply-To: <20240227131630.636392135@linuxfoundation.org>
 
-Like all other SoCs in IPQ5332 family, cpufreq for IPQ5321 is also
-determined by the eFuse, with the maximum limit of 1.1GHz. Add support
-for the same.
 
-Signed-off-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
----
- drivers/cpufreq/qcom-cpufreq-nvmem.c | 1 +
- 1 file changed, 1 insertion(+)
+--aMnH5bQ2nuBGaW2I
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-index ea05d9d67490..0a46b5d49d32 100644
---- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
-+++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-@@ -191,6 +191,7 @@ static int qcom_cpufreq_kryo_name_version(struct device *cpu_dev,
- 	case QCOM_ID_IPQ5312:
- 	case QCOM_ID_IPQ5302:
- 	case QCOM_ID_IPQ5300:
-+	case QCOM_ID_IPQ5321:
- 	case QCOM_ID_IPQ9514:
- 	case QCOM_ID_IPQ9550:
- 	case QCOM_ID_IPQ9554:
+On Tue, Feb 27, 2024 at 02:17:38PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.7.7 release.
+> There are 334 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
--- 
-2.34.1
+Tested-by: Conor Dooley <conor.dooley@microchip.com>
 
+Cheers,
+Conor.
+
+--aMnH5bQ2nuBGaW2I
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd9IuQAKCRB4tDGHoIJi
+0rijAQCyrdvlCRDGKFxycIZooFsfiZ3iQxv986jjBpg3G4EP1wEAokLMgCkSJuj7
+8KYgVeA4MUZ9EZ9iV5jNQE/Um1TI+gQ=
+=uLBD
+-----END PGP SIGNATURE-----
+
+--aMnH5bQ2nuBGaW2I--
