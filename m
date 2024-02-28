@@ -1,109 +1,261 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A823FBB2;
-	Wed, 28 Feb 2024 17:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FF53FBB2
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 17:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709141017; cv=none; b=KGiElUVrBKuX+BPn9cvAeD/quA737i2e+rsgKNbzPoEaelHpIAgehIPkxQUGjUS1ekKStTNHiqkl9S0WfHWrXVTCZth9aFmg4oMUaalxmQmm/RZFW2EQqr0lnlY4T539UBWxdhdBG9OyTQpUEIzAsezLludeQEXZ2gCsNaOhh7I=
+	t=1709141092; cv=none; b=qLAAFOWRNudeQXiR/PYNeJpQBGNc8+XHNa982S1zwu53Y73Y+JnI5Yw7W9HXAIzg7nHxvVqhi7DdGFDSuHzpGHNtst1jX2KNFhKwpCRb7FkCTLz11+d/sTAw8V/GKewBMS1zPw5Frn6fUF/G3V4dWkWGA5k4RgXnTaly5rupqI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709141017; c=relaxed/simple;
-	bh=gyHaX4rUH7VfXk5+GSMnekvjp1WHHHsYtG16XBQttRM=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=HI05kRleNIZuMp0CYaqr3Whx1J0B9+TjEpmXfgKWQKLP2reML10UM8sUxueent/Ozbv/R+U0F4e78wf8zBvU2THPQvNV9dll/EwMwMiyYZAX1zbw9C7c9rLV4OyLYpd7WQbyPzcpbnxl8Cs+VvPNdfZSmA3ErtCAVNqr7fB/2uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=en9o0nri; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JgYaz9Ds; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1709141092; c=relaxed/simple;
+	bh=soRTzd7Me30gCUd+6AIO6TJS6L30Xaor13mHaLhngq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jzP+cVNU05aqd4ADT2oPU6CE4DyfYeCZP15NmJ/Cc0Ds8m34VXbCWWSurrdo7fqmh2wJVo7x2w+czmDxFs1j5urb4OaovvBOix8banwHTkkwRTdBlgn8I//aMbENdnNMrafLyvE7WDiTSwkw7HjB2x0KvLuZG3S5tdTFvVu9Zls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=So3wmLE+; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="en9o0nri";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JgYaz9Ds"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 69C3813800B5;
-	Wed, 28 Feb 2024 12:23:34 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 28 Feb 2024 12:23:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1709141014; x=1709227414; bh=Uczs6P+Vjh
-	lsb/gj6HcF1VFbl7LhQCHMFJrfB/feXkU=; b=en9o0nri8jxQPWja5PFaAxCjBA
-	CVBxhnwxdOqfhXeiKEr+G1DCaaMIRNquKEtCdBroqhtKlzd06Mtko3jduGHe7cOQ
-	S7fWvwXKsXn4Y6vt3CUC13wD9dNVgQ3KMwqHbGEMubfD0iuJcwsamSD++5v0lJ+p
-	k0oZMd94hq5jwqKTKLrja9LEeikZ+sAh9TDqJYKVETniCS/7+hc5iD+4x4p3vcbG
-	xg4NdTCmvxHZ7Q6La679xTekm9TNojZPFpXRbEQH/lmBt7lPmGY+ZmS0qgu4YXPB
-	9982UuShK/IY5SXNoMXRL2qPd9pwvUjdi8JA4jccX7RH0Xg3zhSnvTbT4sUA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709141014; x=1709227414; bh=Uczs6P+Vjhlsb/gj6HcF1VFbl7Lh
-	QCHMFJrfB/feXkU=; b=JgYaz9DsiLHdxiHNDvW8LwzgBn/BCNjf2fob6BKz5jQc
-	DS5kEAeXURNsQZrPIKN9UIcI9+D5d/Ql5rzfYE8oI03V8+6Xcmi8sT7qf1IfcBf3
-	wT/yMM3dUJ3cL7L7YLYNa6FebV0892paATs0dslLr2ZOtmEN+pZEFK3PpVTozZlG
-	ETjDNtSSx5UlIDV/m1U34HExkRAWCshbKoolnF6hJ41jEChZa3Zy3pYPkEpzkySL
-	pBGd7RW2/z3j98TaKrTsUrDPCxnDvlRmokwfGRjmYE6oTNmCQFj3sJ2wsMv3Ge7x
-	t+jbx/Ui/4HcJAe2u8/s3VtdtDojqklL0Yp3mI9hZQ==
-X-ME-Sender: <xms:FWzfZQdJnERtgPUGhWvTMoPTc8vTvStLKqwqM8uoJ15MrQfp6OhDcQ>
-    <xme:FWzfZSN-kUxVIyhgDuW6xybAFJFdxqNHE3h5a2x6cWi7UfIH5uCBT_XKjXyQ93z3P
-    s_vWkt34NI2tth0DYY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgeejgdelhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:FmzfZRh_6upNX0-B6oaWDTR4DjOE33shLapoovFm1eckDY-jte_nSg>
-    <xmx:FmzfZV8ZC_NDmBpXfcAS2AaJgfc1olAVkxquD-MYUuJf4LCRaxgfbA>
-    <xmx:FmzfZcvrXHYnI6fWUzBRb9cRi3I9G6YcUl-TBXpB6I2KbGHi_qdTVQ>
-    <xmx:FmzfZcHoHWEBeJFgNhGJoP0YSpwrg8qfQqIm-0Tt9-sykLuOUbLmwg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id ABF8BB6008D; Wed, 28 Feb 2024 12:23:33 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-182-gaab6630818-fm-20240222.002-gaab66308
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="So3wmLE+"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41SHImi6015851;
+	Wed, 28 Feb 2024 17:24:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=mqVYMcMMlUFQsUkdjAg6n2QQizzlVsv07gqAGjVOnrA=;
+ b=So3wmLE+1xlXKVRPvoQSl5IgoV7+AYseQFHyTb+3f7t9DaMnQ3f595vJMw9yDNPomxvh
+ eTCMBZV4GMZ2LrrZ3jquSpXDK90ZKkRWitu1FsNUvjLdMgE0GMpU3/m5Es0GZIaVdpoD
+ GmILclZCYJQgmYi5G50WJYe8IW/zoYP2topojCXFfR8iglleOTkHZPs7AQ4odw00Q1du
+ GZwFvCGEL9aWj6MwFYa2zOYd9ptQ4pajTlVlTaiXiuzbbXDsbnimVOojltohNhmkAJNk
+ xku815MOCkPikWAfOlOoGYnex4KfLacUY46adELhANvuWLsqQIvPuLWS49yTNyG8IVOa Qw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wj8wnrk3j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 Feb 2024 17:24:34 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41SHIqOf015993;
+	Wed, 28 Feb 2024 17:24:33 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wj8wnrk1x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 Feb 2024 17:24:33 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41SH6GTX008154;
+	Wed, 28 Feb 2024 17:24:32 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfv9mfk74-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 Feb 2024 17:24:32 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41SHOSKO25035314
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 Feb 2024 17:24:30 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C450E58061;
+	Wed, 28 Feb 2024 17:24:28 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F0E3558058;
+	Wed, 28 Feb 2024 17:24:23 +0000 (GMT)
+Received: from [9.43.11.51] (unknown [9.43.11.51])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 28 Feb 2024 17:24:23 +0000 (GMT)
+Message-ID: <72c2d279-90ae-4612-9b96-e579333b8088@linux.ibm.com>
+Date: Wed, 28 Feb 2024 22:54:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <62f20e36-536d-47ee-b486-28ed87201b60@app.fastmail.com>
-In-Reply-To: <87il28h7zs.wl-tiwai@suse.de>
-References: <20240228140152.1824901-1-arnd@kernel.org>
- <87msrkhcz6.wl-tiwai@suse.de>
- <1265517d-b98a-4ec6-9215-10cd988ff78f@app.fastmail.com>
- <87il28h7zs.wl-tiwai@suse.de>
-Date: Wed, 28 Feb 2024 18:23:13 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Takashi Iwai" <tiwai@suse.de>
-Cc: "Arnd Bergmann" <arnd@kernel.org>, "Kees Cook" <keescook@chromium.org>,
- "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-Subject: Re: [PATCH] ALSA: asihpi: work around clang-17+ false positive fortify-string
- warning
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] sched/fair: Add EAS checks before updating
+ overutilized
+Content-Language: en-US
+To: Pierre Gondois <pierre.gondois@arm.com>
+Cc: yu.c.chen@intel.com, dietmar.eggemann@arm.com,
+        linux-kernel@vger.kernel.org, nysal@linux.ibm.com,
+        aboorvad@linux.ibm.com, srikar@linux.vnet.ibm.com, vschneid@redhat.com,
+        morten.rasmussen@arm.com, qyousef@layalina.io, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org
+References: <20240228071621.602596-1-sshegde@linux.ibm.com>
+ <20240228071621.602596-2-sshegde@linux.ibm.com>
+ <86f000a3-3068-4c57-858d-c00e3eb6e974@arm.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+In-Reply-To: <86f000a3-3068-4c57-858d-c00e3eb6e974@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: LwbNPo9sYLxtcIBcZ2FqHeKx4th4lZtP
+X-Proofpoint-GUID: _LNIgGbO8nsthWBrN9SkJoj9Cl0-F2ik
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-28_08,2024-02-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 clxscore=1015 impostorscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 bulkscore=0 phishscore=0 suspectscore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402280137
 
-On Wed, Feb 28, 2024, at 17:24, Takashi Iwai wrote:
-> On Wed, 28 Feb 2024 16:03:56 +0100,
->> On Wed, Feb 28, 2024, at 15:37, Takashi Iwai wrote:
->> > On Wed, 28 Feb 2024 15:01:45 +0100,
->> 
->> The fortified-string warning only triggers for string.h operations
->> (memset, memcpy, memcmp, strn*...), not for a direct assignment.
->
-> Ah, I see.  Then from the logical POV, it's better to have a check
-> before that assignment; otherwise it'd overflow silently there.
->
-> Does putting the check beforehand (like the one below) fix similarly?
 
-Indeed, it does address the issue. I'll send a v2 with that
-version, since it clearly makes more sense.
 
-       Arnd
+On 2/28/24 9:28 PM, Pierre Gondois wrote:
+
+Hi Pierre, Thanks for taking a look.
+
+> It is nice to avoid calling effective_cpu_util() through the following
+> when EAS is not enabled:
+> I think we are avoiding calling cpu_overutilized except in update_sg_lb_stats. 
+I didnt want to put a EAS check in cpu_overutilized as it could be useful 
+function in non-EAS cases in future. calling cpu_overutilized alone doesnt 
+do any access to root_domain's overutilized field. So we are okay w.r.t to 
+cache issues. 
+But we will do some extra computation currently and then not use it if it 
+Non-EAS case in update_sg_lb_stats
+
+Would something like this makes sense?
+@@ -9925,7 +9925,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+                if (nr_running > 1)
+                        *sg_status |= SG_OVERLOAD;
+ 
+-               if (cpu_overutilized(i))
++               if (sched_energy_enabled() && cpu_overutilized(i))
+                        *sg_status |= SG_OVERUTILIZED;
+ 
+
+
+
+I didnt find how would util_fits_cpu ends up calling effective_cpu_util. 
+Could you please elaborate? 
+
+> cpu_overutilized()
+> \-util_fits_cpu()
+>   \- ...
+>     \-effective_cpu_util()
+> 
+> On 2/28/24 08:16, Shrikanth Hegde wrote:
+>> Overutilized field of root domain is only used for EAS(energy aware
+>> scheduler)
+>> to decide whether to do regular load balance or EAS aware load
+>> balance. It
+>> is not used if EAS not possible.
+>>
+>> Currently enqueue_task_fair and task_tick_fair accesses, sometime updates
+>> this field. In update_sd_lb_stats it is updated often.
+>> Which causes cache contention due to load/store tearing and burns
+>> a lot of cycles. Hence add EAS check before updating this field.
+>> EAS check is optimized at compile time or it is static branch.
+>> Hence it shouldn't cost much.
+>>
+>> With the patch, both enqueue_task_fair and newidle_balance don't show
+>> up as hot routines in perf profile.
+>>
+>> 6.8-rc4:
+>> 7.18%  swapper          [kernel.vmlinux]              [k]
+>> enqueue_task_fair
+>> 6.78%  s                [kernel.vmlinux]              [k] newidle_balance
+>> +patch:
+>> 0.14%  swapper          [kernel.vmlinux]              [k]
+>> enqueue_task_fair
+>> 0.00%  swapper          [kernel.vmlinux]              [k] newidle_balance
+>>
+>> Minor change; trace_sched_overutilized_tp expect that second argument to
+>> be bool. So do a int to bool conversion for that.
+>>
+>> Fixes: 2802bf3cd936 ("sched/fair: Add over-utilization/tipping point
+>> indicator")
+>> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+>> ---
+>>   kernel/sched/fair.c | 35 ++++++++++++++++++++++++-----------
+>>   1 file changed, 24 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 8e30e2bb77a0..3105fb08b87e 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -6670,15 +6670,30 @@ static inline bool cpu_overutilized(int cpu)
+>>       return !util_fits_cpu(cpu_util_cfs(cpu), rq_util_min,
+>> rq_util_max, cpu);
+>>   }
+>>
+>> -static inline void update_overutilized_status(struct rq *rq)
+>> +static inline void update_rd_overutilized_status(struct root_domain *rd,
+>> +                         int status)
+>>   {
+>> -    if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
+>> -        WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
+>> -        trace_sched_overutilized_tp(rq->rd, SG_OVERUTILIZED);
+>> +    if (sched_energy_enabled()) {
+>> +        WRITE_ONCE(rd->overutilized, status);
+>> +        trace_sched_overutilized_tp(rd, !!status);
+>> +    }
+>> +}
+> 
+> NIT:
+> When called from check_update_overutilized_status(),
+> sched_energy_enabled() will be checked twice.
+Yes. 
+But, I think that's okay since it is a static branch check at best. 
+This way it keeps the code simpler. 
+
+> 
+>> +
+>> +static inline void check_update_overutilized_status(struct rq *rq)
+>> +{
+>> +    /*
+>> +     * overutilized field is used for load balancing decisions only
+>> +     * if energy aware scheduler is being used
+>> +     */
+>> +    if (sched_energy_enabled()) {
+>> +        if (!READ_ONCE(rq->rd->overutilized) &&
+>> cpu_overutilized(rq->cpu))
+>> +            update_rd_overutilized_status(rq->rd, SG_OVERUTILIZED);
+>>       }
+>>   }
+>>   #else
+>> -static inline void update_overutilized_status(struct rq *rq) { }
+>> +static inline void check_update_overutilized_status(struct rq *rq) { }
+>> +static inline void update_rd_overutilized_status(struct root_domain *rd,
+>> +                         bool status) { }
+>>   #endif
+>>
+>>   /* Runqueue only has SCHED_IDLE tasks enqueued */
+>> @@ -6779,7 +6794,7 @@ enqueue_task_fair(struct rq *rq, struct
+>> task_struct *p, int flags)
+>>        * and the following generally works well enough in practice.
+>>        */
+>>       if (!task_new)
+>> -        update_overutilized_status(rq);
+>> +        check_update_overutilized_status(rq);
+>>
+>>   enqueue_throttle:
+>>       assert_list_leaf_cfs_rq(rq);
+>> @@ -10613,13 +10628,11 @@ static inline void update_sd_lb_stats(struct
+>> lb_env *env, struct sd_lb_stats *sd
+>>           WRITE_ONCE(rd->overload, sg_status & SG_OVERLOAD);
+>>
+>>           /* Update over-utilization (tipping point, U >= 0) indicator */
+>> -        WRITE_ONCE(rd->overutilized, sg_status & SG_OVERUTILIZED);
+>> -        trace_sched_overutilized_tp(rd, sg_status & SG_OVERUTILIZED);
+>> +        update_rd_overutilized_status(rd, sg_status & SG_OVERUTILIZED);
+>>       } else if (sg_status & SG_OVERUTILIZED) {
+>>           struct root_domain *rd = env->dst_rq->rd;
+>>
+>> -        WRITE_ONCE(rd->overutilized, SG_OVERUTILIZED);
+>> -        trace_sched_overutilized_tp(rd, SG_OVERUTILIZED);
+>> +        update_rd_overutilized_status(rd, SG_OVERUTILIZED);
+>>       }
+>>
+>>       update_idle_cpu_scan(env, sum_util);
+>> @@ -12625,7 +12638,7 @@ static void task_tick_fair(struct rq *rq,
+>> struct task_struct *curr, int queued)
+>>           task_tick_numa(rq, curr);
+>>
+>>       update_misfit_status(curr, rq);
+>> -    update_overutilized_status(task_rq(curr));
+>> +    check_update_overutilized_status(task_rq(curr));
+>>
+>>       task_tick_core(rq, curr);
+>>   }
+>> -- 
+>> 2.39.3
+>>
