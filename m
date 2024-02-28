@@ -1,179 +1,175 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A376EEFD;
-	Wed, 28 Feb 2024 16:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711CD1E88D
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709138635; cv=none; b=hunHZ4Wd/biEcZ+SI1bv8V40P2fGYoF2soZmHk27wiM5z6wAc1r5jUvHcrmNkm0+nIuhEIlabfZ46RpCZCAnHzc+sJCOyjxeOkZ4CgWyNzOXI6bHv9KF2F3sS7EEYWbxWXoemXDmixz4nf6PdTtK+au4u9YsV6rBNjgEXqnPFVQ=
+	t=1709138667; cv=none; b=SsaNrM3lZBXEqZS9V1EV5LlXiBOXOlYrRCh8XOD90FkaTtaS8qVEW9fU+HgFEoc3SM3pJsu/DRjPm/lSaCrJfYXY/B54IfI+mMire4uSbyDOjCRQGAjoAr8XJvuICH2O+BYWxakG21NFzi1QXFuH9OYO4vMht4A9S05/+FHzHZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709138635; c=relaxed/simple;
-	bh=FYKCx/CB7lBAZml9S7q6VnA/X2Dc69iuw7PNmS0oyIY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e7I0DLjDMG3iaHDU4kN1iY0XMKltMydv6hoIDfxb4LCmHoRKjyMnq6N30n7y5YEH8HFQMFffbCeC45EomwoU5N3liNvogLlPdvGGkp+qNcChyaxNQ6eBo/YAubb3byObPiLTGpDSVwqSRoI3XJ8ZcelsSbCXQpTUJAGx5/UT9nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=YmRLWnyh; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1709138667; c=relaxed/simple;
+	bh=KJlhzIPR/vjW9vKySj9E3Vpnv5RoXvud7GTILjlLqx8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=W9KBA2PHAkV2Y3Vt2UdtudBWJqytXcTcT3V5KEG4+tvBVmSttOM6qZoeUsYWal3rMOQFvz9JYf/6JZbwZhaIQAHEgxjxJfQ0/eo7dkX8kmx2WG6Sn1nVKNsj5J6SLjlLiQ4DZW/M1LrmvdZEKi7hAG/xMUJhncAq5R5MKmuKPkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=yClr7yzr; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="YmRLWnyh"
-Received: from localhost.ispras.ru (unknown [10.10.165.5])
-	by mail.ispras.ru (Postfix) with ESMTPSA id ABD2140B2789;
-	Wed, 28 Feb 2024 16:43:41 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru ABD2140B2789
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1709138622;
-	bh=8Kapx+kuKpDoK4A4QmaYAHOJUYLKDxYZDCpVP7uvsw8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YmRLWnyh6WTPq/1NtKnORSTnFTdNK0XBXz/JSesuPeJ/UQOd50aBB4vhpf1sWpoPS
-	 Tr78j7iRNgy1AhFUrp4q6Rejc7APf7S8uVsxZ/fCxADORifj6TkwcgVsP3uoBXvoL/
-	 7tTwO71wdrhvoTvkiYudjlDnsw5k/KEryMG38+8U=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Phoebe Buckheister <phoebe.buckheister@itwm.fraunhofer.de>,
-	linux-wpan@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH wpan] mac802154: fix llsec key resources release in mac802154_llsec_key_del
-Date: Wed, 28 Feb 2024 19:38:39 +0300
-Message-ID: <20240228163840.6667-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yClr7yzr"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7c79664c71fso34331139f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 08:44:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1709138664; x=1709743464; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k4XRPdwxUwqws5YY4VvPNG/LxgQfuluLcLEsy4IUoCQ=;
+        b=yClr7yzrDC/SWzZyqDUnt3982p6KQZDRIsPI6bZTF/geYXuK4fIGinTnJ8z9IHVMDT
+         7ZRwm1Qa1Yy85NtRLSSQ2Ckug0Tm7zfk29oWofuPR4oTwMsTl5t4pgzLS+auIrjcXlIW
+         Z4fZyTquIOuTkQGpKKAbPShN9H8kJS+KPoFhY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709138664; x=1709743464;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k4XRPdwxUwqws5YY4VvPNG/LxgQfuluLcLEsy4IUoCQ=;
+        b=TjHsDaAMBG39Ji8bRA26WkdzcwytvoC2CQTTAU1bSt5Odh2T7ZqGBoMXUA0kwC4zsX
+         GBK5S2QO7eExZvPZpBV44dExqvUHV+uYP5BZdvv6LfFlPNh3z4YFmHu9ZPEx8sqeQh9c
+         R6LgtiPZj7EEiveNK6QMHNlSVHHr+5Jn/GxxbjeDe3egLMXGuu6VDeRXLgzYiXNpvD4s
+         7MgrWwg1oa8x7MgDrAXEGlcY2GLR04UB+pQ2F0T52hTnqUlOCRR/AToOUDdVkSybPD6/
+         h+x4TtZ94x1JFAprowMMiS7/4jyBnIBBhfh/3NajP2+bcLMp64+oaujQEgPMpkv8iaww
+         lY5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUfqOG8Yex8VPaLh9z4y6Kw4JiOARfPvNVyTw3RUizJ/LYwUJFkIAhGUui6WeAPbNFD6ZV7rrb9qnK7/mhf2f2oT9ctYzIh/y3ILreu
+X-Gm-Message-State: AOJu0Yyrl05C48l1poElkwv5g0Q1WV1dKCV/q7GE8RJiWQ3Xi5f2Y8+K
+	jlf6Q+XAp03sgDrbiDyEA+oqTh7yxD69lVf0wasABNmNFgl2t3voF4Z16/M8bpQ=
+X-Google-Smtp-Source: AGHT+IEHOs4CxadxUk+QzF5PCarTAbEfy0WGLF1fUV8BDOqm/9M4WKn9+kuDXDQZhcNvB2495wtSKg==
+X-Received: by 2002:a5e:8345:0:b0:7c7:f993:8c55 with SMTP id y5-20020a5e8345000000b007c7f9938c55mr4747iom.2.1709138663699;
+        Wed, 28 Feb 2024 08:44:23 -0800 (PST)
+Received: from [10.5.0.2] ([91.196.69.76])
+        by smtp.gmail.com with ESMTPSA id gw3-20020a0566381ee300b00474b2c54cf7sm156322jab.174.2024.02.28.08.44.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 08:44:23 -0800 (PST)
+Message-ID: <44dce4fb-6198-4ca3-9535-566655fa8e35@joelfernandes.org>
+Date: Wed, 28 Feb 2024 11:44:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/4] rcu: Reduce synchronize_rcu() latency
+Content-Language: en-US
+From: Joel Fernandes <joel@joelfernandes.org>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+ "Paul E . McKenney" <paulmck@kernel.org>
+Cc: RCU <rcu@vger.kernel.org>, Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+ Frederic Weisbecker <frederic@kernel.org>
+References: <20240220183115.74124-1-urezki@gmail.com>
+ <20240220183115.74124-3-urezki@gmail.com>
+ <572f9069-f79f-4432-b2ac-7f963a526c0b@joelfernandes.org>
+In-Reply-To: <572f9069-f79f-4432-b2ac-7f963a526c0b@joelfernandes.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-mac802154_llsec_key_del() can free resources of a key directly without
-following the RCU rules for waiting before the end of a grace period. This
-may lead to use-after-free in case llsec_lookup_key() is traversing the
-list of keys in parallel with a key deletion:
+On 2/28/2024 9:32 AM, Joel Fernandes wrote:
+> 
+> 
+> On 2/20/2024 1:31 PM, Uladzislau Rezki (Sony) wrote:
+[...]
+>> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+>> index c8980d76f402..1328da63c3cd 100644
+>> --- a/kernel/rcu/tree.c
+>> +++ b/kernel/rcu/tree.c
+>> @@ -75,6 +75,7 @@
+>>  #define MODULE_PARAM_PREFIX "rcutree."
+>>  
+>>  /* Data structures. */
+>> +static void rcu_sr_normal_gp_cleanup_work(struct work_struct *);
+>>  
+>>  static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
+>>  	.gpwrap = true,
+>> @@ -93,6 +94,8 @@ static struct rcu_state rcu_state = {
+>>  	.exp_mutex = __MUTEX_INITIALIZER(rcu_state.exp_mutex),
+>>  	.exp_wake_mutex = __MUTEX_INITIALIZER(rcu_state.exp_wake_mutex),
+>>  	.ofl_lock = __ARCH_SPIN_LOCK_UNLOCKED,
+>> +	.srs_cleanup_work = __WORK_INITIALIZER(rcu_state.srs_cleanup_work,
+>> +		rcu_sr_normal_gp_cleanup_work),
+>>  };
+>>  
+>>  /* Dump rcu_node combining tree at boot to verify correct setup. */
+>> @@ -1422,6 +1425,282 @@ static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
+>>  		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>>  }
+> [..]
+>> +static void rcu_sr_normal_add_req(struct rcu_synchronize *rs)
+>> +{
+>> +	llist_add((struct llist_node *) &rs->head, &rcu_state.srs_next);
+>> +}
+>> +
+> 
+> I'm a bit concerned from a memory order PoV about this llist_add() happening
+> possibly on a different CPU than the GP thread, and different than the kworker
+> thread. Basically we can have 3 CPUs simultaneously modifying and reading the
+> list, but only 2 CPUs have the acq-rel pair AFAICS.
+> 
+> Consider the following situation:
+> 
+> synchronize_rcu() user
+> ----------------------
+> llist_add the user U - update srs_next list
+> 
+> rcu_gp_init() and rcu_gp_cleanup (SAME THREAD)
+> --------------------
+> insert dummy node in front of U, call it S
+> update wait_tail to U
+> 
+> and then cleanup:
+> read wait_tail to W
+> set wait_tail to NULL
+> set done_tail to W (RELEASE) -- this release ensures U and S are seen by worker.
+> 
+> workqueue handler
+> -----------------
+> read done_tail (ACQUIRE)
+> disconnect rest of list -- disconnected list guaranteed to have U and S,
+>                            if done_tail read was W.
+> ---------------------------------
+> 
+> So llist_add() does this (assume new_first and new_last are same):
+> 
+> 	struct llist_node *first = READ_ONCE(head->first);
+> 
+> 	do {
+> 		new_last->next = first;
+> 	} while (!try_cmpxchg(&head->first, &first, new_first));
+> 
+> 	return !first;
+> ---
+> 
+> It reads head->first, then writes the new_last->next (call it new_first->next)
+> to the old first, then sets head->first to the new_first if head->first did not
+> change in the meanwhile.
+> 
+> The problem I guess happens if the update the head->first is seen *after* the
+> update to the new_first->next.
+> 
+> This potentially means a corrupted list is seen in the workqueue handler..
+> because the "U" node is not yet seen pointing to the rest of the list
+> (previously added nodes), but is already seen the head of the list.
+> 
+> I am not sure if this can happen, but AFAIK try_cmpxchg() doesn't imply ordering
+> per-se. Maybe that try_cmpxchg() should be a try_cmpxchg_release() in llist_add() ?
 
-refcount_t: addition on 0; use-after-free.
-WARNING: CPU: 4 PID: 16000 at lib/refcount.c:25 refcount_warn_saturate+0x162/0x2a0
-Modules linked in:
-CPU: 4 PID: 16000 Comm: wpan-ping Not tainted 6.7.0 #19
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-RIP: 0010:refcount_warn_saturate+0x162/0x2a0
-Call Trace:
- <TASK>
- llsec_lookup_key.isra.0+0x890/0x9e0
- mac802154_llsec_encrypt+0x30c/0x9c0
- ieee802154_subif_start_xmit+0x24/0x1e0
- dev_hard_start_xmit+0x13e/0x690
- sch_direct_xmit+0x2ae/0xbc0
- __dev_queue_xmit+0x11dd/0x3c20
- dgram_sendmsg+0x90b/0xd60
- __sys_sendto+0x466/0x4c0
- __x64_sys_sendto+0xe0/0x1c0
- do_syscall_64+0x45/0xf0
- entry_SYSCALL_64_after_hwframe+0x6e/0x76
+Everyone in the internal RCU crew corrected me offline that try_cmpxchg() has
+full ordering if the cmpxchg succeeded.
 
-Also, ieee802154_llsec_key_entry structures are not freed by
-mac802154_llsec_key_del():
+So I don't think the issue I mentioned can occur, So we can park this.
 
-unreferenced object 0xffff8880613b6980 (size 64):
-  comm "iwpan", pid 2176, jiffies 4294761134 (age 60.475s)
-  hex dump (first 32 bytes):
-    78 0d 8f 18 80 88 ff ff 22 01 00 00 00 00 ad de  x.......".......
-    00 00 00 00 00 00 00 00 03 00 cd ab 00 00 00 00  ................
-  backtrace:
-    [<ffffffff81dcfa62>] __kmem_cache_alloc_node+0x1e2/0x2d0
-    [<ffffffff81c43865>] kmalloc_trace+0x25/0xc0
-    [<ffffffff88968b09>] mac802154_llsec_key_add+0xac9/0xcf0
-    [<ffffffff8896e41a>] ieee802154_add_llsec_key+0x5a/0x80
-    [<ffffffff8892adc6>] nl802154_add_llsec_key+0x426/0x5b0
-    [<ffffffff86ff293e>] genl_family_rcv_msg_doit+0x1fe/0x2f0
-    [<ffffffff86ff46d1>] genl_rcv_msg+0x531/0x7d0
-    [<ffffffff86fee7a9>] netlink_rcv_skb+0x169/0x440
-    [<ffffffff86ff1d88>] genl_rcv+0x28/0x40
-    [<ffffffff86fec15c>] netlink_unicast+0x53c/0x820
-    [<ffffffff86fecd8b>] netlink_sendmsg+0x93b/0xe60
-    [<ffffffff86b91b35>] ____sys_sendmsg+0xac5/0xca0
-    [<ffffffff86b9c3dd>] ___sys_sendmsg+0x11d/0x1c0
-    [<ffffffff86b9c65a>] __sys_sendmsg+0xfa/0x1d0
-    [<ffffffff88eadbf5>] do_syscall_64+0x45/0xf0
-    [<ffffffff890000ea>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
+Thanks!
 
-Handle the proper resource release in the RCU callback function
-mac802154_llsec_key_del_rcu().
-
-Note that if llsec_lookup_key() finds a key, it gets a refcount via
-llsec_key_get() and locally copies key id from key_entry (which is a
-list element). So it's safe to call llsec_key_put() and free the list
-entry after the RCU grace period elapses.
-
-Found by Linux Verification Center (linuxtesting.org).
-
-Fixes: 5d637d5aabd8 ("mac802154: add llsec structures and mutators")
-Cc: stable@vger.kernel.org
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
-Should the patch be targeted to "net" tree directly?
-
- include/net/cfg802154.h |  1 +
- net/mac802154/llsec.c   | 18 +++++++++++++-----
- 2 files changed, 14 insertions(+), 5 deletions(-)
-
-diff --git a/include/net/cfg802154.h b/include/net/cfg802154.h
-index cd95711b12b8..76d2cd2e2b30 100644
---- a/include/net/cfg802154.h
-+++ b/include/net/cfg802154.h
-@@ -401,6 +401,7 @@ struct ieee802154_llsec_key {
- 
- struct ieee802154_llsec_key_entry {
- 	struct list_head list;
-+	struct rcu_head rcu;
- 
- 	struct ieee802154_llsec_key_id id;
- 	struct ieee802154_llsec_key *key;
-diff --git a/net/mac802154/llsec.c b/net/mac802154/llsec.c
-index 8d2eabc71bbe..f13b07ebfb98 100644
---- a/net/mac802154/llsec.c
-+++ b/net/mac802154/llsec.c
-@@ -265,19 +265,27 @@ int mac802154_llsec_key_add(struct mac802154_llsec *sec,
- 	return -ENOMEM;
- }
- 
-+static void mac802154_llsec_key_del_rcu(struct rcu_head *rcu)
-+{
-+	struct ieee802154_llsec_key_entry *pos;
-+	struct mac802154_llsec_key *mkey;
-+
-+	pos = container_of(rcu, struct ieee802154_llsec_key_entry, rcu);
-+	mkey = container_of(pos->key, struct mac802154_llsec_key, key);
-+
-+	llsec_key_put(mkey);
-+	kfree_sensitive(pos);
-+}
-+
- int mac802154_llsec_key_del(struct mac802154_llsec *sec,
- 			    const struct ieee802154_llsec_key_id *key)
- {
- 	struct ieee802154_llsec_key_entry *pos;
- 
- 	list_for_each_entry(pos, &sec->table.keys, list) {
--		struct mac802154_llsec_key *mkey;
--
--		mkey = container_of(pos->key, struct mac802154_llsec_key, key);
--
- 		if (llsec_key_id_equal(&pos->id, key)) {
- 			list_del_rcu(&pos->list);
--			llsec_key_put(mkey);
-+			call_rcu(&pos->rcu, mac802154_llsec_key_del_rcu);
- 			return 0;
- 		}
- 	}
--- 
-2.43.2
+ - Joel
 
