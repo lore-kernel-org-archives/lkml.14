@@ -1,150 +1,187 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B5D15CD66
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 15:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D56814D44E
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 15:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709134632; cv=none; b=lusqVst6swKBCWJAAMYW2VLc0fhO7Iq4UOVaR3+dHXaBTOliKrmoYA1QupknNboXhYwfz7QCFR5Wq5ZxgUwunofgsBk2gO6EqbZCs7UtlqvrTJS/w0qVMoGYp9IvMhz3SVWbMhsQzdFL2gbMCXJjk2ZGNf5jIXOKn/yGC2FVdek=
+	t=1709134640; cv=none; b=MkihTJY64L/yIYqmxaikkNo/9ZR6X26nbI85gB8fBureWcRwQldBvFpSeNXCVIpEkgwdh1Q6TKUJzmQvwDpMw79OzI+8gdXkYKrLsuzLymPzApJatfVk+DnTqXjg0Hv2gtxr1trQv9QGHAiq+LUAcGbuW7RjAF66RQTj+2akhA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709134632; c=relaxed/simple;
-	bh=zGa+IyFAz8kwIE7x38Wl0fe/t7lkIR01+L6mE1MqudM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T7Vh2drP9ATkvbqgVlOOxnYMQ5H3Llg0QLIv4RFKeZvpPVkG3SYMmWxUgmwPu68JxyL+aeAmogEbuK9dPHrEYwlI4625mEB+12VEWHJuw7Gna/FoAVSGykwkEwH/eLf5WOUIVU7gCEFcGmwD9LwWIc8GMRcOld4+VhDqng0Yr5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TUKVQzDh; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709134640; c=relaxed/simple;
+	bh=YrTM7NclhRirvO5ov26nYLcb/cIPqgB149/aYYtK3+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IayKjCB3tx4QYb5ZH75k7Rd2Xtxp5DQryoC7hC32hOvOOpWKF25xE9VssEjwDqtncAw3Z075WKeMkNKYVblZ522JY2PpmKn7CN48UB9flQaFqxRszOM3aH4HKSQq27B/zuLcpHhRbkXxV8AIP/A4ZLKY8tOSZ1PLYOlmKV7w/BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OxBB1/41; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TUKVQzDh"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56657bcd555so1560819a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 07:37:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OxBB1/41"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36523b9fa11so19514885ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 07:37:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709134628; x=1709739428; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8dVCImcIlLLiITmfEBgBjhdVxqWWMzlc8Dv1nyWSOGo=;
-        b=TUKVQzDhnvGkhODw3ShNo58Wb7gAODf+QVCs7R7LbdhcBr0/Mw1AVlyMs3ZoulFJWd
-         YggH7IsV3h8mzUYvY/4FsOxcxyqgYf71gNNkrxYJyNgjfEVNdRuopE/r1wFjYv9KyeSz
-         Vv7c2kZV7sprdNuc3FMsYw4t9LCjc7eBrV4kjpSsoC2gzwJ/6s519UyKuvKZmn27Lqe8
-         c7bOhv8h7DGN3iXo6jbjgncU3aIVkfSexCEzRCjc2aFTpNuSmoF8dpnEnZqf1Bk0jxsu
-         gCAW9KpiwyjWQl0d4YHCV6Pky+PqMn/TgEQ3pZhJfUFKHSygIRYIWjafunFdbpAroape
-         TYHA==
+        d=chromium.org; s=google; t=1709134637; x=1709739437; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=svD1W1a7QFf9Gza+G3SPXvK0VpFKMCR1+Xi0Z1FWhGs=;
+        b=OxBB1/41F8A5SVmH7WKmwol1l9JkBUCE2aZRvp0MoMgt14h5YhBEKDK08u/e6MCRz8
+         T3+mQ3gcFNwIx+dA5Jcvhew9h9HqHpI7b/oxrD1SYn5MHEea71e2NRaCgi8lzXD2Gzru
+         fjPLs/8qPvLxHxrf1LNf3uxIUgFwv91YrC15U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709134628; x=1709739428;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8dVCImcIlLLiITmfEBgBjhdVxqWWMzlc8Dv1nyWSOGo=;
-        b=g8EvrJZR2+xwfvU4vyF1s7Evi3bBBp9omarEIU9/wzBBYkoAnPdPEtWwQKsRGb+UcB
-         qam9SvnqTXwEtIr+cIODOgU3ETofDJga87JDu3oWRQ3WVLJSj41wKPgBGtWU9xBGkxxt
-         MlmfbgxBdybNq9e2ixFyyL5XK0BXxc6PxbgjhMVfeQjsAHPQEE523dU3uaoMeS8D5Eay
-         bj2spXWQnCYjSL5yAcTucHnQmrVU+YM8JMrVKuSnQCYFjrA7/8aGMEpMJClwjMmtFmPQ
-         QfPm4Yyz9P+atuwuR+wUUq8MnzfYbImIiRT5HKayitWkhS7V5Fry/OEfJH048ptV2ZyY
-         DCUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtHfsaFOjvBWXdqgm0i/0yQbd1x7s41n2zYCtwB7FqiWrzUdYOpPXXcJ8rJCKsdTo44aE8bUGFrcmGu0fWSmi+SMtfaY10Cv5xxCGv
-X-Gm-Message-State: AOJu0Yx4vQ1O1fynDXrHSg4dJk4E4GjOWHPjJ72YBf8f7WBtkKsGyneI
-	OVjZRpdvNenUPPZfozRkoz+1+Spe6NPuoGoBkgeYaJGBIKvVqJMuqsdRCQEizKsCJLlz3Q0N+Z5
-	4dfaJpbvwuNKhl7pIYRpCML8uYmhGnGQp0Nmiag==
-X-Google-Smtp-Source: AGHT+IEQVtJyu0GYHAWdmf+6eoRlVi/P3F2RUBvk49c7M8VZVlNSEYmKA5V/4aGFP0UZhJeY+ePLjPp6XOoBzr5CUX0=
-X-Received: by 2002:aa7:d982:0:b0:565:fb4c:7707 with SMTP id
- u2-20020aa7d982000000b00565fb4c7707mr5488857eds.26.1709134628391; Wed, 28 Feb
- 2024 07:37:08 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709134637; x=1709739437;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=svD1W1a7QFf9Gza+G3SPXvK0VpFKMCR1+Xi0Z1FWhGs=;
+        b=P3uMeoxW7RlKGAE7BXodFWyUdW4nOhZgOWrBdf4+Mw0H04NjmrD2mDQ+yO8LjKduPC
+         PfYvaCeUcQradgIZ45xAmFvtTU+CfFUqpxjGGrugyI+SJETYKP8vAjdXQuNp6blpat9h
+         DbPs7E5Y5hLnwODGpqMQAbmaph2lUnG4V43Ft61EBz1o5CsPls+pZjOWUTQf6w68cLIW
+         4Lh3Omjymu8zZoY1w800KTlaN0u25PRDrQr2sjjFnObTOd13+VOeASm0/7weDE5wTThp
+         rdzQtwpZY8pS/FKb336FAN8Agy/vSzBJoLPfBwS+zAC2gKmCD4OUQJquFSOxwWWZPl6/
+         75aA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzUalwA3wt610mgqA6O5IjWPGHqpL9Z6/hp2arcKR7I5q1G7q5Nd5YRMcIOyP06v2cd4O88w3weuz1ooYJDizMrZ+YIrxsV7lJUvcj
+X-Gm-Message-State: AOJu0YyQeyBN/v/6pygX3QtP3ThcvQy8gaSHoRvMkt4NNKYDCQiZ2Bxa
+	jXzMnocGIQg7cJI2MWPVYv20BIku3j3pdS9aw3OVVLDLPAcUmXjqcpv+tfxnzQ==
+X-Google-Smtp-Source: AGHT+IFwnHar0bSnDcMYJo9D3FZDjlUk0s+GVf8S+gT0uUdrPI6XVBO5n/eqspfTGLxTLggHdT93YQ==
+X-Received: by 2002:a92:de43:0:b0:365:1e8f:1519 with SMTP id e3-20020a92de43000000b003651e8f1519mr13223206ilr.27.1709134637291;
+        Wed, 28 Feb 2024 07:37:17 -0800 (PST)
+Received: from localhost (144.57.222.35.bc.googleusercontent.com. [35.222.57.144])
+        by smtp.gmail.com with UTF8SMTPSA id i6-20020a056e021b0600b00363ce0ac359sm2766041ilv.47.2024.02.28.07.37.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 07:37:16 -0800 (PST)
+Date: Wed, 28 Feb 2024 15:37:16 +0000
+From: Matthias Kaehlcke <mka@chromium.org>
+To: Javier Carrasco <javier.carrasco@wolfvision.net>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Helen Koike <helen.koike@collabora.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 1/8] usb: misc: onboard_hub: use device supply names
+Message-ID: <Zd9TLL0IM08Wh63i@google.com>
+References: <20240228-onboard_xvf3500-v5-0-76b805fd3fe6@wolfvision.net>
+ <20240228-onboard_xvf3500-v5-1-76b805fd3fe6@wolfvision.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240226-rpmhpd-enable-corner-fix-v1-1-68c004cec48c@quicinc.com>
-In-Reply-To: <20240226-rpmhpd-enable-corner-fix-v1-1-68c004cec48c@quicinc.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 28 Feb 2024 16:36:30 +0100
-Message-ID: <CAPDyKFodDx7evDGiJChDohv8qK+9QMpwp6+Z6DrJUWOtMhYfsA@mail.gmail.com>
-Subject: Re: [PATCH] pmdomain: qcom: rpmhpd: Fix enabled_corner aggregation
-To: quic_bjorande@quicinc.com
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Stephen Boyd <swboyd@chromium.org>, Johan Hovold <johan+linaro@kernel.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Johan Hovold <johan@kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240228-onboard_xvf3500-v5-1-76b805fd3fe6@wolfvision.net>
 
-On Tue, 27 Feb 2024 at 02:45, Bjorn Andersson via B4 Relay
-<devnull+quic_bjorande.quicinc.com@kernel.org> wrote:
->
-> From: Bjorn Andersson <quic_bjorande@quicinc.com>
->
-> Commit 'e3e56c050ab6 ("soc: qcom: rpmhpd: Make power_on actually enable
-> the domain")' aimed to make sure that a power-domain that is being
-> enabled without any particular performance-state requested will at least
-> turn the rail on, to avoid filling DeviceTree with otherwise unnecessary
-> required-opps properties.
->
-> But in the event that aggregation happens on a disabled power-domain, with
-> an enabled peer without performance-state, both the local and peer
-> corner are 0. The peer's enabled_corner is not considered, with the
-> result that the underlying (shared) resource is disabled.
->
-> One case where this can be observed is when the display stack keeps mmcx
-> enabled (but without a particular performance-state vote) in order to
-> access registers and sync_state happens in the rpmhpd driver. As mmcx_ao
-> is flushed the state of the peer (mmcx) is not considered and mmcx_ao
-> ends up turning off "mmcx.lvl" underneath mmcx. This has been observed
-> several times, but has been painted over in DeviceTree by adding an
-> explicit vote for the lowest non-disabled performance-state.
->
-> Fixes: e3e56c050ab6 ("soc: qcom: rpmhpd: Make power_on actually enable the domain")
-> Reported-by: Johan Hovold <johan@kernel.org>
-> Closes: https://lore.kernel.org/linux-arm-msm/ZdMwZa98L23mu3u6@hovoldconsulting.com/
-> Cc:  <stable@vger.kernel.org>
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+Hi Javier,
 
-Applied for fixes, thanks!
+Thanks for moving this patch to the front of the series!
 
-Kind regards
-Uffe
+A few more comments inline.
 
-
+On Wed, Feb 28, 2024 at 02:51:28PM +0100, Javier Carrasco wrote:
+> The current implementation uses generic names for the power supplies,
+> which conflicts with proper name definitions in the device bindings.
+> 
+> Add a per-device property to include real supply names and keep generic
+> names for existing devices to keep backward compatibility.
+> 
+> Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
 > ---
-> This issue is the root cause of a display regression on SC8280XP boards,
-> resulting in the system often resetting during boot. It was exposed by
-> the refactoring of the DisplayPort driver in v6.8-rc1.
-> ---
->  drivers/pmdomain/qcom/rpmhpd.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pmdomain/qcom/rpmhpd.c b/drivers/pmdomain/qcom/rpmhpd.c
-> index 3078896b1300..47df910645f6 100644
-> --- a/drivers/pmdomain/qcom/rpmhpd.c
-> +++ b/drivers/pmdomain/qcom/rpmhpd.c
-> @@ -692,6 +692,7 @@ static int rpmhpd_aggregate_corner(struct rpmhpd *pd, unsigned int corner)
->         unsigned int active_corner, sleep_corner;
->         unsigned int this_active_corner = 0, this_sleep_corner = 0;
->         unsigned int peer_active_corner = 0, peer_sleep_corner = 0;
-> +       unsigned int peer_enabled_corner;
->
->         if (pd->state_synced) {
->                 to_active_sleep(pd, corner, &this_active_corner, &this_sleep_corner);
-> @@ -701,9 +702,11 @@ static int rpmhpd_aggregate_corner(struct rpmhpd *pd, unsigned int corner)
->                 this_sleep_corner = pd->level_count - 1;
->         }
->
-> -       if (peer && peer->enabled)
-> -               to_active_sleep(peer, peer->corner, &peer_active_corner,
-> +       if (peer && peer->enabled) {
-> +               peer_enabled_corner = max(peer->corner, peer->enable_corner);
-> +               to_active_sleep(peer, peer_enabled_corner, &peer_active_corner,
->                                 &peer_sleep_corner);
-> +       }
->
->         active_corner = max(this_active_corner, peer_active_corner);
->
->
-> ---
-> base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
-> change-id: 20240226-rpmhpd-enable-corner-fix-c5e07fe7b986
->
-> Best regards,
-> --
-> Bjorn Andersson <quic_bjorande@quicinc.com>
->
+>  drivers/usb/misc/onboard_usb_hub.c | 49 ++++++++++++++++++++------------------
+>  drivers/usb/misc/onboard_usb_hub.h | 12 ++++++++++
+>  2 files changed, 38 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/usb/misc/onboard_usb_hub.c b/drivers/usb/misc/onboard_usb_hub.c
+> index 0dd2b032c90b..3755f6cc1eda 100644
+> --- a/drivers/usb/misc/onboard_usb_hub.c
+> +++ b/drivers/usb/misc/onboard_usb_hub.c
+> @@ -29,17 +29,6 @@
+>  
+>  #include "onboard_usb_hub.h"
+>  
+> -/*
+> - * Use generic names, as the actual names might differ between hubs. If a new
+> - * hub requires more than the currently supported supplies, add a new one here.
+> - */
+> -static const char * const supply_names[] = {
+> -	"vdd",
+> -	"vdd2",
+> -};
+> -
+> -#define MAX_SUPPLIES ARRAY_SIZE(supply_names)
+> -
+>  static void onboard_hub_attach_usb_driver(struct work_struct *work);
+>  
+>  static struct usb_device_driver onboard_hub_usbdev_driver;
+> @@ -65,6 +54,30 @@ struct onboard_hub {
+>  	struct clk *clk;
+>  };
+>  
+> +static int onboard_hub_get_regulator_bulk(struct device *dev,
+> +					  struct onboard_hub *onboard_hub)
+
+Let's call this onboard_hub_get_regulators(), it's an implementation detail
+that regulator_bulk_get() is used for getting them.
+
+no need to pass 'dev', there is onboard_hub->dev
+
+>  static int onboard_hub_power_on(struct onboard_hub *hub)
+>  {
+>  	int err;
+> @@ -253,7 +266,6 @@ static int onboard_hub_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct onboard_hub *hub;
+> -	unsigned int i;
+>  	int err;
+>  
+>  	hub = devm_kzalloc(dev, sizeof(*hub), GFP_KERNEL);
+> @@ -264,18 +276,9 @@ static int onboard_hub_probe(struct platform_device *pdev)
+>  	if (!hub->pdata)
+>  		return -EINVAL;
+>  
+> -	if (hub->pdata->num_supplies > MAX_SUPPLIES)
+> -		return dev_err_probe(dev, -EINVAL, "max %zu supplies supported!\n",
+> -				     MAX_SUPPLIES);
+> -
+> -	for (i = 0; i < hub->pdata->num_supplies; i++)
+> -		hub->supplies[i].supply = supply_names[i];
+> -
+> -	err = devm_regulator_bulk_get(dev, hub->pdata->num_supplies, hub->supplies);
+> -	if (err) {
+> -		dev_err(dev, "Failed to get regulator supplies: %pe\n", ERR_PTR(err));
+> +	err = onboard_hub_get_regulator_bulk(dev, onboard_hub);
+
+The local variable is called 'hub', not 'onboard_hub'.
+
+> diff --git a/drivers/usb/misc/onboard_usb_hub.h b/drivers/usb/misc/onboard_usb_hub.h
+> index f360d5cf8d8a..ea24bd6790f0 100644
+> --- a/drivers/usb/misc/onboard_usb_hub.h
+> +++ b/drivers/usb/misc/onboard_usb_hub.h
+> @@ -6,54 +6,66 @@
+>  #ifndef _USB_MISC_ONBOARD_USB_HUB_H
+>  #define _USB_MISC_ONBOARD_USB_HUB_H
+>  
+> +#define MAX_SUPPLIES 2
+> +
+>  struct onboard_hub_pdata {
+>  	unsigned long reset_us;		/* reset pulse width in us */
+>  	unsigned int num_supplies;	/* number of supplies */
+> +	const char * const supply_names[MAX_SUPPLIES]; /* use the real names */
+
+The comment isn't particularly useful or accurate. Not in all cases
+real names are used and outside of the context of this change the
+comment is hard to understand.
+
+I'd say just omit it, the name of the field is self-documenting enough,
+there is no need to repeat the same in a comment (as for 'num_supplies'
+...)
