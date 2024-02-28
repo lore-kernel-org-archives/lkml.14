@@ -1,129 +1,227 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443CE2263A;
-	Wed, 28 Feb 2024 08:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800A425778
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 08:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709109449; cv=none; b=eYQW/ceA9oo8Ls1FxPRkinG2AVQWexdt4ZV7l9q7ZEKUUh1tY2dU3YJMXAp7ekC1u2/ubXN+OJuQQBJ+EGpIgjvAhEBC2+nmS5ERidJiQZt3TgwBTAJnwkbvhComIrqymYQEptUj5MDE+sZ1uzSju1CR5br7SHyjCwYhoR22XB0=
+	t=1709109595; cv=none; b=C96DXMx7mZnwkkJ+ojVI/QQ/NKErNyai7K+eGpaQZNtRWJUGswd53Ykjd5Ayvfe/lOFQPBR7mFlkJGax17Pfz0BARyUkwSHAHk8oZlPVk2IRGLuhqYKpTQy84ew71xnHPxr1TtXETXJBXVe9mWwcmWuCxj8UhVSqNnQrjRenNlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709109449; c=relaxed/simple;
-	bh=DKje+K8ippA0ZYfJntuI0R7Vbe0XtsQE0B+iMwY1OGI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bv1HA0dY2WLR1cpwljNiGGuE5Gam/Qm3ityPgyGDSbrEACYJQ5mFcZDiwHEZEL0WnhU+A2gCozTa7oV82sUeakXCtN07cD/3khLUdDiYT63GKrVICfXoPfWuMJ0XnQcFTsg5qrE1xlUX1ljmJUcpZglFFky3tGSJ4UtqYsMPJaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cT+gq4Wx; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709109595; c=relaxed/simple;
+	bh=zk2BKpstAg/8JIm2t8EM3S/e6qgBg8z0AtzDWzXVKAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pY5Z0UFgKZRI4N91iU0J+O8hBPq2pSPlOyhL0Z+cawOf1MawLTRVWDbCrOCVA+zwtsrSPRAO3/21CIzOZEKHc4DANVq2jKx2FsCdxeQDakvmbHNfF6pvjRyqauQLIk7gVdPJNi8jZQdT/Ku4kMgI+qSuJfQh7zRWKqP581t0PNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xf0qsAU1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9rw8ia/v; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xf0qsAU1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9rw8ia/v; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT+gq4Wx"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-565ef8af2f5so3812387a12.3;
-        Wed, 28 Feb 2024 00:37:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709109446; x=1709714246; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j/Z7R/WO7svFjmJZnbr0mJ+YCtxsZi714lKpVsB3CcM=;
-        b=cT+gq4Wxrhitfs4uyp99unDIdut0Xy3jOQHB7/TClgiuMMmjgh6gg0rKjhzyUxknMd
-         pT/tWBCgdDIt9Swx9H4bzJUHuJ41ITArskhE3nytckStSOgREoijD5CZShl2bhxLVNsP
-         twLK36MHMGncFLnAJIsVSq5S6U0hSHzBBjW/4t0iFa2iVQjNdq/HDNJfDDaNPjqCGvtn
-         8b+NFYDfaY4qilH/+2lgnHWDIMWLSu9Tb1nRMvtYNKsHMhuv4bbSkM0BSCCoGpzOcrvk
-         sQGe0vNjhW/QFxeL/9llVkYlY0Jzygu9xGoahA22O8mJuPRkEbWyYjxgBy0OvUcMXGdW
-         t4mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709109446; x=1709714246;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j/Z7R/WO7svFjmJZnbr0mJ+YCtxsZi714lKpVsB3CcM=;
-        b=qwhHN5e8D0h1eBy4CFIvwMUS1MoVsgkalDgYKLtjyr+lpbIfIUlEA0+0Kwkdwy2XVR
-         ObxDIcIBKnCVpvOghsCk+oprD1tY6weioTZc/y1AzLHTo9XD6KdcjTrecNoZQyc8yL15
-         zddkYWGzaZVW8g5uwE+PWX66XiLxPqo+uvU73pTc4YRAGdn61gS3vBu+55dNMdU0BhsX
-         uKT7CqTvw4bc2WW25BWxzFhp3DpY66jvmq5DlajVgCP+siDflq1VGU4wHRtDjddrB17Y
-         pMs3tLMoKq3jh5ow8MkdKDb/Yyyo/fcrU92Dq8RIq1YVC0ec2Rp7/nhvoFgIe7HH9gx5
-         5faw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaas0AV79S6CbUQR2GC84WUcasrfhHGRogIf2Ee5zaoUKzcJTYGsxt6FckD27zjJVWxb84HrQlW6rwFtcs/6JtmtRamGzXlSQuSpH0OdEBPOIQDs1YMRhm+rSLbrjoci7bZWZOi+ZmskJ3YVZLqHu7WNbkNnmbVWB2JF42f07O2mxdBqfs
-X-Gm-Message-State: AOJu0YwAB4nZUJBaJVrfYarxL4zXqN4ZwZN1mHd4whpVtUerAKGJcNbS
-	8h1BCH5YpLl2tUoqqqY9ISz38x1mBzlYjf25hcpxjWMUXhxBRdUHitDjQzNMR2XT0uE8CxUjeQT
-	fOS6xChobpo/tTqVttC5866nLs5LiHHWA
-X-Google-Smtp-Source: AGHT+IFNvSAXabzN2nbl2W0qjTBC+1N7DmsqETrbocOgun/hMCcIBi55sNngK16abSZgxl0HOTI2tULKXE9JpWseKGw=
-X-Received: by 2002:a05:6402:180a:b0:566:4047:7106 with SMTP id
- g10-20020a056402180a00b0056640477106mr2727639edy.25.1709109446418; Wed, 28
- Feb 2024 00:37:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xf0qsAU1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9rw8ia/v";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xf0qsAU1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9rw8ia/v"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6CDA1226B4;
+	Wed, 28 Feb 2024 08:39:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709109590; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WyQQpRkr/dgNcbsO1eOjVkFSW+jjxrbD60UrCSG6L7A=;
+	b=xf0qsAU1igRFXb9tEENxIyAjwHPec+aS+fIcinAzSwIoDlTMt16ZSbPZU+4PdTKWUV5sZj
+	6cvnHDR5nZKIG2bIUEbDTr5JnhCafEYUef60DyQs2dR9QBrzTp2okoCyyPALYkVwBJye7k
+	DORULyfPeTy7461r9CmH5bLRg9+Q22g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709109590;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WyQQpRkr/dgNcbsO1eOjVkFSW+jjxrbD60UrCSG6L7A=;
+	b=9rw8ia/vXSxgrWnVtJr62ecULnaSFnU67U76L5iLr/T22hwwhy6PetNREl91eVn5L0CsVi
+	aPah4C2nzab1upDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1709109590; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WyQQpRkr/dgNcbsO1eOjVkFSW+jjxrbD60UrCSG6L7A=;
+	b=xf0qsAU1igRFXb9tEENxIyAjwHPec+aS+fIcinAzSwIoDlTMt16ZSbPZU+4PdTKWUV5sZj
+	6cvnHDR5nZKIG2bIUEbDTr5JnhCafEYUef60DyQs2dR9QBrzTp2okoCyyPALYkVwBJye7k
+	DORULyfPeTy7461r9CmH5bLRg9+Q22g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1709109590;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WyQQpRkr/dgNcbsO1eOjVkFSW+jjxrbD60UrCSG6L7A=;
+	b=9rw8ia/vXSxgrWnVtJr62ecULnaSFnU67U76L5iLr/T22hwwhy6PetNREl91eVn5L0CsVi
+	aPah4C2nzab1upDQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id C65B513A42;
+	Wed, 28 Feb 2024 08:39:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id C7eKLVXx3mXSRAAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Wed, 28 Feb 2024 08:39:49 +0000
+Date: Wed, 28 Feb 2024 09:41:02 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, david@redhat.com,
+	linmiaohe@huawei.com, naoya.horiguchi@nec.com, mhocko@kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm: hugetlb: make the hugetlb migration strategy
+ consistent
+Message-ID: <Zd7xnrzGb_8QiqcE@localhost.localdomain>
+References: <cover.1709041586.git.baolin.wang@linux.alibaba.com>
+ <bdca97e6c59f1b58f09e18defac0c47d1e38f44b.1709041586.git.baolin.wang@linux.alibaba.com>
+ <Zd38_AYtr9QKp-F6@localhost.localdomain>
+ <8d35b8ae-b8d8-4237-bfcf-ed63c0bb4223@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227175513.8703-1-pvkumar5749404@gmail.com> <Zd7lqr8Cz4XrNoI8@nanopsycho>
-In-Reply-To: <Zd7lqr8Cz4XrNoI8@nanopsycho>
-From: prabhav kumar <pvkumar5749404@gmail.com>
-Date: Wed, 28 Feb 2024 14:07:12 +0530
-Message-ID: <CAH8oh8U21HASqhQAUAR08V9322NpHVDZOrkEWibzNEeWM4N6vw@mail.gmail.com>
-Subject: Re: [PATCH net-next] selftests: net: Correctcouple of spelling mistakes
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: shuah@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, petrm@nvidia.com, idosch@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d35b8ae-b8d8-4237-bfcf-ed63c0bb4223@linux.alibaba.com>
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=xf0qsAU1;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="9rw8ia/v"
+X-Spamd-Result: default: False [-6.81 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:98:from];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 6CDA1226B4
+X-Spam-Level: 
+X-Spam-Score: -6.81
+X-Spam-Flag: NO
 
-On Wed, Feb 28, 2024 at 1:20=E2=80=AFPM Jiri Pirko <jiri@resnulli.us> wrote=
-:
->
-> Please fix the patch subject to include appropriate prefixes and
-> rephrase a bit like this:
->
-> Subject: [PATCH net-next] selftests: net: Correct couple of spelling mist=
-akes
->
-> pw-bot: cr
->
->
-> Tue, Feb 27, 2024 at 06:55:13PM CET, pvkumar5749404@gmail.com wrote:
-> >Changes :
-> >       - "excercise" is corrected to "exercise" in drivers/net/mlxsw/spe=
-ctrum-2/tc_flower.sh
-> >       - "mutliple" is corrected to "multiple" in drivers/net/netdevsim/=
-ethtool-fec.sh
-> >
-> >Signed-off-by: Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
-> >---
-> > .../testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh | 2 +-
-> > tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh    | 2 +-
-> > 2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> >diff --git a/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flo=
-wer.sh b/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh
-> >index 616d3581419c..31252bc8775e 100755
-> >--- a/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh
-> >+++ b/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh
-> >@@ -869,7 +869,7 @@ bloom_simple_test()
-> > bloom_complex_test()
-> > {
-> >       # Bloom filter index computation is affected from region ID, eRP
-> >-      # ID and from the region key size. In order to excercise those pa=
-rts
-> >+      # ID and from the region key size. In order to exercise those par=
-ts
-> >       # of the Bloom filter code, use a series of regions, each with a
-> >       # different key size and send packet that should hit all of them.
-> >       local index
-> >diff --git a/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.s=
-h b/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh
-> >index 7d7829f57550..6c52ce1b0450 100755
-> >--- a/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh
-> >+++ b/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh
-> >@@ -49,7 +49,7 @@ for o in llrs rs; do
-> > Active FEC encoding: ${o^^}"
-> > done
-> >
-> >-# Test mutliple bits
-> >+# Test multiple bits
-> > $ETHTOOL --set-fec $NSIM_NETDEV encoding rs llrs
-> > check $?
-> > s=3D$($ETHTOOL --show-fec $NSIM_NETDEV | tail -2)
-> >--
-> >2.34.1
-> >
-> >
+On Wed, Feb 28, 2024 at 03:40:08PM +0800, Baolin Wang wrote:
+> 
+> 
+> On 2024/2/27 23:17, Oscar Salvador wrote:
+> > On Tue, Feb 27, 2024 at 09:52:26PM +0800, Baolin Wang wrote:
+> > 
+> > > --- a/mm/hugetlb.c
+> > > +++ b/mm/hugetlb.c
+> > > @@ -2567,13 +2567,38 @@ static struct folio *alloc_surplus_hugetlb_folio(struct hstate *h,
+> > >   }
+> > >   static struct folio *alloc_migrate_hugetlb_folio(struct hstate *h, gfp_t gfp_mask,
+> > > -				     int nid, nodemask_t *nmask)
+> > > +				     int nid, nodemask_t *nmask, int reason)
+> > 
+> > I still dislike taking the reason argument this far, and I'd rather have
+> > this as a boolean specifing whether we allow fallback on other nodes.
+> > That would mean parsing the reason in alloc_migration_target().
+> > If we don't add a new helper e.g: gfp_allow_fallback(), we can just do
+> > it right there an opencode it with a e.g: macro etc.
+> > 
+> > Although doing it in an inline helper might help hiding these details.
+> > 
+> > That's my take on this, but let's see what others have to say.
+> 
+> Sure. I also expressed my preference for hiding these details within the
+> hugetlb core as much as possible.
+> 
+> Muchun, what do you think? Thanks.
+
+JFTR: I'm talking about https://lore.kernel.org/linux-mm/ZdxXLTDZn8fD3pEn@localhost.localdomain/
+or maybe something cleaner which doesn't need a new helper (we could if
+we want though):
+
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index c1ee640d87b1..ddd794e861e6 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -73,6 +73,16 @@ struct resv_map {
+ #endif
+ };
+
++#define MIGRATE_MEMORY_HOTPLUG	1UL << MR_MEMORY_HOTPLUG
++#define MIGRATE_MEMORY_FAILURE	1UL << MR_MEMORY_FAILURE
++#define MIGRATE_SYSCALL		1UL << MR_SYSCALL
++#define MIGRATE_MBIND		1UL << MR_MEMPOLICY_MBIND
++#define HTLB_ALLOW_FALLBACK	(MIGRATE_MEMORY_HOTPLUG| \
++				 MIGRATE_MEMORY_FAILURE| \
++				 MIGRATE_SYSCALL| \
++				 MIGRATE_MBIND)
++
++
+ /*
+  * Region tracking -- allows tracking of reservations and instantiated pages
+  *                    across the pages in a mapping.
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index ed1581b670d4..7e8d6b5885d6 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2619,7 +2619,7 @@ struct folio *alloc_buddy_hugetlb_folio_with_mpol(struct hstate *h,
+
+ /* folio migration callback function */
+ struct folio *alloc_hugetlb_folio_nodemask(struct hstate *h, int preferred_nid,
+-		nodemask_t *nmask, gfp_t gfp_mask)
++		nodemask_t *nmask, gfp_t gfp_mask, bool allow_fallback)
+ {
+ 	spin_lock_irq(&hugetlb_lock);
+ 	if (available_huge_pages(h)) {
+@@ -2634,6 +2634,12 @@ struct folio *alloc_hugetlb_folio_nodemask(struct hstate *h, int preferred_nid,
+ 	}
+ 	spin_unlock_irq(&hugetlb_lock);
+
++	/*
++	 * We cannot fallback to other nodes, as we could break the per-node pool
++	 */
++	if (!allow_fallback)
++		gfp_mask |= GFP_THISNODE;
++
+ 	return alloc_migrate_hugetlb_folio(h, gfp_mask, preferred_nid, nmask);
+ }
+
+diff --git a/mm/migrate.c b/mm/migrate.c
+index cc9f2bcd73b4..c1f1d011629d 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2016,10 +2016,15 @@ struct folio *alloc_migration_target(struct folio *src, unsigned long private)
+
+ 	if (folio_test_hugetlb(src)) {
+ 		struct hstate *h = folio_hstate(src);
++		bool allow_fallback = false;
++
++		if ((1UL << reason) & HTLB_ALLOW_FALLBACK)
++			allow_fallback = true;
+
+ 		gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
+ 		return alloc_hugetlb_folio_nodemask(h, nid,
+-						mtc->nmask, gfp_mask);
++						mtc->nmask, gfp_mask,
++						allow_fallback);
+ 	}
+
+ 	if (folio_test_large(src)) {
+
+-- 
+Oscar Salvador
+SUSE Labs
