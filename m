@@ -1,253 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F8677A728
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 11:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681727A728;
+	Wed, 28 Feb 2024 11:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709119087; cv=none; b=o7TBax/Z8nb4OYtggp1n83PmfgtR96MkhT6KfyYEu1vF6rNKk5nGHTlkDTRVgQFCA/jX/NheAE0TwDtemC2vPhgqesHn97w3BJ0GNx93BAwxwkq0DISEeVQWj5cw5SH9zZeDc9yyvkPIqvi5VezUjmqaDwK6I24NGXl4eGJuvKg=
+	t=1709119160; cv=none; b=Zxn8fMkRMiz1ztB81gcZBLJu7D5PO0vup9UtxP+gYDja5jxY6uroKVR1UpEW6o28ymPvWIvtgZIxUsD5tR9XDVrD2UljXGGuKW582vlnVem4RFFf841ZCyRc8TWXylA4a2dhOkP3QvAObaFkfUogt877cadtTctjg0QTg4uLUIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709119087; c=relaxed/simple;
-	bh=jTKm5d4eMBm2Qofy02ml2dv6rvtS9m/ELohL41w6BNk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=spsVO5SJk+djLLcntEvjZBb3PE9B28TYKQi6HKPM2yqy3cCYz59oP07BbDeEerLBR+YSk6NbWchqz+2UtKw3/R/GwzOSPZ4D/z7pM+oVh3k6+jRxRY2vVUkVspJexgbprPfObyBqMNSy8a/DKMiYDaHevbdL8vE+hTkRBUP6D8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nkROGjSW; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709119160; c=relaxed/simple;
+	bh=k9YHtI7jHipmokPKQWwD0PwKV0bONau5eJ2uz027Y+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I8rmmgjiInA/xCjMvm25XbUDt8M5zXtQ55raSqfVpjMvHJ9mzIv/aCgVLOze81noU3p/FCnpwy60/n23CKav+afa7tseqmg+d/S9+BnVeGN0iOJA9uFh9jBEtfqVb/IPatB6XdWrGeIg6yYTU6pRMBs8PyNzTrFR0gGEDp84w2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhLoNFaK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nkROGjSW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709119086; x=1740655086;
-  h=date:from:to:cc:subject:message-id;
-  bh=jTKm5d4eMBm2Qofy02ml2dv6rvtS9m/ELohL41w6BNk=;
-  b=nkROGjSWF27qlo5p+cL0GHAQoSZ206m/xBAQ9QTyUPePZg3z+2rTkpZX
-   iYXVFhFzHwfexn35Xxsj0mlH8KJtn/H8ozFc6Jq4SnbtGFsJiEp7xushm
-   XxHgzx7fUa6TWAYuOQ4WTCfI5ZdTGmCX0XHFwq41ZuLZyIcpEKLDG2yYt
-   esoy/GPeSw3EZRkFQXjYligFNlIqw9QIHzaeZXRArHB/Qn36rrchX+ueR
-   eDC+JMCmpIeDkPSveVNp6ck1y2TZIxcCmt2UKCl69sIpUwXIjfrmFvR2k
-   F1rOXF9C2p910ybobuAD/fhRLyGcwXhKBCh6EQplYk4i+Jk2aODDR2kih
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14062489"
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="14062489"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 03:18:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="7826937"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 28 Feb 2024 03:17:58 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rfHsV-000Bzt-03;
-	Wed, 28 Feb 2024 11:14:20 +0000
-Date: Wed, 28 Feb 2024 19:09:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:irq/core] BUILD SUCCESS
- f7f56d59a3923e95bad2c49615a4d7313ed78314
-Message-ID: <202402281945.VtjaHPhB-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhLoNFaK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC640C433C7;
+	Wed, 28 Feb 2024 11:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709119160;
+	bh=k9YHtI7jHipmokPKQWwD0PwKV0bONau5eJ2uz027Y+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IhLoNFaKAQdVot2WS3QbJN46t2xwvd5iAZeyv1fJxI0L0G0bNHvBAiBibtz4Tebbt
+	 NZ4+7MJdH4KmZ3Eu134/XgIKniJfaivXns3Tl+/tOtwggGPIya21SKzB2zRqyjGcHi
+	 kHi+UK/Nu+1lhk/cGCWh9+7kHoB2tPmOsKYvV2gf/J+MkItLm5I6dCvdNZuuGA9Nzg
+	 kxhDinCnPoc1AkKOQqICR9jq05wRfN1wKN6gcwjmpmuhhX6Yy6z9i45IQ9OfFA1cyd
+	 v1bqleQhztYAFc86kbu5VsASnA2cxDmhkZwVHyF++Oc2RXrMw2efRTVfuVQvFTabFo
+	 JfuKnV9PZE+KA==
+Date: Wed, 28 Feb 2024 11:19:15 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Jia Jie Ho <jiajie.ho@starfivetech.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+	Vinod Koul <vkoul@kernel.org>, linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] dt-bindings: crypto: starfive: Add jh8100 support
+Message-ID: <20240228-margarita-glory-73db09c5fc91@spud>
+References: <20240227163758.198133-1-jiajie.ho@starfivetech.com>
+ <20240227163758.198133-2-jiajie.ho@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6rTo2fkA4bSImk4p"
+Content-Disposition: inline
+In-Reply-To: <20240227163758.198133-2-jiajie.ho@starfivetech.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
-branch HEAD: f7f56d59a3923e95bad2c49615a4d7313ed78314  irqchip/ts4800: Convert to platform_driver::remove_new() callback
 
-elapsed time: 1067m
+--6rTo2fkA4bSImk4p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 180
-configs skipped: 3
+On Wed, Feb 28, 2024 at 12:37:53AM +0800, Jia Jie Ho wrote:
+> Add compatible string and additional interrupt for StarFive JH8100
+> crypto engine.
+>=20
+> Signed-off-by: Jia Jie Ho <jiajie.ho@starfivetech.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240228   gcc  
-arc                   randconfig-002-20240228   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                          ixp4xx_defconfig   gcc  
-arm                        mvebu_v5_defconfig   gcc  
-arm                   randconfig-001-20240228   clang
-arm                   randconfig-002-20240228   clang
-arm                   randconfig-003-20240228   clang
-arm                   randconfig-004-20240228   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240228   clang
-arm64                 randconfig-002-20240228   gcc  
-arm64                 randconfig-003-20240228   gcc  
-arm64                 randconfig-004-20240228   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240228   gcc  
-csky                  randconfig-002-20240228   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240228   clang
-hexagon               randconfig-002-20240228   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240228   clang
-i386         buildonly-randconfig-002-20240228   clang
-i386         buildonly-randconfig-003-20240228   clang
-i386         buildonly-randconfig-004-20240228   clang
-i386         buildonly-randconfig-005-20240228   gcc  
-i386         buildonly-randconfig-006-20240228   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240228   clang
-i386                  randconfig-002-20240228   clang
-i386                  randconfig-003-20240228   gcc  
-i386                  randconfig-004-20240228   clang
-i386                  randconfig-005-20240228   clang
-i386                  randconfig-006-20240228   gcc  
-i386                  randconfig-011-20240228   clang
-i386                  randconfig-012-20240228   clang
-i386                  randconfig-013-20240228   gcc  
-i386                  randconfig-014-20240228   gcc  
-i386                  randconfig-015-20240228   gcc  
-i386                  randconfig-016-20240228   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch                 loongson3_defconfig   gcc  
-loongarch             randconfig-001-20240228   gcc  
-loongarch             randconfig-002-20240228   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                     cu1000-neo_defconfig   gcc  
-mips                  decstation_64_defconfig   gcc  
-mips                      maltasmvp_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240228   gcc  
-nios2                 randconfig-002-20240228   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240228   gcc  
-parisc                randconfig-002-20240228   gcc  
-parisc64                         alldefconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                     ep8248e_defconfig   gcc  
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc               randconfig-001-20240228   clang
-powerpc               randconfig-002-20240228   clang
-powerpc               randconfig-003-20240228   gcc  
-powerpc64             randconfig-001-20240228   clang
-powerpc64             randconfig-002-20240228   clang
-powerpc64             randconfig-003-20240228   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240228   clang
-riscv                 randconfig-002-20240228   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240228   clang
-s390                  randconfig-002-20240228   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                    randconfig-001-20240228   gcc  
-sh                    randconfig-002-20240228   gcc  
-sh                        sh7763rdp_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240228   gcc  
-sparc64               randconfig-002-20240228   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240228   clang
-um                    randconfig-002-20240228   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240228   gcc  
-x86_64       buildonly-randconfig-002-20240228   clang
-x86_64       buildonly-randconfig-003-20240228   clang
-x86_64       buildonly-randconfig-004-20240228   gcc  
-x86_64       buildonly-randconfig-005-20240228   gcc  
-x86_64       buildonly-randconfig-006-20240228   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240228   clang
-x86_64                randconfig-002-20240228   gcc  
-x86_64                randconfig-003-20240228   gcc  
-x86_64                randconfig-004-20240228   gcc  
-x86_64                randconfig-005-20240228   gcc  
-x86_64                randconfig-006-20240228   clang
-x86_64                randconfig-011-20240228   clang
-x86_64                randconfig-012-20240228   clang
-x86_64                randconfig-013-20240228   clang
-x86_64                randconfig-014-20240228   gcc  
-x86_64                randconfig-015-20240228   gcc  
-x86_64                randconfig-016-20240228   gcc  
-x86_64                randconfig-071-20240228   gcc  
-x86_64                randconfig-072-20240228   clang
-x86_64                randconfig-073-20240228   gcc  
-x86_64                randconfig-074-20240228   gcc  
-x86_64                randconfig-075-20240228   clang
-x86_64                randconfig-076-20240228   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                randconfig-001-20240228   gcc  
-xtensa                randconfig-002-20240228   gcc  
+Cheers,
+Conor.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  .../crypto/starfive,jh7110-crypto.yaml        | 30 +++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/crypto/starfive,jh7110-cry=
+pto.yaml b/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.=
+yaml
+> index 71a2876bd6e4..d44d77908966 100644
+> --- a/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml
+> +++ b/Documentation/devicetree/bindings/crypto/starfive,jh7110-crypto.yaml
+> @@ -12,7 +12,9 @@ maintainers:
+> =20
+>  properties:
+>    compatible:
+> -    const: starfive,jh7110-crypto
+> +    enum:
+> +      - starfive,jh8100-crypto
+> +      - starfive,jh7110-crypto
+> =20
+>    reg:
+>      maxItems: 1
+> @@ -28,7 +30,10 @@ properties:
+>        - const: ahb
+> =20
+>    interrupts:
+> -    maxItems: 1
+> +    minItems: 1
+> +    items:
+> +      - description: SHA2 module irq
+> +      - description: SM3 module irq
+> =20
+>    resets:
+>      maxItems: 1
+> @@ -54,6 +59,27 @@ required:
+> =20
+>  additionalProperties: false
+> =20
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          const: starfive,jh7110-crypto
+> +
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 1
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          const: starfive,jh8100-crypto
+> +
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 2
+> +
+>  examples:
+>    - |
+>      crypto: crypto@16000000 {
+> --=20
+> 2.34.1
+>=20
+
+--6rTo2fkA4bSImk4p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd8WswAKCRB4tDGHoIJi
+0scyAQCyzlNaU4MW+ttTttfD9zVood2a3GWnh9luZay5NWSbwAD/YoGkkKgWc9jh
+Gk/AToNTyc/NecNiJZkRXrDV7ig7FwU=
+=byAE
+-----END PGP SIGNATURE-----
+
+--6rTo2fkA4bSImk4p--
