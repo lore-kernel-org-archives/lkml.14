@@ -1,224 +1,565 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E35B2263E;
-	Wed, 28 Feb 2024 07:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.153.233
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709103816; cv=fail; b=Tzd/w2hyfO0azCJfqqwh7iROSfFVyDTIjOki84YIv6ztaApD2xwKkLKUm45crV9KCk4bmeXUDtxGRtN9mUvlhmavApU/js/Pg9BVWopMs9fcqitaKPlwFVXLMOeqPknLD8FRB9PKumJyTjShw2R++SsJMtZb/gYj5pX6d7JGYys=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709103816; c=relaxed/simple;
-	bh=IELmI+aoEOyR83XahOBge0qMsWeQ+xp4xxqvocVHEjg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LcpFr43EHlCJjlEzS25DtaNcUi0/HAzBCCDrB3HidW+vnqYXFEguFXng0S90lIZzJjj+QpcOE7AMGJZRA8GKjeX+IkKYBjxBlo4L23s0l/K88IIETH09Pz92rPa1D/5emhnoAZM0GKxNKAasvsvQRr0Wfh48POUUe3BkMMelsLw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=jHaj411J; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=6Kg3qrz+; arc=fail smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D4E22F02
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 07:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709103958; cv=none; b=Y2XuaB472Fa/4j+dCn4PCmEblbzyijtW2KPgELnH/ulFcZEtDxRNJfQs3E64RXtRGQHQTWp++PmF/t7t6MLtkiAGd0WDWQxD+f+0Z56Pf+R+ij7RndfbrKTxMA7eYt20LpnklTsTiSIarL4r7Zs8fsnQaRYTbiPwR15BzV76pRs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709103958; c=relaxed/simple;
+	bh=LZ7rJiFTRknhew6hWsybErTwjdsVw8ts7cc991mYQdM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rq5iYIPYPE70xJ6PCvaxul6FAnxqSHBC+qu7ujsreiLJzcfqrjXBh/qWL1vhQAMxQYP9IgkZrsoBvuhEdiCABM5VZBoyrW5vD3GQbTkWyDPg/mt/T3bs9qdyCmx3lMOnIsozVsDGz5G0+qPaR5zCDsaFwxxQ6ZBV0mUE66/gh10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OcClwfYh; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="jHaj411J";
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="6Kg3qrz+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709103814; x=1740639814;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=IELmI+aoEOyR83XahOBge0qMsWeQ+xp4xxqvocVHEjg=;
-  b=jHaj411JD4VJykXerRP24qZ2Efoqq1XBgJq7n4m2HPibdu5+QQE6l1j7
-   iZGVIiCL9mjLmPORrZXWsu1nbuIeg+QmDHSQNGI67Oud1bnP4VwgjXNEA
-   IT4yPpX4Iec2jNSszJpBGS+hQn151Vu4dJ0Ma9ZmUO4ZTjOZLc8PjdwVQ
-   fMUFaTJMQ1e/aYTOsr9QBSLqmKCIEQuocCMFgZumww9tITBEieOeX+IY0
-   HbdqRjVEcnv+bAchyoWqwpmey9b0t2glKvh1QX9puZutzyT2CxgTcobC5
-   DKwYo5de/DI1KZw/GaJQWH2jZEcVccqvajxIdT3TdiFgaCQn8rM0JwD5G
-   w==;
-X-CSE-ConnectionGUID: spAPJmjJT+etFHBotITZJQ==
-X-CSE-MsgGUID: JSI7Ym8xQ2W+YhDbt0PMcg==
-X-IronPort-AV: E=Sophos;i="6.06,190,1705388400"; 
-   d="scan'208";a="18517744"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Feb 2024 00:03:33 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 28 Feb 2024 00:03:02 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.250)
- by email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 28 Feb 2024 00:03:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g6wc3GaPGfxuHLG7ChniIiyE76Yvt2rCERtY5on3WiSlJI/qrnI5OZDDsMv71tLYf5+N2P7wPMG4NsEKkIjx6TNnnDeTX+4ZUotG6u7xAukgfjtRDrmF/6clcW9/TJ0nN/ETDTBz9FNmQsc6iqUoPl5lRrphBP6qu5kabepzCIgTmUzInBgKuGClrVp6FqgjfkD3v4JUgreYCPcKWgAZLIh88vZLhumWgmIr2eXVMfAJP86GrUqCY86zFYz6JPLSPpEw5t6yc4BguuUf70bFQkdh0tW/lz7I11Mu64Wft6QZw6Deng5Z2pfbxk7WPyxBDNrbXqliImjYH4JHWKITLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IELmI+aoEOyR83XahOBge0qMsWeQ+xp4xxqvocVHEjg=;
- b=gvDPi1hXIMVJucwIyCxxmqHNfV7VpZ4BrQdp9eLZVVN6O6ebAIaA2ls58LdUjZd6N9JTbYwG6oDkCC04m0E/VtfyDcXht2z7zsP+VwoeqtK6TKzw5vM5ftWpvVz7Rs3tf3amvBRSUHw8hgKMZzYROGedrtyDBxBsujINXV38bM8UUggbHLLUG5mKqw5EO2H4fDQgai99wdFBKCSezPclRDZ60FAC3uNPtZQXHsHN5+CfticJurQ6FWyFrXzEt7nhfIk0rTYrfZcBCNrluhUmFX+mgiblwqmNf4UhJPRSw6TFXuhtR7kaQ3yceu4W/C+KqrVoh91Hd70aieYg9dKfyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IELmI+aoEOyR83XahOBge0qMsWeQ+xp4xxqvocVHEjg=;
- b=6Kg3qrz+bNPFmHdCO5/FRSFB/AcmQrKMgaK/T/1KgbcAKALjSQeYLONN5n4UOrZb7Al05UhGA7esHWcJ5Ojrqf8pZ/X1Pl0SkJMg0J036u7dFbaGOsomDAGe0amkMEFVODy3TIdIXswA+wLjjSjutNWB/iIYDhgtN/OT8q0rR8fK/R/s3ihiSdf2RSWsEwN8BZkOdtNakxG7RdWbXV+wy0b9Sqtz7Az+08hpRNTKoD2RvS4h1B05CmHrsd8IOwQxtyY2Y2wymRIRORkT86sZvo+OogV/KkLPMJJnH3tFqm90qA1xz5er/XJOXBK7OdPaJ3YzuG4/fPNQrJXWVlOXYg==
-Received: from SA0PR11MB4719.namprd11.prod.outlook.com (2603:10b6:806:95::17)
- by CY8PR11MB7686.namprd11.prod.outlook.com (2603:10b6:930:70::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.25; Wed, 28 Feb
- 2024 07:03:01 +0000
-Received: from SA0PR11MB4719.namprd11.prod.outlook.com
- ([fe80::f65f:f05e:4faf:4433]) by SA0PR11MB4719.namprd11.prod.outlook.com
- ([fe80::f65f:f05e:4faf:4433%4]) with mapi id 15.20.7339.024; Wed, 28 Feb 2024
- 07:03:01 +0000
-From: <Varshini.Rajendran@microchip.com>
-To: <conor@kernel.org>
-CC: <radu_nicolae.pirea@upb.ro>, <richard.genoud@gmail.com>,
-	<gregkh@linuxfoundation.org>, <jirislaby@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-spi@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v4 12/39] dt-bindings: serial: atmel,at91-usart: add
- compatible for sam9x7.
-Thread-Topic: [PATCH v4 12/39] dt-bindings: serial: atmel,at91-usart: add
- compatible for sam9x7.
-Thread-Index: AQHaZn14iyGqXAZ1bkm2FnuRR0qAfbEZ68sAgAVvkYA=
-Date: Wed, 28 Feb 2024 07:03:01 +0000
-Message-ID: <b49572d4-b52e-4655-8d10-2709e2fbe803@microchip.com>
-References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
- <20240223172559.672142-1-varshini.rajendran@microchip.com>
- <20240224-kimono-stress-898eae80abd3@spud>
-In-Reply-To: <20240224-kimono-stress-898eae80abd3@spud>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA0PR11MB4719:EE_|CY8PR11MB7686:EE_
-x-ms-office365-filtering-correlation-id: 5df5cea3-b1ae-4ae0-6478-08dc382b4d51
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ramMqoAO0f8N3YKFBfI9sgEBjZGoCIzaQ34TUAdAt1RnFUUGdNr8J9e22RiLfj8uaHQugBAlU1LgUV3I1Sm7H5mnufkXIseNl+xZCrdmzLrXjo1Nq1mj13FechjD1yyIArtfiBGkC0SAl9srwjy7Y7aHepTOML12LwQHNwPcSKpD8Mha07tRaSgTqGuMNBzd1Mmx1M15oKC+gxUb4018H6To+c7gtujfn6Prh00AX6f3BquJQYwypZ13rqV3R+N2sqpPXJOgnvPn4BvH5ZbM0AC3mi3wjJQLk6f179yy9JoXtt//poMLLyPmTOjobFKp06b34EaaLLugqWylbh3cia1h9p2JBqAgQ/w0IheWtB+cRUYod96fikBZ0Uw0QI8OjgvMj6gTdgyuf3iUQ56ceRKgWJ+MRxUi39pLV0i+4QDc7H5JCpz/42qdjhaolksOhE2jtqeoeOwqiorL5l0PK7O5g26oKsd4q1jkeKBb13Mw+MW6KErPaEzTBip4g8iW2f34XLEcAKpPIf6+GYVTxlCxwcjs3F0rrciG2BlfwV+C5hyI37eSWJIMGvlRvcuGePNomgrcw/TuUV+DsHtb61Uwgk5vH/ZoNIi3QYfR7DvjF0Am0iYk822sywv0M4o7hgVt18HilGzE+MW5jUAcZif4sdL3bdtOfvWTsI1S+YemgSX+elKbFLWsmQA/PjnpFiwMjxZbjMbUzJFlSMGWSg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR11MB4719.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZlFZOFNwdGNtNTdPUlJ1dTcvVmpMZDBocmJRRTE3alE2b2MwSmxXVjlsa2xi?=
- =?utf-8?B?blRCZ01NaDlQVVV6VlVITTNtYnFEUlkwMzRRYTQ3NzhFazJyOFE5c29ZOWJj?=
- =?utf-8?B?SFd0U0VIRWd0cU9CT1Q4ekEwU1FzcitwNnY0TzFhSDlYbmtzQVVrbnVZOUJ5?=
- =?utf-8?B?Wmh4WVQwbEp4c3VMUTNpQ2hNS3ptdUErUmRncTUvZ1VQTG5QKzRqeXdwazFG?=
- =?utf-8?B?RDlLTTRISzZ0bHppYk1HUjZGUG1IQms2K2IzcG9oWnVMTTJPdVVhRDFxOElR?=
- =?utf-8?B?ZGRmbm9YMlVUY1piTWYvN1FzWlZkTm5zczJlQ212NWh0RmJleEx2cnl0S21i?=
- =?utf-8?B?QTZ5MitYb2hJNGYvMmtGRlFtbjM1MzRvaEFRcHFrL2VVM1RiOXJ5NGJhME1I?=
- =?utf-8?B?aFg1T1ZHS3Y0ZXQ0TVROLzcrRmpBVklPa01hWHpOcWtxeS9nb0VXa3pBdWFD?=
- =?utf-8?B?Qk9ZVWRXME9VUzBPdFhzV0Vqbitjc3ROeHkyZUZIUVhWSGgvdlpLd1BicFRn?=
- =?utf-8?B?SWc4eU9sVVZaZDJ6ZmNCZExGT2RiV0syMmZwZnA4WTBHV2svRnV1a3BsbnlG?=
- =?utf-8?B?T1VoeXdPMk9qOS9pUEZaczVyWnRDTTlZTElBejJTM2J4c09lZUxJSzhwZDFm?=
- =?utf-8?B?SjU5VFVzbTFNK0hnbDFkYlo3NDRXOWxzV0VJUTBYck80YlJIZC9KR3JvTkN4?=
- =?utf-8?B?ZmU4Ym90bEVUdUZUMEFyMCtyNkQ1TTk3OUh5cjk2MmYyMUkwN1F3SGZNb01B?=
- =?utf-8?B?dUt6K0M1ZkFpSlg2VHFJRVYyZEJReGIxWWl6dmx3N2paK0x1V2JkclJrcFNx?=
- =?utf-8?B?V05EWUc2WlptZ2Z2NzNQR1k1dEdrYXJCTjQ3c0lrQzZrSVRHWGYxYVNyNHhC?=
- =?utf-8?B?MlE5YVlLWkxZUGptbjI0RVpqc3BXQW1aeXhDZUNyREZRNE9GWm1BWXRobFVT?=
- =?utf-8?B?aXoweEdiRDc0NWRFaGRXdjdTMHpmdzFjQkdQSk5ybDVtVnhhZ2F2UjI4VEpn?=
- =?utf-8?B?UlN2WG9lNGNKVFVEWGREdE9TTDhXdFhYbnRHY1NDQzB4a2V6dS9QL0NreUsy?=
- =?utf-8?B?Z0tCeHdadm1PcDI2K3IreVZlS2R5YkhVNEN0ME0wY2dVeTVxalp0WXUwd2Vm?=
- =?utf-8?B?VjJ6cUFTRG4xSW1vNDg4UUE0dmdHUDBLTUE3Mm8xemFBUDNoZW4yajZJRkhC?=
- =?utf-8?B?NXBIcEh1Mytublc5bDZiNURpV0JZN012cm1uWEZwUkdHTkR4WWRmNTA4ek1F?=
- =?utf-8?B?RlJoTGh4OG5STFNHbldqUDRGcHZ5aWZjZ2k4K1JvVWxBME1Oem1maGo0dUp2?=
- =?utf-8?B?RUE1dlNVQk0yYW1vTmFlTEQ2SVV2ZUJ6Z3V6TFFQNXFzdi9sZHVHZUZIOFcw?=
- =?utf-8?B?Zy92a2ZXeDV1ZEx1ZmVPb2dCY1F6cnVNWVlhTVZxNTF3WXIyMkZHdlFUU1Y3?=
- =?utf-8?B?UFpSSUNJcTZEalArdUVIb2FVQ0YrS1UwWVVqL0QybGI3dEtoUFdENXpiWnRP?=
- =?utf-8?B?SEpxTnhHaE1PaHhKZWNmOVp3UlZLeTZtaENFbHZ3SmprOEsvekRRTm1GZE9K?=
- =?utf-8?B?UUwzYW1vUGxyWW1kQ2tDOG5PK3lqdndlWnpZQlVqWDhxM2dtRjd2cHRmNUlD?=
- =?utf-8?B?dWZPemM0eW5JczRDaC9sd1B5QU9EdEd2a2t0WmdQWjN1YnFkSUhTcUpmV2ts?=
- =?utf-8?B?RnNNMnEzRCtJUmdRbDIxRFBDVzU4K0pjZm8vQlQwdkF5cEV3Q2NEL0k0VEIz?=
- =?utf-8?B?Z2l5cHozOStkNEV5YngvT1RlLzNoNUJrc1J4R1ROTy9aM2tweFNGcnc4Zlcw?=
- =?utf-8?B?bi9BQ3YzTlROdkI4eEhwNkhrMnFjRVdNdFF1NUpCYjkzZ3g4WU9lT1BFNjJN?=
- =?utf-8?B?eitGOTA3MHlSN2J1NytTQ29zdmxhbjE1eklUVEtwTDVLRERkckU1QjIvWTBJ?=
- =?utf-8?B?SFpnSkJ2SWY2azJHWEZLaWNla2hWNnB4dHZLWG5uMXgzUWFLQUhLY1EwVlpQ?=
- =?utf-8?B?eGE1bENqdEdCS2owVC9kMTdSK0kwUld6UEpNNWR1VXA2YnBYanpzYXBkMW5z?=
- =?utf-8?B?dUVrczZRZzh0MDVGckc1UHNwdDZ2c0dqUjNid3F3azlSNGNneitXM3B6am5X?=
- =?utf-8?B?YUYycmpZamkzNjVDNHZuNS85eWlGZU05a3B4dWNaTlFVS05GSTJJOUxRd3hC?=
- =?utf-8?B?clE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D0E55E44F9B5564599CC225DF661AEE3@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OcClwfYh"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1dc929e5d99so97835ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 23:05:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709103955; x=1709708755; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EYNpsmx+5jlrdHVb/KJnk8W5LZfpc2ZQ4JV3cdQE6BA=;
+        b=OcClwfYhX+Dlm90Wr7HYtpdjpAsY3SorTNNcvyKClLM8p6Dv8SHktFnhGvQT6ENm8m
+         NOUr4bUe/6uwX4ekbY8Dij1nMShofkfbchiR6l0+/vMnQTA0xuipE5IFmX/o3mNuPhlh
+         jdoDQnFt8LeRM9BbehnZs0wYuD505PXtN6jJOYqj+Pnt5UvJuGbvJhVk91lcCZtQ7w+N
+         4p9HsPxHi0HtIyYGXk0p+Fxx1AhrXitrTe92qm0quDPh1KhgxoBedSkD9DjwUCUoUAaj
+         dZanzUm7E/eSgLUpoRr8m5ukIdKhlcGEB8VzA+CKxV3sFOLBp6ThFrT7Qo3j7r0svBs6
+         Srgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709103955; x=1709708755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EYNpsmx+5jlrdHVb/KJnk8W5LZfpc2ZQ4JV3cdQE6BA=;
+        b=L2a087WJonm1PCo0Z1MWpakpRELmfULJ5O7YXQGnfYuaqlXfELTjnxiyDbPgUDJlJ6
+         Ah9VsVYry65dCuDsjbQkxPHqOXRPNemAj9jaY7CKOMGqjs9tJQI4BLqyCOQnY19L0G/z
+         42hLDHyHlarvvtONdQoKQk5IaWMMCPQYnbRNn2a/3Jj/VkpSflA7CVKZkSpOBdT7V3ev
+         Kzeb+MqANgqaQibQEc+Ffw5HIynK8zffP04P+AGXpYkr4rOD7Ifm4YE4iIAogO3yEe7m
+         tONyAuWHkmDzEHbONZFmtg7DpscxIYxi9J/B8Mn7ZcGxtJjpMVINxcrmLvdI82uWz2j7
+         IcKA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+J3xpaANYlkN3nlghlfvFLFW3bYR89NMXG91V3ayj11s+3s/rPnf+KKZ3AKQHeL3q8kwfDNyPYMSPm96qkOXaPSoC5B3HfGWwYPco
+X-Gm-Message-State: AOJu0Yz3O28GJ7vbGhi9HnoJRLmGt3iCdU2M26vtHn2GfYvIc0UVzCQY
+	wANS6L5rzwpxPTEjYmCYDslqbjMPZeRw24xmrOa+tWHLtCtvF0YBcsqHcpJb2cVVBEWL8A/0q6x
+	Wht0hq/hyx8QrkNMgEMAnSBx6S0/sdrRA4fZv
+X-Google-Smtp-Source: AGHT+IHWoCZJH5Wev12SBWbmmtLEfuQBMk3YPL6TsmZsbIBsz9/Ps6cJyG2xGP6cmVXpkIazc6AEV56sBHtmHll33hw=
+X-Received: by 2002:a17:903:2681:b0:1db:a356:b954 with SMTP id
+ jf1-20020a170903268100b001dba356b954mr41271plb.28.1709103955287; Tue, 27 Feb
+ 2024 23:05:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA0PR11MB4719.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5df5cea3-b1ae-4ae0-6478-08dc382b4d51
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2024 07:03:01.1266
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q2pEAR+jiXoptlKEcQ6dugnPLLc0tH8+U1fH4lMGQljFc1HdJIt7WUkyX6ASEO5yu9sPPiYlGqijYwLF+nFavxdPHbkNW/pt1rc9FyeZM25GYANgyLEOvMhpjyzDkIcC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7686
+References: <20240214063708.972376-1-irogers@google.com> <20240214063708.972376-2-irogers@google.com>
+ <CAM9d7ciB8JAgU9P6qKh-VdVCjH0ZK+Q-n6mdXTO_nRAv6kSSyA@mail.gmail.com>
+ <CAP-5=fW+NAXNYs7LGVORsikL4+jvGNqgNgoWVsgi6w8pezS9wQ@mail.gmail.com> <CAM9d7chqy7uD0w=Y+nJyhL8cpAEp6tptqPUHx0-4rQ_NJDRrsg@mail.gmail.com>
+In-Reply-To: <CAM9d7chqy7uD0w=Y+nJyhL8cpAEp6tptqPUHx0-4rQ_NJDRrsg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 27 Feb 2024 23:05:41 -0800
+Message-ID: <CAP-5=fVKpVtNhDQCg=wFTmL7ruZR1gs_CmSsbVw_=_ZfGL2V+Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/6] perf report: Sort child tasks by tid
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Yang Jihong <yangjihong1@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgQ29ub3IsDQoNCk9uIDI1LzAyLzI0IDE6MzIgYW0sIENvbm9yIERvb2xleSB3cm90ZToNCj4g
-RVhURVJOQUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVu
-bGVzcyB5b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+IE9uIEZyaSwgRmViIDIzLCAyMDI0
-IGF0IDEwOjU1OjU5UE0gKzA1MzAsIFZhcnNoaW5pIFJhamVuZHJhbiB3cm90ZToNCj4+IEFkZCBz
-YW05eDcgY29tcGF0aWJsZSB0byBEVCBiaW5kaW5ncyBkb2N1bWVudGF0aW9uLg0KPj4NCj4+IFNp
-Z25lZC1vZmYtYnk6IFZhcnNoaW5pIFJhamVuZHJhbiA8dmFyc2hpbmkucmFqZW5kcmFuQG1pY3Jv
-Y2hpcC5jb20+DQo+PiAtLS0NCj4+IENoYW5nZXMgaW4gdjQ6DQo+PiAtIEZpeGVkIHRoZSB3cm9u
-ZyBhZGRpdGlvbiBvZiBjb21wYXRpYmxlDQo+PiAtIEFkZGVkIGZ1cnRoZXIgY29tcGF0aWJsZXMg
-dGhhdCBhcmUgcG9zc2libGUgY29ycmVjdCAoYXMgcGVyIERUKQ0KPj4gLS0tDQo+PiAgLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc2VyaWFsL2F0bWVsLGF0OTEtdXNhcnQueWFtbCB8IDEyICsrKysr
-KysrKy0tLQ0KPj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25z
-KC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9zZXJpYWwvYXRtZWwsYXQ5MS11c2FydC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3NlcmlhbC9hdG1lbCxhdDkxLXVzYXJ0LnlhbWwNCj4+IGluZGV4IDY1Y2IyZTVj
-NWVlZS4uMzBhZjUzN2U4ZTgxIDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3NlcmlhbC9hdG1lbCxhdDkxLXVzYXJ0LnlhbWwNCj4+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zZXJpYWwvYXRtZWwsYXQ5MS11c2FydC55YW1s
-DQo+PiBAQCAtMjMsMTEgKzIzLDE3IEBAIHByb3BlcnRpZXM6DQo+PiAgICAgICAgICAgIC0gY29u
-c3Q6IGF0bWVsLGF0OTFzYW05MjYwLWRiZ3UNCj4+ICAgICAgICAgICAgLSBjb25zdDogYXRtZWws
-YXQ5MXNhbTkyNjAtdXNhcnQNCj4+ICAgICAgICAtIGl0ZW1zOg0KPj4gLSAgICAgICAgICAtIGNv
-bnN0OiBtaWNyb2NoaXAsc2FtOXg2MC11c2FydA0KPj4gKyAgICAgICAgICAtIGVudW06DQo+PiAr
-ICAgICAgICAgICAgICAtIG1pY3JvY2hpcCxzYW05eDYwLXVzYXJ0DQo+PiArICAgICAgICAgICAg
-ICAtIG1pY3JvY2hpcCxzYW05eDctdXNhcnQNCj4+ICAgICAgICAgICAgLSBjb25zdDogYXRtZWws
-YXQ5MXNhbTkyNjAtdXNhcnQNCj4+ICAgICAgICAtIGl0ZW1zOg0KPj4gLSAgICAgICAgICAtIGNv
-bnN0OiBtaWNyb2NoaXAsc2FtOXg2MC1kYmd1DQo+PiAtICAgICAgICAgIC0gY29uc3Q6IG1pY3Jv
-Y2hpcCxzYW05eDYwLXVzYXJ0DQo+PiArICAgICAgICAgIC0gZW51bToNCj4+ICsgICAgICAgICAg
-ICAgIC0gbWljcm9jaGlwLHNhbTl4NjAtZGJndQ0KPj4gKyAgICAgICAgICAgICAgLSBtaWNyb2No
-aXAsc2FtOXg3LWRiZ3UNCj4gDQo+PiArICAgICAgICAgIC0gZW51bToNCj4+ICsgICAgICAgICAg
-ICAgIC0gbWljcm9jaGlwLHNhbTl4NjAtdXNhcnQNCj4+ICsgICAgICAgICAgICAgIC0gbWljcm9j
-aGlwLHNhbTl4Ny11c2FydA0KPiANCj4gVGhpcyBkb2Vzbid0IG1ha2Ugc2Vuc2UgLSB0aGlzIGVu
-dW0gc2hvdWxkIGJlIGEgY29uc3QuDQo+IEkgZG9uJ3QgcmVhbGx5IHVuZGVyc3RhbmQgdGhlIGlk
-ZWEgYmVoaW5kIG9mIHRoZSBvcmlnaW5hbCBiaW5kaW5nIGhlcmUgdGhhdA0KPiBhbGxvd2VkOg0K
-PiAibWljcm9jaGlwLHNhbTl4NjAtZGJndSIsICJtaWNyb2NoaXAsc2FtOXg2MC11c2FydCIsICJh
-dG1lbCxhdDkxc2FtOTI2MC1kYmd1IiwgImF0bWVsLGF0OTFzYW05MjYwLXVzYXJ0Ig0KPiANCj4g
-U3BlY2lmaWNhbGx5LCBJIGRvbid0IGdldCB0aGUgcHVycG9zZSBvZiB0aGUgIm1pY3JvY2hpcCxz
-YW05eDYwLXVzYXJ0Ii4NCj4gRWl0aGVyIG1ha2UgaXQNCj4gICAgICAgLSBpdGVtczoNCj4gICAg
-ICAgICAgIC0gZW51bToNCj4gICAgICAgICAgICAgICAtIG1pY3JvY2hpcCxzYW05eDYwLWRiZ3UN
-Cj4gICAgICAgICAgICAgICAtIG1pY3JvY2hpcCxzYW05eDctZGJndQ0KPiAgICAgICAgICAgLSBj
-b25zdDogbWljcm9jaGlwLHNhbTl4NjAtdXNhcnQNCj4gICAgICAgICAgIC0gY29uc3Q6IGF0bWVs
-LGF0OTFzYW05MjYwLWRiZ3UNCj4gICAgICAgICAgIC0gY29uc3Q6IGF0bWVsLGF0OTFzYW05MjYw
-LXVzYXJ0DQo+IG9yIGFkZA0KPiAgICAgICAtIGl0ZW1zOg0KPiAgICAgICAgICAgLSBjb25zdDog
-bWljcm9jaGlwLHNhbTl4NjAtZGJndQ0KPiAgICAgICAgICAgLSBjb25zdDogYXRtZWwsYXQ5MXNh
-bTkyNjAtZGJndQ0KPiAgICAgICAgICAgLSBjb25zdDogYXRtZWwsYXQ5MXNhbTkyNjAtdXNhcnQN
-Cj4gb3IgZXhwbGFpbiBleGFjdGx5IHdoeSB0aGlzIG5lZWRzIHRvIGJlDQo+ICJjaGlwYS1kZ2J1
-IiwgImNoaXBhLXVzYXJ0IiwgImNoaXBiLWRiZ3UiLCAiY2hpcGItZGJndSINClRoZSBjb21wYXRp
-YmxlIGhhcyB0byBiZSAiY2hpcGEtdXNhcnQiLCAiY2hpcGItdXNhcnQiLCAiY2hpcGEtZGJndSIs
-IA0KImNoaXBiLWRiZ3UiIGZvciB0aGUgZGV2aWNlIHRvIHdvcmsgYXMgYSBkZWJ1ZyBjb25zb2xl
-IG92ZXIgVUFSVA0Kd2hlciB0aGUgY2hpcGEtPHBlcmlwaD4gaXMgdGhlIGRldmljZSBzcGVjaWZp
-YyBjb21wYXRpYmxlDQphbmQgdGhlIGNoaXBiLTxwZXJpcGg+IGlzIHRoZSBmYWxsYmFjayBjb21w
-YXRpYmxlIHRoYXQgdGhlIGRyaXZlciANCmFjdHVhbGx5IHVzZXMuDQoNCk1heWJlIHB1dHRpbmcg
-dGhlIDIgY29tcGF0aWJsZXMgYXMgMiBlbnVtcyBpcyBub3QgcmlnaHQuIEkgd2lsbCByZXBocmFz
-ZSANCml0IGFzIGJlbG93Lg0KDQogICAgICAgLSBpdGVtczoNCiAgICAgICAgICAgLSBjb25zdDog
-bWljcm9jaGlwLHNhbTl4NjAtZGJndQ0KICAgICAgICAgICAtIGNvbnN0OiBtaWNyb2NoaXAsc2Ft
-OXg2MC11c2FydA0KICAgICAgICAgICAtIGNvbnN0OiBhdG1lbCxhdDkxc2FtOTI2MC1kYmd1DQog
-ICAgICAgICAgIC0gY29uc3Q6IGF0bWVsLGF0OTFzYW05MjYwLXVzYXJ0DQogICAgICAgLSBpdGVt
-czoNCiAgICAgICAgICAgLSBjb25zdDogbWljcm9jaGlwLHNhbTl4Ny1kYmd1DQogICAgICAgICAg
-IC0gY29uc3Q6IG1pY3JvY2hpcCxzYW05eDctdXNhcnQNCiAgICAgICAgICAgLSBjb25zdDogYXRt
-ZWwsYXQ5MXNhbTkyNjAtZGJndQ0KICAgICAgICAgICAtIGNvbnN0OiBhdG1lbCxhdDkxc2FtOTI2
-MC11c2FydA0KDQpIb3BlIHRoaXMgaXMgZmluZS4NCj4gDQo+IFRoYW5rcywNCj4gQ29ub3IuDQo+
-IA0KDQotLSANClRoYW5rcyBhbmQgUmVnYXJkcywNClZhcnNoaW5pIFJhamVuZHJhbi4NCg0K
+On Tue, Feb 27, 2024 at 10:11=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Mon, Feb 26, 2024 at 11:12=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > On Mon, Feb 26, 2024 at 10:39=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > >
+> > > On Tue, Feb 13, 2024 at 10:37=E2=80=AFPM Ian Rogers <irogers@google.c=
+om> wrote:
+> > > >
+> > > > Commit 91e467bc568f ("perf machine: Use hashtable for machine
+> > > > threads") made the iteration of thread tids unordered. The perf rep=
+ort
+> > > > --tasks output now shows child threads in an order determined by th=
+e
+> > > > hashing. For example, in this snippet tid 3 appears after tid 256 e=
+ven
+> > > > though they have the same ppid 2:
+> > > >
+> > > > ```
+> > > > $ perf report --tasks
+> > > > %      pid      tid     ppid  comm
+> > > >          0        0       -1 |swapper
+> > > >          2        2        0 | kthreadd
+> > > >        256      256        2 |  kworker/12:1H-k
+> > > >     693761   693761        2 |  kworker/10:1-mm
+> > > >    1301762  1301762        2 |  kworker/1:1-mm_
+> > > >    1302530  1302530        2 |  kworker/u32:0-k
+> > > >          3        3        2 |  rcu_gp
+> > > > ...
+> > > > ```
+> > > >
+> > > > The output is easier to read if threads appear numerically
+> > > > increasing. To allow for this, read all threads into a list then so=
+rt
+> > > > with a comparator that orders by the child task's of the first comm=
+on
+> > > > parent. The list creation and deletion are created as utilities on
+> > > > machine.  The indentation is possible by counting the number of
+> > > > parents a child has.
+> > > >
+> > > > With this change the output for the same data file is now like:
+> > > > ```
+> > > > $ perf report --tasks
+> > > > %      pid      tid     ppid  comm
+> > > >          0        0       -1 |swapper
+> > > >          1        1        0 | systemd
+> > > >        823      823        1 |  systemd-journal
+> > > >        853      853        1 |  systemd-udevd
+> > > >       3230     3230        1 |  systemd-timesyn
+> > > >       3236     3236        1 |  auditd
+> > > >       3239     3239     3236 |   audisp-syslog
+> > > >       3321     3321        1 |  accounts-daemon
+> > > > ...
+> > > > ```
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> I know you sent out v2 already, but let me continue the discussion
+> here.
+>
+>
+> > > > ---
+> > > >  tools/perf/builtin-report.c | 203 ++++++++++++++++++++------------=
+----
+> > > >  tools/perf/util/machine.c   |  30 ++++++
+> > > >  tools/perf/util/machine.h   |  10 ++
+> > > >  3 files changed, 155 insertions(+), 88 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-repor=
+t.c
+> > > > index 8e16fa261e6f..b48f1d5309e3 100644
+> > > > --- a/tools/perf/builtin-report.c
+> > > > +++ b/tools/perf/builtin-report.c
+> > > > @@ -59,6 +59,7 @@
+> > > >  #include <linux/ctype.h>
+> > > >  #include <signal.h>
+> > > >  #include <linux/bitmap.h>
+> > > > +#include <linux/list_sort.h>
+> > > >  #include <linux/string.h>
+> > > >  #include <linux/stringify.h>
+> > > >  #include <linux/time64.h>
+> > > > @@ -828,35 +829,6 @@ static void tasks_setup(struct report *rep)
+> > > >         rep->tool.no_warn =3D true;
+> > > >  }
+> > > >
+> > > > -struct task {
+> > > > -       struct thread           *thread;
+> > > > -       struct list_head         list;
+> > > > -       struct list_head         children;
+> > > > -};
+> > > > -
+> > > > -static struct task *tasks_list(struct task *task, struct machine *=
+machine)
+> > > > -{
+> > > > -       struct thread *parent_thread, *thread =3D task->thread;
+> > > > -       struct task   *parent_task;
+> > > > -
+> > > > -       /* Already listed. */
+> > > > -       if (!list_empty(&task->list))
+> > > > -               return NULL;
+> > > > -
+> > > > -       /* Last one in the chain. */
+> > > > -       if (thread__ppid(thread) =3D=3D -1)
+> > > > -               return task;
+> > > > -
+> > > > -       parent_thread =3D machine__find_thread(machine, -1, thread_=
+_ppid(thread));
+> > > > -       if (!parent_thread)
+> > > > -               return ERR_PTR(-ENOENT);
+> > > > -
+> > > > -       parent_task =3D thread__priv(parent_thread);
+> > > > -       thread__put(parent_thread);
+> > > > -       list_add_tail(&task->list, &parent_task->children);
+> > > > -       return tasks_list(parent_task, machine);
+> > > > -}
+> > > > -
+> > > >  struct maps__fprintf_task_args {
+> > > >         int indent;
+> > > >         FILE *fp;
+> > > > @@ -900,89 +872,144 @@ static size_t maps__fprintf_task(struct maps=
+ *maps, int indent, FILE *fp)
+> > > >         return args.printed;
+> > > >  }
+> > > >
+> > > > -static void task__print_level(struct task *task, FILE *fp, int lev=
+el)
+> > > > +static int thread_level(struct machine *machine, const struct thre=
+ad *thread)
+> > > >  {
+> > > > -       struct thread *thread =3D task->thread;
+> > > > -       struct task *child;
+> > > > -       int comm_indent =3D fprintf(fp, "  %8d %8d %8d |%*s",
+> > > > -                                 thread__pid(thread), thread__tid(=
+thread),
+> > > > -                                 thread__ppid(thread), level, "");
+> > > > +       struct thread *parent_thread;
+> > > > +       int res;
+> > > >
+> > > > -       fprintf(fp, "%s\n", thread__comm_str(thread));
+> > > > +       if (thread__tid(thread) <=3D 0)
+> > > > +               return 0;
+> > > >
+> > > > -       maps__fprintf_task(thread__maps(thread), comm_indent, fp);
+> > > > +       if (thread__ppid(thread) <=3D 0)
+> > > > +               return 1;
+> > > >
+> > > > -       if (!list_empty(&task->children)) {
+> > > > -               list_for_each_entry(child, &task->children, list)
+> > > > -                       task__print_level(child, fp, level + 1);
+> > > > +       parent_thread =3D machine__find_thread(machine, -1, thread_=
+_ppid(thread));
+> > > > +       if (!parent_thread) {
+> > > > +               pr_err("Missing parent thread of %d\n", thread__tid=
+(thread));
+> > > > +               return 0;
+> > > >         }
+> > > > +       res =3D 1 + thread_level(machine, parent_thread);
+> > > > +       thread__put(parent_thread);
+> > > > +       return res;
+> > > >  }
+> > > >
+> > > > -static int tasks_print(struct report *rep, FILE *fp)
+> > > > +static void task__print_level(struct machine *machine, struct thre=
+ad *thread, FILE *fp)
+> > > >  {
+> > > > -       struct perf_session *session =3D rep->session;
+> > > > -       struct machine      *machine =3D &session->machines.host;
+> > > > -       struct task *tasks, *task;
+> > > > -       unsigned int nr =3D 0, itask =3D 0, i;
+> > > > -       struct rb_node *nd;
+> > > > -       LIST_HEAD(list);
+> > > > +       int level =3D thread_level(machine, thread);
+> > > > +       int comm_indent =3D fprintf(fp, "  %8d %8d %8d |%*s",
+> > > > +                                 thread__pid(thread), thread__tid(=
+thread),
+> > > > +                                 thread__ppid(thread), level, "");
+> > > >
+> > > > -       /*
+> > > > -        * No locking needed while accessing machine->threads,
+> > > > -        * because --tasks is single threaded command.
+> > > > -        */
+> > > > +       fprintf(fp, "%s\n", thread__comm_str(thread));
+> > > >
+> > > > -       /* Count all the threads. */
+> > > > -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++)
+> > > > -               nr +=3D machine->threads[i].nr;
+> > > > +       maps__fprintf_task(thread__maps(thread), comm_indent, fp);
+> > > > +}
+> > > >
+> > > > -       tasks =3D malloc(sizeof(*tasks) * nr);
+> > > > -       if (!tasks)
+> > > > -               return -ENOMEM;
+> > > > +static int task_list_cmp(void *priv, const struct list_head *la, c=
+onst struct list_head *lb)
+> > >
+> > > I'm a little afraid that this comparison logic becomes complex.
+> > > But I think it's better than having a tree of thread relationship.
+> > > Just a comment that explains why we need this would be nice.
+> >
+> > I can add something in v2.
+> >
+> > >
+> > > > +{
+> > > > +       struct machine *machine =3D priv;
+> > > > +       struct thread_list *task_a =3D list_entry(la, struct thread=
+_list, list);
+> > > > +       struct thread_list *task_b =3D list_entry(lb, struct thread=
+_list, list);
+> > > > +       struct thread *a =3D task_a->thread;
+> > > > +       struct thread *b =3D task_b->thread;
+> > > > +       int level_a, level_b, res;
+> > > > +
+> > > > +       /* Compare a and b to root. */
+> > > > +       if (thread__tid(a) =3D=3D thread__tid(b))
+> > > > +               return 0;
+> > > >
+> > > > -       for (i =3D 0; i < THREADS__TABLE_SIZE; i++) {
+> > > > -               struct threads *threads =3D &machine->threads[i];
+> > > > +       if (thread__tid(a) =3D=3D 0)
+> > > > +               return -1;
+> > > >
+> > > > -               for (nd =3D rb_first_cached(&threads->entries); nd;
+> > > > -                    nd =3D rb_next(nd)) {
+> > > > -                       task =3D tasks + itask++;
+> > > > +       if (thread__tid(b) =3D=3D 0)
+> > > > +               return 1;
+> > > >
+> > > > -                       task->thread =3D rb_entry(nd, struct thread=
+_rb_node, rb_node)->thread;
+> > > > -                       INIT_LIST_HEAD(&task->children);
+> > > > -                       INIT_LIST_HEAD(&task->list);
+> > > > -                       thread__set_priv(task->thread, task);
+> > > > -               }
+> > > > +       /* If parents match sort by tid. */
+> > > > +       if (thread__ppid(a) =3D=3D thread__ppid(b)) {
+> > > > +               return thread__tid(a) < thread__tid(b)
+> > > > +                       ? -1
+> > > > +                       : (thread__tid(a) > thread__tid(b) ? 1 : 0)=
+;
+> > >
+> > > Can it be simply like this?  We know tid(a) !=3D tid(b).
+> > >
+> > >   return thread__tid(a) < thread__tid(b) ? -1 : 1;
+> >
+> > Yes, but the parent check is still required.
+>
+> Sure.  I only meant the return statement.
+>
+> >
+> > > >         }
+> > > >
+> > > >         /*
+> > > > -        * Iterate every task down to the unprocessed parent
+> > > > -        * and link all in task children list. Task with no
+> > > > -        * parent is added into 'list'.
+> > > > +        * Find a and b such that if they are a child of each other=
+ a and b's
+> > > > +        * tid's match, otherwise a and b have a common parent and =
+distinct
+> > > > +        * tid's to sort by. First make the depths of the threads m=
+atch.
+> > > >          */
+> > > > -       for (itask =3D 0; itask < nr; itask++) {
+> > > > -               task =3D tasks + itask;
+> > > > -
+> > > > -               if (!list_empty(&task->list))
+> > > > -                       continue;
+> > > > -
+> > > > -               task =3D tasks_list(task, machine);
+> > > > -               if (IS_ERR(task)) {
+> > > > -                       pr_err("Error: failed to process tasks\n");
+> > > > -                       free(tasks);
+> > > > -                       return PTR_ERR(task);
+> > > > +       level_a =3D thread_level(machine, a);
+> > > > +       level_b =3D thread_level(machine, b);
+> > > > +       a =3D thread__get(a);
+> > > > +       b =3D thread__get(b);
+> > > > +       for (int i =3D level_a; i > level_b; i--) {
+> > > > +               struct thread *parent =3D machine__find_thread(mach=
+ine, -1, thread__ppid(a));
+> > > > +
+> > > > +               thread__put(a);
+> > > > +               if (!parent) {
+> > > > +                       pr_err("Missing parent thread of %d\n", thr=
+ead__tid(a));
+> > > > +                       thread__put(b);
+> > > > +                       return -1;
+> > > >                 }
+> > > > +               a =3D parent;
+> > > > +       }
+> > > > +       for (int i =3D level_b; i > level_a; i--) {
+> > > > +               struct thread *parent =3D machine__find_thread(mach=
+ine, -1, thread__ppid(b));
+> > > >
+> > > > -               if (task)
+> > > > -                       list_add_tail(&task->list, &list);
+> > > > +               thread__put(b);
+> > > > +               if (!parent) {
+> > > > +                       pr_err("Missing parent thread of %d\n", thr=
+ead__tid(b));
+> > > > +                       thread__put(a);
+> > > > +                       return 1;
+> > > > +               }
+> > > > +               b =3D parent;
+> > > > +       }
+> > > > +       /* Search up to a common parent. */
+> > > > +       while (thread__ppid(a) !=3D thread__ppid(b)) {
+> > > > +               struct thread *parent;
+> > > > +
+> > > > +               parent =3D machine__find_thread(machine, -1, thread=
+__ppid(a));
+> > > > +               thread__put(a);
+> > > > +               if (!parent)
+> > > > +                       pr_err("Missing parent thread of %d\n", thr=
+ead__tid(a));
+> > > > +               a =3D parent;
+> > > > +               parent =3D machine__find_thread(machine, -1, thread=
+__ppid(b));
+> > > > +               thread__put(b);
+> > > > +               if (!parent)
+> > > > +                       pr_err("Missing parent thread of %d\n", thr=
+ead__tid(b));
+> > > > +               b =3D parent;
+> > > > +               if (!a || !b)
+> > > > +                       return !a && !b ? 0 : (!a ? -1 : 1);
+> > >
+> > > Wouldn't it leak a refcount if either a or b is NULL (not both)?
+> >
+> > It would, but this would be an error condition anyway. I can add puts.
+> >
+> > >
+> > > > +       }
+> > > > +       if (thread__tid(a) =3D=3D thread__tid(b)) {
+> > > > +               /* a is a child of b or vice-versa, deeper levels a=
+ppear later. */
+> > > > +               res =3D level_a < level_b ? -1 : (level_a > level_b=
+ ? 1 : 0);
+> > > > +       } else {
+> > > > +               /* Sort by tid now the parent is the same. */
+> > > > +               res =3D thread__tid(a) < thread__tid(b) ? -1 : 1;
+> > > >         }
+> > > > +       thread__put(a);
+> > > > +       thread__put(b);
+> > > > +       return res;
+> > > > +}
+> > > > +
+> > > > +static int tasks_print(struct report *rep, FILE *fp)
+> > > > +{
+> > > > +       struct machine *machine =3D &rep->session->machines.host;
+> > > > +       LIST_HEAD(tasks);
+> > > > +       int ret;
+> > > >
+> > > > -       fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "ppid", "c=
+omm");
+> > > > +       ret =3D machine__thread_list(machine, &tasks);
+> > > > +       if (!ret) {
+> > > > +               struct thread_list *task;
+> > >
+> > > Do we really need this thread_list?  Why not use an
+> > > array of threads directly?
+> >
+> > The code isn't particularly performance critical. I used a list as it
+> > best approximated how the rbtree was being used. The code is reused in
+> > subsequent patches, there's no initial pass to size an array and I
+> > think the reallocarray/qsort logic is generally more problematic than
+> > the list ones. If we were worried about performance then I think
+> > arrays could make sense for optimization, but I think this is good
+> > enough for now.
+>
+> Well, it's not about performance.  It made me think why we need
+> this thread_list but I couldn't find the reason.  If you can move
+> machine__threads_nr() here then you won't need realloc().
+
+But then you can race between allocating an array and traversing to
+fill it in. Using realloc in the iterator callback would avoid this
+but with capacity tracking, etc. If this were C++ its a call between a
+std::vector and a std::list, and std::vector would win that race there
+(imo). Here we're moving from code that was working on sorted tree
+nodes in code that tends to more heavily use lists. I wanted the
+transition from the rbtree nodes to list nodes to be as small as
+possible in the changes to the APIs that did strange things to the
+threads tree (resorting it). Moving to an array with indices would
+require more tracking and be a larger change in general. The array
+could move because of a realloc, whilst nodes wouldn't, etc. Having
+the code now work on a list its easier to see how it can migrate to an
+array, but that can be follow on work. I'm not sure we're motivated to
+do it given there's no code on a performance critical path.
+
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
+>
+> > > >
+> > > > -       list_for_each_entry(task, &list, list)
+> > > > -               task__print_level(task, fp, 0);
+> > > > +               list_sort(machine, &tasks, task_list_cmp);
+> > > >
+> > > > -       free(tasks);
+> > > > -       return 0;
+> > > > +               fprintf(fp, "# %8s %8s %8s  %s\n", "pid", "tid", "p=
+pid", "comm");
+> > > > +
+> > > > +               list_for_each_entry(task, &tasks, list)
+> > > > +                       task__print_level(machine, task->thread, fp=
+);
+> > > > +       }
+> > > > +       thread_list__delete(&tasks);
+> > > > +       return ret;
+> > > >  }
+> > > >
+> > > >  static int __cmd_report(struct report *rep)
+> > > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > > index 3da92f18814a..7872ce92c9fc 100644
+> > > > --- a/tools/perf/util/machine.c
+> > > > +++ b/tools/perf/util/machine.c
+> > > > @@ -3261,6 +3261,36 @@ int machines__for_each_thread(struct machine=
+s *machines,
+> > > >         return rc;
+> > > >  }
+> > > >
+> > > > +
+> > > > +static int thread_list_cb(struct thread *thread, void *data)
+> > > > +{
+> > > > +       struct list_head *list =3D data;
+> > > > +       struct thread_list *entry =3D malloc(sizeof(*entry));
+> > > > +
+> > > > +       if (!entry)
+> > > > +               return -ENOMEM;
+> > > > +
+> > > > +       entry->thread =3D thread__get(thread);
+> > > > +       list_add_tail(&entry->list, list);
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +int machine__thread_list(struct machine *machine, struct list_head=
+ *list)
+> > > > +{
+> > > > +       return machine__for_each_thread(machine, thread_list_cb, li=
+st);
+> > > > +}
+> > > > +
+> > > > +void thread_list__delete(struct list_head *list)
+> > > > +{
+> > > > +       struct thread_list *pos, *next;
+> > > > +
+> > > > +       list_for_each_entry_safe(pos, next, list, list) {
+> > > > +               thread__zput(pos->thread);
+> > > > +               list_del(&pos->list);
+> > > > +               free(pos);
+> > > > +       }
+> > > > +}
+> > > > +
+> > > >  pid_t machine__get_current_tid(struct machine *machine, int cpu)
+> > > >  {
+> > > >         if (cpu < 0 || (size_t)cpu >=3D machine->current_tid_sz)
+> > > > diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+> > > > index 1279acda6a8a..b738ce84817b 100644
+> > > > --- a/tools/perf/util/machine.h
+> > > > +++ b/tools/perf/util/machine.h
+> > > > @@ -280,6 +280,16 @@ int machines__for_each_thread(struct machines =
+*machines,
+> > > >                               int (*fn)(struct thread *thread, void=
+ *p),
+> > > >                               void *priv);
+> > > >
+> > > > +struct thread_list {
+> > > > +       struct list_head         list;
+> > > > +       struct thread           *thread;
+> > > > +};
+> > > > +
+> > > > +/* Make a list of struct thread_list based on threads in the machi=
+ne. */
+> > > > +int machine__thread_list(struct machine *machine, struct list_head=
+ *list);
+> > > > +/* Free up the nodes within the thread_list list. */
+> > > > +void thread_list__delete(struct list_head *list);
+> > > > +
+> > > >  pid_t machine__get_current_tid(struct machine *machine, int cpu);
+> > > >  int machine__set_current_tid(struct machine *machine, int cpu, pid=
+_t pid,
+> > > >                              pid_t tid);
+> > > > --
+> > > > 2.43.0.687.g38aa6559b0-goog
+> > > >
