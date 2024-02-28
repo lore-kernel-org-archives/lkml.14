@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD7812EBF0;
-	Wed, 28 Feb 2024 11:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82191135A6A;
+	Wed, 28 Feb 2024 11:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709119233; cv=none; b=u54ash75axTbFM0RL6buKHFKKLl4RJuIjFEZxmOazLUmc9wnHYiacYBaLBOITcjd8Xp2XPvg0lnkoUTyYWxAMUQwPswmhaCtQgW8nxDoBHD8PB3fOKLvC6hV5RtDudM2m5t+lk+00lUVKYPRpye7yIkh1H84XCtoNlK1LvtRbRs=
+	t=1709119234; cv=none; b=c4sekmxzSennyp8pqkSpf3uAO1oarWMMzAPfJwDtWDnbbP0SGMsK64/AdqzdGyXbsULZQuQ7iE3WGHjPDr77K8nWVvmYOP9fkC6Edj+Iap1iNcb2/M1godooZij3JyZM28PokbaAKJ0G3dNPN743+szLefrrqq0vJRYc5ecCWmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709119233; c=relaxed/simple;
-	bh=rplIUsIT3bUGki4YvCcSljKVrFbhmRWRP7eVylEd16Q=;
+	s=arc-20240116; t=1709119234; c=relaxed/simple;
+	bh=KXWL5048DZU1pSGrmnaZz7TAdyC7SRezKhReC+a6rfA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=HiTqmFxYeJYFjfxAQtTENvKrCR03s7nYaCWZhPfyQRcmtfq/RaVBIESpUHPad70Hm6AZcIdYbpk7JPouqZwM13avKcI2AZ18HepC6REgoEKDS+pwRyPqqObgdafq1gguKwN3B7qAVGW6cl9ie5A1L71rOUPngbE9ybd4BmnZNt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DaQZ/EGT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Dwkii5bc5CAMmi20BQRYyMLe3vZ8KnpmXKoYrY+2pocC4aBKJ4jooWTHLv5Z3LHfhwCdvYKpzVAhw4GP0W1XQD1WFio80PdvSNmufZvkiMYYIj9821HgsIMaCy4osL8YotuoxfpuE/Y1AEwgxvfDWQi/U7DH0t3LuphK76jrt2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QoxYHj2c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DaQZ/EGT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BF232C43394;
-	Wed, 28 Feb 2024 11:20:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QoxYHj2c"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2732AC433C7;
+	Wed, 28 Feb 2024 11:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709119232;
-	bh=rplIUsIT3bUGki4YvCcSljKVrFbhmRWRP7eVylEd16Q=;
+	s=k20201202; t=1709119234;
+	bh=KXWL5048DZU1pSGrmnaZz7TAdyC7SRezKhReC+a6rfA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=DaQZ/EGTcioC77azl1WOQWaLnPH/0UdgRs0rIZSaMrj+6OhqoXSdF++O91O7AS/c6
-	 MzeA/eI1f7YiaSpey14oqLo8iFcow6G6QkUl5e8JZuaGd23KkCCBp5W8D+C6+Geqvx
-	 5bsB0j/yEinI2bBZcO19z0AoMmwtF5+M0+NeEfiB2sQr/2uRb0kO76z9C6qDGEh1Wi
-	 0lh/pU3ZNH8Byuczoc6tfrW8+6Uvm8bKd+6RbO3BMMkeowMgzu8LJVjFyYlCR9qY8D
-	 9L1mmSK6vHdFEE8EG6aDZeVkIpHr5IhP7IbP4j+qK+vitqTJmmP3i95wLS8nijuj3Z
-	 IYGruZJvL1H3w==
+	b=QoxYHj2c2XWinw7JE+NhoeUx9wRnJlok5OsTOUt2xgNTGxX0NV0ANBPV/mMt7t49C
+	 KVuIyF6UYNUyxmXItdRCepeVTTPiHncFLpSN80jd8nbyRElVwT47ssm7Bhw1KHlayT
+	 HFY4wr0YTOJ6YNY/fBMrxS4f2dfrRKFTsx5WluoeJvcejzLakuiNlWq3lItZ6tKoHv
+	 wAxff6/6Z6c+F1cmrkeen0EnmujyLPHiGwzpk2afBBwvzzGUZZAzgQLToLQwBCDJeg
+	 BX9f7AMlkC6l7vufc0PfSCgluFwbCu8mc2LRyucF3AweE3P8PfXw4INwvdlzg0zwOv
+	 K4IEEPS3vmlhA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A97FFD84BC5;
-	Wed, 28 Feb 2024 11:20:32 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 14568D84BC5;
+	Wed, 28 Feb 2024 11:20:34 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,37 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] ethernet: adi: Move select PHYLIB from NET_VENDOR_ADI to
- ADIN1110
+Subject: Re: [PATCH net-next v5 0/3] ioam6: netlink multicast event
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170911923269.32073.6670138540455160229.git-patchwork-notify@kernel.org>
-Date: Wed, 28 Feb 2024 11:20:32 +0000
-References: <99d4d711acfc020c8987e96145f2f1f323cbaa3b.1708947112.git.geert@linux-m68k.org>
-In-Reply-To: <99d4d711acfc020c8987e96145f2f1f323cbaa3b.1708947112.git.geert@linux-m68k.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: rdunlap@infradead.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ <170911923407.32073.2495064703412581430.git-patchwork-notify@kernel.org>
+Date: Wed, 28 Feb 2024 11:20:34 +0000
+References: <20240226131412.10214-1-justin.iurman@uliege.be>
+In-Reply-To: <20240226131412.10214-1-justin.iurman@uliege.be>
+To: Justin Iurman <justin.iurman@uliege.be>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, dsahern@kernel.org,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
  linux-kernel@vger.kernel.org
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This series was applied to netdev/net-next.git (main)
 by David S. Miller <davem@davemloft.net>:
 
-On Mon, 26 Feb 2024 12:34:02 +0100 you wrote:
-> The NET_VENDOR_* Kconfig options are used as gatekeepers.  Merely
-> enabling such an option must not enable any other extra code.
+On Mon, 26 Feb 2024 14:14:09 +0100 you wrote:
+> v5:
+>  - remove the "must be the destination" check before sending an ioam6
+>    event
+> v4:
+>  - rebase on top of net merge
+> v3:
+>  - patchset was mistakenly superseded due to same cover title used for
+>    iproute2-next equivalent patch -> resend (renamed)
+> v2:
+>  - fix warnings
 > 
-> Fixes: a9f80df4f5144030 ("net: ethernet: adi: requires PHYLIB support")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
->  drivers/net/ethernet/adi/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> [...]
 
 Here is the summary with links:
-  - [net] ethernet: adi: Move select PHYLIB from NET_VENDOR_ADI to ADIN1110
-    https://git.kernel.org/netdev/net/c/943d4bd67950
+  - [net-next,v5,1/3] uapi: ioam6: API for netlink multicast events
+    https://git.kernel.org/netdev/net-next/c/5fa918a33563
+  - [net-next,v5,2/3] net: ioam6: multicast event
+    https://git.kernel.org/netdev/net-next/c/67c8e4bb4f54
+  - [net-next,v5,3/3] net: exthdrs: ioam6: send trace event
+    https://git.kernel.org/netdev/net-next/c/f655c78d6225
 
 You are awesome, thank you!
 -- 
