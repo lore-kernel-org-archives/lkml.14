@@ -1,191 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08AE1AAC9;
-	Wed, 28 Feb 2024 02:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3181CD24
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 02:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709088097; cv=none; b=o9B6nIOqyS1toYDUFBi/9zdX1jHSmEznWuGQUzd0fcjq8HQJMkFn/JCVQwP9WMoyTP4KgeAW9NTcLmyBxklf7k+1ioIL0MIfGelWXmS5qa5Up1bmm9BqyXkFLhvvUgHEa/4/Ru7H5knouRuWov+a+etRhwZSEA+4H0COpEszPys=
+	t=1709088112; cv=none; b=ZhX28ciAV7H6z2doynU+glv851GmAZtTf5AY8gI6YbWm57JQqjEHOpuuEy1Y0eLpZ8FJskwxd9g5UtijQ6ll1oqPsfHnkxLpw2m/w6k08NXfs/TPHxlEsyx/Qhf5bnCyq2VuCs3L2Rp6NtK9mPbF1h6Win6MqutXg+BUixbTITg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709088097; c=relaxed/simple;
-	bh=92CoCrnBxMOMWfB5SuJP3VV67KEybYNkFipmfDe32s4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=dZ3SbNeaeHKSwVcUk/csy7AuA1j7Q1nkBhF88zree6DVI/SwSfENYPN24mOHO/VtupooHcOrunnGngxZgMDwvFsB4l/+lnAxluTM37ssmYF0Hob5nMbO6QAwVFtUHgsTSehd44LA6NhVpxLW3zgokZ0O/7gJRhVuy6lALfh8gMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D+I/jzAk; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709088112; c=relaxed/simple;
+	bh=fot6IvGX0Wk467Q0o26GAtryVO620eXI+SwQAgkJhw4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gyLBmmjeSVIbQhuKn74Xo0c/yLG5p40iab8rTGjPtAgUPRxh2UqKBzjk2OVOeMh9KR2FGRMC6O4k+ZyDSCzUVeApq2/4urqFa9wJ5skxxpvYH1gq/3kUGITLkpen0tUmKHglBI/5VQE/FAsZMNZzuVY0YesjWY81dcPRKbBhnSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BXnfxW/5; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D+I/jzAk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709088096; x=1740624096;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=92CoCrnBxMOMWfB5SuJP3VV67KEybYNkFipmfDe32s4=;
-  b=D+I/jzAk08VfR6OH3O5vRHr14ILEflrr14BHjnUDni+gGcfdXRh7Iysy
-   QHWb89/+j/wTWDCj2iK5xQcEkFx8kmN20IRwnsT2XUvEc8wYz3cZSVFW8
-   pYqrqCkm2KKRaOMW4VQHtElW8PZY+vJK33+o+sV/OSb2qVr3LDjnDtke+
-   jOzwS6Sk673UU9Aa4yWLvYNhKIGP18N3jzMoDNLlKpxSmbVvMaMsrm4y1
-   8RhKFWkNGKts5YY1M5Oh76KwQhHlLMO7AfRPlg6RFLLUdcnnFbi9iX6EM
-   38zbJiJvnCLS4Of5V9mYLH+cE7zA0lM1tFkt60+/zXGblPJANQ/VCzzM6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3326775"
-X-IronPort-AV: E=Sophos;i="6.06,189,1705392000"; 
-   d="scan'208";a="3326775"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 18:41:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,189,1705392000"; 
-   d="scan'208";a="11833524"
-Received: from dschro4x-mobl.amr.corp.intel.com (HELO [10.212.137.190]) ([10.212.137.190])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 18:41:34 -0800
-Message-ID: <7bb4c41c-2df7-4eec-86b2-74d110ea535c@linux.intel.com>
-Date: Tue, 27 Feb 2024 18:41:33 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BXnfxW/5"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6e43ee3f5e5so3580585b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 18:41:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709088110; x=1709692910; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=53SE99VtRIFLP8URa2ZR5LBSPMEfB4F4A0x9UaRfSO4=;
+        b=BXnfxW/5Ti/KVtGUF1bYLpxgYQafnUxhSHuXCrBX5jth1S9eBE+7jHTwIHq4L+P0it
+         ZyPcJOxbyxl0J9GHSrsz3c38F2HVtCJR3QBPKIglvTR8aKTmSVGabXIGeRI6LBbTzinX
+         p7KAU9Quw7hK65IsR7/x4Nh3pnieDPK04ZXxGrrtuIYxxOrkBPQIbsLgxYNk8n76JYb4
+         7s3fJmpxEMFLe4hoqUR5K9+gQGM28AFMxQm+FYzRtj7tLf+7T2GUScOh49znt58R77q7
+         3q/MIVaUKr14mKCerriQRNwa+8a5wb3GY8dkvYcQB1JS9HM7/j+ulujS5eEdjbrQHq4m
+         Znsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709088110; x=1709692910;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=53SE99VtRIFLP8URa2ZR5LBSPMEfB4F4A0x9UaRfSO4=;
+        b=vsZjMlayrEH++iA547/y507sTy5aOwGIT7sLAHHhS8bobLVfEOOJ833lb9+haIsqKq
+         b+xK1txHipDw3PY3P1CM7ZlekKi1+jKVFdE04wzfNvLTiw25iXXsyVVZ/RQQjFxWix6Z
+         BuHlwakd6y1QMq4jtTQFzUbJZREyKIAtH86qcs1TGDVz0AvwaFNBLdIwWVYZ16jPfcjF
+         HCUigX7/iyCr/Xrje2v/s+9Bq9anAFLlQgP7MdNvh3AbwyAqMu4gJadX7ktNghKufuXP
+         rTYOamUuqglVCdLL6Mz6wIr0E4OsWNVLRAm6OJdiJK65wZTBvI2nwlbGcdWMyYUBDUlA
+         cjhw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6hYwUIjH9pmIn7LCjp5MW9xmcfiL0SC+G0XFiwtsdMfDg6IjN0U4lSf6Hop4aRakC6j5M3gcihSZXXibi2pyOuHS59Q+N/jrkwfeW
+X-Gm-Message-State: AOJu0YwToGtpKKy3KbS2xZmOowXLRQ5t2gVmcRp0SGp47SvGNPtdXpa6
+	J/BTCkVW2w7NKRsoDCJdFSBUBjWaqe7YV6FGYbU97hNESjG3ydPpcZLgrSuTYjpEiVAc9aS6HF9
+	Njg==
+X-Google-Smtp-Source: AGHT+IHqZjnLQfoLDlb6615ZXQrJj6R337tVGFLkL2HvBVrbR39vItpyAICXZjZm9RQUXtmJjHxJl3bAMQQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:92a6:b0:6e5:44d3:5865 with SMTP id
+ jw38-20020a056a0092a600b006e544d35865mr136678pfb.2.1709088110637; Tue, 27 Feb
+ 2024 18:41:50 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue, 27 Feb 2024 18:41:31 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 4/9] platform/x86/intel/sdsi: Add attribute to read the
- current meter state
-Content-Language: en-US
-To: "David E. Box" <david.e.box@linux.intel.com>,
- rajvi.jingar@linux.intel.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com
-References: <20240228000016.1685518-1-david.e.box@linux.intel.com>
- <20240228000016.1685518-5-david.e.box@linux.intel.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240228000016.1685518-5-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Message-ID: <20240228024147.41573-1-seanjc@google.com>
+Subject: [PATCH 00/16] KVM: x86/mmu: Page fault and MMIO cleanups
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yan Zhao <yan.y.zhao@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	Michael Roth <michael.roth@amd.com>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	Chao Peng <chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
+
+This is a combination of prep work for TDX and SNP, and a clean up of the
+page fault path to (hopefully) make it easier to follow the rules for
+private memory, noslot faults, writes to read-only slots, etc.
+
+Paolo, this is the series I mentioned in your TDX/SNP prep work series.
+Stating the obvious, these
+
+  KVM: x86/mmu: Pass full 64-bit error code when handling page faults
+  KVM: x86: Move synthetic PFERR_* sanity checks to SVM's #NPF handler
+
+are the drop-in replacements.
+
+Isaku Yamahata (1):
+  KVM: x86/mmu: Pass full 64-bit error code when handling page faults
+
+Sean Christopherson (15):
+  KVM: x86/mmu: Exit to userspace with -EFAULT if private fault hits
+    emulation
+  KVM: x86: Remove separate "bit" defines for page fault error code
+    masks
+  KVM: x86: Define more SEV+ page fault error bits/flags for #NPF
+  KVM: x86/mmu: Use synthetic page fault error code to indicate private
+    faults
+  KVM: x86/mmu: WARN if upper 32 bits of legacy #PF error code are
+    non-zero
+  KVM: x86: Move synthetic PFERR_* sanity checks to SVM's #NPF handler
+  KVM: x86/mmu: WARN and skip MMIO cache on private, reserved page
+    faults
+  KVM: x86/mmu: Move private vs. shared check above slot validity checks
+  KVM: x86/mmu: Don't force emulation of L2 accesses to non-APIC
+    internal slots
+  KVM: x86/mmu: Explicitly disallow private accesses to emulated MMIO
+  KVM: x86/mmu: Move slot checks from __kvm_faultin_pfn() to
+    kvm_faultin_pfn()
+  KVM: x86/mmu: Handle no-slot faults at the beginning of
+    kvm_faultin_pfn()
+  KVM: x86/mmu: Set kvm_page_fault.hva to KVM_HVA_ERR_BAD for "no slot"
+    faults
+  KVM: x86/mmu: Initialize kvm_page_fault's pfn and hva to error values
+  KVM: x86/mmu: Sanity check that __kvm_faultin_pfn() doesn't create
+    noslot pfns
+
+ arch/x86/include/asm/kvm_host.h |  45 ++++-----
+ arch/x86/kvm/mmu.h              |   4 +-
+ arch/x86/kvm/mmu/mmu.c          | 159 +++++++++++++++++++-------------
+ arch/x86/kvm/mmu/mmu_internal.h |  24 ++++-
+ arch/x86/kvm/mmu/mmutrace.h     |   2 +-
+ arch/x86/kvm/svm/svm.c          |   9 ++
+ 6 files changed, 151 insertions(+), 92 deletions(-)
 
 
-On 2/27/24 4:00 PM, David E. Box wrote:
-> The meter_certificate file provides access to metering information that may
-> be attested but is only updated every 8 hours. Add new attribute,
-> meter_current, to allow reading an untested snapshot of the current values.
->
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
-
-Looks good to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->
-> V2 - make control_flags a parameter to be eventually passed to
->      sdsi_mbox_cmd_read(). This removes the need for a lock which had been
->      added to protect control_flags when it was a member of the private
->      struct.
->
->  drivers/platform/x86/intel/sdsi.c | 30 ++++++++++++++++++++++++------
->  1 file changed, 24 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-> index bb3eaf5eb382..277e4f4b20ac 100644
-> --- a/drivers/platform/x86/intel/sdsi.c
-> +++ b/drivers/platform/x86/intel/sdsi.c
-> @@ -68,6 +68,7 @@
->  #define CTRL_COMPLETE			BIT(6)
->  #define CTRL_READY			BIT(7)
->  #define CTRL_INBAND_LOCK		BIT(32)
-> +#define CTRL_METER_ENABLE_DRAM		BIT(33)
->  #define CTRL_STATUS			GENMASK(15, 8)
->  #define CTRL_PACKET_SIZE		GENMASK(31, 16)
->  #define CTRL_MSG_SIZE			GENMASK(63, 48)
-> @@ -95,6 +96,7 @@ enum sdsi_command {
->  struct sdsi_mbox_info {
->  	u64	*payload;
->  	void	*buffer;
-> +	u64	control_flags;
->  	int	size;
->  };
->  
-> @@ -250,7 +252,8 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
->  	control = FIELD_PREP(CTRL_EOM, 1) |
->  		  FIELD_PREP(CTRL_SOM, 1) |
->  		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
-> -		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
-> +		  FIELD_PREP(CTRL_PACKET_SIZE, info->size) |
-> +		  info->control_flags;
->  	writeq(control, priv->control_addr);
->  
->  	return sdsi_mbox_poll(priv, info, data_size);
-> @@ -424,8 +427,8 @@ static ssize_t provision_cap_write(struct file *filp, struct kobject *kobj,
->  static BIN_ATTR_WO(provision_cap, SDSI_SIZE_WRITE_MSG);
->  
->  static ssize_t
-> -certificate_read(u64 command, struct sdsi_priv *priv, char *buf, loff_t off,
-> -		 size_t count)
-> +certificate_read(u64 command, u64 control_flags, struct sdsi_priv *priv,
-> +		 char *buf, loff_t off, size_t count)
->  {
->  	struct sdsi_mbox_info info = {};
->  	size_t size;
-> @@ -441,6 +444,7 @@ certificate_read(u64 command, struct sdsi_priv *priv, char *buf, loff_t off,
->  
->  	info.payload = &command;
->  	info.size = sizeof(command);
-> +	info.control_flags = control_flags;
->  
->  	ret = mutex_lock_interruptible(&priv->mb_lock);
->  	if (ret)
-> @@ -472,7 +476,7 @@ state_certificate_read(struct file *filp, struct kobject *kobj,
->  	struct device *dev = kobj_to_dev(kobj);
->  	struct sdsi_priv *priv = dev_get_drvdata(dev);
->  
-> -	return certificate_read(SDSI_CMD_READ_STATE, priv, buf, off, count);
-> +	return certificate_read(SDSI_CMD_READ_STATE, 0, priv, buf, off, count);
->  }
->  static BIN_ATTR_ADMIN_RO(state_certificate, SDSI_SIZE_READ_MSG);
->  
-> @@ -484,10 +488,23 @@ meter_certificate_read(struct file *filp, struct kobject *kobj,
->  	struct device *dev = kobj_to_dev(kobj);
->  	struct sdsi_priv *priv = dev_get_drvdata(dev);
->  
-> -	return certificate_read(SDSI_CMD_READ_METER, priv, buf, off, count);
-> +	return certificate_read(SDSI_CMD_READ_METER, 0, priv, buf, off, count);
->  }
->  static BIN_ATTR_ADMIN_RO(meter_certificate, SDSI_SIZE_READ_MSG);
->  
-> +static ssize_t
-> +meter_current_read(struct file *filp, struct kobject *kobj,
-> +		   struct bin_attribute *attr, char *buf, loff_t off,
-> +		   size_t count)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct sdsi_priv *priv = dev_get_drvdata(dev);
-> +
-> +	return certificate_read(SDSI_CMD_READ_METER, CTRL_METER_ENABLE_DRAM,
-> +				priv, buf, off, count);
-> +}
-> +static BIN_ATTR_ADMIN_RO(meter_current, SDSI_SIZE_READ_MSG);
-> +
->  static ssize_t registers_read(struct file *filp, struct kobject *kobj,
->  			      struct bin_attribute *attr, char *buf, loff_t off,
->  			      size_t count)
-> @@ -518,6 +535,7 @@ static struct bin_attribute *sdsi_bin_attrs[] = {
->  	&bin_attr_registers,
->  	&bin_attr_state_certificate,
->  	&bin_attr_meter_certificate,
-> +	&bin_attr_meter_current,
->  	&bin_attr_provision_akc,
->  	&bin_attr_provision_cap,
->  	NULL
-> @@ -537,7 +555,7 @@ sdsi_battr_is_visible(struct kobject *kobj, struct bin_attribute *attr, int n)
->  	if (!(priv->features & SDSI_FEATURE_SDSI))
->  		return 0;
->  
-> -	if (attr == &bin_attr_meter_certificate)
-> +	if (attr == &bin_attr_meter_certificate || attr == &bin_attr_meter_current)
->  		return (priv->features & SDSI_FEATURE_METERING) ?
->  				attr->attr.mode : 0;
->  
-
+base-commit: ec1e3d33557babed2c2c2c7da6e84293c2f56f58
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.44.0.278.ge034bb2e1d-goog
 
