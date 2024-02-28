@@ -1,119 +1,129 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A27E3613E;
-	Wed, 28 Feb 2024 10:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169CF37141
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709115016; cv=none; b=fsQ1apoOtLZnc17sMXeQ+D7bEnZV1yMVbjM6aOz73MkPURJJ26aDbviHoyAWY5lbi+B2jCj/B9wWqDuancLCbSlt6lUhVKK8be0ZbL7n5xZ60h9XjPw43sLF6Wih2D7BOb17aai+G/xDw9aHSq04V/5eXPXPE6YGgDCcrvBQJ8I=
+	t=1709115050; cv=none; b=cJ/DwzRHWRSqYxpYLdP/Gaauygz6bfwhQl6qnTh0MotlYy7suhu7E40Kn0RflLtTW08XYXrqZipBEggJy+EZvqBvQfJxJg3s4UhBMvug6w31bhF5bXzGZlnMszZG+dCxZXxpXpZp8nrOZdXxOISVKI92xepaHWByfrOVLjJ0Bww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709115016; c=relaxed/simple;
-	bh=gDrqe1TCdETutZDRLxWC3iPRvaMUjmZdXz4Pg6I6EyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VEonGOu6lz38hqwrokmXSiABa7Yvm8desQymJdzlfPawnT4Tju4u5s614EwkNCusoy35m06CdxbTWuvJTrkS1sWgEhD59vJ3mE7jZG2uLW/TyBjJlXpEm8B7RtU9jAf0MVc5V9KUsMeoy21oTB4VVJOUjRRsCTEAsra2XdiLxdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=A/Yt6XK8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1709115050; c=relaxed/simple;
+	bh=tdz0czbokXbZx8NoSb1bVuk3MM7myK0Cqgqnu3P9uqg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g0hMEmqzpZ0ItrV2w9ciUqZtof2ikPdZMf6vlqGoDwsijnkMfLZRVbCymUiKWg8YjKJGSPSlHye21Vw3f/EHJT5nW7ZcPKiYimNXOBQDxKWPvBK1BvqtH3iBJdYiZd90i44Gvk1DnKEuY7hKqiNqrCFkNR6mpJpIAy95V38/zFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fb3laZnx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="A/Yt6XK8"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41S6VSf8009700;
-	Wed, 28 Feb 2024 10:09:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=F/s+thCeoDRDTCkLO/eC1Mvzb84PqPQpXoHEQ1eWBiA=; b=A/
-	Yt6XK8AhRgCQbjBtMjCSZqzDYrSnINWozkr0vnVTGqqJSVGHymK9ivj/k0x0o1uN
-	WYGtIoILPxfjc78PTJA2OvnoML0+UUsGUo585Mz1fSiPpVKaYw2klS+rrwXdCLCT
-	NOLUfZMGA963L5jPhQhT5QgIjm4N2uS2kmjpxTrQj63Y06y3+BDuTehFIK2+3y4O
-	5pb84JAY8o+RLBsmvEr/e2GS2g+5g4FFXlOGTMNsVqffYyYS0Fj8/f0QOlXMkGTH
-	zAjFwwNcdU00wbbm8hT+H/ChkIni/GoHbS5kvBpqw3VrFXSkj4+lGzbX84rg/B7y
-	zwz8ukycaCKE09OmzmFw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3whp65sgwe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Feb 2024 10:09:43 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41SA9gv8015023
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Feb 2024 10:09:42 GMT
-Received: from [10.131.33.37] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 28 Feb
- 2024 02:09:37 -0800
-Message-ID: <9cc4e465-9979-e4cc-3d2d-84cca307f19e@quicinc.com>
-Date: Wed, 28 Feb 2024 15:39:34 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fb3laZnx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709115047;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EDEC0vsrgcNRv6UvAcMAg7ZhZIrIeAEq54Sn/mnIp3o=;
+	b=fb3laZnx2pUCA0VcBlf7g//IH6KHspfITBozR30Rcth6FE9ghAzdWHxB5mLtMb+WlRh05U
+	q40HKdjhjaoiiMC/omy6O/Ar8ybz2S/SKCIPPXrCBvBTPc6fRSiovUyf9bc5Qa+FOlxpBd
+	0256CMDXl32zs+v9oxL3MkiUVaseH2g=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-314-_1zB7Cs7N8KPJ7GFQhs2hw-1; Wed, 28 Feb 2024 05:10:46 -0500
+X-MC-Unique: _1zB7Cs7N8KPJ7GFQhs2hw-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40d62d3ae0cso28303365e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 02:10:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709115045; x=1709719845;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EDEC0vsrgcNRv6UvAcMAg7ZhZIrIeAEq54Sn/mnIp3o=;
+        b=sLc3FWTYoZBD3IXm0BM86XMga/Ikog6WFHr8nREAS3B52OKy+uunXwlPWsVjBFxACu
+         3szuDv4X0LmvLndcPsZcf9AFKFlQf1odVyQJVXWrJldjarLLVQRpLT85AOZ1mIG3ddng
+         TijkbsEdP7IhSgEMmDLm5LJA/wi6AM2BOX6p7+grPt0Y+hjl/SyNvJEEuye9wmZSiDn2
+         j3hrH1433TzcSmsaD/JUuLgqB3pto9Eek2ovA5coxp7Ib8YDDcfAYTjHvooyQTDxiZZ5
+         IK4rFuu/k6hDI5zWsm3whDr8JNfGqheMlI2I19y1khraQSmaSXhO+k5q0JSOLkqqILkE
+         N1yw==
+X-Gm-Message-State: AOJu0YyTsiFgu3CGsuBDUcQx3cs03hak8+mPQeZBRKM11OOLehFMEXvr
+	p4TDUvVpMaeREgMrNRqHMiGf09+LVcwvm2lBgAtFIaNgG/eL+Ukdgm5e07TQTPRqsME+B/ltGry
+	eHHJeW+COqRGLh/zmTvrqhVJHGV7qzkMcdjJwgazZAPbbbNP8S3PputEfoCoAy2qBPrKc5vWUHe
+	DPe2Zsl6aI7BCOovMkhCfF5xRDIh/bALwCJ78eAlfX6+jM
+X-Received: by 2002:adf:e30e:0:b0:33d:6bd5:9f00 with SMTP id b14-20020adfe30e000000b0033d6bd59f00mr8878807wrj.41.1709115044964;
+        Wed, 28 Feb 2024 02:10:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGNBvyItDUcjcIv0Np/7pXiZKIT9CIiSDAQ+3HmvfjfhrAlJ9hPwCLMmeprtUdu0nI7lbpBTg==
+X-Received: by 2002:adf:e30e:0:b0:33d:6bd5:9f00 with SMTP id b14-20020adfe30e000000b0033d6bd59f00mr8878785wrj.41.1709115044551;
+        Wed, 28 Feb 2024 02:10:44 -0800 (PST)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id bo28-20020a056000069c00b0033b406bc689sm14668667wrb.75.2024.02.28.02.10.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 02:10:44 -0800 (PST)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Nishanth Menon <nm@ti.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Breno Leitao <leitao@debian.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	Li Zetao <lizetao1@huawei.com>,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH v2] wlcore: sdio: Rate limit wl12xx_sdio_raw_{read,write}() failures warns
+Date: Wed, 28 Feb 2024 11:10:32 +0100
+Message-ID: <20240228101042.728881-1-javierm@redhat.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 0/2] Fix per-policy boost behavior
-Content-Language: en-US
-To: Viresh Kumar <viresh.kumar@linaro.org>
-CC: <dietmar.eggemann@arm.com>, <marcan@marcan.st>, <sven@svenpeter.dev>,
-        <alyssa@rosenzweig.io>, <rafael@kernel.org>, <xuwei5@hisilicon.com>,
-        <zhanjie9@hisilicon.com>, <sudeep.holla@arm.com>,
-        <cristian.marussi@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <quic_rgottimu@quicinc.com>,
-        <linux-arm-kernel@lists.infradead.org>, <asahi@lists.linux.dev>,
-        <linux-pm@vger.kernel.org>
-References: <20240227165309.620422-1-quic_sibis@quicinc.com>
- <20240228050703.lixqywrtxravegc6@vireshk-i7>
- <c165dd32-1e51-2fac-38ae-dd7300d36372@quicinc.com>
- <20240228063511.rcntpb3dhbbhf7fb@vireshk-i7>
-From: Sibi Sankar <quic_sibis@quicinc.com>
-In-Reply-To: <20240228063511.rcntpb3dhbbhf7fb@vireshk-i7>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 56b7fyYeCFjEwNtiQNInKEoxnAAVmICM
-X-Proofpoint-ORIG-GUID: 56b7fyYeCFjEwNtiQNInKEoxnAAVmICM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-28_04,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- impostorscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0
- adultscore=0 lowpriorityscore=0 mlxlogscore=999 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402280080
+Content-Transfer-Encoding: 8bit
 
+When these failures happen, the warning and call trace is printed which is
+excessive. Instead, just print the error but rate limited to prevent warns
+to unnecessarily pollute the kernel log buffer and make the serial console
+practically unusable.
 
+For example, on an AM625 BeaglePlay board where accessing a SDIO WiFi chip
+fails with an -110 (ETIMEDOUT) error:
 
-On 2/28/24 12:05, Viresh Kumar wrote:
-> On 28-02-24, 10:44, Sibi Sankar wrote:
->> In the existing code, per-policy flags doesn't have any impact i.e.
->> if cpufreq_driver boost is enabled and one or more of the per-policy
->> boost is disabled, the cpufreq driver will behave as if boost is
->> enabled.
-> 
-> I see. Good catch. The first patch is fine, just explain the problem
-> properly and mention that no one is checking the policy->boost_enabled
-> field. It is never read.
-> 
->> I had to update the policy->boost_enabled value because we seem
->> to allow enabling cpufreq_driver.boost_enabled from the driver, but I
->> can drop that because it was just for book keeping.
-> 
-> So with cpufreq_driver->boost_enabled at init time, policy's
-> boost_enabled must be set too. Do that in the core during
-> initialization of the policy instead.
-> 
->> I didn't want
->> to include redundant info from another mail thread that I referenced in
->> the cover letter, but will add more info in the re-spin.
-> 
-> You don't have to, but you need to explain the exact problem in a bit
-> more detail since it wasn't obvious here.
+  $ dmesg | grep "sdio write\|read failed (-110)" | wc -l
+  39
 
-ack, will make these changes in the next re-spin.
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Reviewed-by: Breno Leitao <leitao@debian.org>
+---
 
--Sibi
+Changes in v2:
+- Add Reviewed-by tag by Breno Leitao.
+- Drop warns which seems excesive and rate limit the error (Kalle Vallo).
 
-> 
+ drivers/net/wireless/ti/wlcore/sdio.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+index eb5482ed76ae..70b9648acaaf 100644
+--- a/drivers/net/wireless/ti/wlcore/sdio.c
++++ b/drivers/net/wireless/ti/wlcore/sdio.c
+@@ -75,8 +75,8 @@ static int __must_check wl12xx_sdio_raw_read(struct device *child, int addr,
+ 
+ 	sdio_release_host(func);
+ 
+-	if (WARN_ON(ret))
+-		dev_err(child->parent, "sdio read failed (%d)\n", ret);
++	if (ret)
++		dev_err_ratelimited(child->parent, "sdio read failed (%d)\n", ret);
+ 
+ 	if (unlikely(dump)) {
+ 		printk(KERN_DEBUG "wlcore_sdio: READ from 0x%04x\n", addr);
+@@ -120,8 +120,8 @@ static int __must_check wl12xx_sdio_raw_write(struct device *child, int addr,
+ 
+ 	sdio_release_host(func);
+ 
+-	if (WARN_ON(ret))
+-		dev_err(child->parent, "sdio write failed (%d)\n", ret);
++	if (ret)
++		dev_err_ratelimited(child->parent, "sdio write failed (%d)\n", ret);
+ 
+ 	return ret;
+ }
+-- 
+2.43.2
+
