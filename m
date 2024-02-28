@@ -1,76 +1,110 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAD279B83;
-	Wed, 28 Feb 2024 18:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0481379B84
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709143485; cv=none; b=WF7vzJRbaFjGvDgR4OKRtMetAV7cG6rOIFa7BQbm7tXxJVhKFzKE2Hhk5yd8GdZt1VajpK5AHe3ojTHRPMtlGS8ImtLnrpZ90JwyJG5am/PWlsRv0oVS2WkMlKZEgwg1N80oIIMz/229LPl5ry5mteEWRk2VdLXtRjEnoVvJapg=
+	t=1709143491; cv=none; b=S8lD3xQWEOyulPH2OnvockLqIAHzWG35RhsyXr6ZDP3doW2Lr7/uPZ/KPx9QKW5IJu1M9wgyrChgR74n+7xZBNbFBUfXIm90sZte0Ntedli4vHiV4m9vlvZ+XHFkFlonUVhDoJjQ2GddmpQC+u6FT1nQh4a5wD6e2zDAt94y8jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709143485; c=relaxed/simple;
-	bh=2uZdEhXlLk6+Kihsqf5ShsnH4PpiXM/DSq0L4fxdcpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mirRT9crycp9g/VrY0pTPjBPsfJTEzdJ6L5S1x99vAWq5PjZwg2IJWz7zmikayzw3lzx/e0WyYlgZx2oa3y16IS/U08621rzsXpBkYK7nakVYplilwRvwNkjdsICVjGV2SDzIzP2iwSz61huzScxujMayjOJ/iTKcOba+4JvGTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=N5jYBfzS; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1709143491; c=relaxed/simple;
+	bh=cAtzSvWv7K7fiLSfVH8FUwSa3irTcvGO/xFIgu5yfdw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FrB/0QLTMweAxnbG8VrUsH8C9NP9arAjZPE9gi7lXQ3KH5ooxJk5lVBtpndYrg/0vVfr1EkKSIw8kZ2s1/CgzWu897waiTfaqmJ+dMWx54F4ZpnIXIa5TrlMTIAfFI6HjmM5UehT8Swujecdz8QfoCSSzgfsZp1w6oKL0bZ7gyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LMbaYMtV; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="N5jYBfzS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=4+3pSytnWQjK2YQrwpnYoErWsk0+5Bb2EK+jBbCnDEY=; b=N5jYBfzSgjDXobOuvQqxkmYWXk
-	QImWXO4epRecr8Hcj7XH3FLIrGE9iMM5iGF1FoQtTTQLFwSeZCqZXQeTjo4mKQddHn5esiTlTg3rd
-	DK1la7jWyH3cZYkfBITOKjSGJ7mJGHrDVQSZCn7kpsJqrjtj5Gwb+3Y52zRIZDHLMPSxqnT/BtbXo
-	Luq6yWLSD1MoRZWOd+174E5Nt7zmTmBinvHjZZ92sYUc6xCPIepBYkcztiBhZAZJJM05JCMZKJf3I
-	XNL1YJ1yzNbZkuIHozFSWERD3azo29pn98mFdU86Vh1+F/EScaRDJvfkoVZaORqtBEVAZkMT1BnwI
-	YMVhPAsQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33306)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rfOI6-0005QG-33;
-	Wed, 28 Feb 2024 18:04:27 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rfOI4-0008Ul-6h; Wed, 28 Feb 2024 18:04:24 +0000
-Date: Wed, 28 Feb 2024 18:04:24 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Robert Marko <robimarko@gmail.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, andrew@lunn.ch,
-	hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, linux-arm-msm@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/2] net: phy: qcom: qca808x: fill in
- possible_interfaces
-Message-ID: <Zd91qM1W/srGL/Jw@shell.armlinux.org.uk>
-References: <20240228172452.2456842-1-robimarko@gmail.com>
- <20240228172452.2456842-3-robimarko@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LMbaYMtV"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-29aa7b63ab8so2811272a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:04:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709143489; x=1709748289; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H2czoKr7OC4zJi+ThYCtqOrTxsgjgImB45RATN9D+Vc=;
+        b=LMbaYMtVhfVoriHSfDW8VhztbmT94W3AzfMk81koOxlqEIO+dWmR8BWBKBNvIsAIZk
+         CPKUIHEKOfoAW7BFAXJEqohVovsjiq5DvpDw5hZbZ3+bpSveNFqn1KbtE1JveIeuKAz6
+         Wi9xzZ8AdcXlYLeYYfTZWQMgemFuyxrkNqg7NKPinlXlVNmf7RxS7bPUppJjtgUOSdoP
+         ugU/nSofyWlJwB9deo6p603NxYN4fctYDFtrfcQdE0+n/IIuGyvHz9g1Isl6tpgSFAZ7
+         c2xpUGkCY2G8G5d7VHENM3eCD68IiADDlumeRB5HHVTArUsWWBZPh49bJmPU919XRXBq
+         VFTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709143489; x=1709748289;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=H2czoKr7OC4zJi+ThYCtqOrTxsgjgImB45RATN9D+Vc=;
+        b=bYt8mvDMtgbzB9ukpXxkagdVMuDFznL1iv6bTA/9buVGaaeYnaKgMwfoiNrv7lHCsF
+         9nkkC5YYMUrVazErtj2uOp/AchvonivtEW82SFZN1M0J+zg7JC1vFUfdqgRiwFAo3iPu
+         2mnbtwjdJm3dTWfQju6GwazdApPXQsfKYiAindNk3SgrYnlwzgkbGowBU4bxGxkyUXjL
+         lxMjBFGb2mZ4+aDuWOPB2TDp1PmoQ0UC5qN/bv+rVIUyyiPsESbnKpIuhmo0hc6f7o0N
+         nf7YHP6Tug6itdRNaaMchcVLIMCkRra4FSIKU9ER2CyHe45Ei52bIfnGMAEmrxeqdCFy
+         DyIA==
+X-Gm-Message-State: AOJu0YxkpF+9ADG4tEaay2o9E+2ORQ68XHY6MiA4oy7aDbYCzxUmHcA/
+	acHeqvNWb4zb1gGpoVPsjcqN2u27JBx1S/oUPFZrMYDY/5AufEkgFvIgSu9/0VkgQQxG1ydzYYV
+	whw==
+X-Google-Smtp-Source: AGHT+IGQXQpg1lzJxOxrSR4obqC5XBMX2J89v+ruIoiBwX4V9kcCB9H6ZRf7VtTSnV9ZKhvLvvEOqkd9+Lc=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:1bcd:b0:29a:98ab:a346 with SMTP id
+ oa13-20020a17090b1bcd00b0029a98aba346mr1210pjb.9.1709143489280; Wed, 28 Feb
+ 2024 10:04:49 -0800 (PST)
+Date: Wed, 28 Feb 2024 10:04:47 -0800
+In-Reply-To: <CABgObfaPRpEnndHwkZpOZ=JOZjJPyh2KXYLh5ZGMFMSboZqj9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240228172452.2456842-3-robimarko@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Mime-Version: 1.0
+References: <20240227232100.478238-1-pbonzini@redhat.com> <Zd6LK7RpZZ8t-5CY@google.com>
+ <CABgObfYpRJnDdQrxp=OgjhbT9A+LHK36MHjMvzcQJsHAmfX++w@mail.gmail.com>
+ <Zd9hrfJ5xRI6HeZp@google.com> <CABgObfaPRpEnndHwkZpOZ=JOZjJPyh2KXYLh5ZGMFMSboZqj9w@mail.gmail.com>
+Message-ID: <Zd91v2DeQmV0yQ1R@google.com>
+Subject: Re: [PATCH 00/21] TDX/SNP part 1 of n, for 6.9
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, michael.roth@amd.com, 
+	isaku.yamahata@intel.com, thomas.lendacky@amd.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 28, 2024 at 06:24:10PM +0100, Robert Marko wrote:
-> Currently QCA808x driver does not fill the possible_interfaces.
-> 2.5G QCA808x support SGMII and 2500Base-X while 1G model only supports
-> SGMII, so fill the possible_interfaces accordingly.
-> 
-> Signed-off-by: Robert Marko <robimarko@gmail.com>
+On Wed, Feb 28, 2024, Paolo Bonzini wrote:
+> On Wed, Feb 28, 2024 at 5:39=E2=80=AFPM Sean Christopherson <seanjc@googl=
+e.com> wrote:
+> > > > This doesn't work.  The ENC flag gets set on any SNP *capable* CPU,=
+ which results
+> > > > in false positives for SEV and SEV-ES guests[*].
+> > >
+> > > You didn't look at the patch did you? :)
+> >
+> > Guilty, sort of.  I looked (and tested) the patch from the TDX series, =
+but I didn't
+> > look at what you postd.  But it's a moot point, because now I did look =
+at what you
+> > posted, and it's still broken :-)
+> >
+> > > It does check for has_private_mem (alternatively I could have dropped=
+ the bit
+> > > in SVM code for SEV and SEV-ES guests).
+> >
+> > The problem isn't with *KVM* setting the bit, it's with *hardware* sett=
+ing the
+> > bit for SEV and SEV-ES guests.  That results in this:
+> >
+> >   .is_private =3D vcpu->kvm->arch.has_private_mem && (err & PFERR_GUEST=
+_ENC_MASK),
+> >
+> > marking the fault as private.  Which, in a vacuum, isn't technically wr=
+ong, since
+> > from hardware's perspective the vCPU access was "private".  But from KV=
+M's
+> > perspective, SEV and SEV-ES guests don't have private memory
+>=20
+> vcpu->kvm->arch.has_private_mem is the flag from the SEV VM types
+> series. It's false on SEV and SEV-ES VMs, therefore fault->is_private
+> is going to be false as well. Is it ENOCOFFEE for you or ENODINNER for
+> me? :)
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-
-Thanks!
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+*sigh*, ENOCOFFEE.
