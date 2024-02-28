@@ -1,65 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE5972926;
-	Wed, 28 Feb 2024 22:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C354776F06;
+	Wed, 28 Feb 2024 22:00:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709157620; cv=none; b=UwYCMG+h3eyIoXNFAf/+UWkvvMwc2GreeK2zx+WBqyVnHvQ3SOIx8qqVRexaTuBj0DBBNKGIzzpw6Dhu3DCP0RirN/84snNoSnqUXhX2HGATz2jHAkHdtuRp9XEYwwV/Qjxqnfsa8Puyb4EHswH0YXYpwrHRBcsidPO5l61iIB0=
+	t=1709157620; cv=none; b=IhbtnyQmeZTpjw4UrWkJMj4fUcwDImMxRa6WguGs7Cc1GQrigjwlJ75jKWPiYTyXobljiFVy9hRkDa0gNgFakow5DJHcjzxGX5QQJrc3pwZf5X1m7PIWly+Qh8tzJZa5Tyh/Yrep3GQm9AQKp8FdUSqaLg6m5xU9J4r784ORKVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709157620; c=relaxed/simple;
-	bh=HxvvFqnmA8souJOCgavYVWOgiTyC8Y/4qwwd2OIPr0E=;
+	bh=Kk/u36gHKxOF4l2/tTGL1C6udfYzvSq/cMqYc413BxY=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=nnjs8aEaGWS1uXvxmh2XlG51KZ9s6CRrKIDSuPsQgwR4mp0VvuCjQaDg6ZP9oDnTAycN1mXS6RgdAawBQNpC2NsQrrYo9VcRds/Maabziy+9znNw90Y8iHVB3pNedv8n1MnxPuyjnuLnfTRBRa/UklktmmvFRONZTrMB5DFexLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xn7h1TLt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8H5y2ZWL; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=n68vhzUiEBcTDy/0rVLl9AAUv2m4GATuGO/qn4inxbhKp5d1gzlSoPFXGm8BcmN10ZtbxVE23j3l0pa3H/Na9hjcSABkMWKsMm48UEwsk/FCa97cgJsI46N7MwoLZbw805s6cJ8Q+pTnA/S6WX8JwwwQOn/Cok2uTaTvnVLdAMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FA47jh11; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2Q/1NS/d; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xn7h1TLt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8H5y2ZWL"
-Date: Wed, 28 Feb 2024 22:00:08 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FA47jh11";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2Q/1NS/d"
+Date: Wed, 28 Feb 2024 22:00:12 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709157609;
+	s=2020; t=1709157612;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n1hUEJTNDyLbFNyv4Pvq7UoLFZ3E7ttyCUfoofWt/8o=;
-	b=xn7h1TLt1nyaIrhTvV6DCuY9lLoHZxM4JuFMw+jrh5aMBqoCL+45XNXI4ko+4hZF/Tmn03
-	Y9ajnOPN8eEmhxg1cX5HyQbdAtjzUHKFxxdBjbd71YCoWh2vx2qbVTk2/ULpQV6WOzhMNV
-	3xAvfHbJh+QgqvZPOm2lH23k4LfDl3gx81A/+dpaQVsZPkQpdfLDl7D4uWP3IIyvljU6BE
-	CEVnM/5S24skHGbbC4mfosxHOWZFDn6M/Fwlunh8ZOwZzap8QycjnEP8WHeZqIMF6oopcs
-	w3vhMe8iy2xVd0KZ8AF0jEgQJGuCm7J6/PmY0Kme9VybVnmz0bJ6zEYmqXt9VA==
+	bh=/O4dhYJbx9UPr8JhnBQF/67XXCWwL6RYSgwf8MFcNPY=;
+	b=FA47jh11PUs1H0QoisO3eYEdQxzsQIw4QNx5KyB7YrlgMJLwDbtf96tDq2kBqlhXAt/2/y
+	ImHGS97+GvSGtJ/w7gNV21OwEptmI1aI3QA9JoAMmImssZDnmbNhIf5JXaFm8uBkWt5G+v
+	8R2AGoAzrkIRWBuaIZGqW4kZrjMOo5Rx9GHfGsi+0+/gr2IrOq8/t9wA85NYo+85nNzJdc
+	EnMkuHAUt2BYW1WJvDpFAt9Cpv9dkMl8hgA4LCyz/M19dZkfcp38NMVyLc7crhvrbskC/r
+	A3L5rWMYnxV7cR8S84cup2X/uleYKeyqfzdWTgio3fX4wKUTW5wYNWmyCfoT+w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709157609;
+	s=2020e; t=1709157612;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n1hUEJTNDyLbFNyv4Pvq7UoLFZ3E7ttyCUfoofWt/8o=;
-	b=8H5y2ZWL/WDBvcFEdBFt5YMckWlN5NYBp2cT6tD6AkzXjVaByrmJP3cPYG9zG4SkHIKb7h
-	4po0/SEnjKoyUJAg==
-From: "tip-bot2 for David Vernet" <tip-bot2@linutronix.de>
+	bh=/O4dhYJbx9UPr8JhnBQF/67XXCWwL6RYSgwf8MFcNPY=;
+	b=2Q/1NS/dQfPRhZV4MSmFBbr51dGNHaLk7Qjwc8IkarOhOe6Z1C5KD0DFrIgqBPZsMtgU7h
+	9C5+xLj75yVfVLBQ==
+From: "tip-bot2 for Shrikanth Hegde" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: sched/core] sched/fair: Simplify the update_sd_pick_busiest() logic
-Cc: David Vernet <void@manifault.com>, Ingo Molnar <mingo@kernel.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Valentin Schneider <vschneid@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240206043921.850302-4-void@manifault.com>
-References: <20240206043921.850302-4-void@manifault.com>
+Subject: [tip: sched/core] sched/fair: Add READ_ONCE() and use existing helper
+ function to access ->avg_irq
+Cc: Shrikanth Hegde <sshegde@linux.vnet.ibm.com>,
+ Ingo Molnar <mingo@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240101154624.100981-3-sshegde@linux.vnet.ibm.com>
+References: <20240101154624.100981-3-sshegde@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170915760842.398.18217674203199461024.tip-bot2@tip-bot2>
+Message-ID: <170915761210.398.716787141204315247.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,73 +68,59 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     7e9f7d17fe6c23432fda9a3648a858b7589cb4aa
-Gitweb:        https://git.kernel.org/tip/7e9f7d17fe6c23432fda9a3648a858b7589cb4aa
-Author:        David Vernet <void@manifault.com>
-AuthorDate:    Mon, 05 Feb 2024 22:39:21 -06:00
+Commit-ID:     a6965b31888501f889261a6783f0de6afff84f8d
+Gitweb:        https://git.kernel.org/tip/a6965b31888501f889261a6783f0de6afff84f8d
+Author:        Shrikanth Hegde <sshegde@linux.vnet.ibm.com>
+AuthorDate:    Mon, 01 Jan 2024 21:16:24 +05:30
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 28 Feb 2024 15:19:26 +01:00
+CommitterDate: Wed, 28 Feb 2024 15:11:15 +01:00
 
-sched/fair: Simplify the update_sd_pick_busiest() logic
+sched/fair: Add READ_ONCE() and use existing helper function to access ->avg_irq
 
-When comparing the current struct sched_group with the yet-busiest
-domain in update_sd_pick_busiest(), if the two groups have the same
-group type, we're currently doing a bit of unnecessary work for any
-group >= group_misfit_task. We're comparing the two groups, and then
-returning only if false (the group in question is not the busiest).
+Use existing helper function cpu_util_irq() instead of open-coding
+access to ->avg_irq.
 
-Otherwise, we break out, do an extra unnecessary conditional check that's
-vacuously false for any group type > group_fully_busy, and then always
-return true.
+During review it was noted that ->avg_irq could be updated by a
+different CPU than the one which is trying to access it.
 
-Let's just return directly in the switch statement instead. This doesn't
-change the size of vmlinux with llvm 17 (not surprising given that all
-of this is inlined in load_balance()), but it does shrink load_balance()
-by 88 bytes on x86. Given that it also improves readability, this seems
-worth doing.
+->avg_irq is updated with WRITE_ONCE(), use READ_ONCE to access it
+in order to avoid any compiler optimizations.
 
-Signed-off-by: David Vernet <void@manifault.com>
+Signed-off-by: Shrikanth Hegde <sshegde@linux.vnet.ibm.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Reviewed-by: Valentin Schneider <vschneid@redhat.com>
-Link: https://lore.kernel.org/r/20240206043921.850302-4-void@manifault.com
+Link: https://lore.kernel.org/r/20240101154624.100981-3-sshegde@linux.vnet.ibm.com
 ---
- kernel/sched/fair.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ kernel/sched/fair.c  | 4 +---
+ kernel/sched/sched.h | 2 +-
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 448520f..51fe17f 100644
+index 127e727..ba36339 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -10010,9 +10010,7 @@ static bool update_sd_pick_busiest(struct lb_env *env,
- 	switch (sgs->group_type) {
- 	case group_overloaded:
- 		/* Select the overloaded group with highest avg_load. */
--		if (sgs->avg_load <= busiest->avg_load)
--			return false;
--		break;
-+		return sgs->avg_load > busiest->avg_load;
+@@ -9246,10 +9246,8 @@ static inline bool others_have_blocked(struct rq *rq)
+ 	if (thermal_load_avg(rq))
+ 		return true;
  
- 	case group_imbalanced:
- 		/*
-@@ -10023,18 +10021,14 @@ static bool update_sd_pick_busiest(struct lb_env *env,
+-#ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+-	if (READ_ONCE(rq->avg_irq.util_avg))
++	if (cpu_util_irq(rq))
+ 		return true;
+-#endif
  
- 	case group_asym_packing:
- 		/* Prefer to move from lowest priority CPU's work */
--		if (sched_asym_prefer(sg->asym_prefer_cpu, sds->busiest->asym_prefer_cpu))
--			return false;
--		break;
-+		return sched_asym_prefer(sds->busiest->asym_prefer_cpu, sg->asym_prefer_cpu);
+ 	return false;
+ }
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 001fe04..d224267 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3136,7 +3136,7 @@ static inline bool uclamp_rq_is_idle(struct rq *rq)
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ static inline unsigned long cpu_util_irq(struct rq *rq)
+ {
+-	return rq->avg_irq.util_avg;
++	return READ_ONCE(rq->avg_irq.util_avg);
+ }
  
- 	case group_misfit_task:
- 		/*
- 		 * If we have more than one misfit sg go with the biggest
- 		 * misfit.
- 		 */
--		if (sgs->group_misfit_task_load <= busiest->group_misfit_task_load)
--			return false;
--		break;
-+		return sgs->group_misfit_task_load > busiest->group_misfit_task_load;
- 
- 	case group_smt_balance:
- 		/*
+ static inline
