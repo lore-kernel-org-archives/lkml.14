@@ -1,85 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4D315F316;
-	Wed, 28 Feb 2024 19:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A500C15F316
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 19:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709149087; cv=none; b=VxEPMyYCtlrjTDh7J1FHs5n5FOWyYsG8nrWidpnRddC+Zd97v0bS/NV0an8yYiNSQLEnz7YP9Dvigg7zhetvPi5CPMq/O7n15OmLHh6+AzOq6v81ZG/GQczQJxffX3f163OhDoF6Uc9iLb3JDw+gW4imp26l7hVVKiiRBNqz1GU=
+	t=1709149097; cv=none; b=Mry57ydAbOYMLoBXxzFTZZU6wm/uL8YEiNI66wadJ+2hQ5biMAp/nYVKGE2WoSqF+DB9pSTrdzYa3C99fs9belI1EW0QuqiBrAtywpOj/LGLpRAaB9U5hnLV5NWyB2BuPvoYhkmFeshKdq63bnmTPzku5M1EDkkFN5mdNi361uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709149087; c=relaxed/simple;
-	bh=Ou+j2G4u1McDiltrMDd5BddvlU0WOmjqjYYJXBtphzc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YOWelIn7gmNLP4bweq4PTyxPEkTSSs7mVulLwHOPohyYMwUwas8wUVL7w76RfSbk07EWnyaIcDhvUIET0gp4WOSJ94YVQQUx0v3jmZ68v2zUUdV7S2nLnn6DCJcClqcUDlZvUXXZENmZTpOd3Ua+4POOzzcSHDenPncBotSPqKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LRMvfi4G; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709149097; c=relaxed/simple;
+	bh=CXacfLZxd/QfNk37caUzTH5lHopeOn500HrfDvKWa+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tsN1pz6OH5YehdajcyT1KrrdraCFelpTdKARP/pf1HZHfeRb1ngY6onod/UPnDwF+2GjkYRFnO/f4YJoq4odQJHq/BO1Cy0y1aHaQUbzXH4ersg1oqGsGh4Ps0G9LHqBR40afr1IXc53MGUOZstyv9RTgfedSbmVfP0TBEb/MfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UKGfXarC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LRMvfi4G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709149085; x=1740685085;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Ou+j2G4u1McDiltrMDd5BddvlU0WOmjqjYYJXBtphzc=;
-  b=LRMvfi4GFQxH/PI9nSxBdPOgce1vSMSAwcf/PsuBwXtBEs8c7q3FTZi/
-   bHxANgsIyveIu/K/YrAtcAFpgssXZZWx8XN1rPRv0zm4kxfPLbGSzzESu
-   2uZv4Zu7uFGzcRjB3RH85pclNbPhFf6xJ/ZE3bxetdp7lIHrQfZ3xTFSA
-   Lp2uZQY6DhhwRvgaGO0UT6adjgIKoxmLemAjDi/b1PsMH6SYO7dwWBa0k
-   Fr8wH5D17V5AV6/I2oa5bmEl11WjjDC97g//q0vHa0K5davE/eV6T1Kw7
-   Ht69uKTw1IrS4fxJCFLaP3pKgCQ2KeeiGnABaUjSLpmBHw/tvy/CInsAW
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="14990894"
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="14990894"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 11:38:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="937034608"
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="937034608"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Feb 2024 11:38:03 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 0FAF81C5; Wed, 28 Feb 2024 21:38:01 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] spi: oc-tiny: Remove unused of_gpio.h
-Date: Wed, 28 Feb 2024 21:37:31 +0200
-Message-ID: <20240228193732.3605768-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UKGfXarC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709149094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uA20CDAKsgM4Tx3YYjgPKLshZVqnm4Ew1QkRNRKLdZo=;
+	b=UKGfXarCbhjUiw8A6FNfr9s/+beoA2N4i0ENGV759ABFU4BgXxeXit4ESFhIWdwRszpbSo
+	b4rEtyZBJmGILtflQxg75QiKD9yayn8Dy8RMNlUcfOm5ThRco6n3vUi1DPD+FclT0wWH8w
+	bPZXbASSFaROdHPTBkSIaM/eK2Ds5KY=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-294-_vsUusOxM7y_yqFT012Peg-1; Wed, 28 Feb 2024 14:38:12 -0500
+X-MC-Unique: _vsUusOxM7y_yqFT012Peg-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7c78505a39eso5175239f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 11:38:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709149092; x=1709753892;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uA20CDAKsgM4Tx3YYjgPKLshZVqnm4Ew1QkRNRKLdZo=;
+        b=l3UiEBoM1t4ulFez+sJOOjzpciOzlWGTSnB5h7R5xouB5r4aStKZ2f5huEUNjmsnqD
+         J9gxDD87yToHVoQN6qSVjySSSOLWZLDCYFuYNwQoWns9pTM/PLuZBDYObslWr79rjNE4
+         S5mxDNNQP7iAehQeJcTT/jTdFU4Q54juSnEa4ePPF/ilNfwa22/b3OU6EjWpjmrslfRM
+         w74yBNggSV/vCaHkJ0X/URxtVcdEGzVYaCqLqwRnY3R73tJ5UgUs7ureLZHghuCtk6+l
+         QBDcp1fsCY+/SFmz1BZahUidQ/SPUFaYdeFbKTbLoPxW6PtLL0KwO7ujhaXd2fj1autg
+         RPrA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPTNdVpkhO31eDpIKlEHBaFSfZNXy6gkNUTkmHD+2hSiOL63PKXMwRG42Y82NHnbtSvbQsjG0omlCi5c1uslTvcihX/aiJAe0X3qjy
+X-Gm-Message-State: AOJu0YyjcBXKJoLxpjjvVllHYY/BevFZrQVci3BOYFxMp61gQou+hIQI
+	ty0FZdWBl6hhGaHqj5wmG/nhfzvxh8e3Fx38RapO5BfFFp+RNiDPMHcycOSnURHLX2meAB22HQ8
+	wHGH4DLN+5m8uYScYDzrdXsF5ncbUKNNAYT/txSdEp6tXGZclSdFk205DW0/6wA==
+X-Received: by 2002:a05:6602:734:b0:7c7:687e:41ba with SMTP id g20-20020a056602073400b007c7687e41bamr163491iox.9.1709149092236;
+        Wed, 28 Feb 2024 11:38:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFLbkc9moMLuoOGq7o7bm+s7c1gRZdMUmGNufsCw5nAB2hYAZNgiuYz111J6g0/Tgm8/E8rCg==
+X-Received: by 2002:a05:6602:734:b0:7c7:687e:41ba with SMTP id g20-20020a056602073400b007c7687e41bamr163467iox.9.1709149091853;
+        Wed, 28 Feb 2024 11:38:11 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id cl10-20020a0566383d0a00b004741d55e66asm7810jab.84.2024.02.28.11.38.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 11:38:11 -0800 (PST)
+Date: Wed, 28 Feb 2024 12:38:10 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Peter Delevoryas <peter@pjd.dev>
+Cc: qemu-devel <qemu-devel@nongnu.org>, suravee.suthikulpanit@amd.com,
+ iommu@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [q&a] Status of IOMMU virtualization for nested virtualization
+ (userspace PCI drivers in VMs)
+Message-ID: <20240228123810.70663da2.alex.williamson@redhat.com>
+In-Reply-To: <3D96D76D-85D2-47B5-B4C1-D6F95061D7D6@pjd.dev>
+References: <3D96D76D-85D2-47B5-B4C1-D6F95061D7D6@pjd.dev>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-of_gpio.h is deprecated and subject to remove.
-The driver doesn't use it, simply remove the unused header.
+On Wed, 28 Feb 2024 10:29:32 -0800
+Peter Delevoryas <peter@pjd.dev> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/spi/spi-oc-tiny.c | 2 --
- 1 file changed, 2 deletions(-)
+> Hey guys,
+>=20
+> I=E2=80=99m having a little trouble reading between the lines on various
+> docs, mailing list threads, KVM presentations, github forks, etc, so
+> I figured I=E2=80=99d just ask:
+>=20
+> What is the status of IOMMU virtualization, like in the case where I
+> want a VM guest to have a virtual IOMMU?
 
-diff --git a/drivers/spi/spi-oc-tiny.c b/drivers/spi/spi-oc-tiny.c
-index 6ea38f5e7d64..7d8c5cd680d1 100644
---- a/drivers/spi/spi-oc-tiny.c
-+++ b/drivers/spi/spi-oc-tiny.c
-@@ -184,8 +184,6 @@ static irqreturn_t tiny_spi_irq(int irq, void *dev)
- }
- 
- #ifdef CONFIG_OF
--#include <linux/of_gpio.h>
--
- static int tiny_spi_of_probe(struct platform_device *pdev)
- {
- 	struct tiny_spi *hw = platform_get_drvdata(pdev);
--- 
-2.43.0.rc1.1.gbec44491f096
+It works fine for simply nested assignment scenarios, ie. guest
+userspace drivers or nested VMs.
+=20
+> I found this great presentation from KVM Forum 2021: [1]
+>=20
+> 1. I=E2=80=99m using -device intel-iommu right now. This has performance
+> implications and large DMA transfers hit the vfio_iommu_type1
+> dma_entry_limit on the host because of how the mappings are made.
+
+Hugepages for the guest and mappings within the guest should help both
+the mapping performance and DMA entry limit.  In general the type1 vfio
+IOMMU backend is not optimized for dynamic mapping, so performance-wise
+your best bet is still to design the userspace driver for static DMA
+buffers.
+=20
+> 2. -device virtio-iommu is an improvement, but it doesn=E2=80=99t seem
+> compatible with -device vfio-pci? I was only able to test this with
+> cloud-hypervisor, and it has a better vfio mapping pattern (avoids
+> hitting dma_entry_limit).
+
+AFAIK it's just growing pains, it should work but it's working through
+bugs.
+
+> 3. -object iommufd [2] I haven=E2=80=99t tried this quite yet, planning t=
+o:
+> if it=E2=80=99s using iommufd, and I have all the right kernel features in
+> the guest and host, I assume it=E2=80=99s implementing the passthrough mo=
+de
+> that AMD has described in their talk? Because I imagine that would be
+> the best solution for me, I=E2=80=99m just having trouble understanding if
+> it=E2=80=99s actually related or orthogonal.
+
+For now iommufd provides a similar DMA mapping interface to type1, but
+it does remove the DMA entry limit and improves locked page accounting.
+
+To really see a performance improvement relative to dynamic mappings,
+you'll need nesting support in the IOMMU, which is under active
+development.  From this aspect you will want iommufd since similar
+features will not be provided by type1.  Thanks,
+
+Alex
 
