@@ -1,121 +1,150 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F6A145B27
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 12:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F0C73515;
+	Wed, 28 Feb 2024 12:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709123786; cv=none; b=qTsK0bB4OPNBaDYhRfyvx+4Bn6hed9NOr3y1hD5CgWfX7Q2SoQRJcfDU8dAZ+oU9pS8JyyMRiFGSLAX35uTakEKKvjmjWw+RtxJhQzhkk71fXm6Ry9jKZxp4G2gfPMykweSnhaO/QIgYEzLiO2iTG34PbSogaG+nD/owfrvyjnU=
+	t=1709123837; cv=none; b=tnMyjkA4YkPHC1H9debBhwxn37JPh2CqBOapOZdXpOCLfSlDrsjO1jX6cleq6SVffcq2GzhhU4FtMtwWEEUE+UUTVzzd0hj0hdNcZHinmzTOQVhaikgHo1tvc/VCYArRmjoPwFYEMSYyYsXoi55VFt9rH4weA0oZyipzREuqjrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709123786; c=relaxed/simple;
-	bh=JV34Rsk9Ud6TAluSh/NNnx0sR4WyEiQcLsdy9DEB4qs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LsZlxh0UNc1txqNdKOxmwaQzmTM0u4cnUcZOyjy/vGuFy6g80x2BAbiSGwUZ5MigxvKkyJJGReOXIRrcOFE2rR/YTyEd4+CGjerByf805XjMOoNPYNyaxLUH++3YA7CUjIIQB6kQ/+G033enAkNPbjAMYnc30VKmyyBooR/O9Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=bvKkZ+ZL; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1709123837; c=relaxed/simple;
+	bh=OiCrhkAImdpoKzsF7o8mkmuy5/VGiIrPcYWm0Rn/A1A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NCriiYDbLvjky63nA37+7hGNLBbbPg7crDyDGO0Jw8I5hsLb/DgAmdAeLsTYD8meQsOe5GaYDMf27tj/IL8IjctE+1Wt60huzIoeaNoL2ELiESnGvlXppCedYjko8hUuTukzVwwsoGyqF3h2PNusUqYgRQboxFVb4evtWPCITGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FWb17mhK; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="bvKkZ+ZL"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d27184197cso68364591fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 04:36:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWb17mhK"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-565b434f90aso4980784a12.3;
+        Wed, 28 Feb 2024 04:37:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1709123783; x=1709728583; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1r218cPQs+vQGXk5W8TMf0lKe2Qttm/rc570dURd+N8=;
-        b=bvKkZ+ZLtHNPsb7dGhSPQXPayePNh+6Lmt/DHG7HRPB3V9c7Ppzh+a3Ho/q1fuQrVM
-         t9J0NO+bVlMs4wQnKdeckyUIShPMuieGay2SK5BhALFXOyFFB2qQ4A6ArQRP/Xt4jY2u
-         bPBxtTIIJDTofbyZjsmVqk05oVSgOVEALDrtGi2XQlrJl0r44lAE1x4hQ077h0Ojxkou
-         pq8OeAjQZJkHFmU2x6PR/Ct0QTi8HA1aK4U8EPyPIx3h8sqOJuS2c1yyqPStDZtySXwT
-         cf+6V3bevYEdhAzWW1i4nslTOm/IT9XJrPueyQmgOT4hIcW45KxL89D6SfJS2Vau3wZA
-         T6Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709123783; x=1709728583;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1709123834; x=1709728634; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1r218cPQs+vQGXk5W8TMf0lKe2Qttm/rc570dURd+N8=;
-        b=XUayUOMn7Fr5GhkzrxenAInsX7l4sK4wfuNb3P76gxEnA85eHyO3VliF2vyXpo5V0Z
-         JtxL1TmRFwZzpu2xaKIblQArpc+RXw4nEw/gXsbjNdKf6mbetQPU3Qr5j0NA9eT5Je19
-         5Gcnlib5CY1rAqi+Hzo+Xyf+ygoi7fikRqGwrCPDhz/IVCLwbeBTX27zt+upDRdcSuS6
-         59CFYfxLGc0wIVZBgg4SAaFyr3nAV4lzd3fWps3j0GhyufE6BTLFqVfgmO88NNnlDlBd
-         oomGSgGVicxp02sBeUy0d3yMKhqiYPS2LOn0Ycnl12LGOETrb9V52nI740YgbiU8zJNJ
-         hwqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ8I+ZllIpDSAkRj63TnGTfXreiPwlkU4PX4knAWXLBMZoNZvDrv8TPwJknxIJEBDkeR9hgR9EwkfCifYiMp6iLJzfc610Gq/Vx144
-X-Gm-Message-State: AOJu0YxIKekhzRObnKugZHp+x4DKxqSZYwmnONhwppa20KiP1oSYCyQC
-	G+nyyIdcNEBvOos2T/dYQlkPbcol5Gsa/8GVa8q64GkxIyOg9wvCkqZ4jqlZ8/8=
-X-Google-Smtp-Source: AGHT+IFb88pLzc0mMMHFWr4GGKTyW9NIU1Fk+9L4Orhc7J610CrnBoBIDGq7iYcyyvZI2ScWuygMWw==
-X-Received: by 2002:a2e:99d5:0:b0:2d0:b758:93a5 with SMTP id l21-20020a2e99d5000000b002d0b75893a5mr7831033ljj.18.1709123783116;
-        Wed, 28 Feb 2024 04:36:23 -0800 (PST)
-Received: from localhost ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 9-20020a05600c230900b004129018510esm1949803wmo.22.2024.02.28.04.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 04:36:22 -0800 (PST)
-Date: Wed, 28 Feb 2024 13:36:19 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: Yunjian Wang <wangyunjian@huawei.com>
-Cc: mst@redhat.com, willemdebruijn.kernel@gmail.com, jasowang@redhat.com,
-	kuba@kernel.org, bjorn@kernel.org, magnus.karlsson@intel.com,
-	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com,
-	davem@davemloft.net, bpf@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	virtualization@lists.linux.dev, xudingke@huawei.com,
-	liwei395@huawei.com
-Subject: Re: [PATCH net-next v2 0/3] tun: AF_XDP Tx zero-copy support
-Message-ID: <Zd8ow_KkdzAfnX8l@nanopsycho>
-References: <1709118281-125508-1-git-send-email-wangyunjian@huawei.com>
+        bh=JudlYv7kq9yuUXRQ/PvG4bnskD9Dxwze5xbPVzN+2ng=;
+        b=FWb17mhKZQNgPPNRPNCZOrIanbIj+q42DbPmuqYMF2v1EGowjqJW7QDuYC/M3tj3fy
+         G4kDoBNRSGhxIzbquKxg0S3ALjtfdwdklJB6JitRoaqJAGmdxtqMEngpmwxVhpHohpK5
+         gYWnzjJaZKGB66yMpm+1KLAZJsdSRELGel2yWumShwX4wsuSGEo0F0sj8z+DwbVm7grm
+         rNMcnN1U2U1U0H7a4FzWWoazV22bew/IGy4zEEJ5UA5Yhz/tyRr8gITgvPJLt3b3pWJL
+         QgXbEBsFK7jOh9ygR+9PHCVMphMZXL2DQHDZf218B62/3mYPO1aMjAM7e7i9L8A+sQGm
+         +Dwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709123834; x=1709728634;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JudlYv7kq9yuUXRQ/PvG4bnskD9Dxwze5xbPVzN+2ng=;
+        b=hehhtwhB0wBN3epNIMbk4PRujwIxVllVG2aNtYV2JUnYVkzQETYrtJO9BAHAPJyXbA
+         6jpVcW2AC5IYEQUnknF9GQiz6Ccz5ArcfoDDRg4v7l1y51Cq2WWIinni/WbRpb19HAzx
+         4ZybptSoFtLRq0tVd1cvRK2yf7eAlYCLn4aC8gVadFw3YGWlEr7LWFDZfdd7repRntmC
+         BtaY5fBhSS0eOpHb93XoLi1HV1uAPyJ+53EsPGXeviIaPxKDWxt9QJPDnLYzjs9wrbV+
+         DCPPWIuMr9rZWg/3PmW8cfbUb7VgGkibkFVVWvALYuqPUQkaXtiSwQbW1s95VBgmkF2T
+         J7PA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYbXrw9pIFXQCLUxDpZZnKkjJCWrOSxPqqAXYp6H76uZbl1OSBQ76ifrVsYAQlhP0P+X4p33yOIovIseXZ1TIoU1SA1pSsSqUsHc9p6G8o0VNEvui/Xji2skmXWGdvFxJdUtmyn33laHoPqcfwctnFy04g0NDEqIsoouWgVWCVa+0AlvaW
+X-Gm-Message-State: AOJu0YyVXyUPgy6osRxtGXj4/P/QPDSzefFoOSC42LhlJiKkvGCIN1/W
+	vaITrDgRDioxQ46TwfWRpx+NOp4RMcx7Dt7ItmTvsYdh/Q71VDu0T5hp4t6CWU1uWMtRYIzbSWe
+	Y2lU+DBegBXdZyv5I8sQ9QrFVSdw/5Efa
+X-Google-Smtp-Source: AGHT+IE96ZWkre7JVXpJhyMlgo+IHpI1hOKcxl71SkWQaICp/+hmUTxPfiwoqMZshS5hFp43nVH0QUrSoFDjJIgAIdk=
+X-Received: by 2002:a05:6402:3126:b0:566:4e7a:fa2b with SMTP id
+ dd6-20020a056402312600b005664e7afa2bmr2110728edb.36.1709123833969; Wed, 28
+ Feb 2024 04:37:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1709118281-125508-1-git-send-email-wangyunjian@huawei.com>
+References: <20240227175513.8703-1-pvkumar5749404@gmail.com>
+ <Zd7lqr8Cz4XrNoI8@nanopsycho> <CAH8oh8U1KLxY95DQW9duU30VC5hdQd1YKs+8USuuz0k4JWtBSQ@mail.gmail.com>
+ <Zd79vEsSp7wlJWQy@nanopsycho>
+In-Reply-To: <Zd79vEsSp7wlJWQy@nanopsycho>
+From: prabhav kumar <pvkumar5749404@gmail.com>
+Date: Wed, 28 Feb 2024 18:07:02 +0530
+Message-ID: <CAH8oh8W9hzWV-fajb-1OoR8dZEbqhrCGL=3bcDRhaDObbacDDA@mail.gmail.com>
+Subject: Re: [PATCH net-next] selftests: net: Correct couple of spelling mistakes
+To: Jiri Pirko <jiri@resnulli.us>
+Cc: shuah@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, petrm@nvidia.com, idosch@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Wed, Feb 28, 2024 at 12:04:41PM CET, wangyunjian@huawei.com wrote:
->Hi all:
+On Wed, Feb 28, 2024 at 3:02=E2=80=AFPM Jiri Pirko <jiri@resnulli.us> wrote=
+:
 >
->Now, some drivers support the zero-copy feature of AF_XDP sockets,
->which can significantly reduce CPU utilization for XDP programs.
->
->This patch set allows TUN to also support the AF_XDP Tx zero-copy
->feature. It is based on Linux 6.8.0+(openEuler 23.09) and has
->successfully passed Netperf and Netserver stress testing with
->multiple streams between VM A and VM B, using AF_XDP and OVS.
->
->The performance testing was performed on a Intel E5-2620 2.40GHz
->machine. Traffic were generated/send through TUN(testpmd txonly
->with AF_XDP) to VM (testpmd rxonly in guest).
->
->+------+---------+---------+---------+
->|      |   copy  |zero-copy| speedup |
->+------+---------+---------+---------+
->| UDP  |   Mpps  |   Mpps  |    %    |
->| 64   |   2.5   |   4.0   |   60%   |
->| 512  |   2.1   |   3.6   |   71%   |
->| 1024 |   1.9   |   3.3   |   73%   |
->+------+---------+---------+---------+
->
->Yunjian Wang (3):
->  xsk: Remove non-zero 'dma_page' check in xp_assign_dev
->  vhost_net: Call peek_len when using xdp
->  tun: AF_XDP Tx zero-copy support
-
-Threading of the patchset seems to be broken. Did you by any chance send
-this with "--nothread" git-send-email option?
-pw seems to cope fine with this though.
-
-
->
-> drivers/net/tun.c       | 177 ++++++++++++++++++++++++++++++++++++++--
-> drivers/vhost/net.c     |  21 +++--
-> include/linux/if_tun.h  |  32 ++++++++
-> net/xdp/xsk_buff_pool.c |   7 --
-> 4 files changed, 220 insertions(+), 17 deletions(-)
->
->-- 
->2.41.0
+> Prabhav, I'm not sure what you are trying to do, but you have to
+> re-submit the patch, preferably using git-send-email or another email
+> client you use.
+>> Sorry for that.
+>> Re-Submitted the patch.
 >
 >
+> Wed, Feb 28, 2024 at 09:42:01AM CET, pvkumar5749404@gmail.com wrote:
+> >On Wed, Feb 28, 2024 at 1:20=E2=80=AFPM Jiri Pirko <jiri@resnulli.us> wr=
+ote:
+> >>
+> >> Please fix the patch subject to include appropriate prefixes and
+> >> rephrase a bit like this:
+> >>
+> >> Subject: [PATCH net-next] selftests: net: Correct couple of spelling m=
+istakes
+> >>
+> >> pw-bot: cr
+> >>
+> >>
+> >> Tue, Feb 27, 2024 at 06:55:13PM CET, pvkumar5749404@gmail.com wrote:
+> >> >Changes :
+> >> >       - "excercise" is corrected to "exercise" in drivers/net/mlxsw/=
+spectrum-2/tc_flower.sh
+> >> >       - "mutliple" is corrected to "multiple" in drivers/net/netdevs=
+im/ethtool-fec.sh
+> >> >
+> >> >Signed-off-by: Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
+> >> >---
+> >> > .../testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh | 2 =
++-
+> >> > tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh    | 2 =
++-
+> >> > 2 files changed, 2 insertions(+), 2 deletions(-)
+> >> >
+> >> >diff --git a/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_=
+flower.sh b/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.=
+sh
+> >> >index 616d3581419c..31252bc8775e 100755
+> >> >--- a/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.=
+sh
+> >> >+++ b/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.=
+sh
+> >> >@@ -869,7 +869,7 @@ bloom_simple_test()
+> >> > bloom_complex_test()
+> >> > {
+> >> >       # Bloom filter index computation is affected from region ID, e=
+RP
+> >> >-      # ID and from the region key size. In order to excercise those=
+ parts
+> >> >+      # ID and from the region key size. In order to exercise those =
+parts
+> >> >       # of the Bloom filter code, use a series of regions, each with=
+ a
+> >> >       # different key size and send packet that should hit all of th=
+em.
+> >> >       local index
+> >> >diff --git a/tools/testing/selftests/drivers/net/netdevsim/ethtool-fe=
+c.sh b/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh
+> >> >index 7d7829f57550..6c52ce1b0450 100755
+> >> >--- a/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh
+> >> >+++ b/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh
+> >> >@@ -49,7 +49,7 @@ for o in llrs rs; do
+> >> > Active FEC encoding: ${o^^}"
+> >> > done
+> >> >
+> >> >-# Test mutliple bits
+> >> >+# Test multiple bits
+> >> > $ETHTOOL --set-fec $NSIM_NETDEV encoding rs llrs
+> >> > check $?
+> >> > s=3D$($ETHTOOL --show-fec $NSIM_NETDEV | tail -2)
+> >> >--
+> >> >2.34.1
+> >> >
+> >> >
