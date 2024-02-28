@@ -1,89 +1,187 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAF5364C0
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377C6364A0;
+	Wed, 28 Feb 2024 10:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709114648; cv=none; b=fuEk5RJf0sujxtbDCd8QGCZrobIBo0yK5fswBtTzbzSN0hdadBSdUPJ4aImIT5bjDQmS2mUxqJyB5hSvocJoHOMlxM/cscrGXgoV5Dht4GM1NNRStnjJW4sH2NSCrLSqYQ01XopvApbQX2cix1EE+8lkSl8Zv/C8zRAG01Ls2IU=
+	t=1709114734; cv=none; b=IC7aYSepugaZOW3+xvJaGxJvrVQCgs2yGvy5nh4NCWcfjOM+ApaLydtThCRkYACES5LCmKNkA5OeW6ULoN3oDLWBUZiY8BHnJSBUdUyC2bctc4lkESw6KjuYVZrgliTZuYsz347dZ4zFCEmxbBSgeBUOMZO79VeuG9oAyJlwr1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709114648; c=relaxed/simple;
-	bh=KQzzUhLT/q9KbVtq8OAn3e60tMLMhyaDIKLmaNMeNN4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bwqVF+Vp7wHyIahQgsKKi/P8VrAYd6JHNXM9vJLvqdnkNYRKP1KwnMk3ojl/uXKfCcpC+FLgvl8SFd2pywyo/BrgBQfAzQqEQXHIViHB7ZoWipYCP3dO7x4yzg9WCCD8r3nZKTEUY5O3VHhQRVReUkQoeniZHyaZUmjLmNVNgkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=N7XJfSGv; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1709114734; c=relaxed/simple;
+	bh=It59g4eBAk0nx1AhPC3trrgLHBIRRxxpweL7YTHYkjc=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NH8ZLDuuqnu3cRg00hVhJ0NASG2OjzD6hM9IdsYDzv70wzZyCrL4Q6bIeT0Bo7FWsGBgKoE+zqJ8+0PWrIcS0Hgf13trqBlR57cV2zWQ0Xo4DgD09srk5JDOORQe4Nsm7eQ33ZAK+fsXnh1KSTVDnnAxrOHjRnN5VFjhpCxc2cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JInmPBuU; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="N7XJfSGv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=rDq91xwkdeBq+p
-	oVwEnDTvivychr45vA3bZxWuSbk7g=; b=N7XJfSGvkmJmWbKxaWscPZOpHc4+QO
-	6D3dbNNONjAyvRDPFam8H2yUdSC4/afPOW0KWMmYfX9wEc+E7wnIvyNRlrWzWxZb
-	wytxOaen9+3EeuLvKwkhGfgzivPanwwU0IKmZVbwkvWrBo/+tmPTuQ6671MxFn8S
-	mbC3nPZqN+HBy/vW+9EfSmn1+y2sgoDwSSnfJ8WPTQ2CotaHbbWuO14LWRGRk5cQ
-	Pdd3y5Qpqlvk5LgJYrVsl5tvApAkhjDYyJrysnDn+GowpscN+Y6Ts2VpY/jgwqKl
-	M5xdYJw747B/9HN/Vx3M8l97pUBPfslRtdgCitq/CWI8olUTGqHKQ9zQ==
-Received: (qmail 1906275 invoked from network); 28 Feb 2024 11:04:02 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 28 Feb 2024 11:04:02 +0100
-X-UD-Smtp-Session: l3s3148p1@nlEfQ24SbIMgAwDPXyvUACsbJ+4rxOVH
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RFT] mmc: tmio: avoid concurrent runs of mmc_request_done()
-Date: Wed, 28 Feb 2024 11:03:45 +0100
-Message-ID: <20240228100354.3285-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JInmPBuU"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41SA511N098292;
+	Wed, 28 Feb 2024 04:05:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1709114701;
+	bh=6T6cKKdRNMBzP6cURWBTF7KjRvrDSRlHckGPQHccD4Y=;
+	h=Date:CC:Subject:To:References:From:In-Reply-To;
+	b=JInmPBuUtfiWwpwnhr42tUk8g8Q3jXMjHS2A8fvZNSSIBCLLImyUQIoqlLQ8anAKU
+	 xzyRZK2gJBm0jaNQLRHRMs7umCSW8jLlR8ffb05OtYHZJepFPq8UojsLY5q0M8VhIZ
+	 HQV7qt3w9AEe1kX9GDBjthNX2r0m4x+ZXqerd5PU=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41SA51x9008488
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 28 Feb 2024 04:05:01 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 28
+ Feb 2024 04:05:01 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 28 Feb 2024 04:05:01 -0600
+Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41SA4uvJ002441;
+	Wed, 28 Feb 2024 04:04:56 -0600
+Message-ID: <49e531f7-9465-40ea-b604-22a3a7f13d62@ti.com>
+Date: Wed, 28 Feb 2024 15:34:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <rogerq@kernel.org>, <andrew@lunn.ch>,
+        <vladimir.oltean@nxp.com>, <hkallweit1@gmail.com>,
+        <dan.carpenter@linaro.org>, <horms@kernel.org>,
+        <yuehaibing@huawei.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH net-next] net: ethernet: ti: am65-cpsw: Add priv-flag for
+ Switch VLAN Aware mode
+To: Jiri Pirko <jiri@resnulli.us>
+References: <20240227082815.2073826-1-s-vadapalli@ti.com>
+ <Zd3YHQRMnv-ZvSWs@nanopsycho> <7d1496da-100a-4336-b744-33e843eba930@ti.com>
+ <Zd7taFB2nEvtZh8E@nanopsycho>
+Content-Language: en-US
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+In-Reply-To: <Zd7taFB2nEvtZh8E@nanopsycho>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-With the to-be-fixed commit, the reset_work handler cleared 'host->mrq'
-outside of the spinlock protected critical section. That leaves a small
-race window during execution of 'tmio_mmc_reset()' where the done_work
-handler could grab a pointer to the now invalid 'host->mrq'. Both would
-use it to call mmc_request_done() causing problems (see Link).
 
-However, 'host->mrq' cannot simply be cleared earlier inside the
-critical section. That would allow new mrqs to come in asynchronously
-while the actual reset of the controller still needs to be done. So,
-like 'tmio_mmc_set_ios()', an ERR_PTR is used to prevent new mrqs from
-coming in but still avoiding concurrency between work handlers.
 
-Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
-Closes: https://lore.kernel.org/all/20240220061356.3001761-1-dirk.behme@de.bosch.com/
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Fixes: df3ef2d3c92c ("mmc: protect the tmio_mmc driver against a theoretical race")
----
+On 28/02/24 13:53, Jiri Pirko wrote:
+> Wed, Feb 28, 2024 at 08:06:39AM CET, s-vadapalli@ti.com wrote:
+>>
+>>
+>> On 27/02/24 18:09, Jiri Pirko wrote:
+>>> Tue, Feb 27, 2024 at 09:28:15AM CET, s-vadapalli@ti.com wrote:
+>>>> The CPSW Ethernet Switch on TI's K3 SoCs can be configured to operate in
+>>>> VLAN Aware or VLAN Unaware modes of operation. This is different from
+>>>> the ALE being VLAN Aware and Unaware. The Ethernet Switch being VLAN Aware
+>>>> results in the addition/removal/replacement of VLAN tag of packets during
+>>>> egress as described in section "12.2.1.4.6.4.1 Transmit VLAN Processing" of
+>>>> the AM65x Technical Reference Manual available at:
+>>>> https://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
+>>>> In VLAN Unaware mode, packets remain unmodified on egress.
+>>>>
+>>>> The driver currently configures the Ethernet Switch in VLAN Aware mode by
+>>>> default and there is no support to toggle this capability of the Ethernet
+>>>> Switch at runtime. Thus, add support to toggle the capability by exporting
+>>>> it via the ethtool "priv-flags" interface.
+>>>
+>>> I don't follow. You have all the means to offload all bridge/vlan
+>>> configurations properly and setup your hw according to that. See mlxsw
+>>> for a reference. I don't see the need for any custom driver knobs.
+>>>
+>>
+>> Thank you for reviewing the patch. Please note that the "VLAN Aware mode" being
+>> referred to here is different from ALE being VLAN aware. The hw offload of
+>> bridge/vlan configurations is already supported in the context of the ALE. The
+>> Ethernet Switch being VLAN Aware is a layer on top of that, which enables
+>> further processing on top of the untagged/VLAN packets. This patch aims to
+>> provide a method to enable the following use-cases:
+>> 1. ALE VLAN Aware + CPSW VLAN Aware
+>> 2. ALE VLAN Aware + CPSW VLAN Unaware
+>>
+>> All hw offloads of bridge/vlan configurations are w.r.t. ALE VLAN Aware alone.
+>> Currently, only use-case 1 is enabled by the driver by default and there is no
+>> knob to toggle to use-case 2.
+>>
+>> I am quoting sections of the Technical Reference Manual mentioned in my commit
+>> message, in order to clarify the CPSW VLAN Unaware and CPSW VLAN Aware terminology.
+>>
+>> CPSW VLAN Unaware:
+>> Transmit packets are NOT modified during switch egress.
+>>
+>> CPSW VLAN Aware:
+>> 1. Untagged Packet Operations
+>> Untagged packets are all packets that are not a VLAN packet or a priority tagged
+>> packet. According to the CPWS0_FORCE_UNTAGGED_EGRESS_REG[1-0] MASK bit in the
+>> packet header the packet may exit the switch with a VLAN tag inserted or the
+>> packet may leave the switch unchanged....
+>> 2. Priority Tagged Packet Operations (VLAN VID == 0 && EN_VID0_MODE ==0h)
+>> Priority tagged packets are packets that contain a VLAN header with VID = 0.
+>> According to the CPSW_ALE_FORCE_UNTAGGED_EGRESS_REG[1-0] MASK bit in the packet
+>> header, priority tagged packets may exit the switch with their VLAN ID and
+>> priority replaced or they may have their priority tag completely removed....
+>> 3. VLAN Tagged Packet Operations (VLAN VID != 0 || (EN_VID0_MODE ==1h && VLAN
+>> VID ==0))
+>> VLAN tagged packets are packets that contain a VLAN header specifying the VLAN
+>> the packet belongs to
+>> (VID), the packet priority (PRI), and the drop eligibility indicator (CFI).
+>> According to the CPSW_ALE_FORCE_UNTAGGED_EGRESS_REG[1-0] MASK bit in the packet
+>> header, VLAN tagged packets may exit the switch with their VLAN priority
+>> replaced or they may have their VLAN header completely removed...
+>>
+>> I hope that this clarifies that CPSW VLAN Unaware/Aware is a layer on top of the
+>> hw offload-able bridge/vlan configuration.  Please let me know if there is
+>> anything specific that could enable this without requiring the "priv-flag" based
+>> implementation of this patch.
+> 
+> I have no clue what "ALE" is. But in general. User provided
 
-Dirk: could you get this tested on your affected setups? I am somewhat
-optimistic that this is already enough. For sure, it is a needed first
-step.
+ALE is Address Lookup Engine.
 
- drivers/mmc/host/tmio_mmc_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+> configuration, using ip/bridge/etc tools/uapi. According to this
+> configuration, kernel is bahaving. When you do offload, you should just
+> make sure to mimic/mirror the kernel behaviour. With this in mind, why
 
-diff --git a/drivers/mmc/host/tmio_mmc_core.c b/drivers/mmc/host/tmio_mmc_core.c
-index be7f18fd4836..c253d176db69 100644
---- a/drivers/mmc/host/tmio_mmc_core.c
-+++ b/drivers/mmc/host/tmio_mmc_core.c
-@@ -259,6 +259,8 @@ static void tmio_mmc_reset_work(struct work_struct *work)
- 	else
- 		mrq->cmd->error = -ETIMEDOUT;
- 
-+	/* No new calls yet, but disallow concurrent tmio_mmc_done_work() */
-+	host->mrq = ERR_PTR(-EBUSY);
- 	host->cmd = NULL;
- 	host->data = NULL;
- 
+What if there is no kernel behavior associated with it? How can it be mimicked
+then? This patch isn't offloading any feature that is supported in software. It
+might not be possible to offload features which act on the forwarding path of
+packets entirely in Hardware within the Ethernet Switch.
+
+Please consider the following:
+Untagged packets sent from Software via the corresponding VLAN interfaces will
+be tagged which is the expected behavior. However, if this is offloaded, it will
+imply that even untagged packets that are simply forwarded in the Ethernet
+Switch and never get to software will also have to be tagged by the Ethernet
+Switch. This is not allowing the choice of leaving untagged packets as-is on the
+Ethernet Switch's forwarding path. This patch attempts to allow configuring
+something quite similar to this, where it is possible to *choose* whether or not
+to tag packets being forwarded.
+
+> can't you do it without adding additional knob? And if you really need
+> it because the know does some internal hw/fw tuning, priv flag of netdev
+
+The feature can be turned on or off depending on the use-case. Is it acceptable
+to have build configs scattered in the driver code? I don't suppose that is
+acceptable, due to which it will be preferable to have a runtime configuration
+option, which is what this patch provides.
+
+> is most probably not the correct place to put it. If it is, make sure
+
+Please suggest an alternative if this isn't the right place. Otherwise, I can
+only assume that there isn't one.
+
+> you advocate for it properly in the patch description.
+> 
+> pw-bot: cr
+>
+
 -- 
-2.43.0
-
+Regards,
+Siddharth.
