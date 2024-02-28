@@ -1,307 +1,198 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6DF21A06
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 08:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A97C2D604;
+	Wed, 28 Feb 2024 08:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709110350; cv=none; b=DqjCb0ua1LbFmY+LMRRioaYpXEdcE9tGqPk/GpDMgyOikUvAZ+Iq4+ruPHekfaOaABlAP8Uk3sOcFzS86+Zp3gI5hE+D4pnW7k+tU6MDwXJLIuhegceiytU2yAzIRy9/2XslttkxTJ7aECPGjycL5kpDw6eAVpX/baNbNFkSdlk=
+	t=1709110421; cv=none; b=KWG7I93jmhcbzz52vPSmRZ/pASas2GLaKaC6XbsVgZqa4TVIx0YCZfVt2OM4+QnPY0PYAPv/ZvfBw42Q1nj5jTfUzYsusBNUmN3+B9OnUTjpVOzfd2OKfZd7t36ihsKl5UweKAOYF8Huk02Mfh3atPM+6uaV76OR4Tu0/9WlJaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709110350; c=relaxed/simple;
-	bh=L9bjFJ/dOqbtdH0g9oG3AMTC72XkuZmJlua2NRa7UyI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=LlEPX6RavF5mGegpOIPbBywC8HrDH2P0EciLffnm2zIhLh1/+zgluRdJAVCO+g+SODuxBPJkVD5Ful3t0u2um6kbGyaXGzZ1P0k9mW/7234vh0gJUkYEAb3gBQZnWiW1E44OE7Bs9TyRYaGMeqXmew5+vlV4RMphkrw6rTw4R24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=u3yQSvVM; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="u3yQSvVM"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240228085218epoutp021ba4011e84e7dc9f91e107d1304a9f73~3_sw2h4nc0619306193epoutp02O
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 08:52:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240228085218epoutp021ba4011e84e7dc9f91e107d1304a9f73~3_sw2h4nc0619306193epoutp02O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1709110338;
-	bh=eXJALbBIdD7HZh78nv7RcwGYAGev1xTXLCQxJmMWp4Y=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=u3yQSvVMhVygbIE9XynUbHOabLwmHZpeLEyQErVL98CKiZfwcuQswMl+T9AWxpWb3
-	 V00MgNKWF/SyEjTnhYPFhWaW4n1Iew/e2dr3nS4iOIJqYqtTCeIYDaxoslvrKglf/k
-	 pR0+1ULwNzINOuwNGxK//hx2zWUjIse7AtUOAALg=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20240228085217epcas5p29c44050931bc2a0da2aea47e124518c4~3_swHlQpY0066800668epcas5p2W;
-	Wed, 28 Feb 2024 08:52:17 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Tl7QS4PpHz4x9Pw; Wed, 28 Feb
-	2024 08:52:16 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	A2.A6.09672.044FED56; Wed, 28 Feb 2024 17:52:16 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240228085203epcas5p420cb18119eec3559793c2249f3d8727b~3_sjDK7mi2480324803epcas5p4D;
-	Wed, 28 Feb 2024 08:52:03 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240228085203epsmtrp2f7c2397bf6ca079873336c466bfe7980~3_sjBDrUE0093400934epsmtrp2m;
-	Wed, 28 Feb 2024 08:52:03 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff700000025c8-db-65def4400dd4
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3A.BD.18939.334FED56; Wed, 28 Feb 2024 17:52:03 +0900 (KST)
-Received: from testpc118124.samsungds.net (unknown [109.105.118.124]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240228085200epsmtip1f95553ad32e7ede9594644bd04b9b4f8~3_sfpDyZ_2359823598epsmtip1c;
-	Wed, 28 Feb 2024 08:52:00 +0000 (GMT)
-From: Xiaobing Li <xiaobing.li@samsung.com>
-To: axboe@kernel.dk, asml.silence@gmail.com
-Cc: linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
-	kun.dou@samsung.com, peiwei.li@samsung.com, joshi.k@samsung.com,
-	kundan.kumar@samsung.com, wenwen.chen@samsung.com, ruyi.zhang@samsung.com,
-	cliang01.li@samsung.com, xue01.he@samsung.com, Xiaobing Li
-	<xiaobing.li@samsung.com>
-Subject: [PATCH v10] io_uring: Statistics of the true utilization of sq
- threads.
-Date: Wed, 28 Feb 2024 16:51:54 +0800
-Message-Id: <20240228085154.193363-1-xiaobing.li@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709110421; c=relaxed/simple;
+	bh=LmMn4l1GClZilnMTAowDg6HVHEvvOnMdx2YPGsYQJJE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=dPUJ4hSltk7sFEhkgCSuV6FJQi9ZQkNurciFwsbIDDG0wgQE4pzkKvSsjOIDCyasxzdnitlT/5BSk9R2BH9AabdlGKY9+F2MjazCNA5pYfwLMhVDW/wibwnQDBw5P9+UzS/QbRzWLdc0pmH8N1d5fkwn3N3evS92YkjtFwg+dvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tl7Rv0pkKz4f3kKQ;
+	Wed, 28 Feb 2024 16:53:31 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 722071A0172;
+	Wed, 28 Feb 2024 16:53:34 +0800 (CST)
+Received: from [10.174.176.34] (unknown [10.174.176.34])
+	by APP1 (Coremail) with SMTP id cCh0CgAn+RGM9N5lUE2aFQ--.30440S3;
+	Wed, 28 Feb 2024 16:53:34 +0800 (CST)
+Subject: Re: [RFC PATCH v3 07/26] iomap: don't increase i_size if it's not a
+ write operation
+To: Christoph Hellwig <hch@infradead.org>, djwong@kernel.org,
+ Dave Chinner <david@fromorbit.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+ tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz,
+ ritesh.list@gmail.com, willy@infradead.org, zokeefe@google.com,
+ yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
+ wangkefeng.wang@huawei.com
+References: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
+ <20240127015825.1608160-8-yi.zhang@huaweicloud.com>
+ <ZcsCP4h-ExNOcdD6@infradead.org>
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+Message-ID: <9b0040ef-3d9d-6246-4bdd-82b9a8f55fa2@huaweicloud.com>
+Date: Wed, 28 Feb 2024 16:53:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <ZcsCP4h-ExNOcdD6@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPJsWRmVeSWpSXmKPExsWy7bCmhq7Dl3upBu0H5SzmrNrGaLH6bj+b
-	xem/j1ks3rWeY7E4+v8tm8Wv7ruMFlu/fGW1uLxrDpvFs72cFl8Of2e3ODvhA6vF1C07mCw6
-	Wi4zWnRdOMXmwOexc9Zddo/LZ0s9+rasYvT4vEkugCUq2yYjNTEltUghNS85PyUzL91WyTs4
-	3jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMH6EQlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5x
-	ia1SakFKToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbGydM1Bae0Kyb1bWJuYJyh3MXIySEh
-	YCLRfG0zUxcjF4eQwG5Gib+nLjBDOJ8YJR49OcwKUgXmrDoZCdex7gFUx05GiTvXmtkgnF+M
-	Ep9ezGYCqWIT0Ja4vq4LrFsEyH79eCoLSBGzwBImia3fDoMVCQsESayY3s0MYrMIqEpMO30J
-	rIFXwFai7cFuZoh18hL7D55lhogLSpyc+YQFxGYGijdvnQ12q4RAJ4fE5E8zoBpcJFbvOMAO
-	YQtLvDq+BcqWkvj8bi8bhF0scaTnOytEcwOjxPTbV6GKrCX+XdkDtIEDaIOmxPpd+hBhWYmp
-	p9YxQSzmk+j9/YQJIs4rsWMejK0qsfrSQxYIW1ridcNvqLiHxLGbU9hBRgoJxEosP1owgVF+
-	FpJ3ZiF5ZxbC4gWMzKsYJVMLinPTU4tNC4zzUsvhEZucn7uJEZxStbx3MD568EHvECMTB+Mh
-	RgkOZiURXhnBu6lCvCmJlVWpRfnxRaU5qcWHGE2BYTyRWUo0OR+Y1PNK4g1NLA1MzMzMTCyN
-	zQyVxHlft85NERJITyxJzU5NLUgtgulj4uCUamBiDnu4+v8t7ZQ2/h+61313316ysLzBzrR0
-	xeIzfRemGV4w7xc7Hd+074p8injYrBz7rb8nbhbq6bCXt7qsyCnHvSFf7J9fbJpjWa5cdaX4
-	gncpPDwWHiEWfrVTvndz+XJ/6z62kFdI+7ege42A6YPMJTFei1n5b/Ie3yUiOjPi0mvrYw/t
-	xb9MFrxyIUTjsZzx+Xs/sh9uNPMwWzfz0LI480vP+rgfZs4wWrGJrdfa8vcTs8pZrQfmeS7i
-	Nfq51Yfj+lLf9FMnEhlqnxVK56x6Gvt4Q0tS28R9BlFMp4/tnGmx10v+lf5rB5EJLxfu0Vm5
-	xLjkQsSBq3Lb9TXDPvQdWJrt8HNVmZr4ZZnAk41KLMUZiYZazEXFiQDdFPU+MgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsWy7bCSnK7xl3upBtfPaVrMWbWN0WL13X42
-	i9N/H7NYvGs9x2Jx9P9bNotf3XcZLbZ++cpqcXnXHDaLZ3s5Lb4c/s5ucXbCB1aLqVt2MFl0
-	tFxmtOi6cIrNgc9j56y77B6Xz5Z69G1ZxejxeZNcAEsUl01Kak5mWWqRvl0CV8bJ0zUFp7Qr
-	JvVtYm5gnKHcxcjJISFgItG87gFTFyMXh5DAdkaJu9tnsHQxcgAlpCX+/CmHqBGWWPnvOTtE
-	zQ9GiUkNvxhBEmwC2hLX13WxgtSLCOhKNN5VAKlhFtjAJLH/6TxWkBphgQCJC3/fs4HYLAKq
-	EtNOXwKL8wrYSrQ92M0MsUBeYv/Bs8wQcUGJkzOfgN3ALKAusX6eEEiYGaikeets5gmM/LOQ
-	VM1CqJqFpGoBI/MqRtHUguLc9NzkAkO94sTc4tK8dL3k/NxNjODw1wrawbhs/V+9Q4xMHIyH
-	GCU4mJVEeGUE76YK8aYkVlalFuXHF5XmpBYfYpTmYFES51XO6UwREkhPLEnNTk0tSC2CyTJx
-	cEo1MOW3yu+rTXVpmr6HUaX6qaxPaXTftQ38Pg3tzxZz+Ike4NnYubclboO4SGbu1vdzWlg7
-	frDOFNOcFSF1NPb18pKDyUvVf3rcru+bxcXF+X39xz0i7FYeawJPRvtz900XTbjSPPn4iXf7
-	mXwevNW/ma1zK8vx1XJXbqb+5q8GD2ymzVoe979ZakHe91nvOK3lPi4UPmXp7b75NuM381k3
-	jj5ZKBH5+5jr0lVeu/gvBFWL3X4h3b2t++Kuk6dvOU+fqvH5w6635yLf1V770/hAf8r+pw2r
-	ly9fa6A2/SDvsfaOOVtjXBW4Fj+5vDUgYR93u4xR8O3ZHSWX58Y8vrF3c8cbNvNFez8HCDYo
-	bPTcvXS+EktxRqKhFnNRcSIA5P7JLu4CAAA=
-X-CMS-MailID: 20240228085203epcas5p420cb18119eec3559793c2249f3d8727b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240228085203epcas5p420cb18119eec3559793c2249f3d8727b
-References: <CGME20240228085203epcas5p420cb18119eec3559793c2249f3d8727b@epcas5p4.samsung.com>
+X-CM-TRANSID:cCh0CgAn+RGM9N5lUE2aFQ--.30440S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF4fXry7uF47AFy5Zw13urg_yoW7GF4rpF
+	909F4jkan7t3yfWr1kZFs5Xry0vwsaqF4UCry7KrW3Z3Z8JFyIgF17uFWYkFWUXr9xAr1a
+	qF4vva4fuF1UCFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UZ18PUUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Count the running time and actual IO processing time of the sqpoll
-thread, and output the statistical data to fdinfo.
+On 2024/2/13 13:46, Christoph Hellwig wrote:
+> Wouldn't it make more sense to just move the size manipulation to the
+> write-only code?  An untested version of that is below.  With this
+> the naming of the status variable becomes even more confusing than
+> it already is, maybe we need to do a cleanup of the *_write_end
+> calling conventions as it always returns the passed in copied value
+> or 0.
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 3dab060aed6d7b..8401a9ca702fc0 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -876,34 +876,13 @@ static size_t iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
+>  		size_t copied, struct folio *folio)
+>  {
+>  	const struct iomap *srcmap = iomap_iter_srcmap(iter);
+> -	loff_t old_size = iter->inode->i_size;
+> -	size_t ret;
+> -
+> -	if (srcmap->type == IOMAP_INLINE) {
+> -		ret = iomap_write_end_inline(iter, folio, pos, copied);
+> -	} else if (srcmap->flags & IOMAP_F_BUFFER_HEAD) {
+> -		ret = block_write_end(NULL, iter->inode->i_mapping, pos, len,
+> -				copied, &folio->page, NULL);
+> -	} else {
+> -		ret = __iomap_write_end(iter->inode, pos, len, copied, folio);
+> -	}
+> -
+> -	/*
+> -	 * Update the in-memory inode size after copying the data into the page
+> -	 * cache.  It's up to the file system to write the updated size to disk,
+> -	 * preferably after I/O completion so that no stale data is exposed.
+> -	 */
+> -	if (pos + ret > old_size) {
+> -		i_size_write(iter->inode, pos + ret);
+> -		iter->iomap.flags |= IOMAP_F_SIZE_CHANGED;
+> -	}
 
-Variable description:
-"work_time" in the code represents the sum of the jiffies of the sq
-thread actually processing IO, that is, how many milliseconds it
-actually takes to process IO. "total_time" represents the total time
-that the sq thread has elapsed from the beginning of the loop to the
-current time point, that is, how many milliseconds it has spent in
-total.
+I've recently discovered that if we don't increase i_size in
+iomap_zero_iter(), it would break fstests generic/476 on xfs. xfs
+depends on iomap_zero_iter() to increase i_size in some cases.
 
-The test tool is fio, and its parameters are as follows:
-[global]
-ioengine=io_uring
-direct=1
-group_reporting
-bs=128k
-norandommap=1
-randrepeat=0
-refill_buffers
-ramp_time=30s
-time_based
-runtime=1m
-clocksource=clock_gettime
-overwrite=1
-log_avg_msec=1000
-numjobs=1
+ generic/476 75s ... _check_xfs_filesystem: filesystem on /dev/pmem2 is inconsistent (r)
+ (see /home/zhangyi/xfstests-dev/results//xfs/generic/476.full for details)
 
-[disk0]
-filename=/dev/nvme0n1
-rw=read
-iodepth=16
-hipri
-sqthread_poll=1
+ _check_xfs_filesystem: filesystem on /dev/pmem2 is inconsistent (r)
+ *** xfs_repair -n output ***
+ Phase 1 - find and verify superblock...
+ Phase 2 - using internal log
+         - zero log...
+         - scan filesystem freespace and inode maps...
+ sb_fdblocks 10916, counted 10923
+         - found root inode chunk
+ ...
 
-The test results are as follows:
-Every 2.0s: cat /proc/9230/fdinfo/6 | grep -E Sq
-SqMask: 0x3
-SqHead: 3197153
-SqTail: 3197153
-CachedSqHead:   3197153
-SqThread:       9231
-SqThreadCpu:    11
-SqTotalTime:    18099614
-SqWorkTime:     16748316
+After debugging and analysis, I found the root cause of the problem is
+related to the pre-allocations of xfs. xfs pre-allocates some blocks to
+reduce fragmentation during buffer append writing, then if we write new
+data or do file copy(reflink) after the end of the pre-allocating range,
+xfs would zero-out and write back the pre-allocate space(e.g.
+xfs_file_write_checks() -> xfs_zero_range()), so we have to update
+i_size before writing back in iomap_zero_iter(), otherwise, it will
+result in stale delayed extent.
 
-The test results corresponding to different iodepths are as follows:
-|-----------|-------|-------|-------|------|-------|
-|   iodepth |   1   |   4   |   8   |  16  |  64   |
-|-----------|-------|-------|-------|------|-------|
-|utilization| 2.9%  | 8.8%  | 10.9% | 92.9%| 84.4% |
-|-----------|-------|-------|-------|------|-------|
-|    idle   | 97.1% | 91.2% | 89.1% | 7.1% | 15.6% |
-|-----------|-------|-------|-------|------|-------|
+For more details, let's think about this case,
+1. Buffered write from range [A, B) of an empty file foo, and
+   xfs_buffered_write_iomap_begin() prealloc blocks for it, then create
+   a delayed extent from [A, D).
+2. Write back process map blocks but only convert above delayed extent
+   from [A, C) since the lack of a contiguous physical blocks, now we
+   have a left over delayed extent from [C, D), and the file size is B.
+3. Copy range from another file to range [E, F), then
+   xfs_reflink_zero_posteof() would zero-out post eof range [B, E), it
+   writes zero, dirty and write back [C, E).
+4. Since we don't update i_size in iomap_zero_iter()，the writeback
+   doesn't write anything back, also doesn't convert the delayed extent.
+   After copy range, the file size will update to F.
+5. Finally, the delayed extent becomes stale, and the free blocks count
+   becomes incorrect.
 
-Signed-off-by: Xiaobing Li <xiaobing.li@samsung.com>
+So, we have to handle above case for xfs. I suppose we could keep
+increasing i_size if the zeroed folio is entirely outside of i_size,
+make sure we could write back and allocate blocks for the
+zeroed & delayed extent, something like below, any suggestions ?
 
----
 
-changes：
-v10:
- - Resubmission based on for - 6.9 / io_uring
+@@ -1390,6 +1390,7 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
 
-v9:
- - Modified the encoding format
+ 	do {
+ 		struct folio *folio;
++		loff_t old_size;
+ 		int status;
+ 		size_t offset;
+ 		size_t bytes = min_t(u64, SIZE_MAX, length);
+@@ -1408,6 +1409,28 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
+ 		folio_mark_accessed(folio);
 
-v8:
- - Get the work time of the sqpoll thread through getrusage
-
-v7:
- - Get the total time of the sqpoll thread through getrusage
- - The working time of the sqpoll thread is obtained through ktime_get()
-
-v6:
- - Replace the percentages in the fdinfo output with the actual running
-time and the time actually processing IO
-
-v5：
- - list the changes in each iteration.
-
-v4：
- - Resubmit the patch based on removing sq->lock
-
-v3：
- - output actual working time as a percentage of total time
- - detailed description of the meaning of each variable
- - added test results
-
-v2：
- - output the total statistical time and work time to fdinfo
-
-v1：
- - initial version
- - Statistics of total time and work time
-
- io_uring/fdinfo.c |  6 ++++++
- io_uring/sqpoll.c | 17 ++++++++++++++++-
- io_uring/sqpoll.h |  1 +
- 3 files changed, 23 insertions(+), 1 deletion(-)
-
-diff --git a/io_uring/fdinfo.c b/io_uring/fdinfo.c
-index 976e9500f651..42b449e53535 100644
---- a/io_uring/fdinfo.c
-+++ b/io_uring/fdinfo.c
-@@ -64,6 +64,7 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
- 	unsigned int sq_shift = 0;
- 	unsigned int sq_entries, cq_entries;
- 	int sq_pid = -1, sq_cpu = -1;
-+	u64 sq_total_time = 0, sq_work_time = 0;
- 	bool has_lock;
- 	unsigned int i;
- 
-@@ -147,10 +148,15 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
- 
- 		sq_pid = sq->task_pid;
- 		sq_cpu = sq->sq_cpu;
-+		getrusage(sq->thread, RUSAGE_SELF, &sq_usage);
-+		sq_total_time = sq_usage.ru_stime.tv_sec * 1000000 + sq_usage.ru_stime.tv_usec;
-+		sq_work_time = sq->work_time;
- 	}
- 
- 	seq_printf(m, "SqThread:\t%d\n", sq_pid);
- 	seq_printf(m, "SqThreadCpu:\t%d\n", sq_cpu);
-+	seq_printf(m, "SqTotalTime:\t%llu\n", sq_total_time);
-+	seq_printf(m, "SqWorkTime:\t%llu\n", sq_work_time);
- 	seq_printf(m, "UserFiles:\t%u\n", ctx->nr_user_files);
- 	for (i = 0; has_lock && i < ctx->nr_user_files; i++) {
- 		struct file *f = io_file_from_index(&ctx->file_table, i);
-diff --git a/io_uring/sqpoll.c b/io_uring/sqpoll.c
-index 82672eaaee81..363052b4ea76 100644
---- a/io_uring/sqpoll.c
-+++ b/io_uring/sqpoll.c
-@@ -253,11 +253,23 @@ static bool io_sq_tw_pending(struct llist_node *retry_list)
- 	return retry_list || !llist_empty(&tctx->task_list);
- }
- 
-+static void io_sq_update_worktime(struct io_sq_data *sqd, struct rusage *start)
-+{
-+	struct rusage end;
+ 		bytes = iomap_write_end(iter, pos, bytes, bytes, folio);
 +
-+	getrusage(current, RUSAGE_SELF, &end);
-+	end.ru_stime.tv_sec -= start->ru_stime.tv_sec;
-+	end.ru_stime.tv_usec -= start->ru_stime.tv_usec;
++		/*
++		 * If folio is entirely outside of i_size, update the
++		 * in-memory inode size after zeroing the data in the page
++		 * cache to prevent the write-back process from not writing
++		 * back zeroed pages.
++		 */
++		old_size = iter->inode->i_size;
++		if (pos + bytes > old_size) {
++			size_t offset = offset_in_folio(folio, old_size);
++			pgoff_t end_index = old_size >> PAGE_SHIFT;
 +
-+	sqd->work_time += end.ru_stime.tv_usec + end.ru_stime.tv_sec * 1000000;
-+}
-+
- static int io_sq_thread(void *data)
- {
- 	struct llist_node *retry_list = NULL;
- 	struct io_sq_data *sqd = data;
- 	struct io_ring_ctx *ctx;
-+	struct rusage start;
- 	unsigned long timeout = 0;
- 	char buf[TASK_COMM_LEN];
- 	DEFINE_WAIT(wait);
-@@ -286,6 +298,7 @@ static int io_sq_thread(void *data)
- 		}
- 
- 		cap_entries = !list_is_singular(&sqd->ctx_list);
-+		getrusage(current, RUSAGE_SELF, &start);
- 		list_for_each_entry(ctx, &sqd->ctx_list, sqd_list) {
- 			int ret = __io_sq_thread(ctx, cap_entries);
- 
-@@ -296,8 +309,10 @@ static int io_sq_thread(void *data)
- 			sqt_spin = true;
- 
- 		if (sqt_spin || !time_after(jiffies, timeout)) {
--			if (sqt_spin)
-+			if (sqt_spin) {
-+				io_sq_update_worktime(sqd, &start);
- 				timeout = jiffies + sqd->sq_thread_idle;
++			if (folio->index > end_index ||
++			    (folio->index == end_index && offset == 0)) {
++				i_size_write(iter->inode, pos + bytes);
++				iter->iomap.flags |= IOMAP_F_SIZE_CHANGED;
 +			}
- 			if (unlikely(need_resched())) {
- 				mutex_unlock(&sqd->lock);
- 				cond_resched();
-diff --git a/io_uring/sqpoll.h b/io_uring/sqpoll.h
-index 8df37e8c9149..4171666b1cf4 100644
---- a/io_uring/sqpoll.h
-+++ b/io_uring/sqpoll.h
-@@ -16,6 +16,7 @@ struct io_sq_data {
- 	pid_t			task_pid;
- 	pid_t			task_tgid;
- 
-+	u64			work_time;
- 	unsigned long		state;
- 	struct completion	exited;
- };
--- 
-2.34.1
++		}
++		__iomap_put_folio(iter, pos, bytes, folio);
++		if (old_size < pos)
++			pagecache_isize_extended(iter->inode, old_size, pos);
++
+ 		if (WARN_ON_ONCE(bytes == 0))
+ 			return -EIO;
+
+Thansk,
+Yi.
 
