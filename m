@@ -1,114 +1,100 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B074E25579;
-	Wed, 28 Feb 2024 07:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FC725601;
+	Wed, 28 Feb 2024 07:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709106900; cv=none; b=Tcn6rP1lU/dNZU3aQdW6c5TiL2BwF1IOX3uzoKRnMzOjVBZI1Q4LtKoCE8/4No3ses8RYO0Z3W4zhJK5RAcpQ6IMq4G/NpvIMC50YkLLMEd06/Jk1GHkl6iapGKALzSk62QiulE068mrGzABc/a1r5QCRsMTrDBcAZgJPQJuqns=
+	t=1709107100; cv=none; b=EI7DTSTpTnlSQhFnqCfinDRBFvGaH79IRoeLTsemT/N7aKJH1RkuFSD5PjmGDuodOgKPMdn7Lxh2fwO60AiFz/ECbYIglgSJPHkA3UE5BAclFkwnyoLHvjDwwBYsD/h5f4aLK2oco5PpCGGtIaURMt6f3yWv6mvtANxxdoLQzuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709106900; c=relaxed/simple;
-	bh=k3PFtWy/PHzxl2DxuJbIoHpjDS4J4NRERx2D4xtaZ/Q=;
+	s=arc-20240116; t=1709107100; c=relaxed/simple;
+	bh=trymZ7YQNfoxgQzjdvi4FBNN10bDU2cFwmLnp4I3YnU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pC745Kg8dDI1YhguwR52ZoBu0vZoDKrp1syhAS7LcnU4XHWTVd3jhWIxG9T/Wb/CZnu5wrUgAeoInc5PP9TllVEwkFBd+PUVIOnZ3It0X7oFdbRpvALooiqCtH+wLaTTIiSyzsyLKXh2uIn+HSemyvB/vIfHX9ANZcNTbfIMMD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
+	 To:Cc:Content-Type; b=WnqXXClQH56xSeue+STQcafTKU5LL4PLxB1Aq8D+3KJeUQPIZKQ5+N7tGQSxZUCnpgLediYoQoVU6L6eSib+u3NZgoTfxBhhGgtXEp3oKKqOw+BFwxq71Nei2a/BG0ws0cCm207mHJY8+KKaAOGMfv2Qu9Yh6+3vHVMUg4lgadc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-607e54b6cf5so4293317b3.0;
-        Tue, 27 Feb 2024 23:54:57 -0800 (PST)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dcbf82cdf05so5296354276.2;
+        Tue, 27 Feb 2024 23:58:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709106896; x=1709711696;
+        d=1e100.net; s=20230601; t=1709107096; x=1709711896;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dan9EEJFFN2NY2BJhmO3YKkWCzZTBjLI4vE6yLCQhC4=;
-        b=KPYL2D5EiMgIkUpWKvIJ8j74Njr7DRacsJPdApLbkuuTs5cNseiPPKVEhoyB27Rh/j
-         UFrItF18YlOoDDib+vPFE1f/KsbW6kDc0kH2XUYDJpIvYQv+OLACYzQv7XBXquDflQ/E
-         Jim+sL1aQmlfcE7E0wqLOHD2nYu1+e6iwXw1BPzwmw215z5vagkbQEsvYRyf0IgTue+h
-         WJk6fNNfZRT0RSS5RXM0pW9jAh2pRz89J/mkQ4uBEMI2XsjINWbFnhm/ZY/eIUataPYZ
-         HCHJzFxSylKfmsrGq8Sir8YnTLpbiuM3bqXzXADHOvlg76mB4VMZrxXxh/CnIgzlJ/4o
-         QSIg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1jlKepU9cVVydE19lo0kO3TwPzTwKTOJkJT4LGxAz2bAPaOxNEoGoowT6ozrX4pLObF/mrWybH85iwgnLgcsKtpN7MNMbEp19PwPyg0167jgM4OaBSTx3mPvUbdTzLnmIQ/YQAvIOMoKHWcjmchJIcf+GBOoU1j5l4LTXZsjKH1J+UxT5UTxVeeWx
-X-Gm-Message-State: AOJu0Yx/NZ8CbhvDGZu+xkqW09c25xA0bs8UwsX+JHa4gp3oLik1/Dwz
-	+KAV3/rE8/LhWshCf5A0qbbKfkqSbU1iYMprmg1XqP9Qe/0Set10k75iB6ANLUAVZQ==
-X-Google-Smtp-Source: AGHT+IFx4E2CORoj73bbBkbQrqOuCoZW+r0MklMUab8Hbb1wSaM//wQBQqV/kktfbc72VqK10jqlhg==
-X-Received: by 2002:a81:aa53:0:b0:609:38c2:3137 with SMTP id z19-20020a81aa53000000b0060938c23137mr1225419ywk.12.1709106896088;
-        Tue, 27 Feb 2024 23:54:56 -0800 (PST)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id x19-20020a81a013000000b006077cd5fc5csm2283241ywg.11.2024.02.27.23.54.55
+        bh=vsKMJK12uTn8rSKE4dhgJsLuGznZe3oJnJWzo8HLoJA=;
+        b=LnAHl/kKGsdiCzXQNOavXeyjrwEs+nAOMzpSWT5Mg6oNdPKBsFjNnIigDS2MQB2UP9
+         7CsoSpEkWmuXwKe0xLhfu9mGTu7uznuDMpBYBHoS5xKxFBt3B7OZFtSwDCujXTucxpJq
+         JEMCn7ilBBOwoK3+y16R7ocDiPJu+0SvSMGXiVXkjiS4+kyW+cH+6DrXVXA0bJJX7ORJ
+         nPPetvDlLQXGWsZkj83mMgULE+omwD/EtmAcwxkYT0jv0NmtoCYTtKZwp4wa9rABzqG7
+         ILb9yVqBRF9zxVLnt+E3DEnqZEAIBkh0R+ud1fL5dA6eB782lSlNVCNJcKddjzdBS2Ys
+         UOXA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgENUK0+wMeh6PsS1ENA24N7cPyYSDZYOi8RYzpG9I9xZqHeW+x1OcvoNYty2Ad9ht8rGBUZ4oUzIiFWzfweQ5d9j9kVXPy5dbqZNoMcZ9OSor/WsRRgNLDxqB+/4V5QtoLBtp5O5yMx8As+na
+X-Gm-Message-State: AOJu0YxDf8B+6VouX+AzxTZXz2zQ1y3NphqkhJildI34+jJltRcJCYmJ
+	l08EG+BofnJGSrUNak34E/vAcGvT8hJ1Vb6cJPERKL0shTrLKHNgU84XE/njaeTlww==
+X-Google-Smtp-Source: AGHT+IH8LGJvHXvyjQkPJVRzBEFNdKxQuC8ac+hjllyf/NUu/GdjH4io5hAfsRKpFAShx5r2dTtV6w==
+X-Received: by 2002:a05:6902:4cc:b0:dc6:9daf:35c7 with SMTP id v12-20020a05690204cc00b00dc69daf35c7mr1645671ybs.28.1709107096489;
+        Tue, 27 Feb 2024 23:58:16 -0800 (PST)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id y14-20020a25860e000000b00dcdac51bad9sm1798102ybk.49.2024.02.27.23.58.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 23:54:55 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so606638276.0;
-        Tue, 27 Feb 2024 23:54:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUEgbGins2hPnBqD31Gn++eQVFmYqXTicY3MNk+b+vGeoRW5nby9019sJoVR/IzCSyYfKRUiro+KxzbOqCqfUtpOPAKW4mU2XhkPvHfRu8nJ6WCczW8WxARaboLMeoYZhy+raO69X8TLChz1T4I3KC0LaEDnqCfw6o2UFlUqvPwmrO0+QWQQgykaBGF
-X-Received: by 2002:a25:bdd4:0:b0:dcb:b072:82d8 with SMTP id
- g20-20020a25bdd4000000b00dcbb07282d8mr1190572ybk.15.1709106895346; Tue, 27
- Feb 2024 23:54:55 -0800 (PST)
+        Tue, 27 Feb 2024 23:58:15 -0800 (PST)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dcc86086c9fso5423695276.3;
+        Tue, 27 Feb 2024 23:58:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWPK4RkC5mUxPA3US4vgOoSzEn4dRj3PEnuEC4r8iwDvxVUyZUToaSzGmXny1QkBAsBN5uh6CIBDTS688/6pR3vZtfN3U3+Wm1SCqn+m/4XY9uLBQzzemzZqrC2oSS2u5Ov/sRu0mzmCheADVrL
+X-Received: by 2002:a25:aaee:0:b0:dcd:407d:52e5 with SMTP id
+ t101-20020a25aaee000000b00dcd407d52e5mr1799682ybi.29.1709107095484; Tue, 27
+ Feb 2024 23:58:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227220930.213703-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240227220930.213703-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240227224653.work.603-kees@kernel.org>
+In-Reply-To: <20240227224653.work.603-kees@kernel.org>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 28 Feb 2024 08:54:42 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVKAfOznxXKb9QTZFpPpkcVk6O2aWxhkEL=ADPZcxx5uw@mail.gmail.com>
-Message-ID: <CAMuHMdVKAfOznxXKb9QTZFpPpkcVk6O2aWxhkEL=ADPZcxx5uw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: soc: renesas: renesas-soc: Add pattern for gray-hawk
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
-	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Date: Wed, 28 Feb 2024 08:58:03 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVMsbVPmcztWCDaorLSvwtLfWz-QVuA=vLFfX_iTdARcA@mail.gmail.com>
+Message-ID: <CAMuHMdVMsbVPmcztWCDaorLSvwtLfWz-QVuA=vLFfX_iTdARcA@mail.gmail.com>
+Subject: Re: [PATCH] lib: stackinit: Adjust target string to 8 bytes for m68k
+To: Kees Cook <keescook@chromium.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
+Hi Kees,
 
-On Tue, Feb 27, 2024 at 11:10=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.=
-com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, Feb 27, 2024 at 11:47=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+wrote:
+> For reasons I cannot understand, m68k moves the start of the stack frame
+> for consecutive calls to the same function if the function's test
+> variable is larger than 8 bytes. This was only happening for the char
+> array test (obviously), so adjust the length of the string for m68k
+> only. I want the array size to be longer than "unsigned long" for every
+> given architecture, so the other remain unchanged.
 >
-> Add pattern for Renesas Gray Hawk Single board (based on R-Car V4M SoC)
-> to fix the below dtbs_check issue:
->
-> arch/arm64/boot/dts/renesas/r8a779h0-gray-hawk-single.dtb: /: compatible:=
-0: 'anyOf' conditional failed, one must be fixed:
-> 4695 'renesas,gray-hawk-single' does not match '^renesas,(emev2|r(7s|8a|9=
-a)[a-z0-9]+|rcar|rmobile|rz[a-z0-9]*|sh(7[a-z0-9]+)?|mobile)-[a-z0-9-]+$'
-> 4696 'renesas,gray-hawk-single' does not match '^renesas,(condor|falcon|g=
-r-peach|salvator|sk-rz|smar(c(2)?)?|spider|white-hawk)(.*)?$'
-> 4697 'renesas,gray-hawk-single' does not match '^renesas,(can|cpg|dmac|du=
-|(g)?ether(avb)?|gpio|hscif|(r)?i[i2]c|imr|intc|ipmmu|irqc|jpu|mmcif|msiof|=
-mtu2|pci(e)?|pfc|pwm|[rq]spi|rcar_sound|sata|scif[ab]*|sdhi|thermal|tmu|tpu=
-|usb(2|hs)?|vin|xhci)-[a-z0-9-]+$'
-> 4698 'renesas,gray-hawk-single' does not match '^renesas,(d|s)?bsc(3)?-(r=
-8a73a4|r8a7740|sh73a0)$'
-> 4699 'renesas,gray-hawk-single' does not match '^renesas,em-(gio|sti|uart=
-)$'
-> 4700 'renesas,gray-hawk-single' does not match '^renesas,fsi2-(r8a7740|sh=
-73a0)$'
-> 4701 'renesas,gray-hawk-single' does not match '^renesas,hspi-r8a777[89]$=
-'
-> 4702 'renesas,gray-hawk-single' does not match '^renesas,sysc-(r8a73a4|r8=
-a7740|rmobile|sh73a0)$'
-> 4703 'renesas,gray-hawk-single' is not one of ['renesas,imr-lx4', 'renesa=
-s,mtu2-r7s72100']
-> 4704 'renesas,gray-hawk-single' is not one of ['renesas,smp-sram']
-> 4705 'renesas,gray-hawk-single' does not match '^(?!renesas,.+-.+).+$'
-> 4706 from schema $id: http://devicetree.org/schemas/soc/renesas/renesas-s=
-oc.yaml#
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Additionally adjust the error message to be a bit more clear about
+> what's happened, and move the KUNIT check outside of the consecutive
+> calls to minimize what happens between them.
 
-I wonder how I managed to miss that?
+Thanks for your patch!
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.9.
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Closes: https://lore.kernel.org/lkml/a0d10d50-2720-4ecd-a2c6-c2c5e5aeee65=
+@roeck-us.net/
+
+Do reports have an expiration date? ;-)
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Closes: https://lore.kernel.org/r/CAMuHMdX_g1tbiUL9PUQdqaegrEzCNN3GtbSvSBFY=
+AL4TzvstFg@mail.gmail.com
+Closes: https://lore.kernel.org/r/CAMuHMdW6N40+0gGQ+LSrN64Mo4A0-ELAm0pR3gWQ=
+0mNanyBuUQ@mail.gmail.com
+
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Finally all parts of this test are passing on m68k, great!
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 Gr{oetje,eeting}s,
 
