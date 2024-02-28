@@ -1,121 +1,94 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9D971EB3
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BE271EB0
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709146245; cv=none; b=Gli1a/y4dd3rTh0epKKWVbrU7sQ62gDJGbQb9zPJay08NFCxtP6XPI5QHsr69s0E5VJj/JS+R9Sl+MMe9qxEEBvvuNM40YGsESK+dSN8qztM1xeX7SzxKbcbLYet1svrprfwVmnJIRI7pfxCaUyiEkItCrOzEwZwPzSYCpW1H6A=
+	t=1709146285; cv=none; b=ciB19obIniA8gCiF0P0cJr7CqB0mZ3/f7onuFys24jktH7w2URc1I5bDL4QoW+cXNlGPNvxfeHC52Z7R+oFZPrxW6Hdzupa6XLGKmDlgHXyVuSO+Vx3hOXfvZO45XhLFebYInWw/uIZGpQJiBPwspNrWOKTXaDT8yx+bmhY0euk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709146245; c=relaxed/simple;
-	bh=uCNk9xZssjz88SO3HgKmg/6pNPAs4j9cZ22qRa/0FUk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d2pvOsw2ysYKOG7M9GrlmBlXXMCSqFojO7RESjOFcNtMv0bf700Z1ciC69AK63SPqTfp8etwyuktJshSUy5zj3TNi7tEdvqcg6cDiruw2j26ZgL/SnK5AuxfsytAG0Q4XpPXtY5hHC2C2iWDr7jftOD7FtUvODZ6TqJgIry8C8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jz8yh18x; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1709146285; c=relaxed/simple;
+	bh=74xrWMGlTWlkqjlt9MN9TpLqx1sShodBXiCj0AvmP38=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Ru6KobZgsKke9Ol4u8f6QZptVcFPfj7i7iRh5QSeAxWkHsKzKoAAMvibybi6d2bgDsKh5Y29tGRUaxsY/E9OJKwGksEaWY8cgFziE6QKy+vPMKALTNlSaarFtRB/IvVwVQxGU5/+U8V5YtyfMqozVvYnDeLgstIMB6mUFpcAvQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vamshigajjela.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4fFdpTz0; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vamshigajjela.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jz8yh18x"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-412a3ebad2aso523695e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:50:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4fFdpTz0"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b2682870so222989276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:51:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709146243; x=1709751043; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zzx4HJfLML4JQaG7fROeK+a0qZNaeaLXumU4hcnOH5U=;
-        b=Jz8yh18xpafJEnQQlffADR/JWLGW90uMfpbJK/V8qPEbJflGfIZ8msGjAds/C4hFOZ
-         hu6ikyWwAojPdrBeIjOhh4i2zzH3AQz8QXm36XuNgKBQ+P432WmD2Rf2DV9NyoxSidun
-         vaNUfc9ElXoq92QN5dQzELXifRLmvt6zoDSFLNbSAmOVJKHHZ4S6sRGAFutDRiDDHoXV
-         DW2Zq24Q+IfvGra77G9IDtsqHL84elno7uuxeoVc80LeynNO/Fzzo9SKCQUrETulwEN7
-         vwpxgWGTrq5yoNBIq5sxL/RXKAIRVbZb9YUEFBJOBCYPuoIz43jnL7FxY5zmjcC44LdF
-         5wNw==
+        d=google.com; s=20230601; t=1709146283; x=1709751083; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=q995VDUT1rCWamECeHTo++lWCTqa/WTcSCUgzRaXW40=;
+        b=4fFdpTz0jZsGXDB2XeKVNB4Ld/y696qu1FM6CnC3OQ36xJJRIixw1uif0KTXX+OfTZ
+         DaZbU/7uNpbZxwqNv2PV+Q1C03VJZElU+uRntihu+kkOiQiiVqCR0udTr7/o4ZiX8j67
+         CYkBaaL66K819azaiLcSwr8v6PvnCp44ku8Cs2yNLThzs1vvTofW+VqmTe0zf688KzZd
+         qa27wLQMKHzpehYRxiiWfSE26Yf/Wj6loVzfamU+smLq4rSpV5VdwOOGEvB7iX2HTEyB
+         UEwzswJuJBEQ8FbnlgH5lQ3QHXmVxOqb8wD72A3KSgWQL6105s4Gc+MVUICOuYzisJAf
+         NZtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709146243; x=1709751043;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zzx4HJfLML4JQaG7fROeK+a0qZNaeaLXumU4hcnOH5U=;
-        b=TWooc5+kadGfG2YgOxfb99W0fJWyIB+4wiZZOpf+Zlkqa/BFtHTRMwwn5hjRilYKa6
-         GazFphy5HTfuwGqUL6755DTtnacIVze7vSjU9kb4LUfX9z0RMi2roqmBSBGazsJ7okWv
-         Egdd7XkyXFx8qMvMMfxHgiON3A3rRJHOlqRZy7hGOHZhTPWq+8GiUWtn79kjBRt9PcEh
-         bcK4Oxa+RjP0kcN5Rrq4yX9N3lGLb1U/+qpPCNdZqXpmOIKYkt+LixeA2rXWA07qXyOw
-         0JZ86Hjim+CfRWKslG4RQHvA3oBNbTtHw/7cRqQ88SGMHiJXVj4rM9P+cpXzTXsIdyU6
-         RyRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWz7Zi5k49TVhSWdYiSmk3ykl1gZVtplQ0dyy1LkElEHTASu9VZ6CvagtrlA/TOj5nyGDDFYay0Q9gOmdp0lNV5fXoQU9CCYMnaqR98
-X-Gm-Message-State: AOJu0YxMSwK4A2DmnXEidLsDagqQWja7LGkQNavossG22OnTSLYlplBu
-	a1Pbt/oBfr3V5tpead7haxTu1+ulg8rnp2vQttezBUrf36gtCb08oG6HRK0wNw==
-X-Google-Smtp-Source: AGHT+IG2H+YrKQ5fSobiXEyDPQnan1RYKk8JYEWcjEAIGT6HGiPQq/QjDtUbrthdPJ6TZz1M9/GBOQ==
-X-Received: by 2002:a05:600c:468c:b0:410:85ab:67f3 with SMTP id p12-20020a05600c468c00b0041085ab67f3mr81884wmo.21.1709146242594;
-        Wed, 28 Feb 2024 10:50:42 -0800 (PST)
-Received: from elver.google.com ([2a00:79e0:9c:201:e9d0:d027:ced7:cf52])
-        by smtp.gmail.com with ESMTPSA id l36-20020a05600c1d2400b00412aff7874esm2890521wms.48.2024.02.28.10.50.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 10:50:41 -0800 (PST)
-Date: Wed, 28 Feb 2024 19:50:36 +0100
-From: Marco Elver <elver@google.com>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-	linux-api@vger.kernel.org, Christian Brauner <brauner@kernel.org>,
-	Florian Weimer <fw@deneb.enyo.de>, David.Laight@aculab.com,
-	carlos@redhat.com, Peter Oskolkov <posk@posk.io>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	Chris Kennelly <ckennelly@google.com>, dvyukov@google.com
-Subject: Re: [PATCH 00/30] RSEQ node id and mm concurrency id extensions
-Message-ID: <Zd-AfDcQ-r04CMXk@elver.google.com>
-References: <20221122203932.231377-1-mathieu.desnoyers@efficios.com>
+        d=1e100.net; s=20230601; t=1709146283; x=1709751083;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q995VDUT1rCWamECeHTo++lWCTqa/WTcSCUgzRaXW40=;
+        b=kTWSHL6LK3alt00qvoC+lMwE0hf4P0XoBEig1CPyjwCkNSM9Xwjx7aqnRjTlm7TFBe
+         g/ljH0kpJhKQ9E2nRhDGcUI7/obn8dZomURGz1pWI72P21xp0lfdhE7+0nHR2tKrjbSF
+         Sa4NFcVu4OTokkfBT8ua8enTSTAPD4jcU/VF/XrFQ8qE6zNBfcqVP43eHyhCFktm6TgZ
+         oJ8N2ypnwlViRoNxu/RczStGbvIiGUhuJ+H7gDb5tkxeHWa5/182m5gBo5z9bdwycKIx
+         hDj32SjzeNwbCgyLlc5Fj6W3Rju0AgVrZLiw5mkl1/Iuh461ymMAS71uhiner3+WKMEJ
+         KUrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUG2mgrcdWv3xzJnBpxFQ0psj50VN0wHDU8nxwWpb0wqT9J0vSVLjrx7d0AiJnLivGm7x+tm4LGJCVpx4tDhEyznHbHh4qzasuezBSL
+X-Gm-Message-State: AOJu0Yyp0bn/XGl4C80Qudl9YVqB4wweOY/JTRkRZNk8H6CJoMUK5+Xx
+	Wxkm6nBIxQxWeIyrYMrYx0VvuS31G3PR0jhXJtp2HU9uV+jQ3ly+x9MQYCAjHHiN12RtYL0JkbN
+	EeB5nZAUqqWfoSDJKKF5qWhSDIuA7Ow==
+X-Google-Smtp-Source: AGHT+IGnnmWYe3kzdu/ZFn7IzaatprsDRrYZpULNetR7ouB2Ba0CntgRLWuFHTTETzBJffD/BE1RNdgRwXmu5DK9wX8U
+X-Received: from vamshig51.c.googlers.com ([fda3:e722:ac3:cc00:3:22c1:c0a8:70c])
+ (user=vamshigajjela job=sendgmr) by 2002:a05:6902:1885:b0:dc6:fec4:1c26 with
+ SMTP id cj5-20020a056902188500b00dc6fec41c26mr8000ybb.1.1709146283403; Wed,
+ 28 Feb 2024 10:51:23 -0800 (PST)
+Date: Thu, 29 Feb 2024 00:21:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221122203932.231377-1-mathieu.desnoyers@efficios.com>
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+Message-ID: <20240228185116.1269-1-vamshigajjela@google.com>
+Subject: [PATCH] spmi: hisi-spmi-controller: Do not override device identifier
+From: Vamshi Gajjela <vamshigajjela@google.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Johan Hovold <johan+linaro@kernel.org>
+Cc: Caleb Connolly <caleb.connolly@linaro.org>, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, Vamshi Gajjela <vamshigajjela@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mathieu, all,
+'nr' member of struct spmi_controller, which serves as an identifier
+for the controller/bus. This value is a dynamic ID assigned in
+spmi_controller_alloc, and overriding it from the driver results in an
+ida_free error "ida_free called for id=xx which is not allocated".
 
-On Tue, Nov 22, 2022 at 03:39PM -0500, Mathieu Desnoyers wrote:
-> Extend the rseq ABI to expose NUMA node ID, mm_cid, and mm_numa_cid
-> fields.
-> 
-> The NUMA node ID field allows implementing a faster getcpu(2) in libc.
-> 
-> The per-memory-map concurrency id (mm_cid) [1] allows ideal scaling
-> (down or up) of user-space per-cpu data structures. The concurrency ids
-> allocated within a memory map are tracked by the scheduler, which takes
-> into account the number of concurrently running threads, thus implicitly
-> considering the number of threads, the cpu affinity, the cpusets
-> applying to those threads, and the number of logical cores on the
-> system.
-> 
-> The NUMA-aware concurrency id (mm_numa_cid) is similar to the mm_cid,
-> except that it keeps track of the NUMA node ids with which each cid has
-> been associated. On NUMA systems, when a NUMA-aware concurrency ID is
-> observed by user-space to be associated with a NUMA node, it is
-> guaranteed to never change NUMA node unless a kernel-level NUMA
-> configuration change happens. This is useful for NUMA-aware per-cpu data
-> structures running in environments where a process or a set of processes
-> belonging to cpuset are pinned to a set of cores which belong to a
-> subset of the system's NUMA nodes.
-[...]
+Signed-off-by: Vamshi Gajjela <vamshigajjela@google.com>
+Fixes: 70f59c90c819 ("staging: spmi: add Hikey 970 SPMI controller driver")
+Cc: stable@vger.kernel.org
+---
+ drivers/spmi/hisi-spmi-controller.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Just out of curiosity: is anyone aware of any libraries that have
-started using CIDs? It looks like the cost of CID assignment is always
-paid (even though it should be small), I'm trying to understand if after
-1.5 years there are common libraries that have started using it and what
-their exact usecase is.
+diff --git a/drivers/spmi/hisi-spmi-controller.c b/drivers/spmi/hisi-spmi-controller.c
+index 674a350cc676..fa068b34b040 100644
+--- a/drivers/spmi/hisi-spmi-controller.c
++++ b/drivers/spmi/hisi-spmi-controller.c
+@@ -300,7 +300,6 @@ static int spmi_controller_probe(struct platform_device *pdev)
+ 
+ 	spin_lock_init(&spmi_controller->lock);
+ 
+-	ctrl->nr = spmi_controller->channel;
+ 	ctrl->dev.parent = pdev->dev.parent;
+ 	ctrl->dev.of_node = of_node_get(pdev->dev.of_node);
+ 
+-- 
+2.44.0.rc1.240.g4c46232300-goog
 
-I'm aware that TCMalloc was the inspiration for vCPUs [1], then renamed to
-CIDs, but am wondering if other users are out there.
-
-Thanks,
--- Marco
-
-[1] https://lore.kernel.org/lkml/20220218210633.23345-10-mathieu.desnoyers@efficios.com/
