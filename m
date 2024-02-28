@@ -1,100 +1,128 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12FF130AC5;
-	Wed, 28 Feb 2024 11:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB6E130AF5;
+	Wed, 28 Feb 2024 11:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709120104; cv=none; b=aMqpypWej4ZiMy1xFmmC2+Mti4v4cAZzmJQKFCqSLUR5uNWndYmZAVAu05G39iSU7qHMsRTrfXJBsVxk2JpTm+aUw5JeNvljjVb2b+Wx0WEX2QY9MunTs9L09cyUh2M0S3KgqB8cW+AY874fG1RBWotI1Ma0B9GJfIhKw7g6Mrw=
+	t=1709120120; cv=none; b=lixZrgKtp53AB9sncWwKejFJ8p/YAFLw55mQdkb4UuAZjHOSMGEdlXmJ9fYdW8zw7Ot4vpDZ02lk4PGeQ6oBIzLFimdrJMgUtAlWKulxiD7r/cushV+th8eHg5YbjcCBD6S1yLvrsPNiMfAcUfIDslKztTZsQLqbD3XXUVRRUOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709120104; c=relaxed/simple;
-	bh=8kGd74yI4ICfYsEeUUbHAbB8aAtmedYoTe8onZxEveM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fIJneRkvcF3TsSyJMmsCosI/Rp2bgFZ8+nLEzbwBum13W6+okhyQBNv0gf408FEg1Stho3qH75aXNTF1ow70NqILR1Ud4g7WYtqVdCj0+qh+uRXbVOw7elrjsyizYj4uR0igOMke3V1nuscxnQ1S9yKcDfGg9kgIKRbfmKf6YkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-608342633b8so50119567b3.1;
-        Wed, 28 Feb 2024 03:35:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709120101; x=1709724901;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cP033zuo0awjRBXqDA4OJxzTwOUOFi5mzCUNQiAWbEw=;
-        b=mSPBjL2kXCeMArhEOesAn2vhxveOEdUwKNBXTi3T7iqW9vUHGnK3LyFUBokaLglne8
-         6ic5Ahvh3CxSswC8v8zONDwWkKcCwxLSrPQkwicHu/D5G5ji8+UmtodgtB2vieYDgdVj
-         P5FXVPng4mL/z1d8wdOfCMAtDmr7/Lx+xXrZ5+/NSXdyydg5/gTJkE4KLQnW9CbjvqCX
-         sy17iiJT+8sfte7UPLfZjHkXjBnqx1RiPLbj9maqKgJ/HDhrJPzjzphFRh/ZytLYFC9f
-         VvzEj0Guk+/Xy049Fx/7rpzWH08sMtOjfDOj8Xkh5J6fwmqTYsRL0QKcj2jgLpuOy7o3
-         BphQ==
-X-Forwarded-Encrypted: i=1; AJvYcCViN/BObkjHVOkQNg36cT1BjgfI2RWybND5K9cMhaxxZpOMml0m92ETOBxOOm2qDDydRvP23FB4vpdTU6CCyEgbv9BnoFKt3U+/3ey6BxMkPPvdNDe/QSecf8Asz3ZF1RjdyUpWKWxTrHNvhDSuLB4uS86F4xlHudxWPnakeW0gSca9qeQQL+MgixKV
-X-Gm-Message-State: AOJu0Ywe3Ob8xSq96ikAZzvyBGsT6Dp9pG1Dsx5HlnG1YBFCb99jI+AP
-	XqgvCf/wo0bh19J7vruISSmF+QlXQoOWjuu5wE5Dmr7DIn41VQNw2P2pwXVjn3NdHw==
-X-Google-Smtp-Source: AGHT+IHf3OkVcBzT6WOPl4qCykw2xNg0veODdNVr1evH5gTDmskYzkAFLrIaGC6eAzoOFESn2DqZpg==
-X-Received: by 2002:a25:8408:0:b0:dbd:1dfd:8b8 with SMTP id u8-20020a258408000000b00dbd1dfd08b8mr2234670ybk.24.1709120100850;
-        Wed, 28 Feb 2024 03:35:00 -0800 (PST)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
-        by smtp.gmail.com with ESMTPSA id g12-20020a25ef0c000000b00dcd56356c80sm1846518ybd.47.2024.02.28.03.35.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 03:35:00 -0800 (PST)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-608841dfcafso50739487b3.2;
-        Wed, 28 Feb 2024 03:35:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU8lNSU1Z6GCtjjALUMz0gJUAeIM0LqS/Cfw/YNjr1bb/LV59HdrmgAwm58gr34nW5rRzcco0UX9f4hixbLcDZhFzV3MDD0fE5LLC1DM6eVXPa6Jes9W6+5b32EXV4GENcL7bmrCtbNwxaFQYGchlE1/hlunvAknXezVbtMGxvW2SG8zAyT+rmjm/5p
-X-Received: by 2002:a05:6902:2191:b0:dc7:465a:2cb2 with SMTP id
- dl17-20020a056902219100b00dc7465a2cb2mr2565771ybb.30.1709120099881; Wed, 28
- Feb 2024 03:34:59 -0800 (PST)
+	s=arc-20240116; t=1709120120; c=relaxed/simple;
+	bh=yc21hha3keyHdTXvtCFq7xYC/BdcAS1u/CZfz2Bpq5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IOiEjRiDnmcBfcwU6CF12q7EyL62ouV0/SzWw2c/fpgEJAgJF4TkvxZOS2m/Ah6nHSFoxpSUyYLq4Yx1mluYDx4nfR8qmIvEKcx+7lyshlko1ULMhdXzKTSq94Yqvz6bi2waUB5jgzzhSol9Q0iCtTzIQ8iBfdJdvdFN7t7T1No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ddF/8lUI; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ddF/8lUI"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1709120114; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ZHu3CCtC5tTmDrHwG9sD4yIzMC6+Q14Tg7eRIc+2je8=;
+	b=ddF/8lUIR4YxEAqD7PNcXr3HFghq5YCFZXMiOZchFcIEFbTYbSu2sTXywTaHyOyW22JbpK/6HcJteBzVCOlVx4dgaRgqWRoJKOBJtEQxy9IqK/A3vZX45/R8mELhq7uoS6eTOsYU/NpI3X9JVL15JRK1bxLZVwhftdjZMwmqrIQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=ethan.xys@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W1PkVY5_1709120113;
+Received: from 30.221.98.53(mailfrom:ethan.xys@linux.alibaba.com fp:SMTPD_---0W1PkVY5_1709120113)
+          by smtp.aliyun-inc.com;
+          Wed, 28 Feb 2024 19:35:14 +0800
+Message-ID: <4ec89335-917a-4ea5-b38b-5cea6476d9a1@linux.alibaba.com>
+Date: Wed, 28 Feb 2024 19:35:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227232531.218159-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240227232531.218159-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240227232531.218159-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 28 Feb 2024 12:34:48 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWZxA+VKHjnAk6J+oxe-D74ScqhCVDnhJ-+F1h2aWD37g@mail.gmail.com>
-Message-ID: <CAMuHMdWZxA+VKHjnAk6J+oxe-D74ScqhCVDnhJ-+F1h2aWD37g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] soc: renesas: Add identification support for
- RZ/V2H SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] vfio/type1: unpin PageReserved page
+To: David Hildenbrand <david@redhat.com>,
+ Alex Williamson <alex.williamson@redhat.com>, akpm@linux-foundation.org
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20240226160106.24222-1-ethan.xys@linux.alibaba.com>
+ <20240226091438.1fc37957.alex.williamson@redhat.com>
+ <e10ace3f-78d3-4843-8028-a0e1cd107c15@linux.alibaba.com>
+ <20240226103238.75ad4b24.alex.williamson@redhat.com>
+ <abb00aef-378c-481a-a885-327a99aa7b09@redhat.com>
+From: Yisheng Xie <ethan.xys@linux.alibaba.com>
+In-Reply-To: <abb00aef-378c-481a-a885-327a99aa7b09@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 28, 2024 at 12:26=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.=
-com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+在 2024/2/27 18:27, David Hildenbrand 写道:
+> On 26.02.24 18:32, Alex Williamson wrote:
+>> On Tue, 27 Feb 2024 01:14:54 +0800
+>> Yisheng Xie <ethan.xys@linux.alibaba.com> wrote:
+>>
+>>> 在 2024/2/27 00:14, Alex Williamson 写道:
+>>>> On Tue, 27 Feb 2024 00:01:06 +0800
+>>>> Yisheng Xie<ethan.xys@linux.alibaba.com>  wrote:
+>>>>> We meet a warning as following:
+>>>>>    WARNING: CPU: 99 PID: 1766859 at mm/gup.c:209 
+>>>>> try_grab_page.part.0+0xe8/0x1b0
+>>>>>    CPU: 99 PID: 1766859 Comm: qemu-kvm Kdump: loaded Tainted: GOE  
+>>>>> 5.10.134-008.2.x86_64 #1
+>>>> ^^^^^^^^
+>>>>
+>>>> Does this issue reproduce on mainline?  Thanks,
+>>>
+>>> I have check the code of mainline, the logical seems the same as my
+>>> version.
+>>>
+>>> so I think it can reproduce if i understand correctly.
+>>
+>> I obviously can't speak to what's in your 5.10.134-008.2 kernel, but I
+>> do know there's a very similar issue resolved in v6.0 mainline and
+>> included in v5.10.146 of the stable tree.  Please test.  Thanks,
 >
-> Add support to identify the RZ/V2H (R9A09G057) SoC.
+> This commit, to be precise:
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> ---
-> v1 -> v2
-> - Replaced RZ/V2H{P} -> RZ/V2H(P)
-> - Used small case for hex value
+> commit 873aefb376bbc0ed1dd2381ea1d6ec88106fdbd4
+> Author: Alex Williamson <alex.williamson@redhat.com>
+> Date:   Mon Aug 29 21:05:40 2022 -0600
+>
+>     vfio/type1: Unpin zero pages
+>         There's currently a reference count leak on the zero page.  We 
+> increment
+>     the reference via pin_user_pages_remote(), but the page is later 
+> handled
+>     as an invalid/reserved page, therefore it's not accounted against the
+>     user and not unpinned by our put_pfn().
+>         Introducing special zero page handling in put_pfn() would 
+> resolve the
+>     leak, but without accounting of the zero page, a single user could
+>     still create enough mappings to generate a reference count overflow.
+>         The zero page is always resident, so for our purposes there's 
+> no reason
+>     to keep it pinned.  Therefore, add a loop to walk pages returned from
+>     pin_user_pages_remote() and unpin any zero pages.
+>
+>
+> BUT
+>
+> in the meantime, we also have
+>
+> commit c8070b78751955e59b42457b974bea4a4fe00187
+> Author: David Howells <dhowells@redhat.com>
+> Date:   Fri May 26 22:41:40 2023 +0100
+>
+>     mm: Don't pin ZERO_PAGE in pin_user_pages()
+>         Make pin_user_pages*() leave a ZERO_PAGE unpinned if it 
+> extracts a pointer
+>     to it from the page tables and make unpin_user_page*() 
+> correspondingly
+>     ignore a ZERO_PAGE when unpinning.  We don't want to risk 
+> overrunning a
+>     zero page's refcount as we're only allowed ~2 million pins on it -
+>     something that userspace can conceivably trigger.
+>         Add a pair of functions to test whether a page or a folio is a 
+> ZERO_PAGE.
+>
+>
+> So the unpin_user_page_* won't do anything with the shared zeropage.
+>
+> (likely, we could revert 873aefb376bbc0ed1dd2381ea1d6ec88106fdbd4)
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.10.
+Thanks for your detail info. BTW, do we need handle all of the 
+pagereserved page?
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
