@@ -1,199 +1,874 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C43C1E88D
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178836EF13
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709138877; cv=none; b=EReo5JhN+Iw1YTPJc3JemvEIofqfva786r2QUJw6yQzAGaJd5r4B9L/2wfsiU5zgQjK0ZLs2n02ZC11q1rzCWnItlWnguO/mF5/J4brFfFCTlGrydtc335gjVDS8li8lItlb/1ZBWt/xoMNLF9eCYjn95VzJJEXWpwtu6wkEAks=
+	t=1709138967; cv=none; b=rLqN8QCpTtFju78NKlP/x5JIek4adtq0WOI5PU+kU5PH2zPzbRI4pxpKpJdliaInQ0ZzOi33W1rPc4X2JGbcvw8+MplcyPJQLypmHm/QOsw5BUFYf0x777Zo5yzCnzoJoyNW5XmhyqOnGY1qGBiSVV5d3Nqfa1u2wZgKAQwntzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709138877; c=relaxed/simple;
-	bh=In3p83V6zrI+MWpNKueg5JQ5LR0pNF8Pef8UBUpES94=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X4jjsZ/lAn0Lknlxoc+lzEldcRRlj/FAyw7vNwUqNahk1L8Nk0GycrV2HkQ0DRZR3z50nUWwKX6Ky07FGX9s2vr8GdxwBkQAMR3nyzcCRcWl9Z1qfy9MvFcZwMebHebWz2RH0X/VpxOVe4czYyJvbLRUwGY+++OQnvqgB4s9xEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mwa7/10j; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709138967; c=relaxed/simple;
+	bh=MxjGOZwtHrXT3qS46kiin+8UgnO2c6KS32ZDVha4EWo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g4lv7q7I9vgMRa+HfuF/RJdGkoLgpSfctqSbEpKtU/pHlecBNU1pajEXYF8IKTqgZi45IYok8FbJ33FTPeb/UzJQDDC+aR0ZH1+sCnpT5hY5f9fXHxRLpj1mbUy9BusHO5UCEg312/jYDPdL9YeLyewHiYsnjMRm5Fox56F+muE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=VabgY1qj; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mwa7/10j"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so1826887a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 08:47:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709138873; x=1709743673; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=In3p83V6zrI+MWpNKueg5JQ5LR0pNF8Pef8UBUpES94=;
-        b=mwa7/10jUd8QtamzcmUAxktE6U4MesfDF8vfbkcbUe4oTjk7vruXl0xVgnUg/LfLRP
-         6UE/lUCJzhh7k/fnArGEV4EWSgV+9lZJTQ2MyqtBLlfL4E9KNw4A0NHeFCscyP9uo8aV
-         kYZnKcjWh6uazSdu/Rf8e9kie/PhJSyKdq2PY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709138873; x=1709743673;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=In3p83V6zrI+MWpNKueg5JQ5LR0pNF8Pef8UBUpES94=;
-        b=ihP5HvHEZhBJGdLon2pY6aGy0BCFJEMnqawr0O+NFeN9p51DYWSVfd9N1C/z0Eb8E9
-         I5bpQ6wSPcT/qKtL2CA+w72n92G5z5/TdSTqicQDAsZcbpGOpvnA7cFInVO6Oqr1e2/g
-         +CNkX/bRyhc5ImZB34t57ZP1oA09eiqspnLzss3UxsD9aSAvfGHqRqtn1/c27SQVxMV6
-         zyS7jlIr1YSILErrGxtCAXF2dCpuEuTb1aXPnzcZAtoEh81o21daU1obTQ47Re7h1zuU
-         0Hn+yHQDtqAeG8bENbsJLRWrIq2U4tjQJJzbm1LquugmjbgcPVv70QD4V7JOT5D4+D3J
-         EkBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWbeuoH95WMHHifyrLE/taI3QZmXbigi4r49YJ3YquUwO68XcJbT2qw9vW0SN+IIVe2FgWqO6iMQP5ZiLDg1T6+w4oO/hVObIfx/X+k
-X-Gm-Message-State: AOJu0YyVrvw3qjbGLOFv3b8rR9iLTFpcWDqJz+qAmamfdr+ngoagslnn
-	NcsuWm81E5wqBdz1QinaJE5kfAqcYQXoxk1zhHdobClLFgReXEqi82oBlEYfeneP/byJOQfHl7h
-	AFcGv
-X-Google-Smtp-Source: AGHT+IEb0jmeuKlIyydEIuVRHo7PG91jz0usMWvhTmOKF6SZADjQyjeZJHInFIti9Y8bKfBU91hHfQ==
-X-Received: by 2002:a05:6402:e94:b0:566:59f5:26db with SMTP id h20-20020a0564020e9400b0056659f526dbmr8652eda.11.1709138873512;
-        Wed, 28 Feb 2024 08:47:53 -0800 (PST)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id da25-20020a056402177900b00566194247desm1939683edb.59.2024.02.28.08.47.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 08:47:53 -0800 (PST)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5664623c311so13541a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 08:47:53 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUTBz+B/H02DL2IB7L0kPaQOL+EjkH3of0fvFE8nZgS2EmmOhjkGPtX0Fvks2AhEUWhCzsRtfRgpKi7QJN4JCI3yVHy7kRKp73E4kiS
-X-Received: by 2002:a05:600c:1e24:b0:412:acde:4839 with SMTP id
- ay36-20020a05600c1e2400b00412acde4839mr68722wmb.3.1709138438231; Wed, 28 Feb
- 2024 08:40:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="VabgY1qj"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41SGVYdU023571;
+	Wed, 28 Feb 2024 08:49:17 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	pfpt0220; bh=++Zm4EfALVHr2uVCa8Qmwfu6G7yYO30aQtPmYOF50Ec=; b=Vab
+	gY1qjWagIVQGs3SztRG4jW5m7gWPFw7g1G7WQ7vq2039i/dPRc/DlVbPAOv6ZASg
+	8VTMtJvugFEIid8URbLIKFncFKep6/jnhuYGt56oLDMRVi9ed9Yopw0B8SYHabye
+	GbCLQwzIpvNmstMLzm6VWLRmJPHX9Gmm69FUK/Cf2W/iYXD1Tt86EW2ChDox+QeQ
+	wdtey3uhSNnfAX24ObLhWjQPKxWD6QDYOueLFOMBjabmOI7g1GQHIHslQsDz8H3H
+	Sy6fTo0nPxZkl6Z3SSdcRVtJipWGk6KtvAFYpghq2rqqD107A7fyH3hP2PlCmgJg
+	MZGk8641AbUCz6TE0yA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3wj8e8r28v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 Feb 2024 08:49:16 -0800 (PST)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.12; Wed, 28 Feb 2024 08:49:16 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Wed, 28 Feb 2024 08:49:15 -0800
+Received: from localhost.localdomain (unknown [10.28.36.156])
+	by maili.marvell.com (Postfix) with ESMTP id C6A835C6943;
+	Wed, 28 Feb 2024 08:21:53 -0800 (PST)
+From: Vamsi Attunuru <vattunuru@marvell.com>
+To: <arnd@arndb.de>, <gregkh@linuxfoundation.org>
+CC: <vattunuru@marvell.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 1/1] misc: mrvl-cn10k-dpi: add Octeon CN10K DPI administrative driver
+Date: Wed, 28 Feb 2024 08:21:41 -0800
+Message-ID: <20240228162141.1413171-1-vattunuru@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <2024021913-aftermost-footnote-cd6e@gregkh>
+References: <2024021913-aftermost-footnote-cd6e@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202141109.1.I24277520ac754ea538c9b14578edc94e1df11b48@changeid>
- <CAJMQK-it9YMod4rHKnACq4O-iaGieK2SN4x5vQ018CghsA631A@mail.gmail.com>
- <CAD=FV=VfuFrK1cSKA0maMzT5dxzKEzADqrd69fZKXuAGrU2rmA@mail.gmail.com>
- <87sf1u58k0.fsf@intel.com> <CAD=FV=XQdLm3PcjEd_g_dBJ9QO8zAJtj5nrXS9=cjC80+-Jbfg@mail.gmail.com>
- <cbcd981f-bd5d-477e-8482-d3414be17057@linaro.org>
-In-Reply-To: <cbcd981f-bd5d-477e-8482-d3414be17057@linaro.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 28 Feb 2024 08:40:22 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UtpL=Wy7jnUFkTF8WtMjWa3ZfJXsXDX=Q=j6o_6rd4AQ@mail.gmail.com>
-Message-ID: <CAD=FV=UtpL=Wy7jnUFkTF8WtMjWa3ZfJXsXDX=Q=j6o_6rd4AQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/dp: Don't attempt AUX transfers when eDP panels are
- not powered
-To: neil.armstrong@linaro.org
-Cc: Jani Nikula <jani.nikula@intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Hsin-Yi Wang <hsinyi@chromium.org>, dri-devel@lists.freedesktop.org, eizan@chromium.org, 
-	Ankit Nautiyal <ankit.k.nautiyal@intel.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	David Airlie <airlied@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Imre Deak <imre.deak@intel.com>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: XqlqxOSC3shQWUXoNVuphc-QxyBs0u-g
+X-Proofpoint-ORIG-GUID: XqlqxOSC3shQWUXoNVuphc-QxyBs0u-g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-28_08,2024-02-27_01,2023-05-22_02
 
-Neil,
+Adds a misc driver for Marvell CN10K DPI(DMA Engine) device's physical
+function which initializes DPI DMA hardware's global configuration and
+enables hardware mailbox channels between physical function (PF) and
+it's virtual functions (VF). VF device drivers (User space drivers) use
+this hw mailbox to communicate any required device configuration on it's
+respective VF device. Accordingly, this DPI PF driver provisions the
+VF device resources.
 
-On Thu, Feb 15, 2024 at 8:53=E2=80=AFAM Neil Armstrong
-<neil.armstrong@linaro.org> wrote:
->
-> Hi Doug,
->
-> On 15/02/2024 16:08, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Thu, Feb 15, 2024 at 2:24=E2=80=AFAM Jani Nikula <jani.nikula@intel.=
-com> wrote:
-> >>
-> >> On Wed, 14 Feb 2024, Doug Anderson <dianders@chromium.org> wrote:
-> >>> Hi,
-> >>>
-> >>> On Tue, Feb 13, 2024 at 10:25=E2=80=AFPM Hsin-Yi Wang <hsinyi@chromiu=
-m.org> wrote:
-> >>>>
-> >>>> On Wed, Feb 14, 2024 at 2:23=E2=80=AFPM Douglas Anderson <dianders@c=
-hromium.org> wrote:
-> >>>>>
-> >>>>> If an eDP panel is not powered on then any attempts to talk to it o=
-ver
-> >>>>> the DP AUX channel will timeout. Unfortunately these attempts may b=
-e
-> >>>>> quite slow. Userspace can initiate these attempts either via a
-> >>>>> /dev/drm_dp_auxN device or via the created i2c device.
-> >>>>>
-> >>>>> Making the DP AUX drivers timeout faster is a difficult proposition=
-.
-> >>>>> In theory we could just poll the panel's HPD line in the AUX transf=
-er
-> >>>>> function and immediately return an error there. However, this is
-> >>>>> easier said than done. For one thing, there's no hard requirement t=
-o
-> >>>>> hook the HPD line up for eDP panels and it's OK to just delay a fix=
-ed
-> >>>>> amount. For another thing, the HPD line may not be fast to probe. O=
-n
-> >>>>> parade-ps8640 we need to wait for the bridge chip's firmware to boo=
-t
-> >>>>> before we can get the HPD line and this is a slow process.
-> >>>>>
-> >>>>> The fact that the transfers are taking so long to timeout is causin=
-g
-> >>>>> real problems. The open source fwupd daemon sometimes scans DP buss=
-es
-> >>>>> looking for devices whose firmware need updating. If it happens to
-> >>>>> scan while a panel is turned off this scan can take a long time. Th=
-e
-> >>>>> fwupd daemon could try to be smarter and only scan when eDP panels =
-are
-> >>>>> turned on, but we can also improve the behavior in the kernel.
-> >>>>>
-> >>>>> Let's let eDP panels drivers specify that a panel is turned off and
-> >>>>> then modify the common AUX transfer code not to attempt a transfer =
-in
-> >>>>> this case.
-> >>>>>
-> >>>>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> >>>>> ---
-> >>>>
-> >>>> Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> >>>
-> >>> Thanks for the review!
-> >>>
-> >>> Given that this touches core DRM code and that I never got
-> >>> confirmation that Jani's concerns were addressed with my previous
-> >>> response, I'm still going to wait a little while before applying. I'm
-> >>> on vacation for most of next week, but if there are no further replie=
-s
-> >>> between now and then I'll plan to apply this to "drm-misc-next" the
-> >>> week of Feb 26th. If someone else wants to apply this before I do the=
-n
-> >>> I certainly won't object. Jani: if you feel this needs more discussio=
-n
-> >>> or otherwise object to this patch landing then please yell. Likewise
-> >>> if anyone else in the community wants to throw in their opinion, feel
-> >>> free.
-> >>
-> >> Sorry for dropping the ball after my initial response. I simply have n=
-ot
-> >> had the time to look into this.
-> >>
-> >> It would be great to get, say, drm-misc maintainer ack on this before
-> >> merging. It's not fair for me to stall this any longer, I'll trust the=
-ir
-> >> judgement.
-> >>
-> >> Reasonable?
-> >
-> > I'd be more than happy for one of the drm-misc maintainers to Ack.
-> > I'll move Maxime, Thomas, and Maarten to the "To:" line to see if that
-> > helps get through their filters.
->
-> I'll like some test reports to be sure it doesn't break anything,
-> then I'll be happy to give my ack !
+At the hardware level, the DPI physical function (PF) acts as a management
+interface to setup the VF device resources, VF devices are only provisioned
+to handle or control the actual DMA Engine's data transfer capabilities.
 
-Are you looking for any more test reports at this point? Eizan did
-some testing and provided a tag, though this was also on ChromeOS.
-Steev also tested on two non-ChromeOS environments and provided his
-tag. It's also been another two weeks of this being rolled out to some
-Chromebook users and I haven't heard any reports of problems. If
-somehow something was missed, I'm happy to follow-up and provide
-additional fixes if some report comes in later.
+Signed-off-by: Vamsi Attunuru <vattunuru@marvell.com>
+---
+Changes V2 -> V3:
+- Added ioctl operation to the fops
+- Used managed version of kzalloc & request_irq
+- Addressed miscellaneous comments
 
-Thanks!
+Changes V1 -> V2:
+- Fixed return values and busy-wait loops
+- Merged .h file into .c file
+- Fixed directory structure
+- Removed module params
+- Registered the device as misc device
 
--Doug
+ MAINTAINERS                   |   5 +
+ drivers/misc/Kconfig          |  12 +
+ drivers/misc/Makefile         |   1 +
+ drivers/misc/mrvl_cn10k_dpi.c | 717 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 735 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 960512bec428..ab77232d583e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13104,6 +13104,11 @@ S:	Supported
+ F:	Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
+ F:	drivers/mmc/host/sdhci-xenon*
+ 
++MARVELL OCTEON CN10K DPI DRIVER
++M:	Vamsi Attunuru <vattunuru@marvell.com>
++S:	Maintained
++F:	drivers/misc/mrvl_cn10k_dpi.c
++
+ MATROX FRAMEBUFFER DRIVER
+ L:	linux-fbdev@vger.kernel.org
+ S:	Orphan
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 4fb291f0bf7c..58de5844ecef 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -574,6 +574,18 @@ config NSM
+ 	  To compile this driver as a module, choose M here.
+ 	  The module will be called nsm.
+ 
++config MARVELL_CN10K_DPI
++	tristate "Octeon CN10K DPI driver"
++	depends on ARM64 && PCI
++	help
++	  Enables Octeon CN10K DPI driver which intializes DPI PF device's global configuration
++	  and its VFs resource configuration to enable DMA transfers. DPI PF device
++	  does not have any data movement functionality, it only serves VF's resource
++	  configuration requests.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called mrvl_cn10k_dpi.
++
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+ source "drivers/misc/cb710/Kconfig"
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index ea6ea5bbbc9c..8fa2fbf8670f 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -68,3 +68,4 @@ obj-$(CONFIG_TMR_INJECT)	+= xilinx_tmr_inject.o
+ obj-$(CONFIG_TPS6594_ESM)	+= tps6594-esm.o
+ obj-$(CONFIG_TPS6594_PFSM)	+= tps6594-pfsm.o
+ obj-$(CONFIG_NSM)		+= nsm.o
++obj-$(CONFIG_MARVELL_CN10K_DPI)	+= mrvl_cn10k_dpi.o
+diff --git a/drivers/misc/mrvl_cn10k_dpi.c b/drivers/misc/mrvl_cn10k_dpi.c
+new file mode 100644
+index 000000000000..3d33395feaa3
+--- /dev/null
++++ b/drivers/misc/mrvl_cn10k_dpi.c
+@@ -0,0 +1,717 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell Octeon CN10K DPI driver
++ *
++ * Copyright (C) 2024 Marvell.
++ *
++ */
++
++#include <linux/delay.h>
++#include <linux/miscdevice.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/irq.h>
++#include <linux/interrupt.h>
++
++#define DPI_DRV_NAME	"mrvl-cn10k-dpi"
++
++/* PCI device IDs */
++#define PCI_DEVID_MRVL_CN10K_DPI_PF	0xA080
++#define PCI_SUBDEVID_MRVL_CN10K_DPI_PF	0xBA00
++
++/* PCI BAR nos */
++#define PCI_DPI_CFG_BAR	0
++
++/* MSI-X interrupts */
++#define DPI_MAX_REQQ_INT 32
++#define DPI_MAX_CC_INT   64
++
++/* MBOX MSI-X interrupt vector index */
++#define DPI_MBOX_PF_VF_INT_IDX 0x75
++
++#define DPI_MAX_IRQS (DPI_MBOX_PF_VF_INT_IDX + 1)
++
++#define DPI_MAX_ENGINES 6
++#define DPI_MAX_VFS	32
++
++#define DPI_ENGINE_MASK GENMASK(2, 0)
++
++#define DPI_DMA_IDS_DMA_NPA_PF_FUNC(x)		((u64)((x) & GENMASK(15, 0)) << 16)
++#define DPI_DMA_IDS_INST_STRM(x)		((u64)((x) & GENMASK(7, 0)) << 40)
++#define DPI_DMA_IDS_DMA_STRM(x)			((u64)((x) & GENMASK(7, 0)) << 32)
++#define DPI_DMA_ENG_EN_MOLR(x)			((u64)((x) & GENMASK(9, 0)) << 32)
++#define DPI_EBUS_PORTX_CFG_MPS(x)		((x) & GENMASK(2, 0) << 4)
++#define DPI_DMA_IDS_DMA_SSO_PF_FUNC(x)		((x) & GENMASK(15, 0))
++#define DPI_DMA_IDS2_INST_AURA(x)		((x) & GENMASK(19, 0))
++#define DPI_DMA_IBUFF_CSIZE_CSIZE(x)		((x) & GENMASK(13, 0))
++#define DPI_EBUS_PORTX_CFG_MRRS(x)		((x) & GENMASK(2, 0))
++#define DPI_ENG_BUF_BLKS(x)			((x) & GENMASK(5, 0))
++#define DPI_DMA_CONTROL_DMA_ENB			GENMASK_ULL(53, 48)
++
++#define DPI_DMA_CONTROL_O_MODE			BIT_ULL(14)
++#define DPI_DMA_CONTROL_LDWB			BIT_ULL(32)
++#define DPI_DMA_CONTROL_WQECSMODE1		BIT_ULL(37)
++#define DPI_DMA_CONTROL_ZBWCSEN			BIT_ULL(39)
++#define DPI_DMA_CONTROL_WQECSOFF(offset)	(((u64)offset) << 40)
++#define DPI_DMA_CONTROL_WQECSDIS		BIT_ULL(47)
++#define DPI_DMA_CONTROL_PKT_EN			BIT_ULL(56)
++#define DPI_DMA_IBUFF_CSIZE_NPA_FREE		BIT(16)
++
++#define DPI_CTL_EN				BIT_ULL(0)
++#define DPI_DMA_CC_INT				BIT_ULL(0)
++#define DPI_DMA_QRST				BIT_ULL(0)
++
++#define DPI_REQQ_INT_INSTRFLT			BIT_ULL(0)
++#define DPI_REQQ_INT_RDFLT			BIT_ULL(1)
++#define DPI_REQQ_INT_WRFLT			BIT_ULL(2)
++#define DPI_REQQ_INT_CSFLT			BIT_ULL(3)
++#define DPI_REQQ_INT_INST_DBO			BIT_ULL(4)
++#define DPI_REQQ_INT_INST_ADDR_NULL		BIT_ULL(5)
++#define DPI_REQQ_INT_INST_FILL_INVAL		BIT_ULL(6)
++#define DPI_REQQ_INT_INSTR_PSN			BIT_ULL(7)
++
++#define DPI_REQQ_INT \
++	(DPI_REQQ_INT_INSTRFLT		| \
++	DPI_REQQ_INT_RDFLT		| \
++	DPI_REQQ_INT_WRFLT		| \
++	DPI_REQQ_INT_CSFLT		| \
++	DPI_REQQ_INT_INST_DBO		| \
++	DPI_REQQ_INT_INST_ADDR_NULL	| \
++	DPI_REQQ_INT_INST_FILL_INVAL	| \
++	DPI_REQQ_INT_INSTR_PSN)
++
++#define DPI_PF_RAS_EBI_DAT_PSN	BIT_ULL(0)
++#define DPI_PF_RAS_NCB_DAT_PSN	BIT_ULL(1)
++#define DPI_PF_RAS_NCB_CMD_PSN	BIT_ULL(2)
++
++#define DPI_PF_RAS_INT \
++	(DPI_PF_RAS_EBI_DAT_PSN  | \
++	 DPI_PF_RAS_NCB_DAT_PSN  | \
++	 DPI_PF_RAS_NCB_CMD_PSN)
++
++#define DPI_DMAX_IBUFF_CSIZE(x)	(0x0ULL | ((x) << 11))
++#define DPI_DMAX_IDS(x)		(0x18ULL | ((x) << 11))
++#define DPI_DMAX_IDS2(x)	(0x20ULL | ((x) << 11))
++#define DPI_DMAX_QRST(x)	(0x30ULL | ((x) << 11))
++
++#define DPI_CTL		0x10010ULL
++#define DPI_DMA_CONTROL 0x10018ULL
++#define DPI_DMA_ENGX_EN(x) (0x10040ULL | ((x) << 3))
++#define DPI_ENGX_BUF(x)	(0x100C0ULL | ((x) << 3))
++
++#define DPI_EBUS_PORTX_CFG(x) (0x10100ULL | ((x) << 3))
++
++#define DPI_PF_RAS 0x10308ULL
++#define DPI_PF_RAS_ENA_W1C 0x10318ULL
++
++#define DPI_DMA_CCX_INT(x) (0x11000ULL | ((x) << 3))
++#define DPI_DMA_CCX_INT_ENA_W1C(x) (0x11800ULL | ((x) << 3))
++
++#define DPI_REQQX_INT(x) (0x12C00ULL | ((x) << 5))
++#define DPI_REQQX_INT_ENA_W1C(x) (0x13800ULL | ((x) << 5))
++
++#define DPI_MBOX_PF_VF_DATA0(x) (0x16000ULL | ((x) << 4))
++#define DPI_MBOX_PF_VF_DATA1(x) (0x16008ULL | ((x) << 4))
++
++#define DPI_MBOX_VF_PF_INT 0x16300ULL
++#define DPI_MBOX_VF_PF_INT_W1S 0x16308ULL
++#define DPI_MBOX_VF_PF_INT_ENA_W1C 0x16310ULL
++#define DPI_MBOX_VF_PF_INT_ENA_W1S 0x16318ULL
++
++#define DPI_WCTL_FIF_THR 0x17008ULL
++
++#define DPI_EBUS_MAX_PORTS 2
++
++#define DPI_EBUS_MRRS_MIN 128
++#define DPI_EBUS_MRRS_MAX 1024
++#define DPI_EBUS_MPS_MIN  128
++#define DPI_EBUS_MPS_MAX  1024
++
++#define DPI_QUEUE_OPEN  0x1
++#define DPI_QUEUE_CLOSE 0x2
++#define DPI_REG_DUMP    0x3
++#define DPI_GET_REG_CFG 0x4
++#define DPI_QUEUE_OPEN_V2 0x5
++
++#define DPI_MAGIC_NUM	0xf
++
++struct dpi_mps_mrrs_cfg {
++	u16 mrrs; /* Max read request size */
++	u16 mps;  /* Max packet size */
++	u8 port;  /* Ebus port */
++};
++
++struct dpi_engine_cfg {
++	u64 fifo_mask; /* FIFO size mask in KBytes */
++	u16 molr[DPI_MAX_ENGINES];
++	u8 update_molr; /* '1' to update engine MOLR */
++};
++
++enum dpi_mbox_rsp_type {
++	DPI_MBOX_TYPE_CMD,
++	DPI_MBOX_TYPE_RSP_ACK,
++	DPI_MBOX_TYPE_RSP_NACK,
++};
++
++struct dpivf_config {
++	u16 csize;
++	u32 aura;
++	u16 sso_pf_func;
++	u16 npa_pf_func;
++};
++
++struct dpipf_vf {
++	u8 this_vfid;
++	bool setup_done;
++	struct dpivf_config vf_config;
++};
++
++/* DPI device mailbox */
++struct dpi_mbox {
++	struct work_struct work;
++	/* lock to serialize mbox requests */
++	struct mutex lock;
++	struct dpipf *pf;
++	u8 __iomem *pf_vf_data_reg;
++	u8 __iomem *vf_pf_data_reg;
++};
++
++struct dpipf {
++	struct miscdevice miscdev;
++	void __iomem *reg_base;
++	struct pci_dev *pdev;
++	struct dpipf_vf vf[DPI_MAX_VFS];
++	/* Mailbox to talk to VFs */
++	struct dpi_mbox *mbox[DPI_MAX_VFS];
++};
++
++union dpi_mbox_message_t {
++	u64 u[2];
++	struct dpi_mbox_message_s {
++		/* VF ID to configure */
++		u64 vfid           :8;
++		/* Command code */
++		u64 cmd            :4;
++		/* Command buffer size in 8-byte words */
++		u64 csize          :14;
++		/* aura of the command buffer */
++		u64 aura           :20;
++		/* SSO PF function */
++		u64 sso_pf_func    :16;
++		/* NPA PF function */
++		u64 npa_pf_func    :16;
++		/* Work queue completion status enable */
++		u64 wqecs	:1;
++		/* Work queue completion status byte offset */
++		u64 wqecsoff	:7;
++		/* Reserved */
++		u64 rsvd	:42;
++	} s __packed;
++};
++
++/* Set MPS & MRRS parameters */
++#define DPI_MPS_MRRS_CFG _IOW(DPI_MAGIC_NUM, 0, struct dpi_mps_mrrs_cfg)
++
++/* Set Engine FIFO configuration */
++#define DPI_ENGINE_CFG   _IOW(DPI_MAGIC_NUM, 1, struct dpi_engine_cfg)
++
++static inline void dpi_reg_write(struct dpipf *dpi, u64 offset, u64 val)
++{
++	writeq(val, dpi->reg_base + offset);
++}
++
++static inline u64 dpi_reg_read(struct dpipf *dpi, u64 offset)
++{
++	return readq(dpi->reg_base + offset);
++}
++
++static void dpi_wqe_cs_offset(struct dpipf *dpi, u8 offset)
++{
++	u64 reg;
++
++	reg = dpi_reg_read(dpi, DPI_DMA_CONTROL);
++	reg &= ~DPI_DMA_CONTROL_WQECSDIS;
++	reg |= DPI_DMA_CONTROL_ZBWCSEN | DPI_DMA_CONTROL_WQECSMODE1;
++	reg |= DPI_DMA_CONTROL_WQECSOFF(offset);
++	dpi_reg_write(dpi, DPI_DMA_CONTROL, reg);
++}
++
++static int dpi_queue_init(struct dpipf *dpi, struct dpipf_vf *dpivf, u8 vf)
++{
++	u16 sso_pf_func = dpivf->vf_config.sso_pf_func;
++	u16 npa_pf_func = dpivf->vf_config.npa_pf_func;
++	u16 csize = dpivf->vf_config.csize;
++	u32 aura = dpivf->vf_config.aura;
++	unsigned long timeout;
++	u64 reg;
++
++	dpi_reg_write(dpi, DPI_DMAX_QRST(vf), DPI_DMA_QRST);
++
++	/* Wait for a maximum of 3 sec */
++	timeout = jiffies + msecs_to_jiffies(3000);
++	while (!time_after(jiffies, timeout)) {
++		reg = dpi_reg_read(dpi, DPI_DMAX_QRST(vf));
++		if (!(reg & DPI_DMA_QRST))
++			break;
++
++		usleep_range(500, 1000);
++	}
++
++	if (reg & DPI_DMA_QRST) {
++		dev_err(&dpi->pdev->dev, "Queue reset failed\n");
++		return -EBUSY;
++	}
++
++	dpi_reg_write(dpi, DPI_DMAX_IDS2(vf), 0);
++	dpi_reg_write(dpi, DPI_DMAX_IDS(vf), 0);
++
++	reg = DPI_DMA_IBUFF_CSIZE_CSIZE(csize) | DPI_DMA_IBUFF_CSIZE_NPA_FREE;
++	dpi_reg_write(dpi, DPI_DMAX_IBUFF_CSIZE(vf), reg);
++
++	reg = dpi_reg_read(dpi, DPI_DMAX_IDS2(vf));
++	reg |= DPI_DMA_IDS2_INST_AURA(aura);
++	dpi_reg_write(dpi, DPI_DMAX_IDS2(vf), reg);
++
++	reg = dpi_reg_read(dpi, DPI_DMAX_IDS(vf));
++	reg |= DPI_DMA_IDS_DMA_NPA_PF_FUNC(npa_pf_func);
++	reg |= DPI_DMA_IDS_DMA_SSO_PF_FUNC(sso_pf_func);
++	reg |= DPI_DMA_IDS_DMA_STRM(vf + 1);
++	reg |= DPI_DMA_IDS_INST_STRM(vf + 1);
++	dpi_reg_write(dpi, DPI_DMAX_IDS(vf), reg);
++
++	return 0;
++}
++
++static void dpi_queue_fini(struct dpipf *dpi, struct dpipf_vf *dpivf, u8 vf)
++{
++	dpi_reg_write(dpi, DPI_DMAX_QRST(vf), DPI_DMA_QRST);
++
++	/* Reset IDS and IDS2 registers */
++	dpi_reg_write(dpi, DPI_DMAX_IDS2(vf), 0);
++	dpi_reg_write(dpi, DPI_DMAX_IDS(vf), 0);
++}
++
++static void dpi_poll_pfvf_mbox(struct dpipf *dpi)
++{
++	u64 reg;
++	u32 vf;
++
++	reg = dpi_reg_read(dpi, DPI_MBOX_VF_PF_INT);
++	if (reg) {
++		for (vf = 0; vf < pci_num_vf(dpi->pdev); vf++) {
++			if (reg & BIT_ULL(vf)) {
++				if (!dpi->mbox[vf]) {
++					dev_err(&dpi->pdev->dev, "bad mbox vf %d\n", vf);
++					continue;
++				}
++				schedule_work(&dpi->mbox[vf]->work);
++			}
++		}
++
++		dpi_reg_write(dpi, DPI_MBOX_VF_PF_INT, reg);
++	}
++}
++
++static irqreturn_t dpi_mbox_intr_handler(int irq, void *data)
++{
++	struct dpipf *dpi = data;
++
++	dpi_poll_pfvf_mbox(dpi);
++
++	return IRQ_HANDLED;
++}
++
++static int queue_config(struct dpipf *dpi, struct dpipf_vf *dpivf, union dpi_mbox_message_t *msg)
++{
++	int ret = 0;
++
++	switch (msg->s.cmd) {
++	case DPI_QUEUE_OPEN:
++	case DPI_QUEUE_OPEN_V2:
++		dpivf->vf_config.aura = msg->s.aura;
++		dpivf->vf_config.csize = (msg->s.cmd == DPI_QUEUE_OPEN) ? (msg->s.csize / 8) :
++					  msg->s.csize;
++		dpivf->vf_config.sso_pf_func = msg->s.sso_pf_func;
++		dpivf->vf_config.npa_pf_func = msg->s.npa_pf_func;
++		ret = dpi_queue_init(dpi, dpivf, msg->s.vfid);
++		if (!ret) {
++			if (msg->s.wqecs)
++				dpi_wqe_cs_offset(dpi, msg->s.wqecsoff);
++			dpivf->setup_done = true;
++		}
++		break;
++	case DPI_QUEUE_CLOSE:
++		dpivf->vf_config.aura = 0;
++		dpivf->vf_config.csize = 0;
++		dpivf->vf_config.sso_pf_func = 0;
++		dpivf->vf_config.npa_pf_func = 0;
++		dpi_queue_fini(dpi, dpivf, msg->s.vfid);
++		dpivf->setup_done = false;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return ret;
++}
++
++static void dpi_pfvf_mbox_work(struct work_struct *work)
++{
++	struct dpi_mbox *mbox = container_of(work, struct dpi_mbox, work);
++	union dpi_mbox_message_t msg = { 0 };
++	struct dpipf_vf *dpivf;
++	struct dpipf *dpi;
++	int ret;
++
++	dpi = mbox->pf;
++
++	mutex_lock(&mbox->lock);
++	msg.u[0] = readq(mbox->vf_pf_data_reg);
++	if (unlikely(msg.u[0] == GENMASK_ULL(63, 0)))
++		goto exit;
++
++	if (msg.s.vfid >= pci_num_vf(dpi->pdev)) {
++		dev_err(&dpi->pdev->dev, "Invalid vfid:%d\n", msg.s.vfid);
++		goto exit;
++	}
++
++	dpivf = &dpi->vf[msg.s.vfid];
++	msg.u[1] = readq(mbox->pf_vf_data_reg);
++
++	ret = queue_config(dpi, dpivf, &msg);
++	if (ret < 0)
++		writeq(DPI_MBOX_TYPE_RSP_NACK, mbox->pf_vf_data_reg);
++	else
++		writeq(DPI_MBOX_TYPE_RSP_ACK, mbox->pf_vf_data_reg);
++exit:
++	mutex_unlock(&mbox->lock);
++}
++
++/* Setup registers for a PF mailbox */
++static void dpi_setup_mbox_regs(struct dpipf *dpi, int vf)
++{
++	struct dpi_mbox *mbox = dpi->mbox[vf];
++
++	mbox->pf_vf_data_reg = dpi->reg_base + DPI_MBOX_PF_VF_DATA0(vf);
++	mbox->vf_pf_data_reg = dpi->reg_base + DPI_MBOX_PF_VF_DATA1(vf);
++}
++
++static int dpi_pfvf_mbox_setup(struct dpipf *dpi)
++{
++	int vf;
++
++	for (vf = 0; vf < DPI_MAX_VFS; vf++) {
++		dpi->mbox[vf] = devm_kzalloc(&dpi->pdev->dev, sizeof(*dpi->mbox[vf]), GFP_KERNEL);
++
++		if (!dpi->mbox[vf])
++			goto free_mbox;
++
++		mutex_init(&dpi->mbox[vf]->lock);
++		INIT_WORK(&dpi->mbox[vf]->work, dpi_pfvf_mbox_work);
++		dpi->mbox[vf]->pf = dpi;
++		dpi_setup_mbox_regs(dpi, vf);
++	}
++
++	return 0;
++
++free_mbox:
++	while (vf--) {
++		cancel_work_sync(&dpi->mbox[vf]->work);
++		dpi->mbox[vf] = NULL;
++	}
++
++	return -ENOMEM;
++}
++
++static void dpi_pfvf_mbox_destroy(struct dpipf *dpi)
++{
++	unsigned int vf;
++
++	for (vf = 0; vf < DPI_MAX_VFS; vf++) {
++		if (!dpi->mbox[vf])
++			continue;
++
++		if (work_pending(&dpi->mbox[vf]->work))
++			cancel_work_sync(&dpi->mbox[vf]->work);
++
++		dpi->mbox[vf] = NULL;
++	}
++}
++
++static void dpi_init(struct dpipf *dpi)
++{
++	unsigned int engine, port;
++	u8 mrrs_val, mps_val;
++	u64 reg;
++
++	for (engine = 0; engine < DPI_MAX_ENGINES; engine++) {
++		if (engine == 4 || engine == 5)
++			reg = DPI_ENG_BUF_BLKS(16);
++		else
++			reg = DPI_ENG_BUF_BLKS(8);
++
++		dpi_reg_write(dpi, DPI_ENGX_BUF(engine), reg);
++	}
++
++	reg = DPI_DMA_CONTROL_ZBWCSEN | DPI_DMA_CONTROL_PKT_EN | DPI_DMA_CONTROL_LDWB |
++		DPI_DMA_CONTROL_O_MODE | DPI_DMA_CONTROL_DMA_ENB;
++
++	dpi_reg_write(dpi, DPI_DMA_CONTROL, reg);
++	dpi_reg_write(dpi, DPI_CTL, DPI_CTL_EN);
++
++	mrrs_val = 2; /* 512B */
++	mps_val = 1; /* 256B */
++
++	for (port = 0; port < DPI_EBUS_MAX_PORTS; port++) {
++		reg = dpi_reg_read(dpi, DPI_EBUS_PORTX_CFG(port));
++		reg &= ~(DPI_EBUS_PORTX_CFG_MRRS(7) | DPI_EBUS_PORTX_CFG_MPS(7));
++		reg |= DPI_EBUS_PORTX_CFG_MPS(mps_val) | DPI_EBUS_PORTX_CFG_MRRS(mrrs_val);
++		dpi_reg_write(dpi, DPI_EBUS_PORTX_CFG(port), reg);
++	}
++
++	/* Set the write control FIFO threshold as per HW recommendation */
++	dpi_reg_write(dpi, DPI_WCTL_FIF_THR, 0x30);
++}
++
++static void dpi_fini(struct dpipf *dpi)
++{
++	unsigned int engine;
++
++	for (engine = 0; engine < DPI_MAX_ENGINES; engine++)
++		dpi_reg_write(dpi, DPI_ENGX_BUF(engine), 0);
++
++	dpi_reg_write(dpi, DPI_DMA_CONTROL, 0);
++	dpi_reg_write(dpi, DPI_CTL, 0);
++}
++
++static int dpi_irq_init(struct dpipf *dpi)
++{
++	struct pci_dev *pdev = dpi->pdev;
++	int i, ret;
++
++	/* Clear all RAS interrupts */
++	dpi_reg_write(dpi, DPI_PF_RAS, DPI_PF_RAS_INT);
++
++	/* Clear all RAS interrupt enable bits */
++	dpi_reg_write(dpi, DPI_PF_RAS_ENA_W1C, DPI_PF_RAS_INT);
++
++	for (i = 0; i < DPI_MAX_REQQ_INT; i++) {
++		dpi_reg_write(dpi, DPI_REQQX_INT(i), DPI_REQQ_INT);
++		dpi_reg_write(dpi, DPI_REQQX_INT_ENA_W1C(i), DPI_REQQ_INT);
++	}
++
++	for (i = 0; i < DPI_MAX_CC_INT; i++) {
++		dpi_reg_write(dpi, DPI_DMA_CCX_INT(i), DPI_DMA_CC_INT);
++		dpi_reg_write(dpi, DPI_DMA_CCX_INT_ENA_W1C(i), DPI_DMA_CC_INT);
++	}
++
++	ret = pci_alloc_irq_vectors(pdev, DPI_MAX_IRQS, DPI_MAX_IRQS, PCI_IRQ_MSIX);
++	if (ret != DPI_MAX_IRQS) {
++		dev_err(&pdev->dev, "DPI: Failed to alloc %d msix irqs\n", DPI_MAX_IRQS);
++		return ret;
++	}
++
++	ret = devm_request_irq(&pdev->dev, pci_irq_vector(pdev, DPI_MBOX_PF_VF_INT_IDX),
++			       dpi_mbox_intr_handler, 0, "dpi-mbox", dpi);
++	if (ret) {
++		dev_err(&pdev->dev, "DPI: request_irq failed for mbox; err=%d\n", ret);
++		return ret;
++	}
++
++	dpi_reg_write(dpi, DPI_MBOX_VF_PF_INT_ENA_W1S, GENMASK_ULL(31, 0));
++
++	return 0;
++}
++
++static void dpi_free_irq_vectors(void *pdev)
++{
++	pci_free_irq_vectors((struct pci_dev *)pdev);
++}
++
++static int dpi_mps_mrrs_config(struct dpipf *dpi, void __user *arg)
++{
++	struct dpi_mps_mrrs_cfg cfg;
++	u8 mrrs_val, mps_val;
++	u64 reg;
++
++	if (copy_from_user(&cfg, arg, sizeof(struct dpi_mps_mrrs_cfg)))
++		return -EFAULT;
++
++	if (cfg.mrrs < DPI_EBUS_MRRS_MIN || cfg.mrrs > DPI_EBUS_MRRS_MAX ||
++	    !is_power_of_2(cfg.mrrs)) {
++		dev_err(&dpi->pdev->dev, "Invalid MRRS size:%u\n", cfg.mrrs);
++		return -EINVAL;
++	}
++
++	if (cfg.mps < DPI_EBUS_MPS_MIN || cfg.mps > DPI_EBUS_MPS_MAX ||
++	    !is_power_of_2(cfg.mps)) {
++		dev_err(&dpi->pdev->dev, "Invalid MPS size:%u\n", cfg.mps);
++		return -EINVAL;
++	}
++
++	if (cfg.port >= DPI_EBUS_MAX_PORTS) {
++		dev_err(&dpi->pdev->dev, "Invalid EBUS port:%u\n", cfg.mps);
++		return -EINVAL;
++	}
++
++	mrrs_val = fls(cfg.mrrs) - 8;
++	mps_val = fls(cfg.mps) - 8;
++
++	reg = dpi_reg_read(dpi, DPI_EBUS_PORTX_CFG(cfg.port));
++	reg &= ~(DPI_EBUS_PORTX_CFG_MRRS(0x7) | DPI_EBUS_PORTX_CFG_MPS(0x7));
++	reg |= DPI_EBUS_PORTX_CFG_MPS(mps_val) | DPI_EBUS_PORTX_CFG_MRRS(mrrs_val);
++	dpi_reg_write(dpi, DPI_EBUS_PORTX_CFG(cfg.port), reg);
++
++	return 0;
++}
++
++static int dpi_engine_config(struct dpipf *dpi, void __user *arg)
++{
++	struct dpi_engine_cfg cfg;
++	unsigned int engine;
++	u8 *eng_buf;
++	u64 reg;
++
++	if (copy_from_user(&cfg, arg, sizeof(struct dpi_engine_cfg)))
++		return -EFAULT;
++
++	eng_buf = (u8 *)&cfg.fifo_mask;
++
++	for (engine = 0; engine < DPI_MAX_ENGINES; engine++) {
++		reg = DPI_ENG_BUF_BLKS(eng_buf[engine & DPI_ENGINE_MASK]);
++		dpi_reg_write(dpi, DPI_ENGX_BUF(engine), reg);
++
++		if (cfg.update_molr) {
++			reg = DPI_DMA_ENG_EN_MOLR(cfg.molr[engine & DPI_ENGINE_MASK]);
++			dpi_reg_write(dpi, DPI_DMA_ENGX_EN(engine), reg);
++		}
++	}
++
++	return 0;
++}
++
++static long dpi_dev_ioctl(struct file *fptr, unsigned int cmd, unsigned long data)
++{
++	void __user *arg = (void __user *)data;
++	struct dpipf *dpi;
++	int ret = -EINVAL;
++
++	dpi = container_of(fptr->private_data, struct dpipf, miscdev);
++
++	switch (cmd) {
++	case DPI_MPS_MRRS_CFG:
++		ret = dpi_mps_mrrs_config(dpi, arg);
++		break;
++	case DPI_ENGINE_CFG:
++		ret = dpi_engine_config(dpi, arg);
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++}
++
++static const struct file_operations dpi_device_fops = {
++	.owner = THIS_MODULE,
++	.unlocked_ioctl = dpi_dev_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
++};
++
++static int dpi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++{
++	struct device *dev = &pdev->dev;
++	struct dpipf *dpi;
++	int ret;
++
++	dpi = devm_kzalloc(dev, sizeof(*dpi), GFP_KERNEL);
++	if (!dpi)
++		return -ENOMEM;
++
++	dpi->pdev = pdev;
++
++	ret = pcim_enable_device(pdev);
++	if (ret) {
++		dev_err(dev, "DPI: Failed to enable PCI device\n");
++		return ret;
++	}
++
++	ret = pcim_iomap_regions(pdev, BIT(0) | BIT(4), DPI_DRV_NAME);
++	if (ret) {
++		dev_err(dev, "DPI: Failed to request MMIO region\n");
++		return ret;
++	}
++
++	dpi->reg_base = pcim_iomap_table(pdev)[PCI_DPI_CFG_BAR];
++
++	/* Initialize global PF registers */
++	dpi_init(dpi);
++
++	/* Setup PF-VF mailbox */
++	ret = dpi_pfvf_mbox_setup(dpi);
++	if (ret) {
++		dev_err(dev, "DPI: Failed to setup pf-vf mbox\n");
++		goto err_dpi_fini;
++	}
++
++	ret = devm_add_action(dev, dpi_free_irq_vectors, pdev);
++	if (ret)
++		goto err_dpi_mbox_free;
++
++	/* Register interrupts */
++	ret = dpi_irq_init(dpi);
++	if (ret) {
++		dev_err(dev, "DPI: Failed to initialize irq vectors\n");
++		goto err_dpi_mbox_free;
++	}
++
++	pci_set_drvdata(pdev, dpi);
++	dpi->miscdev.minor = MISC_DYNAMIC_MINOR;
++	dpi->miscdev.name = DPI_DRV_NAME;
++	dpi->miscdev.fops = &dpi_device_fops;
++	dpi->miscdev.parent = dev;
++
++	ret = misc_register(&dpi->miscdev);
++	if (ret) {
++		dev_err(dev, "DPI: Failed to register misc device\n");
++		goto err_dpi_mbox_free;
++	}
++
++	return 0;
++
++err_dpi_mbox_free:
++	dpi_pfvf_mbox_destroy(dpi);
++err_dpi_fini:
++	dpi_fini(dpi);
++	return ret;
++}
++
++static void dpi_remove(struct pci_dev *pdev)
++{
++	struct dpipf *dpi = pci_get_drvdata(pdev);
++
++	misc_deregister(&dpi->miscdev);
++	pci_sriov_configure_simple(pdev, 0);
++	dpi_pfvf_mbox_destroy(dpi);
++	dpi_fini(dpi);
++	pci_set_drvdata(pdev, NULL);
++}
++
++static const struct pci_device_id dpi_id_table[] = {
++	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_CAVIUM, PCI_DEVID_MRVL_CN10K_DPI_PF,
++			 PCI_VENDOR_ID_CAVIUM, PCI_SUBDEVID_MRVL_CN10K_DPI_PF) },
++	{ 0, }  /* end of table */
++};
++
++static struct pci_driver dpi_driver = {
++	.name = DPI_DRV_NAME,
++	.id_table = dpi_id_table,
++	.probe = dpi_probe,
++	.remove = dpi_remove,
++	.sriov_configure = pci_sriov_configure_simple,
++};
++
++module_pci_driver(dpi_driver);
++MODULE_DEVICE_TABLE(pci, dpi_id_table);
++MODULE_AUTHOR("Marvell.");
++MODULE_DESCRIPTION("Marvell Octeon CN10K DPI Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
+
