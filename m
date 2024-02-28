@@ -1,75 +1,99 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCCB210EC
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241BB20B35;
+	Wed, 28 Feb 2024 05:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709097605; cv=none; b=SseQj/1q8odFDmulSgRbDKZtshaQvwSH+cuHOYSXKNcp73ncPAJ9R5qRsyHfal0VfxSiVOEUBhrW76i056Aie15Kg5Y0ANBdtRCBpkyIEGb6vKtRHw+mWMb1tC1fUjxhj06ICiZO9ds3CxmIKM08c51ApGt7BwLeNAJQ8i9w99o=
+	t=1709097631; cv=none; b=RCo3rtVxMrxBcWmah5a7Vo1YxgLw8aYlOGQFMxC4aflH/03E8pR12A9tV6tW5yVuaUXYmp48tfI4nOMVw3/r+s0b++B2pUIYl1NHg9BbbnEo8QtKA4NbaqQOL/8BnO0AuWg5lBW9UO+MVIKHXzJFr8+J4O+/fOS0zlqhfGFfhdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709097605; c=relaxed/simple;
-	bh=WxQrT4gLYNDVl0XjNABL7fIkgq44GNeMlzUDCjsm7Zc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=aXP4dR4YcayrgkNUKeeXBToOn1JGueJxulN2rkycCd+UDl+78MGnlYLy8O+MLaTPfsWBcYdemHi/8ViB+cAk+/bqqT4JBrasGCrWlRyVwqJuDvUZ+p6MKFQhCz+Z9O7djV8bHIWNujSKQy/v2rkZK7eddO8AgirDMLpDMrFijiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7c7e91ddc42so26174839f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:20:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709097603; x=1709702403;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dv6V2O6lQg2n9LZQBOk1bc2tXIQJwFPskMBoRcLDz5g=;
-        b=FD+/jRv+noBmExDda3BqPlw4heusSkP0w2fjH2afmxPHimLpgUDqqRN5ZC2CNs2h8p
-         topxt5BB3EibHrzYB7jFStZh4UrhWpf2vHwa88NsDNoMzXxW0qXO9KwsyJqf/6YGYLT6
-         e882YOK+0cVo2qkwo0LWIsBewnTK1UvYMBaaKrnpWrJ8QNt7xOMWX187xUWrz7ObUUvq
-         m3rXhgY6CqWygczTDAxLvxpSCXuPXtVOrDx9RNcfoNJII10TSJDqRFY6tbms71XG0Twe
-         ZSr0ZxQrDLeoW6ocjPE8OIQk+zSSmzdRL5iM1YQ3ljxHSrNZVm5Mot01wCMdDpMdmo5Z
-         lu3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWoQ4EZEVhX1IXaa5W7tWYN0P9qugsKpfMiIFTTZTckAo8+I7i/S5QSKfFj8HV96xigBQed/1X7X4vH5sI7E9k0BGBkA9slyRFjDF7t
-X-Gm-Message-State: AOJu0YyMUCZjuKPX8/xdtYGMpDfZJJT1TJmPHBz2fCtI4Br8aB4SJ/PY
-	5UfC+P87GkUgCVsba1Hln8CT8jc0DPvzMe5MVxs3eFFChgz+Wb9Y7XTyHJ3SX06H0nLmhG4CJhk
-	ISYYHh6nIDr2sRrOIWk1tacT+wHNPPcd0hTrjwQ20HVCSjsmdf8326Z8=
-X-Google-Smtp-Source: AGHT+IHFpws7RuH68mE1HYjJIQQuWSpRs++cRXaZ6NLbzVNFAb1c3ZPabIvF/DPFC/xfmllw8CS5ebbDD8XmByptSQpnDWItU8Ij
+	s=arc-20240116; t=1709097631; c=relaxed/simple;
+	bh=bQQCh+4x5G6GPwcir7PDSPu3I8AoEcyhe4AaapPYS+s=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=kvN919OQvWrGS2xerF2vu877SRoJ4sioEH4iKHF7IP+OMaG+RKxzowI3WXnUaDLotgFx29vWUJNARzD8BPOQ+xvgoEA1G2Q1cH/zCkqAu92Yk8nviCHqVoF34rxTQ1/Czj1Np87idXNc1Ol6Vis5rJ+BFU0otmM0LZMHrspftAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbxOV6/g; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbxOV6/g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B02C433F1;
+	Wed, 28 Feb 2024 05:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709097630;
+	bh=bQQCh+4x5G6GPwcir7PDSPu3I8AoEcyhe4AaapPYS+s=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=HbxOV6/gbJDgoEG7nofHmPYlMdX0nXrvWI+sY3S3SB/2MfBGIztYSim5nueJy1Pdy
+	 cZh/exZvSTupu8gWCqEHOc7t8lIkYAR54AxdtUDk6ZBpLOB7APJU/fbMRlRXD7be3f
+	 WepNCD4bEzPFgp/O5dTKPMcYhSFT32cSaScdjC8f3REdG6W7Px1NgnuCvqH4Pc9OzY
+	 aXPKAFDRp5bqdCJfPQn3X7rhzUWqWYAd2jmHM4rUqThlv4kH4GEusLlap0Z0y+T/1O
+	 f4XIsg5MFN8v1RejSnUiHsFbhr+GdhkLOQx8q6W2DInTmvzV5p1yv0ThvbudFPJGB0
+	 /HkLpK243UKQQ==
+Date: Tue, 27 Feb 2024 23:20:29 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:de02:0:b0:7c7:96ac:9408 with SMTP id
- e2-20020a5ede02000000b007c796ac9408mr18782iok.0.1709097603496; Tue, 27 Feb
- 2024 21:20:03 -0800 (PST)
-Date: Tue, 27 Feb 2024 21:20:03 -0800
-In-Reply-To: <8fe3f46c-4ee5-4597-bf2d-12a5d634a264@rowland.harvard.edu>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008b026406126a4bbe@google.com>
-Subject: Re: [syzbot] [usb-storage?] divide error in isd200_ata_command
-From: syzbot <syzbot+28748250ab47a8f04100@syzkaller.appspotmail.com>
-To: bvanassche@acm.org, emilne@redhat.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	martin.petersen@oracle.com, stern@rowland.harvard.edu, 
-	syzkaller-bugs@googlegroups.com, tasos@tasossah.com, 
-	usb-storage@lists.one-eyed-alien.net
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot tried to test the proposed patch but the build/boot failed:
-
-failed to checkout kernel repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ on commit f2e367d6ad3b: failed to run ["git" "fetch" "--force" "--tags" "7b440d1b40dd93ea98b5af6bba55ffca63425216" "f2e367d6ad3b"]: exit status 128
-fatal: couldn't find remote ref f2e367d6ad3b
+From: Rob Herring <robh@kernel.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ linux-clk@vger.kernel.org, imx@lists.linux.dev, 
+ Conor Dooley <conor+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Stephen Boyd <sboyd@kernel.org>, 
+ Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Peng Fan <peng.fan@nxp.com>, Michael Turquette <mturquette@baylibre.com>, 
+ Abel Vesa <abelvesa@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20240228-imx95-blk-ctl-v1-1-9b5ae3c14d83@nxp.com>
+References: <20240228-imx95-blk-ctl-v1-0-9b5ae3c14d83@nxp.com>
+ <20240228-imx95-blk-ctl-v1-1-9b5ae3c14d83@nxp.com>
+Message-Id: <170909762820.1565936.4437868637843535603.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindindgs: clock: support NXP i.MX95 BLK CTL
+ module
 
 
+On Wed, 28 Feb 2024 12:31:04 +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> i.MX95 includes BLK CTL module in several MIXes, such as VPU_CSR in
+> VPUMIX, BLK_CTRL_NETCMIX in NETCMIX, CAMERA_CSR in CAMERAMIX and etc.
+> 
+> The BLK CTL module is used for various settings of a specific MIX, such
+> as clock, QoS and etc.
+> 
+> This patch is to add some BLK CTL modules that has clock features.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../devicetree/bindings/clock/imx95-blk-ctl.yaml   | 61 ++++++++++++++++++++++
+>  include/dt-bindings/clock/nxp,imx95-clock.h        | 32 ++++++++++++
+>  2 files changed, 93 insertions(+)
+> 
 
-Tested on:
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-commit:         [unknown 
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/ f2e367d6ad3b
-kernel config:  https://syzkaller.appspot.com/x/.config?x=eff9f3183d0a20dd
-dashboard link: https://syzkaller.appspot.com/bug?extid=28748250ab47a8f04100
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14296a74180000
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/clock/imx95-blk-ctl.example.dtb: /example-0/syscon@4c410000: failed to match any schema with compatible: ['fsl,imx95-vpumix-blk-ctrl', 'syscon']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240228-imx95-blk-ctl-v1-1-9b5ae3c14d83@nxp.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
