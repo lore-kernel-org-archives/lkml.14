@@ -1,35 +1,35 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E45D73509;
-	Wed, 28 Feb 2024 11:47:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A867C73518;
+	Wed, 28 Feb 2024 11:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709120866; cv=none; b=FM4F64XSLnw4vj2PquPOFniChAe9T65xWt/gOyvch+au1yXa426SqKzP1sINjhIHxqsNv5PaMPG/mCOu4QhQJ7I6j1LSn90mW6Tn7K55B50NypIlT0TZTljnDCavC+223ZXNbuZYPPpF58wrjL7lAkEafk4Wmrw8bQaeY8OZTPo=
+	t=1709120866; cv=none; b=tVCfpp2M7zQ/WIAOqyzQtXt7Ejw+NQINupoJn5XEbxkacesWeUQdaNkEpMGMWjRu7i/M7l6NYCMg8eWyRVMV61MNn2UgstMWkavQUBwzlYzeD8fHImj9uzQOuMf4Z7jNlhwsD+8WVjmfIpF8knqZUmVlAHBDeRUHXOn7Mk2w4c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709120866; c=relaxed/simple;
-	bh=8lPHrm6+QD0qEiAU2AcfWTNdCvcDUejVHKtz27v1cG0=;
+	bh=5SvRPw8yxzP88j6AEfOOKyWIHEfayCZCtRKV7tXmAfQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MsaqKbWu6jPAWo9oSk24uXeE6/FRygJ6NIepuyZrggiQpc0uUXrN9IF7LYVVF0AiQpWtBDwpdaQy5v6WYaXo1x+Zr4AXzv26rwYyu9Uxh8Hv284gxpzqln1bWPNEsm9wnlna97FvikLSXYm/1Due0QgJvCKrwPsgmqRExYb58GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SNoL1Bbs; arc=none smtp.client-ip=217.70.183.197
+	 MIME-Version; b=NoNtl3WWJu7C7zEzQF28AHFy9XYqe6otX7cKvE7M6MvyCghi6RUKFLmrQUrq00UH59MBvBpPTzGn97+vm8c2Qjz/grmf3YSSrimHxhUXf66+OKXvsjoKtlX/+mdSmSclMA55HXIMOZNKTx019xXpZhqJ9qpDYHPX9UbHn8nuCGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=auDRhvWN; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SNoL1Bbs"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 250221C0011;
-	Wed, 28 Feb 2024 11:47:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="auDRhvWN"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9119B1C000B;
+	Wed, 28 Feb 2024 11:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709120862;
+	t=1709120856;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DVkWA8UXuhwnupx653jBAc0MHe2na1axLT83cHd1iPM=;
-	b=SNoL1BbsJL0m/NLWiv6wd2+f2q6uCSlBDkHk6mqf4KTwgv+wV4M3WAQI4g/juS8aj9H3tJ
-	lgZsQotdkB0HWzp3wibiaYGQkodZ5rJ3+qYDDTlEZWQJ9jtvYhDBZf6c38bVKuJ4ClTlJC
-	0+pkWHoxZQ6uAgy9EGJ06r6N8uAkiYQvyJO/aeYd8GYzN3OkRaiIVaAo+v+Gr0HOJKdADZ
-	KrtE5O5sT950gREnByBkR2oMD2aCcIUuHWsNCfjd7asD9zPud2tcVfTbDuAs0ViBBwW7DY
-	fdsfiXysPJlZ1fQw7A1y3raUTtuJso+ReHNFDigebxWD5twgPNJ52Yq050A1Iw==
+	bh=jkKrHjLGj556pMw+p/8b4qL6uL86vAHDuHQrvW67AWQ=;
+	b=auDRhvWNNYJ2Yoj3HzAhycOTkxE/3hky+daxEmBqwmg/NE0SGKyyoVt0HQxfEQghXSBe+r
+	IUr07iWesa1c7DFdMEUo0qUH5YdDGWj+3jVQP1IB0+pGtu2FYfervDAVuxH/3GuC3GqU2g
+	OZzi96Oq2i2sPgs9L1AQskeO4h+V3Yij4jPi1TyYtsbU0ADUruraLZsI4PDb92EIzwqZ4Q
+	/sTHj+L4FyBoDtm/o1Av7vkfjFjbFLpkCYWHKTVQ8jqmgizrwroPfC88g74qv5ZgdW8DaB
+	jwx3TguXD/tN/K5fM9jfq0fWkjsQFmq785PSpsuxkS/EYQtCBq9wBQzVRHiuEA==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -56,9 +56,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
 	Simon Horman <horms@kernel.org>,
 	mwojtas@chromium.org
-Subject: [PATCH net-next v9 06/13] netlink: specs: add phy-index as a header parameter
-Date: Wed, 28 Feb 2024 12:47:20 +0100
-Message-ID: <20240228114728.51861-7-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v9 02/13] net: sfp: pass the phy_device when disconnecting an sfp module's PHY
+Date: Wed, 28 Feb 2024 12:47:16 +0100
+Message-ID: <20240228114728.51861-3-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240228114728.51861-1-maxime.chevallier@bootlin.com>
 References: <20240228114728.51861-1-maxime.chevallier@bootlin.com>
@@ -71,37 +71,73 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Update the spec to take the newly introduced phy-index as a generic
-request parameter.
+Pass the phy_device as a parameter to the sfp upstream .disconnect_phy
+operation. This is preparatory work to help track phy devices across
+a net_device's link.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
 V9: No changes
 V8: No changes
 V7: No changes
-V6: No changes
-V5: Added Andrew's R-b
-V4: Ditch the ethtool-user generated code
-V3: New patch
+V6: Moved an incorrectly added hunk from the previous series to patch 0003
+V5: No changes
+V4: No changes
+V3: No changes
+ drivers/net/phy/phylink.c | 3 ++-
+ drivers/net/phy/sfp-bus.c | 4 ++--
+ include/linux/sfp.h       | 2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
- Documentation/netlink/specs/ethtool.yaml | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 197208f419dc..bb6e1dc6d1c5 100644
---- a/Documentation/netlink/specs/ethtool.yaml
-+++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -30,6 +30,9 @@ attribute-sets:
-       -
-         name: flags
-         type: u32
-+      -
-+        name: phy-index
-+        type: u32
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 503fd7c40523..8a34883eb99b 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -3385,7 +3385,8 @@ static int phylink_sfp_connect_phy(void *upstream, struct phy_device *phy)
+ 	return ret;
+ }
  
-   -
-     name: bitset-bit
+-static void phylink_sfp_disconnect_phy(void *upstream)
++static void phylink_sfp_disconnect_phy(void *upstream,
++				       struct phy_device *phydev)
+ {
+ 	phylink_disconnect_phy(upstream);
+ }
+diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
+index db39dec7f247..e05013aeecc3 100644
+--- a/drivers/net/phy/sfp-bus.c
++++ b/drivers/net/phy/sfp-bus.c
+@@ -486,7 +486,7 @@ static void sfp_unregister_bus(struct sfp_bus *bus)
+ 			bus->socket_ops->stop(bus->sfp);
+ 		bus->socket_ops->detach(bus->sfp);
+ 		if (bus->phydev && ops && ops->disconnect_phy)
+-			ops->disconnect_phy(bus->upstream);
++			ops->disconnect_phy(bus->upstream, bus->phydev);
+ 	}
+ 	bus->registered = false;
+ }
+@@ -742,7 +742,7 @@ void sfp_remove_phy(struct sfp_bus *bus)
+ 	const struct sfp_upstream_ops *ops = sfp_get_upstream_ops(bus);
+ 
+ 	if (ops && ops->disconnect_phy)
+-		ops->disconnect_phy(bus->upstream);
++		ops->disconnect_phy(bus->upstream, bus->phydev);
+ 	bus->phydev = NULL;
+ }
+ EXPORT_SYMBOL_GPL(sfp_remove_phy);
+diff --git a/include/linux/sfp.h b/include/linux/sfp.h
+index 9346cd44814d..0573e53b0c11 100644
+--- a/include/linux/sfp.h
++++ b/include/linux/sfp.h
+@@ -544,7 +544,7 @@ struct sfp_upstream_ops {
+ 	void (*link_down)(void *priv);
+ 	void (*link_up)(void *priv);
+ 	int (*connect_phy)(void *priv, struct phy_device *);
+-	void (*disconnect_phy)(void *priv);
++	void (*disconnect_phy)(void *priv, struct phy_device *);
+ };
+ 
+ #if IS_ENABLED(CONFIG_SFP)
 -- 
 2.43.2
 
