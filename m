@@ -1,180 +1,99 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2C33BBEE
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 13:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A20C3BBEE
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 13:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709125449; cv=none; b=WhU+eZYRtD2q/QR6vSZeUXl9evDKbwm4NBwzMnM/Dh0cvpCWKEI2fv6r7s8JeRSW/EZHApX9SK5CTU1ev4oKzHxeeLYBVazLFFGQgQaAu7VvBRV9z/1t7YT2MBRZyQMFeAIeAxNYPD7UmP9hdkQD5n7o56CvpbYcrZ3oMJSrpqI=
+	t=1709125467; cv=none; b=C/FdODGdPMUr4vRMAAmzjQZ0IooMyeXu4z3xUnlgzXDxnpfR5jHYhHg8ubTSFAloB7hT9UG3Ywk2zl+MAAvX3q8FFo5kS7MMx1MpeXhnBA7ngdYZEndoqBdkO6E7S1PmwlVQR4NSAmbkCrZpdon5f7vmraIyK7cREqQAg/C+O8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709125449; c=relaxed/simple;
-	bh=gtYJD78+zk61wKaUFAjdhRUznoMop+FRi7xFVUcdo2M=;
+	s=arc-20240116; t=1709125467; c=relaxed/simple;
+	bh=E8Q8BUTHPfJyeoU9Q6QdXQerQaQjnZ/2HuOscrhXz2w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TWDsdMttPgaLkGVhh7/0eIHE4fU1kM/6nR3NbV3Gz2zsNSnNKHEZf+Qtwznx1r7p7WDNRM6m35dzNFmeTyZ54QlMzPG0g7Q5bESy5lHFNcusbYcx+vPv0UufQlmGefe+jGTrKmY7Mc8Ltc6VxZmvriz4eZvblbiztwO++8m/tys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O2Ds+7VX; arc=none smtp.client-ip=209.85.167.179
+	 To:Cc:Content-Type; b=gE98QsSzScbO68rOCvPEzfPudoGaUCrNjZAQEBbvF/HQ5WRQ/IQ6dGnEG+J1pDvuQpOF2NlZWbGAnxrsDnaG9jIT/1Pdf06LwKv9PTDXXRZ+pcR2qU4NOivxq1ug+TjS+hgYE/WKt0sycy+qXN15u9ig7r1iDgfeq7FahBZGTf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X5jbiB9w; arc=none smtp.client-ip=209.85.219.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O2Ds+7VX"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3c1a2f7e302so1493022b6e.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:04:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X5jbiB9w"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc236729a2bso5089410276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:04:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709125447; x=1709730247; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709125465; x=1709730265; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=k7qSr+E8IkDSOGsp4neJk0QYmDXRPfIuMj+PPH7uuhU=;
-        b=O2Ds+7VXocLutQOlNqbMDecMXFOEPAl9AROKjkqvsRcO4s6ST/4Hblw4sgTObpg87L
-         UH6ZqYwT4gdqgCwkMDOg5M/yRgVWDPbJZmtdBhRoa4R10TM50OxTxXl03Xubp2IjlcBU
-         ejERcZyHRmrYIEfLWGAD212tTzxF4Eq3hK59A3Hyn1nsmmG5R/BfS7Nc28NYHYsGKXv1
-         5HeefEGeihHgOs2F5IvYKi+LHyhHmPTpFJ1+lqo2JRWYltVa7clgm6iUIyUgYP+c1Z3Y
-         Q1TCehYhdTabyxZYiKZYRSfXNurtZd1dErt2r2XiG7MXE9aNkeHmmATV9ec753pHg82o
-         C/zA==
+        bh=jAVkysIrddkYfA1tLe0rVWGFMQxH9A+gv88vB1iCZTo=;
+        b=X5jbiB9wGoTpduk3FeUv1VZkPef+oGG/mEw4fNENnr7kFNQeMU/6JyPQLeR9GHr5jq
+         x/u5j+zayDVBlfZsrK+paFkGUuMFpRZBxNbU67Ofwg7+1/ta1hilnGhCz5Kw0SzlzkPu
+         mS9R+CW9OK7iJCcqhex1cBhyLVG4o/8MB7v107RExifcnlKpUlsRFk1khuiEbkvgmqCA
+         eQEdiBxkpyVqtutG9tmGm8Ha0kwAOMX+/SiGh2UUSPSNSI1b/YyZI/DDOa/BLf/KCic4
+         +fatOeL4RChqvkY8QmwWaPOsEEM4cMRj6TWzOIL+AXQrxO4F7YmkhsHN842hseMKGHmX
+         NDjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709125447; x=1709730247;
+        d=1e100.net; s=20230601; t=1709125465; x=1709730265;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=k7qSr+E8IkDSOGsp4neJk0QYmDXRPfIuMj+PPH7uuhU=;
-        b=fvYT1lHECMzYnL81gHmiyf9zJFrryG8ZNwecJ9WFpNF3tilA8megtPsz082sX8qVp3
-         ac2sl3hKJmSxhgKEklSd+XzqUodhcRrwYV+QASrvFCfdC6psXVbP9hDOvhhHKePZ4JFs
-         asaCx+3Am49Ic98KYerVqyn3IUBV2BgewU4tXtnQSr0bkk/klMZhvVMoYDrG3N6uVyli
-         uopmg9FBOldJ8mhe9PF/kthueTvDb2H+A6uTQeM3Zy7+VmznhLPIIyeVJ+UiFFs9H96o
-         Fizo1ZDtS9KUWt0rOaafC9PG0mrM9047N87mcoKna07hC36ElA+lDthxYvvChZofE6A4
-         mIgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVb2Q6nCmodFRTZTIqYqs7RKuJIXaKeEQfh6xmua/cQdEISINwxJZkVqiM5fE/JaYegsKTP1fgq/EIdDRlllYW7WdxP6qedJfRDrHaB
-X-Gm-Message-State: AOJu0YzDJI9MMWCb/y55TKbvaTlCDZaB5LXzGZ6TDe0o822+cOmCTFNN
-	gaYNVMqR/5tzcf06FMsUTM7HBv1BO4bArVy2aILyL1mlzbMGPwGSbFHN6b1MKXIkrrEwb+F2bst
-	7OfMXzgaZ0iJBzarm9U5GZgEEJsFAJkPedi3s4BKXYuljwDqg
-X-Google-Smtp-Source: AGHT+IFHPdHOjSRo/mo5Rwta0p5srlJH6dpqJHBuIwpiOWdJg87B8XZP9lSSjpLNU3GUvhTc4DHNbgHd3j+vrV8cPc4=
-X-Received: by 2002:a05:6358:b5c2:b0:17b:bd6e:22c9 with SMTP id
- wb2-20020a056358b5c200b0017bbd6e22c9mr5635045rwc.8.1709125446965; Wed, 28 Feb
- 2024 05:04:06 -0800 (PST)
+        bh=jAVkysIrddkYfA1tLe0rVWGFMQxH9A+gv88vB1iCZTo=;
+        b=fhFqSWF5MdafhhuUIf0wPDl4UbBSsnRvUzPXtBsOgncYkhSN+H64BJF0fjCaNv41vb
+         EbM6IJ7R91eAIPNqnbrOGL27jfjTvopZ9vxfC5dy4Epb8t40E7q9S3GL03+LVv2pZSG9
+         pyPrrFXIfMDDh502G4hmAt57gUhQT3qMVmyIF24136r73oGRnKW9A7iJhIuM5p4XOCgf
+         6LOw67cQdk1zJwDi0OQRPlRa9ABvZGtuigbS70jERVp9MaW33ePgTTvJeEWWjXyu87VB
+         jmpuz1JM2uS+z8DjdB55y881LaMyALAc4fKDbTzbRKB6GHA8CKq9SMPFTHjbh+DHfJSk
+         V7YA==
+X-Forwarded-Encrypted: i=1; AJvYcCULLxx8tL+sl1lYxwBHllFUNSe8A4fTGWTi6UOUuD3Gyflr3Bx9FFCh0SlpThfLV/+QkTaNO2S8XJN/mq6XD5DvgHE4O4KtJo4qrhp1
+X-Gm-Message-State: AOJu0Yzy+HQek1AQlzhspSzxGCV3Z+CLTVIv+Aodc2m3iWgKlsjYL4Fn
+	E7zDMiaAch7veoJ8CQspabNAqnfsK2fVel/BF6uKMeoEVx61TwZUB2mTeD0GvJn3DDaIJW926ze
+	VhzOc1h37jotiqk2J+joKkv9OvZv2gkMqY4aXlSAingxrRFPk
+X-Google-Smtp-Source: AGHT+IEDs/w431tr4qF6okypXXHq9KVTC5AOppR1Q9xcmNDFdy2AyqsDq48PDYDgQFnhrDDXuj09h87Q5miAGmhXqhw=
+X-Received: by 2002:a25:4c89:0:b0:dc7:4951:5f8 with SMTP id
+ z131-20020a254c89000000b00dc7495105f8mr2636701yba.22.1709125465317; Wed, 28
+ Feb 2024 05:04:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240219-device_cleanup-mmc-v1-1-1910e283cf5a@marliere.net>
-In-Reply-To: <20240219-device_cleanup-mmc-v1-1-1910e283cf5a@marliere.net>
+References: <20240221-fix-sh-mmcif-v2-0-5e521eb25ae4@linaro.org>
+In-Reply-To: <20240221-fix-sh-mmcif-v2-0-5e521eb25ae4@linaro.org>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 28 Feb 2024 14:03:30 +0100
-Message-ID: <CAPDyKFoz04LJr=Qek36a8Aa7bFFkapLE6tHrc=W71uEAFKmOCA@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: constify the struct device_type usage
-To: "Ricardo B. Marliere" <ricardo@marliere.net>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date: Wed, 28 Feb 2024 14:03:49 +0100
+Message-ID: <CAPDyKFpJra0+XKG3CvnTk99gvXg5qgeuSQ3UddU4rx1-S-dNLA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Try to fix the sg_mitet bugs in SH MMCIF
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 19 Feb 2024 at 13:43, Ricardo B. Marliere <ricardo@marliere.net> wrote:
+On Wed, 21 Feb 2024 at 22:23, Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> Since commit aed65af1cc2f ("drivers: make device_type const"), the driver
-> core can properly handle constant struct device_type. Move the sdio_type,
-> sd_type and mmc_type variables to be constant structures as well, placing
-> it into read-only memory which can not be modified at runtime.
+> This adresses some bugs found after the introduction of the
+> memory iterator sg_miter to the sh mmcif driver.
 >
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> This was first just one patch for fixing the atomic bug, but
+> now also a second patch is needed to fix a semantic issue.
+>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Changes in v2:
+> - Collect Geerts test tag on patch 1
+> - Add a second patch fixing the problem with advancing to
+>   the next sglist entry before reading/writing the first block and
+>   after reading/writing each block in a multiblock operation.
+> - Link to v1: https://lore.kernel.org/r/20240220-fix-sh-mmcif-v1-1-b9d08a787c1f@linaro.org
+>
+> ---
+> Linus Walleij (2):
+>       mmc: sh_mmcif: sg_miter does not need to be atomic
+>       mmc: sh_mmcif: Advance sg_miter before reading blocks
+>
+>  drivers/mmc/host/sh_mmcif.c | 46 +++++++++++++++++++++++++++++----------------
+>  1 file changed, 30 insertions(+), 16 deletions(-)
+> ---
 
-Applied for next, thanks!
+Applied for next and by amending the commit message header as pointed
+out by Geert, thanks!
 
 Kind regards
 Uffe
-
-
-> ---
->  drivers/mmc/core/bus.c  | 2 +-
->  drivers/mmc/core/bus.h  | 2 +-
->  drivers/mmc/core/mmc.c  | 2 +-
->  drivers/mmc/core/sd.c   | 2 +-
->  drivers/mmc/core/sd.h   | 2 +-
->  drivers/mmc/core/sdio.c | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-> index 48daeafdff7a..0ddaee0eae54 100644
-> --- a/drivers/mmc/core/bus.c
-> +++ b/drivers/mmc/core/bus.c
-> @@ -272,7 +272,7 @@ static void mmc_release_card(struct device *dev)
->  /*
->   * Allocate and initialise a new MMC card structure.
->   */
-> -struct mmc_card *mmc_alloc_card(struct mmc_host *host, struct device_type *type)
-> +struct mmc_card *mmc_alloc_card(struct mmc_host *host, const struct device_type *type)
->  {
->         struct mmc_card *card;
->
-> diff --git a/drivers/mmc/core/bus.h b/drivers/mmc/core/bus.h
-> index 3996b191b68d..cfd0d02d3420 100644
-> --- a/drivers/mmc/core/bus.h
-> +++ b/drivers/mmc/core/bus.h
-> @@ -23,7 +23,7 @@ static ssize_t mmc_##name##_show (struct device *dev, struct device_attribute *a
->  static DEVICE_ATTR(name, S_IRUGO, mmc_##name##_show, NULL)
->
->  struct mmc_card *mmc_alloc_card(struct mmc_host *host,
-> -       struct device_type *type);
-> +                               const struct device_type *type);
->  int mmc_add_card(struct mmc_card *card);
->  void mmc_remove_card(struct mmc_card *card);
->
-> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-> index 58ed7193a3ca..5b2f7c285461 100644
-> --- a/drivers/mmc/core/mmc.c
-> +++ b/drivers/mmc/core/mmc.c
-> @@ -883,7 +883,7 @@ static struct attribute *mmc_std_attrs[] = {
->  };
->  ATTRIBUTE_GROUPS(mmc_std);
->
-> -static struct device_type mmc_type = {
-> +static const struct device_type mmc_type = {
->         .groups = mmc_std_groups,
->  };
->
-> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-> index c3e554344c99..1c8148cdda50 100644
-> --- a/drivers/mmc/core/sd.c
-> +++ b/drivers/mmc/core/sd.c
-> @@ -805,7 +805,7 @@ static const struct attribute_group sd_std_group = {
->  };
->  __ATTRIBUTE_GROUPS(sd_std);
->
-> -struct device_type sd_type = {
-> +const struct device_type sd_type = {
->         .groups = sd_std_groups,
->  };
->
-> diff --git a/drivers/mmc/core/sd.h b/drivers/mmc/core/sd.h
-> index 1af5a038bae9..fe6dd46927a4 100644
-> --- a/drivers/mmc/core/sd.h
-> +++ b/drivers/mmc/core/sd.h
-> @@ -4,7 +4,7 @@
->
->  #include <linux/types.h>
->
-> -extern struct device_type sd_type;
-> +extern const struct device_type sd_type;
->
->  struct mmc_host;
->  struct mmc_card;
-> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-> index 5914516df2f7..4fb247fde5c0 100644
-> --- a/drivers/mmc/core/sdio.c
-> +++ b/drivers/mmc/core/sdio.c
-> @@ -66,7 +66,7 @@ static struct attribute *sdio_std_attrs[] = {
->  };
->  ATTRIBUTE_GROUPS(sdio_std);
->
-> -static struct device_type sdio_type = {
-> +static const struct device_type sdio_type = {
->         .groups = sdio_std_groups,
->  };
->
->
-> ---
-> base-commit: 25e69172db8a31ef8564ce1cf755ac5cb8374daa
-> change-id: 20240219-device_cleanup-mmc-04210bcc3d9a
->
-> Best regards,
-> --
-> Ricardo B. Marliere <ricardo@marliere.net>
->
