@@ -1,130 +1,157 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7202D606
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4F42E657;
+	Wed, 28 Feb 2024 09:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709112681; cv=none; b=gFR8+1M+L9AQYJk8aetYlI/JGGp5TBfDk71JTidBuOQYEKk09SGm1X2VNGDlRBODQlXLIY9mQINC7OhJHgxaqVuIYQxU0HK3LTbOL1GXE+NKlau98ANV5VHKRzQ3NHAP4TMLFGTIWbyZZrGoCO4Ipxa2Bpb2vWFNckc5SomZUwU=
+	t=1709112718; cv=none; b=Iqreri7ye9+/gAaYjJhZ2n0iRs8TV2LuSEk8V+cbjwv5O4nHS4HBXtnRvC1P6Vz7vQuXGeZ3FX5w80yZkXjgLVWQze7kcaPLiI8idSVP0Q0HjLWed/vDUSS9R9FlxSYjDc+b6NiwlVmAkxFLcGTsIud0dwdAq4hQTQBqqWUYitY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709112681; c=relaxed/simple;
-	bh=ggsQyXDpBQNykNIgrvksbxqVHHrQQxhUfF3Xmc//E30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Bk7sFYddANxaMKZ+6wen+JdIaAkRkQHh/1/K4go5siT00adrRwauMg1uCTtXp4sP/MY2SSM88D10z++7pLDyjbKwTt/YabuwReK0qTNG/Kq3E1x88jgpMZRcyR2K7XZY8UFdjsFl3WNksDTVOPtToaJIxSVdVT0pIzJjhfzB9+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FxkUMgHo; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FxkUMgHo"
-Message-ID: <a315427f-fe39-4714-a21c-1c104460d3fb@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1709112676;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kmyL/BrWdx5wm+hWvNvDksX7lVp1tOfJaEY5Dk9iJ0w=;
-	b=FxkUMgHoZ8vP94baYaMWYAKTYOvHCcfPNQOLWsscKf6JV6oUu2rmY/Gae2+2Ktpv5sOrxl
-	aKR1CyClv8PF3fBMdO9dbk249uKOv8/dOeWCZMXP6LuJTWCyD6nPQwI24LshbKBxrjvRPf
-	w9mpzeiZd30A7jC7MU1uyfZboJ8N1OY=
-Date: Wed, 28 Feb 2024 17:31:06 +0800
+	s=arc-20240116; t=1709112718; c=relaxed/simple;
+	bh=PdsLjsWcsNlTwhr57K6QgoJxkvcwYSeSGmfoCSQstz4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l2WDTBVFJSy3/h/2kOc/AhvRqL0bXF1zgdzzn9/Ch4WcVXa5TIg/nWw0TCwMocq/E/A7s10qfY4CeHmBSJpZjSFzemAHqyZWYGzDKc8ml7ooFLQNJ+c7nk/wQBrwQeOb89WhlYS71387onpoudBWo/Wxn4cIFN/zA1OzjoEroYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Tl8Fy1k70z1Q99X;
+	Wed, 28 Feb 2024 17:29:58 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id B377E18005C;
+	Wed, 28 Feb 2024 17:31:46 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 28 Feb 2024 17:31:46 +0800
+From: Yunsheng Lin <linyunsheng@huawei.com>
+To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
+	<linyunsheng@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jesper
+ Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<bpf@vger.kernel.org>
+Subject: [PATCH net-next v6 0/5] remove page frag implementation in vhost_net
+Date: Wed, 28 Feb 2024 17:30:07 +0800
+Message-ID: <20240228093013.8263-1-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm/slab: Fix a kmemleak in kmem_cache_destroy()
-Content-Language: en-US
-To: Xiaolei Wang <xiaolei.wang@windriver.com>, cl@linux.com,
- penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
- akpm@linux-foundation.org, vbabka@suse.cz, roman.gushchin@linux.dev,
- 42.hyeyoo@gmail.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240228030408.2740647-1-xiaolei.wang@windriver.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240228030408.2740647-1-xiaolei.wang@windriver.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-On 2024/2/28 11:04, Xiaolei Wang wrote:
-> For earlier kmem cache creation, slab_sysfs_init() has not been called.
-> Consequently, kmem_cache_destroy() cannot utilize kobj_type::release to
-> release the kmem_cache structure. Therefore, tweak kmem_cache_release()
-> to use slab_kmem_cache_release() for releasing kmem_cache when slab_state
-> isn't FULL. This will fixes the memory leaks like following:
-> 
-> unreferenced object 0xffff0000c2d87080 (size 128):
->    comm "swapper/0", pid 1, jiffies 4294893428
->    hex dump (first 32 bytes):
->      00 00 00 00 ad 4e ad de ff ff ff ff 6b 6b 6b 6b .....N......kkkk
->      ff ff ff ff ff ff ff ff b8 ab 48 89 00 80 ff ff.....H.....
->    backtrace (crc 8819d0f6):
->      [<ffff80008317a298>] kmemleak_alloc+0xb0/0xc4
->      [<ffff8000807e553c>] kmem_cache_alloc_node+0x288/0x3a8
->      [<ffff8000807e95f0>] __kmem_cache_create+0x1e4/0x64c
->      [<ffff8000807216bc>] kmem_cache_create_usercopy+0x1c4/0x2cc
->      [<ffff8000807217e0>] kmem_cache_create+0x1c/0x28
->      [<ffff8000819f6278>] arm_v7s_alloc_pgtable+0x1c0/0x6d4
->      [<ffff8000819f53a0>] alloc_io_pgtable_ops+0xe8/0x2d0
->      [<ffff800084b2d2c4>] arm_v7s_do_selftests+0xe0/0x73c
->      [<ffff800080016b68>] do_one_initcall+0x11c/0x7ac
->      [<ffff800084a71ddc>] kernel_init_freeable+0x53c/0xbb8
->      [<ffff8000831728d8>] kernel_init+0x24/0x144
->      [<ffff800080018e98>] ret_from_fork+0x10/0x20
-> 
-> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+Currently there are three implementations for page frag:
 
-Looks good to me. And I notice the PARTIAL_NODE state of slab_state is
-also useless since SLAB removed.
+1. mm/page_alloc.c: net stack seems to be using it in the
+   rx part with 'struct page_frag_cache' and the main API
+   being page_frag_alloc_align().
+2. net/core/sock.c: net stack seems to be using it in the
+   tx part with 'struct page_frag' and the main API being
+   skb_page_frag_refill().
+3. drivers/vhost/net.c: vhost seems to be using it to build
+   xdp frame, and it's implementation seems to be a mix of
+   the above two.
 
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+This patchset tries to unfiy the page frag implementation a
+little bit by unifying gfp bit for order 3 page allocation
+and replacing page frag implementation in vhost.c with the
+one in page_alloc.c.
 
-Thanks.
+After this patchset, we are not only able to unify the page
+frag implementation a little, but also able to have about
+0.5% performance boost testing by using the vhost_net_test
+introduced in the last patch.
 
-> ---
->  mm/slab_common.c | 8 ++++++--
->  mm/slub.c        | 6 ++----
->  2 files changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 238293b1dbe1..b6b35bcdd196 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -404,8 +404,12 @@ EXPORT_SYMBOL(kmem_cache_create);
->   */
->  static void kmem_cache_release(struct kmem_cache *s)
->  {
-> -	sysfs_slab_unlink(s);
-> -	sysfs_slab_release(s);
-> +	if (slab_state >= FULL) {
-> +		sysfs_slab_unlink(s);
-> +		sysfs_slab_release(s);
-> +	} else {
-> +		slab_kmem_cache_release(s);
-> +	}
->  }
->  #else
->  static void kmem_cache_release(struct kmem_cache *s)
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 2ef88bbf56a3..9ba59d064b6d 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -6792,14 +6792,12 @@ static int sysfs_slab_add(struct kmem_cache *s)
->  
->  void sysfs_slab_unlink(struct kmem_cache *s)
->  {
-> -	if (slab_state >= FULL)
-> -		kobject_del(&s->kobj);
-> +	kobject_del(&s->kobj);
->  }
->  
->  void sysfs_slab_release(struct kmem_cache *s)
->  {
-> -	if (slab_state >= FULL)
-> -		kobject_put(&s->kobj);
-> +	kobject_put(&s->kobj);
->  }
->  
->  /*
+Before this patchset:
+Performance counter stats for './vhost_net_test' (10 runs):
+
+     305325.78 msec task-clock                       #    1.738 CPUs utilized               ( +-  0.12% )
+       1048668      context-switches                 #    3.435 K/sec                       ( +-  0.00% )
+            11      cpu-migrations                   #    0.036 /sec                        ( +- 17.64% )
+            33      page-faults                      #    0.108 /sec                        ( +-  0.49% )
+  244651819491      cycles                           #    0.801 GHz                         ( +-  0.43% )  (64)
+   64714638024      stalled-cycles-frontend          #   26.45% frontend cycles idle        ( +-  2.19% )  (67)
+   30774313491      stalled-cycles-backend           #   12.58% backend cycles idle         ( +-  7.68% )  (70)
+  201749748680      instructions                     #    0.82  insn per cycle
+                                              #    0.32  stalled cycles per insn     ( +-  0.41% )  (66.76%)
+   65494787909      branches                         #  214.508 M/sec                       ( +-  0.35% )  (64)
+    4284111313      branch-misses                    #    6.54% of all branches             ( +-  0.45% )  (66)
+
+       175.699 +- 0.189 seconds time elapsed  ( +-  0.11% )
+
+
+After this patchset:
+Performance counter stats for './vhost_net_test' (10 runs):
+
+     303974.38 msec task-clock                       #    1.739 CPUs utilized               ( +-  0.14% )
+       1048807      context-switches                 #    3.450 K/sec                       ( +-  0.00% )
+            14      cpu-migrations                   #    0.046 /sec                        ( +- 12.86% )
+            33      page-faults                      #    0.109 /sec                        ( +-  0.46% )
+  251289376347      cycles                           #    0.827 GHz                         ( +-  0.32% )  (60)
+   67885175415      stalled-cycles-frontend          #   27.01% frontend cycles idle        ( +-  0.48% )  (63)
+   27809282600      stalled-cycles-backend           #   11.07% backend cycles idle         ( +-  0.36% )  (71)
+  195543234672      instructions                     #    0.78  insn per cycle
+                                              #    0.35  stalled cycles per insn     ( +-  0.29% )  (69.04%)
+   62423183552      branches                         #  205.357 M/sec                       ( +-  0.48% )  (67)
+    4135666632      branch-misses                    #    6.63% of all branches             ( +-  0.63% )  (67)
+
+       174.764 +- 0.214 seconds time elapsed  ( +-  0.12% )
+
+Changelog:
+V6: Add timeout for poll() and simplify some logic as suggested
+    by Jason.
+
+V5: Address the comment from jason in vhost_net_test.c and the
+    comment about leaving out the gfp change for page frag in
+    sock.c as suggested by Paolo.
+
+V4: Resend based on latest net-next branch.
+
+V3:
+1. Add __page_frag_alloc_align() which is passed with the align mask
+   the original function expected as suggested by Alexander.
+2. Drop patch 3 in v2 suggested by Alexander.
+3. Reorder patch 4 & 5 in v2 suggested by Alexander.
+
+Note that placing this gfp flags handing for order 3 page in an inline
+function is not considered, as we may be able to unify the page_frag
+and page_frag_cache handling.
+
+V2: Change 'xor'd' to 'masked off', add vhost tx testing for
+    vhost_net_test.
+
+V1: Fix some typo, drop RFC tag and rebase on latest net-next.
+
+Yunsheng Lin (5):
+  mm/page_alloc: modify page_frag_alloc_align() to accept align as an
+    argument
+  page_frag: unify gfp bits for order 3 page allocation
+  net: introduce page_frag_cache_drain()
+  vhost/net: remove vhost_net_page_frag_refill()
+  tools: virtio: introduce vhost_net_test
+
+ drivers/net/ethernet/google/gve/gve_main.c |  11 +-
+ drivers/net/ethernet/mediatek/mtk_wed_wo.c |  17 +-
+ drivers/nvme/host/tcp.c                    |   7 +-
+ drivers/nvme/target/tcp.c                  |   4 +-
+ drivers/vhost/net.c                        |  91 ++--
+ include/linux/gfp.h                        |  16 +-
+ mm/page_alloc.c                            |  22 +-
+ net/core/skbuff.c                          |   9 +-
+ tools/virtio/.gitignore                    |   1 +
+ tools/virtio/Makefile                      |   8 +-
+ tools/virtio/linux/virtio_config.h         |   4 +
+ tools/virtio/vhost_net_test.c              | 532 +++++++++++++++++++++
+ 12 files changed, 609 insertions(+), 113 deletions(-)
+ create mode 100644 tools/virtio/vhost_net_test.c
+
+-- 
+2.33.0
+
