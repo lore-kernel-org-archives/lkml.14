@@ -1,102 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872EA3FBB7
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6799208B2
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709139449; cv=none; b=LIWVybOIrJ8EBrNsrdDqGVwJ35H4l0YzLVIBV6fSTqpMW3W4LYWzx0A/Y9Xe12lSCdS5K8N9y1d4Gl5Rqth2zRjbCgDH0V7aIZU2rQlI7CoVzorTLYeQPuox0KAiYfkkvUXAN2bFNrwZPMV0Q4h0RS5yq4QVVmyQv90yZpY4qMY=
+	t=1709139450; cv=none; b=H0vigzxKbvfFDxqsJLGL/CyC0e+ZG7VStBYTvkR0MOklSVfPYv8v+O0Hq5JygVm5ALiQ5sBOOpBEszG4ez041I2wJ0897oA+I/IiWwYgNvY5aUqobEIYmE3Silc6SUwqm/KLSpwv3oemIE+IInwrmaYV8OeOU+Hq9uDRCqeN4KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709139449; c=relaxed/simple;
-	bh=Ztn1ISsr+ww0L63y9IS9gk+ABQmLXaSuSOq9U/IgZcw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tlZf4ZGsHKQuXi/izIpJTEdfjPQe3xZZn728tF6buiN/Fak/Knufeve+SUUttdzBViKrItYCv73EXNtVI6Uz5AL2SP79s70AHBrdwzD4jrhC77MMbJYCo0lkzHW0LLHi8xHsFzePOME7igA0IcouEP+JCyhXU/GwUqkydcd6dxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NphCj0O2; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709139450; c=relaxed/simple;
+	bh=/2Azqu1VyiRaiAF7AA3juHS2VEk/q1WqTNt34zVPHsU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k99axeuODL+cupU1P8GNPLP8JXFJe5FB87qhOdhuqwDimsGDkWIou+VrnDZWm5723nDjZ0x7QfbqiAvR0ExGvw34US5MACRnc3WQ+KjgMaolw+jQDDYjrBmIcRdipezhSjgEUp5rK0kAqT2c6u/ifp6TULA7mYn3nXon20XfTFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fUc750sA; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NphCj0O2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709139444; x=1740675444;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ztn1ISsr+ww0L63y9IS9gk+ABQmLXaSuSOq9U/IgZcw=;
-  b=NphCj0O27vmOkoye8GYhb2ipqFpRZd3solMba4NCGxmEbJ2uBua8FUpz
-   Mism33QNIGPQ8E1mW111fp1eUfkA5eTjWLwtjT+3NivJOGuJ2Rro9Ieaj
-   rLBvAMqHS/XiBBBswnqu+lRp1DJAQFvRY8z7m56D5tC8m95b0ndLza3nP
-   GJy9DydCVgSVkHTcNiAJjEEfSyfDT9NzyUvzzGu7dzRMfykBIfqhyZlZ2
-   hBNIUH62s4tZTrKUWTuUj12isMItolKGFCs9c+acBiJoN3TltVf6fM1LV
-   irCMaTNOLAP0Rwq2r+FUeV7fvdl45LKR3spgDmwo5D8YC7480BwzeRIB+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3401222"
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="3401222"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 08:57:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="12213455"
-Received: from josouza-mobl2.bz.intel.com ([10.87.243.88])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 08:57:23 -0800
-From: =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>
-To: linux-kernel@vger.kernel.org,
-	intel-xe@lists.freedesktop.org
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Jonathan Cavitt <jonathan.cavitt@intel.com>,
-	=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>
-Subject: [PATCH v2 4/4] drm/xe: Increase devcoredump timeout
-Date: Wed, 28 Feb 2024 08:57:09 -0800
-Message-ID: <20240228165709.82089-4-jose.souza@intel.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240228165709.82089-1-jose.souza@intel.com>
-References: <20240228165709.82089-1-jose.souza@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fUc750sA"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7bff8f21b74so57237239f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 08:57:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1709139447; x=1709744247; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HNUHzB6bTR8lkrQrwB9JvKFIHk8OQ9UNvaD+yVEbMY0=;
+        b=fUc750sAFxkfAwL2xCN8vk2E3aaNJkHVaqoP4wIew8jDZ0K82+NmNHjhneAKgIoamY
+         cNgfN5dc0PnWnLchxYWNszlUpc280bk5g250901utF8NBer/j/bmcoRyjdTCvIOx1zor
+         dzRnkIdkqos/pObvqOt73+0+PYIKkI4YHHWHA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709139447; x=1709744247;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HNUHzB6bTR8lkrQrwB9JvKFIHk8OQ9UNvaD+yVEbMY0=;
+        b=SyilFU1gRuWT2+Kj1CeGMH74wwFZEJdROfiJ+C/XkbzmOFQz5PjV8Fal6j9xQM+EOq
+         VddBjts9YBCkYLoQno20mj8QSWEOPlHygza4J9bU4eukY1VJS6KNyMqpmXxKFRHE6rdx
+         2FTn4fDcurWeM40+aflvdcrKCqAD0lQMycZPDbXCuQS029BwfMUOjuSc7wbO32bQ9rqk
+         w/ppHCWqFObk4hz/QsC/x1P+yL10Szv0LsqYztduHzbbhXdQLQUA03gVZo+MK+35OaMk
+         BMX8pLJS9jcRQJGbDI0ruZoPFitzqGiP1m/HyirxWdU071x0Ivoif3D0tnZ5DZvmdi53
+         l+0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVBn6XszqmujLdOGGWNmoJxVzL1Fc++ijuk/0Uw6bjoZvjNJnGc4x1YubyWKlxbekqEHU/BO9GG5bL3cd3x0RF5TXYlg0awP7yBljIh
+X-Gm-Message-State: AOJu0YzxPyUUG4eV4xbZRrTrREV1F1XGEbUMBWpWfFj7sU8Qh8FLYmrC
+	O/8bpEmjdzKCM8lvbUWuwut2aCKn4Qla9ne14Er63/atp5mD7VVypHy4RC+wOhk=
+X-Google-Smtp-Source: AGHT+IEYqpBKyp8I8JnTiZT8VG1R5X6EV3Xdx0Ok2vStet+qqfgqgLz4QUj/IMZf8xcfL3JAP7OUlQ==
+X-Received: by 2002:a92:cda6:0:b0:365:4e45:33ad with SMTP id g6-20020a92cda6000000b003654e4533admr12522573ild.1.1709139446863;
+        Wed, 28 Feb 2024 08:57:26 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id bn29-20020a056e02339d00b0036533cae5afsm623565ilb.60.2024.02.28.08.57.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 08:57:26 -0800 (PST)
+Message-ID: <fa711f78-98b0-48a3-95cf-594ff41e0998@linuxfoundation.org>
+Date: Wed, 28 Feb 2024 09:57:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.4 00/84] 5.4.270-rc1 review
+Content-Language: en-US
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240227131552.864701583@linuxfoundation.org>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240227131552.864701583@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-5 minutes is too short for a regular user to search and understand
-what he needs to do to report capture devcoredump and report a bug to
-us, so here increasing this timeout to 1 hour.
+On 2/27/24 06:26, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.270 release.
+> There are 84 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 29 Feb 2024 13:15:36 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.270-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Jonathan Cavitt <jonathan.cavitt@intel.com>
-Signed-off-by: José Roberto de Souza <jose.souza@intel.com>
----
- drivers/gpu/drm/xe/xe_devcoredump.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Compiled and booted on my test system. No dmesg regressions.
 
-diff --git a/drivers/gpu/drm/xe/xe_devcoredump.c b/drivers/gpu/drm/xe/xe_devcoredump.c
-index 3fef81396fe8a..a26aac63d6ecf 100644
---- a/drivers/gpu/drm/xe/xe_devcoredump.c
-+++ b/drivers/gpu/drm/xe/xe_devcoredump.c
-@@ -52,6 +52,9 @@
- 
- #ifdef CONFIG_DEV_COREDUMP
- 
-+/* 1 hour timeout */
-+#define XE_COREDUMP_TIMEOUT_JIFFIES (60 * 60 * HZ)
-+
- static struct xe_device *coredump_to_xe(const struct xe_devcoredump *coredump)
- {
- 	return container_of(coredump, struct xe_device, devcoredump);
-@@ -230,8 +233,9 @@ void xe_devcoredump(struct xe_sched_job *job)
- 	drm_info(&xe->drm, "Check your /sys/class/drm/card%d/device/devcoredump/data\n",
- 		 xe->drm.primary->index);
- 
--	dev_coredumpm(xe->drm.dev, THIS_MODULE, coredump, 0, GFP_KERNEL,
--		      xe_devcoredump_read, xe_devcoredump_free);
-+	dev_coredumpm_timeout(xe->drm.dev, THIS_MODULE, coredump, 0, GFP_KERNEL,
-+			      xe_devcoredump_read, xe_devcoredump_free,
-+			      XE_COREDUMP_TIMEOUT_JIFFIES);
- }
- 
- static void xe_driver_devcoredump_fini(struct drm_device *drm, void *arg)
--- 
-2.44.0
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
+thanks,
+-- Shuah
