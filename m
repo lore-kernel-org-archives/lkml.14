@@ -1,171 +1,128 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CC92560C;
-	Wed, 28 Feb 2024 07:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E898C24B2A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 07:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709105511; cv=none; b=CRiVdtA3CWKwnWaL+SBPRbueIYTnpx4A1BlYJrHdrCVknYYs/gaD3cw1+dsuUtafyjhKy9PxqarkGJeeJ/QZPqteMmjXma6nlnUK8BHJmDLeV8i+ZTBrOqbD6DLpThiOSycMHZyJP4WL98w631/4g5WFCU5X5B/D/qX9Cx1bE10=
+	t=1709105577; cv=none; b=ltcvWFYRzUw4U4hVVhCeWkIdCcrNk/ElHyAYdq1uGS4dcJF4nUPpOb7jTl2esDChP7l72ZFbap7HrgXTs8CoUk4LojeJQ9blNAP76BWL6Eec9vPLNpUyzOkEToaMmUmgFCRYOEfjV6ECLcuQP3th67a8r30gjfw0C9OMCTydT7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709105511; c=relaxed/simple;
-	bh=7b/Mm0rd6kV5M5+yNjB1eglhtbDPT0suSYpIqAyjs98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eu185EIeErU5qMIZ+OqukEJw7j4izDk4jx8K09eIBeHiYP9KInfn5Y3VwcHJZ5/2abziZHyDw9Ho4FMAp4LLZ2edgn8uiz3u6PF+H6TCHU5wH1gu114QTdhmq5x7eFyjyUl8cXPX1AqaZPnd8XMr1n542fdqd2C1lTkX3scl8oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.224] (ip5f5aedb1.dynamic.kabel-deutschland.de [95.90.237.177])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id A509361E5FE04;
-	Wed, 28 Feb 2024 08:30:42 +0100 (CET)
-Message-ID: <93d67381-34fc-423c-868a-565378c63e09@molgen.mpg.de>
-Date: Wed, 28 Feb 2024 08:30:41 +0100
+	s=arc-20240116; t=1709105577; c=relaxed/simple;
+	bh=vl+E2NgRWiD419R8+gukB+VjWzYzUiNLeVzeFg6gGhE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pu/MMwFCOKtrjF+Fky/wRhYe9BWEOxNuSABAeS2kgr4BUnn9ajO7AYv48mkhOWLnkq5o/VOdz7OOV1LkMFyjvmf/AIAfLbh2CJOLMfSGJMNBRq2oJaRb+ILn93aPikGvamsHiqUjFCDllJUc6GcvwQvSzQFMBx0N8gTTboDNwmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=hJrndjlc; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hJrndjlc"
+X-UUID: 9339f2c8d60b11eeb8927bc1f75efef4-20240228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=6ieR/zEKf2T/mkPnmZNu342qzL0+86b6tQM2bieJG+w=;
+	b=hJrndjlcxOwhSNbn51R2sHlrwXVEWaoDbycUx1xyYTZ7xarHMqjYY+WCG8H2wYLy6lFaLxmw+Pjl7i7p3sT/Xk9rLhb7EWLxn+BKErd8rkdwoyXDBzvjarmQHQywu7qYPp/ydA9Gqj7X/OFk9t9zsS52rJi+HPkrKz6TbMPZxTw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:d64a8808-8baa-4943-9d81-4f66098ce44f,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-55
+X-CID-META: VersionHash:6f543d0,CLOUDID:2ba2e680-4f93-4875-95e7-8c66ea833d57,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:2,IP:nil,UR
+	L:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
+	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 9339f2c8d60b11eeb8927bc1f75efef4-20240228
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <haibo.li@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1119168673; Wed, 28 Feb 2024 15:32:49 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 28 Feb 2024 15:32:49 +0800
+Received: from mszsdtlt102.gcn.mediatek.inc (10.16.4.142) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 28 Feb 2024 15:32:49 +0800
+From: Haibo Li <haibo.li@mediatek.com>
+To: Russell King <linux@armlinux.org.uk>, Alexandre Mergnat
+	<amergnat@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>
+CC: Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Haibo Li <haibo.li@mediatek.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mediatek@lists.infradead.org>, <xiaoming.yu@mediatek.com>
+Subject: [PATCH] ARM: unwind: fix unwind started from IRQ stack in THUMB2 kernel
+Date: Wed, 28 Feb 2024 15:32:47 +0800
+Message-ID: <20240228073247.13102-1-haibo.li@mediatek.com>
+X-Mailer: git-send-email 2.34.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] dt-bindings: hwmon: Add NCT7363Y documentation
-Content-Language: en-US
-To: Ban Feng <baneric926@gmail.com>
-Cc: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, corbet@lwn.net,
- linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- kcfeng0@nuvoton.com, kwliu@nuvoton.com, openbmc@lists.ozlabs.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- DELPHINE_CHIU@wiwynn.com, naresh.solanki@9elements.com,
- billy_tsai@aspeedtech.com, Rob Herring <robh@kernel.org>
-References: <20240227005606.1107203-1-kcfeng0@nuvoton.com>
- <20240227005606.1107203-3-kcfeng0@nuvoton.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240227005606.1107203-3-kcfeng0@nuvoton.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-MTK: N
 
-Dear Ban,
+When unwinds started from IRQ stack,call_with_stack is the only
+place to do stack switch.
+It need to identify call_with_stack when unwinding.
 
+In thumb2 kernel,it fails to identify call_with_stack.
+In practice,(u32)&call_with_stack has bit 0 set.
 
-Thank you for your patch.
+	prel31_to_addr(&idx->addr_offset) is 0x806ed518,
+	while (u32)&call_with_stack is 0x806ed519.
+So it is impossible to do stack switch.
 
+dump_stack from IRQ stack gets below result:
+...
+ call_timer_fn from __run_timers+0x163/0x25c
+ __run_timers from run_timer_softirq+0x15/0x24
+ run_timer_softirq from __do_softirq+0xe3/0x232
+ __do_softirq from __irq_exit_rcu+0x3f/0xac
+ __irq_exit_rcu from irq_exit+0x7/0xe
+ irq_exit from call_with_stack+0xd/0x10
+...
+The stacktrace ends with call_with_stack.
 
-Am 27.02.24 um 01:56 schrieb baneric926@gmail.com:
-> From: Ban Feng <kcfeng0@nuvoton.com>
-> 
-> Adding bindings for the Nuvoton NCT7363Y Fan Controller
+Since bit 0 of pc in thumb2 is always 0,skip bit 0 when do compraing.
+Then we get expected stacktrace:
+...
+ call_timer_fn from __run_timers+0x163/0x25c
+ __run_timers from run_timer_softirq+0x15/0x24
+ run_timer_softirq from __do_softirq+0xe3/0x232
+ __do_softirq from __irq_exit_rcu+0x3f/0xac
+ __irq_exit_rcu from irq_exit+0x7/0xe
+ irq_exit from call_with_stack+0xd/0x10
+ call_with_stack from __irq_svc+0x93/0xb6
+Exception stack(0xf0875f60 to 0xf0875fa8)
+5f60: ****
+5f80: ****
+5fa0: ****
+ __irq_svc from arch_local_irq_enable+0x2/0x4
+ arch_local_irq_enable from do_idle+0xad/0x1f6
+...
 
-s/Adding/Add/ or even Document bindings …
+Signed-off-by: Haibo Li <haibo.li@mediatek.com>
+---
+ arch/arm/kernel/unwind.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Do you have an URL to the datasheet?
+diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
+index 9d2192156087..89e1f440082c 100644
+--- a/arch/arm/kernel/unwind.c
++++ b/arch/arm/kernel/unwind.c
+@@ -482,7 +482,8 @@ int unwind_frame(struct stackframe *frame)
+ 
+ 	ctrl.check_each_pop = 0;
+ 
+-	if (prel31_to_addr(&idx->addr_offset) == (u32)&call_with_stack) {
++	if (prel31_to_addr(&idx->addr_offset) ==
++		((u32)&call_with_stack & (~0x01))) {
+ 		/*
+ 		 * call_with_stack() is the only place where we permit SP to
+ 		 * jump from one stack to another, and since we know it is
+-- 
+2.18.0
 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
-> ---
->   .../bindings/hwmon/nuvoton,nct7363.yaml       | 63 +++++++++++++++++++
->   MAINTAINERS                                   |  6 ++
->   2 files changed, 69 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml b/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
-> new file mode 100644
-> index 000000000000..1a9d9a5d614e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +
-> +$id: http://devicetree.org/schemas/hwmon/nuvoton,nct7363.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nuvoton NCT7363Y Hardware Monitoring IC
-> +
-> +maintainers:
-> +  - Ban Feng <kcfeng0@nuvoton.com>
-> +
-> +description: |
-> +  The NCT7363Y is a Fan controller which provides up to 16 independent
-
-lowecase: fan controller?
-
-> +  FAN input monitors, and up to 16 independent PWM output with SMBus interface.
-
-output*s*?
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nuvoton,nct7363
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    const: 2
-> +
-> +patternProperties:
-> +  "^fan-[0-9]+$":
-> +    $ref: fan-common.yaml#
-> +    unevaluatedProperties: false
-> +    required:
-> +      - pwms
-> +      - tach-ch
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#pwm-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        hwmon: hwmon@22 {
-> +            compatible = "nuvoton,nct7363";
-> +            reg = <0x22>;
-> +            #pwm-cells = <2>;
-> +
-> +            fan-0 {
-> +                pwms = <&hwmon 0 50000>;
-> +                tach-ch = /bits/ 8 <0x00>;
-> +            };
-> +            fan-1 {
-> +                pwms = <&hwmon 1 50000>;
-> +                tach-ch = /bits/ 8 <0x01>;
-> +            };
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2ecaaec6a6bf..7b1efefed7c4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15084,6 +15084,12 @@ S:	Maintained
->   F:	Documentation/devicetree/bindings/hwmon/nuvoton,nct6775.yaml
->   F:	drivers/hwmon/nct6775-i2c.c
->   
-> +NCT7363 HARDWARE MONITOR DRIVER
-> +M:	Ban Feng <kcfeng0@nuvoton.com>
-> +L:	linux-hwmon@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
-> +
->   NETDEVSIM
->   M:	Jakub Kicinski <kuba@kernel.org>
->   S:	Maintained
-
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-
-Kind regards,
-
-Paul
