@@ -1,140 +1,127 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E630479B84
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBD740847
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709143850; cv=none; b=k1zQ+7I+xXsrFC/m7CPBP3FjD2dTopgWiRgzzM0sFJXucYBm2gjMkjAQt/nGSvsoN3RF0POcUZj6ptwZS5eMZIZ+XXvZRkvue4xh0PVr9ibVP+PWviLXUtxyhHslEC650DyU1XcMUA0vtnFV53wuPOsPA+xQToJaRNly0QC9//0=
+	t=1709144041; cv=none; b=SYGdsBNlfaxM3IMzhJcaWiCQF9mmCINnwdYoWGoxUJrjTOO0ED6Uyi35Xi/KOtmwVGQNZM/0DojoktvnQK04hLXFIIivqJQrrxmYB/6UZTEQYkzb4LOp4vLwXFinhaP5w8sY1jB6I9OjxMWOWH/A4cy/8CYpzmYYwSjOTT+X0k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709143850; c=relaxed/simple;
-	bh=ydPMob62Ut9r97Sqx0kikCCPdrTngYvBh6QQJWZzIis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s+LYeU49WiPYTHn6FYs1vZt65s2eG1Kr46mgz0/vJr00QSd/wCIglw0ANXWeDgPudu+kNgny1rhzYNmdpMVdAiA5ORFe/dfHpacdHhMtNYS1HAy9i9rYusbnQmjQRu+ANSb8owGKINYgjNR23dV4kUKxhE9Bg214Bv1pKd8A7T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FEIYouPg; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709144041; c=relaxed/simple;
+	bh=IUp2O1DyurNt3DHOePkrTCbRZHnoqxYLM0e7Jur/hNo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mbSbJfONADc8ExmWFvBmjSvKK9R+tIyRimElB3M9t9RnFVdU874LRE09pBktf953t0/x+2/aQ66W7shSYVK9I8TkkShxxf2WUVliEOkt0UtuCf91lwFdpWJgsDyDi5j0cyEnRlvfC2MwEjWbRlPX606GmAKdZA4c+Fx/E5V2nWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=db60gfZj; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FEIYouPg"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3652762edcfso327905ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:10:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="db60gfZj"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5a0932aa9ecso10870eaf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:13:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709143847; x=1709748647; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mr+bD36IoIOKszW1o5Rb9R/mzBzmVVAn2qquBqx2Jtw=;
-        b=FEIYouPgnFUzrWgIdZQASk0HWhUcQiarax30evBDsqyfoRmttaihpZYlAXELZtupH3
-         WLBwen2wkwlwXrRIqLYjRAvbfPShC+vVCVo4S5UFkQLCxPRrjDUvRwqYufqDJ8oZKq/f
-         Hh69pt0BOR0N6tTt5CByS7vnCSxNSo5TYHS3o=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709144037; x=1709748837; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JHGQf153ISVcw0os1WKKJ+NMnoBEbvgIaH2/2iMTb0w=;
+        b=db60gfZjnMbn4CHlwQlB8YP9QpafdbEAuVYp1vulcPJ5SpPGglQOW84gKMpi4EQfh8
+         0dqC9yOlhKy2QKZlIAyjFzsXZjDQxHThxc/608s519MMC+tpe7103colh1TRr7NnZFM3
+         EnUtPW/iEz5gyg8nPJWGErnYStWbL7p27FK6SnzJteVmzLVTgYMdbunw0s2lbciTg5Xl
+         p79Pi9aVT6eYurRpleOiQo5v3W0idyBO1qvP2H0k40QLonaks9+tQqLtxT1Y2cOaTdll
+         ll3Ba4flA6LTa+YpzT/2nGNwTSQP6xyrVBRe1whjcimmZr21BfDypfWyVcIlOPFFypd7
+         FU7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709143847; x=1709748647;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mr+bD36IoIOKszW1o5Rb9R/mzBzmVVAn2qquBqx2Jtw=;
-        b=xOISa6Pgc/pmccVsNhZpoIxlgAc6myiXvhyhny8LMEH7vB/lFwSrAITimya96hOAl8
-         ydboMplG1G/OnfZPrVNomYv862xwXbkr78JYRywLxAeNeVimQSr5M4LZuU0xw2YYfErt
-         lNjtNKVpvpZUgXRPzlYYrUP5PxD0ZEd6OCJVcZljrvktQbb34QQvYdTlhDqRB+O9J4zw
-         nmumLFFkB7BQwwSH0sjoAqzbPzqT7xrFI9gXVgVwOB1IndQsfaIXB81rz1STVe6iBewn
-         swf7PPytZzpgMQrRrfS1cEI/sqByCOQ0su0iUBS7FKEMOA5BQD9FhVhLGYLa3ZgIUfLv
-         2jHA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+1XV9VKUMQknMPvgvR2ulTEpSSmJ1QRXS+8f0GJkeK7Q/bKBUBA/GEfzL+4wypffEDzFlqWvcNc4YePIAXXrnEe4FPDcRnXS4e7gs
-X-Gm-Message-State: AOJu0Yy2DCf+xmc6nqnAMnKO1UXN/LsNFnnWPTEojyKc/SbyatbVWN0Q
-	5JFzjd2MkHhtuqJiJ5YHx9XkcadbKeKSI763MLfflUTEIMQAqhPwLvfM8LW55Q==
-X-Google-Smtp-Source: AGHT+IEcf57nNkZHLpk4X+rVu40fpnQC+KxfZAodN+3tIS0La+wWipkcmp8niTZkNbjmDf9zGzJZYw==
-X-Received: by 2002:a92:dd04:0:b0:365:b9c8:4436 with SMTP id n4-20020a92dd04000000b00365b9c84436mr25912ilm.10.1709143847146;
-        Wed, 28 Feb 2024 10:10:47 -0800 (PST)
-Received: from localhost (144.57.222.35.bc.googleusercontent.com. [35.222.57.144])
-        by smtp.gmail.com with UTF8SMTPSA id bp24-20020a056e02349800b00363da909ebcsm2915892ilb.56.2024.02.28.10.10.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 10:10:46 -0800 (PST)
-Date: Wed, 28 Feb 2024 18:10:45 +0000
-From: Matthias Kaehlcke <mka@chromium.org>
-To: Javier Carrasco <javier.carrasco@wolfvision.net>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        d=1e100.net; s=20230601; t=1709144037; x=1709748837;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JHGQf153ISVcw0os1WKKJ+NMnoBEbvgIaH2/2iMTb0w=;
+        b=TUMRvqPiDz20Eaz4DTUUbBUlUiTXjId8T36ib3W7+g0rV+ZWC9zUd/JPOLL5DYE3kM
+         R8CWUz7Bukh9PrbMboZLXZW2zW47Yg5KgouPBLGhtKQen4QDgZC70RE4tSCY7dfWy67/
+         v1uHiu1NrVX1D8QLsM2ZyuGobutVZxtAhiYND9RjJEs8mD+QbLScDzFAR3aihA4+udEB
+         GDFLXxN2or4VM5u4X2W4H43wDjHsTjqMZoVDJgLrr9e4TS93K5MLAdMYHNV36oewW2iw
+         DY/6dnG++wbpDs4n74muHnRdyk71J6IKs+UU13n7nt4gE/3LD4RuSOZX/OlZol8RKsUW
+         kvYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdh/T+3o31I8h8V4K17yx5kvQhXtYWsz7qgfPZVXEhu4gG8tSZUT4mSt6t1feLUTnQBVDYEib8R5dVDeTCXv0yxUAsZwwBuMNmQFVO
+X-Gm-Message-State: AOJu0YyUZP/VaYKsVJOwGi8GWNtRk5B/wAANGZca7EUyb3CZpMdiVcUY
+	T+7QKDH4Z6TbM3QibGH7NjpnEy2Bv9JcOhfjGwarAwUxdXzXIts3WLP5rPOwXnk=
+X-Google-Smtp-Source: AGHT+IFR/nSV2424gDV/2o+aGcU+yEiir6WLvMYS7zCkUxW6QTer+XFLz59fw4fIyJc3hJM2jNxFhg==
+X-Received: by 2002:a4a:241a:0:b0:5a0:357a:546c with SMTP id m26-20020a4a241a000000b005a0357a546cmr413610oof.6.1709144037018;
+        Wed, 28 Feb 2024 10:13:57 -0800 (PST)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id f20-20020a4a9d54000000b005a0ac863a99sm12291ook.13.2024.02.28.10.13.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 10:13:56 -0800 (PST)
+From: David Lechner <dlechner@baylibre.com>
+To: linux-iio@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Helen Koike <helen.koike@collabora.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 6/8] usb: misc: onboard_dev: add support for non-hub
- devices
-Message-ID: <Zd93JZTlN4BCxWm7@google.com>
-References: <20240228-onboard_xvf3500-v5-0-76b805fd3fe6@wolfvision.net>
- <20240228-onboard_xvf3500-v5-6-76b805fd3fe6@wolfvision.net>
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] iio: adc: ad7944: new driver
+Date: Wed, 28 Feb 2024 12:10:02 -0600
+Message-ID: <20240228-ad7944-mainline-v3-0-781b922334af@baylibre.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240228-onboard_xvf3500-v5-6-76b805fd3fe6@wolfvision.net>
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 28, 2024 at 02:51:33PM +0100, Javier Carrasco wrote:
-> Most of the functionality this driver provides can be used by non-hub
-> devices as well.
-> 
-> To account for the hub-specific code, add a flag to the device data
-> structure and check its value for hub-specific code.
-> 
-> The 'always_powered_in_supend' attribute is only available for hub
-> devices, keeping the driver's default behavior for non-hub devices (keep
-> on in suspend).
-> 
-> Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
-> ---
->  drivers/usb/misc/onboard_usb_dev.c | 25 +++++++++++++++++++++++--
->  drivers/usb/misc/onboard_usb_dev.h | 10 ++++++++++
->  2 files changed, 33 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
-> index e1779bd2d126..df0ed172c7ec 100644
-> --- a/drivers/usb/misc/onboard_usb_dev.c
-> +++ b/drivers/usb/misc/onboard_usb_dev.c
-> @@ -132,7 +132,8 @@ static int __maybe_unused onboard_dev_suspend(struct device *dev)
->  	struct usbdev_node *node;
->  	bool power_off = true;
->  
-> -	if (onboard_dev->always_powered_in_suspend)
-> +	if (onboard_dev->always_powered_in_suspend &&
-> +	    !onboard_dev->pdata->is_hub)
->  		return 0;
+This is a new driver for the Analog Devices AD7944/AD7985/AD7986 family
+of ADCs. These are fairly simple chips (e.g. no configuration registers).
+The initial driver is only supporting the 'multi' (4-wire) SPI mode. We
+plan to follow up with support for the 'single' (3-wire) SPI mode.
 
-With this non-hub devices would always be powered down, since
-'always_powerd_in_suspend' is not set for them. This should be:
+This work is done on behalf of Analog Devices, Inc., hence the
+MAINTAINERS are @analog.com folks.
 
-  if (!onboard_dev->pdata->is_hub ||
-       onboard_dev->always_powered_in_suspend)
+---
+Changes in v3:
+- Removed 'multi' value from adi,spi-mode property in DT bindings
+- Modified driver for above change
+- Fixed spelling of 'conventional'
+- Added '#daisy-chained-devices' to DT bindings
+- Added comments explaining that '3-wire' mode is not related to
+  spi-3wire/SPI_3WIRE
+- Replaced _sign with _diff in chip info struct to properly handle
+  pseudo-differential vs. true differential chips
+- Link to v2: https://lore.kernel.org/r/20240216-ad7944-mainline-v2-0-7eb69651e592@baylibre.com
 
-Checking for the (non-)hub status first is clearer IMO, also it avoids
-an unneccessary check of 'always_powered' for non-hub devices.
+Changes in v2:
+- Added limit to spi-max-frequency for chain mode in DT bindings
+- Added spi-cpol property to DT bindings
+- Renamed '3-wire' mode to 'single' mode (to avoid confusion with spi-3wire)
+- Renamed '4-wire' mode to 'multi' mode
+- Dropped adi,reference property - now using only ref-supply and 
+  refin-supply to determine the reference voltage source
+- Fixed spelling of TURBO
+- Renamed t_cnv to t_conv to match datasheet name and fixed comment
+- Fixed wrong timestamp pushed to buffer
+- Fixed scaling for chips with signed data
+- Make use of sysfs_match_string() function
+- Link to v1: https://lore.kernel.org/r/20240206-ad7944-mainline-v1-0-bf115fa9474f@baylibre.com
 
-Without code context: for hubs there can be multiple device tree nodes
-for the same physical hub chip (e.g. one for the USB2 and another for
-the USB3 part). I suppose this could also be the case for non-hub
-devices. For hubs there is the 'peer-hub' device tree property to
-establish a link between the two USB devices, as a result the onboard
-driver only creates a single platform device (which is desired,
-otherwise two platform devices would be in charge for power sequencing
-the same phyiscal device. For non-hub devices there is currently no such
-link. In many cases I expect there will be just one DT entry even though
-the device has multiple USB interfaces, but it could happen and would
-actually be a more accurate representation.
+---
+David Lechner (2):
+      dt-bindings: iio: adc: add ad7944 ADCs
+      iio: adc: ad7944: add driver for AD7944/AD7985/AD7986
 
-General support is already there (the code dealing with 'peer-hub'), but
-we'd have to come up with a suitable name. 'peer-device' is the first
-thing that comes to my mind, but there might be better options. If such
-a generic property is added then we should deprecate 'peer-hub', but
-maintain backwards compatibility.
+ .../devicetree/bindings/iio/adc/adi,ad7944.yaml    | 213 +++++++++++
+ MAINTAINERS                                        |   9 +
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/ad7944.c                           | 413 +++++++++++++++++++++
+ 5 files changed, 646 insertions(+)
+---
+base-commit: 205bbf0d2dd2e0fcd6bf2a15b7df6fc570967e3b
+change-id: 20240206-ad7944-mainline-17c968aa0967
