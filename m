@@ -1,92 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE301361C6;
-	Wed, 28 Feb 2024 22:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC1572903
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 22:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709157682; cv=none; b=I0bum64thWU+H2vCXVeJMdcwva33LD2SIyryrikxhTfbKhzFeeBfY6gIiDEvMlkSO8RZhr8Zbny6YnKqTniaSL6DXlVcckSqVafv3oGCcQGg12d6rkc8X/HQOuWGGOEH86xtM2dPemsT7vUVg+ljqe9BlC2p9PPHkpdR1SYYqFE=
+	t=1709157720; cv=none; b=ldX8fKLQmtVwraaKUjJjGT1nFLkjPA0SfKOld3mxpBtcJ9qlt7+IBWdYOc8pQ1LWTHeEsi1Ia7y2XMYpdx7EnnZ2zHVci7ucdCrYnizgPs+SUxEaCY1nuLsJjTS3x09Bym/FqxrYVnx5QvVzDwGvELdcpN0JZZpfH/R9HFYn6EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709157682; c=relaxed/simple;
-	bh=o6MFrSIb/9TR5ZXqLPiJmvDqR+Z7VlCuMRswirAkRSE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GFtmluiFPJBersOpCXPHF/nDeR+9hQzj9Dq89uIg4aYAXDu53n9cLnd0OFswRw0QmkjuHiVGdeuEcad3HyhU8ys+NbCHH7woezcWVuoxQO6VDFAUa3wCHI3K+AJDlk//f6kq+nh53kvJ1ju/zTFrrN77yolctKIRX28QIPW9PNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJSdgWg9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709157720; c=relaxed/simple;
+	bh=o+3lKU6VlE6nxZ2uIrWmlrrddb6OP4BDWK4YrtdQs/8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=D5zuJTg/XilFabkniAdusthfBbsY+Amo5TlCmuHCVBorMmQhMpqllTovwVTCZvyC3NakM9HUM+vige3qnvLp7CUteTKkcGSRnGlS22mxYkjn04BlJfdXUhnmPUPPCqLZQWOd3YeioKDxN9LVsdQGTXgpEP/NqYW5cUKWCHgdB/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fpZByzHn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJSdgWg9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E7AEC433C7;
-	Wed, 28 Feb 2024 22:01:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709157682;
-	bh=o6MFrSIb/9TR5ZXqLPiJmvDqR+Z7VlCuMRswirAkRSE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kJSdgWg9TSFk3QMfm6aeJntIdfrB4TNZoBxHCd/RvnVAqZauGl5Ut3K/HmROrXRCV
-	 lazBNdizUR5+ZGRE4FuVBoXPHwDvY4iGQ0wTfi9qFefekjOT4cD4VFnk9b6I4fKTFS
-	 qvtlgDm6WOShzV+8P+b2oEDye+rZdgqGxy5Z6+FuP4mH/VlcAbX6J6Roh9aCXMFV6j
-	 LsO1Oz2cvKjEbGiHITvTikwsy6Rk6pne7z1qXqhrhPpNYqMJU2XhAWVEGOZRXn7Acm
-	 HpkDpA5EUj2HLuZVKYLVm02/c9hFfJGiS8pUcSj82e0YvtjlfXabyt51MNpwCYwBeY
-	 PtBhO3laVUdJw==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d240d8baf6so2760541fa.3;
-        Wed, 28 Feb 2024 14:01:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWqBdRQjvXG8nHqgB5OMqjDPlSCFAFpUCsKQ8IUIt6e6rvFVqtn8Mi4qOmA9mbQszW2op080Ns0kSKmbjEkVykhNMfA5wRq68MVPpGEOTjdsY536Xch3VhNHs+4HLZngPv86m6drSD1Dw==
-X-Gm-Message-State: AOJu0Yyk3xl6GjYeyHOIaKpOjZU3eDzxmLahMNyAJcCNo9eEQXemme/o
-	Rc/yBQ1hx9Rk9kTswyCSFzpmspCdcUC+Q/KyNE3HPCDS8oyUFOuQvhZqq80BUxW2QLuNCAlkET+
-	utHU5MZVyZnFO5y6c5E37zbbdAw==
-X-Google-Smtp-Source: AGHT+IEXnVPLeLSvokP3FFCuUJiG6sgd8fOihS1kxS9XWLz2cM8MT5lYCT7vzDiaLpoDFRMQ4PV0ai3LXdPMw8lPeP4=
-X-Received: by 2002:a2e:8416:0:b0:2d2:9906:6db2 with SMTP id
- z22-20020a2e8416000000b002d299066db2mr83302ljg.39.1709157680618; Wed, 28 Feb
- 2024 14:01:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fpZByzHn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709157717;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Gb42RHaHbvgH6buS2vhwM8dxZVCNDCNpgqpB45gim8I=;
+	b=fpZByzHnCH3AtY+wJzULPCkdXof7qZVo+CfmrK96LE6va2qw5Ndcay+jU+twrXlWrw2KIF
+	PXuQvsOayf5KLpducYdMuFalRrAlFGF/AuVFH4/2yB+uX9+jtb9MiQsX9o0kt1AdcCYqJj
+	sinCRjzTLi8cbKhLaie4IbHRgPKhwtc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-636-nGXaYNxkPR2qvCHipcVnXQ-1; Wed, 28 Feb 2024 17:01:55 -0500
+X-MC-Unique: nGXaYNxkPR2qvCHipcVnXQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40e53200380so1160465e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 14:01:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709157714; x=1709762514;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gb42RHaHbvgH6buS2vhwM8dxZVCNDCNpgqpB45gim8I=;
+        b=rRRqH8Pv725Sw+4jKB6tJNicZdLAe3TMSBHWxK9/xU7VfgDa2t7AMPUjtpapYzRtIs
+         2YuBb6SXVdeYEdsEvd5mCTepuiSIFplS+oA4FEcGDv70tBqhq10lNswRxH7inrrt8VQw
+         Mu0PAXoBlQXvM0MvR5WqGti+kEe4jMUM1EkI7QEH3y5ixOc9rtSX7NsbvWE3VvSVNy5q
+         nTE6jj2gI/07VXy/eiHJRvgpqTt/Amx12qAgUcZA2xw8+isndglBVWUgq5CanW8rm+hF
+         Rhz+VMWK6pO+Jdn706EXwEsUNO0dPcSxKtte7IBv2t5G54C3zs4HIJTjmEGqjtCtuqDv
+         laKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHRu0Rz/QjeIuWV8SV7PJH5Azb5JPBKb1q0tGP8gqA2W9bN98+G0tPyZRDyYKCxMwk6XKi66/WbV8jn4uaAzM90iT8QH6PPIAQEwB8
+X-Gm-Message-State: AOJu0YzfffLjXsUEZvnzA8ev2DJ17I47N4LN2odkk6PDrqjWzsA4aI7o
+	HCXULv9uIDiw5nWXTH3X6EWfxqp5DHSxzhhIcuct7kS6VMJyjPp4kVHc5Xzc3FJ+SJoukkc0VF9
+	WIOB2htru5X+/603BzNVHvefghp9aDjdXbzVO1Qh0ia6vsWlq7WLVs3PSTCHcdw==
+X-Received: by 2002:a05:600c:1da2:b0:412:9868:97ed with SMTP id p34-20020a05600c1da200b00412986897edmr351059wms.9.1709157714636;
+        Wed, 28 Feb 2024 14:01:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFnexliJkq2EDSDzvfJngEL/iGnA4sFkcjtCKKNbI9fBcw6ZnUjpTccYX1RM3sqQbDz3XTJog==
+X-Received: by 2002:a05:600c:1da2:b0:412:9868:97ed with SMTP id p34-20020a05600c1da200b00412986897edmr351036wms.9.1709157714290;
+        Wed, 28 Feb 2024 14:01:54 -0800 (PST)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id jz12-20020a05600c580c00b00411a6ce0f99sm112831wmb.24.2024.02.28.14.01.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 14:01:54 -0800 (PST)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Andrew Halaney <ahalaney@redhat.com>, Jyri Sarha <jyri.sarha@iki.fi>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Enric Balletbo <eballetb@redhat.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Andrew
+ Halaney <ahalaney@redhat.com>
+Subject: Re: [PATCH] drm/tidss: Use dev_err_probe() over dev_dbg() when
+ failing to probe the port
+In-Reply-To: <20240228-tidss-dev-err-probe-v1-1-5482252326d3@redhat.com>
+References: <20240228-tidss-dev-err-probe-v1-1-5482252326d3@redhat.com>
+Date: Wed, 28 Feb 2024 23:01:53 +0100
+Message-ID: <8734tcnt7y.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240207011803.2637531-1-saravanak@google.com>
- <20240207011803.2637531-3-saravanak@google.com> <20240223171849.10f9901d@booty>
-In-Reply-To: <20240223171849.10f9901d@booty>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Wed, 28 Feb 2024 16:01:07 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK5iuK0mMsvKkxPp9iSJuTfXrXuL55MgE09=oRnvS5k1Q@mail.gmail.com>
-Message-ID: <CAL_JsqK5iuK0mMsvKkxPp9iSJuTfXrXuL55MgE09=oRnvS5k1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] of: property: Improve finding the supplier of a
- remote-endpoint property
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Saravana Kannan <saravanak@google.com>, Frank Rowand <frowand.list@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Xu Yang <xu.yang_2@nxp.com>, kernel-team@android.com, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Fri, Feb 23, 2024 at 10:18=E2=80=AFAM Luca Ceresoli
-<luca.ceresoli@bootlin.com> wrote:
->
-> Hello Saravana,
->
-> [+cc Herv=C3=A9 Codina]
->
-> On Tue,  6 Feb 2024 17:18:01 -0800
-> Saravana Kannan <saravanak@google.com> wrote:
->
-> > After commit 4a032827daa8 ("of: property: Simplify of_link_to_phandle()=
-"),
-> > remote-endpoint properties created a fwnode link from the consumer devi=
-ce
-> > to the supplier endpoint. This is a tiny bit inefficient (not buggy) wh=
-en
-> > trying to create device links or detecting cycles. So, improve this the
-> > same way we improved finding the consumer of a remote-endpoint property=
-.
-> >
-> > Fixes: 4a032827daa8 ("of: property: Simplify of_link_to_phandle()")
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
->
-> After rebasing my own branch on v6.8-rc5 from v6.8-rc1 I started
-> getting unexpected warnings during device tree overlay removal. After a
-> somewhat painful bisection I identified this patch as the one that
-> triggers it all.
+Andrew Halaney <ahalaney@redhat.com> writes:
 
-How are you applying the overlay?
+Hello Andrew,
 
-Rob
+> This gets logged out to /sys/kernel/debug/devices_deferred in the
+> -EPROBE_DEFER case and as an error otherwise. The message here provides
+> useful information to the user when troubleshooting why their display is
+> not working in either case, so let's make it output appropriately.
+>
+> Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
+> ---
+> There's definitely more spots in this driver that could be upgraded from
+> dev_dbg() to something more appropriate, but this one burned me today so
+> I thought I'd send a patch for it specifically before I forget.
+> ---
+
+Makes sense to me and I agree that's useful to have that information there.
+
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+
+-- 
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
