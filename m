@@ -1,137 +1,87 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC82420320
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB2D3205
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709096599; cv=none; b=HlBP25fh3T+4KEaWOFsO6sk5KEaP1BJv2DVExeTgEdnH38cuWBScaIbgmx8CU/WzjXVmpgG1aqjTPp06B3XLOKn1BAXVw3GrM3V0T4/vT48FdPcmapi0H7ImIoiwdkncv9oB3VYN1a7NwJ1LA7MWrmelEj1j2WIqa8VkG1B/oyo=
+	t=1709096828; cv=none; b=R1z5z2bSnJWPPf9MGQH+KwWYGHhKUWRleBunhrwUyU/qtHFN/5NWCgl4iSnSl6Qz/flehFoOS0YZVnrmLwoKi6zp3VLkhw1z2Vy3FaKKaWXHFOklTGuON3ZQN6KqvwT5LgxLWslTHosWLO0yz9I893ljGd4B7lzg5bWP0JQPSfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709096599; c=relaxed/simple;
-	bh=IcJu0XYMy2/eKbfOW9/K+j1/WMkhTVyCV1cBVRPywU4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lNOO5dto4oQ7NzjuapO74TFDydyCGXmRdKqTp3/h+h6tyeQHC89UZtzkjcGKd+jLHT/wKQxPUPYnUR0ixfDQ4uTHg9hG4jYMsGOg4kAjH3/wNhDE8htyr5iVDH8wp/KE1uwO1C9RgyScixdGY8Y40EfJPQA192XcriVvE2Xy3Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3651a261194so31683445ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:03:17 -0800 (PST)
+	s=arc-20240116; t=1709096828; c=relaxed/simple;
+	bh=NDYMj29qtQkbokr4QHvEZT1PzlIAohTJuF1hqdMFy6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P/uReyP8FVvFW8niACpvGtpTHTB7nI5vHDla89H0Zg/AJVw6h56YZMji7G7Jj5hyYyrju1zD1/5nlV/MDAkqc0Wa7wOH90uDtyVylv8JDLOItJt4FB1CyJbnQedmmjLZVjFMkxiZpbxKKiIjhctKdUj7wo6KQAqgSaAOD+ALrCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZM93a2D/; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZM93a2D/"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5c229dabbb6so2829438a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 21:07:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709096826; x=1709701626; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R0hZi4IwldcafUQOYCQfscMvfB7SqlvXbZvfr+ma3bQ=;
+        b=ZM93a2D/sBtqxcYD0tx2QmDp2LJOCQr3/zVp0/jrdPmRvGzo/2XDUGvUmt9SAL5tqq
+         BPQreJ2/zRs2G6R2sBhAthyTt9JHCN4O0GAHTWQXtdNNueMUf0QfckiEhnrY5w1tWG72
+         0rnFWt2HKHDCLGdEn++VVaq7Vgl2whjy2vEmKASi+hW/BW0/4xvYtmCL9ix4jhlJImq1
+         4jVx6pIgMhiqMdAYG03zVMoPwvP7l56frQ7NnXeZgLQWrCkCI3zbSUq+B4EEF+hVfrYW
+         H0Ge7pOpW6Nog0aNV5xa1C8qmbI223fGCoR5RAa2r57kRZR0lSH9OrVnXke8VSBMbDQ3
+         cihA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709096597; x=1709701397;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LTOizF5wVcFTzMt2UNKgPkpTl3/Lnnj26VxalAGL3TI=;
-        b=UwyEE9/VIOG8FGEw/MBlHku40zOBppB3UxcBozObw+8OF4y08+8ILZfJgjfimyLLMZ
-         SFLJnTR/AnhrtaX1b2M+aIFScyTKEHCQXHQt7byHV2udsAkcchssBdymqNSoECKevBSv
-         4svFvk0IvXkkoxojtKjtqTgzUrbq0cpDfYWnp6OWfTIIbajjsWHOl9Uy2OW/3BSDr3sR
-         TFhOj82DqIdKvzRSTOnqeNJ9a/sa0NhrsD3718EsRPzpH1P2e5nqihRObgDu9QM1rTz8
-         41AdBBEo6Fea80bdrTGnlYBahXjeXeTkN7G8jCFcf12TedSIupbdkUsKtomaeWVBhw6G
-         OIsA==
-X-Gm-Message-State: AOJu0Yzfbsr/Nz3HhsF8GwU7XXP9Y77LwB1LNAAV5pgHH9k0CowduGIW
-	GJofPgzB0gQg4vCJ0unMy/lfD20xNbjwjUrvX/xtLHC+k6VrsLWZofYwXYomDNfDdvv9VJyosYw
-	UJOxLOPNUuvd1sGXIeMUB9kyu2JEqPRvJwXFgn6zzcs5vGZfPyEf0zFyCrQ==
-X-Google-Smtp-Source: AGHT+IEFXwIUb1wWdKgRcdSYHr30xWPvKueyFjhf2d86D5Ca205szkfWxeElKGbEateWybgPAU4joHQxjOKEyfu23aoXvRSt7/Oe
+        d=1e100.net; s=20230601; t=1709096826; x=1709701626;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R0hZi4IwldcafUQOYCQfscMvfB7SqlvXbZvfr+ma3bQ=;
+        b=pnF794IwFBW/+GtL0EyAZkYayIWGVH+pGks0v06n/Bhp3NtmaJLZpg6EFsZZTvij8Y
+         /FXkrd1ILn7byz3K1BdDSC7dEJ3PQvl4wSDGMCV//4+mjwUD7oKyDsPGJWAYb9nP6KkI
+         IRqoZkqb5YsoA6hBqzJ4UnC1yyQ7vI96WujSfv0MYUEEuAxJ6Wi1u0CX2alMIwBO0VKo
+         pEfv78LqBfBhthace20y9GdqYI27/m2EjiRThuDU5fD1xLVo7Q8CEOfWWshOMwfzZvvW
+         KWQ05aM06H9CMV+Ja3NwRsu1lQ8M0WQa0gLJMNGH7EuqfzPtJKiPTm9+aPkqA2Im1NwX
+         HN2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXmIU0pA/W2UKZfrG8ZXd7lIOowA99nYn5CBYpK/BVAmUGv0kfR83HvqOV3vVvjTiXxMfVvGWWQb5H5tnw8aTuF44YvcrMwVv4XJnUL
+X-Gm-Message-State: AOJu0YwNFx8pjJ/pKSj9KeuW0IG9d9UAD1kYed8NBWpjxszH4em39FmL
+	miqLTBJnMgF4GYo9P6UrNhoDVPGq1ujt25aDbcM8ZobrhPQ7kElolQlo6EhuBNg=
+X-Google-Smtp-Source: AGHT+IEXutCfwWDafJj/H7lNFlXr51oQWF+rHXoJlF9WsTiohURTpGuvZH0dIKe1xDg4l5M6JS8/0Q==
+X-Received: by 2002:a17:90a:bd16:b0:299:275d:c346 with SMTP id y22-20020a17090abd1600b00299275dc346mr9882375pjr.5.1709096826514;
+        Tue, 27 Feb 2024 21:07:06 -0800 (PST)
+Received: from localhost ([122.172.83.95])
+        by smtp.gmail.com with ESMTPSA id sk6-20020a17090b2dc600b0029abe1c3f26sm511598pjb.1.2024.02.27.21.07.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 21:07:06 -0800 (PST)
+Date: Wed, 28 Feb 2024 10:37:03 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Sibi Sankar <quic_sibis@quicinc.com>
+Cc: dietmar.eggemann@arm.com, marcan@marcan.st, sven@svenpeter.dev,
+	alyssa@rosenzweig.io, rafael@kernel.org, xuwei5@hisilicon.com,
+	zhanjie9@hisilicon.com, sudeep.holla@arm.com,
+	cristian.marussi@arm.com, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, quic_rgottimu@quicinc.com,
+	linux-arm-kernel@lists.infradead.org, asahi@lists.linux.dev,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH 0/2] Fix per-policy boost behavior
+Message-ID: <20240228050703.lixqywrtxravegc6@vireshk-i7>
+References: <20240227165309.620422-1-quic_sibis@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2147:b0:365:38db:a585 with SMTP id
- d7-20020a056e02214700b0036538dba585mr897435ilv.1.1709096597167; Tue, 27 Feb
- 2024 21:03:17 -0800 (PST)
-Date: Tue, 27 Feb 2024 21:03:17 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008faf0a06126a0ffb@google.com>
-Subject: [syzbot] [media?] [usb?] INFO: task hung in vb2_video_unregister_device
-From: syzbot <syzbot+2622b51b35f91a00ea18@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-usb@vger.kernel.org, m.szyprowski@samsung.com, mchehab@kernel.org, 
-	syzkaller-bugs@googlegroups.com, tfiga@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227165309.620422-1-quic_sibis@quicinc.com>
 
-Hello,
+On 27-02-24, 22:23, Sibi Sankar wrote:
+> Fix per-policy boost behavior by incorporating per-policy boost flag
+> in the policy->max calculation and setting the correct per-policy
+> boost_enabled value on devices that use cpufreq_enable_boost_support().
 
-syzbot found the following issue on:
+I don't see the problem explained anywhere and the patches look
+incorrect too. The drivers aren't supposed to update the
+policy->boose_enabled value.
 
-HEAD commit:    9abbc24128bc Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=12073622180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=af5c6c699e57bbb3
-dashboard link: https://syzkaller.appspot.com/bug?extid=2622b51b35f91a00ea18
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=132173d2180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d7ec54180000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ce13ec3ed5ad/disk-9abbc241.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/256cbd314121/vmlinux-9abbc241.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0af86fb52109/Image-9abbc241.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2622b51b35f91a00ea18@syzkaller.appspotmail.com
-
-INFO: task kworker/0:1:10 blocked for more than 143 seconds.
-      Tainted: G    B              6.8.0-rc5-syzkaller-g9abbc24128bc #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:kworker/0:1     state:D stack:0     pid:10    tgid:10    ppid:2      flags:0x00000008
-Workqueue: usb_hub_wq hub_event
-Call trace:
- __switch_to+0x314/0x560 arch/arm64/kernel/process.c:553
- context_switch kernel/sched/core.c:5400 [inline]
- __schedule+0x1498/0x24b4 kernel/sched/core.c:6727
- __schedule_loop kernel/sched/core.c:6802 [inline]
- schedule+0xb8/0x19c kernel/sched/core.c:6817
- schedule_preempt_disabled+0x18/0x2c kernel/sched/core.c:6874
- __mutex_lock_common+0xbd8/0x21a0 kernel/locking/mutex.c:684
- __mutex_lock kernel/locking/mutex.c:752 [inline]
- mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:804
- vb2_video_unregister_device+0x11c/0x1dc drivers/media/common/videobuf2/videobuf2-v4l2.c:1269
- usbtv_video_free+0x4c/0x84 drivers/media/usb/usbtv/usbtv-video.c:970
- usbtv_disconnect+0x6c/0xc4 drivers/media/usb/usbtv/usbtv-core.c:138
- usb_unbind_interface+0x1a4/0x758 drivers/usb/core/driver.c:461
- device_remove drivers/base/dd.c:569 [inline]
- __device_release_driver drivers/base/dd.c:1272 [inline]
- device_release_driver_internal+0x440/0x6a0 drivers/base/dd.c:1295
- device_release_driver+0x28/0x38 drivers/base/dd.c:1318
- bus_remove_device+0x314/0x3b4 drivers/base/bus.c:574
- device_del+0x480/0x87c drivers/base/core.c:3828
- usb_disable_device+0x354/0x760 drivers/usb/core/message.c:1416
- usb_disconnect+0x290/0x808 drivers/usb/core/hub.c:2267
- hub_port_connect drivers/usb/core/hub.c:5323 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5623 [inline]
- port_event drivers/usb/core/hub.c:5783 [inline]
- hub_event+0x18ec/0x435c drivers/usb/core/hub.c:5865
- process_one_work+0x694/0x1204 kernel/workqueue.c:2633
- process_scheduled_works kernel/workqueue.c:2706 [inline]
- worker_thread+0x970/0xef4 kernel/workqueue.c:2787
- kthread+0x288/0x310 kernel/kthread.c:388
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
-INFO: lockdep is turned off.
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+viresh
