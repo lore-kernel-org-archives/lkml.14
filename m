@@ -1,577 +1,367 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B184084E
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CBE40845;
+	Wed, 28 Feb 2024 18:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709144042; cv=none; b=lg8trO6rf8eUr8UlKtqav01ivCgQ/888w3H479CDEx2FXcHVMrg4FY7a0deJn8IRvKwtSXghglIiWHV69tyhlO2zKR2x3JwuCCzwCDqONHs4fsPE3CUBH+hA1CaYCLHI9NiVXWKCVkjV8UsLcSAsbYZXLdrYjv+/MVq4BEh+34c=
+	t=1709144125; cv=none; b=PygKRKsQZjdn+HB08SbTx08eKWZRHR9nk7pV1HcSONWQpy9J0iwnL/d39+uK9n0YGn4ka4EpBPjLZ390oikExXYTmOyd4ks4cZn8YIRG9HQXkXAxLnE9LYkWRThJtizGFiXlQHzLRewZ3rGeEhsO6z+IlnPhbrlcAX+QB/FBy9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709144042; c=relaxed/simple;
-	bh=1QfHsIORoXFg+tZIOpYbpH5WNeqMjBeKBcdedB/V6WQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lu8KpgQKBcUbtCru6nBrk3Og+iL48ngHvRXePMb0HqArS29kJPRFTMMfZjjau1AJrjV+eJ4HqCiFRJkF8Bo/DZlMGiuzRVru47/pxcrLGglWGdQCebpCZ2ByJofDNS+gsgAufyx139Jy0I16KhDUx9eyyvRLQb7slbWcfTeWAis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gmJWgxaq; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1709144125; c=relaxed/simple;
+	bh=3zoZeon8Er00fPoyYR7FKoG9wvQMXgKJldR2no22xGc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=Mp2a7jyUmcZH2e+5tCM5ShUC+379KmU5HUqaNRKsSrtbeihT6w9TjfnHN958nz0C6aaFPYgYgtpysD5TeyOYuHDdWvjYa+TI3Af779OU4bf/jX50J2XRYkZbseNO0PW/yilRxQKMiShaugu39HRRWwp5hkQjpS7S+ekMNNTCzvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hUeXU0Dc; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gmJWgxaq"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-59fd6684316so17558eaf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:13:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709144039; x=1709748839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4jcyQueYhRVJP6CrfAlhtw8dKi4Zuon4YwRpnIXMkAg=;
-        b=gmJWgxaqleAeeeYAxUVTc4CIFqax/G9OtBLvihB1LdMlp7GijHhLZ+VJ+mqaI7q7jf
-         l66nzGYoKKPo1jTX01eBTfS2ZvWFHxuB8Q+9P/wpwmu8tZzyjrw9XHZBZ3Xk2tYwfKc7
-         s/CZFmIPpacQv3CU8MPmvxZUBSoBK9WixbQdcthuT9CI+fPuYrU5H5iAq1sinu/9ORnC
-         yKanedkz1HEpWCa6xS7XAnRXbM8f/AgKoRPLKjgauJOUUUWf6z44mUlOiGi9Lyf4HNw+
-         vC26KurCoyE2UHiaYhDQ5dWdRLCEvsgyB8W8XDoiVmiFqH7+UQMrQlv5BFFh3BdeNG5q
-         RPqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709144039; x=1709748839;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4jcyQueYhRVJP6CrfAlhtw8dKi4Zuon4YwRpnIXMkAg=;
-        b=sPB1EJc6PyRpSeZ/eEFymc1iLCKms/M5fzRdO5QvP1PejO7AQNjpD+nJKdCw0qV0HO
-         +7Lm9skINjxAQ8zNriZBYisxupKYcWdq+3fABMEQJ/O+MX7bKJJYnsQchiayQlZbqxaE
-         3Uj9PbXNlTMhN6fAtV3/Yznshq2eBDdrxsCfsfywF2YSDB0Z9LcwvbTRcSSpX7dbhw6Q
-         tHjRLixvfSV0G8ASj2FuvbJrP/ODVF+Ft4fbUb8FiHx5Z98m4ywyEsXBPf9gN+w0zuFy
-         DZ93+VQxeCHmScT9HxiUUdzqBKxSoy8gsIQZ/Ei/zHxp5jv8XUbmRrkuqaesRnhenlt6
-         3H/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUYtwDKuhpkXDrzX3fLWCTimC4hOeZezr7J6d8gPFCgKvCK5MhdLynbO245m5Uqdx1FT27S0PUZm6f0lRST/N4C0Ybqg5HyM8BzImuG
-X-Gm-Message-State: AOJu0Yx5TbZOzP6zbQjIu9ZD47kJDlPUP1l9r60Upz3t7VqYLkC6rCmU
-	Q5Hj4NuexMxuWirw+JXnCy6qhwjjVyu/l1vc8NpgUfByFgih/MsqnJeeo+WKBPM=
-X-Google-Smtp-Source: AGHT+IEcg1g93MVP8mbW8gf2Hi6QtNFAWIgYJsnsIwOe+hL38XGFn22Wsv78WoVP72ORRyMTUdaKGg==
-X-Received: by 2002:a4a:d2dc:0:b0:5a0:ab00:28b5 with SMTP id j28-20020a4ad2dc000000b005a0ab0028b5mr428945oos.6.1709144039121;
-        Wed, 28 Feb 2024 10:13:59 -0800 (PST)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id f20-20020a4a9d54000000b005a0ac863a99sm12291ook.13.2024.02.28.10.13.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 10:13:58 -0800 (PST)
-From: David Lechner <dlechner@baylibre.com>
-To: linux-iio@vger.kernel.org
-Cc: David Lechner <dlechner@baylibre.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] iio: adc: ad7944: add driver for AD7944/AD7985/AD7986
-Date: Wed, 28 Feb 2024 12:10:04 -0600
-Message-ID: <20240228-ad7944-mainline-v3-2-781b922334af@baylibre.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240228-ad7944-mainline-v3-0-781b922334af@baylibre.com>
-References: <20240228-ad7944-mainline-v3-0-781b922334af@baylibre.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hUeXU0Dc"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B24D0E0004;
+	Wed, 28 Feb 2024 18:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709144114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AEgpRUNUfdg/AqiT2bihKk1UxwLOVFdlGxOh9RWqINU=;
+	b=hUeXU0Dcz0oN5vPtmTZkmUoqledoV215cMP44ULFKJnKlxmq66q0nhu0rJ7XsFcBie/HVn
+	Fgr58C1Y/wR8o18KkMvVq6aPRltmvfplwtYKt6Vc8TrBc00P2QAYWorY7wArPdmV8SsIwz
+	ResjbJ/pBjntbYRRl0KHnAnZJB27Aw/phutESczR7m6ZukGea+RcuHFVYhflADsFLOYkFB
+	1Ne9TyHhAEPe3bXjY1R4FFrnI8PHmZy9cVevTfN6aQUbWocIBkR8tZLYcp/IGN/Ulkvh0b
+	8eJpEciQ6J00GoGUhdT4MPWhswO/WmVYHf3NHF7pOkoNHFSQ4n4DllZpx47plg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 28 Feb 2024 19:15:12 +0100
+Message-Id: <CZGX0TSYLOH4.DZHG351R9KFZ@bootlin.com>
+Cc: "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Linus Walleij"
+ <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?=
+ <rafal@milecki.pl>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Vladimir
+ Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v8 05/10] pinctrl: eyeq5: add platform driver
+X-Mailer: aerc 0.15.2
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+ <20240227-mbly-clk-v8-5-c57fbda7664a@bootlin.com>
+ <Zd4moVd_-bY6Z_kL@smile.fi.intel.com>
+In-Reply-To: <Zd4moVd_-bY6Z_kL@smile.fi.intel.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-This adds a driver for the Analog Devices Inc. AD7944, AD7985, and
-AD7986 ADCs. These are a family of pin-compatible ADCs that can sample
-at rates up to 2.5 MSPS.
+Hello,
 
-The initial driver adds support for sampling at lower rates using the
-usual IIO triggered buffer and can handle all 3 possible reference
-voltage configurations.
+On Tue Feb 27, 2024 at 7:14 PM CET, Andy Shevchenko wrote:
+> On Tue, Feb 27, 2024 at 03:55:26PM +0100, Th=C3=A9o Lebrun wrote:
+> > Add the Mobileye EyeQ5 pin controller driver. It might grow to add late=
+r
+> > support of other platforms from Mobileye. It belongs to a syscon region
+> > called OLB.
+> >=20
+> > Existing pins and their function live statically in the driver code
+> > rather than in the devicetree, see compatible match data.
+>
+> ...
+>
+> > +config PINCTRL_EYEQ5
+> > +	bool "Mobileye EyeQ5 pinctrl driver"
+>
+> Can't be a module?
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
+It theory it could, I however do not see why that would be done. Pinctrl
+is essential to the platform capabilities. The platform is an embedded
+one and performance-oriented; boot-time is important and no user will
+ever want to load pinctrl as a module.
 
-v2 changes:
-- Replaced _sign with _diff in chip info struct to properly handle
-  pseudo-differential vs. true differential chips. Pseudo-differential chips
-  now just have a voltage0 channel instead of voltage0-voltage1.
-- Fixed not resetting the CNV gpio on error return.
-- Simplified check of adi,spi-mode property now that "multi" is no longer a
-  valid option.
+>
+> > +	depends on OF
+>
+> It's even not needed for this software as far as I can tell from the code=
+.
 
+Indeed looks like it. Will try that out and remove the dependency if it
+works as expected.
 
- MAINTAINERS              |   1 +
- drivers/iio/adc/Kconfig  |  10 ++
- drivers/iio/adc/Makefile |   1 +
- drivers/iio/adc/ad7944.c | 413 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 425 insertions(+)
+[...]
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 35f27504632d..7b1a6f2d0c9c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -448,6 +448,7 @@ R:	David Lechner <dlechner@baylibre.com>
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/iio/adc/adi,ad7944.yaml
-+F:	drivers/iio/adc/ad7944.c
- 
- ADAFRUIT MINI I2C GAMEPAD
- M:	Anshul Dalal <anshulusr@gmail.com>
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 0d9282fa67f5..555ac74889f3 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -264,6 +264,16 @@ config AD7923
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ad7923.
- 
-+config AD7944
-+	tristate "Analog Devices AD7944 and similar ADCs driver"
-+	depends on SPI
-+	help
-+	  Say yes here to build support for Analog Devices
-+	  AD7944, AD7985, AD7986 ADCs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ad7944
-+
- config AD7949
- 	tristate "Analog Devices AD7949 and similar ADCs driver"
- 	depends on SPI
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index b3c434722364..a0d69b452cca 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_AD7780) += ad7780.o
- obj-$(CONFIG_AD7791) += ad7791.o
- obj-$(CONFIG_AD7793) += ad7793.o
- obj-$(CONFIG_AD7887) += ad7887.o
-+obj-$(CONFIG_AD7944) += ad7944.o
- obj-$(CONFIG_AD7949) += ad7949.o
- obj-$(CONFIG_AD799X) += ad799x.o
- obj-$(CONFIG_AD9467) += ad9467.o
-diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
-new file mode 100644
-index 000000000000..d0ba4ae409c4
---- /dev/null
-+++ b/drivers/iio/adc/ad7944.c
-@@ -0,0 +1,413 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Analog Devices AD7944/85/86 PulSAR ADC family driver.
-+ *
-+ * Copyright 2024 Analog Devices, Inc.
-+ * Copyright 2024 BayLibre, SAS
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/property.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/spi/spi.h>
-+#include <linux/string_helpers.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+
-+#define AD7944_INTERNAL_REF_MV		4096
-+
-+struct ad7944_timing_spec {
-+	/* Normal mode max conversion time (t_{CONV}) in nanoseconds. */
-+	unsigned int conv_ns;
-+	/* TURBO mode max conversion time (t_{CONV}) in nanoseconds. */
-+	unsigned int turbo_conv_ns;
-+};
-+
-+struct ad7944_adc {
-+	struct spi_device *spi;
-+	/* Chip-specific timing specifications. */
-+	const struct ad7944_timing_spec *t;
-+	/* GPIO connected to CNV pin. */
-+	struct gpio_desc *cnv;
-+	/* Optional GPIO to enable turbo mode. */
-+	struct gpio_desc *turbo;
-+	/* Indicates TURBO is hard-wired to be always enabled. */
-+	bool always_turbo;
-+	/* Reference voltage (millivolts). */
-+	unsigned int ref_mv;
-+
-+	/*
-+	 * DMA (thus cache coherency maintenance) requires the
-+	 * transfer buffers to live in their own cache lines.
-+	 */
-+	struct {
-+		union {
-+			u16 u16;
-+			u32 u32;
-+		} raw;
-+		u64 timestamp __aligned(8);
-+	 } sample __aligned(IIO_DMA_MINALIGN);
-+};
-+
-+static const struct ad7944_timing_spec ad7944_timing_spec = {
-+	.conv_ns = 420,
-+	.turbo_conv_ns = 320,
-+};
-+
-+static const struct ad7944_timing_spec ad7986_timing_spec = {
-+	.conv_ns = 500,
-+	.turbo_conv_ns = 400,
-+};
-+
-+struct ad7944_chip_info {
-+	const char *name;
-+	const struct ad7944_timing_spec *t;
-+	const struct iio_chan_spec channels[2];
-+};
-+
-+/*
-+ * AD7944_DEFINE_CHIP_INFO - Define a chip info structure for a specific chip
-+ * @_name: The name of the chip
-+ * @_t: The timing specification for the chip
-+ * @_bits: The number of bits in the conversion result
-+ * @_diff: Whether the chip is true differential or not
-+ */
-+#define AD7944_DEFINE_CHIP_INFO(_name, _t, _bits, _diff)		\
-+static const struct ad7944_chip_info _name##_chip_info = {		\
-+	.name = #_name,							\
-+	.t = &_t##_timing_spec,						\
-+	.channels = {							\
-+		{							\
-+			.type = IIO_VOLTAGE,				\
-+			.indexed = 1,					\
-+			.differential = _diff,				\
-+			.channel = 0,					\
-+			.channel2 = _diff ? 1 : 0,			\
-+			.scan_index = 0,				\
-+			.scan_type.sign = _diff ? 's' : 'u',		\
-+			.scan_type.realbits = _bits,			\
-+			.scan_type.storagebits = _bits > 16 ? 32 : 16,	\
-+			.scan_type.endianness = IIO_CPU,		\
-+			.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)	\
-+					| BIT(IIO_CHAN_INFO_SCALE),	\
-+		},							\
-+		IIO_CHAN_SOFT_TIMESTAMP(1),				\
-+	},								\
-+}
-+
-+/* pseudo-differential with ground sense */
-+AD7944_DEFINE_CHIP_INFO(ad7944, ad7944, 14, 0);
-+AD7944_DEFINE_CHIP_INFO(ad7985, ad7944, 16, 0);
-+/* fully differential */
-+AD7944_DEFINE_CHIP_INFO(ad7986, ad7986, 18, 1);
-+
-+/*
-+ * ad7944_4wire_mode_conversion - Perform a 4-wire mode conversion and acquisition
-+ * @adc: The ADC device structure
-+ * @chan: The channel specification
-+ * Return: 0 on success, a negative error code on failure
-+ *
-+ * Upon successful return adc->sample.raw will contain the conversion result.
-+ */
-+static int ad7944_4wire_mode_conversion(struct ad7944_adc *adc,
-+					const struct iio_chan_spec *chan)
-+{
-+	unsigned int t_conv_ns = adc->always_turbo ? adc->t->turbo_conv_ns
-+						   : adc->t->conv_ns;
-+	struct spi_transfer xfers[] = {
-+		{
-+			/*
-+			 * NB: can get better performance from some SPI
-+			 * controllers if we use the same bits_per_word
-+			 * in every transfer.
-+			 */
-+			.bits_per_word = chan->scan_type.realbits,
-+			/*
-+			 * CS has to be high for full conversion time to avoid
-+			 * triggering the busy indication.
-+			 */
-+			.cs_off = 1,
-+			.delay = {
-+				.value = t_conv_ns,
-+				.unit = SPI_DELAY_UNIT_NSECS,
-+			},
-+
-+		},
-+		{
-+			.rx_buf = &adc->sample.raw,
-+			.len = BITS_TO_BYTES(chan->scan_type.storagebits),
-+			.bits_per_word = chan->scan_type.realbits,
-+		},
-+	};
-+	int ret;
-+
-+	/*
-+	 * In 4-wire mode, the CNV line is held high for the entire conversion
-+	 * and acquisition process.
-+	 */
-+	gpiod_set_value_cansleep(adc->cnv, 1);
-+	ret = spi_sync_transfer(adc->spi, xfers, ARRAY_SIZE(xfers));
-+	gpiod_set_value_cansleep(adc->cnv, 0);
-+
-+	return ret;
-+}
-+
-+static int ad7944_single_conversion(struct ad7944_adc *adc,
-+				    const struct iio_chan_spec *chan,
-+				    int *val)
-+{
-+	int ret;
-+
-+	ret = ad7944_4wire_mode_conversion(adc, chan);
-+	if (ret)
-+		return ret;
-+
-+	if (chan->scan_type.storagebits > 16)
-+		*val = adc->sample.raw.u32;
-+	else
-+		*val = adc->sample.raw.u16;
-+
-+	if (chan->scan_type.sign == 's')
-+		*val = sign_extend32(*val, chan->scan_type.realbits - 1);
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static int ad7944_read_raw(struct iio_dev *indio_dev,
-+			   const struct iio_chan_spec *chan,
-+			   int *val, int *val2, long info)
-+{
-+	struct ad7944_adc *adc = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = iio_device_claim_direct_mode(indio_dev);
-+		if (ret)
-+			return ret;
-+
-+		ret = ad7944_single_conversion(adc, chan, val);
-+		iio_device_release_direct_mode(indio_dev);
-+		return ret;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		switch (chan->type) {
-+		case IIO_VOLTAGE:
-+			*val = adc->ref_mv;
-+
-+			if (chan->scan_type.sign == 's')
-+				*val2 = chan->scan_type.realbits - 1;
-+			else
-+				*val2 = chan->scan_type.realbits;
-+
-+			return IIO_VAL_FRACTIONAL_LOG2;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info ad7944_iio_info = {
-+	.read_raw = &ad7944_read_raw,
-+};
-+
-+static irqreturn_t ad7944_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct ad7944_adc *adc = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = ad7944_4wire_mode_conversion(adc, &indio_dev->channels[0]);
-+	if (ret)
-+		goto out;
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, &adc->sample.raw,
-+					   pf->timestamp);
-+
-+out:
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static const char * const ad7944_power_supplies[] = {
-+	"avdd",	"dvdd",	"bvdd", "vio"
-+};
-+
-+static void ad7944_ref_disable(void *ref)
-+{
-+	regulator_disable(ref);
-+}
-+
-+static int ad7944_probe(struct spi_device *spi)
-+{
-+	const struct ad7944_chip_info *chip_info;
-+	struct iio_dev *indio_dev;
-+	struct ad7944_adc *adc;
-+	bool have_refin = false;
-+	struct regulator *ref;
-+	int ret;
-+
-+	/*
-+	 * driver currently only supports the conventional "4-wire" mode and
-+	 * not other special wiring configurations.
-+	 */
-+	if (device_property_present(&spi->dev, "adi,spi-mode"))
-+		return dev_err_probe(&spi->dev, -EINVAL,
-+				     "adi,spi-mode is not currently supported\n");
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	adc = iio_priv(indio_dev);
-+	adc->spi = spi;
-+
-+	chip_info = spi_get_device_match_data(spi);
-+	if (!chip_info)
-+		return dev_err_probe(&spi->dev, -EINVAL, "no chip info\n");
-+
-+	adc->t = chip_info->t;
-+
-+	/*
-+	 * Some chips use unusual word sizes, so check now instead of waiting
-+	 * for the first xfer.
-+	 */
-+	if (!spi_is_bpw_supported(spi, chip_info->channels[0].scan_type.realbits))
-+		return dev_err_probe(&spi->dev, -EINVAL,
-+				"SPI host does not support %d bits per word\n",
-+				chip_info->channels[0].scan_type.realbits);
-+
-+	ret = devm_regulator_bulk_get_enable(&spi->dev,
-+					     ARRAY_SIZE(ad7944_power_supplies),
-+					     ad7944_power_supplies);
-+	if (ret)
-+		return dev_err_probe(&spi->dev, ret,
-+				     "failed to get and enable supplies\n");
-+
-+	/*
-+	 * Sort out what is being used for the reference voltage. Options are:
-+	 * - internal reference: neither REF or REFIN is connected
-+	 * - internal reference with external buffer: REF not connected, REFIN
-+	 *   is connected
-+	 * - external reference: REF is connected, REFIN is not connected
-+	 */
-+
-+	ref = devm_regulator_get_optional(&spi->dev, "ref");
-+	if (IS_ERR(ref)) {
-+		if (PTR_ERR(ref) != -ENODEV)
-+			ref = NULL;
-+		else
-+			return dev_err_probe(&spi->dev, PTR_ERR(ref),
-+					     "failed to get REF supply\n");
-+	}
-+
-+	ret = devm_regulator_get_enable_optional(&spi->dev, "refin");
-+	if (ret == 0)
-+		have_refin = true;
-+	else if (ret != -ENODEV)
-+		return dev_err_probe(&spi->dev, ret,
-+				     "failed to get and enable REFIN supply\n");
-+
-+	if (have_refin && ref)
-+		return dev_err_probe(&spi->dev, -EINVAL,
-+				     "cannot have both refin and ref supplies\n");
-+
-+	if (ref) {
-+		ret = regulator_enable(ref);
-+		if (ret)
-+			return dev_err_probe(&spi->dev, ret,
-+					     "failed to enable REF supply\n");
-+
-+		ret = devm_add_action_or_reset(&spi->dev,
-+						ad7944_ref_disable, ref);
-+		if (ret)
-+			return ret;
-+
-+		ret = regulator_get_voltage(ref);
-+		if (ret < 0)
-+			return dev_err_probe(&spi->dev, ret,
-+					     "failed to get REF voltage\n");
-+
-+		/* external reference */
-+		adc->ref_mv = ret / 1000;
-+	} else {
-+		/* internal reference */
-+		adc->ref_mv = AD7944_INTERNAL_REF_MV;
-+	}
-+
-+	adc->cnv = devm_gpiod_get(&spi->dev, "cnv", GPIOD_OUT_LOW);
-+	if (IS_ERR(adc->cnv))
-+		return dev_err_probe(&spi->dev, PTR_ERR(adc->cnv),
-+				     "failed to get CNV GPIO\n");
-+
-+	adc->turbo = devm_gpiod_get_optional(&spi->dev, "turbo", GPIOD_OUT_LOW);
-+	if (IS_ERR(adc->turbo))
-+		return dev_err_probe(&spi->dev, PTR_ERR(adc->turbo),
-+				     "failed to get TURBO GPIO\n");
-+
-+	if (device_property_present(&spi->dev, "adi,always-turbo"))
-+		adc->always_turbo = true;
-+
-+	if (adc->turbo && adc->always_turbo)
-+		return dev_err_probe(&spi->dev, -EINVAL,
-+			"cannot have both turbo-gpios and adi,always-turbo\n");
-+
-+	indio_dev->name = chip_info->name;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->info = &ad7944_iio_info;
-+	indio_dev->channels = chip_info->channels;
-+	indio_dev->num_channels = ARRAY_SIZE(chip_info->channels);
-+
-+	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-+					      iio_pollfunc_store_time,
-+					      ad7944_trigger_handler, NULL);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(&spi->dev, indio_dev);
-+}
-+
-+static const struct of_device_id ad7944_of_match[] = {
-+	{ .compatible = "adi,ad7944", .data = &ad7944_chip_info },
-+	{ .compatible = "adi,ad7985", .data = &ad7985_chip_info },
-+	{ .compatible = "adi,ad7986", .data = &ad7986_chip_info },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ad7944_of_match);
-+
-+static const struct spi_device_id ad7944_spi_id[] = {
-+	{ "ad7944", (kernel_ulong_t)&ad7944_chip_info },
-+	{ "ad7985", (kernel_ulong_t)&ad7985_chip_info },
-+	{ "ad7986", (kernel_ulong_t)&ad7986_chip_info },
-+	{ }
-+
-+};
-+MODULE_DEVICE_TABLE(spi, ad7944_spi_id);
-+
-+static struct spi_driver ad7944_driver = {
-+	.driver = {
-+		.name = "ad7944",
-+		.of_match_table = ad7944_of_match,
-+	},
-+	.probe = ad7944_probe,
-+	.id_table = ad7944_spi_id,
-+};
-+module_spi_driver(ad7944_driver);
-+
-+MODULE_AUTHOR("David Lechner <dlechner@baylibre.com>");
-+MODULE_DESCRIPTION("Analog Devices AD7944 PulSAR ADC family driver");
-+MODULE_LICENSE("GPL");
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/pinctrl/pinconf-generic.h>
+> > +#include <linux/pinctrl/pinconf.h>
+> > +#include <linux/pinctrl/pinctrl.h>
+> > +#include <linux/pinctrl/pinmux.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/seq_file.h>
+>
+> Semi-random list of the inclusions. Please, fix it.
+> While doing that, group out pinctrl/* ones as it's done in other drivers.
 
--- 
-2.43.2
+Here is my new list:
+
+#include <linux/array_size.h>
+#include <linux/bits.h>
+#include <linux/bug.h>
+#include <linux/device.h>
+#include <linux/err.h>
+#include <linux/errno.h>
+#include <linux/io.h>
+#include <linux/mod_devicetable.h>
+#include <linux/platform_device.h>
+#include <linux/seq_file.h>
+#include <linux/slab.h>
+#include <linux/types.h>
+
+#include <linux/pinctrl/pinconf-generic.h>
+#include <linux/pinctrl/pinconf.h>
+#include <linux/pinctrl/pinctrl.h>
+#include <linux/pinctrl/pinmux.h>
+
+#include "core.h"
+#include "pinctrl-utils.h"
+
+[...]
+
+> > +static bool eq5p_test_bit(const struct eq5p_pinctrl *pctrl,
+> > +			  enum eq5p_bank bank, enum eq5p_regs reg, int offset)
+> > +{
+> > +	u32 val =3D readl(pctrl->base + eq5p_regs[bank][reg]);
+>
+> > +	if (WARN_ON(offset > 31))
+> > +		return false;
+>
+> When this condition can be true?
+
+If there is a bug in the code. Defensive programming.
+
+There is this subtle conversion of pin numbers =3D> offset inside of a
+bank. If one function forgets doing this then eq5p_test_bit() gets
+called with a pin number.
+
+In this GPIO series I fixed such a bug in a 10 year old driver:
+https://lore.kernel.org/lkml/20240228-mbly-gpio-v2-5-3ba757474006@bootlin.c=
+om/
+
+The whole "if it can happen it will happen" mantra. We'll get a warning
+in the logs using pinctrl-eyeq5.
+
+>
+> > +	return (val & BIT(offset)) !=3D 0;
+> > +}
+>
+> ...
+>
+> > +static int eq5p_pinconf_get(struct pinctrl_dev *pctldev, unsigned int =
+pin,
+> > +			    unsigned long *config);
+>
+> Can't you avoid forward declarations?
+
+Yes, will do so.
+
+>
+> ...
+>
+> > +	if (!eq5p_test_bit(pctrl, bank, EQ5P_IOCR, offset)) {
+>
+> What's wrong with positive conditional?
+
+Nothing. In my mind GPIO was first, other was second. Will change.
+
+>
+>
+> > +	} else {
+>
+> > +	}
+>
+> ...
+>
+> > +static const struct pinctrl_ops eq5p_pinctrl_ops =3D {
+> > +	.get_groups_count	=3D eq5p_pinctrl_get_groups_count,
+> > +	.get_group_name		=3D eq5p_pinctrl_get_group_name,
+> > +	.get_group_pins		=3D eq5p_pinctrl_get_group_pins,
+> > +	.pin_dbg_show		=3D eq5p_pinctrl_pin_dbg_show,
+>
+> > +	.dt_node_to_map		=3D pinconf_generic_dt_node_to_map_pin,
+> > +	.dt_free_map		=3D pinctrl_utils_free_map,
+>
+> ifdef is missing for these... But the question is, isn't these a default =
+when
+> OF is in use?
+
+Doesn't look like it is. In drivers/pinctrl/devicetree.c:
+
+	static int dt_to_map_one_config(struct pinctrl *p,
+					struct pinctrl_dev *hog_pctldev,
+					const char *statename,
+					struct device_node *np_config)
+	{
+		// ...
+
+		/*
+		 * Call pinctrl driver to parse device tree node, and
+		 * generate mapping table entries
+		 */
+		ops =3D pctldev->desc->pctlops;
+		if (!ops->dt_node_to_map) {
+			dev_err(p->dev, "pctldev %s doesn't support DT\n",
+				dev_name(pctldev->dev));
+			return -ENODEV;
+		}
+
+		// ...
+	}
+
+And I see nowhere that puts a value if ->dt_node_to_map is empty.
+
+For dt_free_map, it is an optional value. If the field is NULL nothing
+is done. See dt_free_map() in the same file.
+
+[...]
+
+> > +	mask =3D BIT(offset);
+> > +	val =3D is_gpio ? 0 : U32_MAX;
+>
+> I think you meant something else (semantically) than U32_MAX.
+> Perhaps GENMASK(31, 0)?
+
+To me the semantic of U32_MAX is the same. I see where you are coming
+from. A better alternative however would be:
+
+	mask =3D BIT(offset);
+	val =3D is_gpio ? 0 : mask;
+
+That way the desire is clear and the code is simpler.
+
+>
+> ...
+>
+> > +static int eq5p_pinconf_get(struct pinctrl_dev *pctldev, unsigned int =
+pin,
+> > +			    unsigned long *config)
+> > +{
+> > +	enum pin_config_param param =3D pinconf_to_config_param(*config);
+> > +	struct eq5p_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
+> > +	unsigned int offset =3D eq5p_pin_to_offset(pin);
+> > +	enum eq5p_bank bank =3D eq5p_pin_to_bank(pin);
+> > +	u32 val_ds, arg =3D 0;
+>
+> What's arg assignment for?
+
+No reason indeed. Will remove the assignment.
+
+>
+> > +	bool pd, pu;
+> > +
+> > +	pd =3D eq5p_test_bit(pctrl, bank, EQ5P_PD, offset);
+> > +	pu =3D eq5p_test_bit(pctrl, bank, EQ5P_PU, offset);
+> > +
+> > +	switch (param) {
+> > +	case PIN_CONFIG_BIAS_DISABLE:
+> > +		arg =3D !(pd || pu);
+> > +		break;
+> > +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> > +		arg =3D pd;
+> > +		break;
+> > +	case PIN_CONFIG_BIAS_PULL_UP:
+> > +		arg =3D pu;
+> > +		break;
+> > +	case PIN_CONFIG_DRIVE_STRENGTH:
+> > +		offset *=3D 2; /* two bits per pin */
+> > +		if (offset >=3D 32) {
+> > +			val_ds =3D readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_HIGH]);
+> > +			offset -=3D 32;
+> > +		} else {
+> > +			val_ds =3D readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_LOW]);
+> > +		}
+>
+> I'm wondering why you can't use your helpers before multiplication?
+
+I'm unsure what helpers you are talking about?
+
+If the question is about why multiply before if-condition: I feel like
+multiplying first allows having the if condition be "offset >=3D 32".
+That explicits why we readl HIGH vs LOW regs.
+
+[...]
+
+>
+> > +static int eq5p_pinconf_set_drive_strength(struct pinctrl_dev *pctldev=
+,
+> > +					   unsigned int pin, u32 arg)
+> > +{
+> > +	struct eq5p_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
+> > +	unsigned int offset =3D eq5p_pin_to_offset(pin);
+> > +	enum eq5p_bank bank =3D eq5p_pin_to_bank(pin);
+> > +	unsigned int reg;
+> > +	u32 mask, val;
+> > +
+> > +	if (arg > 3) {
+>
+> Magic number.
+
+Would 0b11 explicit why? The value is two bits wide, so 0 thru 3.
+
+>
+> > +		dev_err(pctldev->dev, "Unsupported drive strength: %u\n", arg);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	offset *=3D 2; /* two bits per pin */
+> > +
+> > +	if (offset >=3D 32) {
+> > +		reg =3D EQ5P_DS_HIGH;
+> > +		offset -=3D 32;
+> > +	} else {
+> > +		reg =3D EQ5P_DS_LOW;
+> > +	}
+>
+> > +	mask =3D 0b11 << offset;
+> > +	val =3D arg << offset;
+> > +	eq5p_update_bits(pctrl, bank, reg, mask, val);
+>
+> Similar comments as per previous function.
+
+So GENMASK(1, 0) rather than 0b11. Or GENMASK(offset+1, offset).
+
+Something else?
+
+>
+> > +	return 0;
+> > +}
+>
+> ...
+>
+> > +static const struct of_device_id eq5p_match[] =3D {
+> > +	{ .compatible =3D "mobileye,eyeq5-pinctrl" },
+> > +	{},
+>
+> No comma in the terminator entry.
+>
+> > +};
+>
+> No MODULE_DEVICE_TABLE()?
+
+It is an oversight. Will be added.
+
+Thanks for the review Andy.
+
+Have a nice day,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
