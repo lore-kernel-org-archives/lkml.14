@@ -1,180 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CAC15F314;
-	Wed, 28 Feb 2024 16:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE623FBB9
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709136764; cv=none; b=A9Lr8OJic2FztRnq+Ie7/hMOlzI+AFVNtB06DZWkFcO95lMpZb3gBFCq+49ivWrQ/NOoI+C+ibcoataXGsRSkdc4ztgW8BdO9FlAMIMhHIC/pAUr3BUYsO2t0J1cvXkizX7uez0kcty0OqC+8SmJ2BoISZwKZQohHYyHYIAt1r0=
+	t=1709136778; cv=none; b=Xclt4jU0OEyHTfgyAC9vZkad2FkoIkoBoe/NnO2YYtNkRSEsU5nMMspxK77EK+oXBUS2r7F6NP3reekFm4lvDp4mgNuErlGCRKMbkNCoGkvypOzSm2sKHuSozJBHM+0eel3IEZV+0m23o81fzdt/i7tY1iGhuGyGBlggDDJEdRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709136764; c=relaxed/simple;
-	bh=SQctvRJ39Y6FTztBS6nvv5clzEQieh9m50qo+ZNGlrY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JeztCtDyUJfX6ANe6v/1unnjQUjrMx77K9iVFlM5vYpSLEf4Ylvg2B5KZQ9Mr0VJesMAWG0Jm3dIm+DNYFinRanndsehrzcS2KanO58NpVgWVnVGl6aiSb0oJM91XypJG+OBZaK3TxUEc1MQHGdaMatyRl2a7d6XS7Cp47h4jk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fq+AlfDB; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709136778; c=relaxed/simple;
+	bh=u7uFXnDrICcdk8xlJjFPen//WVVlF6lAfMWp3oCwzrY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HKqq+wlyaoQaci1BiBsbDdYh4NOQaac1NC7zjaur+65Pp1J0bLfbEJA0Miny7QglIqafIc8L5Bn0sCMLERX0l11EyI3J58zsvh+PadrfQtlGMAuLijZY39IrMOwGjHRAZYDcLtfflISqYjQQXJ5NCfBpCXVinDKABdKevnZBjtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=F1PDbmDH; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fq+AlfDB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709136763; x=1740672763;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SQctvRJ39Y6FTztBS6nvv5clzEQieh9m50qo+ZNGlrY=;
-  b=fq+AlfDB4XAmYzlERJuB7hsJv35g50vTG7K5qIlyWiT6sVpjpZ7qkDtP
-   /0neexrC66iM8Vvmn/goqBDdPddZUfWETmta9tfkQY5Q0cmdVNFek6tos
-   ehlyNDabQIJU+bYH/R8TLx89U/MzAxshX4ISrUXewz3SF67lnjO2wFJnr
-   4hjC/g+c3L2FcILPyWhnyNbNMM9wwlZOovcGO+6SkeMCOQKQsRUCqYgSY
-   gqQjYg1gA0mhI9pWooOoO6hwRA3GcZTiDG6fyosScYjoMwz6Eyf2qfpxN
-   xEj+MuA9xTDDMROnZ+0KqoxP2eRflYfKaZ1GXiZXjo5+vq9hUbTkVINRJ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="14185465"
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="14185465"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 08:12:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
-   d="scan'208";a="7418106"
-Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
-  by orviesa010.jf.intel.com with ESMTP; 28 Feb 2024 08:12:37 -0800
-From: weilin.wang@intel.com
-To: weilin.wang@intel.com,
-	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v2 5/6] perf stat: Add retire latency print functions to print out at the very end of print out
-Date: Wed, 28 Feb 2024 11:12:26 -0500
-Message-ID: <20240228161227.484886-6-weilin.wang@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240228161227.484886-1-weilin.wang@intel.com>
-References: <20240228161227.484886-1-weilin.wang@intel.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="F1PDbmDH"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-513181719easo1060501e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 08:12:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709136772; x=1709741572; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q/+mYwQG2fiJMD7iBIPPcaK1rFS1aZsi0yXF5dIj9kc=;
+        b=F1PDbmDHzqrLbcTb+0mGZx05DLKpzy6pqdgaTu1MopxNeNm6MdqbGS5T53DuGQD9Mu
+         2m73vDI5VNVyVudf/ZgAF4NrOoDNVDemGbAcBlHzY+Mwq9+tA/H6IcIJnIZcXQG4xKgC
+         aAqmb409HblK6wc2WTL/zU3rnxsZQtkrIQz/2XKLyVA98OSdrav83sMZ9YXCvMRWzqxw
+         KROzuYkGvfTI3djoXx/I/HL+xplnLVns6wQIq4Ba7fx0247PW+/CXOuKs+DxzLFbsZFz
+         mtymoWWxLHA0JvHMBZfSedh4pjQr+/7ZcwADDgxRON1qmdFHZJ3uUsWsauYJp0v0GpWx
+         lM5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709136772; x=1709741572;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q/+mYwQG2fiJMD7iBIPPcaK1rFS1aZsi0yXF5dIj9kc=;
+        b=q3pFGjRgZrrnXUDmZVTO7KD3cCecWci30GYK6P+afYD/Zpi0qTZSSGUKyt6/VHYBLV
+         QRVXh2Wc1VNgfnCZrAd94FRKWeGGA9EI1mlqGQiNh0oMKCwIzCo5hkywcpaqLjwWgGkX
+         hmwcLIO/dWnpLruS5J0MctnG3Ealcz/GsavWNgOqDXBabGugno54IAfLGi6opvl8O0fJ
+         fazcxqbI/2eu//lGMiPRyL4dAJPk06cyTUrqGsi8jnzruwXe7y9LE/m1fN7+Vaqu0IN2
+         hWh/pgWbSWq4rhUgWSzXUwU1oib6merxGaRpwULglhdDS1hJTWB/5wK8UIy7uC0byY3x
+         SiXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVznDwRj8Kevcoxih47yc37sxp5Ow/TqJnV2rPjTymmsboxdrsV8FWCzz+2Meg86Z1XRcco1zspAVaAHFv2GojK76RJPHyGP2CMp5m
+X-Gm-Message-State: AOJu0YyI1LMxKGuzvyhhoKnZqfGt5Hw9nwMVXKpywkO1za5CaG66NHZ4
+	1kfLgtjaA1Vd1hRi2ztN8/DU70Higah99Rv5oOmmcGpCBbVeELefweofXBWDF+0=
+X-Google-Smtp-Source: AGHT+IHBjLzG7UAB1n8lEYV3PN0DccuLoMlritaDubua3q9huXs0XinGCKELgA5VpATwkGynNi8W2Q==
+X-Received: by 2002:a05:6512:ba7:b0:512:bdd3:153c with SMTP id b39-20020a0565120ba700b00512bdd3153cmr144237lfv.18.1709136771948;
+        Wed, 28 Feb 2024 08:12:51 -0800 (PST)
+Received: from [192.168.1.20] ([2a01:cb19:95ba:5000:d6dd:417f:52ac:335b])
+        by smtp.gmail.com with ESMTPSA id y16-20020a05600c365000b00412656ba919sm2444276wmq.20.2024.02.28.08.12.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 08:12:50 -0800 (PST)
+From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Date: Wed, 28 Feb 2024 17:12:41 +0100
+Subject: [PATCH] media: chips-media: wave5: Call v4l2_m2m_job_finish() in
+ job_abort()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240228-wave5-fix-abort-v1-1-7482b9316867@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAHhb32UC/x2MSQqAMAwAvyI5G2iDYvEr4qFL1FxUWlGh9O8Wj
+ 8MwkyFxFE4wNhki35Lk2CvotgG/2X1llFAZSFGniAw+9uYeF3nRuiNeuAwUqDdGexegVmfkKv/
+ jNJfyAeappsRhAAAA
+To: Nas Chung <nas.chung@chipsnmedia.com>, 
+ Jackson Lee <jackson.lee@chipsnmedia.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Guillaume La Roque <glaroque@baylibre.com>, 
+ Brandon Brnich <b-brnich@ti.com>, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
+ Robert Beckett <bob.beckett@collabora.com>, 
+ Sebastian Fricke <sebastian.fricke@collabora.com>, 
+ Mattijs Korpershoek <mkorpershoek@baylibre.com>, 
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.12.4-dev-6aa5d
 
-From: Weilin Wang <weilin.wang@intel.com>
+When aborting a stream, it's possible that v4l2_m2m_cancel_job()
+remains stuck:
 
-Add print out functions so that users could read retire latency values.
+[ 3498.490038][    T1] sysrq: Show Blocked State
+[ 3498.511754][    T1] task:V4L2DecodeCompo state:D stack:12480 pid:2387  ppid:1      flags:0x04000809
+[ 3498.521153][    T1] Call trace:
+[ 3498.524333][    T1]  __switch_to+0x174/0x338
+[ 3498.528611][    T1]  __schedule+0x5ec/0x9cc
+[ 3498.532795][    T1]  schedule+0x84/0xf0
+[ 3498.536630][    T1]  v4l2_m2m_cancel_job+0x118/0x194
+[ 3498.541595][    T1]  v4l2_m2m_streamoff+0x34/0x13c
+[ 3498.546384][    T1]  v4l2_m2m_ioctl_streamoff+0x20/0x30
+[ 3498.551607][    T1]  v4l_streamoff+0x44/0x54
+[ 3498.555877][    T1]  __video_do_ioctl+0x388/0x4dc
+[ 3498.560580][    T1]  video_usercopy+0x618/0xa0c
+[ 3498.565109][    T1]  video_ioctl2+0x20/0x30
+[ 3498.569292][    T1]  v4l2_ioctl+0x74/0x8c
+[ 3498.573300][    T1]  __arm64_sys_ioctl+0xb0/0xec
+[ 3498.577918][    T1]  invoke_syscall+0x60/0x124
+[ 3498.582368][    T1]  el0_svc_common+0x90/0xfc
+[ 3498.586724][    T1]  do_el0_svc+0x34/0xb8
+[ 3498.590733][    T1]  el0_svc+0x2c/0xa4
+[ 3498.594480][    T1]  el0t_64_sync_handler+0x68/0xb4
+[ 3498.599354][    T1]  el0t_64_sync+0x1a4/0x1a8
+[ 3498.603832][    T1] sysrq: Kill All Tasks
 
-Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+According to job_abort() documentation from v4l2_m2m_ops:
+
+  After the driver performs the necessary steps, it has to call
+  v4l2_m2m_job_finish() or v4l2_m2m_buf_done_and_job_finish() as
+  if the transaction ended normally.
+
+This is not done in wave5_vpu_dec_job_abort(). Neither switch_state() nor
+wave5_vpu_dec_set_eos_on_firmware() does this.
+
+Add the missing call to fix the v4l2_m2m_cancel_job() hangs.
+
+Fixes: 9707a6254a8a ("media: chips-media: wave5: Add the v4l2 layer")
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 ---
- tools/perf/util/stat-display.c | 65 ++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+This has been tested on the AM62Px SK EVM using Android 14.
+See:
+    https://www.ti.com/tool/PROCESSOR-SDK-AM62P
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bfc1d705f437..e2996ba67bfe 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -21,6 +21,7 @@
- #include "iostat.h"
- #include "pmu.h"
- #include "pmus.h"
-+#include "metricgroup.h"
+Note: while this is has not been tested on an upstream linux tree, I
+believe the fix is still valid for mainline and I would like to get
+some feedback on it.
+
+Thank you in advance for your time.
+---
+ drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
+index ef227af72348..b03e3633a1bc 100644
+--- a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
++++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
+@@ -1715,6 +1715,7 @@ static void wave5_vpu_dec_device_run(void *priv)
+ static void wave5_vpu_dec_job_abort(void *priv)
+ {
+ 	struct vpu_instance *inst = priv;
++	struct v4l2_m2m_ctx *m2m_ctx = inst->v4l2_fh.m2m_ctx;
+ 	int ret;
  
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
-@@ -34,6 +35,7 @@
- #define COMM_LEN     16
- #define PID_LEN       7
- #define CPUS_LEN      4
-+#define RETIRE_LEN    8
- 
- static int aggr_header_lens[] = {
- 	[AGGR_CORE] 	= 18,
-@@ -426,6 +428,67 @@ static void print_metric_std(struct perf_stat_config *config,
- 	fprintf(out, " %-*s", METRIC_LEN - n - 1, unit);
+ 	ret = switch_state(inst, VPU_INST_STATE_STOP);
+@@ -1725,6 +1726,8 @@ static void wave5_vpu_dec_job_abort(void *priv)
+ 	if (ret)
+ 		dev_warn(inst->dev->dev,
+ 			 "Setting EOS for the bitstream, fail: %d\n", ret);
++
++	v4l2_m2m_job_finish(inst->v4l2_m2m_dev, m2m_ctx);
  }
  
-+static void print_retire_lat_std(struct perf_stat_config *config,
-+				 struct outstate *os)
-+{
-+	FILE *out = os->fh;
-+	bool newline = os->newline;
-+	struct tpebs_retire_lat *t;
-+	struct list_head *retire_lats = &config->tpebs_results;
-+
-+	list_for_each_entry(t, retire_lats, nd) {
-+		if (newline)
-+			do_new_line_std(config, os);
-+		fprintf(out, "%'*.2f %-*s", COUNTS_LEN, t->val, EVNAME_LEN, t->name);
-+		fprintf(out, "%*ld %*d\n", RETIRE_LEN, t->count,
-+			 RETIRE_LEN, t->sum);
-+	}
-+}
-+
-+static void print_retire_lat_csv(struct perf_stat_config *config,
-+				 struct outstate *os)
-+{
-+	FILE *out = os->fh;
-+	struct tpebs_retire_lat *t;
-+	struct list_head *retire_lats = &config->tpebs_results;
-+	const char *sep = config->csv_sep;
-+
-+	list_for_each_entry(t, retire_lats, nd) {
-+		fprintf(out, "%f%s%s%s%s%ld%s%d\n", t->val, sep, sep, t->name, sep,
-+			t->count, sep, t->sum);
-+	}
-+}
-+
-+static void print_retire_lat_json(struct perf_stat_config *config,
-+				  struct outstate *os)
-+{
-+	FILE *out = os->fh;
-+	struct tpebs_retire_lat *t;
-+	struct list_head *retire_lats = &config->tpebs_results;
-+
-+	fprintf(out, "{");
-+	list_for_each_entry(t, retire_lats, nd) {
-+		fprintf(out, "\"retire_latency-value\" : \"%f\", ", t->val);
-+		fprintf(out, "\"event-name\" : \"%s\"", t->name);
-+		fprintf(out, "\"sample-counts\" : \"%ld\"", t->count);
-+		fprintf(out, "\"retire_latency-sum\" : \"%d\"", t->sum);
-+	}
-+	fprintf(out, "}");
-+}
-+
-+static void print_retire_lat(struct perf_stat_config *config,
-+			     struct outstate *os)
-+{
-+	if (!&config->tpebs_results)
-+		return;
-+	if (config->json_output)
-+		print_retire_lat_json(config, os);
-+	else if (config->csv_output)
-+		print_retire_lat_csv(config, os);
-+	else
-+		print_retire_lat_std(config, os);
-+}
-+
- static void new_line_csv(struct perf_stat_config *config, void *ctx)
- {
- 	struct outstate *os = ctx;
-@@ -1609,6 +1672,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 		break;
- 	}
- 
-+	print_retire_lat(config, &os);
-+
- 	print_footer(config);
- 
- 	fflush(config->output);
+ static int wave5_vpu_dec_job_ready(void *priv)
+
+---
+base-commit: 8c64f4cdf4e6cc5682c52523713af8c39c94e6d5
+change-id: 20240228-wave5-fix-abort-f72d25881cbd
+
+Best regards,
 -- 
-2.43.0
+Mattijs Korpershoek <mkorpershoek@baylibre.com>
 
