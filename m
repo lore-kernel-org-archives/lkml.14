@@ -1,35 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06AC31EEE7
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 22:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611C11EEE7
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 22:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709160632; cv=none; b=pI/EZG3e4VHP5+dA0ZthU27yfugnG7/WFYNVkc+H2EH0M9uaIWNjHh7qYlUyLXq5H5bde3PAqMtcYm1B1+tW2kjzZzHrWFTVv/VwPJnowFp0HDq5hlaw/2tNpOnsMLd6Rrt8vqwzouzSTFVQjawFaKDK2ZKPFbphtXZnl9hd6dE=
+	t=1709160744; cv=none; b=InRh1URRTM7HkhU76u0FPZjDgVxXawjfTFmyYeoY4P/RV/DXWn5R2vQXHQygvcT8t+3hw0ZjmAu2RL2hZWr92R3fXMILoRpOp6tvhCbor/hcClP4VjKgdvpBW8wMA/dM4/CzSZWFxQfOsCQ+LdAeurlzm4QpLnvWXVVWo94OH5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709160632; c=relaxed/simple;
-	bh=examtTGxF0eDbGWdJnoARMLc/WduLuup5xEbQ5qHBY8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=NABKSrWb5LIYNkfhhGUgixZykItlNy9nLcuTztT4RxHhQdZQCW06fRcMdIbk6XVFf6z94qi8ARdYF7Tr5yilgkDS/1l9Gmu/fEOSGzryGDGQuXbN5hgoJ8BbxfvlsPKjALYhXYciV5b6NcXb8ov876Th/KEQdLUdB+qa++nImbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SR3qF4fP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709160744; c=relaxed/simple;
+	bh=ZQCta753ivPoo8b0/ihVIr1oYvphcIvS17YSXyf2fV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OWs4ulJPE8eDEtKs3VX89pTWcBgWbGh+ygmTxoc/JypMXNAyDRBUoUpyuC5qMtFL4jwC6Kf90cDonV4m+f+JDXbDEIB0sUu+EnreiYIEfiCHQaEhvC7qaNkS1UkawlyYpxV6/akRJFOUI3FyKFyE6MjiXNUYZ3i2SIVJOtqLV9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=ba/CQ0Pk; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SR3qF4fP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9AB46C43390;
-	Wed, 28 Feb 2024 22:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709160631;
-	bh=examtTGxF0eDbGWdJnoARMLc/WduLuup5xEbQ5qHBY8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=SR3qF4fPQpler/7MPquVmdcWZnMYumxsTm1FOE46EHgOjuZQym+SGKaif+4zRqEt2
-	 eSBciKpZvwbwuIh9rMXPHoEdE0vJ8HxKxg3r1FcwZB/pSBo7IUR1k9Bm7eRP45FIKV
-	 2asDOcrXyuSRSNKfibHkPK9GBax1u/RFsDgde10vwRe75WFyiIpK1Sowh1eIiJVYBz
-	 vpETTdtVXU/HuMBQneEkvWAA+/kiwZeRvCGK62Me9CkUL4Q6CgtkRu5ZWCrNFHXBTW
-	 QY376f66XMZhicA3IcSsxtwiKd9zbH8UacURRU0nnhBYNjCN1YGropCvZuyF2Egzyc
-	 DRI437fA3X2rw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 734DED84BC5;
-	Wed, 28 Feb 2024 22:50:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="ba/CQ0Pk"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a4348aaa705so48738766b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 14:52:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1709160741; x=1709765541; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p68q64fPKpPRnVU3Ta/zu5aSS1cC7AT3EHsyijjzmko=;
+        b=ba/CQ0PkDCWH+jZYzyfb0/K+5alngizmRJpTtnaYxzuzFPJsEYW8vLyNJFioq4azcT
+         h6dssooKwnTalEPs3WY/GHkFGhZm2EUcGRP+cN0Bby6uFOKjtUEc/qxmxtzapDJPf7Ic
+         ZDjlAEuY7bcIHhK5RwYq38ziDaCadeEPfbTEt0cze9QVHoDVyElWMETfVzaZ0Ab+jBaS
+         WRkfAX4wT62wcIAlrE9yXhfpK3Z78xFEq+y5Oul5e1brlJeejt1QJgZYRZQ2Lt0BbZpK
+         m/aSFbteusCQttoS0iuFXZSNxma5El18SGMcAsaXtJBKcuLpPsjqco7m/j2//vElN+Yy
+         VWFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709160741; x=1709765541;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p68q64fPKpPRnVU3Ta/zu5aSS1cC7AT3EHsyijjzmko=;
+        b=lG1vdHKay4Ldl2gSNDyPLh2lxVx6gbL4vsJMErh5l4AVVpP8JIPXnroPWFtNdouCnc
+         Q32xHlO9PETA6mChi1YqdOxULWZrSBwSC07oBvLsijrMiPh87/tAk5w+1Ya8RcQuWtdn
+         kjYADhBR4NITjYOOAOcj+s41ucAIFd4fZzktLwhXyijbWJtoYTqnsia7XL3IEICg7h9f
+         McoeYQIAxW2To5q+ZvqoecDkHqNN7FMLcjUyJXab1XwI91MQlJg5mGViVscPGn33aju1
+         83XySsm4/Xfkxb5YanpBQzmW+E+SPdDrp/kqXA+4H8/6T99HZtUjj+sdTDty2nkPOFz3
+         vvHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeXx8tMhGXi29rUo44e/HieuE3pRhVvt7WNwnig1j69Co0I1/OR37KV3bfoIgJ3WpSpUJwuVHabOivVJ6J0SpswBOFDU2WTI6Dy6qY
+X-Gm-Message-State: AOJu0YzOw0CaEXgYTG+7bew81qXoK7BD/0I7vZH6ChIaEiuzJLFS8v3I
+	eKfcefGXeTip8qcBZipOC0MzlEbfbJFn5EdFx1ewmKnEi5MyXznSmgTu+kzp+/JKF8h7HQURehv
+	fqndMuA==
+X-Google-Smtp-Source: AGHT+IFXxI9A58dhuw3TFJjV1Gqjef2xeIhS2AJ9dF542nq8/YdvfewX1SoXF9u5MsKEXu0DwDs0DA==
+X-Received: by 2002:a17:906:b7d4:b0:a3f:7e2:84cc with SMTP id fy20-20020a170906b7d400b00a3f07e284ccmr241976ejb.6.1709160740552;
+        Wed, 28 Feb 2024 14:52:20 -0800 (PST)
+Received: from fedora.fritz.box (aftr-82-135-80-35.dynamic.mnet-online.de. [82.135.80.35])
+        by smtp.gmail.com with ESMTPSA id q11-20020a17090622cb00b00a431e4d5deasm2292785eja.155.2024.02.28.14.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 14:52:20 -0800 (PST)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] mm: page_alloc: Use div64_ul() instead of do_div()
+Date: Wed, 28 Feb 2024 23:49:12 +0100
+Message-ID: <20240228224911.1164-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,48 +67,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH 1/5] f2fs: check number of blocks in a current
- section
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <170916063146.28690.11898550448489981752.git-patchwork-notify@kernel.org>
-Date: Wed, 28 Feb 2024 22:50:31 +0000
-References: <20240223205535.307307-1-jaegeuk@kernel.org>
-In-Reply-To: <20240223205535.307307-1-jaegeuk@kernel.org>
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
 
-Hello:
+Fixes Coccinelle/coccicheck warning reported by do_div.cocci.
 
-This series was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
+Compared to do_div(), div64_ul() does not implicitly cast the divisor and
+does not unnecessarily calculate the remainder.
 
-On Fri, 23 Feb 2024 12:55:31 -0800 you wrote:
-> In cfd66bb715fd ("f2fs: fix deadloop in foreground GC"), we needed to check
-> the number of blocks in a section instead of the segment.
-> 
-> In addtion, let's check the entire node sections when checking the avaiable
-> node block space. It does not match one to one per temperature, but currently
-> we don't have exact dirty page count per temperature. Hence, use a rough
-> estimation.
-> 
-> [...]
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Here is the summary with links:
-  - [f2fs-dev,1/5] f2fs: check number of blocks in a current section
-    (no matching commit)
-  - [f2fs-dev,2/5] f2fs: fix write pointers all the time
-    (no matching commit)
-  - [f2fs-dev,3/5] f2fs: print zone status in string and some log
-    (no matching commit)
-  - [f2fs-dev,4/5] f2fs: prevent an f2fs_gc loop during disable_checkpoint
-    https://git.kernel.org/jaegeuk/f2fs/c/496b655d0460
-  - [f2fs-dev,5/5] f2fs: allow to mount if cap is 100
-    https://git.kernel.org/jaegeuk/f2fs/c/38fcb47642ae
-
-You are awesome, thank you!
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 150d4f23b010..dfafec7fba1d 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5845,7 +5845,7 @@ static void __setup_per_zone_wmarks(void)
+ 
+ 		spin_lock_irqsave(&zone->lock, flags);
+ 		tmp = (u64)pages_min * zone_managed_pages(zone);
+-		do_div(tmp, lowmem_pages);
++		tmp = div64_ul(tmp, lowmem_pages);
+ 		if (is_highmem(zone) || zone_idx(zone) == ZONE_MOVABLE) {
+ 			/*
+ 			 * __GFP_HIGH and PF_MEMALLOC allocations usually don't
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.44.0
 
