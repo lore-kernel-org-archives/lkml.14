@@ -1,60 +1,57 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8781EB27;
-	Wed, 28 Feb 2024 06:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8541724A09;
+	Wed, 28 Feb 2024 06:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709101840; cv=none; b=H9fHu5lX+jdq8eIcsUhIuzUc0z6n7l0ec76ntrSXFtG2rELVXfRyQiVbbi0W//HSVx9sdwRyDYfjMNvQHIuixD2XLdXf1MhmBsBZW01RofrEcFKrzw7c9+gpoxqYy6xVPqjRXKghP8PhKbsgxa7zRcxAAkaZrW6Y2Ax6s5woPWA=
+	t=1709101848; cv=none; b=PAluPeOZmjt5X1fvInLF54s2V7GIhp0RGDlYw+RDEMlzZpOZaH5+EF/zz8+c6AVjIcxR8jiezbIJjqS67zbhFPhDtUEe9IuUxCRW5d9c7Er8B8xA4joI94RjY2QB+IZ4PAfXxNGHNl1g0YhbqT7Wr9c1W3S46Y9WGWAnshcRhqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709101840; c=relaxed/simple;
-	bh=yykHRE1Z1DG58ITzYPSAjX+1Z8DC7NCPRqkZBbJG4/A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LTF/IIaA1c9ii7rfwpE/7sy/TewLfqhqY7Kvv/B8n9L4+hiOHKN57LhAWoeeGEuQLEXeFFycUFCamQ5zmQJjc4pn7QczFhJVodJ0gxt0sqv0GQ9cCbTzeKpT+DsuT37nhJZQDFxGw6Oqrp/7tdmUtYMwemJ42mc1kgY3thZSNaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=bUbpqgpy; arc=none smtp.client-ip=68.232.153.233
+	s=arc-20240116; t=1709101848; c=relaxed/simple;
+	bh=j+lMa2t7oRxVAAwu6ZMMloqWKciBrtveM9JHrtuZOns=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j92mYbIkfEhYVmqfAdWd7ljjU+fRfzhVmk03QT55IZIyOj+xUKw6XszystRAmf7Jx25AO9XXFpQlJRYlVLaN1Ll2dIoxjbxqkInBweshukOEevHuhJ7uNkfQmM5F/tNY9OB07y7s7cJCF0n1SJT9Ipe1Wf2k+R6V+du7KGYfot0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=VaxoA+EV; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bUbpqgpy"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VaxoA+EV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709101839; x=1740637839;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yykHRE1Z1DG58ITzYPSAjX+1Z8DC7NCPRqkZBbJG4/A=;
-  b=bUbpqgpySHTZ2jutG5hDq1C+u24QmsS5+Vxr7WYV14bRWV8DnQWd+/il
-   i6ymwhWew07Ra/yj4uQjj6b1VDFferyrR7iRb7c9pL/2kbJzQrQ1B5zsC
-   vZD8hmT/hCtqH1srsMYXTX+5HC7/FFLfHJ1J7J04/m2Lv+2QVyC6BIeBb
-   w/HjHlBF3JuhRyWu9IAwPhbfi7UgyoNC1AhysGwxeDqFTCyam5T9PtLwT
-   8NWWCFaDD6KrszfrMhWF++huQ2SNLSn5NLf4xhzFgK/CqRckBWym/1L8X
-   3sd8TMLejkkCClUVEUoCMpnDZXVet7gltCIri/Yv2VE2Kg6xt3B6vKVfs
+  t=1709101846; x=1740637846;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=j+lMa2t7oRxVAAwu6ZMMloqWKciBrtveM9JHrtuZOns=;
+  b=VaxoA+EV/ZfICPVX9xDGA74R9vz++2x1S4MEDrA9aRH6eQA8Oulq+ScY
+   TeT4oKVm+/J/dR4baXfLTuE88n099jgsP9ztGt1NTzD2HDZCV8TWO/zJ2
+   662n8hS4b2PeBDyUMIcP5kJeYzATy8uqA4sFAF12wwFgXGEHSWXFSNo2k
+   r2fRotEbBff6MzaeXdcb39lgwTOuUSGE+a5yTzav1ZPr0iueFICVSy3dl
+   ftQNP98Dn+Q9hkPiKl8sjs0P2ueD0q3xwhB4dwpmLKFFj9YjA7EBn+o+q
+   AwCxAxS2a6qPUkuK0XXDO0t6wEOXPXYjLFTq3fTb4/UmConi20Jq2IXmc
    A==;
-X-CSE-ConnectionGUID: WwtfXDcGT3ekg/b+aiH4Eg==
-X-CSE-MsgGUID: jGD6Xd8wRRq4FYvG5xft5w==
+X-CSE-ConnectionGUID: QGTWA1AYSTOMJf59wHwGiA==
+X-CSE-MsgGUID: jJTQM5UKRUytzBkqvnVAKg==
 X-IronPort-AV: E=Sophos;i="6.06,190,1705388400"; 
-   d="scan'208";a="247685635"
+   d="scan'208";a="17467553"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2024 23:30:36 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2024 23:30:44 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 27 Feb 2024 23:30:08 -0700
+ 15.1.2507.35; Tue, 27 Feb 2024 23:30:03 -0700
 Received: from DEN-DL-M31836.microsemi.net (10.10.85.11) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 27 Feb 2024 23:30:06 -0700
+ 15.1.2507.35 via Frontend Transport; Tue, 27 Feb 2024 23:30:01 -0700
 From: Horatiu Vultur <horatiu.vultur@microchip.com>
 To: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
 	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<pabeni@redhat.com>
 CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<UNGLinuxDriver@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net-next 2/2] net: phy: micrel: lan8814 cable improvement errata
-Date: Wed, 28 Feb 2024 07:28:13 +0100
-Message-ID: <20240228062813.1007138-3-horatiu.vultur@microchip.com>
+Subject: [PATCH net-next 0/2] net: phy: micrel: lan8814 erratas
+Date: Wed, 28 Feb 2024 07:28:11 +0100
+Message-ID: <20240228062813.1007138-1-horatiu.vultur@microchip.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240228062813.1007138-1-horatiu.vultur@microchip.com>
-References: <20240228062813.1007138-1-horatiu.vultur@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,50 +61,17 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-When the length of the cable is more than 100m and the lan8814 is
-configured to run in 1000Base-T Slave then the register of the device
-needs to be optimized.
+Add two erratas for lan8814. First one fix the led which might
+stay on even that there is no link. The second one improves increases
+length of the cable that can be used when used in 1000Base-T.
 
-Workaround this by setting the measure time to a value of 0xb. This
-value can be set regardless of the configuration.
+Horatiu Vultur (2):
+  net: phy: micrel: lan8814 led errata
+  net: phy: micrel: lan8814 cable improvement errata
 
-This issue is described in 'LAN8814 Silicon Errata and Data Sheet
-Clarification' and according to that, this will not be corrected in a
-future silicon revision.
+ drivers/net/phy/micrel.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- drivers/net/phy/micrel.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 5a0cc89eaebdd..1e3b0436e161e 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -117,6 +117,10 @@
- #define LAN8814_EEE_STATE			0x38
- #define LAN8814_EEE_STATE_MASK2P5P		BIT(10)
- 
-+#define LAN8814_PD_CONTROLS			0x9d
-+#define LAN8814_PD_CONTROLS_PD_MEAS_TIME_MASK_	GENMASK(3, 0)
-+#define LAN8814_PD_CONTROLS_PD_MEAS_TIME_VAL_	0xb
-+
- /* Represents 1ppm adjustment in 2^32 format with
-  * each nsec contains 4 clock cycles.
-  * The value is calculated as following: (1/1000000)/((2^-32)/4)
-@@ -3302,6 +3306,12 @@ static void lan8814_errata_fixes(struct phy_device *phydev)
- 	val = lanphy_read_page_reg(phydev, 2, LAN8814_EEE_STATE);
- 	val &= ~LAN8814_EEE_STATE_MASK2P5P;
- 	lanphy_write_page_reg(phydev, 2, LAN8814_EEE_STATE, val);
-+
-+	/* Improve cable reach beyond 100m */
-+	val = lanphy_read_page_reg(phydev, 1, LAN8814_PD_CONTROLS);
-+	val &= ~LAN8814_PD_CONTROLS_PD_MEAS_TIME_MASK_;
-+	val |= LAN8814_PD_CONTROLS_PD_MEAS_TIME_VAL_;
-+	lanphy_write_page_reg(phydev, 1, LAN8814_PD_CONTROLS, val);
- }
- 
- static int lan8814_probe(struct phy_device *phydev)
 -- 
 2.34.1
 
