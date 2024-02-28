@@ -1,291 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2085.outbound.protection.outlook.com [40.107.6.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81791EEFC;
-	Wed, 28 Feb 2024 05:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709098418; cv=none; b=Fm67iPeZnAY7o1/ncRIbcFHJXHzkLASUPuLU0t1N/HLre0KwVFi03dM4usVWAU24aecLM8+vF0aPrFKPmnE4KacytpAxwhckN5l4WfBW5WonEzll6P3c1cHiUJPz6LdxG6KiwNKPc/YsteRdyY+g82QeLePkJMod2swLz3W1kgc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709098418; c=relaxed/simple;
-	bh=SG51VYH9JEUGEW6hnzOW/IFg0lpQP3pfUJCNA/WYd58=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oB+hsXFT8hj/DE11RCDFihAjSBSmE8B4CpOV6GD//kdWwsCVOB6adbbZ8KK3GOop9qu0mLWvuKKLvHSs9FUodVexLxQ08/R2zUarL2a4UTMj8+u8qq5pHlVGGLUTyT3dEoKxO0Xok4fBTBKwpcO77DkdYF9ZLkVE3I1yeUi6oZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZL1DB1C; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51D220320;
+	Wed, 28 Feb 2024 05:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709098496; cv=fail; b=gzcEQYbymu49iFF+0Dl7uD/zpzOZmIVZntDILwltZ1GpzsJBW6231jwJ8en+c+IAE3n5aLRZ4SqzgWjJMDmgLHYxQsfa7gkc3AcZtgcVSYzm6aEaYdrPUunxFinUWDQE6y7VCIi9/FCz8Rw+ZpwwHsd7TFBKJ1dQRHFg5yVNiEA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709098496; c=relaxed/simple;
+	bh=T3wdB7ehlBuGWKQDTwowLn+Jn/276/VgTnAm1rAIR8k=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=up48+3MpJNZN/Loi1+3yAuXTKRjLmjF7pTNst4oJTsNVlJ/aewhYQLcvoFq/Ao/ZFsYoEzmVvYm+HddZgzgXPqxGiIB5B5d2KMJu3Y7omusF4qwna2cJwYqmgtAqS9n0DCF5fNzTRJHndgf6mX2Be+mQIwhI2DQKzCebz3j2VLk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=YFmWBx52; arc=fail smtp.client-ip=40.107.6.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZL1DB1C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0067AC433F1;
-	Wed, 28 Feb 2024 05:33:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709098417;
-	bh=SG51VYH9JEUGEW6hnzOW/IFg0lpQP3pfUJCNA/WYd58=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HZL1DB1CnQH4Q3Vc5pionsBT0KLxSYcuTOGSZA6/0MHpfcQRvefBX6K9FMqDg2SVC
-	 MBpJjwuoTu0DK9Owt6CghzhCd2SDrFwlLG+Hbql/pnhQIC7vCW5Xg1wRd5Q75TpYrb
-	 giCUPqCLpKN4DNEHQNKfIVbSyMTx8eQh2feiQGAeo9ih9rxYmQdJwo3dCsESjqjRMS
-	 9s7ecG2rUzj6cjdkLdJmN+yNnHk6u7/kAxdI++c8q7E6/Xneq7vcrSzfhGREc+DFL0
-	 fA3CYcUB1ylQfQgCuguezZKgDb0Yim55orJ8KqREnGfYzB7bZ6QU9v37CkYQfViVSn
-	 W+EDNzx3d8nVQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: [PATCH v2] perf lock contention: Account contending locks too
-Date: Tue, 27 Feb 2024 21:33:35 -0800
-Message-ID: <20240228053335.312776-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="YFmWBx52"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y1cOYjtn2ZD9QUSkd1kSBIMGXyTZKuLKI5gZAeJbwyLMJVM+3nvLMPbWuaipS2H5voCAncmsC23FB8U0+YHFbwhPZNuoweCpwzFa4foE9kO5rI05+Gp0Y9ji5mITW71hZP2tzy4HRZ8BgLCTscNNdASFnbvvf3kPtSO+eGbxn2P/o32T+a4biYwD2pVN8TPUdDqgszcZRL7L73XbQXoby4TPN0NUNEwp21kdXvBu8vV2pQUZp46QwU/lhX9WMjs7ilB2q3b/EoWCoaM7iLv1rahUsDrCW8oi4eoVl57qp0KmtGz66i9Jk6CeUIoLOCgjFZUYmsMqNl1YMLMRTHwL4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1eFQx1UCN7t0vc5on4z/ECIHNOSXtPqYrZzeIPPwcJY=;
+ b=bjX1utLskMdysxhO9QB//uBfIos+ua5guDnWQWMhHyaUkDBrJ4t9klf5XhCh06ozX6esemlKHMyFpFPkx8BQUv8YuC62O1ZRZ+gx/heqkgT25LAJBb25HCPA/49Rzy/JwjU5R/5T/t+ruI9A252ILgkbEj/ITLBb5eQum78eDqnZxBlD7dPwr04/xrEMHCW5WNzB3W6oAnR69AcQ2N6FUAzgdMq378K4LOWbqeKp2P0D/k+Yt3QEQ2j7EPr3dX0FFi0zNacDRKGaKcvUgAKhVe4bWyYXQsCy/QCsHpZyXeCcDnlujbZZ15ZVehyw4IpH3ptBCD4HydJTSrhjmVULug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1eFQx1UCN7t0vc5on4z/ECIHNOSXtPqYrZzeIPPwcJY=;
+ b=YFmWBx52q24AqQRTkkcPeYtd4n0LhWIAMQIJfddJRQlFw6uejid5EbKcc/zK5w4DNcdw5YZ6InKhRDSTHMPnLIw+wVBfMb9CaIQrXY65BGduPWzykWIYNfPLT37HmVPQmiXJ2WJs+0Aslub4kITzLkPnzUPBFkBFrPMFjPDlbgo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by AS8PR04MB7525.eurprd04.prod.outlook.com (2603:10a6:20b:29b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Wed, 28 Feb
+ 2024 05:34:51 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::1232:ed97:118f:72fd]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::1232:ed97:118f:72fd%4]) with mapi id 15.20.7316.034; Wed, 28 Feb 2024
+ 05:34:51 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH v2 0/2] Add support i.MX95 BLK CTL module clock features
+Date: Wed, 28 Feb 2024 13:43:04 +0800
+Message-Id: <20240228-imx95-blk-ctl-v2-0-ffb7eefb6dcd@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOjH3mUC/3XMywqDQAyF4VeRrJvixBG0q76HuNCYqaHemBGxi
+ O/eqfsu/wPnOyCIVwnwSA7wsmnQeYpBtwS4b6aXoHaxgVKyKVGBOu5lju3wRl4HLMUVbBxbJoL
+ 4Wbw43S+vqmP3GtbZfy5+M7/1n7QZTLFs80YyNrYrsue0L3eeR6jP8/wCtllkJqgAAAA=
+To: Abel Vesa <abelvesa@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: linux-clk@vger.kernel.org, imx@lists.linux.dev, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709098992; l=1049;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=T3wdB7ehlBuGWKQDTwowLn+Jn/276/VgTnAm1rAIR8k=;
+ b=z9Dr4FwW/cpptOHrN9dl6AAHj+lIy2CKUezNZvGGsrvWN1m2ycK+UnJzsA6XgQK716fDyf/in
+ XDqAN0h9xlKDuDlXIJgKNPAmAfEvrFh3ToX2ci+Ambgy3pRAkyqFWCd
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SI1PR02CA0034.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::10) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AS8PR04MB7525:EE_
+X-MS-Office365-Filtering-Correlation-Id: a254f5b5-3f74-44bf-3370-08dc381efbc8
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Es3TC4jLdjTZ6wIKssGHd6T3o9JMcyOuu0CHQyo0FKXrtTTpMDAJ0NLd6i3g0KOX4tHv7dA7PSO/NpQ2LT4Ju+4ptyvNpAnGnwDazbJ+H47UJY04TSSQbI3+4Mrj2m7QfYIkdg0/9H3zl4b5XsDgaFChIkaZbku4YkrK8gwf3MosCbi/XwOU0sNLJiU5Q4OPGHosYMpbVpUNDaMbW4qHkmHZGgtTREMHDgPUxJiEOnSkIPP9qWr7inp9Dv4xhUUZNSSXBQYHGHl2OSC9GutYUSJL7OZTD1idRx2CAnr7DoZ2TF1rsePY94z8IVHO/bvG8q2TBYXXmGhaZVK7gZVX2VihCMlGNJr06mVxNeg5x1JlT/wwKZkAfcmJjkUUwCRtIHZOdadiv/y5tGFVCbWNxpR9eYBifno2YodaWBHG6LwPnHMuxlZ3EJJy1hObn7SeEo3hGG66juuqLWakx/uXmvApcjlg6IKUOy7q+BYKELIxosIjqQ3r3Ww4Wetca62qAfB8mizUrDpu6xoDuUX/BPrL2g/rfmOCxaF1YKHRUqSpl0ccQQ2D1K8zdFp3wa67tiSmHbza4LsJU/k2Xmhlt6ZsncRin2RJbaXPpPSCdisWfZTM0QIVScSA5pVk3Ln8O0eGBr1nMBPMpBJHQ1tkw8MlWbHNNPmQeoiNwCdKC1Q60bhpbaRB9GlyWV8a8b94nZigT4dj4sHHKF4kJywz8idYkoMObcYUzjEeTw2kMKo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?V3lXOHd3VE52MEJvSy94ZlpSTnhIU3BSU2hmbmw4OHRyT2dIVHR0Rnpma0RG?=
+ =?utf-8?B?dHdTaExuczUzTUFFVkFod282bjBUWWZwTlRwRk9XUVowVlR1Wm4vNmsvbjNU?=
+ =?utf-8?B?YXZad2xhaFJnK0lNL1pDa2tGMFRpL2F6VE1JelBRM1JNOFNqRFl4WjI1VFlv?=
+ =?utf-8?B?U3FiMUtzYUZUVnJjS042dnA0enNweFNYN21PcFZxNnBZTEVxbDNUdGFZcENE?=
+ =?utf-8?B?cmJjS243R29GMVUwY3VyaVczRk5GaE9OKzYzcFlZTWRxUXpPdXIzSytUMzFh?=
+ =?utf-8?B?U2RtOGZQK2FDd3FRR1JBTFpNVUNueEVXS0Rhb3FublpBYytEOEVEYjRVL1Fr?=
+ =?utf-8?B?YWwxZ2NuOHg3bkgyL1lranJJeFY3YVlVcHRkR0Mzb1c4YzVDZFFkRXBzWFdW?=
+ =?utf-8?B?OUUrQTVZNHlxQVBCcXQ0NTNMZlpwNHIrTDVoR0E4K1dQNUlia1FyTk5XaEhR?=
+ =?utf-8?B?L09CQUtOMkFadC9PUVQxRjVzSWZpRWdRaTZDdDRGS2tBQThjeW5sMlF1Mlc3?=
+ =?utf-8?B?emdxKzhSa2JmZ0U2YWo4UThreFo2ejJaV24zUWlDZllFZmY4RS83OUNPZGhV?=
+ =?utf-8?B?bTJOaUJTQS9aa2NhRDdWaWJ6czhkMnI2UlBoSEw0cG9Kd1JhU3VzZmFsQ0J6?=
+ =?utf-8?B?LzBuU0laSTlBR2ZNK0VRSDZ4VXRld2FoZW5RNEVDWnVSMEppcG9QbkI1MG9t?=
+ =?utf-8?B?amdENVE3a1Z3NFNXY1BIYTk1Y3BocTVrYjF0WTUvYjlXc1E4RjR0K3NIUExT?=
+ =?utf-8?B?RmFIRm9DYzBSMTJORjNTMjcvcWpFdFdkV1NoTjhmR1JmQVpMejVrUlB6NzNY?=
+ =?utf-8?B?b1RVVjJmeldtYVJKVzlWV2VacmR4TjFFQ294VHI5TW9RTU1pL0twdW8xZnBF?=
+ =?utf-8?B?Rk95ME5ZOS93NTczR2NneFJKUUZmcWRIc1RTWW5CT1BiUkMwZWdaalJPYU43?=
+ =?utf-8?B?SDlBcTBLZDR0cVE2NTl1VWYzM1JYdmtXckJweC9qRWMzWXlINDdIOGJLb2xC?=
+ =?utf-8?B?WFFPc3JCbFpUSmRCS2NwL1hkYkQzSTlTWnUvM2Q4QnRhUW5OOXhWOXFSdTBw?=
+ =?utf-8?B?SXdOVWo4Q3FFUEVuTTdyMmRtTmRRYkJ3V2NGenk2REMwMjVacVloK0xyY2cr?=
+ =?utf-8?B?N1U3S1JJSjlTcUdRYnVKVFovWlVSNktIUWtZQVgvOTBGNlVNZHdyem9HOGRR?=
+ =?utf-8?B?NnMvUlpVNTNYb2hTb3Y2SGliQmlGOHFMK2d4SzdWWWFUbDNvQm43ZCswbWE4?=
+ =?utf-8?B?V2M2T2l5cisvSDlDTENYcXo3VVJaQkUzTEZycm5zS3Rjd3hlVlVlTGEyTEhh?=
+ =?utf-8?B?VjU1OE9FRUdKWkM3ZmMwU2RlZ1ZwYVZrWm9pOWJlSjhLcXZXK2pBdGpzcTZl?=
+ =?utf-8?B?OGVvekZhcGUrMjFvem9lMWlIbFBJcDhlUmNmZktSTGY5U0ZQVmEwenJwWXRX?=
+ =?utf-8?B?UWMrSE0yK0Ztd1p0cVlHUGQrRHVFUUp1THcyc3k3M0tiMWhNMDhZNE5rdE14?=
+ =?utf-8?B?ZjBSK1gzRU5DTzhzcURZeWdwOSt3bUFyemZQcTlVZkVnRjRJV1BSRFVxb0J2?=
+ =?utf-8?B?aVNYQmZHYXBuZS9SUnZlODNiZ1I5L00rRmZVOUZwVmpzajF1U2l3SGUvaE8x?=
+ =?utf-8?B?bGhDeG9kdk1EeXRISEJ2eUJJWklzQ3N6Y2FTdDNUVUtONVhKOEtqV1JvMHRp?=
+ =?utf-8?B?bDRWY1F1UHE0QWRUa1o2TFVlVmJpZEN5TmY0aG5iYmtMekRMbC9Ib3MxVWpJ?=
+ =?utf-8?B?eDVLSkM1MldSVkhxVzVETWh1U2xTTTh6UXZSbzBMTmlVWld5ZG80VHhLZENN?=
+ =?utf-8?B?Umo2TG03VUYxYnpLMU5kTDVKNWF5OFp6T0IyS3pWSE1jaHNPczBOSlVKU2dQ?=
+ =?utf-8?B?WEV5empMQkxWUjhOTDRHekVtandkcGg3ckd4V3IwQkFJdlBZZG5VTElHaks2?=
+ =?utf-8?B?cWRCNDVwTlljREZ6V21oRnMydzNub04wd3dhcVZRK041Q2tqOU41eVdDT3FP?=
+ =?utf-8?B?eVVpK0tQY2kyU0IwWUNDbXduUkc2TnFDNzFBVGpZUHJremZDOHhsUld3VG5C?=
+ =?utf-8?B?WjRQdHRmcEc0a2RMcFZFWjlhV1lSdGtCY1pCTUJNblpNUFpsZU9UTGU0RkYw?=
+ =?utf-8?Q?M0fRwJoVT7noq69PW9RzR/mIO?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a254f5b5-3f74-44bf-3370-08dc381efbc8
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 05:34:51.5804
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Dpoud/ao7t5uFbmqzOpQVnHmzHVWeE2v/7pqXQDCX1V2u3YP5aUsHJPtFqkrXCLr9KCzoEZjtyOsMA4HojADRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7525
 
-Currently it accounts the contention using delta between timestamps in
-lock:contention_begin and lock:contention_end tracepoints.  But it means
-the lock should see the both events during the monitoring period.
+i.MX95's several MIXes has BLK CTL module which could be used for
+clk settings, QoS settings, Misc settings for a MIX. This patchset
+is to add the clk feature support, including dt-bindings
 
-Actually there are 4 cases that happen with the monitoring:
-
-                monitoring period
-            /                       \
-            |                       |
- 1:  B------+-----------------------+--------E
- 2:    B----+-------------E         |
- 3:         |           B-----------+----E
- 4:         |     B-------------E   |
-            |                       |
-            t0                      t1
-
-where B and E mean contention BEGIN and END, respectively.  So it only
-accounts the case 4 for now.  It seems there's no way to handle the case
-1.  The case 2 might be handled if it saved the timestamp (t0), but it
-lacks the information from the B notably the flags which shows the lock
-types.  Also it could be a nested lock which it currently ignores.  So
-I think we should ignore the case 2.
-
-However we can handle the case 3 if we save the timestamp (t1) at the
-end of the period.  And then it can iterate the map entries in the
-userspace and update the lock stat accordinly.
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
-v2: add a comment on mark_end_timestamp  (Ian)
+Changes in v2:
+- Correct example node compatible string
+- Link to v1: https://lore.kernel.org/r/20240228-imx95-blk-ctl-v1-0-9b5ae3c14d83@nxp.com
 
- tools/perf/util/bpf_lock_contention.c         | 120 ++++++++++++++++++
- .../perf/util/bpf_skel/lock_contention.bpf.c  |  16 ++-
- tools/perf/util/bpf_skel/lock_data.h          |   7 +
- 3 files changed, 136 insertions(+), 7 deletions(-)
+---
+Peng Fan (2):
+      dt-bindindgs: clock: support NXP i.MX95 BLK CTL module
+      clk: imx: add i.MX95 BLK CTL clk driver
 
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index 31ff19afc20c..9af76c6b2543 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -179,6 +179,123 @@ int lock_contention_prepare(struct lock_contention *con)
- 	return 0;
- }
- 
-+/*
-+ * Run the BPF program directly using BPF_PROG_TEST_RUN to update the end
-+ * timestamp in ktime so that it can calculate delta easily.
-+ */
-+static void mark_end_timestamp(void)
-+{
-+	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
-+		.flags = BPF_F_TEST_RUN_ON_CPU,
-+	);
-+	int prog_fd = bpf_program__fd(skel->progs.end_timestamp);
-+
-+	bpf_prog_test_run_opts(prog_fd, &opts);
-+}
-+
-+static void update_lock_stat(int map_fd, int pid, u64 end_ts,
-+			     enum lock_aggr_mode aggr_mode,
-+			     struct tstamp_data *ts_data)
-+{
-+	u64 delta;
-+	struct contention_key stat_key = {};
-+	struct contention_data stat_data;
-+
-+	if (ts_data->timestamp >= end_ts)
-+		return;
-+
-+	delta = end_ts - ts_data->timestamp;
-+
-+	switch (aggr_mode) {
-+	case LOCK_AGGR_CALLER:
-+		stat_key.stack_id = ts_data->stack_id;
-+		break;
-+	case LOCK_AGGR_TASK:
-+		stat_key.pid = pid;
-+		break;
-+	case LOCK_AGGR_ADDR:
-+		stat_key.lock_addr_or_cgroup = ts_data->lock;
-+		break;
-+	case LOCK_AGGR_CGROUP:
-+		/* TODO */
-+		return;
-+	default:
-+		return;
-+	}
-+
-+	if (bpf_map_lookup_elem(map_fd, &stat_key, &stat_data) < 0)
-+		return;
-+
-+	stat_data.total_time += delta;
-+	stat_data.count++;
-+
-+	if (delta > stat_data.max_time)
-+		stat_data.max_time = delta;
-+	if (delta < stat_data.min_time)
-+		stat_data.min_time = delta;
-+
-+	bpf_map_update_elem(map_fd, &stat_key, &stat_data, BPF_EXIST);
-+}
-+
-+/*
-+ * Account entries in the tstamp map (which didn't see the corresponding
-+ * lock:contention_end tracepoint) using end_ts.
-+ */
-+static void account_end_timestamp(struct lock_contention *con)
-+{
-+	int ts_fd, stat_fd;
-+	int *prev_key, key;
-+	u64 end_ts = skel->bss->end_ts;
-+	int total_cpus;
-+	enum lock_aggr_mode aggr_mode = con->aggr_mode;
-+	struct tstamp_data ts_data, *cpu_data;
-+
-+	/* Iterate per-task tstamp map (key = TID) */
-+	ts_fd = bpf_map__fd(skel->maps.tstamp);
-+	stat_fd = bpf_map__fd(skel->maps.lock_stat);
-+
-+	prev_key = NULL;
-+	while (!bpf_map_get_next_key(ts_fd, prev_key, &key)) {
-+		if (bpf_map_lookup_elem(ts_fd, &key, &ts_data) == 0) {
-+			int pid = key;
-+
-+			if (aggr_mode == LOCK_AGGR_TASK && con->owner)
-+				pid = ts_data.flags;
-+
-+			update_lock_stat(stat_fd, pid, end_ts, aggr_mode,
-+					 &ts_data);
-+		}
-+
-+		prev_key = &key;
-+	}
-+
-+	/* Now it'll check per-cpu tstamp map which doesn't have TID. */
-+	if (aggr_mode == LOCK_AGGR_TASK || aggr_mode == LOCK_AGGR_CGROUP)
-+		return;
-+
-+	total_cpus = cpu__max_cpu().cpu;
-+	ts_fd = bpf_map__fd(skel->maps.tstamp_cpu);
-+
-+	cpu_data = calloc(total_cpus, sizeof(*cpu_data));
-+	if (cpu_data == NULL)
-+		return;
-+
-+	prev_key = NULL;
-+	while (!bpf_map_get_next_key(ts_fd, prev_key, &key)) {
-+		if (bpf_map_lookup_elem(ts_fd, &key, cpu_data) < 0)
-+			goto next;
-+
-+		for (int i = 0; i < total_cpus; i++) {
-+			update_lock_stat(stat_fd, -1, end_ts, aggr_mode,
-+					 &cpu_data[i]);
-+		}
-+
-+next:
-+		prev_key = &key;
-+	}
-+	free(cpu_data);
-+}
-+
- int lock_contention_start(void)
- {
- 	skel->bss->enabled = 1;
-@@ -188,6 +305,7 @@ int lock_contention_start(void)
- int lock_contention_stop(void)
- {
- 	skel->bss->enabled = 0;
-+	mark_end_timestamp();
- 	return 0;
- }
- 
-@@ -301,6 +419,8 @@ int lock_contention_read(struct lock_contention *con)
- 	if (stack_trace == NULL)
- 		return -1;
- 
-+	account_end_timestamp(con);
-+
- 	if (con->aggr_mode == LOCK_AGGR_TASK) {
- 		struct thread *idle = __machine__findnew_thread(machine,
- 								/*pid=*/0,
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 95cd8414f6ef..fb54bd38e7d0 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -19,13 +19,6 @@
- #define LCB_F_PERCPU	(1U << 4)
- #define LCB_F_MUTEX	(1U << 5)
- 
--struct tstamp_data {
--	__u64 timestamp;
--	__u64 lock;
--	__u32 flags;
--	__s32 stack_id;
--};
--
- /* callstack storage  */
- struct {
- 	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
-@@ -140,6 +133,8 @@ int perf_subsys_id = -1;
- /* determine the key of lock stat */
- int aggr_mode;
- 
-+__u64 end_ts;
-+
- /* error stat */
- int task_fail;
- int stack_fail;
-@@ -559,4 +554,11 @@ int BPF_PROG(collect_lock_syms)
- 	return 0;
- }
- 
-+SEC("raw_tp/bpf_test_finish")
-+int BPF_PROG(end_timestamp)
-+{
-+	end_ts = bpf_ktime_get_ns();
-+	return 0;
-+}
-+
- char LICENSE[] SEC("license") = "Dual BSD/GPL";
-diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
-index 08482daf61be..36af11faad03 100644
---- a/tools/perf/util/bpf_skel/lock_data.h
-+++ b/tools/perf/util/bpf_skel/lock_data.h
-@@ -3,6 +3,13 @@
- #ifndef UTIL_BPF_SKEL_LOCK_DATA_H
- #define UTIL_BPF_SKEL_LOCK_DATA_H
- 
-+struct tstamp_data {
-+	u64 timestamp;
-+	u64 lock;
-+	u32 flags;
-+	u32 stack_id;
-+};
-+
- struct contention_key {
- 	u32 stack_id;
- 	u32 pid;
+ .../devicetree/bindings/clock/imx95-blk-ctl.yaml   |  61 +++
+ drivers/clk/imx/Kconfig                            |   7 +
+ drivers/clk/imx/Makefile                           |   1 +
+ drivers/clk/imx/clk-imx95-blk-ctl.c                | 438 +++++++++++++++++++++
+ include/dt-bindings/clock/nxp,imx95-clock.h        |  32 ++
+ 5 files changed, 539 insertions(+)
+---
+base-commit: 22ba90670a51a18c6b36d285fddf92b9887c0bc3
+change-id: 20240228-imx95-blk-ctl-9ef8c1fc4c22
+
+Best regards,
 -- 
-2.44.0.rc1.240.g4c46232300-goog
+Peng Fan <peng.fan@nxp.com>
 
