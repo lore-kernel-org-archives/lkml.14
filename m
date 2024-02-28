@@ -1,162 +1,134 @@
-Received: from libero.it (smtp-18.italiaonline.it [213.209.10.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF1874431
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 19:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.209.10.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2997440E
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 19:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709148115; cv=none; b=RnFTsxgjY4D6rs7OQUEGh/pvM9EJrlMHIYQHzB813Wkf9TwDAElhnmsNTNaLd/E9TfkWZG1EB5r+qNoKUW+zDzlKdZDfAUnsfKvgfAA6CtMF+giNgPMdWQbZB3UyYXbQXLW+T32ENIBYFzH6x78oNZgDaiWYT/+Vd4LH1TWMDdM=
+	t=1709148141; cv=none; b=H+BQZ2ZRjiW8h4fBXVURMl/NYHbST7JtiftNQlDJnEheFuHoRpxasG6V1m+Y2kt+TyDL5/o+EaCv+OQjS2wB6IJUAvXqbj2JKMstxwWy81gjSDr8KKBGOug72gb2U8Oh4foI4VVYv3edTXjwYK8Iu1dW6oKKdagvxRDFJV7Rxlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709148115; c=relaxed/simple;
-	bh=2/xQVcpUfKY89HPCRFaCviw7T/ATDKBu5ZO5Q6qlbv4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mDV6LqBECzbimWAubPk4HNSGCvnmBMISmFhSvt8oiGJayR7uwlfpGDdt5ACLzgpoqDltox6kDKun3XBWEMns4PIZ+rubJhK3GLelqwgF+KuvrAvbr7U6OW0u5Z5VkXRQvWhOCM5btK/j107Er/rg8JrFN4rVfuz7lzLUFe3tuvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=libero.it; spf=pass smtp.mailfrom=libero.it; dkim=pass (2048-bit key) header.d=libero.it header.i=@libero.it header.b=dJ8ixu9x; arc=none smtp.client-ip=213.209.10.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=libero.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=libero.it
+	s=arc-20240116; t=1709148141; c=relaxed/simple;
+	bh=Ys3XowIf0bm7jRKzuc3PtxqeRx99FE+WClNAKD56B0M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K5KzamsKKq6gIMPXog49BlbbyW/iPo+VRIoZWW9r/dpaKRmQRCxAOK82YaI6lhCVIzgZfrwRtMJFQoH8f+4An3M0odyhdEf/OzR0MXaZxdgDN8bP9TkqdyAdr80r8K3eOHVT2DkcRz8PG6ElUVVco0yszbFOPcFiiAtEU/vpcZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GS7ODvLr; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=libero.it header.i=@libero.it header.b="dJ8ixu9x"
-Received: from [192.168.1.27] ([84.220.171.3])
-	by smtp-18.iol.local with ESMTPA
-	id fPSSrAlQ5L93EfPSSrxO42; Wed, 28 Feb 2024 20:19:13 +0100
-x-libjamoibt: 1601
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=libero.it; s=s2021;
-	t=1709147953; bh=QnVc41Vw/MytZeyexdJ1gTgi6wR39ywRKKBoBHj680w=;
-	h=From;
-	b=dJ8ixu9xmNhsLcqXVychkqIhappcQAp8glpWGeYRKdwFeH7Qnu1f+lggBVk7Jc2c4
-	 ky7YbRyfElBUT15VypuHso/LKUBa+EIMbA3tjGuMFgcNZJLq1Tq9vrVPl4J3L2vP2Z
-	 NehP7krhNrKYvJ2IR6ZBxkTvyPhF+gSWcnmm4kveXSzfPQ80w+Ke2+HDL05yTEJYzl
-	 XwKvJ4OYl2H0mKoICG4MUNB7vTxUvY4r+eWcazBU3eekdu/wFY3W3f0d62gNfePP0B
-	 pD4z+X12Do+KtYv0GqhpSBWolL+CwPteo/zDuWPDfb/wVSnbrNGC4rJIdVsCn1gDmf
-	 73jB/KlppweZg==
-X-CNFS-Analysis: v=2.4 cv=B7Ia0/tM c=1 sm=1 tr=0 ts=65df8731 cx=a_exe
- a=hciw9o01/L1eIHAASTHaSw==:117 a=hciw9o01/L1eIHAASTHaSw==:17
- a=IkcTkHD0fZMA:10 a=zCnXDZGV-rsmL1SA_eoA:9 a=QEXdDO2ut3YA:10
-Message-ID: <672e88f2-8ac3-45fe-a2e9-730800017f53@libero.it>
-Date: Wed, 28 Feb 2024 20:19:12 +0100
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GS7ODvLr"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-36519980c04so538565ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 11:22:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709148139; x=1709752939; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cWZCONUO1eBq93ur5BQyYMDhfKl8EM5yFU5z78+cztc=;
+        b=GS7ODvLrZ4WkXb2ylj9Rf3E1euju9QWLterM4AEx2bYAGFy2rrORH9vfuC9tFZO0By
+         cLddsajAj9eDh5NVIrUGEeLVOZJjMerOWUP9cDdxZjRvW/5+BGnr1znbzLtdjsIJx6Xl
+         WAJJBUyZKOCDN4elNbpazW6tcVnWpWhgfZHYw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709148139; x=1709752939;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cWZCONUO1eBq93ur5BQyYMDhfKl8EM5yFU5z78+cztc=;
+        b=NAhqcxFjwl5ZSbQStJ2s0GPImacbQS/Ghk6e0zofxuU4poDX2eqgF6SGgnnMJZPo/S
+         yXeD0JivTgjaf0EN7jVc8Y+SZtTQl20D9yYjSPzi8AUM8K+U1rwguhL6Ri6F1fOFSqgz
+         KRKaEUWI3PRsY3Xdu3LpwLJxJoUiZiuA79q6D5EMs5OBdPBH59xuKTINNiT7ow31QPMH
+         gYPhYJuBD9rmwdrzgEC9cXcc9qBSMPuWeUAH0Wi3M+OrclBeSaIwOz5IzbIJS/hNnuTR
+         +pXaCErSiljM+G9HGmzACGgysKPvFYfWXZgwkhwuAdDLIc0/vLyNuxuJL4zHpWvgizLJ
+         4bRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVd08Y9uZQ6M3NwSS3u6NGrhBP1oZodkGSeO++Lng/FO+OxM0XmgpNjp29n39rlcbY8BdVdi59S8vZx1Ij8d8Y1dDEt+hSrdsrTnahT
+X-Gm-Message-State: AOJu0YwHt6majYHKDG+htgOOuYOGydCPAQg7eJNG3m5KjYsq9qhHL4dv
+	LGTTLrIWJnwhqQCPkqZrpAXXzjtQhqgsXoyfi92++osYMxWfznW28tIpbvz6xA==
+X-Google-Smtp-Source: AGHT+IFqbcv66YZt2FKNF964iMhI6GTiYtKK3x/4hGk7YfuhA2JWmeUUh4jB5yMEezmNt7X9tFEO2w==
+X-Received: by 2002:a92:c5a9:0:b0:365:a9fd:1a7a with SMTP id r9-20020a92c5a9000000b00365a9fd1a7amr178874ilt.26.1709148139247;
+        Wed, 28 Feb 2024 11:22:19 -0800 (PST)
+Received: from localhost (144.57.222.35.bc.googleusercontent.com. [35.222.57.144])
+        by smtp.gmail.com with UTF8SMTPSA id x3-20020a92d643000000b003638f9a9debsm10233ilp.75.2024.02.28.11.22.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 11:22:18 -0800 (PST)
+Date: Wed, 28 Feb 2024 19:22:18 +0000
+From: Matthias Kaehlcke <mka@chromium.org>
+To: Javier Carrasco <javier.carrasco@wolfvision.net>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Helen Koike <helen.koike@collabora.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 8/8] usb: misc: onboard_hub: add support for XMOS
+ XVF3500
+Message-ID: <Zd-H6hVPv1poXoa1@google.com>
+References: <20240228-onboard_xvf3500-v5-0-76b805fd3fe6@wolfvision.net>
+ <20240228-onboard_xvf3500-v5-8-76b805fd3fe6@wolfvision.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: kreijack@inwind.it
-Subject: Re: [REGRESSION] LVM-on-LVM: error while submitting device barriers
-Content-Language: en-US
-To: Patrick Plenefisch <simonpatp@gmail.com>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
- Mikulas Patocka <mpatocka@redhat.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- regressions@lists.linux.dev, dm-devel@lists.linux.dev,
- linux-btrfs@vger.kernel.org
-References: <CAOCpoWc_HQy4UJzTi9pqtJdO740Wx5Yd702O-mwXBE6RVBX1Eg@mail.gmail.com>
- <CAOCpoWf3TSQkUUo-qsj0LVEOm-kY0hXdmttLE82Ytc0hjpTSPw@mail.gmail.com>
- <CAOCpoWeNYsMfzh8TSnFqwAG1BhAYnNt_J+AcUNqRLF7zmJGEFA@mail.gmail.com>
-From: Goffredo Baroncelli <kreijack@libero.it>
-In-Reply-To: <CAOCpoWeNYsMfzh8TSnFqwAG1BhAYnNt_J+AcUNqRLF7zmJGEFA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfOO9Lg10Vh7tBG+9Jztc8Unc4rdDDgR6F/QFGXRd/XEj/mZa1KA/dgldmapSAy81XrNXTTQP8r1n+By0Gxmdm/c/BH0AhwKBI3pIC+9d50HIB7NvNX3O
- v/WArD0gmEWPm5D5Whpz0j3+XBQtpOsinXkJIJzqdusMkcLEnnqKYgiX58/eQFV6zvxC4FpnLvaZSqqAyijnCF9D9eMkFHfXGUMDpXN/YDElPUSn0af/nrBG
- rLFeStdBZ4TgS3EUV+W0Omn+cq6c/XRd66BUpLv28H+6CUDazT0QXLoDcDplCp0U29zQLMavNy3fSTrwt3uG0ZE2p3X9VsQVTOrgVvSjBdaZdrN9rSb+oPuw
- dhlOY5UO7nv355jUDip50bIVRU089ePxpGLSdt9kvuWCLkBGGdU+NeoB9ZD4AxK8COSDiZF9BBHcV/sMPKAy7YojKFgVWAwEFeO6iDzIZ/OLVP78qOU09/Vq
- FgzAO9/usFFKZvdd1fAbSxj23FP0SKJcF+vyQYgppy1bIjZPIPrLI/Klgs9nbQf6sCwDF6QKLgnd+5pX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240228-onboard_xvf3500-v5-8-76b805fd3fe6@wolfvision.net>
 
-On 28/02/2024 18.25, Patrick Plenefisch wrote:
-> I'm unsure if this is just an LVM bug, or a BTRFS+LVM interaction bug,
-> but LVM is definitely involved somehow.
-> Upgrading from 5.10 to 6.1, I noticed one of my filesystems was
-> read-only. In dmesg, I found:
+On Wed, Feb 28, 2024 at 02:51:35PM +0100, Javier Carrasco wrote:
+> The XMOS XVF3500 VocalFusion Voice Processor[1] is a low-latency, 32-bit
+> multicore controller for voice processing.
 > 
-> BTRFS error (device dm-75): bdev /dev/mapper/lvm-brokenDisk errs: wr
-> 0, rd 0, flush 1, corrupt 0, gen 0
-> BTRFS warning (device dm-75): chunk 13631488 missing 1 devices, max
-> tolerance is 0 for writable mount
-> BTRFS: error (device dm-75) in write_all_supers:4379: errno=-5 IO
-> failure (errors while submitting device barriers.)
-> BTRFS info (device dm-75: state E): forced readonly
-> BTRFS warning (device dm-75: state E): Skipping commit of aborted transaction.
-> BTRFS: error (device dm-75: state EA) in cleanup_transaction:1992:
-> errno=-5 IO failure
+> This device requires a specific power sequence, which consists of
+> enabling the regulators that control the 3V3 and 1V0 device supplies,
+> and a reset de-assertion after a delay of at least 100ns. Such power
+> sequence is already supported by the onboard_hub driver, and it can be
+> reused for non-hub USB devices as well.
+
+Please update the commit message, the onboard_hub driver no longer
+exists as such with the other patches of this series.
+
+> Once in normal operation, the XVF3500 registers itself as a USB device,
+> and it does not require any device-specific operations in the driver.
 > 
-> At first I suspected a btrfs error, but a scrub found no errors, and
-> it continued to be read-write on 5.10 kernels.
+> [1] https://www.xmos.com/xvf3500/
 > 
-> Here is my setup:
+> Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
+
+Acked-by: Matthias Kaehlcke <mka@chromium.org>
+
+> ---
+>  drivers/usb/misc/onboard_usb_dev.c | 2 ++
+>  drivers/usb/misc/onboard_usb_dev.h | 8 ++++++++
+>  2 files changed, 10 insertions(+)
 > 
-> /dev/lvm/brokenDisk is a lvm-on-lvm volume. I have /dev/sd{a,b,c,d}
-> (of varying sizes) in a lower VG, which has three LVs, all raid1
-> volumes. Two of the volumes are further used as PV's for an upper VGs.
-> One of the upper VGs has no issues. The non-PV LV has no issue. The
-> remaining one, /dev/lowerVG/lvmPool, hosting nested LVM, is used as a
-> PV for VG "lvm", and has 3 volumes inside. Two of those volumes have
-> no issues (and are btrfs), but the last one is /dev/lvm/brokenDisk.
-> This volume is the only one that exhibits this behavior, so something
-> is special.
-> 
-> Or described as layers:
-> /dev/sd{a,b,c,d} => PV => VG "lowerVG"
-> /dev/lowerVG/single (RAID1 LV) => BTRFS, works fine
-> /dev/lowerVG/works (RAID1 LV) => PV => VG "workingUpper"
-> /dev/workingUpper/{a,b,c} => BTRFS, works fine
-> /dev/lowerVG/lvmPool (RAID1 LV) => PV => VG "lvm"
-> /dev/lvm/{a,b} => BTRFS, works fine
-> /dev/lvm/brokenDisk => BTRFS, Exhibits errors
+> diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
+> index df0ed172c7ec..50f84c5278a2 100644
+> --- a/drivers/usb/misc/onboard_usb_dev.c
+> +++ b/drivers/usb/misc/onboard_usb_dev.c
+> @@ -405,6 +405,7 @@ static struct platform_driver onboard_dev_driver = {
+>  #define VENDOR_ID_REALTEK	0x0bda
+>  #define VENDOR_ID_TI		0x0451
+>  #define VENDOR_ID_VIA		0x2109
+> +#define VENDOR_ID_XMOS		0x20B1
+>  
+>  /*
+>   * Returns the onboard_dev platform device that is associated with the USB
+> @@ -497,6 +498,7 @@ static const struct usb_device_id onboard_dev_id_table[] = {
+>  	{ USB_DEVICE(VENDOR_ID_TI, 0x8142) }, /* TI USB8041 2.0 */
+>  	{ USB_DEVICE(VENDOR_ID_VIA, 0x0817) }, /* VIA VL817 3.1 */
+>  	{ USB_DEVICE(VENDOR_ID_VIA, 0x2817) }, /* VIA VL817 2.0 */
+> +	{ USB_DEVICE(VENDOR_ID_XMOS, 0x0013) }, /* XVF3500 */
 
-I am a bit curious about the reasons of this setup. However I understood that:
+nit: be a bit more specific? e.g. XVF3500 Voice Processor, or XMOS XVF3500
 
-/dev/sda -+                +-- single (RAID1) -> ok             +-> a   ok
-/dev/sdb  |                |                                    |-> b   ok
-/dev/sdc  +--> [lowerVG]>--+-- works (RAID1) -> [workingUpper] -+-> c   ok
-/dev/sdd -+                |
-                            |                       +-> a          -> ok
-                            +-- lvmPool -> [lvm] ->-|
-                                                    +-> b          -> ok
-                                                    |
-                                                    +->brokenDisk  -> fail
-
-[xxx] means VG, the others are LVs that may act also as PV in
-an upper VG
-
-So, it seems that
-
-1) lowerVG/lvmPool/lvm/a
-2) lowerVG/lvmPool/lvm/a
-3) lowerVG/lvmPool/lvm/brokenDisk
-
-are equivalent ... so I don't understand how 1) and 2) are fine but 3) is
-problematic.
-
-Is my understanding of the LVM layouts correct ?
-
-
-> 
-> After some investigation, here is what I've found:
-> 
-> 1. This regression was introduced in 5.19. 5.18 and earlier kernels I
-> can keep this filesystem rw and everything works as expected, while
-> 5.19.0 and later the filesystem is immediately ro on any write
-> attempt. I couldn't build rc1, but I did confirm rc2 already has this
-> regression.
-> 2. Passing /dev/lvm/brokenDisk to a KVM VM as /dev/vdb with an
-> unaffected kernel inside the vm exhibits the ro barrier problem on
-> unaffected kernels.
-
-Is /dev/lvm/brokenDisk *always* problematic with affected ( >= 5.19 ) and
-UNaffected ( < 5.19 ) kernel ?
-
-> 3. Passing /dev/lowerVG/lvmPool to a KVM VM as /dev/vdb with an
-> affected kernel inside the VM and using LVM inside the VM exhibits
-> correct behavior (I can keep the filesystem rw, no barrier errors on
-> host or guest)
-
-Is /dev/lowerVG/lvmPool problematic with only "affected" kernel ?
-
-[...]
-
--- 
-gpg @keyserver.linux.it: Goffredo Baroncelli <kreijackATinwind.it>
-Key fingerprint BBF5 1610 0B64 DAC6 5F7D  17B2 0EDA 9B37 8B82 E0B5
-
+The other entries were implicitly hubs since this was the 'onboard_hub'
+driver. It wouldn't be a bad idea to add 'hub' to these entries in the
+patch that 'renames' the driver.
