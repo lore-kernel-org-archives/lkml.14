@@ -1,33 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97227364A4;
-	Wed, 28 Feb 2024 09:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD96364A0;
+	Wed, 28 Feb 2024 09:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709114285; cv=none; b=MNISCmB6Cq6TfXr80USY3sq9vkbOh6fYnsYUyPriUYAy8RWrUibEJMAuK6cWrT8yh8FV7No2yT/zAKP+8WrlauJZadQFSMAcHKYOtHXIrMtZW01RKIf3YIlBWHJ35ObsnL9mI35E8zb9XEh42RpttfGjdpcE1ReK8iYqJOOcoT0=
+	t=1709114286; cv=none; b=TdivwdPNqdg+10ER5qDNEP3VWwU+9Gj0u8ShmYKwbdJ2KA8EFqzGxTr8UIuILCiEechzKdsHS41Jb9aSyAsRRUckI8+kqMszIW0dgqTW7OkqwC1wa8kUzSIqESyMZip6CL2kA+G7Uo+oY5aHeO2eqdb9lceVnUKHfjQnp3tEAMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709114285; c=relaxed/simple;
-	bh=q7uO3PIAUbv5s0zNPk/hs5o0FMrE1BTaxQJaQU7AWy8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mz+pwrZY0apY8/g6d0Q6uxO4mcQnxlZ3FqI4FQO+AJVVezN3OQLvtuxzSsYD88Pv6N1CwHjZcRQQpndEnHbuWQAwGZ2B3g+EiB3rWgPhxZ1sACXgcxDIsZLeKtscxIGFS3/p3P9VZ39DB5XBATqoDCxR6U0E8jRIw0ng93D1XUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TXG43PxJ; arc=none smtp.client-ip=217.70.183.199
+	s=arc-20240116; t=1709114286; c=relaxed/simple;
+	bh=VLnw7CFtD6tkLMRTwnOleArMwXHH7DdQHAUw3/q5log=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=b5iqoZhiu0d83/Ji1rdyo19zii5jbstg6j3f3ejI8uwog5cd2n+BhGrcpNMqm5JBF/J4nptp31wr4sqGivSX6dSuzGHi//ZEJEvqkwO/exp9qLYR6wfwnccJviAWG7UFxJpcyi8VSGf5KSRTs4EmbFbautkioDHY/oWRB/sZg5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WvgoDo1t; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TXG43PxJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 25ADFFF803;
-	Wed, 28 Feb 2024 09:57:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WvgoDo1t"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 710CCFF809;
+	Wed, 28 Feb 2024 09:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709114280;
+	t=1709114282;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zSLYn7rXTUnchKC2ZY6W8KUHuCnCdXr699wv9CBj8ZM=;
-	b=TXG43PxJ7e8avkmxqC16QU8f3o/nqVSFbG1YvLqNcuOXIGEtDTOwEGFmvL6SKkCONRk8VJ
-	j5XTKcWeBIrwY+eYYZAXgFRBNJzjpscmwrL2ZYHIYbgL6uePdfNF92ey53m/amwdhgdmpM
-	FRafWylvIz6pHzJidPhk7TX5r8bpSWsb/IZP5GWxzK8F96T8tV7EY5rPOwSoT2HezIwQtI
-	L3yo/gIylrReFlaootHXLJlsEGdDDxqUV0ezyxL7ujFlJ11txYtU9oOi79jkY5NVLqr+Fq
-	RtzKcT1cz+VawBIFonDxF6B+jOIwo3aswyGv+CqVd3HoYv9ZzbEez9nKQqbwkA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W+3QsX0HHeSUD5lWMhESk/zPMXGbCqeoiUeL3QgQygQ=;
+	b=WvgoDo1t4zzKfbfna022CiqaJ/MT7QH2lgX24nyvkTfQukuLwPkAWCrRWi0H97DvTv8nA5
+	UJJy5h+Q3Zsq34fV4jh72TCEr/JHS/Nnxf0J47m3dXuLU2cxw+qnaE4kA2F7hInf0WHqKs
+	NSzQxMQVhhifq8Uk1n7wr7rYbx+ZmFMtjwSEC0ZUeJzVyE61ezUetze8Ts8DVMRGD4oYxG
+	L7SyY4WFL6pNYMjtDe1+255Q2468FU6Xx4mCNYBWshU5LFGBc5+g/zdqPhgcN/biu+F322
+	uhI1PyhBNzZEOjqUYwZPf4tVPjhYF5yTfvT+oSI7EIpNc0z9YIDVvatczth+mg==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -42,10 +44,12 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Florian Fainelli <f.fainelli@gmail.com>,
 	Heiner Kallweit <hkallweit1@gmail.com>,
 	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH net-next v2 0/2] doc: sfp-phylink: update the porting guide
-Date: Wed, 28 Feb 2024 10:57:52 +0100
-Message-ID: <20240228095755.1499577-1-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v2 2/2] net: phylink: clean the pcs_get_state documentation
+Date: Wed, 28 Feb 2024 10:57:54 +0100
+Message-ID: <20240228095755.1499577-3-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240228095755.1499577-1-maxime.chevallier@bootlin.com>
+References: <20240228095755.1499577-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,25 +59,32 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hello everyone,
+commit 4d72c3bb60dd ("net: phylink: strip out pre-March 2020 legacy code")
+dropped the mac_pcs_get_state ops in phylink_mac_ops in favor of
+dedicated PCS operation pcs_get_state. However, the documentation for
+the pcs_get_state ops was incorrectly converted and now self-references.
 
-This small series updates the Phylink porting guide, mentionning PCS
-handling, suported_interfaces and mac_capabilities.
+Drop the extra comment.
 
-The first patch is related to the dedicated documentation, whil the
-second patch fixes a small discrepancy in the phylink code
-documentation.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ include/linux/phylink.h | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Link to V1: https://lore.kernel.org/netdev/20240220160406.3363002-1-maxime.chevallier@bootlin.com/
-
-Maxime Chevallier (2):
-  doc: sfp-phylink: update the porting guide with PCS handling
-  net: phylink: clean the pcs_get_state documentation
-
- Documentation/networking/sfp-phylink.rst | 146 ++++++++++++++++++++---
- include/linux/phylink.h                  |   3 -
- 2 files changed, 132 insertions(+), 17 deletions(-)
-
+diff --git a/include/linux/phylink.h b/include/linux/phylink.h
+index 6ba411732a0d..9a57deefcb07 100644
+--- a/include/linux/phylink.h
++++ b/include/linux/phylink.h
+@@ -480,9 +480,6 @@ void pcs_disable(struct phylink_pcs *pcs);
+  * negotiation completion state in @state->an_complete, and link up state
+  * in @state->link. If possible, @state->lp_advertising should also be
+  * populated.
+- *
+- * When present, this overrides pcs_get_state() in &struct
+- * phylink_pcs_ops.
+  */
+ void pcs_get_state(struct phylink_pcs *pcs,
+ 		   struct phylink_link_state *state);
 -- 
 2.43.2
 
