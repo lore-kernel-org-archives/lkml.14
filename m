@@ -1,45 +1,46 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2064.outbound.protection.outlook.com [40.107.102.64])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FC5366;
-	Wed, 28 Feb 2024 00:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14D579E5;
+	Wed, 28 Feb 2024 00:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709080349; cv=fail; b=ggqcG+hn+/Clt+ZxlrDr7hZkJNvWCnQiqvcF9/2PcecYsiN4lEK7r4tSJFiv4kVbyj15PN3pj4JQ2bWT1RacniJOjJF7+Q1Ri0l81S03fjAp2TKh7KyFFB9JP/Q4AZM/haAtSHK+XiiTksXXrJiLS2XLLN2OO/AnLkT4IQCBYXo=
+	t=1709080355; cv=fail; b=QIZ4KoywndPINjHVOe8+xPPJnTnIvnmj16TkRSfObsAQvjNT2GKI4nPJY+PMrjoWD+A+7feMDMz25IaQJ0McgaOGIyHgms00gJ0YwxS1iOkQcwMExTpAL3UvHd4nDpo7Kx4gAyJrZgXfMo8PGGfIDCFVUbS3mgsLcTW2HKFYM/A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709080349; c=relaxed/simple;
-	bh=oPoogPMOgVO9J09hUOPwpoY2C2JspsY/w5n1c/rOV9E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mjkI2lMGoSAXsU7n3FGNGTgDdS9/dtkARxITSZrgziOnJ1+/p1+ZspkCKVuSp2PKHtrD/6MjLDNVT6oYeWODYk7gt/+bsG2PxYwYzXT0oSFIkwZio+v+7tUU3iJ4hve6ekhTJuI974CVQsKt7PWwi7zpA9xv69Y94Aoiu+/TAR8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FbOFIMaV; arc=fail smtp.client-ip=40.107.102.64
+	s=arc-20240116; t=1709080355; c=relaxed/simple;
+	bh=nZ+eQdgS5SXO1P0UoXwfHFI1Lne+ke6IhtGbHEKYQnM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oAD/6keqDxKxITLacl2EKWiBJCWldUfL3U8Pw4dMbCXLQS5R8dh3oA8fkFT72nHamJ0U8klcIRZGWdhkNQEXKgH6Fp6U0Sij9An3JUBTKCrWm7Izh0YNfG+dY1PhL5JO4U+UzWyjJ6T6bRAKds+1Jt5oWsDW1/hrh7lUC+y4a7g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=G17SRz60; arc=fail smtp.client-ip=40.107.244.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FbOFIMaV"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="G17SRz60"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OmSNNugJQmJlqZRZO3MMmG66YJg8YIvO8cY/AGW9mtNHPJwJNnqX6FAx37x70iY8B7F6rz+8D+LGGOFLj1gqdRJ09TMLmiQciLkYCWQi0X/bMGbJ4Budx43iAwnHpVSXqiLL/oBdbxg53C2rpRAWIKKXK5fw7H9ti5FeJSJsp2UmnEkY7pcZWxaAMFwgULhZMNSGh7q8/WiCJ1rfYYtvymf6Tl41lc+9I9olg+K375EvxJbxlYugTsxKwarW1IbSaduy1PafF0D2u3SJ6BrjBrBhjNDppMxsoQgZKeD3ezMLYvPhk17nr+B3yvN4YkWoQw4LdsfyHAxRP3QyFpwc+A==
+ b=mFcffwQ8UY8ZKgQl/MG8gatgJDFlAVcFWgccRVdwSPIGXfgv29qPJXSmuxli1nN6Iegu77GfFF+qd+1Fj0O266gEcNe/Oawb/3TN3QqvZcaY4fZ4B5fAS0D1eoW7CgLTvLFxsmU9H6UETvL9WGEl6yMwlP/HRCLFITnPC1tiRiksTh848hctNe76H649P26rw79QS471fcP75NyfI9BoVOoECWK5KaeGViHadiTXgdK1MEF2aNw7ynHMKNMYEi7hdYP1vsbl3CvbiV42aJEjDLhdq4gGQMz0cr+ENBrTF76ngfWMI9esnmWjdQP32M2LtnP+UrDCiX28opPVNa3Icw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ln8tPIl6lFxhh/jrJP1VIgAM4AqeX5LMSgbkjs2lRFc=;
- b=MkvmBtlmIesxt33VqZ65tJmC3Jv7MdvC3p50ia+aLydcVzEGykZsVNcA9TgUjeiYLg8E/T57pb9zGXraRjN2qe3nu+pj6dVaUG+Y5cptHgUljAnoZBv9HKn7Yr3fgbeoETd/PJCPZPBfbDg75EP4/MSUBEOPUkobdJLEkYvc9YErXCqxdXVwVgIuxrtTE7IVqIZ/X0HvNv7MAtqtd1LN7PU98fvO7CQhK5EVX+YS5DRqLsrZumvhmeoAA6NxS5MJ7mHVhg4bFPlPsx5ahvJnEAEP9TLf8UTMY+7+9OAUgjx2V9J+kTCiJSrBL3m+JPeEWBp6iwtiAlZPFwEWO8dDIg==
+ bh=ws91NiYtg4bM+b9Kg5rN+YdWJ+f7mRFZ+d6ixZOP/rI=;
+ b=njHIxZBaybt5tewWugxUvf+x2GGMuIWDdjhTpZl4bzwvVQBee4Y0RRjeELKA45TD9FR4saih1jr4ypdIhEE/vsY4+OmIcUM1+CBDu/8QU9LCku0Dn9C4hmD+U0siocx6ecmoV19jWySBek9D4q0Ge2w0YvUNz+Hj7mSQiSA3ggYRToVExgNVQ2ZaMr7WE+7aASpSh3Z9tLn89YXz0oA+Ljv1GaQ0uF9Q+V7xLYhJT5PF23EPv8ssWT4EP0FiXqB9XYn0krjMX+3qfrSV3KjvtT3xeQWJCMYC6y3eRFklYsaChmH8Q0ft8zwTaXXVzP05rYrm7i6DGTBUvDyVvhs2Dw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=ziepe.ca smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ln8tPIl6lFxhh/jrJP1VIgAM4AqeX5LMSgbkjs2lRFc=;
- b=FbOFIMaVB2AHhuBuUdHELXErgssrCOfLQLHYa1qxrmWG4aBvy93KA/GKcUEccnJEwakrhBovGU1PTrwvQQZPybTEFPnubwuoPHh6BmRWlw65EzWXUWmUwT6+nbT2e2KX9QmAE0JteSXdvHdxsJkBzWFBAPZbIwmcfp/Hq9XJASY=
-Received: from SJ0PR05CA0051.namprd05.prod.outlook.com (2603:10b6:a03:33f::26)
- by SJ0PR12MB5471.namprd12.prod.outlook.com (2603:10b6:a03:300::14) with
+ bh=ws91NiYtg4bM+b9Kg5rN+YdWJ+f7mRFZ+d6ixZOP/rI=;
+ b=G17SRz60tjGEvVqtay+VTJ4kS1tW2L4g9WBA9ijbJDWRvOTp7UJAkZfuJvuGjyhoTmyD6yrql1lpgyJCzv0A4GXEZkFpRwIMIVs1uif8Q+BrCQdxO30C+T6rXZUSNh0hYWWbYzlfjTcFkKxH2pKvsoipZvUUhjToQ9ObxvPk+2k=
+Received: from SJ0PR03CA0031.namprd03.prod.outlook.com (2603:10b6:a03:33e::6)
+ by CH3PR12MB9432.namprd12.prod.outlook.com (2603:10b6:610:1c7::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Wed, 28 Feb
- 2024 00:32:23 +0000
-Received: from CO1PEPF000044EE.namprd05.prod.outlook.com
- (2603:10b6:a03:33f:cafe::65) by SJ0PR05CA0051.outlook.office365.com
- (2603:10b6:a03:33f::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.29 via Frontend
- Transport; Wed, 28 Feb 2024 00:32:23 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Wed, 28 Feb
+ 2024 00:32:25 +0000
+Received: from CO1PEPF000044F1.namprd05.prod.outlook.com
+ (2603:10b6:a03:33e:cafe::90) by SJ0PR03CA0031.outlook.office365.com
+ (2603:10b6:a03:33e::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.50 via Frontend
+ Transport; Wed, 28 Feb 2024 00:32:25 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,23 +48,25 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044EE.mail.protection.outlook.com (10.167.241.68) with Microsoft
+ CO1PEPF000044F1.mail.protection.outlook.com (10.167.241.71) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Wed, 28 Feb 2024 00:32:22 +0000
+ 15.20.7292.25 via Frontend Transport; Wed, 28 Feb 2024 00:32:25 +0000
 Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 27 Feb
- 2024 18:32:21 -0600
+ 2024 18:32:23 -0600
 From: Brett Creeley <brett.creeley@amd.com>
 To: <jgg@ziepe.ca>, <yishaih@nvidia.com>,
 	<shameerali.kolothum.thodi@huawei.com>, <kevin.tian@intel.com>,
 	<alex.williamson@redhat.com>, <kvm@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
 CC: <shannon.nelson@amd.com>, <brett.creeley@amd.com>
-Subject: [PATCH v2 vfio 0/2] vfio/pds: Fix and simplify resets
-Date: Tue, 27 Feb 2024 16:32:03 -0800
-Message-ID: <20240228003205.47311-1-brett.creeley@amd.com>
+Subject: [PATCH v2 vfio 2/2] vfio/pds: Refactor/simplify reset logic
+Date: Tue, 27 Feb 2024 16:32:05 -0800
+Message-ID: <20240228003205.47311-3-brett.creeley@amd.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240228003205.47311-1-brett.creeley@amd.com>
+References: <20240228003205.47311-1-brett.creeley@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,46 +78,118 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044EE:EE_|SJ0PR12MB5471:EE_
-X-MS-Office365-Filtering-Correlation-Id: b2f84a90-0239-4764-2590-08dc37f4bb1f
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F1:EE_|CH3PR12MB9432:EE_
+X-MS-Office365-Filtering-Correlation-Id: e0c8b115-d7c4-4244-7324-08dc37f4bc5f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	QISUZPfsryPI8IMd4msqwbMucAUGwhQmZ2SOCZp9ZTT5zKAkAFnJKW1+ryAky4qg1GEziVIa5nFgTHZcuhPD8LyVizehU7ULG/wO7Rb6go9e2s3jxojKG7U+z8lCFJiZ7sbJX5ndY1uQZwagUDb93+bO6xgtmjN/KTQiwRxqqydBk0JV2LUQ3fNHoI3GfdyrwjyokF25pRrTxno2nCUR5TegP+ghAxtG0vI0xzseiiTAVsaZp+eVVBPOecjOrxZx6GZ0E6n2qxZFVIng6jTW7INCJvb9CdC5DSKRhFMq32U/h9+85AE949fXD2dMgsr3JG09IKRCFfKuz7QQ93u+0k6LxKteKqpkcWRX4glVDKrR1zsKZY1p4TxmY7Ek88JlVcDGIJjqhD6gMtr5OZD9Cxch2Xh/1ISljXM3nt2SYI7buPd+KPYvgjjJSPjJxDdK+fFwou0o727YcHcqLNnxshXAPuy9AJy3I7UdOrxUEgAO3w+l8q1lCdwmOXVsJCX70fNWil3ymbUbk7rCWFXRd1jdjbw9tDmwy0XW4e1DHtXnUrDWod7/z0CWmMME9KW+GXui+OaSscaVUtQ+pVzlvkyUGLGhiWH1JAyrodUk0h1qzDiROWOWvitJQ0opjNldBIjl3z6btwFnALD2FYOr8zxw1vQAo4LNNiAYuiF9TEz8Qv/f12Fh2RnXBoUfkECs4izD6jHYxoxd0bl9NLVtvpGJobVsHYrRO+CkTPy3k45zdTZc/wiVmX6I9BBp6Sm3
+	8X/Gf+OeuLAwFsIQUYFvQMpUP1lWsnGGHp0omQr3TyXNlSD6yWi9y9aUBAEtet+bIV0lAzX5zehtao4Z32i6OGYihyfHpd/PKLR5C/xespIfLwxxEOrEx93C0JkhRw31xy/r8ajRUYbeQtvnteEcGUrbgez803W/5GlNKhTgLhJLK422C9hjMklNC+5dJqbckPsLToDeKHIQibO/60DzlVL2Og+cUI6tQJ28ghNFHXATVNtM5G/qBVZE6FGTXwu1xp5vtTsw3/+QbTpjYK5qyxRariZSNdBR5bxktdthtsadjzEWFSvHbCIxtauc1yjJipj9vBE3U4v2X6UDkVP6mdS8Es1ziFmGXhIYNWKaATANjz7capnjMMaN55ET6PQoM+q2f1H/7GZ0lD5jgUwFAMbdbZxrHjMBzHce7IKOd7hkW+43g0/P+nGqkXwvup/39DLdMx1xzMiCNpkWIxP9forenbGE/C0oHEzcdGUuXl5S7bbN94gIyPLYUAyWusTJDrW/l5Iu8LkSqDdj/0491E9stCE1hlqhEXEMXxrJ9nZTKToQXt+3IunWPaX83gXOk4KHpADJDKasz+dvnxStlkLAA0sBL73H5qPI/BKIg5PeE8XVb5GQCjCg7fmkFmaXI+Gnt6nk6SSCxy+dtgh+7+4HPDWxSE2/IEYx1nGdkaFx6vpNaX1IhzakWoKVs7hrGTDGmxKAu7AvLBzBAf84XVlAg+6z20/F3pwVGoWi9jau4O1peKKNzgp89AN9B7iE
 X-Forefront-Antispam-Report:
 	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 00:32:22.8977
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 00:32:25.0125
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2f84a90-0239-4764-2590-08dc37f4bb1f
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0c8b115-d7c4-4244-7324-08dc37f4bc5f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044EE.namprd05.prod.outlook.com
+	CO1PEPF000044F1.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5471
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9432
 
-This small series contains a fix and readability improvements for
-resets.
+The current logic for handling resets is more complicated than it needs
+to be. The deferred_reset flag is used to indicate a reset is needed
+and the deferred_reset_state is the requested, post-reset, state. The
+source of the requested reset isn't immediately obvious. Improve
+readability by replacing deferred_reset_state with deferred_reset_type,
+which can be either PDS_VFIO_DEVICE_RESET (initiated/requested by the
+DSC) or PDS_VFIO_HOST_RESET (initiated/requested by the VMM).
 
-v2:
-- Split single patch into 2 patches
-- Improve commit messages
-
-v1:
-https://lore.kernel.org/kvm/20240126183225.19193-1-brett.creeley@amd.com/
-
-Brett Creeley (2):
-  vfio/pds: Always clear the save/restore FDs on reset
-  vfio/pds: Refactor/simplify reset logic
-
+Signed-off-by: Brett Creeley <brett.creeley@amd.com>
+Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
+---
  drivers/vfio/pci/pds/pci_drv.c  |  2 +-
- drivers/vfio/pci/pds/vfio_dev.c | 14 +++++++-------
+ drivers/vfio/pci/pds/vfio_dev.c | 10 +++++-----
  drivers/vfio/pci/pds/vfio_dev.h |  7 ++++++-
- 3 files changed, 14 insertions(+), 9 deletions(-)
+ 3 files changed, 12 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/vfio/pci/pds/pci_drv.c b/drivers/vfio/pci/pds/pci_drv.c
+index a34dda516629..4ac3da7abd32 100644
+--- a/drivers/vfio/pci/pds/pci_drv.c
++++ b/drivers/vfio/pci/pds/pci_drv.c
+@@ -57,7 +57,7 @@ static void pds_vfio_recovery(struct pds_vfio_pci_device *pds_vfio)
+ 	if (deferred_reset_needed) {
+ 		mutex_lock(&pds_vfio->reset_mutex);
+ 		pds_vfio->deferred_reset = true;
+-		pds_vfio->deferred_reset_state = VFIO_DEVICE_STATE_ERROR;
++		pds_vfio->deferred_reset_type = PDS_VFIO_DEVICE_RESET;
+ 		mutex_unlock(&pds_vfio->reset_mutex);
+ 	}
+ }
+diff --git a/drivers/vfio/pci/pds/vfio_dev.c b/drivers/vfio/pci/pds/vfio_dev.c
+index a286ebcc7112..1a791bef5de1 100644
+--- a/drivers/vfio/pci/pds/vfio_dev.c
++++ b/drivers/vfio/pci/pds/vfio_dev.c
+@@ -34,11 +34,12 @@ void pds_vfio_state_mutex_unlock(struct pds_vfio_pci_device *pds_vfio)
+ 		pds_vfio->deferred_reset = false;
+ 		pds_vfio_put_restore_file(pds_vfio);
+ 		pds_vfio_put_save_file(pds_vfio);
+-		if (pds_vfio->state == VFIO_DEVICE_STATE_ERROR) {
++		if (pds_vfio->deferred_reset_type == PDS_VFIO_DEVICE_RESET) {
+ 			pds_vfio_dirty_disable(pds_vfio, false);
++			pds_vfio->state = VFIO_DEVICE_STATE_ERROR;
++		} else {
++			pds_vfio->state = VFIO_DEVICE_STATE_RUNNING;
+ 		}
+-		pds_vfio->state = pds_vfio->deferred_reset_state;
+-		pds_vfio->deferred_reset_state = VFIO_DEVICE_STATE_RUNNING;
+ 		mutex_unlock(&pds_vfio->reset_mutex);
+ 		goto again;
+ 	}
+@@ -50,7 +51,7 @@ void pds_vfio_reset(struct pds_vfio_pci_device *pds_vfio)
+ {
+ 	mutex_lock(&pds_vfio->reset_mutex);
+ 	pds_vfio->deferred_reset = true;
+-	pds_vfio->deferred_reset_state = VFIO_DEVICE_STATE_RUNNING;
++	pds_vfio->deferred_reset_type = PDS_VFIO_HOST_RESET;
+ 	if (!mutex_trylock(&pds_vfio->state_mutex)) {
+ 		mutex_unlock(&pds_vfio->reset_mutex);
+ 		return;
+@@ -194,7 +195,6 @@ static int pds_vfio_open_device(struct vfio_device *vdev)
+ 		return err;
+ 
+ 	pds_vfio->state = VFIO_DEVICE_STATE_RUNNING;
+-	pds_vfio->deferred_reset_state = VFIO_DEVICE_STATE_RUNNING;
+ 
+ 	vfio_pci_core_finish_enable(&pds_vfio->vfio_coredev);
+ 
+diff --git a/drivers/vfio/pci/pds/vfio_dev.h b/drivers/vfio/pci/pds/vfio_dev.h
+index e7b01080a1ec..19547fd8e956 100644
+--- a/drivers/vfio/pci/pds/vfio_dev.h
++++ b/drivers/vfio/pci/pds/vfio_dev.h
+@@ -10,6 +10,11 @@
+ #include "dirty.h"
+ #include "lm.h"
+ 
++enum pds_vfio_reset_type {
++	PDS_VFIO_HOST_RESET = 0,
++	PDS_VFIO_DEVICE_RESET = 1,
++};
++
+ struct pds_vfio_pci_device {
+ 	struct vfio_pci_core_device vfio_coredev;
+ 
+@@ -20,7 +25,7 @@ struct pds_vfio_pci_device {
+ 	enum vfio_device_mig_state state;
+ 	struct mutex reset_mutex; /* protect reset_done flow */
+ 	u8 deferred_reset;
+-	enum vfio_device_mig_state deferred_reset_state;
++	enum pds_vfio_reset_type deferred_reset_type;
+ 	struct notifier_block nb;
+ 
+ 	int vf_id;
 -- 
 2.17.1
 
