@@ -1,136 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3806EF13;
-	Wed, 28 Feb 2024 16:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A376EEFD;
+	Wed, 28 Feb 2024 16:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709138572; cv=none; b=XSwFjPAalmM2zy+H/SgGqjvBPymiwGuez5rD9eMPMTAMsx4bcqVoivo4kaDm65lVGnbzi6b+siR/oqmz1oPSh2pLfvgQPVseaV3dccZNNMI+pZHtmVQnHm88M8irqQQwcbPF/JYSp/Sr0v5T7DMt8Nf8sY/rcqAwmf/hasoyQJg=
+	t=1709138635; cv=none; b=hunHZ4Wd/biEcZ+SI1bv8V40P2fGYoF2soZmHk27wiM5z6wAc1r5jUvHcrmNkm0+nIuhEIlabfZ46RpCZCAnHzc+sJCOyjxeOkZ4CgWyNzOXI6bHv9KF2F3sS7EEYWbxWXoemXDmixz4nf6PdTtK+au4u9YsV6rBNjgEXqnPFVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709138572; c=relaxed/simple;
-	bh=w34PS7US7MJmkyMNpW5sS+Wml2/zjKiX667GmM7Bcmg=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=e2ThVXdVMLO/wzCKL3f+vxOLX2I767AqbH3lzO4+1+5ML0Kzg/PawQesQiDE/IbloZ2O62s7hsVc0w6ZmGztGGnsy2KqCY8tdrMOlnCD3kDQ81UhE8ShpxjEOzN1Kd6F86qR7bPq/2AjFJyaLBC9qO1mjcd4ITUiocx38PKJuTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnmEeXzq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709138635; c=relaxed/simple;
+	bh=FYKCx/CB7lBAZml9S7q6VnA/X2Dc69iuw7PNmS0oyIY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e7I0DLjDMG3iaHDU4kN1iY0XMKltMydv6hoIDfxb4LCmHoRKjyMnq6N30n7y5YEH8HFQMFffbCeC45EomwoU5N3liNvogLlPdvGGkp+qNcChyaxNQ6eBo/YAubb3byObPiLTGpDSVwqSRoI3XJ8ZcelsSbCXQpTUJAGx5/UT9nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=YmRLWnyh; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnmEeXzq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7927CC433F1;
-	Wed, 28 Feb 2024 16:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709138571;
-	bh=w34PS7US7MJmkyMNpW5sS+Wml2/zjKiX667GmM7Bcmg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=DnmEeXzqBJtCFoixO9DkqqjWAPGtxg9babn+o5HoiUfnrqph4SsxsoslsgunXiyvF
-	 xWKGL9W/NIcNeKlhfBePUOpqVOpJ7dK+Od5dVOZCnphgN9OZigR7/vM8WGP44geT9b
-	 bsIQ0QCAc0DZeVicX0b7G6IZaHLmZfEmw2PQ8Y0CIWktdsOAu18OhzIq5lhMaxK0Hc
-	 vMze6FuWTqdn/9TBe5GGeAxMnWv9Xc1DHibhHpWOjDTTu7zrlYmwzZvGKgHNyOUYUL
-	 ws/+8oFvijUgNzEGSJ1lY98egoQOlM4u3ObHH85Ht0Nl/3UKR/TdqQmvI2Mh6czEgH
-	 /SpiyIXES7A9A==
-Date: Wed, 28 Feb 2024 10:42:50 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="YmRLWnyh"
+Received: from localhost.ispras.ru (unknown [10.10.165.5])
+	by mail.ispras.ru (Postfix) with ESMTPSA id ABD2140B2789;
+	Wed, 28 Feb 2024 16:43:41 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru ABD2140B2789
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1709138622;
+	bh=8Kapx+kuKpDoK4A4QmaYAHOJUYLKDxYZDCpVP7uvsw8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YmRLWnyh6WTPq/1NtKnORSTnFTdNK0XBXz/JSesuPeJ/UQOd50aBB4vhpf1sWpoPS
+	 Tr78j7iRNgy1AhFUrp4q6Rejc7APf7S8uVsxZ/fCxADORifj6TkwcgVsP3uoBXvoL/
+	 7tTwO71wdrhvoTvkiYudjlDnsw5k/KEryMG38+8U=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Phoebe Buckheister <phoebe.buckheister@itwm.fraunhofer.de>,
+	linux-wpan@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH wpan] mac802154: fix llsec key resources release in mac802154_llsec_key_del
+Date: Wed, 28 Feb 2024 19:38:39 +0300
+Message-ID: <20240228163840.6667-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Conor Dooley <conor+dt@kernel.org>, 
- Oleksij Rempel <o.rempel@pengutronix.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, 
- Russ Weight <russ.weight@linux.dev>, Heiner Kallweit <hkallweit1@gmail.com>, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, 
- Luis Chamberlain <mcgrof@kernel.org>, linux-doc@vger.kernel.org, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Dent Project <dentproject@linuxfoundation.org>, 
- Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Eric Dumazet <edumazet@google.com>, Mark Brown <broonie@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>
-In-Reply-To: <20240227-feature_poe-v5-11-28f0aa48246d@bootlin.com>
-References: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
- <20240227-feature_poe-v5-11-28f0aa48246d@bootlin.com>
-Message-Id: <170913856921.224923.13844056647540488488.robh@kernel.org>
-Subject: Re: [PATCH net-next v5 11/17] dt-bindings: net: pse-pd: Add
- another way of describing several PSE PIs
+Content-Transfer-Encoding: 8bit
 
+mac802154_llsec_key_del() can free resources of a key directly without
+following the RCU rules for waiting before the end of a grace period. This
+may lead to use-after-free in case llsec_lookup_key() is traversing the
+list of keys in parallel with a key deletion:
 
-On Tue, 27 Feb 2024 15:42:53 +0100, Kory Maincent wrote:
-> PSE PI setup may encompass multiple PSE controllers or auxiliary circuits
-> that collectively manage power delivery to one Ethernet port.
-> Such configurations might support a range of PoE standards and require
-> the capability to dynamically configure power delivery based on the
-> operational mode (e.g., PoE2 versus PoE4) or specific requirements of
-> connected devices. In these instances, a dedicated PSE PI node becomes
-> essential for accurately documenting the system architecture. This node
-> would serve to detail the interactions between different PSE controllers,
-> the support for various PoE modes, and any additional logic required to
-> coordinate power delivery across the network infrastructure.
-> 
-> The old usage of "#pse-cells" is unsuficient as it carries only the PSE PI
-> index information.
-> 
-> This patch is sponsored by Dent Project <dentproject@linuxfoundation.org>.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> ---
-> 
-> Changes in v3:
-> - New patch
-> 
-> Changes in v4:
-> - Remove $def
-> - Fix pairset-names item list
-> - Upgrade few properties description
-> - Update the commit message
-> 
-> Changes in v5:
-> - Fix yamllint error.
-> - Replace underscore by dash in properties names.
-> - Add polarity-supported property.
-> ---
->  .../bindings/net/pse-pd/pse-controller.yaml        | 100 ++++++++++++++++++++-
->  1 file changed, 97 insertions(+), 3 deletions(-)
-> 
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 4 PID: 16000 at lib/refcount.c:25 refcount_warn_saturate+0x162/0x2a0
+Modules linked in:
+CPU: 4 PID: 16000 Comm: wpan-ping Not tainted 6.7.0 #19
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+RIP: 0010:refcount_warn_saturate+0x162/0x2a0
+Call Trace:
+ <TASK>
+ llsec_lookup_key.isra.0+0x890/0x9e0
+ mac802154_llsec_encrypt+0x30c/0x9c0
+ ieee802154_subif_start_xmit+0x24/0x1e0
+ dev_hard_start_xmit+0x13e/0x690
+ sch_direct_xmit+0x2ae/0xbc0
+ __dev_queue_xmit+0x11dd/0x3c20
+ dgram_sendmsg+0x90b/0xd60
+ __sys_sendto+0x466/0x4c0
+ __x64_sys_sendto+0xe0/0x1c0
+ do_syscall_64+0x45/0xf0
+ entry_SYSCALL_64_after_hwframe+0x6e/0x76
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Also, ieee802154_llsec_key_entry structures are not freed by
+mac802154_llsec_key_del():
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml:86:111: [warning] line too long (111 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml:88:111: [warning] line too long (111 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml:89:111: [warning] line too long (111 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml:90:111: [warning] line too long (111 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml:91:111: [warning] line too long (111 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml:92:111: [warning] line too long (111 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml:93:111: [warning] line too long (111 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml:94:111: [warning] line too long (111 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml:95:111: [warning] line too long (111 > 110 characters) (line-length)
+unreferenced object 0xffff8880613b6980 (size 64):
+  comm "iwpan", pid 2176, jiffies 4294761134 (age 60.475s)
+  hex dump (first 32 bytes):
+    78 0d 8f 18 80 88 ff ff 22 01 00 00 00 00 ad de  x.......".......
+    00 00 00 00 00 00 00 00 03 00 cd ab 00 00 00 00  ................
+  backtrace:
+    [<ffffffff81dcfa62>] __kmem_cache_alloc_node+0x1e2/0x2d0
+    [<ffffffff81c43865>] kmalloc_trace+0x25/0xc0
+    [<ffffffff88968b09>] mac802154_llsec_key_add+0xac9/0xcf0
+    [<ffffffff8896e41a>] ieee802154_add_llsec_key+0x5a/0x80
+    [<ffffffff8892adc6>] nl802154_add_llsec_key+0x426/0x5b0
+    [<ffffffff86ff293e>] genl_family_rcv_msg_doit+0x1fe/0x2f0
+    [<ffffffff86ff46d1>] genl_rcv_msg+0x531/0x7d0
+    [<ffffffff86fee7a9>] netlink_rcv_skb+0x169/0x440
+    [<ffffffff86ff1d88>] genl_rcv+0x28/0x40
+    [<ffffffff86fec15c>] netlink_unicast+0x53c/0x820
+    [<ffffffff86fecd8b>] netlink_sendmsg+0x93b/0xe60
+    [<ffffffff86b91b35>] ____sys_sendmsg+0xac5/0xca0
+    [<ffffffff86b9c3dd>] ___sys_sendmsg+0x11d/0x1c0
+    [<ffffffff86b9c65a>] __sys_sendmsg+0xfa/0x1d0
+    [<ffffffff88eadbf5>] do_syscall_64+0x45/0xf0
+    [<ffffffff890000ea>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
 
-dtschema/dtc warnings/errors:
+Handle the proper resource release in the RCU callback function
+mac802154_llsec_key_del_rcu().
 
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml references a file that doesn't exist: Documentation/networking/pse-pd/pse-pi.rst
-Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml: Documentation/networking/pse-pd/pse-pi.rst
+Note that if llsec_lookup_key() finds a key, it gets a refcount via
+llsec_key_get() and locally copies key id from key_entry (which is a
+list element). So it's safe to call llsec_key_put() and free the list
+entry after the RCU grace period elapses.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240227-feature_poe-v5-11-28f0aa48246d@bootlin.com
+Found by Linux Verification Center (linuxtesting.org).
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+Fixes: 5d637d5aabd8 ("mac802154: add llsec structures and mutators")
+Cc: stable@vger.kernel.org
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+---
+Should the patch be targeted to "net" tree directly?
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+ include/net/cfg802154.h |  1 +
+ net/mac802154/llsec.c   | 18 +++++++++++++-----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
 
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/include/net/cfg802154.h b/include/net/cfg802154.h
+index cd95711b12b8..76d2cd2e2b30 100644
+--- a/include/net/cfg802154.h
++++ b/include/net/cfg802154.h
+@@ -401,6 +401,7 @@ struct ieee802154_llsec_key {
+ 
+ struct ieee802154_llsec_key_entry {
+ 	struct list_head list;
++	struct rcu_head rcu;
+ 
+ 	struct ieee802154_llsec_key_id id;
+ 	struct ieee802154_llsec_key *key;
+diff --git a/net/mac802154/llsec.c b/net/mac802154/llsec.c
+index 8d2eabc71bbe..f13b07ebfb98 100644
+--- a/net/mac802154/llsec.c
++++ b/net/mac802154/llsec.c
+@@ -265,19 +265,27 @@ int mac802154_llsec_key_add(struct mac802154_llsec *sec,
+ 	return -ENOMEM;
+ }
+ 
++static void mac802154_llsec_key_del_rcu(struct rcu_head *rcu)
++{
++	struct ieee802154_llsec_key_entry *pos;
++	struct mac802154_llsec_key *mkey;
++
++	pos = container_of(rcu, struct ieee802154_llsec_key_entry, rcu);
++	mkey = container_of(pos->key, struct mac802154_llsec_key, key);
++
++	llsec_key_put(mkey);
++	kfree_sensitive(pos);
++}
++
+ int mac802154_llsec_key_del(struct mac802154_llsec *sec,
+ 			    const struct ieee802154_llsec_key_id *key)
+ {
+ 	struct ieee802154_llsec_key_entry *pos;
+ 
+ 	list_for_each_entry(pos, &sec->table.keys, list) {
+-		struct mac802154_llsec_key *mkey;
+-
+-		mkey = container_of(pos->key, struct mac802154_llsec_key, key);
+-
+ 		if (llsec_key_id_equal(&pos->id, key)) {
+ 			list_del_rcu(&pos->list);
+-			llsec_key_put(mkey);
++			call_rcu(&pos->rcu, mac802154_llsec_key_del_rcu);
+ 			return 0;
+ 		}
+ 	}
+-- 
+2.43.2
 
