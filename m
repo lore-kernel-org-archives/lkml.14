@@ -1,141 +1,237 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC051EEFC;
-	Wed, 28 Feb 2024 07:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CB622F00
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 07:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709104036; cv=none; b=pVatGwv+862gsE8AgeO+nm6Es26u7HTRe4+hCvofwxZKRm06HcpFQsuGZKOLlbvUgRZC6xdbIL67eJXrHIX5ZS+jsZu2VuJUBjU7h6RcdofXJdsSeDE2EAgeu1eVdTRW8Ay0oBsTLIi4b7QBS2/mmU3tMieJOnRpI51xHklJEak=
+	t=1709104323; cv=none; b=m/4yZVN1qxnNdb9AN1Jt7PZ7OcPMg8BIQlwhcxTFrBOR6IKe8fBsKwuwF5L0fr1UUIHVQRWatDP5g5jTEL/9t86EWWPmtTdlASjDlwioP5rsBbXClXZoRw3gI0xClK1yuB8a8+9tj/ZmxlMQYYUvNIGZdEjZj22glh2vAFjbttc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709104036; c=relaxed/simple;
-	bh=rH8a1xlgSv8otqY3V1Ueh3S5uKql5Tp5aIc70RVoy20=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=G52MeyJwyCaZKrAhN0zENiEdjYj/ycKzpozFWKtH/2ze9u6S03yRJ0FQMJ3ot5dlFeCNYkNhNxTJRO7vcDfPDRnMo4MiLumQ0MZj+q3I+WgKJpVNTjXh3KYMCvnFGvFS+LXy9PxCsYG/qbhpUvTBLk+KwWtGYc7fPgm/W1IOOx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DrlJyQ1H; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709104323; c=relaxed/simple;
+	bh=tzfxafuNKbhOtn2FYYTqc/CaHJFNymtSrhTBAv67CIk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=YnnnOtIr2o0ubRljgmgsB4nN59OZe1oX9dzmxMJ+NNiVLk6Y8qjxhx14Z5oAfwqImbW2OZLVepjfjBM9tbu4axq/b1GurFhHHkABisuiav+1s8v0g0jGLQtoBPsStoRuSj1rfbR3Lt2fI6T+mxM58hIJcGIZa/aka99lflAdzYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=V/sXHJ5E; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DrlJyQ1H"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41S76kAx006101;
-	Wed, 28 Feb 2024 01:06:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709104006;
-	bh=bWnuJSOtHFTdxNvHrznUXkm+6A6rrZIwSqOFLyy0mkc=;
-	h=Date:CC:Subject:To:References:From:In-Reply-To;
-	b=DrlJyQ1HBXpuwXzCVufloMOj4zWmZAxB5kl2/wZSCqGRQAWWMchOBexH7FiJcVvfh
-	 G3tntlhbo+gR+L4SD5eWHktIOc2X3m/9HpAgjLXSVcMrxCgfVLsbcTSY9XYEx/abS8
-	 8RoAKyhbVG6jtuw4kOfVkHu0xcChZ/tcDNXjhIfc=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41S76kR8106225
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 28 Feb 2024 01:06:46 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 28
- Feb 2024 01:06:45 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 28 Feb 2024 01:06:45 -0600
-Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41S76eQ3016464;
-	Wed, 28 Feb 2024 01:06:41 -0600
-Message-ID: <7d1496da-100a-4336-b744-33e843eba930@ti.com>
-Date: Wed, 28 Feb 2024 12:36:39 +0530
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V/sXHJ5E"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240228071152epoutp0132d648eedd88c4d591ee4093d5fe852a~39VFDAUZr2224322243epoutp01d
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 07:11:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240228071152epoutp0132d648eedd88c4d591ee4093d5fe852a~39VFDAUZr2224322243epoutp01d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1709104313;
+	bh=FxM63+wxM0TTZ0any1xpD43Jo9Apgd618WROCp12kLk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=V/sXHJ5EBgYNmsco57DUpdHQrEzkNogv9fEi2C3O/G4fVRU6I14MvOgx8+3lVSNyG
+	 JT0zxjLlr8Nzv56ELnVEIMRksGqUKszWGagqTKn3iQJCtp2BaXbmtw2mM+j2oSjp/n
+	 Qp7VRsEZl/dQz4eKEaXu8dXwJSq65GS4ouMch4jg=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240228071152epcas5p2b109e03255635d8fea5d3f6ac1fc1b9f~39VEY6pu91818518185epcas5p2C;
+	Wed, 28 Feb 2024 07:11:52 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Tl5BZ3v63z4x9Q1; Wed, 28 Feb
+	2024 07:11:50 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	ED.6D.09634.6BCDED56; Wed, 28 Feb 2024 16:11:50 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240228063029epcas5p47871105810840bfa7dc9da8d710ba2ec~38w8fLAvy2235322353epcas5p4f;
+	Wed, 28 Feb 2024 06:30:29 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240228063029epsmtrp2ea2585878c966c69b04f67bf80ea7fdc~38w8eRuuh1036510365epsmtrp2B;
+	Wed, 28 Feb 2024 06:30:29 +0000 (GMT)
+X-AuditID: b6c32a49-eebff700000025a2-9d-65dedcb6b16c
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	37.B2.18939.503DED56; Wed, 28 Feb 2024 15:30:29 +0900 (KST)
+Received: from testpc118124.samsungds.net (unknown [109.105.118.124]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240228063028epsmtip2ac1eae56ba227873d6e5b6fa391b0990~38w65hDFa2859828598epsmtip2b;
+	Wed, 28 Feb 2024 06:30:28 +0000 (GMT)
+From: Xiaobing Li <xiaobing.li@samsung.com>
+To: axboe@kernel.dk
+Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
+	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
+	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
+	ruyi.zhang@samsung.com, xiaobing.li@samsung.com, cliang01.li@samsung.com,
+	xue01.he@samsung.com
+Subject: Re: Re: [PATCH v9] io_uring: Statistics of the true utilization of
+ sq threads.
+Date: Wed, 28 Feb 2024 14:30:23 +0800
+Message-Id: <20240228063023.1428736-1-xiaobing.li@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <94284465-0b46-4df4-842e-a0c65dee5908@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <rogerq@kernel.org>, <andrew@lunn.ch>,
-        <vladimir.oltean@nxp.com>, <hkallweit1@gmail.com>,
-        <dan.carpenter@linaro.org>, <horms@kernel.org>,
-        <yuehaibing@huawei.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH net-next] net: ethernet: ti: am65-cpsw: Add priv-flag for
- Switch VLAN Aware mode
-To: Jiri Pirko <jiri@resnulli.us>
-References: <20240227082815.2073826-1-s-vadapalli@ti.com>
- <Zd3YHQRMnv-ZvSWs@nanopsycho>
-Content-Language: en-US
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <Zd3YHQRMnv-ZvSWs@nanopsycho>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHJsWRmVeSWpSXmKPExsWy7bCmhu62O/dSDfZ8FLeYs2obo8Xqu/1s
+	Fqf/PmaxeNd6jsXi6P+3bBa/uu8yWmz98pXV4vKuOWwWz/ZyWnw5/J3d4uyED6wWU7fsYLLo
+	aLnMaNF14RSbA5/Hzll32T0uny316NuyitHj8ya5AJaobJuM1MSU1CKF1Lzk/JTMvHRbJe/g
+	eOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoBOVFMoSc0qBQgGJxcVK+nY2RfmlJakKGfnF
+	JbZKqQUpOQUmBXrFibnFpXnpenmpJVaGBgZGpkCFCdkZdxYuZS/oUa44fuMqawPjf5kuRk4O
+	CQETiQdNf1m6GLk4hAR2M0ps3P2ZFcL5xChxrPkFG5yzfVs3I0zLgdPvmSESOxklzr35yATh
+	/GKUmDJxN1gVm4C2xPV1XawgtoiAsMT+jlawJcwC65gkPu1oYwdJCAtESjRsvgGU4OBgEVCV
+	2N0LdhSvgJ3E0bvn2CC2yUvsP3iWGcTmFLCV+HP8BBNEjaDEyZlPWEBsZqCa5q2zwS6SEOjl
+	kPi0eRpUs4vE/Rl/oM4Wlnh1fAs7hC0l8fndXqiaYokjPd9ZIZobGCWm374KVWQt8e/KHrDj
+	mAU0Jdbv0ocIy0pMPbWOCWIxn0Tv7ydMEHFeiR3zYGxVidWXHrJA2NISrxt+Q8U9JK7/2A4N
+	ugmMEm2nfzFPYFSYheShWUgemoWwegEj8ypGydSC4tz01GLTAsO81HJ4PCfn525iBCdcLc8d
+	jHcffNA7xMjEwXiIUYKDWUmEV0bwbqoQb0piZVVqUX58UWlOavEhRlNggE9klhJNzgem/LyS
+	eEMTSwMTMzMzE0tjM0Mlcd7XrXNThATSE0tSs1NTC1KLYPqYODilGpiSuHVjp21cY/HC9vw+
+	mwil1GRv5ZvXXx5eUVzff1Lxp1JnyqKmM29OTF08KXvmz2tioQahhjLJx6c/bJ5ZLjbBxm59
+	9c/ePSoHlhmdS0gQf7Cpt7WmpqtBM3b/jYUfdk+eYnmxT+OSTvEecc07zJfVQpbE7D194an9
+	3P2vgt9MFF9X/PmJ9Mk9f67PmLKR9fudxIU7t9i6TJlYyt/4+pTYyuhofYX3K/8lKfWdsQj4
+	Xrqp5UzOC67Vn6/1BzJ9k34jsvGixe6/F6MunHrsIf5aeZ7w9xlPGIJ9ffd0ZF/jmPl608ST
+	bRdlOw60+Ft0JMZf6rp6lm3u5CcBEotWPveWZHkVJC5fsDwn2jc4W8E9VImlOCPRUIu5qDgR
+	AGUJKblBBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsWy7bCSvC7r5XupBts3G1jMWbWN0WL13X42
+	i9N/H7NYvGs9x2Jx9P9bNotf3XcZLbZ++cpqcXnXHDaLZ3s5Lb4c/s5ucXbCB1aLqVt2MFl0
+	tFxmtOi6cIrNgc9j56y77B6Xz5Z69G1ZxejxeZNcAEsUl01Kak5mWWqRvl0CV8adhUvZC3qU
+	K47fuMrawPhfpouRk0NCwETiwOn3zF2MXBxCAtsZJeZtuQPkcAAlpCX+/CmHqBGWWPnvOTtE
+	zQ9Gic9Xv7OBJNgEtCWur+tiBbFFgIr2d7SygBQxC+xhkng37TNYQlggXKLz72YmkKEsAqoS
+	u3vBFvMK2EkcvXuODWKBvMT+g2eZQWxOAVuJP8dPMIHYQgI2En1PdrFA1AtKnJz5BMxmBqpv
+	3jqbeQKjwCwkqVlIUgsYmVYxiqYWFOem5yYXGOoVJ+YWl+al6yXn525iBEeBVtAOxmXr/+od
+	YmTiYDzEKMHBrCTCKyN4N1WINyWxsiq1KD++qDQntfgQozQHi5I4r3JOZ4qQQHpiSWp2ampB
+	ahFMlomDU6qBadaBeZ1KVgFTn/qcC+aeqNVzvC+k+q7r5RWX9ivNjzIVkPdY/Dw9oPl0ZvvD
+	26esBfZXdlr7zrCtD5/v+bLOQ97y2vrIO5a7cyrkgpe37F66md9uTqKFd+z3nmc3N3VbWrR5
+	tc/ZZawo9eWdZrG/n3HPhTPtsZny7FfTDiqnZarqRy0NSPfJL+v3vJjlYjRj/cnIa6o7n+2+
+	+MvpmWjBl93vJnfb2rYtF97ItPb1cY4Ki8meIlWKjdN3pt6ftdPf34rh3YzePGW2+Tkr9/nm
+	xDGI+29W513FOVHk0fdIMV1lgfyS50IGc4VzqpdtPeLxKdfz/by5c1apS7Sxzb+9xeMo91nP
+	CaXaLYcz+uOUWIozEg21mIuKEwF2SoAo8QIAAA==
+X-CMS-MailID: 20240228063029epcas5p47871105810840bfa7dc9da8d710ba2ec
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240228063029epcas5p47871105810840bfa7dc9da8d710ba2ec
+References: <94284465-0b46-4df4-842e-a0c65dee5908@kernel.dk>
+	<CGME20240228063029epcas5p47871105810840bfa7dc9da8d710ba2ec@epcas5p4.samsung.com>
 
+On 2/27/24 14:36, Jens Axboe wrote:
+>On 2/26/24 10:45 PM, Xiaobing Li wrote:
+>> On 2/21/24 10:28, Jens Axboe wrote:
+>>> On 2/20/24 7:04 PM, Xiaobing Li wrote:
+>>>> On 2/19/24 14:42, Xiaobing Li wrote:
+>>>>> diff --git a/io_uring/fdinfo.c b/io_uring/fdinfo.c
+>>>>> index 976e9500f651..37afc5bac279 100644
+>>>>> --- a/io_uring/fdinfo.c
+>>>>> +++ b/io_uring/fdinfo.c
+>>>>> @@ -55,6 +55,7 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
+>>>>> 	struct io_ring_ctx *ctx = f->private_data;
+>>>>> 	struct io_overflow_cqe *ocqe;
+>>>>> 	struct io_rings *r = ctx->rings;
+>>>>> +	struct rusage sq_usage;
+>>>>> 	unsigned int sq_mask = ctx->sq_entries - 1, cq_mask = ctx->cq_entries - 1;
+>>>>> 	unsigned int sq_head = READ_ONCE(r->sq.head);
+>>>>> 	unsigned int sq_tail = READ_ONCE(r->sq.tail);
+>>>>> @@ -64,6 +65,7 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
+>>>>> 	unsigned int sq_shift = 0;
+>>>>> 	unsigned int sq_entries, cq_entries;
+>>>>> 	int sq_pid = -1, sq_cpu = -1;
+>>>>> +	u64 sq_total_time = 0, sq_work_time = 0;
+>>>>> 	bool has_lock;
+>>>>> 	unsigned int i;
+>>>>>
+>>>>> @@ -147,10 +149,15 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
+>>>>>
+>>>>> 		sq_pid = sq->task_pid;
+>>>>> 		sq_cpu = sq->sq_cpu;
+>>>>> +		getrusage(sq->thread, RUSAGE_SELF, &sq_usage);
+>>>>> +		sq_total_time = sq_usage.ru_stime.tv_sec * 1000000 + sq_usage.ru_stime.tv_usec;
+>>>>> +		sq_work_time = sq->work_time;
+>>>>> 	}
+>>>>>
+>>>>> 	seq_printf(m, "SqThread:\t%d\n", sq_pid);
+>>>>> 	seq_printf(m, "SqThreadCpu:\t%d\n", sq_cpu);
+>>>>> +	seq_printf(m, "SqTotalTime:\t%llu\n", sq_total_time);
+>>>>> +	seq_printf(m, "SqWorkTime:\t%llu\n", sq_work_time);
+>>>>> 	seq_printf(m, "UserFiles:\t%u\n", ctx->nr_user_files);
+>>>>> 	for (i = 0; has_lock && i < ctx->nr_user_files; i++) {
+>>>>> 		struct file *f = io_file_from_index(&ctx->file_table, i);
+>>>>> diff --git a/io_uring/sqpoll.c b/io_uring/sqpoll.c
+>>>>> index 65b5dbe3c850..006d7fc9cf92 100644
+>>>>> --- a/io_uring/sqpoll.c
+>>>>> +++ b/io_uring/sqpoll.c
+>>>>> @@ -219,10 +219,22 @@ static bool io_sqd_handle_event(struct io_sq_data *sqd)
+>>>>> 	return did_sig || test_bit(IO_SQ_THREAD_SHOULD_STOP, &sqd->state);
+>>>>> }
+>>>>>
+>>>>> +static void io_sq_update_worktime(struct io_sq_data *sqd, struct rusage *start)
+>>>>> +{
+>>>>> +		struct rusage end;
+>>>>> +
+>>>>> +		getrusage(current, RUSAGE_SELF, &end);
+>>>>> +		end.ru_stime.tv_sec -= start->ru_stime.tv_sec;
+>>>>> +		end.ru_stime.tv_usec -= start->ru_stime.tv_usec;
+>>>>> +
+>>>>> +		sqd->work_time += end.ru_stime.tv_usec + end.ru_stime.tv_sec * 1000000;
+>>>>> +}
+>>>>> +
+>>>>> static int io_sq_thread(void *data)
+>>>>> {
+>>>>> 	struct io_sq_data *sqd = data;
+>>>>> 	struct io_ring_ctx *ctx;
+>>>>> +	struct rusage start;
+>>>>> 	unsigned long timeout = 0;
+>>>>> 	char buf[TASK_COMM_LEN];
+>>>>> 	DEFINE_WAIT(wait);
+>>>>> @@ -251,6 +263,7 @@ static int io_sq_thread(void *data)
+>>>>> 		}
+>>>>>
+>>>>> 		cap_entries = !list_is_singular(&sqd->ctx_list);
+>>>>> +		getrusage(current, RUSAGE_SELF, &start);
+>>>>> 		list_for_each_entry(ctx, &sqd->ctx_list, sqd_list) {
+>>>>> 			int ret = __io_sq_thread(ctx, cap_entries);
+>>>>>
+>>>>> @@ -261,8 +274,10 @@ static int io_sq_thread(void *data)
+>>>>> 			sqt_spin = true;
+>>>>>
+>>>>> 		if (sqt_spin || !time_after(jiffies, timeout)) {
+>>>>> -			if (sqt_spin)
+>>>>> +			if (sqt_spin) {
+>>>>> +				io_sq_update_worktime(sqd, &start);
+>>>>> 				timeout = jiffies + sqd->sq_thread_idle;
+>>>>> +			}
+>>>>> 			if (unlikely(need_resched())) {
+>>>>> 				mutex_unlock(&sqd->lock);
+>>>>> 				cond_resched();
+>>>>> diff --git a/io_uring/sqpoll.h b/io_uring/sqpoll.h
+>>>>> index 8df37e8c9149..4171666b1cf4 100644
+>>>>> --- a/io_uring/sqpoll.h
+>>>>> +++ b/io_uring/sqpoll.h
+>>>>> @@ -16,6 +16,7 @@ struct io_sq_data {
+>>>>> 	pid_t			task_pid;
+>>>>> 	pid_t			task_tgid;
+>>>>>
+>>>>> +	u64			work_time;
+>>>>> 	unsigned long		state;
+>>>>> 	struct completion	exited;
+>>>>> };
+>>>>  
+>>>> Hi, Jens
+>>>> I have modified the code according to your suggestions.
+>>>> Do you have any other comments?
+>>>
+>>> Out of town this week, I'll check next week. But from a quick look,
+>>> looks much better now.
+>>  
+>> Hi, Jens
+>> Do you have time to check now?
+>
+>Can I ask you to resend it against for-6.9/io_uring? For some reason I
+>don't see the original patch on the list.
+ 
+ok, I'll resend a v10.
 
-
-On 27/02/24 18:09, Jiri Pirko wrote:
-> Tue, Feb 27, 2024 at 09:28:15AM CET, s-vadapalli@ti.com wrote:
->> The CPSW Ethernet Switch on TI's K3 SoCs can be configured to operate in
->> VLAN Aware or VLAN Unaware modes of operation. This is different from
->> the ALE being VLAN Aware and Unaware. The Ethernet Switch being VLAN Aware
->> results in the addition/removal/replacement of VLAN tag of packets during
->> egress as described in section "12.2.1.4.6.4.1 Transmit VLAN Processing" of
->> the AM65x Technical Reference Manual available at:
->> https://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
->> In VLAN Unaware mode, packets remain unmodified on egress.
->>
->> The driver currently configures the Ethernet Switch in VLAN Aware mode by
->> default and there is no support to toggle this capability of the Ethernet
->> Switch at runtime. Thus, add support to toggle the capability by exporting
->> it via the ethtool "priv-flags" interface.
-> 
-> I don't follow. You have all the means to offload all bridge/vlan
-> configurations properly and setup your hw according to that. See mlxsw
-> for a reference. I don't see the need for any custom driver knobs.
-> 
-
-Thank you for reviewing the patch. Please note that the "VLAN Aware mode" being
-referred to here is different from ALE being VLAN aware. The hw offload of
-bridge/vlan configurations is already supported in the context of the ALE. The
-Ethernet Switch being VLAN Aware is a layer on top of that, which enables
-further processing on top of the untagged/VLAN packets. This patch aims to
-provide a method to enable the following use-cases:
-1. ALE VLAN Aware + CPSW VLAN Aware
-2. ALE VLAN Aware + CPSW VLAN Unaware
-
-All hw offloads of bridge/vlan configurations are w.r.t. ALE VLAN Aware alone.
-Currently, only use-case 1 is enabled by the driver by default and there is no
-knob to toggle to use-case 2.
-
-I am quoting sections of the Technical Reference Manual mentioned in my commit
-message, in order to clarify the CPSW VLAN Unaware and CPSW VLAN Aware terminology.
-
-CPSW VLAN Unaware:
-Transmit packets are NOT modified during switch egress.
-
-CPSW VLAN Aware:
-1. Untagged Packet Operations
-Untagged packets are all packets that are not a VLAN packet or a priority tagged
-packet. According to the CPWS0_FORCE_UNTAGGED_EGRESS_REG[1-0] MASK bit in the
-packet header the packet may exit the switch with a VLAN tag inserted or the
-packet may leave the switch unchanged....
-2. Priority Tagged Packet Operations (VLAN VID == 0 && EN_VID0_MODE ==0h)
-Priority tagged packets are packets that contain a VLAN header with VID = 0.
-According to the CPSW_ALE_FORCE_UNTAGGED_EGRESS_REG[1-0] MASK bit in the packet
-header, priority tagged packets may exit the switch with their VLAN ID and
-priority replaced or they may have their priority tag completely removed....
-3. VLAN Tagged Packet Operations (VLAN VID != 0 || (EN_VID0_MODE ==1h && VLAN
-VID ==0))
-VLAN tagged packets are packets that contain a VLAN header specifying the VLAN
-the packet belongs to
-(VID), the packet priority (PRI), and the drop eligibility indicator (CFI).
-According to the CPSW_ALE_FORCE_UNTAGGED_EGRESS_REG[1-0] MASK bit in the packet
-header, VLAN tagged packets may exit the switch with their VLAN priority
-replaced or they may have their VLAN header completely removed...
-
-I hope that this clarifies that CPSW VLAN Unaware/Aware is a layer on top of the
-hw offload-able bridge/vlan configuration.  Please let me know if there is
-anything specific that could enable this without requiring the "priv-flag" based
-implementation of this patch.
-
--- 
-Regards,
-Siddharth.
+--
+Xiaobing Li
