@@ -1,151 +1,146 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B656F15AF
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 00:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E67363
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 00:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709078938; cv=none; b=nqDD1XhFjz8LacistUC1U89NlqDlephz/dMb0lNMoF81WaG8oPcCcBlMioLTf2sDWBtgdFqE2iFgETNpHte1thAQ7SXM68XAq49vEXF1JwsuShfDaeUBqzEcXmmpqtj55vfixci7todFQQqiZl1ntSXoA7a9eXC97Jc7Knlydd4=
+	t=1709079020; cv=none; b=ekZcngu4E8EltPwcD0EdIF3KBkIFFhdUH/sIuxoYtREkYG2cB7b+WGhTAGQkSsBB5A3g9B6kD4Z+oIUnx9wCkBp67mrWVoVAGj0lmEvAHRas8WKUA3WIaNQXviTA79v7Eqefux0T6Xg6yWRP25JMT8I1FUUpvTVk2mJSpP7Gv78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709078938; c=relaxed/simple;
-	bh=nTsK9p1jokxVeO3Fo4MQIH5ecfakK/v2VWS6ZWRauNM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E4RmXhDz0bUy8yN68Kv/ZMzjOo9gzmfEqJ8+jqenDFbcAT9eIsVmRjYF90lwXZQSrZ6PrChybHrMUlpzs86Q26GbgwTH38R0XFR7MtAHEWhKNHsGYJCFxFda87n2lZKJHKEmYMhGb6SAdNurQBgR7yMJhkOLI4BR3SMcbr8OF+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iLeIWnjq; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1709079020; c=relaxed/simple;
+	bh=OePn2Vqze54j1HJREhzx+vC2haay4Mm45C6FZi0nD1g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t7Lf+uDFHqivLreYuHCN3y+dlws3UhCHeRsAKy/s4L/myaa1nlE2BcPZ+cZGNqsk3TimvG1hSNmMgSQx5qCFoBbY2gLcbKZ1959/oOLcyyEPvW4gHv6bDV0u9iPPqTflbaAS79asYOjeSBBNZ/H11pUKDT2t/lKheZPdj6pTgCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mZ8QwQNt; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iLeIWnjq"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-365b413549eso957345ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:08:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZ8QwQNt"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7d5c2502ea2so2655634241.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:10:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1709078936; x=1709683736; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Cq739qr1rsr2NonXQJuyDZ18sirm7FbjHPegYfq2M0w=;
-        b=iLeIWnjqSGm0LFXCaE04SK1RaEvsmz8Lcto/E1KGOxArhel2d5MtJS+LT/QApErkpY
-         y0Rhe/lzfD102AudZok9CuUBfbb/59geJnUM3uQ8hTtBSwqSDWxjZcQaz5Sq8Z5qGmnf
-         ir7pY94wwLzKBWYOrcf4jSIHsLmeCcRlFiiko=
+        d=gmail.com; s=20230601; t=1709079017; x=1709683817; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GU0HNIXp5FhKieQRiIc51gUQd5WumB9EvT9xoM2OiHs=;
+        b=mZ8QwQNtLzcmc3aHZTZT+HrES5Xc3CbdKoGSMMc9f8MobfPYExzVrRJkvCMJa+9ppX
+         4uNEH3dQKSBnv2/8Dk8GC8dVvLNmz+dltUQ/OXwoH6ONafI8GdK/ephei8LO2X7YFxsi
+         7tI7b2WoCs5hg9s8BzO2g88vNhSS5rYReptgrLhXIwj+LfccY1qu9nyJtofni26TZnRd
+         eVMLIma3V/CviGnTF1CGd4nMvFlXRnyd9OHKROfNsymWVScd3S1lVEBNiOPszT6wZL4B
+         uhUC8BGuozdc7nE0IKKENpqXb4TkYWOTQz5Iwk0/+v28A325gXT5hBRiHPxD7aiwE6ZK
+         or1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709078936; x=1709683736;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cq739qr1rsr2NonXQJuyDZ18sirm7FbjHPegYfq2M0w=;
-        b=r9kjCLZ9Y4v+0ALGBYVLt+/dGx3Sp8Qovr1JplEw+Dd0liAtg1ChiGs3madXETPPcY
-         sRZbmiaD+xLeehWLbkB8hzUHJ8lsv1R1jvZ8i5tsZnbyRQ9+B42MKqLax8lEqlhyNQCK
-         LyY1nD5nT8JBfNX8I+Wb6Tc87Gu5WShllMpXhZ9zh/O9GD6Ft5wpaRrQnxRzmU8n8Ums
-         2NfGAApEPEq8M3EqsohOQmRh7/m2rEcQTZ0atWtCuHxT1LOOT2lGX2ALsuQ3TcwiEtCD
-         gks1bm4Z1DHJA/IMlF0MeA62EYQfgl6jweu0HOyNW/Fit47zmDscW2jRDP4XDAm9oCtO
-         zppg==
-X-Forwarded-Encrypted: i=1; AJvYcCWpFsjSKKbSV7lMpaKlQ0gwQ98WzgjzflkxnGIlwO8w7/1JRBjkPWD9nEJUYK1KxY3rrP1zzrFfn31C6OC4BjmXo5u6Vlf5hwtwSmc8
-X-Gm-Message-State: AOJu0YygKr15Us7ZZvljfv3KLEy2TAaGWKXeZIgE5Ftjd+0irMZTnQxJ
-	nloMKX0kwORZMrBDnWgGnYxYYKDWQDpOSKdranKchV+j462UeC39fw2vHJSVJLY=
-X-Google-Smtp-Source: AGHT+IHhurMRim1oZpaRa/EmwIjRlUocpRTaLd+78t+2y/ZxHBYDwHmgfe1pto6RyieYWCbjx43vvw==
-X-Received: by 2002:a05:6e02:1d98:b0:365:2f19:e58e with SMTP id h24-20020a056e021d9800b003652f19e58emr11475957ila.3.1709078935853;
-        Tue, 27 Feb 2024 16:08:55 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id x14-20020a056e020f0e00b00364b66eb5e3sm2427560ilj.24.2024.02.27.16.08.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 16:08:55 -0800 (PST)
-Message-ID: <987a671f-bacf-4c44-a48d-97ab74397628@linuxfoundation.org>
-Date: Tue, 27 Feb 2024 17:08:54 -0700
+        d=1e100.net; s=20230601; t=1709079017; x=1709683817;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GU0HNIXp5FhKieQRiIc51gUQd5WumB9EvT9xoM2OiHs=;
+        b=XvA7nBbQ28PvK5uwGKCHdfemlUWgXbXt1r1QrUb+we3TDcJxWlFVduIRF68IgS7+rm
+         r1/QxnwPX/kvade/7YRD1fBTmUr7QUniVX+Sh7csIuaScS+y6a/QzlioR5D7cjuPCkx0
+         arvj/M29kHdQounnntYbpqxBvrTTvisuoDtnMMOhiu31mZCf8RGVtQ7ar8zrb0o9bwy8
+         Qp5/00bvtqhFUBYBNAxzDeMRBbj4E1uUXefuPKEl6D/5SnGnG5bwwRdvW2rEc5TcnbUg
+         jxxHgEqLnxkhSsVvM4PINJfn4oowfwMNaSSvK14+JYrqVVkWnF63V6YZw+aQZUCo2mbs
+         4ipw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnELMs5xyNrenn1obWXRnFZU4sk8GpWLjvctwE85RXWpD6qrPFYUTeWHbqyJuENNbhl6duu8dUVn8XF+tN8MrEYkGHUAWw285OGVnU
+X-Gm-Message-State: AOJu0Yw+U+aOxikypNs5WMok68LebCAp3BU9XDeko8leoc9l/25gnV1J
+	8op9/Q/QTJl9+wGieDTw7/9XVdjzDXso30YlwPhZHM7OJyuTzUl2MREaGSY7UpiAi71fRAGXo89
+	Frg4XLfYnQIHe0b4Q3o62yzVDxnk=
+X-Google-Smtp-Source: AGHT+IELRdA4kvWrlniWfwpOQ/SrUe9sSWcOSNAz2d2m+y1pNDQnLGh953wecIjNrA0G1Mn/5MN8RKL1cpxIKj57X2g=
+X-Received: by 2002:a05:6122:408b:b0:4d3:340d:c50f with SMTP id
+ cb11-20020a056122408b00b004d3340dc50fmr2208980vkb.9.1709079017283; Tue, 27
+ Feb 2024 16:10:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/5] selftests/resctrl: Add non-contiguous CBMs in
- Intel CAT selftest
-Content-Language: en-US
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>, shuah@kernel.org,
- fenghua.yu@intel.com, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1708072203.git.maciej.wieczor-retman@intel.com>
- <f8886683-4f24-47ce-a0c6-ef28466bfec9@intel.com>
- <685828ed-06d2-4a2c-9911-05145e55ea1a@linuxfoundation.org>
- <48dab897-162d-4075-baa9-f5391a23d31d@intel.com>
- <a8f1f104-c5c1-400c-873e-99b01cde1d88@linuxfoundation.org>
- <beuizmgezzcnd3f74nsmigfn7n5emj43pxaqtyki7bjgj4nqn5@ldpqu65vaunu>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <beuizmgezzcnd3f74nsmigfn7n5emj43pxaqtyki7bjgj4nqn5@ldpqu65vaunu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240227104201.337988-1-21cnbao@gmail.com> <20240227215426.153162-1-sj@kernel.org>
+In-Reply-To: <20240227215426.153162-1-sj@kernel.org>
+From: Barry Song <21cnbao@gmail.com>
+Date: Wed, 28 Feb 2024 13:10:06 +1300
+Message-ID: <CAGsJ_4wWzG-37D82vqP_zt+Fcbz+URVe5oXLBc4M5wbN8A_gpQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: make folio_pte_batch available outside of mm/memory.c
+To: SeongJae Park <sj@kernel.org>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
+	David Hildenbrand <david@redhat.com>, Lance Yang <ioworker0@gmail.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Yin Fengwei <fengwei.yin@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/26/24 02:28, Maciej Wieczor-Retman wrote:
-> Hi Shuah,
-> 
-> On 2024-02-23 at 15:37:11 -0700, Shuah Khan wrote:
->>
->> Hi Reinette,
->>
->> Okay ran a quick test. Why does this test leave "/sys/fs/resctrl"
->> mounted when it exits. Can we fix this to unmount before the test
->> exits?
-> 
-> I also wasn't able to reproduce this unmounting issue:
-> - with unmounted resctrl before test:
-> 
-> 	[/root]# ls /sys/fs/resctrl/
-> 	[/root]#
-> 	[/root]# ./resctrl_tests -t L3_NONCONT_CAT
-> 	TAP version 13
-> 	# Pass: Check kernel supports resctrl filesystem
-> 	# Pass: Check resctrl mountpoint "/sys/fs/resctrl" exists
-> 	# resctrl filesystem not mounted
-> 	# dmesg: [   12.502941] resctrl: L3 allocation detected
-> 	# dmesg: [   12.507134] resctrl: MB allocation detected
-> 	# dmesg: [   12.511315] resctrl: L3 monitoring detected
-> 	1..1
-> 	# Starting L3_NONCONT_CAT test ...
-> 	# Mounting resctrl to "/sys/fs/resctrl"
-> 	# Write schema "L3:1=3f" to resctrl FS
-> 	# Write schema "L3:1=f0f" to resctrl FS # write() failed : Invalid argument
-> 	# Non-contiguous CBMs not supported and write of non-contiguous CBM failed as expected
-> 	ok 1 L3_NONCONT_CAT: test
-> 	# Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-> 	[/root]# ls /sys/fs/resctrl/
-> 	[/root]#
-> 
-> And with mounted before test:
-> 
-> 	[/root]# ls /sys/fs/resctrl/
-> 	[/root]#
-> 	[/root]# mount -t resctrl resctrl /sys/fs/resctrl
-> 	[/root]# ls /sys/fs/resctrl/
-> 	cpus  cpus_list  info  mode  mon_data  mon_groups  schemata  size  tasks
-> 	[/root]# ./resctrl_tests -t L3_NONCONT_CAT
-> 	TAP version 13
-> 	# Pass: Check kernel supports resctrl filesystem
-> 	# Pass: Check resctrl mountpoint "/sys/fs/resctrl" exists
-> 	# resctrl filesystem is mounted
-> 	# dmesg: [   12.502941] resctrl: L3 allocation detected
-> 	# dmesg: [   12.507134] resctrl: MB allocation detected
-> 	# dmesg: [   12.511315] resctrl: L3 monitoring detected
-> 	1..1
-> 	# Starting L3_NONCONT_CAT test ...
-> 	# Mounting resctrl to "/sys/fs/resctrl"
-> 	# Write schema "L3:1=3f" to resctrl FS
-> 	# Write schema "L3:1=f0f" to resctrl FS # write() failed : Invalid argument
-> 	# Non-contiguous CBMs not supported and write of non-contiguous CBM failed as expected
-> 	ok 1 L3_NONCONT_CAT: test
-> 	# Totals: pass:1 fail:0 xfail:0 xpass:0 skip:0 error:0
-> 	[/root]# ls /sys/fs/resctrl/
-> 	[/root]#
-> 
-> Looking at the code there is an unmounting function called after each test (at
-> the end of run_single_test() inside of test_cleanup()). The non-contiguous test
-> also doesn't write any data into a temp file so no additional cleanup is
-> necessary.
-> 
+On Wed, Feb 28, 2024 at 10:54=E2=80=AFAM SeongJae Park <sj@kernel.org> wrot=
+e:
+>
+> On Tue, 27 Feb 2024 23:42:01 +1300 Barry Song <21cnbao@gmail.com> wrote:
+>
+> > From: Barry Song <v-songbaohua@oppo.com>
+> >
+> > madvise, mprotect and some others might need folio_pte_batch to check i=
+f
+> > a range of PTEs are completely mapped to a large folio with contiguous
+> > physical addresses. Let's make it available in mm/internal.h.
+>
+> Hi Barry,
+>
+>
+> I found this patch makes some of my build test that not setting CONFIG_MM=
+U
+> fails with multiple errors including below:
+>
+>     In file included from .../mm/nommu.c:43:
+>     .../mm/internal.h: In function '__pte_batch_clear_ignored':
+>     .../mm/internal.h:98:23: error: implicit declaration of function 'pte=
+_mkclean'; did you mean 'page_mkclean'? [-Werror=3Dimplicit-function-declar=
+ation]
+>        98 |                 pte =3D pte_mkclean(pte);
+>           |                       ^~~~~~~~~~~
+>           |                       page_mkclean
+>
+> Enabling CONFIG_MMU made the build success.  I haven't had a time to look=
+ into
+> the code yet.  May I ask your opinion?
+
+i guess it is because we have moved some func from memory.c to
+headfile. and this headfile is included by lots of
+files in mm.  memory.c, for itself, will only be compiled with enabled
+CONFIG_MMU:
+mmu-$(CONFIG_MMU)       :=3D highmem.o memory.o mincore.o \
+                           mlock.o mmap.o mmu_gather.o mprotect.o mremap.o =
+\
+                           msync.o page_vma_mapped.o pagewalk.o \
+                           pgtable-generic.o rmap.o vmalloc.o
+
+Does the below fix your build?
+
+diff --git a/mm/internal.h b/mm/internal.h
+index fa9e2f7db506..4e57680b74e1 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -83,6 +83,8 @@ static inline void *folio_raw_mapping(struct folio *folio=
+)
+        return (void *)(mapping & ~PAGE_MAPPING_FLAGS);
+ }
+
++#ifdef CONFIG_MMU
++
+ /* Flags for folio_pte_batch(). */
+ typedef int __bitwise fpb_t;
+
+@@ -172,6 +174,7 @@ static inline int folio_pte_batch(struct folio
+*folio, unsigned long addr,
+
+        return min(ptep - start_ptep, max_nr);
+ }
++#endif /* CONFIG_MMU */
+
+ void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
+                                                int nr_throttled);
 
 
-Looks fine. Thanks for the clarification.
+> Thanks,
+> SJ
 
-thanks,
--- Shuah
+Thanks
+Barry
