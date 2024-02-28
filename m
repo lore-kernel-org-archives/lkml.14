@@ -1,30 +1,30 @@
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [195.130.137.90])
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFCE150994
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 14:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C200B14EFF5
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 14:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709128824; cv=none; b=ShmYrJnJpO9+1iK4zt4AU7ruYBXWRUA0pr+yUrCE4Q4KOT5YhKkyzNNSUplRQMx7xIoycp0HjIAIp0lFJUnrVM6uoNa8NwXjw8eadAY3ojDl2/qOGzIcipoVRz7MkFE+D9WTeVx3xGwSSN3j+9lnIPIzs0RRyj6ToLao1EUdOGk=
+	t=1709128824; cv=none; b=O/NzZL1EzgyKwBNJvaKa12R4WuxGDcwU/0Eqkj+NvaAnJ7R/uas2MYsEluWtO2BLkMpQtxj/nUXeGo5vxyFUMYG0Dg3X+JC6OYlO5tKokyJGGsIdNK3QTVzPMDaCXtWGC69el7POOs21kwNkRqCXYkyRzs5juULGr03b+rsWyPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709128824; c=relaxed/simple;
-	bh=D8NXY2ItVpwUES37gGIiU5wimOI8cGreVo83CtoNigw=;
+	bh=QsCae0o9eyN75UvvnzCtyzD7Q33sU4Xy0REKuZlqxLw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WHMBh1Urbtd+dLmvqp/kF4AEw4I0hzrPSP41v/POv28iDsiQLzl5VWpFV1PxuWvBfDgURpGnp/se24pCFPZddOtiH4JEdORSg2YqnVu7M4TzP2neHlPtZKhyl1YGQeFL7II1YTAaoOlH2AEhcOD2SkrSpaLHMFH71si6Bw3hBjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.90
+	 MIME-Version; b=AqK9ULyrcgNEUJqv40mBHzLyLLb93g89XHSaTTB2chvCb5dZigK8QdLIKgR8zKaQiIXrpnQO19+kPR9GDgGTPRPNqh7RTnIDfJ+qTS64HloUp6rAizIaqsahXMI3jaok5AVf7T5tstIMt15tYBqeJ0YDldYvwPlDMHjR1DBZbnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:48c4:26a9:d9ec:22cb])
-	by albert.telenet-ops.be with bizsmtp
-	id se072B0044gWvPH06e07Y7; Wed, 28 Feb 2024 15:00:13 +0100
+	by andre.telenet-ops.be with bizsmtp
+	id se072B0074gWvPH01e07Ym; Wed, 28 Feb 2024 15:00:13 +0100
 Received: from rox.of.borg ([192.168.97.57])
 	by ramsan.of.borg with esmtp (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rfKTV-001tZG-EJ;
+	id 1rfKTV-001tZC-DU;
 	Wed, 28 Feb 2024 15:00:07 +0100
 Received: from geert by rox.of.borg with local (Exim 4.95)
 	(envelope-from <geert@linux-m68k.org>)
-	id 1rfKTe-006hlI-Vc;
+	id 1rfKTe-006hlF-Uu;
 	Wed, 28 Feb 2024 15:00:06 +0100
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 To: Chris Down <chris@chrisdown.name>,
@@ -43,9 +43,9 @@ To: Chris Down <chris@chrisdown.name>,
 Cc: linux-kernel@vger.kernel.org,
 	ceph-devel@vger.kernel.org,
 	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4/4] ceph: Use no_printk() helper
-Date: Wed, 28 Feb 2024 15:00:05 +0100
-Message-Id: <a21767eccb823435a7f18cdf115d7d572b4e945d.1709127473.git.geert+renesas@glider.be>
+Subject: [PATCH 3/4] dyndbg: Use *no_printk() helpers
+Date: Wed, 28 Feb 2024 15:00:04 +0100
+Message-Id: <32e18ceb528b99d9147be9c1af578a1965e2bad9.1709127473.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1709127473.git.geert+renesas@glider.be>
 References: <cover.1709127473.git.geert+renesas@glider.be>
@@ -57,51 +57,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When printk-indexing is enabled, each printk() invocation emits a
-pi_entry structure.  This is even true when the call is protected by an
-always-false check: while the actual code to print the message is
-optimized out by the compiler, the pi_entry structure is still emitted.
+When printk-indexing is enabled, each printk() or dev_printk()
+invocation emits a pi_entry structure.  This is even true when the call
+is protected by an always-false check: while the actual code to print
+the message is optimized out by the compiler, the pi_entry structure is
+still emitted.
 
-Fix this by replacing "if (0) printk(...)" constructs by calls to the
-no_printk() helper.
+Fix this by replacing "if (0) *printk(...)" constructs by calls to the
+corresponding *no_printk() helpers.
 
-This reduces the size of an arm64 kernel with CONFIG_PRINTK_INDEX=y and
-CONFIG_CEPH_FS=y by ca. 4 KiB.
+Note that this has minimal impact, as most (all?) callers of
+dynamic_{pr,dev}_debug() are protected by checks for DYNAMIC_DEBUG
+anyway.  Still, using the helpers serves as a good example to follow.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- include/linux/ceph/ceph_debug.h | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ include/linux/dynamic_debug.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/ceph/ceph_debug.h b/include/linux/ceph/ceph_debug.h
-index 11a92a946016eab5..5f904591fa5f9e57 100644
---- a/include/linux/ceph/ceph_debug.h
-+++ b/include/linux/ceph/ceph_debug.h
-@@ -27,17 +27,13 @@
- 		 ##__VA_ARGS__)
- # else
- /* faux printk call just to see any compiler warnings. */
--#  define dout(fmt, ...)	do {				\
--		if (0)						\
--			printk(KERN_DEBUG fmt, ##__VA_ARGS__);	\
--	} while (0)
--#  define doutc(client, fmt, ...)	do {			\
--		if (0)						\
--			printk(KERN_DEBUG "[%pU %llu] " fmt,	\
--			&client->fsid,				\
--			client->monc.auth->global_id,		\
--			##__VA_ARGS__);				\
--		} while (0)
-+#  define dout(fmt, ...)					\
-+		no_printk(KERN_DEBUG fmt, ##__VA_ARGS__)
-+#  define doutc(client, fmt, ...)				\
-+		no_printk(KERN_DEBUG "[%pU %llu] " fmt,		\
-+			  &client->fsid,			\
-+			  client->monc.auth->global_id,		\
-+			  ##__VA_ARGS__)
- # endif
+diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+index 4fcbf4d4fd0a29d1..ff44ec346162a164 100644
+--- a/include/linux/dynamic_debug.h
++++ b/include/linux/dynamic_debug.h
+@@ -305,9 +305,9 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
+ #define DYNAMIC_DEBUG_BRANCH(descriptor) false
  
- #else
+ #define dynamic_pr_debug(fmt, ...)					\
+-	do { if (0) printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__); } while (0)
++	no_printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
+ #define dynamic_dev_dbg(dev, fmt, ...)					\
+-	do { if (0) dev_printk(KERN_DEBUG, dev, fmt, ##__VA_ARGS__); } while (0)
++	dev_no_printk(KERN_DEBUG, dev, fmt, ##__VA_ARGS__)
+ #define dynamic_hex_dump(prefix_str, prefix_type, rowsize,		\
+ 			 groupsize, buf, len, ascii)			\
+ 	do { if (0)							\
 -- 
 2.34.1
 
