@@ -1,168 +1,130 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4950C3FBA2;
-	Wed, 28 Feb 2024 17:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06183FBA2
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 17:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709141546; cv=none; b=ICVug/ajFT+KMryE0Y4T+5P+NMn3LgLIW26fnLUiTrUOvGeZexBduGyE4odeb/gL08eyANXjb9n1+1hK4LRBn1cLBopxdNr57CY8BWF6BdRKClEP7aXWSNUuYqvuIFLtAycAG+V6HOUHCyu7u7C2lnqpekTnCKjHPid9iuxwvjc=
+	t=1709141574; cv=none; b=GKXbEucXF4IbVK7Eya733vmPPU0e9w2OPtLd3Bvevc7KxR6rgVKV1E0YH0D5R3+OMSSf1sB7QKAR4oZYpZg04839X9xyR4AymvvTRXXZBxScjpRtPjvK26DZJxr0W1PnrOrOiV5sNTYPmFenGkqgZPKqw5B7Oi5a1bbT0zxC5yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709141546; c=relaxed/simple;
-	bh=Di1LPZZculjhkYlyZeqG4jRqHH2/9Y04HKYM7VRwqTI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L0bAJg30UJRu7tlPtWOjg4eRNCFfr4b8hd+CtaQK5GSX0o0G1ZkHcJDRQRFipg+E84E060CFJ1KK/hfmQTkAyanGZw4zuEQgW9fh7N9qgRGNxE32LzMC1+vlITHwriWod0BrIHyz0rdSE0QY02H0cN1L4OZkbspZffJDexNlC8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhUeOiJx; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709141574; c=relaxed/simple;
+	bh=fYS13N9NZSFLqL5gwUsUap5mM8K5OiN8syZJhBDVxbs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uYgnHrD9zxeHlvWzT4+CR3jumPq4P2yotpNSWkvvSz/CWiI+1g3J1fDTKPbUpnT5L3furfdx+Y9NJ+tOYhfJ35lNnVLuerIN7T2dUnwqb+yG8EdQVvAuzeBecS560gZxOyongAnTV3zOxX5nGJXv84BHso9A7Tb9AjiwydkUuco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dmw4ekwZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhUeOiJx"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-787bc61cb69so380074585a.1;
-        Wed, 28 Feb 2024 09:32:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709141544; x=1709746344; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2p3N5b0ScPGv0PAJy8f2OEufbcAe7rsvEvf1A8xZmn4=;
-        b=ZhUeOiJxfPOHziYjmP9ZXxRrKartJIJ7eoE4toAE1Yg61JkfJXhv7qOTU6PqCylDvo
-         wGOMEPiQWbAW3ZVy1PKJ9s8ZBlzBougoQSUZ0ucnEPZVOqYOwL2argO1WGv7DYWQWK3x
-         FIc4EYat+FafCbnxhKQY5xbHiBMnBRnKn7GtZnp38WD3ho7E/gJgXgr5bJCyynafLzMc
-         bpoCThSnPNMmjM56Wrg3ifdRmGodunKEKkbkdRiAhAJj2d3WAgPInY+bZfDfxC+6+GJK
-         3Bwc92BhmoJ7ZSU7zShKna35ngGH5y6SDVT8kbwosWf48B2jBSUMhEIKZ0DDD0uWCpl+
-         SL0A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dmw4ekwZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709141571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SmXoF31qoxcztznnZL7H+L5aSF9s4S/rqGoBb/y1mxw=;
+	b=Dmw4ekwZ1LOfwh0SpiEHn33v+b7H2PB4vL5/qFdg1LY35wK6MNFA6ITo+FlZP8qRPmPSYo
+	QMU4mnbAy8ic8z04zkTF9h5lXf08el+qW96NgVIFmahLVO8DNlvwRYAuhJM3f2FCLMj7ml
+	JZ3dDxC2h34KvLopexjcR/rWy50NP+Y=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-313-R8p7WTMpPlGwctQj7sdpzQ-1; Wed, 28 Feb 2024 12:32:50 -0500
+X-MC-Unique: R8p7WTMpPlGwctQj7sdpzQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4129b426bdaso29365e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:32:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709141544; x=1709746344;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2p3N5b0ScPGv0PAJy8f2OEufbcAe7rsvEvf1A8xZmn4=;
-        b=fHw9rDRwcaOdN7QD//DkOAufmJNE2H+5LvwgAWEWGCUUE8LTBHcOoUJLthE5E+luwz
-         4dX+OHNxIPyBYoH+Kd+1sChMp2Oq8+4cdoOjGVtgB4QvOSDPZ0NOVL9/T6/ciwwxmfeC
-         KGHo8gVADdmjHmwGAqkbMKfbZig3cBlGTO6vMT8BMC2miUe1+H15mQigRiWjxPnTYoVI
-         uUB0g5U/uhcBVRnFLTd5iYmRAQcwBZHfOWpb7pkGB00VWVn4JqAAghcZiS16QC67uLj2
-         3+Q+KydOIYRuk1xmgRgU2FST6r13unXeNSINF+9xuiGXvYC5IibmfoPZ4GpO24NJ+4FX
-         vohA==
-X-Forwarded-Encrypted: i=1; AJvYcCVjy7hf6SVmg60TFMhqtwhJwCyqUpfg/fl8ylyCaPVtjM6acUwe45OLvf2nxUvfMDgUjVdHezB+ELbRxZ1UGrOUC0rrt4TEl0MmFgku1NxRR/l7x5x4LqBZsPYpCwXuC6DQlbOKVJgR
-X-Gm-Message-State: AOJu0Yysod5FZyAfn+1esMEG0IGa60JNoma0tex5NOZ5vDnl9YqXLTYQ
-	/704SbuBadBst7FW/aQDjVr1rOPmhfFUFIDXlnvVemdb8e6U0J3I
-X-Google-Smtp-Source: AGHT+IHOCJEsVLG0SH4MCO5uUhMA1VmZkdxhrLcPJxyi7AOAttj/k9DjX1WeAlN4qnHHs6nnBM7sig==
-X-Received: by 2002:a05:620a:10ab:b0:787:a4aa:4e1e with SMTP id h11-20020a05620a10ab00b00787a4aa4e1emr5222435qkk.55.1709141544218;
-        Wed, 28 Feb 2024 09:32:24 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id xy12-20020a05620a5dcc00b00787c142ec1fsm4763499qkn.110.2024.02.28.09.32.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 09:32:23 -0800 (PST)
-Message-ID: <77497701-3bd2-4f5f-9404-b32d9e91683b@gmail.com>
-Date: Wed, 28 Feb 2024 09:32:19 -0800
+        d=1e100.net; s=20230601; t=1709141569; x=1709746369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SmXoF31qoxcztznnZL7H+L5aSF9s4S/rqGoBb/y1mxw=;
+        b=bCTtKyHLMg1rS7L3L1tDqP75XotygsuivujBX+wWXAenA11UznEJjqURjfhBM+no7Q
+         1LLSf1tDi/bJNCrncU8+Z5WEOsWHY5191qzyjWvq5nh0ME++Ai9g5jQGadNMYNc9akV4
+         exHNi1q9+lnJmx4G/wd3vnuwxTnggqqGm7cSafotl5KdMDkleWI4hKGRknOvBzwqiWUD
+         Agd19QwQXQz+mxzsCkjrIFTYTLpusIi46eFe/45JmPXZEK5pWQpHgpmK3xjYykWZzPdn
+         W5/mfqTwx+rnLl+mWVmB7grDT16OfjsLzKOFUXtNxDq0UcTS79CTa8dbJwh8lnCNrtr3
+         2TUw==
+X-Gm-Message-State: AOJu0YxqFl6BYkCATsI9gyj1N8zhXwTAnqyt6C8TlqEdH6fZMs+F+Zfb
+	vL1U01Xm2vzIqZ+KWvcyN37SFLhe/uzkXUsv1jyRko1I39RP6UVPh9vWRYag+1qSGtGB21mNnFj
+	IT/P2V8ZrVzqdL04XwoOgSNvClHWl4wnCIV/ncgiXBN791Wm029/LIuWLIJBxzSUKdqnMkk7JDz
+	dRUYmh0ScJCv78q25ncSvYph7cUS86G4034jnv
+X-Received: by 2002:adf:e488:0:b0:33e:202:277a with SMTP id i8-20020adfe488000000b0033e0202277amr164348wrm.46.1709141569076;
+        Wed, 28 Feb 2024 09:32:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHxcghLhChHEAIG27LGbO9eqn7L5dVgSGoWWA3BJFwSP4LoUv8zzPOjUYDW9wZ+F93WhzORVl0bdNLPnNOtaFg=
+X-Received: by 2002:adf:e488:0:b0:33e:202:277a with SMTP id
+ i8-20020adfe488000000b0033e0202277amr164333wrm.46.1709141568784; Wed, 28 Feb
+ 2024 09:32:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: netconsole: Add continuation line prefix to
- userdata messages
-Content-Language: en-US
-To: Matthew Wood <thepacketgeek@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Breno Leitao <leitao@debian.org>
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240228172948.221910-1-thepacketgeek@gmail.com>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240228172948.221910-1-thepacketgeek@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240227232100.478238-1-pbonzini@redhat.com> <20240227232100.478238-11-pbonzini@redhat.com>
+ <Zd6T06Qghvutp8Qw@google.com>
+In-Reply-To: <Zd6T06Qghvutp8Qw@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Wed, 28 Feb 2024 18:32:37 +0100
+Message-ID: <CABgObfaPodSSzArO99Hkn=vpGotO1wZ-0dZKEZHx9EqLZ7M_XQ@mail.gmail.com>
+Subject: Re: [PATCH 10/21] KVM: SEV: Use a VMSA physical address variable for
+ populating VMCB
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, michael.roth@amd.com, 
+	isaku.yamahata@intel.com, thomas.lendacky@amd.com, 
+	Ashish Kalra <ashish.kalra@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/28/24 09:29, Matthew Wood wrote:
-> Add a space (' ') prefix to every userdata line to match docs for
-> dev-kmsg. To account for this extra character in each userdata entry,
-> reduce userdata entry names (directory name) from 54 characters to 53.
-> 
-> According to the dev-kmsg docs, a space is used for subsequent lines to
-> mark them as continuation lines.
-> 
->> A line starting with ' ', is a continuation line, adding
->> key/value pairs to the log message, which provide the machine
->> readable context of the message, for reliable processing in
->> userspace.
-> 
-> Testing for this patch::
-> 
->   cd /sys/kernel/config/netconsole && mkdir cmdline0
->   cd cmdline0
->   mkdir userdata/test && echo "hello" > userdata/test/value
->   mkdir userdata/test2 && echo "hello2" > userdata/test2/value
->   echo "message" > /dev/kmsg
-> 
-> Outputs::
-> 
->   6.8.0-rc5-virtme,12,493,231373579,-;message
->    test=hello
->    test2=hello2
-> 
-> And I confirmed all testing works as expected from the original patchset
-> 
-> Fixes: df03f830d099 ("net: netconsole: cache userdata formatted string in netconsole_target")
-> Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
-> ---
->   Documentation/networking/netconsole.rst | 6 +++---
->   drivers/net/netconsole.c                | 4 ++--
->   2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/networking/netconsole.rst b/Documentation/networking/netconsole.rst
-> index b28c525e5d1e..c2dec12f6060 100644
-> --- a/Documentation/networking/netconsole.rst
-> +++ b/Documentation/networking/netconsole.rst
-> @@ -197,8 +197,8 @@ Messages will now include this additional user data::
->   Sends::
->   
->    12,607,22085407756,-;This is a message
-> - foo=bar
-> - qux=baz
-> +  foo=bar
-> +  qux=baz
->   
->   Preview the userdata that will be appended with::
->   
-> @@ -218,7 +218,7 @@ The `qux` key is omitted since it has no value::
->   
->    echo "This is a message" > /dev/kmsg
->    12,607,22085407756,-;This is a message
-> - foo=bar
-> +  foo=bar
->   
->   Delete `userdata` entries with `rmdir`::
->   
-> diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-> index 0de108a1c0c8..ffd3e19406b5 100644
-> --- a/drivers/net/netconsole.c
-> +++ b/drivers/net/netconsole.c
-> @@ -43,7 +43,7 @@ MODULE_DESCRIPTION("Console driver for network interfaces");
->   MODULE_LICENSE("GPL");
->   
->   #define MAX_PARAM_LENGTH	256
-> -#define MAX_USERDATA_NAME_LENGTH	54
-> +#define MAX_USERDATA_NAME_LENGTH	53 /* 256 - 200 - 3 (for ' =\n' chars)*/
+On Wed, Feb 28, 2024 at 3:00=E2=80=AFAM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> On Tue, Feb 27, 2024, Paolo Bonzini wrote:
+> > From: Tom Lendacky <thomas.lendacky@amd.com>
+> >
+> > In preparation to support SEV-SNP AP Creation, use a variable that hold=
+s
+> > the VMSA physical address rather than converting the virtual address.
+> > This will allow SEV-SNP AP Creation to set the new physical address tha=
+t
+> > will be used should the vCPU reset path be taken.
+>
+> No, this patch belongs in the SNP series.  The hanlding of vmsa_pa is bro=
+ken
+> (KVM leaks the page set by the guest; I need to follow-up in the SNP seri=
+es).
+> On top of that, I detest duplicat variables, and I don't like that KVM ke=
+eps its
+> original VMSA (kernel allocation) after the guest creates its own.
+>
+> I can't possibly imagine why this needs to be pulled in early.  There's n=
+o way
+> TDX needs this, and while this patch is _small_, the functional change it=
+ leads
+> to is not.
 
-Could we take this opportunity to define MAX_USERDATA_NAME_LENGTH based 
-upon MAX_PARAM_LENGTH - MAX_USERDATA_VALUE_LENGTH - 3 then?
+Well, the point of this series (and there will be more if you agree)
+is exactly to ask "why not" in a way that is more manageable than
+through the huge TDX and SNP series. My reading of the above is that
+you believe this is small enough that it can even be merged with "KVM:
+SEV: Support SEV-SNP AP Creation NAE event" (with fixes), which I
+don't disagree with.
 
->   #define MAX_USERDATA_VALUE_LENGTH	200
->   #define MAX_USERDATA_ENTRY_LENGTH	256
->   #define MAX_USERDATA_ITEMS		16
-> @@ -671,7 +671,7 @@ static void update_userdata(struct netconsole_target *nt)
->   		 * checked to not exceed MAX items with child_count above
->   		 */
->   		complete_idx += scnprintf(&nt->userdata_complete[complete_idx],
-> -					  MAX_USERDATA_ENTRY_LENGTH, "%s=%s\n",
-> +					  MAX_USERDATA_ENTRY_LENGTH, " %s=%s\n",
->   					  item->ci_name, udm_item->value);
->   	}
->   	nt->userdata_length = strnlen(nt->userdata_complete,
+Otherwise, if the approach was good there's no reason _not_ to get it
+in early. It's just a refactoring.
 
--- 
-Florian
+Talking in general: I think I agree about keeping the gmem parts in a
+kvm-coco-queue branch (and in the meanwhile involving the mm people if
+mm/filemap.c changes are needed). #VE too, probably, but what I
+_really_ want to avoid is that these series (the plural is not a typo)
+become a new bottleneck for everybody. Basically these are meant to be
+a "these seem good to go to me, please confirm or deny" between
+comaintainers more than a real patch posting; having an extra branch
+is extra protection against screwups but we should be mindful that
+force pushes are painful for everyone.
+
+If you think I'm misguided, please do speak out or feel free to ask me
+to talk on voice.
+
+Paolo
 
