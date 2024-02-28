@@ -1,91 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47E473507;
-	Wed, 28 Feb 2024 11:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227BF73509;
+	Wed, 28 Feb 2024 11:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709121486; cv=none; b=oLmw2MDtOeKRKpjFQGh3frp0ZL8WqBIsMf+zdHUpPff9T6ZXW/bnvSYv9UDlAjVnTApdQeHzPpO5npAzLw07JFBy4/aajtb/GjYN/ve1biGU1I/0fG4QBuCeCvJYQNLwqH21CnszJ4Tl7sHPwOM29fksmVd7hjc0HlWvNDSK6Dk=
+	t=1709121503; cv=none; b=RbJMHh+bE2n6P5Aa/vv60IuOWgeVuLTFuDfSXY0AnHLiWYLjovAT4IGRnTENN4/d8QJKENDyH3ICK1775elOn0/PBoGJHyU0dDkoYdX/u7RbwXd8QaMR3/XCjZ4HlQDhofl1bKYx5j86lMR2OdeXduMoIuJpjM6nqjhXyYrwr/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709121486; c=relaxed/simple;
-	bh=2i57F2bwd8MFtlPkyg5+cTyjkGeR5xF3YTz9mn9FMPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mEkRUGYqOty0CYIcmOgMuMEk39oZTaMdqiyUt/ebs/5dPYzWJEVPV81RgfHJgOcvi+3pb6iFPbzCp4qT11hNeNpEeZrvLjft3ffZgkRs6oY6DxwTpBykQQDqziMvL6iusks7M97hm7uZApvg/0Bz5bL8RAdhMLv2YC151WWnAGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCuvCf8J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709121503; c=relaxed/simple;
+	bh=bmJVxea+oEzT3EtoYlqAmW+AUuUsUmFi5hATLsmQHjI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=XYOYiuj/jMVfKu/7ZjL1gJPHjb5A0cXDMgAYdBXHXk1ewGcso6iCMvBI/5rxpM5nbIx3l37MLCA3GrkxxyuiAQQ7jQZR8Cf/Dx8xMOr0RHH/XJV5i85JWxImyeSmQeVKLLZMumllijgsMIZ+YXn6gYNX5ZfftZiIS0bdGQtmnCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HwbBgPwl; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCuvCf8J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81BF6C433C7;
-	Wed, 28 Feb 2024 11:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709121486;
-	bh=2i57F2bwd8MFtlPkyg5+cTyjkGeR5xF3YTz9mn9FMPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gCuvCf8JLm/G3hyf82omkF/EFRSEDdsMPz+k8PJOUXPTs19x4IjEhAC7IjvarNarp
-	 f2mfRJuQBszQyCddyAoxMKEO/9uwRxfdk6t0vPR6/B77rKJ8uYagYgTj8UDlHozlPd
-	 8Hpor3xdVOWiOQ4gKx0b8I8KNTfnrdIOZ34vxV/QAc5cupuKmdFWXXDYqHSBUgLkH/
-	 9tnS4u6/BKc/7Pny26ZvnLLv3Q4dOw/mpLwnExI+DCB7ZSaQ2CAiFYxEuIDNtIIWD/
-	 rQRqY267+OLRb0coDAzBmqVFIoEfgFqLDHvjMGJbqn2heiodlXXBROnYWoaAmK43kE
-	 zgzYtrx4vvqfg==
-Date: Wed, 28 Feb 2024 11:58:01 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: antoniu.miclaus@analog.com, alexandre.belloni@bootlin.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, jdelvare@suse.com, linux@roeck-us.net,
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	Ibrahim Tilki <Ibrahim.Tilki@analog.com>,
-	Zeynep Arslanbenzer <Zeynep.Arslanbenzer@analog.com>
-Subject: Re: [PATCH v8 2/2] dt-bindings: rtc: add max313xx RTCs
-Message-ID: <20240228-embark-rimmed-d81bab3d42b8@spud>
-References: <20240227010312.3305966-1-chris.packham@alliedtelesis.co.nz>
- <20240227010312.3305966-3-chris.packham@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HwbBgPwl"
+Received: from relay1-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::221])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 255A0C3B08;
+	Wed, 28 Feb 2024 11:44:19 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1A1BC240010;
+	Wed, 28 Feb 2024 11:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709120650;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bmJVxea+oEzT3EtoYlqAmW+AUuUsUmFi5hATLsmQHjI=;
+	b=HwbBgPwlUGwdkKqhxPs0I6nUKj3VWccKez2XcK0QCJRc1E5t+YCDn6NmazS+VoH+UYgi81
+	7OWOMPQ6f+vavnK5g2BIgbR/LB0rBSZcyik1mHXAvwWnxAPJtEAKl45Ic74VkP8JHM8bD+
+	J/Qa20DdB8EK6mbrj+f6aFPqevmHv3KZHgiGoOYPyHBoyogseRFUwazKRn9nvoq87yfVWr
+	u1fo5QuK+MOiX3zstLjuf5jzJnHQgJLhwrXmpb74ingV3ccMfqVHASR/J8SyS8IzxKDd1Q
+	HYiOqUCybVVa8cFJHv7NDK4j87ys693VUgMOwKel7/h25ksp9Tnkabl2a8LlBA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="t4gB6YKl63pmWb0L"
-Content-Disposition: inline
-In-Reply-To: <20240227010312.3305966-3-chris.packham@alliedtelesis.co.nz>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 28 Feb 2024 12:44:09 +0100
+Message-Id: <CZGOPF51JA1R.2YN65K6WUH9N4@bootlin.com>
+Cc: "Paul Burton" <paulburton@kernel.org>, <linux-mips@vger.kernel.org>,
+ "Jiaxun Yang" <jiaxun.yang@flygoat.com>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, "Alexandre Belloni"
+ <alexandre.belloni@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+To: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v8 00/14] Add support for the Mobileye EyeQ5 SoC
+X-Mailer: aerc 0.15.2
+References: <20240216174227.409400-1-gregory.clement@bootlin.com>
+ <ZdSst3fM3EOQGH03@alpha.franken.de>
+In-Reply-To: <ZdSst3fM3EOQGH03@alpha.franken.de>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
+Hello Thomas,
 
---t4gB6YKl63pmWb0L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue Feb 20, 2024 at 2:44 PM CET, Thomas Bogendoerfer wrote:
+> On Fri, Feb 16, 2024 at 06:42:09PM +0100, Gregory CLEMENT wrote:
+> > Hello,
+> >=20
+> > The EyeQ5 SoC from Mobileye is based on the MIPS I6500 architecture
+> > and features multiple controllers such as the classic UART, I2C, SPI,
+> > as well as CAN-FD, PCIe, Octal/Quad SPI Flash interface, Gigabit
+> > Ethernet, MIPI CSI-2, and eMMC 5.1. It also includes a Hardware
+> > Security Module, Functional Safety Hardware, and MJPEG encoder.
 
-On Tue, Feb 27, 2024 at 02:03:10PM +1300, Chris Packham wrote:
+[...]
 
->    interrupts:
-> +    description:
-> +      Alarm1 interrupt line of the RTC. Some of the RTCs have two interrupt
-> +      lines and alarm1 interrupt muxing depends on the clockin/clockout
-> +      configuration.
->      maxItems: 1
+> series applied to mips-next.
+>
+> I've fixed generic|ingenic|realtek builds by adding select MACH_GENERIC_C=
+ORE
+> in arch/mips/Kconfig.
 
-The maxItems: 1 looks odd here when you state "some of the RTCs have two
-interrupt lines", which makes it sound as if there are actually two
-interrupts that should be exposed here. If those two interrupts get
-muxed to the same pin for output I'd suggest that you clarify that here.
+Would it be possible to provide an immutable branch containing the two
+series? I've got quite a few series that depend on them as they target
+EyeQ5 devicetrees and defconfig.
 
-Otherwise, this looks good to me - although I do wonder if the
-authorship on the commit (attributed to the analog guys) is still
-accurate.
+It's been a request from Bartosz for the GPIO series, see [0].
 
-Thanks,
-Conor.
+Series are:
+ - Jiaxun's "Unify register numbering macros for uasm" [1];
+ - Gr=C3=A9gory's "Add support for the Mobileye EyeQ5 SoC".
 
---t4gB6YKl63pmWb0L
-Content-Type: application/pgp-signature; name="signature.asc"
+Have a nice day,
 
------BEGIN PGP SIGNATURE-----
+[0]: https://lore.kernel.org/lkml/CAMRc=3DMfLXCDXBiKKuEPZRjNoNiFN+gvhu+GjZk=
+Z1SQuF1s4=3DUQ@mail.gmail.com/
+[1]: https://lore.kernel.org/linux-mips/20240209-regname-v1-0-2125efa016ef@=
+flygoat.com/
+[2]: https://lore.kernel.org/lkml/20240216174227.409400-1-gregory.clement@b=
+ootlin.com/
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd8fyQAKCRB4tDGHoIJi
-0tDSAQD7rkCjY+O1QQKDOVfrzBf54VpRC0g+H4OnP8QHO8tvcAEAve/lMLAJY/bw
-qykf1vJWluXsxzAdd6/12T1WX8A94Qs=
-=7JwR
------END PGP SIGNATURE-----
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
---t4gB6YKl63pmWb0L--
