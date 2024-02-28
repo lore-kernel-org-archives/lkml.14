@@ -1,134 +1,134 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2123.outbound.protection.partner.outlook.cn [139.219.17.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB9831A82;
-	Wed, 28 Feb 2024 09:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709112763; cv=fail; b=EiQ8yiz0iHQhP0BBNfeVZS2iw4tEoM39wrCPuTJnN3OSdQsHqMEgCafOCcQTX5FFILHsv1Eb9YceJxfefobqfpvDMSqNnnRaXwfc9drY4mltZiYHP8R1dhEUWF/c6w7B1KCBREv4IJT8oiZczQfVz2SjbcElcMz8PvnV1qp9BPw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709112763; c=relaxed/simple;
-	bh=Ktp6i+vzAGi9KMS7ElSt/5gi1mSyxkmW6NMcocHoMho=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IUqOUIwCTQfAC1htuiNME+06JSnPA3DdZucggQiynKp5Q9TkQiAKzqzxtIQEEQjc4NTJCaH1aiHnzC8qqTqPrqYsfH9F6WnLD1Br4p2yZ+LS5GgVZH3jrjUPgAYB9LFx3r5MiQetrWR6psD4s+7XNe+V2Vy/XuF+K+a7nbWLVSA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bznelYdTdVO28lKKdHuysGOm8NnHec3ntixHIv4sGccnX9curlYJLKGeBm+3gKUroVn3S30gB+rmj0L76YlvPfRuJZQbNYlkp9kJpc980teKQtGFVMx+4y/9o3HOr6hmT6qTihC6687cKg2B13rIjs+MJ5VxKHnPiskEzZOEJQVSIruergN7bTFOU+NasiPAsyX1hgzqh8+MHIAxvopqsNpavsXOLvhIppGBdW5kWJ46+CPZZwFUR3/5/ZNWR/V3xmcQU40U4HF6tri5H7rrCRk2Hy1uv3DYNJKUNomx1Bqqy8qoLZGGW7PwJmgkIM1kDUjC1d+dgP0FK9QIxZP+mQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8p0EvvubVnMbFoSdHvAeJxsEmdSrtjrVA1r0BbscUjE=;
- b=mzNnAovUVEQ5XKfMX8XEHI5yxiWN8awqpWmlZcNKv3pBu8Sd4PxiGrDy2xSuG4H2Crb/hsoVCWiCokK6YJF3e/A5oPQNLVGHBraAro5WR4GNQk4eKFy3TL3iOm35g9TPr/54cfcr7XiLs1/bKxyNuQ6vSXiNWt0K6SCdZVtyx8+9Y1RYoEH6Nae8JJ/P5wvTrbB8lZvMZ7TvUNS0LSBBe2XDTXn0GRV2J/bRhiG6+ZmzxN1patCn9Azd0Qx0WnjOzDwMQ33kNUYPepBAy6Z0Y4tMiyJsqyj/cm7gFiLPMBK68oJkI857HuH6Oz3cDTLHe5NgTSfc0GVDC20hfNYl6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6) by ZQ0PR01MB1158.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Wed, 28 Feb
- 2024 08:58:36 +0000
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- ([fe80::d0fb:daf7:3f8b:868c]) by
- ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn ([fe80::d0fb:daf7:3f8b:868c%3])
- with mapi id 15.20.7270.047; Wed, 28 Feb 2024 08:58:36 +0000
-From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Eng Lee Teh <englee.teh@starfivetech.com>
-Subject: [PATCH] i2c: cadence: Add RISCV architecture support
-Date: Wed, 28 Feb 2024 16:56:13 +0800
-Message-ID: <20240228085613.3935476-1-jisheng.teoh@starfivetech.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0011.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510::20) To ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3B936B00
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709112772; cv=none; b=ROzHWSpmVcxdVMLrlx+jhBh+kJy5XQ5VuOV1/rf7s7YRT9Bw+k9UchCuCohKZSfJcEOt9ntaG4Sk5gdoWjP+K3IBIM/r7UpwLC92qnW7hn5IPlkSG6yNg4gUKkPIfaMgCslcw58Vi7KgwNEHUhvKhJ01lgv6pebpGqarlprE/6c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709112772; c=relaxed/simple;
+	bh=uFslmsiSq1HBTE5LNPd44uZu/F0twT8BTQkMgaIxbMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzSgX58fTsv3VjqQpHCutOaYTPlNJO9aUxBfwwJU2ohL4Yzi8b8a6Fr02c6vwai593UhUi7fIHDoUsv8Uq3O8Cpp7y2MpbLVUwMhsQXGZHfnm/U4z9GznkZLYmtsMyasC3CSzsui8vG/LTLxZMVtA5YmzgGO8+0XNT9mK2SLuIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=TFno7vEA; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="TFno7vEA"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33d6f26ff33so3621849f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:32:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1709112768; x=1709717568; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mQNKJ78MfZyuiu4j+k295fZB+jgGmMFXgbaeQC8Zu04=;
+        b=TFno7vEAtJvk8A1beRQwOvIZw3g/vzS8dk6zRjuy336HMS4eFvMMasQGb3bHpFZ+d9
+         xzmRK/vLGm1lF86v1HAm0L7DioQbgSJKN7JEbS2AMj+eZGvo6NNOzEDpyah4lSzl9xzJ
+         AYLV+Bmnj8I+Yn76qIgwQdsCL/iHrBrpP13cGK/GGMscP8JgtalnRHulvoW6R0K4/Bfz
+         E5k195u0KWrxOrwJLNOzjqCio/SaEumX5jSlPG5+Ur74FogDy/178a6ei5dy/Ck4555f
+         zLByFZF3soq+ophlRxY5yvvEEHCqyq/de/3rpbIUOWiUHw3kcZ5xbkaQ0EpdfwheQj8P
+         UtCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709112768; x=1709717568;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mQNKJ78MfZyuiu4j+k295fZB+jgGmMFXgbaeQC8Zu04=;
+        b=Wz1wx7gENHNypbrfnLV477Sa0MSyRzKpVdLb5HgMBZAYz73rAZ8nToD92fVEfrlcBd
+         0jHtvaxzkczragJubsMzYAUagFFfQuMzu1t74WZNIovwh7orqZknU1Uj3DIHdaKZ+wD/
+         UMgWugEAOAvrHnrmkiNOzXHLknaKKmn3oIqB7LF3EQq+nuFRWmB5YYjVnbzrI5e1MIB9
+         pI5GPSqhvllCNEOWIxOqgjulmEAB770FImAXaheKaMkdHc1aKMaEkvTHBv2XSznkkLA5
+         n3J3mrFydh2iVjNsC5tQ3EHCTfYptYX96bHU9bMtmHoJQFT9NzeOckclu0GylCdwgHpw
+         +BOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXiztOlwM6hlR8g8oiGp7OisVZiMeU5FW5Fs2xNt9psERosYqRe+ijd7WiwuaTrRjEIp+v/TwCW+CkKw5C2/kguzRJXyJyzglEBQtuX
+X-Gm-Message-State: AOJu0Yxz2v6+6ZwNbYJo3V8SLEOZ6g+fGbKBGmLheECDm7LhwNpEIDI/
+	oi2hio5paY2HN56/hnhcMeCfPdxr/ry7t/FvgbO9a+ck7nLxoGtLRDN11DywHvw=
+X-Google-Smtp-Source: AGHT+IEWEqNQ9d2tqbJP6sC861PImJRIY/oH0R9V9AxQfO/Gs6YqWMFo4jl9jdQrcYf5WDRE4XxY0A==
+X-Received: by 2002:a5d:4046:0:b0:33d:8cc0:4827 with SMTP id w6-20020a5d4046000000b0033d8cc04827mr8411713wrp.45.1709112767852;
+        Wed, 28 Feb 2024 01:32:47 -0800 (PST)
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id az14-20020adfe18e000000b0033d2541b3e1sm14587268wrb.72.2024.02.28.01.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 01:32:47 -0800 (PST)
+Date: Wed, 28 Feb 2024 10:32:44 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: prabhav kumar <pvkumar5749404@gmail.com>
+Cc: shuah@kernel.org, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	petrm@nvidia.com, idosch@nvidia.com
+Subject: Re: [PATCH net-next] selftests: net: Correct couple of spelling
+ mistakes
+Message-ID: <Zd79vEsSp7wlJWQy@nanopsycho>
+References: <20240227175513.8703-1-pvkumar5749404@gmail.com>
+ <Zd7lqr8Cz4XrNoI8@nanopsycho>
+ <CAH8oh8U1KLxY95DQW9duU30VC5hdQd1YKs+8USuuz0k4JWtBSQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1158:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6c8eac7-3e79-4308-6228-08dc383b730a
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	WfLYuLluDrdPc1+t0okHBLwtIv2/xs87APQj2pbj63TM/b8Vkyl9g5YWk/QLjFz7EvanQ0Kg9Lz2WtwqU4v3Wx1y8cKxglUpJPPWpFScUPzgIwLpIYBlOaQfcj+jrOr+wck4M2ZGcyiCqgsqyIeEzv6FZIbMwm5RATgEE6s7COp/ESH1eekBtjKork4Gg72J+Gd7voLcTvNa4UD3IowXDcggiyPIiOtBhjZy9c99jVhh6JpxjCN5aIrHLjhoK2M/ROEz1GZlYe4xkp4BxX7phHXvmPHsa4MvEibhAuvASLnFGqNUvZN21rdnKfWK8VrDvSXa+ZrmS3kDHafSbAPdVtPoJ2+JTgRW+hutTVEmsjh5Uf6QRVrcC5qFlLEXWPB6Xzam4bpVRak73UKY8xu7so99l747nnmQqIy9zzUfR55HQlU9MVVWeUNqZYkaj0WZs3Md++GZIWwOEeYM+H4neWcU0Rj/o36Tz/ClxQYcP1Ny5XpbWwTe7Ii8vuDF0ufMW+KaWHit96KluLgOC5qwgyg/qBukDFjXIaVP0NGTkPKMZO5qTQU2s9IWEYVpLPAJ/0jJZIfMP6Wb6f3EvNUi4DoX2Fbr4AYlHpp6PeXdVK50r0/2vp9WrfdWLpaGGMB8
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?2cQZGHsie/yf/nGIZka0gokeIuWnUAoSZhVLpfDErrnpoon3eaXXedq3gAfT?=
- =?us-ascii?Q?BurDadtf4pF6IrFRoqNkaCSr2m3Nkz/YjYYHo3YGg/qn5wOD5QvXQo1W3YL+?=
- =?us-ascii?Q?iAPN28c+ZRPmpXdJyu8IFlSxF0spcgAuoB7LHH220Q8h6EXdmCnQuktKk/pr?=
- =?us-ascii?Q?rhpOpGFpxVjbHejueT9bqLB+fBH6Bapp63ulaH65e/LSwVCFLF8H28HOChJ2?=
- =?us-ascii?Q?FHtuKetSByZoHnnqdK9li4TuyW59dhySDbuRm9c1zLBG6E3o62V5g4Rd0pVQ?=
- =?us-ascii?Q?f42DBp/Ocz5prdMnBCFLdcMTHsT9CaJtp/HlCfeMdT/4Jbkr/noWhjAStbas?=
- =?us-ascii?Q?wZ4uhHOkN3hH25IBEvBpaOYwZMa8CFzzFDiyQNF+sMRY26dzkhJUzSOngq0E?=
- =?us-ascii?Q?aTSt7ZeuDy4Vor1oGaL7h9LuSYLPiF2J4Kt+shqZ6ksVtPPT/zvdX7Q1EMA6?=
- =?us-ascii?Q?n129kjNLAuwJU3V9hbO8nL25fYsW0qivHLtBoCFSuR3wPb7yxlBETnJybguN?=
- =?us-ascii?Q?wuaGsztbPew0QnuIkI1uKsfWp7BSeG0TkgK28RoPzP9eRyaO8g1EbvRy3bqk?=
- =?us-ascii?Q?RMEB3aPVzCXFTQQO5+ZJUOOnmJGrGc9Kiew79/4RCqusOr3waFhUX/GzZdoS?=
- =?us-ascii?Q?QruVnmFu0B+X1FcKoW+YDwuDTZN/5EogUQhzIa4Ie157boUK4dc3Y5hL5ncH?=
- =?us-ascii?Q?QjJn/H0sQBmQqEzaHh0NwJRMUO73fnPBI+7rLu41rahfdimYMEoYg6czqvIc?=
- =?us-ascii?Q?TpP5RCl4B3KoN9R6rx2fVFMPn9dwkU3bfU8lz+iA4KafBTC45QJvMkSWr9IX?=
- =?us-ascii?Q?4bDZ38PyYwQ0syfZn5eTGIbKhtWYUCA1Lu0qMlvz1fMEYp7j+HvdYGrpdVv0?=
- =?us-ascii?Q?hvPKrNilJbMem9dvyyv4naZH8Zpjnu8b7hKJ/witr6wOouWe+3isRDCG2JA2?=
- =?us-ascii?Q?SIn1Iz9j1LrNYEs4fXTNIPXOnADZBSGQ4YmFiblmv2v+JPzA1b3E/NIjOxls?=
- =?us-ascii?Q?V+j3vyQqyPkZofKWKx/olg3hKSbgM4R9vTd9Tn3EucpOwi6pdrHNEG0rGNW8?=
- =?us-ascii?Q?AzbujQ/esgGSXF04RbVG174f/I7sDgAmhEGD7VaqRMy7WE8PD/Nk5mIsMXHu?=
- =?us-ascii?Q?YpcrQWWCISv2rnhLi0l6YRSRCEsQcvHcYiRyXnqMpHkBPn83yJQxLf0hRBbL?=
- =?us-ascii?Q?c4JUCo2pSvPLmWnlrSkRh2zs5/5bK36tXjF6rJmHwesE8GLFV+lmvb+isNY5?=
- =?us-ascii?Q?woubT6IEaiOIQxqWE7Ukd99gZDu0pbHWbipo66LIwzXEoEKgbr2bmfBLDVzI?=
- =?us-ascii?Q?W4Ghe8Wi7o09vjJnQARo9MX9GekrhLQSubpy/phyxlqLBquRPlQO1aaHZdSX?=
- =?us-ascii?Q?pJbU+gxf4t9/Apruh7J1BIPxkTTRexBk6nWksC4CR0LG0d7iBOCZmkQzG+Ae?=
- =?us-ascii?Q?soAkpUechSEk4x6qFtWQpmGSmVysCRD9UkkC/dX/FA0y2CKE6XvC1LbbA8od?=
- =?us-ascii?Q?cVXVMHUz2q0nh7OgyAkPpGTFOTz6t2N+75lLW3WIH43eF+cbEPKRYhBGQic+?=
- =?us-ascii?Q?mDrZtO11ajMjF4lUqi7Ft/u4T2dLqsOvoRtoUveTbi7S8GqM75alfH5OlJah?=
- =?us-ascii?Q?uA=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6c8eac7-3e79-4308-6228-08dc383b730a
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 08:58:36.6217
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b6jQkzNpSinx3FmQzWKhD/CIN3Q2K3+C2SEQtBDd2CJY85/050vVOAmGpK5M+u6cmmC5e14BJ6RX+Sh5qoYqPjAGrImbgWRwRDx9wg+dXNo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1158
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH8oh8U1KLxY95DQW9duU30VC5hdQd1YKs+8USuuz0k4JWtBSQ@mail.gmail.com>
 
-Add RISCV support to Cadence I2C Kconfig which is used in platform
-such as the StarFive JH8100.
+Prabhav, I'm not sure what you are trying to do, but you have to
+re-submit the patch, preferably using git-send-email or another email
+client you use.
 
-Signed-off-by: Eng Lee Teh <englee.teh@starfivetech.com>
-Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
----
- drivers/i2c/busses/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 28eb48dd5b32..0f47413ce7b7 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -500,7 +500,7 @@ config I2C_BRCMSTB
- 
- config I2C_CADENCE
- 	tristate "Cadence I2C Controller"
--	depends on ARCH_ZYNQ || ARM64 || XTENSA || COMPILE_TEST
-+	depends on ARCH_ZYNQ || ARM64 || XTENSA || RISCV || COMPILE_TEST
- 	help
- 	  Say yes here to select Cadence I2C Host Controller. This controller is
- 	  e.g. used by Xilinx Zynq.
--- 
-2.43.0
-
+Wed, Feb 28, 2024 at 09:42:01AM CET, pvkumar5749404@gmail.com wrote:
+>On Wed, Feb 28, 2024 at 1:20 PM Jiri Pirko <jiri@resnulli.us> wrote:
+>>
+>> Please fix the patch subject to include appropriate prefixes and
+>> rephrase a bit like this:
+>>
+>> Subject: [PATCH net-next] selftests: net: Correct couple of spelling mistakes
+>>
+>> pw-bot: cr
+>>
+>>
+>> Tue, Feb 27, 2024 at 06:55:13PM CET, pvkumar5749404@gmail.com wrote:
+>> >Changes :
+>> >       - "excercise" is corrected to "exercise" in drivers/net/mlxsw/spectrum-2/tc_flower.sh
+>> >       - "mutliple" is corrected to "multiple" in drivers/net/netdevsim/ethtool-fec.sh
+>> >
+>> >Signed-off-by: Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
+>> >---
+>> > .../testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh | 2 +-
+>> > tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh    | 2 +-
+>> > 2 files changed, 2 insertions(+), 2 deletions(-)
+>> >
+>> >diff --git a/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh b/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh
+>> >index 616d3581419c..31252bc8775e 100755
+>> >--- a/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh
+>> >+++ b/tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh
+>> >@@ -869,7 +869,7 @@ bloom_simple_test()
+>> > bloom_complex_test()
+>> > {
+>> >       # Bloom filter index computation is affected from region ID, eRP
+>> >-      # ID and from the region key size. In order to excercise those parts
+>> >+      # ID and from the region key size. In order to exercise those parts
+>> >       # of the Bloom filter code, use a series of regions, each with a
+>> >       # different key size and send packet that should hit all of them.
+>> >       local index
+>> >diff --git a/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh b/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh
+>> >index 7d7829f57550..6c52ce1b0450 100755
+>> >--- a/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh
+>> >+++ b/tools/testing/selftests/drivers/net/netdevsim/ethtool-fec.sh
+>> >@@ -49,7 +49,7 @@ for o in llrs rs; do
+>> > Active FEC encoding: ${o^^}"
+>> > done
+>> >
+>> >-# Test mutliple bits
+>> >+# Test multiple bits
+>> > $ETHTOOL --set-fec $NSIM_NETDEV encoding rs llrs
+>> > check $?
+>> > s=$($ETHTOOL --show-fec $NSIM_NETDEV | tail -2)
+>> >--
+>> >2.34.1
+>> >
+>> >
