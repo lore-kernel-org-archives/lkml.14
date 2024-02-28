@@ -1,126 +1,144 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D28159574;
-	Wed, 28 Feb 2024 14:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEC237140
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 14:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709130765; cv=none; b=lRYybPBOG4DeYkyjzdllscj9cNEOJLolQkk4z+1poO/jCsN1MOz55QqXjtvZdgIVjoiGnIijDYNSSNWcW9MnAe0xODIki3HcrlO+usXOJBr8LHrhQro0wd7PQXx0/tYbyOLXw6JTu2NwXMsiTsKeHn06FhSF/7GMU78AKKgVL2k=
+	t=1709130782; cv=none; b=Ut0ZuNbeZb7wYsMNKNhXX5PSxu6FAiogX0PuVuO8JRx9G44jQBNFtuyi/whLYTfDf6d04XyBejv58AXQpTWhsMyuJQEIuMU6ro5O1oJ84iqXVhYACuGgoUrqwRfz438WyxCyERBtt9+ksnDJddQTf4ismjhpz5da23JpEdEVHhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709130765; c=relaxed/simple;
-	bh=V9xCmIa6+ktbdxuv0pzexA3rpP6Ec7GNOfYNx5QCXnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VFFu4InrM5mhLvWaOOH5SlCx7+dnWUK2DId5wtuPnIfVns0WVlGu7afgOkP7PIVXxQdua9qcZt6rzustNK82Dl1hmT/IwvjY8xx1GXPHuAhzf6H31q5/m/CyU3sgEbWxLx44fvhjVXJcfCQ6RCN6VbQ2+Revkmae05/aY9PqK08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bpx0DvyB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=W2VnTRbl; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bpx0DvyB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=W2VnTRbl; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bpx0DvyB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="W2VnTRbl";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bpx0DvyB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="W2VnTRbl"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4C07422501;
-	Wed, 28 Feb 2024 14:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709130761;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NYae/Whr9QvEpUrCqVSM/Jhun3OoCsXnrZsdgqnIIBI=;
-	b=Bpx0DvyBYwUL13zSoTsup+Eof4WDYvE6+Zs34RsLcPwz77PwsZVrseYrq5ClGUTA0FevgV
-	+5ngz9GT/Whym9qFhmkM2ylMDVYXe0N1BK2IHu8qpUU57HG+3+j6U//6vgjuji32Gj8vW3
-	bLOxVzGH1GjwSeBlT3rE1I2MjFUlgho=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709130761;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NYae/Whr9QvEpUrCqVSM/Jhun3OoCsXnrZsdgqnIIBI=;
-	b=W2VnTRblcbh6msol7Ep6v9bbOcUIvyyV7JIljVhZkv7iciKsp+O/TAfWff8gj4mzPShmMg
-	LeexC5TcY/LfZQDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1709130761;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NYae/Whr9QvEpUrCqVSM/Jhun3OoCsXnrZsdgqnIIBI=;
-	b=Bpx0DvyBYwUL13zSoTsup+Eof4WDYvE6+Zs34RsLcPwz77PwsZVrseYrq5ClGUTA0FevgV
-	+5ngz9GT/Whym9qFhmkM2ylMDVYXe0N1BK2IHu8qpUU57HG+3+j6U//6vgjuji32Gj8vW3
-	bLOxVzGH1GjwSeBlT3rE1I2MjFUlgho=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1709130761;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NYae/Whr9QvEpUrCqVSM/Jhun3OoCsXnrZsdgqnIIBI=;
-	b=W2VnTRblcbh6msol7Ep6v9bbOcUIvyyV7JIljVhZkv7iciKsp+O/TAfWff8gj4mzPShmMg
-	LeexC5TcY/LfZQDw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 2C4D513A42;
-	Wed, 28 Feb 2024 14:32:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id RQeXCglE32WLGAAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Wed, 28 Feb 2024 14:32:41 +0000
-Date: Wed, 28 Feb 2024 15:32:00 +0100
-From: David Sterba <dsterba@suse.cz>
-To: chengming.zhou@linux.dev
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, vbabka@suse.cz, roman.gushchin@linux.dev,
-	Xiongwei.Song@windriver.com,
-	Chengming Zhou <zhouchengming@bytedance.com>
-Subject: Re: [PATCH] btrfs: remove SLAB_MEM_SPREAD flag usage
-Message-ID: <20240228143200.GN17966@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20240224134709.829191-1-chengming.zhou@linux.dev>
+	s=arc-20240116; t=1709130782; c=relaxed/simple;
+	bh=wqoB8zcfxjW73Uldj3tr5z78Zp+ZJv8D2kVrXyMTshI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Xie9Elhqnal/n2f2jpGSMTAkSZ9w2dVT2eoo6JfGQhfJ6XFz6osn5LB4Pyt6F9IBne7YsjmV9MOU36zAiwIvICGYrbVuysOILc+K8Kd9sa89EHyXhRW5NKuB1E3cErh73rgq8FDSoOcY8hOGr6/O2lC99Ad9v2LEfhQo+Dc1T4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1709130771-1eb14e0c7e4c120001-xx1T2L
+Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx2.zhaoxin.com with ESMTP id wblIV0teK9jWjlKG (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 28 Feb 2024 22:32:51 +0800 (CST)
+X-Barracuda-Envelope-From: WeitaoWang-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX2.zhaoxin.com
+ (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 28 Feb
+ 2024 22:32:51 +0800
+Received: from [10.29.8.21] (10.29.8.21) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 28 Feb
+ 2024 22:32:50 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Message-ID: <07e80d55-d766-1781-ffc9-fab9ddcd33e3@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.21
+Date: Thu, 29 Feb 2024 06:32:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240224134709.829191-1-chengming.zhou@linux.dev>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[99.98%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2] USB:UAS:return ENODEV when submit urbs fail with
+ device not attached.
+Content-Language: en-US
+X-ASG-Orig-Subj: Re: [PATCH v2] USB:UAS:return ENODEV when submit urbs fail with
+ device not attached.
+To: Oliver Neukum <oneukum@suse.com>, <stern@rowland.harvard.edu>,
+	<gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+	<usb-storage@lists.one-eyed-alien.net>
+CC: <WeitaoWang@zhaoxin.com>, <stable@vger.kernel.org>
+References: <20240228111521.3864-1-WeitaoWang-oc@zhaoxin.com>
+ <e8c4e8a3-bfc3-463f-afce-b9f600b588b2@suse.com>
+From: "WeitaoWang-oc@zhaoxin.com" <WeitaoWang-oc@zhaoxin.com>
+In-Reply-To: <e8c4e8a3-bfc3-463f-afce-b9f600b588b2@suse.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
+X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
+X-Barracuda-Start-Time: 1709130771
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 2490
+X-Barracuda-BRTS-Status: 0
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: 1.09
+X-Barracuda-Spam-Status: No, SCORE=1.09 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=DATE_IN_FUTURE_06_12, DATE_IN_FUTURE_06_12_2
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.121446
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
+	0.01 DATE_IN_FUTURE_06_12   Date: is 6 to 12 hours after Received: date
+	3.10 DATE_IN_FUTURE_06_12_2 DATE_IN_FUTURE_06_12_2
 
-On Sat, Feb 24, 2024 at 01:47:09PM +0000, chengming.zhou@linux.dev wrote:
-> From: Chengming Zhou <zhouchengming@bytedance.com>
+On 2024/2/28 16:00, Oliver Neukum wrote:
 > 
-> The SLAB_MEM_SPREAD flag is already a no-op as of 6.8-rc1, remove
-> its usage so we can delete it from slab. No functional change.
+>> @@ -562,9 +561,9 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
+>>
+>>       lockdep_assert_held(&devinfo->lock);
+>>       if (cmdinfo->state & SUBMIT_STATUS_URB) {
+>> -             urb = uas_submit_sense_urb(cmnd, GFP_ATOMIC);
+>> -             if (!urb)
+>> -                     return SCSI_MLQUEUE_DEVICE_BUSY;
+>> +             err = uas_submit_sense_urb(cmnd, GFP_ATOMIC);
+>> +             if (err)
+>> +                     return (err == -ENODEV) ? -ENODEV : SCSI_MLQUEUE_DEVICE_BUSY;
 > 
-> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> Either we ought to use SCSI error codes or generic error codes.
+> There is no need to translate all but one error condition here.
+> 
 
-With updated changelog and some formatting adjustments added to
-for-next, thanks.
+  static int uas_submit_urbs(struct scsi_cmnd *cmnd,
+@@ -562,10 +561,13 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
+
+  	lockdep_assert_held(&devinfo->lock);
+  	if (cmdinfo->state & SUBMIT_STATUS_URB) {
+-		urb = uas_submit_sense_urb(cmnd, GFP_ATOMIC);
+-		if (!urb)
++		err = uas_submit_sense_urb(cmnd, GFP_ATOMIC);
++		if (!err)
++			cmdinfo->state &= ~SUBMIT_STATUS_URB;
++		else if (err == -ENODEV)
++			return -ENODEV;
++		else
+  			return SCSI_MLQUEUE_DEVICE_BUSY;
+-		cmdinfo->state &= ~SUBMIT_STATUS_URB;
+  	}
+
+  	if (cmdinfo->state & ALLOC_DATA_IN_URB) {
+@@ -582,6 +584,8 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
+  		if (err) {
+  			usb_unanchor_urb(cmdinfo->data_in_urb);
+  			uas_log_cmd_state(cmnd, "data in submit err", err);
++			if (err == -ENODEV)
++				return -ENODEV;
+  			return SCSI_MLQUEUE_DEVICE_BUSY;
+  		}
+  		cmdinfo->state &= ~SUBMIT_DATA_IN_URB;
+@@ -602,6 +606,8 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
+  		if (err) {
+  			usb_unanchor_urb(cmdinfo->data_out_urb);
+  			uas_log_cmd_state(cmnd, "data out submit err", err);
++			if (err == -ENODEV)
++				return -ENODEV;
+  			return SCSI_MLQUEUE_DEVICE_BUSY;
+  		}
+  		cmdinfo->state &= ~SUBMIT_DATA_OUT_URB;
+@@ -621,6 +627,8 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
+  		if (err) {
+  			usb_unanchor_urb(cmdinfo->cmd_urb);
+  			uas_log_cmd_state(cmnd, "cmd submit err", err);
++			if (err == -ENODEV)
++				return -ENODEV;
+  			return SCSI_MLQUEUE_DEVICE_BUSY;
+  		}
+
+I'm not sure I fully understand what your mean.
+Whether the above code is more reasonable? If not,could you give me some
+suggestion? Thanks for your help!
+
+Weitao
+
+
