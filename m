@@ -1,128 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.smtp-ext.broadcom.com (unknown [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98003FB8F
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3168179B74
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709145071; cv=none; b=BvrCDUcow4aIvFLPFaipG8WZalGmS6V0NBr4+AFZeM7MjVbw4ooB075g+p7vOhlySkbRPV9QkfrFw76MxA6NAfGCo+6tCCjnEaRVWrxyO/iA3xcCYq8esQ65aymnVfeA9sRe8GkWcJ9rs8L6lb5cpqeluAeHegJ+P9Vt35wS1vI=
+	t=1709145155; cv=none; b=XrUMlzb7N2VdqIoFfHFWBhXPMr1uIW6lOSaMIdeSlw4h9OnGR5AoDuFScXFU9Gn7Uw1sqeOiSEeII95H8hnR+WH62CXs5KEZ9YfohgyplkXtNhjYn6VnnOBPYM23yNKtNwz/mJtlfGmzTkByCQoz7EMn3JdM5WaxTs4Yu+v4S+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709145071; c=relaxed/simple;
-	bh=s/2MSjG8UyaUs97mrM1q6zQgCW0Xk0or22c3BdoaHmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O1cFNiGeP2WkZ6b3L1xzNuP0TuXshvw2TrBTm5SsuiaTPJWJWH0qhFm5q5swGkxhe+aeHS9gVo0rQS2LqULfipGPCoNoQWGp7Wz24AKGv8mD4/MbArPpv+NCcrqOL57wGnvgYs7ucJqomBAMVWwj9RHgmjFAJzjBpdn427I9EFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bbG9uOYs; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709145155; c=relaxed/simple;
+	bh=l4Cl/NiST64tWraJyXUgveTevRf2vajXlc6iu9H/Kd4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SkVFcyiDA2HwJ5MMG9PzJSpPTMf1ANiXvsu8SK+1IVeoayiJU9Ns6AE3f0AsRVcLyFwP5RZqTIPY/q+Bs5kv1JiQBNOnTS1wvoYC+K+UilfxoyLibh+l/e715N6LYguPaMQSPp0jstKiJAAYcYgeGFrcr2QDYHhTMEEwBgRwE2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=LQBnx1tm; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bbG9uOYs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709145068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=weArB08m8SQ4hme6AVbC9RsZWLdEnvH6fsjtADsJEm8=;
-	b=bbG9uOYs5e/eFxyr/drVE+4CE8YHANICxX4H6wuIpnNSDHTUjQCLg9ZnKVE9887VIqyuwb
-	P/8TNB8ng9Hv412MjXs3zY53kpvOZHezrxqK+zZypRFk8FahYX3GgwgGij+KgjKl2+pnc5
-	gv5RrJuidaVw6+h9TzEmK0xcIB3r2w8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-600-Avfu0MtQM4elFhgKp7-MJw-1; Wed, 28 Feb 2024 13:31:07 -0500
-X-MC-Unique: Avfu0MtQM4elFhgKp7-MJw-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-412b2c8f96eso165755e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 10:31:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709145066; x=1709749866;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=weArB08m8SQ4hme6AVbC9RsZWLdEnvH6fsjtADsJEm8=;
-        b=Uz/WsACrMrOJouNrx6MCZKSGCUxscIY4/EXUmXKHd9SZD/GhqIElZQf29bPY0lEkJs
-         gC7SAOPLrtnsYbYavP8rwWIM1b3XiAZkgtKUINnmo2sK0hufHe7ckpqvlGYxlAa40V4W
-         BgtdO7W+atMgH6JZzVGif+DsHYG9cZIcJrO6u5jDmZ0dOfov3ap8eu4BCu66T0wUSeMZ
-         uqv0w1ry4HY4qsbCvdlqEgliCCM1E3crM/UxEwSEQlSrdOfHqNXlpWhRKIO1SGAWSl5z
-         dvSYaIiHOAA9wCxA/0zdUrOwkJMF/Dp+NOch/7xucLnSFU2om/XJVhdrRdMa8gwWhEsp
-         i/jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhkOmUgqD9l59zXLGpRw1E4qxbzzJ1HiV+BNIT0ZopR88JBurSAo69sNjlbQHFzydlTDzpTq1rG2YQ6otzwcOrr4UWeMHoHCYdMiXP
-X-Gm-Message-State: AOJu0YyPUZvrMVyVvSYdZK4sVMwq/EEdtROau8+WW9LTij0TIABXm12B
-	PlhWAHg367Wn6+X/mB8KUKp8S8qzs0WpEMSMHyBkQeXbUkaNXWRFQE1Kq5IefRRyKuqCQaZgjIo
-	rIhvafEhJbrjN3b4AJvlP4d4MTZoP56oxPGabU0NfE44J//njuaEh16cD+bPFXQ==
-X-Received: by 2002:adf:9bdc:0:b0:33d:50cd:4672 with SMTP id e28-20020adf9bdc000000b0033d50cd4672mr256185wrc.21.1709145066135;
-        Wed, 28 Feb 2024 10:31:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEbucOOcYdc5E7w1hWPrlSDUK3hHwk9fJn5afQ97oLMcIn3c+BDLdxi5c2NUzfMbk+v1xT5yw==
-X-Received: by 2002:adf:9bdc:0:b0:33d:50cd:4672 with SMTP id e28-20020adf9bdc000000b0033d50cd4672mr256168wrc.21.1709145065820;
-        Wed, 28 Feb 2024 10:31:05 -0800 (PST)
-Received: from redhat.com ([2a02:14f:178:d6b0:a21c:61c4:2098:5db])
-        by smtp.gmail.com with ESMTPSA id bx10-20020a5d5b0a000000b0033b2799815csm15646500wrb.86.2024.02.28.10.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 10:31:05 -0800 (PST)
-Date: Wed, 28 Feb 2024 13:31:00 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Yunjian Wang <wangyunjian@huawei.com>
-Cc: willemdebruijn.kernel@gmail.com, jasowang@redhat.com, kuba@kernel.org,
-	bjorn@kernel.org, magnus.karlsson@intel.com,
-	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com,
-	davem@davemloft.net, bpf@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	virtualization@lists.linux.dev, xudingke@huawei.com,
-	liwei395@huawei.com
-Subject: Re: [PATCH net-next v2 0/3] tun: AF_XDP Tx zero-copy support
-Message-ID: <20240228133035-mutt-send-email-mst@kernel.org>
-References: <1709118281-125508-1-git-send-email-wangyunjian@huawei.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LQBnx1tm"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 78DFDC003C0F;
+	Wed, 28 Feb 2024 10:32:27 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 78DFDC003C0F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1709145147;
+	bh=l4Cl/NiST64tWraJyXUgveTevRf2vajXlc6iu9H/Kd4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LQBnx1tmznLXpdPCptiFL8VTMrcO6TrRtWeCG4F5+12sJQ1AYnCCBIwON7JuSkmB2
+	 oPaqPhCheo95zFf5PFPUDPg0sgyXGAv3IRLFZrOG2hrSFRwB7BLmM+C0s20SVPZFXL
+	 1D1tZllw95tW5L4ip6yDReaibsKB/c/FNUkRAZMw=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id E0E2918041CAC4;
+	Wed, 28 Feb 2024 10:32:25 -0800 (PST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: bcm-kernel-feedback-list@broadcom.com,
+	Arnd Bergmann <arnd@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] ARM: bcm: stop selecing CONFIG_TICK_ONESHOT
+Date: Wed, 28 Feb 2024 10:32:27 -0800
+Message-Id: <20240228183227.1822982-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240228123850.3499024-2-arnd@kernel.org>
+References: <20240228123850.3499024-1-arnd@kernel.org> <20240228123850.3499024-2-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1709118281-125508-1-git-send-email-wangyunjian@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 28, 2024 at 07:04:41PM +0800, Yunjian Wang wrote:
-> Hi all:
+From: Florian Fainelli <f.fainelli@gmail.com>
+
+On Wed, 28 Feb 2024 13:38:42 +0100, Arnd Bergmann <arnd@kernel.org> wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Now, some drivers support the zero-copy feature of AF_XDP sockets,
-> which can significantly reduce CPU utilization for XDP programs.
+> ARCH_BCM_MOBILE is the only platform that selects CONFIG_TICK_ONESHOT,
+> the others stopped 12 years ago in commit 98fab064d321 ("ARM: Remove
+> unnecessary selection of TICK_ONESHOT").
 > 
-> This patch set allows TUN to also support the AF_XDP Tx zero-copy
-> feature. It is based on Linux 6.8.0+(openEuler 23.09) and has
-> successfully passed Netperf and Netserver stress testing with
-> multiple streams between VM A and VM B, using AF_XDP and OVS.
+> This inconsistency caused a build regression after an otherwise
+> correct change to the timers subsystem:
 > 
-> The performance testing was performed on a Intel E5-2620 2.40GHz
-> machine. Traffic were generated/send through TUN(testpmd txonly
-> with AF_XDP) to VM (testpmd rxonly in guest).
+> kernel/time/tick-sched.c:1599:6: error: redefinition of 'tick_sched_timer_dying'
+>  1599 | void tick_sched_timer_dying(int cpu)
+>       |      ^
+> kernel/time/tick-sched.h:111:20: note: previous definition is here
+>   111 | static inline void tick_sched_timer_dying(int cpu) { }
 > 
-> +------+---------+---------+---------+
-> |      |   copy  |zero-copy| speedup |
-> +------+---------+---------+---------+
-> | UDP  |   Mpps  |   Mpps  |    %    |
-> | 64   |   2.5   |   4.0   |   60%   |
-> | 512  |   2.1   |   3.6   |   71%   |
-> | 1024 |   1.9   |   3.3   |   73%   |
-> +------+---------+---------+---------+
+> Drop this dead select.
 > 
-> Yunjian Wang (3):
->   xsk: Remove non-zero 'dma_page' check in xp_assign_dev
->   vhost_net: Call peek_len when using xdp
->   tun: AF_XDP Tx zero-copy support
+> Fixes: 3aedb7fcd88a ("tick/sched: Remove useless oneshot ifdeffery")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-
-threading broken pls repost.
-
-vhost bits look ok though:
-
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
-
->  drivers/net/tun.c       | 177 ++++++++++++++++++++++++++++++++++++++--
->  drivers/vhost/net.c     |  21 +++--
->  include/linux/if_tun.h  |  32 ++++++++
->  net/xdp/xsk_buff_pool.c |   7 --
->  4 files changed, 220 insertions(+), 17 deletions(-)
-> 
-> -- 
-> 2.41.0
-
+Applied to https://github.com/Broadcom/stblinux/commits/soc/next, thanks!
+--
+Florian
