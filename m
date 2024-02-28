@@ -1,208 +1,163 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB46E12F368;
-	Wed, 28 Feb 2024 11:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDA96CDDB;
+	Wed, 28 Feb 2024 11:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709120985; cv=none; b=qBLW94Wv7leavLI/1s8LzPGBYuZ3f7MiFt6aZCm1u6l9NZ8zgR607ACZLQ92ll8DB9i92OxKp9q5jN5fa/plLYcLtDRQi2d9qnnosJ5PT4TcCKfuPKJXNEVGgduv2iST5+lo6y+/vDIqzB/ArgUff8RIhIYoO7dFNJLeVU9Al9k=
+	t=1709120988; cv=none; b=WiDj5k/jwWqVIa1q54yl5vHznpNLKmPDo8I4SbxKJdactHzB08OaiSI1sxGb7CcbZ7nUnpqhOHMLL9fe9s4z3/QnuzhuDQ43PsjI1+u9Rau+Mx7Y7IHdHYLV7hy/knaPE1TsdJigVLI9qDsqkTk7z2u3S6HP7d36bxUrkAfxO2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709120985; c=relaxed/simple;
-	bh=0oZhOJul7RnQBEM4ip4PYFtTex6jjc1LvQzcBj5x1Fo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ht3YXhDkaO8zFUMEmPecSmfxhO3H0675isCnJXADE3WXTcBG8CgrbkcniSD9E0wqMbi+35DoPsp3QlKJeZBXMRqiR7Vq1pjHN2yzyGftR8iVvxDZYl6sXpItyw1+De69bQ5xleOBMDoi+fqyq7BqP5lRYsR1QMPfuj2lOErlUds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TlCLw2gB9z4f3jXf;
-	Wed, 28 Feb 2024 19:49:28 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 96CB71A0232;
-	Wed, 28 Feb 2024 19:49:33 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g7IHd9l+eamFQ--.6969S8;
-	Wed, 28 Feb 2024 19:49:33 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: xni@redhat.com,
-	paul.e.luse@linux.intel.com,
-	song@kernel.org,
-	shli@fb.com,
-	neilb@suse.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH md-6.9 v3 04/11] md/raid1: fix choose next idle in read_balance()
-Date: Wed, 28 Feb 2024 19:43:26 +0800
-Message-Id: <20240228114333.527222-5-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240228114333.527222-1-yukuai1@huaweicloud.com>
-References: <20240228114333.527222-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1709120988; c=relaxed/simple;
+	bh=P9ZISTEIn48zfYIAKIiJExn1v/AewX92la45i1qfzqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gX+rT2HMWMN8o/qerAByoAVmKXh4wbw/izU20WpTzsZfhfFDbLRkBhc6PHCPomSBu0zRbSEES2Q0JJrtUBCxqIGFx1DMHSS4nYj/yaNVZ2TLoYdeyo+4PKCxw7waSxzyVXyXHepUi4zTw4DpJeFc/vxsITfP0jxYZPAB1EikPk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oT1b+VhH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oT1b+VhH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B28DC43390;
+	Wed, 28 Feb 2024 11:49:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709120988;
+	bh=P9ZISTEIn48zfYIAKIiJExn1v/AewX92la45i1qfzqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oT1b+VhHCgNS1MYbgUqUjxaRVhmDlzO5LGCIfTZnL/gzArI8T1kcpggoCKQLe4qf9
+	 t+RZKJmYHXWCBRitnM2n9NHkT9J1g2nqB1ChsYTQjqpFv1pKSyd1ASVHYSeQ1a0j/E
+	 qolNNFIUzHucLZW2jCYRNz5txSYxeDzbqtllXVzeOp8YatYAAdvsTxI7R1Q21NljLW
+	 2mbXenNlwK7wIsf943XGUqMrgA27breU1aNvMmjNeNmDidZiNXzH77uA+eZasLWDnB
+	 afT+LHlvke2A6BycMxuqPUyTzJ58vxykPHl1/20qaR3Whep+bDYuhkIB65M3SIDnhy
+	 jHLEUEl+lN4IQ==
+Date: Wed, 28 Feb 2024 11:49:42 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Varshini.Rajendran@microchip.com
+Cc: radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, Nicolas.Ferre@microchip.com,
+	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
+	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 12/39] dt-bindings: serial: atmel,at91-usart: add
+ compatible for sam9x7.
+Message-ID: <20240228-capital-nickname-696dfcd655de@spud>
+References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
+ <20240223172559.672142-1-varshini.rajendran@microchip.com>
+ <20240224-kimono-stress-898eae80abd3@spud>
+ <b49572d4-b52e-4655-8d10-2709e2fbe803@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g7IHd9l+eamFQ--.6969S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxXryrKr1kKr4fAFyUJry3twb_yoWrXw1xpw
-	4jvwsaqrWUXF43u3sxJw4UurySg345JayrGrZ7C34Fgry3XrWqqa47K342vry8CFs3J342
-	qw18GrZru3WkKa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr
-	1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-	v20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-	IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUOBTY
-	UUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="naR5QLUVU6sxm80i"
+Content-Disposition: inline
+In-Reply-To: <b49572d4-b52e-4655-8d10-2709e2fbe803@microchip.com>
 
-From: Yu Kuai <yukuai3@huawei.com>
 
-Commit 12cee5a8a29e ("md/raid1: prevent merging too large request") add
-the case choose next idle in read_balance():
+--naR5QLUVU6sxm80i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-read_balance:
- for_each_rdev
-  if(next_seq_sect == this_sector || dist == 0)
-  -> sequential reads
-   best_disk = disk;
-   if (...)
-    choose_next_idle = 1
-    continue;
+On Wed, Feb 28, 2024 at 07:03:01AM +0000, Varshini.Rajendran@microchip.com =
+wrote:
+> Hi Conor,
+>=20
+> On 25/02/24 1:32 am, Conor Dooley wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know =
+the content is safe
+> > On Fri, Feb 23, 2024 at 10:55:59PM +0530, Varshini Rajendran wrote:
+> >> Add sam9x7 compatible to DT bindings documentation.
+> >>
+> >> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
+> >> ---
+> >> Changes in v4:
+> >> - Fixed the wrong addition of compatible
+> >> - Added further compatibles that are possible correct (as per DT)
+> >> ---
+> >>  .../devicetree/bindings/serial/atmel,at91-usart.yaml | 12 +++++++++---
+> >>  1 file changed, 9 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/serial/atmel,at91-usart=
+=2Eyaml b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
+> >> index 65cb2e5c5eee..30af537e8e81 100644
+> >> --- a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
+> >> +++ b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
+> >> @@ -23,11 +23,17 @@ properties:
+> >>            - const: atmel,at91sam9260-dbgu
+> >>            - const: atmel,at91sam9260-usart
+> >>        - items:
+> >> -          - const: microchip,sam9x60-usart
+> >> +          - enum:
+> >> +              - microchip,sam9x60-usart
+> >> +              - microchip,sam9x7-usart
+> >>            - const: atmel,at91sam9260-usart
+> >>        - items:
+> >> -          - const: microchip,sam9x60-dbgu
+> >> -          - const: microchip,sam9x60-usart
+> >> +          - enum:
+> >> +              - microchip,sam9x60-dbgu
+> >> +              - microchip,sam9x7-dbgu
+> >=20
+> >> +          - enum:
+> >> +              - microchip,sam9x60-usart
+> >> +              - microchip,sam9x7-usart
+> >=20
+> > This doesn't make sense - this enum should be a const.
+> > I don't really understand the idea behind of the original binding here =
+that
+> > allowed:
+> > "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam9260=
+-dbgu", "atmel,at91sam9260-usart"
+> >=20
+> > Specifically, I don't get the purpose of the "microchip,sam9x60-usart".
+> > Either make it
+> >       - items:
+> >           - enum:
+> >               - microchip,sam9x60-dbgu
+> >               - microchip,sam9x7-dbgu
+> >           - const: microchip,sam9x60-usart
+> >           - const: atmel,at91sam9260-dbgu
+> >           - const: atmel,at91sam9260-usart
+> > or add
+> >       - items:
+> >           - const: microchip,sam9x60-dbgu
+> >           - const: atmel,at91sam9260-dbgu
+> >           - const: atmel,at91sam9260-usart
+> > or explain exactly why this needs to be
+> > "chipa-dgbu", "chipa-usart", "chipb-dbgu", "chipb-dbgu"
+> The compatible has to be "chipa-usart", "chipb-usart", "chipa-dbgu",=20
+> "chipb-dbgu" for the device to work as a debug console over UART
+> wher the chipa-<periph> is the device specific compatible
+> and the chipb-<periph> is the fallback compatible that the driver=20
+> actually uses.
 
- for_each_rdev
- -> iterate next rdev
-  if (pending == 0)
-   best_disk = disk;
-   -> choose the next idle disk
-   break;
+This examples why you have "microchip,sam9x60-dbgu", "atmel,at91sam9260-dbg=
+u"
+and "atmel,at91sam9260-usart".
+It does not explain "microchip,sam9x60-usart" though, I don't see what
+purpose that serves. If used as a debug uart, you fall back to the
+sam9260 debug uart compatible and if not you fall back to the sam9260
+usart compatible.
 
-  if (choose_next_idle)
-   -> keep using this rdev if there are no other idle disk
-   contine
+In addition, the current setup implies that sam9x60 usart supports all
+the features that the sam9260 debug usart does. I doubt that that is
+true.
 
-However, commit 2e52d449bcec ("md/raid1: add failfast handling for reads.")
-remove the code:
+Thanks,
+Conor.
 
--               /* If device is idle, use it */
--               if (pending == 0) {
--                       best_disk = disk;
--                       break;
--               }
+--naR5QLUVU6sxm80i
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Hence choose next idle will never work now, fix this problem by
-following:
+-----BEGIN PGP SIGNATURE-----
 
-1) don't set best_disk in this case, read_balance() will choose the best
-   disk after iterating all the disks;
-2) add 'pending' so that other idle disk will be chosen;
-3) add a new local variable 'sequential_disk' to record the disk, and if
-   there is no other idle disk, 'sequential_disk' will be chosen;
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd8d1gAKCRB4tDGHoIJi
+0jU8AQDfAMBhvlKIn3K9UK4JvgmYK7R9RtnCCLD4gz08rgwRgAEApDdb5EYy1wap
+lFgNHMX2Z4M+6mlS9jnCV+apFqxAgAM=
+=s5+L
+-----END PGP SIGNATURE-----
 
-Fixes: 2e52d449bcec ("md/raid1: add failfast handling for reads.")
-Co-developed-by: Paul Luse <paul.e.luse@linux.intel.com>
-Signed-off-by: Paul Luse <paul.e.luse@linux.intel.com>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Reviewed-by: Xiao Ni <xni@redhat.com>
----
- drivers/md/raid1.c | 32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 032a6a6c3730..97db9add27df 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -598,13 +598,12 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 	const sector_t this_sector = r1_bio->sector;
- 	int sectors;
- 	int best_good_sectors;
--	int best_disk, best_dist_disk, best_pending_disk;
-+	int best_disk, best_dist_disk, best_pending_disk, sequential_disk;
- 	int disk;
- 	sector_t best_dist;
- 	unsigned int min_pending;
- 	struct md_rdev *rdev;
- 	int choose_first;
--	int choose_next_idle;
- 
- 	/*
- 	 * Check if we can balance. We can balance on the whole
-@@ -615,11 +614,11 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 	sectors = r1_bio->sectors;
- 	best_disk = -1;
- 	best_dist_disk = -1;
-+	sequential_disk = -1;
- 	best_dist = MaxSector;
- 	best_pending_disk = -1;
- 	min_pending = UINT_MAX;
- 	best_good_sectors = 0;
--	choose_next_idle = 0;
- 	clear_bit(R1BIO_FailFast, &r1_bio->state);
- 
- 	if ((conf->mddev->recovery_cp < this_sector + sectors) ||
-@@ -712,7 +711,6 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 			int opt_iosize = bdev_io_opt(rdev->bdev) >> 9;
- 			struct raid1_info *mirror = &conf->mirrors[disk];
- 
--			best_disk = disk;
- 			/*
- 			 * If buffered sequential IO size exceeds optimal
- 			 * iosize, check if there is idle disk. If yes, choose
-@@ -731,15 +729,22 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 			    mirror->next_seq_sect > opt_iosize &&
- 			    mirror->next_seq_sect - opt_iosize >=
- 			    mirror->seq_start) {
--				choose_next_idle = 1;
--				continue;
-+				/*
-+				 * Add 'pending' to avoid choosing this disk if
-+				 * there is other idle disk.
-+				 */
-+				pending++;
-+				/*
-+				 * If there is no other idle disk, this disk
-+				 * will be chosen.
-+				 */
-+				sequential_disk = disk;
-+			} else {
-+				best_disk = disk;
-+				break;
- 			}
--			break;
- 		}
- 
--		if (choose_next_idle)
--			continue;
--
- 		if (min_pending > pending) {
- 			min_pending = pending;
- 			best_pending_disk = disk;
-@@ -751,6 +756,13 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 		}
- 	}
- 
-+	/*
-+	 * sequential IO size exceeds optimal iosize, however, there is no other
-+	 * idle disk, so choose the sequential disk.
-+	 */
-+	if (best_disk == -1 && min_pending != 0)
-+		best_disk = sequential_disk;
-+
- 	/*
- 	 * If all disks are rotational, choose the closest disk. If any disk is
- 	 * non-rotational, choose the disk with less pending request even the
--- 
-2.39.2
-
+--naR5QLUVU6sxm80i--
