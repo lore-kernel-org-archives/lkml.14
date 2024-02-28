@@ -1,136 +1,144 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C8A219FD
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE5A2D052
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 09:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709113281; cv=none; b=BVzByDGFLhFK0nHcHCobua9Vm6C4w4p5tJ1Sc1udIlsWxGCP/EvFl2AwPdrMPojCpsRdSIDB7MG2jaWYwv1EJVCE0XzRQF981yZ18Eh0oyGFoBu6BBoBCRyRgy3uHkGMGAsPCl0X43lc8bv9OUOIExX/tT5GvOFBxcxDSqEhV84=
+	t=1709113424; cv=none; b=fuhdCSsWRM8cgOlJpl6x0NVGX0E9G1eUGWCnU9TpeD7PL842b9gPSFdefEyr4GL5uEWd+oSe9FxUykw/LFMWWxpxfaxYqVavBZHpz1n252kLPopEher5ZUiPut9+Gw0lK85ETldLNSU2z9NNvdvaD4/+36RbimY615XtqASQ+eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709113281; c=relaxed/simple;
-	bh=ea/qP8lceQObB4VFfj13TaUrQWQXFF34TOPECYoDbjc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QxPZAr307AaOQ1u/f8fCVxBBorsdgHlPburb3Gktwibt9wRI6UeWVN2Hz155vCzmO2/bL2yKDNqqlcFu+9ddjFKIxcX1MDFcAHSXVxWrTlJBRqBTiaVDqNI37fT1dz9dHi6+wJ/teeOGoDElsxK3goQkcdo/9k8RitWXToocP8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=u0FaIgGj; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1709113424; c=relaxed/simple;
+	bh=Ult8vei6p6VMkXn/9tdyilwesfzp6VrkTIDAJq5kUtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D9s1hsPYvzHjo6tjfxsJSJ6OTBTtL3V/Esg86k6VOPSjIQO69Y2iKljY2GD94Vi+wvo6KsD5/+2AyspFUHYNjWdJ6xri9d+LaKMEb3mq7TxaO4BC8HoVgI/KE7qN53wwUWi2ktLoImkQ9StwWniVdzX0taAJa5Zpz2eqpjo4xpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=peW0vXEm; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="u0FaIgGj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709113276;
-	bh=ea/qP8lceQObB4VFfj13TaUrQWQXFF34TOPECYoDbjc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=u0FaIgGjtWn77xSxsMdY7Ah7fN6y8vAVkMqFAT2IWrS1T+235RFKhCM0cijnDPWxt
-	 E6vcuSp4/A0vd2CcChADwEtGX3V8x36vDQJ2mtPAIJn/wQCxr7pM1OKs6+z9pSYiPk
-	 yNAn97gtlMyGfATz13onnIYLSsy5u+QMKoE8H8iAXouQbXDzkFeYi2DQ9NtFZxA/IH
-	 8hroDEY842dmV2ViuFxDfAliGElxrzrS636j5odIIkNipeO3tG0GT7LPxqv246h7UE
-	 iBFIctQhaDwiJ6ubBDEcxYwDJ/2RX6Gxu2cJP08Hv5Zlim3j8pFycKuxxUAkeEp0C9
-	 moGZv+eLV0HSg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 724F53780029;
-	Wed, 28 Feb 2024 09:41:16 +0000 (UTC)
-Message-ID: <6389f1e3-57b2-453a-af6f-6bc7f725ad31@collabora.com>
-Date: Wed, 28 Feb 2024 10:41:15 +0100
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="peW0vXEm"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-412af574501so9799765e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 01:43:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1709113421; x=1709718221; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kRPlWagDvPDMQ7ZK9LzRF2TmTIwImnAEbz7S+2nAljo=;
+        b=peW0vXEmBsf7z1/hspbBP+IagT/DOAQo9bClkdS48eeiR54yGh8NX8YZCxYW10KaLg
+         Ivlu5rlgfehXtOAPQX2Prj2eQEA8MuL+eeD10tT4b7xio/D+yoNrj2JNVqOySzueMeUo
+         0iPZVKTm8lQA6Li4NZIMbYckuR1FPVP/HpsRJqU8sCdGKPBLJ1Ob+ncQSUZbLoXYht1h
+         W4MqTBy/+Mw6JAKjgzdVxTqCFvcVXdZq04/A9wxgrR0TPi9O+j2nno4EL7aZMkX8Qlaz
+         0vy8Tf8QScHTH3kJsXgnLz6S2aUTbrPaJaEEuvRJ1SHId+vuslTDjeX6VrdMGXKHy275
+         sH5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709113421; x=1709718221;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kRPlWagDvPDMQ7ZK9LzRF2TmTIwImnAEbz7S+2nAljo=;
+        b=eetWhjqJVB3M9Gwi676FZJ2UIt7/klubM9Z4AgU0As4HJxsWaMZMBAkMz+CyroWGoo
+         1/PFi1XdxA8VLusEMrIO/EIlFwCpnAmIz18688eZHD/ZZr1HjiqZW1/RkhRjNHWBKKLX
+         5gXOQ+YHBxt5wLeh1rThGCuPNm9dO1k9jGktdIcsBFyn3cQU+ETCpNkxuWthvXXl3HEM
+         v9XYFz4uAs4zb/eFb3mRMYMcFsT4eFU7zwD2i9LHRSt59s2Su6aPJaGnRK95Ny/6DLuh
+         5K1hUKxM7xcmBNkluI7sHwMNfbtBjPEX9WfHWnhB5Kp/wrXtzvdLqjNQrmXueoZHk+E1
+         g38Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWNs7kOne1AWeJHdvo3nnVkDsge2VRyhH8EeyOH0RQ05qM54djkKl5EFb7O1YEs2NZs9PigTWrVfWFs8y0J1ad57BTVXjQ78Y3G5SqF
+X-Gm-Message-State: AOJu0Yxt7WA8jV14DxIWqDUdGiEI/D1oxR2i5WpyPCe8AgxL52Mobb/+
+	2GTcLIxe1JL3KnQcjDd09EIDdhr07YdwfN+VFyOEf6gn2qugnF6MCiLR+s+1z9M=
+X-Google-Smtp-Source: AGHT+IHuR2/GUaaVQKMylulngc2NeSpLM/wXdoWCxP1RvRNWXEcQoYpHV6mjF9Upqj7OQcQnPl17cQ==
+X-Received: by 2002:a05:600c:5493:b0:412:f24:560a with SMTP id iv19-20020a05600c549300b004120f24560amr10064073wmb.11.1709113421234;
+        Wed, 28 Feb 2024 01:43:41 -0800 (PST)
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id je13-20020a05600c1f8d00b00412b236f145sm1566537wmb.26.2024.02.28.01.43.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 01:43:40 -0800 (PST)
+Date: Wed, 28 Feb 2024 10:43:37 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Erwan Velu <erwanaliasr1@gmail.com>
+Cc: Erwan Velu <e.velu@criteo.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i40e: Prevent setting MTU if greater than MFS
+Message-ID: <Zd8ASR9ocx-Xk4OT@nanopsycho>
+References: <20240227192704.376176-1-e.velu@criteo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: mediatek: cmdq: Don't log an error when
- gce-client-reg is not found
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20240226-gce-client-reg-log-dbg-v1-1-f0fff97c30c7@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240226-gce-client-reg-log-dbg-v1-1-f0fff97c30c7@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227192704.376176-1-e.velu@criteo.com>
 
-Il 26/02/24 22:31, Nícolas F. R. A. Prado ha scritto:
-> Most of the callers to this function do not require CMDQ support, it is
-> optional, so the missing property shouldn't cause an error message.
-> Furthermore, the callers that do require CMDQ support already log at the
-> error level when an error is returned.
+Tue, Feb 27, 2024 at 08:27:03PM CET, erwanaliasr1@gmail.com wrote:
+>Commit 6871a7de705b6f6a4046f0d19da9bcd689c3bc8e from iPXE project is
+>setting the MFS to 0x600 = 1536.
+>
+>At boot time the i40e driver complains about it with
+>the following message but continues.
+>
+>	MFS for port 1 has been set below the default: 600
+>
+>If the MTU size is increased, the driver accept it but large packets will not
+>be processed by the firmware generating tx_errors. The issue is pretty
+>silent for users. i.e doing TCP in such context will generates lots of
+>retransmissions until the proper window size (below 1500) will be used.
+>
+>To fix this case, it would have been ideal to increase the MFS,
+>via i40e_aqc_opc_set_mac_config, but I didn't found a reliable way to do it.
+>
+>At least, this commit prevents setting up an MTU greater than the current MFS.
+>It will avoid being in the position of having an MTU set to 9000 on the
+>netdev with a firmware refusing packets larger than 1536.
+>
+>A typical trace looks like the following :
+>[  377.548696] i40e 0000:5d:00.0 eno5: Error changing mtu to 9000 which is greater than the current mfs: 1536
+>
+>Signed-off-by: Erwan Velu <e.velu@criteo.com>
+
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+
+Next time, could you please indicate the target tree in the patch
+subject prefix, like this: "[patch net-next] xxx" ?
+
+
+>---
+> drivers/net/ethernet/intel/i40e/i40e_main.c | 9 ++++++++-
+> 1 file changed, 8 insertions(+), 1 deletion(-)
+>
+>diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+>index 54eb55464e31..14fc70d854d3 100644
+>--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
+>+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+>@@ -2950,7 +2950,7 @@ static int i40e_change_mtu(struct net_device *netdev, int new_mtu)
+> 	struct i40e_netdev_priv *np = netdev_priv(netdev);
+> 	struct i40e_vsi *vsi = np->vsi;
+> 	struct i40e_pf *pf = vsi->back;
+>-	int frame_size;
+>+	int frame_size, mfs;
 > 
-> Change the log message in this helper to be printed at the debug level
-> instead.
-
-CMDQ is optional, yes. At least, for some devices it is.
-
-Full story, though, wants that if you use the CPU for register manipulation
-instead of programming the GCE (even with threading, fantastic!) you will
-trigger various performance issues.
-
-In the end, you *don't want* to use the CPU if GCE is available!
-
-The reasons why the CMDQ/GCE is optional are:
-  - You can check register-by-register r/w for debugging scenarios by using
-    the CPU to manipulate them instead of having something magically doing
-    that for you at a certain (pre-set, yes, but still!) point;
-  - Not all SoCs have the same amount of GCE threads and channels, some may
-    support writing to IP block X through the GCE, some may not, but both
-    may support writing for IP block Y through this mailbox;
-  - MediaTek chose to support both ways, enabling means to debug stuff upstream,
-    the other choice would've been to never support CPU register R/W on some IPs
-
-    ... and btw - about the last part: Kudos, MediaTek.
-
-Now, I also get why you're raising this, but we have to find an agreement here
-on a different way to proceed that satisfies all of us.
-
-First of all..
-
-Which device on which SoC is missing the GCE client register DT property?
-Do said SoC really not have a GCE client register for that device?
-
-Is any upstream supported SoC really lacking a GCE register for the upstream
-supported IPs?
-
-I'm not sure.... :-)
-
-P.S.: I guess that the alternative (that I somewhat dislike, and you can probably
-       understand why after reading the reasons above) would be to turn that into a
-       dev_info() instead...
-
-P.P.S.: Having no GCE usually means that there's a performance issue! In that case,
-         it's ... a mistake, so, an error, kind-of.... :-)
-
-Cheers,
-Angelo
-
+> 	frame_size = i40e_max_vsi_frame_size(vsi, vsi->xdp_prog);
+> 	if (new_mtu > frame_size - I40E_PACKET_HDR_PAD) {
+>@@ -2959,6 +2959,13 @@ static int i40e_change_mtu(struct net_device *netdev, int new_mtu)
+> 		return -EINVAL;
+> 	}
 > 
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> ---
->   drivers/soc/mediatek/mtk-cmdq-helper.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index b0cd071c4719..2130ff3aac9e 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -55,7 +55,7 @@ int cmdq_dev_get_client_reg(struct device *dev,
->   					       "mediatek,gce-client-reg",
->   					       3, idx, &spec);
->   	if (err < 0) {
-> -		dev_err(dev,
-> +		dev_dbg(dev,
->   			"error %d can't parse gce-client-reg property (%d)",
->   			err, idx);
->   
-> 
-> ---
-> base-commit: 41913bcddc83b131649ee8ff0d9ff29e01731398
-> change-id: 20240226-gce-client-reg-log-dbg-5ae9637a08ed
-> 
-> Best regards,
-
-
+>+	mfs = pf->hw.phy.link_info.max_frame_size;
+>+	if (new_mtu > mfs) {
+>+		netdev_err(netdev, "Error changing mtu to %d which is greater than the current mfs: %d\n",
+>+			   new_mtu, mfs);
+>+		return -EINVAL;
+>+	}
+>+
+> 	netdev_dbg(netdev, "changing MTU from %d to %d\n",
+> 		   netdev->mtu, new_mtu);
+> 	netdev->mtu = new_mtu;
+>-- 
+>2.43.2
+>
+>
