@@ -1,99 +1,138 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A20C3BBEE
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 13:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD7F14F995;
+	Wed, 28 Feb 2024 13:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709125467; cv=none; b=C/FdODGdPMUr4vRMAAmzjQZ0IooMyeXu4z3xUnlgzXDxnpfR5jHYhHg8ubTSFAloB7hT9UG3Ywk2zl+MAAvX3q8FFo5kS7MMx1MpeXhnBA7ngdYZEndoqBdkO6E7S1PmwlVQR4NSAmbkCrZpdon5f7vmraIyK7cREqQAg/C+O8c=
+	t=1709125472; cv=none; b=S3KjFWmNazvmiHBGPJIjgCAncORVZK16bvuZJWUX1Jhf3DLSWbn2eDfAQLx2XVFxory77anOFLRYkH0+YnTX4UUPWB3+G9Dhpw8lFLGeYRuSceh/BQ4j1G9/xG2OcxCri/iTruLTLov3MO66zMGjb2y8xjE/9MAYGWiX31Xk9u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709125467; c=relaxed/simple;
-	bh=E8Q8BUTHPfJyeoU9Q6QdXQerQaQjnZ/2HuOscrhXz2w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gE98QsSzScbO68rOCvPEzfPudoGaUCrNjZAQEBbvF/HQ5WRQ/IQ6dGnEG+J1pDvuQpOF2NlZWbGAnxrsDnaG9jIT/1Pdf06LwKv9PTDXXRZ+pcR2qU4NOivxq1ug+TjS+hgYE/WKt0sycy+qXN15u9ig7r1iDgfeq7FahBZGTf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X5jbiB9w; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709125472; c=relaxed/simple;
+	bh=Zo7mkUyO1e4cRV15WZDLmxJqSFduroQP9BwBqR01+xQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=q9Jogqtgrtslwc4d3yQOdqB91kAgu0twWOxEsb7VuHT2ytyo/4v6yN1uHCzKNItyzu0dp21RDAoiV+XW8I9Fm0fCQkrRDVEGOe3777+hPA/G6qBo0itsWa9ukKisyo6dBUv8LCMuTAME+h4wObk1U8YaVhm7uuxoG05K21MMDl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cJ6K9TXw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X5jbiB9w"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc236729a2bso5089410276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:04:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709125465; x=1709730265; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jAVkysIrddkYfA1tLe0rVWGFMQxH9A+gv88vB1iCZTo=;
-        b=X5jbiB9wGoTpduk3FeUv1VZkPef+oGG/mEw4fNENnr7kFNQeMU/6JyPQLeR9GHr5jq
-         x/u5j+zayDVBlfZsrK+paFkGUuMFpRZBxNbU67Ofwg7+1/ta1hilnGhCz5Kw0SzlzkPu
-         mS9R+CW9OK7iJCcqhex1cBhyLVG4o/8MB7v107RExifcnlKpUlsRFk1khuiEbkvgmqCA
-         eQEdiBxkpyVqtutG9tmGm8Ha0kwAOMX+/SiGh2UUSPSNSI1b/YyZI/DDOa/BLf/KCic4
-         +fatOeL4RChqvkY8QmwWaPOsEEM4cMRj6TWzOIL+AXQrxO4F7YmkhsHN842hseMKGHmX
-         NDjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709125465; x=1709730265;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jAVkysIrddkYfA1tLe0rVWGFMQxH9A+gv88vB1iCZTo=;
-        b=fhFqSWF5MdafhhuUIf0wPDl4UbBSsnRvUzPXtBsOgncYkhSN+H64BJF0fjCaNv41vb
-         EbM6IJ7R91eAIPNqnbrOGL27jfjTvopZ9vxfC5dy4Epb8t40E7q9S3GL03+LVv2pZSG9
-         pyPrrFXIfMDDh502G4hmAt57gUhQT3qMVmyIF24136r73oGRnKW9A7iJhIuM5p4XOCgf
-         6LOw67cQdk1zJwDi0OQRPlRa9ABvZGtuigbS70jERVp9MaW33ePgTTvJeEWWjXyu87VB
-         jmpuz1JM2uS+z8DjdB55y881LaMyALAc4fKDbTzbRKB6GHA8CKq9SMPFTHjbh+DHfJSk
-         V7YA==
-X-Forwarded-Encrypted: i=1; AJvYcCULLxx8tL+sl1lYxwBHllFUNSe8A4fTGWTi6UOUuD3Gyflr3Bx9FFCh0SlpThfLV/+QkTaNO2S8XJN/mq6XD5DvgHE4O4KtJo4qrhp1
-X-Gm-Message-State: AOJu0Yzy+HQek1AQlzhspSzxGCV3Z+CLTVIv+Aodc2m3iWgKlsjYL4Fn
-	E7zDMiaAch7veoJ8CQspabNAqnfsK2fVel/BF6uKMeoEVx61TwZUB2mTeD0GvJn3DDaIJW926ze
-	VhzOc1h37jotiqk2J+joKkv9OvZv2gkMqY4aXlSAingxrRFPk
-X-Google-Smtp-Source: AGHT+IEDs/w431tr4qF6okypXXHq9KVTC5AOppR1Q9xcmNDFdy2AyqsDq48PDYDgQFnhrDDXuj09h87Q5miAGmhXqhw=
-X-Received: by 2002:a25:4c89:0:b0:dc7:4951:5f8 with SMTP id
- z131-20020a254c89000000b00dc7495105f8mr2636701yba.22.1709125465317; Wed, 28
- Feb 2024 05:04:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cJ6K9TXw"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41S5ffZ0000321;
+	Wed, 28 Feb 2024 13:04:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=P7hLoMtk/Gsil4liN6dyNFOkcj9EO+K0QVhEgrDthSk=; b=cJ
+	6K9TXwSqqeW8/IGr0Jp3AVqRqJXN6BLGzXpXpcte5AT7GQWYe2uyxYdFk+skllGk
+	D3AWNEPTsBr8r+KsIieVCTgyNuknQXsCJR0XIGF+bIXH7MFZsrKTHuuEYOZiQ3zQ
+	sXqpg2VzzfLgyjkctbYTKSNHn5XEWFNJ95QHTl+2kOijDIZJlIoDqewvRoBuskJY
+	jHPbDcF8rlUOeiTFdlt3bPZrYg8emyjhS5SGABgmXiNhd1YBjMtA+/roggw59zIh
+	1ZDLxSA0mnSRHKlhGgDIyy8GBxjFlxlzkhVO09tKeKVCXHb8s9aZoFYROqHgA5Fj
+	GbxaeelCqOkDCNtTeZhg==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3whv1fs7qf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 Feb 2024 13:04:22 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41SD4Lli010461
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 Feb 2024 13:04:21 GMT
+Received: from [10.218.10.86] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 28 Feb
+ 2024 05:04:15 -0800
+Message-ID: <02e44f17-39cd-46ec-b236-bc4f502d705e@quicinc.com>
+Date: Wed, 28 Feb 2024 18:34:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221-fix-sh-mmcif-v2-0-5e521eb25ae4@linaro.org>
-In-Reply-To: <20240221-fix-sh-mmcif-v2-0-5e521eb25ae4@linaro.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 28 Feb 2024 14:03:49 +0100
-Message-ID: <CAPDyKFpJra0+XKG3CvnTk99gvXg5qgeuSQ3UddU4rx1-S-dNLA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Try to fix the sg_mitet bugs in SH MMCIF
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v5 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <andersson@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <konrad.dybcio@linaro.org>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
+        <dmitry.baryshkov@linaro.org>, <quic_krichai@quicinc.com>,
+        <quic_vbadigan@quicinc.com>, <quic_schintav@quicinc.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+	<kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+References: <20240223225425.GA103870@bhelgaas>
+From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+In-Reply-To: <20240223225425.GA103870@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3bA6z9D2GJzgOFx3Fy3RLpMuP9flMF6Y
+X-Proofpoint-ORIG-GUID: 3bA6z9D2GJzgOFx3Fy3RLpMuP9flMF6Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-28_05,2024-02-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 impostorscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ adultscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402280103
 
-On Wed, 21 Feb 2024 at 22:23, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> This adresses some bugs found after the introduction of the
-> memory iterator sg_miter to the sh mmcif driver.
->
-> This was first just one patch for fixing the atomic bug, but
-> now also a second patch is needed to fix a semantic issue.
->
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Changes in v2:
-> - Collect Geerts test tag on patch 1
-> - Add a second patch fixing the problem with advancing to
->   the next sglist entry before reading/writing the first block and
->   after reading/writing each block in a multiblock operation.
-> - Link to v1: https://lore.kernel.org/r/20240220-fix-sh-mmcif-v1-1-b9d08a787c1f@linaro.org
->
-> ---
-> Linus Walleij (2):
->       mmc: sh_mmcif: sg_miter does not need to be atomic
->       mmc: sh_mmcif: Advance sg_miter before reading blocks
->
->  drivers/mmc/host/sh_mmcif.c | 46 +++++++++++++++++++++++++++++----------------
->  1 file changed, 30 insertions(+), 16 deletions(-)
-> ---
 
-Applied for next and by amending the commit message header as pointed
-out by Geert, thanks!
+On 2/24/2024 4:24 AM, Bjorn Helgaas wrote:
+> On Fri, Feb 23, 2024 at 07:33:38PM +0530, Mrinmay Sarkar wrote:
+>> Due to some hardware changes, SA8775P has set the NO_SNOOP attribute
+>> in its TLP for all the PCIe controllers. NO_SNOOP attribute when set,
+>> the requester is indicating that there no cache coherency issues exit
+>> for the addressed memory on the host i.e., memory is not cached. But
+>> in reality, requester cannot assume this unless there is a complete
+>> control/visibility over the addressed memory on the host.
+> s/that there no/that no/
+> s/exit/exist/
+>
+> Forgive my ignorance here.  It sounds like the cache coherency issue
+> would refer to system memory, so the relevant No Snoop attribute would
+> be in DMA transactions, i.e., Memory Reads or Writes initiated by PCIe
+> Endpoints.  But it looks like this patch would affect TLPs initiated
+> by the Root Complex, not those from Endpoints, so I'm confused about
+> how this works.
+>
+> If this were in the qcom-ep driver, it would make sense that setting
+> No Snoop in the TLPs initiated by the Endpoint could be a problem, but
+> that doesn't seem to be what this patch is concerned with.
+I think in multiprocessor system cache coherency issue might occur.
+and RC as well needs to snoop cache to avoid coherency as it is not
+enable by default.
 
-Kind regards
-Uffe
+and we are enabling this feature for qcom-ep driver as well.
+it is in patch2.
+
+Thanks
+Mrinmay
+
+>> And worst case, if the memory is cached on the host, it may lead to
+>> memory corruption issues. It should be noted that the caching of memory
+>> on the host is not solely dependent on the NO_SNOOP attribute in TLP.
+>>
+>> So to avoid the corruption, this patch overrides the NO_SNOOP attribute
+>> by setting the PCIE_PARF_NO_SNOOP_OVERIDE register. This patch is not
+>> needed for other upstream supported platforms since they do not set
+>> NO_SNOOP attribute by default.
+>>
+>> 8775 has IP version 1.34.0 so intruduce a new cfg(cfg_1_34_0) for this
+>> platform. Assign enable_cache_snoop flag into struct qcom_pcie_cfg and
+>> set it true in cfg_1_34_0 and enable cache snooping if this particular
+>> flag is true.
+> s/intruduce/introduce/
+>
+> Bjorn
