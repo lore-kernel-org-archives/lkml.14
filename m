@@ -1,117 +1,91 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86C37E8
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 00:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D176E210D;
+	Wed, 28 Feb 2024 00:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709079022; cv=none; b=FAAgkv+VbahnNxKc0Q49T9G8GZvFoL/ByQ0+DQL1Vee6re47e7AFo65owIq1wdwfFY2VTai0dQqa+I96JQYpjJQTrVHmT+Eh/poBaDHqwGxNWF80jbHPnyu+xO0Mt+xb8QKsjje5bOGdfpdQeRYnJ2QJHPi3RQ6wveN4e87R92Q=
+	t=1709079024; cv=none; b=ofSDZVG98PpVdzLtRiyewNbMGBvJEqSC6pNE9zJWr45LzHkUdAQyMSH3F3oTDkm83W1iPPLDf/4LgINwGF2BJO5LH/VQ63KFH5VdNTXGYdnwuAHlMhhhMVRdF4Kzypeo69NX1H+Bdg2AeRqHmfk5WJJ+YtVZk6M2RGqCHRnOhQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709079022; c=relaxed/simple;
-	bh=7Bibe+mApP2qw+Bwb89kIz1Vorq4HcJl2XyOfxCc+rI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C7mkxFNwsCaU4LgRpiBA5JI8k6T8zDOWMdsw4unXepJFJzbC6zJMOiXbhfioNwlH+qTz7Ws9l0mFpP8bhiEosk08N6amhRuP1cvIf/RFhwt/L9nV7+1SY2o2doK1LQYK3aHXXFi2q/2u58zfifgE+qXBkyITuUf2BW0LhRyUL60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=D2Gb4ltS; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1709079024; c=relaxed/simple;
+	bh=vC8mwnT09idBziDtRBLEFES+hUh7Klq/2GI8cfJmNc8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZDFSI0hF2LJgQUu1d5mlBcY4u0oaxaRwYxe02bTvs+lqUfMsFhTeX2mp5UF+Vhi/av1oBXtxbqjQx/GGSzVe8nRXtOujahGXzQg08giJMViiUVoZB7Em7o27FTDz49ZhxdSUyuX6yBLStKCstsyaB4fuxTFHL/jfeDzFs7+zets=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQEwLO0a; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="D2Gb4ltS"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7c49c979b5dso99271539f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 Feb 2024 16:10:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQEwLO0a"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a43fc42e697so3583266b.1;
+        Tue, 27 Feb 2024 16:10:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1709079019; x=1709683819; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3uNCkE/Y4bucRwr/vs7c1ruuOADEG13u7lr08BZ4VNA=;
-        b=D2Gb4ltSZBbw7GNcjBZZWXuvkDuJasDEjNQU6jiVVhbDbapAbLVi1ryZZx7vIM+Zhw
-         DBaNdui24vVhN05VovPFFOC3VWlaiuW37K4tgOhoAFGc/2tHOoiisBmZk6rGFd2AYnrY
-         7NlS96wYAGJd51AiEkVGeOB1wGejgP6BoGtfA=
+        d=gmail.com; s=20230601; t=1709079021; x=1709683821; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vC8mwnT09idBziDtRBLEFES+hUh7Klq/2GI8cfJmNc8=;
+        b=BQEwLO0awnRQMTnbRFlU97Z9BHubmSIfX+Io2pXZezR+n8jx7WeMq92Chyb72ckY+D
+         I2cuzvm8hcw5xIxdmrF1a8wPKHgnXSPENoZInUpH5d8ZmEglSsxxMse1QNX5loiPV+ZD
+         v2nP2F9a6LmdXcAXWEFImtiF7ISkmyshB+sXwcFIYFDwkyR96m8I2yT1apopFuLUU2Nf
+         1BeNTxlo5tY7arJohOW3ON3hYG4kmlOmcFcP5+32DYi9r4fIcbsZUcH937zRAelD/fMS
+         xImzeV3doy4/+gcyeCF0PFu7zOZzqxOCfKFf1dJNu1hi3DBYOAXsqrNAOemBdk9WbJc0
+         XoMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709079019; x=1709683819;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3uNCkE/Y4bucRwr/vs7c1ruuOADEG13u7lr08BZ4VNA=;
-        b=VpFsE/MCnKW8CtJUccKDOAIGLBKmDPgoXo2Ta6lRayGFJWz1TO1F7BKKV/Gho1rSFP
-         db3z9XKYgeiIO4E5lvJdoFPi3GuhfqEy9AItvW74FUy2Iuuw664/22BixggiYlkA+qnH
-         k3GIIHzajoyjMlOPQf5izwpSGDAaYBsUWjPCsR6avxexS/fOoe5TKuf0AsAGv5rNPKmX
-         G6fVhexPcaCOIHBGcVZTFHYrPw/jCBw+07g7lzSulrPv+g5ZZKd3baOEp4rP1uDpeM1A
-         pi2iabLnL0OtgIZN+DWGu48zdAF/SJLtJ5yeL0XV/vaQ47TtkBDKhDOJJHPePlQDgwA6
-         aSJA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6cPPP3k8pJ2tK4bO5KsbAGV2qjY5JYCG/G4WrxA0HED/dDPkiUDMYyYiOV0u300zyNJhm8LAJtyywxMhSY6YNqJz2jIsCLzB9GZbF
-X-Gm-Message-State: AOJu0YxWZthu1ZfxbBPOo/QJQV8QZYS14m5OfI01Z+cbfsV8y4JTqSxr
-	RB3rdeBiZi4K0TFaZ0OsKcqEN4vVDKt7FMTYC910Rq0LQZk3MKFILpvv0T7iC24=
-X-Google-Smtp-Source: AGHT+IGrxhuv2/vozEcMAJsAG2BL6qpv5diYWB6ZxOntrxwP6jDQRasA2qEhpJhFBGgL0WngloEcfg==
-X-Received: by 2002:a05:6e02:20e4:b0:365:1967:e665 with SMTP id q4-20020a056e0220e400b003651967e665mr11415974ilv.2.1709079018924;
-        Tue, 27 Feb 2024 16:10:18 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id x14-20020a056e020f0e00b00364b66eb5e3sm2427560ilj.24.2024.02.27.16.10.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 16:10:18 -0800 (PST)
-Message-ID: <76d006e1-aeb1-4622-aa9e-6bf4101a4e15@linuxfoundation.org>
-Date: Tue, 27 Feb 2024 17:10:18 -0700
+        d=1e100.net; s=20230601; t=1709079021; x=1709683821;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vC8mwnT09idBziDtRBLEFES+hUh7Klq/2GI8cfJmNc8=;
+        b=emdZYc6UuP0M6JDNIKtKqmV8uZcZWGSYYfWCJRSpHQuve3STx64iadyYlpBBSTuSZ3
+         /6OXxYYq4+G/NKtMv4f7JKYoBu+YlZsVsGKSsuJ2xut5XndW2l+Lj6J/ai0RCRHXeyZj
+         tv+iyFrex2b5PSyUexEgwNlsytwjaJMAAdqzKt01K9fmy0igK4z9SiUJ737TCoYsIoOD
+         /t6SZBA6t4y636yK1GT4vwxUISkGHd6sDm11AdBQ5mVttBIU5nTrcnYXSwP3m5/SaKxy
+         zkMg8puJ7JCVO0FQe89pPp8X7aXJGYMWQ7O3FSGqTquDQhQoZbVfRNHZlltLtH6TRN7b
+         Sk5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWFkaY5S7BmFGn0nt5vNkLD2syaFnepXc03Eg3ZrACkXBLJ+ba4j4ndkMqM9H5BTg3XOezw7vMcUo/52v59V5UG4YvoYps/++6wPUV8iViErxqt/SdHPTAPlVBu90nuqCDS1z7koBEvQ0flWw+7oscBcNFYTLpJUfb9gn8HIBsYIZW2kFM=
+X-Gm-Message-State: AOJu0YwMBcoF4uOAzpzXf6bQAQ6VgAnT51WEU0gwnWaxHaFuvfiskvam
+	HGhnPD95cQMfay2fqYDE3eWZFwLDa9JqU4AtjFJP7MDQ9D92b1f6kVKfIPu8rF3SvjpmL8Q5ukQ
+	XdOvPFsoQqlA/Omo2aI5jni/eYcg=
+X-Google-Smtp-Source: AGHT+IGZVfpkm2DfaATxYbW8sDqLo8UC0/8E2KdJmuFtszeZYC4T0I7y8hVv1MitHOhz6CX/UlDN9ItKNp7imqphW1c=
+X-Received: by 2002:a17:907:118e:b0:a41:38a3:2a2c with SMTP id
+ uz14-20020a170907118e00b00a4138a32a2cmr7858643ejb.12.1709079021161; Tue, 27
+ Feb 2024 16:10:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] Improvements to livepatch kselftests on top of
- kselftest-next
-Content-Language: en-US
-To: Marcos Paulo de Souza <mpdesouza@suse.com>, Shuah Khan
- <shuah@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
- Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- live-patching@vger.kernel.org, kernel test robot <lkp@intel.com>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240221-lp-selftests-fixes-v2-0-a19be1e029a7@suse.com>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240221-lp-selftests-fixes-v2-0-a19be1e029a7@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240227212244.262710-1-chris.packham@alliedtelesis.co.nz> <20240227212244.262710-5-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20240227212244.262710-5-chris.packham@alliedtelesis.co.nz>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 28 Feb 2024 02:09:45 +0200
+Message-ID: <CAHp75VfGfwxh_VVa8N_rYb-MK9AsufqtLRXvquuJwBGnEqh+gw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: marvell: Indicate USB activity on x530
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: andy@kernel.org, geert@linux-m68k.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, andrew@lunn.ch, 
+	gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, 
+	ojeda@kernel.org, tzimmermann@suse.de, javierm@redhat.com, robin@protonic.nl, 
+	lee@kernel.org, pavel@ucw.cz, devicetree@vger.kernel.org, 
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/21/24 10:17, Marcos Paulo de Souza wrote:
-> The changes on lib.mk are both for simplification and also
-> clarification, like in the case of not handling TEST_GEN_MODS_DIR
-> directly. There is a new patch to solve one issue reported by build bot.
-> 
-> These changes apply on top of the current kselftest-next branch. Please
-> review!
-> 
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> ---
-> Changes in v2:
-> - Added a new patch to avoid building the modules/running the tests if
->    kernel-devel is not installed. Resolving an issue reported by the
->    build bot.
-> - Reordered the patches, showing the more simple ones first. Besides
->    patch 0002, all the other three didn't changed since v1.
-> - Link to v1: https://lore.kernel.org/r/20240215-lp-selftests-fixes-v1-0-89f4a6f5cddc@suse.com
-> 
-> ---
-> Marcos Paulo de Souza (4):
->        selftests: livepatch: Add initial .gitignore
->        selftests: livepatch: Avoid running the tests if kernel-devel is missing
->        selftests: lib.mk: Do not process TEST_GEN_MODS_DIR
->        selftests: lib.mk: Simplify TEST_GEN_MODS_DIR handling
-> 
->   tools/testing/selftests/lib.mk                        | 19 +++++++------------
->   tools/testing/selftests/livepatch/.gitignore          |  1 +
->   tools/testing/selftests/livepatch/functions.sh        | 13 +++++++++++++
->   .../testing/selftests/livepatch/test_modules/Makefile |  6 ++++++
->   4 files changed, 27 insertions(+), 12 deletions(-)
-> ---
-> base-commit: 6f1a214d446b2f2f9c8c4b96755a8f0316ba4436
-> change-id: 20240215-lp-selftests-fixes-7d4bab3c0712
-> 
-> Best regards,
+On Tue, Feb 27, 2024 at 11:22=E2=80=AFPM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> Use the dot on the 7 segment LED block to indicate USB access on the
+> x530.
 
-Applied all except the last patch to linux-kelftest next for Linux 6.9-rc1
+Not sure if it's a good idea. I have some plans for the compressed
+format, i.e. use DP for dots (or compatible pieces) so we may print up
+to double characters with that (e.g., '6.4.5.3.' as a single string on
+a 4-digit display).
 
-thanks,
--- Shuah
+That said, I would like to defer this for a while.
 
+--=20
+With Best Regards,
+Andy Shevchenko
