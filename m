@@ -1,99 +1,122 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E34149DE5
-	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 13:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA02073508
+	for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 13:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709125485; cv=none; b=LZ1TgDhAPMJYqm/sManPzzVbnTw1V4Bb+IcQYd7THCudFPpPAtm+w1gABjXLGzBZP6rEa0Fb8gOCqdTAtiP8Pxx5hFUu/ik98d3o2UzlComc3Lwjionhx2fqpI0MoHsLsOe8W64vljRQ70jrCHAPSRRAu+0hsIkfKKk57xIgq3k=
+	t=1709125535; cv=none; b=BsvXKYEZvCyCheGCRW8qwTaKgRrdkO2Kdx9R3oLSchw1998aFufWj18EuNMf3X2r0mwhbMnOdZpDRjgOv8vMUAXp1pINR42xqYdvjSWW+JLALxZUaZpn0D/5LfvvGEv1aV2gU91fjjBF9/jWstKqG9GYfDZKm3T6XwNabCLl/zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709125485; c=relaxed/simple;
-	bh=g5w1gGHFGXzzZmJpBKtp41q1p8eh1BbfF3BwNq/rhXA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IskYv5wQrURIhGdN+i0RAjKGnCc0UDlcciJJNXR2fM/JoBO19CztnP/cH87hiz1Piij/5sw2yoPDMR4EiyPkTQxWFzr//b0pubMG+xlEZaU8A+pqpJ6L+Kh42jcnj5p/oZAL96Q6fBGrwZa6ncudpwPTppHTjlkgjTbwBqsrSn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ttpAR/AR; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709125535; c=relaxed/simple;
+	bh=MMhWgFzk2xvRvZhLcEHl1omXZ+ewrj46X6uo0KVBQU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p01QiyVP/zrLazcspEvBdUIV2LlpD6MAJf1huZVbrgGgbEt36xyGn2uvNBIRWF4fwvqRpvFiF9j2cDX9cdO1cyCfKqsXVLeXRvv+l9ijDAPVuyVmpnlAblQ/LcODsbXxuxcOOkX911FkOaoR5z9pIHUBhTW3bwH0nbwQKd2CPrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=PRg+yigA; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ttpAR/AR"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so5604934276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:04:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="PRg+yigA"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a4348aaa705so443377566b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 05:05:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709125482; x=1709730282; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=w5k6h2ShXlgJ8U8BtYrte9gH1UhDVvYBcQOgkCuTu28=;
-        b=ttpAR/ARviixgzkkCHBHR3KHtgkCERr/ruNIwtNQu2c5762egIs+QvywmkvNC84KOf
-         zq35A0sbZHivGrbeCn/G2RYA8/3fYq7GxwpZ4YbGYBH/JvRPhDW0eQ8tG9dLTFh/uemY
-         GzMjlagmmmOJn5O3QEuyRCec9DWjBl0lAF0bM7rkdtcIHEcduUBlGSFckpktzyKyJhB/
-         /UnKo+oj0y9zFkToPzL6VSve5AKXwdyIcaK88dW1ewuUuVR9oPI9tCUpA//u2WiR1AC6
-         mmZwacev8xntQSR45qL/7kVLsghGzz2VqyxakpIHR9kfbWJvNLPZIsntpg+xCniqaf2c
-         A7bA==
+        d=ventanamicro.com; s=google; t=1709125532; x=1709730332; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O3WgTNeeGr6uKUuJvcES9LZuUweLm/sbBaRIaDoEjes=;
+        b=PRg+yigArlQOvAMf+4ViDVkE40RfzRlIqwtr42og9I+JvnDOywEaiTu1mCCXlJ5MWq
+         g4mMw2IWpGXE+kCqjeBUKMWy92rVUbbPhiltZU1+vemO4e4+GHBiDxODTL+cHCFx56i7
+         jTofTAxBrjwPoKEaIL9mQZuo49h94995gno9C67NPVHIvCNJYy1hYJtThC0MHVmBiYBb
+         6Lq60c6RDn5PM/GUpxF5JO+vf+iI/lpX12McpdbYcjZWyvInxGcb3qBFumEbO2LpVUnL
+         SjAr1NtulmGC5Y7Ia+RWN1NhL8BMsisT5hQRByKzU6vEAL54JHu9AIFMMpHTseRKxtuz
+         /TDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709125482; x=1709730282;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w5k6h2ShXlgJ8U8BtYrte9gH1UhDVvYBcQOgkCuTu28=;
-        b=C2vNa7I4dKkayjp/958AGt76n9laX51dTUr+UDQNUlqCLTgCoTv0DzFwDxxdiL/cit
-         IalFzZIeXean3ITbSoPPdbvf1PtTZmkqMg+d68ES9+z6UoH83bYea/E64t/98G5o5ywt
-         S+RQKAYRtDCedSbbWIsGmcpOB2oiQEJhdgJiGz6b1Yc/u0OV04I7ksTPjVbbPttNyCQI
-         YsFM6AWDwdyBO4bnoPAwe3gzQD8cW9GMgrIA09O0Sp82qVl61XE/7XAvchiVUq8JO4on
-         yRSWhE3ACzVCTBFCdkKLOh9x4BcENIqifHO7qzjnY/546VZyLdFtKyEJ1hsKlUdJqO7U
-         K3lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXnwma5gfDqXW/xjss/6nRFPWNXXCarfKIxeNr87sbLZG/P00QMWRL+AND4l6yYCyVQD6J7yCw/pkoYwtcTN2L947W1cWVKj3YOCJkZ
-X-Gm-Message-State: AOJu0Ywk/qyFKYqF3A5Q7LC2O8ACkcIaeUHg4ubwvS72JEZLz1V6Ygg3
-	repuqRfrWMMIrS6G4K9j0OyEOG6ThQBhpJG2B+9s0riWOTECrInfyajuIpH+3ObwJIYIRx0Hq4k
-	RLd2XlJyemu/keD7WHIIEeLUe2gXk0UPChBRzqr/HtJ+aliNS
-X-Google-Smtp-Source: AGHT+IHVy/3/U+YFr3kDL8D7Mz6ygkKj0BjotcensF7V9yJpyKFtEeqWYvz9KPVlNZA2YO6O8H78qdPvaSlu5PUCWr4=
-X-Received: by 2002:a25:4c89:0:b0:dc7:4951:5f8 with SMTP id
- z131-20020a254c89000000b00dc7495105f8mr2637726yba.22.1709125481162; Wed, 28
- Feb 2024 05:04:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709125532; x=1709730332;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O3WgTNeeGr6uKUuJvcES9LZuUweLm/sbBaRIaDoEjes=;
+        b=T5vRmq/LzSuYm4zbpsQYAAktZn4EPcZuIumpqrem9SdwUc9FFTxdkJh3X5HDQIteVl
+         SwInOkuCBTte9RicCzqW2n8XsrG+48Ypz7zV3nlcISSojHAvuSNgWGemY4mj0VEombcb
+         44tgZyZAu22324RGWONBXJZBLvneYU+LsT0p6PoR/XPlQ5ChXI7Q2EStVv6MxtHsPa9B
+         QeGVvl8VM98gPpa56YItCAr/VGqDz7YnXkIyAmY7P7KqtkjjCALzobbTZu9n2/K1uQjR
+         MPukwsz1pKqQbnMpPR40rb4mzuKl89slpeoliLMh9e65/9id0dFn7wT6agrExBj+AXy6
+         m/qA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6QiNIL0vNU6DYeZ2mvCD8CdKJdunx9FUvs77855E9ULgDKAFerJIQZUKGX8UyUAaxY/CDhS2RxdTYmwidfRIGvWS1Y3bxoDhUj8QH
+X-Gm-Message-State: AOJu0YwUMmY8iiJk4VfUCIEAz2XSk2asgyzK/zKySmI50sla99Vpo5mS
+	E1TyvG2CO5B8kGTkxAXbr6Q0jyOf/9zA6ZiPPVNm6VQrY8cffjvPzh9r08CXRXk=
+X-Google-Smtp-Source: AGHT+IH+C1UK8TXkfq2HYZwku9tG0/J9fW8seqeejTe1fbola7gcXOqlPx5qIbzYgVlGAurTsc1Dmw==
+X-Received: by 2002:a17:906:371a:b0:a3e:9ad2:b555 with SMTP id d26-20020a170906371a00b00a3e9ad2b555mr9508772ejc.24.1709125532375;
+        Wed, 28 Feb 2024 05:05:32 -0800 (PST)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id ti6-20020a170907c20600b00a43c3e5e008sm1386581ejc.205.2024.02.28.05.05.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 05:05:31 -0800 (PST)
+Date: Wed, 28 Feb 2024 14:05:31 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, 
+	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/5] RISC-V: KVM: Allow Ztso extension for Guest/VM
+Message-ID: <20240228-4b0546ecd98e675844aab46f@orel>
+References: <20240214123757.305347-1-apatel@ventanamicro.com>
+ <20240214123757.305347-3-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222191714.1216470-1-enachman@marvell.com>
-In-Reply-To: <20240222191714.1216470-1-enachman@marvell.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 28 Feb 2024 14:04:05 +0100
-Message-ID: <CAPDyKFrG2JwHMesMiLfHJBxmWTB7c0wSJzxH7hceUBgH4mKfng@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] Fix PHY init timeout issues
-To: Elad Nachman <enachman@marvell.com>
-Cc: huziji@marvell.com, adrian.hunter@intel.com, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214123757.305347-3-apatel@ventanamicro.com>
 
-On Thu, 22 Feb 2024 at 20:17, Elad Nachman <enachman@marvell.com> wrote:
->
-> From: Elad Nachman <enachman@marvell.com>
->
-> Fix PHY init timeout issues:
->
-> 1. Clock Stability issue causing PHY timeout
->
-> 2. Timeout taking longer than needed on AC5X.
->    Solve by constantly testing the PHY init bit
->    until it toggles, but up to 100X timeout factor.
->
-> v2:
->     1) convert polling loop to read_poll_timeout()
->        for both patches.
->
-> v3:
->     1) Add Acked-by, Fixes and CC for stable
->
-> Elad Nachman (2):
->   mmc: xenon: fix PHY init clock stability
->   mmc: xenon: add timeout for PHY init complete
->
->  drivers/mmc/host/sdhci-xenon-phy.c | 48 ++++++++++++++++++++++++------
->  1 file changed, 39 insertions(+), 9 deletions(-)
+On Wed, Feb 14, 2024 at 06:07:54PM +0530, Anup Patel wrote:
+> We extend the KVM ISA extension ONE_REG interface to allow KVM
+> user space to detect and enable Ztso extension for Guest/VM.
+> 
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>  arch/riscv/include/uapi/asm/kvm.h | 1 +
+>  arch/riscv/kvm/vcpu_onereg.c      | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
+> index 7499e88a947c..f8aa9f2ace95 100644
+> --- a/arch/riscv/include/uapi/asm/kvm.h
+> +++ b/arch/riscv/include/uapi/asm/kvm.h
+> @@ -166,6 +166,7 @@ enum KVM_RISCV_ISA_EXT_ID {
+>  	KVM_RISCV_ISA_EXT_ZVFH,
+>  	KVM_RISCV_ISA_EXT_ZVFHMIN,
+>  	KVM_RISCV_ISA_EXT_ZFA,
+> +	KVM_RISCV_ISA_EXT_ZTSO,
+>  	KVM_RISCV_ISA_EXT_MAX,
+>  };
+>  
+> diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
+> index 5f7355e96008..38f5cf286087 100644
+> --- a/arch/riscv/kvm/vcpu_onereg.c
+> +++ b/arch/riscv/kvm/vcpu_onereg.c
+> @@ -66,6 +66,7 @@ static const unsigned long kvm_isa_ext_arr[] = {
+>  	KVM_ISA_EXT_ARR(ZKSED),
+>  	KVM_ISA_EXT_ARR(ZKSH),
+>  	KVM_ISA_EXT_ARR(ZKT),
+> +	KVM_ISA_EXT_ARR(ZTSO),
+>  	KVM_ISA_EXT_ARR(ZVBB),
+>  	KVM_ISA_EXT_ARR(ZVBC),
+>  	KVM_ISA_EXT_ARR(ZVFH),
+> @@ -141,6 +142,7 @@ static bool kvm_riscv_vcpu_isa_disable_allowed(unsigned long ext)
+>  	case KVM_RISCV_ISA_EXT_ZKSED:
+>  	case KVM_RISCV_ISA_EXT_ZKSH:
+>  	case KVM_RISCV_ISA_EXT_ZKT:
+> +	case KVM_RISCV_ISA_EXT_ZTSO:
+>  	case KVM_RISCV_ISA_EXT_ZVBB:
+>  	case KVM_RISCV_ISA_EXT_ZVBC:
+>  	case KVM_RISCV_ISA_EXT_ZVFH:
+> -- 
+> 2.34.1
 >
 
-Applied for fixes, thanks!
-
-Kind regards
-Uffe
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
