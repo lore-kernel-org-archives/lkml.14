@@ -1,159 +1,139 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466F120DD5;
-	Wed, 28 Feb 2024 16:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28943FBA9;
+	Wed, 28 Feb 2024 16:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709137610; cv=none; b=WG1R80tsZPUrym1b77/VK0NhGVDKJMWQfYVEMAfreJ/q1/RqGMMUnYLNIKbQVnf+QE8baWyXG562gunDmKZ5lk6iWocIBX5ce1fuSiYS438bqt2eeg7PrCqsVuLVzx9USZGD1jJ1S3haoKjtzc81G0Prq/CpVHRKe1/7d3dC190=
+	t=1709137610; cv=none; b=ccJq6f9D+yLH0pwMh/AIGPYaRu/QJW06klzC5mij8DWEH4u+CmLhgiRTeMA2seQfTDDXse8E5ZctzM8BGepGafhGEEKEXJiVtQjNjRAJsfe8StNT9k87ev6i83LGIuLiiYBNOyitOVO4Nfpc/BjmxyR7loE2SvbX5DZY8Ek+rsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709137610; c=relaxed/simple;
-	bh=i0uJzDDNx/9MRtcLNxLIpGvbtgkEiz4pwvdJzLFqJh8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l51WB6c4hbQ0C5YQUL7fJFjx0wJ0n+cBM6XzQnJHloo/AGeWOtfGvcdzTEHvt/2Ph3maHuVg5e0oyiQkd99tG84ahxgYxMEGcdVl6l+QPkIBkjGSYObtQOz1G7/0aBHWvc7klqs2bd97Q88N2LGaD3RTiAyzwm5Z9H/ukMBCqZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.53] (ip5f5aedb1.dynamic.kabel-deutschland.de [95.90.237.177])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id F2C2D61E5FE04;
-	Wed, 28 Feb 2024 17:25:44 +0100 (CET)
-Message-ID: <35dcecdd-ee19-40d6-80ab-5eed9718e639@molgen.mpg.de>
-Date: Wed, 28 Feb 2024 17:25:44 +0100
+	bh=1mSJiKFveQIcxWUIOdkvzQ2W+3D7jbH1bL69Ehdc/yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pcdeET4XmV8RAeEUhztc34VBXp25TMImMmbW85NCZXXo1qV8e3QJhy9RB2wL22pek38LT5USdapTRg7cnZpro3F9BycSBqXTzwGzRGVZ45XR3zPZgjNWBGBGbIuoxasDj1WqYPfEwe5rh3w/aI14AMiA+2vRVqBZzy8e/RUBWcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oVqn6QUE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oVqn6QUE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155E1C433C7;
+	Wed, 28 Feb 2024 16:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709137610;
+	bh=1mSJiKFveQIcxWUIOdkvzQ2W+3D7jbH1bL69Ehdc/yY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oVqn6QUEeQbM2a4tYvbqKYOaLr8t7uOwvVSd3bqV+lsvDt9tkYSR8xnsdKr+lOCiU
+	 CZOf9vQt2KEnN4bveiKcvGMJTXjxm2PhqkAsnz5WypOWq7OwnrpyTX58fEfNwX7J8l
+	 eG9bQXiTQ1jwb0FPIjcsrBj+coy8kR3/3ZL5mtHjIuspJ8SlbH949BMqZudWeekl23
+	 1jKX3aYwVPEcGT4aXxac6TXOf2h+HJSnkv4I388UUZPlt+TAiDSx4mPJorTFR+6tKd
+	 3B8oABI8qB8/gfrybDKR/LttigggdNps8lLOUx5kQwegY6B5PBenGShBGh26yMAG/4
+	 dax5em0LZHBrA==
+Date: Wed, 28 Feb 2024 10:26:47 -0600
+From: Rob Herring <robh@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	linux-um@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+	devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v4 5/7] arm64: Unconditionally call
+ unflatten_device_tree()
+Message-ID: <20240228162647.GA4086865-robh@kernel.org>
+References: <20240217010557.2381548-1-sboyd@kernel.org>
+ <20240217010557.2381548-6-sboyd@kernel.org>
+ <20240223000317.GA3835346-robh@kernel.org>
+ <20240223102345.GA10274@willie-the-truck>
+ <CAL_JsqJSeSHeWV3YJE9n2NuY+s_iE6f7N5C_oguEJn7jTZ20xA@mail.gmail.com>
+ <Zd4dQpHO7em1ji67@FVFF77S0Q05N.cambridge.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Commit messages (was: [PATCH v4 3/3] hwmon: Driver for Nuvoton
- NCT7363Y)
-Content-Language: en-US
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Ban Feng <baneric926@gmail.com>, jdelvare@suse.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, corbet@lwn.net,
- linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- kcfeng0@nuvoton.com, kwliu@nuvoton.com, openbmc@lists.ozlabs.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- DELPHINE_CHIU@wiwynn.com, naresh.solanki@9elements.com,
- billy_tsai@aspeedtech.com
-References: <20240227005606.1107203-1-kcfeng0@nuvoton.com>
- <20240227005606.1107203-4-kcfeng0@nuvoton.com>
- <62f38808-7d5f-4466-a65e-b6a64b2e7c01@molgen.mpg.de>
- <4b06d535-6739-47b5-ad1e-0ff94322620e@roeck-us.net>
- <e2b0b8e3-9b39-4621-9e43-d7de02286a27@molgen.mpg.de>
- <24ee4bf3-aa91-483d-a9be-5c47e5c37ed7@roeck-us.net>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <24ee4bf3-aa91-483d-a9be-5c47e5c37ed7@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zd4dQpHO7em1ji67@FVFF77S0Q05N.cambridge.arm.com>
 
-Dear Guenter,
-
-
-Thank you for your reply.
-
-Am 28.02.24 um 17:03 schrieb Guenter Roeck:
-> On 2/28/24 03:03, Paul Menzel wrote:
-
->> Am 28.02.24 um 10:03 schrieb Guenter Roeck:
->>> On 2/27/24 23:57, Paul Menzel wrote:
->>
->>>> Am 27.02.24 um 01:56 schrieb baneric926@gmail.com:
->>>>> From: Ban Feng <kcfeng0@nuvoton.com>
->>>>>
->>>>> NCT7363Y is an I2C based hardware monitoring chip from Nuvoton.
->>>>
->>>> Please reference the datasheet.
->>>
->>> Note that something like
->>>
->>> Datasheet: Available from Nuvoton upon request
->>>
->>> is quite common for hardware monitoring chips and acceptable.
->>
->> Yes, it would be nice to document it though. (And finally for vendors 
->> to just make them available for download.)
+On Tue, Feb 27, 2024 at 05:34:58PM +0000, Mark Rutland wrote:
+> On Fri, Feb 23, 2024 at 11:17:02AM -0700, Rob Herring wrote:
+> > On Fri, Feb 23, 2024 at 3:23 AM Will Deacon <will@kernel.org> wrote:
+> > >
+> > > On Thu, Feb 22, 2024 at 05:03:17PM -0700, Rob Herring wrote:
+> > > > On Fri, Feb 16, 2024 at 05:05:54PM -0800, Stephen Boyd wrote:
+> > > > > Call this function unconditionally so that we can populate an empty DTB
+> > > > > on platforms that don't boot with a firmware provided or builtin DTB.
+> > > > > When ACPI is in use, unflatten_device_tree() ignores the
+> > > > > 'initial_boot_params' pointer so the live DT on those systems won't be
+> > > > > whatever that's pointing to. Similarly, when kexec copies the DT data
+> > > > > the previous kernel to the new one on ACPI systems,
+> > > > > of_kexec_alloc_and_setup_fdt() will ignore the live DT (the empty root
+> > > > > one) and copy the 'initial_boot_params' data.
+> > > > >
+> > > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > > Cc: Frank Rowand <frowand.list@gmail.com>
+> > > > > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > > > > Cc: Will Deacon <will@kernel.org>
+> > > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > > Cc: <linux-arm-kernel@lists.infradead.org>
+> > > > > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> > > > > ---
+> > > > >  arch/arm64/kernel/setup.c | 3 +--
+> > > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > >
+> > > > Catalin, Will, Can I get an ack on this so I can take the series via the
+> > > > DT tree.
+> > >
+> > > Mark had strong pretty strong objections to this in version one:
+> > 
+> > Yes, I had concerns with it as well.
+> > 
+> > > https://lore.kernel.org/all/ZaZtbU9hre3YhZam@FVFF77S0Q05N/
+> > >
+> > > and this patch looks the same now as it did then. Did something else
+> > > change?
+> > 
+> > Yes, that version unflattened the bootloader passed DT. Now within
+> > unflatten_devicetree(), the bootloader DT is ignored if ACPI is
+> > enabled and we unflatten an empty tree. That will prevent the kernel
+> > getting 2 h/w descriptions if/when a platform does such a thing. Also,
+> > kexec still uses the bootloader provided DT as before.
 > 
-> Nuvoton is nice enough and commonly makes datasheets available on request.
-> The only exception I have seen so far is where they were forced into an NDA
-> by a large chip and board vendor, which prevented them from publishing a
-> specific datasheet.
-
-Nice, that they are better in this regard than others.
-
-> Others are much worse. Many PMIC vendors don't publish their datasheets at
-> all, and sometimes chips don't even officially exist (notorious for chips
-> intended for the automotive market). Just look at the whole discussion
-> around MAX31335.
+> That avoids the main instance of my concern, and means that this'll boot
+> without issue, but IIUC this opens the door to dynamically instantiating DT
+> devices atop an ACPI base system, which I think in general is something that's
+> liable to cause more problems than it solves.
 > 
-> Anyway, there are lots of examples in Documentation/hwmon/. I don't see
-> the need to add further documentation, and I specifically don't want to
-> make it official that "Datasheet not public" is acceptable as well.
-> We really don't have a choice unless we want to exclude a whole class
-> of chips from the kernel, but that doesn't make it better.
+> I understand that's desireable for the selftests, though I still don't believe
+> it's strictly necessary -- there are plenty of other things that only work if
+> the kernel is booted in a specific configuration.
 
-I know folks figure it out eventually, but I found it helpful to have 
-the datesheet name in the commit message to know what to search for, ask 
-for, or in case of difference between datasheet revision what to compare 
-against.
+Why add to the test matrix if we don't have to?
 
->>>> Could you please give a high level description of the driver design?
->>>
->>> Can you be more specific ? I didn't have time yet to look into details,
->>> but at first glance this looks like a standard hardware monitoring 
->>> driver.
->>> One could argue that the high level design of such drivers is described
->>> in Documentation/hwmon/hwmon-kernel-api.rst.
->>>
->>> I don't usually ask for a additional design information for hwmon drivers
->>> unless some chip interaction is unusual and needs to be explained,
->>> and then I prefer to have it explained in the code. Given that, I am
->>> quite curious and would like to understand what you are looking for.
->> For a 10+ lines commit, in my opinion the commit message should say 
->> something about the implementation. Even it is just, as you wrote, a 
->> note, that it follows the standard design.
-> 
-> Again, I have not looked into the submission, but usually we ask for that
-> to be documented in Documentation/hwmon/. I find that much better than
-> a soon-to-be-forgotten commit message. I don't mind something like
-> "The NCT7363Y is a fan controller with up to 16 independent fan input
->   monitors and up to 16 independent PWM outputs. It also supports up
->   to 16 GPIO pins"
-> or in other words a description of the chip, not the implementation.
-> That a driver hwmon driver uses the hardware monitoring API seems to be
-> obvious to me, so I don't see the value of adding it to the commit
-> description. I would not mind having something there, but I don't
-> see it as mandatory.
-> 
-> On the  other side, granted, that is just _my_ personal opinion.
-> Do we have a common guideline for what exactly should be in commit
-> descriptions for driver submissions ? I guess I should look that up.
+> Putting the selftests aside, why do we need to do this? Is there any other
+> reason to enable this?
 
-`Documentation/hwmon/submitting-patches.rst` refers to 
-`Documentation/process/submitting-patches.rst`, and there *Describe your 
-changes* seems to have been written for documenting bug fixes or 
-enhancements and not new additions. It for example contains:
+See my Plumbers talk...
 
-> Once the problem is established, describe what you are actually doing
-> about it in technical detail.  It's important to describe the change
-> in plain English for the reviewer to verify that the code is behaving
-> as you intend it to.
+Or in short, there's 3 main usecases:
 
-I agree with your description, but I am also convinced if you write 500 
-lines of code, that you can write ten lines of commit messages giving a 
-broad overview. In this case, saying that it follows the standard driver 
-model would be good enough for me.
+- PCI FPGA card with devices instantiated in it 
+- SoCs which expose their peripherals via a PCI endpoint.
+- Injecting test devices with QEMU (testing, but not what this series 
+  does. Jonathan Cameron's usecase)
 
-Also, at least for me, often having to bisect stuff and using `git 
-blame` to look at old commits, commit messages are very valuable to me, 
-and not “forgotten”. ;-)
+In all cases, drivers already exist for the devices, and they often only 
+support DT. DT overlays is the natural solution for this, and there's 
+now kernel support for it (dynamically generating PCI DT nodes when they 
+don't exist). The intent is to do the same thing on ACPI systems.
 
+I don't see another solution other than 'go away, you're crazy'. There's 
+ACPI overlays, but that's only a debug feature. Also, that would 
+encourage more of the DT bindings in ACPI which I find worse than this 
+mixture. There's swnodes, but that's just board files and platform_data 
+2.0.
 
-Kind regards,
+I share the concerns with mixing, but I don't see a better solution. The 
+scope of what's possible is contained enough to avoid issues.
 
-Paul
+Rob
