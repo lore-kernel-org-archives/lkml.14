@@ -1,103 +1,88 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49DE15B10F;
-	Wed, 28 Feb 2024 15:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9E224B39;
+	Wed, 28 Feb 2024 15:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709132550; cv=none; b=pnJyQVqCZoWV5xe0lXLwrdSqxbu6m3mVixqjClIezcm8piwJPldWDhOkg31YfubFls4KRxhse0p/y3R+8BabHSCNzz+j8KdpX6aMbdhyfvfY0DbkuupPV+LfA1NwbdQdqRyqYS/BkcZmb9AWxiDakTMTs397S/K6vnF/dXTKc/E=
+	t=1709132658; cv=none; b=Rl3otR9/UF6Of4xCJQgPwkR6u4nMqz4TvBd3kINcxbtICgeQCX5RNOgc84czynPmxg9Jx1mAVWmQIfStL1uoaUeeD0lqB9fxLQdTJATsYLhgoTU5lV2np0zsyPfSTEGq0AJ4W0Q5WYLVfpZPdhHAWjYJ3QQjGtm/BGmnux0csc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709132550; c=relaxed/simple;
-	bh=LLoZpEXZrb4qyUzIaxkmCot88D7QEoKCy9xtugExuUA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eWV0swI+nNNLIJ6RW999UBsSNbtB4XMlmowCQsbfZWaJnS79vRr4dZtG1HD7325n2Q0nhDzCb9lricqjt1feOFXZ/lWy2+7RNYCFO71blJTiOUwiPItbHJLe0ex+rKvrr1gJRfKhLb3cd7F6UJeRbu+5PLw/PY795skbzhzwclk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKZLS+W4; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709132658; c=relaxed/simple;
+	bh=t9muqhfNN7i4XP7gG3jCRjrTS9ve2WB+DxxVMTVNZA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZLkIYbq8+C8Ls3AiwU/URcwv0t20XN4ewV/guflYmq+Ot0mVkFtFJ8PKf4l1lEHz23xSVGbJGDP5w4S6J1AEav/UznGYLf6rgvC09ljSQRuP2LA1P7ISbYaujtGLcqu4EvSnQTI0ysmsBVl2FKOMZkMu2d3BlhlMtNS9p1kPCF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bTUZz3v4; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKZLS+W4"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e5675f2ca2so410413b3a.0;
-        Wed, 28 Feb 2024 07:02:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709132548; x=1709737348; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3VCmmq+4eba1jx1BqMgmbQQgplh1rf6OaXgPK/1tuIk=;
-        b=NKZLS+W4Ohc3C8PgkUKpiDErLM2YCpo6iZ9BzqSTK5F3z3lsYwiciAQBwiGQL8jN7a
-         R3m/BbGdLHxbWz3hyRfFB60lWFgYlapzgqJyIQD5aSJsLpJqLqWRCVFN19eMTJKce4DZ
-         1NUFM5bwoUIzv4BTGNpIPA7GSexNhkd/nAjENWHdv8OAz9n+S0gEO0m9MPmTc42ptLZB
-         YKHyVbvRzlhNhbBZt7MaAGBl1JXBlLGxywrGDqmqQH6ndq29hJ5MYK1EWuCutdnwwhds
-         hnKLVTbjSBs7AqL/rP1oXOvdFxg2KxA/pqNxMVvZPA8efQB1sErrkBur6MUxVr+5p6IL
-         2YWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709132548; x=1709737348;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3VCmmq+4eba1jx1BqMgmbQQgplh1rf6OaXgPK/1tuIk=;
-        b=A2p2cAr885aNCR0B1Hbt4LxJusoHNgv/bv9mU8j10Qgz6ML+ypsBelIR2i68ThuiAA
-         bto0ql6FzCjEtnz+qC8+2fnbUed+6QgG9Kt/iBN22JWTXAz6f40URj2BX5cqzfao5HrS
-         AFh/nB8upRXzXfM0M/K9XUGJPdz73ryxbWP/G+ABN26n/lNEMM/YS/i8ztP5onX2rXj2
-         DHPm7CRyEplvRYTNwkA7NCZFVRLz2Ojs2LUO+Rs2jNnccIydr8YFDZGg2AFDrPuBwqzG
-         Ic/kKSykNJZyOf/ycyllJHlc7lVqRXQrvWLhVoR3yk9jz+5tBuUusQ+OzJkm9ZiUZaWd
-         KpYg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGPFqjmU6LgRracguEMyAfPbs8oY7immjLB9pmk3dOGgY0DYc+KDbN+55ukowo5AvXjgCGFWvQHjvREcjQHXuNyjmk79axBF47sqjg
-X-Gm-Message-State: AOJu0YxHsJ9XFIfxEhmxBjc2zv428ZPWE242Vtn2eQFCb0FZLuB+shLw
-	hrwAPWTKOgsnd6+hCT49Won+GBJ+gOK1eSUoA4PgI/ite2tPCP6ViTTq+iGvM9w5Dw==
-X-Google-Smtp-Source: AGHT+IHGKFPM11qIWDMaFIJA2bwG1vA4MS+XF5h1c2dKAXwKA32pFTvWuXUxR9dQ1E1iQSXrfA1vng==
-X-Received: by 2002:a05:6a21:1394:b0:1a0:ebbd:9aeb with SMTP id oa20-20020a056a21139400b001a0ebbd9aebmr5964504pzb.5.1709132547845;
-        Wed, 28 Feb 2024 07:02:27 -0800 (PST)
-Received: from ares2-ThinkPad-L13-Yoga-Gen-2.. ([2400:2410:b9a0:8400:d1cb:3c04:cf19:22d9])
-        by smtp.googlemail.com with ESMTPSA id o30-20020a63921e000000b005e49bf50ff9sm263602pgd.0.2024.02.28.07.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 07:02:27 -0800 (PST)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mpearson-lenovo@squebb.ca,
-	vsankar@lenovo.com,
-	Vishnu Sankar <vishnuocv@gmail.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add more ThinkPads with non-standard reg address for fan
-Date: Thu, 29 Feb 2024 00:01:49 +0900
-Message-Id: <20240228150149.4799-1-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bTUZz3v4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=dOocNfIFOpPF6lqMWSXAW9AMnznAJXSj9KJvDupMxYg=; b=bTUZz3v4hxXRRqqLkvtLScD7qZ
+	/WpJG7GUplG1kh3IxUbHuJznV7aCXbWselztd5/1OrNEIjX4DPWCAT3nwjZus2EnfKmMELkcf/8IJ
+	J4b7cgWKvuKSxI+sC5x58oWQ0WEsz0TGSxx/d5ZvgMMy8WpyRjH7+YsKq1ZugZII140Q=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rfLTn-008xT3-DF; Wed, 28 Feb 2024 16:04:19 +0100
+Date: Wed, 28 Feb 2024 16:04:19 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	herve.codina@bootlin.com, maxime.chevallier@bootlin.com,
+	christophercordahi@nanometrics.ca
+Subject: Re: [PATCH v2 3/6] net: phy: DP83640: Add LED handling
+Message-ID: <9b06003c-afc9-419a-af36-7b81aab8517e@lunn.ch>
+References: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
+ <20240227093945.21525-4-bastien.curutchet@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227093945.21525-4-bastien.curutchet@bootlin.com>
 
-Add more ThinkPads with non-standard register addresses to read fan values.
+> +static int dp83640_led_brightness_set(struct phy_device *phydev, u8 index,
+> +				      enum led_brightness brightness)
+> +{
+> +	int val;
+> +
+> +	if (index > DP83640_SPDLED_IDX)
+> +		return -EINVAL;
+> +
+> +	phy_write(phydev, PAGESEL, 0);
+> +
+> +	val = phy_read(phydev, LEDCR) & ~DP83640_LED_DIS(index);
+> +	val |= DP83640_LED_DRV(index);
+> +	if (brightness)
+> +		val |= DP83640_LED_VAL(index);
+> +	else
+> +		val &= ~DP83640_LED_VAL(index);
+> +	phy_write(phydev, LEDCR, val);
 
-ThinkPads added are L13 Yoga Gen1, X13 Yoga Gen1, L380, L390, 11e Gen5 GL,
-11e Gen5 GL-R, 11e Gen5 KL-Y.
+I don't understand this driver too well, but should this be using
+ext_read() and ext_write().
 
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+I'm also woundering if it would be good to implement the .read_page
+and .write_page members in phy_driver and then use phy_write_paged()
+and phy_write_paged() and phy_modify_paged(), which should do better
+locking.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 5ecd9d33250d..23b2abe44a5a 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8767,6 +8767,13 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('N', '3', '7', TPACPI_FAN_2CTL),  /* T15g (2nd gen) */
- 	TPACPI_Q_LNV3('R', '1', 'F', TPACPI_FAN_NS),	/* L13 Yoga Gen 2 */
- 	TPACPI_Q_LNV3('N', '2', 'U', TPACPI_FAN_NS),	/* X13 Yoga Gen 2*/
-+	TPACPI_Q_LNV3('R', '0', 'R', TPACPI_FAN_NS),	/* L380 */
-+	TPACPI_Q_LNV3('R', '1', '5', TPACPI_FAN_NS),	/* L13 Yoga Gen 1 */
-+	TPACPI_Q_LNV3('R', '1', '0', TPACPI_FAN_NS),	/* L390 */
-+	TPACPI_Q_LNV3('N', '2', 'L', TPACPI_FAN_NS),	/* X13 Yoga Gen 1 */
-+	TPACPI_Q_LNV3('R', '0', 'T', TPACPI_FAN_NS),	/* 11e Gen5 GL */
-+	TPACPI_Q_LNV3('R', '1', 'D', TPACPI_FAN_NS),	/* 11e Gen5 GL-R */
-+	TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),	/* 11e Gen5 KL-Y */
- 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
- };
- 
--- 
-2.34.1
-
+	Andrew
