@@ -1,260 +1,218 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB9F364D4;
-	Wed, 28 Feb 2024 09:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709114286; cv=none; b=WOJX9by6Zs8GcaoPjNMzS1FqfVJ1mlCgsK+5De10GKYR7bzEbLlnulLDKATQzS5/aqiplALr70knHdfadcnE81CpL7WovGORMDBhoP7av+CU8xNjoyz5wrTSuN0Gsp2ncm/CTynbzEzvzSgNxeoJSFrnMtSZTcGLrQnrNcTpSnU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709114286; c=relaxed/simple;
-	bh=Blso9lfH51kwcP1CVK11hHzCJHFZ9OHJEV6PgKIUfUU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nxi6h/+uvyDhccrReaTLCXb472vTlnbiFcQUkW/g2Y/kmV8/i6Je4aoXDDktgug8rHTILvxEAOe10B9NYuLoEafd+/6sS+hH44p+6baHMkevy4oESsZhcO4TlccCSlRYGHkkBVXhfvQK8553kgTecAod7OofE2kHKUSTY8w0w/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BViL+tKz; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED066364A1;
+	Wed, 28 Feb 2024 09:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709114354; cv=fail; b=E9Ph/OE/wB2EGDeGYpnld6LGdtcy8/1GQ4suwWwLLgWtVldBrpRwVVWq6P/lcQZloWSpWL0MbRLz0E/0yvCQL7mjuznDue7hcENwvrFc0dp2R4ycD1yTFYXW15q9FlY9zDkgEWe5YnUUtByF0O88outSyHOw0yP7y6nHvL1xKnk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709114354; c=relaxed/simple;
+	bh=6b74PYGttap25WTK0hrfVUKxplfVRvX7oREyaEobW6A=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nrRTqDbN5VQxmaurUl4iJRfKDMxQ5pTY7aYBUhTjZPEKKwgde2L+CYq0ixhYxI0ehmWfwuZWXOMQ1dfHZ5T1HixCo4z14fvZ5o7CDZvcw61dTjYf9RVMpqdZVs+MtnDM818t9mTk3ij5xK/XDEUsGKabpAgLrwQziONiYGuNIRQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jIsKWau4; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BViL+tKz"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A8442FF808;
-	Wed, 28 Feb 2024 09:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709114281;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JMKpIee8poazIgmO/n+MA29ouCu1haPkvnzwBSNqjQ8=;
-	b=BViL+tKzSQvB8Hex93cnYGs7f4vPfYl3wumtMYaw8xc9zQr5TYUFmjYxT4f1+xbiBgUHmw
-	JFHHDZ57HskKTjxo0NsTLyUd4dwvZPIJ9B/rpMRJGkLiafBib8FksbRw8oLZjdRXzMo5w0
-	JJpxz4fapIS99FAxfH3xTDIi40ALmRWgY/1G7Dbb8NbrRlrhAIvHovoi1LMvhJHHQeEfYV
-	9NPMu74kqhWXMpNu3Rz82KoOpbXN7AYlg7wG/zDxBFGtNpVzUf0oBpZAGo+98vhBALkr9Q
-	AA4BTepXmYryigRioYH7Nc52fuvDZEUE8HpW1D4tri5b8kkrutZHbPDw1iNiMw==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH net-next v2 1/2] doc: sfp-phylink: update the porting guide with PCS handling
-Date: Wed, 28 Feb 2024 10:57:53 +0100
-Message-ID: <20240228095755.1499577-2-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240228095755.1499577-1-maxime.chevallier@bootlin.com>
-References: <20240228095755.1499577-1-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jIsKWau4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709114352; x=1740650352;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=6b74PYGttap25WTK0hrfVUKxplfVRvX7oREyaEobW6A=;
+  b=jIsKWau4P6PjLB+NPbxSgb4mEZxXGBy3hF3KsB8TfeoVy+JEtxGnNIO1
+   QCYfnU1H4vOcN4N/UzD9wiTDYQidRkdNreWmkm/tPaJ9DuMnqtAT3wqtS
+   N7UQA5gkg/jEzFCYdQEsys0tuISg2KeVe1V4q/Doa0gep9gMqdbc58jUN
+   E5K7sFx/x3Upugq/jcSwQBu4LxR8ySN9t94W53OWjzUECGFf6uBKkGhJa
+   MnaBHFVfSgYxuHt57HfL7GGbYRGpCdk26zvvNOZ4aiX2qM4EpO7GT5fU1
+   8ZG0ajcuzRDxVQ+W0XJvd5ftqpRLjTDXh0CHvI3KloD9/Fta/Ihhw9dH3
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14055269"
+X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
+   d="scan'208";a="14055269"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 01:59:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
+   d="scan'208";a="7590126"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Feb 2024 01:59:10 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 28 Feb 2024 01:59:10 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 28 Feb 2024 01:59:10 -0800
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.41) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 28 Feb 2024 01:59:09 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GbKs7Uzhed915QHi1kVyFXljjp3fX+t7+CImqKh7yA4uQxbTiF5Uc1A5j1ZBmsGrMu8+IjSdzquejMFU+W5Cm9ir1oQroe4bS7Hgq//eBAI69Vpr5Wal7c5QTD56oe8JGkAkA+L73jMkvuDcoBJJ2cyA+SjEYX1sIOsTcQ+jxL0AkWTwSzUblbQva13S9+CieqHwJsPXlnd138kkFzTTKJLMpCGQLr4Lb56huDuBbFqY09/JPP+r7pOgi2UjqoRHsYvb/Ht3yTX8sxrohdgJ9v2xcPP7xx3DdeuCykvp2+sXUUoSrn9zvrumnQEEJoVK26qaEFByNVPenfAeL0sxNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cw+JSWrrRmrLB3XrxHYKRfIx5K3CNaBWPQttnd9Igsc=;
+ b=nGsMR+PJp8Mp24xg/Nhj7PVDHHXezOaLbdy2htgwbnjaSRU6NoIFsJjtR4pUs8HkslPZIgcz83e2IFkM3IyRL3PstDBdDIH4HwSe285szmtJUHqJUYLshOxfysY7D7aBVXdsYRogBD47sJlyecMhdB4GFYNgQBGdQURXTv75FftxQZ8uranbL9FWTsBSU7PgDmHmFeDoNXdNp6WhAtVEL2uRWtlxkhYKVGx70wDHPIbGeL5RlCiZ/+GUNS4AQGU0Dc3yXZXwyUSzayiR/djHsWpTrYYsNtrhh/JetHmUaarPYXRawNeiOFd8/cBkRh0YJTUr/Or/mYw1VLrkedmKUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MW4PR11MB5776.namprd11.prod.outlook.com (2603:10b6:303:183::9)
+ by MN6PR11MB8145.namprd11.prod.outlook.com (2603:10b6:208:474::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.22; Wed, 28 Feb
+ 2024 09:59:02 +0000
+Received: from MW4PR11MB5776.namprd11.prod.outlook.com
+ ([fe80::8079:6172:11ca:5fe9]) by MW4PR11MB5776.namprd11.prod.outlook.com
+ ([fe80::8079:6172:11ca:5fe9%3]) with mapi id 15.20.7339.019; Wed, 28 Feb 2024
+ 09:59:02 +0000
+Message-ID: <501f7f57-99e6-4826-833c-b8414ebe8176@intel.com>
+Date: Wed, 28 Feb 2024 10:58:56 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 1/2] net: phy: micrel: lan8814 led errata
+Content-Language: en-US
+To: Horatiu Vultur <horatiu.vultur@microchip.com>, <andrew@lunn.ch>,
+	<hkallweit1@gmail.com>, <linux@armlinux.org.uk>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<UNGLinuxDriver@microchip.com>
+References: <20240228062813.1007138-1-horatiu.vultur@microchip.com>
+ <20240228062813.1007138-2-horatiu.vultur@microchip.com>
+From: Wojciech Drewek <wojciech.drewek@intel.com>
+In-Reply-To: <20240228062813.1007138-2-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR5P281CA0050.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f0::6) To MW4PR11MB5776.namprd11.prod.outlook.com
+ (2603:10b6:303:183::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR11MB5776:EE_|MN6PR11MB8145:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a1be0e9-9e7d-4a5e-b998-08dc3843e448
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yOGCfZ5SmNU9aCh2Ka0vI/OscEhBniJdFNSXcFQOv8nFVbq7rTCJpT59I/HIe1YzbZL1dXFon7rSN8O2akpMtOtG+Q9VxHEO65RHz1w72EOfl90p0yaeFIEsYSiC8O5lmEx7k6swKqCkvMFB3DLNKjHp6sDqk3xVIRo2KfdKVYEDW0YTSil0rMYBzBMH4OXQ7IA+cJZGPuAxvufTOfhBDZ5LJx0M36o0n4AJot8KzFkBpeHbumy2r4CfHnach35T+1Id6ofI5DssSTnNwTaKVlyIbdm8fwTrdlxB3DqiSVfLIQQHj8cSx77kuPRAbmE1WKICLszGgKH6SMhe+sIGRTP1QoGnTLflv7TN1c+jd8n/2Zpnsm3cgXn/w8NCjFNSRpg5Zd3+QnFLWsLurI+iIUL2NyVApwAxiqKMzmR1WuaMuGt0IsQES8PCrabErV4FNX1KJgmz7T1SKgbsCkPQY9Hxc3L9Shve/SnDXg9Tc6cuJEwBEycy6I8qTgXXdjqqjs/xf3Ywi4Lsbu5tP38VlBaaPGGGdLpNrhVDvxOAf2TBFEvRANx8NmqN7dfLp2hqkIJKwSZKKvXZjCzV6IJZa4ZNSX02KQAk2gAocGknJU/Tc6Xl6vWI/2SLvqfJT9oUUE24mEzq0Q9RHtf3ALJTwQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB5776.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Tk5tbWsyMXVhbGgxcWRwclMzYUY4S1lyWWFUNThuRHVCUEJlNFEwaWRGS2Q4?=
+ =?utf-8?B?UU92Z1k2R0ZGTTljVGpOZEpJemZiYSttUVYxR0FvcmJSUUJEV1d3ZEVhVVBI?=
+ =?utf-8?B?MVJtQktNSUVyV0NaNnIxYnVWc0UvcElvMnpCTFVOVDdyU2FybjBTUEE1N21m?=
+ =?utf-8?B?YkVzQk82TUVtR2doSW1VU243bUJ6bW1xYXpJZ0lkaElhVkJYdFhpN2dFcVpk?=
+ =?utf-8?B?V2ZacWZrei9Jd2o0N2k4ZnppK1VJNUVUdjRNdTJUQk92Tk5DdVNtekVhZXhu?=
+ =?utf-8?B?WktoeUppdnk5K3dZemtUblQrN2t3a3M5M0JHeFZmdmZpY0w5UnhUMmRwS2g4?=
+ =?utf-8?B?UFh4VVhGOGMrM1JVdnNYYzhQNUlBcTd4UnRISGdRUEhrU2FYbWtiQitxZnBY?=
+ =?utf-8?B?RVhIYTcvL1B0YitUQmJrWVZoeVRqSkRZTDRUYzJxR05DRUxQcXA5Y1BUL1Rk?=
+ =?utf-8?B?dWtuZSt6ZDVwQStMSzd5WnNuc3ZaNGYrL3dZZHZ4ZU9TVG9vc0cwUUZHTFBY?=
+ =?utf-8?B?N0Q5czBDZ1RwVTgrZ0VHV1QyeWRoYUpDRk5jK0Ztb0p2QWlwcjQ3aWFRb2Zm?=
+ =?utf-8?B?SHlORENyT0I2blZTanczalJselpNY1gxS3I1T1VQK21Zc0pkUGtoczNIazhQ?=
+ =?utf-8?B?RCtFMmJhWDUwQ0N6WWZ6MjQwTlpSOXZDMVRPMFFOcTNkc0JBSG9hQmpVTHhu?=
+ =?utf-8?B?OW9oUUNlUDBkWWFTeEhQblFTWU5EcitwRXJ1VzBYTUNCVWhmQjMrQW5ZZFhm?=
+ =?utf-8?B?Z0dMbS9JYmYvZUduZEF1NTRudm1YQU5QMmx4SmFpYjRIY3FtWVdTeHR3dXdz?=
+ =?utf-8?B?bmZBMjhzSXdPbThQbWZPTGhWV3ljSzEzeHg0dFZVcjFyZWxMRm9rVWN5QnNP?=
+ =?utf-8?B?TC9BcWZqekpxUnZCVDU2aTZ3bmlNZGp1QUJGcVYzQ25qcHJRdDAxZVpwcW8w?=
+ =?utf-8?B?U0wzdXlOaSt6Vys5eC9nSFI3eXVxL0hwZ0hITVNZQm5YaExXMjQveGhWZVZ2?=
+ =?utf-8?B?eUVzNXJpTWdFV0JWaHpGUkhDQlFxdlcra2ZxMDZvbUg2UHdTV2NBa21qa0Yv?=
+ =?utf-8?B?YzZvSkFFNWUyck1JZXYwd043dWRZTTQ3cjJaeTcrQmpXUDNlNm9pMUsvUldq?=
+ =?utf-8?B?bUhrK0d6dENETk96RG5QZ2xWbm5sWlJDQSs4ejBTenRLL1lXeXk4dTYzTDhm?=
+ =?utf-8?B?YTFVV3ZxK2VOdStCV2pKMm55bC9oa0JKY0R6eFFFMzdzdGJsV1dpRzB4dHU3?=
+ =?utf-8?B?UkJub3IxZHlUa0xpbkdhMjF1OGxJMEhyWmxjR1F4QytRWkE0NTNreVNkb0Ix?=
+ =?utf-8?B?bXdYUEV6MWdYcHFUSSs4UUU3WFlVeWFXVm4vSWRCMkV4akE1S3JLaEJDNjV3?=
+ =?utf-8?B?S21ieEluZkdqMjdzU1J4WFkxbTd5M2FMa083VG1lTGxhTktDOUVwemFiNHZ5?=
+ =?utf-8?B?MmN6cFZ6cEJiKzdDYWU0Snd5dWs5WTFmV0tnRHBlZWJMbDZCMk5CUWxqK05J?=
+ =?utf-8?B?YytJd3Eya2ZkOUFETlVuZElYYnpGVEc2UTBGT2RHeXAvSFNiNmxSL3g2MUxz?=
+ =?utf-8?B?TmN6R1N5WVVkVjRJWTJtRUVaZUE3ajZLNUNJbnA0UTBqNzdkamI1MjhKd1NM?=
+ =?utf-8?B?ZVFlMjB2cEY0dG9PeVEzSWUyKy9WY2tla1NrSkxFb0FXVWxxZU1kOXkweEcw?=
+ =?utf-8?B?N0dRMStqNGxqVUxvZW9PSHFNU3Z3T0tuU2JQUnNoSlBVRWMza3hkSG9BM0Iz?=
+ =?utf-8?B?cTRvZkQ1K0hNVjQrTTRXM1FWSEdtSnJIQkp6M24xT1A5NnRrS3ZGc0UzamJB?=
+ =?utf-8?B?ZGp2SmszSVF3N1RyWEdJczRnOWVuekh6bE5aVlAzTFR0ZUJ6OWpnTWYyaGlj?=
+ =?utf-8?B?aWxpZkZvbHBXQUVrNEtrL1VqVFh2VFYxMmZLL1FGSG16YzZ4T3plTmJaOWdK?=
+ =?utf-8?B?aGIxQkhFOEw2MUtqODdiTWpCcDdMOXBGR2xDR2dBcFhsN1BiU3lCNXUvemVZ?=
+ =?utf-8?B?M0MwL0NIZ3NHcHo3OFYrNmlJS2pwRXhTRFBZUngwdGpLNFRGbEZoWjNzejZ3?=
+ =?utf-8?B?SDRVQWJJcWlEL0Nxc1pZOFV1Vm0xdDc1RnpOekV1ZUQzSHVmQW82OUwzNDd6?=
+ =?utf-8?B?NzF4U1J3dFBiKytHbUpBc2ZRTEJIWXNIVUFUR1p0MC9GSTBkZThkQmRJVHJF?=
+ =?utf-8?B?c2c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a1be0e9-9e7d-4a5e-b998-08dc3843e448
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB5776.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2024 09:59:02.5812
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yvZbCaaWkOtakLd4dCGpBOfQPP1eMK2QWb04xlMtkapOYcGhexPQBVTMnvlw7gNN3vUznPjzCwhiBqlih6j3sn1pQWOX7gw0MuQTmvnzFf0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8145
+X-OriginatorOrg: intel.com
 
-Now that phylink has a comprehensive PCS support, update the porting
-guide to explain the process of supporting the PCS configuration. This
-also removed outdated references to phylink_config fields that no longer
-exists.
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
- Documentation/networking/sfp-phylink.rst | 146 ++++++++++++++++++++---
- 1 file changed, 132 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/networking/sfp-phylink.rst b/Documentation/networking/sfp-phylink.rst
-index 8054d33f449f..8afbfe0d3b52 100644
---- a/Documentation/networking/sfp-phylink.rst
-+++ b/Documentation/networking/sfp-phylink.rst
-@@ -231,16 +231,135 @@ this documentation.
-    For further information on these methods, please see the inline
-    documentation in :c:type:`struct phylink_mac_ops <phylink_mac_ops>`.
- 
--9. Remove calls to of_parse_phandle() for the PHY,
--   of_phy_register_fixed_link() for fixed links etc. from the probe
--   function, and replace with:
-+9. Fill-in the :c:type:`struct phylink_config <phylink_config>` fields with
-+   a reference to the :c:type:`struct device <device>` associated to your
-+   :c:type:`struct net_device <net_device>`:
- 
-    .. code-block:: c
- 
--	struct phylink *phylink;
- 	priv->phylink_config.dev = &dev.dev;
- 	priv->phylink_config.type = PHYLINK_NETDEV;
- 
-+   Fill-in the various speeds, pause and duplex modes your MAC can handle:
-+
-+   .. code-block:: c
-+
-+        priv->phylink_config.mac_capabilities = MAC_SYM_PAUSE | MAC_10 | MAC_100 | MAC_1000FD;
-+
-+10. Some Ethernet controllers work in pair with a PCS (Physical Coding Sublayer)
-+    block, that can handle among other things the encoding/decoding, link
-+    establishment detection and autonegotiation. While some MACs have internal
-+    PCS whose operation is transparent, some other require dedicated PCS
-+    configuration for the link to become functional. In that case, phylink
-+    provides a PCS abstraction through :c:type:`struct phylink_pcs <phylink_pcs>`.
-+
-+    Identify if your driver has one or more internal PCS blocks, and/or if
-+    your controller can use an external PCS block that might be internally
-+    connected to your controller.
-+
-+    If your controller doesn't have any internal PCS, you can go to step 11.
-+
-+    If your Ethernet controller contains one or several PCS blocks, create
-+    one :c:type:`struct phylink_pcs <phylink_pcs>` instance per PCS block within
-+    your driver's private data structure:
-+
-+    .. code-block:: c
-+
-+        struct phylink_pcs pcs;
-+
-+    Populate the relevant :c:type:`struct phylink_pcs_ops <phylink_pcs_ops>` to
-+    configure your PCS. Create a :c:func:`pcs_get_state` function that reports
-+    the inband link state, a :c:func:`pcs_config` function to configure your
-+    PCS according to phylink-provided parameters, and a :c:func:`pcs_validate`
-+    function that report to phylink all accepted configuration parameters for
-+    your PCS:
-+
-+    .. code-block:: c
-+
-+        struct phylink_pcs_ops foo_pcs_ops = {
-+                .pcs_validate = foo_pcs_validate,
-+                .pcs_get_state = foo_pcs_get_state,
-+                .pcs_config = foo_pcs_config,
-+        };
-+
-+    Arrange for PCS link state interrupts to be forwarded into
-+    phylink, via:
-+
-+    .. code-block:: c
-+
-+        phylink_pcs_change(pcs, link_is_up);
-+
-+    where ``link_is_up`` is true if the link is currently up or false
-+    otherwise. If a PCS is unable to provide these interrupts, then
-+    it should set ``pcs->pcs_poll = true;`` when creating the PCS.
-+
-+11. If your controller relies on, or accepts the presence of an external PCS
-+    controlled through its own driver, add a pointer to a phylink_pcs instance
-+    in your driver private data structure:
-+
-+    .. code-block:: c
-+
-+        struct phylink_pcs *pcs;
-+
-+    The way of getting an instance of the actual PCS depends on the platform,
-+    some PCS sit on an MDIO bus and are grabbed by passing a pointer to the
-+    corresponding :c:type:`struct mii_bus <mii_bus>` and the PCS's address on
-+    that bus. In this example, we assume the controller attaches to a Lynx PCS
-+    instance:
-+
-+    .. code-block:: c
-+
-+        priv->pcs = lynx_pcs_create_mdiodev(bus, 0);
-+
-+    Some PCS can be recovered based on firmware information:
-+
-+    .. code-block:: c
-+
-+        priv->pcs = lynx_pcs_create_fwnode(of_fwnode_handle(node));
-+
-+12. Populate the :c:func:`mac_select_pcs` callback and add it to your
-+    :c:type:`struct phylink_mac_ops <phylink_mac_ops>` set of ops. This function
-+    must return a pointer to the relevant :c:type:`struct phylink_pcs <phylink_pcs>`
-+    that will be used for the requested link configuration:
-+
-+    .. code-block:: c
-+
-+        static struct phylink_pcs *foo_select_pcs(struct phylink_config *config,
-+                                                  phy_interface_t interface)
-+        {
-+                struct foo_priv *priv = container_of(config, struct foo_priv, phylink_config); 
-+
-+                if ( /* 'interface' needs a PCS to function */ )
-+                        return priv->pcs;
-+
-+                return NULL;
-+        }
-+
-+    See :c:func:`mvpp2_select_pcs` for an example of a driver that has multiple
-+    internal PCS.
-+
-+13. Fill-in all the :c:type:`phy_interface_t <phy_interface_t>` (i.e. all MAC to
-+    PHY link modes) that your MAC can output. The following example shows a
-+    configuration for a MAC that can handle all RGMII modes, SGMII and 1000BaseX.
-+    You must adjust these according to what your MAC and all PCS associated
-+    with this MAC are capable of, and not just the interface you wish to use:
-+
-+    .. code-block:: c
-+
-+       phy_interface_set_rgmii(priv->phylink_config.supported_interfaces);
-+        __set_bit(PHY_INTERFACE_MODE_SGMII,
-+                  priv->phylink_config.supported_interfaces);
-+        __set_bit(PHY_INTERFACE_MODE_1000BASEX,
-+                  priv->phylink_config.supported_interfaces);
-+
-+14. Remove calls to of_parse_phandle() for the PHY,
-+    of_phy_register_fixed_link() for fixed links etc. from the probe
-+    function, and replace with:
-+
-+    .. code-block:: c
-+
-+	struct phylink *phylink;
-+
- 	phylink = phylink_create(&priv->phylink_config, node, phy_mode, &phylink_ops);
- 	if (IS_ERR(phylink)) {
- 		err = PTR_ERR(phylink);
-@@ -249,14 +368,14 @@ this documentation.
- 
- 	priv->phylink = phylink;
- 
--   and arrange to destroy the phylink in the probe failure path as
--   appropriate and the removal path too by calling:
-+    and arrange to destroy the phylink in the probe failure path as
-+    appropriate and the removal path too by calling:
- 
--   .. code-block:: c
-+    .. code-block:: c
- 
- 	phylink_destroy(priv->phylink);
- 
--10. Arrange for MAC link state interrupts to be forwarded into
-+15. Arrange for MAC link state interrupts to be forwarded into
-     phylink, via:
- 
-     .. code-block:: c
-@@ -264,17 +383,16 @@ this documentation.
- 	phylink_mac_change(priv->phylink, link_is_up);
- 
-     where ``link_is_up`` is true if the link is currently up or false
--    otherwise. If a MAC is unable to provide these interrupts, then
--    it should set ``priv->phylink_config.pcs_poll = true;`` in step 9.
-+    otherwise.
- 
--11. Verify that the driver does not call::
-+16. Verify that the driver does not call::
- 
- 	netif_carrier_on()
- 	netif_carrier_off()
- 
--   as these will interfere with phylink's tracking of the link state,
--   and cause phylink to omit calls via the :c:func:`mac_link_up` and
--   :c:func:`mac_link_down` methods.
-+    as these will interfere with phylink's tracking of the link state,
-+    and cause phylink to omit calls via the :c:func:`mac_link_up` and
-+    :c:func:`mac_link_down` methods.
- 
- Network drivers should call phylink_stop() and phylink_start() via their
- suspend/resume paths, which ensures that the appropriate
--- 
-2.43.2
+On 28.02.2024 07:28, Horatiu Vultur wrote:
+> Lan8814 phy led behavior is not correct. It was noticed that the led
+> still remains ON when the cable is unplugged while there was traffic
+> passing at that time.
+> 
+> The fix consists in clearing bit 10 of register 0x38, in this way the
+> led behaviour is correct and gets OFF when there is no link.
+> 
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  drivers/net/phy/micrel.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+> index 9b69735819896..5a0cc89eaebdd 100644
+> --- a/drivers/net/phy/micrel.c
+> +++ b/drivers/net/phy/micrel.c
+> @@ -114,6 +114,9 @@
+>  #define LAN8814_INTR_CTRL_REG_POLARITY		BIT(1)
+>  #define LAN8814_INTR_CTRL_REG_INTR_ENABLE	BIT(0)
+>  
+> +#define LAN8814_EEE_STATE			0x38
+> +#define LAN8814_EEE_STATE_MASK2P5P		BIT(10)
+> +
+>  /* Represents 1ppm adjustment in 2^32 format with
+>   * each nsec contains 4 clock cycles.
+>   * The value is calculated as following: (1/1000000)/((2^-32)/4)
+> @@ -3288,6 +3291,19 @@ static int lan8814_release_coma_mode(struct phy_device *phydev)
+>  	return 0;
+>  }
+>  
+> +static void lan8814_errata_fixes(struct phy_device *phydev)
 
+This name is too generic IMO.
+Maybe: lan8814_clear_2psp_bit
+
+> +{
+> +	u16 val;
+> +
+> +	/* It was noticed that when traffic is passing through the PHY and the
+> +	 * cable is removed then the LED was still one even though there is no
+> +	 * link
+> +	 */
+> +	val = lanphy_read_page_reg(phydev, 2, LAN8814_EEE_STATE);
+> +	val &= ~LAN8814_EEE_STATE_MASK2P5P;
+> +	lanphy_write_page_reg(phydev, 2, LAN8814_EEE_STATE, val);
+> +}
+> +
+>  static int lan8814_probe(struct phy_device *phydev)
+>  {
+>  	const struct kszphy_type *type = phydev->drv->driver_data;
+> @@ -3323,6 +3339,7 @@ static int lan8814_probe(struct phy_device *phydev)
+>  	}
+>  
+>  	lan8814_ptp_init(phydev);
+> +	lan8814_errata_fixes(phydev);
+>  
+>  	return 0;
+>  }
