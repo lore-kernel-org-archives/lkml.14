@@ -1,111 +1,126 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD75E12A179;
-	Thu, 29 Feb 2024 13:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2083B8626A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709214558; cv=none; b=GtiAqlDiRZlJ066OdbB1QbdFNIOf/PyhWhfYmMWfvlAUp3+UOLaMH6BVN1i4+Ou69GFeUvUoQ6Kzd52hu0gcSz2DmyriKqrLifvjiP3XCiTL8TmY+sLqpgh59koof/FC9IdH/IekiMUi+lgOeCzJHm8AbdFLpLvPCI82kcOFOzQ=
+	t=1709214607; cv=none; b=etx4nstNw/I0j+Zh3Kg7fXJcC6Up4A/o7xDGUGYe6GO4Pb8z9lOpHlFqrFJUnK2nTOlOwSFfAvLDJet/opB7glFKnewrP82Q5fSKZT1ull74NQTxQOqapuVg8167mdkcBbT92H5Kbl+3+7YV9eXvAabie6g0nuoh3QYYGRRJT4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709214558; c=relaxed/simple;
-	bh=OG2JBUj8GDnmGuNM2PZBOG+lvzg06A55/ZLbFzDAO4g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hk3wcADVIm9R+6lHgje7uF2h9RrjNJRKYzWv5P0H+Ae+zZnxUkBy8VZAGZrGijQx18WLoY/f5ySM72sa7j31PMb3iqODDXz7qKYG5jokPpXMwbBR+DheD/qO+6Xka2lW5J9Q/qUzsDtKF1DqvH2VGnv8/mr1q+wG4Vj/iLji8BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=inR/8y4/; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1709214607; c=relaxed/simple;
+	bh=ZthdLMEgc+nZu6xtx9oT1Y4pegcGJjq7DAE9PSkZaVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ca4FmVlef9g9f2+ScZeD/1pf1nLQRa3YtH76j24JG8EN7VNmDlejhG90caD1R/vJgAcINvtT0OTZUbFp9HVep9iU3/dsHcPfQsbF0lBDql03mbahuH84TriGf+QROY7yNVT7XYzE92f8AXj9xaqVPEBs9kFV6DpYhhlv6lTjGm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CvEaJ/Uk; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="inR/8y4/"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41TA3QQO014622;
-	Thu, 29 Feb 2024 14:48:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=Uh4G8CmqPIJAa2uYtpxNk760ABcqHo6RLCc3TLV1M9M=; b=in
-	R/8y4/4dOdFbV8e0szTF959zk66j7pK/yLoZqczLIjh5Yvcu4oVAmzzJKUSrjeUk
-	tnccMQ2NmEZRRQQuMpiBaMDGMRGeGuGJPm3t9l+eDMm2Oy6pmTDXK8mm8lbhggpT
-	Gw/teImR+lJCZdcLjIegTUWv5ubGh+xVjNDx5tH4ukWCSTX2+JtpejYoCZoHsp+3
-	gGnaTufllubkdHa717f+KGYAc50gqay1MN04YSp6c5Ov/1zw7bIgyCtdmlRzAXj9
-	FVfadJHXGAM51E5TJ3uZ2fUc5lLL5CGZzJxnJ4dVvEsih4CvcI7NJoC4fmNqbizf
-	O6qJaMXj/UcMZeQ2o6UQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3whf4bjr4j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 14:48:56 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D17D340046;
-	Thu, 29 Feb 2024 14:48:53 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5BB35275197;
-	Thu, 29 Feb 2024 14:47:47 +0100 (CET)
-Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 29 Feb
- 2024 14:47:45 +0100
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] dt-bindings: net: add phy-supply property for stm32
-Date: Thu, 29 Feb 2024 14:47:23 +0100
-Message-ID: <20240229134724.1353903-2-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240229134724.1353903-1-christophe.roullier@foss.st.com>
-References: <20240229134724.1353903-1-christophe.roullier@foss.st.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CvEaJ/Uk"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5656e5754ccso1332778a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 05:50:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1709214603; x=1709819403; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FvjnGKJvWwLxX/Y9kz34/zEMHUMBymFfcTwqG+MSZAM=;
+        b=CvEaJ/Uk2YjKhGp1QeAsMfLlXQq4yGprjUcIkWCVxZRFqZ8Ih3sMDAWiUw9R5TvAiL
+         5hVoLZkeGLKSnE8olYcmpOIZX0cp5j86Wfiq4sb2JV0DKpJjOv4pSO3/ub1tw1V1KYwF
+         dIbl28inSL/ksheV4kytlvSJ5y88+5szt+cqqBa3z6JIWjwqnBCAT/BODeVWdW/Kqsw6
+         NnnneN6YDXJMp7EwDptiLI1mWSKWHqJHqNalvYuybwzHOZ9W6BUK41vA6KFhULVUvrUR
+         CUAfEn/wikDQqoNm761HAQAb3b8LDrMs1M7BBlNXTMhrNME6eRdNaNh0PLc7p/T62Ilf
+         wCuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709214603; x=1709819403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FvjnGKJvWwLxX/Y9kz34/zEMHUMBymFfcTwqG+MSZAM=;
+        b=XOBXAT1vpTnOWseSbXZT4SkBQ1Lz/7dQfxiiPRWyIkLOTXDr02UBqBhUW06embcUKJ
+         oxv6JoFz8kCoezh8YZnS5rDPsvpol80wHehDLNBint36to1vJI3Wqm6/T/lR7lcGPLxY
+         +d1IL/v/krZT2NU0PCJEQIK9KJvkOg4yM1Ci7jLCF4Chvg6+5fgsKxLEjHNz9a7Bjenn
+         5lTDVbNA34fX8O+j+o1yY4qH5aOrbXzCXxH4UG8w/CKoBoSBLJ3dKeMdxg0iOZQAGcIZ
+         wmn3SH4ib6cLRYVqOxxiNWSTOSs+esj4vtegNCsh2i9BmgraHoZaw3I0BdxZ8+xN7+YV
+         IFsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfrJQ4D8IHIHzh1NO1zW1pq93gSyGyGawoG10kq5MBFuZ8qp7JOD+oiyWZbP73nBgR/4BlweO4DgramRuBMJyZ66/QOc2tvD5Yh/aB
+X-Gm-Message-State: AOJu0YyeOc6VSml6rx8o+60KVO/4j755SAG922BBVB4nx4kpjQU4fz1s
+	jQP2w32tdSgulLIr0GqioGmQ4iPtFeO0nOo1e7k0Zy1K8263r6Z6YY7pI3bz+UM=
+X-Google-Smtp-Source: AGHT+IEoBxCQcRtXeleftoTFRk+T7pqbi9sMqRTWcAaHN3dxPrq61pjP46N3K9zl1ZQ4HnQvAEm7YA==
+X-Received: by 2002:a17:906:81d5:b0:a44:4932:77bc with SMTP id e21-20020a17090681d500b00a44493277bcmr1078621ejx.40.1709214603416;
+        Thu, 29 Feb 2024 05:50:03 -0800 (PST)
+Received: from alley ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id hb15-20020a170906b88f00b00a3fcbd4eb2esm702668ejb.1.2024.02.29.05.50.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 05:50:03 -0800 (PST)
+Date: Thu, 29 Feb 2024 14:50:01 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH printk v2 17/26] printk: nbcon: Assign priority based on
+ CPU state
+Message-ID: <ZeCLic3zZEdi0-o2@alley>
+References: <20240218185726.1994771-1-john.ogness@linutronix.de>
+ <20240218185726.1994771-18-john.ogness@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-29_02,2024-02-29_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240218185726.1994771-18-john.ogness@linutronix.de>
 
-Phandle to a regulator that provides power to the PHY. This
-regulator will be managed during the PHY power on/off sequence.
+On Sun 2024-02-18 20:03:17, John Ogness wrote:
+> Use the current state of the CPU to determine which priority to
+> assign to the printing context.
+> 
+> Note: The uart_port wrapper, which is responsible for non-console-
+>       printing activities, will always use NORMAL priority.
+> 
+> --- a/kernel/printk/nbcon.c
+> +++ b/kernel/printk/nbcon.c
+> @@ -961,6 +961,22 @@ static bool nbcon_atomic_emit_one(struct nbcon_write_context *wctxt)
+>  	return ctxt->backlog;
+>  }
+>  
+> +/**
+> + * nbcon_get_default_prio - The appropriate nbcon priority to use for nbcon
+> + *				printing on the current CPU
+> + *
+> + * Context:	Any context which could not be migrated to another CPU.
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
----
- Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+Strictly speaking, this variant does not need to be called with
+disabled CPU migration. The panic-CPU could not be migrated.
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-index fc8c96b08d7dc..80937b28fa046 100644
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-@@ -82,6 +82,9 @@ properties:
-       Should be phandle/offset pair. The phandle to the syscon node which
-       encompases the glue register, and the offset of the control register
- 
-+  phy-supply:
-+    description: PHY regulator
-+
-   st,eth-clk-sel:
-     description:
-       set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
--- 
-2.25.1
+It would be nice to mention in the commit message, something like:
 
+</proposal>
+The emergency context handling is going to be added in a separate
+patch. It will use a per-CPU variable.
+</proposal>
+
+It would also explain why this context is not handled in this patch.
+
+> + * Return:	The nbcon_prio to use for acquiring an nbcon console in this
+> + *		context for printing.
+> + */
+> +enum nbcon_prio nbcon_get_default_prio(void)
+> +{
+> +	if (this_cpu_in_panic())
+> +		return NBCON_PRIO_PANIC;
+> +
+> +	return NBCON_PRIO_NORMAL;
+> +}
+> +
+>  /**
+>   * nbcon_legacy_emit_next_record - Print one record for an nbcon console
+>   *					in legacy contexts
+
+Otherwise, it looks good. With the added commit message:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
