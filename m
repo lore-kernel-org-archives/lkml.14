@@ -1,104 +1,76 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9A4A64CC9;
-	Thu, 29 Feb 2024 10:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6FE50243;
+	Thu, 29 Feb 2024 10:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709202146; cv=none; b=L/SWL9O1ZCmRH5GHveGuNW2FmzS3nVpN31Zuy2nfDVRsFctdv7r5oMYqP9Ka0DE1kIhkxQqOT05UdL53fFBr7rWGur0Um6jQ0hRWNU1S0IQso0y3U8B1V3BqGwf3fS6xLtWAb4KMdyVup95sqw6hyr3Gw1g59jl5OKUOTVIeRi4=
+	t=1709202145; cv=none; b=WjsuzylpDYT9DA6j82g/VQbndydkKtBgTH3N8KYR4B1Aw7Um/Htq6gLW38thrEmFwx3ejC1NTGMleA++hQS1yw129UQQ/FIlSO98kjmHrJTVi5Roa0rj9kiHT0uW1MZq/kMr/3a58SPvfDiaiyX4k0sD1PzmWrJ1rRpf/VwycgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709202146; c=relaxed/simple;
-	bh=zC+rOfgZk0FjySsxZFgupFvl2AUI4LOD52LgDdh6ffk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gHQzYXJwBPgnFMXl0/qDKoglVckRTasG1+UVYiM3nxhUr5Q2OVVOgQC4+RdifcwZ1hgznLw05JPj4lEO96+00irChYugRmjtKOUlbcFw/MqTUQUum32geTuc3fqawmBk4LPzUEfFSMikuE8kvq+Nq+YV+O/26KFrFxaeu0vaUqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA8831FB;
-	Thu, 29 Feb 2024 02:23:02 -0800 (PST)
-Received: from [10.57.12.184] (unknown [10.57.12.184])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99F903F762;
-	Thu, 29 Feb 2024 02:22:21 -0800 (PST)
-Message-ID: <18c249b2-ce8c-435b-8d65-a1770a1f294e@arm.com>
-Date: Thu, 29 Feb 2024 10:22:39 +0000
+	s=arc-20240116; t=1709202145; c=relaxed/simple;
+	bh=xqYoVbQrzxJrVmuFu8YWAVBO11aFSukfR6rHY30u3Xc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WjMrjWqvcwygy5EFjU8lj2JbXffeJJCezR9/PuI97ILO7GSiZieyBXmQvVMQFkgk4gWgEBB+9c0t2SxoXVnZ96JLX0wG4+YPWzrqrwoAvFj5sCFXu4pNf+2j2AFEQ38TyxPWpMW7XyjU5DxUg4qi629eAuNxekXNXoz46Za9zf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8UPH3zx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8UPH3zx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C9F9C433F1;
+	Thu, 29 Feb 2024 10:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709202145;
+	bh=xqYoVbQrzxJrVmuFu8YWAVBO11aFSukfR6rHY30u3Xc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=o8UPH3zxxxnGbKQ7YoLoRElSx2Xc469vLkUxNDvl0ubOfumLXbHjTH721kp1zxGdF
+	 vAaU+P1McRiwO2/xEMG5pJiywbapkYsJRfUg7l5wFPYhxIzV0NEP5tV405y72wli9W
+	 cRZlqKLwGLa5SRZN8adsxyify4/pfEW1X1qxjTnyK1Sbto1xBAlngQcPMVh4yDKMKS
+	 a3gD+PUdRVbpL3FiZyn0RGAgqKrrfnMJwvSX6i8WL3cBXHWbQcgs39RggpKZu3N+iN
+	 bQDxDBJwzDJPaNn0n5m6+q7jZsVOOWgPRQwREOrccT5d+JZB1kdjl2tFPkKddCWyig
+	 4h2QBnJ52nbAQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Nguyen Dinh Phi <phind.uet@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] fs: use inode_set_ctime_to_ts to set inode ctime to current time
+Date: Thu, 29 Feb 2024 11:22:15 +0100
+Message-ID: <20240229-benachbarten-zunutze-5302698c7317@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240228173031.3208743-1-phind.uet@gmail.com>
+References: <20240228173031.3208743-1-phind.uet@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/2] cpufreq: scmi: Register for limit change
- notifications
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-To: Sibi Sankar <quic_sibis@quicinc.com>, sudeep.holla@arm.com,
- cristian.marussi@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, pierre.gondois@arm.com,
- dietmar.eggemann@arm.com, morten.rasmussen@arm.com, viresh.kumar@linaro.org,
- rafael@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_mdtipton@quicinc.com, linux-arm-msm@vger.kernel.org
-References: <20240227181632.659133-1-quic_sibis@quicinc.com>
- <20240227181632.659133-3-quic_sibis@quicinc.com>
- <f8bfc666-c216-44d5-a63b-99f04ff3b8ef@arm.com>
- <2608b2d8-f3b0-b4f5-f8e4-1f2242043ded@quicinc.com>
- <64c6a1bc-92f2-4f44-ab10-cbd2473746f3@arm.com>
-In-Reply-To: <64c6a1bc-92f2-4f44-ab10-cbd2473746f3@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1070; i=brauner@kernel.org; h=from:subject:message-id; bh=xqYoVbQrzxJrVmuFu8YWAVBO11aFSukfR6rHY30u3Xc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQ+iLrR9TxTiE15ktBu46fX7uc9q3CINP2sHvX7emz4v TNe/BHPOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbSZsHI0MBYekX6XVuS7PJf jOrdy96ezVWUYWwUWrH0ttfUKuujBgy/WVe+al/cvOvlt0l6l6ruJ7pdrv/3pDg0z1BlQ1B7Anc NDwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-
-
-On 2/29/24 09:59, Lukasz Luba wrote:
+On Thu, 29 Feb 2024 01:30:31 +0800, Nguyen Dinh Phi wrote:
+> The function inode_set_ctime_current simply retrieves the current time
+> and assigns it to the field __i_ctime without any alterations. Therefore,
+> it is possible to set ctime to now directly using inode_set_ctime_to_ts
 > 
 > 
-> On 2/28/24 17:00, Sibi Sankar wrote:
->>
->>
->> On 2/28/24 18:54, Lukasz Luba wrote:
->>>
->>>
->>> On 2/27/24 18:16, Sibi Sankar wrote:
->>>> Register for limit change notifications if supported and use the 
->>>> throttled
->>>> frequency from the notification to apply HW pressure.
->>
->> Lukasz,
->>
->> Thanks for taking time to review the series!
->>
->>>>
->>>> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
->>>> ---
->>>>
->>>> v3:
->>>> * Sanitize range_max received from the notifier. [Pierre]
->>>> * Update commit message.
->>>>
->>>>   drivers/cpufreq/scmi-cpufreq.c | 29 ++++++++++++++++++++++++++++-
->>>>   1 file changed, 28 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/cpufreq/scmi-cpufreq.c 
->>>> b/drivers/cpufreq/scmi-cpufreq.c
->>>> index 76a0ddbd9d24..78b87b72962d 100644
->>>> --- a/drivers/cpufreq/scmi-cpufreq.c
->>>> +++ b/drivers/cpufreq/scmi-cpufreq.c
->>>> @@ -25,9 +25,13 @@ struct scmi_data {
->>>>       int domain_id;
->>>>       int nr_opp;
->>>>       struct device *cpu_dev;
->>>> +    struct cpufreq_policy *policy;
->>>>       cpumask_var_t opp_shared_cpus;
->>>> +    struct notifier_block limit_notify_nb;
->>>>   };
->>>> +const struct scmi_handle *handle;
-> 
-> I've missed this bit here.
 
-So for this change we actually have to ask Cristian or Sudeep
-because I'm not sure if we have only one 'handle' instance
-for all cpufreq devices.
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-If we have different 'handle' we cannot move it to the
-global single pointer.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Sudeep, Cristian what do you think?
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] fs: use inode_set_ctime_to_ts to set inode ctime to current time
+      https://git.kernel.org/vfs/vfs/c/6adf169c32c2
