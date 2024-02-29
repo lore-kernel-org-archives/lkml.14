@@ -1,114 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEC950243
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F9A50A63;
+	Thu, 29 Feb 2024 08:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709195731; cv=none; b=FtQ/w5iH/mjk3e2bcd5MWXPl6Rj5ILsnucvaF+H2VUfZG0PHwl3U8Mmrh9zH54HMzF5b3lP2S+QoRyKmq4HPZgYHsM1z6Xp+Q54ZS9Ppuxq/MXuNuzqoWqUIJ9Y9cZdwFujI/qtuvsP9msH64a76TEgeLSUb32QuKAHguoZdt6Q=
+	t=1709195822; cv=none; b=eZ8/D30LHGhpaLNxQHwv8abpet15kuUfujGUGfNPsXI4dhQCHW+sOs3SrKg47lYorpZ+f/zOGlFHNSojK52xmk/0f8Jd70GYaZsWzs36Lynx7LgauvD/whIa0muCLI1j6VYQh9DK7lQfY000pFP6bzgHQpwDmwHDZeVm97rg3QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709195731; c=relaxed/simple;
-	bh=fA1mNcf8ZmdJIOze7Z8GLbKIyNJJo7AAfgYikEFLClQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kcXN8VTsYe+H587mIrEkw895OoHWWzpoEmgNb0HB3skDWjT4wgyZFs8LlXsaVGJRADhw6pANQWb2Sl5f0M+aBslG1m8l8u0oA/lf9WtNwS8+hcIIJ5VfFIm8Q9J1BpF+11L6w0P/3QDubEE/M07HN9kwLK/GNLXWRFJ0RatvmhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fhH+vCXz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fhH+vCXz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E63A9C43390;
-	Thu, 29 Feb 2024 08:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709195731;
-	bh=fA1mNcf8ZmdJIOze7Z8GLbKIyNJJo7AAfgYikEFLClQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fhH+vCXzbecbs+j3oZM1ubuJfKRIeZMX/7Xo8YwHFfGd8u/b/19JUiroRkWHP3TMO
-	 StSxvanXRGK8WCUs2u/a9qyE1p9s+U3fDpYEyxj1HcLUJFsyNEA65k4NN08beO8YSn
-	 bwNO9tqeSklYgAnlnPCgWm4RPWrn5epItXiAb+2g=
-Date: Thu, 29 Feb 2024 09:35:28 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Kees Cook <keescook@chromium.org>, cve@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: CVE-2023-52451: powerpc/pseries/memhp: Fix access beyond end of
- drmem array
-Message-ID: <2024022915-dissuade-grandson-ebd4@gregkh>
-References: <2024022257-CVE-2023-52451-7bdb@gregkh>
- <Zdylmz28rZ-mCeiN@tiehlicka>
- <2024022639-wronged-grafted-6777@gregkh>
- <ZdytVTOgfvKBBvtn@tiehlicka>
- <202402271029.FD67395@keescook>
- <Zd8hPpP_6q_o8uQW@tiehlicka>
- <202402280906.D6D5590DB@keescook>
- <ZeA-281OudkWBhd_@tiehlicka>
+	s=arc-20240116; t=1709195822; c=relaxed/simple;
+	bh=DFpZU+iH4UhuNKIVT9kLtI0sltz21Wxk14OgBTiuG3Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ud1Lx44XuQMJZPie3YAGjj2slCdifdyRk9nJufhZYVWSCu6rg4d8Kl8Y9gf2l6qQlWjFNTGTC7Si3YZHb0Z176Rv6DyUUUG5Vz/HQ8zsRrqjuu4neVt1w01cF1xkVeTZQw+F6vm7t+4tMicZJIlcVg52Vsz7g8hsMEhEz44FuK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from lijuan-ubuntu-04.home.arpa (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowABXeKmRQOBlkqbJAw--.65446S2;
+	Thu, 29 Feb 2024 16:30:10 +0800 (CST)
+From: lilijuan@iscas.ac.cn
+To: clm@fb.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com
+Cc: linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pengpeng@iscas.ac.cn,
+	Lijuan Li <lilijuan@iscas.ac.cn>
+Subject: [PATCH] btrfs: mark btrfs_put_caching_control static
+Date: Thu, 29 Feb 2024 16:30:07 +0800
+Message-Id: <20240229083007.679804-1-lilijuan@iscas.ac.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZeA-281OudkWBhd_@tiehlicka>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABXeKmRQOBlkqbJAw--.65446S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ur4fZFWrGr43KrW7XrW3GFg_yoW8XF13pr
+	ykCrnxGF1UCFn0gF4UG3yYqw1Sgas5J3y7A3s5Cw4xZ343Kr17Zryqyw1rAa4UtFs8ArZr
+	Z3WY934UCFnIyr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwAKzVCY07xG64k0F24l
+	c2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
+	fU8UUUUUUUU
+X-CM-SenderInfo: poloxyxxdqqxpvfd2hldfou0/
 
-On Thu, Feb 29, 2024 at 09:22:51AM +0100, Michal Hocko wrote:
-> On Wed 28-02-24 09:12:15, Kees Cook wrote:
-> > On Wed, Feb 28, 2024 at 01:04:14PM +0100, Michal Hocko wrote:
-> > > On Tue 27-02-24 10:35:40, Kees Cook wrote:
-> > > > On Mon, Feb 26, 2024 at 04:25:09PM +0100, Michal Hocko wrote:
-> > > [...]
-> > > > > Does that mean that any potentially incorrect input provided by an admin is
-> > > > > considered CVE now?
-> > > > 
-> > > > Yes. Have you seen what USER_NS does? There isn't a way to know how
-> > > > deployments are using Linux, and this is clearly a "weakness" as defined
-> > > > by CVE. It is better to be over zealous than miss things.
-> > > 
-> > > If we are over zealous to the point when almost any fix is marked CVE
-> > > then the special marking simply stops making any sense IMHO.
-> > 
-> > Perhaps, but the volume of fixes is high, and I think it's better to
-> > over estimate than under estimate -- the work needed to actually
-> > evaluate all these changes is huge: it's better to take everything from
-> > -stable.
-> 
-> This is simply not feasible for many downstream kernels and reasons have
-> been discussed many times.
+From: Lijuan Li <lilijuan@iscas.ac.cn>
 
-How does taking 10 patches differ from taking 200 patches?  Your
-testing/infrastructure issues should be the same, right?
+btrfs_put_caching_control is only used in block-group.c,
+so mark it static.
 
-And really, if you have the crazy requirement of "All CVEs must be
-applied" then perhaps that needs to be revisited?  You are dictating
-your business's processes to an external entity, is that wise?  And if
-it is wise, why are you not able to handle it today?  Making it simpler
-for you to consume these entries seems to be a better decision.  With
-the changes we have made, you should be able to automatically determine
-if you are affected or not, which is something that you did NOT have
-before, so this might just be able to be automated, right?
+Signed-off-by: Lijuan Li <lilijuan@iscas.ac.cn>
+---
+ fs/btrfs/block-group.c | 2 +-
+ fs/btrfs/block-group.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-> > This has been a long standing problem with communicating this
-> > to engineering management in many organizations. They have pointed to
-> > the relatively small number of CVEs and said, "just backport those
-> > fixes", and trying to explain that it's is totally insufficient falls on
-> > deaf ears.
-> 
-> I think it is fair to say/expect that every downstream is responsibile
-> for the kernel they are distributing and that applies to vulnerabilities
-> affecting those kernels. Forcing fixes by slapping CVE over them sounds
-> just very dubious to me.
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index 1b4be41495ea..84932d944d51 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -418,7 +418,7 @@ struct btrfs_caching_control *btrfs_get_caching_control(
+ 	return ctl;
+ }
+ 
+-void btrfs_put_caching_control(struct btrfs_caching_control *ctl)
++static void btrfs_put_caching_control(struct btrfs_caching_control *ctl)
+ {
+ 	if (refcount_dec_and_test(&ctl->count))
+ 		kfree(ctl);
+diff --git a/fs/btrfs/block-group.h b/fs/btrfs/block-group.h
+index c03971f50521..8656b38f1fa5 100644
+--- a/fs/btrfs/block-group.h
++++ b/fs/btrfs/block-group.h
+@@ -311,7 +311,6 @@ void btrfs_wait_nocow_writers(struct btrfs_block_group *bg);
+ void btrfs_wait_block_group_cache_progress(struct btrfs_block_group *cache,
+ 				           u64 num_bytes);
+ int btrfs_cache_block_group(struct btrfs_block_group *cache, bool wait);
+-void btrfs_put_caching_control(struct btrfs_caching_control *ctl);
+ struct btrfs_caching_control *btrfs_get_caching_control(
+ 		struct btrfs_block_group *cache);
+ int btrfs_add_new_free_space(struct btrfs_block_group *block_group,
+-- 
+2.40.1
 
-Not having CVEs assigned for things that can cause issues is dubious,
-which is why we are doing this.  We can not determine use cases of our
-code base, that is up to you as a distro to figure out, all we can do is
-our best to call out "This might be something you want to take!" which
-is what we are doing here.
-
-Remember, we KNOW that people have been scraping our commit logs for
-these types of things and using them in attacks for years.  At least
-this way we are giving you a machine-parsable feed that gives you the
-opportunity to make your kernels more secure than they previously were.
-
-Why is that not a good thing?
-
-thanks,
-
-greg k-h
