@@ -1,113 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDAE22F13;
-	Thu, 29 Feb 2024 01:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D7F37149;
+	Thu, 29 Feb 2024 01:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709171901; cv=none; b=Nzwn9DQccp2zTIfSUGPvlYLa9LhSNdtZPEqzcakfhMXkhW8y/EAtlamB1ZryIiBd3Rhy8b1Pzfxs+FsXr6Y1/yI+hOY/0EnmOkOsGGenRTgxBvheUcMw7fSFrYpR+zpJHsmtbZOveCYnMp/NFpRI0dctnFTuUrvkcVSjn8anSKk=
+	t=1709171933; cv=none; b=W8t/m74I3t9XcBq8v1mWWBtcdNAKWJ3GgdcDU6WAkJCQp4N9UzaAM/ALQ9GOYTSMkNgMR1VhPXeVgBKb+t6TGMNJe01QJXgzx2cgg81cDGlaG/BV0QU3wvIOo1BkWaGlUGcPkueJNIb3E09+BY81K0eGQuwRVGcj2OtvfZoo5ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709171901; c=relaxed/simple;
-	bh=J41cmZC7bQsegjax8yQD7VpQyLCqWbWDH7KNEl/+hnA=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=fJcPiULOL6XtkqMIZYuliMpJLnoZBM68KYSEmWVt4oanbEx2tHgURsqltv9sw5pIqD3v7kV/0rl0llffcB4O+WL8PtD0v4mypy/GjGdmuFzQx0/aa3SP8VBz6u/mlotndiJu1kr36iNb4LNKisjaL7I3atHSBtGvNaQY1HSAlJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppqXCoRE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709171933; c=relaxed/simple;
+	bh=S8jmVo0I46uk03wXhxccYbMoWVhLMZ8mWEQqkTnYATs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HcvC5ckHJYqcdXVvBi6RVaRRTo0dRJIzZZNR+m9ePFsha0blJ22PUpLomP4QvMlwHOd42O0utrPJE21rlgp3znq7CH20ENGsiatWv+ohREpqpKNfsEVXxk02aqR5AswOjrDWV+a3lenq/2CF/rtICe3mJ4dimkNNGuxkZd21E8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4DCk7e+; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppqXCoRE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE00C433F1;
-	Thu, 29 Feb 2024 01:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709171900;
-	bh=J41cmZC7bQsegjax8yQD7VpQyLCqWbWDH7KNEl/+hnA=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=ppqXCoRECb8qXQoHJV/NedfjPoAvUrCzaLZWrdv36y63x9YACBjE83Eip0svG9PBf
-	 lngFZh81/sv5eDP0xqh+DP9e55gJN9nUSINtJ7SDCGddGHywnAG9VF9O9sfnwpDvc2
-	 0DApIgUKBUF6iPHDCAtlJ1DK0gKip1voMF7pZ86nP9sOb7kjkWPfHqhxj77yh/sBOa
-	 2q3EsdbMQVAEfZwDuQMVAuuZpDuJzOJC7kxaTC+BIP9+j/2B1z4PTHwh0CN0xmeuIJ
-	 TCfGVBP7w7kadNgohRjctolPlhaclQhNnuqOvYyBZN1Hfa5EWDb+GWJwCmuxqzHi7B
-	 1OW1E2HfMn97A==
-Message-ID: <0db752d31016823ccd3799925255a74a.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4DCk7e+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709171930; x=1740707930;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=S8jmVo0I46uk03wXhxccYbMoWVhLMZ8mWEQqkTnYATs=;
+  b=Z4DCk7e+tEOk4CWS5gI91thOkyY7JYrLHqL1oWNHvIfWrHW1qltRVpoq
+   Tg6oMMEcd/m76oiC8FkhQQRTW16NxmAl2ZupX9HzoJ58u2ega/DXUNPUF
+   V0/9GrebRlYsGetH6YySAGbvyKbQC4wJNoX3d+QxRiSpHsCbWqIOGMSLX
+   lI/bDSaWKNHK0N7k47zqtklpwdGf4KusQ//z+854ED/WcWnbY2BhPVyqU
+   BvI1gjfOfEdH5CteoU+vQ7Z7k05K9h+FU5FcxuNaD8AptM3XzP/BL/YyR
+   7oKN2q9JB/7BQ6qJeBYHAkjg8AJyrZCIAq1CmGBliSk6FOOuS/uNMbVG8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3495735"
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="3495735"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 17:58:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="7590267"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 17:58:45 -0800
+Message-ID: <c3585084-5587-49ca-bc2d-db92714a557b@linux.intel.com>
+Date: Thu, 29 Feb 2024 09:58:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240224-mux-v1-1-608cc704ef43@outlook.com>
-References: <20240224-mux-v1-1-608cc704ef43@outlook.com>
-Subject: Re: [PATCH RESEND] clk: set initial best mux parent to current parent when determining rate
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Yang Xiwen <forbidden405@outlook.com>
-To: Michael Turquette <mturquette@baylibre.com>, Yang Xiwen via B4 Relay <devnull+forbidden405.outlook.com@kernel.org>, forbidden405@outlook.com
-Date: Wed, 28 Feb 2024 17:58:18 -0800
-User-Agent: alot/0.10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 1/3] PCI: make pci_dev_is_disconnected() helper public
+ for other drivers
+To: Bjorn Helgaas <helgaas@kernel.org>, Baolu Lu <baolu.lu@linux.intel.com>
+Cc: bhelgaas@google.com, robin.murphy@arm.com, jgg@ziepe.ca,
+ kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org, lukas@wunner.de,
+ yi.l.liu@intel.com, dan.carpenter@linaro.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ Haorong Ye <yehaorong@bytedance.com>
+References: <20240226230537.GA10383@bhelgaas>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <20240226230537.GA10383@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Quoting Yang Xiwen via B4 Relay (2024-02-23 09:18:52)
-> From: Yang Xiwen <forbidden405@outlook.com>
->=20
-> Originally, the initial clock rate is hardcoded to 0, this can lead to
-> some problem when setting a very small rate with CLK_MUX_ROUND_NEAREST.
+On 2/27/2024 7:05 AM, Bjorn Helgaas wrote:
+> On Thu, Feb 22, 2024 at 08:54:54PM +0800, Baolu Lu wrote:
+>> On 2024/2/22 17:02, Ethan Zhao wrote:
+>>> Make pci_dev_is_disconnected() public so that it can be called from
+>>> Intel VT-d driver to quickly fix/workaround the surprise removal
+>>> unplug hang issue for those ATS capable devices on PCIe switch downstream
+>>> hotplug capable ports.
+>>>
+>>> Beside pci_device_is_present() function, this one has no config space
+>>> space access, so is light enough to optimize the normal pure surprise
+>>> removal and safe removal flow.
+>>>
+>>> Tested-by: Haorong Ye<yehaorong@bytedance.com>
+>>> Signed-off-by: Ethan Zhao<haifeng.zhao@linux.intel.com>
+>>> ---
+>>>    drivers/pci/pci.h   | 5 -----
+>>>    include/linux/pci.h | 5 +++++
+>>>    2 files changed, 5 insertions(+), 5 deletions(-)
+>> Hi PCI subsystem maintainers,
+>>
+>> The iommu drivers (including, but not limited to, the Intel VT-d driver)
+>> require a helper to check the physical presence of a PCI device in two
+>> scenarios:
+>>
+>> - During the iommu_release_device() path: This ensures the device is
+>>    physically present before sending device TLB invalidation to device.
+> This wording is fundamentally wrong.  Testing
+> pci_dev_is_disconnected() can never ensure the device will still be
+> present by the time a TLB invalidation is sent.
 
-Did you mean CLK_MUX_ROUND_CLOSEST?
+The logic of testing pci_dev_is_disconnected() in patch [2/3] works
+in the opposite:
 
->=20
-> For example, if the lowest possible rate privided by the mux is 1000Hz,
+1. if pci_dev_is_disconnected() return true, means the device is in
+    the process of surprise removal handling, adapter already been
+    removed from the slot.
 
-s/privided/provided/
+2. for removed device, no need to send ATS invalidation request to it.
+    removed device lost power, its devTLB wouldn't be valid anymore.
 
-> setting a rate below 500Hz will fail, because no clock can provide a
-> better rate than the non-existant 0. But it should succeed with 1000Hz
-> being set.
->=20
-> Setting the initial best parent to current parent could solve this bug
-> very well.
->=20
-> Signed-off-by: Yang Xiwen <forbidden405@outlook.com>
-> ---
-> This is actually a v2 of [1], but seems too simple to have a unittest.
-> It's tested in a mmc host driver.
+3. if pci_dev_is_disconnected() return false, the device is *likely*
+    to be removed at any momoment after this function called.
+    such case will be treated in the iommu ITE fault handling, not to
+    retry the timeout request if device isn't present (patch [3/3]).
 
-It's not too simple for a unittest.
+>
+> The device may be removed after the pci_dev_is_disconnected() test and
+> before a TLB invalidate is sent.
 
->=20
-> [1]: https://lore.kernel.org/linux-clk/20230421-clk-v3-1-9ff79e7e7fed@out=
-look.com/
+even in the process while TLB is invalidating.
 
-In that thread I asked you to please Cc Maxime. Please do that.
+>
+> This is why I hesitate to expose pci_dev_is_disconnected() (and
+> pci_device_is_present(), which we already export) outside
+> drivers/pci/.  They both lead to terrible mistakes like relying on the
+> false assumption that the result will remain valid after the functions
+> return, without any recognition that we MUST be able to deal with the
+> cases where that assumption is broken.
 
-> ---
->  drivers/clk/clk.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 2253c154a824..d98cebd7ff03 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -649,6 +649,10 @@ int clk_mux_determine_rate_flags(struct clk_hw *hw,
-> =20
->         /* find the parent that can provide the fastest rate <=3D rate */
->         num_parents =3D core->num_parents;
-> +       if (core->parent) {
-> +               best_parent =3D core->parent;
-> +               best =3D clk_core_get_rate_nolock(best_parent);
-> +       }
+Yup, your concern is worthy ,but isn't happening within this patchset.
 
-Is the problem that we're not using abs_diff()?
+>
+> This series claims to avoid "continuous hard lockup warnings and
+> system hangs".  It may reduce the likelihood, but I don't think it can
+> completely avoid them.
 
-----8<----
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index a3bc7fb90d0f..91023345595f 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -542,7 +542,7 @@ static bool mux_is_better_rate(unsigned long rate, unsi=
-gned long now,
- 			   unsigned long best, unsigned long flags)
- {
- 	if (flags & CLK_MUX_ROUND_CLOSEST)
--		return abs(now - rate) < abs(best - rate);
-+		return abs_diff(now, rate) < abs_diff(best, rate);
-=20
- 	return now <=3D rate && now > best;
- }
+It doesn't try to close the race window, actually we are doing post-fault
+handling in patch [3/3].
+
+>
+> I don't see any acknowledgement of that in the commit logs of this
+> series.  E.g., it doesn't say "we can recover from ATS Invalidate
+> Completion Timeouts, but the timeouts are on the order of minutes, so
+> we want to avoid them when possible."
+> And given the "system hangs" language, I am not convinced that we
+> actually *can* recover from those timeouts.
+
+It is testing in customer's environment. separatly, patch[3/3] vs
+
+patch [2/3].
+
+>
+> Using pci_dev_is_disconnected() may make those timeouts less frequent
+
+will test patch[3/3] alone, if couldn't recover from the 100% ITE fault
+case, we will look for other method.
+
+Thanks,
+Ethan
+
+> and give the illusion that the problem is "solved", but it just means
+> the problem is still there and harder to reproduce.
+>
+>> - During the device driver lifecycle when a device TLB invalidation
+>>    timeout event is generated by the IOMMU hardware: This helps handle
+>>    situations where the device might have been hot-removed.
+>>
+>> While there may be some adjustments needed in patch 3/3, I'd like to
+>> confirm with you whether it's feasible to expose this helper for general
+>> use within the iommu subsystem.
+>>
+>> If you agree with this change, I can route this patch to Linus through
+>> the iommu tree with an "acked-by" or "reviewed-by" tag from you.
+>>
+>> Best regards,
+>> baolu
