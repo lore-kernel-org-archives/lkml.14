@@ -1,48 +1,47 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344BA62808;
-	Thu, 29 Feb 2024 13:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C844212CD87;
+	Thu, 29 Feb 2024 13:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709214545; cv=none; b=EmEuRxgwHSgqGMcueXDuodAOWVdLVG2i78DvzBqUtWAkeRdDlVncEBhgavTuYGqpSKtxSd1kKAP9mmAHGbeGTUCMbXq4YklM7hynm/XN7OgQXIKZ+thetwRowsv6RcyWOzcT7P16RaxF30JFhNMaNmuWVCHkVDQK1HRzNiNc1Hk=
+	t=1709214548; cv=none; b=EW6fyxm6tl77ZBix9bLbXxTy9iEsVnr9vckDT+3iP+FzJKg3HO5I5IQOurUg0m9JbWQgk5eSZbBiVZs9dStpjcXj7M2lDr53Wcdf+BCe5w5xn/uqDdToc/sIIO1MupmecYPD8Z/kiPaEqk9ALJw3qZMWKaV5M16y5hM2H/M7fMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709214545; c=relaxed/simple;
-	bh=PT6thhGwV8a6x/GJTFO6n9c0DQeUab0GqSnmK+Ht/AQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rqu9g+7TrsdD6OwUkxFHljrdbmK7DNx9PRQj5rOeCr1UTxtbfzzRkj6bRxWc6WsarjveQi7S/Z2gzNHH5lTZCH0kiTYEjS09KIrxcuDZpBRi+qNgiN9BIla3xX/i/yz0yA/PStavVfOkUvdOxMBqp8TeP6VxSIe7lb8kOq5nMZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Bc6+frUR; arc=none smtp.client-ip=185.132.182.106
+	s=arc-20240116; t=1709214548; c=relaxed/simple;
+	bh=aRTII+3NPMyzQVYAhCc1A8P1Zc2CrSGjf8yf70WQIO8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mvyEDzdw6mmNifxSvkoht1evc8wi9steoQ8V8zoQ/yHVoGc+98mobS90JBpR0BrAeMJyDQX4yVhiQZwjT18vaFbOeQKopxX8vqQyAPW922+zKHFJiJ9j6qVE2hEsUn3Y+FRkWElx+ETEhZrwHfBUEVzKV2mz0oyDsmj/GzzOIyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ophE01xx; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Bc6+frUR"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41TAIv8s014612;
-	Thu, 29 Feb 2024 14:48:30 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ophE01xx"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41TA6kFh018050;
+	Thu, 29 Feb 2024 14:48:18 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=PNmumkbr1ax1y/K5cCKHgfDeQwZWzifckds6A8d+eoY=; b=Bc
-	6+frURoIYZspnY4pIeyq+iflh2eouJ+SzFfev2qkSuIJyxatB9naEvbs7m4D78CM
-	jB1qBrXJbPzHRMzYnFdzhU36u6VHlt3jx0Du38pcWLGpNR7C6HHmD74rgIq7f2FP
-	3yNv6eP65PHxYcrhpQe7S4YvYImglmRS2/U4x50h9KTMbZNZ52VQJtgGZAkiF4Zw
-	rta2/UkaY1HbReeW8NbSlI2u5i78gXIotYqCCF8Y+jhrz9nK08HeGn57qUkl/zBX
-	mBJDUwEl0Lmt3Yce75WZcdzEXFKmfUU8ZKD2Gvu1eICGBco6FzV06Kvio1j5RiNq
-	DzX2confWhFZDmRDAbVg==
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=oivmPaX
+	pFQMFUsyyqZJLQRYPIoHlWLULOftzA1Oyk3I=; b=ophE01xxHASQtSdV8Iv1/3k
+	slVE+9cu0fGeVGFMgpP4WDJfZjk4lP7HQVQnmnPG1LVG4klpkpNS6wLVS9QWFzhK
+	ZUSYKhWT/iIr6POd0HbG11W0jcXD1QfxjbKGEsfuWkta2Cqrh5YIQHamBJKxC68A
+	Dph9AkXlxMDtCsfqdebTzyaKjVD1uxCCaMxxHHZbGoUKgIcrW3FW3da+D/tM7RbR
+	vzi/Ns/rGliN/n1qERyN6VRY8ByMAzMDwvrwDPldV6uCQPirfiKmSWN4FWCCOPKM
+	SBHobgXk1NEtADQiA7HMfVeCmfaraaFitImPiHuNPGSzF/2+iVLTWyHh4mDVIvg=
+	=
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3whf4bjr35-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3whf4e2jh2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 14:48:30 +0100 (CET)
+	Thu, 29 Feb 2024 14:48:18 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2D63C4002D;
-	Thu, 29 Feb 2024 14:48:27 +0100 (CET)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9B04C40048;
+	Thu, 29 Feb 2024 14:48:12 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 277CD26C46B;
-	Thu, 29 Feb 2024 14:47:46 +0100 (CET)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 87F5526F13F;
+	Thu, 29 Feb 2024 14:47:44 +0100 (CET)
 Received: from localhost (10.201.21.128) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 29 Feb
- 2024 14:47:45 +0100
+ 2024 14:47:44 +0100
 From: Christophe Roullier <christophe.roullier@foss.st.com>
 To: "David S . Miller" <davem@davemloft.net>,
         Eric Dumazet
@@ -64,12 +63,10 @@ To: "David S . Miller" <davem@davemloft.net>,
 CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] dt-bindings: net: add new property st,ext-phyclk in documentation for stm32
-Date: Thu, 29 Feb 2024 14:47:24 +0100
-Message-ID: <20240229134724.1353903-3-christophe.roullier@foss.st.com>
+Subject: [PATCH 0/2] Add properties in dwmac-stm32 documentation
+Date: Thu, 29 Feb 2024 14:47:22 +0100
+Message-ID: <20240229134724.1353903-1-christophe.roullier@foss.st.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240229134724.1353903-1-christophe.roullier@foss.st.com>
-References: <20240229134724.1353903-1-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,44 +81,20 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-29_02,2024-02-29_01,2023-05-22_02
 
-Add property st,ext-phyclk to manage cases when PHY have no cristal/quartz
-This property can be used with RMII phy without cristal 50Mhz and when we
-want to select RCC clock instead of ETH_REF_CLK
-Can be used also with RGMII phy with no cristal and we select RCC clock
-instead of ETH_CLK125
-This new property replace st,eth-clk-sel and st,eth-ref-clk-sel
+Introduce 2 new properties in dwamc-stm32 documentation
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
----
- Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ - phy-supply: to manage PHY regulator.
+ - st,ext-phyclk: is present since 2020 in driver so need to explain
+   it.
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-index 80937b28fa046..fda23c07c1cad 100644
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-@@ -85,12 +85,21 @@ properties:
-   phy-supply:
-     description: PHY regulator
- 
-+  st,ext-phyclk:
-+    description:
-+      set this property in RMII mode when you have PHY without crystal 50MHz and want to
-+      select RCC clock instead of ETH_REF_CLK. OR in RGMII mode when you want to select
-+      RCC clock instead of ETH_CLK125.
-+    type: boolean
-+
-   st,eth-clk-sel:
-+    deprecated: true
-     description:
-       set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-     type: boolean
- 
-   st,eth-ref-clk-sel:
-+    deprecated: true
-     description:
-       set this property in RMII mode when you have PHY without crystal 50MHz and want to
-       select RCC clock instead of ETH_REF_CLK.
+Christophe Roullier (2):
+  dt-bindings: net: add phy-supply property for stm32
+  dt-bindings: net: add new property st,ext-phyclk in documentation for
+    stm32
+
+ .../devicetree/bindings/net/stm32-dwmac.yaml         | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
 -- 
 2.25.1
 
