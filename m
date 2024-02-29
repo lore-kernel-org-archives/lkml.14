@@ -1,118 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E7716B048;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472A016B041;
 	Thu, 29 Feb 2024 20:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239304; cv=none; b=PTbaefoSrZAvFsEBdMEOxRxVtihR9C3h9v7KkZaEkmHJ2WssX2b0nRR7qRmn6SV3aebszgNjAyiEXcj6t7Vd1wM/Pbfeg3dOEYpcOkYP1sWPcjvz4AZOinIgXXfvkL8QObJoOXycJESLlQod6GP+cJo+TWxFJTSiGGl3/bXrXFA=
+	t=1709239305; cv=none; b=lmWY33pJmEcz2kb+pX+pa5q4GK5kRZUiMl35cRv/l1LgcUpeXMCATA8cVFGfykmFUetEqWiPF6Xk0h2YAviEWzVluNw4TJPS4HjGj0pK64i6kc/Pifq7xysZX6qkJPjQNDQjZ/+qc3SiZq+lcgc+G10SdDLg/ut/HvGTqXEYL90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239304; c=relaxed/simple;
-	bh=ZxIx9z3r2Fy0pXEj0UY8qczYhkBfaOAySFHgWRpmokM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jkRi3go6f2oelgxXt1jp4goYkUzFg1mtejCCJ1dyaILqW8GhodEtyeDQHJIzkQFFk6liDxmUUIjwhzbDHjJRRzVFluR2Tf7B0f/d6TGabXtu1NEQqr+Hzioo0zc5Wylh0wybL2E2rwW5hDkjf6AINDpGCn23YSNTIen6PiFFPrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHUeyqQw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709239305; c=relaxed/simple;
+	bh=APRMZ4n8LYH5W13havCjtiPcQWPmAf0KgH9MeFCxuFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jzDH5dUycPkuuXBQ0j4sCQ+M+X/SlJEY5Mb78VhQAjaamx4/8KyPBsfOMhHhZ47Bff+dRg+gjlD8ukDXrtnJHbdGesxu21jtNOiUs2tGWZxKf3c1qpjqEXO3sWs0T/3K0TNnIiqZtcNYEtbejljcvkSI+46l5Ozcl/EzTxgRv4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhg+MfpI; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHUeyqQw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8934FC433C7;
-	Thu, 29 Feb 2024 20:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709239304;
-	bh=ZxIx9z3r2Fy0pXEj0UY8qczYhkBfaOAySFHgWRpmokM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bHUeyqQw3m+TB+h7Y//gUzemdleBCdrx0jnQ2yEoOS/+azD3WFpmAE210MRdbjGmX
-	 RvVXeCwnQ0nVoOxYEOWRGIRSF6ptwlomcVJW02cIaypZERqGd0e4NP+GmAyRn/3L74
-	 6vvaS0+lrpzsMcSSZNEp6rw8Hda5qvYss9pFYYo1QHucX3C94l3Aq1T9TpYHPuBElN
-	 mYOGCrwg+1AlfEMcF6y7X3fWJANRoRMyBh6VYgQ0iwQ3FnlCok5kSYnQzl1SD4hMFN
-	 2yymtQyRF1wSJo2cN5U0vbSb7dxY8KqWvSQ9D3TiyVOI67W2W+pgSlbtjkbG29wJS7
-	 H9Bq3ISQ/ydZw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Mikulas Patocka <mpatocka@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	agk@redhat.com,
-	dm-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.10 8/8] dm-verity, dm-crypt: align "struct bvec_iter" correctly
-Date: Thu, 29 Feb 2024 15:41:25 -0500
-Message-ID: <20240229204127.2861980-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229204127.2861980-1-sashal@kernel.org>
-References: <20240229204127.2861980-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhg+MfpI"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dc5d0162bcso13270825ad.0;
+        Thu, 29 Feb 2024 12:41:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709239303; x=1709844103; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DCuy/++A6Eh0DIGCLnbR4RQY4erAHeKD29B4iy7q32c=;
+        b=fhg+MfpIN7opj+P+p/0Gc9adCTHPfd27qDIMVQEjKG1lY4+BKhdx4d9vlT0yRc4JSe
+         FpLjpZ4/05PTke1V1COIFKSVsaQORF4lLXbXcpE6c/SwFtltJDOu69pSgfwymP827Ycw
+         rYYOQdKXd1zxMSgaDCIAcdCl0/tlBZQJibZhUNMOqPEf3npeLiv6ljFzXEiFPSb/E6uN
+         rUGd+TTieRsVes5oRVWdPP8OcWMOvMuwWdpNuxr4FCgC0rTnruBplh29R9CLCSRcDBLt
+         RJiDMDpO6uPiuU4wymbDp2QQmIfQBUxmYX7z4eYiYPG/k1xJmP1E80IQZzA5rTX9FIs1
+         IkRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709239303; x=1709844103;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DCuy/++A6Eh0DIGCLnbR4RQY4erAHeKD29B4iy7q32c=;
+        b=s2DrKl6y0KDWOyUa2Y1aTpJeDwF43PjCcspXN30ThoD6MrwBUuIq5aAKWrtID61IN4
+         +4NXRWkmSEeaxVZ08SpzPSiJD5KJS8DFNck4mT1Te0tDKAXn5IT96ZqrXpCHjObc06TZ
+         7LpJi8aYF034Napd8Z6CWPCf4Iiqa//+2BbHRVCUhDvdoWviooJpe7foc+0fqvA9t58P
+         Y0ppd7kQDjTzkR780PnO+MsrZTbIS4GECcRnXPTwQOgctzLSIWZ7ryROo59eqxPfoote
+         BrOPoIit+KiPbGkh8z0BfNvPv7dImtsFKIC6lejfRaNg+zLTmHfKdfD5c+neZPIo3EpF
+         919Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVZWcNwFtyw5y81DlbW3gaw/0yHnrhc1ln4M4uVjlDNENEj9bp3bzUiz02EfQujDg65/eNsLMuQLozzwSpr8UycRExUvwCdTOg1iXaZhNVQLIGtGAEmM6JpNHO97UJEfWT8CUcrmw==
+X-Gm-Message-State: AOJu0YzFp3nZ7zFCEyKwNQy4Go+if/ulAdBnZrCnphGurFTKRE0i/aXk
+	6O5k2L+vmIcU+g0JHcnxuQY4Aj4kwkwDECf1EcOx4iUWEsaB/liI
+X-Google-Smtp-Source: AGHT+IGTQKsZ5pKWSZpx0KLaYeFeiUjZqrnllq1Zus41oD/Lse7gy8HG5VCwXQlQCIaaZTp2iFyYeA==
+X-Received: by 2002:a17:902:aa8f:b0:1dc:890a:45a9 with SMTP id d15-20020a170902aa8f00b001dc890a45a9mr2640785plr.65.1709239303406;
+        Thu, 29 Feb 2024 12:41:43 -0800 (PST)
+Received: from localhost ([2620:10d:c090:400::5:8305])
+        by smtp.gmail.com with ESMTPSA id a2-20020a170902900200b001dccaafe249sm1923875plp.220.2024.02.29.12.41.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 12:41:43 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Thu, 29 Feb 2024 10:41:41 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	Cestmir Kalina <ckalina@redhat.com>,
+	Costa Shulyupin <cshulyup@redhat.com>
+Subject: Re: [PATCH 2/2] cgroup/cpuset: Exclude isolated CPUs from
+ housekeeping CPU masks
+Message-ID: <ZeDsBW4rC9gaMjuY@slm.duckdns.org>
+References: <20240229021414.508972-1-longman@redhat.com>
+ <20240229021414.508972-3-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.210
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229021414.508972-3-longman@redhat.com>
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+On Wed, Feb 28, 2024 at 09:14:14PM -0500, Waiman Long wrote:
+> Call the newly introduced housekeeping_exlude_isolcpus() function to
+> exclude isolated CPUs from the selected housekeeping CPU masks. This
+> is in addition to the exclusion of isolated CPUs from the workqueue
+> unbound CPU mask.
+> 
+> Right now only HK_TYPE_TIMER and HK_TYPE_RCU CPU masks are updated,
+> but more may be added in the future when appropriate.
+> 
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-[ Upstream commit 787f1b2800464aa277236a66eb3c279535edd460 ]
+This looks fine to me from cgroup POV. Please feel free to route the patch
+any way you see fit.
 
-"struct bvec_iter" is defined with the __packed attribute, so it is
-aligned on a single byte. On X86 (and on other architectures that support
-unaligned addresses in hardware), "struct bvec_iter" is accessed using the
-8-byte and 4-byte memory instructions, however these instructions are less
-efficient if they operate on unaligned addresses.
+  Acked-by: Tejun Heo <tj@kernel.org>
 
-(on RISC machines that don't have unaligned access in hardware, GCC
-generates byte-by-byte accesses that are very inefficient - see [1])
+Thanks.
 
-This commit reorders the entries in "struct dm_verity_io" and "struct
-convert_context", so that "struct bvec_iter" is aligned on 8 bytes.
-
-[1] https://lore.kernel.org/all/ZcLuWUNRZadJr0tQ@fedora/T/
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/dm-crypt.c  | 4 ++--
- drivers/md/dm-verity.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 5d772f322a245..bed685969ad49 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -48,11 +48,11 @@
- struct convert_context {
- 	struct completion restart;
- 	struct bio *bio_in;
--	struct bio *bio_out;
- 	struct bvec_iter iter_in;
-+	struct bio *bio_out;
- 	struct bvec_iter iter_out;
--	u64 cc_sector;
- 	atomic_t cc_pending;
-+	u64 cc_sector;
- 	union {
- 		struct skcipher_request *req;
- 		struct aead_request *req_aead;
-diff --git a/drivers/md/dm-verity.h b/drivers/md/dm-verity.h
-index 78d1e51195ada..f61c89c79cf5b 100644
---- a/drivers/md/dm-verity.h
-+++ b/drivers/md/dm-verity.h
-@@ -74,11 +74,11 @@ struct dm_verity_io {
- 	/* original value of bio->bi_end_io */
- 	bio_end_io_t *orig_bi_end_io;
- 
-+	struct bvec_iter iter;
-+
- 	sector_t block;
- 	unsigned n_blocks;
- 
--	struct bvec_iter iter;
--
- 	struct work_struct work;
- 
- 	/*
 -- 
-2.43.0
-
+tejun
