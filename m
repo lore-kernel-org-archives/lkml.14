@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674E33CF6E
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3B44594C
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709189883; cv=none; b=K0BVYoH0oBk75ql9NNVi+QnPrDAeC/HJfX/cnGSmsweKkls+OK3jNt4JQjyoaTVRw13MhLOdcQhtFnvkflHWu8nvA76z9xVUTpUPlM33PRYhpwCg9aNfKehh9hegdl0r3geOjnrnoIGLMusefFVZaNaPPd9Awznvk5V+0QOruZo=
+	t=1709189885; cv=none; b=SAPWvCw9nBVoqCxol8krQTIyI2c+brpWee3TIVp4iH4RsJBxTiaQWdzzEbR2lEL3uhwv07QraZ6XdStJh3B+0onl4gvRWnKRHUVQhX3W6X9qvmimJ+KdPjIJ/k2N1+CyqNs5C0OfWjRIqf1WJkfisIgPKdif/gwk/uZ9rmSngCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709189883; c=relaxed/simple;
-	bh=kSl3pHe/ihRWWBrf1Tezc0PNoeKDj3aNbp4aK+ZcfUs=;
+	s=arc-20240116; t=1709189885; c=relaxed/simple;
+	bh=HYHSTfpelvyYDR1wzWgIV1iFpf6tLCCOfsvel0KTnk0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GeAuXw9nqc0+BfHGLdy0S32q/ffPkXW3ekdArGuV/Rdtrwa0DQD2TAGc0alcOs53wEFMCOKboVQViRRYhZOHUBfFQlqaKQDTVqd8dJ3P465FGUciS8HKY2vpAApqPsVFXWiM/t/21KYx0goPMQOfi/7QsCWYrTMnh+weAiye4Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KU0Rzqq9; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=Kf05Fw/MFg8ZOm4oUFsmet/gpC5CbYBfRcF64n9Kqh8lpZ49fMSkl4rIPeit0bQMAzNdKmBbDVJ+0pOrTZ4QmrhwNa9jm5x1won/zM5Zn2cv/1y7CHNRa4J88W9N0gL6TsUGfXTRun8reW3XZpMSLbpPUWzfjVimTlETloYdUNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QMmFOdT0; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KU0Rzqq9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QMmFOdT0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709189879;
+	s=mimecast20190719; t=1709189882;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YFmwQWt00Kaj3Ot93eqM53gw7IrZWb5swPo/SmIieP0=;
-	b=KU0Rzqq9Th7y+JH2tQUObiwn4ZyMAcaxL0hZECiLoD2XdcWXED+EzNjsW16kGNSDU9SiF1
-	hih70MdboIbMXbw6A+Bdj4zrfaOZEjFNgkjG/hBm7psTMzcG1NamEsY4f0aRCP1rdRHqhU
-	mkzgBdLYQ+6Dvu8L3odlulNhxqEUN5U=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-dGxUhgedMeCDdf-lt5JrlQ-1; Thu, 29 Feb 2024 01:57:55 -0500
-X-MC-Unique: dGxUhgedMeCDdf-lt5JrlQ-1
+	bh=O548D4ZJM+qQxwtnpg5UXQkiY5ZV60J3DSbyn2ZI5lc=;
+	b=QMmFOdT0LDSP1QRMj+Izn0L0bvgM1QNa6IXthn+Srh6Rg55CkRxKEG83OPSP0slcPm+Y5r
+	lAbC4hTijL/o/xwcMzB8vGpUFQJcFHDZADsEg0cDAbfzQ6ELCBYkUgrhpA+Bnsg6YTUHJ1
+	C80FZ8oGr5ru2YN7+RqNkNRPvTQ2s9E=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-204-BzgnBlw4MCWclqiFPnc2kw-1; Thu,
+ 29 Feb 2024 01:57:58 -0500
+X-MC-Unique: BzgnBlw4MCWclqiFPnc2kw-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 55E9B185A784;
-	Thu, 29 Feb 2024 06:57:55 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6F90E3813F32;
+	Thu, 29 Feb 2024 06:57:57 +0000 (UTC)
 Received: from virt-mtcollins-01.lab.eng.rdu2.redhat.com (virt-mtcollins-01.lab.eng.rdu2.redhat.com [10.8.1.196])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 45FF148B;
-	Thu, 29 Feb 2024 06:57:55 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 64D0048B;
+	Thu, 29 Feb 2024 06:57:57 +0000 (UTC)
 From: Shaoqin Huang <shahuang@redhat.com>
 To: Oliver Upton <oliver.upton@linux.dev>,
 	Marc Zyngier <maz@kernel.org>,
@@ -51,13 +51,13 @@ Cc: Eric Auger <eauger@redhat.com>,
 	Zenghui Yu <yuzenghui@huawei.com>,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v5 1/3] KVM: selftests: aarch64: Add helper function for the vpmu vcpu creation
-Date: Thu, 29 Feb 2024 01:56:19 -0500
-Message-Id: <20240229065625.114207-2-shahuang@redhat.com>
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 3/3] KVM: selftests: aarch64: Add invalid filter test in pmu_event_filter_test
+Date: Thu, 29 Feb 2024 01:56:21 -0500
+Message-Id: <20240229065625.114207-4-shahuang@redhat.com>
 In-Reply-To: <20240229065625.114207-1-shahuang@redhat.com>
 References: <20240229065625.114207-1-shahuang@redhat.com>
 Precedence: bulk
@@ -69,122 +69,76 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Create a vcpu with vpmu would be a common requirement for the vpmu test,
-so add the helper function for the vpmu vcpu creation. And use those
-helper function in the vpmu_counter_access.c test.
-
-Use this chance to delete the meaningless ASSERT about the pmuver,
-because KVM does not advertise an IMP_DEF PMU to guests.
-
-No functional changes intended.
+Add the invalid filter test which sets the filter beyond the event
+space and sets the invalid action to double check if the
+KVM_ARM_VCPU_PMU_V3_FILTER will return the expected error.
 
 Signed-off-by: Shaoqin Huang <shahuang@redhat.com>
 ---
- .../kvm/aarch64/vpmu_counter_access.c         | 33 ++++---------------
- .../selftests/kvm/include/aarch64/vpmu.h      | 29 ++++++++++++++++
- 2 files changed, 36 insertions(+), 26 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/include/aarch64/vpmu.h
+ .../kvm/aarch64/pmu_event_filter_test.c       | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/aarch64/vpmu_counter_access.c b/tools/testing/selftests/kvm/aarch64/vpmu_counter_access.c
-index 5f9713364693..e068a0a7a43b 100644
---- a/tools/testing/selftests/kvm/aarch64/vpmu_counter_access.c
-+++ b/tools/testing/selftests/kvm/aarch64/vpmu_counter_access.c
-@@ -16,6 +16,7 @@
- #include <processor.h>
- #include <test_util.h>
- #include <vgic.h>
-+#include <vpmu.h>
- #include <perf/arm_pmuv3.h>
- #include <linux/bitfield.h>
- 
-@@ -426,18 +427,8 @@ static void guest_code(uint64_t expected_pmcr_n)
- /* Create a VM that has one vCPU with PMUv3 configured. */
- static void create_vpmu_vm(void *guest_code)
- {
--	struct kvm_vcpu_init init;
--	uint8_t pmuver, ec;
--	uint64_t dfr0, irq = 23;
--	struct kvm_device_attr irq_attr = {
--		.group = KVM_ARM_VCPU_PMU_V3_CTRL,
--		.attr = KVM_ARM_VCPU_PMU_V3_IRQ,
--		.addr = (uint64_t)&irq,
--	};
--	struct kvm_device_attr init_attr = {
--		.group = KVM_ARM_VCPU_PMU_V3_CTRL,
--		.attr = KVM_ARM_VCPU_PMU_V3_INIT,
--	};
-+	uint8_t ec;
-+	uint64_t irq = 23;
- 
- 	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
- 	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
-@@ -449,27 +440,17 @@ static void create_vpmu_vm(void *guest_code)
- 					guest_sync_handler);
- 	}
- 
--	/* Create vCPU with PMUv3 */
--	vm_ioctl(vpmu_vm.vm, KVM_ARM_PREFERRED_TARGET, &init);
--	init.features[0] |= (1 << KVM_ARM_VCPU_PMU_V3);
--	vpmu_vm.vcpu = aarch64_vcpu_add(vpmu_vm.vm, 0, &init, guest_code);
-+	vpmu_vm.vcpu = vm_vcpu_add_with_vpmu(vpmu_vm.vm, 0, guest_code);
- 	vcpu_init_descriptor_tables(vpmu_vm.vcpu);
-+
- 	vpmu_vm.gic_fd = vgic_v3_setup(vpmu_vm.vm, 1, 64,
- 					GICD_BASE_GPA, GICR_BASE_GPA);
- 	__TEST_REQUIRE(vpmu_vm.gic_fd >= 0,
- 		       "Failed to create vgic-v3, skipping");
- 
--	/* Make sure that PMUv3 support is indicated in the ID register */
--	vcpu_get_reg(vpmu_vm.vcpu,
--		     KVM_ARM64_SYS_REG(SYS_ID_AA64DFR0_EL1), &dfr0);
--	pmuver = FIELD_GET(ARM64_FEATURE_MASK(ID_AA64DFR0_EL1_PMUVer), dfr0);
--	TEST_ASSERT(pmuver != ID_AA64DFR0_EL1_PMUVer_IMP_DEF &&
--		    pmuver >= ID_AA64DFR0_EL1_PMUVer_IMP,
--		    "Unexpected PMUVER (0x%x) on the vCPU with PMUv3", pmuver);
--
- 	/* Initialize vPMU */
--	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &irq_attr);
--	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &init_attr);
-+	vpmu_set_irq(vpmu_vm.vcpu, irq);
-+	vpmu_init(vpmu_vm.vcpu);
+diff --git a/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
+index 2dd8ea418f47..86714345ee97 100644
+--- a/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
++++ b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
+@@ -8,6 +8,7 @@
+  * This test checks if the guest only see the limited pmu event that userspace
+  * sets, if the guest can use those events which user allow, and if the guest
+  * can't use those events which user deny.
++ * It also checks that setting invalid filter ranges return the expected error.
+  * This test runs only when KVM_CAP_ARM_PMU_V3, KVM_ARM_VCPU_PMU_V3_FILTER
+  * is supported on the host.
+  */
+@@ -262,6 +263,41 @@ static void run_tests(void)
+ 		run_test(t);
  }
  
- static void destroy_vpmu_vm(void)
-diff --git a/tools/testing/selftests/kvm/include/aarch64/vpmu.h b/tools/testing/selftests/kvm/include/aarch64/vpmu.h
-new file mode 100644
-index 000000000000..0dfcc7ab1c4d
---- /dev/null
-+++ b/tools/testing/selftests/kvm/include/aarch64/vpmu.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <kvm_util.h>
-+
-+static inline struct kvm_vcpu *vm_vcpu_add_with_vpmu(struct kvm_vm *vm,
-+						     uint32_t vcpu_id,
-+						     void *guest_code)
++static void test_invalid_filter(void)
 +{
-+	struct kvm_vcpu_init init;
++	struct kvm_pmu_event_filter invalid;
++	int ret;
 +
-+	/* Create vCPU with PMUv3 */
-+	vm_ioctl(vm, KVM_ARM_PREFERRED_TARGET, &init);
-+	init.features[0] |= (1 << KVM_ARM_VCPU_PMU_V3);
++	pr_info("Test: test_invalid_filter\n");
 +
-+	return aarch64_vcpu_add(vm, 0, &init, guest_code);
++	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
++
++	vpmu_vm.vm = vm_create(1);
++	vpmu_vm.vcpu = vm_vcpu_add_with_vpmu(vpmu_vm.vm, 0, guest_code);
++	vpmu_vm.gic_fd = vgic_v3_setup(vpmu_vm.vm, 1, 64,
++					GICD_BASE_GPA, GICR_BASE_GPA);
++	__TEST_REQUIRE(vpmu_vm.gic_fd >= 0,
++		       "Failed to create vgic-v3, skipping");
++
++	/* The max event number is (1 << 16), set a range largeer than it. */
++	invalid = __DEFINE_FILTER(BIT(15), BIT(15) + 1, 0);
++	ret = __kvm_device_attr_set(vpmu_vm.vcpu->fd, KVM_ARM_VCPU_PMU_V3_CTRL,
++				    KVM_ARM_VCPU_PMU_V3_FILTER, &invalid);
++	TEST_ASSERT(ret && errno == EINVAL, "Set Invalid filter range "
++		    "ret = %d, errno = %d (expected ret = -1, errno = EINVAL)",
++		    ret, errno);
++
++	/* Set the Invalid action. */
++	invalid = __DEFINE_FILTER(0, 1, 3);
++	ret = __kvm_device_attr_set(vpmu_vm.vcpu->fd, KVM_ARM_VCPU_PMU_V3_CTRL,
++				    KVM_ARM_VCPU_PMU_V3_FILTER, &invalid);
++	TEST_ASSERT(ret && errno == EINVAL, "Set Invalid filter action "
++		    "ret = %d, errno = %d (expected ret = -1, errno = EINVAL)",
++		    ret, errno);
++
++	destroy_vpmu_vm();
 +}
 +
-+static void vpmu_set_irq(struct kvm_vcpu *vcpu, int irq)
-+{
-+	kvm_device_attr_set(vcpu->fd, KVM_ARM_VCPU_PMU_V3_CTRL,
-+			    KVM_ARM_VCPU_PMU_V3_IRQ, &irq);
-+}
+ static bool kvm_pmu_support_events(void)
+ {
+ 	create_vpmu_vm(guest_get_pmceid);
+@@ -284,4 +320,6 @@ int main(void)
+ 	TEST_REQUIRE(kvm_pmu_support_events());
+ 
+ 	run_tests();
 +
-+static void vpmu_init(struct kvm_vcpu *vcpu)
-+{
-+	kvm_device_attr_set(vcpu->fd, KVM_ARM_VCPU_PMU_V3_CTRL,
-+			    KVM_ARM_VCPU_PMU_V3_INIT, NULL);
-+}
-+
++	test_invalid_filter();
+ }
 -- 
 2.40.1
 
