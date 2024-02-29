@@ -1,104 +1,181 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F2F5CDF2;
-	Thu, 29 Feb 2024 09:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E80A5B694
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709198817; cv=none; b=Ykl2QKkBjIRr6KVU1xz+cqkHVR/TMTvOuYAdEJUOh5dtx59J1dWaiX9Gtvgj3neiy6qfALdt4ro1wCpsFIFRhwNEfqYdy5CydV3fylFmlKPq32nt2tlIdJ9I6wwR5Md0xkOAyTs9Gzn3tJHYN0l+v5BrTyg6B+KgCTb9ng0/ulU=
+	t=1709198857; cv=none; b=OLlv93nRflg/VoqXYilbd1E2Ruy+sxTMzKIpwXpEEARa3HZLDV8FG9fVzOGAVd8lkcjj9rDuWlblkhD+8GvBcs2WbDDr3aD4YjrlINbYpEKo+W4UbMaNv83DcEdVfkz1MLU9CccJ31bwMBx8bd0ux1bEQ++II94dd3959L7LjiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709198817; c=relaxed/simple;
-	bh=H3DVOzLmQ6k1aiZNO64pehrcmvGMoPGpzkMsjPLddA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N2souOSP5Cu47RWKX4XLthk1JYRLt3t3mrpOG+WfEd/5Olt4R9bh4W2eyP6OweQTY7GkUw2OiafAoRObRqrNm7kR8GdZDl3c0jQtI3SOWH/o8g6sDZmwEFADY4thRq4Tt/43j429l8n+g+YMzu61Jqs9iUMoTqXS3oDpOJgQY6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hzS66Bce; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709198857; c=relaxed/simple;
+	bh=Bt+6HUNU4JLltfZpincMFjh+g0KSkoZR27N1mCOMTAo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=B5bICrBWTY2DkGNw2Oou6Va8jZtpHMxaB/PbNCc5QfB4PWJXboa/JidaSVL5gDCcK9MC/rRKtErz21Eshag+C7Mj3UJpGDcOzCk4r2DlhPg4WvcA/UZZvGmnIlL5Q4eVvdYNj1KrO5SIN865gvW9JYgxNbg5kor9PGceE0Gassg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=0ABp3sjm; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzS66Bce"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d2533089f6so7735861fa.1;
-        Thu, 29 Feb 2024 01:26:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="0ABp3sjm"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5640fef9fa6so926264a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:27:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709198813; x=1709803613; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MUGoQKrYI+CUGIzYiMWNWVHuIqGWUhSm1DPKxOOJHWY=;
-        b=hzS66Bcej3pnr7hurc58cBly9l2tkNw3YfXX+a9j3mP6nSJUkYJc7lWJHBlEUb29L/
-         YD85meJiikcsC5T5zD413B3mZ9AZoz70PDB73CkumUOAqa6dkHNkizlB73lWabV9kiAa
-         AN7hf+QKrByOlI5jS0PA1oezdp1c3+JgqjFptYtW+jPYRomGl2uJ5mc8TDd6FScGQIaU
-         zJwTQ4nSDx570AiixFK2WKdy2g6tee0IqeGRr7KjFUEzNJ+RAdtNY7+ZthCb+nPSvtTV
-         7B03inZtfgIJjOFAg2PBlZtEA6kmFY8KBmFOlFnXjQ5qp+m64wEBojvJuVCW6U78hD4P
-         dy+A==
+        d=fairphone.com; s=fair; t=1709198854; x=1709803654; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1n6ZCV67cur8e5mAju//0gzCRgXTlxNt1OqrWENqIVs=;
+        b=0ABp3sjm5vzBfsOuhTPARKgb2GE8mw/9VtWUqPSGEMPHGlKHzx/pjscvcHWJzfjONH
+         DIwCKPUjfKasi9JjrTJ//n+BJBLFT/GEEfXgox0I1J91iUDNTtIOkqJZDcorZW9zcWK1
+         JfNGtXPLyPzrGHcg5oPPL4lZ6rW8ExHwzLy6TUf0GE24Shd6kNYcCEqsmgnw6+DUdAnX
+         QVS98YmFQHxwzOwhJjjyThw4ac29/I1rURzv0tp4CVRIJvTUWNm6WNgkAqZQqyf8rZ0v
+         sO32jQsM3zpg68DBey53lPGGMxvFxmZjUk9/MLcpqxDx1zTo31fO0F7tBah1q5d4H+uL
+         uw9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709198813; x=1709803613;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MUGoQKrYI+CUGIzYiMWNWVHuIqGWUhSm1DPKxOOJHWY=;
-        b=Y1qaoexznz2GcMX6rXKmQdFTdpheo7cuO6Q1lY2tWajjUxyNGq/qWiL6EtmW+K8UuJ
-         kgUkbnBInOk4gfpB2GVA7uQjyq45i1wsG/8A/P21qN1sUxEXy+SYREOaPryHG2KXMLdW
-         /S4ovxZ4LDtcFsA5dPRphSuzczMU2OKRvSBn05j8mp9rxBwzEccHsaPStaRRU9Zskmet
-         WwgzfEHbTvaP8H6gwKSHgx0xFAMxY79jWgW/StOLE3RD+0s8hneiVRZjkkNY8HxtxM9L
-         f+OotPbgIAl4QBdM024sd0uMEhEhFan0WWeesM3o0xzP7+1u18sko6cpaHg3xPP1QCSh
-         7SKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZGoZRfz+coJkoVGGzyhzItGHm32QMu5AzxBnXjRkd8N3PRkRffojsbYA648eIsRl3H/STQnJ1arNlSwjeEg+xObvk38ZFHKoShxlaxBNaMwFjLUM34Lb+sp436henOnui+oga6HQfP23HndlMN8vVx3YuAZJaipDjT/dZc7AzerdJerPl8nGi
-X-Gm-Message-State: AOJu0YyHlJFCr5ZqWcb699gs5c9AxYaYdu30iLFZPq285vs54U/xeXO/
-	Lq+xc3u9BZQ65XKGdECK9qaW++U12FyxlgDb2Ux5B5d8FMW8HO2H
-X-Google-Smtp-Source: AGHT+IEQQGvEUUUJJE0Q32Q1dWpicjPYOMb4ktp8tTjoWEWQsJczQ+GYRu123pV36LqzQ6iLRlTmxA==
-X-Received: by 2002:a2e:9496:0:b0:2d2:e704:77a8 with SMTP id c22-20020a2e9496000000b002d2e70477a8mr987605ljh.3.1709198813316;
-        Thu, 29 Feb 2024 01:26:53 -0800 (PST)
-Received: from [192.168.0.118] (88-113-27-52.elisa-laajakaista.fi. [88.113.27.52])
-        by smtp.gmail.com with ESMTPSA id v2-20020a2e9902000000b002d0f905ddf9sm151234lji.18.2024.02.29.01.26.52
+        d=1e100.net; s=20230601; t=1709198854; x=1709803654;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1n6ZCV67cur8e5mAju//0gzCRgXTlxNt1OqrWENqIVs=;
+        b=hZkgqvkBxgZtzThL+fjMtUVsCJIVCdeqvK2VCZtP3GsH+PC0xDfsKrqvIYtnqeUldy
+         nyqxjc4kNxlUbccPgl2SjiwnNxDD284aCfWn13wzs0E4b7LeKl1awqdYK7ki8uCaqqeL
+         XIZhoJCzL0EF4LBtCHdsgYlASP0ASUpSCKGeUQ822IEcTKJrm2Hw7Ww/SEEG60pyNrgL
+         fr+sGcS278Qfa9T6iwx64ZyHyLwgvjo/on+hkdQNq58GPv9S0HrHUjV/qFUaLlQEmJOl
+         +eYFX83EioW/6RxWqHe90wDZ0EVtGesv8FF3MaeiRIIEv5DFK2oiJTnvwSiBUwQnEF47
+         M6Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpTvzfKLA9iuLlHwt1KkvaM4yL+rCxa0TFYHhBuAWDeHzCE8BVupfbqOC5DCsV7q1jUgjk49r/VG7ASlyMFMyvKEaWObq/t6GmOUbb
+X-Gm-Message-State: AOJu0Ywy7dtuqd56WdmZ3CTeJwt5eFhzfHM4Dn7+YY4qyTaSqg57NEv3
+	FUL1GzcHQKjHecFMgnQqXHAkJDZmxTNfPlOo2h4AJba+ZpRUtXK+0AHKq+k3usI=
+X-Google-Smtp-Source: AGHT+IHQg7Xq8XAUxZCM3b/8E8wHu/qSRHC8mHdsKWekvtDdWPMBzGdgTylK0ht1WUfnSdjcGfBQAQ==
+X-Received: by 2002:a05:6402:520c:b0:565:b4ca:72f3 with SMTP id s12-20020a056402520c00b00565b4ca72f3mr1476269edd.35.1709198853784;
+        Thu, 29 Feb 2024 01:27:33 -0800 (PST)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id c6-20020a056402100600b0056536eed484sm436406edu.35.2024.02.29.01.27.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 01:26:53 -0800 (PST)
-Message-ID: <0a5bf7d1-0a7e-4071-877a-a3d312d80084@gmail.com>
-Date: Thu, 29 Feb 2024 11:26:51 +0200
+        Thu, 29 Feb 2024 01:27:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] kci-gitlab: Introducing GitLab-CI Pipeline for Kernel
- Testing
-Content-Language: en-US
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Helen Koike <helen.koike@collabora.com>
-Cc: linuxtv-ci@linuxtv.org, dave.pigott@collabora.com, mripard@kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kselftest@vger.kernel.org, gustavo.padovan@collabora.com,
- pawiecz@collabora.com, tales.aparecida@gmail.com, workflows@vger.kernel.org,
- kernelci@lists.linux.dev, skhan@linuxfoundation.org,
- kunit-dev@googlegroups.com, nfraprado@collabora.com, davidgow@google.com,
- cocci@inria.fr, Julia.Lawall@inria.fr, laura.nao@collabora.com,
- ricardo.canuelo@collabora.com, kernel@collabora.com,
- torvalds@linuxfoundation.org, gregkh@linuxfoundation.org
-References: <20240228225527.1052240-1-helen.koike@collabora.com>
- <20240228230725.GF1659@pendragon.ideasonboard.com>
-From: Nikolai Kondrashov <spbnick@gmail.com>
-In-Reply-To: <20240228230725.GF1659@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 29 Feb 2024 10:27:32 +0100
+Message-Id: <CZHGFD9QYM82.371U2DPG1AEGQ@fairphone.com>
+Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/bridge: Select DRM_KMS_HELPER for DRM_PANEL_BRIDGE
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Luca Weiss" <luca.weiss@fairphone.com>, <neil.armstrong@linaro.org>,
+ "Andrzej Hajda" <andrzej.hajda@intel.com>, "Robert Foss"
+ <rfoss@kernel.org>, "Laurent Pinchart" <Laurent.pinchart@ideasonboard.com>,
+ "Jonas Karlman" <jonas@kwiboo.se>, "Jernej Skrabec"
+ <jernej.skrabec@gmail.com>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
+ <airlied@gmail.com>, "Daniel Vetter" <daniel@ffwll.ch>
+X-Mailer: aerc 0.15.2
+References: <20240111-drm-panel-bridge-fixup-v1-1-e06292f6f500@fairphone.com> <b1da07f9-7e15-4d83-bef3-d0ce157654bc@linaro.org> <CYGUWBAM3D62.35CPP5HGEYJ3Y@fairphone.com>
+In-Reply-To: <CYGUWBAM3D62.35CPP5HGEYJ3Y@fairphone.com>
 
-On 2/29/24 01:07, Laurent Pinchart wrote:
-> On Wed, Feb 28, 2024 at 07:55:24PM -0300, Helen Koike wrote:
->> **Join Our Slack Channel:**
->> We have a Slack channel, #gitlab-ci, on the KernelCI Slack instance https://kernelci.slack.com/ .
->> Feel free to join and contribute to the conversation. The KernelCI team has
->> weekly calls where we also discuss the GitLab-CI pipeline.
-> 
-> Could we communicate using free software please ? Furthermore, it's not
-> possible to create an account on that slack instance unless you have an
-> e-mail address affiliated with a small number of companies
-> (https://kernelci.slack.com/signup#/domain-signup). That's a big no-go
-> for me.
+On Wed Jan 17, 2024 at 9:59 AM CET, Luca Weiss wrote:
+> On Mon Jan 15, 2024 at 9:43 AM CET, Neil Armstrong wrote:
+> > Hi Luca,
+> >
+> > On 11/01/2024 13:38, Luca Weiss wrote:
+> > > Since the kconfig symbol of DRM_PANEL_BRIDGE is only adding
+> > > bridge/panel.o to drm_kms_helper object, we need to select
+> > > DRM_KMS_HELPER to make sure the file is actually getting built.
+> > >=20
+> > > Otherwise with certain defconfigs e.g. devm_drm_of_get_bridge will no=
+t
+> > > be properly available:
+> > >=20
+> > >    aarch64-linux-gnu-ld: drivers/phy/qualcomm/phy-qcom-qmp-combo.o: i=
+n function `qmp_combo_bridge_attach':
+> > >    drivers/phy/qualcomm/phy-qcom-qmp-combo.c:3204:(.text+0x8f4): unde=
+fined reference to `devm_drm_of_get_bridge'
+> > >=20
+> > > Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> > > ---
+> > > I can see "depends on DRM_KMS_HELPER" was removed with commit
+> > > 3c3384050d68 ("drm: Don't make DRM_PANEL_BRIDGE dependent on DRM_KMS_=
+HELPERS")
+> > >=20
+> > > I'm not too familiar with Kconfig but it feels more correct if
+> > > PHY_QCOM_QMP_COMBO selects DRM_PANEL_BRIDGE that that's enough; and i=
+t
+> > > doesn't also has to explicitly select DRM_KMS_HELPER because of how t=
+he
+> > > objects are built in the Makefile.
+> > >=20
+> > > Alternatively solution to this patch could be adjusting this line in
+> > > include/drm/drm_bridge.h:
+> > >=20
+> > >    -#if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL_BRIDGE)
+> > >    +#if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL_BRIDGE) && def=
+ined(CONFIG_DRM_KMS_HELPER)
+> > >     struct drm_bridge *devm_drm_of_get_bridge(struct device *dev, str=
+uct device_node *node,
+> > >                                              u32 port, u32 endpoint);
+> > >=20
+> > > .. and then selecting DRM_KMS_HELPER for PHY_QCOM_QMP_COMBO.
+> > >=20
+> > > But I think the solution in this patch is better. Let me know what yo=
+u
+> > > think.
+> >
+> > I think this is no more the case after on linux-next:
+> > 35921910bbd0 phy: qcom: qmp-combo: switch to DRM_AUX_BRIDGE
+> >
+> > But could you still check ?
+>
+> On next-20240117 the error happens in the aux-bridge file instead then.
+>
+> aarch64-linux-gnu-ld: drivers/gpu/drm/bridge/aux-bridge.o: in function `d=
+rm_aux_bridge_probe':
+> drivers/gpu/drm/bridge/aux-bridge.c:115:(.text+0xe0): undefined reference=
+ to `devm_drm_of_get_bridge'
+>
+> I'm attaching the defconfig with which I can reproduce this but it's
+> really just DRM_KMS_HELPER=3Dn and PHY_QCOM_QMP_COMBO=3Dy I believe.
 
-Yes, it's not ideal that we use closed-source software for communication, but 
-FWIW I'd be happy to invite you there. Perhaps if you try logging in e.g. with 
-a Google account, I'd be able to see and approve your attempt too.
+Hi Neil,
 
-Otherwise, our video meetings are generally open to everyone and run in Jitsi.
+Ping on this patch
 
-Nick
+Regards
+Luca
+
+>
+> Regards
+> Luca
+>
+>
+> >
+> > Neil
+> >
+> > > ---
+> > >   drivers/gpu/drm/bridge/Kconfig | 1 +
+> > >   1 file changed, 1 insertion(+)
+> > >=20
+> > > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/=
+Kconfig
+> > > index ac9ec5073619..ae782b427829 100644
+> > > --- a/drivers/gpu/drm/bridge/Kconfig
+> > > +++ b/drivers/gpu/drm/bridge/Kconfig
+> > > @@ -8,6 +8,7 @@ config DRM_BRIDGE
+> > >   config DRM_PANEL_BRIDGE
+> > >   	def_bool y
+> > >   	depends on DRM_BRIDGE
+> > > +	select DRM_KMS_HELPER
+> > >   	select DRM_PANEL
+> > >   	help
+> > >   	  DRM bridge wrapper of DRM panels
+> > >=20
+> > > ---
+> > > base-commit: b9c3a1fa6fb324e691a03cf124b79f4842e65d76
+> > > change-id: 20240111-drm-panel-bridge-fixup-5c2977fb969f
+> > >=20
+> > > Best regards,
+
