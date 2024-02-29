@@ -1,86 +1,129 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED0044C69
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508B144C93
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709191231; cv=none; b=dN0L+6UbiMXSUBFNMPgWpiFUyGfPMuXFo2PHnI3wY8BbSjnLX8TjuoE6Z8lNXrcfE3G7t+6/swjLoLtJeID3E6eYVuioMl3StryFvbFRMIdrbGCCISIxOwah+lLqee5tprBdXd8cEBxaK7FJUIv9uSln0CYnCOPJ13B4j0L9fWA=
+	t=1709191313; cv=none; b=bmAczYmaP3n7bjK3MwbMvIJv6jupss5eqq3tcFMbWf5zOaIAvi4U2XO5PpbgdtzHsLbyfOg3KEWAgPkIiz0yIdytDc36CD8JSjCujABaSiLxhyvgNZLR/q9NOpevhmfg68DH3iYZljqfiQQHpL59+xbU5OBsAWk00clpCTAWgEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709191231; c=relaxed/simple;
-	bh=5owT2mmSIcyPKIqHX6anxx+p48OkmUiZh6ZFklUw16o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FbCqpsfEbdWozVm1JDZcLSYDoEbw00uVReCSLGgDIBkhY6/RvohG5KbZfITX6Msy1lqfBD+OY+9mvEryuaKwzC99U0q834krao3YC4CujEOulX4OyStSMFefjr92ZjZxbhwTRfNld2sj2mR/7cSXWItHWHTZwX4oq9ozOJfX1JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=YZBpx3gb; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+	s=arc-20240116; t=1709191313; c=relaxed/simple;
+	bh=HqknOjEjlYxT7iVdqKOIUCiHsRYWnF8WRHrWHM7BaNU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ux4oCx6O9SyHDOu5mAvFmZJo5ZGQX5w2lydEfNRlJbe+kDS/Y6fz3qj5etXZHnAG+Aa6NCjXMANdlMuW/Bpok8LSyL4Psc87TA4q+ZzZ+ST/mwmvjvhkmcSf0gxr8tcuMSd3E4tTuubkKACpnlnS7zp3AkbzH4ib5On+AOeVFo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fDC7cpTV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="YZBpx3gb"
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T6UtXs004078;
-	Thu, 29 Feb 2024 07:20:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PPS06212021; bh=aQA1FGjGBZCnin1GCXGqv02s3sd+HBBVDdeHye7+N34=; b=
-	YZBpx3gbvIBv6RmJbqslPZBJ47w/XEvHB4xslc9QbyyMHKlaNomR3QGMdKqJmN3+
-	ToBbmi5N96y/vlB3PhTZNSaoA7w0YVvFVhOVT59SKiBtnRQ03WGw5TZOO5oBAzYw
-	6DLeR3nfEspaeo7zZE/ZtN/66OVAiwVSuWu7/UXv98Sv3ABYFedyGnMjf4Q7W1FP
-	QcrJObapmy/Q6P8SkqOPh3Z0iPdcGu9EvchA4o7gNMEYSSwTaWEO5mQGFWNtxvLE
-	4BrNgr6RQ1nOBq28r2iRUxlwTRqpDbKvkq/tTOuABNDTU1z8eNqiIytlnmuKzAuF
-	/kwvAO0VlktnJBz/e280JA==
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3wf7e6d5mq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 29 Feb 2024 07:20:19 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 28 Feb 2024 23:20:18 -0800
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 28 Feb 2024 23:20:17 -0800
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <syzbot+2622b51b35f91a00ea18@syzkaller.appspotmail.com>
-CC: <syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [syzbot] [media?] [usb?] INFO: task hung in vb2_video_unregister_device
-Date: Thu, 29 Feb 2024 15:20:16 +0800
-Message-ID: <20240229072016.186240-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000008faf0a06126a0ffb@google.com>
-References: <0000000000008faf0a06126a0ffb@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fDC7cpTV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709191309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Net7WSZ0SLXfX6qP1fBqoZy/fUubtzc+/J9dRqSPBjo=;
+	b=fDC7cpTVoJEkDtSKX4a6Cy5yRamTE6hfRcna+b+TJnvQDptMLdBce22lV1Mcs5NM51NntB
+	KWIobSkp/b+ZodBBGRnpfumwEXbtpiOqcps73QyXjP208uN5h2ZFJd7uUZ5RXMX8AtMtH9
+	P7bg/z8lMN2Le4IVWkmM9iXpQm9BqMQ=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-553-LypiVx6OPEGkPiIHIs8QJg-1; Thu, 29 Feb 2024 02:21:47 -0500
+X-MC-Unique: LypiVx6OPEGkPiIHIs8QJg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a4454ff9a70so4750266b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 23:21:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709191306; x=1709796106;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Net7WSZ0SLXfX6qP1fBqoZy/fUubtzc+/J9dRqSPBjo=;
+        b=SjTgnSR3TKcMkeCNXlSdPZiLuUcdhqn4GYbFkUzfJjO42t2PMt51dMFEJJkO+g8KV6
+         qrNI46pgGTayMac7iTZbCr81qshK+IZ1no5FR5ARA81t/vosaDJUdHS5u+bz4Ql38nPg
+         OVP8v6jsePY2MJbIl4ParHgot+8/TmXkxzow5mT7V1myFyldEiOo3wa9DaXm9Jr+XSnh
+         fd5wpC2bT4vswNpY+WFRlCpRlKUcEG70s/rrAl2g1RIEnPRCvgmJ8fbCvhbGy4ney6hS
+         D/t1VLITafEX2WDA2PJrCiIUOLZ581f5F8cjCV8K/OK63Lr2xZCwvnzjmbsuADN4PaLp
+         y7rA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzoJlou9rm+kYi9CBkeOLsFbEf3ukFM2k8VeIIQBQK+alhJLpb83zZcWjy0yPtZrVVfnfeglDft4qkhDl7UcYLgmEaNtqBJncWw1IO
+X-Gm-Message-State: AOJu0Yzz4i4JN00Q/4jBCIVS0TCGfi69cRwD2t35NHGiApL3PYprd4oa
+	f9L7CeyE7hShOsrGVLEbwibW+n7rnJWJk3nKOEVaLB0xp32zwX4isFKLUWBiqBgMVHXAEvJds0V
+	nlHQNgOB22nBsT1mjZMfbv2sxrz8UuTvo5X/o91jyDKN+fVdp58cJ0wjWyy17syA+Ff+phBZFjF
+	XQTSduqONQSitvQWQik9a49Pqg5KmbRD6LmMBc
+X-Received: by 2002:a17:906:f848:b0:a3f:d71d:d820 with SMTP id ks8-20020a170906f84800b00a3fd71dd820mr688218ejb.26.1709191306659;
+        Wed, 28 Feb 2024 23:21:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHR1+8q9qhWcpHCQv9NfHXzSbTJvOggAWbOmIh8P8wUWatZVIF7qiSuP0cDF+Mqh1M4VO49hebtH0JZ7m1N8oM=
+X-Received: by 2002:a17:906:f848:b0:a3f:d71d:d820 with SMTP id
+ ks8-20020a170906f84800b00a3fd71dd820mr688204ejb.26.1709191306393; Wed, 28 Feb
+ 2024 23:21:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: bu2QW6jWm8BcqEre06joraw_P8BXXTKC
-X-Proofpoint-ORIG-GUID: bu2QW6jWm8BcqEre06joraw_P8BXXTKC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-28_08,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 phishscore=0 mlxscore=0 impostorscore=0 spamscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=772 clxscore=1011
- priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2402120000 definitions=main-2402290056
+References: <98298b2f-7288-4b0b-8974-3d5111b589cb@moroto.mountain> <CAJSP0QWW2QvibpcrZbcLzVp8ngnooiTqP8i2emd+0sdCj_7Yww@mail.gmail.com>
+In-Reply-To: <CAJSP0QWW2QvibpcrZbcLzVp8ngnooiTqP8i2emd+0sdCj_7Yww@mail.gmail.com>
+From: Cindy Lu <lulu@redhat.com>
+Date: Thu, 29 Feb 2024 15:21:09 +0800
+Message-ID: <CACLfguXksa4TEb5gk2bvoeGaQrR8s5TZMJGzR0r7Y9Wo9N82UQ@mail.gmail.com>
+Subject: Re: [PATCH v3] vduse: Fix off by one in vduse_dev_mmap()
+To: Stefan Hajnoczi <stefanha@gmail.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Xie Yongji <xieyongji@bytedance.com>, Maxime Coquelin <maxime.coquelin@redhat.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Brauner <brauner@kernel.org>, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+On Thu, Feb 29, 2024 at 3:19=E2=80=AFAM Stefan Hajnoczi <stefanha@gmail.com=
+> wrote:
+>
+> On Wed, 28 Feb 2024 at 13:24, Dan Carpenter <dan.carpenter@linaro.org> wr=
+ote:
+> >
+> > The dev->vqs[] array has "dev->vq_num" elements.  It's allocated in
+> > vduse_dev_init_vqs().  Thus, this > comparison needs to be >=3D to avoi=
+d
+> > reading one element beyond the end of the array.
+> >
+> > Add an array_index_nospec() as well to prevent speculation issues.
+> >
+> > Fixes: 316ecd1346b0 ("vduse: Add file operation for mmap")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> > v2: add array_index_nospec()
+> > v3: I accidentally corrupted v2.  Try again.
+> >
+Thanks for fix this
+> >  drivers/vdpa/vdpa_user/vduse_dev.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Reviewed-by:  Cindy Lu <lulu@redhat.com>
+> > diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_use=
+r/vduse_dev.c
+> > index b7a1fb88c506..eb914084c650 100644
+> > --- a/drivers/vdpa/vdpa_user/vduse_dev.c
+> > +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
+> > @@ -1532,9 +1532,10 @@ static int vduse_dev_mmap(struct file *file, str=
+uct vm_area_struct *vma)
+> >         if ((vma->vm_flags & VM_SHARED) =3D=3D 0)
+> >                 return -EINVAL;
+> >
+> > -       if (index > dev->vq_num)
+> > +       if (index >=3D dev->vq_num)
+> >                 return -EINVAL;
+> >
+> > +       index =3D array_index_nospec(index, dev->vq_num);
+> >         vq =3D dev->vqs[index];
+> >         vaddr =3D vq->vdpa_reconnect_vaddr;
+> >         if (vaddr =3D=3D 0)
+> > --
+> > 2.43.0
+> >
+> >
+>
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-index c575198e8354..437f80551a2d 100644
---- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-+++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-@@ -1262,8 +1262,7 @@ void vb2_video_unregister_device(struct video_device *vdev)
- 	get_device(&vdev->dev);
- 	video_unregister_device(vdev);
- 	if (vdev->queue) {
--		struct mutex *lock = vdev->queue->lock ?
--			vdev->queue->lock : vdev->lock;
-+		struct mutex *lock = vdev->queue->lock;
- 
- 		if (lock)
- 			mutex_lock(lock);
