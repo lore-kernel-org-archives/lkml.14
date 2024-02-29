@@ -1,77 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB29E2D638;
-	Thu, 29 Feb 2024 02:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37AF1EB42
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709172322; cv=none; b=JlQAQCJTkV+ZA+qfOhiS+BkUTOE6QINKqL78f5wlxmMXCJ/OmRyvHXCpohmlVOMGWv0VBVEc2v4UtctHE1GBA50UGU3juvOdCwR6JdlMw8wmfFVl68vMg+xzYBKeHYCrgKBR6+inxl83Pk+Kptqls4e90K5hww6gbR8ZZXzhTGc=
+	t=1709172416; cv=none; b=t4Uyk5+DSVVv9Jk5m9PJn4hqW1UAk86du65yR9q9xLHgI+Hd5XSeUpbFzZ5QANrP2wHjGzvLVzMAj/KafAdSAdI+7Vd4BPKO/ix2KRDhg+YYUTLGlnCKt7uJJbBa9WiGRZ42UsIH+Z77TB+pWweV2lBIgvs05tlduuLJGQyuIpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709172322; c=relaxed/simple;
-	bh=fqsiv75ue6xl6cHe9uXd44i3iEeE5fdO87JHWHg3h/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cdvh3oG3sIo50g1A8e8ZoLN5bokgfdjF1ljQEiuqVXqPbxFlTvtpDta4OKlWte8SeLtLxxOf0r+2RjljnaxFdHNcSMKx+CzRNVN1z0g85eeZyqfPW2U/bf9czEkX5Ra+NJUo7E4siSGkfshQtjuJPEHpOsPRHQjYrfF/phF+yuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZcCEcbJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709172416; c=relaxed/simple;
+	bh=BuSkLRb4QPldzejb8HpzIiarRIskIn0qMKWYCYBJYHw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Br/T94qENMZqLaMbnJnBVT05YhkZj7JzVWAdqh+KI+WgFKW60HlNikpGT0BV5DFLzI1mOiyP5y3QilSt4+p0nJCoDKsUy6CqmUqeNqDoIFEK5X3UDTrPzbTueIWZbwvApQxAjKIhFMcCkaoco8ZmFCgAN5IdkOI/yjJE815HnwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Irf3Cpqk; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZcCEcbJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 673F9C433C7;
-	Thu, 29 Feb 2024 02:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709172322;
-	bh=fqsiv75ue6xl6cHe9uXd44i3iEeE5fdO87JHWHg3h/I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HZcCEcbJAOOVBYRh7frp3IJCZBT+4Fjgw86FcTURFeVoVjRPckBU//4A3xSyu0Oyy
-	 5gxKhzQpa0K/LZdp3OS18OTxc2GVqywAYK+XKC8zXv7blaFE0HbaRiAs9+lPF31hZy
-	 L2FW0ixCzn2NOXp1AWcgBm52OPgJHfZVq0IHVGSyys683h2w4QXQerkrbqbsHpxGFI
-	 3OOJVnwpRvBHKakCT0WItju9r5KQW5yTzEE3RN5WHNIWy7fGNuddruXFaifTjAfYWR
-	 aOtTzVYfbBGlKTMprk1U/iEs0Zvl705TdIm+yJsrhW/hoGCW+gSsy5YGXDSOce2n0/
-	 T4eRU3jMGDunA==
-Date: Wed, 28 Feb 2024 18:05:20 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Cc: Saeed Mahameed <saeed@kernel.org>, Leon Romanovsky <leon@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Richard Cochran <richardcochran@gmail.com>, Tariq Toukan
- <tariqt@nvidia.com>, Gal Pressman <gal@nvidia.com>, Vadim Fedorenko
- <vadim.fedorenko@linux.dev>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
- <hkallweit1@gmail.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Ahmed Zaki <ahmed.zaki@intel.com>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, Hangbin Liu <liuhangbin@gmail.com>, Paul
- Greenwalt <paul.greenwalt@intel.com>, Justin Stitt
- <justinstitt@google.com>, Randy Dunlap <rdunlap@infradead.org>, Maxime
- Chevallier <maxime.chevallier@bootlin.com>, Kory Maincent
- <kory.maincent@bootlin.com>, Wojciech Drewek <wojciech.drewek@intel.com>,
- Vladimir Oltean <vladimir.oltean@nxp.com>, Jiri Pirko <jiri@resnulli.us>,
- Jacob Keller <jacob.e.keller@intel.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, Dragos
- Tatulea <dtatulea@nvidia.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH RFC net-next v1 1/6] ethtool: add interface to read Tx
- hardware timestamping statistics
-Message-ID: <20240228180520.5cea0f8b@kernel.org>
-In-Reply-To: <20240223192658.45893-2-rrameshbabu@nvidia.com>
-References: <20240223192658.45893-1-rrameshbabu@nvidia.com>
-	<20240223192658.45893-2-rrameshbabu@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Irf3Cpqk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709172415; x=1740708415;
+  h=date:from:to:cc:subject:message-id;
+  bh=BuSkLRb4QPldzejb8HpzIiarRIskIn0qMKWYCYBJYHw=;
+  b=Irf3CpqkI/mJHIvc9ZJ+wAZdi2z9cW3wi1w/6cX0NnYPAEJEWPo51Ig/
+   8oKudNmcabhzsfHdldzEqgaIyve/TjT3vtCtgWFJlnyNxBgxH3d4kzW5/
+   HmEfGz274+mmZHCTHx5AfiZeKzx8wDK79CTVlmTLMRyG999vD7ZAVOEkn
+   EWx0pvzIS8ZwDUF8twcMx3TZKSNotjQSfEscGo4hsF7UUP/+HYmWcmSjT
+   P/mcNIcwXPISvpq2xY2BSvE1A9zY8o5uFByWVs2GypsYQ6dXYA+I2wtEQ
+   3jc5ATogNier6jf9mZOiUvTskbOYOxPrs1k9e1MNrpfXiNdEYy/YWeTsf
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3783746"
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="3783746"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 18:06:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="7691647"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 28 Feb 2024 18:06:52 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rfVow-000CZb-0r;
+	Thu, 29 Feb 2024 02:06:50 +0000
+Date: Thu, 29 Feb 2024 10:03:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/boot] BUILD SUCCESS
+ 891f8890a4a3663da7056542757022870b499bc1
+Message-ID: <202402291030.m7XuvDeH-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Fri, 23 Feb 2024 11:24:45 -0800 Rahul Rameshbabu wrote:
-> +/**
-> + * struct ethtool_ts_stats - HW timestamping statistics
-> + * @layer: input field denoting whether stats should be queried from the DMA or
-> + *        PHY timestamping layer. Defaults to the active layer for packet
-> + *        timestamping.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/boot
+branch HEAD: 891f8890a4a3663da7056542757022870b499bc1  efi/x86: Set the PE/COFF header's NX compat flag unconditionally
 
-I think we're better off attaching this to an existing message in the
-dump (using ETHTOOL_FLAG_STATS / ethtool -I), like we do for pause, 
-fec, etc., rather than having to build a separate hierarchy and copy
-identifiers within ETHTOOL_MSG_STATS_GET.
+elapsed time: 726m
 
-Sorry if I mis-directed you this way.
+configs tested: 50
+configs skipped: 133
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240228   clang
+i386         buildonly-randconfig-002-20240228   clang
+i386         buildonly-randconfig-003-20240228   clang
+i386         buildonly-randconfig-004-20240228   clang
+i386         buildonly-randconfig-005-20240228   gcc  
+i386         buildonly-randconfig-006-20240228   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240228   clang
+i386                  randconfig-002-20240228   clang
+i386                  randconfig-003-20240228   gcc  
+i386                  randconfig-004-20240228   clang
+i386                  randconfig-005-20240228   clang
+i386                  randconfig-006-20240228   gcc  
+i386                  randconfig-011-20240228   clang
+i386                  randconfig-012-20240228   clang
+i386                  randconfig-013-20240228   gcc  
+i386                  randconfig-014-20240228   gcc  
+i386                  randconfig-015-20240228   gcc  
+i386                  randconfig-016-20240228   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240229   gcc  
+x86_64       buildonly-randconfig-002-20240229   clang
+x86_64       buildonly-randconfig-003-20240229   gcc  
+x86_64       buildonly-randconfig-004-20240229   gcc  
+x86_64       buildonly-randconfig-005-20240229   gcc  
+x86_64       buildonly-randconfig-006-20240229   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240229   clang
+x86_64                randconfig-002-20240229   clang
+x86_64                randconfig-003-20240229   clang
+x86_64                randconfig-004-20240229   clang
+x86_64                randconfig-005-20240229   clang
+x86_64                randconfig-006-20240229   clang
+x86_64                randconfig-011-20240229   gcc  
+x86_64                randconfig-012-20240229   gcc  
+x86_64                randconfig-013-20240229   gcc  
+x86_64                randconfig-014-20240229   gcc  
+x86_64                randconfig-015-20240229   gcc  
+x86_64                randconfig-016-20240229   gcc  
+x86_64                randconfig-071-20240229   clang
+x86_64                randconfig-072-20240229   clang
+x86_64                randconfig-073-20240229   clang
+x86_64                randconfig-074-20240229   clang
+x86_64                randconfig-075-20240229   gcc  
+x86_64                randconfig-076-20240229   clang
+x86_64                          rhel-8.3-rust   clang
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
