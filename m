@@ -1,201 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B61677AE4E;
-	Thu, 29 Feb 2024 12:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680377D069
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 12:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709208720; cv=none; b=FdXQxEsvpn1ieGocXzOLuRhxwDyJtRapGaSi3K6Gy2YbFzUTyt8ih2t70SG7d4mI3a2lDhK7egrqofsZirczehISjuq3Whf4QFS7LjWZbGvA7hylnkSQ2gcyU8I3FcvlhBPXut4q/vete3axnCuVfJmOnL6aOzpnVwXDpcsFbOU=
+	t=1709208723; cv=none; b=eiCiKYyZ8DIymTu7cD2tokM38e6XxfLVw9fVRSqMRfaHBJgfrUaQzODHCwvqs7sm7DYb5VfWo/o8joCJWt3gLchOKMHHMekpwv7UCc/Bax/QNNPce8+pErLfzqiYThqkRGdLmDAX8A8jtH7scmh2JSZjw1ybj8aD2FXzVTKJRf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709208720; c=relaxed/simple;
-	bh=SInHJs1oLqIxihFlj7TL1nnFgNCjwVbuSEWy4/KTSGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GztZKleEPmFCAS3Jyfb/KNViX1zZspoi5rLm+yPQA40pfX3ONuBdymVbHJOriywtziCZoM98324RZIhigNWx8XWeVknZ7T9POxCYtTLFB+WQA0bK3SZwReafvJVcN4iZ05Qv9bYs3SG4E6UujIHfN7YvwfUk3Sm8TOeWIQOFUjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89E0C1FB;
-	Thu, 29 Feb 2024 04:12:35 -0800 (PST)
-Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18BBC3F762;
-	Thu, 29 Feb 2024 04:11:54 -0800 (PST)
-Date: Thu, 29 Feb 2024 12:11:52 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: Sibi Sankar <quic_sibis@quicinc.com>, sudeep.holla@arm.com,
-	linux-arm-kernel@lists.infradead.org, pierre.gondois@arm.com,
-	dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-	viresh.kumar@linaro.org, rafael@kernel.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_mdtipton@quicinc.com, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V3 2/2] cpufreq: scmi: Register for limit change
- notifications
-Message-ID: <ZeB0iCr9GpfUiOEg@pluto>
-References: <20240227181632.659133-1-quic_sibis@quicinc.com>
- <20240227181632.659133-3-quic_sibis@quicinc.com>
- <f8bfc666-c216-44d5-a63b-99f04ff3b8ef@arm.com>
- <2608b2d8-f3b0-b4f5-f8e4-1f2242043ded@quicinc.com>
- <64c6a1bc-92f2-4f44-ab10-cbd2473746f3@arm.com>
- <18c249b2-ce8c-435b-8d65-a1770a1f294e@arm.com>
- <ZeBqW04f8V4dHphn@pluto>
- <7c82b316-89d9-470d-b46d-f86e81e2add3@arm.com>
+	s=arc-20240116; t=1709208723; c=relaxed/simple;
+	bh=wwTa8WVdddwZqs8n44/5Bmw0bz7f3NhpD4br/pjBNu8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=U74/slF3wM8xlbaO6b2EgU4DiWO34lKwYEdSHb3WqOIWaidfRzera0+mGOH3VgDex2Yaf1EpoKs2CBwP3CGA6JxCILDPSvBDwKDCRqoWTVKZF14+AQV+r5+cpH/Q82y2EsVvzcjCjXF3K9+D5jcVCAollWygu//MtFxOFxsGhQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pWnOgRrL; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pWnOgRrL"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-412c2352f74so999985e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 04:12:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1709208720; x=1709813520; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sQF1yLtoiSlCctJ+RE39C/7ki1uh9viRU9s1V0y1lKc=;
+        b=pWnOgRrLbMWA9ko9HU34VPW6aMd/8vT8w+wdzQXeepHpUGGBFrtqQolfeQBwe/Ttxs
+         RzG92+sZnhZSz3QjnnwFx1d2TI3t8BdbqKEcfouxzZc36KB6YwYwCIEm2y6f+7YDymM5
+         zTsi+WspyHjyIvOqEIp+roAsd7jph/MvSuSKQbS8DTZ9JmjsXGks4s0kXOzNz8tMSzgg
+         IPe4dFQ9flX3z5B0IfGNNU3COUBU561mdL/ezluibOTD6xlScof8YJrvKGTyBkKhL7GO
+         BEji15qNB+TnIIrU325WWfZcfX/yTa3f6iVH4pEJ94Wuk3NEsQ2Vw8xa769KZxtUk/Jw
+         dfYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709208720; x=1709813520;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sQF1yLtoiSlCctJ+RE39C/7ki1uh9viRU9s1V0y1lKc=;
+        b=NAVyvx6EGsYkqMK64ctZZAx/F0HY4iNnXMxV5iesxo584ScVUrG7zUzGFggQkhOwVl
+         DYKG9/ZiN5fC+nFH0Uf7p+YB+BAq2rhIjfuxKGqW65ME0uik+hXLvE+mgGuOar+AoQfX
+         rrrIYhmFUlbVr2xHhR973oTRcf0Wk5RWjnSHCLZc/A9YWGac9QrylKTwmwoEtu771Zkf
+         jd8fKbrjdgPAZanZu/FR3L4HiTiR1a5mjPoH3eDtW3ikm3W8su+fFFbASuHWyYiQXUjF
+         xF0Ta4oH5n6r+9QQ1iMPkKUa/RuEfgJOgUpDa2yP0ozIIuZ/NQMAEzeBTOdndCQT4FnH
+         cP5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXN4u5p6nknFL9ZxGKyOYLQYqNL581qzbHDiTnt6lN3+i1uF5reivUSVGXxMt0DmFyjQaHx6Ryz1kXpf1EFUllsSwNSznd+uyt/qEDI
+X-Gm-Message-State: AOJu0Yz5mmnv2TZPYr0ymny4vjUSFDUKGhOnlxA+WuRbw5EkY3pYezPV
+	83ENzPAVPKgW7s0odKQbjZOuRlhXiuNDEYe7/7srfmRAoxQEokGT6ptXsYa0+sk=
+X-Google-Smtp-Source: AGHT+IHfRGAEIEth4r9z2kyk2vnllBD0U8y+Yoxb/4kYE6ynYOIB5eFJyLQx9/3aYLh47mInURi5ig==
+X-Received: by 2002:a05:600c:4ecd:b0:412:bca4:f23d with SMTP id g13-20020a05600c4ecd00b00412bca4f23dmr1340384wmq.29.1709208719846;
+        Thu, 29 Feb 2024 04:11:59 -0800 (PST)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id k40-20020a05600c1ca800b00412b643b5a3sm1922750wms.11.2024.02.29.04.11.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 04:11:59 -0800 (PST)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrea Parri <andrea@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Andrea Parri <parri.andrea@gmail.com>
+Subject: [PATCH v3 1/2] riscv: Remove superfluous smp_mb()
+Date: Thu, 29 Feb 2024 13:10:55 +0100
+Message-Id: <20240229121056.203419-2-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240229121056.203419-1-alexghiti@rivosinc.com>
+References: <20240229121056.203419-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7c82b316-89d9-470d-b46d-f86e81e2add3@arm.com>
 
-On Thu, Feb 29, 2024 at 11:45:41AM +0000, Lukasz Luba wrote:
-> 
-> 
-> On 2/29/24 11:28, Cristian Marussi wrote:
-> > On Thu, Feb 29, 2024 at 10:22:39AM +0000, Lukasz Luba wrote:
-> > > 
-> > > 
-> > > On 2/29/24 09:59, Lukasz Luba wrote:
-> > > > 
-> > > > 
-> > > > On 2/28/24 17:00, Sibi Sankar wrote:
-> > > > > 
-> > > > > 
-> > > > > On 2/28/24 18:54, Lukasz Luba wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 2/27/24 18:16, Sibi Sankar wrote:
-> > > > > > > Register for limit change notifications if supported and use
-> > > > > > > the throttled
-> > > > > > > frequency from the notification to apply HW pressure.
-> > > > > 
-> > > > > Lukasz,
-> > > > > 
-> > > > > Thanks for taking time to review the series!
-> > > > > 
-> > > > > > > 
-> > > > > > > Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-> > > > > > > ---
-> > > > > > > 
-> > > > > > > v3:
-> > > > > > > * Sanitize range_max received from the notifier. [Pierre]
-> > > > > > > * Update commit message.
-> > > > > > > 
-> > > > > > > � drivers/cpufreq/scmi-cpufreq.c | 29 ++++++++++++++++++++++++++++-
-> > > > > > > � 1 file changed, 28 insertions(+), 1 deletion(-)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/cpufreq/scmi-cpufreq.c
-> > > > > > > b/drivers/cpufreq/scmi-cpufreq.c
-> > > > > > > index 76a0ddbd9d24..78b87b72962d 100644
-> > > > > > > --- a/drivers/cpufreq/scmi-cpufreq.c
-> > > > > > > +++ b/drivers/cpufreq/scmi-cpufreq.c
-> > > > > > > @@ -25,9 +25,13 @@ struct scmi_data {
-> > > > > > > ����� int domain_id;
-> > > > > > > ����� int nr_opp;
-> > > > > > > ����� struct device *cpu_dev;
-> > > > > > > +��� struct cpufreq_policy *policy;
-> > > > > > > ����� cpumask_var_t opp_shared_cpus;
-> > > > > > > +��� struct notifier_block limit_notify_nb;
-> > > > > > > � };
-> > > > > > > +const struct scmi_handle *handle;
-> > > > 
-> > > > I've missed this bit here.
-> > > 
-> > > So for this change we actually have to ask Cristian or Sudeep
-> > > because I'm not sure if we have only one 'handle' instance
-> > > for all cpufreq devices.
-> > > 
-> > > If we have different 'handle' we cannot move it to the
-> > > global single pointer.
-> > > 
-> > > Sudeep, Cristian what do you think?
-> > 
-> > I was just replying noticing this :D .... since SCMI drivers can be
-> > probed multiple times IF you defined multiple scmi top nodes in your DT
-> > containing the same protocol nodes, they receive a distinct sdev/handle/ph
-> > for each probe...so any attempt to globalize these wont work...BUT...
-> > 
-> > ...this is a bit of a weird setup BUT it is not against the spec and it can
-> > be used to parallelize more the SCMI accesses to disjont set of resources
-> > within the same protocol (a long story here...) AND this type of setup is
-> > something that it is already used by some other colleagues of Sibi working
-> > on a different line of products (AFAIK)...
-> > 
-> > So, for these reasons, usually, all the other SCMI drivers have per-instance
-> > non-global references to handle/sdev/ph....
-> > 
-> > ...having said that, thought, looking at the structure of CPUFReq
-> > drivers, I am not sure that they can stand such a similar setup
-> > where multiple instances of this same driver are probed
-> > 
-> > .... indeed the existent *ph refs above is already global....so it wont already
-> > work anyway in case of multiple instances now...
-> > 
-> > ...and if I look at how CPUFreq expects the signature of scmi_cpufreq_get_rate()
-> > to be annd how it is implemented now using the global *ph reference, it is
-> > clearly already not working cleanly on a multi-instance setup...
-> > 
-> > ...now...I can imagine how to (maybe) fix the above removing the globals and
-> > fixing this, BUT the question, more generally, is CPUFreq supposed to work at all in
-> > this multi-probed mode of operation ?
-> > Does it even make sense to be able to support this in CPUFREQ ?
-> > 
-> > (as an example in cpufreq,c there is static global cpufreq_driver
-> >   pointing to the arch-specific configured driver BUT that also holds
-> >   some .driver_data AND that cleraly wont be instance specific if you
-> >   probe multiple times and register with CPUFreq multiple times...)
-> > 
-> >   More questions than answers here :D
-> > 
-> 
-> Thanks Cristian for instant response. Yes, indeed now we have more
-> questions :) (which is good). But that's good description of the
-> situation.
-> 
-> So lets consider a few option what we could do now:
-> 1. Let Sibi add another global state the 'handle' but add
->    a BUG_ON() or WARN_ON() in the probe path if the next
->    'handle' instance is different than already set in global.
->    This would simply mean that we don't support (yet)
->    such configuration in a platform. As you said, we
->    already have the *ph global, so maybe such platforms
->    with multiple instances for this particular cpufreq and
->    performance protocol don't exist yet.
+This memory barrier is not needed and not documented so simply remove
+it.
 
-Yes this is the quickst way (and a WARN_ON() is better I'd say) but there
-are similar issues of "unicity" currently already with another vendor SCMI
-drivers and custom protocol currently under review, so I was thinking to
-add a new common mechanism in SCMI to handle this ... not thought about
-this really in depth and I want to chat with Sudeep about this...
+Suggested-by: Andrea Parri <andrea@rivosinc.com>
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+---
+ arch/riscv/kernel/patch.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> 2. Ask Sibi to wait with this change, till we refactor the
->    exiting driver such that it could support easily those
->    multiple instances. Then pick up this patch set.
->    Although, we would also like to have those notifications from our
->    Juno SCP reference FW, so the feature is useful.
-> 3. Ask Sibi to refactor his patch to somehow get the 'handle'
->    in different way, using exiting code and not introduce this global.
-> 
+diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
+index 37e87fdcf6a0..0b5c16dfe3f4 100644
+--- a/arch/riscv/kernel/patch.c
++++ b/arch/riscv/kernel/patch.c
+@@ -239,7 +239,6 @@ static int patch_text_cb(void *data)
+ 	} else {
+ 		while (atomic_read(&patch->cpu_count) <= num_online_cpus())
+ 			cpu_relax();
+-		smp_mb();
+ 	}
+ 
+ 	return ret;
+-- 
+2.39.2
 
-> IHMO we could do this in steps: 1. and then 2. When
-> we create some mock platform to test this refactoring we can
-> start cleaning it.
-> 
-
-Both of these options really beg an answer to my original previous q
-question...if we somehow enable this multi-probe support in the
-scmi-cpufreq.c driver by avoiding glbals refs, does this work at all in
-the context of CPUFreq ?
-
-...or it is just that CPUFreq cannot handle such a configuration (and
-maybe dont want to) and so the only solution here is just 1. at first and
-then a common refined mechanism (as mentioned above) to ensure this "unicity"
-of the probes for some drivers ?
-
-I'm not familiar enough to grasp if this "multi-probed" mode of operation is
-allowed/supported by CPUFreq and, more important, if it makes any sense
-at all to be a supported mode...
-
-Thanks,
-Cristian
