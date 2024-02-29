@@ -1,85 +1,66 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2153F5EE7E;
-	Thu, 29 Feb 2024 09:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C765D91B;
+	Thu, 29 Feb 2024 09:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199245; cv=none; b=VVVeodg0XGIShn3gft/YkEc77GMKBdUbCZMVte6HjrUkfVudw3BpwHvp5IL2QFwxC9FljtgPZwMAumGcMBqG/k/zGn/MlHEY/0t+D2peRWvHF/dNW8XtfiTsCWvf1P8CJ0GNRCVLXhlXxABidi4JFHMrWk1h5hX0ADm0AhQqW6c=
+	t=1709199264; cv=none; b=H8GLn/TR/wDOyN6r7MU9E8wD/gkErSI19ZIswF9T5893r08I9MYZmuk0sb79bIMr/DdRNFp1VVWnP7L4lpeyHTckO4J3oRLryuVlFDQnXf+o5blXjyFDT7zoVpE8/bmqKy8G63oX0Es4h16yH81Fyg9GLv0WlYdDLSDITG0KLvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199245; c=relaxed/simple;
-	bh=JYn9O2kHbLW+DuiEmtvcLS087RRhHTFUePdVT6PY9zQ=;
+	s=arc-20240116; t=1709199264; c=relaxed/simple;
+	bh=AIypsgqbCFGVRElhXEqL4dlDKOmK1OT1uzTwp7CIJHg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l5NrQIO64gUqXPi1N760jqDzB38Sm5CjLbIPXy3Nt+km5oS6I9ZmS/VoZgi5Wc0JxTNAHOxEBeoIeNy5xmnlCWH+cDM6cQY1Xq5CeYjts+yGVTKYZ86KovxgdpKj/Kyitoqdl9DGgZ959I8dcMaaUhbwFt7fyJcQymwdW0kBMPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CDo8BTM8; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CDo8BTM8"
-Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 320D5673;
-	Thu, 29 Feb 2024 10:33:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1709199227;
-	bh=JYn9O2kHbLW+DuiEmtvcLS087RRhHTFUePdVT6PY9zQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CDo8BTM8WDvhct61kEZND1uCGh2rGMB278Y6LChh4iA13UEi6ctYKRgxm8IRIH7Z+
-	 VUklmNtpMm9U9z81NLnhCTzs0tEGWcLlPzVGE707haJTgklFApM+WVXv1mw0mYNiAa
-	 OzhHpoLhFPs19mbAzNcTLuT0ydllPBpuOo2CbcZY=
-Date: Thu, 29 Feb 2024 11:34:02 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Nikolai Kondrashov <spbnick@gmail.com>
-Cc: Helen Koike <helen.koike@collabora.com>, linuxtv-ci@linuxtv.org,
-	dave.pigott@collabora.com, mripard@kernel.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-kselftest@vger.kernel.org, gustavo.padovan@collabora.com,
-	pawiecz@collabora.com, tales.aparecida@gmail.com,
-	workflows@vger.kernel.org, kernelci@lists.linux.dev,
-	skhan@linuxfoundation.org, kunit-dev@googlegroups.com,
-	nfraprado@collabora.com, davidgow@google.com, cocci@inria.fr,
-	Julia.Lawall@inria.fr, laura.nao@collabora.com,
-	ricardo.canuelo@collabora.com, kernel@collabora.com,
-	torvalds@linuxfoundation.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH 0/3] kci-gitlab: Introducing GitLab-CI Pipeline for
- Kernel Testing
-Message-ID: <20240229093402.GA30889@pendragon.ideasonboard.com>
-References: <20240228225527.1052240-1-helen.koike@collabora.com>
- <20240228230725.GF1659@pendragon.ideasonboard.com>
- <0a5bf7d1-0a7e-4071-877a-a3d312d80084@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=B/H5QPT2jakk3kkQ22LItn7COFF8BHYHDr6Fnv7SyEVFL1h8Rj7kHZWcFMFBANeqBsVT7faSYxoluxwzQOeek4+Ox37KT7ljANNpNqrel8EZ2On1k8pxevwbSZeK1Iswx8GYW3TChLv1Im5VdkDG4Uw3TCUyDuwSqE7+gk2Cgqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id C45012800BB90;
+	Thu, 29 Feb 2024 10:34:19 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id B787513B544; Thu, 29 Feb 2024 10:34:19 +0100 (CET)
+Date: Thu, 29 Feb 2024 10:34:19 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Stefan Berger <stefanb@linux.ibm.com>
+Cc: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au, davem@davemloft.net,
+	linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br
+Subject: Re: [PATCH v3 00/10] Add support for NIST P521 to ecdsa
+Message-ID: <20240229093419.GA32424@wunner.de>
+References: <20240223204149.4055630-1-stefanb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0a5bf7d1-0a7e-4071-877a-a3d312d80084@gmail.com>
+In-Reply-To: <20240223204149.4055630-1-stefanb@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, Feb 29, 2024 at 11:26:51AM +0200, Nikolai Kondrashov wrote:
-> On 2/29/24 01:07, Laurent Pinchart wrote:
-> > On Wed, Feb 28, 2024 at 07:55:24PM -0300, Helen Koike wrote:
-> >> **Join Our Slack Channel:**
-> >> We have a Slack channel, #gitlab-ci, on the KernelCI Slack instance https://kernelci.slack.com/ .
-> >> Feel free to join and contribute to the conversation. The KernelCI team has
-> >> weekly calls where we also discuss the GitLab-CI pipeline.
-> > 
-> > Could we communicate using free software please ? Furthermore, it's not
-> > possible to create an account on that slack instance unless you have an
-> > e-mail address affiliated with a small number of companies
-> > (https://kernelci.slack.com/signup#/domain-signup). That's a big no-go
-> > for me.
+On Fri, Feb 23, 2024 at 03:41:39PM -0500, Stefan Berger wrote:
+> This series adds support for the NIST P521 curve to the ecdsa module.
 > 
-> Yes, it's not ideal that we use closed-source software for communication, but 
-> FWIW I'd be happy to invite you there. Perhaps if you try logging in e.g. with 
-> a Google account, I'd be able to see and approve your attempt too.
+> An issue with the current code in ecdsa is that it assumes that input
+> arrays providing key coordinates for example, are arrays of digits
+> (a 'digit' is a 'u64'). This works well for all currently supported
+> curves, such as NIST P192/256/384, but does not work for NIST P521 where
+> coordinates are 8 digits + 2 bytes long. So some of the changes deal with
+> converting byte arrays to digits and adjusting tests on input byte
+> array lengths to tolerate arrays not providing multiples of 8 bytes.
 
-I don't use Google accounts to authenticate to third-party services,
-sorry. And in any case, that won't make slack free software.
+Don't you also need to amend software_key_query()?  In the "issig" case,
+it calculates len = crypto_sig_maxsize(sig), which is 72 bytes for P521,
+then further below calculates "info->max_sig_size = 2 * (len + 3) + 2;"
 
-> Otherwise, our video meetings are generally open to everyone and run in Jitsi.
+I believe the ASN.1 encoded integers are just 66 bytes instead of 72,
+so info->max_sig_size is 6 bytes too large.  Am I missing something?
 
--- 
-Regards,
+Thanks,
 
-Laurent Pinchart
+Lukas
