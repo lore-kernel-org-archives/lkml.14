@@ -1,57 +1,57 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C6D6CBED;
-	Thu, 29 Feb 2024 16:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935673771E;
+	Thu, 29 Feb 2024 16:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709225634; cv=none; b=Nho3mHW6v8x8rX7xuZ6JpySxyxUu0LgbGb1EfSpBdm1ShzQV1kWO9gb1No3zqaYmmjJXHRnsEhK8UQWXbS0Meo9TF/9399XUk5XMLrWHslpY7MdFkqKJlZcn8XKLxMqEtmZeMwyu3iHR6NbCVfVW7h9UdTyvyP47Y907hO4Yjoo=
+	t=1709225632; cv=none; b=FTpnUdMH6U760IBsszAM3XLZ19o/hhaHBZFfRTw8QzCnPp1XWnbUhn2gLXXmFEw2M6T2dp6VFNqVdkNNuzxq7KlNI25UeeANPIsaeN8qorRKXgxoyeYQqh8hjTGu5lEMQh4R9S0Ota5twPO7MxqFzXgmeePRlUo7XqJ/e1VvZ9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709225634; c=relaxed/simple;
-	bh=j606ZlD8gl05cV2S9Sv71dKFd6GOqrmr3w9wbDSb3Lg=;
+	s=arc-20240116; t=1709225632; c=relaxed/simple;
+	bh=6LhnKLkyHoR2DQhrygMZnlhExO0jOETkNADL5rYjKBA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pn2uwRcnT+K4/vqCX/nuqnQnu9CPbwFEbYAx6IIAKtf3LzFP/O7BLaFVPGVGk5/mGvIrwwNdgTvM28R9Zvi06Xd8GKXlLMWS/RRCydi0DKydojhLIwoiz+tZ9CKeyGWvJhdjQxD2fK546XpJhNwwRpdZVP+/yzW/x1OHBJWFXAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=StaxK95a; arc=none smtp.client-ip=209.85.167.45
+	 MIME-Version; b=XGJvI2fOtyUXE+VChPbrQ4+2PLXoZaOA8bldI/jg/gvHyVdI80AQZL465NoqLfhKGOns931lq+XAqIr34bqaxDTmHtCKs+vx8Um2iKSdNu07EPSYfMk25Vxe4mjuNM700xIuf3ka29KS5XZUYZpZ2b6s/QxUYq7it4KD8enkKwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fYctecZu; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StaxK95a"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5132181d54bso1252677e87.3;
-        Thu, 29 Feb 2024 08:53:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYctecZu"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-513235b5975so1542140e87.2;
+        Thu, 29 Feb 2024 08:53:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709225630; x=1709830430; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1709225628; x=1709830428; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p5ZvgJwue3pMCGuTCyOPC8+J9NNnO47EiCt5EDIclk4=;
-        b=StaxK95a9gy9AnUdHRO10ggwCGVEf2lWTF72SU2ZCYl9Bg0WjlXv5Wt3sE98j6gVTh
-         17C2COwTdcBpnIUaSdniAOx6oPgQj/mEVrI7s6GZeQk/++NdAgrkPNCKoCtCMiwbrzl8
-         bqEi9xy4VGFsQzV/IumY+gpzXzuHWf9i7yqw3cfLzZJ1hBtYhLSqKXWRL9kzvq2b4xm4
-         CINpaMT25i7bdLic/7PF7twzquv7NTFwXGbliiSB3y3qf3mChQhPGrywHT/d6iryWzwa
-         lje9hmBbaoADkRw/Qk0BFT7SGrP2L2o4Kx0JC7wOzsI/UlIHJM/t7A5TY6xgmU8LzgT3
-         Rv7w==
+        bh=MDcEufGaeEidfkZcKTWsyxzNEaaKvnRrmWH2EUzo0uE=;
+        b=fYctecZuKsXWxc8ny1v+Sxd7MP8N7pKVBS76esCbhXm59Znt2T0bvGGuyNCZtoNcYT
+         v03nulk460IohSFsoBvogzoKjlFlvMT9AUIL/7LNdvkrrU/l8ZcJVsEdzEuZMu9YXdUf
+         g+BKxRLfL8hNlR15BYrDftuuJDjOWaSU1EesEjKGyKkIckSNePI5U0t9jRyW6f0ukMNi
+         b/Ahgf2mNWSFn0Gy5prBrYY4/htVsSmUGDHyM2wPtMGjXnPKnnH908XMK14GuQ//cOxB
+         U2BdDQ6t68jQMHtsWQ+1o+fOMXa++xQPxOCblpaBHv2+/WPhU8S6q5TvZvexzjS1zPw/
+         GbOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709225631; x=1709830431;
+        d=1e100.net; s=20230601; t=1709225628; x=1709830428;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=p5ZvgJwue3pMCGuTCyOPC8+J9NNnO47EiCt5EDIclk4=;
-        b=C4IhcOFbJtff+Pj22ptoy7OOpYATo1REBPHs3N52PsLG/MTe9BRwT2NPFNON/eNV2n
-         nIOUWTafwHwJoiPfWLxqNXBD28i4HaHKB0q7XgYlnRZvBxKlpl5tI62zShwWV11gJZsZ
-         PJWKorcRIvOExrjdrbeVnElMLwrFwtFz4KIc/d/bd2Zb2Yo9ukG1A1lDKrWTMU2cETZj
-         fS7Jk5L5TSEdrF2KlKQTWNvjT9xSMKMmath/Xg/KzUuudjuWPVVOcBu0rwTfyZr98QbU
-         4TsbFrukspmxTbgBntVzjW9zsNwjwb/2rhi5iCtwSkW9K9FR/wXQN7V1Ccf7uIT+jqRk
-         M5OA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMnBYQwnyBYN1eQqbnuZdqF/5eCiNJY4NyYWsWPUZlTy4KgXLFVIGVfd/6WiZIDXYADW43Qz1I/VkwpHFtj7vFnizXtk4XiNhMWS2j
-X-Gm-Message-State: AOJu0Ywjgh7ecim/q4nFu9KO6+/57Exfo/GxvlaQGYeVWiQixc4insx3
-	UJxALc5vZ7uGUMVmprSm9oJEfyLpvRh/YwkvFhm9fGB4+i2Cq0OOeci3pH1D8js=
-X-Google-Smtp-Source: AGHT+IFFopAHgABNiCnnmrTCDHTh1+/5AFtlUuuSwlj/1f+1Xupf4e2mMvy74apZVcCeHoLHYjf62w==
-X-Received: by 2002:a05:6512:3049:b0:512:fccc:f289 with SMTP id b9-20020a056512304900b00512fcccf289mr2202630lfb.6.1709225630635;
-        Thu, 29 Feb 2024 08:53:50 -0800 (PST)
+        bh=MDcEufGaeEidfkZcKTWsyxzNEaaKvnRrmWH2EUzo0uE=;
+        b=viaabchR7OuZuJnXDRS3JoyN0C0oVMa6/uB0CPG7svicdU59IB1II3AyhIbkbicSnv
+         wBZks4mgoYuGKLdP2+tUI2P3lVMcpcijyYjJ6PlUMxwKnWYmHWKms0FlQ8WiH9G3QcBY
+         PBFpGiJhD8gOn7iCik8uO6s+OtHQwk/B/53t7I3auijIDnKI0dWwbog6O3t7o8Hbr1uS
+         8+KlOX1ETMLYcMZ7W8Jl+o3ahFEDVVJd+V2MJlk9+2O4quBHRsEUNgYcehTNbWnPErzw
+         Rh3hewIWWLpnMpiw59FKU6qP9AyKoJ1HHKgKXf7yunZ0Q93gGv5WVW+trP+Vew3KMbNz
+         1Ogw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIEEMiFrvIBRRqvZ52jao+MWH3hnqQdL74KvF7XN+1rkMR13ZdXWApbXw3pI4fvlu90dcGXV6GbwxBt3BrqAgGqs4b/PeJlrvIWPct
+X-Gm-Message-State: AOJu0YyKUjfWkemxu+by4RiOlGkKn4rIJHxvLqwDt2nr+7L3l7rIKSSM
+	+yujXm98dEHCobpiQSpkJpDhL0dfhvBF2Ydx4TSmacxuHd63mVj5fbAPQ/KVwvk=
+X-Google-Smtp-Source: AGHT+IEtCrfAsH0/0aQdK3Zrv1ZJ9cSpKT2JDEkPiWDICd8OFMB10iFf5wo9ayhCzN01V+Qd/qcfeA==
+X-Received: by 2002:ac2:4d10:0:b0:513:2347:4b57 with SMTP id r16-20020ac24d10000000b0051323474b57mr1924844lfi.66.1709225627682;
+        Thu, 29 Feb 2024 08:53:47 -0800 (PST)
 Received: from localhost ([83.149.246.185])
-        by smtp.gmail.com with ESMTPSA id m20-20020a195214000000b0051322d314e9sm305373lfb.137.2024.02.29.08.53.50
+        by smtp.gmail.com with ESMTPSA id c41-20020a05651223a900b00513256fb6fasm293233lfv.187.2024.02.29.08.53.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 08:53:50 -0800 (PST)
+        Thu, 29 Feb 2024 08:53:46 -0800 (PST)
 From: Mikhail Rudenko <mike.rudenko@gmail.com>
 To: linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -63,9 +63,9 @@ Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Mikhail Rudenko <mike.rudenko@gmail.com>
-Subject: [PATCH v3 03/20] media: i2c: ov4689: Fix typo in a comment
-Date: Thu, 29 Feb 2024 19:53:16 +0300
-Message-ID: <20240229165333.227484-4-mike.rudenko@gmail.com>
+Subject: [PATCH v3 01/20] media: i2c: ov4689: Clean up and annotate the register table
+Date: Thu, 29 Feb 2024 19:53:14 +0300
+Message-ID: <20240229165333.227484-2-mike.rudenko@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240229165333.227484-1-mike.rudenko@gmail.com>
 References: <20240229165333.227484-1-mike.rudenko@gmail.com>
@@ -77,27 +77,238 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix a spelling error in a comment.
+Many values in the register table are actually power-on
+defaults. Remove those and also unused HDR exposures and gains.
+Annotate the remaining values using the publicly available datasheet
+to facilitate further development. No functional change intended.
 
 Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- drivers/media/i2c/ov4689.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov4689.c | 203 +++++++++++++++++++++----------------
+ 1 file changed, 118 insertions(+), 85 deletions(-)
 
 diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
-index a6c101044eb3..f2614a0b1340 100644
+index 403091651885..5a509e908e3c 100644
 --- a/drivers/media/i2c/ov4689.c
 +++ b/drivers/media/i2c/ov4689.c
-@@ -692,7 +692,7 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+@@ -3,7 +3,7 @@
+  * ov4689 driver
+  *
+  * Copyright (C) 2017 Fuzhou Rockchip Electronics Co., Ltd.
+- * Copyright (C) 2022 Mikhail Rudenko
++ * Copyright (C) 2022, 2024 Mikhail Rudenko
+  */
  
- 	switch (ctrl->id) {
- 	case V4L2_CID_EXPOSURE:
--		/* 4 least significant bits of expsoure are fractional part */
-+		/* 4 least significant bits of exposure are fractional part */
- 		ret = ov4689_write_reg(ov4689->client, OV4689_REG_EXPOSURE,
- 				       OV4689_REG_VALUE_24BIT, ctrl->val << 4);
- 		break;
+ #include <linux/clk.h>
+@@ -123,90 +123,123 @@ struct ov4689_gain_range {
+  * mipi_datarate per lane 1008Mbps
+  */
+ static const struct regval ov4689_2688x1520_regs[] = {
+-	{0x0103, 0x01}, {0x3638, 0x00}, {0x0300, 0x00},
+-	{0x0302, 0x2a}, {0x0303, 0x00}, {0x0304, 0x03},
+-	{0x030b, 0x00}, {0x030d, 0x1e}, {0x030e, 0x04},
+-	{0x030f, 0x01}, {0x0312, 0x01}, {0x031e, 0x00},
+-	{0x3000, 0x20}, {0x3002, 0x00}, {0x3018, 0x72},
+-	{0x3020, 0x93}, {0x3021, 0x03}, {0x3022, 0x01},
+-	{0x3031, 0x0a}, {0x303f, 0x0c}, {0x3305, 0xf1},
+-	{0x3307, 0x04}, {0x3309, 0x29}, {0x3500, 0x00},
+-	{0x3501, 0x60}, {0x3502, 0x00}, {0x3503, 0x04},
+-	{0x3504, 0x00}, {0x3505, 0x00}, {0x3506, 0x00},
+-	{0x3507, 0x00}, {0x3508, 0x00}, {0x3509, 0x80},
+-	{0x350a, 0x00}, {0x350b, 0x00}, {0x350c, 0x00},
+-	{0x350d, 0x00}, {0x350e, 0x00}, {0x350f, 0x80},
+-	{0x3510, 0x00}, {0x3511, 0x00}, {0x3512, 0x00},
+-	{0x3513, 0x00}, {0x3514, 0x00}, {0x3515, 0x80},
+-	{0x3516, 0x00}, {0x3517, 0x00}, {0x3518, 0x00},
+-	{0x3519, 0x00}, {0x351a, 0x00}, {0x351b, 0x80},
+-	{0x351c, 0x00}, {0x351d, 0x00}, {0x351e, 0x00},
+-	{0x351f, 0x00}, {0x3520, 0x00}, {0x3521, 0x80},
+-	{0x3522, 0x08}, {0x3524, 0x08}, {0x3526, 0x08},
+-	{0x3528, 0x08}, {0x352a, 0x08}, {0x3602, 0x00},
+-	{0x3603, 0x40}, {0x3604, 0x02}, {0x3605, 0x00},
+-	{0x3606, 0x00}, {0x3607, 0x00}, {0x3609, 0x12},
+-	{0x360a, 0x40}, {0x360c, 0x08}, {0x360f, 0xe5},
+-	{0x3608, 0x8f}, {0x3611, 0x00}, {0x3613, 0xf7},
+-	{0x3616, 0x58}, {0x3619, 0x99}, {0x361b, 0x60},
+-	{0x361c, 0x7a}, {0x361e, 0x79}, {0x361f, 0x02},
+-	{0x3632, 0x00}, {0x3633, 0x10}, {0x3634, 0x10},
+-	{0x3635, 0x10}, {0x3636, 0x15}, {0x3646, 0x86},
+-	{0x364a, 0x0b}, {0x3700, 0x17}, {0x3701, 0x22},
+-	{0x3703, 0x10}, {0x370a, 0x37}, {0x3705, 0x00},
+-	{0x3706, 0x63}, {0x3709, 0x3c}, {0x370b, 0x01},
+-	{0x370c, 0x30}, {0x3710, 0x24}, {0x3711, 0x0c},
+-	{0x3716, 0x00}, {0x3720, 0x28}, {0x3729, 0x7b},
+-	{0x372a, 0x84}, {0x372b, 0xbd}, {0x372c, 0xbc},
+-	{0x372e, 0x52}, {0x373c, 0x0e}, {0x373e, 0x33},
+-	{0x3743, 0x10}, {0x3744, 0x88}, {0x3745, 0xc0},
+-	{0x374a, 0x43}, {0x374c, 0x00}, {0x374e, 0x23},
+-	{0x3751, 0x7b}, {0x3752, 0x84}, {0x3753, 0xbd},
+-	{0x3754, 0xbc}, {0x3756, 0x52}, {0x375c, 0x00},
+-	{0x3760, 0x00}, {0x3761, 0x00}, {0x3762, 0x00},
+-	{0x3763, 0x00}, {0x3764, 0x00}, {0x3767, 0x04},
+-	{0x3768, 0x04}, {0x3769, 0x08}, {0x376a, 0x08},
+-	{0x376b, 0x20}, {0x376c, 0x00}, {0x376d, 0x00},
+-	{0x376e, 0x00}, {0x3773, 0x00}, {0x3774, 0x51},
+-	{0x3776, 0xbd}, {0x3777, 0xbd}, {0x3781, 0x18},
+-	{0x3783, 0x25}, {0x3798, 0x1b}, {0x3800, 0x00},
+-	{0x3801, 0x08}, {0x3802, 0x00}, {0x3803, 0x04},
+-	{0x3804, 0x0a}, {0x3805, 0x97}, {0x3806, 0x05},
+-	{0x3807, 0xfb}, {0x3808, 0x0a}, {0x3809, 0x80},
+-	{0x380a, 0x05}, {0x380b, 0xf0}, {0x380c, 0x0a},
+-	{0x380d, 0x0e}, {0x380e, 0x06}, {0x380f, 0x12},
+-	{0x3810, 0x00}, {0x3811, 0x08}, {0x3812, 0x00},
+-	{0x3813, 0x04}, {0x3814, 0x01}, {0x3815, 0x01},
+-	{0x3819, 0x01}, {0x3820, 0x00}, {0x3821, 0x06},
+-	{0x3829, 0x00}, {0x382a, 0x01}, {0x382b, 0x01},
+-	{0x382d, 0x7f}, {0x3830, 0x04}, {0x3836, 0x01},
+-	{0x3837, 0x00}, {0x3841, 0x02}, {0x3846, 0x08},
+-	{0x3847, 0x07}, {0x3d85, 0x36}, {0x3d8c, 0x71},
+-	{0x3d8d, 0xcb}, {0x3f0a, 0x00}, {0x4000, 0xf1},
+-	{0x4001, 0x40}, {0x4002, 0x04}, {0x4003, 0x14},
+-	{0x400e, 0x00}, {0x4011, 0x00}, {0x401a, 0x00},
+-	{0x401b, 0x00}, {0x401c, 0x00}, {0x401d, 0x00},
+-	{0x401f, 0x00}, {0x4020, 0x00}, {0x4021, 0x10},
+-	{0x4022, 0x07}, {0x4023, 0xcf}, {0x4024, 0x09},
+-	{0x4025, 0x60}, {0x4026, 0x09}, {0x4027, 0x6f},
+-	{0x4028, 0x00}, {0x4029, 0x02}, {0x402a, 0x06},
+-	{0x402b, 0x04}, {0x402c, 0x02}, {0x402d, 0x02},
+-	{0x402e, 0x0e}, {0x402f, 0x04}, {0x4302, 0xff},
+-	{0x4303, 0xff}, {0x4304, 0x00}, {0x4305, 0x00},
+-	{0x4306, 0x00}, {0x4308, 0x02}, {0x4500, 0x6c},
+-	{0x4501, 0xc4}, {0x4502, 0x40}, {0x4503, 0x01},
+-	{0x4601, 0xa7}, {0x4800, 0x04}, {0x4813, 0x08},
+-	{0x481f, 0x40}, {0x4829, 0x78}, {0x4837, 0x10},
+-	{0x4b00, 0x2a}, {0x4b0d, 0x00}, {0x4d00, 0x04},
+-	{0x4d01, 0x42}, {0x4d02, 0xd1}, {0x4d03, 0x93},
+-	{0x4d04, 0xf5}, {0x4d05, 0xc1}, {0x5000, 0xf3},
+-	{0x5001, 0x11}, {0x5004, 0x00}, {0x500a, 0x00},
+-	{0x500b, 0x00}, {0x5032, 0x00}, {0x5040, 0x00},
+-	{0x5050, 0x0c}, {0x5500, 0x00}, {0x5501, 0x10},
+-	{0x5502, 0x01}, {0x5503, 0x0f}, {0x8000, 0x00},
+-	{0x8001, 0x00}, {0x8002, 0x00}, {0x8003, 0x00},
+-	{0x8004, 0x00}, {0x8005, 0x00}, {0x8006, 0x00},
+-	{0x8007, 0x00}, {0x8008, 0x00}, {0x3638, 0x00},
++	/* System control*/
++	{0x0103, 0x01}, /* SC_CTRL0103 software_reset = 1 */
++	{0x3000, 0x20}, /* SC_CMMN_PAD_OEN0 FSIN_output_enable = 1 */
++	{0x3021, 0x03}, /*
++			 * SC_CMMN_MISC_CTRL fst_stby_ctr = 0,
++			 * sleep_no_latch_enable = 0
++			 */
++
++	/* AEC PK */
++	{0x3503, 0x04}, /* AEC_MANUAL gain_input_as_sensor_gain_format = 1 */
++	{0x352a, 0x08}, /* DIG_GAIN_FRAC_LONG dig_gain_long[14:8] = 0x08 (2x) */
++
++	/* ADC and analog control*/
++	{0x3603, 0x40},
++	{0x3604, 0x02},
++	{0x3609, 0x12},
++	{0x360c, 0x08},
++	{0x360f, 0xe5},
++	{0x3608, 0x8f},
++	{0x3611, 0x00},
++	{0x3613, 0xf7},
++	{0x3616, 0x58},
++	{0x3619, 0x99},
++	{0x361b, 0x60},
++	{0x361e, 0x79},
++	{0x3634, 0x10},
++	{0x3635, 0x10},
++	{0x3636, 0x15},
++	{0x3646, 0x86},
++	{0x364a, 0x0b},
++
++	/* Sensor control */
++	{0x3700, 0x17},
++	{0x3701, 0x22},
++	{0x3703, 0x10},
++	{0x370a, 0x37},
++	{0x3706, 0x63},
++	{0x3709, 0x3c},
++	{0x370c, 0x30},
++	{0x3710, 0x24},
++	{0x3720, 0x28},
++	{0x3729, 0x7b},
++	{0x372b, 0xbd},
++	{0x372c, 0xbc},
++	{0x372e, 0x52},
++	{0x373c, 0x0e},
++	{0x373e, 0x33},
++	{0x3743, 0x10},
++	{0x3744, 0x88},
++	{0x3745, 0xc0},
++	{0x374c, 0x00},
++	{0x374e, 0x23},
++	{0x3751, 0x7b},
++	{0x3753, 0xbd},
++	{0x3754, 0xbc},
++	{0x3756, 0x52},
++	{0x376b, 0x20},
++	{0x3774, 0x51},
++	{0x3776, 0xbd},
++	{0x3777, 0xbd},
++	{0x3781, 0x18},
++	{0x3783, 0x25},
++	{0x3798, 0x1b},
++
++	/* Timing control */
++	{0x3801, 0x08}, /* H_CROP_START_L h_crop_start[7:0] = 0x08 */
++	{0x3805, 0x97}, /* H_CROP_END_L h_crop_end[7:0] = 0x97 */
++	{0x380c, 0x0a}, /* TIMING_HTS_H hts[14:8] = 0x0a */
++	{0x380d, 0x0e}, /* TIMING_HTS_L hts[7:0] = 0x0e */
++	{0x3811, 0x08}, /* H_WIN_OFF_L h_win_off[7:0] = 0x08*/
++	{0x3813, 0x04}, /* V_WIN_OFF_L v_win_off[7:0] = 0x04 */
++	{0x3819, 0x01}, /* VSYNC_END_L vsync_end_point[7:0] = 0x01 */
++	{0x3821, 0x06}, /* TIMING_FORMAT2 array_h_mirror = 1, digital_h_mirror = 1 */
++
++	/* OTP control */
++	{0x3d85, 0x36}, /* OTP_REG85 OTP_power_up_load_setting_enable = 1,
++			 * OTP_power_up_load_data_enable = 1,
++			 * OTP_bist_select = 1 (compare with zero)
++			 */
++	{0x3d8c, 0x71}, /* OTP_SETTING_STT_ADDRESS_H */
++	{0x3d8d, 0xcb}, /* OTP_SETTING_STT_ADDRESS_L */
++
++	/* BLC registers*/
++	{0x4001, 0x40}, /* DEBUG_MODE */
++	{0x401b, 0x00}, /* DEBUG_MODE */
++	{0x401d, 0x00}, /* DEBUG_MODE */
++	{0x401f, 0x00}, /* DEBUG_MODE */
++	{0x4020, 0x00}, /* ANCHOR_LEFT_START_H anchor_left_start[11:8] = 0 */
++	{0x4021, 0x10}, /* ANCHOR_LEFT_START_L anchor_left_start[7:0] = 0x10 */
++	{0x4022, 0x07}, /* ANCHOR_LEFT_END_H anchor_left_end[11:8] = 0x07 */
++	{0x4023, 0xcf}, /* ANCHOR_LEFT_END_L anchor_left_end[7:0] = 0xcf */
++	{0x4024, 0x09}, /* ANCHOR_RIGHT_START_H anchor_right_start[11:8] = 0x09 */
++	{0x4025, 0x60}, /* ANCHOR_RIGHT_START_L anchor_right_start[7:0] = 0x60 */
++	{0x4026, 0x09}, /* ANCHOR_RIGHT_END_H anchor_right_end[11:8] = 0x09 */
++	{0x4027, 0x6f}, /* ANCHOR_RIGHT_END_L anchor_right_end[7:0] = 0x6f */
++
++	/* ADC sync control */
++	{0x4500, 0x6c}, /* ADC_SYNC_CTRL */
++	{0x4503, 0x01}, /* ADC_SYNC_CTRL */
++
++	/* VFIFO */
++	{0x4601, 0xa7}, /* VFIFO_CTRL_01 r_vfifo_read_start[7:0] = 0xa7 */
++
++	/* Temperature monitor */
++	{0x4d00, 0x04}, /* TPM_CTRL_00 tmp_slope[15:8] = 0x04 */
++	{0x4d01, 0x42}, /* TPM_CTRL_01 tmp_slope[7:0] = 0x42 */
++	{0x4d02, 0xd1}, /* TPM_CTRL_02 tpm_offset[31:24] = 0xd1 */
++	{0x4d03, 0x93}, /* TPM_CTRL_03 tpm_offset[23:16] = 0x93 */
++	{0x4d04, 0xf5}, /* TPM_CTRL_04 tpm_offset[15:8]  = 0xf5 */
++	{0x4d05, 0xc1}, /* TPM_CTRL_05 tpm_offset[7:0]   = 0xc1 */
++
++	/* pre-ISP control */
++	{0x5050, 0x0c}, /* DEBUG_MODE */
++
++	/* OTP-DPC control */
++	{0x5501, 0x10}, /* OTP_DPC_START_L otp_start_address[7:0] = 0x10 */
++	{0x5503, 0x0f}, /* OTP_DPC_END_L otp_end_address[7:0] = 0x0f */
+ 	{REG_NULL, 0x00},
+ };
+ 
 -- 
 2.43.0
 
