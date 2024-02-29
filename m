@@ -1,92 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0A8634FE
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 10:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ADE6280C;
+	Thu, 29 Feb 2024 10:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709201401; cv=none; b=M4vZg9drazBq8XmxgVAEYsHNzP8QEZ4AjaVlH5c0tcZUIPVs4YzRuUTtlilfX07b1q4fZZCXyOJdm39NfSSX8FCtDG8dSosUNcFaDyhTpOsJ0yd8m72wdbCnfq6RfekaxuJV4QOry3cu1ZdoG4IHFlJ4KDaCBdUNtjxvHPyYWuI=
+	t=1709201516; cv=none; b=PS0qtYbHaHYk9U9+7aW18QEhxki+HXbACRg8gaRvOE56eiGOe+PAbLGfxtmUDYFtE6bv79Eo6bmKb4uhbsGNX1nJwfQJbJlfHeDfl8ouWaGpAwXeKurlaGA5mNL5sUAYC0af5b5IkdinCPVSrfMZnoxO823H9yRDSoBPKIJVomU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709201401; c=relaxed/simple;
-	bh=NFCnMoMrVuC4cCuJvgRycjqyC2YcWg3DtXlKvOroRlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hi3JRTawwtMOqAXyQrNzT9YSgbTQC0mmU7QG50yAXG54PEG8sNW3qkoJbJGwMwYoJKk5EW9pw6T0JRCYCICHgoEVewJJ01vOM2gJ1qTUbwqCWBxOUMrj0fxuV3k+qSd3S1xZm7HCmrLj/oSUFR5TXd93PQw/g+i4xhcMFY21OVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7dYoOTy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7dYoOTy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CA8C433C7;
-	Thu, 29 Feb 2024 10:09:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709201401;
-	bh=NFCnMoMrVuC4cCuJvgRycjqyC2YcWg3DtXlKvOroRlc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=h7dYoOTyoUUwJfUYKS8oc/GOmVFCi8gYJOMVwQbnlmCkF71wUj/BjdSpyavLaqZAF
-	 /yr1BrQ4NDTDhRqWHMrV6k5OtKvz0ncEGnszdFth4oVSBafR9nc3kcrpvxSfXl6kZz
-	 PLjtxRSsf5QuzJ+CKvdXlBvik7E7v2mzKPGPIb3+WDmc4FrFyNH7B51w2e8KmgUUBh
-	 DkAUyzz9sQ72N6vTA7Ht5/glAnJlC3jBMWQCQuNEDnniCiBhij7ERX6x/W93UbIyZV
-	 dgtYvgHoNTqbhz4MAnlx80D1XtTPFJM4hs+egJ9ueV/Bf3tGygu6NxEzZnemyxjfBZ
-	 U8DWDAUF7NBFg==
-Message-ID: <2b81aa6f-db51-4a7c-97ab-2af2c2fea056@kernel.org>
-Date: Thu, 29 Feb 2024 18:09:56 +0800
+	s=arc-20240116; t=1709201516; c=relaxed/simple;
+	bh=GyGUdXIg/byhkhi4PY7TzcTxrUGkdHFdA4AEWVhCBTI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M7RvnJwNXm2KO9aL9fLJCGw5gJl2QMMEMC0eudJ5I6T7VM7TXYLYfiAXYmeE36ivJiCE1YawIhObtIgj4qH/QRuoyjYY4THirJI4XL9zJCMMGeHOT96805pM9EqNF3detYRsvVNKNOdTn86D7NxiPp2tS9ls1iX3EBEc8wOEV+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6093247d1acso7298827b3.0;
+        Thu, 29 Feb 2024 02:11:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709201513; x=1709806313;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vlayGp3B7LHt3ezElVfSVkqAS1u/HUJTCJbUomcuaEU=;
+        b=A0Z0uJysc+8qfqDI9G8hx2OpibdAs6tjTXSIRYLPksWJ3AUXJ/DHuI8lwnjowDkOcM
+         ap13mGi7vk6prGbjWOHUSBJQoAWLkaiv/Wi7GAWlTiPo+be6w8biQWl94NdVFpyVtUJO
+         AZF6SMopCUwldlixyeScfWsw03NtArV5nqUfTb5Ip0klQr1kxBRWqyArsrQvq8YInDw0
+         nruTzOXnYjGba6D9tR/Ym7yRM9KfwqJQw2t1a1D8ydcayGiQIBBiDb03xiMjqgT6TXq9
+         oz0yuQy+hcuP6gQkIhNGnOgRj4DktbL5k49CEmwD2Hc+jhRIYU8SCoAvI1subS8QYTSb
+         0ciw==
+X-Forwarded-Encrypted: i=1; AJvYcCVi2e06KQsiOksWSRplcAGb0YDURKRc6xVRuX7hfPFakHhD0Rer9UxnGT7LBhlH/iy2Ocl9d5jg77emqfO7A0EwJhml9oEmo+isJebV5L79nf6Ooer/1HcmqAR4223Phj1BlFhKYSNn+A==
+X-Gm-Message-State: AOJu0YwMLHoQfIcu2XTM/Jth09eJ1lgvYrb+jQ1sVmWY/H7tNTDfWXhz
+	RX3kbbPu1VmKA85qOBw+YgGp8a3RHiNyzKUITrDcRq8zx4Y5oIT+Ln5r+cKhfd8=
+X-Google-Smtp-Source: AGHT+IHK8Y43Alkij7eS6ZrAWKOBWGQsyNI+1A9kN2pnBs9xLS9XAgK4r8SAOtfojcf1hABaCpXdPw==
+X-Received: by 2002:a81:df0f:0:b0:604:a75:4274 with SMTP id c15-20020a81df0f000000b006040a754274mr1866293ywn.51.1709201512718;
+        Thu, 29 Feb 2024 02:11:52 -0800 (PST)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id u125-20020a816083000000b006078f8caa68sm285238ywb.71.2024.02.29.02.11.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Feb 2024 02:11:52 -0800 (PST)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so749191276.2;
+        Thu, 29 Feb 2024 02:11:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXjhsHqla4tJ3TDQa0H6s69GliUxIMNtvIu8USNyYAQxAnXzg/NCEn2Lj3WYN/0TdzU8Q6sYDIFXxxrosDVAM3izDo30RaZGxcflrtEtYnhTZvU/eHyAD5/YXmc+KHmc825Ie9cyanP1A==
+X-Received: by 2002:a05:6902:50b:b0:dcf:c6ce:b4ca with SMTP id
+ x11-20020a056902050b00b00dcfc6ceb4camr1745346ybs.56.1709201511893; Thu, 29
+ Feb 2024 02:11:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] f2fs: fix blkofs_end correctly in
- f2fs_migrate_blocks()
-Content-Language: en-US
-To: jaegeuk@kernel.org, Daeho Jeong <daehojeong@google.com>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <20240226013208.2389246-1-chao@kernel.org>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20240226013208.2389246-1-chao@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240224052436.3552333-1-saravanak@google.com>
+In-Reply-To: <20240224052436.3552333-1-saravanak@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 29 Feb 2024 11:11:39 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWhm1WaX3X3P7tyB+e-rX=iwkwm8LxE3=gfHzJ1umhsFg@mail.gmail.com>
+Message-ID: <CAMuHMdWhm1WaX3X3P7tyB+e-rX=iwkwm8LxE3=gfHzJ1umhsFg@mail.gmail.com>
+Subject: Re: [PATCH] of: property: fw_devlink: Fix stupid bug in
+ remote-endpoint parsing
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, 
+	=?UTF-8?Q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, kernel-team@android.com, 
+	Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Jaegeuk, Daeho,
+Hi Saravana,
 
-Any comments on this serials?
+On Sat, Feb 24, 2024 at 6:25=E2=80=AFAM Saravana Kannan <saravanak@google.c=
+om> wrote:
+> Introduced a stupid bug in commit 782bfd03c3ae ("of: property: Improve
+> finding the supplier of a remote-endpoint property") due to a last minute
+> incorrect edit of "index !=3D0" into "!index". This patch fixes it to be
+> "index > 0" to match the comment right next to it.
+>
+> Reported-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> Link: https://lore.kernel.org/lkml/20240223171849.10f9901d@booty/
+> Fixes: 782bfd03c3ae ("of: property: Improve finding the supplier of a rem=
+ote-endpoint property")
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 
-Thanks,
+Thanks for your patch!
 
-On 2024/2/26 9:32, Chao Yu wrote:
-> In f2fs_migrate_blocks(), when traversing blocks in last section,
-> blkofs_end should be (start_blk + blkcnt - 1) % blk_per_sec, fix it.
-> 
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->   fs/f2fs/data.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index c21b92f18463..0c728e82d936 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -3841,13 +3841,14 @@ static int f2fs_migrate_blocks(struct inode *inode, block_t start_blk,
->   	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->   	unsigned int blkofs;
->   	unsigned int blk_per_sec = BLKS_PER_SEC(sbi);
-> +	unsigned int end_blk = start_blk + blkcnt - 1;
->   	unsigned int secidx = start_blk / blk_per_sec;
->   	unsigned int end_sec;
->   	int ret = 0;
->   
->   	if (!blkcnt)
->   		return 0;
-> -	end_sec = secidx + (blkcnt - 1) / blk_per_sec;
-> +	end_sec = end_blk / blk_per_sec;
->   
->   	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
->   	filemap_invalidate_lock(inode->i_mapping);
-> @@ -3857,7 +3858,7 @@ static int f2fs_migrate_blocks(struct inode *inode, block_t start_blk,
->   
->   	for (; secidx <= end_sec; secidx++) {
->   		unsigned int blkofs_end = secidx == end_sec ?
-> -			(blkcnt - 1) % blk_per_sec : blk_per_sec - 1;
-> +				end_blk % blk_per_sec : blk_per_sec - 1;
->   
->   		f2fs_down_write(&sbi->pin_sem);
->   
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1304,7 +1304,7 @@ static struct device_node *parse_remote_endpoint(st=
+ruct device_node *np,
+>                                                  int index)
+>  {
+>         /* Return NULL for index > 0 to signify end of remote-endpoints. =
+*/
+> -       if (!index || strcmp(prop_name, "remote-endpoint"))
+> +       if (index > 0 || strcmp(prop_name, "remote-endpoint"))
+>                 return NULL;
+>
+>         return of_graph_get_remote_port_parent(np);
+> --
+> 2.44.0.rc0.258.g7320e95886-goog
+
+After this, the "Fixed dependency cycle" messages I reported to be
+gone in [1] are back.
+
+In fact, they are slightly different, and there are now even more of them:
+
+-platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef7000/ports/port@1/endpoint@0
+-platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef6000/ports/port@1/endpoint@0
+-platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef5000/ports/port@1/endpoint@0
+-platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef4000/ports/port@1/endpoint@0
+-platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef3000/ports/port@1/endpoint@0
+-platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef2000/ports/port@1/endpoint@0
+-platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef1000/ports/port@1/endpoint@0
+-platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef0000/ports/port@1/endpoint@0
+-platform feaa0000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef3000/ports/port@1/endpoint@2
+-platform feaa0000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef2000/ports/port@1/endpoint@2
+-platform feaa0000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef1000/ports/port@1/endpoint@2
+-platform feaa0000.csi2: Fixed dependency cycle(s) with
+/soc/video@e6ef0000/ports/port@1/endpoint@2
+-platform fead0000.hdmi: Fixed dependency cycle(s) with
+/soc/sound@ec500000/ports/port@1/endpoint
+-platform feae0000.hdmi: Fixed dependency cycle(s) with
+/soc/sound@ec500000/ports/port@2/endpoint
+-platform feb00000.display: Fixed dependency cycle(s) with
+/soc/hdmi@feae0000/ports/port@0/endpoint
+-platform feb00000.display: Fixed dependency cycle(s) with
+/soc/hdmi@fead0000/ports/port@0/endpoint
+-platform hdmi0-out: Fixed dependency cycle(s) with
+/soc/hdmi@fead0000/ports/port@1/endpoint
+-platform hdmi1-out: Fixed dependency cycle(s) with
+/soc/hdmi@feae0000/ports/port@1/endpoint
+-platform vga-encoder: Fixed dependency cycle(s) with /vga/port/endpoint
+-platform vga-encoder: Fixed dependency cycle(s) with
+/soc/display@feb00000/ports/port@0/endpoint
++platform e6ef0000.video: Fixed dependency cycle(s) with /soc/csi2@feaa0000
++platform e6ef0000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef1000.video: Fixed dependency cycle(s) with /soc/csi2@feaa0000
++platform e6ef1000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef2000.video: Fixed dependency cycle(s) with /soc/csi2@feaa0000
++platform e6ef2000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef3000.video: Fixed dependency cycle(s) with /soc/csi2@feaa0000
++platform e6ef3000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef4000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef5000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef6000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef7000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform ec500000.sound: Fixed dependency cycle(s) with /soc/hdmi@feae0000
++platform ec500000.sound: Fixed dependency cycle(s) with /soc/hdmi@fead0000
++platform ec500000.sound: Fixed dependency cycle(s) with
+/soc/i2c@e6510000/codec@10
++platform e6ef7000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef6000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef5000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef4000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef3000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef2000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef1000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform e6ef0000.video: Fixed dependency cycle(s) with /soc/csi2@fea80000
++platform fea80000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef7000
++platform fea80000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef6000
++platform fea80000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef5000
++platform fea80000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef4000
++platform fea80000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef3000
++platform fea80000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef2000
++platform fea80000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef1000
++platform fea80000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef0000
++platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/i2c@e66d8000/video-receiver@70
++platform e6ef3000.video: Fixed dependency cycle(s) with /soc/csi2@feaa0000
++platform e6ef2000.video: Fixed dependency cycle(s) with /soc/csi2@feaa0000
++platform e6ef1000.video: Fixed dependency cycle(s) with /soc/csi2@feaa0000
++platform e6ef0000.video: Fixed dependency cycle(s) with /soc/csi2@feaa0000
++platform feaa0000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef3000
++platform feaa0000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef2000
++platform feaa0000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef1000
++platform feaa0000.csi2: Fixed dependency cycle(s) with /soc/video@e6ef0000
++platform feaa0000.csi2: Fixed dependency cycle(s) with
+/soc/i2c@e66d8000/video-receiver@70
++platform ec500000.sound: Fixed dependency cycle(s) with /soc/hdmi@fead0000
++platform fead0000.hdmi: Fixed dependency cycle(s) with /soc/sound@ec500000
++platform fead0000.hdmi: Fixed dependency cycle(s) with /soc/display@feb000=
+00
++platform ec500000.sound: Fixed dependency cycle(s) with /soc/hdmi@feae0000
++platform feae0000.hdmi: Fixed dependency cycle(s) with /soc/sound@ec500000
++platform feae0000.hdmi: Fixed dependency cycle(s) with /soc/display@feb000=
+00
++platform feae0000.hdmi: Fixed dependency cycle(s) with /soc/display@feb000=
+00
++platform fead0000.hdmi: Fixed dependency cycle(s) with /soc/display@feb000=
+00
++platform feb00000.display: Fixed dependency cycle(s) with /soc/hdmi@feae00=
+00
++platform feb00000.display: Fixed dependency cycle(s) with /soc/hdmi@fead00=
+00
++platform cvbs-in: Fixed dependency cycle(s) with
+/soc/i2c@e66d8000/video-receiver@70
++platform hdmi-in: Fixed dependency cycle(s) with
+/soc/i2c@e66d8000/video-receiver@70
++platform fead0000.hdmi: Fixed dependency cycle(s) with /hdmi0-out
++platform hdmi0-out: Fixed dependency cycle(s) with /soc/hdmi@fead0000
++platform feae0000.hdmi: Fixed dependency cycle(s) with /hdmi1-out
++platform hdmi1-out: Fixed dependency cycle(s) with /soc/hdmi@feae0000
++platform vga: Fixed dependency cycle(s) with /vga-encoder
++platform feb00000.display: Fixed dependency cycle(s) with /vga-encoder
++platform vga-encoder: Fixed dependency cycle(s) with /vga
++platform vga-encoder: Fixed dependency cycle(s) with /soc/display@feb00000
+
+-i2c 2-0010: Fixed dependency cycle(s) with
+/soc/sound@ec500000/ports/port@0/endpoint
++platform ec500000.sound: Fixed dependency cycle(s) with
+/soc/i2c@e6510000/codec@10
+
+-i2c 4-0070: Fixed dependency cycle(s) with
+/soc/csi2@fea80000/ports/port@0/endpoint
+-i2c 4-0070: Fixed dependency cycle(s) with
+/soc/csi2@feaa0000/ports/port@0/endpoint
+-i2c 4-0070: Fixed dependency cycle(s) with /hdmi-in/port/endpoint
+-i2c 4-0070: Fixed dependency cycle(s) with /cvbs-in/port/endpoint
++platform feaa0000.csi2: Fixed dependency cycle(s) with
+/soc/i2c@e66d8000/video-receiver@70
++platform fea80000.csi2: Fixed dependency cycle(s) with
+/soc/i2c@e66d8000/video-receiver@70
++i2c 4-0070: Fixed dependency cycle(s) with /soc/csi2@fea80000
++i2c 4-0070: Fixed dependency cycle(s) with /soc/csi2@feaa0000
+
+I guess all of that is expected?
+
+[1] https://lore.kernel.org/all/CAMuHMdVon3mdivZQ0O6D4+va0nGBrUQbDp23bEq661=
+QD=3D4t7+g@mail.gmail.com/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
