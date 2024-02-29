@@ -1,186 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139707828D;
-	Thu, 29 Feb 2024 18:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E40160629
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 18:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709232059; cv=none; b=l/y5ovLxuLvAhI14G6C5M0zUTvKgrHpEaeKMpCJiq3eDJBExvfMAFwUZqAOsTMgKlwyAaJaCl/tSiAYJbeRYgjW9BCZFqlWzEXO1qtgwzHz+aGZHFjaJlMygQUc6/AzVdXo4mquxZkTlUb+IBuDRJMb/TNTilpSJR1Y8QnIfqHE=
+	t=1709232098; cv=none; b=UtU8CbMjAa4PBCvFHB5h7Qd6JOW2D25ppMcbZbQ2tp3L7ULIdcg1tyw4pgB5QFjdzZvxF+7lS+IHTd22/UshrCT6TmjYCvyqkXpeFaVKb+xrv8te5gzmuzjoJdB3UgKoonu8o89k3IjNfXRcCxBrb19qii9QJP4gHPTD9gKbkTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709232059; c=relaxed/simple;
-	bh=XOIwSKahWpPR9jGAWZnUuaG5OHH6sWJYuNj9i3WFYso=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S7uQqUJVScrQzx2qfpkpen3z3OFduL19my/oxwL80+9yt13pUXTA9AqvrYWr0zYQp+2K81ShkjG9xszAJGYLBqQ6m6zYBfOITkhzXo7hJvx91Uz5XwBDvw19BtNkPdF8Ozr1J5XV9Gc9ThVpu4ew+R/BCgGXnnpiJOD4c34ejI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4C0qKd/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709232098; c=relaxed/simple;
+	bh=Fg9exPopaMXgoBeg3T8QjIb2dbC8fu4hOHN1ULOmBgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E2vz25yuyun9Lcj4/FReFhMf28qk4Zs7rD6mNoqLLTcqX81UnTr33tijgcN/zb6OmbDEXP2scwPlznYwqMXm83c+HlySmuAI0/PeLLciwJIGDaIpV+CtK8IbEkJZzaCg8FpDfD48ZkUOGWDaQ5mYfCv3qbN+tw3sKkAcnHZIaGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YfcX++nt; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4C0qKd/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B3F5C433C7;
-	Thu, 29 Feb 2024 18:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709232058;
-	bh=XOIwSKahWpPR9jGAWZnUuaG5OHH6sWJYuNj9i3WFYso=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Z4C0qKd/Rb41/Yaf+xCj37agyrwn3r1ddkExRoiOTQQ1rOv6K0esta8w4jH7PujD+
-	 kD7/qP8No/C/78+0smVm9IZtu4d/jrk7LEqvuhyFtMxBc3j0LJtbp0URAThI+keGei
-	 qks/8U5YbqWJsiittU3E6aFngNaeGWrH/DmfvXcvuQjZSKoYhQxx9U49A0Gkb/15KR
-	 j9sQH34m8e6nV3/YFkW66ccdvDbTCUuikr9q5EpBgPuov6ncnUJDohVrx0fTvIKk01
-	 sVVwxjS5r90wPV2vfn4N5Gn1d3uC8zTkPgkNbpWl1EoFhHIEm+KMpBrfUVqBbnH6QE
-	 aw4KV5QlkVDCA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rflKx-0088Cq-QW;
-	Thu, 29 Feb 2024 18:40:56 +0000
-Date: Thu, 29 Feb 2024 18:40:54 +0000
-Message-ID: <8634tb2jwp.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH V16 5/8] KVM: arm64: nvhe: Disable branch generation in nVHE guests
-In-Reply-To: <20240125094119.2542332-6-anshuman.khandual@arm.com>
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
-	<20240125094119.2542332-6-anshuman.khandual@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YfcX++nt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709232095;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=imfi9nyY2Ds1zTSvT7FW6iYVGAy7PqxovSx7W2kz8Yk=;
+	b=YfcX++nt0xmIih3yaK/yWnJsxMVEIOqCFSKvuBuIp+d/LhauHFL/MOGeU/WUVHyxflAkuq
+	zZpouo1b4nQBTF4DV816mPO82Kl4ULGtPG+2zZAUU9sla+Rux7jy1aUKjvwWZhDvN/+yJB
+	MBqLbaWaXIoUPcm1zQn8ZCjUnn8nXSE=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-354-HBfG6nMvNqO1SbL0atuuFQ-1; Thu,
+ 29 Feb 2024 13:41:33 -0500
+X-MC-Unique: HBfG6nMvNqO1SbL0atuuFQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5B75629AC011;
+	Thu, 29 Feb 2024 18:41:33 +0000 (UTC)
+Received: from bfoster (unknown [10.22.32.137])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 23E242166AE1;
+	Thu, 29 Feb 2024 18:41:33 +0000 (UTC)
+Date: Thu, 29 Feb 2024 13:43:15 -0500
+From: Brian Foster <bfoster@redhat.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	djwong@kernel.org
+Subject: Re: [PATCH 01/21] bcachefs: KEY_TYPE_accounting
+Message-ID: <ZeDQQ8cyMTgYaY6D@bfoster>
+References: <20240225023826.2413565-1-kent.overstreet@linux.dev>
+ <20240225023826.2413565-2-kent.overstreet@linux.dev>
+ <Zd4Ef49kHX3g69VT@bfoster>
+ <t6cc6gqgla2csyvrsv2znel5lg76vx7t2zna772qpw7zd6pnft@rxdakxza5cab>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <t6cc6gqgla2csyvrsv2znel5lg76vx7t2zna772qpw7zd6pnft@rxdakxza5cab>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-On Thu, 25 Jan 2024 09:41:16 +0000,
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+On Wed, Feb 28, 2024 at 02:39:38PM -0500, Kent Overstreet wrote:
+> On Tue, Feb 27, 2024 at 10:49:19AM -0500, Brian Foster wrote:
+> > On Sat, Feb 24, 2024 at 09:38:03PM -0500, Kent Overstreet wrote:
+> > > New key type for the disk space accounting rewrite.
+> > > 
+> > >  - Holds a variable sized array of u64s (may be more than one for
+> > >    accounting e.g. compressed and uncompressed size, or buckets and
+> > >    sectors for a given data type)
+> > > 
+> > >  - Updates are deltas, not new versions of the key: this means updates
+> > >    to accounting can happen via the btree write buffer, which we'll be
+> > >    teaching to accumulate deltas.
+> > > 
+> > > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> > > ---
+> > >  fs/bcachefs/Makefile                 |   3 +-
+> > >  fs/bcachefs/bcachefs.h               |   1 +
+> > >  fs/bcachefs/bcachefs_format.h        |  80 +++------------
+> > >  fs/bcachefs/bkey_methods.c           |   1 +
+> > >  fs/bcachefs/disk_accounting.c        |  70 ++++++++++++++
+> > >  fs/bcachefs/disk_accounting.h        |  52 ++++++++++
+> > >  fs/bcachefs/disk_accounting_format.h | 139 +++++++++++++++++++++++++++
+> > >  fs/bcachefs/replicas_format.h        |  21 ++++
+> > >  fs/bcachefs/sb-downgrade.c           |  12 ++-
+> > >  fs/bcachefs/sb-errors_types.h        |   3 +-
+> > >  10 files changed, 311 insertions(+), 71 deletions(-)
+> > >  create mode 100644 fs/bcachefs/disk_accounting.c
+> > >  create mode 100644 fs/bcachefs/disk_accounting.h
+> > >  create mode 100644 fs/bcachefs/disk_accounting_format.h
+> > >  create mode 100644 fs/bcachefs/replicas_format.h
+> > > 
+> > ...
+> > > diff --git a/fs/bcachefs/disk_accounting_format.h b/fs/bcachefs/disk_accounting_format.h
+> > > new file mode 100644
+> > > index 000000000000..e06a42f0d578
+> > > --- /dev/null
+> > > +++ b/fs/bcachefs/disk_accounting_format.h
+> > > @@ -0,0 +1,139 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +#ifndef _BCACHEFS_DISK_ACCOUNTING_FORMAT_H
+> > > +#define _BCACHEFS_DISK_ACCOUNTING_FORMAT_H
+> > > +
+> > > +#include "replicas_format.h"
+> > > +
+> > > +/*
+> > > + * Disk accounting - KEY_TYPE_accounting - on disk format:
+> > > + *
+> > > + * Here, the key has considerably more structure than a typical key (bpos); an
+> > > + * accounting key is 'struct disk_accounting_key', which is a union of bpos.
+> > > + *
+> > 
+> > First impression.. I'm a little confused why the key type is a union of
+> > bpos. I'm possibly missing something fundamental/obvious, but could you
+> > elaborate more on why that is here?
 > 
-> Disable the BRBE before we enter the guest, saving the status and enable it
-> back once we get out of the guest. This avoids capturing branch records in
-> the guest kernel or userspace, which would be confusing the host samples.
+> How's this?
 > 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: kvmarm@lists.linux.dev
-> Cc: linux-arm-kernel@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> Changes in V16:
+>  * More specifically: a key is just a muliword integer (where word endianness   
+>  * matches native byte order), so we're treating bpos as an opaque 20 byte                                                                                  
+>  * integer and mapping bch_accounting_key to that.
 > 
-> - Dropped BRBCR_EL1 and BRBFCR_EL1 from enum vcpu_sysreg
-> - Reverted back the KVM NVHE patch - used host_debug_state based 'brbcr_el1'
->   element, and dropped the previous dependency on Jame's coresight series
-> 
->  arch/arm64/include/asm/kvm_host.h  |  5 ++++-
->  arch/arm64/kvm/debug.c             |  5 +++++
->  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
->  3 files changed, 42 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 21c57b812569..bce8792092af 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
->  	u8 cflags;
->  
->  	/* Input flags to the hypervisor code, potentially cleared after use */
-> -	u8 iflags;
-> +	u16 iflags;
->  
->  	/* State flags for kernel bookkeeping, unused by the hypervisor code */
->  	u8 sflags;
-> @@ -610,6 +610,7 @@ struct kvm_vcpu_arch {
->  		u64 pmscr_el1;
->  		/* Self-hosted trace */
->  		u64 trfcr_el1;
-> +		u64 brbcr_el1;
->  	} host_debug_state;
->  
->  	/* VGIC state */
-> @@ -779,6 +780,8 @@ struct kvm_vcpu_arch {
->  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
->  /* vcpu running in HYP context */
->  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
-> +/* Save BRBE context if active  */
-> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(8))
->  
->  /* SVE enabled for host EL0 */
->  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
-> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-> index 8725291cb00a..99f85d8acbf3 100644
-> --- a/arch/arm64/kvm/debug.c
-> +++ b/arch/arm64/kvm/debug.c
-> @@ -335,10 +335,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
->  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
->  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
->  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-> +
-> +	/* Check if we have BRBE implemented and available at the host */
-> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
-> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->  }
->  
->  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
->  {
->  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
->  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->  }
-> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> index 4558c02eb352..79bcf0fb1326 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> @@ -79,6 +79,34 @@ static void __debug_restore_trace(u64 trfcr_el1)
->  	write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
->  }
->  
-> +static void __debug_save_brbe(u64 *brbcr_el1)
-> +{
-> +	*brbcr_el1 = 0;
-> +
-> +	/* Check if the BRBE is enabled */
-> +	if (!(read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
-> +		return;
-> +
-> +	/*
-> +	 * Prohibit branch record generation while we are in guest.
-> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
-> +	 * modify the filtering set by the host.
-> +	 */
-> +	*brbcr_el1 = read_sysreg_s(SYS_BRBCR_EL1);
-> +	write_sysreg_s(0, SYS_BRBCR_EL1);
 
-As for TRFCR and PMSCR, this is broken on hVHE.
+Hmm.. I think the connection I missed on first look is basically
+disk_accounting_key_to_bpos(). I think what is confusing is that calling
+this a key makes me think of bkey, which I understand to contain a bpos,
+so then overlaying it with a bpos didn't really make a lot of sense to
+me conceptually.
 
-Please see [1]
+So when I look at disk_accounting_key_to_bpos(), I see we are actually
+using the bpos _pad field, and this structure basically _is_ the bpos
+for a disk accounting btree bkey. So that kind of makes me wonder why
+this isn't called something like disk_accounting_pos instead of _key,
+but maybe that is wrong for other reasons.
 
-	M.
+Either way, what I'm trying to get at is that I think this documentation
+would be better if it explained conceptually how disk_accounting_key
+relates to bkey/bpos, and why it exists separately from bkey vs. other
+key types, rather than (or at least before) getting into the lower level
+side effects of a union with bpos.
 
-[1] https://lore.kernel.org/r/20240229145417.3606279-1-maz@kernel.org
+Brian
 
--- 
-Without deviation from the norm, progress is not possible.
