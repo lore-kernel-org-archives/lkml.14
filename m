@@ -1,107 +1,108 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFED58207
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DDE59167;
+	Thu, 29 Feb 2024 09:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709198410; cv=none; b=cih5CKR3jcISu/HUcIHAcUic6/Bx6riX8/So8qJ2+gBOPrMRx9h4Vi2alXnT9EnNTwzbMvxUWJiqjbQYQgnq5Y8E90N25lNkSofU96ZesA8QUwp0Pe+qRslErIWIX3mR1gV7K5dxaO6rChRBBr/8dmSXaHrgTo9DsECmBUX4YfY=
+	t=1709198412; cv=none; b=l9bI09sc8Di4ZFkKZQrcnfk3icHA90p+dMkGZq4n666FyBk7tsmkPXPXw+hl1N0bi6FXCSs0RrbU8qZwJ6I1G3u3QNxjucuhn5/hL1T6LUuDCH4QCaO6Q5nQ1kmSUBxBKcGWcD/moc0m88iW5cL3b7u/Rwtw2YcmMbvh3QPaHvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709198410; c=relaxed/simple;
-	bh=9ld9CHJWAVfxgUOV9rgblXkoVNbUU8Ep4EODEe+gquw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JnSeslt0uCwozqsMZivpl1ZqrbDjuY1+WHqkLoLBcKbrtSj2Wz0dfOM+d7Ogy64Zb1Xov95NZZNZ3xjDsCEiZi7VVONvoDXH3EwXF9nRc1Kaz62v79doOAoi6T/SJOuMKS0R+hs8lDIAilRDdSldF5ppaLV3wyLErdUnq5bLKg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=qvyVbti5; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="qvyVbti5"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a3e706f50beso104690166b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:20:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1709198407; x=1709803207; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3WwQvPtrchQr55jMR6QmPbP1tMQ2V4TzDErrhsqCBXY=;
-        b=qvyVbti5bozXCdsuTMBIZEahD6J3GQRWEwaJu5AKhnvPrTe7KNM45nkphjeUb0GgtE
-         M46iKWGBW/Hfj7Eir6pyMJcfMMj21cj8l4XnbVb9xdqDqVapHWoa8oXMTR+qf40JCmKm
-         VPlnl9o97X/bTt8+rVMbA3iFJoYkB2xEk6kSY4lXolqzUUYppfupnwUw5WGfcheRbf+n
-         Uky4Q97DAvJD7aznUwNIr/Ju2rSpm1sMGighC8U6BopUvBEy2HO0838R0fOfh88X95s/
-         AF9etQiJdvEdbdylDsNgKs3LdnbfPPyCUjnFsNFnaQ2jLD7CVLtBgjAtGczoF4WZj35H
-         05aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709198407; x=1709803207;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3WwQvPtrchQr55jMR6QmPbP1tMQ2V4TzDErrhsqCBXY=;
-        b=RdiWac3qzZlL/NR7kcAs5pFHie0nxUXDiDkw70oqdDoHy7/Zb26agaMZqrSEH1dnmI
-         S7b4UU+wO79GIrcsFOhodYqZ1mglgqfxVX/C58TI9jg525DzROoe64rgef7Y6XBbJJZK
-         JNGU7SW86hdM8TCuaKRPSwInYsrZBRG+97vKJjAaE56Gdc6Nqc/MFCFj/RfHPg1/1A4v
-         DddZqn5mk1F21+MJXFOcAPaIHAltY0vRb/Z5gscv1oGmI6AgY0YAE+4gB2XEt0wG+bxw
-         /2ELw8vwE9MPr9mjhq2s3OxB2PFCrRR5WADnZq3pMlSozxBMcXO3GoQlBWupI3q+RiBg
-         MbMw==
-X-Forwarded-Encrypted: i=1; AJvYcCV38Nk8AQaHAdPUgAS58QNwzGt4yUeZ+ndwuiyFMy3Htvon3d2cDINei+BL/aAyhq7bRJAZrvi/YYdJmmDaGREItpDXZPRmHk16lirl
-X-Gm-Message-State: AOJu0YwA0SBFbwCqvMOtHTf0mIn8/GTliHKoArIJ8nBvjeRWGLRduar+
-	W6alIMGduWTOPtn1wKPBzv1bFIWlph4icUA8HIbo4Iry712/4RJY6a5MZnqAGAY=
-X-Google-Smtp-Source: AGHT+IH4DjWRcIUwOnrisXOgXOTPoAtgvr+Hfo1U5qDrkqpiXjsIbxHBau+xcepAx4WAx5xlZ3c19Q==
-X-Received: by 2002:a17:906:1c4b:b0:a3e:a3c3:9658 with SMTP id l11-20020a1709061c4b00b00a3ea3c39658mr1054883ejg.22.1709198407361;
-        Thu, 29 Feb 2024 01:20:07 -0800 (PST)
-Received: from localhost ([86.61.181.4])
-        by smtp.gmail.com with ESMTPSA id s22-20020a17090699d600b00a3f4bb02bc8sm488281ejn.42.2024.02.29.01.20.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 01:20:06 -0800 (PST)
-Date: Thu, 29 Feb 2024 10:20:05 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mateusz Pacuszka <mateuszx.pacuszka@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Lukasz Plachno <lukasz.plachno@intel.com>,
-	Jakub Buchocki <jakubx.buchocki@intel.com>,
-	Pawel Kaminski <pawel.kaminski@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Pawel Chmielewski <pawel.chmielewski@intel.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>
-Subject: Re: [PATCH iwl-net 0/5] ice: LLDP support for VFs
-Message-ID: <ZeBMRXUjVSwUHxU-@nanopsycho>
-References: <20240228155957.408036-1-larysa.zaremba@intel.com>
- <20240228084745.2c0fef0e@kernel.org>
+	s=arc-20240116; t=1709198412; c=relaxed/simple;
+	bh=iGHP7pwpeOVDDFpZ0noQ898rYHBuWLE3gLeIZkVM71E=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=aiDzo7P3A4GhJGuqlczsZ/MSdeg33AebzehUaCDn0LjtGBn/5knAN/8rKWKCBEpgMO4lls6T2KU8WwlzSdKlbXkcsRsJRRF58dcgwbilD9RCsEOm5VhryTInY1eKSfrz/3AXYWm6jfek+IqH1v6v3IqNN5QSpF+srZb6A9bRWeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Tllzz1psXz4f3jHd;
+	Thu, 29 Feb 2024 17:19:59 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 7E5281A0F7F;
+	Thu, 29 Feb 2024 17:20:04 +0800 (CST)
+Received: from [10.174.176.34] (unknown [10.174.176.34])
+	by APP1 (Coremail) with SMTP id cCh0CgBHZQ5BTOBl5aoEFg--.45042S3;
+	Thu, 29 Feb 2024 17:20:04 +0800 (CST)
+Subject: Re: [RFC PATCH v3 07/26] iomap: don't increase i_size if it's not a
+ write operation
+To: Christoph Hellwig <hch@infradead.org>
+Cc: djwong@kernel.org, Dave Chinner <david@fromorbit.com>,
+ linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+ tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz,
+ ritesh.list@gmail.com, willy@infradead.org, zokeefe@google.com,
+ yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
+ wangkefeng.wang@huawei.com
+References: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
+ <20240127015825.1608160-8-yi.zhang@huaweicloud.com>
+ <ZcsCP4h-ExNOcdD6@infradead.org>
+ <9b0040ef-3d9d-6246-4bdd-82b9a8f55fa2@huaweicloud.com>
+ <Zd-v_25DKYI1hn-l@infradead.org>
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+Message-ID: <9c9f1831-a772-299b-072b-1c8116c3fb35@huaweicloud.com>
+Date: Thu, 29 Feb 2024 17:20:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240228084745.2c0fef0e@kernel.org>
+In-Reply-To: <Zd-v_25DKYI1hn-l@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgBHZQ5BTOBl5aoEFg--.45042S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF1UWFy7tF1xCryxKw15urg_yoW8GF1Dpr
+	WF9FykKr1qg3y5ur1kuay7Jw10kw1fZrW8Aryjgw45Gan3XFyxZryjgay09FWqgrZ7Zw1Y
+	qF4UWaySyry0vaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+	uYvjxUFDGOUUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Wed, Feb 28, 2024 at 05:47:45PM CET, kuba@kernel.org wrote:
->On Wed, 28 Feb 2024 16:59:44 +0100 Larysa Zaremba wrote:
->> Allow to:
->> * receive LLDP packets on a VF
->> * transmit LLDP from a VF
->> 
->> Only a single VF per port can transmit LLDP packets,
->> all trusted VFs can transmit LLDP packets.
->> 
->> For both functionalities to work, private flag
->> fw-lldp-agent must be off.
->> 
->> I am aware that implemented way of configuration (through sysfs) can be
->> potentially controversial and would like some feedback from outside.
->
->Why is the device not in switchdev mode? You can put your lldp-agent
->priv flag on repr netdevs.
->
+Hello Christoph!
 
-But isn't it a matter of eswitch configuration? I mean, the user should
-be free to configure filtering/forwarding of any packet, including LLDP
-ones.
+On 2024/2/29 6:13, Christoph Hellwig wrote:
+> On Wed, Feb 28, 2024 at 04:53:32PM +0800, Zhang Yi wrote:
+>> So, we have to handle above case for xfs. I suppose we could keep
+>> increasing i_size if the zeroed folio is entirely outside of i_size,
+>> make sure we could write back and allocate blocks for the
+>> zeroed & delayed extent, something like below, any suggestions ?
+> 
+> Sorry for being dumb, but what was the problem solved by not updating
+> the size for ext4 again?  (for unshare I can't see any reason to
+> ever update the inode size)
+> 
+
+The problem I want to slove by not updating the size for ext4 is
+truncate. Now ext4 use iomap_zero_range() for the case of zero
+partial blocks, and ext4's truncate is different from xfs.
+
+Let's think about a simple case, we have a reg file with size 3K,
+then truncate it to 1K. ext4 first set i_size to 1K and then call
+ext4_block_truncate_page() to zero out data after 1K(EOF) through
+iomap_zero_range(). But now it will update i_size in
+iomap_write_end(), so the size of the file will increase to 4K,
+this is wrong. xfs first zero out data through iomap_truncate_page()
+and then set file size to 1K, so the file size is 3K->4K->1K.
+Although the result is correct, but the increasing in
+iomap_zero_range() is also not necessary, so so I'm just gonna
+delete the i_size updating in iomap_zero_range(). It's not for
+unhare.
+
+Thanks,
+Yi.
+
+
