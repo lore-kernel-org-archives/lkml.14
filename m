@@ -1,120 +1,77 @@
-Received: from mail.cybernetics.com (mail.cybernetics.com [72.215.153.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37EA13E7D1
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 20:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.215.153.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388A9145642;
+	Thu, 29 Feb 2024 20:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239238; cv=none; b=GtkReUhqtfzMIqKRMzfdC/aqhiuEaTowN7AXWSH5AGCfjRk8JNvQak16FjD4m/9eBCs/DNWsPi1oXqneVG1d1pGTmdSXbTLEN6kUhKPFiOXdE4EjFCxq/zTWIl9nTpinsqcKggVj6m3VND9KSKZp+tDXJAY02MPDLny4rhv+CFs=
+	t=1709239240; cv=none; b=o7X48NWyd1eSi5p6uaB681FItiSGPvffAQwiF3b78D+SDxsOQ1zEs69WowfwyX7iGshhRakRZDnSTo0ykMpfR7KvWdtvWbbptKSnGKdpfouK8yj5SQBE1f6PNrsA0icZfUkSsT+pyO35oPROXnqShkHapyYzLhZ9NuuGxXUa3hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239238; c=relaxed/simple;
-	bh=d2Jnd4yjkGkEApv48eNzr6PHo1ck9eCm1SggiXIqMu4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HorlnkVJpwB/3SpWOA4WwLKBLVqAYpKiEkzIIZdAM8qUUc/Oiz/x5e3dfEXfqjCI9bDPljtmtbxsI11cxBDD/we9cPbkMLTOG2IdCoT+i6euiHJPXO64wBWk/NRoLSztSNim5OlATp7cVp3UaFdsWkBLrd+A1qPak5HVZ7zw3MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cybernetics.com; spf=pass smtp.mailfrom=cybernetics.com; dkim=pass (1024-bit key) header.d=cybernetics.com header.i=@cybernetics.com header.b=oND8RtnD; arc=none smtp.client-ip=72.215.153.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cybernetics.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cybernetics.com
+	s=arc-20240116; t=1709239240; c=relaxed/simple;
+	bh=FkzDlT8ctDyCauDA5oCuwo7gENN9bz4/MUbxBdnuFjM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b/CnnkdEBwoXh24cFsbEG0IeNfpCF1KSxq5OZEOTEmjTRUvnJPyRdcWSumdbJzBbGQhLaQpcgYcw9WUVcHRk4FMnB0Syolqv/ainZ7Ozthu94BkFBMsMEpLKwNNBnRDMUa3Tuk/xt23RcT87B3VKPz7azOtPGILQOn3Bp+LUsXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIoKWvJn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cybernetics.com header.i=@cybernetics.com header.b="oND8RtnD"
-X-ASG-Debug-ID: 1709239210-1cf4391a1c513a0002-xx1T2L
-Received: from cybernetics.com ([10.10.4.126]) by mail.cybernetics.com with ESMTP id PjbAbyf3BfhDty5E for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:40:32 -0500 (EST)
-X-Barracuda-Envelope-From: tonyb@cybernetics.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.10.4.126
-X-ASG-Whitelist: Client
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cybernetics.com; s=mail;
-	bh=KGdwz7goRECtYGm5sOnk6GBz6zSl4J5s0wT/cSLJdMw=;
-	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Content-Language:Subject:MIME-Version:Date:Message-ID; b=oND8RtnDJqAi9sA80RB4
-	sb4XkMRRCvNMjh6iERzlbrwrBvsjIOrbs14Fav2aVqBlrnTByQSS+hxqeGim5/aVdLcGaeyzzFjAt
-	NXzreOxVb4kMcqOJ2IsQTScZkRwbiu5reQ7c8yHiEMiU44bqKuGSJgsmQLeCuBABcbFTPk8IMY=
-Received: from [10.157.2.224] (HELO [192.168.200.1])
-  by cybernetics.com (CommuniGate Pro SMTP 7.1.1)
-  with ESMTPS id 13109217; Thu, 29 Feb 2024 15:40:10 -0500
-Message-ID: <2dbe097c-a4b8-4f22-8c39-1bdecbee4581@cybernetics.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.157.2.224
-Date: Thu, 29 Feb 2024 15:40:09 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIoKWvJn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31515C43390;
+	Thu, 29 Feb 2024 20:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709239240;
+	bh=FkzDlT8ctDyCauDA5oCuwo7gENN9bz4/MUbxBdnuFjM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BIoKWvJnFVfyD78CMXPc8VBykbIYrvvtSlHR5MQhL77u2ckClkIATXRCwlw/dYTER
+	 uJlQCaFuvxmNra2/WGKE623g9UZZ1+PZtv7DA68WzFT/5FsID9Qbufx6tfxxFg/t5w
+	 IszudrxnKt8gHMvNXYJJHrR4zTxsbumNS3kmR7Kq8k+kVnxjWHsBnTNClRlVE3PMke
+	 3Gc1GWH4Jn4freM14mdeWbH3gysO3leQkh90rZnedBz3gLijdmM4I8+5NBxNfviu5V
+	 WF3jjA7MyST9BZ6ElMgQVx04W9FTWzs9+UriT4Q2w5wy3Idiqgfi0XEnKpUuyGYOF7
+	 lfO+7qQTn7hUg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Sasha Levin <sashal@kernel.org>,
+	conor@kernel.org
+Subject: [PATCH AUTOSEL 6.1 01/12] soc: microchip: Fix POLARFIRE_SOC_SYS_CTRL input prompt
+Date: Thu, 29 Feb 2024 15:40:23 -0500
+Message-ID: <20240229204039.2861519-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: Fix page refcounts for unaligned buffers in
- __bio_release_pages()
-Content-Language: en-US
-X-ASG-Orig-Subj: Re: [PATCH] block: Fix page refcounts for unaligned buffers in
- __bio_release_pages()
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Andrew Morton <akpm@linux-foundation.org>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Hugh Dickins <hughd@google.com>, Hannes Reinecke <hare@suse.de>,
- Keith Busch <kbusch@kernel.org>, linux-mm <linux-mm@kvack.org>,
- linux-block@vger.kernel.org, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <86e592a9-98d4-4cff-a646-0c0084328356@cybernetics.com>
- <ZeDguZujxets0KtD@casper.infradead.org>
-From: Tony Battersby <tonyb@cybernetics.com>
-In-Reply-To: <ZeDguZujxets0KtD@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.79
 Content-Transfer-Encoding: 8bit
-X-Barracuda-Connect: UNKNOWN[10.10.4.126]
-X-Barracuda-Start-Time: 1709239232
-X-Barracuda-URL: https://10.10.4.122:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at cybernetics.com
-X-Barracuda-Scan-Msg-Size: 1861
-X-Barracuda-BRTS-Status: 1
 
-On 2/29/24 14:53, Matthew Wilcox wrote:
-> On Thu, Feb 29, 2024 at 01:08:09PM -0500, Tony Battersby wrote:
->> Fix an incorrect number of pages being released for buffers that do not
->> start at the beginning of a page.
-> Oh, I see what I did.  Wouldn't a simpler fix be to just set "done" to
-> offset_in_page(fi.offset)?
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Actually it would be:
+[ Upstream commit 6dd9a236042e305d7b69ee92db7347bf5943e7d3 ]
 
-ssize_t done = -offset_in_page(offset);
+The symbol's prompt should be a one-line description, instead of just
+duplicating the symbol name.
 
-But then you have signed vs. unsigned comparison in the while(), or you
-could rearrange the loop to avoid the negative, but then it gets clunky.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/soc/microchip/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
->> @@ -1152,7 +1152,7 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
->>  
->>  	bio_for_each_folio_all(fi, bio) {
->>  		struct page *page;
->> -		size_t done = 0;
->> +		size_t nr_pages;
->>  
->>  		if (mark_dirty) {
->>  			folio_lock(fi.folio);
->> @@ -1160,10 +1160,11 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
->>  			folio_unlock(fi.folio);
->>  		}
->>  		page = folio_page(fi.folio, fi.offset / PAGE_SIZE);
->> +		nr_pages = (fi.offset + fi.length - 1) / PAGE_SIZE -
->> +			   fi.offset / PAGE_SIZE + 1;
->>  		do {
->>  			bio_release_page(bio, page++);
->> -			done += PAGE_SIZE;
->> -		} while (done < fi.length);
->> +		} while (--nr_pages != 0);
->>  	}
->>  }
->>  EXPORT_SYMBOL_GPL(__bio_release_pages);
-> The long-term path here, I think, is to replace this bio_release_page()
-> with a bio_release_folio(folio, offset, length) which calls into
-> a new unpin_user_folio(folio, nr) which calls gup_put_folio().
-
-I developed the patch with the 6.1 stable series, which just has:
-
-nr_pages = (fi.offset + fi.length - 1) / PAGE_SIZE -
-	   fi.offset / PAGE_SIZE + 1;
-folio_put_refs(fi.folio, nr_pages);
-
-Which is another reason that I went for the direct nr_pages
-calculation.  Would you still prefer the negative offset_in_page() approach?
-
-Tony
+diff --git a/drivers/soc/microchip/Kconfig b/drivers/soc/microchip/Kconfig
+index eb656b33156ba..f19e74d342aa2 100644
+--- a/drivers/soc/microchip/Kconfig
++++ b/drivers/soc/microchip/Kconfig
+@@ -1,5 +1,5 @@
+ config POLARFIRE_SOC_SYS_CTRL
+-	tristate "POLARFIRE_SOC_SYS_CTRL"
++	tristate "Microchip PolarFire SoC (MPFS) system controller support"
+ 	depends on POLARFIRE_SOC_MAILBOX
+ 	help
+ 	  This driver adds support for the PolarFire SoC (MPFS) system controller.
+-- 
+2.43.0
 
