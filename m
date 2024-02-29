@@ -1,90 +1,161 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B31B5A0FC
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEAE5A4D4;
+	Thu, 29 Feb 2024 09:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709198416; cv=none; b=Jjxjo8krd3SqTMB2qogQ5utpBkd/dpPpWQPAyOOxVR+udNpzLdBZxykjkE5icaygaq4dNN9GAcf4zutHnicKtKICNMa8q1i8GaD/s7GgBgM9RCs/sUM+sv3ndpASaJhR3KEPePzWBb+Xq0QxRc/glbgDpr5tFSGPChFzRt+3wH4=
+	t=1709198425; cv=none; b=fvz7QMCerVq6grc+X6NISrKnzjePQjh5i3fe/o51/50MEwqQ0EGuX6eTDcF2KXzVRTJ3ggDbfMW9x9cMrd0WUBVUpGOM3NsBC7MjsCM6eDR/qt7hwWEueh3KbY5XyF5FQqFyrjgkycnDCAielkgA6LjYbRyLf3ymPTT6/0BQtPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709198416; c=relaxed/simple;
-	bh=5xzfnn3F2GF2BfKe/mVyPJKPZNzVltzgAEBEx7mAnhk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AkdIECoLk965Q2VCb3rXSJt3EZj5SgE3iSNUIQ0hpwCqC8lIQ47aIlJRG6N1TAXk90u+4UCEGFoWrDwCEADQwAkBsg0Jf4n4riOey/PqYYWJbyPwx53H1clMwfPptIazC9taEwOFnRhmLtUEsJSaveeh6bTHzraQVkIdLUZTK+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BgfHQuZf; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BgfHQuZf"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso736622276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:20:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709198413; x=1709803213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5xzfnn3F2GF2BfKe/mVyPJKPZNzVltzgAEBEx7mAnhk=;
-        b=BgfHQuZft3r4L/CZCnL4Qe8QX3b99EIcOrvScbe4ckSkfABseWzaJal8aDD4D8pqnx
-         7hWlPF/XP71qOLqZAzN20mbge7gl6RYw5RGU67dwW09hnZVrB08GJ10ExletdYFGPeW/
-         NGGdmd9dyIzUUg8T7dgiRPIAiegGoGfokjes+PjOHz2XUwvQjAT7P7HqcjBbBNKJS5aS
-         dEU0JDghOEccNS7dsI3TSjUCVqEfetHzSjYGW3gwhROEgfkEHzD0Bv1cnD0ZLnjMh7dA
-         B+V5m0mkXascWaz4pQdTJAis65wHPEUsSOxbJN9bjEqJis9nqIAtc1qt8SqFvKbbbTgO
-         a2+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709198413; x=1709803213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5xzfnn3F2GF2BfKe/mVyPJKPZNzVltzgAEBEx7mAnhk=;
-        b=PT6gkOBj9eQPq66XFywA8rsa7Pdv7t+rLygg8xdfFsETyzlKe7vu/BOwzkxLdDzSQ5
-         Hhs+toab64auOLQE/dRgDko68gm7ehhasRO+ydxOHmJn6uX8CAdp5tjwv8XNlVzgMzOC
-         T8KC7s3Zk/eCdWRcuRfz6tYJLXoNf+Rs3Bo6XzAZFVGVHkXPUtK5GepIs8UiImHLC8Xc
-         fsmjSoRTHYI2iFbLI/2ArHoXnpYSKZDXM5TK61Hdl0G2nKBmcTNhbtAudmEX9OzAIhkE
-         K72ejMIU5avMtKuqUPq7nMFhBCBc8ZNRnkuUw6GmVPcOwER8J27QaVR+Mf2ToC8Gzgta
-         Yv6w==
-X-Forwarded-Encrypted: i=1; AJvYcCV9kjBJQeDxqO69F+LHfPqerj19W9Lb+GA8RIU1/9evzOn3oL1LePActTgslY6aNfOPp7SAtfIFhTJlJObDgxs+uvcnqGPAFKDBAmED
-X-Gm-Message-State: AOJu0YxSpKfLiehJYX732pqkiuk6w+fRqU8WuR2fmlbTYkRHdb+/i6wP
-	1o+kup3/ATt1GdWQr6+WTmb5YRuyloVTMBvAQco2RPAP3+5AI1NwuzOf2GWCHjK0/UcwvcrEk8e
-	YpCtawdIuVqM7498ShPIQYoFYa9rKh5+/C+GmXQ==
-X-Google-Smtp-Source: AGHT+IGt1MHfcsA4yW7IZbUF8nqXwJyHryvR5atqc+sje8VW2MJ+tKCW4a3qqqWQL8pBx8LXl1is3Fk6Gy4y4Etyzw0=
-X-Received: by 2002:a25:ce14:0:b0:dcb:b072:82d5 with SMTP id
- x20-20020a25ce14000000b00dcbb07282d5mr1507386ybe.64.1709198413600; Thu, 29
- Feb 2024 01:20:13 -0800 (PST)
+	s=arc-20240116; t=1709198425; c=relaxed/simple;
+	bh=4F/X5Z6QsULNfoSYXx+VhyVs0V627xYO/1kLOHJm/zU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=buCX5YUqJZCIEUy109cdNxk+vF5wFqHllAvu5DEmFGRBGCqM13Gxz0Smc8F2g34MlYS89m2sPtmsV4GaTeb27cvzlIK/XTPPTx28nITGD14VIbSotbDH0KyMrBy7xpZP05P5Goxae/Byjj8WwX6oJUvRwr0HU8vTLauBKF88mXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: by air.basealt.ru (Postfix, from userid 490)
+	id AF09C2F2025F; Thu, 29 Feb 2024 09:20:20 +0000 (UTC)
+X-Spam-Level: 
+Received: from [10.88.144.178] (obninsk.basealt.ru [217.15.195.17])
+	by air.basealt.ru (Postfix) with ESMTPSA id A8BA72F20251;
+	Thu, 29 Feb 2024 09:20:18 +0000 (UTC)
+Message-ID: <077c8417-03bf-8d61-5d3a-0aef91b55659@basealt.ru>
+Date: Thu, 29 Feb 2024 12:20:18 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-4-3ba757474006@bootlin.com>
-In-Reply-To: <20240228-mbly-gpio-v2-4-3ba757474006@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 10:20:02 +0100
-Message-ID: <CACRpkdZ301u-iAGBVQS0VPW+2XX=onGViuaK7fZ8eeTOXJCFPw@mail.gmail.com>
-Subject: Re: [PATCH v2 04/30] dt-bindings: gpio: nomadik: add optional reset property
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH net] gtp: fix use-after-free and null-ptr-deref in
+ gtp_newlink()
+Content-Language: en-US
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240228114703.465107-1-oficerovas@altlinux.org>
+ <Zd_HAGqXSE6Nwcag@calendula>
+From: Vasiliy Kovalev <kovalev@altlinux.org>
+In-Reply-To: <Zd_HAGqXSE6Nwcag@calendula>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boot=
-lin.com> wrote:
+Hi,
 
-> Add optional reset device-tree property to the Nomadik GPIO controller.
->
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+29.02.2024 02:51, Pablo Neira Ayuso wrote:
+> On Wed, Feb 28, 2024 at 02:47:03PM +0300, Alexander Ofitserov wrote:
+>> The gtp_link_ops operations structure for the subsystem must be
+>> registered after registering the gtp_net_ops pernet operations structure.
+> 
+> A fix for this was already applied, see:
+> 
+> commit 136cfaca22567a03bbb3bf53a43d8cb5748b80ec
+> Author: Vasiliy Kovalev <kovalev@altlinux.org>
+> Date:   Wed Feb 14 19:27:33 2024 +0300
+> 
+>      gtp: fix use-after-free and null-ptr-deref in gtp_genl_dump_pdp()
+> 
+>> diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+>> index 2129ae42c7030..0ddec4cc84093 100644
+>> --- a/drivers/net/gtp.c
+>> +++ b/drivers/net/gtp.c
+>> @@ -1903,26 +1903,26 @@ static int __init gtp_init(void)
+>>   
+>>   	get_random_bytes(&gtp_h_initval, sizeof(gtp_h_initval));
+>>   
+>> -	err = rtnl_link_register(&gtp_link_ops);
+>> +	err = register_pernet_subsys(&gtp_net_ops);
+>>   	if (err < 0)
+>>   		goto error_out;
+> 
+> BTW, I like that this calls register_pernet_subsys() before
+> rtnl_link_register(), where a rtnetlink request could come before
+> pernet is set up.
+> 
+>> -	err = register_pernet_subsys(&gtp_net_ops);
+>> +	err = rtnl_link_register(&gtp_link_ops);
+>>   	if (err < 0)
+>> -		goto unreg_rtnl_link;
+>> +		goto unreg_pernet_subsys;
+>>   
+>>   	err = genl_register_family(&gtp_genl_family);
+>>   	if (err < 0)
+>> -		goto unreg_pernet_subsys;
+>> +		goto unreg_rtnl_link;
+>>   
+>>   	pr_info("GTP module loaded (pdp ctx size %zd bytes)\n",
+>>   		sizeof(struct pdp_ctx));
+>>   	return 0;
+>>   
+>> -unreg_pernet_subsys:
+>> -	unregister_pernet_subsys(&gtp_net_ops);
+>>   unreg_rtnl_link:
+>>   	rtnl_link_unregister(&gtp_link_ops);
+>> +unreg_pernet_subsys:
+>> +	unregister_pernet_subsys(&gtp_net_ops);
+>>   error_out:
+>>   	pr_err("error loading GTP module loaded\n");
+>>   	return err;
+>> -- 
+>> 2.42.1
+>>
+>>
 
-Patch applied!
+This patch fixes another problem, but a similar one, since the sequence 
+is incorrect when registering subsystems.
 
-Yours,
-Linus Walleij
+Initially, the registration sequence in the gtp module was as follows:
+
+1) rtnl_link_register();
+
+2) genl_register_family();
+
+3) register_pernet_subsys();
+
+During debugging of the module, when starting the syzkaller reproducer, 
+it turned out that after genl_register_family() (2),
+
+without waiting for register_pernet_subsys()(3), the .dumpit  event is 
+triggered, in which the data of the unregistered pernet subsystem is 
+accessed.
+
+That is, the bug was fixed by the commit
+
+136cfaca2256 ("gtp: fix use-after-free and null-ptr-deref in 
+gtp_genl_dump_pdp()") [1]
+
+and the registration sequence became as follows:
+
+1) rtnl_link_register();
+
+2) register_pernet_subsys();
+
+3) genl_register_family();
+
+However, syzkaller has discovered another problem:
+
+after registering rtnl_link_register, the .newlink event is triggered, 
+in which the data of the unregistered pernet subsystem is accessed.
+
+This problem is reproducible on current stable kernels and the latest 
+upstream kernel 6.8-rc6, in which the patch 136cfaca2256 [1] is applied.
+
+Therefore, the correct sequence should be as follows:
+
+1) register_pernet_subsys();
+
+2) rtnl_link_register();
+
+3) genl_register_family();
+
+The proposed patch is developed on top of the commit changes [1], does 
+not conflict with it and fixes the described bug.
+
+[1] 
+https://lore.kernel.org/lkml/20240220160434.29bcaf43@kernel.org/T/#mb1f72c2ad57b7ea6d47333e8616beccf8bce0e23
+
+-- 
+Regards,
+Vasiliy Kovalev
