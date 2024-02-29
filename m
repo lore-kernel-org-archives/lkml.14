@@ -1,110 +1,68 @@
-Received: from mail.cybernetics.com (mail.cybernetics.com [72.215.153.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10137A157
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 18:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.215.153.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F488160649;
+	Thu, 29 Feb 2024 18:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709231239; cv=none; b=McJRNt2y8x4V5tDNLKNizqRDcHmzvMjQlndSGIXgXwj6ZR7gGPMckWmOqZ2rVSgNiW0/Le2WN4ts/XthIS0LmllmcQkPrX5FkEWhfLnUo+HXNibckz0+TIYx2TgtY4UjksYRCK3vfI+PLioeYnwS7KyrNOl2zHlBcMtfnDLiSr8=
+	t=1709231248; cv=none; b=Wc3wAw11tcvc+OwAEPDvFe7NJQVqbL8zt1KzBSwyN7Zb1nDhsvICqg2L0fmQmKW42oeQ/OmPpKTOsfxZoslE1jIynnyKQP16NMbBrWatKpoPUfgH9f0ktSEFELIaUPEvvlqtagjXLVSpINZ290T+b+8lW/X9iZkqAi7S0oxhxqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709231239; c=relaxed/simple;
-	bh=0ujY1W7EPTMDMv8Qjd/XFEAXcyl4EZ0O06CzvoVFYCc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=FiR/9aIhjQFwCcGsuFzwQkxGWNm59SZ7msxGDbtjYsdvf6iXcn7dI608YwFTkHmC3eFzxKf1ltpqELWk64bJenyUAMC8ebgvaQZIbqdVc0eUudNvCw5K3lSeHMBsZHrYvkL9ZSkEtYrFDxGsimDLVUkDXzfopEpYw59bi1dOZ7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cybernetics.com; spf=pass smtp.mailfrom=cybernetics.com; dkim=pass (1024-bit key) header.d=cybernetics.com header.i=@cybernetics.com header.b=EHNEAJpH; arc=none smtp.client-ip=72.215.153.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cybernetics.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cybernetics.com
+	s=arc-20240116; t=1709231248; c=relaxed/simple;
+	bh=DM1+TDGlpoIdXe3Yub3/EkTQHLT0a3FH9jPyyK8F8Lk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TfK5J0tLaaEESVJI21hRi7G1HGfA5inuPv4nOlaxUeRjgWRs/jPkG2sZnFMTRmRTs2PCZ9IvkfoiSKJ72vqT+KO7Jbi+948qzJ37mBbaiMQb8NjiL65MHD/vp8zZLrBnrAA3u8/s6nzv0CA22bv4j/PrdVMLBGh3/l7PgJ8h628=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eCj3smvi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cybernetics.com header.i=@cybernetics.com header.b="EHNEAJpH"
-X-ASG-Debug-ID: 1709230070-1cf4391a1c4fcf0003-xx1T2L
-Received: from cybernetics.com ([10.10.4.126]) by mail.cybernetics.com with ESMTP id skGYSPFiFfPsVh4j for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:08:13 -0500 (EST)
-X-Barracuda-Envelope-From: tonyb@cybernetics.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.10.4.126
-X-ASG-Whitelist: Client
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cybernetics.com; s=mail;
-	bh=GyTYh7rZxyuaZxAK4E6INt0hy/oXnF2VsS983Qgm9WI=;
-	h=Content-Transfer-Encoding:Content-Type:Subject:From:Cc:To:Content-Language:
-	MIME-Version:Date:Message-ID; b=EHNEAJpH9NO6DGJeblalbgxMQVo9ZjLHP5lNuDo0CY5z+
-	3qRP6j8BSOQ1clNEfFa8V1xd1wyAxTkw7gIdJuf4r5DcXWB08/uQ/7qeVuc70mLwffJnHoNaXO4ro
-	5M6b7FYErqw/nqlHndEyRgwppLhJ5Aw8n43zpvTRnqCKTu0iA=
-Received: from [10.157.2.224] (HELO [192.168.200.1])
-  by cybernetics.com (CommuniGate Pro SMTP 7.1.1)
-  with ESMTPS id 13108803; Thu, 29 Feb 2024 13:08:10 -0500
-Message-ID: <86e592a9-98d4-4cff-a646-0c0084328356@cybernetics.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.157.2.224
-Date: Thu, 29 Feb 2024 13:08:09 -0500
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eCj3smvi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDA79C433C7;
+	Thu, 29 Feb 2024 18:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709231248;
+	bh=DM1+TDGlpoIdXe3Yub3/EkTQHLT0a3FH9jPyyK8F8Lk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eCj3smviGbgJc8R+R+fPnSE9fDlU9bvsgVf74CJPIW+Spe38sco9f7qemvXqwh6/9
+	 +ilwwrVWUheYxO+Uxi9fEMM9aDB8SzzuTh3x6axiwJo8+9Z45J7nOHhbrHXdmfklSP
+	 DGJQUzDVruZDpaRjLIsAAOviUrECdgk4ihHzmucc=
+Date: Thu, 29 Feb 2024 13:27:26 -0500
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	linux-iio@vger.kernel.org, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adc: add ad7944 ADCs
+Message-ID: <20240229-imaginary-sophisticated-dodo-5b97b8@lemur>
+References: <20240228-ad7944-mainline-v3-0-781b922334af@baylibre.com>
+ <20240228-ad7944-mainline-v3-1-781b922334af@baylibre.com>
+ <06235b66-6948-49b3-b881-198443a421df@linaro.org>
+ <CAMknhBHhrNc-6qggSD1pt8djc9cv93dyNON8c_np6RwqT3yzig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Jens Axboe <axboe@kernel.dk>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Hugh Dickins <hughd@google.com>, Hannes Reinecke <hare@suse.de>,
- Keith Busch <kbusch@kernel.org>, linux-mm <linux-mm@kvack.org>,
- linux-block@vger.kernel.org, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From: Tony Battersby <tonyb@cybernetics.com>
-Subject: [PATCH] block: Fix page refcounts for unaligned buffers in
- __bio_release_pages()
-Content-Type: text/plain; charset=UTF-8
-X-ASG-Orig-Subj: [PATCH] block: Fix page refcounts for unaligned buffers in
- __bio_release_pages()
-Content-Transfer-Encoding: 7bit
-X-Barracuda-Connect: UNKNOWN[10.10.4.126]
-X-Barracuda-Start-Time: 1709230093
-X-Barracuda-URL: https://10.10.4.122:443/cgi-mod/mark.cgi
-X-Barracuda-BRTS-Status: 1
-X-Virus-Scanned: by bsmtpd at cybernetics.com
-X-Barracuda-Scan-Msg-Size: 1347
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMknhBHhrNc-6qggSD1pt8djc9cv93dyNON8c_np6RwqT3yzig@mail.gmail.com>
 
-Fix an incorrect number of pages being released for buffers that do not
-start at the beginning of a page.
+On Thu, Feb 29, 2024 at 08:35:47AM -0600, David Lechner wrote:
+> Oh geez, yeah really dumb mistake. Will resend. I do use b4 but it
+> doesn't handle per-patch changelogs that I know of.
 
-Fixes: 1b151e2435fc ("block: Remove special-casing of compound pages")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tony Battersby <tonyb@cybernetics.com>
----
+b4 directly doesn't, but you can put them under --- in individual commits and
+they should be preserved and included on send. E.g.:
 
-Tested with 6.1.79.  The 6.1 backport can just use
-folio_put_refs(fi.folio, nr_pages) instead of do {...} while.
+    foodrv: add new device bar-0x555
 
- block/bio.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+    The commit message that should go into the tree.
 
-diff --git a/block/bio.c b/block/bio.c
-index b9642a41f286..b52b56067e79 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1152,7 +1152,7 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
- 
- 	bio_for_each_folio_all(fi, bio) {
- 		struct page *page;
--		size_t done = 0;
-+		size_t nr_pages;
- 
- 		if (mark_dirty) {
- 			folio_lock(fi.folio);
-@@ -1160,10 +1160,11 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
- 			folio_unlock(fi.folio);
- 		}
- 		page = folio_page(fi.folio, fi.offset / PAGE_SIZE);
-+		nr_pages = (fi.offset + fi.length - 1) / PAGE_SIZE -
-+			   fi.offset / PAGE_SIZE + 1;
- 		do {
- 			bio_release_page(bio, page++);
--			done += PAGE_SIZE;
--		} while (done < fi.length);
-+		} while (--nr_pages != 0);
- 	}
- }
- EXPORT_SYMBOL_GPL(__bio_release_pages);
+    Signed-off-by: You <you@example.com>
+    ---
+    Changes:
 
-base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
--- 
-2.25.1
+    v3: add foo to bar
 
+-K
