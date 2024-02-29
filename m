@@ -1,270 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913E34AEC8;
-	Thu, 29 Feb 2024 16:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E3F6CBE0;
+	Thu, 29 Feb 2024 16:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709224078; cv=none; b=J/WzwuCmrFng/7eUO2y79pMScFpcWZwc7HjDp24kXxZT4cundvi7mg74TLgMkURu7mUQYv3mA1gnF04Be1CI9Jjlw1mgR5bOAI1rU2x/LcZcjfgKZp13jNNqHeKcFrGpatBacSBY7Ghn2BMCyLgiPhodzUGW09OYpFSSrknm3gs=
+	t=1709224138; cv=none; b=RlgEzoPp+HymUrW2RLArSw1cIFH9NrXWkKrWacZIn1157k0RpUUoscb3roUjsfIEN8CnbgVlwhSKDilbscOsNIBnqcIjis05xNcNj8EZ0asgcJMGFu9DZRiM5JedBb+dhnu852HNY76khrC74HfJvun/7Bj4g0ohGnMlqPGQRxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709224078; c=relaxed/simple;
-	bh=FWCxX58oaTp/I5tWymdZXgSX0/MgNSs17Vpy+x3zz+0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kx1hYF8rxB1zBjfoUHgPogyn2haoiybX29rHgFx2+bIpNF3xX1gqCP255YNHC15X9TPrW1nmX2rkSIUULOeW+MklGow5mP9te7b9alOoT3qPBzEhMQNe6d/+5emxrdR/MZb7pRTBdCiGzWJAQKNz0HQ5PwYfAuJnF+dqjygYS+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mLIYjEPx; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709224138; c=relaxed/simple;
+	bh=z4pcMkbx7CwYtTLR1xVSD2jGRP8EoN4FBh8txazgN9A=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Yk8q9AvQFOuB1esStVtnxxiAbNRAJO0Lil2m8r8FT9CAlg2fRrQ9+bKc1dG78FWod6jA/kKEmM1XWRNFEVvAAoBpuN1c4pE1xPbR54pFkpMR8/156j57BTE2ApuKfjKdf/J/LB4tFx3BJDN5W/hxEU0A/Q+Os1ZE7XUJ9fUKEPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Q14FqFwO; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mLIYjEPx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709224076; x=1740760076;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FWCxX58oaTp/I5tWymdZXgSX0/MgNSs17Vpy+x3zz+0=;
-  b=mLIYjEPx7Lm9tqa7f8tPQNBAxUhupAkG/Vr03l2/D7nYI+2Q1h2OyBdL
-   Dhfcm+lJjoewkKgbmuLGOBcUmfZK+05VVjxtKM1t8jVmOixnxZ5XAkylL
-   EZMYeWNeD7gBZMGxAZSe8BKANnSDOcvfkhw4Imlr43M/dJcXRteYZUDHK
-   v69w73caJePznmaNOTLqH0ITuPtU2ojgf9MGaSPDYuj16jM8VNnvCLW6H
-   kgMVnoUIUWPdX5QHI8SyECyNz9veIp9J6F1bSpH8U6cPbvEP7eBiPPDNJ
-   w0YejxSAzDXdVxFQbjgfOlLv/+CfBWnCvx+JlBRJ6jBOuYIcBt3nSEUlL
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="6660694"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="6660694"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 08:27:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="937036139"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="937036139"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Feb 2024 08:27:45 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id A0C48476; Thu, 29 Feb 2024 18:27:44 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>
-Subject: [PATCH v3 2/4] driver core: Move fw_devlink stuff to where it belongs
-Date: Thu, 29 Feb 2024 18:23:44 +0200
-Message-ID: <20240229162741.3854912-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240229162741.3854912-1-andriy.shevchenko@linux.intel.com>
-References: <20240229162741.3854912-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Q14FqFwO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709224134;
+	bh=z4pcMkbx7CwYtTLR1xVSD2jGRP8EoN4FBh8txazgN9A=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=Q14FqFwOkU3VixMurYxnw1yk1ZbMV9inkY4T1bEtUk4/XS5dyG+R94vFtllvI/t1b
+	 BLOtyXu7swxRNfucTD11pVsSgdE0emaKDk+nNA+iRUqy11TXgGKLTE0dbr4QtYhiAW
+	 3R3NW0akW34+qswicx0By/kpbDHalnrt0hcUHs1fQf08vDKcmYxD0p4odjklxshMID
+	 bek9QpSuvYFpYd2ms1DWsCyijWVcDNkR+DROy3guaDoYd21B1zBqeAE/1j+qZu0tTL
+	 nVulcl3OdM19BKtZutlAs+shYJGgpfIoXjlhEB9AgDh2FFQa2kdoq7wtco/LS2xlHT
+	 dlzl/nirPPcnA==
+Received: from nicolas-tpx395.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 92CC13782066;
+	Thu, 29 Feb 2024 16:28:51 +0000 (UTC)
+Message-ID: <51fa8932e57010620e9a9e16a1979f4883e95a7d.camel@collabora.com>
+Subject: Re: [PATCH 0/3] kci-gitlab: Introducing GitLab-CI Pipeline for
+ Kernel Testing
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Nikolai Kondrashov <spbnick@gmail.com>, Guillaume Tucker
+ <gtucker@gtucker.io>, Helen Koike <helen.koike@collabora.com>, 
+ linuxtv-ci@linuxtv.org, dave.pigott@collabora.com, mripard@kernel.org, 
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-kselftest@vger.kernel.org, gustavo.padovan@collabora.com, 
+ pawiecz@collabora.com, tales.aparecida@gmail.com,
+ workflows@vger.kernel.org,  kernelci@lists.linux.dev,
+ skhan@linuxfoundation.org, kunit-dev@googlegroups.com, 
+ nfraprado@collabora.com, davidgow@google.com, cocci@inria.fr, 
+ Julia.Lawall@inria.fr, laura.nao@collabora.com,
+ ricardo.canuelo@collabora.com,  kernel@collabora.com,
+ torvalds@linuxfoundation.org, gregkh@linuxfoundation.org
+Date: Thu, 29 Feb 2024 11:28:48 -0500
+In-Reply-To: <a5726043-1906-44ba-a6ee-a725a2776269@gmail.com>
+References: <20240228225527.1052240-1-helen.koike@collabora.com>
+	 <d99d026e-ed32-4432-bab3-db75296e67d8@gtucker.io>
+	 <a5726043-1906-44ba-a6ee-a725a2776269@gmail.com>
+Autocrypt: addr=nicolas.dufresne@collabora.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-A few APIs, i.e. fwnode_is_ancestor_of(), fwnode_get_next_parent_dev(),
-and get_dev_from_fwnode(), that belong specifically to the fw_devlink APIs,
-may be static, but they are not.
+Hi,
 
-Resolve this mess by moving them to the driver/base/core where the all
-users are being resided and make static.
+Le jeudi 29 f=C3=A9vrier 2024 =C3=A0 16:16 +0200, Nikolai Kondrashov a =C3=
+=A9crit=C2=A0:
+> On 2/29/24 2:20 PM, Guillaume Tucker wrote:
+> > Hello,
+> >=20
+> > On 28/02/2024 23:55, Helen Koike wrote:
+> > > Dear Kernel Community,
+> > >=20
+> > > This patch introduces a `.gitlab-ci` file along with a `ci/` folder, =
+defining a
+> > > basic test pipeline triggered by code pushes to a GitLab-CI instance.=
+ This
+> > > initial version includes static checks (checkpatch and smatch for now=
+) and build
+> > > tests across various architectures and configurations. It leverages a=
+n
+> > > integrated cache for efficient build times and introduces a flexible =
+'scenarios'
+> > > mechanism for subsystem-specific extensions.
+> >=20
+> > This sounds like a nice starting point to me as an additional way
+> > to run tests upstream.  I have one particular question as I see a
+> > pattern through the rest of the email, please see below.
+> >=20
+> > [...]
+> >=20
+> > > 4. **Collaborative Testing Environment:** The kernel community is alr=
+eady
+> > > engaged in numerous testing efforts, including various GitLab-CI pipe=
+lines such
+> > > as DRM-CI, which I maintain, along with other solutions like KernelCI=
+ and
+> > > BPF-CI. This proposal is designed to further stimulate contributions =
+to the
+> > > evolving testing landscape. Our goal is to establish a comprehensive =
+suite of
+> > > common tools and files.
+> >=20
+> > [...]
+> >=20
+> > > **Leveraging External Test Labs:**
+> > > We can extend our testing to external labs, similar to what DRM-CI cu=
+rrently
+> > > does. This includes:
+> > > - Lava labs
+> > > - Bare metal labs
+> > > - Using KernelCI-provided labs
+> > >=20
+> > > **Other integrations**
+> > > - Submit results to KCIDB
+> >=20
+> > [...]
+> >=20
+> > > **Join Our Slack Channel:**
+> > > We have a Slack channel, #gitlab-ci, on the KernelCI Slack instance h=
+ttps://kernelci.slack.com/ .
+> > > Feel free to join and contribute to the conversation. The KernelCI te=
+am has
+> > > weekly calls where we also discuss the GitLab-CI pipeline.
+> > >=20
+> > > **Acknowledgments:**
+> > > A special thanks to Nikolai Kondrashov, Tales da Aparecida - both fro=
+m Red Hat -
+> > > and KernelCI community for their valuable feedback and support in thi=
+s proposal.
+> >=20
+> > Where does this fit on the KernelCI roadmap?
+> >=20
+> > I see it mentioned a few times but it's not entirely clear
+> > whether this initiative is an independent one or in some way
+> > linked to KernelCI.  Say, are you planning to use the kci tool,
+> > new API, compiler toolchains, user-space and Docker images etc?
+> > Or, are KernelCI plans evolving to follow this move?
+>=20
+> I would say this is an important part of KernelCI the project, considerin=
+g its=20
+> aim to improve testing and CI in the kernel. It's not a part of KernelCI =
+the=20
+> service as it is right now, although I would say it would be good to have=
+=20
+> ability to submit KernelCI jobs from GitLab CI and pull results in the sa=
+me=20
+> pipeline, as we discussed earlier.
 
-No functional changes intended.
+I'd like to add that both CI have a different purpose in the Linux project.=
+ This
+CI work is a pre-merge verification. Everyone needs to run checkpatch and
+smatch, this is automating it (and will catch those that forgot or ran it
+incorrectly). But it can go further by effectively testing specific patches=
+ on
+real hardware (with pretty narrow filters). It will help catch submission i=
+ssues
+earlier, and reduce kernelCI regression rate. As a side effect, kernelCI in=
+fra
+will endup catching the "integration" issues, which are the issue as a resu=
+lt of
+simultenous changes in different trees. They are also often more complex an=
+d
+benefit from the bisection capabilities.
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/base/core.c      | 58 ++++++++++++++++++++++++++++++++++++++++
- drivers/base/property.c  | 56 --------------------------------------
- include/linux/fwnode.h   |  1 -
- include/linux/property.h |  2 --
- 4 files changed, 58 insertions(+), 59 deletions(-)
+kernelCI tests are also a lot more intensive, they usually covers everythin=
+g,
+but they bundle multiple changes per run. The pre-merge tests will be reduc=
+ed to
+what seems meaningful for the changes. Its important to understand that pre=
+-
+merge CI have a time cost, and we need to make sure CI time does not exceed=
+ the
+merge window period.
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 9828da9b933c..35ccd8bb2c9b 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1871,6 +1871,7 @@ static void fw_devlink_unblock_consumers(struct device *dev)
- 	device_links_write_unlock();
- }
- 
-+#define get_dev_from_fwnode(fwnode)	get_device((fwnode)->dev)
- 
- static bool fwnode_init_without_drv(struct fwnode_handle *fwnode)
- {
-@@ -1901,6 +1902,63 @@ static bool fwnode_ancestor_init_without_drv(struct fwnode_handle *fwnode)
- 	return false;
- }
- 
-+/**
-+ * fwnode_is_ancestor_of - Test if @ancestor is ancestor of @child
-+ * @ancestor: Firmware which is tested for being an ancestor
-+ * @child: Firmware which is tested for being the child
-+ *
-+ * A node is considered an ancestor of itself too.
-+ *
-+ * Return: true if @ancestor is an ancestor of @child. Otherwise, returns false.
-+ */
-+static bool fwnode_is_ancestor_of(const struct fwnode_handle *ancestor,
-+				  const struct fwnode_handle *child)
-+{
-+	struct fwnode_handle *parent;
-+
-+	if (IS_ERR_OR_NULL(ancestor))
-+		return false;
-+
-+	if (child == ancestor)
-+		return true;
-+
-+	fwnode_for_each_parent_node(child, parent) {
-+		if (parent == ancestor) {
-+			fwnode_handle_put(parent);
-+			return true;
-+		}
-+	}
-+	return false;
-+}
-+
-+/**
-+ * fwnode_get_next_parent_dev - Find device of closest ancestor fwnode
-+ * @fwnode: firmware node
-+ *
-+ * Given a firmware node (@fwnode), this function finds its closest ancestor
-+ * firmware node that has a corresponding struct device and returns that struct
-+ * device.
-+ *
-+ * The caller is responsible for calling put_device() on the returned device
-+ * pointer.
-+ *
-+ * Return: a pointer to the device of the @fwnode's closest ancestor.
-+ */
-+static struct device *fwnode_get_next_parent_dev(const struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *parent;
-+	struct device *dev;
-+
-+	fwnode_for_each_parent_node(fwnode, parent) {
-+		dev = get_dev_from_fwnode(parent);
-+		if (dev) {
-+			fwnode_handle_put(parent);
-+			return dev;
-+		}
-+	}
-+	return NULL;
-+}
-+
- /**
-  * __fw_devlink_relax_cycles - Relax and mark dependency cycles.
-  * @con: Potential consumer device.
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 53e42031c646..d983a4dea105 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -699,34 +699,6 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
- }
- EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
- 
--/**
-- * fwnode_get_next_parent_dev - Find device of closest ancestor fwnode
-- * @fwnode: firmware node
-- *
-- * Given a firmware node (@fwnode), this function finds its closest ancestor
-- * firmware node that has a corresponding struct device and returns that struct
-- * device.
-- *
-- * The caller is responsible for calling put_device() on the returned device
-- * pointer.
-- *
-- * Return: a pointer to the device of the @fwnode's closest ancestor.
-- */
--struct device *fwnode_get_next_parent_dev(const struct fwnode_handle *fwnode)
--{
--	struct fwnode_handle *parent;
--	struct device *dev;
--
--	fwnode_for_each_parent_node(fwnode, parent) {
--		dev = get_dev_from_fwnode(parent);
--		if (dev) {
--			fwnode_handle_put(parent);
--			return dev;
--		}
--	}
--	return NULL;
--}
--
- /**
-  * fwnode_count_parents - Return the number of parents a node has
-  * @fwnode: The node the parents of which are to be counted
-@@ -773,34 +745,6 @@ struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
- }
- EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
- 
--/**
-- * fwnode_is_ancestor_of - Test if @ancestor is ancestor of @child
-- * @ancestor: Firmware which is tested for being an ancestor
-- * @child: Firmware which is tested for being the child
-- *
-- * A node is considered an ancestor of itself too.
-- *
-- * Return: true if @ancestor is an ancestor of @child. Otherwise, returns false.
-- */
--bool fwnode_is_ancestor_of(const struct fwnode_handle *ancestor, const struct fwnode_handle *child)
--{
--	struct fwnode_handle *parent;
--
--	if (IS_ERR_OR_NULL(ancestor))
--		return false;
--
--	if (child == ancestor)
--		return true;
--
--	fwnode_for_each_parent_node(child, parent) {
--		if (parent == ancestor) {
--			fwnode_handle_put(parent);
--			return true;
--		}
--	}
--	return false;
--}
--
- /**
-  * fwnode_get_next_child_node - Return the next child node handle for a node
-  * @fwnode: Firmware node to find the next child node for.
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index 2d23a14857c7..416cbe72f0c7 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -187,7 +187,6 @@ struct fwnode_operations {
- 		if (fwnode_has_op(fwnode, op))				\
- 			(fwnode)->ops->op(fwnode, ## __VA_ARGS__);	\
- 	} while (false)
--#define get_dev_from_fwnode(fwnode)	get_device((fwnode)->dev)
- 
- static inline void fwnode_init(struct fwnode_handle *fwnode,
- 			       const struct fwnode_operations *ops)
-diff --git a/include/linux/property.h b/include/linux/property.h
-index eefd662a2f9d..420420a1d8ad 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -157,11 +157,9 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode);
- 	for (parent = fwnode_get_parent(fwnode); parent;	\
- 	     parent = fwnode_get_next_parent(parent))
- 
--struct device *fwnode_get_next_parent_dev(const struct fwnode_handle *fwnode);
- unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
- struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
- 					    unsigned int depth);
--bool fwnode_is_ancestor_of(const struct fwnode_handle *ancestor, const struct fwnode_handle *child);
- struct fwnode_handle *fwnode_get_next_child_node(
- 	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
- struct fwnode_handle *fwnode_get_next_available_child_node(
--- 
-2.43.0.rc1.1.gbec44491f096
-
+Nicolas
