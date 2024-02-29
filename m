@@ -1,139 +1,91 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAA016FF29;
-	Thu, 29 Feb 2024 21:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F9A16FF21
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 21:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709241804; cv=none; b=F97uurudg30h4ZVWfEh4yTp6bHI8XgGO8atKbH/p8oLqGf1FPZnuLJLDOkGYMKZt8WqONZj60MO2oNdvOxX1NuTPTdXTYvP6KYNMIfeIBurv3fEHIvrCdfPPazY+VPmTviStSyjr8pk7LoTQSnzz0ftWmlyGjUZvLSkAmAvpffY=
+	t=1709241813; cv=none; b=NiURp1GdRKIfmEtNFdUTx6grReP4iO7fXV+gVH7vOfv9+kd/12pEmhZ0CF6Uqgmkgd8rYV/jLAnFcwA4SGfxTlIBoJvjZ53UcIc6w8iA6ewV6ITXO2GGih9EWUPXmbOUF37VGfEv7Or9rl8CIbtzx8SNb9PqzhgRVjC1Goe4ohY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709241804; c=relaxed/simple;
-	bh=dr2CETLPDzvOjfQ+4hzjizFIOCRZWKH7BMDF5xNDmVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t4jEtRJFgpMh3AK1mPN9FWazMoiUuODpTmrd7KhsSyBwlmkR2AcWI7GuNeHjKom9RG5qYh7O0dt/Fq19/kIGeECfZVllomqCiXkGleX+qbArTYOi4BMT2PXbgCFNSVYLDX4uN4yfLe+CbS3c+pEaK3U+hk/xmBXOtI/bGMhI9uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Dj8QYvH1; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1709241813; c=relaxed/simple;
+	bh=VjPiDMf6IhNaW+cu762GVEnCAc1qZeJ+AXh7xICr/eo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=UPywW64MDNEeD1AJZhxYM2kc90xWWhnjaQU130vgFZXGHcJC4S0hKzOWKqvxgdRFhcu6oTZxfO1CsHUn2os9D/R2uDfuuY+IIg81d7JT9GEPMUh7JRMTVmLNMSnvddqLBbZzAiwmn+/SeLJiW1QvV2qzaDgjtYPDSGleVU6SGHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OhvjvEUv; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Dj8QYvH1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=WV/j6Y5N6otWN1tEplJm/8ekXe3vxnN6/ZPGGpf+w6U=; b=Dj
-	8QYvH1CsV06IW27X93TYnqspsw8At9LX7YmY9g02ojJYhZ/sAkNZIeV+PLXzWsijdZLjujg45/JAa
-	l46mK7WWfEvLzGG+J3rBMyelnG3levKWyzWgilnVHaSo2jI18G3Dru47kP9brEN94JpD4VNrfEqnc
-	Ce0PcYvCybZ6IrA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rfnsH-0095Hf-8S; Thu, 29 Feb 2024 22:23:29 +0100
-Date: Thu, 29 Feb 2024 22:23:29 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: =?iso-8859-1?Q?J=E9r=E9mie?= Dautheribes <jeremie.dautheribes@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, Andrew Davis <afd@ti.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
-	Yen-Mei Goh <yen-mei.goh@keysight.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next 1/3] dt-bindings: net: dp83822: support
- configuring RMII master/slave mode
-Message-ID: <68112ecb-532f-4799-912d-16d6ceb9a6f3@lunn.ch>
-References: <20240222103117.526955-1-jeremie.dautheribes@bootlin.com>
- <20240222103117.526955-2-jeremie.dautheribes@bootlin.com>
- <d14ba685-dc7e-4f99-a21e-bae9f3e6bc79@lunn.ch>
- <860648fa-11f5-4e0d-ac4e-e81ea111ef31@bootlin.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OhvjvEUv"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-608cf88048eso24050777b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:23:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709241810; x=1709846610; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fLhWwQ23CyyTvDsLOK851AhQhodJoK3lOakZm//Wnio=;
+        b=OhvjvEUv5RXKCUisVhYiqDWeUklAeaS3hGRg4KGnR2UMBDVg1Vjq/ZK0dkEnNLGsin
+         rT9+I6LUjj8o/9fYKgT0s4kmJQ8KN6YxlI7zO/Zo+rq4ELFdQCUGwX/QDDMYs4gurwcI
+         sZkWN5ns7xDV0q+JPZOYPLTro3EPHMVcWj0BhKAuZyf37uKOUN2rVoWG0J0NG5u+d68t
+         KCvGCAsW9t+aR2FlYAqZqtKu/q8ci/rZs9rgMMtLfrMUxDEKmr0VfodE8Y27yWObtgE2
+         fGuiG78jL3Lh9O0lBVMsp9D5STMXF3ySNIzOSSwnBVz+UexlLkqUdqm0HGwdK9ebflMD
+         Ticg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709241810; x=1709846610;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fLhWwQ23CyyTvDsLOK851AhQhodJoK3lOakZm//Wnio=;
+        b=bKN6dVBOcKK0ARhZRVG9jWHClZGHV/PBoriCbB90h1Rv4hzcN/peIHqxyz/u2ZY3Ei
+         JLEcqPoX+/HPswdY//pwbAiGD+/5UAJ9rJ+4pZyMCZGK22eqeTrPdw1i80u82sJ4D9M1
+         yDJoqBwtMkR81ZFMdKrUbYVJeQaZEuhE+WwAY44F/+BSLWdgeAasAuAg4d3by9ZC1iWz
+         aZmgsXvV7R4fe+CnpPQewPi7ht3Xew5TL5PhMla5SN13WJM7JnRGvOaxyRs9HAyXXxDw
+         zyHjpJdfhGpVtHqQWz9m443Q7KRha2ELJ5WW/QXYO5Y5pWU+BgWjzKBGEdfF7dm+l5Tr
+         iIBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZqPxZwiHhN4x1O5XRhHDRtWI42UlCPoxijbRbQEQXzQWJPiabPhBISYUoeXmPG4k8P2VnxZWzMsLEtYFQktS0tMi7cy9mVDDQQaKq
+X-Gm-Message-State: AOJu0YyDIa3T6R5/9lQMTHq5sEF+ohkI1J/9SVndaIdF5DV+1gxAFr66
+	kT0ySWA/EeEe2tCZnOPV0tNsvnnLekQSIez47SyhqFouo/yLa63gRhIIf6XqFkErPAqqcoSmeCL
+	riN2hx0V5jvNHCQ==
+X-Google-Smtp-Source: AGHT+IFS1dty/+rJQWw2sc3jcb3WwNJDLmAlgdfa2XsO6QwyCtrMLH5+4rkAyXpzjKCLMyIlAwCimbEcA1cqqH8=
+X-Received: from ziweixiao.sea.corp.google.com ([2620:15c:11c:202:43b5:fdf3:8395:a655])
+ (user=ziweixiao job=sendgmr) by 2002:a25:abc2:0:b0:dc7:48ce:d17f with SMTP id
+ v60-20020a25abc2000000b00dc748ced17fmr800935ybi.10.1709241810564; Thu, 29 Feb
+ 2024 13:23:30 -0800 (PST)
+Date: Thu, 29 Feb 2024 13:22:33 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <860648fa-11f5-4e0d-ac4e-e81ea111ef31@bootlin.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+Message-ID: <20240229212236.3152897-1-ziweixiao@google.com>
+Subject: [PATCH net-next 0/3] gve: Add header split support
+From: Ziwei Xiao <ziweixiao@google.com>
+To: netdev@vger.kernel.org
+Cc: jeroendb@google.com, pkaligineedi@google.com, shailend@google.com, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	willemb@google.com, rushilg@google.com, jfraker@google.com, jrkim@google.com, 
+	hramamurthy@google.com, ziweixiao@google.com, horms@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-> > > --- a/Documentation/devicetree/bindings/net/ti,dp83822.yaml
-> > > +++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
-> > > @@ -80,6 +80,22 @@ properties:
-> > >              10625, 11250, 11875, 12500, 13125, 13750, 14375, 15000]
-> > >       default: 10000
-> > > +  ti,rmii-mode:
-> > > +    description: |
-> > > +       If present, select the RMII operation mode. Two modes are
-> > > +       available:
-> > > +         - RMII master, where the PHY operates from a 25MHz clock reference,
-> > > +         provided by a crystal or a CMOS-level oscillator
-> > > +         - RMII slave, where the PHY operates from a 50MHz clock reference,
-> > > +         provided by a CMOS-level oscillator
-> > 
-> > What has master and slave got to do with this?
-> > 
-> > Sometimes, the MAC provides a clock to the PHY, and all data transfer
-> > over the RMII bus is timed by that.
-> > 
-> > Sometimes, the PHY provides a clock to the MAC, and all data transfer
-> > over the RMII bus is timed by that.
-> > 
-> > Here there is a clear master/slave relationship, who is providing the
-> > clock, who is consuming the clock. However, what you describe does not
-> > fit that. Maybe look at other PHY bindings, and copy what they do for
-> > clocks.
-> 
-> In fact, I hesitated a lot before choosing this master/slave designation
-> because of the same reasoning as you. But the TI DP83826 datasheet [1] uses
-> this name for two orthogonal yet connected meanings, here's a copy of the
-> corresponding § (in section 9.3.10):
-> 
-> "The DP83826 offers two types of RMII operations: RMII Slave and RMII
-> Master. In RMII Master operation, the DP83826 operates from either a 25-MHz
-> CMOS-level oscillator connected to XI pin, a 25-MHz crystal connected across
-> XI and XO pins. A 50-MHz output clock referenced from DP83826 can be
-> connected to the MAC. In RMII Slave operation, the DP83826 operates from a
-> 50-MHz CMOS-level oscillator connected to the XI pin and shares the same
-> clock as the MAC. Alternatively, in RMII slave mode, the PHY can operate
-> from a 50-MHz clock provided by the Host MAC."
-> 
-> So it seems that in some cases this also fits the master/slave relationship
-> you describe.
+Currently, the ethtool's ringparam has added a new field tcp-data-split
+for enabling and disabling header split. These three patches will
+utilize that ethtool flag to support header split in GVE driver.
 
-We are normally interested in this 50Mhz reference clock. So i would
-drop all references to 25Mhz. It is not relevant to the binding, since
-it is nothing to do with connecting the PHY to the MAC, and it has a
-fixed value.
+Jeroen de Borst (3):
+  gve: Add header split device option
+  gve: Add header split data path
+  gve: Add header split ethtool stats
 
-So you can simplify this down to:
+ drivers/net/ethernet/google/gve/gve.h         | 27 +++++++-
+ drivers/net/ethernet/google/gve/gve_adminq.c  | 50 ++++++++++++--
+ drivers/net/ethernet/google/gve/gve_adminq.h  | 20 +++++-
+ drivers/net/ethernet/google/gve/gve_ethtool.c | 62 +++++++++++++----
+ drivers/net/ethernet/google/gve/gve_main.c    | 65 ++++++++++++++++--
+ drivers/net/ethernet/google/gve/gve_rx_dqo.c  | 68 ++++++++++++++++++-
+ drivers/net/ethernet/google/gve/gve_utils.c   | 17 +++--
+ drivers/net/ethernet/google/gve/gve_utils.h   |  3 +
+ 8 files changed, 277 insertions(+), 35 deletions(-)
 
-RMII Master: Outputs a 50Mhz Reference clock which can be connected to the MAC.
+-- 
+2.44.0.rc1.240.g4c46232300-goog
 
-RMII Slave: Expects a 50MHz Reference clock input, shared with the
-MAC.
-
-> That said, would you like me to include this description (or some parts) in
-> the binding in addition to what I've already written? Or would you prefer me
-> to use a more meaningful property name?
-
-We don't really have any vendor agnostic consistent naming. dp83867
-and dp83869 seems to call this ti,clk-output-sel. Since this is
-another dp83xxx device, it would be nice if there was consistency
-between all these TI devices. So could you check if the concept is the
-same, and if so, change dp83826 to follow what other TI devices do.
-
-> BTW, this series has already been merged into the net-next tree, I'm not
-> sure what procedure to follow in such cases.
-
-KAPI don't become fixed until published as a release kernel. We can
-rework bindings until then. So just submit patches on top of what is
-already in net-next.
-
-	Andrew
