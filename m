@@ -1,337 +1,252 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEDC7C6C4
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 11:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B04DE7C6C1
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 11:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709207091; cv=none; b=WucgoA206nI91bGhjaf5VKyQjVNlGcGHyZwPogaQKAJgN32gvHboWkC218OFLuPWj+9Z4bss5QQvRqdQ8GL9bI6Lx2CKIG8awQ29EW2GtlrqZ5CHXVqPKGp3HHTDmMfS8GTaVRptvTSY0o1zRbveOkobusjK3d+DExP0wR94L9k=
+	t=1709207110; cv=none; b=rDdzy/ZrsE8kdXBtJd2iUbzrsFaRT+IYl4zaTFUwvLR4ewdG+jrI3jubp1fnOqjphn6pDd0dNwpl/UEBgOgKd2Crj39mxcgMrGSUv4/yUnMHAtZBRqmAC/Jsi2C5wsg1cvgqjtbAQI0P+l/SqjIYXtEqvjv3+WTL/Uct/mO0gJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709207091; c=relaxed/simple;
-	bh=gqSm8MYLIVR/YBvqKOzvJl7HducvnUY68m5cyYziU1g=;
+	s=arc-20240116; t=1709207110; c=relaxed/simple;
+	bh=ZMvT27zZmRa7OAu43iihzVGaDwsXtfM9wdl37+5gSbU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nEybArv0s3C/JDidiVAJEHTKFKhzj319r2+XEPWmNBd0bP901aF6grykdaGFKPPT386LdiQplQINZReq5RxoSro9OLi1N34oj5zuYKEMgLxZDrP+SVLaR/ETbeAbuUHlIYl6MuS15C8LCEHWs7VQyC6GQ55eE5eKh89uxlfasAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UTZawJFm; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UTZawJFm"
-Message-ID: <361e1243-7975-43e1-807e-e9d4473ecc0f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1709207085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KHLGt0Ofqy3PQoH+RqDHzhuytpxwAw+VoEfFRwzP40g=;
-	b=UTZawJFmsLjwlPgLeg8iB8Ct94iJYfbC1jrSbhEaRgfiFMHzNTYKYLSwiZDQ53Rv+rlotr
-	b7NslKmrMNT4WrLxTvXbfIuOteDzfYrVdWwEaQ6YVQRSMfycnjCrtmJ89yt2aVYrVAiUBi
-	oeBPzATAZSt5zcJYJ46nVJz1O2XZIGQ=
-Date: Thu, 29 Feb 2024 11:44:38 +0000
+	 In-Reply-To:Content-Type; b=jGvjwEG84laA5LTIrUNDROdYq1E8tgwO8Y/QUe4eY/GEJTgaqDbZfkUgdHbKtf2Qq+u6h3R3mRs9W85Lrmzas/+R1ERBr5P0I4jsH2Ju0uxv8ngZBTdS9l3skmIVZAM4K51r3UuILNr4+VsAQw4ah5lD19qlbiMprPs2+nMVMHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 019FE1FB;
+	Thu, 29 Feb 2024 03:45:46 -0800 (PST)
+Received: from [10.57.68.58] (unknown [10.57.68.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 225483F762;
+	Thu, 29 Feb 2024 03:45:05 -0800 (PST)
+Message-ID: <58c4726d-73ec-40e5-8f1d-e00c37532af9@arm.com>
+Date: Thu, 29 Feb 2024 11:45:04 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [revert 0d60d8df6f49] [net/net-next] [6.8-rc5] Build Failure
-Content-Language: en-US
-To: Eric Dumazet <edumazet@google.com>,
- Tasmiya Nalatwad <tasmiya@linux.vnet.ibm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- arkadiusz.kubalewski@intel.com, jiri@nvidia.com, kuba@kernel.org,
- "abdhalee@linux.vnet.ibm.com" <abdhalee@linux.vnet.ibm.com>,
- "mputtash@linux.vnet.com" <mputtash@linux.vnet.com>,
- "sachinp@linux.vnet.com" <sachinp@linux.vnet.com>,
- venkat88@linux.vnet.ibm.com,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <3fcf3a2c-1c1b-42c1-bacb-78fdcd700389@linux.vnet.ibm.com>
- <85b78dad-affa-47c3-9cd0-79a4321460b8@linux.dev>
- <CANn89iJEzTjwxF7wXSnUR+NyDu-S-zEOYVXA+fEaYs_1o1g5HQ@mail.gmail.com>
- <a1fdd2c2-4443-458e-86db-280e7cbd4a36@linux.vnet.ibm.com>
- <CANn89iKdaMFCKnGRL4ffnbyrr2PUaKn1hoiu4VZ=sRyX=Vy0Wg@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <CANn89iKdaMFCKnGRL4ffnbyrr2PUaKn1hoiu4VZ=sRyX=Vy0Wg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] mm: convert folio_estimated_sharers() to
+ folio_likely_mapped_shared()
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, Barry Song <v-songbaohua@oppo.com>,
+ Vishal Moola <vishal.moola@gmail.com>
+References: <20240227201548.857831-1-david@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240227201548.857831-1-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 29/02/2024 08:55, Eric Dumazet wrote:
-> On Thu, Feb 29, 2024 at 9:04 AM Tasmiya Nalatwad
-> <tasmiya@linux.vnet.ibm.com> wrote:
->>
->> Greetings,
->>
->> I have tried the patch provided below. Moving struct to file
->> "net/core/rtnetlink.c" is not resolving the problem. Please find the
->> below traces.
->>
->> --- Traces ---
->>
->> In file included from ./include/linux/rbtree.h:24,
->>                    from ./include/linux/mm_types.h:11,
->>                    from ./include/linux/mmzone.h:22,
->>                    from ./include/linux/gfp.h:7,
->>                    from ./include/linux/umh.h:4,
->>                    from ./include/linux/kmod.h:9,
->>                    from ./include/linux/module.h:17,
->>                    from net/core/rtnetlink.c:17:
->> net/core/rtnetlink.c: In function ‘netdev_dpll_pin’:
->> ./include/linux/rcupdate.h:439:9: error: dereferencing pointer to
->> incomplete type ‘struct dpll_pin’
->>     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
->>            ^
->> ./include/linux/rcupdate.h:587:2: note: in expansion of macro
->> ‘__rcu_dereference_check’
->>     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->>     ^~~~~~~~~~~~~~~~~~~~~~~
->> ./include/linux/rtnetlink.h:70:2: note: in expansion of macro
->> ‘rcu_dereference_check’
->>     rcu_dereference_check(p, lockdep_rtnl_is_held())
->>     ^~~~~~~~~~~~~~~~~~~~~
->> net/core/rtnetlink.c:1059:15: note: in expansion of macro
->> ‘rcu_dereference_rtnl’
->>           return rcu_dereference_rtnl(dev->dpll_pin);
->>                  ^~~~~~~~~~~~~~~~~~~~
->>     CC      crypto/algboss.o
->> net/core/rtnetlink.c:1063:1: error: control reaches end of non-void
->> function [-Werror=return-type]
->>    }
->>    ^
->>     CC      crypto/authenc.o
->>     CC      crypto/authencesn.o
->>     CC      crypto/af_alg.o
->>     CC      crypto/algif_hash.o
->>     CC      crypto/algif_skcipher.o
->>     CC      crypto/algif_rng.o
->>     CC      crypto/algif_aead.o
->>     AR      arch/powerpc/kernel/built-in.a
->> cc1: some warnings being treated as errors
->> make[4]: *** [scripts/Makefile.build:243: net/core/rtnetlink.o] Error 1
->> make[4]: *** Waiting for unfinished jobs....
->>     CC      lib/kobject_uevent.o
->>     AR      drivers/net/mdio/built-in.a
->>     AR      net/802/built-in.a
->>     AR      drivers/connector/built-in.a
->>     CC      lib/vsprintf.o
->>     AR      ipc/built-in.a
->>     AR      net/nsh/built-in.a
->>     CC      lib/dynamic_debug.o
->> In file included from ./arch/powerpc/include/generated/asm/rwonce.h:1,
->>                    from ./include/linux/compiler.h:251,
->>                    from ./include/linux/instrumented.h:10,
->>                    from ./include/linux/uaccess.h:6,
->>                    from net/core/dev.c:71:
->> net/core/dev.c: In function ‘netdev_dpll_pin_assign’:
->> ./include/linux/rcupdate.h:462:36: error: dereferencing pointer to
->> incomplete type ‘struct dpll_pin’
->>    #define RCU_INITIALIZER(v) (typeof(*(v)) __force __rcu *)(v)
->>                                       ^~~~
->> ./include/asm-generic/rwonce.h:55:33: note: in definition of macro
->> ‘__WRITE_ONCE’
->>     *(volatile typeof(x) *)&(x) = (val);    \
->>                                    ^~~
->> ./arch/powerpc/include/asm/barrier.h:76:2: note: in expansion of macro
->> ‘WRITE_ONCE’
->>     WRITE_ONCE(*p, v);      \
->>     ^~~~~~~~~~
->> ./include/asm-generic/barrier.h:172:55: note: in expansion of macro
->> ‘__smp_store_release’
->>    #define smp_store_release(p, v) do { kcsan_release();
->> __smp_store_release(p, v); } while (0)
->> ^~~~~~~~~~~~~~~~~~~
->> ./include/linux/rcupdate.h:503:3: note: in expansion of macro
->> ‘smp_store_release’
->>      smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
->>      ^~~~~~~~~~~~~~~~~
->> ./include/linux/rcupdate.h:503:25: note: in expansion of macro
->> ‘RCU_INITIALIZER’
->>      smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
->>                            ^~~~~~~~~~~~~~~
->> net/core/dev.c:9081:2: note: in expansion of macro ‘rcu_assign_pointer’
->>     rcu_assign_pointer(dev->dpll_pin, dpll_pin);
->>     ^~~~~~~~~~~~~~~~~~
->>
->> On 2/28/24 20:13, Eric Dumazet wrote:
->>> On Wed, Feb 28, 2024 at 3:07 PM Vadim Fedorenko
->>> <vadim.fedorenko@linux.dev> wrote:
->>>> On 28/02/2024 11:09, Tasmiya Nalatwad wrote:
->>>>> Greetings,
->>>>>
->>>>> [revert 0d60d8df6f49] [net/net-next] [6.8-rc5] Build Failure
->>>>>
->>>>> Reverting below commit fixes the issue
->>>>>
->>>>> commit 0d60d8df6f493bb46bf5db40d39dd60a1bafdd4e
->>>>>        dpll: rely on rcu for netdev_dpll_pin()
->>>>>
->>>>> --- Traces ---
->>>>>
->>>>> ./include/linux/dpll.h: In function ‘netdev_dpll_pin’:
->>>>> ./include/linux/rcupdate.h:439:9: error: dereferencing pointer to
->>>>> incomplete type ‘struct dpll_pin’
->>>>>      typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
->>>>>             ^
->>>>> ./include/linux/rcupdate.h:587:2: note: in expansion of macro
->>>>> ‘__rcu_dereference_check’
->>>>>      __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->>>>>      ^~~~~~~~~~~~~~~~~~~~~~~
->>>>> ./include/linux/rtnetlink.h:70:2: note: in expansion of macro
->>>>> ‘rcu_dereference_check’
->>>>>      rcu_dereference_check(p, lockdep_rtnl_is_held())
->>>>>      ^~~~~~~~~~~~~~~~~~~~~
->>>>> ./include/linux/dpll.h:175:9: note: in expansion of macro
->>>>> ‘rcu_dereference_rtnl’
->>>>>      return rcu_dereference_rtnl(dev->dpll_pin);
->>>>>             ^~~~~~~~~~~~~~~~~~~~
->>>>> make[4]: *** [scripts/Makefile.build:243: drivers/dpll/dpll_core.o] Error 1
->>>>> make[4]: *** Waiting for unfinished jobs....
->>>>>      AR      net/mpls/built-in.a
->>>>>      AR      net/l3mdev/built-in.a
->>>>> In file included from ./include/linux/rbtree.h:24,
->>>>>                     from ./include/linux/mm_types.h:11,
->>>>>                     from ./include/linux/mmzone.h:22,
->>>>>                     from ./include/linux/gfp.h:7,
->>>>>                     from ./include/linux/umh.h:4,
->>>>>                     from ./include/linux/kmod.h:9,
->>>>>                     from ./include/linux/module.h:17,
->>>>>                     from drivers/dpll/dpll_netlink.c:9:
->>>>> ./include/linux/dpll.h: In function ‘netdev_dpll_pin’:
->>>>> ./include/linux/rcupdate.h:439:9: error: dereferencing pointer to
->>>>> incomplete type ‘struct dpll_pin’
->>>>>      typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
->>>>>             ^
->>>>> ./include/linux/rcupdate.h:587:2: note: in expansion of macro
->>>>> ‘__rcu_dereference_check’
->>>>>      __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->>>>>      ^~~~~~~~~~~~~~~~~~~~~~~
->>>>> ./include/linux/rtnetlink.h:70:2: note: in expansion of macro
->>>>> ‘rcu_dereference_check’
->>>>>      rcu_dereference_check(p, lockdep_rtnl_is_held())
->>>>>      ^~~~~~~~~~~~~~~~~~~~~
->>>>> ./include/linux/dpll.h:175:9: note: in expansion of macro
->>>>> ‘rcu_dereference_rtnl’
->>>>>      return rcu_dereference_rtnl(dev->dpll_pin);
->>>>>             ^~~~~~~~~~~~~~~~~~~~
->>>>> make[4]: *** [scripts/Makefile.build:243: drivers/dpll/dpll_netlink.o]
->>>>> Error 1
->>>>> make[3]: *** [scripts/Makefile.build:481: drivers/dpll] Error 2
->>>>> make[3]: *** Waiting for unfinished jobs....
->>>>> In file included from ./arch/powerpc/include/generated/asm/rwonce.h:1,
->>>>>                     from ./include/linux/compiler.h:251,
->>>>>                     from ./include/linux/instrumented.h:10,
->>>>>                     from ./include/linux/uaccess.h:6,
->>>>>                     from net/core/dev.c:71:
->>>>> net/core/dev.c: In function ‘netdev_dpll_pin_assign’:
->>>>> ./include/linux/rcupdate.h:462:36: error: dereferencing pointer to
->>>>> incomplete type ‘struct dpll_pin’
->>>>>     #define RCU_INITIALIZER(v) (typeof(*(v)) __force __rcu *)(v)
->>>>>                                        ^~~~
->>>>> ./include/asm-generic/rwonce.h:55:33: note: in definition of macro
->>>>> ‘__WRITE_ONCE’
->>>>>      *(volatile typeof(x) *)&(x) = (val);    \
->>>>>                                     ^~~
->>>>> ./arch/powerpc/include/asm/barrier.h:76:2: note: in expansion of macro
->>>>> ‘WRITE_ONCE’
->>>>>      WRITE_ONCE(*p, v);      \
->>>>>      ^~~~~~~~~~
->>>>> ./include/asm-generic/barrier.h:172:55: note: in expansion of macro
->>>>> ‘__smp_store_release’
->>>>>     #define smp_store_release(p, v) do { kcsan_release();
->>>>> __smp_store_release(p, v); } while (0)
->>>>> ^~~~~~~~~~~~~~~~~~~
->>>>> ./include/linux/rcupdate.h:503:3: note: in expansion of macro
->>>>> ‘smp_store_release’
->>>>>       smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
->>>>>       ^~~~~~~~~~~~~~~~~
->>>>> ./include/linux/rcupdate.h:503:25: note: in expansion of macro
->>>>> ‘RCU_INITIALIZER’
->>>>>       smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
->>>>>                             ^~~~~~~~~~~~~~~
->>>>> net/core/dev.c:9081:2: note: in expansion of macro ‘rcu_assign_pointer’
->>>>>      rcu_assign_pointer(dev->dpll_pin, dpll_pin);
->>>>>      ^~~~~~~~~~~~~~~~~~
->>>>> make[4]: *** [scripts/Makefile.build:243: net/core/dev.o] Error 1
->>>>> make[4]: *** Waiting for unfinished jobs....
->>>>>      AR      drivers/net/ethernet/built-in.a
->>>>>      AR      drivers/net/built-in.a
->>>>>      AR      net/dcb/built-in.a
->>>>>      AR      net/netlabel/built-in.a
->>>>>      AR      net/strparser/built-in.a
->>>>>      AR      net/handshake/built-in.a
->>>>>      GEN     lib/test_fortify.log
->>>>>      AR      net/8021q/built-in.a
->>>>>      AR      net/nsh/built-in.a
->>>>>      AR      net/unix/built-in.a
->>>>>      CC      lib/string.o
->>>>>      AR      net/packet/built-in.a
->>>>>      AR      net/switchdev/built-in.a
->>>>>      AR      lib/lib.a
->>>>>      AR      net/mptcp/built-in.a
->>>>>      AR      net/devlink/built-in.a
->>>>> In file included from ./include/linux/rbtree.h:24,
->>>>>                     from ./include/linux/mm_types.h:11,
->>>>>                     from ./include/linux/mmzone.h:22,
->>>>>                     from ./include/linux/gfp.h:7,
->>>>>                     from ./include/linux/umh.h:4,
->>>>>                     from ./include/linux/kmod.h:9,
->>>>>                     from ./include/linux/module.h:17,
->>>>>                     from net/core/rtnetlink.c:17:
->>>>> ./include/linux/dpll.h: In function ‘netdev_dpll_pin’:
->>>>> ./include/linux/rcupdate.h:439:9: error: dereferencing pointer to
->>>>> incomplete type ‘struct dpll_pin’
->>>>>      typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
->>>>>             ^
->>>>> ./include/linux/rcupdate.h:587:2: note: in expansion of macro
->>>>> ‘__rcu_dereference_check’
->>>>>      __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->>>>>      ^~~~~~~~~~~~~~~~~~~~~~~
->>>>> ./include/linux/rtnetlink.h:70:2: note: in expansion of macro
->>>>> ‘rcu_dereference_check’
->>>>>      rcu_dereference_check(p, lockdep_rtnl_is_held())
->>>>>      ^~~~~~~~~~~~~~~~~~~~~
->>>>> ./include/linux/dpll.h:175:9: note: in expansion of macro
->>>>> ‘rcu_dereference_rtnl’
->>>>>      return rcu_dereference_rtnl(dev->dpll_pin);
->>>>>             ^~~~~~~~~~~~~~~~~~~~
->>>>> In file included from net/core/rtnetlink.c:60:
->>>>> ./include/linux/dpll.h:179:1: error: control reaches end of non-void
->>>>> function [-Werror=return-type]
->>>>>     }
->>>>>
->>>> Hi, Eric!
->>>>
->>>> Looks like we have to move struct dpll_pin definition to
->>>> include/linux/dpll.h to have this fixed, right?
->>>>
->>> No idea what is wrong. Is it powerpc specific ? Some compiler version ?
->>>
->>> netdev_dpll_pin() could be moved to net/core/rtnetlink.c, this is the only user.
+On 27/02/2024 20:15, David Hildenbrand wrote:
+> Callers of folio_estimated_sharers() only care about "mapped shared vs.
+> mapped exclusively", not the exact estimate of sharers. Let's consolidate
+> and unify the condition users are checking. While at it clarify the
+> semantics and extend the discussion on the fuzziness.
 > 
-> OK, it seems netdev_dpll_pin() has to be moved in a place the
-> structure is known,
-> because rcu_dereference() needs to know its size.
+> Use the "likely mapped shared" terminology to better express what the
+> (adjusted) function actually checks.
 > 
-> I do not see other solution than this, otherwise we have to add more
-> pollution to include/linux/netdevice.h
+> Whether a partially-mappable folio is more likely to not be partially
+> mapped than partially mapped is debatable. In the future, we might be able
+> to improve our estimate for partially-mappable folios, though.
 > 
-> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> index a9c973b92294bb110cf3cd336485972127b01b58..40797ea80bc6273cae6b7773d0a3e47459a72150
-> 100644
-> --- a/include/linux/netdevice.h
-> +++ b/include/linux/netdevice.h
-> @@ -2469,7 +2469,7 @@ struct net_device {
->          struct devlink_port     *devlink_port;
+> Note that we will now consistently detect "mapped shared" only if the
+> first subpage is actually mapped multiple times. When the first subpage
+> is not mapped, we will consistently detect it as "mapped exclusively".
+> This change should currently only affect the usage in
+> madvise_free_pte_range() and queue_folios_pte_range() for large folios: if
+> the first page was already unmapped, we would have skipped the folio.
 > 
->   #if IS_ENABLED(CONFIG_DPLL)
-> -       struct dpll_pin __rcu   *dpll_pin;
-> +       void __rcu *dpll_pin;
->   #endif
->   #if IS_ENABLED(CONFIG_PAGE_POOL)
->          /** @page_pools: page pools created for this netdevice */
+> Cc: Barry Song <v-songbaohua@oppo.com>
+> Cc: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-I agree, this is the easiest solution.
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
-Reviewed-by: Vadim Fedorenko <vadim.fedoreno@linux.dev>
+> ---
+>  include/linux/mm.h | 46 ++++++++++++++++++++++++++++++++++++----------
+>  mm/huge_memory.c   |  2 +-
+>  mm/madvise.c       |  6 +++---
+>  mm/memory.c        |  2 +-
+>  mm/mempolicy.c     | 14 ++++++--------
+>  mm/migrate.c       |  8 ++++----
+>  6 files changed, 51 insertions(+), 27 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 6f4825d829656..795c89632265f 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2147,21 +2147,47 @@ static inline size_t folio_size(struct folio *folio)
+>  }
+>  
+>  /**
+> - * folio_estimated_sharers - Estimate the number of sharers of a folio.
+> + * folio_likely_mapped_shared - Estimate if the folio is mapped into the page
+> + *				tables of more than one MM
+>   * @folio: The folio.
+>   *
+> - * folio_estimated_sharers() aims to serve as a function to efficiently
+> - * estimate the number of processes sharing a folio. This is done by
+> - * looking at the precise mapcount of the first subpage in the folio, and
+> - * assuming the other subpages are the same. This may not be true for large
+> - * folios. If you want exact mapcounts for exact calculations, look at
+> - * page_mapcount() or folio_total_mapcount().
+> + * This function checks if the folio is currently mapped into more than one
+> + * MM ("mapped shared"), or if the folio is only mapped into a single MM
+> + * ("mapped exclusively").
+>   *
+> - * Return: The estimated number of processes sharing a folio.
+> + * As precise information is not easily available for all folios, this function
+> + * estimates the number of MMs ("sharers") that are currently mapping a folio
+> + * using the number of times the first page of the folio is currently mapped
+> + * into page tables.
+> + *
+> + * For small anonymous folios (except KSM folios) and anonymous hugetlb folios,
+> + * the return value will be exactly correct, because they can only be mapped
+> + * at most once into an MM, and they cannot be partially mapped.
+> + *
+> + * For other folios, the result can be fuzzy:
+> + * (a) For partially-mappable large folios (THP), the return value can wrongly
+> + *     indicate "mapped exclusively" (false negative) when the folio is
+> + *     only partially mapped into at least one MM.
+> + * (b) For pagecache folios (including hugetlb), the return value can wrongly
+> + *     indicate "mapped shared" (false positive) when two VMAs in the same MM
+> + *     cover the same file range.
+> + * (c) For (small) KSM folios, the return value can wrongly indicate "mapped
+> + *     shared" (false negative), when the folio is mapped multiple times into
+> + *     the same MM.
+> + *
+> + * Further, this function only considers current page table mappings that
+> + * are tracked using the folio mapcount(s). It does not consider:
+> + * (1) If the folio might get mapped in the (near) future (e.g., swapcache,
+> + *     pagecache, temporary unmapping for migration).
+> + * (2) If the folio is mapped differently (VM_PFNMAP).
+> + * (3) If hugetlb page table sharing applies. Callers might want to check
+> + *     hugetlb_pmd_shared().
+> + *
+> + * Return: Whether the folio is estimated to be mapped into more than one MM.
+>   */
+> -static inline int folio_estimated_sharers(struct folio *folio)
+> +static inline bool folio_likely_mapped_shared(struct folio *folio)
+>  {
+> -	return page_mapcount(folio_page(folio, 0));
+> +	return page_mapcount(folio_page(folio, 0)) > 1;
+>  }
+>  
+>  #ifndef HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 50d146eb248ff..4d10904fef70c 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1829,7 +1829,7 @@ bool madvise_free_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>  	 * If other processes are mapping this folio, we couldn't discard
+>  	 * the folio unless they all do MADV_FREE so let's skip the folio.
+>  	 */
+> -	if (folio_estimated_sharers(folio) != 1)
+> +	if (folio_likely_mapped_shared(folio))
+>  		goto out;
+>  
+>  	if (!folio_trylock(folio))
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 44a498c94158c..32a534d200219 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -366,7 +366,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>  		folio = pfn_folio(pmd_pfn(orig_pmd));
+>  
+>  		/* Do not interfere with other mappings of this folio */
+> -		if (folio_estimated_sharers(folio) != 1)
+> +		if (folio_likely_mapped_shared(folio))
+>  			goto huge_unlock;
+>  
+>  		if (pageout_anon_only_filter && !folio_test_anon(folio))
+> @@ -453,7 +453,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>  		if (folio_test_large(folio)) {
+>  			int err;
+>  
+> -			if (folio_estimated_sharers(folio) > 1)
+> +			if (folio_likely_mapped_shared(folio))
+>  				break;
+>  			if (pageout_anon_only_filter && !folio_test_anon(folio))
+>  				break;
+> @@ -677,7 +677,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+>  		if (folio_test_large(folio)) {
+>  			int err;
+>  
+> -			if (folio_estimated_sharers(folio) != 1)
+> +			if (folio_likely_mapped_shared(folio))
+>  				break;
+>  			if (!folio_trylock(folio))
+>  				break;
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 1c45b6a42a1b9..8394a9843ca06 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -5173,7 +5173,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  	 * Flag if the folio is shared between multiple address spaces. This
+>  	 * is later used when determining whether to group tasks together
+>  	 */
+> -	if (folio_estimated_sharers(folio) > 1 && (vma->vm_flags & VM_SHARED))
+> +	if (folio_likely_mapped_shared(folio) && (vma->vm_flags & VM_SHARED))
+>  		flags |= TNF_SHARED;
+>  
+>  	nid = folio_nid(folio);
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index f60b4c99f1302..0b92fde395182 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -642,12 +642,11 @@ static int queue_folios_hugetlb(pte_t *pte, unsigned long hmask,
+>  	 * Unless MPOL_MF_MOVE_ALL, we try to avoid migrating a shared folio.
+>  	 * Choosing not to migrate a shared folio is not counted as a failure.
+>  	 *
+> -	 * To check if the folio is shared, ideally we want to make sure
+> -	 * every page is mapped to the same process. Doing that is very
+> -	 * expensive, so check the estimated sharers of the folio instead.
+> +	 * See folio_likely_mapped_shared() on possible imprecision when we
+> +	 * cannot easily detect if a folio is shared.
+>  	 */
+>  	if ((flags & MPOL_MF_MOVE_ALL) ||
+> -	    (folio_estimated_sharers(folio) == 1 && !hugetlb_pmd_shared(pte)))
+> +	    (!folio_likely_mapped_shared(folio) && !hugetlb_pmd_shared(pte)))
+>  		if (!isolate_hugetlb(folio, qp->pagelist))
+>  			qp->nr_failed++;
+>  unlock:
+> @@ -1032,11 +1031,10 @@ static bool migrate_folio_add(struct folio *folio, struct list_head *foliolist,
+>  	 * Unless MPOL_MF_MOVE_ALL, we try to avoid migrating a shared folio.
+>  	 * Choosing not to migrate a shared folio is not counted as a failure.
+>  	 *
+> -	 * To check if the folio is shared, ideally we want to make sure
+> -	 * every page is mapped to the same process. Doing that is very
+> -	 * expensive, so check the estimated sharers of the folio instead.
+> +	 * See folio_likely_mapped_shared() on possible imprecision when we
+> +	 * cannot easily detect if a folio is shared.
+>  	 */
+> -	if ((flags & MPOL_MF_MOVE_ALL) || folio_estimated_sharers(folio) == 1) {
+> +	if ((flags & MPOL_MF_MOVE_ALL) || !folio_likely_mapped_shared(folio)) {
+>  		if (folio_isolate_lru(folio)) {
+>  			list_add_tail(&folio->lru, foliolist);
+>  			node_stat_mod_folio(folio,
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 73a052a382f13..35d376969f8b9 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -2568,11 +2568,11 @@ int migrate_misplaced_folio(struct folio *folio, struct vm_area_struct *vma,
+>  	/*
+>  	 * Don't migrate file folios that are mapped in multiple processes
+>  	 * with execute permissions as they are probably shared libraries.
+> -	 * To check if the folio is shared, ideally we want to make sure
+> -	 * every page is mapped to the same process. Doing that is very
+> -	 * expensive, so check the estimated mapcount of the folio instead.
+> +	 *
+> +	 * See folio_likely_mapped_shared() on possible imprecision when we
+> +	 * cannot easily detect if a folio is shared.
+>  	 */
+> -	if (folio_estimated_sharers(folio) != 1 && folio_is_file_lru(folio) &&
+> +	if (folio_likely_mapped_shared(folio) && folio_is_file_lru(folio) &&
+>  	    (vma->vm_flags & VM_EXEC))
+>  		goto out;
+>  
 
