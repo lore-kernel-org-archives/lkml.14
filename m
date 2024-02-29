@@ -1,130 +1,168 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3007D077
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 14:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5572A1361B5;
+	Thu, 29 Feb 2024 14:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709216816; cv=none; b=TDBZfr4YfTRD4BwmpiBp38BYJrdeO26jLScgqb96UWgY7OnjJx+XqlZ/NX1xNDtSDAxgpMSFsb6hKl7KxQHFIg5j0lrJFatEipmJ7CJMAjTDEpavd2QEFuTC9aA7fMKnhxjowgwfmhjMQuCdoX07yNwChAbpGc9YH+yiDXBFZW0=
+	t=1709216827; cv=none; b=NckAFNnAIqxx2Kw9TwXxg4MzTpFAKsFumkE0SRY0kU00Q12Tq0euQcIQdUs7Ww6BOm42jgHYbA1eeDHIyqfhB0o+3k8n5qcWJqzZDQKhiDQD2byK+zVhStJ61ytoCHPpLd84fnXdTyPLn3K/Ql4LoZ0ecYQpsMV9+wOSC0l6OmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709216816; c=relaxed/simple;
-	bh=bzjgNSKoSU8cQ4ureTNHKpEbcTPZZ48+o+gmq9XCD/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WIVaEwFqk1DwKjLhYnE3/2rWPkqsS85/uFx4nBJrJZX9ZZcMs4PcaJFzbUyAflLb5NmzjIWSQ+ssd+kNtBJ3Xh5ECydELPMN8pNCxPWwRcep7C5Rt03ME6eVzaLp+pteI/7mhd9l1Mpd03BTeq/6+vFr1Wy2MoWqCDDFrmjFb4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=E1pBneX2; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1709216827; c=relaxed/simple;
+	bh=sNvC0eOCgXlJieYs9eVk854YNI9DoGHKHOnTmERF/cQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=Dh7YRh/+YoAT6yZenrurkPYd4Fz0D2IrXhv6W+SWN/xI4RrxAGUpiecpsADUxQLJtq7fcnYl2f281IxhP86FHWVnknPjtKITqwT8OEZ/HibvBrRyspwLmer686MlxL69wieyfZQdokde8X1jVQbmUOwBPymFGfJu8N2mkj2B6Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o+A9e/Np; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="E1pBneX2"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-29a430c3057so678500a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:26:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1709216814; x=1709821614; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZoxsmwunD3kBPWbwwdtLfnrTSWRtrCBfDnhBS5exbak=;
-        b=E1pBneX2k/gyutOVJPwABXIT14ht7Pw+AQFNPQVVQn6GMqAXYjKo+ql84B48b+MKHm
-         EYp7v7F8UHuNeyESqIAfGcmALGLrOpxEAo8eOE8cfdm7jms5knVDypzEbIxYMD0Oa5XZ
-         0JSoBd6hijEPHwY0NN7Yw5HF1djt2Ae4Wzr8P+yRpPqc0dy/7GySyEnPe0rgPz7/TVPc
-         IyyB6hWQHK870B2ARMfBrOTtORBuJaIs0YgliEZ4XU+7UQtuFS89kv7TKmL1OOr/yqEH
-         Bz6WZQQTHX0yqJg3p+dbvPKu5ro1UvyBFJf/53+bX1/nEWRxN+G7BpcMTKjVGPH6mBro
-         Exrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709216814; x=1709821614;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZoxsmwunD3kBPWbwwdtLfnrTSWRtrCBfDnhBS5exbak=;
-        b=OHDb99ca7gYadtXi/2hTH0NW+uDWQjx7I1b2DpXUnvZfxt0NasiLdTB09UW22jtN/d
-         havZAkdSMm4tBuSOcEaKP6AXJXkmjzUkR6ZhCJATwc/Q0ml0rfcKaRzpjGTIvSWKWwCA
-         /pwaEz0C/9oEBaV9uPJKeYYVu0uYwObee3KZVn1TwJXCG+Jn+jQ32ApmDrrlBNrQKvMD
-         5DZhdWefRu7FBkCW0MNE0RsWjH9vC9Mzm26L6ujEWcKmTYV48Fgj2h80uauDQehXYkEq
-         NC6sKdYNNEsqpg1a0CVeTMVZkl8fz5jHdnu+rYtHwSHmzgTc5Ff+ub2h3UFerKT0SubL
-         TLug==
-X-Forwarded-Encrypted: i=1; AJvYcCU33buVMpAoNbbcJz8f0oXjGpfPqq1rePDuu0enb7rV9hWhe96zLg7XqmWmDSdrkUd43MucUMlIqZpcCK6zpWM/0j5aGyuxCWOIg6J+
-X-Gm-Message-State: AOJu0YwYLQkdOydQ1IiLDOv4b6nPp8WE+75WnpsB4tusoX7UbdmDVa25
-	vPT2vJqS84600X+xMEQF8kfHsa1t/rdRCBxlNzjEgfnm1hHeT2+cV3OjEemkPtU=
-X-Google-Smtp-Source: AGHT+IFDujHDEpGzcRKCpejmIx29QpyEwREP5k2f97svfF1nbqXgXYH+keTGpqWs21ToWKSj1QuiXA==
-X-Received: by 2002:a17:90a:4a15:b0:299:63ff:9c0f with SMTP id e21-20020a17090a4a1500b0029963ff9c0fmr2129502pjh.21.1709216813843;
-        Thu, 29 Feb 2024 06:26:53 -0800 (PST)
-Received: from [10.84.152.139] ([203.208.167.155])
-        by smtp.gmail.com with ESMTPSA id db12-20020a17090ad64c00b00298ca3a93f1sm3741069pjb.4.2024.02.29.06.26.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 06:26:53 -0800 (PST)
-Message-ID: <59585184-d13d-46e0-8d68-42838e97a702@bytedance.com>
-Date: Thu, 29 Feb 2024 22:25:30 +0800
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o+A9e/Np"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BEC2040003;
+	Thu, 29 Feb 2024 14:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709216822;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2XC8WVbFw8gyrsduV0a8Mx8kJRDW3cgBWOx4bpt+o3I=;
+	b=o+A9e/NpQa8U2GS1i1QZ1RNp86ogtneZMMENFbJQE34yHohdcbMzRX5MdkLejch7msmONu
+	ckWC8Ux8AQ+M/VmP6+BP8pzZ4bEjfnhpicWmpJ4Zo1yhDU6eWaBvYlJP3yECa/oBTP4a+w
+	3ci/BYCbBJgO6319C90XQzpx48LNJYibDbYa6aK0nZchfj+0oBFU6eq9Ug1bih7n15ADUU
+	zZxKVM76dnEie16weoCcE9saF/RMgjSBmq0maKhBXzVHPYEPka4aJOyLTB6+Qr1EsZpBp+
+	CK6/hLtQcx2YNyp0rst6pavL9VU3YIFSwk134HTS42+2pieZzft1adjF28+e1Q==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [PATCH 1/4] sched/eevdf: Fix vruntime adjustment on reweight
-Content-Language: en-US
-To: Tianchen Ding <dtcccc@linux.alibaba.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Valentin Schneider <valentin.schneider@arm.com>,
- Barry Song <21cnbao@gmail.com>, Benjamin Segall <bsegall@google.com>,
- Chen Yu <yu.c.chen@intel.com>, Daniel Jordan <daniel.m.jordan@oracle.com>,
- "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- K Prateek Nayak <kprateek.nayak@amd.com>, Mike Galbraith <efault@gmx.de>,
- Qais Yousef <qyousef@layalina.io>, Tim Chen <tim.c.chen@linux.intel.com>,
- Yicong Yang <yangyicong@huawei.com>,
- Youssef Esmat <youssefesmat@chromium.org>, linux-kernel@vger.kernel.org
-References: <c2ceff07-e1b4-4dbc-b945-f91a9076375e@linux.alibaba.com>
-From: Abel Wu <wuyun.abel@bytedance.com>
-In-Reply-To: <c2ceff07-e1b4-4dbc-b945-f91a9076375e@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 29 Feb 2024 15:27:01 +0100
+Message-Id: <CZHMSNWMH4KJ.2J6ZMWKMSZYH2@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v8 03/10] clk: eyeq5: add platform driver, and init
+ routine at of_clk_init()
+Cc: "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Linus Walleij"
+ <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?=
+ <rafal@milecki.pl>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Vladimir
+ Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.15.2
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+ <20240227-mbly-clk-v8-3-c57fbda7664a@bootlin.com>
+ <Zd4X3NnBoEl0wu2H@smile.fi.intel.com>
+ <CZGSB2O8P572.28HK6WFT43N6S@bootlin.com>
+ <ZeBnX2upNRN0xXH4@smile.fi.intel.com>
+In-Reply-To: <ZeBnX2upNRN0xXH4@smile.fi.intel.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hi Tianchen,
+Hello,
 
-On 2/29/24 5:24 PM, Tianchen Ding Wrote:
-> Hi Abel:
-> 
-> I'm not so familiar with eevdf and still learning. Here I've some questions about this patch.
-> 
-> 1. You did proof that V will not change during reweight (COROLLARY #2). However, according to the original paper, the new V will be:
-> V' = V + lag(j)/(W - w_j) - lag(j)/(W - w_j + w'_j)
-> So the V' in paper will change (when lag is not zero).
-> Is the V in Linux code slightly different from the paper?
+On Wed, Feb 28, 2024 at 03:33:29PM +0100, Th=C3=A9o Lebrun wrote:
+> On Tue Feb 27, 2024 at 6:11 PM CET, Andy Shevchenko wrote:
+> > On Tue, Feb 27, 2024 at 03:55:24PM +0100, Th=C3=A9o Lebrun wrote:
 
-Good catch. And to the best of my knowledge, the answer is YES. The
-above Equation in the paper, which is Eq. (20), is based on the
-assumption that:
+[...]
 
-	"once client 3 leaves, the remaining two clients will
-	 proportionally support the eventual loss or gain in the
-	 service time"  -- Page 10
+> > > > +	u32		reg;	/* next 8 bytes are r0 and r1 */
+> > >
+> > > Not sure this comments gives any clarification to a mere reader of th=
+e code.
+> > > Perhaps you want to name this as reg64 (at least it will show that yo=
+u have
+> > > 8 bytes, but I have no clue what is the semantic relationship between=
+ r0 and
+> > > r1, it's quite cryptic to me). Or maybe it should be reg_0_1?
+> >=20
+> > Clocks are defined by two 32-bit registers. We only store the first
+> > register offset because they always follow each other.
+>
+> > I like the reg64 name and will remove the comment. This straight forwar=
+d
+> > code is found in the rest of the code, I don't think it is anything
+> > hard to understand (ie does not need a comment):
+> >=20
+> > 	u32 r0 =3D readl(base_plls + pll->reg);
+> > 	u32 r1 =3D readl(base_plls + pll->reg + sizeof(r0));
+>
+> Btw, why readq()/writeq() (with probably the inclusion of io-64-nonatomic=
+-lo-hi.h)
+> can be used in this case? It will be much better overall and be aligned w=
+ith
+> reg64 name.
 
-	"by updating the virtual time according to Eq. (18,19) we
-	 ensure that the sum over the lags of all active clients
-	 is always zero"  -- Page 11
+The doc talks in terms of 32-bit registers. I do not see a reason to
+work in 64-bit. If we get a 64-bit value that we need to split we need
+to think about the endianness of our platform, which makes things more
+complex than just reading both values independently.
 
-But in Peter's implementation, it is the competitors in the new group
-that client 3 later joins in who actually support the effect. So when
-client 3 leaves competition with !0-lag in Linux, the rq's sum(lag_i)
-is no longer zero.
+> [...]
+>
+> > > I didn't get. If eq5c_init() was finished successfully, why do you ne=
+ed to
+> > > seems repeat what it already done? What did I miss?
+> >=20
+> > The key here is that eq5c_init() iterates on eq5c_early_plls[] while
+> > eq5c_probe() iterates on eq5c_plls[]. I've tried to hint at this in the
+> > commit message:
+> >=20
+> > > Two PLLs are required early on and are therefore registered at
+> > > of_clk_init(). Those are pll-cpu for the GIC timer and pll-per for th=
+e
+> > > UARTs.
+> >=20
+> > Doing everything in eq5c_init() is not clean because we expect all new
+> > clock provider drivers to be standard platform drivers. Doing
+> > everything from a platform driver probe doesn't work because some
+> > clocks are required earlier than platform bus init. We therefore do a
+> > mix.
+>
+> Am I missing something or these two pieces are using the same IO resource=
+s?
+> This looks like a lot of code duplication without clear benefit. Perhaps
+> you can have a helper?
 
-> 
-> 2. I print some log around reweight_entity(), mainly want to print V by calling avg_vruntime(cfs_rq). I found your algorithm only keeps the V unchanged during reweight_eevdf(), but not reweight_entity().
-> 
-> In detail:
-> If curr is true (i.e., cfs_rq->curr == se), we will directly run reweight_eevdf(), and the V is not changed.
-> If curr is false, we will have __dequeue_entity() -> reweight_eevdf() -> __enqueue_entity(). The V is finally changed due to dequeue and enqueue. So the result of reweight_entity() will be impacted by "cfs_rq->curr == se", is this expected?
+There are two subtle differences that make creating a helper difficult:
 
-Good catch again! It smells like a bug. Since this @se is still on_rq,
-it should be taken into consideration when calculating avg_runtime(),
-but in fact it isn't because __dequeue_entity() will remove its share.
+ - Logging, pr_*() vs dev_*(). Second option is preferred but only
+   available once a device is created.
 
-And I seem to spot another bug, although not relate to this problem,
-that we actually need to call update_curr() unconditionally if curr is
-available, because we need to commit curr's outstanding runtime to
-ensure the result of avg_runtime() is up to date.
+ - Behavior on error: we stop the world for early clocks but keep going
+   for normal clocks.
 
-Thanks & BR,
-	Abel
+[...]
+
+> > > > +		eq5c_clk_data->hws[pll->index] =3D hw;
+> > > > +		if (IS_ERR(hw))
+> > >
+> > > > +			dev_err_probe(dev, PTR_ERR(hw), "failed registering %s\n",
+> > > > +				      pll->name);
+> > >
+> > > Missed return statement?
+> >=20
+> > No, we still try to register all clocks even if one failed. I guess we
+> > can call this being optimistic.
+>
+> But how critical these clocks are? I believe we should panic it we have n=
+o
+> critical calls be available. Otherwise, why '_err_'? Shouldn't be dev_war=
+n()?
+
+Indeed printing should be dev_warn(), I missed that.
+
+Thanks Andy,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
