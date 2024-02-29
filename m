@@ -1,856 +1,277 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2119.outbound.protection.partner.outlook.cn [139.219.146.119])
+Received: from ms.asus.com (ms.asus.com [103.10.4.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3FE50255;
-	Thu, 29 Feb 2024 07:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4BE45C04;
+	Thu, 29 Feb 2024 07:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=103.10.4.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709192759; cv=fail; b=pAS7idF5HQ8n/bZakg2F4KI/xZ9sv69gxETpS69v/WL0ccVScaUFJCU1MW1paxdwSHj0vaYSDiuv6KX2s5ROoBP4knQEE1vgVgRQW+dZsZemf6coXTH2TeHRLr5F1i8ECEDMX1XMV43DXk5wSVZkB6F/xeI1tH7J9tR1K+DODYc=
+	t=1709192774; cv=fail; b=WI/eGS7nQegsoT16116nMPmjTFNd64qqoLuuyWNC2SsD/bOLpKm5dcWWLPDolGQXoBeK+YXSayy0o5ckzQ7BCHq3pab8SPL5b8qlaD75wrOi7gFBwU+oMcMEOSyLjtXUi4aQu2UPy0YhSwKpPhDAJLLGf+u2V5ARiKP4hvS/2Mo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709192759; c=relaxed/simple;
-	bh=xpEKy3Rn/7hvdo/Vy32nqWCBlxFF2+XfXvqxzgkuXCQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LybZs6AX1KdAW/qVTN3lrfnOH9o1o/umJN3vEhrO9rcGjd2qsZv9Y78V2oy3sYzTY/Cys+ozdUWu8zTblvPKPd2wgfeCRj248NU6+ENjd+I/mdYQlz1ZJjLbhg+hxAGws7LBiF0BzNKB3p7FGOTc+rzR4LJg6145fEl4OtMfrn4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	s=arc-20240116; t=1709192774; c=relaxed/simple;
+	bh=VQJhLQ8P2rEkVHrqYtHEmXSAQARjNKULqEKtKRwdHiY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nSEY1FeNs0/pp0TkIAmph14ben3r93szZSyqM5316bejGLYcHF77Ay+zplI62wn1QadJYAZqXamlw6qscLkeos+OLIZYTj3J0aJmFbJgTcxWp2xZRNGah/bfolW6SJUCOBJYHu6Kp7omF+g5MRFoIfkbFBnY46+TvD6V7NyenYw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asus.com; spf=pass smtp.mailfrom=asus.com; dkim=pass (1024-bit key) header.d=asus.com header.i=@asus.com header.b=fuAGs2zY; arc=fail smtp.client-ip=103.10.4.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=asus.com header.i=@asus.com header.b="fuAGs2zY"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=asus.com; i=@asus.com; q=dns/txt; s=asuscom;
+  t=1709192772; x=1740728772;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=VQJhLQ8P2rEkVHrqYtHEmXSAQARjNKULqEKtKRwdHiY=;
+  b=fuAGs2zY5i0UXDjmCNkkO7JQessdy53Cr/b4tP3mwxbhzDz6lAE2ubWI
+   PL0sjIl6KA36oXCNi692QyoLxF8YnhoMIFy3EqpYfGAchGRxRtgl+Ukdj
+   kBzDyHDvHA9x1pzheiosvyLh5D3xoKyzwj4FCJBfgnwm22LEY/mUPREFj
+   A=;
+X-IPAS-Result: =?us-ascii?q?A2EsAAC5NeBl/xUvFqxaHQEBAQEJARIBBQUBQAmBMggBC?=
+ =?us-ascii?q?wGCOHqBYYRTiB2JSgOKIYE/kFEqgSwUgV8LDwEBAQEBAQEBAQcBAS4WBAEBh?=
+ =?us-ascii?q?QYCFodcJzQJDgECBAEBAQEDAgMBAQEBAQEIAQEBBQEBAQEBAQYEAQEBAoEZh?=
+ =?us-ascii?q?S9KglwBg3YBAQEBAwEiEUUMBAIBBgINBAQBAQECAiYCAgIeBwoVCAgCBAENB?=
+ =?us-ascii?q?QiFJAMxkzybOnqBMhpnghYEsB8NgSyBKQkBgRAuAYFohh8eAYFWgWyCM4NBe?=
+ =?us-ascii?q?4JPJm9CgWaBAj6CH4FvARIBCRoFEBUMAoMhOYIvBIEUI1yDEimDMIEojE2BE?=
+ =?us-ascii?q?iyCbjsmhWQJS4ECHAOBBQRaDQUWEB43ERATDQMIbh0CMToDBQMEMgoSDAsfB?=
+ =?us-ascii?q?VQDQAZJCwMCGgUDAwSBMAUNGgIQGgYMJgMDEkkCEBQDOAMDBgMKMTBVQQxQA?=
+ =?us-ascii?q?2QfFhwJPA8MGgIbFA0kIwIsPgMJChACFgMdFgQwEQkLJgMqBjYCEgwGBgZdI?=
+ =?us-ascii?q?BYJBCUDCAQDVAMgdBEDBBoHCwd4ggmBPQQTRgENA4E0BooeDIMQAgUlBCxdA?=
+ =?us-ascii?q?0QdQAMLbT01Bg4bBQQfAR18BaFaE2hBEBADES5wKxVQERoUkEWCQIM/SZlrl?=
+ =?us-ascii?q?A9wDYMMgQOZMYF7hisXhAWMeoZcA5JJmFogkVCWYAIEAgQFAg4IgUEjgSZwM?=
+ =?us-ascii?q?z2DN1IZoiJ4OwIHAQoBAQMJhkiCJgUvZ18BAQ?=
+IronPort-PHdr: A9a23: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
+ 5KzioUTR1WzKQMukUjN2A==
+IronPort-Data: A9a23:v2U4b69/s7+/pjEOkA/sDrUDzn6TJUtcMsCJ2f8bNWPcYEJGY0x3z
+ GIWUG2FM/qKZmv8L9hxYYu1p0kH6JfdytVrQApsqy4xFiIbosfsO4+Ufxz6V8+wBpSYFRo4t
+ a3ySTViwOQcFCK0SsKFb+CJQUFUjP3OHPynYAL9EngZbRd+Tys8gg5Ulec8g4p56fC0GArlV
+ ena+qUzBXf8s9JKGjNMg068gE431BjCkGtwlkAzY/lNoGjfmxE9ZH7IDfrpR5dQatA88t+SH
+ 44v/pnglo/q105F5ueer1rOWhZirog+neS5oiE+t6CK2nCur8Gpu0oxHKJ0hUx/011lkz3to
+ TnkWFPZpQoBZ8XxdOohvxZwHCp1A/xA3bP7GHmQruq30GDnaCbXzKA7ZK02FdVwFudfPVkL2
+ MxBdnUzN0nFjOWs2LS2Vq9lndk4RCXpFNpA4Dc6l3eFUrB8GPgvQI2TjTNc9BQ9gsRfKtbDY
+ cUxYCFyd1LLZBgn1lI/UstvwLz32SGjG9FegHyLuIQW5zDN9U983eGuCvP5eIaORPwAyy50o
+ UqDpQwVGCoyN8aN2CGX7nWiwOzIjyf8R5kRFZW89/hjmlrVwXYcYDUOTVq0of6kkUOWVNdWK
+ khS8S0rxYAo80arDdXhdx61uniJulgbQdU4O+4g+hCW2LbT7UCaAXoASSFaa91luNMeQT0s3
+ 0WO2dTzClRHu7qTTmje+qu8rj6oPyURa2gYakcsTwwI5/HhpZp1jx6JR8sLOKezgsf4Bhn7x
+ DyHpy84nKkJkMUXka68+BbOnlqEqpXXTwU4+h/aU0q74Q5jIo2ofYql7R7c9/koBIKYSESR+
+ XEeno2d4foIAJWlkC2WXP5LHben/f+JPTTQx1l1EPEJ8zWr5m7mdJtI7TxyDENoKdofPzj7Z
+ EbZokVW/pA7FH+ra7JnJoG8EcInyYD+Gtn/EPPZdNxDZt52bgDv1CZ2aEia2mvFlEk3jbp5P
+ oWfeMy3S3EABsxaICGeHrhHl+VxgHxhgzmKLXzm8ymaPXOlTCb9Yd843JGmPr9RAH+syOkNz
+ +tiCg==
+IronPort-HdrOrdr: A9a23:GxjOlKlN9tQv2jZj3KSsEL/Q/FnpDfNgiWdD5ihNYBxZY6Wkfp
+ +V88jzhCWZtN9OYhwdcIi7SdO9qXO1z+8W3WBjB8beYOCAghrjEGgC1/qo/9SOIVyZygcw78
+ ddmu1FeabN5DtB/IvHCWuDYq8dKbC8mcjC74m+854ud3ATV0gJ1XY/Nu/xKDwSeOAyP+tfKH
+ Pq3Lsim9PPQwV1Uu2LQl0+G8TTrdzCk5zrJTQcAQQ81QWIhTS0rJbnDhmxxH4lIn9y6IZn1V
+ KAvx3y562lvf3+4ATbzXXv45Nfn8ak4sdfBfaLltMeJlzX+0mVjcVaKvO/VQIO0aGSAWUR4Z
+ rxStAbToZOAkbqDyCISN3WqkzdOXgVmjvfIBSj8AfeSITCNU0H4ox69MRkmtGw0Tt4gDm+uJ
+ g7h15wzfBsfEn9dH+W3amUa/kv/XDE/0bLVIYo/idiuU93Us4MkWTZlHklT6voVRiKlrwPAa
+ 1gCtrR6+1Rdk7fZ3fFvnN3yNjpRXgrGAyaK3JyzPB9/gIm6EyR9XFos/A3jzMF7tYwWpNE7+
+ PLPuBhk6xPVNYfaeZ4CP0aScW6B2TRSVaUWVjiaWjPBeUCITbAupT36LI66KWjf4EJ1oI7nN
+ DEXElDvWA/dkryAYmF3YFN8BrKXGKhNA6dg/129tx8oPnxVbDrOSqMRBQnlNahuewWBonBV/
+ O6KPttcorexKvVaPR0NiHFKupvwCMlIbwoU/4AKiKznv4=
+X-Talos-CUID: 9a23:AKUDEWEGscc4lPzIqmJo/0UqS8YAfkHkzVjPBWunJEdyFYaaHAo=
+X-Talos-MUID: 9a23:hWiUnATHFoTZQRX7RXTCmixMFcMw/Z3tBU1U0q8vl8veMS1JbmI=
+X-IronPort-Anti-Spam-Filtered: true
+Received: from unknown (HELO TP-EX16-V11.corpnet.asus) ([172.22.47.21])
+  by ms.asus.com with ESMTP; 29 Feb 2024 15:45:52 +0800
+Received: from APZA002EXB.corpnet.asus (172.22.6.14) by
+ TP-EX16-V11.corpnet.asus (172.22.47.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 29 Feb 2024 15:45:51 +0800
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (104.47.26.112)
+ by APZA002EXB.corpnet.asus (172.22.6.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28 via Frontend Transport; Thu, 29 Feb 2024 15:45:51 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wx4XP3Lw0LjvGnqUCeTZ6zyej8SQBf5Ny099tpYJ7f6f39CcwzDBLy0sysGqQmnk5Hv95t7tH708u7frcfpvbECTvAN+TiD4emOpNVBwoisDfEiyWvhy70t7IhF8yrm0D/YD1nUCFRwF+f7Zq2jf9ocXOijpuveTt+MPLrw9KQxG6pB3Ab0pRtHaWwqjaBvD8fTw9LbN+mggC/f3IrkD2yfVtPjhORTyDLxwR624j0EHXdd8fCp84h3wAlqkBHx3T/tKE+AB+yO3kN0zVQ6k35ujbf2zfZR/rYO2fdXbe+Ycu0OaiVYfwMT27twajoueS1mR+cqVt551LQuNfcs/Mg==
+ b=gypVWg6yITX7cWR0fTg2DEotHpY38crxMoChSIqsAqYewPLzSjuPFgJQ/iZKFCd4m0L9E80q7N3Ygny8sgOcoYIDxIyeeKyAGW+3PnLalBQUjAw6Glqg2xd9tGVIvlHV/ls7tp2iklustEzmecWsUoxms03klvCE9uHomiMqPAMBQnLK3ACr84QRNdeACFBHwmcJTvm6nw4E730g13Vur5isuoVVXyuvHrM+sbAXlScz1mT4v9JMWSUbIwBiSDOVWvNLx/ewZJA25pPlGAdTLcDIkOiZy3U/yu2RNjmssXDF1nIgqTVgpkyaC4xXg9ujyn052OCv0btws1SrKQuCqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kR4HjIB/ALX5+ZlAmIg7MsxRqKDlFc9Y3QGk7k/sr+E=;
- b=X1DecGYOIctYVIfuAEMu8AFXX59V8C0xSKNPt6GS8l9/6XIB5HqltHX+72V6tubR8cCULkUfn72ISORTrhvpxj5lGIpc7Qmbt4i/A0t4PFluxtSRHRHmouWcWahO6okE9nkPHenF24oW+1+rBbL1/3sBt+QWGW8/1YDo6lT+PgNyJLmfP78ZV/OpbKmtko1HRfqAH1udiGYE+R6mqSj9kXEgGtC+SJfPS6GMuM2M6ZjJTZC8aJ7zJ67AXBb/kga9OjP/SuKgO3gWk5fuwPgPV9pA3NFpuowBQO3DFYyNOYlAjr5XeH7/cXh57AbQqNvnJqo56rvGG2TjHL3PFvesXw==
+ bh=yZIHAX8ZPzU9AN4RFXu1ltFOpllFKllb1zi6KjnvZ0Y=;
+ b=JLY6FTCteQxgXZ46pg1RJQe0L1DrkIBTfksx+YUrf94XK3wtuxP4wPKR1JtKfS9ihlSSRvlQa3u2NNgTKbKoKiIL4Bl/HVXIrmJaCbgzPa6HA72KuJfYCcLwe5/bU8cm692cuhkdqCA7uSpo8A3pbrjXXRxxSU37a2ZueTquqv1zVbp7ePkN1w60zTGqQRVBZAk/BDX8wCtSNc/jRXOpEfuVD17tbaO1GflRYYzC4T+/5BmIAVMu+BFkyZFwK5bvuA/CA9MgAPdE5dz9P25LsOVe5sav34v1TFBlnNirseD6uc/biKhtreNYuWAkShXueXPBsYm/UL7/ylf+p0m9Nw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6) by ZQ0PR01MB1013.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Thu, 29 Feb
- 2024 07:30:13 +0000
-Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- ([fe80::2f41:68f:6f07:6c8b]) by ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- ([fe80::2f41:68f:6f07:6c8b%4]) with mapi id 15.20.7316.039; Thu, 29 Feb 2024
- 07:30:13 +0000
-From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v7 1/4] perf: starfive: Add StarLink PMU support
-Date: Thu, 29 Feb 2024 15:27:17 +0800
-Message-ID: <20240229072720.3987876-2-jisheng.teoh@starfivetech.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229072720.3987876-1-jisheng.teoh@starfivetech.com>
-References: <20240229072720.3987876-1-jisheng.teoh@starfivetech.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0026.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:c::21) To ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:19::6)
+ smtp.mailfrom=asus.com; dmarc=pass action=none header.from=asus.com;
+ dkim=pass header.d=asus.com; arc=none
+Received: from TYZPR04MB6596.apcprd04.prod.outlook.com (2603:1096:400:28d::13)
+ by SI6PR04MB8051.apcprd04.prod.outlook.com (2603:1096:4:249::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
+ 2024 07:45:49 +0000
+Received: from TYZPR04MB6596.apcprd04.prod.outlook.com
+ ([fe80::ceae:2258:3883:29e6]) by TYZPR04MB6596.apcprd04.prod.outlook.com
+ ([fe80::ceae:2258:3883:29e6%3]) with mapi id 15.20.7316.034; Thu, 29 Feb 2024
+ 07:45:49 +0000
+From: =?utf-8?B?S2VsbHkgSHVuZyjmtKrlmInojokp?= <Kelly_Hung@asus.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Kelly Hung
+	<ppighouse@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC: "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "joel@jms.id.au"
+	<joel@jms.id.au>, "andrew@codeconstruct.com.au"
+	<andrew@codeconstruct.com.au>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "openbmc@lists.ozlabs.org"
+	<openbmc@lists.ozlabs.org>, =?utf-8?B?QWxsZW5ZWSBIc3Uo6Kix5bm85bKzKQ==?=
+	<AllenYY_Hsu@asus.com>
+Subject: RE: [PATCH v3 1/2] dt-bindings: arm: aspeed: add ASUS X4TF board
+Thread-Topic: [PATCH v3 1/2] dt-bindings: arm: aspeed: add ASUS X4TF board
+Thread-Index: AQHaaV972feDuqyHeEa+vdxFV1FqSLEd9SWAgAL7MvA=
+Date: Thu, 29 Feb 2024 07:45:49 +0000
+Message-ID: <TYZPR04MB65964904A9624AF3BE05198D9D5F2@TYZPR04MB6596.apcprd04.prod.outlook.com>
+References: <20240227092922.1734998-1-Kelly_Hung@asus.com>
+ <60d048df-9a54-4239-8a8b-a8eb9a59dde9@linaro.org>
+In-Reply-To: <60d048df-9a54-4239-8a8b-a8eb9a59dde9@linaro.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=asus.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR04MB6596:EE_|SI6PR04MB8051:EE_
+x-ms-office365-filtering-correlation-id: 161b4748-9ef1-41fc-d46e-08dc38fa72ba
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OWNVX/LzHhj/z7gAdclGEJxOoJIN6MCYSO4U1xBv9z/KJ0J/DloUH0lbTh30lbwIaBIqw7cE6dN9VpTfIF4RnCIUPzqmUrMTAy+Ig1wKRO2e4WLHkKTCTIWXCswP8uGX9J6yXxzGW9LvrDQXRRkl8QBn9EJSMsnaVe/xcCIRnEav2rtRQorxro27zgj65q43odXQvLwCe8imVaSal0I1j2K4KmUA00KxEraNJwzZBxCjYnM3g5Jk27uY21BKYlnx4N91KMTCOHsLeqjRffHQQ9Mkt+JcV3rmm+Zdltju5qzbKeOb3o0qeoezOqvUXtf1CM5DvpYmL/qkS/btfILhcWNQEcmFAZBwaCdWGYRg4ssIkeBI/Wo1Vv+qxjwgnzOtoz+csppMY0cSIDY93mXzyI6zBa55gWDhYXn4E4puk+4jdC5cYAxr3LdYLxatGBrHvL4YX/PSo2xzSpTYc1aLD6KtTpX2T7N7v0+MOfQESyaRHCj8e+hscAGN3phW/xIrQgMWkvu0RND2kOK2B92zXXbo56Lx7ERSurQwI/93QcgUpa1bOedL8NhmgUdW+hKcaPjWrQHHf4z9euxY+sYFulEb7oBBEUe1KI4miWotoMcwlFDmb54gZ0RGfGP+x/HdZkz69UxI7H0uYKFzs/12sMd35oz/4v3VjtTCkZ/2rZFSKipa40OHbI8di8bcNpmMkH/dvwUeRhedEAtwCeKvtQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR04MB6596.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UGp4enQ2Y0lFMUlXNG1oQ2IwZU5YcDVvakwrd3RnRlFYV2FFbzVkRjJDQXZh?=
+ =?utf-8?B?RmlFRFI3cHdWaDgrQXJESU0yTmNIV0dhNXNUWjJiS01qTS9yRWxxYk9nckR6?=
+ =?utf-8?B?bkhEbHBEalhmQkRWTmRrZ3A4QS9xQ2k1dHFOV0ZvVVo3eEJ0NUlFSEdQUi8y?=
+ =?utf-8?B?eG5od1ErcFZqVmR0TWUzcjNyQzg5YWJqeUFiSUdiWUdHeDEvWFRCUExiRGdM?=
+ =?utf-8?B?aFVxUERhUWJwVHJrMG5RQUlNYWpIVGJtakdja2xMSjV4aFZNZXNOOGtEUktw?=
+ =?utf-8?B?U1k1bmZxMFkvbkY3UXV4cTMzMnhKaDZrRmN1eitzZzNMSENJOGR2MFlKd2kr?=
+ =?utf-8?B?SDhXRkpjRGVGMXEwYzExUkIyYUZjbGRzeEJVV3pWekZkbEpTZFJ2a2JwNjRp?=
+ =?utf-8?B?L1hFZkFucFlrL2kycWxNTFA0aXBCaytVYzR0QVZqdCtVYVkvaXkyYkZxNEJq?=
+ =?utf-8?B?QTZwZTBzUWZPakF5cDNyMENEY2VSUEFML3g1Q1F3Q0tYRWc2YzBmWEdnUUd6?=
+ =?utf-8?B?bzFtdk1iL3FVb3JXUEhhamZuQ2NkRmJwL0thMmw1Sm1RcHNRTU56WFFCdHk2?=
+ =?utf-8?B?ek1CQVBzMEo3d2duYXRHSnZJTFpkdldGdGFPY25TWFRKMEhjRDdmaWkrbU01?=
+ =?utf-8?B?cWhLRS9FQVpPZ21yWjkwdmRnc3Q1RmIyOTY3NE9HSUxGK04yclBYRlZiSEx6?=
+ =?utf-8?B?NEd3YUgwNnlEZ3AzY3h5RldkVHh3YjM0L3BCT1FBVGNHTXBjUHBSTE94cTcz?=
+ =?utf-8?B?Zi9sOVZ2VkNzNEJlQ3AyZXRxcUd0K3NDbHZqNFNLS3BQMm5OWlhaUFpaYmNn?=
+ =?utf-8?B?cEF6QzJnT09OU0FhSHEwQ29MMWNMaW8wam5MVmRkbkpST09reXl0UVdzWXRo?=
+ =?utf-8?B?VnA0b3FPM21GYmFLTGs4RzlzZmZPMkZza2FVSjZycU5ScGFWMnJ3U2luS1gr?=
+ =?utf-8?B?bUF5N1lFd3dmOUF4TWxRQUFlS1dKaUpUb3NjTUFwVlRjaUtzMUYxV3JzWGFM?=
+ =?utf-8?B?dVRNSFd3ZEVyZmkrTC95MjJZVlFVMVIwU1paMFh2M1B6ZmFqa3loTnRqTkxr?=
+ =?utf-8?B?YVh4dzl2dmpCWktibU1JR1BuV2EzVDNnN1VNOTdrRnJDUzZVOTQxYmlkRVl1?=
+ =?utf-8?B?U0orZWRiK2w4QTlSUTVUcytxS25iQnIwZ1NTTVhtajVSWTNrS1R0aHZYaS9E?=
+ =?utf-8?B?Zld2S3AzeExQSWtrUUNTN3JlWDJtWWNldnhhbWt2V1VuWHF6czljek11bVNy?=
+ =?utf-8?B?QmdGVm1kM1h5OVZxTnlnZ2lYQmVmczZ3SHNGT0lzQ1JLaHNPSlhmNjhRL3dD?=
+ =?utf-8?B?UEd3aU54WWVnN1VsMDgxOTNibjRiV2R2YUF2aStsSXRTSWw5ZFEwMXN1R2ZO?=
+ =?utf-8?B?T01yYXhpc3JETU5tUVBCYlJhaUQ1RitPRGdMTUlNaUE1bkM3UG5vbitXUjJO?=
+ =?utf-8?B?NklndVFUcE95ZUQ4YU1NSWtYVmw0SGdUSTlLakx4SDZwRlN1SDVGTUlXMzNW?=
+ =?utf-8?B?NzllcVNlNGlQUWJuT2VPTytoRGFyV0htWlJrRmVyL1l3aGsxMHEvekJOMTgr?=
+ =?utf-8?B?WTE3alEyWmpWbm11Um1SWUJRbzdkbFQybW1nWEswVmFFK1czRGR4c3pWTGY2?=
+ =?utf-8?B?cFEremsyOFlsWDMvREZqVjg5eExnY2Ewa1puREg3UWJtaXplQ2dCN0c3MFcv?=
+ =?utf-8?B?SXlnUWhqcTV3WkEyLzBLZkl0MnBETmtNdnVmNmtJZDAvZkVBazY5UVNCYjVY?=
+ =?utf-8?B?aUU2VG96ZElXd1FyMWdFWnlBUUluY3RDTTRLeFFVR2U5ZlhkdW1iNXhKdjBz?=
+ =?utf-8?B?c20wbjV2ZWJOV0hRU1d6NkdRQWc3U2hpOXliWm4wcWM3MXp1Ly9zbWMzYXo5?=
+ =?utf-8?B?MTdrR0RWNVdMc0o3UVJLZk8rSUdzWDgzcnZFTTROV29JNDRsNVRSYTBDWXVQ?=
+ =?utf-8?B?aHV4UENLUXJ1eW1RRmVNYVh6NFd2T3JVS0JPajM3SGtWVVBVajZqMmJVQ2VE?=
+ =?utf-8?B?dXNoZVJiblp2VGxtUjRPZTd0SXlWOUZHaXpYaGJ0T1ZKSnFXMUdyZmtjYzR6?=
+ =?utf-8?B?eWFTclNTUGpqR2ZXQkM1VXlINnNMM0JNRXV3QkR0UHRPRkVyemVaakptRXg1?=
+ =?utf-8?Q?i16oykKnfgkibPUQ0A1s0oeLp?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1013:EE_
-X-MS-Office365-Filtering-Correlation-Id: 81cf4112-2689-40e0-025a-08dc38f84455
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	fbwWG9D+HoCN8ufHyVlf9wx7s4fFbPSLZAq8HP40SMhQaCaIyct1Q14eWMUTOK4v+WwAcKXjxz5gGpqcD4pc1U398a9FAu8tjBgB+zlHhHNdXfiQIqHN12aTHyJaH6L81shmnikp2e3+IgDmu1eCtAFCIdyQxhFWPtcWeE5JRe5Rij9FcDr0/DaHWecFtoEyy3ZOwdELe1eymr0xb6cdO0XFQqKcWzuP4fPy9kYcpH47NKDP2pM8YcpBd1Jhoo91UfkFkuRwADQJbZkWr8E0S5/wqkTEOGpdrBDQ0AXTGet93VHg8uNljRavmJvsn2zsy7Yq2Mi/VGgOZMYjQBh8nSXIFc2kr9+IsYLseBlaJ1c6LSLa4wAqaioVUkAxlthzJnoiHHsMJJrIFav7PvTdPlr4YkgZfpQG2vnVkWFGLDlxROt+jt7mW5KXx8K9thkribPx1eRpM5uq2VWJecw85rWU16jgsRUnLuYXuXSMII+tmjiXe1Up4y4XkP4ERUXmiflgcRyBMXMJ9TrJXBBv45qwdPVvNd8HzOFbsijAmbE9t1OZfrfrNIr8quWrlVlvDg4oC5Bl82SsHx5tkkoZFgYaqnTSihgCaaPiKhiTqlNwu2fBukIYD7wM6/I7PrONI0Y3TP7Po2jwflvOCl7K1A==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(921011)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vcMpycd6NtwxjL4sisaeyjkacbj5pmU701VIjvech7fGnjigjge6rvo3zUx4?=
- =?us-ascii?Q?mf5/iUJ9x1+h+NgQVVntbtiK+e0XBPld80ia8mTFIxb/E4A6V1F81WiW4vz8?=
- =?us-ascii?Q?GmINvmNxLquBSyhuy+yf6MTpQC47MTpInKgQQoBSFERvufWLruEwnrQYnjik?=
- =?us-ascii?Q?6s4HP9WM3q1rb3e7Ncaz4jPv0BjNPoFtqRD7POd6v837NEjSPQxYBbBu0xhC?=
- =?us-ascii?Q?W050VYBwch5KfymwobkxwUyTdag0M+6vR7DDBJjmCptLvUJI3+Ev7uHMWnnr?=
- =?us-ascii?Q?RbtFXbbBRMHpF0WDEdFP35DwbYV3lYmTroZHSaLoEJ2oVLQCGqSalN3vsaSz?=
- =?us-ascii?Q?jgC1hNcsI4ImDtMhm3oTrkT9Stpy9mFv2ndWlGHVywTIPH0HXSeCmTHC+YTX?=
- =?us-ascii?Q?rk7b1qoPiOUAMifWtoKBRfI0fFKJpUqKMt6/NgEGDYCpisdkRf1S0/t9OIS1?=
- =?us-ascii?Q?2OusF0Uw2Chj0O7jXtBnq4IiE3JIKugXtEZnnyhGpi9JjfnqlfigF8gqiLRp?=
- =?us-ascii?Q?TvrVL9EKEYdGTFiAutHpJyraiEN9OGHgNJEufhyqwtklZduTxefDijAZJLTD?=
- =?us-ascii?Q?4VwSGQ+08u6jwkfs1PVkUDMSDL/ksC5qmphG1dwz61TQFijM3NhuZbNe+53V?=
- =?us-ascii?Q?Gl2aTvdxezCWQqAZgjNldIa4p3BIFcFLsN5bl6JDrSAwP5eYIgHqtVl/vGpF?=
- =?us-ascii?Q?c7TzMULsWsjbfoqc9ioC6PV11RevWlUh5pgX4dldJQzrQCPu7elKBb/pbb6Z?=
- =?us-ascii?Q?FMAWCV/HhOpuUo56m9ND1DJxurGRsMRB1sZSTlAQq0IH839/13Dfg8M7THl1?=
- =?us-ascii?Q?IjcrnFyMbSKSwRFAcjz+s7CLwFR/IwPq3ctysfwPkFkzugeO2M5spbzz1kEA?=
- =?us-ascii?Q?xMnpQeoAY70SjEPm3RBnTIpLmZT/LC1GOmwtiddXwN3LvXPWYpmtoNKtxY+N?=
- =?us-ascii?Q?kCfxB59hlO8mkiip7G1CeMvk9iVDUOluaUXS1CMm6T8OSrh1s8QEyAmhpBZ2?=
- =?us-ascii?Q?fk7HL9xh5yYvQ5p6DYsRAbFo8128shpTxEiiorsqm0VaLDzoyUs8BwFbfRLr?=
- =?us-ascii?Q?Xt4xQB3oe5ZIYDgfTMfP11DH50spcTd8X8s/vt9q2TqxXPEyYlaa/KgC3UKp?=
- =?us-ascii?Q?GJBTl0YBdPmWHR5+XD5F9LuVs5Daoop2DMt+iUpQiKzBBjh5JEoVPGnbtBcK?=
- =?us-ascii?Q?cHgOgw7rzufE5K4+nuRULSYwf5IU+TEb1sshXmcRVKxK3y4TYmqBnP4eYhlb?=
- =?us-ascii?Q?ZZi+/0CbLre57eYUfmXYQReRgCJ1X46KAi7mplVfmRCV0x3aeWikBxvP37Sh?=
- =?us-ascii?Q?E283hiiIYKmtTIHFtU8/BZAmWyvHValDBjpp8leYRKRpsZ3UzTMia0WB6xOP?=
- =?us-ascii?Q?f41Rux14fcmcKEao+XKRlFzmXeM051PeK6ANFjK2d2W9mM9wW15YF1JXTaJd?=
- =?us-ascii?Q?LfyWBy4jDlNnSQoiH0tMXBYZTwXWxBeji8T1Bmt25bime4cSxqQabIfUUdhI?=
- =?us-ascii?Q?yoVP10RTCL5oAIb0wWu+L27thvGA2voC2++0/yCEi9XIdo4O5VXYU0R5/6CU?=
- =?us-ascii?Q?vWsD2zWewSODThSiSb6KMKWY1TEQyT+aPDhmRb9IfR6rBNBNHMK6Izt9hj1L?=
- =?us-ascii?Q?Eg=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81cf4112-2689-40e0-025a-08dc38f84455
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 07:30:13.1402
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR04MB6596.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 161b4748-9ef1-41fc-d46e-08dc38fa72ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2024 07:45:49.7088
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GZuOEkQVxWbDlL5h68mSuUuS9Xm2CEh6sTumwcnnxcbR4DQxxoxkKKkTSo5w5C5h0Pg7+a8BszoLLStP2zej4gFJhNXNJPO0WW0Q9CxQCpw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1013
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 301f59c4-c269-4a66-8a8c-f5daab211fa3
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: whL+rO0VFxsMqiDymVY0VOPccAbkKWc1c+6RKOKmxix2cL8Uf2Uciid/R90Tf2JrPuP6YnTpB0MEjg9cFL/K5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI6PR04MB8051
+X-OriginatorOrg: ASUS.com
+X-TM-AS-Product-Ver: SMEX-14.0.0.3197-9.1.2019-28220.004
+X-TM-AS-Result: No-10--16.985300-8.000000
+X-TMASE-MatchedRID: scwq2vQP8OH5ETspAEX/nnOjEKYddvv6Xdw5PWqPhD9jIOKZDN+g+4yi
+	F5onUG2P01nQU8mVCBUPtvKHk5LZ1ZISLa/7Hy7VESXOZXq6MIQWHD9oTapTmuU0ANNKseCVf9R
+	EPtrqOGFcBLQa+1h4t2BN/PrhIa5ffjeDWHP5lq/BOM8VvnzB4gp9RhY5FneF1McWg5VNQo/Ybt
+	L4351/xnrXd53wcg59jX3M0aFmhUO4YW3IPBlDmpr4DbFfhFdeo2sqUJr6IXBxg7svMtapLg7Ht
+	RZkYKSFwMoPtKDwPsVrt++zA/Mnv0mTFBEtNzxxZcCOwTVX/+hwv7Hjk7SQ4A==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--16.985300-8.000000
+X-TMASE-Version: SMEX-14.0.0.3197-9.1.2019-28220.004
+X-TM-SNTS-SMTP:
+	034154DDF20AF0D9505A859DBD7764E65D097044B00F3622175B14A94ABE238E2000:9
 
-This patch adds support for StarFive's StarLink PMU (Performance
-Monitor Unit). StarLink PMU integrates one or more CPU cores with
-a shared L3 memory system. The PMU supports overflow interrupt,
-up to 16 programmable 64bit event counters, and an independent
-64bit cycle counter. StarLink PMU is accessed via MMIO.
-
-Example Perf stat output:
-[root@user]# perf stat -a -e /starfive_starlink_pmu/cycles/ \
-	-e /starfive_starlink_pmu/read_miss/ \
-	-e /starfive_starlink_pmu/read_hit/ \
-	-e /starfive_starlink_pmu/release_request/  \
-	-e /starfive_starlink_pmu/write_hit/ \
-	-e /starfive_starlink_pmu/write_miss/ \
-	-e /starfive_starlink_pmu/write_request/ \
-	-e /starfive_starlink_pmu/writeback/ \
-	-e /starfive_starlink_pmu/read_request/ \
-	-- openssl speed rsa2048
-Doing 2048 bits private rsa's for 10s: 5 2048 bits private RSA's in
-2.84s
-Doing 2048 bits public rsa's for 10s: 169 2048 bits public RSA's in
-2.42s
-version: 3.0.11
-built on: Tue Sep 19 13:02:31 2023 UTC
-options: bn(64,64)
-CPUINFO: N/A
-                  sign    verify    sign/s verify/s
-rsa 2048 bits 0.568000s 0.014320s      1.8     69.8
-/////////
- Performance counter stats for 'system wide':
-
-         649991998      starfive_starlink_pmu/cycles/
-           1009690      starfive_starlink_pmu/read_miss/
-           1079750      starfive_starlink_pmu/read_hit/
-           2089405      starfive_starlink_pmu/release_request/
-               129      starfive_starlink_pmu/write_hit/
-                70      starfive_starlink_pmu/write_miss/
-               194      starfive_starlink_pmu/write_request/
-            150080      starfive_starlink_pmu/writeback/
-           2089423      starfive_starlink_pmu/read_request/
-
-      27.062755678 seconds time elapsed
-
-Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
----
- drivers/perf/Kconfig                 |   9 +
- drivers/perf/Makefile                |   1 +
- drivers/perf/starfive_starlink_pmu.c | 642 +++++++++++++++++++++++++++
- 3 files changed, 652 insertions(+)
- create mode 100644 drivers/perf/starfive_starlink_pmu.c
-
-diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-index 273d67ecf6d2..8dfeb583b059 100644
---- a/drivers/perf/Kconfig
-+++ b/drivers/perf/Kconfig
-@@ -86,6 +86,15 @@ config RISCV_PMU_SBI
- 	  full perf feature support i.e. counter overflow, privilege mode
- 	  filtering, counter configuration.
- 
-+config STARFIVE_STARLINK_PMU
-+	depends on ARCH_STARFIVE || COMPILE_TEST
-+	bool "StarFive StarLink PMU"
-+	help
-+	   Provide support for StarLink Performance Monitor Unit.
-+	   StarLink Performance Monitor Unit integrates one or more cores with
-+	   an L3 memory system. The L3 cache events are added into perf event
-+	   subsystem, allowing monitoring of various L3 cache perf events.
-+
- config ARM_PMU_ACPI
- 	depends on ARM_PMU && ACPI
- 	def_bool y
-diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-index 16b3ec4db916..e2153aee1e04 100644
---- a/drivers/perf/Makefile
-+++ b/drivers/perf/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_QCOM_L3_PMU) += qcom_l3_pmu.o
- obj-$(CONFIG_RISCV_PMU) += riscv_pmu.o
- obj-$(CONFIG_RISCV_PMU_LEGACY) += riscv_pmu_legacy.o
- obj-$(CONFIG_RISCV_PMU_SBI) += riscv_pmu_sbi.o
-+obj-$(CONFIG_STARFIVE_STARLINK_PMU) += starfive_starlink_pmu.o
- obj-$(CONFIG_THUNDERX2_PMU) += thunderx2_pmu.o
- obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
- obj-$(CONFIG_ARM_SPE_PMU) += arm_spe_pmu.o
-diff --git a/drivers/perf/starfive_starlink_pmu.c b/drivers/perf/starfive_starlink_pmu.c
-new file mode 100644
-index 000000000000..5e5a672b4229
---- /dev/null
-+++ b/drivers/perf/starfive_starlink_pmu.c
-@@ -0,0 +1,642 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * StarFive's StarLink PMU driver
-+ *
-+ * Copyright (C) 2023 StarFive Technology Co., Ltd.
-+ *
-+ * Author: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
-+ *
-+ */
-+
-+#define STARLINK_PMU_PDEV_NAME	"starfive_starlink_pmu"
-+#define pr_fmt(fmt)	STARLINK_PMU_PDEV_NAME ": " fmt
-+
-+#include <linux/bitmap.h>
-+#include <linux/cpu_pm.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/perf_event.h>
-+#include <linux/platform_device.h>
-+#include <linux/sysfs.h>
-+
-+#define STARLINK_PMU_MAX_COUNTERS			64
-+#define STARLINK_PMU_NUM_COUNTERS			16
-+#define STARLINK_PMU_IDX_CYCLE_COUNTER			63
-+
-+#define STARLINK_PMU_EVENT_SELECT			0x060
-+#define STARLINK_PMU_EVENT_COUNTER			0x160
-+#define STARLINK_PMU_COUNTER_MASK			GENMASK_ULL(63, 0)
-+#define STARLINK_PMU_CYCLE_COUNTER			0x058
-+
-+#define STARLINK_PMU_CONTROL				0x040
-+#define STARLINK_PMU_GLOBAL_ENABLE			BIT_ULL(0)
-+
-+#define STARLINK_PMU_INTERRUPT_ENABLE			0x050
-+#define STARLINK_PMU_COUNTER_OVERFLOW_STATUS		0x048
-+#define STARLINK_PMU_CYCLE_OVERFLOW_MASK		BIT_ULL(63)
-+
-+#define STARLINK_CYCLES				0x058
-+#define CACHE_READ_REQUEST			0x04000701
-+#define CACHE_WRITE_REQUEST			0x03000001
-+#define CACHE_RELEASE_REQUEST			0x0003e001
-+#define CACHE_READ_HIT				0x00901202
-+#define CACHE_READ_MISS				0x04008002
-+#define CACHE_WRITE_HIT				0x006c0002
-+#define CACHE_WRITE_MISS			0x03000002
-+#define CACHE_WRITEBACK				0x00000403
-+
-+#define to_starlink_pmu(p) (container_of(p, struct starlink_pmu, pmu))
-+
-+#define STARLINK_FORMAT_ATTR(_name, _config)				      \
-+	(&((struct dev_ext_attribute[]) {				      \
-+		{ .attr = __ATTR(_name, 0444, starlink_pmu_sysfs_format_show, NULL), \
-+		  .var = (void *)_config, }				      \
-+	})[0].attr.attr)
-+
-+#define STARLINK_EVENT_ATTR(_name, _id)					     \
-+	PMU_EVENT_ATTR_ID(_name, starlink_pmu_sysfs_event_show, _id)
-+
-+static int starlink_pmu_cpuhp_state;
-+
-+struct starlink_hw_events {
-+	struct perf_event	*events[STARLINK_PMU_MAX_COUNTERS];
-+	DECLARE_BITMAP(used_mask, STARLINK_PMU_MAX_COUNTERS);
-+};
-+
-+struct starlink_pmu {
-+	struct pmu					pmu;
-+	struct starlink_hw_events			__percpu *hw_events;
-+	struct hlist_node				node;
-+	struct notifier_block				starlink_pmu_pm_nb;
-+	void __iomem					*pmu_base;
-+	cpumask_t					cpumask;
-+	int						irq;
-+};
-+
-+static ssize_t
-+starlink_pmu_sysfs_format_show(struct device *dev,
-+			       struct device_attribute *attr,
-+			       char *buf)
-+{
-+	struct dev_ext_attribute *eattr = container_of(attr,
-+						       struct dev_ext_attribute, attr);
-+
-+	return sysfs_emit(buf, "%s\n", (char *)eattr->var);
-+}
-+
-+static struct attribute *starlink_pmu_format_attrs[] = {
-+	STARLINK_FORMAT_ATTR(event, "config:0-31"),
-+	NULL
-+};
-+
-+static const struct attribute_group starlink_pmu_format_attr_group = {
-+	.name = "format",
-+	.attrs = starlink_pmu_format_attrs,
-+};
-+
-+static ssize_t
-+starlink_pmu_sysfs_event_show(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct perf_pmu_events_attr *eattr = container_of(attr,
-+							  struct perf_pmu_events_attr, attr);
-+
-+	return sysfs_emit(buf, "event=0x%02llx\n", eattr->id);
-+}
-+
-+static struct attribute *starlink_pmu_event_attrs[] = {
-+	STARLINK_EVENT_ATTR(cycles, STARLINK_CYCLES),
-+	STARLINK_EVENT_ATTR(read_request, CACHE_READ_REQUEST),
-+	STARLINK_EVENT_ATTR(write_request, CACHE_WRITE_REQUEST),
-+	STARLINK_EVENT_ATTR(release_request, CACHE_RELEASE_REQUEST),
-+	STARLINK_EVENT_ATTR(read_hit, CACHE_READ_HIT),
-+	STARLINK_EVENT_ATTR(read_miss, CACHE_READ_MISS),
-+	STARLINK_EVENT_ATTR(write_hit, CACHE_WRITE_HIT),
-+	STARLINK_EVENT_ATTR(write_miss, CACHE_WRITE_MISS),
-+	STARLINK_EVENT_ATTR(writeback, CACHE_WRITEBACK),
-+	NULL
-+};
-+
-+static const struct attribute_group starlink_pmu_events_attr_group = {
-+	.name = "events",
-+	.attrs = starlink_pmu_event_attrs,
-+};
-+
-+static ssize_t
-+cpumask_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct starlink_pmu *starlink_pmu = to_starlink_pmu(dev_get_drvdata(dev));
-+
-+	return cpumap_print_to_pagebuf(true, buf, &starlink_pmu->cpumask);
-+}
-+
-+static DEVICE_ATTR_RO(cpumask);
-+
-+static struct attribute *starlink_pmu_cpumask_attrs[] = {
-+	&dev_attr_cpumask.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group starlink_pmu_cpumask_attr_group = {
-+	.attrs = starlink_pmu_cpumask_attrs,
-+};
-+
-+static const struct attribute_group *starlink_pmu_attr_groups[] = {
-+	&starlink_pmu_format_attr_group,
-+	&starlink_pmu_events_attr_group,
-+	&starlink_pmu_cpumask_attr_group,
-+	NULL
-+};
-+
-+static void starlink_pmu_set_event_period(struct perf_event *event)
-+{
-+	struct starlink_pmu *starlink_pmu = to_starlink_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int idx = event->hw.idx;
-+
-+	/*
-+	 * Program counter to half of it's max count to handle
-+	 * cases of extreme interrupt latency.
-+	 */
-+	u64 val = STARLINK_PMU_COUNTER_MASK >> 1;
-+
-+	local64_set(&hwc->prev_count, val);
-+	if (hwc->config == STARLINK_CYCLES)
-+		writeq(val, starlink_pmu->pmu_base + STARLINK_PMU_CYCLE_COUNTER);
-+	else
-+		writeq(val, starlink_pmu->pmu_base + STARLINK_PMU_EVENT_COUNTER +
-+		       idx * sizeof(u64));
-+}
-+
-+static void starlink_pmu_counter_start(struct perf_event *event,
-+				       struct starlink_pmu *starlink_pmu)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	int idx = event->hw.idx;
-+	u64 val;
-+
-+	/*
-+	 * Enable counter overflow interrupt[63:0],
-+	 * which is mapped as follow:
-+	 *
-+	 * event counter 0	- Bit [0]
-+	 * event counter 1	- Bit [1]
-+	 * ...
-+	 * cycle counter	- Bit [63]
-+	 */
-+	val = readq(starlink_pmu->pmu_base + STARLINK_PMU_INTERRUPT_ENABLE);
-+
-+	if (hwc->config == STARLINK_CYCLES) {
-+		/*
-+		 * Cycle count has its dedicated register, and it starts
-+		 * counting as soon as STARLINK_PMU_GLOBAL_ENABLE is set.
-+		 */
-+		val |= STARLINK_PMU_CYCLE_OVERFLOW_MASK;
-+	} else {
-+		writeq(event->hw.config, starlink_pmu->pmu_base +
-+		       STARLINK_PMU_EVENT_SELECT + idx * sizeof(u64));
-+
-+		val |= BIT_ULL(idx);
-+	}
-+
-+	writeq(val, starlink_pmu->pmu_base + STARLINK_PMU_INTERRUPT_ENABLE);
-+
-+	writeq(STARLINK_PMU_GLOBAL_ENABLE, starlink_pmu->pmu_base +
-+	       STARLINK_PMU_CONTROL);
-+}
-+
-+static void starlink_pmu_counter_stop(struct perf_event *event,
-+				      struct starlink_pmu *starlink_pmu)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	int idx = event->hw.idx;
-+	u64 val;
-+
-+	val = readq(starlink_pmu->pmu_base + STARLINK_PMU_CONTROL);
-+	val &= ~STARLINK_PMU_GLOBAL_ENABLE;
-+	writeq(val, starlink_pmu->pmu_base + STARLINK_PMU_CONTROL);
-+
-+	val = readq(starlink_pmu->pmu_base + STARLINK_PMU_INTERRUPT_ENABLE);
-+	if (hwc->config == STARLINK_CYCLES)
-+		val &= ~STARLINK_PMU_CYCLE_OVERFLOW_MASK;
-+	else
-+		val &= ~BIT_ULL(idx);
-+
-+	writeq(val, starlink_pmu->pmu_base + STARLINK_PMU_INTERRUPT_ENABLE);
-+}
-+
-+static void starlink_pmu_update(struct perf_event *event)
-+{
-+	struct starlink_pmu *starlink_pmu = to_starlink_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int idx = hwc->idx;
-+	u64 prev_raw_count, new_raw_count;
-+	u64 oldval;
-+	u64 delta;
-+
-+	do {
-+		prev_raw_count = local64_read(&hwc->prev_count);
-+		if (hwc->config == STARLINK_CYCLES)
-+			new_raw_count = readq(starlink_pmu->pmu_base +
-+					      STARLINK_PMU_CYCLE_COUNTER);
-+		else
-+			new_raw_count = readq(starlink_pmu->pmu_base +
-+					      STARLINK_PMU_EVENT_COUNTER +
-+					      idx * sizeof(u64));
-+		oldval = local64_cmpxchg(&hwc->prev_count, prev_raw_count,
-+					 new_raw_count);
-+	} while (oldval != prev_raw_count);
-+
-+	delta = (new_raw_count - prev_raw_count) & STARLINK_PMU_COUNTER_MASK;
-+	local64_add(delta, &event->count);
-+}
-+
-+static void starlink_pmu_start(struct perf_event *event, int flags)
-+{
-+	struct starlink_pmu *starlink_pmu = to_starlink_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
-+		return;
-+
-+	if (flags & PERF_EF_RELOAD)
-+		WARN_ON_ONCE(!(event->hw.state & PERF_HES_UPTODATE));
-+
-+	hwc->state = 0;
-+
-+	starlink_pmu_set_event_period(event);
-+	starlink_pmu_counter_start(event, starlink_pmu);
-+
-+	perf_event_update_userpage(event);
-+}
-+
-+static void starlink_pmu_stop(struct perf_event *event, int flags)
-+{
-+	struct starlink_pmu *starlink_pmu = to_starlink_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (hwc->state & PERF_HES_STOPPED)
-+		return;
-+
-+	starlink_pmu_counter_stop(event, starlink_pmu);
-+	starlink_pmu_update(event);
-+	hwc->state |= PERF_HES_STOPPED | PERF_HES_UPTODATE;
-+}
-+
-+static int starlink_pmu_add(struct perf_event *event, int flags)
-+{
-+	struct starlink_pmu *starlink_pmu = to_starlink_pmu(event->pmu);
-+	struct starlink_hw_events *hw_events =
-+					this_cpu_ptr(starlink_pmu->hw_events);
-+	struct hw_perf_event *hwc = &event->hw;
-+	unsigned long *used_mask = hw_events->used_mask;
-+	u32 n_events = STARLINK_PMU_NUM_COUNTERS;
-+	int idx;
-+
-+	/*
-+	 * Cycle counter has dedicated register to hold counter value.
-+	 * Event other than cycle count has to be enabled through
-+	 * event select register, and assigned with independent counter
-+	 * as they appear.
-+	 */
-+
-+	if (hwc->config == STARLINK_CYCLES) {
-+		idx = STARLINK_PMU_IDX_CYCLE_COUNTER;
-+	} else {
-+		idx = find_first_zero_bit(used_mask, n_events);
-+		/* All counter are in use */
-+		if (idx < 0)
-+			return idx;
-+
-+		set_bit(idx, used_mask);
-+	}
-+
-+	hwc->idx = idx;
-+	hw_events->events[idx] = event;
-+	hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
-+
-+	if (flags & PERF_EF_START)
-+		starlink_pmu_start(event, PERF_EF_RELOAD);
-+
-+	perf_event_update_userpage(event);
-+
-+	return 0;
-+}
-+
-+static void starlink_pmu_del(struct perf_event *event, int flags)
-+{
-+	struct starlink_pmu *starlink_pmu = to_starlink_pmu(event->pmu);
-+	struct starlink_hw_events *hw_events =
-+					this_cpu_ptr(starlink_pmu->hw_events);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	starlink_pmu_stop(event, PERF_EF_UPDATE);
-+	hw_events->events[hwc->idx] = NULL;
-+	clear_bit(hwc->idx, hw_events->used_mask);
-+
-+	perf_event_update_userpage(event);
-+}
-+
-+static bool starlink_pmu_validate_event_group(struct perf_event *event)
-+{
-+	struct perf_event *leader = event->group_leader;
-+	struct perf_event *sibling;
-+	int counter = 1;
-+
-+	/*
-+	 * Ensure hardware events in the group are on the same PMU,
-+	 * software events are acceptable.
-+	 */
-+	if (event->group_leader->pmu != event->pmu &&
-+	    !is_software_event(event->group_leader))
-+		return false;
-+
-+	for_each_sibling_event(sibling, leader) {
-+		if (sibling->pmu != event->pmu && !is_software_event(sibling))
-+			return false;
-+
-+		counter++;
-+	}
-+
-+	return counter <= STARLINK_PMU_NUM_COUNTERS;
-+}
-+
-+static int starlink_pmu_event_init(struct perf_event *event)
-+{
-+	struct starlink_pmu *starlink_pmu = to_starlink_pmu(event->pmu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	/*
-+	 * Sampling is not supported, as counters are shared
-+	 * by all CPU.
-+	 */
-+	if (hwc->sample_period)
-+		return -EOPNOTSUPP;
-+
-+	/*
-+	 * Per-task and attach to a task are not supported,
-+	 * as uncore events are not specific to any CPU.
-+	 */
-+	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK)
-+		return -EOPNOTSUPP;
-+
-+	if (!starlink_pmu_validate_event_group(event))
-+		return -EINVAL;
-+
-+	hwc->idx = -1;
-+	hwc->config = event->attr.config;
-+	event->cpu = cpumask_first(&starlink_pmu->cpumask);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t starlink_pmu_handle_irq(int irq_num, void *data)
-+{
-+	struct starlink_pmu *starlink_pmu = data;
-+	struct starlink_hw_events *hw_events =
-+			this_cpu_ptr(starlink_pmu->hw_events);
-+	bool handled = false;
-+	int idx;
-+	u64 overflow_status;
-+
-+	for (idx = 0; idx < STARLINK_PMU_MAX_COUNTERS; idx++) {
-+		struct perf_event *event = hw_events->events[idx];
-+
-+		if (!event)
-+			continue;
-+
-+		overflow_status = readq(starlink_pmu->pmu_base +
-+					STARLINK_PMU_COUNTER_OVERFLOW_STATUS);
-+		if (!(overflow_status & BIT_ULL(idx)))
-+			continue;
-+
-+		writeq(BIT_ULL(idx), starlink_pmu->pmu_base +
-+		       STARLINK_PMU_COUNTER_OVERFLOW_STATUS);
-+
-+		starlink_pmu_update(event);
-+		starlink_pmu_set_event_period(event);
-+		handled = true;
-+	}
-+	return IRQ_RETVAL(handled);
-+}
-+
-+static int starlink_setup_irqs(struct starlink_pmu *starlink_pmu,
-+			       struct platform_device *pdev)
-+{
-+	int ret, irq;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return -EINVAL;
-+
-+	ret = devm_request_irq(&pdev->dev, irq, starlink_pmu_handle_irq,
-+			       0, STARLINK_PMU_PDEV_NAME, starlink_pmu);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to request IRQ\n");
-+
-+	starlink_pmu->irq = irq;
-+
-+	return 0;
-+}
-+
-+static int starlink_pmu_pm_notify(struct notifier_block *b,
-+				  unsigned long cmd, void *v)
-+{
-+	struct starlink_pmu *starlink_pmu = container_of(b, struct starlink_pmu,
-+							 starlink_pmu_pm_nb);
-+	struct starlink_hw_events *hw_events =
-+					this_cpu_ptr(starlink_pmu->hw_events);
-+	int enabled = bitmap_weight(hw_events->used_mask,
-+				    STARLINK_PMU_MAX_COUNTERS);
-+	struct perf_event *event;
-+	int idx;
-+
-+	if (!enabled)
-+		return NOTIFY_OK;
-+
-+	for (idx = 0; idx < STARLINK_PMU_MAX_COUNTERS; idx++) {
-+		event = hw_events->events[idx];
-+		if (!event)
-+			continue;
-+
-+		switch (cmd) {
-+		case CPU_PM_ENTER:
-+			/* Stop and update the counter */
-+			starlink_pmu_stop(event, PERF_EF_UPDATE);
-+			break;
-+		case CPU_PM_EXIT:
-+		case CPU_PM_ENTER_FAILED:
-+			/* Restore and enable the counter */
-+			starlink_pmu_start(event, PERF_EF_RELOAD);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int starlink_pmu_pm_register(struct starlink_pmu *starlink_pmu)
-+{
-+	if (!IS_ENABLED(CONFIG_CPU_PM))
-+		return 0;
-+
-+	starlink_pmu->starlink_pmu_pm_nb.notifier_call = starlink_pmu_pm_notify;
-+	return cpu_pm_register_notifier(&starlink_pmu->starlink_pmu_pm_nb);
-+}
-+
-+static void starlink_pmu_pm_unregister(struct starlink_pmu *starlink_pmu)
-+{
-+	if (!IS_ENABLED(CONFIG_CPU_PM))
-+		return;
-+
-+	cpu_pm_unregister_notifier(&starlink_pmu->starlink_pmu_pm_nb);
-+}
-+
-+static void starlink_pmu_destroy(struct starlink_pmu *starlink_pmu)
-+{
-+	starlink_pmu_pm_unregister(starlink_pmu);
-+	cpuhp_state_remove_instance(starlink_pmu_cpuhp_state,
-+				    &starlink_pmu->node);
-+}
-+
-+static int starlink_pmu_probe(struct platform_device *pdev)
-+{
-+	struct starlink_pmu *starlink_pmu;
-+	struct starlink_hw_events *hw_events;
-+	struct resource *res;
-+	int cpuid, i, ret;
-+
-+	starlink_pmu = devm_kzalloc(&pdev->dev, sizeof(*starlink_pmu), GFP_KERNEL);
-+	if (!starlink_pmu)
-+		return -ENOMEM;
-+
-+	starlink_pmu->pmu_base =
-+			devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-+	if (IS_ERR(starlink_pmu->pmu_base))
-+		return PTR_ERR(starlink_pmu->pmu_base);
-+
-+	starlink_pmu->hw_events = alloc_percpu_gfp(struct starlink_hw_events,
-+						   GFP_KERNEL);
-+	if (!starlink_pmu->hw_events) {
-+		dev_err(&pdev->dev, "Failed to allocate per-cpu PMU data\n");
-+		return -ENOMEM;
-+	}
-+
-+	for_each_possible_cpu(cpuid) {
-+		hw_events = per_cpu_ptr(starlink_pmu->hw_events, cpuid);
-+		for (i = 0; i < STARLINK_PMU_MAX_COUNTERS; i++)
-+			hw_events->events[i] = NULL;
-+	}
-+
-+	ret = starlink_setup_irqs(starlink_pmu, pdev);
-+	if (ret)
-+		return ret;
-+
-+	ret = cpuhp_state_add_instance(starlink_pmu_cpuhp_state,
-+				       &starlink_pmu->node);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to register hotplug\n");
-+		return ret;
-+	}
-+
-+	ret = starlink_pmu_pm_register(starlink_pmu);
-+	if (ret) {
-+		cpuhp_state_remove_instance(starlink_pmu_cpuhp_state,
-+					    &starlink_pmu->node);
-+		return ret;
-+	}
-+
-+	starlink_pmu->pmu = (struct pmu) {
-+		.task_ctx_nr	= perf_invalid_context,
-+		.event_init	= starlink_pmu_event_init,
-+		.add		= starlink_pmu_add,
-+		.del		= starlink_pmu_del,
-+		.start		= starlink_pmu_start,
-+		.stop		= starlink_pmu_stop,
-+		.read		= starlink_pmu_update,
-+		.attr_groups	= starlink_pmu_attr_groups,
-+	};
-+
-+	ret = perf_pmu_register(&starlink_pmu->pmu, STARLINK_PMU_PDEV_NAME, -1);
-+	if (ret)
-+		starlink_pmu_destroy(starlink_pmu);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id starlink_pmu_of_match[] = {
-+	{ .compatible = "starfive,jh8100-starlink-pmu" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, starlink_pmu_of_match);
-+
-+static struct platform_driver starlink_pmu_driver = {
-+	.driver = {
-+		.name	= STARLINK_PMU_PDEV_NAME,
-+		.of_match_table = starlink_pmu_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = starlink_pmu_probe,
-+};
-+
-+static int
-+starlink_pmu_online_cpu(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct starlink_pmu *starlink_pmu = hlist_entry_safe(node,
-+							     struct starlink_pmu,
-+							     node);
-+
-+	if (cpumask_empty(&starlink_pmu->cpumask))
-+		cpumask_set_cpu(cpu, &starlink_pmu->cpumask);
-+
-+	WARN_ON(irq_set_affinity(starlink_pmu->irq, cpumask_of(cpu)));
-+
-+	return 0;
-+}
-+
-+static int
-+starlink_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
-+{
-+	struct starlink_pmu *starlink_pmu = hlist_entry_safe(node,
-+							     struct starlink_pmu,
-+							     node);
-+	unsigned int target;
-+
-+	if (!cpumask_test_and_clear_cpu(cpu, &starlink_pmu->cpumask))
-+		return 0;
-+
-+	target = cpumask_any_but(cpu_online_mask, cpu);
-+	if (target >= nr_cpu_ids)
-+		return 0;
-+
-+	perf_pmu_migrate_context(&starlink_pmu->pmu, cpu, target);
-+
-+	cpumask_set_cpu(target, &starlink_pmu->cpumask);
-+	WARN_ON(irq_set_affinity(starlink_pmu->irq, cpumask_of(target)));
-+
-+	return 0;
-+}
-+
-+static int __init starlink_pmu_init(void)
-+{
-+	int ret;
-+
-+	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-+				      "soc/starfive/starlink_pmu:online",
-+				      starlink_pmu_online_cpu,
-+				      starlink_pmu_offline_cpu);
-+	if (ret < 0)
-+		return ret;
-+
-+	starlink_pmu_cpuhp_state = ret;
-+
-+	return platform_driver_register(&starlink_pmu_driver);
-+}
-+
-+device_initcall(starlink_pmu_init);
--- 
-2.43.0
-
+SGksIEtyenlzenRvZiwNCg0KSSBjb3JyZWN0IG15IGNoYW5nZSBsb2cNCj4gRG9jdW1lbnQgdGhl
+IG5ldyBjb21wYXRpYmxlcyB1c2VkIG9uIEFTVVMgWDRURi4NCj4NCj4gQ2hhbmdlbG9nDQo+IENo
+YW5nZXMgaW4gdjMNCj4gLS0tIFRoZSBuZXcgY29tcGF0aWJsZSBpcyBhIEJNQyBmb3IgYSBBU1VT
+IFg0VEYgc2VydmVyIHdoaWNoIHVzZSBhIGFzdDI2MDAtYTMgY2hpcCwgc28gY29ycmVjdCBzdHJp
+bmcgdG8gYXN1cyx4NHRmLWJtYw0KDQpEbyBJIG5lZWQgdG8gcmVzZW5kIHYzIHBhdGNoIGFnYWlu
+IHdpdGggdGhlIGNvcnJlY3QgY2hhbmdlIGxvZz8NCg0KVGhhbmtzIGZvciByZXZpZXcuDQoNCkJl
+c3QgUmVnYXJkcw0KS2VsbHkNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBLcnp5
+c3p0b2YgS296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+DQpTZW50OiBU
+dWVzZGF5LCBGZWJydWFyeSAyNywgMjAyNCA2OjAyIFBNDQpUbzogS2VsbHkgSHVuZyA8cHBpZ2hv
+dXNlQGdtYWlsLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZw0KQ2M6IGtyenlzenRvZi5rb3psb3dz
+a2krZHRAbGluYXJvLm9yZzsgY29ub3IrZHRAa2VybmVsLm9yZzsgam9lbEBqbXMuaWQuYXU7IGFu
+ZHJld0Bjb2RlY29uc3RydWN0LmNvbS5hdTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtYXNwZWVkQGxpc3RzLm96
+bGFicy5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IG9wZW5ibWNAbGlzdHMub3ps
+YWJzLm9yZzsgS2VsbHkgSHVuZyjmtKrlmInojokpIDxLZWxseV9IdW5nQGFzdXMuY29tPjsgQWxs
+ZW5ZWSBIc3Uo6Kix5bm85bKzKSA8QWxsZW5ZWV9Ic3VAYXN1cy5jb20+DQpTdWJqZWN0OiBSZTog
+W1BBVENIIHYzIDEvMl0gZHQtYmluZGluZ3M6IGFybTogYXNwZWVkOiBhZGQgQVNVUyBYNFRGIGJv
+YXJkDQoNCkV4dGVybmFsIGVtYWlsIDogRW5zdXJlIHlvdXIgZW1haWwgaXMgc2VjdXJlIGJlZm9y
+ZSBvcGVuaW5nIGxpbmtzIGFuZCBhdHRhY2htZW50cy4NCg0KT24gMjcvMDIvMjAyNCAxMDoyOSwg
+S2VsbHkgSHVuZyB3cm90ZToNCj4gRG9jdW1lbnQgdGhlIG5ldyBjb21wYXRpYmxlcyB1c2VkIG9u
+IEFTVVMgWDRURi4NCj4NCj4gQ2hhbmdlbG9nDQo+IENoYW5nZXMgaW4gdjMNCj4gLSBjb3JyZWN0
+IHN0cmluZyB0byBhc3VzLHg0dGYtYm1jDQoNCkNoYW5nZWxvZyBnb2VzIGFmdGVyIC0tLS4NCg0K
+QWdhaW46IHdoYXQgaGFwcGVuZWQgd2l0aCB0aGUgdGFncz8gV2h5IGFyZW4ndCB5b3UgcmVzcG9u
+ZGluZyB0byBjb21tZW50cyB5b3UgcmVjZWl2ZT8NCg0KDQpCZXN0IHJlZ2FyZHMsDQpLcnp5c3p0
+b2YNCg0KDQo8cD48L3A+DQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KVGhpcyBlbWFpbCBhbmQgYW55IGF0
+dGFjaG1lbnRzIHRvIGl0IGNvbnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIGFuZCBhcmUg
+aW50ZW5kZWQgc29sZWx5IGZvciB0aGUgdXNlIG9mIHRoZSBpbmRpdmlkdWFsIHRvIHdob20gaXQg
+aXMgYWRkcmVzc2VkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50IG9yIHJl
+Y2VpdmUgaXQgYWNjaWRlbnRhbGx5LCBwbGVhc2UgaW1tZWRpYXRlbHkgbm90aWZ5IHRoZSBzZW5k
+ZXIgYnkgZS1tYWlsIGFuZCBkZWxldGUgdGhlIG1lc3NhZ2UgYW5kIGFueSBhdHRhY2htZW50cyBm
+cm9tIHlvdXIgY29tcHV0ZXIgc3lzdGVtLCBhbmQgZGVzdHJveSBhbGwgaGFyZCBjb3BpZXMuIFBs
+ZWFzZSBiZSBhZHZpc2VkIHRoYXQgYW55IHVuYXV0aG9yaXplZCBkaXNjbG9zdXJlLCBjb3B5aW5n
+LCBkaXN0cmlidXRpb24gb3IgYW55IGFjdGlvbiB0YWtlbiBvciBvbWl0dGVkIGluIHJlbGlhbmNl
+IG9uIHRoaXMsIGlzIGlsbGVnYWwgYW5kIHByb2hpYml0ZWQuIEFueSB2aWV3cyBvciBvcGluaW9u
+cyBleHByZXNzZWQgYXJlIHNvbGVseSB0aG9zZSBvZiB0aGUgYXV0aG9yIGFuZCBkbyBub3QgcmVw
+cmVzZW50IHRob3NlIG9mIEFTVVNUZUsuDQoNCkZvciBwcmljaW5nIGluZm9ybWF0aW9uLCBBU1VT
+IGlzIG9ubHkgZW50aXRsZWQgdG8gc2V0IGEgcmVjb21tZW5kYXRpb24gcmVzYWxlIHByaWNlLiBB
+bGwgY3VzdG9tZXJzIGFyZSBmcmVlIHRvIHNldCB0aGVpciBvd24gcHJpY2UgYXMgdGhleSB3aXNo
+Lg0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0NCg==
