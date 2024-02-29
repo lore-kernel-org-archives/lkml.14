@@ -1,119 +1,76 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9892112F58D;
-	Thu, 29 Feb 2024 14:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408117D091
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 14:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709216541; cv=none; b=mUUhIYDS/PVx84a9RgnAyK/x2opbsegOGXlztTH0vnCOscqmIUCFdyYzBQfOniSPWjWqYluZFhr9Reouk8clUVijYZmV7+XKwWWqTq05fVSe9SzK+aQbyuPhVASRYddH5q6Zv6zQSbZ/wvb5nK1R6ffpCeZMSAUM7WD560F9LF8=
+	t=1709216622; cv=none; b=PhUQKtJtcNHNSLI1Ph1kQ+evTEoXE0InDyupgZuCg8B+QhkWCFoazr+sl0aSQvz0xXEONV+lNoaEFRoxhiP14SL9dDUzYD+BB10EcssRtT8jjsRsnjLuaxizY8DtRwU+qAg3iAF6SQ9t/lwCceuAgU1EOAlEWcxPFAcrLYP6M4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709216541; c=relaxed/simple;
-	bh=5tRPmXL2TVv6kom3cQU7ugeRZCPtoU7puLCKLDcp4wA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uGkA6jUQrrtKsSUeNodr89HYcp+chViBfQBubXzwAht359ASlpEckVahejKdiV3dW0lAdYlifQNbU9tm++OLM2ppJwOLvKSXYzbICoKqRzvXw55lsMCEqYM/qIxO549W/xsuKDkGDN2O0LjdPc4xA/hjLj7jQnWEiTY4eNB9hZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=sOntqjeT; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+	s=arc-20240116; t=1709216622; c=relaxed/simple;
+	bh=9YxB+yDw77PtyqZXKGijQ4xOSfluWqcXRfMJfBlF3oU=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=ig4Pc6elt1lHqE4DNo3TB52KuZcDHxhm8OVKCIHhPxFugoFnto8c4Mzql5i+k9/OxCDGwTmI1aLyXqOgp6fw1PuHf5AToESbYxBbT6d+ikcWlu83MWW29eRV45iqjUfM9/EgfMe6S/JMXPQSCFVqoA6ab/BhUQvvM8uQrmA4ezY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CdQgvwcL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AhQycSGj; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="sOntqjeT"
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T6NeDS014776;
-	Thu, 29 Feb 2024 06:20:28 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PPS06212021; bh=2udlK6bNAriNhByS7Iy3jsJU3amaElXU/XABWbmgNfc=; b=
-	sOntqjeT7qgWOl9nx/HSpKtXrTSVs1EJI3ufWOw1CsVk8mB6xKui6wxfg9wYbjli
-	8QO4hPPhakPUCLI529zzChGKDjrZnssWhlNpNjGYaRHU+2uN7z2RUCqOgfuNPUqm
-	VATA0egIg/XYgZS10aqNOGPozpJVzZaWKpuTlEE/8CcjdcFbj2GovC0HO6/cnSc4
-	4jJ3qGaPSrKkhJ5N17X94zP76nGvKOgyOaTJ6lCS/NLPIMlKL8bwNbnqBHjKQvl1
-	HklMgL21HUGymNsts+M0SOrx8bc8a2b1N2QA8SuFR6ILCg2md9ziV7qpxvg8/vi+
-	Kh9zS7HEedVepqPDbYR8AQ==
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3wfcm45aaf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 29 Feb 2024 06:20:27 -0800 (PST)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 29 Feb 2024 06:20:27 -0800
-Received: from pek-lpd-ccm6.wrs.com (147.11.1.11) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 29 Feb 2024 06:20:23 -0800
-From: Xiongwei Song <xiongwei.song@windriver.com>
-To: <longman@redhat.com>, <lizefan.x@bytedance.com>, <tj@kernel.org>,
-        <hannes@cmpxchg.org>, <corbet@lwn.net>
-CC: <vbabka@suse.cz>, <yosryahmed@google.com>, <rostedt@goodmis.org>,
-        <cl@linux.com>, <chengming.zhou@linux.dev>, <zhengyejian1@huawei.com>,
-        <cgroups@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] cgroup/cpuset: Mark memory_spread_slab as obsolete
-Date: Thu, 29 Feb 2024 22:20:07 +0800
-Message-ID: <20240229142007.1278610-2-xiongwei.song@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229142007.1278610-1-xiongwei.song@windriver.com>
-References: <20240229142007.1278610-1-xiongwei.song@windriver.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CdQgvwcL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AhQycSGj"
+Message-ID: <20240229141407.283316443@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1709216615;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=YmE0uxXodHKBHzS272mmIFqP1XyyLlUoXMVZdCkWWBE=;
+	b=CdQgvwcLvUOf7I7P/QJAFmhRhrN/GrnJiF6bo7TmW1AeQydDSRGeJh5ymd/3TwWNYOH0vC
+	AklpITWn7D9I0Az/wqObRFWhh5MKWs8ryta4d177nZvJXGTcYhQSumWWGlWLyshffK8FVT
+	Ki0VWGiC2EKS5KLD72SrFmOqkU4t1d5X8R/jDCc2RQogS9l0HfwppCJMMdqvlYNL42mZfD
+	uyzlTakTyj2f7K/ZQEycf5tTjjJEstLe+vCCHfF3k+TpAxi0FlSn+KODH6lmzAlh9/A8wr
+	MvznxtN0ww8EdtR+onlJmaSUmoPyd0xf3ZMu7Pbld4xR4Tt854Q/Ir7e5SD0Ww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1709216615;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=YmE0uxXodHKBHzS272mmIFqP1XyyLlUoXMVZdCkWWBE=;
+	b=AhQycSGjdyuPlwZFb6D7y/qhoQ4zGWkCLoR9a+yRfnza0GO4GRl9G/cqekLWEqKw3Hs4m+
+	FKLT92Ai5G1+84DA==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org,
+ Steven Rostedt <rostedt@goodmis.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [patch 0/6] x86/idle: Cure RCU violations and cleanups
+Date: Thu, 29 Feb 2024 15:23:35 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: qSydO_QdNgcpzUfXcE3ufBZrizF9vWxf
-X-Proofpoint-GUID: qSydO_QdNgcpzUfXcE3ufBZrizF9vWxf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-29_02,2024-02-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 spamscore=0 bulkscore=0 mlxlogscore=934 mlxscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 suspectscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402290110
 
-We've removed the SLAG allocator, cpuset_do_slab_mem_spread() and
-SLAB_MEM_SPREAD, memory_spread_slab is a no-op now. We can mark
-memory_spread_slab as obsolete in case someone still wants to use it
-after cpuset_do_slab_mem_spread() removed. For more details, please
-check [1].
+Boris reported that a RCU related warning triggers in the tracer code on
+AMD machines which are affected by Erratum 400. On those CPUs the local
+APIC timer stops in the C1E halt state. This is handled by a special idle
+function which invokes tick_broadcast_enter()/exit() around HALT.  These
+functions can end up in lockdep or tracing which use RCU protected data,
+but the core code already set RCU to idle which means that the RCU
+protection is not longer given.
 
-[1] https://lore.kernel.org/lkml/32bc1403-49da-445a-8c00-9686a3b0d6a3@redhat.com/T/#m8e292e21b00f95a4bb8086371fa7387fa4ea8f60
+This series fixes this by handling the tick broadcast conditionally in the
+core idle function. While working on it I noticed a few bogosities in the
+related code and cleaned that up on top.
 
-Signed-off-by: Xiongwei Song <xiongwei.song@windriver.com>
+The series is also available from git:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git x86/core
+
+Thanks,
+
+	tglx
 ---
- Documentation/admin-guide/cgroup-v1/cpusets.rst | 2 +-
- kernel/cgroup/cpuset.c                          | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/cgroup-v1/cpusets.rst b/Documentation/admin-guide/cgroup-v1/cpusets.rst
-index ae646d621a8a..88d0e7fa2ee0 100644
---- a/Documentation/admin-guide/cgroup-v1/cpusets.rst
-+++ b/Documentation/admin-guide/cgroup-v1/cpusets.rst
-@@ -179,7 +179,7 @@ files describing that cpuset:
-  - cpuset.mem_hardwall flag:  is memory allocation hardwalled
-  - cpuset.memory_pressure: measure of how much paging pressure in cpuset
-  - cpuset.memory_spread_page flag: if set, spread page cache evenly on allowed nodes
-- - cpuset.memory_spread_slab flag: if set, spread slab cache evenly on allowed nodes
-+ - cpuset.memory_spread_slab flag: IT'S OBSOLETE. Please don't use it anymore
-  - cpuset.sched_load_balance flag: if set, load balance within CPUs on that cpuset
-  - cpuset.sched_relax_domain_level: the searching range when migrating tasks
- 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index ba36c073304a..728d06fe9382 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -3897,6 +3897,9 @@ static struct cftype legacy_files[] = {
- 	},
- 
- 	{
-+		/* It's obsolete. Please don't use it anymore. We will remove it
-+		 * in the future.
-+		 */
- 		.name = "memory_spread_slab",
- 		.read_u64 = cpuset_read_u64,
- 		.write_u64 = cpuset_write_u64,
--- 
-2.43.0
-
+ arch/x86/Kconfig                 |    1 
+ arch/x86/include/asm/processor.h |    2 
+ arch/x86/kernel/cpu/common.c     |    4 -
+ arch/x86/kernel/process.c        |   89 +++++++++++----------------------------
+ include/linux/cpu.h              |    2 
+ include/linux/tick.h             |    3 +
+ kernel/sched/idle.c              |   21 +++++++++
+ kernel/time/Kconfig              |    5 ++
+ 8 files changed, 62 insertions(+), 65 deletions(-)
