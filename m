@@ -1,81 +1,130 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D973962164;
-	Thu, 29 Feb 2024 10:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888E761665;
+	Thu, 29 Feb 2024 10:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709203891; cv=none; b=TkDfcRCWpGkEigbfHQXtHpRXeVWu1vAoQk05s1MjkN7oKFoJ2qs3QPnbpgN549N3dcA8QzTJjaSooqovJ7uoEc1VzFlsQhMREdHPFj5ga+IdISw2Q3RMQVpQVEYNpy7HV7O5EfavlbefE0eWcZYB+CPpE2sq02jYjoG7ydifryo=
+	t=1709203934; cv=none; b=n77K+OItrJS9+s0J6yOla48X/1VU+gISc0IGSlV1CSES2lH2vCH6cPDeIHshG/12cBkjnQ7A1KyjEc7c8xP4A4KacXgWTy6qcg+/hhwFPyfkYWbT/2rL+2Mu9K03ZZW7JYjzI3Dkmz+d7FjMmpLABhCFyPBm9sCjrhHl8fb0dmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709203891; c=relaxed/simple;
-	bh=mj8dOhDBEawOqZN4EsKS59pbFnAi/npto8QTvaPi9gU=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=UOBnEOy1/bYla85R4pDAezYfuRtQg2zhSv4ijpuq/TrafxchSgl6njj8tQYLdW5IynPi6owMSpbyH6Njjb4Z6YvRzWs9kR9ldLzrW0G8Btn7GAMQ0Iu7j1ZrTNkutr1f0QEs4IY6KXb/rA9kgjMriCvDwFNZ3jnqPiB4M45OmS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 8CA0C3780029;
-	Thu, 29 Feb 2024 10:51:25 +0000 (UTC)
-From: "Shreeya Patel" <shreeya.patel@collabora.com>
-In-Reply-To: <20240227131630.636392135@linuxfoundation.org>
-Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240227131630.636392135@linuxfoundation.org>
-Date: Thu, 29 Feb 2024 10:51:25 +0000
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, "Gustavo Padovan" <gustavo.padovan@collabora.com>, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+	s=arc-20240116; t=1709203934; c=relaxed/simple;
+	bh=tFIRN6AD7OJmcls33kRXGPl2Q5cmwc4WEirIvdGkHzU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cYka7F0Khmp1FEqZBeMmjC9yXUK/6bEEcJQoMtdvicDz3exwhFfNQMX4Nq5gzmZccd1zQ9QBUQPqQLEAceIJbhMAJqUhaiG4e6VRwMEjJPjzqfvlapuQvrfVg+B2qe5PoAwrbmWZDdDSW5Ahru1MJBIaGBGaaEalLLKpR4d0PZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qvy2HkJj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qvy2HkJj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C61C433C7;
+	Thu, 29 Feb 2024 10:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709203934;
+	bh=tFIRN6AD7OJmcls33kRXGPl2Q5cmwc4WEirIvdGkHzU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qvy2HkJjQRFvy49WbBPN6hh/2n2KJejdturTF3m9Zr0Zr6A9utMib5ESLThImKW0F
+	 9aonzpE+JIwUkl2pEbtSDK2hoiWbWKMF3dReGzkeM1B2bFt+o/Xd1DzUwiJ2Dnpf+n
+	 fobSTAdyYYl5i/4tCEzAH7ZDj8GMU3RpF7SkqDtKt08KKfzF5YD1rbQh0GFhYP5R4C
+	 Fqug2EHJQydIhLS8hYUv57Zxx/iWIn6ALQNXrLAIw7vqy9G1NZ0TjiuzCq0sNE9i65
+	 ZI4qoMYGEFm0tesRCAtTC4eMu3Xsxn7z7xR0y6MmKnZEjMdaKKRRa8956NqvhLveQN
+	 yuD7qtUtBuZuA==
+Message-ID: <0106ce78-c83f-4552-a234-1bf7a33f1ed1@kernel.org>
+Date: Thu, 29 Feb 2024 12:52:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <95bf-65e06180-17-20e5b800@156243252>
-Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?6=2E7?= 000/334] 
- =?utf-8?q?6=2E7=2E7-rc1?= review
-User-Agent: SOGoMail 5.10.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] net: ethernet: ti: am65-cpsw: Add priv-flag for
+ Switch VLAN Aware mode
+Content-Language: en-US
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Jiri Pirko <jiri@resnulli.us>, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, vladimir.oltean@nxp.com,
+ hkallweit1@gmail.com, dan.carpenter@linaro.org, horms@kernel.org,
+ yuehaibing@huawei.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, srk@ti.com,
+ Pekka Varis <p-varis@ti.com>
+References: <20240227082815.2073826-1-s-vadapalli@ti.com>
+ <Zd3YHQRMnv-ZvSWs@nanopsycho> <7d1496da-100a-4336-b744-33e843eba930@ti.com>
+ <Zd7taFB2nEvtZh8E@nanopsycho> <49e531f7-9465-40ea-b604-22a3a7f13d62@ti.com>
+ <10287788-614a-4eef-9c9c-a0ef4039b78f@lunn.ch>
+ <0004e3d5-0f62-49dc-b51f-5a302006c303@ti.com>
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <0004e3d5-0f62-49dc-b51f-5a302006c303@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tuesday, February 27, 2024 18:47 IST, Greg Kroah-Hartman <gregkh@lin=
-uxfoundation.org> wrote:
 
-> This is the start of the stable review cycle for the 6.7.7 release.
-> There are 334 patches in this series, all will be posted as a respons=
-e
-> to this one.  If anyone has any issues with these being applied, plea=
-se
-> let me know.
->=20
-> Responses should be made by Thu, 29 Feb 2024 13:15:36 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7=
-.7-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
-.git linux-6.7.y
-> and the diffstat can be found below.
->=20
 
-KernelCI report for stable-rc/linux-6.7.y for this week :-
+On 29/02/2024 11:27, Siddharth Vadapalli wrote:
+> On Wed, Feb 28, 2024 at 02:36:55PM +0100, Andrew Lunn wrote:
+>>> What if there is no kernel behavior associated with it? How can it be mimicked
+>>> then?
+>>
+>> Simple. Implement the feature in software in the kernel for
+>> everybody. Then offload it to your hardware.
+>>
+>> Your hardware is an accelerator. You use it to accelerate what linux
+>> can already do. If Linux does not have the feature your accelerator
+>> has, that accelerator feature goes unused.
+> 
+> Is it acceptable to have a macro in the Ethernet Driver to conditionally
+> disable/enable the feature (via setting the corresponding bit in the
+> register)?
+> 
+> The current implementation is:
+> 
+> 	/* Control register */
+> 	writel(AM65_CPSW_CTL_P0_ENABLE | AM65_CPSW_CTL_P0_TX_CRC_REMOVE |
+> 	       AM65_CPSW_CTL_VLAN_AWARE | AM65_CPSW_CTL_P0_RX_PAD,
+> 	       common->cpsw_base + AM65_CPSW_REG_CTL);
+> 
+> which sets the "AM65_CPSW_CTL_VLAN_AWARE" bit by default.
+> 
+> Could it be changed to:
+> 
+> #define TI_K3_CPSW_VLAN_AWARE 1
+> 
+> ....
+> 
+> 	/* Control register */
+> 	val = AM65_CPSW_CTL_P0_ENABLE | AM65_CPSW_CTL_P0_TX_CRC_REMOVE |
+> 	      AM65_CPSW_CTL_P0_RX_PAD;
+> 
+> #ifdef TI_K3_CPSW_VLAN_AWARE
+> 	val |= AM65_CPSW_CTL_VLAN_AWARE;
+> #endif
+> 
+> 	writel(val, common->cpsw_base + AM65_CPSW_REG_CTL);
+> 
+> Since no additional configuration is necessary to disable/enable the
+> functionality except clearing/setting a bit in a register, I am unsure of
+> the implementation for the offloading part being suggested. Please let me
+> know if the above implementation is an acceptable alternative.
 
-## stable-rc HEAD for linux-6.7.y:
+This doesn't really solve the problem as it leaves the question open as to
+who will set TI_K3_CPSW_VLAN_AWARE. And the configuration is then fixed at build.
 
-Date: 2024-02-27
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
-git/log/?h=3Defce2e6615798a9e83b7a4798f3713414938ab6b
+Can you please explain in which scenario the default case does not work for you?
+Why would end user want to disable VLAN_AWARE mode?
 
-## Build failures:
-No build failures seen for the stable-rc/linux-6.7.y commit head \o/
+TRM states
+"Transmit packets are NOT modified during switch egress when the VLAN_AWARE bit in the
+CPSW_CONTROL_REG register is cleared to 0h. This means that the switch is not in VLAN-aware mode."
 
-## Boot failures:
-No **new** boot failures seen for the stable-rc/linux-6.7.y commit head=
- \o/
+The same problem would also apply to cpsw.c and cpsw_new.c correct?
 
-Tested-by: kernelci.org bot <bot@kernelci.org>
+A bit later the driver does this
 
-Thanks,
-Shreeya Patel
+        /* switch to vlan unaware mode */
+        cpsw_ale_control_set(common->ale, HOST_PORT_NUM, ALE_VLAN_AWARE, 1);
+        cpsw_ale_control_set(common->ale, HOST_PORT_NUM,
+                             ALE_PORT_STATE, ALE_PORT_STATE_FORWARD);
 
+The comment says vlan unaware but code is setting ALE_VLAN_AWARE to 1.
+Is the comment wrong?
+
+-- 
+cheers,
+-roger
