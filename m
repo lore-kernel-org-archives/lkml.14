@@ -1,120 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE2D70AF5;
-	Thu, 29 Feb 2024 16:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD41663B9;
+	Thu, 29 Feb 2024 16:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709224177; cv=none; b=YrbqZRA8qUQj/fPV+d30zUBxCq+qte1pbxYDsE+zwojmzTBwzCUZ16o5KyQKjzBNd1GwJ+VaRLxR5CsvQvWJvYltB9pAMQkY+wvpee7KXuJJ001OciOF4H3atoYqHLiXKfY/P7fVrtYLkW3MUviO7QO8kH6oEJfEkGlS2FLA+W0=
+	t=1709224219; cv=none; b=J9LAZXBiqWpmHfiXOdGz9P4WjMjUnniMyWa1x94z9PDBSck8HyKkIZR+UM0VFIsieHo0liDjUAqAWxhwLWrrS5AvBYteghLKifXCP1L7eZzKnhWaY8nKEMHOXla/DHnqExbsiXvgKIDPb4VE0ujOrwN91S4pB+EkWsMIh4tSu4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709224177; c=relaxed/simple;
-	bh=SBH3IxdEplFFcD11L2ZgQ0Oq6K4q8knEjTbHRPm5G2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O6IKTj83XtaJk7Sq7b2rSmsVB/SVaTf/p5rXYgRjfQJx8QwP6MNjQUbHtRyxuZ0kjMjJwfE+J8mPATuvdjB/5zk/fhG5S9z+aiHA5W8z1+nq7vOx9NYyRB4D+tFTYMsE3+B7lx9LtrgGzT9Art+2HENzBHlSBwI7XljGLqXxzkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QMkvyfId; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QMkvyfId"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709224175; x=1740760175;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=SBH3IxdEplFFcD11L2ZgQ0Oq6K4q8knEjTbHRPm5G2c=;
-  b=QMkvyfIdLzSqQyJk4rYcOov+MOgPBRJjf7kxqbLC25xNC73BcOxCUFVo
-   Qura5aocR6DYKFfIkI/tgooO62J0Xpxk7feFq/bEhfQx4AIlMO7zRi0yS
-   vHabELCxtwe9b6vA/4i2KwfmuXqOxtIf+SOkzkwXDikKB+W9fmk0h7MNk
-   Q6gqDEfShf7TtMjW242j8qtPe32en61BE+4bD32h8IA+cSBLLb/HT1CNJ
-   TcqSpCFzbjSR18LmNUGhCSmL/zlFfQ3wafR/A04cDgJVno92gtoJCc8Ab
-   dIZHXpNGT2ZS2BlsBN421GVhjaJOqpA1a2Gn2BON0cISDzs3oaIDRPpSm
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3575528"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="3575528"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 08:29:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="913986033"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="913986033"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 08:29:20 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rfjHa-00000008ijg-1Qdj;
-	Thu, 29 Feb 2024 18:29:18 +0200
-Date: Thu, 29 Feb 2024 18:29:18 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] gpiolib: Fix the error path order in
- gpiochip_add_data_with_key()
-Message-ID: <ZeCw3pzHdrXw46of@smile.fi.intel.com>
-References: <20240221192846.4156888-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MdvYdx6x=gSiOZ3SXAdJORnqhsNW79G2c7wABofWARwFw@mail.gmail.com>
- <ZddLRAqxFr7v3Zqs@smile.fi.intel.com>
- <CAMRc=Mdxtx-wh3HGu+SNrCwfSq0PEm3fG7hK_6wPAk2uzk8xpA@mail.gmail.com>
- <ZddOKTP73ja6ejTc@smile.fi.intel.com>
- <CAMRc=Mf_w_E4B7c_Uj1WV3zv9DbmJ22oFvJJwtd-+3oUDVcvXA@mail.gmail.com>
+	s=arc-20240116; t=1709224219; c=relaxed/simple;
+	bh=Xk9XcUV/m/3qcxL2T7wAJKSjMepPVZ/pH5SeAdJs0Ps=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Bze0lyIMrz2HfK5K/SP8NxAoMjq0TeCiXtmbDWtKvYytYgmuUB3XZ8dLZGF7nIdjVOjL3kl4eBmQAiov3TPdOOTyBR6t6H/e8O+WKLm4nJqn4CKaNfUYu853odRD48/saBgpETPnxY83syKC31IpcDCIfjqB6c2txjX3OrS+Dg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E036C21FD4;
+	Thu, 29 Feb 2024 16:30:15 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2150613A8B;
+	Thu, 29 Feb 2024 16:30:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wNTjBBex4GU0PwAAD6G6ig
+	(envelope-from <lhenriques@suse.de>); Thu, 29 Feb 2024 16:30:15 +0000
+Received: from localhost (brahms.olymp [local])
+	by brahms.olymp (OpenSMTPD) with ESMTPA id aac9d32e;
+	Thu, 29 Feb 2024 16:30:14 +0000 (UTC)
+From: Luis Henriques <lhenriques@suse.de>
+To: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>
+Cc: linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luis Henriques <lhenriques@suse.de>
+Subject: [PATCH 1/3] fs_parser: handle parameters that can be empty and don't have a value
+Date: Thu, 29 Feb 2024 16:30:08 +0000
+Message-ID: <20240229163011.16248-2-lhenriques@suse.de>
+In-Reply-To: <20240229163011.16248-1-lhenriques@suse.de>
+References: <20240229163011.16248-1-lhenriques@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mf_w_E4B7c_Uj1WV3zv9DbmJ22oFvJJwtd-+3oUDVcvXA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 REPLY(-4.00)[]
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: E036C21FD4
+X-Spam-Flag: NO
 
-On Thu, Feb 22, 2024 at 02:39:28PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Feb 22, 2024 at 2:37 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Feb 22, 2024 at 05:33:59AM -0800, Bartosz Golaszewski wrote:
-> > > On Thu, 22 Feb 2024 14:25:24 +0100, Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> said:
-> > > > On Thu, Feb 22, 2024 at 10:37:06AM +0100, Bartosz Golaszewski wrote:
-> > > >> On Wed, Feb 21, 2024 at 8:28 PM Andy Shevchenko
-> > > >> <andriy.shevchenko@linux.intel.com> wrote:
+Currently, only parameters that have the fs_parameter_spec 'type' set to
+NULL are handled as 'flag' types.  However, parameters that have the
+'fs_param_can_be_empty' flag set and their value is NULL should also be
+handled as 'flag' type, as their type is set to 'fs_value_is_flag'.
 
-...
+Signed-off-by: Luis Henriques <lhenriques@suse.de>
+---
+ fs/fs_parser.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > > >> >         gpiochip_irqchip_free_valid_mask(gc);
-> > > >> >  err_remove_acpi_chip:
-> > > >> >         acpi_gpiochip_remove(gc);
-> > > >> > +       gpiochip_remove_pin_ranges(gc);
-> > > >> >  err_remove_of_chip:
-> > > >> >         gpiochip_free_hogs(gc);
-> > > >> >         of_gpiochip_remove(gc);
-> > > >>
-> > > >> This undoes machine_gpiochip_add() and I think it also needs to be
-> > > >> moved before acpi_gpiochip_remove().
-> > > >
-> > > > You mean it should be like
-> > > >
-> > > >        gpiochip_irqchip_free_valid_mask(gc);
-> >
-> > > >        gpiochip_free_hogs(gc);
-> >
-> > But should it be here...
-> >
-> > > > err_remove_acpi_chip:
-> >
-> > ...or here?
-> >
-> > I'm sorry I really need more (morning) coffee, maybe you can simply update
-> > yourself or submit a correct fix?
-> 
-> Ok, I'll apply this and send a fix on top of it.
-
-I don't see any progress with this. Do I need to do something?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+index edb3712dcfa5..53f6cb98a3e0 100644
+--- a/fs/fs_parser.c
++++ b/fs/fs_parser.c
+@@ -119,7 +119,8 @@ int __fs_parse(struct p_log *log,
+ 	/* Try to turn the type we were given into the type desired by the
+ 	 * parameter and give an error if we can't.
+ 	 */
+-	if (is_flag(p)) {
++	if (is_flag(p) ||
++	    (!param->string && (p->flags & fs_param_can_be_empty))) {
+ 		if (param->type != fs_value_is_flag)
+ 			return inval_plog(log, "Unexpected value for '%s'",
+ 				      param->key);
