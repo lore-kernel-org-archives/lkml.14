@@ -1,129 +1,83 @@
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787FC36B16
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 03:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D5A2030B;
+	Thu, 29 Feb 2024 03:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709176807; cv=none; b=Dskdg9enNZbF5DI9FTZGhE6ODDXKtxEDw1j16jAGdi0CwtK3zWhj0asf20NcGa2CB7WOKJKSc7NcDG5l8DBHDhCAQg5MpsSnuNAR3PJmY/OquOMt6lOcuh09B7iK65z2c/rqjzAdgGiW2ACQDmFSaR0WYnS3o64x5R01JNMYPiQ=
+	t=1709176923; cv=none; b=IcwBjjAu3J7VGCnuEfTXlxf02//Pg6Jm2CSDx1UjXPPmL3xVkh7sgMY/m0sL5a6zzNO99ZTILYsV19ro1pWEZ0iE+cMprVhNDnAPNOoTWGPB4VcPYMmWmx/IMZY2Uv0coBaymhmd+26piRqnYH1asaVw9S1W+tcUZKp9qgM8owE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709176807; c=relaxed/simple;
-	bh=nWI0xfyfsyOczyWzPno9G0ANgOD4EpWps6XT4tWG26c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WaIC/pfUcrAjQUq5klxXx6vx5uocXF46QO6O+Qgf9wMPloFMqRfmYlq7twZRxWaQXEl9vaBcOPf/Ldf0rB7n271ckeUnjdpkOrxTR+tm00bFEuKZXoix8aTqhuFYpsVEyi4kfsLnN2f6yGLLoFcrq45+n9nxg3m1f3LfVw2ieYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1709176794-086e2316ed02390001-xx1T2L
-Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx1.zhaoxin.com with ESMTP id 1NWDjwmQUgYZ1sxI (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 29 Feb 2024 11:19:54 +0800 (CST)
-X-Barracuda-Envelope-From: WeitaoWang-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX2.zhaoxin.com
- (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 29 Feb
- 2024 11:19:54 +0800
-Received: from [10.29.8.21] (10.29.8.21) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 29 Feb
- 2024 11:19:52 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Message-ID: <0b0eefa5-71b6-dc08-d103-72b9aebd9237@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.21
-Date: Thu, 29 Feb 2024 19:19:49 +0800
+	s=arc-20240116; t=1709176923; c=relaxed/simple;
+	bh=LPgGynQ+A1/bnYxF+wO/SXRI5kLXQ3Qw06TO0sy0C24=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SfeW0KKdnz3pJtUVF4iwuQIi1XySDVNYXjRBIIE+yGkZevDJ7VE143ybexBA0w0k0HyndizdApRENNYfe+Y7s9EXO5+g2ZmzJHbBEfcoyY2dZVpw5RLy8QOm3hqAIlu8pt3cZxr4g/Lq59VYJeo2/06dMLDLUs+c9dHiTbZXJls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=fRNXX3Iz; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="fRNXX3Iz"
+Received: from [192.168.68.112] (ppp14-2-70-176.adl-apt-pir-bras31.tpg.internode.on.net [14.2.70.176])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 854162003C;
+	Thu, 29 Feb 2024 11:21:48 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1709176912;
+	bh=RLcNqeFFO91l5U2c2IKNxo911MnrtAjB3bSLnMByv8c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=fRNXX3IzTcEDeyZE4x/DP7vMGGIc5cp7BOkn7QL+57i48ck+9kkXj2c+UWUD9JxVX
+	 2EqFfWfksv4DLEqx48mVIcMgcys42fwv2FaWdBCdNGi9nyArnwCtBtvzDf7jUk5DR3
+	 /anASWfpRpAMG2muKIHLK/ZBzNlMpeM+0B9HZOepx0wgXeMYRdEj3m909jz4J63VTS
+	 aWztF4wAso9Qg9NuRqiVWWMiVr4GAYD35xnEa9cWmTkWE+vP5zCHwCiMvvsDAnUEjx
+	 hNZziqdSqQmtRsAZSeWSJSyWL5OIjPElh1aFlTOotSSxurW0x8g8Ryg1PYBbwVKuzz
+	 QNybC8fjN4CcA==
+Message-ID: <16ddd99007176da3f84462de217cb76c8fa4e1bd.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v6] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to
+ DT schema
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, krzysztof.kozlowski+dt@linaro.org
+Cc: robh+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 29 Feb 2024 13:51:45 +1030
+In-Reply-To: <c2060450-4b76-4740-afe4-d14717245f01@linaro.org>
+References: <20240228003043.1167394-1-andrew@codeconstruct.com.au>
+	 <c2060450-4b76-4740-afe4-d14717245f01@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2] USB:UAS:return ENODEV when submit urbs fail with
- device not attached.
-Content-Language: en-US
-X-ASG-Orig-Subj: Re: [PATCH v2] USB:UAS:return ENODEV when submit urbs fail with
- device not attached.
-To: Oliver Neukum <oneukum@suse.com>, <stern@rowland.harvard.edu>,
-	<gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-	<usb-storage@lists.one-eyed-alien.net>
-CC: <WeitaoWang@zhaoxin.com>, <stable@vger.kernel.org>
-References: <20240228111521.3864-1-WeitaoWang-oc@zhaoxin.com>
- <e8c4e8a3-bfc3-463f-afce-b9f600b588b2@suse.com>
- <07e80d55-d766-1781-ffc9-fab9ddcd33e3@zhaoxin.com>
- <49a365a7-199a-42cd-b8d3-86d72fe5bca6@suse.com>
-From: "WeitaoWang-oc@zhaoxin.com" <WeitaoWang-oc@zhaoxin.com>
-In-Reply-To: <49a365a7-199a-42cd-b8d3-86d72fe5bca6@suse.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
-X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
-X-Barracuda-Start-Time: 1709176794
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 1699
-X-Barracuda-BRTS-Status: 0
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: 1.09
-X-Barracuda-Spam-Status: No, SCORE=1.09 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=DATE_IN_FUTURE_06_12, DATE_IN_FUTURE_06_12_2
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.121467
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
-	0.01 DATE_IN_FUTURE_06_12   Date: is 6 to 12 hours after Received: date
-	3.10 DATE_IN_FUTURE_06_12_2 DATE_IN_FUTURE_06_12_2
 
-On 2024/2/28 22:47, Oliver Neukum wrote:
+On Wed, 2024-02-28 at 08:47 +0100, Krzysztof Kozlowski wrote:
+> On 28/02/2024 01:30, Andrew Jeffery wrote:
+> > Squash warnings such as:
+> >=20
+> > ```
+> > arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e=
+600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,=
+ast2400-gpio']
+> > ```
+> >=20
+> > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> > ---
+> > v6: Address more constraint feedback from Krzysztof:
+> >     https://lore.kernel.org/all/f69ef2ad-8ace-40c8-b923-4dde20eda2ec@li=
+naro.org/
+>=20
+> You still have way too many examples. One is enough, two is still okay.
+> We really do not want more of examples with minor differences.
 
->> I'm not sure I fully understand what your mean.
->> Whether the above code is more reasonable? If not,could you give me some
->> suggestion? Thanks for your help!
-> 
-> You want to change uas_submit_urbs() to return the reason for
-> errors, because -ENODEV needs to be handled differently. That
-> is good.
-> But why don't you just do
-> 
-> return err;
-> 
-> unconditionally? There is no point in using SCSI_MLQUEUE_DEVICE_BUSY
+Noted, I'll keep them to a minimum in the future.
 
-I got it, Thanks. New patch would like this sample:
+>=20
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-@@ -562,9 +561,9 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
+Thanks for the feedback.
 
-  	lockdep_assert_held(&devinfo->lock);
-  	if (cmdinfo->state & SUBMIT_STATUS_URB) {
--		urb = uas_submit_sense_urb(cmnd, GFP_ATOMIC);
--		if (!urb)
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+		err = uas_submit_sense_urb(cmnd, GFP_ATOMIC);
-+		if (err)
-+			return err;
-  		cmdinfo->state &= ~SUBMIT_STATUS_URB;
-  	}
-@@ -582,7 +581,7 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-  		if (err) {
-  			usb_unanchor_urb(cmdinfo->data_in_urb);
-  			uas_log_cmd_state(cmnd, "data in submit err", err);
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+			return err;
-  		}
+Andrew
 
-When alloc urb fail in the same function uas_submit_urbs,
-whether we should replace SCSI_MLQUEUE_DEVICE_BUSY with generic
-error code -ENOMEM? Such like this:
-
-@@ -572,7 +571,7 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-  		cmdinfo->data_in_urb = uas_alloc_data_urb(devinfo, GFP_ATOMIC,
-  							cmnd, DMA_FROM_DEVICE);
-  		if (!cmdinfo->data_in_urb)
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+			return -ENOMEM;
-  		cmdinfo->state &= ~ALLOC_DATA_IN_URB;
-  	}
-
-Thanks and Best regards,
-Weitao
