@@ -1,47 +1,48 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203686214F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4E0612D5;
 	Thu, 29 Feb 2024 09:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709200582; cv=none; b=ENItuwfM7CpXCWNy+LvhnUDMLr8zZh5N1aewZ+nlGQIeyzFOelIMW2Du689qKY06PWjJOVcMbFzau7vWshdW4vWhe58t7VKNCEUaeELMH3aiNiv5X8Kgd93h+zEsrwfPQDmtNxITMr7j4ILlG84tPPuMuq2cgPICOZX5siac37A=
+	t=1709200582; cv=none; b=IioujxTJOTGdZsl37LSfnd2yFWxMlhe6HabZdaBaxE2GjIXd9j5fhlcvn3HWB+KW2SozhwvPdVoGhJ6ITN9+NRNh/9PM3uy8Nrn7Gh5xKc4+nF8g925x9pFfWDlOotiAbOwPok9xhy5ugH1Q6cIwEUiorZcd9W8h7vVuT3X3af8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709200582; c=relaxed/simple;
-	bh=oX6D0KfNi01U7tSsTaFJWOaYfQ65vpLBSdYFEZ0GUsk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=APRucDEANP4hjKy9P8FgTgOdSO016CNE+GPpB0hepX8ZrPgup6YOfjcLSPIOsWtcFRgy69ea06H9OrXCasqcgdyu8Iz/Ud+qqwIgdAQV5571dJAd4qCyXIaJMMKlPXKpGjUFqcIVwv8K4YmC8Wog4acvFSznDqGWKXGHvDhXAR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=N/cP+7EM; arc=none smtp.client-ip=210.61.82.184
+	bh=MgdTsHLLMyHVYrpvLWL/9dZ0SjQrrXEvt9AyUFXF49Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=azvBSK34JVxTDOi2MFOEbfBi8Pv6/p32sslrERTHjkc4YvDXvwJSkSdzeSb70u3t/iCR5aYiDG3FHN/HwUXdcYiXGMegCk4wz9SvtIcppEGEjrsTG7W26LeKRPFCpfa9amu1H7SUYUGJLswCW9XQvXfjnFFeSrxFWjxAlo2rbo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=XokIPBwF; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="N/cP+7EM"
-X-UUID: c6aedc08d6e811ee935d6952f98a51a9-20240229
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XokIPBwF"
+X-UUID: c817e38cd6e811eeb8927bc1f75efef4-20240229
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=8mZe/2ayLC1nbMG8YNHZKyZz78ymXaSQ8iXw5n6PhEY=;
-	b=N/cP+7EMBel7PGEdQ2X0OEdtEbJgZsV+mBcucne+5S43i4PWCLE86YdKO5dJjfgaOpE4u4HX3zAMei/q+c2J3LNmyjA8TlgUeHBhvcZ1+7pgi2bXb7oaQKVQWn1nEG17pR5u8XY/MkZFgVD9UCwqzpg1Oiv+UXfEiSxO/4pbaO0=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=h+/3sZEj2StDKJBFGHkGJp/KMJru0cPHdlEY9qhRQEY=;
+	b=XokIPBwF2r85AdpcHAho1KTg3LwJnJXDALzQi2xuySk5nIkVPMjmoYt+FzhsrULi6/aRdPT8btSYx62TPdi2/deTHk4NoQgDg3Ufm+yiycJR/5gecOX15IZ+dUEX+bgj4xEPGRVOAWDPKayCOzfMT1zzTF8dwrI9KtijMZCPmdo=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:0d075454-d480-45ba-8505-9dfaad702b72,IP:0,U
+X-CID-O-INFO: VERSION:1.1.37,REQID:e4994c2e-eaf6-4b96-a1af-b027b1aaffdf,IP:0,U
 	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
 	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:45477384-8d4f-477b-89d2-1e3bdbef96d1,B
+X-CID-META: VersionHash:6f543d0,CLOUDID:580858ff-c16b-4159-a099-3b9d0558e447,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
 	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
 	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: c6aedc08d6e811ee935d6952f98a51a9-20240229
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
+X-UUID: c817e38cd6e811eeb8927bc1f75efef4-20240229
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
 	(envelope-from <yunfei.dong@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1439398416; Thu, 29 Feb 2024 17:56:14 +0800
+	with ESMTP id 1107992247; Thu, 29 Feb 2024 17:56:17 +0800
 Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 29 Feb 2024 17:56:12 +0800
+ 15.2.1118.26; Thu, 29 Feb 2024 17:56:15 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 29 Feb 2024 17:56:12 +0800
+ 15.2.1118.26 via Frontend Transport; Thu, 29 Feb 2024 17:56:14 +0800
 From: Yunfei Dong <yunfei.dong@mediatek.com>
 To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
 	<nfraprado@collabora.com>, Nicolas Dufresne <nicolas.dufresne@collabora.com>,
@@ -54,10 +55,12 @@ CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH 0/3] media: mediatek: vcodec: fix vcodec smatch warning
-Date: Thu, 29 Feb 2024 17:56:08 +0800
-Message-ID: <20240229095611.6698-1-yunfei.dong@mediatek.com>
+Subject: [PATCH 3/3] media: mediatek: vcodec: fix h264 stateless decoder smatch warning
+Date: Thu, 29 Feb 2024 17:56:11 +0800
+Message-ID: <20240229095611.6698-4-yunfei.dong@mediatek.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240229095611.6698-1-yunfei.dong@mediatek.com>
+References: <20240229095611.6698-1-yunfei.dong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,44 +70,51 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--5.692400-8.000000
-X-TMASE-MatchedRID: GsIztItoYiqoft0ZW3r/iTCaEJt46PppMZm0+sEE9mv7efdnqtsaE2qs
-	CKGiHb6RWXHfTJ/rMPZKhBUJyxjhBiY0eULsNBXlngIgpj8eDcAZ1CdBJOsoY8RB0bsfrpPIfiA
-	qrjYtFiQtkoiozVGxQwPgUY24KmPEUzhAlmaaSM7Hh1Xl/pN1bX7cGd19dSFd
+X-TM-AS-Result: No-10--3.129400-8.000000
+X-TMASE-MatchedRID: eyg11LmjlNWoft0ZW3r/iTCaEJt46PppPtDsRiRP0d9h2fnHe1cil/Rm
+	0kmqtH+DgHpD5xuuxKghg4hY1jreIz1/tvmVhm3Z4RtSDjG+z7An8jQhMLowhTb9TB28UbkiGd2
+	282fApofi8zVgXoAltsIJ+4gwXrEtWBd6ltyXuvvbpmBDD2TFj98wLU+WiG+1nFuFOPWxVkZTG7
+	xPN4dkvBmdMmsGdter8vvt+3Tm4M/f/vgI7238uvErCCJVJQ9KpuuZawmdJ+KElVGWRzS6/kYFe
+	h7KssddUGjjbmeia+IPZN5fBGmCHKL6Q11UB8yDftwZ3X11IV0=
 X-TM-AS-User-Approved-Sender: No
 X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--5.692400-8.000000
+X-TMASE-Result: 10--3.129400-8.000000
 X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	C12846495FBB9F31E1C1D1D305CD86C0CE38D318B493888AF7439DD448A5A48B2000:8
+X-TM-SNTS-SMTP: B12C07BBBBE98A45A57C3E4EB857ACB0715509E02DDE7A7912DA0D6CE426E62D2000:8
 X-MTK: N
 
-Fix below smatch static checker warning from [bug report]:
-The patch 397edc703a10: "media: mediatek: vcodec: add h264 decoder
-driver for mt8186" from May 12, 2022 (linux-next), leads to the
-following (in development) Smatch static checker warning:
+Fix smatch static checker warning for vdec_h264_req_if.c. Leading
+to kernel crash when fb is NULL.
 
-drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_if.c:351
-vdec_h264_slice_decode() potential NULL container_of 'fb'
-
-drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c:337
-vdec_vp8_slice_decode() potential NULL container_of 'fb'
-
-drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c:728
-vdec_h264_slice_single_decode() potential NULL container_of 'fb'
-
+Fixes: 06fa5f757dc5 ("media: mtk-vcodec: vdec: support stateless H.264 decoding")
+Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
 ---
-Yunfei Dong (3):
-  media: mediatek: vcodec: fix h264 multi statless decoder smatch
-    warning
-  media: mediatek: vcodec: fix vp8 stateless decoder smatch warning
-  media: mediatek: vcodec: fix h264 stateless decoder smatch warning
+ .../mediatek/vcodec/decoder/vdec/vdec_h264_req_if.c      | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
- .../mediatek/vcodec/decoder/vdec/vdec_h264_req_if.c    |  9 +++++++--
- .../vcodec/decoder/vdec/vdec_h264_req_multi_if.c       |  9 +++++++--
- .../mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c     | 10 +++++++---
- 3 files changed, 21 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_if.c
+index 5600f1df653d..f1c164b644f8 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_if.c
++++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_if.c
+@@ -347,11 +347,16 @@ static int vdec_h264_slice_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+ 		return vpu_dec_reset(vpu);
+ 
+ 	fb = inst->ctx->dev->vdec_pdata->get_cap_buffer(inst->ctx);
++	if (!fb) {
++		mtk_vdec_err(inst->ctx, "fb buffer is NULL");
++		return -EBUSY;
++	}
++
+ 	src_buf_info = container_of(bs, struct mtk_video_dec_buf, bs_buffer);
+ 	dst_buf_info = container_of(fb, struct mtk_video_dec_buf, frame_buffer);
+ 
+-	y_fb_dma = fb ? (u64)fb->base_y.dma_addr : 0;
+-	c_fb_dma = fb ? (u64)fb->base_c.dma_addr : 0;
++	y_fb_dma = (u64)fb->base_y.dma_addr;
++	c_fb_dma = (u64)fb->base_c.dma_addr;
+ 
+ 	mtk_vdec_debug(inst->ctx, "+ [%d] FB y_dma=%llx c_dma=%llx va=%p",
+ 		       inst->num_nalu, y_fb_dma, c_fb_dma, fb);
 -- 
 2.25.1
 
