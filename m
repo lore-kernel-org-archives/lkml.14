@@ -1,154 +1,157 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C95F43AD5
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5634E5674B;
+	Thu, 29 Feb 2024 08:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709196980; cv=none; b=nHi5mPfmemXt9oV6VOqs+e/3hXAiGQ+8NmLcnWaqys3DO7NAy+jTOvbf/8QUAUKOAaIEyddJk4ap7cHxeIQV+p9XUUtaBFgLfWv3egtR41oa40xEMD/+MBOA/EA3ya4/21jlYc1ziy8JYqZ8HMjdSb4DNgJulGohQHgCe6ZD0ac=
+	t=1709196985; cv=none; b=QOCMeKnY+BI0EtGUom+Ggz9usEESXmAsKgyo/GtGMoXhDKUKTcQjK8GJbp6MjV8dg8rumjmAVmbeHMw8vs00fci4bQU77172ol61ZSXOHhIAhk3gW4kpfvcm/i6T7+7STEJ6mrpOeuz7EuZeDW7W3qRs4B7R4ajD3Qbs4w2C6Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709196980; c=relaxed/simple;
-	bh=Ohh5o0tgsoOOCzMRKRvwy99ZeLUEdn4IneZlG7Vb4aU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UQ4h4eEuY5dpHQrF5SrxjIleB8JCT08oJ0D9VojsVCgmN1aqs3pf8G7du0YZEK/DNBgv7FoZPgwM9a84ElmlGunb2VwAkYiqS8VFNwEnxfeUDfRbW2cIu1Kch7x8Vk78czYH44NqSxJ5MNQf0JmBc5eIFW/o6PX3UOhWQ3gsaZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-607e60d01b2so4221607b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 00:56:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709196977; x=1709801777;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sFkr5JxwsV6XvZDodaeTLDSdT/zdoLo0VmIMVo/2cDw=;
-        b=dkfhKyJ7qcxzQlCmzDszlCV1iwIrFT9Emxuq1+B+sl4rLtmvDIIHgQjQgF9GyHCrSj
-         NCgCJzhoKvd6sOaORioBFYG4LDZjNgkAzARggmEEWcLip1dCtTAoo2OMWg4qRpHePf1K
-         STrkpowhHaxxtYQYJDUsKV4HUBqis15gZgTEYHzB9wN1CN1qvf3bhkecG8yfxZMHOl+C
-         duGgsE+uOU20fH+K3eYYIJ6A+xGu2ZmFBE3tCoKW5FUzNGO6DOnbxcl8VudwKr1eZjos
-         uIjz3NLYJ/5HfaHCruCm1AaQvtYX4IwG+DWKx0al8ur2uYDdpqedlOtfES/hDRhO6Wm1
-         YokA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqn/0b+5urDnIzdDw/k46ZnvyEuxxsU1cXjjpRjj8aYegOCp+EDxe5VhhsVWb7+zcRgdKM1E8uBOBIc1/GNXF68Lm1sSHeJ3GW/wES
-X-Gm-Message-State: AOJu0YwsZsTeX1CJF/hKZ7/eLMV3AXsmIoKx2MO6isv0qJPfRXTW9kR4
-	ZohkwVOMvkVuvwRSkbidoUEViiSCPstcCC9lWHOTekHeop3AReODUkrQNYhj+Tk=
-X-Google-Smtp-Source: AGHT+IH383ovOmCv2eopcJPb5DaD4+9FP2qPLOMOstjHVxdl6OOQwSN/pxtn6hJaKWxPJVO2VXXH6Q==
-X-Received: by 2002:a81:a243:0:b0:607:9504:ebf0 with SMTP id z3-20020a81a243000000b006079504ebf0mr1754988ywg.8.1709196976975;
-        Thu, 29 Feb 2024 00:56:16 -0800 (PST)
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id y17-20020a81a111000000b00607a42af275sm257918ywg.48.2024.02.29.00.56.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 00:56:16 -0800 (PST)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so648112276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 00:56:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWMJuZe/DQdZboRSOcgyA9eA67ZcDZ6+2ExPeTO+QPRjVqQXGYxf9HZYNzxDPwTp/lbacKAuuQ5ggeq0ZN3LHsOiscKVhL8jUgVmALY
-X-Received: by 2002:a25:bb85:0:b0:dc6:bcd5:9503 with SMTP id
- y5-20020a25bb85000000b00dc6bcd59503mr1607791ybg.48.1709196975769; Thu, 29 Feb
- 2024 00:56:15 -0800 (PST)
+	s=arc-20240116; t=1709196985; c=relaxed/simple;
+	bh=aVkoHTk2ntu7MHr+KHAJ6yTHS1E2hTdndDgB9eicr/4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Jq4aOXEx+Zj7aebKVGFrxw7a6rbhV/i8twxXBZLewHRLhc/4d4nJtUjRFMHezapofDs/lxk79fBZPsJTO+kxK0JfsdLAJGubd+jW3lQeF2owPFt225KSOiP6MRxLs8AcXlwhy2zW1Jl6kTH8M5y4AHegNs+pE2JGox87j9mOwHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=cP7n2UeD; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="cP7n2UeD"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T4cbCP014616;
+	Thu, 29 Feb 2024 09:55:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=PRClVcFO7m3xuOH5U/cKOHOTQgP4AbIEED6u8ca7mZQ=; b=cP
+	7n2UeD+dqWjp2VgHFeaJV7rLqzqvAv/tCpec0uTogLLHJlLCXgW6l2qsPYBcgRPe
+	yomymGQy1m8Uq4MwbLXz6IHX0L/PxPqjjKIQ2f71PrrnbCYcs/FFetp1gcfE254D
+	SAbww/pouzlgpYMf7G+Org7WIoB8HMQTwl+IKg8dNRY0/x0Q0LsNFIbtNbMLOfXH
+	9+iUCSEwSMV0dmt81O9mJvGbcwgYuV8JU2G4Fm21Ty8rsf1Ch0GDRbPKsz9FERgD
+	hAB6Wm/LO7QQCDJCRsE9rd898qoCf/k4wxgi4YFoVRf6Odz9JYD/cGiA/KxlEZcF
+	LLidL0NXM3ENveByDsTg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3whf4bh934-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 09:55:52 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 056F840049;
+	Thu, 29 Feb 2024 09:55:41 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ADD16249A2D;
+	Thu, 29 Feb 2024 09:54:20 +0100 (CET)
+Received: from [10.201.21.122] (10.201.21.122) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 29 Feb
+ 2024 09:54:19 +0100
+Message-ID: <fe3b18a0-c25f-4c81-ba2f-f6daf5eca087@foss.st.com>
+Date: Thu, 29 Feb 2024 09:54:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221092040.403629-1-chao@kernel.org>
-In-Reply-To: <20240221092040.403629-1-chao@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 29 Feb 2024 09:56:03 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXRuiV8PEe6azKYLp+z_Sa8CbL8849bzu59J1_XXtyk1g@mail.gmail.com>
-Message-ID: <CAMuHMdXRuiV8PEe6azKYLp+z_Sa8CbL8849bzu59J1_XXtyk1g@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: introduce SEGS_TO_BLKS/BLKS_TO_SEGS for cleanup
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [drm-drm-misc:drm-misc-next v2] dt-bindings: nt35510: document
+ 'port' property
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>, <heiko@sntech.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC: Conor Dooley <conor@kernel.org>, <linux-kernel@vger.kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie
+	<airlied@gmail.com>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Neil
+ Armstrong <neil.armstrong@linaro.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, <devicetree@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>
+References: <20240131092852.643844-1-dario.binacchi@amarulasolutions.com>
+ <20240131-gap-making-59055befaf04@spud>
+ <494b51fa-0f0e-4c1b-add3-73b5fe0b3c29@foss.st.com>
+ <CABGWkvr8RQrUf0Uc+e83qDgqmzUT7OBcS4EDr2DFQnavfRTRDQ@mail.gmail.com>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <CABGWkvr8RQrUf0Uc+e83qDgqmzUT7OBcS4EDr2DFQnavfRTRDQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-29_01,2024-02-27_01,2023-05-22_02
 
-Hi Chao,
+Hi
 
-On Wed, Feb 21, 2024 at 10:20=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
-> Just cleanup, no functional change.
->
-> Signed-off-by: Chao Yu <chao@kernel.org>
+On 2/25/24 10:01, Dario Binacchi wrote:
+> Hi,
+> 
+> On Wed, Feb 14, 2024 at 10:47 AM Alexandre TORGUE
+> <alexandre.torgue@foss.st.com> wrote:
+>>
+>> Hi Heiko
+>>
+>> On 1/31/24 16:53, Conor Dooley wrote:
+>>> On Wed, Jan 31, 2024 at 10:28:44AM +0100, Dario Binacchi wrote:
+>>>> Allow 'port' property (coming from panel-common.yaml) to be used in DTS:
+>>>>
+>>>>     st/stm32f769-disco-mb1166-reva09.dtb: panel@0: 'port' does not match any of the regexes: 'pinctrl-[0-9]+'
+>>>>
+>>>> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+>>>> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+>>>
+>>> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>>>
+>>>
+>>>>
+>>>> ---
+>>>>
+>>>> Changes in v2:
+>>>> - Rework the patch to drop errors found by command
+>>>>     'make DT_CHECKER_FLAGS=-m dt_binding_check'.
+>>>>
+>>>>    .../devicetree/bindings/display/panel/novatek,nt35510.yaml       | 1 +
+>>>>    1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml b/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
+>>>> index a4afaff483b7..91921f4b0e5f 100644
+>>>> --- a/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
+>>>> +++ b/Documentation/devicetree/bindings/display/panel/novatek,nt35510.yaml
+>>>> @@ -31,6 +31,7 @@ properties:
+>>>>      vddi-supply:
+>>>>        description: regulator that supplies the vddi voltage
+>>>>      backlight: true
+>>>> +  port: true
+>>>>
+>>>>    required:
+>>>>      - compatible
+>>>> --
+>>>> 2.43.0
+>>>>
+>>
+>> Do you plan to take this patch in drm-misc next branch ? As I have a
+>> dependency with it to merge a DT patch I can take in my tree
+>> (stm32-next) if you prefer. Let me know.
+>>
+>> Cheers
+>> Alex
+> 
+> It's been some weeks, so a gentle ping seems in order :)
 
-Thanks for your patch, which is now commit 5fa6a97d27842dab ("f2fs:
-introduce SEGS_TO_BLKS/BLKS_TO_SEGS for cleanup") in next-20240229.
+Applied on stm32-next.
 
-noreply@ellerman.id.au reports several build failures on m68k.
-http://kisskb.ellerman.id.au/kisskb/head/f303a3e2bcfba900efb5aee55236d17030=
-e9f882/
-
-E.g. m68k defconfig + CONFIG_F2FS_FS=3Dy:
-
-m68k-linux-gnu-ld: fs/f2fs/file.o: in function
-`has_not_enough_free_secs.constprop.0':
-file.c:(.text+0x19ee): undefined reference to `__moddi3'
-m68k-linux-gnu-ld: file.c:(.text+0x1a22): undefined reference to `__divdi3'
-m68k-linux-gnu-ld: fs/f2fs/file.o: in function `f2fs_ioc_defragment':
-file.c:(.text+0x205a): undefined reference to `__divdi3'
-m68k-linux-gnu-ld: fs/f2fs/inode.o: in function `f2fs_write_inode':
-inode.c:(.text+0x1692): undefined reference to `__moddi3'
-m68k-linux-gnu-ld: inode.c:(.text+0x16c0): undefined reference to `__divdi3=
-'
-m68k-linux-gnu-ld: fs/f2fs/namei.o: in function `f2fs_is_checkpoint_ready':
-namei.c:(.text+0xa64): undefined reference to `__moddi3'
-m68k-linux-gnu-ld: namei.c:(.text+0xa98): undefined reference to `__divdi3'
-m68k-linux-gnu-ld: fs/f2fs/gc.o: in function
-`has_not_enough_free_secs.constprop.0':
-gc.c:(.text+0xe28): undefined reference to `__moddi3'
-m68k-linux-gnu-ld: gc.c:(.text+0xe5c): undefined reference to `__divdi3'
-m68k-linux-gnu-ld: fs/f2fs/gc.o: in function `f2fs_gc':
-gc.c:(.text+0x2f2c): undefined reference to `__divdi3'
-m68k-linux-gnu-ld: gc.c:(.text+0x2f58): undefined reference to `__divdi3'
-m68k-linux-gnu-ld: gc.c:(.text+0x2f66): undefined reference to `__moddi3'
-m68k-linux-gnu-ld: gc.c:(.text+0x2f96): undefined reference to `__moddi3'
-m68k-linux-gnu-ld: fs/f2fs/data.o: in function
-`has_not_enough_free_secs.constprop.0':
-data.c:(.text+0xde8): undefined reference to `__moddi3'
-m68k-linux-gnu-ld: data.c:(.text+0xe1c): undefined reference to `__divdi3'
-m68k-linux-gnu-ld: fs/f2fs/segment.o: in function
-`has_not_enough_free_secs.constprop.0':
-segment.c:(.text+0x16ee): undefined reference to `__moddi3'
-m68k-linux-gnu-ld: segment.c:(.text+0x1722): undefined reference to `__divd=
-i3'
-m68k-linux-gnu-ld: fs/f2fs/xattr.o: in function `f2fs_setxattr':
-xattr.c:(.text+0xf5e): undefined reference to `__moddi3'
-m68k-linux-gnu-ld: xattr.c:(.text+0xf8c): undefined reference to `__divdi3'
-
-Other 32-bit architectures are affected, too, e.g. arm/shmobile_defconfig
-+ CONFIG_F2FS_FS=3Dy:
-
-arm-linux-gnueabihf-ld: fs/f2fs/file.o: in function
-`has_not_enough_free_secs.constprop.0':
-file.c:(.text+0x1d40): undefined reference to `__aeabi_ldivmod'
-arm-linux-gnueabihf-ld: file.c:(.text+0x1d5c): undefined reference to
-`__aeabi_ldivmod'
-arm-linux-gnueabihf-ld: fs/f2fs/file.o: in function `f2fs_defragment_range'=
-:
-file.c:(.text+0x2018): undefined reference to `__aeabi_ldivmod'
-arm-linux-gnueabihf-ld: fs/f2fs/inode.o: in function `f2fs_write_inode':
-inode.c:(.text+0x19d4): undefined reference to `__aeabi_ldivmod'
-arm-linux-gnueabihf-ld: inode.c:(.text+0x19f0): undefined reference to
-`__aeabi_ldivmod'
-arm-linux-gnueabihf-ld: fs/f2fs/namei.o:namei.c:(.text+0x12bc): more
-undefined references to `__aeabi_ldivmod' follow
-
-Manually reverting 5fa6a97d27842dab fixes the issue.
-
-64-bit divisions (iff needed at all) must not be open-coded, but use
-the helpers from <linux/math64.h> instead.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Thanks
+Alex
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> 
+> Thanks and regards,
+> Dario
+> 
