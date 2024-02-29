@@ -1,59 +1,59 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E8A757F3
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC66757ED
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709229319; cv=none; b=JFLNJBO8fgzonWogX/LOgn+ojeJqqQLZFWhjKPUocJeNyNcd597913oFkjvY4lhmu+Ki/yTAMJU9IXThstrQYfhhlldzE7YXQwkufOAWLQC87tj8nY7PEkYMcseGwbsrlrcUvggmxwj8N/4D7be0bdk5tVXT+G95mhTkn1Lndv0=
+	t=1709229437; cv=none; b=LhQtqdbQ89SAFseQYCgcFfy+i85ETkWEdFa+e7ct5iCemMEU4M3yCYMMU1lcAfovWw7S/ZqZB2euCQ2KWwx57GX8yNkiQv7pUafvaaApDcoKeZK2aJ59iPAMZ7HJ6IKp/g+OaJDfpEBWnOmdqgmavD6D96Z9PNVfem33xCG/iOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709229319; c=relaxed/simple;
-	bh=vKxNFS78uD0E5j38AWn+sBz9ITWXnKyhlNNJEbUO6ck=;
+	s=arc-20240116; t=1709229437; c=relaxed/simple;
+	bh=P7nQhn3DAJ9i3Niab1QxHDxD6xtT6wxpVOwcDAJ4T58=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XndqOkkInjC9o1rQZ5iGyb1O0KKqLdy+YsbO4NkFCWhrUnvjHSLFLREpJ4y5N8/yvQ9n3MtrVlDnItMMvjSZ9AfVWgrBaisQRtQEDc3P25TNmLtil0Rne9B5OHEphBtGoM0D9fERkkwssERps3NNEgYWxPocvLmIQ5r4BLGCB6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fUmIaXT3; arc=none smtp.client-ip=209.85.208.52
+	 In-Reply-To:Content-Type; b=mBsOaXo4oztjYOia4ChH806UmRxGecN8l3U3kEwFiXSpUkM2f8oDM20Id0cxddrez6RSMcTlwxLu+eQCM3vRsN/PYARF+kTITjgVJdPx0lu8Axn+Pn26a6CtI5SSzajZ6plsC4iQP7fIjMLmdkaFB+qqWTOp9LA2bHKx7YNL8No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vi8wFU3X; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fUmIaXT3"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-565a3910f86so1990862a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:55:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vi8wFU3X"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-563f675be29so1688605a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:57:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709229315; x=1709834115; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709229434; x=1709834234; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ep0WR+ChrFSVu6soC87wXbpyqa2oU4ugQ6MkkQ7GOxg=;
-        b=fUmIaXT3LMTSnsZCt4ARxaZu2JOrR1qu/BJTPYzQFn1sTDfG+7085tdT/9H3mS8OEW
-         1SOz2X2EMcHxH1vg1UZ/aOpPbQ5S+UtxiDgRNfN3VUpuFDTOwAPybjDEZn4WxFCa4xhc
-         9Jvnp5dlZ3Bs5zxMYyDaD7+uFAMQT/yLbC+xqy6KI/hdiUUUGyvNQ+g6r5SCerqsfjt3
-         PgpdiyqBrzKVoFSYRHP+GnNR3/Xv8QerMIXUuB6nDzU9S3FwWSZoTdfFSs0eO5Ofe/dv
-         K1KZTOwP6lMMpCTPIv7F9mMei8oEe2p4MtrGF9D1wXNAqmn37yXuvp+0bDPtsPhpu+7e
-         ZnFQ==
+        bh=0VSCcHYawJXa1rt0x3Tg+kDAG9fenwtP0XfWlTJ01QI=;
+        b=Vi8wFU3X9mfeDiWqnkf2FMfpyOir8W/ia2J0xq8WAeC15TLueN/V/c3nLHLBMz3BXH
+         eW2msq5Pp5QRGfUX3cEqCUY9B1yKhMluxC8CUghbrDCHjycjfxTQ+Re4XxsKEhN13bf8
+         xI8kJcim3LDgs0uQ+pvJoo4qA25/a31WOveCiE2IqyXvzBCHM8iqE1pwYWMsp+As8sqB
+         UpDFdH2h5zavU5QbM+8KTOBTzPoz/rorkeu6VLbsO4JWcl3H9xGVSYxP8YPw2odGfu2t
+         z7nrDnM8S0XfuVVy8sErYxY4nC1rwmGNiJ9dNWwYSGWW9Sg6cULedfJUXARKAFKXtAOm
+         bvfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709229315; x=1709834115;
+        d=1e100.net; s=20230601; t=1709229434; x=1709834234;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ep0WR+ChrFSVu6soC87wXbpyqa2oU4ugQ6MkkQ7GOxg=;
-        b=J83O5KfmrrUHdsE2hWhFjyeWUFN4iHT6gKyV5yEil7XIkC17V6YuRpbKrLEnetLzUk
-         VfNdjD2mudrkQ2clAqxTscXbIWv+7YdV+srV1VmPaBAM6meR1oylflcY2lOmW82ra+lB
-         96t9gc7GJPeJKHmBPJ0MsyEzITw02784mBScqfjiWlvZJD6bizQTbumHZYNTErrM6h07
-         b20yM8nlUSuHEHPQyVrE7YZqOqNIqUQqARRCw2aX6Fx9yNEf+an718hdeKqt8+rVUwDS
-         GhWZwEd5xNVtEJdKnjQnAp3UchOx1VSlv4AQ2Bgqodq2/M/HaOqY3lABIhmjgb4dsbwc
-         vTKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNfZO3mdFhXI4tEixUVffLek9dyml9+2XnOnkei7TdTcvwnIeA/yzE2UJ9xvOJu1bJH84jxdmWQVfXvN7ZzHhnknimmNqUI0heeG70
-X-Gm-Message-State: AOJu0Yw3Fkem7tHNqIUCujXVC2qSnzeK95ZSTDlBfqKEamPUD8WmVWGp
-	CD4FPpbs6fo2qRC/R5Fcww9VOLEQrvi9tfaAN63U5XAMq/WU73TeVhGSeQAXJwc=
-X-Google-Smtp-Source: AGHT+IGlqcs8msF7hm2oFXU8BDHjZbeoUAnYAY8cpJdZL/vOWV9axBEkFbpSgw0FM/6B4GEhAE9n+g==
-X-Received: by 2002:a50:8d86:0:b0:566:2e42:8c38 with SMTP id r6-20020a508d86000000b005662e428c38mr2080620edh.2.1709229315580;
-        Thu, 29 Feb 2024 09:55:15 -0800 (PST)
+        bh=0VSCcHYawJXa1rt0x3Tg+kDAG9fenwtP0XfWlTJ01QI=;
+        b=FDw2s9jwIy39GS0DIgsvB6sDu0+aN5XNbKa8Y2i46xs0kiKOFLPRnrySCqPbZ+kEYT
+         1KB+dSN/bk8vDJ5fsJRxU4NSTlMVe3ZaQasObuKeRr3090m2QTdeV/o+KA12qeGvoOqJ
+         vXxibtQHG2OWHuk0x/25bQ4QTk+h5LsTAgFmGyXxIIkR5bQqm/VVUAd/9vngS6G4cd2l
+         PPTTXGX6UZusniY16JNrp+zt8zstaFpp4Ht9uw3GjdYeBuddQe84dE6GOEKbyqikrwd/
+         IFyKaSdE4O9kT9rs82Xbx8//TYuHwYX2l9wueQr0tU9ItcugPtF2CG+Wy7RzTk/7kr+Z
+         eJMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhEQOsArQ7McZhIl1k+aPbYxvuKCbPJiCsQaTmN8Xnv8qF9RaySfSKxpAaFgBG2v+YnRXrWXONZuoSo39sBzvJ66vPEgjx/zdEMk7U
+X-Gm-Message-State: AOJu0Yzc5HQxHniJlGoL9u2opOGoglZFMayUI7kjeC9jHzvwQavLHWEO
+	Iy4YRHBK+PPHh6AOJB7v6x+cdyF9tK86cvkCrqPtskVuJXdOfGC1a4s7+NkHTgM=
+X-Google-Smtp-Source: AGHT+IF56NSGBrEqJBOxqJHRaQaPzb3lTrNuWrOCeKIwLr0SE3ZZhoQ9MsCmRQWOrWsRdA+vWkACWQ==
+X-Received: by 2002:a50:cbc1:0:b0:566:5897:b3ba with SMTP id l1-20020a50cbc1000000b005665897b3bamr1909598edi.3.1709229434246;
+        Thu, 29 Feb 2024 09:57:14 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id r15-20020a056402034f00b0056686744752sm809679edw.37.2024.02.29.09.55.13
+        by smtp.gmail.com with ESMTPSA id s24-20020aa7c558000000b0056664063ca6sm815241edr.44.2024.02.29.09.57.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 09:55:14 -0800 (PST)
-Message-ID: <926bde97-64ac-4cb4-8821-9dc828052e8d@linaro.org>
-Date: Thu, 29 Feb 2024 18:55:13 +0100
+        Thu, 29 Feb 2024 09:57:13 -0800 (PST)
+Message-ID: <6eb17b85-1b38-401d-84b6-4e995482d86f@linaro.org>
+Date: Thu, 29 Feb 2024 18:57:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,20 +61,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/7] arm64: dts: qcom: sc7280: Add DT nodes for the
- TBUs
+Subject: Re: [PATCH 1/1] iommu/arm-smmu-qcom: Fix use-after-free issue in
+ qcom_smmu_create()
 Content-Language: en-US
-To: Georgi Djakov <quic_c_gdjako@quicinc.com>, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, will@kernel.org,
- robin.murphy@arm.com, joro@8bytes.org, iommu@lists.linux.dev
-Cc: devicetree@vger.kernel.org, andersson@kernel.org,
- konrad.dybcio@linaro.org, robdclark@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, quic_cgoldswo@quicinc.com,
- quic_sukadev@quicinc.com, quic_pdaly@quicinc.com, quic_sudaraja@quicinc.com,
- djakov@kernel.org
-References: <20240226172218.69486-1-quic_c_gdjako@quicinc.com>
- <20240226172218.69486-8-quic_c_gdjako@quicinc.com>
+To: Pratyush Brahma <quic_pbrahma@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: quic_c_gdjako@quicinc.com, andersson@kernel.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, djakov@kernel.org, iommu@lists.linux.dev,
+ joro@8bytes.org, konrad.dybcio@linaro.org,
+ krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_cgoldswo@quicinc.com, quic_pdaly@quicinc.com,
+ quic_sudaraja@quicinc.com, quic_sukadev@quicinc.com, robdclark@gmail.com,
+ robh+dt@kernel.org, robin.murphy@arm.com, will@kernel.org
+References: <20240201210529.7728-4-quic_c_gdjako@quicinc.com>
+ <20240213062608.13018-1-quic_pbrahma@quicinc.com>
+ <CAA8EJpoh-m_fzt9WcUXOkTxVZRQMDf-WrgqqoM0C_-qzjgDm1w@mail.gmail.com>
+ <ccb6b2a2-040b-46cc-9b72-2e4bd4c75565@quicinc.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -120,39 +123,33 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240226172218.69486-8-quic_c_gdjako@quicinc.com>
+In-Reply-To: <ccb6b2a2-040b-46cc-9b72-2e4bd4c75565@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/02/2024 18:22, Georgi Djakov wrote:
-> Add the device-tree nodes for the TBUs (translation buffer units) that
-> are present on the sc7280 platforms. The TBUs can be used debug the
-> kernel and provide additional information when a context faults occur.
+On 13/02/2024 09:17, Pratyush Brahma wrote:
 > 
-> Describe the all registers, clocks, interconnects and power-domain
-> resources that are needed for each of the TBUs.
-> 
-> Signed-off-by: Georgi Djakov <quic_c_gdjako@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/sc7280.dtsi | 89 ++++++++++++++++++++++++++++
->  1 file changed, 89 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> index 83b5b76ba179..cc42560f63ad 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> @@ -2905,6 +2905,18 @@ adreno_smmu: iommu@3da0000 {
->  			dma-coherent;
->  		};
->  
-> +		gfx_0_tbu: tbu@3dd9000 {
-> +			compatible = "qcom,qsmmuv500-tbu";
-> +			reg = <0x0 0x3dd9000 0x0 0x1000>;
-> +			qcom,stream-id-range = <&adreno_smmu 0x0 0x400>;
+> On 2/13/2024 1:36 PM, Dmitry Baryshkov wrote:
+>> On Tue, 13 Feb 2024 at 08:27, Pratyush Brahma <quic_pbrahma@quicinc.com> wrote:
+>>> Currently, during arm smmu probe, struct arm_smmu_device pointer
+>>> is allocated. The pointer is reallocated to a new struct qcom_smmu in
+>>> qcom_smmu_create() with devm_krealloc() which frees the smmu device
+>>> after copying the data into the new pointer.
+>>>
+>>> The freed pointer is then passed again in devm_of_platform_populate()
+>>> inside qcom_smmu_create() which causes a use-after-free issue.
+>>>
+>>> Fix the use-after-free issue by reassigning the old pointer to
+>>> the new pointer where the struct was copied by devm_krealloc().
+>>>
+>>> Signed-off-by: Pratyush Brahma <quic_pbrahma@quicinc.com>
+>> Missing Fixes tag.
+> Haven't added as the patchset in-reply-to hasn't been merged to 
+> linux-next. Please refer my next reply.
 
-Where are the clocks/interconnects/power-domains? Your binding said it
-is exactly (100%) the same as SDM845, so either binding is missing
-compatibles or this is incomplete.
+Why do you send patches for work being reviewed? Just perform the
+review. It looks like you deliberately want to apply bad code just to
+fix it a second later!
 
 Best regards,
 Krzysztof
