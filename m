@@ -1,102 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412BD13C9DA;
-	Thu, 29 Feb 2024 19:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C542113C9DB;
+	Thu, 29 Feb 2024 19:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709234813; cv=none; b=ldhYWT8piT4+78lnoKG3YkvP6DiXj48aHWaY0Lq/tCnhYYiUV2hIH3fnfQ/tnwf1RYpM45JvE0mjovJ24Y2jYhz6pX1iirVrNSRQ1o09kZXCmitiM4NuVEVIAGCo8n4SgG0nAZG3URfdnaSBqzL9joHK3m7flwF0D5JblX6PRZs=
+	t=1709234824; cv=none; b=gFo3ot3b1VPu8X5wy1fx1TEWUvKR5WCL4JlSpD8VMflhYYaFKuckXooqPYGGO+Q0htDttpNO9QmRehz3WJo4+7lGBKbBdLCKK0EO5c9xW0wFSC1dbq4csBkZL2LiDyDz89OKXUPqJMC8pknhsRz6Ic2oXoREnwOw6yLUh6xO3HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709234813; c=relaxed/simple;
-	bh=dQBzFjbiyMY2YfsnEMAA2D18qSH0i0EESuIQfSa8Bos=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=E6QwpIJRUaoTiLsRD/yqBMuikz5IlQB5dI7U6mijoyNAEuG9mW3o/VGq3fuql5S4Fasu0vAnpO+Tz/KhvXvHiYTviBljolVoDm1f7qqqDeY9JMh8nqrq+wacO7BLUbJojns4YXRgtjMjpOVgpUTEeCoaxUKnQ7eX/2W74Qmw8Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCJCcUTx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709234824; c=relaxed/simple;
+	bh=hAYEg69gGvrO2LTlkt7LFP2fOAof7WF6nmTQJr0yRQs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=n7Z0glSxIXmPE63hQZNJ4PxFkPUsZz9G5Lk5PByy6on3efjkbIk0tRNVwmabJY+2BPDTfXWO38GbeNQgGcOoS+EPy61iYxLtX1QbIJjGJJRtSdNZJaLkUXfSRW0f/Gdp2rCTee8nDElncPegOejn32CrPnqwVu7st8EU975+HfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cKZPpW0v; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCJCcUTx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98BF4C433C7;
-	Thu, 29 Feb 2024 19:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709234811;
-	bh=dQBzFjbiyMY2YfsnEMAA2D18qSH0i0EESuIQfSa8Bos=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=FCJCcUTxHFiF2vBsMkiF1XIA1kLFEDBldowvgltYlnfplQRI/KrH4bGhod7q8aORO
-	 X/rrkYKtLDRDqNe7CwJqfIDMvsvtokaX3/OMpZCpJbRLU6zt02ytjlgWDzanOIECbZ
-	 EFtefDCRg9utWb8at5XYYiS7w6AriGL0fvWY/Q/fFVtTHgv2EKvGkH8tqNhsuSbX8W
-	 JeR8DdXDm0FEFx2we4NsYQPhrm0f9mpolPAkZsD+6OENZ8Ql+rFRoDzy8zSRj0dr4s
-	 AbSkFaJK1IJzmM2DiL5bQjj2D9Ni97TeO6S7iF5TJPCaCcWRHPBucoHW7YR01yFWYH
-	 nzw3iZP6CrtRg==
-Date: Thu, 29 Feb 2024 13:26:50 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKZPpW0v"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-412a14299a4so9984325e9.1;
+        Thu, 29 Feb 2024 11:27:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709234820; x=1709839620; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tJOJyUFKE6vWJvYSz1LvG697rW0U88KqR4dAP+GyGq4=;
+        b=cKZPpW0vBTY5fGABZ0/WPynqOJ0Q+Q1YEUC7F2nnjT1TRTAu5SKpViWSe5j2OWF5bE
+         q1MFkHKpKKbrIHxEhGYfdZISsi8a31BftgYxQX6XWVB+mVxWcacK6s3hO0+yGr+TSqKC
+         a1gina1Q0dCpZhVtQBodZNk2Hv4IiuQy3EFzWyuEUDhRCqkiBLRY38Alry2la9hIDKle
+         NGhUxvdN7xgpPSC+qzbivAZe1fkuxXagzrwicqMNiW80t+ADahR0a/7vAClxRqICBNh4
+         T/TtA46PV6xoYpdT+DXb1zG6NfqMLyDotoTEqfB9FIY0J5Gid8ZYfnMZrMHDDap7IheZ
+         mlMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709234820; x=1709839620;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tJOJyUFKE6vWJvYSz1LvG697rW0U88KqR4dAP+GyGq4=;
+        b=ViJyTb/BWzUY3Bxev0VOGQ8PzgY3HIb/xYmVAvARC6fFHIBN+Yh5QYBpQZVmtm1p6x
+         T34Gp6C9BKBbCcuwbmwOO/OkZ0rqKEX7ulz5ZI0+VkW170uvLnE15RPxavwQm0zl9yyE
+         H2ADR8iSzX5SQSVVSw6Bz3zxNL+y2YJh7ohg1a6PgwWGehG1UAaFxpDgERbOBVfn2b/0
+         KYt6BHhPEnkFS6z8LmkH9nDF6mJFzBcrLZ8Z9Ke2Sb+X7bbnB0MWi4aLCz38JMsvcplA
+         +6rtkjIZjSrp3HeVyk9yEZNHJtLRNJ/6/DoY87lCblV/WN575htS+wG5lpqPvd/sZovg
+         fqAg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdrLqh40xan5YSpM+1TOb2WnzqAIhbkBIZzqkiclcmCYiEX8lsNInk94GVAHoUZRT8a9QElnC/ArniOH+dgX9GPj9pWcwr9fpFO5cbM02Gwwqw+LqNn8J5kthTStgFDOgfr6Z8b7LvAA==
+X-Gm-Message-State: AOJu0YwXu2ZSKdzG7aHJSJk4ZWEocY54CLPKXIif7e8yf8qlvYfdxdC4
+	x/lqooqzXw+j0FTR3dWUrKxmvFGLQaHYc9g4c/GHyT3uFy+9lqkuJ2w3skShc3IWaA==
+X-Google-Smtp-Source: AGHT+IEmConaemKMtcTzN62uobZUuH1/Oz6g74N2+DYM6UgwDD8QkXzhIsYPJiHOQJ25qJEWxsvgdA==
+X-Received: by 2002:a05:600c:444e:b0:412:bd9b:2a55 with SMTP id v14-20020a05600c444e00b00412bd9b2a55mr2325602wmn.13.1709234820222;
+        Thu, 29 Feb 2024 11:27:00 -0800 (PST)
+Received: from [172.30.32.188] ([2001:8f8:183b:6ebc::d35])
+        by smtp.gmail.com with ESMTPSA id j20-20020a05600c1c1400b00412bca49a5bsm2853944wms.42.2024.02.29.11.26.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 11:26:59 -0800 (PST)
+From: Alexey Charkov <alchark@gmail.com>
+Subject: [PATCH v3 0/5] RK3588 and Rock 5B dts additions: thermal, OPP and
+ fan
+Date: Thu, 29 Feb 2024 23:26:31 +0400
+Message-Id: <20240229-rk-dts-additions-v3-0-6afe8473a631@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>, 
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, 
- linux-i2c@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGfa4GUC/23NwQ6CMAwG4FchOzszCmPgyfcwHmAd0KhgNrJoC
+ O9uITHR6K1/8/frLILz5II4JLPwLlKgceCQ7RJh+3ronCTkLEBBrlLIpb9InIKsEWniLk8Fmka
+ DKU1TCT67e9fSYyNPZ849hWn0z+1DTNftG9O/WEylkro0FRiNTVa0x+5W03Vvx5tYsQgfQKb+A
+ MCALQDA5taU+AUsy/IC2/+ckvEAAAA=
+To: Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- devicetree@vger.kernel.org, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Guenter Roeck <linux@roeck-us.net>, Andi Shyti <andi.shyti@kernel.org>
-In-Reply-To: <20240229-mbly-i2c-v2-2-b32ed18c098c@bootlin.com>
-References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
- <20240229-mbly-i2c-v2-2-b32ed18c098c@bootlin.com>
-Message-Id: <170923480718.105821.4890305771845201981.robh@kernel.org>
-Subject: Re: [PATCH v2 02/11] dt-bindings: hwmon: lm75: use common hwmon
- schema
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Dragan Simic <dsimic@manjaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+ Chen-Yu Tsai <wens@kernel.org>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709234816; l=4526;
+ i=alchark@gmail.com; s=20240125; h=from:subject:message-id;
+ bh=hAYEg69gGvrO2LTlkt7LFP2fOAof7WF6nmTQJr0yRQs=;
+ b=8Jd8dVO6bUfYp/U7rjYgPVzmRlNnRBnMSq82B8/2P2cj+d66afXQk6tm+K1xjrrxSTY/72ER6
+ hk5QZc0BWj4AS/b5yjnWVo+X0dTuTjtACCdHufZH5JGxxfXs5z/zs2w
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=xRO8VeD3J5jhwe0za0aHt2LDumQr8cm0Ls7Jz3YGimk=
 
+This enables thermal monitoring and CPU DVFS on RK3588(s), as well as
+active cooling on Radxa Rock 5B via the provided PWM fan.
 
-On Thu, 29 Feb 2024 19:10:50 +0100, Théo Lebrun wrote:
-> Reference common hwmon schema which has the generic "label" property,
-> parsed by Linux hwmon subsystem.
-> 
-> To: Jean Delvare <jdelvare@suse.com>
-> To: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-hwmon@vger.kernel.org
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/hwmon/lm75.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+Some RK3588 boards use separate regulators to supply CPUs and their
+respective memory interfaces, so this is handled by coupling those
+regulators in affected boards' device trees to ensure that their
+voltage is adjusted in step.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+In this revision of the series I chose to enable TSADC for all boards
+at .dtsi level, because:
+ - The defaults already in .dtsi should work for all users, given that
+   the CRU based resets don't need any out-of-chip components, and
+   the CRU vs. PMIC reset is pretty much the only thing a board might
+   have to configure / override there
+ - The boards that have TSADC_SHUT signal wired to the PMIC reset line
+   can still choose to override the reset logic in their .dts. Or stay
+   with CRU based resets, as downstream kernels do anyway
+ - The on-by-default approach helps ensure thermal protections are in
+   place (emergency reset and throttling) for any board even with a
+   rudimentary .dts, and thus lets us introduce CPU DVFS with better
+   peace of mind
 
-yamllint warnings/errors:
+Fan control on Rock 5B has been split into two intervals: let it spin
+at the minimum cooling state between 55C and 65C, and then accelerate
+if the system crosses the 65C mark - thanks to Dragan for suggesting.
+This lets some cooling setups with beefier heatsinks and/or larger
+fan fins to stay in the quietest non-zero fan state while still
+gaining potential benefits from the airflow it generates, and
+possibly avoiding noisy speeds altogether for some workloads.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/lm75.yaml:
-Error in referenced schema matching $id: http://devicetree.org/schemas/hwmon/hwmon-common.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/lm75.example.dtb: sensor@48: False schema does not allow {'compatible': ['st,stlm75'], 'reg': [[72]], 'vs-supply': [[4294967295]], '$nodename': ['sensor@48']}
-	from schema $id: http://devicetree.org/schemas/hwmon/lm75.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/lm75.example.dtb: temperature-sensor@48: False schema does not allow {'compatible': ['ams,as6200'], 'reg': [[72]], 'vs-supply': [[4294967295]], 'interrupts': [[17, 3]], '$nodename': ['temperature-sensor@48']}
-	from schema $id: http://devicetree.org/schemas/hwmon/lm75.yaml#
+OPPs help actually scale CPU frequencies up and down for both cooling
+and performance - tested on Rock 5B under varied loads. I've split
+the patch into two parts: the first containing those OPPs that seem
+to be no-regret with general consensus during v1 review [2], while
+the second contains OPPs that cause frequency reductions without
+accompanying decrease in CPU voltage. There seems to be a slight
+performance gain in some workload scenarios when using these, but
+previous discussion was inconclusive as to whether they should be
+included or not. Having them as separate patches enables easier
+comparison and partial reversion if people want to test it under
+their workloads, and also enables the first 'no-regret' part to be
+merged to -next while the jury is still out on the second one.
 
-doc reference errors (make refcheckdocs):
+[1] https://lore.kernel.org/linux-rockchip/1824717.EqSB1tO5pr@bagend/T/#ma2ab949da2235a8e759eab22155fb2bc397d8aea
+[2] https://lore.kernel.org/linux-rockchip/CABjd4YxqarUCbZ-a2XLe3TWJ-qjphGkyq=wDnctnEhdoSdPPpw@mail.gmail.com/T/#m49d2b94e773f5b532a0bb5d3d7664799ff28cc2c
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240229-mbly-i2c-v2-2-b32ed18c098c@bootlin.com
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
+---
+Changes in v3:
+- Added regulator coupling for EVB1 and QuartzPro64
+- Enabled the TSADC for all boards in .dtsi, not just Rock 5B (thanks ChenYu)
+- Added comments regarding two passive cooling trips in each zone (thanks Dragan)
+- Fixed active cooling map numbering for Radxa Rock 5B (thanks Dragan)
+- Dropped Daniel's Acked-by tag from the Rock 5B fan patch, as there's been quite some
+  churn there since the version he acknowledged
+- Link to v2: https://lore.kernel.org/r/20240130-rk-dts-additions-v2-0-c6222c4c78df@gmail.com
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+Changes in v2:
+- Dropped the rfkill patch which Heiko has already applied
+- Set higher 'polling-delay-passive' (100 instead of 20)
+- Name all cooling maps starting from map0 in each respective zone
+- Drop 'contribution' properties from passive cooling maps
+- Link to v1: https://lore.kernel.org/r/20240125-rk-dts-additions-v1-0-5879275db36f@gmail.com
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+---
+Alexey Charkov (5):
+      arm64: dts: rockchip: enable built-in thermal monitoring on RK3588
+      arm64: dts: rockchip: enable automatic active cooling on Rock 5B
+      arm64: dts: rockchip: Add CPU/memory regulator coupling for RK3588
+      arm64: dts: rockchip: Add OPP data for CPU cores on RK3588
+      arm64: dts: rockchip: Add further granularity in RK3588 CPU OPPs
 
-pip3 install dtschema --upgrade
+ arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts   |  12 +
+ .../arm64/boot/dts/rockchip/rk3588-quartzpro64.dts |  12 +
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    |  30 +-
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi          | 385 ++++++++++++++++++++-
+ 4 files changed, 437 insertions(+), 2 deletions(-)
+---
+base-commit: cf1182944c7cc9f1c21a8a44e0d29abe12527412
+change-id: 20240124-rk-dts-additions-a6d7b52787b9
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Best regards,
+-- 
+Alexey Charkov <alchark@gmail.com>
 
