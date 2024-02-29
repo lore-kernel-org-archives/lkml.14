@@ -1,128 +1,132 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2E1626A1;
-	Thu, 29 Feb 2024 09:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2A75B5D2;
+	Thu, 29 Feb 2024 09:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709200021; cv=none; b=iyuMCC+XgHBZXKTqLphe2NXfk1qmkh6d9VR/RA5Fo5Z32trSH6c2U2UAgdCohHZoPj+4TFbEwXjwFMJjaGE2w8EAfStEkq6jtJf57SH03ctiy8w2IAeWBv8Nv/OytEbF57BsesE9Y9jrEE/fO8Wgkk6igss3LPhakwh6CyfFMjY=
+	t=1709200031; cv=none; b=fs8D8uq0CDuFk8SfKP3PO/bATlH16iuKtnZm3aZbDUldPqD0jh7cqBY+10+qjv3J0befnjSONcvrrwAiDkG860pYlwVYO2cgC/V3aXLerXBeuPLFxXNit/AILNYpGCBe7vb9+dlAyaOCVy79RYi978zj3o9IjBwfLkqFyJ5P92M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709200021; c=relaxed/simple;
-	bh=ZKF6CGDxJo7aTCOVRYbPvZuJuMOfRD8zOUkDxs6+UMc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dJlWhsBDf5P3JfOwq4T+gsZ5KaPL5M+ljjACnpl8mBSyDecedOIjEAL+pWnx+Wa/3vo9XaP8Zj2YWC/ZCmMx1sXQ/O016fFjJj2GOgRia7Mxtvyl0fCApUB8YkvY8eeiJ+q301CuwNFNlKlVnzgXlVk05S50hScJvQrqrc7HZ5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fXZS2Fr8; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709200031; c=relaxed/simple;
+	bh=xc+qRjR0bWdnBIKs1iZ20uh/Wq/YWbOq3AIghhd6LfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E8efQjdTdCNz3C2M4r211sZ9bkLV8lSQnyTSX6uSVeb1HkiOb+o1twUzdU1S4iXGilV2wTNH7VzqjddubK33HTdqhOY9P9Y5lJBzk3um22/lJMKme8DzrzxYpdI6rV7GruAlyh9WFRDGFocIHXXrLBHV7rGdhC9Hw2bn9pzNRC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UhfaqvoG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXZS2Fr8"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5654f700705so1088941a12.1;
-        Thu, 29 Feb 2024 01:46:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709200018; x=1709804818; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZKF6CGDxJo7aTCOVRYbPvZuJuMOfRD8zOUkDxs6+UMc=;
-        b=fXZS2Fr8GU6zZmElBl0wcyJq/8r7yc3OkayucqHxD03QSf5zVizvf7p2VZzEishF0h
-         r9Vd/a2xrvIG7vHW7ckX3w0BlezkPiiPcLZLsW44EiAavGhbph/3iJk9SoJc6LVh2v/C
-         JYFXQCz1e424kQSRUf7psF1k5Zr3t6rnh+2KOQ1TtHwNmIdrts5fyyTq65Jb58hYRM5x
-         5VmT44hUg71Xz7/6D81uC5sAWR2dN8AYo/tJ/PfevNGGQ15JQvF4a6t/WEDaFhdGH2Uw
-         rNh/ARLm60AzI9aiSOHOoUs1wrx3T+OoeoNLB5w/wKpFzsjp83o0QiNqsQZuiRmXF+it
-         54Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709200018; x=1709804818;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZKF6CGDxJo7aTCOVRYbPvZuJuMOfRD8zOUkDxs6+UMc=;
-        b=Cm6TmziVUidAN8bSfn5Zwo+c/nOC07+YnzQwa3GopPUhn0qFYA0xgkrsxp2V3Sd8Jw
-         9yL2tyH6wKFcHpQZOKmvi97++19JwD8BoTDnLb3aFWKgEp5B3WJM212qqzAcHl6Tq+Ie
-         6pb2qZ4FI3dey7Z0a2PY/cUljk6M3SDIzuzAlCfpwqNhx6VuNSeEXUevR1Mg0qor7osK
-         bnqhJYEEiz2G5Puf3tfvpN+hz3NU1VK4CcGytoFzeoCronq1JRcgKwqERhNl1VoKerqA
-         mdNtUxq9FMpuhRO+1MFTUOuuMvgzQfReLRjYLwtIEh2mxrVY7eEpFBIDtEHXjPMidIpW
-         6YnA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLcsJ3IRrDBRXfZ0TQKmkG+/rDsfkZ47+7uMRKvqlWpQIwFvoC/dZ+uWoNlr7xHhCrm+oA4FkMRPcVeMKIG0EcsSVr9RP8Yg37QqGIiwvmJbS4JAhGMtiM7uthaduEVlnLT3L9Qc2fkG5q4sXf3UStiDybo+9S6pXaE7tbJFG7qQ==
-X-Gm-Message-State: AOJu0YyNi3vsXlUMBiNg5j3F7twhnt/MnvvhHjR8oufkBaVYSZv0arIG
-	0lbza+NQuhA1vUFZgxqFXOJxvHuJE2R0yIE7nF5ai6jy5+j9F0Tm
-X-Google-Smtp-Source: AGHT+IGYn6hgKhooP5suk6LbV9V/eMI1wmp/BB2frmjgHS/QPCx3g8SNZ5X3gedy+bkNYy/MkSi2qQ==
-X-Received: by 2002:a05:6402:26d3:b0:566:6e4e:cb8c with SMTP id x19-20020a05640226d300b005666e4ecb8cmr1379117edd.38.1709200017706;
-        Thu, 29 Feb 2024 01:46:57 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
-        by smtp.gmail.com with ESMTPSA id d19-20020a05640208d300b0056650cd0156sm446013edz.66.2024.02.29.01.46.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 01:46:57 -0800 (PST)
-Message-ID: <c2b830bb4a4cf76dec8783f38b2477120edb1a15.camel@gmail.com>
-Subject: Re: [PATCH v2 2/2] of: overlay: Synchronize of_overlay_remove()
- with the devlink removals
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Herve Codina <herve.codina@bootlin.com>, Greg Kroah-Hartman
-	 <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob
-	Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, Sonal Santan
- <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>,
-  Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>,  stable@vger.kernel.org
-Date: Thu, 29 Feb 2024 10:50:21 +0100
-In-Reply-To: <20240229083953.607569-3-herve.codina@bootlin.com>
-References: <20240229083953.607569-1-herve.codina@bootlin.com>
-	 <20240229083953.607569-3-herve.codina@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UhfaqvoG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F596C433C7;
+	Thu, 29 Feb 2024 09:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709200031;
+	bh=xc+qRjR0bWdnBIKs1iZ20uh/Wq/YWbOq3AIghhd6LfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UhfaqvoGfdj3afa6zQC7Y8B5MFpwLcInlkfwmi/p3rpe3opbROvbbdeKBjsUyyafR
+	 e4bq0ftGNcwoct8km6fPaK6Qy9VzQs0SNdoJoajf2GaQBYHojuJDJdj8Yi0+TRNExF
+	 beeI+ve9/2S981guPre8Ian9A20elKPZKV3qrmQjzyynmKR80aN68onGGsS3hLHeKp
+	 iiHyeBvB/zaSnqo1BRj4/xCd8H80Hk2EqYwDG70BrI6hL+UnD8o4a9q93rCnhjUh3f
+	 3AkFmnJxe+T5kc/nHJijw9P0cfndWaxUgi6dIdzh4H3ejlByecFU1nS93Y5UxQs896
+	 8b4hVH6vXduDQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rfd0Z-000000000me-15w5;
+	Thu, 29 Feb 2024 10:47:19 +0100
+Date: Thu, 29 Feb 2024 10:47:19 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Krishna Kurapati <quic_kriskura@quicinc.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_ppratap@quicinc.com,
+	quic_jackp@quicinc.com
+Subject: Re: [PATCH v15 2/9] usb: dwc3: core: Access XHCI address space
+ temporarily to read port info
+Message-ID: <ZeBSp0EWnHo8Wbsv@hovoldconsulting.com>
+References: <20240216005756.762712-1-quic_kriskura@quicinc.com>
+ <20240216005756.762712-3-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240216005756.762712-3-quic_kriskura@quicinc.com>
 
-On Thu, 2024-02-29 at 09:39 +0100, Herve Codina wrote:
-> In the following sequence:
-> =C2=A0 1) of_platform_depopulate()
-> =C2=A0 2) of_overlay_remove()
->=20
-> During the step 1, devices are destroyed and devlinks are removed.
-> During the step 2, OF nodes are destroyed but
-> __of_changeset_entry_destroy() can raise warnings related to missing
-> of_node_put():
-> =C2=A0 ERROR: memory leak, expected refcount 1 instead of 2 ...
->=20
-> Indeed, during the devlink removals performed at step 1, the removal
-> itself releasing the device (and the attached of_node) is done by a job
-> queued in a workqueue and so, it is done asynchronously with respect to
-> function calls.
-> When the warning is present, of_node_put() will be called but wrongly
-> too late from the workqueue job.
->=20
-> In order to be sure that any ongoing devlink removals are done before
-> the of_node destruction, synchronize the of_overlay_remove() with the
-> devlink removals.
->=20
-> Fixes: 80dd33cf72d1 ("drivers: base: Fix device link removal")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
-> =C2=A0drivers/of/overlay.c | 9 ++++++++-
-> =C2=A01 file changed, 8 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 2ae7e9d24a64..99659ae9fb28 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
+On Fri, Feb 16, 2024 at 06:27:49AM +0530, Krishna Kurapati wrote:
+> Currently Multiport DWC3 controllers are host-only capable.
 
-In the cover, you mention device.h inclusion but I'm not seeing it? This is
-clearly up to the DT maintainers to decide but, IMHO, I would very much pre=
-fer
-to see fwnode.h included in here rather than directly device.h (so yeah,
-renaming the function to fwnode_*). But yeah, I might be biased by own seri=
-es :)
+I already asked you to rephrase this so that it becomes clear that you
+are describing a property of the current hardware (and similar
+throughout the series):
 
-- Nuno S=C3=A1
+	https://lore.kernel.org/all/ZTI7AtCJWgAnACSh@hovoldconsulting.com/
 
+> +static int dwc3_read_port_info(struct dwc3 *dwc)
+> +{
+> +	void __iomem *base;
+> +	u8 major_revision;
+> +	u32 offset;
+> +	u32 val;
+> +
+> +	/*
+> +	 * Remap xHCI address space to access XHCI ext cap regs since it is
+> +	 * needed to get information on number of ports present.
+> +	 */
+> +	base = ioremap(dwc->xhci_resources[0].start,
+> +		       resource_size(&dwc->xhci_resources[0]));
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	offset = 0;
+> +	do {
+> +		offset = xhci_find_next_ext_cap(base, offset,
+> +						XHCI_EXT_CAPS_PROTOCOL);
+> +		if (!offset)
+> +			break;
+> +
+> +		val = readl(base + offset);
+> +		major_revision = XHCI_EXT_PORT_MAJOR(val);
+> +
+> +		val = readl(base + offset + 0x08);
+> +		if (major_revision == 0x03) {
+> +			dwc->num_usb3_ports += XHCI_EXT_PORT_COUNT(val);
+> +		} else if (major_revision <= 0x02) {
+> +			dwc->num_usb2_ports += XHCI_EXT_PORT_COUNT(val);
+> +		} else {
+> +			dev_warn(dwc->dev,
+> +				 "unrecognized port major revision %d\n",
 
+I still think you should merge this with the previous line even if you
+end up with 83 chars.
+
+> +							major_revision);
+> +		}
+> +	} while (1);
+ 
+> +	/*
+> +	 * Currently only DWC3 controllers that are host-only capable
+> +	 * support Multiport.
+> +	 */
+
+So again, also here, rephrase the comment so that it is clear that you
+are referring to a property of the current hardware.
+
+> +	hw_mode = DWC3_GHWPARAMS0_MODE(dwc->hwparams.hwparams0);
+> +	if (hw_mode == DWC3_GHWPARAMS0_MODE_HOST) {
+> +		ret = dwc3_read_port_info(dwc);
+> +		if (ret)
+> +			goto err_disable_clks;
+> +	} else {
+> +		dwc->num_usb2_ports = 1;
+> +		dwc->num_usb3_ports = 1;
+> +	}
+
+Johan
