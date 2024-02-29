@@ -1,157 +1,116 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C3D16062E
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 18:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC36757F1;
+	Thu, 29 Feb 2024 18:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709230051; cv=none; b=oqs4f2EYvx4zHgmcS5g846coeE3lfnPUbDow9rxault/uf2OkUB4bEH0QNSErgCc/FoNnSJyVSV9jDwccIiCkMCMx/zxjVgrxAaXuP51TEb+PkohH11SWhvkKPTlC37cJUXQj7bjrFb+sUJ5x188RoV3JjihYBcO3+EZvzt93S8=
+	t=1709230104; cv=none; b=FwtO8WVTBKJX/J0tXqusiU/ZF7eF0/kPU+jZN1IfruYFvYXDDxS3sGUv14xJk1En52/kMvJGqYU3sMSvBiJmk2mMyKKmZCtOMZliLggE0I/ibDvxqA9IzegEqDCZxd4xriLfJ530fDP/0Zgeu5JrCBvAwQ5qsqywPf78p8Nm5as=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709230051; c=relaxed/simple;
-	bh=1huf7QSRKz4j2YSUX5zuQki23is1yKa09RlMpGRiswM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OqLO5IyqS34nYRC1HWalMN4rTBs/pN7gzd1sJdNGcHYErr+R15H2tsnWv5zSRHe4RoCyOAyt6IARRowx3xBBy4iI/pWcbxgaqHwNuz63bL9yq/+cctLB04ojp8ILcWR8cMmbGunNggVWZqU4MWzJOgrFck61tZS73K9fiPRP4pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m6Oph2AG; arc=none smtp.client-ip=209.85.222.49
+	s=arc-20240116; t=1709230104; c=relaxed/simple;
+	bh=LKMqn9SElFgPu+r38CPN3LBzssOiaUnIZhvwNjwFq6o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=atpK5Pbr3eTGZgS1yP5ThpnQTTyY+OBw7gjZ8JXiSApNYicvapAEqCMtCvEfY2he8YHKMAVgw58koa//rBll9parvkZVc06RXqbO+ufl3fnMQuWWt7KwuW3st07cQ3G3dT+T5p7z2td9/2s3Ijhkl7DiDIg75opwFfCztQVzCYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IXevVB3Q; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6Oph2AG"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-7ce4512d308so690091241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 10:07:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXevVB3Q"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d22b8801b9so15279471fa.0;
+        Thu, 29 Feb 2024 10:08:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709230049; x=1709834849; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y5aO9FKYCVkPiimp5ZLTW2UUTWK+L37GG2aW8Lkr1OY=;
-        b=m6Oph2AGPQjSY0/6bVUTjebk37N7qQU0QvfD/PLV0ms1Ox4vbwTfASmVoZAMkh9sCU
-         JKM5rN+lnDDmYkAqJk4Jeh6qoCxWiH9P4zJ1GTQO0g3gYzagHFU8PKOEY513Vu+5mxl4
-         f5OLtXp129NOFiv2FPUTmUnglE7TzTdMVlWSOx2CCxjomENj5vLVdUspvZByPLdcHSnV
-         bxBovtx25oEdgiZDgHh6Xj1hAFkFUD2mgeHUmfMGlIOaKiHdoibhTVN9qs9Gneok6bSK
-         i/74VGsnUB4/f3kI62PyVyiFjJmxf8pJwCfK2B+B+NKZlUkitNpXax7k9tTXGhrlbM6u
-         o/Jw==
+        d=gmail.com; s=20230601; t=1709230101; x=1709834901; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q37MG069R1VCZUDWL9GxLkHnkMWluo9SRdj8E+y677M=;
+        b=IXevVB3QlTDY+6vI64sXJUk9e+GUZWq6f2A5GwxSWrHPkdT1mNb+nbnWqIQYEzIOxF
+         5Twf4Mb0TomtHLvvJtHGBruCJvhP+pUX7Yy5XAXdkG6zkoA5RycxzMkZFcTWx5vATCtx
+         1suJYfQXElE4v3Sx08VqlBkiOq/Vt+yoKmlG2YmeSBAjHgdTFJ4wyJV5wKLMbhqrOEj4
+         +QYBRp/DtqPf5mJAh4dwYSgwa6Mu4ddSM3A2acWS6IZomgEFkW+CPSgF1xtMFFs31WTb
+         zCWQ4BnDBuclo9JPro8n3sfHRbv6BchZJjSKh8TNWOUx8WpMrDmTnDWYWQv6kflwlm8x
+         /t1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709230049; x=1709834849;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y5aO9FKYCVkPiimp5ZLTW2UUTWK+L37GG2aW8Lkr1OY=;
-        b=W497yN/eADai54A7p8dOu9CouPKJ+6VqsjAzFlp25dxUDlcadyhBLkeLrUFdlxYWBM
-         fo21IWiqx0fRRi0buYhd1u/Yox7jb/PEjB5YB3r2A3/Ku3mfePhHj+FCIKeQzDpPL3Li
-         RggakyWHynNOuIWr2JIBqVVPs7XZQpHGd5LEycsqGAqNAkfHLxRckjg+XhMr000bH9hD
-         f+r36SHPin9bWpmv3PPyZscToy7glFW7QxfGAWMNc5yVrVcd2kfCzK4wnlvMsdQ66ZhG
-         WRXtDTTmpH02gseQTuk7YImR23MBzhPC86F3Boqt9FKDfRYBtBz4i+tyQCDSoR1ZbYPD
-         V+ug==
-X-Forwarded-Encrypted: i=1; AJvYcCVihl4XK3y7igTO22Hq11arE/NyLjPAKMSJ3n5/4TQ0z70lJy3eI/zNK8Bq/oBYll8HErbEkKxCZ8wFHi2yHKWB5l5s7EeJQwgQmX4A
-X-Gm-Message-State: AOJu0Yx1t5UwXcE8bYyxHq00LoA6N4Wjau1nYOy1IkVyfYXLb1u9x7DN
-	IiLCPFd/EH/Jkj8oP7Cm+UOsHgjhKq1/rbpis53a3duk7januHUml+gkUJ4mGfqirolreYvMn3m
-	roP3rIsdA+9wBKpCvfcrAZBqPY0TMQVOQk98=
-X-Google-Smtp-Source: AGHT+IHm0Q3ixNNu9cmggWgNNsR8ASg0FLqyjz36T/uPBKyzWma2Rx7sIr/qnpSDb4vMRsldinkwtqy7QMI+FvSqI9Y=
-X-Received: by 2002:a05:6122:1c0d:b0:4cf:da07:fb01 with SMTP id
- et13-20020a0561221c0d00b004cfda07fb01mr2408795vkb.8.1709230049114; Thu, 29
- Feb 2024 10:07:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709230101; x=1709834901;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q37MG069R1VCZUDWL9GxLkHnkMWluo9SRdj8E+y677M=;
+        b=pTKXqYr8NfOaJ5Iupx6FjeOTkYVG813GMcJyqpzZBO+sAgPOIDp9rmRWv6GhmIoGAz
+         0Gr0W5P5ZmUl0AhqRHqxC/L6AE6bd2tCBE1I+LQLHo6WgKtYSEwjkI4DgnLI2U9o5iGf
+         4rxTBdaI7r0oUbToMSNvGnhBiQN5hB1ShL6ieRR80e586cvmLQAq8vo590JSwubEvcb1
+         FK6gBNUHlqL+cphYOM3JIci1g4Gl1xG8W11hNcCIvRzw3od0qzOaaEO/1tNgIMAKVFqR
+         VXeHvL5Jad0ihQHnO2s12p/Xc4Nfl/UrjKVPkSdS9YkLnbh/3tPzVBN0HKE2Yrb0blFk
+         AOVw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+u5EYSlMdrVPlZjsCgeGnjmmYg0wMPK88KwoEC6gUvV3NcMMXa9n868nVyJ9i2nP0dO/FbNZyabsh0Ot97mZkpCcIOk6KYNQIDtxaus4JF5RgFD3JOUcatl1nNLRWnDFAFnyGi7v2
+X-Gm-Message-State: AOJu0Yz8rdp8wzevd8GJxljJuI1TF6pXpKSNuiup6Z9HxEUsdZmAEJ2B
+	Jf7xwjOlJrJ6b2ZKWuM9im2+m5p0NYUYRlmu0fm7ifntlP2QTexq
+X-Google-Smtp-Source: AGHT+IG2pXvD68HwNp2RNlzcZ37vQ3NGNduX+dCd/iIMYrTf9O5lWhcoIgUPQTpd1MG4TSK/8PVVDQ==
+X-Received: by 2002:a2e:b5ce:0:b0:2d2:b146:d42b with SMTP id g14-20020a2eb5ce000000b002d2b146d42bmr1743349ljn.52.1709230100780;
+        Thu, 29 Feb 2024 10:08:20 -0800 (PST)
+Received: from [192.168.20.102] (57657817.catv.pool.telekom.hu. [87.101.120.23])
+        by smtp.googlemail.com with ESMTPSA id z11-20020a1c4c0b000000b00412ba5cda16sm3100620wmf.33.2024.02.29.10.08.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 10:08:20 -0800 (PST)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Subject: [PATCH 0/7] clk: qcom: fix frequency table termination in several
+ drivers
+Date: Thu, 29 Feb 2024 19:07:45 +0100
+Message-Id: <20240229-freq-table-terminator-v1-0-074334f0905c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240226013208.2389246-1-chao@kernel.org> <20240226013208.2389246-4-chao@kernel.org>
-In-Reply-To: <20240226013208.2389246-4-chao@kernel.org>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Thu, 29 Feb 2024 10:07:16 -0800
-Message-ID: <CACOAw_zMrGQp4oX1x559jrOVkcmj54gS0bHepMhYgFPCQKFcOg@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH 4/4] f2fs: fix to reset fields for unloaded curseg
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPHH4GUC/x3MQQqDMBBG4avIrDsQozXSq0gXsf6pAxrrJBRBv
+ HtDl9/ivZMSVJDoUZ2k+EqSLRbUt4pes49vsEzFZI1tjbUNB8XO2Y8LOENXiT5vysH1rjNw4x2
+ GSvtRBDn+3+F5XT8eq7FeZwAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>, 
+ Devi Priya <quic_devipriy@quicinc.com>, 
+ Anusha Rao <quic_anusha@quicinc.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Georgi Djakov <gdjakov@mm-sol.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.12.3
 
-Reviewed-by: Daeho Jeong <daehojeong@google.com>
+Add missing terminating entry to frequency table arrays in
+several drivers. There are separate independent patches for
+each affected driver.
 
-Thanks,
+The series is based on v6.8-rc6.
 
-On Sun, Feb 25, 2024 at 5:33=E2=80=AFPM Chao Yu <chao@kernel.org> wrote:
->
-> In f2fs_allocate_data_block(), before skip allocating new segment
-> for DATA_PINNED log header, it needs to tag log header as unloaded
-> one to avoid skipping logic in locate_dirty_segment() and
-> __f2fs_save_inmem_curseg().
->
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->  fs/f2fs/segment.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index c159b0985596..5e45afd69f3f 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -3101,12 +3101,16 @@ static int __allocate_new_segment(struct f2fs_sb_=
-info *sbi, int type,
->         struct curseg_info *curseg =3D CURSEG_I(sbi, type);
->         unsigned int old_segno;
->
-> +       if (type =3D=3D CURSEG_COLD_DATA_PINNED && !curseg->inited)
-> +               goto allocate;
-> +
->         if (!force && curseg->inited &&
->             !curseg->next_blkoff &&
->             !get_valid_blocks(sbi, curseg->segno, new_sec) &&
->             !get_ckpt_valid_blocks(sbi, curseg->segno, new_sec))
->                 return 0;
->
-> +allocate:
->         old_segno =3D curseg->segno;
->         if (new_curseg(sbi, type, true))
->                 return -EAGAIN;
-> @@ -3451,6 +3455,13 @@ static void f2fs_randomize_chunk(struct f2fs_sb_in=
-fo *sbi,
->                 get_random_u32_inclusive(1, sbi->max_fragment_hole);
->  }
->
-> +static void reset_curseg_fields(struct curseg_info *curseg)
-> +{
-> +       curseg->inited =3D false;
-> +       curseg->segno =3D NULL_SEGNO;
-> +       curseg->next_segno =3D 0;
-> +}
-> +
->  int f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page=
-,
->                 block_t old_blkaddr, block_t *new_blkaddr,
->                 struct f2fs_summary *sum, int type,
-> @@ -3516,8 +3527,10 @@ int f2fs_allocate_data_block(struct f2fs_sb_info *=
-sbi, struct page *page,
->          */
->         if (segment_full) {
->                 if (type =3D=3D CURSEG_COLD_DATA_PINNED &&
-> -                   !((curseg->segno + 1) % sbi->segs_per_sec))
-> +                   !((curseg->segno + 1) % sbi->segs_per_sec)) {
-> +                       reset_curseg_fields(curseg);
->                         goto skip_new_segment;
-> +               }
->
->                 if (from_gc) {
->                         get_atssr_segment(sbi, type, se->type,
-> @@ -4595,9 +4608,7 @@ static int build_curseg(struct f2fs_sb_info *sbi)
->                         array[i].seg_type =3D CURSEG_COLD_DATA;
->                 else if (i =3D=3D CURSEG_ALL_DATA_ATGC)
->                         array[i].seg_type =3D CURSEG_COLD_DATA;
-> -               array[i].segno =3D NULL_SEGNO;
-> -               array[i].next_blkoff =3D 0;
-> -               array[i].inited =3D false;
-> +               reset_curseg_fields(&array[i]);
->         }
->         return restore_curseg_summaries(sbi);
->  }
-> --
-> 2.40.1
->
->
->
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Gabor Juhos (7):
+      clk: qcom: gcc-ipq5018: fix terminating of frequency table arrays
+      clk: qcom: gcc-ipq6018: fix terminating of frequency table arrays
+      clk: qcom: gcc-ipq8074: fix terminating of frequency table arrays
+      clk: qcom: gcc-ipq9574: fix terminating of frequency table arrays
+      clk: qcom: camcc-sc8280xp: fix terminating of frequency table arrays
+      clk: qcom: mmcc-apq8084: fix terminating of frequency table arrays
+      clk: qcom: mmcc-msm8974: fix terminating of frequency table arrays
+
+ drivers/clk/qcom/camcc-sc8280xp.c | 21 +++++++++++++++++++++
+ drivers/clk/qcom/gcc-ipq5018.c    |  3 +++
+ drivers/clk/qcom/gcc-ipq6018.c    |  2 ++
+ drivers/clk/qcom/gcc-ipq8074.c    |  2 ++
+ drivers/clk/qcom/gcc-ipq9574.c    |  1 +
+ drivers/clk/qcom/mmcc-apq8084.c   |  2 ++
+ drivers/clk/qcom/mmcc-msm8974.c   |  2 ++
+ 7 files changed, 33 insertions(+)
+---
+base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
+change-id: 20240223-freq-table-terminator-f78760e7b5e0
+
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
+
