@@ -1,108 +1,107 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1287562801;
-	Thu, 29 Feb 2024 09:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E765F86F;
+	Thu, 29 Feb 2024 09:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709200584; cv=none; b=unImOK2+uDtY4UYcCHvUWEKQFAzM1PK8IxWKMzmcskgLN9NYmgXSN9MxecWjTPghHkFmPDu20MAcMh96zrLewrPPwywxH9AXqO1/4SwjdipVTRNYLjnt50AJ99nxWmiucb+U1o7ppzkRkr3n0FKTerNROtwF7DRGPPoGfYe4HqI=
+	t=1709200599; cv=none; b=o1McPd2cAGXU/81mVh5yQ2+QwXKzLmNHjxSNQbL8+MvpDZeECNKnyDRjqvR8H4CiMvZffRIPkU2iZMmdoIRlzUFEwLmuyXmFYZxGFm/iRlnYiAYtyhjKQ+Ma+id5jsRWmNvYmlpNLiGMmB6WD06kwZ50mVx41dQ5hVlhFESBljI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709200584; c=relaxed/simple;
-	bh=Kuxb7Z7SxDymhUXCf/8OI233Gjndg1g669+lIXC5Gwg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HOL8UFIE8vXcFylE+Ig1ZeYNuJ05CAUBOgXtklSQw5bYPoixBZwlk+rmy6z0fggL6etSfhllQmSJfJu70uV1yYiBUyILt4XhkNl7fP26FktL+pouKlIECDDo4xMp/C2LWPS/JJwL8b3ZH4JSU/ugK4jvaUrVFA0ZN+oAnFKI0xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Zo9dDuHu; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1709200599; c=relaxed/simple;
+	bh=6r5UPWYkvqQFSDHNeLtsINM/kTHr8C9zl217UjTeoQQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=PKKNMEyNDjNQGugBZBiwidxh4Ew3Jo14JD0QQhJRbJlDdOXsCXYXXQyVqRaMRwcgkBhZmPCr/Uepa/+BQySDrBDadxSIJ4QxXO53qETz2qd7XvFfs4tlUgdlaTlTw2FLrbSpssQrK/ljKle+0RfsC5I23zXcvDDNH7Qt43cGdRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L3PusnRP; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Zo9dDuHu"
-X-UUID: c6d18096d6e811eeb8927bc1f75efef4-20240229
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=NSJvBf2MtjtGhjMO2/ZFmTYLI8qmp/2QaCoKqPV6uw8=;
-	b=Zo9dDuHuECaL8Yegn9VKliddA9lYXyjYw4S+a/rV3ckzUAV4SvfhSYi86uS42expLvTfUcmnAKO09xyx55VY+XEKS0qiorBh1JuNzatBh4Ulij4r3rQjJuMpfThI5ii35LgXhcgTa1MUJFUQSnKy5SAuBY/ZOLfLrGTqpVwhO9o=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:5b0e5b89-0de6-49f0-9717-81229bd439bc,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:6e18f380-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: c6d18096d6e811eeb8927bc1f75efef4-20240229
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
-	(envelope-from <yunfei.dong@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1390350831; Thu, 29 Feb 2024 17:56:15 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 29 Feb 2024 17:56:13 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 29 Feb 2024 17:56:13 +0800
-From: Yunfei Dong <yunfei.dong@mediatek.com>
-To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>
-CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
- Dong <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH 1/3] media: mediatek: vcodec: fix h264 multi statless decoder smatch warning
-Date: Thu, 29 Feb 2024 17:56:09 +0800
-Message-ID: <20240229095611.6698-2-yunfei.dong@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240229095611.6698-1-yunfei.dong@mediatek.com>
-References: <20240229095611.6698-1-yunfei.dong@mediatek.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L3PusnRP"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B5074240011;
+	Thu, 29 Feb 2024 09:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709200594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k/PhTuZtbma+b2uqep16NcKtM46o621J394ZeTPTZI0=;
+	b=L3PusnRPwEbDjYR4L9o8gH4UGu9vXKeMdR2QKBwtIJPNgNAXIEI+R36BHQ8lEnayZQfkpW
+	R2bOAaawZ2iyC9hVzar02u9ocGEa/2L4vUD4N4ObBe14RalRlDKIzRwilBVoYgPK9/2SDw
+	N5g2wiTrFKhSBWRymq2fI1gpCuSWxH+E908J0eDHmiTN72eNJ4eKgN/GJpOHOiqWbaIipM
+	ehoa7OiNbYptLGA9no1SnMR3hR61e23++aiwj0vcWr6ko37Rn2SjPQu1tzDRyxYr4q27Gz
+	Ux1m+dqzUgwWPxMD229EXKofRwfo5iQvOgg/iFCxVRkLkOFeGbahe6lcv15qwA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 29 Feb 2024 10:56:32 +0100
+Message-Id: <CZHH1KDAVDCC.1INC050YK8HU1@bootlin.com>
+Subject: Re: [PATCH v2 00/30] Rework Nomadik GPIO to add Mobileye EyeQ5
+ support
+Cc: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Philipp Zabel" <p.zabel@pengutronix.de>, "Thomas Bogendoerfer"
+ <tsbogend@alpha.franken.de>, <linux-gpio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-mips@vger.kernel.org>,
+ "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, "Stephen Warren" <swarren@wwwdotorg.org>,
+ "Jonathan Corbet" <corbet@lwn.net>, <linux-doc@vger.kernel.org>
+To: "Linus Walleij" <linus.walleij@linaro.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: aerc 0.15.2
+References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com>
+ <CACRpkdbK2Sa_4qp3VE0ivHP8W6F-QDkuxV-XnZYviAkO5ZBMsg@mail.gmail.com>
+In-Reply-To: <CACRpkdbK2Sa_4qp3VE0ivHP8W6F-QDkuxV-XnZYviAkO5ZBMsg@mail.gmail.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-Fix smatch static checker warning for vdec_h264_req_multi_if.c.
-Leading to kernel crash when fb is NULL.
+Hello,
 
-Fixes: 397edc703a10 ("media: mediatek: vcodec: add h264 decoder")
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
----
- .../vcodec/decoder/vdec/vdec_h264_req_multi_if.c         | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+On Thu Feb 29, 2024 at 10:44 AM CET, Linus Walleij wrote:
+> On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bo=
+otlin.com> wrote:
+>
+> > This patch series reworks the Nomadik GPIO driver to bring it up to dat=
+e
+> > to current kernel standards. We then add Mobileye EyeQ5 support that
+> > uses the same IP block but with limited functionality. We also add
+> > features required by our newly supported platform:
+> >
+> >  - Dynamic GPIO ID allocation;
+> >  - Make clock optional;
+> >  - Shared IRQ (usecase: EyeQ5 has two banks using the same IRQ);
+> >  - Handle variadic GPIO counts (usecase: EyeQ5 has <32 GPIOs per bank);
+> >  - Grab optional reset at probe (usecase: EyeQ5 has a shared GPIO reset=
+).
+> >
+> > This GPIO platform driver was previously declared & registered inside
+> > drivers/pinctrl/nomadik/pinctrl-nomadik.c, side-by-side with the
+> > pinctrl driver. Both are tightly integrated, mostly for muxing reasons.
+> > Now that gpio-nomadik is used for another platform, we loosen the
+> > relationship. The behavior should not change on already supported
+> > hardware but I do not have Nomadik hardware to test for that.
+>
+> I have queued the relevant patches to an immutable branch in the
+> pinctrl tree for testing and I can also pick up some ACKs if they arrive.
+>
+> When I'm confident in the branch, I will send an optional pull request
+> to Bartosz for it!
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
-index 0e741e0dc8ba..ab8e708e0df1 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
-@@ -724,11 +724,16 @@ static int vdec_h264_slice_single_decode(void *h_vdec, struct mtk_vcodec_mem *bs
- 		return vpu_dec_reset(vpu);
- 
- 	fb = inst->ctx->dev->vdec_pdata->get_cap_buffer(inst->ctx);
-+	if (!fb) {
-+		mtk_vdec_err(inst->ctx, "fb buffer is NULL");
-+		return -EBUSY;
-+	}
-+
- 	src_buf_info = container_of(bs, struct mtk_video_dec_buf, bs_buffer);
- 	dst_buf_info = container_of(fb, struct mtk_video_dec_buf, frame_buffer);
- 
--	y_fb_dma = fb ? (u64)fb->base_y.dma_addr : 0;
--	c_fb_dma = fb ? (u64)fb->base_c.dma_addr : 0;
-+	y_fb_dma = (u64)fb->base_y.dma_addr;
-+	c_fb_dma = (u64)fb->base_c.dma_addr;
- 	mtk_vdec_debug(inst->ctx, "[h264-dec] [%d] y_dma=%llx c_dma=%llx",
- 		       inst->ctx->decoded_frame_cnt, y_fb_dma, c_fb_dma);
- 
--- 
-2.25.1
+That is all great news, thanks Linus! I'm staying available if you
+encounter anything that needs action.
+
+Have a nice day,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
