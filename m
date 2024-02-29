@@ -1,98 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDBE76EF5;
-	Thu, 29 Feb 2024 12:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945497D087
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 12:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709210746; cv=none; b=vFGcBs7MSSEM2x/GEXwSaj4MY52pNJaFWBvYOUFdG9NnL/jUCrmZlYLjIDW+YOOmpNUUL7+hi0zO6QM15+wEHzYtT2DoWuRNtw78lVz7R7Jq9Z1NDhiGGqeS73YjVbPaT/k/f7rMeKAIE42w70iJSbcH5DKr5+xQlMsRM1qMnLk=
+	t=1709210771; cv=none; b=C/ATb3XPhwNjvBUrcRcU/4Ps76Qaj9GPN8zNgrdw8artKxbNJ2LKyiZnjLb7lMlFS3L3lSkjZ8ESOJvWSGy2Eh6MoT1liiOzPj1qUd8Beae9QTeKsNvWG7tbEMdPFeGHJZgmSW8yK1oSgT9fUoePjo8NN8lzHsZtzrVhBAP6z+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709210746; c=relaxed/simple;
-	bh=tvUemNZGsvgO/MlGsGtmZDvktWQt7kfF2MN28m+YPqk=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=Qc1GxHv8EW1OUa200PTt1ZyUhuFQFRM/ZgSpp5Si5nQVVvpThCqS5WWoliCjGAKeooQ5bG0kFsF53hsSwkYd6vrpB9YiD4Ask0jk2utIVO32sc2sUngHnPi4A6enHRrwdEsDPIVa1ZzEksZ+27rMJhZOqT8/9rIEUmjyBiS0mnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JPc9qsae; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709210771; c=relaxed/simple;
+	bh=WZ9GC1UAZA9PhjCIOq74EvlVw5d0YIJ1tOkPKmdkzyM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Et2FesINuWXNksYnvAHmiim6GnkS3bLgQiFEbv9S+WYEm9coww3dFfGAHJA47Zzs6AkMZ1BszqLRve9OFzfVNN+CKCdJp58CHdI5iaA6uKdSN/+BqyLjRaw2BTjT1rWB29JuvMOEJoL7Yn+0KgzICa6LSbybYmFq7axAxXt+Qs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UYbQHJJK; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JPc9qsae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70969C433F1;
-	Thu, 29 Feb 2024 12:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709210745;
-	bh=tvUemNZGsvgO/MlGsGtmZDvktWQt7kfF2MN28m+YPqk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=JPc9qsae5yF7nYjMqTu1ZQijy9A2/KAgWvqucCqIxGSPEmFAz4rUDm5SWJnNN5kIz
-	 w/bDCFpYr51AEIIZAhe3ghx3EouHVQoLlMDaxgSdoybVEsC0m4YV5L5Z55FK3WakB6
-	 5fORxIEQzoqnA1a604a3wStSKs03djYlmHcCMXuLz3TK24iqv4sbbx329bTnGU5381
-	 /DLR4DA2JgbMsdU7j5/o3k1L50NQCZPKpDdehR6ySH3tg9dyCYoLTzWT9KPWHMuH1S
-	 UC7KLZI8Stekbah4qVgm/YYb5d+rsCqZZ6zigFWOjeBO3rHRM2B68jelpb2gYI0vqL
-	 TGaITSn6E+Miw==
-Date: Thu, 29 Feb 2024 06:45:44 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UYbQHJJK"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3ed9cae56fso381198666b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 04:46:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709210766; x=1709815566; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Clp72FczazQSKbLIcT40/U9haor6HXf5C1kMTuaxg/s=;
+        b=UYbQHJJK+uFxNgP0/RpAxE6dJwWPBFBkHhTnqcqW1PPPyTKFyfJ7ThPuJHPWW6CID0
+         qN3RGEMA6YBYx6+1byyY93+CFbv5LRBXOm1mE6msVUiT2XZ1ugQKgwu6hZw/vZST55fV
+         sP5dmRGLDspaf6Szro7j9Hr/KC4gxSdt7DTlQEG5lzKISmK0fyxbf4v5HD6tP0nkN2DB
+         MQr42B7Hx5TJZzmcEmpYRksRkUvSEwT00pXkqHgPCXPgo75796+rKkNaLIIdmPswpajn
+         njb6msTdzV0c2eDBENlVsXPX0mX+M2k5vkZCh7IAUhp2m9MSenTjzMJp52H3lJDpDmSP
+         cixQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709210766; x=1709815566;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Clp72FczazQSKbLIcT40/U9haor6HXf5C1kMTuaxg/s=;
+        b=TCEq0Ip+mhnj+EBXy3QCPvdFyya8yjr/wqM+eKcFK3btrxUQkQH3KwxBNdNgFbYXv6
+         r8OLrBDAKtde8JmJtiYrEGCsPA8Af+p2a4U2u848E23b7EVTNkecjNSFgVMBG0EFMfgi
+         WAnZfd6akOryGjQB3CZS67NVBY14KOFmF3P7Z6mDmHade3dnUbrEhgaqtasbnVmEoxew
+         boOFpOxGNeBSe8z9lOEG1B2lmWUzaROPCbuVrCSk+N08tMGXRHuqPhayyQnGY3T/fV54
+         dfR73efhuFpWgCnf1I/oINNdf9wD1a+OX1uzcKBGzti0sHB3t1Nz2k6oX8CnakhSECMj
+         FLOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKsZyZIFk8NXD93LwXW6d7pck1ZckfX4rjTIjPn9Ixpdqd2sT59kU/wInFQaxxV09TEjt9Exs7tnOTwg21boI0TzbLP6S2+qJIGSIg
+X-Gm-Message-State: AOJu0Yz8nZuOiueSg17vge6gbEPAJ/MpgSnqgcyGOU70Q/agM8Ul/448
+	fZPxliTIK5uEIB6Cr+NJSUJEdnNLdkVIrOgJ9YV3vj3NNmmwokiwLlev9QYqIRg=
+X-Google-Smtp-Source: AGHT+IEbc5TOsBDYIZbxJZluVIqRpWDGJIcTKTs2jSWq0poKpB4ruewhGMO+AuZvX14rCHkXubUxhg==
+X-Received: by 2002:a17:906:71d6:b0:a44:eb5:dd4a with SMTP id i22-20020a17090671d600b00a440eb5dd4amr1240876ejk.25.1709210765889;
+        Thu, 29 Feb 2024 04:46:05 -0800 (PST)
+Received: from krzk-bin.. ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id cx10-20020a170907168a00b00a3cf9b832eesm655991ejd.40.2024.02.29.04.46.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 04:46:05 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Olof Johansson <olof@lixom.net>,
+	Arnd Bergmann <arnd@arndb.de>,
+	arm@kernel.org,
+	soc@kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] memory: drivers for v6.9, part two
+Date: Thu, 29 Feb 2024 13:46:00 +0100
+Message-Id: <20240229124600.405016-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Balakrishnan Sambath <balakrishnan.s@microchip.com>
-Cc: linux-arm-kernel@lists.infradead.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Rob Herring <robh+dt@kernel.org>, Claudiu Beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20240229-pio4-pinctrl-yaml-v1-3-c4d8279c083f@microchip.com>
-References: <20240229-pio4-pinctrl-yaml-v1-0-c4d8279c083f@microchip.com>
- <20240229-pio4-pinctrl-yaml-v1-3-c4d8279c083f@microchip.com>
-Message-Id: <170921074336.3023845.8016971743332587819.robh@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: pinctrl: at91-pio4: convert Atmel's
- PIO4 bindings to json-schema
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+On top of previous pull request.
+
+Best regards,
+Krzysztof
 
 
-On Thu, 29 Feb 2024 17:09:32 +0530, Balakrishnan Sambath wrote:
-> Convert the existing text DT bindings of Atmel's PIO4 pincontroller to
-> yaml based DT schema.
-> 
-> Signed-off-by: Balakrishnan Sambath <balakrishnan.s@microchip.com>
-> ---
->  .../bindings/pinctrl/atmel,at91-pio4-pinctrl.txt   |  98 ---------------
->  .../bindings/pinctrl/atmel,sama5d2-pinctrl.yaml    | 140 +++++++++++++++++++++
->  2 files changed, 140 insertions(+), 98 deletions(-)
-> 
+The following changes since commit 2f542c937c48c2bd5a8ddf180b417fbe7152559f:
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+  dt-bindings: memory-controllers: narrow regex for unit address to hex numbers (2024-01-25 12:04:09 +0100)
 
-yamllint warnings/errors:
+are available in the Git repository at:
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pinctrl/atmel,sama5d2-pinctrl.example.dts:27:18: fatal error: dt-bindings/pinctrl/sama5d2-pinfunc.h: No such file or directory
-   27 |         #include <dt-bindings/pinctrl/sama5d2-pinfunc.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/pinctrl/atmel,sama5d2-pinctrl.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1428: dt_binding_check] Error 2
-make: *** [Makefile:240: __sub-make] Error 2
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl.git tags/memory-controller-drv-6.9-2
 
-doc reference errors (make refcheckdocs):
+for you to fetch changes up to e46076906722ee6f9e7fd5abad7f909cd11a26af:
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240229-pio4-pinctrl-yaml-v1-3-c4d8279c083f@microchip.com
+  memory: stm32-fmc2-ebi: keep power domain on (2024-02-27 10:18:04 +0100)
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+----------------------------------------------------------------
+Memory controller drivers for v6.9, part two
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+1. Renesas RPC-IF: add bindings for R-Car V4M.
+2. Tegra MC: correct and extend support for Tegra234 memory controller.
+3. STM32: add support for Flexible Memory Controller on MP25 SoC.
+4. NXP WEIM bindings: convert to DT schema.
 
-pip3 install dtschema --upgrade
+----------------------------------------------------------------
+Christophe Kerello (5):
+      dt-bindings: memory-controller: st,stm32: add MP25 support
+      memory: stm32-fmc2-ebi: check regmap_read return value
+      memory: stm32-fmc2-ebi: add MP25 support
+      memory: stm32-fmc2-ebi: add MP25 RIF support
+      memory: stm32-fmc2-ebi: keep power domain on
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Geert Uytterhoeven (1):
+      dt-bindings: memory: renesas,rpc-if: Document R-Car V4M support
 
+Jon Hunter (3):
+      memory: tegra: Correct DLA client names
+      memory: tegra: Add BPMP and ICC info for DLA clients
+      memory: tegra: Fix indentation
+
+Sebastian Reichel (1):
+      dt-bindings: bus: imx-weim: convert to YAML
+
+ Documentation/devicetree/bindings/bus/imx-weim.txt | 117 ----
+ .../fsl/fsl,imx-weim-peripherals.yaml              |  31 +
+ .../memory-controllers/fsl/fsl,imx-weim.yaml       | 204 ++++++
+ .../memory-controllers/mc-peripheral-props.yaml    |   1 +
+ .../memory-controllers/renesas,rpc-if.yaml         |   1 +
+ .../memory-controllers/st,stm32-fmc2-ebi.yaml      |   7 +-
+ drivers/memory/stm32-fmc2-ebi.c                    | 729 +++++++++++++++++++--
+ drivers/memory/tegra/tegra234.c                    |  48 +-
+ .../bindings/fieldbus/arcx,anybus-controller.txt   |   2 +-
+ 9 files changed, 963 insertions(+), 177 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/bus/imx-weim.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/fsl,imx-weim-peripherals.yaml
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/fsl,imx-weim.yaml
