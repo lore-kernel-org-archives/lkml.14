@@ -1,91 +1,122 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06169156D31;
-	Thu, 29 Feb 2024 20:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0ACB14402F;
+	Thu, 29 Feb 2024 20:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239111; cv=none; b=FScUly3WnE7Axy4005TCP/FYxK7m1SraqJV5yOW+RV/RgeqYK+Z9DEahmHO335kx1Lda5al5Uc9WryWUyIhNEPuCP3PFwiDaYwpeNzmNGkpSn9JFhtgtNG0fflr0cRLdyygtgA1o53Uzr11zK5BeAbl5WRjPuaSE+cnUhH4KU+k=
+	t=1709239153; cv=none; b=ZYm4kFW4LKliLQ+P1/qAyJ0e9RbcdAvznr8ieflWsohS7qMt3K5I0KeKF95kdptMS9Tdw5ButCFiOGzeA2nWARnR7gI9LKlyIHeS+ifYagb12tu2M8oqVt3WoBa+fH/PXZbMf5fC+qbSWpjYVG8spG5gpb9vCeCFhPyB8/+zoQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239111; c=relaxed/simple;
-	bh=eSg98sjt7aRu+w+i6zQE4mpmeGRBJu3v1N/Ulj64Yaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qi2PuCG6FFC7GBOacq0rh1FQPBNbVU7DMnIIEusHdQm9THoTJwrtKuC24cSMVtmrskOjmx0ana3jaebr/CoQIquQLZ0bXa7N7WuTl9OBAFLOzBkmKVA0D4MPziCy/max80S0+9HyJi61MVFhJS24bqBDjTKm3dBk6gUj1q6DRCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CIJfwYXJ; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709239153; c=relaxed/simple;
+	bh=F1BWa4jzZKYFHykP4yUqY5Y3/LkmRdmf8Kjmr64U45s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F3A33aZBAKR1AXcnFPZuP7csDTgxJRNKPtnW4j14tqxEDc5MC49UVWCHd1/jLEM1l25gw2CIctlelwNJniFX1HME2qxUCpT8U6IkNy2xUsiWgX5b0yeeJ+Jdvue3jocg83B3BCvJXKUOYqLUV/CU1QPAUmtE0WiIDksMmNJZkGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnBqyPBc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIJfwYXJ"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-299354e5f01so2020977a91.1;
-        Thu, 29 Feb 2024 12:38:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709239109; x=1709843909; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3lG/LT7+3PcIB/iOfBuZGUVtLVxEz6BzHTsZ3utL/eU=;
-        b=CIJfwYXJKCklU7+6aORG+sxbmFvsGCIwN8+upNp+XESh5f6C5aZjlpFZMeAnAfhVhO
-         +iDQkIVZCHExr3FJrFKUDHfuw4IUDBc57Cl5dKY3kWB8IJfjhS08FZtgaSlTM6RED7h2
-         B6Zd/MgH5qckBbqmpWrn8tGb3BRDL0J3QrdvMEGXvsraR9uWxbO+HXoVOrgm339POPLh
-         R0/wQAnReGBOJYfazXMygdlKt1e/Ce4ibQ1P17zyqKHbLSQUtXtqCeWoyHvubjKAWMkU
-         XT2n8VuK4YgKvWJ1+8GjeLn7jggR5lSxGGYrVKTHxEI3gFPjkpC2f0zFX7IgKE0T7c2g
-         Xhdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709239109; x=1709843909;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3lG/LT7+3PcIB/iOfBuZGUVtLVxEz6BzHTsZ3utL/eU=;
-        b=j5IRJSS5dFk5qNZs9GdspgTTbQmCwSC/s0HVS+lnxrkort2oUcVygBkp3os2DXf0tp
-         MfI8CRTrqXGB3VyDQV8OZOykWuBs79hzeQvaENe7SsktzlDjgB5zw9/e0R+b0haG2oTU
-         rHpfjewfnkWO67TxnEpCx2AaObM1ZhtWSyE6kRYulaZyXrZUi0SHo9EylZn+mG6Uu+Hq
-         EWrCd6pqdaQIOajnVEvUQkkDHjE+KWubidn9fBhEtbUfzttxsxPgZFR4pCHD6iekRA9N
-         IYUrarS9XfnGindkiRiFHluEIy7twV6y8lPE3EFQZVIi3UPbAqd6sB0DGFENJHN0+LCh
-         o4gg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOzNFoETdj7FCVPhN4Xae3hC8NJdedDhH/t7fTX4gNORKBaUsnqAYDlc8tmcy3mwBvsph14KEpyemeTIZ/UfvgShQL/u+C373U0xWioaMNeBLrSo6Hojw42o+69JUwgMujnDnkMg==
-X-Gm-Message-State: AOJu0YwmI2rNGHeVbc+FjhziNZPzqqFYXcFoR/ZJfoC76Rce3NbvyQo8
-	f6+8w62b4VrHVjtGsP9QUSRjXzS0IOxYR0ioLfqaKK31pmRdDyCC
-X-Google-Smtp-Source: AGHT+IGhRDhVSX6S3gH8ug1BgIIy3hfcEVYtLNzdTbhvxQpwCPUehtphII31vkVKc5tfPp6Acn5tWA==
-X-Received: by 2002:a17:90a:6c47:b0:29a:decc:711f with SMTP id x65-20020a17090a6c4700b0029adecc711fmr68384pjj.20.1709239109352;
-        Thu, 29 Feb 2024 12:38:29 -0800 (PST)
-Received: from localhost ([2620:10d:c090:400::5:8305])
-        by smtp.gmail.com with ESMTPSA id u8-20020a17090a5e4800b0029a56afe382sm1898967pji.39.2024.02.29.12.38.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 12:38:29 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Thu, 29 Feb 2024 10:38:27 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Kamalesh Babulal <kamalesh.babulal@oracle.com>
-Cc: Waiman Long <longman@redhat.com>, Zefan Li <lizefan.x@bytedance.com>,
-	Tom Hromatka <tom.hromatka@oracle.com>, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cgroup/cpuset: Fix retval in update_cpumask()
-Message-ID: <ZeDrQzU29SlKU2hF@slm.duckdns.org>
-References: <20240229101116.60043-1-kamalesh.babulal@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnBqyPBc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB589C433F1;
+	Thu, 29 Feb 2024 20:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709239152;
+	bh=F1BWa4jzZKYFHykP4yUqY5Y3/LkmRdmf8Kjmr64U45s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UnBqyPBc6vQZct3ynFoSMxTHtFV0cajnkqJH36TeNWTaotTIfF92b4vxcYKoMwPMH
+	 beZE7QWOTD2uuEF6tt1Ujogv12Pj4VRKKHcA2z7OzHS3cgMpOUPzVlUuQXE3w5TIEi
+	 XpXPOkp23yNegPLxo0s8IieM02JRWjpHiA2JpZZ2K7AjkLGG0EE37MFknfBa3YjvYl
+	 6oFyq1vBpCY3RpipcvtQ/dxbMJ9U051ec0KCVkl+GL9IzEy8jE0CH0rraEeLM10xas
+	 XPfbwByInw8ULfE7LmsX+t5R00pibZuqB1ril0UMX4ErgZIyY6cvudJ9UvRXM0Ulrd
+	 lzhtGrx3ocANg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Swapnil Patel <swapnil.patel@amd.com>,
+	Charlene Liu <charlene.liu@amd.com>,
+	Rodrigo Siqueira <rodrigo.siqueira@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	nicholas.kazlauskas@amd.com,
+	hamza.mahfooz@amd.com,
+	roman.li@amd.com,
+	syed.hassan@amd.com,
+	sungkim@amd.com,
+	jerry.zuo@amd.com,
+	Qingqing.Zhuo@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.7 24/24] drm/amd/display: fix input states translation error for dcn35 & dcn351
+Date: Thu, 29 Feb 2024 15:37:04 -0500
+Message-ID: <20240229203729.2860356-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240229203729.2860356-1-sashal@kernel.org>
+References: <20240229203729.2860356-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240229101116.60043-1-kamalesh.babulal@oracle.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7.6
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 29, 2024 at 03:41:14PM +0530, Kamalesh Babulal wrote:
-> The update_cpumask(), checks for newly requested cpumask by calling
-> validate_change(), which returns an error on passing an invalid set
-> of cpu(s). Independent of the error returned, update_cpumask() always
-> returns zero, suppressing the error and returning success to the user
-> on writing an invalid cpu range for a cpuset. Fix it by returning
-> retval instead, which is returned by validate_change().
-> 
-> Fixes: 99fe36ba6fc1 ("cgroup/cpuset: Improve temporary cpumasks handling")
-> Signed-off-by: Kamalesh Babulal <kamalesh.babulal@oracle.com>
+From: Swapnil Patel <swapnil.patel@amd.com>
 
-Applied to cgroup/for-6.8-fixes.
+[ Upstream commit 27a6c49394b1a203beeb94752c9a1d6318f24ddf ]
 
-Thanks.
+[Why]
+Currently there is an error while translating input clock sates into
+output clock states. The highest fclk setting from output sates is
+being dropped because of this error.
 
+[How]
+For dcn35 and dcn351, make output_states equal to input states.
+
+Reviewed-by: Charlene Liu <charlene.liu@amd.com>
+Acked-by: Rodrigo Siqueira <rodrigo.siqueira@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Swapnil Patel <swapnil.patel@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../drm/amd/display/dc/dml2/dml2_translation_helper.c    | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c b/drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c
+index 2c379be19aa84..16452dae4acac 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c
++++ b/drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c
+@@ -398,7 +398,6 @@ void dml2_init_soc_states(struct dml2_context *dml2, const struct dc *in_dc,
+ 	/* Copy clocks tables entries, if available */
+ 	if (dml2->config.bbox_overrides.clks_table.num_states) {
+ 		p->in_states->num_states = dml2->config.bbox_overrides.clks_table.num_states;
+-
+ 		for (i = 0; i < dml2->config.bbox_overrides.clks_table.num_entries_per_clk.num_dcfclk_levels; i++) {
+ 			p->in_states->state_array[i].dcfclk_mhz = dml2->config.bbox_overrides.clks_table.clk_entries[i].dcfclk_mhz;
+ 		}
+@@ -437,6 +436,14 @@ void dml2_init_soc_states(struct dml2_context *dml2, const struct dc *in_dc,
+ 	}
+ 
+ 	dml2_policy_build_synthetic_soc_states(s, p);
++	if (dml2->v20.dml_core_ctx.project == dml_project_dcn35 ||
++		dml2->v20.dml_core_ctx.project == dml_project_dcn351) {
++		// Override last out_state with data from last in_state
++		// This will ensure that out_state contains max fclk
++		memcpy(&p->out_states->state_array[p->out_states->num_states - 1],
++				&p->in_states->state_array[p->in_states->num_states - 1],
++				sizeof(struct soc_state_bounding_box_st));
++	}
+ }
+ 
+ void dml2_translate_ip_params(const struct dc *in, struct ip_params_st *out)
 -- 
-tejun
+2.43.0
+
