@@ -1,88 +1,95 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EDC5E082;
-	Thu, 29 Feb 2024 17:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211CC383BB
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709227108; cv=none; b=RKLgK5tRDyHnMYrUOb1tR53u9H/K6YXWviFFg+3Q5QHx5XI7EYe80Y8mz3jkLZMtGfJHbMOCqUcWg7kxW0IzPqiEpfNNCD0Vi4LKvT2G/UC+K49NJWeT8nNeg+Fu/L504IL/coEiYOnukRqnFyh+yzXqkfAN07NYKGG88gIr3sA=
+	t=1709227182; cv=none; b=R+D86E0MDrAkUfvKRvz/5Xfa0Hp7xg5zpBRlIytwU12nIJpVb6jSsdz3408TBaUfDLOQdLJ611zdnyg0/Sh97+MJwRRuonau+WVt//rYJs7/ppGWPKnbSg9ag3Km1Po499FAqXTBiUqXKKxUaHh1iZWSTQ6rq3zu2S2gjDuqOHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709227108; c=relaxed/simple;
-	bh=wLFkbz3gkSljFGtwkfV2wWbaprCVgevB+4kcM+B8hRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FTLuM7qtkjK7QKrO6t9FFWYiNlp9kzyRpixL4wGzKWlDr7sCbyk4vgdfqKBCkmRvemZb90mdWK5UliFVZH6ur1HhLHK2GJA+pL+7E7HZ1fFvi9BECtRb+6y3aJsN6KH37R3GuizjAOiHFlHCkHyFDXrhBRbA6Ovsz6Br0OrhIss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=VBYTBo5T; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1709227182; c=relaxed/simple;
+	bh=6+rl/GJVImeAP5L4FgFElC4Bja1VWI5nUPej4fO1So4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bY2MM8aM2OBly8Z/Q4K4Ct3UAoHRyuISflat2bzCCiiJQj2Pn/AqXnpOT+FcAO202/gtoRMGiKFdAYNughU7DjJ5bsn/Pdkzf4nXkSF7W8EMAKvHMiHOOqGiXobGPvx1RwvdfxGTgdx4jG6U6Yb3EsLvcC4GYGgtkDtyF5Z4/wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WCoLnECL; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VBYTBo5T"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=nDTd85D0N7TgWSzEKq+BxgNnlzgmZW1OM2gxs9VR3ZY=; b=VBYTBo5TjEwXvKL7n0GEU/Bl4R
-	qlsi7iODH1JwrBMD+xa9T0IEeF+ITk8FVf1E3AWKHXTguVNnaB0m7XV/71KwVaCTFpvn5whbFRyi2
-	EoHvxhoXmXLjV3vOjie/Uc5vH6rfpUgFw0FAOIjvKHPCX6idla2gYa/5a9CyD46UOrt4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rfk34-0093vZ-5V; Thu, 29 Feb 2024 18:18:22 +0100
-Date: Thu, 29 Feb 2024 18:18:22 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: forbidden405@outlook.com
-Cc: Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v6 07/11] dt-bindings: net: hisi-femac: replace
- deprecated phy-mode with recommended phy-connection-type
-Message-ID: <1cba5245-08c7-43b0-8ae3-11db52e036aa@lunn.ch>
-References: <20240228-net-v6-0-6d78d3d598c1@outlook.com>
- <20240228-net-v6-7-6d78d3d598c1@outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WCoLnECL"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3651ee59db4so1303405ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:19:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1709227178; x=1709831978; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nOgy56I4Hpij+0HEOIiQF0kFHBK0lqM4qJcV/nWXy5g=;
+        b=WCoLnECLH1NUbvB9TmZacgdLottY0zEYjRkNh4TG0QlMKaCcfQeHpTOnRZeSHcXfLA
+         vveDG5kI/2k4E+4QCddNBTCbi8P9RlRFOxUBmbeC6Yb8blV4VASrdMe0y3POiTCCyWYj
+         ZXOdHcFYW4dsTeft1IuPbt125yN0YW7in6WADsLaYJYsex+qkEev+RFPTfPE2VKGSCMj
+         PCQEoxzHjE1GfBGr3rqdWOPwrE0KqZDdzSskFapLBGLCc539wsa8/H7AUyh//7Z5SRKl
+         sriXyxErrERkv8edUVAoc5h5mKsJwyuonyUA6wIe2IwPjx09TrHiqtET7w1fz87b4Grd
+         sSxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709227178; x=1709831978;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nOgy56I4Hpij+0HEOIiQF0kFHBK0lqM4qJcV/nWXy5g=;
+        b=uGmKbfTKgfJCCV/YnJZeR1Ia8E5YIMyD+OqRvcMJcYQSX9wA6OTXMGXKmyQc1dIpK2
+         xb7aGCqn0ywKsKWZCitsbDZpoLSl91G5OY4xlQ9xWx2RlkONqcxxYdlHY2gn/07n1C7G
+         Gb3vUxp7HyPZK+EtLim+ISG2Dv625IZ003o1Qp21YLQo2xfGvzaFhitpG8KasSOFcvj1
+         xcY4NvfRBA9+pUgT/odg3N9qer40mDUb2V0gBPdQd5MCSpWdb2pfQflQK8oo+8VIRY1S
+         CsYMJyzhV4AzDRQq3ke2kJzi6cEWOeJZ1Ol2CyVi/IWuCm0tw4te/vXx18yV3/7tY1j8
+         8ANA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDDOO1Ahyw4xBRxngok6ErtdJChPlk3QyuOjY+GaWkMLwx2g1jgRSt7BTKmmyLeUlmLU3WD0ZKA3s4kZljaJPyIug/haJBdyrxNmS9
+X-Gm-Message-State: AOJu0YzFx/GGkTjWE0IJpmuaZv23M6GjXLJcGF4FBOkEJFLIZgaMzWFG
+	f1NPqMOPASmOOxC+OPE6DDHWc0uok5ReekhEVpjBhdqIMG89bX1XQivXST4+f8Q=
+X-Google-Smtp-Source: AGHT+IGKS/vzutMl+3Z3yfI9+PyG1fFtEDiGpu7nqJq12sQy7kqUUVuEOO2U3Bz+ISy7w+atkzDp5g==
+X-Received: by 2002:a05:6602:2561:b0:7c7:b54b:19b0 with SMTP id dj1-20020a056602256100b007c7b54b19b0mr2982780iob.0.1709227178021;
+        Thu, 29 Feb 2024 09:19:38 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id z11-20020a056638000b00b00472d64a444csm405509jao.62.2024.02.29.09.19.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Feb 2024 09:19:37 -0800 (PST)
+Message-ID: <c3abe716-3d8f-47dc-9c7d-203b05b25393@kernel.dk>
+Date: Thu, 29 Feb 2024 10:19:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240228-net-v6-7-6d78d3d598c1@outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] sched/core: switch struct rq->nr_iowait to a normal
+ int
+Content-Language: en-US
+To: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com
+References: <20240228192355.290114-1-axboe@kernel.dk>
+ <20240228192355.290114-2-axboe@kernel.dk> <8734tb8b57.ffs@tglx>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <8734tb8b57.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 28, 2024 at 05:02:31PM +0800, Yang Xiwen via B4 Relay wrote:
-> From: Yang Xiwen <forbidden405@outlook.com>
+On 2/29/24 9:53 AM, Thomas Gleixner wrote:
+> On Wed, Feb 28 2024 at 12:16, Jens Axboe wrote:
+>> In 3 of the 4 spots where we modify rq->nr_iowait we already hold the
 > 
-> The old property "phy-mode" should be replaced with the latest
-> "phy-connection-type".
+> We modify something and hold locks? It's documented that changelogs
+> should not impersonate code. It simply does not make any sense.
 
-In practice, phy-mode is typically used, and phy-connection-type is
-not used much. All new user tend to be phy-mode.
+Agree it doesn't read that well... It's meant to say that we already
+hold the rq lock in 3 of the 4 spots, hence using atomic_inc/dec is
+pointless for those cases.
 
-~/linux$ grep -r phy-mode arch/* | wc
-   1561    6258  113122
-~/linux$ grep -r phy-connection-type arch/* | wc
-    372    1489   28981
+> Other than that:
+> 
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
-Most of the phy-connection-type appear in PowerPC.
+Thanks for the review!
 
-~/linux$ grep -r phy-connection-type arch/powerpc/* | wc
-    247     990   18335
+-- 
+Jens Axboe
 
-It was the early adopter of DT, long before ARM. The DT standard of
-the time, which PowerPC followed, said to use
-phy-connection-type. When ARM started using DT, it did not follow the
-standard too well, and phy-mode got used a lot. Officially, phy-mode
-is deprecated because it is not part of the standard. But practice
-does not always follow the standard.
-
-So both are O.K, all the generic code accepts both, and there is no
-real reason to change.
-
-	Andrew
