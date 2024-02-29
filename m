@@ -1,113 +1,91 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA6570AD2
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270766CC02
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709227559; cv=none; b=mPpp33XKzOAKXrcim5Z/Ay67oqpMBcvy4rlI38N6H/gSFtI5/BWN0ONC60IoPKuQegoGg5jUX1ov/b2ovawhAAgzFVktbJMSLtN75pHtBkcD26w+DCC/rZ9vdFRPhhxVZQtTetpiSun4eTRbOILesAvfgLVjJw0VylgPdwLxhks=
+	t=1709227602; cv=none; b=SVVw6yScOZzoVr7uVmDQhn24uyXCHicM8xwGaA06umNdR6mxZtROSWztNLFVOexRcWe6a+zeYYRmKFlBL3Uokb/UEn7U4um5fvJj+CKisgZ7Xp9Ulci85syz0eWX/3itVIs1gBi9SjCdTTYCaQBQ3EDu9gJ/hpA2Pu9/Vqemu6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709227559; c=relaxed/simple;
-	bh=x023CuxQEDUhqmIMeqnfqJUbjUEG0Bp8dWnHTJB3rdI=;
+	s=arc-20240116; t=1709227602; c=relaxed/simple;
+	bh=SyjKEYVew5m9zUU9ZMwdROqu52vc9bJrfOA47hQzAww=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aZ1lqDtH/S1C5uVanYi2t61jsczk71JWl003aifUi+fIuGnEurkEKxvyLMabAEUUGossYlgxLmpYyJV9u7k1KE2IPS8R4j2txPAEC9TKr+LL/nxqJQaJM50Pr6vzJN8mFpMrUCraMNk1nGEf+wlAHFvweaBSZPlJnDmbKt94JDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cou7Vty8; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=Ye7/aB9VNzZo0QAblf/UVj0+6LExtOoH3liUSdSN6TEyUB4RntVIDpg7K0WeDnzwctVML0zeNhYzb2nbIsbF4badsGSd34et2tKALDuLUiMsGN2W09f52LmnsJ9aWAVgUCvqeaqRO8S1AvLLrpgIhrJZKzQgzQap9KNNp4U8Oo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jyuudsHt; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cou7Vty8"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5658082d2c4so1826425a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:25:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jyuudsHt"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7cedcea89a0so618843241.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:26:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709227555; x=1709832355; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709227600; x=1709832400; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x023CuxQEDUhqmIMeqnfqJUbjUEG0Bp8dWnHTJB3rdI=;
-        b=cou7Vty8VLoEFq4M6Yv86Ms99c7KUcdIfpRyFMLAeAznWgxF68ZxfCozRKV3mWOo8T
-         GEHS2DXF20JjjV4frDcXWoUIQq4+m+Ll0G7b2IwOGHqCdCc9RvIolbiyejpJKygZBwLy
-         dtUr0nq86E3jtQe83tMlNpOm+EZ8uZ6puVlTc=
+        bh=SyjKEYVew5m9zUU9ZMwdROqu52vc9bJrfOA47hQzAww=;
+        b=jyuudsHtZ2ZYs1WZcU/W8nrOO4dCsdKtmJwb65ec3niioqB2cirsmFCYLTmlGPseBo
+         gTHJfUo8Z5jEkXDvr+wqh5xGrZ6Dyc55I3V5a3HlNA9/TCcWwDiPpv1Xcnsko9AeqAFk
+         IEu8rIwTaN79DXOERGDUJwFJjJzOCT+QsW6zT6a+O6o5yfIM+q0/hvA1jAG74JMA9kp8
+         Yz8MlL4NFdd/Ghy0/H76phParkGKAoIrhjGwXzjV40gG6DrN1+YXfLuukvZkYpsBMqIO
+         c1dImv+MXSODmDyVTsEwTwBZKVaYNuxds5e/cz4l0V6AA3K/X7iyTw78g28l7rj2I1FI
+         BUQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709227555; x=1709832355;
+        d=1e100.net; s=20230601; t=1709227600; x=1709832400;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x023CuxQEDUhqmIMeqnfqJUbjUEG0Bp8dWnHTJB3rdI=;
-        b=Bnk8wH8gGwguLdjaBpBV7vdnBTzXVQMa7qCBgN7VFzietWhcsiAU2kGSB6EVTpggHQ
-         j3M5ilB1BegiQSdDOxrrTQo8crdi+F4kU1dH8vBd8zwu59U897wGPh7uCrE34R2aaOVC
-         T54ZhIegqAMXIzXofoN8R+06doTPrcpSAMyJWZ+hq5Tn0HC8rD+MTCu5fgqCIWMqPH0G
-         l374ycBYZ1C4OMNpzvTV5SMmZ+i+H4XlXa4a+Pfg+sEf2RC80BBfUjgcrYRHZ16sB9vw
-         QpMnszSSxtjIm4NGpJo7u44pmOl8N+Q3fBkXGfpRBx24zEEkz6jndIq8GgVVHlQQa/+5
-         +cNA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6wP6RONXHdWvE/fhyXb6gXEForSaatHwB22tTxTM8orkNqM/oWQVS3ocxpMYMAAdcihAdiLPREweuOEKX4d3ZzPR0kDmc/qPMcH1B
-X-Gm-Message-State: AOJu0YwMi8tS/a0PFWzq2m9GJkPMhO0EfZhI947kIMtD/lqJzc5Hp1jT
-	foOtZYb/U0qQ2IOCoRjKLrHQrDpAISrRKHMSrPdZhwuK1Jnr0YRS3ff9SCpnK/abKXp+1706+eP
-	p1K9U
-X-Google-Smtp-Source: AGHT+IFScoizlu7JiGmm/w1R1n7r3v02zrvK71MWDPqoB7RViOOrxeck70klBXRvvUjDLdkLFeL+tQ==
-X-Received: by 2002:a05:6402:26c5:b0:564:dd13:56e9 with SMTP id x5-20020a05640226c500b00564dd1356e9mr2388255edd.29.1709227554879;
-        Thu, 29 Feb 2024 09:25:54 -0800 (PST)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
-        by smtp.gmail.com with ESMTPSA id be27-20020a0564021a3b00b0056650031d94sm781572edb.90.2024.02.29.09.25.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 09:25:54 -0800 (PST)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4129a5f7b54so84705e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:25:53 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWXYopRXolOw1kmaW72X0R85UVz7nwDY2D8fQ8WprLa4Si2nu1hq37XDL03FWeezRU2rivd2EmTnrSHdJ5pS1tLOq3PV0ZQbQe130kL
-X-Received: by 2002:a05:600c:3d90:b0:412:ba6c:8067 with SMTP id
- bi16-20020a05600c3d9000b00412ba6c8067mr151782wmb.5.1709227553392; Thu, 29 Feb
- 2024 09:25:53 -0800 (PST)
+        bh=SyjKEYVew5m9zUU9ZMwdROqu52vc9bJrfOA47hQzAww=;
+        b=tME5VzNRNc04TqW5AS+Rq8aXXp6yVxYNXwPs8YDpTatvb15M0Xo7bdmUDg5ONe5yy3
+         pOSg6LimEfk4tvrjzYYhEhBD5S5JIX7JeRTTT+a7evKyRwJcfZ/mnuHQZJWYrPJ5YzYd
+         tecahqhurmQdvusl0NcMVkC/a6r3byOIakrDv4VtxF5dZp2yjEAVoW4jjUYhhOHf6Qru
+         vzdBQv9pImHwExxzj5UVVF+qatdQjwgroLGfjYpF2jv2hunqPNPQO33waIqYNh8E3zhv
+         atPQz90LHkZycyhxshX0L916APW9zCLbY4m5lQKGuuXXuTOla5W/fYO4ej4b9w05MPRK
+         SJ6g==
+X-Forwarded-Encrypted: i=1; AJvYcCXSeQ6VQJBH8fEzHYKFFMD1VcEei0Mcc4B5A3YvFGBHIClVivwwsmm+xJdg5QTdozKlBYsdKIVrSV0VJotJUUG9lIxa7tg3wuEV2OWQ
+X-Gm-Message-State: AOJu0YwQE3XbEaHIwesb7VXLkIoFFkWGhn5rQ+rWTgTYEycBFhb6lOCc
+	WeU2ETkXcKQiCnUfh1KyebqU2gO81cG4QGkQxOSLXNk8xB8ObqsXKiiRcYGyAA1rUooMJMz+xyC
+	UihomZBEiJBS5EpYakp0ZM0o1ME1sovRvGqUv7g==
+X-Google-Smtp-Source: AGHT+IENN9hkUa/eueNHGpnumeQR0qC+f2AJiya9lAHk3TbgLuACYT7KNIIao33kBn6o5QD5xMiLvm3jT6mR6rwCkz0=
+X-Received: by 2002:a1f:e082:0:b0:4d3:3a0f:77ce with SMTP id
+ x124-20020a1fe082000000b004d33a0f77cemr2902281vkg.13.1709227600036; Thu, 29
+ Feb 2024 09:26:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229154946.2850012-1-sashal@kernel.org> <20240229154946.2850012-21-sashal@kernel.org>
- <CAD=FV=Wb4meRvghR00LTzXRAobgioGo5g2oYqMLuO8nYWDa7Rg@mail.gmail.com> <05cbeae5-cd40-45a9-9b4f-68b9b20a6839@sirena.org.uk>
-In-Reply-To: <05cbeae5-cd40-45a9-9b4f-68b9b20a6839@sirena.org.uk>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 29 Feb 2024 09:25:38 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VG1DpW3YukX691P59eN=oAnDxfWvm6CjpWFg5SxUmCRA@mail.gmail.com>
-Message-ID: <CAD=FV=VG1DpW3YukX691P59eN=oAnDxfWvm6CjpWFg5SxUmCRA@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.6 21/21] arm64/sve: Lower the maximum allocation
- for the SVE ptrace regset
-To: Mark Brown <broonie@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Will Deacon <will@kernel.org>, catalin.marinas@arm.com, oleg@redhat.com, 
-	mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org
+References: <20240221192846.4156888-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MdvYdx6x=gSiOZ3SXAdJORnqhsNW79G2c7wABofWARwFw@mail.gmail.com>
+ <ZddLRAqxFr7v3Zqs@smile.fi.intel.com> <CAMRc=Mdxtx-wh3HGu+SNrCwfSq0PEm3fG7hK_6wPAk2uzk8xpA@mail.gmail.com>
+ <ZddOKTP73ja6ejTc@smile.fi.intel.com> <CAMRc=Mf_w_E4B7c_Uj1WV3zv9DbmJ22oFvJJwtd-+3oUDVcvXA@mail.gmail.com>
+ <ZeCw3pzHdrXw46of@smile.fi.intel.com>
+In-Reply-To: <ZeCw3pzHdrXw46of@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 29 Feb 2024 18:26:29 +0100
+Message-ID: <CAMRc=MdKFvAefKxLnovxnQt_tpiW+dCviWXKuHqg3vqHhEtPNA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Fix the error path order in gpiochip_add_data_with_key()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Thu, Feb 29, 2024 at 9:13=E2=80=AFAM Mark Brown <broonie@kernel.org> wro=
-te:
+On Thu, Feb 29, 2024 at 5:29=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Thu, Feb 29, 2024 at 08:51:09AM -0800, Doug Anderson wrote:
+> > >
+> > > I'm sorry I really need more (morning) coffee, maybe you can simply u=
+pdate
+> > > yourself or submit a correct fix?
+> >
+> > Ok, I'll apply this and send a fix on top of it.
 >
-> > As I mentioned [1], there's a hidden dependency here and without it
-> > the patch doesn't actually do anything useful in kernel 6.6 nor kernel
-> > 6.1. Maybe the right answer is to backport this with the hardcoded
-> > value of "16" for those older kernels? Maybe Mark has a better
-> > suggestion?
->
-> Your suggestion should be fine.
+> I don't see any progress with this. Do I need to do something?
 
-Crud. Ignore me. The patch is fine as-is for 6.1, 6.6, and 6.7. :(
+No, it just fell through the cracks. I applied this now and sent my
+own fix on top.
 
-git tag --contains f171f9e4097d
-...shows that the needed patch is actually in 5.19+
-
-Instead of using the above "git tag --contains", I was naively just running=
-:
-
-git grep ZCR_ELx_LEN_SIZE
-
-...and I saw that it still came back 9 on v6.6. ...but that's because
-it was still set as 9 in the tools directory and I didn't notice.
-
-Sorry for the noise. We could still do the hardcoded solution of
-defining it as 16 for 5.15 and older if folks want.
-
--Doug
+Bart
