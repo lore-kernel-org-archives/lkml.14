@@ -1,56 +1,56 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67BA6D535
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BE0134419
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709248937; cv=none; b=fFkenk3+4PJIV/YHYe99bJJqbG+9KFsMD92uHtxJsqcCPn3RUCwYBA2DFV112hWdVFv1m3+1Y99AgEAeLrS/1NdcSKFvceVhm71CqAvG74x8cKnjvPBS/ztWw1wYJb4qkaUx8vtB4B/zHfn13uj/Ww3s360jWT1MDFtu4RFgJVc=
+	t=1709248939; cv=none; b=Wa1WgqfhA6Vaq9QTDppjnhXSjIqyYRrkCHMRyB3+xyDhraN/iVby9tnYupJ30ClTgQfPG2dYt2BtqKBu2kQoCV2fQos69o8g6yAF136fxeQZpWpBd5slq7u52b26LUHr3uZ6d4jhpFoUKIA+yQuzRrv6e61bWk+yn/LFcS6MB/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709248937; c=relaxed/simple;
-	bh=AZIiAOFhR7ivzwD+1gH5VFDhXubgORx9r0fNtPydx90=;
+	s=arc-20240116; t=1709248939; c=relaxed/simple;
+	bh=+FVwMSfaHr0vNyET+wjjwD1Kp9smtCmocHiX0IEwmbE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iSGfx67MWk/P+fNbt0+2/pr5VIBlSednVuj1g4/khSZbj9yNtmgE8vWi0dVGSENh0IyqRhYJQ6/BjK4vrBplqHwTfZf6ctfsZpCeWzN3B4LJSOuyRW4ahP+3a4AKhnfWrrP0XmC0a75AHVT2cWfcMZFYVij2dg8xY4yd2+RGh/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=h/MyfBgN; arc=none smtp.client-ip=209.85.210.174
+	 MIME-Version; b=MJokqbcm9pH5w3H3hYJ2QUGY88hW5Mj7YM/A6EJqgDAUg7IOWtzrRfFM/HFZZtF8jOfLZCFjU7JIHE/LczCp3pLLArLEU27MB2KxXwLonHd+zpYvGhtMDbR50jJ/DXBhi8wAgSe8Yp0ef1+vsirCrzWrYr6VExI6vuDSEOW4QrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Y5PTzjo+; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="h/MyfBgN"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6e581ba25e1so1204857b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:22:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Y5PTzjo+"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e571666829so1039247b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:22:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1709248935; x=1709853735; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1709248937; x=1709853737; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XEa0bZw6X2PF+fvXkyrnyWuZOURSNgi5dGIyeM9k7ic=;
-        b=h/MyfBgNZmwR2myHs7E6KXTLfy/zy1gfa3oxhsXQYIegsrJqrp4hzpBgLA+YjMO/RJ
-         9lva7lenbVWleD/pau1Jvi9JO2ZQIr0o4SkAaDhT01LWrn20n0pVuRv3qIwdmrmQYOEI
-         AV44QE89HoHSIa7tTRgg7pQIcpntzZ+3wq4NrvzR4Fw7HUoIiLCoZYDGLlXa4DvmQng6
-         rcGfi6KVOeYbtFg+ySwZtfR7nwaWuQXirx6iv2NmpWMKsDjJ7OPylpJQZLwO8eUHRmOv
-         gzUqsM2AYEilcIvQM1nKITXsQcmmXAi5kG9PTVVxRWDmDGK9Yzm1aPAfLXWvD06v9rvW
-         Zcfw==
+        bh=1/3iO4NfkALka4Buc8Img0QDYdUTnf5/4SNG0fcN5rQ=;
+        b=Y5PTzjo+xBUgRjntIDSAgAbd24KT29iEbqMGCCLRMTr35b1b3rLtcOwWzYC1SUMGMI
+         X6vxlEWAr2F+jpllNu/1xe2pqgPqZQc3lYoTEGfTj/ocdYencX2QG9so2pRU3rXDGly8
+         UJsBav/WBvbvCwFFUs+d/2J4TOT5MADKnsqkGN4XjmnmrDYmE1q8xxBJ360dAZsxXcLg
+         D2HX4OmSFrfQthSrs7V6Hf4ChzrL75U2EuNPBX2lfoE8xKaagefK+YFeK+v+MLCSrOfq
+         nXFDSnclrkt3oJ+YFhyA1wGvpwSjzDD9B+wQNpK/36sMScXN1C7leNHfz1dpUxzCIzJ5
+         dKSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709248935; x=1709853735;
+        d=1e100.net; s=20230601; t=1709248937; x=1709853737;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XEa0bZw6X2PF+fvXkyrnyWuZOURSNgi5dGIyeM9k7ic=;
-        b=Hrg7qfypbqJSJODLlxLpbivMyPlKysyucR5hEZ03zgPoaZ7IaENg8QUxLMdphm7wCm
-         OV8Cni8EhIh8DtVqvn6FDBEy7Uhs+iwmGeJh2/4udtbDd0XjBumOG2O9e52WVBQifSHc
-         FPvv+snM0PJMmcR42YvN2cC2G/941Bv1nfsCcGR7ljUM5d6WeAoV2MLKH0UlehXwxjoa
-         J4dCgY+FA3YZVL4C1NgWNYvXP00Km6Is3E3OEhli8sCEEJkPcQwDlQC7d8E8Jyjo0ZdY
-         AFvmO2WXiY6JV1Cyb54rcR8AeNNFtEK9Ojuzr5ziamPdDb00EV7tIXuFjeRr4dZaaoPL
-         fPSw==
-X-Gm-Message-State: AOJu0YwIdF0Mubo5zP6Ou4ke4dLiDg2HQ6V7S0UsHirKBc5C/c9XkqHV
-	7NaPvOZmQQmXeQHGaaKXicNk5bdSFlYMS2/9byKNssQqKTcz/lPZAAuoN3sSq98=
-X-Google-Smtp-Source: AGHT+IFdgcTr06rQ4rVKFKQwHiCzNjuzvF9/zHzBzMpbTCozBAylfcba6wC7aAVCdn9otyCllPR9tg==
-X-Received: by 2002:a05:6a00:2293:b0:6e5:599a:5252 with SMTP id f19-20020a056a00229300b006e5599a5252mr606918pfe.15.1709248935218;
-        Thu, 29 Feb 2024 15:22:15 -0800 (PST)
+        bh=1/3iO4NfkALka4Buc8Img0QDYdUTnf5/4SNG0fcN5rQ=;
+        b=beDnSaIJslE0SpK6II225n00JqQp3ChkrtBOCRPIRYNvV5uF3eFHCSdOp/QK9W8GA5
+         xNyFDpHmmATMIMEZF0nIV+2lAAiqnnI3ckALXZXz9XMFwWG1Xa4txSZZbiaa2qEHLS9T
+         zM/rem/a5t+ZqU58K8Pf2ryeseHAHB1+dF+b5nD4fLNJRyQ+z7Ia3II4YKRBgZe4VGeh
+         3HdEJjkcwOteYxMNO7bstMYixoBhgtS/xhD+3aSlCfRx2Vhi6H3Z3pI0hvhH6nKJNtD9
+         sZgvXl0BXZn3zQV4z1srig/RJ81p5BCBxS8/y+x2c48rENauIew7gBTBU6UoaSwGQRoI
+         8RXQ==
+X-Gm-Message-State: AOJu0Yz1RtM8T4iojcH541GjTslcQI2AJUM0VHQwAH8F+SsSJ/548Jjo
+	bYTuqY+Z2bYoPg7/svz6ZmJWYYWfC5dHESz/0r2nmdRX9YU8a2NcHRIciy8NCgo=
+X-Google-Smtp-Source: AGHT+IHEWuHXVZ/LoNCuQjq9ikFwqlpYM8ivEnjNJqMVh5lQ2hbDE0NnP51hssPDjMbEUOy86+sdSg==
+X-Received: by 2002:a05:6a00:14cf:b0:6e5:a996:5201 with SMTP id w15-20020a056a0014cf00b006e5a9965201mr172471pfu.10.1709248937282;
+        Thu, 29 Feb 2024 15:22:17 -0800 (PST)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id c6-20020aa78806000000b006e55aa75d6csm1779719pfo.122.2024.02.29.15.22.14
+        by smtp.gmail.com with ESMTPSA id c6-20020aa78806000000b006e55aa75d6csm1779719pfo.122.2024.02.29.15.22.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 15:22:14 -0800 (PST)
+        Thu, 29 Feb 2024 15:22:16 -0800 (PST)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-riscv@lists.infradead.org
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Jisheng Zhang <jszhang@kernel.org>,
 	Yunhui Cui <cuiyunhui@bytedance.com>,
 	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v5 02/13] riscv: Factor out page table TLB synchronization
-Date: Thu, 29 Feb 2024 15:21:43 -0800
-Message-ID: <20240229232211.161961-3-samuel.holland@sifive.com>
+Subject: [PATCH v5 04/13] riscv: mm: Broadcast kernel TLB flushes only when needed
+Date: Thu, 29 Feb 2024 15:21:45 -0800
+Message-ID: <20240229232211.161961-5-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.43.1
 In-Reply-To: <20240229232211.161961-1-samuel.holland@sifive.com>
 References: <20240229232211.161961-1-samuel.holland@sifive.com>
@@ -74,88 +74,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The logic is the same for all page table levels. See commit 69be3fb111e7
-("riscv: enable MMU_GATHER_RCU_TABLE_FREE for SMP && MMU").
+__flush_tlb_range() avoids broadcasting TLB flushes when an mm context
+is only active on the local CPU. Apply this same optimization to TLB
+flushes of kernel memory when only one CPU is online. This check can be
+constant-folded when SMP is disabled.
 
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
 
-Changes in v5:
- - New patch for v5
+(no changes since v4)
 
- arch/riscv/include/asm/pgalloc.h | 31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+Changes in v4:
+ - New patch for v4
 
-diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
-index deaf971253a2..87468f67951a 100644
---- a/arch/riscv/include/asm/pgalloc.h
-+++ b/arch/riscv/include/asm/pgalloc.h
-@@ -88,6 +88,14 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
- 	return NULL;
- }
- 
-+static inline void riscv_tlb_remove_ptdesc(struct mmu_gather *tlb, void *pt)
-+{
-+	if (riscv_use_ipi_for_rfence())
-+		tlb_remove_page_ptdesc(tlb, pt);
-+	else
-+		tlb_remove_ptdesc(tlb, pt);
-+}
-+
- #define pud_free pud_free
- static inline void pud_free(struct mm_struct *mm, pud_t *pud)
+ arch/riscv/mm/tlbflush.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
+
+diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+index 0373661bd1c4..8cdb082f00ca 100644
+--- a/arch/riscv/mm/tlbflush.c
++++ b/arch/riscv/mm/tlbflush.c
+@@ -102,22 +102,15 @@ static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
+ 			      unsigned long start, unsigned long size,
+ 			      unsigned long stride)
  {
-@@ -102,10 +110,7 @@ static inline void __pud_free_tlb(struct mmu_gather *tlb, pud_t *pud,
- 		struct ptdesc *ptdesc = virt_to_ptdesc(pud);
+-	bool broadcast;
++	unsigned int cpu;
  
- 		pagetable_pud_dtor(ptdesc);
--		if (riscv_use_ipi_for_rfence())
--			tlb_remove_page_ptdesc(tlb, ptdesc);
--		else
--			tlb_remove_ptdesc(tlb, ptdesc);
-+		riscv_tlb_remove_ptdesc(tlb, ptdesc);
- 	}
- }
+ 	if (cpumask_empty(cmask))
+ 		return;
  
-@@ -139,12 +144,8 @@ static inline void p4d_free(struct mm_struct *mm, p4d_t *p4d)
- static inline void __p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d,
- 				  unsigned long addr)
- {
--	if (pgtable_l5_enabled) {
--		if (riscv_use_ipi_for_rfence())
--			tlb_remove_page_ptdesc(tlb, virt_to_ptdesc(p4d));
--		else
--			tlb_remove_ptdesc(tlb, virt_to_ptdesc(p4d));
+-	if (cmask != cpu_online_mask) {
+-		unsigned int cpuid;
++	cpu = get_cpu();
+ 
+-		cpuid = get_cpu();
+-		/* check if the tlbflush needs to be sent to other CPUs */
+-		broadcast = cpumask_any_but(cmask, cpuid) < nr_cpu_ids;
+-	} else {
+-		broadcast = true;
 -	}
-+	if (pgtable_l5_enabled)
-+		riscv_tlb_remove_ptdesc(tlb, virt_to_ptdesc(p4d));
+-
+-	if (!broadcast) {
++	/* Check if the TLB flush needs to be sent to other CPUs. */
++	if (cpumask_any_but(cmask, cpu) >= nr_cpu_ids) {
+ 		local_flush_tlb_range_asid(start, size, stride, asid);
+ 	} else if (riscv_use_sbi_for_rfence()) {
+ 		sbi_remote_sfence_vma_asid(cmask, start, size, asid);
+@@ -131,8 +124,7 @@ static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
+ 		on_each_cpu_mask(cmask, __ipi_flush_tlb_range_asid, &ftd, 1);
+ 	}
+ 
+-	if (cmask != cpu_online_mask)
+-		put_cpu();
++	put_cpu();
  }
- #endif /* __PAGETABLE_PMD_FOLDED */
  
-@@ -176,10 +177,7 @@ static inline void __pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd,
- 	struct ptdesc *ptdesc = virt_to_ptdesc(pmd);
- 
- 	pagetable_pmd_dtor(ptdesc);
--	if (riscv_use_ipi_for_rfence())
--		tlb_remove_page_ptdesc(tlb, ptdesc);
--	else
--		tlb_remove_ptdesc(tlb, ptdesc);
-+	riscv_tlb_remove_ptdesc(tlb, ptdesc);
- }
- 
- #endif /* __PAGETABLE_PMD_FOLDED */
-@@ -190,10 +188,7 @@ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
- 	struct ptdesc *ptdesc = page_ptdesc(pte);
- 
- 	pagetable_pte_dtor(ptdesc);
--	if (riscv_use_ipi_for_rfence())
--		tlb_remove_page_ptdesc(tlb, ptdesc);
--	else
--		tlb_remove_ptdesc(tlb, ptdesc);
-+	riscv_tlb_remove_ptdesc(tlb, ptdesc);
- }
- #endif /* CONFIG_MMU */
- 
+ static inline unsigned long get_mm_asid(struct mm_struct *mm)
 -- 
 2.43.1
 
