@@ -1,59 +1,59 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DD470ACC
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3B470AEE
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709228600; cv=none; b=NadLua3ytJieOME72I1lWsfQW6eAzcLVghKDh+xsuThAkDVtbhOapIfNvDnZPLZDtT35/q8J+/qetks7HEIkYUtlBNR/csAecV2RPgryzYwHcTn2BhUkMcUsWfZjSiBe1A4VmmYSEjaom+dgclwMIsYKnZ79uHGeDAuKGoniYYc=
+	t=1709228618; cv=none; b=qDqqizWLh2u+Y0oXacf2fMMOL3U8GnzbCTg8mXPIZCWPBR9tJ1YMXA9D12E299FsWoj6eCE5RaFi9pmQLbMrwbg0HW0oKOX5igpNcn/uX9TeylhHqSJV3wQY5QHfjdAUY7v80zuWUIsedWUFZVeduTPqP/DLYNmoiJRnoyUFa3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709228600; c=relaxed/simple;
-	bh=w6AdOiaLAyoig0kQspf2X7rcy+iDR+kHR7twZhRbNNE=;
+	s=arc-20240116; t=1709228618; c=relaxed/simple;
+	bh=IA7WIBsWopO0bTAcjK6tZFMHJB3vGqdbyrYnHgFSrt8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CA3HzRGg7fmENzu+4+qFe4NBJLfXMhyyBSSW0JdbsU7ACugPvmHUM2KzAGeCIp9pF1lPIc2W4P70sZ+ilQOJn05MEkmQQWhZfMJFqYKANNtdFY5ZTUlPYFf2Nsp8S1OrZKvxSxTraTOVzFNXTb4xMPcVCNVUWxepYnfduDDNhME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=doX3wbfA; arc=none smtp.client-ip=209.85.218.46
+	 In-Reply-To:Content-Type; b=IGktv14CdhEFb5QHZmFAzfSFx668p6gUmyVHViTfuRkuR0YgW1bL/Xg6/CqBgrMSmUFZl9wSkkwLxlvmEN7FPMpIXbUCjnz8jBCAw74z6kH+gVdW0Hv2x3hBvQqJnXWFN5hzWM869Viel56hHTKZYb/MvvV5+aQhPhNnQUX6ksA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CIObHfdw; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="doX3wbfA"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a4417fa396fso180945266b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:43:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CIObHfdw"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3d484a58f6so201611066b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:43:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709228597; x=1709833397; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709228615; x=1709833415; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=mO+H6+G4YSz8IeOsBVv5sQ0x1EP4KIAqMrOXy0HjQPs=;
-        b=doX3wbfAx4XcB4wrVCZXekfkDnXLJJAP8OFevJzqpA9IgPZ8+nt0eiAtwrvPJhVL/g
-         uANo9IqZFFlr08WZ0TtQEbX047h6ICyFB7C1lEuJmYwBhQCCKrFXJzjgdzQeyrv5dgPi
-         uEbSLoCcWy+N1FcYKSCJEFSYTCIr9o9FDFbvY1pKGbNuKyHYP1zfOS/AhJH9FkDEoFfN
-         gNj/BxzffqQ0r0FlLODdRhMtsuc//UCaAIoeFgV5Uk/yF+fRG9GDaL5D7NAf/Ty8+MBg
-         rme6W9GNP+5zFUMhDZSmQg4aVeTPW3nb0JP6tIJEiTCdM1E0ZXHsgB4At8VtLGVmLt5k
-         JDvg==
+        bh=QflVlc0dU41Xz+jvDjUpE/rCGsaEEg8jxGJoUeKeatM=;
+        b=CIObHfdwRKqJ+HKuPCqB/LXXhjZng0qMqm5DyFSdg3b0VuCDw+roUyacCNbappfbp+
+         9SLZ2CFYp8SMGTMoP0taGSeysI9k2bbcri9tmDsA2RiGnrEMD0Ua1tahZO2QjhAUrNWW
+         O1AHWlYZ0qlaOhoHsBpNgPLrAcYke1hpPpHmgjrik3Lo8zMDSy4UUxdXGcaTcCu3GON2
+         TetdA3diXcRn9PSWmUktjCKALuLEqc8zomzc9AtJMfBzylCfAsirCqiu28LEOBReFIG5
+         wPfhhEtkgRhli/nRXts3aLMa1v2oEgSqBML99hQHMqYyHijQL4tobqY1FFJHpi/HzNl6
+         qYpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709228597; x=1709833397;
+        d=1e100.net; s=20230601; t=1709228615; x=1709833415;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mO+H6+G4YSz8IeOsBVv5sQ0x1EP4KIAqMrOXy0HjQPs=;
-        b=RHE5gGPetwt4UyVU66TsWbWzyzrE/FXTydgnP5YttvlwhJqIHsFHJctIop11JC8xqm
-         CSq8nbGI2Hc/il6cCQXF8+XdJ39dq89hB+1FHhjzc/3Vxteaxu/3xxlm3Dmt/5AzBinN
-         5+C6OkiDsg2vVVWB6D15Gz9yeBY0gaYkkZ7idGwdec0g8V1X1yvbusk6+ns/ag0UyR58
-         IpbcJTACAtROgnn5E1ZKgVbVbW0Oeb5swxkK5hVzHkHDAXe0dcuw6300M2MD2mvMkQNn
-         0xKD01xkI35HCCYvVwm9Cp83A4mVXC4fhnCpw9XPkRr+tO082jy08fUb9o4EoiFEXK+v
-         z+Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUjso5fn1OUDmSuDL4VUVlqmEwIzZipERb+haiTIZS9NZIBlIWrl0aNsNeOvpDJYFU9msBZCa9vbz3qNDsUwpIqK2fFQoDtguNaM6b8
-X-Gm-Message-State: AOJu0YyEiecfTrOm3r243am9QjJ9aYXkJ0DoN4o6xx+1X8z1PS9LatBX
-	L18lX/kYWvD8iLZhbbB2j4xGN1RVsQbboO265UnRPdKaub+XPEN6XQ9lRfE6NBQ=
-X-Google-Smtp-Source: AGHT+IGsvTUghW93OmU09I9xD94BRhklA5NkviBlZILtOBEqF7tVj8IM7T87ZFbzErkm5p8V/vxygA==
-X-Received: by 2002:a17:906:2dc9:b0:a43:9693:e3b2 with SMTP id h9-20020a1709062dc900b00a439693e3b2mr1746044eji.41.1709228597029;
-        Thu, 29 Feb 2024 09:43:17 -0800 (PST)
+        bh=QflVlc0dU41Xz+jvDjUpE/rCGsaEEg8jxGJoUeKeatM=;
+        b=sWImyOmHfjR/qm6ybw0vPs4+ks3FaqQIeaJZPAIkvzxHauGVFr/MNLqSxOIXngHpZz
+         1GDcex80S1+S1neaHMup+rZplFkuw9F5x08WjS7t6zIklyACRx72KPOx686i0pzDKkBM
+         6n60RcWMhe6gWIC4foubzZOVemI8joUNb1BQ/eGI45c1x5vniehON/sMVddrYgV49Ynp
+         OBWf3J/0hjr7FoD/Bg8ku89utrFN/RU0Az45aERWhnHoOwti3ayvph2xTB6GZLYQsfxW
+         FvLQjmm/755eBxMB32ve0WVMd5ZhS8Y0ofQ1aSTOLCIXRkDtlkDHQ9LpsckLmAf1HQKX
+         0APg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDHWqwD9hlvMhEOB2GoDwpgo5rTh8OiRZKcQBmGjk8hSEYo/ecOdaNQqOwgn6k/oI6oxxnR3b28GztiJg8HwZdusRWGcpEPaoVGzzy
+X-Gm-Message-State: AOJu0YyP5XYdqz+Xlleqf6KBhrB1UILvPVy4Y7073RsYkeurRJlZeBak
+	VLtxPcRuHOttYhKPUO0Z2DRkt8W98JW8jeK7eetQ4gcFPDJh2SatVPgzm3lzTYo=
+X-Google-Smtp-Source: AGHT+IH8TclhfzAYOVPJl1M8hMQr/xyEXHvah/7qumhsG9GDzqB9Bq+UdrM6RJHKm7j4x060McfQxg==
+X-Received: by 2002:a17:906:4e88:b0:a3e:b439:6c8d with SMTP id v8-20020a1709064e8800b00a3eb4396c8dmr2112924eju.25.1709228615313;
+        Thu, 29 Feb 2024 09:43:35 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id cu5-20020a170906ba8500b00a440ec600e3sm880825ejd.121.2024.02.29.09.43.15
+        by smtp.gmail.com with ESMTPSA id cu5-20020a170906ba8500b00a440ec600e3sm880825ejd.121.2024.02.29.09.43.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 09:43:16 -0800 (PST)
-Message-ID: <5d6d78b6-28e2-40a1-80f8-4a9748a4b25e@linaro.org>
-Date: Thu, 29 Feb 2024 18:43:13 +0100
+        Thu, 29 Feb 2024 09:43:34 -0800 (PST)
+Message-ID: <60020f66-b803-4dd8-805f-8ffb902811c2@linaro.org>
+Date: Thu, 29 Feb 2024 18:43:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,7 +61,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] ARM: dts: microchip: sama5d2: Move pinfunc.h headers
+Subject: Re: [PATCH 2/3] ARM: dts: microchip: sama7g5: Move pinfunc.h headers
 Content-Language: en-US
 To: Balakrishnan Sambath <balakrishnan.s@microchip.com>,
  Rob Herring <robh+dt@kernel.org>,
@@ -74,7 +74,7 @@ To: Balakrishnan Sambath <balakrishnan.s@microchip.com>,
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20240229-pio4-pinctrl-yaml-v1-0-c4d8279c083f@microchip.com>
- <20240229-pio4-pinctrl-yaml-v1-1-c4d8279c083f@microchip.com>
+ <20240229-pio4-pinctrl-yaml-v1-2-c4d8279c083f@microchip.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -120,19 +120,17 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240229-pio4-pinctrl-yaml-v1-1-c4d8279c083f@microchip.com>
+In-Reply-To: <20240229-pio4-pinctrl-yaml-v1-2-c4d8279c083f@microchip.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 29/02/2024 12:39, Balakrishnan Sambath wrote:
-> Move sama5d2-pinfunc.h into include/dt-bindings/pinctrl so that we can
+> Move sama7g5-pinfunc.h into include/dt-bindings/pinctrl so that we can
 > include it in yaml dt-binding examples.
-
-That is not a the reason to make something a binding. Please provide
-rationale why this is supposed to be binding. Because it does not look
-like at all and it is kind of contradictory to what we recently were
-doing - moving from bindings to DTS.
 > 
+
+Nope, that's not a reason to make a binding. Provide rationale why this
+is supposed to be a binding.
 
 Best regards,
 Krzysztof
