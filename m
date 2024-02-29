@@ -1,119 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB90936B1C;
-	Thu, 29 Feb 2024 02:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB29E2D638;
+	Thu, 29 Feb 2024 02:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709172244; cv=none; b=hzT/34zzzwLkU+3XcB2hQzyvuhbF+vLpuvL4Cjr9A/AYro135Q+DT3bTLzqAHQU7wFgTXObCIcqJyvq34Z8Oy8uEtr7lyA90eIW1Rgb6Tz4lBeiT5cUKARJR0uke7qN7d0YSpMofeMb4iemz/Vc58KIKFYln/GHBxYQBKwxdvv4=
+	t=1709172322; cv=none; b=JlQAQCJTkV+ZA+qfOhiS+BkUTOE6QINKqL78f5wlxmMXCJ/OmRyvHXCpohmlVOMGWv0VBVEc2v4UtctHE1GBA50UGU3juvOdCwR6JdlMw8wmfFVl68vMg+xzYBKeHYCrgKBR6+inxl83Pk+Kptqls4e90K5hww6gbR8ZZXzhTGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709172244; c=relaxed/simple;
-	bh=Hqt27iztKg8bH7+WN1AsbcYSqLKusd3MveKfLQx9J/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vEUnpl7QdnfJsdtLhJb0YMrThvjN28KjxIOTiT85IX58Lw7o3PwLXak15YLWqqga1KdMgrFTrARbtNJcEgjbIUQiu0II71xCiqbHIfqAkRi/JNaq6vgy1++ISBY4+ioumjCoqchTsbdz2bIlhXwuoAzS+CWX6t9hjhOHt9ZQCQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ktYDXtfH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709172322; c=relaxed/simple;
+	bh=fqsiv75ue6xl6cHe9uXd44i3iEeE5fdO87JHWHg3h/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cdvh3oG3sIo50g1A8e8ZoLN5bokgfdjF1ljQEiuqVXqPbxFlTvtpDta4OKlWte8SeLtLxxOf0r+2RjljnaxFdHNcSMKx+CzRNVN1z0g85eeZyqfPW2U/bf9czEkX5Ra+NJUo7E4siSGkfshQtjuJPEHpOsPRHQjYrfF/phF+yuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZcCEcbJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ktYDXtfH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD53C43390;
-	Thu, 29 Feb 2024 02:04:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZcCEcbJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 673F9C433C7;
+	Thu, 29 Feb 2024 02:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709172244;
-	bh=Hqt27iztKg8bH7+WN1AsbcYSqLKusd3MveKfLQx9J/o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ktYDXtfHUoCSzF5aFXxG3n9/eUi7LgtqEtaC6IPV+4ExMWbrpyZtGDnsyq/QuuIpH
-	 oyaKDGTh694C+xGUSMj5yek8hNt3bkVrbOWMc6y1tK4AQUlQ9c6jsuo28/5nJLFLvv
-	 vgpf6XXot7ngz5g0Jy9OqZ9XNyiZ+rLF+H1ntrq0yPXbixyD01+zQszfLW3KQY00Zm
-	 D/oI3GcdVas6lZS0Z9e6gN3o1UBch18kjW1vrcXQfUJjNNtdJjJITT/o6HlSaaAGwp
-	 /nCUa+WFWtQIceg/ZHa/UC6uzRS91kc1R7RIcG2tAbMdGTJy0aRGKVAZ41M1MIF9Wr
-	 UakyA4j8TFNIA==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51326436876so61854e87.1;
-        Wed, 28 Feb 2024 18:04:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVDxkzX/dlg3CNR/M3Uu3F6p4yLxnJ1lG9OQa/uJBLd70PT70Xl49QO1bs7DQu/ca7G4xsXmoJ6PiVVhkwerBSYerhdO66n5oPXD5jt
-X-Gm-Message-State: AOJu0YwOpxwp2BGLknRdhYHW13kqV+/+RN2VdB5+iLEe+20itqaRpGRY
-	TfmbtAXSw+CDH7RHbXZdQhFuqbd/dnee5ADRQKbidGF74ucYGsT3RZlTyrgKsuQAPKDrSGsdDdt
-	3/JOlNIQN/WVlUzuDkm8iXrUn9B8=
-X-Google-Smtp-Source: AGHT+IG9Y3Y320pwAwzwBrb6NW0R4FDMaXeUFqOdM2RAsjoBp/xnwruJM6OZRDZnzwJ6N4yei2OT/iXLsrVHbXS0Oj4=
-X-Received: by 2002:ac2:4a8a:0:b0:512:bb33:2eab with SMTP id
- l10-20020ac24a8a000000b00512bb332eabmr382640lfp.58.1709172242808; Wed, 28 Feb
- 2024 18:04:02 -0800 (PST)
+	s=k20201202; t=1709172322;
+	bh=fqsiv75ue6xl6cHe9uXd44i3iEeE5fdO87JHWHg3h/I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HZcCEcbJAOOVBYRh7frp3IJCZBT+4Fjgw86FcTURFeVoVjRPckBU//4A3xSyu0Oyy
+	 5gxKhzQpa0K/LZdp3OS18OTxc2GVqywAYK+XKC8zXv7blaFE0HbaRiAs9+lPF31hZy
+	 L2FW0ixCzn2NOXp1AWcgBm52OPgJHfZVq0IHVGSyys683h2w4QXQerkrbqbsHpxGFI
+	 3OOJVnwpRvBHKakCT0WItju9r5KQW5yTzEE3RN5WHNIWy7fGNuddruXFaifTjAfYWR
+	 aOtTzVYfbBGlKTMprk1U/iEs0Zvl705TdIm+yJsrhW/hoGCW+gSsy5YGXDSOce2n0/
+	 T4eRU3jMGDunA==
+Date: Wed, 28 Feb 2024 18:05:20 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Cc: Saeed Mahameed <saeed@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Cochran <richardcochran@gmail.com>, Tariq Toukan
+ <tariqt@nvidia.com>, Gal Pressman <gal@nvidia.com>, Vadim Fedorenko
+ <vadim.fedorenko@linux.dev>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Ahmed Zaki <ahmed.zaki@intel.com>, Alexander Lobakin
+ <aleksander.lobakin@intel.com>, Hangbin Liu <liuhangbin@gmail.com>, Paul
+ Greenwalt <paul.greenwalt@intel.com>, Justin Stitt
+ <justinstitt@google.com>, Randy Dunlap <rdunlap@infradead.org>, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, Kory Maincent
+ <kory.maincent@bootlin.com>, Wojciech Drewek <wojciech.drewek@intel.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>, Jiri Pirko <jiri@resnulli.us>,
+ Jacob Keller <jacob.e.keller@intel.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, Dragos
+ Tatulea <dtatulea@nvidia.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH RFC net-next v1 1/6] ethtool: add interface to read Tx
+ hardware timestamping statistics
+Message-ID: <20240228180520.5cea0f8b@kernel.org>
+In-Reply-To: <20240223192658.45893-2-rrameshbabu@nvidia.com>
+References: <20240223192658.45893-1-rrameshbabu@nvidia.com>
+	<20240223192658.45893-2-rrameshbabu@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222031801.GG11472@google.com> <20240222032559.496127-1-senozhatsky@chromium.org>
- <CAK7LNARo4L6qxoqRU-0dgABarukJKAaZpCRtfA3MyUHhSuDQxQ@mail.gmail.com>
- <20240222051621.GH11472@google.com> <20240228045652.GH11972@google.com>
-In-Reply-To: <20240228045652.GH11972@google.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 29 Feb 2024 11:03:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ8OyNMeGzVoTRg-sHDZ4YK0EKY_eEWNepekaibO_ZKwg@mail.gmail.com>
-Message-ID: <CAK7LNAQ8OyNMeGzVoTRg-sHDZ4YK0EKY_eEWNepekaibO_ZKwg@mail.gmail.com>
-Subject: Re: [PATCHv2] kconfig: add some Kconfig env variables to make help
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 28, 2024 at 1:56=E2=80=AFPM Sergey Senozhatsky
-<senozhatsky@chromium.org> wrote:
->
-> On (24/02/22 14:16), Sergey Senozhatsky wrote:
-> > On (24/02/22 13:57), Masahiro Yamada wrote:
-> > > On Thu, Feb 22, 2024 at 12:26=E2=80=AFPM Sergey Senozhatsky
-> > > <senozhatsky@chromium.org> wrote:
-> > > >
-> > > > Add a new section "Configuration environment variables" to
-> > > > `make help` output in order to make it easier for people to
-> > > > discover KCONFIG_WERROR, etc.
-> > > >
-> > > > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > > > ---
-> > > >  scripts/kconfig/Makefile | 4 ++++
-> > > >  1 file changed, 4 insertions(+)
-> > > >
-> > > > diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> > > > index ea1bf3b3dbde..0044d49e149c 100644
-> > > > --- a/scripts/kconfig/Makefile
-> > > > +++ b/scripts/kconfig/Makefile
-> > > > @@ -158,6 +158,10 @@ help:
-> > > >                 if help=3D$$(grep -m1 '^# Help: ' $(f)); then \
-> > > >                         printf '  %-25s - %s\n' '$(notdir $(f))' "$=
-${help#*: }"; \
-> > > >                 fi;)
-> > > > +       @echo  ''
-> > > > +       @echo  'Configuration environment variables:'
-> > > > +       @echo  '  KCONFIG_WERROR                 - Turn some Kconfi=
-g warnings into error conditions'
-> > > > +       @echo  '  KCONFIG_WARN_UNKNOWN_SYMBOLS   - Make Kconfig war=
-n about all unrecognized config symbols'
-> > > >
-> > > >  # =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> > > >  # object files used by all kconfig flavours
-> > > > --
-> > > > 2.44.0.rc0.258.g7320e95886-goog
-> > > >
-> > > >
-> > >
-> > > Why only two, while Kconfig supports more env variables?
-> >
-> > Right.  I wanted to add only those that we use (and familiar with) for
-> > starters.  I'm not familiar with things like KCONFIG_PROBABILITY, for
-> > instance, and not sure how to document it (its Documentation/kbuild/kco=
-nfig.rst
-> > description is pretty lengthy).
->
-> Masahiro, any opinion?
+On Fri, 23 Feb 2024 11:24:45 -0800 Rahul Rameshbabu wrote:
+> +/**
+> + * struct ethtool_ts_stats - HW timestamping statistics
+> + * @layer: input field denoting whether stats should be queried from the DMA or
+> + *        PHY timestamping layer. Defaults to the active layer for packet
+> + *        timestamping.
 
+I think we're better off attaching this to an existing message in the
+dump (using ETHTOOL_FLAG_STATS / ethtool -I), like we do for pause, 
+fec, etc., rather than having to build a separate hierarchy and copy
+identifiers within ETHTOOL_MSG_STATS_GET.
 
-I do not need this patch.
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Sorry if I mis-directed you this way.
