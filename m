@@ -1,113 +1,81 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C86145679
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144B355E76;
+	Thu, 29 Feb 2024 23:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709248948; cv=none; b=Ux4QAhlHH5KYasppMubXsEr/CSnwVUOH7Is/ROQwm8ocKfFVKsSK5iedN1EOw7qvEITTeS2Lhefx9cfPTkf5Ub8nVyaumVOudax+dMgK8uDfRuDupatIkqwBxZyAyCZlc+OzmVKNw+Xeddsxa1sy8pqLR9gRurh0APNz2mWgBwk=
+	t=1709249024; cv=none; b=Eq6BomKbfjqev29sf4T5WbQHMk8ktfCcFgHnAaU2K7dr05prEf4qaptqCVbNvKDkrsqFIPiYgUNVsW45ft10dsFznRcr4Gx95syinR2Tdi7xCkvT2mBAFEeWGiGGzQQCZiuKDo7KMx71r6eeM/rJOQxZ5KKElJhpCI9GOXAMZyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709248948; c=relaxed/simple;
-	bh=iR1wf5c+BMYzI7Dk7MIElBjHFZAAvj9ByRRGMTXW5IA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AhXNJqvUQtp5NTnVOX4R5APkVJb/zANiHAVK5NSu3RGD0JNXT5yZ7WEcWDiNqDBOrUTG5rL7k/Vl04/oKdkfrDVIdhrFIQiF0zm/A1zRPuXsVrttmYA317KeoHgQ+3GpTyyQTqx5UgYuntEq+MybzqqdApucU2xWFt9mkZToqAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=e+Pa+A3E; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1709249024; c=relaxed/simple;
+	bh=iwhvBuR3uowqRZpqmpqi0jgdnW+GpbB/EsS1T+Pi24Q=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Z1geHNgtd1OVgku2xuqHPwMzedRr7rSmSxytlM0lxvi550ykZH5Fz8TOwq1vPtJWWzvSuTnh3Z+1QKjQc3HOvFatoOO0tPYeb/4LULC9dkJ1A8b7j4b1iSf5wyCaXtB8XWNz6cDmAwpi9cevO00S5H845DkiHxYMIK93BGjBGLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=T35ZCjxn; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="e+Pa+A3E"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e5a232fe80so701516b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:22:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="T35ZCjxn"
+Received: from [192.168.68.112] (ppp14-2-70-176.adl-apt-pir-bras31.tpg.internode.on.net [14.2.70.176])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 1092A2014F;
+	Fri,  1 Mar 2024 07:23:36 +0800 (AWST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1709248947; x=1709853747; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cJvv9umwOkXOwc0iOvLk+NQYD7Mm5kACvwQaK1YGZP0=;
-        b=e+Pa+A3EB/w6kupfp9BgaUqZShW6EPMpsncIOTv/l1dVOxtBqjGKlDsQBm7MtnR1JN
-         4SnYfrzns3hITSjfawED+HzdC3tP9fKxIm5ZueckFyxVNHvZRjZOJMakDv7iJfyG3qZ3
-         Qh9q5QeXaJYeWlqTI+yVedi05TUrmreisshxgKOtl1CQ7fJTZu3o88tEunmZDptSRhrX
-         +E4LgwjC0O7SBMY5bEf+4imc8HWHDz9HUx1jiD9IIQxxHixE0rmHa5tGHAxVBHdKwPun
-         1ndp8tpgfVlzt4dRo+6bprH5MRxPu5n6GCbiL71RqlY8+GSGc+y/9BTIm0+hG06Cf0Zo
-         xnGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709248947; x=1709853747;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cJvv9umwOkXOwc0iOvLk+NQYD7Mm5kACvwQaK1YGZP0=;
-        b=pFmcP/27HCLSFFPYW8C405ju4v+p4GkhfFlh0+i+hXrqtsiKcgpno4gu6GfGtHbJik
-         ehEJRzbM4PLKt7FFzSgfK8OvrlejNU+24KGTKseEZnzBQxbSyXbTaAJKvp3y4SrqFqCZ
-         nr3j4pfSm7NkdikHM9HjJ/Af4AIhNDbMGLmNdqhjeKtbygmMl96FRbRrswgIoTyPNM74
-         zyE+j+mKCVwuDBJjjF9VgV5jog0K7ouegYdcBR+OUSazihlT9/IRddtsQoJ1M1WfuQ9V
-         omT/PUSqxSWZJh2Rv3L613yxwDz9Av3FzL+URfKH74fDHI6vZTwxPg+cLdYEG1MYlWQb
-         Iz1w==
-X-Gm-Message-State: AOJu0YwEvz5XD8MHpgwF7NE6PHrGj2IKXANt4L0g8NaqL/IAAmXFyMzJ
-	D4rSFuQpXUSbUYHvMUnZIQDC8sJSMML+98nnWQCfa4bNM1m8Zf8jl+VY3dXTh4M=
-X-Google-Smtp-Source: AGHT+IG000bMn11OdL3LH1zGovTy9Qg+UUgYE8CMrW4h6bNv2nzitQBp1dzsEHx4shrcmNE8zaAVpw==
-X-Received: by 2002:a05:6a00:27a3:b0:6e5:3dea:bf51 with SMTP id bd35-20020a056a0027a300b006e53deabf51mr562992pfb.7.1709248946831;
-        Thu, 29 Feb 2024 15:22:26 -0800 (PST)
-Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id c6-20020aa78806000000b006e55aa75d6csm1779719pfo.122.2024.02.29.15.22.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 15:22:26 -0800 (PST)
-From: Samuel Holland <samuel.holland@sifive.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Yunhui Cui <cuiyunhui@bytedance.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v5 13/13] riscv: mm: Always use an ASID to flush mm contexts
-Date: Thu, 29 Feb 2024 15:21:54 -0800
-Message-ID: <20240229232211.161961-14-samuel.holland@sifive.com>
-X-Mailer: git-send-email 2.43.1
-In-Reply-To: <20240229232211.161961-1-samuel.holland@sifive.com>
-References: <20240229232211.161961-1-samuel.holland@sifive.com>
+	d=codeconstruct.com.au; s=2022a; t=1709249019;
+	bh=iwhvBuR3uowqRZpqmpqi0jgdnW+GpbB/EsS1T+Pi24Q=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=T35ZCjxnY32uGh1veM/9q6f1NytauK7tck34JYdig1hWxH48PHb4OylbgljFV7Yvs
+	 lMwpgNgI4Adtol5s228u5RgVH7fEvlW3pjC0EK2eb60yPen92xuja2B5vU5IebcL5B
+	 46yZkX+PriKqmQP57m/8GL90/NGbUfHxBLQUOjJqRSn5Ib+kxFGEknw6UBb8zDbq1r
+	 eeGC8jDGcZ5U2JxbesjLGLOKSsRRbqr391cKM/bVdWQuYYr0RdkJUTFmhWUzwLHrgm
+	 bm/iSfjkySDatt8zWhbl/05ELmOZPHoJTYyYixQXlMxOKxz9J8tHxm3fB6gCcavcbW
+	 PrNZeGOggyRag==
+Message-ID: <e55aa1321ccac8e6391ab65a5a439b49d265bfce.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v6] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to
+ DT schema
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
+ robh+dt@kernel.org,  conor+dt@kernel.org, joel@jms.id.au,
+ linux-gpio@vger.kernel.org,  devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,  linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+Date: Fri, 01 Mar 2024 09:53:36 +1030
+In-Reply-To: <CAMRc=MeEyo7y-G1saydxtTRedNtHPaEeLANuzXt6KsiDU2jOWw@mail.gmail.com>
+References: <20240228003043.1167394-1-andrew@codeconstruct.com.au>
+	 <c2060450-4b76-4740-afe4-d14717245f01@linaro.org>
+	 <16ddd99007176da3f84462de217cb76c8fa4e1bd.camel@codeconstruct.com.au>
+	 <CAMRc=MeEyo7y-G1saydxtTRedNtHPaEeLANuzXt6KsiDU2jOWw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Even if multiple ASIDs are not supported, using the single-ASID variant
-of the sfence.vma instruction preserves TLB entries for global (kernel)
-pages. So it is always more efficient to use the single-ASID code path.
+On Thu, 2024-02-29 at 09:52 +0100, Bartosz Golaszewski wrote:
+> On Thu, Feb 29, 2024 at 4:21=E2=80=AFAM Andrew Jeffery
+> <andrew@codeconstruct.com.au> wrote:
+> >=20
+> > On Wed, 2024-02-28 at 08:47 +0100, Krzysztof Kozlowski wrote:
+> > >=20
+> > > You still have way too many examples. One is enough, two is still oka=
+y.
+> > > We really do not want more of examples with minor differences.
+> >=20
+> > Noted, I'll keep them to a minimum in the future.
+> >=20
+>=20
+> As in: I'll still send a v7? I can trim the examples when applying,
+> just tell me which ones to drop.
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
----
+Ah, thanks. I wasn't planning to send a v7 given the R-b tag from
+Krzysztof for v6. I intended for "in the future" to mean for patches
+converting other bindings to DT schema. But if you're keen to trim some
+examples out I'd drop the aspeed,ast2400-gpio and aspeed,ast2500-gpio
+nodes, keeping just the aspeed,ast2600-gpio example.
 
-Changes in v5:
- - Leave use_asid_allocator declared in asm/mmu_context.h
-
-Changes in v4:
- - There is now only one copy of __flush_tlb_range()
-
-Changes in v2:
- - Update both copies of __flush_tlb_range()
-
- arch/riscv/mm/tlbflush.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
-index e194e14e5b2b..5b473588a985 100644
---- a/arch/riscv/mm/tlbflush.c
-+++ b/arch/riscv/mm/tlbflush.c
-@@ -108,8 +108,7 @@ static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
- 
- static inline unsigned long get_mm_asid(struct mm_struct *mm)
- {
--	return static_branch_unlikely(&use_asid_allocator) ?
--			cntx2asid(atomic_long_read(&mm->context.id)) : FLUSH_TLB_NO_ASID;
-+	return cntx2asid(atomic_long_read(&mm->context.id));
- }
- 
- void flush_tlb_mm(struct mm_struct *mm)
--- 
-2.43.1
-
+Andrew
