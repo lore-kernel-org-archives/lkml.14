@@ -1,112 +1,76 @@
-Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [83.166.143.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D6D160639
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE606CBF4
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709226611; cv=none; b=CdwCCj+ks5U/FLO+H9P0qBWvf8vAY7TANt3RYTEuFKjc0Y+TLbcoNO1uLh/4xVk8Y0C13xwRvtUEjq/OOD37ZJKVTBIjS2vPuJf1GT9hfLySZeXJcfE553ba/Pj1c8CHDFeOdlpE52DRxNjt119xdq1DPIyfBG+a92zQbDavPJY=
+	t=1709226703; cv=none; b=C9jWflmzu+Fpf6AzKgc38ScUgN3vLQy0tISiO/hwoZE4XdY77QvksvzCvu3Ze6KPDZgvZllhP3kooIo1ghL8a6AfMIvrfUzhIaeW1EpfL6S2OYTTfKqXVNo+K0UdeeHZSqhIH5AiYgPLz7ATQ4jYEeBQrC1zKZZxx0xe37SLD4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709226611; c=relaxed/simple;
-	bh=uBMChHU5UNMlEl3ATgwx20Pp9VOumM9CW4wvZ2gv728=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gLwKLjNGjeXOPfYW+woKkM1MyFZYwrJpI3vNI92yUtinW7nxqF5BNWidkTwCP3Rs84kr4kcRzhG5smnw3ckcqOwNp53ITcmXhahGQK5TiBED/CaLvuaizSH1qZokfE+svaFfBiWnGYYHKY/iuFYfV701RZ/wWC0HG3HJdvkCzYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=g3VQrtX/; arc=none smtp.client-ip=83.166.143.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1709226703; c=relaxed/simple;
+	bh=hmzZB1RMnyCzUt+d63lCVZYeV1p79MWV8jAn56LJ9Lk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nKs/rWKheA+t5WwIfI8R/P86Xv/hlMFX+vWHHguFxZdcRDsKuEsyWFBGGmjZ8m3zhxpQYQ/H2xQIHDGgvpNk++Hb2zbBqyGD6DcwA2JlxTqTKj4lQR3JUyAcaLVdkPTPBFIkCzkosZgfEq5wGdsZquUofQsFBFWCRScrODQwhpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gbbu2zVi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="g3VQrtX/"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TlyHv6JJjzMrkvR;
-	Thu, 29 Feb 2024 18:04:27 +0100 (CET)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TlyHv0Y1GzMppV9;
-	Thu, 29 Feb 2024 18:04:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1709226267;
-	bh=uBMChHU5UNMlEl3ATgwx20Pp9VOumM9CW4wvZ2gv728=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g3VQrtX/j4mrYOK5lCD4XPwom/SI0/y/0R4myV2rOLoAWJbQXs3vRNiqY7hBGvPKt
-	 IWhFH8Ae2AB6sbRZrZYR+D0SJT6lcgzTL2uwOpY7ATOhYsFr6lnwl26n6gEktkAfAl
-	 F696GqV8G1WnaDB4mg5K41u90uy9ksSd19IE4k0Q=
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Brendan Higgins <brendanhiggins@google.com>,
-	David Gow <davidgow@google.com>,
-	Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-	Marco Pagani <marpagan@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	x86@kernel.org
-Subject: [PATCH v1 4/8] kunit: Fix timeout message
-Date: Thu, 29 Feb 2024 18:04:05 +0100
-Message-ID: <20240229170409.365386-5-mic@digikod.net>
-In-Reply-To: <20240229170409.365386-1-mic@digikod.net>
-References: <20240229170409.365386-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gbbu2zVi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09D06C433C7;
+	Thu, 29 Feb 2024 17:11:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709226703;
+	bh=hmzZB1RMnyCzUt+d63lCVZYeV1p79MWV8jAn56LJ9Lk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=Gbbu2zVi2Xrpo9FcCdOMRlUJSeFmHGOhrTS2oFkR0lej/rYIEN5+uFi6K8XVT5ZQB
+	 S348O0510nlb4YaaEfMgGtv+as+MKqYQ+ws5WStaYnBmJfoaUU2cwEKcvGmvBSVKHm
+	 mAU9embj/4Ty8uy28mgAsCZS2X/H95vKdDXcFB6IK3ojpW+BeOQmL7KkVswOckU++F
+	 psJXDobRY869trRSZwzqcQxN1ysGBK4Nq1dfnQTfKJpBsKv8noG1VXhE3Fzh/6BZgy
+	 76CA4un00p7REo4GEnnOX7YkAYN8WmDfEbj48TPnazlbWnEcQd48pBNxMxe1wbFxff
+	 EQLgFA6ffbLFw==
+Date: Thu, 29 Feb 2024 18:11:40 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Michal Hocko <mhocko@suse.com>, Kees Cook <keescook@chromium.org>, 
+    cve@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CVE-2023-52451: powerpc/pseries/memhp: Fix access beyond end of
+ drmem array
+In-Reply-To: <ZeCsKGwU96sKi_S_@sashalap>
+Message-ID: <nycvar.YFH.7.76.2402291754020.13421@cbobk.fhfr.pm>
+References: <2024022639-wronged-grafted-6777@gregkh> <ZdytVTOgfvKBBvtn@tiehlicka> <202402271029.FD67395@keescook> <Zd8hPpP_6q_o8uQW@tiehlicka> <202402280906.D6D5590DB@keescook> <ZeA-281OudkWBhd_@tiehlicka> <2024022915-dissuade-grandson-ebd4@gregkh>
+ <ZeBRZqJd5HAKaOfC@tiehlicka> <2024022913-borrower-resource-ecc9@gregkh> <nycvar.YFH.7.76.2402291605370.4159@cbobk.fhfr.pm> <ZeCsKGwU96sKi_S_@sashalap>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=US-ASCII
 
-The exit code is always checked, so let's properly handle the -ETIMEDOUT
-error code.
+On Thu, 29 Feb 2024, Sasha Levin wrote:
 
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: David Gow <davidgow@google.com>
-Cc: Rae Moar <rmoar@google.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
- lib/kunit/try-catch.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> >> It's pretty trivial to get root on most of the "enterprise" kernels
+> >
+> >Wow, that's a very strong statement you are making here, and I'd now
+> >really like to ask you to back that up with some real data.
+> 
+> Is something like https://www.suse.com/security/cve/CVE-2023-52447.html
+> a good example?
 
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 73f5007f20ea..cab8b24b5d5a 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -79,7 +79,6 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 	time_remaining = wait_for_completion_timeout(&try_completion,
- 						     kunit_test_timeout());
- 	if (time_remaining == 0) {
--		kunit_err(test, "try timed out\n");
- 		try_catch->try_result = -ETIMEDOUT;
- 		kthread_stop(task_struct);
- 	}
-@@ -94,6 +93,8 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 		try_catch->try_result = 0;
- 	else if (exit_code == -EINTR)
- 		kunit_err(test, "wake_up_process() was never called\n");
-+	else if (exit_code == -ETIMEDOUT)
-+		kunit_err(test, "try timed out\n");
- 	else if (exit_code)
- 		kunit_err(test, "Unknown error: %d\n", exit_code);
- 
+- this fix is on our list/queue to be integrated into one of our kernel 
+  branches, and was even beore it just got CVE assigned, as it references 
+  a commit in Fixes: that we have present in one of our branches, but 
+  hasn't been processed yet, mainly because we don't allow unprivileged 
+  BPF
+
+- you pointed to a fix for UAF in BPF, which definitely is a good fix to 
+  have, I don't even dispute that CVE is justified in this particular 
+  case. What I haven't yet seen though how this connects to in my view 
+  rather serious 'trivial to get root' statement
+
+Thanks,
+
 -- 
-2.44.0
+Jiri Kosina
+SUSE Labs
 
