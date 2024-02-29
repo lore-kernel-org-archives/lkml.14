@@ -1,157 +1,104 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821F364AB6;
-	Thu, 29 Feb 2024 10:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9A4A64CC9;
+	Thu, 29 Feb 2024 10:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709202110; cv=none; b=S1zBuQb6a4Ag5IL89sKwHFsYWkOYcxc2OnHstrsxLtxH7S7YHIiHKB+0CobxrzbMxjzDdW7O9YwyyG9FpDAffJD9kNi/K9J7ab7GoenECO4Lz0jijNbvCVVMfQkrirftv6oegIlvnR/ria1xiZIXRLU2ra3A6Zh4O23KYw4ePIg=
+	t=1709202146; cv=none; b=L/SWL9O1ZCmRH5GHveGuNW2FmzS3nVpN31Zuy2nfDVRsFctdv7r5oMYqP9Ka0DE1kIhkxQqOT05UdL53fFBr7rWGur0Um6jQ0hRWNU1S0IQso0y3U8B1V3BqGwf3fS6xLtWAb4KMdyVup95sqw6hyr3Gw1g59jl5OKUOTVIeRi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709202110; c=relaxed/simple;
-	bh=w3kEVFOrvKCGNI2O50JnYc2GqcNbmvQBLSVNxFfrY9A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p7rDbTMkwCY+C9xLdBnZ0oQNA5r+db/I77bJ0JImoHXu0iS3SzchhPNM8h/KqlhOkHrlfvuxrh94t7YwAO+g0VzJ2IlfqSAcfjLhNm315oFu6l8BbIZyQS1ofI6SmbXBT19QZT5ukBuRYd765oX1zRmy9Y1j4G5gLK9o3n706So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gy02jnUV; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gy02jnUV"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a28a6cef709so113550866b.1;
-        Thu, 29 Feb 2024 02:21:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709202107; x=1709806907; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=w3kEVFOrvKCGNI2O50JnYc2GqcNbmvQBLSVNxFfrY9A=;
-        b=Gy02jnUVGtgp4N1pW3VrDdxMQFyb9rg2ej5AjZotG7ohA6M6Z8D7jxvJ6xdNTQ8MXI
-         rfQ663lm+J1uC9WhcLeM6bpTgTbbbeN9cAkWD2ppLJrYuuaUmd48ssN+0UvL8pJbi7I6
-         STuJKxKcGQlEYMzPqtEhOWOMI1prDB3aggBoTkcnLlflLajMnMPf7MswSXthlDCAc/LO
-         YcwmIzHcgXoE5oR0+sRACDHljZjycnX5Y+3QEMs1HnY1uYVoRm88/VaSNunVa46ARyPR
-         9ZKDLBjPNTaJ750vZFl3efhIldxJ55XErR9WAexne7EApZU4SF0zU6RbNpRdUg0RD97c
-         h54Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709202107; x=1709806907;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w3kEVFOrvKCGNI2O50JnYc2GqcNbmvQBLSVNxFfrY9A=;
-        b=Dc5SVTddsfp6AgoLAgiSaj4V6/Sji567QBZ/RMUVLqBAUHMjJyy8NTuP2WEoO2+tle
-         eOI4a5whDfcsDjlTqphIkdrikPPDY5dHtZ2vIdZbHSLWF69AzD1LG08Eq9AgEX8mZhj/
-         f7YIwiouZxeUwTGNqeIogZyeHeu50DKJcjAtIMox+FJWDpDNMFVzWWzfJN5NaZ12Im4l
-         IJFv6ML9n3qg5r8iz6YHrw07wcUWjePEDUkrT6pBiEp758/ACYIRgM6oij2rviXinMZy
-         jIUAOqevdxIA0HVovqHBE/rXeBCIXOTYbRlTezLnJ3UOnFt5FdlIUs4heoYLHokafALl
-         GN+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWgT+6yDFtqqOmoVWfGT2jHfGyLnT/hrM4ak2DQXadgZWZRPGCR3A18I3kfsiqytXbgnS7ArTVPUBVlc0Zn9nVIjwYsOKunRjLfKdsVtNsPllqBrlB4Gcx1Yh65Z2SlijsNIOwTef6Tw1mbWpPybt0/0pbeej8rgl5kObdNucgSgQ==
-X-Gm-Message-State: AOJu0YyliJZ18ngfubmbA0CmosKR+INDGPBqleISak3+jSAie9M9Znb5
-	v8Gg2ZoYwlrjcMjIBPOYr/PDHFhznEMTghiY3CjkeZ+VHv6vPAxj
-X-Google-Smtp-Source: AGHT+IHP6SnZ+t4Rm6KnZQyLCPnDHrCVu8cAcZaXXcHYjJTCsFL5UqAxZ1do7itkDcPWR4ldQU/9Mw==
-X-Received: by 2002:a17:906:b247:b0:a3f:5e8c:8a34 with SMTP id ce7-20020a170906b24700b00a3f5e8c8a34mr1300997ejb.9.1709202106581;
-        Thu, 29 Feb 2024 02:21:46 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
-        by smtp.gmail.com with ESMTPSA id lf12-20020a170906ae4c00b00a3f27031d7bsm530358ejb.104.2024.02.29.02.21.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 02:21:46 -0800 (PST)
-Message-ID: <581fb060128519d29c06f797ee8ec7c8d0e60ca0.camel@gmail.com>
-Subject: Re: [PATCH v2 2/2] of: overlay: Synchronize of_overlay_remove()
- with the devlink removals
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand
- <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen
- <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini
- <stefano.stabellini@xilinx.com>, Jonathan Cameron
- <Jonathan.Cameron@Huawei.com>,  linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>,  Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>,  stable@vger.kernel.org
-Date: Thu, 29 Feb 2024 11:25:09 +0100
-In-Reply-To: <20240229111430.54bdb6b1@bootlin.com>
-References: <20240229083953.607569-1-herve.codina@bootlin.com>
-	 <20240229083953.607569-3-herve.codina@bootlin.com>
-	 <c2b830bb4a4cf76dec8783f38b2477120edb1a15.camel@gmail.com>
-	 <20240229111430.54bdb6b1@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 
+	s=arc-20240116; t=1709202146; c=relaxed/simple;
+	bh=zC+rOfgZk0FjySsxZFgupFvl2AUI4LOD52LgDdh6ffk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=gHQzYXJwBPgnFMXl0/qDKoglVckRTasG1+UVYiM3nxhUr5Q2OVVOgQC4+RdifcwZ1hgznLw05JPj4lEO96+00irChYugRmjtKOUlbcFw/MqTUQUum32geTuc3fqawmBk4LPzUEfFSMikuE8kvq+Nq+YV+O/26KFrFxaeu0vaUqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA8831FB;
+	Thu, 29 Feb 2024 02:23:02 -0800 (PST)
+Received: from [10.57.12.184] (unknown [10.57.12.184])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99F903F762;
+	Thu, 29 Feb 2024 02:22:21 -0800 (PST)
+Message-ID: <18c249b2-ce8c-435b-8d65-a1770a1f294e@arm.com>
+Date: Thu, 29 Feb 2024 10:22:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 2/2] cpufreq: scmi: Register for limit change
+ notifications
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+To: Sibi Sankar <quic_sibis@quicinc.com>, sudeep.holla@arm.com,
+ cristian.marussi@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, pierre.gondois@arm.com,
+ dietmar.eggemann@arm.com, morten.rasmussen@arm.com, viresh.kumar@linaro.org,
+ rafael@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_mdtipton@quicinc.com, linux-arm-msm@vger.kernel.org
+References: <20240227181632.659133-1-quic_sibis@quicinc.com>
+ <20240227181632.659133-3-quic_sibis@quicinc.com>
+ <f8bfc666-c216-44d5-a63b-99f04ff3b8ef@arm.com>
+ <2608b2d8-f3b0-b4f5-f8e4-1f2242043ded@quicinc.com>
+ <64c6a1bc-92f2-4f44-ab10-cbd2473746f3@arm.com>
+In-Reply-To: <64c6a1bc-92f2-4f44-ab10-cbd2473746f3@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2024-02-29 at 11:14 +0100, Herve Codina wrote:
-> On Thu, 29 Feb 2024 10:50:21 +0100
-> Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
->=20
-> > On Thu, 2024-02-29 at 09:39 +0100, Herve Codina wrote:
-> > > In the following sequence:
-> > > =C2=A0 1) of_platform_depopulate()
-> > > =C2=A0 2) of_overlay_remove()
-> > >=20
-> > > During the step 1, devices are destroyed and devlinks are removed.
-> > > During the step 2, OF nodes are destroyed but
-> > > __of_changeset_entry_destroy() can raise warnings related to missing
-> > > of_node_put():
-> > > =C2=A0 ERROR: memory leak, expected refcount 1 instead of 2 ...
-> > >=20
-> > > Indeed, during the devlink removals performed at step 1, the removal
-> > > itself releasing the device (and the attached of_node) is done by a j=
-ob
-> > > queued in a workqueue and so, it is done asynchronously with respect =
-to
-> > > function calls.
-> > > When the warning is present, of_node_put() will be called but wrongly
-> > > too late from the workqueue job.
-> > >=20
-> > > In order to be sure that any ongoing devlink removals are done before
-> > > the of_node destruction, synchronize the of_overlay_remove() with the
-> > > devlink removals.
-> > >=20
-> > > Fixes: 80dd33cf72d1 ("drivers: base: Fix device link removal")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > > ---
-> > > =C2=A0drivers/of/overlay.c | 9 ++++++++-
-> > > =C2=A01 file changed, 8 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> > > index 2ae7e9d24a64..99659ae9fb28 100644
-> > > --- a/drivers/of/overlay.c
-> > > +++ b/drivers/of/overlay.c=C2=A0=20
-> >=20
-> > In the cover, you mention device.h inclusion but I'm not seeing it? Thi=
-s is
-> > clearly up to the DT maintainers to decide but, IMHO, I would very much
-> > prefer
-> > to see fwnode.h included in here rather than directly device.h (so yeah=
-,
-> > renaming the function to fwnode_*). But yeah, I might be biased by own
-> > series :)
-> >=20
->=20
-> Damned. I missed device.h in this patch.
-> Without this one, the patch do not compile :(
->=20
-> A fixup commit I missed to squash before sending.
->=20
-> A v3 is planned to add this device.h.
->=20
-> Nuno, do you prefer I wait few days before sending this v3 waiting for mo=
-re
-> replies
-> or I send it right now and you re-do your comment on the v3 ?
->=20
-> I would really prefer to send it now :)
->=20
 
-Typically maintainers don't like much of re-spinning versions too fast. Tha=
-t
-said, up to you :). I can copy paste my comments in v3.
 
-- Nuno S=C3=A1
+On 2/29/24 09:59, Lukasz Luba wrote:
+> 
+> 
+> On 2/28/24 17:00, Sibi Sankar wrote:
+>>
+>>
+>> On 2/28/24 18:54, Lukasz Luba wrote:
+>>>
+>>>
+>>> On 2/27/24 18:16, Sibi Sankar wrote:
+>>>> Register for limit change notifications if supported and use the 
+>>>> throttled
+>>>> frequency from the notification to apply HW pressure.
+>>
+>> Lukasz,
+>>
+>> Thanks for taking time to review the series!
+>>
+>>>>
+>>>> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+>>>> ---
+>>>>
+>>>> v3:
+>>>> * Sanitize range_max received from the notifier. [Pierre]
+>>>> * Update commit message.
+>>>>
+>>>>   drivers/cpufreq/scmi-cpufreq.c | 29 ++++++++++++++++++++++++++++-
+>>>>   1 file changed, 28 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/cpufreq/scmi-cpufreq.c 
+>>>> b/drivers/cpufreq/scmi-cpufreq.c
+>>>> index 76a0ddbd9d24..78b87b72962d 100644
+>>>> --- a/drivers/cpufreq/scmi-cpufreq.c
+>>>> +++ b/drivers/cpufreq/scmi-cpufreq.c
+>>>> @@ -25,9 +25,13 @@ struct scmi_data {
+>>>>       int domain_id;
+>>>>       int nr_opp;
+>>>>       struct device *cpu_dev;
+>>>> +    struct cpufreq_policy *policy;
+>>>>       cpumask_var_t opp_shared_cpus;
+>>>> +    struct notifier_block limit_notify_nb;
+>>>>   };
+>>>> +const struct scmi_handle *handle;
+> 
+> I've missed this bit here.
 
+So for this change we actually have to ask Cristian or Sudeep
+because I'm not sure if we have only one 'handle' instance
+for all cpufreq devices.
+
+If we have different 'handle' we cannot move it to the
+global single pointer.
+
+Sudeep, Cristian what do you think?
