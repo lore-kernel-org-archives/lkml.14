@@ -1,121 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11C37E0E7;
-	Thu, 29 Feb 2024 13:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCB167C71;
+	Thu, 29 Feb 2024 13:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709212214; cv=none; b=eQ0rZmEbosWnOq9pNnNqHfR+9CfrfDD8gLPTf01jVHS3EipFcEOp3OYJzQkir5Ag9+xOg9UgGiVQbCgJKMTaMZooX2CDjlQ+kOW8C0q+VEJuYslpkYQIMYvxN85JrAmDs1Vpcb7mNh6Ip5r3mg11ZnAefJ/frCIpHerf2IGbcFg=
+	t=1709212272; cv=none; b=FY+Ucn/f9KhBfB3bKJNSJ8VgchVAUfMXpuqhdCiGs0UCyJIHcCNDzsLUlfJke3Y5KpCyAgGJbfOZpmm49XnsnqUbd1KlfzOCnerTZFpyRQrXOarzg031vWJ4rX1ig59iFruzRbfL+JgDoLSM7GYAEs3yD6o7Ecu0+LS10DfM/I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709212214; c=relaxed/simple;
-	bh=Vk41IkkyBM5ve0CG9q29yRlZai/dCooOSBeD513BM9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H70nT//RFduMFxG4TDUk+bIVfN9vk9FDfrNlv1WLzqOPAEm8yzNRqYCmaP6pvY/2LD6VLYH0jpxxM0CeBV14xoiadne39YdNvBuncVpAVOcS4P5m/MvD2taxJsfnX9Cw+ziEmULCHEhRNLesJW3sUNVWGLAMerIC35erSXQzHTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHB+43P8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHB+43P8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822B1C433F1;
-	Thu, 29 Feb 2024 13:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709212213;
-	bh=Vk41IkkyBM5ve0CG9q29yRlZai/dCooOSBeD513BM9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bHB+43P814TAK3jEMSFuGvrrQ9mMbI1NTpKf1jUaSHWFxqcVRDRDXofkmExidYquS
-	 Yc2PlHkxvyLm5QuwZRkqFpwmFueATLl5XrsOWSy4Oz2NnxEvCe/Qxe+eKi6NQ+9P1X
-	 B3xRI0VVhMvG96/gFvTeun7UNl/z2TIB0J6qiT1JPhCUd96075FgHeJxRM3egIFyO7
-	 kOwWxrNMNfUS6va2AZPVDOk9KGKZkOt8G6nJ/zJLeLmwmvFghT11VCqhj01Bbnfmtt
-	 INic3qZlhIDARJ8v8wwB6d/DKsCey2FDZ2LUKFrWay+VoRdlvqXKW3Z8rq4PQBK5ln
-	 kDoGELHB+qRWQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rfgB3-000000003Mr-0AvT;
-	Thu, 29 Feb 2024 14:10:21 +0100
-Date: Thu, 29 Feb 2024 14:10:21 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and
- GICv3 ITS enable
-Message-ID: <ZeCCPRVvYCNfMYnd@hovoldconsulting.com>
-References: <20240223152124.20042-1-johan+linaro@kernel.org>
- <20240228220843.GA309344@bhelgaas>
- <20240229100853.GA2999@thinkpad>
- <ZeBbrJhks46XByMD@hovoldconsulting.com>
- <20240229122416.GD2999@thinkpad>
+	s=arc-20240116; t=1709212272; c=relaxed/simple;
+	bh=LVt5hPd25B281TRLtTutKKX5US2y0TKwkmdiBT+P8IE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oV4QJLr/TCwE/Hwn3Vmvk9qq4BQ1XD+H0eIMh2Dq2insDPqC78Bven9iFzFCAYPKKLuwyQbLMF8h5aHDvAS+2bNzKlc9Sqk8iSiT+acetNCmsQ1Mxsmh/6itv0f7DiUm2QRWjET1ZaUH10QR4E2TNq/2mGOqJxSy1pZh2BpDLU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e447c39525so170507a34.0;
+        Thu, 29 Feb 2024 05:11:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709212270; x=1709817070;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tvvRk2gFQ4DOAmG0ZAXvnWf5WKlifEzlcrpvhWJNSEM=;
+        b=B9u5nsnhVRdwgQgYkwj/bMb3uBgedQDw5bQC0QiuLLv6+5x148uc1eM6K1TmRG1IZI
+         khb7cj07NEUCGo2/WW4XEE5dTIbmgJUMRKUt36QHDYsgatXE7QAJUP/5iQRfx8Shouxh
+         Dzpu7NHOTT73NzBJH9H2C3rZSxQkBzunD9F8U9PjW/Ktk6P03CjqDAEcLhBapYPU/MPA
+         5uLo78EYhLAEPVbWES7lozLDtxNLZXFU5MJ8jkFJv6U0BtTxe2qJYnm8FrlQMdUGWSz4
+         zYxNqoQU9ED6S9m3U4Xu2+A+nGF96bdqys7AJ6EhAhx0ZcfWqoPU+dfPFDXLTlskY2Kc
+         5ysw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZJcD+ESU2VsoOVwqd8fDifnXEiyrwbcZAcmmAPIQg+IqQNkX+EOksyFS2T2eXX5EbCeYPecS8HMTlFkavS65vkBoSXOOWhi92ENI0IIdo1CEYPKmsl7/DOGNIINrN1QBcYlftufUN+/ukFTbQOi/KXftnbU5qWG7JVhN+qVqY/w==
+X-Gm-Message-State: AOJu0YwBqiZrLUWHN2fSK1laOMha7UQJX5RFttrcbx+/Op1lcfop8yr3
+	VeGwl+fMEOaahdKrus8wBl7979+zRlk41P0+wfMweniI5pkKodaDbbq/KjPIaMwI3MuEpZSylHS
+	EVQasvo+j+v6BhScTbggyIlPUmvI=
+X-Google-Smtp-Source: AGHT+IHi3c3RgO2A1VH16z4qbN2kTgJY1571Ukf5IEcJB1p5nBjZ6clv6ctv3wxEJuFdMZE7W4nhzwDuQXoFachzwOc=
+X-Received: by 2002:a4a:d091:0:b0:5a0:4216:c5f0 with SMTP id
+ i17-20020a4ad091000000b005a04216c5f0mr1921598oor.0.1709212269855; Thu, 29 Feb
+ 2024 05:11:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240229122416.GD2999@thinkpad>
+References: <20240229105204.720717-1-herve.codina@bootlin.com>
+ <20240229105204.720717-2-herve.codina@bootlin.com> <9cc3d11bc3e1bb89a1c725f865d0c8d1494111c5.camel@gmail.com>
+ <CAJZ5v0hGfqrczS1Si8Bu67vTSkTKO_gO7ftO2R7CQxGKGWsbAA@mail.gmail.com> <af8a97f3a187cc403b6184948d3e335ee83f44ec.camel@gmail.com>
+In-Reply-To: <af8a97f3a187cc403b6184948d3e335ee83f44ec.camel@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 29 Feb 2024 14:10:58 +0100
+Message-ID: <CAJZ5v0jwXiJU6SMwHZUJ0RVhGTmiwX1ijx4UcgbYdM6SnftSfA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] driver core: Introduce device_link_wait_removal()
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Herve Codina <herve.codina@bootlin.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, 
+	Frank Rowand <frowand.list@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, 
+	Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Nuno Sa <nuno.sa@analog.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 05:54:16PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Feb 29, 2024 at 11:25:48AM +0100, Johan Hovold wrote:
+On Thu, Feb 29, 2024 at 2:03=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmail.com=
+> wrote:
+>
+> On Thu, 2024-02-29 at 14:01 +0100, Rafael J. Wysocki wrote:
+> > On Thu, Feb 29, 2024 at 12:13=E2=80=AFPM Nuno S=C3=A1 <noname.nuno@gmai=
+l.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > Just copy pasting my previous comments :)
+> > >
+> > > On Thu, 2024-02-29 at 11:52 +0100, Herve Codina wrote:
+> > > > The commit 80dd33cf72d1 ("drivers: base: Fix device link removal")
+> > > > introduces a workqueue to release the consumer and supplier devices=
+ used
+> > > > in the devlink.
+> > > > In the job queued, devices are release and in turn, when all the
+> > > > references to these devices are dropped, the release function of th=
+e
+> > > > device itself is called.
+> > > >
+> > > > Nothing is present to provide some synchronisation with this workqu=
+eue
+> > > > in order to ensure that all ongoing releasing operations are done a=
+nd
+> > > > so, some other operations can be started safely.
+> > > >
+> > > > For instance, in the following sequence:
+> > > >   1) of_platform_depopulate()
+> > > >   2) of_overlay_remove()
+> > > >
+> > > > During the step 1, devices are released and related devlinks are re=
+moved
+> > > > (jobs pushed in the workqueue).
+> > > > During the step 2, OF nodes are destroyed but, without any
+> > > > synchronisation with devlink removal jobs, of_overlay_remove() can =
+raise
+> > > > warnings related to missing of_node_put():
+> > > >   ERROR: memory leak, expected refcount 1 instead of 2
+> > > >
+> > > > Indeed, the missing of_node_put() call is going to be done, too lat=
+e,
+> > > > from the workqueue job execution.
+> > > >
+> > > > Introduce device_link_wait_removal() to offer a way to synchronize
+> > > > operations waiting for the end of devlink removals (i.e. end of
+> > > > workqueue jobs).
+> > > > Also, as a flushing operation is done on the workqueue, the workque=
+ue
+> > > > used is moved from a system-wide workqueue to a local one.
+> > > >
+> > > > Fixes: 80dd33cf72d1 ("drivers: base: Fix device link removal")
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > > > ---
+> > > >  drivers/base/core.c    | 26 +++++++++++++++++++++++---
+> > > >  include/linux/device.h |  1 +
+> > > >  2 files changed, 24 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > > index d5f4e4aac09b..80d9430856a8 100644
+> > > > --- a/drivers/base/core.c
+> > > > +++ b/drivers/base/core.c
+> > > > @@ -44,6 +44,7 @@ static bool fw_devlink_is_permissive(void);
+> > > >  static void __fw_devlink_link_to_consumers(struct device *dev);
+> > > >  static bool fw_devlink_drv_reg_done;
+> > > >  static bool fw_devlink_best_effort;
+> > > > +static struct workqueue_struct *device_link_wq;
+> > > >
+> > > >  /**
+> > > >   * __fwnode_link_add - Create a link between two fwnode_handles.
+> > > > @@ -532,12 +533,26 @@ static void devlink_dev_release(struct device=
+ *dev)
+> > > >       /*
+> > > >        * It may take a while to complete this work because of the S=
+RCU
+> > > >        * synchronization in device_link_release_fn() and if the con=
+sumer
+> > > > or
+> > > > -      * supplier devices get deleted when it runs, so put it into =
+the
+> > > > "long"
+> > > > -      * workqueue.
+> > > > +      * supplier devices get deleted when it runs, so put it into =
+the
+> > > > +      * dedicated workqueue.
+> > > >        */
+> > > > -     queue_work(system_long_wq, &link->rm_work);
+> > > > +     queue_work(device_link_wq, &link->rm_work);
+> > > >  }
+> > > >
+> > > > +/**
+> > > > + * device_link_wait_removal - Wait for ongoing devlink removal job=
+s to
+> > > > terminate
+> > > > + */
+> > > > +void device_link_wait_removal(void)
+> > > > +{
+> > > > +     /*
+> > > > +      * devlink removal jobs are queued in the dedicated work queu=
+e.
+> > > > +      * To be sure that all removal jobs are terminated, ensure th=
+at any
+> > > > +      * scheduled work has run to completion.
+> > > > +      */
+> > > > +     drain_workqueue(device_link_wq);
+> > > > +}
+> > >
+> > > I'm still not convinced we can have a recursive call into devlinks re=
+moval
+> > > so I
+> > > do think flush_workqueue() is enough. I will defer to Saravana though=
+...
+> >
+> > AFAICS, the difference betwee flush_workqueue() and drain_workqueue()
+> > is the handling of the case when a given work item can queue up itself
+> > again.  This does not happen here.
+>
+>
+> Yeah, that's also my understanding...
 
-> > As I mentioned, the 'required-opps' binding update is needed to fix the
-> > missing OPP vote so blocking the binding patch would block merging the
-> > DT fix which could otherwise go into 6.8.
+Moreover, IIUC this is called after dropping the last reference to the
+device link in question and so after queuing up the link removal work.
+Because that work does not requeue itself, flush_workqueue() is
+sufficient to ensure that the removal work has been completed.
 
-> I agree that the fix gets the priority. But some maintainers perfer to merge fix
-> patches _only_ if they are fixing the issue introduced in the ongoing release.
-> But if Bjorn has no issues in merging these for 6.8, then it is fine.
-
-It also depends on the severity of the issue and to some extent the
-complexity of the fix. These binding fixes are certainly low risk. :)
-
-> > The 'msi-map-mask' is arguably a fix of the binding which should never
-> > have had that property, but sure, it's strictly only needed for 6.9.
-> > 
-> > And Bjorn A has already checked with the Qualcomm PCI team regarding
-> > ASPM. It's also been two weeks since you said you were going to check
-> > with your contacts. Is it really worth waiting more for an answer from
-> > that part of the team? We can always amend the ASPM fixes later when/if
-> > we learn more.
-> > 
-> > Note that this is also a blocker for merging ITS support for 6.9.
-
-> I got it, but we cannot just merge the patches without finding the rootcause. I
-> heard from Qcom that this AER error could also be due to PHY init sequence as
-> spotted on some other platforms, so if that is the case then the DT property is
-> not correct.
-
-I've verified the PHY sequences both against what the UEFI firmware (and
-hence Windows) uses as well as against the internal Qualcomm
-documentation (with the help of Bjorn A). And Qualcomm did say that such
-errors are also seen under Windows on these platforms.
-
-But the fact that the symptoms differ between the CRD and X13s, which
-use the same Atheros Wi-Fi controller (and the same PHY initialisation)
-also suggests that this may to some extent be due to some property of
-the machine.
-
-Notably, on the X13s there are lot of errors when pushing data
-(e.g. using iperf3), whereas on the CRD the are no errors when running
-such tests.
-
-When leaving the CRD on for long periods of time with the Wi-Fi
-disconnected, I do however see occasional correctable errors.
-
-> Since this is not the hot target now (for Qcom), it takes time to
-> check things.
-
-I think that based on the available data it's reasonable to go ahead and
-merge these patches. In the event that this turns out to be a
-configuration issue, we can just drop the 'aspm-no-l0s' properties
-again.
-
-Johan
+If anyone thinks that it may not be sufficient, please explain to me
+why you think so.  Otherwise, don't do stuff to prevent things you
+cannot explain.
