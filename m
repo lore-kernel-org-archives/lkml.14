@@ -1,40 +1,59 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D06761680;
-	Thu, 29 Feb 2024 09:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CE96215C
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199932; cv=none; b=GbCLGmhvfgLwA93nzZXNE2zJ6BMe7Yr4Gqi5+YIzZnNaoJYqrOwflo88DcOi+2BWM634LFScuoJcgTzYXGON8Z/X8/D3bOyLCgd6A3CGx5BZyX+Fge4GS22tLCRZNzucK/3d4pbufrX4BQlcuuqYNoCML/F3oV7+gbVFODQm0RQ=
+	t=1709200017; cv=none; b=JEH6Pfh3fgMAa8H7py+8nN/hM1onf6O04+byOhwmPCG13eLTAAlV7lHFaVx0moAd3GuMQiiULZdkTW5ZGgYt14ODBzoYIQitB3lFN+t+DZkqNAUafVHtmh23B2GUxycbQtH7Nmhw+0gzSJAwemIl2SZ1K5WuQ8i5Yp6/6tKJ/jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199932; c=relaxed/simple;
-	bh=zqMod5Dpmo25ZYJnsrKD9ta8Mkuv6yxXbpPE124uuWg=;
+	s=arc-20240116; t=1709200017; c=relaxed/simple;
+	bh=4zH9C/dh4VdmSyxV/m5XlzDwF4IzkWrKleVHIhuzXWQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cy4A+fVkqFtgeWGq5fHs8Cj7SzxIdf4fOafgeWJenb3z3LMUnR/dZx3wpIuewu5ua0JhZBlMhdrrM4nmO2rBMwmLjQrvYATvMfUk2IT3tNAu9HCaIA4eNyaeMwkA4Ip0F2xqIgopO8BdxPKiqNmeG957jO0J5qPLKqVFVeEJwGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cGGUw0Gn; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=OmQBeq7RiEhwA/oKI+r9dvlRWk6A+4oJYnROxbGkfi49KeA+gvrOEPZPmmKqJTaj6u4UWW+gDvUAsCfvx/n/6SrEL85Qi+SlJe3QCASfFJ+zWc5IUoG4cZZAbvW2lIty2ZTttM9pcKZNAXFN6LcO0cQNKsxwfpRWYtNDl9NbHTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NOAnXi8H; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cGGUw0Gn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709199928;
-	bh=zqMod5Dpmo25ZYJnsrKD9ta8Mkuv6yxXbpPE124uuWg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cGGUw0GnTQlL8WhUt9CYdUBIGh5WzXoZi4F6acKTJ/nfgKY0bGsEOMGPt+4hfVPrz
-	 vNpEJT8waAK2cuNo6R8RcTti5lm4I6qYEL0bVw8d0g6uQ+P4l/w0ALBQy5DRjnWhtC
-	 /v4VOleLj0QalfQK4cWa6ebsZS7R8HLJtNoxVUE7QTpP5z7S25zZg48tceTKSD49pZ
-	 G8M+V6D0VhHTRqQBL4U1ecuV7CJQjRMU/TSrYsnDxCgaRoHo+gWArm3BptRnP9R1dM
-	 XNNTHfu+mlgCxmD8M9lOyNVNx2IOLPr2gLsJXJUoxPfBWa/6YU1AH9zYr7NsFRpjiI
-	 qnCJozDOS5mpg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 335B53780F7F;
-	Thu, 29 Feb 2024 09:45:28 +0000 (UTC)
-Message-ID: <cc74422d-962f-4da5-867b-158a71db1a7b@collabora.com>
-Date: Thu, 29 Feb 2024 10:45:27 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NOAnXi8H"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56682b85220so1231405a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:46:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709200013; x=1709804813; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9+hYCX3torNsXyaqwug19LZ2jZs7RJKtMjbl9CWfQq8=;
+        b=NOAnXi8H9R7WYifd5Nm+BM/Qg6q5FVpOtzJy7HmdDN7aO46XgQ3vGZUh6Ud0wqqNLi
+         zz3Nl4qtNcYsEo8AbIriXWdyu24OH0gEFkzgnR3w4qu2L0WYOlTFLMFy/vDUE7lRBZIR
+         63WOEpxtLl6I1DScMfYMqYFjErlg/M1ZjN4At0+09jCebQzJzoadKKYMJqQjPPuGNJkO
+         xbrXyN7A8h96VtkdzDUdQnFeExOUXfvTd4Umog3GcpRMLXmtemmuLtqSMuiI5VpyGFJW
+         4kWoQxsfv+1FRxrAweLu5WFbJA+651btTtonekz6T0P6FRmOKhTJYpWpPNmAgADNA5Z4
+         P9Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709200013; x=1709804813;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9+hYCX3torNsXyaqwug19LZ2jZs7RJKtMjbl9CWfQq8=;
+        b=XIoGWtdqoD5E/XxRRcQ+jsynzHSil8tRaIFuRCci+pxRAIRStjR1F8DlO3VOQPJqN+
+         FQpcj/+2Tctc1zohK1p3ReIDLo4e/mSFQLyTKcZ+HBXt7eWUZC759ICdIGGbqhgDqvIs
+         we+RDTv1d7BBJeSQaO6rNRt93V9u8FSUqOhT+TJnfmLBScRk/mM0dzEyLUF0ONvLfAC3
+         4buWIot4DxNP2B/Gzcyq2haGr4RMhUDAHQn3Ypb9FpHWkX1o+a3FukAHbsLIYA94a7FO
+         fwQi3y1FBPuSl0LdFWUWYI1Mw+Ivw0D3WqxkldHobYp0KdPtVQsiGs5X7Kn+IiI7p2Z3
+         gxDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLm/h7yfKXz69PtBLfiQ/mR7zAwVV59fEmftVXpTbxRPZz7wWF0y9cbQd+aw22cKOq+YOsTnHKbBgd+94KFAtKKeCb7Zjk42oGY0dJ
+X-Gm-Message-State: AOJu0YyGx6LRKgbwuhRMwW5KFr3MAM9gxmtbVVba9bkXUgGBHQllommL
+	75YvX9wm0OymmEgqUIRDLowHBiBZBQQUNAE3EmTRVwbvLGkeH3hJm7UsWl7xjhY=
+X-Google-Smtp-Source: AGHT+IHGJ0GTnOsuEWYL2EDugHnlHOvlmuCMytlM2mHCsu87oEHGMBnsAVzam8apsk9mo1zAfDi+bg==
+X-Received: by 2002:a50:8d8d:0:b0:564:7bff:8472 with SMTP id r13-20020a508d8d000000b005647bff8472mr1193367edh.2.1709200013161;
+        Thu, 29 Feb 2024 01:46:53 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id ef9-20020a05640228c900b0056624b47971sm442445edb.97.2024.02.29.01.46.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Feb 2024 01:46:52 -0800 (PST)
+Message-ID: <1251bf21-c65e-4749-ad14-78ddf5cae7ab@linaro.org>
+Date: Thu, 29 Feb 2024 10:46:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,206 +61,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] clk: mediatek: Introduce need_pm_runtime to
- mtk_clk_desc
+Subject: Re: [PATCH v3 3/4] ASoC: dt-bindings: fsl-sai: allow only one
+ dma-names
 Content-Language: en-US
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Pin-yen Lin <treapking@chromium.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Weiyi Lu <weiyi.lu@mediatek.com>, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org
-References: <20240108081834.408403-1-treapking@chromium.org>
- <CAGXv+5EnBt+7WrNb-QyziEaCihvjhFVf2tpzk=XyAoeELqucaw@mail.gmail.com>
- <e0e6febf-1045-49f8-a200-8bc095b0fa50@collabora.com>
- <CAGXv+5F5YFRKjaXu_XbXrUhqKL0NSRyt6tniQYfhRh+fsaxqmg@mail.gmail.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <CAGXv+5F5YFRKjaXu_XbXrUhqKL0NSRyt6tniQYfhRh+fsaxqmg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Frank Li <Frank.Li@nxp.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240228-asrc_8qxp-v3-0-d4d5935fd3aa@nxp.com>
+ <20240228-asrc_8qxp-v3-3-d4d5935fd3aa@nxp.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240228-asrc_8qxp-v3-3-d4d5935fd3aa@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Il 29/02/24 08:17, Chen-Yu Tsai ha scritto:
-> On Mon, Feb 26, 2024 at 7:16 PM AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@collabora.com> wrote:
->>
->> Il 23/02/24 05:27, Chen-Yu Tsai ha scritto:
->>> On Mon, Jan 8, 2024 at 4:18 PM Pin-yen Lin <treapking@chromium.org> wrote:
->>>>
->>>> Introduce a new need_pm_runtime variable to mtk_clk_desc to indicate
->>>> this clock controller needs runtime PM for its operations.
->>>> Also do a runtime PM get on the clock controller during the
->>>> probing stage to workaround a possible deadlock.
->>>>
->>>> Signed-off-by: Pin-yen Lin <treapking@chromium.org>
->>>
->>> Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
->>>
->>> The patch itself looks fine.
->>>
->>> Besides the MT8183 MFG clock issues, we do actually need this for the
->>> MT8192 ADSP clock. Its power domain is not enabled by default.
->>>
->>
->> ...but on MT8195 the ADSP clock works - because the ADSP node exists.
+On 28/02/2024 20:14, Frank Li wrote:
+> Some sai only connect one direction. So allow only "rx" or "tx" for
+> dma-names.
+
+"one direction" was already allowed. Explain really what is the
+different, e.g. you expect only TX?
+
+This applies to all your recent patches - they all have insufficient
+explanation. Often they explain what you are doing, but not why.
+
 > 
-> That's an indirect dependency that should not be relied on. Say the clock
-> driver probed but the ADSP hasn't, and you try to read out the current
-> status. What would happen?
-> 
-> - Read out works fine, because the power domain is default on, and hasn't
->    been turned off by late cleanup
-> - Read out is bogus (but you can't tell)
-> - Read out hangs.
-> 
-> The third is what happens on MT8192. There's still some issues on that
-> front, as even after I applied the ADSP power domain patches from MediaTek,
-> the readout was still hanging.
-> 
-
-That MT8192 lockup story is getting crazy in my head... anyway, besides that,
-I get the point - I was somehow ignoring the fact that kernel modules do exist.
-
-Eh, sorry about that :-)
-
->> This poses a question: should we make clock controllers depend on power domains,
->> or should we keep everything powered off (hence clocks down - no power consumption)
->> *unless* the user exists?
-> 
-> That's a policy discussion separate from actual hardware dependencies.
-> *If* the clock controller needs the power domain to be active for the
-> registers to be accessed, the clock controller *must* have a direct
-> dependency on the power domain.
-> 
-
-I admit I should've worded that better.
-
-"should we make clock controllers depend on power domains" was actually implying
-"IF those need one" :-)
-
-I really wonder if - at this point - it's simply a better idea to not restrict
-the call to devm_pm_runtime_enable/resume_and_get to `need_runtime_pm == true`.
-
-Do we really need to exclude that on other clock controllers that don't have
-any power domain dependency? Any side effect?
-
-Saying this because if we can avoid yet another per-SoC flag I'm really happy,
-as readability is also impacted and besides - if we ever find out that one of
-those need a power domain in the future, we'll need just one commit and just
-only in the devicetree, instead of enabling a flag in driver X as well as that,
-avoiding some (potentially unnecessary) noise... I guess.
-
-P.S.: I just noticed that the return value for the devm_pm_runtime_enable() call
-       is not being checked!
-
-.......
-
-In short....
-
-Chen-Yu, at this point, do you have any reason why we wouldn't be able and/or it
-wouldn't be a good idea to just avoid adding the `need_runtime_pm` flag (meaning
-that we perform pm_runtime calls for all clock drivers unconditionally)?
-
-If this is about longer boot time, I don't think that it's going to be more than
-a millisecond or two, so that should be completely ignorable.
-
-Can you please do a test for that, or should I?
-
-Cheers
-Angelo
-
->> For the second one, this means that the *device* gets the power domain (adsp), and
->> not the clock controller (which clocks are effectively useless if there's no user).
-> 
-> No. See my previous paragraph.
-> 
-> ChenYu
-> 
->> Angelo
->>
->>>> ---
->>>>
->>>> Changes in v3:
->>>> - Update the commit message and the comments before runtime PM call
->>>>
->>>> Changes in v2:
->>>> - Fix the order of error handling
->>>> - Update the commit message and add a comment before the runtime PM call
->>>>
->>>>    drivers/clk/mediatek/clk-mtk.c | 19 +++++++++++++++++++
->>>>    drivers/clk/mediatek/clk-mtk.h |  2 ++
->>>>    2 files changed, 21 insertions(+)
->>>>
->>>> diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
->>>> index 2e55368dc4d8..ba1d1c495bc2 100644
->>>> --- a/drivers/clk/mediatek/clk-mtk.c
->>>> +++ b/drivers/clk/mediatek/clk-mtk.c
->>>> @@ -13,6 +13,7 @@
->>>>    #include <linux/of.h>
->>>>    #include <linux/of_address.h>
->>>>    #include <linux/platform_device.h>
->>>> +#include <linux/pm_runtime.h>
->>>>    #include <linux/slab.h>
->>>>
->>>>    #include "clk-mtk.h"
->>>> @@ -494,6 +495,18 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
->>>>                           return IS_ERR(base) ? PTR_ERR(base) : -ENOMEM;
->>>>           }
->>>>
->>>> +
->>>> +       if (mcd->need_runtime_pm) {
->>>> +               devm_pm_runtime_enable(&pdev->dev);
->>>> +               /*
->>>> +                * Do a pm_runtime_resume_and_get() to workaround a possible
->>>> +                * deadlock between clk_register() and the genpd framework.
->>>> +                */
->>>> +               r = pm_runtime_resume_and_get(&pdev->dev);
->>>> +               if (r)
->>>> +                       return r;
->>>> +       }
->>>> +
->>>>           /* Calculate how many clk_hw_onecell_data entries to allocate */
->>>>           num_clks = mcd->num_clks + mcd->num_composite_clks;
->>>>           num_clks += mcd->num_fixed_clks + mcd->num_factor_clks;
->>>> @@ -574,6 +587,9 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
->>>>                           goto unregister_clks;
->>>>           }
->>>>
->>>> +       if (mcd->need_runtime_pm)
->>>> +               pm_runtime_put(&pdev->dev);
->>>> +
->>>>           return r;
->>>>
->>>>    unregister_clks:
->>>> @@ -604,6 +620,9 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
->>>>    free_base:
->>>>           if (mcd->shared_io && base)
->>>>                   iounmap(base);
->>>> +
->>>> +       if (mcd->need_runtime_pm)
->>>> +               pm_runtime_put(&pdev->dev);
->>>>           return r;
->>>>    }
->>>>
->>>> diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
->>>> index 22096501a60a..c17fe1c2d732 100644
->>>> --- a/drivers/clk/mediatek/clk-mtk.h
->>>> +++ b/drivers/clk/mediatek/clk-mtk.h
->>>> @@ -237,6 +237,8 @@ struct mtk_clk_desc {
->>>>
->>>>           int (*clk_notifier_func)(struct device *dev, struct clk *clk);
->>>>           unsigned int mfg_clk_idx;
->>>> +
->>>> +       bool need_runtime_pm;
->>>>    };
->>>>
->>>>    int mtk_clk_pdev_probe(struct platform_device *pdev);
->>>> --
->>>> 2.43.0.472.g3155946c3a-goog
->>>>
->>
->>
->>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
 
+
+
+Best regards,
+Krzysztof
 
