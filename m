@@ -1,50 +1,59 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE2B56757;
-	Thu, 29 Feb 2024 09:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E830A54FBB
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709197272; cv=none; b=CWW+ak6KCfRFyRy4l7Tn0B60EqPHp/7SjdRyMH0pILRM9OjeCDVBXCGHXVabtmI7QUj3AI+MbuOpiiPmlv+BCjIvzXWu5axdhMOw06aSH8lvayRSC+rgB+Uunxxj2FqRyiE32nPyIvvqzF2wIYTOIbCv7WtJ0gFMdT5xrN0AcLQ=
+	t=1709197303; cv=none; b=gY8bMjYak2dk+v7JHVFzxzi2B8cVgZpMmY1QWxJ1imy+ZyDyyTcjJ41I7yFr1S9+kBN3XJd0uoSu/ajY6iyy4fjsMhkXsirHfYtPrDq1sXs2BeXonuhRIvYiVLT0ckZKQJz+S6MRTwICzJhyf3pdN3xx/mNqSbDp89Ww9BeEs+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709197272; c=relaxed/simple;
-	bh=nO18ek6qIJNdw08Rtc5K1go4uLYCgSvQEvI8E/7k09g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GyoA4xV3hOpS47LqiWGoo5vCMHNxyCzd1Lz7CHnj3eWCnH7QhMryN2BrmmncJa/a6k4r/q+mn62ckp1disZw1+ZWcwq8PJJu6D1L/Af3yqD+4iK0UwPVdDXSqhhdNz9+aaEANij3FNGRjQEso/yWd+C1EgG7IQnNAmd4offVwYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=PYay3daQ; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1709197303; c=relaxed/simple;
+	bh=hItLO7VanrN+m6xHMkLjQkLMEeRdSTJX+I7zjIOedNc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uJBOWdNZ9Fz+fWiUH3NesCHkQ7yRMwpmvceE45dWJMJv/JvESXoIka9uQfywi5rvOnAJuZCO05VQAvPRYx5qBIdxleczd3RH/vLjGMxjuW9+fYAim0yAF7X90FHuSMjKaTeIqp8A1eYuMI6QBQnXi4/DhvS5OM2AJMpw5wTBlxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DMzK5rWr; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="PYay3daQ"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T4huaR020905;
-	Thu, 29 Feb 2024 10:00:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=WqasNkugCYHmCbUQtRLId+t0ZOPdmhx4ImM59TrtYG0=; b=PY
-	ay3daQ4GMhtSWIfFDGLmS3mxULzRt144e6oupaRv6Mx3tRmRgYSSgTWO/5I/qY+0
-	om45XexYD4zz87L1VmgmVK3eHroMBRuPNMvHr3r86gvbE8uiWNMLFX63LBAv8j2a
-	C3Wp2CIoBiCBu81kfEP8PTu3FeDBFbCMgWiupStb1EObM/MVYck0v2Oc1FYzKDdy
-	WtUYL5PuUrs9Y9p96/Z8kNghqIfntuhNBfZfs6vHFnv0krOmQgmgVDCurYECr2R/
-	XSGrROjH3u9iSiTgViYWoRJxihwtjHdYwdsZ2DAV/DoU8iwpip/ucquBX41PDCBL
-	SAn/jyF4BGWvsf+2E5Vg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3whf4d143v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 10:00:25 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3A55640048;
-	Thu, 29 Feb 2024 10:00:14 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 61EC9249DEE;
-	Thu, 29 Feb 2024 09:59:16 +0100 (CET)
-Received: from [10.201.21.122] (10.201.21.122) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 29 Feb
- 2024 09:59:15 +0100
-Message-ID: <c990453c-f43a-48a7-9285-f8b391604f57@foss.st.com>
-Date: Thu, 29 Feb 2024 09:59:14 +0100
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DMzK5rWr"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e57ab846a1so417368b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:01:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1709197300; x=1709802100; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=an35NBp5Mp8TLZfvQl1bisU8Xz+LHk2m54lQFmMBW7M=;
+        b=DMzK5rWrKbxJ+Qh46csPH42MEENMj3ArUSbXNuWlVCNsSs1DDNGH9mEZiklKPHUhIh
+         ZY8rWAZlN8NsT9gzvElSQ5G1sxmvdaAVNtaDq64d/BQmoexUpYv81dbFHvMYNgE8c6Cf
+         n/kYDbo9A9Vh4Uuwg/7vrEGxFOiXIDKg/Ld72pYOUAsLfpD008ueMXFdLfZAiCqt3huU
+         2HRXDLlupiOuQ/AhpLYHuH3NVIMbwjpB0hEqQ4yfL6syrEJNurp8C5Wi1hQgBEz2J9jK
+         gWOqIWT78cXC92itNqYgOQNUXreBygsTuyocB5tyPIhUoRVvXWO+elVMemPRgeVJ/pyw
+         CWew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709197300; x=1709802100;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=an35NBp5Mp8TLZfvQl1bisU8Xz+LHk2m54lQFmMBW7M=;
+        b=KSKOzMqcnktYKfPs0RD/vpmVAWiFksuGIA6MGuERVOAvJSIfELLJPLjGQ6xtYkAxer
+         iJmlUfnhNrqMxBcWWZIS917pqr3pvVGeeZclD7ps4gyTd2PzJCUAXp5QvQ9YF3CGfCK9
+         nYi+QOX1EnwQiote9+l0e/MrkFRP/1X+6744Zfnst1Qum/WC4R1iC3LsDH/mAmucscpK
+         rpNSjn6utZOY6Wi7TJ9+OleWlnn2HmPMUJGkAB4UkbKlIXToptZJh48QpYNfWiqvgc31
+         tpCuO2qKklZHVI3SRglHxRa6R51duBbmBP7eE2/gIvTBQWHrsMYhTIq63Jc1X4jtvlww
+         w9TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmL0JHrz87TTsQAkcrk8mXyNeFJeI8DwwDuZWnEEgbl1FF4ZlDrxXUhtLRochI7Yr7qykkmBj+IVAJUiMrEwOFWqXCp/8PMm1zqIwQ
+X-Gm-Message-State: AOJu0Yx7EPiDL8DewltWmiOypd2mNi0Au9B09OeuaumOdeSkUrpDks+G
+	4E+LCNwCz9XwaKT7pyyEfyivUItcEyafqaf5YSKLq9skDo8/cBdKF9vufaX27Vo=
+X-Google-Smtp-Source: AGHT+IFY3AHg4m8nBMNVAFaa01zrNve+4dbHUktxFyT7dirxUCQtarrXYNSe+xM10W0RtgItMALuOw==
+X-Received: by 2002:a62:d44e:0:b0:6e4:f12c:c43e with SMTP id u14-20020a62d44e000000b006e4f12cc43emr1451475pfl.24.1709197300042;
+        Thu, 29 Feb 2024 01:01:40 -0800 (PST)
+Received: from [10.84.152.139] ([203.208.167.152])
+        by smtp.gmail.com with ESMTPSA id a15-20020aa78e8f000000b006e5808b472esm807258pfr.95.2024.02.29.01.01.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Feb 2024 01:01:39 -0800 (PST)
+Message-ID: <758ebf4e-ee84-414b-99ec-182537bcc168@bytedance.com>
+Date: Thu, 29 Feb 2024 17:00:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,113 +61,159 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 0/5] Add display support for stm32f769-disco board
+Subject: Re: [RFC PATCH] sched/eevdf: Return leftmost entity in pick_eevdf()
+ if no eligible entity is found
 Content-Language: en-US
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-        <linux-kernel@vger.kernel.org>
-CC: <linux-amarula@amarulasolutions.com>,
-        Raphael Gallais-Pou
-	<raphael.gallais-pou@foss.st.com>,
-        Lee Jones <lee@kernel.org>, Andre Przywara
-	<andre.przywara@arm.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Leonard_G=C3=B6hrs?=
-	<l.goehrs@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Sean
- Nyekjaer <sean@geanix.com>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20240127152853.65937-1-dario.binacchi@amarulasolutions.com>
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20240127152853.65937-1-dario.binacchi@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Chen Yu <yu.c.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Juri Lelli <juri.lelli@redhat.com>
+Cc: Tim Chen <tim.c.chen@intel.com>, Tiwei Bie <tiwei.btw@antgroup.com>,
+ Honglei Wang <wanghonglei@didichuxing.com>, Aaron Lu <aaron.lu@intel.com>,
+ Chen Yu <yu.chen.surf@gmail.com>, linux-kernel@vger.kernel.org,
+ kernel test robot <oliver.sang@intel.com>
+References: <20240226082349.302363-1-yu.c.chen@intel.com>
+From: Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <20240226082349.302363-1-yu.c.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-29_01,2024-02-27_01,2023-05-22_02
 
-Hi Dario
+Hi Chen, thanks for detailed analysis.
 
-On 1/27/24 16:28, Dario Binacchi wrote:
-> The series adds display support for the stm32f769-disco board. It has been
-> tested on hardware revisions MB1225-B03 and MB1166-A09. This required
-> modifications to the nt35510 driver that have already been applied.
-> 
-> Changes in v10:
-> - Drop backlight. From a closer analysis of the schematics
->    en.MB1225-F769I-B01_Schematic.pdf and en.mb1166-default-a09-schematic.pdf,
->    it is noticed that the GPIO I14 is connected to an unmounted
->    resistor (n/a), making the backlight functionality via GPIO unusable.
-> - Drop backlight references
-> 
-> Changes in v9:
-> - Drop 'interrupts' property to fix yaml checks
-> - Rename vcc_3v3 to to vcc-3v3
-> - Rename panel-dsi@0 to panel@0 to fix yaml warnings
-> - Change commit message
-> - Rename stm32f769-disco-mb1225-revb03-mb1166-reva09 to
->    stm32f769-disco-mb1166-reva09
-> 
-> Changes in v8:
-> - Add Acked-by tag of Lee Jones
-> - Add Reviewed-by tag of Raphael Gallais-Pou
-> - Add Reviewed-by tag of Raphael Gallais-Pou
-> - Remove unit name from 'ltdc/port/endpoint@0' to fix the compiling
->    warning:
->    ../arch/arm/boot/dts/st/stm32f769-disco.dts:189.28-191.5: Warning
->    (unit_address_vs_reg): /soc/display-controller@40016800/port/endpoint@0: node
->    has a unit name, but no reg or ranges property
-> - Add Reviewed-by tag of Linus Walleij
-> - Add Reviewed-by tag of Raphael Gallais-Pou
-> 
-> Changes in v7:
-> - Replace .dts with .dtb in the Makefile
-> 
-> Changes in v6:
-> - Drop patches
->    - [5/8] dt-bindings: nt35510: add compatible for FRIDA FRD400B25025-A-CTK
->    - [7/8] drm/panel: nt35510: move hardwired parameters to configuration
->    - [8/8] drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK
->    because applied by the maintainer Linus Walleij
-> 
-> Changes in v5:
-> - Replace GPIOD_ASIS with GPIOD_OUT_HIGH in the call to devm_gpiod_get_optional().
-> 
-> Changes in v2:
-> - Add Acked-by tag of Conor Dooley
-> - Change the status of panel_backlight node to "disabled"
-> - Delete backlight property from panel0 node.
-> - Re-write the patch [8/8] "drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK"
->    in the same style as the original driver.
-> 
-> Dario Binacchi (5):
->    dt-bindings: mfd: stm32f7: Add binding definition for DSI
->    ARM: dts: stm32: add DSI support on stm32f769
->    ARM: dts: stm32: rename mmc_vcard to vcc-3v3 on stm32f769-disco
->    ARM: dts: stm32: add display support on stm32f769-disco
->    ARM: dts: add stm32f769-disco-mb1166-reva09
-> 
->   arch/arm/boot/dts/st/Makefile                 |  1 +
->   .../dts/st/stm32f769-disco-mb1166-reva09.dts  | 13 ++++
->   arch/arm/boot/dts/st/stm32f769-disco.dts      | 70 +++++++++++++++++--
->   arch/arm/boot/dts/st/stm32f769.dtsi           | 20 ++++++
->   include/dt-bindings/mfd/stm32f7-rcc.h         |  1 +
->   5 files changed, 101 insertions(+), 4 deletions(-)
->   create mode 100644 arch/arm/boot/dts/st/stm32f769-disco-mb1166-reva09.dts
->   create mode 100644 arch/arm/boot/dts/st/stm32f769.dtsi
-> 
+The title of this patch sounds a little weird to me, since any
+non-empty cfs_rq should have at least one eligible entity. Besides,
+choosing the leftmost entity which could be non-eligible can be
+sub-optimal, anyway this is only a workaround..
 
-Series applied on stm32-next.
+On 2/26/24 4:23 PM, Chen Yu Wrote:
+> There is occasional report from lkp that the kernel hits the NULL pointer
+> exception:
+> 
+> [  512.079810][ T8305] BUG: kernel NULL pointer dereference, address: 0000002c
+> [  512.080897][ T8305] #PF: supervisor read access in kernel mode
+> [  512.081636][ T8305] #PF: error_code(0x0000) - not-present page
+> [  512.082337][ T8305] *pde = 00000000
+> [  512.082829][ T8305] Oops: 0000 [#1] PREEMPT SMP
+> [  512.083407][ T8305] CPU: 1 PID: 8305 Comm: watchdog Tainted: G        W
+> [  512.086203][ T8305] EIP: set_next_entity (fair.c:?)
+> 
+> This is caused by NULL candidate returned by pick_eevdf() as Abel analyzed.
+> After
+> commit 2227a957e1d5 ("sched/eevdf: Sort the rbtree by virtual deadline")
+> the NULL candidate would trigger the NULL pointer exception. While before
+> this commit, there would be warning.
+> 
+> This NULL entity issue was always there before above commit. With debug
+> patch to print the cfs_rq and all the entities in the tree, we have the
+> information when the issue was reproduced:
+> 
+> [  514.461242][ T8390] cfs_rq avg_vruntime:386638640128 avg_load:2048 min_vruntime:763383370431
+> [  514.535935][ T8390] current on_rq se 0xc5851400, deadline:18435852013562231446
+> 			min_vruntime:18437121115753667698 vruntime:18435852013561943404, load:629
+> [  514.536772][ T8390] Traverse rb-tree from left to right
+> [  514.537138][ T8390]  se 0xec1234e0 deadline:763384870431 min_vruntime:763383370431 vruntime:763383370431 non-eligible
+> [  514.537835][ T8390]  se 0xec4fcf20 deadline:763762447228 min_vruntime:763760947228 vruntime:763760947228 non-eligible
+> [  514.538539][ T8390] Traverse rb-tree from topdown
+> [  514.538877][ T8390]  middle se 0xec1234e0 deadline:763384870431 min_vruntime:763383370431 vruntime:763383370431 non-eligible
+> [  514.539605][ T8390]  middle se 0xec4fcf20 deadline:763762447228 min_vruntime:763760947228 vruntime:763760947228 non-eligible
+> [  514.540340][ T8390] Found best:0x0
+> [  514.540613][ T8390] BUG: kernel NULL pointer dereference, address: 00000074
+> 
+> We can see that non of the entities in the tree are eligible, neither is
+> the current entity on this cfs_rq. As a result, curr is set to NULL:
+> if (curr && (!curr->on_rq || !entity_eligible(cfs_rq, curr)))
+> 	curr = NULL;
+> 
+> and the best is set to NULL, which caused the problem:
+> if (!best || (curr && entity_before(curr, best)))
+> 	best = curr;
+> 
+> The cause is that, the curr is eligible, but vruntime_eligible()
+> returns false. And the false negative is due to the following
+> code in vruntime_eligible():
+> 
+> return avg >= (s64)(vruntime - cfs_rq->min_vruntime) * load;
+> 
+> According to the log, vruntime is 18435852013561943404, the
+> cfs_rq->min_vruntime is 763383370431, the load is 629 + 2048 = 2677,
+> thus:
+> s64 delta = (s64)(18435852013561943404 - 763383370431) = -10892823530978643
+>      delta * 2677 = 7733399554989275921
+> that is to say, the multiply result overflow the s64, which turns the
+> negative value into a positive value, thus eligible check fails.
 
-Thanks for your efforts.
+Indeed.
 
-Alex
+> 
+> So where is this insane huge vruntime 18435852013561943404 coming from?
+> My guess is that, it is because the initial value of cfs_rq->min_vruntime
+> is set to (unsigned long)(-(1LL << 20)). If the task(watchdog in this case)
+> seldom scheduled in, its vruntime might not move forward too much and
+> remain its original value by previous place_entity().
 
+So why not just initialize to 0? The (unsigned long)(-(1LL << 20))
+thing is dangerous as it can easily blow up lots of calculations in
+lag, key, avg_vruntime and so on.
 
+Say during this pre-life, which is about 1ms for 1024-weight entity,
+there is only one entity running in this cfs_rq. Now another entity
+with funny lag joins in, being placed somewhere at 0+ vruntime, so
+cfs_rq->min_vruntime needs to be adjusted accordingly which leads to
+the breakage of cfs_rq->curr's key as you showed above.
+
+> 
+> The proper fix should deal with the overflow of entity_key() * load, but
+> I don't have much clue on that, so propose this conservative method to
+> restore the previous behavior before the mentioned commit.
+
+Inspired by Xuewen's proposal, will it work if limit the key?
+
+Thanks & BR,
+	Abel
+
+> 
+> Fixes: 2227a957e1d5 ("sched/eevdf: Sort the rbtree by virtual deadline")
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/lkml/202401301012.2ed95df0-oliver.sang@intel.com/
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+>   kernel/sched/fair.c | 13 ++++++++++++-
+>   1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 533547e3c90a..fb9202f464e2 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -880,7 +880,7 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
+>   	struct rb_node *node = cfs_rq->tasks_timeline.rb_root.rb_node;
+>   	struct sched_entity *se = __pick_first_entity(cfs_rq);
+>   	struct sched_entity *curr = cfs_rq->curr;
+> -	struct sched_entity *best = NULL;
+> +	struct sched_entity *best = NULL, *leftmost;
+>   
+>   	/*
+>   	 * We can safely skip eligibility check if there is only one entity
+> @@ -905,6 +905,8 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
+>   		goto found;
+>   	}
+>   
+> +	leftmost = se;
+> +
+>   	/* Heap search for the EEVD entity */
+>   	while (node) {
+>   		struct rb_node *left = node->rb_left;
+> @@ -937,6 +939,15 @@ static struct sched_entity *pick_eevdf(struct cfs_rq *cfs_rq)
+>   	if (!best || (curr && entity_before(curr, best)))
+>   		best = curr;
+>   
+> +	/*
+> +	 * entity_eligible() could bring false negative due to
+> +	 * multiply overflow, which reports no eligible entity.
+> +	 * Return leftmost entity as a backup(it is guaranteed
+> +	 * the tree is not NULL.
+> +	 */
+> +	if (!best)
+> +		best = leftmost;
+> +
+>   	return best;
+>   }
+>   
