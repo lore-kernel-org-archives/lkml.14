@@ -1,198 +1,78 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F86D657AE
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 10:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A91964CC1
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 10:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709202515; cv=none; b=OphcgsYOCV7wPLKVTsMlMdDxPptjhmDuKtkU1ZAA4AT6pfJXm9BdQbG83SZXPxqva32+99SCPw1oU779mDHSnpAqad9w7eoKopGhALUYAPeCn/dGie/CWFCiDnHXNbtYSn7nmzlsEjd+MI/a4nnh9SRU2GPBLJL1LMZPJALXgyw=
+	t=1709202545; cv=none; b=I36AXHqy3S9+qP3HFNipsX+jZLrfnKg0Q8MUMMnIhPjPjHNkoieF6VZUh6H7U+ch3jYgx/zUvcSGU9YIrhBjv0LwG+1IA2ng2WOkIXY0Fv5KxooF4Gs/I6SGP+dEVxNiuF8AMq8pGQH9b7XbP0aYVygzh1scDdMnzW/V5gxaawo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709202515; c=relaxed/simple;
-	bh=Gen/pPzDEnmUgS1j8ZB4uddyDs73eqpIaUAHuD12qXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EVJXZEu4jNAK4n6crEFQqndCTs+xcr3k/vFfDp8YucWxJBtwvdh+MrzWlpCGDTOLtUpkQgWxQuvYzuKvfPKvGf6865+zaY/GaGznproJl5Mx1Rd3Fu3qjlAaKf9XRfwugeIJ0K3lsyb6FZbDnsmasoC56UR2OuTsnpEketigAeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ard+GFlR; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ard+GFlR"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-565223fd7d9so7180a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:28:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709202512; x=1709807312; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vDV4jL0SIZPHNGZJLJzya8BUhcBbRTIVipyMtlb65G0=;
-        b=ard+GFlRGUZsQMrcp1leI0/d8jwYrtSftPwEEzweVrCfrtLZ9Qy0YJ8diziUjZ+CI5
-         uJ1GLg8R1XdQqJB/YhGFLTHwOu5JDF4a9XfczU+xqxS2PHToOenulF/OXzXlcd6EDPlv
-         FgpVhIA2//i5NF3jPwEZSZil5y2iX+CaplGwxXNSi6YSjretIGGiZtnizO42HG8B5MFN
-         zX1I9pGMc0pvmaEKzHfnFTG8Kx+hYqBB48ErOE6FVbm9XU3B/5bFvBdSdpnaSNbJAhUP
-         J3DEToIjyVMBe0GC+KbysQjneTbuSxVxCufc1eIokYta5ynYDIBgWWX731yIAOAtqQ8o
-         ksQw==
+	s=arc-20240116; t=1709202545; c=relaxed/simple;
+	bh=G/v8tih04oAC4s//9EOGB31fFEFCAiSTHed4T5BB2i4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=hYImIQO5wYtogmlSkhvct2cg07m7WCaMCY/EWjuAaHbkBFjDAJi9p59ce5NjRgZUvxBp5CXTMp9Iw1MrZyAnw1GPWes0U9fkCvu84UEi6dsXv23XF9TEjd5vHFp2uzyp8w+XdqiLIMjyEUj1N4PmW64p9g9pAAjrVDZNYHyDXmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7c76a65a4aaso53565739f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:29:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709202512; x=1709807312;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vDV4jL0SIZPHNGZJLJzya8BUhcBbRTIVipyMtlb65G0=;
-        b=aJ+DMYEvHixL+zJNCIvs5ZwX/pOtLi6FKWjJAkN0n3gZMzcIW36xlKqFKMBNn8osYy
-         VcFHIr9ZwjjABJbbSm1F7vhXzkwYtzC7RpuDro2tGBdgOldp4+tyeVSJ48ASqRUYGG8o
-         Q8X18dz76R5BHkCf74eYC1a7C+lue/QLCaWakMA9g+fcmoml7txWekPNU4MrAp+5v5RL
-         PKpAuzv0h1fou4Cd9EUt+NJTGNEVClg0UWFS7WEYTZcC7nWINLWAusKlBKKWMQCAQtfW
-         ncaSoRK+H6nDMmLTmm/IGsfZUe866RpswVBMSx7boxM+2cyloutitf5mn0p+x4855IAD
-         Kdfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHStXy262DoL+4hed9iT8+NM02s8ULoCO4eLVuqAe9MdlPb3EkJ+cCIaB0N0Eb3okRLoVXr7cI7tDM87TKEb/69J9ZKvSVCXlXi/tJ
-X-Gm-Message-State: AOJu0YzkF2OHGLw7uL06cP9dWrCTLNkaqjI21l8GUQ0r39GcNx/lKXe3
-	aSBkeC66iTeY7btzesWC5h3fDaOimQVG8s25uPgA1M4XF7pr2EWMdbVONYwj3J+ZTtUSlAb5F6D
-	Bcgd7qjV7uFlk/0kypdJGL1d04kg5z5WchMnH
-X-Google-Smtp-Source: AGHT+IGxqSlWKixvBGZKaFQJW5SjqcWLJPXBbGX85VtQJOjxoM5SUFjK2E2FtgML+eAxvmhg9UFMzJjqAkFTM8jh33s=
-X-Received: by 2002:a05:6402:348a:b0:566:2c0:a9d6 with SMTP id
- v10-20020a056402348a00b0056602c0a9d6mr82704edc.3.1709202511503; Thu, 29 Feb
- 2024 02:28:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709202543; x=1709807343;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=due3BSO2Q9QQy1tfU+DhYvgI9lxf7h7yLmfxg2bj9yE=;
+        b=Ubc8Bh2ObxsBbaSigA//j3FykqmoCgTD+qWDnSscGPl5mD59CLJ5V7wG3U1nuJ057b
+         kyxyowoyEqQfFVw4+VoQmm+DIr3PwRlMj5r+Vm7k2k6c4ZZoUNJ5GS+hmpgGusF1EOSZ
+         +tTVebiHgGgCo/r8fLYi6ck3FJGcPc96J+Wlts57TOrPnkDpkaBEP+HrQY6SkSD2yGC1
+         XyNqjrxjQCKmLvXqstA//wMRR3vkz5LM98GLJTkhXY8opZxo4zw87/zCSO1p5mKyJxJQ
+         iM6tAN+lGjMB0ftP5SWGUZLDwHALnNqnMoifDTnNo6AwetbqWw3X6qO9k1Z1SEXbGwWS
+         qXlw==
+X-Forwarded-Encrypted: i=1; AJvYcCWi/ISqNzZHDjbUONckzGy0IevrBSxdOekEnLqFbBvftzlWUeAcDGxlWAmF6SYUepkRD5GJZoJegAlkDj9QRy3G77pob8N3h8b26iy1
+X-Gm-Message-State: AOJu0Yxz5oEwQgg56uy2mv+2RFUPi945wMHj6sxk+FUaSUts7rjUw1SN
+	E6jyvm6/JJWpFG0qXswafoKvJNZX8Y3F57hA9+nZTYOZG4CqZiA6WQSksVvVHaxVr+2oTbWemyY
+	ko9c9+GaWlLZRZPNA/QwHdfl6OHegpmYx57kJDyL30FjVrVfbSr3Ug/g=
+X-Google-Smtp-Source: AGHT+IG2pzGB/bSL5lyIW4of4SnG2AETh2eVcWNY2PjmAky9W70Ne3ilD1c0bgJEXD2NQSMBqAVmrCjpUxXXw1IVIbbE8VsD2goT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223143833.1509961-1-guanyulin@google.com>
- <a299118d-eeec-40b4-9a3d-48dc40f34e12@gmail.com> <CAOuDEK3wP6zhEwgUn5zSedtwTYVFaJeBfeXkSg897EhpGP9=ig@mail.gmail.com>
- <3208c5b9-5286-48d1-81ab-cc3b2bc4303e@gmail.com> <CAOuDEK39Bdru5wAbxW-g2c=POgRxZwdQzPO5uNXP96AfSyA6pw@mail.gmail.com>
- <2024022749-campus-multiply-d657@gregkh>
-In-Reply-To: <2024022749-campus-multiply-d657@gregkh>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Thu, 29 Feb 2024 18:27:00 +0800
-Message-ID: <CAOuDEK3e0y_5HB3VkZoyYY8kzoWAJ3w9y7RcLJy7tSatsc+A6w@mail.gmail.com>
-Subject: Re: [PATCH v3] PM / core: conditionally skip system pm in
- device/driver model
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, rafael@kernel.org, pavel@ucw.cz, 
-	len.brown@intel.com, andriy.shevchenko@linux.intel.com, rdunlap@infradead.org, 
-	james@equiv.tech, broonie@kernel.org, james.clark@arm.com, 
-	masahiroy@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+X-Received: by 2002:a05:6638:3c45:b0:474:ba84:8ded with SMTP id
+ bg5-20020a0566383c4500b00474ba848dedmr69269jab.0.1709202543676; Thu, 29 Feb
+ 2024 02:29:03 -0800 (PST)
+Date: Thu, 29 Feb 2024 02:29:03 -0800
+In-Reply-To: <000000000000602c0e05f55d793c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007717e5061282baa0@google.com>
+Subject: Re: [syzbot] [ntfs3?] kernel BUG in ntfs_iget
+From: syzbot <syzbot+d62e6bd2a2d05103d105@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, anton@tuxera.com, 
+	axboe@kernel.dk, brauner@kernel.org, jack@suse.cz, linkinjeon@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-ntfs-dev@lists.sourceforge.net, ntfs3@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024 at 5:15=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Tue, Feb 27, 2024 at 04:56:00PM +0800, Guan-Yu Lin wrote:
-> > On Tue, Feb 27, 2024 at 2:40=E2=80=AFAM Florian Fainelli <f.fainelli@gm=
-ail.com> wrote:
-> > >
-> > > On 2/26/24 02:28, Guan-Yu Lin wrote:
-> > > > On Sat, Feb 24, 2024 at 2:20=E2=80=AFAM Florian Fainelli <f.fainell=
-i@gmail.com> wrote:
-> > > >>
-> > > >> On 2/23/24 06:38, Guan-Yu Lin wrote:
-> > > >>> In systems with a main processor and a co-processor, asynchronous
-> > > >>> controller management can lead to conflicts.  One example is the =
-main
-> > > >>> processor attempting to suspend a device while the co-processor i=
-s
-> > > >>> actively using it. To address this, we introduce a new sysfs entr=
-y
-> > > >>> called "conditional_skip". This entry allows the system to select=
-ively
-> > > >>> skip certain device power management state transitions. To use th=
-is
-> > > >>> feature, set the value in "conditional_skip" to indicate the type=
- of
-> > > >>> state transition you want to avoid.  Please review /Documentation=
-/ABI/
-> > > >>> testing/sysfs-devices-power for more detailed information.
-> > > >>
-> > > >> This looks like a poor way of dealing with a lack of adequate reso=
-urce
-> > > >> tracking from Linux on behalf of the co-processor(s) and I really =
-do not
-> > > >> understand how someone is supposed to use that in a way that works=
-.
-> > > >>
-> > > >> Cannot you use a HW maintained spinlock between your host processo=
-r and
-> > > >> the co-processor such that they can each claim exclusive access to=
- the
-> > > >> hardware and you can busy-wait until one or the other is done usin=
-g the
-> > > >> device? How is your partitioning between host processor owned bloc=
-ks and
-> > > >> co-processor(s) owned blocks? Is it static or is it dynamic?
-> > > >> --
-> > > >> Florian
-> > > >>
-> > > >
-> > > > This patch enables devices to selectively participate in system pow=
-er
-> > > > transitions. This is crucial when multiple processors, managed by
-> > > > different operating system kernels, share the same controller. One
-> > > > processor shouldn't enforce the same power transition procedures on
-> > > > the controller =E2=80=93 another processor might be using it at tha=
-t moment.
-> > > > While a spinlock is necessary for synchronizing controller access, =
-we
-> > > > still need to add the flexibility to dynamically customize power
-> > > > transition behavior for each device. And that's what this patch is
-> > > > trying to do.
-> > > > In our use case, the host processor and co-processor are managed by
-> > > > separate operating system kernels. This arrangement is static.
-> > >
-> > > OK, so now the question is whether the peripheral is entirely visible=
- to
-> > > Linux, or is it entirely owned by the co-processor, or is there a
-> > > combination of both and the usage of the said device driver is dynami=
-c
-> > > between Linux and your co-processor?
-> > >
-> > > A sysfs entry does not seem like the appropriate way to described whi=
-ch
-> > > states need to be skipped and which ones can remain under control of
-> > > Linux, you would have to use your firmware's description for that (AC=
-PI,
-> > > Device Tree, etc.) such that you have a more comprehensive solution t=
-hat
-> > > can span a bigger scope.
-> > > --
-> > > Florian
-> > >
-> >
-> > We anticipate that control of the peripheral (e.g., controller) will
-> > be shared between operating system kernels. Each kernel will need its
-> > own driver for peripheral communication. To accommodate different
-> > tasks, the operating system managing the peripheral can change
-> > dynamically at runtime.
->
-> That sounds like a nightmare of control and handling, how are you going
-> to do any of that?  Where is the code for that?
->
+syzbot suspects this issue was fixed by commit:
 
-Since the peripheral can issue different types of interrupts, we plan
-to assign the handling of those interrupts to separate operating
-system kernels. Additionally, only one operating system kernel will
-have the privilege to issue commands to the peripheral. We think that
-this could resolve potential conflicts.
+commit 6f861765464f43a71462d52026fbddfc858239a5
+Author: Jan Kara <jack@suse.cz>
+Date:   Wed Nov 1 17:43:10 2023 +0000
 
-> > We dynamically select the operating system kernel controlling the
-> > target peripheral based on the task at hand, which looks more like a
-> > software behavior rather than hardware behavior to me. I agree that we
-> > might need a firmware description for "whether another operating
-> > system exists for this peripheral", but we also need to store the
-> > information about "whether another operating system is actively using
-> > this peripheral". To me, the latter one looks more like a sysfs entry
-> > rather than a firmware description as it's not determined statically.
->
-> So you want to download different firmware to the device depending on
-> "something".  What is going to control that "something"?  Is that coming
-> from the kernel, or from userspace?  If userspace, why is any of this an
-> issue and just load whatever firmware you decide at that point in time?
-> Why does the kernel care?
->
-> confused,
->
-> greg k-h
+    fs: Block writes to mounted block devices
 
-In our design, no single firmware can fully control or communicate
-with the peripheral. Different functions of the peripheral are
-supported by different operating system kernels. Therefore, we should
-keep both firmwares active to use the peripheral effectively.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=105d5a6a180000
+start commit:   2639772a11c8 get_maintainer: remove stray punctuation when..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f8e72bae38c079e4
+dashboard link: https://syzkaller.appspot.com/bug?extid=d62e6bd2a2d05103d105
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1358d65ee80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10dbbe45e80000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: fs: Block writes to mounted block devices
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
