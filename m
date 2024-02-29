@@ -1,73 +1,66 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67C32D046
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAED933CF1;
+	Thu, 29 Feb 2024 02:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.121.71.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709173342; cv=none; b=m1az2CkvR8YLMCNmiDdNpm/150zQp4D0b1atTCTrWG7JRcEXff+X8KuLptyGw7f2FQMkg/5iqTtVOlrGvv8Pk9sgmRDZ5ehC4+pnXom1c+ugHcfFjicddRATv+3lfhGjONGiPR8IOV/ah/w6dNlJ8zCwYU0JPHfJUr0ph73+1QY=
+	t=1709173392; cv=none; b=MRIODshIR/7b3ocLPYc3dfqZ9Ru5WjsCBeDeBzAeeotbEaCqwC70vLnOc0At9cjR9O2YfGGM5nQUsLUn8IvYpQvTXwi4KvD7get22l60s5THUdZ0/6rR3MeY9N9CmNxKGApNZAGw4HDRhR1VS1BsrMeHu/DlT11aVkw2mW7Tlps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709173342; c=relaxed/simple;
-	bh=4AJpzkskAVEPBHUeKRfECaqwiHQnWCBHyFj6MymtwPY=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QQDeWZD+aWbX13o7WG5rwk9NY+TDxwM2xVKw+D4lyzS0tLpl78IYvTBRBvkhNOPovjssxU9ToxVHvWu6yeyJ3n/HMmio4ca1e3A8wo2efXCyboJmjpgN2sxDz4h2oV0wnaQY9ZpeqsbH4rt8wb7m2D1h4x8YKiyk8EQb3gy5YP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jJmU6isy; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709173392; c=relaxed/simple;
+	bh=0Fbi5ZAg7Uf7prUv2XS6xmsOLyEbnEHlNUw6NlOeY9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+ao2vRSsflGGgGeRuyL1DOjKddUxMP4M8Ak3eN0YP4ZUAHgHjFist89davhM/XaEpnyLkwCJYNs3oNAi6ADPQsugJ5NCXT4JhN5hKOJlg8kDMaZaNsgg88UXbBD4cqN2ssthMPjmFWrsRuneNJsJZhk291eLgQAFZkP1AsErSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=OH+LSqhQ; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=ihh1gmTk; arc=none smtp.client-ip=91.121.71.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jJmU6isy"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41T2CugB026645;
-	Thu, 29 Feb 2024 02:22:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : subject :
- in-reply-to : references : date : message-id : mime-version : content-type
- : content-transfer-encoding; s=pp1;
- bh=jrqcB7f3gqyOeE/5n3jxRuz15ul9JOIkrDuzji+2Ahk=;
- b=jJmU6isyya83TevqWcsHwRUSmhH0m/DSV5/VRf6avOcv4kx9AfnPnsgjR56pW3yieUaN
- +4oL1+Tnk4ftNmAdZ71KEpC8D3zeNuN7gUqOssWvG9QMjgIUiYNVLME280/cLM+EVPwS
- ALCCdEblfrnm5wTxmeAP/D0PYE3hnMtmK8+cpcrE5sMx7trPp60m9ytfMp7xZO/snZgt
- UZXhVtkFa9ucZZFGhdnWBadIFVsxYqtYnXMFP9tGaVcG+aQNNmkHJxUpnFhywnsmFn4g
- UnGUbs6FRL2JbPwd0a0hAPC6YDhsq9VID6l1NHL0pOUPjdow3Ov6HPYxhA3X1MpuvfBf Lg== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wjgxjr7xu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 02:22:15 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41SNKKur008147;
-	Thu, 29 Feb 2024 02:22:14 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfv9mj9vf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 02:22:14 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41T2MAag32113134
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 02:22:12 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0D9D420043;
-	Thu, 29 Feb 2024 02:22:10 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 314F020040;
-	Thu, 29 Feb 2024 02:22:09 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 29 Feb 2024 02:22:09 +0000 (GMT)
-Received: from localhost (unknown [9.66.77.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id ACE1A610C8;
-	Thu, 29 Feb 2024 13:22:04 +1100 (AEDT)
-From: Michael Ellerman <mpe@linux.ibm.com>
-To: Tasmiya Nalatwad <tasmiya@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org"
- <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [netdev] Build failure on powerpc
-In-Reply-To: <8294bf9a-d175-4d86-b6df-9c409108cbf1@linux.vnet.ibm.com>
-References: <8294bf9a-d175-4d86-b6df-9c409108cbf1@linux.vnet.ibm.com>
-Date: Thu, 29 Feb 2024 13:22:01 +1100
-Message-ID: <875xy8103a.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="OH+LSqhQ";
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="ihh1gmTk"
+Received: by nautica.notk.org (Postfix, from userid 108)
+	id 6592AC01C; Thu, 29 Feb 2024 03:23:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1709173382; bh=kHqYKpzkFMSrtvJ6fyOrRsaNmM72iJYg8f1LNIssPbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OH+LSqhQo7hIHUT3o7cRs7jCL9VUq6kbaz+k+0lj4eXEL7WYEcwokoXapW9o/ZJxt
+	 iv1zOIE7Z0HDOr1sVWAWN07XBfa4ku5I4PTnQdzHCppek1r0mKZE24yrjCbOcg4FTv
+	 aXiRQ8+VrrT4Deez/gyX4W5RlIjrNHcKTHcrWptw+LvPmm4/ZQ23qHB4CretMmljOy
+	 nRMDO7jcjxQ6fvOQxGpBBqyYnTzCjq8X79/Z8GnoQPnjzAHOVn3T1Y238Yh/Y6MYdP
+	 +clKQO0LrIlabv3AVH5X+05qmAPuRa5WmtYcrsNv593+vH1GWb8JYqoZgSqQnAXmvY
+	 IxpZUAZT0eXug==
+X-Spam-Level: 
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by nautica.notk.org (Postfix) with ESMTPS id 5A98DC009;
+	Thu, 29 Feb 2024 03:22:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1709173380; bh=kHqYKpzkFMSrtvJ6fyOrRsaNmM72iJYg8f1LNIssPbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ihh1gmTk1f1wUHyWQLFRPjxL+nUJBOK893eWBUjJzucPyOEL09wCcsxKMjptcWAq8
+	 WhkmwHMjNxlUiuxvnVxFw4VAuQgKghZ+PjjxcbM3YGoy5BDMm30uteyuRiFdxdHFte
+	 haCy2l5YJdduAelXfHpUtJ4w6eVlUXlevXw9aG65HtzOhupWtT/5V/K5vY+s+1IOtH
+	 S2g4gjVgA7nzpV7qBs2fbKqSbzRd2DfWl/4iaUH/ViVtFQX5LVQpPAOTHs3K6PXuPk
+	 4uesdBoLkdalD2QD0kz1U24Ea9+HUSKTbXn+DGLNtbAQZAZgJ5RLcvNFK4c0P/E5BH
+	 8ku6nkWBGqzyA==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id f503bea0;
+	Thu, 29 Feb 2024 02:22:50 +0000 (UTC)
+Date: Thu, 29 Feb 2024 11:22:35 +0900
+From: Dominique Martinet <asmadeus@codewreck.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	allen.lkml@gmail.com
+Subject: Re: [PATCH 5.10 000/122] 5.10.211-rc1 review
+Message-ID: <Zd_qaxKc9V6dMkOA@codewreck.org>
+References: <20240227131558.694096204@linuxfoundation.org>
+ <Zd53aNc1aFrCYxFd@codewreck.org>
+ <2024022804-askew-stung-cba8@gregkh>
+ <202402281231.F7A20FCE@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,202 +68,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: o4WeUlssk2yTmGgHZR9QAl7DpcyRAxfV
-X-Proofpoint-GUID: o4WeUlssk2yTmGgHZR9QAl7DpcyRAxfV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-28_08,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- suspectscore=0 mlxlogscore=954 clxscore=1011 impostorscore=0 bulkscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402290017
+Content-Disposition: inline
+In-Reply-To: <202402281231.F7A20FCE@keescook>
 
-Tasmiya Nalatwad <tasmiya@linux.vnet.ibm.com> writes:
-> Greetings,
->
-> [netdev] Build failure on powerpc
-> latest netdev 6.8.0-rc5-auto-g1ce7d306ea63 fails to build on powerpc=20
-> below traces
+Kees Cook wrote on Wed, Feb 28, 2024 at 12:39:42PM -0800:
+> > > This commit breaks build of some 3rd party wireless module we use here
+> > > (because sizeof(sa->sa_data) no longer works and needs to use
+> > > sa_data_min)
+> 
+> Just FYI, it's possible that things using sizeof(sa->sa_data) were buggy
+> to begin with since the struct size isn't actually dictated by that size
+> (it's only the minimum possible size).
 
-Please include the defconfig you're building, and the toolchain
-versions, in reports like this.
+Yes, I definitely agree with this.
+As it's "vendor stuff" I just replaced with sa_data_min because that
+preserves the values, but it ought to get a second look.
+I'd love to pretend that driver's upstream will do the right thing and
+use proper values here on newer kernel but upon checking its >6.2 tree
+support now they apparently did the same instead of getting the size
+properly.
 
-I wasn't able to reproduce this failure here.
+> > We NEVER preserve in-kernel APIs for any out-of-tree code as obviously,
+> > we have no idea what out-of-tree code is actually using, so it would be
+> > impossible to do so.
 
-cheers
+Right, I just don't see much "common struct" changes in stable tree
+patches -- stuff like livepatches or weak modules and whatsnot don't
+like these so some downstreams (redhat to name them) try very hard to
+keep these constants for the lifetime of a given stable release... iirc
+they go as far as adding some padding fields to some structs that are
+likely to need fiddling so they can do this while preserving binary
+compatibility.
 
-> --- Traces---
->
-> /include/linux/dpll.h: In function =E2=80=98netdev_dpll_pin=E2=80=99:
-> /include/linux/rcupdate.h:439:9: error: dereferencing pointer to=20
-> incomplete type =E2=80=98struct dpll_pin=E2=80=99
->  =C2=A0 typeof(*p) *local =3D (typeof(*p) *__force)READ_ONCE(p); \
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> /include/linux/rcupdate.h:587:2: note: in expansion of macro=20
-> =E2=80=98__rcu_dereference_check=E2=80=99
->  =C2=A0 __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->  =C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~
-> /include/linux/rtnetlink.h:70:2: note: in expansion of macro=20
-> =E2=80=98rcu_dereference_check=E2=80=99
->  =C2=A0 rcu_dereference_check(p, lockdep_rtnl_is_held())
->  =C2=A0 ^~~~~~~~~~~~~~~~~~~~~
-> /include/linux/dpll.h:175:9: note: in expansion of macro=20
-> =E2=80=98rcu_dereference_rtnl=E2=80=99
->  =C2=A0 return rcu_dereference_rtnl(dev->dpll_pin);
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~
-> make[4]: *** [scripts/Makefile.build:243: drivers/dpll/dpll_core.o] Error=
- 1
-> make[4]: *** Waiting for unfinished jobs....
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/mpls/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/l3mdev/built-in.a
-> In file included from ./include/linux/rbtree.h:24,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/mm_types.h:11,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/mmzone.h:22,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/gfp.h:7,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/umh.h:4,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/kmod.h:9,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/module.h:17,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from drivers/dpll/dpll_netlink.c:9:
-> /include/linux/dpll.h: In function =E2=80=98netdev_dpll_pin=E2=80=99:
-> /include/linux/rcupdate.h:439:9: error: dereferencing pointer to=20
-> incomplete type =E2=80=98struct dpll_pin=E2=80=99
->  =C2=A0 typeof(*p) *local =3D (typeof(*p) *__force)READ_ONCE(p); \
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> /include/linux/rcupdate.h:587:2: note: in expansion of macro=20
-> =E2=80=98__rcu_dereference_check=E2=80=99
->  =C2=A0 __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->  =C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~
-> /include/linux/rtnetlink.h:70:2: note: in expansion of macro=20
-> =E2=80=98rcu_dereference_check=E2=80=99
->  =C2=A0 rcu_dereference_check(p, lockdep_rtnl_is_held())
->  =C2=A0 ^~~~~~~~~~~~~~~~~~~~~
-> /include/linux/dpll.h:175:9: note: in expansion of macro=20
-> =E2=80=98rcu_dereference_rtnl=E2=80=99
->  =C2=A0 return rcu_dereference_rtnl(dev->dpll_pin);
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~
-> make[4]: *** [scripts/Makefile.build:243: drivers/dpll/dpll_netlink.o]=20
-> Error 1
-> make[3]: *** [scripts/Makefile.build:481: drivers/dpll] Error 2
-> make[3]: *** Waiting for unfinished jobs....
-> In file included from ./arch/powerpc/include/generated/asm/rwonce.h:1,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/compiler.h:251,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/instrumented.h:10,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/uaccess.h:6,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from net/core/dev.c:71:
-> net/core/dev.c: In function =E2=80=98netdev_dpll_pin_assign=E2=80=99:
-> /include/linux/rcupdate.h:462:36: error: dereferencing pointer to=20
-> incomplete type =E2=80=98struct dpll_pin=E2=80=99
->  =C2=A0#define RCU_INITIALIZER(v) (typeof(*(v)) __force __rcu *)(v)
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~
-> /include/asm-generic/rwonce.h:55:33: note: in definition of macro=20
-> =E2=80=98__WRITE_ONCE=E2=80=99
->  =C2=A0 *(volatile typeof(x) *)&(x) =3D (val);=C2=A0=C2=A0=C2=A0 \
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~
-> /arch/powerpc/include/asm/barrier.h:76:2: note: in expansion of macro=20
-> =E2=80=98WRITE_ONCE=E2=80=99
->  =C2=A0 WRITE_ONCE(*p, v);=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
->  =C2=A0 ^~~~~~~~~~
-> /include/asm-generic/barrier.h:172:55: note: in expansion of macro=20
-> =E2=80=98__smp_store_release=E2=80=99
->  =C2=A0#define smp_store_release(p, v) do { kcsan_release();=20
-> __smp_store_release(p, v); } while (0)
-> ^~~~~~~~~~~~~~~~~~~
-> /include/linux/rcupdate.h:503:3: note: in expansion of macro=20
-> =E2=80=98smp_store_release=E2=80=99
->  =C2=A0=C2=A0 smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)=
-); \
->  =C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~
-> /include/linux/rcupdate.h:503:25: note: in expansion of macro=20
-> =E2=80=98RCU_INITIALIZER=E2=80=99
->  =C2=A0=C2=A0 smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)=
-); \
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~=
-~~~~~~~~~~~~~
-> net/core/dev.c:9081:2: note: in expansion of macro =E2=80=98rcu_assign_po=
-inter=E2=80=99
->  =C2=A0 rcu_assign_pointer(dev->dpll_pin, dpll_pin);
->  =C2=A0 ^~~~~~~~~~~~~~~~~~
-> make[4]: *** [scripts/Makefile.build:243: net/core/dev.o] Error 1
-> make[4]: *** Waiting for unfinished jobs....
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drivers/net/ethernet/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drivers/net/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/dcb/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/netlabel/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/strparser/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/handshake/built-in.a
->  =C2=A0 GEN=C2=A0=C2=A0=C2=A0=C2=A0 lib/test_fortify.log
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/8021q/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/nsh/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/unix/built-in.a
->  =C2=A0 CC=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lib/string.o
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/packet/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/switchdev/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 lib/lib.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/mptcp/built-in.a
->  =C2=A0 AR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 net/devlink/built-in.a
-> In file included from ./include/linux/rbtree.h:24,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/mm_types.h:11,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/mmzone.h:22,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/gfp.h:7,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/umh.h:4,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/kmod.h:9,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/module.h:17,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 from net/core/rtnetlink.c:17:
-> /include/linux/dpll.h: In function =E2=80=98netdev_dpll_pin=E2=80=99:
-> /include/linux/rcupdate.h:439:9: error: dereferencing pointer to=20
-> incomplete type =E2=80=98struct dpll_pin=E2=80=99
->  =C2=A0 typeof(*p) *local =3D (typeof(*p) *__force)READ_ONCE(p); \
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> /include/linux/rcupdate.h:587:2: note: in expansion of macro=20
-> =E2=80=98__rcu_dereference_check=E2=80=99
->  =C2=A0 __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->  =C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~
-> /include/linux/rtnetlink.h:70:2: note: in expansion of macro=20
-> =E2=80=98rcu_dereference_check=E2=80=99
->  =C2=A0 rcu_dereference_check(p, lockdep_rtnl_is_held())
->  =C2=A0 ^~~~~~~~~~~~~~~~~~~~~
-> /include/linux/dpll.h:175:9: note: in expansion of macro=20
-> =E2=80=98rcu_dereference_rtnl=E2=80=99
->  =C2=A0 return rcu_dereference_rtnl(dev->dpll_pin);
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~
-> In file included from net/core/rtnetlink.c:60:
-> /include/linux/dpll.h:179:1: error: control reaches end of non-void=20
-> function [-Werror=3Dreturn-type]
->  =C2=A0}
->
->
-> Reverting the below commit fixes the problem
->
-> commit 0d60d8df6f493bb46bf5db40d39dd60a1bafdd4e
->  =C2=A0=C2=A0=C2=A0 dpll: rely on rcu for netdev_dpll_pin()
->
-> --=20
-> Regards,
-> Tasmiya Nalatwad
-> IBM Linux Technology Center
+I understand the upstream stable kernels don't make such promise (and
+given the amount of work that probably goes into it, rightfully so! I
+wouldn't exect you or anyone to do this here), just pointed it out
+as part of my usual test round for anyone else who'd care.
+
+> Out of curiosity, which drivers broke and what's needed to get them into
+> upstream (or at least staging)?
+
+Sure, it was NXP's wifi chips driver:
+https://github.com/nxp-imx/mwifiex/
+
+It's mostly based on drivers/net/wireless/marvell/mwifiex but has since
+been quite extensively modified, so it'd take quite a bit of effort to
+upstream as a separate entity (changing a few names to avoid conflcts so
+both can be built together... Add to that the requirement for a
+compatible firmware with a restrictive license... And that NXP isn't
+exactly focused on upstreaming); I have little hope of seeing it
+upstream at this point unfortunately and gave up on it as part of
+maintaining an embedded kernel "port" as it's sadly far from being
+only one :/
+
+(I especially don't get it as I consider maintaining a bunch of
+spaghetti ifdef on kernel versions to be much more work than getting the
+driver upstream once, but I guess I'm barking at the wrong tree here)
+
+
+Thanks,
+-- 
+Dominique Martinet | Asmadeus
