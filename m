@@ -1,56 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD1B17545
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D653B17545
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709249902; cv=none; b=L/yJQvyjaIKBvzbGc822HMZaoTnS63ewu+z/tKVtVeZWYsEpLmoYdJ9dvkPNF0NsgxvFKiH7+66/SBaZKaaUofr85aXXERWt5S7udhODhuJ0zWRuCmxNQpZVPhCiolAmF0/mti3pWa/A6sVXZAaRLzy6FO72UbXv60sCaHiMN94=
+	t=1709249950; cv=none; b=V4dlhjT8up5sc/ELPmJ/Mcc56nzxvQOnmpx75gxGkVv5zxpDwKWhPVrw59y6vzyfJn5+VhYs1mN7oQyRozhsorSdfeJV+KIXxJ15ErAutFj2HnjoCw9Wpx/FWPKw9xZlo2GJx+G+FdapEts6pg+GMLY1wBVLss5E7Zcz8dNHt5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709249902; c=relaxed/simple;
-	bh=JxabirRy9sp8zBzir1sOeWwkxxHBQdkLBmgQvc4b6/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kbss4kwDC7MEMZn9yHXWp43WED5wvk3yZn6wspk0i82H+6ODV/uihYFUiZB4OXB1BUxi/Q2RMg6lgtfGiJFBjVG7Em+6lE8/kENfShRn9wXnFHHOUJuWXHxdDSHEvIOlVaf6cb0yEtL4orepqcckRfoCxxfKrd8W20kBpkbVDP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CBD4C433F1;
-	Thu, 29 Feb 2024 23:38:20 +0000 (UTC)
-Date: Thu, 29 Feb 2024 18:40:27 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Vince
- Weaver <vincent.weaver@maine.edu>, Dave Jones <dsj@fb.com>, Jann Horn
- <jannh@google.com>, Miroslav Benes <mbenes@suse.cz>, Andy Lutomirski
- <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Masami Hiramatsu
- <mhiramat@kernel.org>, Nilay Vaish <nilayvaish@google.com>
-Subject: Re: [PATCH v2 06/11] x86/unwind/orc: Convert global variables to
- static
-Message-ID: <20240229184027.45609c0f@gandalf.local.home>
-In-Reply-To: <20240229004252.awmammhp63f5udyy@treble>
-References: <cover.1587808742.git.jpoimboe@redhat.com>
-	<43ae310bf7822b9862e571f36ae3474cfde8f301.1587808742.git.jpoimboe@redhat.com>
-	<20240228183507.78c5f130@gandalf.local.home>
-	<20240229000309.ibtuk7gr27d7cbxz@treble>
-	<20240228191406.21e894b0@gandalf.local.home>
-	<20240229004252.awmammhp63f5udyy@treble>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709249950; c=relaxed/simple;
+	bh=e/8V7q0T5PQHD8Yc+VQwsb6DOiBHkVWPVrFu2N9+wis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PszSlmsm9QYKDw4pAPuWjmxJw3NXBkrLwGmSXle25m2HGfM199mp90YnAJ3I4XnUkFFevmlq/pNgzgZ3cwAKbBsN4A3Iclep+Qwr0Ghtla9+4077P7r3B+JUkZKCZ+ZC66i2Gt+GgYGx73whxNocg6exFUiSYpB121CFKk+Dqug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AW67M3HE; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AW67M3HE"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e5a232fe80so708741b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:39:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709249948; x=1709854748; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zrpA1mv8JfPN81Pqls2RUoWHBrGbGLLk6Rp+CKKaj/s=;
+        b=AW67M3HEZ8+Ko+S4R3j/DvmN4MVoDg3TDZNuAbZqUz/VFKHMsUsdNh/+1ZdSQsSkvr
+         hp9HCzh5UdgCOcyGFxcJuA9Dh9znea32nlkv4PM06/9wRhCQHGNngGYa1JAmewCY7SDl
+         LcZuHZk2REpIz+uTgCvUUL3ru3b3OYswWiuXI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709249948; x=1709854748;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zrpA1mv8JfPN81Pqls2RUoWHBrGbGLLk6Rp+CKKaj/s=;
+        b=uwJEpSFVn8S3Xh+ZWzqO4qYAuAtq+EmUEGCv/SJYMeAhAg+6PqEIPRD+LqjJ9qn3IW
+         WDQ5RuPbsOL9DgZVzsSdoAiaxSxyi45EIebda9Fj7c12JUaa9eHIXndpbZZmVtGSV8Vn
+         eq6tA0Z4YBiH+GbhaxTDBtbCMTeldDXm32Rz+Q+T8SomXoBhNWeGleKJigrxXEvb5+zz
+         rKbC7Zc/uC35Fr6+il0KAmwwmjX/6ysbJfHEbMdlWIJFyRIJhMN9qcPJEb+rj1Kac0F1
+         u/XdX7SXzW48SrrrcdIvstDg0enewn78GULwgbLeaTR9vqYC7Wcnf5426Lczt9Y7Bbs3
+         oK2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWqz69Asot3FF1TZ9kFoO4OcjpDWa0EdwPGOtwdWz8zjdcltcTQTIl2hU/XCacV7aV7U+GvR+ck3i/2vRQv6JLJpuSZQK5/+RvIeuBp
+X-Gm-Message-State: AOJu0YzIi97W+VaIbTl/ehpFbgN9+KUjaCUK1QHwTx3cS5ZLyZO2SDwV
+	118ZRGu0wlN5By5JXBXlZU50eNDdsVIwd5k8PXtpntSDuck33NpCjk9PF1WtJQ==
+X-Google-Smtp-Source: AGHT+IGJVW2Kg8FOzevwO891TfCYJpBIFcznOfoM7q4NgpLUnUQXz9LiC/9jjgPSzgqu4jXznWV/FQ==
+X-Received: by 2002:a05:6a00:2293:b0:6e5:599a:5252 with SMTP id f19-20020a056a00229300b006e5599a5252mr665091pfe.15.1709249947822;
+        Thu, 29 Feb 2024 15:39:07 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id m19-20020aa78a13000000b006e509762bc2sm1813393pfa.26.2024.02.29.15.39.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 15:39:07 -0800 (PST)
+Date: Thu, 29 Feb 2024 15:39:06 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] string: Convert helpers selftest to KUnit
+Message-ID: <202402291539.F0E3E63061@keescook>
+References: <20240229233432.work.675-kees@kernel.org>
+ <20240229233528.1538803-2-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229233528.1538803-2-keescook@chromium.org>
 
-On Wed, 28 Feb 2024 16:42:52 -0800
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+On Thu, Feb 29, 2024 at 03:35:24PM -0800, Kees Cook wrote:
+> Convert test-string_helpers.c to KUnit so it can be easily run with
+> everything else.
 
-> DWARF isn't needed for that.  Even the symbol table has it (as does
-> System.map).  For both globals and statics.
+Gah, I will send a v2. I thought I was doing this on top of the
+get_size() change, but I didn't...
 
-Interesting enough, it is reported that if lookup_num_blocks is global,
-crash returns the proper value. If it is static, it just returns "1", which
-is incorrect (the correct value is around 60K).
-
--- Steve
+-- 
+Kees Cook
