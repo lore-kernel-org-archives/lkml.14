@@ -1,78 +1,112 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA7D50A63;
-	Thu, 29 Feb 2024 08:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4873024A19
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709196083; cv=none; b=ijjhR7wqG4ke6DmZbRm2hWTL3WtC6SJyf9jaTimldipDJa2NNIPcBRrYLU4DUbQ6SszXQHLi6WtLOW0o6u0/atO3ztdHiAoiY73rdC0k7JzqEKBoDdVD/IqTol7Z4kmxwpNQat0+EDRpQQ7OI0joNaH3qAuhrkEN6P3AysDwg14=
+	t=1709196192; cv=none; b=gNGwzfI5TKDAT9vj+wlwfHasFts39itRh9zzNDHwfDYlBc2L8v75NTxEIOpn/K6HwdLTrMF3KwnyQ/cy8H5MtsZGDhNiy8AHJWU/fb4uALNKp9+D1gDI9UorU5ugrM8W3lCteysPcdYk67OnBLwO18JtVjazYzrWN9o/4uXJd7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709196083; c=relaxed/simple;
-	bh=03KT88bs5CPFUzGWiSf0JoK4aabPHEcPRG/J8ct3YMs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UoSXKS7WiStDvQreBKx7yXhbaUIjvyU0L+AT6svNTzb2/NCaAmm2eGLIaphbvCfViauj9YXJziS2xynvQ7rpfffhGcgThcEwvova5VFFvVyR2KaZvOkgNP7NM5KlpkLzQorFvUtOIWuSBwG8apBPbDkQ77PIZAu8PMWt4GIvDuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gQXMnted; arc=none smtp.client-ip=45.254.50.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1709196192; c=relaxed/simple;
+	bh=hikBQBwK+HCibV9Ay+uw3hwq6fhlJ+kbZbSIdNLQbuc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XmemDDRaEepIVe/ABohlIkoTCL01tABuGEoCcdpXOBeGatOYdMEwj43FgKigQF4JcJTwVZgtjUMtukhWvKWSjeaAEO9ST49HPHogUX+VXdtOtBJOYnxisouLr/xAs8lW9kiwELxuL0o0t3pup9guf14LLVH6Rzndzt2a63wdsX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MW9qslLd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gQXMnted"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=hyAxN
-	nJEjaEeWu++V1hIX4/hQ1ibrMzym3D/Hwm9ZGQ=; b=gQXMntedUhlzrlxQ4uEv6
-	zKmC6QNXfalg9kKuLxySTnTzIws33S1WybuoCtsfhXs348FFRWVuoVzqZKNsMYd0
-	qiRt7N23hA4nB/Qprz6wF1C0HHgwGh5/DsMJFhZ6UlhZMocoNO4j5+W1YUxlSpSL
-	vOWw3irxW37MRHfIg31r1I=
-Received: from WH-D-007635B.QUECTEL.COM (unknown [223.76.229.213])
-	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD33oYhQ+BloLRsGg--.37440S2;
-	Thu, 29 Feb 2024 16:41:07 +0800 (CST)
-From: clancy_shang@163.com
-To: marcel@holtmann.org,
-	johan.hedberg@gmail.com,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhongjun.yu@quectel.com,
-	Clancy Shang <clancy.shang@quectel.com>
-Subject: [PATCH] Bluetooth: mgmt: Fix wrong param be used
-Date: Thu, 29 Feb 2024 16:40:59 +0800
-Message-Id: <20240229084059.895730-1-clancy_shang@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MW9qslLd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709196189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DEuBlHD3kgoIX0ziveljn5872wJi8XDsY60eCgSwad4=;
+	b=MW9qslLdZwCW3fRiPfuIk56YiiyYuIdZhYkCK9JiFrrlCDca3VDd9haUpsWxEMHh6R5Qx7
+	IDxnwBPFM8sD8woZOPSGAXN76WDgg205MjAKkilhJK+GryPELnhSjE/NyZ0J/RpZwzd8vV
+	k+cDPsG5EUQeJ7CQ1qG9hTwVtxEgmF4=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-426-FcqhayKvMoyMHcmJFL_Rzg-1; Thu, 29 Feb 2024 03:43:06 -0500
+X-MC-Unique: FcqhayKvMoyMHcmJFL_Rzg-1
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1dc685df4adso5312335ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 00:43:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709196186; x=1709800986;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DEuBlHD3kgoIX0ziveljn5872wJi8XDsY60eCgSwad4=;
+        b=J/2ch0wz/tFKvGlVOF1Urh5l3o5X7/xWD82r3JyroTAlOE9fdlu1qVH/yfO23rAvNg
+         oTXXhTZh06q47QvPGh93E+xURgebuhu+9gFN4P7Fd4hImd1uhC3pq06jAwSG/f+JO+cb
+         x1eBs+2mOXJ3pxI6Ex/gIX48i4k7rvHFr6V5q2wfuk+iInCfhs0Z7eL6MRLOyNwWWJlw
+         7P5j37TSdEEz24N1Y2tKBRxvyeID6AHZjR3yHrLl2Ba64x2C4AfsVmaYYshruGyiG5d6
+         zpAOwXk6Lpt665bwsDzcvFLoa+0Jl9MM+XKd1ZefiyJi+uZrFWkYPGMvR0z4cpbGzppO
+         DbDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUciS2BkKsHjdjpWj8ehcl/KETxwib79hWz21bhjXTBNvjp2KGH/ONsEL+3I82m+aieL4jnQFRJzlDERzLZ4SsAV2Ti4vrcyFWhzflJ
+X-Gm-Message-State: AOJu0Ywe6uEVFYfvp9cvn+R02Z/VBs3a1tcrFwcbad81PIRhrRF/3XQm
+	uyXrwJGRa3DGqlEvEfzfjgsswyWw8izOaMk76ddxovf2g27qNxp4cwSF+5a5soAEDgix1tTj4By
+	KknXvMKmW5A7Fdp5xhCk+nOcUCmOrYqAbhx/UvRRxwPY8ZJi/NDPu2lHyOz9NDykb1kyeFJkd6N
+	MnOiz8MAKp1RjeXYPLASY+1hTY0rzVZKSSGD5/
+X-Received: by 2002:a17:902:da8f:b0:1dc:ca09:6b7d with SMTP id j15-20020a170902da8f00b001dcca096b7dmr1826112plx.2.1709196185777;
+        Thu, 29 Feb 2024 00:43:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHRJixUvjUtpkuPEzMa01pFKLhC0GOFKYvulFM09afef/K1eyl+EDf7oLoFQwQVwElle44GHMlouy/Ss7TyUcc=
+X-Received: by 2002:a17:902:da8f:b0:1dc:ca09:6b7d with SMTP id
+ j15-20020a170902da8f00b001dcca096b7dmr1826093plx.2.1709196185336; Thu, 29 Feb
+ 2024 00:43:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD33oYhQ+BloLRsGg--.37440S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKrW7WF4rWw1UWF1rXFWUArb_yoWDZFXEgF
-	409ay7uF4UXryvyF4Y93WrWr1Sya4a9Fs7Xr9xKrWxAr98Gr1UuFn7AF9xJFn3uanxZrn7
-	Zr4DXF4F9w409jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU01q2tUUUUU==
-X-CM-SenderInfo: xfod0ux1bvxtlqj6il2tof0z/1tbisAiLuGV4H-ePSAABs4
+References: <00000000000029b00c05ef9c1802@google.com> <000000000000cf2d2d06127def32@google.com>
+In-Reply-To: <000000000000cf2d2d06127def32@google.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
+Date: Thu, 29 Feb 2024 09:42:53 +0100
+Message-ID: <CAHc6FU7GqeMROfnoFLbTaNnoDhwr1+eFAsP_=rQD_JkfF__AqQ@mail.gmail.com>
+Subject: Re: [syzbot] [gfs2?] WARNING in gfs2_check_blk_type
+To: syzbot <syzbot+092b28923eb79e0f3c41@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, cluster-devel@redhat.com, 
+	gfs2@lists.linux.dev, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rpeterso@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Clancy Shang <clancy.shang@quectel.com>
+On Thu, Feb 29, 2024 at 5:46=E2=80=AFAM syzbot
+<syzbot+092b28923eb79e0f3c41@syzkaller.appspotmail.com> wrote:
+> syzbot suspects this issue was fixed by commit:
+>
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
+>
+>     fs: Block writes to mounted block devices
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D108aa9ba18=
+0000
+> start commit:   861deac3b092 Linux 6.7-rc7
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D10c7857ed774d=
+c3e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D092b28923eb79e0=
+f3c41
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1440171ae80=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D11b1205ee8000=
+0
+>
+> If the result looks correct, please mark the issue as fixed by replying w=
+ith:
+>
+> #syz fix: fs: Block writes to mounted block devices
 
-if the BlueZ library calls the API interface "adapter_set_device_flags",
-which sends the "MGMT_OP_SET_DEVICE_FLAGS" opcode to the kernel, but
-does not receive the callback message "MGMT_EV_DEVICE_FLAGS_CHANGED"
-from the kernel. it fixs this bug.
+Sounds reasonable:
 
-Signed-off-by: Clancy Shang <clancy.shang@quectel.com>
----
- net/bluetooth/mgmt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+#syz fix: fs: Block writes to mounted block devices
 
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 9dd815b6603f..c74abdf3618f 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -5177,7 +5177,7 @@ static int set_device_flags(struct sock *sk, struct hci_dev *hdev, void *data,
- 
- done:
- 	if (status == MGMT_STATUS_SUCCESS)
--		device_flags_changed(sk, hdev, &cp->addr.bdaddr, cp->addr.type,
-+		device_flags_changed(NULL, hdev, &cp->addr.bdaddr, cp->addr.type,
- 				     supported_flags, current_flags);
- 
- 	return mgmt_cmd_complete(sk, hdev->id, MGMT_OP_SET_DEVICE_FLAGS, status,
--- 
-2.25.1
+Andreas
 
