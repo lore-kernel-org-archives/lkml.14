@@ -1,35 +1,35 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34A91361BF;
-	Thu, 29 Feb 2024 14:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0858F12C53A;
+	Thu, 29 Feb 2024 14:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709216178; cv=none; b=f39KAV9MGFzach884b543YPKSlGt2j+uJMpTR9AwHMFlSblI8xa7sLykxXKKtK660Lmz+tCCLB4A3VySVOxRTOAzREmulmdjDH/Efc/C75/8DgMtvtbJor7mtg5AUOEwcBoiiEGfjBqaR412sJvRhvjiRD3nto7LkTOVceK5zYo=
+	t=1709216177; cv=none; b=EdLc8XN+KtepOHtp4/EWnhmiaVzFETcjXWNA2PYp3qAIcNFDLwpXyDrbQUELIQKEbrZ0jXiR5SUOXpoefTh5BFdLuPLJ1aMzHBb7CU67auCLIxE1JHvB3cZNQg6AxgF8BsE+n9e5zri1CYsv+fKneW4k3BAHpX+DLDA/NEulP+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709216178; c=relaxed/simple;
-	bh=Qvy5YIlLldiX0R7wIDqtJBVKHeubDCELaurFbpCFnp8=;
+	s=arc-20240116; t=1709216177; c=relaxed/simple;
+	bh=W2gdnrXjuUChVznYr4WSWLCNTMqCbNot/f2IWsy4Gu0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tbyRT/q1c0uAVykdkmSu/LYZHyhcNi3RdmfJPxvp1thBOyfWF4jVpBeWM7nnoCaf59ORTBpWoLNebR8KtoNvwkRNJ31X6ub2pnXaNJDrUJnrHrHgXWe6sO8oC7l2ZiAh2yd4w01nxQA6FVQQiwNN9b0urHlikJ9gMo09N08IW0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=enEejcO2; arc=none smtp.client-ip=217.70.183.194
+	 MIME-Version; b=gqKEToT5v7mMWjhsPVS5RzfubaEYoiHckpSUquIEUO6NtmlwOcaiZN2BHnPCBG6vw80Wm7ZiuK6E60IrjRS0PguHip8VF40g7l5QQM4CdEtaZh1ZjDt9usCAFAAQKcan9DOjAHUs6+IBFgF3gWEZr471f6h7EpDiCSe/hC7W+DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=e/zsT4nJ; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="enEejcO2"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 2D50F40005;
-	Thu, 29 Feb 2024 14:16:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="e/zsT4nJ"
+Received: by mail.gandi.net (Postfix) with ESMTPA id BEDD34000A;
+	Thu, 29 Feb 2024 14:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709216168;
+	t=1709216173;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=opmB03pxVbtCj6pvCgp5nhczC3sDrqxdKFiEeY7PEsQ=;
-	b=enEejcO20m9x/uJbdyOzmwduWs5RrzgchW4NyPNePzZQ/eusS4cPON9KjAPR/UaEph0jPS
-	KAKNBAtGhXTSaxVJb9A99iz4hZPiPDeJ8P4um0zyaFF2Z9lqFDLJANI/jx6QO7yMPFLdlC
-	Fz2DpvEcfPmOyTMYxfQ8zQnbdJdl2G0ZH3Wl2MDqLjp45w0WqhLUHKFyL2rPQX4q90Ffbz
-	m2+8/AWszNGrWdu699EKqsF9dLblnqQ9pU1X7uiDWX6bixw+/sqtPqJXYoZDi9c21xMeh+
-	UwzKdIZ3y202i372GPbuWpmqpmhHG36oAqGHMulA2rgfUEpjDUPfM7K7sloxMw==
+	bh=+8ok8TG0kJuE8iBu8qNACBQYbQ3c7LdJVkKbhlZMtoA=;
+	b=e/zsT4nJuDpmvhqZpFnM2wGO+FvRTQNut1KFFCLZfwV8slgaTIXi3TbfWXS6GdEs3HglA4
+	oBsMaZBZEnyP/Rajv6poTS6FlX3AtCPigAkuG4H3iq/SsYR49cs678lJ3KMzF4bb9oS09K
+	QN+ea+N/ARlsRVNTfHXjYW+1SPGVEccbB47m2SXkWzhnULVnuWFNPjVc88dE5YBVVsBbNc
+	Srm8L01+GMGtOw3JasmfiLfTxRXpX1IR0AOlzyT7AXv3MMgE4E0C78O1i5uVKq09j0pVvN
+	9kA/VbcJ2RVey3XPfH0IukgkfO59gMM9pGQEC7Hh3USsaBytM0EKBZBrvmgF9Q==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Mark Brown <broonie@kernel.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v5 2/5] MAINTAINERS: Add the Freescale QMC HDLC driver entry
-Date: Thu, 29 Feb 2024 15:15:50 +0100
-Message-ID: <20240229141554.836867-3-herve.codina@bootlin.com>
+Subject: [PATCH v5 5/5] net: wan: fsl_qmc_hdlc: Add framer support
+Date: Thu, 29 Feb 2024 15:15:53 +0100
+Message-ID: <20240229141554.836867-6-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240229141554.836867-1-herve.codina@bootlin.com>
 References: <20240229141554.836867-1-herve.codina@bootlin.com>
@@ -62,32 +62,364 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-After contributing the driver, add myself as the maintainer for the
-Freescale QMC HDLC driver.
+Add framer support in the fsl_qmc_hdlc driver in order to be able to
+signal carrier changes to the network stack based on the framer status
+Also use this framer to provide information related to the E1/T1 line
+interface on IF_GET_IFACE and configure the line interface according to
+IF_IFACE_{E1,T1} information.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/wan/fsl_qmc_hdlc.c | 239 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 234 insertions(+), 5 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8d1052fa6a69..15cd3a8e5866 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8584,6 +8584,13 @@ F:	Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
- F:	drivers/soc/fsl/qe/qmc.c
- F:	include/soc/fsl/qe/qmc.h
+diff --git a/drivers/net/wan/fsl_qmc_hdlc.c b/drivers/net/wan/fsl_qmc_hdlc.c
+index 80998ad89088..dd6b69a950c9 100644
+--- a/drivers/net/wan/fsl_qmc_hdlc.c
++++ b/drivers/net/wan/fsl_qmc_hdlc.c
+@@ -10,6 +10,7 @@
+ #include <linux/cleanup.h>
+ #include <linux/bitmap.h>
+ #include <linux/dma-mapping.h>
++#include <linux/framer/framer.h>
+ #include <linux/hdlc.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+@@ -29,6 +30,9 @@ struct qmc_hdlc {
+ 	struct device *dev;
+ 	struct qmc_chan *qmc_chan;
+ 	struct net_device *netdev;
++	struct framer *framer;
++	spinlock_t carrier_lock; /* Protect carrier detection */
++	struct notifier_block nb;
+ 	bool is_crc32;
+ 	spinlock_t tx_lock; /* Protect tx descriptors */
+ 	struct qmc_hdlc_desc tx_descs[8];
+@@ -42,6 +46,192 @@ static struct qmc_hdlc *netdev_to_qmc_hdlc(struct net_device *netdev)
+ 	return dev_to_hdlc(netdev)->priv;
+ }
  
-+FREESCALE QUICC ENGINE QMC HDLC DRIVER
-+M:	Herve Codina <herve.codina@bootlin.com>
-+L:	netdev@vger.kernel.org
-+L:	linuxppc-dev@lists.ozlabs.org
-+S:	Maintained
-+F:	drivers/net/wan/fsl_qmc_hdlc.c
++static int qmc_hdlc_framer_set_carrier(struct qmc_hdlc *qmc_hdlc)
++{
++	struct framer_status framer_status;
++	int ret;
 +
- FREESCALE QUICC ENGINE TSA DRIVER
- M:	Herve Codina <herve.codina@bootlin.com>
- L:	linuxppc-dev@lists.ozlabs.org
++	if (!qmc_hdlc->framer)
++		return 0;
++
++	guard(spinlock_irqsave)(&qmc_hdlc->carrier_lock);
++
++	ret = framer_get_status(qmc_hdlc->framer, &framer_status);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "get framer status failed (%d)\n", ret);
++		return ret;
++	}
++	if (framer_status.link_is_on)
++		netif_carrier_on(qmc_hdlc->netdev);
++	else
++		netif_carrier_off(qmc_hdlc->netdev);
++
++	return 0;
++}
++
++static int qmc_hdlc_framer_notifier(struct notifier_block *nb, unsigned long action,
++				    void *data)
++{
++	struct qmc_hdlc *qmc_hdlc = container_of(nb, struct qmc_hdlc, nb);
++	int ret;
++
++	if (action != FRAMER_EVENT_STATUS)
++		return NOTIFY_DONE;
++
++	ret = qmc_hdlc_framer_set_carrier(qmc_hdlc);
++	return ret ? NOTIFY_DONE : NOTIFY_OK;
++}
++
++static int qmc_hdlc_framer_start(struct qmc_hdlc *qmc_hdlc)
++{
++	struct framer_status framer_status;
++	int ret;
++
++	if (!qmc_hdlc->framer)
++		return 0;
++
++	ret = framer_power_on(qmc_hdlc->framer);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "framer power-on failed (%d)\n", ret);
++		return ret;
++	}
++
++	/* Be sure that get_status is supported */
++	ret = framer_get_status(qmc_hdlc->framer, &framer_status);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "get framer status failed (%d)\n", ret);
++		goto framer_power_off;
++	}
++
++	qmc_hdlc->nb.notifier_call = qmc_hdlc_framer_notifier;
++	ret = framer_notifier_register(qmc_hdlc->framer, &qmc_hdlc->nb);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "framer notifier register failed (%d)\n", ret);
++		goto framer_power_off;
++	}
++
++	return 0;
++
++framer_power_off:
++	framer_power_off(qmc_hdlc->framer);
++	return ret;
++}
++
++static void qmc_hdlc_framer_stop(struct qmc_hdlc *qmc_hdlc)
++{
++	if (!qmc_hdlc->framer)
++		return;
++
++	framer_notifier_unregister(qmc_hdlc->framer, &qmc_hdlc->nb);
++	framer_power_off(qmc_hdlc->framer);
++}
++
++static int qmc_hdlc_framer_set_iface(struct qmc_hdlc *qmc_hdlc, int if_iface,
++				     const te1_settings *te1)
++{
++	struct framer_config config;
++	int ret;
++
++	if (!qmc_hdlc->framer)
++		return 0;
++
++	ret = framer_get_config(qmc_hdlc->framer, &config);
++	if (ret)
++		return ret;
++
++	switch (if_iface) {
++	case IF_IFACE_E1:
++		config.iface = FRAMER_IFACE_E1;
++		break;
++	case IF_IFACE_T1:
++		config.iface = FRAMER_IFACE_T1;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	switch (te1->clock_type) {
++	case CLOCK_DEFAULT:
++		/* Keep current value */
++		break;
++	case CLOCK_EXT:
++		config.clock_type = FRAMER_CLOCK_EXT;
++		break;
++	case CLOCK_INT:
++		config.clock_type = FRAMER_CLOCK_INT;
++		break;
++	default:
++		return -EINVAL;
++	}
++	config.line_clock_rate = te1->clock_rate;
++
++	return framer_set_config(qmc_hdlc->framer, &config);
++}
++
++static int qmc_hdlc_framer_get_iface(struct qmc_hdlc *qmc_hdlc, int *if_iface, te1_settings *te1)
++{
++	struct framer_config config;
++	int ret;
++
++	if (!qmc_hdlc->framer) {
++		*if_iface = IF_IFACE_E1;
++		return 0;
++	}
++
++	ret = framer_get_config(qmc_hdlc->framer, &config);
++	if (ret)
++		return ret;
++
++	switch (config.iface) {
++	case FRAMER_IFACE_E1:
++		*if_iface = IF_IFACE_E1;
++		break;
++	case FRAMER_IFACE_T1:
++		*if_iface = IF_IFACE_T1;
++		break;
++	}
++
++	if (!te1)
++		return 0; /* Only iface type requested */
++
++	switch (config.clock_type) {
++	case FRAMER_CLOCK_EXT:
++		te1->clock_type = CLOCK_EXT;
++		break;
++	case FRAMER_CLOCK_INT:
++		te1->clock_type = CLOCK_INT;
++		break;
++	default:
++		return -EINVAL;
++	}
++	te1->clock_rate = config.line_clock_rate;
++	return 0;
++}
++
++static int qmc_hdlc_framer_init(struct qmc_hdlc *qmc_hdlc)
++{
++	int ret;
++
++	if (!qmc_hdlc->framer)
++		return 0;
++
++	ret = framer_init(qmc_hdlc->framer);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "framer init failed (%d)\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void qmc_hdlc_framer_exit(struct qmc_hdlc *qmc_hdlc)
++{
++	if (!qmc_hdlc->framer)
++		return;
++
++	framer_exit(qmc_hdlc->framer);
++}
++
+ static int qmc_hdlc_recv_queue(struct qmc_hdlc *qmc_hdlc, struct qmc_hdlc_desc *desc, size_t size);
+ 
+ #define QMC_HDLC_RX_ERROR_FLAGS				\
+@@ -291,6 +481,12 @@ static int qmc_hdlc_set_iface(struct qmc_hdlc *qmc_hdlc, int if_iface, const te1
+ 
+ 	qmc_hdlc->slot_map = te1->slot_map;
+ 
++	ret = qmc_hdlc_framer_set_iface(qmc_hdlc, if_iface, te1);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "framer set iface failed %d\n", ret);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -298,11 +494,16 @@ static int qmc_hdlc_ioctl(struct net_device *netdev, struct if_settings *ifs)
+ {
+ 	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
+ 	te1_settings te1;
++	int ret;
+ 
+ 	switch (ifs->type) {
+ 	case IF_GET_IFACE:
+-		ifs->type = IF_IFACE_E1;
+ 		if (ifs->size < sizeof(te1)) {
++			/* Retrieve type only */
++			ret = qmc_hdlc_framer_get_iface(qmc_hdlc, &ifs->type, NULL);
++			if (ret)
++				return ret;
++
+ 			if (!ifs->size)
+ 				return 0; /* only type requested */
+ 
+@@ -312,6 +513,11 @@ static int qmc_hdlc_ioctl(struct net_device *netdev, struct if_settings *ifs)
+ 
+ 		memset(&te1, 0, sizeof(te1));
+ 
++		/* Retrieve info from framer */
++		ret = qmc_hdlc_framer_get_iface(qmc_hdlc, &ifs->type, &te1);
++		if (ret)
++			return ret;
++
+ 		/* Update slot_map */
+ 		te1.slot_map = qmc_hdlc->slot_map;
+ 
+@@ -345,10 +551,17 @@ static int qmc_hdlc_open(struct net_device *netdev)
+ 	int ret;
+ 	int i;
+ 
+-	ret = hdlc_open(netdev);
++	ret = qmc_hdlc_framer_start(qmc_hdlc);
+ 	if (ret)
+ 		return ret;
+ 
++	ret = hdlc_open(netdev);
++	if (ret)
++		goto framer_stop;
++
++	/* Update carrier */
++	qmc_hdlc_framer_set_carrier(qmc_hdlc);
++
+ 	chan_param.mode = QMC_HDLC;
+ 	/* HDLC_MAX_MRU + 4 for the CRC
+ 	 * HDLC_MAX_MRU + 4 + 8 for the CRC and some extraspace needed by the QMC
+@@ -397,6 +610,8 @@ static int qmc_hdlc_open(struct net_device *netdev)
+ 	}
+ hdlc_close:
+ 	hdlc_close(netdev);
++framer_stop:
++	qmc_hdlc_framer_stop(qmc_hdlc);
+ 	return ret;
+ }
+ 
+@@ -432,6 +647,7 @@ static int qmc_hdlc_close(struct net_device *netdev)
+ 	}
+ 
+ 	hdlc_close(netdev);
++	qmc_hdlc_framer_stop(qmc_hdlc);
+ 	return 0;
+ }
+ 
+@@ -480,6 +696,7 @@ static int qmc_hdlc_probe(struct platform_device *pdev)
+ 
+ 	qmc_hdlc->dev = dev;
+ 	spin_lock_init(&qmc_hdlc->tx_lock);
++	spin_lock_init(&qmc_hdlc->carrier_lock);
+ 
+ 	qmc_hdlc->qmc_chan = devm_qmc_chan_get_bychild(dev, dev->of_node);
+ 	if (IS_ERR(qmc_hdlc->qmc_chan))
+@@ -502,9 +719,19 @@ static int qmc_hdlc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	qmc_hdlc->framer = devm_framer_optional_get(dev, "fsl,framer");
++	if (IS_ERR(qmc_hdlc->framer))
++		return PTR_ERR(qmc_hdlc->framer);
++
++	ret = qmc_hdlc_framer_init(qmc_hdlc);
++	if (ret)
++		return ret;
++
+ 	qmc_hdlc->netdev = alloc_hdlcdev(qmc_hdlc);
+-	if (!qmc_hdlc->netdev)
+-		return -ENOMEM;
++	if (!qmc_hdlc->netdev) {
++		ret = -ENOMEM;
++		goto framer_exit;
++	}
+ 
+ 	hdlc = dev_to_hdlc(qmc_hdlc->netdev);
+ 	hdlc->attach = qmc_hdlc_attach;
+@@ -519,11 +746,12 @@ static int qmc_hdlc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	platform_set_drvdata(pdev, qmc_hdlc);
+-
+ 	return 0;
+ 
+ free_netdev:
+ 	free_netdev(qmc_hdlc->netdev);
++framer_exit:
++	qmc_hdlc_framer_exit(qmc_hdlc);
+ 	return ret;
+ }
+ 
+@@ -533,6 +761,7 @@ static int qmc_hdlc_remove(struct platform_device *pdev)
+ 
+ 	unregister_hdlc_device(qmc_hdlc->netdev);
+ 	free_netdev(qmc_hdlc->netdev);
++	qmc_hdlc_framer_exit(qmc_hdlc);
+ 
+ 	return 0;
+ }
 -- 
 2.43.0
 
