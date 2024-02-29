@@ -1,59 +1,35 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF797E10B
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAED760EDC;
+	Thu, 29 Feb 2024 13:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709212778; cv=none; b=f9s+7t9vgrqVF3BNVV9upQSfFnk92gSpf8hkatQrDhCF9xnL4d++urQDo0l/HabIUvS27BD/i1ukiJcQ93+/7vzMw92CMD61r1faHAerLSfQgviDH4pXIUd4PAs4MlXKC1gEX/4iAfPhTD2rrtWIsfn7V0gYjt7txb5Yh2rosaw=
+	t=1709212828; cv=none; b=W7DHxVFyqGPmjro0Y3kooW53IR1Qju4unc6fSb5OJ2jg+Y4cw3j0KJId177FIYs53aQxi7l5ZqjilPoHgPhh6cfuhEO6BHAOOc8soVYQzQAKTZ5e4KYQe0eljicGWGfG5XYgPMP+F/r31QkT1d06ojbki8Rsio9+pQS8uw3B1VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709212778; c=relaxed/simple;
-	bh=dRCSejW2kzJ3xySBJGPqpUgKdSkvijfiyJXAlXGgd3E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Omyqni+DKawpMdehRrRPP1zdfGhKqCdgOUAK13sfEj+ZM7jQCZ6uRLRc1l7+IWQyPwP7xin+CJHLqQKUMwtO96WhkF1wCIrBuhoNzPlq8lOJeOMlqMd8AXI7XH7LwTpbmx/wBVvUm39L6AkH5i5n7HTuc6T2IPIJyrp6c4Jza5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=Fi5mGeks; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+	s=arc-20240116; t=1709212828; c=relaxed/simple;
+	bh=3o9ZCKEWx1uwHV9n0/7XRzWyr48MSOodxXI+/MVbGzY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=f3GCeJznTQcmPGioiNLZlnAHcOOGl3+dQUJ8E2uEdi/kYxpGhw6y6D39W3v5T9Lbswo5FdyEwgIenLnNpRpkhB5j7W7Qoh+KSLMz6xKKe1HTaw6ANaJRR26JKlxIXRhBVQwp1f0NVFjzDURbMlfebQl9fCM6VJOC+JMwcYDPHkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxxatgB/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="Fi5mGeks"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id A1E991C0E74
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 16:10:42 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:to:from:from; s=dkim; t=1709212242; x=
-	1710076243; bh=dRCSejW2kzJ3xySBJGPqpUgKdSkvijfiyJXAlXGgd3E=; b=F
-	i5mGeksyN0m1+xAorznCpcY5+pNJC12/Kf9nqXJTCyeYyEuLijZLLay/bWgtmYwz
-	7KqUV9VRU5loSUNryWLmXwc4Vklo+jXc/8YmSXLfMXRUx7OQNAW16ddaA16CyT1H
-	YWWFDgLNX07bpQiJqRoXUAozo0BL4QF78Spuv9Cz0Q=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 2CSd_yPFfNRy for <linux-kernel@vger.kernel.org>;
-	Thu, 29 Feb 2024 16:10:42 +0300 (MSK)
-Received: from localhost.localdomain (mail.dev-ai-melanoma.ru [185.130.227.204])
-	by mail.nppct.ru (Postfix) with ESMTPSA id 02F0A1C05FF;
-	Thu, 29 Feb 2024 16:10:37 +0300 (MSK)
-From: Andrey Shumilin <shum.sdl@nppct.ru>
-To: Karol Herbst <kherbst@redhat.com>
-Cc: Andrey Shumilin <shum.sdl@nppct.ru>,
-	Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	khoroshilov@ispras.ru,
-	ykarpov@ispras.ru,
-	vmerzlyakov@ispras.ru,
-	vefanov@ispras.ru
-Subject: [PATCH 3/3] drivers/gpu/drm/nouveau/nvkm/subdev/mxm/base.c: BUFFER_OVERFLOW
-Date: Thu, 29 Feb 2024 16:10:24 +0300
-Message-Id: <20240229131024.636527-1-shum.sdl@nppct.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxxatgB/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0ED88C433C7;
+	Thu, 29 Feb 2024 13:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709212828;
+	bh=3o9ZCKEWx1uwHV9n0/7XRzWyr48MSOodxXI+/MVbGzY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=HxxatgB/k9lPyz4wVFI589MyuvO6a/Pm2Nlmx/gNO3qIG+c0giYy+b4EuiOnhOsZL
+	 HR1QZJ2+4bt8L5xe/yrM/toCx1ZJIlnTjKdKX4jkwMTnEFX85kVwkRLmrUhvs9hGAS
+	 3SgfBA2ivwMyusXr++OQNuQqSX7Abh/oUMN/W1srnw1FQuoMEpygSjmvGVUMSFhNjq
+	 Y0x2iSumj3BFYoZq2wdRgzoKm152bbvauKat9HwvraUgSyxnS4gX1ieLTNQ2tcrzvB
+	 uTkOIkdQ5phSpwCr0n6+Mg+7IhY9EuFEK5qhkivTwjYnhSc7piv2Gy1FMCocYWS+LJ
+	 COp5r4cSpnVEw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E27F7D84BBA;
+	Thu, 29 Feb 2024 13:20:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,29 +37,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] gtp: fix use-after-free and null-ptr-deref in
+ gtp_newlink()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170921282792.3692.2017750155322648868.git-patchwork-notify@kernel.org>
+Date: Thu, 29 Feb 2024 13:20:27 +0000
+References: <20240228114703.465107-1-oficerovas@altlinux.org>
+In-Reply-To: <20240228114703.465107-1-oficerovas@altlinux.org>
+To: Alexander Ofitserov <oficerovas@altlinux.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, edumazet@google.com,
+ pablo@netfilter.org, laforge@gnumonks.org, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, kovalev@altlinux.org,
+ nickel@altlinux.org, dutyrok@altlinux.org, stable@vger.kernel.org
 
-The mxms_structlen function returns u16 (2 bytes).
-Therefore it reads 2 bytes beyond the mxms array.
+Hello:
 
-Signed-off-by: Andrey Shumilin <shum.sdl@nppct.ru>
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
----
- drivers/gpu/drm/nouveau/nvkm/subdev/mxm/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mxm/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/mxm/base.c
-index c1acfe642da3..efd0c874742e 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/mxm/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mxm/base.c
-@@ -47,7 +47,7 @@ mxm_shadow_rom(struct nvkm_mxm *mxm, u8 version)
- 	struct nvkm_bios *bios = device->bios;
- 	struct nvkm_i2c *i2c = device->i2c;
- 	struct nvkm_i2c_bus *bus = NULL;
--	u8 i2cidx, mxms[6], addr, size;
-+	u8 i2cidx, mxms[8], addr, size;
- 
- 	i2cidx = mxm_ddc_map(bios, 1 /* LVDS_DDC */) & 0x0f;
- 	if (i2cidx < 0x0f)
+On Wed, 28 Feb 2024 14:47:03 +0300 you wrote:
+> The gtp_link_ops operations structure for the subsystem must be
+> registered after registering the gtp_net_ops pernet operations structure.
+> 
+> Syzkaller hit 'general protection fault in gtp_genl_dump_pdp' bug:
+> 
+> [ 1010.702740] gtp: GTP module unloaded
+> [ 1010.715877] general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] SMP KASAN NOPTI
+> [ 1010.715888] KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+> [ 1010.715895] CPU: 1 PID: 128616 Comm: a.out Not tainted 6.8.0-rc6-std-def-alt1 #1
+> [ 1010.715899] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.0-alt1 04/01/2014
+> [ 1010.715908] RIP: 0010:gtp_newlink+0x4d7/0x9c0 [gtp]
+> [ 1010.715915] Code: 80 3c 02 00 0f 85 41 04 00 00 48 8b bb d8 05 00 00 e8 ed f6 ff ff 48 89 c2 48 89 c5 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 4f 04 00 00 4c 89 e2 4c 8b 6d 00 48 b8 00 00 00
+> [ 1010.715920] RSP: 0018:ffff888020fbf180 EFLAGS: 00010203
+> [ 1010.715929] RAX: dffffc0000000000 RBX: ffff88800399c000 RCX: 0000000000000000
+> [ 1010.715933] RDX: 0000000000000001 RSI: ffffffff84805280 RDI: 0000000000000282
+> [ 1010.715938] RBP: 000000000000000d R08: 0000000000000001 R09: 0000000000000000
+> [ 1010.715942] R10: 0000000000000001 R11: 0000000000000001 R12: ffff88800399cc80
+> [ 1010.715947] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000400
+> [ 1010.715953] FS:  00007fd1509ab5c0(0000) GS:ffff88805b300000(0000) knlGS:0000000000000000
+> [ 1010.715958] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 1010.715962] CR2: 0000000000000000 CR3: 000000001c07a000 CR4: 0000000000750ee0
+> [ 1010.715968] PKRU: 55555554
+> [ 1010.715972] Call Trace:
+> [ 1010.715985]  ? __die_body.cold+0x1a/0x1f
+> [ 1010.715995]  ? die_addr+0x43/0x70
+> [ 1010.716002]  ? exc_general_protection+0x199/0x2f0
+> [ 1010.716016]  ? asm_exc_general_protection+0x1e/0x30
+> [ 1010.716026]  ? gtp_newlink+0x4d7/0x9c0 [gtp]
+> [ 1010.716034]  ? gtp_net_exit+0x150/0x150 [gtp]
+> [ 1010.716042]  __rtnl_newlink+0x1063/0x1700
+> [ 1010.716051]  ? rtnl_setlink+0x3c0/0x3c0
+> [ 1010.716063]  ? is_bpf_text_address+0xc0/0x1f0
+> [ 1010.716070]  ? kernel_text_address.part.0+0xbb/0xd0
+> [ 1010.716076]  ? __kernel_text_address+0x56/0xa0
+> [ 1010.716084]  ? unwind_get_return_address+0x5a/0xa0
+> [ 1010.716091]  ? create_prof_cpu_mask+0x30/0x30
+> [ 1010.716098]  ? arch_stack_walk+0x9e/0xf0
+> [ 1010.716106]  ? stack_trace_save+0x91/0xd0
+> [ 1010.716113]  ? stack_trace_consume_entry+0x170/0x170
+> [ 1010.716121]  ? __lock_acquire+0x15c5/0x5380
+> [ 1010.716139]  ? mark_held_locks+0x9e/0xe0
+> [ 1010.716148]  ? kmem_cache_alloc_trace+0x35f/0x3c0
+> [ 1010.716155]  ? __rtnl_newlink+0x1700/0x1700
+> [ 1010.716160]  rtnl_newlink+0x69/0xa0
+> [ 1010.716166]  rtnetlink_rcv_msg+0x43b/0xc50
+> [ 1010.716172]  ? rtnl_fdb_dump+0x9f0/0x9f0
+> [ 1010.716179]  ? lock_acquire+0x1fe/0x560
+> [ 1010.716188]  ? netlink_deliver_tap+0x12f/0xd50
+> [ 1010.716196]  netlink_rcv_skb+0x14d/0x440
+> [ 1010.716202]  ? rtnl_fdb_dump+0x9f0/0x9f0
+> [ 1010.716208]  ? netlink_ack+0xab0/0xab0
+> [ 1010.716213]  ? netlink_deliver_tap+0x202/0xd50
+> [ 1010.716220]  ? netlink_deliver_tap+0x218/0xd50
+> [ 1010.716226]  ? __virt_addr_valid+0x30b/0x590
+> [ 1010.716233]  netlink_unicast+0x54b/0x800
+> [ 1010.716240]  ? netlink_attachskb+0x870/0x870
+> [ 1010.716248]  ? __check_object_size+0x2de/0x3b0
+> [ 1010.716254]  netlink_sendmsg+0x938/0xe40
+> [ 1010.716261]  ? netlink_unicast+0x800/0x800
+> [ 1010.716269]  ? __import_iovec+0x292/0x510
+> [ 1010.716276]  ? netlink_unicast+0x800/0x800
+> [ 1010.716284]  __sock_sendmsg+0x159/0x190
+> [ 1010.716290]  ____sys_sendmsg+0x712/0x880
+> [ 1010.716297]  ? sock_write_iter+0x3d0/0x3d0
+> [ 1010.716304]  ? __ia32_sys_recvmmsg+0x270/0x270
+> [ 1010.716309]  ? lock_acquire+0x1fe/0x560
+> [ 1010.716315]  ? drain_array_locked+0x90/0x90
+> [ 1010.716324]  ___sys_sendmsg+0xf8/0x170
+> [ 1010.716331]  ? sendmsg_copy_msghdr+0x170/0x170
+> [ 1010.716337]  ? lockdep_init_map_type+0x2c7/0x860
+> [ 1010.716343]  ? lockdep_hardirqs_on_prepare+0x430/0x430
+> [ 1010.716350]  ? debug_mutex_init+0x33/0x70
+> [ 1010.716360]  ? percpu_counter_add_batch+0x8b/0x140
+> [ 1010.716367]  ? lock_acquire+0x1fe/0x560
+> [ 1010.716373]  ? find_held_lock+0x2c/0x110
+> [ 1010.716384]  ? __fd_install+0x1b6/0x6f0
+> [ 1010.716389]  ? lock_downgrade+0x810/0x810
+> [ 1010.716396]  ? __fget_light+0x222/0x290
+> [ 1010.716403]  __sys_sendmsg+0xea/0x1b0
+> [ 1010.716409]  ? __sys_sendmsg_sock+0x40/0x40
+> [ 1010.716419]  ? lockdep_hardirqs_on_prepare+0x2b3/0x430
+> [ 1010.716425]  ? syscall_enter_from_user_mode+0x1d/0x60
+> [ 1010.716432]  do_syscall_64+0x30/0x40
+> [ 1010.716438]  entry_SYSCALL_64_after_hwframe+0x62/0xc7
+> [ 1010.716444] RIP: 0033:0x7fd1508cbd49
+> [ 1010.716452] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ef 70 0d 00 f7 d8 64 89 01 48
+> [ 1010.716456] RSP: 002b:00007fff18872348 EFLAGS: 00000202 ORIG_RAX: 000000000000002e
+> [ 1010.716463] RAX: ffffffffffffffda RBX: 000055f72bf0eac0 RCX: 00007fd1508cbd49
+> [ 1010.716468] RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000006
+> [ 1010.716473] RBP: 00007fff18872360 R08: 00007fff18872360 R09: 00007fff18872360
+> [ 1010.716478] R10: 00007fff18872360 R11: 0000000000000202 R12: 000055f72bf0e1b0
+> [ 1010.716482] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> [ 1010.716491] Modules linked in: gtp(+) udp_tunnel ib_core uinput af_packet rfkill qrtr joydev hid_generic usbhid hid kvm_intel iTCO_wdt intel_pmc_bxt iTCO_vendor_support kvm snd_hda_codec_generic ledtrig_audio irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel snd_hda_intel nls_utf8 snd_intel_dspcfg nls_cp866 psmouse aesni_intel vfat crypto_simd fat cryptd glue_helper snd_hda_codec pcspkr snd_hda_core i2c_i801 snd_hwdep i2c_smbus xhci_pci snd_pcm lpc_ich xhci_pci_renesas xhci_hcd qemu_fw_cfg tiny_power_button button sch_fq_codel vboxvideo drm_vram_helper drm_ttm_helper ttm vboxsf vboxguest snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi snd_seq_device snd_timer snd soundcore msr fuse efi_pstore dm_mod ip_tables x_tables autofs4 virtio_gpu virtio_dma_buf drm_kms_helper cec rc_core drm virtio_rng virtio_scsi rng_core virtio_balloon virtio_blk virtio_net virtio_console net_failover failover ahci libahci libata evdev scsi_mod input_leds serio_raw virtio_pci 
+ intel_agp
+> [ 1010.716674]  virtio_ring intel_gtt virtio [last unloaded: gtp]
+> [ 1010.716693] ---[ end trace 04990a4ce61e174b ]---
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] gtp: fix use-after-free and null-ptr-deref in gtp_newlink()
+    https://git.kernel.org/netdev/net/c/616d82c3cfa2
+
+You are awesome, thank you!
 -- 
-2.30.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
