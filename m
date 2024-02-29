@@ -1,269 +1,97 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4694074BF2
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 21:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A283216FF2B
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 21:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709241836; cv=none; b=uqqdBNicEzLkr5zs/Gu1m1+xgRjC7ulFMawL4Xz+1ulL7JXCsky5MJqGgEAD+6XndoH3b/p9+6TUQ8uACq7q9CJWJlbRxXevM+WHQIiH0pfeMeMa8xae8j0ByQl3MJatKNovB7+58g2fCW7uBxd0OOklfnoiu88El3/W31q14ww=
+	t=1709241883; cv=none; b=fh16QwIst4nOVOXhFx74GgQS/P5MrZhSxmKO72RCAa/lqhaE0y1IMSyDXtN9F7J42i/AxAGATR4ur8Gghbvxni2aOAsfft2jp22trRnIrJqgw9xDsdHjiC4f02pPzUR7D1cZ5xIsDfO8ArWLrCbKj5ok6OtGq3sDe/mN0pABz14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709241836; c=relaxed/simple;
-	bh=nNRYs43CNcjZoviggESxp1eEDgYULA6gB+/AuIQtI1c=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uCZKVQlrknQ2XgHVtNsxgfg82/3YJ2yxNwFEdxf5xuGcDX6Fv9odsLTrIbPfgQcTfy/TjlWW/N5HYobn/6k4/AeMBysaMKR6KpKrKB/2hWv7akv++iC4jr+4KQOqX2oM+Sb1akzKMYALqrcl7IX5QT80pkuvsWyJB4o+jvogSeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H78YpcgH; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com
+	s=arc-20240116; t=1709241883; c=relaxed/simple;
+	bh=Jv57XkdEOb5lCcmwhvsrgcTRHKKlbAL+X8QUWiBeHm0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYuJAtzEg4ki3TsVpn8omXffvkfPmapT542ScIU7ltcipjedUe42PxPOFyRsl0T86Fryc1E+h4hmZadH2ZKam1iq4E1npozjTilnc55DWYSxZ2q4u6XhkyO5urniQkzl8RwrtGfC26IILxqx5Y0gdIR7vJ/d8+mJo2EeXqM07Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dEe/F6Cp; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H78YpcgH"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1dcabec8fddso14927875ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:23:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709241835; x=1709846635; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xurr9IMa0IOArYf8o+P8T4vB1IGhQ03rSgtQlkyp0BA=;
-        b=H78YpcgHFoH4ndfLUAoWlauvyQHEotP4s7YBjdwDu16F5npy+5GwSQsR4sYhH+L9jb
-         849Bk7YgevtElm+2fhInoHzLI+2MwgbxD9F0X3eODveO/iowNjBpck90C+6z3sXuX3Wv
-         5jz/kn6OE80FMzjQys7icSC+oYCQ+qVd8fCN3z4CBGWvdn8ymES3NPoRVTosu2RuSDGP
-         eSRFhJKA6jsUitOKA7A1pZpPeow6m7rNC+fkxlmJQqTp/flUwkFmUvnRtsji3ibExLvS
-         IwqSSmq7N197x1Fo957JQVaLepuYizNpPJWfAywaosqXTLzHWgpOpH4HeWYDhwtsGQ/7
-         x2Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709241835; x=1709846635;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xurr9IMa0IOArYf8o+P8T4vB1IGhQ03rSgtQlkyp0BA=;
-        b=ex//xDPlqThCS6/qMxYP1oaQWcSocYGAcrQn5bIUtDuzy1degUlw6ndniLjPb3iSEL
-         IfgjUJ7EDES9v7yGtaz6GB4YQiE4QsxAoi1jYdRgIHIAhjKbGcvQFwWfgU5AEE0J6Dx4
-         bGqVqZ0EjfOCOuTrXklOTGmENyua8jfurpAbqv0rDuJ4FgYWbk5JpicP/MB1yxgcmq3M
-         +5u94IYKRdnewIIQcsu2BCK1zLioO+hH4csJd08LJi5EAJzIlnisf/y9mCkSHu5K86xI
-         A9amUJs8P98fhmge5k2WnmxsOe/bIA1H3gETb6l9h6SdFjhJVUEKHumuGAS074naF5D9
-         oQ0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWR+OrtDpfLxpH4sBmrHHQNxidO7UMxi55P+kpbfOa4TuxQ/1L9HnCTlRKxP6IV6qzpmK3QwHpplwPn9cFgRY3UDVvML+3BcYOdE9oz
-X-Gm-Message-State: AOJu0Yxpq0n6RH6Z139OxMJsgtrUto/avP2ZbOvoQ/+yVIYKF15q62TS
-	aR++dBPsatE2nXuAq/bZ8zcPj8JFlR3mWNsu1ZkHJRqOcUKeF3bxK52a1zMJz2T+/OMRKEjlrVD
-	QP0OTnr6nnUZT4A==
-X-Google-Smtp-Source: AGHT+IFqt3ldMw/BECjjDJSaPfiP+LaU5TVxhqmyrd602FhAkoxoBUMbcgz9vHF9/uD0bShCkGFAHIbt2S4AW+U=
-X-Received: from ziweixiao.sea.corp.google.com ([2620:15c:11c:202:43b5:fdf3:8395:a655])
- (user=ziweixiao job=sendgmr) by 2002:a17:902:da8c:b0:1db:b8a6:dbb2 with SMTP
- id j12-20020a170902da8c00b001dbb8a6dbb2mr61212plx.13.1709241834615; Thu, 29
- Feb 2024 13:23:54 -0800 (PST)
-Date: Thu, 29 Feb 2024 13:22:36 -0800
-In-Reply-To: <20240229212236.3152897-1-ziweixiao@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dEe/F6Cp"
+Date: Thu, 29 Feb 2024 16:24:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1709241879;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jv57XkdEOb5lCcmwhvsrgcTRHKKlbAL+X8QUWiBeHm0=;
+	b=dEe/F6Cpa/brZBrjcWn/DWZZekUEpH/qX6WBbE+JZND6SmPso1PcIBIYezVUQHo+OrQ4Gq
+	sebiBHtZe5Yqj6NE+8c1QgumE18RpWc/el5cK0/UWnrIyn6BnEcz55686sgS0N7myIErKs
+	Kjcz/Ieltatda8+p5hHhM8AXrTgVtt8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Brian Foster <bfoster@redhat.com>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	djwong@kernel.org
+Subject: Re: [PATCH 01/21] bcachefs: KEY_TYPE_accounting
+Message-ID: <r2ieuj2kvitrrg7sqhuossm3wn4zzlkhygfqx7bxorzbaylnw2@kpgfn4e42iuw>
+References: <20240225023826.2413565-1-kent.overstreet@linux.dev>
+ <20240225023826.2413565-2-kent.overstreet@linux.dev>
+ <Zd4Ef49kHX3g69VT@bfoster>
+ <t6cc6gqgla2csyvrsv2znel5lg76vx7t2zna772qpw7zd6pnft@rxdakxza5cab>
+ <ZeDQQ8cyMTgYaY6D@bfoster>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240229212236.3152897-1-ziweixiao@google.com>
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Message-ID: <20240229212236.3152897-4-ziweixiao@google.com>
-Subject: [PATCH net-next 3/3] gve: Add header split ethtool stats
-From: Ziwei Xiao <ziweixiao@google.com>
-To: netdev@vger.kernel.org
-Cc: jeroendb@google.com, pkaligineedi@google.com, shailend@google.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	willemb@google.com, rushilg@google.com, jfraker@google.com, jrkim@google.com, 
-	hramamurthy@google.com, ziweixiao@google.com, horms@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZeDQQ8cyMTgYaY6D@bfoster>
+X-Migadu-Flow: FLOW_OUT
 
-From: Jeroen de Borst <jeroendb@google.com>
+On Thu, Feb 29, 2024 at 01:43:15PM -0500, Brian Foster wrote:
+> Hmm.. I think the connection I missed on first look is basically
+> disk_accounting_key_to_bpos(). I think what is confusing is that calling
+> this a key makes me think of bkey, which I understand to contain a bpos,
+> so then overlaying it with a bpos didn't really make a lot of sense to
+> me conceptually.
+>
+> So when I look at disk_accounting_key_to_bpos(), I see we are actually
+> using the bpos _pad field, and this structure basically _is_ the bpos
+> for a disk accounting btree bkey. So that kind of makes me wonder why
+> this isn't called something like disk_accounting_pos instead of _key,
+> but maybe that is wrong for other reasons.
 
-To record the stats of header split packets, three stats are added in
-the driver's ethtool stats.
+hmm, I didn't consider calling it disk_accounting_pos. I'll let that
+roll around in my brain.
 
-- rx_hsplit_pkt is the split packets count with header split
-- rx_hsplit_bytes is the received header bytes count with header split
-- rx_hsplit_unsplit_pkt is the unsplit packet count due to header buffer
-  overflow or zero header length when header split is enabled
+'key' is more standard terminology to me outside bcachefs, but 'pos'
+does make more sense within bcachefs.
 
-Currently, it's entering the stats_update critical section more than
-once per packet. We have plans to avoid that in the future change to let
-all the stats_update happen in one place at the end of
-`gve_rx_poll_dqo`.
+> Either way, what I'm trying to get at is that I think this documentation
+> would be better if it explained conceptually how disk_accounting_key
+> relates to bkey/bpos, and why it exists separately from bkey vs. other
+> key types, rather than (or at least before) getting into the lower level
+> side effects of a union with bpos.
 
-Co-developed-by: Ziwei Xiao <ziweixiao@google.com>
-Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
-Signed-off-by: Jeroen de Borst <jeroendb@google.com>
-Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
-Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
----
- drivers/net/ethernet/google/gve/gve.h         |  4 +++
- drivers/net/ethernet/google/gve/gve_ethtool.c | 36 +++++++++++++------
- drivers/net/ethernet/google/gve/gve_rx_dqo.c  |  9 +++++
- 3 files changed, 38 insertions(+), 11 deletions(-)
+Well, that gets into some fun territory - ideally bpos would not be a
+fixed thing that every btree was forced to use, we'd be able to define
+different types per btree.
 
-diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
-index 5f02b87d7fea..4814c96d5fe7 100644
---- a/drivers/net/ethernet/google/gve/gve.h
-+++ b/drivers/net/ethernet/google/gve/gve.h
-@@ -269,15 +269,19 @@ struct gve_rx_ring {
- 	};
- 
- 	u64 rbytes; /* free-running bytes received */
-+	u64 rx_hsplit_bytes; /* free-running header bytes received */
- 	u64 rpackets; /* free-running packets received */
- 	u32 cnt; /* free-running total number of completed packets */
- 	u32 fill_cnt; /* free-running total number of descs and buffs posted */
- 	u32 mask; /* masks the cnt and fill_cnt to the size of the ring */
-+	u64 rx_hsplit_pkt; /* free-running packets with headers split */
- 	u64 rx_copybreak_pkt; /* free-running count of copybreak packets */
- 	u64 rx_copied_pkt; /* free-running total number of copied packets */
- 	u64 rx_skb_alloc_fail; /* free-running count of skb alloc fails */
- 	u64 rx_buf_alloc_fail; /* free-running count of buffer alloc fails */
- 	u64 rx_desc_err_dropped_pkt; /* free-running count of packets dropped by descriptor error */
-+	/* free-running count of unsplit packets due to header buffer overflow or hdr_len is 0 */
-+	u64 rx_hsplit_unsplit_pkt;
- 	u64 rx_cont_packet_cnt; /* free-running multi-fragment packets received */
- 	u64 rx_frag_flip_cnt; /* free-running count of rx segments where page_flip was used */
- 	u64 rx_frag_copy_cnt; /* free-running count of rx segments copied */
-diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/net/ethernet/google/gve/gve_ethtool.c
-index 13c2901968e0..9aebfb843d9d 100644
---- a/drivers/net/ethernet/google/gve/gve_ethtool.c
-+++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
-@@ -39,17 +39,18 @@ static u32 gve_get_msglevel(struct net_device *netdev)
-  * as declared in enum xdp_action inside file uapi/linux/bpf.h .
-  */
- static const char gve_gstrings_main_stats[][ETH_GSTRING_LEN] = {
--	"rx_packets", "tx_packets", "rx_bytes", "tx_bytes",
--	"rx_dropped", "tx_dropped", "tx_timeouts",
-+	"rx_packets", "rx_hsplit_pkt", "tx_packets", "rx_bytes",
-+	"tx_bytes", "rx_dropped", "tx_dropped", "tx_timeouts",
- 	"rx_skb_alloc_fail", "rx_buf_alloc_fail", "rx_desc_err_dropped_pkt",
-+	"rx_hsplit_unsplit_pkt",
- 	"interface_up_cnt", "interface_down_cnt", "reset_cnt",
- 	"page_alloc_fail", "dma_mapping_error", "stats_report_trigger_cnt",
- };
- 
- static const char gve_gstrings_rx_stats[][ETH_GSTRING_LEN] = {
--	"rx_posted_desc[%u]", "rx_completed_desc[%u]", "rx_consumed_desc[%u]", "rx_bytes[%u]",
--	"rx_cont_packet_cnt[%u]", "rx_frag_flip_cnt[%u]", "rx_frag_copy_cnt[%u]",
--	"rx_frag_alloc_cnt[%u]",
-+	"rx_posted_desc[%u]", "rx_completed_desc[%u]", "rx_consumed_desc[%u]",
-+	"rx_bytes[%u]", "rx_hsplit_bytes[%u]", "rx_cont_packet_cnt[%u]",
-+	"rx_frag_flip_cnt[%u]", "rx_frag_copy_cnt[%u]", "rx_frag_alloc_cnt[%u]",
- 	"rx_dropped_pkt[%u]", "rx_copybreak_pkt[%u]", "rx_copied_pkt[%u]",
- 	"rx_queue_drop_cnt[%u]", "rx_no_buffers_posted[%u]",
- 	"rx_drops_packet_over_mru[%u]", "rx_drops_invalid_checksum[%u]",
-@@ -153,11 +154,13 @@ static void
- gve_get_ethtool_stats(struct net_device *netdev,
- 		      struct ethtool_stats *stats, u64 *data)
- {
--	u64 tmp_rx_pkts, tmp_rx_bytes, tmp_rx_skb_alloc_fail,
--		tmp_rx_buf_alloc_fail, tmp_rx_desc_err_dropped_pkt,
-+	u64 tmp_rx_pkts, tmp_rx_hsplit_pkt, tmp_rx_bytes, tmp_rx_hsplit_bytes,
-+		tmp_rx_skb_alloc_fail, tmp_rx_buf_alloc_fail,
-+		tmp_rx_desc_err_dropped_pkt, tmp_rx_hsplit_unsplit_pkt,
- 		tmp_tx_pkts, tmp_tx_bytes;
--	u64 rx_buf_alloc_fail, rx_desc_err_dropped_pkt, rx_pkts,
--		rx_skb_alloc_fail, rx_bytes, tx_pkts, tx_bytes, tx_dropped;
-+	u64 rx_buf_alloc_fail, rx_desc_err_dropped_pkt, rx_hsplit_unsplit_pkt,
-+		rx_pkts, rx_hsplit_pkt, rx_skb_alloc_fail, rx_bytes, tx_pkts, tx_bytes,
-+		tx_dropped;
- 	int stats_idx, base_stats_idx, max_stats_idx;
- 	struct stats *report_stats;
- 	int *rx_qid_to_stats_idx;
-@@ -184,8 +187,10 @@ gve_get_ethtool_stats(struct net_device *netdev,
- 		kfree(rx_qid_to_stats_idx);
- 		return;
- 	}
--	for (rx_pkts = 0, rx_bytes = 0, rx_skb_alloc_fail = 0,
--	     rx_buf_alloc_fail = 0, rx_desc_err_dropped_pkt = 0, ring = 0;
-+	for (rx_pkts = 0, rx_bytes = 0, rx_hsplit_pkt = 0,
-+	     rx_skb_alloc_fail = 0, rx_buf_alloc_fail = 0,
-+	     rx_desc_err_dropped_pkt = 0, rx_hsplit_unsplit_pkt = 0,
-+	     ring = 0;
- 	     ring < priv->rx_cfg.num_queues; ring++) {
- 		if (priv->rx) {
- 			do {
-@@ -194,18 +199,23 @@ gve_get_ethtool_stats(struct net_device *netdev,
- 				start =
- 				  u64_stats_fetch_begin(&priv->rx[ring].statss);
- 				tmp_rx_pkts = rx->rpackets;
-+				tmp_rx_hsplit_pkt = rx->rx_hsplit_pkt;
- 				tmp_rx_bytes = rx->rbytes;
- 				tmp_rx_skb_alloc_fail = rx->rx_skb_alloc_fail;
- 				tmp_rx_buf_alloc_fail = rx->rx_buf_alloc_fail;
- 				tmp_rx_desc_err_dropped_pkt =
- 					rx->rx_desc_err_dropped_pkt;
-+				tmp_rx_hsplit_unsplit_pkt =
-+					rx->rx_hsplit_unsplit_pkt;
- 			} while (u64_stats_fetch_retry(&priv->rx[ring].statss,
- 						       start));
- 			rx_pkts += tmp_rx_pkts;
-+			rx_hsplit_pkt += tmp_rx_hsplit_pkt;
- 			rx_bytes += tmp_rx_bytes;
- 			rx_skb_alloc_fail += tmp_rx_skb_alloc_fail;
- 			rx_buf_alloc_fail += tmp_rx_buf_alloc_fail;
- 			rx_desc_err_dropped_pkt += tmp_rx_desc_err_dropped_pkt;
-+			rx_hsplit_unsplit_pkt += tmp_rx_hsplit_unsplit_pkt;
- 		}
- 	}
- 	for (tx_pkts = 0, tx_bytes = 0, tx_dropped = 0, ring = 0;
-@@ -226,6 +236,7 @@ gve_get_ethtool_stats(struct net_device *netdev,
- 
- 	i = 0;
- 	data[i++] = rx_pkts;
-+	data[i++] = rx_hsplit_pkt;
- 	data[i++] = tx_pkts;
- 	data[i++] = rx_bytes;
- 	data[i++] = tx_bytes;
-@@ -237,6 +248,7 @@ gve_get_ethtool_stats(struct net_device *netdev,
- 	data[i++] = rx_skb_alloc_fail;
- 	data[i++] = rx_buf_alloc_fail;
- 	data[i++] = rx_desc_err_dropped_pkt;
-+	data[i++] = rx_hsplit_unsplit_pkt;
- 	data[i++] = priv->interface_up_cnt;
- 	data[i++] = priv->interface_down_cnt;
- 	data[i++] = priv->reset_cnt;
-@@ -276,6 +288,7 @@ gve_get_ethtool_stats(struct net_device *netdev,
- 				start =
- 				  u64_stats_fetch_begin(&priv->rx[ring].statss);
- 				tmp_rx_bytes = rx->rbytes;
-+				tmp_rx_hsplit_bytes = rx->rx_hsplit_bytes;
- 				tmp_rx_skb_alloc_fail = rx->rx_skb_alloc_fail;
- 				tmp_rx_buf_alloc_fail = rx->rx_buf_alloc_fail;
- 				tmp_rx_desc_err_dropped_pkt =
-@@ -283,6 +296,7 @@ gve_get_ethtool_stats(struct net_device *netdev,
- 			} while (u64_stats_fetch_retry(&priv->rx[ring].statss,
- 						       start));
- 			data[i++] = tmp_rx_bytes;
-+			data[i++] = tmp_rx_hsplit_bytes;
- 			data[i++] = rx->rx_cont_packet_cnt;
- 			data[i++] = rx->rx_frag_flip_cnt;
- 			data[i++] = rx->rx_frag_copy_cnt;
-diff --git a/drivers/net/ethernet/google/gve/gve_rx_dqo.c b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-index a12d776d4385..8e8071308aeb 100644
---- a/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-+++ b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-@@ -720,6 +720,8 @@ static int gve_rx_dqo(struct napi_struct *napi, struct gve_rx_ring *rx,
- 
- 	/* Copy the header into the skb in the case of header split */
- 	if (hsplit) {
-+		int unsplit = 0;
-+
- 		if (hdr_len && !hbo) {
- 			rx->ctx.skb_head = gve_rx_copy_data(priv->dev, napi,
- 							    rx->dqo.hdr_bufs.data +
-@@ -728,7 +730,14 @@ static int gve_rx_dqo(struct napi_struct *napi, struct gve_rx_ring *rx,
- 			if (unlikely(!rx->ctx.skb_head))
- 				goto error;
- 			rx->ctx.skb_tail = rx->ctx.skb_head;
-+		} else {
-+			unsplit = 1;
- 		}
-+		u64_stats_update_begin(&rx->statss);
-+		rx->rx_hsplit_pkt++;
-+		rx->rx_hsplit_unsplit_pkt += unsplit;
-+		rx->rx_hsplit_bytes += hdr_len;
-+		u64_stats_update_end(&rx->statss);
- 	}
- 
- 	/* Sync the portion of dma buffer for CPU to read. */
--- 
-2.44.0.rc1.240.g4c46232300-goog
+And we're actually going to need to be able to do that in order to do
+configurationless autotiering - i.e. tracking how hot/cold data is on an
+inode:offset basis, because LRU btree backreferences need to go in the
+key (bpos), not the value, in order to avoid collisions, and bpos isn't
+big enough for that.
 
+disk_accounting_(key|pos) is an even trickier situation, because of
+endianness issues. The trick we do with bpos of defining the field order
+differently based on endianness so that byte order matches word order -
+that really wouldn't work here, so there is at present no practical way
+that I know of to avoid the byte swabbing when going back and forth
+between bpos and disk_accounting_pos on big endian.
+
+But gcc does have an attribute now that lets you specify that an integer
+struct member is big or little endian... I if we could get them to go
+one step further and give us an attribute to control whether members are
+laid out in ascending or descending order...
