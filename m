@@ -1,115 +1,143 @@
-Received: from muminek.juszkiewicz.com.pl (muminek.juszkiewicz.com.pl [213.251.184.221])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8546D1353F8
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 14:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.251.184.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F151353F8;
+	Thu, 29 Feb 2024 14:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709218700; cv=none; b=MYwlUqz1GDRPfkLSWFRpurjq1pnxULVfv4uqWdK+9d/W8W5BrLx/tbyoN1LjKS6uBf8f1VayErnpRVzqk1Flfg7OXn0IrGyiCBw8FGxcOGFri2P+74G/n496/wbqt/q8kIdSW4FNTIs8TXlYJ4L0o5f7Fm+ptCEe5baLF5zOcy4=
+	t=1709218725; cv=none; b=N2Rp+Z8+zljKdvLjSvB5a0GuDNGLhMfUD0B9+eLh3QfKuj8GJu/dzRTGFtyLOubUq3+44OxmGJpEaw4Q/phmxv8org6n8TGt3b4XOnNfA464mDDvVeOF4PjR6IdgfS4tTKApVEWO1cLZoylvyGH4sWU/Qz4+KJH2XyFJjOrCLFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709218700; c=relaxed/simple;
-	bh=FfQX8T2OKycP5tIHDJMSdxNJ4eZiVZCwuwsyExBR/J0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HVdeNlGUKkh7jz9HgZ6DN4/FbdoG09/LudgEeETh10oeeZKiB6ONuCwjrOylP3IJDqEqogGxnnUyTOdIznM99nccLkdOOBI4VSimqQwi5dWFAXeIJON9NcZl60sLHejQszJrODPnPVBmc85qbGR63lr7sBNZKo1u3oy+Ma2wbJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=juszkiewicz.com.pl; spf=pass smtp.mailfrom=juszkiewicz.com.pl; dkim=pass (2048-bit key) header.d=juszkiewicz.com.pl header.i=@juszkiewicz.com.pl header.b=B1sMq+m0; dkim=pass (2048-bit key) header.d=juszkiewicz.com.pl header.i=@juszkiewicz.com.pl header.b=cSZ8FUGG; arc=none smtp.client-ip=213.251.184.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=juszkiewicz.com.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=juszkiewicz.com.pl
+	s=arc-20240116; t=1709218725; c=relaxed/simple;
+	bh=vt8AtWviueFaNUh2SIRA7kFo2RoOzji6O8iI5DEzmzQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l+w+I1AgTm9+iiZCIEUuRBkGSmythVUTQFTwzbKqIP3GUwnIlZsMcSKfU3vAt5EnXrvZIsLxU9sugXtHVA9uxEWpEQ3hWXOLPET2OO9bnaRwCZJVPelgsRFW1ZYGCV2BJwhAul7FGAvsrrKCGzsmnb3vT8dvwgtjJic2eh2Ftt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bEQ3KDEP; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=juszkiewicz.com.pl header.i=@juszkiewicz.com.pl header.b="B1sMq+m0";
-	dkim=pass (2048-bit key) header.d=juszkiewicz.com.pl header.i=@juszkiewicz.com.pl header.b="cSZ8FUGG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=juszkiewicz.com.pl;
-	s=mail; t=1709218275;
-	bh=FfQX8T2OKycP5tIHDJMSdxNJ4eZiVZCwuwsyExBR/J0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=B1sMq+m0NI0vtn2jMBr3xiUcuCY6XdfxUQQzwjG4F+2Aznt0WUfzqLnnbCUfOMKIv
-	 e17++AaOTFsLFqvFxnkp+8FEXc6MOgu+byQTH2gA6PLdAfdrxAZX5dj6AuiQCdiz0a
-	 rtU2vHtBpSGHbpiq+56BTr7q9qzGszIfkyPgCTyFwdtkSvgp8WU5WN1jfhJtOx3W1M
-	 qEP8n7skO2b0ipDrXToUjVx5eeW9byA/Zrv+h9sHu5ipIMDywNQrncfTgNFnFN4YMf
-	 XmrkRABWVxD1GlvCR0IEicoQGDk6CaVEHzkE6OIfkhgzZo8JO+awMdFYGtkbUh68SI
-	 CegaNQw7m/EgQ==
-Received: from localhost (localhost [127.0.0.1])
-	by muminek.juszkiewicz.com.pl (Postfix) with ESMTP id 7243226084A;
-	Thu, 29 Feb 2024 15:51:15 +0100 (CET)
-X-Virus-Scanned: Debian amavis at juszkiewicz.com.pl
-Received: from muminek.juszkiewicz.com.pl ([127.0.0.1])
- by localhost (muminek.juszkiewicz.com.pl [127.0.0.1]) (amavis, port 10024)
- with ESMTP id x9xZT7CxWXDO; Thu, 29 Feb 2024 15:51:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=juszkiewicz.com.pl;
-	s=mail; t=1709218273;
-	bh=FfQX8T2OKycP5tIHDJMSdxNJ4eZiVZCwuwsyExBR/J0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cSZ8FUGGAjpiAILumLpcM+cBaLcDWBMCx2y2ubp9W2mDYRj7I1/IdmbNmfCytpoB0
-	 H7M5ralpNm+k00qTT2k2fCDW9KMdbWUkth2EbyZKiPlm3vW2wtkkyKLwIAuXUcLcE5
-	 NVPtKAx4STu1tdH8oDmWh5G/CAGzP9m9dNjDqEPgPUaZiS8jCX6J3JH6RVY73FOiRN
-	 lEW+T3Oq4ptCX7zkge85Gj/OrmSZ4uaHF0uGVGsrZ56Q+hdOb2Rqi7t1kkNMthO4nu
-	 3AMjpipt6t6BANybSJh1d0WDsXrmY5M9DkEczeg4BoPnjWq54VDNK0FxsxTcFYYLZD
-	 y1aKGWeExu3Jw==
-Received: from puchatek.lan (83.11.22.169.ipv4.supernova.orange.pl [83.11.22.169])
-	by muminek.juszkiewicz.com.pl (Postfix) with ESMTPSA id 942C2260080;
-	Thu, 29 Feb 2024 15:51:12 +0100 (CET)
-From: Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>
-To: linux-kernel@vger.kernel.org
-Cc: Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>,
-	Russell King <linux@armlinux.org.uk>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] x86, arm: add missing license tag into syscall tables
-Date: Thu, 29 Feb 2024 15:51:00 +0100
-Message-ID: <20240229145101.553998-1-marcin@juszkiewicz.com.pl>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bEQ3KDEP"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41TES2QI014349;
+	Thu, 29 Feb 2024 14:57:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=r/t14PRcRophG5LFLb15IuPPFzri/0d0atNhzF7nkec=;
+ b=bEQ3KDEPRcFxBuYEmgeihUIoqRNivj6jS0cHkOSvcHTrpB0EDA5M88FacHVcH8A7Gfoo
+ 3vRLMIG+q6bUZKvn++PMR0dx252dkekBX3t8D5wqA3T6IiUdsZdOXPrcbyR4fqETMwoj
+ FW/6MHWHiYO7vnVGFKZUVOx0K9eXinmgGEwiuMG4LxgWdFV/TFER/CxMi//JDI2XX8EL
+ wDwYdT+rjvktyp8G+5iY4MxrCAK+c71FNMAoOD+BdpRVI4GVjnolb8APUYlOsfE/EwX1
+ ErzkdMDenZkBj/EvMnlkLNkQR0kZEcY+C04wemh/CjfqBmdMcJBilgP0IsRhqUn6tX8q og== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wjuq7rutv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 14:57:35 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41TDf9UY008782;
+	Thu, 29 Feb 2024 14:57:34 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wftstxakd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 14:57:34 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41TEvVhF57606594
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 29 Feb 2024 14:57:33 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 48F1958063;
+	Thu, 29 Feb 2024 14:57:31 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9980E5805B;
+	Thu, 29 Feb 2024 14:57:30 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 29 Feb 2024 14:57:30 +0000 (GMT)
+Message-ID: <aabeec7b-618c-4d15-b033-4162b6e54f6a@linux.ibm.com>
+Date: Thu, 29 Feb 2024 09:57:30 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/10] crypto: ecdsa - Convert byte arrays with key
+ coordinates to digits
+Content-Language: en-US
+To: Lukas Wunner <lukas@wunner.de>
+Cc: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br
+References: <20240223204149.4055630-1-stefanb@linux.ibm.com>
+ <20240223204149.4055630-2-stefanb@linux.ibm.com>
+ <20240229091105.GA29363@wunner.de>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20240229091105.GA29363@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: e8QKhuV7oPEm9p7MO45mPyckdj26FnXI
+X-Proofpoint-ORIG-GUID: e8QKhuV7oPEm9p7MO45mPyckdj26FnXI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-29_02,2024-02-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ clxscore=1011 suspectscore=0 malwarescore=0 impostorscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402290114
 
-syscall*.tbl files were added to make it easier to check which system
-calls are supported on each architecture and to check for their numbers.
 
-Arm and x86 files lack Linux-syscall-note license exception present in
-files for all other architectures.
 
-Signed-off-by: Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>
----
- arch/arm/tools/syscall.tbl             | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl | 1 +
- arch/x86/entry/syscalls/syscall_64.tbl | 1 +
- 3 files changed, 3 insertions(+)
+On 2/29/24 04:11, Lukas Wunner wrote:
+> On Fri, Feb 23, 2024 at 03:41:40PM -0500, Stefan Berger wrote:
+>> +static inline void ecc_digits_from_bytes(const u8 *in, unsigned int nbytes,
+>> +					 u64 *out, unsigned int ndigits)
+>> +{
+>> +	unsigned int sz = ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
+>> +	u8 tmp[ECC_MAX_DIGITS << ECC_DIGITS_TO_BYTES_SHIFT];
+>> +	unsigned int o = sz - nbytes;
+>> +
+>> +	memset(tmp, 0, o);
+>> +	memcpy(&tmp[o], in, nbytes);
+>> +	ecc_swap_digits(tmp, out, ndigits);
+>> +}
+> 
+> Copying the whole key into tmp seems inefficient.  You only need
+> special handling for the first few bytes of "in" (6 bytes in the
+> P521 case) and could use ecc_swap_digits() to convert the rest
+> of "in" directly to "out" without using tmp.
+> 
+> So it would be sufficient to allocate the first digit on the stack,
+> memset + memcpy, then convert that to native byte order into "in[0]"
+> and use ecc_swap_digits() for the rest.
+> 
+> And the special handling would be conditional on "!o", so is skipped
+> for existing curves.
 
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index b6c9e01e14f5..a65fae9af312 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
- #
- # Linux system call numbers and entry vectors
- #
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 5f8591ce7f25..f532adc9ebca 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
- #
- # 32-bit system call numbers and entry vectors
- #
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 7e8d46f4147f..a5eee53d39bc 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
- #
- # 64-bit system call numbers and entry vectors
- #
--- 
-2.43.2
+Thanks. It looks like this now:
 
+static inline void ecc_digits_from_bytes(const u8 *in, unsigned int nbytes,
+                                          u64 *out, unsigned int ndigits)
+{
+         unsigned int o = nbytes & 7;
+         u64 msd = 0;
+         size_t i;
+
+         if (o == 0) {
+                 ecc_swap_digits(in, out, ndigits);
+         } else {
+                 for (i = 0; i < o; i++)
+                         msd = (msd << 8) | in[i];
+                 out[ndigits - 1] = msd;
+                 ecc_swap_digits(&in[o], out, ndigits - 1);
+         }
+}
+
+
+   Stefan
+
+> 
+> Thanks,
+> 
+> Lukas
