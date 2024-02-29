@@ -1,65 +1,61 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B7E4EB5F
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC6E4CE00
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709195148; cv=none; b=ltKUHTVsznue2UN5J8wPZDIgt2n/la4RSUmwS9DHhtT1lnKq1Ev7YFgpbqHAccFLxeW46YdxS0oRgpSTF+kAp08nY3JgoQM7dok+kiJDBMkA2cj/yUN2kccKrB6KRtBiUQVuVDuIggdknMrXci9QXoIk0YNCLANj95T5zzhsALk=
+	t=1709195198; cv=none; b=lORfLT9SnR+lIfBP9fW0xQCzfdNvD3Wp7cNxu4NyFJ16lLmbdYbqd4JMlh1TPo1kGvGKEDXl7va56eXQknlECmC7iApSKI9+he4R7Gefol44j0/rlSRBUsSfT1PJGvPYoFwV+VvlXLSYLl2xD8IvZPghc08md9OAbFWkuIJA3yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709195148; c=relaxed/simple;
-	bh=Xrr2pQvNjK9HqdjZU0yutLs3+7x9Uaikc+0/N+mc4Nw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tQe3hGnjcMTRtFtChcneLM5uG6Ghtb9ZDHEhKBfkb6mRzu/N9UkntPzbXzgndWRDnp68Ddsp9BFCrYEGe/6oAJvtRfndqAx3jhnTBdkTKxGK4AEmy1Z0CSVI1Ih1O2au86dXShFR36wQy9WlZjBoeJ8j66BG24DajaTbBvfytYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com; spf=pass smtp.mailfrom=linumiz.com; dkim=pass (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b=IBY8fre6; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linumiz.com
+	s=arc-20240116; t=1709195198; c=relaxed/simple;
+	bh=juUcc4UcKK/NL61XUnA4t+5ff677KqidZ2CHwPWtVYc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hvWK4bytIVJy/KsJk3zLAYQtQQt14bIusYcGdMyMeDWcCAxMNIiobHtFvWUMuLFSxKjtSweTx7GP315Nm20vgxh1iQTfYMr3ZqsybdYJPkOUnnY9a8X1EPacKT9KiALsNCwOI6H+r592LfFasX7NKVwZMx4r4QJsYVdKwOd35a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nY9/lmKt; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linumiz.com header.i=@linumiz.com header.b="IBY8fre6"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id fTFqr6kN7PM1hfbi7rUPM8; Thu, 29 Feb 2024 08:24:11 +0000
-Received: from md-in-79.webhostbox.net ([43.225.55.182])
-	by cmsmtp with ESMTPS
-	id fbi3rHZqtu3fafbi5rK4Cc; Thu, 29 Feb 2024 08:24:10 +0000
-X-Authority-Analysis: v=2.4 cv=LsSUyGdc c=1 sm=1 tr=0 ts=65e03f2a
- a=LfuyaZh/8e9VOkaVZk0aRw==:117 a=kofhyyBXuK/oEhdxNjf66Q==:17
- a=k7vzHIieQBIA:10 a=oz0wMknONp8A:10 a=vU9dKmh3AAAA:8 a=SsdV6KCYXRRehQAGIlkA:9
- a=rsP06fVo5MYu2ilr0aT5:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=linumiz.com
-	; s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
-	:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=M3fw+Np3S1U8MDlGpthERJ0UDarHWeHDvVRuxtYOYKU=; b=IBY8fre6bEtwsygBfag88/QM7V
-	CBMahsiAY0kO6Cy5W9zDGIVFmrnuirpAVx/cdwQXntE3K0G3vK75XwojqYzyhb/RJwQpOKtiH2UcN
-	YtlFU7ys/sPQyF351tCVdy8AZi4tmQbLQGYQYbYy+OdHRmPBT785HVq7oaxKvvTUPL6F1sK+bkggh
-	iZYHLjy/OkHYVf+qYIY8FxJXaBmCYhoNDTgdocfuCNtFt9X1W4d1NNOsgChlNr2VEUpXL1SmJ6xXn
-	eR4vwSKxogc0ThmKOOOek8EICpVQJciegbjZzKaGrCezAL+tVuJAtvDnOYq8vzSZ9pr1Y14a3L7UY
-	3L+4ReHg==;
-Received: from [122.165.245.213] (port=55676 helo=kural..)
-	by md-in-79.webhostbox.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <parthiban@linumiz.com>)
-	id 1rfbi1-0013bQ-37;
-	Thu, 29 Feb 2024 13:54:06 +0530
-From: Parthiban Nallathambi <parthiban@linumiz.com>
-To: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com
-Cc: devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nY9/lmKt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709195196; x=1740731196;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=juUcc4UcKK/NL61XUnA4t+5ff677KqidZ2CHwPWtVYc=;
+  b=nY9/lmKtN2mJm7OUgW9B5felRxxM+kkRVMH18cOxWdWkmQW2roldibY7
+   iZq59vTmq3ZejqR8/JbN2Njvv81ZgfkN7P0esAMIFBqKI5BlYgLZ9Q9KK
+   hrp0dqzd8WmGZrF2J3BcWb5BByM6isVKXNYDLJXcHECurQM7grrbi6CVz
+   m/ZQDceRrCEJqiPh/KkFbQSL7kHLjHwlBs43T/iNdQPD7gyh8PJELWwOh
+   CLxgjFmf7QqRan/9MaQ1cxcVlN9QnWgdC/9w4EwpuUXyjfivK01KZ4RGI
+   NRDmvWdVrPZOkpxDJcgGVKXyKVMbrSy+ZRi9l6npDlnQJ4obj30Ks9/2f
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="29082088"
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="29082088"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 00:26:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="12360365"
+Received: from a4bf01946c30.jf.intel.com ([10.165.116.30])
+  by fmviesa004.fm.intel.com with ESMTP; 29 Feb 2024 00:26:33 -0800
+From: rulinhuang <rulin.huang@intel.com>
+To: urezki@gmail.com,
+	bhe@redhat.com
+Cc: akpm@linux-foundation.org,
+	colin.king@intel.com,
+	hch@infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Parthiban Nallathambi <parthiban@linumiz.com>
-Subject: [PATCH 1/2] dt-bindings: arm: fsl: Add Seeed studio NPi based boards
-Date: Thu, 29 Feb 2024 13:53:36 +0530
-Message-Id: <20240229082337.3090778-1-parthiban@linumiz.com>
-X-Mailer: git-send-email 2.34.1
+	linux-mm@kvack.org,
+	lstoakes@gmail.com,
+	rulin.huang@intel.com,
+	tianyou.li@intel.com,
+	tim.c.chen@intel.com,
+	wangyang.guo@intel.com,
+	zhiguo.zhou@intel.com
+Subject: [PATCH v6] mm/vmalloc: lock contention optimization under multi-threading
+Date: Thu, 29 Feb 2024 00:26:11 -0800
+Message-ID: <20240229082611.4104839-1-rulin.huang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,55 +63,248 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - md-in-79.webhostbox.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - linumiz.com
-X-BWhitelist: no
-X-Source-IP: 122.165.245.213
-X-Source-L: No
-X-Exim-ID: 1rfbi1-0013bQ-37
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (kural..) [122.165.245.213]:55676
-X-Source-Auth: parthiban@linumiz.com
-X-Email-Count: 2
-X-Org: HG=dishared_whb_net_legacy;ORG=directi;
-X-Source-Cap: bGludW1jbWM7aG9zdGdhdG9yO21kLWluLTc5LndlYmhvc3Rib3gubmV0
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJWm2XY4iR0HyN7nqtFB6xyWV20fKbYMlcM0RSRrjHG5EUtECJJSTmVuMdLVSy6TS5pv//VKfRxOKstUun5cuWZwSry97F1GWI1AEVLV1vOIIy74tj8B
- CdPwkHEja6Cx8RyWyhzeH89D8KEbjmM24UqCN79dZOuRByl5KYD8BO6xNQIGHjDLyCn6luU0AELHKH33nde831KgnTzrWf+0LX4=
 
-NPi i.MX6ULL eMMC/NAND is Seed Studios SoM using i.MX6ULL.
-Development baords can be either based on NAND or eMMC
-SoM.
+When allocating a new memory area where the mapping address range is
+known, it is observed that the vmap_node->busy.lock is acquired twice.
 
-Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
+The first acquisition occurs in the alloc_vmap_area() function when
+inserting the vm area into the vm mapping red-black tree. The second
+acquisition occurs in the setup_vmalloc_vm() function when updating the
+properties of the vm, such as flags and address, etc.
+
+Combine these two operations together in alloc_vmap_area(), which
+improves scalability when the vmap_node->busy.lock is contended.
+By doing so, the need to acquire the lock twice can also be eliminated
+ to once.
+
+With the above change, tested on intel sapphire rapids
+platform(224 vcpu), a 4% performance improvement is
+gained on stress-ng/pthread(https://github.com/ColinIanKing/stress-ng),
+which is the stress test of thread creations.
+
+Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: "Chen, Tim C" <tim.c.chen@intel.com>
+Reviewed-by: "King, Colin" <colin.king@intel.com>
+Signed-off-by: rulinhuang <rulin.huang@intel.com>
 ---
- Documentation/devicetree/bindings/arm/fsl.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+V1 -> V2: Avoided the partial initialization issue of vm and
+separated insert_vmap_area() from alloc_vmap_area()
+V2 -> V3: Rebased on 6.8-rc5
+V3 -> V4: Rebased on mm-unstable branch
+V4 -> V5: cancel the split of alloc_vmap_area()
+and keep insert_vmap_area()
+V5 -> V6: add bug_on
+---
+ mm/vmalloc.c | 132 +++++++++++++++++++++++++--------------------------
+ 1 file changed, 64 insertions(+), 68 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 228dcc5c7d6f..dfe9ddd0872b 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -810,6 +810,14 @@ properties:
-           - const: tq,imx6ull-tqma6ull2l      # MCIMX6Y2, LGA SoM variant
-           - const: fsl,imx6ull
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 25a8df497255..5ae028b0d58d 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1841,15 +1841,66 @@ node_alloc(unsigned long size, unsigned long align,
+ 	return va;
+ }
  
-+      - description: Seeed Stuido i.MX6ULL SoM on dev boards
-+        items:
-+          - enum:
-+              - seeed,imx6ull-seeed-npi-emmc
-+              - seeed,imx6ull-seeed-npi-nand
-+          - const: seeed,imx6ull-seeed-npi
-+          - const: fsl,imx6ull
++/*** Per cpu kva allocator ***/
 +
-       - description: i.MX6ULZ based Boards
-         items:
-           - enum:
++/*
++ * vmap space is limited especially on 32 bit architectures. Ensure there is
++ * room for at least 16 percpu vmap blocks per CPU.
++ */
++/*
++ * If we had a constant VMALLOC_START and VMALLOC_END, we'd like to be able
++ * to #define VMALLOC_SPACE		(VMALLOC_END-VMALLOC_START). Guess
++ * instead (we just need a rough idea)
++ */
++#if BITS_PER_LONG == 32
++#define VMALLOC_SPACE		(128UL*1024*1024)
++#else
++#define VMALLOC_SPACE		(128UL*1024*1024*1024)
++#endif
++
++#define VMALLOC_PAGES		(VMALLOC_SPACE / PAGE_SIZE)
++#define VMAP_MAX_ALLOC		BITS_PER_LONG	/* 256K with 4K pages */
++#define VMAP_BBMAP_BITS_MAX	1024	/* 4MB with 4K pages */
++#define VMAP_BBMAP_BITS_MIN	(VMAP_MAX_ALLOC*2)
++#define VMAP_MIN(x, y)		((x) < (y) ? (x) : (y)) /* can't use min() */
++#define VMAP_MAX(x, y)		((x) > (y) ? (x) : (y)) /* can't use max() */
++#define VMAP_BBMAP_BITS		\
++		VMAP_MIN(VMAP_BBMAP_BITS_MAX,	\
++		VMAP_MAX(VMAP_BBMAP_BITS_MIN,	\
++			VMALLOC_PAGES / roundup_pow_of_two(NR_CPUS) / 16))
++
++#define VMAP_BLOCK_SIZE		(VMAP_BBMAP_BITS * PAGE_SIZE)
++
++/*
++ * Purge threshold to prevent overeager purging of fragmented blocks for
++ * regular operations: Purge if vb->free is less than 1/4 of the capacity.
++ */
++#define VMAP_PURGE_THRESHOLD	(VMAP_BBMAP_BITS / 4)
++
++#define VMAP_RAM		0x1 /* indicates vm_map_ram area*/
++#define VMAP_BLOCK		0x2 /* mark out the vmap_block sub-type*/
++#define VMAP_FLAGS_MASK		0x3
++
++static inline void setup_vmalloc_vm(struct vm_struct *vm,
++	struct vmap_area *va, unsigned long flags, const void *caller)
++{
++	vm->flags = flags;
++	vm->addr = (void *)va->va_start;
++	vm->size = va->va_end - va->va_start;
++	vm->caller = caller;
++	va->vm = vm;
++}
++
+ /*
+  * Allocate a region of KVA of the specified size and alignment, within the
+- * vstart and vend.
++ * vstart and vend. If vm is passed in, the two will also be bound.
+  */
+ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 				unsigned long align,
+ 				unsigned long vstart, unsigned long vend,
+ 				int node, gfp_t gfp_mask,
+-				unsigned long va_flags)
++				unsigned long va_flags, struct vm_struct *vm,
++				unsigned long flags, const void *caller)
+ {
+ 	struct vmap_node *vn;
+ 	struct vmap_area *va;
+@@ -1912,6 +1963,11 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+ 	va->vm = NULL;
+ 	va->flags = (va_flags | vn_id);
+ 
++	if (vm) {
++		BUG_ON(va_flags & VMAP_RAM);
++		setup_vmalloc_vm(vm, va, flags, caller);
++	}
++
+ 	vn = addr_to_node(va->va_start);
+ 
+ 	spin_lock(&vn->busy.lock);
+@@ -2325,46 +2381,6 @@ static struct vmap_area *find_unlink_vmap_area(unsigned long addr)
+ 	return NULL;
+ }
+ 
+-/*** Per cpu kva allocator ***/
+-
+-/*
+- * vmap space is limited especially on 32 bit architectures. Ensure there is
+- * room for at least 16 percpu vmap blocks per CPU.
+- */
+-/*
+- * If we had a constant VMALLOC_START and VMALLOC_END, we'd like to be able
+- * to #define VMALLOC_SPACE		(VMALLOC_END-VMALLOC_START). Guess
+- * instead (we just need a rough idea)
+- */
+-#if BITS_PER_LONG == 32
+-#define VMALLOC_SPACE		(128UL*1024*1024)
+-#else
+-#define VMALLOC_SPACE		(128UL*1024*1024*1024)
+-#endif
+-
+-#define VMALLOC_PAGES		(VMALLOC_SPACE / PAGE_SIZE)
+-#define VMAP_MAX_ALLOC		BITS_PER_LONG	/* 256K with 4K pages */
+-#define VMAP_BBMAP_BITS_MAX	1024	/* 4MB with 4K pages */
+-#define VMAP_BBMAP_BITS_MIN	(VMAP_MAX_ALLOC*2)
+-#define VMAP_MIN(x, y)		((x) < (y) ? (x) : (y)) /* can't use min() */
+-#define VMAP_MAX(x, y)		((x) > (y) ? (x) : (y)) /* can't use max() */
+-#define VMAP_BBMAP_BITS		\
+-		VMAP_MIN(VMAP_BBMAP_BITS_MAX,	\
+-		VMAP_MAX(VMAP_BBMAP_BITS_MIN,	\
+-			VMALLOC_PAGES / roundup_pow_of_two(NR_CPUS) / 16))
+-
+-#define VMAP_BLOCK_SIZE		(VMAP_BBMAP_BITS * PAGE_SIZE)
+-
+-/*
+- * Purge threshold to prevent overeager purging of fragmented blocks for
+- * regular operations: Purge if vb->free is less than 1/4 of the capacity.
+- */
+-#define VMAP_PURGE_THRESHOLD	(VMAP_BBMAP_BITS / 4)
+-
+-#define VMAP_RAM		0x1 /* indicates vm_map_ram area*/
+-#define VMAP_BLOCK		0x2 /* mark out the vmap_block sub-type*/
+-#define VMAP_FLAGS_MASK		0x3
+-
+ struct vmap_block_queue {
+ 	spinlock_t lock;
+ 	struct list_head free;
+@@ -2486,7 +2502,8 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
+ 	va = alloc_vmap_area(VMAP_BLOCK_SIZE, VMAP_BLOCK_SIZE,
+ 					VMALLOC_START, VMALLOC_END,
+ 					node, gfp_mask,
+-					VMAP_RAM|VMAP_BLOCK);
++					VMAP_RAM|VMAP_BLOCK, NULL,
++					0, NULL);
+ 	if (IS_ERR(va)) {
+ 		kfree(vb);
+ 		return ERR_CAST(va);
+@@ -2843,7 +2860,8 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node)
+ 		struct vmap_area *va;
+ 		va = alloc_vmap_area(size, PAGE_SIZE,
+ 				VMALLOC_START, VMALLOC_END,
+-				node, GFP_KERNEL, VMAP_RAM);
++				node, GFP_KERNEL, VMAP_RAM,
++				NULL, 0, NULL);
+ 		if (IS_ERR(va))
+ 			return NULL;
+ 
+@@ -2946,26 +2964,6 @@ void __init vm_area_register_early(struct vm_struct *vm, size_t align)
+ 	kasan_populate_early_vm_area_shadow(vm->addr, vm->size);
+ }
+ 
+-static inline void setup_vmalloc_vm_locked(struct vm_struct *vm,
+-	struct vmap_area *va, unsigned long flags, const void *caller)
+-{
+-	vm->flags = flags;
+-	vm->addr = (void *)va->va_start;
+-	vm->size = va->va_end - va->va_start;
+-	vm->caller = caller;
+-	va->vm = vm;
+-}
+-
+-static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
+-			      unsigned long flags, const void *caller)
+-{
+-	struct vmap_node *vn = addr_to_node(va->va_start);
+-
+-	spin_lock(&vn->busy.lock);
+-	setup_vmalloc_vm_locked(vm, va, flags, caller);
+-	spin_unlock(&vn->busy.lock);
+-}
+-
+ static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+ {
+ 	/*
+@@ -3002,14 +3000,12 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
+ 	if (!(flags & VM_NO_GUARD))
+ 		size += PAGE_SIZE;
+ 
+-	va = alloc_vmap_area(size, align, start, end, node, gfp_mask, 0);
++	va = alloc_vmap_area(size, align, start, end, node, gfp_mask, 0, area, flags, caller);
+ 	if (IS_ERR(va)) {
+ 		kfree(area);
+ 		return NULL;
+ 	}
+ 
+-	setup_vmalloc_vm(area, va, flags, caller);
+-
+ 	/*
+ 	 * Mark pages for non-VM_ALLOC mappings as accessible. Do it now as a
+ 	 * best-effort approach, as they can be mapped outside of vmalloc code.
+@@ -4584,7 +4580,7 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
+ 
+ 		spin_lock(&vn->busy.lock);
+ 		insert_vmap_area(vas[area], &vn->busy.root, &vn->busy.head);
+-		setup_vmalloc_vm_locked(vms[area], vas[area], VM_ALLOC,
++		setup_vmalloc_vm(vms[area], vas[area], VM_ALLOC,
+ 				 pcpu_get_vm_areas);
+ 		spin_unlock(&vn->busy.lock);
+ 	}
+
+base-commit: 7e6ae2db7f319bf9613ec6db8fa3c9bc1de1b346
 -- 
-2.34.1
+2.43.0
 
