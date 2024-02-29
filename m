@@ -1,97 +1,136 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A283216FF2B
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 21:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3486E16FF2B;
+	Thu, 29 Feb 2024 21:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709241883; cv=none; b=fh16QwIst4nOVOXhFx74GgQS/P5MrZhSxmKO72RCAa/lqhaE0y1IMSyDXtN9F7J42i/AxAGATR4ur8Gghbvxni2aOAsfft2jp22trRnIrJqgw9xDsdHjiC4f02pPzUR7D1cZ5xIsDfO8ArWLrCbKj5ok6OtGq3sDe/mN0pABz14=
+	t=1709241915; cv=none; b=Ja4q1vrHpfcFbFLCnkdh/DR8G00DvYKKkmDo1LPikDplABU3pbMLI98xjuJ1e1s2nt0hJWRMwMX4cQsC9vNS293pohZYyyu2fzpoekQd/8jjZjucWNo/FgX0FAlbCZYKPZIFrxCHnMFKVwrNTRJywrqUf1neKBd3EC5gk0xStzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709241883; c=relaxed/simple;
-	bh=Jv57XkdEOb5lCcmwhvsrgcTRHKKlbAL+X8QUWiBeHm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iYuJAtzEg4ki3TsVpn8omXffvkfPmapT542ScIU7ltcipjedUe42PxPOFyRsl0T86Fryc1E+h4hmZadH2ZKam1iq4E1npozjTilnc55DWYSxZ2q4u6XhkyO5urniQkzl8RwrtGfC26IILxqx5Y0gdIR7vJ/d8+mJo2EeXqM07Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dEe/F6Cp; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1709241915; c=relaxed/simple;
+	bh=C0iUknyALwb8yx7/aULdmmyNhZJP7DOze6qzJbWn+m4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=dgcGrZdyhdaempyqCoJnSMHJgpT9VizeUEQxpW5YMh1puIGTVIaj4yLLmwiUFaswxghQokr0n34cvaj+O1iJWajVeOQCs8sT2rCIgoJ/ycvSw4zgtsILasPbvKz654xXGlOc0MdDVTXdHlzX+FNXIAfeGIA41QGVhNCZ/e7Sgp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=d89LOaNK; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dEe/F6Cp"
-Date: Thu, 29 Feb 2024 16:24:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1709241879;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jv57XkdEOb5lCcmwhvsrgcTRHKKlbAL+X8QUWiBeHm0=;
-	b=dEe/F6Cpa/brZBrjcWn/DWZZekUEpH/qX6WBbE+JZND6SmPso1PcIBIYezVUQHo+OrQ4Gq
-	sebiBHtZe5Yqj6NE+8c1QgumE18RpWc/el5cK0/UWnrIyn6BnEcz55686sgS0N7myIErKs
-	Kjcz/Ieltatda8+p5hHhM8AXrTgVtt8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Brian Foster <bfoster@redhat.com>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	djwong@kernel.org
-Subject: Re: [PATCH 01/21] bcachefs: KEY_TYPE_accounting
-Message-ID: <r2ieuj2kvitrrg7sqhuossm3wn4zzlkhygfqx7bxorzbaylnw2@kpgfn4e42iuw>
-References: <20240225023826.2413565-1-kent.overstreet@linux.dev>
- <20240225023826.2413565-2-kent.overstreet@linux.dev>
- <Zd4Ef49kHX3g69VT@bfoster>
- <t6cc6gqgla2csyvrsv2znel5lg76vx7t2zna772qpw7zd6pnft@rxdakxza5cab>
- <ZeDQQ8cyMTgYaY6D@bfoster>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="d89LOaNK"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZeDQQ8cyMTgYaY6D@bfoster>
-X-Migadu-Flow: FLOW_OUT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1709241911;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j/jsIYQWtNjGo8V67lba+C9XsvoM+JnwriF6mpcDVn8=;
+	b=d89LOaNKrX6cixjeJ68nSXNhPFchDZiqiqCu6ykaBlnJJBLl1Th/424XtWLWAYz6rkib1F
+	QoVJsAfsErJ8lUaTUXUQm0/8qT21TJJ/Dsdd2bhxOYSaESaExHAg3NWj1DhdvylS0BQNVr
+	M4DM9bLV3qvr6IKJ9SRsdC3Xa8rOJuosByahQbhVVLdfuVXeIdNP9pQ2J3HE0VRsWqkddO
+	xeHSjmUshU1OTIkrArv7E2Hvs3G3n7GOQyx4IlKmKdoZXJSh0lyHHJ145ccFJqR+8MmqxK
+	YHha/ZO91aJJ7QDn8RV+VIxajr2HymxMxxsHpMZQUzfG2cTJPmaY5GFoBN3urA==
+Date: Thu, 29 Feb 2024 22:25:10 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Chen-Yu
+ Tsai <wens@kernel.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] arm64: dts: rockchip: enable automatic active
+ cooling on Rock 5B
+In-Reply-To: <20240229-rk-dts-additions-v3-2-6afe8473a631@gmail.com>
+References: <20240229-rk-dts-additions-v3-0-6afe8473a631@gmail.com>
+ <20240229-rk-dts-additions-v3-2-6afe8473a631@gmail.com>
+Message-ID: <823379825559bb76088c31f44f998dd3@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Thu, Feb 29, 2024 at 01:43:15PM -0500, Brian Foster wrote:
-> Hmm.. I think the connection I missed on first look is basically
-> disk_accounting_key_to_bpos(). I think what is confusing is that calling
-> this a key makes me think of bkey, which I understand to contain a bpos,
-> so then overlaying it with a bpos didn't really make a lot of sense to
-> me conceptually.
->
-> So when I look at disk_accounting_key_to_bpos(), I see we are actually
-> using the bpos _pad field, and this structure basically _is_ the bpos
-> for a disk accounting btree bkey. So that kind of makes me wonder why
-> this isn't called something like disk_accounting_pos instead of _key,
-> but maybe that is wrong for other reasons.
+Hello Alexey,
 
-hmm, I didn't consider calling it disk_accounting_pos. I'll let that
-roll around in my brain.
+On 2024-02-29 20:26, Alexey Charkov wrote:
+> This links the PWM fan on Radxa Rock 5B as an active cooling device
+> managed automatically by the thermal subsystem, with a target SoC
+> temperature of 65C and a minimum-spin interval from 55C to 65C to
+> ensure airflow when the system gets warm
 
-'key' is more standard terminology to me outside bcachefs, but 'pos'
-does make more sense within bcachefs.
+I'd suggest that you replace "automatic active cooling" with "active
+cooling" in the patch subject.  I know, it may seem like more of the
+unnecessary nitpicking, :) but I hope you'll agree that "automatic"
+is actually redundant there.  It would also make the patch subject
+a bit shorter.
 
-> Either way, what I'm trying to get at is that I think this documentation
-> would be better if it explained conceptually how disk_accounting_key
-> relates to bkey/bpos, and why it exists separately from bkey vs. other
-> key types, rather than (or at least before) getting into the lower level
-> side effects of a union with bpos.
+Another option would be to replace "automatic active cooling" with
+"automatic fan control", which may actually be a better choice.
+I'd be happy with whichever one you prefer. :)
 
-Well, that gets into some fun territory - ideally bpos would not be a
-fixed thing that every btree was forced to use, we'd be able to define
-different types per btree.
+Otherwise, please feel free to add:
 
-And we're actually going to need to be able to do that in order to do
-configurationless autotiering - i.e. tracking how hot/cold data is on an
-inode:offset basis, because LRU btree backreferences need to go in the
-key (bpos), not the value, in order to avoid collisions, and bpos isn't
-big enough for that.
+Reviewed-by: Dragan Simic <dsimic@manjaro.org>
 
-disk_accounting_(key|pos) is an even trickier situation, because of
-endianness issues. The trick we do with bpos of defining the field order
-differently based on endianness so that byte order matches word order -
-that really wouldn't work here, so there is at present no practical way
-that I know of to avoid the byte swabbing when going back and forth
-between bpos and disk_accounting_pos on big endian.
-
-But gcc does have an attribute now that lets you specify that an integer
-struct member is big or little endian... I if we could get them to go
-one step further and give us an attribute to control whether members are
-laid out in ascending or descending order...
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 30 
+> ++++++++++++++++++++++++-
+>  1 file changed, 29 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> index a0e303c3a1dc..3f7fb055c4dc 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> @@ -52,7 +52,7 @@ led_rgb_b {
+> 
+>  	fan: pwm-fan {
+>  		compatible = "pwm-fan";
+> -		cooling-levels = <0 95 145 195 255>;
+> +		cooling-levels = <0 120 150 180 210 240 255>;
+>  		fan-supply = <&vcc5v0_sys>;
+>  		pwms = <&pwm1 0 50000 0>;
+>  		#cooling-cells = <2>;
+> @@ -173,6 +173,34 @@ &cpu_l3 {
+>  	cpu-supply = <&vdd_cpu_lit_s0>;
+>  };
+> 
+> +&package_thermal {
+> +	polling-delay = <1000>;
+> +
+> +	trips {
+> +		package_fan0: package-fan0 {
+> +			temperature = <55000>;
+> +			hysteresis = <2000>;
+> +			type = "active";
+> +		};
+> +		package_fan1: package-fan1 {
+> +			temperature = <65000>;
+> +			hysteresis = <2000>;
+> +			type = "active";
+> +		};
+> +	};
+> +
+> +	cooling-maps {
+> +		map1 {
+> +			trip = <&package_fan0>;
+> +			cooling-device = <&fan THERMAL_NO_LIMIT 1>;
+> +		};
+> +		map2 {
+> +			trip = <&package_fan1>;
+> +			cooling-device = <&fan 2 THERMAL_NO_LIMIT>;
+> +		};
+> +	};
+> +};
+> +
+>  &i2c0 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&i2c0m2_xfer>;
