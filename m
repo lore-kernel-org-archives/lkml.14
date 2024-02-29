@@ -1,99 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8381B137777;
-	Thu, 29 Feb 2024 14:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE1F137747;
+	Thu, 29 Feb 2024 14:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709218439; cv=none; b=jiOGqZLoTWNYEpH99LFwaxF4hQOws74Cfk/BwO1a3333+9e9sAR40ZY5Cc80msZKrIf56AC8zG8YtwKDNsvF7aCrmRY6MGCPwm+Da3wHQari6meSr0OqpSBhpwSDUe148Uj0Ummn110W0eAgBkf9ZG5smvyY02XG3oGark0sd/M=
+	t=1709218541; cv=none; b=KVLOXr/BIRyj1gfBdTp64FXcYY+6qVtpAIubIGTJxsQhWdy5qa7pWraDP/fCWRfk6MAKnuTqab3TEmfKuUCu6+QsvKVykFkbFD17VLgDXFKSs9PLCGbNxXfnNVs24OiNPfbfOOum0Xul+NBGmBhynGORv0Y61CkH21W6Gzd2qeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709218439; c=relaxed/simple;
-	bh=H/xypjHg3RAGtOrdFLSQMFFbI9FZppPqPGCTlvgpMy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L8PIyhS+Uqtv7g/yC69Pr3ZO6oTwiZG/ClI0Tnk/KksqtRkRGlgsJrAIW9BttMEfz0RaQFBJMygHZuaDkpZGf9+h34Qgk+7ILBx6ULsmpXwJtgt6ShpZ+jb+v4+xQCiGy5Z2S5KBnhxvCekVJa+OJu14zbBOgGkd0SvfdyFtLyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DlslagbC; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709218541; c=relaxed/simple;
+	bh=f+/q7GkH+OaFYxQE4zP/4onFmtutKCNIPD40hxaVN6M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eUe5oEIBej/FPtDqJro4ELoF24A1fbYe8y+3HebWTGp+JQ2i1Nz6Zpb/DsDy1BehOwNJIb4KE8TIT8tbwDLhLJrk9rxyANkrsOmGlAmTEE4dBK9h9YrUgXTk4VnO4yP7eQ916TKr2A4DBzr80IpCkoitom/fGUGf6+l5aZMH/JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vmo6mUOv; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DlslagbC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709218438; x=1740754438;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=H/xypjHg3RAGtOrdFLSQMFFbI9FZppPqPGCTlvgpMy8=;
-  b=DlslagbCfXQK676474bV3pAjKHVKN+B6FAm5kPYwRIOIcOOKDcw81Q3O
-   qfBYM7LSuTBWPSrrsusAMDihGCLPFK7IGKdkMX6nIX5D4rvMjdZ85Wrf2
-   09vM1XfxWWJIBauatfLHd8e58v75Dh6TfjP6emtV4bZse3+Eik+rPysMC
-   x1YhBrSwzHrumEj/XnK8wywfbxR6vdRkQKHbCHXKlk2P5LjM/sGwZIm9Q
-   DGTOdxf3flKmTZaIGTdZxKmhi8x8oeRfmzfB1GAnCG58vzUYnlrup0qg7
-   teMB8+cy8LOxH+sANI3RoC+H1hqylxURboVjDvXOIRpkQKlw+3n+1ddzx
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="7470968"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="7470968"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:53:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="913983848"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="913983848"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:53:52 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rfhnA-00000008hMb-38bp;
-	Thu, 29 Feb 2024 16:53:48 +0200
-Date: Thu, 29 Feb 2024 16:53:48 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Mark Brown <broonie@kernel.org>, Kees Cook <keescook@chromium.org>,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-spi@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH v4 8/8] dmaengine: ste_dma40: Use new helpers from
- overflow.h
-Message-ID: <ZeCafPgtU1FeyzJG@smile.fi.intel.com>
-References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
- <20240228204919.3680786-9-andriy.shevchenko@linux.intel.com>
- <CACRpkdaEzexhCYFf-NKnbcagXc6Tqcn4J+sFWk94mbJG9LkpVw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vmo6mUOv"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-299b92948a6so657314a91.3;
+        Thu, 29 Feb 2024 06:55:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709218539; x=1709823339; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hP6lzrqapccsF2KLWHw3WzMibJs8TMjgt2szFY2HpXk=;
+        b=Vmo6mUOvTOBHWe3SiE4PFklJJMfq+PHEpLSmNz60KQNhhxSxYdvQ1S/qejzK9nK6yz
+         EvM3AmsX19suwrI3niBMm/d3npAjSbc0ei4UNCvLYoUa0rWSXDWK05hvkiMbmiDQ7hft
+         Xlt71a61wFmUjr5ErHTjZFzVqzEOlR8kuDWY7kAa9KxxK7rIsNrrxUBY4v4Pjp4cN3eR
+         5b7a70HxtkERCtU/FQNDf923P0WYX/M5WUSlppxHwCEn9PdmpQPC0SHCzcA+DoYlFyvR
+         IIScn2nI2FiD7fcHfumrn5lMtYnQPaDb0GUqtPsMaMwCzkyhQijQBuvaLL2DbHmCzRXO
+         sENg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709218539; x=1709823339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hP6lzrqapccsF2KLWHw3WzMibJs8TMjgt2szFY2HpXk=;
+        b=BB4bzkoBXPkA1qfguxy4EjIgCrnKlCcaNhpF9hYjO3BmE51hDn2zFFBxjeu8LI9QZS
+         QYPtWTxvRQ7gizXPkF0NGe1iB55PF6PxKJXbWD4yZOXvgs7EPTmGV5pH9m3tVt7DFIqN
+         epFUbqPaL4qOAfw4FBJRpvPX5lLzDKEc9PZAPDxSNTmalTOkWM2hqWC2drvX6LthbxUd
+         pObDq1an1o+bNLFy9CF1ydi8wL8rFeXrGsSm3JSKgW45XYqwtRkKZzQueP9pFmR6imR5
+         2wA0Nbv4WE9KZEK4LTn8bMsxUmoHyp2+lPKpUxSluwIoGO26t3vJZkB8brkz8U4B0nEp
+         /y8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVAp7ql2XyN0T+rvbBmNmHksFFzN3PSviZhdBECICLNA7pQHu+Rm+x0LsyLeQUWj8Vk89WTwEQ7b7PAiwn8ICwKDiNB
+X-Gm-Message-State: AOJu0YywKwiKhbHL7qtOI6iTw+2jpDuNlPNOyANPwZHgWqWym9N1+4DP
+	P8eWxP41sxDn15IqGeMtwtSvWuQ2k4NxgWNUTsDlE+3qy/RL00KE0iMSnM0h7sfoCe8vuTNI2Kr
+	D8KSDC5ZXQSTROslhW+sLcvVVQuQ=
+X-Google-Smtp-Source: AGHT+IEhVLB8oSGlTlLkyrt6KF+P4ZoHNYQMmdL5tHoI8RvPCpSpZVPwG1yKonSyWpwnlhp8XnSUC0GfqgD4tmrthfA=
+X-Received: by 2002:a17:90a:4384:b0:29a:feba:abbd with SMTP id
+ r4-20020a17090a438400b0029afebaabbdmr2696847pjg.0.1709218539331; Thu, 29 Feb
+ 2024 06:55:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdaEzexhCYFf-NKnbcagXc6Tqcn4J+sFWk94mbJG9LkpVw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240226143630.33643-1-jiangshanlai@gmail.com> <CABgObfaSGOt4AKRF5WEJt2fGMj_hLXd7J2x2etce2ymvT4HkpA@mail.gmail.com>
+In-Reply-To: <CABgObfaSGOt4AKRF5WEJt2fGMj_hLXd7J2x2etce2ymvT4HkpA@mail.gmail.com>
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+Date: Thu, 29 Feb 2024 22:55:28 +0800
+Message-ID: <CAJhGHyDSHzPPhwaipSbcZXDJ+P3d6-K=ngjk1Ru3DbwzPGuz4Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/73] KVM: x86/PVM: Introduce a new hypervisor
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshan.ljs@antgroup.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Ingo Molnar <mingo@redhat.com>, kvm@vger.kernel.org, x86@kernel.org, 
+	Kees Cook <keescook@chromium.org>, Juergen Gross <jgross@suse.com>, 
+	Hou Wenlong <houwenlong.hwl@antgroup.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 03:14:03PM +0100, Linus Walleij wrote:
-> On Wed, Feb 28, 2024 at 9:49 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > We have two new helpers struct_size_with_data() and struct_data_pointer()
-> > that we can utilize in d40_hw_detect_init(). Do it so.
+Hello, Paolo
+
+On Mon, Feb 26, 2024 at 10:49=E2=80=AFPM Paolo Bonzini <pbonzini@redhat.com=
+> wrote:
+>
+> On Mon, Feb 26, 2024 at 3:34=E2=80=AFPM Lai Jiangshan <jiangshanlai@gmail=
+.com> wrote:
+> > - Full control: In XENPV/Lguest, the host Linux (dom0) entry code is
+> >   subordinate to the hypervisor/switcher, and the host Linux kernel
+> >   loses control over the entry code. This can cause inconvenience if
+> >   there is a need to update something when there is a bug in the
+> >   switcher or hardware.  Integral entry gives the control back to the
+> >   host kernel.
 > >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Wow really neat! Much easier to read and understand the code like this.
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > - Zero overhead incurred: The integrated entry code doesn't cause any
+> >   overhead in host Linux entry path, thanks to the discreet design with
+> >   PVM code in the switcher, where the PVM path is bypassed on host even=
+ts.
+> >   While in XENPV/Lguest, host events must be handled by the
+> >   hypervisor/switcher before being processed.
+>
+> Lguest... Now that's a name I haven't heard in a long time. :)  To be
+> honest, it's a bit weird to see yet another PV hypervisor. I think
+> what really killed Xen PV was the impossibility to protect from
+> various speculation side channel attacks, and I would like to
+> understand how PVM fares here.
 
-Thanks, but Kees has seems even better suggestion.
+How does the host kernel protect itself from guest's speculation side
+channel attacks?
 
--- 
-With Best Regards,
-Andy Shevchenko
+PVM is primarily designed for secure containers like Kata containers,
+where safety and security are of utmost importance.
+
+Guests run in the hardware ring3 and they are treated as the same as the
+normal user applications in the views of the host kernel's protections
+and mitigations. The code employs all of the current protections and
+mitigations for kernel/user interactions to host/guest and with extra
+protections from pagetable isolation and with protections/mitigations
+usually used for host/VTX_or_AMDV_guest (with some similar VM enter/exit
+code as in vmx/ svm/). All of these are sorta easily achieved by the
+"integral entry" design and "the distinct separation of the address
+spaces" design can also help for protections.
+
+How does the guest kernel protect itself from guest users' speculation
+side channel attacks?
+
+The code also tries its best to provide all of the current protections
+and mitigations between the native kernel/user for virtualized kernel/user.
+It is obvious that the PVM virtualized kernel operates in hardware ring3
+and you can't expect all methods can be effective. Since the linux kernel
+can provide protections for threads switching between different user
+processes, PVM can potentially offer similar protections between guest
+kernel/user through the PVM hypervisor's support.
+
+I'm not familiar with XENPV's handling and its solutions (including its
+impossibility) for the speculation side channel attacks, thus I cannot
+provide additional insights or assurances in this context.
+
+PVM is not designed as a general-purpose virtualization. The primary
+objective is for secure container and Linux kernel testing. PVM intends
+to allow for the universal deployment of Kata Containers inside cloud
+VMs leased from any provider over the world.
+
+For Kata containers, the protection between host/guest is much more
+important and every container is only for a single tenement in which
+the guest kernel is not a TCB of the external container services.
+It means the protection requirements between guest kernel/user are
+more flexible and customized.
 
 
+>
+> You obviously did a great job in implementing this within the KVM
+> framework; the changes in arch/x86/ are impressively small.
+
+Thanks for your appreciation.
+
+> On the
+> other hand this means it's also not really my call to decide whether
+> this is suitable for merging upstream. The bulk of the changes are
+> really in arch/x86/kernel/ and arch/x86/entry/, and those are well
+> outside my maintenance area.
+>
+
+Thanks
+Lai
