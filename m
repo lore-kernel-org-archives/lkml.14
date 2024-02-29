@@ -1,131 +1,97 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B2644C67;
-	Thu, 29 Feb 2024 07:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A764D44C7A;
+	Thu, 29 Feb 2024 07:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709191837; cv=none; b=S1unKXtLxeX3tzl/1czwSPr/cg10KPfO1G2zC48AhoPOhFRAUofLQbFrTD9o4aYQtYGC36VKFu1kH4Y12EpbQPNEXwE7EF2VACwUohAwrQxVhm7mn4r3XwQ42ygPUfOP2gVPhcCFC6+x8td2c00eHemALpRPAZ6X0FnW2jtqJoQ=
+	t=1709191840; cv=none; b=I3s8goIADXxog0YVwrXDgo31Ks7uBaWz0DKSs4fRVRImVWK+SF1Q8mOhVwDvZo1BeKfdiVLlvabFRZxRoMWWVsHb1a/boZAlgnNHyDsxgnDQdhTUXCKOkVvdRxm1o//ydX2oC7pUOxFvL00wp1M7tVWwShO2Lpth9u46tqyjf00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709191837; c=relaxed/simple;
-	bh=tEkNMsql6n7EmLjiIafb3HPwIpQRV25IrRm3wpHTFQ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=ZEVxtTXST3huBClXegGDakScqQo1DDm/WaPRyhPvOJ8o1cBjaatGKU7lZXO5+1W9bO+dcJ7nlF367hIlaFO9HSf9XMyYVzf5MoSteX+fkG6J0b9tUlNM7iyJ/ipUkjmqeJx8nOkWL5F7kO8vckAS6ReW5fh8EC4a0kwAGJkyXLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XZ2Px/DE; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709191840; c=relaxed/simple;
+	bh=qQphN+sqW5YE4b5rl2f3FHHx7OKKlN9smis0Dk0DJDA=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=pXbQa/CzK+1Cj5s3Y178XMSbOMMo1xTKQd67zDAy5pGv1QWAXLsC3CKaFyshDwV1GgQdLzD4uSMlqspDsw+b2c96FoUbzePq7oYzT2cxdGVIQQscDyH8J82BZlEXgK9aR53kxk0Ysn/2keMqGZmnf0/AgWb0jzc09LUuZoqlUa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hManudXJ; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZ2Px/DE"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5648d92919dso1044823a12.1;
-        Wed, 28 Feb 2024 23:30:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709191834; x=1709796634; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DKPf0LgfDBQdcT2AOOktC0F3XZfRUjBLP/Wgrh2tUeI=;
-        b=XZ2Px/DEgNFeQNhVQM4RxnmW5aCL4w5gVzwlGT7E/e9Rip7LlrHokJ8vUbKEw5IknO
-         VPclmq7At+L3osgjNAtBqOWie4xwXi8VJ4ZEV+vusgC2wH/Uq4iIA0TEniHAgElYVHar
-         n8YelzC3gxABhtO/tqZXhsmGxzo00vvWLS1/a3S9u8yjCzuZkl1eprpf7gqhaDbPq/Z0
-         Pxa8yZNeJm4XHVWF9/tW/fAfbaFmWYbr7+8f/dQURSfWuXN2xHqyCiVyOvA8tbiLwH/l
-         vwRqt89iX/NzXy1U+ONrwrJKGmOQdiGKdnYR6UDmW/QOTtg6AcJUEjX9MXMdAWneK8Bf
-         +Hrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709191834; x=1709796634;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DKPf0LgfDBQdcT2AOOktC0F3XZfRUjBLP/Wgrh2tUeI=;
-        b=VaKfX6FDZL88N29aD6VYu6z+yL2RGiZAFKcGUbQ2clZsTD+iqFk7EbSZl+q0y9sj9D
-         Wo7qZDodAN+zl1NbHr4K5QtbpPDUiHT9nJ03FjTzmFTs6k9q8MG+g5+EVkWrhkNsA9bd
-         9mEaTRO4oEqEsxbuymSXU0FO4iIiy/Grs31x6y8O62fTH8n0B6JBEL7/+HvwXVIjUad3
-         9e4Q9n1IqwvhxDwXHzK98C1JtXwSx/CmSNDy3YhJB9puJHWKfhXfumLMYLqmlYRBAD+j
-         mOXhw4aZOWSIOceDM5keriRnRcAGKIIhSxm6M287bczpc7f1Y0TOzjTgIcMWPxlHb0Ml
-         4lVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQ7BzjeK3aTSDr++TIH4PNIaS7ew1/GQTWBsR7rn62qACwyQavGUqOMsGSklG0gfQmuIloZeujM4EiAsVoVHzDt0kTBgVJRv68gOruVW3GFAHjBZGPC/EfEQjw2rQFFUgoJA2UxB0nieFVsTETmXqJysTyHef14p0lXPYK4d7P1jW1aFtIU+Zr
-X-Gm-Message-State: AOJu0YzFtUrWJLWy7dR4xC8DxTZlxEclD/AxcETF73q/YUn/httHHczh
-	N53+nKvkKqFvPDav9uZ+dxjAqtllz6laM2eAnGn17idY23r4YMoTw/cpCFZKPwW1R4+9j+bV2tX
-	p6W7XwACg7jDU6vjuvDangWAxh2Q=
-X-Google-Smtp-Source: AGHT+IHoCqstq7TdVZ88Dk/71bmmKf5b9RkwknQU02aYiHxGF6OjB2trJyj9jkf88TO2KWMcDdIIMvUH+yEss8vkXFE=
-X-Received: by 2002:a17:906:e20b:b0:a44:fb7:d42 with SMTP id
- gf11-20020a170906e20b00b00a440fb70d42mr774752ejb.2.1709191834050; Wed, 28 Feb
- 2024 23:30:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hManudXJ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1709191835; h=Message-ID:Subject:Date:From:To;
+	bh=fY81VLSpIMYe2pZ+dvGpRY8n4fDqoWg+ECmGm/R8l7Q=;
+	b=hManudXJTnYJ5uyzatUIB9LJkVBYOGik/9+msLe1wbvsPMxD8Jrm6pWP94E6hWRk3LL6mts8+IrUKEWW5q3wLMv0lqVQhIILO2jmJFj0edP6THtGJYSWvuCqL1p5l9kUp5HJQ7z1ZomExzFPnEARY3vgob2YD1Gpbm1ZCSDxceg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0W1SHVCt_1709191834;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W1SHVCt_1709191834)
+          by smtp.aliyun-inc.com;
+          Thu, 29 Feb 2024 15:30:35 +0800
+Message-ID: <1709191267.7473843-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: linux-next: build failure after merge of the vhost tree
+Date: Thu, 29 Feb 2024 15:21:07 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20240229145531.7f7369cb@canb.auug.org.au>
+ <1709179304.522055-1-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <1709179304.522055-1-xuanzhuo@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240229052813.GA23899@didi-ThinkCentre-M920t-N000>
-In-Reply-To: <20240229052813.GA23899@didi-ThinkCentre-M920t-N000>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Thu, 29 Feb 2024 15:29:56 +0800
-Message-ID: <CAL+tcoAhvFhXdr1WQU8mv_6ZX5nOoNpbOLAB6=C+DB-qXQ11Ew@mail.gmail.com>
-Subject: Re: [PATCH] tcp: Add skb addr and sock addr to arguments of
- tracepoint tcp_probe.
-To: edumazet@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	fuyuanli@didiglobal.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 1:33=E2=80=AFPM fuyuanli <fuyuanli@didiglobal.com> =
-wrote:
+On Thu, 29 Feb 2024 12:01:44 +0800, Xuan Zhuo <xuanzhuo@linux.alibaba.com> wrote:
+> On Thu, 29 Feb 2024 14:55:31 +1100, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > Hi all,
+> >
+> > After merging the vhost tree, today's linux-next build (powerpc
+> > ppc64_defconfig) failed like this:
+> >
+> > drivers/virtio/virtio_pci_modern.c: In function 'vp_modern_create_avq':
+> > drivers/virtio/virtio_pci_modern.c:755:34: warning: passing argument 5 of 'vp_dev->setup_vq' makes integer from pointer without a cast [-Wint-conversion]
+> >   755 |                               avq->name, NULL, VIRTIO_MSI_NO_VECTOR);
+> >       |                               ~~~^~~~~~
+> >       |                                  |
+> >       |                                  char *
+> > drivers/virtio/virtio_pci_modern.c:755:34: note: expected 'u16' {aka 'short unsigned int'} but argument is of type 'char *'
+> > drivers/virtio/virtio_pci_modern.c:754:14: error: too many arguments to function 'vp_dev->setup_vq'
+> >   754 |         vq = vp_dev->setup_vq(vp_dev, &vp_dev->admin_vq.info, avq->vq_index, NULL,
+> >       |              ^~~~~~
+> >
+> > Caused by commit
+> >
+> >   4cceb2591a87 ("virtio: find_vqs: pass struct instead of multi parameters")
+> >
+> > I have used the vhost tree from next-20240228 for today.
 >
-> It is useful to expose skb addr and sock addr to user in tracepoint
-> tcp_probe, so that we can get more information while monitoring
-> receiving of tcp data, by ebpf or other ways.
->
-> For example, we need to identify a packet by seq and end_seq when
-> calculate transmit latency between lay 2 and lay 4 by ebpf, but which is
-> not available in tcp_probe, so we can only use kprobe hooking
-> tcp_rcv_esatblised to get them. But we can use tcp_probe directly if skb
-> addr and sock addr are available, which is more efficient.
->
-> Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
+> I will post new version for powerpc soon.
 
-Please target 'net-next' in the title of your v2 patch.
 
-> ---
->  include/trace/events/tcp.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-> index 7b1ddffa3dfc..096c15f64b92 100644
-> --- a/include/trace/events/tcp.h
-> +++ b/include/trace/events/tcp.h
-> @@ -258,6 +258,8 @@ TRACE_EVENT(tcp_probe,
->                 __field(__u32, srtt)
->                 __field(__u32, rcv_wnd)
->                 __field(__u64, sock_cookie)
-> +               __field(const void *, skbaddr)
-> +               __field(const void *, skaddr)
->         ),
->
->         TP_fast_assign(
-> @@ -285,6 +287,9 @@ TRACE_EVENT(tcp_probe,
->                 __entry->ssthresh =3D tcp_current_ssthresh(sk);
->                 __entry->srtt =3D tp->srtt_us >> 3;
->                 __entry->sock_cookie =3D sock_gen_cookie(sk);
-> +
-> +               __entry->skbaddr =3D skb;
-> +               __entry->skaddr =3D sk;
->         ),
->
->         TP_printk("family=3D%s src=3D%pISpc dest=3D%pISpc mark=3D%#x data=
-_len=3D%d snd_nxt=3D%#x snd_una=3D%#x snd_cwnd=3D%u ssthresh=3D%u snd_wnd=
-=3D%u srtt=3D%u rcv_wnd=3D%u sock_cookie=3D%llx",
+This is not a bug on the powerpc. This is due to a conflict with the admin
+queue commit. Because my patch set contains files for many other platforms. So I
+have to check each file manually. Maybe when I do rebase I missed
+checking the code again and my automated script didn't work because some files
+can not compile on x86.
 
-If they are useful, at least you should printk those two addresses
-like what trace_kfree_skb() does.
+But the good news is that this patch set contains the ability to add new virtio
+features without impacting files on other platforms.
 
-May I ask how it could be useful if there is no more function printing
-such information in the receive path?
+The new version is sent.
 
-Thanks,
-Jason
-> --
-> 2.17.1
+	http://lore.kernel.org/all/20240229072044.77388-1-xuanzhuo@linux.alibaba.com
+
+Thanks.
+
+
 >
+> Thanks.
+>
+>
+> >
+> > --
+> > Cheers,
+> > Stephen Rothwell
+> >
 >
