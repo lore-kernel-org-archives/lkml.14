@@ -1,160 +1,362 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7557A5DF2E
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811315E08F;
+	Thu, 29 Feb 2024 09:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199267; cv=none; b=q1T9/9f+nab8B/JNTbt3jVhph8wrAoYRdZqpddkukxIqg0vEi5/kUTCVfA2zWSYvTGtEq5ofTyGPbECibV7/mUow4Y8cAPvk4FfjVraigh3rkxu7U9sHsQJTpmts7IDwO773DIDvPZSzbJOqrOqsPCozGoA3WNMl4yQ/dZkxQNY=
+	t=1709199270; cv=none; b=R6xAiLRUYcDv+ZhHKKOPAvCMa/RBxHX+kMU2Ns6TFrGrBCddXo4Bbm2uLy6l8X6qralx/LU8W0Mu8kqevUAemlrJ7jY9tWmXR3LDaAi12NxcWAvYg/Uf3oZG5jYH96uy7EgK2oHIOqjnTQBa4swMj722hQk7/X5ksiBS13bsM+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199267; c=relaxed/simple;
-	bh=StLx1U6ANyaxhU7Kg8zvsXAct3f95Q4ofWakuARJ13s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=StBM0GmssEfh9X32ekYGdvm/s+9EBrWAkVADQ/v6aCytsgND1CBjFkSxmm0GwKaj8AWVZdOD2C50MRjUVf4bGpaCkjNN3lQN6zMhVcGrPdVLujRYYmfLaVCzPdD2o2/l40PMt4KlJ/iqAZ8ej/tpWG+61R0MMv14zTvbdeuGlps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KeS6W0EW; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709199270; c=relaxed/simple;
+	bh=o8gbZwF10LCv9UWZMQ0ZGmjP9/uC4G8Yn5JLvt2eYes=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dPXtQRTct/tmBPvyZ9ITz0r7FldNWYF96/iiO1TuHs3fEvZCLQJYLPmnToI/NRWwAC2ssZvxAzf+OW/oRMRixZQXukm1qbXzxpIKv1KkFB4Z6UGL/aIMVOClQ3u5R8qMatm3go5tuSO4hY5bmaC2UM2J+azWYq6XoxHvITggp50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l23WjzDX; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KeS6W0EW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709199265; x=1740735265;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=StLx1U6ANyaxhU7Kg8zvsXAct3f95Q4ofWakuARJ13s=;
-  b=KeS6W0EWE1C98iwWoPRjrJa/26gDnTv1YQoIPumF5hb3yNM4OkCrf02t
-   e9uZQZ8JnRD8MInrQjsjImuhqksCeiN3/UbyGtViycKAqjQ+UcdhTLR+P
-   RyW9VnVioi77J5B/Po+EPA7Qy8LaNeaCxDGCX0OWrIsBdleGJ1jLAILIY
-   SdE7S0xsobt+JI6WHGrbiWrhxR1cpCu/JhTas8U04wkEceZvBCc4V5boR
-   UcGxvmrEetkcPJAWOiU3UgKx3la/RwAr6Cv66eprbOEphjRaKPMsznbol
-   ibjV/LUVqgRuOS1LLG8HNwsA+Za7WsJ0WmhfLOQ/llKPAbvLQ3HTPfdnA
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="15069949"
-X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
-   d="scan'208";a="15069949"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 01:34:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
-   d="scan'208";a="30944373"
-Received: from vyalavar-mobl1.amr.corp.intel.com (HELO desk) ([10.209.79.44])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 01:34:20 -0800
-Date: Thu, 29 Feb 2024 01:34:16 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: Nikolay Borisov <nik.borisov@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/bugs: Use fixed addressing for VERW operand
-Message-ID: <20240229093416.ubabob5aykjgh47l@desk>
-References: <20240226-verw-arg-fix-v1-1-7b37ee6fd57d@linux.intel.com>
- <92440f47-21b7-4f4f-ad99-a99358cfbedf@suse.com>
- <373674e4-cbd0-44d7-98c7-304b0ab4f34b@kernel.org>
- <20240229013924.cksuxebpylyeymzo@desk>
- <20240229091428.lnbcvhm3udzl5jd5@desk>
- <28205b59-50b8-4e05-b267-503179156431@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l23WjzDX"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2823FFF808;
+	Thu, 29 Feb 2024 09:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709199266;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qox6e5cdQpNa2Zc8vUoW89TqqTDyKUlTFOGSqGcUjC0=;
+	b=l23WjzDXviIyASupehXHYvHXbS4WV27yvlgOeb8EbWG5ydDjf7RXhVUY0ttR2BpjWU6xHH
+	tBYZSJ/dtkVwwa5NRbgSlYYPNMzKNQVSeozpW+p5YTf2P34YFvt7zGoh6A7svEfFXUVuA+
+	/w9tdjhFbm4HwHzEgIoSxBpEoUDd32JV1RhusGxr0Xo09eq7ShY+R5zp4g0D+QE0gboqt6
+	F+0cmNoMzSNEcEWw0jbRSXFMZLdujc2zu87jUeI7f3UoGiXVRLgG6HIhxkrFEPlTiYtDMm
+	Wvlk7PHZPIRAQk8wyCTYS8aAaGpnOy/uQuy5ozTI+hr+ziRvKoBTiAMmLet3dg==
+Date: Thu, 29 Feb 2024 10:34:23 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>, Frank Rowand
+ <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Xu Yang <xu.yang_2@nxp.com>, kernel-team@android.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?Q?Herv?=
+ =?UTF-8?Q?=C3=A9?= Codina <herve.codina@bootlin.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>
+Subject: Re: [REGRESSION] Re: [PATCH v2 2/3] of: property: Improve finding
+ the supplier of a remote-endpoint property
+Message-ID: <20240229103423.1244de38@booty>
+In-Reply-To: <CAL_Jsq+edTZ3yC0Xxojo5bR3aCwAMFERjuqVFaU8sFmj=nAB8w@mail.gmail.com>
+References: <20240207011803.2637531-1-saravanak@google.com>
+	<20240207011803.2637531-3-saravanak@google.com>
+	<20240223171849.10f9901d@booty>
+	<CAGETcx99hhfOaEn1CH1OLDGp_pnrVeJ2nWb3X5=0j8tij4NR9w@mail.gmail.com>
+	<20240226125226.705efef3@booty>
+	<CAL_JsqLMY94KmiEUcOYT4p1HdHENffOFgRJ+Tv6RDH7ewVbyig@mail.gmail.com>
+	<CAGETcx_6UEpOJteQ0Gmfb=NgU+9MZumtmyLbn++C=uj7nOon=g@mail.gmail.com>
+	<CAL_Jsq+edTZ3yC0Xxojo5bR3aCwAMFERjuqVFaU8sFmj=nAB8w@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <28205b59-50b8-4e05-b267-503179156431@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Thu, Feb 29, 2024 at 10:19:09AM +0100, Jiri Slaby wrote:
-> On 29. 02. 24, 10:14, Pawan Gupta wrote:
-> > On Wed, Feb 28, 2024 at 05:39:27PM -0800, Pawan Gupta wrote:
-> > > On Tue, Feb 27, 2024 at 10:43:53AM +0100, Jiri Slaby wrote:
-> > > > On 27. 02. 24, 9:47, Nikolay Borisov wrote:
-> > > > > 
-> > > > > 
-> > > > > On 27.02.24 г. 1:52 ч., Pawan Gupta wrote:
-> > > > > > Macro used for MDS mitigation executes VERW with relative addressing for
-> > > > > > the operand. This is unnecessary and creates a problem for backports on
-> > > > > > older kernels that don't support relocations in alternatives. Relocation
-> > > > > > support was added by commit 270a69c4485d ("x86/alternative: Support
-> > > > > > relocations in alternatives"). Also asm for fixed addressing is much
-> > > > > > more cleaner than relative RIP addressing.
-> > > > > > 
-> > > > > > Simplify the asm by using fixed addressing for VERW operand.
-> > > > > > 
-> > > > > > Fixes: baf8361e5455 ("x86/bugs: Add asm helpers for executing VERW")
-> > > > > > Reported-by: Nikolay Borisov <nik.borisov@suse.com>
-> > > > > > Closes: https://lore.kernel.org/lkml/20558f89-299b-472e-9a96-171403a83bd6@suse.com/
-> > > > > > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > > > > > ---
-> > > > > >    arch/x86/include/asm/nospec-branch.h | 2 +-
-> > > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > 
-> > > > > > diff --git a/arch/x86/include/asm/nospec-branch.h
-> > > > > > b/arch/x86/include/asm/nospec-branch.h
-> > > > > > index 2aa52cab1e46..ab19c7f1167b 100644
-> > > > > > --- a/arch/x86/include/asm/nospec-branch.h
-> > > > > > +++ b/arch/x86/include/asm/nospec-branch.h
-> > > > > > @@ -323,7 +323,7 @@
-> > > > > >     * Note: Only the memory operand variant of VERW clears the CPU
-> > > > > > buffers.
-> > > > > >     */
-> > > > > >    .macro CLEAR_CPU_BUFFERS
-> > > > > > -    ALTERNATIVE "", __stringify(verw _ASM_RIP(mds_verw_sel)),
-> > > > > > X86_FEATURE_CLEAR_CPU_BUF
-> > > > > > +    ALTERNATIVE "", __stringify(verw mds_verw_sel),
-> > > > > > X86_FEATURE_CLEAR_CPU_BUF
-> > > > > 
-> > > > > Actually thinking about it more and discussing with Jiri (cc'ed), will
-> > > > > this work with KASLR enabled?
-> > > > 
-> > > > I might of course be wrong. We appear to rely on the asm+linker here.
-> > > 
-> > > You were right, with KASLR enabled, instructions with fixed addressing
-> > > in alternatives don't get relocated. I guess we will have to keep
-> > > rip-relative as is. Thanks for catching that.
-> > 
-> > Looks like this is not settled yet, it was naive of me to trust gdb on
-> > /proc/kcore earlier with KASLR enabled.
-> > 
-> > With the below debug patch it appears the relocation with fixed
-> > addresses is working as expected with KASLR enabled.
-> 
-> As I wrote already, asm+linker converts the fixed address to rip-rela
-> anyway:
-> 
-> https://lore.kernel.org/all/fd8f2df0-563e-4f5c-aca4-bc92a14e9426@kernel.org/
-> 
-> I also raised questions in there:
-> ====
-> The assembler generates a relocation for the fixed address anyway. And
-> the linker resolves it as rip-relative. At least the pair from my
-> binutils-2.42.
-> 
-> But if it generates a rip-relative address, is < 6.5 with no support of
-> rip-rel in alternatives still fine?
+Hi Rob, Saravana,
 
-In that case backports < 6.5 can do:
+On Wed, 28 Feb 2024 18:26:36 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
-+.macro CLEAR_CPU_BUFFERS
-+	ALTERNATIVE "jmp .Lskip_verw_\@", "", X86_FEATURE_CLEAR_CPU_BUF
-+	verw _ASM_RIP(mds_verw_sel)
-+.Lskip_verw_\@:
-+.endm
+> On Wed, Feb 28, 2024 at 5:58=E2=80=AFPM Saravana Kannan <saravanak@google=
+.com> wrote:
+> >
+> > On Wed, Feb 28, 2024 at 1:56=E2=80=AFPM Rob Herring <robh+dt@kernel.org=
+> wrote: =20
+> > >
+> > > On Mon, Feb 26, 2024 at 5:52=E2=80=AFAM Luca Ceresoli <luca.ceresoli@=
+bootlin.com> wrote: =20
+> > > >
+> > > > Hello Saravana,
+> > > >
+> > > > On Fri, 23 Feb 2024 17:35:24 -0800
+> > > > Saravana Kannan <saravanak@google.com> wrote:
+> > > > =20
+> > > > > On Fri, Feb 23, 2024 at 8:18=E2=80=AFAM Luca Ceresoli <luca.ceres=
+oli@bootlin.com> wrote: =20
+> > > > > >
+> > > > > > Hello Saravana,
+> > > > > >
+> > > > > > [+cc Herv=C3=A9 Codina]
+> > > > > >
+> > > > > > On Tue,  6 Feb 2024 17:18:01 -0800
+> > > > > > Saravana Kannan <saravanak@google.com> wrote:
+> > > > > > =20
+> > > > > > > After commit 4a032827daa8 ("of: property: Simplify of_link_to=
+_phandle()"),
+> > > > > > > remote-endpoint properties created a fwnode link from the con=
+sumer device
+> > > > > > > to the supplier endpoint. This is a tiny bit inefficient (not=
+ buggy) when
+> > > > > > > trying to create device links or detecting cycles. So, improv=
+e this the
+> > > > > > > same way we improved finding the consumer of a remote-endpoin=
+t property.
+> > > > > > >
+> > > > > > > Fixes: 4a032827daa8 ("of: property: Simplify of_link_to_phand=
+le()")
+> > > > > > > Signed-off-by: Saravana Kannan <saravanak@google.com> =20
+> > > > > >
+> > > > > > After rebasing my own branch on v6.8-rc5 from v6.8-rc1 I started
+> > > > > > getting unexpected warnings during device tree overlay removal.=
+ After a
+> > > > > > somewhat painful bisection I identified this patch as the one t=
+hat
+> > > > > > triggers it all. =20
+> > > > >
+> > > > > Thanks for the report.
+> > > > > =20
+> > > > > > =20
+> > > > > > > ---
+> > > > > > > --- a/drivers/of/property.c
+> > > > > > > +++ b/drivers/of/property.c
+> > > > > > > @@ -1232,7 +1232,6 @@ DEFINE_SIMPLE_PROP(pinctrl5, "pinctrl-5=
+", NULL)
+> > > > > > >  DEFINE_SIMPLE_PROP(pinctrl6, "pinctrl-6", NULL)
+> > > > > > >  DEFINE_SIMPLE_PROP(pinctrl7, "pinctrl-7", NULL)
+> > > > > > >  DEFINE_SIMPLE_PROP(pinctrl8, "pinctrl-8", NULL)
+> > > > > > > -DEFINE_SIMPLE_PROP(remote_endpoint, "remote-endpoint", NULL)
+> > > > > > >  DEFINE_SIMPLE_PROP(pwms, "pwms", "#pwm-cells")
+> > > > > > >  DEFINE_SIMPLE_PROP(resets, "resets", "#reset-cells")
+> > > > > > >  DEFINE_SIMPLE_PROP(leds, "leds", NULL)
+> > > > > > > @@ -1298,6 +1297,17 @@ static struct device_node *parse_inter=
+rupts(struct device_node *np,
+> > > > > > >       return of_irq_parse_one(np, index, &sup_args) ? NULL : =
+sup_args.np;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +static struct device_node *parse_remote_endpoint(struct devi=
+ce_node *np,
+> > > > > > > +                                              const char *pr=
+op_name,
+> > > > > > > +                                              int index)
+> > > > > > > +{
+> > > > > > > +     /* Return NULL for index > 0 to signify end of remote-e=
+ndpoints. */
+> > > > > > > +     if (!index || strcmp(prop_name, "remote-endpoint")) =20
+> > > > > >
+> > > > > > There seem to be a bug here: "!index" should be "index > 0", as=
+ the
+> > > > > > comment suggests. Otherwise NULL is always returned. =20
+> > > > >
+> > > > > Ah crap, I think you are right. It should have been "index". Not
+> > > > > "!index". But I tested this! Sigh. I probably screwed up my testi=
+ng.
+> > > > >
+> > > > > Please send out a Fix for this.
+> > > > >
+> > > > > Geert, we got excited too soon. :(
+> > > > > =20
+> > > > > > I am going to send a quick patch for that, but haven't done so =
+yet
+> > > > > > because it still won't solve the problem, so I wanted to open t=
+he topic
+> > > > > > here without further delay.
+> > > > > >
+> > > > > > Even with the 'index > 0' fix I'm still getting pretty much the=
+ same: =20
+> > > > >
+> > > > > This part is confusing though. If I read your DT correctly, there=
+'s a
+> > > > > cycle between platform:panel-dsi-lvds and i2c:13-002c. And fw_dev=
+link
+> > > > > should not be enforcing any ordering between those devices ever.
+> > > > >
+> > > > > I'm surprised that in your "working" case, fw_devlink didn't dete=
+ct
+> > > > > any cycle. It should have. If there's any debugging to do, that's=
+ the
+> > > > > one we need to debug.
+> > > > > =20
+> > > > > >
+> > > > > > [   34.836781] ------------[ cut here ]------------
+> > > > > > [   34.841401] WARNING: CPU: 2 PID: 204 at drivers/base/devres.=
+c:1064 devm_kfree+0x8c/0xfc
+> > > > > > ...
+> > > > > > [   35.024751] Call trace:
+> > > > > > [   35.027199]  devm_kfree+0x8c/0xfc
+> > > > > > [   35.030520]  devm_drm_panel_bridge_release+0x54/0x64 [drm_km=
+s_helper]
+> > > > > > [   35.036990]  devres_release_group+0xe0/0x164
+> > > > > > [   35.041264]  i2c_device_remove+0x38/0x9c
+> > > > > > [   35.045196]  device_remove+0x4c/0x80
+> > > > > > [   35.048774]  device_release_driver_internal+0x1d4/0x230
+> > > > > > [   35.054003]  device_release_driver+0x18/0x24
+> > > > > > [   35.058279]  bus_remove_device+0xcc/0x10c
+> > > > > > [   35.062292]  device_del+0x15c/0x41c
+> > > > > > [   35.065786]  device_unregister+0x18/0x34
+> > > > > > [   35.069714]  i2c_unregister_device+0x54/0x88
+> > > > > > [   35.073988]  of_i2c_notify+0x98/0x224
+> > > > > > [   35.077656]  blocking_notifier_call_chain+0x6c/0xa0
+> > > > > > [   35.082543]  __of_changeset_entry_notify+0x100/0x16c
+> > > > > > [   35.087515]  __of_changeset_revert_notify+0x44/0x78
+> > > > > > [   35.092398]  of_overlay_remove+0x114/0x1c4
+> > > > > > ...
+> > > > > >
+> > > > > > By comparing the two versions I found that before removing the =
+overlay:
+> > > > > >
+> > > > > >  * in the "working" case (with this patch reverted) I have:
+> > > > > >
+> > > > > >    # ls /sys/class/devlink/ | grep 002c
+> > > > > >    platform:hpbr--i2c:13-002c
+> > > > > >    platform:panel-dsi-lvds--i2c:13-002c =20
+> > > > >
+> > > > > Can you check the "status" and "sync_state_only" file in this fol=
+der
+> > > > > and tell me what it says?
+> > > > >
+> > > > > Since these devices have a cyclic dependency between them, it sho=
+uld
+> > > > > have been something other than "not tracked" and "sync_state_only"
+> > > > > should be "1". But my guess is you'll see "active" and "0".
+> > > > > =20
+> > > > > >    platform:regulator-sys-1v8--i2c:13-002c
+> > > > > >    regulator:regulator.31--i2c:13-002c
+> > > > > >    #
+> > > > > >
+> > > > > >  * in the "broken" case (v6.8-rc5 + s/!index/index > 0/ as ment=
+ioned):
+> > > > > >
+> > > > > >    # ls /sys/class/devlink/ | grep 002c
+> > > > > >    platform:hpbr--i2c:13-002c
+> > > > > >    platform:regulator-sys-1v8--i2c:13-002c
+> > > > > >    regulator:regulator.30--i2c:13-002c
+> > > > > >    #
+> > > > > >
+> > > > > > So in the latter case the panel-dsi-lvds--i2c:13-002c link is m=
+issing.
+> > > > > > I think it gets created but later on removed. Here's a snippet =
+of the
+> > > > > > kernel log when that happens:
+> > > > > >
+> > > > > > [    9.578279] ----- cycle: start -----
+> > > > > > [    9.578283] /soc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3=
+/dsi-lvds-bridge@2c: cycle: depends on /panel-dsi-lvds
+> > > > > > [    9.578308] /panel-dsi-lvds: cycle: depends on /soc@0/bus@30=
+800000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-bridge@2c
+> > > > > > [    9.578329] ----- cycle: end -----
+> > > > > > [    9.578334] platform panel-dsi-lvds: Fixed dependency cycle(=
+s) with /soc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-bridge@2c
+> > > > > > ... =20
+> > > > >
+> > > > > Somewhere in this area, I'm thinking you'll also see "device:
+> > > > > 'i2c:13-002c--platform:panel-dsi-lvds': device_add" do you not? A=
+nd if
+> > > > > you enabled device link logs, you'll see that it was "sync state =
+only"
+> > > > > link.
+> > > > > =20
+> > > > > > [    9.590620] /panel-dsi-lvds Dropping the fwnode link to /soc=
+@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-bridge@2c
+> > > > > > ...
+> > > > > > [    9.597280] ----- cycle: start -----
+> > > > > > [    9.597283] /panel-dsi-lvds: cycle: depends on /soc@0/bus@30=
+800000/i2c@30ad0000/i2cmux@70/i2c@3/dsi-lvds-bridge@2c
+> > > > > > [    9.602781] /soc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3=
+/dsi-lvds-bridge@2c: cycle: depends on /panel-dsi-lvds
+> > > > > > [    9.607581] ----- cycle: end -----
+> > > > > > [    9.607585] i2c 13-002c: Fixed dependency cycle(s) with /pan=
+el-dsi-lvds
+> > > > > > [    9.614217] device: 'platform:panel-dsi-lvds--i2c:13-002c': =
+device_add
+> > > > > > ...
+> > > > > > [    9.614277] /soc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3=
+/dsi-lvds-bridge@2c Dropping the fwnode link to /panel-dsi-lvds
+> > > > > > [    9.614369] /soc@0/bus@30800000/i2c@30ad0000/i2cmux@70/i2c@3=
+/dsi-lvds-bridge@2c Dropping the fwnode link to /regulator-dock-sys-1v8
+> > > > > > ...
+> > > > > > [    9.739840] panel-simple panel-dsi-lvds: Dropping the link t=
+o 13-002c
+> > > > > > [    9.739846] device: 'i2c:13-002c--platform:panel-dsi-lvds': =
+device_unregister =20
+> > > > >
+> > > > > Oh yeah, see. The "device_add" I expected earlier is getting remo=
+ved here.
+> > > > > =20
+> > > > > > [   10.247037] sn65dsi83 13-002c: Dropping the link to panel-ds=
+i-lvds
+> > > > > > [   10.247049] device: 'platform:panel-dsi-lvds--i2c:13-002c': =
+device_unregister
+> > > > > >
+> > > > > > And here's the relevant portion of my device tree overlay:
+> > > > > >
+> > > > > > --------------------8<--------------------
+> > > > > > =20
+> > > > >
+> > > > > I think the eventual fix would be this series + adding a
+> > > > > "post-init-providers" property to the device that's supposed to p=
+robe
+> > > > > first and point it to the device that's supposed to probe next. Do
+> > > > > this at the device node level, not the endpoint level.
+> > > > > https://lore.kernel.org/lkml/20240221233026.2915061-1-saravanak@g=
+oogle.com/ =20
+> > > >
+> > > > I'm certainly going to look at this series in more detail and at the
+> > > > debugging you asked for, however I'm afraid I won't have access to =
+the
+> > > > hardware this week and it's not going to be a quick task anyway.
+> > > >
+> > > > So in this moment I think it's quite clear that this specific patch
+> > > > creates a regression and there is no clear fix that is reasonably
+> > > > likely to get merged before 6.8.
+> > > >
+> > > > I propose reverting this patch immediately, unless you have a better
+> > > > short-term solution. =20
+> > >
+> > > It's just this one of the 3 patches that needs reverting? =20
 
-As done in Nikolay's 5.4 backport:
+Just this patch. I reverted only this and the issue disappeared.
 
-https://lore.kernel.org/stable/20240226122237.198921-3-nik.borisov@suse.com/
+> > I sent a fix. With the fix, it's just exposing a bug elsewhere.=20
 
-> Another question: can we rely on the assembler to generate a relocation
-> and on the linker to resolve it as rip-relative?
+Exactly, this patch has two issues and only the easy one has a fix [0]
+currently as far as I know.
 
-This is definitely not my area of expertise, but with the above approach
-VERW should be inlined always, and rip-relative should be resolved as
-with any other instruction.
+> You say apply the fix. Luca says revert. I say I wish I made this 6.9
+> material. Which is it?
+>=20
+> If the overlay applying depends on out of tree code (likely as there
+> are limited ways to apply an overlay in mainline), then I don't really
+> care if there is still a regression.
+
+Obviously, to load and unload the overlays I'm using code not yet
+in mainline. It is using of_overlay_fdt_apply() and of_overlay_remove()
+via a driver underdevelopment that is similar to the one Herv=C3=A9 and
+Lizhi Hou are working on [1][2].
+
+I see the point that "we are not breaking existing use cases as no code
+is (un)loading overlays except unittest", sure.
+
+As I see it, we have a feature in the kernel that is not used, but it
+will be, eventually: there are use cases, development is progressing and
+patches are being sent actively. My opinion is that we should not
+put additional known obstacles that will make it even harder than it
+already is.
+
+[0]
+https://lore.kernel.org/linux-devicetree/20240224052436.3552333-1-saravanak=
+@google.com/
+[1]
+https://lore.kernel.org/all/1692120000-46900-1-git-send-email-lizhi.hou@amd=
+.com/
+[2]
+https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.=
+com/
+
+Luca
+
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
