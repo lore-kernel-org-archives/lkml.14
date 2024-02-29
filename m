@@ -1,129 +1,98 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960815D8E7
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1158F5D8FA
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199125; cv=none; b=rBRyBzUye3tQN9Z+M2m8xBEXb+/H5duTkatoFYF+4SafMIDFdwDyC9xodUHirGN60TVGfWlZ8tuI+M2V70VD9j0+xCxaWM1AG1q0k3404fY/T1qGi1bI2eGNFNv5vQ2J06uSUrMJ85MInHyRVEbeyAiBlzgGQ16JwsqzlKrAXV0=
+	t=1709199196; cv=none; b=tfW9p5ionUnuo4L9ng3WDEzxaHzC8XzUQIZNGWQNCFpOqjujHcEICOOwqV2JOQdOcn1vDGdYy1Hcrpa8pI/1/TsZI2S9n6Mi8cCV2m0XbjpvWclS2C1BG4XuRK/R9i7NlTpE7kBxA7bCgQY/blpxAXQZGHU7F2l8+dfqpFYQlWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199125; c=relaxed/simple;
-	bh=o/MZbNUm82wJ0smN4ZI9fIXzGicdoFKBpqsdICiE+8w=;
+	s=arc-20240116; t=1709199196; c=relaxed/simple;
+	bh=TA5XDR0sixwyfoYxqxJ3AVyk4Nya6rVcdVMTi766fKQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GLMLCea0aEZ0ir3wX/Hs1oXt5CGnA1cvLbdzYhK+UQ6/RKs3rEUSkXTbjFXQEFvfzJilBjDvaNY/43+ePe43E6CIzDcvlIQmWgBjkzpwBOybzJDdfUddiF1deYWwLvQrblqgG3ZEGvkRCosWYq9ddTFUYgO/iNh2le8laX/X1fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Sk539cE; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=fr1sVAt40k4xDkdbjLU5T0tRzdrB9Unsp+sXH+MUsIvbbxkZAIaI6x7vkwiXz/weuSRvj8e+WduqBAKo02KyOz+E6MWvfoaoWIF+7yblD8rPuAd9lyzYcrsvVHpvKxxuV/4p47eWeeZ6geanvF4MxEUCk3eblLFkDqkOti+lUYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nFkqfJvQ; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Sk539cE"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-4d355374878so34912e0c.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:32:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nFkqfJvQ"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso745925276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:33:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709199122; x=1709803922; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o/MZbNUm82wJ0smN4ZI9fIXzGicdoFKBpqsdICiE+8w=;
-        b=1Sk539cE8o5FzNKJBVCxNknb7cr4kQ1+gNS7O6HPIi4yKHgsXR9eWePgrHyQvGADzW
-         E5YCtpImhX6r2r1JClF/kcWB1KNBdTbQQH0NHFWDsIR0ookkc4GxUX3+d4puRkTZTDrn
-         2HkpRDsYvOyhnjhekT8a0+sWG3qrCWiz9ml/ZSXREn4QrctOv/jGo8AyOwsgPa7GCheL
-         sGJv/FgEMuYNdmD/af2bvxd6fPvYMeP7Sg1elK8FXbHE2HRIMbxIBgJ0DwUIUrFHvY5i
-         Y9d74GvdrXAkOA9pV7tc5hRpeh4ZDIbDCYADAnPbSKrCwBMBblbOMjwvo9Qd+TW7+ooL
-         TGqQ==
+        d=linaro.org; s=google; t=1709199194; x=1709803994; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TA5XDR0sixwyfoYxqxJ3AVyk4Nya6rVcdVMTi766fKQ=;
+        b=nFkqfJvQwFs+cxOrekeldas6aoDkkenIwcmU6e7vjZu9qZ/Xt01YdsdMlX5PJE+wF1
+         FKC9RHavdw7abnQhAQF9nF9cqLj5LuKrhCLGBUIluqeXWrIPqbeiV8COJ6eQHfaYiJi/
+         /e5g+q92Iz1j5AxoHXRfXlsxBlWEfqZEmNzwJiC4b21+9Egwx7i//D7rwHH8Fo12lING
+         HqlUsg7fIMUIHrpFhUCOgvnpRmlk/jurq5+XvQwktDfwnOkBTfeoKVMO4YHE25s/vYW/
+         OYub1WhyeV8XYVG/vewgNd7EHn55TihvNMg5TTXL2FXq9/ekgqnNJw4Ube2x15649p0K
+         HPuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709199122; x=1709803922;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o/MZbNUm82wJ0smN4ZI9fIXzGicdoFKBpqsdICiE+8w=;
-        b=mcc2W2d1BAxMDBn57EvhO2rXAfAIkyuyKiOSIgSJDaXonWtAkYyDQj5Oza46oRWJZC
-         /4E9ZIGN0UuWEJAZo1LN9VN7PhyAfoezatMuVrXtCnBIinSBqnGlyY1cjGhVlUy5baAk
-         riTznBBcoplHuXb1Omruv2kuaRc/t6mbUv28O+Hb82V7vrNHZ3dSgPE6dSuZYVFACK+L
-         /hW2EHSvpKBbPC2xFDzAH194wx3+XNnUZny0NL8pF+4DnzL8P6qK5haHujGtliv/xDMP
-         kK1pJ7e6WnfU6gCGBZNdAYJN1LMsdduAx6uFTruR61VAbUPt78ky9UTaPRmCf1Qzbv70
-         pVlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfyJwEzMxrHD/6eob+mG4aPE57KURSdI731toDKj7NKlAgas26bt6RNQSI3mtMCjrMJV1lfZr+plKc1+MZ3VrFEOwrXDy2SxTljCZC
-X-Gm-Message-State: AOJu0YxGUaRSP/un+77Xhj2KQJHJmlIOGsruius0JSppWLW4f2gU0mfF
-	gZWIwOIWVftNIjnvrBwXhO4Is+B/61ATGk+Z7Xffl8WOySsX6BWpiKzOnGShdXAgpJ13RYtm1m5
-	xC82Y5zTlYX9gXRN1HuxOeE1qPeMOq3da0NM5
-X-Google-Smtp-Source: AGHT+IEcI+OzNlTqO+wq1gec5ZnsAEK9sGj+CdGnwfO2S0zJF19vgdJU5vBMHWClUBiikOWVe1MQp9GjXvVA0TX7hhc=
-X-Received: by 2002:a1f:da03:0:b0:4c0:25db:3618 with SMTP id
- r3-20020a1fda03000000b004c025db3618mr1508020vkg.0.1709199122221; Thu, 29 Feb
- 2024 01:32:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709199194; x=1709803994;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TA5XDR0sixwyfoYxqxJ3AVyk4Nya6rVcdVMTi766fKQ=;
+        b=s4jtKkdb+BUS8Rwv6yvnkKC4MBZyH8h2/gicRNHM71f6dxZ2tdSTuBl8XcmeArbGZj
+         FvfF9AjsJpJT2AFUW6kX9klxS9Aym+WEkTPt+DDkYFeUtNiKOs4SE8KKX06ToFScwPv9
+         hk9wSmdHdSpkv7f9K+LVdEZpXdP/sPK4d/qiWUPatYcIqOOnRHFagVBNe8eMDGcsRb1T
+         PawOoFUbAq2odzPL2tCbolIcO5ICt/9tw58mkgKTC2FB1AgUAf94bCM7/wRI7M1yhvRB
+         9H78Utcj3hid86sd1aakuHXNgyF7v3AXwQVDFumjMNITr4f7Fz3guQLJ5Uf7rnVtzj4z
+         dKyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwssk9Oln9ywb92Ti1icr+J8zb50IXraP5xa4x9b0DBN8imFnZQupo/qpbWHv5KB0ifVn+WMjSWj6DsM2HOeYFIWNUJGikjXwE1XMK
+X-Gm-Message-State: AOJu0YxWSfZqVJ98HH2iNSNIGK6tn8f+dFQ6bqwfLdPPJ1hHsL4/eN0w
+	pyD+ihnYbd95rDWhLLfs5G+8W0n0XpdsmWMOnfGr9wZl4nW+UsnPF+XU+G3FrkGfZlrWdEMWEZz
+	JsJ25WskcH8c77DfDYq9KCbkV7R25O/WqkBXeJQ==
+X-Google-Smtp-Source: AGHT+IFJx7qNkajaqQQOEZz9bg4d/0XSAClSsgSr7+DWG04FeqoP5n/XZvXvx+LASciVRHXOSFjzxgkNPnaVjJuZjkE=
+X-Received: by 2002:a5b:f05:0:b0:dcd:aee6:fa9 with SMTP id x5-20020a5b0f05000000b00dcdaee60fa9mr1802025ybr.53.1709199194095;
+ Thu, 29 Feb 2024 01:33:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20221122203932.231377-1-mathieu.desnoyers@efficios.com>
- <Zd-AfDcQ-r04CMXk@elver.google.com> <ed828ce7-2046-4884-ab1f-d7bff3c0a714@efficios.com>
-In-Reply-To: <ed828ce7-2046-4884-ab1f-d7bff3c0a714@efficios.com>
-From: Marco Elver <elver@google.com>
-Date: Thu, 29 Feb 2024 10:31:24 +0100
-Message-ID: <CANpmjNP9ApuE+FyeSPPEJZK9Q8BdY24i8xuqhTbXEQM_d_HmcQ@mail.gmail.com>
-Subject: Re: [PATCH 00/30] RSEQ node id and mm concurrency id extensions
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>, 
-	linux-api@vger.kernel.org, Christian Brauner <brauner@kernel.org>, 
-	Florian Weimer <fw@deneb.enyo.de>, David.Laight@aculab.com, carlos@redhat.com, 
-	Peter Oskolkov <posk@posk.io>, Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
-	Chris Kennelly <ckennelly@google.com>, dvyukov@google.com
+References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-19-3ba757474006@bootlin.com>
+In-Reply-To: <20240228-mbly-gpio-v2-19-3ba757474006@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 29 Feb 2024 10:33:03 +0100
+Message-ID: <CACRpkdboVcO2+RT5r+FkJ6t-Uru3vrwOodRPn+vmBvv7LFtM1A@mail.gmail.com>
+Subject: Re: [PATCH v2 19/30] gpio: nomadik: request dynamic ID allocation
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 28 Feb 2024 at 21:01, Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
-[...]
-> AFAIK the only project using the mm_cid concept I know of today is
-> tcmalloc. It's very useful to scale data structures such as memory
-> allocator arenas to the number of concurrently running threads
-> within a process without having to rely on heuristics on the
-> user-space side.
->
-> I have plans to migrate LTTng-UST to per-ipc-namespace NUMA-aware
-> mm_cid as well (after I get around to submit this extension into the
-> Linux kernel) for user-space ring buffers over shared memory, but my
-> current focus has been on pushing support for extensible RSEQ into
-> GNU libc for the past year or so.
->
-> We are getting there though:
->
-> https://sourceware.org/pipermail/libc-alpha/2024-February/154390.html
+On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boot=
+lin.com> wrote:
 
-Glad to see this!
-
-> Once we have this key piece in place within GNU libc, it will become
-> easier to extend rseq further because the libc will adapt to the extended
-> feature set.
+> Move away from statically allocated GPIO IDs. Switch to dynamic ID
+> allocation. Static IDs are deprecated because they cause issues when
+> multiple GPIO controllers are to be found on the same platform.
 >
-> Note that the overhead of the mm_cid assignment within the scheduler
-> should be negligible after
-> commit 223baf9d17f2 ("sched: Fix performance regression introduced by mm_cid").
+> Add a bit of complexity to do pin number -> GPIO chip + offset.
+> Previously, bank number and offsets were retrieved using division and
+> remainder (bank size being constant 32). Now, to get the pin number
+> matching a bank base, we must know the sum of ngpios of previous banks.
+> This is done in find_nmk_gpio_from_pin() which also exposes the offset
+> inside the bank.
 >
-> Another thing we've actively been working on is to get the "librseq"
-> project [1] in shape so a copy the librseq headers can be integrated
-> into the GNU libc project as internal header files. So basically
-> librseq will become a GNU libc upstream. This will facilitate
-> implementation of rseq critical section within GNU libc. One of
-> the possible use-cases will be to move the GNU libc malloc
-> implementation to per-mm_cid arenas.
-
-I suppose if GNU libc malloc starts using it then usage would become
-ubiquitous in no time.
-
-> > I'm aware that TCMalloc was the inspiration for vCPUs [1], then renamed to
-> > CIDs, but am wondering if other users are out there.
+> Also remove the assumption that bank sizes are constant. Instead of
+> using NMK_GPIO_PER_CHIP as bank size, use nmk_gpio_chips[i]->ngpio.
 >
-> I'd be curious to learn about those as well.
->
-> I suspect that the lack of official release of librseq critical section
-> helper headers may contribute to the fact that few applications use advanced
-> rseq features at this point.
+> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 
-I guess you've answered my question, and I conclude "no known open
-source usage yet". A simple search on Github or the likes also didn't
-yield anything. I will go and check again in a year or so. ;-)
+Patch applied!
 
-Thanks,
--- Marco
+Yours,
+Linus Walleij
