@@ -1,91 +1,84 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23597A13B;
-	Thu, 29 Feb 2024 16:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4940E2E3E1;
+	Thu, 29 Feb 2024 17:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709225922; cv=none; b=jHH1bW+c9NIhd1yt/U8fa8dPlcMslK53ItJVmtixz0Vgs6lelChg2QfqAlhlfaA7LTziBCvsN/5yGueaWL6y9xou9eqF73BkziTSP/SOJL/w/Vg4ofIxUzMIQVqmrYGlGQ3h2cCSuNuxMMUl43brQPekhplGDGBpSLPf0TmHEEQ=
+	t=1709226062; cv=none; b=dzututtrhlKqC6ZMkiul4/GHu/kRqrFZGdPcN5b6DtHZGhVECvfHhWGHw0ytcjLV2YOrQWCi8VDPgYFq4BUMOYXjzUzDRy/4N7cVi2KlajPF8IaD22iepsrypZM9MP31WBuytbaUrmWn5RtteMkaaaQbpmh98HiB58pcXMvUApM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709225922; c=relaxed/simple;
-	bh=p6FqwOUMGbV2c5HR1BYCJhqK5gkHnO/jnmliZOTV0mY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C6XcgzXqKw/Wcla3R3u5twDZ4Nc3PpVXTmABTZUHFRKzJTrQIpBYAdhEPgklejlDc3v61KpWXVZI4LxPSwQ5khF9KwkTzkvJm2WmjPg/ixTOh7SLGW4XFs5sAKhIfb4rokioMuRODjrqgvYOhMvUR2yaZTx8WAwhFcXbeejITBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=N9ZbocCb; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="N9ZbocCb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/cAast4b1moTClApH8MesOygPfzXLs7wuYy5qzSoQzM=; b=N9ZbocCbjrkXC3f/TVFZZiow7r
-	KBN807SMyg2iL4AZBkaetkYRUEGJogEhjby9l/ukSKUFudq4PgFkeQYr3CiS+OpEvk9TK3NbGGQRb
-	MyWKR4JMuMnwOguJHzsmJlyHvMfSainzvzZLOZM3YXJapOTONhS4y7ekVU+u3LRrAQ9H5qivH5xxm
-	e1DZRNdOjn7JJEAdK/paIzo+/vbWMq33Un4Z0Rquv1lzBBbg/2+MeuZwromNoUpc8G71XUWMCL9Om
-	opZfnSh+EvjifPbOYilY4QXwLFLyvYeu1r7zGNFu8yArqegaw35l6IupkKMr69+eAAQvujfzGT5h5
-	dA0w84bQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45990)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rfjjl-0000WT-0y;
-	Thu, 29 Feb 2024 16:58:25 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rfjjh-0000yS-TA; Thu, 29 Feb 2024 16:58:21 +0000
-Date: Thu, 29 Feb 2024 16:58:21 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	herve.codina@bootlin.com, maxime.chevallier@bootlin.com,
-	christophercordahi@nanometrics.ca
-Subject: Re: [PATCH v2 2/6] leds: trigger: Create a new LED netdev trigger
- for collision
-Message-ID: <ZeC3raIM/wxGXsuz@shell.armlinux.org.uk>
-References: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
- <20240227093945.21525-3-bastien.curutchet@bootlin.com>
- <e6351d0c-15e2-47a9-be6c-6f21aee9ae90@lunn.ch>
- <e1936774-14bf-4ae5-9754-e21f5a0c59b3@bootlin.com>
- <9dd1b2d0-4ba5-4d34-a892-a6cc8c01df28@lunn.ch>
+	s=arc-20240116; t=1709226062; c=relaxed/simple;
+	bh=AJlVspfSdCAd3r0V5g9qas0SihWHSfY4bK1XQbc9yqg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=IUEXu8EkDEKRG1Wvia1tbhRzl7TMYJjzFrjcvDna58WzaAuZ0HW7NfcKMVx0Zf864JZRLuUJefkjXV/pgV8yW2LTvwCCD3TucGIJihz8wDK2l/gfua2fP/mmFRLqu+Qe12NaYJuHMbuCM3/UEGs6mUEwZS43GbWaqFbeQaT8Elk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=fail smtp.mailfrom=linux.com; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=linux.com
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 86EC040B02; Thu, 29 Feb 2024 09:00:58 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 8634E40AAD;
+	Thu, 29 Feb 2024 09:00:58 -0800 (PST)
+Date: Thu, 29 Feb 2024 09:00:58 -0800 (PST)
+From: "Christoph Lameter (Ampere)" <cl@linux.com>
+To: Shijie Huang <shijie@amperemail.onmicrosoft.com>
+cc: Eric Dumazet <edumazet@google.com>, 
+    Huang Shijie <shijie@os.amperecomputing.com>, kuba@kernel.org, 
+    patches@amperecomputing.com, davem@davemloft.net, horms@kernel.org, 
+    ast@kernel.org, dhowells@redhat.com, linyunsheng@huawei.com, 
+    aleksander.lobakin@intel.com, linux-kernel@vger.kernel.org, 
+    netdev@vger.kernel.org, cl@os.amperecomputing.com
+Subject: Re: [PATCH v2] net: skbuff: set FLAG_SKB_NO_MERGE for
+ skbuff_fclone_cache
+In-Reply-To: <018b5652-8006-471d-94d0-d230e4aeef6d@amperemail.onmicrosoft.com>
+Message-ID: <b7825865-c368-1b72-3751-f1928443db32@linux.com>
+References: <CANn89iJoHDzfYfhcwVvR4m7DiVG-UfFNqm+D1WD-2wjOttk6ew@mail.gmail.com> <20240227062833.7404-1-shijie@os.amperecomputing.com> <CANn89iL2a2534d8QU9Xt6Gjm8M1+wWH03+YPdjSPQCq_Q4ZGxw@mail.gmail.com>
+ <018b5652-8006-471d-94d0-d230e4aeef6d@amperemail.onmicrosoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9dd1b2d0-4ba5-4d34-a892-a6cc8c01df28@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, Feb 29, 2024 at 04:17:47PM +0100, Andrew Lunn wrote:
-> 2) LEDs are the wild west, because it is not part of 802.3. Every
-> vendor does it differently, and has their own special blinking
-> patterns. My preference is to keep it simple to what people actually
-> use. You cannot actually generate a collision, the developer who wants
-> to add support for collision. I have to ask, is collision actually
-> useful?
+On Wed, 28 Feb 2024, Shijie Huang wrote:
 
-I'm not sure when you say "You cannot actually generate a collision"
-whether you're referring to the link or the LEDs here? Obviously, we
-can't detect a collision unless the hardware tells us that it happened.
+>> 
+>> Using SLAB_NO_MERGE does not help, I am still seeing wrong allocations
+>> on a dual socket
+>> host with plenty of available memory.
+>> (either sk_buff or skb->head being allocated on the other node).
+>
+> Do you mean you still can see the wrong fclone after using SLAB_NO_MERGE?
+>
+> If so, I guess there is bug in the slub.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Mergin has nothing to do with memory locality.
+
+>> fclones might be allocated from a cpu running on node A, and freed
+>> from a cpu running on node B.
+>> Maybe SLUB is not properly handling this case ?
+>
+> Maybe.
+
+Basic functionality is broken??? Really?
+
+>> I think we need help from mm/slub experts, instead of trying to 'fix'
+>> networking stacks.
+>
+> @Christopher
+>
+> Any idea about this?
+
+
+If you want to force a local allocation then use GFP_THISNODE as a flag.
+
+If you do not specify a node or GFP_THISNODE then the slub allocator will 
+opportunistically allocate sporadically from other nodes to avoid 
+fragmentation of slabs. The page allocator also will sporadically go off 
+node in order to avoid reclaim. The page allocator may go off node 
+extensively if there is a imbalance of allocation between node. The page 
+allocator has knobs to tune off node vs reclaim options. Doing more 
+reclaim will slow things down but give you local data.
+
