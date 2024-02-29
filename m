@@ -1,54 +1,54 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7129013F426
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 19:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E380B134411
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 19:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709235792; cv=none; b=h2kJ/uBHug8Dvo9jGNRZSbZMV2q6/s/FJCEDYeKlMRotbTG7AMYCQZe2l6ieAkaUt0W885wbht2preos49xBOkEtFCZjbDRei0vTVuPfn5lHKPTQIm43uwXkr7g5noIKrMudBP5mIFZC+chLQ5BoGCapwkMegU//eMluBUzdR3c=
+	t=1709235826; cv=none; b=hCReWqtfZr6roBB9TAahPci3AntoWtxnzQIhMz35GM6hhrMeTXVlRJTR2zHsB7VjassRREUk97CNZH7sF4azjfSMWO3UNwg+UI90BBRMRzIazQbXkAqCHc4ba5yyEIzQXqVANGuWBsEbjmYpS3OB0s/ri/i+EbQra4oC42yOEgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709235792; c=relaxed/simple;
-	bh=z4br7zD9nOzBiMkwamc93pBabVM0YG6eSQefAbwCJkc=;
+	s=arc-20240116; t=1709235826; c=relaxed/simple;
+	bh=7Zq+gh4T8LIelYKBo/Vnz3ml4VoKW5MNYt5ad4EfTjs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a+J+uBx+kq0Fzrg4C4jhN3UvZYQUqNkjOA9+6E0ikcql0wSTVQGGyk0ZCRnMjEZI7K449tiWCpXi5VXFIP85R8uzRmpm71ihG3OPAm1YCtowGF5OGnB/OhAfjcqwHGxauBvZJQXuPKZNHqeIzr0lLRJYhsdSHMRalS0uj2Sk1P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mvcMvTv1; arc=none smtp.client-ip=209.85.166.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=WRVEiiVBN5GKLN3xBTy1na10jR+AUt1hCRtLUCYg9jC6jVrAaj89uxDg5IWgyU+vegwxXqN34GKTDXF291Z4yKgGJDNuR44XmnOhBTMylQGd66HhyE1pphQXWQaUBSysFYQoC7qQ59hEos85D+sMyNUmhhCNT2isFbWVKhrv5oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nyDsyHcU; arc=none smtp.client-ip=209.85.166.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mvcMvTv1"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7bf7e37dc60so73226239f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 11:43:10 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nyDsyHcU"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7c40863de70so68448939f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 11:43:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709235789; x=1709840589; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1709235823; x=1709840623; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=F8CJpd2zjevkw27a8KH1DmVXJgw/Y0RSSqYs/uQ6sww=;
-        b=mvcMvTv15lG7dodcDtpO9NtWIUGjtxjefBjg7FVxl2jQO9eWyzJ1gUKpV3O6ZV6MQV
-         fLVNylwF7wVDURk194kTF3qfs3FyuCgwq/2Rq9W6r2Jsp06lPuwpZfCZOiLK2CHFEUHr
-         HH2/lzwDcpJlHyvSqVg+SD3Ws8Gjv0USid0K8=
+        bh=vPzWpf0KRKzJfNNxm1xP82WyABEHBYT/ScSU2rL7CkM=;
+        b=nyDsyHcUmMAfzQuBxW2XM7VbPdoencgSUn5MNRoW9Z1X5QfAC+Vb28k5kmroFuLjDW
+         trSEfSYKClTca60YkN3Awsy9pA/W3wRiAZMBrCTc9oWjVRe4lpNOZ3NC+Iq8pMLWtZG0
+         hvfqPlp7D3wufkTBhrp3YvhuDcneIO572dFKM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709235789; x=1709840589;
+        d=1e100.net; s=20230601; t=1709235823; x=1709840623;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F8CJpd2zjevkw27a8KH1DmVXJgw/Y0RSSqYs/uQ6sww=;
-        b=rWv8fo6jFnfsFdrJIF1Pu1nKqG0MmBPOg5IP0CtI8Rblc3w85THtNWLnoR+2ipQzdP
-         tq7Cgx2ZYxHBcGQmWPOKBR2EM/qmWsIgKRnZdhKWVo/2ES79CIjhQtpGTiS4nhxgmyK9
-         JyQ23RhMhQSfIvvv69GMbmbo/GzjXFQmlquU5Id3y3Eto2AsATwsNrs3YrwxO/RFgHUv
-         8THTu4kEAIqCjABxba+uEV2cwkEwiuBd/TYADNspJW9OvljeVBvhKUJT7eK1mOaDF5Kn
-         JH0SZWRr2A15lsti0jSVMfv5tCdg1FprPCMu7OBPL81NJMY5Uo13vQKgFeUDM39hlt1M
-         n/qw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjYUVmuHrCulbtil8QbSn8rQBSnW8Iggd4gMqAW1kbHyxeHkTYkze8X6tjxsSX5BIf/oRj46UN/rLQQgLGFtNsX02PFOCOKUvbUzPE
-X-Gm-Message-State: AOJu0Yw5scW50RfldKbqyFDRLR5+Y4o/e3y3CiPlIVMGHfWfEWou4z1Z
-	Fg0WyY9fAZ+e/ymvfKnMmXeWTTVSFvL3S6r319pTD3ZH0VeAMxE9mXQ0qiNEaQ==
-X-Google-Smtp-Source: AGHT+IHgIo2qPrUsuvVLTw7+MTktv0oQumqgBoVoBnnMijf9sWuRrwq2Jdy3DJ/2sgHur6o+XReVVw==
-X-Received: by 2002:a05:6602:1c8c:b0:7c7:43e0:335a with SMTP id hf12-20020a0566021c8c00b007c743e0335amr3364192iob.2.1709235789521;
-        Thu, 29 Feb 2024 11:43:09 -0800 (PST)
+        bh=vPzWpf0KRKzJfNNxm1xP82WyABEHBYT/ScSU2rL7CkM=;
+        b=hMtgwpNGr5yFyJz1w10WWskwcRJyiibNz6lK0P+JEJxbLDeXWOmLj5Grh0ZAbWozr9
+         OyEXUEaLDV6QOQLnq/1LQF6enr5bgiDxgKHNSJLka+9yUeT6lSHIUyO01JX00txZ9EbA
+         tHL/6l/jqdW0Vq/5pBWIj5/DOyI6NX/4FAChdx0gq2ROqBPDIADiLwO0cc2kYiwBnzrX
+         cVbtb6F1gJzQx8vQlXherfQvP1E4l7aGBtKHlfUIMo2Uaa9+X4IygvUxylvb6HqIdHaw
+         BypFkDth57y6UdBJq+l8mCNJOPLPCFsDt2NEtNb8Vt37aR4bVY8A/GnwsWaw5XE9hmyG
+         ghvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXW7s/+b+OwkuaFOpOsd3HiyXU/fCSQm3berBilm2XZhNRN1gV9N8D+rwXixZTmwU95jSNcHCPvjAUINkCiMwXfjBDbssiVOmdhPJf9
+X-Gm-Message-State: AOJu0YyZnqD4C3wjXnkXGW/CeNmQcTS16ggDcFxfcRLLTx/1A1yDbl+h
+	QpKE8KaXo2vTxayltNMhTd2RcF0fZ1FQjLRNFZ534V/Ingtj5mrr+czusc6Eyg==
+X-Google-Smtp-Source: AGHT+IFs9wvs5pOAkDdWryJuttZydoEKEVDVwn8LfV2HYXPgDEXsihSPEp+kjzLHY+xQ9IiRbWM32w==
+X-Received: by 2002:a05:6602:2c48:b0:7c8:1437:4b07 with SMTP id x8-20020a0566022c4800b007c814374b07mr2416906iov.20.1709235823176;
+        Thu, 29 Feb 2024 11:43:43 -0800 (PST)
 Received: from localhost (144.57.222.35.bc.googleusercontent.com. [35.222.57.144])
-        by smtp.gmail.com with UTF8SMTPSA id x25-20020a029719000000b00474663a39edsm460221jai.50.2024.02.29.11.43.09
+        by smtp.gmail.com with UTF8SMTPSA id m8-20020a0566380ac800b0047472bc0182sm465429jab.63.2024.02.29.11.43.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 11:43:09 -0800 (PST)
-Date: Thu, 29 Feb 2024 19:43:08 +0000
+        Thu, 29 Feb 2024 11:43:42 -0800 (PST)
+Date: Thu, 29 Feb 2024 19:43:42 +0000
 From: Matthias Kaehlcke <mka@chromium.org>
 To: Javier Carrasco <javier.carrasco@wolfvision.net>
 Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
@@ -67,11 +67,11 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 5/9] arm64: defconfig: update ONBOARD_USB_HUB to
- ONBOARD_USB_DEV
-Message-ID: <ZeDeTFh_V4Eux5uK@google.com>
+Subject: Re: [PATCH v6 6/9] ARM: multi_v7_defconfig: update ONBOARD_USB_HUB
+ to ONBOAD_USB_DEV
+Message-ID: <ZeDeboeqDe88gKj2@google.com>
 References: <20240229-onboard_xvf3500-v6-0-a0aff2947040@wolfvision.net>
- <20240229-onboard_xvf3500-v6-5-a0aff2947040@wolfvision.net>
+ <20240229-onboard_xvf3500-v6-6-a0aff2947040@wolfvision.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,11 +80,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240229-onboard_xvf3500-v6-5-a0aff2947040@wolfvision.net>
+In-Reply-To: <20240229-onboard_xvf3500-v6-6-a0aff2947040@wolfvision.net>
 
-On Thu, Feb 29, 2024 at 09:34:48AM +0100, Javier Carrasco wrote:
+On Thu, Feb 29, 2024 at 09:34:49AM +0100, Javier Carrasco wrote:
 > The onboard_usb_hub driver has been updated to support non-hub devices,
-> which has led to some renaming.
+> which has led to some renaming. Update to the new name accordingly.
 > 
 > Update to the new name (ONBOARD_USB_DEV) accordingly.
 > 
