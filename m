@@ -1,177 +1,119 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A02F7C6D2;
-	Thu, 29 Feb 2024 11:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7520C7CF17;
+	Thu, 29 Feb 2024 11:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709207129; cv=none; b=OjCKv31w0iNeVADKi/UmDMSeqNwitdzLWmFmGTj0aoKqOVjMLizl+GEMeksSHAwWwU4o67ITBJ6tK46HkDkTpYRMTdYFjw6g7/hVuUQPu4c9NtJP7gCFB9j528XictahBShoXFJaAycADss3K9wZH3Ur2t6tKXjwD86rv9ez4o8=
+	t=1709207137; cv=none; b=pX4pbyvOOHBwZ4ugfJOY3sz9A+aN6c9U+TxlsvH+HvmJ4RXxqXsPBLJW06jovlFOul1HPmDicMDoRJp4TGZLQkgBhTGx+GjvRqkDL+AjShDc3p/isMK6K1o3r1nNFJl49ifELjYkTmP1pL3jmPi3pA8V2pWu1YuMRgNAhEwTTWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709207129; c=relaxed/simple;
-	bh=bQ1POsiBVxJpCj50R+gPzypiWjWcKy+68WnaAm1EsE4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=agnroo1Z5AOpcNvwANoi3Ok1Et9s4DZ7ghBJNClwYwlZ9sWJrg5NqQvyNUVezMF+NgoV9Y+Ms8gzmAkfKdIZN8c/MKPaghiDEKyWtK28FcSFV1ORDUrqcsd2+GnxgZcAOOVTktGCXs56A0SqvCNMbJFyqW/SOsFgs/lAM/0SLbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91AB51FB;
-	Thu, 29 Feb 2024 03:46:05 -0800 (PST)
-Received: from [10.57.12.184] (unknown [10.57.12.184])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78D6E3F762;
-	Thu, 29 Feb 2024 03:45:24 -0800 (PST)
-Message-ID: <7c82b316-89d9-470d-b46d-f86e81e2add3@arm.com>
-Date: Thu, 29 Feb 2024 11:45:41 +0000
+	s=arc-20240116; t=1709207137; c=relaxed/simple;
+	bh=Kq0TK4bY8t/Mvm9W8afZQDPlQRDXrI1jGg+Gg966bnE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CNM2OKu2aGWYN1OFmvrLuxpKx/nQpMjIZboz3/Dyp8pLEsq4y/dEzn4rYQrbj4d09WBmjgSa/XQkKQ6ZssDMsExrpJfP2a0sAoXH8AeNlZG51C75OE6hqlDPEdj7utdfD8q442vAWYBIaUGq/MPaDN0U4piVbbE+WglERRqpOfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TlqB83zg7z1xpTm;
+	Thu, 29 Feb 2024 19:44:00 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id CB0B71402CE;
+	Thu, 29 Feb 2024 19:45:31 +0800 (CST)
+Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
+ (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 29 Feb
+ 2024 19:45:30 +0800
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+To: <brauner@kernel.org>, <david@fromorbit.com>, <djwong@kernel.org>,
+	<jack@suse.cz>, <tytso@mit.edu>
+CC: <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
+	<yi.zhang@huawei.com>
+Subject: [PATCH RFC 1/2] iomap: Add a IOMAP_DIO_MAY_INLINE_COMP flag
+Date: Thu, 29 Feb 2024 19:38:48 +0800
+Message-ID: <20240229113849.2222577-2-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240229113849.2222577-1-chengzhihao1@huawei.com>
+References: <20240229113849.2222577-1-chengzhihao1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/2] cpufreq: scmi: Register for limit change
- notifications
-Content-Language: en-US
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Sibi Sankar <quic_sibis@quicinc.com>, sudeep.holla@arm.com,
- linux-arm-kernel@lists.infradead.org, pierre.gondois@arm.com,
- dietmar.eggemann@arm.com, morten.rasmussen@arm.com, viresh.kumar@linaro.org,
- rafael@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_mdtipton@quicinc.com, linux-arm-msm@vger.kernel.org
-References: <20240227181632.659133-1-quic_sibis@quicinc.com>
- <20240227181632.659133-3-quic_sibis@quicinc.com>
- <f8bfc666-c216-44d5-a63b-99f04ff3b8ef@arm.com>
- <2608b2d8-f3b0-b4f5-f8e4-1f2242043ded@quicinc.com>
- <64c6a1bc-92f2-4f44-ab10-cbd2473746f3@arm.com>
- <18c249b2-ce8c-435b-8d65-a1770a1f294e@arm.com> <ZeBqW04f8V4dHphn@pluto>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <ZeBqW04f8V4dHphn@pluto>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
+It will be more efficient to execute quick endio process(eg. non-sync
+overwriting case) under irq process rather than starting a worker to
+do it.
+Add a flag to control DIO to be finished inline(under irq context), which
+can be used for non-sync overwriting case.
+Besides, skip invalidating pages if DIO is finished inline, which will
+keep the same logic with dio_bio_end_aio in non-sync overwriting case.
 
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ fs/iomap/direct-io.c  | 10 ++++++++--
+ include/linux/iomap.h |  6 ++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-On 2/29/24 11:28, Cristian Marussi wrote:
-> On Thu, Feb 29, 2024 at 10:22:39AM +0000, Lukasz Luba wrote:
->>
->>
->> On 2/29/24 09:59, Lukasz Luba wrote:
->>>
->>>
->>> On 2/28/24 17:00, Sibi Sankar wrote:
->>>>
->>>>
->>>> On 2/28/24 18:54, Lukasz Luba wrote:
->>>>>
->>>>>
->>>>> On 2/27/24 18:16, Sibi Sankar wrote:
->>>>>> Register for limit change notifications if supported and use
->>>>>> the throttled
->>>>>> frequency from the notification to apply HW pressure.
->>>>
->>>> Lukasz,
->>>>
->>>> Thanks for taking time to review the series!
->>>>
->>>>>>
->>>>>> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
->>>>>> ---
->>>>>>
->>>>>> v3:
->>>>>> * Sanitize range_max received from the notifier. [Pierre]
->>>>>> * Update commit message.
->>>>>>
->>>>>> ï¿½ drivers/cpufreq/scmi-cpufreq.c | 29 ++++++++++++++++++++++++++++-
->>>>>> ï¿½ 1 file changed, 28 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/cpufreq/scmi-cpufreq.c
->>>>>> b/drivers/cpufreq/scmi-cpufreq.c
->>>>>> index 76a0ddbd9d24..78b87b72962d 100644
->>>>>> --- a/drivers/cpufreq/scmi-cpufreq.c
->>>>>> +++ b/drivers/cpufreq/scmi-cpufreq.c
->>>>>> @@ -25,9 +25,13 @@ struct scmi_data {
->>>>>> ï¿½ï¿½ï¿½ï¿½ï¿½ int domain_id;
->>>>>> ï¿½ï¿½ï¿½ï¿½ï¿½ int nr_opp;
->>>>>> ï¿½ï¿½ï¿½ï¿½ï¿½ struct device *cpu_dev;
->>>>>> +ï¿½ï¿½ï¿½ struct cpufreq_policy *policy;
->>>>>> ï¿½ï¿½ï¿½ï¿½ï¿½ cpumask_var_t opp_shared_cpus;
->>>>>> +ï¿½ï¿½ï¿½ struct notifier_block limit_notify_nb;
->>>>>> ï¿½ };
->>>>>> +const struct scmi_handle *handle;
->>>
->>> I've missed this bit here.
->>
->> So for this change we actually have to ask Cristian or Sudeep
->> because I'm not sure if we have only one 'handle' instance
->> for all cpufreq devices.
->>
->> If we have different 'handle' we cannot move it to the
->> global single pointer.
->>
->> Sudeep, Cristian what do you think?
-> 
-> I was just replying noticing this :D .... since SCMI drivers can be
-> probed multiple times IF you defined multiple scmi top nodes in your DT
-> containing the same protocol nodes, they receive a distinct sdev/handle/ph
-> for each probe...so any attempt to globalize these wont work...BUT...
-> 
-> ...this is a bit of a weird setup BUT it is not against the spec and it can
-> be used to parallelize more the SCMI accesses to disjont set of resources
-> within the same protocol (a long story here...) AND this type of setup is
-> something that it is already used by some other colleagues of Sibi working
-> on a different line of products (AFAIK)...
-> 
-> So, for these reasons, usually, all the other SCMI drivers have per-instance
-> non-global references to handle/sdev/ph....
-> 
-> ...having said that, thought, looking at the structure of CPUFReq
-> drivers, I am not sure that they can stand such a similar setup
-> where multiple instances of this same driver are probed
-> 
-> .... indeed the existent *ph refs above is already global....so it wont already
-> work anyway in case of multiple instances now...
-> 
-> ...and if I look at how CPUFreq expects the signature of scmi_cpufreq_get_rate()
-> to be annd how it is implemented now using the global *ph reference, it is
-> clearly already not working cleanly on a multi-instance setup...
-> 
-> ...now...I can imagine how to (maybe) fix the above removing the globals and
-> fixing this, BUT the question, more generally, is CPUFreq supposed to work at all in
-> this multi-probed mode of operation ?
-> Does it even make sense to be able to support this in CPUFREQ ?
-> 
-> (as an example in cpufreq,c there is static global cpufreq_driver
->   pointing to the arch-specific configured driver BUT that also holds
->   some .driver_data AND that cleraly wont be instance specific if you
->   probe multiple times and register with CPUFreq multiple times...)
-> 
->   More questions than answers here :D
-> 
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index bcd3f8cf5ea4..221715b38ce2 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -110,7 +110,8 @@ ssize_t iomap_dio_complete(struct iomap_dio *dio)
+ 	 * ->end_io() when necessary, otherwise a racing buffer read would cache
+ 	 * zeros from unwritten extents.
+ 	 */
+-	if (!dio->error && dio->size && (dio->flags & IOMAP_DIO_WRITE))
++	if (!dio->error && dio->size && (dio->flags & IOMAP_DIO_WRITE) &&
++	    !(dio->flags & IOMAP_DIO_INLINE_COMP))
+ 		kiocb_invalidate_post_direct_write(iocb, dio->size);
+ 
+ 	inode_dio_end(file_inode(iocb->ki_filp));
+@@ -122,8 +123,10 @@ ssize_t iomap_dio_complete(struct iomap_dio *dio)
+ 		 * If this is a DSYNC write, make sure we push it to stable
+ 		 * storage now that we've written data.
+ 		 */
+-		if (dio->flags & IOMAP_DIO_NEED_SYNC)
++		if (dio->flags & IOMAP_DIO_NEED_SYNC) {
++			WARN_ON_ONCE(dio->flags & IOMAP_DIO_INLINE_COMP);
+ 			ret = generic_write_sync(iocb, ret);
++		}
+ 		if (ret > 0)
+ 			ret += dio->done_before;
+ 	}
+@@ -628,6 +631,9 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+ 			*/
+ 			if (!(iocb->ki_flags & IOCB_SYNC))
+ 				dio->flags |= IOMAP_DIO_WRITE_THROUGH;
++		} else if (dio_flags & IOMAP_DIO_MAY_INLINE_COMP) {
++			/* writes could complete inline */
++			dio->flags |= IOMAP_DIO_INLINE_COMP;
+ 		}
+ 
+ 		/*
+diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+index 96dd0acbba44..f292b10028d0 100644
+--- a/include/linux/iomap.h
++++ b/include/linux/iomap.h
+@@ -382,6 +382,12 @@ struct iomap_dio_ops {
+  */
+ #define IOMAP_DIO_PARTIAL		(1 << 2)
+ 
++/*
++ * DIO will be completed inline unless sync operation is needed after io is
++ * finished.
++ */
++#define IOMAP_DIO_MAY_INLINE_COMP	(1 << 3)
++
+ ssize_t iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+ 		const struct iomap_ops *ops, const struct iomap_dio_ops *dops,
+ 		unsigned int dio_flags, void *private, size_t done_before);
+-- 
+2.39.2
 
-Thanks Cristian for instant response. Yes, indeed now we have more
-questions :) (which is good). But that's good description of the
-situation.
-
-So lets consider a few option what we could do now:
-1. Let Sibi add another global state the 'handle' but add
-    a BUG_ON() or WARN_ON() in the probe path if the next
-    'handle' instance is different than already set in global.
-    This would simply mean that we don't support (yet)
-    such configuration in a platform. As you said, we
-    already have the *ph global, so maybe such platforms
-    with multiple instances for this particular cpufreq and
-    performance protocol don't exist yet.
-2. Ask Sibi to wait with this change, till we refactor the
-    exiting driver such that it could support easily those
-    multiple instances. Then pick up this patch set.
-    Although, we would also like to have those notifications from our
-    Juno SCP reference FW, so the feature is useful.
-3. Ask Sibi to refactor his patch to somehow get the 'handle'
-    in different way, using exiting code and not introduce this global.
-
-IHMO we could do this in steps: 1. and then 2. When
-we create some mock platform to test this refactoring we can
-start cleaning it.
-
-What do you think?
-
-Regards,
-Lukasz
