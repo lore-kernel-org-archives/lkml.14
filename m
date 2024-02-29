@@ -1,174 +1,261 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABEA16FF5E;
-	Thu, 29 Feb 2024 21:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709242029; cv=fail; b=UehZfvnqWcZpLiN3w/Li1a918fM/JdO0vYtlarc109zmMC78HCSNUyjPxgyWo3cVHviWGthC9jDZDum58YVX271Yn6OL/zZn811H9frc4t9qdb6Fl800MZYhZjX2NnN2X9zfAC7K5ZcC4LV+xasgUs5EwdRUWszX1cMCLkK7qiI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709242029; c=relaxed/simple;
-	bh=mItibZ9SycnmPJz6smQB8xJlvb2fQeRH4p6BZeyBcfc=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=NXXk3qaJfnJ6ocbOhkpoiEAEpmfOnCelGnF7+cuPjztR2EOInAnO9xYzgotX7CnDzcTB84irxYETRIsiXQfINlHmP1M+xya+MWjBIetEi7Hvht9uPn16rDM0ODUOTDyE3JHxOKv35bN8xye9f98xtsI+AfFKT1LEMhg/X0np8+U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=D6+VMekF; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=AFfNQFVG; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4881710EF;
+	Thu, 29 Feb 2024 21:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709242199; cv=none; b=cpG6Sw5TXgYPP7cBjAcI+PXqYK+BNvTFG+0TRfBHIgVeYZfSTWN/T0VmuML8q1etpdKC9IheNkjSym85k9DMHjUuV9DhYbaYo5m6w5/gagC5n7loMSl+FauKQWRNOVH8LSloCrOWVWMo8m/SO39eN4/q7yut9m8ZuBSvARuvE/8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709242199; c=relaxed/simple;
+	bh=JSQSuvS3BqiY4vOYlLKAwjqAcvmXdSlmgBMi42ABiiQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d7y4tUDcqHkXPcmTwsHL+C/Dqi3h0KqGAsrEzS5IN7kRBrRbUYO1qH4XylYgCkwkOlsLoSf0iB2CKgZJDQoYiTnnICBIGM6zeyefH1jSuitc7QEivaHq8tsqgCSdn3b9o/vXO2NFqTfWrfL9d5E6ZbNrPRvCOG9mrV2/JD2ypwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ie2ajNe6; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D6+VMekF";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="AFfNQFVG"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41TGEe7A016535;
-	Thu, 29 Feb 2024 21:26:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : content-transfer-encoding : content-type :
- mime-version; s=corp-2023-11-20;
- bh=qav04GRTTBAY7EvSIOwiv3vqCt3toeX3YU+HO4NmmBg=;
- b=D6+VMekF4Z2JTUu4eK1f5hxjuqrZICwm+2psFsxWCEhyx6sRkrY3+pQnwVBsLagmX3of
- 34NMn8RVROlz+Xo1bTJSgpAzfdNYHFm+uq8O8R10TeSVvAew4Mtw7ax3h4/BQBrvBDql
- khSpDGhy60ObtgzSA/pyBIsLQ7qprjdRS6X3opdI4siNrutlZGQxdokGhpL8boldBMDP
- gUjOfbYjnkhMVNA+5c6f5Ng9ynEzOiDd2AsVuoCl4PM6AGoUp1R2UcLGywOgYhUQnGsx
- TP4mtFBuVXpTJoL+Q1pUlqBaqFPSIc1R6XLNeaRfLnmBQv6oWTfR0jryuEAdzbUJ4lto pg== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wf722pwv6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 21:26:58 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41TLGoxh022403;
-	Thu, 29 Feb 2024 21:26:58 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2100.outbound.protection.outlook.com [104.47.58.100])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wf6wbkjh1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 21:26:58 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TJ9FyOsXuaKD/EkY2sSMOqNv9KfUixmISRpDzsOZprUrZHhhrC3B3feDaKxPg0XVnYEKlNLfB6qwxqicBseJKMkdlYs9YYTbXM5xB+ZVkNwg07loBx8A2xS3Ueqz+RM4C6iCsUcMLzzgHGZZ/j5VggZnSyqTJtcgkWJV2t7ImuosfawFB7OG2ucecMjUNy51dhnCeYyhK/XYyxsy4vtd0kXav7j0dDm5u8H2+KtpbEY9VgP6rJN1ItdbJc158++k0DVTMFarBz3PipUR495kJaqjkZLSvdw4k4nUz+lKBUjgyaMhIjdNMucmVGAslkaFT5lrs64SoD/ZTvDbVMVZKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qav04GRTTBAY7EvSIOwiv3vqCt3toeX3YU+HO4NmmBg=;
- b=XMWPLQazk7ZmMA0DkRQn3whHzytEx+Uj0UnLKJ8BzBgGCUb0QPLMQuiqyrcZ8kBnSQC3DL/eY5YaRwAiCloZzT6AKu4zdVFS0L6f3kh5byDEUYInkeOiRbEmJEwcKhKivb5fHpWAScoPHJBwAIQmRW7c45UjibfJN8lUfTh5aInPwNHt8/vnYqEFEI5nngyZj7UUYAGTRFU5hRBQekeccKaBQlyk8Rn80iYHwxJEBbh81SRwXB2vZoJgccWZxN49JGbpMNHscQbG3g4ivKoCp1VsVlz7ZPo2ucL6Jy6XPYc1M41BZjDwRq17/CFrtzYrvIxHdxz6Xn42S8UgahCkYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ie2ajNe6"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcc80d6006aso1564549276.0;
+        Thu, 29 Feb 2024 13:29:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qav04GRTTBAY7EvSIOwiv3vqCt3toeX3YU+HO4NmmBg=;
- b=AFfNQFVGhfatvPhJ+LPRtuQM3GK59DhSUxNokCaXl+t0YgYbCylyJODXkywUQ3rtHcBk38VxZBmqxka9Y6GEkhBjJ/cm2KeVnsiCwgUNvrY7JoMrTinwn3TMeYaTj5ypCobu+kT+98Qcr/v0l4ShAB17DUpjqcJFqxOqFp3DhIs=
-Received: from BYAPR10MB2663.namprd10.prod.outlook.com (2603:10b6:a02:a9::20)
- by PH0PR10MB5780.namprd10.prod.outlook.com (2603:10b6:510:149::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Thu, 29 Feb
- 2024 21:26:56 +0000
-Received: from BYAPR10MB2663.namprd10.prod.outlook.com
- ([fe80::8156:346:504:7c6f]) by BYAPR10MB2663.namprd10.prod.outlook.com
- ([fe80::8156:346:504:7c6f%6]) with mapi id 15.20.7316.037; Thu, 29 Feb 2024
- 21:26:55 +0000
-From: Dongli Zhang <dongli.zhang@oracle.com>
-To: kvm@vger.kernel.org
-Cc: pbonzini@redhat.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] KVM: use KVM_HVA_ERR_BAD to check bad hva
-Date: Thu, 29 Feb 2024 13:25:22 -0800
-Message-Id: <20240229212522.34515-1-dongli.zhang@oracle.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1PR13CA0374.namprd13.prod.outlook.com
- (2603:10b6:208:2c0::19) To BYAPR10MB2663.namprd10.prod.outlook.com
- (2603:10b6:a02:a9::20)
+        d=gmail.com; s=20230601; t=1709242197; x=1709846997; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=k5wMxH4vAYTGAMz+PGH6whMCr3IUt1BUKWwQdJ4jqjo=;
+        b=ie2ajNe60SOO/5XVW2TBw9Q2cpuuWDvVk/ain6zf4vu/ZLqhhY/XF8XK+NNLfECi84
+         lNLZlkGmX+a+630n53PPjE0f12xTcYT8u14Nd0noQIroenh3a9LgzFvv/ZKf7EDueKuO
+         OjX7JoBh5cuHVnOKkt/nwSPKWLYHakgPSAeTYBi+Ga/Goq+we0p80mwIDG4HV1LglSAJ
+         Uq50ev8hdxLYHybcfVuS8XLD2W0ZJyoEBP/WbyzNVH2DtvJaUu5NKKrdw9ej3d1F4VoS
+         +TcbxCq22d1/Qtnbx+2J+6U9+8ZkCX9os+rvsykw+c5Ju1uxIWIUj3hJb4Lzx7u2RYP/
+         D4rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709242197; x=1709846997;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k5wMxH4vAYTGAMz+PGH6whMCr3IUt1BUKWwQdJ4jqjo=;
+        b=LWC+bMMet7ZWyzniF/Y5l4F3QrNaDwv/nJZBzjs8qwthFXLDDw+XXjNHpL+/tV9axO
+         UYZIwPv0wTP83nc8YVOpRTZi4lIWh07R+ek8pJGOn6n2HnNlmz3LPMXMBIm0tXSYcmHU
+         zmxPF2N4tY5QUq70rObZHSEBZT/LRI1kkZzKtKr/pqitF3erhHLNmQY5NzHNAObyAg1E
+         CihzH1OdCGaQoH3jpAYzF+yvkiUIC3RgX2uLqa9yi4fPPx0RheEu4Tleie9DfsoP6PBX
+         IECm+qOfSK8ggQy3Lfnr3JmvlTT8D+l0ECOi5Z1E1ktxi6jMkQGAEXJOga+BzKPswNM7
+         KYsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXEk/zGj2rAKo/tkdGJuYT5l5aL7DgaUW3rkTaVPXHmC0sxzCKSwUlFGVySm4WbY174ELbg4xVsd24zA6nV/BOoEgP8gyMFj2C4LN77TV9MQRrC+E2LcQ0bk8g3rb/H4zrxwr4smy9BQ2zkLkbWNPULtOtMhg5MSAd7POhB4z1gg8+O8Q==
+X-Gm-Message-State: AOJu0YwCRNZUT6OujxYQr531jov9PlMhUZTH2dMLg3ahjHhpTLYswYlM
+	M0lBlAx6q5ZciRPb5X+LiibWqoBUkulAnQhRfgy1nWzsyOOp9KWr6VJrTMEot7+S0cBb1SxDTCz
+	YtddgPduTlr2L7cJSZ1le8tInaHE=
+X-Google-Smtp-Source: AGHT+IGJEqoh4kjQJcuPZHN/0agzOnRCd/TPqM9BiXAsCE07qzvqycF30395DpFhfdkJ1SxZn3C4ld3yFmxmRXDP60I=
+X-Received: by 2002:a25:16c5:0:b0:dcc:f0a:e495 with SMTP id
+ 188-20020a2516c5000000b00dcc0f0ae495mr3238209ybw.3.1709242197196; Thu, 29 Feb
+ 2024 13:29:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR10MB2663:EE_|PH0PR10MB5780:EE_
-X-MS-Office365-Filtering-Correlation-Id: a36ee3b5-a49d-4e9e-778e-08dc396d2771
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	nVjgtccpH4KOykuWTz6Xbrm3s3zLyLncBP81m9ko/Gk3+6Sm1zkB46Y79dicr6Mz4rwslIB7k6OBSua9BzV5QQ2ytsQ7Z6D9M8j2aaUmwvG/hu/+Z3hmw+/QXM/LRwydO5idIVp4estXqtqe/a+e5uNKR3woB0nfRMSlymQChyVcNOqHlPzk6MgOQNuSRLe3SkIMTI4+Lwn+w3YBnOuKJMP+1R+DtsS9aN2T9LkZx79AHGv7WfcAUjkSbYePtxEIM6m3KHKIflIEAZDNmCTHuAKP3Z7ntN75pq16A91iiURNvYzaLx5l1aonxAOckx/XUKMQIepYa3iNOnagAT4rH8PjmPjniqKVkW7hKRr2aaei0GzcmOGYV2RU6JOOSvK2QNYo7WfkRBWt7sW9DHLJd4w3iRjSwum8HfLXoXhURSQ90ky+jJq1bSP1+Jp6weBb6BDVEgcJCuYT5HqQdl92HcT1ysrNjBbtV1MXFt1C5gJN2M2HAXwWCukOnT+kjkCe2JnDBL4Ae3zLEy6YXQmvkxLLeKcBWPlpxZqejsH2L/dZNGbLiThOwWQbtL4Y3+9+UtOCequzU8LY+74CrBq06K/+DTOXLR0l59cuqt8Lw6zSN4mJJXaE2AzaFRFeXeIRGLBVPIqo+xyWaZ1O4gA5SQ==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2663.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?JhfawYs82+rPd+ZLqcKX7jtVOp1hrv0CHuEmH32mSGP2qClD2hb5DkBh5N+f?=
- =?us-ascii?Q?teY03Yz1QeSDvBRgdHtdAP/BxO2pFVFcg0tZkr79qqtNXre+BmjhvahfUrwR?=
- =?us-ascii?Q?jDFKt037kX9Fth8xUz8v1o5oQoNMLfOWDJLmHIOvKJYKi4NZZCN+1eP5WZ31?=
- =?us-ascii?Q?rcdlY0tK8eRysLpEiW95aQWQ6vqjxPt9C5VYs21hvR51QzVBpvKxJpriJLSa?=
- =?us-ascii?Q?jmVSEGWnEPBcJC7mHY45h2uqqbLUP2UI0d2u66C3lP9lB2Jp4VXQmMAO5MId?=
- =?us-ascii?Q?ppMXANS7+HCrTsQnqMMab9Kpj9waRDdduWP1RzimAg2g8N6fJxSnt3MBWL+B?=
- =?us-ascii?Q?G15Q0xjXU4cCKwlQDVRiyysS2sWc3ZHb0tQ9ennIbHNFBZSGy4RFLRSngz3Z?=
- =?us-ascii?Q?N80hTEVDij8NYMC5UytevphaAuePlmDDGqKUqU5doP+M2e6RvjyTb3PHjaG8?=
- =?us-ascii?Q?VnOlExhy6PL2seuElRm8oEhs3W2nsuJ401AU4svrM43/+4Bpc7WE8H8boPJu?=
- =?us-ascii?Q?PF0bi/NJFNEV5iHA5oM2QGoFyeRUXRLsEhw8miiGR171ER31TjCc5JeO+vDu?=
- =?us-ascii?Q?VBZjKkrPeIwhgNGbWJDX4L37mFFM79+M4MPod1l5CV9TokI3DI8Pq1PD/FvF?=
- =?us-ascii?Q?di7Ur8kjXHIRFKc3AVnKUpSb45x16WxCnQ0TUscExlV7/ufqB37zenxRAXNM?=
- =?us-ascii?Q?oWwVGruAsWeZE6jmp2pCTZ5/kzo/oNHSuKCMR/VPOYTgkFmlV4tD0g4NklLG?=
- =?us-ascii?Q?O60f3/UlxiEjfGEAzjKvxMF2DetrSUT+uLhMCbGQuaiQpB7qycr1CMXNZQNY?=
- =?us-ascii?Q?aDiTA6xDU56Ixez6SpwowL2SQzY7VCg3qUlo38xk7h1Bb5BcpY9RkN+GdgkW?=
- =?us-ascii?Q?gUePTQpDlWmHj2PtaYKdRc+CrvtljceSG7i10mIn3iC9RJlzGH0ooERr1DZJ?=
- =?us-ascii?Q?ove3cl093WevsHYMtxePl/P13pCSKodcWSpCiMEGmgQ1rov0Ux7gQznyk5iO?=
- =?us-ascii?Q?OEKgxwUhU8+xeXG29QswHCQSZPxTfdRAkhIMZM8WS25bKCvQu0eAH0fWoGok?=
- =?us-ascii?Q?sQs+Ie5u4e4jkLfNzH80/YNWaQnj6PoskVq8HwdMXPfaRfZrRccvpynZjVQr?=
- =?us-ascii?Q?PPPlY07PfnR2fGTgsj/WcuBhHgdBLNP/qDQlq8pD5ZO7DSgAB93Nyf6om0bM?=
- =?us-ascii?Q?OyhhvzbKgs5kFdvrSHwD+VGfQIrDPhp4buRzdvZAZ3d8AnIx+pYC6u9/VAhk?=
- =?us-ascii?Q?HO9SLPGYmszmSgzufZH9zPjMZS0jnNDrfmJNCCkUQk/BgviTmoKDIT3pYvKw?=
- =?us-ascii?Q?JO6S8qOLVOZDqplumKcOwHGegu4NEYC1apyIxc65eNlu7w9To47K4FQR8qXx?=
- =?us-ascii?Q?osBe1hYMLMQuqwtothtZ2+eVuSLzuMH6wDBCIKCc9YQkkKNa3kGTniB2SBvs?=
- =?us-ascii?Q?ZPoqFnQT2AeHNG/OiY3R+r68872/jrfrFmYetxe4/sEMtyH0VHsunqrdaCkC?=
- =?us-ascii?Q?VQNFdsajsS65FefkDyVjQhC4ethd9B4/inuDNEFn5BlAvpida0q6oNgrR6RO?=
- =?us-ascii?Q?JBE1bwDxrLxG5mXpfg50RUGhWwnYIoPgrzAHcnpg?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	IxnRObSBJgILAVJpRuU1+zehmzug8CG4zEo3U4wXScMnqLrixUq1pZAv4h+zMPAgcfmtvoAyoQ8E7OFA+2+6i9O67aq8cBREDr1taH5Snm7Ie3nk9zlxo7CcVzAbq7PradK/b5FTYyWmkewwJtIsOVmz7eAePFp1AZOxDfabCq6gDp63l2cvr8KCT8ywB4UQjHGtdVp5mBJO3iNYjW1uNfJd0xxaFhqmykgHLi9Zjwlisc+dOHQohNTMaRgoUiET1iW4wDBPr9tj7gsEM2zR9qALIvRAVESLboMK14VChTdzJJK7kGj3ViG4k+4zaT1PgiaJILIGK4KxhyaLwfivmxChfcCMrJVMjLEjFP9NrBcik2x/9Z40qdt+cM1cDkKnGvjxVeyhnJWWsu2M2Q5IpbR5B2Xn6vs4cnXZ2rtTesq+TAtwKT9GJ3M0nKmHOtDdsQja5qmbwHjL88j3XqVV/Qkq4Cw1KoY5+I+1imVdIBysm/5f4gBvfAIZCpPWgU7rnnGyvMeXP8ONaxJ5YUU4GJCSVqt3KP7NTWGz2xh/aH37vU72uRQ/dbReq3EE0wFnNMu0bF34c2Vx2k3MPcnZxTSQMOAx389g7t7EEN0aDEk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a36ee3b5-a49d-4e9e-778e-08dc396d2771
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2663.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 21:26:55.6935
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 16bSV4aV3IrkH4Rpb+PsOX5RgIdhzGKqu20dYiWWieGI1sbi5C/KM71SvdNZNaJUuSa2h0PquQcxLOUQUdwFmg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5780
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-29_06,2024-02-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 adultscore=0 mlxscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402290167
-X-Proofpoint-ORIG-GUID: twz0L8ZavW30sRfHmuyHXuv1x5hX3LOd
-X-Proofpoint-GUID: twz0L8ZavW30sRfHmuyHXuv1x5hX3LOd
+References: <20240131182653.2673554-1-tmaimon77@gmail.com> <20240131182653.2673554-4-tmaimon77@gmail.com>
+ <74e003c6d80611ddd826ac21f48b4b3a.sboyd@kernel.org> <CAP6Zq1g5gwXvYzO5fnHxG-6__gSCpNBY7VeEPyr4Qtijya6EfQ@mail.gmail.com>
+ <8acf846e767884978f3bb98646433551.sboyd@kernel.org>
+In-Reply-To: <8acf846e767884978f3bb98646433551.sboyd@kernel.org>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Thu, 29 Feb 2024 23:29:46 +0200
+Message-ID: <CAP6Zq1htKQ5v0tH9HGRejnKwJ5ZauUWG_CzYUKegkVL4Ek8UxA@mail.gmail.com>
+Subject: Re: [PATCH v23 3/3] clk: npcm8xx: add clock controller
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: benjaminfair@google.com, joel@jms.id.au, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, robh+dt@kernel.org, tali.perry1@gmail.com, 
+	venture@google.com, yuenn@google.com, openbmc@lists.ozlabs.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Replace PAGE_OFFSET with KVM_HVA_ERR_BAD, to facilitate the cscope when
-looking for where KVM_HVA_ERR_BAD is used.
+Hi Stephen,
 
-Every time I use cscope to query the functions that are impacted by the
-return value (KVM_HVA_ERR_BAD) of __gfn_to_hva_many(), I may miss
-kvm_is_error_hva().
+Thanks for your reply.
 
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
----
- include/linux/kvm_host.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, 29 Feb 2024 at 00:48, Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Tomer Maimon (2024-02-25 10:00:35)
+> > Hi Stephen,
+> >
+> > On Thu, 22 Feb 2024 at 07:58, Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Tomer Maimon (2024-01-31 10:26:53)
+> > > > diff --git a/drivers/clk/clk-npcm8xx.c b/drivers/clk/clk-npcm8xx.c
+> > > > new file mode 100644
+> > > > index 000000000000..eacb579d30af
+> > > > --- /dev/null
+> > > > +++ b/drivers/clk/clk-npcm8xx.c
+> > > > @@ -0,0 +1,509 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/*
+> > > > + * Nuvoton NPCM8xx Clock Generator
+> > > > + * All the clocks are initialized by the bootloader, so this driver allows only
+> > > [...]
+> > > > +
+> > > > +/* external clock definition */
+> > > > +#define NPCM8XX_CLK_S_REFCLK   "refclk"
+> > > > +
+> > > > +/* pll definition */
+> > > > +#define NPCM8XX_CLK_S_PLL0     "pll0"
+> > > > +#define NPCM8XX_CLK_S_PLL1     "pll1"
+> > > > +#define NPCM8XX_CLK_S_PLL2     "pll2"
+> > > > +#define NPCM8XX_CLK_S_PLL_GFX  "pll_gfx"
+> > > > +
+> > > > +/* early divider definition */
+> > > > +#define NPCM8XX_CLK_S_PLL2_DIV2                "pll2_div2"
+> > > > +#define NPCM8XX_CLK_S_PLL_GFX_DIV2     "pll_gfx_div2"
+> > > > +#define NPCM8XX_CLK_S_PLL1_DIV2                "pll1_div2"
+> > > > +
+> > > > +/* mux definition */
+> > > > +#define NPCM8XX_CLK_S_CPU_MUX     "cpu_mux"
+> > > > +
+> > > > +/* div definition */
+> > > > +#define NPCM8XX_CLK_S_TH          "th"
+> > > > +#define NPCM8XX_CLK_S_AXI         "axi"
+> > >
+> > > Please inline all these string #defines to the place they're used.
+> > The version V21 you mention using define only when the definition is
+> > used more than once
+> > https://www.spinics.net/lists/kernel/msg5045826.html
+> > Should I remove all the string definitions and add the string to the array?
+>
+> If it's a clk name for a clk registered in this file it should be
+> inlined. Is that the case for everything besides refclk? And even refclk
+> could be inlined so that we don't have to jump to the definition of a
+> string.
+I will add the string in the clock arrays and remove all the string definitions.
+>
+> > > > +
+> > > > +static unsigned long npcm8xx_clk_div_get_parent(struct clk_hw *hw,
+> > > > +                                               unsigned long parent_rate)
+> > > > +{
+> > > > +       struct npcm8xx_clk *div = to_npcm8xx_clk(hw);
+> > > > +       unsigned int val;
+> > > > +
+> > > > +       regmap_read(div->clk_regmap, div->offset, &val);
+> > > > +       val = val >> div->shift;
+> > > > +       val &= clk_div_mask(div->width);
+> > > > +
+> > > > +       return divider_recalc_rate(hw, parent_rate, val, NULL, div->flags,
+> > > > +                                  div->width);
+> > > > +}
+> > > > +
+> > > > +static const struct clk_ops npcm8xx_clk_div_ops = {
+> > > > +       .recalc_rate = npcm8xx_clk_div_get_parent,
+> > > > +};
+> > > > +
+> > > > +static int npcm8xx_clk_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +       struct device_node *parent_np = of_get_parent(pdev->dev.of_node);
+> > >
+> > > The parent of this device is not a syscon.
+> > Once I have registered the map that handles both reset and the clock
+> > in general is syscon, this is why we will modify the DTS so the clock
+> > and the reset will be under syscon father node
+> >                 sysctrl: system-controller@f0801000 {
+> >                         compatible = "syscon", "simple-mfd";
+> >                         reg = <0x0 0xf0801000 0x0 0x1000>;
+> >
+> >                         rstc: reset-controller {
+> >                                 compatible = "nuvoton,npcm845-reset";
+> >                                 reg = <0x0 0xf0801000 0x0 0xC4>;
+> >                                 #reset-cells = <2>;
+> >                                 nuvoton,sysgcr = <&gcr>;
+> >                         };
+> >
+> >                         clk: clock-controller {
+> >                                 compatible = "nuvoton,npcm845-clk";
+> >                                 #clock-cells = <1>;
+> >                                 clocks = <&refclk>;
+> >                                 clock-names = "refclk";
+> >                         };
+> >                 };
+> > You can see other drivers that using the same method like
+> > https://elixir.bootlin.com/linux/v6.8-rc5/source/Documentation/devicetree/bindings/clock/socionext,uniphier-clock.yaml
+>
+> You will need a similar file like
+> Documentation/devicetree/bindings/soc/socionext/socionext,uniphier-perictrl.yaml
+> then to describe the child nodes.
+I can do it.
+>
+> Socionext may not be the best example to follow. I generally try to
+> avoid syscon and simply put #reset-cells and #clock-cells in the node
+If I remove syscon I can't use syscon_node_to_regmap function, What
+should I use If I remove syscon? auxiliary bus? something else?
+> for the device. You can use the auxiliary bus to register drivers for
+> clk and reset and put them into the resepective driver directories.
+I little bit confused, what is an auxiliary bus to register drivers,
+can you provide me an example?
+> Avoid syscon means random drivers can't reach into the device with a
+> regmap handle and read/write registers that they're not supposed to.
+Indeed, but the drivers could use the reset and clock memory map only
+if the module is also a child node.
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 7e7fd25b09b3..4dc0300e7766 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -143,7 +143,7 @@ static inline bool is_noslot_pfn(kvm_pfn_t pfn)
- 
- static inline bool kvm_is_error_hva(unsigned long addr)
- {
--	return addr >= PAGE_OFFSET;
-+	return addr >= KVM_HVA_ERR_BAD;
- }
- 
- #endif
--- 
-2.34.1
+Please let me know what is your preferred way to handle it:
+1. stick with syscon and upstream-defined documentation for the rst clk syscon.
+2. avoid syscon and use an auxiliary bus, appreciate if you could give
+me an example of how it should be done.
+3. Avoid sycon and handle it differently.
+>
+> > >
+> > > > +       struct clk_hw_onecell_data *npcm8xx_clk_data;
+> > > > +       struct device *dev = &pdev->dev;
+> > > > +       struct regmap *clk_regmap;
+> > > > +       struct clk_hw *hw;
+> > > > +       unsigned int i;
+> > > > +
+> > > > +       npcm8xx_clk_data = devm_kzalloc(dev, struct_size(npcm8xx_clk_data, hws,
+> > > > +                                                        NPCM8XX_NUM_CLOCKS),
+> > > > +                                       GFP_KERNEL);
+> > > > +       if (!npcm8xx_clk_data)
+> > > > +               return -ENOMEM;
+> > > > +
+> > > > +       clk_regmap = syscon_node_to_regmap(parent_np);
+> > > > +       of_node_put(parent_np);
+> > >
+> > > Is there another binding update that is going to move this node to be a
+> > > child of the syscon?
+> > >
+> > >                 gcr: system-controller@f0800000 {
+> > >                         compatible = "nuvoton,npcm845-gcr", "syscon";
+> > >                         reg = <0x0 0xf0800000 0x0 0x1000>;
+> > >                 };
+> > No, sorry but I'm not going to use the GCR node the handle the clock
+> > and reset modules, the GCR has different memory space.
+> > the clock driver will have the following device tree
+>
+> What does the reset driver use the CGR node for? The driver looks like
+> it's using it to control USB phy resets.
+Yes, the USB PHY reset is handled through the GCR registers.
+>
+> >                sysctrl: system-controller@f0801000 {
+> >                         compatible = "syscon", "simple-mfd";
+> >                         reg = <0x0 0xf0801000 0x0 0x1000>;
+> >
+> >                         rstc: reset-controller {
+> >                                 compatible = "nuvoton,npcm845-reset";
+> >                                 reg = <0x0 0xf0801000 0x0 0xC4>;
+>
+> This isn't a valid reg property for a child node like this.
+O.K.
+>
+> >                                 #reset-cells = <2>;
+> >                                 nuvoton,sysgcr = <&gcr>;
+> >                         };
+> >
+> >                         clk: clock-controller {
+> >                                 compatible = "nuvoton,npcm845-clk";
+> >                                 #clock-cells = <1>;
+> >                                 clocks = <&refclk>;
+> >                                 clock-names = "refclk";
+> >                         };
+> >                 };
 
+Appreciate your guidance!
+
+Thanks,
+
+Tomer
