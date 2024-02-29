@@ -1,219 +1,78 @@
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB61F4F205
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA7D50A63;
+	Thu, 29 Feb 2024 08:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709196053; cv=none; b=ulDq/p5U9u8QfZrtc8A6q6TMIBMBDHdoJCf+HQekiiOgE8hbbSw165MqxvrdWQXowpKmMDUISQgwWJHXmBlYIOgnoHSsjKe3r4P7EiotUTVp4JWhRGtUcG4VgVMPnZljgJALBWLxlKxT2Nx+wWNsJxvkmjRveuH14WXiCcI9+g4=
+	t=1709196083; cv=none; b=ijjhR7wqG4ke6DmZbRm2hWTL3WtC6SJyf9jaTimldipDJa2NNIPcBRrYLU4DUbQ6SszXQHLi6WtLOW0o6u0/atO3ztdHiAoiY73rdC0k7JzqEKBoDdVD/IqTol7Z4kmxwpNQat0+EDRpQQ7OI0joNaH3qAuhrkEN6P3AysDwg14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709196053; c=relaxed/simple;
-	bh=FLBMpOnUYTtHFFdZlsSLuXW6H+PMwcHf+HhPg0BQiiU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dcdJDY2SP3fFBwHPE7NO77R0FRGtjpqO5ERa4jAW3CYfGPjmWht2fwiz3FC05tqPm3KetvNGaDW1XYix/dWEDTMLdmymwXTsA+af2l5jZRIV1HNQhtw4MKgPq5mkzavxJIEMHzNm+SaImwokzZuB4wHwEijMxvrnlrTda2SMwFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1709196046-1eb14e0c7c4cd80001-xx1T2L
-Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx2.zhaoxin.com with ESMTP id IFq8M5OlV5QskFli (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 29 Feb 2024 16:40:46 +0800 (CST)
-X-Barracuda-Envelope-From: WeitaoWang-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHMBX1.zhaoxin.com
- (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 29 Feb
- 2024 16:40:46 +0800
-Received: from [10.29.8.21] (10.29.8.21) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 29 Feb
- 2024 16:40:44 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Message-ID: <bb269ab0-128b-1988-acf1-8df05f08cf86@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.21
-Date: Fri, 1 Mar 2024 00:40:43 +0800
+	s=arc-20240116; t=1709196083; c=relaxed/simple;
+	bh=03KT88bs5CPFUzGWiSf0JoK4aabPHEcPRG/J8ct3YMs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UoSXKS7WiStDvQreBKx7yXhbaUIjvyU0L+AT6svNTzb2/NCaAmm2eGLIaphbvCfViauj9YXJziS2xynvQ7rpfffhGcgThcEwvova5VFFvVyR2KaZvOkgNP7NM5KlpkLzQorFvUtOIWuSBwG8apBPbDkQ77PIZAu8PMWt4GIvDuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gQXMnted; arc=none smtp.client-ip=45.254.50.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gQXMnted"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=hyAxN
+	nJEjaEeWu++V1hIX4/hQ1ibrMzym3D/Hwm9ZGQ=; b=gQXMntedUhlzrlxQ4uEv6
+	zKmC6QNXfalg9kKuLxySTnTzIws33S1WybuoCtsfhXs348FFRWVuoVzqZKNsMYd0
+	qiRt7N23hA4nB/Qprz6wF1C0HHgwGh5/DsMJFhZ6UlhZMocoNO4j5+W1YUxlSpSL
+	vOWw3irxW37MRHfIg31r1I=
+Received: from WH-D-007635B.QUECTEL.COM (unknown [223.76.229.213])
+	by gzga-smtp-mta-g0-4 (Coremail) with SMTP id _____wD33oYhQ+BloLRsGg--.37440S2;
+	Thu, 29 Feb 2024 16:41:07 +0800 (CST)
+From: clancy_shang@163.com
+To: marcel@holtmann.org,
+	johan.hedberg@gmail.com,
+	luiz.dentz@gmail.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhongjun.yu@quectel.com,
+	Clancy Shang <clancy.shang@quectel.com>
+Subject: [PATCH] Bluetooth: mgmt: Fix wrong param be used
+Date: Thu, 29 Feb 2024 16:40:59 +0800
+Message-Id: <20240229084059.895730-1-clancy_shang@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2] USB:UAS:return ENODEV when submit urbs fail with
- device not attached.
-Content-Language: en-US
-X-ASG-Orig-Subj: Re: [PATCH v2] USB:UAS:return ENODEV when submit urbs fail with
- device not attached.
-To: Oliver Neukum <oneukum@suse.com>, <stern@rowland.harvard.edu>,
-	<gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-	<usb-storage@lists.one-eyed-alien.net>
-CC: <WeitaoWang@zhaoxin.com>, <stable@vger.kernel.org>
-References: <20240228111521.3864-1-WeitaoWang-oc@zhaoxin.com>
- <e8c4e8a3-bfc3-463f-afce-b9f600b588b2@suse.com>
- <07e80d55-d766-1781-ffc9-fab9ddcd33e3@zhaoxin.com>
- <49a365a7-199a-42cd-b8d3-86d72fe5bca6@suse.com>
- <0b0eefa5-71b6-dc08-d103-72b9aebd9237@zhaoxin.com>
- <9263b77e-9ebe-4987-bf7f-8f9fafcf06b3@suse.com>
-From: "WeitaoWang-oc@zhaoxin.com" <WeitaoWang-oc@zhaoxin.com>
-In-Reply-To: <9263b77e-9ebe-4987-bf7f-8f9fafcf06b3@suse.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
-X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
-X-Barracuda-Start-Time: 1709196046
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 4700
-X-Barracuda-BRTS-Status: 0
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: 1.09
-X-Barracuda-Spam-Status: No, SCORE=1.09 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=DATE_IN_FUTURE_06_12, DATE_IN_FUTURE_06_12_2
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.121476
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
-	0.01 DATE_IN_FUTURE_06_12   Date: is 6 to 12 hours after Received: date
-	3.10 DATE_IN_FUTURE_06_12_2 DATE_IN_FUTURE_06_12_2
+X-CM-TRANSID:_____wD33oYhQ+BloLRsGg--.37440S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKrW7WF4rWw1UWF1rXFWUArb_yoWDZFXEgF
+	409ay7uF4UXryvyF4Y93WrWr1Sya4a9Fs7Xr9xKrWxAr98Gr1UuFn7AF9xJFn3uanxZrn7
+	Zr4DXF4F9w409jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU01q2tUUUUU==
+X-CM-SenderInfo: xfod0ux1bvxtlqj6il2tof0z/1tbisAiLuGV4H-ePSAABs4
 
-On 2024/2/29 16:08, Oliver Neukum wrote:
-> 
+From: Clancy Shang <clancy.shang@quectel.com>
 
-> On 29.02.24 12:19, WeitaoWang-oc@zhaoxin.com wrote:
-> 
->> When alloc urb fail in the same function uas_submit_urbs,
->> whether we should replace SCSI_MLQUEUE_DEVICE_BUSY with generic
->> error code -ENOMEM? Such like this:
->>
->> @@ -572,7 +571,7 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
->>           cmdinfo->data_in_urb = uas_alloc_data_urb(devinfo, GFP_ATOMIC,
->>                               cmnd, DMA_FROM_DEVICE);
->>           if (!cmdinfo->data_in_urb)
->> -            return SCSI_MLQUEUE_DEVICE_BUSY;
->> +            return -ENOMEM;
->>           cmdinfo->state &= ~ALLOC_DATA_IN_URB;
->>       }
-> 
-> Hi,
-> 
-> yes, and then you translate in one central place for the SCSI layer
-> into DID_ERROR or DID_NO_CONNECT.
-> 
+if the BlueZ library calls the API interface "adapter_set_device_flags",
+which sends the "MGMT_OP_SET_DEVICE_FLAGS" opcode to the kernel, but
+does not receive the callback message "MGMT_EV_DEVICE_FLAGS_CHANGED"
+from the kernel. it fixs this bug.
 
-OK, I'll submit a new version after you help to review the following patch.
+Signed-off-by: Clancy Shang <clancy.shang@quectel.com>
+---
+ net/bluetooth/mgmt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 9dd815b6603f..c74abdf3618f 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -5177,7 +5177,7 @@ static int set_device_flags(struct sock *sk, struct hci_dev *hdev, void *data,
+ 
+ done:
+ 	if (status == MGMT_STATUS_SUCCESS)
+-		device_flags_changed(sk, hdev, &cp->addr.bdaddr, cp->addr.type,
++		device_flags_changed(NULL, hdev, &cp->addr.bdaddr, cp->addr.type,
+ 				     supported_flags, current_flags);
+ 
+ 	return mgmt_cmd_complete(sk, hdev->id, MGMT_OP_SET_DEVICE_FLAGS, status,
+-- 
+2.25.1
 
-diff --git a/drivers/usb/storage/uas.c b/drivers/usb/storage/uas.c
-index 9707f53cfda9..689396777b6f 100644
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -533,7 +533,7 @@ static struct urb *uas_alloc_cmd_urb(struct uas_dev_info *devinfo, 
-gfp_t gfp,
-   * daft to me.
-   */
-
--static struct urb *uas_submit_sense_urb(struct scsi_cmnd *cmnd, gfp_t gfp)
-+static int uas_submit_sense_urb(struct scsi_cmnd *cmnd, gfp_t gfp)
-  {
-  	struct uas_dev_info *devinfo = cmnd->device->hostdata;
-  	struct urb *urb;
-@@ -541,16 +541,15 @@ static struct urb *uas_submit_sense_urb(struct scsi_cmnd *cmnd, 
-gfp_t gfp)
-
-  	urb = uas_alloc_sense_urb(devinfo, gfp, cmnd);
-  	if (!urb)
--		return NULL;
-+		return -ENOMEM;
-  	usb_anchor_urb(urb, &devinfo->sense_urbs);
-  	err = usb_submit_urb(urb, gfp);
-  	if (err) {
-  		usb_unanchor_urb(urb);
-  		uas_log_cmd_state(cmnd, "sense submit err", err);
-  		usb_free_urb(urb);
--		return NULL;
-  	}
--	return urb;
-+	return err;
-  }
-
-  static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-@@ -562,9 +561,9 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-
-  	lockdep_assert_held(&devinfo->lock);
-  	if (cmdinfo->state & SUBMIT_STATUS_URB) {
--		urb = uas_submit_sense_urb(cmnd, GFP_ATOMIC);
--		if (!urb)
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+		err = uas_submit_sense_urb(cmnd, GFP_ATOMIC);
-+		if (err)
-+			return err;
-  		cmdinfo->state &= ~SUBMIT_STATUS_URB;
-  	}
-
-@@ -572,7 +571,7 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-  		cmdinfo->data_in_urb = uas_alloc_data_urb(devinfo, GFP_ATOMIC,
-  							cmnd, DMA_FROM_DEVICE);
-  		if (!cmdinfo->data_in_urb)
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+			return -ENOMEM;
-  		cmdinfo->state &= ~ALLOC_DATA_IN_URB;
-  	}
-
-@@ -582,7 +581,7 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-  		if (err) {
-  			usb_unanchor_urb(cmdinfo->data_in_urb);
-  			uas_log_cmd_state(cmnd, "data in submit err", err);
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+			return err;
-  		}
-  		cmdinfo->state &= ~SUBMIT_DATA_IN_URB;
-  		cmdinfo->state |= DATA_IN_URB_INFLIGHT;
-@@ -592,7 +591,7 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-  		cmdinfo->data_out_urb = uas_alloc_data_urb(devinfo, GFP_ATOMIC,
-  							cmnd, DMA_TO_DEVICE);
-  		if (!cmdinfo->data_out_urb)
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+			return -ENOMEM;
-  		cmdinfo->state &= ~ALLOC_DATA_OUT_URB;
-  	}
-
-@@ -602,7 +601,7 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-  		if (err) {
-  			usb_unanchor_urb(cmdinfo->data_out_urb);
-  			uas_log_cmd_state(cmnd, "data out submit err", err);
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+			return err;
-  		}
-  		cmdinfo->state &= ~SUBMIT_DATA_OUT_URB;
-  		cmdinfo->state |= DATA_OUT_URB_INFLIGHT;
-@@ -611,7 +610,7 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-  	if (cmdinfo->state & ALLOC_CMD_URB) {
-  		cmdinfo->cmd_urb = uas_alloc_cmd_urb(devinfo, GFP_ATOMIC, cmnd);
-  		if (!cmdinfo->cmd_urb)
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+			return -ENOMEM;
-  		cmdinfo->state &= ~ALLOC_CMD_URB;
-  	}
-
-@@ -621,7 +620,7 @@ static int uas_submit_urbs(struct scsi_cmnd *cmnd,
-  		if (err) {
-  			usb_unanchor_urb(cmdinfo->cmd_urb);
-  			uas_log_cmd_state(cmnd, "cmd submit err", err);
--			return SCSI_MLQUEUE_DEVICE_BUSY;
-+			return err;
-  		}
-  		cmdinfo->cmd_urb = NULL;
-  		cmdinfo->state &= ~SUBMIT_CMD_URB;
-@@ -698,7 +697,7 @@ static int uas_queuecommand_lck(struct scsi_cmnd *cmnd)
-  	 * of queueing, no matter how fatal the error
-  	 */
-  	if (err == -ENODEV) {
--		set_host_byte(cmnd, DID_ERROR);
-+		set_host_byte(cmnd, DID_NO_CONNECT);
-  		scsi_done(cmnd);
-  		goto zombie;
-  	}
-
-Thanks and best regards,
-weitao
