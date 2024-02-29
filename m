@@ -1,131 +1,162 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B38F23A2
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 00:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C22C107B3
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 00:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709167091; cv=none; b=NCvKRnMi20egUzlJ/8DBY96uUD6ZGqQEDpy5PE+OI1aRd+6nFiIcyqDOxR3Zw3zAwgo/IuMNSPjJ856BxQ0zbvhWwKLLMs+D3V50mT6VCc5arbXJwdqCyQXy9srYfxPZUVpUsog0MvfbjN7LB33pXxi3IjXnsy5BsaDf6/uAHm4=
+	t=1709167104; cv=none; b=Cy9M4Un8BLM502htmchVmbep77Olxq57Tz/ZVm37CZ/uWfZRMxAIr4OwDy++WILTBIwICIODjYagtKjSpLdn7Vw7VjEP/U3wfewAUBmferbLlCKa4qhdctY9EbeqresFBH8q8w42r/0aKlEdR1SgivDTmoz0swi4QDPtjMNtHtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709167091; c=relaxed/simple;
-	bh=zdmDmZBOd3SFC0jwS2ekHtoLe9Wo02yDanRCzI2UXqI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mf0XlNiVQEW+vIMG3PpIiIarGot60Oojo6Ve5dw09LYlpWHPHprLzBuyCFQruaSoUVEZp9uUU65Yp3+P0iLl160XgS/jg44egEQTtwHY5u+hztvUSHaR9Pur8YnsLz7zpSEiX9Q8hICX4W5O1PSoy9t0UfOX8YY3ZuS2G1jkM3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XeuCFgpw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709167104; c=relaxed/simple;
+	bh=XkZeZaotjRY9f/JW79nEwtvQRPftr9TtSxowRUjsPuE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a5TA3MQ9aWDJuIv/B2WPVAGESZqRmnxjtRTLS1DGCyHt9nUKgBXzaphihksgteX0FBs6VGqCbAatZBSn3HV2/ISdkOFRT8Hl84c3ox8SbP6FmZ0vglt3FqrnhHoX4u5oiZ2vYFwkbRNhXNQozVydpBU8h7j0jovrwSHh+Dzoa7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iTo4w3fv; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XeuCFgpw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709167088;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YfpEyRdMnEBOuDbLwr2jbhFRxgF9v/FYFNIfm+Be1aI=;
-	b=XeuCFgpwa9I9oXVYWNbBgIgfyjQ0YMdJ65GGR6cH+PPZcrrE82taBRBRRT1bVw7VVNWeVy
-	XUbrNKEqGfRARbdRM9OPdOGLNBTU2b94wq+RPo9MEhV/M9Mlz4GeKGvH8c5f42/9VITnP+
-	B41bPDruhXr9mQEmQJTN3llshhl/B+U=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-653-xHnLUIoGPbOH7XAppqmKFg-1; Wed, 28 Feb 2024 19:38:06 -0500
-X-MC-Unique: xHnLUIoGPbOH7XAppqmKFg-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-29a90e49c67so170287a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:38:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTo4w3fv"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e558a67f70so317321b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:38:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709167102; x=1709771902; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PLlvZgGlSRzongjxq0MK8434n2l98HY21vL9Cchmy+s=;
+        b=iTo4w3fvxhc0897OPLWF+CraLaVgXtUWNXNTpsvpmr1DyNr9MmXYX51nlVIbxayIxh
+         EuuHwUCZ/RbmTSjSM9YKmusLgeRLK67vRCtghh1Vwp72y4EpKIxRZbA9mxr1v35dXjs/
+         7PX+CKttck+ogVFtzv+POETH4mLfVZw1U+x7tJlkjzKZHH5S9rcMzM69+fd9ZHmLp6yK
+         f7F/uJv6uMchAc0fT2o3daFD8s4BYIidrMb3oLYo7xkn+OTu62ou32/uS1zp54o9hAMz
+         hG7nUJKGp/JNcQ9jXTYzc8AMlqczeDCFXeKZAYQsUC0PzGI9TB5I6MbEGLQbzsq70mDu
+         MEOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709167085; x=1709771885;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YfpEyRdMnEBOuDbLwr2jbhFRxgF9v/FYFNIfm+Be1aI=;
-        b=TEY67P/Ctwb4DddF7HvsDx9QUFoYt/OVTdLfoGw2IqoWDuBeUjpjCfeq8D05ZZ+HRu
-         lXO/b3TdfpSIrGF2499uUoGis2keJj5J+bI7gYEvZZuv8WxapGRyzJm/sz23+nMJcRn0
-         WN7mGxUel5Ph2/ViJjdlJlOSPKQCvJDBVC7s2Denv50N7CyGDJYLRjkjivfUtwp5dQBz
-         aQ/NRImTVNtfGN20PI5rU8tgnWW0MaDW562vCtebQg4+Oxun5ZWUGV3K+UdNh81wGxBH
-         xtkM/uG7fYwXOPQoRSrCSFeu1K53feMWSQ+M8A4FXkjs40YRqVFYh2duGymkBDYy8wDo
-         GjFw==
-X-Gm-Message-State: AOJu0YwcJl2tK/P+Lwe6LSBZTIozeTskvighc92Mqw8p4Ds2XMRf9Qog
-	VZsvYiIO3ixZBKctLrzC4wFAWgFQt8GfG2+3bNFDNkO4G85bE59DUpPKq3LEMUK0fQGTg5MgzD0
-	P5JCF/UWOHV0HsHg8GxgMQwLU6fAtnoNjYUOKFIEgiCYbxJaH8PYqGPuIS3Heuw==
-X-Received: by 2002:a17:90a:734a:b0:29a:6cf0:57a3 with SMTP id j10-20020a17090a734a00b0029a6cf057a3mr780163pjs.8.1709167085433;
-        Wed, 28 Feb 2024 16:38:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGszdfYRJZp6tlT4Iv+7U3f3pqW70sm2nHeFWfeGFuTKrfVroRvZkuQ39/PNYPi7byINkwM9g==
-X-Received: by 2002:a17:90a:734a:b0:29a:6cf0:57a3 with SMTP id j10-20020a17090a734a00b0029a6cf057a3mr780152pjs.8.1709167085101;
-        Wed, 28 Feb 2024 16:38:05 -0800 (PST)
-Received: from [10.72.112.85] ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id g10-20020a17090a714a00b0029ab460019asm158574pjs.1.2024.02.28.16.37.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 16:38:04 -0800 (PST)
-Message-ID: <b0e7dc61-d595-4f26-9db4-c223b725bc47@redhat.com>
-Date: Thu, 29 Feb 2024 08:37:55 +0800
+        d=1e100.net; s=20230601; t=1709167102; x=1709771902;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PLlvZgGlSRzongjxq0MK8434n2l98HY21vL9Cchmy+s=;
+        b=hjG7wQgKA6qEWHachlAFCwW8QLrbBkqM5tlDtGWZxB3vaXVTtVsB/OqaMQ+IWF3iyj
+         uCqbYryxMuU7ROQSYyh1y5X1GengzZdoveOgtjBMrmV5rT7efRPvUP8Q38tEaxZBGNH4
+         b9J6/Zc5sbO/1DUGBgc1auREpQfrfNbmyO5ut5a6hPD6zD/HyAEevAEBQSMJn8EThMhr
+         EWPJALugKWyfful6CyvUIcfrzRvpQHaytjsIYrTIEoRICsjUXwQdmIXA4VsaMHc/AjSB
+         1qc7d7gH22I3Rr17Ar6zcpJBo5sXYUeAnLZoYye3BlW1+3g16i9z0qGwhAEXx8Fj1k2J
+         j4uA==
+X-Forwarded-Encrypted: i=1; AJvYcCWF6NHge2Bww9OU7T7jDCUPPYzrAcbwAsocO4VTwvKi6WuYBInWL4t3oSkd6QVjq/hFxfRMTnle8C2jYZoPwbTzAC0sc0Oh96b2ex6y
+X-Gm-Message-State: AOJu0YzFhQr+foTn1rxyF5htb7Mu1trxXUnENWJko9PphhM3fpzcwM79
+	XMaM1Mo9l2loUYC+B0Zb2bd2RM9JvQj5JkLMY/dNb7rTqqcZkELS
+X-Google-Smtp-Source: AGHT+IEd9ZL6V0bBtXZY0UKUADZ6hFH+KIkxlAwsFnjMdxe4pljodJu/eu75SFY+Vu1uM5BOFc05gQ==
+X-Received: by 2002:a05:6a21:394b:b0:19e:9da6:c73b with SMTP id ac11-20020a056a21394b00b0019e9da6c73bmr1382377pzc.8.1709167101626;
+        Wed, 28 Feb 2024 16:38:21 -0800 (PST)
+Received: from localhost.localdomain ([2407:7000:8942:5500:5158:ed66:78b3:7fda])
+        by smtp.gmail.com with ESMTPSA id p3-20020a170902780300b001d9641003cfsm62647pll.142.2024.02.28.16.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Feb 2024 16:38:21 -0800 (PST)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com,
+	linux-mm@kvack.org,
+	ryan.roberts@arm.com,
+	chrisl@kernel.org
+Cc: 21cnbao@gmail.com,
+	linux-kernel@vger.kernel.org,
+	mhocko@suse.com,
+	shy828301@gmail.com,
+	steven.price@arm.com,
+	surenb@google.com,
+	wangkefeng.wang@huawei.com,
+	willy@infradead.org,
+	xiang@kernel.org,
+	ying.huang@intel.com,
+	yuzhao@google.com,
+	kasong@tencent.com,
+	yosryahmed@google.com,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	hannes@cmpxchg.org,
+	linux-arm-kernel@lists.infradead.org,
+	Barry Song <v-songbaohua@oppo.com>
+Subject: [PATCH RFC v2 0/5] mm: support large folios swap-in
+Date: Thu, 29 Feb 2024 13:37:48 +1300
+Message-Id: <20240229003753.134193-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] printk_index: Fix false positives
-Content-Language: en-US
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
- Chris Down <chris@chrisdown.name>, Petr Mladek <pmladek@suse.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Jessica Yu <jeyu@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
- Ilya Dryomov <idryomov@gmail.com>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org
-References: <cover.1709127473.git.geert+renesas@glider.be>
-From: Xiubo Li <xiubli@redhat.com>
-In-Reply-To: <cover.1709127473.git.geert+renesas@glider.be>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Barry Song <v-songbaohua@oppo.com>
 
-On 2/28/24 22:00, Geert Uytterhoeven wrote:
-> 	Hi all,
->
-> When printk-indexing is enabled, each printk() invocation emits a
-> pi_entry structure, containing the format string and other information
-> related to its location in the kernel sources.  This is even true when
-> the printk() is protected by an always-false check, as is typically the
-> case for debug messages: while the actual code to print the message is
-> optimized out by the compiler, the pi_entry structure is still emitted.
-> Hence when debugging is disabled, this leads to the inclusion in the
-> index of lots of printk formats that cannot be emitted by the current
-> kernel.
->
-> This series fixes that for the common debug helpers under include/.
-> It reduces the size of an arm64 defconfig kernel with
-> CONFIG_PRINTK_INDEX=y by ca. 1.5 MiB, or 28% of the overhead of
-> enabling CONFIG_PRINTK_INDEX=y.
->
-> Notes:
->    - netdev_(v)dbg() and netif_(v)dbg() are not affected, as
->      net{dev,if}_printk() do not implement printk-indexing, except
->      for the single global internal instance of __netdev_printk().
->    - This series fixes only debug code in global header files under
->      include/.  There are more cases to fix in subsystem-specific header
->      files and in sources files.
->
-> Thanks for your comments!
->
-> Geert Uytterhoeven (4):
->    printk: Let no_printk() use _printk()
->    dev_printk: Add and use dev_no_printk()
->    dyndbg: Use *no_printk() helpers
->    ceph: Use no_printk() helper
->
->   include/linux/ceph/ceph_debug.h | 18 +++++++-----------
->   include/linux/dev_printk.h      | 25 +++++++++++++------------
->   include/linux/dynamic_debug.h   |  4 ++--
->   include/linux/printk.h          |  2 +-
->   4 files changed, 23 insertions(+), 26 deletions(-)
->
-This series LGTM.
+-v2:
+ * lots of code cleanup according to Chris's comments, thanks!
+ * collect Chris's ack tags, thanks!
+ * address David's comment on moving to use folio_add_new_anon_rmap
+   for !folio_test_anon in do_swap_page, thanks!
+ * remove the MADV_PAGEOUT patch from this series as Ryan will
+   intergrate it into swap-out series
+ * Apply Kairui's work of "mm/swap: fix race when skipping swapcache"
+   on large folios swap-in as well
+ * fixed corrupted data(zero-filled data) in two races: zswap and
+   a part of entries are in swapcache while some others are not
+   in by checking SWAP_HAS_CACHE while swapping in a large folio
 
-Reviewed-by: Xiubo Li <xiubli@redhat.com>
+-v1:
+ https://lore.kernel.org/all/20240118111036.72641-1-21cnbao@gmail.com/#t
+
+On an embedded system like Android, more than half of anon memory is actually
+in swap devices such as zRAM. For example, while an app is switched to back-
+ground, its most memory might be swapped-out.
+
+Now we have mTHP features, unfortunately, if we don't support large folios
+swap-in, once those large folios are swapped-out, we immediately lose the 
+performance gain we can get through large folios and hardware optimization
+such as CONT-PTE.
+
+In theory, we don't need to rely on Ryan's swap out patchset[1]. That is to say,
+before swap-out, if some memory were normal pages, but when swapping in, we
+can also swap-in them as large folios. But this might require I/O happen at
+some random places in swap devices. So we limit the large folios swap-in to
+those areas which were large folios before swapping-out, aka, swaps are also
+contiguous in swapdevice. On the other hand, in OPPO's product, we've deployed
+anon large folios on millions of phones[2]. we enhanced zsmalloc and zRAM to
+compress and decompress large folios as a whole, which help improve compression
+ratio and decrease CPU consumption significantly. In zsmalloc and zRAM we can
+save large objects whose original size are 64KiB for example (related patches
+are coming). So it is also a good choice for us to support swap-in large
+folios for those compressed large objects as a large folio can be decompressed
+all together.
+
+Note I am moving my previous "arm64: mm: swap: support THP_SWAP on hardware
+with MTE" to this series as it might help review.
+
+[1] [PATCH v3 0/4] Swap-out small-sized THP without splitting
+https://lore.kernel.org/linux-mm/20231025144546.577640-1-ryan.roberts@arm.com/
+[2] OnePlusOSS / android_kernel_oneplus_sm8550 
+https://github.com/OnePlusOSS/android_kernel_oneplus_sm8550/tree/oneplus/sm8550_u_14.0.0_oneplus11
+
+Barry Song (2):
+  arm64: mm: swap: support THP_SWAP on hardware with MTE
+  mm: swap: introduce swapcache_prepare_nr and swapcache_clear_nr for
+    large folios swap-in
+
+Chuanhua Han (3):
+  mm: swap: introduce swap_nr_free() for batched swap_free()
+  mm: swap: make should_try_to_free_swap() support large-folio
+  mm: support large folios swapin as a whole
+
+ arch/arm64/include/asm/pgtable.h |  19 +--
+ arch/arm64/mm/mteswap.c          |  43 +++++++
+ include/linux/huge_mm.h          |  12 --
+ include/linux/pgtable.h          |   2 +-
+ include/linux/swap.h             |   7 ++
+ mm/memory.c                      | 193 +++++++++++++++++++++++++------
+ mm/page_io.c                     |   2 +-
+ mm/swap.h                        |   1 +
+ mm/swap_slots.c                  |   2 +-
+ mm/swapfile.c                    | 152 ++++++++++++++++--------
+ 10 files changed, 319 insertions(+), 114 deletions(-)
+
+-- 
+2.34.1
 
