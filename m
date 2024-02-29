@@ -1,121 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B5F12F580;
-	Thu, 29 Feb 2024 14:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568A841A80
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 14:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709217976; cv=none; b=VS9aroMDYCiSnQfbzqiwTF2hOJwdNmTFtiKBHhnA2s5wD6h74iVRZ+Mg/v0izkTuzTfiW6i3uGeX5kruMWX7NiP8dpiVZd4DA9eYOsE9CeVFMP0pV+gs+BkiFk8DoIog5k/DN8+jF1Z+XVLekDijTGMSrIH7E8jONeX/P4zJhwg=
+	t=1709218064; cv=none; b=U2dxfilCkpV49TnMQcKALmw4/SytAj2E2UOiglNCxb4Y3NEIFK2qnK+DjGCZK/TQb8L4uCpdEj9US/EREigOGIJ9YO1runC1TlNNliD70WPtT7E/z//qj/suYwmWTQaIT+gik5M4FmJzdMZTCd7kzTr8SMzj6RFIl7yizckKQ30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709217976; c=relaxed/simple;
-	bh=3oJedtpUCDtslx7gH0XWE1db//lVWLZiW0moWQs5pns=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=tnzziS+SGUybs37gtJ47O09/ecGep4MUf+INHa60vGNCkhUYHo36Dha5IeQnvxTrA7BKCMjzhbciTSX95tjB+X8i5GKQmAAGdM0SvSSGvYEJyUYIgEeMtvyU3jsau2sXmY56eHwbrv/609qmf+zG1g/EtcAjoUqdqe038mIgRI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nx4DrTWh; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709218064; c=relaxed/simple;
+	bh=c7GmbVJf43ArHWG9m+LgTeyF8QmqxKm6DE7najW6vkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mzGUPa4vosMk3jBUUnczdugx5KjYfl+djVaJbxV1UxU/r2gLlEktUNDjk9eHxgykYHYhnetuIy1QyajfXfGpTD/9k6QQ4DHplPVYhGQWzRhqVi3WtdFSbqTaPtAqpLuh5qPjdLkUWPDtKc6IhQLoiwKCRYTyFXif2QkT45bal1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fd8bWomS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nx4DrTWh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709217974; x=1740753974;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=3oJedtpUCDtslx7gH0XWE1db//lVWLZiW0moWQs5pns=;
-  b=Nx4DrTWhVC49Th+tSpQVjHaVueYcYd/zpj2fiTuktm4IzKhEjVXuQAif
-   VhSlWhQEbV7ZnfhOFwY3Hz4Q/E93ryVOI7Dj+STxAbSN0Nw7gUK09bPNZ
-   2ldyst25rw59deXTuLJcDa+f5fqMcZB5m9eAu+gR6aQpmNPJERx0BTCpc
-   RhaKi6gNqk+uyB00FJl7ozysAf/L3aON3qW6KnsNWQktzrta/Y7CWSgEf
-   W6mAGZ27g5BMF/5lPEiLnshykFCixpd7lT9uet2bkDM7rI7DjGTzLZkwS
-   55pqB0JhgZEcJXXrPP6AgnjVdnuyNgrQK0JNI6nXv20suYU5C36tHnTvZ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="14398435"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="14398435"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:46:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="8080548"
-Received: from unknown (HELO localhost) ([10.237.66.160])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:46:09 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Rodrigo Vivi
- <rodrigo.vivi@intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
- <tvrtko.ursulin@linux.intel.com>, David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/i915/display: Save a few bytes of memory in
- intel_backlight_device_register()
-In-Reply-To: <ecfdb3af5005e05131e2fb93fd870830f39a8c29.1708708142.git.christophe.jaillet@wanadoo.fr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <ecfdb3af5005e05131e2fb93fd870830f39a8c29.1708708142.git.christophe.jaillet@wanadoo.fr>
-Date: Thu, 29 Feb 2024 16:46:07 +0200
-Message-ID: <8734tb8h1s.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fd8bWomS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C91BC43390;
+	Thu, 29 Feb 2024 14:47:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709218063;
+	bh=c7GmbVJf43ArHWG9m+LgTeyF8QmqxKm6DE7najW6vkw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fd8bWomSDlRNZkU9IB07feEamaa19n8kfPgUJONxZEAcmwiJIjF9ianrPSh2PUQ2+
+	 NQOJxKk8u6voltML5yygA3M0NCgqDtOjxDmGmqtquTBDRHh66gOOOyIC1JThtsl6Ui
+	 Z22/moAG2DQUoobCnXVA1JIYppGFI1eu86YJTtx9/j43KU+80OhaM0eDYlu72OPp0N
+	 gXicsCxEPUx0xW+xxKkjldIor83o1qhPBJTdeCerzQkG7Ka/I5NvebRky5wr1Krvlp
+	 +AY+VMQJOL5jaSejJsGunF6zMZc+2RzWh2YPdu2w4rjTBm3O48z4WQw6x9yhL1hPI8
+	 XLt3LA5uibv0Q==
+Date: Thu, 29 Feb 2024 06:47:42 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Tasmiya Nalatwad <tasmiya@linux.vnet.ibm.com>, Vadim Fedorenko
+ <vadim.fedorenko@linux.dev>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, arkadiusz.kubalewski@intel.com,
+ jiri@nvidia.com, "abdhalee@linux.vnet.ibm.com"
+ <abdhalee@linux.vnet.ibm.com>, "mputtash@linux.vnet.com"
+ <mputtash@linux.vnet.com>, "sachinp@linux.vnet.com"
+ <sachinp@linux.vnet.com>, venkat88@linux.vnet.ibm.com,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [revert 0d60d8df6f49] [net/net-next] [6.8-rc5] Build Failure
+Message-ID: <20240229064742.36c2f476@kernel.org>
+In-Reply-To: <CANn89iKdaMFCKnGRL4ffnbyrr2PUaKn1hoiu4VZ=sRyX=Vy0Wg@mail.gmail.com>
+References: <3fcf3a2c-1c1b-42c1-bacb-78fdcd700389@linux.vnet.ibm.com>
+	<85b78dad-affa-47c3-9cd0-79a4321460b8@linux.dev>
+	<CANn89iJEzTjwxF7wXSnUR+NyDu-S-zEOYVXA+fEaYs_1o1g5HQ@mail.gmail.com>
+	<a1fdd2c2-4443-458e-86db-280e7cbd4a36@linux.vnet.ibm.com>
+	<CANn89iKdaMFCKnGRL4ffnbyrr2PUaKn1hoiu4VZ=sRyX=Vy0Wg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 23 Feb 2024, Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
-> 'name' may still be "intel_backlight" when backlight_device_register() is
-> called.
-> In such a case, using kstrdup_const() saves a memory duplication when
-> dev_set_name() is called in backlight_device_register().
->
-> Use kfree_const() accordingly.
->
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Thu, 29 Feb 2024 09:55:22 +0100 Eric Dumazet wrote:
+> I do not see other solution than this, otherwise we have to add more
+> pollution to include/linux/netdevice.h
 
-Thanks, pushed to drm-intel-next.
+Right :(
 
-BR,
-Jani.
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index a9c973b92294bb110cf3cd336485972127b01b58..40797ea80bc6273cae6b7773d0a3e47459a72150
+> 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -2469,7 +2469,7 @@ struct net_device {
+>         struct devlink_port     *devlink_port;
+> 
+>  #if IS_ENABLED(CONFIG_DPLL)
+> -       struct dpll_pin __rcu   *dpll_pin;
+> +       void __rcu *dpll_pin;
+>  #endif
 
-> ---
-> Compile tested only
-> ---
->  drivers/gpu/drm/i915/display/intel_backlight.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_backlight.c b/drivers/gpu/drm/i915/display/intel_backlight.c
-> index 1946d7fb3c2e..9e4a9d4f1585 100644
-> --- a/drivers/gpu/drm/i915/display/intel_backlight.c
-> +++ b/drivers/gpu/drm/i915/display/intel_backlight.c
-> @@ -949,7 +949,7 @@ int intel_backlight_device_register(struct intel_connector *connector)
->  	else
->  		props.power = FB_BLANK_POWERDOWN;
->  
-> -	name = kstrdup("intel_backlight", GFP_KERNEL);
-> +	name = kstrdup_const("intel_backlight", GFP_KERNEL);
->  	if (!name)
->  		return -ENOMEM;
->  
-> @@ -963,7 +963,7 @@ int intel_backlight_device_register(struct intel_connector *connector)
->  		 * compatibility. Use unique names for subsequent backlight devices as a
->  		 * fallback when the default name already exists.
->  		 */
-> -		kfree(name);
-> +		kfree_const(name);
->  		name = kasprintf(GFP_KERNEL, "card%d-%s-backlight",
->  				 i915->drm.primary->index, connector->base.name);
->  		if (!name)
-> @@ -987,7 +987,7 @@ int intel_backlight_device_register(struct intel_connector *connector)
->  		    connector->base.base.id, connector->base.name, name);
->  
->  out:
-> -	kfree(name);
-> +	kfree_const(name);
->  
->  	return ret;
->  }
+If DPLL wants to hide its type definitions the helpers must live
+in dpll? IOW move netdev_dpll_pin() to drivers/dpll/dpll_core.c
 
--- 
-Jani Nikula, Intel
+BTW Tasmiya, please do tell us what compiler you're using.
