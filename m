@@ -1,112 +1,81 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E5C137768;
-	Thu, 29 Feb 2024 14:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFD4137750;
+	Thu, 29 Feb 2024 14:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709218214; cv=none; b=aOTHeofMMsS/cvcceK+FIwWOWJCF07ghcirhonKa5me4CZILQ72WJr3v4j9TcsuVSs5IrguL9Jtkf+PZUbi/scitHu6ND+WPrLm1lKj578CaBwQ5fSRDHtw0OLeKNZE7SOup0TlRNu2TtQI7ZsKYwDbjZeyC70BrI5TXUwcULQg=
+	t=1709218318; cv=none; b=i0/cX2Mbw56+rtced9TgW2N1POUkv5j5rVnSlL6VQ/EKrikky0JqlbQOMp81FPGuqE0rC/g2RNOvItI18j13aQqPROrRUtV4dBcfdx9c2wT0qLasiA2yU6FYxghu9eiQd9QrOjAuOgAle4yXxJqNH1NTF9s4HykvPwGcc+QAm50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709218214; c=relaxed/simple;
-	bh=TOTjG3XFCu+SOCsoJWQ+YdswTrZJGHoVHpqHXU1UTDg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TTleNRhZpAcizv1LD27skUPKpYjVhgb9JWXU6X3TTlNkclkwmT0khVbgfQmKu+R/Q+/gS9hJmFO7Ax+zYLKSSCeKDxr2FGhmtiB8cOfTFBF9yzX20/ZQdRHzmisLfOiPIihsTzCalUsrSrxaj1a1UiTSQn++vynaCDJgDvEt5Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=o+9pjhFN; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1709218318; c=relaxed/simple;
+	bh=wrjX1gCWYg6nSC7PmaC6lhYpHs6jGe36eMWuYBSxilk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RUcz69dvWZ193Kgjwn1XyLEB0WVKM1bm2ZusYIpAJQ2qIosEEYW2G02b9IMDE3C+olzHAnQyVqut5tm8/23HS6Zc2STa7e+Mh2Dj2qwgr24EBPmPXDx/zy5ZLZ/Yem++eMg6BP3Qli3cKMeUQSCp0VWPfHuz4l8Z550UBcpGp8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=plEqwVnx; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="o+9pjhFN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1709218211; x=1740754211;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ywrhZUKaJjcwpmTB5QYutRLtgp1qQnXwV/7znwi7QCg=;
-  b=o+9pjhFNznvq8PmgIQJRwnr2a9RoPaLXdGEWR9ygWMTTrYLmJgOZP1Is
-   +eCfOFEGYPMoPYxSr+YqHh+RCD+dve2hRx9OFQVBT9506zW+0q4eGYdOL
-   LBICRjkB/85DWZMsuxn7YNEEzHW0E0hxWS2pLWAdDmHZjgX5EriGV0TBn
-   3O/cIZKtJc8uereRiwO/hp4v/pCzAtsiwnrsm1M2gk3x79ZaW8vb9Pjzm
-   jSm0htccKjXWYlv/PyCqQhGAPaC5pbU/oXVDivnBFXPsjStZhLEDO6RXc
-   nqQLm2CMSzinUB+vmcfeAVMwUR59IGTZgRo7DqErvfw9wKEbjMCMlrpbp
-   w==;
-X-IronPort-AV: E=Sophos;i="6.06,194,1705359600"; 
-   d="scan'208";a="35668392"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 29 Feb 2024 15:50:05 +0100
-Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="plEqwVnx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709218311;
+	bh=wrjX1gCWYg6nSC7PmaC6lhYpHs6jGe36eMWuYBSxilk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=plEqwVnxYxepv2JEG/f9Bg/Gb93C9CmKhxp5jfucjO/sbNALZYICMpViFrBJ4r7xd
+	 gnFN14JTKU2IOG3sbHdI0Az0Ckzapl0TEFAGw0oWyTtn8QdGUGmCMFvBdn8tvbPGQR
+	 7JH4fOCOY4CkTB+0plwtFdBKVIVPMeKTa38Z6C8zBmXYXzK5BqBbTPAzDn+WXy0Caw
+	 d4G5IXOdhVR/6XJy9Vie+p60BEEB02y7OTFGcWZugI0+83J3IHMPU7nzaG084tda0e
+	 rLkJ7My88caQ6FW27ofQF45v6mM3g3wHuSj5EnOx+V5hkW/pWhRjmNSnPboOUzLOKp
+	 ZZnJgmSZ8gb8Q==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id B61DA280071;
-	Thu, 29 Feb 2024 15:50:05 +0100 (CET)
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, Markus Niebel <Markus.Niebel@ew.tq-group.com>, Lee Jones <lee@kernel.org>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust file patterns in TQ SYSTEMS BOARD & DRIVER SUPPORT
-Date: Thu, 29 Feb 2024 15:50:04 +0100
-Message-ID: <7803640.lOV4Wx5bFT@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20231123113245.23542-1-lukas.bulwahn@gmail.com>
-References: <20231123113245.23542-1-lukas.bulwahn@gmail.com>
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1EDE33782079;
+	Thu, 29 Feb 2024 14:51:50 +0000 (UTC)
+Message-ID: <9e7e840d-59bf-42fb-8e7b-224afb9f27d8@collabora.com>
+Date: Thu, 29 Feb 2024 15:51:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: mediatek: gamma: Change
+ MT8195 to single enum group
+Content-Language: en-US
+To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, Jason-ch Chen <jason-ch.chen@mediatek.com>,
+ Johnson Wang <johnson.wang@mediatek.com>,
+ Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
+ Shawn Sung <shawn.sung@mediatek.com>,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ Fei Shao <fshao@chromium.org>
+References: <20240229144844.1688-1-jason-jh.lin@mediatek.com>
+ <20240229144844.1688-2-jason-jh.lin@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240229144844.1688-2-jason-jh.lin@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Il 29/02/24 15:48, Jason-JH.Lin ha scritto:
+> Since MT8195 gamma has multiple bank for 12 bits LUT and it is
+> different from any other SoC LUT setting.
+> 
+> So we add MT8195 compatible to the single enum group to make its
+> driver data settings can be reused by other SoC.
+> 
+> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Am Donnerstag, 23. November 2023, 12:32:45 CET schrieb Lukas Bulwahn:
-> Commit 77da3f22b3d5 ("MAINTAINERS: Add entry for TQ-Systems device trees
-> and drivers") adds some file patterns for files in arch/arm/boot/dts/, but
-> those patterns do not match any files in the repository. Hence,
-> ./scripts/get_maintainer.pl --self-test=3Dpatterns complains about broken
-> references. The files of interest are actually in the directory
-> arch/arm/boot/dts/nxp/imx/.
->=20
-> Adjust the file patterns to match the intended files.
->=20
-> Fixes: 77da3f22b3d5 ("MAINTAINERS: Add entry for TQ-Systems device trees =
-and drivers")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-
-any feedback? Can this be merged?
-
-Thanks,
-Alexander
-
-> ---
->  MAINTAINERS | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index df7a57ac864e..1e439b08d5d4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22084,9 +22084,9 @@ TQ SYSTEMS BOARD & DRIVER SUPPORT
->  L:	linux@ew.tq-group.com
->  S:	Supported
->  W:	https://www.tq-group.com/en/products/tq-embedded/
-> -F:	arch/arm/boot/dts/imx*mba*.dts*
-> -F:	arch/arm/boot/dts/imx*tqma*.dts*
-> -F:	arch/arm/boot/dts/mba*.dtsi
-> +F:	arch/arm/boot/dts/nxp/imx/imx*mba*.dts*
-> +F:	arch/arm/boot/dts/nxp/imx/imx*tqma*.dts*
-> +F:	arch/arm/boot/dts/nxp/imx/mba*.dtsi
->  F:	arch/arm64/boot/dts/freescale/fsl-*tqml*.dts*
->  F:	arch/arm64/boot/dts/freescale/imx*mba*.dts*
->  F:	arch/arm64/boot/dts/freescale/imx*tqma*.dts*
->=20
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
 
