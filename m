@@ -1,156 +1,228 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5421419A9
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948B713EFF6;
+	Thu, 29 Feb 2024 15:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709220576; cv=none; b=TtWTMg5wv6OlWPlZTteKZ2wPCYXCtOGEel3omt4XEyFyW1wjRmJyIbLv/IqQ7UldmS1ihjh8Zr7aHCZ5+ZAQ1m3N50rWJbrYD+xKH0FCbNfeOVCxawDPBrcPp2mfmmIVUSNUXQxvTPPEo77+8qqe5dp8gxaTE8BbPLClgkKiXUY=
+	t=1709220770; cv=none; b=uC4YHY06HHIVwuVzeNiqH2pXmp4PyDOGJqVOZ8P1mFRD8iHEU4DlSmxaYxlbUx4mV/zRG4HSOwOJ5bW99zUDgzWsaRHpzq+yNkMW51J7PHzO26dvBK1FlRhaawoieF4bL+/Ji/sfSAfzdsBKJSM7ibEGv+Pb67ypynU7TrzqqZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709220576; c=relaxed/simple;
-	bh=fXVxODgA2ixfiucAm8ghxEYEC7FGBQeI4d5yd8894+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dUabbiWdmaQFV7Q5e8TyBQ+iafwpwBR9f6hxxSqrGk5Ug8JNOE2VlKCUwNtirQmYq6RnotS8Pn4eBzIaQ7Z7jcX7h6TmHLgSpjukQlkhojrX9LYvYeWa9WWqVdAepoc3yzLEV1ld5zW8KUiypkyV/IIaJTiNmGhyoX4+fT9zGcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QuyzOGmR; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709220770; c=relaxed/simple;
+	bh=xt+PgzxRSPIXI+lUwP9wsR2d9PWJuIwdO2KjxmYQstw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u4yplu/RkcmKKBPL0OJHtS3KPjR6iWgoIorRScX9/bLWWS1n7vIEiKBcSNrbPSZNSCpmEvEg5KAZL409SUFpW3YtDfuDYRLi+w/4U0vK6EGsbGj7s+ujPhKKrcCq17tlw5GFS1WrtdOimC7lcr/ZTOkyHMeZAV4uVXL0y7ic/Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g4Af6Lyt; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QuyzOGmR"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a28a6cef709so167477966b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:29:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709220573; x=1709825373; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QMxqOZsH5DLRx/KCv1pnjf11BDEABi2ibjaW1z9c95Y=;
-        b=QuyzOGmRwxTBKdIw8cSAtEETFV4dKvObrxxf68/KxFhrKaxdYneojDZklkVC2JQzJo
-         WKtwwmG6WQs9jy0AMe+2pQlM2z9L/+2rf0EjNvkGstvh4zRRbQA0HcuM006fm78kF2vT
-         biIK86QVtt4o1bgJYPThiQ1eryOamjkMlx1QD4MLjAHA9qV/n70lxI2l5t2/wLaVYz3j
-         FnE3rUDba/uUTgWlLwp4QW+fe+rM/eWwPrWkUxXynZ/lfeJ0eo7SgIkw8yqwUWXBWDSu
-         FHn81k8ipWe9wvrrFVpZNMEE0AYjBeZYHmlDw3pbN3K/MT5IJql/+dPI9P2bK4ePle/2
-         NafA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709220573; x=1709825373;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QMxqOZsH5DLRx/KCv1pnjf11BDEABi2ibjaW1z9c95Y=;
-        b=lm1xDIwetijII6uo+WT6rkZjvE22/wB4UGXS/7jLXUeKtPmB43yP+7+SVFHLlIVkm2
-         3kUPFAcrPqs/EpQTqv/iT2+IA+vj3AjPzfyk4XkhSmg2MWranUdOiaaggyRu8Fwf5BvN
-         XOXyluq1gzM40Pcnp9nn/gVnI8UODubglCQ3rMajva6TsW6KMHShRkh21jPfL+cB/NKa
-         5A+hkJCAvIZoA8tfxT49y9jfe3fzbzZZt+fbkyy3rgNeuesLJum2iGD4SwfxPB/SshR1
-         8Ei2z4cRkFRuv3kfpVHkTokxFZvnonuKFfcyX33/v0FFREqDF/4M+ihRuHGjh6+LUuON
-         1NtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbvAR8AKFg3nsAqHNyeJXFR7/VL/iLkQj+xs4f9USN4sPyy/SuamzIximIwJw4ZZ7ukySECrUyFBSKo47eM1Py++JjtEPdwWngDnnP
-X-Gm-Message-State: AOJu0YyQfjPXFHLXj5m8q7r4G1kWZlr3bwp5xwODUH3clMZicygbteIU
-	KeoqNvj/8a4WXalCLCMXh/xcIW7o3kgOxoS44+0kaZvz7D+E2J2/uItH5Mo+shY=
-X-Google-Smtp-Source: AGHT+IFHvzUGBa1W+Ku5tr+KjcOyzY8BsHA660zQLQqhB/quvthLaDx+33IZZjKERKw4YHma1uiSJg==
-X-Received: by 2002:a17:906:7f12:b0:a3f:da1c:ae4c with SMTP id d18-20020a1709067f1200b00a3fda1cae4cmr1975746ejr.54.1709220573113;
-        Thu, 29 Feb 2024 07:29:33 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id y1-20020a1709060bc100b00a43aa27b5f2sm788345ejg.94.2024.02.29.07.29.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 07:29:32 -0800 (PST)
-Message-ID: <44fcf7d0-9399-42d9-81b0-e744bc37a831@linaro.org>
-Date: Thu, 29 Feb 2024 16:29:30 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g4Af6Lyt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709220768; x=1740756768;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xt+PgzxRSPIXI+lUwP9wsR2d9PWJuIwdO2KjxmYQstw=;
+  b=g4Af6LytsLgX57YSO3XFm1s3MU2spWuJnHApqN3zI3jTkzvxKOzNaT2Y
+   Dcf2oZK5FObkrVD8PHAxy5YbNtqNodXiHYveEViDjUYE++v8bs8DhNWOA
+   ZE6SOvn4T9mSeELn0uzGW34TSMrA5jXzwYmsGZCw//+2jJRn7A3NPgnto
+   UxMjcKIgJP5MsJJCKmxojTjFunP6e1cIFHrYXY2356VKw28im8IWcSS0J
+   fHldoamSqWde7yuOfWlkV/YdxXSpetPoew5F8VO9ZTaR4AICcsSVm9je8
+   kMCxLheVPKCasUEao4A8pJxju8eBs/lo9ZryB8ju/TTc+vTxWdgFR/yHR
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3552531"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="3552531"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 07:32:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="913984645"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="913984645"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 07:32:38 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rfiOh-00000008hqd-1cE5;
+	Thu, 29 Feb 2024 17:32:35 +0200
+Date: Thu, 29 Feb 2024 17:32:35 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v8 05/10] pinctrl: eyeq5: add platform driver
+Message-ID: <ZeCjk9QgtCWb8Ecy@smile.fi.intel.com>
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+ <20240227-mbly-clk-v8-5-c57fbda7664a@bootlin.com>
+ <Zd4moVd_-bY6Z_kL@smile.fi.intel.com>
+ <CZGX0TSYLOH4.DZHG351R9KFZ@bootlin.com>
+ <ZeBsAbPRr5IPkVZj@smile.fi.intel.com>
+ <CZHNS29NK9RR.13G019Y9ZY6IO@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adc: add ad7944 ADCs
-Content-Language: en-US
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-iio@vger.kernel.org,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240228-ad7944-mainline-v3-0-781b922334af@baylibre.com>
- <20240228-ad7944-mainline-v3-1-781b922334af@baylibre.com>
- <06235b66-6948-49b3-b881-198443a421df@linaro.org>
- <CAMknhBHhrNc-6qggSD1pt8djc9cv93dyNON8c_np6RwqT3yzig@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAMknhBHhrNc-6qggSD1pt8djc9cv93dyNON8c_np6RwqT3yzig@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CZHNS29NK9RR.13G019Y9ZY6IO@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 29/02/2024 15:35, David Lechner wrote:
->>>
->>> v2 changes:
->>> - Removed default 'multi' value from adi,spi-mode property. This simplifies
->>>   things a bit by not having to check for two possible conditions (absence of
->>>   property or explicit default value). Now, only absence of property is valid to
->>>   indicate the default mode. Constraints that depend on this property are
->>>   updated accordingly.
->>> - Fixed spelling of 'conventional'.
->>> - Expanded description to call out potential confusion of '3-wire' mode being
->>>   unrelated to the standard spi-3wire property.
->>> - Added standard '#daisy-chained-devices' property for chain mode.
->>> - Relaxed requirement of cnv-gpios since it was determined that an active high
->>>   CS could actually be used in chain mode.
->>
->> ? Please don't edit patches manually... Use git or git+b4. Or quilt?
->>
->> Best regards,
->> Krzysztof
->>
+On Thu, Feb 29, 2024 at 04:13:15PM +0100, Théo Lebrun wrote:
+> On Thu Feb 29, 2024 at 12:35 PM CET, Andy Shevchenko wrote:
+> > On Wed, Feb 28, 2024 at 07:15:12PM +0100, Théo Lebrun wrote:
+> > > On Tue Feb 27, 2024 at 7:14 PM CET, Andy Shevchenko wrote:
+> > > > On Tue, Feb 27, 2024 at 03:55:26PM +0100, Théo Lebrun wrote:
+
+...
+
+> > > > > +	bool "Mobileye EyeQ5 pinctrl driver"
+> > > >
+> > > > Can't be a module?
+> > > 
+> > > It theory it could, I however do not see why that would be done. Pinctrl
+> > > is essential to the platform capabilities. The platform is an embedded
+> > > one and performance-oriented; boot-time is important and no user will
+> > > ever want to load pinctrl as a module.
+> >
+> > I can argue. The modularization can give a better granularity in the exactly
+> > embedded world when the memory resource (flash/RAM) is limited or fragmented
+> > (for one or another reason). Having less weighty kernel at boot makes it smaller
+> > to fit, for example, faster read only memory block which is not so uncommon.
 > 
-> Oh geez, yeah really dumb mistake. Will resend. I do use b4 but it
-> doesn't handle per-patch changelogs that I know of.
+> I can argue back. :-) Granularity brought from modules is useful either
+> in (1) resource constrained boot context or (2) for peripherals which
+> some people might want to do without. We are not in case 1 nor case 2.
+> 
+> > The rule of thumb is to make modules if, otherwise, it's not so critical for
+> > the boot process (and even for some cases we still may have it done as a module
+> > with help of deferred probe mechanism).
+> 
+> I'd call SoC pin control a critical resource for the boot process.
+> 
+> I also like the simplicity of builtin better for such a resource.
+>  - If we tristate pinctrl-eyeq5 and there is a bug, there is a bug (in a
+>    context that we have no reason to support).
+>  - If we do not allow it and there is a bug, there is no bug.
+>    Plus, it makes one less choice for people configuring the kernel.
 
-Per-patch changelog is the job for git.
+The problem is that you reduce the flexibility. Nobody prevents you from having
+it built-in while tristate. But completely different situation when it's bool.
 
-Best regards,
-Krzysztof
+So my argument still stays. I think new code shouldn't be boolean by default.
+The only exceptional cases can do that (like PMIC driver or critical clock one).
+
+[...]
+
+> > > > > +	if (WARN_ON(offset > 31))
+> > > > > +		return false;
+> > > >
+> > > > When this condition can be true?
+> > > 
+> > > If there is a bug in the code. Defensive programming.
+> > > 
+> > > There is this subtle conversion of pin numbers => offset inside of a
+> > > bank. If one function forgets doing this then eq5p_test_bit() gets
+> > > called with a pin number.
+> > > 
+> > > In this GPIO series I fixed such a bug in a 10 year old driver:
+> > > https://lore.kernel.org/lkml/20240228-mbly-gpio-v2-5-3ba757474006@bootlin.com/
+> > > 
+> > > The whole "if it can happen it will happen" mantra. We'll get a warning
+> > > in the logs using pinctrl-eyeq5.
+> >
+> > My point here that we have mechanisms to avoid such issues, for example in GPIO
+> > we have valid_mask field and GPIO library takes care to avoid such conditions
+> > from happening. Please, double check that you really need these in your driver.
+> > I prefer to avoid them until it's proven that they are real cases.
+> 
+> Whatever the subsystem does to protect us (like only calling callbacks
+> with valid IDs), it will not protect us from bugs inside the driver's
+> callbacks.
+> 
+> I do no see a reason to avoid such code. I do not trust myself to write
+> perfect code.
+
+Perfect is enemy of good. ;)
+
+> Its aim is to protect ourselves from our own mistakes. If
+> such an issue occurs, understanding that this is what happened would be
+> really hard (especially if it occurs on someone else's boards).
+
+Yes, but we usually don't put a dead code into the kernel. So, can you confirm
+that warning can appear IRL? If yes, there is another red flag or question:
+why WARN()? This is easily becomes a panic and/or reboot (depending to the kernel
+command line) and hence may give unresponsive system. Was this considered?
+
+...
+
+> > > > > +static const struct pinctrl_ops eq5p_pinctrl_ops = {
+> > > > > +	.get_groups_count	= eq5p_pinctrl_get_groups_count,
+> > > > > +	.get_group_name		= eq5p_pinctrl_get_group_name,
+> > > > > +	.get_group_pins		= eq5p_pinctrl_get_group_pins,
+> > > > > +	.pin_dbg_show		= eq5p_pinctrl_pin_dbg_show,
+> > > >
+> > > > > +	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
+> > > > > +	.dt_free_map		= pinctrl_utils_free_map,
+> > > >
+> > > > ifdef is missing for these... But the question is, isn't these a default when
+> > > > OF is in use?
+> > > 
+> > > Doesn't look like it is. In drivers/pinctrl/devicetree.c:
+> > > 
+> > > 	static int dt_to_map_one_config(struct pinctrl *p,
+> > > 					struct pinctrl_dev *hog_pctldev,
+> > > 					const char *statename,
+> > > 					struct device_node *np_config)
+> > > 	{
+> > > 		// ...
+> > > 
+> > > 		/*
+> > > 		 * Call pinctrl driver to parse device tree node, and
+> > > 		 * generate mapping table entries
+> > > 		 */
+> > > 		ops = pctldev->desc->pctlops;
+> > > 		if (!ops->dt_node_to_map) {
+> > > 			dev_err(p->dev, "pctldev %s doesn't support DT\n",
+> > > 				dev_name(pctldev->dev));
+> > > 			return -ENODEV;
+> > > 		}
+> > > 
+> > > 		// ...
+> > > 	}
+> > > 
+> > > And I see nowhere that puts a value if ->dt_node_to_map is empty.
+> > > 
+> > > For dt_free_map, it is an optional value. If the field is NULL nothing
+> > > is done. See dt_free_map() in the same file.
+> >
+> > If we drop OF dependency, these fields might not be present in the structure
+> > (by definition). Compilation won't succeed. Am I mistaken?
+> 
+> struct pinctrl_ops has both ->dt_node_to_map and ->dt_free_map fields in
+> any case. See include/linux/pinctrl/pinctrl.h which declares the
+> struct. The function pointers we put are also under no conditional
+> compilation.
+
+Indeed, I mixed it with something else (probably GPIO library and one of its
+core structures) where it's the case.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
