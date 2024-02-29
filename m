@@ -1,57 +1,56 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0BA14564F
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94168145668
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709248947; cv=none; b=akFc1ntTgNf+HI55plev8ptCxGvtxUtS8bxIk+rgZSahyq0Y7oBZSTAipvdUDu1xC8/ZlJN2XCilLqJhTF9iGbizluBmCN9l2MWONsUtVkqZvC8bhqwS6LzwFpmXfMaSyftr/NSCMsReK2KbFuFyB9skbEsSefTwANJ7ZSJqhOs=
+	t=1709248948; cv=none; b=GpIUqyhwn9sJmdsEICsn57css4NLH71GWWKZ3+7Uns4HDkDzvCNRrwY+uJcDOrwyH4frePlmaZpyEXRoIkwTNEjkdW8ltOmUJWqaJve3Pu63XuGSUqse2ZvBRqAvRN6TrLl5HMDDBZL1A1p2UXo+izpaWW5WUvzwkzvD9QnvYok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709248947; c=relaxed/simple;
-	bh=ftmlZUm13WxGdRUTJnLym9NaWym8BpVy8g2b1tMP78U=;
+	s=arc-20240116; t=1709248948; c=relaxed/simple;
+	bh=MRE4XT0P9lLUUCp1Ujsa6SQk4prpBDb9nMVRKvQ6tEU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X9wWxID3hapdWtOnlE2pe4F7WPNi+AMXHkcI+bUjb+/xuslsZMIx8oMjFafDjOKvY43Q67ctOEoovRlKzPx4n6EVIuZ/7QvUaYcxorJKbP2iAevkVutFuE+pkkH7X/fOKIv0CS7Yx7fGcTHL8fBd0jhVcdmc4bF5T9isQfjKvBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=L/K1eENv; arc=none smtp.client-ip=209.85.167.171
+	 MIME-Version; b=E4GAX3Xv+UI+98BgTuHZlqCVwwEnsm2gYONN4Xv2SfQbR+SejtyfS/lsvxpcBK9uJMORDX3H7Gm0NgIQXrL8ebwxxSa7AyLVn9ZDBS3nhroaLkcaYaTzApXJWD3/SDW6yYq2VcVBlklXI4xstQAWmtd7V2QvI45QRu/c8CFDTBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=XSvn8kij; arc=none smtp.client-ip=209.85.167.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="L/K1eENv"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3bbb4806f67so1099947b6e.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:22:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XSvn8kij"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3bb9b28acb4so1094686b6e.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:22:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1709248943; x=1709853743; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1709248946; x=1709853746; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A+Ju3+5NsQ7zqLi78mVdBh82QtKzTZZzrfFOA+rFDFs=;
-        b=L/K1eENvtww414ZLEnzDtPnjNRpwoUx8rzv082ES4ghMYTt0wArVxwWYwV9LFyhNOY
-         0Yv1RLyPpE4A9oYBi1R3kWeUCCPp+CwknA69YGrsM0rq0BlyDH22s4nlOvsuRzD5R7JE
-         osCrnmUUiOhHzydd+gGWiju5iJSQZUbnmETb8AARXOWQySCPFBeLauTKBX+M4/2is/r6
-         a3jDMMUcuwZDG9NHN9jkf5DbSMP1gyvmb4OIgtPb3dsrnE6N5Zso0K+FLMsDexGzsLWz
-         3EaCeKUV7FM9Y4j+e9VUlxp5EF72ldTHsS20NmVNvE0thm7dvHKn2H66IoYzVNK9X3AD
-         RomQ==
+        bh=hwpkv2OuO7YHUplKH98oFVfOa+CFbclxXNu0ysmduyU=;
+        b=XSvn8kijH43lMHYjQhBT0h1zp2LObu8ygYFKiDSr3mS/HXqIzckAiAmvpc+COu0a2e
+         3jOeUVSnSk+Onb1pHstwBjfqUS5KGf8RXtO6tAtJm6eaCHkXou/JQiWDojnRBlolaYHM
+         kBUDXsvMVoJVYzEmE1oL5rZfj/ljFQ26OMJ1meUy3YBJ8i3hlPYk/OSLOkUHA5KGTZrU
+         jbxkqEEbCl5g12LXsmxXoSIRe3rVDZFQSFjX0o0s0dTO28YG2KbXa7laBLDx5j4GGwn9
+         lK4IDJko3KLj3es+Gy7PODJy5cb4nvbV9LZxJ5ACeZHpQCJ4Y1SwtE00qMWrJT4JaNoG
+         LPfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709248943; x=1709853743;
+        d=1e100.net; s=20230601; t=1709248946; x=1709853746;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=A+Ju3+5NsQ7zqLi78mVdBh82QtKzTZZzrfFOA+rFDFs=;
-        b=hBtBjwZmcGlTE0iXrP5BIjztf5cpojlhRTx1x/3qRGtBx9MXcLoQmJ/gDXiXBPpREd
-         SESz3CE39RYt52TlND0ez0URTgNr/buf161IuHKuZmkPz0bxpd32NbOtYOf1mVX1v42w
-         6ZPU6tKWbBCvoijcJbCht7zZ+kOVYPPtiMnZA/3GIz7VNEpkqLDnZhXKvBeXMrtyr9xb
-         seKx4WRc5ofq/F99XH53r2FvOeoc2v9jMrFxGzOLGP7ZxOkFgEbSwItzKrsljhJDKNgO
-         3+vj1NAbApan2Q23kSb4yGoUtSOgp1C3xwRddC4mh/c0GCbvw/eca6ZseyEw10n0jiyf
-         nsqw==
-X-Gm-Message-State: AOJu0YwwX1QkmeHTFGjO5vavN2FUDXGX6MY/QIwqKpGoT//np7ECkIVI
-	fQir83lDj4EyrkZRFYbYm4ph5VLb27WAAZgcQzWoOzi/fgAO0A7V50FkCRJdqPqgxxsug0/yrCf
-	T
-X-Google-Smtp-Source: AGHT+IHzbXWkwDmlfZ/eL4jDsB3ccQ2hOxgMwKxCvl8MiEGc4S4tbeeGWY8zmXhmQ74ouvbz4gXZvw==
-X-Received: by 2002:a05:6808:1447:b0:3c1:b28b:76f0 with SMTP id x7-20020a056808144700b003c1b28b76f0mr91074oiv.9.1709248943714;
-        Thu, 29 Feb 2024 15:22:23 -0800 (PST)
+        bh=hwpkv2OuO7YHUplKH98oFVfOa+CFbclxXNu0ysmduyU=;
+        b=DRvGW7+TLapQHMFqVqMOK1dSanEk6P6tYCcCvhqciRup2ORjyzFt/inCea4qikuUOX
+         Rey35XDu1R5AsX152gsfy+P4lzW9bIAcWdbPnDrwzenKqQrl4zzHfEAmOiex8DSHVkCt
+         YWVxa130ohLvXktkz0oy2uLlPQBel5WebQxkQKlwAlerAV7opgjFbidGZVH6beG8M1U+
+         4slINWcQScDEGlfBhfjOJivfDaNHfEXkT7LKE56feHiCoiNVwg3HvPDGstlMX3oykRbD
+         XmZGSSIFT014P7r0nnsk429vS23OSuFgyOHH2m1SNQ9YM7j3xkTGxu0voYl0Ha080pjK
+         tUVQ==
+X-Gm-Message-State: AOJu0YyPLL4gG6leb9aGuFLI4a76KCLB3ZvrLpUanB0cPLhOB2Ecssx+
+	C4tOi1U9Oty7EbrjYNZEudr5KI21ZTtRIdV7H0drvTpYqKtrWCApNp1qRW9yBNk=
+X-Google-Smtp-Source: AGHT+IHmmt9lzZLUCIFAbm5GqyPJaePE9QFXJ4x/3NAo+fPZmowQvwtei5P759brqGkqtPXCOnb8SQ==
+X-Received: by 2002:a05:6808:17a7:b0:3c1:af49:222b with SMTP id bg39-20020a05680817a700b003c1af49222bmr47209oib.37.1709248945851;
+        Thu, 29 Feb 2024 15:22:25 -0800 (PST)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id c6-20020aa78806000000b006e55aa75d6csm1779719pfo.122.2024.02.29.15.22.23
+        by smtp.gmail.com with ESMTPSA id c6-20020aa78806000000b006e55aa75d6csm1779719pfo.122.2024.02.29.15.22.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 15:22:23 -0800 (PST)
+        Thu, 29 Feb 2024 15:22:25 -0800 (PST)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-riscv@lists.infradead.org
@@ -61,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Jisheng Zhang <jszhang@kernel.org>,
 	Yunhui Cui <cuiyunhui@bytedance.com>,
 	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v5 10/13] riscv: mm: Use a fixed layout for the MM context ID
-Date: Thu, 29 Feb 2024 15:21:51 -0800
-Message-ID: <20240229232211.161961-11-samuel.holland@sifive.com>
+Subject: [PATCH v5 12/13] riscv: mm: Preserve global TLB entries when switching contexts
+Date: Thu, 29 Feb 2024 15:21:53 -0800
+Message-ID: <20240229232211.161961-13-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.43.1
 In-Reply-To: <20240229232211.161961-1-samuel.holland@sifive.com>
 References: <20240229232211.161961-1-samuel.holland@sifive.com>
@@ -75,11 +74,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, the size of the ASID field in the MM context ID dynamically
-depends on the number of hardware-supported ASID bits. This requires
-reading a global variable to extract either field from the context ID.
-Instead, allocate the maximum possible number of bits to the ASID field,
-so the layout of the context ID is known at compile-time.
+If the CPU does not support multiple ASIDs, all MM contexts use ASID 0.
+In this case, it is still beneficial to flush the TLB by ASID, as the
+single-ASID variant of the sfence.vma instruction preserves TLB entries
+for global (kernel) pages.
+
+This optimization is recommended by the RISC-V privileged specification:
+
+  If the implementation does not provide ASIDs, or software chooses
+  to always use ASID 0, then after every satp write, software should
+  execute SFENCE.VMA with rs1=x0. In the common case that no global
+  translations have been modified, rs2 should be set to a register
+  other than x0 but which contains the value zero, so that global
+  translations are not flushed.
+
+It is not possible to apply this optimization when using the ASID
+allocator, because that code must flush the TLB for all ASIDs at once
+when incrementing the version number.
 
 Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
@@ -87,77 +98,22 @@ Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 
 (no changes since v1)
 
- arch/riscv/include/asm/mmu.h      | 4 ++--
- arch/riscv/include/asm/tlbflush.h | 2 --
- arch/riscv/mm/context.c           | 6 ++----
- 3 files changed, 4 insertions(+), 8 deletions(-)
+ arch/riscv/mm/context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/mmu.h b/arch/riscv/include/asm/mmu.h
-index a550fbf770be..dc0273f7905f 100644
---- a/arch/riscv/include/asm/mmu.h
-+++ b/arch/riscv/include/asm/mmu.h
-@@ -26,8 +26,8 @@ typedef struct {
- #endif
- } mm_context_t;
- 
--#define cntx2asid(cntx)		((cntx) & asid_mask)
--#define cntx2version(cntx)	((cntx) & ~asid_mask)
-+#define cntx2asid(cntx)		((cntx) & SATP_ASID_MASK)
-+#define cntx2version(cntx)	((cntx) & ~SATP_ASID_MASK)
- 
- void __init create_pgd_mapping(pgd_t *pgdp, uintptr_t va, phys_addr_t pa,
- 			       phys_addr_t sz, pgprot_t prot);
-diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
-index 8e329721375b..72e559934952 100644
---- a/arch/riscv/include/asm/tlbflush.h
-+++ b/arch/riscv/include/asm/tlbflush.h
-@@ -15,8 +15,6 @@
- #define FLUSH_TLB_NO_ASID       ((unsigned long)-1)
- 
- #ifdef CONFIG_MMU
--extern unsigned long asid_mask;
--
- static inline void local_flush_tlb_all(void)
- {
- 	__asm__ __volatile__ ("sfence.vma" : : : "memory");
 diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
-index b562b3c44487..5315af06cd4d 100644
+index 0bf6d0070a14..60cb0b82240e 100644
 --- a/arch/riscv/mm/context.c
 +++ b/arch/riscv/mm/context.c
-@@ -22,7 +22,6 @@ DEFINE_STATIC_KEY_FALSE(use_asid_allocator);
+@@ -200,7 +200,7 @@ static void set_mm_noasid(struct mm_struct *mm)
+ {
+ 	/* Switch the page table and blindly nuke entire local TLB */
+ 	csr_write(CSR_SATP, virt_to_pfn(mm->pgd) | satp_mode);
+-	local_flush_tlb_all();
++	local_flush_tlb_all_asid(0);
+ }
  
- static unsigned long asid_bits;
- static unsigned long num_asids;
--unsigned long asid_mask;
- 
- static atomic_long_t current_version;
- 
-@@ -128,7 +127,7 @@ static unsigned long __new_context(struct mm_struct *mm)
- 		goto set_asid;
- 
- 	/* We're out of ASIDs, so increment current_version */
--	ver = atomic_long_add_return_relaxed(num_asids, &current_version);
-+	ver = atomic_long_add_return_relaxed(BIT(SATP_ASID_BITS), &current_version);
- 
- 	/* Flush everything  */
- 	__flush_context();
-@@ -247,7 +246,6 @@ static int __init asids_init(void)
- 	/* Pre-compute ASID details */
- 	if (asid_bits) {
- 		num_asids = 1 << asid_bits;
--		asid_mask = num_asids - 1;
- 	}
- 
- 	/*
-@@ -255,7 +253,7 @@ static int __init asids_init(void)
- 	 * at-least twice more than CPUs
- 	 */
- 	if (num_asids > (2 * num_possible_cpus())) {
--		atomic_long_set(&current_version, num_asids);
-+		atomic_long_set(&current_version, BIT(SATP_ASID_BITS));
- 
- 		context_asid_map = bitmap_zalloc(num_asids, GFP_KERNEL);
- 		if (!context_asid_map)
+ static inline void set_mm(struct mm_struct *prev,
 -- 
 2.43.1
 
