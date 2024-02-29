@@ -1,98 +1,159 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59536137758
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41BB7D07B
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709219203; cv=none; b=Iphm/XMAr68Yo5rQX/Xs7b849IrNnYcVDw5sqRtGk+/fFH8XKDoOkXN6cniU2whLvB/kZVVEbIo15mua68vWdYKudHre42ZAE0JJO4tahfHR7B1HiITv5lVpG0bf1CKBrW4mnt2nMt9IQ9C/MjTqq9hWHykP13mB3fxHtpfkmW8=
+	t=1709219234; cv=none; b=BHSe/xfp3C3R701Ru3geiXjDc58Ues9TGDvjohYO6YSjAimyKMN1mfObXgBRHJSvuwEgOMbmBTBw8C1wu4kOiH2wMosfJu9CSPNGiFKZJNfT1C+9Qsg7fwboMh3NAiIUV5rJpjNjo5imWvYslKCB2LyGyW+B4+LMyKsWx69mHsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709219203; c=relaxed/simple;
-	bh=PQ/k0j/+e1mnfwmxiUbzUWJRrlV0ylYhakUhgNYyuQ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oFyp1VLsV1Hs+QvvvB1wNwwLJ861Qo3Nuk0VtwLcSM35v7E0f7YKBF/Q5W66LZRfL4Obj8Y8rXM20pI88DA3bU/kcBJZBFh6jPdn1kHnPzqAHkcYuL3NKkpnlkdHAxTC8RCb6rdyvQB8B7BFk8Gzn4gFJ9rOKzzCVntsAYc29s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KsB3fYdG; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709219234; c=relaxed/simple;
+	bh=eQoYcoWIrFj7gRUjrrGk3RBO7jWfySCV0Qbg3y5bQck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X0a39X2EP5Xn1XCiNXMJibwolc7IPUzQgY3jqdUXUA2mUKowG9K2RMCHwXySt2/ama27ia/sc/F9OcTSNnBFD/QAOkgvQLWhuWISJByvdyZE0nWod0X84fuij8JICnJtcdP24i8zz9ooj1Ud4vvEedSUeAIa3Tq0U3naRwAQqMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YLcnSk4B; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KsB3fYdG"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so977821276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:06:42 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YLcnSk4B"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-365b413549eso1400975ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:07:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709219201; x=1709824001; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=26MU8kHY9/G5Vo/Dcv5Tts/6jAZMZIquioYpJYzi0xE=;
-        b=KsB3fYdGhLGct4kjtdL0Q713IKX2Aa3fWKkRV1Cugx3CStkNQnyhtXWvrxEu2zM1PB
-         CmyHRZjvPIwkbbWqODjHxitkWyI2i5teoFgr+5Cw0hEnik93Zp7oFuKFgiyzca7mMp9i
-         4gyrWSQRqQd7vkFP2+1eV/6fsyE+Qbr4euV6ZhcwI8w578yQGpC+xgRMTL0c/fU5fEYH
-         ydnSBuWlEqz+XLZjv/tWYWjopwXn9PLU1/bs7EZrF7TBbjKMzRZ6ucgjImr5r+ltgMao
-         ypFc+AW/e2HLgfQkMN0FyyymgkyTnlEXAesawPoerSHazj0Y4WOcW6+T7+t/RlBYJXu9
-         U3hQ==
+        d=linuxfoundation.org; s=google; t=1709219232; x=1709824032; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lUr9WwPm1bDr07bGVGyHcZBKICuYFoD9+zTSPH1u+LA=;
+        b=YLcnSk4Bkqf+xK4M7Z0Fu/4wyMjkRvC+iSXz0JP2E56T1gksz21Vrqwhtr9wdK3xdZ
+         jv8bu135TvSwWt8LHo0tZH/lHqWfn52lLGb9LfhXjftKMJo4WkOjsWc6ycTJ3FbyAHN2
+         v6MOsGTrUWM7/B32QcbmZNX0+tcxovms/yr2U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709219201; x=1709824001;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=26MU8kHY9/G5Vo/Dcv5Tts/6jAZMZIquioYpJYzi0xE=;
-        b=XwS9SzMXKVUni3lRf1G6rX7k0+ueDh1VObg9XpHPVJNBwK/QealYdIqw5K69JkxdIl
-         Rl8fmUzlFb7eMhIEk2Jb+tZDAKKPr4sWpb9H7zlMgiEuxwSTiXxDg1EQHl4FW33WjAPf
-         gYwm6AihpvP++TuQ51keL3cmF0cLwKSc/31ndu8eYFuQ21kYMy84evfgsxgyUXI5PBdF
-         nr/SvjgsdgYWgSYGLsApmr0kbiNW02PIraR9m8GyAjfQC8IuNneamRQbQsbIVYnmQTMZ
-         bVtKygOqlu5MQv0jCB7ez+qLVuaEnax9xJPpuHv9eYIqniCHyZ/mv4KowupjVHQy42r4
-         B72w==
-X-Forwarded-Encrypted: i=1; AJvYcCUnLh5mU2rS+MHrrUZuX3blXJJ/tPPU2BBkNYpYCXlXBErgqjJT+r2CHbgZ6KlQdb1YRPG4igs+wbNqPpHaCrhASynLXz7YLJL3VSLD
-X-Gm-Message-State: AOJu0YyfnBloPDTiRYRe0OROXoTm2Npm0eZT1sx85pSjPe5tLyCvwRF+
-	B0+v9Y//8w7FiV85Xwsw+DRWXN4zJ4PIlpNia/iUbz2GzXrTC1QIU82TSG0ZXn2QQBzsWeIs/Ct
-	VWCHffN+9LELyNplY53bCcavA64UP9+b12/EKTw==
-X-Google-Smtp-Source: AGHT+IGyVzxlO9P2N2/Nle4urv89zandwAhtRJZVVvNItIuQ0pBbBhYt18T7OWc2iTv2p8Tw14IEUrXNp6FevFF8nO0=
-X-Received: by 2002:a25:e812:0:b0:dcd:a28e:e5e0 with SMTP id
- k18-20020a25e812000000b00dcda28ee5e0mr2521252ybd.25.1709219201044; Thu, 29
- Feb 2024 07:06:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709219232; x=1709824032;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lUr9WwPm1bDr07bGVGyHcZBKICuYFoD9+zTSPH1u+LA=;
+        b=hqKYaiOdU7Mkg27dNHDgmt2ICRB693r59Mse+FHMq70j+rdhhdIUHoWpFQKcmej7pn
+         gmKYWC1Obs1neSZkk0LPQlrwQi/44xFosxjzT5BS6v/QnO6k9GUaaDsu0DO7pAya202h
+         hXcWOAMuemL9eEQYHHfGdJ3/N1hEa5qGJK1jf1/pd91PNEbT2U/P6UcHZcXGSxXNWYZo
+         QFUBowjwoOySKglgBol9Sr9vx4+HI6xlvzacVJ73ccoOu1BRxN3TiKbxql7vAokkg1zW
+         9otMVCClzEFRv4faK1wlBwdNJjBRtx+MFzcHBnVrH5rWq37BcTImy3Zk/mAxx4nek3+g
+         OzuA==
+X-Forwarded-Encrypted: i=1; AJvYcCU04+wQKzbyA28qKCrtJkcp1T2FMrTJ1uGkhFQpwxghc3kNpQAVutyJuG+hxIw7efiZvvc8rkQVs8PTGxYcwIQzk3bPwslJFI+PY/Gj
+X-Gm-Message-State: AOJu0YwXmoLGoufyx3g2M+9Qk7w6IYYjVy5mE6/PQMQdpb4zhI0yMAL6
+	qJlknOPYGf812PvuianXd6qdOJs+GxQk5hka8Mbn6XZSduWMNkJ9N8vOgDstqvRUeIxzSQpgiyt
+	pa3k=
+X-Google-Smtp-Source: AGHT+IGnBv7cnuB5+Ygx0Spp8dOixJyI7HqA7kTIXE4S9xFxwubQmYW37F+sI4cGzNH5Sqb9chjpgg==
+X-Received: by 2002:a05:6e02:1a27:b0:365:2bd4:2f74 with SMTP id g7-20020a056e021a2700b003652bd42f74mr2811151ile.0.1709219232030;
+        Thu, 29 Feb 2024 07:07:12 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id m15-20020a02c88f000000b004745b40ba6fsm346477jao.164.2024.02.29.07.07.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Feb 2024 07:07:11 -0800 (PST)
+Message-ID: <be2e812c-3898-4be8-8a9d-e221acb837c3@linuxfoundation.org>
+Date: Thu, 29 Feb 2024 08:07:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223181439.1099750-1-aaro.koskinen@iki.fi>
-In-Reply-To: <20240223181439.1099750-1-aaro.koskinen@iki.fi>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 29 Feb 2024 16:06:04 +0100
-Message-ID: <CAPDyKFq-KuoMNE56zjc329OTfF-O8Qm5pDxtkNotZWi2aTBd2Q@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Fix MMC/GPIO regression on Nokia N8x0
-To: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build failure after merge of the kunit-next tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Brendan Higgins <brendanhiggins@google.com>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Intel Graphics <intel-gfx@lists.freedesktop.org>,
+ DRI <dri-devel@lists.freedesktop.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Matthew Auld <matthew.auld@intel.com>, David Gow <davidgow@google.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240229152653.09ecf771@canb.auug.org.au>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240229152653.09ecf771@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 23 Feb 2024 at 19:15, Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
->
-> Hi,
->
-> Nokia N8x0 MMC has been pretty much broken starting from v6.3. These
-> patches restore the functionality. Tested on N810 with eMMC and external
-> miniSD card, and on N800 with SD card in the inner slot.
->
-> A.
->
-> Aaro Koskinen (5):
->   ARM: OMAP: fix bogus MMC GPIO labels on Nokia N8x0
->   ARM: OMAP: fix N810 MMC gpiod table
->   MMC: OMAP: fix broken slot switch lookup
->   MMC: OMAP: fix deferred probe
->   MMC: OMAP: restore original power up/down steps
->
->  arch/arm/mach-omap2/board-n8x0.c | 17 ++++++-----
->  drivers/mmc/host/omap.c          | 48 +++++++++++++++++++++-----------
->  2 files changed, 39 insertions(+), 26 deletions(-)
->
+Hi Stephen,
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+On 2/28/24 21:26, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the kunit-next tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> In file included from drivers/gpu/drm/tests/drm_buddy_test.c:7:
+> drivers/gpu/drm/tests/drm_buddy_test.c: In function 'drm_test_buddy_alloc_range_bias':
+> drivers/gpu/drm/tests/drm_buddy_test.c:191:40: error: format '%u' expects a matching 'unsigned int' argument [-Werror=format=]
+>    191 |                                        "buddy_alloc failed with bias(%x-%x), size=%u, ps=%u\n",
+>        |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/kunit/test.h:597:37: note: in definition of macro '_KUNIT_FAILED'
+>    597 |                                     fmt,                                       \
+>        |                                     ^~~
+> include/kunit/test.h:662:9: note: in expansion of macro 'KUNIT_UNARY_ASSERTION'
+>    662 |         KUNIT_UNARY_ASSERTION(test,                                            \
+>        |         ^~~~~~~~~~~~~~~~~~~~~
+> include/kunit/test.h:1233:9: note: in expansion of macro 'KUNIT_FALSE_MSG_ASSERTION'
+>   1233 |         KUNIT_FALSE_MSG_ASSERTION(test,                                        \
+>        |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/tests/drm_buddy_test.c:186:17: note: in expansion of macro 'KUNIT_ASSERT_FALSE_MSG'
+>    186 |                 KUNIT_ASSERT_FALSE_MSG(test,
+>        |                 ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/tests/drm_buddy_test.c:191:91: note: format string is defined here
+>    191 |                                        "buddy_alloc failed with bias(%x-%x), size=%u, ps=%u\n",
+>        |                                                                                          ~^
+>        |                                                                                           |
+>        |                                                                                           unsigned int
+> cc1: all warnings being treated as errors
+> 
+> Caused by commit
+> 
+>    806cb2270237 ("kunit: Annotate _MSG assertion variants with gnu printf specifiers")
+> 
 
-Nitpick: Tony, while applying I think it would be nice to change the
-prefixes of the commit message headers for the mmc patches to "mmc:
-omap:".
+Thank you. I did allmodconfig build on kselftest kunit branch to make
+sure all is well, before I pushed the commits.
 
-Kind regards
-Uffe
+> interacting with commit
+> 
+>    c70703320e55 ("drm/tests/drm_buddy: add alloc_range_bias test")
+  > 
+> from the drm-misc-fixes tree.
+> 
+> I have applied the following patch for today (this should probably
+> actually be fixed in the drm-misc-fixes tree).
+> 
+
+Danial, David,
+
+I can carry the fix through kselftest kunit if it works
+for all.
+
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Thu, 29 Feb 2024 15:18:36 +1100
+> Subject: [PATCH] fix up for "drm/tests/drm_buddy: add alloc_range_bias test"
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>   drivers/gpu/drm/tests/drm_buddy_test.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/tests/drm_buddy_test.c b/drivers/gpu/drm/tests/drm_buddy_test.c
+> index 1e73e3f0d278..369edf587b44 100644
+> --- a/drivers/gpu/drm/tests/drm_buddy_test.c
+> +++ b/drivers/gpu/drm/tests/drm_buddy_test.c
+> @@ -188,7 +188,7 @@ static void drm_test_buddy_alloc_range_bias(struct kunit *test)
+>   							      bias_end, size, ps,
+>   							      &allocated,
+>   							      DRM_BUDDY_RANGE_ALLOCATION),
+> -				       "buddy_alloc failed with bias(%x-%x), size=%u, ps=%u\n",
+> +				       "buddy_alloc failed with bias(%x-%x), size=%u\n",
+>   				       bias_start, bias_end, size);
+>   		bias_rem -= size;
+>   
+
+thanks,
+-- Shuah
