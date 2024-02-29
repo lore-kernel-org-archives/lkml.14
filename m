@@ -1,89 +1,94 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B8B5B690
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC9D5B690;
+	Thu, 29 Feb 2024 09:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199088; cv=none; b=DzSNX2quDPVIvhp0fC2HDPIi24jc/5tvql1e3qU8RJBWMN6Qf39KE24kyIJIHH1Q2DgXgHuoxvCuaQVP6WaUirksM/DnjcROvVWjBo6QPaZWFMZYx0TimyqP3Eu+nG1gvLfhDP+XButXW518wA8N3RzJMbXs3r25TfGGaLoUfH4=
+	t=1709199105; cv=none; b=rUtmpdYVDGRa76jbaY2dVR8ssM3Ovqc/WX6iMlnwYGwt8/gOUKIBRVryxJxcZ7od2GwceMfhIFgv6lkeSHT1ICrRiJtf9+yvuEcoNYCLZW+4fGSWRrj0p/Qn4rCF+2ocZpC560+RtmzHnO4sybD7ax8NI21cwyegvdAdlK13z3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199088; c=relaxed/simple;
-	bh=yLDH/SmZ8OkNo4IKopG13DYJTMTGxHzaAKTzK5mwr88=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kpyRnhrOuYxhRqaY3YlckY68pg9xFcbWJmY6mwzxoloiMd+mA41pUyOgTUQDm2q3sK/ATgimsZqY/S8o9ftnT4xleYN6My444mu9gvOnp85DOdiVNE/rvA0nXFmWI+ikIXQvTDACleJdndZSllWZ7v6yMfaO9fJ10j/MvnOlcvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=miaiGnrt; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709199105; c=relaxed/simple;
+	bh=PWzrG6VIjZLBT76F+KgpRQIxbWi9zLp+1US14SEgOzU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=CHsobcp+kAxAwUCErDBSJ+7hJqIuMjYUSQrlD25PBzboafHWL+E3NRxiQufgj81Iq8bx/Ck+QIuUIlSem6rF1++SF6oCjrE4G7bjbtaFoBKU1KAO/dtOrdqJElPFg3svSlqORS681+MaGONkVtyJqlY/kkrDCgoIVnc4wAlTy7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dYHy0nIT; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="miaiGnrt"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dcc86086c9fso767283276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:31:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709199085; x=1709803885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yLDH/SmZ8OkNo4IKopG13DYJTMTGxHzaAKTzK5mwr88=;
-        b=miaiGnrt0Ofo/Y9TQswPkiaTMl+dgvBYegpF6lL+Tla111mA5PVr0JxUPAjhFaXN8t
-         YPgwarVt4S8w8FCN8D+M950Teob1tIypeRLnkMqPeU4jRKp8b7TWdBBPT36bwfbkwXD/
-         POufNVxJ6LAzDlLr0WsuTatvvFG14Xojy+jC8GYqH4zfcdtn9wyFyr+uDya5ufUSjLEm
-         O0olpqp7JT7iqOlii1adZmBrxq5i5+U/JP0jK5Zqfs5vz0G4f5KXA0ieOK3KVyPXedBn
-         e40aVi/wAdwxsUEzL+3NTKhqtftZxv2VWjvzGDq3K+7YNRAo0Ir4QXofOrThA4Glammg
-         Zs+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709199085; x=1709803885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yLDH/SmZ8OkNo4IKopG13DYJTMTGxHzaAKTzK5mwr88=;
-        b=PJEZwDsBvPJdUxbZSPtZDFdJ9+kEXQ78EM+BAr3Xjlf1HHBGUZO9ppJ0VQmmlMeuUR
-         VNbYvzQDQIB5NLxu2w3UWWo/BMN3Ipbqo6V/qbbTp8TSzL3BlUfMfvakmAhx+oyBr0C+
-         OLt25uIhzJlhucer9ie5u5U0UzoYvpIU85lL6AKB7nSFkXJmc0AxAIO+ep6KgH3FmwQa
-         p/NKF96QZmpZ+VOHQ3eytCFst4gCed5UM8bzRUi+352uaSTNOEKNpqoNvaJzkDcb2qYp
-         eYdwfkkXl95alQk2w2Pg1V+RLIeBa9YNzXyKIXSVRnf1j/qA28BUNavPB08HI1J1gw24
-         y9xw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTbTH4aCsFmu4/qMPOQTOxuRATdX8K+wr2stxC4TIz20N3WH77QVI9vE0kLp5L8qxTdE0HMTn0I4p+gnalGP7O5VfpN0zcAEE539iZ
-X-Gm-Message-State: AOJu0YwU+w4EztsJb5wKaNEVmpB6wBpG3epR9ef0VqrGp8ROV3xdUWEN
-	2U8DgrrLhbADq7XOjK29ffQMJ6pUln4o00WiUktdczFGGKGKBrvw5QXef6Ih6Xi5hIfgiNmXMBW
-	rwJMLVz5rL/LgdDrFmHp+HcVplY1puOslGTjR7Q==
-X-Google-Smtp-Source: AGHT+IGSggpuk2KLmltD3piA3qT24S+sa7pJ2na4Fu/l5Ohz9uHZf9k8yLApEggfc1Jf09gIebRKKbZvOzn1ChOVodk=
-X-Received: by 2002:a25:a28f:0:b0:dca:e4fd:b6d5 with SMTP id
- c15-20020a25a28f000000b00dcae4fdb6d5mr1603586ybi.27.1709199085627; Thu, 29
- Feb 2024 01:31:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dYHy0nIT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1D3D7E0011;
+	Thu, 29 Feb 2024 09:31:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709199101;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PWzrG6VIjZLBT76F+KgpRQIxbWi9zLp+1US14SEgOzU=;
+	b=dYHy0nITyeQv9SDvJSf0KHiSFGyyJMx6bJY1VW+IopaZlmZOfJZBEwXe1kjXJZphSb7HFy
+	22+t/AXW5/rCaE0+feMCcC8OksOOb+K70PrnlcJX+ooZHUIl0Fju33omWcSX5njKkrSgIC
+	Id2wFpqxrJnaF/TDMXZ8nZfhanGK4j6XoEmag3stdmX8KamAQCJka+XurtxwGh0IVPGw3c
+	vz+j98XUXdQNXd0I295OsoBEuoC8vOE7vPu4jKpF/U3u02d+/UX80cuGwAiwBrglfSS1CT
+	aO+n9sgU9ywBxuHhCWq6eAhT3sz2b7DYCbgu+CMyHFKhNkZXBE0U+pmSys/64w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-17-3ba757474006@bootlin.com>
-In-Reply-To: <20240228-mbly-gpio-v2-17-3ba757474006@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 10:31:14 +0100
-Message-ID: <CACRpkdbUNiK7wmtR0xastCgtsp+QpfEGgXTBf32S+R5xQtxD0Q@mail.gmail.com>
-Subject: Re: [PATCH v2 17/30] gpio: nomadik: use devm_platform_ioremap_resource()
- helper
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 29 Feb 2024 10:31:39 +0100
+Message-Id: <CZHGIIQPJ6KU.ZY00CXS7MHA7@bootlin.com>
+To: "Wolfram Sang" <wsa@kernel.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH 09/13] i2c: nomadik: fetch timeout-usecs property from
+ devicetree
+Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Andi Shyti"
+ <andi.shyti@kernel.org>, "Rob Herring" <robh+dt@kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-mips@vger.kernel.org>, "Gregory Clement"
+ <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+X-Mailer: aerc 0.15.2
+References: <20240215-mbly-i2c-v1-0-19a336e91dca@bootlin.com>
+ <20240215-mbly-i2c-v1-9-19a336e91dca@bootlin.com>
+ <Zd3SJMBp23ybgdsJ@shikoro> <CZFWIJE9978P.G3TZC2YIUST9@bootlin.com>
+ <Zd8PtLsUc0G8KR97@shikoro> <CZGR61YHK1DJ.SVRE78BJ9WB4@bootlin.com>
+ <ZeBNbx6PDGk8xqGX@shikoro>
+In-Reply-To: <ZeBNbx6PDGk8xqGX@shikoro>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boot=
-lin.com> wrote:
+Hello,
 
-> Replace calls to platform_get_resource() then devm_ioremap_resource() by
-> a single call to devm_platform_ioremap_resource().
+On Thu Feb 29, 2024 at 10:25 AM CET, Wolfram Sang wrote:
+> > The alternative is that I keep going with a new revision of i2c-nomadik
+> > that manually parses the prop. It'll be refactored if/when the I2C core
+> > provides a better way to access the value. Is that OK?
 >
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> That wouldn't have helped because there is still no user in-kernel of
+> that property, i.e. no DTS file with that property. But I just realized
+> that I need to convert i2c-mpc to avoid a deprecated binding, so we have
+> a user there. Lucky you ;)
+>
+> I'll try to get the series done today.
 
-Patch applied!
+Lucky me indeed!
 
-Yours,
-Linus Walleij
+I just thought about it but I don't mind using the property in the eval
+board DTS. The default 200ms timeout makes no sense for us. Using a
+default of a few ms would be more sensible and make us the second user
+of the prop.
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
