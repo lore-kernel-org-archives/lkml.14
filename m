@@ -1,125 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A7216A342
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 20:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBF116A375;
+	Thu, 29 Feb 2024 20:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239299; cv=none; b=Q1LO08ldYO1vgmhVT+h9/KdDC68mcgypc+MKSWQeNLDhkFPBGrILUsuM5+dzV+ONbjaWU1O15CgGKf7DvQT/nfLobNC05FL/vlfzDfj2C6Ukg5P/gF+MtFOEpKiOoIQEwmNylun7/CvPE4LCnNf55qaTxLlWwjZQctj8mYBg1SY=
+	t=1709239299; cv=none; b=YgyybDJgUkDiHK+vaDZsjcIUVjLX2kLJcb+0jA4QL+/7dk2xM3NZty3FA74AJac+hPmovlFKRBzaYUGkqAQUN0nsWTZEy8xQ7Id4EeDD7csdaLJesJfHOsjoosWaOpTcoupIDT9EH4w9RH2t4W+pXwms+IcpsqoF0f0XaMo4uzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709239299; c=relaxed/simple;
-	bh=l0Oq7AxbSJ3lXobf7o9ZXRUD7DUDozdY4OL4raAyp+U=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=gvYBfl/ZSgkPf07KMlYPANHDadz4tYGdMBBUUA6Hns7Ic3o0GvFtG09RV0FzlisvrrNyEdevqJBz9tG/UD1G/n0LEWtw6NBV9onJBFTmzyOLRJPqj8ses2dlmhJ4f+fFcM9vXB/zGHUvVHo1Z8Hb0I7+RTpf4CLqbDJOw1vobS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MKawtjZc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=/+JbcQspYtn1cfE7npVm5z6VSjqlZ5+MhDIb1KgxOJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jFAHKFR6GXwlY6OirN93zr7LH/yda10GVWTCfC/0Cvov6wao4oNJuAOBDmS1ZnKO/Klkh3Jb0oKr4jQ48heCycC/yVWHSmbiv6btn+EqPjnXmJ+6RLyX9K0Pb1tXdxerKRhuZjhKRyfO1KOzDlJ621FjAvOI0ttdR+2hoZRLcgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EHcJRa89; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MKawtjZc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709239295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=CGBj0np1q/By//l0SwNKja6NHqrIAS9mqiRvEzZjjl8=;
-	b=MKawtjZc8cVkdeqrqB2aEB+kYTqfvL3UvR3lx/2tDDh4vnVUEQlsfrFivMHZ8J01zRyhLQ
-	bhzKM8ULiJRx+F3n8Q9uuG/VrJ1za2uD/6nEsxKN/3DUWq5sjF+ePhEWJBVDYwpxxHoN2H
-	iBOrM50R3qiRHQHBQzqfNs+nAOCQ5dY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-115-LPrxkonAMx-LIKP55RDsAQ-1; Thu,
- 29 Feb 2024 15:41:34 -0500
-X-MC-Unique: LPrxkonAMx-LIKP55RDsAQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2CDDA1C0690F;
-	Thu, 29 Feb 2024 20:41:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.114])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7AC2D1BDB1;
-	Thu, 29 Feb 2024 20:41:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Marc Dionne <marc.dionne@auristor.com>
-cc: dhowells@redhat.com, linux-afs@lists.infradead.org,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] afs: Don't cache preferred address
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHcJRa89"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2927DC43330;
+	Thu, 29 Feb 2024 20:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709239299;
+	bh=/+JbcQspYtn1cfE7npVm5z6VSjqlZ5+MhDIb1KgxOJY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EHcJRa89sa/JNhV1RtNgILyhebxnCYZUr9pXoU7umhFKgL/5R9EiTSVqtWeB0yKhn
+	 a0E61/XrwpNupKhURnh55WzQXnUjKKblkXcfMklXB3W5vTNtdrupTU6zlbr+vSRPyv
+	 cqyot7ym71EC3gdGj5u9K+MOrOUtJhL/ZbipGwabAZYLTb9Y4lX0BH7pJtFFWGPko/
+	 bMolewgUAVQGSBRFpUPLuHnj4QMhrCJgUHS/0SDW+JrVpU/UCrnbl8HGC1aoJd4qpW
+	 tuRcW1Irv/VpnQ5F0T89M62GrxduGl6mKr2zk4ks8ow/usAnKThdwwD2nYlBlqhJw5
+	 5CufV9aRNAkZA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+	Alexandra Winter <wintera@linux.ibm.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Sasha Levin <sashal@kernel.org>,
+	twinkler@linux.ibm.com,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 5/8] net/iucv: fix the allocation size of iucv_path_table array
+Date: Thu, 29 Feb 2024 15:41:22 -0500
+Message-ID: <20240229204127.2861980-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240229204127.2861980-1-sashal@kernel.org>
+References: <20240229204127.2861980-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <159568.1709239291.1@warthog.procyon.org.uk>
-Date: Thu, 29 Feb 2024 20:41:31 +0000
-Message-ID: <159569.1709239291@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.210
+Content-Transfer-Encoding: 8bit
 
-In the AFS fileserver rotation algorithm, don't cache the preferred address
-for the server as that will override the explicit preference if a
-non-preferred address responds first.
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: linux-afs@lists.infradead.org
+[ Upstream commit b4ea9b6a18ebf7f9f3a7a60f82e925186978cfcf ]
+
+iucv_path_table is a dynamically allocated array of pointers to
+struct iucv_path items. Yet, its size is calculated as if it was
+an array of struct iucv_path items.
+
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/rotate.c |   21 ++++-----------------
- 1 file changed, 4 insertions(+), 17 deletions(-)
+ net/iucv/iucv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/afs/rotate.c b/fs/afs/rotate.c
-index 700a27bc8c25..ed04bd1eeae8 100644
---- a/fs/afs/rotate.c
-+++ b/fs/afs/rotate.c
-@@ -602,6 +602,8 @@ bool afs_select_fileserver(struct afs_operation *op)
- 		goto wait_for_more_probe_results;
+diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
+index 6f84978a77265..ed0dbdbba4d94 100644
+--- a/net/iucv/iucv.c
++++ b/net/iucv/iucv.c
+@@ -156,7 +156,7 @@ static char iucv_error_pathid[16] = "INVALID PATHID";
+ static LIST_HEAD(iucv_handler_list);
  
- 	alist = op->estate->addresses;
-+	best_prio = -1;
-+	addr_index = 0;
- 	for (i = 0; i < alist->nr_addrs; i++) {
- 		if (alist->addrs[i].prio > best_prio) {
- 			addr_index = i;
-@@ -609,9 +611,7 @@ bool afs_select_fileserver(struct afs_operation *op)
- 		}
- 	}
+ /*
+- * iucv_path_table: an array of iucv_path structures.
++ * iucv_path_table: array of pointers to iucv_path structures.
+  */
+ static struct iucv_path **iucv_path_table;
+ static unsigned long iucv_max_pathid;
+@@ -542,7 +542,7 @@ static int iucv_enable(void)
  
--	addr_index = READ_ONCE(alist->preferred);
--	if (!test_bit(addr_index, &set))
--		addr_index = __ffs(set);
-+	alist->preferred = addr_index;
- 
- 	op->addr_index = addr_index;
- 	set_bit(addr_index, &op->addr_tried);
-@@ -656,12 +656,6 @@ bool afs_select_fileserver(struct afs_operation *op)
- next_server:
- 	trace_afs_rotate(op, afs_rotate_trace_next_server, 0);
- 	_debug("next");
--	ASSERT(op->estate);
--	alist = op->estate->addresses;
--	if (op->call_responded &&
--	    op->addr_index != READ_ONCE(alist->preferred) &&
--	    test_bit(alist->preferred, &op->addr_tried))
--		WRITE_ONCE(alist->preferred, op->addr_index);
- 	op->estate = NULL;
- 	goto pick_server;
- 
-@@ -690,14 +684,7 @@ bool afs_select_fileserver(struct afs_operation *op)
- failed:
- 	trace_afs_rotate(op, afs_rotate_trace_failed, 0);
- 	op->flags |= AFS_OPERATION_STOP;
--	if (op->estate) {
--		alist = op->estate->addresses;
--		if (op->call_responded &&
--		    op->addr_index != READ_ONCE(alist->preferred) &&
--		    test_bit(alist->preferred, &op->addr_tried))
--			WRITE_ONCE(alist->preferred, op->addr_index);
--		op->estate = NULL;
--	}
-+	op->estate = NULL;
- 	_leave(" = f [failed %d]", afs_op_error(op));
- 	return false;
- }
+ 	get_online_cpus();
+ 	rc = -ENOMEM;
+-	alloc_size = iucv_max_pathid * sizeof(struct iucv_path);
++	alloc_size = iucv_max_pathid * sizeof(*iucv_path_table);
+ 	iucv_path_table = kzalloc(alloc_size, GFP_KERNEL);
+ 	if (!iucv_path_table)
+ 		goto out;
+-- 
+2.43.0
 
