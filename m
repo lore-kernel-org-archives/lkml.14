@@ -1,144 +1,145 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1EF143728
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 21:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F184014373A;
+	Thu, 29 Feb 2024 21:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709240572; cv=none; b=mLzjug6QPb1JWwIAt0yQSFd9zwSrmRPhdb15bWJ3jIigaPOwd1TziwU4jSNDdPIiAWuPNYhJUBI4L7XRUzINVdr5KB1L79fmTwUWyePqE16kcazJtiVWGm1G/a8yPDGkfpA+3hK6DKgDXyflMFgGTAy7ZXfb0A//SQ+graohztA=
+	t=1709240594; cv=none; b=Pq2FBAZyY+s0XsGgrnFsNwjIqHRVTe50OOEmyZrWrvhiEsC2G+TET0eZV1XU8whCSx+SH5VOAqDBmQqq27Dn2XEsbwULY7cbe8BvFzcCpLlFJmaBomEnzE3MSZwv05U9JxRlFEW1rwd9m2pDVjxBriE1hJFCP33Uc90OxBs2Ffg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709240572; c=relaxed/simple;
-	bh=w8Goakld9blZJd9/ya/yCd3Qk4/5VBb72qWNnFBC0g4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HU+Z4s9vOKSTCL+OQhdZ6p3VXfuNOn2Qwi9l+hoEdxrqRqK6QQgYpKzyca/Jw4Xl8f0l6zT2aEAjRW1ypDT5wSOYDQe2emhYCiB/PVY2qRONrjHUv68i/GfOPawELzvXOM4ip4LX+h62zZQ5VG71ReGhHZ/y5nFXlGW2r+luER8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R9cM4npi; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709240594; c=relaxed/simple;
+	bh=VTjWIjnaot8bvp8Uz7YSb+Wu+VwzB7BvnAiwu0uiHUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aA5Kx72eCTQTlcfN85Ih+XhIu4XF4ziOO3F3Zx1Tun8tw96TIREO2CLLU2ZHPTvqDXf+FHPFlKHsHC+dYAz1pm48C3JNfsBcJ8j0yZBgUibj9Cc0+EWKyRPK2ruKLwpnFxIlWWYx9HbrqDopnnj8ljt5aKIXMwhqUVwjy3Jkrhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=kzPXwjK1; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R9cM4npi"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcc6fc978ddso1239063276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:02:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709240570; x=1709845370; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RzH42Le6JLqPTnrmstPPgkRIyy1vLFZ8cAEfYjhK5wU=;
-        b=R9cM4npi1EypKIfskw8+XO7V1LVb9YUy7YPLmnpf7/jfA8v4sfFWsDOdI6pfXnF92H
-         xzq+FkNLU8QNPe0pw761/O2RWjgQXvEjFjBN3i9+kNIpJWqSEO9ZCQJjPFOymOQyYrvH
-         U1Yxi6GUanaiyzYHZ3oGhTW7a8CwrtWnJ7KhPQiohYXmbTISW6uabaJsMNJ1JFvHze6r
-         6y0ZD18SY3N4r0omVczT+vlOVKQ5FmGPEWjK2F6cyVHnb9/8be+dphiiOEqZTlZrdzw4
-         s5NBmmAd6ih+Kd2kmugOQJpcN9UKlkwboL0ZTOtFscUokSzPWXkagZAA74qCsLoPJicl
-         F6vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709240570; x=1709845370;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RzH42Le6JLqPTnrmstPPgkRIyy1vLFZ8cAEfYjhK5wU=;
-        b=d7FkhD874IN35nx9QFAQj14RkZpjIt8NNL0Bal6yduD4DTvA8yBQn827Pkpiqx7Ii3
-         LQUw7uoqDEN3YqQUVZrCI5M5czVqLsalp2u6dcCsxDKzvpip6zzOknt5oA9XmEcUTvxN
-         d4j/pA1jAnC+O6XAKCTjxeVSjkRMk4ormBc8Ye581SBhgSEH4UBUyMX6gha4keMcDLnM
-         YnhR8U1XpFF8f0ZXuH+gU0oYzbwKuVJyfHSjNq5vR/yAhhxO6BFWCVxpOfwPp5PjqxSj
-         Mp0QdIoyk3ObTdIWbPbqHgeE/CAcIxceyHQZmL5xohh8fn6JuqfillwHlwy+vF/E+C+3
-         DG7A==
-X-Forwarded-Encrypted: i=1; AJvYcCX1EjmB4rcnDv46LGtmWE5ASZaj7DM1Ik1QgQMY/rLKbwxX4Es+BB6Uzhl/dTVbOPQJSuERI2AxsV3Yvvyg8CZGazGCCyx9EgwuKQd0
-X-Gm-Message-State: AOJu0YxfBiz1ZHNm9L6PQC1Ew1AYYGBOhf7RxUkBIe2icxRfsxMGuP+P
-	QpPN3jZ9FDOjfFobY2HAv5HXSsdMBGnO+XNUyItaG+rhNvx7Kto2DQhLyg+EwfOudlCkAkCW0ow
-	NYqoY8adXSqt/WsPyQhjDjlijzkpIl9adYIbuRg==
-X-Google-Smtp-Source: AGHT+IGrqHZZfmk+QgMoq6cpaifJe9cFgRnyEqezfeLGnwvG4l4U6/5Wq4g1VkIDnrBaM3IK6DsIiSkau/poL+aahCE=
-X-Received: by 2002:a25:d696:0:b0:dcc:2671:7819 with SMTP id
- n144-20020a25d696000000b00dcc26717819mr2486052ybg.25.1709240569561; Thu, 29
- Feb 2024 13:02:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="kzPXwjK1"
+Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41TFBuaH010561;
+	Thu, 29 Feb 2024 20:07:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : mime-version : content-type; s=pps0720;
+ bh=bTL4DOSmyNxQGe0QwLYqgTCiTE3h293KECpT2Cd+njk=;
+ b=kzPXwjK1SZsCC4A2UXBWK91e9uFF/hCuTPi/3IZkSdWrHbLVAxL10mh32LdEw+Qf5/ik
+ at81CsioejMhAKCSvyosSXQTrD63rc1D1WG3QZE84heShZI+kdUW4LvQ0dzZE4esF0OQ
+ /GLydvzxR5es2XSb3ehAa2Sd4tkM+ZqWsYOjmbT1nfxPMjNPWoDTqxkvuPohvhABOSFU
+ e1sc33lrbdKqeMAkVfZzwza1x2KLjLatL3e6oHtFcInLnKCYtXEyqtvWrOqwpzmj/fb/
+ qthu2c9EMSRUd+FI9oRgFnlP/q2d3V9q4YlabwIFqRkVDvEs4B8R3/II53iogipiTrde 7w== 
+Received: from p1lg14879.it.hpe.com ([16.230.97.200])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3wjvbxb4w5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 20:07:30 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 9BB85130F8;
+	Thu, 29 Feb 2024 20:07:29 +0000 (UTC)
+Received: from hpe.com (unknown [16.231.227.39])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id A83CB8005F1;
+	Thu, 29 Feb 2024 20:07:26 +0000 (UTC)
+Date: Thu, 29 Feb 2024 14:07:24 -0600
+From: Dimitri Sivanich <sivanich@hpe.com>
+To: Dimitri Sivanich <sivanich@hpe.com>, David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, iommu@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>
+Subject: [PATCH] Allocate DMAR fault interrupts locally
+Message-ID: <ZeDj/LK56borSxO4@hpe.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
- <20240227-mbly-clk-v8-5-c57fbda7664a@bootlin.com> <Zd4moVd_-bY6Z_kL@smile.fi.intel.com>
- <CZGX0TSYLOH4.DZHG351R9KFZ@bootlin.com> <ZeBsAbPRr5IPkVZj@smile.fi.intel.com>
- <CZHNS29NK9RR.13G019Y9ZY6IO@bootlin.com> <ZeCjk9QgtCWb8Ecy@smile.fi.intel.com>
-In-Reply-To: <ZeCjk9QgtCWb8Ecy@smile.fi.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 22:02:37 +0100
-Message-ID: <CACRpkda-6jZUH5jDwPhyGgO-h8upRbj1z_4nT_gUisSQO9X8cg@mail.gmail.com>
-Subject: Re: [PATCH v8 05/10] pinctrl: eyeq5: add platform driver
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
-	Gregory CLEMENT <gregory.clement@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, linux-mips@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Proofpoint-GUID: kaKI-Rt3ddMThGjjOtXFFOFMzOETu6v1
+X-Proofpoint-ORIG-GUID: kaKI-Rt3ddMThGjjOtXFFOFMzOETu6v1
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-29_06,2024-02-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ mlxscore=0 mlxlogscore=995 priorityscore=1501 impostorscore=0 phishscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402290155
 
-Hi folks,
+The Intel IOMMU code currently tries to allocate all DMAR fault interrupt
+vectors on the boot cpu.  On large systems with high DMAR counts this
+results in vector exhaustion, and most of the vectors are not initially
+allocated socket local.
 
-lots of discussion here, lazy Reviewed-by from me, but Andy often (thank Go=
-d!)
-catches things I just miss.
+Instead, have a cpu on each node do the vector allocation for the DMARs on
+that node.  The boot cpu still does the allocation for its node during its
+boot sequence.
 
-On Thu, Feb 29, 2024 at 4:32=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
+Signed-off-by: Dimitri Sivanich <sivanich@hpe.com>
+---
+ drivers/iommu/intel/dmar.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
-> > > The rule of thumb is to make modules if, otherwise, it's not so criti=
-cal for
-> > > the boot process (and even for some cases we still may have it done a=
-s a module
-> > > with help of deferred probe mechanism).
-> >
-> > I'd call SoC pin control a critical resource for the boot process.
-> >
-> > I also like the simplicity of builtin better for such a resource.
-> >  - If we tristate pinctrl-eyeq5 and there is a bug, there is a bug (in =
-a
-> >    context that we have no reason to support).
-> >  - If we do not allow it and there is a bug, there is no bug.
-> >    Plus, it makes one less choice for people configuring the kernel.
->
-> The problem is that you reduce the flexibility. Nobody prevents you from =
-having
-> it built-in while tristate. But completely different situation when it's =
-bool.
->
-> So my argument still stays. I think new code shouldn't be boolean by defa=
-ult.
-> The only exceptional cases can do that (like PMIC driver or critical cloc=
-k one).
+diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+index 23cb80d62a9a..41ef72ba7509 100644
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -2108,8 +2108,12 @@ int __init enable_drhd_fault_handling(void)
+ 	 */
+ 	for_each_iommu(iommu, drhd) {
+ 		u32 fault_status;
+-		int ret = dmar_set_interrupt(iommu);
++		int ret;
+ 
++		if (iommu->node != cpu_to_node(smp_processor_id()))
++			continue;
++
++		ret = dmar_set_interrupt(iommu);
+ 		if (ret) {
+ 			pr_err("DRHD %Lx: failed to enable fault, interrupt, ret %d\n",
+ 			       (unsigned long long)drhd->reg_base_addr, ret);
+@@ -2192,6 +2196,34 @@ static int __init dmar_free_unused_resources(void)
+ 
+ late_initcall(dmar_free_unused_resources);
+ 
++#ifdef CONFIG_X86_LOCAL_APIC
++static void __init irq_remap_enable_fault_handling_thr(struct work_struct *work)
++{
++	irq_remap_enable_fault_handling();
++}
++
++static int __init assign_dmar_vectors(void)
++{
++	struct work_struct irq_remap_work;
++	int nid;
++
++	INIT_WORK(&irq_remap_work, irq_remap_enable_fault_handling_thr);
++	cpus_read_lock();
++	for_each_online_node(nid) {
++		/* Boot cpu dmar vectors are assigned before the rest */
++		if (nid == cpu_to_node(get_boot_cpu_id()))
++			continue;
++		schedule_work_on(cpumask_first(cpumask_of_node(nid)),
++				 &irq_remap_work);
++		flush_work(&irq_remap_work);
++	}
++	cpus_read_unlock();
++	return 0;
++}
++
++arch_initcall(assign_dmar_vectors);
++#endif /* CONFIG_X86_LOCAL_APIC */
++
+ /*
+  * DMAR Hotplug Support
+  * For more details, please refer to Intel(R) Virtualization Technology
+-- 
+2.35.3
 
-I think bool is helpful for users if:
-
-- The system cannot boot without the pin control driver
-
-- The system cannot mount root from a storage medium without the pin contro=
-l
-  driver. Initramfs doesn't count for embedded systems, many of these use t=
-hings
-  like OpenWrt that does not use initramfs the way Debian or Fedora etc doe=
-s.
-
-This SoC is obviously for the deeply embedded usecase. If this SoC has root
-on flash or eMMC and cannot access either without pin control, it is helpfu=
-l
-for users to have this as bool so they don't shoot themselves in the foot w=
-ith
-Kconfig.
-
-> > > > > > +     if (WARN_ON(offset > 31))
-> > > > > > +             return false;
-
-I think I asked for this code in my review, because I felt unsafe about off=
-set.
-
-Maybe it's not such a big problem, but, this twoliner is also not a big dea=
-l.
-
-Yours,
-Linus Walleij
