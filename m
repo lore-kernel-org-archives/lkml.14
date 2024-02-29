@@ -1,147 +1,125 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF59A62A06
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 10:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7722164A8E;
+	Thu, 29 Feb 2024 10:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709201363; cv=none; b=jBW1/HkCVjy9rPwEKJIDkJoyjbiS/+gqCe1+zqbPHG5tSQDL9sMCi+8FhL89BDOuab4XcLXPN76gur9MRdta/rbcjuHspEuMYAAnDFk+UPgtVavJwItAX/d1M/6/cTH9FE4bQHLclTtxRr58bVKU96MkM3KWNvzEDveawm46+OM=
+	t=1709201371; cv=none; b=tulC48sAA9mM+la66TubO7m9fLoUObm8ODtBY+ZT6uDCZkwcUvHRh/C/5pJJK7tSPehrq9/jNjLw/DcvMzkqZbE79fvsnuZSN6nMNs0VzyMejqxW0h3hE0rUvXeYP2Y27LBp4IYMq4rmVGzjl0Xl7unvsaGHvTwcCwqDZVm2PVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709201363; c=relaxed/simple;
-	bh=GA3hOk2+V3le+4muvMPKWEzM4CFPwWUnDODB09RfE4U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jRk2rXr4KK4DDd8oZ5akK/Cz1H84qBadTzYTKkLXGr5gMWmU+cCyFCdKFGY4hax5LF8RpnZeErLWfini/BOlwEVHOYNiF8lkKFUTCYWvn+174zT97ZVmBYxuDY4w+mUD8fpnwgw2o2suNYppObYUpProXhZChcxb40im06iO5x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rSkbaSN0; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1709201371; c=relaxed/simple;
+	bh=jTspB3iUz57ARAjdinxW+/Q91yDRnm3gqja4T9fxZTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WrsTKjF96HJg9LsuOEf9iM8DPCUw7ftyD5DjIfnF9N71rtx7kO4DJjCgPx/wzCNFJP7+KfJ9nS4RSXO4XdgE9oetLb29/R4b6pQFobMgvFTTvJWWa4QV7LhkhKpTe/4xVVOWZLf5GYtGfn552X3lNcuA8X369E/+grAN3nLIlHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBFjhK5d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rSkbaSN0"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5654ef0c61fso10148a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:09:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709201360; x=1709806160; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t/Go3YqIu09UH/h/HOYTGKZUGAGfZufH1m+hGfleaeo=;
-        b=rSkbaSN0te7psnftf8RVCKwTkY/RIDX6i5cjqo/wDTV3qvx8Pmbvd65epK2qKkIjRV
-         69Gx5DoTlzMfuDHTe1DwsokSBe2J1BeA0Sev107ppxJnKf2GqMEJvYKiGEvgj3w3/1xp
-         0cSqEiCcyJozHyiqrX1k6zzDo4gdzQrp5FnEhetcSXTnAZ7xntuBjADi2MyjCgZTKKrC
-         JGBHsdq+iN83J8TInKH/zKF+9VLCGTgNam/fCCTT6H/L8LxttAO9Ii+TAtsWWWxF85s+
-         FRKK4yKL80KyOS5OgxUqxIBARzbGBMUOWmc/e/KBFJbu8Qi13FqYphgBy9/vFuRsP1c2
-         2xhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709201360; x=1709806160;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t/Go3YqIu09UH/h/HOYTGKZUGAGfZufH1m+hGfleaeo=;
-        b=ux69MU/bJR7FzQPxl0ha/wfTh+pc4U8w9lMEmEVbqeSLEN7A51mhzUI8JKSBtXZeLs
-         mSTfA1Hi7UWXxS3QpITa6hxTAEpOwXBDh09JKJcaDt3y/XrIHm5P77QjLejj4f/ykiC6
-         xD5HeVl3xcTLCCbu652Q+0ahCZO6Bg3Fe2rWUgXuH4Wd7MPwxma554MtY3JM81+p7oso
-         IziuD+CSO0TPuCwRGI/C3PMvtCdWDPafK9MLwkLyvMa7kOB7V1pV89Qc9JGEm0aOchJb
-         20OYXXjtz2fUZPLodaVusYehNhnB2lrrlNSaj2RaTbWc4Gn+o6lF5HjHvjAtqQqk16dq
-         j68A==
-X-Forwarded-Encrypted: i=1; AJvYcCWR1PTWgKyKIvzgBlkBvPLsc3REw4a2ziPQFeQaJ3Lc7v7NfGwB+4IpnPajmlLEMK3bu4IQNFs3MQqlISWx8MqCWvXpCO6uow5NcjXu
-X-Gm-Message-State: AOJu0YzDPRlgLC63KWehMj1WSyop4zJA/K3fvoXcUkRCC9bj4Cy1Rb5Y
-	8JqwgAe6U1ISXBInhpqb6mhcBrDgIFgZZ0bLbPwbxOXMJQhHVCVWWb+hMd4X9dpJjCUPA+G5Og3
-	RP3/Zt+4fWVeSNNGpQT+WSXlAXHsH5Zv3ePJt
-X-Google-Smtp-Source: AGHT+IGqgX6DpEN74CADxukO7H9XFj6A5L3gDfzgaZwl7aLZqmrIaLPyqEGhwFwYnJ0bEzVfW3daN07CbHbZHFQiHXk=
-X-Received: by 2002:aa7:dcc5:0:b0:563:f48a:aa03 with SMTP id
- w5-20020aa7dcc5000000b00563f48aaa03mr103397edu.2.1709201360039; Thu, 29 Feb
- 2024 02:09:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBFjhK5d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F695C433F1;
+	Thu, 29 Feb 2024 10:09:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709201371;
+	bh=jTspB3iUz57ARAjdinxW+/Q91yDRnm3gqja4T9fxZTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mBFjhK5d7fJpVw/6bDbc5tkU6ElHDTpzVkK/jIbuftZBarsoqfd0J/td4ycX7Y0NI
+	 OwuwPlDbj8ZtIqnlCXOF2pG3huqmMUj5GBAof4EEoDRc9P6XPkyLOZ8+aLsqxoP9yI
+	 E+m7pUJjav8Pn5m1m75Em6T0UBx+RyRZKKV0gXMgKErQBBb2lSrjaJ6CNubQUijnjS
+	 Dck5QGzkyUjQu7qNjOmf68ZPRsSaTKxIdhCuhIRwbtTaqNBpNuQDQRK4HppSWMejtG
+	 bsu5gpSsPoHrMRolGv5LGA7fro/ZxAwUPx7adyrYyWYoONQWysvfvvefct3/hkMK84
+	 UhWf04m39lTrg==
+Date: Thu, 29 Feb 2024 11:09:24 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Daniel =?utf-8?B?RMOtYXo=?= <daniel.diaz@linaro.org>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
+	linux-ext4 <linux-ext4@vger.kernel.org>, linux-fsdevel@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	Jan Kara <jack@suse.cz>, Andreas Dilger <adilger.kernel@dilger.ca>, 
+	Theodore Ts'o <tytso@mit.edu>, Randy Dunlap <rdunlap@infradead.org>, shikemeng@huaweicloud.com, 
+	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: ext4_mballoc_test: Internal error: Oops: map_id_range_down
+ (kernel/user_namespace.c:318)
+Message-ID: <20240229-stapfen-eistee-9d946b4a3a9d@brauner>
+References: <CA+G9fYvnjDcmVBPwbPwhFDMewPiFj6z69iiPJrjjCP4Z7Q4AbQ@mail.gmail.com>
+ <CAEUSe79PhGgg4-3ucMAzSE4fgXqgynAY_t8Xp+yiuZsw4Aj1jg@mail.gmail.com>
+ <7e1c18e3-7523-4fe6-affe-d3f143ad79e3@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223143833.1509961-1-guanyulin@google.com>
- <CAJZ5v0gM=0rU6a1A6Bh2Ed=4=1AtQ3p5aDJVCOioA6qxGv1jtQ@mail.gmail.com>
- <CAOuDEK1NdFSZgy8_ebO_zSxbU-gLJHsCzjd6JSr2cckQAFgaTg@mail.gmail.com> <CAJZ5v0g0WgYWyOfMaq8PhOkCmBFuDRb3XbCxPpcbpJuJza0+cA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0g0WgYWyOfMaq8PhOkCmBFuDRb3XbCxPpcbpJuJza0+cA@mail.gmail.com>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Thu, 29 Feb 2024 18:09:00 +0800
-Message-ID: <CAOuDEK04r+1j-R7EmMEu91OGwmjY8AaViyQgVK4uShouTLZFiw@mail.gmail.com>
-Subject: Re: [PATCH v3] PM / core: conditionally skip system pm in
- device/driver model
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: pavel@ucw.cz, len.brown@intel.com, gregkh@linuxfoundation.org, 
-	andriy.shevchenko@linux.intel.com, rdunlap@infradead.org, james@equiv.tech, 
-	broonie@kernel.org, james.clark@arm.com, masahiroy@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7e1c18e3-7523-4fe6-affe-d3f143ad79e3@roeck-us.net>
 
-On Tue, Feb 27, 2024 at 7:28=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Mon, Feb 26, 2024 at 10:45=E2=80=AFAM Guan-Yu Lin <guanyulin@google.co=
-m> wrote:
-> >
-> > On Sat, Feb 24, 2024 at 1:44=E2=80=AFAM Rafael J. Wysocki <rafael@kerne=
-l.org> wrote:
-> > >
-> > > On Fri, Feb 23, 2024 at 3:38=E2=80=AFPM Guan-Yu Lin <guanyulin@google=
-.com> wrote:
-> > > >
-> > > > In systems with a main processor and a co-processor, asynchronous
-> > > > controller management can lead to conflicts.  One example is the ma=
-in
-> > > > processor attempting to suspend a device while the co-processor is
-> > > > actively using it. To address this, we introduce a new sysfs entry
-> > > > called "conditional_skip". This entry allows the system to selectiv=
-ely
-> > > > skip certain device power management state transitions. To use this
-> > > > feature, set the value in "conditional_skip" to indicate the type o=
-f
-> > > > state transition you want to avoid.  Please review /Documentation/A=
-BI/
-> > > > testing/sysfs-devices-power for more detailed information.
-> > > >
-> > > > Signed-off-by: Guan-Yu Lin <guanyulin@google.com>
-> > >
-> > > Please explain how this is intended to work.  That is, what exactly
-> > > you expect to happen when the new attribute is set.
-> >
-> > The sysfs entry 'conditional_skip' for a device indicates which power
-> > transitions (e.g. PM_EVENT_SUSPEND) are omitted within the system
-> > power management flow. During the processing of an identified power
-> > transition, the device's power.entry will not be added to the
-> > dpm_prepared_list, preventing the device from undergoing that
-> > transition. As 'conditional_skip' is modifiable at runtime, a device's
-> > participation in system power management can be dynamically enabled or
-> > disabled.
->
-> So this idea is completely misguided AFAICS.
->
-> First off, why would a device be skipped in system-wide suspend and
-> not in hibernation?  Or the other way around?  Or why would it be
-> skipped in one phase of hibernation and not in the other?
->
+On Wed, Feb 28, 2024 at 11:33:36AM -0800, Guenter Roeck wrote:
+> On 2/28/24 11:26, Daniel Díaz wrote:
+> > Hello!
+> > 
+> > On Wed, 28 Feb 2024 at 12:19, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > > Kunit ext4_mballoc_test tests found following kernel oops on Linux next.
+> > > All ways reproducible on all the architectures and steps to reproduce shared
+> > > in the bottom of this email.
+> > > 
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > > 
+> 
+> [ ... ]
+> 
+> > +Guenter. Just the thing we were talking about, at about the same time.
+> > 
+> 
+> Good that others see the same problem. Thanks a lot for reporting!
 
-The motto is to set less constraints and let users configure them
-properly by themselves. But, we could redesign it to better match with
-existing conventions/regulations.
+Hm...
 
-> Second, but not less important, why is skipping a device in
-> system-wide transitions a good idea at all?  What about dependencies
-> between that device and the other devices in the system?
->
+static struct super_block *mbt_ext4_alloc_super_block(void)
+{                                                                                                                                                                                                       struct ext4_super_block *es = kzalloc(sizeof(*es), GFP_KERNEL);
+        struct ext4_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+        struct mbt_ext4_super_block *fsb = kzalloc(sizeof(*fsb), GFP_KERNEL);
 
-If a device is also used by another operating system kernel, then
-Linux kernel shouldn't always do the system power transition on that
-device to avoid affecting another operating system kernel.
+        if (fsb == NULL || sbi == NULL || es == NULL)
+                goto out;
 
-Since device dependencies can be highly system-specific, maybe we
-should let users handle it as users are the only ones who understand
-their system's unique configuration.
+        sbi->s_es = es;
+        fsb->sb.s_fs_info = sbi;
+        return &fsb->sb;
 
-> Generally speaking, system-wide PM is designed to cover the entire
-> system and there are good reasons for that.  If you don't want it to
-> cover the entire system, you cannot use it at all.
+out:
+        kfree(fsb);
+        kfree(sbi);
+        kfree(es);
+        return NULL;
+}
 
-We discovered a use case that the existing system-wide PM may not
-fully support: devices shared by multiple operating system kernels. I
-think supporting this case would be beneficial to the system-wide PM,
-as it would increase its compatibility.
+That VFS level struct super_block that is returned from this function is
+never really initialized afaict? Therefore, sb->s_user_ns == NULL:
+
+i_uid_write(sb, ...)
+-> NULL = i_user_ns(sb)
+   -> make_kuid(NULL)
+      -> map_id_range_down(NULL)
+
+Outside of this test this can never be the case. See alloc_super() in
+fs/super.c. So to stop the bleeding this needs something like:
+
+static struct super_block *mbt_ext4_alloc_super_block(void)
+{
+        struct ext4_super_block *es = kzalloc(sizeof(*es), GFP_KERNEL);
+        struct ext4_sb_info *sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+        struct mbt_ext4_super_block *fsb = kzalloc(sizeof(*fsb), GFP_KERNEL);
+
+        if (fsb == NULL || sbi == NULL || es == NULL)
+                goto out;
+
+        sbi->s_es = es;
+        fsb->sb.s_fs_info = sbi;
++       fsb.sb.s_user_ns = &init_user_ns;
+        return &fsb->sb;
+
+out:
+        kfree(fsb);
+        kfree(sbi);
+        kfree(es);
+        return NULL;
+}
