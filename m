@@ -1,76 +1,79 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD04381B0
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 03:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D6E2E622;
+	Thu, 29 Feb 2024 03:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709178480; cv=none; b=Jqykveq5XtZhJj0TW5c07ZES3ie2jaR5SgXLWuYZiTd6YsptwiGdHx8zE+yvDguJN37cbd0ivxJ3JsV0OkPLdg/V5Oe6LoLQT142FeOxtMRKwZpEbpDte7zlT2U5arx377vGmi3O3jqH72phiarixIQH2KN77kgh6ImPszF9Kms=
+	t=1709178628; cv=none; b=OTKaUqeOwCLt2+0yKCPi93g4VHs1p00M3JlNqYo25mUv/qFrGFrkWsJN8s1CBiZqoI3snA7/dB9b+EX1rbJ63LpgPZfLarxXvgyVItEFFfeLAdagcLhLa+8L1SHC+Zu7zwRMQTvQozgWCNNESD1U+rzxpHaYPJLwTAno3eC16AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709178480; c=relaxed/simple;
-	bh=fp3Mxq2ltzt6MMHBtz4FN6pPfnR8KvUSOwgEwxPR6nU=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=j23maUC8dwDR5+shP19xqM1JmwrAoQs19CYy/aCljJHdbgFf+7GENfZ4qKMbDVMYlmJIsIRACvxt28+SRmao0+YupU3CkqXT/mUeF0opQS8sAClFkE37YNZLaIbMC3paIRMi6pETh0Ynn+VwE2TPAWoKBDqHjdE2ax2LVsodWTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1rfXOM-0006Wc-2B;
-	Thu, 29 Feb 2024 03:47:30 +0000
-Date: Thu, 29 Feb 2024 03:47:24 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Richard Weinberger <richard@nod.at>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Daniel Golle <daniel@makrotopia.org>, linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] mtd: ubi: fix NVMEM over UBI volumes on 32-bit systems
-Message-ID: <ff29447dcee834c17e4e1e99725b9454c90136ca.1709178325.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1709178628; c=relaxed/simple;
+	bh=x7HCXFc/QCt6bW6Q25nzlitIcya5GwMSMH8LmoGpH2w=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=X2Fj1YHmumYM3GxMgv7HusYD85iotpD4Y3PzS6Q9Z8DF0iTL0zcF5GyK1OEOrRtiR/Jp+30LTG1SpBFLcCuOvCes8pa4xb+AwvA8gpebCpWCp2VrB/4a/G7rLkVVLu6zs5UVLkbKPt7JzdwinvXpRTUIbVT6sHPtj8QTUMX6Tbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/GF5TEP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/GF5TEP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 249F2C43390;
+	Thu, 29 Feb 2024 03:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709178628;
+	bh=x7HCXFc/QCt6bW6Q25nzlitIcya5GwMSMH8LmoGpH2w=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=u/GF5TEPUkbHil9/c11Tsw3LhTzIBMeTubvG9Kqy7Jy8qdLlH7nLk7wnrkisQP0Be
+	 InNd14zsgbmoTzFi0l4z38sf1lMd/Ln0WE1qvzsUfUKTk6VHILb4dsRnM9meEdHPkc
+	 GAVoJ4x9S5t7eGEpZtBKzINeH0r25Jq3Rs85ina6Pr0OJ9Sq8UaB0pUlCBmS+ZhCGp
+	 BxQi+VNCNgJd8a1/7sjMlwZyebqZmwaKd0RZclUcncH5wuw5R/+/B6qoABla/voocW
+	 5wczIQXe2i+3s4y3M4ElwZPGYz+rcuTcuSdkpUZaI06BBDJcfvmL1AbsN245WEdIHN
+	 5xfR3qX8qyIfg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0B4C5D88FAF;
+	Thu, 29 Feb 2024 03:50:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] rtnetlink: fix error logic of IFLA_BRIDGE_FLAGS
+ writing back
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170917862804.28712.16209474962340682302.git-patchwork-notify@kernel.org>
+Date: Thu, 29 Feb 2024 03:50:28 +0000
+References: <20240227121128.608110-1-linma@zju.edu.cn>
+In-Reply-To: <20240227121128.608110-1-linma@zju.edu.cn>
+To: Lin Ma <linma@zju.edu.cn>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, idosch@nvidia.com, razor@blackwall.org, jiri@resnulli.us,
+ lucien.xin@gmail.com, edwin.peer@broadcom.com, amcohen@nvidia.com,
+ pctammela@mojatatu.com, liuhangbin@gmail.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-A compiler warning related to sizeof(int) != 8 when calling do_div()
-is triggered when building on 32-bit platforms.
-Address this by using integer types having a well-defined size.
+Hello:
 
-Fixes: 3ce485803da1 ("mtd: ubi: provide NVMEM layer over UBI volumes")
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
-v3: use size_t also for 'to_read' variable to avoid truncation
-    (no problem in practise beyond the compiler warning)
-v2: use size_t for 'bytes_left' variable to match parameter type
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
- drivers/mtd/ubi/nvmem.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On Tue, 27 Feb 2024 20:11:28 +0800 you wrote:
+> In the commit d73ef2d69c0d ("rtnetlink: let rtnl_bridge_setlink checks
+> IFLA_BRIDGE_MODE length"), an adjustment was made to the old loop logic
+> in the function `rtnl_bridge_setlink` to enable the loop to also check
+> the length of the IFLA_BRIDGE_MODE attribute. However, this adjustment
+> removed the `break` statement and led to an error logic of the flags
+> writing back at the end of this function.
+> 
+> [...]
 
-diff --git a/drivers/mtd/ubi/nvmem.c b/drivers/mtd/ubi/nvmem.c
-index b7a93c495d172..8aeb9c428e510 100644
---- a/drivers/mtd/ubi/nvmem.c
-+++ b/drivers/mtd/ubi/nvmem.c
-@@ -23,9 +23,12 @@ struct ubi_nvmem {
- static int ubi_nvmem_reg_read(void *priv, unsigned int from,
- 			      void *val, size_t bytes)
- {
--	int err = 0, lnum = from, offs, bytes_left = bytes, to_read;
-+	size_t to_read, bytes_left = bytes;
- 	struct ubi_nvmem *unv = priv;
- 	struct ubi_volume_desc *desc;
-+	uint32_t offs;
-+	uint64_t lnum = from;
-+	int err = 0;
- 
- 	desc = ubi_open_volume(unv->ubi_num, unv->vol_id, UBI_READONLY);
- 	if (IS_ERR(desc))
+Here is the summary with links:
+  - [net,v2] rtnetlink: fix error logic of IFLA_BRIDGE_FLAGS writing back
+    https://git.kernel.org/netdev/net/c/743ad091fb46
+
+You are awesome, thank you!
 -- 
-2.44.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
