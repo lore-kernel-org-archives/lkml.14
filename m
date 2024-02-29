@@ -1,119 +1,172 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B5F74BF9
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050D97827E
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709249210; cv=none; b=rV+YQGhTF25Zma4QJPmPU+zakWR36RDC09WZW8F0HjRQnWnbCJjl+5+gl7qzzxEqX5o3qShL/G12e2UCobOA/gjc2tb+nZ9jY8A22OT9TLy0DlGWmf1OAPzjzcTXCq+6i/DC4nmH3QUWLy+wSLsXcKatsDD+orzK4pPUZ0q4piY=
+	t=1709249214; cv=none; b=NDy51LKKZ6hdwLWpl5SUqyG9P0sq0VfH75I0xMcfXms9E3fUey69FS/jaPNBLskW+RSBbvtE9CILZczV3zdb7fJbp+KmxZtJgheqj852wTxi/KlmaCaQ3/OOfm3OJYDxC1ze/Uau4axmOT+R80YRFmTjT75WQxpf5ljzpCzOf6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709249210; c=relaxed/simple;
-	bh=vFGe/JPM+D98FYRCFhoM8TP+K+kv3fj2cPK6Z4iL8bQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GrWE0PQVhbz1AvfK1ac8yYmMlVz/HzOGaC4ucWKy90mx+OckefE8ptBRhOPUcbnRZ/VVLwWlCAlNo2pP52QoP7M7Gs6I61o3gMOahwkVbxZJUuYQKOI5duenGga4aROHqWIYC2lrsNmudqK05QSEDQq9XcByMbbNdEBFsjwsD6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=xM8dEdSI; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1709249214; c=relaxed/simple;
+	bh=XY+tF/oyv5RZqs+TYf1m3Rn6En+Ql1F7UgQnTwazuWQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ftOxHstopHTPbV4+k/rC7YbY1zGLoFhc0HhlAtGCYrKHuhm55fQoSgkEPPJ00znZja7TwLmNCxwXmaHQwO95puJagcyGF6VxSx2S0cMus1JJoYsms1BR8CxfHIw3Umkwr/JAFSxTCP3M761uWVs3I5A03T6D/k7VfvlzIShMB44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A24Mc9Wi; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="xM8dEdSI"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29abd02d0d9so1106931a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:26:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A24Mc9Wi"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-42ec412cafdso17161cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:26:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1709249208; x=1709854008; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=grHdyJH43EDqTr7lOlPpsv2LnOtPCDv7mkz6AEIU0ok=;
-        b=xM8dEdSI0/FTFjeiVslj0L5JrHinrkZRbK0wIXgaF8BK0/xXK48R39MUEVILrw2tlZ
-         0y/HJuwAJxr1wFMOoWiyYc3EtldxtiVFQgPvAeoOiXMAUMHcGUScmnsLYYWUbhyLyU6q
-         pcaS1Expi4zbTjBNaun9f5cSG0m2dzOOiYpMW5OOG547M9uUewSBC6N3I4yUX3OoKPra
-         5yAWS88QIpu0mxdp25Zi96Pl94/StNz/wZOGOQBGxoqeUxMxftRsNi7NgDEwTahvjtrY
-         4DUiPcf8eGyEX1ShqWsUB0ZO7Fcd5+wrB6NhB2Z+EOKWDoS+fSOeQAT948ZgqnUtpbqz
-         KWmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709249208; x=1709854008;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1709249211; x=1709854011; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=grHdyJH43EDqTr7lOlPpsv2LnOtPCDv7mkz6AEIU0ok=;
-        b=AxDEbw+mUMTvu9SZfdoEb80HYDuj12qFQ38ZHqwnimiMDQf55OoFRwC5MwfhafYysE
-         pnuzd5LgwjP3KlNZaivasU/aLQpH2RUdm+6JfYq7O45xwtdPr19+2j+DF13Tl/j+I1DG
-         0BstM8GemW8JDv9WNe9X00xv1qsLpmdHgaX4MaU86WT9xgGQ4ihGc8QIOfGJfWmx5U9m
-         tIKShO1TEj/iSrV+UHgx28L9pR+r7oRVPx8p8+QV/FCZiAiLQWPCy/CYGbxV0f/uMdcB
-         vNgQPDg7DXsSXbjaURKWZQKv/JUmpxr9607rUKT++8+T47BX8DY+62EShBdIrojKcm+I
-         vb0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWxKZWEWw36qgWiAsRBR/41b3lRY1V0OOQvsICOelMB3jpf1bFRykRjH5yfUuajpSK2HEhcAXVuz2UGQ16usGjcCEdJxPIkvylwRd1+
-X-Gm-Message-State: AOJu0YywcyrOM4emfSbPYlT7tOYGEIxciOwqJXxmCjYCAq3Mvch2TuAu
-	t1bErZx6A6sd2+ygjPx4hfBjzvftbAEN2P4EiaNZfGuDB3w0czbjUGxiwejqTy9mJgGbu3VpY0U
-	+
-X-Google-Smtp-Source: AGHT+IGiSfuRv3Y76uLW0YYRJRv2KJMhOadB6A35s9PgdU0SN6q4L74ZxSAPem4Amsho3fTWY8H25g==
-X-Received: by 2002:a17:90a:a618:b0:29a:795:a132 with SMTP id c24-20020a17090aa61800b0029a0795a132mr99168pjq.18.1709249208246;
-        Thu, 29 Feb 2024 15:26:48 -0800 (PST)
-Received: from dread.disaster.area (pa49-181-247-196.pa.nsw.optusnet.com.au. [49.181.247.196])
-        by smtp.gmail.com with ESMTPSA id sj5-20020a17090b2d8500b0029ad78306d8sm4245337pjb.3.2024.02.29.15.26.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 15:26:47 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rfpnY-00DJUd-1S;
-	Fri, 01 Mar 2024 10:26:44 +1100
-Date: Fri, 1 Mar 2024 10:26:44 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: kunwu.chan@linux.dev
-Cc: chandan.babu@oracle.com, djwong@kernel.org, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Kunwu Chan <chentao@kylinos.cn>
-Subject: Re: [PATCH] xfs: use KMEM_CACHE() to create xfs_defer_pending cache
-Message-ID: <ZeEStFZwMu068YTc@dread.disaster.area>
-References: <20240229083342.1128686-1-kunwu.chan@linux.dev>
+        bh=2qC3fdiR3wpO9HRmx8vGtLqu6epk2+GZTHN12FsFnSk=;
+        b=A24Mc9WiSVEs5PorukWsU2KUenqSFBj+odxFx72XrNl8qJ7NHq/egTBXeDCf5tgmoE
+         ZcREkBetYcmOehfzJr0CAxychPYapTfDhm6KO96lETs1L3GTnkCLEAZvqo9CBcLUVy6n
+         qC3OUbov/Ldn15Td33tR3Ti1nQydbh+ntddvI0ubZxVfQume/3pK6uacneS3OCTohta4
+         k2yKLeTEdD9WKJxxJu55fQN2PRBZ9sDXsC7YJ6HdffiUmftnyyQAR4Bnx50xQ0vGv/fb
+         BGPrKcZfBp2gXheNQTg7t4yPJwW42IIcjtMfew/0tZtHAj5hmgRSCG5thzYxHdZBLYd+
+         K9Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709249211; x=1709854011;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2qC3fdiR3wpO9HRmx8vGtLqu6epk2+GZTHN12FsFnSk=;
+        b=Kz03XnYoTtX/2wjvJ6KThsp2NuqDvCBj91j3h0P4VcnQURrlMY33fj76egvLfEyw6f
+         RLDY5d+rx8ZsO4cDWr8Jse/wcZvcbNQlZrIqXvW8GP0xkV4JX/n9pUNkNOTEGnn7wTJ4
+         KKOR6nZdkR6MT0fB2h9z+y8BYUffQ3CfEQL9QWmSvA7xPOwLafNb5B1ky/a+CbdYYd9e
+         ESQRpqpzLyjU2wyq0G+2q6+mmqZewvuS4wXZrrt/ajcduXjS/nujBD+noUmMSKVp7xR8
+         WH/wYvf4x6WGnc5w8WfFvcQYfOtJaNO8ppdSYHkKJLo8qsd5gI4pScH5FFQvs4GDIJA1
+         fVFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdydym5yxOyVm4rSGPfNWQi/ErudRpakRmVhFmzoBtePcnd0+ziKvPyVdjHwrt7EnLfnHUOi2ETEilG32ZpxL++B6FbaXNTaHH+B0F
+X-Gm-Message-State: AOJu0YwsQwjcICSVHHsKUEFJkCmY31rRtBN26DhjPRwkrYg7+YlD66iM
+	ILW3c6d0+HyAc4bCfh5aD2W7EyZceXXRFFhx2Q/5DpVEGTdP3F/13P9+3Schfjf1bZwBKwgjOYM
+	31JA6kKcN7QlbVSYgQ+U15VUrzFKABqiRNGig
+X-Google-Smtp-Source: AGHT+IFTp3iCHULEe6WvtnD0a3CSDWgwwezmvxtlg72qf7OTNzFNIfW9Lodil24Jm8e+rucPSssirLGptHIFDo/AUd8=
+X-Received: by 2002:a05:622a:6:b0:42e:8e9e:3a1f with SMTP id
+ x6-20020a05622a000600b0042e8e9e3a1fmr91697qtw.10.1709249210646; Thu, 29 Feb
+ 2024 15:26:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240229083342.1128686-1-kunwu.chan@linux.dev>
+References: <20231130174126.688486-1-herve.codina@bootlin.com>
+ <20231130174126.688486-2-herve.codina@bootlin.com> <CAGETcx9uP86EHyKJNifBMd23oCsA+KpMa+e36wJEEnHDve+Avg@mail.gmail.com>
+ <20240223101115.6bf7d570@bootlin.com> <cdf0a9facd95a2b7ee618e6130dedb9aabf4ed09.camel@gmail.com>
+In-Reply-To: <cdf0a9facd95a2b7ee618e6130dedb9aabf4ed09.camel@gmail.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Thu, 29 Feb 2024 15:26:14 -0800
+Message-ID: <CAGETcx9x55moTrvcDCup_K0DU305TtjK4Nvjf_drfipyowKb=w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] driver core: Introduce device_link_wait_removal()
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc: Herve Codina <herve.codina@bootlin.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, 
+	Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 04:33:42PM +0800, kunwu.chan@linux.dev wrote:
-> From: Kunwu Chan <chentao@kylinos.cn>
-> 
-> Use the KMEM_CACHE() macro instead of kmem_cache_create() to simplify
-> the creation of SLAB caches when the default values are used.
-> 
-> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
-> ---
->  fs/xfs/libxfs/xfs_defer.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-> index 66a17910d021..6d957fcc17f2 100644
-> --- a/fs/xfs/libxfs/xfs_defer.c
-> +++ b/fs/xfs/libxfs/xfs_defer.c
-> @@ -1143,9 +1143,7 @@ xfs_defer_resources_rele(
->  static inline int __init
->  xfs_defer_init_cache(void)
->  {
-> -	xfs_defer_pending_cache = kmem_cache_create("xfs_defer_pending",
-> -			sizeof(struct xfs_defer_pending),
-> -			0, 0, NULL);
-> +	xfs_defer_pending_cache = KMEM_CACHE(xfs_defer_pending, 0);
->  
->  	return xfs_defer_pending_cache != NULL ? 0 : -ENOMEM;
->  }
+On Fri, Feb 23, 2024 at 2:41=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.com=
+> wrote:
+>
+> On Fri, 2024-02-23 at 10:11 +0100, Herve Codina wrote:
+> > Hi Saravana,
+> >
+> > On Tue, 20 Feb 2024 16:31:13 -0800
+> > Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > ...
+> >
+> > > > +void device_link_wait_removal(void)
+> > > > +{
+> > > > +       /*
+> > > > +        * devlink removal jobs are queued in the dedicated work qu=
+eue.
+> > > > +        * To be sure that all removal jobs are terminated, ensure =
+that
+> > > > any
+> > > > +        * scheduled work has run to completion.
+> > > > +        */
+> > > > +       drain_workqueue(fw_devlink_wq);
+> > >
+> > > Is there a reason this needs to be drain_workqueu() instead of
+> > > flush_workqueue(). Drain is a stronger guarantee than we need in this
+> > > case. All we are trying to make sure is that all the device link
+> > > remove work queued so far have completed.
+> >
+> > I used drain_workqueue() because drain_workqueue() allows for jobs alre=
+ady
+> > present in a workqueue to re-queue a job and drain_workqueue() will wai=
+t
+> > also for this new job completion.
+> >
+> > I think flush_workqueue() doesn't wait for this chain queueing.
+> >
+> > In our case, my understanding was that device_link_release_fn() calls
+> > put_device() for the consumer and the supplier.
+> > If refcounts reaches zero, devlink_dev_release() can be called again
+> > and re-queue a job.
+> >
+>
+> Looks sensible. The only doubt (that Saravana mays know better) is that I=
+'m not
+> sure put_device() on a supplier or consumer can actually lead to
+> devlink_dev_release(). AFAIU, a consumer or a supplier should not be a de=
+vice
+> from the devlink class. Hence, looking at device_release(), I'm not sure =
+it can
+> happen unless for some odd reason someone is messing with devlinks in .re=
+move()
+> or .type->remove().
 
-Please stop wasting our time by trying to make changes that have
-already been rejected. I gave you good reasons last time for why we
-aren't going to make this change in XFS, and now you've forced
-Darrick to waste time repeating all those same reasons. You did not
-respond to my review comments last time, and now you are posting
-more patches that make the same rejected change.
+The case we are trying to fix here involves a supplier or a consumer
+device (say Device-A) being device_del(). When that happens, all the
+device links to/from the device are deleted by a call to
+device_links_purge() since a device link can't exist without both the
+supplier and consumer existing.
 
-PLease listen to the feedback you are given. Indeed, please respond
-and acknowledge that you have read and understood the feedback you
-have been given, otherwise I'll consider anything from this email
-address as "just another annoying bot" and killfile it.
+The problem you were hitting is that the device link deletion code
+does the put_device(Device-A) in a workqueue. You change is to make
+sure to wait until that has completed. To do that, you only need to
+wait for the device link deletion work (already queued before
+returning from device_del()) to finish. You don't need to wait for
+anything more.
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+I read up on drain_workqueue() before I made my comments. The point I
+was trying to make is that there could be some unrelated device link
+deletions that you don't need to wait on.
+
+But taking a closer look[1], it looks like drain_workqueue() might
+actually cause bugs because while a workqueue is being drained, if
+another unrelated device link deletion is trying to queue work, that
+will get ignored.
+
+Reply to rest of the emails in this thread here:
+
+Nuno,
+
+Sorry if I messed up who sent the first patch, but I did dig back to
+your v1. But I could be wrong.
+
+If devlink_dev_release() could have done the work synchronously, we'd
+have done it in the first place. It's actually a bug because
+devlink_dev_release() gets called in atomic context but the
+put_device() on the supplier/consumer can do some sleeping work.
+
+-Saravana
+
+[1] - https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/kernel/workqueue.c#n1727
