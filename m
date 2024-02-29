@@ -1,60 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2A3629E6
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203686214F;
+	Thu, 29 Feb 2024 09:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709200458; cv=none; b=Zidl1DsxsxFXEI1cN9T4Geq5ABithWxrYozW/ngBwIhMqEwDM62BzbiFA61hT5EZBi3+HHQLiQtZepXqOVs6OXSlymGTzQpGzL+rMgjmFGlVccFvIYyTazJTeU7ZakMBViA2gjEgQmFednA+XrIvnC8wnUq1gY3y3MOixZI5Vj4=
+	t=1709200582; cv=none; b=ENItuwfM7CpXCWNy+LvhnUDMLr8zZh5N1aewZ+nlGQIeyzFOelIMW2Du689qKY06PWjJOVcMbFzau7vWshdW4vWhe58t7VKNCEUaeELMH3aiNiv5X8Kgd93h+zEsrwfPQDmtNxITMr7j4ILlG84tPPuMuq2cgPICOZX5siac37A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709200458; c=relaxed/simple;
-	bh=i5VupaqaS+NrLRNsFYfr01tBDs7Ieuup0RZUQBFc98w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RNH52YnbNhcFdjT5wZjZRmb3XmX7nUmWUFoNIRiX3lB89i5M0kAsKVmn3NMyqEvnCahpEHk39R/hFNrnkZQkbErwFoy4s6G5Bfctk35MoSjAoBP+0oslEBYkS0edHNQStPMv1jPQMaFrY6rP9nCP0YVjGQB1esYXnZJ0bZ0AYmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cLjA0+8o; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709200582; c=relaxed/simple;
+	bh=oX6D0KfNi01U7tSsTaFJWOaYfQ65vpLBSdYFEZ0GUsk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=APRucDEANP4hjKy9P8FgTgOdSO016CNE+GPpB0hepX8ZrPgup6YOfjcLSPIOsWtcFRgy69ea06H9OrXCasqcgdyu8Iz/Ud+qqwIgdAQV5571dJAd4qCyXIaJMMKlPXKpGjUFqcIVwv8K4YmC8Wog4acvFSznDqGWKXGHvDhXAR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=N/cP+7EM; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cLjA0+8o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709200457; x=1740736457;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=i5VupaqaS+NrLRNsFYfr01tBDs7Ieuup0RZUQBFc98w=;
-  b=cLjA0+8o2zSfRQzUYV02lkw4jot+499FxTMQR8q5h4dYbo/RKQ5rfwzI
-   oz3lY9+bfZYjOXJTeX3nuOI/7Fdkk+HpcUbWyX3cFFO1TABS1bE72DspF
-   LZQUKdVF+QWlv9xDkCk2XDXvN4s3a0zMxu9TFw04ZI1Ce7X/wod+LD5ks
-   5Hlofcg6fRz66LRm2hDaAi79NJKoAgWG/MGXa/iCUVSX5CvtALlrLrEKd
-   CbBWlNXeqckYuEI++TlNm9esaMAEGd2MW3adQ7UQtNbcfNwQEwhsasfNg
-   6MgtwOja7Ms28c8x8En6aQ6yqI0DN6f2xdhHfwMuy3VA01dEmjt4cNZ9n
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="7480797"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="7480797"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 01:54:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="7695772"
-Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by orviesa010.jf.intel.com with ESMTP; 29 Feb 2024 01:54:15 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Eric Badger <ebadger@purestorage.com>
-Cc: iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH 3/3] iommu/vt-d: Remove scalabe mode in domain_context_clear_one()
-Date: Thu, 29 Feb 2024 17:48:04 +0800
-Message-Id: <20240229094804.121610-4-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240229094804.121610-1-baolu.lu@linux.intel.com>
-References: <20240229094804.121610-1-baolu.lu@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="N/cP+7EM"
+X-UUID: c6aedc08d6e811ee935d6952f98a51a9-20240229
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=8mZe/2ayLC1nbMG8YNHZKyZz78ymXaSQ8iXw5n6PhEY=;
+	b=N/cP+7EMBel7PGEdQ2X0OEdtEbJgZsV+mBcucne+5S43i4PWCLE86YdKO5dJjfgaOpE4u4HX3zAMei/q+c2J3LNmyjA8TlgUeHBhvcZ1+7pgi2bXb7oaQKVQWn1nEG17pR5u8XY/MkZFgVD9UCwqzpg1Oiv+UXfEiSxO/4pbaO0=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:0d075454-d480-45ba-8505-9dfaad702b72,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6f543d0,CLOUDID:45477384-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: c6aedc08d6e811ee935d6952f98a51a9-20240229
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
+	(envelope-from <yunfei.dong@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1439398416; Thu, 29 Feb 2024 17:56:14 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 29 Feb 2024 17:56:12 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Thu, 29 Feb 2024 17:56:12 +0800
+From: Yunfei Dong <yunfei.dong@mediatek.com>
+To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
+	<nfraprado@collabora.com>, Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
+	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>
+CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, "Yunfei
+ Dong" <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH 0/3] media: mediatek: vcodec: fix vcodec smatch warning
+Date: Thu, 29 Feb 2024 17:56:08 +0800
+Message-ID: <20240229095611.6698-1-yunfei.dong@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,55 +65,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--5.692400-8.000000
+X-TMASE-MatchedRID: GsIztItoYiqoft0ZW3r/iTCaEJt46PppMZm0+sEE9mv7efdnqtsaE2qs
+	CKGiHb6RWXHfTJ/rMPZKhBUJyxjhBiY0eULsNBXlngIgpj8eDcAZ1CdBJOsoY8RB0bsfrpPIfiA
+	qrjYtFiQtkoiozVGxQwPgUY24KmPEUzhAlmaaSM7Hh1Xl/pN1bX7cGd19dSFd
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--5.692400-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	C12846495FBB9F31E1C1D1D305CD86C0CE38D318B493888AF7439DD448A5A48B2000:8
+X-MTK: N
 
-domain_context_clear_one() only handles the context entry teardown in
-legacy mode. Remove the scalable mode check in it to avoid dead code.
+Fix below smatch static checker warning from [bug report]:
+The patch 397edc703a10: "media: mediatek: vcodec: add h264 decoder
+driver for mt8186" from May 12, 2022 (linux-next), leads to the
+following (in development) Smatch static checker warning:
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_if.c:351
+vdec_h264_slice_decode() potential NULL container_of 'fb'
+
+drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c:337
+vdec_vp8_slice_decode() potential NULL container_of 'fb'
+
+drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c:728
+vdec_h264_slice_single_decode() potential NULL container_of 'fb'
+
 ---
- drivers/iommu/intel/iommu.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+Yunfei Dong (3):
+  media: mediatek: vcodec: fix h264 multi statless decoder smatch
+    warning
+  media: mediatek: vcodec: fix vp8 stateless decoder smatch warning
+  media: mediatek: vcodec: fix h264 stateless decoder smatch warning
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index d682eb6ad4d2..50eb9aed47cc 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -2175,9 +2175,6 @@ static void domain_context_clear_one(struct device_domain_info *info, u8 bus, u8
- 	struct context_entry *context;
- 	u16 did_old;
- 
--	if (!iommu)
--		return;
--
- 	spin_lock(&iommu->lock);
- 	context = iommu_context_addr(iommu, bus, devfn, 0);
- 	if (!context) {
-@@ -2185,14 +2182,7 @@ static void domain_context_clear_one(struct device_domain_info *info, u8 bus, u8
- 		return;
- 	}
- 
--	if (sm_supported(iommu)) {
--		if (hw_pass_through && domain_type_is_si(info->domain))
--			did_old = FLPT_DEFAULT_DID;
--		else
--			did_old = domain_id_iommu(info->domain, iommu);
--	} else {
--		did_old = context_domain_id(context);
--	}
-+	did_old = context_domain_id(context);
- 
- 	context_clear_entry(context);
- 	__iommu_flush_cache(iommu, context, sizeof(*context));
-@@ -2203,9 +2193,6 @@ static void domain_context_clear_one(struct device_domain_info *info, u8 bus, u8
- 				   DMA_CCMD_MASK_NOBIT,
- 				   DMA_CCMD_DEVICE_INVL);
- 
--	if (sm_supported(iommu))
--		qi_flush_pasid_cache(iommu, did_old, QI_PC_ALL_PASIDS, 0);
--
- 	iommu->flush.flush_iotlb(iommu,
- 				 did_old,
- 				 0,
+ .../mediatek/vcodec/decoder/vdec/vdec_h264_req_if.c    |  9 +++++++--
+ .../vcodec/decoder/vdec/vdec_h264_req_multi_if.c       |  9 +++++++--
+ .../mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c     | 10 +++++++---
+ 3 files changed, 21 insertions(+), 7 deletions(-)
+
 -- 
-2.34.1
+2.25.1
 
