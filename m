@@ -1,57 +1,58 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F60114E2E5
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 20:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72351504CF
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 20:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709240167; cv=none; b=lbLxD1cHyw+AaLJLSqu9pJ9xjIyCmlivXOrvx4MxLRyl9tfXGXWJRQob6pEG+WDBY7W2b2cxnhEP0igvD6LHizjSjkfkRZuOx4V0v2jjCou09/yjH+L9QrbZ3/NcYsMRcvjspHcPghEG/OCc8z1OfvtHn7FLXqpCuYpiM1qLzZ8=
+	t=1709240169; cv=none; b=X9IFr2Mb6VmIutJoLe64a9e5etZW1PcKAgQ90VljkudibirIZvXpXlVQEuANixGrjMHUrBitej7AWb1bsZLPyAQKudEMuOaX62P90zIyf1yy2WiJXq9R4bdwdO0PP+4Z3Wej2k+5uA0DIlmD38gvN7iDVLnqR4PHlqhYI6UZ+00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709240167; c=relaxed/simple;
-	bh=C4WEfnReplN0gQTzXkMZmEt442ImK4xT7st2F/By4dE=;
+	s=arc-20240116; t=1709240169; c=relaxed/simple;
+	bh=pEDv/5wU7sbtDhxVNH7M10AUlaZ8vBb6MddBYxdRtUM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A9h41shf5x1KstoNzXCVTODCxTfhVNVn8+wN19brIqne1yJioqyB4WOGcVuWgmWDWl54l65J0l87VVMRnj3H1oJmxLx2vs9ARbcogMX3HRk4NDDG62jPf93yEU6XWA2l7KA8YbE+aKbBEJMg1meeaRM3o27L7EBPmpFxwDLru+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EcAC3g3K; arc=none smtp.client-ip=209.85.166.177
+	 MIME-Version; b=Uyp9aS+DgjMlK+qz1FH+V/tsZaaDfHjsKMiVlKgIFqdDt3zasPylNIp9ofDs/p0HCuhBIm72IZ2t8dQTJq2Eo0hZR7xfuAJlzfZYS5S3loJvrjS/iWTvSd8dCmHjhoo7UW+kPL9ND365uM3giJVQUrArDqlucfHAN14LzVLlM3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ekaKm67M; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EcAC3g3K"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-365138d9635so5124675ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 12:56:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ekaKm67M"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3652731b2b7so5527245ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 12:56:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709240164; x=1709844964; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709240167; x=1709844967; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c1od9Mf5e1UrqV2FcK9CW+GpeCIGbA7ZM3UP+zHhMOk=;
-        b=EcAC3g3K7UEfy8rRSHSminWF2HHkpjr+QZ8gdSZkyo4dOiAEgCTR71Z9iCyeNMrgHh
-         SJd1Ug6h3092vIIb4qUy5UnmQqQ/3VLYAWfZmK/hYpS1fW2/lY7Y01T1E4S8LKzymQlZ
-         +m7RBbdSbtEJ0JVHqm3O9/URC2MRKMhZbQGN2jzb0I2GxEA41RHKpMS+oVyplNQQMdUz
-         mH4KkqRbPZMdayG1u98nyg4pnflNLUuGzB1xymzMU3OhMY03QMpjGBfIJiPltFlXj21D
-         o6TCtJ7uCMxjU0h6pD2xJbRLJXTYX/fmx8d3wkzvfsaYkEpqMOkuvXH0PA2U/bTGLjoy
-         MvjA==
+        bh=CjF4i+Vy6ouwx0EOaBtId9vglat4HShUeD3p4ZJNnXY=;
+        b=ekaKm67MDgpRP+zqMVGclf8BvL5mRHjOCL1hVtgTLbSqrFnwSFMF95aFhxVQeXSG6r
+         lNGpTDUWTSEPe1h57ofgJ6lMXvupykY93P+LykycGFngjkBj58IYMGR5K2of2V935WOk
+         2mX5m6eRG3ijtkNWIFzLAgbUEswoxJD8P+a4QYwIQ4Bk9s7kqTgWr2m65ASbcR1S2S+J
+         qR3ukvXGkdc/bHUHBvzbmPLzXDV4hei7ll8YZQ1QlQv95XEIIT6/wVzjGAJEaTYekStl
+         p+IBOcCR21wh3tpSWB0GuioW/JgJicrP+UZkPo8A3RKTcGQGGLUiQ00F4WXuMcumtekR
+         xbfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709240164; x=1709844964;
+        d=1e100.net; s=20230601; t=1709240167; x=1709844967;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c1od9Mf5e1UrqV2FcK9CW+GpeCIGbA7ZM3UP+zHhMOk=;
-        b=rulm5lSG2aRtVBcMNNrw/8KAVgq4q9nHeszPUn4NEwm7OOX3iAsfuoAx3CnZeO63+k
-         0zngpS8LzQKRW/rMU9yBzlCkjg/RespRDO5api2Hx2jYeWAXlWWF4aTZPXyCTjJ6gFq1
-         JvU1Unr73BhCpX99wtM99J7Koy+nBsi3pQaBeEYSwIyikqhoRvXsEIcE2KY2VxvPwCg0
-         IbX/xXsyHpypoxFAxbCcd8oiibcHTD2XGyP7x3svKhlkdSKuHP33ZjUynLEE/QFac+hF
-         NgOs7HvqWBaQ2bYZoKL6zbpaEmQLZTsrYXaKCTbJEyrvAtTXAKN/W9zIgLfiU/QSafgt
-         dzDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjv9AcxUcX8YWn+DwBBai3P45Hei/cymyrS/JxbzH5PdZgwnyVPZaBGB141iJwV8Udu/Sf/dOSIDkDuaKPx88CckmiDGJKTuyJI+fk
-X-Gm-Message-State: AOJu0Yywpwcq4SkRQaMoMkl+bUByOd7H0eLzK6dPlDEFL9QCIoTkZyCQ
-	q/2JWMwu5kkQ4k30hk2NhMPqzttzxmLTe0RHcDZKcNJtxgSvvFtC5iav0VbuMOU=
-X-Google-Smtp-Source: AGHT+IGE8nNFn9cjihJfZQrMAXfbTxMQwRrViN8h+ZxBefjhLisKo+axRUJv//pEuVTxKMmHSs3yTg==
-X-Received: by 2002:a05:6e02:1c09:b0:365:c6ae:c40e with SMTP id l9-20020a056e021c0900b00365c6aec40emr318786ilh.0.1709240164615;
-        Thu, 29 Feb 2024 12:56:04 -0800 (PST)
+        bh=CjF4i+Vy6ouwx0EOaBtId9vglat4HShUeD3p4ZJNnXY=;
+        b=M+tR3rpSY6oCnAwYW9bMDpnvZ8rPJl70ojIyc9iWqtfNe9sYtLYfIz1wIUZVHbVcUm
+         Jnj7LHS7+gbXMMpPOvyd52MTMOWnfiTQ7RL3vAes+UFT5/i1I7MhvTf87h32A0jKzraJ
+         tTOrbXxTe++lQk3z1rxDNXCXXdYU1t7SWrEHQbbwq0H05o0C6psXPSaUOTRvXt67fUMd
+         7VPSwkwr3PuFUNZzD5gHFnDDn2tCVscOy8Z5caZf11HQJ5jGe99HyhlhHUwtOwfx85zo
+         6qtWgWUgQAVr74ErnpXsh33hCy1pKtjuDrlsK/SvafkC00VYoWg/C8vJQczuAUNkSB4n
+         AVYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXm4jbdqrseNTdZeNGAa1RK12bSqN+/b70NsgZfvaRKUKmi2sJCGZn4G7fAqxPp7lCGRcDUBI4ACVFv5erRpd2PxFQUa3FM1kglpKb
+X-Gm-Message-State: AOJu0YxVsSW+QJmzvbwE4a231CdKHCTkrftKmrqh/l9CjXNW02cpoduG
+	PS9aFZbPkioHMUcM35xuhAN7T23Ovv8Du3r6ga73Rh0VnGtkM8pZYgrRtfVxMDlEy24feE+4MnZ
+	f
+X-Google-Smtp-Source: AGHT+IGdoKi6C+rA0byjO8nOJp/Q/Gcboxib0igBCpb/NWRQoPu1yXNvKq1oWZfIq0U8OfZgk0wHfg==
+X-Received: by 2002:a92:c264:0:b0:365:4b91:7cf9 with SMTP id h4-20020a92c264000000b003654b917cf9mr172420ild.26.1709240166902;
+        Thu, 29 Feb 2024 12:56:06 -0800 (PST)
 Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id h14-20020a056e020d4e00b003658fbcf55dsm521551ilj.72.2024.02.29.12.56.03
+        by smtp.gmail.com with ESMTPSA id h14-20020a056e020d4e00b003658fbcf55dsm521551ilj.72.2024.02.29.12.56.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 12:56:04 -0800 (PST)
+        Thu, 29 Feb 2024 12:56:06 -0800 (PST)
 From: Alex Elder <elder@linaro.org>
 To: davem@davemloft.net,
 	edumazet@google.com,
@@ -67,9 +68,9 @@ Cc: mka@chromium.org,
 	netdev@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 4/7] net: ipa: pass a platform device to ipa_mem_init()
-Date: Thu, 29 Feb 2024 14:55:51 -0600
-Message-Id: <20240229205554.86762-5-elder@linaro.org>
+Subject: [PATCH net-next 6/7] net: ipa: pass a platform device to ipa_smp2p_init()
+Date: Thu, 29 Feb 2024 14:55:53 -0600
+Message-Id: <20240229205554.86762-7-elder@linaro.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240229205554.86762-1-elder@linaro.org>
 References: <20240229205554.86762-1-elder@linaro.org>
@@ -82,105 +83,93 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Rather than using the platform device pointer field in the IPA
-pointer, pass a platform device pointer to ipa_mem_init().  Use
+pointer, pass a platform device pointer to ipa_smp2p_init().  Use
 that pointer throughout that function.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_main.c |  2 +-
- drivers/net/ipa/ipa_mem.c  | 13 +++++++------
- drivers/net/ipa/ipa_mem.h  |  5 ++++-
- 3 files changed, 12 insertions(+), 8 deletions(-)
+ drivers/net/ipa/ipa_main.c  |  2 +-
+ drivers/net/ipa/ipa_smp2p.c | 10 +++++-----
+ drivers/net/ipa/ipa_smp2p.h |  7 +++++--
+ 3 files changed, 11 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
-index 5c9c1b0ef8de5..17ee075370ce6 100644
+index 17ee075370ce6..3125aec88e6e1 100644
 --- a/drivers/net/ipa/ipa_main.c
 +++ b/drivers/net/ipa/ipa_main.c
-@@ -870,7 +870,7 @@ static int ipa_probe(struct platform_device *pdev)
+@@ -888,7 +888,7 @@ static int ipa_probe(struct platform_device *pdev)
  	if (ret)
- 		goto err_kfree_ipa;
+ 		goto err_endpoint_exit;
  
--	ret = ipa_mem_init(ipa, data->mem_data);
-+	ret = ipa_mem_init(ipa, pdev, data->mem_data);
+-	ret = ipa_smp2p_init(ipa, loader == IPA_LOADER_MODEM);
++	ret = ipa_smp2p_init(ipa, pdev, loader == IPA_LOADER_MODEM);
  	if (ret)
- 		goto err_reg_exit;
+ 		goto err_table_exit;
  
-diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
-index 694960537ecda..d7df7d340221d 100644
---- a/drivers/net/ipa/ipa_mem.c
-+++ b/drivers/net/ipa/ipa_mem.c
-@@ -9,6 +9,7 @@
- #include <linux/bug.h>
- #include <linux/dma-mapping.h>
- #include <linux/iommu.h>
-+#include <linux/platform_device.h>
- #include <linux/io.h>
- #include <linux/soc/qcom/smem.h>
- 
-@@ -75,9 +76,9 @@ ipa_mem_zero_region_add(struct gsi_trans *trans, enum ipa_mem_id mem_id)
- int ipa_mem_setup(struct ipa *ipa)
- {
- 	dma_addr_t addr = ipa->zero_addr;
--	const struct reg *reg;
- 	const struct ipa_mem *mem;
- 	struct gsi_trans *trans;
-+	const struct reg *reg;
- 	u32 offset;
- 	u16 size;
- 	u32 val;
-@@ -615,9 +616,10 @@ static void ipa_smem_exit(struct ipa *ipa)
+diff --git a/drivers/net/ipa/ipa_smp2p.c b/drivers/net/ipa/ipa_smp2p.c
+index 8c4497dfe5afd..831268551d9a7 100644
+--- a/drivers/net/ipa/ipa_smp2p.c
++++ b/drivers/net/ipa/ipa_smp2p.c
+@@ -220,10 +220,11 @@ static void ipa_smp2p_power_release(struct ipa *ipa)
  }
  
- /* Perform memory region-related initialization */
--int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
-+int ipa_mem_init(struct ipa *ipa, struct platform_device *pdev,
-+		 const struct ipa_mem_data *mem_data)
+ /* Initialize the IPA SMP2P subsystem */
+-int ipa_smp2p_init(struct ipa *ipa, bool modem_init)
++int
++ipa_smp2p_init(struct ipa *ipa, struct platform_device *pdev, bool modem_init)
  {
+ 	struct qcom_smem_state *enabled_state;
 -	struct device *dev = &ipa->pdev->dev;
 +	struct device *dev = &pdev->dev;
- 	struct resource *res;
- 	int ret;
+ 	struct qcom_smem_state *valid_state;
+ 	struct ipa_smp2p *smp2p;
+ 	u32 enabled_bit;
+@@ -262,7 +263,7 @@ int ipa_smp2p_init(struct ipa *ipa, bool modem_init)
+ 	/* We have enough information saved to handle notifications */
+ 	ipa->smp2p = smp2p;
  
-@@ -634,14 +636,13 @@ int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
- 	if (!ipa_table_mem_valid(ipa, true))
- 		return -EINVAL;
+-	ret = ipa_smp2p_irq_init(smp2p, smp2p->ipa->pdev, "ipa-clock-query",
++	ret = ipa_smp2p_irq_init(smp2p, pdev, "ipa-clock-query",
+ 				 ipa_smp2p_modem_clk_query_isr);
+ 	if (ret < 0)
+ 		goto err_null_smp2p;
+@@ -274,8 +275,7 @@ int ipa_smp2p_init(struct ipa *ipa, bool modem_init)
  
--	ret = dma_set_mask_and_coherent(&ipa->pdev->dev, DMA_BIT_MASK(64));
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
- 	if (ret) {
- 		dev_err(dev, "error %d setting DMA mask\n", ret);
- 		return ret;
- 	}
+ 	if (modem_init) {
+ 		/* Result will be non-zero (negative for error) */
+-		ret = ipa_smp2p_irq_init(smp2p, smp2p->ipa->pdev,
+-					 "ipa-setup-ready",
++		ret = ipa_smp2p_irq_init(smp2p, pdev, "ipa-setup-ready",
+ 					 ipa_smp2p_modem_setup_ready_isr);
+ 		if (ret < 0)
+ 			goto err_notifier_unregister;
+diff --git a/drivers/net/ipa/ipa_smp2p.h b/drivers/net/ipa/ipa_smp2p.h
+index 9b969b03d1a4b..2a3d8eefb13bb 100644
+--- a/drivers/net/ipa/ipa_smp2p.h
++++ b/drivers/net/ipa/ipa_smp2p.h
+@@ -8,17 +8,20 @@
  
--	res = platform_get_resource_byname(ipa->pdev, IORESOURCE_MEM,
--					   "ipa-shared");
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ipa-shared");
- 	if (!res) {
- 		dev_err(dev,
- 			"DT error getting \"ipa-shared\" memory property\n");
-diff --git a/drivers/net/ipa/ipa_mem.h b/drivers/net/ipa/ipa_mem.h
-index 868e9c20e8c41..28aad00a151da 100644
---- a/drivers/net/ipa/ipa_mem.h
-+++ b/drivers/net/ipa/ipa_mem.h
-@@ -6,6 +6,8 @@
- #ifndef _IPA_MEM_H_
- #define _IPA_MEM_H_
+ #include <linux/types.h>
  
 +struct platform_device;
 +
  struct ipa;
- struct ipa_mem_data;
  
-@@ -100,7 +102,8 @@ int ipa_mem_setup(struct ipa *ipa);	/* No ipa_mem_teardown() needed */
+ /**
+  * ipa_smp2p_init() - Initialize the IPA SMP2P subsystem
+  * @ipa:	IPA pointer
++ * @pdev:	Platform device pointer
+  * @modem_init:	Whether the modem is responsible for GSI initialization
+  *
+  * Return:	0 if successful, or a negative error code
+- *
+  */
+-int ipa_smp2p_init(struct ipa *ipa, bool modem_init);
++int ipa_smp2p_init(struct ipa *ipa, struct platform_device *pdev,
++		   bool modem_init);
  
- int ipa_mem_zero_modem(struct ipa *ipa);
- 
--int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data);
-+int ipa_mem_init(struct ipa *ipa, struct platform_device *pdev,
-+		 const struct ipa_mem_data *mem_data);
- void ipa_mem_exit(struct ipa *ipa);
- 
- #endif /* _IPA_MEM_H_ */
+ /**
+  * ipa_smp2p_exit() - Inverse of ipa_smp2p_init()
 -- 
 2.40.1
 
