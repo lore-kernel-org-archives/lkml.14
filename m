@@ -1,126 +1,91 @@
-Received: from mail-4319.protonmail.ch (mail-4319.protonmail.ch [185.70.43.19])
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0699263509
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 10:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A93D634FA;
+	Thu, 29 Feb 2024 10:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709201589; cv=none; b=qVhCwGdBzXMBzAq+X7HMGhNJ5JuB/b44p6CLg9YpMs6uFKHO1cOgkbJc7aQ2F/Gv77/3EIxtAMok1pTeyQXENLDI+XdSdyF5QWLXjBlRBffedHPveg0Rpvyl9mg/M41c2CXwWZ4xbADB1IEDjOlDfcbbPF4FVdt1iJh2Oso+dCQ=
+	t=1709201637; cv=none; b=DJ14bd8UNbzd11tqZwdkWs2p/wRzgZJ/BDXO0WHkFeh7h+a1enaoBTTJGiFinaCJ16tYGlnuIdBRjG1aSQJjAud/kPH2X3isLcQpDIdjIdV+l8GjS5qYZF8dMvcT0JOVHTK6SaDyljRkeMA2UBC9hPo4f3y88kdPR2j68o0kmtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709201589; c=relaxed/simple;
-	bh=oCv5ptGslBsvzY38wuYywJJB0GagxC7b5VLaoj0VmfY=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Smk3c8SAA1GqzpyfErjohVR6btXrjBPiwJsmTzzAxvvNt+xRFXIGbuMjxdGaPKQzwuDdIcCnrr6qpa5sR6II4RA514ZwH/F4v7WSI7MCHNQ8qiDgeUSJ/mImynQRkIO641v/gBUwLbRUcKCv0xDMPEImPqSsL2AfzPkKyASaY64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=MFtLxXkt; arc=none smtp.client-ip=185.70.43.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="MFtLxXkt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1709201578; x=1709460778;
-	bh=1+5PN7s4OG2QQVyTl949Lw49v6y85D98ucEwbSzG7mg=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=MFtLxXktFHHNTvQABUNCHhHwmWtAzCID3ogGbSC6vQx7FdiNnxNcFJJLSiVyN25eZ
-	 +9OL3lID5wv9Kumr1S6RyYjyt6p44H4O1K4eQKazoiMycL8IevO7DyVAlPxtXPpQJX
-	 BtzO9tVnpkNcrngbbyWMxvJkLYvPQdzptTQztsPaMyZ4A1iVJotBYdSeTFLrFb7VXN
-	 VSVWAGOJREK8iAOl1q7DJDDTWX6pJNc3skM9aW61axI7/bQPiUt0FF04y9oq1bhAsO
-	 Im62+O40nPN9NFHUcNU4exkgzfQsTWBlfMIlbrJ3pAoHfRZuE+emOnJ/UShDpNb7Ft
-	 UrcEz85YIvNRA==
-Date: Thu, 29 Feb 2024 10:12:43 +0000
-To: o-takashi@sakamocchi.jp
-From: Edmund Raile <edmund.raile@proton.me>
-Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, Edmund Raile <edmund.raile@proton.me>
-Subject: [PATCH] firewire: ohci: prevent leak of left-over msi on unbind
-Message-ID: <20240229101236.8074-1-edmund.raile@proton.me>
-Feedback-ID: 45198251:user:proton
+	s=arc-20240116; t=1709201637; c=relaxed/simple;
+	bh=8NZVv0lkuZlY6+A2M5F1zaJ3Ds4jXdulvQdDZTK2V0E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rx3YjGJP9DMT4zaqWFL9tmQC6ICXCKyb3YAK1DXZG1+wcKjn7TxyHJjwZqlg98l0V/7y1cMSeY2wS853hlU1MPlBSfj6c9WjG5FVUIMjYS4aTFNc5Jdn4URF5N8iNT/JCvatFnCEaUcblPkizrXMOmNW4OalRDgg3MaE5F3eqtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; arc=none smtp.client-ip=15.184.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+X-QQ-mid: bizesmtp80t1709201113t32ib1l5
+X-QQ-Originating-IP: darFS/AnfPpgCRo7otCbYoD5Wd/NwnLY6XQ6Qd04Thk=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 29 Feb 2024 18:05:11 +0800 (CST)
+X-QQ-SSF: 01400000000000C0B000000A0000000
+X-QQ-FEAT: znfcQSa1hKYmF0jHFgph+YrvzbCpdq/0E1K0TlIRQBz/8ddzsf+8rJH47uuYR
+	u+FqG3YXNgS533wDh5NenF2q0B/FXDJYvMpu2SHxLgyAC/4HCGtWvn7o+X1pFfgfTWUTA4U
+	MGW+z3jkKG/vrk15Ihh6fTFkLak8qU4uni5GFb4dbZ9bjwAhBPVkGgWOQBWBiqlRmTeklZ2
+	9PsiJG/sz6BJAsheURugGIFtrSBrK/H2Ri6rvcZpyHc9m9mPeYB9v0ea37khJ78w5lV2k/m
+	KgRYlc8he3dfst2lSHmD+k0BmfQ8ckHP6kKyVYa1wZqY3TnePr+4fb2zS59uItG+MrhzdTC
+	D9ObeIq4uqUQmpa4xu3w5HKvkDImTgLFpYrJ8DL1/JCsxNAhFmwE8YMjpAfxFBVR3RuVcyu
+	OdNtYJnpuVw=
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 5336942437654610621
+From: WangYuli <wangyuli@uniontech.com>
+To: herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: linux-crypto@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	WangYuli <wangyuli@uniontech.com>,
+	Guan Wentao <guanwentao@uniontech.com>
+Subject: [PATCH v2] LoongArch/crypto: Clean up useless assignment operations
+Date: Thu, 29 Feb 2024 18:04:49 +0800
+Message-ID: <79D75E042AE5B03F+20240229100449.1001261-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
 
-Commit 5a95f1ded28691e6 ("firewire: ohci: use devres for requested IRQ")
-also removed the call to free_irq() in pci_remove(), leading to a
-leftover irq of devm_request_irq() at pci_disable_msi() in pci_remove()
-when unbinding the driver from the device
+The LoongArch CRC32 hw acceleration is based on
+arch/mips/crypto/crc32-mips.c. While the MIPS code supports both
+MIPS32 and MIPS64, LA32 lacks the CRC instruction. As a result,
+"line len -= sizeof(u32)" is unnecessary.
 
-remove_proc_entry: removing non-empty directory 'irq/136', leaking at
-least 'firewire_ohci'
-Call Trace:
- ? remove_proc_entry+0x19c/0x1c0
- ? __warn+0x81/0x130
- ? remove_proc_entry+0x19c/0x1c0
- ? report_bug+0x171/0x1a0
- ? console_unlock+0x78/0x120
- ? handle_bug+0x3c/0x80
- ? exc_invalid_op+0x17/0x70
- ? asm_exc_invalid_op+0x1a/0x20
- ? remove_proc_entry+0x19c/0x1c0
- unregister_irq_proc+0xf4/0x120
- free_desc+0x3d/0xe0
- ? kfree+0x29f/0x2f0
- irq_free_descs+0x47/0x70
- msi_domain_free_locked.part.0+0x19d/0x1d0
- msi_domain_free_irqs_all_locked+0x81/0xc0
- pci_free_msi_irqs+0x12/0x40
- pci_disable_msi+0x4c/0x60
- pci_remove+0x9d/0xc0 [firewire_ohci
-     01b483699bebf9cb07a3d69df0aa2bee71db1b26]
- pci_device_remove+0x37/0xa0
- device_release_driver_internal+0x19f/0x200
- unbind_store+0xa1/0xb0
+Removing it can make context code style more unified and improve
+code readability.
 
-remove irq with devm_free_irq() before pci_disable_msi()
-also remove it in fail_msi: of pci_probe() as this would lead to
-an identical leak
-
-Fixes: 5a95f1ded28691e6 ("firewire: ohci: use devres for requested IRQ")
-
-Signed-off-by: Edmund Raile <edmund.raile@proton.me>
-
+Suggested-by: Guan Wentao <guanwentao@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
+ arch/loongarch/crypto/crc32-loongarch.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Using FW643 with vfio-pci required unbinding from firewire_ohci,
-doing so currently produces a memory leak due to a leftover irq
-which this patch removes.
-
-The irq can be observed while the driver is loaded and bound:
-find /proc/irq -type d -name "firewire_ohci"
-
-Is it a good idea to submit a patch to devm_request_irq() in
-include/linux/interrupt.h to add the function comment
-/*
- * counterpart: devm_free_irq()
- */
-so LSPs show that hint?
-
- drivers/firewire/ohci.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
-index 9db9290c3269..7bc71f4be64a 100644
---- a/drivers/firewire/ohci.c
-+++ b/drivers/firewire/ohci.c
-@@ -3773,6 +3773,7 @@ static int pci_probe(struct pci_dev *dev,
- =09return 0;
-=20
-  fail_msi:
-+=09devm_free_irq(&dev->dev, dev->irq, ohci);
- =09pci_disable_msi(dev);
-=20
- =09return err;
-@@ -3800,6 +3801,7 @@ static void pci_remove(struct pci_dev *dev)
-=20
- =09software_reset(ohci);
-=20
-+=09devm_free_irq(&dev->dev, dev->irq, ohci);
- =09pci_disable_msi(dev);
-=20
- =09dev_notice(&dev->dev, "removing fw-ohci device\n");
---=20
+diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/crypto/crc32-loongarch.c
+index a49e507af38c..3eebea3a7b47 100644
+--- a/arch/loongarch/crypto/crc32-loongarch.c
++++ b/arch/loongarch/crypto/crc32-loongarch.c
+@@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+ 
+ 		CRC32(crc, value, w);
+ 		p += sizeof(u32);
+-		len -= sizeof(u32);
+ 	}
+ 
+ 	if (len & sizeof(u16)) {
+@@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, unsigned int len)
+ 
+ 		CRC32C(crc, value, w);
+ 		p += sizeof(u32);
+-		len -= sizeof(u32);
+ 	}
+ 
+ 	if (len & sizeof(u16)) {
+-- 
 2.43.0
-
 
