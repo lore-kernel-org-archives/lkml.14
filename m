@@ -1,75 +1,81 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2080.outbound.protection.outlook.com [40.107.92.80])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD1B50260;
-	Thu, 29 Feb 2024 06:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19ABC3D541
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709188966; cv=fail; b=o9jS2IWCx0/7bCHlvQlx1pblULgv1h02PWAj5PgAdWINLVHcnFLnQAlbeWpg8dcVlQSHNyWASrJ4hBkGnf6DabUFwLilxktkRBv3hbQVeuATFmFn7vFIG5EwHri8ZxQ2R6UcrLjC4OvbvouoMlIWV4Tw35kKwZzS5FucooQQ5jY=
+	t=1709189080; cv=fail; b=XJdJcG7tigap01tIgIk3qQpShJ0Stwf+i/r2D7h/aVway1K9lIEVwOswR0xtAk+MlfALFB/OjKd2fek0LHAayy1rE0LFnRkPmAV/FV5wJvHnq+pkL0Sx/XeMLqHNrJJdNkx+3FyfJTIO1+WGeGeyMJZBWXFGD9ezHDb+s2Sa778=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709188966; c=relaxed/simple;
-	bh=RLM6tgLf4y4B2BRlM/0CxYeenGA9ZITvg8RmbHia310=;
+	s=arc-20240116; t=1709189080; c=relaxed/simple;
+	bh=ryE+uUapXIL+VQeyyRD9FVAYCwXOFL+yvYK2nJsWAW8=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KWegtAsnK5R3UQVtz6/MACNfNU9nBSkyj7/k5df8fpMV3mQZtY2I7QM2z2bu4IZYJjG3osMDMpetCHf8DcVkqfmW+dUiAxEaTtZwwBZ0ge9pf7XHIiGPdFsmmwMGWDP7+J4ZXzEOvpXSHRVolspoBoTQoLgWHiCbnMdHiUksNfA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=c7i1YIcW; arc=fail smtp.client-ip=40.107.92.80
+	 Content-Type:MIME-Version; b=LdVkgcItqWywFXXqUdSwANkmv3KmO614PdsrlYVQKsjh6zLDycH6KCg2TMl8iwWv65r2F/pGWp5+j/0TILtAstgSBx9W/k9Dp2b1G+YwuTacE6j2b30ZmfOTUju1n8hrDQQQdIuHk5c1UULDQRbQYJkm9YAht5zKmt235FaLCtI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AzU2eWdu; arc=fail smtp.client-ip=40.107.236.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="c7i1YIcW"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AzU2eWdu"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K0YFkKkRgjBZfEsx0s7WjSE24351XZ0OdhzwcmAYMC6VIAtm8cWchO4kGKhi5jr8WYcbpjXIIDhMANHfVsDZT9lgVD3wIKEpa/sqOj6B87iIO5bgDIK/Hnyw/9kBh/fSvSp6uKjd2/jtDjWiALFSRmOx8bKzC8c6sDwAL9qrieL0gpwOrDOYx1pgGI39/YGQZDPSJ4UOQNNDlDi7X7ZglIqkqW9UbznwOAjHuFx9+LE+581jQ6DzRLdVDEw7A0xQnpnC03lt7U6f8e6/dEwoI3StcJOOdB802nUI58AoS4fXInLGzIDeMkWl3y6iXAPaY4alXQ5nme8MTSGsPWlXTg==
+ b=JSU11H6wPvhC7OUHcrGs0gK2eNzp7cTWviiRvXWBo8tXZMlcjK2Zrx8d0Tvr/j9Xy3PTtQrK1CrgA1GzIcZMl3irBRqspqHtWb7FhiU0D9FHOmgAmpWqqhoSNYT+1slOLB2hue57O8DIbOXzOxFumk86gR9VoB81911Pd8HWVoK8+2ML+5AhwGXjmY92prRhJGw/yGXmQraNG8SiO2qflDa8F7t78+2XkYCYBXnohPUiio7c8H7/s9XlaGevOv/52KQGTO2LE9a/2FVr5FfdLBlTnWGi8/9nHtJbdl4KByhZoZfFRyWAzbx96xZxLbY/qTWbVlKeFGX7eZjSDy8pCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8NEm88aMLmnodhor/tGLkxvNDK/ScyfL6eWfK/1O3dk=;
- b=aU1UarhCHQqHugg7Qipa95kNXiREjoLTnGP1gwigIB9tjmDP0fXMYqMoL/D542VfLoqgWboHvf6wSHwI8awYG2DyTSAz/i6YV/gBI6ONyf5yDzaFQIdgYkaxK5JRAi2AqZu14I2PuPTb2vv+1ZMN7g1y7Tibr+Zv+FCBn6asDhsS5NjR92x1MX9XHu4TQFZ4CgMsGww5zR2EI4lArp+hvyOLNMKIRogTq/A6fHJ+hntm4IUi4Q466fmhT49S8tP+9u423hRS1sJv+8x3OCTVQJkMCiTLUZSZ5iaGLhwmCRsmeFRtpyEmeoQnB2OGun3VahMznoBr8VTDNjC5jEflEw==
+ bh=jUIK2ltfHuJ8MwKKJRV92+1qVSd4Y0Lhd3Dtwky7MNY=;
+ b=RL2IyXeudgu3ShYOUgfNBV/9LMTlOzbvJQ+pBEOzP2wAPz0xw0UG2ixCwli7EbovEY/JjZ/tzooG4krdW8YD+Bf84kLF1Rte7PVVxIGnSTrlWTDkMCsS3FAmeOGUZlwudaTnuzywBBkgmvjaA2mkebMkKQQMYoy58cpJCkhGJGyBMBL6otiY+fMY5Xphhid3xnADKlSXkACsOeOVUDNliDQpO7Klj+E78ISZKc5QLRAXxWIDl7MknbhrFLQNDkbLG/4qlcYG2OAG65CkuyDIl9Xc5r8Y2wwKNJcKbaHj9T22LbZI/zs+wNZPGHM2S6SmdOm2xt+jPx5IHH74mABFXw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8NEm88aMLmnodhor/tGLkxvNDK/ScyfL6eWfK/1O3dk=;
- b=c7i1YIcWmRwodSu0agrGRmdxXxQJyvb5b1SC/fSOtq272jV7zNu0LIBOqRSTI5AbphUOijkk4Is0N4Cnstm4palGlPiT9tRk0spbb2t1kuHnaf/mNDF9woFlasQR5N+6QaWLQei12s9bJVnNuWqB+YKhp48lpOr4VUydEUBXQC0=
+ bh=jUIK2ltfHuJ8MwKKJRV92+1qVSd4Y0Lhd3Dtwky7MNY=;
+ b=AzU2eWdu7JmHY8arxayFeshXsAKor18nGX7uOL77EjRrgTvHOIRr05DzFM3n4Bd/mKTuVQJHsTb5U2H5Hp2SfWIkabHFbWnSbxVTUL3iHovkzlyqxxHw2KiaRllHVvUhdDTLctCP009RNd5vHF3ezfrsNM+yRdqE5jaSDVcAjDo=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB8403.namprd12.prod.outlook.com (2603:10b6:610:133::14)
- by LV3PR12MB9215.namprd12.prod.outlook.com (2603:10b6:408:1a0::21) with
+Received: from MW2PR12MB2379.namprd12.prod.outlook.com (2603:10b6:907:9::24)
+ by DS7PR12MB8346.namprd12.prod.outlook.com (2603:10b6:8:e5::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Thu, 29 Feb
- 2024 06:42:42 +0000
-Received: from CH3PR12MB8403.namprd12.prod.outlook.com
- ([fe80::aaa1:af99:e0e5:7f14]) by CH3PR12MB8403.namprd12.prod.outlook.com
- ([fe80::aaa1:af99:e0e5:7f14%4]) with mapi id 15.20.7316.039; Thu, 29 Feb 2024
- 06:42:41 +0000
-Message-ID: <8ee24cad-e9b8-4321-aad4-9a9ba4f8b7b6@amd.com>
-Date: Thu, 29 Feb 2024 00:42:38 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/mce: Dynamically size space for machine check records
-To: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>
-Cc: "Mehta, Sohil" <sohil.mehta@intel.com>, "x86@kernel.org"
- <x86@kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
- Avadhut Naik <avadhut.naik@amd.com>
-References: <20240212093246.GBZcnlvkPKDC8C7rv5@fat_crate.local>
- <SJ1PR11MB6083B3511D18787BE823AB2CFC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240212175408.GIZcpbQHVjEtwRKLS-@fat_crate.local>
- <SJ1PR11MB60830AF35FA89C7869B8C11EFC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240212191401.GLZcpt-XHFqPg3cDw-@fat_crate.local>
- <SJ1PR11MB6083C60D7584B02E9CAF19D5FC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <ZcqPhVO_DtD2x5N7@agluck-desk3>
- <20240212220833.GQZcqW4WxKH34i-oBR@fat_crate.local>
- <20240212221913.GRZcqZYRd6EPTTnN97@fat_crate.local>
- <20240212224220.GSZcqezMhPojxvIcvO@fat_crate.local>
- <Zd--PJp-NbXGrb39@agluck-desk3>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Thu, 29 Feb
+ 2024 06:44:35 +0000
+Received: from MW2PR12MB2379.namprd12.prod.outlook.com
+ ([fe80::3150:d50f:7411:e6bb]) by MW2PR12MB2379.namprd12.prod.outlook.com
+ ([fe80::3150:d50f:7411:e6bb%4]) with mapi id 15.20.7316.037; Thu, 29 Feb 2024
+ 06:44:34 +0000
+Message-ID: <7daee7bc-bf4c-ab24-dbf2-467371ee72e1@amd.com>
+Date: Thu, 29 Feb 2024 12:14:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [RESEND][PATCH v8 0/7] Preparatory changes for Proxy Execution v8
 Content-Language: en-US
-From: "Naik, Avadhut" <avadnaik@amd.com>
-In-Reply-To: <Zd--PJp-NbXGrb39@agluck-desk3>
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Joel Fernandes <joelaf@google.com>,
+ Qais Yousef <qyousef@google.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Zimuzo Ezeozue <zezeozue@google.com>, Youssef Esmat
+ <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+ Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Metin Kaya <Metin.Kaya@arm.com>, Xuewen Yan <xuewen.yan94@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com
+References: <20240224001153.2584030-1-jstultz@google.com>
+ <3937e057-6b47-77fe-9440-ade079ee2cfe@amd.com>
+ <CANDhNCqUrd4RNfKKMPRZj9ft1tTMNZq-XgYsU1dHpN4ixcZuJw@mail.gmail.com>
+ <0c606d04-6765-d55d-61ec-c3625daea423@amd.com>
+ <CANDhNCpb2Ve5saKtnBgTeAQXFbaWf84G_ky-509ddsfhOhdiLQ@mail.gmail.com>
+ <c26251d2-e1bf-e5c7-0636-12ad886e1ea8@amd.com>
+ <CANDhNCrkXF0R1Otu_EKY6OHxnAOYUQ+UjaQsJ_mW4Ys4ELPcYA@mail.gmail.com>
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <CANDhNCrkXF0R1Otu_EKY6OHxnAOYUQ+UjaQsJ_mW4Ys4ELPcYA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0071.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:2c1::18) To CH3PR12MB8403.namprd12.prod.outlook.com
- (2603:10b6:610:133::14)
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0060.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:99::14) To MW2PR12MB2379.namprd12.prod.outlook.com
+ (2603:10b6:907:9::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,148 +83,137 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8403:EE_|LV3PR12MB9215:EE_
-X-MS-Office365-Filtering-Correlation-Id: 299f51e8-5a99-41f2-31fa-08dc38f1a074
+X-MS-TrafficTypeDiagnostic: MW2PR12MB2379:EE_|DS7PR12MB8346:EE_
+X-MS-Office365-Filtering-Correlation-Id: b19aa4d4-d1fc-4c2f-bc61-08dc38f1e412
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	x+YMGSZk/G/MP7yxdpvw/0GG3KpKH7eemLqpQUwpAjSh5jqN6iGeqVzMSL63Vi4WjDTc7WppP1zJLH6s3zJtyUBBIV+vQI7srYw+lEjNPxbSd1zAETDCDCW7HAPiiJM5OvHn4+ZOr1/aaUUt6+txR4CTdxzP192XPrVyPtGX+VYQQS1bcqyZcO660qVJnnO8KFD6XqYhApKKlxwU76iXNbCtgJo8XxkgKZwMyRJCXj1Pj8K6/7fpgxtN+TKvozwOGrNkJxNeqE/YByMys8lwpTVRJnSkxanu/vqFOVXNcZXd4j8Uh8XfZ3gPW4yh2Sl7ASDElSyaEXl9j0zcQfyCGvy/Vr3IoUvWGAFhkZenZBLc1CKWv971YWKdSsgRjFtcSX1mLhPz4Z4WXysY28VVzj/SjLeF4gw5zd57aGmT0ehlrY37XiPLVXHgtAZiZlIV+kVTwIjWzrYIgPGp95dkhmReNzeRIZn4t4w9sA+7vDn+cczhxsKDIpUEBQ8zz4cw/P8wfVT7SRtUuyDWx/DgjZKO+JSfsdyvXZqkimonvh9PC13RFpENdP6x7zGTSmfHiifZzByyqKZzcPgUApaKWijKWgrHYU+ebIRb2IyTxNGz2ztXuU0I69cybIDm3pMA
+	PUJ4ElkFFT7pclrv+meM0i0N7OErFOX4/lVTnwEmN1XeBIaa05Q6ULClV3XPju4Eck1sGRe8s8pyO5p3lDLdS98P3UcyOKbwiUGtAsIG2Semh9UuZEB/oDtPbUtVHe5vpOSBXhqHW1aR5/Q6ppAUVxBJx0hTOkYS/co+qHCX7sigvFTwXno2jSD+XJi8+QTdm9f6wAjpcmkrDRt9zko5yAsFGPuRyx+Od9IOtuGLWpX2Q3dcQG2bPE2KqtHigeNJTUfUH+8LaUqXMO8M06smGkYiqZ7KWRL754taU/HuItKTe0heHv957/jgXaiCwg27XkTovw7v/HgGJzBNW+I96SUZ8atkv57MF8W8DxgPIdeR1MGQXIftQQbs3vtkhs4HORQ4gqHgFUuUvOiT3IAPbQ5ARhxiTJVBLnZlGxut6G9TIhnn3pZc8S7wZVB/uTGX+dl33jSGL74/SwyjyOMlLUhm0u6vRX+shCIaTn5Kxqw6ODKESxGaGr7peYBiuT/UVu76JDNAa3eQtPPpumD+HOMycWocIkd24VVfQLNsYte95SnapwVOCH8iNcv9cZ2qhyBF3w60l/TOPqO7RyOyww==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8403.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2379.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZitHUVQ1REZ5MEMraC90a2RSUlovNHVhYlpxTTdIZ3ZSV3FMWFZZK1Q5NjRH?=
- =?utf-8?B?MkphcGRJQm1UemtSY2NlcGdmSG94aFhTMDBlK2RaZElXZXdVVXVXSWU4QzYy?=
- =?utf-8?B?Wno3QkliT2x2Wk0vMU1JU05DZFRwUzY4Y0hVWTNkMVdLWTNaa1p5R1Q2V3ZW?=
- =?utf-8?B?VmhIelZUOWVZUWNQQThwMmYvRE8yUmdVUjZVcEFzUE1oaG9kVFljekpUMnBH?=
- =?utf-8?B?Z2p5ZVZ1L1RwOStmRHZ4aTdraVdGeVVYd3h5US85QXM4SzZaNkpTZHpaWm1x?=
- =?utf-8?B?MzVzc0NLRk9WQ1lmTTVuVHRBMHNMdmNnWXdPTWNKOE5NVXdzbDdDODM2L1FW?=
- =?utf-8?B?QXBmaUJxcVBsZ3FrbkZkTnFFZVZXQThHOEpZTFFhUWJ2TXd2eDJVWFZPb25Q?=
- =?utf-8?B?ZVg3b0RLakRYbm9VQWFKL0k5Z2ZPeHEzSXdKTGg2TE1NZXBHVWpjV29PQ05Q?=
- =?utf-8?B?SDBacERPV0VkbDJnUnkxRjNBNXFwSVBTNm9jbDg5VlhWWTJlOTBrTE1QZnJT?=
- =?utf-8?B?QUcyRE1aVFpTMUNVeWVTb2V6QlgyTWd1dlNtdkZUMlZwcDdzSHI0dzc5MklV?=
- =?utf-8?B?emtxVnZET09ja3pzVlhsSUtQb05ReEpGM1RhYlNPZXZxU3BXbWJ2MEVDRk5V?=
- =?utf-8?B?alFka2hlbzQrNU1ZdFFLT29pK050aHFEZGgxd0JGa1JNSlhoRG5ybnoxZXda?=
- =?utf-8?B?ZDBCQ1BUUnlNeVlyUVJzWjcwTUR5VWN6RWFmV05vYVFTYldsT2RBSFAyeXV1?=
- =?utf-8?B?bktUY2lZN3locytIQnVZUS80Y0c4Tk9OUFBCOHRFNkRZcnhiT3BKbmlEVXBM?=
- =?utf-8?B?TzAvWkppeVZUMkhDQUNudDN6R3ZONENjeHJVOCtXMXA2Z3RPY05LTnVEN01I?=
- =?utf-8?B?cEJoeEV0KzhZRDNxeklNWWU1S2QraWxYWGNnQ21GRDBTbWlkVXZJd2JSa3Bu?=
- =?utf-8?B?OVU1TndHYUp6cHR4ZzE4NC84NEkrWDJHa0k5cjVoQ2kzVTRvRlZzN3dVRW5i?=
- =?utf-8?B?MDgza3llcjlZYnM3cStBZWppRlF1VWlJR0prTTc0cktvNmkzRE1wYjIwRzFS?=
- =?utf-8?B?dlkxMHYrMER1SjRBN01mTjFZRWlVQ2pvMGloQTdKcTZKcFZZakZMK1hSdmls?=
- =?utf-8?B?SEE3SkNBaTNRczZ6T3N3L2NEWHU3c0p3bFp6OGhjVEw2ZFlVTDJkaUY2M0Y4?=
- =?utf-8?B?L25tdGVORmFqSG9TS3BtRlA2c0tCRDNkQkNLYzhEOVIwSFI3NnNzVElPZzNT?=
- =?utf-8?B?TEwwUzV1cCszZGtWdkFoZTRkZ2xnZDFuM05JM3JvcmMxcDgwM0U4NnNIQ0tZ?=
- =?utf-8?B?V0wwRGtoMTA3dGhETTM0QnFCTlh5M0VmbEM0bFFFajE4RjZDYWR6cm94bEtW?=
- =?utf-8?B?a3c4WnRFcFRZaFozOVpmSlVmTXZpdlZUQTBuQXBpZk5jeGFtV1pObHR5aE42?=
- =?utf-8?B?MzJzeFRqdlpGRFpndElFUitQNU1SVHFUNXd6MncwMnBHNzVvSmVqL1gxWDFF?=
- =?utf-8?B?R05jUytoeFlhbHFHNmRTU1oySU9FSDF0ZllabnZoL3N0blpiMmxSc09DSjVR?=
- =?utf-8?B?MVNzczczejJIQmVBT0pXNVZEcGl4N1ZHOWNQNEtPMzZaR01XOVo0QjJhZzNC?=
- =?utf-8?B?YUV2MERaNm5tZDhhSE05UFN1K2lwbmpubVBvOURiZkMvMFZQQStJam9NaFc2?=
- =?utf-8?B?WlhESTJ3TmdTS0xrdndkamwxOUlYM3RiSk1PSExZbk5jOVpZb25jK1MwandJ?=
- =?utf-8?B?bnVtWFpKT25EdElzTjRFSDRjdVZSM2pPU0ZPdGZNaXdqVnFXYlRQYTlXNEps?=
- =?utf-8?B?dm41U1lSSENVSW5PdytsdEU4bTJmVlgrdkNQblJMa3poV0lqV3J4OHE5ME51?=
- =?utf-8?B?TEdrdlk5c1k3OHRDeUJwZEZZaDhTbU9maEdqKyt1TzRnU0JzVDhmTjc5VHhk?=
- =?utf-8?B?cFdaQjZpbzZ1NFZqbUo0L2hiYWNaRkw1TG9EQ3IxMlI0b1crVUwzYkdnZ01z?=
- =?utf-8?B?V211R0NqTXVFcm5PUENMUlR6ejdvK1hPT1ZFeWozY3NuS0FZYlhPRzZ2RFVv?=
- =?utf-8?B?cXJBS3FmaFl2ZHFjVG5kMmJMWEFDLytXKzV4NzQ1akd4cFh5NjgrOTY4VHRi?=
- =?utf-8?Q?CVb23YwfeUD+CADJoiqtLXbK9?=
+	=?utf-8?B?MnJDS1c0Wkl6aVdRenhsdUlicGlTRU10Wmwya2ZLSktjWU1lTldjRC91blNX?=
+ =?utf-8?B?RnJPckVaU28yMHhmeEF1SEdJUGI1Y21LazcxR3pLaHIyTUFpRDltbjhZc2Jr?=
+ =?utf-8?B?MHppU1dEY3hRRDR5L3FhVThKQkVKV1JMOUdqVWd4aVVyd296ZUk3U2ZQbDVm?=
+ =?utf-8?B?OWxzZTREMmFMSG5oaXpVdzlqRTQxMVZEak5WT1prZjFZQUVrMVhDMGhWMmZy?=
+ =?utf-8?B?UU9uTjBmcU1GeUNoYXVYakdSRDN3eE9EdVVkNVVtUzJoOHdVQWltaEpqZzhw?=
+ =?utf-8?B?Z245RzlVdGNPc0YvZ095UmJCNkZVWVZ3Z0UyLzM0V2ZDcUVTNGJOamk0Yy9r?=
+ =?utf-8?B?S3JVTTlVMHhJZnRPNFdnWldHS05CSkxnYjdNa2ZFN3UzaG4xcmZ5cmdPdEt2?=
+ =?utf-8?B?dklESVJqRE1GTEZtbUdsTG9ZREEvY3lZaVRhUExaYTl6aWx1dXBJZThGUWhv?=
+ =?utf-8?B?TmcvKzIwK2g1Y0ZoRU5aQ2ppMStKUW9sV0szdHVhREtKRWJleU5yVk1qUVZm?=
+ =?utf-8?B?UVFIRCtVRWJ2U3hZcENrWlZDTnlzMEIwaUN3NjdLRlJCSnFUaWpqeHl3aHov?=
+ =?utf-8?B?RmdNL1NvN0RNcU1oL1hmTG5oNFZGa0s4c1ZNK1ROcUIxbXQ0MjFZMWVhVHFj?=
+ =?utf-8?B?dUYzd2lNSnNjcWlJS2dlMVVqQjl1OFVUSmpabko0ZlhUcXdyL3pFMExJdm1r?=
+ =?utf-8?B?Q0lZeWV0cWkvWmR6dXlRUXR2Mnc2OE1rRkpsTmcrdXJTczExU2l6T292OVUv?=
+ =?utf-8?B?aVhjS3FLc0dwa1dXNGxMT3dWeXpJQjVSb1ptckxPdm10TFBNSHlneXhYWVA1?=
+ =?utf-8?B?QW1MUEJ5andyVUEzNGtuTUh5U2RlQmorZjJkL3dvNUdpYTFzbHpadW9yTC9B?=
+ =?utf-8?B?a1JrdExhRUcxcVFTZWhsQUhnc1p1VnI0VmRPYUpTQUcwR0RXSGgwL0JWRVFJ?=
+ =?utf-8?B?SnQrZ3Y1SmRTRGRkU1RMZXBKcXFBRHRrTWt2RytobDdkdEhlc0JHUXVzWUZ6?=
+ =?utf-8?B?UGRxZHBNNk9aTWY3UFpPNHRZUDNnbEREMHpQVERQMThsaTNDRTlsZ2NQZXJi?=
+ =?utf-8?B?Y1Z6MndYQWIzTlE2RHpZM01oMHNnUkgwMjFMOXJKTVVXYU52M0RNbTRVMUsx?=
+ =?utf-8?B?THg2cG45WXk5RFVXRXdnRGxkeDlqTnpDMVAxZHRlVExRU3c4OFZ1Z0pmVDND?=
+ =?utf-8?B?MXV3dUcyRVY5Tkc5TzM1UTNFMFFRZDltK044N3lra2hONVl4a3hWSWJkQmQz?=
+ =?utf-8?B?OEVjUXc5YnltWS9CUzVHa2hZcnZFQ0t4UEpxcDd3NkhCcGoyVEVoc251SVFh?=
+ =?utf-8?B?VGJBK0Uwb1hOMVhURXpFZWt3T2d3cmh5SEpwMVJsTVZkR0VoVm5wOWNncDhV?=
+ =?utf-8?B?UEN5aEs1bWVWeVRaZ0NWaUJwYU5VZm14b3Q3L0E1anZ2VnhzRTd4dWlyUXVB?=
+ =?utf-8?B?cmZnK0ZGaTNnOEJrNnBGMkxCYnVyd0hsWTB3NVpKQ0pLQ0J2RWd4dWl5M1J0?=
+ =?utf-8?B?WGxNbFcrdEY5YjBzUW93SWZxaVhoV0k5M2hMM2NwZDg1QlAyYWlHZ0x3SndO?=
+ =?utf-8?B?K0NaRVh5VUNSVkhYS2Frb09uZWdWVEFGNkdzRVY1ZVJtZmR5RFBLU0dJQk1o?=
+ =?utf-8?B?SXQ2QmR4WWxZQzVISWhPbUVLdzhab3ppeElDWkt3WUNubzF5Rml5d0Q5WDll?=
+ =?utf-8?B?cEFMMnQ5MVFLZkQyU1RadjY5SGpDZUh1aC9UK2g0MVdKamxsZHN5THQwdWhX?=
+ =?utf-8?B?bVJZMU5IM1Npek1ZSURiTnVMWVZvbFljU3lzdW5kMC9LVXNoSGMwSkFscTJE?=
+ =?utf-8?B?cXh0aFFMNEZYVzhlM013bStjNERZbElpOWNFbzA5VGcxQW55aEVpZGdBVEhC?=
+ =?utf-8?B?S1dxWTBUbUJLbDlYZVFPdXoxdGpLNUN0NEVTVDBEaTdaVlF1aDNnbk1UWjN2?=
+ =?utf-8?B?WGNUUk9HY1Rpb1VDOVlyYWgwNFNmRTJXaWxXS2tLZ3l3Q3lGQ28rUURuSkpP?=
+ =?utf-8?B?eXZnSXpMYkVjZ3NxK2RWejBzSUp3UkpRU29RaHhIdVNCYnAzWjlib241NDMr?=
+ =?utf-8?B?aU42djdXTGZqQjQwUUVHMndTTDJoTnBOd1FzbFBoUGRITXJtZldZUEhQZFdp?=
+ =?utf-8?Q?aZ9lhvIczhOQRmElHFVd+gGp2?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 299f51e8-5a99-41f2-31fa-08dc38f1a074
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8403.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b19aa4d4-d1fc-4c2f-bc61-08dc38f1e412
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2379.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 06:42:41.1763
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 06:44:34.7687
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: V+gVD1lp12LIQCMxxQpArEtP6dx3caLftQSGaZ3I+9Nj3bcpgeqasK9yKSBnDXlzAPJZ9PdohYN1oxMJv32Uog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9215
+X-MS-Exchange-CrossTenant-UserPrincipalName: Vyr1rwTgQsBOppM6+enpnM5GnmKocg5XP62Wqm14JjUXKO8ggL1Bx/btDp2l5EaEmPqGE+poEKrzMaSdKlsxbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8346
 
-Hi,
+Hello John,
 
-On 2/28/2024 17:14, Tony Luck wrote:
-> Systems with a large number of CPUs may generate a large
-> number of machine check records when things go seriously
-> wrong. But Linux has a fixed buffer that can only capture
-> a few dozen errors.
+On 2/29/2024 11:49 AM, John Stultz wrote:
+> On Wed, Feb 28, 2024 at 9:37 AM 'K Prateek Nayak' via kernel-team
+> <kernel-team@android.com> wrote:
+>> I got a chance to test the whole of v8 patches on the same dual socket
+>> 3rd Generation EPYC system:
+>>
+>> tl;dr
+>>
+>> - There is a slight regression in hackbench but instead of the 10x
+>>   blowup seen previously, it is only around 5% with overloaded case
+>>   not regressing at all.
+>>
+>> - A small but consistent (~2-3%) regression is seen in tbench and
+>>   netperf.
 > 
-> Allocate space based on the number of CPUs (with a minimum
-> value based on the historical fixed buffer that could store
-> 80 records).
+> Once again, thank you so much for your testing and reporting of the
+> data! I really appreciate it!
 > 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
+> Do you mind sharing exactly how you're running the benchmarks? (I'd
+> like to try to reproduce these locally (though my machine is much
+> smaller).
 > 
-> Discussion earlier concluded with the realization that it is
-> safe to dynamically allocate the mce_evt_pool at boot time.
-> So here's a patch to do that. Scaling algorithm here is a
-> simple linear "4 records per possible CPU" with a minimum
-> of 80 to match the legacy behavior. I'm open to other
-> suggestions.
-> 
-> Note that I threw in a "+1" to the return from ilog2() when
-> calling gen_pool_create(). From reading code, and running
-> some tests, it appears that the min_alloc_order argument
-> needs to be large enough to allocate one of the mce_evt_llist
-> structures.
-> 
-> Some other gen_pool users in Linux may also need this "+1".
-> 
+> I'm guessing the hackbench one is the same command you shared earlier with v6?
 
-Somewhat confused here. Weren't we also exploring ways to avoid
-duplicate records from being added to the genpool? Has something
-changed in that regard?
+Yup it is same as earlier. I'll list all the commands down below:
 
->  arch/x86/kernel/cpu/mce/genpool.c | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
+o Hackbench
+
+	perf bench sched messaging -p -t -l 100000 -g <# of groups>
+
+o Old schbench
+  git://git.kernel.org/pub/scm/linux/kernel/git/mason/schbench.git
+  at commit e4aa540 ("Make sure rps isn't zero in auto_rps mode.")
+
+	schbench -m 2 -t <# workers> -r 30
+
+  (I should probably upgrade this to the latest! Let me get on it)
+
+o tbench (https://www.samba.org/ftp/tridge/dbench/dbench-4.0.tar.gz)
+
+	nohup tbench_srv 0 &
+	tbench -c client.txt -t 60 <# clients> 127.0.0.1
+
+o Stream (https://www.cs.virginia.edu/stream/FTP/Code/)
+
+	export ARRAY_SIZE=128000000; # 4 * Local L3 size
+	gcc -DSTREAM_ARRAY_SIZE=$ARRAY_SIZE -DNTIMES=<Loops internally> -fopenmp -O2 stream.c -o stream
+	export OMP_NUM_THREADS=16; # Number of CCX on my machine
+	./stream;
+
+o netperf
+
+	netserver -L 127.0.0.1
+	for i in `seq 0 1 <num clients>`;
+	do
+		netperf -H 127.0.0.1 -t TCP_RR -l 100 -- -r 100 -k REQUEST_SIZE,RESPONSE_SIZE,ELAPSED_TIME,THROUGHPUT,THROUGHPUT_UNITS,MIN_LATENCY,MEAN_LATENCY,P50_LATENCY,P90_LATENCY,P99_LATENCY,MAX_LATENCY,STDDEV_LATENCY&
+	done
+	wait;
+
+o Unixbench (from mmtest)
+
+	./run-mmtests.sh --no-monitor --config configs/config-workload-unixbench
+--
+
+If you have any other question, please do let me know :)
+
 > 
-> diff --git a/arch/x86/kernel/cpu/mce/genpool.c b/arch/x86/kernel/cpu/mce/genpool.c
-> index fbe8b61c3413..a1f0a8f29cf5 100644
-> --- a/arch/x86/kernel/cpu/mce/genpool.c
-> +++ b/arch/x86/kernel/cpu/mce/genpool.c
-> @@ -16,14 +16,13 @@
->   * used to save error information organized in a lock-less list.
->   *
->   * This memory pool is only to be used to save MCE records in MCE context.
-> - * MCE events are rare, so a fixed size memory pool should be enough. Use
-> - * 2 pages to save MCE events for now (~80 MCE records at most).
-> + * MCE events are rare, so a fixed size memory pool should be enough.
-> + * Allocate on a sliding scale based on number of CPUs.
->   */
-> -#define MCE_POOLSZ	(2 * PAGE_SIZE)
-> +#define MCE_MIN_ENTRIES	80
->  
->  static struct gen_pool *mce_evt_pool;
->  static LLIST_HEAD(mce_event_llist);
-> -static char gen_pool_buf[MCE_POOLSZ];
->  
->  /*
->   * Compare the record "t" with each of the records on list "l" to see if
-> @@ -118,14 +117,25 @@ int mce_gen_pool_add(struct mce *mce)
->  
->  static int mce_gen_pool_create(void)
->  {
-> +	int mce_numrecords, mce_poolsz;
->  	struct gen_pool *tmpp;
->  	int ret = -ENOMEM;
-> +	void *mce_pool;
-> +	int order;
->  
-> -	tmpp = gen_pool_create(ilog2(sizeof(struct mce_evt_llist)), -1);
-> +	order = ilog2(sizeof(struct mce_evt_llist)) + 1;
-> +	tmpp = gen_pool_create(order, -1);
->  	if (!tmpp)
->  		goto out;
->  
-> -	ret = gen_pool_add(tmpp, (unsigned long)gen_pool_buf, MCE_POOLSZ, -1);
-> +	mce_numrecords = max(80, num_possible_cpus() * 4);
-> +	mce_poolsz = mce_numrecords * (1 << order);
-> +	mce_pool = kmalloc(mce_poolsz, GFP_KERNEL);
-
-To err on the side of caution, wouldn't kzalloc() be a safer choice here?
-
--- 
-Thanks,
-Avadhut Naik
+> thanks
+> -john
+ 
+--
+Thanks and Regards,
+Prateek
