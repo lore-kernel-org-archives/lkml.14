@@ -1,67 +1,67 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA1760ECF
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429D560DE7
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199750; cv=none; b=YbmCvRfAV52qCYjhd4XQDnxIl8zU/tMZm3h1xg9izT5FuhO8bRKSf//LjihOR8KLNXS1O6bLL/FLTeztIMjYX9I0eQSglptX+U/gZ3Jl/N9JLmqNB/4r0TPXCq+OsoQykrrmwS8cLZxvfZQj16VQdbD9PgIbWRzM/NohqLV7S6o=
+	t=1709199781; cv=none; b=DTBGCSI/5L9NlXMXaTY+dEt+MwnEsPhSfxLPm65m+e2NInieXUzFs0D63fs4RlRbq9bGLmIklYYl4pXzCgFIaZ41G+338YltJLZhtDFEXz7eWYnVYLpA6jBlIvn3MAerVtWKnJlXTS/iyNxsQ6k7uB6gD8N35r16fHcElAzwYCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199750; c=relaxed/simple;
-	bh=7uKC/FvBJpACc0ZQ/imEXkYWFQ7oYf5ML6Z59yi/fM8=;
+	s=arc-20240116; t=1709199781; c=relaxed/simple;
+	bh=WX6ElzN18ENGeITFFDkMWABhcHlHX3NBsTlvSRXysgY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P1SsZ74eOi21QktiWQkxQcexzxlIZ+5eiqWGqBOCWGZZnOvcIFN6nwmXS8IPVD/A3YbumfHgEt9jR9q92AsdpFt1N9ue0EgPHZKxg7q8yKi9ZR/gIBWzZf92IIyrQxRtUkeub6WyJow95d36oVn0w+pYATQOaBHEgyBgI10Hz6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O1jLiK5t; arc=none smtp.client-ip=209.85.128.171
+	 To:Cc:Content-Type; b=KuFhtXkZeTyBW44bpwFG8wDvu5OkSH2fXxiBaqUcpuoS0Zt63PbTuKKnvH8nJK8vzUvCcSUsubTI483TQ41r3CMZoqJRwkZw8AM6e7slfJGMSWjCDJ4hFFjt6m+b6mDcFT97Kf6URCIvDyUv6N8a9MWEIUAmMOfeFMhZXriyjjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VwpAPcha; arc=none smtp.client-ip=209.85.219.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O1jLiK5t"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-60943ad307fso6805667b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:42:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwpAPcha"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso731716276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:43:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709199747; x=1709804547; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709199779; x=1709804579; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7uKC/FvBJpACc0ZQ/imEXkYWFQ7oYf5ML6Z59yi/fM8=;
-        b=O1jLiK5tNdoIuhCWhmcMHOSCl+L+Kub7p0BfgOb1lMu1o2jlqrTYRSyoKbF5aRoX4z
-         5MSaYrAQnCbJeGc5GXnMbEPeYADekqm4IAUkFJriINVsoqRmrzRFt0DpwDirM9x56BIF
-         UbWCEfxBvaTDPDM+9ixQMC34dC9XkT5POpdhDExEmPyrM9uQOct4w6HuHa3MFqbo1vbX
-         hi819j8TpZbYX4vof/2qWPfXVI1wcLVBQbR1ARAlWrdsxb83xn8LYzKnN07W/iOOnX9m
-         GtPP1IOks/RruAlPcHdKCQ4ulubCKdLdWFOWzO4eMrh+MgYwipz9wkftRO2+zJ9VdfXW
-         6Y5g==
+        bh=WX6ElzN18ENGeITFFDkMWABhcHlHX3NBsTlvSRXysgY=;
+        b=VwpAPcha58IVwBhOUoRrxXcCj4urcm/iMWfWwUZjGayw9A6C87UU/jo0/YS9kaMSlz
+         RxQ8CrM4nRtLU48hYwDoMeTNFpYXJh+IUbvD9DFbwtnIEA7UHTwZr2PBNDvNifkGuMgK
+         UCVHWJ2SnfPt7jtO+Cldq2VPS94EYrNQQn6CgcdlejoJHkMOKW8pRon3uzWonq8mRo/w
+         NBL3xd2c40WKqJCz7/Oyf7auOeAgP9lyCFfbsgr7xuuYnbBMW8omDHnk3O5GB6rlgzCk
+         6fhbSouQodxb/7QoUkppeH3j6k5tWfOx7QAbVGq5Un9ZzaJjtayB2Hd2/Bqsi8CZ/UuK
+         Tkig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709199747; x=1709804547;
+        d=1e100.net; s=20230601; t=1709199779; x=1709804579;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7uKC/FvBJpACc0ZQ/imEXkYWFQ7oYf5ML6Z59yi/fM8=;
-        b=j4CMbLKUBLksCQ/ft3rP5k4khgSj+T3fCo39pvfVCTzFODcox+3XSwy1cyw4GdMDNq
-         ZlK3/LtnzjF9Y38r+c/Vcb0hSRU6WGtDjUKxEv5eoK3/7URMoArdBeHn7yVEHZ8SWpFt
-         SdH9a4WMfQe/5Q4Bi5eXdIC9RwFHiYIzEgyEKjd8uApPYlpHSA1AslCBFr7lcKQK5xhZ
-         H8BtJmTNmHM6bzDK0oCv3iLEB/hPXS3M15tmUF1w+du45TlU+d4jWo6ryHd2Td/ejUkZ
-         pu/pZiZAZNe43VFQeNQZQm6uwv99KrqrJFuoD1Z2hnJTrXoPUjW0lXv9xUCxYn4fRRaD
-         PesQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcE/5we795fhcG9Kb9yhkHHKJQtXbtRQwUko9oV6E99O/psuUYMTYEb8tAUKf8a02jGRPhE0E3M/Z8RuRQUNnEV8QPiKWeJrObEhCi
-X-Gm-Message-State: AOJu0Yw/Hw+WFCaMJYxrqHQx5leFVPyFk5FMQzeWXRqj6GppY0S1ocUc
-	5zoqKq4MxjqXH09MPUmqwEfFLroIF5dIWokSE6FAlRYIsGieB1omK9phl1rcrd4jwSG9WYcqSWK
-	n46FhBW67lKAUd+2MO50374FwW8DDC8czqFImOA==
-X-Google-Smtp-Source: AGHT+IEpJ3NFu5a8qlfTHTx/bDighLY1fBT+nS1X9VL0cGXlwBe5EOlcAMNoF6lc/EO/wb8zGIf7qpxZCEmSAd7rIAg=
-X-Received: by 2002:a25:ad62:0:b0:dcd:13ba:cdd6 with SMTP id
- l34-20020a25ad62000000b00dcd13bacdd6mr1498057ybe.47.1709199746956; Thu, 29
- Feb 2024 01:42:26 -0800 (PST)
+        bh=WX6ElzN18ENGeITFFDkMWABhcHlHX3NBsTlvSRXysgY=;
+        b=GxpaI72zIPQ0shlS56F4f2uZo6k6Tb/u9IqltvGkAkJHmWZAIfgbjI4WX/2SEIDtGJ
+         5xybPJguk3xng6ekyz9TXh8A02uQQ+0CZxHTKo8ClqYnaeDTiS/efxJM4plaMbhMhyMq
+         4fRPFGX12bdAbBsFuGipkPq80r2Ngm1N8H9MOLD/QrqWYZoQGBZ9RBEaRRshiXuHe/2f
+         nqkVJs4JhIaTZIuyWqf2jO+t4r9EmKNtusMLP7qjan7ocikGtYhUamxZ2JraKc8A7G2V
+         fKWWRAWSwWSPUt+ksdgY3xOjAQciQwBpOSVk1YFq0MxaRsewZKZn2/pyeXRTk+ZM1c0k
+         xn8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXYBawPmtKg087h0ov8BQFA6SzqVw5laX5czfbQx37gJWiuSsf6zNKC3doP/QwDJKuLgq2/tPviwMQWXfNk5w9zL8XGBDmE5wEdVMHB
+X-Gm-Message-State: AOJu0YzJig/MWd6DqeMKVBK9DSQGCWS3SZBzP/80fW3h3zlJYBlHqJay
+	lBrNzpTSN0Mixux0xknqJlGCibJD6FliVGmlzkzSvd+VNWv6T0WhqPILUiSyjUiJqjIl9aXUa3D
+	ku2akuzvTNEFSBxw5/QF8JEoZjbOC2P6JWEYmKA==
+X-Google-Smtp-Source: AGHT+IGWB8ii4Rr1OBtluZ0lydmBWdI57cDGyFQbH9+5gpfG9FKxBEkZzmzb3kJFjrZ9rPeNA84QZSnk4Kq3aGP+H3s=
+X-Received: by 2002:a25:b209:0:b0:dc6:9b9f:d3c0 with SMTP id
+ i9-20020a25b209000000b00dc69b9fd3c0mr1735381ybj.10.1709199779367; Thu, 29 Feb
+ 2024 01:42:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-29-3ba757474006@bootlin.com>
-In-Reply-To: <20240228-mbly-gpio-v2-29-3ba757474006@bootlin.com>
+References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-30-3ba757474006@bootlin.com>
+In-Reply-To: <20240228-mbly-gpio-v2-30-3ba757474006@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 10:42:16 +0100
-Message-ID: <CACRpkda7m9qvTED-meROn=U1RQUYe4sW47n9EJisPFoVV10Z0w@mail.gmail.com>
-Subject: Re: [PATCH v2 29/30] MIPS: mobileye: eyeq5: add resets to GPIO banks
+Date: Thu, 29 Feb 2024 10:42:48 +0100
+Message-ID: <CACRpkdbHhbxu4TX8ZnkEGA_+v2GdaYSMMgBZH6pL2a356kcS7w@mail.gmail.com>
+Subject: Re: [PATCH v2 30/30] MIPS: mobileye: eyeq5: map GPIOs to pins using gpio-ranges
 To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -77,7 +77,12 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boot=
 lin.com> wrote:
 
-> The two GPIO banks share a single reset line.
+> Create a mapping between the GPIO controllers and the pin controllers.
+> GPIO is handled in a one-instance-per-bank manner while pinctrl is done
+> with a single instance for both pin banks.
+>
+> See gpio-ranges documentation:
+> Documentation/devicetree/bindings/gpio/gpio.txt
 >
 > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 
