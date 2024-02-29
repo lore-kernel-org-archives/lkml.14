@@ -1,96 +1,148 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DEA6D522
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 22:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBD574BE8
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 22:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709244816; cv=none; b=D33YYcb5u3vfLwoDWqyVu7hbKXGLq4PxWCyltpxFq46aSCHvEV7NzZT/q6aj3gODwXULo3YgXWo8ldmPC7c8aJCCJVOLrxtVYbv53IokqQH4kn3mrj+WQUJRdjUJANO1kH872xux8RqeJAtf2qh+x2sz1H/OULYLSqLx9I2tnWE=
+	t=1709244840; cv=none; b=VxH64TSPoiFvKMeAqO52N6Kn0/8xw/+huCe7W3P3ZWy28tT+eVwlHLDLpkRhB0cZ0meStVz2VEm2htXfMP1DfUspugxsQocJNaHLd8em934AI03g68FZwglP/Z8/jpGpmeOLdX9IjQKR89mst5hBzOd8S+/C2X/Rr9BNgDgByGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709244816; c=relaxed/simple;
-	bh=lZDiyJsUmZId/Z3fYLT2IIVuOrOC5HBxpjKM+fv3XMw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=YGiU69SlljFbSDeAZdqqOCXGRuAWo9Xesy1d1seRLhfqRc+JS774r58n2oy5xN5MAtbwbXYVzLp4GhdRzJZtLKd1yqG6/85gffbMUaQTfgF+JC1fzPPR9zUOG6ZdUdN6jTMMEPGG5nxLkdU2XnrGfu6PDab2ROvMzXTIeXOM2PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-152-bS3OTQjvO0uFxpOp8UZoqA-1; Thu, 29 Feb 2024 22:13:28 +0000
-X-MC-Unique: bS3OTQjvO0uFxpOp8UZoqA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 29 Feb
- 2024 22:13:26 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 29 Feb 2024 22:13:26 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Thorsten Blum' <thorsten.blum@toblux.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>
-CC: "H. Peter Anvin" <hpa@zytor.com>, "Peter Zijlstra (Intel)"
-	<peterz@infradead.org>, Wei Liu <wei.liu@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] x86/apic: Use div64_ul() instead of do_div()
-Thread-Topic: [PATCH] x86/apic: Use div64_ul() instead of do_div()
-Thread-Index: AQHaaXLYiXydWB8fRkmBfBNz3Gms8bEh48og
-Date: Thu, 29 Feb 2024 22:13:26 +0000
-Message-ID: <7e46123775e64898bd7c467328125ee0@AcuMS.aculab.com>
-References: <20240227114333.1718-2-thorsten.blum@toblux.com>
-In-Reply-To: <20240227114333.1718-2-thorsten.blum@toblux.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1709244840; c=relaxed/simple;
+	bh=t21HnzIGHk+n6QlvVMMSXJY9HBCCiiEVREtwL2Cu0k0=;
+	h=References:From:To:Cc:Subject:In-reply-to:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mHGXyjAxxiwF4D+6696F2Ws0/Zw5CpIWwn5v3tm+HDG344O4wzCI8SezZoLadVgGF2pF5rds4+POLED2OjjxBugcS1rKAFtuz0622anXXeHXUQmsVyUKoy6EoH3097WZbRyo5nua8eJzBovheq/7SiJR9+f5PRdmFP+OjRGwsKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vEJlEXp/; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEJlEXp/"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c19b79535aso825968b6e.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 14:13:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709244838; x=1709849638; darn=vger.kernel.org;
+        h=mime-version:message-id:date:in-reply-to:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=F0bbqczj3Keglw64JiNfdvO4M759XtAlzANrlsOPWOc=;
+        b=vEJlEXp/t0sGocdgJ+1M/q7Vfl/icZb3SlgkPnVhhgAUne7jyVapSyV5iz0w6jQESv
+         eLMmE3SE59/cufa8fdT8VBWPspFkAJb+ps0oVBcTePciNYAzhreUrDI7V2xiduDdhhEU
+         QFdHdaZzqfv6my4Zp98pxSdcHPEx0I3q8W0dGJ6CqwagyxzDTpBAiTCLnpIlQ+O6O5M4
+         y2jWTnaNTZAxe1mVKuNtWOkE9OiZ+4BHWVQQHl5icIcLMZidNcECZeWYzlnehjpykhYU
+         BEVCyq3LDwkHt3zS64N+l1AleFgaLMccgfZDfMNJP3K02ojEikeQuLjWNC2fn4E++25u
+         ME6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709244838; x=1709849638;
+        h=mime-version:message-id:date:in-reply-to:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F0bbqczj3Keglw64JiNfdvO4M759XtAlzANrlsOPWOc=;
+        b=WFk+VkeeNQLd5USeg4yw+tXE1VRX22szKSfJyg1w2sHpKFpMC6ARsrMnpHNON15tqI
+         f4qzIG3gsxTDAHdNGbwS8UH8DwtT3uKRooQeanTCo/g8iHjekdyhnQErueN/xQMzLmmM
+         UdUvY9yDtmtU16/SYfS/uUYiN1eCy5vrhIE5VdJS4eBMM1zOfnE7F15+jcBYcdUuelsO
+         zimoL+02gs069wEZbtOBH6EPAKKAd3Eta3b1BFEpR/M+mdbO139wkv0/tRarxPVyNqXx
+         AhBbwUipguZNut/rWUCVBG8J4Rizm9IJBjpAaQd2YCmGMQQgJuV4DTxx19uJ4Fnuw2Pm
+         3v/g==
+X-Forwarded-Encrypted: i=1; AJvYcCW6AEpv722cwsh4YFuCRwZyFc4pu61tpfiF6/f4MJO0HfMzUOM/JWWccU50LUb6waWIhb+4sP4HGDws70JGb49Z6X/8xvMKtIW+Kkqz
+X-Gm-Message-State: AOJu0YzYNmVXZ0oxIh1OkGgUXL9GXFSAw0vZChiVgfTmZmHvhACqJonp
+	jrffJYNo7KdLWKvzMcD6n6uxwtU9fg2L05k1BlTXFDNL5IgME6MK0Xp2aZPOO9k=
+X-Google-Smtp-Source: AGHT+IHdJxypAmK3qvNYc2vGOAmkw9y2ZwPcLUGqtAKe2grsU0Su0E62P6Tt4LBvrgbMxt6+5DcYzg==
+X-Received: by 2002:a05:6808:438f:b0:3c1:c2e6:b046 with SMTP id dz15-20020a056808438f00b003c1c2e6b046mr3051822oib.23.1709244837897;
+        Thu, 29 Feb 2024 14:13:57 -0800 (PST)
+Received: from localhost ([2804:14d:7e39:8470:a90b:ac37:af4a:feb9])
+        by smtp.gmail.com with ESMTPSA id ei4-20020a056a0080c400b006e57e220ceasm1771460pfb.6.2024.02.29.14.13.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 14:13:57 -0800 (PST)
+References: <20240203-arm64-gcs-v8-0-c9fec77673ef@kernel.org>
+ <20240203-arm64-gcs-v8-33-c9fec77673ef@kernel.org>
+ <87sf1n7uea.fsf@linaro.org>
+ <9b899b4e-7410-4c3b-967b-7794dac742e4@sirena.org.uk>
+ <87ttlzsyro.fsf@linaro.org>
+ <c710a6b1-cf58-4e32-ada0-c0b256a62b2c@sirena.org.uk>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton
+ <akpm@linux-foundation.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+ <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, Suzuki K
+ Poulose <suzuki.poulose@arm.com>, Arnd Bergmann <arnd@arndb.de>, Oleg
+ Nesterov <oleg@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Kees
+ Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>, "Rick P.
+ Edgecombe" <rick.p.edgecombe@intel.com>, Deepak Gupta
+ <debug@rivosinc.com>, Ard Biesheuvel <ardb@kernel.org>, Szabolcs Nagy
+ <Szabolcs.Nagy@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Florian Weimer <fweimer@redhat.com>, Christian
+ Brauner <brauner@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v8 33/38] kselftest/arm64: Add a GCS test program built
+ with the system libc
+In-reply-to: <c710a6b1-cf58-4e32-ada0-c0b256a62b2c@sirena.org.uk>
+Date: Thu, 29 Feb 2024 19:13:55 -0300
+Message-ID: <878r329avw.fsf@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-From: Thorsten Blum
-> Sent: 27 February 2024 11:44
->=20
-> Fixes Coccinelle/coccicheck warnings reported by do_div.cocci.
->=20
-> Change deltapm to unsigned long and replace do_div() with div64_ul()
-> which doesn't implicitly cast the divisor and doesn't unnecessarily
-> calculate the remainder.
-
-Eh? they are entirely different beasts.
-
-do_div() does a 64 by 32 divide that gives a 32bit quotient.
-div64_ul() does a much more expensive 64 by 64 divide that
-can generate a 64bit quotient.
-
-The remainder is pretty much free in both cases.
-If a cpu has a divide instruction it will almost certainly
-put the result in one register and the quotient in another.
-
-64 by 64 divides are horribly expensive on 32bit - they typically
-have to be done in software even if the cpu has a divide instruction
-which will (typically) do a 64 by 32 divide.
-
-Even on Intel 64 bit x86 the 128 by 64 divide (needed to get
-the 64 bit quotient) takes twice as long as the 64 by 32 one.
-Even when the values are small.
-
-The entire reason that the 'libc' divide function isn't in
-the kernel is because it is slow and you really don't want
-to be doing it unless the VALUES not the types require it.
+Content-Type: text/plain
 
 
-=09David
+Mark Brown <broonie@kernel.org> writes:
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+> [[PGP Signed Part:Undecided]]
+> On Thu, Feb 22, 2024 at 11:24:59PM -0300, Thiago Jung Bauermann wrote:
+>> Mark Brown <broonie@kernel.org> writes:
+>
+>> > I believe based on prior discussions that you're running this using
+>> > shrinkwrap - can you confirm exactly how please, including things like
+>> > which firmware configuration you're using?  I'm using current git with
+>> >
+>> >   shrinkwrap run \
+>> >         --rtvar KERNEL=arch/arm64/boot/Image \
+>> >         --rtvar ROOTFS=${ROOTFS} \
+>> >         --rtvar CMDLINE="${CMDLINE}" \
+>> >         --overlay=arch/v9.4.yaml ns-edk2.yaml
+>> >
+>> > and a locally built yocto and everything seems perfectly happy.
+>> 
+>> Yes, this is how I'm running it:
+>> 
+>>   CMDLINE="Image dtb=fdt.dtb console=ttyAMA0 earlycon=pl011,0x1c090000 root=/dev/vda2 ip=dhcp maxcpus=1"
+>> 
+>>   shrinkwrap run \
+>>       --rtvar=KERNEL=Image-gcs-v8-v6.7-rc4-14743-ga551a7d7af93 \
+>
+> I guess that's bitrotted?
 
+Ah, sorry. When I renamed the Image I messed up the kernel version in the
+filename, but I did confirm via "uname -r" that I was running the
+correct version: 6.8.0-rc2-ga551a7d7af93.
+
+>> My rootfs is Ubuntu 22.04.3. In case it's useful, my kernel config is
+>> here:
+>
+> ...
+>
+>> https://people.linaro.org/~thiago.bauermann/gcs/config-v6.8.0-rc2
+>
+> Thanks, it seems to be something in your config that's making a
+> difference - I can see issues with that.  Hopefully that'll help me get
+> to the bottom of this quickly.  I spent a bunch of time fighting with
+> Ubuntu images to get them running but once I did they didn't seem to
+> make much difference.
+
+In that case, it's interesting that I still run into the problem with
+the defconfig. One thing I failed to mention and perhaps is relevant
+considering your result, is that I didn't copy the modules into the disk
+image, so the FVP was running just with was built into the kernel.
+
+That was actually the main reason for me to use a custom config:
+I didn't want to have to deal with kernel modules, so I created a config
+that didn't have any.
+
+-- 
+Thiago
