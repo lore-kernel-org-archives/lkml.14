@@ -1,246 +1,307 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54F92E415;
-	Thu, 29 Feb 2024 06:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709187777; cv=fail; b=J2YbikFk5OvJFvxi/aPrCkG3G8xf+ZE3/3Ysy9bUQWhOX0NoNYuHSnqQAOgOuUsVOV1lP1OQUmPCIeFlpI1Bgn7VYpryigxPEmzYvr5UC+GN6E6inuIRaw6a3pybh7weHYSbdWmEApxfgp+am6SMAC1VLUJxn/9M/SWiwK10oGk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709187777; c=relaxed/simple;
-	bh=RVbikJl+sHQ/i0PajLBdOzeS7lLhV7wty90TnUqhRgI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e6E4+HqMzTCI2kyq1rOSLCSfxpp9Z+cEKQYb+K5lRfjG8sLoQiLKuHojicpchZe3lRYDIVkeLkQdKUeZTKPAJdHoxnAKMYRiqwWU9lWl7FrrFgQJC2CESI2MZdGC1Ao5HycdyF3Y0mbpQRAPmaaxEKXUFjpyRQmTv1g4D0IZPy8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nHcUIb2u; arc=fail smtp.client-ip=40.107.220.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BFE3BBFB
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709187796; cv=none; b=f526kFGJ6YuNOhD1pRak2gakb1/T1HzjVvmh8ZGvrtKf0ySJqf5Mp+jnFe7vTAR7mjMsvQgMYy4OrBcAxar5ogniLmVObHhLFGNuLaUh9YqQD9ntIgv9kfn5MtMDfYuxOccIIb5nQufdL+uZxURSWiXuB3e/CpoB9e2MpwX6604=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709187796; c=relaxed/simple;
+	bh=vE8NafTn3vOUKgnZ/vVeV0fqWc145zT7+13M30pUdy8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Azuw87yx+rh9YiGaBb9oNN039HpRzyJCbAIrqZeZgJA9SxvCvN1HojwPDCruy90c7epAZfTjF0ri62BhJXqwrbrAd49809mFoTEaBJC8pS3e/lhkvp2Ofqnddi+A2Eewehj3n1WKJzAKLmt6ESEntIr9zaNpHOliNHEFLu2l9jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ti5XQ/aP; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nHcUIb2u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JIXLLxtau59TL2TlE7dZUjfhv8LKHB9BdSZCmDKT5rqv9Xeci3Mt6nocLvfhXFnIOvdILu4uY5OLrbfzjJlob6hB/Va/+3p/VMMeIz7gI3M/NEMJ7wJww7KerPuPpIOFQpl4vNZnV93xgZF5GuDP3k/3T0Ec3iKESk+67UwI9ajBoi84lteylY2q1Fh/KOohHxcyxw07p/XIq9Q1JwxXS8gXND3QQ7EUkSuBYazVLhvJXwVLXNK8ciQtCpwvPr3+gi4JolEea47yuoJX75QO2C/7ZvxQA2C+ZAey4Gr79GPzskjuEqBHi8Bg2jAnLeK93Pj+VxOQegqzX4sY6yXTAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GREByrcmPJ1umQ89Kz0166OzFwUmSCBN0U7GUNxqByk=;
- b=ZfiRCzPukp0veq+zxAbl5oX7iSgQ0WKQaTeldUs+RjFEWfouW8/mrWVItriOt326UoWKPBeYkekXbPiiag0C+XaVIq+jotSaBdnLl1KLQCtfMaf2dHl3qIreUM+8fmpUnm0C0CMnP/JXMEkXuLLgF4OSdU7kMTk8Vi7ugBas2F9//OC/S87QXyOpXYF1ZtnLsyCEiVuADmhMAgEDnvthweNxXkORUiJla0NdXSZpRP+D+mdcMM7S3BlSyGm5BPEQUHaVqIEX/wacQ/hjl1Mp2QbATZ7LRIgljL+LfBZUGyIwN+DLbaUOuXGsFgjeSfTL0lTbKIJlWJYfiziDdo+8yA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GREByrcmPJ1umQ89Kz0166OzFwUmSCBN0U7GUNxqByk=;
- b=nHcUIb2uD3yD0ZnrIUoTA5q78vbffIJLg6zMa9oSn8pPslOlumEYOYd9oRzaU3NVVhmF4nvFpSF3XTYUqxgstnplUlGbYSf123tmGKENxSn8xgD3r9Y/50YCRX69VO3w4tqNyoTkv9jBEZZL5LM9G4JyF3Z/ALt7ZYf+ZNVU6Fg=
-Received: from CY5PR19CA0053.namprd19.prod.outlook.com (2603:10b6:930:1a::30)
- by PH7PR12MB9202.namprd12.prod.outlook.com (2603:10b6:510:2ef::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
- 2024 06:22:52 +0000
-Received: from CY4PEPF0000EE33.namprd05.prod.outlook.com
- (2603:10b6:930:1a:cafe::2c) by CY5PR19CA0053.outlook.office365.com
- (2603:10b6:930:1a::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.28 via Frontend
- Transport; Thu, 29 Feb 2024 06:22:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE33.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7292.25 via Frontend Transport; Thu, 29 Feb 2024 06:22:51 +0000
-Received: from titanite-d354host.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 29 Feb 2024 00:22:50 -0600
-From: Avadhut Naik <avadhut.naik@amd.com>
-To: <linux-acpi@vger.kernel.org>
-CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <linux-kernel@vger.kernel.org>,
-	<yazen.ghannam@amd.com>, <avadnaik@amd.com>
-Subject: [PATCH v4] ACPI: APEI: Skip initialization of GHES_ASSIST structures for Machine Check Architecture
-Date: Thu, 29 Feb 2024 00:22:45 -0600
-Message-ID: <20240229062245.2723548-1-avadhut.naik@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ti5XQ/aP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709187793; x=1740723793;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=vE8NafTn3vOUKgnZ/vVeV0fqWc145zT7+13M30pUdy8=;
+  b=Ti5XQ/aPBY2kSoYt5tMreSpMOxkNA3s36jKAq31vboltWC1I+DbIN1mS
+   l4O0geptgrDEagDTjoj/JUSh54d90qvC4sQaYzCScluEIFebLKeCgqVWg
+   ZBoK/8iHlAINdwEloxhJotU6LviTgQmDukNQjd1tkJP0psyP+7o1HxoUk
+   ouOga2mr69O0zERYyLo/m/+sUkB6r3Cf4dn9b39UKANS+4yRbAD+GjwZR
+   qfXWvVZvvmCT4ajgKe7iBqUjZ7eDc54U3I8R98AF6Ne+NQLbFP5/4ll81
+   HF3KqAyZGikKUBwVSIaiJ9GLIAzgLawKd8neQcmZuAgUewEA3LV9gNvoJ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="21094534"
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="21094534"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 22:23:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="7925166"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 22:23:10 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@suse.com>,  Byungchul Park <byungchul@sk.com>,
+  akpm@linux-foundation.org,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  kernel_team@skhynix.com,  yuzhao@google.com,  Mel
+ Gorman <mgorman@suse.de>,  Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v3] mm, vmscan: do not turn on cache_trim_mode if it
+ doesn't work
+In-Reply-To: <20240228223601.GA53666@cmpxchg.org> (Johannes Weiner's message
+	of "Wed, 28 Feb 2024 17:36:01 -0500")
+References: <20240223054407.14829-1-byungchul@sk.com>
+	<ZdyM1nS8a8UR1dw_@tiehlicka> <20240228223601.GA53666@cmpxchg.org>
+Date: Thu, 29 Feb 2024 14:21:15 +0800
+Message-ID: <87jzmndc4k.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE33:EE_|PH7PR12MB9202:EE_
-X-MS-Office365-Filtering-Correlation-Id: c3408d4c-8fa1-44d6-b320-08dc38eedb9a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	SlixrivOAus2KmaN7rhtT8331x5EykIh8KdfukyD4AOOgfiiOQTRynEfeea5ZztfRDxtG87Xs/gYGm3R4WZPgWrRfJtckJSwp8AJgc+JxGRQiTUg6bYHQcRM3vuV6y0JTT2h/oAwy8gQLsUy8xURgRYVbLv8rV9N0di6ymkrU3DS4Ue59EGzKSn2JA3JBGmyJsoUYnHcAskdvEhH3IwfoqzpAfSsur+swbBLSNEC00TXUGLdi1tXMXomsjLmpx8bpbSHV/0QCcFWi4CZ54ZtfX8Vk+x4OZtIHGqAkf8dhmlsmxpQzWphwZA9rhQs7AkywImXh47YSApIuoIzhOwNokTfFIXD1ErtjOqDNTOgoI4CgCZ+YCEYDED7fdiqHjWKhdTef/uAMZlQEgxZ254KnQFxHRIA0CXTUQ3aOL1rnTqWk3r0I0g0/F0uA82fdZYL5MioJYTV+SQkNi4hXfTT5EvxGP35vtJsEIRHmLIlNrykvgGzcenB8sYkZSyrj5bSAOzzqzGC9n7wmBTKVmZYvIQiG53mthIG6ObUzt01cfbSVBjYb5gpQpneLsaFcyWF2Xjm6QmnApOCSd6UfnAyRQ+T75TssOK78chtXPH8HbimTU4lTmLP7ZoKTbltz4XMLqMV0QCnWB5qAF6fh4e581gRhqmkSGLtIjtT+nf1cLI2k4OjGjcXZq6v2ri5U66Q9RAYIi8iHbGaDDDsI6ZoXSsInQYDAQ+mwcBr/YBYNjqf94PVs0dI0VCrHKpS17Oe
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 06:22:51.6550
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3408d4c-8fa1-44d6-b320-08dc38eedb9a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE33.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9202
+Content-Type: text/plain; charset=ascii
 
-To support GHES_ASSIST on Machine Check Architecture (MCA) error sources,
-a set of GHES structures is provided by the system firmware for each MCA
-error source. Each of these sets consists of a GHES structure for each MCA
-bank on each logical CPU, with all structures of a set sharing a common
-Related Source ID, equal to the Source ID of one of the MCA error source
-structures.[1] On SOCs with large core counts, this typically equates to
-tens of thousands of GHES_ASSIST structures for MCA under
-"/sys/bus/platform/drivers/GHES".
+Johannes Weiner <hannes@cmpxchg.org> writes:
 
-Support for GHES_ASSIST however, hasn't been implemented in the kernel. As
-such, the information provided through these structures is not consumed by
-Linux. Moreover, these GHES_ASSIST structures for MCA, which are supposed
-to provide supplemental information in context of an error reported by
-hardware, are setup as independent error sources by the kernel during HEST
-initialization.
+> On Mon, Feb 26, 2024 at 02:06:30PM +0100, Michal Hocko wrote:
+>> [CC Mel, Vlastimil and Johannes for awareness]
+>> 
+>> On Fri 23-02-24 14:44:07, Byungchul Park wrote:
+>> > Changes from v2:
+>> > 	1. Change the condition to stop cache_trim_mode.
+>> > 
+>> > 	   From - Stop it if it's at high scan priorities, 0 or 1.
+>> > 	   To   - Stop it if it's at high scan priorities, 0 or 1, and
+>> > 	          the mode didn't work in the previous turn.
+>> > 
+>> > 	   (feedbacked by Huang Ying)
+>> > 
+>> > 	2. Change the test result in the commit message after testing
+>> > 	   with the new logic.
+>> > 
+>> > Changes from v1:
+>> > 	1. Add a comment describing why this change is necessary in code
+>> > 	   and rewrite the commit message with how to reproduce and what
+>> > 	   the result is using vmstat. (feedbacked by Andrew Morton and
+>> > 	   Yu Zhao)
+>> > 	2. Change the condition to avoid cache_trim_mode from
+>> > 	   'sc->priority != 1' to 'sc->priority > 1' to reflect cases
+>> > 	   where the priority goes to zero all the way. (feedbacked by
+>> > 	   Yu Zhao)
+>> > 
+>> > --->8---
+>> > >From 05846e34bf02ac9b3e254324dc2d7afd97a025d9 Mon Sep 17 00:00:00 2001
+>> > From: Byungchul Park <byungchul@sk.com>
+>> > Date: Fri, 23 Feb 2024 13:47:16 +0900
+>> > Subject: [PATCH v3] mm, vmscan: do not turn on cache_trim_mode if it doesn't work
+>> > 
+>> > With cache_trim_mode on, reclaim logic doesn't bother reclaiming anon
+>> > pages.  However, it should be more careful to turn on the mode because
+>> > it's going to prevent anon pages from being reclaimed even if there are
+>> > a huge number of anon pages that are cold and should be reclaimed.  Even
+>> > worse, that leads kswapd_failures to reach MAX_RECLAIM_RETRIES and
+>> > stopping kswapd from functioning until direct reclaim eventually works
+>> > to resume kswapd.
+>> > 
+>> > So do not turn on cache_trim_mode if the mode doesn't work, especially
+>> > while the sytem is struggling against reclaim.
+>> > 
+>> > The problematic behavior can be reproduced by:
+>> > 
+>> >    CONFIG_NUMA_BALANCING enabled
+>> >    sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
+>> >    numa node0 (8GB local memory, 16 CPUs)
+>> >    numa node1 (8GB slow tier memory, no CPUs)
+>> > 
+>> >    Sequence:
+>> > 
+>> >    1) echo 3 > /proc/sys/vm/drop_caches
+>> >    2) To emulate the system with full of cold memory in local DRAM, run
+>> >       the following dummy program and never touch the region:
+>> > 
+>> >          mmap(0, 8 * 1024 * 1024 * 1024, PROT_READ | PROT_WRITE,
+>> > 	      MAP_ANONYMOUS | MAP_PRIVATE | MAP_POPULATE, -1, 0);
+>> > 
+>> >    3) Run any memory intensive work e.g. XSBench.
+>> >    4) Check if numa balancing is working e.i. promotion/demotion.
+>> >    5) Iterate 1) ~ 4) until numa balancing stops.
+>> > 
+>> > With this, you could see that promotion/demotion are not working because
+>> > kswapd has stopped due to ->kswapd_failures >= MAX_RECLAIM_RETRIES.
+>> > 
+>> > Interesting vmstat delta's differences between before and after are like:
+>> > 
+>> >    +-----------------------+-------------------------------+
+>> >    | interesting vmstat	   | before	   | after	   |
+>> >    +-----------------------+-------------------------------+
+>> >    | nr_inactive_anon	   | 321935	   | 1636737	   |
+>> >    | nr_active_anon	   | 1780700	   | 465913	   |
+>> >    | nr_inactive_file	   | 30425	   | 35711	   |
+>> >    | nr_active_file	   | 14961	   | 8698	   |
+>> >    | pgpromote_success	   | 356	   | 1267785	   |
+>> >    | pgpromote_candidate   | 21953245	   | 1745631	   |
+>> >    | pgactivate		   | 1844523	   | 3309867	   |
+>> >    | pgdeactivate	   | 50634	   | 1545041	   |
+>> >    | pgfault		   | 31100294	   | 6411036	   |
+>> >    | pgdemote_kswapd	   | 30856	   | 2267467	   |
+>> >    | pgscan_kswapd	   | 1861981	   | 7729231	   |
+>> >    | pgscan_anon	   | 1822930	   | 7667544	   |
+>> >    | pgscan_file	   | 39051	   | 61687	   |
+>> >    | pgsteal_anon	   | 386	   | 2227217	   |
+>> >    | pgsteal_file	   | 30470	   | 40250	   |
+>> >    | pageoutrun		   | 30		   | 457	   |
+>> >    | numa_hint_faults	   | 27418279	   | 2752289	   |
+>> >    | numa_pages_migrated   | 356	   | 1267785 	   |
+>> >    +-----------------------+-------------------------------+
+>> > 
+>> > Signed-off-by: Byungchul Park <byungchul@sk.com>
+>> > ---
+>> >  mm/vmscan.c | 24 +++++++++++++++++++-----
+>> >  1 file changed, 19 insertions(+), 5 deletions(-)
+>> > 
+>> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> > index bba207f41b14..f7312d831fed 100644
+>> > --- a/mm/vmscan.c
+>> > +++ b/mm/vmscan.c
+>> > @@ -127,6 +127,9 @@ struct scan_control {
+>> >  	/* One of the zones is ready for compaction */
+>> >  	unsigned int compaction_ready:1;
+>> >  
+>> > +	/* If the last try was reclaimable */
+>> > +	unsigned int reclaimable:1;
+>> > +
+>> >  	/* There is easily reclaimable cold cache in the current node */
+>> >  	unsigned int cache_trim_mode:1;
+>> >  
+>> > @@ -2266,9 +2269,14 @@ static void prepare_scan_control(pg_data_t *pgdat, struct scan_control *sc)
+>> >  	 * If we have plenty of inactive file pages that aren't
+>> >  	 * thrashing, try to reclaim those first before touching
+>> >  	 * anonymous pages.
+>> > +	 *
+>> > +	 * It doesn't make sense to keep cache_trim_mode on if the mode
+>> > +	 * is not working while struggling against reclaim. So do not
+>> > +	 * turn it on if so. Note the highest priority of kswapd is 1.
+>> >  	 */
+>> >  	file = lruvec_page_state(target_lruvec, NR_INACTIVE_FILE);
+>> > -	if (file >> sc->priority && !(sc->may_deactivate & DEACTIVATE_FILE))
+>> > +	if (file >> sc->priority && !(sc->may_deactivate & DEACTIVATE_FILE) &&
+>> > +	    !(sc->cache_trim_mode && !sc->reclaimable && sc->priority <= 1))
+>> >  		sc->cache_trim_mode = 1;
+>> >  	else
+>> >  		sc->cache_trim_mode = 0;
+>
+> The overall goal makes sense to me.
+>
+> file >> priority is just a heuristic that there are enough potential
+> candidate pages, not a guarantee that any forward progress will
+> happen. So it makes sense to retry without before failing.
+>
+> The way you wrote this conditional kind of hurts my head,
+> though. Please don't write negations of complex terms like this.
+>
+> It expands to this:
+>
+> 	!sc->cache_trim_mode || sc->reclaimable || sc->priority > 1
+>
+> which I'm not sure makes sense. Surely it should be something like
+>
+> 	!sc->cache_trim_mode && sc->reclaimable && sc->priority > 1
+>
+> instead?
+>
+> Also
+>
+> 	if (!sc->cache_trim_mode)
+> 		sc->cache_trim_mode = 1
+> 	else
+> 		sc->cache_trim_mode = 0
+>
+> will toggle on every loop. So if direct reclaim runs through a
+> zonelist, it'll cache trim every other numa node...?
+>
+>> > @@ -5862,7 +5870,6 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>> >  {
+>> >  	unsigned long nr_reclaimed, nr_scanned, nr_node_reclaimed;
+>> >  	struct lruvec *target_lruvec;
+>> > -	bool reclaimable = false;
+>> >  
+>> >  	if (lru_gen_enabled() && root_reclaim(sc)) {
+>> >  		lru_gen_shrink_node(pgdat, sc);
+>> > @@ -5877,6 +5884,14 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>> >  	nr_reclaimed = sc->nr_reclaimed;
+>> >  	nr_scanned = sc->nr_scanned;
+>> >  
+>> > +	/*
+>> > +	 * Reset to the default values at the start.
+>> > +	 */
+>> > +	if (sc->priority == DEF_PRIORITY) {
+>> > +		sc->reclaimable = 1;
+>> > +		sc->cache_trim_mode = 0;
+>> > +	}
+>> > +
+>> >  	prepare_scan_control(pgdat, sc);
+>> >  
+>> >  	shrink_node_memcgs(pgdat, sc);
+>> > @@ -5890,8 +5905,7 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>> >  		vmpressure(sc->gfp_mask, sc->target_mem_cgroup, true,
+>> >  			   sc->nr_scanned - nr_scanned, nr_node_reclaimed);
+>> >  
+>> > -	if (nr_node_reclaimed)
+>> > -		reclaimable = true;
+>> > +	sc->reclaimable = !!nr_node_reclaimed;
+>
+> The scope of this doesn't quite make sense. If direct reclaim scans
+> multiple nodes, reclaim failure on the first node would disable cache
+> trim mode on the second node, which is totally unrelated.
+>
+> I think it needs separate paths for direct reclaim and kswapd. For
+> direct reclaim, the retry should be before these similar retry catches
+> in do_try_to_free_pages(), after all zones have been considered:
+>
+> 	/*
+> 	 * We make inactive:active ratio decisions based on the node's
+> 	 * composition of memory, but a restrictive reclaim_idx or a
+> 	 * memory.low cgroup setting can exempt large amounts of
+> 	 * memory from reclaim. Neither of which are very common, so
+> 	 * instead of doing costly eligibility calculations of the
+> 	 * entire cgroup subtree up front, we assume the estimates are
+> 	 * good, and retry with forcible deactivation if that fails.
+> 	 */
+> 	if (sc->skipped_deactivate) {
+> 		sc->priority = initial_priority;
+> 		sc->force_deactivate = 1;
+> 		sc->skipped_deactivate = 0;
+> 		goto retry;
+> 	}
+>
+> 	/* Untapped cgroup reserves?  Don't OOM, retry. */
+> 	if (sc->memcg_low_skipped) {
+> 		sc->priority = initial_priority;
+> 		sc->force_deactivate = 0;
+> 		sc->memcg_low_reclaim = 1;
+> 		sc->memcg_low_skipped = 0;
+> 		goto retry;
+> 	}
 
-Additionally, if the Type field of the Notification structure, associated
-with these GHES_ASSIST structures for MCA, is set to Polled, the kernel
-sets up a timer for each individual structure. The duration of the timer
-is derived from the Poll Interval field of the Notification structure. On
-SOCs with high core counts, this will result in tens of thousands of
-timers expiring periodically causing unnecessary preemptions and wastage
-of CPU cycles. The problem will particularly intensify if Poll Interval
-duration is not sufficiently high.
+In get_scan_count(), we have
 
-Since GHES_ASSIST support is not present in kernel, skip initialization
-of GHES_ASSIST structures for MCA to eliminate their performance impact.
+	if (!sc->priority && swappiness) {
+		scan_balance = SCAN_EQUAL;
+		goto out;
+	}
 
-[1] ACPI specification 6.5, section 18.7
+So, we don't really need the heuristics in direct reclaim path.  So, one
+choice is to constrain this in kswapd reclaim only.
 
-Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
-Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
-Changes in v2:
-1. Since is_ghes_assist_struct() returns if any of the conditions is hit
-if-else-if chain is redundant. Replace it with just if statements.
-2. Fix formatting errors.
-3. Add Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+--
+Best Regards,
+Huang, Ying
 
-Changes in v3:
-1. Modify structure (mces) comment, per Tony's recommendation, to better
-reflect the structure's usage.
 
-Changes in v4:
-1. No changes within the patch. Just sending out to gather more attention.
-2. Add Reviewed-by: Tony Luck <tony.luck@intel.com>
----
- drivers/acpi/apei/hest.c | 51 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/drivers/acpi/apei/hest.c b/drivers/acpi/apei/hest.c
-index 6aef1ee5e1bd..20d757687e3d 100644
---- a/drivers/acpi/apei/hest.c
-+++ b/drivers/acpi/apei/hest.c
-@@ -37,6 +37,20 @@ EXPORT_SYMBOL_GPL(hest_disable);
- 
- static struct acpi_table_hest *__read_mostly hest_tab;
- 
-+/*
-+ * Since GHES_ASSIST is not supported, skip initialization of GHES_ASSIST
-+ * structures for MCA.
-+ * During HEST parsing, detected MCA error sources are cached from early
-+ * table entries so that the Flags and Source Id fields from these cached
-+ * values are then referred to in later table entries to determine if the
-+ * encountered GHES_ASSIST structure should be initialized.
-+ */
-+static struct {
-+	struct acpi_hest_ia_corrected *cmc;
-+	struct acpi_hest_ia_machine_check *mc;
-+	struct acpi_hest_ia_deferred_check *dmc;
-+} mces;
-+
- static const int hest_esrc_len_tab[ACPI_HEST_TYPE_RESERVED] = {
- 	[ACPI_HEST_TYPE_IA32_CHECK] = -1,	/* need further calculation */
- 	[ACPI_HEST_TYPE_IA32_CORRECTED_CHECK] = -1,
-@@ -70,22 +84,54 @@ static int hest_esrc_len(struct acpi_hest_header *hest_hdr)
- 		cmc = (struct acpi_hest_ia_corrected *)hest_hdr;
- 		len = sizeof(*cmc) + cmc->num_hardware_banks *
- 			sizeof(struct acpi_hest_ia_error_bank);
-+		mces.cmc = cmc;
- 	} else if (hest_type == ACPI_HEST_TYPE_IA32_CHECK) {
- 		struct acpi_hest_ia_machine_check *mc;
- 		mc = (struct acpi_hest_ia_machine_check *)hest_hdr;
- 		len = sizeof(*mc) + mc->num_hardware_banks *
- 			sizeof(struct acpi_hest_ia_error_bank);
-+		mces.mc = mc;
- 	} else if (hest_type == ACPI_HEST_TYPE_IA32_DEFERRED_CHECK) {
- 		struct acpi_hest_ia_deferred_check *mc;
- 		mc = (struct acpi_hest_ia_deferred_check *)hest_hdr;
- 		len = sizeof(*mc) + mc->num_hardware_banks *
- 			sizeof(struct acpi_hest_ia_error_bank);
-+		mces.dmc = mc;
- 	}
- 	BUG_ON(len == -1);
- 
- 	return len;
- };
- 
-+/*
-+ * GHES and GHESv2 structures share the same format, starting from
-+ * Source Id and ending in Error Status Block Length (inclusive).
-+ */
-+static bool is_ghes_assist_struct(struct acpi_hest_header *hest_hdr)
-+{
-+	struct acpi_hest_generic *ghes;
-+	u16 related_source_id;
-+
-+	if (hest_hdr->type != ACPI_HEST_TYPE_GENERIC_ERROR &&
-+	    hest_hdr->type != ACPI_HEST_TYPE_GENERIC_ERROR_V2)
-+		return false;
-+
-+	ghes = (struct acpi_hest_generic *)hest_hdr;
-+	related_source_id = ghes->related_source_id;
-+
-+	if (mces.cmc && mces.cmc->flags & ACPI_HEST_GHES_ASSIST &&
-+	    related_source_id == mces.cmc->header.source_id)
-+		return true;
-+	if (mces.mc && mces.mc->flags & ACPI_HEST_GHES_ASSIST &&
-+	    related_source_id == mces.mc->header.source_id)
-+		return true;
-+	if (mces.dmc && mces.dmc->flags & ACPI_HEST_GHES_ASSIST &&
-+	    related_source_id == mces.dmc->header.source_id)
-+		return true;
-+
-+	return false;
-+}
-+
- typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *data);
- 
- static int apei_hest_parse(apei_hest_func_t func, void *data)
-@@ -114,6 +160,11 @@ static int apei_hest_parse(apei_hest_func_t func, void *data)
- 			return -EINVAL;
- 		}
- 
-+		if (is_ghes_assist_struct(hest_hdr)) {
-+			hest_hdr = (void *)hest_hdr + len;
-+			continue;
-+		}
-+
- 		rc = func(hest_hdr, data);
- 		if (rc)
- 			return rc;
-
-base-commit: 07a90c3d91505e44a38e74e1588b304131ad8028
--- 
-2.34.1
-
+> and for kswapd it looks like it should be in balance_pgdat(), after
+> the priority loop, before increasing kswapd_failures.
+>
+> Instead of sc->reclaimable, which is very broad, it would be better to
+> call it sc->may_cache_trim_mode. This is in line with a bunch of other
+> such mechanisms in scan_control.
