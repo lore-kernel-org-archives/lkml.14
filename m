@@ -1,128 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C229D152DE4;
-	Thu, 29 Feb 2024 15:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46EB152E09;
+	Thu, 29 Feb 2024 15:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709221745; cv=none; b=hWUpghG5Gh3bv+YPoCgTzOyC5leAPBx2xonbZaHLJVf91oPuSRyQp86f1n3t0kJrO3ZNyf5PokX2sh3ycZfgKVH49a1P/t90RBqQlX3UQSZ957GQ08lysTOESGolYVfPDNUl63clX261V928iFoIr9L7o7JISRTFoC6x6TTvIk4=
+	t=1709221746; cv=none; b=BtsbustdgHLkTg/AA1qldEGEa6LkNjD+D0WsQ/nPRHAQcK5kqw61jckZyjIoty4wEP+PEvm1Vm+xPGyuMJ1iV2iEjQCSCQ8cHYkq/HwH+aXntBbVGGgXy310sRrLl+VmQufijQE7M4vQZWPOTJs+QT6gMzE1cXjyVABld1c6KPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709221745; c=relaxed/simple;
-	bh=KcTNPiFwNY84hKxY/REFym2TAOMI7OjhJJXCHAPfAWI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MJvdq36yk36iUevndfeXWOpR9cXMLotf+uChWgDV8CkfGyhT4WfJpjEr+6Xg4vdNu72ggzCNJ+hLEhJz8f3rpZI9Ekn9UWddoxmoGhslO7ubRYDMNtUj5zYV6eetkehsT6VnUKSIpHGyaveY+Cbf8Tx0w2tW3MhT3wkP3Ow5+0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPL5cAnS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709221746; c=relaxed/simple;
+	bh=B6z1QKOE3x2nI2mPVwteO/iiaGfW/JzMEnxrnKdy4d8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E+4OuZFFPU7x/Esye2ldUFy0f0zTquviW86CHh8rXsqnOGZmgF4RSpieRM1VcXyZCg56TV3LfDQXc2/iVLXVF/UYre7CDIiqztS4/gLKEAwVHPioaOxU1qJFzdDxVvKsdSHQo305U1HQ+w7e+xFUI0QZq+iLaAPJjSipOiZgskk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M0YaKCf7; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPL5cAnS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E29C433F1;
-	Thu, 29 Feb 2024 15:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709221745;
-	bh=KcTNPiFwNY84hKxY/REFym2TAOMI7OjhJJXCHAPfAWI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NPL5cAnSlK8E2JmD1bx2QsnCuYOR1JQPep15hbh+cu6yUGvJr9VZs9BZl/BFRwGyM
-	 SSWYXfOlHl88iK9BGNw0jBVOxeJ97PINYPFUtHBHu9Eght+yoY8H2StUNCRnhoCOzy
-	 azdNqvh9YGLXCAgGvDEfDZREgctXCkoqTCVM2ecZHS+5c29sn+S++Y4fbMhRFUD0vD
-	 7ipV6CPZZWqqIbUAUo46ktrB/uOnU1gLk+/Cir9XI+4i35U458lGzslc2VKH4YooXf
-	 A4d1aypOT9KKV1lc+KEyrxQZUelqcrlN/FU7Entch2eMxx3O27bssM+qIFfMOq1AGC
-	 cUsmaSthPAtOQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Fangrui Song <maskray@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	peterz@infradead.org,
-	jpoimboe@kernel.org,
-	jbaron@akamai.com,
-	catalin.marinas@arm.com,
-	nathan@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.7 07/26] arm64: jump_label: use constraints "Si" instead of "i"
-Date: Thu, 29 Feb 2024 10:48:26 -0500
-Message-ID: <20240229154851.2849367-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229154851.2849367-1-sashal@kernel.org>
-References: <20240229154851.2849367-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M0YaKCf7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709221745; x=1740757745;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=B6z1QKOE3x2nI2mPVwteO/iiaGfW/JzMEnxrnKdy4d8=;
+  b=M0YaKCf7wrEqGNkQvVmKkRt3w9EowrK9ik4NW3nMRmt+3RVUikYrGZwh
+   kS2RBzqeq4yp3OcQdep1dgOXpBARDFhHMxFFFJ2r+n+OHR0Ss6XX79yDU
+   g5Mb2VJVO8wIQGIu1tUBkDTMoYMk6FgpEZZv7iwoYOp/f6rcc/MjIVBw4
+   JdOaEvRoTYv2wARdFyr4YccclwSTXx755AO6Ww7jls0P5jCpsIx6AWiwi
+   KRPkn1GP4Rf+rARbyUdmZVawOJcqOxh3byFCcPkuNnBDB+aaznGgXj5cv
+   HEWjNnYCnGfDDZXHCDfUSiQjKYeYSd79n9nYYzki22Tl/HgIWJF4lmZDe
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3554474"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="3554474"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 07:49:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="913985020"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="913985020"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 07:48:58 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rfieV-00000008i4q-1m6A;
+	Thu, 29 Feb 2024 17:48:55 +0200
+Date: Thu, 29 Feb 2024 17:48:55 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v8 03/10] clk: eyeq5: add platform driver, and init
+ routine at of_clk_init()
+Message-ID: <ZeCnZ0Py62EyKI9Z@smile.fi.intel.com>
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+ <20240227-mbly-clk-v8-3-c57fbda7664a@bootlin.com>
+ <Zd4X3NnBoEl0wu2H@smile.fi.intel.com>
+ <CZGSB2O8P572.28HK6WFT43N6S@bootlin.com>
+ <ZeBnX2upNRN0xXH4@smile.fi.intel.com>
+ <CZHMSNWMH4KJ.2J6ZMWKMSZYH2@bootlin.com>
+ <ZeCbvgWY6x1o17Kq@smile.fi.intel.com>
+ <CZHOCV35A23S.14HL07U73EH6X@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CZHOCV35A23S.14HL07U73EH6X@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Fangrui Song <maskray@google.com>
+On Thu, Feb 29, 2024 at 04:40:25PM +0100, Théo Lebrun wrote:
+> On Thu Feb 29, 2024 at 3:59 PM CET, Andy Shevchenko wrote:
+> > On Thu, Feb 29, 2024 at 03:27:01PM +0100, Théo Lebrun wrote:
+> > > On Wed, Feb 28, 2024 at 03:33:29PM +0100, Théo Lebrun wrote:
+> > > > On Tue Feb 27, 2024 at 6:11 PM CET, Andy Shevchenko wrote:
+> > > > > On Tue, Feb 27, 2024 at 03:55:24PM +0100, Théo Lebrun wrote:
 
-[ Upstream commit f9daab0ad01cf9d165dbbbf106ca4e61d06e7fe8 ]
+[...]
 
-The generic constraint "i" seems to be copied from x86 or arm (and with
-a redundant generic operand modifier "c"). It works with -fno-PIE but
-not with -fPIE/-fPIC in GCC's aarch64 port.
+> > > > > > > +	u32		reg;	/* next 8 bytes are r0 and r1 */
+> > > > > >
+> > > > > > Not sure this comments gives any clarification to a mere reader of the code.
+> > > > > > Perhaps you want to name this as reg64 (at least it will show that you have
+> > > > > > 8 bytes, but I have no clue what is the semantic relationship between r0 and
+> > > > > > r1, it's quite cryptic to me). Or maybe it should be reg_0_1?
+> > > > > 
+> > > > > Clocks are defined by two 32-bit registers. We only store the first
+> > > > > register offset because they always follow each other.
+> > > >
+> > > > > I like the reg64 name and will remove the comment. This straight forward
+> > > > > code is found in the rest of the code, I don't think it is anything
+> > > > > hard to understand (ie does not need a comment):
+> > > > > 
+> > > > > 	u32 r0 = readl(base_plls + pll->reg);
+> > > > > 	u32 r1 = readl(base_plls + pll->reg + sizeof(r0));
+> > > >
+> > > > Btw, why readq()/writeq() (with probably the inclusion of io-64-nonatomic-lo-hi.h)
+> > > > can be used in this case? It will be much better overall and be aligned with
+> > > > reg64 name.
+> > > 
+> > > The doc talks in terms of 32-bit registers. I do not see a reason to
+> > > work in 64-bit. If we get a 64-bit value that we need to split we need
+> > > to think about the endianness of our platform, which makes things more
+> > > complex than just reading both values independently.
+> >
+> > 1) Would be nice to test on the real HW to confirm it doesn't accept 64-bit IO.
+> 
+> Just tested, it works. No error on the memory bus. And checked assembly
+> generated was a single 64-bit instructions.
+> 
+> It might not work on other hardware revisions though. I can't remember
+> if memory bus is changing across them.
+> 
+> > 2) Still I see a benefit from using lo_hi_readq() and friends directly.
+> 
+> So it is:
+> 
+> 	u32 r0 = readl(base_plls + pll->reg64);
+> 	u32 r1 = readl(base_plls + pll->reg64 + sizeof(r0));
+> 
+> vs:
+> 
+> 	u64 r = lo_hi_readq(base_plls + pll->regs64);
 
-The machine constraint "S", which denotes a symbol or label reference
-with a constant offset, supports PIC and has been available in GCC since
-2012 and in Clang since 7.0. However, Clang before 19 does not support
-"S" on a symbol with a constant offset [1] (e.g.
-`static_key_false(&nf_hooks_needed[pf][hook])` in
-include/linux/netfilter.h), so we use "i" as a fallback.
+> 	u32 r0 = r;
+> 	u32 r1 = r >> 32;
 
-Suggested-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Link: https://github.com/llvm/llvm-project/pull/80255 [1]
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://lore.kernel.org/r/20240206074552.541154-1-maskray@google.com
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/include/asm/jump_label.h | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+It depends to the semantics of these two. How hard do they coupled to each
+other semantically? I.o.w. can they always be considered as 64-bit register
+with the respective bitfields? (And note FIELD_GET() here is your friend.)
 
-diff --git a/arch/arm64/include/asm/jump_label.h b/arch/arm64/include/asm/jump_label.h
-index 48ddc0f45d228..b7716b215f91a 100644
---- a/arch/arm64/include/asm/jump_label.h
-+++ b/arch/arm64/include/asm/jump_label.h
-@@ -15,6 +15,10 @@
- 
- #define JUMP_LABEL_NOP_SIZE		AARCH64_INSN_SIZE
- 
-+/*
-+ * Prefer the constraint "S" to support PIC with GCC. Clang before 19 does not
-+ * support "S" on a symbol with a constant offset, so we use "i" as a fallback.
-+ */
- static __always_inline bool arch_static_branch(struct static_key * const key,
- 					       const bool branch)
- {
-@@ -23,9 +27,9 @@ static __always_inline bool arch_static_branch(struct static_key * const key,
- 		 "	.pushsection	__jump_table, \"aw\"	\n\t"
- 		 "	.align		3			\n\t"
- 		 "	.long		1b - ., %l[l_yes] - .	\n\t"
--		 "	.quad		%c0 - .			\n\t"
-+		 "	.quad		(%[key] - .) + %[bit0]  \n\t"
- 		 "	.popsection				\n\t"
--		 :  :  "i"(&((char *)key)[branch]) :  : l_yes);
-+		 :  :  [key]"Si"(key), [bit0]"i"(branch) :  : l_yes);
- 
- 	return false;
- l_yes:
-@@ -40,9 +44,9 @@ static __always_inline bool arch_static_branch_jump(struct static_key * const ke
- 		 "	.pushsection	__jump_table, \"aw\"	\n\t"
- 		 "	.align		3			\n\t"
- 		 "	.long		1b - ., %l[l_yes] - .	\n\t"
--		 "	.quad		%c0 - .			\n\t"
-+		 "	.quad		(%[key] - .) + %[bit0]  \n\t"
- 		 "	.popsection				\n\t"
--		 :  :  "i"(&((char *)key)[branch]) :  : l_yes);
-+		 :  :  [key]"Si"(key), [bit0]"i"(branch) :  : l_yes);
- 
- 	return false;
- l_yes:
+> One is straight forward, the other uses an obscure helper that code
+> readers must understand and follows that with bit manipulation.
+
+[...]
+
+> There are two errors to handle, that makes a mess out of the code.
+> Having a little bit of repetition but straight forward code is nicer in
+> my opinion. At least we tried!
+
+Yes! Perhaps you can add a couple of words into commit message to explain
+this detail of implementation (that code in two parts is not so identical
+to be easily deduplicated).
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
