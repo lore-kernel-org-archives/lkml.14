@@ -1,42 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77504405F9;
-	Thu, 29 Feb 2024 18:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528DC381C4
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 18:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709232127; cv=none; b=oGOY65SboqY4cD7r0FYq1689Hie9UQnk19nXqetJFSL03Gv4GwIGRd0yjxeTXAjEbbRSjSPwEFAjknCQwI0jl1Ybh7ebL8OmQoxdCvyTosOrqZt7PNb5I0vbM2hn2nWq7OOtqjqB/OOtpY0iPkmfm+Z85mU30tGPPb0vSzLJKf0=
+	t=1709232153; cv=none; b=dxMxKHW4cgjY86ORbEh/5J1zEVTTZDJ9Jc5JpbAiS+1p5YWQ5I6faWvP/ATfirwBiHgXIOkx1GvBwS0FAjdnjoS87jT41/f90kTC2KKwwkBC3X39q4M4Hw56zn5eg6r8Cd24hsaveFaOo/Vw4e+HkYx1rIPN7wDm/l9YC61b5D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709232127; c=relaxed/simple;
-	bh=6Q9YQ5JrvV5TT6WigJ4rpB2hWZ0gwkmwK4ue/OTgeDE=;
+	s=arc-20240116; t=1709232153; c=relaxed/simple;
+	bh=H3KrRIYdyvPnDKbeeJxYKtEYwLKqkVQJutQO00Vbu1c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MIPLIo0YqlDf+uxfFr5zVEKtoY8Ky39HYHpBNi/VHEz1aipWhLfRSB7Dm8d8C8ORnGkv2/AeAysyZ72FKoHGYErhARcUAMy50tWnftvIkCizgcl/Y7QIfAvC6uphAEupC/w2/uvwHB+rpdn6nmwDcU/6bmelo4AnxAVv5T/20Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qYNCfL5i; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rFRrwaCLStpCNPEaajak4sqoEB7Ol8+KrnOX8h3WA58rxxotB6iLbeePjfVkiiYa1yMt08pIYrcR8oPI3p9Q62zunWYKDQwm3lctnK8KMfYEQ6iKpL9iaGFASYUIpcA4fJSZ4RzCc25TRSIntc39p0txQmGgOfTfWxrvZOksgro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KHMGtpYD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qYNCfL5i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7468FC433C7;
-	Thu, 29 Feb 2024 18:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1709232127;
-	bh=6Q9YQ5JrvV5TT6WigJ4rpB2hWZ0gwkmwK4ue/OTgeDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qYNCfL5iUEJh5Vs4iY3aFLrDrVD/sF4EAiaLf5jJhIppNNRT29nJrpiZhHQLcu8oX
-	 D8AIXFId6eiOW+TSCG3flvrVJ6hGcijI4K09+MWIrPO1KP7Bjbd/z5VH0Bx2pB74Fi
-	 jvapwf1Fiw13fN+T7d9v2vT9Gv29PvdBmFNavqPs=
-Date: Thu, 29 Feb 2024 19:42:03 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	allen.lkml@gmail.com
-Subject: Re: [PATCH 5.15 000/245] 5.15.150-rc1 review
-Message-ID: <2024022911-eatery-woven-f882@gregkh>
-References: <20240227131615.098467438@linuxfoundation.org>
- <03a17f2d-ab8f-4241-8912-ebd903fb2c43@roeck-us.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KHMGtpYD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709232150;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jci2gA3KsOy/kFeDun1e7o29XwWtdM+TPMqwUNO5Ia8=;
+	b=KHMGtpYDOalkGweZoBODDv5KucoJdnAw6++KQBi3HcPXox5SSWCmtJBbYjkBEgQNgLaPPp
+	glV054pdhtPFXW5MO1c43rMvdlvrDa1C5i7/xiswzNvY4zXPcTNFryHe7+N5znSWiRizem
+	09lyqcwvXv202pP8Ac56MzUivT15zTM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-244-5O340XGJPTWQQ3fj9j9EoQ-1; Thu, 29 Feb 2024 13:42:26 -0500
+X-MC-Unique: 5O340XGJPTWQQ3fj9j9EoQ-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9BE9F848524;
+	Thu, 29 Feb 2024 18:42:25 +0000 (UTC)
+Received: from bfoster (unknown [10.22.32.137])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 60C59483ECA;
+	Thu, 29 Feb 2024 18:42:25 +0000 (UTC)
+Date: Thu, 29 Feb 2024 13:44:07 -0500
+From: Brian Foster <bfoster@redhat.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	djwong@kernel.org
+Subject: Re: [PATCH 03/21] bcachefs: btree write buffer knows how to
+ accumulate bch_accounting keys
+Message-ID: <ZeDQd7l6PQF5IpBa@bfoster>
+References: <20240225023826.2413565-1-kent.overstreet@linux.dev>
+ <20240225023826.2413565-4-kent.overstreet@linux.dev>
+ <Zd4Ev8XPzn5AJ8K9@bfoster>
+ <ius5flpyc3nelyhflvf3cjok7fh6a6qceq43ruweqyu3giqg2k@n2eun6iwtsyj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,46 +59,165 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <03a17f2d-ab8f-4241-8912-ebd903fb2c43@roeck-us.net>
+In-Reply-To: <ius5flpyc3nelyhflvf3cjok7fh6a6qceq43ruweqyu3giqg2k@n2eun6iwtsyj>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On Thu, Feb 29, 2024 at 10:15:49AM -0800, Guenter Roeck wrote:
-> On 2/27/24 05:23, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.15.150 release.
-> > There are 245 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Wed, Feb 28, 2024 at 05:42:39PM -0500, Kent Overstreet wrote:
+> On Tue, Feb 27, 2024 at 10:50:23AM -0500, Brian Foster wrote:
+> > On Sat, Feb 24, 2024 at 09:38:05PM -0500, Kent Overstreet wrote:
+> > > +	if (!*accounting_accumulated && wb->k.k.type == KEY_TYPE_accounting) {
+> > > +		struct bkey u;
+> > > +		struct bkey_s_c k = bch2_btree_path_peek_slot_exact(btree_iter_path(trans, iter), &u);
+> > > +
+> > > +		if (k.k->type == KEY_TYPE_accounting)
+> > > +			bch2_accounting_accumulate(bkey_i_to_accounting(&wb->k),
+> > > +						   bkey_s_c_to_accounting(k));
 > > 
-> > Responses should be made by Thu, 29 Feb 2024 13:15:36 +0000.
-> > Anything received after that time might be too late.
-> > 
+> > So it looks like we're accumulating from the btree key into the write
+> > buffer key. Is this so the following code will basically insert a new
+> > btree key based on the value of the write buffer key?
 > 
-> $ git grep dma_fence_allocate_private_stub
-> drivers/dma-buf/dma-fence-unwrap.c:             return dma_fence_allocate_private_stub(timestamp);
->                                                                                        ^^^^^^^^^
-> drivers/dma-buf/dma-fence-unwrap.c:             tmp = dma_fence_allocate_private_stub(ktime_get());
->                                                                                       ^^^^^^^^^^^
-> drivers/dma-buf/dma-fence.c: * dma_fence_allocate_private_stub - return a private, signaled fence
-> drivers/dma-buf/dma-fence.c:struct dma_fence *dma_fence_allocate_private_stub(void)
->                                                                               ^^^^
-> drivers/dma-buf/dma-fence.c:EXPORT_SYMBOL(dma_fence_allocate_private_stub);
-> drivers/gpu/drm/drm_syncobj.c:  struct dma_fence *fence = dma_fence_allocate_private_stub();
-> include/linux/dma-fence.h:struct dma_fence *dma_fence_allocate_private_stub(void);
->                                                                             ^^^^
+> Correct, this is where we go from "accounting keys is a delta" to
+> "accounting key is new version of the key".
+> 
+> > >  	darray_for_each(wb->sorted, i) {
+> > >  		struct btree_write_buffered_key *k = &wb->flushing.keys.data[i->idx];
+> > > +		bool accounting_accumulated = false;
+> > 
+> > Should this live within the interior flush loop?
+> 
+> We can't define it within the loop because then we'd be setting it to
+> false on every loop iteration... but it does belong _with_ the loop, so
+> I'll move it to right before.
+> 
 
-How is any of this building then?  Does no one actually use
-dma-fence-unwrap.c?
+Ah, right.
 
-> This was introduced with commit 4e82b9c11d3cd ("dma-buf: add dma_fence_timestamp helper") in
-> v5.15.149. The additional parameter to dma_fence_allocate_private_stub() was introduced in the
-> upstream kernel with commit f781f661e8c99 ("dma-buf: keep the signaling time of merged fences
-> v3") which is missing in v5.15.y.
+> > > -			bch2_journal_pin_update(j, i->journal_seq, &wb->flushing.pin,
+> > > -						bch2_btree_write_buffer_journal_flush);
+> > > +			if (!accounting_replay_done &&
+> > > +			    i->k.k.type == KEY_TYPE_accounting) {
+> > > +				could_not_insert++;
+> > > +				continue;
+> > > +			}
+> > > +
+> > > +			if (!could_not_insert)
+> > > +				bch2_journal_pin_update(j, i->journal_seq, &wb->flushing.pin,
+> > > +							bch2_btree_write_buffer_journal_flush);
+> > 
+> > Hmm.. so this is sane because the slowpath runs in journal sorted order,
+> > right?
+> 
+> yup, which means as soon as we hit a key we can't insert we can't
+> release any more journal pins
+> 
+> > 
+> > >  
+> > >  			bch2_trans_begin(trans);
+> > >  
+> > > @@ -375,13 +409,27 @@ static int bch2_btree_write_buffer_flush_locked(struct btree_trans *trans)
+> > >  					btree_write_buffered_insert(trans, i));
+> > >  			if (ret)
+> > >  				goto err;
+> > > +
+> > > +			i->journal_seq = 0;
+> > > +		}
+> > > +
+> > 
+> > 		/*
+> > 		 * Condense the remaining keys <reasons reasons>...??
+> > 		 */
+> 
+> yup, that's a good comment
+> 
+> > > +		if (could_not_insert) {
+> > > +			struct btree_write_buffered_key *dst = wb->flushing.keys.data;
+> > > +
+> > > +			darray_for_each(wb->flushing.keys, i)
+> > > +				if (i->journal_seq)
+> > > +					*dst++ = *i;
+> > > +			wb->flushing.keys.nr = dst - wb->flushing.keys.data;
+> > >  		}
+> > >  	}
+> > >  err:
+> > > +	if (ret || !could_not_insert) {
+> > > +		bch2_journal_pin_drop(j, &wb->flushing.pin);
+> > > +		wb->flushing.keys.nr = 0;
+> > > +	}
+> > > +
+> > >  	bch2_fs_fatal_err_on(ret, c, "%s: insert error %s", __func__, bch2_err_str(ret));
+> > > -	trace_write_buffer_flush(trans, wb->flushing.keys.nr, skipped, fast, 0);
+> > > -	bch2_journal_pin_drop(j, &wb->flushing.pin);
+> > > -	wb->flushing.keys.nr = 0;
+> > > +	trace_write_buffer_flush(trans, wb->flushing.keys.nr, overwritten, fast, 0);
+> > 
+> > I feel like the last time I looked at the write buffer stuff the flush
+> > wasn't reentrant in this way. I.e., the flush switched out the active
+> > buffer and so had to process all entries in the current buffer (or
+> > something like that). Has something changed or do I misunderstand?
+> 
+> Yeah, originally we were adding keys to the write buffer directly from
+> the transaction commit path, so that necessitated the super fast
+> lockless stuff where we'd toggle between buffers so one was always
+> available.
+> 
+> Now keys are pulled from the journal, so we can use (somewhat) simpler
+> locking and buffering; now the complication is that we can't predict in
+> advance how many keys are going to come out of the journal for the write
+> buffer.
+> 
 
-f781f661e8c99 still uses an option to dma_fence_allocate_private_stub():
--               return dma_fence_get_stub();
-+               return dma_fence_allocate_private_stub(timestamp);
+Ok.
 
-So backporting that will continue the breakage, right?
+> > 
+> > >  	return ret;
+> > >  }
+> > >  
+> > > diff --git a/fs/bcachefs/recovery.c b/fs/bcachefs/recovery.c
+> > > index 6829d80bd181..b8289af66c8e 100644
+> > > --- a/fs/bcachefs/recovery.c
+> > > +++ b/fs/bcachefs/recovery.c
+> > > @@ -228,6 +228,8 @@ static int bch2_journal_replay(struct bch_fs *c)
+> > >  			goto err;
+> > >  	}
+> > >  
+> > > +	set_bit(BCH_FS_accounting_replay_done, &c->flags);
+> > > +
+> > 
+> > I assume this ties into the question on the previous patch..
+> > 
+> > Related question.. if the write buffer can't flush during journal
+> > replay, is there concern/risk of overflowing it?
+> 
+> Shouldn't be any actual risk. It's just new accounting updates that the
+> write buffer can't flush, and those are only going to be generated by
+> interior btree node updates as journal replay has to split/rewrite nodes
+> to make room for its updates.
+> 
+> And for those new acounting updates, updates to the same counters get
+> accumulated as they're flushed from the journal to the write buffer -
+> see the patch for eytzingcer tree accumulated. So we could only overflow
+> if the number of distinct counters touched somehow was very large.
+> 
+> And the number of distinct counters will be growing significantly, but
+> the new counters will all be for user data, not metadata.
+> 
+> (Except: that reminds me, we do want to add per-btree counters, so users
+> can see "I have x amount of extents, x amount of dirents, etc.).
+> 
 
-confused,
+Heh, Ok. This all does sound a little open ended to me. Maybe the better
+question is: suppose this hypothetically does happen after adding a
+bunch of new counters, what would the expected side effect be in the
+recovery scenario where the write buffer can't be flushed?
 
-greg k-h
+If write buffer updates now basically just journal a special entry,
+would that basically mean we'd deadlock during recovery due to no longer
+being able to insert journal entries due to a pinned write buffer? If
+so, that actually seems reasonable to me in the sense that in theory it
+at least doesn't break the filesystem on-disk, but obviously it would
+require some kind of enhancement in order to complete the recovery (even
+if what that is is currently unknown). Hm?
+
+Brian
+
