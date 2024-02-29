@@ -1,67 +1,67 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127E45B697
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0805B5D8
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709198938; cv=none; b=CKC6khdiv3hb4Vd9sQKJxglfg1mwVqMe0DEYfSmNxJXmnpFIvV0NALCPokY5d6mOcfy0Acaj27WN89pymq66p9/6T3n/mmA1kJY8osMpl8eZKR4sRn4DQ1azFANYFd2eiCRCawYuFkYgKqQH6imAY9ILb97+sa5mH6cuqKxj3qI=
+	t=1709198972; cv=none; b=MWgfbfqWeTI4OEBQFT53WR90Arw1iy1v2GKNvh2OGEQMkN5FYZybg6BaPAVYp7M1jDUdu7F/fSzbCuXXKOsGEVcWzDS6DmazAI93Q2WA2oXWjmcOHDSxpN1p0ajifyn75biQ+SgjeyaSUlLdW8Svw3BMQI3p2h0exhwXhrUrvTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709198938; c=relaxed/simple;
-	bh=il/+MTSUB+hJ9/Qk/zhTY8kE7bR8Rhe3rQiBlSatDYc=;
+	s=arc-20240116; t=1709198972; c=relaxed/simple;
+	bh=9xrun28hvTbwUNlBt/r1pmmvIKLwTUek4EH0OAQeY6g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oKUgV+tX2olTaK30uKKqwJ8y4OSqwHy8i2Vx913OpDR2yFZQ3oosdmPGLa9IclUp2m2bV1KQv6pkuERGG4WydnRyHDdii8PN9eR9WXlREnCsJRxH8J6xjX74uziXI3lx0+zFhq3WdutAwjsuDwsl89+PkAqkp+jbaMxoASq34M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TYuNkIPj; arc=none smtp.client-ip=209.85.219.170
+	 To:Cc:Content-Type; b=VBfh6Ouifu3t115kl31712MayuhAw6SSEud7d9634qwAIBkuJI1mDxOUSr/rC1KEJNmUZad//l3ap1Rc8CT4lAzObuddssj82oV6aI8ZScbQMHk7lpzgReGKjL/OfFKuW2ssrvQ31DwDQrE0RQIVy1A6LrnXcqhnN0C2emVZM/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d5lfH0Z1; arc=none smtp.client-ip=209.85.219.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TYuNkIPj"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so670779276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:28:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d5lfH0Z1"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcdb210cb6aso778571276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:29:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709198936; x=1709803736; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709198970; x=1709803770; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lpnwZXvO+GxSiHd0a/DytgyertWwHVGU4iyf7Q6jgRw=;
-        b=TYuNkIPjMwzDHQdknFcZap2VRp457jPMtJDlOKTrctAkBWLQi4bK2SGCP2BZEl1Rq+
-         E0gA3YYj58ti5Duzm8HbzOG4gRNfoCtzM16hKtF+9B2WPMJVjkepl0FSh7J62ze0SOmG
-         LaLgb4IWlYioWh4MATdLMcmwEKWO9VRCoRUGooefg45aWtBJH/Y3Ny58TDlunKSijXAH
-         v5lAuOy2zJL9QdgQpaPwR3geDDFbwQWlXt5+aDJR48UrUXJDpUnB4a3dNlkJPIpHELab
-         P0WizjuSJk9yuwQ12ykZnqHygcaW2sNnQC/ojEmDgp0kdwLsR5zs9c9MUUC25j79wlIk
-         MTaw==
+        bh=9xrun28hvTbwUNlBt/r1pmmvIKLwTUek4EH0OAQeY6g=;
+        b=d5lfH0Z1sSIgs50yYIeIQKbO474hjQu/EvDmwE49iQgsPOInNaUQDOSA+AF4CXIpmy
+         Xb1yPwzdhzClmaM4/Sk0iXEUpm+yQhSsgDzdlqlLeZvTwcW3dE3W01U7sSMPo0shu7Fc
+         DvniCqD9rNmEwOafYGPLQlfQwYPz5sQoI9To5ytwb51myDjMz8imulc5asSJHGygEuRW
+         niIiT0OyykV5slPLPb3X8XhzLIz8bSeMBjuBVD+hqMi3M/ZVN6reQuYyVcKeW7hgzrHU
+         GJh75fl0fgOWApwNO5tjbiM5lwSFeovt7YtrIQmbdYcRK4gc52P62cd5kaS1C6Oqf5xj
+         tbMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709198936; x=1709803736;
+        d=1e100.net; s=20230601; t=1709198970; x=1709803770;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lpnwZXvO+GxSiHd0a/DytgyertWwHVGU4iyf7Q6jgRw=;
-        b=HZHYRbDKl6HsFiTxjU49Zm8vJKhj83L13x53kzxUlTiQfIj2PlmakZw2RuseZxRCDD
-         MafPyAG+iQvbMZYLmPkVsWOF214zIdxeEfwk2+NdFn1YSBhtr4SDyBQonWg5bGTafrCt
-         UZ14LGHX30O9BCRAzv8aAHpBf9gdXf/SFNxsKoM16uGWxSWwy4NcQ8SVqp4hVDBzftkw
-         tcSkIH9YLEAcB9U3T+fWrM2NEp7gSzcroPLSBCbuY+Zx19DXjxM6s9FX6GE//3zgm0sn
-         OCH31DTBDuJ9ZD2cS66BUMRo4tk5lBWMyOTn5jGuLKvSXAtEN2wQgHSUokkV3QkayJdS
-         BVFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxHyLtQdKoOKpeMeoxqG0fcOIQEcrkkWv/z8uXCrPpOeaxb1FzP8Xf5bl9EdOY1pnIZ3vn+vxRmf/i/o/zs0TM24F5b4cflAgia13V
-X-Gm-Message-State: AOJu0Yz4uz9myJX2s9xDvIbAvNTApD9Jx0gcgHlZG6JXpoaDw20qKMMI
-	ue/bK2sljdcMaVLDiYx960DJqq4ZMpFmd91/TXbgL8GL4htsoiax9th35TZGXq3UYyoCs1cjs15
-	XrbCkRSPvrNjHMRFjO4gtX10GcXgE1NRB/UlloA==
-X-Google-Smtp-Source: AGHT+IGIbl2TgaNavrw5wNoqVGLPJWdWimW4CCp6UKDlUrz43Cqlv3DtmfGj5h6AXkXD7KdYMCvm+9wtqdkrh8HvPfQ=
-X-Received: by 2002:a5b:445:0:b0:dcb:bff0:72b with SMTP id s5-20020a5b0445000000b00dcbbff0072bmr1559369ybp.31.1709198936052;
- Thu, 29 Feb 2024 01:28:56 -0800 (PST)
+        bh=9xrun28hvTbwUNlBt/r1pmmvIKLwTUek4EH0OAQeY6g=;
+        b=KQxoXj0LL+ImpjL5F1x/mJ5iwAt3/jByTeo31GcslhXJpeYXucoXbNIFtDI2Dw/jAW
+         u8R1Ht9odad5S57t7T1U3NX4UnvvLxTADs7gcmgNU5hnIKoaIXdmWJmE8LEnsMW4pSaN
+         jreZxjyXLZ8qW1ThIwH2mlFd5xCZxPXVXTLez8Xi8pN2T49MLsI97A1Z9IMds7L7AIo/
+         m0DFWWSV5PjZALt87lUeYJ/7J7RalbzOHdnPUxXAstkZByHcUtPJ/fU5Jp333uSiHYsy
+         CGwCzm6YjJnCNLbSz7THA5j1cUJy9ShulG5Y2hv6n5HxXap+0DDW6ZJVWTSeiX08SilQ
+         wejA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpRZLMT7VM7Rh0eYdPiTq3u31lRPNMKqYcqtXydV2M71Ci5k+POp80IDtpj/Pou3CEUbt83m/9XlyGQ4z+njAY4bWu6+OMtBIQA8Bx
+X-Gm-Message-State: AOJu0YyFzTmaIhMNDX+KuF5LkbqcYOYBm3n83N2XK3tpbeNFE8srCwU5
+	UebQQR2CN0+PrWmpriK1+Q0G09W54SV5hvYvKBs7twrX3tO9V8l+n2OdzcNnbwJLyUlNx2EsHZ2
+	OGyE53UAZ8vK+xGVxxmX88o/J0xKvAvr54Kz2Ww==
+X-Google-Smtp-Source: AGHT+IFcIq6rOa8YJF/37W++7S7G6OEFznJJRmbQw71XiyjH8oKuNU7jWDHU4uKxFfdpywX9lIfEjnnzQ3AuD36QOkg=
+X-Received: by 2002:a25:81cd:0:b0:dcc:8c5e:7c9b with SMTP id
+ n13-20020a2581cd000000b00dcc8c5e7c9bmr1795722ybm.57.1709198970093; Thu, 29
+ Feb 2024 01:29:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-13-3ba757474006@bootlin.com>
-In-Reply-To: <20240228-mbly-gpio-v2-13-3ba757474006@bootlin.com>
+References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-14-3ba757474006@bootlin.com>
+In-Reply-To: <20240228-mbly-gpio-v2-14-3ba757474006@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 10:28:45 +0100
-Message-ID: <CACRpkdb6cLAaAkYa=2Sz1G4t2yBRQcwPWsoQShdQ2JMcg+VaRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 13/30] pinctrl: nomadik: follow conditional kernel
- coding conventions
+Date: Thu, 29 Feb 2024 10:29:19 +0100
+Message-ID: <CACRpkdYavroWGW5HXLJATF0UuffQYnyoQYnO=aV364=XA7ARsg@mail.gmail.com>
+Subject: Re: [PATCH v2 14/30] gpio: nomadik: add #include <linux/slab.h>
 To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -77,18 +77,7 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boot=
 lin.com> wrote:
 
-> Fix strict checkpatch warnings relative to if-else blocks and bool
-> expressions. Message types addressed:
->
->    CHECK: Comparison to NULL could be written "!nmk_cfg_params[index].cho=
-ice"
->    CHECK: Unbalanced braces around else statement
->    CHECK: Using comparison to false is error prone
->    CHECK: Using comparison to true is error prone
->    CHECK: braces {} should be used on all arms of this statement
->
-> Before: 0 errors, 1 warnings, 16 checks.
-> After:  0 errors, 1 warnings,  7 checks.
+> Add linux/slab.h header include for GFP flags.
 >
 > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 
