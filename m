@@ -1,129 +1,108 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B225364A4;
-	Thu, 29 Feb 2024 03:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CA435F18;
+	Thu, 29 Feb 2024 03:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709175782; cv=none; b=p2X26LO2aPNvmJ0BYzn5Bf0Dr7SwPg0jIv6gTIW9NQhQt2RC+DFbgC76J/p2RGu2D2NGv/iynXlt9GhAqo4g8GoqBcLHrNgh1WeQxT0m/GsMSf/l5YmXWfWfarf1iuTCewIpRAb7KCKYBk6oPJ0rAf6yntD20DvWFWwRBhhzTfs=
+	t=1709175934; cv=none; b=f6IypB2Pnooia/tmc6sCH7GA+VnCDI8XWZ2lJdhBMkyDpCA1LSzX7zB/tODC2f0sSDji/whuV/xUY0um5sU3Tc11AWBXw1RejDBq5emhfu6aaUyhHiT59Z0ApLGL3M0fgq7RzIhLfg4nYXVFCKCZgYIOSFTBjydRn9gfEyXv53E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709175782; c=relaxed/simple;
-	bh=d5YeaavC8vb1W+Ug/VmFLsdkSOi7EID7OlQsAE8E4fQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W09ByOyoG/PXjDwgja6ElxI98luE0NSDX+t2++YkIf8T2IZz8CAhrtm+JInIIhMv94zJcFWyDnw7yLcb/u4v/qZ6I81BMXZ7cvXSLbZJfg/EvgRFLR+SdweoNBog9Apcv2m+c478xqmUVFgA0hzmwyGVIiQrEAlUbghHc0IdUEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=iCAyrNOE; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1709175934; c=relaxed/simple;
+	bh=tQQ7xj//LU316ukpe78B00k15tsraKruobbXoWY9rrg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bTRDDc3mgO8KumFvJEQsjbZpweWvEFFwc42FhB6euuJMUXxcPoahZSU+r42R+DjPWjTJJHwEQlhjefBZ5Krn6clI9sdSp9rBEvHBYQdK3V/Ycx0yWrwJluDtlbimW/Gq6UYtreZunE0Rp6cdwO61vtMjKX0m5G/U4cNVPSNrJ3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfvWxeR3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iCAyrNOE"
-X-UUID: 083293a2d6af11eeb8927bc1f75efef4-20240229
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=aYhv12Ei/4yfF7DsV5pcHLs6C/tsptVLgekgyTfK2o0=;
-	b=iCAyrNOEQs9Co0VSv0GRswhR6Bf56YLJoqqT1eBCOd5DVcyEtkqbN/+LvByPUNNoBkNPoayMBAdbw3W6Rhta8oufRgHXyYZ3HVHSIMMlzAYV7ts/oYRjOm5dJWRkWnQ4ZYFek59zSk1bKSIZzXHy4/YnaWSntZ6/gVbG7mSMmv4=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:0dd5f1ff-7977-4477-8f68-18c58b84eb8b,IP:0,U
-	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-30
-X-CID-META: VersionHash:6f543d0,CLOUDID:5f2353ff-c16b-4159-a099-3b9d0558e447,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:2,IP:nil,UR
-	L:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
-	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 083293a2d6af11eeb8927bc1f75efef4-20240229
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
-	(envelope-from <irui.wang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1682834460; Thu, 29 Feb 2024 11:02:54 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 29 Feb 2024 11:02:52 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 29 Feb 2024 11:02:51 +0800
-From: Irui Wang <irui.wang@mediatek.com>
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab
-	<mchehab@kernel.org>, Tiffany Lin <tiffany.lin@mediatek.com>, Matthias
- Brugger <matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>,
-	<nicolas.dufresne@collabora.com>, Yunfei Dong <yunfei.dong@mediatek.com>,
-	Longfei Wang <longfei.wang@mediatek.com>, Maoguang Meng
-	<maoguang.meng@mediatek.com>
-CC: Irui Wang <irui.wang@mediatek.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2] media: mediatek: vcodec: Handle VP9 superframe bitstream with 8 sub-frames
-Date: Thu, 29 Feb 2024 11:02:49 +0800
-Message-ID: <20240229030249.3404-1-irui.wang@mediatek.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfvWxeR3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F118DC433B1;
+	Thu, 29 Feb 2024 03:05:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709175934;
+	bh=tQQ7xj//LU316ukpe78B00k15tsraKruobbXoWY9rrg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gfvWxeR3pbs8ghgSbBlJCLmuK/7aVZUzt93Irm/LS4k5mTSaydV+NuqvOMspAjW1A
+	 4Bbs3e6FUYLqVah3jC9FsdAUDt0FgVOUy7WVuGe+VBQI0kU91/DcH0tKF+nSr3wlJk
+	 L+U4Jg4m3yH30n3/8uRSibcfYK9LL+5mGSKFfM16DSSZBQCEy/deWwknSAfIhjbJ7g
+	 a2dBVOWgyeVqrsvpeivOsMsGY0L0V1uI8ni8nY4qpTFdJtrV33cQhp8Wasj5wVxmOM
+	 jUZynJQXc8USJyRSrus9rpCOE2Lx2VS8GW/bNuIkJHhY1c3dKH+qACvLhDq2UHCzBx
+	 KDzHel7v/SZrQ==
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a3566c0309fso62737066b.1;
+        Wed, 28 Feb 2024 19:05:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWXPUCkcNjfDkJvwoG/uJFmH1UA0RQcQQbstxzJllOed7Q7QbcXavP38hFJh31Mo6ZNZEs3dRb6dhe4yUi2hsULAG+1e41ann4/M0wKbBoUfd3w//P5JxZYYI9SrD3OLZRWiEsipGnMbcta
+X-Gm-Message-State: AOJu0Yywx1SDd9XisWST2nWhy+XCIb+WOselyuZVc7ZJ1lV/5+t4gn9p
+	X6cSrS6plvwvzWjWxvWkd0FCvtEJfaTEL58Omu0O7KHJ19pgm3lhdOYfPnjnWri5XDGhMEYdF8/
+	VNm0Pf+ap9yT8DZhWCCrTQuVdW54=
+X-Google-Smtp-Source: AGHT+IFVMoyGoA0xQbS/JsIg1Cl7TXgTjZPzrXNORPXtgXO6d+4IGnmLrfhNOxwcomGzNF2eNNE8ozfcarOb4XUphl4=
+X-Received: by 2002:a17:906:ca49:b0:a44:1be1:66f0 with SMTP id
+ jx9-20020a170906ca4900b00a441be166f0mr447407ejb.57.1709175932312; Wed, 28 Feb
+ 2024 19:05:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+References: <20240226080328.334021-1-wangyuli@uniontech.com>
+In-Reply-To: <20240226080328.334021-1-wangyuli@uniontech.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 29 Feb 2024 11:05:22 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4CXW5Lkn1=hMnMbcY3MO2eoos8bSr3Z5jY_piAbpP+5A@mail.gmail.com>
+Message-ID: <CAAhV-H4CXW5Lkn1=hMnMbcY3MO2eoos8bSr3Z5jY_piAbpP+5A@mail.gmail.com>
+Subject: Re: [PATCH] loongarch/crypto: Clean up useless assignment operations
+To: WangYuli <wangyuli@uniontech.com>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net, kernel@xen0n.name, 
+	linux-crypto@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Guan Wentao <guanwentao@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The VP9 bitstream has 8 sub-frames into one superframe, the superframe
-index validate failed when reach 8, modify the index checking so that the
-last sub-frame can be decoded normally with stateful vp9 decoder.
+Hi, Yuli,
 
-Signed-off-by: Irui Wang <irui.wang@mediatek.com>
----
-changed with v1:
- - add a new define 'VP9_MAX_SUPER_FRAMES_NUM' for superframes.
----
- .../mediatek/vcodec/decoder/vdec/vdec_vp9_if.c        | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+The code is fine to me, please change loongarch to LoongArch in the
+subject, and update your commit message with Xuerui's review in V2.
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_if.c
-index 55355fa70090..039082f600c8 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_if.c
-@@ -16,6 +16,7 @@
- #include "../vdec_drv_base.h"
- #include "../vdec_vpu_if.h"
- 
-+#define VP9_MAX_SUPER_FRAMES_NUM 8
- #define VP9_SUPER_FRAME_BS_SZ 64
- #define MAX_VP9_DPB_SIZE	9
- 
-@@ -133,11 +134,11 @@ struct vp9_sf_ref_fb {
-  */
- struct vdec_vp9_vsi {
- 	unsigned char sf_bs_buf[VP9_SUPER_FRAME_BS_SZ];
--	struct vp9_sf_ref_fb sf_ref_fb[VP9_MAX_FRM_BUF_NUM-1];
-+	struct vp9_sf_ref_fb sf_ref_fb[VP9_MAX_SUPER_FRAMES_NUM];
- 	int sf_next_ref_fb_idx;
- 	unsigned int sf_frm_cnt;
--	unsigned int sf_frm_offset[VP9_MAX_FRM_BUF_NUM-1];
--	unsigned int sf_frm_sz[VP9_MAX_FRM_BUF_NUM-1];
-+	unsigned int sf_frm_offset[VP9_MAX_SUPER_FRAMES_NUM];
-+	unsigned int sf_frm_sz[VP9_MAX_SUPER_FRAMES_NUM];
- 	unsigned int sf_frm_idx;
- 	unsigned int sf_init;
- 	struct vdec_fb fb;
-@@ -526,7 +527,7 @@ static void vp9_swap_frm_bufs(struct vdec_vp9_inst *inst)
- 	/* if this super frame and it is not last sub-frame, get next fb for
- 	 * sub-frame decode
- 	 */
--	if (vsi->sf_frm_cnt > 0 && vsi->sf_frm_idx != vsi->sf_frm_cnt - 1)
-+	if (vsi->sf_frm_cnt > 0 && vsi->sf_frm_idx != vsi->sf_frm_cnt)
- 		vsi->sf_next_ref_fb_idx = vp9_get_sf_ref_fb(inst);
- }
- 
-@@ -735,7 +736,7 @@ static void get_free_fb(struct vdec_vp9_inst *inst, struct vdec_fb **out_fb)
- 
- static int validate_vsi_array_indexes(struct vdec_vp9_inst *inst,
- 		struct vdec_vp9_vsi *vsi) {
--	if (vsi->sf_frm_idx >= VP9_MAX_FRM_BUF_NUM - 1) {
-+	if (vsi->sf_frm_idx > VP9_MAX_SUPER_FRAMES_NUM) {
- 		mtk_vdec_err(inst->ctx, "Invalid vsi->sf_frm_idx=%u.", vsi->sf_frm_idx);
- 		return -EIO;
- 	}
--- 
-2.18.0
+Huacai
 
+On Mon, Feb 26, 2024 at 4:04=E2=80=AFPM WangYuli <wangyuli@uniontech.com> w=
+rote:
+>
+> Both crc32 and crc32c hw accelerated funcs will calculate the
+> remaining len. Those codes are derived from
+> arch/mips/crypto/crc32-mips.c and "len -=3D sizeof(u32)" is not
+> necessary for 64-bit CPUs.
+>
+> Removing it can make context code style more unified and improve
+> code readability.
+>
+> Suggested-by: Guan Wentao <guanwentao@uniontech.com>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>  arch/loongarch/crypto/crc32-loongarch.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/loongarch/crypto/crc32-loongarch.c b/arch/loongarch/cry=
+pto/crc32-loongarch.c
+> index a49e507af38c..3eebea3a7b47 100644
+> --- a/arch/loongarch/crypto/crc32-loongarch.c
+> +++ b/arch/loongarch/crypto/crc32-loongarch.c
+> @@ -44,7 +44,6 @@ static u32 crc32_loongarch_hw(u32 crc_, const u8 *p, un=
+signed int len)
+>
+>                 CRC32(crc, value, w);
+>                 p +=3D sizeof(u32);
+> -               len -=3D sizeof(u32);
+>         }
+>
+>         if (len & sizeof(u16)) {
+> @@ -80,7 +79,6 @@ static u32 crc32c_loongarch_hw(u32 crc_, const u8 *p, u=
+nsigned int len)
+>
+>                 CRC32C(crc, value, w);
+>                 p +=3D sizeof(u32);
+> -               len -=3D sizeof(u32);
+>         }
+>
+>         if (len & sizeof(u16)) {
+> --
+> 2.33.1
+>
