@@ -1,152 +1,142 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6A445946
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB854446B4;
+	Thu, 29 Feb 2024 07:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709190712; cv=none; b=CODYvH76OVTDoVUy60CRRRSN5vClYRgQkuQgKchXPMaIwdKg34FUy3WI/jWFHLXnH79fo93CjHnr64nzMtv3Gr3lyukyrDvZPMr3e4vZiy3pWuld6Hs692jXqAbQV0G7Glrlh2+QM046YPnjKKFjrr5kSZwDZ90+L56qeoIUH/k=
+	t=1709190805; cv=none; b=Hd/dMr62089ajA/tZEfDC6xHXnsutdUWcw9JB2mu/aiI1HGUneuXdiV9DVx7ZdJ0XBJVVbgA/B3m1fIOn5761T/adcv2TTmpwXwXG5NF7o2mh9GewlwpeKjRgQvbXIGgMrVzSGuh7gCOgP5LagG8WFyiiF1IqC0adc4jWk7ZLk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709190712; c=relaxed/simple;
-	bh=Ewl/VKxW/umgKxueyWDskoudQ5FqI/tOTEYi3VSfdmI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mBbOLb+pvRvdawEaD6vEoE7t0FBIeIWHsb3/dfrmW54PP2jh/njD9IXy0JfWi7igRP6b1FDoLBi2Bn58kIxKvXt9esjChVDRQQBKcsXGjiRp0D2SfD85DfJUw2x7HdTrjEqynkPdxHJsx5i6vt4Rz3WjfykKlLuQvtIcLEO+j6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=d6SaeKpo; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	s=arc-20240116; t=1709190805; c=relaxed/simple;
+	bh=G2TxGFUdAAXJKdIfxQBleGyn2fBf9uj4lSj2hBlEcmE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ummvUjBVgKEGZID0/BLDaVrPqkoAjbxbrRZZ/S7K63D+5+qQJUgeLHsh4zTZUpBRgsizkt36VEvkmTgPfIM9IdnkWOvtkHzo3a/il8DC2+pyG2h5jD6ZsRXbQ0+wXeMfbHsbAAPMhndgvI3Wsamg+sXY8lYdqleAbXtYO6KZhTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UiXLkR9C; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="d6SaeKpo"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-29abd02d0d9so378718a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 23:11:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1709190710; x=1709795510; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qoZ7n8igIv+4DqQuKIGb174Uw0V0LnTg30YXyffisGo=;
-        b=d6SaeKpoNcdjUrJ2vXNwu/fh6cOSQFdc85lTTKjOZxPWdDtW6pHQKvJnUvViDt2hTA
-         04qnNawTlSpMF89qcrImqv2Uo4TMdO4AhMNNQ+M0NfQUZHuNT+10SMPvAUMLQrcCmTZe
-         5j2i5/7js8tKecKqLxkwHXl0RTowqBerxWAEx3GyRHJomMQPrsHvmCnkymcNpRc6B8xy
-         7z7DaMeXop3w5D/p4sgHHwkP1pcRWsZ6OagoDkB+RZP8Xkmu11b2BNpzeCLLf+ysT599
-         MOfRk2jYejZrca/ILqXBwwlCYyO/DtTSPfyNxgM0Mu2blEHr2CRvnRIUiPpl4OZUN6j/
-         cVaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709190710; x=1709795510;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qoZ7n8igIv+4DqQuKIGb174Uw0V0LnTg30YXyffisGo=;
-        b=XcxHQc+OgjMLwD1/9k/bq2OJYqN90qpF3rmoOIstJachl6dpJTwmg1MPbPRLGDONAs
-         rwW65LYIGN8mfOcbQnBZvVNTGr20KV2eQC3+CBelMsy40jCZwyA0j+h4LvhEfFKx8Rfi
-         UNxAiRiIWNvBNjfu3z0sjwp+HQ0zhh4I0bSd0jsiToSqYif83ZFdZ1uLilG+Qnf3VVgn
-         XmL7GPwCDb4sg8zXpAC3dvcZ6JLHUjBY95b+BiXW73IcVKddxbGxu2sjemAZSj/sgZtZ
-         Q6l0hZeyL7F+nnLFBGj7Ctq9OhFHiDixAeX+yxNqzYHMajCukuh85iVmF3L3dwCx0I6u
-         sUrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJrBzeGT9rHuZbYA+MIjqXEF0GP3QLhNgFGQwohHJRXlfucR7Pm+epzZu+vRph65RZb/cFjOmOt+l8yQ/KJj+nu+ntQX/3TrBdFhL4
-X-Gm-Message-State: AOJu0Yyx+jYeYKjOikH3tKSdW+9YhYrdzfRfQKxMzUki73zJ68qp620j
-	wxKAdUAF88eYPeC8Sc0cr3pZJKSHsIFTadvDRHhCNn3Uq6nx59ZKfMhmX6TMWVg=
-X-Google-Smtp-Source: AGHT+IHLL9MB8QqecBJjLftIG23ldEdUBrWI4d7gFbidyeGlwRFpVflmoYxqEY/cs4I/uQtgX7SRBA==
-X-Received: by 2002:a17:90a:68c6:b0:29a:9e27:61ee with SMTP id q6-20020a17090a68c600b0029a9e2761eemr1396100pjj.1.1709190710087;
-        Wed, 28 Feb 2024 23:11:50 -0800 (PST)
-Received: from seacloud.vm ([143.92.64.18])
-        by smtp.gmail.com with ESMTPSA id gg12-20020a17090b0a0c00b002995e9aca72sm691659pjb.29.2024.02.28.23.11.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 23:11:49 -0800 (PST)
-From: Haifeng Xu <haifeng.xu@shopee.com>
-To: reinette.chatre@intel.com
-Cc: james.morse@arm.com,
-	fenghua.yu@intel.com,
-	babu.moger@amd.com,
-	peternewman@google.com,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haifeng Xu <haifeng.xu@shopee.com>
-Subject: [PATCH 2/2] x86/resctrl: Add tracepoint for llc_occupancy tracking
-Date: Thu, 29 Feb 2024 15:11:25 +0800
-Message-Id: <20240229071125.100991-3-haifeng.xu@shopee.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240229071125.100991-1-haifeng.xu@shopee.com>
-References: <20240229071125.100991-1-haifeng.xu@shopee.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UiXLkR9C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709190803; x=1740726803;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=G2TxGFUdAAXJKdIfxQBleGyn2fBf9uj4lSj2hBlEcmE=;
+  b=UiXLkR9Cp4hO1eXJyqVSuXXFP1C0yilwDUhquHfzLVlas54+ScZF/j5l
+   9ts2XZcgDIdWZzz5xdYIOs/JF4GIQxlVb9y25EAuc7WQ83QiQTz57cmL2
+   NWk2aN+81tnemZfaUSMxbiUjntXDnNZi55V7OQPgLg+KJuJoSzxLhrFT9
+   gSzYRoP6LpyuJvqPF7cHZ2ndbjI808qsPJnoKs49nYx931k2ZXaneNOOh
+   hetnYpvuOmRhgufF8LMPZyck4KsPzwgXjuoKOaWxNap/j/T9Imx0EwRA5
+   LZE+33TFOlMrbUy9TClGtbFUFDziNW6ykovZUTU7a1c8B6mkvRK4tCebM
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3519845"
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="3519845"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 23:13:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="8283933"
+Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.213.166.213])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 23:13:21 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH 0/4] efi/cxl-cper: Report CXL CPER events through tracing
+Date: Wed, 28 Feb 2024 23:13:15 -0800
+Message-Id: <20240228-cxl-cper3-v1-0-6aa3f1343c6c@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIsu4GUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDIyMD3eSKHN3kgtQiY11jg1RTUyNzyzRLYzMloPqCotS0zAqwWdGxtbU
+ AOfAb71sAAAA=
+To: Dan Williams <dan.j.williams@intel.com>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
+ Shiju Jose <shiju.jose@huawei.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, 
+ Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+ Borislav Petkov <bp@alien8.de>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709190800; l=2474;
+ i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
+ bh=G2TxGFUdAAXJKdIfxQBleGyn2fBf9uj4lSj2hBlEcmE=;
+ b=XjOlXZKAEwpqnuJEnFKvUjGnxXZSncPqvFrkssW+feQFDHoP54pVx2E9WtzvCDJALiGBFE8fl
+ DhElZ3pqyWGAepI8DDWySgAgDpUCNjPWul3jVRxN5I8o2xhN5ZsGVsf
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
 
-In our production environment, after removing monitor groups, those unused
-RMIDs get stuck in the limbo list forever because their llc_occupancy are
-always larger than the threshold. But the unused RMIDs can be successfully
-freed by turning up the threshold.
+CXL Component Events, as defined by EFI 2.10 Section N.2.14, wrap a
+mostly CXL event payload in an EFI Common Platform Error Record (CPER)
+record.  If a device is configured for firmware first CXL event records
+are not sent directly to the host.
 
-In order to know how much the threshold should be, perf can be used to acquire
-the llc_occupancy of RMIDs in each rdt domain.
+The CXL sub-system uniquely has DPA to HPA translation information.  It
+also already has event decoding/tracing.  Such translations are very
+useful for users to determine which system issues may correspond to
+specific hardware events.
 
-Instead of using perf tool to track llc_occupancy and filter the log manually,
-it is more convenient for users to use tracepoint to do this work. So add a new
-tracepoint that shows the llc_occupancy of busy RMIDs when scanning the limbo
-list.
+The restructuring of the event data structures in 6.8 made sharing the
+data between CPER/event logs more efficient.  Now re-wire the sending of
+CPER records to the CXL sub-system.
 
-Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+In addition provide a default RAS event should the CXL module not be
+loaded [ie callback not registered].
+
+Series status/background
+========================
+
+Smita and Jonathan have been a great help with this series.  Once again
+thank you.
+
+Unfortunately, with all the churn surrounding the bug which Dan
+Carpenter found the maintainers were force to revert this work.
+
+Therefore, this is a whole new series based on what is in 6.8.
+
+Testing
+=======
+
+I've hacked up a quick debugfs patch to facilitate easier testing.[1]
+
+With this I have verified that the bug Dan Carpenter found is fixed.
+However, the tp_printk bug Jonathan found remains.  The taking of the
+device lock in the callback is required and the tp_printk issue is
+unlikely to be fixed.  Fortunately, tp_printk is not widely used so it
+is anticipated this will not be an issue.
+
+No other locking issues were found with this test and locking debug
+turned on.
+
+[1] https://github.com/weiny2/linux-kernel/commit/6c540a23cb1194d67a9dcfefb702774a99afc3b1
+
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/monitor.c |  8 ++++++++
- arch/x86/kernel/cpu/resctrl/trace.h   | 15 +++++++++++++++
- 2 files changed, 23 insertions(+)
+Ira Weiny (4):
+      cxl/event: Add missing include files
+      acpi/ghes: Process CXL Component Events
+      cxl/pci: Register for and process CPER events
+      ras/events: Trace CXL CPER events even without the CXL stack loaded
 
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index c34a35ec0f03..ada392ca75b2 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -24,6 +24,7 @@
- #include <asm/resctrl.h>
- 
- #include "internal.h"
-+#include "trace.h"
- 
- /**
-  * struct rmid_entry - dirty tracking for all RMID.
-@@ -362,6 +363,13 @@ void __check_limbo(struct rdt_domain *d, bool force_free)
- 				limbo_release_entry(entry);
- 		}
- 		cur_idx = idx + 1;
-+
-+		/* x86's CLOSID and RMID are independent numbers, so the entry's
-+		 * closid is a invalid CLOSID. But on arm64, the RMID value isn't
-+		 * a unique number for each CLOSID. It's necessary to track both
-+		 * CLOSID and RMID because there may be dependencies between each
-+		 * other on some architectures */
-+		trace_mon_llc_occupancy_limbo(entry->closid, entry->rmid, d->id, val);
- 	}
- 
- 	resctrl_arch_mon_ctx_free(r, QOS_L3_OCCUP_EVENT_ID, arch_mon_ctx);
-diff --git a/arch/x86/kernel/cpu/resctrl/trace.h b/arch/x86/kernel/cpu/resctrl/trace.h
-index 495fb90c8572..35149a75c951 100644
---- a/arch/x86/kernel/cpu/resctrl/trace.h
-+++ b/arch/x86/kernel/cpu/resctrl/trace.h
-@@ -35,6 +35,21 @@ TRACE_EVENT(pseudo_lock_l3,
- 	    TP_printk("hits=%llu miss=%llu",
- 		      __entry->l3_hits, __entry->l3_miss));
- 
-+TRACE_EVENT(mon_llc_occupancy_limbo,
-+	    TP_PROTO(u32 ctrl_hw_id, u32 mon_hw_id, int id, u64 occupancy),
-+	    TP_ARGS(ctrl_hw_id, mon_hw_id, id, occupancy),
-+	    TP_STRUCT__entry(__field(u32, ctrl_hw_id)
-+			     __field(u32, mon_hw_id)
-+			     __field(int, id)
-+			     __field(u64, occupancy)),
-+	    TP_fast_assign(__entry->ctrl_hw_id = ctrl_hw_id;
-+			   __entry->mon_hw_id = mon_hw_id;
-+			   __entry->id = id;
-+			   __entry->occupancy = occupancy;),
-+	    TP_printk("ctrl_hw_id=%u mon_hw_id=%u domain=%d llc_occupancy=%llu",
-+		      __entry->ctrl_hw_id, __entry->mon_hw_id, __entry->id, __entry->occupancy)
-+	   );
-+
- #endif /* _TRACE_RESCTRL_H */
- 
- #undef TRACE_INCLUDE_PATH
+ drivers/acpi/apei/ghes.c  | 130 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/pci.c         |  69 +++++++++++++++++++++++-
+ include/linux/cxl-event.h |  21 ++++++++
+ include/ras/ras_event.h   |  90 ++++++++++++++++++++++++++++++++
+ 4 files changed, 309 insertions(+), 1 deletion(-)
+---
+base-commit: daeacfa75d08954e1a5b71c36a8fbfcdd0b3fec9
+change-id: 20240220-cxl-cper3-30e55279f936
+
+Best regards,
 -- 
-2.25.1
+Ira Weiny <ira.weiny@intel.com>
 
