@@ -1,144 +1,86 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B175570AE6
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272257828A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709228186; cv=none; b=Caz99SxyJ6FTHmFhBhCS01kt3EWzl+YV9luNgqGGNV4HdHnOmSeD1RcoyABJSKeobAFkri8aTgsMHAA/p+sLfbu5r0YMCo7OajPhrOA2Idgifx63JXNhD0yGpJ+6UbrQo4Bx0+jx2sUe0VEdRwmQp8DkiqKL4dNT/+r4vhbfCpg=
+	t=1709228191; cv=none; b=ZT+1kS0QZVK4MRyYZRGRXTFAX9iL4p2D+eNKSqssP9PFVf9poM4xhXkUFl7APdUzmDis11Nvpu2Wjl8BD0GYWgcpv4waNz0uLCo6r/JuUZlwmJjNGLjFyjFkSL2FN0nhOO0Ab1WsmOClNIWsUUBa7vVBnOg1DLa6stUb5mcfZV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709228186; c=relaxed/simple;
-	bh=iR3owAjar1QBrZxphTgj8xGOl+9mw9uymkrVoayhBog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=orBv7fqBAVdWR0LhemCiUEKH8QczYCnOVg6By7A1e4hQ4UTD0QUuJh6razWYlLf4FDFWvsIj04/v2dZvlMdRpQ2IO3gOOCuOTLzwbE+abb0bhfF4jOswUWsDAIlB19e1fz5ClaeedyxhhXEhyJr5dm1uqCv8UlDmor7jdXPwGa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=gRsoWfqL; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=gRsoWfqL; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1709228191; c=relaxed/simple;
+	bh=Nfy+FvhiVO6FRr4RGFIgCjBGC56X8Ck24EWdzRnn+CA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=cpn+RNcG2b0GiV9p+qa42CqnHXV3iDQYvNBzI+xBExvTNlLGkXoCXSrXfNPGcN7qcgo/l+hFCCskBggByytqAabCNnXX0b2KHqD5CTNYWOw+ELprjpPwSCcKIdZ4MgsGLxZUGnUVmJGfn1bzTATAPZaHajStCc8IcTGqIWOd4eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fB+l7Dtw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="gRsoWfqL";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="gRsoWfqL"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fB+l7Dtw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709228189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8NCFY5/xqwqZ+BzOYm6QBuVWVdJZDIeZ/gZcGzEqZ/8=;
+	b=fB+l7DtwHuxqvbKXkzdZ/O45ea4GwhPX3XeG4SK/sUAWl1ljqcdaPG6NRvlUBq/GkSESSd
+	tm0l1FVtggYXQavXulHSavkZxHBBQS+l6IsxHfXXnA4aUVKvFFB2gK5A/tuKX+0oM5PY0B
+	3enVrGbDGuqTCOr7UKfExfZrVHEbDM4=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-FaAciST9MoWocjVqHzlTlg-1; Thu,
+ 29 Feb 2024 12:36:25 -0500
+X-MC-Unique: FaAciST9MoWocjVqHzlTlg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A57431FBEF;
-	Thu, 29 Feb 2024 17:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1709228182; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vpBFV488mGbzEhc4yj49r8uR7a9BeE38z4pBORJHIdw=;
-	b=gRsoWfqL83bYLtZZX2oTiMMF/nqN/gVAL98f+vQWPSR91OeGKOx6EbHpF//e7/n+3TRBR5
-	y4LBHgIU7LzJRunqAhL7pzgEebwj4gcPJbW32kdp8Tp+dnF6nlIA0OClrVwu7ih9rc2Fj1
-	biET31QXeqPYr5BKuhnEd1lh2Bm7HH4=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1709228182; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vpBFV488mGbzEhc4yj49r8uR7a9BeE38z4pBORJHIdw=;
-	b=gRsoWfqL83bYLtZZX2oTiMMF/nqN/gVAL98f+vQWPSR91OeGKOx6EbHpF//e7/n+3TRBR5
-	y4LBHgIU7LzJRunqAhL7pzgEebwj4gcPJbW32kdp8Tp+dnF6nlIA0OClrVwu7ih9rc2Fj1
-	biET31QXeqPYr5BKuhnEd1lh2Bm7HH4=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8B8AE13503;
-	Thu, 29 Feb 2024 17:36:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4LcaH5bA4GU3TwAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Thu, 29 Feb 2024 17:36:22 +0000
-Date: Thu, 29 Feb 2024 18:36:21 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kees Cook <keescook@chromium.org>, cve@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: CVE-2023-52451: powerpc/pseries/memhp: Fix access beyond end of
- drmem array
-Message-ID: <ZeDAlRyp9L4L7f37@tiehlicka>
-References: <2024022639-wronged-grafted-6777@gregkh>
- <ZdytVTOgfvKBBvtn@tiehlicka>
- <202402271029.FD67395@keescook>
- <Zd8hPpP_6q_o8uQW@tiehlicka>
- <202402280906.D6D5590DB@keescook>
- <ZeA-281OudkWBhd_@tiehlicka>
- <2024022915-dissuade-grandson-ebd4@gregkh>
- <ZeBRZqJd5HAKaOfC@tiehlicka>
- <2024022913-borrower-resource-ecc9@gregkh>
- <D06F40E5-0DBC-4FF2-BAF5-2373BDF3815C@kernel.org>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1C8701C0CCA5;
+	Thu, 29 Feb 2024 17:36:25 +0000 (UTC)
+Received: from rules.brq.redhat.com (unknown [10.45.242.24])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7C6B220229A4;
+	Thu, 29 Feb 2024 17:36:23 +0000 (UTC)
+From: Vladis Dronov <vdronov@redhat.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>
+Cc: Nicolai Stange <nstange@suse.de>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vladis Dronov <vdronov@redhat.com>
+Subject: [PATCH] crypto: tcrypt - add ffdhe2048(dh) test
+Date: Thu, 29 Feb 2024 18:36:03 +0100
+Message-ID: <20240229173603.10258-1-vdronov@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D06F40E5-0DBC-4FF2-BAF5-2373BDF3815C@kernel.org>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.81
-X-Spamd-Result: default: False [-0.81 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.01)[46.37%]
-X-Spam-Flag: NO
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On Thu 29-02-24 07:08:06, Kees Cook wrote:
-> 
-> 
-> On February 29, 2024 6:18:36 AM PST, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> >As part of the requirement to be a CNA, we have to announce everything
-> >that we think is a potential vulnerability, severity not be judged at
-> > [...]
-> >Again, none of this has anything to do with "severity", it only is an
-> >identifier that says "this fixes a vulnerability".
-> 
-> The language here can perhaps be improved for better understanding by
-> folks since "CVE" and "vulnerability" can mean different things to
-> different people. I would say "this fixes a weakness".
-> 
-> CVEs are for anything deemed a "weakness"[1]. It doesn't need to rise
-> to the level of what many people would consider a "vulnerability".
-> (Modern attacks traditionally chain many weaknesses together to form
-> an exploit, some of which look harmless when examined in isolation.)
-> 
-> I find it helps to keep in mind the "CIA" acronym of what makes up a
-> security weakness: "negative impact to Confidentiality, Integrity, or
-> Availability". (Not to be confused with the US Gov intelligence org
-> with the name acronym, ironically.)
+Commit 7dce59819750 ("crypto: dh - implement ffdheXYZ(dh) templates")
+implemented the said templates. Add ffdhe2048(dh) test as it is the
+fastest one. This is a requirement for the FIPS certification.
 
-Yes, this makes a lot of sense to me and I believe we are on the same
-page here. We have gone in several tangents here but let me just remind
-that I was objecting/wondering how much sense does it make to assign CVE
-to configurations which are inherently insecure. From a user POV, does
-it make me safer to have that addressed when the fundamental
-configuration hole (to allow untrusted user to access said resources)
-still in place. See my point or do I still fail to explain myself? It is
-not about assuming usecases and whatnot.
- 
-> -Kees
-> 
-> [1] https://nvd.nist.gov/vuln
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+---
+ crypto/tcrypt.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
+index ea4d1cea9c06..8aea416f6480 100644
+--- a/crypto/tcrypt.c
++++ b/crypto/tcrypt.c
+@@ -1851,6 +1851,9 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
+ 		ret = min(ret, tcrypt_test("cbc(aria)"));
+ 		ret = min(ret, tcrypt_test("ctr(aria)"));
+ 		break;
++	case 193:
++		ret = min(ret, tcrypt_test("ffdhe2048(dh)"));
++		break;
+ 	case 200:
+ 		test_cipher_speed("ecb(aes)", ENCRYPT, sec, NULL, 0,
+ 				speed_template_16_24_32);
 -- 
-Michal Hocko
-SUSE Labs
+2.43.2
+
