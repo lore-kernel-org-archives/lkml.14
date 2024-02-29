@@ -1,33 +1,32 @@
-Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
+Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [84.16.66.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC844AEDA
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F52636B1C
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709226277; cv=none; b=q1Sko7fl7Hk+C5q0SEF5oIDKjCKXK71mlTftfSp/CSO9/6FWFN5Et1kDSoh7y5e9YRemBuQa9Dkzx50kvzt/T/vmo37xzA3yME+XKNk7ccf+K5GE7za/MyxvUrItBEBJfF2cAkh9rNRxrkXP3uGFTE9kGwgJzw1htkjqHu59qwY=
+	t=1709226278; cv=none; b=HUChTzTwL+mt+6joPJN2SBHSpkqmoiEPuumXjb5kAV41EzbpdtHEjTAJvo5v6ChQfYQY0nGWAQLPX3NGtzyJ54CyjCEmxtSftfUqJ+ixclomkIW5sARV6WsF+1Ot2QQErdva2JpHZCCGytCIxgmSJJsJz6lHtJw/Cxqj7OyzZWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709226277; c=relaxed/simple;
-	bh=f3wQ1gxeTPJnB2/Gx7Deo/AawwvRjdcM6xP+hwNtgJY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KEmfoe8pcIRkOrR96prnb21IxZTZ5N4luf/5JRID1l6Uvn8pvTethbPHfvTba3IPzN+BsyGBCg//bb8WfRB6zyssdenFP8spzyHPVqNfQvm4KAb8yzSdICHxvCbSrBJswtquNItjklDW8KRLr5GEBSbsHo+zlkkdLaocPHiIMc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=gcmoNxGK; arc=none smtp.client-ip=84.16.66.172
+	s=arc-20240116; t=1709226278; c=relaxed/simple;
+	bh=4wDdbt4I56G5n6LSUJ2u1jaEVBMsm/64WWZPbsYi9U0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lo9Ubhsms1bau8PYOi4rrWQI/qmyEO6y1mLi/NT7LeCa3hfzlI/A++zfD9fLJ3jpExJ5ziGZdJlTyJ2mgEsFERRQ3jMcJ7VTJ7beJhN+NOZzNsM3CVvak7bxS1Zq7iYwh150G+5Qk8LSNDg+NBbbNbSM2hudHrQdzTlzcQILbRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=nlVkoodR; arc=none smtp.client-ip=84.16.66.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="gcmoNxGK"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TlyHt43J2zMrktk;
-	Thu, 29 Feb 2024 18:04:26 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TlyHt04GMz3g;
-	Thu, 29 Feb 2024 18:04:26 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="nlVkoodR"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TlyHp6JJMz5wk;
+	Thu, 29 Feb 2024 18:04:22 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TlyHm47S2zYBH;
+	Thu, 29 Feb 2024 18:04:20 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1709226266;
-	bh=f3wQ1gxeTPJnB2/Gx7Deo/AawwvRjdcM6xP+hwNtgJY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gcmoNxGKgHYnKVXBDTBQhQzczqpk0AxQqq9JNXYdDODHvh/MAoOXfB/kwfdeEagYp
-	 NERBG2Kr74hChpupRTAofgZCk4ummr2hEYGU9T9zi+Tiqlcq/wnfCSFRB+ktAVcOJM
-	 XfkR6BWeRDyyrWQGtYg1MRUyDHGWxF7r/xVDhEOA=
+	s=20191114; t=1709226262;
+	bh=4wDdbt4I56G5n6LSUJ2u1jaEVBMsm/64WWZPbsYi9U0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nlVkoodRGG/+JH60co6QTYI+j/xS/kAvzRqTk/xdhkVfSSC5JtD7P7treNBKoqd0u
+	 U5gu49lO236cmDqZAiQi+oFIZbE1jszXjS2h0mslolmhNqIG4IKa/drMCKvMRTmYRX
+	 pKXV1VkrqQbG3nE+oEnjraDdG3Vrknapc8Mb93bc=
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Brendan Higgins <brendanhiggins@google.com>,
 	David Gow <davidgow@google.com>,
@@ -59,11 +58,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-security-module@vger.kernel.org,
 	linux-um@lists.infradead.org,
 	x86@kernel.org
-Subject: [PATCH v1 3/8] kunit: Fix kthread reference
-Date: Thu, 29 Feb 2024 18:04:04 +0100
-Message-ID: <20240229170409.365386-4-mic@digikod.net>
-In-Reply-To: <20240229170409.365386-1-mic@digikod.net>
-References: <20240229170409.365386-1-mic@digikod.net>
+Subject: [PATCH v1 0/8] Run KUnit tests late and handle faults
+Date: Thu, 29 Feb 2024 18:04:01 +0100
+Message-ID: <20240229170409.365386-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,57 +71,49 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-There is a race condition when a kthread finishes after the deadline and
-before the call to kthread_stop(), which may lead to use after free.
+Hi,
 
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: David Gow <davidgow@google.com>
-Cc: Rae Moar <rmoar@google.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
- lib/kunit/try-catch.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+This patch series moves KUnit test execution at the very end of kernel
+initialization, just before launching the init process.  This opens the
+way to test any kernel code in its normal state (i.e. fully
+initialized).
 
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index a5cb2ef70a25..73f5007f20ea 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -11,6 +11,7 @@
- #include <linux/completion.h>
- #include <linux/kernel.h>
- #include <linux/kthread.h>
-+#include <linux/sched/task.h>
- 
- #include "try-catch-impl.h"
- 
-@@ -65,14 +66,15 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 	try_catch->context = context;
- 	try_catch->try_completion = &try_completion;
- 	try_catch->try_result = 0;
--	task_struct = kthread_run(kunit_generic_run_threadfn_adapter,
--				  try_catch,
--				  "kunit_try_catch_thread");
-+	task_struct = kthread_create(kunit_generic_run_threadfn_adapter,
-+				     try_catch, "kunit_try_catch_thread");
- 	if (IS_ERR(task_struct)) {
- 		try_catch->try_result = PTR_ERR(task_struct);
- 		try_catch->catch(try_catch->context);
- 		return;
- 	}
-+	get_task_struct(task_struct);
-+	wake_up_process(task_struct);
- 
- 	time_remaining = wait_for_completion_timeout(&try_completion,
- 						     kunit_test_timeout());
-@@ -82,6 +84,7 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 		kthread_stop(task_struct);
- 	}
- 
-+	put_task_struct(task_struct);
- 	exit_code = try_catch->try_result;
- 
- 	if (!exit_code)
+This patch series also teaches KUnit to handle kthread faults as errors,
+and it brings a few related fixes and improvements.
+
+New tests check NULL pointer dereference and read-only memory, which
+wasn't possible before.
+
+This is useful to test current kernel self-protection mechanisms or
+future ones such as Heki: https://github.com/heki-linux
+
+Regards,
+
+Mickaël Salaün (8):
+  kunit: Run tests when the kernel is fully setup
+  kunit: Handle thread creation error
+  kunit: Fix kthread reference
+  kunit: Fix timeout message
+  kunit: Handle test faults
+  kunit: Fix KUNIT_SUCCESS() calls in iov_iter tests
+  kunit: Print last test location on fault
+  kunit: Add tests for faults
+
+ include/kunit/test.h                |  24 +++++-
+ include/kunit/try-catch.h           |   3 -
+ init/main.c                         |   4 +-
+ lib/bitfield_kunit.c                |   8 +-
+ lib/checksum_kunit.c                |   2 +-
+ lib/kunit/executor.c                |  81 ++++++++++++++------
+ lib/kunit/kunit-example-test.c      |   6 +-
+ lib/kunit/kunit-test.c              | 115 +++++++++++++++++++++++++++-
+ lib/kunit/try-catch.c               |  33 +++++---
+ lib/kunit_iov_iter.c                |  70 ++++++++---------
+ tools/testing/kunit/kunit_kernel.py |   6 +-
+ 11 files changed, 261 insertions(+), 91 deletions(-)
+
+
+base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
 -- 
 2.44.0
 
