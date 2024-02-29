@@ -1,39 +1,34 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0126481D1
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5B875025C
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709195680; cv=none; b=g68FyyUt0C5y2kU4rL0lopVQ4XkI6B9bjOa6MsE4bJykKhoTjLSM+KhfFczNLCZhsqrT5rov4iAIrncXMWVy/WQDvyy7Rjy1Omj4Aomxp4uNsQPffrnTe23G/a0zQo5Jhdrh3u6bv3mzLK7oX3IvMTWzaoFePAG1f/hz9hTc+Ug=
+	t=1709195684; cv=none; b=bP/hbScbOp1nx/CuaNzs0+PZmZ0fuEKckXrONvz0W8TXb+EWOMqNtIvvawMMnN8zp+ftMRhLxJ8uJeAl3FTQJqNmUKAOtLzaGq6Eu+TA04K3TsuxYC8bIGIPIDN9+JGeTSWwO48Z25WSenU21wPVfUFXybnUD5WJyjT9THkd/cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709195680; c=relaxed/simple;
-	bh=PtmJDoA1H7SAn1CqzqBzHGTEfAfkzw/1rSUcVqWa4Ig=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CehP9+YNdYKvxeQT6HENwkmPxf6c2Gnq/P+JDI8W4DXxn/1+/W/RapUkwXCF21zpNSWKSHVJRG/HGzZ8vxoqyePasXNI11qbqQPpvSu0HEZNX+4jTmd+1F2dcLBo4iMH3mjqdpznz++P+ayuuH0nCNa4kjSu+NV0kczfX8ej5k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mQLRID5R; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mQLRID5R"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1709195675;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=c4hqPXVYzAPKLJpLD1lYkRxhseQa0+qO76gLH6MQGf8=;
-	b=mQLRID5RGJsIYKfmSTAqOY53BAsA4WAZ0BePYmie39/1QizuzOovA5S4I5TBOiAVyoWp3H
-	CNJjh9ZM5cv+BCAsrdYIudxwvCfWG/jGFQcnfH3xj7SVFa3QkHEHr0UFNmJ4+yKZpbndt8
-	jVp0H/m+WelwzyxcDMbdVU+sfssmHAs=
-From: kunwu.chan@linux.dev
-To: chandan.babu@oracle.com,
-	djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org,
+	s=arc-20240116; t=1709195684; c=relaxed/simple;
+	bh=dAYAj7SZmUmbdaksmAoUcV11I0Mcv8AU0oakyneZ/M0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a0pQzCA3KuJU73hvr3jyfdc5c6lGbmdd1lC5dEPeZUbVBGSSSMBEErDXg6lGNM4VwSgNBEULj58qpOn/ZybDbuZTPxSJRpPYWAJICX6Jp+Hqq+C0in8wva9ZtnixXgra06uDQxIfXzFUszuYzLjZZ5rFHJX1PIrqHaomsXIvH5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 686681FB;
+	Thu, 29 Feb 2024 00:35:19 -0800 (PST)
+Received: from a077893.arm.com (unknown [10.163.47.238])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 005BF3F6C4;
+	Thu, 29 Feb 2024 00:34:37 -0800 (PST)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	catalin.marinas@arm.com
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] xfs: use KMEM_CACHE() to create xfs_defer_pending cache
-Date: Thu, 29 Feb 2024 16:33:42 +0800
-Message-Id: <20240229083342.1128686-1-kunwu.chan@linux.dev>
+	Mark Brown <broonie@kernel.org>
+Subject: [PATCH V2] arm64/hw_breakpoint: Directly use ESR_ELx_WNR for an watchpoint exception
+Date: Thu, 29 Feb 2024 14:04:31 +0530
+Message-Id: <20240229083431.356578-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,33 +36,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-From: Kunwu Chan <chentao@kylinos.cn>
+Let's use existing ISS encoding for an watchpoint exception i.e ESR_ELx_WNR
+This represents an instruction's either writing to or reading from a memory
+location during an watchpoint exception. While here this drops non-standard
+macro AARCH64_ESR_ACCESS_MASK.
 
-Use the KMEM_CACHE() macro instead of kmem_cache_create() to simplify
-the creation of SLAB caches when the default values are used.
-
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- fs/xfs/libxfs/xfs_defer.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+This applies on v6.8-rc5
 
-diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-index 66a17910d021..6d957fcc17f2 100644
---- a/fs/xfs/libxfs/xfs_defer.c
-+++ b/fs/xfs/libxfs/xfs_defer.c
-@@ -1143,9 +1143,7 @@ xfs_defer_resources_rele(
- static inline int __init
- xfs_defer_init_cache(void)
- {
--	xfs_defer_pending_cache = kmem_cache_create("xfs_defer_pending",
--			sizeof(struct xfs_defer_pending),
--			0, 0, NULL);
-+	xfs_defer_pending_cache = KMEM_CACHE(xfs_defer_pending, 0);
+Changes in V2:
+
+- Dropped new ISS encoding details ESR_ELx_WnR and ESR_ELx_WnR_SHIFT
+- Directly used existing ESR_ELx_WNR per Catalin
+- Updated the commit message as required
+
+Changes in V1:
+
+https://lore.kernel.org/all/20240223094615.3977323-1-anshuman.khandual@arm.com/ 
+
+ arch/arm64/include/asm/hw_breakpoint.h | 1 -
+ arch/arm64/kernel/hw_breakpoint.c      | 3 ++-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/asm/hw_breakpoint.h
+index 84055329cd8b..bd81cf17744a 100644
+--- a/arch/arm64/include/asm/hw_breakpoint.h
++++ b/arch/arm64/include/asm/hw_breakpoint.h
+@@ -59,7 +59,6 @@ static inline void decode_ctrl_reg(u32 reg,
+ /* Watchpoints */
+ #define ARM_BREAKPOINT_LOAD	1
+ #define ARM_BREAKPOINT_STORE	2
+-#define AARCH64_ESR_ACCESS_MASK	(1 << 6)
  
- 	return xfs_defer_pending_cache != NULL ? 0 : -ENOMEM;
- }
+ /* Lengths */
+ #define ARM_BREAKPOINT_LEN_1	0x1
+diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+index 35225632d70a..2f5755192c2b 100644
+--- a/arch/arm64/kernel/hw_breakpoint.c
++++ b/arch/arm64/kernel/hw_breakpoint.c
+@@ -21,6 +21,7 @@
+ 
+ #include <asm/current.h>
+ #include <asm/debug-monitors.h>
++#include <asm/esr.h>
+ #include <asm/hw_breakpoint.h>
+ #include <asm/traps.h>
+ #include <asm/cputype.h>
+@@ -779,7 +780,7 @@ static int watchpoint_handler(unsigned long addr, unsigned long esr,
+ 		 * Check that the access type matches.
+ 		 * 0 => load, otherwise => store
+ 		 */
+-		access = (esr & AARCH64_ESR_ACCESS_MASK) ? HW_BREAKPOINT_W :
++		access = (esr & ESR_ELx_WNR) ? HW_BREAKPOINT_W :
+ 			 HW_BREAKPOINT_R;
+ 		if (!(access & hw_breakpoint_type(wp)))
+ 			continue;
 -- 
-2.39.2
+2.25.1
 
