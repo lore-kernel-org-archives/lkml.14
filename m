@@ -1,395 +1,201 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2119.outbound.protection.partner.outlook.cn [139.219.146.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DFE25630
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709193885; cv=none; b=f9oteQC8ZGyuRj+0tHUwtXnzdATVoFwxbaxmV0aFCnb6rSbM0EEYFcwAaqtX3Az/KmDtANDsRTD2CEj+CXkSHlYE16d5YuUndjt/q7V+zuoAn8IbKlMLZXW0NLBdaOMKC09bJzm4D5cbQrDUacw39xasgqvd1JQtZiOJg6HQdl0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709193885; c=relaxed/simple;
-	bh=1wCU2OdfGTf2Pk+hKAfOdXzpfNAMSl5L8KXtLBWlo/Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MIOKZ9+SYJQTbqTZNzIi+uctDkvxAlzWMyjM2+d18wyRa7Jg/WU6GAhWDTuntYuzsROTbnnUzauLXmg+198VY1cAVRmmXjSfX7Iqd9cTYLonLT4SnVQRgKLmE4J4wklDwY0dQbLXQyoCq81xejTxgzlW5izU1CW+9S/fSfZWaDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YXEhbrYi; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YXEhbrYi"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41T82PjR025147;
-	Thu, 29 Feb 2024 08:04:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=vNCloWa9rpkjDgB/cpjEFdYXPVzWq/UH1dD4hpZWK10=;
- b=YXEhbrYiYumGo0s0+qq3gTKDgMd5p5DmHMJx/g4YedGydPVZPC8k6BOHkAc4rvZIGZfu
- W4uAXTg9u714wGCRXFhK5M6tDLbOVGUo9JKCON5KTooPlumbOygUwVA/7QLfuMYB1AzZ
- SFIrW2KqR9A6dO47KgNwoANSGcVT00bAW2D5pSLtqpGfEJdEpLZ2nThEeNCcQ8YUWbDf
- gZsKOJctpWGWD0FgLTP4rQTHDzHzeOfMGSQ1J0WDjp2swiPGk+XEzBLciZMCKlNiWXVR
- RlZqJAzz86rtsFzumNentGL9mHqrJOizxkpOcTR7l0Nb04R/weRlfgZIbenB/OVkFnRe 9w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wjp2hr44e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 08:04:26 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41T83DM8031184;
-	Thu, 29 Feb 2024 08:04:26 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wjp2hr43e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 08:04:25 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41T5UpL8021316;
-	Thu, 29 Feb 2024 08:04:25 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfuspbwfy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 08:04:25 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41T84Mnh40042988
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 08:04:24 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1B18C5805C;
-	Thu, 29 Feb 2024 08:04:22 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8EB9958079;
-	Thu, 29 Feb 2024 08:04:17 +0000 (GMT)
-Received: from [9.43.32.108] (unknown [9.43.32.108])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 29 Feb 2024 08:04:17 +0000 (GMT)
-Message-ID: <a1fdd2c2-4443-458e-86db-280e7cbd4a36@linux.vnet.ibm.com>
-Date: Thu, 29 Feb 2024 13:34:15 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B6A4E1CB;
+	Thu, 29 Feb 2024 08:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.119
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709193925; cv=fail; b=t7gWZs/4Cz3Qs7F8Wv3b2V8aVx4VfzDGz7z7jMO/JmvK7wZIUexoDE/8SAHv7gxSnvDSbd528NNZ8FxkY+b8oMzFA7Gze8AmRmxvFDBSTlnhxSX7ZaepVTq1vgk8W6vSh4rnfcfcTcOZkG/Y74O1OXfGJ6dZ714JpETF87yBpMA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709193925; c=relaxed/simple;
+	bh=CB99zG8HhfF22E7aqWlXnOKkEPjAQhb/STW3349+S/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=I3Pm9LpS9r4i5Mlb3FcujdtZK8hoB6ZybKtjf4AFFGyUuZMs+OeH4dZ73oy9ZSvzj73ag1HpQ43+y4R7yjwLkgFlPXHDnbYcL26cmDg7s4KgwnNwmUnRVygBOjYo427h3sgxLwJsPWE0xNWRrc329FgbZ0qQ8b0Ivz9vS4iWDnE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ma7WNjNB8RWGF7D4s3fgkSFfBM/zNY80kWMWjLI/NuWdut+QIasVCO7x7F22F1/3G5mvVRI0Qp8Uy9Y67XQK8odg7+ol5A8xu//688RdIvhkD5RG7Pq95sKC+xszEY7AUSFWQfA4qJdRT4DKbf0o9w+Bgtn/CJPDqih7dIqgpdDENOVVhM3rQ29CbJAs4DnamFw0GJLvvwnAvQXUJqa8FLiZtY1IvWjrx/k/ED+Lvuhy+qjyZ9jU4x4Fk7BGiIk8XABHvgHMLxbP9M/FvMBAdx+uA1uxgT5yvea5FQWvOVyBj/uxgEYoeyY3bqGADioFhL4vrXHFnCc3pJwz8PKrhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K1FFxmi1pkgFbG+fBdZqjANt92yeGgJun+j8l/3qx9o=;
+ b=g03sDGRdIyYnpp3jzcnvarhxDj5jgLNRYx7JPpPum0WwNjFG8r0PWLMX2yJvUiNhNJnXEF2AZrecOY02LpfJVi0lSKM1eqZSqFm1noAYS5Tw9DGjkbjWfeRYRmbHQ6BY3msAZIOqENDFvl8Tz0g8Ks+GOZxvbgEHcVp0YMSB7VuBQl+NgBC3GPXWjOnHZ9TBdmCP/zbs6nXnkAFjzI2rsda2/a/gOihbpCBYrJIBLCqC5MvuO5xNt14nyQxxwXPklGpbwVngdjoAfm+JpoSGZly7m3QTl81idm0ycHlJQQYXttjuCMEPtinDYyh1TI5jeGdE5JMIGLL30b/1SxqgKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6) by ZQ0PR01MB1013.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Thu, 29 Feb
+ 2024 07:30:20 +0000
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2f41:68f:6f07:6c8b]) by ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2f41:68f:6f07:6c8b%4]) with mapi id 15.20.7316.039; Thu, 29 Feb 2024
+ 07:30:20 +0000
+From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v7 3/4] docs: perf: Add description for StarFive's StarLink PMU
+Date: Thu, 29 Feb 2024 15:27:19 +0800
+Message-ID: <20240229072720.3987876-4-jisheng.teoh@starfivetech.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240229072720.3987876-1-jisheng.teoh@starfivetech.com>
+References: <20240229072720.3987876-1-jisheng.teoh@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0026.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:c::21) To ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [revert 0d60d8df6f49] [net/net-next] [6.8-rc5] Build Failure
-To: Eric Dumazet <edumazet@google.com>,
-        Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        arkadiusz.kubalewski@intel.com, jiri@nvidia.com, kuba@kernel.org,
-        "abdhalee@linux.vnet.ibm.com" <abdhalee@linux.vnet.ibm.com>,
-        "mputtash@linux.vnet.com" <mputtash@linux.vnet.com>,
-        "sachinp@linux.vnet.com" <sachinp@linux.vnet.com>,
-        venkat88@linux.vnet.ibm.com,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <3fcf3a2c-1c1b-42c1-bacb-78fdcd700389@linux.vnet.ibm.com>
- <85b78dad-affa-47c3-9cd0-79a4321460b8@linux.dev>
- <CANn89iJEzTjwxF7wXSnUR+NyDu-S-zEOYVXA+fEaYs_1o1g5HQ@mail.gmail.com>
-Content-Language: en-US
-From: Tasmiya Nalatwad <tasmiya@linux.vnet.ibm.com>
-In-Reply-To: <CANn89iJEzTjwxF7wXSnUR+NyDu-S-zEOYVXA+fEaYs_1o1g5HQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: OTJnR3xJPU91ToZ0GLSBpYQPlyNp7TsS
-X-Proofpoint-ORIG-GUID: oWDAQZrahUGh0cNSPpMnHqHdCbHr77Qj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-28_08,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- impostorscore=0 malwarescore=0 suspectscore=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402290062
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1013:EE_
+X-MS-Office365-Filtering-Correlation-Id: fc89ab16-21ce-401f-983c-08dc38f84883
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	1v5qkKOkMb36mtE/vm7lS3W21DFGu/RLS+UplzXvc59EoeQ09nOyFhX81goiwMCGfar3Z7JsTuC9qZX+d1qAilxVpS24aWKuPwqt0X7cO85H6gGHzrGOR4QFsvlUgy04jVmvSHfSeGEwjspmVwagRmNyx8QXoyNNwyWeSzhebyX5l+hsJdjo651dZdrHCUkchD1J3xvcMsU0L3nAh/3fV9et3w2HPEXYwfp3LoWOZn6ELzmmvRpM1SMfKqcNwEUAwmImQ2D0y/Y+vn8YVtlSznnRaTD2OmohKZMWwc2/5TE1kzJGL4wePWQp3iVlr+xbSIpu95bK5ggRjglQcvKR0QdGMS7X6Y70vSFmjlq3WRO7zLco5AGKaKoZs62amEK6DriaQhELaOqGCwGxk9b2GmTINp5W0U1lG7AM2274O5hznPiiJBkiktIzXsRGiC7n81WzRQn6onVm0JSUjGgVpS7PtwNpgjzxmsMw3g5TEuUa2CeqUQwipa+rbJOEeMAvLqB/3zLNi9SbBXXrdZeO6G956lsfNTi05T73hcYYfveDh1iAkBlsnv4im2j0vCz0McK1cLqECP9lw8qnBEYzoUwXLjuaK51vo2zi7oK2Df0gAD3YUGjqQVt1OuF/BWiXlab9/3rD4i4q4fH2PQKLXQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(921011)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+xDynYGYR/OfggKTHSufGmbuNx8bFRlfaeey/zVXJGBRlY7Xaqtx9XMUw0Uq?=
+ =?us-ascii?Q?jyIrjetqkCfKo/LcLZROuTKiaMuHZdLIL0GefwHNg4Q/PpUdwwrNYCxZkFa0?=
+ =?us-ascii?Q?9KzwTZ1rxcwfzsrJAvp7efN4PxJ2pwdbxDcc49I0NtWaeG//F3piIaBnsLNx?=
+ =?us-ascii?Q?DEmoZCou1E/0eXxvMlJB3CtPj6cILlqzgZVcoCmVEz6I5+TcLFIZBUaH1+XR?=
+ =?us-ascii?Q?BYBm/Mo5UyxE9xQ8evjeglaMsQYmwgiOcW2hRUK/xMtKGF/kX+XkWaMTXagG?=
+ =?us-ascii?Q?zltBP4Zh6NdbfmjrjHXvtHjCh0GNNH4olhNA9RIuEKxa3XNWpe9T7YydrPjL?=
+ =?us-ascii?Q?SArDujSA3ow+p84aJ2dVzL37PJgZhe8M9YtMIx5/M3onp8gYZMHW3Na3Whab?=
+ =?us-ascii?Q?01PYjfrb2d41voY2TDuoPzSrsdFDjuYzvtXQIe3SOmWjAa0IpLJ2YNoEnrWR?=
+ =?us-ascii?Q?Pj2TNW5ckvFSl7tCNs7AKcLWIWkKVABDPwTXFHUvXBZo7+MiLiz3wtFjQXhf?=
+ =?us-ascii?Q?gkNrDdlDQHuZIDvxvR07WqtJcvNgXkiO05gxfib5y9PBGNKWX5JFX2lI5DxL?=
+ =?us-ascii?Q?e7aMlih24o/VAT9Sg3PqEDf8ZuCrTbGvTlPmmvLeiHTKFQUc0y62Vjlziejt?=
+ =?us-ascii?Q?I0eY8xExR1zP5au2qsK4gE7b+etB5PA1zLoVizcHkMGgdz3iP7dK6uLi5HcR?=
+ =?us-ascii?Q?1SEw7DZyYONJ7PZUUdDuiZ4WZcOBaQ/+28Zeo9Ymd6qmuoDhdTSH0aeaPGPT?=
+ =?us-ascii?Q?21A++5CQ2+e6uytlc0kXRCdg1y8bOBSltPvB+P7/7OpSjp1U/Ez+yGSIGKBX?=
+ =?us-ascii?Q?rFDTUvALZ6yp/kfcgc4hovq8/dbLAlqkdQ310Hr1V/ECD3gAouJzAA1Dd8nz?=
+ =?us-ascii?Q?/n1qdCY4H9KYHujkbXTKhdldYZnC5qimLM0FkAqBQqkkf0JOOcQJ9ejEOEdm?=
+ =?us-ascii?Q?aXunvtrj2lpzAppJ/4hlVnCz0R5xDKtu1RJtBp6QQGGsI13QCBwYRMpNvf4A?=
+ =?us-ascii?Q?4aKkpNREOhOI4wxZxJcvgV0ZgTeifitmZizauIW2Py3DztFGf3ntLltKouj4?=
+ =?us-ascii?Q?dIqjZsftFeoPvPoAJIhv0awQ1a8p06npUcr3yJdFrBk9iedVwy+Rvhc8sbVL?=
+ =?us-ascii?Q?UKqPQhxDbBxgDwzUtv0NXbvZLb5s4cwqZVnucH7PZw72nchIFbV6OERjskM7?=
+ =?us-ascii?Q?uS1ctppS7wHY+AOmfRFgExKXWrnwWap34xiKAQMp8f5slGHRlhwyIzhkL3Pb?=
+ =?us-ascii?Q?6NHahpopvJXLn1mB7mQ6jW8vPhE4waWylUzppr3q84KX4PYZRKlnZhaIFwR+?=
+ =?us-ascii?Q?T4RtK+svXmxCiMbU7U7FEkDZFOo7Qk0H7EHHfr3l978DlU3YRrp30PtCtWhW?=
+ =?us-ascii?Q?1bTMV/n5dsSvpVMWDcDsSOYQ94kuh6VxXBBbGtw0afwOBULtYf4quZWXLaAg?=
+ =?us-ascii?Q?KTjS9Uw482HS7ojMCLh299dytq4CgwS3W2gpMRZxiiTlFa4GEofpwRAXwif4?=
+ =?us-ascii?Q?EWrGq0C1UL9cROEErwzZhbg1FTKtkvbim5aBOHIa+KPQagV2KGBEFF34y7FB?=
+ =?us-ascii?Q?5ksJ53D/85I+wAHnr/6NhIXcyHWG6gJr3mLpjRdfmm4GGDdmE5vSs9PbZd1D?=
+ =?us-ascii?Q?Ww=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc89ab16-21ce-401f-983c-08dc38f84883
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 07:30:20.1527
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6aV9pWcktfKvOp6rwP3J685BjtpAjjIIwprK2v9fUJLjxfn2blplMm6koLkqGfwmyStfXFv2NpCsMBCRV71h/W0eF5T7OthsrGxJhEI0WvY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1013
 
-Greetings,
+StarFive StarLink PMU support monitoring L3 memory system PMU events.
+Add documentation to describe StarFive StarLink PMU support and it's
+usage.
 
-I have tried the patch provided below. Moving struct to file 
-"net/core/rtnetlink.c" is not resolving the problem. Please find the 
-below traces.
+Signed-off-by: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+---
+ Documentation/admin-guide/perf/index.rst      |  1 +
+ .../perf/starfive_starlink_pmu.rst            | 46 +++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 Documentation/admin-guide/perf/starfive_starlink_pmu.rst
 
---- Traces ---
-
-In file included from ./include/linux/rbtree.h:24,
-                  from ./include/linux/mm_types.h:11,
-                  from ./include/linux/mmzone.h:22,
-                  from ./include/linux/gfp.h:7,
-                  from ./include/linux/umh.h:4,
-                  from ./include/linux/kmod.h:9,
-                  from ./include/linux/module.h:17,
-                  from net/core/rtnetlink.c:17:
-net/core/rtnetlink.c: In function ‘netdev_dpll_pin’:
-./include/linux/rcupdate.h:439:9: error: dereferencing pointer to 
-incomplete type ‘struct dpll_pin’
-   typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-          ^
-./include/linux/rcupdate.h:587:2: note: in expansion of macro 
-‘__rcu_dereference_check’
-   __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-   ^~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/rtnetlink.h:70:2: note: in expansion of macro 
-‘rcu_dereference_check’
-   rcu_dereference_check(p, lockdep_rtnl_is_held())
-   ^~~~~~~~~~~~~~~~~~~~~
-net/core/rtnetlink.c:1059:15: note: in expansion of macro 
-‘rcu_dereference_rtnl’
-         return rcu_dereference_rtnl(dev->dpll_pin);
-                ^~~~~~~~~~~~~~~~~~~~
-   CC      crypto/algboss.o
-net/core/rtnetlink.c:1063:1: error: control reaches end of non-void 
-function [-Werror=return-type]
-  }
-  ^
-   CC      crypto/authenc.o
-   CC      crypto/authencesn.o
-   CC      crypto/af_alg.o
-   CC      crypto/algif_hash.o
-   CC      crypto/algif_skcipher.o
-   CC      crypto/algif_rng.o
-   CC      crypto/algif_aead.o
-   AR      arch/powerpc/kernel/built-in.a
-cc1: some warnings being treated as errors
-make[4]: *** [scripts/Makefile.build:243: net/core/rtnetlink.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-   CC      lib/kobject_uevent.o
-   AR      drivers/net/mdio/built-in.a
-   AR      net/802/built-in.a
-   AR      drivers/connector/built-in.a
-   CC      lib/vsprintf.o
-   AR      ipc/built-in.a
-   AR      net/nsh/built-in.a
-   CC      lib/dynamic_debug.o
-In file included from ./arch/powerpc/include/generated/asm/rwonce.h:1,
-                  from ./include/linux/compiler.h:251,
-                  from ./include/linux/instrumented.h:10,
-                  from ./include/linux/uaccess.h:6,
-                  from net/core/dev.c:71:
-net/core/dev.c: In function ‘netdev_dpll_pin_assign’:
-./include/linux/rcupdate.h:462:36: error: dereferencing pointer to 
-incomplete type ‘struct dpll_pin’
-  #define RCU_INITIALIZER(v) (typeof(*(v)) __force __rcu *)(v)
-                                     ^~~~
-./include/asm-generic/rwonce.h:55:33: note: in definition of macro 
-‘__WRITE_ONCE’
-   *(volatile typeof(x) *)&(x) = (val);    \
-                                  ^~~
-./arch/powerpc/include/asm/barrier.h:76:2: note: in expansion of macro 
-‘WRITE_ONCE’
-   WRITE_ONCE(*p, v);      \
-   ^~~~~~~~~~
-./include/asm-generic/barrier.h:172:55: note: in expansion of macro 
-‘__smp_store_release’
-  #define smp_store_release(p, v) do { kcsan_release(); 
-__smp_store_release(p, v); } while (0)
-^~~~~~~~~~~~~~~~~~~
-./include/linux/rcupdate.h:503:3: note: in expansion of macro 
-‘smp_store_release’
-    smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
-    ^~~~~~~~~~~~~~~~~
-./include/linux/rcupdate.h:503:25: note: in expansion of macro 
-‘RCU_INITIALIZER’
-    smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
-                          ^~~~~~~~~~~~~~~
-net/core/dev.c:9081:2: note: in expansion of macro ‘rcu_assign_pointer’
-   rcu_assign_pointer(dev->dpll_pin, dpll_pin);
-   ^~~~~~~~~~~~~~~~~~
-
-On 2/28/24 20:13, Eric Dumazet wrote:
-> On Wed, Feb 28, 2024 at 3:07 PM Vadim Fedorenko
-> <vadim.fedorenko@linux.dev> wrote:
->> On 28/02/2024 11:09, Tasmiya Nalatwad wrote:
->>> Greetings,
->>>
->>> [revert 0d60d8df6f49] [net/net-next] [6.8-rc5] Build Failure
->>>
->>> Reverting below commit fixes the issue
->>>
->>> commit 0d60d8df6f493bb46bf5db40d39dd60a1bafdd4e
->>>       dpll: rely on rcu for netdev_dpll_pin()
->>>
->>> --- Traces ---
->>>
->>> ./include/linux/dpll.h: In function ‘netdev_dpll_pin’:
->>> ./include/linux/rcupdate.h:439:9: error: dereferencing pointer to
->>> incomplete type ‘struct dpll_pin’
->>>     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
->>>            ^
->>> ./include/linux/rcupdate.h:587:2: note: in expansion of macro
->>> ‘__rcu_dereference_check’
->>>     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>> ./include/linux/rtnetlink.h:70:2: note: in expansion of macro
->>> ‘rcu_dereference_check’
->>>     rcu_dereference_check(p, lockdep_rtnl_is_held())
->>>     ^~~~~~~~~~~~~~~~~~~~~
->>> ./include/linux/dpll.h:175:9: note: in expansion of macro
->>> ‘rcu_dereference_rtnl’
->>>     return rcu_dereference_rtnl(dev->dpll_pin);
->>>            ^~~~~~~~~~~~~~~~~~~~
->>> make[4]: *** [scripts/Makefile.build:243: drivers/dpll/dpll_core.o] Error 1
->>> make[4]: *** Waiting for unfinished jobs....
->>>     AR      net/mpls/built-in.a
->>>     AR      net/l3mdev/built-in.a
->>> In file included from ./include/linux/rbtree.h:24,
->>>                    from ./include/linux/mm_types.h:11,
->>>                    from ./include/linux/mmzone.h:22,
->>>                    from ./include/linux/gfp.h:7,
->>>                    from ./include/linux/umh.h:4,
->>>                    from ./include/linux/kmod.h:9,
->>>                    from ./include/linux/module.h:17,
->>>                    from drivers/dpll/dpll_netlink.c:9:
->>> ./include/linux/dpll.h: In function ‘netdev_dpll_pin’:
->>> ./include/linux/rcupdate.h:439:9: error: dereferencing pointer to
->>> incomplete type ‘struct dpll_pin’
->>>     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
->>>            ^
->>> ./include/linux/rcupdate.h:587:2: note: in expansion of macro
->>> ‘__rcu_dereference_check’
->>>     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>> ./include/linux/rtnetlink.h:70:2: note: in expansion of macro
->>> ‘rcu_dereference_check’
->>>     rcu_dereference_check(p, lockdep_rtnl_is_held())
->>>     ^~~~~~~~~~~~~~~~~~~~~
->>> ./include/linux/dpll.h:175:9: note: in expansion of macro
->>> ‘rcu_dereference_rtnl’
->>>     return rcu_dereference_rtnl(dev->dpll_pin);
->>>            ^~~~~~~~~~~~~~~~~~~~
->>> make[4]: *** [scripts/Makefile.build:243: drivers/dpll/dpll_netlink.o]
->>> Error 1
->>> make[3]: *** [scripts/Makefile.build:481: drivers/dpll] Error 2
->>> make[3]: *** Waiting for unfinished jobs....
->>> In file included from ./arch/powerpc/include/generated/asm/rwonce.h:1,
->>>                    from ./include/linux/compiler.h:251,
->>>                    from ./include/linux/instrumented.h:10,
->>>                    from ./include/linux/uaccess.h:6,
->>>                    from net/core/dev.c:71:
->>> net/core/dev.c: In function ‘netdev_dpll_pin_assign’:
->>> ./include/linux/rcupdate.h:462:36: error: dereferencing pointer to
->>> incomplete type ‘struct dpll_pin’
->>>    #define RCU_INITIALIZER(v) (typeof(*(v)) __force __rcu *)(v)
->>>                                       ^~~~
->>> ./include/asm-generic/rwonce.h:55:33: note: in definition of macro
->>> ‘__WRITE_ONCE’
->>>     *(volatile typeof(x) *)&(x) = (val);    \
->>>                                    ^~~
->>> ./arch/powerpc/include/asm/barrier.h:76:2: note: in expansion of macro
->>> ‘WRITE_ONCE’
->>>     WRITE_ONCE(*p, v);      \
->>>     ^~~~~~~~~~
->>> ./include/asm-generic/barrier.h:172:55: note: in expansion of macro
->>> ‘__smp_store_release’
->>>    #define smp_store_release(p, v) do { kcsan_release();
->>> __smp_store_release(p, v); } while (0)
->>> ^~~~~~~~~~~~~~~~~~~
->>> ./include/linux/rcupdate.h:503:3: note: in expansion of macro
->>> ‘smp_store_release’
->>>      smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
->>>      ^~~~~~~~~~~~~~~~~
->>> ./include/linux/rcupdate.h:503:25: note: in expansion of macro
->>> ‘RCU_INITIALIZER’
->>>      smp_store_release(&p, RCU_INITIALIZER((typeof(p))_r_a_p__v)); \
->>>                            ^~~~~~~~~~~~~~~
->>> net/core/dev.c:9081:2: note: in expansion of macro ‘rcu_assign_pointer’
->>>     rcu_assign_pointer(dev->dpll_pin, dpll_pin);
->>>     ^~~~~~~~~~~~~~~~~~
->>> make[4]: *** [scripts/Makefile.build:243: net/core/dev.o] Error 1
->>> make[4]: *** Waiting for unfinished jobs....
->>>     AR      drivers/net/ethernet/built-in.a
->>>     AR      drivers/net/built-in.a
->>>     AR      net/dcb/built-in.a
->>>     AR      net/netlabel/built-in.a
->>>     AR      net/strparser/built-in.a
->>>     AR      net/handshake/built-in.a
->>>     GEN     lib/test_fortify.log
->>>     AR      net/8021q/built-in.a
->>>     AR      net/nsh/built-in.a
->>>     AR      net/unix/built-in.a
->>>     CC      lib/string.o
->>>     AR      net/packet/built-in.a
->>>     AR      net/switchdev/built-in.a
->>>     AR      lib/lib.a
->>>     AR      net/mptcp/built-in.a
->>>     AR      net/devlink/built-in.a
->>> In file included from ./include/linux/rbtree.h:24,
->>>                    from ./include/linux/mm_types.h:11,
->>>                    from ./include/linux/mmzone.h:22,
->>>                    from ./include/linux/gfp.h:7,
->>>                    from ./include/linux/umh.h:4,
->>>                    from ./include/linux/kmod.h:9,
->>>                    from ./include/linux/module.h:17,
->>>                    from net/core/rtnetlink.c:17:
->>> ./include/linux/dpll.h: In function ‘netdev_dpll_pin’:
->>> ./include/linux/rcupdate.h:439:9: error: dereferencing pointer to
->>> incomplete type ‘struct dpll_pin’
->>>     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
->>>            ^
->>> ./include/linux/rcupdate.h:587:2: note: in expansion of macro
->>> ‘__rcu_dereference_check’
->>>     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
->>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>> ./include/linux/rtnetlink.h:70:2: note: in expansion of macro
->>> ‘rcu_dereference_check’
->>>     rcu_dereference_check(p, lockdep_rtnl_is_held())
->>>     ^~~~~~~~~~~~~~~~~~~~~
->>> ./include/linux/dpll.h:175:9: note: in expansion of macro
->>> ‘rcu_dereference_rtnl’
->>>     return rcu_dereference_rtnl(dev->dpll_pin);
->>>            ^~~~~~~~~~~~~~~~~~~~
->>> In file included from net/core/rtnetlink.c:60:
->>> ./include/linux/dpll.h:179:1: error: control reaches end of non-void
->>> function [-Werror=return-type]
->>>    }
->>>
->> Hi, Eric!
->>
->> Looks like we have to move struct dpll_pin definition to
->> include/linux/dpll.h to have this fixed, right?
->>
-> No idea what is wrong. Is it powerpc specific ? Some compiler version ?
->
-> netdev_dpll_pin() could be moved to net/core/rtnetlink.c, this is the only user.
->
-> diff --git a/include/linux/dpll.h b/include/linux/dpll.h
-> index 4ec2fe9caf5a3f284afd0cfe4fc7c2bf42cbbc60..72d21e710d7f201d2fc57bb3a32b4bc0ff2b1749
-> 100644
-> --- a/include/linux/dpll.h
-> +++ b/include/linux/dpll.h
-> @@ -169,13 +169,4 @@ int dpll_device_change_ntf(struct dpll_device *dpll);
->
->   int dpll_pin_change_ntf(struct dpll_pin *pin);
->
-> -static inline struct dpll_pin *netdev_dpll_pin(const struct net_device *dev)
-> -{
-> -#if IS_ENABLED(CONFIG_DPLL)
-> -       return rcu_dereference_rtnl(dev->dpll_pin);
-> -#else
-> -       return NULL;
-> -#endif
-> -}
-> -
->   #endif
-> diff --git a/net/core/rtnetlink.c b/net/core/rtnetlink.c
-> index 9c4f427f3a5057b52ec05405e8b15b8ca2246b4b..32dc601fd8ca66dfcd3cb8f38b533314de02d1d2
-> 100644
-> --- a/net/core/rtnetlink.c
-> +++ b/net/core/rtnetlink.c
-> @@ -1053,6 +1053,15 @@ static size_t rtnl_devlink_port_size(const
-> struct net_device *dev)
->          return size;
->   }
->
-> +static struct dpll_pin *netdev_dpll_pin(const struct net_device *dev)
-> +{
-> +#if IS_ENABLED(CONFIG_DPLL)
-> +       return rcu_dereference_rtnl(dev->dpll_pin);
-> +#else
-> +       return NULL;
-> +#endif
-> +}
-> +
->   static size_t rtnl_dpll_pin_size(const struct net_device *dev)
->   {
->          size_t size = nla_total_size(0); /* nest IFLA_DPLL_PIN */
-
+diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
+index a2e6f2c81146..c5de7579a71b 100644
+--- a/Documentation/admin-guide/perf/index.rst
++++ b/Documentation/admin-guide/perf/index.rst
+@@ -13,6 +13,7 @@ Performance monitor support
+    imx-ddr
+    qcom_l2_pmu
+    qcom_l3_pmu
++   starfive_starlink_pmu
+    arm-ccn
+    arm-cmn
+    xgene-pmu
+diff --git a/Documentation/admin-guide/perf/starfive_starlink_pmu.rst b/Documentation/admin-guide/perf/starfive_starlink_pmu.rst
+new file mode 100644
+index 000000000000..2932ddb4eb76
+--- /dev/null
++++ b/Documentation/admin-guide/perf/starfive_starlink_pmu.rst
+@@ -0,0 +1,46 @@
++================================================
++StarFive StarLink Performance Monitor Unit (PMU)
++================================================
++
++StarFive StarLink Performance Monitor Unit (PMU) exists within the
++StarLink Coherent Network on Chip (CNoC) that connects multiple CPU
++clusters with an L3 memory system.
++
++The uncore PMU supports overflow interrupt, up to 16 programmable 64bit
++event counters, and an independent 64bit cycle counter.
++The PMU can only be accessed via Memory Mapped I/O and are common to the
++cores connected to the same PMU.
++
++Driver exposes supported PMU events in sysfs "events" directory under::
++
++  /sys/bus/event_source/devices/starfive_starlink_pmu/events/
++
++Driver exposes cpu used to handle PMU events in sysfs "cpumask" directory
++under::
++
++  /sys/bus/event_source/devices/starfive_starlink_pmu/cpumask/
++
++Driver describes the format of config (event ID) in sysfs "format" directory
++under::
++
++  /sys/bus/event_source/devices/starfive_starlink_pmu/format/
++
++Example of perf usage::
++
++	$ perf list
++
++	starfive_starlink_pmu/cycles/                      [Kernel PMU event]
++	starfive_starlink_pmu/read_hit/                    [Kernel PMU event]
++	starfive_starlink_pmu/read_miss/                   [Kernel PMU event]
++	starfive_starlink_pmu/read_request/                [Kernel PMU event]
++	starfive_starlink_pmu/release_request/             [Kernel PMU event]
++	starfive_starlink_pmu/write_hit/                   [Kernel PMU event]
++	starfive_starlink_pmu/write_miss/                  [Kernel PMU event]
++	starfive_starlink_pmu/write_request/               [Kernel PMU event]
++	starfive_starlink_pmu/writeback/                   [Kernel PMU event]
++
++
++	$ perf stat -a -e /starfive_starlink_pmu/cycles/ sleep 1
++
++Sampling is not supported. As a result, "perf record" is not supported.
++Attaching to a task is not supported, only system-wide counting is supported.
 -- 
-Regards,
-Tasmiya Nalatwad
-IBM Linux Technology Center
+2.43.0
 
