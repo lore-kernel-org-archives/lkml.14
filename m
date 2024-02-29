@@ -1,188 +1,228 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927092E415;
-	Thu, 29 Feb 2024 04:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB27383BE;
+	Thu, 29 Feb 2024 05:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709182766; cv=none; b=aMpW+xiMQxGZhAxZwgugo/1EfFGUgD9bTTAgQrtxpSGBkZAcXM+OrHpKtGjQUeb1tkEe8QzSQF6SghSzcaX8SzjzDjoCWgoqgBazmb9+m/MkEx9uoy9cOXkQBuLHtonwbr8bsq6hK1jTecZF3J+vv3nHCMC2aO5n5vSmRnNNV3U=
+	t=1709183796; cv=none; b=d2A0QGr4iAuk2Pj9pjmnpcYO646ndebo978/+BSbcUKwC6QXnSBs1FpWYoKkbjRaqg+IPKHCTmCVzV2OS4hHgeCpqDADKCYk60A7wK6dhzOd+j3LYlQED8rqG4vX8xGOb66G1XVTSVuGqLzHZQ/esorY/BNM3fvir7623hZSRh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709182766; c=relaxed/simple;
-	bh=LEJMaC1gxEsmiBbx7I2iVFrPGxeJ2sGR0TCSwaXBt48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kld92mB3c5KVpswq44hGaxl5/1cR3pfRtnc6/Q3wBDQstvvK/EOWV3wn3kvFqVq2Drx9P692h758VCE9Yr9XhXCkbBf//00AFAF0VaBHyCN5ioJ1K54vT/IktMzbgtZgcAz4mzIr52y3QDvWtQKbZ66MVLTNJi7XtC7BWjM119k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jyc+f1P+; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jyc+f1P+"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-787b5c68253so26100685a.2;
-        Wed, 28 Feb 2024 20:59:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709182763; x=1709787563; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ln8ih9ys+HkjNsKguuawbY2jpQF93RZW6fsCYu3AHtU=;
-        b=Jyc+f1P+JeeFUt62sDk21FQwGJiqEKkuEsgo+WUd/RBkbz7qSp+KvyksuRxsH+k3mc
-         Wzq1Ej8Wyg0gPXXGqVm1/x7fIpWRYSI3L8A1JPPr5U0wJ/BLXUlHqmOVg8SMPg4Z7ZEx
-         3J8NsDp/ElcHDRogRzQjjrF+e9ikZERLhd6evQHd5ib6srHxdBoA1yqZetj15YeUBU+T
-         3kVnqEH39l9PzqE57vSczo0O39+NalPHVf0/UKhWP9VqAK1T5zjmOEJxn53TtzrFu1dZ
-         4s1u/0XQNvJZWsedaTRoNXcMNRLlTEoVva9daq9ViVDDJXTMrffgkMnDGOxKZsFezTFm
-         z75A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709182763; x=1709787563;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ln8ih9ys+HkjNsKguuawbY2jpQF93RZW6fsCYu3AHtU=;
-        b=DkRKaxRIUSrfkwlzR27vZ6C0gy8RMUrKYkhTAVSJgfRk49HeqMzN7OjQC5JRHvW0XU
-         vAUhOSQtAPFQU9DvyijavYWb41v412cDEBIs1WHHxfrA7zbtq7StEltEK1kFfwlgUq4D
-         Db3u2FcOohGHrd98AtiwWHFSH8gnfihk1/h6mQGMM2soa4MdbHjgYA/xefAujcVlEJui
-         3Gj40//wwUCnnQvX1GOFSt/5ZNq+a1YbPQLALnW12mH6dcxpABejRdUi0fQt6I5aRC8L
-         wOxll7DV56f25PI6lgXjIdZYRpt4CmIAw0JwYg5kWXbTBFdF3utX3bLOz0xFOSdCH0CV
-         SgOg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9d7kj1ze5HOR/b4RSviUa+7u/lUrRzpZ5yig5lgM9CKM1AbK7EHIcRpggwOzh+POHAjt1LEPXAlVoNtyCHp01+z4tLuGANvp52diLMipJ3T8IMycyGZ6g5wxm92BX6tCJYRVj9fUBjg==
-X-Gm-Message-State: AOJu0Yyk25neWJ4yxQ0BITNX+wQ8e/fYeo2EdZpF0AFsFoCAOhjw5i2C
-	ahU6u8kLQPHR1TbBZEvTijTT1IeiS57Jx6SV15El0TNMc5H90PEF
-X-Google-Smtp-Source: AGHT+IH5EGqQke3S+1CI+MmbUruz8ZZK+JzIbyyCIsFQO2rwOg3IMuvm4r2pxdlAbncmy9S0OBtTXA==
-X-Received: by 2002:ac8:7f8d:0:b0:42e:a06b:415c with SMTP id z13-20020ac87f8d000000b0042ea06b415cmr1265815qtj.15.1709182763448;
-        Wed, 28 Feb 2024 20:59:23 -0800 (PST)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id f14-20020a05622a1a0e00b0042e1950d591sm349502qtb.70.2024.02.28.20.59.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 20:59:22 -0800 (PST)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 0C27C1200043;
-	Wed, 28 Feb 2024 23:59:22 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 28 Feb 2024 23:59:22 -0500
-X-ME-Sender: <xms:KQ_gZbANjRN3IoJ575Vf-WHNiuRqMGCWiA1Pu_DpyGdWLica66Upcw>
-    <xme:KQ_gZRgQkZNQa1cXWIELHO-qBgsdDyFyKn0Rsrm27OgvZIfFARJib4OHL0MRHYnUq
-    fAWz1fuh_voxWUABA>
-X-ME-Received: <xmr:KQ_gZWnCucaO-27ZIJuQWKYEcRM-kqCJ-D-hEqkiNdm89mBMCAqnlTHPug>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrgeekgdejhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepgfeivdeugeeujeduuedvueeuvdeuieekudejieehgfejvedtgefhleejtddu
-    vdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsg
-    hoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieeg
-    qddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigi
-    hmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:KQ_gZdyIcQ2afB0rNU3V90wNC2mPWN2rX1ReH2tp6CQVq3jMvCdBxw>
-    <xmx:KQ_gZQSyYOkZxYmejKR6uDccwoLdO7cKjllytjTxdqMChmAvLZ36SQ>
-    <xmx:KQ_gZQYAslJ6ng6RO2cZBlOgFiJrFkZmSHT8w3jY_fyQjWCRZ1t8yw>
-    <xmx:Kg_gZfE-GfDOkB-QzjasOHSkz-anfg1T6af3BOycb8L2HTJ_KFEhnz7BPJw>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 28 Feb 2024 23:59:21 -0500 (EST)
-Date: Wed, 28 Feb 2024 20:59:17 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Nikhil V <quic_nprakash@quicinc.com>
-Subject: Re: linux-next: manual merge of the rcu tree with the pm tree
-Message-ID: <ZeAPJYPfgc6q2tpu@tardis>
-References: <20240226135745.12ac854d@canb.auug.org.au>
+	s=arc-20240116; t=1709183796; c=relaxed/simple;
+	bh=t3j1woEgvFnLc8x11g+kBPBzZ/jeWchNm0SifGt5RgQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WCmdME/qRXKMc6KHaMfRdmj0HM1vdhwNWIEIi3jV402G40AN44fuIgDEVk1AkrgkucmddARErsIMvaJjJ8H0firwyC+kZ80h3Iim7eqlKYW9rKw8DFy+AZl+eBk8dqB5/wq97ThhbTIwvt7YjX4bMhW5851hP8FHisfUJ3LngWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: d08d34d4130e45a8a69a80c8dd358203-20240229
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:9f5ee081-2332-4efc-8847-62d1591c6024,IP:10,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-10
+X-CID-INFO: VERSION:1.1.37,REQID:9f5ee081-2332-4efc-8847-62d1591c6024,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-10
+X-CID-META: VersionHash:6f543d0,CLOUDID:888d54ff-c16b-4159-a099-3b9d0558e447,B
+	ulkID:240229131626BIG1UWI7,BulkQuantity:0,Recheck:0,SF:17|19|44|66|38|24|1
+	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC
+	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: d08d34d4130e45a8a69a80c8dd358203-20240229
+X-User: aichao@kylinos.cn
+Received: from localhost.localdomain [(112.64.161.44)] by mailgw
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 724790857; Thu, 29 Feb 2024 13:16:23 +0800
+From: Ai Chao <aichao@kylinos.cn>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Cc: Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH] platform/x86: add lenovo generic wmi driver
+Date: Thu, 29 Feb 2024 13:16:21 +0800
+Message-Id: <20240229051621.12341-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XJyYbvL4ZSs4ZkVx"
-Content-Disposition: inline
-In-Reply-To: <20240226135745.12ac854d@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
 
+Add lenovo generic wmi driver to support camera button.
 
---XJyYbvL4ZSs4ZkVx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+ drivers/platform/x86/Kconfig      |  10 +++
+ drivers/platform/x86/Makefile     |   1 +
+ drivers/platform/x86/lenovo-wmi.c | 121 ++++++++++++++++++++++++++++++
+ 3 files changed, 132 insertions(+)
+ create mode 100644 drivers/platform/x86/lenovo-wmi.c
 
-On Mon, Feb 26, 2024 at 01:57:45PM +1100, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Today's linux-next merge of the rcu tree got a conflict in:
->=20
->   Documentation/admin-guide/kernel-parameters.txt
->=20
-> between commit:
->=20
->   3fec6e5961b7 ("PM: hibernate: Support to select compression algorithm")
->=20
-> from the pm tree and commit:
->=20
->   600716592a3a ("doc: Add EARLY flag to early-parsed kernel boot paramete=
-rs")
->=20
-> from the rcu tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index bdd302274b9a..fbbb8fb843d7 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1001,6 +1001,16 @@ config INSPUR_PLATFORM_PROFILE
+ 	To compile this driver as a module, choose M here: the module
+ 	will be called inspur-platform-profile.
+ 
++config LENOVO_WMI
++	tristate "Lenovo Geneirc WMI driver"
++	depends on ACPI_WMI
++	depends on INPUT
++	help
++	This driver provides support for Lenovo WMI driver.
++
++	To compile this driver as a module, choose M here: the module
++	will be called lenovo-wmi.
++
+ source "drivers/platform/x86/x86-android-tablets/Kconfig"
+ 
+ config FW_ATTR_CLASS
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 1de432e8861e..d51086552192 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
+ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
++obj-$(CONFIG_LENOVO_WMI)	+= lenovo-wmi.o
+ 
+ # Intel
+ obj-y				+= intel/
+diff --git a/drivers/platform/x86/lenovo-wmi.c b/drivers/platform/x86/lenovo-wmi.c
+new file mode 100644
+index 000000000000..e8b1c401b53e
+--- /dev/null
++++ b/drivers/platform/x86/lenovo-wmi.c
+@@ -0,0 +1,121 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Lenovo Generic WMI Driver
++ *
++ *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
++ */
++
++#include <linux/acpi.h>
++#include <linux/device.h>
++#include <linux/input.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++
++#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
++
++static u8 camera_mode;
++
++struct lenovo_wmi_priv {
++	struct input_dev *idev;
++};
++
++static ssize_t camerabutton_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	return sprintf(buf, "%u\n", camera_mode);
++}
++
++DEVICE_ATTR_RO(camerabutton);
++
++static struct attribute *lenovo_wmi_attrs[] = {
++	&dev_attr_camerabutton.attr,
++	NULL,
++};
++
++static const struct attribute_group lenovo_wmi_group = {
++	.attrs = lenovo_wmi_attrs,
++};
++
++const struct attribute_group *lenovo_wmi_groups[] = {
++	&lenovo_wmi_group,
++	NULL,
++};
++
++static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	if (obj->type == ACPI_TYPE_BUFFER) {
++		camera_mode = obj->buffer.pointer[0];
++		input_report_key(priv->idev, KEY_CAMERA, 1);
++		input_sync(priv->idev);
++		input_report_key(priv->idev, KEY_CAMERA, 0);
++		input_sync(priv->idev);
++	} else {
++		dev_info(&wdev->dev, "Bad response type %d\n", obj->type);
++	}
++}
++
++static int lenovo_wmi_input_setup(struct wmi_device *wdev)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	priv->idev = devm_input_allocate_device(&wdev->dev);
++	if (!priv->idev)
++		return -ENOMEM;
++
++	priv->idev->name = "Lenovo WMI Camera Button";
++	priv->idev->phys = "wmi/input0";
++	priv->idev->id.bustype = BUS_HOST;
++	priv->idev->dev.parent = &wdev->dev;
++	priv->idev->evbit[0] = BIT_MASK(EV_KEY);
++	priv->idev->keybit[BIT_WORD(KEY_CAMERA)] = BIT_MASK(KEY_CAMERA);
++
++	return input_register_device(priv->idev);
++}
++
++static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct lenovo_wmi_priv *priv;
++	int err;
++
++	priv = devm_kzalloc(&wdev->dev, sizeof(struct lenovo_wmi_priv),
++			    GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	dev_set_drvdata(&wdev->dev, priv);
++
++	err = lenovo_wmi_input_setup(wdev);
++	return err;
++}
++
++static void lenovo_wmi_remove(struct wmi_device *wdev)
++{
++	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	input_unregister_device(priv->idev);
++}
++
++static const struct wmi_device_id lenovo_wmi_id_table[] = {
++	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
++	{  }
++};
++
++static struct wmi_driver lenovo_wmi_driver = {
++	.driver = {
++		.name = "lenovo-wmi",
++		.dev_groups = lenovo_wmi_groups,
++	},
++	.id_table = lenovo_wmi_id_table,
++	.probe = lenovo_wmi_probe,
++	.notify = lenovo_wmi_notify,
++	.remove = lenovo_wmi_remove,
++};
++
++module_wmi_driver(lenovo_wmi_driver);
++
++MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
++MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
++MODULE_DESCRIPTION("Lenovo Generic WMI Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.25.1
 
-Thanks! The below looks good to me ;-)
-
-Regards,
-Boqun
-
-
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc Documentation/admin-guide/kernel-parameters.txt
-> index c503770e8f0b,3f894fbb4916..000000000000
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@@ -1753,18 -1749,7 +1754,18 @@@
->   				(that will set all pages holding image data
->   				during restoration read-only).
->  =20
->  +	hibernate.compressor=3D 	[HIBERNATION] Compression algorithm to be
->  +				used with hibernation.
->  +				Format: { lzo | lz4 }
->  +				Default: lzo
->  +
->  +				lzo: Select LZO compression algorithm to
->  +				compress/decompress hibernation image.
->  +
->  +				lz4: Select LZ4 compression algorithm to
->  +				compress/decompress hibernation image.
->  +
-> - 	highmem=3Dnn[KMG]	[KNL,BOOT] forces the highmem zone to have an exact
-> + 	highmem=3Dnn[KMG]	[KNL,BOOT,EARLY] forces the highmem zone to have an =
-exact
->   			size of <nn>. This works even on boxes that have no
->   			highmem otherwise. This also works to reduce highmem
->   			size on bigger boxes.
-
-
-
---XJyYbvL4ZSs4ZkVx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEj5IosQTPz8XU1wRHSXnow7UH+rgFAmXgDx8ACgkQSXnow7UH
-+rh7sggApIMmADJfpEBuhu4yI0YxPVeG9zTgQbfWM+QuWH9fr6SnGyqsHumxER8D
-kdKD7h8xK3ZzFc4Fl/MjRu+/GrBLDKbH16kayjiCkiOkVVjFbpHw5nlZdFlXL3Ps
-h0WzOHY5URZuyXsy/eB4F5QElWNNHoCfQdS+c2JyWMagkRMwVGmhM2ZcyR4crzdK
-R93WLv5lJE3xY2auuUqMEqKQUyeg+rsH/dCXv2crDeMTcM4OVbshcD7OBPQka7VM
-lxkgDe7h6tp3+FioA5oVvp0YlNmXHMy85Mk2nPg7fJ9lZM4//NS4YJFFG2Gnwil4
-dYvQQMIyuqLqtYSowH6GsdK8k++GBw==
-=vVL1
------END PGP SIGNATURE-----
-
---XJyYbvL4ZSs4ZkVx--
