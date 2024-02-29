@@ -1,116 +1,93 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FFE137753;
-	Thu, 29 Feb 2024 15:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8604312F362;
+	Thu, 29 Feb 2024 15:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709219861; cv=none; b=EUt/Kdzcj+tx8zkchWMbtCy8SmWX2ak74DBfwq2ZaS9BvQnJ5kOST8lNjowgYE4n7xQIxKF4sWJ7ukr43jr7vGM69zIR0TSm4TS1JNFL1uVfGg/yCx8NAxGJa3nQeGjSspCfYDRZwUsyc+shENx2M1JWoPHVYRTA1D8UsGVr+qM=
+	t=1709219954; cv=none; b=NANCQa2OCtBA9qRs+j35c1XzmXMdsjy6tnkJgkZHQCFqroB+MDzw+FVzS0xvGeY/cp5rsa1zvsvuO1N83EE8dRbyVo1enN9pUrw2FPfO85DUo6n1Cxhn4nu24ByshSMyWi/pXC6jgm/rcl/dtj2yfwAoabr7hq92439Gr0VCKVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709219861; c=relaxed/simple;
-	bh=br/HWN6lmANGcA8lXtzi6rpYYGeQsWi3eahucRslWvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SMyULDPc+mxwlmB1X8yIulhrDpB9ChyALM4kPFiJFu/ugXAWxq3OZ8JJ0H7Cexg6bI6bJaGE+BMLQKdWPbbnNPQsc/AEMsh8EKkhDY/rr28JasSChqu6lGxmhCBpND5V+919SSbSP6coy/W08zY9ETbQiRqtZHki+4tvWzw5V4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=XSu+wV/o; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XSu+wV/o"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=+c7Vmm6KMU5zSvglgfqufPHeSuGV1yw9KPRb+vUHbSs=; b=XSu+wV/oCNilQemLKrLXtUYJun
-	ZFsAIYQS4CPzcvXULpppRYMnMQAOaPDTBOQp4Fi0W33U9liiMEbP4aNMLs9Uom5a3ibtYmpr3Rxaf
-	Is3E4P5BVtL/4LPvUhWtCVpzV4TPKJ+aj8EJCpuSkF/AKfVbnwVkDlRKpXa4h+PFJb9Q=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rfiAN-0093D1-J5; Thu, 29 Feb 2024 16:17:47 +0100
-Date: Thu, 29 Feb 2024 16:17:47 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	herve.codina@bootlin.com, maxime.chevallier@bootlin.com,
-	christophercordahi@nanometrics.ca
-Subject: Re: [PATCH v2 2/6] leds: trigger: Create a new LED netdev trigger
- for collision
-Message-ID: <9dd1b2d0-4ba5-4d34-a892-a6cc8c01df28@lunn.ch>
-References: <20240227093945.21525-1-bastien.curutchet@bootlin.com>
- <20240227093945.21525-3-bastien.curutchet@bootlin.com>
- <e6351d0c-15e2-47a9-be6c-6f21aee9ae90@lunn.ch>
- <e1936774-14bf-4ae5-9754-e21f5a0c59b3@bootlin.com>
+	s=arc-20240116; t=1709219954; c=relaxed/simple;
+	bh=AkQ/AaKsEPuD8c6bNddvXHBp1aND4HVn4Dv1rsPMEkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=balmccoC4WHyMnSdqlaXyIkZcrRINYj+Z+YBMaKzT7QRG8i3/nkFYdIWPGrbhrZZ1zlHOL9zwNSgBPo+VMNO3TCezEDpoRgPrR5PbGQwbdFHMhwZPSQVQEgJKeUsF12M0h5y3o+fpXJZP4DoMjGwMxT3p4+Jq1nW8tDlHA+SvZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A192C433C7;
+	Thu, 29 Feb 2024 15:19:13 +0000 (UTC)
+Date: Thu, 29 Feb 2024 10:21:19 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linke <lilinke99@qq.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org
+Subject: Re: [PATCH] ring-buffer: use READ_ONCE() to read
+ cpu_buffer->commit_page in concurrent environment
+Message-ID: <20240229102119.7c475dee@gandalf.local.home>
+In-Reply-To: <tencent_BE8C3169030CD9C2FC7548832C2994921609@qq.com>
+References: <tencent_BE8C3169030CD9C2FC7548832C2994921609@qq.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1936774-14bf-4ae5-9754-e21f5a0c59b3@bootlin.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> > How useful is collision? How did you test this? How did you cause
-> > collisions to see if the LED actually worked?
-> Indeed I am not able to generate collision on my setup so I did not test
-> this
-> collision part.
-> My use case is that the hardware strap configuration that selects the LED
-> output mode
-> can not be trusted so I have to force configuration with software. I added
-> this collision
-> part because I wanted to cover all the LED configuration modes offered by
-> the PHY.
+On Thu, 29 Feb 2024 20:32:26 +0800
+linke <lilinke99@qq.com> wrote:
 
-There are a few things i want to avoid here:
-
-1) Vendor SDK mentality. The hardware can do this, lets add a knob to
-make use of it. We end up with 100 of configuration knobs which nobody
-ever uses. Do you actually have a board where the strapping is wrong?
-Are you going to submit a .dts file making use of this option?
-
-2) LEDs are the wild west, because it is not part of 802.3. Every
-vendor does it differently, and has their own special blinking
-patterns. My preference is to keep it simple to what people actually
-use. You cannot actually generate a collision, the developer who wants
-to add support for collision. I have to ask, is collision actually
-useful?
-
-> > As far as i can see, this is just a normal 100Base-T PHY. Everybody
-> > uses that point-to-point nowadays. If it was an 100Base-T1, with a
-> > shared medium, good old CSMA/CD then collision might actually be
-> > useful.
-> > 
-> > I also disagree with not having software fallback:
-> > 
-> > ip -s link show eth0
-> > 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
-> >      link/ether 80:ee:73:83:60:27 brd ff:ff:ff:ff:ff:ff
-> >      RX:     bytes    packets errors dropped  missed   mcast
-> >      4382213540983 2947876747      0       0       0  154890
-> >      TX:     bytes    packets errors dropped carrier collsns
-> >        18742773651  197507119      0       0       0       0
-> > 
-> > collsns = 0. The information is there in a standard format. However,
-> > when did you last see it not 0?
+> Hi Steven, sorry for the late reply.
 > 
-> Ok, I could add the software callback but I will not be able to test it ...
+> > 
+> > Now the reason for the above READ_ONCE() is because the variables *are*
+> > going to be used again. We do *not* want the compiler to play any games
+> > with that.
+> >   
+> 
+> I don't think it is because the variables are going to be used again. 
+> Compiler optimizations barely do bad things in single thread programs. It
+> is because cpu_buffer->commit_page may change concurrently and should be
+> accessed atomically.
 
-My personal experience is, anything not tested is broken...
+So basically you are worried about read-tearing?
 
-Think about what Russell actually said. That should give you a clue
-how to cause collisions. If not, go study history books about CSMA/CD.
+That wasn't mentioned in the change log.
 
-   Andrew
+> 
+> 	/* Make sure commit page didn't change */
+> 	curr_commit_page = READ_ONCE(cpu_buffer->commit_page);
+> 	curr_commit_ts = READ_ONCE(curr_commit_page->page->time_stamp);
+> 
+> 	/* If the commit page changed, then there's more data */
+> 	if (curr_commit_page != commit_page ||
+> 	    curr_commit_ts != commit_ts)
+> 		return 0;
+> 
+> This code read cpu_buffer->commit_page and time_stamp again to check
+> whether commit page changed. It shows that cpu_buffer->commit_page and 
+> time_stamp may be changed by other threads.
+> 
+>         commit_page = cpu_buffer->commit_page;
+>         commit_ts = commit_page->page->time_stamp;
+> 
+> So the commit_page and time_stamp above is read while other threads may
+> change it. I think it is a data race if it is not atomic. Thus it is 
+> necessary to use READ_ONCE() here.
+
+Funny part is, if the above timestamp read did a tear, then this would
+definitely not match, and would return the correct value. That is, the
+buffer is not empty because the only way for this to get corrupted is if
+something is in the process of writing to it.
+
+Now we could add a comment stating this.
+
+So, I don't even think the reading of the commit_page is needed (it's long
+size so it should not tear, and if it does, I consider that more a bug in
+the compiler).
+
+Please explain why READ_ONCE() is needed, and what exactly is it "fixing".
+That is, what breaks if it's not there?
+
+-- Steve
+
