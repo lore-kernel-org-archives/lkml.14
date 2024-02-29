@@ -1,126 +1,91 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259127E564
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FCF3FB9D;
+	Thu, 29 Feb 2024 13:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709212878; cv=none; b=rl4KomRl14Nvm1Sgf3cIqIO7M4jMUQj3+HkpeBvlc04lxcjzR+gplldhp06yi0JDABq7P6AlyMhsHAf27hzeZWqrDBDopZFxW9xdA3PAWbivTM1dfUEZldYDByUNCf5btvVII1AqRH2sne59EoAdyFeQs51zG8c/D7Y2FyIpYZg=
+	t=1709212954; cv=none; b=FuVZE+2jVpjZjOHs5uuvKsKwaVjl9Wqc06gDB+jXhJLQvLA/nYozFjH5LDJ6YGXDmcxgju/rWL/DEkfDSOkx3R6xl0sE2TINJKBkrFHdBvXZANhg0fjeghfyi26xGkpzb8ApuDb4KTDOxZH+rrBeLN/ymKnA0oLUT9puaaggEIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709212878; c=relaxed/simple;
-	bh=G7/4ke5O1foODR/W5e+5EmR5toRY12nyoSLmRsgk074=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tr0EpnqYjtwE+Of6jT4qU+qy1GZvQf5fQlp2GJMezq/cRtp4LgoI6f2MDXIptEqMvLxOrGLBWVQQR1z2hJRbtEOJLLXckYl5nQeZucc+TF+j73ZKznmiIRbrdLiDqk1idMKHtGga+w4wEJE/0m5OQLUcTEaIAMIvu+qe2MV209I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=eixID0yb; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
+	s=arc-20240116; t=1709212954; c=relaxed/simple;
+	bh=AIkGHWsp3IT7slI0BoSA7OlEYcACu9ABuNukN+ai0n8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b7woVEMXC6J9WZS7si/yyoENYE60zwu+bP9/ob1K2jFiVkRzZXWplcXY2MyIlvLvcU4RpdxhZLbd1MsG48iGDNdve2a0behnAndEk90mvalnTUyV/lZRsJRmbaBvwoU1CucC2d/2u2LxMm7sWWXmAm7QpUWUvvqneptK1loa+us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uvGqvKAi; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="eixID0yb"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7c48e13e0d7so40991439f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 05:21:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1709212875; x=1709817675; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dtagWCDHvNpjUWPNIWwFp6OZCKzLwBZUxwMg6aAtqwY=;
-        b=eixID0ybVPe2tDySiIHQlXQhgl816W40i+fM+YnlCTErY9T5UyRgvL4+SkU+Andnzy
-         iSt63qLWzBYhLTSTn2xz02KpTZZUxtiFNOc8Sepp6DW+2r24DZaEmffm4+qONHktdAkr
-         OKAGZb5d65TWPDwkYslIFhGB8rYCrbNSwJKuU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709212875; x=1709817675;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dtagWCDHvNpjUWPNIWwFp6OZCKzLwBZUxwMg6aAtqwY=;
-        b=pq+ZH6y/HrsxTKU27eWLctJzbV2vILgwslhaPkpYrL3FJrVKgEzOkrwcQtB0vW8cKQ
-         QjQEe1pqB45swF3IUEv5h3JwPMqsU11LfxzsMTKq0mWjyVYIn48n+7jRCbkseQEK28jh
-         jOiZsPIaw+AEqP0DBqQI2woiLEcMC3d4xq485CF2EHGRUiEyxkyRnLbpDn1PyZr2f2xV
-         tGffckPdDJRmTrW8pXRoPHWAESfjKDqvtu+17VlzSHPFbh9Yg5T19DlSX4BTky0E7dIT
-         Xjr+T+3k1dY5ZqkJYp2QEmiI62SWX1oAxyKdlY3AXcese9MxDnMPsGvj5w7GXZKtW6Y0
-         8+3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU7EBoYIJ2+84KTedFEbykgbl1BRIA6KTYhaZJGoq2xcWNrwf19/cm4/c/YaN/QzalZF4PnA1BVLVy84Q9Q+zQyuvBTsZk5pJ2lIwSL
-X-Gm-Message-State: AOJu0YxgsNVMS0wGGRgpBRYO+OkHdDl9KUX04ScscVBi+iXLLSXzmGxH
-	jqz4be2Oq74HvFHjBn7ocC+7ATRk0Yf63PMtPV2wkHR4IRU8jVHOpZ/bub0WnA==
-X-Google-Smtp-Source: AGHT+IEFbqax2urpItdGNEfcpavfE09uSNM65EilqLl0cVmvgwRkZ6IVp2f1hsY4s2Xe1Bdy5CiaqA==
-X-Received: by 2002:a05:6602:2495:b0:7c7:fd21:78c0 with SMTP id g21-20020a056602249500b007c7fd2178c0mr2084343ioe.12.1709212875240;
-        Thu, 29 Feb 2024 05:21:15 -0800 (PST)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.googlemail.com with ESMTPSA id d6-20020a056602280600b007c7a55ea0b6sm289555ioe.48.2024.02.29.05.21.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 05:21:14 -0800 (PST)
-Message-ID: <f7b36055-a710-4d57-b952-33431876e221@ieee.org>
-Date: Thu, 29 Feb 2024 07:21:13 -0600
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uvGqvKAi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=WgmtAItz9YHUcyII9kPKDdl0zysykRTiy16vadX3xLg=; b=uv
+	GqvKAixzaqfhuxtJdKI4JcyHjGMDt0EJqDxIrLvT6YUfK8Pz2kDrpf3CTVVrmw30hgJr+nGdRUNZl
+	AyVE65SvFy+1Eaq8o35ih7eyNEfnjgmbZPx2+NuZ1+XEez5uTJsCmptkltCoOVdjNWExnEeTgZgkB
+	fdHxn+IbxD3CbLM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rfgMx-0092Zv-OT; Thu, 29 Feb 2024 14:22:39 +0100
+Date: Thu, 29 Feb 2024 14:22:39 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: =?iso-8859-1?B?U2FuanXhbiBHYXJj7WEs?= Jorge <Jorge.SanjuanGarcia@duagon.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"s-vadapalli@ti.com" <s-vadapalli@ti.com>,
+	"r-gunasekaran@ti.com" <r-gunasekaran@ti.com>,
+	"rogerq@kernel.org" <rogerq@kernel.org>,
+	"f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+	"olteanv@gmail.com" <olteanv@gmail.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net RESEND] net: ethernet: ti: am65-cpsw: Add
+ IFF_UNICAST_FLT flag to port device
+Message-ID: <c2faf5d1-2dd2-4046-a5f7-998dee252c6b@lunn.ch>
+References: <20240228111300.2516590-1-jorge.sanjuangarcia@duagon.com>
+ <20240228200516.1166a097@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] staging: greybus: Remove redundant variable 'mask'
-To: Colin Ian King <colin.i.king@gmail.com>,
- Vaibhav Agarwal <vaibhav.sr@gmail.com>, Mark Greer <mgreer@animalcreek.com>,
- Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240229120541.219429-1-colin.i.king@gmail.com>
-Content-Language: en-US
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <20240229120541.219429-1-colin.i.king@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240228200516.1166a097@kernel.org>
 
-On 2/29/24 6:05 AM, Colin Ian King wrote:
-> The variable mask is being assigned and bit-set but it is never
-> being used apart from this. The variable is redundant and can
-> be removed.
+On Wed, Feb 28, 2024 at 08:05:16PM -0800, Jakub Kicinski wrote:
+> On Wed, 28 Feb 2024 11:13:23 +0000 Sanjuán García, Jorge wrote:
+> > Since commit 8940e6b669ca ("net: dsa: avoid call to __dev_set_promiscuity()
+> > while rtnl_mutex isn't held") when conecting one of this switch's port
+> > to a DSA switch as the conduit interface, the network interface is set to
+> > promiscuous mode by default and cannot be set to not promiscuous mode again
+> > from userspace. The reason for this is that the cpsw ports net devices
+> > do not have the flag IFF_UNICAST_FLT set in their private flags.
+> > 
+> > The cpsw switch should be able to set not promiscuous mode as otherwise
+> > a '1' is written to bit ALE_PORT_MACONLY_CAF which makes ethernet frames
+> > get an additional VLAN tag when entering the port connected to the DSA
+> > switch. Setting the IFF_UNICAST_FLT flag to all ports allows us to have
+> > the conduit interface on the DSA subsystem set as not promiscuous.
 > 
-> Cleans up clang scan build warning:
-> drivers/staging/greybus/audio_topology.c:764:15: warning: variable 'mask'
-> set but not used [-Wunused-but-set-variable]
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> It doesn't look like am65-cpsw-nuss supports unicast filtering, 
+> tho, does it? So we're lying about support to work around some 
+> CPSW weirdness (additional VLAN tag thing)?
 
-This is a reasonable change, but I don't know this code that
-well and would like to hear from Vaibhav (if possible) or
-someone else whether they think the mask value *should* have
-been used in this spot.  It doesn't look like it to me, but
-I'd like you to get a second opinion...
+I considered that as well, it is also not clear to me if this actually
+works. At minimum the description needs additions.
 
-					-Alex
+The interesting thing here is, this is a switch port. If there is an
+entry in the FDB, that is as good as a unicast filter.
 
-> ---
->   drivers/staging/greybus/audio_topology.c | 3 ---
->   1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/staging/greybus/audio_topology.c b/drivers/staging/greybus/audio_topology.c
-> index 08e6a807c132..5dc4721105d4 100644
-> --- a/drivers/staging/greybus/audio_topology.c
-> +++ b/drivers/staging/greybus/audio_topology.c
-> @@ -761,7 +761,6 @@ static int gbcodec_enum_dapm_ctl_put(struct snd_kcontrol *kcontrol,
->   {
->   	int ret, wi, ctl_id;
->   	unsigned int val, mux, change;
-> -	unsigned int mask;
->   	struct snd_soc_dapm_widget_list *wlist = snd_kcontrol_chip(kcontrol);
->   	struct snd_soc_dapm_widget *widget = wlist->widgets[0];
->   	struct gb_audio_ctl_elem_value gbvalue;
-> @@ -802,7 +801,6 @@ static int gbcodec_enum_dapm_ctl_put(struct snd_kcontrol *kcontrol,
->   
->   	mux = ucontrol->value.enumerated.item[0];
->   	val = mux << e->shift_l;
-> -	mask = e->mask << e->shift_l;
->   
->   	if (le32_to_cpu(gbvalue.value.enumerated_item[0]) !=
->   	    ucontrol->value.enumerated.item[0]) {
-> @@ -815,7 +813,6 @@ static int gbcodec_enum_dapm_ctl_put(struct snd_kcontrol *kcontrol,
->   		if (ucontrol->value.enumerated.item[1] > e->items - 1)
->   			return -EINVAL;
->   		val |= ucontrol->value.enumerated.item[1] << e->shift_r;
-> -		mask |= e->mask << e->shift_r;
->   		if (le32_to_cpu(gbvalue.value.enumerated_item[1]) !=
->   		    ucontrol->value.enumerated.item[1]) {
->   			change = 1;
+Now, i've no idea if this actually works. This is more Vladimirs
+area. What especially needs testing is a port not a member of a
+bridge, when you don't really expect there to be any FDB entries.
+
+	Andrew
 
