@@ -1,217 +1,287 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5957F200BA
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0496C200CD;
+	Thu, 29 Feb 2024 23:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709249304; cv=none; b=rM6rhew+FhyClQ9wuQHJram/MvGiwfk6iq3n5I+4NJGGlaIhoA3u5XS7yAQkRvYCKjJKIbZv+CTfG7taBzhNdErPAPcYT0TmBqf2Yvj6W1dy5f5hzdqj+YsK3MAIHk3D7qm1adEujWB1dl6uMPw1pslgU3ybXa3MWoaOHF67dt4=
+	t=1709249358; cv=none; b=c0tvF9/meOsBbHhnRRMJraUiTGs8tHGqTo9mGLDFIoNcLlG0KsIzuE1RdszsUzmLev5fTjqfC+w1qh2w/rUmVo4Hxqr1uizekEK227ypFgvle80qYvuSeV0bFDpWS7T6HPOFIMokTSYyfMHjwJ4Sq7FPrhakqW7F+5SwB/eVEFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709249304; c=relaxed/simple;
-	bh=sjFQtDvhvEyWLfprHkf57jFvK86g9+U0imPTasrTbf0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OJzvawEVQ+g1g2eP+Av3osnQApIZsY6oEZm/PhyOypZWeSmdEmer7cP1vgzhYMEVFsMv4q3YAQkAR3Fsln2+KEh2F5AalLdnWiyukb5x6niYbef+oTq4w8rrHnipBYH17BpeBxdlCwxVCxjgOVqnkHUANWUSowMC7JNu6lMXaak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nm8n2PeT; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com
+	s=arc-20240116; t=1709249358; c=relaxed/simple;
+	bh=rlRoTcAkeLdFoK5I7nEY6DMlG7QMXz3Gox/lPZFNqfs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r0JBVT/doX3xhIpK3iWFIqW3cSCP65Szeib+bBgtXAr+t+Wnse05T3haNyXrFk82BxoIDo3pz8s8QlJeotMM1aCD1jJiKs96b8Afq6Lfa9LwHYr4WDgypPRd0pPZjO+u0CC+TQwfyk4VF4fYNG0c9TE2OFcfF943wGULQD3DW8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5iTNON8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nm8n2PeT"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608ad239f8fso24636287b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:28:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709249302; x=1709854102; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DIpbzGnuxG/veYQVRb7uyrg5E8imeH2l3OOJtVWsq90=;
-        b=nm8n2PeTnaFNoXXE3u8FAy2WgfsyzGQ8mEd5TNbxK2nlw9kMeOGqJPEg05bc9NGooO
-         r+a0QYlNZWUnopzncKv1u/IU/dXFTc19fIHqy+2uPi50AA29And35/HEyi0lRtmdpY5C
-         yoaAC6dVp23EBDzefol2IOhW2r/uEPgNfMQTrqnNOMGrkylV+YId3A5jV+CB7T7Jag4F
-         E5HeaOXV0B+Psn2ImVbftPyjZmZWvyyHsLWMU+TvhpYwS4oHHBGSMl7TL+ysDpU4euHG
-         hOgjxSE0zzESIJ47nt82kq/EPBZ7RxgFT169F4HXAZmS9X3uIO/stly3KQBQPrk3IzO2
-         rsYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709249302; x=1709854102;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DIpbzGnuxG/veYQVRb7uyrg5E8imeH2l3OOJtVWsq90=;
-        b=B/1ToJIu6QFAd1Gv5tJlegA54y8iwsnpsk82PHiaBOwco17lapvQptkZeZ3bOOlddX
-         oap4Vj1wqlcIXMwO/fAf0x6qbAr4lKFAd4yL8eQYLoVZGh1WLbvHKFEwcuoq1En0hgLR
-         HNdKBNR50lYi6l0spQbVn61pn7qPbKcDy7wTJbdstd5jxmthcUl8QMsM9KUejHeXQILy
-         6TXIe3K5OyI2QAr+yNa7N5KS90AyuZtnRzGEgAnDA1fOT8TI/tIPmK4attsLBcSFrwpS
-         M0n8FvUhdGLDAH8z10r82Wkx8yH5C/7bZZuOHvtpbUwX6qaHdYvy5flyZBYpBnpr6AxK
-         VEUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWkN1oBsqbZzK5P98pSQYNqIPH321gcq5AJuqifoUnqI5VIpQxOJQJXHGeVvP/EmdML9RDfCcGYxtQ9VBhgg06i6JkDbHD8MaAaoT8
-X-Gm-Message-State: AOJu0YwvdbLoIjabtbIWrZfUbj0muk0xUz6mzualspY43XKZlKZ5XloV
-	qdSGIOjwWIEXXLmmtCOdy5Dqp6DXaKprrpZ/dVYFKepEzHUiz2CZpL/CPUYIc+RYwrOG+jROaxk
-	WBA==
-X-Google-Smtp-Source: AGHT+IEQdV7H7CHxrnccmLNuQKd/TUmgGzmqv3n4/NAfpiq2qW0h/l/JfxuMlMpEcrlOT+b5qU1x1R6kbbw=
-X-Received: from jthies.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:23db])
- (user=jthies job=sendgmr) by 2002:a81:9808:0:b0:609:5dc8:fc81 with SMTP id
- p8-20020a819808000000b006095dc8fc81mr1551ywg.1.1709249302545; Thu, 29 Feb
- 2024 15:28:22 -0800 (PST)
-Date: Thu, 29 Feb 2024 23:26:25 +0000
-In-Reply-To: <20240229232625.3944115-1-jthies@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5iTNON8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71FCFC43330;
+	Thu, 29 Feb 2024 23:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709249357;
+	bh=rlRoTcAkeLdFoK5I7nEY6DMlG7QMXz3Gox/lPZFNqfs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f5iTNON8Mm6LlrZpl5rixdiN447xNZOSdfzeHKdJJLty3w57h9sugpm8FB3dxXDqI
+	 MM+7fYLsH09bJDO+fW2VuyyOWfZU7qaRP0KTp2nd0S2BHfA7Av+kwHKN4BZq14vBGx
+	 NCZBL5qSui2LqzRf8KS8oO82IDbGOcBw/SdA0xR1Ir+M/xoYskivqObRneatyAQf/G
+	 kggdXwW9ID7lkAiSlMtiYvldXshZUrYICpxdiOBelHL8qaYS1vfdc1YuhUc2o36sqO
+	 LJPfzX9dWp9m9NqVoHgM/5LvLA0yW6RjJgESrF/MizkfvjTy6TXeUmEzqdr2mGFbAF
+	 6FNf/6KcUupFg==
+Date: Thu, 29 Feb 2024 15:29:16 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Zhang Yi <yi.zhang@huaweicloud.com>,
+	Christoph Hellwig <hch@infradead.org>, linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz,
+	ritesh.list@gmail.com, willy@infradead.org, zokeefe@google.com,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
+	wangkefeng.wang@huawei.com
+Subject: Re: [RFC PATCH v3 07/26] iomap: don't increase i_size if it's not a
+ write operation
+Message-ID: <20240229232916.GE1927156@frogsfrogsfrogs>
+References: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
+ <20240127015825.1608160-8-yi.zhang@huaweicloud.com>
+ <ZcsCP4h-ExNOcdD6@infradead.org>
+ <9b0040ef-3d9d-6246-4bdd-82b9a8f55fa2@huaweicloud.com>
+ <Zd+y2VP8HpbkDu41@dread.disaster.area>
+ <45c1607a-805d-e7a2-a5ca-3fd7e507a664@huaweicloud.com>
+ <ZeERAob9Imwh01bG@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240229232625.3944115-1-jthies@google.com>
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-Message-ID: <20240229232625.3944115-5-jthies@google.com>
-Subject: [PATCH v3 4/4] usb: typec: ucsi: Register SOP' alternate modes with
- cable plug
-From: Jameson Thies <jthies@google.com>
-To: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org
-Cc: jthies@google.com, pmalani@chromium.org, bleung@google.com, 
-	abhishekpandit@chromium.org, andersson@kernel.org, 
-	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com, 
-	gregkh@linuxfoundation.org, hdegoede@redhat.com, neil.armstrong@linaro.org, 
-	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
-	linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZeERAob9Imwh01bG@dread.disaster.area>
 
-Register SOP' alternate modes with a Type-C Connector Class cable plug.
-Alternate modes are queried from the PPM using the GET_ALTERNATE_MODES
-command with recipient set to SOP'.
+On Fri, Mar 01, 2024 at 10:19:30AM +1100, Dave Chinner wrote:
+> On Thu, Feb 29, 2024 at 04:59:34PM +0800, Zhang Yi wrote:
+> > Hello, Dave!
+> > 
+> > On 2024/2/29 6:25, Dave Chinner wrote:
+> > > On Wed, Feb 28, 2024 at 04:53:32PM +0800, Zhang Yi wrote:
+> > >> On 2024/2/13 13:46, Christoph Hellwig wrote:
+> > >>> Wouldn't it make more sense to just move the size manipulation to the
+> > >>> write-only code?  An untested version of that is below.  With this
+> > >>> the naming of the status variable becomes even more confusing than
+> > >>> it already is, maybe we need to do a cleanup of the *_write_end
+> > >>> calling conventions as it always returns the passed in copied value
+> > >>> or 0.
+> > >>>
+> > >>> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> > >>> index 3dab060aed6d7b..8401a9ca702fc0 100644
+> > >>> --- a/fs/iomap/buffered-io.c
+> > >>> +++ b/fs/iomap/buffered-io.c
+> > >>> @@ -876,34 +876,13 @@ static size_t iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
+> > >>>  		size_t copied, struct folio *folio)
+> > >>>  {
+> > >>>  	const struct iomap *srcmap = iomap_iter_srcmap(iter);
+> > >>> -	loff_t old_size = iter->inode->i_size;
+> > >>> -	size_t ret;
+> > >>> -
+> > >>> -	if (srcmap->type == IOMAP_INLINE) {
+> > >>> -		ret = iomap_write_end_inline(iter, folio, pos, copied);
+> > >>> -	} else if (srcmap->flags & IOMAP_F_BUFFER_HEAD) {
+> > >>> -		ret = block_write_end(NULL, iter->inode->i_mapping, pos, len,
+> > >>> -				copied, &folio->page, NULL);
+> > >>> -	} else {
+> > >>> -		ret = __iomap_write_end(iter->inode, pos, len, copied, folio);
+> > >>> -	}
+> > >>> -
+> > >>> -	/*
+> > >>> -	 * Update the in-memory inode size after copying the data into the page
+> > >>> -	 * cache.  It's up to the file system to write the updated size to disk,
+> > >>> -	 * preferably after I/O completion so that no stale data is exposed.
+> > >>> -	 */
+> > >>> -	if (pos + ret > old_size) {
+> > >>> -		i_size_write(iter->inode, pos + ret);
+> > >>> -		iter->iomap.flags |= IOMAP_F_SIZE_CHANGED;
+> > >>> -	}
+> > >>
+> > >> I've recently discovered that if we don't increase i_size in
+> > >> iomap_zero_iter(), it would break fstests generic/476 on xfs. xfs
+> > >> depends on iomap_zero_iter() to increase i_size in some cases.
+> > >>
+> > >>  generic/476 75s ... _check_xfs_filesystem: filesystem on /dev/pmem2 is inconsistent (r)
+> > >>  (see /home/zhangyi/xfstests-dev/results//xfs/generic/476.full for details)
+> > >>
+> > >>  _check_xfs_filesystem: filesystem on /dev/pmem2 is inconsistent (r)
+> > >>  *** xfs_repair -n output ***
+> > >>  Phase 1 - find and verify superblock...
+> > >>  Phase 2 - using internal log
+> > >>          - zero log...
+> > >>          - scan filesystem freespace and inode maps...
+> > >>  sb_fdblocks 10916, counted 10923
+> > >>          - found root inode chunk
+> > >>  ...
+> > >>
+> > >> After debugging and analysis, I found the root cause of the problem is
+> > >> related to the pre-allocations of xfs. xfs pre-allocates some blocks to
+> > >> reduce fragmentation during buffer append writing, then if we write new
+> > >> data or do file copy(reflink) after the end of the pre-allocating range,
+> > >> xfs would zero-out and write back the pre-allocate space(e.g.
+> > >> xfs_file_write_checks() -> xfs_zero_range()), so we have to update
+> > >> i_size before writing back in iomap_zero_iter(), otherwise, it will
+> > >> result in stale delayed extent.
+> > > 
+> > > Ok, so this is long because the example is lacking in clear details
+> > > so to try to understand it I've laid it out in detail to make sure
+> > > I've understood it correctly.
+> > > 
+> > 
+> > Thanks for the graph, the added detail makes things clear and easy to
+> > understand. To be honest, it's not exactly the same as the results I
+> > captured and described (the position A\B\C\D\E\F I described is
+> > increased one by one), but the root cause of the problem is the same,
+> > so it doesn't affect our understanding of the problem.
+> 
+> OK, good :)
+> 
+> .....
+> 
+> > > However, if this did actually write zeroes to disk, this would end
+> > > up with:
+> > > 
+> > > 	A          C           B     E       F      D
+> > > 	+wwwwwwwwww+DDDDDDDDDDD+zzzzz+rrrrrrr+dddddd+
+> > > 	                      EOF   EOF
+> > >                       (in memory)   (on disk)
+> > > 
+> > > Which is wrong - the file extension and zeros should not get exposed
+> > > to the user until the entire reflink completes. This would expose
+> > > zeros at the EOF and a file size that the user never asked for after
+> > > a crash. Experience tells me that they would report this as
+> > > "filesystem corrupting data on crash".
+> > > 
+> > > If we move where i_size gets updated by iomap_zero_iter(), we get:
+> > > 
+> > > 	A          C           B     E       F      D
+> > > 	+wwwwwwwwww+DDDDDDDDDDD+zzzzz+rrrrrrr+dddddd+
+> > > 	                            EOF
+> > >                                 (in memory)
+> > > 		                 (on disk)
+> > > 
+> > > Which is also wrong, because now the user can see the size change
+> > > and read zeros in the middle of the clone operation, which is also
+> > > wrong.
+> > > 
+> > > IOWs, we do not want to move the in-memory or on-disk EOF as a
+> > > result of zeroing delalloc extents beyond EOF as it opens up
+> > > transient, non-atomic on-disk states in the event of a crash.
+> > > 
+> > > So, catch-22: we need to move the in-memory EOF to write back zeroes
+> > > beyond EOF, but that would move the on-disk EOF to E before the
+> > > clone operation starts. i.e. it makes clone non-atomic.
+> > 
+> > Make sense. IIUC, I also notice that xfs_file_write_checks() zero
+> > out EOF blocks if the later write offset is beyond the size of the
+> > file.  Think about if we replace the reflink operation to a buffer
+> > write E to F, although it doesn't call xfs_flush_unmap_range()
+> > directly, but if it could be raced by another background write
+> > back, and trigger the same problem (I've not try to reproduce it,
+> > so please correct me if I understand wrong).
+> 
+> Correct, but the write is about to extend the file size when it
+> writes into the cache beyond the zeroed region. There is no cache
+> invalidate possible in this path, so the write of data moves the
+> in-memory EOF past the zeroes in cache and everything works just
+> fine.
+> 
+> If it races with concurrent background writeback, the writeback will
+> skip the zeroed range beyond EOF until they are exposed by the first
+> data write beyond the zeroed post-eof region which moves the
+> in-memory EOF.
+> 
+> truncate(to a larger size) also does this same zeroing - the page
+> cache is zeroed before we move the EOF in memory, and so the
+> writeback will only occur once the in-memory EOF is moved. i.e. it
+> effectively does:
+> 
+> 	xfs_zero_range(oldsize to newsize)
+> 	truncate_setsize(newsize)
+> 	filemap_write_and_wait_range(old size to new size)
+> 
+> > > What should acutally result from the iomap_zero_range() call from
+> > > xfs_reflink_remap_prep() is a state like this:
+> > > 
+> > > 	A          C           B     E       F      D
+> > > 	+wwwwwwwwww+DDDDDDDDDDD+uuuuu+rrrrrrr+dddddd+
+> > > 	          EOF         EOF
+> > >                (on disk)  (in memory)
+> > > 
+> > > where 'u' are unwritten extent blocks.
+> > > 
+> > 
+> > Yeah, this is a good solution.
+> > 
+> > In xfs_file_write_checks(), I don't fully understand why we need
+> > the xfs_zero_range().
+> 
+> The EOF block may only be partially written. Hence on extension, we
+> have to guarantee the part of that block beyond the current EOF is
+> zero if the write leaves a hole between the current EOF and the
+> start of the new extending write.
+> 
+> > Theoretically, iomap have already handled
+> > partial block zeroing for both buffered IO and DIO, so I guess
+> > the only reason we still need it is to handle pre-allocated blocks
+> > (no?).
+> 
+> Historically speaking, Linux is able to leak data beyond EOF on
+> writeback of partial EOF blocks (e.g. mmap() can write to the EOF
+> page beyond EOF without failing. We try to mitigate these cases
+> where we can, but we have to consider that at any time the data in
+> the cache beyond EOF can be non-zero thanks to mmap() and so any
+> file extension *must* zero any region beyond EOF cached in the page
+> cache.
+> 
+> > If so，would it be better to call xfs_free_eofblocks() to
+> > release all the preallocated extents in range? If not, maybe we
+> > could only zero out mapped partial blocks and also release
+> > preallocated extents?
+> 
+> No, that will cause all sorts of other performance problems,
+> especially for reflinked files that triggering COW
+> operations...
+> 
+> > 
+> > In xfs_reflink_remap_prep(), I read the commit 410fdc72b05a ("xfs:
+> > zero posteof blocks when cloning above eof"), xfs used to release
+> > preallocations, the change log said it didn't work because of the
+> > PREALLOC flag, but the 'force' parameter is 'true' when calling
+> > xfs_can_free_eofblocks(), so I don't get the problem met. Could we
+> > fall back to use xfs_free_eofblocks() and make a state like this?
+> > 
+> >  	A          C           B     E       F      D
+> >  	+wwwwwwwwww+DDDDDDDDDDD+hhhhh+rrrrrrr+dddddd+
+> >  	          EOF         EOF
+> >                 (on disk)  (in memory)
+> 
+> It could, but that then requires every place that may call
+> xfs_zero_range() to be aware of this need to trim EOF blocks to do
+> the right thing in all cases. We don't want to remove speculative
+> delalloc in the write() path nor in the truncate(up) case, and so it
+> doesn't fix the general problem of zeroing specualtive delalloc
+> beyond EOF requiring writeback to push page caceh pages to disk
+> before the inode size has been updated.
+> 
+> The general solution is to have zeroing of speculative prealloc
+> extents beyond EOF simply convert the range to unwritten and then
+> invalidate any cached pages over that range. At this point, we are
+> guaranteed to have zeroes across that range, all without needing to
+> do any IO at all...
 
-Reviewed-by: Benson Leung <bleung@chromium.org>
-Reviewed-by: Prashant Malani <pmalani@chromium.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Jameson Thies <jthies@google.com>
----
-SOP' GET_ALTERNATE_MODE responses from the PPM are correctly registered
-to the cable plug.
-nospike-rev4 /sys/class/typec # ls port0-cable/port0-plug0/
-device  port0-plug0.0  port0-plug0.1  power  subsystem  uevent
+That (separate iomap ops that do the delalloc -> unwritten allocation)
+seems a lot more straightforward to me than whacking preallocations.
 
-Changes in v3:
-- None.
+--D
 
-Changes in v2:
-- Shortened lines to within 80 characters.
-- Tested on usb-testing branch merged with chromeOS 6.8-rc2 kernel.
-
- drivers/usb/typec/ucsi/ucsi.c | 60 +++++++++++++++++++++++++++++++++++
- drivers/usb/typec/ucsi/ucsi.h |  2 ++
- 2 files changed, 62 insertions(+)
-
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index 4088422b33c74..281954fe9d855 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -399,6 +399,27 @@ static int ucsi_register_altmode(struct ucsi_connector *con,
- 
- 		con->partner_altmode[i] = alt;
- 		break;
-+	case UCSI_RECIPIENT_SOP_P:
-+		i = ucsi_next_altmode(con->plug_altmode);
-+		if (i < 0) {
-+			ret = i;
-+			goto err;
-+		}
-+
-+		ret = ucsi_altmode_next_mode(con->plug_altmode, desc->svid);
-+		if (ret < 0)
-+			return ret;
-+
-+		desc->mode = ret;
-+
-+		alt = typec_plug_register_altmode(con->plug, desc);
-+		if (IS_ERR(alt)) {
-+			ret = PTR_ERR(alt);
-+			goto err;
-+		}
-+
-+		con->plug_altmode[i] = alt;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -566,6 +587,9 @@ static void ucsi_unregister_altmodes(struct ucsi_connector *con, u8 recipient)
- 	case UCSI_RECIPIENT_SOP:
- 		adev = con->partner_altmode;
- 		break;
-+	case UCSI_RECIPIENT_SOP_P:
-+		adev = con->plug_altmode;
-+		break;
- 	default:
- 		return;
- 	}
-@@ -849,6 +873,33 @@ static void ucsi_unregister_partner_pdos(struct ucsi_connector *con)
- 	con->partner_pd = NULL;
- }
- 
-+static int ucsi_register_plug(struct ucsi_connector *con)
-+{
-+	struct typec_plug *plug;
-+	struct typec_plug_desc desc = {.index = TYPEC_PLUG_SOP_P};
-+
-+	plug = typec_register_plug(con->cable, &desc);
-+	if (IS_ERR(plug)) {
-+		dev_err(con->ucsi->dev,
-+			"con%d: failed to register plug (%ld)\n", con->num,
-+			PTR_ERR(plug));
-+		return PTR_ERR(plug);
-+	}
-+
-+	con->plug = plug;
-+	return 0;
-+}
-+
-+static void ucsi_unregister_plug(struct ucsi_connector *con)
-+{
-+	if (!con->plug)
-+		return;
-+
-+	ucsi_unregister_altmodes(con, UCSI_RECIPIENT_SOP_P);
-+	typec_unregister_plug(con->plug);
-+	con->plug = NULL;
-+}
-+
- static int ucsi_register_cable(struct ucsi_connector *con)
- {
- 	struct typec_cable *cable;
-@@ -892,6 +943,7 @@ static void ucsi_unregister_cable(struct ucsi_connector *con)
- 	if (!con->cable)
- 		return;
- 
-+	ucsi_unregister_plug(con);
- 	typec_unregister_cable(con->cable);
- 	memset(&con->cable_identity, 0, sizeof(con->cable_identity));
- 	con->cable = NULL;
-@@ -1098,6 +1150,14 @@ static int ucsi_check_cable(struct ucsi_connector *con)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = ucsi_register_plug(con);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ucsi_register_altmodes(con, UCSI_RECIPIENT_SOP_P);
-+	if (ret < 0)
-+		return ret;
-+
- 	return 0;
- }
- 
-diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-index b89fae82e8ce7..32daf5f586505 100644
---- a/drivers/usb/typec/ucsi/ucsi.h
-+++ b/drivers/usb/typec/ucsi/ucsi.h
-@@ -429,9 +429,11 @@ struct ucsi_connector {
- 	struct typec_port *port;
- 	struct typec_partner *partner;
- 	struct typec_cable *cable;
-+	struct typec_plug *plug;
- 
- 	struct typec_altmode *port_altmode[UCSI_MAX_ALTMODES];
- 	struct typec_altmode *partner_altmode[UCSI_MAX_ALTMODES];
-+	struct typec_altmode *plug_altmode[UCSI_MAX_ALTMODES];
- 
- 	struct typec_capability typec_cap;
- 
--- 
-2.44.0.rc1.240.g4c46232300-goog
-
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
