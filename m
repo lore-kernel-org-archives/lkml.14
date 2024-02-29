@@ -1,100 +1,107 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419C136AE1
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D363FB81
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709187523; cv=none; b=HURIHccj01g3v1NJDvWtvbXDzvbwxFMK2Zxnt60SxI/nAOK4tB02KuZXP/TciKZzDnisg0mumWssphG3vZFkrst4Eg1tN1pepa0MP03gsiwTzWMzCZDJjAZvxyLKGiynaL0Qyuh+ZugtaK2HLCMDvHVQR9g5jlDjg519vxrrEMU=
+	t=1709187565; cv=none; b=NMd55eKfmConBltgCWGD5X/mhcRGjYpSbkWqIPAk78unPPXHMMtCk71TfuOqI2RZ1NCF+jf80NVRgxEcoqsoquth4LIEgzFtxfM17ZVssqRzkfNFvSbKaw0HslUw04HXT3Mehu2RYO+L0aDRhF0cU/6SpthwFb9w2JCoCqwN02c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709187523; c=relaxed/simple;
-	bh=+qbymGl2a1QToFGQyExG9ZunXLOUJI8LBQgEqoKp1jw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=u7qRztuE4fPsAS4rrX5lFOEwt1P6KLpQ+zQocT2enxR2JxjLcjQVLgylMAwkJ/P/v4ffWpmabuRFdvzQBlaOrhdIDzubCCfOMLCyK5EyrT+sqcocuNTUhrq0DtDFhVLqmGG69Qyn2h+QN306Bnn+lHFmU18CbIbrRmL2+WE3RPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=C9OlH+RA; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1709187565; c=relaxed/simple;
+	bh=iPnDh2eSwYyolQXIzSqo4or2l70TWsuBZOxHkv+0ofY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PmjFNlN5liiBO6RV8SToGay8m6tGnnD4pMyTSDziqe9davlZhroFVPXM6eCzVL9LZ+Ma3Br3KEAE20/LMa0LWfgTuaJrm30WQUb+Zs+fXZVum3/XauHzm8VCvs0HXRxxIeSoU08Q+YMw1tmZXy1GCLXIRu/fcjJY8vb78R05b3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4qBl/iyO; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="C9OlH+RA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1709187517;
-	bh=3rPcoNkAXcpWZ8q00u4PWHD9ZMXVCcKe51zCGK/zmmM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=C9OlH+RAEQUYEF7CvXeN3khlG4AxZoOiNYU73WWD1H8X2VDBDwqNgHd0etKpmeWrN
-	 SHdXc29fjfrEbAQdqE6vY0Cn1myrZKg8MCNPvP5MQjeJ5yWkKVPRSIymIuM4z5fLEF
-	 2BDqpFy21V/Ph3RHC+BXNb2i2D6pEwU0yM+FNBC4ET6af7hAS7D9njOCl//qbQzrEw
-	 fNDlDc3jr0BQdJQFj1Z9GRrPZgefCXIk6xk75bgo1lWtkbCPTjAjpa03+Q+18mxCy0
-	 SKuauHA6gl+sszlKKoGImJTBepG+q7ueFWHzJyOJfsp9y2bMw7Wf90712sQKWIE1Rg
-	 trl7/rdZQ1c/g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Tlgyh4k9sz4wc5;
-	Thu, 29 Feb 2024 17:18:36 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Kunwu Chan
- <chentao@kylinos.cn>, npiggin@gmail.com, christophe.leroy@csgroup.eu,
- naveen.n.rao@linux.ibm.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/mm: Code cleanup for __hash_page_thp
-In-Reply-To: <87bk80kjup.fsf@kernel.org>
-References: <20240125092624.537564-1-chentao@kylinos.cn>
- <87h6hva4b0.fsf@mail.lhotse>
- <f3b53f0e-58ce-4b2d-ba91-f347da73f9f3@kylinos.cn>
- <87jzmq5tjr.fsf@mail.lhotse> <87bk80kjup.fsf@kernel.org>
-Date: Thu, 29 Feb 2024 17:18:32 +1100
-Message-ID: <87wmqng5dz.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4qBl/iyO"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4129a748420so49745e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 22:19:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709187562; x=1709792362; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=az6XEAS8FztXooX3dZ/R7i89Xfel1TOOflgq0AVQzMY=;
+        b=4qBl/iyO/T0H0UoDHiRqsl2W/kUkjVUai8LhWHRNUPx007rSVBL4j8gESuOpUnUwuG
+         vAwPj2HOY6AqoMsYERPYx/fbWe7Y/4QOjZJ8jBRrJaCW7FvMqRUfSdB7CkrpkQ882CLm
+         uuFTmHtpo7J8iI+tyIE+i6FIXenVO/mW+PxM8qv7PJ6WPEX3wf+T4aXLYNYPAvkCbgm1
+         9v5AnIQE7i/NHAqSCHXGJ24xFblHQXPKmVWGH5Mqwkgw3M7SG0NkJchTtEfg0jnJIMYb
+         85CwXN2zTarvY4krWPnomTRjL4H2gCYKV4WdM2emv+PkSDOIuWjhtj1GFCVLrTxJ/tqs
+         agqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709187562; x=1709792362;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=az6XEAS8FztXooX3dZ/R7i89Xfel1TOOflgq0AVQzMY=;
+        b=iH+/6KEMDXBFAfPUKGTI4kqSEi88jf1cJHW7WSZJZ/LTvRlIirLzafvb/56zQV2/zr
+         2fRGlF3tBBwORXpAW/zpj4n2R/CtS/aMNcLi/L9vMVifVPzmJ0+QscmaW5a86ACS7qyV
+         qHl62IWPLAi9z77KoPw37OQK0N+yWnFArtp6dGCLpfE48UVbOWjgod6HtJ86zY9lKlse
+         dXUEPqfI/dUnG3MpVtlMrqz940KhnkQvW7AprNNweo2kt3yVNKFejJK9/2+qKtmC31p0
+         O7dkmynj04p3T7SVOPgh9w5Z/H4UzISH5/Jtpy68qHT1IC41fMYIj7HtGj07KlAFm3ds
+         qmFw==
+X-Gm-Message-State: AOJu0YzrbN/vCmex6YfwmzBH1pFgp91mL0xAOhXuNtPsBuydX093xgIm
+	HJEpds5E9QEOWa2drWHri4w6mP7WAqy1ooxihPXkaJJMlNw6EQlIRKBrHDQxo0WbFzgNMXs2wkt
+	rkeop1hgm9/oB0NQvo0pnYeJVYOmiYUCRyZk=
+X-Google-Smtp-Source: AGHT+IHxU3lNVb+KEbbHtRkZi/Su2QeRX8s4v9UQD/UYWqCApILHWYh04nN5xkJ4dG3es+WCbokG/7BqZHJGjsu+B3s=
+X-Received: by 2002:a05:600c:3d18:b0:412:a37b:4171 with SMTP id
+ bh24-20020a05600c3d1800b00412a37b4171mr74567wmb.4.1709187561622; Wed, 28 Feb
+ 2024 22:19:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240224001153.2584030-1-jstultz@google.com> <3937e057-6b47-77fe-9440-ade079ee2cfe@amd.com>
+ <CANDhNCqUrd4RNfKKMPRZj9ft1tTMNZq-XgYsU1dHpN4ixcZuJw@mail.gmail.com>
+ <0c606d04-6765-d55d-61ec-c3625daea423@amd.com> <CANDhNCpb2Ve5saKtnBgTeAQXFbaWf84G_ky-509ddsfhOhdiLQ@mail.gmail.com>
+ <c26251d2-e1bf-e5c7-0636-12ad886e1ea8@amd.com>
+In-Reply-To: <c26251d2-e1bf-e5c7-0636-12ad886e1ea8@amd.com>
+From: John Stultz <jstultz@google.com>
+Date: Wed, 28 Feb 2024 22:19:10 -0800
+Message-ID: <CANDhNCrkXF0R1Otu_EKY6OHxnAOYUQ+UjaQsJ_mW4Ys4ELPcYA@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v8 0/7] Preparatory changes for Proxy Execution v8
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Joel Fernandes <joelaf@google.com>, 
+	Qais Yousef <qyousef@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, 
+	Youssef Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Metin Kaya <Metin.Kaya@arm.com>, Xuewen Yan <xuewen.yan94@gmail.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Aneesh Kumar K.V <aneesh.kumar@kernel.org> writes:
-> Michael Ellerman <mpe@ellerman.id.au> writes:
->> Kunwu Chan <chentao@kylinos.cn> writes:
->>> On 2024/2/26 18:49, Michael Ellerman wrote:
->>>> Kunwu Chan <chentao@kylinos.cn> writes:
->>>>> This part was commented from commit 6d492ecc6489
->>>>> ("powerpc/THP: Add code to handle HPTE faults for hugepages")
->>>>> in about 11 years before.
->>>>>
->>>>> If there are no plans to enable this part code in the future,
->>>>> we can remove this dead code.
->>>> 
->>>> I agree the code can go. But I'd like it to be replaced with a comment
->>>> explaining what the dead code was trying to say.
->>
->>> Thanks, i'll update a new patch with the following comment:
->>>      /*
->>>      * No CPU has hugepages but lacks no execute, so we
->>>      * don't need to worry about cpu no CPU_FTR_COHERENT_ICACHE feature case
->>>      */
->>
->> Maybe wait until we can get some input from Aneesh. I'm not sure the
->> code/comment are really up to date.
+On Wed, Feb 28, 2024 at 9:37=E2=80=AFAM 'K Prateek Nayak' via kernel-team
+<kernel-team@android.com> wrote:
+> I got a chance to test the whole of v8 patches on the same dual socket
+> 3rd Generation EPYC system:
 >
-> How about?
+> tl;dr
 >
-> modified   arch/powerpc/mm/book3s64/hash_hugepage.c
-> @@ -58,17 +58,13 @@ int __hash_page_thp(unsigned long ea, unsigned long access, unsigned long vsid,
->  		return 0;
->  
->  	rflags = htab_convert_pte_flags(new_pmd, flags);
-> +	/*
-> +	 * THPs are only supported on platforms that can do mixed page size
-> +	 * segments (MPSS) and all such platforms have coherent icache. Hence we
-> +	 * don't need to do lazy icache flush (hash_page_do_lazy_icache()) on
-> +	 * noexecute fault.
-> +	 */
+> - There is a slight regression in hackbench but instead of the 10x
+>   blowup seen previously, it is only around 5% with overloaded case
+>   not regressing at all.
+>
+> - A small but consistent (~2-3%) regression is seen in tbench and
+>   netperf.
 
-Yeah thanks that looks good.
+Once again, thank you so much for your testing and reporting of the
+data! I really appreciate it!
 
-It could say "see eg. __hash_page_4K()", but that's probably unnecessary
-as it mentions hash_page_do_lazy_icache(), and anyone interested is just
-going to grep for that anyway.
+Do you mind sharing exactly how you're running the benchmarks? (I'd
+like to try to reproduce these locally (though my machine is much
+smaller).
 
-cheers
+I'm guessing the hackbench one is the same command you shared earlier with =
+v6?
+
+thanks
+-john
