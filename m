@@ -1,148 +1,76 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE54A1420C9;
-	Thu, 29 Feb 2024 14:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5127612E1E3;
+	Thu, 29 Feb 2024 14:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709216183; cv=none; b=CGG0gfp8qHmLm+CpOBaf33ow055jfi6Rcmxxe0A1Esaj+szQ4pmDy/Urf0mX5dVab36f8EnYTLnyv/t+/d12XttZNZus3YmBh6PYUj9o9cZWhXZ53DaEelfs5scvmV7l+m1IQWdSt2g+lHDdVEPsOhGJTYEeP23XAMKka8PSwco=
+	t=1709216204; cv=none; b=GvBW6cBWRXxsIiB4KLYNyRvQVouF/kOLNUAgrzicdEZfGKTXIzK9bgTa80/0tgujLx+DlSjTSjdwck6TcWumqD2p0B4O8EW4bPloWiS90bRwOikyYksy6NdluxfbaK+71FIabhBmevgkXThJv7J1T5+uDqjUnJrvQD1no6LiLmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709216183; c=relaxed/simple;
-	bh=PUK02Cucbp8QURrkbJDRBmCMb/j7fNSM0Xn8Y5zhIkc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RIb39mnyI32lzgBHMNFw1x5VdoMENSsZ2JqotEIMjK76xvcwXD4+MM9rqLR9BSGB9bKM3vyWMo8mLQhV1A2IcvMFBvk16yUXmjiG9Me/IleRMPEB07fEiZlOogfSFK12+M2NysCWc1zneGkp15RwohmgkjyGx+7EXw/Na/HTyMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egIENjQO; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egIENjQO"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-68009cb4669so3329676d6.1;
-        Thu, 29 Feb 2024 06:16:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709216180; x=1709820980; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/W/wZXm/lm7nezS3iJK5hhPJV5z7bm8xrMOjN7sfA2c=;
-        b=egIENjQOzhmY5vkoALNg3x+1lOZMiTSDwlaZUAHurP2erzDGExOaRhgUPwFT9Z/Qyy
-         1mzsNlBlHHxJeh+eZwPwAdTBDoqYpRh8COppJrez/Fg/EoIyQLDD9lR2zf5J1n0xRcxR
-         +mpbE+9axTBe5mZg/LwDkMtK4K/cekcvFQQLFY8VRXcVq4schNiJpoO4ZKTbLh/GPsj8
-         srDGr9IIOzRAWYtPg6lTY3UiuZYifpL7AoessODFR7nFtmxsOW6dlRsKqk6TVi9HZlIk
-         UmcCssg71Kf3H2DiiLIzkS4rhWaJbYjHxlcugjBmvSk/ipRXCKubEHw46JbH5aPBrP7/
-         i80A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709216180; x=1709820980;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/W/wZXm/lm7nezS3iJK5hhPJV5z7bm8xrMOjN7sfA2c=;
-        b=O1GGIa6KdL4Yc0jsCn3ePZ2WtPeLgMS8VG+EOaMV+0TVVV5dBg50sURU8hh3a+9Nmx
-         O8PGqxqnHVdvYLKsTV+ztvIL7RpG8XrruKq1+14mf/xxCOcQ06W6/TOJsMcMbPPcIsRh
-         mYBqqj3my7LbTP4aJntMv8SPCymoG+Gvh2u1HhZIjCcLNZNpxexH3f8TkFFxyrCas6uP
-         EwGchR9MhLfqS8LnUMv4V1Yl7kd+1WTuh0DUhetXhOjd68vHGEEFDnIZSt5/R223SBKo
-         AHXBLtkRcSLINjDw/Nf7VQnxoqDi9vMCY1hsupbt+crzYRbt8tLUT27v6DKYgR+4+705
-         Jylw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJoXntIPWbWEdUxoPqh6dgCaNjCbwZ2YZL7NPkVKIhREjbq6nv1Xe5J+079uZSUE5jdCQM6zWwghNdNEl9OdTEVWLE8dJnYHu0KME2GoNJcfoxNl7UkOjmCWFe1tkdxNkEAvT9pYGxP/k3gJ64u2KvL+eKqDF3Iv5EqHqYPiXECMi2Zh2USi5p
-X-Gm-Message-State: AOJu0YzNK7lB9we21DJexcdQn5QXOMvqHatFVKxsFXYxlzBH4DFbXMIV
-	l5N3seE6ug5/Fsmks4OHRyUdVJUYw/Gt+ufRr6/+OjuqIYD5IuNj
-X-Google-Smtp-Source: AGHT+IHs1YnZ0esHs1BMxISmBCDSRJY5ZhDnZqGmDP5+mD/g+W2yrpWgUSNeF5GUTRda4q1JIaSsQQ==
-X-Received: by 2002:a0c:e80e:0:b0:68f:3058:a0 with SMTP id y14-20020a0ce80e000000b0068f305800a0mr2481153qvn.41.1709216180406;
-        Thu, 29 Feb 2024 06:16:20 -0800 (PST)
-Received: from [192.168.0.118] (88-113-27-52.elisa-laajakaista.fi. [88.113.27.52])
-        by smtp.gmail.com with ESMTPSA id ng8-20020a0562143bc800b0068fa4534070sm770363qvb.83.2024.02.29.06.16.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 06:16:20 -0800 (PST)
-Message-ID: <a5726043-1906-44ba-a6ee-a725a2776269@gmail.com>
-Date: Thu, 29 Feb 2024 16:16:15 +0200
+	s=arc-20240116; t=1709216204; c=relaxed/simple;
+	bh=CwPbKWNjMP0nh0cY2U+B8n7NhSWz1CSP0wEAb4gTmx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=plodutLIskgTGHgdErpDvHmcVQ8+UC5Vvqixwo2EkIj7zUGqcV5Sv2fwPMxTg6/X3GV2Cf19u/wLWj7RYxHnUyPZY3H5lpAljArvOug/h04Oz3BDT+FD+ju7DIUSpEKpj8C2gRxuUJtocEYWMf0FoiyavKfO+ublKMjmm9gJkKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 584511FB;
+	Thu, 29 Feb 2024 06:17:20 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 610B23F6C4;
+	Thu, 29 Feb 2024 06:16:39 -0800 (PST)
+Date: Thu, 29 Feb 2024 14:16:36 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: Sibi Sankar <quic_sibis@quicinc.com>, andersson@kernel.org,
+	Sudeep Holla <sudeep.holla@arm.com>, konrad.dybcio@linaro.org,
+	jassisinghbrar@gmail.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	quic_rgottimu@quicinc.com, quic_kshivnan@quicinc.com,
+	conor+dt@kernel.org, Amir Vajid <avajid@quicinc.com>
+Subject: Re: [RFC 3/7] firmware: arm_scmi: Add QCOM vendor protocol
+Message-ID: <ZeCRxP9PnHK_UFK7@bogus>
+References: <20240117173458.2312669-1-quic_sibis@quicinc.com>
+ <20240117173458.2312669-4-quic_sibis@quicinc.com>
+ <ZcpXx8NkVImwRqX-@pluto>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] kci-gitlab: Introducing GitLab-CI Pipeline for Kernel
- Testing
-Content-Language: en-US
-To: Guillaume Tucker <gtucker@gtucker.io>,
- Helen Koike <helen.koike@collabora.com>, linuxtv-ci@linuxtv.org,
- dave.pigott@collabora.com, mripard@kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kselftest@vger.kernel.org,
- gustavo.padovan@collabora.com, pawiecz@collabora.com,
- tales.aparecida@gmail.com, workflows@vger.kernel.org,
- kernelci@lists.linux.dev, skhan@linuxfoundation.org,
- kunit-dev@googlegroups.com, nfraprado@collabora.com, davidgow@google.com,
- cocci@inria.fr, Julia.Lawall@inria.fr, laura.nao@collabora.com,
- ricardo.canuelo@collabora.com, kernel@collabora.com,
- torvalds@linuxfoundation.org, gregkh@linuxfoundation.org
-References: <20240228225527.1052240-1-helen.koike@collabora.com>
- <d99d026e-ed32-4432-bab3-db75296e67d8@gtucker.io>
-From: Nikolai Kondrashov <spbnick@gmail.com>
-In-Reply-To: <d99d026e-ed32-4432-bab3-db75296e67d8@gtucker.io>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcpXx8NkVImwRqX-@pluto>
 
-On 2/29/24 2:20 PM, Guillaume Tucker wrote:
-> Hello,
+On Mon, Feb 12, 2024 at 05:39:19PM +0000, Cristian Marussi wrote:
+> > diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> > index a7bc4796519c..eaeb788b93c6 100644
+> > --- a/drivers/firmware/arm_scmi/Makefile
+> > +++ b/drivers/firmware/arm_scmi/Makefile
+> > @@ -17,6 +17,7 @@ obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
+> >  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-module.o
+> >  
+> >  obj-$(CONFIG_ARM_SCMI_POWER_CONTROL) += scmi_power_control.o
+> > +obj-$(CONFIG_QCOM_SCMI_VENDOR_PROTOCOL) += qcom_scmi_vendor.o
+> >  
 > 
-> On 28/02/2024 23:55, Helen Koike wrote:
->> Dear Kernel Community,
->>
->> This patch introduces a `.gitlab-ci` file along with a `ci/` folder, defining a
->> basic test pipeline triggered by code pushes to a GitLab-CI instance. This
->> initial version includes static checks (checkpatch and smatch for now) and build
->> tests across various architectures and configurations. It leverages an
->> integrated cache for efficient build times and introduces a flexible 'scenarios'
->> mechanism for subsystem-specific extensions.
+> I am starting to think to put vendor protocols in their own dedicated
+> subdir given that a bunch of those appeared recently :D
 > 
-> This sounds like a nice starting point to me as an additional way
-> to run tests upstream.  I have one particular question as I see a
-> pattern through the rest of the email, please see below.
-> 
-> [...]
-> 
->> 4. **Collaborative Testing Environment:** The kernel community is already
->> engaged in numerous testing efforts, including various GitLab-CI pipelines such
->> as DRM-CI, which I maintain, along with other solutions like KernelCI and
->> BPF-CI. This proposal is designed to further stimulate contributions to the
->> evolving testing landscape. Our goal is to establish a comprehensive suite of
->> common tools and files.
-> 
-> [...]
-> 
->> **Leveraging External Test Labs:**
->> We can extend our testing to external labs, similar to what DRM-CI currently
->> does. This includes:
->> - Lava labs
->> - Bare metal labs
->> - Using KernelCI-provided labs
->>
->> **Other integrations**
->> - Submit results to KCIDB
-> 
-> [...]
-> 
->> **Join Our Slack Channel:**
->> We have a Slack channel, #gitlab-ci, on the KernelCI Slack instance https://kernelci.slack.com/ .
->> Feel free to join and contribute to the conversation. The KernelCI team has
->> weekly calls where we also discuss the GitLab-CI pipeline.
->>
->> **Acknowledgments:**
->> A special thanks to Nikolai Kondrashov, Tales da Aparecida - both from Red Hat -
->> and KernelCI community for their valuable feedback and support in this proposal.
-> 
-> Where does this fit on the KernelCI roadmap?
-> 
-> I see it mentioned a few times but it's not entirely clear
-> whether this initiative is an independent one or in some way
-> linked to KernelCI.  Say, are you planning to use the kci tool,
-> new API, compiler toolchains, user-space and Docker images etc?
-> Or, are KernelCI plans evolving to follow this move?
 
-I would say this is an important part of KernelCI the project, considering its 
-aim to improve testing and CI in the kernel. It's not a part of KernelCI the 
-service as it is right now, although I would say it would be good to have 
-ability to submit KernelCI jobs from GitLab CI and pull results in the same 
-pipeline, as we discussed earlier.
+Yes I tend to agree with different subdir for each vendor. Not sure if we
+need new Kconfig entry or just use ARCH_<vendor/group of SoC> to build all
+subdir used by that vendor.
 
-Nick
+> ....have to discuss with Sudeep...anyway not really an issue...
+> 
+> any thoughts about this ?
+
+In general, I see lot of discussions on this thread when I was away for
+past 3 weeks. I will wait for newer version as that seems simpler for me
+than getting lost to follow the discussions so far.
+
+-- 
+Regards,
+Sudeep
