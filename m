@@ -1,306 +1,339 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1307A33CF1
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D874513D2F5
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709168808; cv=none; b=Wkzz+J1ZU2Mx3AwuMxgJA+kMUGlruKNJULpL6FZStl3WVUpJlx9SCUiJV/QrStBMwyOWiAuTnUi92ST6TjISTInMdDBPLzGHcFZbS8OX/WQyFhbSX5zfhIInCFLQuiTxMFTn8nMHi0M2bdw34J6CbPlSBUdqUoXwRbMmCj7MuW4=
+	t=1709169140; cv=none; b=tDnNjTzH6fg7oGDP+rzyGmKXhtYsEN+i8B+RUzx+EJN/n8A3gf4PioGFaOuQhaNP/0WoYX1+akTEFfnC+J+UL2Hzghy+2VmqhFpbegdfZHgK9FGAbojia9Du+hTm5dQ9NDvt5kNhyZcvg4aPIW1YcM+DEve0+iF4VPxhFmSnziQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709168808; c=relaxed/simple;
-	bh=/3+2A+9VSZsYfecPNmRshPel0UnODNohqINTq+mk0uo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ZD3DziZ4o2IM1qjUGI3MLyGdnbMP+JXBWiigET1D2ThV5RIyngwR/QHzFD4OO4MkVfRrm//jEwIl/cnD8T+54CBehqB9E5lGclKZZ7qPxwNNHp1+h5FrUMutnm4KXCoOgyZcbM0Uh4nLAcurf0r6iFY3/UNDv2OT3SbHQKSdBGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CoSfUuL7; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709169140; c=relaxed/simple;
+	bh=9TjAjeZ8FgvYRLBC7y7eIEkwq/iH3VaG5Txt04L2TiU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=svQNwKTnSF4SueDQVW9bSfxQ2Y+94xTlDSAZHgphddTnvAWGw6bSTHt0RAv7cYzpGwo00EFgMzjCnzAq0koMUexqxHtdXaRphJUx0NRQfZxpJ+xKJg4BAVhdU86ZHHmjYI5umFxKBQ3pTe+ZQ9qIeKZUvNEW/Y8rQDqPd1Xia/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oRqQZRBz; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CoSfUuL7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709168806; x=1740704806;
-  h=date:from:to:cc:subject:message-id;
-  bh=/3+2A+9VSZsYfecPNmRshPel0UnODNohqINTq+mk0uo=;
-  b=CoSfUuL7ulP3HBzMQH2vj/8n9x2dp9YaYommNW0kaEjv63cEkWQMt9Ge
-   Gr+jDuhAb56iXnpL3HdpgkxXFFxdHyCrB5QnhVRBbssdAyUjlkjiGjw3L
-   sPye4a2RrRnw3jKhAIercQhxAJ2gbBNXT6Ns4dRR8qgVV33gohi68bKWo
-   PYhr3DsaICcwLKy/jGTUQso71GqnqYoFjsoNAOKpLoz+Jq2QQGizztkKZ
-   6Z/aXsv9XIzx6wDdKm3WH8f60KuuApWXeh/hYGv6yPoYJnNw4nsP0TEJe
-   JHpgnRTCLcz/FKcLC5/aA9gPNuBjXlmnUQYRjO28+Wvt5RaQyJZOiJHB+
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="7443037"
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="7443037"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 17:06:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,191,1705392000"; 
-   d="scan'208";a="12256215"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa004.fm.intel.com with ESMTP; 28 Feb 2024 17:06:44 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rfUsa-000CX8-12;
-	Thu, 29 Feb 2024 01:06:34 +0000
-Date: Thu, 29 Feb 2024 09:05:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:locking/core] BUILD SUCCESS
- f3e3620f1a97fcd02a5f3606fa63888dbcffd82c
-Message-ID: <202402290925.i2bVh8zI-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oRqQZRBz"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a4419683a6bso57511966b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 17:12:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709169137; x=1709773937; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=za/f+FD8CJTPCMoqnLZV1TIT7CRykE1Lv1/KdXF4ElQ=;
+        b=oRqQZRBzIUrAmacH7wrH2uqcKMhnrJcC9mfO7CQSGh+zo0qFy5xWsFuPxNxMJ883aE
+         xEHsN2WDrzevdHlls3e0f+sRksZ35tNtozG0Kx8Qaw+NCAA6qYZheG7uFYzWz7erO+zy
+         6Rg34XL9ebCvM4XhEBHiDuhk1RdLk6oyEIktHZhDZe69KNd7z5sAIPIWayKDtO6wIm6M
+         iiOh6Xh+76gDYeamYPvRxny/hsqmlGltn1aiapSkugpOEnRQ+EfE0BZeVCbneLjt1Zo1
+         Fy2m73t7KmL5UNsNkOCmF/0QHMF+fPY0EjM28XfhqwDIxf6a4L1DDha72Fysv1sOrxV+
+         flFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709169137; x=1709773937;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=za/f+FD8CJTPCMoqnLZV1TIT7CRykE1Lv1/KdXF4ElQ=;
+        b=E7Ty2FLuRRCMuhxlr7A8V+Vc2x4vs76Q96uw5bBEy2u9uk8f8yJDS+OJxOg0g6qx3f
+         HBIC4D16NJ/0CFwO/EP+bMogV65k6MYSxxvVK4Z02L11vK2oIbzWDv/NITLFnJsV+FbY
+         01D59wBoaoUiJjpI+bmQK7xr77FPTL1SsJj59dhga3ahpLnqAToKahJgz/d6p5G8O2Q7
+         lyA92Y3OMeCn1S3BMP/21VH17WdxxhJUkNiEUeerEcpDrsXFjvEIZgitZWjbSMCnhPZT
+         0eWScx+f1TiDeLU1k1tlWJVQaqCKhJtVYfo5wNWVlPxe47vGmjbyPXAR+IrIh2jzpFOm
+         FVyA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyfjavuaCWfK/Ht7PnMnzUl33+oSPnK5zNlSTURSsqyjxBhkUxtCa8dynU1GuSPowIaiYagdjjmUpNLVzCbaeD8kBGljC9QA/Bj1St
+X-Gm-Message-State: AOJu0Yy07/00qGYSH2hI0z+TA407nf7x8ObT71ZeIfepc4JFed6HwtxH
+	W5X/2VxlkfHx6L/PhHoN4nVwna5DHKZDL2dYKXCLlCN3P2G7/ZstFnsHgagPBBXrZHQctyCPOTI
+	A2U7RuRTwYaB5zhm+d8JCCm0VMrC2mqEF/F54
+X-Google-Smtp-Source: AGHT+IEAgL1Bww+5JuEgUxcDBnN9H9F8iZLjpAJi5GB+9ifzlx3C9P2jRNo47k/MGoURNxB9skuSrspX3DXCeGqK5HI=
+X-Received: by 2002:a17:906:f9cc:b0:a43:adc:7220 with SMTP id
+ lj12-20020a170906f9cc00b00a430adc7220mr349274ejb.8.1709169136943; Wed, 28 Feb
+ 2024 17:12:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240229003753.134193-1-21cnbao@gmail.com> <20240229003753.134193-5-21cnbao@gmail.com>
+ <CAJD7tkYWvxeCLmDO83tGyde7e4wPDPMnNbQfnB+pyTJAoSHqbg@mail.gmail.com> <CAGsJ_4wSDZM4s6v8KmjwjbpWcoeF95R3-AkhUt2SthZ49MNNcw@mail.gmail.com>
+In-Reply-To: <CAGsJ_4wSDZM4s6v8KmjwjbpWcoeF95R3-AkhUt2SthZ49MNNcw@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Wed, 28 Feb 2024 17:11:40 -0800
+Message-ID: <CAJD7tkZi2g8HjwtchE46SkKgOHSE02ZTNLKFi-t0c4+hihUjYQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 4/5] mm: swap: introduce swapcache_prepare_nr and
+ swapcache_clear_nr for large folios swap-in
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org, 
+	ryan.roberts@arm.com, chrisl@kernel.org, linux-kernel@vger.kernel.org, 
+	mhocko@suse.com, shy828301@gmail.com, steven.price@arm.com, surenb@google.com, 
+	wangkefeng.wang@huawei.com, willy@infradead.org, xiang@kernel.org, 
+	ying.huang@intel.com, yuzhao@google.com, kasong@tencent.com, 
+	nphamcs@gmail.com, chengming.zhou@linux.dev, hannes@cmpxchg.org, 
+	linux-arm-kernel@lists.infradead.org, Barry Song <v-songbaohua@oppo.com>, 
+	Hugh Dickins <hughd@google.com>, Minchan Kim <minchan@kernel.org>, SeongJae Park <sj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
-branch HEAD: f3e3620f1a97fcd02a5f3606fa63888dbcffd82c  locking/percpu-rwsem: Trigger contention tracepoints only if contended
+On Wed, Feb 28, 2024 at 4:59=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
+e:
+>
+> On Thu, Feb 29, 2024 at 1:52=E2=80=AFPM Yosry Ahmed <yosryahmed@google.co=
+m> wrote:
+> >
+> > On Wed, Feb 28, 2024 at 4:39=E2=80=AFPM Barry Song <21cnbao@gmail.com> =
+wrote:
+> > >
+> > > From: Barry Song <v-songbaohua@oppo.com>
+> > >
+> > > Commit 13ddaf26be32 ("mm/swap: fix race when skipping swapcache") sup=
+ports
+> > > one entry only, to support large folio swap-in, we need to handle mul=
+tiple
+> > > swap entries.
+> > >
+> > > Cc: Kairui Song <kasong@tencent.com>
+> > > Cc: "Huang, Ying" <ying.huang@intel.com>
+> > > Cc: Yu Zhao <yuzhao@google.com>
+> > > Cc: David Hildenbrand <david@redhat.com>
+> > > Cc: Chris Li <chrisl@kernel.org>
+> > > Cc: Hugh Dickins <hughd@google.com>
+> > > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > > Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > > Cc: Michal Hocko <mhocko@suse.com>
+> > > Cc: Minchan Kim <minchan@kernel.org>
+> > > Cc: Yosry Ahmed <yosryahmed@google.com>
+> > > Cc: Yu Zhao <yuzhao@google.com>
+> > > Cc: SeongJae Park <sj@kernel.org>
+> > > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> > > ---
+> > >  include/linux/swap.h |   1 +
+> > >  mm/swap.h            |   1 +
+> > >  mm/swapfile.c        | 117 ++++++++++++++++++++++++++---------------=
+--
+> > >  3 files changed, 72 insertions(+), 47 deletions(-)
+> > >
+> > > diff --git a/include/linux/swap.h b/include/linux/swap.h
+> > > index b3581c976e5f..2691c739d9a4 100644
+> > > --- a/include/linux/swap.h
+> > > +++ b/include/linux/swap.h
+> > > @@ -480,6 +480,7 @@ extern int add_swap_count_continuation(swp_entry_=
+t, gfp_t);
+> > >  extern void swap_shmem_alloc(swp_entry_t);
+> > >  extern int swap_duplicate(swp_entry_t);
+> > >  extern int swapcache_prepare(swp_entry_t);
+> > > +extern int swapcache_prepare_nr(swp_entry_t, int nr);
+> > >  extern void swap_free(swp_entry_t);
+> > >  extern void swap_nr_free(swp_entry_t entry, int nr_pages);
+> > >  extern void swapcache_free_entries(swp_entry_t *entries, int n);
+> > > diff --git a/mm/swap.h b/mm/swap.h
+> > > index fc2f6ade7f80..1cec991efcda 100644
+> > > --- a/mm/swap.h
+> > > +++ b/mm/swap.h
+> > > @@ -42,6 +42,7 @@ void delete_from_swap_cache(struct folio *folio);
+> > >  void clear_shadow_from_swap_cache(int type, unsigned long begin,
+> > >                                   unsigned long end);
+> > >  void swapcache_clear(struct swap_info_struct *si, swp_entry_t entry)=
+;
+> > > +void swapcache_clear_nr(struct swap_info_struct *si, swp_entry_t ent=
+ry, int nr);
+> > >  struct folio *swap_cache_get_folio(swp_entry_t entry,
+> > >                 struct vm_area_struct *vma, unsigned long addr);
+> > >  struct folio *filemap_get_incore_folio(struct address_space *mapping=
+,
+> > > diff --git a/mm/swapfile.c b/mm/swapfile.c
+> > > index c0c058ee7b69..c8c8b6dbaeda 100644
+> > > --- a/mm/swapfile.c
+> > > +++ b/mm/swapfile.c
+> > > @@ -3308,7 +3308,7 @@ void si_swapinfo(struct sysinfo *val)
+> > >  }
+> > >
+> > >  /*
+> > > - * Verify that a swap entry is valid and increment its swap map coun=
+t.
+> > > + * Verify that nr swap entries are valid and increment their swap ma=
+p count.
+> > >   *
+> > >   * Returns error code in following case.
+> > >   * - success -> 0
+> > > @@ -3318,66 +3318,73 @@ void si_swapinfo(struct sysinfo *val)
+> > >   * - swap-cache reference is requested but the entry is not used. ->=
+ ENOENT
+> > >   * - swap-mapped reference requested but needs continued swap count.=
+ -> ENOMEM
+> > >   */
+> > > -static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
+> > > +static int __swap_duplicate_nr(swp_entry_t entry, int nr, unsigned c=
+har usage)
+> > >  {
+> > >         struct swap_info_struct *p;
+> > >         struct swap_cluster_info *ci;
+> > >         unsigned long offset;
+> > > -       unsigned char count;
+> > > -       unsigned char has_cache;
+> > > -       int err;
+> > > +       unsigned char count[SWAPFILE_CLUSTER];
+> > > +       unsigned char has_cache[SWAPFILE_CLUSTER];
+> >
+>
+> Hi Yosry,
+>
+> Thanks for reviewing!
+>
+> > I am not closely following this series, but a couple of things caught m=
+y eyes.
+> >
+> > Is this reasonable for stack usage?
+>
+> SWAPFILE_CLUSTER is not huge. typically 512 or 256.
 
-elapsed time: 729m
+So that's 1K of stack usage out of 16K total on x86. I think this may
+be a lot for a single function to use, but perhaps others will
+disagree.
 
-configs tested: 233
-configs skipped: 3
+>
+> #ifdef CONFIG_THP_SWAP
+> #define SWAPFILE_CLUSTER        HPAGE_PMD_NR
+>
+> #define swap_entry_size(size)   (size)
+> #else
+> #define SWAPFILE_CLUSTER        256
+>
+> If this is still a concern, I can move it to a bitmap.
+>
+> >
+> > > +       int err, i;
+> > >
+> > >         p =3D swp_swap_info(entry);
+> > >
+> > >         offset =3D swp_offset(entry);
+> > >         ci =3D lock_cluster_or_swap_info(p, offset);
+> > >
+> > > -       count =3D p->swap_map[offset];
+> > > -
+> > > -       /*
+> > > -        * swapin_readahead() doesn't check if a swap entry is valid,=
+ so the
+> > > -        * swap entry could be SWAP_MAP_BAD. Check here with lock hel=
+d.
+> > > -        */
+> > > -       if (unlikely(swap_count(count) =3D=3D SWAP_MAP_BAD)) {
+> > > -               err =3D -ENOENT;
+> > > -               goto unlock_out;
+> > > -       }
+> > > +       for (i =3D 0; i < nr; i++) {
+> > > +               count[i] =3D p->swap_map[offset + i];
+> > >
+> > > -       has_cache =3D count & SWAP_HAS_CACHE;
+> > > -       count &=3D ~SWAP_HAS_CACHE;
+> > > -       err =3D 0;
+> > > -
+> > > -       if (usage =3D=3D SWAP_HAS_CACHE) {
+> > > -
+> > > -               /* set SWAP_HAS_CACHE if there is no cache and entry =
+is used */
+> > > -               if (!has_cache && count)
+> > > -                       has_cache =3D SWAP_HAS_CACHE;
+> > > -               else if (has_cache)             /* someone else added=
+ cache */
+> > > -                       err =3D -EEXIST;
+> > > -               else                            /* no users remaining=
+ */
+> > > +               /*
+> > > +                * swapin_readahead() doesn't check if a swap entry i=
+s valid, so the
+> > > +                * swap entry could be SWAP_MAP_BAD. Check here with =
+lock held.
+> > > +                */
+> > > +               if (unlikely(swap_count(count[i]) =3D=3D SWAP_MAP_BAD=
+)) {
+> > >                         err =3D -ENOENT;
+> > > +                       goto unlock_out;
+> > > +               }
+> >
+>
+>
+> > Here we immediately exit if there is an error, but we don't below, we
+> > just keep overwriting the error every iteration as far as I can tell.
+> > Also, it doesn't seem like we do any cleanups if we hit an error
+> > halfway through. Should we undo previously updated swap entries, or am
+> > I missing something here?
+>
+> we are safely immediately exiting because we don't change swap_map
+> till we finish all checks. while all checks are done, we write  them by
+> WRITE_ONCE(p->swap_map[offset + i], count[i] | has_cache[i]);
+> at the end.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I see, but I think we may be overwriting the error from each iteration belo=
+w?
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                      axs103_smp_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     haps_hs_smp_defconfig   gcc  
-arc                        nsimosci_defconfig   gcc  
-arc                   randconfig-001-20240228   gcc  
-arc                   randconfig-001-20240229   gcc  
-arc                   randconfig-002-20240228   gcc  
-arc                   randconfig-002-20240229   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                            dove_defconfig   gcc  
-arm                             pxa_defconfig   gcc  
-arm                   randconfig-001-20240228   clang
-arm                   randconfig-001-20240229   gcc  
-arm                   randconfig-002-20240228   clang
-arm                   randconfig-002-20240229   gcc  
-arm                   randconfig-003-20240228   clang
-arm                   randconfig-004-20240228   gcc  
-arm                   randconfig-004-20240229   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240228   clang
-arm64                 randconfig-002-20240228   gcc  
-arm64                 randconfig-002-20240229   gcc  
-arm64                 randconfig-003-20240228   gcc  
-arm64                 randconfig-004-20240228   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240228   gcc  
-csky                  randconfig-001-20240229   gcc  
-csky                  randconfig-002-20240228   gcc  
-csky                  randconfig-002-20240229   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240228   clang
-hexagon               randconfig-002-20240228   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240228   clang
-i386         buildonly-randconfig-001-20240229   clang
-i386         buildonly-randconfig-002-20240228   clang
-i386         buildonly-randconfig-003-20240228   clang
-i386         buildonly-randconfig-004-20240228   clang
-i386         buildonly-randconfig-004-20240229   clang
-i386         buildonly-randconfig-005-20240228   gcc  
-i386         buildonly-randconfig-006-20240228   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240228   clang
-i386                  randconfig-001-20240229   clang
-i386                  randconfig-002-20240228   clang
-i386                  randconfig-003-20240228   gcc  
-i386                  randconfig-003-20240229   clang
-i386                  randconfig-004-20240228   clang
-i386                  randconfig-005-20240228   clang
-i386                  randconfig-006-20240228   gcc  
-i386                  randconfig-011-20240228   clang
-i386                  randconfig-012-20240228   clang
-i386                  randconfig-013-20240228   gcc  
-i386                  randconfig-013-20240229   clang
-i386                  randconfig-014-20240228   gcc  
-i386                  randconfig-014-20240229   clang
-i386                  randconfig-015-20240228   gcc  
-i386                  randconfig-015-20240229   clang
-i386                  randconfig-016-20240228   clang
-i386                  randconfig-016-20240229   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240228   gcc  
-loongarch             randconfig-001-20240229   gcc  
-loongarch             randconfig-002-20240228   gcc  
-loongarch             randconfig-002-20240229   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                           virt_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze                      mmu_defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  cavium_octeon_defconfig   gcc  
-mips                malta_qemu_32r6_defconfig   gcc  
-mips                       rbtx49xx_defconfig   gcc  
-mips                           rs90_defconfig   gcc  
-nios2                            alldefconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240228   gcc  
-nios2                 randconfig-001-20240229   gcc  
-nios2                 randconfig-002-20240228   gcc  
-nios2                 randconfig-002-20240229   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                    or1ksim_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240228   gcc  
-parisc                randconfig-001-20240229   gcc  
-parisc                randconfig-002-20240228   gcc  
-parisc                randconfig-002-20240229   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                        cell_defconfig   gcc  
-powerpc               randconfig-001-20240228   clang
-powerpc               randconfig-002-20240228   clang
-powerpc               randconfig-002-20240229   gcc  
-powerpc               randconfig-003-20240228   gcc  
-powerpc64             randconfig-001-20240228   clang
-powerpc64             randconfig-001-20240229   gcc  
-powerpc64             randconfig-002-20240228   clang
-powerpc64             randconfig-003-20240228   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240228   clang
-riscv                 randconfig-002-20240228   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240228   clang
-s390                  randconfig-002-20240228   gcc  
-s390                  randconfig-002-20240229   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        dreamcast_defconfig   gcc  
-sh                          kfr2r09_defconfig   gcc  
-sh                    randconfig-001-20240228   gcc  
-sh                    randconfig-001-20240229   gcc  
-sh                    randconfig-002-20240228   gcc  
-sh                    randconfig-002-20240229   gcc  
-sh                           se7705_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                       sparc32_defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240228   gcc  
-sparc64               randconfig-001-20240229   gcc  
-sparc64               randconfig-002-20240228   gcc  
-sparc64               randconfig-002-20240229   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240228   clang
-um                    randconfig-001-20240229   gcc  
-um                    randconfig-002-20240228   clang
-um                    randconfig-002-20240229   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240228   gcc  
-x86_64       buildonly-randconfig-002-20240228   clang
-x86_64       buildonly-randconfig-002-20240229   clang
-x86_64       buildonly-randconfig-003-20240228   clang
-x86_64       buildonly-randconfig-004-20240228   gcc  
-x86_64       buildonly-randconfig-005-20240228   gcc  
-x86_64       buildonly-randconfig-006-20240228   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240228   clang
-x86_64                randconfig-001-20240229   clang
-x86_64                randconfig-002-20240228   gcc  
-x86_64                randconfig-002-20240229   clang
-x86_64                randconfig-003-20240228   gcc  
-x86_64                randconfig-003-20240229   clang
-x86_64                randconfig-004-20240228   gcc  
-x86_64                randconfig-004-20240229   clang
-x86_64                randconfig-005-20240228   gcc  
-x86_64                randconfig-005-20240229   clang
-x86_64                randconfig-006-20240228   clang
-x86_64                randconfig-006-20240229   clang
-x86_64                randconfig-011-20240228   clang
-x86_64                randconfig-012-20240228   clang
-x86_64                randconfig-013-20240228   clang
-x86_64                randconfig-014-20240228   gcc  
-x86_64                randconfig-015-20240228   gcc  
-x86_64                randconfig-016-20240228   gcc  
-x86_64                randconfig-071-20240228   gcc  
-x86_64                randconfig-071-20240229   clang
-x86_64                randconfig-072-20240228   clang
-x86_64                randconfig-072-20240229   clang
-x86_64                randconfig-073-20240228   gcc  
-x86_64                randconfig-073-20240229   clang
-x86_64                randconfig-074-20240228   gcc  
-x86_64                randconfig-074-20240229   clang
-x86_64                randconfig-075-20240228   clang
-x86_64                randconfig-076-20240228   clang
-x86_64                randconfig-076-20240229   clang
-x86_64                          rhel-8.3-func   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                randconfig-001-20240228   gcc  
-xtensa                randconfig-001-20240229   gcc  
-xtensa                randconfig-002-20240228   gcc  
-xtensa                randconfig-002-20240229   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> >
+> > >
+> > > -       } else if (count || has_cache) {
+> > > -
+> > > -               if ((count & ~COUNT_CONTINUED) < SWAP_MAP_MAX)
+> > > -                       count +=3D usage;
+> > > -               else if ((count & ~COUNT_CONTINUED) > SWAP_MAP_MAX)
+> > > -                       err =3D -EINVAL;
+> > > -               else if (swap_count_continued(p, offset, count))
+> > > -                       count =3D COUNT_CONTINUED;
+> > > -               else
+> > > -                       err =3D -ENOMEM;
+> > > -       } else
+> > > -               err =3D -ENOENT;                  /* unused swap entr=
+y */
+> > > -
+> > > -       if (!err)
+> > > -               WRITE_ONCE(p->swap_map[offset], count | has_cache);
+> > > +               has_cache[i] =3D count[i] & SWAP_HAS_CACHE;
+> > > +               count[i] &=3D ~SWAP_HAS_CACHE;
+> > > +               err =3D 0;
+> > > +
+> > > +               if (usage =3D=3D SWAP_HAS_CACHE) {
+> > > +
+> > > +                       /* set SWAP_HAS_CACHE if there is no cache an=
+d entry is used */
+> > > +                       if (!has_cache[i] && count[i])
+> > > +                               has_cache[i] =3D SWAP_HAS_CACHE;
+> > > +                       else if (has_cache[i])          /* someone el=
+se added cache */
+> > > +                               err =3D -EEXIST;
+> > > +                       else                            /* no users r=
+emaining */
+> > > +                               err =3D -ENOENT;
+> > > +               } else if (count[i] || has_cache[i]) {
+> > > +
+> > > +                       if ((count[i] & ~COUNT_CONTINUED) < SWAP_MAP_=
+MAX)
+> > > +                               count[i] +=3D usage;
+> > > +                       else if ((count[i] & ~COUNT_CONTINUED) > SWAP=
+_MAP_MAX)
+> > > +                               err =3D -EINVAL;
+> > > +                       else if (swap_count_continued(p, offset + i, =
+count[i]))
+> > > +                               count[i] =3D COUNT_CONTINUED;
+> > > +                       else
+> > > +                               err =3D -ENOMEM;
+> > > +               } else
+> > > +                       err =3D -ENOENT;                  /* unused s=
+wap entry */
+> > > +       }
+> > >
+> > > +       if (!err) {
+> > > +               for (i =3D 0; i < nr; i++)
+> > > +                       WRITE_ONCE(p->swap_map[offset + i], count[i] =
+| has_cache[i]);
+>
+> Here is the place where we really write data. Before that, we only
+> touched temp variables.
+>
+> > > +       }
+> > >  unlock_out:
+> > >         unlock_cluster_or_swap_info(p, ci);
+> > >         return err;
+> > >  }
+>
+> thanks
+> Barry
