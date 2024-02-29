@@ -1,173 +1,216 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE45036B0A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C323FB87
 	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709188387; cv=none; b=N7XJ4qmtX8SlG2tXkviw06WHTraG7UafwyAI9sbMMiSnVwcNIpbBN+/NXwCEkX7lfahAuBY952+US2ygZxemB0FosecCtIDZnH39RUIPZQ0SI0ZbVs8z1lmCqL7lQGXIyhWrI/10O4hFhxumuL0X87MuUnKDgXGaxjVqopPlHNg=
+	t=1709188388; cv=none; b=RA0HskuSbAUUWhgAGlAuwfdM1CHQIcuzN/px/GkMtQgtE7DjsJbbociJssw4YroA4jbtThI5sERXqil3OSiNz5P9sq1lxVNVcJK/cWzG5jKDbbYOaQxGgMZNeIhYO5ARhGFasYm4wYKhioBv3Fcns+qC4lt2DkrxOcnzNwb/R7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709188387; c=relaxed/simple;
-	bh=soASIs7D8iQcX2U2s2M4JC6RaqIvyHatWg6UktdKnSI=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=jwEpkgqlAo0ZTIXRroAIlBGFW/jCSkbsRhqTNoht8tWUd+alEmv3RA17dfg5UuTmGRNidWueRV6RVTEfh+JlI3XFkRaQEDNuoV/2LAuwxQehgvKR0+pd5D435nhpprMsvKOr4rEsGOmVlDvgruBi1JwflbAljfl68DGRemTaRtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=si/v60O4; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1709188388; c=relaxed/simple;
+	bh=NSlHiZ9lIHUdp/N5IbtcCw+XhruNoYntUSB5WUs3eCI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PriOrrI3foo15yphCp3YEounxtVqvsAv6MaOKnqj/LS/aJrOjtc+ngDR5nVkhAu7kBeRFWefFp4IvI8LKEeufdryGaRze2sOLXphLnqcj84J4TrjX8vRO5kqcN+dAYY6vn9EaNFKqJ3VJkScT8YNYqfD3Q8LZuDE29XLIsrG26g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OsZXghKi; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="si/v60O4"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-608d6ffc64eso8227417b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 22:33:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709188385; x=1709793185; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eHNbX5Xyi/VqeebJOw+lK9eWaYZye24FQe0AyXZlgyM=;
-        b=si/v60O4T4V4NmN75HXUfiMGRA9yqMoIC6MhzoEKci3e3TsIm5gsdGpa2QMiFDMMl+
-         zM0a143rYO7SbCCbaaVEspF6PKF/ZyIsiFkXMLpc0KCMSMMiNvxckdBRkvciWMeJjaUP
-         IM2M6rrVRWWTLLZkF75NcuPqsdCstzYZSJLk7XgJZ1pSe1Mk7GpohBbXTJwiq2nVRg29
-         V61ypgV4lCsIAjylpjlcNsevdSQoByXqhwdSzF3FawkaR4jYMm2X0yOf9tCmkB62JWJY
-         nk6E+A6le+CAMBn36CeMfaxP6V0Y1w5jZB7u8rOwIg2P5UTESCLjcF9Cbm/snbySb+vU
-         I3SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709188385; x=1709793185;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eHNbX5Xyi/VqeebJOw+lK9eWaYZye24FQe0AyXZlgyM=;
-        b=Ui+v3lhhzDBWvxZASAGx9p03TtIvb2ftEw/hRvDjaTQc/83Otu58ArpBa1XjEYBD/O
-         an0sWRzmSwlmGaqsMO69azpxiv7dDQdNSoVxjaw86ZjaBf4OrkwB0xbKlom4Z9wbaOcI
-         IA/+7vxCLDUHnWzNeZgv+EsiH36NjZI2uk3jykMxzLrSjYdjwTqgqlsb3aj1JrSfIX0s
-         Ya6XXqf69lPXsK6/HI4Qb+ba4sMOul4bcJ4WCeNwCFAn0NTOADLV9uraySb24EyIj8cM
-         ra8n5Rb8rGv+U+ZmAkeAjccMq1WlA4V8SDruGHGp6+eSKit+0JtG15Kj97vIzh+2hdfM
-         laJg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5oyZuDPyTekv8i9HTFyGo0QFI46mlqO7cDEjFbfb+odRM1Ke0LTX2mgjIheE5rHVjRbWyh0xJh1eWYYwMKaMJj03I0LC0uP1e5htZ
-X-Gm-Message-State: AOJu0Yx/XM8iuhh3RG7gPx5KW6AAbWYRim5lQYDCPPTd3sutz3d1bWKd
-	uljIPMw5jWjRH7ABloC0krCtLfeCRs/s6XD0Iw64wapbp31QKatTtCOjoVnRrSOvdg54gsh7sxv
-	Eoi1LSg==
-X-Google-Smtp-Source: AGHT+IHbrMd6slwQeYvMqN/08zqbSC1gNZwN0G1DzdWqDvoRaymALnRDCNTv4Jp+H4HvcIsxQUpc0B2RCQOK
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:77dc:144c:334e:e2dd])
- (user=irogers job=sendgmr) by 2002:a0d:c346:0:b0:609:3a1f:e852 with SMTP id
- f67-20020a0dc346000000b006093a1fe852mr169734ywd.2.1709188384986; Wed, 28 Feb
- 2024 22:33:04 -0800 (PST)
-Date: Wed, 28 Feb 2024 22:32:48 -0800
-In-Reply-To: <20240229063253.561838-1-irogers@google.com>
-Message-Id: <20240229063253.561838-3-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OsZXghKi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709188386; x=1740724386;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=NSlHiZ9lIHUdp/N5IbtcCw+XhruNoYntUSB5WUs3eCI=;
+  b=OsZXghKi7axyU79XrKauUALLG8OjESQVFhS8jom0WDwkNfyLkPsn3MT0
+   MKt2dAyr3KtBAfwiwD5L2umTCx2WjNb1neRroImHtua/edMELTa9PZbz2
+   olH/u+mxnwlOlcgmFNlOJlqPTak5NRCbG1DRDJucmAWh385aIYuAs7kEj
+   /Zk5F31DTZW73PXW4u8/2rxJ23WxMAKlosh3GUshPVMRVlxgwVVLIPEce
+   1d4xDvxASL0PqPsh2XFLXtQ0JpnbDroBD1e1TbeXancy+N/KhcIstkxk8
+   PrRs3tALANzi+u1zUXrv7fdv1d4HpeG2GHICWdGJAALYeuWWt3OuWZDsb
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="21095163"
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="21095163"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 22:33:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="7928578"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 22:33:02 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Peng Zhang <zhangpeng362@huawei.com>
+Cc: <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
+  <akpm@linux-foundation.org>,  <willy@infradead.org>,
+  <fengwei.yin@intel.com>,  <david@redhat.com>,
+  <aneesh.kumar@linux.ibm.com>,  <shy828301@gmail.com>,
+  <hughd@google.com>,  <wangkefeng.wang@huawei.com>,
+  <sunnanyong@huawei.com>
+Subject: Re: [PATCH v3] filemap: avoid unnecessary major faults in
+ filemap_fault()
+In-Reply-To: <20240229060907.836589-1-zhangpeng362@huawei.com> (Peng Zhang's
+	message of "Thu, 29 Feb 2024 14:09:07 +0800")
+References: <20240229060907.836589-1-zhangpeng362@huawei.com>
+Date: Thu, 29 Feb 2024 14:31:07 +0800
+Message-ID: <87il27dbo4.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240229063253.561838-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v3 2/7] perf trace: Ignore thread hashing in summary
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Yang Jihong <yangjihong1@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ascii
 
-Commit 91e467bc568f ("perf machine: Use hashtable for machine
-threads") made the iteration of thread tids unordered. The perf trace
---summary output sorts and prints each hash bucket, rather than all
-threads globally. Change this behavior by turn all threads into a
-list, sort the list by number of trace events then by tids, finally
-print the list. This also allows the rbtree in threads to be not
-accessed outside of machine.
+Peng Zhang <zhangpeng362@huawei.com> writes:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-trace.c  | 41 +++++++++++++++++++++----------------
- tools/perf/util/rb_resort.h |  5 -----
- 2 files changed, 23 insertions(+), 23 deletions(-)
+> From: ZhangPeng <zhangpeng362@huawei.com>
+>
+> The major fault occurred when using mlockall(MCL_CURRENT | MCL_FUTURE)
+> in application, which leading to an unexpected issue[1].
+>
+> This caused by temporarily cleared PTE during a read+clear/modify/write
+> update of the PTE, eg, do_numa_page()/change_pte_range().
+>
+> For the data segment of the user-mode program, the global variable area
+> is a private mapping. After the pagecache is loaded, the private anonymous
+> page is generated after the COW is triggered. Mlockall can lock COW pages
+> (anonymous pages), but the original file pages cannot be locked and may
+> be reclaimed. If the global variable (private anon page) is accessed when
+> vmf->pte is zeroed in numa fault, a file page fault will be triggered.
+> At this time, the original private file page may have been reclaimed.
+> If the page cache is not available at this time, a major fault will be
+> triggered and the file will be read, causing additional overhead.
+>
+> This issue affects our traffic analysis service. The inbound traffic is
+> heavy. If a major fault occurs, the I/O schedule is triggered and the
+> original I/O is suspended. Generally, the I/O schedule is 0.7 ms. If
+> other applications are operating disks, the system needs to wait for
+> more than 10 ms. However, the inbound traffic is heavy and the NIC buffer
+> is small. As a result, packet loss occurs. But the traffic analysis service
+> can't tolerate packet loss.
+>
+> Fix this by holding PTL and rechecking the PTE in filemap_fault() before
+> triggering a major fault. We do this check only if vma is VM_LOCKED. In
+> our service test environment, the baseline is 7 major faults / 12 hours.
+> After the patch is applied, no major fault will be triggered.
+>
+> Testing file anonymous page read and write page fault performance in
+> ext4, tmpfs and ramdisk using will-it-scale[2] on a x86 physical machine.
+> The data is the average change compared with the mainline after the patch
+> is applied. The test results are indicates some performance regressions.
+> We do this check only if vma is VM_LOCKED, therefore, no performance
+> regressions is caused for most common cases.
+>
+> The test results are as follows:
+>                           processes processes_idle threads threads_idle
+> ext4    private file write: -0.51%    0.08%          -0.03%  -0.04%
+> ext4    shared  file write:  0.135%  -0.531%          2.883% -0.772%
+> ramdisk private file write: -0.48%    0.23%          -1.08%   0.27%
+> ramdisk private file  read:  0.07%   -6.90%          -5.85%  -0.70%
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 109b8e64fe69..90eaff8c0f6e 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -74,6 +74,7 @@
- #include <linux/err.h>
- #include <linux/filter.h>
- #include <linux/kernel.h>
-+#include <linux/list_sort.h>
- #include <linux/random.h>
- #include <linux/stringify.h>
- #include <linux/time64.h>
-@@ -4312,34 +4313,38 @@ static unsigned long thread__nr_events(struct thread_trace *ttrace)
- 	return ttrace ? ttrace->nr_events : 0;
- }
- 
--DEFINE_RESORT_RB(threads,
--		(thread__nr_events(thread__priv(a->thread)) <
--		 thread__nr_events(thread__priv(b->thread))),
--	struct thread *thread;
--)
-+static int trace_nr_events_cmp(void *priv __maybe_unused,
-+			       const struct list_head *la,
-+			       const struct list_head *lb)
- {
--	entry->thread = rb_entry(nd, struct thread_rb_node, rb_node)->thread;
-+	struct thread_list *a = list_entry(la, struct thread_list, list);
-+	struct thread_list *b = list_entry(lb, struct thread_list, list);
-+	unsigned long a_nr_events = thread__nr_events(thread__priv(a->thread));
-+	unsigned long b_nr_events = thread__nr_events(thread__priv(b->thread));
-+
-+	if (a_nr_events != b_nr_events)
-+		return a_nr_events < b_nr_events ? -1 : 1;
-+
-+	/* Identical number of threads, place smaller tids first. */
-+	return thread__tid(a->thread) < thread__tid(b->thread)
-+		? -1
-+		: (thread__tid(a->thread) > thread__tid(b->thread) ? 1 : 0);
- }
- 
- static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp)
- {
- 	size_t printed = trace__fprintf_threads_header(fp);
--	struct rb_node *nd;
--	int i;
--
--	for (i = 0; i < THREADS__TABLE_SIZE; i++) {
--		DECLARE_RESORT_RB_MACHINE_THREADS(threads, trace->host, i);
-+	LIST_HEAD(threads);
- 
--		if (threads == NULL) {
--			fprintf(fp, "%s", "Error sorting output by nr_events!\n");
--			return 0;
--		}
-+	if (machine__thread_list(trace->host, &threads) == 0) {
-+		struct thread_list *pos;
- 
--		resort_rb__for_each_entry(nd, threads)
--			printed += trace__fprintf_thread(fp, threads_entry->thread, trace);
-+		list_sort(NULL, &threads, trace_nr_events_cmp);
- 
--		resort_rb__delete(threads);
-+		list_for_each_entry(pos, &threads, list)
-+			printed += trace__fprintf_thread(fp, pos->thread, trace);
- 	}
-+	thread_list__delete(&threads);
- 	return printed;
- }
- 
-diff --git a/tools/perf/util/rb_resort.h b/tools/perf/util/rb_resort.h
-index 376e86cb4c3c..d927a0d25052 100644
---- a/tools/perf/util/rb_resort.h
-+++ b/tools/perf/util/rb_resort.h
-@@ -143,9 +143,4 @@ struct __name##_sorted *__name = __name##_sorted__new
- 	DECLARE_RESORT_RB(__name)(&__ilist->rblist.entries.rb_root,		\
- 				  __ilist->rblist.nr_entries)
- 
--/* For 'struct machine->threads' */
--#define DECLARE_RESORT_RB_MACHINE_THREADS(__name, __machine, hash_bucket)    \
-- DECLARE_RESORT_RB(__name)(&__machine->threads[hash_bucket].entries.rb_root, \
--			   __machine->threads[hash_bucket].nr)
--
- #endif /* _PERF_RESORT_RB_H_ */
--- 
-2.44.0.278.ge034bb2e1d-goog
+Have you retested with the VM_LOCKED optimization?  Why are there still
+performance regression?
 
+> tmpfs   private file write: -0.344%  -0.110%          0.200%  0.145%
+> tmpfs   shared  file write:  0.958%   0.101%          2.781% -0.337%
+> tmpfs   private file  read: -0.16%    0.00%          -0.12%   0.41%
+>
+> [1] https://lore.kernel.org/linux-mm/9e62fd9a-bee0-52bf-50a7-498fa17434ee@huawei.com/
+> [2] https://github.com/antonblanchard/will-it-scale/
+>
+> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+> v2->v3:
+> - Do this check only if vma is VM_LOCKED per David Hildenbrand
+> - Hold PTL and recheck the PTE
+> - Place the recheck code in a new function filemap_fault_recheck_pte()
+>
+> v1->v2:
+> - Add more test results per Huang, Ying
+> - Add more comments before check PTE per Huang, Ying, David Hildenbrand
+>   and Yin Fengwei
+> - Change pte_offset_map_nolock to pte_offset_map as the PTL won't
+>   be used
+>
+> RFC->v1:
+> - Add error handling when ptep == NULL per Huang, Ying and Matthew
+>   Wilcox
+> - Check the PTE without acquiring PTL in filemap_fault(), suggested by
+>   Huang, Ying and Yin Fengwei
+> - Add pmd_none() check before PTE map
+> - Update commit message and add performance test information
+>
+>  mm/filemap.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index b4858d89f1b1..2668bac68df7 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -3181,6 +3181,42 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
+>  	return fpin;
+>  }
+>  
+> +/*
+> + * filemap_fault_recheck_pte - hold PTL and recheck whether pte is none.
+> + * @vmf - the vm_fault for this fault.
+> + *
+> + * Recheck PTE as the PTE can be cleared temporarily during a read+clear/modify
+> + * /write update of the PTE, eg, do_numa_page()/change_pte_range(). This will
+> + * trigger an unexpected major fault, even if we use mlockall(), which may
+> + * increase IO and thus cause other unexpected behavior.
+> + *
+> + * Return VM_FAULT_NOPAGE if the PTE is not none or pte_offset_map_lock()
+> + * fails. In other cases, 0 is returned.
+> + */
+> +static vm_fault_t filemap_fault_recheck_pte(struct vm_fault *vmf)
+> +{
+> +	struct vm_area_struct *vma = vmf->vma;
+> +	vm_fault_t ret = 0;
+> +	pte_t *ptep;
+> +
+> +	if (!(vma->vm_flags & VM_LOCKED))
+> +		return ret;
+> +
+> +	if (pmd_none(*vmf->pmd))
+> +		return ret;
+> +
+
+How about check PTE without lock firstly?  I guess that this can improve
+performance in common case (no race).
+
+> +	ptep = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+> +				   &vmf->ptl);
+> +	if (unlikely(!ptep))
+> +		return VM_FAULT_NOPAGE;
+> +
+> +	if (unlikely(!pte_none(ptep_get(ptep))))
+> +		ret = VM_FAULT_NOPAGE;
+> +
+> +	pte_unmap_unlock(ptep, vmf->ptl);
+> +	return ret;
+> +}
+> +
+>  /**
+>   * filemap_fault - read in file data for page fault handling
+>   * @vmf:	struct vm_fault containing details of the fault
+> @@ -3236,6 +3272,10 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
+>  			mapping_locked = true;
+>  		}
+>  	} else {
+> +		ret = filemap_fault_recheck_pte(vmf);
+> +		if (unlikely(ret))
+> +			return ret;
+> +
+>  		/* No page in the page cache at all */
+>  		count_vm_event(PGMAJFAULT);
+>  		count_memcg_event_mm(vmf->vma->vm_mm, PGMAJFAULT);
+
+--
+Best Regards,
+Huang, Ying
