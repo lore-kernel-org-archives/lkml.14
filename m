@@ -1,155 +1,225 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2116.outbound.protection.partner.outlook.cn [139.219.146.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7F047796
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709192731; cv=none; b=VEHtpF+2y57UzDJR/xLmjg+XN5UMFyKA1d9roq/uA20LBA/1RvBMQZ4oezCg2CJrBlRYO27UUmk0DMAVSmdOT4Oxl6+RMxgJK2OI1nAV02XnkqULOS+xYhDWcxIj10DUCqaJ+ScF5CqMiSU1y6acAI9ZSJ0pctEK3hMmyZcobYk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709192731; c=relaxed/simple;
-	bh=nprCiNIb1lN5/qtpPbPjzPejLTVyLTXlXUF6ldlGyIg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qOADZ+una7YlWTuXKU+UTrMtyoRgK6p5AA+lx3QQyOZPO2WOBKjXL8GWdw+LuYb8peRbZUZm8+XIW0C9jTUrLngFjB7titQUxylal6U62StjvVtM/k6azpd2kjnNZJmMIxK/lZt/fG65t1sDvEf2X3WpqCq87bTibphBjWeaLpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wYd/8Lvf; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wYd/8Lvf"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-563d32ee33aso863984a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 23:45:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709192728; x=1709797528; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=aiDM2lk2ZusTKKAWchaELkIj8SFXFJyRyBEHuc5rkt8=;
-        b=wYd/8LvfsUA+DJWdu1YvvoTlFWZvnsoWn5jIiU2zGUYoPENig9tTDv+j3P2qcOGPy8
-         JiQ2XJrcOsZK5m3X72HdUPougX2vRrmnj3V1jnjBd2sBsMHh+/X0d8KqMfw615FXrnQd
-         W9ziD9aoYXESGdsHlHmSDJSaQqWEw29UImRSnZD4ybOx7mRYK7tKfaJ1Ycw9z+ORJ6OC
-         TiRsahXjvaZI7R36yQEMFgS+CcN8Np+flWBv7mOH1AFydMP5FLMgz9PYS+fAAEXR5zlH
-         U29X7FLIUMKshTCmUEgjrSz1OEVCU7n6JT89PyF9MReLHLoV4O2wS+adw41uEfmgWLMh
-         IGYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709192728; x=1709797528;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aiDM2lk2ZusTKKAWchaELkIj8SFXFJyRyBEHuc5rkt8=;
-        b=XIWEmSRnYja0scXuSgmxdurQrMdGYZ5llhmdl9ILS6vS+V8YiJEdVXwM8O2cP4W+TA
-         lAiY90EDqwOgmMCR7nX6GKUB33muM05k7XYktRgnEZhMQzVjtGExbA/BBabjZFAPVolM
-         qPtJ0E0I6H47TZxcz5FxxJKCCTR6rDwQFA4wTU4IAOL0lUxHAbrZRR1/cg1OYoa+oB71
-         wRn/loUNZ/Y/5tMxpmQiV2JFpB4nQSrAcj7iCC4pSMCSTxVBegmhM3mZqNlaKUyfdUrX
-         ORbmdG3ChxZbUPIF+O0wxyjJSsv9kteItyiJM3i6gsx7GUQsPxjTcG2UVHwLf0vSsAf5
-         +JZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMweaCopAIYhG0QO5OqUJLatSlec+0m5/3iA/QJoCOMmLbD0GSkyjM1qFFc6BKa9sfK8lUkaT54UENTGrI5thExDtavdWi8Mf1ZI8e
-X-Gm-Message-State: AOJu0YzmAH2DDKTzULu9AwLVRjNncp65PquRJC2Ybg0k/IcxjhuF5GZ8
-	1WYwksJ0WqDibzGA7i+1Z3Sson7xtIyzMfLIvLK3ftXQQljAS0lxFY4Vqeh1DiBYjvgs/TztH9X
-	d
-X-Google-Smtp-Source: AGHT+IFP6qMAvSFJZFJJC6eIDbHPkr6AJyEjLw7OetdzaRfyq5ERUUiZnqTTbAF14kuhwEzsX0Xy7g==
-X-Received: by 2002:a17:906:7150:b0:a44:17da:41d with SMTP id z16-20020a170906715000b00a4417da041dmr853496ejj.46.1709192727958;
-        Wed, 28 Feb 2024 23:45:27 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id mc18-20020a170906eb5200b00a3f28bf94f8sm394701ejb.199.2024.02.28.23.45.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 23:45:27 -0800 (PST)
-Message-ID: <2ad77fdf-ab8d-43b1-be19-304c9f983f3a@linaro.org>
-Date: Thu, 29 Feb 2024 08:45:25 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232C145955;
+	Thu, 29 Feb 2024 07:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.116
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709192734; cv=fail; b=ZIItPnB2mmcV7MUCrZZS+drkb9Fcjo+SDdHhNoW0bxDmEgDcNZJTPY1ntCAZR4HNPkN8jJcgMBtLQNNmduPvMG8wL6kETriKYK6o+GaHh+uwY2HLUWc6Vy9Tg0WaMzQ3BNENjUZBjivano6WKxULkfeoZI9oq9DOWCu4uw2dzjc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709192734; c=relaxed/simple;
+	bh=kfOgi4JGeCW0woisOvhN74rXTb6WJEURkD3k9ZKZimw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Buymv/5AVDP/nkFy45Toa1hRUDohYQtRdZVF6JYqMZ8g8J/6LfkIf0WaSdQt3bDjcUgkiWHYQx+2R1KjkOZoCZfGiLQq08ey5IVWNV0uu67cPOSKRdgwO9bZ4AvRP1ElXmcPCFkLiYSPp2GVc037+WBH3c6dxqa7urzqyreQtQw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KRzEB5XoTWNAnzbe5VpmfjuWdP+iqFwAwZCbDIqT1y4Wm1tWcC33XTBPdOQWC1pFeXobG9nxJx07F7AfO2e0VwwS4fF997xehW6NIeNbHBwut6Ti4fpAl04Sk+GTbuT3QnWXFXa93GPZmnh8CqCcKaOKYOzU8+73lJOyWY3GeVddwBMd6EBYOka7Eevi5G12RzaG4ZOt4dezox1n+lvaI7LUAagcjJ/fcy4UY9/fxEShrMfiZlq9z1/JDAAWodVZP87sfJp+ALB7XUwwGJ8Gv2wVgeu1RdZvVM+GxxUBPICrFoEGRSxwjz259Ig2IMRk5RiAfHGkshW9SfWmKTkdbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zp8FbaXxs9K4B9KJkviYLlBYUubtPkGmpyn2WDeAIzc=;
+ b=FNq3pbD+YF/eiZLk5k3HYR72pyQimOpGYCMLrK+a4yHGLZCV2qNrts4oMqI+BVJuoCesnDtViL9xG5Fw0REGZVlS/bnRJNI8BQPCp6IDN4UwJN9mZLSehMmZEas/V2UUfmxxTKh5DYSVubpp1beqwvl2q5PZmagMc7ALieFJmQheYssgdCFZqq4KZhmmEZ9mdM/faSqjGwJRpkgEDMwvRto8PYkReBXUPFUYK9M5VNOJi44MewJx4QXtwVnWaGLiJnbyjSmdFucI5RivnOhXnoNxf0oFGuWBSXKD9v047PtNgnP8XJceY2dDZHTVNHRkEPTxqTqRqefv1SfxYTe+5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6) by ZQ0PR01MB1013.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Thu, 29 Feb
+ 2024 07:30:09 +0000
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2f41:68f:6f07:6c8b]) by ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ ([fe80::2f41:68f:6f07:6c8b%4]) with mapi id 15.20.7316.039; Thu, 29 Feb 2024
+ 07:30:09 +0000
+From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v7 0/4] StarFive's StarLink PMU Support
+Date: Thu, 29 Feb 2024 15:27:16 +0800
+Message-ID: <20240229072720.3987876-1-jisheng.teoh@starfivetech.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0026.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:c::21) To ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: add support for MC33XS2410
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240228133236.748225-1-dima.fedrau@gmail.com>
- <20240228133236.748225-2-dima.fedrau@gmail.com>
- <6dd18b29-6e45-4c35-8f7e-5248b057449d@linaro.org>
- <20240228154129.GA749753@debian>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240228154129.GA749753@debian>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1013:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d73a6fa-d306-4377-7210-08dc38f84248
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	nvvQOvsLVjYycXbwWDcCLx4NUzespTKXZ6sxUly4GPEmtLpONMFowyuCRmzLjzoZeSeZmWaxXfgCxR8VB+6Lx+lBx9rsSojK2bCqv9UYkJYst4Pu+Qefj90yYYD4+g46gnsbH2U2ASg2zmxyDXFUZpTu+xllOcRxFonm2hW3o6JJqPvrDTBpAzlxuA3QaChxOEalF4UYuFroKtzuiiL0jg+fNRjcCKRUyEaHriJiGw/3RFOQVWzite9Uc3ghCl+wlli5HXIeo1kQ8GA7Uy8yaovbF+NkdJtukMse/L8oy8VOElHa0UNBPlpxEfiGGr1UmJ2JH8DdeZ8BHwgriiLE3l1MIDG/D7hndrdaHghAsJA2DBixo7MFR230EAODgOaFU74JVwx90KOPAa2d9T8GIFgPCpXalOpE//x6pECV+XHTCvN+B4VqNVGN9ZDIo4TrqGHRIdXwADqQ9MY6KvqHSfoTAD8VKefVRA9WG/H6g9MUGfxVCcCWfu+FKWOegPr57Yl01ZBthN+oFUGZovDeF0qJNNcEwOCyTjFPzP9RiujHtJO8DxL7PUBTfIKD+UG0QJxndw0BvoQsUVG6COZDwhwxVSBF9SbFXmjEu0a8DG7aDp3ydkCIp4byGGSLwM/NmW6FY5G2V146HE0isrK23g==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(921011)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?noRj8JAsqdi8Og9m6OxD0NVNW7ntLOHtIHF51vD89BDQozV9rj/oRHvz3ENE?=
+ =?us-ascii?Q?J1xrw4GRM0Hbb1tVuDG3j5FF/sYEeAg+uxA73UBdq4qgt/U6Ylkbfg3SZg7c?=
+ =?us-ascii?Q?bMZ4QuBZ18Lh/AfyVkmjA21H7Z6oVE47JOupvIuUe/pm4KL4zlOOE68c1tem?=
+ =?us-ascii?Q?s0EFuFX/Y06Hf9C5pv993Pe7LoeEKUYbTKEHItoyhESlkJIPSUySgO8NdSqT?=
+ =?us-ascii?Q?dc2W4SYQE3R58eoqXVbKSAtJpPyZeiOoZcpao65t++ZoL52D0Qw3tq83Uc4W?=
+ =?us-ascii?Q?JLpuc+IPHlownnYc28XJH/VjILuGPehHw5ITncCL1PZKWDOSonH//hinvQ2G?=
+ =?us-ascii?Q?jbmRzHkFBuZglITL4jWQcYBKq88da08l+KY13BImnvHfMEmmHML6zNCHr1Py?=
+ =?us-ascii?Q?md6hVs0dKzFkJB9obCABrCy+i12L6sWNiSLKbfU/bVFkdZdevSwVgDGpGiiw?=
+ =?us-ascii?Q?dgvwxfXOZWlL0EaPczJEyA3ucAVy366cN7sXv/6xtb/rR5O5Wft85jH6jSat?=
+ =?us-ascii?Q?oHQOm5E6DpRvZZc/o/QkZGsVz+VZpcFarIlXSMWFAHQSsqqjdDzw1F7NRwfQ?=
+ =?us-ascii?Q?BY8n5Yp2U8sax/t6xUtQCjYn53yL1naM9A6HqwD70Jz4ydDL0LRa+Nf9sUGO?=
+ =?us-ascii?Q?NI8mVe0iUCH0Lgz+rqs6wtc291KXAuQld0XVMc5XXiZ/TFDu4XI9UJncYgpF?=
+ =?us-ascii?Q?YiNjjL2EJHLmRZIwPbvnbFaxMTQvXIagsb+WYLr9DN0TPP9To1hLESK7EagT?=
+ =?us-ascii?Q?SkA5I88IyEobQF/a9wXOzf8geYyeEXnN+9uDqEYgtm+bdSA7MMrjwCVZ0YII?=
+ =?us-ascii?Q?PyKQefRnbIiQOWIvpqsvpegxc2zS00nRMmWbK4jKAMF5foBoZf/fEthzXoYR?=
+ =?us-ascii?Q?YAE6trtBwnW612UHt8G+jjU4nZgS7atfdodEUdowCpbWfH6xlm6GDukCfKT7?=
+ =?us-ascii?Q?baBs2SeZ30Ng6+C6EKYhV2Ul8evQaQkH6OLHoqB3muhhbcNHfi3DVeyuxq+f?=
+ =?us-ascii?Q?C9ZkzrrtCeyMGyDiBL9Qi8HEG6l3XDNSTQDOAke2nt4EJ0G4zb7NrpqM4+kA?=
+ =?us-ascii?Q?SofjApN9JkHWFec5Uh/Os7LPKrnVj871lRd0H/M4Er++flirbKTFAXKWrQSf?=
+ =?us-ascii?Q?gRR2jyv73C2fmsHrcjF5hGyhOkqH6l1V8OpX823B19W8hyHkebHs7gkhhIPC?=
+ =?us-ascii?Q?Mn257WDBFv9w952Yf9JB53QhvoGN4wSRN+dD5DIQi0hmcmAtztjEHbma0+s3?=
+ =?us-ascii?Q?jzwLbv70nXbOrcE9Zp7oErmxrLNLdwSzrqG0rT4HlA4MwCl5jN34lFoxNqvv?=
+ =?us-ascii?Q?ZQ6Jezbygqwa7hcw98A71OrlsohsT/m6btbEqloo+sp4Y9eqVunLUm5ci2rl?=
+ =?us-ascii?Q?NP4LoKWDTHtSSQy9qfh99kYRLZ+EJ8cpVi9fnRd4yqGBpvAGp/p1FA8B440U?=
+ =?us-ascii?Q?QcKOUEeCZIJX1QceqY5B8oUVpYHbcdtfVIaiJBiy2xAaWB/RkD6q5jxsqima?=
+ =?us-ascii?Q?o+M0JrsnW1+Vf9nrv6k9Fd4L1qKDriJb0GXhRQox1eTZAXJySoW3NDHp6bhs?=
+ =?us-ascii?Q?inS8J4MfwLv9nP+fFd2jTcDM4/idDMiwDP8c+9dqgFDPJCJV1Ij9C3K89p3W?=
+ =?us-ascii?Q?kw=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d73a6fa-d306-4377-7210-08dc38f84248
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 07:30:09.6949
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UFZDv/ugyGVPo9+6YRZ0Ca3pV7GEToAhUYOU6f46FpLaOXZGq9NeJbINOfCKeHGJOOksQ5Yynoeg87V7JqHe+V//vOqM68a+idY5pYOmrrY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1013
 
-On 28/02/2024 16:41, Dimitri Fedrau wrote:
->>> +    maxItems: 5
->>> +
->>> +  pwm-names:
->>> +    items:
->>> +      - const: di0
->>> +      - const: di1
->>> +      - const: di2
->>> +      - const: di3
->>> +      - const: ext_clk
->>
->> Aren't these clocks?
->>
-> di0-3 are PWM input signals which are translated to output voltage "vpwr".
-> ext_clk is described as PWM clock in the datasheet. Didn't used it, just
-> mentioned it here for completeness.
+Changes since v6:
+- Address comments from Will
+  - Add "COMPILE_TEST" to STARFIVE_STARLINK_PMU Kconfig dependency.
+  - Fix incorrect bitmask with BIT_ULL().
+  - Drop kfree() which is not needed in devm_kzalloc() allocation.
 
-Then it looks more like a clock, so clocks: property.
+Changes since v5:
+- Add entry to MAINTAINERS and mark the driver as "Maintained".
 
->>> +
->>> +  vdd-supply:
->>> +    description:
->>> +      Logic supply voltage
->>> +
+Changes since v4:
+- Add Reviewed-by tag from Conor to dt-bindings.
+- Add Documentation/admin-guide/perf/starfive_starlink_pmu.rst.
+- Rework starfive_starlink_pmu.c based on Jonathan's comment.
+  - Use <linux/mod_devicetable.h> in place of <linux/of_device.h>.
+  - Prefix CYCLES to STARLINK_CYCLES.
+  - Fixup error handling, remove unnecessary comma after NULL and
+    comments.
 
+Changes since v3:
+- Change dt-bindings filename along with the compatible field to
+   "starfive,jh8100-starlink-pmu" with SOC specific naming
+   convention.
+- Drop unused label defined in examples section in dt-bindings.
+- Update compatible field in starfive_starlink_pmu.c to the
+  aforementioned.
 
-Best regards,
-Krzysztof
+Changes since v2:
+- Change compatible field from generic "starfive,starlink-pmu"
+   to "starfive,starlink-500-pmu" with specific IP versioning
+   in bindings and driver.
+- Fix warning '-Wmissing-prototypes' reported by kernel test robot,
+   by appending static to starlink_pmu_set_event_period() in
+   starfive_starlink_pmu.c.
+
+Changes since v1:
+- Change 'depends on SOC_STARFIVE' to 'depends on ARCH_STARFIVE'
+   in Kconfig
+
+----
+
+This patch series adds support for StarFive's StarLink Performance
+Monitor Unit(PMU).
+StarFive's StarLink PMU integrates one or more CPU cores with
+a shared L3 memory system. The PMU supports overflow interrupt,
+up to 16 programmable 64bit event counters, and an independent
+64bit cycle counter.
+StarLink PMU is accessed via MMIO.
+
+Example Perf stat output:
+[root@user]# perf stat -a -e /starfive_starlink_pmu/cycles/ \
+        -e /starfive_starlink_pmu/read_miss/ \
+        -e /starfive_starlink_pmu/read_hit/ \
+        -e /starfive_starlink_pmu/release_request/  \
+        -e /starfive_starlink_pmu/write_hit/ \
+        -e /starfive_starlink_pmu/write_miss/ \
+        -e /starfive_starlink_pmu/write_request/ \
+        -e /starfive_starlink_pmu/writeback/ \
+        -e /starfive_starlink_pmu/read_request/ \
+        -- openssl speed rsa2048
+Doing 2048 bits private rsa's for 10s: 5 2048 bits private RSA's in
+2.84s
+Doing 2048 bits public rsa's for 10s: 169 2048 bits public RSA's in
+2.42s
+version: 3.0.11
+built on: Tue Sep 19 13:02:31 2023 UTC
+options: bn(64,64)
+CPUINFO: N/A
+                  sign    verify    sign/s verify/s
+rsa 2048 bits 0.568000s 0.014320s      1.8     69.8
+/////////
+ Performance counter stats for 'system wide':
+
+         649991998      starfive_starlink_pmu/cycles/
+           1009690      starfive_starlink_pmu/read_miss/
+           1079750      starfive_starlink_pmu/read_hit/
+           2089405      starfive_starlink_pmu/release_request/
+               129      starfive_starlink_pmu/write_hit/
+                70      starfive_starlink_pmu/write_miss/
+               194      starfive_starlink_pmu/write_request/
+            150080      starfive_starlink_pmu/writeback/
+           2089423      starfive_starlink_pmu/read_request/
+
+      27.062755678 seconds time elapsed
+
+Ji Sheng Teoh (4):
+  perf: starfive: Add StarLink PMU support
+  dt-bindings: perf: starfive: Add JH8100 StarLink PMU
+  docs: perf: Add description for StarFive's StarLink PMU
+  MAINTAINERS: Add entry for StarFive StarLink PMU
+
+ Documentation/admin-guide/perf/index.rst      |   1 +
+ .../perf/starfive_starlink_pmu.rst            |  46 ++
+ .../perf/starfive,jh8100-starlink-pmu.yaml    |  46 ++
+ MAINTAINERS                                   |   7 +
+ drivers/perf/Kconfig                          |   9 +
+ drivers/perf/Makefile                         |   1 +
+ drivers/perf/starfive_starlink_pmu.c          | 642 ++++++++++++++++++
+ 7 files changed, 752 insertions(+)
+ create mode 100644 Documentation/admin-guide/perf/starfive_starlink_pmu.rst
+ create mode 100644 Documentation/devicetree/bindings/perf/starfive,jh8100-starlink-pmu.yaml
+ create mode 100644 drivers/perf/starfive_starlink_pmu.c
+
+-- 
+2.43.0
 
