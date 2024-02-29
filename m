@@ -1,42 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B106B3984D;
-	Thu, 29 Feb 2024 05:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ECE3BBE8
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 05:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709184070; cv=none; b=q65FL0urxyRiM/r4MrWEUCpNb9Rwfoa13QUDfO+jDlaK95ruInBTQ/er/OE+pjj2O4J/B6fVuA8SN2+YGs6VN0/rLf0/vtiPBSsezJCRo7lQe7a5Nf5HCpTbgcaZe40avWbn+us2m7679hM/zUwZQaj3x/thY9r/KLD/gXnmmJ8=
+	t=1709184094; cv=none; b=N1VDyf/AM7VbwzAFXi1Jn8bB6L2YcRjoN64rGWO4wley36+zxIS8HUbDb739uWjWrgh+vt42hF+6FgrcvEi8KkTE+OdiTxZvep6bb7lWR0BC8mg15CjMSdrYFpOxcVudH2jGzg/O4PVn1/uRcRapsFQiQh3yoy2Bdnf1GWHsoic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709184070; c=relaxed/simple;
-	bh=DHiWzPoy1kmOKKN7UVFFQWx2TovKkknoFp+snJK8Osw=;
+	s=arc-20240116; t=1709184094; c=relaxed/simple;
+	bh=+OKbZBg8INtp2Ye+Yftr/WMz8Wbb90mWnLDPuYct/UY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RODTkiOvvhpuLqWv3FZqqoVOaqELbEiQp6v5uwYZ/Qiyk9UB4gVVBenZbBrwGvghF/Yga/BjuDKm3NfH/q7ZshCBllehYldhKV00fwzlBTshtLigDcSWxDE9vRq/Xxj70PSFa9ldjzfYRaMLWWBBaiA4hlddDkWhaKzB8w6R4JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRqTuSmi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rtss1KTpYzvTBC80h3zftWnueVjAlRAlUAYDuFARLcqzPdP8p0+d+YgK9zP0i5IpaIpGhP3/k5tbq23Q6q0m0AYlRH6/2mdeOIF+2e50VaU1/Lu+LaDk46nMBDIkITmWsS2GsKVNv/4vEFbmWFtTV0MeDafiqrO042ZGSjCicSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FVuPTr/c; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRqTuSmi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D11E1C433F1;
-	Thu, 29 Feb 2024 05:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709184070;
-	bh=DHiWzPoy1kmOKKN7UVFFQWx2TovKkknoFp+snJK8Osw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mRqTuSmirBwMmznqcSKqYz8VGmpkPXcOSm7ezRsKOqrlQP4DKqMOAs4HU8lYI3TR3
-	 HT06mNSjpPq5Vi2ZIJvYAmKu3uK60CDKjO2mDD7OMlRGWDicNyhz1VLhKke0yyhaTf
-	 1tWfqw78tJCFQ+/juWqm2IjUg9r4tJFp2Tpmx1qntPBxaFrY7Jp7g3spBIjjyJ/pJ2
-	 vy3xbeHFe3l3RmVm0cQi+tr84qomrmqC4MWbqmJzsJ0P/eqjVwUTgIpjhQyFP3aw0d
-	 pgSZbjIZPLt0+KrNhBenNV3ChOmK0BzJ63+NssbMNPy2L5ljdpjouGxzQ2D86j0P9M
-	 WnYxxI5CFP0ig==
-Date: Thu, 29 Feb 2024 06:21:04 +0100
-From: Greg KH <gregkh@kernel.org>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	KVM list <kvm@vger.kernel.org>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: CVE-2021-46978: KVM: nVMX: Always make an attempt to map eVMCS
- after migration
-Message-ID: <2024022905-barrette-lividly-c312@gregkh>
-References: <2024022822-CVE-2021-46978-3516@gregkh>
- <54595439-1dbf-4c3c-b007-428576506928@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FVuPTr/c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709184093; x=1740720093;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+OKbZBg8INtp2Ye+Yftr/WMz8Wbb90mWnLDPuYct/UY=;
+  b=FVuPTr/cYdiMHpDCKkFYSsq6YOCrTSQ7cwT+MmeEyRl3aDJsMvMCn99b
+   7GI4mYj2wo5h4thU1pAck+wa6bs9zp7xearsMhOfrR/VHp1RWJgFxFCNf
+   m6/8DMqaqVhIFjrQzro+xrez1hoYxm6jP0TcBrzgInP3GC+TWDpU8Dd6n
+   vNbgpoQLeF5MB4Lyu470+iId/UXgBiuDEYnjTLRecIZmeDk0tt+Y6OsJ8
+   6r+iSDOfIrfs3vIpdc/ecLPFIUlapSbGYe/dbGzS7rXIRSgl9uetj9OSz
+   k7xq2TgATsQL00IBNRafh0XKfwbx7O013wUjfk4PsygI5gxjSwwsVeSng
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="26097756"
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="26097756"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 21:21:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="7735235"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 28 Feb 2024 21:21:26 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rfYrD-000CfY-1k;
+	Thu, 29 Feb 2024 05:21:23 +0000
+Date: Thu, 29 Feb 2024 13:17:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: peterx@redhat.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Yang Shi <shy828301@gmail.com>, Muchun Song <muchun.song@linux.dev>,
+	Jason Gunthorpe <jgg@nvidia.com>, x86@kernel.org,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	linuxppc-dev@lists.ozlabs.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	peterx@redhat.com
+Subject: Re: [PATCH 5/5] mm/treewide: Drop pXd_large()
+Message-ID: <202402291233.CVhChP2c-lkp@intel.com>
+References: <20240228085350.520953-6-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,54 +65,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <54595439-1dbf-4c3c-b007-428576506928@redhat.com>
+In-Reply-To: <20240228085350.520953-6-peterx@redhat.com>
 
-On Wed, Feb 28, 2024 at 11:09:50PM +0100, Paolo Bonzini wrote:
-> On 2/28/24 09:14, Greg Kroah-Hartman wrote:
-> > From: gregkh@kernel.org
-> > 
-> > Description
-> > ===========
-> > 
-> > In the Linux kernel, the following vulnerability has been resolved:
-> > 
-> > KVM: nVMX: Always make an attempt to map eVMCS after migration
-> 
-> How does this break the confidentiality, integrity or availability of the
-> host kernel?  It's a fix for a failure to restart the guest after migration.
-> Vitaly can confirm.
+Hi,
 
-It's a fix for the availability of the guest kernel, which now can not
-boot properly, right?  That's why this was selected.  If this is not
-correct, I will be glad to revoke this.
+kernel test robot noticed the following build errors:
 
-> Apparently the authority to "dispute or modify an assigned CVE lies solely
-> with the maintainers", but we don't have the authority to tell you in
-> advance that a CVE is crap, so please consider this vulnerability to be
-> disputed.
+[auto build test ERROR on akpm-mm/mm-everything]
 
-Great, but again, not allowing the guest kernel to boot again feels like
-an "availability" issue to me.  If not, we can revoke this.
+url:    https://github.com/intel-lab-lkp/linux/commits/peterx-redhat-com/mm-ppc-Define-pXd_large-with-pXd_leaf/20240228-170049
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240228085350.520953-6-peterx%40redhat.com
+patch subject: [PATCH 5/5] mm/treewide: Drop pXd_large()
+config: i386-buildonly-randconfig-001-20240228 (https://download.01.org/0day-ci/archive/20240229/202402291233.CVhChP2c-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240229/202402291233.CVhChP2c-lkp@intel.com/reproduce)
 
-> Unlike what we discussed last week:
-> 
-> - the KVM list is not CC'd so whoever sees this reply will have to find the
-> original message on their own
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402291233.CVhChP2c-lkp@intel.com/
 
-Adding a cc: to the subsystem mailing list for the CVEs involved can be
-done, but would it really help much?
+All errors (new ones prefixed by >>):
 
-> - there is no list gathering all the discussions/complaints about these
-> CVEs, since I cannot reply to linux-cve-announce@vger.kernel.org.
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:11:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+   In file included from arch/x86/include/asm/tlbflush.h:16:
+>> arch/x86/include/asm/pgtable.h:1099:19: error: redefinition of 'pud_leaf'
+    1099 | static inline int pud_leaf(pud_t pud)
+         |                   ^
+   include/asm-generic/pgtable-nopmd.h:34:19: note: previous definition is here
+      34 | static inline int pud_leaf(pud_t pud)           { return 0; }
+         |                   ^
+   1 error generated.
+   make[3]: *** [scripts/Makefile.build:116: arch/x86/kernel/asm-offsets.s] Error 1 shuffle=298844285
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1191: prepare0] Error 2 shuffle=298844285
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:240: __sub-make] Error 2 shuffle=298844285
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:240: __sub-make] Error 2 shuffle=298844285
+   make: Target 'prepare' not remade because of errors.
 
-That's what lkml is for, and is why the "Reply-to:" is set on the
-linux-cve-announce emails.  Creating yet-another-list isn't really going
-to help much.
 
-Also, this is part of the "import the GSD database into CVE" which the
-CVE project asked us to do, which is why these "old" issues are popping
-up now.
+vim +/pud_leaf +1099 arch/x86/include/asm/pgtable.h
 
-thanks,
+  1093	
+  1094	static inline int pud_bad(pud_t pud)
+  1095	{
+  1096		return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+  1097	}
+  1098	#else
+> 1099	static inline int pud_leaf(pud_t pud)
+  1100	{
+  1101		return 0;
+  1102	}
+  1103	#endif	/* CONFIG_PGTABLE_LEVELS > 2 */
+  1104	#define pud_leaf pud_leaf
+  1105	
 
-greg k-h
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
