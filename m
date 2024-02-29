@@ -1,90 +1,150 @@
-Received: from mx9.didiglobal.com (mx9.didiglobal.com [111.202.70.124])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 192CA3A28D;
-	Thu, 29 Feb 2024 05:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.124
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246A23A1BF
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 05:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709184706; cv=none; b=PFI/jDW9ISHqKRptjXoJM8KIjP1JlKhuClsm8yuP2Eh/KZgExR7eamvN9QWvkXfcvAx8ZHy6SfMSZ82/qa6XC94Ybnlpudowz3ECF5bmCBfoEdO68F7UtnMH8MPBVCCTXhyPlsrAOUi58wwmfyhC6/4pdMiJPD4SX2jVqY7+8ZY=
+	t=1709184727; cv=none; b=o70QSXQPqSlfhBWlNnYjiOvNYVnCQm4N/lxbIZIw7K6KRYsoOpaHOzAEdcQKz9SpUsmHLFHt7x2Kf3/QR2PC3ctaYU7uw5M6eDS8Hgs494TNADBpJCoKWmZLxdMSptwbKOzp6wUBFmtr/0LDM0m+Bc+9S9zFL01xo9W7yaZNtFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709184706; c=relaxed/simple;
-	bh=ItNNI5PI2/YfqekAfeRz73Do4tEfWpAAJlwE9t9osO4=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=l5a/Y35iPu3p5DXLRl7KueenygWiVQnbUFUtbhBjFgcw8sijHxMmrdCwKI+6zEv95js3+xDuIfOUxS/JXEX/tXD3Eybxs+dKoK62+rd4ssFYWLJ1R6L7jKi1JIafpXBSxkgQCokGDq8EWr8ZLHQ+bQhqxePG0MwAmPaEnw7ZcpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
-Received: from mail.didiglobal.com (unknown [10.79.65.12])
-	by mx9.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 6D60D1875C42A1;
-	Thu, 29 Feb 2024 13:28:31 +0800 (CST)
-Received: from didi-ThinkCentre-M920t-N000 (10.79.64.101) by
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 29 Feb 2024 13:28:30 +0800
-Date: Thu, 29 Feb 2024 13:28:22 +0800
-X-MD-Sfrom: fuyuanli@didiglobal.com
-X-MD-SrcIP: 10.79.65.12
-From: fuyuanli <fuyuanli@didiglobal.com>
-To: <edumazet@google.com>
-CC: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<fuyuanli@didiglobal.com>
-Subject: [PATCH] tcp: Add skb addr and sock addr to arguments of tracepoint
- tcp_probe.
-Message-ID: <20240229052813.GA23899@didi-ThinkCentre-M920t-N000>
-Mail-Followup-To: edumazet@google.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, fuyuanli@didiglobal.com
+	s=arc-20240116; t=1709184727; c=relaxed/simple;
+	bh=Gz6cyj5IxxyD9H9LT1YWjsonRagDA8CrCUTcK3stBxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NenKMEPnBx+1ZLc/ONkZDTtIFl9WnOKmEPFCm/onQbcMlc2HhpztF8LRgHAHxHj5QAUNUyAKlUG7zENr3gJ0U0D3bxqQ1LGgTeHghs5r6io/7TEojYJvgzC5mByEya984+oVicNbaZ9aELjvABAzSw/6I+u7io25F6nBb777N4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Qsc9mKaA; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Qsc9mKaA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D2F4C433C7;
+	Thu, 29 Feb 2024 05:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1709184726;
+	bh=Gz6cyj5IxxyD9H9LT1YWjsonRagDA8CrCUTcK3stBxk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qsc9mKaAxJayIK4XM6LUY4Ns4dVOP8NjdPtFZK/qNdmUG85RxJ+7QkeCiswx7g3Df
+	 iv5b6a5zZbT74yP10LL9XsJQ1OX3S0o3A891T2/WMlYdasifpE0OCmy7FpLHvr1F6v
+	 tltGV/emaRYLxQ4oH7tkQ3IjXxCsgQVS8xKNQUw8=
+Date: Thu, 29 Feb 2024 06:32:03 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+	cve@kernel.org, Jiri Kosina <jkosina@suse.cz>
+Subject: Re: CVE-2023-52437: Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING
+ in raid5d"
+Message-ID: <2024022949-uncapped-crushing-e5f9@gregkh>
+References: <ZdX2LcAWR6wyvYC5@sashalap>
+ <bec7c1db-c13e-4b00-a968-4ae69539d7ac@redhat.com>
+ <ZdYKSkqRckOc5aRO@sashalap>
+ <a9652aa2-e79b-4144-b3b7-746587af9eca@redhat.com>
+ <ZdYSmdUKzQAYpprc@sashalap>
+ <3ebbc121-8cb8-4b8d-ad5d-fb5c576e5171@redhat.com>
+ <2024022129-expiring-resurface-146c@gregkh>
+ <288132ea-87cf-4b56-908e-2263b6c6b67f@redhat.com>
+ <2024022236-stock-wielder-fcbc@gregkh>
+ <7be9ad00-1432-4a19-a954-32fa0f24fecd@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: ZJY02-PUBMBX-01.didichuxing.com (10.79.65.31) To
- ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
+In-Reply-To: <7be9ad00-1432-4a19-a954-32fa0f24fecd@redhat.com>
 
-It is useful to expose skb addr and sock addr to user in tracepoint
-tcp_probe, so that we can get more information while monitoring
-receiving of tcp data, by ebpf or other ways.
+Sorry for the delay in response, been a busy week...
 
-For example, we need to identify a packet by seq and end_seq when
-calculate transmit latency between lay 2 and lay 4 by ebpf, but which is
-not available in tcp_probe, so we can only use kprobe hooking
-tcp_rcv_esatblised to get them. But we can use tcp_probe directly if skb
-addr and sock addr are available, which is more efficient.
+On Thu, Feb 22, 2024 at 02:31:06PM +0100, Paolo Bonzini wrote:
+> > > Perhaps since there's no archive for cve@kernel.org, there should be a
+> > > public discussion mailing list (e.g. linux-cve@vger) that maintainers can
+> > > reply to?  The private cve@kernel.org alias would then be just for the
+> > > request of embargoed CVEs.
+> > 
+> > What's wrong with lkml for discussion?  I'll add a "reply-to" to point
+> > there as well so that it will properly redirect if you respond to a
+> > message sent to the -announce list.
+> 
+> Well, LKML is not the most searchable archive and subscribing to it puts
+> measurable stress on the kernel.org servers (mostly due to gmail
+> shenanigans, but still).
 
-Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
----
- include/trace/events/tcp.h | 5 +++++
- 1 file changed, 5 insertions(+)
+lore is a great search tool for lkml, and you can subscribe to feeds
+from it very easily.
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 7b1ddffa3dfc..096c15f64b92 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -258,6 +258,8 @@ TRACE_EVENT(tcp_probe,
- 		__field(__u32, srtt)
- 		__field(__u32, rcv_wnd)
- 		__field(__u64, sock_cookie)
-+		__field(const void *, skbaddr)
-+		__field(const void *, skaddr)
- 	),
- 
- 	TP_fast_assign(
-@@ -285,6 +287,9 @@ TRACE_EVENT(tcp_probe,
- 		__entry->ssthresh = tcp_current_ssthresh(sk);
- 		__entry->srtt = tp->srtt_us >> 3;
- 		__entry->sock_cookie = sock_gen_cookie(sk);
-+
-+		__entry->skbaddr = skb;
-+		__entry->skaddr = sk;
- 	),
- 
- 	TP_printk("family=%s src=%pISpc dest=%pISpc mark=%#x data_len=%d snd_nxt=%#x snd_una=%#x snd_cwnd=%u ssthresh=%u snd_wnd=%u srtt=%u rcv_wnd=%u sock_cookie=%llx",
--- 
-2.17.1
+> Plus (relatively) fine grained mailing lists are really cheap to subscribe
+> to lore/NNTP.
 
+Lore picks out stuff from lkml just as easily.
+
+> So if the reply-to points to LKML + the subsystem mailing
+> list for the maintainers + a new ML for the security folks (and these three
+> are also CC'd on the announcements, at least the last two), that would be
+> nice to have.  I can work on patches to vulns.git, for example to integrate
+> with get_maintainer.pl, if you ack the idea.
+
+That might be a bit noisy, for some commits, but sure, I can see the
+value in being notified about a CVE for my subsystem.  If you have a
+specific 'get_maintainer.pl' command line invocation you think would be
+good, I can easily add it to the scripts.
+
+> The linux-cve@ mailing list would also be a natural place to send patches to
+> vulns.git.
+
+Proliferation of mailing lists are a pain, I'd like to resist that for
+now if possible.  Just use lkml and cc: cve@kernel.org if you want to
+send us patches.
+
+> > > * is there a limit on embargo length similar to security@kernel.org
+> > 
+> > We have no embargos here, you should NOT be emailing this alias about
+> > any unfixed security things, the document explicitly states this.
+> 
+> Wait that's not what the docs say:
+> 
+> +If anyone wishes to
+> +have a CVE assigned before an issue is resolved with a commit, please
+> +contact the kernel CVE assignment team at <cve@kernel.org> to get an
+> +identifier assigned from their batch of reserved identifiers.
+
+The document also says:
+	If you feel you have found an unfixed security issue, please
+	follow the :doc:`normal Linux kernel security bug reporting
+	process<../process/security-bugs>`.
+
+So _IFF_ you have an unfixed security issue that security@k.o knows
+about, and you MUST have a CVE id at this point in time (i.e. because it
+needs to be referenced somewhere), then you can email cve@k.o to get
+one, but the number of times I forsee that being the case based on the
+security@k.o workload is going to be very small.
+
+So we can take those on a case-by-case basis please, that's not going to
+be a normal occurrence.
+
+> So it's just that it's a lot of new work.  So far the only thing for which I
+> can say "this sucks" is having one CVE per commit in a multi-patch fix.
+> That's somewhat ingrained in the operation of the bippy script, but not
+> unfixable (and BTW I wouldn't mind rewriting bippy in Python, but that's a
+> different story).
+
+Yes, the "multi-patch" issue is going to be real, and we will handle it
+when it happens.  The current scripts don't handle that well, but they
+DO allow us to hand-write entries, which is probably what is going to
+happen for those types of rare issues.
+
+And yes, bippy in Python would be nice, but my python skills are bad
+(and you didn't want me writing it in perl), so I went with what I could
+do in the amount of time I had to get it up and running.
+
+> > I've already had soo many threads from the "Red Hat product security
+> > team" including flow charts and other fun things to last me quite a
+> > while already, and that's just in the past few days.
+> 
+> Lol yeah I've seen some of those too (but only this morning---I'm not
+> writing on their behalf, in case that was unclear).
+
+I met with someone from Red Hat earlier this week and hopefully most of
+this will be resolved soon, I'm waiting to hear back from them for the
+issues we discussed.
+
+thanks,
+
+greg k-h
