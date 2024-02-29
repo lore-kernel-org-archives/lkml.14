@@ -1,207 +1,154 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2086.outbound.protection.outlook.com [40.107.100.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BDD1DFE3;
-	Thu, 29 Feb 2024 12:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709210771; cv=fail; b=aU6l1hJBOOZSRhVH8DcoIjZGRd3oGnII0mYSEQwdIWHZaCxJysXBPMNzivuBJ7EcqVwzX3JuIR/6dV0eT/2MJoLTHK5R7kj9olPv1wwfFGHw4Xb8eT5WTRhdMgM+nn/3cLbwcHSRKz1LUb1BXPVUKnyqZtLEy+IAUv2Dn1c4V5c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709210771; c=relaxed/simple;
-	bh=ss8G5Kt7xEUKHY10nEPQG4HpBsPwsdU1QHNBvP9KQEA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cVV4P0I6Km01TFpuFmAhNeCnPh56KDqDKOLFi81XVAfNfeRTElqE1n65V/SbaCyObqsIhjHyXvs3DX1maAvirMN5GQp7fKmACBbbOCj3Aon3IDAYTwh3t+WV9t+DsoS8WzeQ+pBh5vF2TKnFbRN0hllsNE0XE8Vu4wtmajsWM98=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pTgNnuXT; arc=fail smtp.client-ip=40.107.100.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pTgNnuXT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nAbShlMoBN9r3xcSKiJM5SqmCMdIaQvCG+I/kyFre7luyK45dLQrq6UF3RUKmJt8gfP0zywtjuyHBfCtfOMtlFmn8Db4cnbUWdjiPkRbgnDz1B7uSEoQhSFfcTCdxkdl8zOt7/nCTdOjgY1W+HVEy3IBoO++gvBSS3fkc/Mv/Pa8EPYjJ+9uFbaPEmEpOMHeCj+3B6iUx3kCbV1Qun/Zt+dsTCwMbLOkUQ3q9h9vnIu6z/gm1oxe+Uw4sKmB7qhxOCFkk6OoTokSv+VJEOSSnJ0umIhnBZYgBpTt/CbQi0jPWHJxP8QSl1rX/HELom0nY68iYQNdRcUOb4vuflFhog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+YoBnbsp4vOPMIEMgKovnBtOUsXH5Mwte+a9paJ1/Ek=;
- b=BcURUpLhLmI8YyUBFRGRXFdKFhHiH0VYzz8g/8Z8UZr5ziFVmSooB3EdrUkvX/Zxeij92fc4R8KpOtQGlEJnQ/caWLTYfI4akpntie5K0sK9rJqW2hZV4tG+8+GIZ2H9pl9sBW566a0s+KMQB7g5FYiIAfjdj7nNa9OiHytz22sdbm/ZWBohA8sYXiHkVVPZc9taGsd8oNpThldsjDR1hJwgL23fdbgk1Ffysvyl3kIAGVy72Nws1FD2Ejdn4p4TiYGbbfOpEyWg8ssdWVh3XTsiSckTiNtfDW/rT7RczfaCV54efbMDdP4voFu9MvbQH8mX+raV+ul6VZ2IQQ8gXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+YoBnbsp4vOPMIEMgKovnBtOUsXH5Mwte+a9paJ1/Ek=;
- b=pTgNnuXTzWg6iB5oNNmN4YuEWVNnGw4AjMJFbiBOaspEtRGzXVCM2HJ/kc+GBxOry5vrYAZhLg6sA5AbdvJOO4LNti0iK7aNW8en2DZHLplC8oD+Z19/bcQM7w6x6HMQaFsfLf11OAnHWYUj7sH3Bxylbwv5FXHn3+xsawMmbWc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ2PR12MB8109.namprd12.prod.outlook.com (2603:10b6:a03:4f5::8)
- by PH8PR12MB7231.namprd12.prod.outlook.com (2603:10b6:510:225::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
- 2024 12:46:07 +0000
-Received: from SJ2PR12MB8109.namprd12.prod.outlook.com
- ([fe80::6622:ec76:9367:3907]) by SJ2PR12MB8109.namprd12.prod.outlook.com
- ([fe80::6622:ec76:9367:3907%2]) with mapi id 15.20.7316.035; Thu, 29 Feb 2024
- 12:46:06 +0000
-Message-ID: <2b274111-e65a-4b99-8f07-220324f1e214@amd.com>
-Date: Thu, 29 Feb 2024 13:45:54 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] clk: zynq: Prevent null pointer dereference caused by
- kmalloc failure
-Content-Language: en-US
-To: Duoming Zhou <duoming@zju.edu.cn>, linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- sboyd@kernel.org, mturquette@baylibre.com
-References: <20240229122250.24786-1-duoming@zju.edu.cn>
-From: Michal Simek <michal.simek@amd.com>
-Autocrypt: addr=michal.simek@amd.com; keydata=
- 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
- 3i3l5DA=
-In-Reply-To: <20240229122250.24786-1-duoming@zju.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR06CA0208.eurprd06.prod.outlook.com
- (2603:10a6:802:2c::29) To SJ2PR12MB8109.namprd12.prod.outlook.com
- (2603:10b6:a03:4f5::8)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C5777A72D;
+	Thu, 29 Feb 2024 12:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709211038; cv=none; b=YhE2iZ2Xq2hDBowoayzX5fzGELg1pojrd0gW8N+D0uVaZMjFdbNk0KpPw0UTefXXDpPTynufw3DowixQVzXGcNWbCTpdUdu4ScSAS+Nhf6TLP6P038IxSeeffz4kLSomYahkRNLCC4e9cLBXEghNTXpXjdMLDCL+xMBA0XGj1FI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709211038; c=relaxed/simple;
+	bh=v4Z+oXuXx0D5jdKPs8wfHh7ousIZoYSShg2LKWjb2ZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CzHs0DA5BjzmXAEIDgPFEW2wfpW/JWnuk1/U+cesxY9GijMr+5UqjdEOyvPjGNRsDOWAQbxAX7Abwt7V+MaoBCjeYoEXWI0/j6OFv4z4nZ23l8cXwSjn2GeCOMHN2OfH/GbTgIlL8CN1ze5Rgdp3xLhvvOWvp4fdsNq7oAbrUYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D44CB1FB;
+	Thu, 29 Feb 2024 04:51:13 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.67.138])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D29AD3F762;
+	Thu, 29 Feb 2024 04:50:29 -0800 (PST)
+Date: Thu, 29 Feb 2024 12:50:24 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org, catalin.marinas@arm.com,
+	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+Subject: Re: [PATCH V16 2/8] KVM: arm64: Prevent guest accesses into BRBE
+ system registers/instructions
+Message-ID: <ZeB9kHheAGJ__TQU@FVFF77S0Q05N>
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-3-anshuman.khandual@arm.com>
+ <ZdYCUi9YVDNDz7fr@FVFF77S0Q05N>
+ <ab50e67e-3d06-4ba7-a5f8-4684e9ef98a4@arm.com>
+ <Zd2zy0oUk8XvoDJM@FVFF77S0Q05N>
+ <b134c30d-d855-41bb-a260-9f6437b77697@arm.com>
+ <62e64ddd-266c-414e-b66a-8ca94f3c2bbf@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB8109:EE_|PH8PR12MB7231:EE_
-X-MS-Office365-Filtering-Correlation-Id: 638b1e31-d530-4a74-219f-08dc392465a4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Su9zM4/Hkm1ik7fhPw7w6I6I3hS5LNVlvz5XcqI5tLfWUuAm704O5+xY95s7NENzzBcKfLIhiOlNYm7h6XBkLsrYB1rbntAlZV3UrXhJHNn5PUKOEeFgJLaVor4TshWyQPg3DSYFfkZHvPGA512I2zIVCQu7LF8H5JuDF6U1A664EgbD/TYH6i3xvFMx8yiUfU7tblyiHjWx5ZIHaN320VohqW43VvYYm7dCpEUC4YjLzptHkiiM+w+VfsbH2hkR3xrV72odKK71wToNKHQWOIxVA4i9B9AcwnEhRRBjw52zp7JCHIlBC2yTNMmt/BgiUFV5HKKrw+ivrDs+wl/dLv/rxC1Cij46AaKLUOVdmr0ptHS78eH+x5CO4UmTPvezS1MATSesTafqyLikuFTLeCqCr6Yugj+9OejL3rZKd+2s2eNQEM1wOzgkr44rGANAJgNUnaan3W3F71w4yzBTIJ/qhV4B+Iw/yS5o76TDS3BKXTEsapyPTXnjNd83pxrgd+0NxNZbrgCPw43QB5XByWPs3bqd5pVQ5APySsbXcicq1nevYp6CbezMlgq4sZe2HSdoH0qiCYalItSA/uf14nVTZ1NNwNL5PWmg2S0tQhxtE5lJ3PqqdU/OxXTBBt5E/EUsruiR+4kaeisEruRmLg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8109.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WFk0Znh4ZzFKSjBIc3ZDNW5oOEE1OWRBMnZTWHYzWktMSVZVV0JyakJwemw5?=
- =?utf-8?B?SnJXb1QxUjhZWmxKcTVJZVcvQ1J0c0JBMVNnZndpSXZ1RDdBVElkcm9oUCtW?=
- =?utf-8?B?T1FHcFJjZkQ5Qklrd2d0UmN3YVFSbFNIbEkwc3BDMUZPa0dWendTUGU1Ri8z?=
- =?utf-8?B?bWpscGVUOHU2SVUrajZtVUk0azN0NWVqN3NWQVByandldlhKaXRrZmZKSGhz?=
- =?utf-8?B?TEhjdTQyVENEZmFCdWQ3VWc0WnUwV3J0cEhzVHVVWkZjUThnZ2UrczBwQ2lw?=
- =?utf-8?B?Ymxnd25zb2wrOWxVMVU2TzhSaEViT2ZRWTRQWEVHWGh0cFhqTXlQMkFjc2Zm?=
- =?utf-8?B?U2daUlJ6VXVpTURyV05IQ0VtZ0dXK2tJMkN4cENKYmVCWFhrOCsxTTJuVVZq?=
- =?utf-8?B?TlJmSmI4TzRPd081VitzcEVKNmRCYStHL3BBa1Jvd2FsNTBhRzlwQ0h5bE1a?=
- =?utf-8?B?S3c1OVNTTkRLNjVNd0lPengyTEZZYUNEQlZPUXBKdVJZODhzQlpTc2pwL1ZR?=
- =?utf-8?B?TGpSd3BzMHFOQTZHckljTC82VEtpVmZEZ3c2Wms2dm5MemY2OXR0V1gvQkp0?=
- =?utf-8?B?WTg1YXV0VmZYZlBPUi9sVTMxTDFrNk9CWmk2aFRWSXRQcEh4eEF4WkFNQUN2?=
- =?utf-8?B?U1ptVHlVdDl2a1RlTEErb1lJYTIxMzM5alBNSmR2WmN0UEtxSk9kSFFSU1ln?=
- =?utf-8?B?cC9pUzVxbU9NQzBPZkRwbFVzUERueWNFVXJxTkIyZVVQSWwzQWtNSkkxTDUz?=
- =?utf-8?B?ZjJQUlFOZDdDK3ZWSjJvTm9oLzFlRkEwa0Q2ZmJGaEU4U3B6VEkrRHR6c1gv?=
- =?utf-8?B?VVRzUVFHNi8xYXhMY1JWSzFaZzgvVnZSVisreU1WakQxNC81bU5GT09na1RZ?=
- =?utf-8?B?OUtZREg5VkJpeVliMnRVc1FxN0U4R2RyS1U0QzJnMitwdGh5MDhuQ3pWdUF1?=
- =?utf-8?B?SFNLUENXbFYrVXVpUzAvRm5vN0hRc0QyeFJXSW9ZMndLSXhZWVFMSEFlQU9u?=
- =?utf-8?B?VjYySVpIUWpCSDdoSy9wSERCbm5vdzB6VDd0VUVmR212MmNQNU1rSVdGa2Vt?=
- =?utf-8?B?TjFBY3FNREplRWRNdStEdnVDTGJ1bzNCOTVsVFJLS3ZPcWFYR0VON1NSK3Vv?=
- =?utf-8?B?ZU9tZzlUUXlYK1hBY3ZGdkpoT1ErMk1TV0o1SDFJWC96eFMyMUNVUk1lbUJK?=
- =?utf-8?B?S2pnL3NJQ3d0YTdDeEVOMERiaVZqMkxXdWxtRGplM3ltajdqUCtrR0hGMmZp?=
- =?utf-8?B?SW5yZC9BWU5WK0FLRDRvSmlKbTNaZTVoSDhsaGc1RlFzQzBRMXpLc2w2UW5X?=
- =?utf-8?B?TU5IeSt0TmI2c2Qybm9EdEdKUWk0d0t5cTk3SHNFcC9udkU4UGFxL2hqcmM1?=
- =?utf-8?B?VHhJVXNtZ0UxVTF3dnJPTHovZzhleWdMMGVWNE9hblhISDREWnp2Skl6aFZy?=
- =?utf-8?B?UGVydTZxdzFuRTQ2OXdLTisxbGgyYTRSdTRUTHhUL1Q2WUIrc2hrQ0hWUEtU?=
- =?utf-8?B?UXlCeHNQTFQraUVKZ2MrTTVVK1Q5WEk0RjdQOWNpUWdlMnJrR2orYzBkYldI?=
- =?utf-8?B?UXVvYnFzYXdlQmJieitrZGhGbjVQZ2ZYQlI5NmlEa0srSXlnd3g2YnVLWi9H?=
- =?utf-8?B?T2huWVZoSldYckVGN21Jcnd0NlNzTVVTR3pnL2VUcmhIcGFzMi9yZFBKNEVB?=
- =?utf-8?B?MGdTQWd3THd6OThydmdBelJqdW1GaTdZMXM1bmdyRG41L09HK282WmZ0Sis3?=
- =?utf-8?B?cjk3akpjWGtZZm05SzFWRUhFNDltVVFxSng2blpVMmpVWFErT0k2Y0xPRUlh?=
- =?utf-8?B?VTVzWVJnbXVmKzV5dUpwaWV5RXpqL0NweEQzOWpkbC9jQlBYN2p5S1I5dmlm?=
- =?utf-8?B?S0xqN2VlZlZWeE1saEcwYXhZR1k3Z0ZuZ2hFMEJrUE5MRHJlZXNyOVJQdHRE?=
- =?utf-8?B?MkIyV21BL3ZGNXVJTm1Kb0xvWis2cVRBUmdRVEgvMjRoOGxhT2QvbEdlblFt?=
- =?utf-8?B?QVBFNEJNdTFwVHhHSzJEZXlxb3VsMGJ0ckdQYUtMUkpKSUZaQm9WRFA5TnQ5?=
- =?utf-8?B?cy9TL3pqWUNhRCtyNmNzRkU1Vk1pUk5YclZyS3BFc2ZycEsvaS9qejQyZDNt?=
- =?utf-8?Q?teQS6EwxfNbH/A6WN8BWLbYm9?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 638b1e31-d530-4a74-219f-08dc392465a4
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8109.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 12:46:06.9145
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 72aK0QroiEaO9otszceAyS3wi0QZC9p9e7WZxMzVRC+I74MsKsqPwqWSsQm9IEe0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7231
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62e64ddd-266c-414e-b66a-8ca94f3c2bbf@arm.com>
 
+Hi Suzuki,
 
-
-On 2/29/24 13:22, Duoming Zhou wrote:
-> The kmalloc() in zynq_clk_setup() will return null if the
-> physical memory has run out. As a result, if we use snprintf
-> to write data to the null address, the null pointer dereference
-> bug will happen.
+On Thu, Feb 29, 2024 at 11:45:08AM +0000, Suzuki K Poulose wrote:
+> On 27/02/2024 11:13, Anshuman Khandual wrote:
+> > On 2/27/24 15:34, Mark Rutland wrote:
+> > > On Fri, Feb 23, 2024 at 12:58:48PM +0530, Anshuman Khandual wrote:
+> > > > On 2/21/24 19:31, Mark Rutland wrote:
+> > > > > On Thu, Jan 25, 2024 at 03:11:13PM +0530, Anshuman Khandual wrote:
+> > > > > > Currently BRBE feature is not supported in a guest environment. This hides
+> > > > > > BRBE feature availability via masking ID_AA64DFR0_EL1.BRBE field.
+> > > > > 
+> > > > > Does that means that a guest can currently see BRBE advertised in the
+> > > > > ID_AA64DFR0_EL1.BRB field, or is that hidden by the regular cpufeature code
+> > > > > today?
+> > > > 
+> > > > IIRC it is hidden, but will have to double check. When experimenting for BRBE
+> > > > guest support enablement earlier, following changes were need for the feature
+> > > > to be visible in ID_AA64DFR0_EL1.
+> > > > 
+> > > > diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> > > > index 646591c67e7a..f258568535a8 100644
+> > > > --- a/arch/arm64/kernel/cpufeature.c
+> > > > +++ b/arch/arm64/kernel/cpufeature.c
+> > > > @@ -445,6 +445,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+> > > >   };
+> > > >   static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+> > > > +       S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_IMP),
+> > > >          S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+> > > >          ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+> > > >          ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+> > > > 
+> > > > Should we add the following entry - explicitly hiding BRBE from the guest
+> > > > as a prerequisite patch ?
 > 
-> This patch adds a stack variable to replace the kmalloc().
+> This has nothing to do with the Guest visibility of the BRBE. This is
+> specifically for host "userspace" (via MRS emulation).
 > 
-> Fixes: 0ee52b157b8e ("clk: zynq: Add clock controller driver")
-> Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
-> ---
-> Changes in v2:
->    - Use stack variable to replace kmalloc().
+> > > > 
+> > > > S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_NI)
+> > > 
+> > > Is it visbile currently, or is it hidden currently?
+> > > 
+> > > * If it is visible before this patch, that's a latent bug that we need to go
+> > >    fix first, and that'll require more coordination.
+> > > 
+> > > * If it is not visible before this patch, there's no problem in the code, but
+> > >    the commit message needs to explicitly mention that's the case as the commit
+> > >    message currently implies it is visible by only mentioning hiding it.
+> > > 
+> > > ... so can you please double check as you suggested above? We should be able to
+> > > explain why it is or is not visible today.
+> > 
+> > It is currently hidden i.e following code returns 1 in the host
+> > but returns 0 inside the guest.
+> > 
+> > aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
+> > brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
+> > 
+> > Hence - will update the commit message here as suggested.
 > 
->   drivers/clk/zynq/clkc.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/zynq/clkc.c b/drivers/clk/zynq/clkc.c
-> index 7bdeaff2bfd..e4c4c9adf79 100644
-> --- a/drivers/clk/zynq/clkc.c
-> +++ b/drivers/clk/zynq/clkc.c
-> @@ -427,7 +427,7 @@ static void __init zynq_clk_setup(struct device_node *np)
->   			SLCR_GEM1_CLK_CTRL, 0, 0, &gem1clk_lock);
->   
->   	tmp = strlen("mio_clk_00x");
-> -	clk_name = kmalloc(tmp, GFP_KERNEL);
-> +	char clk_name[tmp];
+> This is by virtue of the masking we do in the kvm/sysreg.c below.
 
-I know that Stephen asked for it but variable with variable length in the middle 
-of code doesn't look good or useful.
-I would allocate rather bigger array on stack with size bigger than max length 
-which will use it.
+Yep, once this patch is applied.
 
-Thanks,
-Michal
+I think we might have some crossed wires here; I'm only really asking for the
+commit message (and title) to be updated and clarified.
+
+Ignoring the patchlet above, and just considering the original patch:
+
+IIUC before the patch is applied, the ID_AA64DFR0_EL1.BRBE field is zero for
+the guest because we don't have an arm64_ftr_bits entry for the
+ID_AA64DFR0_EL1.BRBE field, and so init_cpu_ftr_reg() will leave that as zero
+in arm64_ftr_reg::sys_val, and hence when read_sanitised_id_aa64dfr0_el1()
+calls read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1), the BRBE field will be zero.
+
+This series as-is doesn't add an arm64_ftr_bits entry for ID_AA64DFR0_EL1.BRBE,
+so it'd still be hidden from a guest regardless of whether we add explicit
+masking in read_sanitised_id_aa64dfr0_el1(). The reason to add that masking is
+to be explicit, so that if/when we add an arm64_ftr_bits entry for
+ID_AA64DFR0_EL1.BRBE, it isn't exposed to a guest unexpectedly.
+
+Similarly, IIUC the BRBE register accesses are *already* trapped, and
+emulate_sys_reg() will log a warning an inject an UNDEFINED exception into the
+guest if the guest tries to access the BRBE registers. Any well-behaved guest
+*shouldn't* do that, but a poorly-behaved guest could do that and (slowly) spam
+dmesg with messages about the unhandled sysreg traps. The reasons to handle
+thos regs is largely to suppress that warning, and to make it clear that we
+intend for those to be handled as undef.
+
+So the commit title should be something like:
+
+  KVM: arm64: explicitly handle BRBE register accesses as UNDEFINED
+
+... and the message should mention the key points from the above.
+
+Suzuki, does that sound right to you?
+
+Anshuman, can you go re-write the commit message with that in mind?
+
+Mark.
