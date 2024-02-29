@@ -1,97 +1,126 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE092AD32;
-	Thu, 29 Feb 2024 08:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BE052F7A;
+	Thu, 29 Feb 2024 08:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709196015; cv=none; b=pX3bXUXo+FVpyZ6fSDi9Ab/Booq3I90KyruM+x9YUCCK67GL2LNq/ABOb6gZ6bciiqbRxJK46m3x8Pvhs67zW534x1KkbeHC2tFfZQnIkGcwj6UE4MMSM93NWu5gBt/T7P5lFT/Lf24sMQB0s7v8buYTl2Eb7ca+HjhAwqOaIqc=
+	t=1709196016; cv=none; b=BDr92UaePWEz1IwrmGYnMiKaNDBdVeGHM11c9kuc76nbDmRI6e8bPxdsIdUTW9Bih8sSyreekt7gATfPUedMCZwFwtGUwNK0lDecUp18l+c/msIR1u07emw5D8qmzvT+rEQq7cnTJTHL+8MKryLSoddgEXA7mvWWluz3gVj/mMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709196015; c=relaxed/simple;
-	bh=TpIABOi8CFz2DDFHLfZToJ/2OFIXL70FWuAQnHfHTL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hr84X0zxS8yG0eN/e7vUrgkfYjVrEpVP6C1uFFukuPRFy6o+eMbXZs7sp75q2wmyfLlJK1W+2W/88jdyXsXqkhFN0GFD4was2VmnApqdDqO8oyqrLKvDLWDQcF51HUvzff6V/6mgCh5VThvLoE9nVqhRWnc4j4aABNdqHsrXutw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=dksbZgX1; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1709196016; c=relaxed/simple;
+	bh=BNo0yW2FLpDKUhmP2HaX0f6PbcoTDWSkMT1gkxmdvZE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Sg1aihYy/QGL/SFRSX2cWUBx9z5n2TEOiXlv7rSU6giXyohssBUDBbhE1jKhBwXRSWKCTWEbaTXHnPmcS8n67Cjs/5hGwvlJbSJ76LmYIUDP25q7Y6hf1b+fOln9DC6sDvUt9677wBgrKhPfgZB4OkV4Bb+UTqljvfJJSeSRPPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fdbcXAaE; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dksbZgX1"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 50A2040E0028;
-	Thu, 29 Feb 2024 08:40:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BE24TXGbZrcc; Thu, 29 Feb 2024 08:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709196005; bh=Xgu43DQMWHM4tVOw+nnmZWTTI64ZfzAwiBOS/HGblUY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dksbZgX18ASp3u4gP7ViApi04XiiLj10wBkEw1cqaKcuM8gnjNfHN53PSzePZkyAW
-	 gNCFa3Uz3Hb9bjRAro3xoRkkxyJpwfOJiJvxRdNLc8D+uwAYAimZI1DaL2T7ciRaOH
-	 swfSip6d2Yige1LNfeVm4aTETznBU4+IsKHhk/RGHOR95EPUSb52Xr3dlChu3EBkd0
-	 Yhb/Rxuhkg8BNgczqqphO3JW5z7a/3T86yXmZVDn8Xy2exMUDGsGkTjfBa1UX3l+aQ
-	 zhjSn7ZuyYLLiylXQ1kflJQL9BsJgoDfSLPgupnq12tjKt2J/poYdTma35rhQYEAr5
-	 Yo21r8RwUw4Fw7wIefKAuGPjejBRLvLZYnWzXraaJZB1ybWzgMgpWh73aVHzxusSNV
-	 qX7oS2zA3Cwg1ItPmbe+4U+v0aNgnAOgRPA6tvXjzFawufm1XKTT6Zp6X3HFeZkpxe
-	 nO4zhKOg8r6ncwJiWnjCF2CDVx1tnT0+CNyNMAm1lT7WgntT1Io0VenrtOoIDpZDqK
-	 mwGi6f9KWZXrbVyHMHCqlMSyDR9+6OV3b0my0qlsYgI/yoGgen7o1i7mt9H2Rrifqw
-	 7vJewU4gGn3bTLcuFUaCrrgiWH1Qe/2vgUPtqIDMY1B4lzOgPdb6RHFJrcquBIOUk2
-	 +jq+vPFhnaPPVy20oad93f2s=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C901D40E0196;
-	Thu, 29 Feb 2024 08:39:56 +0000 (UTC)
-Date: Thu, 29 Feb 2024 09:39:51 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Naik, Avadhut" <avadnaik@amd.com>
-Cc: Tony Luck <tony.luck@intel.com>, "Mehta, Sohil" <sohil.mehta@intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-	Avadhut Naik <avadhut.naik@amd.com>
-Subject: Re: [PATCH] x86/mce: Dynamically size space for machine check records
-Message-ID: <20240229083951.GAZeBC1yS3MPonWwKv@fat_crate.local>
-References: <20240212175408.GIZcpbQHVjEtwRKLS-@fat_crate.local>
- <SJ1PR11MB60830AF35FA89C7869B8C11EFC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240212191401.GLZcpt-XHFqPg3cDw-@fat_crate.local>
- <SJ1PR11MB6083C60D7584B02E9CAF19D5FC482@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <ZcqPhVO_DtD2x5N7@agluck-desk3>
- <20240212220833.GQZcqW4WxKH34i-oBR@fat_crate.local>
- <20240212221913.GRZcqZYRd6EPTTnN97@fat_crate.local>
- <20240212224220.GSZcqezMhPojxvIcvO@fat_crate.local>
- <Zd--PJp-NbXGrb39@agluck-desk3>
- <8ee24cad-e9b8-4321-aad4-9a9ba4f8b7b6@amd.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fdbcXAaE"
+Received: by mail.gandi.net (Postfix) with ESMTPA id B5F541C000E;
+	Thu, 29 Feb 2024 08:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709196011;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=66l5nnX2XD0JkszxdbTNgnTBzOtV2bLUDTMkK3+nFE4=;
+	b=fdbcXAaEGmYq4xDjfNLLpoZfYjl0yLzw91HYvMXGM0Rk7GIahIpgp/PD8MJc3XtdCCD8ft
+	Dyhg2CLbB3DE0DI8tN1a8oFnq3ncDc7RYM3otb43Lx1iGdfxJ4CuAEdSi8LhLsC2grptbG
+	xmgrXu97H663Qn08GdU3TNxJdkl1wzjIIQEd1UnEO6+E0eM3OOqMgaiRf2IvxBizQw5sf3
+	yNYGUc11/7MAAve97/BwKm+YVKBdBuqVOite+4ChfY3A5n5Q/dgOfEhmZEA3CYnPLDL07S
+	4XsnrlV07nBmPEDmyVmcI9qMU5+g3fU59+93KdCjyQj6GZsMB3BpbV/U2iyhzg==
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>
+Cc: Lizhi Hou <lizhi.hou@amd.com>,
+	Max Zhen <max.zhen@amd.com>,
+	Sonal Santan <sonal.santan@amd.com>,
+	Stefano Stabellini <stefano.stabellini@xilinx.com>,
+	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Nuno Sa <nuno.sa@analog.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH v2 0/2] Synchronize DT overlay removal with devlink removals
+Date: Thu, 29 Feb 2024 09:39:40 +0100
+Message-ID: <20240229083953.607569-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8ee24cad-e9b8-4321-aad4-9a9ba4f8b7b6@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Thu, Feb 29, 2024 at 12:42:38AM -0600, Naik, Avadhut wrote:
-> Somewhat confused here. Weren't we also exploring ways to avoid
-> duplicate records from being added to the genpool? Has something
-> changed in that regard?
+Hi,
 
-You can always send patches proposing how *you* think this duplicate
-elimination should look like and we can talk. :)
+In the following sequence:
+  of_platform_depopulate(); /* Remove devices from a DT overlay node */
+  of_overlay_remove(); /* Remove the DT overlay node itself */
 
-I don't think anyone would mind it if done properly but first you'd need
-a real-life use case. As in, do we log sooo many duplicates such that
-we'd want to dedup?
+Some warnings are raised by __of_changeset_entry_destroy() which  was
+called from of_overlay_remove():
+  ERROR: memory leak, expected refcount 1 instead of 2 ...
 
-Hmmm.
+The issue is that, during the device devlink removals triggered from the
+of_platform_depopulate(), jobs are put in a workqueue.
+These jobs drop the reference to the devices. When a device is no more
+referenced (refcount == 0), it is released and the reference to its
+of_node is dropped by a call to of_node_put().
+These operations are fully correct except that, because of the
+workqueue, they are done asynchronously with respect to function calls.
+
+In the sequence provided, the jobs are run too late, after the call to
+__of_changeset_entry_destroy() and so a missing of_node_put() call is
+detected by __of_changeset_entry_destroy().
+
+This series fixes this issue introducing device_link_wait_removal() in
+order to wait for the end of jobs execution (patch 1) and using this
+function to synchronize the overlay removal with the end of jobs
+execution (patch 2).
+
+Compared to the previous iteration:
+  https://lore.kernel.org/linux-kernel/20231130174126.688486-1-herve.codina@bootlin.com/
+this v2 series mainly:
+- Renames the workqueue used.
+- Calls device_link_wait_removal() a bit later to handle cases reported
+  by Luca [1] and Nuno [2].
+  [1]: https://lore.kernel.org/all/20231220181627.341e8789@booty/
+  [2]: https://lore.kernel.org/all/20240205-fix-device-links-overlays-v2-2-5344f8c79d57@analog.com/
+
+Best regards,
+Hervé
+
+Changes v1 -> v2
+  - Patch 1
+    Rename the workqueue to 'device_link_wq'
+    Add 'Fixes' tag and Cc stable
+
+  - Patch 2
+    Add device.h inclusion.
+    Call device_link_wait_removal() later in the overlay removal
+    sequence (i.e. in free_overlay_changeset() function).
+    Drop of_mutex lock while calling device_link_wait_removal().
+    Add	'Fixes'	tag and Cc stable
+
+Herve Codina (2):
+  driver core: Introduce device_link_wait_removal()
+  of: overlay: Synchronize of_overlay_remove() with the devlink removals
+
+ drivers/base/core.c    | 26 +++++++++++++++++++++++---
+ drivers/of/overlay.c   |  9 ++++++++-
+ include/linux/device.h |  1 +
+ 3 files changed, 32 insertions(+), 4 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
