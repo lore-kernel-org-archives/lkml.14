@@ -1,115 +1,162 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601B557333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAAA58104
 	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 00:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709165930; cv=none; b=Z+fVG4TGtyw5xYlRmKeZ0MmlOuVST0r85tVT0W4JHTK+lb5v5IBMmrXjQZWkj+cFJLMGmOsaPxiBJ3GWoqVj7C2WxMOZR2Wj7PqG+C894ryh5oIa9p9PpHKvOpQaM0Z42oDd+UaKBxQWFTs0Ypp9BqtC5CHIiWORP8NkROvwwwI=
+	t=1709165931; cv=none; b=n6OQGiv4Uw1WGl8FXOYXSLPRcrj4HGaMbSSSu0YdJYBxQRGdm6S3XCw1ZLmNGHlf7jhAoVXtc4eGfFuUFiX/jw788OuRQfeqLpWwW2ZeaFtjuXV3yzXj4kDhAIjKKAUEyB679573JQrYX1i8REH55VuK0EPSl5TeGHu4HPZUOzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709165930; c=relaxed/simple;
-	bh=9DJj6YTz0ZZOl6MAUN9AsplTyADMYRPheFd4FjREcq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TNHhjwIF/Ejr2OlRThlzitIUarV8uOCjcquy2kpNcbWBCRbptjEfM1dmCQBPEZyZAPxcvLu+YQBiMnPEkZaG1xRXsSD90Kn2oVgU8jcdCEP4jnPI66QF4HyG5LtXRp/+wqafyPR4vwbJLCtyX2mw/F/CJ2UqkyAu5vIgD3gABvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Zd6FsrbG; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709165931; c=relaxed/simple;
+	bh=ky/hxGqHiEPNUXC5YpHVs6vSUyZz80sm9NdbvegFkVY=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=SIPgdEtyatPS99x3KxEc2pmn31cgiUZ73THYl+OXjl5ko29HtMDfbqSvy0JPmGr2/Izck/3rveQrCW8uJNSjT7gV3xyMKYCMPhOOO8f6GH3YMXdqaW/s2+S+wfuQ5Ev1ILvJ6+fMQH3Zcju0lO5CCalfCKBiYwPJ/VfTgNBFK08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YzaDeDaz; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zd6FsrbG"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-299e0271294so191902a91.3
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YzaDeDaz"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60942936e31so6125967b3.1
         for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 16:18:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709165929; x=1709770729; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K5uqn8jk7ThAKtuWvpjc6qdSbK1EvuBbH6icwTpGIW4=;
-        b=Zd6FsrbGvnNHW8S/xTkaP8iOt0/OYTPNpeWEampDlCmOtdciZpBKQacdXgA3W8WqKd
-         je2ed3pek8hzLO8jLXSAiCfElrc/dD2tOLHFMyF0P5JuV1g+AZaU0I40tkMAVPEhCjEU
-         kbIf/NuBfZz5rKsXoMemtF89f69aO0mt0e9/4=
+        d=google.com; s=20230601; t=1709165929; x=1709770729; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BJrxbtjXZ5o0JjkZHH3aEb9P2cYPenOBkdypf42wLcI=;
+        b=YzaDeDazio6WwF+JPxPXpfaFUOQ9x/OMBIxGCUN8m0fwdSO2lw9UmaxgTSu0LUc+VG
+         zpzQeEFu54SBwTw/5a3vZMSZ8nrh+fDV8xIy2z1jxqU9//KzoJq4vYex5Iw2V9SYp48z
+         2eayrNzEsz9X8/wpap2vpsHkqqCq40vyArcqxP4H2HLW7544L2wg4P6SHgMLm1JHzyVa
+         cH8St+39R09/R09pXuSEsr1saPrng479rC89NxqItSij6mO5svAzRu/FLT85v+4fua6G
+         T4k0W6lCz9WhDeN0IaChpFUYKGyHySVX1eHa+9e/39zIpHullEhdTld/T8uBaJyUOb46
+         +NSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1709165929; x=1709770729;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K5uqn8jk7ThAKtuWvpjc6qdSbK1EvuBbH6icwTpGIW4=;
-        b=fQCuF3+Wcyck4szZhvKJRiLxVAf9KXCevPQwW3Aw8AIRunDs/Hk0QhZRz4umZuLAd5
-         OIgCsyjyi/7G4IbLjGRdnEq9DQt3y2VOmpYIS5A+WsHax3wd2Wkbi2cbXFAdjCYSQByL
-         RGCesoOqrRHyUisv8GjTmoAB64g2ZLScmDs22PmMa/bTscGZqB56Ip2tdFSDsxvScJRs
-         QNpz9+KSvb9vJ39btygOXVZC9mqacDppjxR14PwxJHTGSUFZwmOPJjz1+LBLYliV1Kxp
-         tsmx3T9MKytQeTCa3tjtH5i1xk6kor7e/qMcfcPZPNORVKoKzB/zDXkyxYN0dqsIIq3O
-         uDKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXX9ufnGLJW8Dkl6Lk0tnUH/Z7N/jVLjRE0eeOtT4iuDDdzCU46/BzndFgFHxJSospRgzdjhuSTwIoGhib1f1tJ/z6u8pM+LUFCAPcv
-X-Gm-Message-State: AOJu0YzRRmzFJZf8eE4TQC9pni49wHTUcPs2b5Oicwv+COyvqzL+2FR9
-	N8uu+LuC3gBNUaSCHo+96ViOq1FitsDuVHG30C4rmJhlxaDe4apXAjEljY85mg==
-X-Google-Smtp-Source: AGHT+IG9LGv7xga1c26psaW5lSQ/a3FgyK1kDrzHgkNdLgVdVr5RsO1xWGsalLcOFQ/g2GqHBPATsg==
-X-Received: by 2002:a17:90b:3905:b0:299:6848:28c1 with SMTP id ob5-20020a17090b390500b00299684828c1mr834549pjb.26.1709165928724;
-        Wed, 28 Feb 2024 16:18:48 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id su7-20020a17090b534700b002973162eca1sm2292760pjb.17.2024.02.28.16.18.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 16:18:48 -0800 (PST)
-Date: Wed, 28 Feb 2024 16:18:47 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-	Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	Ariel Elior <aelior@marvell.com>,
-	Manish Chopra <manishc@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Saurav Kashyap <skashyap@marvell.com>,
-	Javed Hasan <jhasan@marvell.com>,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	Nilesh Javali <njavali@marvell.com>,
-	Manish Rangankar <mrangankar@marvell.com>,
-	Don Brace <don.brace@microchip.com>,
-	mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	MPT-FusionLinux.pdl@broadcom.com, netdev@vger.kernel.org,
-	storagedev@microchip.com
-Subject: Re: [PATCH v2 0/7] scsi: replace deprecated strncpy
-Message-ID: <202402281617.807B1B7@keescook>
-References: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BJrxbtjXZ5o0JjkZHH3aEb9P2cYPenOBkdypf42wLcI=;
+        b=oApo8qpt/CoNAdJ+42Y2vUaZHfpyuCHdPwDBhN0sde7J7C3lZdmb9U/Zqrkn2P/wPN
+         7vO4CJs6QJTOATM9GpRgPu9tt51PCl4rlSMb+bD/3nVmCacDk3KLLDNtHsfsrMhelGn2
+         L7zXaeq3hWtRCftoLdMp2o9NRTtzoyLSnFg9v+C1m9D35EjgZcVlmJsoGVttuu6OON6r
+         0K70vZDiPDiYniK8vBMiW6/Yr6vPG5F8HNtLp+UMfWUME0C3MvCATDfijSYBn//beJIc
+         mnVf29HtOwj7G90Rq6tVMRDS0XmyxO+Y+UEaXWqJjyOFdgyXIcLWKoDMS4vNqwZ1ehlg
+         A30A==
+X-Forwarded-Encrypted: i=1; AJvYcCXn6xsv+AUso7G/zYLRe5GMSJzaLgxM71SImFmvCAb/W3ANg0F1IMGe0953D7W/oqzlYYPh6ExsFIFr1uqY+Q73kPsGIq+DFfsxu3iS
+X-Gm-Message-State: AOJu0Yz+oquCZFuY7Qx988NQsJTrZRkBK4MUnjwxb1CrQzM1msxRTgGa
+	8GeDnXkPB14exlkDWzMWELg8AATNSg6VH0oEaEp31r25mQ+j/jZnUNOXDzoBc2zf4+UxPLKqJPI
+	adUXRRg==
+X-Google-Smtp-Source: AGHT+IEo3RGijORvg0bMyiPUl0pLjQFN4aUVrzl0Qe2gJVNJD3hSooctK9svjYU/OGSVdqBQ1IkB0/0Ggwuh
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:77dc:144c:334e:e2dd])
+ (user=irogers job=sendgmr) by 2002:a81:4c17:0:b0:609:2455:da6 with SMTP id
+ z23-20020a814c17000000b0060924550da6mr154107ywa.5.1709165929121; Wed, 28 Feb
+ 2024 16:18:49 -0800 (PST)
+Date: Wed, 28 Feb 2024 16:17:56 -0800
+In-Reply-To: <20240229001806.4158429-1-irogers@google.com>
+Message-Id: <20240229001806.4158429-12-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240228-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v2-0-dacebd3fcfa0@google.com>
+Mime-Version: 1.0
+References: <20240229001806.4158429-1-irogers@google.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v1 11/20] perf jevents: Add context switch metrics for Intel
+From: Ian Rogers <irogers@google.com>
+To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Feb 28, 2024 at 10:59:00PM +0000, Justin Stitt wrote:
-> This series contains multiple replacements of strncpy throughout the
-> scsi subsystem.
-> 
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces. The details of each replacement will be in their respective
-> patch.
-> 
-> ---
-> Changes in v2:
-> - for (1/7): change strscpy to simple const char* assignments
-> - Link to v1: https://lore.kernel.org/r/20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-0-9cd3882f0700@google.com
+Metrics break down context switches for different kinds of
+instruction.
 
-I think you lost my tags for the later patches. I re-reviewed a few and
-then remembered I'd already reviewed these and they were unchanged. :)
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/intel_metrics.py | 55 ++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-Please run:
-
-b4 trailers -u 20240223-strncpy-drivers-scsi-mpi3mr-mpi3mr_fw-c-v1-0-9cd3882f0700@google.com
-
-:)
-
--Kees
-
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index 0ca72aeec1ea..6ee708e84863 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -271,6 +271,60 @@ def IntelBr():
+                      description="breakdown of retired branch instructions")
+ 
+ 
++def IntelCtxSw() -> MetricGroup:
++  cs = Event("context\-switches")
++  metrics = [
++      Metric("cs_rate", "Context switches per second", d_ratio(cs, interval_sec), "ctxsw/s")
++  ]
++
++  ev = Event("instructions")
++  metrics.append(Metric("cs_instr", "Instructions per context switch",
++                        d_ratio(ev, cs), "instr/cs"))
++
++  ev = Event("cycles")
++  metrics.append(Metric("cs_cycles", "Cycles per context switch",
++                        d_ratio(ev, cs), "cycles/cs"))
++
++  try:
++    ev = Event("MEM_INST_RETIRED.ALL_LOADS", "MEM_UOPS_RETIRED.ALL_LOADS")
++    metrics.append(Metric("cs_loads", "Loads per context switch",
++                          d_ratio(ev, cs), "loads/cs"))
++  except:
++    pass
++
++  try:
++    ev = Event("MEM_INST_RETIRED.ALL_STORES", "MEM_UOPS_RETIRED.ALL_STORES")
++    metrics.append(Metric("cs_stores", "Stores per context switch",
++                          d_ratio(ev, cs), "stores/cs"))
++  except:
++    pass
++
++  try:
++    ev = Event("BR_INST_RETIRED.NEAR_TAKEN", "BR_INST_RETIRED.TAKEN_JCC")
++    metrics.append(Metric("cs_br_taken", "Branches taken per context switch",
++                          d_ratio(ev, cs), "br_taken/cs"))
++  except:
++    pass
++
++  try:
++    l2_misses = (Event("L2_RQSTS.DEMAND_DATA_RD_MISS") +
++                 Event("L2_RQSTS.RFO_MISS") +
++                 Event("L2_RQSTS.CODE_RD_MISS"))
++    try:
++      l2_misses += Event("L2_RQSTS.HWPF_MISS", "L2_RQSTS.L2_PF_MISS", "L2_RQSTS.PF_MISS")
++    except:
++      pass
++
++    metrics.append(Metric("cs_l2_misses", "L2 misses per context switch",
++                          d_ratio(l2_misses, cs), "l2_misses/cs"))
++  except:
++    pass
++
++  return MetricGroup("cs", metrics,
++                     description = ("Number of context switches per second, instructions "
++                                    "retired & core cycles between context switches"))
++
++
+ def IntelIlp() -> MetricGroup:
+     tsc = Event("msr/tsc/")
+     c0 = Event("msr/mperf/")
+@@ -632,6 +686,7 @@ all_metrics = MetricGroup("", [
+     Smi(),
+     Tsx(),
+     IntelBr(),
++    IntelCtxSw(),
+     IntelIlp(),
+     IntelL2(),
+     IntelLdSt(),
 -- 
-Kees Cook
+2.44.0.278.ge034bb2e1d-goog
+
