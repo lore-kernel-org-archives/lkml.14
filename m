@@ -1,54 +1,53 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2115.outbound.protection.outlook.com [40.107.22.115])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2110.outbound.protection.outlook.com [40.107.7.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DB153E23;
-	Thu, 29 Feb 2024 08:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D7454747;
+	Thu, 29 Feb 2024 08:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.110
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709195710; cv=fail; b=Z0xpzqFroPulf3J3iof8Kb1SZxx7Kz0z65DYDBdGqfbMkYHxnSrWtr35Cra1c2ucD9b/9cxXUWWaZUDa/Q1iDMBnXk3ih2mM/RN2ksd26Z0ouuyfmpkhifWDIq+03S++e3hz5HbhoHDkxuQe9Z3aJyTSJSsMnzCeNqfDKwiFo9g=
+	t=1709195711; cv=fail; b=nQSf8cHo5SkebzfDmCJoriOVke6xjiHt357V57dI3f5BGXQnv82T8eDQFGOGyOQYF6cY31FzoTczWHqKBAAclyhlQ29KXIFfd/J5c0pQ61KKT6TDkRLdF3PPDIPH3LUvQrgjaWDUlMJDSoAz3etuvHsmaTSZqlltlhE7t1DEWG0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709195710; c=relaxed/simple;
-	bh=GYIorgCuxQ34b4lu1hFXgE4alR4MOyW2uxp4IG/bCFo=;
+	s=arc-20240116; t=1709195711; c=relaxed/simple;
+	bh=1jRF6eUBRouA1Hvx0Z6eIEmXQvVE/AoBOk4doyc8rhY=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=iZk0i2xTXWxxWdXDwSrJsPmXpz9P2cORxyiBKNvfr/RN+/r9EiHWk6dp188ABvNoHKlPcrvxKs73mJ8OoZnAAsReZBMXrrvl9sx+1q1OncJR+y18qkqCmSHsPNeKG4RRfqCZWIKd5RhT7XjvMbAnjc3oBrMkLqPNt4Ob3H3z/Og=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=U4731ceG; arc=fail smtp.client-ip=40.107.22.115
+	 To:Cc:MIME-Version; b=ZjtAdyzYg4s5c5lQUgCYNmBNc9yIU0bacD++XZRmpmvhBPHlNPMEIhcmuND2duuA7zUxqy6HWGbL9N13hnnGxz8BUhC0XPuy4XLl4cc+cQfIRig2lqlLV5ZWcLRatvEvAjEb+uDPbZcX7uUT+tjAxfkm6VlevtrZI787C6T8UFc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=eYunF7HP; arc=fail smtp.client-ip=40.107.7.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="U4731ceG"
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="eYunF7HP"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xp4ys2S7Ad91l6aSG049K6np9zFxeEzM3y4d/kPyy6DPE3E9NJeUdnkC5ZeEpVSZ1cdBJwKi3zlILT6uVVuT2TaEFmkiuOkkkHhmQuyWpd9h9YHfWqx0qq6riIQTlQyfE7qu1YgpV8s/G7lxQiByWv/rZyGnF/6eQZmlKIUqrpQh9hKIj84hKgycAo5EPrvJS+od3VG6vh+oXIh1fBOPkk5aDat/scf2sCbKArkp7z/tut+YQpGVqEI+E0DKX7QmSEN+6VsVAaQGpQ1dqn6xAExcaObiBQpbjreL2NTpZ5/66TA73LSvpJh0Ul1wOT7ahThdqgqHATd6Hs1Cyn7V0Q==
+ b=gCJHlCxbdZ4fua7R7wySD9hFmt2rSLuAHCywF9MPkFjdcapvsdT8yZeP1HMZIySN+ETZeYz/X7LM/zio/ik0wjhVBqZ3N90ggB2i2+npwvqLImoiZ5xhV4G+AgNJceQ/fxxhMvNVS3S+c8hwfPht6FwXpJEzAhB481T4Nhb8N998FS7nIZGi4/a1GzgAO5idgbX87B0VvWGnk4szQcN8Mj9K1T9unoqThB2KBTb4p2LcARv1Q/YKNpqPvHWZZEeE83eIrwcTIQRCUBcvRig48yHzVC/qP90U7oBawtA3TTkC/h688UzoiLb6Mo+pJLAScxy6qVa6pu9nXPLaAHgDUw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BwxTPyHk173LH7OLvpI8Mk3rAWKwhtS83y1hH7zVRz4=;
- b=aSuq5WxUKuoogfXpS7Xz8CUe45Jp82PigEm3w/dR4ysjZAo4bh+WblvpGA8zv95OjbAnpDcw9nYMBPbPUsLKPqty41dzM+zA2daQ0sQ4RyqfIep7nEPbxjAoU0Z0iIrpN4Qo4T285krgGU7Egj4txEgzb1iq36Vwee0BcUqO1TKMsP/yOQHZ1Uz0MvsshxzR0Z7o7oEMn4Fgjw/CjiWPe52oEq3fYV64uksXVwnywsqEyAjDGNIZfzquuY5gvVTZRPGoir8ZOpSRLnqCVkTjE36T9x8Qd7NNvmzA3wN3Xy35AJjuh4SsnBG0/Gs9nRF+rHqsNQglwyYXCaKHbW9U+A==
+ bh=WgoMgCPBKwzfWbeF8lgH5NAIRhQpmLQTYXnUHWavB58=;
+ b=CeLCYThLJO0w5Z0keYJWKpD4UG0hre+YsTfe92HAgJcyaX3bW4gnWu8o2kksU7aZGW6NsVPAhOdt4L3CBFrmWPxDPU6oY7N3pousfGi0m/6s7YJ4giCTqzm1zqQghjsh3KvaRIc/tJruN9sQlL37R7QIsXMGnIAKrru+QylOeNYvSu/hrofrimQAyldI6dGldTplfJdfUSH+/vL7xR+2quLCK6ZmojQBZM6AP5JyjE7qpLB7thnf5Z/yAyW4rzbia/pzxqkJvHDukDdb7WczyXgNlOZN3E+Eps8Cg67qpVBB6flD6wxh8BU6rq7PAmbd3BtSrMgQG1EDGQM/Ps+Zxg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wolfvision.net; dmarc=pass action=none
  header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BwxTPyHk173LH7OLvpI8Mk3rAWKwhtS83y1hH7zVRz4=;
- b=U4731ceG3/ZrLrOnMDIBtovq9aKVE3ZzXKtQs39m9bA+X5DXtIqh+Hdl8WOYjihMyj7ApF6Cup9JGt++VFoqU4Nv/xf2x1l0Ma1DwLxbK1POrxJnOIhSkupjvZO1hAg147Flrztn/k+Hj++PmEN+3gogs5HrrXlQN5JFVAVQY84=
+ bh=WgoMgCPBKwzfWbeF8lgH5NAIRhQpmLQTYXnUHWavB58=;
+ b=eYunF7HPZN04HKRxnpNCkk/tW4zv1RbamVP8OaNbVpM1Aqe+V7E7YWFM5V/Rr0HhlxYxrbmsFlZS1EKs5+pcvEM7WHBKb1vA2MdAkG0HjLm1w7G7BvM6jKYYc7CRTvMaXeE/tck9EuDBbYO4irzZdJX/KeTNQX+cvBFAPTpb/0w=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=wolfvision.net;
 Received: from VE1PR08MB4974.eurprd08.prod.outlook.com (2603:10a6:803:111::15)
  by DU0PR08MB9727.eurprd08.prod.outlook.com (2603:10a6:10:445::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Thu, 29 Feb
- 2024 08:35:00 +0000
+ 2024 08:34:55 +0000
 Received: from VE1PR08MB4974.eurprd08.prod.outlook.com
  ([fe80::9e35:6de9:e4fc:843f]) by VE1PR08MB4974.eurprd08.prod.outlook.com
  ([fe80::9e35:6de9:e4fc:843f%6]) with mapi id 15.20.7316.035; Thu, 29 Feb 2024
- 08:35:00 +0000
+ 08:34:55 +0000
 From: Javier Carrasco <javier.carrasco@wolfvision.net>
-Date: Thu, 29 Feb 2024 09:34:49 +0100
-Subject: [PATCH v6 6/9] ARM: multi_v7_defconfig: update ONBOARD_USB_HUB to
- ONBOAD_USB_DEV
+Date: Thu, 29 Feb 2024 09:34:45 +0100
+Subject: [PATCH v6 2/9] usb: misc: onboard_hub: use device supply names
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240229-onboard_xvf3500-v6-6-a0aff2947040@wolfvision.net>
+Message-Id: <20240229-onboard_xvf3500-v6-2-a0aff2947040@wolfvision.net>
 References: <20240229-onboard_xvf3500-v6-0-a0aff2947040@wolfvision.net>
 In-Reply-To: <20240229-onboard_xvf3500-v6-0-a0aff2947040@wolfvision.net>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -67,11 +66,11 @@ Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
  dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
  Javier Carrasco <javier.carrasco@wolfvision.net>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709195691; l=852;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709195691; l=5198;
  i=javier.carrasco@wolfvision.net; s=20230509; h=from:subject:message-id;
- bh=GYIorgCuxQ34b4lu1hFXgE4alR4MOyW2uxp4IG/bCFo=;
- b=gZbczGL3U/gwunqCnXvBXPrBTgAYMDRX09PR7beYv7MA1hMksPcl/THmanBCv5Nbkw4TeAlAN
- vb2Rm6dfAqWB0kqJbOUzhDCx2ckai+NeaX4pwDp0F0iFE2eGL7X+Hhj
+ bh=1jRF6eUBRouA1Hvx0Z6eIEmXQvVE/AoBOk4doyc8rhY=;
+ b=0EeVN4pBM1GJ9v8jgWBoPsqcxuLrDqh5pThK7jfBO1qPZgPT6o5U2gcNEtaO/KRuYYvlOI2pj
+ t6kFYQ8+QDPADIDB21Zb/fIbl31J6cRxdVmogSOG35Y2J0//l1HPH1L
 X-Developer-Key: i=javier.carrasco@wolfvision.net; a=ed25519;
  pk=tIGJV7M+tCizagNijF0eGMBGcOsPD+0cWGfKjl4h6K8=
 X-ClientProxiedBy: FR3P281CA0020.DEUP281.PROD.OUTLOOK.COM
@@ -85,88 +84,238 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: VE1PR08MB4974:EE_|DU0PR08MB9727:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f940327-9cf2-4327-0287-08dc3901512f
+X-MS-Office365-Filtering-Correlation-Id: d4cf20a4-a127-4692-a1de-08dc39014e2e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	MjWgJ6f2ZryRDvUj3MU2bkA4+W4wr0sgLxfvIf0htTEXYRB4Q5j8AEnrrtR7vXB+DvzalmdkMPIQMiC4jjA9FA2d/EA+/CPkZk8S3ouTTNjBiomTiB4wI2opvw9EXsO057vTNJ9TGPz7U/y2Cep7rYwwqXZsQrdSXwg1zsLG3VPEUQvisairskvuKNK5NPcArFQmpWdrFNPi+UO3z5zwHBUmJAzqT0HeLjI1fAWKbybzLdNQdmx/uAeFbbECk+Eh/F/qQELVKo5PSaZnSSYYQ6sgFfHLvK4gBrPOUF6ImYSC9oFbml/xNnnnL2tRGNRRdOVVuyGNNDpSgD5oypismP3G9oBJKoE1i1MBQAjozRnImbNPvQa2ARIR+QpHpTBfd0yAQ44SMfYi55KOereeWdlEPaDArOqZg6tG4lGeTC/mXNbc0W0YLKHx2NjqpiiS+2KC52HwQqNRvBdvYxGX+hnTP+dEq5iZM2NKbWHq5jYI6r6KryIX3QZCAPV4hp6FRT1nqJY+SHbxGJe4GdFZbdXkdxLpqs1pIOgxr01yQv1dSnOkdqP+5A1nbFPJ62CxGcMmVwvV4xDKAHooVTvvtl304KFGtRwTsvXBVIOUAaWWuU1PXXwMLlImXCT/rfi0vZHk0f3/k0k8AMlE5k4p6wKc93f4TyL2mvoZdh1HurwzzhHJQXC1Xqfn6UQL/KHhQC/IAB3Df7QhSnfQ67+fNTH4mt3oFSMFdLYOLGDdpS4=
+	2EOLCjIUHaLs8zMcT6XTh7ECtoFv0EY8cD5oOdEHK1qkUasVWy3KQliyLKlTu/Jqgs//8RRb7KUiaEkjQ04erG4cR5iiMQqMRf4BJh/yMDUht6W9v9BJofVSjAGo/ngNUsmPyIa2m2W/rLwBl0AKr4pZqX6Ry9QFtjNHlWBE4S7m/s8SUPRhDiTU1938B/tdBwIkgqYbQOIstruZUpnLxraWxYVted5RJM3yPHmGAiMSuadNUXkstWqMZPX/JVyFXYTe+8XiauvuxasyC6S8347k5Cr67Etsg7PmtDqzfhKp2J2qU5VskiIDrWr+clsiGiKvVPLsONk39rGmEtTY61RQivph8ojNcqg2S/mgkK/+5/KZGiP9fkL208GD4O8mA7zvfjKHCyv3BrcY2neQ+f51Lh0fv+2OiKw9M4HaaM9LawZKOpDurpcZNVTc7Aerm7as1t30MwkvuEcDxRwktb2VNtRP6J/QFlZhZoObb3JRSgq8TozhB9FymbAV2QXTM0NovwfznAVG5fS62rvTHs08dhzFGVHmW43zcRACAu21waRl4BAc5ilF34H/e6pRVwRU/Vh6+7xJR/pUjuFzDaR5lGdMbxw6sbtpgRJFfiHoycK4AyWCNOgR7AUt4fsz2CZShWspm8ju8apO0sX2oA2jFaPmlMwPPIlgRreR1Foo5vY6GFmi1jxnEfyvcP67j0WvnF/49Mja1k3Hy2FgqHIF+fWRE3v344HaFxTaPEI=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4974.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(921011)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OTN6MHRDOFYzRHNHSTZNcUxnalRMYXdkR3hBVHh0bHFxZkxCTXVDaGdlR1Nm?=
- =?utf-8?B?NU9aV3NNb21tZFpmbzR5R1BmLzFyZnlqUzdPaEdlQlR4WnpvTmU1Wnp1Yjky?=
- =?utf-8?B?MVc1a2ErNW5mejVmQmtwWGNhTm5iN0VSWVp0UFBaMVQ2cWVRcFVhTG80cjEy?=
- =?utf-8?B?TzZGeUFWcHpjVXBQV3dxM2lVZ1dsaG56MXFXWk1Bam13THR1NjJiSHpaWHc2?=
- =?utf-8?B?c3A2VmQ5d1dELzIrZ3hVQVdsUGIxeU1UeFV1WHhrM2p2WHpzdFJwY3M2VklJ?=
- =?utf-8?B?aUQxYk9wd3N0TDdTaUhYcmJ4azdZRW1MVnErTUx2dmNwQ1pmQWlnWFY5OCtE?=
- =?utf-8?B?ZlAvVDVFOTRpWVNRYkVKQThpOU1jbXdsTDFYU2NkYnVvTWxKZmxWVGczOG4x?=
- =?utf-8?B?T3pBYVlrZmJGREdyMytzQVpIK3ZVTitrcUVBeDc5dDRqL3J0SHNkbHkvRFhr?=
- =?utf-8?B?Q1N6TU45MUh3ZnJuclNDaTY1MjBscm1FSlBwY3owL01ybjV5VTRtSVM3OXlT?=
- =?utf-8?B?a3lZeVE1ZFUyeDFvRC9GSXkwajkvaEpGYkRjRFJRWmtGRDZ5KzNZM05JdEZH?=
- =?utf-8?B?MzdaWE1ZYk1sSk1EdWFKcm5FNVZOeEVHUHAyZWpCY3VTdzZ5b3NKSUJIbmRO?=
- =?utf-8?B?aXZnODRzRUpWOVdodzkwbzZGdjh5aXp4VE12MWFtOU04TlB4dnBpenUyOU1k?=
- =?utf-8?B?VnJzUy9DZW1XbmROOXl4ZVRXd0RQS1BvcGloOW52ek5PZ2dFMHg0eDdWOWkr?=
- =?utf-8?B?Q0tMSUVzVGRxZXJIVDQ3eFlVOHJ3K2ZNZWsvVnR0UWNLRVk0aml2bnJKY3V3?=
- =?utf-8?B?NDU0Q2lCWk11ZW9DM0NneGVZeWlaUDltTDJLOGxMMWIwcEYvL2tkWGxZaHdO?=
- =?utf-8?B?MWZtSGZ2akNzUnRDazB0ZDFPTXl4aWQwcFlYN0w2LzRkODJaZzY2dUhUbk05?=
- =?utf-8?B?dHNteE1wemh4NzFNU2RrY3A4aFRnK1J5Vnp0SDhKTXBlZ0ZsQVQ3RUkvYWVp?=
- =?utf-8?B?dWZVeHZocm5Fc0drRDk3OHdFOGdkVUYvZHlEVkVtc0lNa2NmL2hNZTZCc3k2?=
- =?utf-8?B?d2JXVzFqRnR6eXdDRWxoY25pdTBlWitHZkJ2c2l5eWhoT1ltMmNrNVZ5U0Nq?=
- =?utf-8?B?UXlCVHNwdVVoa08yUkQxTGdpV0FYSmg3aXd0Q1QxcEdjMkNaaDlpTUMwclEv?=
- =?utf-8?B?WGNtQXYwdjYrUmVNdzlYdSswQzdRcFZxakE4dGRvd0liNmRQYndEa3RpSWRn?=
- =?utf-8?B?b1BpcW5TRThJQ0d1VGZ6YkpxVFBXNlZsNzRWKzZQc0JESjk5cHhScnhkRWFJ?=
- =?utf-8?B?ZnE2TkF5alYzeWVVbVpwSEFyczU2UlJDTWxlRCtRK3cwRUVFUUlkVUZzZzcz?=
- =?utf-8?B?cmEwZHhKWEFiRmplbU04WHlPNVdtdUxRL20rSFVyYm9PVzFrQzQ5VUV4OWhX?=
- =?utf-8?B?eE5YeDVPMWNtNjJvTzlwRlNZTkV1ZEJDemxCMlJlY1lzZ3htc2RUYmhoUUN0?=
- =?utf-8?B?U0tESUU5V0l1QjZLY0thSFlFaXFmZ1lYSXN2NGRYVXBid0M0TXRRQzdiWTN3?=
- =?utf-8?B?aEN2cW9uQXdvdUhrUnFXY2I0eDRURVZlNFVKMUtBb3JBRStYUm90c0tvQjFt?=
- =?utf-8?B?L3paZFU5cnpRdEVtQlJWcWttekx6SVVSVUNvVGJ6UUNsd085U2dEYmhJNnQ0?=
- =?utf-8?B?eVkzNUJvSGE0UldTMTc5TE80SnF5bUhtWm5sMkdrZlRrK0ozckhjTXR2ZG0v?=
- =?utf-8?B?aXVLT28xYnNJd1dUSVRBd0hYVk82L2dkbjc2dlNPZ3lPeGo0Q1k0M3UrYVk0?=
- =?utf-8?B?Q0t2aW1DK3pCK2Y1djJaSWJZUXdxQzRDenhlRERoVmU1OGhyUmRXVDZpdkpo?=
- =?utf-8?B?SEJva1dCSlZlMVNNYXF1cE1rdit1NEtVRVdXa3dJTVF4c0JLTlE2ZTNUTTlr?=
- =?utf-8?B?aHFFVHAwMWthcU1vMDRuTGNXYlVDWkZSR21sbE14bnJSOUxra2hXTDZiTjhW?=
- =?utf-8?B?UDdyKzA3WFVNaGgyM1hLcExmd2gwVFBpSmNqM3R1WVZSTjZ4MkNRTVBoaXor?=
- =?utf-8?B?RHJ0YVdmTjFSaG9GRjBPVWFFV09tWjZiUVdHTExTZ2FiTTArV2lKRjBPc1Za?=
- =?utf-8?B?MUNqVHdiakdDOG56emh0SFlpWmJ6MFR6ZzgvUFgxcEkzR3JVcUFURm1DNDJ3?=
- =?utf-8?Q?1szpWtFxC+oYwIJnmtEoBHc=3D?=
+	=?utf-8?B?TVU4Qml5TFZ4VFZhYXhVRkVxZUV6MGcvV0VwTUpaZ1VaUWNTQUgxK3VHenF4?=
+ =?utf-8?B?ZXk1VzhCTGgxT2wrYlJVejJBZzlVKzB4cEJhNkJ4TXBmNVowaUp5SXptTi9Q?=
+ =?utf-8?B?YlB2VXNqUVBBTXlhUkc0WVFOL0xkYUt0YzhGMjV5TmdLY2VLVXRocEhva0VN?=
+ =?utf-8?B?SlIxaDcwZXFscEhnaXg5UGw5ZkkrSS81M0RuWVk1WG5FUnZDSDJUaFlGZDJ2?=
+ =?utf-8?B?OHRITW5OMHE5MDdhL1gyTjZsbEd4ckYzVExtMzU1QXJSajZ4dXNRbmEzQ3VD?=
+ =?utf-8?B?bEJ5QlluVTlMNDNYQzdPQjdPTFRaUEJOdVBvS2ZJN3MydkFIditKS2d6S3ZQ?=
+ =?utf-8?B?U2NLMGFjaGVTblJwWUZtVjFBMStiaVlNZTBNMVdRU3p3ZEZuLzhkUUx3aE4y?=
+ =?utf-8?B?TWs0a285cTJxbGdhN3haQmhNd3BrOFo1SG52dHRrQ0I1NnNON0wzaXpaWGtq?=
+ =?utf-8?B?U2h0M3RxRnJoNkVkOTFVZHpNSkRkK05uVHArcC9hdFdidTVUU2pmOHFzek0v?=
+ =?utf-8?B?c0F4WU55ZVMrTFB2UWdobXVrVlFvU2lZUWVyRGlMcklVRy9jY0x0T2RLenNG?=
+ =?utf-8?B?R3Z2L2t0UUt5cnNuRHVXR2lhaHhib09mNk10dVlYTkhWWEhRS2pzNzNaZTlD?=
+ =?utf-8?B?TkhTdG82NVRxdVpQZ2Q3RE44Z2Y3K3BwSzhlKzdKODJvbmluUzROdFhsZTl5?=
+ =?utf-8?B?OVdPK0RpTzFrd2k2M1RqSlV6Z0tjWUQyNVluUG4wdVQwVWRuYnpOd1RKU2Zn?=
+ =?utf-8?B?YTFLbnVNT21aSlR0SlB2dmhUd1NhdjZiY1JGNldPdlFZVldkSGNkVERkSGdw?=
+ =?utf-8?B?M0M5eFRld3lWdWhIOWdOK2J1U3RVcTVKUnBBeFRYMGYyS2VmYUJRNjVVT2NK?=
+ =?utf-8?B?WTJ6WjQ0TkNaVXpWRUVoaVpCQmFFbEQzRHhKTCs4YUFIeTRqY2pOcVVtSTBS?=
+ =?utf-8?B?dm9pTi9wd1FyY0ZoSWltOVE2M253YTRLajVsZjN3VU0zdGZPOEZ6SzQxcmFw?=
+ =?utf-8?B?a1R5akdudGdqV0JUN2c5YVA5eVB1cFR0QXhIR3MwVXZLYzE5SEdMRWt2RFdU?=
+ =?utf-8?B?TThGaU1DbFVNUVp5ZHRwU0FNbmtTYnJlb0xqNCtjRDNSbzdnclBydk1UeUdP?=
+ =?utf-8?B?L1duWDc1bWk5YXRGdElDN0lqQWpXYzdjdkdCMTExUnZvK0toRDBSSmZXbkdV?=
+ =?utf-8?B?RlBaRDRqRmxpRVBTRFB1QitlQ2JKVXlXYUoraC9kNk1qbi9zTlpFVkc4Q2Zz?=
+ =?utf-8?B?NjNBemxXcGdxRU95TzRUY2FITHdvOHdDMFJqVzI1Sk52SVI0MlpUYzJwL0E1?=
+ =?utf-8?B?NlBtL3ZxVnRYTUVjajNPaTFnZmkzUXJSMWxGZUhiTDNRRXJMbWo1cDRPcGJK?=
+ =?utf-8?B?cDJkaHNyVXNadXFRYjRuUUdObWVzZ0N4bUdTeFluTE1LTUJXK2c1UmloZjZi?=
+ =?utf-8?B?eTZISEd6UEFqVTRCSkdicFlLTXJXdEtaMFpYbGVSa2kyQ2RtSHp1V1VoWHVw?=
+ =?utf-8?B?Z0ZXOUpFcWZiQ1NPbFQ1ZUE5MmtVeXZkbnJTcnZvNGJPcUx6LzdtT0NMelIw?=
+ =?utf-8?B?N2J5V2NjWkd0dlE4aG1jVnhlSkFOMWNTOFZ6a1ZWWEoxdC9XVVpjeTJrNUky?=
+ =?utf-8?B?SmNwYzBiSUlNazZqU3ZybDRkZHJWNVZnejBEdDdDZXEvb20yKzdFL2NJMWl3?=
+ =?utf-8?B?SlAyek0vN3JSOXFacmt0SytKcGtHOHF2TWZNVGwvNHpxaTdXTWJleUVTczVq?=
+ =?utf-8?B?aTZPSFlrSFBMVnJlNStEUzQydXJTR1Jmb0tKZ3dRUHhLVjF5alNTemd1V3lI?=
+ =?utf-8?B?NWkxdmVwRFVibFVENVZrTXdDYkFUNTNRZ0x1aFZrcFdSb0pHZll3amlqbHRh?=
+ =?utf-8?B?MTkvWjF3Ry9iNW42RzdsNDBzQ3pPL0VvSWIzUWJkNVFRaWdMcXZMT2hvS08w?=
+ =?utf-8?B?aG9ac2ZqaUxGMGFQdnBxd2NRMkEydUswNmppa2ZGN0ZxN01Ia1o5bTdwM1ZY?=
+ =?utf-8?B?MVBWbmRTTEx1c08raE9uYm5UZFp5LzJsZnNuSUVFOFVON1ZIV2tVQXlrcFNz?=
+ =?utf-8?B?bTM0YUFHSXk0SUFpWFVDUXJvbU8zb2RRbGpxNnZ2bFBiRnl4SFFQWWp2YWZo?=
+ =?utf-8?B?bHBlR2JtU3hqSUlEbi9CdGNtRXVBVWFNRkQrRE84SHpNbHVXVjhCZGtpY2F6?=
+ =?utf-8?Q?o1XtquE24MqVjvn9siQYhws=3D?=
 X-OriginatorOrg: wolfvision.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f940327-9cf2-4327-0287-08dc3901512f
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4cf20a4-a127-4692-a1de-08dc39014e2e
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR08MB4974.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 08:35:00.0842
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 08:34:55.0314
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IUdVHkVoZF+mE/wF/qO4N4LRGTMnMuXari/KVPnpOktnInrcUs524OOQHDziXz98tnC0hfKOFOr4XUCE3uXUssONGVgG4mMI5vhGTJLyOj0=
+X-MS-Exchange-CrossTenant-UserPrincipalName: KrMMn+2Y/1LpU+InzY4tHzBv5fHPf8E9eNdy8KRdtdR3ARNQMsLnTHSB/th9XW5xuJKwoTLkB4w4N2fLh6aAPnaL4Ukj3F7qI4xuwExPSEs=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9727
 
-The onboard_usb_hub driver has been updated to support non-hub devices,
-which has led to some renaming. Update to the new name accordingly.
+The current implementation uses generic names for the power supplies,
+which conflicts with proper name definitions in the device bindings.
 
-Update to the new name (ONBOARD_USB_DEV) accordingly.
+Add a per-device property to include real supply names and keep generic
+names for existing devices to keep backward compatibility.
 
 Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
 ---
- arch/arm/configs/multi_v7_defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/misc/onboard_usb_hub.c | 49 ++++++++++++++++++++------------------
+ drivers/usb/misc/onboard_usb_hub.h | 12 ++++++++++
+ 2 files changed, 38 insertions(+), 23 deletions(-)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index ecb3e286107a..6a6ebec173dc 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -876,7 +876,7 @@ CONFIG_USB_CHIPIDEA_UDC=y
- CONFIG_USB_CHIPIDEA_HOST=y
- CONFIG_USB_ISP1760=y
- CONFIG_USB_HSIC_USB3503=y
--CONFIG_USB_ONBOARD_HUB=m
-+CONFIG_USB_ONBOARD_DEV=m
- CONFIG_AB8500_USB=y
- CONFIG_KEYSTONE_USB_PHY=m
- CONFIG_NOP_USB_XCEIV=y
+diff --git a/drivers/usb/misc/onboard_usb_hub.c b/drivers/usb/misc/onboard_usb_hub.c
+index 81c001fd38c1..1f3e0094957d 100644
+--- a/drivers/usb/misc/onboard_usb_hub.c
++++ b/drivers/usb/misc/onboard_usb_hub.c
+@@ -29,17 +29,6 @@
+ 
+ #include "onboard_usb_hub.h"
+ 
+-/*
+- * Use generic names, as the actual names might differ between hubs. If a new
+- * hub requires more than the currently supported supplies, add a new one here.
+- */
+-static const char * const supply_names[] = {
+-	"vdd",
+-	"vdd2",
+-};
+-
+-#define MAX_SUPPLIES ARRAY_SIZE(supply_names)
+-
+ static void onboard_hub_attach_usb_driver(struct work_struct *work);
+ 
+ static struct usb_device_driver onboard_hub_usbdev_driver;
+@@ -65,6 +54,29 @@ struct onboard_hub {
+ 	struct clk *clk;
+ };
+ 
++static int onboard_hub_get_regulators(struct onboard_hub *hub)
++{
++	const char * const *supply_names = hub->pdata->supply_names;
++	unsigned int num_supplies = hub->pdata->num_supplies;
++	struct device *dev = hub->dev;
++	unsigned int i;
++	int err;
++
++	if (num_supplies > MAX_SUPPLIES)
++		return dev_err_probe(dev, -EINVAL, "max %d supplies supported!\n",
++				     MAX_SUPPLIES);
++
++	for (i = 0; i < num_supplies; i++)
++		hub->supplies[i].supply = supply_names[i];
++
++	err = devm_regulator_bulk_get(dev, num_supplies, hub->supplies);
++	if (err)
++		dev_err(dev, "Failed to get regulator supplies: %pe\n",
++			ERR_PTR(err));
++
++	return err;
++}
++
+ static int onboard_hub_power_on(struct onboard_hub *hub)
+ {
+ 	int err;
+@@ -253,7 +265,6 @@ static int onboard_hub_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct onboard_hub *hub;
+-	unsigned int i;
+ 	int err;
+ 
+ 	hub = devm_kzalloc(dev, sizeof(*hub), GFP_KERNEL);
+@@ -264,18 +275,11 @@ static int onboard_hub_probe(struct platform_device *pdev)
+ 	if (!hub->pdata)
+ 		return -EINVAL;
+ 
+-	if (hub->pdata->num_supplies > MAX_SUPPLIES)
+-		return dev_err_probe(dev, -EINVAL, "max %zu supplies supported!\n",
+-				     MAX_SUPPLIES);
+-
+-	for (i = 0; i < hub->pdata->num_supplies; i++)
+-		hub->supplies[i].supply = supply_names[i];
++	hub->dev = dev;
+ 
+-	err = devm_regulator_bulk_get(dev, hub->pdata->num_supplies, hub->supplies);
+-	if (err) {
+-		dev_err(dev, "Failed to get regulator supplies: %pe\n", ERR_PTR(err));
++	err = onboard_hub_get_regulators(hub);
++	if (err)
+ 		return err;
+-	}
+ 
+ 	hub->clk = devm_clk_get_optional(dev, NULL);
+ 	if (IS_ERR(hub->clk))
+@@ -286,7 +290,6 @@ static int onboard_hub_probe(struct platform_device *pdev)
+ 	if (IS_ERR(hub->reset_gpio))
+ 		return dev_err_probe(dev, PTR_ERR(hub->reset_gpio), "failed to get reset GPIO\n");
+ 
+-	hub->dev = dev;
+ 	mutex_init(&hub->lock);
+ 	INIT_LIST_HEAD(&hub->udev_list);
+ 
+diff --git a/drivers/usb/misc/onboard_usb_hub.h b/drivers/usb/misc/onboard_usb_hub.h
+index f360d5cf8d8a..0ee515e7feae 100644
+--- a/drivers/usb/misc/onboard_usb_hub.h
++++ b/drivers/usb/misc/onboard_usb_hub.h
+@@ -6,54 +6,66 @@
+ #ifndef _USB_MISC_ONBOARD_USB_HUB_H
+ #define _USB_MISC_ONBOARD_USB_HUB_H
+ 
++#define MAX_SUPPLIES 2
++
+ struct onboard_hub_pdata {
+ 	unsigned long reset_us;		/* reset pulse width in us */
+ 	unsigned int num_supplies;	/* number of supplies */
++	const char * const supply_names[MAX_SUPPLIES];
+ };
+ 
+ static const struct onboard_hub_pdata microchip_usb424_data = {
+ 	.reset_us = 1,
+ 	.num_supplies = 1,
++	.supply_names = { "vdd" },
+ };
+ 
+ static const struct onboard_hub_pdata microchip_usb5744_data = {
+ 	.reset_us = 0,
+ 	.num_supplies = 2,
++	.supply_names = { "vdd", "vdd2" },
+ };
+ 
+ static const struct onboard_hub_pdata realtek_rts5411_data = {
+ 	.reset_us = 0,
+ 	.num_supplies = 1,
++	.supply_names = { "vdd" },
+ };
+ 
+ static const struct onboard_hub_pdata ti_tusb8041_data = {
+ 	.reset_us = 3000,
+ 	.num_supplies = 1,
++	.supply_names = { "vdd" },
+ };
+ 
+ static const struct onboard_hub_pdata cypress_hx3_data = {
+ 	.reset_us = 10000,
+ 	.num_supplies = 2,
++	.supply_names = { "vdd", "vdd2" },
+ };
+ 
+ static const struct onboard_hub_pdata cypress_hx2vl_data = {
+ 	.reset_us = 1,
+ 	.num_supplies = 1,
++	.supply_names = { "vdd" },
+ };
+ 
+ static const struct onboard_hub_pdata genesys_gl850g_data = {
+ 	.reset_us = 3,
+ 	.num_supplies = 1,
++	.supply_names = { "vdd" },
+ };
+ 
+ static const struct onboard_hub_pdata genesys_gl852g_data = {
+ 	.reset_us = 50,
+ 	.num_supplies = 1,
++	.supply_names = { "vdd" },
+ };
+ 
+ static const struct onboard_hub_pdata vialab_vl817_data = {
+ 	.reset_us = 10,
+ 	.num_supplies = 1,
++	.supply_names = { "vdd" },
+ };
+ 
+ static const struct of_device_id onboard_hub_match[] = {
 
 -- 
 2.40.1
