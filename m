@@ -1,33 +1,35 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AB867C71;
-	Thu, 29 Feb 2024 14:16:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8064F7D091;
+	Thu, 29 Feb 2024 14:16:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709216175; cv=none; b=cqFrN4TUJU94xo+Pqlq7aJgAWP/3xRZi9p96WrjcVbmZNCEFhNcCslAlW+fEzQ6JqGUCokcXd5iYD8grO53+2ZRaol1nJ57JG8gE06UW1fzLPCYaRz2SKJDy0+wOCR3RySiV5Rq+OjP6/OEo+7vVcdISR8a5mMCveIfrylyy9oE=
+	t=1709216176; cv=none; b=QdLytCNwXs6zAQMgX81F9R3NkxB2B8/EAZnmPK0MljIK+kyGMZ1Xq0Ps6S53xzHWlJyO9NAu59xACLyFFHLsNzZ2QO8UNrlX0iH1Cll78RxIym8Biz4dCsFeQXueJbLkQqkql8Lk5Y7MNkQ8MG/+5lEDmmWoDU0X2xFK8Q+2LdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709216175; c=relaxed/simple;
-	bh=r0gdwpdiOcVEmYzeCAbf/LsPLFItzMu7ondxBP6yQLQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y//hKS1ZGIXnz8E8gaf73h/skm87jhXYDdhsCkcX7mbIaNERIWYawGB1gdnM54ZP/0usCafYSFGLx7pLISm2b/npDBIrY365jr6HAWeEt4zQ5hFexZTwiWM62pzqklzWP28hJB6rdVH1eamMLoOJ0rBpuS2MQShGejuvyDWBgXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bwRPX7Ja; arc=none smtp.client-ip=217.70.183.194
+	s=arc-20240116; t=1709216176; c=relaxed/simple;
+	bh=HQg6BtizgNqCrRDehW95r4xhMR9i6RLghqpEnNLecks=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MP1RcbPax02P2veIx8t6lnfdD5ajxf5SahhbsSphffu9KU4qfUtHFJJNKZ6a5bFFwIG2PwdWAAprq6yqzy3SKF2J56/CvZuUAXhzX2S9tKSvud1DJTJhU9Hu/V5mEtL6JmDaKWOmhj5kfdWOqe9eMlp2cl36dH9oMztIccbHcBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dcJ1B0Ei; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bwRPX7Ja"
-Received: by mail.gandi.net (Postfix) with ESMTPA id ECC1040004;
-	Thu, 29 Feb 2024 14:16:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dcJ1B0Ei"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 464B84000F;
+	Thu, 29 Feb 2024 14:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709216165;
+	t=1709216171;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dQR77Ohf9Ft7UqgPafYk2gt6DAiG/6MEe3qWS1f2ydk=;
-	b=bwRPX7JacO2MqgeOrYY9nCIKDgdJqkmz4U/5JC5VIS8aLVO8VL62a2WQS0P+dbHk2pPpBf
-	kk5NLB1pmi14PA1604TcfL6I8Oh0XkwMVXFnEnQzWsFhpzaoWDklGIs0b6SO/WRfaznCQu
-	cHud7CxjXguKT8MCy2lKjx62r5d+azDBr+nhxL1QqZnUbKzF2Ey2etjYkHx1YoK6N2rCix
-	+jZp7paGnOyPg2dP9hdt/dw8kyxPoC3mvMlmCOCm/iIOVnl8JeiF9CYSctrlXiroOEhs56
-	hb+74nKThKdQLk72GVjxeoso4zEOnLufho9LCsPlqbBzVFXfdSSGeuXoNLUGcQ==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UvIx8DaizrQghBKGl8R+5wAr2HBs0xxu5W0YcXy1Fj4=;
+	b=dcJ1B0Ei7NJvgliJ/dCgxAMVeBJqAjPLVZ60J3qecbqz/dmzckJPbRDJBcVxaw+dGiDRqO
+	RyWYtsifAOzDiUbKsREunPlM36dy5dmV3G7HsibxOUyoF0/EjMEjw/fjFWisGLqovAegmE
+	LzJ+IhPMblZzioNvjFWikL2eS4PSfvS4CCFAbFxqcPa4uaN+98DOEaja3imH5qoi2KNeKR
+	6KShmhS/sjug2np7chuT0b6sn8WBAOQX5CGfK17gwUHo49+XPyonxabDyXFnpxFbm9bFN7
+	S2byIAUIULNrQuJmbnDKO+jcHLmm+UP8VuD+EqUFqzUrVFCFyzVl6VjjTEyOeg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -45,171 +47,228 @@ Cc: linux-kernel@vger.kernel.org,
 	Mark Brown <broonie@kernel.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v5 0/5] Add support for QMC HDLC
-Date: Thu, 29 Feb 2024 15:15:48 +0100
-Message-ID: <20240229141554.836867-1-herve.codina@bootlin.com>
+Subject: [PATCH v5 4/5] net: wan: fsl_qmc_hdlc: Add runtime timeslots changes support
+Date: Thu, 29 Feb 2024 15:15:52 +0100
+Message-ID: <20240229141554.836867-5-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240229141554.836867-1-herve.codina@bootlin.com>
+References: <20240229141554.836867-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-Hi,
+QMC channels support runtime timeslots changes but nothing is done at
+the QMC HDLC driver to handle these changes.
 
-This series introduces the QMC HDLC support.
+Use existing IFACE ioctl in order to configure the timeslots to use.
 
-Patches were previously sent as part of a full feature series and were
-previously reviewed in that context:
-"Add support for QMC HDLC, framer infrastructure and PEF2256 framer" [1]
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Acked-by: Jakub Kicinski <kuba@kernel.org>
+---
+ drivers/net/wan/fsl_qmc_hdlc.c | 151 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 150 insertions(+), 1 deletion(-)
 
-In order to ease the merge, the full feature series has been split and
-needed parts were merged in v6.8-rc1:
- - "Prepare the PowerQUICC QMC and TSA for the HDLC QMC driver" [2]
- - "Add support for framer infrastructure and PEF2256 framer" [3]
-
-This series contains patches related to the QMC HDLC part (QMC HDLC
-driver):
- - Introduce the QMC HDLC driver (patches 1 and 2)
- - Add timeslots change support in QMC HDLC (patch 3)
- - Add framer support as a framer consumer in QMC HDLC (patch 4)
-
-Compare to the original full feature series, a modification was done on
-patch 3 in order to use a coherent prefix in the commit title.
-
-I kept the patches unsquashed as they were previously sent and reviewed.
-Of course, I can squash them if needed.
-
-Compared to the previous iteration:
-  https://lore.kernel.org/linux-kernel/20240222142219.441767-1-herve.codina@bootlin.com/
-this v5 series mainly:
-- Update some piece of code to improve readability.
-- Release resources before printing error messages.
-- Use 'struct device *dev' and dev_err_probe() in probe().
-- Use guard() and scoped_guard() from cleanup.h for spinlock locking.
-
-Best regards,
-Hervé
-
-[1]: https://lore.kernel.org/linux-kernel/20231115144007.478111-1-herve.codina@bootlin.com/
-[2]: https://lore.kernel.org/linux-kernel/20231205152116.122512-1-herve.codina@bootlin.com/
-[3]: https://lore.kernel.org/linux-kernel/20231128132534.258459-1-herve.codina@bootlin.com/
-
-Changes v4 -> v5
-  - Patch 1
-    Update QMC_HDLC_RX_ERROR_FLAGS to improve readability.
-    Display an error message after releasing resources instead of
-    before.
-    Use 'struct device *dev' in probe().
-    Use dev_err_probe() in probe().
-    Do not print a message on -ENOMEM.
-    Use guard() and scoped_guard().
-
-  - Patch 3
-    Use '(). See' constructing in kernel-doc instead of '() (See ...'
-    Add 'Co-developed-by: Herve Codina <herve.codina@bootlin.com>'
-
-  - Patch 4
-    Use 'struct device *dev' in probe().
-    Use dev_err_probe() in probe().
-    Use '%64pb' instead of '%*pb' in printk formats.
-
-  - Patch 5
-    Use 'struct device *dev' in probe().
-    Use guard()
-
-Changes v3 -> v4
-  - Patch 1
-    Remove of.h and of_platform.h includes, add mod_devicetable.h.
-    Add a blank line in the includes list.
-
-  - Path 2
-    No changes.
-
-  - v3 patches 3 and 4 removed
-
-  - Patch 3 (new patch in v4)
-    Introduce bitmap_{scatter,gather}() based on the original patch done
-    by Andy Shevchenko.
-    Address comments already done on the original patch:
-    https://lore.kernel.org/lkml/20230926052007.3917389-3-andriy.shevchenko@linux.intel.com/
-      - Removed the returned values.
-      - Used 'unsigned int' for all indexes.
-      - Added a 'visual' description of the operations in kernel-doc.
-      - Described the relationship between bitmap_scatter() and
-        bitmap_gather().
-      - Moved bitmap_{scatter,gather}() to the bitmap.h file.
-      - Improved bitmap_{scatter,gather}() test.
-      - Reworked the commit log.
-
-  - Patch 4 (v3 patch 5)
-    Use bitmap_{scatter,gather}()
-
-  - Patches 5 (v3 patch 6)
-    No changes.
-
-Changes v2 -> v3
-  - Patch 1
-    Remove 'inline' function specifier from .c file.
-    Fix a bug introduced when added WARN_ONCE(). The warn condition must
-    be desc->skb (descriptor used) instead of !desc->skb.
-    Remove a lock/unlock section locking the entire qmc_hdlc_xmit()
-    function.
-
-  - Patch 5
-    Use bitmap_from_u64() everywhere instead of bitmap_from_arr32() and
-    bitmap_from_arr64().
-
-Changes v1 -> v2
-  - Patch 1
-    Use the same qmc_hdlc initialisation in qmc_hcld_recv_complete()
-    than the one present in qmc_hcld_xmit_complete().
-    Use WARN_ONCE()
-
-  - Patch 3 (new patch in v2)
-    Make bitmap_onto() available to users
-
-  - Patch 4 (new patch in v2)
-    Introduce bitmap_off()
-
-  - Patch 5 (patch 3 in v1)
-    Use bitmap_*() functions
-
-  - Patch 6 (patch 4 in v1)
-    No changes
-
-Changes compare to the full feature series:
-  - Patch 3
-    Use 'net: wan: fsl_qmc_hdlc:' as commit title prefix
-
-Patches extracted:
-  - Patch 1 : full feature series patch 7
-  - Patch 2 : full feature series patch 8
-  - Patch 3 : full feature series patch 20
-  - Patch 4 : full feature series patch 27
-
-Andy Shevchenko (1):
-  lib/bitmap: Introduce bitmap_scatter() and bitmap_gather() helpers
-
-Herve Codina (4):
-  net: wan: Add support for QMC HDLC
-  MAINTAINERS: Add the Freescale QMC HDLC driver entry
-  net: wan: fsl_qmc_hdlc: Add runtime timeslots changes support
-  net: wan: fsl_qmc_hdlc: Add framer support
-
- MAINTAINERS                    |   7 +
- drivers/net/wan/Kconfig        |  12 +
- drivers/net/wan/Makefile       |   1 +
- drivers/net/wan/fsl_qmc_hdlc.c | 787 +++++++++++++++++++++++++++++++++
- include/linux/bitmap.h         | 101 +++++
- lib/test_bitmap.c              |  42 ++
- 6 files changed, 950 insertions(+)
- create mode 100644 drivers/net/wan/fsl_qmc_hdlc.c
-
+diff --git a/drivers/net/wan/fsl_qmc_hdlc.c b/drivers/net/wan/fsl_qmc_hdlc.c
+index b9e067101171..80998ad89088 100644
+--- a/drivers/net/wan/fsl_qmc_hdlc.c
++++ b/drivers/net/wan/fsl_qmc_hdlc.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <linux/cleanup.h>
++#include <linux/bitmap.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/hdlc.h>
+ #include <linux/mod_devicetable.h>
+@@ -33,6 +34,7 @@ struct qmc_hdlc {
+ 	struct qmc_hdlc_desc tx_descs[8];
+ 	unsigned int tx_out;
+ 	struct qmc_hdlc_desc rx_descs[4];
++	u32 slot_map;
+ };
+ 
+ static struct qmc_hdlc *netdev_to_qmc_hdlc(struct net_device *netdev)
+@@ -197,6 +199,144 @@ static netdev_tx_t qmc_hdlc_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	return NETDEV_TX_OK;
+ }
+ 
++static int qmc_hdlc_xlate_slot_map(struct qmc_hdlc *qmc_hdlc,
++				   u32 slot_map, struct qmc_chan_ts_info *ts_info)
++{
++	DECLARE_BITMAP(ts_mask_avail, 64);
++	DECLARE_BITMAP(ts_mask, 64);
++	DECLARE_BITMAP(map, 64);
++
++	/* Tx and Rx available masks must be identical */
++	if (ts_info->rx_ts_mask_avail != ts_info->tx_ts_mask_avail) {
++		dev_err(qmc_hdlc->dev, "tx and rx available timeslots mismatch (0x%llx, 0x%llx)\n",
++			ts_info->rx_ts_mask_avail, ts_info->tx_ts_mask_avail);
++		return -EINVAL;
++	}
++
++	bitmap_from_u64(ts_mask_avail, ts_info->rx_ts_mask_avail);
++	bitmap_from_u64(map, slot_map);
++	bitmap_scatter(ts_mask, map, ts_mask_avail, 64);
++
++	if (bitmap_weight(ts_mask, 64) != bitmap_weight(map, 64)) {
++		dev_err(qmc_hdlc->dev, "Cannot translate timeslots %64pb -> (%64pb, %64pb)\n",
++			map, ts_mask_avail, ts_mask);
++		return -EINVAL;
++	}
++
++	bitmap_to_arr64(&ts_info->tx_ts_mask, ts_mask, 64);
++	ts_info->rx_ts_mask = ts_info->tx_ts_mask;
++	return 0;
++}
++
++static int qmc_hdlc_xlate_ts_info(struct qmc_hdlc *qmc_hdlc,
++				  const struct qmc_chan_ts_info *ts_info, u32 *slot_map)
++{
++	DECLARE_BITMAP(ts_mask_avail, 64);
++	DECLARE_BITMAP(ts_mask, 64);
++	DECLARE_BITMAP(map, 64);
++	u32 array32[2];
++
++	/* Tx and Rx masks and available masks must be identical */
++	if (ts_info->rx_ts_mask_avail != ts_info->tx_ts_mask_avail) {
++		dev_err(qmc_hdlc->dev, "tx and rx available timeslots mismatch (0x%llx, 0x%llx)\n",
++			ts_info->rx_ts_mask_avail, ts_info->tx_ts_mask_avail);
++		return -EINVAL;
++	}
++	if (ts_info->rx_ts_mask != ts_info->tx_ts_mask) {
++		dev_err(qmc_hdlc->dev, "tx and rx timeslots mismatch (0x%llx, 0x%llx)\n",
++			ts_info->rx_ts_mask, ts_info->tx_ts_mask);
++		return -EINVAL;
++	}
++
++	bitmap_from_u64(ts_mask_avail, ts_info->rx_ts_mask_avail);
++	bitmap_from_u64(ts_mask, ts_info->rx_ts_mask);
++	bitmap_gather(map, ts_mask, ts_mask_avail, 64);
++
++	if (bitmap_weight(ts_mask, 64) != bitmap_weight(map, 64)) {
++		dev_err(qmc_hdlc->dev, "Cannot translate timeslots (%64pb, %64pb) -> %64pb\n",
++			ts_mask_avail, ts_mask, map);
++		return -EINVAL;
++	}
++
++	bitmap_to_arr32(array32, map, 64);
++	if (array32[1]) {
++		dev_err(qmc_hdlc->dev, "Slot map out of 32bit (%64pb, %64pb) -> %64pb\n",
++			ts_mask_avail, ts_mask, map);
++		return -EINVAL;
++	}
++
++	*slot_map = array32[0];
++	return 0;
++}
++
++static int qmc_hdlc_set_iface(struct qmc_hdlc *qmc_hdlc, int if_iface, const te1_settings *te1)
++{
++	struct qmc_chan_ts_info ts_info;
++	int ret;
++
++	ret = qmc_chan_get_ts_info(qmc_hdlc->qmc_chan, &ts_info);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "get QMC channel ts info failed %d\n", ret);
++		return ret;
++	}
++	ret = qmc_hdlc_xlate_slot_map(qmc_hdlc, te1->slot_map, &ts_info);
++	if (ret)
++		return ret;
++
++	ret = qmc_chan_set_ts_info(qmc_hdlc->qmc_chan, &ts_info);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "set QMC channel ts info failed %d\n", ret);
++		return ret;
++	}
++
++	qmc_hdlc->slot_map = te1->slot_map;
++
++	return 0;
++}
++
++static int qmc_hdlc_ioctl(struct net_device *netdev, struct if_settings *ifs)
++{
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++	te1_settings te1;
++
++	switch (ifs->type) {
++	case IF_GET_IFACE:
++		ifs->type = IF_IFACE_E1;
++		if (ifs->size < sizeof(te1)) {
++			if (!ifs->size)
++				return 0; /* only type requested */
++
++			ifs->size = sizeof(te1); /* data size wanted */
++			return -ENOBUFS;
++		}
++
++		memset(&te1, 0, sizeof(te1));
++
++		/* Update slot_map */
++		te1.slot_map = qmc_hdlc->slot_map;
++
++		if (copy_to_user(ifs->ifs_ifsu.te1, &te1, sizeof(te1)))
++			return -EFAULT;
++		return 0;
++
++	case IF_IFACE_E1:
++	case IF_IFACE_T1:
++		if (!capable(CAP_NET_ADMIN))
++			return -EPERM;
++
++		if (netdev->flags & IFF_UP)
++			return -EBUSY;
++
++		if (copy_from_user(&te1, ifs->ifs_ifsu.te1, sizeof(te1)))
++			return -EFAULT;
++
++		return qmc_hdlc_set_iface(qmc_hdlc, ifs->type, &te1);
++
++	default:
++		return hdlc_ioctl(netdev, ifs);
++	}
++}
++
+ static int qmc_hdlc_open(struct net_device *netdev)
+ {
+ 	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
+@@ -322,12 +462,13 @@ static const struct net_device_ops qmc_hdlc_netdev_ops = {
+ 	.ndo_open       = qmc_hdlc_open,
+ 	.ndo_stop       = qmc_hdlc_close,
+ 	.ndo_start_xmit = hdlc_start_xmit,
+-	.ndo_siocwandev	= hdlc_ioctl,
++	.ndo_siocwandev = qmc_hdlc_ioctl,
+ };
+ 
+ static int qmc_hdlc_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct qmc_chan_ts_info ts_info;
+ 	struct qmc_hdlc *qmc_hdlc;
+ 	struct qmc_chan_info info;
+ 	hdlc_device *hdlc;
+@@ -353,6 +494,14 @@ static int qmc_hdlc_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, -EINVAL, "QMC chan mode %d is not QMC_HDLC\n",
+ 				     info.mode);
+ 
++	ret = qmc_chan_get_ts_info(qmc_hdlc->qmc_chan, &ts_info);
++	if (ret)
++		return dev_err_probe(dev, ret, "get QMC channel ts info failed\n");
++
++	ret = qmc_hdlc_xlate_ts_info(qmc_hdlc, &ts_info, &qmc_hdlc->slot_map);
++	if (ret)
++		return ret;
++
+ 	qmc_hdlc->netdev = alloc_hdlcdev(qmc_hdlc);
+ 	if (!qmc_hdlc->netdev)
+ 		return -ENOMEM;
 -- 
 2.43.0
 
