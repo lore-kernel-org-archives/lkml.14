@@ -1,161 +1,80 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DC013C9CD
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 19:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA8513C9CD;
+	Thu, 29 Feb 2024 19:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709236351; cv=none; b=Z04c8b2B+40E2La4K2rm8qr67hrMmTQu2k4rrI+d5pXm4AlLW2FhsgHIqNhQHmIeN6O1tYmixxuwf4aYFA8sQFIByRQyQr54K8twISUdRgmjKPiKTZFh49phABQp2N/Nz2vi2dc6YVKRjxHeW93P3MPs2qshtwNSQvRqGzssmpA=
+	t=1709236381; cv=none; b=ofUQvxJl1sTurV2ZRW7T43b7ni5oUgEYO3R1dRdhiqfMMF+VUY1NIr/vIDYQs/Ipl0G/aYSsDq904xm5c5MVQz4oD87EAog1stzYjUkxFqrU8/Yh1dWBWYIPT4+uaMglY9B9puhqMBWuMFhAVZ9sKM4TksrLJwHgNtajsocTo6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709236351; c=relaxed/simple;
-	bh=BP7MIA4aqWsMyk/DGZfI6PyI07QVMNIRBi3JywY0eHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nu/Lh/OyqMojqmeBfeOo+J33uuT0o7ku0CDzvwdsXiUQWVkvi4NnT8/i0h2ma24rtTZOAD1VmVGtQpgwah/3gRpt8XD1gP1XU/ZPJUT3b2wYsIOXMDrbDHTz/91pjggPnr/b+dDWgPnnQMu5sQ5k4MqsHwXPYYxcqSrIYb2gVgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HypF3EI9; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709236381; c=relaxed/simple;
+	bh=fRVcWf5mL1gagzxIJm87iwzhYx0evaIHjsoZZkgDEmQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IeHnxMDQe9N7YJR0Gqrkt2Hy9tg0cbCAkqyQNBuhgfhwkUVMsx16r97Uxl/fkxNYLIs+E+dhIfmuTT5648h89vRg3/rY+bv1oNZh/Qkdr3TXq40zoyPYeypvdV7vfU1F0bWz8jaYcN+UDYNQ+X19udgMlNaH4uxgvf4zt5gzStM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=FFcwUqec; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HypF3EI9"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c7701f95b6so72174039f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 11:52:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709236349; x=1709841149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2t6iwGhsnNUxY4xM8qxSPssm7+cm45B8gw+DhHQKME4=;
-        b=HypF3EI9hLgQur8I6NBhRnURfqFI7olBYhAmwesAxfVtKJ6jcKGaOFMnuEL4pd+Cnb
-         rCzJyadxlNFrmvS9HJrV6QSm/B2irlD8WqJrVpiM411kdNarXQJgZz0HGwz53/H13oLK
-         35vOknB0OWFPxxFCT9XdgoPn7FvQI8XYZRbLA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709236349; x=1709841149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2t6iwGhsnNUxY4xM8qxSPssm7+cm45B8gw+DhHQKME4=;
-        b=AW4bbf4//xDH5AastvbRGrCpif4MkFpeKPqUQ7jgB1JCLH/aLWpKckbCEoZhrEzWBQ
-         23f14+w8J7JvxvuNWd2W4R7mzAo3SlYsJzss9hykUiT1tnqa1ON3HDmC3B6DtERTToxq
-         GEfKMgJNqUmDwPvWFvwZbX+sSIxQD9dALNbTFuouRjUQPQ7KkPLj9vnIl95UQFP1q6fa
-         5dvV++MEHh0Fwt6r4Q5Axc+hUr9hucaixudOgs7EL5SCMpc6oadBbSaP304n25biuKdb
-         B4TQeoYVpv9t3p3ijMAdVbvAdazeelcGv/SejTCLo3bx0nZS3eUOnP+Ko4VI4UyqKYOR
-         0qKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWV7CuI4wmi85nG5X2Yjru7dqUAyC+2sz5sUsP9snNaF6LU5DRdCVr/qJhxVTSMlq7c1iZz+WidZxSPoUNB8KmJCGhFmhgIsK4QO1Be
-X-Gm-Message-State: AOJu0YyHu5hc5XrRZ0ccxeD6Zehd0SAEUg6AUega7LhgVlAYSk+Lbp7q
-	o40EPB5DrggQTCUa1E4ypAbadyiPBgGAaFEnPSo/Qs/SDhgu62OMBUA6j1ahsw==
-X-Google-Smtp-Source: AGHT+IEZumlIxb4G0d4K62o0AbkepaXShc33hqlL9UEbLbxcWjF6LoBXCm4td2IpRYXolb4bY9ObCA==
-X-Received: by 2002:a05:6e02:1a8e:b0:365:185a:83ed with SMTP id k14-20020a056e021a8e00b00365185a83edmr1768942ilv.10.1709236349457;
-        Thu, 29 Feb 2024 11:52:29 -0800 (PST)
-Received: from localhost (144.57.222.35.bc.googleusercontent.com. [35.222.57.144])
-        by smtp.gmail.com with UTF8SMTPSA id 6-20020a056e020ca600b003653eb24e14sm492989ilg.78.2024.02.29.11.52.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 11:52:29 -0800 (PST)
-Date: Thu, 29 Feb 2024 19:52:28 +0000
-From: Matthias Kaehlcke <mka@chromium.org>
-To: Javier Carrasco <javier.carrasco@wolfvision.net>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Helen Koike <helen.koike@collabora.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 7/9] usb: misc: onboard_dev: add support for non-hub
- devices
-Message-ID: <ZeDgfIojODIbhs6N@google.com>
-References: <20240229-onboard_xvf3500-v6-0-a0aff2947040@wolfvision.net>
- <20240229-onboard_xvf3500-v6-7-a0aff2947040@wolfvision.net>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FFcwUqec"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1709236379; x=1740772379;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fRVcWf5mL1gagzxIJm87iwzhYx0evaIHjsoZZkgDEmQ=;
+  b=FFcwUqecxtMN/EAVIujm2aoWbb1Xw8AonpvpLSePqntbqqZPuPPC2RH2
+   oQS4Hg82zcssNg0DjJFFZBkF8cxrut/yLWGEnC6lE/noYt2fendJ0doYW
+   XBou7RAgSq3AxCaqaZBYq7mPt5i3MSk8/t0bFKaoVrk7he0KhdthB96aW
+   9CGUeGzpznY96Z2WnTDNIwLKy29sbBPP1oMj5q3yRvAOi0pSAj+OI1UUt
+   gkuBarBPlhs5p8kVpvY9kemzbvstojlhe0zUVaQFKl+6tsYcNbBN/BerM
+   rVHWIaGs0MQ1khaH14JTPNIVYmnk6tLFnwDwg3G8V0vI/gZcXCdt8vqzA
+   A==;
+X-CSE-ConnectionGUID: 1amprSseSNuxLnYX5OpglQ==
+X-CSE-MsgGUID: kh2rHzcxQIaEdMxHQ4S7gQ==
+X-IronPort-AV: E=Sophos;i="6.06,194,1705388400"; 
+   d="scan'208";a="247788406"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Feb 2024 12:52:52 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 29 Feb 2024 12:52:38 -0700
+Received: from DEN-DL-M31836.microsemi.net (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 29 Feb 2024 12:52:35 -0700
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <wojciech.drewek@intel.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<UNGLinuxDriver@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net-next v2 0/2] net: phy: micrel: lan8814 erratas
+Date: Thu, 29 Feb 2024 20:52:18 +0100
+Message-ID: <20240229195220.2673049-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240229-onboard_xvf3500-v6-7-a0aff2947040@wolfvision.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, Feb 29, 2024 at 09:34:50AM +0100, Javier Carrasco wrote:
-> Most of the functionality this driver provides can be used by non-hub
-> devices as well.
-> 
-> To account for the hub-specific code, add a flag to the device data
-> structure and check its value for hub-specific code.
-> 
-> The 'always_powered_in_supend' attribute is only available for hub
-> devices, keeping the driver's default behavior for non-hub devices (keep
-> on in suspend).
-> 
-> Signed-off-by: Javier Carrasco <javier.carrasco@wolfvision.net>
-> ---
->  drivers/usb/misc/onboard_usb_dev.c | 25 ++++++++++++++++++++++++-
->  drivers/usb/misc/onboard_usb_dev.h | 10 ++++++++++
->  2 files changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
-> index 4ae580445408..f1b174503c44 100644
-> --- a/drivers/usb/misc/onboard_usb_dev.c
-> +++ b/drivers/usb/misc/onboard_usb_dev.c
-> @@ -261,7 +261,27 @@ static struct attribute *onboard_dev_attrs[] = {
->  	&dev_attr_always_powered_in_suspend.attr,
->  	NULL,
->  };
-> -ATTRIBUTE_GROUPS(onboard_dev);
-> +
-> +static umode_t onboard_dev_attrs_are_visible(struct kobject *kobj,
-> +					     struct attribute *attr,
-> +					     int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct onboard_dev *onboard_dev = dev_get_drvdata(dev);
-> +
-> +	if (attr == &dev_attr_always_powered_in_suspend.attr &&
-> +	    !onboard_dev->pdata->is_hub)
-> +		return 0;
-> +
-> +	return attr->mode;
-> +}
-> +
-> +static const struct attribute_group onboard_dev_group = {
-> +	.is_visible = onboard_dev_attrs_are_visible,
-> +	.attrs = onboard_dev_attrs,
-> +};
-> +__ATTRIBUTE_GROUPS(onboard_dev);
-> +
+Add two erratas for lan8814. First one fix the led which might
+stay on even that there is no link. The second one improves increases
+length of the cable that can be used when used in 1000Base-T.
 
-nit: remove one empty line
+v1->v2:
+- separate errates such that each errate has it's own function.
 
->  
->  static void onboard_dev_attach_usb_driver(struct work_struct *work)
->  {
-> @@ -286,6 +306,9 @@ static int onboard_dev_probe(struct platform_device *pdev)
->  	if (!onboard_dev->pdata)
->  		return -EINVAL;
->  
-> +	if (!onboard_dev->pdata->is_hub)
-> +		onboard_dev->always_powered_in_suspend = true;
-> +
->  	onboard_dev->dev = dev;
->  
->  	err = onboard_dev_get_regulators(onboard_dev);
-> diff --git a/drivers/usb/misc/onboard_usb_dev.h b/drivers/usb/misc/onboard_usb_dev.h
-> index 4da9f3b7f9e9..58cf8c81b2cf 100644
-> --- a/drivers/usb/misc/onboard_usb_dev.h
-> +++ b/drivers/usb/misc/onboard_usb_dev.h
-> @@ -12,60 +12,70 @@ struct onboard_dev_pdata {
->  	unsigned long reset_us;		/* reset pulse width in us */
->  	unsigned int num_supplies;	/* number of supplies */
->  	const char * const supply_names[MAX_SUPPLIES];
-> +	bool is_hub;			/* true if the device is a HUB */
+Horatiu Vultur (2):
+  net: phy: micrel: lan8814 led errata
+  net: phy: micrel: lan8814 cable improvement errata
 
-nit: either drop the comment (the variable name is pretty self explaining),
-or s/HUB/hub/ ('hub' isn't an acronym).
+ drivers/net/phy/micrel.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-Acked-by: Matthias Kaehlcke <mka@chromium.org>
+-- 
+2.34.1
+
