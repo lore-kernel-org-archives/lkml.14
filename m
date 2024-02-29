@@ -1,96 +1,132 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93EF12E5B
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8253F17554
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709170507; cv=none; b=u3QbGmjolUiCWnpXnMx98BSOyGR2uVf/7u4hws6u+bIRbsBzsA5buR9z1/xKzvTZ4yNC44zT6yFvsqFETbHAAQPqytAgBZfe2uE4CLKSz/ieInN3WlISFwx+7vZs7og79Ac5iZ+ezqvMaPZSoOpQJRLJn+psP5M6X0OCRV/jOCw=
+	t=1709170589; cv=none; b=D5Q/WdHZ+92kyKAPJWC4FWQPZs36auHBj164gHP6B9wCxqrrQefXvKiEKoR0kUIS/t49mjF2EX/7riEB/QZFFx6DAh+abZOfSPmZ20YisfHBNF8gF+3QPh2nG4tVhD2vpSknAjP3tqNbwkvpe7g8yYxD6LuJbh/mzUXHLx+0xys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709170507; c=relaxed/simple;
-	bh=rNhXvztlPIMQxaT3uBcxWgppme382OuBdUXTLAuCzMQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WAZlw2c9xeYt+bS8vQVvom6vvsaVQMScu1XML1A0hn26+qdxR/DEXHIkphSYAm7LfuT7ddkmjpOwnb1QqLG8pGsZcYkot9evTBqOplCLojHaZSZemheaGfBX/NsRqdkGHpIrbWnQCOvD6gm4x47g/j5g8luJJpnJh4nvCr1WUDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jiPlFYOp; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709170589; c=relaxed/simple;
+	bh=+q2AytV+UscXohFfoUnQzX7SS5YtqNU5pYoLOmw3iMI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W4MyBFZsWc/YdCylCGkzlc10vu/9/l4+g6ZYTivoXFMqi00PSapZFx6lxob6eIXlSlx3togLYhZA2Ua/sFYwKeJXnWquLXXBIQmNQWRunWmea4zCQ4V5DSPAkDBS7RkzF9zQNtYpUR50hCEK2r7st4zf/2wPQevyZfa69FiY0No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ELJO8Bj9; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jiPlFYOp"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e5760eeb7aso306888b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 17:35:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709170505; x=1709775305; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+iy/LQHSKsmIm2Ae2f5kmdkaP9KIdMysWT/fEuU36SA=;
-        b=jiPlFYOpUGz9wYjFKfG1HdNQe55ZF6z44B5lFhR9TB4twaDKd8MsQ6u9kPk6n1vXxI
-         APuBjVtKWLDs5IxvahQSunDhoR5kjO3OjIXtv0d8lyxErLAh0FVvaQzAbY3INgcP4L6i
-         Y+kop3OMLnCpPW2Xlg904RVRrjThXBswRTBMw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709170505; x=1709775305;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+iy/LQHSKsmIm2Ae2f5kmdkaP9KIdMysWT/fEuU36SA=;
-        b=LZIjJ+Rit2An+oFNdVIzkRiS7UcR+Rh6/bObk8iirYuhB6+VwHXHDYP7D7v1Am7H4k
-         0pCkn6x98yPlBzoVXyhGgwv5Vn5qIInK7X8GSIr4/jzG6Yr9Nx/9FR4J6rC7NZkY4vC3
-         shGPR9w+0vAm9cwecZepABwgx1Nc/uFFfirDWf/8AzAS85hk8FGGnHzz4/pr/IHqEeQO
-         ch/8lDKZVY0BCDHk/iSzwzauOHlEyQhEzsjEKG9p/NRxeFkNl10/ozj3q8FAvFjZR0ju
-         Zz3FIDzS2rOXvrkeeIE0UhfCbwYCt9yzOR0dg4uF/7EqsNQi/UfIB7XPpdYY5tqSkDwc
-         BRTQ==
-X-Gm-Message-State: AOJu0YyH59LwXp51FkZc0/TWizHqVQX89cHE6ShE1p6YWZZupQcRVwew
-	u+ZnbuZqnzt7mUxrh9uLC72lLt3Cjw2mWg6x0LKJMKu2Fmuvc+k8KeSwPjs8pQ==
-X-Google-Smtp-Source: AGHT+IHe8q/7Uap3Rq440sONVc3d/cawGrolo7Z307D4Y05inxotsQMMYjUjiMMfqtXROHeogJrWVQ==
-X-Received: by 2002:aa7:8482:0:b0:6e4:eb29:357 with SMTP id u2-20020aa78482000000b006e4eb290357mr839544pfn.12.1709170505147;
-        Wed, 28 Feb 2024 17:35:05 -0800 (PST)
-Received: from localhost (217.108.125.34.bc.googleusercontent.com. [34.125.108.217])
-        by smtp.gmail.com with UTF8SMTPSA id b26-20020aa7871a000000b006e13a88d52esm97174pfo.61.2024.02.28.17.35.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 17:35:04 -0800 (PST)
-From: Stephen Boyd <swboyd@chromium.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	cros-qcom-dts-watchers@chromium.org,
-	Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Subject: [PATCH] arm64: dts: qcom: sc7180: Disable DCC node by default
-Date: Wed, 28 Feb 2024 17:35:01 -0800
-Message-ID: <20240229013503.483651-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ELJO8Bj9"
+Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
+	by cmsmtp with ESMTPS
+	id fSS6ru3fntf2QfVLXrZnS5; Thu, 29 Feb 2024 01:36:27 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id fVLWrRBaHpZ2hfVLWruoIh; Thu, 29 Feb 2024 01:36:26 +0000
+X-Authority-Analysis: v=2.4 cv=EZvOQumC c=1 sm=1 tr=0 ts=65dfdf9a
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VhncohosazJxI00KdYJ/5A==:17
+ a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=wYkD_t78qR0A:10
+ a=kwRZLr0jWMAg0_Wj33cA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=iICL8pgfW/eValc0KcsgShjcYjIIkOjZx3q+9YTL2YU=; b=ELJO8Bj9iMneFv7JC7NmH7UfR+
+	g3TzcaAOp/fsvnRTc0nv6FPuxXS1rmofZjAgM9xgiqmDJbxCRVeT7z4+baskZePZ5zAGQtgXwgHQu
+	JpUd4pr/VhZ+kJ7GI3K6iYAyeoPdAtuevqTXNuCNgUcY77pw2nZlDUlNd5N4gjcNQwEsDEqG5XKGQ
+	v+lCm6CmYcGG1ilpML1wGXvZYFSTc3fZhNlLZS+DTF2vbrRFYwR9/fBstubGpRgqQkbXWlwdLFVCF
+	EkuimUCvI7CTu+JWTBXZU5tyNGxXGwZFlqF6/BNo3duYtIOpN/De+o3hBnbkGy4+XX6pGfM6koybY
+	nKqEsKDA==;
+Received: from [201.172.172.225] (port=34076 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rfVLV-002v75-09;
+	Wed, 28 Feb 2024 19:36:25 -0600
+Message-ID: <126f4cb7-7164-43d2-bf0e-1192d1438338@embeddedor.com>
+Date: Wed, 28 Feb 2024 19:36:22 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 7/8] net-device: Use new helpers from overflow.h in
+ netdevice APIs
+Content-Language: en-US
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Vinod Koul <vkoul@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-spi@vger.kernel.org,
+ netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>
+References: <20240228204919.3680786-1-andriy.shevchenko@linux.intel.com>
+ <20240228204919.3680786-8-andriy.shevchenko@linux.intel.com>
+ <202402281341.AC67EB6E35@keescook> <20240228144148.5c227487@kernel.org>
+ <202402281554.C1CEEF744@keescook>
+ <653bbfe8-1b35-4f5e-b89d-9e374c64e46b@embeddedor.com>
+ <20240228165730.3171d76c@kernel.org>
+ <49f55b02-ce21-40ac-a4cc-02894cd5eb8f@embeddedor.com>
+ <20240228171509.4eeb5519@kernel.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240228171509.4eeb5519@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.172.225
+X-Source-L: No
+X-Exim-ID: 1rfVLV-002v75-09
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.10]) [201.172.172.225]:34076
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 31
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfE3kDWldOfuUSzFT8eDwHtJ9EpS/4JTEXOy2pbp9KYZQs82QUVrn6q3TTW0osT2IJX+ILcOxiUUUVa9F9D+l1nhsFgM7F6OjgbR3iZhY2wiVbDRDqFdi
+ qBThToDWCghe6b8YJ4oiLnQOXSTTIgfqKB3rliEsBZfxn6Bf4zxbpcTf9IyeI/tixx68u9nBYeOrTdAFUwyI7QBQQ0ECItRPvHMqbMyGIktKWNM5Uhig0qt9
 
-We don't use this device on Trogdor boards. If we did, it would be
-enabled in the sc7180-trogdor.dtsi file. Let's disable this here so that
-boards with t he sc7180 SoC can decide to enable or disable this device.
 
-Cc: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Fixes: add74cad7c9d ("arm64: dts: qcom: sc7180: Add Data Capture and Compare(DCC) support node")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 4dcaa15caef2..f390bf3eccbe 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -2239,6 +2239,7 @@ dma@10a2000 {
- 			compatible = "qcom,sc7180-dcc", "qcom,dcc";
- 			reg = <0x0 0x010a2000 0x0 0x1000>,
- 			      <0x0 0x010ae000 0x0 0x2000>;
-+			status = "disabled";
- 		};
- 
- 		stm@6002000 {
+On 2/28/24 19:15, Jakub Kicinski wrote:
+> On Wed, 28 Feb 2024 19:03:12 -0600 Gustavo A. R. Silva wrote:
+>> On 2/28/24 18:57, Jakub Kicinski wrote:
+>>> On Wed, 28 Feb 2024 18:49:25 -0600 Gustavo A. R. Silva wrote:
+>>>> struct net_device {
+>>>> 	struct_group_tagged(net_device_hdr, hdr,
+>>>> 		...
+>>>> 		u32			priv_size;
+>>>> 	);
+>>>> 	u8			priv_data[] __counted_by(priv_size) __aligned(NETDEV_ALIGN);
+>>>> }
+>>>
+>>> No, no, that's not happening.
+>>
+>> Thanks, one less flex-struct to change. :)
+> 
+> I like the flex struct.
+> I don't like struct group around a 360LoC declaration just to avoid
+> having to fix up a handful of users.
 
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
--- 
-https://chromeos.dev
+That's what I mean. If we can prevent the flex array ending up in the
+middle of a struct by any means, then I wouldn't have to change the
+flex struct.
 
+--
+Gustavo
