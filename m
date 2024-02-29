@@ -1,92 +1,135 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B2916FF3A
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 21:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B54F6D503;
+	Thu, 29 Feb 2024 21:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709240679; cv=none; b=Z+ntvXDSprkjc511hkOaqFTxSvxpjTN0R1qAAigJ07vz3V/TA81vNlx/gMWoaSvLgY4yBs9fhwXoOuLIyk8JTFaOmWIe6QuDfyzm6h4wxxYcYRwCut4P17kbm8FuE263m8G4lOv1GD8mOPMarCf+2+/xBGvUBX0kEUk3s2kvqo0=
+	t=1709240803; cv=none; b=DgsBRwxkOCvnmI6qLvBZUNBy1TRiO33cVFAISOriHmHNNGDv2uyhLnbS9KypXL8w+ibz8cKMmhW5d6PF6771qHH6v7UlJo7jiJadhUCQ6dpRfJNRYUATBQr9n5nQuveoUjndqc4hdcHpkl5l9qyXBs7/i7UlWifhk7lpF7F4Bzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709240679; c=relaxed/simple;
-	bh=8uPVylV9EO6m0KYXwD9bCM+qusEzKV7OpBt6B4Y/Y+Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WH8bU6EED0hGRUoyx7FivD2DGPCr5K0yzLQeLOife/DB1H0lzr/CVA1GjjsHV5Qq5KMWn6FXYZ3HrzUubOztXU8xAX+Tf48+CFKt7RDXZJEpF+Arb8q6dOTN4OuhtCRYA+17L95UqyH+nLAmkxccpU6og+n0wc2HD7baXmWXaUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QpmSeTlB; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709240803; c=relaxed/simple;
+	bh=AEjYtbKr9ZxceLUwWxzAgzu87zcJb3nLNbDcnS6bRS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=cebCOL8ADyVy68XTCzIq4Ha1cYyRSRF53i+/DtDYIwe3eWUsUTv0Ibh77ThMeqGXBTru8OxYpU7uGF8vmzPwmqbBVUlLirCAduAujp+yLqe8eambhjtUbLeRX1wGw4HCenZ8TgZqOLpwhh1T0mNsCoEbw/GVvfsI8LCWumPCGBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFKFW96s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpmSeTlB"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6084e809788so20973447b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:04:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709240677; x=1709845477; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8uPVylV9EO6m0KYXwD9bCM+qusEzKV7OpBt6B4Y/Y+Q=;
-        b=QpmSeTlBYpnn9mqBMS99KSQoZHAmlh6zlGdw4USU97YoQ+XX3pZp67WWm46223FX8E
-         0OfZt5HLZBO8Pu5KzQziX+rCqF/8sTLEPjQHydYjaCsMwcPqwuKoS5NtLLh1UtxMBeQF
-         KgnqF8j1+ZbS2T/jI5OKRHJP034PAmx3TvT0AVXyfm7uQpSy0p6CyPeQ2NvtRi1JW6+3
-         YoLDRiQdHEuk7WtViN1J9YTZAUSOjL1sjYC1n5/A57Kb0etZ0YMUSRkpsJhmn4QtjHWW
-         gSB18Nu6KqAbmV+1j31K3lkdiyW2E0SBTieklLw5yzjVU/AYYoomZQdBGYI+fwMmHxUM
-         amFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709240677; x=1709845477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8uPVylV9EO6m0KYXwD9bCM+qusEzKV7OpBt6B4Y/Y+Q=;
-        b=gaKzF5f5uNZN9Brx7XGbyhe6fThubFPAYKDT09jVbxMvWxII+U0BfDVcOLwouexShF
-         gIamAEz2i1ippcwdxu6TLb2okCuMOQTNZnpSBXjDdk66PaT995dYslpKCtdKvYfUoQUj
-         fPLk2Obq+y+O1DO/wQTwX9nwfidYXU1mJsURcrJGRkdiljiMlZls9O8NiouKY4BesiEf
-         c6nHbFQW9mYRHB3XDzkXM5+8nNJdJli0LAbMuJIAt5w2ZJjiKJheW6gOcZxa+m3huCbH
-         NbcNnb2eqI+te5WeXYVZqXUOoX+10yKW6WzVGSZy2s9Fe2trzSiAMU7cSnoOXCo9SQdx
-         5rmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjhxonyqHS9AY5RKlN4MDpZSe2Iw4U7ny/LhSYjKnsy4ISypPkPOx4TOSSbk/khYv+Jtv4Swq0C/+QmZyFsnOmimFiTpAYZvp0geaE
-X-Gm-Message-State: AOJu0Ywylb8K6Z+XLtNUYv8+ZDJsgoF6tEV0BEXrUYaej6VESb4hRiny
-	OyWFiDlhJcYz/Gx/8RiLVgIn9pkN49Fgqn2e2hBZg61eFbsvwS0SrrZGe/JX37LpM4D4yVHa9ZZ
-	zhIvjX2lORc8vyuUtCClv0UzkJw9zRIRC2Rb7BQ==
-X-Google-Smtp-Source: AGHT+IF6WpL6uXLdz5RRC4t8N2wE2n4WdvI8YyClMoKto9MRFbIOM8wSfgQJvA/IZCtI3mWM0tMsS/RNNVdPkijGBSI=
-X-Received: by 2002:a5b:9c5:0:b0:dc7:421d:bcc0 with SMTP id
- y5-20020a5b09c5000000b00dc7421dbcc0mr1924276ybq.32.1709240677236; Thu, 29 Feb
- 2024 13:04:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFKFW96s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF351C433F1;
+	Thu, 29 Feb 2024 21:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709240802;
+	bh=AEjYtbKr9ZxceLUwWxzAgzu87zcJb3nLNbDcnS6bRS4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=bFKFW96sIiJGSerm8V0bNCD1SbFpGcH/jDdjnh4RISImFg9R0/QLxoUqbMF5f6JXJ
+	 ORnFl3JyAhMJN9MkJO1le80pH4UK/bdn6EpKh3PKAwnwHo27GndhmCouKfNFHe0Csw
+	 1/iToOeuEUcZ5liziICd9GbPgezx1mJo2E7pHzz/S3JtN7xuCTA22hBMTvzvWGWXUf
+	 DDyborhhtQlAOxY+QJcmFzr0ZFBL6UoxhMMXo3Yo+TKfcQ4bMY60AjqEwj4+5dAgbd
+	 egOHbUlLATGcB4yk3C8SQDfRgmV4pljL9ydcLl6A+ilyVdaUmMbcespX3oZPyRvXRS
+	 11bYcGkPSOkcA==
+Date: Thu, 29 Feb 2024 15:06:40 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Cc: baolu.lu@linux.intel.com, bhelgaas@google.com, robin.murphy@arm.com,
+	jgg@ziepe.ca, kevin.tian@intel.com, dwmw2@infradead.org,
+	will@kernel.org, lukas@wunner.de, yi.l.liu@intel.com,
+	dan.carpenter@linaro.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/vt-d: avoid sending explicit ATS invalidation
+ request to released device
+Message-ID: <20240229210640.GA362869@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com> <20240229-mbly-i2c-v2-8-b32ed18c098c@bootlin.com>
-In-Reply-To: <20240229-mbly-i2c-v2-8-b32ed18c098c@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 22:04:26 +0100
-Message-ID: <CACRpkdYRPNq0diYUyQoZ54pYb6Gz22rj-WoGwPFALiuvgY71jA@mail.gmail.com>
-Subject: Re: [PATCH v2 08/11] i2c: nomadik: fetch i2c-transfer-timeout-us
- property from devicetree
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
-	Gregory Clement <gregory.clement@bootlin.com>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229033138.3379560-1-haifeng.zhao@linux.intel.com>
 
-On Thu, Feb 29, 2024 at 7:10=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
-in.com> wrote:
+On Wed, Feb 28, 2024 at 10:31:38PM -0500, Ethan Zhao wrote:
+> The introduction of per iommu device rbtree also defines the lifetime of
+> interoperation between iommu and devices, if the device has been released
+> from device rbtree, no need to send ATS invalidation request to it anymore,
+> thus avoid the possibility of later ITE fault to be triggered.
+> 
+> This is part of the followup of prior proposed patchset
+> 
+> https://do-db2.lkml.org/lkml/2024/2/22/350
 
-> Allow overriding the default timeout value (200ms) from devicetree,
-> using the generic i2c-transfer-timeout-us property.
->
-> The i2c_adapter->timeout field is an unaccurate jiffies amount;
-> i2c-nomadik uses hrtimers for timeouts below one jiffy.
->
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+Please use https://lore.kernel.org/ URLs instead.  This one looks like
+https://lore.kernel.org/r/20240222090251.2849702-1-haifeng.zhao@linux.intel.com/
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> To make sure all the devTLB entries to be invalidated in the device release
+> path, do implict invalidation by fapping the E bit of ATS control register.
+> see PCIe spec v6.2, sec 10.3.7 implicit invalidation events.
 
-Yours,
-Linus Walleij
+s/implict/implicit/
+
+s/fapping/?/  (no idea :)  "flipping"?  Oh, probably "flapping" per the
+comment below.  But I think "flapping" is ambiguous; "setting" would be
+better)
+
+s/v6.2/r6.2/ (also below in comment)
+
+> Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table interface")
+> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 6 ++++++
+>  drivers/iommu/intel/pasid.c | 7 +++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 6743fe6c7a36..b85d88ccb4b0 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -1368,6 +1368,12 @@ static void iommu_disable_pci_caps(struct device_domain_info *info)
+>  	pdev = to_pci_dev(info->dev);
+>  
+>  	if (info->ats_enabled) {
+> +		pci_disable_ats(pdev);
+> +		/*
+> +		 * flap the E bit of ATS control register to do implicit
+> +		 * ATS invlidation, see PCIe spec v6.2, sec 10.3.7
+
+s/invlidation/invalidation/
+
+I would put the comment above the pci_disable_ats(), so it looks like
+this:
+
+  /* comment ... */
+  pci_disable_ats(pdev);
+  pci_enable_ats(pdev, VTD_PAGE_SHIFT);
+
+  pci_disable_ats(pdev);
+
+because the spec says the E field must change from Clear to Set to
+cause invalidation of all ATC entries, so it's important to see that
+we clear E first, then set it.
+
+> +		 */
+> +		pci_enable_ats(pdev, VTD_PAGE_SHIFT);
+>  		pci_disable_ats(pdev);
+>  		info->ats_enabled = 0;
+>  		domain_update_iotlb(info->domain);
+> diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
+> index 108158e2b907..5f13e017a12c 100644
+> --- a/drivers/iommu/intel/pasid.c
+> +++ b/drivers/iommu/intel/pasid.c
+> @@ -215,6 +215,13 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
+>  		return;
+>  
+>  	sid = info->bus << 8 | info->devfn;
+> +	/*
+> +	 * If device has been released from rbtree, no need to send ATS
+> +	 * Invalidation	request anymore, that could cause ITE fault.
+> +	 */
+> +	if (!device_rbtree_find(iommu, sid))
+> +		return;
+> +
+>  	qdep = info->ats_qdep;
+>  	pfsid = info->pfsid;
+>  
+> -- 
+> 2.31.1
+> 
