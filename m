@@ -1,315 +1,97 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13C17D063
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 12:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC8F7D074;
+	Thu, 29 Feb 2024 12:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709209231; cv=none; b=jk03zsWiszn3tjs5LzB8Nb3SBjClt5ZsHjIewU0grO5vUZc5/v0sVCbu11Wf7aBSOgJucbQkw+d/MygDR6IOl01jQIOThL1AfyEWn45QS2Ry4llFNx76ux3K9LW12mrexUZuY3/5zXVOvqGKYt8phImk7ZOkP3dykxxoYq/Nngc=
+	t=1709209245; cv=none; b=ArrBF9Lu/A3y9o6TEMaRoRkod4QMR2FUB5vAWJZM9Cx2nGkoLI3lT6iLdORUUOHjZNQ/ZG5qs5h9ms3t/GZWghJr8gtbGYWAAvRbIdQD81mKXhKtAijRzBpMwGsRlmAcq4XJa/pFTl6hth12D4Sp49qnLCymA5cDEg43NPYvKMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709209231; c=relaxed/simple;
-	bh=lSBnb+XEH5OWKNdD4KGcBTGlJJw3UsgmPv8PP61sTBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pi0yPLD2F+M1eCROsAXfPn8HGjA/K40iNlEnGwhn1xIvJ7GBPoFiWHxOsioaoCFo1+0UeCxjEjVYRBExTOVMU0MjPuhRQQVimhs36DSOXHjjGY7v0nq969Ylc/iv4ZzhGz3yUEFYX/NLqVY6qZSLduLoDe7KV8GHEum/OoZKTa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N0vVTGo/; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709209245; c=relaxed/simple;
+	bh=emQm7hFesm1ix53qkhKXk/Ui+MWdzCkGTzLlugguFwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9gSDqmaaw08S1KYB8pqvsGr5pU7lrjETWNQfS3E0BPJQW+dm0FZrQD9clO42HKWFAzMcEOjWBnIv9ZmbTuxNotp5ns9TqxphF2sDW2R7BKgAa7zvJM3O7gzI0xRdDFYkGyuKaJjbdxGBxd9TrML82qgS40hkKOJbJhkpMvXAaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=IqN3QhQZ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N0vVTGo/"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-412bfacd146so2396155e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 04:20:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709209228; x=1709814028; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JQDiw4Hp02y45aR2U+S1FUPielx60HP4THtzacPLYL4=;
-        b=N0vVTGo/QK7TuMMtlx508B8T8+MwraDk0xD+X6+mU7gD25o90TSDGOt1udnVFRlxwh
-         nzCFxgBjFKz2cyrmmL5x2R/AZBb3w0PYf+YtP7ywrzplPH7BD+RaCCpkWJo/3ugHIuz0
-         uzDATlaOSFeJ8bJVxSjpIOaTMmhML5COEgU3DzUrau1fp6oGLucHeNBYU/nQHQ9xCkOm
-         wnw7/so1tVS8drQnYjv3SgpMOwcE+DLV9Kh+9/skJlP59r1vH53D3St+vM6315/8tcK0
-         k2kESc0F/UUzMFljsfiKf6hy48on3E415IbFeGtdiSDiiuOWIKYUD6clRPfPRfMb1uHJ
-         u1iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709209228; x=1709814028;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JQDiw4Hp02y45aR2U+S1FUPielx60HP4THtzacPLYL4=;
-        b=o7eB2siTwzbuVBaitZf3BwX9IoksEIvht0GGzMEMpiy4+ff24rwSC9pQH6uE3b+r9D
-         +JP/UrwGs40plUXnzRDhK9wq5vgLI26/kXyv2iQDX1KSNtn29hVKHWqYUAg6qrvOW/82
-         XgAqeQYTVlER0fn/5Kr92FR6bUPfGo6I1g0GZB9WDkRtDfRLFVaURIDXPJrclTboBRx7
-         DYVpEYfP0S1XJmIaY4EEj+E8y/P5LV8TUyE038it3SSwHYPt0n0yfM/5b+6RJm8yi5Uz
-         ldtYrSRhe+dckeHA85zbvqc1nFXAPom3q31I1Ix9GwCeYw29fqJoN+sZOaVwtiInT+29
-         5hyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLr54YHZGHBF6CHnDkz22PIzgKaSm94nW8/wwh6iK4UYP8V/15IV73FMbUvIrd6O7wxcNX+JvLb15tl7qarsuBEL4cMeJj2fY/zJJ5
-X-Gm-Message-State: AOJu0YySxvpEQNCs3SexN57H7GylVBnNboswN93G4ErlkKqEkJ6dQ9P2
-	405mcWVUfHpLxzfPYyNOEIzY5xgSM3qTT7di80W0pXEIJtXMhEEpZ7vEdv4npSHc/1LVvE9r7yH
-	nCJqszw==
-X-Google-Smtp-Source: AGHT+IF4he2HlSn1uPXmyFLNHEgmB6m1JN5wF1U8no+ln4ydrMAzQxoObQ3iUBzOebwvb9t68euB8g==
-X-Received: by 2002:a05:600c:444f:b0:412:c285:10fc with SMTP id v15-20020a05600c444f00b00412c28510fcmr275312wmn.4.1709209228120;
-        Thu, 29 Feb 2024 04:20:28 -0800 (PST)
-Received: from ta2.c.googlers.com.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
-        by smtp.gmail.com with ESMTPSA id dx14-20020a05600c63ce00b004129f28e2cdsm5009121wmb.3.2024.02.29.04.20.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 04:20:27 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: krzysztof.kozlowski@linaro.org,
-	s.nawrocki@samsung.com,
-	cw00.choi@samsung.com,
-	semen.protsenko@linaro.org
-Cc: alim.akhtar@samsung.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	peter.griffin@linaro.org,
-	andre.draszik@linaro.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	willmcvicker@google.com,
-	kernel-team@android.com,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH 3/4] clk: samsung: gs101: propagate PERIC0 USI SPI clock rate
-Date: Thu, 29 Feb 2024 12:20:20 +0000
-Message-ID: <20240229122021.1901785-4-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-In-Reply-To: <20240229122021.1901785-1-tudor.ambarus@linaro.org>
-References: <20240229122021.1901785-1-tudor.ambarus@linaro.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IqN3QhQZ"
+Received: from pendragon.ideasonboard.com (89-27-53-110.bb.dnainternet.fi [89.27.53.110])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 04C6E673;
+	Thu, 29 Feb 2024 13:20:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1709209225;
+	bh=emQm7hFesm1ix53qkhKXk/Ui+MWdzCkGTzLlugguFwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IqN3QhQZMd06ouU9VAf2MIJT4ISmQMj11yF1qHSQEqULk6VFr9BVsMVkwwcty4L9U
+	 3kcec5y7Ii/cM1IvKdbrbm66BC/F7dPzgm10TZNwomr15OXWS8mOtFMkw4oGWdlZrh
+	 m1PJta3Pe42j2OYxP0d3lsvvJDtu4m8HhZ8ECO7g=
+Date: Thu, 29 Feb 2024 14:20:40 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Guillaume Tucker <gtucker@gtucker.io>
+Cc: Mark Brown <broonie@kernel.org>, Nikolai Kondrashov <spbnick@gmail.com>,
+	Helen Koike <helen.koike@collabora.com>, linuxtv-ci@linuxtv.org,
+	dave.pigott@collabora.com, mripard@kernel.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-kselftest@vger.kernel.org, gustavo.padovan@collabora.com,
+	pawiecz@collabora.com, tales.aparecida@gmail.com,
+	workflows@vger.kernel.org, kernelci@lists.linux.dev,
+	skhan@linuxfoundation.org, kunit-dev@googlegroups.com,
+	nfraprado@collabora.com, davidgow@google.com, cocci@inria.fr,
+	Julia.Lawall@inria.fr, laura.nao@collabora.com,
+	ricardo.canuelo@collabora.com, kernel@collabora.com,
+	torvalds@linuxfoundation.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH 0/3] kci-gitlab: Introducing GitLab-CI Pipeline for
+ Kernel Testing
+Message-ID: <20240229122040.GG30889@pendragon.ideasonboard.com>
+References: <20240228225527.1052240-1-helen.koike@collabora.com>
+ <20240228230725.GF1659@pendragon.ideasonboard.com>
+ <0a5bf7d1-0a7e-4071-877a-a3d312d80084@gmail.com>
+ <20240229093402.GA30889@pendragon.ideasonboard.com>
+ <655f89fa-6ccb-4b54-adcd-69024b4a1e28@gmail.com>
+ <20240229111919.GF30889@pendragon.ideasonboard.com>
+ <a4fc23e1-5689-4f86-beb7-5b63a0d13359@sirena.org.uk>
+ <b3fb89aa-56b4-4b3c-88f6-c6320bf5c489@gtucker.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <b3fb89aa-56b4-4b3c-88f6-c6320bf5c489@gtucker.io>
 
-When SPI transfer is being prepared, the spi-s3c64xx driver will call
-clk_set_rate() to change the rate of SPI source clock (IPCLK). But IPCLK
-is a gate (leaf) clock, so it must propagate the rate change up the
-clock tree, so that corresponding MUX/DIV clocks can actually change
-their values. Add CLK_SET_RATE_PARENT flag to corresponding clocks for
-all USI instances in GS101 PERIC0: USI{1-8, 14}. This change involves the
-following clocks:
+On Thu, Feb 29, 2024 at 12:53:38PM +0100, Guillaume Tucker wrote:
+> On 29/02/2024 12:41, Mark Brown wrote:
+> > On Thu, Feb 29, 2024 at 01:19:19PM +0200, Laurent Pinchart wrote:
+> >> On Thu, Feb 29, 2024 at 01:10:16PM +0200, Nikolai Kondrashov wrote:
+> > 
+> >>> Of course. You're also welcome to join the #kernelci channel on libera.chat.
+> > 
+> >> Isn't that a bit pointless if it's no the main IM channel ?
+> > 
+> > It *was* the original channel and still gets some usage (mostly started
+> > by me admittedly since I've never joined slack for a bunch of reasons
+> > that make it hassle), IIRC the Slack was started because there were some
+> > interns who had trouble figuring out IRC and intermittent connectivity
+> > but people seem to have migrated.
+> 
+> In fact it was initially created for the members of the Linux
+> Foundation project only, which is why registration is moderated
+> for emails that don't have a domain linked to a member (BTW not
+> any Google account will just work e.g. @gmail.com is moderated,
+> only @google.com for Google employees isn't).
+> 
+> And yes IRC is the "least common denominator" chat platform.
+> Maybe having a bridge between the main Slack channel and IRC
+> would help.
 
-PERIC0 USI*:
+If the gitlab CI pipeline proposal wants to be considered for inclusion
+in the kernel, I think it needs to switch to a free software solution
+for its *main* communication channels.
 
-    Clock                              Div range    MUX Selection
-    -------------------------------------------------------------------
-    gout_peric0_peric0_top0_ipclk_*    -            -
-    dout_peric0_usi*_usi               /1..16       -
-    mout_peric0_usi*_usi_user          -            {24.5 MHz, 400 MHz}
-
-With input clock of 400 MHz this scheme provides the following IPCLK
-rate range, for each USI block:
-
-    PERIC0 USI*:       1.5 MHz ... 400 MHz
-
-Accounting for internal /4 divider in SPI blocks, and because the max
-SPI frequency is limited at 50 MHz, it gives us next SPI SCK rates:
-
-    PERIC0 USI_SPI*:   384 KHz ... 49.9 MHz
-
-Which shall be fine for the applications of the SPI bus.
-
-Fixes: 893f133a040b ("clk: samsung: gs101: add support for cmu_peric0")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- drivers/clk/samsung/clk-gs101.c | 135 +++++++++++++++++---------------
- 1 file changed, 72 insertions(+), 63 deletions(-)
-
-diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-gs101.c
-index ddf2d57eed68..bd3c1b02715b 100644
---- a/drivers/clk/samsung/clk-gs101.c
-+++ b/drivers/clk/samsung/clk-gs101.c
-@@ -2763,33 +2763,33 @@ static const struct samsung_mux_clock peric0_mux_clks[] __initconst = {
- 	MUX(CLK_MOUT_PERIC0_USI0_UART_USER,
- 	    "mout_peric0_usi0_uart_user", mout_peric0_usi0_uart_user_p,
- 	    PLL_CON0_MUX_CLKCMU_PERIC0_USI0_UART_USER, 4, 1),
--	MUX(CLK_MOUT_PERIC0_USI14_USI_USER,
--	    "mout_peric0_usi14_usi_user", mout_peric0_usi_usi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERIC0_USI14_USI_USER, 4, 1),
--	MUX(CLK_MOUT_PERIC0_USI1_USI_USER,
--	    "mout_peric0_usi1_usi_user", mout_peric0_usi_usi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERIC0_USI1_USI_USER, 4, 1),
--	MUX(CLK_MOUT_PERIC0_USI2_USI_USER,
--	    "mout_peric0_usi2_usi_user", mout_peric0_usi_usi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERIC0_USI2_USI_USER, 4, 1),
--	MUX(CLK_MOUT_PERIC0_USI3_USI_USER,
--	    "mout_peric0_usi3_usi_user", mout_peric0_usi_usi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERIC0_USI3_USI_USER, 4, 1),
--	MUX(CLK_MOUT_PERIC0_USI4_USI_USER,
--	    "mout_peric0_usi4_usi_user", mout_peric0_usi_usi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERIC0_USI4_USI_USER, 4, 1),
--	MUX(CLK_MOUT_PERIC0_USI5_USI_USER,
--	    "mout_peric0_usi5_usi_user", mout_peric0_usi_usi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERIC0_USI5_USI_USER, 4, 1),
--	MUX(CLK_MOUT_PERIC0_USI6_USI_USER,
--	    "mout_peric0_usi6_usi_user", mout_peric0_usi_usi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERIC0_USI6_USI_USER, 4, 1),
--	MUX(CLK_MOUT_PERIC0_USI7_USI_USER,
--	    "mout_peric0_usi7_usi_user", mout_peric0_usi_usi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERIC0_USI7_USI_USER, 4, 1),
--	MUX(CLK_MOUT_PERIC0_USI8_USI_USER,
--	    "mout_peric0_usi8_usi_user", mout_peric0_usi_usi_user_p,
--	    PLL_CON0_MUX_CLKCMU_PERIC0_USI8_USI_USER, 4, 1),
-+	nMUX(CLK_MOUT_PERIC0_USI14_USI_USER,
-+	     "mout_peric0_usi14_usi_user", mout_peric0_usi_usi_user_p,
-+	     PLL_CON0_MUX_CLKCMU_PERIC0_USI14_USI_USER, 4, 1),
-+	nMUX(CLK_MOUT_PERIC0_USI1_USI_USER,
-+	     "mout_peric0_usi1_usi_user", mout_peric0_usi_usi_user_p,
-+	     PLL_CON0_MUX_CLKCMU_PERIC0_USI1_USI_USER, 4, 1),
-+	nMUX(CLK_MOUT_PERIC0_USI2_USI_USER,
-+	     "mout_peric0_usi2_usi_user", mout_peric0_usi_usi_user_p,
-+	     PLL_CON0_MUX_CLKCMU_PERIC0_USI2_USI_USER, 4, 1),
-+	nMUX(CLK_MOUT_PERIC0_USI3_USI_USER,
-+	     "mout_peric0_usi3_usi_user", mout_peric0_usi_usi_user_p,
-+	     PLL_CON0_MUX_CLKCMU_PERIC0_USI3_USI_USER, 4, 1),
-+	nMUX(CLK_MOUT_PERIC0_USI4_USI_USER,
-+	     "mout_peric0_usi4_usi_user", mout_peric0_usi_usi_user_p,
-+	     PLL_CON0_MUX_CLKCMU_PERIC0_USI4_USI_USER, 4, 1),
-+	nMUX(CLK_MOUT_PERIC0_USI5_USI_USER,
-+	     "mout_peric0_usi5_usi_user", mout_peric0_usi_usi_user_p,
-+	     PLL_CON0_MUX_CLKCMU_PERIC0_USI5_USI_USER, 4, 1),
-+	nMUX(CLK_MOUT_PERIC0_USI6_USI_USER,
-+	     "mout_peric0_usi6_usi_user", mout_peric0_usi_usi_user_p,
-+	     PLL_CON0_MUX_CLKCMU_PERIC0_USI6_USI_USER, 4, 1),
-+	nMUX(CLK_MOUT_PERIC0_USI7_USI_USER,
-+	     "mout_peric0_usi7_usi_user", mout_peric0_usi_usi_user_p,
-+	     PLL_CON0_MUX_CLKCMU_PERIC0_USI7_USI_USER, 4, 1),
-+	nMUX(CLK_MOUT_PERIC0_USI8_USI_USER,
-+	     "mout_peric0_usi8_usi_user", mout_peric0_usi_usi_user_p,
-+	     PLL_CON0_MUX_CLKCMU_PERIC0_USI8_USI_USER, 4, 1),
- };
- 
- static const struct samsung_div_clock peric0_div_clks[] __initconst = {
-@@ -2798,33 +2798,42 @@ static const struct samsung_div_clock peric0_div_clks[] __initconst = {
- 	DIV(CLK_DOUT_PERIC0_USI0_UART,
- 	    "dout_peric0_usi0_uart", "mout_peric0_usi0_uart_user",
- 	    CLK_CON_DIV_DIV_CLK_PERIC0_USI0_UART, 0, 4),
--	DIV(CLK_DOUT_PERIC0_USI14_USI,
--	    "dout_peric0_usi14_usi", "mout_peric0_usi14_usi_user",
--	    CLK_CON_DIV_DIV_CLK_PERIC0_USI14_USI, 0, 4),
--	DIV(CLK_DOUT_PERIC0_USI1_USI,
--	    "dout_peric0_usi1_usi", "mout_peric0_usi1_usi_user",
--	    CLK_CON_DIV_DIV_CLK_PERIC0_USI1_USI, 0, 4),
--	DIV(CLK_DOUT_PERIC0_USI2_USI,
--	    "dout_peric0_usi2_usi", "mout_peric0_usi2_usi_user",
--	    CLK_CON_DIV_DIV_CLK_PERIC0_USI2_USI, 0, 4),
--	DIV(CLK_DOUT_PERIC0_USI3_USI,
--	    "dout_peric0_usi3_usi", "mout_peric0_usi3_usi_user",
--	    CLK_CON_DIV_DIV_CLK_PERIC0_USI3_USI, 0, 4),
--	DIV(CLK_DOUT_PERIC0_USI4_USI,
--	    "dout_peric0_usi4_usi", "mout_peric0_usi4_usi_user",
--	    CLK_CON_DIV_DIV_CLK_PERIC0_USI4_USI, 0, 4),
--	DIV(CLK_DOUT_PERIC0_USI5_USI,
--	    "dout_peric0_usi5_usi", "mout_peric0_usi5_usi_user",
--	    CLK_CON_DIV_DIV_CLK_PERIC0_USI5_USI, 0, 4),
--	DIV(CLK_DOUT_PERIC0_USI6_USI,
--	    "dout_peric0_usi6_usi", "mout_peric0_usi6_usi_user",
--	    CLK_CON_DIV_DIV_CLK_PERIC0_USI6_USI, 0, 4),
--	DIV(CLK_DOUT_PERIC0_USI7_USI,
--	    "dout_peric0_usi7_usi", "mout_peric0_usi7_usi_user",
--	    CLK_CON_DIV_DIV_CLK_PERIC0_USI7_USI, 0, 4),
--	DIV(CLK_DOUT_PERIC0_USI8_USI,
--	    "dout_peric0_usi8_usi", "mout_peric0_usi8_usi_user",
--	    CLK_CON_DIV_DIV_CLK_PERIC0_USI8_USI, 0, 4),
-+	DIV_F(CLK_DOUT_PERIC0_USI14_USI,
-+	      "dout_peric0_usi14_usi", "mout_peric0_usi14_usi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERIC0_USI14_USI, 0, 4,
-+	      CLK_SET_RATE_PARENT, 0),
-+	DIV_F(CLK_DOUT_PERIC0_USI1_USI,
-+	      "dout_peric0_usi1_usi", "mout_peric0_usi1_usi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERIC0_USI1_USI, 0, 4,
-+	      CLK_SET_RATE_PARENT, 0),
-+	DIV_F(CLK_DOUT_PERIC0_USI2_USI,
-+	      "dout_peric0_usi2_usi", "mout_peric0_usi2_usi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERIC0_USI2_USI, 0, 4,
-+	      CLK_SET_RATE_PARENT, 0),
-+	DIV_F(CLK_DOUT_PERIC0_USI3_USI,
-+	      "dout_peric0_usi3_usi", "mout_peric0_usi3_usi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERIC0_USI3_USI, 0, 4,
-+	      CLK_SET_RATE_PARENT, 0),
-+	DIV_F(CLK_DOUT_PERIC0_USI4_USI,
-+	      "dout_peric0_usi4_usi", "mout_peric0_usi4_usi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERIC0_USI4_USI, 0, 4,
-+	      CLK_SET_RATE_PARENT, 0),
-+	DIV_F(CLK_DOUT_PERIC0_USI5_USI,
-+	      "dout_peric0_usi5_usi", "mout_peric0_usi5_usi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERIC0_USI5_USI, 0, 4,
-+	      CLK_SET_RATE_PARENT, 0),
-+	DIV_F(CLK_DOUT_PERIC0_USI6_USI,
-+	      "dout_peric0_usi6_usi", "mout_peric0_usi6_usi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERIC0_USI6_USI, 0, 4,
-+	      CLK_SET_RATE_PARENT, 0),
-+	DIV_F(CLK_DOUT_PERIC0_USI7_USI,
-+	      "dout_peric0_usi7_usi", "mout_peric0_usi7_usi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERIC0_USI7_USI, 0, 4,
-+	      CLK_SET_RATE_PARENT, 0),
-+	DIV_F(CLK_DOUT_PERIC0_USI8_USI,
-+	      "dout_peric0_usi8_usi", "mout_peric0_usi8_usi_user",
-+	      CLK_CON_DIV_DIV_CLK_PERIC0_USI8_USI, 0, 4,
-+	      CLK_SET_RATE_PARENT, 0),
- };
- 
- static const struct samsung_gate_clock peric0_gate_clks[] __initconst = {
-@@ -2857,11 +2866,11 @@ static const struct samsung_gate_clock peric0_gate_clks[] __initconst = {
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_0,
- 	     "gout_peric0_peric0_top0_ipclk_0", "dout_peric0_usi1_usi",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_0,
--	     21, 0, 0),
-+	     21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_1,
- 	     "gout_peric0_peric0_top0_ipclk_1", "dout_peric0_usi2_usi",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_1,
--	     21, 0, 0),
-+	     21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_10,
- 	     "gout_peric0_peric0_top0_ipclk_10", "dout_peric0_i3c",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_10,
-@@ -2889,27 +2898,27 @@ static const struct samsung_gate_clock peric0_gate_clks[] __initconst = {
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_2,
- 	     "gout_peric0_peric0_top0_ipclk_2", "dout_peric0_usi3_usi",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_2,
--	     21, 0, 0),
-+	     21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_3,
- 	     "gout_peric0_peric0_top0_ipclk_3", "dout_peric0_usi4_usi",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_3,
--	     21, 0, 0),
-+	     21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_4,
- 	     "gout_peric0_peric0_top0_ipclk_4", "dout_peric0_usi5_usi",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_4,
--	     21, 0, 0),
-+	     21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_5,
- 	     "gout_peric0_peric0_top0_ipclk_5", "dout_peric0_usi6_usi",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_5,
--	     21, 0, 0),
-+	     21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_6,
- 	     "gout_peric0_peric0_top0_ipclk_6", "dout_peric0_usi7_usi",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_6,
--	     21, 0, 0),
-+	     21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_7,
- 	     "gout_peric0_peric0_top0_ipclk_7", "dout_peric0_usi8_usi",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_7,
--	     21, 0, 0),
-+	     21, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_8,
- 	     "gout_peric0_peric0_top0_ipclk_8", "dout_peric0_i3c",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP0_IPCLKPORT_IPCLK_8,
-@@ -2990,7 +2999,7 @@ static const struct samsung_gate_clock peric0_gate_clks[] __initconst = {
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP1_IPCLK_2,
- 	     "gout_peric0_peric0_top1_ipclk_2", "dout_peric0_usi14_usi",
- 	     CLK_CON_GAT_GOUT_BLK_PERIC0_UID_PERIC0_TOP1_IPCLKPORT_IPCLK_2,
--	     21, 0, 0),
-+	     21, CLK_SET_RATE_PARENT, 0),
- 	/* Disabling this clock makes the system hang. Mark the clock as critical. */
- 	GATE(CLK_GOUT_PERIC0_PERIC0_TOP1_PCLK_0,
- 	     "gout_peric0_peric0_top1_pclk_0", "mout_peric0_bus_user",
 -- 
-2.44.0.278.ge034bb2e1d-goog
+Regards,
 
+Laurent Pinchart
