@@ -1,157 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69D116A349;
-	Thu, 29 Feb 2024 20:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A7216A342
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 20:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709239297; cv=none; b=Y4J7hwOdwKbHH0sA9K6HVmr7PLv7aZCjtjtbJOybY0DeYG9nE7MWMKeibaGgfIIbAWaGDlLZXhSsPF+/zeu7lB56e4hywHtr5GCLdLaRVY3MFf1L7RDLnTtxLTNpam6xNPPhP5cUFEBqd7RCwt86Nnzcb+9I/m5T+g+vZBfJVdU=
+	t=1709239299; cv=none; b=Q1LO08ldYO1vgmhVT+h9/KdDC68mcgypc+MKSWQeNLDhkFPBGrILUsuM5+dzV+ONbjaWU1O15CgGKf7DvQT/nfLobNC05FL/vlfzDfj2C6Ukg5P/gF+MtFOEpKiOoIQEwmNylun7/CvPE4LCnNf55qaTxLlWwjZQctj8mYBg1SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709239297; c=relaxed/simple;
-	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oGGYESCk6oYOWL3OE6NLKH5z9kKuxJHVysJV+9fuIi9xubo6fgUeEhkvV6TSY2WqtYiQ5b2VwMocMjWicgMbpL2ViTo+AozVHdIXmCkparSGGIFp5Zpj8pofQ/wp5nj5DbZdbsj7upXdvKIc73m3g5F9aVbaNCfNfddfpsVzyLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sCYjgIIp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709239299; c=relaxed/simple;
+	bh=l0Oq7AxbSJ3lXobf7o9ZXRUD7DUDozdY4OL4raAyp+U=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=gvYBfl/ZSgkPf07KMlYPANHDadz4tYGdMBBUUA6Hns7Ic3o0GvFtG09RV0FzlisvrrNyEdevqJBz9tG/UD1G/n0LEWtw6NBV9onJBFTmzyOLRJPqj8ses2dlmhJ4f+fFcM9vXB/zGHUvVHo1Z8Hb0I7+RTpf4CLqbDJOw1vobS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MKawtjZc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sCYjgIIp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D01B2C43394;
-	Thu, 29 Feb 2024 20:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709239297;
-	bh=Vo3k/UgoRrmyUGzlldwCCqinbenvGMIr4yM+BJI4MQQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sCYjgIIpWH9B+MiOIlBBO+UjeZdUhlOBs4J5aa6kMSnkrd28QijIqhDb30zXQ0GmY
-	 nTPFp6vRuaGOlgLzbMPVTslCSpGIYUJ59sb0Gdy1sQuD2mmBY1cn3IQAjpJUHD3hpA
-	 um0sFAoAZYapRIHosAUGhlY+ehfIzN6TDNf2X07K+bLXZHKImI37faNoAJAdv/ciQ7
-	 Mj5YmDP4mcFbRCmN1s1mjIAXENKTlJ/q8Znahqa5dDnoEAKy7ApuWW+D+fJRPSo0GF
-	 tcFGq9C8JwBAksDGKLVq95zhBRCPfZfNuToQyDnxpw6YmTJsujMSafDDn4hLpSxn4S
-	 fIHc9bcSbHd6Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Hou Tao <houtao1@huawei.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com,
-	xingwei lee <xrivendell7@gmail.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	bp@alien8.de,
-	x86@kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 4/8] x86/mm: Disallow vsyscall page read for copy_from_kernel_nofault()
-Date: Thu, 29 Feb 2024 15:41:21 -0500
-Message-ID: <20240229204127.2861980-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229204127.2861980-1-sashal@kernel.org>
-References: <20240229204127.2861980-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MKawtjZc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709239295;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=CGBj0np1q/By//l0SwNKja6NHqrIAS9mqiRvEzZjjl8=;
+	b=MKawtjZc8cVkdeqrqB2aEB+kYTqfvL3UvR3lx/2tDDh4vnVUEQlsfrFivMHZ8J01zRyhLQ
+	bhzKM8ULiJRx+F3n8Q9uuG/VrJ1za2uD/6nEsxKN/3DUWq5sjF+ePhEWJBVDYwpxxHoN2H
+	iBOrM50R3qiRHQHBQzqfNs+nAOCQ5dY=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-115-LPrxkonAMx-LIKP55RDsAQ-1; Thu,
+ 29 Feb 2024 15:41:34 -0500
+X-MC-Unique: LPrxkonAMx-LIKP55RDsAQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2CDDA1C0690F;
+	Thu, 29 Feb 2024 20:41:33 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.114])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7AC2D1BDB1;
+	Thu, 29 Feb 2024 20:41:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Marc Dionne <marc.dionne@auristor.com>
+cc: dhowells@redhat.com, linux-afs@lists.infradead.org,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] afs: Don't cache preferred address
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.210
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <159568.1709239291.1@warthog.procyon.org.uk>
+Date: Thu, 29 Feb 2024 20:41:31 +0000
+Message-ID: <159569.1709239291@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-From: Hou Tao <houtao1@huawei.com>
+In the AFS fileserver rotation algorithm, don't cache the preferred address
+for the server as that will override the explicit preference if a
+non-preferred address responds first.
 
-[ Upstream commit 32019c659ecfe1d92e3bf9fcdfbb11a7c70acd58 ]
-
-When trying to use copy_from_kernel_nofault() to read vsyscall page
-through a bpf program, the following oops was reported:
-
-  BUG: unable to handle page fault for address: ffffffffff600000
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 3231067 P4D 3231067 PUD 3233067 PMD 3235067 PTE 0
-  Oops: 0000 [#1] PREEMPT SMP PTI
-  CPU: 1 PID: 20390 Comm: test_progs ...... 6.7.0+ #58
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996) ......
-  RIP: 0010:copy_from_kernel_nofault+0x6f/0x110
-  ......
-  Call Trace:
-   <TASK>
-   ? copy_from_kernel_nofault+0x6f/0x110
-   bpf_probe_read_kernel+0x1d/0x50
-   bpf_prog_2061065e56845f08_do_probe_read+0x51/0x8d
-   trace_call_bpf+0xc5/0x1c0
-   perf_call_bpf_enter.isra.0+0x69/0xb0
-   perf_syscall_enter+0x13e/0x200
-   syscall_trace_enter+0x188/0x1c0
-   do_syscall_64+0xb5/0xe0
-   entry_SYSCALL_64_after_hwframe+0x6e/0x76
-   </TASK>
-  ......
-  ---[ end trace 0000000000000000 ]---
-
-The oops is triggered when:
-
-1) A bpf program uses bpf_probe_read_kernel() to read from the vsyscall
-page and invokes copy_from_kernel_nofault() which in turn calls
-__get_user_asm().
-
-2) Because the vsyscall page address is not readable from kernel space,
-a page fault exception is triggered accordingly.
-
-3) handle_page_fault() considers the vsyscall page address as a user
-space address instead of a kernel space address. This results in the
-fix-up setup by bpf not being applied and a page_fault_oops() is invoked
-due to SMAP.
-
-Considering handle_page_fault() has already considered the vsyscall page
-address as a userspace address, fix the problem by disallowing vsyscall
-page read for copy_from_kernel_nofault().
-
-Originally-by: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: syzbot+72aa0161922eba61b50e@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/bpf/CAG48ez06TZft=ATH1qh2c5mpS5BT8UakwNkzi6nvK5_djC-4Nw@mail.gmail.com
-Reported-by: xingwei lee <xrivendell7@gmail.com>
-Closes: https://lore.kernel.org/bpf/CABOYnLynjBoFZOf3Z4BhaZkc5hx_kHfsjiW+UWLoB=w33LvScw@mail.gmail.com
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240202103935.3154011-3-houtao@huaweicloud.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
 ---
- arch/x86/mm/maccess.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/afs/rotate.c |   21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
-index 6993f026adec9..42115ac079cfe 100644
---- a/arch/x86/mm/maccess.c
-+++ b/arch/x86/mm/maccess.c
-@@ -3,6 +3,8 @@
- #include <linux/uaccess.h>
- #include <linux/kernel.h>
+diff --git a/fs/afs/rotate.c b/fs/afs/rotate.c
+index 700a27bc8c25..ed04bd1eeae8 100644
+--- a/fs/afs/rotate.c
++++ b/fs/afs/rotate.c
+@@ -602,6 +602,8 @@ bool afs_select_fileserver(struct afs_operation *op)
+ 		goto wait_for_more_probe_results;
  
-+#include <asm/vsyscall.h>
-+
- #ifdef CONFIG_X86_64
- bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
- {
-@@ -15,6 +17,14 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
- 	if (vaddr < TASK_SIZE_MAX + PAGE_SIZE)
- 		return false;
+ 	alist = op->estate->addresses;
++	best_prio = -1;
++	addr_index = 0;
+ 	for (i = 0; i < alist->nr_addrs; i++) {
+ 		if (alist->addrs[i].prio > best_prio) {
+ 			addr_index = i;
+@@ -609,9 +611,7 @@ bool afs_select_fileserver(struct afs_operation *op)
+ 		}
+ 	}
  
-+	/*
-+	 * Reading from the vsyscall page may cause an unhandled fault in
-+	 * certain cases.  Though it is at an address above TASK_SIZE_MAX, it is
-+	 * usually considered as a user space address.
-+	 */
-+	if (is_vsyscall_vaddr(vaddr))
-+		return false;
-+
- 	/*
- 	 * Allow everything during early boot before 'x86_virt_bits'
- 	 * is initialized.  Needed for instruction decoding in early
--- 
-2.43.0
+-	addr_index = READ_ONCE(alist->preferred);
+-	if (!test_bit(addr_index, &set))
+-		addr_index = __ffs(set);
++	alist->preferred = addr_index;
+ 
+ 	op->addr_index = addr_index;
+ 	set_bit(addr_index, &op->addr_tried);
+@@ -656,12 +656,6 @@ bool afs_select_fileserver(struct afs_operation *op)
+ next_server:
+ 	trace_afs_rotate(op, afs_rotate_trace_next_server, 0);
+ 	_debug("next");
+-	ASSERT(op->estate);
+-	alist = op->estate->addresses;
+-	if (op->call_responded &&
+-	    op->addr_index != READ_ONCE(alist->preferred) &&
+-	    test_bit(alist->preferred, &op->addr_tried))
+-		WRITE_ONCE(alist->preferred, op->addr_index);
+ 	op->estate = NULL;
+ 	goto pick_server;
+ 
+@@ -690,14 +684,7 @@ bool afs_select_fileserver(struct afs_operation *op)
+ failed:
+ 	trace_afs_rotate(op, afs_rotate_trace_failed, 0);
+ 	op->flags |= AFS_OPERATION_STOP;
+-	if (op->estate) {
+-		alist = op->estate->addresses;
+-		if (op->call_responded &&
+-		    op->addr_index != READ_ONCE(alist->preferred) &&
+-		    test_bit(alist->preferred, &op->addr_tried))
+-			WRITE_ONCE(alist->preferred, op->addr_index);
+-		op->estate = NULL;
+-	}
++	op->estate = NULL;
+ 	_leave(" = f [failed %d]", afs_op_error(op));
+ 	return false;
+ }
 
