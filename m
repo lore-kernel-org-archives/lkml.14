@@ -1,154 +1,117 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484767D060
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 14:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A7C1361DA;
+	Thu, 29 Feb 2024 14:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709216514; cv=none; b=BMNrBcvY7yz1wBoKeOEZHXfRvhNcOkNjz0NGcSrGppwW8WhNxXlzWU4ExtmIWt+RVRE6KqAAfNuqFVCNRQ6MWfjlKgOrogqclz4b3qhpl3CcTakghogKdjMCtzFFkVoDLpEQEi/a1b1ARLQ2lp7TD+rlg+jsUxgp4PG8jEbzSzA=
+	t=1709216527; cv=none; b=QrQiom8VRECDl+MopTOY/cYghR+JItgqKmBZGqRhfj72iA2R9zNXKU0t7HLWIlUd0o1FHRIjW/rRNa7K7iDoodzIsjidEyBAtcI8bSvNznRa9yw2dRYaot7PXnNy0oZmxDIiZWZ/rfOJOlkgKvERrD5srhGgTy5rpzPZxcNMqXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709216514; c=relaxed/simple;
-	bh=s9koWyBOH5kffAk/ctMX8vICzTEVqUgQIoSQO1DAJ1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nvyRRvTzAN/q0770C9QYCU+dtlF8bGgxuEZ+Zcew4vezrthijL1IZSPCU3J+WJPVEKVgfj42s1cAPacholLEuBHpm7aBbHXGTIePWQmOILM6Q5MilZe6/RiKZbVMsgH4FKBdkTa6kPIVDEWSuEq5ZLaNkzuObEbMo6ldOuSiWz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=TbyqMLjB; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1709216527; c=relaxed/simple;
+	bh=eQfYYlfZztNSVMw3hVLw7QVKBwlURfYEIOXk8wyb4LU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XOg4FrI5EJqcxle8wp2k4BCPs9ek9o5QgJVLrDTau7F4Rp5B1R2r/+/ZfLdAN2ZdZsjWckxdJqcOkUzlcxAzELcc1DsZ+7SrYaX728vIAO2Oz/shrCkORvaLW2gO6SY0/diLxEt5f0rKeg6FljVmYe/9jShYqvjpYnY7DyiloRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=Fi5WSARf; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="TbyqMLjB"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7c810b04bc0so26790039f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:21:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1709216512; x=1709821312; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I7QQf86WBSLlT/8W/ge7tfKbRHIzhxvhjanWb4LCZ2Q=;
-        b=TbyqMLjBGFbW1XYlgjVchNT8LUCoGp061bxAeusS9ycHO17B69pk9QuQEIqVi7WC0X
-         Dop1CM197ycc7ib2kiUp7R8DuZcUDT67qc9LprKNzsVz4XpwfpGKFb6wEWqwgX9MTTJq
-         gDwqVGEzpcbftbs9iqIUAPuH8dbaOtFXJrE84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709216512; x=1709821312;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I7QQf86WBSLlT/8W/ge7tfKbRHIzhxvhjanWb4LCZ2Q=;
-        b=KPkR/PnawkqTvAQ4ES9EXJm4wJQ5/zMQevRt+lWJkUWB4qXBwKe9lTen7uHs5u8EF0
-         zFAk4OgVA8VRJHAh7K5PtDMUrOmuzIPUcvWUzzX+FZ7b7WlouqOnr8QQScbzE9g+OKqR
-         /ugFT4/N+GDw793QmGzgZJeeohpjNIkylDAjOm7d0wAmdvfNllnYSa03j7P7wmNGyiHS
-         emkGtMjrQJfoxhAiTsvY6/oxKtnWX5FTDckvUVf/kFzkq12TvXJovbCiXe41zhEuOpho
-         aWtf6xSR0M3+tl71wv8mSigrbGg4fcXRoFKltLcCqNFwECd0b4R5pn/wo+EXutR6lnBI
-         z2rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYcgKwVW2stc61V5Qs07TEOvvgVnCwzsa7srES0VfvygM0NwmIZcyU+iYY1wx1yMDHY/J6wFjpnJY05mxLSXX/P0PXH9AN2m3e9X7R
-X-Gm-Message-State: AOJu0Yw0R8Gp2VIFoVe+QOPdA+7ueGRgPhKLXSQNTsYrXLoshevkvlG1
-	PLFw7LciDABNFDw8qK8NZIZKgg0bP5bjNJufNS5UqzMZNHtZbNDcJBGYVWvKwew=
-X-Google-Smtp-Source: AGHT+IGocqJwt9KmmMr7A2O/6M57M/JbaCMv0luN5qeZx+9pAylTJ9Tny6UR5Td+4D66YZVFB9CTBQ==
-X-Received: by 2002:a05:6602:3b97:b0:7c7:9c58:c970 with SMTP id dm23-20020a0566023b9700b007c79c58c970mr2398006iob.4.1709216512347;
-        Thu, 29 Feb 2024 06:21:52 -0800 (PST)
-Received: from [10.5.0.2] ([91.196.69.76])
-        by smtp.gmail.com with ESMTPSA id a14-20020a5d9ece000000b007c8197e8473sm86044ioe.5.2024.02.29.06.21.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 06:21:51 -0800 (PST)
-Message-ID: <888d2f90-6d2f-4d4f-a9f6-fbf2f2611821@joelfernandes.org>
-Date: Thu, 29 Feb 2024 09:21:48 -0500
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="Fi5WSARf"
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T5ATuw022823;
+	Thu, 29 Feb 2024 14:20:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PPS06212021; bh=CdQQt
+	2w/RCAyMiw/AwHTodQgR7TVrvlZkYmoTV0OJxo=; b=Fi5WSARfmrEbKY5bua/bF
+	ZqA9bE5Vr8rHOfM/AGxC9Vfyo367Eg6jG2/d1mQaqOtTXxkGBwg/GNraE4Jg76dC
+	aeIGOHTAkVS0E1TzZOYNWGG+VMkkmkZw9bJN5+Rt/ArL4F9DDTTwYZTgjzhzBsh5
+	cZCi6TYxrZKFDCzISGfQ+h0xBcfVaYB3N7f6/yJI/USQHz35//KN6kVP58uD/Ku0
+	o1Hctu5nRO+5Qq8Pu6fXUQ1jur2B0KrXFxP3eSDJSZITpmr8RaORHrPmjXg28KQF
+	EZ0dCFmrK6Lx7Q4ManmwkAnHv3zlT4bjWPubdXkjMoUVTC/z2ElquocotETJgdZS
+	w==
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3wf7e6dgd7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 29 Feb 2024 14:20:24 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 29 Feb 2024 06:20:23 -0800
+Received: from pek-lpd-ccm6.wrs.com (147.11.1.11) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 29 Feb 2024 06:20:19 -0800
+From: Xiongwei Song <xiongwei.song@windriver.com>
+To: <longman@redhat.com>, <lizefan.x@bytedance.com>, <tj@kernel.org>,
+        <hannes@cmpxchg.org>, <corbet@lwn.net>
+CC: <vbabka@suse.cz>, <yosryahmed@google.com>, <rostedt@goodmis.org>,
+        <cl@linux.com>, <chengming.zhou@linux.dev>, <zhengyejian1@huawei.com>,
+        <cgroups@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] cgroup/cpuset: Remove cpuset_do_slab_mem_spread()
+Date: Thu, 29 Feb 2024 22:20:06 +0800
+Message-ID: <20240229142007.1278610-1-xiongwei.song@windriver.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: raise RCU qs after each threaded NAPI poll
-Content-Language: en-US
-To: paulmck@kernel.org, Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Yan Zhai <yan@cloudflare.com>,
- Eric Dumazet <edumazet@google.com>,
- Network Development <netdev@vger.kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Jiri Pirko <jiri@resnulli.us>,
- Simon Horman <horms@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Coco Li <lixiaoyan@google.com>,
- Wei Wang <weiwan@google.com>, Alexander Duyck <alexanderduyck@fb.com>,
- Hannes Frederic Sowa <hannes@stressinduktion.org>,
- LKML <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
- bpf <bpf@vger.kernel.org>, kernel-team <kernel-team@cloudflare.com>,
- Mark Rutland <mark.rutland@arm.com>
-References: <02913b40-7b74-48b3-b15d-53133afd3ba6@paulmck-laptop>
- <3D27EFEF-0452-4555-8277-9159486B41BF@joelfernandes.org>
- <ba95955d-b63d-4670-b947-e77b740b1a49@paulmck-laptop>
- <20240228173307.529d11ee@gandalf.local.home>
- <CAADnVQ+szRDGaDJPoBFR9KyeMjwpuxOCNys=yxDaCLYZkSkyYw@mail.gmail.com>
- <8ae889cb-ee1d-4c72-9414-e21258118ce3@paulmck-laptop>
-From: Joel Fernandes <joel@joelfernandes.org>
-In-Reply-To: <8ae889cb-ee1d-4c72-9414-e21258118ce3@paulmck-laptop>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: Y7ftEdNsVCXNHQJqyuun61KEZUNp0dbS
+X-Proofpoint-ORIG-GUID: Y7ftEdNsVCXNHQJqyuun61KEZUNp0dbS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-29_02,2024-02-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 phishscore=0 mlxscore=0 impostorscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 mlxlogscore=990 clxscore=1011
+ priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2402120000 definitions=main-2402290110
 
+The SLAB allocator has been removed sine 6.8-rc1 [1], so there is no user
+with SLAB_MEM_SPREAD and cpuset_do_slab_mem_spread(). Then SLAB_MEM_SPREAD
+is marked as unused by [2]. Here we can remove
+cpuset_do_slab_mem_spread(). For more details, please check [3].
 
+[1] https://lore.kernel.org/linux-mm/20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz/
+[2] https://lore.kernel.org/linux-kernel/20240223-slab-cleanup-flags-v2-0-02f1753e8303@suse.cz/T/
+[3] https://lore.kernel.org/lkml/32bc1403-49da-445a-8c00-9686a3b0d6a3@redhat.com/T/#mf14b838c5e0e77f4756d436bac3d8c0447ea4350
 
-On 2/28/2024 5:58 PM, Paul E. McKenney wrote:
-> On Wed, Feb 28, 2024 at 02:48:44PM -0800, Alexei Starovoitov wrote:
->> On Wed, Feb 28, 2024 at 2:31 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->>>
->>> On Wed, 28 Feb 2024 14:19:11 -0800
->>> "Paul E. McKenney" <paulmck@kernel.org> wrote:
->>>
->>>>>>
->>>>>> Well, to your initial point, cond_resched() does eventually invoke
->>>>>> preempt_schedule_common(), so you are quite correct that as far as
->>>>>> Tasks RCU is concerned, cond_resched() is not a quiescent state.
->>>>>
->>>>>  Thanks for confirming. :-)
->>>>
->>>> However, given that the current Tasks RCU use cases wait for trampolines
->>>> to be evacuated, Tasks RCU could make the choice that cond_resched()
->>>> be a quiescent state, for example, by adjusting rcu_all_qs() and
->>>> .rcu_urgent_qs accordingly.
->>>>
->>>> But this seems less pressing given the chance that cond_resched() might
->>>> go away in favor of lazy preemption.
->>>
->>> Although cond_resched() is technically a "preemption point" and not truly a
->>> voluntary schedule, I would be happy to state that it's not allowed to be
->>> called from trampolines, or their callbacks. Now the question is, does BPF
->>> programs ever call cond_resched()? I don't think they do.
->>>
->>> [ Added Alexei ]
->>
->> I'm a bit lost in this thread :)
->> Just answering the above question.
->> bpf progs never call cond_resched() directly.
->> But there are sleepable (aka faultable) bpf progs that
->> can call some helper or kfunc that may call cond_resched()
->> in some path.
->> sleepable bpf progs are protected by rcu_tasks_trace.
->> That's a very different one vs rcu_tasks.
-> 
-> Suppose that the various cond_resched() invocations scattered throughout
-> the kernel acted as RCU Tasks quiescent states, so that as soon as a
-> given task executed a cond_resched(), synchronize_rcu_tasks() might
-> return or call_rcu_tasks() might invoke its callback.
-> 
-> Would that cause BPF any trouble?
-> 
-> My guess is "no", because it looks like BPF is using RCU Tasks (as you
-> say, as opposed to RCU Tasks Trace) only to wait for execution to leave a
-> trampoline.  But I trust you much more than I trust myself on this topic!
+Signed-off-by: Xiongwei Song <xiongwei.song@windriver.com>
+---
+ include/linux/cpuset.h | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-But it uses RCU Tasks Trace as well (for sleepable bpf programs), not just
-Tasks? Looks like that's what Alexei said above as well, and I confirmed it in
-bpf/trampoline.c
+diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+index 875d12598bd2..0ce6ff0d9c9a 100644
+--- a/include/linux/cpuset.h
++++ b/include/linux/cpuset.h
+@@ -121,11 +121,6 @@ static inline int cpuset_do_page_mem_spread(void)
+ 	return task_spread_page(current);
+ }
+ 
+-static inline int cpuset_do_slab_mem_spread(void)
+-{
+-	return task_spread_slab(current);
+-}
+-
+ extern bool current_cpuset_is_being_rebound(void);
+ 
+ extern void rebuild_sched_domains(void);
+@@ -264,11 +259,6 @@ static inline int cpuset_do_page_mem_spread(void)
+ 	return 0;
+ }
+ 
+-static inline int cpuset_do_slab_mem_spread(void)
+-{
+-	return 0;
+-}
+-
+ static inline bool current_cpuset_is_being_rebound(void)
+ {
+ 	return false;
+-- 
+2.43.0
 
-        /* The trampoline without fexit and fmod_ret progs doesn't call original
-         * function and doesn't use percpu_ref.
-         * Use call_rcu_tasks_trace() to wait for sleepable progs to finish.
-         * Then use call_rcu_tasks() to wait for the rest of trampoline asm
-         * and normal progs.
-         */
-        call_rcu_tasks_trace(&im->rcu, __bpf_tramp_image_put_rcu_tasks);
-
-The code comment says it uses both.
-
-Thanks,
-
- - Joel
