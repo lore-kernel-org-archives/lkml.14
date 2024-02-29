@@ -1,99 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E2A23DB
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB90936B1C;
+	Thu, 29 Feb 2024 02:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709172235; cv=none; b=UKbqOkeSJoh56Hbxd4nWrbpIzPbZH+paMBE4IfWej3QiZWsekAkuPGwwNt6Ym4+aI5dgylR07sRpBdz36gBh2otSF/OVU19ncZVniSC5BD5i3B63lHwZezRNYcjnbvWRrrAwIUnntEMlmdAybmeW6Ur/QC7DvROVpLSv1VsjbsQ=
+	t=1709172244; cv=none; b=hzT/34zzzwLkU+3XcB2hQzyvuhbF+vLpuvL4Cjr9A/AYro135Q+DT3bTLzqAHQU7wFgTXObCIcqJyvq34Z8Oy8uEtr7lyA90eIW1Rgb6Tz4lBeiT5cUKARJR0uke7qN7d0YSpMofeMb4iemz/Vc58KIKFYln/GHBxYQBKwxdvv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709172235; c=relaxed/simple;
-	bh=Q75pArREJLjVh3lGI4fFUuUjzEdAl5eP+jZ7P9RGLrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XdZNfRX8K/q9Zu1jSmkEd8TMU32w1Ca5DR8MtjKMTgPBJo9kjYCGeR3WKyz5ObHHERN7+MLnND0qOhCV/go2IPjBYkLpot/dC0LP8Y6TF+tMdkraJU2ViqEeK29zRK9VOxum/k8zf//Ob/BocuYOPO73E6UOPDiWp+N+JmSeX4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AfkF0B2P; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709172244; c=relaxed/simple;
+	bh=Hqt27iztKg8bH7+WN1AsbcYSqLKusd3MveKfLQx9J/o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vEUnpl7QdnfJsdtLhJb0YMrThvjN28KjxIOTiT85IX58Lw7o3PwLXak15YLWqqga1KdMgrFTrARbtNJcEgjbIUQiu0II71xCiqbHIfqAkRi/JNaq6vgy1++ISBY4+ioumjCoqchTsbdz2bIlhXwuoAzS+CWX6t9hjhOHt9ZQCQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ktYDXtfH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AfkF0B2P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709172233; x=1740708233;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q75pArREJLjVh3lGI4fFUuUjzEdAl5eP+jZ7P9RGLrs=;
-  b=AfkF0B2PVsnCAJL+70YT0Nu/DMI4DSv3FFfOEGD+tLa62Hz8azMU4gXW
-   KxPeyVLS22zNKc34MXrIgIW2hxawHozWr9KJJahIAdnwhHZk3w3vL6B9+
-   oqAQTjKus0W7QcIPIhebA3dvS802R/5mfgQ7q++zUpKosZU2MdYtIJKpW
-   W3SyfwtQD6DgmeY8Smuz0Kg13lz/HrnpoNhIGVX/WAZFatotrt8nJ8SGd
-   ojywt5+8MQCBdDY3yhIPvDXVDWcTsBhG2/35Bg8hW5XpylBnHkv5jUgNI
-   eWkCjyWdV734ZJRGFzSKYsPhVJYu1z1fEsvCYJh53H5rGi937np00tNyz
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3539938"
-X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
-   d="scan'208";a="3539938"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 18:03:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
-   d="scan'208";a="12349324"
-Received: from vabarca-mobl1.amr.corp.intel.com (HELO desk) ([10.209.19.138])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 18:03:48 -0800
-Date: Wed, 28 Feb 2024 18:03:47 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/bugs: Use fixed addressing for VERW operand
-Message-ID: <20240229020347.nhu6564kmwcp2cey@desk>
-References: <20240226-verw-arg-fix-v1-1-7b37ee6fd57d@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ktYDXtfH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD53C43390;
+	Thu, 29 Feb 2024 02:04:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709172244;
+	bh=Hqt27iztKg8bH7+WN1AsbcYSqLKusd3MveKfLQx9J/o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ktYDXtfHUoCSzF5aFXxG3n9/eUi7LgtqEtaC6IPV+4ExMWbrpyZtGDnsyq/QuuIpH
+	 oyaKDGTh694C+xGUSMj5yek8hNt3bkVrbOWMc6y1tK4AQUlQ9c6jsuo28/5nJLFLvv
+	 vgpf6XXot7ngz5g0Jy9OqZ9XNyiZ+rLF+H1ntrq0yPXbixyD01+zQszfLW3KQY00Zm
+	 D/oI3GcdVas6lZS0Z9e6gN3o1UBch18kjW1vrcXQfUJjNNtdJjJITT/o6HlSaaAGwp
+	 /nCUa+WFWtQIceg/ZHa/UC6uzRS91kc1R7RIcG2tAbMdGTJy0aRGKVAZ41M1MIF9Wr
+	 UakyA4j8TFNIA==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51326436876so61854e87.1;
+        Wed, 28 Feb 2024 18:04:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVDxkzX/dlg3CNR/M3Uu3F6p4yLxnJ1lG9OQa/uJBLd70PT70Xl49QO1bs7DQu/ca7G4xsXmoJ6PiVVhkwerBSYerhdO66n5oPXD5jt
+X-Gm-Message-State: AOJu0YwOpxwp2BGLknRdhYHW13kqV+/+RN2VdB5+iLEe+20itqaRpGRY
+	TfmbtAXSw+CDH7RHbXZdQhFuqbd/dnee5ADRQKbidGF74ucYGsT3RZlTyrgKsuQAPKDrSGsdDdt
+	3/JOlNIQN/WVlUzuDkm8iXrUn9B8=
+X-Google-Smtp-Source: AGHT+IG9Y3Y320pwAwzwBrb6NW0R4FDMaXeUFqOdM2RAsjoBp/xnwruJM6OZRDZnzwJ6N4yei2OT/iXLsrVHbXS0Oj4=
+X-Received: by 2002:ac2:4a8a:0:b0:512:bb33:2eab with SMTP id
+ l10-20020ac24a8a000000b00512bb332eabmr382640lfp.58.1709172242808; Wed, 28 Feb
+ 2024 18:04:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240226-verw-arg-fix-v1-1-7b37ee6fd57d@linux.intel.com>
+References: <20240222031801.GG11472@google.com> <20240222032559.496127-1-senozhatsky@chromium.org>
+ <CAK7LNARo4L6qxoqRU-0dgABarukJKAaZpCRtfA3MyUHhSuDQxQ@mail.gmail.com>
+ <20240222051621.GH11472@google.com> <20240228045652.GH11972@google.com>
+In-Reply-To: <20240228045652.GH11972@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 29 Feb 2024 11:03:26 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ8OyNMeGzVoTRg-sHDZ4YK0EKY_eEWNepekaibO_ZKwg@mail.gmail.com>
+Message-ID: <CAK7LNAQ8OyNMeGzVoTRg-sHDZ4YK0EKY_eEWNepekaibO_ZKwg@mail.gmail.com>
+Subject: Re: [PATCHv2] kconfig: add some Kconfig env variables to make help
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 26, 2024 at 03:52:33PM -0800, Pawan Gupta wrote:
-> Macro used for MDS mitigation executes VERW with relative addressing for
-> the operand. This is unnecessary and creates a problem for backports on
-> older kernels that don't support relocations in alternatives. Relocation
-> support was added by commit 270a69c4485d ("x86/alternative: Support
-> relocations in alternatives"). Also asm for fixed addressing is much
-> more cleaner than relative RIP addressing.
-> 
-> Simplify the asm by using fixed addressing for VERW operand.
-> 
-> Fixes: baf8361e5455 ("x86/bugs: Add asm helpers for executing VERW")
-> Reported-by: Nikolay Borisov <nik.borisov@suse.com>
-> Closes: https://lore.kernel.org/lkml/20558f89-299b-472e-9a96-171403a83bd6@suse.com/
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> ---
->  arch/x86/include/asm/nospec-branch.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-> index 2aa52cab1e46..ab19c7f1167b 100644
-> --- a/arch/x86/include/asm/nospec-branch.h
-> +++ b/arch/x86/include/asm/nospec-branch.h
-> @@ -323,7 +323,7 @@
->   * Note: Only the memory operand variant of VERW clears the CPU buffers.
->   */
->  .macro CLEAR_CPU_BUFFERS
-> -	ALTERNATIVE "", __stringify(verw _ASM_RIP(mds_verw_sel)), X86_FEATURE_CLEAR_CPU_BUF
-> +	ALTERNATIVE "", __stringify(verw mds_verw_sel), X86_FEATURE_CLEAR_CPU_BUF
+On Wed, Feb 28, 2024 at 1:56=E2=80=AFPM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> On (24/02/22 14:16), Sergey Senozhatsky wrote:
+> > On (24/02/22 13:57), Masahiro Yamada wrote:
+> > > On Thu, Feb 22, 2024 at 12:26=E2=80=AFPM Sergey Senozhatsky
+> > > <senozhatsky@chromium.org> wrote:
+> > > >
+> > > > Add a new section "Configuration environment variables" to
+> > > > `make help` output in order to make it easier for people to
+> > > > discover KCONFIG_WERROR, etc.
+> > > >
+> > > > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > > > ---
+> > > >  scripts/kconfig/Makefile | 4 ++++
+> > > >  1 file changed, 4 insertions(+)
+> > > >
+> > > > diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+> > > > index ea1bf3b3dbde..0044d49e149c 100644
+> > > > --- a/scripts/kconfig/Makefile
+> > > > +++ b/scripts/kconfig/Makefile
+> > > > @@ -158,6 +158,10 @@ help:
+> > > >                 if help=3D$$(grep -m1 '^# Help: ' $(f)); then \
+> > > >                         printf '  %-25s - %s\n' '$(notdir $(f))' "$=
+${help#*: }"; \
+> > > >                 fi;)
+> > > > +       @echo  ''
+> > > > +       @echo  'Configuration environment variables:'
+> > > > +       @echo  '  KCONFIG_WERROR                 - Turn some Kconfi=
+g warnings into error conditions'
+> > > > +       @echo  '  KCONFIG_WARN_UNKNOWN_SYMBOLS   - Make Kconfig war=
+n about all unrecognized config symbols'
+> > > >
+> > > >  # =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> > > >  # object files used by all kconfig flavours
+> > > > --
+> > > > 2.44.0.rc0.258.g7320e95886-goog
+> > > >
+> > > >
+> > >
+> > > Why only two, while Kconfig supports more env variables?
+> >
+> > Right.  I wanted to add only those that we use (and familiar with) for
+> > starters.  I'm not familiar with things like KCONFIG_PROBABILITY, for
+> > instance, and not sure how to document it (its Documentation/kbuild/kco=
+nfig.rst
+> > description is pretty lengthy).
+>
+> Masahiro, any opinion?
 
-Extremely sorry this change will not work with KASLR. The patch was
-rushed to facilitate backports, and was only tested on qemu that had
-KASLR disabled. :( Lesson learnt.
 
-Please drop this patch.
+I do not need this patch.
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
