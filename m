@@ -1,48 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407CF7D077
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 14:23:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FC41361CF
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 14:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709216624; cv=none; b=u2N86rTEDh6deHKnKCWUcu9vYyxCY2D2BglAJWtDN1pST7LuAxXDDhZ6PPbYNZd1tq2jUBtx+JxTykqyBAtXjfA4g0Tuyf0OBQwsE6Gpv3MdJwn7zXuK/Lu+hp8prWzAdEb24llmzzipeTOi4G2gBFMhaETJqXvwlfAif+3SBRk=
+	t=1709216625; cv=none; b=HlTqmkGoIiIS6fkFJgWDV9Gaw0FuyykzWpae1hQhAwJ9zdgedwGsMsJyGrqMYTfi/FWqsCA/SLAGPB9lS9QrlER6JQOlPos16xNmrJgrnO5DIIlP8z5psWv81o95weyqfQcUnc9Y3jEVB1vWDiheKMVIaudrQ+Bh4cYcY3tszD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709216624; c=relaxed/simple;
-	bh=55zY29d/udGnwxmlXArsqLI2//BoHZlNbwI2T6gnHa0=;
+	s=arc-20240116; t=1709216625; c=relaxed/simple;
+	bh=RYjgrsnTa5ZE0/Y2Vs7u3YT+7pEEBNYqFqB94PRnE9Y=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=annw+5e0rw77gkcX2Qu4iEgLWN5tHVO7A+QLcZmiFv0swBa1YeTRNwSKtwAzMeM4yI+hmmcO597iNKCA8FeBXutQIp52XVJXbOUIJomLXe7y+ivefGwMMWu6BybhcEKdWXqlr3H/o9iOT22Vwj28rouSuSECbmWqOpWv88z1osE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iUrN2S+N; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C6geCrle; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=tbRKIK63v6NKdmYHkegnSVRzR6YgrQdrubXjOOa07P52mLKoAoi9mskikfxm0QBJ63NeeXRq03uMJ/Wabopi08nBgohL43pZU9aY2OEseXKtridKV9eQiKuKCUpNWm0KyJg6hLt5S7cHsV8Eo9Sut3MR2v+v+W8xgGXMVLBdX0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rCgrKLzN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wrb4cDbK; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iUrN2S+N";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C6geCrle"
-Message-ID: <20240229142248.266708822@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rCgrKLzN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wrb4cDbK"
+Message-ID: <20240229142248.582321500@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1709216616;
+	s=2020; t=1709216622;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=B2ejJz0qvL4jeeFT2KaF7scEKPWGORNFA2dKFt8UgLE=;
-	b=iUrN2S+NTli3nENJPs7zEEU6lAsSJdtgYDc9lkZY1OomCHRMd5yh9HonHdSUuiwipCe4Kd
-	nnurYBBpb+Ff8kinKlHG6fRpD5tL5mXJTnfucuq5OyE4plz2w0MDBAmFG5rcx0QoXxJ2ZO
-	Jz8iWrpcoj6JXY3uup34p3yiV4NVu5AS1hS64XQQSOERqVUzJWnXtuGgHHydMXciEaesvL
-	48F+5JgFMeYNI/HOzJEpXp40kMlHqHK17iMxUhZKA+7r4M1gMvuUYwNrxgWjzc10Ui9Q/d
-	oK0DOJykitjbhZN8kwpmHlWBaDahVnLr43T75mUDr+ZIcbtVCjrdxSgajV9LLg==
+	 references:references; bh=LNNG9Jq+5CN9Sd6cMwb+ZtsoydO1GTY3u/PKYA5LbYI=;
+	b=rCgrKLzNnXAJY4Zz0SDVlmyfrwrDTu1tzaZdnmqkKGsPyT8ZvfLWIrxWM0KMMstuUsF4Mp
+	97wJ0KRpLX6QqeXkvlcbzkZQVfpZTMeusQ4GBJuZER5nrB0oSySQjs0AzfJSWSo8t/SRlr
+	6lLWUnEMzXPgViZs+oRCFLTeMEc0F3U2qS13dPNPZHXS6TvXvP0W5ncMekrVxuZsiIRpi2
+	wMqd3IdOQbEng36tO+U9mAnPrkmhi6cJ/bFcwdWjGMAArLWEQs5+WwLIbJjU9ztNBM6IPl
+	E95s9nm1Kd+xIsyPUcrcQshE/PJ1PCWiSk79ZsF5ydZsFZ225Rrg5yCAEIz7MQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1709216616;
+	s=2020e; t=1709216622;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=B2ejJz0qvL4jeeFT2KaF7scEKPWGORNFA2dKFt8UgLE=;
-	b=C6geCrlePlpAOvHxrTnAQXKX1fJbKeUGszlgICNxUaOo2FBTakEpwqjJOlsFPOeIA/2PV6
-	tgwCv0qEhBzHBqAA==
+	 references:references; bh=LNNG9Jq+5CN9Sd6cMwb+ZtsoydO1GTY3u/PKYA5LbYI=;
+	b=wrb4cDbKtuppv+wHBLyf/kbGN8Bpl/sOApjOH/vE/24sPbalv/MlJMr3qmAp2IwJTtjcka
+	4qMjKjSYLXXY0ODA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: x86@kernel.org,
  Steven Rostedt <rostedt@goodmis.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Borislav Petkov <bp@alien8.de>
-Subject: [patch 1/6] sched/idle: Conditionally handle tick broadcast in
- default_idle_call()
+ "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [patch 6/6] x86/idle: Select idle routine only once
 References: <20240229141407.283316443@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -51,118 +49,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 29 Feb 2024 15:23:36 +0100 (CET)
+Date: Thu, 29 Feb 2024 15:23:42 +0100 (CET)
 
-X86 has a idle routine for AMD CPUs which are affected by erratum 400. On
-the affected CPUs the local APIC timer stops in the C1E halt state. It
-therefore requires tick broadcasting. The invocation of
-tick_broadcast_enter()/exit() from this function violates the RCU
-constraints because it can end up in lockdep or tracing, which rightfully
-triggers a warning.
+The idle routine selection is done on every CPU bringup operation and has a
+guard in place which is effective after the first invocation, which is a
+pointless exercise.
 
-tick_broadcast_enter()/exit() must be invoked before ct_cpuidle_enter() and
-after ct_cpuidle_exit() in default_idle_call().
+Invoke it once on the boot CPU and mark the related functions __init.
 
-Add a static branch conditional invocation of tick_broadcast_enter()/exit()
-into this function to allow X86 to replace the AMD specific idle code. It's
-guarded by a config switch which will be selected by X86. Otherwise it's a
-NOOP.
-
-Reported-by: Borislav Petkov <bp@alien8.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/cpu.h  |    2 ++
- include/linux/tick.h |    3 +++
- kernel/sched/idle.c  |   21 +++++++++++++++++++++
- kernel/time/Kconfig  |    5 +++++
- 4 files changed, 31 insertions(+)
+ arch/x86/include/asm/processor.h |    2 +-
+ arch/x86/kernel/cpu/common.c     |    4 ++--
+ arch/x86/kernel/process.c        |   10 ++++------
+ 3 files changed, 7 insertions(+), 9 deletions(-)
 
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -196,6 +196,8 @@ void arch_cpu_idle(void);
- void arch_cpu_idle_prepare(void);
- void arch_cpu_idle_enter(void);
- void arch_cpu_idle_exit(void);
-+void arch_tick_broadcast_enter(void);
-+void arch_tick_broadcast_exit(void);
- void __noreturn arch_cpu_idle_dead(void);
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -555,7 +555,7 @@ static inline void load_sp0(unsigned lon
  
- #ifdef CONFIG_ARCH_HAS_CPU_FINALIZE_INIT
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -12,6 +12,7 @@
- #include <linux/cpumask.h>
- #include <linux/sched.h>
- #include <linux/rcupdate.h>
-+#include <linux/static_key.h>
+ unsigned long __get_wchan(struct task_struct *p);
  
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- extern void __init tick_init(void);
-@@ -69,6 +70,8 @@ extern void tick_broadcast_control(enum
- static inline void tick_broadcast_control(enum tick_broadcast_mode mode) { }
- #endif /* BROADCAST */
+-extern void select_idle_routine(const struct cpuinfo_x86 *c);
++extern void select_idle_routine(void);
+ extern void amd_e400_c1e_apic_setup(void);
  
-+extern struct static_key_false arch_needs_tick_broadcast;
+ extern unsigned long		boot_option_idle_override;
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1938,8 +1938,6 @@ static void identify_cpu(struct cpuinfo_
+ 	/* Init Machine Check Exception if available. */
+ 	mcheck_cpu_init(c);
+ 
+-	select_idle_routine(c);
+-
+ #ifdef CONFIG_NUMA
+ 	numa_add_cpu(smp_processor_id());
+ #endif
+@@ -2343,6 +2341,8 @@ void __init arch_cpu_finalize_init(void)
+ {
+ 	identify_boot_cpu();
+ 
++	select_idle_routine();
 +
- #if defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST) && defined(CONFIG_HOTPLUG_CPU)
- extern void tick_offline_cpu(unsigned int cpu);
- #else
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -81,6 +81,25 @@ void __weak arch_cpu_idle(void)
- 	cpu_idle_force_poll = 1;
+ 	/*
+ 	 * identify_boot_cpu() initialized SMT support information, let the
+ 	 * core code know.
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -853,8 +853,9 @@ void __noreturn stop_this_cpu(void *dumm
+  * Do not prefer MWAIT if MONITOR instruction has a bug or idle=nomwait
+  * is passed to kernel commandline parameter.
+  */
+-static bool prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
++static __init bool prefer_mwait_c1_over_halt(void)
+ {
++	const struct cpuinfo_x86 *c = &boot_cpu_data;
+ 	u32 eax, ebx, ecx, edx;
+ 
+ 	/* If override is enforced on the command line, fall back to HALT. */
+@@ -908,7 +909,7 @@ static __cpuidle void mwait_idle(void)
+ 	__current_clr_polling();
  }
  
-+#ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST_IDLE
-+DEFINE_STATIC_KEY_FALSE(arch_needs_tick_broadcast);
-+
-+static inline void cond_tick_broadcast_enter(void)
-+{
-+	if (static_branch_unlikely(&arch_needs_tick_broadcast))
-+		tick_broadcast_enter();
-+}
-+
-+static inline void cond_tick_broadcast_exit(void)
-+{
-+	if (static_branch_unlikely(&arch_needs_tick_broadcast))
-+		tick_broadcast_exit();
-+}
-+#else
-+static inline void cond_tick_broadcast_enter(void) { }
-+static inline void cond_tick_broadcast_exit(void) { }
-+#endif
-+
- /**
-  * default_idle_call - Default CPU idle routine.
-  *
-@@ -90,6 +109,7 @@ void __cpuidle default_idle_call(void)
+-void select_idle_routine(const struct cpuinfo_x86 *c)
++void __init select_idle_routine(void)
  {
- 	instrumentation_begin();
- 	if (!current_clr_polling_and_test()) {
-+		cond_tick_broadcast_enter();
- 		trace_cpu_idle(1, smp_processor_id());
- 		stop_critical_timings();
- 
-@@ -99,6 +119,7 @@ void __cpuidle default_idle_call(void)
- 
- 		start_critical_timings();
- 		trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
-+		cond_tick_broadcast_exit();
+ 	if (boot_option_idle_override == IDLE_POLL) {
+ 		if (IS_ENABLED(CONFIG_SMP) && smp_num_siblings > 1)
+@@ -916,10 +917,7 @@ void select_idle_routine(const struct cp
+ 		return;
  	}
- 	local_irq_enable();
- 	instrumentation_end();
---- a/kernel/time/Kconfig
-+++ b/kernel/time/Kconfig
-@@ -39,6 +39,11 @@ config GENERIC_CLOCKEVENTS_BROADCAST
- 	bool
- 	depends on GENERIC_CLOCKEVENTS
  
-+# Handle broadcast in default_idle_call()
-+config GENERIC_CLOCKEVENTS_BROADCAST_IDLE
-+	bool
-+	depends on GENERIC_CLOCKEVENTS_BROADCAST
-+
- # Automatically adjust the min. reprogramming time for
- # clock event device
- config GENERIC_CLOCKEVENTS_MIN_ADJUST
+-	if (x86_idle_set())
+-		return;
+-
+-	if (prefer_mwait_c1_over_halt(c)) {
++	if (prefer_mwait_c1_over_halt()) {
+ 		pr_info("using mwait in idle threads\n");
+ 		static_call_update(x86_idle, mwait_idle);
+ 	} else if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
 
