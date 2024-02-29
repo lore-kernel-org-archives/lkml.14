@@ -1,103 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A4B7A711;
-	Thu, 29 Feb 2024 10:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603437A72A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 10:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709204324; cv=none; b=nuBZ/E3DE39wk9CWuBzR60jkKnULJdf8wzH7JUuE+ps1ViE3FS28M7nZhnOl9bqjuC7R/LyGH6LG/30rkMrJWzVlKV5K2WQvg8evRtoJlS8a0iIU/b/LiHcVGhzI1vV0wYLR0IS5UKysl5DAX2PptFAw2SgKgf1l4H6qwkAxwwU=
+	t=1709204326; cv=none; b=lgSr/0euoQaRBnY/2nSMtp+CbFoQ01G7SfNFuIxdnMqykRZge9ehn7bcVWX0kQLCZc2gyWT6CsBQBL+dlVPAtz2+4DcwWYAXEDRajN9VnQO0sIHq9FYVxLOYj11TWcT/rSmUK9ccqquQkICdD8Purlli3kfaXHZN6DclzW3h518=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709204324; c=relaxed/simple;
-	bh=a/GVLuUrTUXA8L8R4irxd4Al3SblyPKMDzQJ/K5AMdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=olQreu3zqGt3okfhdBRE6c1p5XlzPZ/mBAJ99Cvd6aRMoEpwhyDHYlBKQNnNfaXXtOvAujQ5iihY2pq7aXtn8g004bhi+sTwUyqh/HP45qUZX4xM3SJiNPcsQhoyOY6gTa+T+pT/Sqkdkp7dOUOyKWEYN3uIBNDgzr7jNmlIeQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kUj+VfAm; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1709204326; c=relaxed/simple;
+	bh=4sd9fX38+0z52dugV8+bmNK8bTTLEY/RwiQhB+Ew+3o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K925ZWOH1GqNoupxcuyvPXGg0T9e2SqGvaAWDSAnUsXFKLlWPVtL7YTyFnGKNEAgTigVN79pUeA1OJh2yhlhd1XPdRA1zAw1usXPnqJLhXixDI1rTGryqgORGLWioHIcpPHJQsXLkWNx4vo4rIrZ4jSeTbCUFFturF+bXO9qcOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=YdJSz+rp; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kUj+VfAm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709204323; x=1740740323;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=a/GVLuUrTUXA8L8R4irxd4Al3SblyPKMDzQJ/K5AMdE=;
-  b=kUj+VfAmaHPr/JlpAtOiJqtmIqvb+M7gz2ENHVlNjyRqxyyxaGq26U/+
-   KF3jI826whARDXQrq7PEhquUSAyZgdeAWc5aDRieDKe8wZRS59W0Jd6k3
-   5Y77Npxg0XPif0djlBxIFRiJff/j90KNdhk7biVuyVhs6PXZ/8ko4E1Vq
-   ftGXlSJgx3KoHMYnEg12HTb4TfQraCd2tD4gBSYSeWYOCaD3CJUZJi37f
-   UBXUW4Ozaj9f/X2n5YuWmOSepd1CQ9DTMHae/Szhw3sey1yj135X+iTn7
-   uZtnChZMNDuULr/cTJgoJ1YaarSAbnH0IoUwfNFrl9FfgI43bNV1sumZB
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3789902"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="3789902"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:58:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="913979058"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="913979058"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:58:40 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rfe7Z-00000008eCZ-1cLi;
-	Thu, 29 Feb 2024 12:58:37 +0200
-Date: Thu, 29 Feb 2024 12:58:37 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Pass consumer device through to core in
- devm_fwnode_gpiod_get_index()
-Message-ID: <ZeBjXfKH_Wl2Giai@smile.fi.intel.com>
-References: <20240223065254.3795204-1-swboyd@chromium.org>
- <Zd-CJHkCHpuIEnWh@smile.fi.intel.com>
- <CAMRc=Mdapd2jTACGqm-ujZrAunRmNeJ8_3+bpsN4ieCre52yrg@mail.gmail.com>
- <Zd-nI9XoYW3hrPXx@smile.fi.intel.com>
- <CAE-0n52cgFvaHPDLBd-cn0WMisxX41-fPJHkroTucxHNk39SZQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="YdJSz+rp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=/y+V+1tDgCSb4ph0B2hx85t2I6GTJ/+BzAqonnhqTB8=; b=YdJSz+
+	rpcAmXCgqbn1v1cUEbTTDDpOgjF7pnjkR8hkIsu5mNBTXNXUYRpf5s5wM9QK5L5D
+	deKqAOGQj7PrasgO0ICEidD8sNay1Jg9vrUK8A6JinY2ztncHFzIJsM0PR98u8V1
+	Se0qT9pJyX8jYhxYRNaxLvHalG/guPXYlvLhLwxnXzhQjtRGXqIV/IDw0d35Zr5f
+	F2s5sdfGw4n3kb+hY4XryMu2spb+G1uetsmT2ndWEALt/1mHxX7MM3vqSX1MGtYD
+	4kpIlhGX8CdXIx3fknrmoksOlKyAUe+6rszMxZ5s66MAgldFV0CuqMuNNvvy1yzo
+	8B+n54pmGeXUcowQ==
+Received: (qmail 2278070 invoked from network); 29 Feb 2024 11:58:42 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 29 Feb 2024 11:58:42 +0100
+X-UD-Smtp-Session: l3s3148p1@8KB2JIMSfDttKPFZ
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>,
+	Rob Herring <robh+dt@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RFT 2/3] i2c: mpc: use proper binding for transfer timeouts
+Date: Thu, 29 Feb 2024 11:58:12 +0100
+Message-ID: <20240229105810.29220-7-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240229105810.29220-5-wsa+renesas@sang-engineering.com>
+References: <20240229105810.29220-5-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE-0n52cgFvaHPDLBd-cn0WMisxX41-fPJHkroTucxHNk39SZQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Feb 28, 2024 at 01:38:54PM -0800, Stephen Boyd wrote:
-> Quoting Andy Shevchenko (2024-02-28 13:35:31)
-> > On Wed, Feb 28, 2024 at 10:28:07PM +0100, Bartosz Golaszewski wrote:
-> > > On Wed, Feb 28, 2024 at 7:57 PM Andy Shevchenko
-> > > <andriy.shevchenko@intel.com> wrote:
+"i2c-scl-clk-low-timeout-us" is wrongly used here because it describes
+maximum clock stretching not maximum transfer time. Additionally, it is
+deprecated because of issues. Move this driver to the correct binding.
 
-...
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/i2c/busses/i2c-mpc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> > > > Have you seen this?
-> > > > https://lore.kernel.org/r/20231019173457.2445119-1-andriy.shevchenko@linux.intel.com
-> > >
-> > > Clearly yes as I queued the first one in that series. The rest did not
-> > > make its way upstream for whatever reason. What is your point? You
-> > > want to respin it?
-> >
-> > It was a reply to Stephen. :-)
-> 
-> I saw it but it hadn't gone anywhere for many months so I fixed the
-> problem I saw. Will you resend it?
-
-Yes, this is the plan, too many things are ongoing, so have had no time (yet)
-to address comments and resubmit. In any case I'm not against your change, it
-makes it better anyway without hacking the code.
-
+diff --git a/drivers/i2c/busses/i2c-mpc.c b/drivers/i2c/busses/i2c-mpc.c
+index e4e4995ab224..0b4de9e569ba 100644
+--- a/drivers/i2c/busses/i2c-mpc.c
++++ b/drivers/i2c/busses/i2c-mpc.c
+@@ -844,14 +844,14 @@ static int fsl_i2c_probe(struct platform_device *op)
+ 			mpc_i2c_setup_8xxx(op->dev.of_node, i2c, clock);
+ 	}
+ 
+-	/*
+-	 * "fsl,timeout" has been marked as deprecated and, to maintain
+-	 * backward compatibility, we will only look for it if
+-	 * "i2c-scl-clk-low-timeout-us" is not present.
+-	 */
++	/* Sadly, we have to support two deprecated bindings here */
+ 	result = of_property_read_u32(op->dev.of_node,
+-				      "i2c-scl-clk-low-timeout-us",
++				      "i2c-transfer-timeout-us",
+ 				      &mpc_ops.timeout);
++	if (result == -EINVAL)
++		result = of_property_read_u32(op->dev.of_node,
++					      "i2c-scl-clk-low-timeout-us",
++					      &mpc_ops.timeout);
+ 	if (result == -EINVAL)
+ 		result = of_property_read_u32(op->dev.of_node,
+ 					      "fsl,timeout", &mpc_ops.timeout);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
