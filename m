@@ -1,35 +1,35 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8064F7D091;
-	Thu, 29 Feb 2024 14:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34A91361BF;
+	Thu, 29 Feb 2024 14:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709216176; cv=none; b=QdLytCNwXs6zAQMgX81F9R3NkxB2B8/EAZnmPK0MljIK+kyGMZ1Xq0Ps6S53xzHWlJyO9NAu59xACLyFFHLsNzZ2QO8UNrlX0iH1Cll78RxIym8Biz4dCsFeQXueJbLkQqkql8Lk5Y7MNkQ8MG/+5lEDmmWoDU0X2xFK8Q+2LdQ=
+	t=1709216178; cv=none; b=f39KAV9MGFzach884b543YPKSlGt2j+uJMpTR9AwHMFlSblI8xa7sLykxXKKtK660Lmz+tCCLB4A3VySVOxRTOAzREmulmdjDH/Efc/C75/8DgMtvtbJor7mtg5AUOEwcBoiiEGfjBqaR412sJvRhvjiRD3nto7LkTOVceK5zYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709216176; c=relaxed/simple;
-	bh=HQg6BtizgNqCrRDehW95r4xhMR9i6RLghqpEnNLecks=;
+	s=arc-20240116; t=1709216178; c=relaxed/simple;
+	bh=Qvy5YIlLldiX0R7wIDqtJBVKHeubDCELaurFbpCFnp8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MP1RcbPax02P2veIx8t6lnfdD5ajxf5SahhbsSphffu9KU4qfUtHFJJNKZ6a5bFFwIG2PwdWAAprq6yqzy3SKF2J56/CvZuUAXhzX2S9tKSvud1DJTJhU9Hu/V5mEtL6JmDaKWOmhj5kfdWOqe9eMlp2cl36dH9oMztIccbHcBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dcJ1B0Ei; arc=none smtp.client-ip=217.70.183.194
+	 MIME-Version; b=tbyRT/q1c0uAVykdkmSu/LYZHyhcNi3RdmfJPxvp1thBOyfWF4jVpBeWM7nnoCaf59ORTBpWoLNebR8KtoNvwkRNJ31X6ub2pnXaNJDrUJnrHrHgXWe6sO8oC7l2ZiAh2yd4w01nxQA6FVQQiwNN9b0urHlikJ9gMo09N08IW0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=enEejcO2; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dcJ1B0Ei"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 464B84000F;
-	Thu, 29 Feb 2024 14:16:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="enEejcO2"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 2D50F40005;
+	Thu, 29 Feb 2024 14:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709216171;
+	t=1709216168;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UvIx8DaizrQghBKGl8R+5wAr2HBs0xxu5W0YcXy1Fj4=;
-	b=dcJ1B0Ei7NJvgliJ/dCgxAMVeBJqAjPLVZ60J3qecbqz/dmzckJPbRDJBcVxaw+dGiDRqO
-	RyWYtsifAOzDiUbKsREunPlM36dy5dmV3G7HsibxOUyoF0/EjMEjw/fjFWisGLqovAegmE
-	LzJ+IhPMblZzioNvjFWikL2eS4PSfvS4CCFAbFxqcPa4uaN+98DOEaja3imH5qoi2KNeKR
-	6KShmhS/sjug2np7chuT0b6sn8WBAOQX5CGfK17gwUHo49+XPyonxabDyXFnpxFbm9bFN7
-	S2byIAUIULNrQuJmbnDKO+jcHLmm+UP8VuD+EqUFqzUrVFCFyzVl6VjjTEyOeg==
+	bh=opmB03pxVbtCj6pvCgp5nhczC3sDrqxdKFiEeY7PEsQ=;
+	b=enEejcO20m9x/uJbdyOzmwduWs5RrzgchW4NyPNePzZQ/eusS4cPON9KjAPR/UaEph0jPS
+	KAKNBAtGhXTSaxVJb9A99iz4hZPiPDeJ8P4um0zyaFF2Z9lqFDLJANI/jx6QO7yMPFLdlC
+	Fz2DpvEcfPmOyTMYxfQ8zQnbdJdl2G0ZH3Wl2MDqLjp45w0WqhLUHKFyL2rPQX4q90Ffbz
+	m2+8/AWszNGrWdu699EKqsF9dLblnqQ9pU1X7uiDWX6bixw+/sqtPqJXYoZDi9c21xMeh+
+	UwzKdIZ3y202i372GPbuWpmqpmhHG36oAqGHMulA2rgfUEpjDUPfM7K7sloxMw==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Mark Brown <broonie@kernel.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v5 4/5] net: wan: fsl_qmc_hdlc: Add runtime timeslots changes support
-Date: Thu, 29 Feb 2024 15:15:52 +0100
-Message-ID: <20240229141554.836867-5-herve.codina@bootlin.com>
+Subject: [PATCH v5 2/5] MAINTAINERS: Add the Freescale QMC HDLC driver entry
+Date: Thu, 29 Feb 2024 15:15:50 +0100
+Message-ID: <20240229141554.836867-3-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240229141554.836867-1-herve.codina@bootlin.com>
 References: <20240229141554.836867-1-herve.codina@bootlin.com>
@@ -62,213 +62,32 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-QMC channels support runtime timeslots changes but nothing is done at
-the QMC HDLC driver to handle these changes.
-
-Use existing IFACE ioctl in order to configure the timeslots to use.
+After contributing the driver, add myself as the maintainer for the
+Freescale QMC HDLC driver.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Acked-by: Jakub Kicinski <kuba@kernel.org>
 ---
- drivers/net/wan/fsl_qmc_hdlc.c | 151 ++++++++++++++++++++++++++++++++-
- 1 file changed, 150 insertions(+), 1 deletion(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/wan/fsl_qmc_hdlc.c b/drivers/net/wan/fsl_qmc_hdlc.c
-index b9e067101171..80998ad89088 100644
---- a/drivers/net/wan/fsl_qmc_hdlc.c
-+++ b/drivers/net/wan/fsl_qmc_hdlc.c
-@@ -8,6 +8,7 @@
-  */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d1052fa6a69..15cd3a8e5866 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8584,6 +8584,13 @@ F:	Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+ F:	drivers/soc/fsl/qe/qmc.c
+ F:	include/soc/fsl/qe/qmc.h
  
- #include <linux/cleanup.h>
-+#include <linux/bitmap.h>
- #include <linux/dma-mapping.h>
- #include <linux/hdlc.h>
- #include <linux/mod_devicetable.h>
-@@ -33,6 +34,7 @@ struct qmc_hdlc {
- 	struct qmc_hdlc_desc tx_descs[8];
- 	unsigned int tx_out;
- 	struct qmc_hdlc_desc rx_descs[4];
-+	u32 slot_map;
- };
- 
- static struct qmc_hdlc *netdev_to_qmc_hdlc(struct net_device *netdev)
-@@ -197,6 +199,144 @@ static netdev_tx_t qmc_hdlc_xmit(struct sk_buff *skb, struct net_device *netdev)
- 	return NETDEV_TX_OK;
- }
- 
-+static int qmc_hdlc_xlate_slot_map(struct qmc_hdlc *qmc_hdlc,
-+				   u32 slot_map, struct qmc_chan_ts_info *ts_info)
-+{
-+	DECLARE_BITMAP(ts_mask_avail, 64);
-+	DECLARE_BITMAP(ts_mask, 64);
-+	DECLARE_BITMAP(map, 64);
++FREESCALE QUICC ENGINE QMC HDLC DRIVER
++M:	Herve Codina <herve.codina@bootlin.com>
++L:	netdev@vger.kernel.org
++L:	linuxppc-dev@lists.ozlabs.org
++S:	Maintained
++F:	drivers/net/wan/fsl_qmc_hdlc.c
 +
-+	/* Tx and Rx available masks must be identical */
-+	if (ts_info->rx_ts_mask_avail != ts_info->tx_ts_mask_avail) {
-+		dev_err(qmc_hdlc->dev, "tx and rx available timeslots mismatch (0x%llx, 0x%llx)\n",
-+			ts_info->rx_ts_mask_avail, ts_info->tx_ts_mask_avail);
-+		return -EINVAL;
-+	}
-+
-+	bitmap_from_u64(ts_mask_avail, ts_info->rx_ts_mask_avail);
-+	bitmap_from_u64(map, slot_map);
-+	bitmap_scatter(ts_mask, map, ts_mask_avail, 64);
-+
-+	if (bitmap_weight(ts_mask, 64) != bitmap_weight(map, 64)) {
-+		dev_err(qmc_hdlc->dev, "Cannot translate timeslots %64pb -> (%64pb, %64pb)\n",
-+			map, ts_mask_avail, ts_mask);
-+		return -EINVAL;
-+	}
-+
-+	bitmap_to_arr64(&ts_info->tx_ts_mask, ts_mask, 64);
-+	ts_info->rx_ts_mask = ts_info->tx_ts_mask;
-+	return 0;
-+}
-+
-+static int qmc_hdlc_xlate_ts_info(struct qmc_hdlc *qmc_hdlc,
-+				  const struct qmc_chan_ts_info *ts_info, u32 *slot_map)
-+{
-+	DECLARE_BITMAP(ts_mask_avail, 64);
-+	DECLARE_BITMAP(ts_mask, 64);
-+	DECLARE_BITMAP(map, 64);
-+	u32 array32[2];
-+
-+	/* Tx and Rx masks and available masks must be identical */
-+	if (ts_info->rx_ts_mask_avail != ts_info->tx_ts_mask_avail) {
-+		dev_err(qmc_hdlc->dev, "tx and rx available timeslots mismatch (0x%llx, 0x%llx)\n",
-+			ts_info->rx_ts_mask_avail, ts_info->tx_ts_mask_avail);
-+		return -EINVAL;
-+	}
-+	if (ts_info->rx_ts_mask != ts_info->tx_ts_mask) {
-+		dev_err(qmc_hdlc->dev, "tx and rx timeslots mismatch (0x%llx, 0x%llx)\n",
-+			ts_info->rx_ts_mask, ts_info->tx_ts_mask);
-+		return -EINVAL;
-+	}
-+
-+	bitmap_from_u64(ts_mask_avail, ts_info->rx_ts_mask_avail);
-+	bitmap_from_u64(ts_mask, ts_info->rx_ts_mask);
-+	bitmap_gather(map, ts_mask, ts_mask_avail, 64);
-+
-+	if (bitmap_weight(ts_mask, 64) != bitmap_weight(map, 64)) {
-+		dev_err(qmc_hdlc->dev, "Cannot translate timeslots (%64pb, %64pb) -> %64pb\n",
-+			ts_mask_avail, ts_mask, map);
-+		return -EINVAL;
-+	}
-+
-+	bitmap_to_arr32(array32, map, 64);
-+	if (array32[1]) {
-+		dev_err(qmc_hdlc->dev, "Slot map out of 32bit (%64pb, %64pb) -> %64pb\n",
-+			ts_mask_avail, ts_mask, map);
-+		return -EINVAL;
-+	}
-+
-+	*slot_map = array32[0];
-+	return 0;
-+}
-+
-+static int qmc_hdlc_set_iface(struct qmc_hdlc *qmc_hdlc, int if_iface, const te1_settings *te1)
-+{
-+	struct qmc_chan_ts_info ts_info;
-+	int ret;
-+
-+	ret = qmc_chan_get_ts_info(qmc_hdlc->qmc_chan, &ts_info);
-+	if (ret) {
-+		dev_err(qmc_hdlc->dev, "get QMC channel ts info failed %d\n", ret);
-+		return ret;
-+	}
-+	ret = qmc_hdlc_xlate_slot_map(qmc_hdlc, te1->slot_map, &ts_info);
-+	if (ret)
-+		return ret;
-+
-+	ret = qmc_chan_set_ts_info(qmc_hdlc->qmc_chan, &ts_info);
-+	if (ret) {
-+		dev_err(qmc_hdlc->dev, "set QMC channel ts info failed %d\n", ret);
-+		return ret;
-+	}
-+
-+	qmc_hdlc->slot_map = te1->slot_map;
-+
-+	return 0;
-+}
-+
-+static int qmc_hdlc_ioctl(struct net_device *netdev, struct if_settings *ifs)
-+{
-+	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
-+	te1_settings te1;
-+
-+	switch (ifs->type) {
-+	case IF_GET_IFACE:
-+		ifs->type = IF_IFACE_E1;
-+		if (ifs->size < sizeof(te1)) {
-+			if (!ifs->size)
-+				return 0; /* only type requested */
-+
-+			ifs->size = sizeof(te1); /* data size wanted */
-+			return -ENOBUFS;
-+		}
-+
-+		memset(&te1, 0, sizeof(te1));
-+
-+		/* Update slot_map */
-+		te1.slot_map = qmc_hdlc->slot_map;
-+
-+		if (copy_to_user(ifs->ifs_ifsu.te1, &te1, sizeof(te1)))
-+			return -EFAULT;
-+		return 0;
-+
-+	case IF_IFACE_E1:
-+	case IF_IFACE_T1:
-+		if (!capable(CAP_NET_ADMIN))
-+			return -EPERM;
-+
-+		if (netdev->flags & IFF_UP)
-+			return -EBUSY;
-+
-+		if (copy_from_user(&te1, ifs->ifs_ifsu.te1, sizeof(te1)))
-+			return -EFAULT;
-+
-+		return qmc_hdlc_set_iface(qmc_hdlc, ifs->type, &te1);
-+
-+	default:
-+		return hdlc_ioctl(netdev, ifs);
-+	}
-+}
-+
- static int qmc_hdlc_open(struct net_device *netdev)
- {
- 	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
-@@ -322,12 +462,13 @@ static const struct net_device_ops qmc_hdlc_netdev_ops = {
- 	.ndo_open       = qmc_hdlc_open,
- 	.ndo_stop       = qmc_hdlc_close,
- 	.ndo_start_xmit = hdlc_start_xmit,
--	.ndo_siocwandev	= hdlc_ioctl,
-+	.ndo_siocwandev = qmc_hdlc_ioctl,
- };
- 
- static int qmc_hdlc_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct qmc_chan_ts_info ts_info;
- 	struct qmc_hdlc *qmc_hdlc;
- 	struct qmc_chan_info info;
- 	hdlc_device *hdlc;
-@@ -353,6 +494,14 @@ static int qmc_hdlc_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, -EINVAL, "QMC chan mode %d is not QMC_HDLC\n",
- 				     info.mode);
- 
-+	ret = qmc_chan_get_ts_info(qmc_hdlc->qmc_chan, &ts_info);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "get QMC channel ts info failed\n");
-+
-+	ret = qmc_hdlc_xlate_ts_info(qmc_hdlc, &ts_info, &qmc_hdlc->slot_map);
-+	if (ret)
-+		return ret;
-+
- 	qmc_hdlc->netdev = alloc_hdlcdev(qmc_hdlc);
- 	if (!qmc_hdlc->netdev)
- 		return -ENOMEM;
+ FREESCALE QUICC ENGINE TSA DRIVER
+ M:	Herve Codina <herve.codina@bootlin.com>
+ L:	linuxppc-dev@lists.ozlabs.org
 -- 
 2.43.0
 
