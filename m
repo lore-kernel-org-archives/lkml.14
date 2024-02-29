@@ -1,159 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0603C7E564;
-	Thu, 29 Feb 2024 15:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFC4137750;
+	Thu, 29 Feb 2024 15:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709219021; cv=none; b=oVvDPzXq1aQIJrnJsqMOVQZR1nAbBD5XObup6ZEwIJM+zFJVOpJL7XfclOr1aaGiDJPL7dXSflA3tNXWdxdi4zKvl4sial5+CwaBZK7oi0VbxTieUVecT+Ned2GqrrS6ytSB4Yq24ZVEkPSnhrrbtKg+ATPyX9uYCO9bBv3INh0=
+	t=1709219169; cv=none; b=qzeYeQKRvCxoptgB6GvHfIDjDfa+l34QJqAzw2wN0VtP/MdrLJTPyyuff6xF5W2rg5sp4eOf5Talr+fD0YqaC64B8yNVlIWS+0N9tYMSPx3bhei0fvlwYRsRFQ+8zBQpedd1BlmYoPT4u+vW+zaq1ZcnJAIi7wyq1vTQ7rkKBB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709219021; c=relaxed/simple;
-	bh=LZyjh65EolwbZ2yy1NV5Vd1hxzz8NX2wmok/ryDrasw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=I1MBJK4WE7dJJBkigFYbSAudNjzwHzB663fFAzZMjZkQc6Teu8emHBQybzy50imNCf6ygQaAa+Hs1+Y2rGK/cyFgZ25ZrV8q1PSS4sRrx+T0ru8qPlBj1iqAoF/5y19BiEYqGqHX4VG30TZbGp+m2yWCdKhHXKMb1MAl42lifdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOpNTBTn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709219169; c=relaxed/simple;
+	bh=6h4hJKdMJ/mUzFPTHkW+CQwyfVnMV3EorukJNOsAz3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dgtmirgkLBOAFCXjEHQbvPM/+cyC+revkQ29Dh6lYM4r2hjksVhXOudURHrF3qIB663X7tarJSOtMHQ+OMEq/FV+NfoaKNp3TqDpI/B7EpWHJwwc/BQVPehxtRDiCWZsI6HYrZUnTabXmvwEJzqBp8SZqNbHKPN9+wHUtZduNQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=HmkNoC/0; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOpNTBTn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FDDEC43399;
-	Thu, 29 Feb 2024 15:03:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709219020;
-	bh=LZyjh65EolwbZ2yy1NV5Vd1hxzz8NX2wmok/ryDrasw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VOpNTBTnUOMsO0iiVZcMcn0pkYsuEGgP7ncm8HJmdoLrYLsvFBw6HuPeLXms4TuPx
-	 O1WzqRJiDlmKuB7Ib8OZ8RS2aFeJJ+K18/Uoi5sW7PXLZUoQemT8JUfg2xzrF3pRpg
-	 81JITgMKQhmKprGUx88Tw0HfnqQqoYl34rthxijgxI+gQq31xaZR4J+4XLXvWK4srA
-	 lnUDdznBlOE3VrUZa0r55K+tA26q7RIg15ewbXS5fdeYlGgSzT6f2G52WnURg/0Wn6
-	 AZuvqSJGntiMqKrB2zhhq57yTIBg+YT+EQ6TddaAI+ItUsNylym2TFCiee8SLIH1o0
-	 PwGtyrVyavwnw==
-Date: Thu, 29 Feb 2024 09:03:38 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sai Krishna Gajula <saikrishnag@marvell.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"richardcochran@gmail.com" <richardcochran@gmail.com>,
-	"horms@kernel.org" <horms@kernel.org>,
-	"vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-	"vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-	Geethasowjanya Akula <gakula@marvell.com>,
-	Linu Cherian <lcherian@marvell.com>,
-	Hariprasad Kelam <hkelam@marvell.com>,
-	Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
-	Naveen Mamindlapalli <naveenm@marvell.com>
-Subject: Re: [net-next PATCH v2] octeontx2: Add PTP clock driver for Octeon
- PTM clock.
-Message-ID: <20240229150338.GA342557@bhelgaas>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HmkNoC/0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=vkq1cSPFx4ixNxWnCzVtyGnhzokMMdq2KSDQeGVzjh4=; b=Hm
+	kNoC/0tf2wu5Kum9eNsJqARb6GTT3hVSccJw2ov4WPtd/sPqx53htebi6yrbp4xHVTco/26xuE8CL
+	Fdpn1jMc8Kg3r9irWKZdBMKXXbg2oDJcxpnKHsdPP5W5W+dMRGLnMjZkEBs35zNmDaK6wLm0UBqaQ
+	ptHuFuxaLD0LyD4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rfhzL-009397-J9; Thu, 29 Feb 2024 16:06:23 +0100
+Date: Thu, 29 Feb 2024 16:06:23 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Raju.Lakkaraju@microchip.com
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, Bryan.Whitehead@microchip.com,
+	richardcochran@gmail.com, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net 3/3] net: lan743x: Address problems with wake option
+ flags configuration sequences
+Message-ID: <e038ec4e-c54d-4628-8997-90510c0d96ab@lunn.ch>
+References: <20240226080934.46003-1-Raju.Lakkaraju@microchip.com>
+ <20240226080934.46003-4-Raju.Lakkaraju@microchip.com>
+ <b83b74b7-3221-4747-8b71-17738c18c042@lunn.ch>
+ <LV8PR11MB8700C2F9461F4200431446D49F5F2@LV8PR11MB8700.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BY3PR18MB4707E7764D59DF25C57CCB58A05F2@BY3PR18MB4707.namprd18.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <LV8PR11MB8700C2F9461F4200431446D49F5F2@LV8PR11MB8700.namprd11.prod.outlook.com>
 
-On Thu, Feb 29, 2024 at 04:57:26AM +0000, Sai Krishna Gajula wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: Wednesday, February 28, 2024 9:39 PM
-> > To: Sai Krishna Gajula <saikrishnag@marvell.com>
-> > Cc: bhelgaas@google.com; linux-pci@vger.kernel.org;
-> > richardcochran@gmail.com; horms@kernel.org; vinicius.gomes@intel.com;
-> > vadim.fedorenko@linux.dev; davem@davemloft.net; kuba@kernel.org;
-> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Sunil Kovvuri
-> > Goutham <sgoutham@marvell.com>; Geethasowjanya Akula
-> > <gakula@marvell.com>; Linu Cherian <lcherian@marvell.com>; Hariprasad
-> > Kelam <hkelam@marvell.com>; Subbaraya Sundeep Bhatta
-> > <sbhatta@marvell.com>; Naveen Mamindlapalli <naveenm@marvell.com>
-> > Subject: Re: [net-next PATCH v2] octeontx2: Add PTP clock driver for
-> > Octeon PTM clock.
-> > 
-> > On Wed, Feb 28, 2024 at 12:37:02PM +0000, Sai Krishna Gajula wrote:
-> > > > -----Original Message-----
-> > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > Sent: Monday, February 26, 2024 10:31 PM
-> > > ...
-> > > > On Mon, Feb 26, 2024 at 03:40:25PM +0000, Sai Krishna Gajula wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > > > Sent: Wednesday, February 14, 2024 10:59 PM ...
-> > > > > > On Wed, Feb 14, 2024 at 06:38:53PM +0530, Sai Krishna wrote:
-> > > > > > > The PCIe PTM(Precision time measurement) protocol provides
-> > > > > > > precise coordination of events across multiple components like
-> > > > > > > PCIe host clock, PCIe EP PHC local clocks of PCIe devices.
-> > > > > > > This patch adds support for ptp clock based PTM clock. We can
-> > > > > > > use this PTP device to sync the PTM time with CLOCK_REALTIME
-> > > > > > > or other PTP PHC devices using phc2sys.
-> > 
-> > > > > > > +static int __init ptp_oct_ptm_init(void) {
-> > > > > > > +	struct pci_dev *pdev = NULL;
-> > > > > > > +
-> > > > > > > +	pdev = pci_get_device(PCI_VENDOR_ID_CAVIUM,
-> > > > > > > +			      PCI_DEVID_OCTEONTX2_PTP, pdev);
-> > > > > >
-> > > > > > pci_get_device() is a sub-optimal method for a driver to claim a
-> > device.
-> > > > > > pci_register_driver() is the preferred method.  If you can't use
-> > > > > > that, a comment here explaining why not would be helpful.
-> > > > >
-> > > > > We just want to check the PTP device availability in the system as
-> > > > > one of the use case is to sync PTM time to PTP.
-> > > >
-> > > > This doesn't explain why you can't use pci_register_driver().  Can
-> > > > you clarify that?
-> > >
-> > > This is not a PCI endpoint driver.  This piece of code is used to
-> > > identify the silicon version.  We will update the code by reading the
-> > > silicon version from Endpoint internal BAR register offsets.
-> > 
-> > > > I assume the PCI_DEVID_OCTEONTX2_PTP device is a PCIe Endpoint, and
-> > > > this driver runs on the host?  I.e., this driver does not run as
-> > > > firmware on the Endpoint itself?  So if you run lspci on the host,
-> > > > you would see this device as one of the PCI devices?
-> > > >
-> > > > If that's the case, a driver would normally operate the device via
-> > > > MMIO accesses to regions described by PCI BARs.  "lspci -v" would
-> > > > show those addresses.
-> > >
-> > > This driver don't run on Host but runs on the EP firmware itself.
-> > 
-> > The "endpoint driver" terminology is a bit confusing here.  See
-> > Documentation/PCI/endpoint/pci-endpoint.rst for details.
-> > 
-> > If this driver actually runs as part of the Endpoint firmware, it would not
-> > normally see a hierarchy of pci_devs, and I don't think
-> > pci_get_device() would work.
-> > 
-> > So I suspect this driver actually runs on the host, and it looks like it wants to
-> > use the same device (0x177d:0xa00c) as these two drivers:
-> > 
-> >   drivers/net/ethernet/cavium/common/cavium_ptp.c:#define
-> > PCI_DEVICE_ID_CAVIUM_PTP        0xA00C
-> >   drivers/net/ethernet/marvell/octeontx2/af/ptp.c:#define
-> > PCI_DEVID_OCTEONTX2_PTP                 0xA00C
-> > 
-> > It seems like maybe it should be integrated into them?  Otherwise you have
-> > multiple drivers thinking they are controlling a single device.
+On Thu, Feb 29, 2024 at 08:59:20AM +0000, Raju.Lakkaraju@microchip.com wrote:
+> Hi Andrew,
 > 
-> Though this device does not appear as a PCI device on EP firmware,
-> but there are some other internal PCI devices that will be
-> enumerated. 
->
-> We will remove the dependency of reading the PTP device to check the
-> SoC versions, instead we will read the config space of this PCI
-> device itself.
->
-> I hope this clears your doubt whether this driver is running on Host
-> or EP device.
+> Thank you for review comments.
+> 
+> > -----Original Message-----
+> > From: Andrew Lunn <andrew@lunn.ch>
+> > Sent: Tuesday, February 27, 2024 7:28 AM
+> > To: Raju Lakkaraju - I30499 <Raju.Lakkaraju@microchip.com>
+> > Cc: netdev@vger.kernel.org; davem@davemloft.net; kuba@kernel.org; linux-
+> > kernel@vger.kernel.org; Bryan Whitehead - C21958
+> > <Bryan.Whitehead@microchip.com>; richardcochran@gmail.com;
+> > UNGLinuxDriver <UNGLinuxDriver@microchip.com>
+> > Subject: Re: [PATCH net 3/3] net: lan743x: Address problems with wake option
+> > flags configuration sequences
+> > 
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the
+> > content is safe
+> > 
+> > On Mon, Feb 26, 2024 at 01:39:34PM +0530, Raju Lakkaraju wrote:
+> > > Wake options handling has been reworked as follows:
+> > > a. We only enable secure on magic packet when both secure and magic wol
+> > >    options are requested together.
+> > > b. If secure-on magic packet had been previously enabled, and a
+> > subsequent
+> > >    command does not include it, we add it. This was done to workaround a
+> > >    problem with the 'pm-suspend' application which is unaware of secure-on
+> > >    magic packet being enabled and can unintentionally disable it prior to
+> > >    putting the system into suspend.
+> > 
+> > This seems to be in a bit of a grey area. But ethtool says:
+> > 
+> >            wol p|u|m|b|a|g|s|f|d...
+> >                   Sets  Wake-on-LAN  options.   Not  all devices support this.
+> >                   The argument to this option is a string of characters speci‐
+> >                   fying which options to enable.
+> >                   p   Wake on PHY activity
+> >                   u   Wake on unicast messages
+> >                   m   Wake on multicast messages
+> >                   b   Wake on broadcast messages
+> >                   a   Wake on ARP
+> >                   g   Wake on MagicPacket™
+> >                   s   Enable SecureOn™ password for MagicPacket™
+> >                   f   Wake on filter(s)
+> >                   d   Disable (wake on  nothing).   This  option
+> >                       clears all previous options.
+> > 
+> > d clears everything. All other things enable one option. There does not
+> > appear to be a way to disable a single option, and i would say, adding options
+> > is incremental.
+> > 
+> 
+> Yes. "d" clears everything.
+> But, if we enable "g" then enable "a", "g" option overwritten by "a"
 
-It does not.  But I don't maintain this area and I'm not making any
-progress on understanding how this works, so I don't think I can
-give any useful advice here.
+This is where i say it is a bit of a grey area. For me, they are
+incremental. You can enable a and then later enable g, and you should
+have both enabled.
 
-Bjorn
+> Please find the attached log information 
+> > So:
+> > 
+> > > a. We only enable secure on magic packet when both secure and magic wol
+> > >    options are requested together.
+> > 
+> > I don't think they need to be requested together. I think you can first enable
+> > Wake on MagicPacket and then in a second call to ethtool Enable SecureOn
+> > password for MagicPacket. I also don't think it would unreasonable to accept
+> > Enable SecureOn password for MagicPacket and have that imply Wake on
+> > MagicPacket.
+> > 
+> 
+> If we need to enable any 2 options, we have to provide both options together.
+> i.e.
+> sudo ethtool -s enp9s0 wol ga
+
+which i think is wrong. A driver should allow incremental adding WoL
+options.
+
+> 
+> > And:
+> > 
+> > > b. If secure-on magic packet had been previously enabled, and a
+> > subsequent
+> > >    command does not include it, we add it.
+> > 
+> > If there has not been a d, secure-on magic packet should remain enabled until
+> > there is a d.
+> > 
+> 
+> This is not happened with existing "Ethtool".
+> Please find the log information in an attachment file.
+
+That could just be a driver bug.
+
+Take a step back. Is there any clear documentation about how ethtool
+-s wol should really work? Any comments in the code? Any man page
+documentation.
+
+Lets first understand how it is expected to work. Then we can decided
+if the driver is implementing it correctly.
+
+   Andrew
