@@ -1,120 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-233.mail.qq.com (out203-205-221-233.mail.qq.com [203.205.221.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7087651BC;
-	Thu, 29 Feb 2024 11:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7712C7AE62
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 11:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709205807; cv=none; b=VsGWQe5nVle6g8jMqyxlzVawpZO5b0WSWK55tGt+QpfySLU0IoVsML7OydOnpBRdMy2gi/+KG0qjRYdHioAx5ARo3FnVRxdv1pPU6+jfjeWR2suTYKwABqp71rAOi4QFwZn810ZjRMjdxJQDDl8L/WR+9KPzXBUr5VAKX9lClK0=
+	t=1709205842; cv=none; b=Jb3cCuJyBRo5aI7kPmVsIxc5dYY0gAdbU35WpN9yXrRJbwqSFE3copTPMFmDKQIiT4EwjbscvG8PeMbs5tjIUmkNnhMuc6frD6d/lZMVgD7HegCSLHE/xilUEABTaUSAn04OGjosToVtzncrl4Q0JuK354YoWYJwzjz6vWlP2ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709205807; c=relaxed/simple;
-	bh=WqUPAXlssCmtqdLpcCv+8iCzvErdAxK/S/ZBo23Kh1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TtqJFMaiB086lHnEy0m2ineCuzQAG7uTSwS1lb+yVCO1shjOF+5nhUrbzGBPqRe63I+8abov72tc9XtV3w9ktNRJPtDfOwpfKl/5lGnBGpcws0pKu6XBxG9Ac7wSIt2v2RfjqQOH/wrEgmhnGiCXS39YfT34zDi1b4k3k55nw3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEE4knre; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709205842; c=relaxed/simple;
+	bh=Lw43WVRfx/Ig61s0twf8oAgY2tROhrU+dPuL5u7K74Q=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=RRg68zbNWyVSTqWwllycv5cbTCPQMdfeacfX7cE7n/hvT2Kzj5vtycXzc1QElvhmiRWrJc1EVRt1Kj6CCk+pFBNsYNNamtaU6oZWyVTCkB14iW8o4nyBDQlU4EP9u7eh7+Pewxub4DAOP+i5CZPM7F7RthWerSc7L2pdvS4wIys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=XunhVmMw; arc=none smtp.client-ip=203.205.221.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEE4knre"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD8DEC43390;
-	Thu, 29 Feb 2024 11:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709205807;
-	bh=WqUPAXlssCmtqdLpcCv+8iCzvErdAxK/S/ZBo23Kh1M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AEE4knre18WNc+Z4ry/juSz4W7aDGP/Ez0hsT9XjtMow88AXfe7DMzTDAEdv4e9ax
-	 m/VW/hBb8BKj8zGUvRBLGk4ycN0JQcBurj6JMEkdIoWbtZvxyDrGy0WCIEXqfpOgOC
-	 mpH8LrNg4+WGaFQcu+AvriL8JoEiud/KdVdY2oruqydWUJyoZn9zzThq7jwdhNlLbM
-	 hixtNQfLpwIhQu6r1cpguRalL6F/i1qeuTclO+Wz2ItlZeq9pVR9cXvCQ1PxrVmuzB
-	 TCMC200o6tcmHtL8/ts6p8bYyjsdSegQ6Rvb4RGIPIkFR3g4IUX4/55AQa2eSVdadO
-	 TtawRjDGmx5NQ==
-Date: Thu, 29 Feb 2024 12:23:16 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v8 07/10] PCI: dwc: ep: Remove "core_init_notifier" flag
-Message-ID: <ZeBpJL1K_vAdmr2M@fedora>
-References: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
- <20240224-pci-dbi-rework-v8-7-64c7fd0cfe64@linaro.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="XunhVmMw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1709205531; bh=dDkhUtUenMCvjbf5QUmcPYlkJERal+L3GzpBUKTc2uk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=XunhVmMwf7eEPDUYangGh0LnZ8BqrOC3/5rIlnmCQUkqnfr4gcMUyLWk7YvZaraWs
+	 J3mcreyag9XVNwAECy3DMeGsMxpJfBW2UfMm4FM06LKj1O/RRNaAtkRjNlYUNHiB69
+	 Tpi1t0wp1gfadal4tCw60jt13XwR/TUPjn6FY8dk=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.140])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id 4B123E98; Thu, 29 Feb 2024 19:18:49 +0800
+X-QQ-mid: xmsmtpt1709205529t8co6ro2f
+Message-ID: <tencent_66D84A6C740977ED66023CCD3716963E3709@qq.com>
+X-QQ-XMAILINFO: NhUkPfKlCtQwjfAHDpPnwVSIrfaeba6ENSnlwGC5Yxfl8HdhHBJHAUPff5hd51
+	 S3WsBEZb1c9z3+QyyNlIqTrciirIec3NWFiJDELpIhdqN1+2L6JxL9+kDzkRct8PUNyYEyvcU0+D
+	 wg1i9NzQSqYB+62H6x0+slN3X5yX4pfabf7PYGrSFGGbStQRyqzs8Q5zlfGLHng3+MZ43WdIVXtL
+	 SdXuppBRWaChyn0NUkbGEJOmO0xh4F+DocseT1AotRhumcKZ3nm80TWOvXWugGwYJ0KzM5YpgVQt
+	 Yu3ckFEdPGcbjx/HC3lKxaBRtvlJKFGDxeyBzeWdIy0+9KyhvhRigqJZe8wyvCeb6UVOxQFwS1gR
+	 YC7+UT2VYjuwDmXhWmXZTn2691C6ZGvJNS2yZj9wdny2vyfQE349lTGGWO2uLTIXatfKe8C+lPxJ
+	 WEz62+Uyt3YTgANkMB+l5COq3FJoSGp3VUDf7X3YfINcwWeF9NnNmy+UhZcajugvgQqldpqTLi+U
+	 oH9/Gdvy/GuscMGRhBRLk2jkLHdpf4KjfS15baahNXPN0KbuuoiEsBFPlG0L6f8Rt55LLmFivLBD
+	 FlUAERvph30mo0R1QDBcmb3PYjuUUOJ12HenGIsHbpaGL5qQImUcI7ZisZBLCZrdVW+cSTfODiJ9
+	 uJVqHjB7/nHrikq+N1qYaET+e8IU0GDyUou6o8QJpEJQWPdcUuOzOBm7izg5+CtYuVN4MSmUWof5
+	 CkCSmmV1+s6i20fYBvWNljlOP3HIKUVG5BhxLfnc3NC2TRE0UFTfnqa7qQC+tjNDsTwr3o1kMxPv
+	 ilnBHYNJW1QMDLTYJiW18IP3eELX5El78ejUxs73zFAHpxXs1dGmSi+z/cSdB7QV43q7RoBD4mv7
+	 xBahOuzdaimDO3TpIXIRrW6gpUeMX2ujGjPF9wL9ssQvz+0GZeyn5NRtdKYYw2b+altPacgAj5
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+2622b51b35f91a00ea18@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [media?] [usb?] INFO: task hung in vb2_video_unregister_device
+Date: Thu, 29 Feb 2024 19:18:50 +0800
+X-OQ-MSGID: <20240229111849.917736-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000008faf0a06126a0ffb@google.com>
+References: <0000000000008faf0a06126a0ffb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240224-pci-dbi-rework-v8-7-64c7fd0cfe64@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-Hello Mani,
+please test task hung in vb2_video_unregister_device
 
-On Sat, Feb 24, 2024 at 12:24:13PM +0530, Manivannan Sadhasivam wrote:
-> "core_init_notifier" flag is set by the glue drivers requiring refclk from
-> the host to complete the DWC core initialization. Also, those drivers will
-> send a notification to the EPF drivers once the initialization is fully
-> completed using the pci_epc_init_notify() API. Only then, the EPF drivers
-> will start functioning.
-> 
-> For the rest of the drivers generating refclk locally, EPF drivers will
-> start functioning post binding with them. EPF drivers rely on the
-> 'core_init_notifier' flag to differentiate between the drivers.
-> Unfortunately, this creates two different flows for the EPF drivers.
-> 
-> So to avoid that, let's get rid of the "core_init_notifier" flag and follow
-> a single initialization flow for the EPF drivers. This is done by calling
-> the dw_pcie_ep_init_notify() from all glue drivers after the completion of
-> dw_pcie_ep_init_registers() API. This will allow all the glue drivers to
-> send the notification to the EPF drivers once the initialization is fully
-> completed.
-> 
-> Only difference here is that, the drivers requiring refclk from host will
-> send the notification once refclk is received, while others will send it
-> during probe time itself.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pci-dra7xx.c           |  2 ++
->  drivers/pci/controller/dwc/pci-imx6.c             |  2 ++
->  drivers/pci/controller/dwc/pci-keystone.c         |  2 ++
->  drivers/pci/controller/dwc/pci-layerscape-ep.c    |  2 ++
->  drivers/pci/controller/dwc/pcie-designware-plat.c |  2 ++
->  drivers/pci/controller/dwc/pcie-qcom-ep.c         |  1 -
->  drivers/pci/controller/dwc/pcie-rcar-gen4.c       |  2 ++
->  drivers/pci/controller/dwc/pcie-tegra194.c        |  1 -
->  drivers/pci/controller/dwc/pcie-uniphier-ep.c     |  2 ++
->  drivers/pci/endpoint/functions/pci-epf-test.c     | 18 +++++-------------
->  include/linux/pci-epc.h                           |  3 ---
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-pcie-artpec6.c:static const struct dw_pcie_ep_ops pcie_ep_ops = {
-pcie-keembay.c:static const struct dw_pcie_ep_ops keembay_pcie_ep_ops = {
+diff --git a/drivers/media/usb/usbtv/usbtv-video.c b/drivers/media/usb/usbtv/usbtv-video.c
+index 62a583040cd4..b55f432b44d4 100644
+--- a/drivers/media/usb/usbtv/usbtv-video.c
++++ b/drivers/media/usb/usbtv/usbtv-video.c
+@@ -963,7 +963,6 @@ int usbtv_video_init(struct usbtv *usbtv)
+ 
+ void usbtv_video_free(struct usbtv *usbtv)
+ {
+-	mutex_lock(&usbtv->vb2q_lock);
+ 	mutex_lock(&usbtv->v4l2_lock);
+ 
+ 	usbtv_stop(usbtv);
+@@ -971,7 +970,6 @@ void usbtv_video_free(struct usbtv *usbtv)
+ 	v4l2_device_disconnect(&usbtv->v4l2_dev);
+ 
+ 	mutex_unlock(&usbtv->v4l2_lock);
+-	mutex_unlock(&usbtv->vb2q_lock);
+ 
+ 	v4l2_device_put(&usbtv->v4l2_dev);
+ }
 
-Where is the love for these drivers? ;)
-
-
-Kind regards,
-Niklas
