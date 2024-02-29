@@ -1,57 +1,58 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB0E145673
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 20:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F46145651
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 20:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709240165; cv=none; b=I9BWoqf57nEaE0cXqZ87Ha1obbgcpkwlgTH9lhJ53HIu1IYuuKoUuf6/RWfqDPDDmsgcnQYzA5BFVHER+hJeJge74qdnWPbHebhT9w9LOFL3ywXIcLJen7/X6w8Z/o6fXcqhuXKMv5njqqEfM/buOxk1JF4xuq54y2DZH6HWSoQ=
+	t=1709240165; cv=none; b=etW5spyna7o19qqgWM3iakHs2IGP7MFsvy55IhX4QEAI43uwIDIzHqybZukeH1ELFnJ51iwfRrq9jk2pGzDVQYOOywZCBu9BYgKDk2qz7CMmls/OsdYo/xkndTkmGmiT/93Dgi4ylKAaHMgxtMisI8ihghhGeRCKrzAlAuCq5aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709240165; c=relaxed/simple;
-	bh=XwGOf1MLWzPXiuaGkXStpdLvB4FPo5vk4nLwFw1ga6k=;
+	bh=58ZSVqSazsVEHoU8qFXXAJJ94ldiaiahFmGNCpA1b2A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qkHGM7dW9zWeLvZiMe4EFxD81RYhU17RkSPNYuhnYsmQ3No5nP4J28AYcWeOqy8E0O8Blp6bz+6Ad+DaLRi/h++eXjjQWYGfroLgZse8aXNBL1CEgegOQqnlJtZlGxQpoPCksWlS2LhjAwcie+cUdwyMGsqV7eR26wlA8urFyMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vZvrrRto; arc=none smtp.client-ip=209.85.166.180
+	 MIME-Version; b=apV0Q6oCgqfuIE50Kte4ES+vhtcaDMHOxPIcm4/1RLyEl/pyVtp0jSh/TngXnrUIXKFV4LHyPICyJKSGFB5mI4Amt4YgwcLQerdi+LliXa7S5fmUqgTeejNX6LUfsrPSFIhmUZBmbUcRiQkHrNSzYw06k/xCyxZ9F4zXKtfW5Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UvrbEA5i; arc=none smtp.client-ip=209.85.166.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vZvrrRto"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-365169e0938so4008725ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 12:56:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UvrbEA5i"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-36540b9885cso6289685ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 12:56:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709240163; x=1709844963; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709240161; x=1709844961; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TGWJjaxvrYhNIssQekJJrsQHyV2VIpv1G8S6HOh3hAI=;
-        b=vZvrrRtoJ0d9uTr6s3Pb/ceg1M0WUShdeXro7vTkFOuyMhhCxWOBFuU2vqDIMYMbx6
-         1p10cO8/kLLuKXEdFnXVzAQIlPL6RG436NEt/5Rwbr6MQgNhyR3nYpzdNPA8aEqS9GX/
-         L7nWkkoY259bDUvFZxZtQVuJandsi1M9vCy/fr3uNBCtIbHjWxU23ABTel1RfWDhjfb3
-         jYBkqSKnZiscII1i+2l9mZuhkrlbZAF2MkyGc9PjB7a8Pobb6dbuz+pXcUyxA/8NIZCM
-         G/p0Svhvp4q7v78mMdfpipj/SuQyTGlWoexXe9A2Pov9eniDYEG1ujo5gizx2vS8T8Qr
-         JCeQ==
+        bh=3K7f3RiTowa/EAhWLKI1GEo5jRAquYP1bOnRd1hO3Z4=;
+        b=UvrbEA5iEz7Z3nDmxZ/U1S1OUpBy/DhhvQn1WpBgSeeT/WHxJR+FQaBcOFVgC6x53K
+         QxblbfmMqkaNlXhj6ngPZY+Prt5ziVS5WmvvpVZPiS3aNnsf9mYKSsPKJesFJcxMVARr
+         BzuxAYR2ueM2l+SvmiQN44hadgfENG1JZHGOEvx0JYnxo1tjBF9HqAzeZFGwi2O1odld
+         8iyJsjLoJWl4We3wGCjbjmIeaclZ8ZHZUeeWj+qMxG04IQwRUDlhqpVvLr2pvY+disrX
+         Fy0EQthAtfXb11KWKwqkTnKB6ugcp5JrhB2rgYcSrLrPqk2xEc/lSzTErTSawkoil24x
+         BWCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709240163; x=1709844963;
+        d=1e100.net; s=20230601; t=1709240161; x=1709844961;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TGWJjaxvrYhNIssQekJJrsQHyV2VIpv1G8S6HOh3hAI=;
-        b=uAZ2nXzTSLw28GMBVbb8cmIcfbO6DVEFpXcegp41DvFyozTsCi39N4/20l4hjK0WwI
-         YK4aySTMBPo2DBooTPbnBOPTzTokEd6wuXcidGERupxys0yx62GDaiVlv1xvTRWcp4cL
-         WW6DsLu1avG6YXN69rNuSOrUeDo/V4aIZvKLuU+jw2SbLYhFoVzqqoGAuu3sKMWxADlW
-         C9/ZmszovLmADK6JpSTB3SGMuRW7XRzttlAMBPwOmgBDF4X3UyW4I5wqmCp/8oiufoAr
-         wtw6PYhPTFV3LvAxwtw2odGiK8n1yNbepEur3KoLx8gFEOGhpJ0KJfwoFhjLRNPle4HR
-         Bd0w==
-X-Forwarded-Encrypted: i=1; AJvYcCWWuydNOq5d2JStWVeRu20mKAiblon1/v8swcikuZ8ocnAYE5Qnkcw62MGJsI4aBdszEiUJVWs+ChC9RYp19BJB2k4rZ0RCObm1KJ7M
-X-Gm-Message-State: AOJu0YwYzYZ5H2RKv1WvyWxE46mORIc9EVtN5Vg6Lqw25dgopDFQM1R5
-	6k1yRv3GDvkFgMeTOTN0PSlo+ovD14DpTs4UIkNYKwYxgl5ArKNqYQTjZOwAnfI=
-X-Google-Smtp-Source: AGHT+IFiZEOjl8Eg1h5669qLC0O7+SdSht2D0xZWN6IxWmQVMl7eENwv3Y4e2KBM5sTVa/64RKullw==
-X-Received: by 2002:a05:6e02:2195:b0:365:1c5:7a5a with SMTP id j21-20020a056e02219500b0036501c57a5amr24688ila.4.1709240163486;
-        Thu, 29 Feb 2024 12:56:03 -0800 (PST)
+        bh=3K7f3RiTowa/EAhWLKI1GEo5jRAquYP1bOnRd1hO3Z4=;
+        b=QcLVc3B7jd/3uLIq3W/qpi3zs5Q4abZ8KKxRzzS5YAkcoFHTftoLu52tmYHbZdkh1y
+         eqxOeeLDwctbpLDzCKdy2fj6Vq9KhRk+qegvfphDHjjLtgQVbDXhZpcayakiwaSrZNn0
+         92Vdp02RwuKVh/sVu/8fqH5yhhih8QHTTzgJP3N+hMxRkiU4JHy4Upgcr0eEmf+C0OZl
+         HOKtBH1DoUL9yorM5Cv+foilhNhuQYhFxonYbeNuYCBf8XDcUz9qXH32YlBRa5R6eA/A
+         qCiym/MNxd6BrIZHpl52r/K3zjp8n9BMWUC3TMoUGD2veuy62Pqp1JUM/zyqeNwD2o65
+         23jw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAb4gLi8+JjEHmHrbHlwCDz16c4ajs0LhbwDoLOMP2oQTpt9WzeTntGNSByHBSU8go8IOnqB1GNR8pU/m29S+NR9PgR0iH6HSjPy5F
+X-Gm-Message-State: AOJu0Yz9D5JsmD2cFkbEQEm2B0D0v7rZPHH1IxsRcbJ+W5y88cQ6AzUz
+	0DWZAn9cNz0MdsbuBvoCTBf9zm3sewPM4osVjK19ZRX8UNZZsljNg7HhM8LTFZ+j1+KaM6jfhnK
+	7
+X-Google-Smtp-Source: AGHT+IEKCJy8er2U/25XopKWelRMq3W5Ar+pFByoKiRgsBU7iDIUhRe2uF9ci9DOl1lDMQm020cB6A==
+X-Received: by 2002:a05:6e02:12c3:b0:365:3a69:1e20 with SMTP id i3-20020a056e0212c300b003653a691e20mr47922ilm.3.1709240161169;
+        Thu, 29 Feb 2024 12:56:01 -0800 (PST)
 Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id h14-20020a056e020d4e00b003658fbcf55dsm521551ilj.72.2024.02.29.12.56.02
+        by smtp.gmail.com with ESMTPSA id h14-20020a056e020d4e00b003658fbcf55dsm521551ilj.72.2024.02.29.12.56.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 12:56:03 -0800 (PST)
+        Thu, 29 Feb 2024 12:56:00 -0800 (PST)
 From: Alex Elder <elder@linaro.org>
 To: davem@davemloft.net,
 	edumazet@google.com,
@@ -67,9 +68,9 @@ Cc: mka@chromium.org,
 	netdev@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 3/7] net: ipa: pass a platform device to ipa_reg_init()
-Date: Thu, 29 Feb 2024 14:55:50 -0600
-Message-Id: <20240229205554.86762-4-elder@linaro.org>
+Subject: [PATCH net-next 1/7] net: ipa: change ipa_interrupt_config() prototype
+Date: Thu, 29 Feb 2024 14:55:48 -0600
+Message-Id: <20240229205554.86762-2-elder@linaro.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240229205554.86762-1-elder@linaro.org>
 References: <20240229205554.86762-1-elder@linaro.org>
@@ -81,86 +82,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rather than using the platform device pointer field in the IPA
-pointer, pass a platform device pointer to ipa_reg_init().  Use
-that pointer throughout that function.
+Change the return type of ipa_interrupt_config() to be an error
+code rather than an IPA interrupt structure pointer, and assign the
+the pointer within that function.
+
+Change ipa_interrupt_deconfig() to take the IPA pointer as argument
+and have it invalidate the ipa->interrupt pointer.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_main.c | 2 +-
- drivers/net/ipa/ipa_reg.c  | 8 ++++----
- drivers/net/ipa/ipa_reg.h  | 4 +++-
- 3 files changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/ipa/ipa_interrupt.c | 15 ++++++++++-----
+ drivers/net/ipa/ipa_interrupt.h | 10 +++++-----
+ drivers/net/ipa/ipa_main.c      | 13 ++++---------
+ 3 files changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
-index 6cf5c1280aa4e..5c9c1b0ef8de5 100644
---- a/drivers/net/ipa/ipa_main.c
-+++ b/drivers/net/ipa/ipa_main.c
-@@ -866,7 +866,7 @@ static int ipa_probe(struct platform_device *pdev)
- 	ipa->modem_route_count = data->modem_route_count;
- 	init_completion(&ipa->completion);
- 
--	ret = ipa_reg_init(ipa);
-+	ret = ipa_reg_init(ipa, pdev);
- 	if (ret)
- 		goto err_kfree_ipa;
- 
-diff --git a/drivers/net/ipa/ipa_reg.c b/drivers/net/ipa/ipa_reg.c
-index 6a3203ae6f1ef..98625956e0bb4 100644
---- a/drivers/net/ipa/ipa_reg.c
-+++ b/drivers/net/ipa/ipa_reg.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2019-2023 Linaro Ltd.
-  */
- 
-+#include <linux/platform_device.h>
- #include <linux/io.h>
- 
- #include "ipa.h"
-@@ -132,9 +133,9 @@ static const struct regs *ipa_regs(enum ipa_version version)
- 	}
+diff --git a/drivers/net/ipa/ipa_interrupt.c b/drivers/net/ipa/ipa_interrupt.c
+index 4d80bf77a5323..a298d922dd871 100644
+--- a/drivers/net/ipa/ipa_interrupt.c
++++ b/drivers/net/ipa/ipa_interrupt.c
+@@ -236,7 +236,7 @@ void ipa_interrupt_simulate_suspend(struct ipa_interrupt *interrupt)
  }
  
--int ipa_reg_init(struct ipa *ipa)
-+int ipa_reg_init(struct ipa *ipa, struct platform_device *pdev)
+ /* Configure the IPA interrupt framework */
+-struct ipa_interrupt *ipa_interrupt_config(struct ipa *ipa)
++int ipa_interrupt_config(struct ipa *ipa)
  {
--	struct device *dev = &ipa->pdev->dev;
-+	struct device *dev = &pdev->dev;
- 	const struct regs *regs;
- 	struct resource *res;
+ 	struct device *dev = &ipa->pdev->dev;
+ 	struct ipa_interrupt *interrupt;
+@@ -254,10 +254,12 @@ struct ipa_interrupt *ipa_interrupt_config(struct ipa *ipa)
  
-@@ -146,8 +147,7 @@ int ipa_reg_init(struct ipa *ipa)
- 		return -EINVAL;
+ 	interrupt = kzalloc(sizeof(*interrupt), GFP_KERNEL);
+ 	if (!interrupt)
+-		return ERR_PTR(-ENOMEM);
++		return -ENOMEM;
+ 	interrupt->ipa = ipa;
+ 	interrupt->irq = irq;
  
- 	/* Setup IPA register memory  */
--	res = platform_get_resource_byname(ipa->pdev, IORESOURCE_MEM,
--					   "ipa-reg");
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ipa-reg");
- 	if (!res) {
- 		dev_err(dev, "DT error getting \"ipa-reg\" memory property\n");
- 		return -ENODEV;
-diff --git a/drivers/net/ipa/ipa_reg.h b/drivers/net/ipa/ipa_reg.h
-index 2998f115f12c7..62c62495b7968 100644
---- a/drivers/net/ipa/ipa_reg.h
-+++ b/drivers/net/ipa/ipa_reg.h
-@@ -12,6 +12,8 @@
- #include "ipa_version.h"
- #include "reg.h"
- 
-+struct platform_device;
++	ipa->interrupt = interrupt;
 +
- struct ipa;
+ 	/* Start with all IPA interrupts disabled */
+ 	reg = ipa_reg(ipa, IPA_IRQ_EN);
+ 	iowrite32(0, ipa->reg_virt + reg_offset(reg));
+@@ -282,13 +284,16 @@ struct ipa_interrupt *ipa_interrupt_config(struct ipa *ipa)
+ err_kfree:
+ 	kfree(interrupt);
+ 
+-	return ERR_PTR(ret);
++	return ret;
+ }
+ 
+ /* Inverse of ipa_interrupt_config() */
+-void ipa_interrupt_deconfig(struct ipa_interrupt *interrupt)
++void ipa_interrupt_deconfig(struct ipa *ipa)
+ {
+-	struct device *dev = &interrupt->ipa->pdev->dev;
++	struct ipa_interrupt *interrupt = ipa->interrupt;
++	struct device *dev = &ipa->pdev->dev;
++
++	ipa->interrupt = NULL;
+ 
+ 	dev_pm_clear_wake_irq(dev);
+ 	free_irq(interrupt->irq, interrupt);
+diff --git a/drivers/net/ipa/ipa_interrupt.h b/drivers/net/ipa/ipa_interrupt.h
+index 53e1b71685c75..1947654e3e360 100644
+--- a/drivers/net/ipa/ipa_interrupt.h
++++ b/drivers/net/ipa/ipa_interrupt.h
+@@ -76,17 +76,17 @@ void ipa_interrupt_irq_enable(struct ipa *ipa);
+ void ipa_interrupt_irq_disable(struct ipa *ipa);
  
  /**
-@@ -643,7 +645,7 @@ extern const struct regs ipa_regs_v5_5;
+- * ipa_interrupt_config() - Configure the IPA interrupt framework
++ * ipa_interrupt_config() - Configure IPA interrupts
+  * @ipa:	IPA pointer
+  *
+- * Return:	Pointer to IPA SMP2P info, or a pointer-coded error
++ * Return:	0 if successful, or a negative error code
+  */
+-struct ipa_interrupt *ipa_interrupt_config(struct ipa *ipa);
++int ipa_interrupt_config(struct ipa *ipa);
  
- const struct reg *ipa_reg(struct ipa *ipa, enum ipa_reg_id reg_id);
+ /**
+  * ipa_interrupt_deconfig() - Inverse of ipa_interrupt_config()
+- * @interrupt:	IPA interrupt structure
++ * @ipa:	IPA pointer
+  */
+-void ipa_interrupt_deconfig(struct ipa_interrupt *interrupt);
++void ipa_interrupt_deconfig(struct ipa *ipa);
  
--int ipa_reg_init(struct ipa *ipa);
-+int ipa_reg_init(struct ipa *ipa, struct platform_device *pdev);
- void ipa_reg_exit(struct ipa *ipa);
+ #endif /* _IPA_INTERRUPT_H_ */
+diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
+index 00475fd7a2054..0c6e6719d99e3 100644
+--- a/drivers/net/ipa/ipa_main.c
++++ b/drivers/net/ipa/ipa_main.c
+@@ -542,12 +542,9 @@ static int ipa_config(struct ipa *ipa, const struct ipa_data *data)
+ 	if (ret)
+ 		goto err_hardware_deconfig;
  
- #endif /* _IPA_REG_H_ */
+-	ipa->interrupt = ipa_interrupt_config(ipa);
+-	if (IS_ERR(ipa->interrupt)) {
+-		ret = PTR_ERR(ipa->interrupt);
+-		ipa->interrupt = NULL;
++	ret = ipa_interrupt_config(ipa);
++	if (ret)
+ 		goto err_mem_deconfig;
+-	}
+ 
+ 	ipa_uc_config(ipa);
+ 
+@@ -572,8 +569,7 @@ static int ipa_config(struct ipa *ipa, const struct ipa_data *data)
+ 	ipa_endpoint_deconfig(ipa);
+ err_uc_deconfig:
+ 	ipa_uc_deconfig(ipa);
+-	ipa_interrupt_deconfig(ipa->interrupt);
+-	ipa->interrupt = NULL;
++	ipa_interrupt_deconfig(ipa);
+ err_mem_deconfig:
+ 	ipa_mem_deconfig(ipa);
+ err_hardware_deconfig:
+@@ -591,8 +587,7 @@ static void ipa_deconfig(struct ipa *ipa)
+ 	ipa_modem_deconfig(ipa);
+ 	ipa_endpoint_deconfig(ipa);
+ 	ipa_uc_deconfig(ipa);
+-	ipa_interrupt_deconfig(ipa->interrupt);
+-	ipa->interrupt = NULL;
++	ipa_interrupt_deconfig(ipa);
+ 	ipa_mem_deconfig(ipa);
+ 	ipa_hardware_deconfig(ipa);
+ }
 -- 
 2.40.1
 
