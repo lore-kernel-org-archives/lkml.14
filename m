@@ -1,70 +1,68 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5AD3BBCF
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F6C36123
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709174623; cv=none; b=Nr9yQkg4DNJrT+yBqRtNHV69h0ntVb93quMKQHqBCsFxvD09s1mNRX3857IewFLT0b1X3eeUutlIwMwecMDsFGfEfr44vw7S8IVI305UCSkpDeJIAH7ma6/cDgaiG3OZ/YRkAKMBoIzNwwmJHBzr2c9ROFERD9MteG6AbpATMV0=
+	t=1709175489; cv=none; b=S7PMHI1fVSfld/MFsUale/J3ZqHlLKo52FutzqHPnAbq59C7/LokId0fGJXpxlnUNx3dEoHVcRHYPqJZvomrxiQU0cjkQMGwzbIBE2S4Ax1JH/xMXtSB38Nyy1z3m9C0xuceF//u2vmIVvia3ZnXAE42ZZpyX2gXoXi8xf3ZRPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709174623; c=relaxed/simple;
-	bh=3Bml3fisOhf12xoHuFgq9dvsIWbtNV/lOg2k7b3U5H4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LSHMRYsjwIwBBPDyg2orgQGWgJt2DNSyNPd5UWmDeKQ0BSbH+dyzgCb4cgOZ+6ye01zzMUI3qZDCf9Am+/tVY/jbsBoWIvgFeHfMEuEKHYvPbPkFpXFQRsRxn9bqgUDDIeBmjpL5Dw5ijQcvqUGOa3O5LL2Endl7Li8CXOAOsHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=TgQOZxbL; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
+	s=arc-20240116; t=1709175489; c=relaxed/simple;
+	bh=vTo43K8wKC81JH1cmE6G3o/ZjBDx+QgMlTVTqwHGI38=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T7hTYaxxM9Jhu3fhlTpIqNB6jd6HRnQRhXswyafbn26jw5kwTpIlGoXi2ckKalRq8sfkHQ2uTyx0ME3RnkUNGfxetKA0AcuYmwGR5L9Rg82KHFX3/jOJNUMdftJ1E7UIrjqN4F3Rs+W1pP7AV+0Yzl886n+w+hHsk+Ct3iwKFeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jPg2dr5p; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="TgQOZxbL"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7c7f3f66d17so19602239f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:43:40 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jPg2dr5p"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d93edfa76dso4861585ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:58:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=darkphysics.net; s=google; t=1709174620; x=1709779420; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p0/Uo8bpOofX8j1GcCdenVCAyHrsJbHLlgNs8scFou8=;
-        b=TgQOZxbL+79lTGwM2Zl8pEXWYom9hJA5OztW3zkIaiK3lxViPu0aY8K2q8LXOaMDfT
-         h6MOkRuRuvfZn5Dd8s8j8aLJRzMUWHv1xx9kblr45h9SiAPV3htsF9eviXCkUEYQnqim
-         kq96zYIYL1x0HI8mXJMYC2kvWXfJ+bk+PbRbH2Og+ej4CWcVuJfhP3Kmi2+7YSK68NZs
-         zEVq1SGzigaa6ampzEF7kQ6sot+qIavrq8TNd7q/6cDWKE22UphXlNh2iyCkjY8ZrG8C
-         7XtaUSrNTxnrA48koJZgJZL4fLO3vHqa3EssEtpFwPOefk8jvXRbF15/67yoIXRVw0St
-         vaWw==
+        d=chromium.org; s=google; t=1709175487; x=1709780287; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GYrIjEX8sBb4dT+FuvYa3Se1T3Bf/IWCGgkiK7PdSp0=;
+        b=jPg2dr5pROUofHcv0fIh3KOujgBfZOUB8aC6+4UuVmVQYEwGVSeQhRO5VY0Uw6U+j/
+         79BvHRZCSKjJxQUo6XaO1PO7MJDLtnSyNcozeglUTOM8mOujpMR0wsu8zA6xDs01YwUW
+         dOdMjW95ZXju/hC+bPLMZ7If2CCINPfOknExc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709174620; x=1709779420;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p0/Uo8bpOofX8j1GcCdenVCAyHrsJbHLlgNs8scFou8=;
-        b=nsMHCXA3Mai0999fZ3zMlEhzGcvPH0U5MppjbtL8x0ZBvRh/dKFHrJJnsShZm4xtlG
-         0xKuLS337/a/3ilUh+YoD2dUIlQ+qzul7DRDP7V+CgfJX7GiMmYJN4qXtaVNm8YNio1M
-         aet55D4Ws9GDHl2FCC8xXLdr+gcH0X3lrerIqDQX1FqUliFtZ8L7AQZK1wsWRZN3osef
-         vxxEE4uEQy6cZeQC8tA9MPf94thgIYK9iRdIBr9TQzCezW47mTK0Rrg2Ct0gn1gB/rHr
-         zaMqgQUxYWLPp4eaVA/J3s+bKeDNgZguuLgLSCmVA4Pj8RHf2eE/Wvi70U8I/+T6fK0h
-         YEpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSvkOsYZwhYZwivAum0zAAAl4MSyhSrzlXrK7AvFDGbKh/uoys5AMwsTy5oo/6V2WTr8lqJ/fsS0RbJgEMbazX+82SfobBF8Pn2wBL
-X-Gm-Message-State: AOJu0YwS+VRd1xVkXNX0QStv/ZZ5wd7QAlGu202XUyjjG38kqdOi/+IQ
-	m3+GdKVZmFY4njNiN1jXLQIPA67WqxhuciO4rQmx6Ers8lVjKKxKlphytOmkYF8=
-X-Google-Smtp-Source: AGHT+IFHS+/I2I1geaDiHB0u47wojczAJlRr4O9aK0E5+a2fyLFbLDiHZLmrP7DZFQ/lEpHyiN1qfg==
-X-Received: by 2002:a92:c990:0:b0:365:1044:4dcd with SMTP id y16-20020a92c990000000b0036510444dcdmr1252439iln.16.1709174619962;
-        Wed, 28 Feb 2024 18:43:39 -0800 (PST)
-Received: from oatmeal.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
-        by smtp.gmail.com with ESMTPSA id u23-20020aa78497000000b006e5092fb3efsm141504pfn.159.2024.02.28.18.43.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 18:43:39 -0800 (PST)
-From: Tree Davies <tdavies@darkphysics.net>
-To: gregkh@linuxfoundation.org,
-	philipp.g.hortmann@gmail.com,
-	anjan@momi.ca
-Cc: linux-staging@lists.linux.dev,
+        d=1e100.net; s=20230601; t=1709175487; x=1709780287;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GYrIjEX8sBb4dT+FuvYa3Se1T3Bf/IWCGgkiK7PdSp0=;
+        b=stxtpVuybznz8kv2Q5qniT83NZGV0OtLTH/CsiGYgTC7dr/qNruof2rkjlLohywY+B
+         rfgtEl4/LUr72OTm1EDbFRFz81NmB2bLQhSgYK8J2kwtsfAFJsk3618xVSyUp6paPyq0
+         fqKye5rGG+iPdX5vQ5I7B+UOHC7TUa3F9YdXiiOK5Z+VT2jYXhi77csqsXP9HTnnal/e
+         egSYjN2YlDlClpGraqofUKg51K2cMZQxCmQQzwOC5hmh2Lp8Eob5uBO67LrdN5L8+5i0
+         Ig0QjHB0o+0TUJFn84BYYcwPaxx2VjAtD1VklP7PUpXt6F3DGJ8EwQjk9PCpfAtirmBO
+         +nqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXW231/2+sGAp9mYRPJi86gWchoTHmTKMgiDcukuTklyrEUhlaSe2cgnPT24jIG5l9yNPJH0stbs+BifEpNuCuqRVTV/75q5y8HhPlS
+X-Gm-Message-State: AOJu0Yz0HZRB5tNaBX38e4Io+qKVQIH6t1SOo1mUoJn+8I5PqqQbKZgq
+	+S2Des18gpul4sfqtv3e5vuBeACSvlJmUpQu7NBG8KqPf4fSX+8mV/GokeHcsg==
+X-Google-Smtp-Source: AGHT+IGX2J1qRGPAk8Cl6s48psnsoyoG+In7Glf3fzZVHLi4UU8vhZ5C51T0Oye4gDcJQGTRUdVsaQ==
+X-Received: by 2002:a17:902:6b41:b0:1db:ccd0:e77e with SMTP id g1-20020a1709026b4100b001dbccd0e77emr849550plt.35.1709175486838;
+        Wed, 28 Feb 2024 18:58:06 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:f51:e79e:9056:77ea])
+        by smtp.gmail.com with UTF8SMTPSA id i6-20020a170902eb4600b001dc38eaa7fdsm174087pli.278.2024.02.28.18.58.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 18:58:06 -0800 (PST)
+From: David Stevens <stevensd@chromium.org>
+X-Google-Original-From: David Stevens <stevensd@google.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: Yu Zhang <yu.c.zhang@linux.intel.com>,
+	Isaku Yamahata <isaku.yamahata@gmail.com>,
+	Zhi Wang <zhi.wang.linux@gmail.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	kvmarm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Tree Davies <tdavies@darkphysics.net>
-Subject: [PATCH v2 8/8] Staging: rtl8192e: Rename function GetHalfNmodeSupportByAPsHandler()
-Date: Wed, 28 Feb 2024 18:43:25 -0800
-Message-Id: <20240229024325.453374-9-tdavies@darkphysics.net>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240229024325.453374-1-tdavies@darkphysics.net>
-References: <20240229024325.453374-1-tdavies@darkphysics.net>
+	kvm@vger.kernel.org,
+	David Stevens <stevensd@chromium.org>
+Subject: [PATCH v11 0/8] KVM: allow mapping non-refcounted pages
+Date: Thu, 29 Feb 2024 11:57:51 +0900
+Message-ID: <20240229025759.1187910-1-stevensd@google.com>
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,112 +71,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename function GetHalfNmodeSupportByAPsHandler to
-get_half_nmode_support_by_aps_handler to fix checkpatch
-warning Avoid CamelCase.
+From: David Stevens <stevensd@chromium.org>
 
-Signed-off-by: Tree Davies <tdavies@darkphysics.net>
----
-v2: Fix commit message 75 char limit
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c | 2 +-
- drivers/staging/rtl8192e/rtl8192e/rtl_dm.c   | 2 +-
- drivers/staging/rtl8192e/rtl819x_BAProc.c    | 2 +-
- drivers/staging/rtl8192e/rtl819x_HTProc.c    | 8 ++++----
- drivers/staging/rtl8192e/rtllib.h            | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
+This patch series adds support for mapping VM_IO and VM_PFNMAP memory
+that is backed by struct pages that aren't currently being refcounted
+(e.g. tail pages of non-compound higher order allocations) into the
+guest.
 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-index fc5014f719d7..50a4e1cb8c79 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-@@ -657,7 +657,7 @@ static void _rtl92e_init_priv_handler(struct net_device *dev)
- 	priv->rtllib->ps_is_queue_empty = _rtl92e_is_tx_queue_empty;
- 
- 	priv->rtllib->get_nmode_support_by_sec_cfg = rtl92e_get_nmode_support_by_sec;
--	priv->rtllib->GetHalfNmodeSupportByAPsHandler =
-+	priv->rtllib->get_half_nmode_support_by_aps_handler =
- 						rtl92e_is_halfn_supported_by_ap;
- 
- 	priv->rtllib->set_hw_reg_handler = rtl92e_set_reg;
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-index 57e1a361a7c9..047da39f730e 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-@@ -354,7 +354,7 @@ static void _rtl92e_dm_check_rate_adaptive(struct net_device *dev)
- 			}
- 		}
- 
--		if (priv->rtllib->GetHalfNmodeSupportByAPsHandler(dev))
-+		if (priv->rtllib->get_half_nmode_support_by_aps_handler(dev))
- 			target_ratr &=  0xf00fffff;
- 
- 		current_ratr = rtl92e_readl(dev, RATR0);
-diff --git a/drivers/staging/rtl8192e/rtl819x_BAProc.c b/drivers/staging/rtl8192e/rtl819x_BAProc.c
-index 04f3fb54d1b7..834329886ea2 100644
---- a/drivers/staging/rtl8192e/rtl819x_BAProc.c
-+++ b/drivers/staging/rtl8192e/rtl819x_BAProc.c
-@@ -276,7 +276,7 @@ int rtllib_rx_add_ba_req(struct rtllib_device *ieee, struct sk_buff *skb)
- 	ba->ba_timeout_value = *ba_timeout_value;
- 	ba->ba_start_seq_ctrl = *ba_start_seq_ctrl;
- 
--	if (ieee->GetHalfNmodeSupportByAPsHandler(ieee->dev) ||
-+	if (ieee->get_half_nmode_support_by_aps_handler(ieee->dev) ||
- 	    (ieee->ht_info->iot_action & HT_IOT_ACT_ALLOW_PEER_AGG_ONE_PKT))
- 		ba->ba_param_set.field.buffer_size = 1;
- 	else
-diff --git a/drivers/staging/rtl8192e/rtl819x_HTProc.c b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-index abc21ae49ff7..fa96a2c2c916 100644
---- a/drivers/staging/rtl8192e/rtl819x_HTProc.c
-+++ b/drivers/staging/rtl8192e/rtl819x_HTProc.c
-@@ -252,7 +252,7 @@ void ht_construct_capability_element(struct rtllib_device *ieee, u8 *pos_ht_cap,
- 	}
- 
- 	cap_ele->AdvCoding		= 0;
--	if (ieee->GetHalfNmodeSupportByAPsHandler(ieee->dev))
-+	if (ieee->get_half_nmode_support_by_aps_handler(ieee->dev))
- 		cap_ele->ChlWidth = 0;
- 	else
- 		cap_ele->ChlWidth = 1;
-@@ -301,7 +301,7 @@ void ht_construct_capability_element(struct rtllib_device *ieee, u8 *pos_ht_cap,
- 		if (ht->iot_action & HT_IOT_ACT_DISABLE_RX_40MHZ_SHORT_GI)
- 			cap_ele->ShortGI40Mhz		= 0;
- 
--		if (ieee->GetHalfNmodeSupportByAPsHandler(ieee->dev)) {
-+		if (ieee->get_half_nmode_support_by_aps_handler(ieee->dev)) {
- 			cap_ele->ChlWidth = 0;
- 			cap_ele->MCS[1] = 0;
- 		}
-@@ -408,7 +408,7 @@ static u8 ht_filter_mcs_rate(struct rtllib_device *ieee, u8 *pSupportMCS,
- 
- 	ht_pick_mcs_rate(ieee, pOperateMCS);
- 
--	if (ieee->GetHalfNmodeSupportByAPsHandler(ieee->dev))
-+	if (ieee->get_half_nmode_support_by_aps_handler(ieee->dev))
- 		pOperateMCS[1] = 0;
- 
- 	for (i = 2; i <= 15; i++)
-@@ -666,7 +666,7 @@ void ht_set_connect_bw_mode(struct rtllib_device *ieee,
- {
- 	struct rt_hi_throughput *ht_info = ieee->ht_info;
- 
--	if (ieee->GetHalfNmodeSupportByAPsHandler(ieee->dev))
-+	if (ieee->get_half_nmode_support_by_aps_handler(ieee->dev))
- 		bandwidth = HT_CHANNEL_WIDTH_20;
- 
- 	if (ht_info->sw_bw_in_progress) {
-diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
-index 9d9420f7a371..be2615bae6ca 100644
---- a/drivers/staging/rtl8192e/rtllib.h
-+++ b/drivers/staging/rtl8192e/rtllib.h
-@@ -1486,7 +1486,7 @@ struct rtllib_device {
- 				    enum ht_extchnl_offset Offset);
- 	bool (*get_nmode_support_by_sec_cfg)(struct net_device *dev);
- 	void (*set_wireless_mode)(struct net_device *dev, u8 wireless_mode);
--	bool (*GetHalfNmodeSupportByAPsHandler)(struct net_device *dev);
-+	bool (*get_half_nmode_support_by_aps_handler)(struct net_device *dev);
- 	u8   (*rtllib_ap_sec_type)(struct rtllib_device *ieee);
- 	void (*init_gain_handler)(struct net_device *dev, u8 Operation);
- 	void (*ScanOperationBackupHandler)(struct net_device *dev,
+Our use case is virtio-gpu blob resources [1], which directly map host
+graphics buffers into the guest as "vram" for the virtio-gpu device.
+This feature currently does not work on systems using the amdgpu driver,
+as that driver allocates non-compound higher order pages via
+ttm_pool_alloc_page().
+
+First, this series replaces the gfn_to_pfn_memslot() API with a more
+extensible kvm_follow_pfn() API. The updated API rearranges
+gfn_to_pfn_memslot()'s args into a struct and where possible packs the
+bool arguments into a FOLL_ flags argument. The refactoring changes do
+not change any behavior.
+
+From there, this series extends the kvm_follow_pfn() API so that
+non-refconuted pages can be safely handled. This invloves adding an
+input parameter to indicate whether the caller can safely use
+non-refcounted pfns and an output parameter to tell the caller whether
+or not the returned page is refcounted. This change includes a breaking
+change, by disallowing non-refcounted pfn mappings by default, as such
+mappings are unsafe. To allow such systems to continue to function, an
+opt-in module parameter is added to allow the unsafe behavior.
+
+This series only adds support for non-refcounted pages to x86. Other
+MMUs can likely be updated without too much difficulty, but it is not
+needed at this point. Updating other parts of KVM (e.g. pfncache) is not
+straightforward [2].
+
+[1]
+https://patchwork.kernel.org/project/dri-devel/cover/20200814024000.2485-1-gurchetansingh@chromium.org/
+[2] https://lore.kernel.org/all/ZBEEQtmtNPaEqU1i@google.com/
+
+v10 -> v11:
+ - Switch to u64 __read_mostly shadow_refcounted_mask.
+ - Update comments about allow_non_refcounted_struct_page.
+v9 -> v10:
+ - Re-add FOLL_GET changes.
+ - Split x86/mmu spte+non-refcount-page patch into two patches.
+ - Rename 'foll' variables to 'kfp'.
+ - Properly gate usage of refcount spte bit when it's not available.
+ - Replace kfm_follow_pfn's is_refcounted_page output parameter with
+   a struct page *refcounted_page pointing to the page in question.
+ - Add patch downgrading BUG_ON to WARN_ON_ONCE.
+v8 -> v9:
+ - Make paying attention to is_refcounted_page mandatory. This means
+   that FOLL_GET is no longer necessary. For compatibility with
+   un-migrated callers, add a temporary parameter to sidestep
+   ref-counting issues.
+ - Add allow_unsafe_mappings, which is a breaking change.
+ - Migrate kvm_vcpu_map and other callsites used by x86 to the new API.
+ - Drop arm and ppc changes.
+v7 -> v8:
+ - Set access bits before releasing mmu_lock.
+ - Pass FOLL_GET on 32-bit x86 or !tdp_enabled.
+ - Refactor FOLL_GET handling, add kvm_follow_refcounted_pfn helper.
+ - Set refcounted bit on >4k pages.
+ - Add comments and apply formatting suggestions.
+ - rebase on kvm next branch.
+v6 -> v7:
+ - Replace __gfn_to_pfn_memslot with a more flexible __kvm_faultin_pfn,
+   and extend that API to support non-refcounted pages (complete
+   rewrite).
+
+David Stevens (7):
+  KVM: Relax BUG_ON argument validation
+  KVM: mmu: Introduce kvm_follow_pfn()
+  KVM: mmu: Improve handling of non-refcounted pfns
+  KVM: Migrate kvm_vcpu_map() to kvm_follow_pfn()
+  KVM: x86: Migrate to kvm_follow_pfn()
+  KVM: x86/mmu: Track if sptes refer to refcounted pages
+  KVM: x86/mmu: Handle non-refcounted pages
+
+Sean Christopherson (1):
+  KVM: Assert that a page's refcount is elevated when marking
+    accessed/dirty
+
+ arch/x86/kvm/mmu/mmu.c          | 108 +++++++---
+ arch/x86/kvm/mmu/mmu_internal.h |   2 +
+ arch/x86/kvm/mmu/paging_tmpl.h  |   7 +-
+ arch/x86/kvm/mmu/spte.c         |   5 +-
+ arch/x86/kvm/mmu/spte.h         |  16 +-
+ arch/x86/kvm/mmu/tdp_mmu.c      |  22 +-
+ arch/x86/kvm/x86.c              |  11 +-
+ include/linux/kvm_host.h        |  58 +++++-
+ virt/kvm/guest_memfd.c          |   8 +-
+ virt/kvm/kvm_main.c             | 345 +++++++++++++++++++-------------
+ virt/kvm/kvm_mm.h               |   3 +-
+ virt/kvm/pfncache.c             |  11 +-
+ 12 files changed, 399 insertions(+), 197 deletions(-)
+
+
+base-commit: 54be6c6c5ae8e0d93a6c4641cb7528eb0b6ba478
 -- 
-2.39.2
+2.44.0.rc1.240.g4c46232300-goog
 
