@@ -1,318 +1,218 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD0D44C6E
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3669D47F47
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 02:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709175525; cv=none; b=GKPu4nLNMR7xETR3NPpAn9yrx5DM70BmfKcXxazF+cbtBihkn0WrwiJ633KQmpMOcBHnoPtYN/U+7aLzsERdYw4RRELQm2DA83mRXfFGXIMsVvn3SP0HsDaEvn/UCuHOd9t5XfEDIAr/L5J3c8mZF/BdeWREWMU5tJFHQV9PMN4=
+	t=1709175545; cv=none; b=Fysn3Oz+avFcykSj+cRyOi7zGwN8nyNn8671kRQpG0HlGT0XdgyXN0HXSHgOtanTjWUW44hMVx/W+vViOZdpMMPlGjrinxtVf6RYmhzYBDbEZ3yErKQW12b8cIevD59iVnGxGKt0XdaLQZX0I5t87V/PFEWVoz8LBozJ5ScX2iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709175525; c=relaxed/simple;
-	bh=CHA75S6snq8UA20Y4BdKK2SwtCegWvLmcyn13Xk/r2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J3/3lLEMWxbgFttExIXNrNQ4i1aBBjsUR7Wmb9kptChvCYRAYtVqxOoeNnHTvYefk0/SfDlM8Cq6C9tJ5GLXAhWnx3ybZAmHdZqVpas69hGTyku1qpKEsQB+7wJ6UzxDwEn2ae8gr0QS+oJEQEsm8IHEpjE9eUie5QOpHmHLhCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mp1HfUoV; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709175545; c=relaxed/simple;
+	bh=bvh4LIy0JThGuT1F6fFtxn+KkjZVxZJQK1/rTLG++/A=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jomhqmQWphLfYp5ZuAEUPHyfHn+9ZCvDs/BQ2+JN+F61O7Hl7JhL7wGS4DTyx6pwBLKeRmwaay0NFMfM4+JiyrqkstlamQye8+iwOu5wXrH9ntvQuv5+aOWjSPEk9e0Zev9GnXX2Uk9WdF3InYVS7oJqJ3Iuaw865oCuNfUxkTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nf0AUKpu; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mp1HfUoV"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1dba177c596so3133045ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 18:58:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709175523; x=1709780323; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jpTtMKeJSamVSvzUBrIb8hYRwduZxS9ewHlGqezhwx0=;
-        b=mp1HfUoV8R1444WIRrFqUzYsztJIyvqm0ZOmqXBbcmLPwO5W+7I0kcV3s/V+A5voQl
-         WGioLd8r/JBgnvkQFknWgPHmvi/NPAIZSdyK/E4gQvp2FjQJW+JlJBwbTBSi0DcuJuC2
-         MrwIJJcJHby6lJRxN52BzPSs2EGtqaSBp13X4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709175523; x=1709780323;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jpTtMKeJSamVSvzUBrIb8hYRwduZxS9ewHlGqezhwx0=;
-        b=WLHw0ibYuoMlXUxTsXC+5P2eQtzVyD5GeRqJ/a2oMFwLVXF12iNEYFkM3Ow7EAWFMd
-         5M0GeJTygBrAr3G1/SbVW1q2qJ9eP3SrbZ5roWHgqhDLjG0UW9ri26zkAqXU+Iv57ASc
-         dLd9DKglb4ueHR2DMZsDeJTYIAzzyYsFz2HXYREE/GKyAZvIvpJVVhHQKhGHIUoXgEGn
-         0tQzFHaUyN1hwgazLLuqK2Ebv8PlFu/tDVPvj76Sszoo6vC4qUfQXzi1wAn3PnYciR3K
-         TXAy6elYqmhqmTCz+WZo/Ii9dgjhXU2QxY6g+YepfCvf8fxK6USOPsciY1gjmR4WOF/l
-         7HeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpX89b7t96wJLXbwVcRH2JeYDMlBNJZR12RJmlQfvvrRogvZo4KPPfUjw2iFaG+CeHxLbevB9dJzfVB+LC9uIxz5ONC/1Yrod7Xw0w
-X-Gm-Message-State: AOJu0YyaOm1G+Bxw/0rVtXrF85OfWpwHo/osZgJM1xQk7lU8BdQRTZSI
-	t3cc8XcSrmK7k7GCqQuY0i8e72xgpU6q4vOV/fu8tDijuzLkRX5A0eUcHChBuuSLFU3NyUd+99A
-	=
-X-Google-Smtp-Source: AGHT+IGM1EDN7WbxlDlaAFvUVqxxOhGfcdRwSEFUSUMiVweNLOqnXEi8yEI66S2thaSNOdr2AlN3GA==
-X-Received: by 2002:a17:903:1c3:b0:1dc:b887:35bd with SMTP id e3-20020a17090301c300b001dcb88735bdmr1034209plh.5.1709175523466;
-        Wed, 28 Feb 2024 18:58:43 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:f51:e79e:9056:77ea])
-        by smtp.gmail.com with UTF8SMTPSA id x10-20020a170902ec8a00b001d5f1005096sm181559plg.55.2024.02.28.18.58.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Feb 2024 18:58:43 -0800 (PST)
-From: David Stevens <stevensd@chromium.org>
-X-Google-Original-From: David Stevens <stevensd@google.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: Yu Zhang <yu.c.zhang@linux.intel.com>,
-	Isaku Yamahata <isaku.yamahata@gmail.com>,
-	Zhi Wang <zhi.wang.linux@gmail.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	David Stevens <stevensd@chromium.org>
-Subject: [PATCH v11 8/8] KVM: x86/mmu: Handle non-refcounted pages
-Date: Thu, 29 Feb 2024 11:57:59 +0900
-Message-ID: <20240229025759.1187910-9-stevensd@google.com>
-X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
-In-Reply-To: <20240229025759.1187910-1-stevensd@google.com>
-References: <20240229025759.1187910-1-stevensd@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nf0AUKpu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709175543; x=1740711543;
+  h=date:from:to:cc:subject:message-id;
+  bh=bvh4LIy0JThGuT1F6fFtxn+KkjZVxZJQK1/rTLG++/A=;
+  b=Nf0AUKpu3n2+NuvcZ5EMkpep+rYM+3kSw48wjKcUf7IjBWw3ihkRXtqR
+   9cNQOlCJI2ZmRYlQE7PLCfWTUlttXYJjSCBG08khDyT6yAxarvG3LjBhm
+   H2dDnv/WNcOXZoe+6iS/WJEJF9rQ8pcUXaKG85pBc06/YW0/mBg0jElxB
+   f1+RwTOZrrjSYlxuZJdFHQ++sD4ORunSlrCC+FysNDr7TyMGf7Y87ZLWG
+   ZhCucXyAj1S7K4/32hC7pxTol32GBTP1p4EhHKq2jIO6Szr19RDskBIv2
+   bonuRUfPOI+zyVMhzOteMvulepLyAzizTs5Wrf05jpuHWa+nDBXTvg7NA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="4202910"
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="4202910"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 18:59:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="38695094"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 28 Feb 2024 18:59:01 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rfWd5-000CbF-1s;
+	Thu, 29 Feb 2024 02:58:46 +0000
+Date: Thu, 29 Feb 2024 10:57:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/sev] BUILD SUCCESS
+ d7b69b590bc9a5d299c82d3b27772cece0238d38
+Message-ID: <202402291014.h3TK7epJ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: David Stevens <stevensd@chromium.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/sev
+branch HEAD: d7b69b590bc9a5d299c82d3b27772cece0238d38  x86/sev: Dump SEV_STATUS
 
-Handle non-refcounted pages in __kvm_faultin_pfn. This allows the
-host to map memory into the guest that is backed by non-refcounted
-struct pages - for example, the tail pages of higher order non-compound
-pages allocated by the amdgpu driver via ttm_pool_alloc_page.
+elapsed time: 810m
 
-Signed-off-by: David Stevens <stevensd@chromium.org>
----
- arch/x86/kvm/mmu/mmu.c          | 24 +++++++++++++++++-------
- arch/x86/kvm/mmu/mmu_internal.h |  2 ++
- arch/x86/kvm/mmu/paging_tmpl.h  |  2 +-
- arch/x86/kvm/mmu/tdp_mmu.c      |  3 ++-
- include/linux/kvm_host.h        |  6 ++++--
- virt/kvm/guest_memfd.c          |  8 ++++----
- virt/kvm/kvm_main.c             | 10 ++++++++--
- 7 files changed, 38 insertions(+), 17 deletions(-)
+configs tested: 145
+configs skipped: 3
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 4936a8c5829b..f9046912bb43 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -2924,6 +2924,11 @@ static int mmu_set_spte(struct kvm_vcpu *vcpu, struct kvm_memory_slot *slot,
- 	bool host_writable = !fault || fault->map_writable;
- 	bool prefetch = !fault || fault->prefetch;
- 	bool write_fault = fault && fault->write;
-+	/*
-+	 * Prefetching uses gfn_to_page_many_atomic, which never gets
-+	 * non-refcounted pages.
-+	 */
-+	bool is_refcounted = !fault || !!fault->accessed_page;
- 
- 	if (unlikely(is_noslot_pfn(pfn))) {
- 		vcpu->stat.pf_mmio_spte_created++;
-@@ -2951,7 +2956,7 @@ static int mmu_set_spte(struct kvm_vcpu *vcpu, struct kvm_memory_slot *slot,
- 	}
- 
- 	wrprot = make_spte(vcpu, sp, slot, pte_access, gfn, pfn, *sptep, prefetch,
--			   true, host_writable, true, &spte);
-+			   true, host_writable, is_refcounted, &spte);
- 
- 	if (*sptep == spte) {
- 		ret = RET_PF_SPURIOUS;
-@@ -4319,8 +4324,8 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
- 		return -EFAULT;
- 	}
- 
--	r = kvm_gmem_get_pfn(vcpu->kvm, fault->slot, fault->gfn, &fault->pfn,
--			     &max_order);
-+	r = kvm_gmem_get_pfn(vcpu->kvm, fault->slot, fault->gfn,
-+			     &fault->pfn, &fault->accessed_page, &max_order);
- 	if (r) {
- 		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
- 		return r;
-@@ -4330,6 +4335,9 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
- 			       fault->max_level);
- 	fault->map_writable = !(fault->slot->flags & KVM_MEM_READONLY);
- 
-+	/* kvm_gmem_get_pfn takes a refcount, but accessed_page doesn't need it. */
-+	put_page(fault->accessed_page);
-+
- 	return RET_PF_CONTINUE;
- }
- 
-@@ -4339,10 +4347,10 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 	struct kvm_follow_pfn kfp = {
- 		.slot = slot,
- 		.gfn = fault->gfn,
--		.flags = FOLL_GET | (fault->write ? FOLL_WRITE : 0),
-+		.flags = fault->write ? FOLL_WRITE : 0,
- 		.try_map_writable = true,
- 		.guarded_by_mmu_notifier = true,
--		.allow_non_refcounted_struct_page = false,
-+		.allow_non_refcounted_struct_page = shadow_refcounted_mask,
- 	};
- 
- 	/*
-@@ -4359,6 +4367,7 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 			fault->slot = NULL;
- 			fault->pfn = KVM_PFN_NOSLOT;
- 			fault->map_writable = false;
-+			fault->accessed_page = NULL;
- 			return RET_PF_CONTINUE;
- 		}
- 		/*
-@@ -4422,6 +4431,7 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- success:
- 	fault->hva = kfp.hva;
- 	fault->map_writable = kfp.writable;
-+	fault->accessed_page = kfp.refcounted_page;
- 	return RET_PF_CONTINUE;
- }
- 
-@@ -4510,8 +4520,8 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 	r = direct_map(vcpu, fault);
- 
- out_unlock:
-+	kvm_set_page_accessed(fault->accessed_page);
- 	write_unlock(&vcpu->kvm->mmu_lock);
--	kvm_release_pfn_clean(fault->pfn);
- 	return r;
- }
- 
-@@ -4586,8 +4596,8 @@ static int kvm_tdp_mmu_page_fault(struct kvm_vcpu *vcpu,
- 	r = kvm_tdp_mmu_map(vcpu, fault);
- 
- out_unlock:
-+	kvm_set_page_accessed(fault->accessed_page);
- 	read_unlock(&vcpu->kvm->mmu_lock);
--	kvm_release_pfn_clean(fault->pfn);
- 	return r;
- }
- #endif
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index 0669a8a668ca..0b05183600af 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -240,6 +240,8 @@ struct kvm_page_fault {
- 	kvm_pfn_t pfn;
- 	hva_t hva;
- 	bool map_writable;
-+	/* Does NOT have an elevated refcount */
-+	struct page *accessed_page;
- 
- 	/*
- 	 * Indicates the guest is trying to write a gfn that contains one or
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index c965f77ac4d5..b39dce802394 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -847,8 +847,8 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 	r = FNAME(fetch)(vcpu, fault, &walker);
- 
- out_unlock:
-+	kvm_set_page_accessed(fault->accessed_page);
- 	write_unlock(&vcpu->kvm->mmu_lock);
--	kvm_release_pfn_clean(fault->pfn);
- 	return r;
- }
- 
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index ee497fb78d90..0524be7c0796 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -958,7 +958,8 @@ static int tdp_mmu_map_handle_target_level(struct kvm_vcpu *vcpu,
- 	else
- 		wrprot = make_spte(vcpu, sp, fault->slot, ACC_ALL, iter->gfn,
- 				   fault->pfn, iter->old_spte, fault->prefetch, true,
--				   fault->map_writable, true, &new_spte);
-+				   fault->map_writable, !!fault->accessed_page,
-+				   &new_spte);
- 
- 	if (new_spte == iter->old_spte)
- 		ret = RET_PF_SPURIOUS;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index d19a418df04b..ea34eae6cfa4 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -2426,11 +2426,13 @@ static inline bool kvm_mem_is_private(struct kvm *kvm, gfn_t gfn)
- 
- #ifdef CONFIG_KVM_PRIVATE_MEM
- int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
--		     gfn_t gfn, kvm_pfn_t *pfn, int *max_order);
-+		     gfn_t gfn, kvm_pfn_t *pfn, struct page **page,
-+		     int *max_order);
- #else
- static inline int kvm_gmem_get_pfn(struct kvm *kvm,
- 				   struct kvm_memory_slot *slot, gfn_t gfn,
--				   kvm_pfn_t *pfn, int *max_order)
-+				   kvm_pfn_t *pfn, struct page **page,
-+				   int *max_order)
- {
- 	KVM_BUG_ON(1, kvm);
- 	return -EIO;
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index 0f4e0cf4f158..dabcca2ecc37 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -483,12 +483,12 @@ void kvm_gmem_unbind(struct kvm_memory_slot *slot)
- }
- 
- int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
--		     gfn_t gfn, kvm_pfn_t *pfn, int *max_order)
-+		     gfn_t gfn, kvm_pfn_t *pfn, struct page **page,
-+		     int *max_order)
- {
- 	pgoff_t index = gfn - slot->base_gfn + slot->gmem.pgoff;
- 	struct kvm_gmem *gmem;
- 	struct folio *folio;
--	struct page *page;
- 	struct file *file;
- 	int r;
- 
-@@ -514,9 +514,9 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 		goto out_unlock;
- 	}
- 
--	page = folio_file_page(folio, index);
-+	*page = folio_file_page(folio, index);
- 
--	*pfn = page_to_pfn(page);
-+	*pfn = page_to_pfn(*page);
- 	if (max_order)
- 		*max_order = 0;
- 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 235c92830cdc..1f5d2a1e63a9 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3284,11 +3284,17 @@ void kvm_set_page_dirty(struct page *page)
- }
- EXPORT_SYMBOL_GPL(kvm_set_page_dirty);
- 
--void kvm_set_page_accessed(struct page *page)
-+static void __kvm_set_page_accessed(struct page *page)
- {
- 	if (kvm_is_ad_tracked_page(page))
- 		mark_page_accessed(page);
- }
-+
-+void kvm_set_page_accessed(struct page *page)
-+{
-+	if (page)
-+		__kvm_set_page_accessed(page);
-+}
- EXPORT_SYMBOL_GPL(kvm_set_page_accessed);
- 
- void kvm_release_page_clean(struct page *page)
-@@ -3298,7 +3304,7 @@ void kvm_release_page_clean(struct page *page)
- 	if (!page)
- 		return;
- 
--	kvm_set_page_accessed(page);
-+	__kvm_set_page_accessed(page);
- 	put_page(page);
- }
- EXPORT_SYMBOL_GPL(kvm_release_page_clean);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240229   gcc  
+arc                   randconfig-002-20240229   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240229   gcc  
+arm                   randconfig-002-20240229   gcc  
+arm                   randconfig-003-20240229   clang
+arm                   randconfig-004-20240229   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240229   clang
+arm64                 randconfig-002-20240229   gcc  
+arm64                 randconfig-003-20240229   clang
+arm64                 randconfig-004-20240229   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240229   gcc  
+csky                  randconfig-002-20240229   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240229   clang
+hexagon               randconfig-002-20240229   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386                                defconfig   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240229   gcc  
+loongarch             randconfig-002-20240229   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240229   gcc  
+nios2                 randconfig-002-20240229   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240229   gcc  
+parisc                randconfig-002-20240229   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240229   clang
+powerpc               randconfig-002-20240229   gcc  
+powerpc               randconfig-003-20240229   clang
+powerpc64             randconfig-001-20240229   gcc  
+powerpc64             randconfig-002-20240229   clang
+powerpc64             randconfig-003-20240229   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240229   clang
+riscv                 randconfig-002-20240229   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240229   clang
+s390                  randconfig-002-20240229   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240229   gcc  
+sh                    randconfig-002-20240229   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240229   gcc  
+sparc64               randconfig-002-20240229   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240229   gcc  
+um                    randconfig-002-20240229   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240229   gcc  
+x86_64       buildonly-randconfig-002-20240229   clang
+x86_64       buildonly-randconfig-003-20240229   gcc  
+x86_64       buildonly-randconfig-004-20240229   gcc  
+x86_64       buildonly-randconfig-005-20240229   gcc  
+x86_64       buildonly-randconfig-006-20240229   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240229   clang
+x86_64                randconfig-002-20240229   clang
+x86_64                randconfig-003-20240229   clang
+x86_64                randconfig-004-20240229   clang
+x86_64                randconfig-005-20240229   clang
+x86_64                randconfig-006-20240229   clang
+x86_64                randconfig-011-20240229   gcc  
+x86_64                randconfig-012-20240229   gcc  
+x86_64                randconfig-013-20240229   gcc  
+x86_64                randconfig-014-20240229   gcc  
+x86_64                randconfig-015-20240229   gcc  
+x86_64                randconfig-016-20240229   gcc  
+x86_64                randconfig-071-20240229   clang
+x86_64                randconfig-072-20240229   clang
+x86_64                randconfig-073-20240229   clang
+x86_64                randconfig-074-20240229   clang
+x86_64                randconfig-075-20240229   gcc  
+x86_64                randconfig-076-20240229   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240229   gcc  
+xtensa                randconfig-002-20240229   gcc  
+
 -- 
-2.44.0.rc1.240.g4c46232300-goog
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
