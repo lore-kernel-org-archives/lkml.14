@@ -1,80 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bues.ch (bues.ch [80.190.117.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD51160629
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 18:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF5A160629;
+	Thu, 29 Feb 2024 18:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.190.117.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709232014; cv=none; b=fEfJZqxNiCYrRsh3rv1E2WABWLbLTqxO4Dy1mMZXe8J6cidSs639kasIvFht7Dfrh6SJb6SB2f2fZJ/B94tpYmKVyoA4RTZq6UBOOJsYdHxUZHMqhwDa2LEaceevF0gM67mPaFsHRQ7XE8dQQgH6m+2m80OIiZsTBpyNn2j8Fxw=
+	t=1709232033; cv=none; b=lxUzGeLqQUIySs6IDnd4EChgPCKbZ2ViOsS93dVX1Snvu7rtYmzHtmkAyJHPXzY5872noTTccxmxADWZulnZLvRaR108R7/AhNzg439tjjUcRvPCx8ZbdJ5AJ0yfnwyK29cvg8JukIX1JedC7dFuLGLCn4JGgjOQgOgSm588M0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709232014; c=relaxed/simple;
-	bh=G39x9X/r8wD8EZNMCjKX99fVjL/JmQl3/uLDdbycsUw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=M6MU1VtFdaxkLy27QLDrp5fB4/d1ysZIcQKxdI7auLJeHhLi1ZMwmKDwXKWtvc0d09KSIhb9LGviPfSUaoszalXSB2X2a9gJFrz0kpSQKa1DafRfE19A/II4hDhZJQPjqqoURgWM5TiRQ76neyJCEnuo4yobC17HIn3HHdOAA8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gZvtYW5R; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gZvtYW5R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B82C433F1;
-	Thu, 29 Feb 2024 18:40:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1709232014;
-	bh=G39x9X/r8wD8EZNMCjKX99fVjL/JmQl3/uLDdbycsUw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gZvtYW5RjwYGvMOcS1OD4p/NBFNkCvv+69I/19wQJojZcno1nDd8S9x6ufT9/b74c
-	 hrtO5sy9ttg1Enx/clLC3kgJM+v4EpMSxjvvkSPcfJxrZTOqz8FNt52Fus1uBgV5hG
-	 wdx/0gzpkwkSj4llp4f4J9CYk6lUE4gu9noxwvvA=
-Date: Thu, 29 Feb 2024 10:40:13 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Hao Ge <gehao@kylinos.cn>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, gehao618@163.com
-Subject: Re: [PATCH v2] mm/vmstat: Add order's information for extfrag_index
- and unusable_index
-Message-Id: <20240229104013.5ed8c1ca9c2dbd0bd5fb571f@linux-foundation.org>
-In-Reply-To: <20240229141443.99408-1-gehao@kylinos.cn>
-References: <20240229141443.99408-1-gehao@kylinos.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709232033; c=relaxed/simple;
+	bh=UW+TdciKB5gSR3r9g/ate3m4F5PvqE5YslCXW8lrDB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NzqqzIREYIgV9z4AqVXaG2RJsHcYtT3gbQCNcFLXCU6L9V4OZScUr82D8CYpn8YqvbZcfPcUEAGjH0X6RmQ0mkKLwZxQjkQOG3IE1URZGTK+EbvxXnnQXVbQDUvgz1nbdgitJBXY0Gn6tzi9urdGJQu9EmSGmOT9AGBi3Nnsnlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bues.ch; spf=pass smtp.mailfrom=bues.ch; arc=none smtp.client-ip=80.190.117.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bues.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bues.ch
+Received: by bues.ch with esmtpsa (Exim 4.96)
+	(envelope-from <m@bues.ch>)
+	id 1rfkqo-000F5s-3B;
+	Thu, 29 Feb 2024 19:09:46 +0100
+Date: Thu, 29 Feb 2024 19:08:54 +0100
+From: Michael =?UTF-8?B?QsO8c2No?= <m@bues.ch>
+To: Rand Deeb <rand.sec96@gmail.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ deeb.rand@confident.ru, lvc-project@linuxtesting.org,
+ voskresenski.stanislav@confident.ru
+Subject: Re: [PATCH] ssb: Fix potential NULL pointer dereference in
+ ssb_device_uevent
+Message-ID: <20240229190854.3717772c@barney>
+In-Reply-To: <20240229093756.129324-1-rand.sec96@gmail.com>
+References: <20240229093756.129324-1-rand.sec96@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/ob.XXZ=76OiP5u+w1/NKFuc";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
 
-On Thu, 29 Feb 2024 22:14:43 +0800 Hao Ge <gehao@kylinos.cn> wrote:
+--Sig_/ob.XXZ=76OiP5u+w1/NKFuc
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> Current cat /sys/kernel/debug/extfrag/extfrag_index and
-> /sys/kernel/debug/extfrag/unusable_index is not friendly to userspace.
-> 
-> We should add order's information so that users can clearly understand
-> the situation of each order at a glance like pagetypeinfo.
-> 
-> before:
-> cat /sys/kernel/debug/extfrag/extfrag_index:
-> Node 0, zone    DMA32  ...... ...... ...... ......
-> Node 0, zone   Normal  ...... ...... ...... ......
-> 
-> cat /sys/kernel/debug/extfrag/unusable_index:
-> Node 0, zone    DMA32 ..... ..... ..... .....
-> Node 0, zone   Normal ..... ..... ..... .....
-> 
-> after:
-> cat /sys/kernel/debug/extfrag/extfrag_index:
-> Extfrag index at order:       0      1      2      3
-> Node 0, zone        DMA  ...... ...... ...... ......
-> Node 0, zone     Normal  ...... ...... ...... ......
-> 
-> cat /sys/kernel/debug/extfrag/unusable_index:
-> Unusable index at order:     0     1     2     3
-> Node 0, zone         DMA ..... ..... ..... .....
-> Node 0, zone      Normal ..... ..... ..... .....
-> 
+On Thu, 29 Feb 2024 12:37:56 +0300
+Rand Deeb <rand.sec96@gmail.com> wrote:
 
-This may break existing parsers of this file.
+>  static int ssb_device_uevent(struct device *dev, struct kobj_uevent_env =
+*env)
+>  {
+> -	struct ssb_device *ssb_dev =3D dev_to_ssb_dev(dev);
+> +	struct ssb_device *ssb_dev;
+> =20
+>  	if (!dev)
+>  		return -ENODEV;
+> =20
+> +	ssb_dev =3D dev_to_ssb_dev(dev);
+> +
+>  	return add_uevent_var(env,
+>  			     "MODALIAS=3Dssb:v%04Xid%04Xrev%02X",
+>  			     ssb_dev->id.vendor, ssb_dev->id.coreid,
 
-And that would be allowed if these files were under debugfs.  But
-they're under sysfs/debug, where the rules are less clear.
+Good catch.
+Acked-by: Michael B=C3=BCsch <m@bues.ch>
 
-Still, it's unclear to me that the benefit is worth this risk.  What do
-others think?
+
+--=20
+Michael B=C3=BCsch
+https://bues.ch/
+
+--Sig_/ob.XXZ=76OiP5u+w1/NKFuc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmXgyDcACgkQ9TK+HZCN
+iw6qKg//T18rCQhWWnilcYj4srdCKlazbrCftkkAQSu680rHZXaMTlgLWeNKxBve
+TUf2P0v7S2d6BDpoNiyixNkYiJX0VyhXPQRUvmqFMhP+cy9zuWMrvLLBxgGRzuh/
+XeKw9Gnwhp+KQNsuE9MlH1JC8T+tVQxvpBvyxNdHGL3UWi9+xRgNnRtRkc2nWTBO
+7x4hMpYNmE+NbyIwoj4ps2+wruvzTvAQnaMNtwcyImBKd/J7fE7FPRVqP57+xR+C
+bftMfFV4xn7rArpU+Pg+8wEryOUIhPJ9ZmO/CLejkjaE2qoy7PP4sZbdcCSeMxak
+w10uZ1x7veeNspxNEMSKTjuvRcKJgg0x2eFKFhLbTnJg9D60yeDVTK+9S/QVHpXa
+frndJ8VCxjMq2+bY2sdglOZelAtAh9PQzLgma3HlRvwe6zprWZdmexih06oFV+kW
+4vQNus9qhZxCl7Wpxap/OlFwdgINqU/J6VDAsnt0wyMd1kdGXJaZDXeKAfY/a6B8
+eM//hyWbJ+axLvtJxbnZOCUffy64yqGLJMYUQi9dfAriyDtIozRP7vGsqEDlhVTP
+xz4PlzWuoEyzCAF9DBQ3hYxihCgGuOE9bGXg8dG0MPTw8V1XjigKdqPJyWETi43o
+PJGNkPWysXXCE03+KAmvpz3VNYGBFRy7+YiRUC6bImGqMaszisM=
+=8bGs
+-----END PGP SIGNATURE-----
+
+--Sig_/ob.XXZ=76OiP5u+w1/NKFuc--
