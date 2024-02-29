@@ -1,48 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8656CBF3;
-	Thu, 29 Feb 2024 17:16:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFBE4AED8;
+	Thu, 29 Feb 2024 17:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709227007; cv=none; b=r2KvZIfwwPX0H8WcoHfrqCBcJcvvbczzyYDXqHeGZ1a/O/BBxCIe9/IIhvaBsTAZDYAgD17Hl3znBssHHmQGKzcvRMSe2iqqyrTjbjBx4JXir3wnhg2gj85H7XONfG2CdUiWyVa1XJuW38Qy8tfnIaouVVIqGLxUB37nlYcP0O4=
+	t=1709227108; cv=none; b=WQudx63kkEPlP8HIPKeA8dUk7xk5/+WpUR+Lm8e0Uobde7esXJ/zqvh1Eh3mj+mB9cdqI0eyo4JxBm4Ghe08XPymTNkvDW4XBb1aIxd4gkceM1mwUbY2OD4D76GjlrLtjFq06sH9o2nR5hEtFbP8UHiAEGbR8gH0IH1a+hv9JoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709227007; c=relaxed/simple;
-	bh=sO1V/9+1+1pxQKgovU9SQDqskwQ8QcDLkagOKz3zDZ0=;
+	s=arc-20240116; t=1709227108; c=relaxed/simple;
+	bh=+ZMo9iEMsSfz6V8Ou27C1FUbJqgrktdBSS/LmjvzYAo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nzZYrh6upu+pVRf7j4ZRq8+8tEKg2IO+gfX6+eCdoev3VPsbceng375WW2TAtYrPii15zLhjHft1y/dhi2IH8z+NFr3U+gzOMkAKeJ3oj5hzK+WF7xRCQjZbBp+sl7QCTT15ZnnKEm1AmG0Pw5lebzCILS3oVnyxCHXwv/vqlWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfToqY1U; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=lK7/kiCF1WRURLM6ux4IfVEzhmBK/YcvyxmJXxZZDg7RR977uVgBKOC6lUHwO5vVM/cKqqudSGhYUQi0n1RjmHqXWYd7GGyKMBD13EyOw90xw5DUFRh8vuSB2p2kTFmq6m/BwNl7K8qqQdLpmgFtiwys98O7K3/2E7aPrNQWd8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C30cjscs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfToqY1U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1824CC433C7;
-	Thu, 29 Feb 2024 17:16:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C30cjscs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DA16C433F1;
+	Thu, 29 Feb 2024 17:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709227006;
-	bh=sO1V/9+1+1pxQKgovU9SQDqskwQ8QcDLkagOKz3zDZ0=;
+	s=k20201202; t=1709227107;
+	bh=+ZMo9iEMsSfz6V8Ou27C1FUbJqgrktdBSS/LmjvzYAo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=mfToqY1UgqQ+hOSLiBwz5q1cVaoYgKNvmupbOIIYnauOFK0aKp92jB6ZmhbylaFeY
-	 8r1F4/C3a/qPC19E63rOohIBGLpGSCl6j6AM4f3cqoiD/+9zKRNuWCw2ZQqfB0c8I0
-	 r9qSGfwE2kzt7oAfOLU+OrnNo4UnjgqcQNyVYgWUnUeWEjw7C/KEtkEpdUP+b12pP2
-	 UGVn81mjeg3vt9JnfV3jkn5O33wDyeHynm9zXszN08fTUR6I6dHVP1v4V5CCY6Lvvx
-	 a/RDIRsfMEd1o/ja99bO2sus/5QmQKyqPEktgo2/km7KLbNReQu/GNcd5vbsq5q3I4
-	 RiWHgCLEWgH4w==
+	b=C30cjscst84mSSST8nBsirG+OfbAQON5hFMVORfzIaT1fNwG5X2+Eo6SpO4rI7iJs
+	 xpe9SXUxPA2WiVTbFKr2YOw6Ocub3AxcAqNwQHOa+qt7b7nUrT3YhZjbiQWmY18Y6X
+	 b4/yNIMexku+SIWin/2r1UxmIxA0+JQx+h0NgWyYexKVW4RaSLmbHm58ngpsnbfnR3
+	 Erb/sTy3XbNfAbA5gQzsjrBkZgTIDiOtKUSK7+qkGdSyxF71kv+Z3xwia2VpVlLCvG
+	 sHVznouwYKssgYFofqxmogJ4JYHg5WPCPWPrxuRFj2aF/UcO5oI3G7tRwps0B5YiwP
+	 rGqIFLAUDa7KA==
 From: Lee Jones <lee@kernel.org>
-To: Rob Herring <robh+dt@kernel.org>, 
+To: Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
- Roger Quadros <rogerq@kernel.org>
-Cc: Andrew Davis <afd@ti.com>, b-liu@ti.com, srk@ti.com, 
- r-gunasekaran@ti.com, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Rob Herring <robh@kernel.org>
-In-Reply-To: <20240226-b4-for-v6-5-am62-usb-typec-dt-v6-1-acf77fff4344@kernel.org>
-References: <20240226-b4-for-v6-5-am62-usb-typec-dt-v6-0-acf77fff4344@kernel.org>
- <20240226-b4-for-v6-5-am62-usb-typec-dt-v6-1-acf77fff4344@kernel.org>
-Subject: Re: (subset) [PATCH v6 1/4] dt-bindings: mfd: syscon: Add
- ti,am62-usb-phy-ctrl compatible
-Message-Id: <170922700382.1610849.6482403854629206955.b4-ty@kernel.org>
-Date: Thu, 29 Feb 2024 17:16:43 +0000
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, linux-leds@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
+In-Reply-To: <20240223112223.1368-1-zajec5@gmail.com>
+References: <20240223112223.1368-1-zajec5@gmail.com>
+Subject: Re: (subset) [PATCH] dt-bindings: leds: Add
+ LED_FUNCTION_WAN_ONLINE for Internet access
+Message-Id: <170922710524.1611805.15418765168874516395.b4-ty@kernel.org>
+Date: Thu, 29 Feb 2024 17:18:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,20 +52,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.12.4
 
-On Mon, 26 Feb 2024 14:03:07 +0200, Roger Quadros wrote:
-> Add the compatible for TI AM62 USB PHY Control register. This
-> register is found in the TI AM62 WKUP_CTRL_MMR0 space [1]. It
-> is used to indicate the USB PHY PLL reference clock rate and
-> core voltage level to the USB controller.
+On Fri, 23 Feb 2024 12:22:23 +0100, Rafał Miłecki wrote:
+> It's common for routers to have LED indicating link on the WAN port.
 > 
-> [1] - https://www.ti.com/lit/pdf/spruiv7
+> Some devices however have an extra LED that's meant to be used if WAN
+> connection is actually "online" (there is Internet access available).
+> 
+> It was suggested to add #define for such use case.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/4] dt-bindings: mfd: syscon: Add ti,am62-usb-phy-ctrl compatible
-      commit: e9f06bd428d3f07c8d26506ed35d9f8bb836950b
+[1/1] dt-bindings: leds: Add LED_FUNCTION_WAN_ONLINE for Internet access
+      commit: c0ef9799df8756968c236720658e492fbe636064
 
 --
 Lee Jones [李琼斯]
