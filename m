@@ -1,244 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E3F4438E;
-	Thu, 29 Feb 2024 06:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFAD8F4A;
+	Thu, 29 Feb 2024 06:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709189192; cv=none; b=HCe7e9LAlJPRzhH9e1HhXej36ZH+2/hNR5x2zupAS+WfLaFbC/ELRBZdMW1ApmnXDGt4ORvjDDLlqzdqnLrT7QAzqGjmiEIJcQ9QU+7arAJRIznQMevtiv88zJnTGcaBNSmoeYmvyxKnImLQRWyxkThrvfBh1Md0o27yLyvo0B4=
+	t=1709189566; cv=none; b=A3waFE6a/NK6qzjc29dLXPBmSJePzB2DMYRB4Eu1JWJQKe7L+q9VqE7aXLiSRepJdgAbYGr7ICKrfUPngrWXcCbCnyBBK+HMYzSXIwWzVsbdSuYtR7Qpd0RmMraMe1GfMx4VLDTtP41cdMKoxBVVZOlBo5wmiD82u6gmv6Q475Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709189192; c=relaxed/simple;
-	bh=wLx74cxDos7PYxlETX7eEY2HrA5tgmRwY2rfBPbGBKY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JoNvCL+ODPuPBFcjOovMMpGt7YeDbacerCKZuBHR8i5Ntq14jo25147vgvzgIm2AlGSXM2hIHvEtiV35kpNWPt5eLwKGTEUcVQmn5AfiqwHYFNT2v6PemT7yVuV94IRey4AVN5UFCTH/XJMSZfDTSpRY3wmwuWbC52U5CZf6o/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ijlTkJMd; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709189566; c=relaxed/simple;
+	bh=QEJAoHeT2wh90dI+ZjoF1ZHx+LcAYE5U/em2XDUBioM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=atALxQJHlNUCOMFuP3B8F7t8lQcteFeA4/+hI/nZzZ837GXor4FByfQ2NKljMTvF5CgtM/BdvbLMfMocOUgkU+PHeL6VjCd6HHmVPEu6cWuAIH8f5E3M4Un9WNxQvFdzjpYr6NxTsCWi2UHnfbdoBiN4kCYI4xj5puvv56ROQ7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QdZO2z78; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ijlTkJMd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709189191; x=1740725191;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=wLx74cxDos7PYxlETX7eEY2HrA5tgmRwY2rfBPbGBKY=;
-  b=ijlTkJMdCXXDTweWCRLMWaulA24FhzPsV2AfZ4JIO4DIKTKhZ4OGQvcH
-   2SxllLDZXuwzmU7qlPa+mdCu/wVntVy5eqzGo8wY4F4kmmWHStxMCNMVK
-   wq39TTM7KAY9CRNQ6aJCmZi8J16sMEqnG+BXJWQld8fNbcpA5AWgLxQbg
-   fiEnUFLYdmLkh+6mdqQAZGTsNTknHdslCSfy6dUzYtiu06nh9cGLAAO9g
-   3fYkMarkWnkWjSRW4DKlD3FJvV2SegxNPtq1ZwWhpciSTd3jskTHb5BX5
-   2HMsmwafnBePzq2810KLUAEr8lvC8xyB7OTA391GEDfgoC/VpEfpfryqZ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3486504"
-X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
-   d="scan'208";a="3486504"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 22:46:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
-   d="scan'208";a="12373836"
-Received: from smitpat1-mobl.amr.corp.intel.com (HELO [10.209.30.182]) ([10.209.30.182])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 22:46:30 -0800
-Message-ID: <a7b70317-7734-4e36-b79a-7cfeaf664f3b@linux.intel.com>
-Date: Wed, 28 Feb 2024 22:46:29 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdZO2z78"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42e8758fd52so4332761cf.1;
+        Wed, 28 Feb 2024 22:52:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709189564; x=1709794364; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iPX1yFcE2Qv3sy/mqTmODI/j9a9JW9C8YeAhgYmhLGs=;
+        b=QdZO2z78FLEY4RWdjVmUdbrKoq0N/fYM+uC5aG9e6ZJmCKek53xR3UVmADzlUwOLDO
+         0iBOf6bXHyV01JkM2zJzFHb8bKVhsB8s38YRrrvk2sgrbA+vndWnP86CWUOx44UcvRa3
+         gAI9IhZLtJi89nlvmaE1yGQ+S7Y3208HzgJylGPszXl84JeLy7N81pzYM1W70jF6mPUa
+         t+kMHNiUb6lzQHrGrYzQ7CnAT0H1lZ7gJh68GFElWJGU1DXh5naQWJFqp/QYvc/tMx+6
+         G2GSrQRboLWvQAf9z74/RRxegpLpCW1i8fUo6VtRdLCbNFyMWzFmN7QKqFrzAw0SFXfg
+         XRMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709189564; x=1709794364;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iPX1yFcE2Qv3sy/mqTmODI/j9a9JW9C8YeAhgYmhLGs=;
+        b=d7qDmIclWJrCQsb6+dBgVnj8sI/SrJZAo7vNQW5pnyrxQMTqwD/+RShwRXj2P/IpYt
+         Zv9yN0AIBZFEDJoGQVcUvLrIxSPDdv4gfHM3AkDpu6YZP6PDh+n6S/UyYou/1gswljoH
+         QFh1eR7jEP7ezi1TIeHp6Oqcm7dDxK3hocQSioEr2w4fCGm2Iij9A4AtOYHth8tlNEZA
+         JthQdmjaI3qJW32ctRXsldx4JzLqqInEER1A1RRcYHPRv7mnxB7yK9KszWcp0XsHGess
+         N+Zg1IdNPSjJ+qSJDXPX6ykHAK9No9T4N/1LfXaCFsQxNpLD0KPxPb7cLBGNaYpWMKUu
+         rTYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr4zRzWPu3iYMXgfM5TETbOozfb4d0Ch1BvjNcSq6dfd40P7HLNGiNNN7zVCTVH4AjPIph63xKb0zqRpIEgiJILBL6QvjLllEMVQuJUezZPYDMfkzFQjoI/YiOuAE8eGNTmLgju/Fl+QK9oLMYfamIfijAsFaEFurew1kNYdOpw4seeuU8Czn1h0h2hk2aY4bfz8GXBX9KnChX8GR4cUbIjA==
+X-Gm-Message-State: AOJu0YzFCvZPqENBTpu15bNMO4Q7ZVZBFNZ0n9WXZLBvm60a+617cdCs
+	3KXbkbXVoTLkcEL8Zox3IyLw/kf1evhb2tOBjYdrV/+21vuNQsoWoC5tvSeXubUZQdrTuq7nGcr
+	Dun4i/FjXah7NM81MiCjWmTDomRs=
+X-Google-Smtp-Source: AGHT+IFn20kiezhjvNWVPNWkvhcd3j6u19avlEPGAe1WEmIZ6yWLp27W9XetikSPB9EKVwpdSFz5h3OKt1KsGriybmc=
+X-Received: by 2002:ac8:7f82:0:b0:42e:8c8f:42f6 with SMTP id
+ z2-20020ac87f82000000b0042e8c8f42f6mr1421021qtj.40.1709189563696; Wed, 28 Feb
+ 2024 22:52:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: add lenovo generic wmi driver
-Content-Language: en-US
-To: Ai Chao <aichao@kylinos.cn>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20240229051621.12341-1-aichao@kylinos.cn>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240229051621.12341-1-aichao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1708709155.git.john@groves.net>
+In-Reply-To: <cover.1708709155.git.john@groves.net>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Thu, 29 Feb 2024 08:52:32 +0200
+Message-ID: <CAOQ4uxiPc5ciD_zm3jp5sVQaP4ndb40mApw5hx2DL+8BZNd==A@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/20] Introduce the famfs shared-memory file system
+To: John Groves <John@groves.net>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, john@jagalactic.com, 
+	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, dave.hansen@linux.intel.com, 
+	gregory.price@memverge.com, Miklos Szeredi <miklos@szeredi.hu>, 
+	Vivek Goyal <vgoyal@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 2/28/24 9:16 PM, Ai Chao wrote:
-> Add lenovo generic wmi driver to support camera button.
+On Fri, Feb 23, 2024 at 7:42=E2=80=AFPM John Groves <John@groves.net> wrote=
+:
 >
-> Signed-off-by: Ai Chao <aichao@kylinos.cn>
-> ---
->  drivers/platform/x86/Kconfig      |  10 +++
->  drivers/platform/x86/Makefile     |   1 +
->  drivers/platform/x86/lenovo-wmi.c | 121 ++++++++++++++++++++++++++++++
->  3 files changed, 132 insertions(+)
->  create mode 100644 drivers/platform/x86/lenovo-wmi.c
+> This patch set introduces famfs[1] - a special-purpose fs-dax file system
+> for sharable disaggregated or fabric-attached memory (FAM). Famfs is not
+> CXL-specific in anyway way.
 >
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bdd302274b9a..fbbb8fb843d7 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1001,6 +1001,16 @@ config INSPUR_PLATFORM_PROFILE
->  	To compile this driver as a module, choose M here: the module
->  	will be called inspur-platform-profile.
->  
-> +config LENOVO_WMI
-> +	tristate "Lenovo Geneirc WMI driver"
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	help
-> +	This driver provides support for Lenovo WMI driver.
-> +
-> +	To compile this driver as a module, choose M here: the module
-> +	will be called lenovo-wmi.
-> +
->  source "drivers/platform/x86/x86-android-tablets/Kconfig"
->  
->  config FW_ATTR_CLASS
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 1de432e8861e..d51086552192 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -66,6 +66,7 @@ obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
->  obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->  obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
-> +obj-$(CONFIG_LENOVO_WMI)	+= lenovo-wmi.o
->  
->  # Intel
->  obj-y				+= intel/
-> diff --git a/drivers/platform/x86/lenovo-wmi.c b/drivers/platform/x86/lenovo-wmi.c
-> new file mode 100644
-> index 000000000000..e8b1c401b53e
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi.c
-> @@ -0,0 +1,121 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  Lenovo Generic WMI Driver
-> + *
-> + *  Copyright (C) 2018	      Ai Chao <aichao@kylinos.cn>
-2024 ?
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +
-> +#define WMI_LENOVO_CAMERABUTTON_EVENT_GUID "50C76F1F-D8E4-D895-0A3D-62F4EA400013"
-> +
-> +static u8 camera_mode;
-> +
-> +struct lenovo_wmi_priv {
-> +	struct input_dev *idev;
-> +};
-> +
-> +static ssize_t camerabutton_show(struct device *dev,
-> +				 struct device_attribute *attr, char *buf)
-> +{
-> +	return sprintf(buf, "%u\n", camera_mode);
-> +}
-> +
-> +DEVICE_ATTR_RO(camerabutton);
-> +
-> +static struct attribute *lenovo_wmi_attrs[] = {
-> +	&dev_attr_camerabutton.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group lenovo_wmi_group = {
-> +	.attrs = lenovo_wmi_attrs,
-> +};
-> +
-> +const struct attribute_group *lenovo_wmi_groups[] = {
-> +	&lenovo_wmi_group,
-> +	NULL,
-> +};
-> +
-> +static void lenovo_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
-> +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	if (obj->type == ACPI_TYPE_BUFFER) {
-> +		camera_mode = obj->buffer.pointer[0];
-> +		input_report_key(priv->idev, KEY_CAMERA, 1);
-> +		input_sync(priv->idev);
-> +		input_report_key(priv->idev, KEY_CAMERA, 0);
-> +		input_sync(priv->idev);
-> +	} else {
-> +		dev_info(&wdev->dev, "Bad response type %d\n", obj->type);
-Does it needs to be dev_info? I don't think this affects the driver functionality, right?
+> * Famfs creates a simple access method for storing and sharing data in
+>   sharable memory. The memory is exposed and accessed as memory-mappable
+>   dax files.
+> * Famfs supports multiple hosts mounting the same file system from the
+>   same memory (something existing fs-dax file systems don't do).
+> * A famfs file system can be created on either a /dev/pmem device in fs-d=
+ax
+>   mode, or a /dev/dax device in devdax mode (the latter depending on
+>   patches 2-6 of this series).
+>
+> The famfs kernel file system is part the famfs framework; additional
+> components in user space[2] handle metadata and direct the famfs kernel
+> module to instantiate files that map to specific memory. The famfs user
+> space has documentation and a reasonably thorough test suite.
+>
 
-May be dev_dbg() is better here?
-> +	}
-> +}
-> +
-> +static int lenovo_wmi_input_setup(struct wmi_device *wdev)
-> +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	priv->idev = devm_input_allocate_device(&wdev->dev);
-> +	if (!priv->idev)
-> +		return -ENOMEM;
-> +
-> +	priv->idev->name = "Lenovo WMI Camera Button";
-> +	priv->idev->phys = "wmi/input0";
-> +	priv->idev->id.bustype = BUS_HOST;
-> +	priv->idev->dev.parent = &wdev->dev;
-> +	priv->idev->evbit[0] = BIT_MASK(EV_KEY);
-> +	priv->idev->keybit[BIT_WORD(KEY_CAMERA)] = BIT_MASK(KEY_CAMERA);
-> +
-> +	return input_register_device(priv->idev);
-> +}
-> +
-> +static int lenovo_wmi_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +	struct lenovo_wmi_priv *priv;
-> +	int err;
-> +
-> +	priv = devm_kzalloc(&wdev->dev, sizeof(struct lenovo_wmi_priv),
-> +			    GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(&wdev->dev, priv);
-> +
-> +	err = lenovo_wmi_input_setup(wdev);
-> +	return err;
-> +}
-> +
-> +static void lenovo_wmi_remove(struct wmi_device *wdev)
-> +{
-> +	struct lenovo_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> +
-> +	input_unregister_device(priv->idev);
+So can we say that Famfs is Fuse specialized for DAX?
 
-Since you use devm_input_allocate_device() for allocation, you don't need to explicitly unregister the device.
-> +}
-> +
-> +static const struct wmi_device_id lenovo_wmi_id_table[] = {
-> +	{ .guid_string = WMI_LENOVO_CAMERABUTTON_EVENT_GUID },
-> +	{  }
-> +};
-> +
-> +static struct wmi_driver lenovo_wmi_driver = {
-> +	.driver = {
-> +		.name = "lenovo-wmi",
-> +		.dev_groups = lenovo_wmi_groups,
-> +	},
-> +	.id_table = lenovo_wmi_id_table,
-> +	.probe = lenovo_wmi_probe,
-> +	.notify = lenovo_wmi_notify,
-> +	.remove = lenovo_wmi_remove,
-> +};
-> +
-> +module_wmi_driver(lenovo_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, lenovo_wmi_id_table);
-> +MODULE_AUTHOR("Ai Chao <aichao@kylinos.cn>");
-> +MODULE_DESCRIPTION("Lenovo Generic WMI Driver");
-> +MODULE_LICENSE("GPL v2");
+I am asking because you seem to have asked it first:
+https://lore.kernel.org/linux-fsdevel/0100018b2439ebf3-a442db6f-f685-4bc4-b=
+4b0-28dc333f6712-000000@email.amazonses.com/
+I guess that you did not get your answers to your questions before or at LP=
+C?
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+I did not see your question back in October.
+Let me try to answer your questions and we can discuss later if a new dedic=
+ated
+kernel driver + userspace API is really needed, or if FUSE could be used as=
+ is
+extended for your needs.
 
+You wrote:
+"...My naive reading of the existence of some sort of fuse/dax support
+for virtiofs
+suggested that there might be a way of doing this - but I may be wrong
+about that."
+
+I'm not virtiofs expert, but I don't think that you are wrong about this.
+IIUC, virtiofsd could map arbitrary memory region to any fuse file mmaped
+by virtiofs client.
+
+So what are the gaps between virtiofs and famfs that justify a new filesyst=
+em
+driver and new userspace API?
+
+Thanks,
+Amir.
