@@ -1,145 +1,92 @@
-Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F184014373A;
-	Thu, 29 Feb 2024 21:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B2916FF3A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 21:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709240594; cv=none; b=Pq2FBAZyY+s0XsGgrnFsNwjIqHRVTe50OOEmyZrWrvhiEsC2G+TET0eZV1XU8whCSx+SH5VOAqDBmQqq27Dn2XEsbwULY7cbe8BvFzcCpLlFJmaBomEnzE3MSZwv05U9JxRlFEW1rwd9m2pDVjxBriE1hJFCP33Uc90OxBs2Ffg=
+	t=1709240679; cv=none; b=Z+ntvXDSprkjc511hkOaqFTxSvxpjTN0R1qAAigJ07vz3V/TA81vNlx/gMWoaSvLgY4yBs9fhwXoOuLIyk8JTFaOmWIe6QuDfyzm6h4wxxYcYRwCut4P17kbm8FuE263m8G4lOv1GD8mOPMarCf+2+/xBGvUBX0kEUk3s2kvqo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709240594; c=relaxed/simple;
-	bh=VTjWIjnaot8bvp8Uz7YSb+Wu+VwzB7BvnAiwu0uiHUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=aA5Kx72eCTQTlcfN85Ih+XhIu4XF4ziOO3F3Zx1Tun8tw96TIREO2CLLU2ZHPTvqDXf+FHPFlKHsHC+dYAz1pm48C3JNfsBcJ8j0yZBgUibj9Cc0+EWKyRPK2ruKLwpnFxIlWWYx9HbrqDopnnj8ljt5aKIXMwhqUVwjy3Jkrhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=kzPXwjK1; arc=none smtp.client-ip=148.163.147.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1709240679; c=relaxed/simple;
+	bh=8uPVylV9EO6m0KYXwD9bCM+qusEzKV7OpBt6B4Y/Y+Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WH8bU6EED0hGRUoyx7FivD2DGPCr5K0yzLQeLOife/DB1H0lzr/CVA1GjjsHV5Qq5KMWn6FXYZ3HrzUubOztXU8xAX+Tf48+CFKt7RDXZJEpF+Arb8q6dOTN4OuhtCRYA+17L95UqyH+nLAmkxccpU6og+n0wc2HD7baXmWXaUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QpmSeTlB; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="kzPXwjK1"
-Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
-	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41TFBuaH010561;
-	Thu, 29 Feb 2024 20:07:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : mime-version : content-type; s=pps0720;
- bh=bTL4DOSmyNxQGe0QwLYqgTCiTE3h293KECpT2Cd+njk=;
- b=kzPXwjK1SZsCC4A2UXBWK91e9uFF/hCuTPi/3IZkSdWrHbLVAxL10mh32LdEw+Qf5/ik
- at81CsioejMhAKCSvyosSXQTrD63rc1D1WG3QZE84heShZI+kdUW4LvQ0dzZE4esF0OQ
- /GLydvzxR5es2XSb3ehAa2Sd4tkM+ZqWsYOjmbT1nfxPMjNPWoDTqxkvuPohvhABOSFU
- e1sc33lrbdKqeMAkVfZzwza1x2KLjLatL3e6oHtFcInLnKCYtXEyqtvWrOqwpzmj/fb/
- qthu2c9EMSRUd+FI9oRgFnlP/q2d3V9q4YlabwIFqRkVDvEs4B8R3/II53iogipiTrde 7w== 
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3wjvbxb4w5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 20:07:30 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id 9BB85130F8;
-	Thu, 29 Feb 2024 20:07:29 +0000 (UTC)
-Received: from hpe.com (unknown [16.231.227.39])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id A83CB8005F1;
-	Thu, 29 Feb 2024 20:07:26 +0000 (UTC)
-Date: Thu, 29 Feb 2024 14:07:24 -0600
-From: Dimitri Sivanich <sivanich@hpe.com>
-To: Dimitri Sivanich <sivanich@hpe.com>, David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, iommu@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>
-Subject: [PATCH] Allocate DMAR fault interrupts locally
-Message-ID: <ZeDj/LK56borSxO4@hpe.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpmSeTlB"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6084e809788so20973447b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:04:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709240677; x=1709845477; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8uPVylV9EO6m0KYXwD9bCM+qusEzKV7OpBt6B4Y/Y+Q=;
+        b=QpmSeTlBYpnn9mqBMS99KSQoZHAmlh6zlGdw4USU97YoQ+XX3pZp67WWm46223FX8E
+         0OfZt5HLZBO8Pu5KzQziX+rCqF/8sTLEPjQHydYjaCsMwcPqwuKoS5NtLLh1UtxMBeQF
+         KgnqF8j1+ZbS2T/jI5OKRHJP034PAmx3TvT0AVXyfm7uQpSy0p6CyPeQ2NvtRi1JW6+3
+         YoLDRiQdHEuk7WtViN1J9YTZAUSOjL1sjYC1n5/A57Kb0etZ0YMUSRkpsJhmn4QtjHWW
+         gSB18Nu6KqAbmV+1j31K3lkdiyW2E0SBTieklLw5yzjVU/AYYoomZQdBGYI+fwMmHxUM
+         amFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709240677; x=1709845477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8uPVylV9EO6m0KYXwD9bCM+qusEzKV7OpBt6B4Y/Y+Q=;
+        b=gaKzF5f5uNZN9Brx7XGbyhe6fThubFPAYKDT09jVbxMvWxII+U0BfDVcOLwouexShF
+         gIamAEz2i1ippcwdxu6TLb2okCuMOQTNZnpSBXjDdk66PaT995dYslpKCtdKvYfUoQUj
+         fPLk2Obq+y+O1DO/wQTwX9nwfidYXU1mJsURcrJGRkdiljiMlZls9O8NiouKY4BesiEf
+         c6nHbFQW9mYRHB3XDzkXM5+8nNJdJli0LAbMuJIAt5w2ZJjiKJheW6gOcZxa+m3huCbH
+         NbcNnb2eqI+te5WeXYVZqXUOoX+10yKW6WzVGSZy2s9Fe2trzSiAMU7cSnoOXCo9SQdx
+         5rmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWjhxonyqHS9AY5RKlN4MDpZSe2Iw4U7ny/LhSYjKnsy4ISypPkPOx4TOSSbk/khYv+Jtv4Swq0C/+QmZyFsnOmimFiTpAYZvp0geaE
+X-Gm-Message-State: AOJu0Ywylb8K6Z+XLtNUYv8+ZDJsgoF6tEV0BEXrUYaej6VESb4hRiny
+	OyWFiDlhJcYz/Gx/8RiLVgIn9pkN49Fgqn2e2hBZg61eFbsvwS0SrrZGe/JX37LpM4D4yVHa9ZZ
+	zhIvjX2lORc8vyuUtCClv0UzkJw9zRIRC2Rb7BQ==
+X-Google-Smtp-Source: AGHT+IF6WpL6uXLdz5RRC4t8N2wE2n4WdvI8YyClMoKto9MRFbIOM8wSfgQJvA/IZCtI3mWM0tMsS/RNNVdPkijGBSI=
+X-Received: by 2002:a5b:9c5:0:b0:dc7:421d:bcc0 with SMTP id
+ y5-20020a5b09c5000000b00dc7421dbcc0mr1924276ybq.32.1709240677236; Thu, 29 Feb
+ 2024 13:04:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Proofpoint-GUID: kaKI-Rt3ddMThGjjOtXFFOFMzOETu6v1
-X-Proofpoint-ORIG-GUID: kaKI-Rt3ddMThGjjOtXFFOFMzOETu6v1
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-29_06,2024-02-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- mlxscore=0 mlxlogscore=995 priorityscore=1501 impostorscore=0 phishscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402290155
+References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com> <20240229-mbly-i2c-v2-8-b32ed18c098c@bootlin.com>
+In-Reply-To: <20240229-mbly-i2c-v2-8-b32ed18c098c@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 29 Feb 2024 22:04:26 +0100
+Message-ID: <CACRpkdYRPNq0diYUyQoZ54pYb6Gz22rj-WoGwPFALiuvgY71jA@mail.gmail.com>
+Subject: Re: [PATCH v2 08/11] i2c: nomadik: fetch i2c-transfer-timeout-us
+ property from devicetree
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-arm-kernel@lists.infradead.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+	Gregory Clement <gregory.clement@bootlin.com>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Intel IOMMU code currently tries to allocate all DMAR fault interrupt
-vectors on the boot cpu.  On large systems with high DMAR counts this
-results in vector exhaustion, and most of the vectors are not initially
-allocated socket local.
+On Thu, Feb 29, 2024 at 7:10=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
+in.com> wrote:
 
-Instead, have a cpu on each node do the vector allocation for the DMARs on
-that node.  The boot cpu still does the allocation for its node during its
-boot sequence.
+> Allow overriding the default timeout value (200ms) from devicetree,
+> using the generic i2c-transfer-timeout-us property.
+>
+> The i2c_adapter->timeout field is an unaccurate jiffies amount;
+> i2c-nomadik uses hrtimers for timeouts below one jiffy.
+>
+> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 
-Signed-off-by: Dimitri Sivanich <sivanich@hpe.com>
----
- drivers/iommu/intel/dmar.c | 34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index 23cb80d62a9a..41ef72ba7509 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -2108,8 +2108,12 @@ int __init enable_drhd_fault_handling(void)
- 	 */
- 	for_each_iommu(iommu, drhd) {
- 		u32 fault_status;
--		int ret = dmar_set_interrupt(iommu);
-+		int ret;
- 
-+		if (iommu->node != cpu_to_node(smp_processor_id()))
-+			continue;
-+
-+		ret = dmar_set_interrupt(iommu);
- 		if (ret) {
- 			pr_err("DRHD %Lx: failed to enable fault, interrupt, ret %d\n",
- 			       (unsigned long long)drhd->reg_base_addr, ret);
-@@ -2192,6 +2196,34 @@ static int __init dmar_free_unused_resources(void)
- 
- late_initcall(dmar_free_unused_resources);
- 
-+#ifdef CONFIG_X86_LOCAL_APIC
-+static void __init irq_remap_enable_fault_handling_thr(struct work_struct *work)
-+{
-+	irq_remap_enable_fault_handling();
-+}
-+
-+static int __init assign_dmar_vectors(void)
-+{
-+	struct work_struct irq_remap_work;
-+	int nid;
-+
-+	INIT_WORK(&irq_remap_work, irq_remap_enable_fault_handling_thr);
-+	cpus_read_lock();
-+	for_each_online_node(nid) {
-+		/* Boot cpu dmar vectors are assigned before the rest */
-+		if (nid == cpu_to_node(get_boot_cpu_id()))
-+			continue;
-+		schedule_work_on(cpumask_first(cpumask_of_node(nid)),
-+				 &irq_remap_work);
-+		flush_work(&irq_remap_work);
-+	}
-+	cpus_read_unlock();
-+	return 0;
-+}
-+
-+arch_initcall(assign_dmar_vectors);
-+#endif /* CONFIG_X86_LOCAL_APIC */
-+
- /*
-  * DMAR Hotplug Support
-  * For more details, please refer to Intel(R) Virtualization Technology
--- 
-2.35.3
-
+Yours,
+Linus Walleij
