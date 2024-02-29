@@ -1,206 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.cybernetics.com (mail.cybernetics.com [72.215.153.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B366C2A8D7;
-	Thu, 29 Feb 2024 18:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10137A157
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 18:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.215.153.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709231175; cv=none; b=rk36zvD4PgzKsW/vwXWKhPILXNGUhiNTqzF32U+zrDxlkBM8zP+KMp6l04HhM07J6UrkXb0pke6hkGsQFwss6iQoHpR6K2jghFOrciyP3gqvDFT4dmuD/VRJXAqvpLgC/wdw0eXEEMYkNn7LVcANyjf8aJv9ZUj+mjfeBUa0OZg=
+	t=1709231239; cv=none; b=McJRNt2y8x4V5tDNLKNizqRDcHmzvMjQlndSGIXgXwj6ZR7gGPMckWmOqZ2rVSgNiW0/Le2WN4ts/XthIS0LmllmcQkPrX5FkEWhfLnUo+HXNibckz0+TIYx2TgtY4UjksYRCK3vfI+PLioeYnwS7KyrNOl2zHlBcMtfnDLiSr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709231175; c=relaxed/simple;
-	bh=Vgq4hnQMw27GH6PkaZfA5dT6KlUr9HO4n6N8lO1OUZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Og/HNEkguYqOl+YE/JfDvWNMwH5EszwXxEvgN9hOi805d46qFrSaFubWfm12zUNQ/44Z4yvr+nDDbP7zZjsNen0kvpXMu55m++SLS4wZlOORNyKkWHxotGl9qgMTNRXQmLTzEKESSTXtmglCe1RR6y51x5xz6fMXJMw7YuaYQZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFrtT96X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709231239; c=relaxed/simple;
+	bh=0ujY1W7EPTMDMv8Qjd/XFEAXcyl4EZ0O06CzvoVFYCc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=FiR/9aIhjQFwCcGsuFzwQkxGWNm59SZ7msxGDbtjYsdvf6iXcn7dI608YwFTkHmC3eFzxKf1ltpqELWk64bJenyUAMC8ebgvaQZIbqdVc0eUudNvCw5K3lSeHMBsZHrYvkL9ZSkEtYrFDxGsimDLVUkDXzfopEpYw59bi1dOZ7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cybernetics.com; spf=pass smtp.mailfrom=cybernetics.com; dkim=pass (1024-bit key) header.d=cybernetics.com header.i=@cybernetics.com header.b=EHNEAJpH; arc=none smtp.client-ip=72.215.153.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cybernetics.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cybernetics.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFrtT96X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C1DC433F1;
-	Thu, 29 Feb 2024 18:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709231175;
-	bh=Vgq4hnQMw27GH6PkaZfA5dT6KlUr9HO4n6N8lO1OUZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bFrtT96Xq64H+T6w/LgvmGQcoep03LjgB30PBEddTKmTqkdMUU2vRqeODlsoNU9lJ
-	 KAOLtXcJW6sqkjVJ6iGi5/U3whxLZpxfvHZV96TcS7EUqoQn53KTCW83bibg2mSXU9
-	 kZ8vLNptyVMM25I29+7bMbkO06IThF02QLUjr824P7ibSitzCWzbKRBEQmdCOJBFFs
-	 Sdp6jiww/LXGOogKQcsZUcNT+Zn2HJaA4FSSTvxE9keuvto74s7rFM0nofqEd+4t8H
-	 S0yXl3wGjNlViVie5Ml0fcVYTqJGUgi96C3a75HCe1+6VsHKwKZlc5N13NkNuCaZ91
-	 q5HFNa7Cpf8jA==
-Date: Thu, 29 Feb 2024 18:26:09 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Varshini.Rajendran@microchip.com
-Cc: radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
-	gregkh@linuxfoundation.org, jirislaby@kernel.org,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, Nicolas.Ferre@microchip.com,
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 12/39] dt-bindings: serial: atmel,at91-usart: add
- compatible for sam9x7.
-Message-ID: <20240229-champion-vengeful-4612cee0d678@spud>
-References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
- <20240223172559.672142-1-varshini.rajendran@microchip.com>
- <20240224-kimono-stress-898eae80abd3@spud>
- <b49572d4-b52e-4655-8d10-2709e2fbe803@microchip.com>
- <20240228-capital-nickname-696dfcd655de@spud>
- <16e37a0e-74d0-4632-b0a2-403f74a3a379@microchip.com>
+	dkim=pass (1024-bit key) header.d=cybernetics.com header.i=@cybernetics.com header.b="EHNEAJpH"
+X-ASG-Debug-ID: 1709230070-1cf4391a1c4fcf0003-xx1T2L
+Received: from cybernetics.com ([10.10.4.126]) by mail.cybernetics.com with ESMTP id skGYSPFiFfPsVh4j for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:08:13 -0500 (EST)
+X-Barracuda-Envelope-From: tonyb@cybernetics.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.10.4.126
+X-ASG-Whitelist: Client
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cybernetics.com; s=mail;
+	bh=GyTYh7rZxyuaZxAK4E6INt0hy/oXnF2VsS983Qgm9WI=;
+	h=Content-Transfer-Encoding:Content-Type:Subject:From:Cc:To:Content-Language:
+	MIME-Version:Date:Message-ID; b=EHNEAJpH9NO6DGJeblalbgxMQVo9ZjLHP5lNuDo0CY5z+
+	3qRP6j8BSOQ1clNEfFa8V1xd1wyAxTkw7gIdJuf4r5DcXWB08/uQ/7qeVuc70mLwffJnHoNaXO4ro
+	5M6b7FYErqw/nqlHndEyRgwppLhJ5Aw8n43zpvTRnqCKTu0iA=
+Received: from [10.157.2.224] (HELO [192.168.200.1])
+  by cybernetics.com (CommuniGate Pro SMTP 7.1.1)
+  with ESMTPS id 13108803; Thu, 29 Feb 2024 13:08:10 -0500
+Message-ID: <86e592a9-98d4-4cff-a646-0c0084328356@cybernetics.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.157.2.224
+Date: Thu, 29 Feb 2024 13:08:09 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="27icH3WNe5d1kQpd"
-Content-Disposition: inline
-In-Reply-To: <16e37a0e-74d0-4632-b0a2-403f74a3a379@microchip.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Jens Axboe <axboe@kernel.dk>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Hugh Dickins <hughd@google.com>, Hannes Reinecke <hare@suse.de>,
+ Keith Busch <kbusch@kernel.org>, linux-mm <linux-mm@kvack.org>,
+ linux-block@vger.kernel.org, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Tony Battersby <tonyb@cybernetics.com>
+Subject: [PATCH] block: Fix page refcounts for unaligned buffers in
+ __bio_release_pages()
+Content-Type: text/plain; charset=UTF-8
+X-ASG-Orig-Subj: [PATCH] block: Fix page refcounts for unaligned buffers in
+ __bio_release_pages()
+Content-Transfer-Encoding: 7bit
+X-Barracuda-Connect: UNKNOWN[10.10.4.126]
+X-Barracuda-Start-Time: 1709230093
+X-Barracuda-URL: https://10.10.4.122:443/cgi-mod/mark.cgi
+X-Barracuda-BRTS-Status: 1
+X-Virus-Scanned: by bsmtpd at cybernetics.com
+X-Barracuda-Scan-Msg-Size: 1347
 
+Fix an incorrect number of pages being released for buffers that do not
+start at the beginning of a page.
 
---27icH3WNe5d1kQpd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Feb 29, 2024 at 08:55:11AM +0000, Varshini.Rajendran@microchip.com =
-wrote:
-> Hi Conor,
->=20
-> On 28/02/24 5:19 pm, Conor Dooley wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know =
-the content is safe
-> > On Wed, Feb 28, 2024 at 07:03:01AM +0000, Varshini.Rajendran@microchip.=
-com wrote:
-> >> Hi Conor,
-> >>
-> >> On 25/02/24 1:32 am, Conor Dooley wrote:
-> >>> EXTERNAL EMAIL: Do not click links or open attachments unless you kno=
-w the content is safe
-> >>> On Fri, Feb 23, 2024 at 10:55:59PM +0530, Varshini Rajendran wrote:
-> >>>> Add sam9x7 compatible to DT bindings documentation.
-> >>>>
-> >>>> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-> >>>> ---
-> >>>> Changes in v4:
-> >>>> - Fixed the wrong addition of compatible
-> >>>> - Added further compatibles that are possible correct (as per DT)
-> >>>> ---
-> >>>>  .../devicetree/bindings/serial/atmel,at91-usart.yaml | 12 +++++++++=
+Fixes: 1b151e2435fc ("block: Remove special-casing of compound pages")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tony Battersby <tonyb@cybernetics.com>
 ---
-> >>>>  1 file changed, 9 insertions(+), 3 deletions(-)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/serial/atmel,at91-usa=
-rt.yaml b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-> >>>> index 65cb2e5c5eee..30af537e8e81 100644
-> >>>> --- a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-> >>>> +++ b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-> >>>> @@ -23,11 +23,17 @@ properties:
-> >>>>            - const: atmel,at91sam9260-dbgu
-> >>>>            - const: atmel,at91sam9260-usart
-> >>>>        - items:
-> >>>> -          - const: microchip,sam9x60-usart
-> >>>> +          - enum:
-> >>>> +              - microchip,sam9x60-usart
-> >>>> +              - microchip,sam9x7-usart
-> >>>>            - const: atmel,at91sam9260-usart
-> >>>>        - items:
-> >>>> -          - const: microchip,sam9x60-dbgu
-> >>>> -          - const: microchip,sam9x60-usart
-> >>>> +          - enum:
-> >>>> +              - microchip,sam9x60-dbgu
-> >>>> +              - microchip,sam9x7-dbgu
-> >>>
-> >>>> +          - enum:
-> >>>> +              - microchip,sam9x60-usart
-> >>>> +              - microchip,sam9x7-usart
-> >>>
-> >>> This doesn't make sense - this enum should be a const.
-> >>> I don't really understand the idea behind of the original binding her=
-e that
-> >>> allowed:
-> >>> "microchip,sam9x60-dbgu", "microchip,sam9x60-usart", "atmel,at91sam92=
-60-dbgu", "atmel,at91sam9260-usart"
-> >>>
-> >>> Specifically, I don't get the purpose of the "microchip,sam9x60-usart=
-".
-> >>> Either make it
-> >>>       - items:
-> >>>           - enum:
-> >>>               - microchip,sam9x60-dbgu
-> >>>               - microchip,sam9x7-dbgu
-> >>>           - const: microchip,sam9x60-usart
-> >>>           - const: atmel,at91sam9260-dbgu
-> >>>           - const: atmel,at91sam9260-usart
-> >>> or add
-> >>>       - items:
-> >>>           - const: microchip,sam9x60-dbgu
-> >>>           - const: atmel,at91sam9260-dbgu
-> >>>           - const: atmel,at91sam9260-usart
-> >>> or explain exactly why this needs to be
-> >>> "chipa-dgbu", "chipa-usart", "chipb-dbgu", "chipb-dbgu"
-> >> The compatible has to be "chipa-usart", "chipb-usart", "chipa-dbgu",=
-=20
-> >> "chipb-dbgu" for the device to work as a debug console over UART
-> >> wher the chipa-<periph> is the device specific compatible
-> >> and the chipb-<periph> is the fallback compatible that the driver=20
-> >> actually uses.
-> >=20
-> > This examples why you have "microchip,sam9x60-dbgu", "atmel,at91sam9260=
--dbgu"
-> > and "atmel,at91sam9260-usart".
-> > It does not explain "microchip,sam9x60-usart" though, I don't see what
-> > purpose that serves. If used as a debug uart, you fall back to the
-> > sam9260 debug uart compatible and if not you fall back to the sam9260
-> > usart compatible.
-> >=20
-> Here, if it is not used as debug uart it has to fallback to the default=
-=20
-> usart compatible which in this case should have a device specific=20
-> compatible too right?
->=20
-> The common usart compatible looks as follows,
->=20
->      compatible =3D "microchip,sam9x60-usart", "atmel,at91sam9260-usart";
->=20
-> meaning the 1st one is the device specific usart compatible and the 2nd=
-=20
-> one is the fallback compatible which the driver actually supports.
->=20
-> The debug uart looks as follows,
->=20
-> compatible =3D "microchip,sam9x60-dbgu", "atmel,at91sam9260-dbgu",=20
-> "microchip,sam9x60-usart", "atmel,at91sam9260-usart";
 
-This version here makes a lot more sense than what is currently in use
-and what is being added in your original patch. I wouldn't object to
-this being used.
+Tested with 6.1.79.  The 6.1 backport can just use
+folio_put_refs(fi.folio, nr_pages) instead of do {...} while.
 
-> In this case, there is a device specific debug uart compatible, a=20
-> fallback tot he debug uart compatible and as you said if not used as a=20
-> debug uart it should fallback and work as a normal uart device which has=
-=20
-> both a device specific compatible and a fallback to work.
->=20
-> In case the device specific compatible is supported with some other=20
-> features in the driver in the future, the debug uart also should get its=
-=20
-> perk. Does this make sense?
->=20
->=20
-> > In addition, the current setup implies that sam9x60 usart supports all
-> > the features that the sam9260 debug usart does. I doubt that that is
-> > true.
+ block/bio.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---27icH3WNe5d1kQpd
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/block/bio.c b/block/bio.c
+index b9642a41f286..b52b56067e79 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1152,7 +1152,7 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
+ 
+ 	bio_for_each_folio_all(fi, bio) {
+ 		struct page *page;
+-		size_t done = 0;
++		size_t nr_pages;
+ 
+ 		if (mark_dirty) {
+ 			folio_lock(fi.folio);
+@@ -1160,10 +1160,11 @@ void __bio_release_pages(struct bio *bio, bool mark_dirty)
+ 			folio_unlock(fi.folio);
+ 		}
+ 		page = folio_page(fi.folio, fi.offset / PAGE_SIZE);
++		nr_pages = (fi.offset + fi.length - 1) / PAGE_SIZE -
++			   fi.offset / PAGE_SIZE + 1;
+ 		do {
+ 			bio_release_page(bio, page++);
+-			done += PAGE_SIZE;
+-		} while (done < fi.length);
++		} while (--nr_pages != 0);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(__bio_release_pages);
 
------BEGIN PGP SIGNATURE-----
+base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
+-- 
+2.25.1
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeDMQQAKCRB4tDGHoIJi
-0p5MAQDmJ9VKwmndXGtuYADUIRc9WGk25Ny/CCPltwAriEMOYwD+PPAQ6NAoy6jt
-WUaQKjRkDFQpmgCzd1Fn+JVDmsW/NgA=
-=vhzy
------END PGP SIGNATURE-----
-
---27icH3WNe5d1kQpd--
