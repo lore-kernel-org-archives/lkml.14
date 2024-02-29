@@ -1,161 +1,150 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83E9D14A089;
-	Thu, 29 Feb 2024 15:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709221412; cv=none; b=RyOyNLk0OSMEpKrHBcKx5rqguDsLq5qvAhbCxC1YpeMedsQjSm5cjNg8iLSfPUJc+RuOJ+uyZAlrTGXXU3fJCewnS9zmipe+7nu1OBQrTJZK6zaQ+eXFc59DHEQasNDjvjEftUjYV01S8qk9g45SMOoah8ycRdNv+348q7zbokk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709221412; c=relaxed/simple;
-	bh=VwlMZVqyzIQ7HwzKaB0DOVora1ocbFGWaqk1VMNGMPc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PdzMy3XxK0D7V1DmbbHldixVQeWxCA0EdAJsgZmkJ2g6QUTltvva+/fo+nHqPe0c7VepY52mq995nthlwpeOQhwk/YfCKWp9AF7tnSQf0GZxEsYD6PAc/K14Rc5ipg/G7BciYA+dRX0a2lV6n5eWu60vbuQFK4RJUNLY3kGxgjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58D221FB;
-	Thu, 29 Feb 2024 07:44:07 -0800 (PST)
-Received: from [10.57.51.9] (unknown [10.57.51.9])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F5F43F6C4;
-	Thu, 29 Feb 2024 07:43:25 -0800 (PST)
-Message-ID: <57994888-f82f-4d2b-a7e1-8dfed825533f@arm.com>
-Date: Thu, 29 Feb 2024 15:43:24 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2084.outbound.protection.outlook.com [40.92.18.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7544C14A0AB
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.18.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709221456; cv=fail; b=mMtKU0SX91Z0FfVe65oHxucFTQrhM+nF71WYcdYtRoOJFFHFzBBut+q/C6y9sCXwZmV3oMzIZZQyv5NuVMRhgKc/KNtZcju0fJT+2K59ShCgX2LgvuQtnF0cjop7cETmJCTeX2ZbWPMTkIrGAH28JYs5jvB+JBNezHB4jrsM9OA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709221456; c=relaxed/simple;
+	bh=5AHNemKMeCCSJt1v88kRTOMnWQJ1NyGGEvyopQny8aE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hkvYveXIKzXHyWED20W2iv5D4yNXgukOD0qal8A2EFG9oO2N8Y94OkJHV2XkAt/BW5eF+fsMztxQtXprHF80jHt+NQRMu527bvK7Zz8wpAmhdHhuVzG18BLwLX6JvrmuFqLlvSdjv1DGk9YDINFa5QC8IbbYiqA1jG1YfZMypyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=i4nsUDFb; arc=fail smtp.client-ip=40.92.18.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="i4nsUDFb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VLkPhdYqdTahAbSxfxsFFMmMUcwdgz0K0RRAICeWeosvEUYPoKe8TG5Zil6pqKRQF8v82AuF4qLse+bJabHOff/nxuQQuBwXuLmWo4exvvU/2X2KLGs4JS5U73I/Q9O6KSCRWr17FUqr90N1NUw1R5nBg9XSyhQKLFoKQnT/4KM/WRAxx/zHk8JROJoog1O9z+z87IaqY03L3JbdJa1BslmXc0VeMJxS6E83q9zJpVHFDnBOJLP4q2HKnSBEOcfS3J73grxb656tM9fxLDlZdyiGkZ5VjN3eqkLonYKk+h+axSqiu1i3Nrfk+dV2TtTECMUynT4W/JNJxVCp5hMhmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=83u3nQkfVx7es4l6JumZijIlHFSb1yDRniklylTZZXE=;
+ b=SqA9RApuTiLRVy7kdJ+U5dqVLBoKpqPP3GHQ9CYWoGE6fO4IjoEcbizdThaL24jxXiQ6PMXtZBRBHhXOZi/lhlij1jdBfivc67QGmiJBL46xsAZuYvOt+WzKCSqLy2wTFLyrJryE5w6EyJnGlSWqTYg0DBMlnl+ELxGWWkcCZAJEYFrlzyjbgtdk2s0djk+m7X4MI15GvgKjc1grrSBP7HuIEqiR9VnLYiX6ie4ks5IyByN3TSgFY+9CV7aZmdACUUWCrGXffe9ib4Re7hV4Z9oaYsrnlPIhoptpNVScq1HWhVrNbEL1VpymaItohKL399+OxQ5uFDKhN+7I1PwJ9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=83u3nQkfVx7es4l6JumZijIlHFSb1yDRniklylTZZXE=;
+ b=i4nsUDFbIvZyq8O2BfsUE1oDcePnjEcamQwViyh4uPwfjsO/h4kH2npBrncqPoudKjGD1Jg3aiYCqra88D+3Yikm/B90U/zC3GvtTFxLRBZ/E+ydef49pXKWe4UGvhYGWFNHNwbGD/xt3Rpx++g//mSTZMRMQl2+AsGhdZdBEcs4KINCCTKyRYRQy28pDf+moQQO8ZFOzAeGQAzF1C5U7vn+5sIe256ZXivzLgawXriRbzRFErJ4em5hqwtW2082Y6u9KVgEjwOJsqXrHCx+/gvTMOKjgqdmr+0c+YtVSnbKyosDYvYFXm/s982m+/agNnK3bBN1lyfCHr1Ec5tEcA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by LV8PR02MB10142.namprd02.prod.outlook.com (2603:10b6:408:192::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
+ 2024 15:44:12 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7316.037; Thu, 29 Feb 2024
+ 15:44:11 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Christoph Hellwig <hch@lst.de>
+CC: Will Deacon <will@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Petr Tesarik
+	<petr.tesarik1@huawei-partners.com>, "kernel-team@android.com"
+	<kernel-team@android.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy
+	<robin.murphy@arm.com>, Dexuan Cui <decui@microsoft.com>, Nicolin Chen
+	<nicolinc@nvidia.com>
+Subject: RE: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
+ allocations >= PAGE_SIZE
+Thread-Topic: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
+ allocations >= PAGE_SIZE
+Thread-Index: AQHaakuep9s0mIf3eE+om+sQlmyZtbEg06/QgAAR1sCAAG26AIAAIlEw
+Date: Thu, 29 Feb 2024 15:44:11 +0000
+Message-ID:
+ <SN6PR02MB4157314F142D05E279B7991ED45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240228133930.15400-1-will@kernel.org>
+ <20240228133930.15400-7-will@kernel.org>
+ <SN6PR02MB4157A62353559DA8DB8BC4ADD45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB41577D09E97B1D9645369D58D45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20240229133346.GA7177@lst.de>
+In-Reply-To: <20240229133346.GA7177@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [/rylYCHwDNAkV4Fy+igzWw3nb9s2B6ja]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|LV8PR02MB10142:EE_
+x-ms-office365-filtering-correlation-id: 3f685fc2-588d-44d9-31a8-08dc393d467f
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ +0kW5jx+RFTNU7d0GI2e20GXagiJDYe9eCmdNTfhv/4lD7ph9AT9+GATBlieycEa8FJ5nKiCzWU2x1FBjEnzWWbOZIgJbPzEMnlTA2dbg59sjYXmDqnV0cRcfGpjTAHtszanOg8mvT/s6VD8ILKSJo+/j1AWDLj7YCZCeAEojWAeLrtQ3bM2N6BU5E7vh+dQIbqeQMWHZT0RnY6Ec4EUFh4uZciweNIK+qUWOJej24ucXqvL0zL45S7Fp+kpk1xutg/A3ZzCJA+277hQ76CS+l3CNqSpJLBAzsj1EOA+FTu4LWk9dQSXLrmm2LC5UI441KyUCaPkBYC1pcDC57+lVCsD9ibgGCUnP2/l4nrciQRlqAoPhYTxvy5Ol3LsQhXvQNy2Mkt/dMZyavE0VeKO1NzjVrUuD7ZObcayH7logwduqn8vQKK8P47J4zHyPM6Z7DtvG0/40t/Qpn78QlHJoFvJFpTIHmc9PiDM46qNJtrdFQevfiaiaIaBlOitgPgYZwvZEd7IJ5Ree2zaE0knzPW7y8D7wOpudznmFPNJLo++pnAPo4x9s75fF+O/NTea
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ZT4I8DVdHEFTvkjZhjwkPNGmGMITOhvjgWjUhIDTZzxWndhQDELTx8wYtAEs?=
+ =?us-ascii?Q?fQWW+Jh1F/zuLYuyQs83TMHeGAZ5r9Ezwu2Nx4SOgsD1IolWXCrfc5u0ONYh?=
+ =?us-ascii?Q?iJeSx2j1dhNBvtQghZq9VJ9h4UZViN3q35jKyYvlJjWuI1F9UgNvCMbxCxME?=
+ =?us-ascii?Q?F0r8EqTCF4iFSk6G6XVaWF9Him4ZxoaQxhd3NyabhpxCxLQskuDt6BUaKr+I?=
+ =?us-ascii?Q?knUl2bdm7OJgthwxI1wCbXNs7Vc+EyoURc2sLfITdzUSdVenn2EjsWtGkpwh?=
+ =?us-ascii?Q?/Gp/hrOBZPifFjQZUVqxQYYivV7P8XmOZn9WX8vWn5mcgMS08BfgjSf5TqOY?=
+ =?us-ascii?Q?5KqTNZRw953pBb3aKCKCUaU2FSLPVjhJKofLvVp4VSwOgN08oU+CJfcFZ7oB?=
+ =?us-ascii?Q?ZVAqfgaTzIrOuf2yCb7HKzSSjSEA9sSfGfX8Wdk34rtlE9+XB2jVPf17KoQf?=
+ =?us-ascii?Q?aJzc/kxxpIZN5U2RHhT8eqNmAW5TYK2O8n40keOJsKCLyJFNKbwRHVd6F5i2?=
+ =?us-ascii?Q?jgK3vcLc4ZKutVT++Vc6ooOTCC27YNexoIKI0HcImirxKAxF5wcrPJI24G/f?=
+ =?us-ascii?Q?boDWY19ZvdAdhsjYvy0FjsiJg+B4KI5zlsoqjAMUSWONb/s0EOCbL49z4ByC?=
+ =?us-ascii?Q?s54AkUziwWSb1w8yolV5yds55HkJTKxT8Em9zx54hv7JQrZV2irhy8qA4LXx?=
+ =?us-ascii?Q?QMemd6XYhaPDcRwcRA4A3Egkjeu5MOKmrliZ0hllJsqUdQqWiI7dVSK8BnzC?=
+ =?us-ascii?Q?ZAHlR2m9riqogT4ihhQoBpn8fYlbd64LFqCD0cX/C3o6zaf2PrmNilV9MBSN?=
+ =?us-ascii?Q?9TdCBoSivYNnzd+90BntUd/0ALk6WD2hr294bVAzeAuM7UUFIcBLPKosyvNq?=
+ =?us-ascii?Q?OFh62/HDTKbGi8rYxPzDtzdyjZ7P5gmCjR81JUlnl40Hne7Z1T4gJLoyfdQL?=
+ =?us-ascii?Q?gbZ8AfdFRWvHUmX8V/Isas2UusASLY8weyKzAFmVxoJsyIhT0EuhMSaiBfqW?=
+ =?us-ascii?Q?GOV0Og46iPmyJQCEVLgiG24yjdXdrAI4SMxVkQO7LIO9vh7OzVHq6yqDRUOc?=
+ =?us-ascii?Q?twg+p8tD0mI2UYXC4Ym7gHEafMf1WiCzg9S6RIHe5pZCY1GdGLjjRTBqoERJ?=
+ =?us-ascii?Q?mbSSQCyIMifHKIlVlWVPXeB51QnTprj9j26kGakjPCULpHyN7w3hZE5K9/3B?=
+ =?us-ascii?Q?3mYhJKGaJJGr6qoIsxz50aLKstJHhKHFqH5W2Q=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V16 2/8] KVM: arm64: Prevent guest accesses into BRBE
- system registers/instructions
-Content-Language: en-GB
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- will@kernel.org, catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
- James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
- Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
- James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
- <20240125094119.2542332-3-anshuman.khandual@arm.com>
- <ZdYCUi9YVDNDz7fr@FVFF77S0Q05N>
- <ab50e67e-3d06-4ba7-a5f8-4684e9ef98a4@arm.com>
- <Zd2zy0oUk8XvoDJM@FVFF77S0Q05N>
- <b134c30d-d855-41bb-a260-9f6437b77697@arm.com>
- <62e64ddd-266c-414e-b66a-8ca94f3c2bbf@arm.com>
- <ZeB9kHheAGJ__TQU@FVFF77S0Q05N>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <ZeB9kHheAGJ__TQU@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f685fc2-588d-44d9-31a8-08dc393d467f
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2024 15:44:11.7865
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR02MB10142
 
-On 29/02/2024 12:50, Mark Rutland wrote:
-> Hi Suzuki,
-> 
-> On Thu, Feb 29, 2024 at 11:45:08AM +0000, Suzuki K Poulose wrote:
->> On 27/02/2024 11:13, Anshuman Khandual wrote:
->>> On 2/27/24 15:34, Mark Rutland wrote:
->>>> On Fri, Feb 23, 2024 at 12:58:48PM +0530, Anshuman Khandual wrote:
->>>>> On 2/21/24 19:31, Mark Rutland wrote:
->>>>>> On Thu, Jan 25, 2024 at 03:11:13PM +0530, Anshuman Khandual wrote:
->>>>>>> Currently BRBE feature is not supported in a guest environment. This hides
->>>>>>> BRBE feature availability via masking ID_AA64DFR0_EL1.BRBE field.
->>>>>>
->>>>>> Does that means that a guest can currently see BRBE advertised in the
->>>>>> ID_AA64DFR0_EL1.BRB field, or is that hidden by the regular cpufeature code
->>>>>> today?
->>>>>
->>>>> IIRC it is hidden, but will have to double check. When experimenting for BRBE
->>>>> guest support enablement earlier, following changes were need for the feature
->>>>> to be visible in ID_AA64DFR0_EL1.
->>>>>
->>>>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->>>>> index 646591c67e7a..f258568535a8 100644
->>>>> --- a/arch/arm64/kernel/cpufeature.c
->>>>> +++ b/arch/arm64/kernel/cpufeature.c
->>>>> @@ -445,6 +445,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
->>>>>    };
->>>>>    static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
->>>>> +       S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_IMP),
->>>>>           S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
->>>>>           ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
->>>>>           ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
->>>>>
->>>>> Should we add the following entry - explicitly hiding BRBE from the guest
->>>>> as a prerequisite patch ?
->>
->> This has nothing to do with the Guest visibility of the BRBE. This is
->> specifically for host "userspace" (via MRS emulation).
->>
->>>>>
->>>>> S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_NI)
->>>>
->>>> Is it visbile currently, or is it hidden currently?
->>>>
->>>> * If it is visible before this patch, that's a latent bug that we need to go
->>>>     fix first, and that'll require more coordination.
->>>>
->>>> * If it is not visible before this patch, there's no problem in the code, but
->>>>     the commit message needs to explicitly mention that's the case as the commit
->>>>     message currently implies it is visible by only mentioning hiding it.
->>>>
->>>> ... so can you please double check as you suggested above? We should be able to
->>>> explain why it is or is not visible today.
->>>
->>> It is currently hidden i.e following code returns 1 in the host
->>> but returns 0 inside the guest.
->>>
->>> aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
->>> brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
->>>
->>> Hence - will update the commit message here as suggested.
->>
->> This is by virtue of the masking we do in the kvm/sysreg.c below.
-> 
-> Yep, once this patch is applied.
-> 
-> I think we might have some crossed wires here; I'm only really asking for the
-> commit message (and title) to be updated and clarified.
-> 
-> Ignoring the patchlet above, and just considering the original patch:
-> 
-> IIUC before the patch is applied, the ID_AA64DFR0_EL1.BRBE field is zero for
-> the guest because we don't have an arm64_ftr_bits entry for the
-> ID_AA64DFR0_EL1.BRBE field, and so init_cpu_ftr_reg() will leave that as zero
-> in arm64_ftr_reg::sys_val, and hence when read_sanitised_id_aa64dfr0_el1()
-> calls read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1), the BRBE field will be zero.
-> 
-> This series as-is doesn't add an arm64_ftr_bits entry for ID_AA64DFR0_EL1.BRBE,
-> so it'd still be hidden from a guest regardless of whether we add explicit
-> masking in read_sanitised_id_aa64dfr0_el1(). The reason to add that masking is
-> to be explicit, so that if/when we add an arm64_ftr_bits entry for
-> ID_AA64DFR0_EL1.BRBE, it isn't exposed to a guest unexpectedly.
-> 
-> Similarly, IIUC the BRBE register accesses are *already* trapped, and
-> emulate_sys_reg() will log a warning an inject an UNDEFINED exception into the
-> guest if the guest tries to access the BRBE registers. Any well-behaved guest
-> *shouldn't* do that, but a poorly-behaved guest could do that and (slowly) spam
-> dmesg with messages about the unhandled sysreg traps. The reasons to handle
-> thos regs is largely to suppress that warning, and to make it clear that we
-> intend for those to be handled as undef.
-> 
-> So the commit title should be something like:
-> 
->    KVM: arm64: explicitly handle BRBE register accesses as UNDEFINED
-> 
-> ... and the message should mention the key points from the above.
-> 
-> Suzuki, does that sound right to you?
+From: Christoph Hellwig <hch@lst.de> Sent: Thursday, February 29, 2024 5:34=
+ AM
+>=20
+> On Thu, Feb 29, 2024 at 07:36:05AM +0000, Michael Kelley wrote:
+> > If there *is* a requirement for page alignment of page-size-or-greater
+> > requests, even when alloc_align_mask and min_align_mask are zero,
+> > we need to think about how to do that correctly, as that requirement
+> > is no longer met after Patch 1 of this series.
+>=20
+> It has been historical behavior that all dma allocations are page
+> aligned (including in fact smaller than page sized ones that get
+> rounded up to a page size).  The documentation actually (incorretly)
+> states an even stronger guarantee:
+>=20
+> "The CPU virtual address and the DMA address are both
+> guaranteed to be aligned to the smallest PAGE_SIZE order which
+> is greater than or equal to the requested size.  This invariant
+> exists (for example) to guarantee that if you allocate a chunk
+> which is smaller than or equal to 64 kilobytes, the extent of the
+> buffer you receive will not cross a 64K boundary."
 
-Yes, that makes perfect sense to me. Thanks for clarifying
+Any thoughts on how that historical behavior should apply if
+the DMA min_align_mask is non-zero, or the alloc_align_mask
+parameter to swiotbl_tbl_map_single() is non-zero? As currently
+used, alloc_align_mask is page aligned if the IOMMU granule is
+>=3D PAGE_SIZE. But a non-zero min_align_mask could mandate
+returning a buffer that is not page aligned. Perhaps do the
+historical behavior only if alloc_align_mask and min_align_mask
+are both zero?
 
-Suzuki
-
-> 
-> Anshuman, can you go re-write the commit message with that in mind?
-> 
-> Mark.
+Michael
 
