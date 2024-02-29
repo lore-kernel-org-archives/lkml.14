@@ -1,134 +1,151 @@
-Received: from isilmar-4.linta.de (isilmar-4.linta.de [136.243.71.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B60016065D;
-	Thu, 29 Feb 2024 16:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.243.71.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615A23770C;
+	Thu, 29 Feb 2024 16:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709225627; cv=none; b=RB+U1eq+QDPQdB1gbAumqXheV3X6SCXbFpxL3PIN22rcIXzlJlgEE3dPdKotuI7g72zJ/3ynzQ6zpAlEQ3agpc9xoiwjUXZN3ewearuZqRtSn4QcNAVoZAkVdDnR3fZDWzElPgxrIaCNUY/K6YCFVO0Iru5Qp2yUKKdijbXHtXQ=
+	t=1709225632; cv=none; b=JmN+uJpXNm/COot6FUhKpAApWBOjHxvJ8271echAyqguaJZIPD0zQPAvugq2RAqyh3n3yfBLznLwahOVNxImibEL6ViErlBX+rZAjk2Lqq7U/xOXwSMqp8t21fY2XnTBanTv4OUCJ3v2C+DYNfXyDvfOYmrUOzj9rYWpZQuwWlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709225627; c=relaxed/simple;
-	bh=nSf+UyIsvbI5cnEYLyQ0GPOZ4UECM4vWEu3AEyZSTpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eZLFGGOui1gRK1dDZgL+Da7W59bKCr7wP2W1EvSqY2DJYqnXK3xj5G4kioR1WBgymYpVZLyXfQeY2G8ZOJDCFalSyZbtITLiebXzMW/TJMpAyPIJyGdAb7JU0KB+ffssIuAnYmeS74U9Q4ubLYEvd0YsP1HOEwV5JrjqttXZepM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net; spf=pass smtp.mailfrom=dominikbrodowski.net; arc=none smtp.client-ip=136.243.71.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dominikbrodowski.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dominikbrodowski.net
-Received: from shine.dominikbrodowski.net (shine.brodo.linta [10.2.0.112])
-	by isilmar-4.linta.de (Postfix) with ESMTPSA id 688482000CD;
-	Thu, 29 Feb 2024 16:53:40 +0000 (UTC)
-Received: by shine.dominikbrodowski.net (Postfix, from userid 1000)
-	id DB256A0083; Thu, 29 Feb 2024 17:53:34 +0100 (CET)
-Date: Thu, 29 Feb 2024 17:53:34 +0100
-From: Dominik Brodowski <linux@dominikbrodowski.net>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: tomas.winkler@intel.com, mchehab@kernel.org, wentong.wu@intel.com,
-	hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+	s=arc-20240116; t=1709225632; c=relaxed/simple;
+	bh=6nUDMEYGUfxHVEKkeMkr+OYMLMqJ1KXcgPHzN5jW+is=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P/5S74E1XjyNNDDvWGt9Bpsnjg7lusmfCI/brl84kLVdX6QAoeafbqf5mCSd2bOz9duWor8Ef195PAZPZzMwde9Gc5Q5pMcVmzlBAwlkVSf+nMU3jnTOiEnRxtCIsTcdvsQMX74ohisvOhjjs+wy6RaCoJwtSR0CGLMvMCLrrJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a1EhP9C1; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a1EhP9C1"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d29111272eso13809351fa.0;
+        Thu, 29 Feb 2024 08:53:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709225626; x=1709830426; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YDgRtT3BGtrQFTqpJ/xCmUJivNRGOmFTEriQdIVVtdY=;
+        b=a1EhP9C16OgQqfPmftXOS66SjGgOwxjajY2bODVqlP+qrwl4j9Yyh9i9OxRMk1+o+O
+         lAAbT5P6RfWchNBf2O1KLh6SJs1ZlCiEKW0sbO/XGY8FDunJkH52aKrJzhwg/hwsxgGb
+         ZVR5n4gffgMPVM2AT2Lr95DXJapXnFqQtqzshpXd48tknLNZM/zCu4An4sVjhW310vzg
+         Kmz9DPLYx6BIJv6Gu3vUYCKIyNfu22n3opfcaZ5fSh0iN/17ldtMErqUMIEDq25drLvZ
+         IUZT6cV2xNJBkvf2JxCwwEYWhIdDE90wXm/OY4uzGvsP8M5iIiKStMm3+J03Xu6sni4M
+         Vtpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709225626; x=1709830426;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YDgRtT3BGtrQFTqpJ/xCmUJivNRGOmFTEriQdIVVtdY=;
+        b=IRWdM63MqnpUK3NG5gGBt14vrgMuqYFIBvfIwvm1dtSHksagfWUQ8CDBpPe7+QMVBg
+         DUgXBJ/cDD92DmSGy2Wo/ShsFfH5eZZ1QyI6CgyF+mdK+nUtc5nSTxDgoVP34x37vD3z
+         qaIT0TmCstxog+E7pR8Xg6NHTte2/aogDqY+1CRL9ABeyEUmID1HnaGD7Oabxcu8GFSY
+         TWTh8n9Y1xAjjYoyPMztuXcj5zxSbyJJOlJaGjoDO23XgK2UKA7rABdKZYdpyQ4NWyJO
+         mOVqhOOMCbtNfTlfixU7cHBeP/PzDeIzcssdSyMclS0AxaQzUZ/jKS2uKeC7NwHEsmaN
+         dF1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWwDBv3MPNRLRAHKGKLTRY3NKedzveRWykhNDIXr4fGAhPnBezFL/nF+AHAOWH9/bjbCvK77KC5gXHXjtEPMP6sX/oG/lMIdz0I0GB9
+X-Gm-Message-State: AOJu0YxPTQhDgsbfA51KqLTzaqFruZR4uLYAf48hbOptPMHXX2C1A7MH
+	SpNJj5SbwNfDGMqbttsi/JW1D2CGNMTm1XlMWn/LYq5skRo80tKODDmKlc+/PHA=
+X-Google-Smtp-Source: AGHT+IHrnNQ+VZCSRL3mER8oBxjLgfoNFkSHy2jOgg1LGXnuP4+EA4v1I0ExQfvPntbXGRVwiw+43Q==
+X-Received: by 2002:a2e:9613:0:b0:2d2:ed31:9fa6 with SMTP id v19-20020a2e9613000000b002d2ed319fa6mr1751801ljh.49.1709225625789;
+        Thu, 29 Feb 2024 08:53:45 -0800 (PST)
+Received: from localhost ([83.149.246.185])
+        by smtp.gmail.com with ESMTPSA id a26-20020a05651c031a00b002d318451854sm106048ljp.113.2024.02.29.08.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 08:53:45 -0800 (PST)
+From: Mikhail Rudenko <mike.rudenko@gmail.com>
+To: linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: v6.8.0-rc6: mei_ace_probe / mei_vsc_probe: do not call blocking
- ops when !TASK_RUNNING
-Message-ID: <ZeC2jss4IAM4aPWy@shine.dominikbrodowski.net>
-References: <Zd9wUv1zSJ59WS8i@shine.dominikbrodowski.net>
- <Zd-BVmoFOiCxA632@kekkonen.localdomain>
- <ZeAwhhW7DSEazs0F@shine.dominikbrodowski.net>
- <ZeAymVVsI-CNj6Pc@kekkonen.localdomain>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jacopo Mondi <jacopo@jmondi.org>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Mikhail Rudenko <mike.rudenko@gmail.com>
+Subject: [PATCH v3 00/20] Omnivision OV4689 refactoring and improvements
+Date: Thu, 29 Feb 2024 19:53:13 +0300
+Message-ID: <20240229165333.227484-1-mike.rudenko@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZeAymVVsI-CNj6Pc@kekkonen.localdomain>
+Content-Transfer-Encoding: 8bit
 
-Hi Sakari,
+Hi,
 
-Am Thu, Feb 29, 2024 at 07:30:33AM +0000 schrieb Sakari Ailus:
-> On Thu, Feb 29, 2024 at 08:21:42AM +0100, Dominik Brodowski wrote:
-> > Hi Sakari,
-> > 
-> > many thanks, this patch helps. Another issue persists, though:
-> > 
-> > 
-> > $ dmesg | cut -c16- | grep -E "(mei|vsc)"
-> > mei_me 0000:00:16.0: enabling device (0000 -> 0002)
-> > mei_hdcp 0000:00:16.0-b638ab7e-94e2-4ea2-a552-d1c54b627f04: bound 0000:00:02.0 (ops i915_hdcp_ops)
-> > mei_pxp 0000:00:16.0-fbf6fcf1-96cf-4e2e-a6a6-1bab8cbe36b1: bound 0000:00:02.0 (ops i915_pxp_tee_component_ops)
-> > intel_vsc intel_vsc: silicon stepping version is 0:2
-> > mei intel_vsc-92335fcf-3203-4472-af93-7b4453ac29da: deferred probe pending: (reason unknown)
-> > mei intel_vsc-5db76cf6-0a68-4ed6-9b78-0361635e2447: deferred probe pending: (reason unknown)
-> 
-> You'll probably need the IPU bridge patches from that branch, too. Or you
-> can try removing the intel-ipu6 driver and modprobing it again.
+this is a third revision of the series containing refactoring and new
+features implementation for the Omnivision OV4689 sensor
+driver. Specifically, patches 1, 2, 3, 5, 6, 10, 15, 16, 18, and 19
+are refactorings, and are not supposed to introduce any functional
+change. Patches 4 and 7 perform migration to CCI helpers and subdevice
+active state respectively, and should not introduce any hardware-
+and/or user-visible change either. Patch 8 fixes a possible race
+condition due to v4l2_async_register_subdev_sensor being called too
+early in ov4689_probe, and patch 9 migrates power management to PM
+autosuspend.
 
-Everything is built into the kernel here - and the kernel I run is pure
-upstream (plus your patch), therefore no intel-ipu6 driver is available
-(yet) or active.
+Patches 11-14 expose more sensor controls to the userspace, such as
+(read-write) HBLANK, VFLIP/HFLIP, digital gain, and color
+balance. Patch 17 implements configurable analogue crop rectangle via
+.set_selection callback. And finally, patch 20 enables 2x2 binning
+option. It should be noted that publicly available sensor
+documentation is lacking description of many registers and their value
+ranges, so a lot of values had to be found by experimentation.
 
-> > During suspend entry (s2idle), the following messages are emitted:
-> > 
-> > ACPI Warning: \_SB.PC00.SPI1.SPFD.CVFD.SID: Insufficient arguments - Caller passed 0, method requires 1 (20230628/nsarguments-232)
-> > intel_vsc intel_vsc: silicon stepping version is 0:2
-> > PM: Some devices failed to suspend, or early wake event detected
-> > ACPI Warning: \_SB.PC00.SPI1.SPFD.CVFD.SID: Insufficient arguments - Caller passed 0, method requires 1 (20230628/nsarguments-232)
-> > intel_vsc intel_vsc: silicon stepping version is 0:2
-> > vsc-tp spi-INTC1094:00: wakeup firmware failed ret: -110
-> > vsc-tp spi-INTC1094:00: wakeup firmware failed ret: -110
-> > intel_vsc intel_vsc: wait fw ready failed: -110
-> > intel_vsc intel_vsc: hw_start failed ret = -110 fw status = 
-> > intel_vsc intel_vsc: unexpected reset: dev_state = RESETTING fw status = 
-> > ACPI Warning: \_SB.PC00.SPI1.SPFD.CVFD.SID: Insufficient arguments - Caller passed 0, method requires 1 (20230628/nsarguments-232)
-> > intel_vsc intel_vsc: silicon stepping version is 0:2
-> 
-> I haven't tried suspending. Is this while streaming or not?
+Changes in v3:
+- rebase on top of media_stage
+- collect Reviewed-by and Acked-by from v2
+- update copyright year
+- zero-initialize ret in ov4689_set_ctrl
+- get back blank line before return in ov4689_set_ctrl
+- move `sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE` before
+  `ov4689_initialize_controls()` in ov4689_probe
+- remove blank line after `v4l2_subdev_init_finalize(sd)`
+- use pm_runtime_put instead of pm_runtime_put_sync
+- add comment for dummy columns/rows defines
+- fix OV4689_PIXEL_ARRAY_WIDTH use instead of OV4689_PIXEL_ARRAY_HEIGHT
+  in ov4689_get_selection
+- split s_stream into two functions for start and stop
 
-No streaming - in fact, without intel-ipu6 available (upstream + your patch,
-see above).
+Changes in v2:
+- collect Laurent's r-b's
+- squash together "CCI conversion" and "Set gain in one 16 bit write"
+- use ctrl->val in ov4689_set_ctrl
+- rename try_fmt to fmt in ov4689_init_cfg and drop corresponding comment
+- rebase on top of media-stage and rename init_cfg->init_state
+- sort register definitions by address throughout the whole series
+- fix number of controls hint in v4l2_ctrl_handler_init
+- make all hexadecimal constants lowercase
+- disable runtime pm in probe error path
+- implement pm autosuspend
 
+Mikhail Rudenko (20):
+  media: i2c: ov4689: Clean up and annotate the register table
+  media: i2c: ov4689: Sort register definitions by address
+  media: i2c: ov4689: Fix typo in a comment
+  media: i2c: ov4689: CCI conversion
+  media: i2c: ov4689: Remove i2c_client from ov4689 struct
+  media: i2c: ov4689: Refactor ov4689_set_ctrl
+  media: i2c: ov4689: Use sub-device active state
+  media: i2c: ov4689: Enable runtime PM before registering sub-device
+  media: i2c: ov4689: Use runtime PM autosuspend
+  media: i2c: ov4689: Remove max_fps field from struct ov4689_mode
+  media: i2c: ov4689: Make horizontal blanking configurable
+  media: i2c: ov4689: Implement vflip/hflip controls
+  media: i2c: ov4689: Implement digital gain control
+  media: i2c: ov4689: Implement manual color balance controls
+  media: i2c: ov4689: Move pixel array size out of struct ov4689_mode
+  media: i2c: ov4689: Set timing registers programmatically
+  media: i2c: ov4689: Configurable analogue crop
+  media: i2c: ov4689: Eliminate struct ov4689_mode
+  media: i2c: ov4689: Refactor ov4689_s_stream
+  media: i2c: ov4689: Implement 2x2 binning
 
-I have now tried upstream plus the ipu6 branch; there I get one message
-indicating that something is amiss:
+ drivers/media/i2c/Kconfig  |    1 +
+ drivers/media/i2c/ov4689.c | 1003 ++++++++++++++++++++++--------------
+ 2 files changed, 618 insertions(+), 386 deletions(-)
 
-	vsc-tp spi-INTC1094:00: wakeup firmware failed ret: -110
-
-And if I try to do a suspend&resume cycle, the machine hangs. A longer
-snippet from dmesg from upstream+ipu6 branch:
-
-mei_me 0000:00:16.0: enabling device (0000 -> 0002)
-mei_hdcp 0000:00:16.0-b638ab7e-94e2-4ea2-a552-d1c54b627f04: bound 0000:00:02.0 (ops i915_hdcp_ops)
-mei_pxp 0000:00:16.0-fbf6fcf1-96cf-4e2e-a6a6-1bab8cbe36b1: bound 0000:00:02.0 (ops i915_pxp_tee_component_ops)
-intel-ipu6 0000:00:05.0: enabling device (0000 -> 0002)
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel_vsc intel_vsc: silicon stepping version is 0:2
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-vsc-tp spi-INTC1094:00: wakeup firmware failed ret: -110
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: IPU6 in non-secure mode touch 0x0 mask 0xff
-intel-ipu6 0000:00:05.0: FW version: 20230925
-intel-ipu6 0000:00:05.0: Found supported sensor OVTI01A0:00
-intel-ipu6 0000:00:05.0: Connected 1 cameras
-intel-ipu6 0000:00:05.0: IPU6-v3[465d] hardware version 5
-
-
-Best,
-	Dominik
+--
+2.43.0
