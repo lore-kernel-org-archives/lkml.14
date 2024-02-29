@@ -1,119 +1,253 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2079.outbound.protection.outlook.com [40.107.212.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB9B17545
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709250041; cv=none; b=NaQBEWIFCObvNhGtBfRe1i79KznIfs+pNMGvPgs5vdBxfPwi+KaDY0RBkYNwUFiHHyWQEz5qCMIj65RY5QGOdnUJX5PUHYr8oLMrF+6aNmBvd4k3HxQAdqXBeOohcL22uhstAwJ22lRxO43GViSoo6+HgkukWatjtUNlSIpv24Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709250041; c=relaxed/simple;
-	bh=YINVBLnxrq+l39FJyQ3fbITB0i0PTuuWS+US1jLsYZQ=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=sNRIj8kmOdBQmeS57wNLG9fagKaKrbFwtqeK8xh9l3RdIB2GqeApOlZvyE8YEk4jeqwGhVA5UD1+KX0Sogjbo6ArIen6J2iXZmtL0LHUdRZtUDLcKxBgYCrl7uIh/ESn+8TaIqVXm1u9XnpiQAi46NFQP5/UOuEiY98iWxLZe/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=L1dXKeSD; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E20316FF51;
+	Thu, 29 Feb 2024 23:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709250334; cv=fail; b=rIUPvLYE906xb2yo5oW7QjwsEeDgTBLbS/NUvEmTl5zBGZKDZCMkQtJsqxDdhaa4niOljA0m6VLyaahmv3q5FtmgL14hMGFclGbQH2MpiYk7LXJdX67sME+plMGDMg2XNiVTRpE5q6aA3REFBl/4X+zRWrtZ6Ci7QTnplFYmVss=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709250334; c=relaxed/simple;
+	bh=fGWkrWcwdkBvkJxX7b7h2sPOzbLXNpYkc15UHMjiN8s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JDPqvWRkr0BKiRWIw6N0xwCupOeeqwD6/GYcB9ELzGAJt6ed0ntYWlS5LdIk1QA6LNpey8D3GDN698rcqN2x1JcejQ2KaC+aWEbjQPLZYr6nA8WVs6shMC7EgandpKgjYRKbyE7hMRb2WK2HhAKP2qGRc5l7UR5ebfUsp6zYTNI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Niqeh+pH; arc=fail smtp.client-ip=40.107.212.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="L1dXKeSD"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e56da425b5so1194655b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:40:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1709250039; x=1709854839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lx8BWhywoDIgpgt+e03ZrIqlEHq0YVesZbrDMn3IG9M=;
-        b=L1dXKeSDFIjfvffS2m5a1b8sh4JIj+PRoGkPaID2+IzmK/qxjuEYU81sc7sIC5F74+
-         AMB10CZJyCUT2y5/uYfODUt+82yZX7jxEmHJY/u9uitrsmVRaqG8VkUARKWdT0Q7eSeM
-         twggHu2Rfr9YS0swOoZaj4EgYlhuW/vHruS1TNvtA38PW3KxIEDmrD4bDLfjl5hvdxiF
-         nsecFpa2qhO6ezebLH/LVxelsxNR0CqdXyQoqLHIKUw2uI58tJg0HAGpV8hlNy05/xjt
-         9dQN69M8CdwHOMd34IHMmnf8YkdBtjIqWIe9FQvplRhrEQX/iWzdWoDt47pjY8aH01QY
-         hgvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709250039; x=1709854839;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lx8BWhywoDIgpgt+e03ZrIqlEHq0YVesZbrDMn3IG9M=;
-        b=GN6jqNkOuNVGRa6NO+ZuXtG/caLsA5OqqdH+CgoiFRETh8VeHBe/7lWDRtTd4U5FP4
-         2aLWwon1Z7EgH3hbYwjdrIGWVaxdRuvI9f2rIfOusYlMX+ZgJycfX0RKohOagx57USRm
-         qikHykdp5gjOZALX5pwxPCXiyleJRjC/tC/lDM+WSF87j2KTGXoOl3kGg8hQDLWBglAz
-         vuDKF1jnfUSYskn1uf82692HA3kq7NeFcwozVtRl6HJhBnhZyHKS/EfFdsMVItM47Ix7
-         UZ4p6+HoYdgXcBNJXhjbnvvOFvCs3L6OuLAHXTjSoUq1XG0cjyrBsZntvK6czli/A9+H
-         gpLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFaUZvq9/jUTluFaWtoTj5CAXv3PscnSWIrRZ/aNXDm0j0YyColkTV3TPpV4qNWR2Qz1sDWVe3fE5jbyEN2ik+nImjKdwG+TMrC8Eo
-X-Gm-Message-State: AOJu0Yw2C2OHGyWvWEFY8vQj8pCq531PeQzyV0tOMob7qplLvTQN3ZAp
-	afWchXYP84Z5IZWrW+XgdpIq58v8DL7TjEgIkJ8X7H+D9vfjRyC4ywyBMGHj3HA=
-X-Google-Smtp-Source: AGHT+IEP0KUN5vieOSkjcb6f/9wrtZCWTiS6hFvutEkB79kR+hMPoz0zBj3WKb8OwHFOckN1Bdptdw==
-X-Received: by 2002:a05:6a00:188b:b0:6e5:9698:7cb9 with SMTP id x11-20020a056a00188b00b006e596987cb9mr278229pfh.4.1709250038519;
-        Thu, 29 Feb 2024 15:40:38 -0800 (PST)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id k16-20020aa79990000000b006e59615812fsm1693015pfh.213.2024.02.29.15.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 15:40:37 -0800 (PST)
-Date: Thu, 29 Feb 2024 15:40:37 -0800 (PST)
-X-Google-Original-Date: Thu, 29 Feb 2024 15:40:31 PST (-0800)
-Subject:     Re: [PATCH -fixes v4 2/3] riscv: Add a custom ISA extension for the [ms]envcfg CSR
-In-Reply-To: <20240229-establish-itinerary-5d08f6c3ee43@spud>
-CC: samuel.holland@sifive.com, ajones@ventanamicro.com, linux-kernel@vger.kernel.org,
-  alex@ghiti.fr, linux-riscv@lists.infradead.org, sorear@fastmail.com, stable@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Conor Dooley <conor@kernel.org>
-Message-ID: <mhng-0128d165-88ba-4952-b875-c35b06ce9224@palmer-ri-x1c9>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Niqeh+pH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kIXI/vltSZ1YP+0EYb+daf172OvkYJfEzqxF7IRcNyQWVlq8pbGItcdOW+TA718gTPpLdu/bDBS5YB7MrEyr7GrnktZzgEPd3KHf2RWY9omXfZwunzDaSqWIniFR4SKFNL4VuSv2wPW30E6tfG2Jlu+4l3DkVj0+UPxzKohx0KHgAqyHHg/fXzYI5PQQWDdmDrDuJUbE6gA8jHZ9kPlHNHrqII3/FFAMlCpzOQxrfzFiXTYFg811D2GJu5jGNGEvR/ZHubRV1glR5cklwKK0b/kwWM2JF0WN/BRIsEoKN5P4Ex1VBmsWnEjMPuf93xBerV5fSRPb3XBXRp2t+AyxiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6rAkdWfRIgiHK0dTosl7qsamX5W3Fy5c/5nYuBR1oHw=;
+ b=PD928uviyYWSioa1BSpO4wlfv+ZJ8JivJQuGG1FmEzHkTSiWTfHw1rprldqppssa+kS6bDsgHsd8zCwWzTc6WWfd2+1soYykkQ6+GAr/QvKGeB7omLTD6eZSSKAuOpGwHh2efJR0DAr7nsNZHUjfRCy+sMA4kZY4W5r4OQY+KsUYxONOMD0tveYb3DJaCx3EQBXhmfl81CM4TnbISPRxdqar9rxnsaAopsK/dSDIpXElcQNzYgCexMqiCZi5NCmuC8SrPfrqtuTYsLeyg4q9quOtxDsAZMuGUp55vBQuEPxMHMKSkkM5R72VW2+l0wQmTCm6Lw3ImZeZ/FsF5RJJOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6rAkdWfRIgiHK0dTosl7qsamX5W3Fy5c/5nYuBR1oHw=;
+ b=Niqeh+pHhldo/cgGZAglucv3jK2ymS1KdFsefZCwNtKELSlkY6GS+FHUWE7vnQ2yWfW2qpf2NYPj6yawj+5z/YyQgbQa8JrDQ2rRFZ9gS0RZRSfAsjaoP0/CfeSdfQCWWkj2qW9YhE54u5q9jsDw6zib4b9/sa2OZhIsBlcoT+o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5874.namprd12.prod.outlook.com (2603:10b6:208:396::17)
+ by DM4PR12MB5842.namprd12.prod.outlook.com (2603:10b6:8:65::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
+ 2024 23:45:29 +0000
+Received: from BL1PR12MB5874.namprd12.prod.outlook.com
+ ([fe80::8b3e:57e8:d574:309a]) by BL1PR12MB5874.namprd12.prod.outlook.com
+ ([fe80::8b3e:57e8:d574:309a%4]) with mapi id 15.20.7339.031; Thu, 29 Feb 2024
+ 23:45:29 +0000
+Message-ID: <294dc34c-11ac-4220-9619-1578ebca6382@amd.com>
+Date: Thu, 29 Feb 2024 17:45:26 -0600
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v11 2/4] dt-bindings: remoteproc: add Tightly Coupled
+ Memory (TCM) bindings
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ andersson@kernel.org, mathieu.poirier@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ michal.simek@amd.com, ben.levinsky@amd.com
+Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+References: <20240219174437.3722620-1-tanmay.shah@amd.com>
+ <20240219174437.3722620-3-tanmay.shah@amd.com>
+ <d0963aeb-1165-469b-b9c7-410a61b117f4@linaro.org>
+Content-Language: en-US
+From: Tanmay Shah <tanmay.shah@amd.com>
+In-Reply-To: <d0963aeb-1165-469b-b9c7-410a61b117f4@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR01CA0025.prod.exchangelabs.com (2603:10b6:805:b6::38)
+ To BL1PR12MB5874.namprd12.prod.outlook.com (2603:10b6:208:396::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5874:EE_|DM4PR12MB5842:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e933d15-b0e5-4bc1-9af7-08dc398082dc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Oj6nG47GufR8Wz9mpWtzyKgMvx/fGU9GzRn+c0JhUX/fg/0r3h4k1UVuK55AF2sxriEEmRoU0EptKKzjd4lO3CLilwWkfAhWJWpiC6RmxjTm5pwn/HZeOPRo0UrsWWGDp1LEhw8LPWaF6QmnnNMDlSfUXs7YO0gm9H8zGU1UeGu4My3bAlesSCEhptViEYFjgD5s/5l1D8FEji/90cFOYAWfIgeviVWBfBVJ/ULpgbdNh5nLrxEgXxb5kkEYn4QmUEv4g/7VzPbgOtndOH4S9I6E+HrVQSxwwFM9vcVsGHdlauANtyh9yu/jN3nLBSryzsFC4dlNoaLDDC8drYRUXfMgZNVqLy9vxzsnV0w3oURTeQziaEF/ddymbPwo7rXoFPa3FX+/CFYJ57pAJklCUHNLj6wdDALWWDzLZnjxlCNCkfbiotzMBj+yPv0D8tr4+6wZ78wflzdoTpwVwpnxFPjyOv0OvAuKE7yOD/FP3Hzqd3+qRpEVb7OmBK0eQiUaaXqJGz9L53w3T5yq4ZG6X6nxV2B+E7lDNd4/WUISCpqhJ7TF5R6gCLRkiqPhuX5KJU63uWTFfFF6lulNtoRTjWFOW2ftpOcYXrQwWz5PfbgQqhWbcYxyIV35Q1STdrhadb/mIUqx3S/ul85B5h9YdQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5874.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RjFMbzNzUmpLekg2RDJaOFN6YjRwejk2N2FEK0g4Qnd6bG9Wb2NacXRDMVNC?=
+ =?utf-8?B?M0pad0hSUFNkNFF6R3pENHhHR3N5L0xPTXU1Y0dKZ25GUlVsbDJ3dE5Nc1dm?=
+ =?utf-8?B?cktYWlRHM2s3ZjFBd0VHeFg4UjZrMnNtbkRsVmhUNTRvKzNhc1FPQWkyeVFs?=
+ =?utf-8?B?SDQyOGQwMDdEMFJ6NkdUY0RkYWg4SHpZazJzSEd5QzBZRFRoQjdKMC8wNzRp?=
+ =?utf-8?B?OHJMWkFBMWlCVVU5Qmtmc2tOVCtnMnhSaU5NRzgxOUZYVU5yak1yalRYR2tZ?=
+ =?utf-8?B?cHF6cVVPa080b1RUUUZBbExvV1Vwc1hYcWNMVmplS0JoNzV4eHF1dE5aWjYy?=
+ =?utf-8?B?MHA3NkE0KzBWKzdpbmllVjg2dHBWbnd6REVCdEhpZnRLaFc1R21HeG9rb20r?=
+ =?utf-8?B?bm1WWGRROEFCRWcxOXN6WHRvb0ZKc2tYNnNRakRCdVpodm5KTUUrdGZ6Zmht?=
+ =?utf-8?B?QjZMOHVJYktuYWo4R3lTUEhDVkdyQm8yUWNwUkU2WTVadXFDczZmNUo3K0hz?=
+ =?utf-8?B?SXl5SUtubU5Ya0dVRXpQWEZQZ3kxSlFhdWNaZTZFUndoeG4yUzlXTFJlRGpJ?=
+ =?utf-8?B?aFRlckRla0J5SlBHK3oydUlQWkVvM3MvZkhQbkpOdnlFUHdmSjRBMXpVcGdK?=
+ =?utf-8?B?eUk2YUVaSzJ0ZmluVXQ3ZUNMcjdIVTcrRUpYNzJrSTFEdHQvV2lJdGxKTnNK?=
+ =?utf-8?B?REJubUdSY0tCMDMveVlhc3drSjhuemJUVVdWTE8wVklpbFBVY2hzSFhWOVA3?=
+ =?utf-8?B?V1EzL0NtVjBlWERnMHgva2UrTHdyUFYySS9NNGZscUxhSHdrQlBlT0dxNmlS?=
+ =?utf-8?B?RmhETDZaYXRSQnlVY3pUVTVFaG41Z3V0a2VBQXdXTVVpWGpIc1lTenRaaGJC?=
+ =?utf-8?B?T2JqRUg4RVZuSENaODBpei95Q2VETy9iK0MrQkx3WTZMTUdSR2U3Wll5TmRL?=
+ =?utf-8?B?OEpmTVZRenVoZzlUNElFZ1dvNVpoZTQvWVN0Y085VUIzQkdValE0R1VFTTZY?=
+ =?utf-8?B?MHBZSjViVnlkbEJyeXNhcU1Yelc5S1RCbTE5L0g3MmN3eHBTNlBUWURuT3JE?=
+ =?utf-8?B?OUpkN0hGUG0rWUMvbU01a0xiSnF5YUptUVJ6Ynphb2F4dzZlYmZwZzM4U09h?=
+ =?utf-8?B?VWFMM1NWbCtTd0FhV1pZL1ZNckVDMjF1VzVUN0RrblBncGdkaHF5VXY4Sml5?=
+ =?utf-8?B?YXNjQmdRbHBhcXh1alNLekNpbDBCWEpoN0NZc2J3U3NjSUxPSmg0eDBlRVZz?=
+ =?utf-8?B?VjJxYnJJaE5JS3g4eFpvcGpiWUdMb0tReHVMUXFCTm1CUTgrM2RLVzJCR0NR?=
+ =?utf-8?B?akRmZDdKWC8yWFhuVTVJZ05xaC9NdTBIcUxyNXN0Y3ZZdUVub0QyZ2g4cjZC?=
+ =?utf-8?B?K0k1Rk9oWHVrQzR5dUYzbXpwenk0UkJMMW5TdXFlZHd2czljMVlBUGNjMTFu?=
+ =?utf-8?B?VXMrSWZBalZCR0dlVVVQTzVOeW9qWGpyY2FzTTBUUWJQZDMrZzNTSmhiT3A1?=
+ =?utf-8?B?L3J0NlFFUHBxR1R5aHZDM09LZzB2ak9obUk2QXl0V3RubWxkQ2Fza1h2c09O?=
+ =?utf-8?B?YW4vRTRtV1ZYRkIvd1R1UmtxeTlrWVdHLzZxNE95dzRmbFkwZnFCdGpPRE1j?=
+ =?utf-8?B?cGhpWXc4b0w5VVN0RXIzWEhxaW9UWTk3UjB0ZXdLQmtsRE5WUVBVa09jYlJO?=
+ =?utf-8?B?NGhVVmIvMy84Rlo1OXdTNmk5YlFLM1g1bHlkandOa3I3OTNad3cwY29zRHVL?=
+ =?utf-8?B?V0NaQVRiVW5pOE9BVUFvRmY4UGZ4Qmtta2Y2eGpmSWN0NGovRk0xWit5OFlK?=
+ =?utf-8?B?VUhNYXh0UU9nRkxkMGRlVDd2RXdVUGErWTlxSldlRUo5Q0ZuU25YcCtIN3JJ?=
+ =?utf-8?B?eThLc2NQVFlZOXBRZE5STXd0cWVnWEphU3hHVndSaVlKMXhMQ3Bpa2VqaHZ6?=
+ =?utf-8?B?ZDNBdDF6TjltQkFRSEk0U21VVHA3V0UrOWg4amRMZE5qQ1l1UEVTa21BZE9h?=
+ =?utf-8?B?OU1hM1V1UnBNNWx2dkpUdVlrRkpCaFR0QnlRYiswYndHWUhLUGs2ZGgxR2ND?=
+ =?utf-8?B?TElyU3NROTJWRWRvcE1zOG0zWlpyYkZzcGlUY3FwWXIvNHZSV0g0R0xSYVJ1?=
+ =?utf-8?Q?TjcYTcye6nREMIlAhJU35j8IE?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e933d15-b0e5-4bc1-9af7-08dc398082dc
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5874.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 23:45:29.5391
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8eCBUmD6n92W+IyzfB15SvAuis5ciM2resjrxLfF0segLVoKxPyL6Cs25Q6FDPm5
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5842
 
-On Thu, 29 Feb 2024 10:30:10 PST (-0800), Conor Dooley wrote:
-> On Thu, Feb 29, 2024 at 10:23:39AM -0800, Palmer Dabbelt wrote:
->> On Wed, 28 Feb 2024 02:12:14 PST (-0800), Conor Dooley wrote:
->> > On Tue, Feb 27, 2024 at 10:55:34PM -0800, Samuel Holland wrote:
->> > > The [ms]envcfg CSR was added in version 1.12 of the RISC-V privileged
->> > > ISA (aka S[ms]1p12). However, bits in this CSR are defined by several
->> > > other extensions which may be implemented separately from any particular
->> > > version of the privileged ISA (for example, some unrelated errata may
->> > > prevent an implementation from claiming conformance with Ss1p12). As a
->> > > result, Linux cannot simply use the privileged ISA version to determine
->> > > if the CSR is present. It must also check if any of these other
->> > > extensions are implemented. It also cannot probe the existence of the
->> > > CSR at runtime, because Linux does not require Sstrict, so (in the
->> > > absence of additional information) it cannot know if a CSR at that
->> > > address is [ms]envcfg or part of some non-conforming vendor extension.
->> > > 
->> > > Since there are several standard extensions that imply the existence of
->> > > the [ms]envcfg CSR, it becomes unwieldy to check for all of them
->> > > wherever the CSR is accessed. Instead, define a custom Xlinuxenvcfg ISA
->> > > extension bit that is implied by the other extensions and denotes that
->> > > the CSR exists as defined in the privileged ISA, containing at least one
->> > > of the fields common between menvcfg and senvcfg.
->> > 
->> > > This extension does not need to be parsed from the devicetree or ISA
->> > > string because it can only be implemented as a subset of some other
->> > > standard extension.
->> > 
->> > NGL, every time I look at the superset stuff I question whether or not
->> > it is a good implementation, but it is nice to see that it at least
->> > makes the creation of quasi-extension flags like this straightforward.
->> 
->> We can always add it to the DT list as a proper extension, but I think for
->> this sort of stuff it's good enough for now
+Thanks for reviews.
+
+Ack to all comments, I will address in next revision.
+
+
+Tanmay
+
+On 2/29/24 3:59 AM, Krzysztof Kozlowski wrote:
+> On 19/02/2024 18:44, Tanmay Shah wrote:
+> > From: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> > 
+> > Introduce bindings for TCM memory address space on AMD-xilinx Zynq
+> > UltraScale+ platform. It will help in defining TCM in device-tree
+> > and make it's access platform agnostic and data-driven.
+> > 
+> > Tightly-coupled memories(TCMs) are low-latency memory that provides
+> > predictable instruction execution and predictable data load/store
+> > timing. Each Cortex-R5F processor contains two 64-bit wide 64 KB memory
+> > banks on the ATCM and BTCM ports, for a total of 128 KB of memory.
+> > 
+> > The TCM resources(reg, reg-names and power-domain) are documented for
+> > each TCM in the R5 node. The reg and reg-names are made as required
+> > properties as we don't want to hardcode TCM addresses for future
+> > platforms and for zu+ legacy implementation will ensure that the
+> > old dts w/o reg/reg-names works and stable ABI is maintained.
+> > 
+> > It also extends the examples for TCM split and lockstep modes.
+> > 
+> > Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> > Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
+> > ---
+> > 
+> > Changes in v11:
+> >   - Fix yamllint warning and reduce indentation as needed
+> > 
+> >  .../remoteproc/xlnx,zynqmp-r5fss.yaml         | 192 ++++++++++++++++--
+> >  1 file changed, 170 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
+> > index 78aac69f1060..77030edf41fa 100644
+> > --- a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
+> > +++ b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5fss.yaml
+> > @@ -20,9 +20,21 @@ properties:
+> >    compatible:
+> >      const: xlnx,zynqmp-r5fss
+> >  
+> > +  "#address-cells":
+> > +    const: 2
+> > +
+> > +  "#size-cells":
+> > +    const: 2
+> > +
+> > +  ranges:
+> > +    description: |
+> > +      Standard ranges definition providing address translations for
+> > +      local R5F TCM address spaces to bus addresses.
+> > +
+> >    xlnx,cluster-mode:
+> >      $ref: /schemas/types.yaml#/definitions/uint32
+> >      enum: [0, 1, 2]
+> > +    default: 1
+> >      description: |
+> >        The RPU MPCore can operate in split mode (Dual-processor performance), Safety
+> >        lock-step mode(Both RPU cores execute the same code in lock-step,
+> > @@ -37,7 +49,7 @@ properties:
+> >        2: single cpu mode
+> >  
+> >  patternProperties:
+> > -  "^r5f-[a-f0-9]+$":
+> > +  "^r5f@[0-9a-f]+$":
+> >      type: object
+> >      description: |
+> >        The RPU is located in the Low Power Domain of the Processor Subsystem.
+> > @@ -54,9 +66,6 @@ patternProperties:
+> >        compatible:
+> >          const: xlnx,zynqmp-r5f
+> >  
+> > -      power-domains:
+> > -        maxItems: 1
 >
-> Perhaps good enough forever. I was not advocating for adding it as a
-> permitted DT property - I was just saying that I didn't the complexity
-> that you mention below, but I was pleasantly surprised that the stuff
-> ?Evan? and I came up with allows for this kind of inferred "extension"
-> without any changes.
-
-Ya, I'm in the same boat.  I think we can get away without putting these 
-into DT until we end up with something odd going on, like some other 
-flavor of *envcf from some vendor being weird.
-
->> -- we've already got a bunch of
->> complexity for the proper ISA-defined extension dependencies, so it's not
->> like we could really get away from it entirely.
+> Why power-domains are being dropped? This should have widest constraints
+> if you later customize it.
+>
+> > -
+> >        mboxes:
+> >          minItems: 1
+> >          items:
+> > @@ -101,35 +110,174 @@ patternProperties:
+> >  
+> >      required:
+> >        - compatible
+> > -      - power-domains
+>
+> Don't drop power domains.
+>
+>
+> >  
+> > -    unevaluatedProperties: false
+> > +allOf:
+>
+> allOf block goes after required:
+>
+> > +  - if:
+> > +      properties:
+> > +        xlnx,cluster-mode:
+> > +          enum:
+> > +            - 1
+> > +    then:
+> > +      patternProperties:
+> > +        "^r5f@[0-9a-f]+$":
+> > +          type: object
+> > +
+> > +          properties:
+> > +            reg:
+>
+> reg is missing in your patternProperties earlier.
+>
+>
+>
+> Best regards,
+> Krzysztof
+>
