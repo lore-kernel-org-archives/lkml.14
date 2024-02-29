@@ -1,81 +1,119 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144B355E76;
-	Thu, 29 Feb 2024 23:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B5F74BF9
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709249024; cv=none; b=Eq6BomKbfjqev29sf4T5WbQHMk8ktfCcFgHnAaU2K7dr05prEf4qaptqCVbNvKDkrsqFIPiYgUNVsW45ft10dsFznRcr4Gx95syinR2Tdi7xCkvT2mBAFEeWGiGGzQQCZiuKDo7KMx71r6eeM/rJOQxZ5KKElJhpCI9GOXAMZyo=
+	t=1709249210; cv=none; b=rV+YQGhTF25Zma4QJPmPU+zakWR36RDC09WZW8F0HjRQnWnbCJjl+5+gl7qzzxEqX5o3qShL/G12e2UCobOA/gjc2tb+nZ9jY8A22OT9TLy0DlGWmf1OAPzjzcTXCq+6i/DC4nmH3QUWLy+wSLsXcKatsDD+orzK4pPUZ0q4piY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709249024; c=relaxed/simple;
-	bh=iwhvBuR3uowqRZpqmpqi0jgdnW+GpbB/EsS1T+Pi24Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z1geHNgtd1OVgku2xuqHPwMzedRr7rSmSxytlM0lxvi550ykZH5Fz8TOwq1vPtJWWzvSuTnh3Z+1QKjQc3HOvFatoOO0tPYeb/4LULC9dkJ1A8b7j4b1iSf5wyCaXtB8XWNz6cDmAwpi9cevO00S5H845DkiHxYMIK93BGjBGLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=T35ZCjxn; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1709249210; c=relaxed/simple;
+	bh=vFGe/JPM+D98FYRCFhoM8TP+K+kv3fj2cPK6Z4iL8bQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GrWE0PQVhbz1AvfK1ac8yYmMlVz/HzOGaC4ucWKy90mx+OckefE8ptBRhOPUcbnRZ/VVLwWlCAlNo2pP52QoP7M7Gs6I61o3gMOahwkVbxZJUuYQKOI5duenGga4aROHqWIYC2lrsNmudqK05QSEDQq9XcByMbbNdEBFsjwsD6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=xM8dEdSI; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="T35ZCjxn"
-Received: from [192.168.68.112] (ppp14-2-70-176.adl-apt-pir-bras31.tpg.internode.on.net [14.2.70.176])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 1092A2014F;
-	Fri,  1 Mar 2024 07:23:36 +0800 (AWST)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="xM8dEdSI"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29abd02d0d9so1106931a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:26:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1709249019;
-	bh=iwhvBuR3uowqRZpqmpqi0jgdnW+GpbB/EsS1T+Pi24Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=T35ZCjxnY32uGh1veM/9q6f1NytauK7tck34JYdig1hWxH48PHb4OylbgljFV7Yvs
-	 lMwpgNgI4Adtol5s228u5RgVH7fEvlW3pjC0EK2eb60yPen92xuja2B5vU5IebcL5B
-	 46yZkX+PriKqmQP57m/8GL90/NGbUfHxBLQUOjJqRSn5Ib+kxFGEknw6UBb8zDbq1r
-	 eeGC8jDGcZ5U2JxbesjLGLOKSsRRbqr391cKM/bVdWQuYYr0RdkJUTFmhWUzwLHrgm
-	 bm/iSfjkySDatt8zWhbl/05ELmOZPHoJTYyYixQXlMxOKxz9J8tHxm3fB6gCcavcbW
-	 PrNZeGOggyRag==
-Message-ID: <e55aa1321ccac8e6391ab65a5a439b49d265bfce.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v6] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to
- DT schema
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
- robh+dt@kernel.org,  conor+dt@kernel.org, joel@jms.id.au,
- linux-gpio@vger.kernel.org,  devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,  linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-Date: Fri, 01 Mar 2024 09:53:36 +1030
-In-Reply-To: <CAMRc=MeEyo7y-G1saydxtTRedNtHPaEeLANuzXt6KsiDU2jOWw@mail.gmail.com>
-References: <20240228003043.1167394-1-andrew@codeconstruct.com.au>
-	 <c2060450-4b76-4740-afe4-d14717245f01@linaro.org>
-	 <16ddd99007176da3f84462de217cb76c8fa4e1bd.camel@codeconstruct.com.au>
-	 <CAMRc=MeEyo7y-G1saydxtTRedNtHPaEeLANuzXt6KsiDU2jOWw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1709249208; x=1709854008; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=grHdyJH43EDqTr7lOlPpsv2LnOtPCDv7mkz6AEIU0ok=;
+        b=xM8dEdSI0/FTFjeiVslj0L5JrHinrkZRbK0wIXgaF8BK0/xXK48R39MUEVILrw2tlZ
+         0y/HJuwAJxr1wFMOoWiyYc3EtldxtiVFQgPvAeoOiXMAUMHcGUScmnsLYYWUbhyLyU6q
+         pcaS1Expi4zbTjBNaun9f5cSG0m2dzOOiYpMW5OOG547M9uUewSBC6N3I4yUX3OoKPra
+         5yAWS88QIpu0mxdp25Zi96Pl94/StNz/wZOGOQBGxoqeUxMxftRsNi7NgDEwTahvjtrY
+         4DUiPcf8eGyEX1ShqWsUB0ZO7Fcd5+wrB6NhB2Z+EOKWDoS+fSOeQAT948ZgqnUtpbqz
+         KWmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709249208; x=1709854008;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=grHdyJH43EDqTr7lOlPpsv2LnOtPCDv7mkz6AEIU0ok=;
+        b=AxDEbw+mUMTvu9SZfdoEb80HYDuj12qFQ38ZHqwnimiMDQf55OoFRwC5MwfhafYysE
+         pnuzd5LgwjP3KlNZaivasU/aLQpH2RUdm+6JfYq7O45xwtdPr19+2j+DF13Tl/j+I1DG
+         0BstM8GemW8JDv9WNe9X00xv1qsLpmdHgaX4MaU86WT9xgGQ4ihGc8QIOfGJfWmx5U9m
+         tIKShO1TEj/iSrV+UHgx28L9pR+r7oRVPx8p8+QV/FCZiAiLQWPCy/CYGbxV0f/uMdcB
+         vNgQPDg7DXsSXbjaURKWZQKv/JUmpxr9607rUKT++8+T47BX8DY+62EShBdIrojKcm+I
+         vb0g==
+X-Forwarded-Encrypted: i=1; AJvYcCWxKZWEWw36qgWiAsRBR/41b3lRY1V0OOQvsICOelMB3jpf1bFRykRjH5yfUuajpSK2HEhcAXVuz2UGQ16usGjcCEdJxPIkvylwRd1+
+X-Gm-Message-State: AOJu0YywcyrOM4emfSbPYlT7tOYGEIxciOwqJXxmCjYCAq3Mvch2TuAu
+	t1bErZx6A6sd2+ygjPx4hfBjzvftbAEN2P4EiaNZfGuDB3w0czbjUGxiwejqTy9mJgGbu3VpY0U
+	+
+X-Google-Smtp-Source: AGHT+IGiSfuRv3Y76uLW0YYRJRv2KJMhOadB6A35s9PgdU0SN6q4L74ZxSAPem4Amsho3fTWY8H25g==
+X-Received: by 2002:a17:90a:a618:b0:29a:795:a132 with SMTP id c24-20020a17090aa61800b0029a0795a132mr99168pjq.18.1709249208246;
+        Thu, 29 Feb 2024 15:26:48 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-247-196.pa.nsw.optusnet.com.au. [49.181.247.196])
+        by smtp.gmail.com with ESMTPSA id sj5-20020a17090b2d8500b0029ad78306d8sm4245337pjb.3.2024.02.29.15.26.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 15:26:47 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rfpnY-00DJUd-1S;
+	Fri, 01 Mar 2024 10:26:44 +1100
+Date: Fri, 1 Mar 2024 10:26:44 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: kunwu.chan@linux.dev
+Cc: chandan.babu@oracle.com, djwong@kernel.org, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Kunwu Chan <chentao@kylinos.cn>
+Subject: Re: [PATCH] xfs: use KMEM_CACHE() to create xfs_defer_pending cache
+Message-ID: <ZeEStFZwMu068YTc@dread.disaster.area>
+References: <20240229083342.1128686-1-kunwu.chan@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229083342.1128686-1-kunwu.chan@linux.dev>
 
-On Thu, 2024-02-29 at 09:52 +0100, Bartosz Golaszewski wrote:
-> On Thu, Feb 29, 2024 at 4:21=E2=80=AFAM Andrew Jeffery
-> <andrew@codeconstruct.com.au> wrote:
-> >=20
-> > On Wed, 2024-02-28 at 08:47 +0100, Krzysztof Kozlowski wrote:
-> > >=20
-> > > You still have way too many examples. One is enough, two is still oka=
-y.
-> > > We really do not want more of examples with minor differences.
-> >=20
-> > Noted, I'll keep them to a minimum in the future.
-> >=20
->=20
-> As in: I'll still send a v7? I can trim the examples when applying,
-> just tell me which ones to drop.
+On Thu, Feb 29, 2024 at 04:33:42PM +0800, kunwu.chan@linux.dev wrote:
+> From: Kunwu Chan <chentao@kylinos.cn>
+> 
+> Use the KMEM_CACHE() macro instead of kmem_cache_create() to simplify
+> the creation of SLAB caches when the default values are used.
+> 
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+> ---
+>  fs/xfs/libxfs/xfs_defer.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
+> index 66a17910d021..6d957fcc17f2 100644
+> --- a/fs/xfs/libxfs/xfs_defer.c
+> +++ b/fs/xfs/libxfs/xfs_defer.c
+> @@ -1143,9 +1143,7 @@ xfs_defer_resources_rele(
+>  static inline int __init
+>  xfs_defer_init_cache(void)
+>  {
+> -	xfs_defer_pending_cache = kmem_cache_create("xfs_defer_pending",
+> -			sizeof(struct xfs_defer_pending),
+> -			0, 0, NULL);
+> +	xfs_defer_pending_cache = KMEM_CACHE(xfs_defer_pending, 0);
+>  
+>  	return xfs_defer_pending_cache != NULL ? 0 : -ENOMEM;
+>  }
 
-Ah, thanks. I wasn't planning to send a v7 given the R-b tag from
-Krzysztof for v6. I intended for "in the future" to mean for patches
-converting other bindings to DT schema. But if you're keen to trim some
-examples out I'd drop the aspeed,ast2400-gpio and aspeed,ast2500-gpio
-nodes, keeping just the aspeed,ast2600-gpio example.
+Please stop wasting our time by trying to make changes that have
+already been rejected. I gave you good reasons last time for why we
+aren't going to make this change in XFS, and now you've forced
+Darrick to waste time repeating all those same reasons. You did not
+respond to my review comments last time, and now you are posting
+more patches that make the same rejected change.
 
-Andrew
+PLease listen to the feedback you are given. Indeed, please respond
+and acknowledge that you have read and understood the feedback you
+have been given, otherwise I'll consider anything from this email
+address as "just another annoying bot" and killfile it.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
