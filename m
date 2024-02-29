@@ -1,180 +1,330 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CE863501;
-	Thu, 29 Feb 2024 10:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709201551; cv=fail; b=Sz5lXO85YCQ5bYtMVPMp2YNLrkmsFFskMpzVi0rA2Qpr8zQoPE1yBdbdYfWfQ4d6HfM9RaRC7d+dPu9SBnaF2drlaHtPCYIouaYH47SqWbZ9cmy8OL72nqZXcUaVc72Z6lOenCEJa9jdMhGr7t3E/zbRwYYPUPhnWjDwzQAR+fI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709201551; c=relaxed/simple;
-	bh=bEfkuE/kZEUoBkGTrGatYYNjiBEg/WVbP9zdS94aJBY=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=gG/1A2vjLOyd8OtThTcS4Woab+19S61BFIzB7geJLmaIEVn4knHNWv88emPw9aOSgDRhD/sBDu9BsEyfupm0Bp4Ps+LSJmsq5AjggQhD7cWqSYTwvNpWPUVeSl/pkQhMCrkl+1Tdz5U16EFpwTMZpLBDrj4235L5LGx9R+3lMio=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=GHcwZ3yM; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=iQbA1x47; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7063964A8A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 10:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709201564; cv=none; b=o9qQCdmGvPOoDhTSqqGbvHn9wTz1as5udpZik3RBfx1+MH+4gh/r+luIb5bDKK2CVeOqfZpuDMKoFczX2cOSs6XSizhu9Ksr9PC4VwsI3vRg+dzEBF89IxU1Td3q1Uy+5vIWoPabDvDzd/smto9v99Q+TnG/VnRCOIXBFdIk+Pg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709201564; c=relaxed/simple;
+	bh=l54BWmo2qBQhfU+nOETMwbUa9rPPpZylhZJ9ZNpclZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nls+HVBslyB0Tx0bHf4UXP6JmkWGwManZdCZK69vThhjm8Qb2H8M7Co03gUJoLRZoqH+LoTuJ/dWUQb0AaT+x03U72kVkrZdUKrIxIJA3/uOrU+oepTgs51Memz1EPb9IqxCEFHLnkHduHR8GnN/oEq7T6XIf2+xx7TPLbLN53s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gxdlJZI4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GHcwZ3yM";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="iQbA1x47"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41T9FYqe020466;
-	Thu, 29 Feb 2024 10:12:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : content-transfer-encoding : content-type :
- mime-version; s=corp-2023-11-20;
- bh=cSj7rddjhuXKPU0unTMP0ct6rFgIQr8/bNBgCeLQcYs=;
- b=GHcwZ3yMBqc5UXI9Tk3Z6mhZtUzrnAYoOmelrJULd+dOG2l0TNx8ANms9kjBytmsZrGj
- yabzcfC6ITPiLOWJKMTCx7gjNb24GlKW6TOF+sceyV9l8nW8ddY6WtiE0w6vpanEWrjE
- yNumTJiWkNvESxHH8nN30eOzr0CTeBZIXq2q6z8qmBi9gr5DqCY0mrw2UMXTMbinHlaU
- jkbxqoCbrrffr/AFCVC6bb+XKSHLoMnQmvPanwqon1O7zmeCZQ41umYVjvxRQdmLLgGJ
- lMcaqGpGS2qciIwvEZ4U0KDZw7Tg4wlfBItodwA7z64bsmGMbJY5El8zTmkglPvWzE7L Hg== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wf722n2sg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 10:12:05 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41T8Rivn015274;
-	Thu, 29 Feb 2024 10:12:04 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3wf6wafbak-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 10:12:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l9Wcslcfkryc47JChSBU7HmrH6ARNgNSStmwJLeRdIENjcZkqWkQEaeHN6yIIFK29LCCrXz2i2kUNkJLMei7xJ3qRogkhxGLVhgEaX7DUnLD9zJuKYenTc2RXsZprH2iVgIbQK0U+a7Gc0WePztbpbaj/6+0lMP2Cw2mPl3rEGdqT0FjMF35jFKJyRfyia6WhuTSMZ3TVdYPLWnJ6Yb1n36xUbQg3sMg8+u1NzTrIf/L3ED1lDkrLgW4+C91REazYXUWyWlNpdJ7kAXJ0ypIK2b5l9GeEOInREjTUNV/Oc0bdWfm3dLCYXb11VrDC0SMcvCVmhXSEfRZNLj/hJSx5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cSj7rddjhuXKPU0unTMP0ct6rFgIQr8/bNBgCeLQcYs=;
- b=mEWYmzw2lnvWVwWoG46rYTtiD8lEfHxaaqkVKTXVEJl4XlrEsZzH0pbjy/Y7n34DjS/NXh0Cb2d+HrpjFmgOfM32DOMoR0QP4IPyvQFKWz+mVIk4v/22lj/lp2EEdGA6062E2rtK24BB3O2nB2bt1XGbOk3jYIPuYL6C6YRlFIwFq0yOkUdI7SDPjhBm0z5UltAfjQdWb4CYISg4HWk47KxZryj6WkVpK0Pn3kzSPADzh7RyJCCZ2IqkOHZuEYmm+qYzIHltlikLUGyAc9mNGWrhsoqwwT+PlaD6OwEglGdIXHJcE/wfm37dtVcPWm+ZkY4bfnSgeNuzCUMbqwzUsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cSj7rddjhuXKPU0unTMP0ct6rFgIQr8/bNBgCeLQcYs=;
- b=iQbA1x47AbqxaGQe2EmmQN/lfXUUq04o/KyWPIfkGJQtmLWhwEVbBAg2g7V6QWk7+KJyYzOegL3NSz2n8B3ml4mWcnxdGcUFHayv3tlcMBR7YJcdl26woyLRLkC7cR0Hk3yAoPk0QiFVJkNSLLeRhxh1k60LGdJTeYHdvAg+C5Q=
-Received: from PH0PR10MB7080.namprd10.prod.outlook.com (2603:10b6:510:28c::6)
- by SJ0PR10MB4591.namprd10.prod.outlook.com (2603:10b6:a03:2af::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
- 2024 10:12:02 +0000
-Received: from PH0PR10MB7080.namprd10.prod.outlook.com
- ([fe80::5bd9:10a1:f938:2ee5]) by PH0PR10MB7080.namprd10.prod.outlook.com
- ([fe80::5bd9:10a1:f938:2ee5%5]) with mapi id 15.20.7316.034; Thu, 29 Feb 2024
- 10:12:02 +0000
-From: Kamalesh Babulal <kamalesh.babulal@oracle.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Zefan Li <lizefan.x@bytedance.com>, Tejun Heo <tj@kernel.org>,
-        Tom Hromatka <tom.hromatka@oracle.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] cgroup/cpuset: Fix retval in update_cpumask()
-Date: Thu, 29 Feb 2024 15:41:14 +0530
-Message-ID: <20240229101116.60043-1-kamalesh.babulal@oracle.com>
-X-Mailer: git-send-email 2.44.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYWP286CA0002.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:178::17) To PH0PR10MB7080.namprd10.prod.outlook.com
- (2603:10b6:510:28c::6)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gxdlJZI4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709201560;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MyG7advrzShaE4GD7r+5bwZTpy9MVwSz4bddaNdVD5I=;
+	b=gxdlJZI4n09dw22phMQnCViPkY0CPQ5OR7Z1dnldkjp83cQRxuGc52VWVGq+NLaIYduVxy
+	C7FJ/hbuGVmkJWZtN8S7r2tAdpcmT4GVc+AElJIV3YlUa6qJh1bVU22pLBA+9IJjlOpsiE
+	6C5+gyU4WrwLYF9O4fa+XZRr1luYPUs=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-395-g2_kueaYMjGjcrktKfdRQQ-1; Thu,
+ 29 Feb 2024 05:12:35 -0500
+X-MC-Unique: g2_kueaYMjGjcrktKfdRQQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7563F3C40B51;
+	Thu, 29 Feb 2024 10:12:34 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.6])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 729CD2166B33;
+	Thu, 29 Feb 2024 10:12:31 +0000 (UTC)
+Date: Thu, 29 Feb 2024 18:12:00 +0800
+From: Baoquan He <bhe@redhat.com>
+To: rulinhuang <rulin.huang@intel.com>
+Cc: urezki@gmail.com, akpm@linux-foundation.org, colin.king@intel.com,
+	hch@infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	lstoakes@gmail.com, tianyou.li@intel.com, tim.c.chen@intel.com,
+	wangyang.guo@intel.com, zhiguo.zhou@intel.com
+Subject: Re: [PATCH v6] mm/vmalloc: lock contention optimization under
+ multi-threading
+Message-ID: <ZeBYcCAdHBCiDJkz@MiWiFi-R3L-srv>
+References: <20240229082611.4104839-1-rulin.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB7080:EE_|SJ0PR10MB4591:EE_
-X-MS-Office365-Filtering-Correlation-Id: 607de5c7-6777-448c-b4d2-08dc390edfc1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	P1ycU8cG7JwRAGozywjxiiT200ClhwJTAdFoP1hqnN/RiE/nbVAc8k+99J2xiPzJ7Qemq96S+UZYpGAZufqwDBYzG238J4S4nXMW9XOk9WwkEPCV0/P9ld0DMbGRzP2BN9/c0/VsgXX8IvDBoMCQb4e2ho2f0Ylo019a4muMnAgWIsHoD3kIQevetRPdcQueO6NpjFJVdUJgjzVE87Od9Mo+ewApLtBy2Y7qtZHvFOO5y6m2QUJEFR0yI2qNwYERKnHfbn1UAYOT+7DzADe0IAVbwjhx1C0HOelVrTPDbsrD2KYB632Nz7h9a1u7jlMzatmOvCmr3HQxBi97a1R7YItxeLbtQMMxqYdmAZORwdvOFIraIEfn4OyMMzYjvw0lK8sP7MBF1JP1IS9HFolxE9TMjUxX/Ri+m9wqGhV9or9yooJPg0gtj+UwceN0llLLnq0Ac9zfLGDVwAxRUO0goUo+8G0OmTcvYFP7Kpk1qgORQ/b1ldTMHPV8cmuYGtzH1Tj67WmZODpywWZkVyYiLOhVOSDLIR4atXysFpmSTdG3+EVu5BlJl6NBWD/Sco+ljjN+6s7x3cNoOvz/e8p85x8feLXHs3VzSch+La7HTs6Xc9oNtIx9OJLIqziLNZhABPH3ZEl1y8xW4e4fe1Oidw==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB7080.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?ghXwvXWZJu3Ji3idirpruk433/0ksErGqFvsuE8HrqNkIoqQ/ifqzqLyr9zU?=
- =?us-ascii?Q?r3Fy8tn7R/eqBy2VSEARVAajI42z/AHdhdOR8+cdIOjJArYqL/Mze7NunON2?=
- =?us-ascii?Q?P4PN3v1NhzCENHQEgZpNEi3wOQ6XJiJlizTyNNJumWIK75OajTv6sl48xhnH?=
- =?us-ascii?Q?MijpjbX2tGwiuKQfMhMOaq5BgUf6XE6vGnEgTHVv4VihbYxIOOV2xmler0fe?=
- =?us-ascii?Q?4coSHe7o1cXKSFk0OYczFtwRWpUEDKbKN/oWY8kvvN0qhs9M21hJazytZOUR?=
- =?us-ascii?Q?mPrtf1fv3aa9Kz+uvhJm4QdRYB8spfl22M9O0M1XlbOoN6FltcrQes2S55A/?=
- =?us-ascii?Q?v6AwLiLtWS105r180VRyCZUWXc60XThr6qXDbWY4jDcnEPlm5jyrKwlwZsLO?=
- =?us-ascii?Q?93Lu9wuZ4o0Q+bK7EWhnFClLAJ0SM2rd3UKYC8e/hCODd7lwTrcl9J/tQ6Jm?=
- =?us-ascii?Q?01SRJ/w/GBsLQB+aCadFQaZYzMK1vgQf5S5O6ZmRG6ME0cj/CYsc+3Q9trzR?=
- =?us-ascii?Q?4hCQRRjJb4Wcst636wuE4zmu2jx6mtXbYc4dwHtaZ0uJSoyoozILWBXPtqSr?=
- =?us-ascii?Q?EuUcDwdGWXZktrG6gufjHVL791wAXZTKweI0KDxcSDYeOnLcXJqSKmdsbxPy?=
- =?us-ascii?Q?bq6RfrxW5IMRiWKrKsgs5IX7RF1pCvtp+T6dr3VxScxcsTQWZyHrroHDIN7T?=
- =?us-ascii?Q?bgaIqrnwMXsbdJawCok/7va83kxN4QibnSizMo9Dc2mMvTFgfgCTmyi3R4Yy?=
- =?us-ascii?Q?uMhmEBXNetjkwnixnYAQkFQ9eUNUzcP/NfKhIGYs6i2P3x0Ng0QP0dKriehc?=
- =?us-ascii?Q?KUTK84bv6Ke+k+ZnJge+v6CeNWJHVzhsghmqtDSJ0NRFDoKNmLMw1HDFcEln?=
- =?us-ascii?Q?v6n1Dw/Lt39Y2aj+rLqB+ChszDhF/uulVjR2VcvKlfLQFleLECsNhFY3tDWJ?=
- =?us-ascii?Q?vB+y0Q6EP/LV+oyw8HHS+L3JvNLoLkNU65FgKpgdjCWNQ4v/h9gxkk6ATxO+?=
- =?us-ascii?Q?npX/YzUv9b0IQpMgy+W+L1JkRK/DFBrsApw2VnpUcFlZ58FuFZbnosOVsens?=
- =?us-ascii?Q?hwyUZ1VTi9BXALYpJDcjYz+PbQjrXlRu1T+ziCfYcwAleQkC2rJhxjDaZ6pR?=
- =?us-ascii?Q?CQPkQCEbTzn51fNhDIUhHXQYrlY5rjwmh4DwR7TTvXyHxJOdxrz1HZPo2ys9?=
- =?us-ascii?Q?P0XrxqmiERdCSMzDzJWPC3kBb3RSbWXckck3tcrvOps/lzeseUYJwINKRI8q?=
- =?us-ascii?Q?5IMGNUX+lVAKGr7p2qmtRoG8sVdxej0Q/2axrZD29EuMPns8Fbwix4E+TS3h?=
- =?us-ascii?Q?u7WCND3h/4q0aTGG19ztvaA/hBlJxbCV0Hr4gGLfwCop3Z1V7pA4RZbsCpjb?=
- =?us-ascii?Q?LibH2eCsvZyXqKrgD/LfHNugwzKUxG5DeZchzPC3fjatWuDgLlWX0yuzrFrf?=
- =?us-ascii?Q?Z0XsH92CPxAIwKA1u4zE59vIpXA+shw2m+OCU0KLNhAEqHWpfIHNMgCa/NeT?=
- =?us-ascii?Q?WAWkwqN/HwyZPYODZ9mhWCgRv+nVJggGWN5DxYHuiXmNOZy+kBDUBsXfmWiu?=
- =?us-ascii?Q?IyJ3iHKyKZZxjOSbnR00xMrq8f17YhYtqu8jMXBhrAYWniWhYoCVb8iIun1l?=
- =?us-ascii?Q?ZQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	F5/0b/MRNH2y4MjW6IJmpwTikagAQZdi22uzc9vAOEQMG6aZa7c9Cm5MV2FWT+sXgwF05Non5/ZSXPvf9bFfBJ+k+4t7FM44fH0XMLSo6Nn8L6qjawXd0z3q4YyfQ598UujaKT7B4lCfyv79QsgF1wwSXp8QdxDLsuaJo9CWA23MiYfzKOUXKkcYcSpZPDad3DPeQ5iAQDrfpS6zYnQ3jcF0sJhPekCy95I5zXCxbiVVLUAlHwfoTp6pNHS2tFsNInaMq8KBj5Y3SWFzjae5Dmu+5qpVsYSGzm/Kfv6ccAVSeNmMyfT8oU+Tokuip0fabxb/de1rfjYm1IYv5LG6FbCQIDz070IqO3eV9F5p0Nn9neti/OGJAzgdQeb2sk47N0ONjrEDgHShkgC0otqfgeWCXa8Obbrd2H1ZQ/6CHMBb6yUX5b1J7IPqhuFXDF3KnxxYA8Oy2bc2L1EO/FqT/YbQ4/KR8SmXEy8zxO2gmSHTHljEMmzgBDEaHxTVMpS9p49JnneUhLzg845S1wJoI1YnnUw61WMq8xinJNnnNPWF6VYqDgaSgbJ0Ivd3j08vM55cAzwOLn7OZVxiJ+QF5MtVqY2ERxm/cHvRmEpFXJM=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 607de5c7-6777-448c-b4d2-08dc390edfc1
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB7080.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 10:12:02.6917
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8RjP8noqipW4hpaYfdXGpz3OepJghLbczsnT9SWYt//DAY1v71encV6MmGmIeuh10lMN4e1vlFUxdVZzQWb8LWqCHa0cqYAML6/QwDbXhdg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4591
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-29_02,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 phishscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402290077
-X-Proofpoint-ORIG-GUID: jIAC-M-2iJgC4AFT_gMs7pdgGrOsSu21
-X-Proofpoint-GUID: jIAC-M-2iJgC4AFT_gMs7pdgGrOsSu21
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229082611.4104839-1-rulin.huang@intel.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-The update_cpumask(), checks for newly requested cpumask by calling
-validate_change(), which returns an error on passing an invalid set
-of cpu(s). Independent of the error returned, update_cpumask() always
-returns zero, suppressing the error and returning success to the user
-on writing an invalid cpu range for a cpuset. Fix it by returning
-retval instead, which is returned by validate_change().
+Hi Rulin,
 
-Fixes: 99fe36ba6fc1 ("cgroup/cpuset: Improve temporary cpumasks handling")
-Signed-off-by: Kamalesh Babulal <kamalesh.babulal@oracle.com>
----
- kernel/cgroup/cpuset.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the great work and v6, some concerns, please see inline
+comments.
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index ba36c073304a..2ddbfaa4efa9 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -2562,7 +2562,7 @@ static int update_cpumask(struct cpuset *cs, struct cpuset *trialcs,
- 		update_partition_sd_lb(cs, old_prs);
- out_free:
- 	free_cpumasks(NULL, &tmp);
--	return 0;
-+	return retval;
- }
- 
- /**
+On 02/29/24 at 12:26am, rulinhuang wrote:
+> When allocating a new memory area where the mapping address range is
+> known, it is observed that the vmap_node->busy.lock is acquired twice.
+> 
+> The first acquisition occurs in the alloc_vmap_area() function when
+> inserting the vm area into the vm mapping red-black tree. The second
+> acquisition occurs in the setup_vmalloc_vm() function when updating the
+> properties of the vm, such as flags and address, etc.
+> 
+> Combine these two operations together in alloc_vmap_area(), which
+> improves scalability when the vmap_node->busy.lock is contended.
+> By doing so, the need to acquire the lock twice can also be eliminated
+>  to once.
+> 
+> With the above change, tested on intel sapphire rapids
+> platform(224 vcpu), a 4% performance improvement is
+> gained on stress-ng/pthread(https://github.com/ColinIanKing/stress-ng),
+> which is the stress test of thread creations.
+> 
+> Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
+> Reviewed-by: Baoquan He <bhe@redhat.com>
+> Reviewed-by: "Chen, Tim C" <tim.c.chen@intel.com>
+> Reviewed-by: "King, Colin" <colin.king@intel.com>
 
-base-commit: cf1182944c7cc9f1c21a8a44e0d29abe12527412
--- 
-2.44.0
+
+We possibly need remove these reviewers' tags when new code change is
+taken so that people check and add Acked-by or Reviewed-by again if then
+agree, or add new comments if any concern.
+
+> Signed-off-by: rulinhuang <rulin.huang@intel.com>
+> ---
+> V1 -> V2: Avoided the partial initialization issue of vm and
+> separated insert_vmap_area() from alloc_vmap_area()
+> V2 -> V3: Rebased on 6.8-rc5
+> V3 -> V4: Rebased on mm-unstable branch
+> V4 -> V5: cancel the split of alloc_vmap_area()
+> and keep insert_vmap_area()
+> V5 -> V6: add bug_on
+> ---
+>  mm/vmalloc.c | 132 +++++++++++++++++++++++++--------------------------
+>  1 file changed, 64 insertions(+), 68 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 25a8df497255..5ae028b0d58d 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -1841,15 +1841,66 @@ node_alloc(unsigned long size, unsigned long align,
+>  	return va;
+>  }
+>  
+> +/*** Per cpu kva allocator ***/
+> +
+> +/*
+> + * vmap space is limited especially on 32 bit architectures. Ensure there is
+> + * room for at least 16 percpu vmap blocks per CPU.
+> + */
+> +/*
+> + * If we had a constant VMALLOC_START and VMALLOC_END, we'd like to be able
+> + * to #define VMALLOC_SPACE		(VMALLOC_END-VMALLOC_START). Guess
+> + * instead (we just need a rough idea)
+> + */
+> +#if BITS_PER_LONG == 32
+> +#define VMALLOC_SPACE		(128UL*1024*1024)
+> +#else
+> +#define VMALLOC_SPACE		(128UL*1024*1024*1024)
+> +#endif
+> +
+> +#define VMALLOC_PAGES		(VMALLOC_SPACE / PAGE_SIZE)
+> +#define VMAP_MAX_ALLOC		BITS_PER_LONG	/* 256K with 4K pages */
+> +#define VMAP_BBMAP_BITS_MAX	1024	/* 4MB with 4K pages */
+> +#define VMAP_BBMAP_BITS_MIN	(VMAP_MAX_ALLOC*2)
+> +#define VMAP_MIN(x, y)		((x) < (y) ? (x) : (y)) /* can't use min() */
+> +#define VMAP_MAX(x, y)		((x) > (y) ? (x) : (y)) /* can't use max() */
+> +#define VMAP_BBMAP_BITS		\
+> +		VMAP_MIN(VMAP_BBMAP_BITS_MAX,	\
+> +		VMAP_MAX(VMAP_BBMAP_BITS_MIN,	\
+> +			VMALLOC_PAGES / roundup_pow_of_two(NR_CPUS) / 16))
+> +
+> +#define VMAP_BLOCK_SIZE		(VMAP_BBMAP_BITS * PAGE_SIZE)
+> +
+> +/*
+> + * Purge threshold to prevent overeager purging of fragmented blocks for
+> + * regular operations: Purge if vb->free is less than 1/4 of the capacity.
+> + */
+> +#define VMAP_PURGE_THRESHOLD	(VMAP_BBMAP_BITS / 4)
+> +
+> +#define VMAP_RAM		0x1 /* indicates vm_map_ram area*/
+> +#define VMAP_BLOCK		0x2 /* mark out the vmap_block sub-type*/
+> +#define VMAP_FLAGS_MASK		0x3
+
+These code moving is made because we need check VMAP_RAM in advance. We
+may need move all those data structures and basic helpers related to per
+cpu kva allocator up too to along with these macros, just as the newly
+introduced vmap_node does. If that's agreed, better be done in a
+separate patch. My personal opinion. Not sure if Uladzislau has
+different thoughts.
+
+Other than this, the overall looks good to me.
+
+> +
+> +static inline void setup_vmalloc_vm(struct vm_struct *vm,
+> +	struct vmap_area *va, unsigned long flags, const void *caller)
+> +{
+> +	vm->flags = flags;
+> +	vm->addr = (void *)va->va_start;
+> +	vm->size = va->va_end - va->va_start;
+> +	vm->caller = caller;
+> +	va->vm = vm;
+> +}
+> +
+>  /*
+>   * Allocate a region of KVA of the specified size and alignment, within the
+> - * vstart and vend.
+> + * vstart and vend. If vm is passed in, the two will also be bound.
+>   */
+>  static struct vmap_area *alloc_vmap_area(unsigned long size,
+>  				unsigned long align,
+>  				unsigned long vstart, unsigned long vend,
+>  				int node, gfp_t gfp_mask,
+> -				unsigned long va_flags)
+> +				unsigned long va_flags, struct vm_struct *vm,
+> +				unsigned long flags, const void *caller)
+>  {
+>  	struct vmap_node *vn;
+>  	struct vmap_area *va;
+> @@ -1912,6 +1963,11 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
+>  	va->vm = NULL;
+>  	va->flags = (va_flags | vn_id);
+>  
+> +	if (vm) {
+> +		BUG_ON(va_flags & VMAP_RAM);
+> +		setup_vmalloc_vm(vm, va, flags, caller);
+> +	}
+> +
+>  	vn = addr_to_node(va->va_start);
+>  
+>  	spin_lock(&vn->busy.lock);
+> @@ -2325,46 +2381,6 @@ static struct vmap_area *find_unlink_vmap_area(unsigned long addr)
+>  	return NULL;
+>  }
+>  
+> -/*** Per cpu kva allocator ***/
+> -
+> -/*
+> - * vmap space is limited especially on 32 bit architectures. Ensure there is
+> - * room for at least 16 percpu vmap blocks per CPU.
+> - */
+> -/*
+> - * If we had a constant VMALLOC_START and VMALLOC_END, we'd like to be able
+> - * to #define VMALLOC_SPACE		(VMALLOC_END-VMALLOC_START). Guess
+> - * instead (we just need a rough idea)
+> - */
+> -#if BITS_PER_LONG == 32
+> -#define VMALLOC_SPACE		(128UL*1024*1024)
+> -#else
+> -#define VMALLOC_SPACE		(128UL*1024*1024*1024)
+> -#endif
+> -
+> -#define VMALLOC_PAGES		(VMALLOC_SPACE / PAGE_SIZE)
+> -#define VMAP_MAX_ALLOC		BITS_PER_LONG	/* 256K with 4K pages */
+> -#define VMAP_BBMAP_BITS_MAX	1024	/* 4MB with 4K pages */
+> -#define VMAP_BBMAP_BITS_MIN	(VMAP_MAX_ALLOC*2)
+> -#define VMAP_MIN(x, y)		((x) < (y) ? (x) : (y)) /* can't use min() */
+> -#define VMAP_MAX(x, y)		((x) > (y) ? (x) : (y)) /* can't use max() */
+> -#define VMAP_BBMAP_BITS		\
+> -		VMAP_MIN(VMAP_BBMAP_BITS_MAX,	\
+> -		VMAP_MAX(VMAP_BBMAP_BITS_MIN,	\
+> -			VMALLOC_PAGES / roundup_pow_of_two(NR_CPUS) / 16))
+> -
+> -#define VMAP_BLOCK_SIZE		(VMAP_BBMAP_BITS * PAGE_SIZE)
+> -
+> -/*
+> - * Purge threshold to prevent overeager purging of fragmented blocks for
+> - * regular operations: Purge if vb->free is less than 1/4 of the capacity.
+> - */
+> -#define VMAP_PURGE_THRESHOLD	(VMAP_BBMAP_BITS / 4)
+> -
+> -#define VMAP_RAM		0x1 /* indicates vm_map_ram area*/
+> -#define VMAP_BLOCK		0x2 /* mark out the vmap_block sub-type*/
+> -#define VMAP_FLAGS_MASK		0x3
+> -
+>  struct vmap_block_queue {
+>  	spinlock_t lock;
+>  	struct list_head free;
+> @@ -2486,7 +2502,8 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
+>  	va = alloc_vmap_area(VMAP_BLOCK_SIZE, VMAP_BLOCK_SIZE,
+>  					VMALLOC_START, VMALLOC_END,
+>  					node, gfp_mask,
+> -					VMAP_RAM|VMAP_BLOCK);
+> +					VMAP_RAM|VMAP_BLOCK, NULL,
+> +					0, NULL);
+>  	if (IS_ERR(va)) {
+>  		kfree(vb);
+>  		return ERR_CAST(va);
+> @@ -2843,7 +2860,8 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node)
+>  		struct vmap_area *va;
+>  		va = alloc_vmap_area(size, PAGE_SIZE,
+>  				VMALLOC_START, VMALLOC_END,
+> -				node, GFP_KERNEL, VMAP_RAM);
+> +				node, GFP_KERNEL, VMAP_RAM,
+> +				NULL, 0, NULL);
+>  		if (IS_ERR(va))
+>  			return NULL;
+>  
+> @@ -2946,26 +2964,6 @@ void __init vm_area_register_early(struct vm_struct *vm, size_t align)
+>  	kasan_populate_early_vm_area_shadow(vm->addr, vm->size);
+>  }
+>  
+> -static inline void setup_vmalloc_vm_locked(struct vm_struct *vm,
+> -	struct vmap_area *va, unsigned long flags, const void *caller)
+> -{
+> -	vm->flags = flags;
+> -	vm->addr = (void *)va->va_start;
+> -	vm->size = va->va_end - va->va_start;
+> -	vm->caller = caller;
+> -	va->vm = vm;
+> -}
+> -
+> -static void setup_vmalloc_vm(struct vm_struct *vm, struct vmap_area *va,
+> -			      unsigned long flags, const void *caller)
+> -{
+> -	struct vmap_node *vn = addr_to_node(va->va_start);
+> -
+> -	spin_lock(&vn->busy.lock);
+> -	setup_vmalloc_vm_locked(vm, va, flags, caller);
+> -	spin_unlock(&vn->busy.lock);
+> -}
+> -
+>  static void clear_vm_uninitialized_flag(struct vm_struct *vm)
+>  {
+>  	/*
+> @@ -3002,14 +3000,12 @@ static struct vm_struct *__get_vm_area_node(unsigned long size,
+>  	if (!(flags & VM_NO_GUARD))
+>  		size += PAGE_SIZE;
+>  
+> -	va = alloc_vmap_area(size, align, start, end, node, gfp_mask, 0);
+> +	va = alloc_vmap_area(size, align, start, end, node, gfp_mask, 0, area, flags, caller);
+>  	if (IS_ERR(va)) {
+>  		kfree(area);
+>  		return NULL;
+>  	}
+>  
+> -	setup_vmalloc_vm(area, va, flags, caller);
+> -
+>  	/*
+>  	 * Mark pages for non-VM_ALLOC mappings as accessible. Do it now as a
+>  	 * best-effort approach, as they can be mapped outside of vmalloc code.
+> @@ -4584,7 +4580,7 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
+>  
+>  		spin_lock(&vn->busy.lock);
+>  		insert_vmap_area(vas[area], &vn->busy.root, &vn->busy.head);
+> -		setup_vmalloc_vm_locked(vms[area], vas[area], VM_ALLOC,
+> +		setup_vmalloc_vm(vms[area], vas[area], VM_ALLOC,
+>  				 pcpu_get_vm_areas);
+>  		spin_unlock(&vn->busy.lock);
+>  	}
+> 
+> base-commit: 7e6ae2db7f319bf9613ec6db8fa3c9bc1de1b346
+> -- 
+> 2.43.0
+> 
 
