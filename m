@@ -1,120 +1,98 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EA65B697;
-	Thu, 29 Feb 2024 09:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127E45B697
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709198905; cv=none; b=TzzmtIzFrn2TNTP6kwtpdA8qbWt8QjDqy8RY6hhCaGuVotE1wCsoY8yk5C8LZAhYpmb8hodOMkUKPIxjygWOw1M2fxh6qjfraL+jyeH1TglCHp/FXXmNMIS04W4BJ653F4GEnm2ozw6btjsX1XdfxD1O1VLm5MLOef8DQSu+dCc=
+	t=1709198938; cv=none; b=CKC6khdiv3hb4Vd9sQKJxglfg1mwVqMe0DEYfSmNxJXmnpFIvV0NALCPokY5d6mOcfy0Acaj27WN89pymq66p9/6T3n/mmA1kJY8osMpl8eZKR4sRn4DQ1azFANYFd2eiCRCawYuFkYgKqQH6imAY9ILb97+sa5mH6cuqKxj3qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709198905; c=relaxed/simple;
-	bh=4Z2ckJYc2X1eKlf+Pruh4UD5514kZq9qLpckK12vBs0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RMK6aqgvpEy/X1iXMRWhYePjgZ7eboIDMObwUimwJwVN0zvJ7BppJphCXRGWKqSM4DtAW0103ZtiNd7Wwdr7X5/vqpof0w7OpjtBE6E1ELELL6zYTiq2hHP7ATWS0De8Mt8RgXrGBwMNL1Tz9aT+U2PAW9ahnDEOZvK2z1QXp3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=W8YMYZFA; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1709198938; c=relaxed/simple;
+	bh=il/+MTSUB+hJ9/Qk/zhTY8kE7bR8Rhe3rQiBlSatDYc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oKUgV+tX2olTaK30uKKqwJ8y4OSqwHy8i2Vx913OpDR2yFZQ3oosdmPGLa9IclUp2m2bV1KQv6pkuERGG4WydnRyHDdii8PN9eR9WXlREnCsJRxH8J6xjX74uziXI3lx0+zFhq3WdutAwjsuDwsl89+PkAqkp+jbaMxoASq34M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TYuNkIPj; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W8YMYZFA"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41T9RoZe012078;
-	Thu, 29 Feb 2024 03:27:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1709198870;
-	bh=GzKfgPrCzPpYr7lfuwIgLdFgDGketk3AdQD7tugAgqU=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=W8YMYZFACerPlpM5giQNVGU4rBqte6vfifJMRl01jPHMQjUCLYx3e4bsbL/bCYrZ+
-	 bf2v1pieqHH8jIuVUEiechrmpsfn7Xnn4QwjmgaAcfs0YlGwuvJTVJ/NbhEHNtMDQr
-	 4HJjLPPuZW0HFuR5/STT+E/YINQ7kzKHuQgOO+40=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41T9RoYu074642
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 29 Feb 2024 03:27:50 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 29
- Feb 2024 03:27:49 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 29 Feb 2024 03:27:49 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41T9RnMl089761;
-	Thu, 29 Feb 2024 03:27:49 -0600
-Date: Thu, 29 Feb 2024 14:57:48 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, Jiri Pirko <jiri@resnulli.us>,
-        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <rogerq@kernel.org>, <vladimir.oltean@nxp.com>,
-        <hkallweit1@gmail.com>, <dan.carpenter@linaro.org>, <horms@kernel.org>,
-        <yuehaibing@huawei.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH net-next] net: ethernet: ti: am65-cpsw: Add priv-flag for
- Switch VLAN Aware mode
-Message-ID: <0004e3d5-0f62-49dc-b51f-5a302006c303@ti.com>
-References: <20240227082815.2073826-1-s-vadapalli@ti.com>
- <Zd3YHQRMnv-ZvSWs@nanopsycho>
- <7d1496da-100a-4336-b744-33e843eba930@ti.com>
- <Zd7taFB2nEvtZh8E@nanopsycho>
- <49e531f7-9465-40ea-b604-22a3a7f13d62@ti.com>
- <10287788-614a-4eef-9c9c-a0ef4039b78f@lunn.ch>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TYuNkIPj"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so670779276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:28:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709198936; x=1709803736; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lpnwZXvO+GxSiHd0a/DytgyertWwHVGU4iyf7Q6jgRw=;
+        b=TYuNkIPjMwzDHQdknFcZap2VRp457jPMtJDlOKTrctAkBWLQi4bK2SGCP2BZEl1Rq+
+         E0gA3YYj58ti5Duzm8HbzOG4gRNfoCtzM16hKtF+9B2WPMJVjkepl0FSh7J62ze0SOmG
+         LaLgb4IWlYioWh4MATdLMcmwEKWO9VRCoRUGooefg45aWtBJH/Y3Ny58TDlunKSijXAH
+         v5lAuOy2zJL9QdgQpaPwR3geDDFbwQWlXt5+aDJR48UrUXJDpUnB4a3dNlkJPIpHELab
+         P0WizjuSJk9yuwQ12ykZnqHygcaW2sNnQC/ojEmDgp0kdwLsR5zs9c9MUUC25j79wlIk
+         MTaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709198936; x=1709803736;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lpnwZXvO+GxSiHd0a/DytgyertWwHVGU4iyf7Q6jgRw=;
+        b=HZHYRbDKl6HsFiTxjU49Zm8vJKhj83L13x53kzxUlTiQfIj2PlmakZw2RuseZxRCDD
+         MafPyAG+iQvbMZYLmPkVsWOF214zIdxeEfwk2+NdFn1YSBhtr4SDyBQonWg5bGTafrCt
+         UZ14LGHX30O9BCRAzv8aAHpBf9gdXf/SFNxsKoM16uGWxSWwy4NcQ8SVqp4hVDBzftkw
+         tcSkIH9YLEAcB9U3T+fWrM2NEp7gSzcroPLSBCbuY+Zx19DXjxM6s9FX6GE//3zgm0sn
+         OCH31DTBDuJ9ZD2cS66BUMRo4tk5lBWMyOTn5jGuLKvSXAtEN2wQgHSUokkV3QkayJdS
+         BVFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxHyLtQdKoOKpeMeoxqG0fcOIQEcrkkWv/z8uXCrPpOeaxb1FzP8Xf5bl9EdOY1pnIZ3vn+vxRmf/i/o/zs0TM24F5b4cflAgia13V
+X-Gm-Message-State: AOJu0Yz4uz9myJX2s9xDvIbAvNTApD9Jx0gcgHlZG6JXpoaDw20qKMMI
+	ue/bK2sljdcMaVLDiYx960DJqq4ZMpFmd91/TXbgL8GL4htsoiax9th35TZGXq3UYyoCs1cjs15
+	XrbCkRSPvrNjHMRFjO4gtX10GcXgE1NRB/UlloA==
+X-Google-Smtp-Source: AGHT+IGIbl2TgaNavrw5wNoqVGLPJWdWimW4CCp6UKDlUrz43Cqlv3DtmfGj5h6AXkXD7KdYMCvm+9wtqdkrh8HvPfQ=
+X-Received: by 2002:a5b:445:0:b0:dcb:bff0:72b with SMTP id s5-20020a5b0445000000b00dcbbff0072bmr1559369ybp.31.1709198936052;
+ Thu, 29 Feb 2024 01:28:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <10287788-614a-4eef-9c9c-a0ef4039b78f@lunn.ch>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-13-3ba757474006@bootlin.com>
+In-Reply-To: <20240228-mbly-gpio-v2-13-3ba757474006@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 29 Feb 2024 10:28:45 +0100
+Message-ID: <CACRpkdb6cLAaAkYa=2Sz1G4t2yBRQcwPWsoQShdQ2JMcg+VaRQ@mail.gmail.com>
+Subject: Re: [PATCH v2 13/30] pinctrl: nomadik: follow conditional kernel
+ coding conventions
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 28, 2024 at 02:36:55PM +0100, Andrew Lunn wrote:
-> > What if there is no kernel behavior associated with it? How can it be mimicked
-> > then?
-> 
-> Simple. Implement the feature in software in the kernel for
-> everybody. Then offload it to your hardware.
-> 
-> Your hardware is an accelerator. You use it to accelerate what linux
-> can already do. If Linux does not have the feature your accelerator
-> has, that accelerator feature goes unused.
+On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boot=
+lin.com> wrote:
 
-Is it acceptable to have a macro in the Ethernet Driver to conditionally
-disable/enable the feature (via setting the corresponding bit in the
-register)?
+> Fix strict checkpatch warnings relative to if-else blocks and bool
+> expressions. Message types addressed:
+>
+>    CHECK: Comparison to NULL could be written "!nmk_cfg_params[index].cho=
+ice"
+>    CHECK: Unbalanced braces around else statement
+>    CHECK: Using comparison to false is error prone
+>    CHECK: Using comparison to true is error prone
+>    CHECK: braces {} should be used on all arms of this statement
+>
+> Before: 0 errors, 1 warnings, 16 checks.
+> After:  0 errors, 1 warnings,  7 checks.
+>
+> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 
-The current implementation is:
+Patch applied!
 
-	/* Control register */
-	writel(AM65_CPSW_CTL_P0_ENABLE | AM65_CPSW_CTL_P0_TX_CRC_REMOVE |
-	       AM65_CPSW_CTL_VLAN_AWARE | AM65_CPSW_CTL_P0_RX_PAD,
-	       common->cpsw_base + AM65_CPSW_REG_CTL);
-
-which sets the "AM65_CPSW_CTL_VLAN_AWARE" bit by default.
-
-Could it be changed to:
-
-#define TI_K3_CPSW_VLAN_AWARE 1
-
-....
-
-	/* Control register */
-	val = AM65_CPSW_CTL_P0_ENABLE | AM65_CPSW_CTL_P0_TX_CRC_REMOVE |
-	      AM65_CPSW_CTL_P0_RX_PAD;
-
-#ifdef TI_K3_CPSW_VLAN_AWARE
-	val |= AM65_CPSW_CTL_VLAN_AWARE;
-#endif
-
-	writel(val, common->cpsw_base + AM65_CPSW_REG_CTL);
-
-Since no additional configuration is necessary to disable/enable the
-functionality except clearing/setting a bit in a register, I am unsure of
-the implementation for the offloading part being suggested. Please let me
-know if the above implementation is an acceptable alternative.
-
-Regards,
-Siddharth.
+Yours,
+Linus Walleij
