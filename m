@@ -1,148 +1,265 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5353770AFD
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 17:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016824AEC0;
+	Thu, 29 Feb 2024 17:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709227973; cv=none; b=c5kHeq44NfCP9wKzjsyCs8iBDjQ9dNH/fbPfo4BPXWYDGOKE09RNZFXp2Wq1QDZEh3e37bwzlOTgq0u1JBc8rqTzezbL1ixA0qElBtglZuzVFyUb3Ow8qfEkRd45pexU0VGM86Q9WUOUGgOdxiyn0NbSitnIxVR/MAWjO+99gnk=
+	t=1709227993; cv=none; b=pmhc5fJqtK+AqLgm9GZ39GDfsfTe6F7hSuql/nIqqAc2gw6wrNs/ysQe0ptDEVcEHPCGIQUpXYp/RCBZSOIc7ia/xoUvL0A2EZGBTzHO/Ajkz5yKJMQFGPnry7WFUtrijLYORGAhHsPmJ7wpD3Ketnfngu5LRaJUebc+FQuTEFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709227973; c=relaxed/simple;
-	bh=jzGj5I4LRuYklOQyJfNOnG7oivOkxoCVa97TajgQgCo=;
+	s=arc-20240116; t=1709227993; c=relaxed/simple;
+	bh=Xcb/Cl9PjMGq/KNM5b/4VikRIorMVBalMVplpmQgSs4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BitHi7aGA8+Y+lvSXv7S+ctoMSv5axEHKSrsoVUIIqyxXnGjr4OgQd3mt0Q/dM9DzuTmSCreKXSWYs5+3i5HGZ5KgHzFGKiBDIWaHmpyRmfdQnKLfIdns5EA6CsVmdxFzQIYgqQVJyJwwGooDe9asRV6zbjNRHvPQNLyw1WeA98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UkPwfEB4; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UkPwfEB4"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a446478b04bso70524466b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:32:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1709227969; x=1709832769; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JQrqXSOy2jKpIC5hjgybMDfk5pI8gvMKo0UOhxnaCp0=;
-        b=UkPwfEB4O6Y6ht2USoBSG/iMVrIqf1j5RMbMgxabuAJkeVL8qQLd3VEOJrEp93s8pu
-         Lh8Ssf+TE3jpPEtTfzCN9mC/qbm04xvvUsmhPghUtWBelhS5yDBWEEpy4BZJZnOgG7Eu
-         NbSQved5jtliTlseHJSmjtSjjSOOLVFXZOZ+Q=
+	 To:Cc:Content-Type; b=sMLLbWhS0ZUQMKgiCehT2LaOeDYW1SOjmSMtEh3zRxCI5Q1v5YNdyWN3opYnNBTb1BdugP957oevimBW6vNDlUiHF/jwG9TctS6E8kfy+n5nHCkoz+8BHN+ZAhaTXl3hXsOHbAT20yVe39dc2pNnELswKWAMBemRjXxv/9CRmMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e45f7c63f4so151844a34.1;
+        Thu, 29 Feb 2024 09:33:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709227969; x=1709832769;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JQrqXSOy2jKpIC5hjgybMDfk5pI8gvMKo0UOhxnaCp0=;
-        b=NRaghaahAg+lHpsa11N5IEIJ3ky4Qq2Rx315utkKfFAa9WS8lXK23WRK5iXRqrfPg0
-         RVXA9hLqeDFiEX07AKRt6varlflYotBu8OQizqPH0zqlSTHAUSirQqixtN0WWyJCJA7h
-         4bYkkLJtL7d9Y/V87zCE8lLB622lIcEy6AjRTSJE1Dcmd2iJltSdK37L9uGa7RutXHS7
-         89ug+sDnABj4u6P1pj6BdAomvINnTtQqJeJhGIID0AsKHmXH4cdzFaamDRNzTGQ1wg+J
-         0ko5D/wbcjCJycEWsjlZWNIb0sNTMh+62LYIthfXumU/sUq91RHDh1O5Pi4SeBHOLvf1
-         kCWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBSsvXVoDsXdZUhwSSgUq/9oxj0g2ApjAvAnkSsKZBD0oiDr4wBU/T++EfIgvJBmBQ3Y8uYiKmhy6zRDUEKU+sgFXByCSHx37YyVYG
-X-Gm-Message-State: AOJu0Yyh62QQ21d6vCz2/ITRemuZn4aqxx5eqixpC3dA69/GN9Gaqx1F
-	DzPmpRjIPBvwaaLMDdIZjdcKOmFoan+eXoYtfcw/a368xAZlvQ2UkZdQwkG639MZ9ijUwtOxkdz
-	CGWT4tw==
-X-Google-Smtp-Source: AGHT+IFYwIuaUSpSHd+TzurO1KQrUGh8CS1dTYmf5496JxMk1QtsyK32S0l5Tw5CF2OsOzYT2RSADg==
-X-Received: by 2002:a17:906:bc52:b0:a3e:5856:9b03 with SMTP id s18-20020a170906bc5200b00a3e58569b03mr2240799ejv.18.1709227969315;
-        Thu, 29 Feb 2024 09:32:49 -0800 (PST)
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
-        by smtp.gmail.com with ESMTPSA id cm29-20020a170906f59d00b00a3ce60b003asm897443ejd.176.2024.02.29.09.32.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 09:32:48 -0800 (PST)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5640fef9fa6so1688160a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:32:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVOT141zy9zGA+Zm7M3JCH8tM5CcebmOOLVShfTjYXT9g+cLsU9f7gE/5UaVqzcKeOn0twZGC5qMlVHZZZ5M8nH4InNYPOHBQDfor4j
-X-Received: by 2002:a17:906:b78e:b0:a44:176e:410c with SMTP id
- dt14-20020a170906b78e00b00a44176e410cmr2046490ejb.5.1709227968058; Thu, 29
- Feb 2024 09:32:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709227991; x=1709832791;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f6VNqhRaH2SJuKPVuPLQRWdJSZsktM+MOSg52wWcrck=;
+        b=vTdH2kpSXY/kqHOHGaWbLJgrho0r1n+QsW5CcCYjJfhMMfavPOF3x2AL5Q5VXgIB4H
+         zQ02smeoMGA3dZZOKJb2BtI+/F0DN0znrf18dz9apJw2tnVuR4N4dlQLeKH04PlIXV1i
+         7dYZ3kleVAXI3ZqXNxgVVn9W/nTA+0cLRuDw2W6ej5va8MvBau+hHZmKySqnr/uZ4qfT
+         c7QEc/ay/ziFRRqXTERUWeZyAX53v7WeK9hVTiB8aDw1wxR9mXFY0r1uCHKMRl8Kl2Qd
+         4jiOaY9fMtjtpWi5Jtw69iq5IlIHtCjgq/Mta1f7Y9xD4oAw3iSRsYeKHaMJxfBSNTpY
+         i+Gw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIcPaydQDzDd00D2E+oXpDNhhOj17zp3aWw2czmPiroQjLHfxGAbQDi8OhO4slGLb6uV8b6KkM858toHQhBFYzDwfIDKeQ+cZUGd7niK2ZY6aIb9SPW8mRlVdacCVzSYywEuPC94ablVaV1vpQQxAliZTsnW2dAf13pqQqYkPSLzi/
+X-Gm-Message-State: AOJu0Yx/nsPnA19hYBaFknyWLBOs8qNuY+3k8BBgfBaDUlWLdJDZID6V
+	aNS6oSdxbM0UxhjqQ+XzgFEFYH7Phtzww80hnqDpXAoF4vRi16nCnPCoq9sL8CP7qepMBmsPgm/
+	+YQ/Yzok5L6DgyCZT94iNPakqZTPv+l/xIA8=
+X-Google-Smtp-Source: AGHT+IGjpEGSMo+0QpJNV2Tg9yYpRW1jakjszfOjfGj7BtHqDShrpf3q2Dla2vdyWIv5WN8dWQm7RDaPT5UuGqZO3T8=
+X-Received: by 2002:a4a:a543:0:b0:5a0:ec66:b56b with SMTP id
+ s3-20020a4aa543000000b005a0ec66b56bmr1884873oom.0.1709227990938; Thu, 29 Feb
+ 2024 09:33:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230925120309.1731676-1-dhowells@redhat.com> <20230925120309.1731676-8-dhowells@redhat.com>
- <4e80924d-9c85-f13a-722a-6a5d2b1c225a@huawei.com> <CAHk-=whG+4ag+QLU9RJn_y47f1DBaK6b0qYq_6_eLkO=J=Mkmw@mail.gmail.com>
- <CAHk-=wjSjuDrS9gc191PTEDDow7vHy6Kd3DKDaG+KVH0NQ3v=w@mail.gmail.com> <e985429e-5fc4-a175-0564-5bb4ca8f662c@huawei.com>
-In-Reply-To: <e985429e-5fc4-a175-0564-5bb4ca8f662c@huawei.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 29 Feb 2024 09:32:31 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wh06M-1c9h7wZzZ=1KqooAmazy_qESh2oCcv7vg-sY6NQ@mail.gmail.com>
-Message-ID: <CAHk-=wh06M-1c9h7wZzZ=1KqooAmazy_qESh2oCcv7vg-sY6NQ@mail.gmail.com>
-Subject: Re: [bug report] dead loop in generic_perform_write() //Re: [PATCH v7
- 07/12] iov_iter: Convert iterate*() to inline funcs
-To: Tong Tiangen <tongtiangen@huawei.com>, Al Viro <viro@kernel.org>
-Cc: David Howells <dhowells@redhat.com>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
-	Christian Brauner <christian@brauner.io>, David Laight <David.Laight@aculab.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>
-Content-Type: multipart/mixed; boundary="000000000000e07d49061288a5ca"
-
---000000000000e07d49061288a5ca
+References: <20240229162520.970986-1-vanshikonda@os.amperecomputing.com> <20240229162520.970986-4-vanshikonda@os.amperecomputing.com>
+In-Reply-To: <20240229162520.970986-4-vanshikonda@os.amperecomputing.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 29 Feb 2024 18:32:59 +0100
+Message-ID: <CAJZ5v0j+qz0okToszmU=kBjZvD3GJKzwz-ZrweOkgw6A2e3pQQ@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] ACPI: CPPC: Read CPC FFH counters in a single IPI
+To: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
+Cc: Huisong Li <lihuisong@huawei.com>, Beata Michalska <beata.michalska@arm.com>, 
+	Ionela Voinescu <ionela.voinescu@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	rafael@kernel.org, sumitg@nvidia.com, zengheng4@huawei.com, 
+	yang@os.amperecomputing.com, will@kernel.org, sudeep.holla@arm.com, 
+	liuyonglong@huawei.com, zhanjie9@hisilicon.com, linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 Feb 2024 at 00:13, Tong Tiangen <tongtiangen@huawei.com> wrote:
+On Thu, Feb 29, 2024 at 5:25=E2=80=AFPM Vanshidhar Konda
+<vanshikonda@os.amperecomputing.com> wrote:
 >
-> See the logic before this patch, always success (((void)(K),0)) is
-> returned for three types: ITER_BVEC, ITER_KVEC and ITER_XARRAY.
+> The CPPC driver reads delivered and reference counters using cpc_read
+> one at a time. This leads to inaccurate measurement of CPU frequency
+> discussed in [1]. If the firmware indicates that both the registers are
+> in the FFH interface the kernel can read the registers together in a
+> single IPI. This has two benefits:
+> 1. Reduces the number of IPIs needed to read the two registers
+> 2. The two registers will be read in close proximity resulting in more
+>    accurate CPU frequency measurement
+>
+> [1]: https://lore.kernel.org/all/20230328193846.8757-1-yang@os.amperecomp=
+uting.com/
+>
+> Signed-off-by: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
+> ---
+>  arch/arm64/kernel/topology.c | 37 ++++++++++++++++++++++++++++++++++++
+>  drivers/acpi/cppc_acpi.c     | 32 +++++++++++++++++++++++++++----
+>  include/acpi/cppc_acpi.h     | 13 +++++++++++++
+>  3 files changed, 78 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> index 8905eb0c681f..8207565f43ee 100644
+> --- a/arch/arm64/kernel/topology.c
+> +++ b/arch/arm64/kernel/topology.c
+> @@ -421,6 +421,43 @@ int cpc_read_ffh(int cpu, struct cpc_reg *reg, u64 *=
+val)
+>         return ret;
+>  }
+>
+> +static void cpc_update_freq_counters(void *info)
+> +{
+> +       update_freq_counters_refs();
+> +}
+> +
+> +int cpc_read_regs_ffh(int cpu, struct ffh_cpc_reg_values *ffh_regs)
+> +{
+> +       struct amu_counters *ctrs =3D per_cpu_ptr(&cpu_samples, cpu);
+> +       int idx;
+> +
+> +       if (!cpc_ffh_supported() || !freq_counters_valid(cpu))
+> +               return -EOPNOTSUPP;
+> +
+> +       if (WARN_ON_ONCE(irqs_disabled()))
+> +               return -EPERM;
+> +
+> +       if (!idle_cpu(cpu))
+> +               smp_call_function_single(cpu, cpc_update_freq_counters, N=
+ULL, 1);
+> +
+> +       for (idx =3D 0; idx < MAX_NUM_CPC_REGS_FFH; idx++) {
+> +
+> +               if (!ffh_regs->regs[idx].reg)
+> +                       continue;
+> +
+> +               switch ((u64)(ffh_regs->regs[idx].reg->address)) {
+> +               case 0x0:
+> +                       ffh_regs->regs[idx].value =3D ctrs->core_cnt;
+> +                       break;
+> +               case 0x1:
+> +                       ffh_regs->regs[idx].value =3D ctrs->const_cnt;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  int cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val)
+>  {
+>         return -EOPNOTSUPP;
+> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+> index d155a86a8614..55ffb1915e4f 100644
+> --- a/drivers/acpi/cppc_acpi.c
+> +++ b/drivers/acpi/cppc_acpi.c
+> @@ -113,6 +113,10 @@ static DEFINE_PER_CPU(struct cpc_desc *, cpc_desc_pt=
+r);
+>                                 (cpc)->cpc_entry.reg.space_id =3D=3D     =
+   \
+>                                 ACPI_ADR_SPACE_SYSTEM_IO)
+>
+> +#define CPC_IN_FFH(cpc) ((cpc)->type =3D=3D ACPI_TYPE_BUFFER &&         =
+   \
+> +                               (cpc)->cpc_entry.reg.space_id =3D=3D     =
+   \
+> +                               ACPI_ADR_SPACE_FIXED_HARDWARE)
+> +
+>  /* Evaluates to True if reg is a NULL register descriptor */
+>  #define IS_NULL_REG(reg) ((reg)->space_id =3D=3D  ACPI_ADR_SPACE_SYSTEM_=
+MEMORY && \
+>                                 (reg)->address =3D=3D 0 &&               =
+   \
+> @@ -974,6 +978,11 @@ int __weak cpc_write_ffh(int cpunum, struct cpc_reg =
+*reg, u64 val)
+>         return -ENOTSUPP;
+>  }
+>
+> +int __weak cpc_read_regs_ffh(int cpu, struct ffh_cpc_reg_values *regs)
+> +{
+> +       return -ENOTSUPP;
+> +}
 
-No, look closer.
+This might return a bool value.
 
-Yes, the iterate_and_advance() macro does that "((void)(K),0)" to make
-the compiler generate better code for those cases (because then the
-compiler can see that the return value is a compile-time zero), but
-notice how _copy_mc_to_iter() didn't use that macro back then. It used
-the unvarnished __iterate_and_advance() exactly so that the MC copy
-case would *not* get that "always return zero" behavior.
+Is there any case in which the caller would handle different error
+codes differently?
 
-That goes back to (in a different form) at least commit 1b4fb5ffd79b
-("iov_iter: teach iterate_{bvec,xarray}() about possible short
-copies").
+> +
+>  /*
+>   * Since cpc_read and cpc_write are called while holding pcc_lock, it sh=
+ould be
+>   * as fast as possible. We have already mapped the PCC subspace during i=
+nit, so
+> @@ -1317,7 +1326,7 @@ int cppc_get_perf_ctrs(int cpunum, struct cppc_perf=
+_fb_ctrs *perf_fb_ctrs)
+>         int pcc_ss_id =3D per_cpu(cpu_pcc_subspace_idx, cpunum);
+>         struct cppc_pcc_data *pcc_ss_data =3D NULL;
+>         u64 delivered, reference, ref_perf, ctr_wrap_time;
+> -       int ret =3D 0, regs_in_pcc =3D 0;
+> +       int ret =3D 0, regs_in_pcc =3D 0, regs_read_in_ffh =3D 0;
 
-But hardly anybody ever tests this machine-check special case code, so
-who knows when it broke again.
+Please use bool as the type for boolean variables.
 
-I'm just looking at the source code, and with all the macro games it's
-*really* hard to follow, so I may well be missing something.
+>
+>         if (!cpc_desc) {
+>                 pr_debug("No CPC descriptor for CPU:%d\n", cpunum);
+> @@ -1353,8 +1362,23 @@ int cppc_get_perf_ctrs(int cpunum, struct cppc_per=
+f_fb_ctrs *perf_fb_ctrs)
+>                 }
+>         }
+>
+> -       cpc_read(cpunum, delivered_reg, &delivered);
+> -       cpc_read(cpunum, reference_reg, &reference);
+> +       if (CPC_IN_FFH(delivered_reg) && CPC_IN_FFH(reference_reg)) {
+> +               struct ffh_cpc_reg_values ffh_regs;
+> +
+> +               ffh_regs.regs[0].reg =3D &(delivered_reg->cpc_entry.reg);
+> +               ffh_regs.regs[1].reg =3D &(reference_reg->cpc_entry.reg);
+> +               ret =3D cpc_read_regs_ffh(cpunum, &ffh_regs);
+> +               if (!ret) {
 
-> Maybe we're all gonna fix it back? as follows=EF=BC=9A
+If cpc_read_regs_ffh() returned 'true' on success, the above could be writt=
+en as
 
-No. We could do it for the kvec and xarray case, just to get better
-code generation again (not that I looked at it, so who knows), but the
-one case that actually uses memcpy_from_iter_mc() needs to react to a
-short write.
+if (cpc_read_regs_ffh(cpunum, &ffh_regs)) {
 
-One option might be to make a failed memcpy_from_iter_mc() set another
-flag in the iter, and then make fault_in_iov_iter_readable() test that
-flag and return 'len' if that flag is set.
-
-Something like that (wild handwaving) should get the right error handling.
-
-The simpler alternative is maybe something like the attached.
-COMPLETELY UNTESTED. Maybe I've confused myself with all the different
-indiraction mazes in the iov_iter code.
-
-                     Linus
-
---000000000000e07d49061288a5ca
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lt7i5gtw0>
-X-Attachment-Id: f_lt7i5gtw0
-
-IGxpYi9pb3ZfaXRlci5jIHwgNSArKysrLQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
-KSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2xpYi9pb3ZfaXRlci5jIGIvbGliL2lvdl9p
-dGVyLmMKaW5kZXggZTBhYTZiNDQwY2E1Li41MjM2YzE2NzM0ZTAgMTAwNjQ0Ci0tLSBhL2xpYi9p
-b3ZfaXRlci5jCisrKyBiL2xpYi9pb3ZfaXRlci5jCkBAIC0yNDgsNyArMjQ4LDEwIEBAIHN0YXRp
-YyBfX2Fsd2F5c19pbmxpbmUKIHNpemVfdCBtZW1jcHlfZnJvbV9pdGVyX21jKHZvaWQgKml0ZXJf
-ZnJvbSwgc2l6ZV90IHByb2dyZXNzLAogCQkJICAgc2l6ZV90IGxlbiwgdm9pZCAqdG8sIHZvaWQg
-KnByaXYyKQogewotCXJldHVybiBjb3B5X21jX3RvX2tlcm5lbCh0byArIHByb2dyZXNzLCBpdGVy
-X2Zyb20sIGxlbik7CisJc2l6ZV90IG4gPSBjb3B5X21jX3RvX2tlcm5lbCh0byArIHByb2dyZXNz
-LCBpdGVyX2Zyb20sIGxlbik7CisJaWYgKG4pCisJCW1lbXNldCh0byArIHByb2dyZXNzIC0gbiwg
-MCwgbik7CisJcmV0dXJuIDA7CiB9CiAKIHN0YXRpYyBzaXplX3QgX19jb3B5X2Zyb21faXRlcl9t
-Yyh2b2lkICphZGRyLCBzaXplX3QgYnl0ZXMsIHN0cnVjdCBpb3ZfaXRlciAqaSkK
---000000000000e07d49061288a5ca--
+> +                       delivered =3D ffh_regs.regs[0].value;
+> +                       reference =3D ffh_regs.regs[1].value;
+> +                       regs_read_in_ffh =3D 1;
+> +               }
+> +       }
+> +
+> +       if (!regs_read_in_ffh) {
+> +               cpc_read(cpunum, delivered_reg, &delivered);
+> +               cpc_read(cpunum, reference_reg, &reference);
+> +       }
+>         cpc_read(cpunum, ref_perf_reg, &ref_perf);
+>
+>         /*
+> @@ -1366,7 +1390,7 @@ int cppc_get_perf_ctrs(int cpunum, struct cppc_perf=
+_fb_ctrs *perf_fb_ctrs)
+>         if (CPC_SUPPORTED(ctr_wrap_reg))
+>                 cpc_read(cpunum, ctr_wrap_reg, &ctr_wrap_time);
+>
+> -       if (!delivered || !reference || !ref_perf) {
+> +       if (!delivered || !reference || !ref_perf) {
+>                 ret =3D -EFAULT;
+>                 goto out_err;
+>         }
+> diff --git a/include/acpi/cppc_acpi.h b/include/acpi/cppc_acpi.h
+> index 3a0995f8bce8..0da614a50edd 100644
+> --- a/include/acpi/cppc_acpi.h
+> +++ b/include/acpi/cppc_acpi.h
+> @@ -137,6 +137,18 @@ struct cppc_cpudata {
+>  };
+>
+>  #ifdef CONFIG_ACPI_CPPC_LIB
+> +
+> +#define MAX_NUM_CPC_REGS_FFH 2
+> +
+> +struct ffh_cpc_reg {
+> +       struct cpc_reg *reg;
+> +       u64 value;
+> +};
+> +
+> +struct ffh_cpc_reg_values {
+> +       struct ffh_cpc_reg regs[MAX_NUM_CPC_REGS_FFH];
+> +};
+> +
+>  extern int cppc_get_desired_perf(int cpunum, u64 *desired_perf);
+>  extern int cppc_get_nominal_perf(int cpunum, u64 *nominal_perf);
+>  extern int cppc_get_perf_ctrs(int cpu, struct cppc_perf_fb_ctrs *perf_fb=
+_ctrs);
+> @@ -153,6 +165,7 @@ extern unsigned int cppc_get_transition_latency(int c=
+pu);
+>  extern bool cpc_ffh_supported(void);
+>  extern bool cpc_supported_by_cpu(void);
+>  extern int cpc_read_ffh(int cpunum, struct cpc_reg *reg, u64 *val);
+> +extern int cpc_read_regs_ffh(int cpu, struct ffh_cpc_reg_values *regs);
+>  extern int cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val);
+>  extern int cppc_get_epp_perf(int cpunum, u64 *epp_perf);
+>  extern int cppc_set_epp_perf(int cpu, struct cppc_perf_ctrls *perf_ctrls=
+, bool enable);
+> --
