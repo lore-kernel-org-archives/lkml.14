@@ -1,193 +1,151 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4352446AD;
-	Thu, 29 Feb 2024 07:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB19445BE2
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 07:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709193330; cv=none; b=IJE7IYWsCQULcU13fNBXOXGqF9Hu1zVb/aTR5E/h1RE5VE8TZFi5kk7HtKaHhpJfaU86Rl+atGskWEzirkOpeqPuNG0cdRcGJt++HU6r5X39cARgb0d/bY6fLqqGj961waVcj6ZdKdZ+/0DS+XvFP5qgSEF+9Co31bp1FSgIaWA=
+	t=1709193382; cv=none; b=L5PMitjBlst3YnX+h8ff8X+sBGB3bcSoMKShO/hhPAU4vziN9A5119vP5tuS1+M9rUwGfJ7ZD5nMit4KvAITufuW8wj4LAVVmlWngUb+ZzoJO79x3T7EMj+3wo4POzm6Yt0uC3Ee4kdq2vM3GubkL/UDvCAAmwyqvU8nEWynr5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709193330; c=relaxed/simple;
-	bh=IVtuPS1lBPaj/zxrsGhLxqcDNjuzZOdLuezGWMB8DKo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GyD24lYX9e4MTTL76ZnOEY65p4X4SeHCMULcshLUcCbDEADpHFigCSOkP1CMxOCIHJ36Kl3561Lbew/9TqDeKURSnUwXsSu+Ytv6VI1xAxDmUAXy+X5XnZB2vlRXq1fK0wkQyfO3TIkxj2xFfkhST8fxEqFpxEGWTLLkA5KfgPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 41T7skWyB1231943, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 41T7skWyB1231943
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 15:54:46 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.17; Thu, 29 Feb 2024 15:54:47 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 29 Feb 2024 15:54:47 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::48bb:4f38:369c:d153]) by
- RTEXMBS01.realtek.com.tw ([fe80::48bb:4f38:369c:d153%9]) with mapi id
- 15.01.2507.035; Thu, 29 Feb 2024 15:54:47 +0800
-From: Ricky WU <ricky_wu@realtek.com>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook
-	<keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
-        "Guilherme G.
- Piccoli" <gpiccoli@igalia.com>,
-        "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>,
-        "bpf@vger.kernel.org"
-	<bpf@vger.kernel.org>
-Subject: RE: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on device removal
-Thread-Topic: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
- device removal
-Thread-Index: AQHaate/5A+a/3dg+UCIxr7elsRj3rEg7uxQ
-Date: Thu, 29 Feb 2024 07:54:46 +0000
-Message-ID: <ac998dfd10074f77a66d59bcc0ca2213@realtek.com>
-References: <20240229062201.49500-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20240229062201.49500-1-kai.heng.feng@canonical.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1709193382; c=relaxed/simple;
+	bh=xalTvrC3436CWoDDWIMy3YccKsUzpHw+pYYrTOnwkpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BdMwYHwf4VCNt8JTjYGQLeIixdXN/mp7g5gbkQCXwl3TS25FQp3Mn3uGR3i0Ozj4QbQlOZVYeM2KYEECy3VTO3MDYD6OTnlzeScyu8kaeRDoQoOTPgQ4oreO0RzqHNE6KkJj6lbH0UYg8WpyedamCBDOUAZQ0B9kvPYRSJ0ePsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jgO7BqV+; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jgO7BqV+"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56698eb5e1dso552768a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 Feb 2024 23:56:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709193379; x=1709798179; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Cu6mjnfD5m4+aU28S18XmI+K3qmvRUR5PoxLhp2cnhk=;
+        b=jgO7BqV+8dQvG+kGIEVgbrsJMVioZbi+D34mo3TXztclfWS7KCf9ZkHMk2s+ehbKFs
+         Hi7CI82CrBzNhTsIGavQ40t8M2S6gTvUiaCVTKDChtNJ60ZN1DCtcCL2yTX2MzGtQS5l
+         VkQNiuNiHEbofIubsT2wQeWD9beJEh18YK11Mi+Ms78pDpfmF/PQdutLa8zoVXN5emkD
+         Yl/WKj9fzEl4lqwefeZamGaT9o4irEMg4Sxr2KbQHsf0ZDNO2VEuuSwYWeu1Hv55o7/o
+         Lu2NAy4YCWw2gwDkcq7pRvWHG/vtiRL9peqo3jFUQjnDoCnrHXLSpOuBKtTaJbZ5SSRY
+         H8vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709193379; x=1709798179;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cu6mjnfD5m4+aU28S18XmI+K3qmvRUR5PoxLhp2cnhk=;
+        b=WP9yWWRL5Ah8JjQgDjqNlVS3ze5ZuC3OwyIW0n6mbHwzbLVCtGgKkJ6EqRUsyCtiOh
+         nub4Uz7ofPfknneHNFTQabrp8qmRWMDwbKfNXU6N1R6+/KL/2yZfO/FjOxEKJ/MiYHfL
+         qn07pbAq3CYhAPDNUD9vB7L207LahhTUalKWdpaY7fyb0ngHM+1tyWNIvPfMO12Cu2iW
+         vumM+XBdzz2UbRCD//qy1ru3HGAW6WBVWYTOboOseKmWSXPZfRT0DyPPhdqMEvrRdgZ7
+         yY7Ysxdyt9pQcgXnQmbZCdK0fi35d/RXyaOFZSUNt+fmuvajY9itYylhsSqTElB4ygUc
+         v1ow==
+X-Forwarded-Encrypted: i=1; AJvYcCUWw7Z5nTDCNHov9R4DVHQVU36Qr8tEBWqnEryRrkPE8qPsUGK+ZVTLIiLqLy4o9TTuNCVluWD1tKE/nmYjVNLyWgtgGaDPf/qINxBq
+X-Gm-Message-State: AOJu0YwhvVO3nuym1I3boOibrByrmQfQQIreaV2PM+T2wrxIfAFQPbuI
+	nMkkCnZw6NVgjlvTCaNkVDlvP0oouLiB1HpwH+MXi6Ps+RF0wFsQ5/4OHf/647A=
+X-Google-Smtp-Source: AGHT+IFD2F0dsAJTriWGloHGAECOnwct5/b+t1wR92stMVygQYZ4dVGFAsGp8PfFSSPlMMNUCWMbjg==
+X-Received: by 2002:a17:906:f902:b0:a3f:effa:2134 with SMTP id lc2-20020a170906f90200b00a3feffa2134mr744061ejb.18.1709193379062;
+        Wed, 28 Feb 2024 23:56:19 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id ps2-20020a170906bf4200b00a43a79b10absm407995ejb.140.2024.02.28.23.56.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 23:56:18 -0800 (PST)
+Message-ID: <df9c05aa-6744-4954-9918-8b2abf59bbc0@linaro.org>
+Date: Thu, 29 Feb 2024 08:56:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: aspeed: add ASUS X4TF board
+Content-Language: en-US
+To: =?UTF-8?B?S2VsbHkgSHVuZyjmtKrlmInojokp?= <Kelly_Hung@asus.com>,
+ Kelly Hung <ppighouse@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>, "joel@jms.id.au"
+ <joel@jms.id.au>, "andrew@codeconstruct.com.au"
+ <andrew@codeconstruct.com.au>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+ =?UTF-8?B?QWxsZW5ZWSBIc3Uo6Kix5bm85bKzKQ==?= <AllenYY_Hsu@asus.com>
+References: <20240227092922.1734998-1-Kelly_Hung@asus.com>
+ <60d048df-9a54-4239-8a8b-a8eb9a59dde9@linaro.org>
+ <TYZPR04MB65964904A9624AF3BE05198D9D5F2@TYZPR04MB6596.apcprd04.prod.outlook.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <TYZPR04MB65964904A9624AF3BE05198D9D5F2@TYZPR04MB6596.apcprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> When inserting an SD7.0 card to Realtek card reader, the card reader
-> unplugs itself and morph into a NVMe device. The slot Link down on hot
-> unplugged can cause the following error:
->=20
-> pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> BUG: unable to handle page fault for address: ffffb24d403e5010
-> PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
-> Oops: 0000 [#1] PREEMPT SMP PTI
-> CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
-> Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M Pro4,
-> BIOS P3.40 10/25/2018
-> Workqueue: pm pm_runtime_work
-> RIP: 0010:ioread32+0x2e/0x70
-> Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 08 d9 54 01 b8 ff f=
-f ff ff
-> 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <8b> 07 c3 cc cc cc cc=
- 55 83
-> ea 01 48 89 fe 48 c7 c7 98 6f 15 99 48
-> RSP: 0018:ffffb24d40a5bd78 EFLAGS: 00010296
-> RAX: ffffb24d403e5000 RBX: 0000000000000152 RCX: 000000000000007f
-> RDX: 000000000000ff00 RSI: ffffb24d403e5010 RDI: ffffb24d403e5010
-> RBP: ffffb24d40a5bd98 R08: ffffb24d403e5010 R09: 0000000000000000
-> R10: ffff9074cd95e7f4 R11: 0000000000000003 R12: 000000000000007f
-> R13: ffff9074e1a68c00 R14: ffff9074e1a68d00 R15: 0000000000009003
-> FS:  0000000000000000(0000) GS:ffff90752a180000(0000)
-> knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffb24d403e5010 CR3: 0000000152832006 CR4: 00000000003706e0
-> Call Trace:
->  <TASK>
->  ? show_regs+0x68/0x70
->  ? __die_body+0x20/0x70
->  ? __die+0x2b/0x40
->  ? page_fault_oops+0x160/0x480
->  ? search_bpf_extables+0x63/0x90
->  ? ioread32+0x2e/0x70
->  ? search_exception_tables+0x5f/0x70
->  ? kernelmode_fixup_or_oops+0xa2/0x120
->  ? __bad_area_nosemaphore+0x179/0x230
->  ? bad_area_nosemaphore+0x16/0x20
->  ? do_kern_addr_fault+0x8b/0xa0
->  ? exc_page_fault+0xe5/0x180
->  ? asm_exc_page_fault+0x27/0x30
->  ? ioread32+0x2e/0x70
->  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
->  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
->  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
->  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
->  ? __pfx_pci_pm_runtime_idle+0x10/0x10
->  pci_pm_runtime_idle+0x34/0x70
->  rpm_idle+0xc4/0x2b0
->  pm_runtime_work+0x93/0xc0
->  process_one_work+0x21a/0x430
->  worker_thread+0x4a/0x3c0
->  ? __pfx_worker_thread+0x10/0x10
->  kthread+0x106/0x140
->  ? __pfx_kthread+0x10/0x10
->  ret_from_fork+0x29/0x50
->  </TASK>
-> Modules linked in: nvme nvme_core snd_hda_codec_hdmi
-> snd_sof_pci_intel_cnl snd_sof_intel_hda_common snd_hda_codec_realtek
-> snd_hda_codec_generic snd_soc_hdac_hda soundwire_intel ledtrig_audio
-> nls_iso8859_1 soundwire_generic_allocation soundwire_cadence
-> snd_sof_intel_hda_mlink snd_sof_intel_hda snd_sof_pci snd_sof_xtensa_dsp
-> snd_sof snd_sof_utils snd_hda_ext_core snd_soc_acpi_intel_match
-> snd_soc_acpi soundwire_bus snd_soc_core snd_compress ac97_bus
-> snd_pcm_dmaengine snd_hda_intel i915 snd_intel_dspcfg snd_intel_sdw_acpi
-> intel_rapl_msr snd_hda_codec intel_rapl_common snd_hda_core
-> x86_pkg_temp_thermal intel_powerclamp snd_hwdep coretemp snd_pcm
-> kvm_intel drm_buddy ttm mei_hdcp kvm drm_display_helper snd_seq_midi
-> snd_seq_midi_event cec crct10dif_pclmul ghash_clmulni_intel sha512_ssse3
-> aesni_intel crypto_simd rc_core cryptd rapl snd_rawmidi drm_kms_helper
-> binfmt_misc intel_cstate i2c_algo_bit joydev snd_seq snd_seq_device
-> syscopyarea wmi_bmof snd_timer sysfillrect input_leds snd ee1004 sysimgbl=
-t
-> mei_me soundcore
->  mei intel_pch_thermal mac_hid acpi_tad acpi_pad sch_fq_codel msr
-> parport_pc ppdev lp ramoops drm parport reed_solomon efi_pstore ip_tables
-> x_tables autofs4 hid_generic usbhid hid rtsx_pci_sdmmc crc32_pclmul ahci
-> e1000e i2c_i801 i2c_smbus rtsx_pci xhci_pci libahci xhci_pci_renesas vide=
-o
-> wmi
-> CR2: ffffb24d403e5010
-> ---[ end trace 0000000000000000 ]---
->=20
-> This happens because scheduled pm_runtime_idle() is not cancelled.
->=20
-> So before releasing the device, stop all runtime power managements by
-> using pm_runtime_barrier() to fix the issue.
->=20
-> Link:
-> https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@realtek.com
-> /
-> Cc: Ricky Wu <ricky_wu@realtek.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Ricky Wu <ricky_wu@realtek.com>
+On 29/02/2024 08:45, Kelly Hung(洪嘉莉) wrote:
+> Hi, Krzysztof,
+> 
+> I correct my change log
+>> Document the new compatibles used on ASUS X4TF.
+>>
+>> Changelog
+>> Changes in v3
+>> --- The new compatible is a BMC for a ASUS X4TF server which use a ast2600-a3 chip, so correct string to asus,x4tf-bmc
+> 
+> Do I need to resend v3 patch again with the correct change log?
 
-I tested this patch, the result is GOOD.=20
-This issue is not happening with multiple plugging and unplugging
+You need to send v4 with correct changelog and tags.
 
-> ---
-> v3:
->   Move the change the device driver core.
->=20
-> v2:
->   Cover more cases than just pciehp.
->=20
->  drivers/base/dd.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 85152537dbf1..38c815e2b3a2 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -1244,6 +1244,7 @@ static void __device_release_driver(struct device
-> *dev, struct device *parent)
->=20
->         drv =3D dev->driver;
->         if (drv) {
-> +               pm_runtime_barrier(dev);
->                 pm_runtime_get_sync(dev);
->=20
->                 while (device_links_busy(dev)) {
-> --
-> 2.34.1
+https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+If a tag was not added on purpose, please state why and what changed.
+
+Best regards,
+Krzysztof
 
