@@ -1,103 +1,121 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA6478270;
-	Thu, 29 Feb 2024 18:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD807A127
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 18:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709231024; cv=none; b=q2L84Y1B35S3Goce0yMUhPJkrzghcmdH+6natq14WKtORfiXayrCDVV3aeLFZp/vZ3b9zxwXe+OcHPeSd+qfsfRT6+gMXwEtMWLv9SfXuziWz1jOuY/gUlVNGPjborLJWavr88lPOW2oqUCRZJSLXM6fxN4dilDBP+UUZ8VwQ5M=
+	t=1709231062; cv=none; b=SKQX0WYcLICfsxyeInRXkl79wI2JFHZarwbOgDY/Yqo8h5Qc4S9qBboFur7X9xnFEFoYdUdifRPMYFeWpcVaw/arlcrCbJHrsOUkHRVaMCZTC7pZjA3RBGyP0TyJ8YUj8SUA4tDQJBWExIogGTh55qKALJ2f2Ltx+kbw0Eix3eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709231024; c=relaxed/simple;
-	bh=5jqso/svpH6RJgz80zOv2/ISg2eV2Gq5Sp0Ypt8qi5A=;
+	s=arc-20240116; t=1709231062; c=relaxed/simple;
+	bh=Y9KRbZhBlGJ/L8+onTzy/F5qfnhONJecU4/IHZrT6pA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=akMUs15oFD5OtXSGDbpr4PNNYCVOj4N0VMVfZCd2JGfojEyc9CE7A3b5xvIxtcjZy2+fvkdAOT7UA5TAFYEmc0a02+35BXtPReAi/SNUmOkxODa/wCVoyG7G/YDOoWIEHwRp5WgaVg68VCU8PcyTTRS7dXO3CuukBEPmsAJohpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QnVuMV4m; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=X6ofKnBKToJwnIv6sp1scP85SsZnNjpobUa+Wem1bt1FCwKxTWBqo8ObZW8SOwJbbgaCqWH8+NcesszmcyX7+C8kp+lZhS7wlHWiErPdRLMrKzrgx1S4oeN6ZdLXtOjIm66k0vsHhu2nM9q/VFKTh7Y/1D8b+gYmC6ah/PJ5x6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DGB8d3AQ; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnVuMV4m"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e558a67f70so1209986b3a.0;
-        Thu, 29 Feb 2024 10:23:43 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DGB8d3AQ"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e571666804so885287b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 10:24:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709231023; x=1709835823; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oxDoMRVa20IuyjJXcaw3kzEI/O2UphhqTGKzQSQuVLg=;
-        b=QnVuMV4mqZxXGL18W7GN/ZVwtTPZGqQhqyIiiSkpuD8x3f3D/B2NVc4MAVfaWFA6yM
-         CYv7chD4Ta1OvGYFbzlKc1LK0dTRBcmJuUCZj2UlY3wE+qgleo30clq1+cJfjevZLlbO
-         NM7UXURsPTh7a3y9hgVz9PjXCOgwCxTyrcsQjSI8flNoHq3tcionWH5cJDexzs+seDhp
-         97tvpMRp4EGYFwu3WoZMyH3hxYQUGFYOy2TWU8K+w4I6LPFGw0IyGAj6NWHxI9KTwriI
-         kR7Xho34szppRs+aY72P1kEj5Om8jIHuRigjABg8BV9YHSsY9FSeSamQKSRhGc1iGTzA
-         TFZg==
+        d=chromium.org; s=google; t=1709231060; x=1709835860; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Pi3TKYGbYkDedreuD0VF7nTXnRCpQ3DLSOdVsFC+ytE=;
+        b=DGB8d3AQl2+iH13eetsKydo3vb3vKmNPvdwsANlX2BfGL1DAG3u6KjA12l5TgeafeN
+         9ds6vKjxHstX5iBQRgKg5KHOSOF0WV0/Z9kUXF6cBZZJbR924zVB3M9ievzHMEO/hDkx
+         cgpQVyk+n/MzWXXKylu8Cz+BC8oJILk7P8g00=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709231023; x=1709835823;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oxDoMRVa20IuyjJXcaw3kzEI/O2UphhqTGKzQSQuVLg=;
-        b=rSoa24YAi6kwljS7ZLkW4AsXoM2BkPlVB3nVtu0d8DmdBJCy2815Lp9mwcqf/XaH2V
-         SdH7iY8vCM80s2/t0zSVbDRPYoEimlZhqRT8ImS/chdjMjuDAy5HVlhuPIPb63wCwL3J
-         N44DES2DG+9cyR/4JJZal4iutLmuQ2+4W5J2KI+qC0FsfvQi54rILedJ8E/9gkLPCpnA
-         p//QqFNYMrtWqZCS+P2+Qhs8YpGpQEOtdiXYwFFPS1xCP6I/7kuaxS4AiyZTaCy1K8S2
-         LtdnZin/vaHddFmwhaqbfkYRLZbmGJ2PBnw/3Pr00/n6neZhUSWX05MmrS5VoeX3uxY4
-         oNDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfEc1lo+6onRbF+pHjqzyKLwkPVS5P1Wc7ZEXGdKyOYlSQeKa+1qgiLUcSX51thIAB/tkBYAnwdC6h8VTFWWC/DljNJp0nJgV+KOE=
-X-Gm-Message-State: AOJu0Yz23tRZm1UMFR2mNdwPno6U3BsEPGsBFfIP1Ei9a3DTWmT9GwSj
-	lOwb/nYXVeoJihHJZfll7JkZJmXBAgUIh7JvwtcH5oAZRMHve+LR
-X-Google-Smtp-Source: AGHT+IHkqlVqyDo+KQuoVkjYQujzZcaxmfHofCO2mnYHEm8bP4IaQTnoB3zFeIsc3gLtYw1hwgLl/A==
-X-Received: by 2002:aa7:9e88:0:b0:6e5:3e08:cbf1 with SMTP id p8-20020aa79e88000000b006e53e08cbf1mr2980024pfq.23.1709231022224;
-        Thu, 29 Feb 2024 10:23:42 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:157c:61d4:480a:864b])
-        by smtp.gmail.com with ESMTPSA id g8-20020aa79dc8000000b006e4d8687f44sm1558151pfq.102.2024.02.29.10.23.41
+        d=1e100.net; s=20230601; t=1709231060; x=1709835860;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pi3TKYGbYkDedreuD0VF7nTXnRCpQ3DLSOdVsFC+ytE=;
+        b=HFkWPdsDn62BLLMowIpU1fLJFlCbd4tOFvRLf/QT/+tAiTOFsvmOXoLGnfqQuKbgBE
+         iM+rCt7MqRLGWrxqYa54GrivaA5PLUM5eVMTvo+BhL0brLPFfFnbitlqGIzYXEOVsqSz
+         4/V71ISUXTrlZqNiqv/17wYdZC1vHbxPkA9yJxtEiHtwfjSIfXT6i4BWBurZFusqty/+
+         sToIZuycogziHrKqQ52I3cPhUs8oQq7EaQUuWJXfiTUqlL6mDQ4FBIi8FMURWT5ixbb/
+         OZuPbXgwO+sYhSMwucuka4ms8FCsucOAfPwT778CnMbXJd7J+rVsKtRxP/IYC0BGFuXY
+         /afA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRer+VuZGUu/t3LlqypuTS/Usf8+49ck5hh8e0SwhU5OtZGWYN8+9HDov4FOIN51CZzEZmn+PwCl6K4XJW71DoWpnrW2Dlfg9DtGlL
+X-Gm-Message-State: AOJu0YyXnnR9C88fb4Z9Z9NMfWU8+81SFqSEBIVjufapfRjkH7ukY0e+
+	BIc0wtsrQLDdyG7b2UybR5ZrA5c6egS2QnVYB9+QeNezHC1Yq2/CIzAQH1CKxA==
+X-Google-Smtp-Source: AGHT+IGaWIUafiUvWzOx6gFaLolklPJ+XzrkV3hrkkZkuSARRfVzagRox8BqzdDqYvItAAhiU4VzEg==
+X-Received: by 2002:a17:902:da85:b0:1dc:a60f:1b6a with SMTP id j5-20020a170902da8500b001dca60f1b6amr3395287plx.13.1709231060211;
+        Thu, 29 Feb 2024 10:24:20 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u11-20020a170903124b00b001db2b8b2da7sm1793216plh.122.2024.02.29.10.24.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 10:23:41 -0800 (PST)
-Date: Thu, 29 Feb 2024 10:23:39 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Jonathan Denose <jdenose@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, jefferymiller@google.com,
-	Jonathan Denose <jdenose@google.com>,
-	Raul Rangel <rrangel@chromium.org>, linux-input@vger.kernel.org
-Subject: Re: [PATCH] Input: psmouse - add resync_on_resume dmi check
-Message-ID: <ZeDLq9gPs5InBmdK@google.com>
-References: <20231102075243.1.Idb37ff8043a29f607beab6440c32b9ae52525825@changeid>
- <ZcKs589qYxviC1J4@google.com>
- <CALNJtpV0KsOusPQeGv8bQ3jKy2sUj+k=mPHc172f+vMaTDYPfg@mail.gmail.com>
- <ZcZ2oG1Rls-oR593@google.com>
- <CALNJtpWNbSZdpxky9hTiSRsaGgLDUnM66QGEy213d3Lhra0hsw@mail.gmail.com>
+        Thu, 29 Feb 2024 10:24:19 -0800 (PST)
+Date: Thu, 29 Feb 2024 10:24:19 -0800
+From: Kees Cook <keescook@chromium.org>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc: Brendan Higgins <brendanhiggins@google.com>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+	James Morris <jamorris@linux.microsoft.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+	Marco Pagani <marpagan@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Thara Gopinath <tgopinath@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>,
+	Zahra Tarkhani <ztarkhani@microsoft.com>, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-um@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v1 5/8] kunit: Handle test faults
+Message-ID: <202402291023.071AA58E3@keescook>
+References: <20240229170409.365386-1-mic@digikod.net>
+ <20240229170409.365386-6-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CALNJtpWNbSZdpxky9hTiSRsaGgLDUnM66QGEy213d3Lhra0hsw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240229170409.365386-6-mic@digikod.net>
 
-On Mon, Feb 12, 2024 at 02:57:08PM -0600, Jonathan Denose wrote:
-...
-> [   50.241235] ideapad_acpi VPC2004:00: PM: calling acpi_subsys_resume+0x0/0x5d @ 4492, parent: PNP0C09:00
-> [   50.242055] snd_hda_intel 0000:00:0e.0: PM: pci_pm_resume+0x0/0xed returned 0 after 13511 usecs
-> [   50.242120] snd_hda_codec_realtek hdaudioC0D0: PM: calling hda_codec_pm_resume+0x0/0x19 [snd_hda_codec] @ 4518, parent: 0000:00:0e.0
-> [   50.247406] i8042: [49434] a8 -> i8042 (command)
-> [   50.247468] ideapad_acpi VPC2004:00: PM: acpi_subsys_resume+0x0/0x5d returned 0 after 6220 usecs
-...
-> [   50.247883] i8042 kbd 00:01: PM: calling pnp_bus_resume+0x0/0x9d @ 4492, parent: pnp0
-> [   50.247894] i8042 kbd 00:01: PM: pnp_bus_resume+0x0/0x9d returned 0 after 0 usecs
-> [   50.247906] i8042 aux 00:02: PM: calling pnp_bus_resume+0x0/0x9d @ 4492, parent: pnp0
-> [   50.247916] i8042 aux 00:02: PM: pnp_bus_resume+0x0/0x9d returned 0 after 0 usecs
-...
-> [   50.248301] i8042 i8042: PM: calling platform_pm_resume+0x0/0x41 @ 4492, parent: platform
-> [   50.248377] i8042: [49434] 55 <- i8042 (flush, kbd)
-> [   50.248407] i8042: [49435] aa -> i8042 (command)
-> [   50.248601] i8042: [49435] 00 <- i8042 (return)
-> [   50.248604] i8042: [49435] i8042 controller selftest: 0x0 != 0x55
+On Thu, Feb 29, 2024 at 06:04:06PM +0100, Mickaël Salaün wrote:
+> Previously, when a kernel test thread crashed (e.g. NULL pointer
+> dereference, general protection fault), the KUnit test hanged for 30
+> seconds and exited with a timeout error.
+> 
+> Fix this issue by waiting on task_struct->vfork_done instead of the
+> custom kunit_try_catch.try_completion, and track the execution state by
+> initially setting try_result with -EFAULT and only setting it to 0 if
+> the test passed.
+> 
+> Fix kunit_generic_run_threadfn_adapter() signature by returning 0
+> instead of calling kthread_complete_and_exit().  Because thread's exit
+> code is never checked, always set it to 0 to make it clear.
+> 
+> Fix the -EINTR error message, which couldn't be reached until now.
+> 
+> This is tested with a following patch.
+> 
+> Cc: Brendan Higgins <brendanhiggins@google.com>
+> Cc: David Gow <davidgow@google.com>
+> Cc: Rae Moar <rmoar@google.com>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
 
-So here I see the ideapad-laptop driver trying to access i8042 before it
-even starts resuming. I wonder, does it help if you disable
-(temporarily) the ideapad driver?
+I assume we can start checking for "intentional" faults now?
 
-Thanks.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
-Dmitry
+Kees Cook
