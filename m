@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E51163506;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E500763509;
 	Thu, 29 Feb 2024 10:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709201005; cv=none; b=EY/akmUflaa6PCs/7mtsqITf5RAyB/YYi9uoi3XwvywbBwAXD6Nkzz+PI5D9V04jBbJvHYbRi7BqmT/+O6MgkDVBbtEtNvpn/qplXO5eCb4Tnhvgmp1VTjZpjg4Cx0eMRk4JoA3BSRi2XuJWoDEZesDrVN/AF9nMKjC6MMhpA0w=
+	t=1709201006; cv=none; b=GXq6DRmSeMsQHBV1dqtmbwFhqFlwvkcO2ei2+hbEJ62b39RfTSpm1LTGjPGsbWL01KZ0uoN/koTwS3mBM9/bhnAmv+XicvJIFWyeGInPBwxMIdLy7RmYTwgTY3gqu0IMHJCZbkvAoZAYp5r9UKjkVuNYX4udttcvoV1bnm10zNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709201005; c=relaxed/simple;
-	bh=bes3PToCDsibsQ7i3d3Xi3EdrGYpwN8sD1+581g+HXw=;
+	s=arc-20240116; t=1709201006; c=relaxed/simple;
+	bh=ydJlZJiiaEdXYJPeZ/bNmmCJFSzSpqOiP4+1KilJb1Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R4IescRarLh7f9yBxVhuvDaZQX2jgPiq0cyuzC3wITSO1HJVWWN67ojwSEGe//0A8REqGlfjX7PaR3p2mY/qDo/9WvBarhNh9u8KFnP+bLQLwSYi6+0cGMOBs8sTROIaqlkvakEuGpXlVhmkynCpBhedU2Jp14GfWyysdfn1GDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=ERPZCTuuaaw5O+HC5os6fo0N67ljEFfEgIgLy53gCaj+QGPVEpZ7XNVk41r/CWNOjEN+UMl0Nzm8cmi7ZbcLboAIgVg53D1RfOPdZYdcDJQBqaWd/Eqtt2UuwOsJYO11ldeNGTi4xkPb2jXMihSa2W76Z5LtuskJYFSHnmHwPck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Tlmxr3jPmz4f3mHQ;
-	Thu, 29 Feb 2024 18:03:12 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Tlmxv3pl9z4f3khH;
+	Thu, 29 Feb 2024 18:03:15 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id D86D11A0172;
-	Thu, 29 Feb 2024 18:03:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id C46D61A0568;
+	Thu, 29 Feb 2024 18:03:20 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g5hVuBlFsMHFg--.11578S10;
-	Thu, 29 Feb 2024 18:03:19 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g5hVuBlFsMHFg--.11578S12;
+	Thu, 29 Feb 2024 18:03:20 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: xni@redhat.com,
 	paul.e.luse@linux.intel.com,
@@ -35,9 +35,9 @@ Cc: linux-raid@vger.kernel.org,
 	yukuai1@huaweicloud.com,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH md-6.9 v4 06/11] md/raid1-10: factor out a new helper raid1_should_read_first()
-Date: Thu, 29 Feb 2024 17:57:09 +0800
-Message-Id: <20240229095714.926789-7-yukuai1@huaweicloud.com>
+Subject: [PATCH md-6.9 v4 08/11] md/raid1: factor out choose_slow_rdev() from read_balance()
+Date: Thu, 29 Feb 2024 17:57:11 +0800
+Message-Id: <20240229095714.926789-9-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240229095714.926789-1-yukuai1@huaweicloud.com>
 References: <20240229095714.926789-1-yukuai1@huaweicloud.com>
@@ -48,10 +48,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g5hVuBlFsMHFg--.11578S10
-X-Coremail-Antispam: 1UD129KBjvJXoWxXr17Jw4DJrWruF4DWr4xCrg_yoWrWF43pw
-	4avF93JryUKay3Aws8A3yDua4Sy3yrWrWUKFWxWws5uFySqFZ8Way5JryY9r1DCF95Jw17
-	Xa45GrW5C3ZrJFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:cCh0CgAX5g5hVuBlFsMHFg--.11578S12
+X-Coremail-Antispam: 1UD129KBjvJXoWxZF4rKw4kZF4rXrykWF4xCrg_yoW5ZF15pa
+	y3CFWftryUXry7uws8J3yDurySga4rGFW8GryxJwna9r9agrZ09FWxGFyagFyUWrWrJa47
+	Xw15ZrW293WktFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUP214x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -63,122 +63,122 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxXr17Jw4DJrWruF4DWr4xCrg_yoWrWF43pw
 	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
 	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
 	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbmZ
+	wI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JV
+	WxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbmZ
 	X7UUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-If resync is in progress, read_balance() should find the first usable
-disk, otherwise, data could be inconsistent after resync is done. raid1
-and raid10 implement the same checking, hence factor out the checking
-to make code cleaner.
+read_balance() is hard to understand because there are too many status
+and branches, and it's overlong.
 
-Noted that raid1 is using 'mddev->recovery_cp', which is updated after
-all resync IO is done, while raid10 is using 'conf->next_resync', which
-is inaccurate because raid10 update it before submitting resync IO.
-Fortunately, raid10 read IO can't concurrent with resync IO, hence there
-is no problem. And this patch also switch raid10 to use
-'mddev->recovery_cp'.
+This patch factor out the case to read the slow rdev from
+read_balance(), there are no functional changes.
 
 Co-developed-by: Paul Luse <paul.e.luse@linux.intel.com>
 Signed-off-by: Paul Luse <paul.e.luse@linux.intel.com>
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 Reviewed-by: Xiao Ni <xni@redhat.com>
 ---
- drivers/md/raid1-10.c | 20 ++++++++++++++++++++
- drivers/md/raid1.c    | 15 ++-------------
- drivers/md/raid10.c   | 13 ++-----------
- 3 files changed, 24 insertions(+), 24 deletions(-)
+ drivers/md/raid1.c | 69 ++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 52 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-index 9bc0f0022a6c..2ea1710a3b70 100644
---- a/drivers/md/raid1-10.c
-+++ b/drivers/md/raid1-10.c
-@@ -276,3 +276,23 @@ static inline int raid1_check_read_range(struct md_rdev *rdev,
- 	*len = first_bad + bad_sectors - this_sector;
- 	return 0;
- }
-+
-+/*
-+ * Check if read should choose the first rdev.
-+ *
-+ * Balance on the whole device if no resync is going on (recovery is ok) or
-+ * below the resync window. Otherwise, take the first readable disk.
-+ */
-+static inline bool raid1_should_read_first(struct mddev *mddev,
-+					   sector_t this_sector, int len)
-+{
-+	if ((mddev->recovery_cp < this_sector + len))
-+		return true;
-+
-+	if (mddev_is_clustered(mddev) &&
-+	    md_cluster_ops->area_resyncing(mddev, READ, this_sector,
-+					   this_sector + len))
-+		return true;
-+
-+	return false;
-+}
 diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index fa86d9fdb16f..30f467bb48fd 100644
+index 3149f22f1155..09b7e93a54b5 100644
 --- a/drivers/md/raid1.c
 +++ b/drivers/md/raid1.c
-@@ -605,11 +605,6 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 	struct md_rdev *rdev;
- 	int choose_first;
+@@ -620,6 +620,53 @@ static int choose_first_rdev(struct r1conf *conf, struct r1bio *r1_bio,
+ 	return -1;
+ }
  
--	/*
--	 * Check if we can balance. We can balance on the whole
--	 * device if no resync is going on, or below the resync window.
--	 * We take the first readable disk when above the resync window.
--	 */
-  retry:
- 	sectors = r1_bio->sectors;
- 	best_disk = -1;
-@@ -619,16 +614,10 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
- 	best_pending_disk = -1;
- 	min_pending = UINT_MAX;
- 	best_good_sectors = 0;
-+	choose_first = raid1_should_read_first(conf->mddev, this_sector,
-+					       sectors);
- 	clear_bit(R1BIO_FailFast, &r1_bio->state);
- 
--	if ((conf->mddev->recovery_cp < this_sector + sectors) ||
--	    (mddev_is_clustered(conf->mddev) &&
--	    md_cluster_ops->area_resyncing(conf->mddev, READ, this_sector,
--		    this_sector + sectors)))
--		choose_first = 1;
--	else
--		choose_first = 0;
--
- 	for (disk = 0 ; disk < conf->raid_disks * 2 ; disk++) {
- 		sector_t dist;
- 		sector_t first_bad;
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index d5a7a621f0f0..8aecdb1ccc16 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -748,17 +748,8 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 	best_good_sectors = 0;
- 	do_balance = 1;
- 	clear_bit(R10BIO_FailFast, &r10_bio->state);
--	/*
--	 * Check if we can balance. We can balance on the whole
--	 * device if no resync is going on (recovery is ok), or below
--	 * the resync window. We take the first readable disk when
--	 * above the resync window.
--	 */
--	if ((conf->mddev->recovery_cp < MaxSector
--	     && (this_sector + sectors >= conf->next_resync)) ||
--	    (mddev_is_clustered(conf->mddev) &&
--	     md_cluster_ops->area_resyncing(conf->mddev, READ, this_sector,
--					    this_sector + sectors)))
++static int choose_slow_rdev(struct r1conf *conf, struct r1bio *r1_bio,
++			    int *max_sectors)
++{
++	sector_t this_sector = r1_bio->sector;
++	int bb_disk = -1;
++	int bb_read_len = 0;
++	int disk;
 +
-+	if (raid1_should_read_first(conf->mddev, this_sector, sectors))
- 		do_balance = 0;
++	for (disk = 0 ; disk < conf->raid_disks * 2 ; disk++) {
++		struct md_rdev *rdev;
++		int len;
++		int read_len;
++
++		if (r1_bio->bios[disk] == IO_BLOCKED)
++			continue;
++
++		rdev = conf->mirrors[disk].rdev;
++		if (!rdev || test_bit(Faulty, &rdev->flags) ||
++		    !test_bit(WriteMostly, &rdev->flags))
++			continue;
++
++		/* there are no bad blocks, we can use this disk */
++		len = r1_bio->sectors;
++		read_len = raid1_check_read_range(rdev, this_sector, &len);
++		if (read_len == r1_bio->sectors) {
++			update_read_sectors(conf, disk, this_sector, read_len);
++			return disk;
++		}
++
++		/*
++		 * there are partial bad blocks, choose the rdev with largest
++		 * read length.
++		 */
++		if (read_len > bb_read_len) {
++			bb_disk = disk;
++			bb_read_len = read_len;
++		}
++	}
++
++	if (bb_disk != -1) {
++		*max_sectors = bb_read_len;
++		update_read_sectors(conf, bb_disk, this_sector, bb_read_len);
++	}
++
++	return bb_disk;
++}
++
+ /*
+  * This routine returns the disk from which the requested read should
+  * be done. There is a per-array 'next expected sequential IO' sector
+@@ -673,23 +720,8 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
+ 		if (!test_bit(In_sync, &rdev->flags) &&
+ 		    rdev->recovery_offset < this_sector + sectors)
+ 			continue;
+-		if (test_bit(WriteMostly, &rdev->flags)) {
+-			/* Don't balance among write-mostly, just
+-			 * use the first as a last resort */
+-			if (best_dist_disk < 0) {
+-				if (is_badblock(rdev, this_sector, sectors,
+-						&first_bad, &bad_sectors)) {
+-					if (first_bad <= this_sector)
+-						/* Cannot use this */
+-						continue;
+-					best_good_sectors = first_bad - this_sector;
+-				} else
+-					best_good_sectors = sectors;
+-				best_dist_disk = disk;
+-				best_pending_disk = disk;
+-			}
++		if (test_bit(WriteMostly, &rdev->flags))
+ 			continue;
+-		}
+ 		/* This is a reasonable device to use.  It might
+ 		 * even be best.
+ 		 */
+@@ -808,7 +840,10 @@ static int read_balance(struct r1conf *conf, struct r1bio *r1_bio, int *max_sect
+ 	}
+ 	*max_sectors = sectors;
  
- 	for (slot = 0; slot < conf->copies ; slot++) {
+-	return best_disk;
++	if (best_disk >= 0)
++		return best_disk;
++
++	return choose_slow_rdev(conf, r1_bio, max_sectors);
+ }
+ 
+ static void wake_up_barrier(struct r1conf *conf)
 -- 
 2.39.2
 
