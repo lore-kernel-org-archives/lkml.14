@@ -1,141 +1,261 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2081.outbound.protection.outlook.com [40.107.92.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26B659B6A;
-	Thu, 29 Feb 2024 11:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709207111; cv=fail; b=e6Y89vQTNhKcPK33ZHYjIAmlI3lnnZJAqGk87yPzXEih2294F+OPGcLR7Cgae+AEmjdhWlVGi/4Yi91EN1/Yojlv9ZuJlK8yqcluQul8zbTxp+y35TQVUIO4+tmPJORhoFqZP3JNCOanls7FiLxDZpHiwHaeKhxvGWTawxTtSRo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709207111; c=relaxed/simple;
-	bh=2AvODDP7c14q+zYQcAXV9HzRG0nVwf8u9lSlwKyZxHc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=baGBKZq9bVu0Sko9ooGVjj/Q2IVF2ubaD7L+nmo8ClOAR/imD2xhpaQ2HKVXqrkmziYjinQhw7RV6F5t7FxG/aohZjyalYunUHN6mIPQEcTHQ5e0PEi2JMbTTBdYMCtTwN1Dt8qKhpo4Fq9nxhHgN6rwzkmFknhqhBjMewYnXQw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=k4mxdAHA; arc=fail smtp.client-ip=40.107.92.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="k4mxdAHA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JIt6RlqFhUW8taASyqiPyIlZIQiKb/Ud3vn2xNdBSM0D2rj/xxxNxs1285CUbV1qkXuzhFMkgNyvIxqlgrGf+60zVdk8B+737CJmIm++HYfabSPOBy583P8cs2ojhBrcUJSuam9WA52bYb5wCzhQDe2i2Z9k3wo0HX+Re2uFclU9mKNV+Zvle/D3UgJIL+3GTGpypkvU3VxNqQ3UGsWpm1L3yTyHISSheVnudh82RiiSLvSBFpwQ8AgqMhK1pDiUCcddVEv2qXxDo7yN3iXh+GPhq13uxwRLf3bw3Amqjja5UJm+cdxuuiaYgoq6pRBw8vuW6bj0OaGbTPiQMett8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TeZlVl8zDiAyryXi7c4BZnR4xI7fGP+mqPXR0kQrMho=;
- b=aSgaeWZntCZN+hisTvtmHghAFudmxGFre7Ip+L1E0ju5s8qNoK7bwgkc/6nZteRrOtoKScCAub138ZRVo2//E0xA/+R0cUn128DazCkfLODEWAS+Rs/+JHEhqUlbeZ10a/bcUvUkyX9FrGY+PGiXguA3ZXS5/AQ/lXrKtf8dC9Nb7CQX2noIABHxS2ybL4p5rQ6KGlO3G3DTNtgQd7/9WwKP7lxK4rY223gYBrbW4t9sTH1/OxKjsaDByNw94u4nSQPYUCFhVlWutyPKoPnEEbo6diUxhuBNqq3JBFDf0hf0vkC2TB4O4J33x088DpH2Uur7X7HYESdjlyDIUzs1Vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TeZlVl8zDiAyryXi7c4BZnR4xI7fGP+mqPXR0kQrMho=;
- b=k4mxdAHA/KJPXuoJUZ3XSR7VUccmINTrjVRXBkJKuDRt6Om9pwWhnjoXKnAC/5qvvEXrESurR7bCaDvIHXlZ9C9qWMstLVBOovo2nj7g0PQokuOgdss2wqZK5PfroI0i1HOdBeoynh1wBaC9hMZ6+oo1YJcKvzrtY1cM6fEdOXTZBBvClT4qOUaAOiCGw+4CJDZa0bBAwipL2SsUZlQR7vV1XlhxLHRRGHvpOxQ1RW72AoNuO9oQ+CY9wEEaN+DNjAOHEXI3MyBwsaBfAvCsA8OP44izOeftcTrfmw3N8IGI3pSW67paZt1ESv6CPqTfsc4NeyLghr6di90nk3o37Q==
-Received: from BYAPR06CA0063.namprd06.prod.outlook.com (2603:10b6:a03:14b::40)
- by PH0PR12MB7471.namprd12.prod.outlook.com (2603:10b6:510:1e9::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Thu, 29 Feb
- 2024 11:45:06 +0000
-Received: from SJ5PEPF000001CD.namprd05.prod.outlook.com
- (2603:10b6:a03:14b:cafe::cf) by BYAPR06CA0063.outlook.office365.com
- (2603:10b6:a03:14b::40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.32 via Frontend
- Transport; Thu, 29 Feb 2024 11:45:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001CD.mail.protection.outlook.com (10.167.242.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7292.25 via Frontend Transport; Thu, 29 Feb 2024 11:45:06 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 29 Feb
- 2024 03:44:51 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Thu, 29 Feb
- 2024 03:44:50 -0800
-Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.14) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Thu, 29 Feb 2024 03:44:48 -0800
-From: Akhil R <akhilrajeev@nvidia.com>
-To: <ldewangan@nvidia.com>, <jonathanh@nvidia.com>, <vkoul@kernel.org>,
-	<thierry.reding@gmail.com>, <digetx@gmail.com>, <dmaengine@vger.kernel.org>,
-	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Akhil R <akhilrajeev@nvidia.com>
-Subject: [PATCH v2] dmaengine: tegra186: Fix residual calculation
-Date: Thu, 29 Feb 2024 17:14:39 +0530
-Message-ID: <20240229114439.21246-1-akhilrajeev@nvidia.com>
-X-Mailer: git-send-email 2.43.2
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C29C7CF25;
+	Thu, 29 Feb 2024 11:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709207116; cv=none; b=i0iLVfr672bHpI2WBLhrZ+pPB6vn3B03DfvaxM3gMBDSmw91fFYIJpnuX1M90u8lw9YUE3uCNhh29cpqlp6/Xxxfovmz9C64NI7iXo2Gn6O064DmQE2FUIpSqx9xebVZdfuxuIsMCz9dirpDDqrtCCR6xk+4I8ajke8hbRrfEXQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709207116; c=relaxed/simple;
+	bh=nd/b2uYlCb8E5dfzti2/q6XqGYbwdWariXVO650ml4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=acJKjzf+ha6EeRk02y9gEkhctrK5njZxfcJJ9qzRTJhiZ4MqLcSWJyoIw74ySxdnM44Ooto8EntGUzFCAGhJ+iMoEGQSZFV6ndtMRUNjKWjXBdXWY76lxze1+iqoyyzU4O0MkuM/6T/HOLBL2nLXsT3chuHG7c1KooYWfbBTIfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77A24150C;
+	Thu, 29 Feb 2024 03:45:51 -0800 (PST)
+Received: from [10.57.50.133] (unknown [10.57.50.133])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19A5E3F762;
+	Thu, 29 Feb 2024 03:45:09 -0800 (PST)
+Message-ID: <62e64ddd-266c-414e-b66a-8ca94f3c2bbf@arm.com>
+Date: Thu, 29 Feb 2024 11:45:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CD:EE_|PH0PR12MB7471:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5634d516-7a61-4bfc-418e-08dc391be024
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	zkjLTpxIIcXt9dnTZLCee+v5a6G5D2reQ4TwVd1/iRaTmmGtCcVFM5sn9sc5CvQu5O1uVtUjBB71tdR4OaQscUMDoK18uSyyVerSAKTc3+mUWf3F5rFKqbjHLu5z4d8xMU1W30SwB+afJB3iLA+feT5v1rOTgGSd8jBlHIZt+zM/5RycxKUOMoBawSynoBEpacN0NK+gqBLP3q+gOajrpFah3Btq77JJ3zA5qFGMqM5q9ljw5RFGbNiYQXHZLQztR9oWGnjYaAJLfTfQhXq9NW0Zsd+gv+WI95RVScEzTzmzlhlI8yhDozA6b2IxBwOCkyj7jQue6clMpTtuIdtFRb+YVUJdTq6YagqrnorqWqG34mzCWkDprDAAZ5oQ4YR4k1SWpTJuRcWnrEzkVCTlqTZzB5V6fvKtocfqZQrfm9e86EgxYV6WaM/oBLToM6+ODaHDIek6qnZDY0GVIuomg7qmQuZXfwcX2eZ9fTaz7p0Dwl3eL0SqtkYHcuXBqg/TreTLBu3Fw7VW8zzvoKTsPFfmb/zpgR5z2uJKd+mx1L7vFkY6/xB2+sTbyqp+e4erknsEvECBJiI7Yziu4ub9akhR8lzWa1lvKBDM2JVuzxnUq6b0cqglbnf6Mb9j0NHYEiu6mGLc0PN5uGnZaaeljh6tlHQftz9O9TtlvyRS90ARu7YrceMeDZ5xjfiy1afr7Pa98uQjZs4hYyuZ3NdaWOdUlNuIsn7QkAsQPKtkgf/cPMTpmliltnI8kpcn7i7v
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 11:45:06.6984
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5634d516-7a61-4bfc-418e-08dc391be024
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001CD.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7471
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V16 2/8] KVM: arm64: Prevent guest accesses into BRBE
+ system registers/instructions
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
+ James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+ <20240125094119.2542332-3-anshuman.khandual@arm.com>
+ <ZdYCUi9YVDNDz7fr@FVFF77S0Q05N>
+ <ab50e67e-3d06-4ba7-a5f8-4684e9ef98a4@arm.com>
+ <Zd2zy0oUk8XvoDJM@FVFF77S0Q05N>
+ <b134c30d-d855-41bb-a260-9f6437b77697@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <b134c30d-d855-41bb-a260-9f6437b77697@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The existing residual calculation returns an incorrect value when
-bytes_xfer == bytes_req. This scenario occurs particularly with drivers
-like UART where DMA is scheduled for maximum number of bytes and is
-terminated when the bytes inflow stops. At higher baud rates, it could
-request the tx_status while there is no bytes left to transfer. This will
-lead to incorrect residual being set. Hence return residual as '0' when
-bytes transferred equals to the bytes requested.
+On 27/02/2024 11:13, Anshuman Khandual wrote:
+> 
+> 
+> On 2/27/24 15:34, Mark Rutland wrote:
+>> On Fri, Feb 23, 2024 at 12:58:48PM +0530, Anshuman Khandual wrote:
+>>>
+>>>
+>>> On 2/21/24 19:31, Mark Rutland wrote:
+>>>> On Thu, Jan 25, 2024 at 03:11:13PM +0530, Anshuman Khandual wrote:
+>>>>> Currently BRBE feature is not supported in a guest environment. This hides
+>>>>> BRBE feature availability via masking ID_AA64DFR0_EL1.BRBE field.
+>>>>
+>>>> Does that means that a guest can currently see BRBE advertised in the
+>>>> ID_AA64DFR0_EL1.BRB field, or is that hidden by the regular cpufeature code
+>>>> today?
+>>>
+>>> IIRC it is hidden, but will have to double check. When experimenting for BRBE
+>>> guest support enablement earlier, following changes were need for the feature
+>>> to be visible in ID_AA64DFR0_EL1.
+>>>
+>>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>>> index 646591c67e7a..f258568535a8 100644
+>>> --- a/arch/arm64/kernel/cpufeature.c
+>>> +++ b/arch/arm64/kernel/cpufeature.c
+>>> @@ -445,6 +445,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+>>>   };
+>>>   
+>>>   static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+>>> +       S_ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_IMP),
+>>>          S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+>>>          ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+>>>          ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+>>>
+>>> Should we add the following entry - explicitly hiding BRBE from the guest
+>>> as a prerequisite patch ?
 
-Fixes: ee17028009d4 ("dmaengine: tegra: Add tegra gpcdma driver")
-Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
----
-v1->v2:
-* corrected typo - s/exisiting/existing/
+This has nothing to do with the Guest visibility of the BRBE. This is
+specifically for host "userspace" (via MRS emulation).
 
- drivers/dma/tegra186-gpc-dma.c | 3 +++
- 1 file changed, 3 insertions(+)
+>>>
+>>> S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_BRBE_SHIFT, 4, ID_AA64DFR0_EL1_BRBE_NI)
+>>
+>> Is it visbile currently, or is it hidden currently?
+>>
+>> * If it is visible before this patch, that's a latent bug that we need to go
+>>    fix first, and that'll require more coordination.
+>>
+>> * If it is not visible before this patch, there's no problem in the code, but
+>>    the commit message needs to explicitly mention that's the case as the commit
+>>    message currently implies it is visible by only mentioning hiding it.
+>>
+>> ... so can you please double check as you suggested above? We should be able to
+>> explain why it is or is not visible today.
+> 
+> It is currently hidden i.e following code returns 1 in the host
+> but returns 0 inside the guest.
+> 
+> aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
+> brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
+> 
+> Hence - will update the commit message here as suggested.
 
-diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
-index 88547a23825b..3642508e88bb 100644
---- a/drivers/dma/tegra186-gpc-dma.c
-+++ b/drivers/dma/tegra186-gpc-dma.c
-@@ -746,6 +746,9 @@ static int tegra_dma_get_residual(struct tegra_dma_channel *tdc)
- 	bytes_xfer = dma_desc->bytes_xfer +
- 		     sg_req[dma_desc->sg_idx].len - (wcount * 4);
- 
-+	if (dma_desc->bytes_req == bytes_xfer)
-+		return 0;
-+
- 	residual = dma_desc->bytes_req - (bytes_xfer % dma_desc->bytes_req);
- 
- 	return residual;
--- 
-2.43.2
+This is by virtue of the masking we do in the kvm/sysreg.c below.
+
+> 
+>>
+>> Mark.
+>>
+>>>>> This also blocks guest accesses into BRBE system registers and instructions
+>>>>> as if the underlying hardware never implemented FEAT_BRBE feature.
+>>>>>
+>>>>> Cc: Marc Zyngier <maz@kernel.org>
+>>>>> Cc: Oliver Upton <oliver.upton@linux.dev>
+>>>>> Cc: James Morse <james.morse@arm.com>
+>>>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>>> Cc: Will Deacon <will@kernel.org>
+>>>>> Cc: kvmarm@lists.linux.dev
+>>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>> ---
+>>>>> Changes in V16:
+>>>>>
+>>>>> - Added BRB_INF_SRC_TGT_EL1 macro for corresponding BRB_[INF|SRC|TGT] expansion
+>>>>>
+>>>>>   arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
+>>>>>   1 file changed, 56 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>>>>> index 30253bd19917..6a06dc2f0c06 100644
+>>>>> --- a/arch/arm64/kvm/sys_regs.c
+>>>>> +++ b/arch/arm64/kvm/sys_regs.c
+>>>>> @@ -1304,6 +1304,11 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
+>>>>>   	return 0;
+>>>>>   }
+>>>>>   
+>>>>> +#define BRB_INF_SRC_TGT_EL1(n)					\
+>>>>> +	{ SYS_DESC(SYS_BRBINF##n##_EL1), undef_access },	\
+>>>>> +	{ SYS_DESC(SYS_BRBSRC##n##_EL1), undef_access },	\
+>>>>> +	{ SYS_DESC(SYS_BRBTGT##n##_EL1), undef_access }		\
+>>>>
+>>>> With the changes suggested on the previous patch, this would need to change to be:
+>>>>
+>>>> 	#define BRB_INF_SRC_TGT_EL1(n)					\
+>>>> 		{ SYS_DESC(SYS_BRBINF_EL1(n)), undef_access },	\
+>>>> 		{ SYS_DESC(SYS_BRBSRC_EL1(n)), undef_access },	\
+>>>> 		{ SYS_DESC(SYS_BRBTGT_EL1(n)), undef_access }	\
+>>>
+>>> Sure, already folded back in these above changes.
+>>>
+>>>>
+>>>>
+>>>> ... which would also be easier for backporting (if necessary), since those
+>>>> definitions have existed for a while.
+>>>>
+>>>> Otherwise (modulo Suzuki's comment about rebasing), this looks good to me.
+>>>
+>>> Okay.
+>>>
+>>>>
+>>>> Mark.
+>>>>
+>>>>>   /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
+>>>>>   #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
+>>>>>   	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
+>>>>> @@ -1707,6 +1712,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+>>>>>   	/* Hide SPE from guests */
+>>>>>   	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+>>>>>   
+>>>>> +	/* Hide BRBE from guests */
+>>>>> +	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
+>>>>> +
+
+This controls what the guest sees.
+
+Suzuki
+
+
+>>>>>   	return val;
+>>>>>   }
+>>>>>   
+>>>>> @@ -2195,6 +2203,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>>>>>   	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
+>>>>>   	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
+>>>>>   	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
+>>>>> +	{ SYS_DESC(OP_BRB_IALL), undef_access },
+>>>>> +	{ SYS_DESC(OP_BRB_INJ), undef_access },
+>>>>>   
+>>>>>   	DBG_BCR_BVR_WCR_WVR_EL1(0),
+>>>>>   	DBG_BCR_BVR_WCR_WVR_EL1(1),
+>>>>> @@ -2225,6 +2235,52 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>>>>>   	{ SYS_DESC(SYS_DBGCLAIMCLR_EL1), trap_raz_wi },
+>>>>>   	{ SYS_DESC(SYS_DBGAUTHSTATUS_EL1), trap_dbgauthstatus_el1 },
+>>>>>   
+>>>>> +	/*
+>>>>> +	 * BRBE branch record sysreg address space is interleaved between
+>>>>> +	 * corresponding BRBINF<N>_EL1, BRBSRC<N>_EL1, and BRBTGT<N>_EL1.
+>>>>> +	 */
+>>>>> +	BRB_INF_SRC_TGT_EL1(0),
+>>>>> +	BRB_INF_SRC_TGT_EL1(16),
+>>>>> +	BRB_INF_SRC_TGT_EL1(1),
+>>>>> +	BRB_INF_SRC_TGT_EL1(17),
+>>>>> +	BRB_INF_SRC_TGT_EL1(2),
+>>>>> +	BRB_INF_SRC_TGT_EL1(18),
+>>>>> +	BRB_INF_SRC_TGT_EL1(3),
+>>>>> +	BRB_INF_SRC_TGT_EL1(19),
+>>>>> +	BRB_INF_SRC_TGT_EL1(4),
+>>>>> +	BRB_INF_SRC_TGT_EL1(20),
+>>>>> +	BRB_INF_SRC_TGT_EL1(5),
+>>>>> +	BRB_INF_SRC_TGT_EL1(21),
+>>>>> +	BRB_INF_SRC_TGT_EL1(6),
+>>>>> +	BRB_INF_SRC_TGT_EL1(22),
+>>>>> +	BRB_INF_SRC_TGT_EL1(7),
+>>>>> +	BRB_INF_SRC_TGT_EL1(23),
+>>>>> +	BRB_INF_SRC_TGT_EL1(8),
+>>>>> +	BRB_INF_SRC_TGT_EL1(24),
+>>>>> +	BRB_INF_SRC_TGT_EL1(9),
+>>>>> +	BRB_INF_SRC_TGT_EL1(25),
+>>>>> +	BRB_INF_SRC_TGT_EL1(10),
+>>>>> +	BRB_INF_SRC_TGT_EL1(26),
+>>>>> +	BRB_INF_SRC_TGT_EL1(11),
+>>>>> +	BRB_INF_SRC_TGT_EL1(27),
+>>>>> +	BRB_INF_SRC_TGT_EL1(12),
+>>>>> +	BRB_INF_SRC_TGT_EL1(28),
+>>>>> +	BRB_INF_SRC_TGT_EL1(13),
+>>>>> +	BRB_INF_SRC_TGT_EL1(29),
+>>>>> +	BRB_INF_SRC_TGT_EL1(14),
+>>>>> +	BRB_INF_SRC_TGT_EL1(30),
+>>>>> +	BRB_INF_SRC_TGT_EL1(15),
+>>>>> +	BRB_INF_SRC_TGT_EL1(31),
+>>>>> +
+>>>>> +	/* Remaining BRBE sysreg addresses space */
+>>>>> +	{ SYS_DESC(SYS_BRBCR_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBFCR_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBTS_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBINFINJ_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBSRCINJ_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBTGTINJ_EL1), undef_access },
+>>>>> +	{ SYS_DESC(SYS_BRBIDR0_EL1), undef_access },
+>>>>> +
+>>>>>   	{ SYS_DESC(SYS_MDCCSR_EL0), trap_raz_wi },
+>>>>>   	{ SYS_DESC(SYS_DBGDTR_EL0), trap_raz_wi },
+>>>>>   	// DBGDTR[TR]X_EL0 share the same encoding
+>>>>> -- 
+>>>>> 2.25.1
+>>>>>
+> 
 
