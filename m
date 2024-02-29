@@ -1,38 +1,39 @@
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBDB7827A;
-	Thu, 29 Feb 2024 18:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6403C7A15C;
+	Thu, 29 Feb 2024 18:10:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709230259; cv=none; b=AuYVTaYHzgpahn6MXconR0QcyjyI4ukTupe4h68s4KXy6M8ZebN2UYdGtkVAfFceBigNaT6/v4W7vHuh1eP2E+Y1lV2x3QApvOZQ/1V1z242xvMxQs0fvWY9yvS2tENOJTnjCHRbHVXGLEMn4+Bgjg/Bu/hNLU41BDtTqjZqgHw=
+	t=1709230261; cv=none; b=rdACjDPJdP1eptgQUNhMRieWfgjFbtEs+29MI1ikJignz1CE+VDXWY5QCPTUemGuJ5AogSFj6kCUOZdi4PaPGFG+5QTGFbDHRRyotlCZ8LmMFAxLPsgWAgt5Uz6COT//1LrbEuLmuhHLxBOl2YrR8WztoDtgyV6+VIQjb4mLIUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709230259; c=relaxed/simple;
-	bh=MOkti5POBNAAPodBmKTRKlIVoSockxo5dnR5oUDn8/Y=;
+	s=arc-20240116; t=1709230261; c=relaxed/simple;
+	bh=E6JIr8h+OwWIEYevpKG0zN3Nj02fkHMXvYMjPiDM944=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EnV4E/5zHRtk2MtwM7h7+0uuw/Vx9RRcBnHIVbQBhfrank/g2kJhLVoMRpVdRwUPBQsCpLPemMxzT40F0clsAkBj1Yy0g9GUuF4PM/965L7Aof+mrxIZsP5CjSgR49x+vCa1iexJohQVZAnNG5rSa5dQDnWpSF8a/hzEuGbGenc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CjkDBqWT; arc=none smtp.client-ip=217.70.183.195
+	 In-Reply-To:To:Cc; b=TtNYFEv0X6gICJJvMBPkYl4iIac+kS4Y0bnNI5klI0D3AKeDo5ucC6kcPlBQbhcQLzIJVDgiE8UEPGKrhPL4SFfZC6nKCdbTDJcLModrKmIp3xjCr/ZFHK5AcLncYe6y5GVgtkm5lupZrsxYqwXlNBL+4mjVZGBLd0oz7Cawmrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ckm51Utd; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CjkDBqWT"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B4B286000A;
-	Thu, 29 Feb 2024 18:10:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ckm51Utd"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1A6BF60008;
+	Thu, 29 Feb 2024 18:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709230255;
+	t=1709230257;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ty2EJ876o5Kn9zQBvjF0tUqOXzfEY6odYnS7MMMrsVs=;
-	b=CjkDBqWTQO8VkImGA2epQhUPlTMDUTn99AN5BljtdS+um7gvcinAzduZxh/ogpVeUsXxBn
-	60xkeuZf41hMFyl8dLuzO5K5MeN1jx1uixbmKHbmUjAbtiU0OX/KKHGDXNC4395GlGuZ2v
-	mUroovnuHzB/1pkJJ9ePn6I9ewxFLPY8LxNMK1+YTd0I7jxMARlOu53GBOqYndii9BadzJ
-	8Zt18n6se8rdZ/4v7cLCBXVIWbUUM3eLOtaIiaCqb0nTo8ZvsDkXrbnr1J3jpAUi+B5JF7
-	5/zRpEhb5Ongp2bZ4YvCA5/OZ+e3DkxmSv4LP9jMelz/yxhestxicVxe2aafOQ==
+	bh=nvp7WvCSrLtX8t3FL321hrxMmXFJgNTHJeZP7j1HXbE=;
+	b=Ckm51UtdhLlYjy1+GbXevZeyNXA0eukCYSQhGmLH4wBsZhILrXTbpeMH2vErQhfebIR53U
+	CR6+RgyMrcCuYFhHc8ePO50DzVGbY3HepxKSmoOgpVUSKs78fHepcik9/YndIWTs9xkjTd
+	NIIaZAkB4cZcy+dha9TUY1uJCN4GxTlg1RObJxgLY+SYP21oa86NDdcoFf3r1eQ91xllej
+	3g6LLV+teBzdM521+U61+iXYwm84AHTGl0GDFabJqfXXvtxO8Dx6WvUoEwJX5NMbMWiyPd
+	9rTC21hsGuNSoQ3P0JC1xyYM9C0WnjbL6uC56HERTpvjvYVI2DaKsS9+mc/8SQ==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Thu, 29 Feb 2024 19:10:52 +0100
-Subject: [PATCH v2 04/11] i2c: nomadik: simplify IRQ masking logic
+Date: Thu, 29 Feb 2024 19:10:55 +0100
+Subject: [PATCH v2 07/11] i2c: nomadik: replace jiffies by ktime for FIFO
+ flushing timeout
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240229-mbly-i2c-v2-4-b32ed18c098c@bootlin.com>
+Message-Id: <20240229-mbly-i2c-v2-7-b32ed18c098c@bootlin.com>
 References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
 In-Reply-To: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -59,80 +60,42 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-IRQ_MASK and I2C_CLEAR_ALL_INTS are redundant. One masks the top three
-bits off as reserved, the other one masks the reserved IRQs inside the
-u32. Get rid of IRQ_MASK and only use the most restrictive mask.
+The FIFO flush function uses a jiffies amount to detect timeouts as the
+flushing is async. Replace with ktime to get more accurate precision
+and support short timeouts.
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/i2c/busses/i2c-nomadik.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/i2c/busses/i2c-nomadik.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-nomadik.c b/drivers/i2c/busses/i2c-nomadik.c
-index cd511c884f99..80bdf7e42613 100644
+index e68b8e0d7919..afd54999bbbb 100644
 --- a/drivers/i2c/busses/i2c-nomadik.c
 +++ b/drivers/i2c/busses/i2c-nomadik.c
-@@ -94,9 +94,6 @@
- /* some bits in ICR are reserved */
- #define I2C_CLEAR_ALL_INTS	0x131f007f
- 
--/* first three msb bits are reserved */
--#define IRQ_MASK(mask)		(mask & 0x1fffffff)
--
- /* maximum threshold value */
- #define MAX_I2C_FIFO_THRESHOLD	15
- 
-@@ -249,8 +246,7 @@ static int flush_i2c_fifo(struct nmk_i2c_dev *priv)
-  */
- static void disable_all_interrupts(struct nmk_i2c_dev *priv)
+@@ -219,8 +219,8 @@ static inline void i2c_clr_bit(void __iomem *reg, u32 mask)
+ static int flush_i2c_fifo(struct nmk_i2c_dev *priv)
  {
--	u32 mask = IRQ_MASK(0);
--	writel(mask, priv->virtbase + I2C_IMSCR);
-+	writel(0, priv->virtbase + I2C_IMSCR);
- }
+ #define LOOP_ATTEMPTS 10
++	ktime_t timeout;
+ 	int i;
+-	unsigned long timeout;
  
- /**
-@@ -259,9 +255,7 @@ static void disable_all_interrupts(struct nmk_i2c_dev *priv)
-  */
- static void clear_all_interrupts(struct nmk_i2c_dev *priv)
- {
--	u32 mask;
--	mask = IRQ_MASK(I2C_CLEAR_ALL_INTS);
--	writel(mask, priv->virtbase + I2C_ICR);
-+	writel(I2C_CLEAR_ALL_INTS, priv->virtbase + I2C_ICR);
- }
+ 	/*
+ 	 * flush the transmit and receive FIFO. The flushing
+@@ -232,9 +232,9 @@ static int flush_i2c_fifo(struct nmk_i2c_dev *priv)
+ 	writel((I2C_CR_FTX | I2C_CR_FRX), priv->virtbase + I2C_CR);
  
- /**
-@@ -468,7 +462,7 @@ static int read_i2c(struct nmk_i2c_dev *priv, u16 flags)
- 	else
- 		irq_mask |= I2C_IT_MTDWS;
+ 	for (i = 0; i < LOOP_ATTEMPTS; i++) {
+-		timeout = jiffies + priv->adap.timeout;
++		timeout = ktime_add_us(ktime_get(), priv->timeout_usecs);
  
--	irq_mask = I2C_CLEAR_ALL_INTS & IRQ_MASK(irq_mask);
-+	irq_mask &= I2C_CLEAR_ALL_INTS;
- 
- 	writel(readl(priv->virtbase + I2C_IMSCR) | irq_mask,
- 	       priv->virtbase + I2C_IMSCR);
-@@ -547,7 +541,7 @@ static int write_i2c(struct nmk_i2c_dev *priv, u16 flags)
- 	else
- 		irq_mask |= I2C_IT_MTDWS;
- 
--	irq_mask = I2C_CLEAR_ALL_INTS & IRQ_MASK(irq_mask);
-+	irq_mask &= I2C_CLEAR_ALL_INTS;
- 
- 	writel(readl(priv->virtbase + I2C_IMSCR) | irq_mask,
- 	       priv->virtbase + I2C_IMSCR);
-@@ -703,8 +697,8 @@ static int nmk_i2c_xfer(struct i2c_adapter *i2c_adap,
-  */
- static int disable_interrupts(struct nmk_i2c_dev *priv, u32 irq)
- {
--	irq = IRQ_MASK(irq);
--	writel(readl(priv->virtbase + I2C_IMSCR) & ~(I2C_CLEAR_ALL_INTS & irq),
-+	irq &= I2C_CLEAR_ALL_INTS;
-+	writel(readl(priv->virtbase + I2C_IMSCR) & ~irq,
- 	       priv->virtbase + I2C_IMSCR);
- 	return 0;
- }
+-		while (!time_after(jiffies, timeout)) {
++		while (ktime_after(timeout, ktime_get())) {
+ 			if ((readl(priv->virtbase + I2C_CR) &
+ 				(I2C_CR_FTX | I2C_CR_FRX)) == 0)
+ 				return 0;
 
 -- 
 2.44.0
