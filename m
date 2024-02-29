@@ -1,156 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E27678293;
-	Thu, 29 Feb 2024 18:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C697416063E;
+	Thu, 29 Feb 2024 18:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709230139; cv=none; b=WY1cUSX7L/xxXE7TVkbc8AcYjXJVxRzb3Ve+w1hUoAssFAzavY6NE1JgVISlS7n+4PNg7+uo6CYCBK04YxEr96RVLqrhVuehy3m9ar8xxAUWXPSLN0dazUSBkjiWaE7WLI9CLV+IkAZZZE+GDps92K54ijmbXBwJctJ4jyLT1Qs=
+	t=1709230257; cv=none; b=NeAjAltCKbmqh4jsMVpetfvCyTWUmYAxMxmADdzaKvVXve8yg2VrQ1QnbO72RfZ+B8umgy6LQoxqwyQMR1cc3oRuY+LySJjBAUFBDSX5WSpOsCvk+bigkjuTKdyMOWQKp4guWcPoEUjYRYqvb8+PFTFKUb+fgGBXq1C93K5kofU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709230139; c=relaxed/simple;
-	bh=nbZCCz5px6JjbfeYHv/GrHoTHGKZQxDjRcckuW8fpQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XAcMmhb5aYeBhzAK5foetSlZs/0ad5z/laSksQVHGqk7CIdb09S41d0RWoQ0zebPvbz1q6oZRXFBdtHmzXuebpIMKAf+IhrcpVdSDDCKWE2IM+IVJtKjfvVI4W9AMn4M7/m6iYvzV1DB2hhm6SZglagLNtU7uq8vFmmyzIg1Rh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lR5uVimo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709230257; c=relaxed/simple;
+	bh=LpFcuLraRe7BWVqNKjqBpF37d0hNa+NEq3AANyBCH1Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MTyk7sbyA/0y1VAt/zlJ/Vh8wFyw388tJsqmaUJq0vWnjgGI5IG325xkACE5xAJpGeh3HcU4dd+o2zDpvI6dbv3hFD5N5cxilMOb0kzOKPRSy+52OPnqd+2lSLICIxjy68lmn7h4X5ivUuBXX59hUV1yQD0Pu0EWpOJ0mI1o478=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AnGjFFU5; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lR5uVimo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59288C433F1;
-	Thu, 29 Feb 2024 18:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709230138;
-	bh=nbZCCz5px6JjbfeYHv/GrHoTHGKZQxDjRcckuW8fpQw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lR5uVimo391OfyuEVpj2RcpIVEXlBNj76gfYMLAl74R6gXtXEOxvPgArU7zYVEeAZ
-	 QiambT42WsLDIgidy8iBWQOIPHMtFlwgMucCPCrijo94Y7/lc5QCzOkkpwhHqdbzuX
-	 1GQJT7QIWJqVWO45VviJhXpDnh9oS7HB3r5MpUZXsNxZ3zpGWHSFisSLTIbAQZEQsn
-	 JOAxHrGRQrACScps7QyZha392ih++0i0qenVV1F5nS6lEiYZQ87BRVRmIMR7ja7vZv
-	 U/6Ylo+yUcn4Z2BWZd7UXljlPGukuJsTZb+LKoqKRp+c7gTjOX2CWZChUWih9P/7f5
-	 18S4C65Dbq1Ow==
-Date: Thu, 29 Feb 2024 18:08:54 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, imx@lists.linux.dev,
-	krzysztof.kozlowski+dt@linaro.org, kw@linux.com,
-	linux-kernel@vger.kernel.org, conor+dt@kernel.org,
-	linux-pci@vger.kernel.org, lpieralisi@kernel.org,
-	helgaas@kernel.org, bhelgaas@google.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] dt-bindings: pci: layerscape-pci: Convert to yaml
- format
-Message-ID: <20240229-strategic-premises-967eae1f6d9f@spud>
-References: <20240228190321.580846-1-Frank.Li@nxp.com>
- <20240228190321.580846-2-Frank.Li@nxp.com>
- <170915420970.759733.12998246565079147606.robh@kernel.org>
- <ZeDCQezI2zj8bWBP@lizhi-Precision-Tower-5810>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AnGjFFU5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3AC7960005;
+	Thu, 29 Feb 2024 18:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709230252;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n3ykZDJuu5yB2cRXMdYcgz6EH3xu6RTNJDgFxtnNhQg=;
+	b=AnGjFFU5zZr3ArMGU/5d4Enuu9hYz1+7wRNU1/Prf4Nv+2jOwLj1XOcolR7kjGHFZw63BU
+	/pSVN9IOVRi8Ehkpultv1rt3p+iavsRMwKLm2YBQC1P9iuxF/ZfC+mXilEV+ytZMkwZKuf
+	tGhDJpdndAF/p/kORhg1Zecv9jbGFLSlGX+rGr5247PUQuUhzOl2SEBaroz6VF5ITZKeu4
+	WIbxdrM7zYiWSjh0PgO8M2aQE0Q1/sEsRAYZDhg9cF42zXSl4wDw3ebf5MXe5ivIBOoAsp
+	AzqZUyytLV3djNYFz53Sbc3dqSSgdlVtR9U+pmpsveZ01HJlvrqqlF0jsjIKhg==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Thu, 29 Feb 2024 19:10:49 +0100
+Subject: [PATCH v2 01/11] dt-bindings: i2c: nomadik: add mobileye,eyeq5-i2c
+ bindings and example
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Re0jwgYgtPOeuZKC"
-Content-Disposition: inline
-In-Reply-To: <ZeDCQezI2zj8bWBP@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240229-mbly-i2c-v2-1-b32ed18c098c@bootlin.com>
+References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
+In-Reply-To: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mips@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
+Add EyeQ5 bindings to the existing Nomadik I2C dt-bindings. Add the
+EyeQ5-specific property behind a conditional. Add an example for this
+compatible.
 
---Re0jwgYgtPOeuZKC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+ .../devicetree/bindings/i2c/st,nomadik-i2c.yaml    | 48 ++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 4 deletions(-)
 
-On Thu, Feb 29, 2024 at 12:43:29PM -0500, Frank Li wrote:
-> On Wed, Feb 28, 2024 at 03:03:31PM -0600, Rob Herring wrote:
-> >=20
-> > On Wed, 28 Feb 2024 14:03:17 -0500, Frank Li wrote:
-> > > Split layerscape-pci.txt into two yaml files: fsl,layerscape-pcie-ep.=
-yaml
-> > > and fsl,layerscape-pcie.yaml.
-> > > yaml files contain the same content as the original txt file.
-> > >=20
-> > > The subsequent commit will fix DTB_CHECK failure.
-> > >=20
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  .../bindings/pci/fsl,layerscape-pcie-ep.yaml  |  89 +++++++++++++
-> > >  .../bindings/pci/fsl,layerscape-pcie.yaml     | 123 ++++++++++++++++=
-++
-> > >  .../bindings/pci/layerscape-pci.txt           |  79 -----------
-> > >  3 files changed, 212 insertions(+), 79 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layersc=
-ape-pcie-ep.yaml
-> > >  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layersc=
-ape-pcie.yaml
-> > >  delete mode 100644 Documentation/devicetree/bindings/pci/layerscape-=
-pci.txt
-> > >=20
-> >=20
-> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_chec=
-k'
-> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
->=20
-> Please omit these errors. Bjorn require create a identical version as
-> old txt file.
->=20
-> Origial txt will cause DTB_CHECK error. The problem will be fixed at next
-> patches.
+diff --git a/Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml b/Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml
+index 16024415a4a7..2d9d5b276762 100644
+--- a/Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/st,nomadik-i2c.yaml
+@@ -14,9 +14,6 @@ description: The Nomadik I2C host controller began its life in the ST
+ maintainers:
+   - Linus Walleij <linus.walleij@linaro.org>
+ 
+-allOf:
+-  - $ref: /schemas/i2c/i2c-controller.yaml#
+-
+ # Need a custom select here or 'arm,primecell' will match on lots of nodes
+ select:
+   properties:
+@@ -24,6 +21,7 @@ select:
+       contains:
+         enum:
+           - st,nomadik-i2c
++          - mobileye,eyeq5-i2c
+   required:
+     - compatible
+ 
+@@ -39,6 +37,10 @@ properties:
+           - const: stericsson,db8500-i2c
+           - const: st,nomadik-i2c
+           - const: arm,primecell
++      # The variant found on Mobileye EyeQ5
++      - items:
++          - const: mobileye,eyeq5-i2c
++          - const: arm,primecell
+ 
+   reg:
+     maxItems: 1
+@@ -55,7 +57,7 @@ properties:
+       - items:
+           - const: mclk
+           - const: apb_pclk
+-      # Clock name in DB8500
++      # Clock name in DB8500 or EyeQ5
+       - items:
+           - const: i2cclk
+           - const: apb_pclk
+@@ -70,6 +72,16 @@ properties:
+     minimum: 1
+     maximum: 400000
+ 
++  mobileye,olb:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    items:
++      - items:
++          - description: Phandle to OLB system controller node.
++          - description: Platform-wide controller ID (integer starting from zero).
++    description:
++      The phandle pointing to OLB system controller node, with the I2C
++      controller index.
++
+ required:
+   - compatible
+   - reg
+@@ -79,6 +91,20 @@ required:
+ 
+ unevaluatedProperties: false
+ 
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: mobileye,eyeq5-i2c
++    then:
++      required:
++        - mobileye,olb
++    else:
++      properties:
++        mobileye,olb: false
++
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/irq.h>
+@@ -111,5 +137,19 @@ examples:
+       clocks = <&i2c0clk>, <&pclki2c0>;
+       clock-names = "mclk", "apb_pclk";
+     };
++  - |
++    #include <dt-bindings/interrupt-controller/mips-gic.h>
++    i2c@300000 {
++      compatible = "mobileye,eyeq5-i2c", "arm,primecell";
++      reg = <0x300000 0x1000>;
++      interrupt-parent = <&gic>;
++      interrupts = <GIC_SHARED 1 IRQ_TYPE_LEVEL_HIGH>;
++      clock-frequency = <400000>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++      clocks = <&i2c_ser_clk>, <&i2c_clk>;
++      clock-names = "i2cclk", "apb_pclk";
++      mobileye,olb = <&olb 0>;
++    };
+ 
+ ...
 
-One of these is a real error - caused by a typo. "dma-coherence" should
-be "dma-coherent".
+-- 
+2.44.0
 
->=20
-> >=20
-> > yamllint warnings/errors:
-> >=20
-> > dtschema/dtc warnings/errors:
-> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
-/pci/fsl,layerscape-pcie.example.dtb: pcie@3400000: Unevaluated properties =
-are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-=
-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', =
-'msi-parent', 'ranges', 'reg-names' were unexpected)
-> > 	from schema $id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie=
-=2Eyaml#
-> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
-/pci/fsl,layerscape-pcie.example.dtb: pcie@3400000: 'fsl,pcie-scfg' is a re=
-quired property
-> > 	from schema $id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie=
-=2Eyaml#
-> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
-/pci/fsl,layerscape-pcie.example.dtb: pcie@3400000: 'dma-coherence' is a re=
-quired property
-> > 	from schema $id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie=
-=2Eyaml#
-> >=20
-> > doc reference errors (make refcheckdocs):
-> >=20
-> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/2024=
-0228190321.580846-2-Frank.Li@nxp.com
-> >=20
-> > The base for the series is generally the latest rc1. A different depend=
-ency
-> > should be noted in *this* patch.
-> >=20
-> > If you already ran 'make dt_binding_check' and didn't see the above
-> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> > date:
-> >=20
-> > pip3 install dtschema --upgrade
-> >=20
-> > Please check and re-submit after running the above command yourself. No=
-te
-> > that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> > your schema. However, it must be unset to test all examples with your s=
-chema.
-> >=20
-
---Re0jwgYgtPOeuZKC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeDINQAKCRB4tDGHoIJi
-0lRyAP9fEXfWNs46QnjOnUvH2S38xwB64vicfxsWzjSwnN6DzAD/Z/FNBFX2hAZ4
-3gNGGsWbqATFWZOMzrQPjVBaQcNQKAw=
-=Bh1c
------END PGP SIGNATURE-----
-
---Re0jwgYgtPOeuZKC--
