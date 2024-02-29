@@ -1,88 +1,103 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129A160DE7
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 09:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C2B60BBA;
+	Thu, 29 Feb 2024 09:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199670; cv=none; b=cnb/o0A3ekLIF/f2GFg38jBR5rZVwaQNrNT4ZoL2oqqjIiiEv5/F/bk4i984ZRPZHWTwGCCBuWh5fO/Ka1zorzJZKOBENki6aMH4iNaU8mTXcopHGvioSmN049SUDADc6jNW0wErUuqySn2uuakV5mmeAuqg670/RVIrrlkerZc=
+	t=1709199683; cv=none; b=O5h3vTMMiRH9kleXYEIIiaLxIkJKcNWBQUrdR6E1sdPtG2tWzhB8A42rAy25W3lSwj2XFvhww8Z3NyPJZUGqMiqe/i5fmqwfdd3RrrSVbVpW+r1br0VG2k1d56UNK4iK/7Lhwy3iygZfy98OvN9A8nxuMkhsWQ7FJtrg9s8EfHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199670; c=relaxed/simple;
-	bh=1LAjz4Y7MgTjDbSVjJS1Nz5v3QtYCcLeY1fivGF7h+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TqlDeXxFQ/1r2UwuaQVQyv7+efZebAEsQLP9piPq5gbQTIeWdpzhhyLfzJUl68PxFNNM6Vhe2w4sqiROQPp0Woi0Zpw3GJtegh+LknbPaCpP9oM+DecJEtJTpyld0pU7+7GYDIYreeDrHdGu8NJObGmwOB+rx+EqJKdmTc0PrYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bOk+H5zi; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709199683; c=relaxed/simple;
+	bh=sFjwo3k0DJQ95l5/XGTun+1UQyAPnjIJqK2nH7Yo7yk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pbF2wz+RYqIUpAwsLXU2cHwQaXU/g/90YSqd59KBATEjC2vWpKO3pFIwMm1noUGSwn05DvhA7RmDRi9KXKiXdfg8eULQOHGZnwWwJhXGPDJSo2ylObiEeeIgqhxKqNldiX44lxUB52pO8C3fZxKQqNssw0H55TWgRzKAXLad0SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BhBaekxm; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bOk+H5zi"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dc6d8bd618eso800263276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 01:41:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709199668; x=1709804468; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1LAjz4Y7MgTjDbSVjJS1Nz5v3QtYCcLeY1fivGF7h+w=;
-        b=bOk+H5ziLVv2qsDj+Y0/8M3K5xKkqqZkB/ft0u2fz7w3rDUUcY7qCHPzFdNm0y6YCQ
-         gAyf3FJeaGrm9dl+3Rtbg+vDVCZNz07txVAEnP/Qg95gaBippBM8O828J3D97U2sx9G5
-         IQICd0L/mgPtkhyZxvhb9gSpbnd7AFn/69uKd9tY+pn/bClI3CkcDUg/3pOotcPKQu7A
-         +blM5RaHykl4XkyijHFfVe6i8qjKrB4SC6Q+RyRy7XgZgB5eRGJkybN6A6GdHjrkS19K
-         9wkW6vYDDOWwh1QsTGB9o+3oiEqc6ywbUtImLxVBs3OGLAagxgYZekuElRx46w0CveyG
-         YUEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709199668; x=1709804468;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1LAjz4Y7MgTjDbSVjJS1Nz5v3QtYCcLeY1fivGF7h+w=;
-        b=AoYYyViuJXL/TheTIvP+3HgS7j5/yEAnjzB3QPLzxzs8chFVNLbPX++fRe5TD9XF5e
-         0XQpqkGLNiUm0ZO+IuRu77vGXeeNlAz4sjNopSQKqCWs3k119BeUwOc9BZdRPcO49blc
-         9d6jHhCcrxTy6A0ZYVZ97BGiT3bjXfq+2nFgtX9FxpJUrrFpncNcyhLfwTGR9g1JHzhJ
-         VTZR20SOSDNZLxoJRW6uf9ztacgPvgx28JGNnKmvzzNR7r04bZeupDXI81S98pG3+hdh
-         XFGVyBWgbm0NoqFeYwg9ZHLEq+uL40v1mT3ZOGPiC2Ds7EKJ/zM7IFk3mBMktg4dbQBj
-         CowA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpjs8c2gEonKoUZb1qRjOaaDYcm1CyVqW31y1ZPXawUHIuDFysqR6VJTCFEskjTHCdgx4g7840N3femx1oJ3fCImfhcAd62qJrJBw3
-X-Gm-Message-State: AOJu0YzLwzmnvykNjCjdIGqc/4fJTiQ5Hl/ERLbApCONStZxtt69y8jU
-	t8VUkJzb+vH4rQ6x+ByBa/I37TQF7YU5zYEfkgGv7AJQpJX7AKZsVlCZlF06odzhmVJEJVNkDYX
-	BhVHWLLrdDS9qL81ST1rmDqYTg2vQ+1DFv7hodw==
-X-Google-Smtp-Source: AGHT+IGrJ/cHOI2YcStaE9WyB7ggGo5jiMT7KH1xbTtumhV5wTi1F5y6GwDXF7TJS+ZMtxBW9IfMabVbA7T5C68C6Ok=
-X-Received: by 2002:a25:2e02:0:b0:dcd:a9ad:7d64 with SMTP id
- u2-20020a252e02000000b00dcda9ad7d64mr1651564ybu.48.1709199668109; Thu, 29 Feb
- 2024 01:41:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BhBaekxm"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CD80A20014;
+	Thu, 29 Feb 2024 09:41:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709199679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=miimJ0QV3VvK+wNEwrpf81APPWqkbf1H8b2Er4VQt5U=;
+	b=BhBaekxmrCJddaSy/g+XrJndV/Bge++ZWK2tlct4TWoKfps2OXYAQ87mWlZtGklwjFmKdi
+	onEjlkGrcfLWp73GaAQQ8p8jT2Sabx99BJu0HkUBIA0DF8lHfIKcnaCM47Hjnn9KvxOv1S
+	+60HENXE9gWyChvcZRETgV2TdgV5Ml3VcNnCxxfQNoW1GGj2lhCDV4VIUKh8237HK9m2Fk
+	QNMSeM0vaLxPbO6itroDcXyxIwjwBT7VpXCpfgYGduksLoL1QZJAH3VdFYgbeZtcF03+U9
+	wulSUMED+0x1d5toURGHWhLbcDK31ojoM7o8S1XkOw6o0mh9n5/x7M8uU33R5w==
+Date: Thu, 29 Feb 2024 10:41:17 +0100
+From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+To: Simon Horman <horms@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Luis Chamberlain
+ <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+ Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>
+Subject: Re: [PATCH net-next v5 13/17] net: pse-pd: Use regulator framework
+ within PSE framework
+Message-ID: <20240229104117.4edf96ae@kmaincent-XPS-13-7390>
+In-Reply-To: <20240228124801.GC292522@kernel.org>
+References: <20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com>
+	<20240227-feature_poe-v5-13-28f0aa48246d@bootlin.com>
+	<20240228124801.GC292522@kernel.org>
+Organization: bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-27-3ba757474006@bootlin.com>
-In-Reply-To: <20240228-mbly-gpio-v2-27-3ba757474006@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 10:40:57 +0100
-Message-ID: <CACRpkdaZN_siGUDPBNoiRXej=X1ygMh9ce7MPWsi=GzS-UzTew@mail.gmail.com>
-Subject: Re: [PATCH v2 27/30] MIPS: eyeq5_defconfig: enable GPIO by default
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boot=
-lin.com> wrote:
+On Wed, 28 Feb 2024 12:48:01 +0000
+Simon Horman <horms@kernel.org> wrote:
 
-> Add both CONFIG_GPIOLIB=3Dy and CONFIG_GPIO_NOMADIK=3Dy to our platform
-> defconfig. Default config is CONFIG_GPIOLIB=3Dn.
->
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> On Tue, Feb 27, 2024 at 03:42:55PM +0100, Kory Maincent wrote:
+>=20
+> ...
+>=20
+> > diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
+> > index 522115cc6cef..a3e297cc2150 100644
+> > --- a/include/linux/pse-pd/pse.h
+> > +++ b/include/linux/pse-pd/pse.h
+> > @@ -55,10 +55,10 @@ struct pse_controller_ops {
+> >  	int (*ethtool_get_status)(struct pse_controller_dev *pcdev,
+> >  		unsigned long id, struct netlink_ext_ack *extack,
+> >  		struct pse_control_status *status);
+> > -	int (*ethtool_set_config)(struct pse_controller_dev *pcdev,
+> > -		unsigned long id, struct netlink_ext_ack *extack,
+> > -		const struct pse_control_config *config);
+> >  	int (*setup_pi_matrix)(struct pse_controller_dev *pcdev);
+> > +	int (*pi_is_enabled)(struct pse_controller_dev *pcdev, int id);
+> > +	int (*pi_enable)(struct pse_controller_dev *pcdev, int id);
+> > +	int (*pi_disable)(struct pse_controller_dev *pcdev, int id); =20
+>=20
+> Hi Kory,
+>=20
+> Please update the Kernel doc for struct pse_controller_ops to reflect the
+> added and removed fields.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Hello Simon,
+Sorry I totally forgot to update the kernel doc on that patch.
 
-Yours,
-Linus Walleij
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
