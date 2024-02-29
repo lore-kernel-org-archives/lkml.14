@@ -1,115 +1,92 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D2A16FF51
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E154137763
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709250342; cv=none; b=GAZ3NxLMDsqi0RwBUYd1atLzQjxd59J+U6j9/Xzm0jCFCk8pV5yR9M5+bOyE2VZ/WoQYw6jzJqBm8962N0ErwbdFxnXX0R10w6YXd0XWO2viRXsx96NF92fbzzCpdgeO6k1ewIzo7Jg/6xgjHj0jUnbaGeyIfj1IxG/8wTpt4GU=
+	t=1709250697; cv=none; b=uEjG6KHHpJiiwcMxRn6c0t76IECrUznBO+WRosmLdmA0cGz13DwWJgbnn08SfxMOm8jzZZvY/tNg5uuuYTICU3Darv6OW5kaptC55JsV7pI7wOcBAv0dCjwpTBhZhtv9/1pHwTWZrY/4DVMF7p0c/FmLONEE7bIrU4nCSnXPECM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709250342; c=relaxed/simple;
-	bh=lQZDwo7pNYetMYwpB3CLHJ/+PW0KEucA/7RaMYYnuTc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kd0LNvVhRHYZ6R25IhLj0LaL6q20w3GdhmCDvcVaN6Jy4OwQ1PP7df7yB0s1AqDjN4fKIKdUfGwZpTgAQwuTTPjdvv6wbRV4OsaHX6MqoDmyyQpw2qGlfpNvk02MskL+h+gHcUtvzthQLTuOZb/5KpdNTiNaUT8JKyh/SBi74nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kX4brMjo; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1709250697; c=relaxed/simple;
+	bh=wGdhmGNHVTXKtr8Coxlis0Li3Bk52TXuxtZPxJDknj4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hC37h5EiMkl48mFK/2KWNmNKxKy/pfgMogZNx4BKUaNV+g8TSoJwIw2Rjaun3SPTubgR61+IUIZqVFE+pevsTsN3RSnyvFHJhLGbutPmJPAAmWO7RUVDQKfal4xqmH4NJ+w9gKWgixrRgWfTemtOr6k0dq4PrpHy6BKMYLrsTss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ShtDbs5l; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kX4brMjo"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41TNWlOH010226;
-	Thu, 29 Feb 2024 23:45:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=lQZDwo7pNYetMYwpB3CLHJ/+PW0KEucA/7RaMYYnuTc=;
- b=kX4brMjoz9GU4Ua7wF7C3LO3d0+LpWRXWcHL979m82x2aYuGyQsMayFihDQbBqihP0Qh
- dM9OkKHAi+YwngaZBX5C5jGLRk2/dBWq/jUV/4lacEntPIPtgl7/IUVWCMAFCD2nNTjf
- 4lQiNffnATGq/ASD6r81bXFpaZzy3RTzmzblqEyUcoZOc9oS6iu8Yr52NtqwxcKNxQmE
- 28rhRpTGvht0OUKtp/EHDX8cPMVysF7Zm2Oz0aGEtQuqhn+dgwOmd/Z/Fvc2w/11wVio
- KCdPCgyAS77P6EQOmN/YnwihW3DCM5mCGWRZ4pMZ3Hz/nWn+Bwt7tiuBlaLS/OxExmYm WA== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wk3pkr7vt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 23:45:36 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41TMA2D6021267;
-	Thu, 29 Feb 2024 23:45:35 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfuspgxdp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 Feb 2024 23:45:35 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41TNjVfK000648
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 23:45:33 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6CDBC20043;
-	Thu, 29 Feb 2024 23:45:31 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E8B6E2004B;
-	Thu, 29 Feb 2024 23:45:30 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 29 Feb 2024 23:45:30 +0000 (GMT)
-Received: from localhost (unknown [9.66.77.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id DCE2A60064;
-	Fri,  1 Mar 2024 10:45:26 +1100 (AEDT)
-From: Michael Ellerman <mpe@linux.ibm.com>
-To: Sachin Sant <sachinp@linux.ibm.com>
-Cc: Tasmiya Nalatwad <tasmiya@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org"
- <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [netdev] Build failure on powerpc
-In-Reply-To: <916F09F9-FC10-4248-BE64-9E01AA264CBA@linux.ibm.com>
-References: <8294bf9a-d175-4d86-b6df-9c409108cbf1@linux.vnet.ibm.com>
- <875xy8103a.fsf@mail.lhotse>
- <916F09F9-FC10-4248-BE64-9E01AA264CBA@linux.ibm.com>
-Date: Fri, 01 Mar 2024 10:45:23 +1100
-Message-ID: <87il26g7ho.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ShtDbs5l"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so2212737276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:51:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709250695; x=1709855495; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wGdhmGNHVTXKtr8Coxlis0Li3Bk52TXuxtZPxJDknj4=;
+        b=ShtDbs5lOFNRkk6Jtu8JScDIID2cRH09UM0rEHa6BxrEoF+X1yaRbj3RU6CeG2XhPK
+         zVUjNdXaoVzLz+bFIWeoKiSGRylGGXlRo6mJFlF7WJj9SahP4UalsFo0L/xewY5DgREa
+         osgTNe6OR3RRQ1TfTrYpVaq/8NkfmHVW81dOlE6j13uUtz/wCMExtr6qZBSip0UPZMxK
+         vBmnRFke3t1oLrdUr7NYDKmitiMwCeHgfNKwG14qmca5IiNjPuTgIS2r7LQdyFo65Aon
+         XhYFKgsUxJxKU4s5tCcQSfbzWi1ZTdPIQZ+MzTIgld13X5wetBVgn41crBn0GwIbqdz4
+         UKZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709250695; x=1709855495;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wGdhmGNHVTXKtr8Coxlis0Li3Bk52TXuxtZPxJDknj4=;
+        b=YKGUj3pKuR+06LDokpwgV1u1coh2nCRkIEGaPV4sv0ZG2rS56LdEXVgIBRj1/O1XFA
+         1qfAHkFH/fTbdtAendILxknGYQ7AqDt2jO8OMFPL9JUteSyKn9d1b1PUNjgmIoVQS23q
+         yi8Uh3hAl58CLnvkin9bnSIXZnpe8jvZruI0zOwF9Poe4V8BEhHpAxdrAY7UE0FglBku
+         be5HZod2j/FkDrB7+W3v3amPgTWamk4T8iztNxzrmQsW3BsZW4ty6LQN5KtB73RAoFA7
+         XmGbYaV2sYMYxyAabj2sPsP6AUrHvXJB2XOCdhokQL1a69kFfCUTuZ2MLsOfFv0Jx/GW
+         eeoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwCpZ7pNK+4ZlKdXyrpuApPCyCwttM3KlAFDtOQjh7eEqwc8DHh6KkrWQNOlTpcfZxLQoGGvjGOwKZKTdgJuSfCdEdrFDpfSROGfzB
+X-Gm-Message-State: AOJu0YxIoQVxIdoweXmjdCqSqGeKU1W2a6wDHCVhR1WnTOsG1gNIj41H
+	xXD0fzevAyU1dtvIgO2UaBcO2LmSOhVLXHB8tPFoX+8G7SpUre1TtXbUhuG2x7Fv98NrlA8EvrP
+	p1reLbtE+TIVqzhz79GIOY72K9RNvzQ==
+X-Google-Smtp-Source: AGHT+IH867rn03DULgpAnZN98NdftWiJfM3usfRmVuNXYLi9bkM7Uz9nOwttJ34eI/OIA2Ca2LK6EGXn14L13DXQ6nxP
+X-Received: from axel.svl.corp.google.com ([2620:15c:2a3:200:4ca4:66d0:de29:8d39])
+ (user=axelrasmussen job=sendgmr) by 2002:a05:6902:100a:b0:dbe:387d:a8ef with
+ SMTP id w10-20020a056902100a00b00dbe387da8efmr177541ybt.1.1709250695530; Thu,
+ 29 Feb 2024 15:51:35 -0800 (PST)
+Date: Thu, 29 Feb 2024 15:51:33 -0800
+In-Reply-To: <ZcWOh9u3uqZjNFMa@chrisdown.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vHsBYj5vATN-KdEmopV5fJmGr-eMjc2A
-X-Proofpoint-GUID: vHsBYj5vATN-KdEmopV5fJmGr-eMjc2A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-29_06,2024-02-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- bulkscore=0 mlxlogscore=669 impostorscore=0 adultscore=0 phishscore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402290185
+Mime-Version: 1.0
+References: <ZcWOh9u3uqZjNFMa@chrisdown.name>
+X-Mailer: git-send-email 2.44.0.rc1.240.g4c46232300-goog
+Message-ID: <20240229235134.2447718-1-axelrasmussen@google.com>
+Subject: MGLRU premature memcg OOM on slow writes
+From: Axel Rasmussen <axelrasmussen@google.com>
+To: chris@chrisdown.name
+Cc: cgroups@vger.kernel.org, hannes@cmpxchg.org, kernel-team@fb.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, yuzhao@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-Sachin Sant <sachinp@linux.ibm.com> writes:
->> On 29-Feb-2024, at 7:52=E2=80=AFAM, Michael Ellerman <mpe@linux.ibm.com>=
- wrote:
->> Tasmiya Nalatwad <tasmiya@linux.vnet.ibm.com> writes:
->>> Greetings,
->>>=20
->>> [netdev] Build failure on powerpc
->>> latest netdev 6.8.0-rc5-auto-g1ce7d306ea63 fails to build on powerpc=20
->>> below traces
->>=20
->> Please include the defconfig you're building, and the toolchain
->> versions, in reports like this.
->>=20
->> I wasn't able to reproduce this failure here.
->
-> I believe this is tied to gcc version.=20
->
-> Build failure is seen while using gcc-8.5.x but not with gcc-11.4.x
+Hi Chris,
 
-Thanks. Yes, I see it here with 8.4, and 9.5, but not 10.5.
+A couple of dumb questions. In your test, do you have any of the following
+configured / enabled?
 
-cheers
+/proc/sys/vm/laptop_mode
+memory.low
+memory.min
+
+Besides that, it looks like the place non-MGLRU reclaim wakes up the
+flushers is in shrink_inactive_list() (which calls wakeup_flusher_threads()).
+Since MGLRU calls shrink_folio_list() directly (from evict_folios()), I agree it
+looks like it simply will not do this.
+
+Yosry pointed out [1], where MGLRU used to call this but stopped doing that. It
+makes sense to me at least that doing writeback every time we age is too
+aggressive, but doing it in evict_folios() makes some sense to me, basically to
+copy the behavior the non-MGLRU path (shrink_inactive_list()) has.
+
+I can send a patch which tries to implement this next week. In the meantime, Yu,
+please let me know if what I've said here makes no sense for some reason. :)
+
+[1]: https://lore.kernel.org/lkml/YzSiWq9UEER5LKup@google.com/
