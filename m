@@ -1,37 +1,57 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23157E0E4;
-	Thu, 29 Feb 2024 11:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D008863501;
+	Thu, 29 Feb 2024 11:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709207141; cv=none; b=IDbsgHKrUU1PszECizn4PCUyAJJhA7s03+WvWe+hHv6DaQWD7uwpJsSNdYWfVV2L9h3dTkk7pUw0Hb06RL0t+2VOqvi0ShM5Tm5JhWfHnfS5kI7DJPTwOmpr+gke1mSFmp4OzkaDyNWNsw344o5qSEkelQ0byXH6d00/UF5actw=
+	t=1709207256; cv=none; b=RijMyk3ReOL8HuSKFh70s8mk5eIs+2IXQuiukmdcuHVtL6ES55f932uHZKTA3X6xSwImAq4zsPn3IF1C2iCPgGwQXMIpQoaBxo9KVukU3ybtiRDwTK+mcRRRUIKtwPb8DDRgAMrifUjNzzY65ecKzbXNB25pbhkzOyFjOPdY9pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709207141; c=relaxed/simple;
-	bh=hngxUyHulZ27eylXtud4AjMHhGagOr3zuKNraEBD/S0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sh2+t9C8oNY7wNuXmIivoSKqym6/ZyrpyatMUpa4EYcsI+FlSM3iOQ1KQ9Lvcima6rbFiRGuQLEfXEOVZfZgQy1MRDnsZCQu51wlAMigCEHlbguCA6VSAwGMfWdoKz+9Q2V+w06o2/xajaH0mUbdDQPCruk67GgOoMVQ+oyAjA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Tlq9M6mSQzvW29;
-	Thu, 29 Feb 2024 19:43:19 +0800 (CST)
-Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 067BB1404DB;
-	Thu, 29 Feb 2024 19:45:31 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
- (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 29 Feb
- 2024 19:45:30 +0800
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-To: <brauner@kernel.org>, <david@fromorbit.com>, <djwong@kernel.org>,
-	<jack@suse.cz>, <tytso@mit.edu>
-CC: <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
-	<yi.zhang@huawei.com>
-Subject: [PATCH RFC 0/2] ext4: Do endio process under irq context for DIO overwrites
-Date: Thu, 29 Feb 2024 19:38:47 +0800
-Message-ID: <20240229113849.2222577-1-chengzhihao1@huawei.com>
+	s=arc-20240116; t=1709207256; c=relaxed/simple;
+	bh=2jyXrHzbfxd/JOAxh3e1PhKSiapQT6RGkklw9UG1uqg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WNHHo1sWbTCYidbIjg1ycf+uf53o1FruPK7UywNZCUHibZQxLGRmbZW2eiqyQm1rN+/rD/kP1vjOFKjkoFZCVtvAsbPsgEZh2mxqXPRJyXiehogaZt2X50ujzoXVTziHprAyApeWX995rAc9B/7ZQZjhoW9cmzoXfEyhX2Cne5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Ay6XhMyn; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Ay6XhMyn"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T5sRaU030026;
+	Thu, 29 Feb 2024 05:47:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=h
+	xS3YkR9HRJrUiZKDHT46QHfH+IijXAkgWyrqayzils=; b=Ay6XhMyno590K89u6
+	rXlxQEL6wXAJfJmPjnvhCc0VvlWa0dMqpYPL8zSIpJ23Aa51QWDlyv9UsrynKwvG
+	JuXYLSARBsYS3cCLAngdzMExBBaheXjXu/K4HRlDFlFsFlCb+VC+K837eOHfHMDH
+	FejaZWhSklWpjkHct4toCylxJSq5W8NDOAF82tafHgFlIoA2hXqKRx1z9o0fOn6v
+	U90DE7/735mQhZ7ViYxcPJ/UfsO7X63gxslrKQ3e+TZrs2EKSI5Igf/04hG8kAgF
+	j7djasx8U22tADkxYsdiIfz7msR0OXOwptWiQwdaMD42WNOvPRkAda4Uu48Zjhyc
+	/dWdA==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3wfer2x6qg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 05:47:14 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 29 Feb
+ 2024 11:47:12 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40 via Frontend Transport; Thu, 29 Feb 2024 11:47:12 +0000
+Received: from ediswws08.ad.cirrus.com (ediswws08.ad.cirrus.com [198.90.208.13])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 64B5C820242;
+	Thu, 29 Feb 2024 11:47:12 +0000 (UTC)
+From: Stuart Henderson <stuarth@opensource.cirrus.com>
+To: <broonie@kernel.org>, <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>, <alsa-devel@alsa-project.org>,
+        "Stuart
+ Henderson" <stuarth@opensource.cirrus.com>
+Subject: [PATCH] ASoC: madera: Fix typo in madera_set_fll_clks shift value
+Date: Thu, 29 Feb 2024 11:46:37 +0000
+Message-ID: <20240229114637.352098-1-stuarth@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,60 +61,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600013.china.huawei.com (7.193.23.68)
+X-Proofpoint-GUID: emryE5ZiCVPcVZrPiWURg68VaAPx2LKi
+X-Proofpoint-ORIG-GUID: emryE5ZiCVPcVZrPiWURg68VaAPx2LKi
+X-Proofpoint-Spam-Reason: safe
 
-Recently we found an ext4 performance regression problem between 4.18
-and 5.10 by following test command on a x86 physical machine with nvme:
-  fio -direct=1 -iodepth=128 -rw=randwrite -ioengine=libaio -bs=4k
-      -size=2G -numjobs=1 -time_based -runtime=60 -group_reporting
-      -filename=/test/test -name=Rand_write_Testing --cpus_allowed=1
-4.18: 288k IOPS    5.10: 234k IOPS
+Fix a typo in the shift value used in madera_set_fll_clks.
 
-After anlayzing the changes between above two versions, we found that
-the endio context changed since commit 378f32bab3714("ext4: introduce
-direct I/O write using iomap infrastructure"), in aio DIO overwriting
-case. And the problem still exist in latest mainline.
-4.18: endio is processed under irq context
- dio_bio_end_aio
-  defer_completion = dio->defer_completion || ... // defer_completion is
-                                                  // false for overwrite
-  if (defer_completion) {
-    queue_work
-  } else {
-    dio_complete                          // endio in irq context
-  }
-mainline: endio is processed in kworker
- iomap_dio_bio_end_io
-  if (dio->flags & IOMAP_DIO_INLINE_COMP) // false, only for read
-  if (dio->flags & IOMAP_DIO_CALLER_COMP) // false, only for io_uring
-  queue_work                              // endio in kworker context
+Fixes: 3863857dd5ca3 ("ASoC: madera: Enable clocks for input pins when used for the FLL")
+Signed-off-by: Stuart Henderson <stuarth@opensource.cirrus.com>
+---
+ sound/soc/codecs/madera.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Assume that nvme irq registers on cpu 1, and fio runs on cpu 1, it could
-be possible(Actually we did reproduce it easily) that fio, nvme irq and
-kworker all run on cpu 1. Firstly, compared with 4.18, there are extra
-operations(eg. queue work and wake up kworker) while processing endio,
-which is slower than processing endio under nvme irq context. Secondly,
-fio and kworker will race to get cpu resource, which will slow down fio.
-
-There is no need to do
-ext4_convert_unwritten_extents/ext4_handle_inode_extension under
-ext4_dio_write_end_io in overwriting case, so we can put ext4 dio endio
-under irq context.
-
-It is worth noting that iomap_dio_complete shouldn't be executed under
-irq context if datasync is required(IOMAP_DIO_NEED_SYNC), so overwriting
-endio is still done in kworker for this situation.
-
-Zhihao Cheng (2):
-  iomap: Add a IOMAP_DIO_MAY_INLINE_COMP flag
-  ext4: Optimize endio process for DIO overwrites
-
- fs/ext4/file.c        |  8 ++++++--
- fs/iomap/direct-io.c  | 10 ++++++++--
- include/linux/iomap.h |  6 ++++++
- 3 files changed, 20 insertions(+), 4 deletions(-)
-
+diff --git a/sound/soc/codecs/madera.c b/sound/soc/codecs/madera.c
+index b9f19fbd2911..b24d6472ad5f 100644
+--- a/sound/soc/codecs/madera.c
++++ b/sound/soc/codecs/madera.c
+@@ -3884,7 +3884,7 @@ static inline int madera_set_fll_clks(struct madera_fll *fll, int base, bool ena
+ 	return madera_set_fll_clks_reg(fll, ena,
+ 				       base + MADERA_FLL_CONTROL_6_OFFS,
+ 				       MADERA_FLL1_REFCLK_SRC_MASK,
+-				       MADERA_FLL1_REFCLK_DIV_SHIFT);
++				       MADERA_FLL1_REFCLK_SRC_SHIFT);
+ }
+ 
+ static inline int madera_set_fllao_clks(struct madera_fll *fll, int base, bool ena)
 -- 
-2.39.2
+2.30.2
 
