@@ -1,150 +1,114 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E5C1361C2;
-	Thu, 29 Feb 2024 14:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB9415D2;
+	Thu, 29 Feb 2024 14:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709215243; cv=none; b=IJ8C2RVo83hR+IJIMoIzRpbw7RQzGxEq/MLuFIyjoSSX2Db4en0PB37bms3c186XoUivVOYXsi73vX1iBD/ksTkFU9PZvKWogWcwNudrgFDALJN3ekeqVmDdWDSsOPJF/FjoJlc3Yxp6pDFDlxNw4jbHWDBjAdpcsJ7zm7nBb1s=
+	t=1709215390; cv=none; b=aLTaQJ3JgVXWLTQLJ+la10NCxkYGKpXSdhva8/g1NhWEf7z7EpNDdZYKtWqkDHhsUFSPYdllJI/Bi7162K/987Jlytq95kKsr3O74jrzHzVe/mG7X0sGJkzu4RuweOI5saKG1ewqbhmyshd7kkkSoG/FIvxIEkLwXxJ2PsYdPgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709215243; c=relaxed/simple;
-	bh=wwJQMdpI6wzPFkGbG61u25Um1c0sM/55HL3azw3uZDc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-type; b=RO/2z2y7zdwL+16b7EJKWwfA9KzqH8/nkjxBVGbJqHXov3NQkkViUVFkCdcCaph02mJMRYb0vv7BG/MenB6swa+mv/GYMm9IFOD8zQXiIw83r1wKAMdwWSbMEsgcyjSBDsf2WvBGXx/VXH0HGwf8UoDj3nKj8LnImlReZEIo8rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xuw+ahxL; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1709215390; c=relaxed/simple;
+	bh=of78azqk9pyl3dbaAzM1nddstYUe6Qj3+UufZgaZ84Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ts46bBVKn0509a/QMcjm41E80c2dt2OuFNS4poJ4CYVm9BwygyMG+WHZWFPrd17jnvE3irE7Kl2mM0yhkrpcCIDKaVHq29fMejQULQgH4W2YU80zk9re1oK4y5HYGHIK6tetK4ko9RNDose3TuAdQwzE/6hFZf8Meg6rAB1q/90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I8NS4JOl; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xuw+ahxL"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-412c29da53dso1239545e9.0;
-        Thu, 29 Feb 2024 06:00:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709215240; x=1709820040; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TV6GRMDY8Scq8jpKm5RnkX4lQVf+6dmwO1naHKeWIUI=;
-        b=Xuw+ahxLqRqSRI/JEigA+SohwZhihulykE/iIuXMl8xEVf4l5DAN89baFeDxoAbiIf
-         OYr0xonMSL9qbJ5Z2NuavZzlw8c1kMj65D57glMedBII1fiJWlRpVi7bVS6kH7OLaXbb
-         DxX/iytfOnxKJpg/obhlTFAMLZqKMllCbt5Tr4wwHlVZK+c9HfmAIWo6auBlDQjHLni4
-         GMx+qL3MRmcOM5CglWARNVER3XjlmEHrhPPfhtRm6TimrbBRcmAErHShvLacYlYUZMgC
-         DskH1PMxs5F5epa5lTzrKQssneS2e3OFLofGpgfxnv1tAueu46Y1e4OW8GTPVm0JoJSk
-         wYEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709215240; x=1709820040;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TV6GRMDY8Scq8jpKm5RnkX4lQVf+6dmwO1naHKeWIUI=;
-        b=j6F0S5WJ0V0MJFAGKboReM+AU2J1N3DdgKHI023b0jp2hLuIKyuOrdXBN3cnfgb5Gu
-         fjVTOgtxTUl1jxqcyvDlwnSpPdM95qxRbdSodlYgUYr66pbrcYQCEgr8MulZSgIg0pIE
-         Qem1f0aKb8OE5reiUCvevqO0vD4noctTYj/BL3ZXEyE+W/2LCziKXSVa6ZVWEEZbtL7i
-         mPcx8cKVdO+IUTa/x+WVBTxwx1wr0EKj/WOzWXoqXlCz2TQeZwrpeGdMff6wkNwPqH9Y
-         u6Vo3woa1pe27LPcGvhYmDDnZBhVfdNv60XLXCwUrB91RzAdii3vg+gVifEvJxu0wPIJ
-         Ko8A==
-X-Forwarded-Encrypted: i=1; AJvYcCU0TmzmY3rxPRQLoiyeYwmn5wAbNZ1uyltMuuYEsv2uoXGzfqhbUGv14sPV7vtw+XyGAoz+P0nTbuRgJ9FkKvWFKU46Ir3NwZ8pBXLVOCWhtRJgyTwNKHUCCQXQlujHWIbzi9lM1smUTyAlw0c2jsfl38hEXUPYj02GxjwFvLWcgj/X
-X-Gm-Message-State: AOJu0Yy8oDQyMVdVybdr8Si/rjbe3lYoT92j7Tt/utF1Q2SWhSoCKPe+
-	Oe6CjSipwxd6ssdNvuWt6wkZZGRfD/cRXpR/zzTViWSJ0iDB+7HO
-X-Google-Smtp-Source: AGHT+IEwf+/RVY7fF3mXhgA46Gx6Z7+tKPEdgZuVHVJ3dqiO6lqa68xkSLU+gRMERE5GETkvkB7+og==
-X-Received: by 2002:a05:600c:3512:b0:410:e43d:24e9 with SMTP id h18-20020a05600c351200b00410e43d24e9mr2137532wmq.22.1709215239735;
-        Thu, 29 Feb 2024 06:00:39 -0800 (PST)
-Received: from lab.hqhome163.com ([194.183.10.152])
-        by smtp.googlemail.com with ESMTPSA id g8-20020a05600c310800b00412b0ef22basm2216853wmo.10.2024.02.29.06.00.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 06:00:39 -0800 (PST)
-From: "Alessandro Carminati (Red Hat)" <alessandro.carminati@gmail.com>
-To: Andrii Nakryiko <andrii@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alessandro Carminati <alessandro.carminati@gmail.com>,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I8NS4JOl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709215389; x=1740751389;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=of78azqk9pyl3dbaAzM1nddstYUe6Qj3+UufZgaZ84Y=;
+  b=I8NS4JOllwUcL1Wlm9oWfF+kiV7QZ4/ISS/kVEfI29ZJqarOTiyNmmUO
+   EUMvavfeRVsKSWGI9V4f2mQUrrT32qwMJ1NwHsad90B6IpVmbYC3qBMPv
+   DzvqyxEZSFNHDbm0F0kxYzuo+ddz0cRX1TasZc0U1hauPSvtWybIG91xz
+   6lzAPXEccAPFStq+/IBLQG6t9LptCPEJZWXkA32uP7nFykFEiuPAe5U1n
+   wFbzc88LB2ocdf3Q4zcTI0eWrwmNOMEaGRjjBDGsVKE1zjBb/jDCn7wN9
+   ObBsicUTEmbqGD+BTHwA/ZViIuF5FbjCmsYyGPWRMlUsiCl4X/BDvlIGV
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="29116843"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="29116843"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:03:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="913982839"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="913982839"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:03:06 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rfh03-00000008gdV-1Zia;
+	Thu, 29 Feb 2024 16:03:03 +0200
+Date: Thu, 29 Feb 2024 16:03:03 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Cc: Luc Van Oostenryck <lucvoo@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+	linux-sparse@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] tools/testing/selftests/bpf/test_tc_tunnel.sh: Prevent client connect before server bind
-Date: Thu, 29 Feb 2024 14:00:00 +0000
-Message-Id: <20240229140000.175274-1-alessandro.carminati@gmail.com>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH v2] parse: handle __cleanup__ attribute
+Message-ID: <ZeCOlzq6qLJtuc0O@smile.fi.intel.com>
+References: <8d596a06-9f25-4d9f-8282-deb2d03a6b0a@moroto.mountain>
+ <i4s2gnr6rlq3yhmfiy7lkbsahnaioilksvmx3eocdjfh2434zo@zhxhwwgqpxt2>
+ <44e22df1-734e-49c5-b20b-4f4cdbce24a6@suswa.mountain>
+ <75ee8bd3-aa80-46dc-9f0c-874a8f4e9d48@suswa.mountain>
+ <k6ztyjq24ik24qtsu3aqpipodzgq37i2ko42ag7wzn4t2ryrzf@i4gbxu7kvslt>
+ <c3884893-44fe-4622-8e8e-576a0bdff19f@suswa.mountain>
+ <troz4beymvsw2m4y4ocghwiidohi4nbj45ry2tfmbekanu2ray@ooravawiynxr>
+ <Zag2fYsyJDtDR7a6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zag2fYsyJDtDR7a6@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-In some systems, the netcat server can incur in delay to start listening.
-When this happens, the test can randomly fail in various points.
-This is an example error message:
-   # ip gre none gso
-   # encap 192.168.1.1 to 192.168.1.2, type gre, mac none len 2000
-   # test basic connectivity
-   # Ncat: Connection refused.
+On Wed, Jan 17, 2024 at 12:20:13PM -0800, Dmitry Torokhov wrote:
+> On Mon, Dec 18, 2023 at 02:51:32PM +0100, Luc Van Oostenryck wrote:
+> > On Thu, Dec 14, 2023 at 04:20:20PM +0300, Dan Carpenter wrote:
+> > > Yep.  Perfect.  Thanks so much!
+> > 
+> > Pushed now.
+> 
+> Any chance someone is looking at making context tracking working for
+> code annotated as __cleanup? We already have a bunch of code using
+> constructs like:
+> 
+> 	...
+> 	guard(spinlock_irqsave)(&gpio_lock);
+> 
+> 	if (!test_bit(FLAG_REQUESTED, &desc->flags))
+> 		return NULL;
+> 	...
+> 
+> which resuls in:
+> 
+> $ make C=1 W=1 drivers/gpio/gpiolib.o
+>   CALL    scripts/checksyscalls.sh
+>   DESCEND objtool
+>   INSTALL libsubcmd_headers
+>   CC      drivers/gpio/gpiolib.o
+>   CHECK   drivers/gpio/gpiolib.c
+> drivers/gpio/gpiolib.c:2359:6: warning: context imbalance in 'gpiochip_dup_line_label' - different lock contexts for basic block
+> 
+> and I expect we'll see more and more of this.
 
-Signed-off-by: Alessandro Carminati (Red Hat) <alessandro.carminati@gmail.com>
----
- tools/testing/selftests/bpf/test_tc_tunnel.sh | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
++1 here. It's quite annoying for every Linux kernel developer in the world
+(which are at least 2k of active ones).
 
-diff --git a/tools/testing/selftests/bpf/test_tc_tunnel.sh b/tools/testing/selftests/bpf/test_tc_tunnel.sh
-index 910044f08908..01c0f4b1a8c2 100755
---- a/tools/testing/selftests/bpf/test_tc_tunnel.sh
-+++ b/tools/testing/selftests/bpf/test_tc_tunnel.sh
-@@ -72,7 +72,6 @@ cleanup() {
- server_listen() {
- 	ip netns exec "${ns2}" nc "${netcat_opt}" -l "${port}" > "${outfile}" &
- 	server_pid=$!
--	sleep 0.2
- }
- 
- client_connect() {
-@@ -93,6 +92,22 @@ verify_data() {
- 	fi
- }
- 
-+wait_for_port() {
-+	local digits=8
-+	local port2check=$(printf ":%04X" $1)
-+	local prot=$([ "$2" == "-6" ] && echo 6 && digits=32)
-+
-+	for i in $(seq 20); do
-+		if ip netns exec "${ns2}" cat /proc/net/tcp${prot} | \
-+			sed -r 's/^[ \t]+[0-9]+: ([0-9A-F]{'${digits}'}:[0-9A-F]{4}) .*$/\1/' | \
-+			grep -q "${port2check}"; then
-+			return 0
-+		fi
-+		sleep 0.1
-+	done
-+	return 1
-+}
-+
- set -e
- 
- # no arguments: automated test, run all
-@@ -193,6 +208,7 @@ setup
- # basic communication works
- echo "test basic connectivity"
- server_listen
-+wait_for_port ${port} ${netcat_opt}
- client_connect
- verify_data
- 
-@@ -204,6 +220,7 @@ ip netns exec "${ns1}" tc filter add dev veth1 egress \
- 	section "encap_${tuntype}_${mac}"
- echo "test bpf encap without decap (expect failure)"
- server_listen
-+wait_for_port ${port} ${netcat_opt}
- ! client_connect
- 
- if [[ "$tuntype" =~ "udp" ]]; then
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
