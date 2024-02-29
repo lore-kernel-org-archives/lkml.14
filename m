@@ -1,69 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0F116FF50
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 21:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C62F16FF27;
+	Thu, 29 Feb 2024 21:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709241920; cv=none; b=RcBK5b5rP0TRaRQMjkn54339lR9eTFQTToI61COlEx9F4vH937M73YABNA/9joW8+a+12jiPQunfUrsLWwmyveQWBqtyClLeYIpXIo8rNTA7hDhhN6jqOJOU4OFIN9lyXwAcUi7L/xUzwz5GIMJtMr43zU/YUP7cpycufz1WLHU=
+	t=1709241972; cv=none; b=H5YdI6e3xl11G8xiACboGL8RSQed0lRKI6SPywMvSxoouwjkdglxmVUYxQH/LCy73Sjw34pcQxHGIiEV+r2Gk/qyyw0nP1k7gHMah1dFNN7pbXC/tbHfDQlpNYhmO6xm0ULKe+hDyPn6F0mT/v4wNcoQBCWq6c5GfVrfquiVsbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709241920; c=relaxed/simple;
-	bh=SFyQlewP4ftbmGqknuUYzFkLWVMDFsCIdPs9JN7A2rk=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tiLvmwAOgVjdwNUW1sYgTdFDeEqFrSU33TpkYEloaYpxLW1fBbRb1klsJpQJqq0sJQzTK1p+eUWA0oGo6wZxNCgIHETe/1xKJ7lXmeWM+aHUne8xTKHpoMdt+qSyDoKi5ykC6LX53SFdubu/EzTUyfFeFZQQSOFOE1/SS0Ixi4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZaEgNB8e; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1709241972; c=relaxed/simple;
+	bh=lJk9xa7/GLM0wwzy/lzi2jJUuy/bAoJV2ivF1DfXv6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mNctVKgfJMdFez3mrH/iQMuTFm7RHnbg+3alhCTwuT9lcgWfj8I8RylG7oqPzrc20PaBaZLspCgUPQk2sPOzqAjVB4zH3MYy8B+1Z1CZwhoniN/fU1P/8ycakIc+XAa4yYPrUW9BfWwSAKKShcVK/X3LIgwVIttU3mCB9JnXDTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Myn37glh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaEgNB8e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709241916;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=c900KPGjnu3D/iFJTCJ5ahUYDipicYnnjvzpvJk+zps=;
-	b=ZaEgNB8e+x31AJXFA77IdUS2mF2J+jff6UvqEHG72oXElig55rfBCxVBv7wK7QJ411VcGJ
-	PhrOyL3z9jCdu0DrMvAORTCaHJ9ZUe0E/kIN4RDdt8iVauS7yNaH+OVmqzMKTBzFhcer9n
-	DCRjysi8RVrVcUFHhowqmGLp/fQNQaU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-336-EBDQQc53M-m_oYY3F6H75w-1; Thu, 29 Feb 2024 16:25:13 -0500
-X-MC-Unique: EBDQQc53M-m_oYY3F6H75w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3D64E881C81;
-	Thu, 29 Feb 2024 21:25:13 +0000 (UTC)
-Received: from ws.net.home (unknown [10.45.225.183])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A2F1A112132A;
-	Thu, 29 Feb 2024 21:25:12 +0000 (UTC)
-Date: Thu, 29 Feb 2024 22:25:10 +0100
-From: Karel Zak <kzak@redhat.com>
-To: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	util-linux@vger.kernel.org
-Subject: [ANNOUNCE] util-linux v2.40-rc2
-Message-ID: <20240229212510.ltajnsygpmxclz7i@ws.net.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Myn37glh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB639C433C7;
+	Thu, 29 Feb 2024 21:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709241972;
+	bh=lJk9xa7/GLM0wwzy/lzi2jJUuy/bAoJV2ivF1DfXv6I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Myn37glhD6BaHkDxAxprdk6qnpAV3DoNSW19K8dsP7vG/q3Upusjt0rIEKIBXvVYI
+	 4wShmdUePwLos0+ffd3Fal3JLcN1p+Rt1W34apiGlX6bMQIAdd9uH89gx0sLfhXgPc
+	 Vk3aRsZMOOMdcz0XxzTzAVNNW3+i4M4UuumDIs9x7OiU32KYgykYb2y0TdVynoVfBA
+	 Oi/7xMajgQARH0tUJr5wZ84yGzRqwBPyBigaiVh+hmhouhrNcp6IuGAZDZjckSyuy8
+	 fw2N9nhg6kl8o1gN7xAbmFCPikNdjWJs4G7SuiF9cEi9H3rfbBMHHRrONm6snnTbTN
+	 LYsOranuOk3lQ==
+Date: Thu, 29 Feb 2024 13:26:10 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, pabeni@redhat.com
+Subject: Re: [GIT PULL] Networking for v6.8-rc7
+Message-ID: <20240229132610.4ea1517f@kernel.org>
+In-Reply-To: <CAHk-=wizM+YawbbsvdRnFXLipMXS+iwgD3fahUu4DeyQCKzSWA@mail.gmail.com>
+References: <20240229203921.3037023-1-kuba@kernel.org>
+	<CAHk-=wizM+YawbbsvdRnFXLipMXS+iwgD3fahUu4DeyQCKzSWA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Thu, 29 Feb 2024 12:56:21 -0800 Linus Torvalds wrote:
+> On Thu, 29 Feb 2024 at 12:39, Jakub Kicinski <kuba@kernel.org> wrote:
+> > A few hours late, the commit on top fixes an odd "rcu_dereference()
+> > needs to know full type" build issue I can't repro..  
+> 
+> Ugfh. That change literally makes a single load instruction be a
+> function call. Pretty sad, particularly with all the crazy CPU
+> mitigations causing that to be even more expensive than it is already.
+> 
+> I really don't see how that error can happen, it sounds very odd.
+> 
+> Oh well.
 
-The util-linux release v2.40-rc2 is available at
-                                                      
-  http://www.kernel.org/pub/linux/utils/util-linux/v2.40/
-                                                      
-Feedback and bug reports, as always, are welcomed.    
-                                                      
-  Karel       
+Another mysterious report was:
 
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+include/linux/dpll.h:179:1: warning: control reaches end of non-void function [-Wreturn-type]
+https://lore.kernel.org/all/202403010245.MXVdcekk-lkp@intel.com/
 
+which I also don't see how since the code as of the commit used was:
+
+   173	static inline struct dpll_pin *netdev_dpll_pin(const struct net_device *dev)
+   174	{
+   175	#if IS_ENABLED(CONFIG_DPLL)
+   176		return rcu_dereference_rtnl(dev->dpll_pin);
+   177	#else
+   178		return NULL;
+   179	#endif
+   180	}
+
+We'll rejig this in net-next, all the caller does is pass the result
+to another function.
