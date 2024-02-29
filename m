@@ -1,161 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42D7141995;
-	Thu, 29 Feb 2024 15:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28FF13776F
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:09:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709219331; cv=none; b=ob++XbgfYLMCWtYvz0q3r2v8ZLBhRbAuhgf/cbPzSGKmRYJG99tc+/9IFO8HtvXX3rGG0wmxJpJRMNjXKB+M2twec0+8+/P01Wl+DT6+fiY3ZmXj/zEggwpc59g9+EXGtBPu5wauslAsKjyq6tQeL5RnO0j4OdYZCvxu3BH52pI=
+	t=1709219367; cv=none; b=eKO6bjFoJxymsyjD2eG2rGU2WuHnQDozMKNbPA2MKeB3KjWMe4TQLzlebHn72MUFyOOxI9XZCKLKcPHNXILJ3vkUvV+zZ8ruVlriVd/n+unei2uCIoPDTjqZyMXvYL2oSvn5DOzu5WsmFGhzrihoFp1JmfIx1M0GUqDpC9tLyLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709219331; c=relaxed/simple;
-	bh=1Zyw6/15dc8py4UHaheILppIr29j2DVuoJ+GnLmxmI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X9XJiR3pC9M4eo+I2oYI5kOqL8g/TeCyy3VLvHFl3GyvsQopbtVY6d8G9W20DJ7ufg/uBiRgo2mV4xJwdftuYY9AzyA4/hEFWG9XA9x76yd6BYciaOQjGaGsUN7FuCe7Y3ekJkUIBzHlyaYsp2w5fkZg5PkSvb0vvmqLnHE2ILk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbE142na; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709219367; c=relaxed/simple;
+	bh=M5tYlHJqiKu98ugQTIytTFV0lJCmkjxpZ7krVLv0VxE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hEbFrilBqyYNoZOhEUjxJk1qcTOEsUb67BHbS9szggnc/EDgGhabMOZALtoBQ4LUamW1H73QGbeF1N7npycTbDBvC4H6Qyp87l/nPMZaVm3F96voZpH31PFgPzmQ5NJYs7TTvi2yk9rjHkaPO27F/h/F0ix7CemHKpeP14+saRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVv8bJf+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbE142na"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8C5DC43394;
-	Thu, 29 Feb 2024 15:08:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVv8bJf+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D72BC433C7;
+	Thu, 29 Feb 2024 15:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709219331;
-	bh=1Zyw6/15dc8py4UHaheILppIr29j2DVuoJ+GnLmxmI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qbE142naa92rUgW7jL/DgquUxvIA8orHcRMgUTDyddce65pfDrm5hqA2gW1XhNEW1
-	 M9mhn4t1LH5FmGr+9vxIZj3lWezTgwutUTT9MFvgOEbxD3MUXBEe2+gj4i08VwWHnU
-	 AZRLl0FrHrOBNbBj3B9joRiitw1QbIUaM58sENEelec+3rzJe+v9gtvOJ1DxJBcLVC
-	 Q992XY0FVty+LT18+GMGFLjH+GGFEJ1RwHcuUU8sIFGQGNxQ6B3B/4vFkw5Aq7alGS
-	 57Xq1IPbNKu1IcM0c12i1Q/3MttMRGg6tdlxmEibgCn3P5lMdEJsiugpx10dhXtF+l
-	 hPvdF3nQRkfWg==
-Date: Thu, 29 Feb 2024 16:08:43 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Minda Chen <minda.chen@starfivetech.com>
-Cc: Conor Dooley <conor@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v15,RESEND 22/23] PCI: starfive: Offload the NVMe timeout
- workaround to host drivers.
-Message-ID: <ZeCd+xqE6x2ZFtJN@lpieralisi>
-References: <20240227103522.80915-1-minda.chen@starfivetech.com>
- <20240227103522.80915-23-minda.chen@starfivetech.com>
+	s=k20201202; t=1709219366;
+	bh=M5tYlHJqiKu98ugQTIytTFV0lJCmkjxpZ7krVLv0VxE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=bVv8bJf+9RIalLrYvHYD4n5kChaqJ52mya/6h90yQdiZQA4mVc0AH4RqA5nkTAb1o
+	 FyNTQEMS7tXc+12CtulA/OpdPFkegRZUsl8ap8gmvzzVFOt3n/eEMvCbmIKIi8+SkR
+	 YXLGt3iOYmv3UdX0t5i5GK9LO+w+ZcNDK+262Rp8XCS3n1VNPe8uJUwWemDhuxv/L1
+	 bT5OpioVOvFpXRubon0rsC2V8m5tUzOEqVJNRvI5aKMcQ91iZBcxAj2ekTVF5K8ix7
+	 RoWP8f7YlTXJk/dtcJpfPD+hYnzkBLoKd3RF+qZDKcGg8S7NFFEIUlZ91wQkK2sGVR
+	 tHASwCcFREa0g==
+Date: Thu, 29 Feb 2024 16:09:24 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Michal Hocko <mhocko@suse.com>, Kees Cook <keescook@chromium.org>, 
+    cve@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CVE-2023-52451: powerpc/pseries/memhp: Fix access beyond end of
+ drmem array
+In-Reply-To: <2024022913-borrower-resource-ecc9@gregkh>
+Message-ID: <nycvar.YFH.7.76.2402291605370.4159@cbobk.fhfr.pm>
+References: <2024022257-CVE-2023-52451-7bdb@gregkh> <Zdylmz28rZ-mCeiN@tiehlicka> <2024022639-wronged-grafted-6777@gregkh> <ZdytVTOgfvKBBvtn@tiehlicka> <202402271029.FD67395@keescook> <Zd8hPpP_6q_o8uQW@tiehlicka> <202402280906.D6D5590DB@keescook>
+ <ZeA-281OudkWBhd_@tiehlicka> <2024022915-dissuade-grandson-ebd4@gregkh> <ZeBRZqJd5HAKaOfC@tiehlicka> <2024022913-borrower-resource-ecc9@gregkh>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240227103522.80915-23-minda.chen@starfivetech.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Feb 27, 2024 at 06:35:21PM +0800, Minda Chen wrote:
-> From: Kevin Xie <kevin.xie@starfivetech.com>
-> 
-> As the Starfive JH7110 hardware can't keep two inbound post write in
-> order all the time, such as MSI messages and NVMe completions. If the
-> NVMe completion update later than the MSI, an NVMe IRQ handle will miss.
+On Thu, 29 Feb 2024, Greg Kroah-Hartman wrote:
 
-Please explain what the problem is and what "NVMe completions" means
-given that you are talking about posted writes.
+> It's pretty trivial to get root on most of the "enterprise" kernels 
 
-If you have a link to an erratum write-up it would certainly help.
+Wow, that's a very strong statement you are making here, and I'd now 
+really like to ask you to back that up with some real data.
 
-This looks completely broken to me, if the controller can't guarantee
-PCIe transactions ordering it is toast, there is not even a point
-considering mainline merging.
+(or at least first clarify what exactly you mean when you are saying 
+"enterprise kernels").
 
-> As a workaround, we will wait a while before going to the generic
-> handle here.
-> 
-> Verified with NVMe SSD, USB SSD, R8169 NIC.
-> The performance are stable and even higher after this patch.
+-- 
+Jiri Kosina
+SUSE Labs
 
-I assume this is a joke even though it does not make me laugh.
-
-Thanks,
-Lorenzo
-
-> 
-> Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
-> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> ---
->  drivers/pci/controller/plda/pcie-plda-host.c | 12 ++++++++++++
->  drivers/pci/controller/plda/pcie-plda.h      |  1 +
->  drivers/pci/controller/plda/pcie-starfive.c  |  1 +
->  3 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
-> index a18923d7cea6..9e077ddf45c0 100644
-> --- a/drivers/pci/controller/plda/pcie-plda-host.c
-> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
-> @@ -13,6 +13,7 @@
->  #include <linux/msi.h>
->  #include <linux/pci_regs.h>
->  #include <linux/pci-ecam.h>
-> +#include <linux/delay.h>
->  
->  #include "pcie-plda.h"
->  
-> @@ -44,6 +45,17 @@ static void plda_handle_msi(struct irq_desc *desc)
->  			       bridge_base_addr + ISTATUS_LOCAL);
->  		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
->  		for_each_set_bit(bit, &status, msi->num_vectors) {
-> +			/*
-> +			 * As the Starfive JH7110 hardware can't keep two
-> +			 * inbound post write in order all the time, such as
-> +			 * MSI messages and NVMe completions.
-> +			 * If the NVMe completion update later than the MSI,
-> +			 * an NVMe IRQ handle will miss.
-> +			 * As a workaround, we will wait a while before
-> +			 * going to the generic handle here.
-> +			 */
-> +			if (port->msi_quirk_delay_us)
-> +				udelay(port->msi_quirk_delay_us);
->  			ret = generic_handle_domain_irq(msi->dev_domain, bit);
->  			if (ret)
->  				dev_err_ratelimited(dev, "bad MSI IRQ %d\n",
-> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-> index 04e385758a2f..feccf285dfe8 100644
-> --- a/drivers/pci/controller/plda/pcie-plda.h
-> +++ b/drivers/pci/controller/plda/pcie-plda.h
-> @@ -186,6 +186,7 @@ struct plda_pcie_rp {
->  	int msi_irq;
->  	int intx_irq;
->  	int num_events;
-> +	u16 msi_quirk_delay_us;
->  };
->  
->  struct plda_event {
-> diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
-> index 9bb9f0e29565..5cfc30572b7f 100644
-> --- a/drivers/pci/controller/plda/pcie-starfive.c
-> +++ b/drivers/pci/controller/plda/pcie-starfive.c
-> @@ -391,6 +391,7 @@ static int starfive_pcie_probe(struct platform_device *pdev)
->  
->  	plda->host_ops = &sf_host_ops;
->  	plda->num_events = PLDA_MAX_EVENT_NUM;
-> +	plda->msi_quirk_delay_us = 1;
->  	/* mask doorbell event */
->  	plda->events_bitmap = GENMASK(PLDA_INT_EVENT_NUM - 1, 0)
->  			     & ~BIT(PLDA_AXI_DOORBELL)
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
