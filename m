@@ -1,325 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015121E521;
-	Thu, 29 Feb 2024 12:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7210185B;
+	Thu, 29 Feb 2024 12:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709209892; cv=none; b=Bj3sQQ72Y8tIo7ks98bdZaMpv9EgdhM8aeumTEtRNvejJw19qFdv6mzdJr4Dd546NUVhpHF+LZbW5DPr43byo1ByueJ36YMQ0OEQQNPyHZgNAof+R55mTgyKijee6JIz6Wpe3wMAg5zu1oobcBVtrKsfLaMV3CTXMFGMTRKttxY=
+	t=1709209988; cv=none; b=ofn35LBW4jBw4oNyTz1BIltj0TvTD2lA3GE7Y2/fpwaAG6S9R52zTJ2aTuhAfAOFUlEhjlfxnf+N89b8EKrHRAenlgJxJaW0ILORvKKjD/vnd46YY7shKUR+KL2hEd+IJDfPD9xKjMCljNxx0oa4bXltNoX7suzjHFfm8I3vU/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709209892; c=relaxed/simple;
-	bh=YD/qzrBFsXrNIMjIfkkmyedNh06jyG8HwGCWFaCQIEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AJhl4OKUwsy3ix7/AEvyvEqpxta+ZlzjkwERbZDi4UsBJqRsD86GjAE6WeHTCsH8nclR5SuUE+gPzyCXQIpKlAd1n4LJFqd1e6l+wIzWHDtRRnwUIxI9YqdQ3kjRkE29AD98rw6SQG1Ja87bsWeqQ5icDz6iYYk2E+EycIAi19w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=haZsNFe/; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1709209988; c=relaxed/simple;
+	bh=ZKlZMmZXcw2fZf045p5kABlG1+alTG4gOk2aY7Bv/KU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=plZAJhEV8BQ1x6lM62NBAaekxj3jkDZGQlRAESc7U6GmrGHpHiTi23Ris2iRRQnrNuZGtp5EXFWLcjVC2a368k/Xu3Cq/Uw2fwdsrxVYyieaoU6PnH4CG4uHI2vK5DRlzj8URzF2HOCNAI2rtvXRidl0sXrFn1piGkJnEVAgEPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T/fCB2+f; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="haZsNFe/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T/fCB2+f"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709209891; x=1740745891;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YD/qzrBFsXrNIMjIfkkmyedNh06jyG8HwGCWFaCQIEo=;
-  b=haZsNFe/FWecTwXsQEaF9a5ilDWIvbmRGQaAxsgWBNxt7IYnbYJGX+Tu
-   rrAxh6q56pBtCpi0DOHjUvl1VShWWFdsSDdFbjFrTc7Yx2Pg9YZp8HCq2
-   Y7y5KR3JiXYWV8n1IQPy8dNitnIqOJcrk6r1FmtlJThaipCPgvfEMckK6
-   TSvQEWfoXxJZ7XX5ej4HkAJZ/BHoIAnCWEMyKhcapGqMxygQYYRYZ1qow
-   OdrUtkONgWdEI0/s0OABTJiEre9KLhJ7c3jPw+82jXwTITiU0TguwXogE
-   KTvvnLI48HfA3rzKpO9Z46UCR5YM2BvT8VHMH+x/jn8RJvH5aR0OYmqhD
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="14243021"
+  t=1709209987; x=1740745987;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZKlZMmZXcw2fZf045p5kABlG1+alTG4gOk2aY7Bv/KU=;
+  b=T/fCB2+fiv53Mzs5C/2Xff3CnMMCaINrAmcUOkzjh10Q/89kHRAQow8v
+   9+Ii+Zh3iXl+KoUstcxWNvwcRgURSFdJ1WNO9P1qrFssI/U82A1+ZByaH
+   Kchi2qJsOsUyepGsTtZS0wZYIKWfttvjcJZOdNtEU1uN0BYzyN7yfnrB8
+   JqbBzvUofArFFB2tOywtQsadKwU+2b1M3QzwZgFag1bhYtA/1E0B+1VuA
+   +YunkXU9R/MfDHegxLQIXn0Nsb8u1TBcnctqEvMHxt1+Kr6SAe4ceoHJw
+   g4W+WtUaL2kIjEenlkZuPHHXw8w9feMdt4cIaAzE5PCp7K9RPg0uf1RRV
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3520378"
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="14243021"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 04:31:19 -0800
+   d="scan'208";a="3520378"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 04:32:58 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="38845679"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.225.159]) ([10.124.225.159])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 04:31:14 -0800
-Message-ID: <1b3ebbdb-ac7c-47f5-8556-2ea9f397ab60@linux.intel.com>
-Date: Thu, 29 Feb 2024 20:31:11 +0800
+   d="scan'208";a="7766258"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.51.250])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 04:32:55 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 29 Feb 2024 14:32:50 +0200 (EET)
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, markgross@kernel.org, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: ISST: Allow reading core-power state on
+ HWP disabled systems
+In-Reply-To: <20240229002659.1416623-1-srinivas.pandruvada@linux.intel.com>
+Message-ID: <23b62f29-902c-800a-1cd4-6e24d70abd86@linux.intel.com>
+References: <20240229002659.1416623-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 09/29] KVM: selftests: TDX: Add report_fatal_error
- test
-To: Sagi Shahar <sagis@google.com>
-Cc: linux-kselftest@vger.kernel.org, Ackerley Tng <ackerleytng@google.com>,
- Ryan Afranji <afranji@google.com>, Erdem Aktas <erdemaktas@google.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
- Peter Gonda <pgonda@google.com>, Haibo Xu <haibo1.xu@intel.com>,
- Chao Peng <chao.p.peng@linux.intel.com>,
- Vishal Annapurve <vannapurve@google.com>, Roger Wang <runanwang@google.com>,
- Vipin Sharma <vipinsh@google.com>, jmattson@google.com, dmatlack@google.com,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org
-References: <20231212204647.2170650-1-sagis@google.com>
- <20231212204647.2170650-10-sagis@google.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20231212204647.2170650-10-sagis@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Wed, 28 Feb 2024, Srinivas Pandruvada wrote:
 
+> When HWP (Hardware P-states) is disabled, dynamic SST features are
+> disabled. But user should still be able to read the current core-power
+> state, with legacy P-states. This will allow users to read current
+> configuration with static SST enabled from BIOS.
+> 
+> To address this, do not call disable_dynamic_sst_features() when the
+> request is for reading the state.
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-On 12/13/2023 4:46 AM, Sagi Shahar wrote:
-> The test checks report_fatal_error functionality.
->
-> Signed-off-by: Sagi Shahar <sagis@google.com>
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> Signed-off-by: Ryan Afranji <afranji@google.com>
+Is this a fix? (It's lacking the tag if it is).
+
+-- 
+ i.
+
 > ---
->   .../selftests/kvm/include/x86_64/tdx/tdx.h    |  6 ++-
->   .../kvm/include/x86_64/tdx/tdx_util.h         |  1 +
->   .../kvm/include/x86_64/tdx/test_util.h        | 19 ++++++++
->   .../selftests/kvm/lib/x86_64/tdx/tdx.c        | 39 ++++++++++++++++
->   .../selftests/kvm/lib/x86_64/tdx/tdx_util.c   | 12 +++++
->   .../selftests/kvm/lib/x86_64/tdx/test_util.c  | 10 +++++
->   .../selftests/kvm/x86_64/tdx_vm_tests.c       | 45 +++++++++++++++++++
->   7 files changed, 131 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> index a7161efe4ee2..1340c1070002 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx.h
-> @@ -3,10 +3,14 @@
->   #define SELFTEST_TDX_TDX_H
->   
->   #include <stdint.h>
-> +#include "kvm_util_base.h"
->   
-> -#define TDG_VP_VMCALL_INSTRUCTION_IO 30
-> +#define TDG_VP_VMCALL_REPORT_FATAL_ERROR 0x10003
->   
-> +#define TDG_VP_VMCALL_INSTRUCTION_IO 30
-> +void handle_userspace_tdg_vp_vmcall_exit(struct kvm_vcpu *vcpu);
->   uint64_t tdg_vp_vmcall_instruction_io(uint64_t port, uint64_t size,
->   				      uint64_t write, uint64_t *data);
-> +void tdg_vp_vmcall_report_fatal_error(uint64_t error_code, uint64_t data_gpa);
->   
->   #endif // SELFTEST_TDX_TDX_H
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx_util.h b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx_util.h
-> index 274b245f200b..32dd6b8fda46 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/tdx/tdx_util.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/tdx/tdx_util.h
-> @@ -12,5 +12,6 @@ struct kvm_vm *td_create(void);
->   void td_initialize(struct kvm_vm *vm, enum vm_mem_backing_src_type src_type,
->   		   uint64_t attributes);
->   void td_finalize(struct kvm_vm *vm);
-> +void td_vcpu_run(struct kvm_vcpu *vcpu);
->   
->   #endif // SELFTESTS_TDX_KVM_UTIL_H
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/tdx/test_util.h b/tools/testing/selftests/kvm/include/x86_64/tdx/test_util.h
-> index b570b6d978ff..6d69921136bd 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/tdx/test_util.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/tdx/test_util.h
-> @@ -49,4 +49,23 @@ bool is_tdx_enabled(void);
->    */
->   void tdx_test_success(void);
->   
-> +/**
-> + * Report an error with @error_code to userspace.
-> + *
-> + * Return value from tdg_vp_vmcall_report_fatal_error is ignored since execution
-> + * is not expected to continue beyond this point.
-> + */
-> +void tdx_test_fatal(uint64_t error_code);
-> +
-> +/**
-> + * Report an error with @error_code to userspace.
-> + *
-> + * @data_gpa may point to an optional shared guest memory holding the error
-> + * string.
-> + *
-> + * Return value from tdg_vp_vmcall_report_fatal_error is ignored since execution
-> + * is not expected to continue beyond this point.
-> + */
-> +void tdx_test_fatal_with_data(uint64_t error_code, uint64_t data_gpa);
-> +
->   #endif // SELFTEST_TDX_TEST_UTIL_H
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> index c2414523487a..b854c3aa34ff 100644
-> --- a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx.c
-> @@ -1,8 +1,31 @@
->   // SPDX-License-Identifier: GPL-2.0-only
->   
-> +#include <string.h>
-> +
->   #include "tdx/tdcall.h"
->   #include "tdx/tdx.h"
->   
-> +void handle_userspace_tdg_vp_vmcall_exit(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_tdx_vmcall *vmcall_info = &vcpu->run->tdx.u.vmcall;
-> +	uint64_t vmcall_subfunction = vmcall_info->subfunction;
-> +
-> +	switch (vmcall_subfunction) {
-> +	case TDG_VP_VMCALL_REPORT_FATAL_ERROR:
-> +		vcpu->run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
-> +		vcpu->run->system_event.ndata = 3;
-> +		vcpu->run->system_event.data[0] =
-> +			TDG_VP_VMCALL_REPORT_FATAL_ERROR;
-> +		vcpu->run->system_event.data[1] = vmcall_info->in_r12;
-> +		vcpu->run->system_event.data[2] = vmcall_info->in_r13;
-> +		vmcall_info->status_code = 0;
-> +		break;
-> +	default:
-> +		TEST_FAIL("TD VMCALL subfunction %lu is unsupported.\n",
-> +			  vmcall_subfunction);
-> +	}
-> +}
-> +
->   uint64_t tdg_vp_vmcall_instruction_io(uint64_t port, uint64_t size,
->   				      uint64_t write, uint64_t *data)
->   {
-> @@ -25,3 +48,19 @@ uint64_t tdg_vp_vmcall_instruction_io(uint64_t port, uint64_t size,
->   
->   	return ret;
->   }
-> +
-> +void tdg_vp_vmcall_report_fatal_error(uint64_t error_code, uint64_t data_gpa)
-> +{
-> +	struct tdx_hypercall_args args;
-> +
-> +	memset(&args, 0, sizeof(struct tdx_hypercall_args));
-> +
-> +	if (data_gpa)
-> +		error_code |= 0x8000000000000000;
-> +
-> +	args.r11 = TDG_VP_VMCALL_REPORT_FATAL_ERROR;
-> +	args.r12 = error_code;
-> +	args.r13 = data_gpa;
-> +
-> +	__tdx_hypercall(&args, 0);
-> +}
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx_util.c b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx_util.c
-> index b302060049d5..d745bb6287c1 100644
-> --- a/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx_util.c
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/tdx/tdx_util.c
-> @@ -10,6 +10,7 @@
->   
->   #include "kvm_util.h"
->   #include "test_util.h"
-> +#include "tdx/tdx.h"
->   #include "tdx/td_boot.h"
->   #include "kvm_util_base.h"
->   #include "processor.h"
-> @@ -519,3 +520,14 @@ void td_finalize(struct kvm_vm *vm)
->   
->   	tdx_td_finalizemr(vm);
->   }
-> +
-> +void td_vcpu_run(struct kvm_vcpu *vcpu)
-> +{
-> +	vcpu_run(vcpu);
-> +
-> +	/* Handle TD VMCALLs that require userspace handling. */
-> +	if (vcpu->run->exit_reason == KVM_EXIT_TDX &&
-> +	    vcpu->run->tdx.type == KVM_EXIT_TDX_VMCALL) {
-> +		handle_userspace_tdg_vp_vmcall_exit(vcpu);
-> +	}
-> +}
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/tdx/test_util.c b/tools/testing/selftests/kvm/lib/x86_64/tdx/test_util.c
-> index 6905d0ca3877..7f3cd8089cea 100644
-> --- a/tools/testing/selftests/kvm/lib/x86_64/tdx/test_util.c
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/tdx/test_util.c
-> @@ -32,3 +32,13 @@ void tdx_test_success(void)
->   				     TDX_TEST_SUCCESS_SIZE,
->   				     TDG_VP_VMCALL_INSTRUCTION_IO_WRITE, &code);
->   }
-> +
-> +void tdx_test_fatal_with_data(uint64_t error_code, uint64_t data_gpa)
-> +{
-> +	tdg_vp_vmcall_report_fatal_error(error_code, data_gpa);
-> +}
-> +
-> +void tdx_test_fatal(uint64_t error_code)
-> +{
-> +	tdx_test_fatal_with_data(error_code, 0);
-> +}
-> diff --git a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> index a18d1c9d6026..8638c7bbedaa 100644
-> --- a/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> +++ b/tools/testing/selftests/kvm/x86_64/tdx_vm_tests.c
-> @@ -2,6 +2,7 @@
->   
->   #include <signal.h>
->   #include "kvm_util_base.h"
-> +#include "tdx/tdx.h"
->   #include "tdx/tdx_util.h"
->   #include "tdx/test_util.h"
->   #include "test_util.h"
-> @@ -30,6 +31,49 @@ void verify_td_lifecycle(void)
->   	printf("\t ... PASSED\n");
->   }
->   
-> +void guest_code_report_fatal_error(void)
-> +{
-> +	uint64_t err;
-> +
-> +	/*
-> +	 * Note: err should follow the GHCI spec definition:
-> +	 * bits 31:0 should be set to 0.
-> +	 * bits 62:32 are used for TD-specific extended error code.
-> +	 * bit 63 is used to mark additional information in shared memory.
-> +	 */
-> +	err = 0x0BAAAAAD00000000;
-> +	if (err)
-> +		tdx_test_fatal(err);
-
-Nit:
-Since the error code is a constant, no need to use if statement.
-Or even save the variable?
-
-
-> +
-> +	tdx_test_success();
-> +}
-> +void verify_report_fatal_error(void)
-> +{
-> +	struct kvm_vm *vm;
-> +	struct kvm_vcpu *vcpu;
-> +
-> +	vm = td_create();
-> +	td_initialize(vm, VM_MEM_SRC_ANONYMOUS, 0);
-> +	vcpu = td_vcpu_add(vm, 0, guest_code_report_fatal_error);
-> +	td_finalize(vm);
-> +
-> +	printf("Verifying report_fatal_error:\n");
-> +
-> +	td_vcpu_run(vcpu);
-> +
-> +	TEST_ASSERT_EQ(vcpu->run->exit_reason, KVM_EXIT_SYSTEM_EVENT);
-> +	TEST_ASSERT_EQ(vcpu->run->system_event.ndata, 3);
-> +	TEST_ASSERT_EQ(vcpu->run->system_event.data[0], TDG_VP_VMCALL_REPORT_FATAL_ERROR);
-> +	TEST_ASSERT_EQ(vcpu->run->system_event.data[1], 0x0BAAAAAD00000000);
-> +	TEST_ASSERT_EQ(vcpu->run->system_event.data[2], 0);
-> +
-> +	vcpu_run(vcpu);
-> +	TDX_TEST_ASSERT_SUCCESS(vcpu);
-> +
-> +	kvm_vm_free(vm);
-> +	printf("\t ... PASSED\n");
-> +}
-> +
->   int main(int argc, char **argv)
->   {
->   	setbuf(stdout, NULL);
-> @@ -40,6 +84,7 @@ int main(int argc, char **argv)
->   	}
->   
->   	run_in_new_process(&verify_td_lifecycle);
-> +	run_in_new_process(&verify_report_fatal_error);
->   
->   	return 0;
->   }
+>  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> index 2662fbbddf0c..1d918000d72b 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
+> @@ -462,10 +462,10 @@ static long isst_if_core_power_state(void __user *argp)
+>  	struct tpmi_per_power_domain_info *power_domain_info;
+>  	struct isst_core_power core_power;
+>  
+> -	if (disable_dynamic_sst_features())
+> +	if (copy_from_user(&core_power, argp, sizeof(core_power)))
+>  		return -EFAULT;
+>  
+> -	if (copy_from_user(&core_power, argp, sizeof(core_power)))
+> +	if (core_power.get_set && disable_dynamic_sst_features())
+>  		return -EFAULT;
+>  
+>  	power_domain_info = get_instance(core_power.socket_id, core_power.power_domain_id);
+> 
 
