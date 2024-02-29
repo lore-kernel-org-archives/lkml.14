@@ -1,64 +1,76 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC877B3D1
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 12:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD6B7D060
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 12:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709209145; cv=none; b=hg/IC6XuX4/O1rAUXw1BdJAhoQjTgKDqDt6aPPSDuoUJg/jPKu3dKeWDCknSQAuUEG85DOcEggrNUdU2wzYaH5ppSXTOa8uttyoaq8R4ts4ibabbgZNjxRICcLBgJz0kgqstGqpqcHd+R738c5FXf2EexuPHgMBNpKC6aiYKPzE=
+	t=1709209229; cv=none; b=nMEHf2ALw778Mh4iIyc4cTp9n9vJFtiXHr0Ha5kJq3Kau7OriGwHfxIpQ8WOuecEg0w3ma/vCHxML1OSo9NyZpT9XWB8JcXTCOCgXkntpyxGDpvYQu9MU4BXde8t9k0rv0mTY3vwiDIhWwtAytyFRXlHqwQhBPQ44edIY6Iyyqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709209145; c=relaxed/simple;
-	bh=ob9I68XwHPK2eYEM0MtrNgpwmwAN/WdbqJzDEKS2+i8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kdy/bMQMcP9ez4WFxNaDz16LAo2Zp53RgyCiLO2f4Q+DHJOBLZjcm7MY0EkbPrZoVa+Ed2dtVi279z31YFrcaxQF7cHXh2o3GqREb7AfQoVedXjj+vR7emScyr0nVBC3PUME+CMsuAc1MJwaTrjk3N7OAp3J9YZLpvSm+2+DPUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=YPQZvCho; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1709209229; c=relaxed/simple;
+	bh=t3T3nzjH4yLLDmY7ceHX7NGlnylBse4d450fwq8jtb4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kUz4JBW927PLoMj/yqzSFHl4vUE4TtZhGw0n+SFsv+bE3Ge7lStOSblyR4j2SiMBn6n2gBR0XqZxlwldC3I4wjufAXA+GBbDQgh0L5SHA9vPzLNlRYW8Ug11zb8AulJ+nC8MjyNmeccHwkWt9cQyOOcr4gAkI6nHapMUkLcH7CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bV0ljLJs; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="YPQZvCho"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a4348aaa705so131052066b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 04:19:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bV0ljLJs"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d28e465655so10743421fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 04:20:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1709209142; x=1709813942; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709209225; x=1709814025; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CK/gyhWcnx3ozsMFB9IWH6XZsidf01J5WrD6CcF2Cpk=;
-        b=YPQZvChopeY9iFwuo+s48f4HVQ9CKnfYQCIZgELkj334wmHYIa8L1G150L3OhACbrA
-         f5EszpFYTRKuNXuaMPaTM3xYGsmKm/71bjMuUo+Dxxdbt8UzAtRuBn0bV1pBm+MvzjoE
-         yr2jjOyAR9seg4Cn5eXubaztErGFbQlS2FvlW/F852VnqCuc6xApmAhlD0x3VZnErZEc
-         CamXHbHmj53Nrpeka3SD6fquFODbv8IXEXnd9eCI0tD4bLBNjziptU/UqVbLZDhh1iCS
-         U8aGNiZSJl0/597qrfO4Ax7IZ54tsioY4FOkXRVtaqHMz2Oh5HMEXgvKDJj+PAlcIOpX
-         eTrw==
+        bh=0vjzIB8u0IabtEYVRJzJAEQ3mD04zR5ijVvS5JF9Y6Y=;
+        b=bV0ljLJsnKGd2TcJdvZm1mPKKYlRZ/EiYJjfHVuMoIUDtNy+/4KBDX4JMOpZr+MDUX
+         8JAVwS0kvP4QdXbt7QPYgvbcSYEsTPtMG1JTkkFyFpiFzssSOZoIlCDBPGWZwJzu8Zav
+         sWAKtYDtPkq+PvcVDpsnnRzsCwbWIP9PyubVkRrPt0HAL+0WFvT8B1SFRb4rFUcULhsQ
+         lPrs/bzhh/sf7fNo/tRv16WCGmzx4ATc6pgOvbt8R6eravEcpJJJEzmUqqfZdym6bamY
+         2i3n87OtH0JPXpUbZuyhUtiar19u18mA1PHnp8lZiQ33MjAiQsJ/ltPtqpmi4EemwdsG
+         8AlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709209142; x=1709813942;
+        d=1e100.net; s=20230601; t=1709209225; x=1709814025;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CK/gyhWcnx3ozsMFB9IWH6XZsidf01J5WrD6CcF2Cpk=;
-        b=Tj37i+o6beEqgr5LmzikYIW8RpymEbKuoqzSvW5A04KqAMBcFaI+UYaCo9c5jsF9nE
-         ko6bx3yOEvlWdrwG4cZ3fSbvAGTRMwNEeRr2KnTu2gxl+Lnf7Tmxl76FMOXQf75kQEOJ
-         kWMVF6qiF6wJ4NEpMWy9KfHFVAZGH8OapSznBrUorTiTpgLPfbFiWKAj8kv8lOT53Ez/
-         bDlNRW9qEEOtRTjYEhHICjQOubwtuxSmNNnaFowh1JqqAIb31TBSoQrS84+ZfaHAeEfq
-         7qtPDAFoE8o8GJxuco95ad+KWzFPv1G1Jo3/vSUbr/AAR46v7ruhfrElAz8u4G0zSOFp
-         tMuA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4VgFT5vzToF/2/bvBwdoTYq8IG/jl2+ckyHWV03nG22gENZWSxxUfCIcDmx5eLrWOsoTIQB5ngXWEvgxiFWpM+Egg0PGgWDjFSYNR
-X-Gm-Message-State: AOJu0YwJf3fjqv6GY3Rp6DwSxh24ncEwkoRFeJNBb/eDxtFtol1FOUzL
-	l5/XXbje+iH03wNK/wUOEMzm+uxyAgHq5QDwNvdo3ATcoTvaf3ARsRFbb5wEgcg=
-X-Google-Smtp-Source: AGHT+IF6pa9RCtJLn2UJSZqPkK7BUg0kISl2l4MpvEHaWBWsTVgXcg8Nrgt3oGsfmrlMYsK5JbqVOQ==
-X-Received: by 2002:a17:906:f6d2:b0:a44:415d:fa3b with SMTP id jo18-20020a170906f6d200b00a44415dfa3bmr1229733ejb.6.1709209142367;
-        Thu, 29 Feb 2024 04:19:02 -0800 (PST)
-Received: from fedora.fritz.box (aftr-82-135-80-35.dynamic.mnet-online.de. [82.135.80.35])
-        by smtp.gmail.com with ESMTPSA id vi10-20020a170907d40a00b00a445db55f39sm161039ejc.156.2024.02.29.04.19.01
+        bh=0vjzIB8u0IabtEYVRJzJAEQ3mD04zR5ijVvS5JF9Y6Y=;
+        b=GIWNMpFjZR8VyuBRAn1I4YO3YSOgzhb35AVi8lLv82EgTKeyJUKPfgtHkEby116YDT
+         aRjDl2dDVRG/QdIoQ7ZRuMvMrRH6bPXehOrpnUTN1kyNz0xGgFSEG03dIYpO1OKWqNrV
+         Ur/+mYOIFDvXNGOnBTr/hqlQLnzc4uVUjc/UGysp8CNZzAcMM0sJmdkvCMR3KFE7b8OM
+         IzGx6LE/MWpUrhA10l5FycppMRNw6U7TbXYa8OW701a6Y4NBd7D1aFlshVm8hWvb/LET
+         WmSsX5pATtUF7aZsGNTEtutBBurrVCQnUHeTNxyrJn9lk27H4BSxpcIKGwKWqGvfsFYO
+         J9+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXKkZfQDReMDQyDluRapxHRYydo5EhWQe7nlXiwFQRvqj2L6A1xEAUC+0dXNLG/p8Acc2alUXbwDdtg7B9zkdvNtJ/dTgxAl7XxqP/o
+X-Gm-Message-State: AOJu0Yx/qAky+oK+cQt9pT2Cet152swgxh+o5KLtvcRZ/AY4LfhfMelA
+	a/dR6leHXV9Q9X8Pd++VuiybA5kWMGwSt4eL2TlnAaS7VE7G7Q87qXfQqqBP1aM=
+X-Google-Smtp-Source: AGHT+IG8n5Uwvbvs8YE19xuHslAxDWVpeTnYjInoghHURNZKQMGqmCLjO4J8AQclmPxxrOwq2z/Afg==
+X-Received: by 2002:a05:651c:19a3:b0:2d2:6c75:9a67 with SMTP id bx35-20020a05651c19a300b002d26c759a67mr1670331ljb.38.1709209224600;
+        Thu, 29 Feb 2024 04:20:24 -0800 (PST)
+Received: from ta2.c.googlers.com.com (110.121.148.146.bc.googleusercontent.com. [146.148.121.110])
+        by smtp.gmail.com with ESMTPSA id dx14-20020a05600c63ce00b004129f28e2cdsm5009121wmb.3.2024.02.29.04.20.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 04:19:02 -0800 (PST)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: linux-nilfs@vger.kernel.org,
+        Thu, 29 Feb 2024 04:20:24 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: krzysztof.kozlowski@linaro.org,
+	s.nawrocki@samsung.com,
+	cw00.choi@samsung.com,
+	semen.protsenko@linaro.org
+Cc: alim.akhtar@samsung.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	peter.griffin@linaro.org,
+	andre.draszik@linaro.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] nilfs2: Use div64_ul() instead of do_div()
-Date: Thu, 29 Feb 2024 13:16:50 +0100
-Message-ID: <20240229121650.33983-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+	willmcvicker@google.com,
+	kernel-team@android.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH 0/4] clk: samsung: introduce nMUX to reparent MUX clocks
+Date: Thu, 29 Feb 2024 12:20:17 +0000
+Message-ID: <20240229122021.1901785-1-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,80 +79,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fixes Coccinelle/coccicheck warning reported by do_div.cocci.
+Introduce nMUX() for MUX clocks that can be reparented. There are MUX
+clocks that are dedicated per IP. The reparenting of the MUX is
+safe without affecting other IPs.
 
-Compared to do_div(), div64_ul() does not implicitly cast the divisor and
-does not unnecessarily calculate the remainder.
+Follow with 2 patches for GS101 to propagate the USI SPI clock rate. nMUX
+is used in GS101 to reparent the USI MUX to oscclk. Tested with USI6 and
+USI13 SPI.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- fs/nilfs2/cpfile.c | 2 +-
- fs/nilfs2/dat.c    | 2 +-
- fs/nilfs2/ioctl.c  | 4 ++--
- fs/nilfs2/sufile.c | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+Fix USI SPI clock propagation in exynos850 by allowing MUX reparenting
+for the dedicated USI MUX clocks. Stop propagating the rate change from
+the USI muxes to the common bus dividers (dout_apm_bus and dout_peri_ip).
+Other leaf clocks (HSI2C, I3C) are no longer affected on SPI rate
+change. USI SPI clock range remains the same. Exynos850 patch is not
+tested!
 
-diff --git a/fs/nilfs2/cpfile.c b/fs/nilfs2/cpfile.c
-index 39136637f715..bafbdca1a17d 100644
---- a/fs/nilfs2/cpfile.c
-+++ b/fs/nilfs2/cpfile.c
-@@ -28,7 +28,7 @@ nilfs_cpfile_get_blkoff(const struct inode *cpfile, __u64 cno)
- {
- 	__u64 tcno = cno + NILFS_MDT(cpfile)->mi_first_entry_offset - 1;
- 
--	do_div(tcno, nilfs_cpfile_checkpoints_per_block(cpfile));
-+	tcno = div64_ul(tcno, nilfs_cpfile_checkpoints_per_block(cpfile));
- 	return (unsigned long)tcno;
- }
- 
-diff --git a/fs/nilfs2/dat.c b/fs/nilfs2/dat.c
-index 9cf6ba58f585..df5324b0c0cd 100644
---- a/fs/nilfs2/dat.c
-+++ b/fs/nilfs2/dat.c
-@@ -460,7 +460,7 @@ ssize_t nilfs_dat_get_vinfo(struct inode *dat, void *buf, unsigned int visz,
- 		kaddr = kmap_atomic(entry_bh->b_page);
- 		/* last virtual block number in this block */
- 		first = vinfo->vi_vblocknr;
--		do_div(first, entries_per_block);
-+		first = div64_ul(first, entries_per_block);
- 		first *= entries_per_block;
- 		last = first + entries_per_block - 1;
- 		for (j = i, n = 0;
-diff --git a/fs/nilfs2/ioctl.c b/fs/nilfs2/ioctl.c
-index cfb6aca5ec38..f1a01c191cf5 100644
---- a/fs/nilfs2/ioctl.c
-+++ b/fs/nilfs2/ioctl.c
-@@ -1111,7 +1111,7 @@ static int nilfs_ioctl_set_alloc_range(struct inode *inode, void __user *argp)
- 	segbytes = nilfs->ns_blocks_per_segment * nilfs->ns_blocksize;
- 
- 	minseg = range[0] + segbytes - 1;
--	do_div(minseg, segbytes);
-+	minseg = div64_ul(minseg, segbytes);
- 
- 	if (range[1] < 4096)
- 		goto out;
-@@ -1120,7 +1120,7 @@ static int nilfs_ioctl_set_alloc_range(struct inode *inode, void __user *argp)
- 	if (maxseg < segbytes)
- 		goto out;
- 
--	do_div(maxseg, segbytes);
-+	maxseg = div64_ul(maxseg, segbytes);
- 	maxseg--;
- 
- 	ret = nilfs_sufile_set_alloc_range(nilfs->ns_sufile, minseg, maxseg);
-diff --git a/fs/nilfs2/sufile.c b/fs/nilfs2/sufile.c
-index 0a8119456c21..c02b523d9c7e 100644
---- a/fs/nilfs2/sufile.c
-+++ b/fs/nilfs2/sufile.c
-@@ -48,7 +48,7 @@ nilfs_sufile_get_blkoff(const struct inode *sufile, __u64 segnum)
- {
- 	__u64 t = segnum + NILFS_MDT(sufile)->mi_first_entry_offset;
- 
--	do_div(t, nilfs_sufile_segment_usages_per_block(sufile));
-+	t = div64_ul(t, nilfs_sufile_segment_usages_per_block(sufile));
- 	return (unsigned long)t;
- }
- 
+All 4 patches can go as fixes, since they fix the clock rate range for
+gs101, and stop affecting other leaf clocks for exynos850. I don't mind
+however if K choses to queue these for next.
+
+Tudor Ambarus (4):
+  clk: samsung: introduce nMUX for MUX clks that can reparented
+  clk: samsung: gs101: propagate PERIC1 USI SPI clock rate
+  clk: samsung: gs101: propagate PERIC0 USI SPI clock rate
+  clk: samsung: exynos850: fix propagation of SPI IPCLK rate
+
+ drivers/clk/samsung/clk-exynos850.c |  15 +-
+ drivers/clk/samsung/clk-gs101.c     | 225 +++++++++++++++-------------
+ drivers/clk/samsung/clk.h           |  20 +++
+ 3 files changed, 147 insertions(+), 113 deletions(-)
+
 -- 
-2.44.0
+2.44.0.278.ge034bb2e1d-goog
 
