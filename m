@@ -1,82 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14855446B8;
-	Thu, 29 Feb 2024 07:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7891446B6;
+	Thu, 29 Feb 2024 07:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709190805; cv=none; b=p6lmd6WfsVkv8V8EhFuiCZd4qyXAR9UR4exEcOJIS9OrB55CBMVN0Zd1KbczT3HszLEhG+os1jT604Q/naEdnncUtK6DZVVPkad5jsTjHyLFe+4ll5abluIfQXC/hfHYiTZza8l/OkKQAe0pVhqcEWuXE6phoR7pSPgtWxahpTc=
+	t=1709190805; cv=none; b=uyzU6SFgBPuStMc9ulH5wkfKpaoq/UzrA/YrNip/2dNsZZvkrpDSpCJ5w8MkaOZGYyxlxDd+3lpinj5Oc68asBaxCNpp1PDNBF7n6ED9cSlfg2POW/QurOvYe82g7WhnXM6SzII1TLL8d2B8P7YO8Lo/5iS/rWC+HqqGk0JJfeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709190805; c=relaxed/simple;
-	bh=sTFRZabajf/krYk3PM4o4UwGsA4jCPH/kYX/YIBaFFQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=rrou+qyt/mZB5i6rY5HjB2GFYmu6UMU3/LcpUhAgwEd4c9Zu4+zUl8aykqOr0l00V2QjOaY1o5AISgPbM5x+zONjMpQMkG6puRABdnaUn6RCS1g77m8sWIoVMsmshvVR9GH24SpsNrEPe0V7V3VsvjdV2CwDpeazsjhwQbiiw2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUGlU738; arc=none smtp.client-ip=10.30.226.201
+	bh=tyzJnjQ8r78M9dJ56ewIMb+ho6PqTtHsXYNzlsBHLqQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=U5cNAp2DHnp8nhmN+peibbgtbN6GO07ZRwx5yNBTvXSc6h0vkA6+xKEdicX2GSUxen2xpcJeSO6DNzdns0ZKMmUTaGDm1K/3Ek6EzghoXgnc1VWgPaK+2SVy423KRxcANRtUGhWlppfd5hc8CBAmbZorenSIs8hWcuAb58hccTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xko1Zge6; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUGlU738"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98225C433F1;
-	Thu, 29 Feb 2024 07:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709190804;
-	bh=sTFRZabajf/krYk3PM4o4UwGsA4jCPH/kYX/YIBaFFQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OUGlU738hUpRVx01d84rqAhOzR10pyvcWXzBPl3tO/bB0Ve/kdCrehO4Nvx7CNknc
-	 zrpXNjLeKSA8R10DDUlU9Euuer0LPnly3RInbJbxAd3H7CTMDjQUXxjB6PzSbM64UQ
-	 94U86xoToN7HwCt8P917HtYwhQdXb1ENvc6Dj5pdtv/I0KC2QZfhVqYj8HyVtbBHtI
-	 L40MwM5UeB/+WMvCHr3E7OZ7koK23UXGBLX/alScaAmG5kFCKjKboruwtYlov6xQOa
-	 diSK0jIl+0u04MeA5uel3UHKZA8Cz6573rDBfoiZcAj0nZlS/+zZKnm1jFzoJffcKA
-	 tw+pk4LjuB1yg==
-Date: Thu, 29 Feb 2024 16:13:20 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] tracing/probes: Support function parameter
- access from return probe
-Message-Id: <20240229161320.978190f42dcc1a521c192e7d@kernel.org>
-In-Reply-To: <20240229153855.6fe3fb454cf56eebc6ea9953@kernel.org>
-References: <170891987362.609861.6767830614537418260.stgit@devnote2>
-	<Zd9eBn2FTQzYyg7L@krava>
-	<20240229145139.a215085c44add62302463312@kernel.org>
-	<20240229153855.6fe3fb454cf56eebc6ea9953@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xko1Zge6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709190804; x=1740726804;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=tyzJnjQ8r78M9dJ56ewIMb+ho6PqTtHsXYNzlsBHLqQ=;
+  b=Xko1Zge6QMn1eDwWUsahfr82pB+yxChclDdeodAdEGyLoGjmItBKzXuD
+   ztQJEWqSvCz627hyioQAQ3KYhqZDeS1L5NQ+y8c23FOTplwamne6sm4Hc
+   Om0SvZH1JSVUjHjyrvOFNI8eSTH10UTgNIDKrfSI+ZK11i3Bp0VloBX12
+   PEmSxcQi5P6r9quriHfTqs/qIiNL3jeJT49pz99MnUeGWuWtz1hYmDp8Q
+   bC7kS+IGhNz23/8oNe1ClekEyuatQg2GqqNUI3uiGCQoiCPcKc3VsvQOx
+   0I7JGtscs3KlW561IBEe++Z2lM+I/Gz4ifYPTt6UxFkyz1eGM6SL4Uzkj
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3519853"
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="3519853"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 23:13:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,192,1705392000"; 
+   d="scan'208";a="8283945"
+Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.213.166.213])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 23:13:22 -0800
+From: Ira Weiny <ira.weiny@intel.com>
+Date: Wed, 28 Feb 2024 23:13:16 -0800
+Subject: [PATCH 1/4] cxl/event: Add missing include files
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240228-cxl-cper3-v1-1-6aa3f1343c6c@intel.com>
+References: <20240228-cxl-cper3-v1-0-6aa3f1343c6c@intel.com>
+In-Reply-To: <20240228-cxl-cper3-v1-0-6aa3f1343c6c@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, 
+ Jonathan Cameron <jonathan.cameron@huawei.com>, 
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
+ Shiju Jose <shiju.jose@huawei.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, 
+ Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
+ linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-2d940
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709190800; l=932;
+ i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
+ bh=tyzJnjQ8r78M9dJ56ewIMb+ho6PqTtHsXYNzlsBHLqQ=;
+ b=aVJn1c1YctwcOn+6/FjTVDtOQD+bGI+t0/QiVekrpKTZX4YnK16qBReM6jWtAab8dwuINloJs
+ KuCLIe4VS7BCimoINRmT58TzbdnJ23ABGgWCYGNbqACI1H/+fAsCMXv
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
 
-On Thu, 29 Feb 2024 15:38:55 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Additional event testing using the cxl-event.h header revealed that it
+did not include the correct headers for the types used.  Compile errors
+such as:
 
-> Hmm, this seems arch_rethook_trampoline caused the issue.
-> 
-> And curiously, it depends on the number of stored data.
-> 
-> OK:
-> /sys/kernel/tracing # echo 'f vfs_read%return $arg1 $arg2 $arg3' >> dynamic_events 
-> /sys/kernel/tracing # echo 1 > events/fprobes/enable 
-> 
-> NG:
-> /sys/kernel/tracing # echo 'f vfs_read%return $arg1 $arg2 $arg3 $arg4' >> dynamic_events 
-> /sys/kernel/tracing # echo 1 > events/fprobes/enable 
-> 
-> I also confirmed that on 'vfs_write' caused the same result. 3 arguments(24 bytes) is OK,
-> but 4 arguments (32bytes) is NG.
+	include/linux/cxl-event.h|11 col 9| error: unknown type name ‘u8’
 
-And this may be the fprobe bug. kretprobe events doesn't show this issue.
+... were seen.
 
-OK:
-/sys/kernel/tracing # echo 'r vfs_read $arg*' >> kprobe_events 
-/sys/kernel/tracing # echo 1 > events/kprobes/enable 
+Add the correct pre-requisite headers.
 
-But this is strange because both uses same rethook...
+Omit the fixes tag because this does not cause any issues until the
+header is used again in other code.
 
-Thank you,
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ include/linux/cxl-event.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
+index 03fa6d50d46f..812ed16ffc2f 100644
+--- a/include/linux/cxl-event.h
++++ b/include/linux/cxl-event.h
+@@ -3,6 +3,9 @@
+ #ifndef _LINUX_CXL_EVENT_H
+ #define _LINUX_CXL_EVENT_H
+ 
++#include <linux/types.h>
++#include <linux/uuid.h>
++
+ /*
+  * Common Event Record Format
+  * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
