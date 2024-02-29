@@ -1,188 +1,119 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18472E410;
-	Thu, 29 Feb 2024 18:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A9816062E;
+	Thu, 29 Feb 2024 18:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709229785; cv=none; b=qF1PWog4Z5ZGWtPaNn90X8MC3y+xuAIXpp0KNSdReMRjGE1RiYoo/8Un3py3e5mfPBDRmFR+QScTajL9xIpyHqHp5T4RFpeoFiSU2dqH/1cyfuAloZMGLX+mSDNMtbsb3nmt9JcHvJvnE7vQ6EP1lfOCMLExw1kpigiOcSeSY7Y=
+	t=1709230042; cv=none; b=EFYBPbPSvG3K7GjvgvwKIsmoi+zYz+Yz3ax8mxZChfQ5gFQ/QN3E8eK0+MPwKaVFChG5im5xCgGM/V4bQWzeULD/bJtVLwAeCScu1A3uXhdFbhFXMFxMgAIFLATZ7u6dphNvzk2v9SfOVcfs438ZNimd+V8CR/HNTuQ2A8iKUSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709229785; c=relaxed/simple;
-	bh=Yv7Kh+xyzhHgEEJC7cvh6WUFRIzB9hwLqRLYbL6gjZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rIfK5DagTAOhrLRtgyU8jKnFTSyUDlvfWg9S2bblDpE7wvwl1aX6oS6Jp++b60v1lDLAIfVmBlhralShjL8Ne7DfzSs1yHwotpRrGKdJU0IAfRGZIlhKSd9qCtVvbxUNtA1LXypD2KJh3IEhhI9ghSxCy/9bfeNrQe4fR5BbmuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6e45f7c63f4so156910a34.1;
-        Thu, 29 Feb 2024 10:03:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709229782; x=1709834582;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H+vLszme3j62CDIVZVLpVdKt2WiORGBWMybzMte4imE=;
-        b=Z5q4FK3/Bg/XXIgNjGhp6cpRLtGg4cLjLi3kaDf/7DnJNxGFuGrChXwofhr4/AVV/f
-         oiHHjGfQtr7MeA6O7mEY1bUgJc1lVU4rytu25STCZ0sv3KSXIAl5Mk6YMf3DuaqFbFJ1
-         Pe6BeB0WeJYb2qg/2d68g1+UJfFpwjKaI6gIXlm8ImTv9c2GMFPT3T62loRpSzWaBuoH
-         WpaqKU3wmsXqPv6pEEr3PgHULRuriXOTi16DjqYdbbvP8dzm9qWHTYdtggyA3X9H9/sf
-         uPJfzLaHt9KJkr76+ObptvSaGuLf4xj6Ax02yOaoKE4Aio1B58BVmOv5/9CPYCjMDOCH
-         uEdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqOSQ3YEQdQK4EpOotaiwwofBJSOU4J+mw4hT8myOqHNv+bUF5xwBpGe0gGI5wTRkGcud7yABTrk8RM6hMOUtmYdCn40VDx5/JQQH/uJb2TRqUEr6szaZEBv3CDBJL8ilNeFAHzqIkKKEb2KxVBEXObOjpc28CY6/3cJgbPbDBHwJ+
-X-Gm-Message-State: AOJu0Yz9frwHjSq2Z7TQP+d6Zid6FprDFsf3nJD7Ck+TfOUDpSFR0FzL
-	znHyWW83Ar2F7FjM/i4VYTJhuGYPZ8eVqbZMyblmfRdvquZFGXtV84PRXBUbnJV+ZlMpvKxb19K
-	wsKNCgHFUBcuc/r3n0F2ti3GT5ko=
-X-Google-Smtp-Source: AGHT+IGjwCt8gwPhtD2QfGUFtj7EEmyRNMqlWVH4M3FPv6FvZwVjPAuxpU04rmh+tGHIdUKcjXgxVuCjIWguAI1Ld88=
-X-Received: by 2002:a4a:301:0:b0:5a0:396d:2489 with SMTP id
- 1-20020a4a0301000000b005a0396d2489mr2769270ooi.1.1709229781780; Thu, 29 Feb
- 2024 10:03:01 -0800 (PST)
+	s=arc-20240116; t=1709230042; c=relaxed/simple;
+	bh=cX2PHbRKLPBHDGWFeHshU8/kZ6O3pk6xNH+MwzuwUqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XDRF91VtWrdFw3Be/EhCsNLyx0nhu89GPvAgLKl7OQ6V9k1SGXIEtmTlGg4Ye01RsM9GxLdgZZXYoA06BHD98GrdRQ0gwru6jy7zKB1vY/LdiYZ8yrApwoNhbvCLjM+jQhTGov3rmddB8IevNKOPIU0GbYqQ4qZyTtIhHKkEE54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cg1541hv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cg1541hv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF73C433F1;
+	Thu, 29 Feb 2024 18:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709230042;
+	bh=cX2PHbRKLPBHDGWFeHshU8/kZ6O3pk6xNH+MwzuwUqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cg1541hvCxmc/49oNGiTZXi+uzcb5gnkddG0ZEFtXZNCP/xCLIo0W5wA0Y5BVSTfV
+	 1/VAdoDvJwVNAe2Rd4VXy4G/9x2zFlXw5qiMsgABhuSkNERiZHFSMjY8ZlEPhvtGUp
+	 mo1pmXwkCq9+Ufu3F9UW5CLqsFRVo1U/3t17NYnbuZIGFczMQQsZ/B9Pcpfox9Vsm7
+	 vySAGACLxG2/uFu30N9+l5YoNESW4TY8u0Q8sumLKh2mTIl27gODNBYGroxKtVDk1V
+	 2Thqv9jlex0BiX9Eqd7VngEvUFSiJRY5gscioA/zBcHMF0K34bqpFyWvUf2PUek185
+	 ZqObIVvPdA8Hg==
+Date: Thu, 29 Feb 2024 18:07:17 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: "antoniu.miclaus@analog.com" <antoniu.miclaus@analog.com>,
+	"alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"jdelvare@suse.com" <jdelvare@suse.com>,
+	"linux@roeck-us.net" <linux@roeck-us.net>,
+	"linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+	Zeynep Arslanbenzer <Zeynep.Arslanbenzer@analog.com>
+Subject: Re: [PATCH v8 2/2] dt-bindings: rtc: add max313xx RTCs
+Message-ID: <20240229-skeletal-ultimatum-27cd91e8d8a8@spud>
+References: <20240227010312.3305966-1-chris.packham@alliedtelesis.co.nz>
+ <20240227010312.3305966-3-chris.packham@alliedtelesis.co.nz>
+ <20240228-embark-rimmed-d81bab3d42b8@spud>
+ <bd43a198-6287-40b2-be15-2734c5d2742d@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229162520.970986-1-vanshikonda@os.amperecomputing.com>
- <20240229162520.970986-4-vanshikonda@os.amperecomputing.com>
- <CAJZ5v0j+qz0okToszmU=kBjZvD3GJKzwz-ZrweOkgw6A2e3pQQ@mail.gmail.com> <5paw5cvh7klhwasvldyl2coaihntkv4cvmogzyov7qwyohxmvl@lt3auiqhg2nv>
-In-Reply-To: <5paw5cvh7klhwasvldyl2coaihntkv4cvmogzyov7qwyohxmvl@lt3auiqhg2nv>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 29 Feb 2024 19:02:50 +0100
-Message-ID: <CAJZ5v0j9t8y9dvTmVXsyUha73a6CBx8iHQNkteY_Bogx27sHLg@mail.gmail.com>
-Subject: Re: Re: [PATCH v1 3/3] ACPI: CPPC: Read CPC FFH counters in a single IPI
-To: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Huisong Li <lihuisong@huawei.com>, 
-	Beata Michalska <beata.michalska@arm.com>, Ionela Voinescu <ionela.voinescu@arm.com>, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, sumitg@nvidia.com, zengheng4@huawei.com, 
-	yang@os.amperecomputing.com, will@kernel.org, sudeep.holla@arm.com, 
-	liuyonglong@huawei.com, zhanjie9@hisilicon.com, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iR98pNhTE57Kvx2v"
+Content-Disposition: inline
+In-Reply-To: <bd43a198-6287-40b2-be15-2734c5d2742d@alliedtelesis.co.nz>
+
+
+--iR98pNhTE57Kvx2v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 7:01=E2=80=AFPM Vanshidhar Konda
-<vanshikonda@os.amperecomputing.com> wrote:
->
-> On Thu, Feb 29, 2024 at 06:32:59PM +0100, Rafael J. Wysocki wrote:
-> >On Thu, Feb 29, 2024 at 5:25=E2=80=AFPM Vanshidhar Konda
-> ><vanshikonda@os.amperecomputing.com> wrote:
-> >>
-> >> The CPPC driver reads delivered and reference counters using cpc_read
-> >> one at a time. This leads to inaccurate measurement of CPU frequency
-> >> discussed in [1]. If the firmware indicates that both the registers ar=
-e
-> >> in the FFH interface the kernel can read the registers together in a
-> >> single IPI. This has two benefits:
-> >> 1. Reduces the number of IPIs needed to read the two registers
-> >> 2. The two registers will be read in close proximity resulting in more
-> >>    accurate CPU frequency measurement
-> >>
-> >> [1]: https://lore.kernel.org/all/20230328193846.8757-1-yang@os.amperec=
-omputing.com/
-> >>
-> >> Signed-off-by: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
-> >> ---
-> >>  arch/arm64/kernel/topology.c | 37 +++++++++++++++++++++++++++++++++++=
-+
-> >>  drivers/acpi/cppc_acpi.c     | 32 +++++++++++++++++++++++++++----
-> >>  include/acpi/cppc_acpi.h     | 13 +++++++++++++
-> >>  3 files changed, 78 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology=
-.c
-> >> index 8905eb0c681f..8207565f43ee 100644
-> >> --- a/arch/arm64/kernel/topology.c
-> >> +++ b/arch/arm64/kernel/topology.c
-> >> @@ -421,6 +421,43 @@ int cpc_read_ffh(int cpu, struct cpc_reg *reg, u6=
-4 *val)
-> >>         return ret;
-> >>  }
-> >>
-> >> +static void cpc_update_freq_counters(void *info)
-> >> +{
-> >> +       update_freq_counters_refs();
-> >> +}
-> >> +
-> >> +int cpc_read_regs_ffh(int cpu, struct ffh_cpc_reg_values *ffh_regs)
-> >> +{
-> >> +       struct amu_counters *ctrs =3D per_cpu_ptr(&cpu_samples, cpu);
-> >> +       int idx;
-> >> +
-> >> +       if (!cpc_ffh_supported() || !freq_counters_valid(cpu))
-> >> +               return -EOPNOTSUPP;
-> >> +
-> >> +       if (WARN_ON_ONCE(irqs_disabled()))
-> >> +               return -EPERM;
-> >> +
-> >> +       if (!idle_cpu(cpu))
-> >> +               smp_call_function_single(cpu, cpc_update_freq_counters=
-, NULL, 1);
-> >> +
-> >> +       for (idx =3D 0; idx < MAX_NUM_CPC_REGS_FFH; idx++) {
-> >> +
-> >> +               if (!ffh_regs->regs[idx].reg)
-> >> +                       continue;
-> >> +
-> >> +               switch ((u64)(ffh_regs->regs[idx].reg->address)) {
-> >> +               case 0x0:
-> >> +                       ffh_regs->regs[idx].value =3D ctrs->core_cnt;
-> >> +                       break;
-> >> +               case 0x1:
-> >> +                       ffh_regs->regs[idx].value =3D ctrs->const_cnt;
-> >> +                       break;
-> >> +               }
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +}
-> >> +
-> >>  int cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val)
-> >>  {
-> >>         return -EOPNOTSUPP;
-> >> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-> >> index d155a86a8614..55ffb1915e4f 100644
-> >> --- a/drivers/acpi/cppc_acpi.c
-> >> +++ b/drivers/acpi/cppc_acpi.c
-> >> @@ -113,6 +113,10 @@ static DEFINE_PER_CPU(struct cpc_desc *, cpc_desc=
-_ptr);
-> >>                                 (cpc)->cpc_entry.reg.space_id =3D=3D  =
-      \
-> >>                                 ACPI_ADR_SPACE_SYSTEM_IO)
-> >>
-> >> +#define CPC_IN_FFH(cpc) ((cpc)->type =3D=3D ACPI_TYPE_BUFFER &&      =
-      \
-> >> +                               (cpc)->cpc_entry.reg.space_id =3D=3D  =
-      \
-> >> +                               ACPI_ADR_SPACE_FIXED_HARDWARE)
-> >> +
-> >>  /* Evaluates to True if reg is a NULL register descriptor */
-> >>  #define IS_NULL_REG(reg) ((reg)->space_id =3D=3D  ACPI_ADR_SPACE_SYST=
-EM_MEMORY && \
-> >>                                 (reg)->address =3D=3D 0 &&            =
-      \
-> >> @@ -974,6 +978,11 @@ int __weak cpc_write_ffh(int cpunum, struct cpc_r=
-eg *reg, u64 val)
-> >>         return -ENOTSUPP;
-> >>  }
-> >>
-> >> +int __weak cpc_read_regs_ffh(int cpu, struct ffh_cpc_reg_values *regs=
-)
-> >> +{
-> >> +       return -ENOTSUPP;
-> >> +}
+On Wed, Feb 28, 2024 at 08:21:35PM +0000, Chris Packham wrote:
+>=20
+> On 29/02/24 00:58, Conor Dooley wrote:
+> > On Tue, Feb 27, 2024 at 02:03:10PM +1300, Chris Packham wrote:
 > >
-> >This might return a bool value.
-> >
-> >Is there any case in which the caller would handle different error
-> >codes differently?
-> >
-> I kept this similar to cpc_read_ffh(). I didn't see any usage of the erro=
-r
-> codes. The return value of cpc_read_ffh() is returned only from cpc_read(=
-),
-> but I didn't see anyone consuming the return value of cpc_read().
-> Additionally, checkpatch complains about using -ENOTSUPP and suggests
-> replacing it with -EOPNOTSUPP. Does it make sense to update
-> cpc_read/write_ffh() as well to switch to return type bool?
+> >>     interrupts:
+> >> +    description:
+> >> +      Alarm1 interrupt line of the RTC. Some of the RTCs have two int=
+errupt
+> >> +      lines and alarm1 interrupt muxing depends on the clockin/clocko=
+ut
+> >> +      configuration.
+> >>       maxItems: 1
+> > The maxItems: 1 looks odd here when you state "some of the RTCs have two
+> > interrupt lines", which makes it sound as if there are actually two
+> > interrupts that should be exposed here. If those two interrupts get
+> > muxed to the same pin for output I'd suggest that you clarify that here.
+>=20
+> This may end up changing if I can come up with something that Alexandre=
+=20
+> is happy with. Basically (some of) the chips have a configurable pin=20
+> that can either be dedicated to the ALARM1 output (annoyingly labelled=20
+> as INTB) or to a clock output. There is an INTA line that has other=20
+> interrupts and if the clock output option is used then it also has=20
+> ALARM1. The driver doesn't currently do anything with the other=20
+> interrupt sources so as written this needs to correspond to whichever=20
+> interrupt output is asserted for ALARM1.
 
-Probably, but in a separate patch.
+So you're saying that depending on whether or not the clock output is
+used, there could be two interrupts?
+
+Without looking further, it sounds like you should be setting maxItems
+to 1 if #clock-cells is present and to 2 if it is not. Then if there are
+two interrupts provided, the driver is free to configure whatever way it
+wants. If there aren't, send everything to INTA.
+
+Am I missing something?
+
+Cheers,
+Conor.
+
+--iR98pNhTE57Kvx2v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeDH1QAKCRB4tDGHoIJi
+0mgUAP968MrAUrLc4/ZPgIL2M9ot1CbzwNP1m69CXgjSTaqhBAEAzgOl8/WsPk83
+fJ+Eot7rs9erOG9XK/haG0oYOJlUBww=
+=znc+
+-----END PGP SIGNATURE-----
+
+--iR98pNhTE57Kvx2v--
