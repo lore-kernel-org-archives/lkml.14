@@ -1,44 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7733812EBD0
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 18:11:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3138B70AE4
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 18:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709230271; cv=none; b=rVXTeCTZNsWvtZ6Tw+im9GWbSzGvu9dJNopGHgmgZ1J7I3EtJ80nFd0owGO7HAbHxv6eMouZyO58UN7d3rnfc/2SbJWGd/8g34wj25o+k0/KwafxjTFueasI3igJQbH/ssUoBE19DmZg0ZflSkEglAtILNVz45aOAz7p2Fo55c4=
+	t=1709230388; cv=none; b=GtB8hEE2RhGo8AO6XYDKCzlOxsVndR0oFuLUKv9VvoLU+Gxn8C9wTPZD80wX8sgs8DHQSzU9aSPfvaGzbyd6xyl+lyDQO1K63ZhYARx1i8j6uabY4Ss9brsz0oHr/FCQYHBzhQhne9oE0qoTCPEU9GsNDoVrTXOY1GIpzV7Ud2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709230271; c=relaxed/simple;
-	bh=a5/6+2LTn+N0eUr8eiV1Ty/edBikw63mMsI6aVDC6Ss=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p7GtFBF0BiX6Uy58JamtlJhrZNc3yvV2WRbgHcMWRcEwpxJNpSIxuEvOWnI2fX6ffZbLv/XUBtkARssaBvxq4ehgjF+y+1KLA8SpEKjMCP5h0FP4ODvfLyxLY+t/vuCCx7DOjDX6l6lJeg+W9VixceZvuQk5GJwWEza5ZqPWMLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2yCqsHZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709230388; c=relaxed/simple;
+	bh=wwT/73TZLUN9nMPo1iubmrl4kKujUgP+nvI3bxKowtY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CqMd/8ODAq391stNxwA4ALRqB/EJr1MhWx0axV+6fjJtCdvbBgJgvrXi6XWJUdiKjrV2g9JgvH9rFeGYK9ehiW7TdGz59P/bUI3xz2yuYZ/UPLI/72FajVP/4R/Z4PFwnbNYupd1ULIb79b39EULKdxGsZy/BOEy7eXXpjDyzXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GDGFtnP3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2yCqsHZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA85BC433A6;
-	Thu, 29 Feb 2024 18:11:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GDGFtnP3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5A3C433F1;
+	Thu, 29 Feb 2024 18:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709230270;
-	bh=a5/6+2LTn+N0eUr8eiV1Ty/edBikw63mMsI6aVDC6Ss=;
+	s=k20201202; t=1709230387;
+	bh=wwT/73TZLUN9nMPo1iubmrl4kKujUgP+nvI3bxKowtY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=l2yCqsHZ6H7hX115YD1FwHAzweYh5q7rp1bnWXvWvqrMjEQtBO2S0OD5YHzjg5IKz
-	 vlixsoeEX2ykU/3WRJwPYUvU+1fpah+SIV71lDnHmKF8PrsdwRQGAf8ohE8ofyHJI5
-	 FOE8hk15AEsB6Ro8NiO7Yc0eAvDJuxkY1jVw5//stvK+juNOWsKfJ1n5LuUoH7uHqD
-	 sf8a1P/b7FW4B1JEtGpT0DlsTU4TWbqplGvLDnKRGN27VEiUnmno+SgUS5/BQb6Alc
-	 M1A7GbDAcMkaBC2U82NaxG21HYa06KamZAS0PHt6qDrRcEp0zKHrQSOPrwEhccmOAs
-	 WKMpWj5S6D8gA==
+	b=GDGFtnP3zxkG5xvsUeTyTb0eCeqhsiYlMgxf4/Z48Av8OSdGxu7kDcQA69IaFLywn
+	 iBhqJ8braZpPHJ+6Gw6NNkys2BaSONIIQIpLRT2wL7n4evJpO4oX1H8BAdZ6t2wl3J
+	 vTnVXxqVHVbUc11tdOTfYFOpwcX7mG/CIYZ/ttecaSkDHBXPDDOR1wJTRdPV8aF4+3
+	 AyPBXV9F0bMRvL5YiwXvVR+nY8todt8+taPkqrE9gQGTN5GjEGanqS3B58/IljrT7l
+	 mwhvQCFlZW/kXG5m7be0AvHzsK8dXeSq290YwlgtGpbvKwwUSeTslUQULpyStz2kej
+	 yi6uw1S2UgiEA==
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Pan,
-	Xinhui <Xinhui.Pan@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
+To: Tomas Winkler <tomas.winkler@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] drm/amdgpu: remove misleading amdgpu_pmops_runtime_idle() comment
-Date: Thu, 29 Feb 2024 12:11:06 -0600
-Message-Id: <20240229181106.351877-1-helgaas@kernel.org>
+Subject: [PATCH 0/3] mei: remove unnecessary NULL pointer checks
+Date: Thu, 29 Feb 2024 12:12:57 -0600
+Message-Id: <20240229181300.352077-1-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -50,32 +45,19 @@ Content-Transfer-Encoding: 8bit
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-After 4020c2280233 ("drm/amdgpu: don't runtime suspend if there are
-displays attached (v3)"), "ret" is unconditionally set later before being
-used, so there's point in initializing it and the associated comment is no
-longer meaningful.
+After .probe() has returned success, drvdata has been set to a non-NULL
+value, so there's no need to check for NULL in other callbacks.
 
-Remove the comment and the unnecessary initialization.
+Bjorn Helgaas (3):
+  mei: gsc: remove unnecessary NULL pointer checks
+  mei: txe: remove unnecessary NULL pointer checks
+  mei: me: remove unnecessary NULL pointer checks
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/misc/mei/gsc-me.c  | 17 ----------------
+ drivers/misc/mei/pci-me.c  | 38 ++++++------------------------------
+ drivers/misc/mei/pci-txe.c | 40 ++++++--------------------------------
+ 3 files changed, 12 insertions(+), 83 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index cc69005f5b46..68416e2a9130 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -2744,8 +2744,7 @@ static int amdgpu_pmops_runtime_idle(struct device *dev)
- {
- 	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 	struct amdgpu_device *adev = drm_to_adev(drm_dev);
--	/* we don't want the main rpm_idle to call suspend - we want to autosuspend */
--	int ret = 1;
-+	int ret;
- 
- 	if (adev->pm.rpm_mode == AMDGPU_RUNPM_NONE) {
- 		pm_runtime_forbid(dev);
 -- 
 2.34.1
 
