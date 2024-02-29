@@ -1,235 +1,351 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8B974C03;
-	Thu, 29 Feb 2024 23:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709248938; cv=fail; b=eyOIhrMIVxZp9fiIlunx3mcH8ZOQEY6zxWW8xncFZ8gSEQd6xj9uAjFBRpRYyTDqVrcFohbtGvB8LCPNitQEMW5T5ZRCxjeefw+yzC+3nuz/NtXxT4Fq7Cu1B6ppr4yHeJHA7VqcK8hNQQ1WBR07xVXkHw5mJZEzdA1ska69KBE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709248938; c=relaxed/simple;
-	bh=nC+mMRTJFH2QIl70LiwWAZdiczYEiyGYMGVh3NJZ4jY=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UhMCpXqo/k+nTUVufwcYL9TTmxtcExOUR3HlFJ6l1K6Fuv+loRLRD9uTy19FkJi9GU3AZdLaM5ujbF8RAqVCqaTR8j0AKJddtUHe8407bnjSqWosIrJFKq4xbDC+MXGjnWEHTX5tm608ErYjLgZEyDCQ8ZT4SnsVPnp/1iFXDTs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M8k+Nb1v; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A9975815
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709248939; cv=none; b=ePreVcJUeErL1qfVm3KKUD/2z2NgaAFzGq9kTF19sSM17+dEdFXpT8xydZSaQag0hwu3Io5rWW/kjy6ixzs9lMH2QUFrde2tPwjXEnUD3OIdwhUWt+U8R5bEhMpNshaharfdcHOCXj+EiLKLvKspKeTEy6rgKRiiSROS6IRwnlc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709248939; c=relaxed/simple;
+	bh=POwNoYcpvng6qPt5oFG0srd43nGliYjpqXmrjwOe5C0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=go70LVeRiE84tAr16x1WokLo1WzuKBnv8LQW8zL9nPi51PZ1pYy3YtRJfASdkb6w6Pc3VnCoQ+9ptseCGYdU09awMmcQVK+r4gWAGTHPb+nPctVHfsoN4DomysU/6+smYYQgZKuq+Q8ikxGcYPyI66n+Kn0h8gMwN48ye0TMzIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ZVsYrktr; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M8k+Nb1v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709248937; x=1740784937;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=nC+mMRTJFH2QIl70LiwWAZdiczYEiyGYMGVh3NJZ4jY=;
-  b=M8k+Nb1vv0zzWq3dJLxO9aHdzbvW7L6PRi2O0eBXnqd/LO3pk1V9HVtM
-   dDy+3wcUYVhtITY5roHVbjfAkvh/yPHsHOny6qHgau14fOsneqoW7G0ai
-   iiIVahmG/9xCEDG0IyHruzBWmSYrh0Yk8g3yTtGDW1pbLE7nxyzJZ7DCc
-   1FvIAE/diMN+JCQp+9BDfxOPadDipJvRd3UqPKaA4FPQsLSCTKvOKuMCh
-   YLkqWqPgqfpnuKKbqxxSmly+Bsj7ZQqnE2xa7pKWv+nBYh578MctwjOOF
-   lXTxxni0Rn7y4fnq50pXld3QRi7segvrGwA9w6T0cg1I1dhQirvtfEYsw
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="29191586"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="29191586"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 15:22:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="38835061"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Feb 2024 15:22:13 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 29 Feb 2024 15:22:10 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 29 Feb 2024 15:22:10 -0800
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 29 Feb 2024 15:22:10 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JrOeP5YKgheQkLFC6HxaQrkvK6RznJpnF8o5YbMIXIi9kryEKfOnn2hwnj26hJ3ei/M4Awk9vsEpKToW3EXRhBa3ArdxATlfISzcNPZdBKDMtLSPjTvAKLyjZb/nhkcsWaR0j7Kb9jkxb4lN05RFiwkPdrH0DjTIvutKYdshhdrIm6o6gLnlImXahJ4ZLKytDr3R/2ri0q+RPlPRshV9OAPeEWkXi1xYQkW6UDAfVb7fbZw0lFOScUEs+YwCX4arIGZcrkIWCdHkupWbdOMIB/x7GrQW81YfMhkYCCjy62bEJ4Ulu0KpMMPz82clt8+MJ+eR3Y0Ha0Z5sPxXTYBiVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fx0/WN6eJXrRkQV6JhafQqSoln9FUs3Swers0we3DOk=;
- b=Eyty51AB53/nKaredkry4R7++tdH7IsOjecdxez1Nu1gECcG9DHZF+whMGcmUyoTU6nDJgXuW/ETboQR1Q42J1giDeOzXUEY/ScI8v6nIp5Ns2zYAraBL51Gzb9TSxFm+QCJcTuSwp+X1ZgsXw7NXsL1KzqqcPrtKxkO0fe+8cJ5sqiBjQ3iz4JLmFKbH1+VqTpdG9tpt0rcPiYzBxgiOFQyPcgOdGISogX8UX0R3j1IooJ60V8CanBaxBBs3d4TKo57yz29miftyKS9RLgeUASVsRL+mTWlt3ghbv/rE9IbueDe7M0tXclbe6wj5qvHpoulHqYfXNaLagb2mO0Fxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by PH0PR11MB5783.namprd11.prod.outlook.com (2603:10b6:510:128::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.24; Thu, 29 Feb
- 2024 23:22:08 +0000
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ef2c:d500:3461:9b92]) by BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ef2c:d500:3461:9b92%4]) with mapi id 15.20.7339.024; Thu, 29 Feb 2024
- 23:22:07 +0000
-Message-ID: <05449435-008c-4d51-b21f-03df1fa58e77@intel.com>
-Date: Fri, 1 Mar 2024 12:21:59 +1300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/16] KVM: x86/mmu: WARN and skip MMIO cache on private,
- reserved page faults
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>
-CC: Paolo Bonzini <pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Yan Zhao <yan.y.zhao@intel.com>, "Isaku
- Yamahata" <isaku.yamahata@intel.com>, Michael Roth <michael.roth@amd.com>,
-	"Yu Zhang" <yu.c.zhang@linux.intel.com>, Chao Peng
-	<chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>, David Matlack
-	<dmatlack@google.com>
-References: <20240228024147.41573-1-seanjc@google.com>
- <20240228024147.41573-9-seanjc@google.com>
- <2237d6b1-1c90-4acd-99e9-f051556dd6ac@intel.com>
- <ZeEOC0mo8C4GL708@google.com>
-From: "Huang, Kai" <kai.huang@intel.com>
-In-Reply-To: <ZeEOC0mo8C4GL708@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWH0EPF00056D18.namprd21.prod.outlook.com
- (2603:10b6:30f:fff2:0:1:0:19) To BL1PR11MB5978.namprd11.prod.outlook.com
- (2603:10b6:208:385::18)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ZVsYrktr"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3652731b2b7so6019635ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:22:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1709248936; x=1709853736; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nL3CU8jW9vVfZeENVgIQs2Z0lmYtCUXWU5kIlhxMA+M=;
+        b=ZVsYrktrfxOF4ow9ec/phqqw8bbpPoKv0ww/8/GpeepsbGmuxuzaOUMPNURIFn/8r2
+         fo/IIDHsqAdnNejCAdsRioXiD4YJjy0cD0wG/89HIXTwEPgzfggWLb2YcgAnJ+ntFlPZ
+         MbLYJ7cCfeaFyD/x4YJbkIjPfilnFeQQUztBoyS8XTA2vvTUAdqGK3G5CRrbC94kpA2M
+         +9ZfKRy12PUnvejRO7nl96dIPkaphzmJr4CjwpbVd/yQlU5bYBJl/UhEaO1rmLBv8Uv7
+         8i4VN3RNQ0X+Fc6YNywhNnRKtF8UWt+pNKG8l9pvmwANttliGdH0EpJhuZXfqYscWlXA
+         Y4bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709248936; x=1709853736;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nL3CU8jW9vVfZeENVgIQs2Z0lmYtCUXWU5kIlhxMA+M=;
+        b=hOtQ/qYO6OyQ33eabhYs1DWMhs8f2pHBpGul/sediv538yA8pSNXmmEHIBKMRUKxGk
+         zi4T6fX2y9FuyzTyks9sI+qMKah6sLqGCfwRaCZA/CXK31QWdUy8isJ5/PMs6U3QELqZ
+         8GHUxex+9B0IzavOiOpZ4qxVbTQ6WV0RmfD70LV+rAsA3/3EyW0pnN/leP0sdp3Dvztt
+         WXRCc1FX2KYW/aFt0Rfvt0yyPg1XRiOf7WcaEtdhoavFexlr3nJuZnxbwhmN6v6+SOpt
+         iWUGnBf3QlWbzw9y2YxP8J0oNsmKAEMcVVmKWPf+NROZcl+6+17hkV8U6YOtjOXzJsEj
+         xjjA==
+X-Gm-Message-State: AOJu0Yx5lHbzJ2p6Jzu6Q08mJhB+mTEl1zh7lQmQGAIMKmXmXYycSq/i
+	rIQibwJtlVUtlSRK6DA0hsHBWG/rSqUnoUhVsQUkZcpDTvM0FVD3/ZFteBhHbLI=
+X-Google-Smtp-Source: AGHT+IEuQOuQ50R8qoZP0RbIoJTNSdVCKrs4lRWLzJ+znFdHc+eSLoYj/Ypw4BmFNiQ++vK2RkPm8w==
+X-Received: by 2002:a05:6e02:1b8f:b0:365:ae26:5827 with SMTP id h15-20020a056e021b8f00b00365ae265827mr159548ili.5.1709248936255;
+        Thu, 29 Feb 2024 15:22:16 -0800 (PST)
+Received: from sw06.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id c6-20020aa78806000000b006e55aa75d6csm1779719pfo.122.2024.02.29.15.22.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 15:22:15 -0800 (PST)
+From: Samuel Holland <samuel.holland@sifive.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Yunhui Cui <cuiyunhui@bytedance.com>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v5 03/13] riscv: Use IPIs for remote cache/TLB flushes by default
+Date: Thu, 29 Feb 2024 15:21:44 -0800
+Message-ID: <20240229232211.161961-4-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.43.1
+In-Reply-To: <20240229232211.161961-1-samuel.holland@sifive.com>
+References: <20240229232211.161961-1-samuel.holland@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR11MB5978:EE_|PH0PR11MB5783:EE_
-X-MS-Office365-Filtering-Correlation-Id: f5ba20bd-b861-491b-3433-08dc397d3f61
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MBCbuZvvbzK0Pi4KS1Mf1sM1VhBZvGFT1BvVnrrvrdLG/BwyKMIEeTv1+s38Xl90BhmxOCgBGF+asz+bv5O9fBxERdvEXUmDYSr+sCkB2AsRIdoq+2GFOwaTN+q2XYT++SiC8Xjyh3GXKQLkOZUALG7c2WIDForCyhAW1F0UXDfrDIVk0/JFu7dHnMbqbcwnyHhMZBYoGBFgTUQn5udmawCskCYKbqcJa/an6IfQtJxQ6xRzRbd+lHDkJWu3umabR6/iB5/zvCaxu5jgzemYjVpvxdk3Dx/em+u19xO9PX1yA5yKidouoD/Nz+fs79Ra1V+iTsiv5d0nmF9YEjCSTXHtX27dAjvwQ6ZcDNz69tro8hmfOjFLGToV8q4FFjK5vH0gkhq9yC4SIw0CximIyOoBwhumcLPD2GkfNx1/cJ+/s2iFmrMDYYtD5Y3Am/3xZ5ggmauParyN+kwSnMmzHx8KsvuWShr31gRo9tG0ZiRQaW3NAl0ubei3ZS6XQctShts8+dSU3eQCZcII6OHBDEtzkhppZQ8Tt6B05IdgCgoUZuQcXco9DPZTqKSc8tlCckUsRHCY10Yo7R6H9+/W53Cf0FVdX07rzUEMB85/C2SHcNE4UdEOny7y+iFEQyzs7D9Mr7uYpyLjpE5vo4Y2Ow==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RmxLVWhVVHk3dVdQTWV4Ty8yNGNHalNtZS9YZWE2emVycm43UzdpZGhPOTFK?=
- =?utf-8?B?Q3hxNG9qaXRFeGZXLy9WZTV2UGpNUU1FM1lPZ09jdmtXa0h2RVpBL2xPbVpU?=
- =?utf-8?B?VXBwcEF6QXZiYytpTmd0NWI3S0FZSStPVjBZcU8xVDVVcU1mZytzVGx0VWZ2?=
- =?utf-8?B?THVnNHBwdzZmeXhUTkFsR2F6RHVMc0JSaUh4d3JNWEYzNmZ4Z0NwcHFvdjQv?=
- =?utf-8?B?UWo2dzc2ZTY1TDZCMklabjF2L3pCU1N2T2g2ZFVHOXJiUFZQbGs2UjUvVEpm?=
- =?utf-8?B?dlhhcjV1ZG8xTWxNWWxYckVWWHBmSnZiNDZ1SUpmQk90Y0VZZ1JPSTBON2RO?=
- =?utf-8?B?OE9WOTYyalVmUjcxamE3UTNsS3A4emUwcW8vTEVDbExXOVZlckdocVM3dmxr?=
- =?utf-8?B?aXBldDVJLzZYS1NsUmpUcVNLRkFvZU5sZjlKeG9majJPaDNYSStiemF6aHFi?=
- =?utf-8?B?VVlLWmg4M3hvOWdLTjBSYTA1clMyVjFBNEhBbk0yT1o5RG1QZ1ZQcUV4WC9m?=
- =?utf-8?B?QXFqdWRMQ2NZRklPWVd1WjloSm10ekRPT3pCc3JjOVdSZVRaRnl0T05ZcDhv?=
- =?utf-8?B?NGpZaVkvUWdpNnJIdldxZG10WlJ3cy91N1J4ZzBTSkNZdHMvMEpHTmUvSU54?=
- =?utf-8?B?TGIvWGhxSUhtdWlvMlZGYU8xM0E0bmFxRExtY3NtaEJCL0VjZ3BNSlV5WFVp?=
- =?utf-8?B?WlVqTDF3aUk3Q0tlUlM4WmFORG5lU2M1anJWOGtPMnlYY091ZzIzYk95MldX?=
- =?utf-8?B?TG4zWnkxYUVta2FXczQwM3pNcFVwNUd6RTZrdHY3WFd3MmU3Y0d0bUNoZERm?=
- =?utf-8?B?VytqYXpuY213eXRad1ZrSEtLUGpuZ1J0TXFDRVdiSE1uZjlqdVpRMlBuamRZ?=
- =?utf-8?B?N3hXbkZaVG5WemM3TFYyL2grZks4TW84U2ZQc1NxZXNqTm1jK0NFWTBIVUFq?=
- =?utf-8?B?Ty85Yk9BRUc3VHBWZklETW9YWExoVDFBd0twbkwrQVVlaTcyeHNmSEhjZTJT?=
- =?utf-8?B?dnBiRWNSS2t0R1BzdGwxRVVjM2lIQ0xNTWNkdk9QMnVHaDAwMFRTK3U5Y2p1?=
- =?utf-8?B?R1pscnF2cFhvdm9obUZOUzFZOFZyQ3RPK1luTTVDTi9WaldBU2JWWkVsREE1?=
- =?utf-8?B?Zlp3Mnh3NnNlUStJWHVOR1lpZngxR2VMaU5vbllBV3Fsb0ZrRlJhcjNaY0FR?=
- =?utf-8?B?Wk5sRi94cDNZNFVGd1VFcVZSZW9aOFNCU0ZLR0RJdURjb29jWnZpLzcwMXNG?=
- =?utf-8?B?dUhqTS9MVFVkWDFOd3Z3ZDNhMWJ5WUExM1RsRmdIR0krOTlxbDd3MzlZaHJw?=
- =?utf-8?B?NFdqR2c3RHRtblNiQ1ZwME9oVnFKeERxQ0dmMFVRWnFPR0FqaXJxY3dpRU5S?=
- =?utf-8?B?VUMxbU9rU3VTZStUdTBoOWFMVm9ZSXN0UFk0L3Y1T01TeGZNYW1ibXBGVm9D?=
- =?utf-8?B?cCtGVlVYSGhFWGtFUWdZVnNDUy9XR0MzMlF6Rm5Fb09EMGdQcnVIejZ0NTN3?=
- =?utf-8?B?d0Mwc2RkbnFWaWZMRDV1d2QvWE9qVVJBeWtKdVl6cXlJNkVIblBCVmtqQ251?=
- =?utf-8?B?Z2YrbTZVU0NEQldSWE5oaFdaOXJodjhseFZpSUc5dk55Y0VkdFM5M2Fucm4w?=
- =?utf-8?B?c3JFQjdSQy93TWl0SEp2eWlsTlFiaDF2cDBXMUZSUHFUUHFSblgxaEoyaEhE?=
- =?utf-8?B?cjF3ejhjZHNseUtGWC91UW9UV3BhUzVxaWZPSzVmSEswRndFK2tQT2djTmYx?=
- =?utf-8?B?WXlNWWZxZFM0MVFOUktSWmRLOWRFODVQUVpmSmtXYUVCNDBzb295amM3Q0Zk?=
- =?utf-8?B?OHpNbW41Q0hkK0I0aU9MQzVQelUrYXlpbkRxTXFXYzQ5eS9xSEFoUmQrNW0w?=
- =?utf-8?B?S0V1RXBZUlJXeDB0eC8vQzhSR2Ixc1VqSHUzaTZDS2JPUXRPL1ZveHJXcllv?=
- =?utf-8?B?TE9Sd0F6SGhSZ05XRlhYaXNaNkJoYXpLYXhnMW9vMFdSTG5PM09aWFFVOEJn?=
- =?utf-8?B?QUkrUEJyeGJlblorMlA1S3RodU85cmdMTlRNS0NlTnZ5Z2ZkeGhISnNYK001?=
- =?utf-8?B?azkyMXkyTFR4anhmSVJzVjJONmRSQkdWQmozR0F2aGk5Tk84Vk1Lcm5kNTFi?=
- =?utf-8?Q?h5606CkYPOS0yOX2aF2fTATsy?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5ba20bd-b861-491b-3433-08dc397d3f61
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 23:22:07.8380
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wQM+oa0zRvK1iIlxxdnvrrWETb6wNgO2eJmwwsGfeIaNZzqZ4xVEF+iIrmzGWcmdkcdZrRTUzPuDii0DPlABmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5783
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
+An IPI backend is always required in an SMP configuration, but an SBI
+implementation is not. For example, SBI will be unavailable when the
+kernel runs in M mode.
 
+Generally, IPIs are assumed to be faster than SBI calls due to the SBI
+context switch overhead. However, when SBI is used as the IPI backend,
+then the context switch cost must be paid anyway, and performing the
+cache/TLB flush directly in the SBI implementation is more efficient
+than inserting an interrupt to the kernel. This is the only scenario
+where riscv_ipi_set_virq_range()'s use_for_rfence parameter is false.
 
-On 1/03/2024 12:06 pm, Sean Christopherson wrote:
-> On Fri, Mar 01, 2024, Kai Huang wrote:
->>
->>
->> On 28/02/2024 3:41 pm, Sean Christopherson wrote:
->>> WARN and skip the emulated MMIO fastpath if a private, reserved page fault
->>> is encountered, as private+reserved should be an impossible combination
->>> (KVM should never create an MMIO SPTE for a private access).
->>>
->>> Signed-off-by: Sean Christopherson <seanjc@google.com>
->>> ---
->>>    arch/x86/kvm/mmu/mmu.c | 3 ++-
->>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
->>> index bd342ebd0809..9206cfa58feb 100644
->>> --- a/arch/x86/kvm/mmu/mmu.c
->>> +++ b/arch/x86/kvm/mmu/mmu.c
->>> @@ -5866,7 +5866,8 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
->>>    		error_code |= PFERR_PRIVATE_ACCESS;
->>>    	r = RET_PF_INVALID;
->>> -	if (unlikely(error_code & PFERR_RSVD_MASK)) {
->>> +	if (unlikely((error_code & PFERR_RSVD_MASK) &&
->>> +		     !WARN_ON_ONCE(error_code & PFERR_PRIVATE_ACCESS))) {
->>>    		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
->>>    		if (r == RET_PF_EMULATE)
->>>    			goto emulate;
->>
->> It seems this will make KVM continue to call kvm_mmu_do_page_fault() when
->> such private+reserve error code actually happens (e.g., due to bug), because
->> @r is still RET_PF_INVALID in such case.
-> 
-> Yep.
-> 
->> Is it better to just return error, e.g., -EINVAL, and give up?
-> 
-> As long as there is no obvious/immediate danger to the host, no obvious way for
-> the "bad" behavior to cause data corruption for the guest, and continuing on has
-> a plausible chance of working, then KVM should generally try to continue on and
-> not terminate the VM.
+Thus, it makes sense for remote fences to use IPIs by default, and make
+the SBI remote fence extension the special case.
 
-Agreed.  But I think sometimes it is hard to tell whether there's any 
-dangerous things waiting to happen, because that means we have to sanity 
-check a lot of code, and when new patches arrive we need to keep that in 
-mind too, which could be a nightmare in terms of maintenance.
+sbi_ipi_init() already checks riscv_ipi_have_virq_range(), so it only
+calls riscv_ipi_set_virq_range() when no other IPI device is available.
+So we can move the static key and drop the use_for_rfence parameter.
 
-> 
-> E.g. in this case, KVM will just skip various fast paths because of the RSVD flag,
-> and treat the fault like a PRIVATE fault.  Hmm, but page_fault_handle_page_track()
-> would skip write tracking, which could theoretically cause data corruption, so I
-> guess arguably it would be safer to bail?
-> 
-> Anyone else have an opinion?  This type of bug should never escape development,
-> so I'm a-ok effectively killing the VM.  Unless someone has a good argument for
-> continuing on, I'll go with Kai's suggestion and squash this:
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index cedacb1b89c5..d796a162b2da 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -5892,8 +5892,10 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
->                  error_code |= PFERR_PRIVATE_ACCESS;
->   
->          r = RET_PF_INVALID;
-> -       if (unlikely((error_code & PFERR_RSVD_MASK) &&
-> -                    !WARN_ON_ONCE(error_code & PFERR_PRIVATE_ACCESS))) {
-> +       if (unlikely(error_code & PFERR_RSVD_MASK)) {
-> +               if (WARN_ON_ONCE(error_code & PFERR_PRIVATE_ACCESS))
-> +                       return -EFAULT;
+Furthermore, the static branch only makes sense when CONFIG_RISCV_SBI is
+enabled. Optherwise, IPIs must be used. Add a fallback definition of
+riscv_use_sbi_for_rfence() which handles this case and removes the need
+to check CONFIG_RISCV_SBI elsewhere, such as in cacheflush.c.
 
--EFAULT is part of guest_memfd() memory fault ABI.  I didn't think over 
-this thoroughly but do you want to return -EFAULT here?
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+---
+
+Changes in v5:
+ - Also switch to riscv_use_sbi_for_rfence() in asm/pgalloc.h
+
+Changes in v4:
+ - New patch for v4
+
+ arch/riscv/include/asm/pgalloc.h  |  7 ++++---
+ arch/riscv/include/asm/sbi.h      |  4 ++++
+ arch/riscv/include/asm/smp.h      | 15 ++-------------
+ arch/riscv/kernel/sbi-ipi.c       | 11 ++++++++++-
+ arch/riscv/kernel/smp.c           | 11 +----------
+ arch/riscv/mm/cacheflush.c        |  5 ++---
+ arch/riscv/mm/tlbflush.c          | 31 ++++++++++++++-----------------
+ drivers/clocksource/timer-clint.c |  2 +-
+ 8 files changed, 38 insertions(+), 48 deletions(-)
+
+diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
+index 87468f67951a..6578054977ef 100644
+--- a/arch/riscv/include/asm/pgalloc.h
++++ b/arch/riscv/include/asm/pgalloc.h
+@@ -8,6 +8,7 @@
+ #define _ASM_RISCV_PGALLOC_H
+ 
+ #include <linux/mm.h>
++#include <asm/sbi.h>
+ #include <asm/tlb.h>
+ 
+ #ifdef CONFIG_MMU
+@@ -90,10 +91,10 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long addr)
+ 
+ static inline void riscv_tlb_remove_ptdesc(struct mmu_gather *tlb, void *pt)
+ {
+-	if (riscv_use_ipi_for_rfence())
+-		tlb_remove_page_ptdesc(tlb, pt);
+-	else
++	if (riscv_use_sbi_for_rfence())
+ 		tlb_remove_ptdesc(tlb, pt);
++	else
++		tlb_remove_page_ptdesc(tlb, pt);
+ }
+ 
+ #define pud_free pud_free
+diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+index 6e68f8dff76b..ea84392ca9d7 100644
+--- a/arch/riscv/include/asm/sbi.h
++++ b/arch/riscv/include/asm/sbi.h
+@@ -375,8 +375,12 @@ unsigned long riscv_cached_marchid(unsigned int cpu_id);
+ unsigned long riscv_cached_mimpid(unsigned int cpu_id);
+ 
+ #if IS_ENABLED(CONFIG_SMP) && IS_ENABLED(CONFIG_RISCV_SBI)
++DECLARE_STATIC_KEY_FALSE(riscv_sbi_for_rfence);
++#define riscv_use_sbi_for_rfence() \
++	static_branch_unlikely(&riscv_sbi_for_rfence)
+ void sbi_ipi_init(void);
+ #else
++static inline bool riscv_use_sbi_for_rfence(void) { return false; }
+ static inline void sbi_ipi_init(void) { }
+ #endif
+ 
+diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+index 0d555847cde6..7ac80e9f2288 100644
+--- a/arch/riscv/include/asm/smp.h
++++ b/arch/riscv/include/asm/smp.h
+@@ -49,12 +49,7 @@ void riscv_ipi_disable(void);
+ bool riscv_ipi_have_virq_range(void);
+ 
+ /* Set the IPI interrupt numbers for arch (called by irqchip drivers) */
+-void riscv_ipi_set_virq_range(int virq, int nr, bool use_for_rfence);
+-
+-/* Check if we can use IPIs for remote FENCEs */
+-DECLARE_STATIC_KEY_FALSE(riscv_ipi_for_rfence);
+-#define riscv_use_ipi_for_rfence() \
+-	static_branch_unlikely(&riscv_ipi_for_rfence)
++void riscv_ipi_set_virq_range(int virq, int nr);
+ 
+ /* Check other CPUs stop or not */
+ bool smp_crash_stop_failed(void);
+@@ -104,16 +99,10 @@ static inline bool riscv_ipi_have_virq_range(void)
+ 	return false;
+ }
+ 
+-static inline void riscv_ipi_set_virq_range(int virq, int nr,
+-					    bool use_for_rfence)
++static inline void riscv_ipi_set_virq_range(int virq, int nr)
+ {
+ }
+ 
+-static inline bool riscv_use_ipi_for_rfence(void)
+-{
+-	return false;
+-}
+-
+ #endif /* CONFIG_SMP */
+ 
+ #if defined(CONFIG_HOTPLUG_CPU) && (CONFIG_SMP)
+diff --git a/arch/riscv/kernel/sbi-ipi.c b/arch/riscv/kernel/sbi-ipi.c
+index a4559695ce62..1026e22955cc 100644
+--- a/arch/riscv/kernel/sbi-ipi.c
++++ b/arch/riscv/kernel/sbi-ipi.c
+@@ -13,6 +13,9 @@
+ #include <linux/irqdomain.h>
+ #include <asm/sbi.h>
+ 
++DEFINE_STATIC_KEY_FALSE(riscv_sbi_for_rfence);
++EXPORT_SYMBOL_GPL(riscv_sbi_for_rfence);
++
+ static int sbi_ipi_virq;
+ 
+ static void sbi_ipi_handle(struct irq_desc *desc)
+@@ -72,6 +75,12 @@ void __init sbi_ipi_init(void)
+ 			  "irqchip/sbi-ipi:starting",
+ 			  sbi_ipi_starting_cpu, NULL);
+ 
+-	riscv_ipi_set_virq_range(virq, BITS_PER_BYTE, false);
++	riscv_ipi_set_virq_range(virq, BITS_PER_BYTE);
+ 	pr_info("providing IPIs using SBI IPI extension\n");
++
++	/*
++	 * Use the SBI remote fence extension to avoid
++	 * the extra context switch needed to handle IPIs.
++	 */
++	static_branch_enable(&riscv_sbi_for_rfence);
+ }
+diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+index 45dd4035416e..8e6eb64459af 100644
+--- a/arch/riscv/kernel/smp.c
++++ b/arch/riscv/kernel/smp.c
+@@ -171,10 +171,7 @@ bool riscv_ipi_have_virq_range(void)
+ 	return (ipi_virq_base) ? true : false;
+ }
+ 
+-DEFINE_STATIC_KEY_FALSE(riscv_ipi_for_rfence);
+-EXPORT_SYMBOL_GPL(riscv_ipi_for_rfence);
+-
+-void riscv_ipi_set_virq_range(int virq, int nr, bool use_for_rfence)
++void riscv_ipi_set_virq_range(int virq, int nr)
+ {
+ 	int i, err;
+ 
+@@ -197,12 +194,6 @@ void riscv_ipi_set_virq_range(int virq, int nr, bool use_for_rfence)
+ 
+ 	/* Enabled IPIs for boot CPU immediately */
+ 	riscv_ipi_enable();
+-
+-	/* Update RFENCE static key */
+-	if (use_for_rfence)
+-		static_branch_enable(&riscv_ipi_for_rfence);
+-	else
+-		static_branch_disable(&riscv_ipi_for_rfence);
+ }
+ 
+ static const char * const ipi_names[] = {
+diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+index 55a34f2020a8..47c485bc7df0 100644
+--- a/arch/riscv/mm/cacheflush.c
++++ b/arch/riscv/mm/cacheflush.c
+@@ -21,7 +21,7 @@ void flush_icache_all(void)
+ {
+ 	local_flush_icache_all();
+ 
+-	if (IS_ENABLED(CONFIG_RISCV_SBI) && !riscv_use_ipi_for_rfence())
++	if (riscv_use_sbi_for_rfence())
+ 		sbi_remote_fence_i(NULL);
+ 	else
+ 		on_each_cpu(ipi_remote_fence_i, NULL, 1);
+@@ -69,8 +69,7 @@ void flush_icache_mm(struct mm_struct *mm, bool local)
+ 		 * with flush_icache_deferred().
+ 		 */
+ 		smp_mb();
+-	} else if (IS_ENABLED(CONFIG_RISCV_SBI) &&
+-		   !riscv_use_ipi_for_rfence()) {
++	} else if (riscv_use_sbi_for_rfence()) {
+ 		sbi_remote_fence_i(&others);
+ 	} else {
+ 		on_each_cpu_mask(&others, ipi_remote_fence_i, NULL, 1);
+diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+index 8d12b26f5ac3..0373661bd1c4 100644
+--- a/arch/riscv/mm/tlbflush.c
++++ b/arch/riscv/mm/tlbflush.c
+@@ -78,10 +78,10 @@ static void __ipi_flush_tlb_all(void *info)
+ 
+ void flush_tlb_all(void)
+ {
+-	if (riscv_use_ipi_for_rfence())
+-		on_each_cpu(__ipi_flush_tlb_all, NULL, 1);
+-	else
++	if (riscv_use_sbi_for_rfence())
+ 		sbi_remote_sfence_vma_asid(NULL, 0, FLUSH_TLB_MAX_SIZE, FLUSH_TLB_NO_ASID);
++	else
++		on_each_cpu(__ipi_flush_tlb_all, NULL, 1);
+ }
+ 
+ struct flush_tlb_range_data {
+@@ -102,7 +102,6 @@ static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
+ 			      unsigned long start, unsigned long size,
+ 			      unsigned long stride)
+ {
+-	struct flush_tlb_range_data ftd;
+ 	bool broadcast;
+ 
+ 	if (cpumask_empty(cmask))
+@@ -118,20 +117,18 @@ static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
+ 		broadcast = true;
+ 	}
+ 
+-	if (broadcast) {
+-		if (riscv_use_ipi_for_rfence()) {
+-			ftd.asid = asid;
+-			ftd.start = start;
+-			ftd.size = size;
+-			ftd.stride = stride;
+-			on_each_cpu_mask(cmask,
+-					 __ipi_flush_tlb_range_asid,
+-					 &ftd, 1);
+-		} else
+-			sbi_remote_sfence_vma_asid(cmask,
+-						   start, size, asid);
+-	} else {
++	if (!broadcast) {
+ 		local_flush_tlb_range_asid(start, size, stride, asid);
++	} else if (riscv_use_sbi_for_rfence()) {
++		sbi_remote_sfence_vma_asid(cmask, start, size, asid);
++	} else {
++		struct flush_tlb_range_data ftd;
++
++		ftd.asid = asid;
++		ftd.start = start;
++		ftd.size = size;
++		ftd.stride = stride;
++		on_each_cpu_mask(cmask, __ipi_flush_tlb_range_asid, &ftd, 1);
+ 	}
+ 
+ 	if (cmask != cpu_online_mask)
+diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
+index 09fd292eb83d..0bdd9d7ec545 100644
+--- a/drivers/clocksource/timer-clint.c
++++ b/drivers/clocksource/timer-clint.c
+@@ -251,7 +251,7 @@ static int __init clint_timer_init_dt(struct device_node *np)
+ 	}
+ 
+ 	irq_set_chained_handler(clint_ipi_irq, clint_ipi_interrupt);
+-	riscv_ipi_set_virq_range(rc, BITS_PER_BYTE, true);
++	riscv_ipi_set_virq_range(rc, BITS_PER_BYTE);
+ 	clint_clear_ipi();
+ #endif
+ 
+-- 
+2.43.1
+
