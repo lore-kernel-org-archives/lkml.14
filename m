@@ -1,139 +1,72 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C97574BEA
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FB316FF21
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 23:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.18.0.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709248015; cv=none; b=O3B+1w//MiQnnjgyRLuCa627MJLFSIZGKrmiqBm+6hK1PzQl+fF9a0SkMFUpntWlrHkjjqYu+ZsXjBqR92LqRulEdL3LqYb37FU2bCVZB6wWBJ7Lv2TklO7M0/D6ViDqsmFltfFu3eutl8yagNtgVagRVSLKmT61hKbnFLV54Q4=
+	t=1709248079; cv=none; b=GDDQ6rz7CwknQTG1a39Ot3efxt3EWDbA5f9nlNs+yOoP506oQu4YU4ftVR63cNcm9BO/uGePJDbtCSJSTn/NCpY45IA9HBlYDpyxBB23SMiq3aA4fWqxUqjD6pGKqy71mgaDUWDA/LmGlKWT2FxeXuJdJpGmp0EzEifVRFolrmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709248015; c=relaxed/simple;
-	bh=xlv4BCWUd+xW1oov75VPMIAgTQnOq8HdvUJUz5cAOE0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pKvBJcjgdYN7Bo/dFSPI5txypoJOE+OsfpJfKiZw9S+eLBeecCkqBYyC3tM6dq7BpV9+/ynsSyueaZH8kEYs1U4iShpfdQoIB1scZL7d4h6XSpo9Q9jV5DCrWvv574BPwVaztmn74yTPI1t8Uh5DcE6glMCVsP9EMygXo3sSV1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vmzF74//; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vmzF74//"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6e5588db705so1210362b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 15:06:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709248012; x=1709852812; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aDSHqiXfNKpfl7COydQUrDyx9a3y4hCYnPwB57HeAq4=;
-        b=vmzF74//eEnu3FEZLvDTrbaKWrHKwN7zPUve1BN473bFERGEAiIRRD+OhFE7prwF6S
-         TG9eusVU4Dy3O0jkT89W+9V8w+EiIK5SwoOPH3CamhnPFItXpwCxl5HbxvWExFK1z0DK
-         oa5PV9w9iwPmnZhzZL1BndkUIy5I2grBHyNasg//eux/xH8uNx3XVmkWFJGcYo9B3Efq
-         t2p03mOEsi/l4goNKK6l8cyYiZLFHQDKq1LWSOEIcZtz922m8nRIqaqcoVzEr7LDmKSM
-         k77mt0qF/YSp+Evm/BhxLhp/KaPd3phOGzOrUAV0YadS8o2Uow0yxDoyPa4RSf4bwJ9Q
-         QmPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709248012; x=1709852812;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aDSHqiXfNKpfl7COydQUrDyx9a3y4hCYnPwB57HeAq4=;
-        b=IRDtVr//jMAmvOFmanq+a8NOqYbASB6Y8+tP6gdsFdvOqso4tiSl0/NntgAbNGeHKU
-         WlVcykDFnvdUO16O7eNJkhLIosNy3X9uvsyouajHcZpxP7vdyTaB0ZQIgvNK0MauaKmK
-         ieic4ASaUMEKUgTen/g6eqbhREgFNY88F2r9yoexWAjV+H3mcF6a9RhBHS4Fs6PiLME7
-         p7h6SGHmbUAo03GJ2cDP2UCTucSYCl3UmZGh8vgqVUKcMUovLRL/BJkE5O5ZwZw7tNvw
-         /YUWbW86w/pSs5dgOPzLbTwPbnVUmxQOBb5WkeXMhI4vV13KeMELfnMV3Dxc2PXduekp
-         3BAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYvsflwWryxw1XcHxPsNBq5o/wQYCdreN8OwqVXJX7hmfMwHejJrpKMtA1nMmIIjJZR4kjfjuL6SCCkErgN/BRPRCVDWWm2hujxnXz
-X-Gm-Message-State: AOJu0YyohJ1Z3dvI/1nnrdEir6SYuN3z7dnpVwITWOZWyhfTTgBU4rPI
-	VDHsg39jkkqMaXma/sX0SPfusPSCMTkpZl4u2bZYVl22s+jK9mW8fJ548Q01MYvUyuTVhLBZuE7
-	+PA==
-X-Google-Smtp-Source: AGHT+IGyOJM16ooLf22gCZwTXPwwrqBH5Gu9wh/XTg/dFAQ9ybGaCE2NIcDjGHVD/eYJmV6aRvTArFW5Iac=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:2d09:b0:6e5:4142:ea1c with SMTP id
- fa9-20020a056a002d0900b006e54142ea1cmr4589pfb.3.1709248012512; Thu, 29 Feb
- 2024 15:06:52 -0800 (PST)
-Date: Thu, 29 Feb 2024 15:06:51 -0800
-In-Reply-To: <2237d6b1-1c90-4acd-99e9-f051556dd6ac@intel.com>
+	s=arc-20240116; t=1709248079; c=relaxed/simple;
+	bh=uwE3qinU29HK8e2RgqhGzA+W9OmNW5zKCwr4ho/GjVQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cCHMJv0oV9kTww2pEVNoHJPio5p2KutVULtaxOdZEUIsjxorVcoLeOaS8k1E0D2sDEQPv/uxfuMhJJ3haG3Fq+bhCkZ2dPVbP9xhroHmPwhWsVb0+H5iHn2AXW3NumZXwJzXx/a2mo+Xja0D1Wu/wyotNfgfQEfcmbvVG06V1K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=nefkom.net; arc=none smtp.client-ip=212.18.0.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nefkom.net
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 4Tm6M80V3fz1qsP8;
+	Fri,  1 Mar 2024 00:07:48 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.68])
+	by mail.m-online.net (Postfix) with ESMTP id 4Tm6M767qtz1qqlS;
+	Fri,  1 Mar 2024 00:07:47 +0100 (CET)
+X-Virus-Scanned: amavis at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+ by localhost (dynscan1.mail.m-online.net [192.168.6.68]) (amavis, port 10024)
+ with ESMTP id SQwoWJyaYmti; Fri,  1 Mar 2024 00:07:46 +0100 (CET)
+X-Auth-Info: 0rf1pMZMaomnnOVa7F8O7s3fTttPJcBoMnGsi6T23JBpz/xoMlnPhCvkNDopI+pr
+Received: from igel.home (aftr-62-216-202-139.dynamic.mnet-online.de [62.216.202.139])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Fri,  1 Mar 2024 00:07:46 +0100 (CET)
+Received: by igel.home (Postfix, from userid 1000)
+	id 904FE2C1A2A; Fri,  1 Mar 2024 00:07:46 +0100 (CET)
+From: Andreas Schwab <schwab@linux-m68k.org>
+To: David Laight <David.Laight@ACULAB.COM>
+Cc: 'Guenter Roeck' <linux@roeck-us.net>,  Geert Uytterhoeven
+ <geert@linux-m68k.org>,  Linus Torvalds <torvalds@linux-foundation.org>,
+  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,  Kees Cook
+ <keescook@chromium.org>,  linux-m68k <linux-m68k@lists.linux-m68k.org>
+Subject: Re: Linux 6.8-rc6
+In-Reply-To: <b4fa177d6fcc42deb7db0dc0f9d36fe2@AcuMS.aculab.com> (David
+	Laight's message of "Thu, 29 Feb 2024 22:19:20 +0000")
+References: <CAHk-=whZ=iA6DhijePcW-pJjZ8YD4T5qLpLKVSUT+4gWNm_0sA@mail.gmail.com>
+	<6bb3f88b-bf57-442a-8b46-cb4784dd4cab@roeck-us.net>
+	<CAMuHMdVYjw9CEBUzxuJ-10wudK_mvJZgqP3gR4kuv-FDYBZ-Aw@mail.gmail.com>
+	<8403d8e3-c8ac-476b-8b8e-2c8b6ed8f464@roeck-us.net>
+	<b4fa177d6fcc42deb7db0dc0f9d36fe2@AcuMS.aculab.com>
+X-Yow: Yes, but will I see the EASTER BUNNY in skintight leather
+ at an IRON MAIDEN concert?
+Date: Fri, 01 Mar 2024 00:07:46 +0100
+Message-ID: <87o7byeunx.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240228024147.41573-1-seanjc@google.com> <20240228024147.41573-9-seanjc@google.com>
- <2237d6b1-1c90-4acd-99e9-f051556dd6ac@intel.com>
-Message-ID: <ZeEOC0mo8C4GL708@google.com>
-Subject: Re: [PATCH 08/16] KVM: x86/mmu: WARN and skip MMIO cache on private,
- reserved page faults
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Yan Zhao <yan.y.zhao@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	Michael Roth <michael.roth@amd.com>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
-	Chao Peng <chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>, 
-	David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Fri, Mar 01, 2024, Kai Huang wrote:
-> 
-> 
-> On 28/02/2024 3:41 pm, Sean Christopherson wrote:
-> > WARN and skip the emulated MMIO fastpath if a private, reserved page fault
-> > is encountered, as private+reserved should be an impossible combination
-> > (KVM should never create an MMIO SPTE for a private access).
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >   arch/x86/kvm/mmu/mmu.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index bd342ebd0809..9206cfa58feb 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -5866,7 +5866,8 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
-> >   		error_code |= PFERR_PRIVATE_ACCESS;
-> >   	r = RET_PF_INVALID;
-> > -	if (unlikely(error_code & PFERR_RSVD_MASK)) {
-> > +	if (unlikely((error_code & PFERR_RSVD_MASK) &&
-> > +		     !WARN_ON_ONCE(error_code & PFERR_PRIVATE_ACCESS))) {
-> >   		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
-> >   		if (r == RET_PF_EMULATE)
-> >   			goto emulate;
-> 
-> It seems this will make KVM continue to call kvm_mmu_do_page_fault() when
-> such private+reserve error code actually happens (e.g., due to bug), because
-> @r is still RET_PF_INVALID in such case.
+On Feb 29 2024, David Laight wrote:
 
-Yep.
+> Maybe because m68k only has 2 byte alignment for 32 bit items.
 
-> Is it better to just return error, e.g., -EINVAL, and give up?
+Nope.  Its simply undefined behavior.
 
-As long as there is no obvious/immediate danger to the host, no obvious way for
-the "bad" behavior to cause data corruption for the guest, and continuing on has
-a plausible chance of working, then KVM should generally try to continue on and
-not terminate the VM.
-
-E.g. in this case, KVM will just skip various fast paths because of the RSVD flag,
-and treat the fault like a PRIVATE fault.  Hmm, but page_fault_handle_page_track()
-would skip write tracking, which could theoretically cause data corruption, so I
-guess arguably it would be safer to bail?
-
-Anyone else have an opinion?  This type of bug should never escape development,
-so I'm a-ok effectively killing the VM.  Unless someone has a good argument for
-continuing on, I'll go with Kai's suggestion and squash this:
-
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index cedacb1b89c5..d796a162b2da 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5892,8 +5892,10 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
-                error_code |= PFERR_PRIVATE_ACCESS;
- 
-        r = RET_PF_INVALID;
--       if (unlikely((error_code & PFERR_RSVD_MASK) &&
--                    !WARN_ON_ONCE(error_code & PFERR_PRIVATE_ACCESS))) {
-+       if (unlikely(error_code & PFERR_RSVD_MASK)) {
-+               if (WARN_ON_ONCE(error_code & PFERR_PRIVATE_ACCESS))
-+                       return -EFAULT;
-+
-                r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
-                if (r == RET_PF_EMULATE)
-                        goto emulate;
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
