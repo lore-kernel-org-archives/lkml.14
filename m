@@ -1,156 +1,201 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB1B383B0
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 16:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A75C5B1E7
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 16:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709225875; cv=none; b=Im8/i9UQX/X65DsCLQY8pii/8EsdIjmwn1XmVWobfau3XqetFvahUFvEvqbDhh7HstFEMiPkC1f1/lVjtty6pCBBUjiu/A7bf1L7lsmu7EP9UP60IT0YVHV8ZUVmM60diWYW2yT1Bmvlp73zfPd0b1CENLPoUb/B1LdoOQ1n4cI=
+	t=1709225914; cv=none; b=SpkewvW7UIbhDsraRSwMPLsuoMaAjeo/7xbFJK5c8CeS1dvKZhZQ251Kyp7ERvcG6PChZElT2hnnl/MSODIsQ2TmJzIwLPpyYCu3hHU5O35EjkhtZwetal8heyEW/ajqyq/RW6ew5sA2FFlsa/V3G98/W7fA8eRmb0fSSA/qaG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709225875; c=relaxed/simple;
-	bh=/iw69Wo9b7FEqCXecpxEQgFw9ugs5Mjc606tFUFxMt8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rnvmqiQQTpzb/mqQyL4+sIKiPm4RvIS8abYv5S4C1sV75uJQhtEA0aJLNfm+tUg+FuaXLY+4X/wlPn3GOkWU3ZulllovUg5VIcBKgIh+RIoWvGBYnk4cxHQ6oMrR/pAf96sXHk75+Ngt8HhfOihaJgRS7ID23CpyeKH7ra+ezyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Lo3xB0/m; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1709225914; c=relaxed/simple;
+	bh=rLcg+QFxMO4tfDr/Ll/BSdaEnJ9/peAnLuEhE/ktC7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fWqdFbo+/cLSX0jgFT1vFN45Wg+23461tRS41RLkboTw10Qtz/s8x5LRQbwQst4YQk7v/NOjNmMNLos3slABSziUfT9Rdt0USfZDN3nViT9t4ZwlUFuvEMApLcv8opk7MhGVK79m34ArKgXz4ysaLNHjEAnvIeucqp3TsiGvr/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=g939HP+w; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lo3xB0/m"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-21f70f72fb5so740200fac.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:57:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="g939HP+w"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5132010e5d1so1242975e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:58:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709225872; x=1709830672; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wIQGu3rSrz7XnTQlEMgB0HP/EAY1ehgeyK1F+l2GXOk=;
-        b=Lo3xB0/mbu8XwNJlZAE8l1HGN7XzY6I2pDvnw45R8TlXt6daKh5QgOXrq5/OaoImW2
-         VRMLHnWVbA9m7rDnbnFnRdC0dbMXMdADCqFEbktBCn62t4d5aqqS9au8ToKpP4mOOJpR
-         +j6qF4GcT6XhxoZdLmu27SXm62q80Q+RENhrc=
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1709225909; x=1709830709; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UHaD3gz7UZ3gDZtHuuClG/CvFKBpOvfiky+iLvUCPh8=;
+        b=g939HP+wEJ9s1s1koAiQhg0iR/44hT9HPXk4d8pFUXvBZNXRQK2q8BpdowxPIwEUWx
+         RP4XRhtnmnv38B9ZI9xQh1fxEvKJ6s/aFZNOnFn1wdOkkMbuqROwXBAwmTo9I9Uh5Qf7
+         d5RUGAUNb9Ctn44KfUWxTb7durLpJOf4tZRmFIUrMqwxpnoS6bvC4KseflC9ezXrEMI2
+         gDYc0cQX+JWwLcbRs6cWIbr6nAsI6GyNEOxfbjESqkbUFjMUnEjV12DB0OApXJn8T0QT
+         6qggi+PiBbkGK1Nh3uABH/97hQRGfyeuT8ThLR41CtiQNPKBKO36qPES7EKlOcVvg9Gl
+         d3TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709225872; x=1709830672;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wIQGu3rSrz7XnTQlEMgB0HP/EAY1ehgeyK1F+l2GXOk=;
-        b=jS9MEUN9v9pjrV4PAGdPfX/3kJQaU0rQhx2eCLpBXhO266ijjmzSsqmMs1ye4EGQJs
-         o+71u7sFiNeFWz90/uhOSgNQltVxyNLa8Vpy8siJJaApLyERa5spoxHogK80Zuu3EqRZ
-         5sEEQB5QgwmHrw32qXl5FXDKfzRextsgnayKQ6TwSlabPGm7416hEar8r4F129KzPi/0
-         vYi84PGK7TUzuOCVdDFTvbWvDVKdcPdwkIkyeXeflDFr5p+b8aA5LZ/HmZaoUl+RW9nV
-         EotlFsttZhJjk8w3+gPdA5K3whPzu+4YLLvDCBrEt0iGIeePHJRQMB9ryuYdM1s8ayaD
-         B3tw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjfcpf2ClIy84Y08f8UHO5plA/kiMBJNnssbDj88m1lbN89g9L9eNI9LghpSDXEjHPmj3pV4Wydmxe3+1m5cvDiIR7WORuaOiqpyzF
-X-Gm-Message-State: AOJu0YzJ/pnMfPLHxuS+UUCiRgqQ5JFZyWoEUF3wmopz7PJ2gzQBW3tc
-	fvHwFSYxdXIJxh79oDGaO6OKKUtso+FwLJiyStPElVk2fCdKKSY25AJ9DglJVVMATaokNe4By5E
-	=
-X-Google-Smtp-Source: AGHT+IGtoG6eCWdb0ME4nP9hi74TBkowKp2OcBTqB4fk0pvmFmvWS3DIy1fSHSlpIJ/Ufz8Uz5G1yw==
-X-Received: by 2002:a05:6870:9d10:b0:220:8989:2ab9 with SMTP id pp16-20020a0568709d1000b0022089892ab9mr3052588oab.13.1709225872457;
-        Thu, 29 Feb 2024 08:57:52 -0800 (PST)
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com. [209.85.161.47])
-        by smtp.gmail.com with ESMTPSA id ns7-20020a056870ac8700b00220a0b057f4sm223561oab.10.2024.02.29.08.57.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Feb 2024 08:57:52 -0800 (PST)
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5a05923b689so445932eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 08:57:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW7+9LpHCYCK1E090LvTDB7xpdY/h5P7HDkfODI221GduCU5BzJWYomVR5XrpoiE5aMTY7kdRG71+qb2HErQBjWyBVGXCGGEpAChiw+
-X-Received: by 2002:a05:6358:441e:b0:17b:5c4b:90a with SMTP id
- z30-20020a056358441e00b0017b5c4b090amr3320345rwc.5.1709225871313; Thu, 29 Feb
- 2024 08:57:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709225909; x=1709830709;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UHaD3gz7UZ3gDZtHuuClG/CvFKBpOvfiky+iLvUCPh8=;
+        b=q6GoWMkI4BcuDbeQoNakVKmpWV2vANbb1/fuYLfGPPS5kB4YyeoTlFHZJ7reH8wrEm
+         UVVs/znk8Cc9oG/YY09megi9qPHkQ188QoWneojNGxDcjG3kigyEn9CytRJRyZGmz2cl
+         WvRUeavACzGE7q37bqWEMZX6mxffa5QBCqCGnEgXKxbbJXZu+7oWH0MJJgr6SL1hVVRa
+         1fqdF4nv/5PP+Qlrn+Sr1rBMClpCVWf+hlVOu2+kPYH91kVd7WuJG5bbEvDG53XbeDLs
+         Nb2iQs/S6guLumIGWxEiQ1edSevmWTwOXPSJPYUPRSu5e+ISPxT2FyOqEJ9T2G9hsjcf
+         MbrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsN/SAtMw6V0qXh7/L4Bm3K8P/NRaUgGrmTsmmtQ7t/aTAjKC4ul09L1TdZ+ovo6s+HFTLA6NU9gWJSEiZYcQIhJfEi3URZQh5bDYn
+X-Gm-Message-State: AOJu0Yww/ay1Vnug6LC3A+Zcq9BMv35/uW3TLTqMjXjID8L+Cvg6FKnz
+	4j0ZOngjMYN3I0dJJOoogzMYigIMIhgNrMFv4s9FFFalaojRVoAhVOuc31psZ10=
+X-Google-Smtp-Source: AGHT+IFS/gHlHbP8qb9npNeK/79DqgVLrHzdnFqgu0ECL5vdficQaV0eujo5UT9w6GvBSKjKWVVUqw==
+X-Received: by 2002:a05:6512:481e:b0:512:f2c5:6 with SMTP id eo30-20020a056512481e00b00512f2c50006mr1712001lfb.6.1709225908758;
+        Thu, 29 Feb 2024 08:58:28 -0800 (PST)
+Received: from localhost ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id u2-20020adfeb42000000b0033b483d1abcsm2206252wrn.53.2024.02.29.08.58.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 08:58:28 -0800 (PST)
+Date: Thu, 29 Feb 2024 17:58:25 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: syzbot <syzbot+3c47b5843403a45aef57@syzkaller.appspotmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] possible deadlock in team_port_change_check (2)
+Message-ID: <ZeC3sSwEcZSfh0fz@nanopsycho>
+References: <000000000000a97e9f061287624c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108-rallybar-v4-1-a7450641e41b@chromium.org>
- <20240204105227.GB25334@pendragon.ideasonboard.com> <ca89eb86-a566-422c-9448-d8d5254d54b8@suse.com>
- <6aade777-d97c-4c65-b542-14ce5b39abb6@rowland.harvard.edu>
- <20240213104725.GC5012@pendragon.ideasonboard.com> <CANiDSCvqEkzD_-pUExT2Aci9t_tfFPWusnjST5iF-5N9yiob4g@mail.gmail.com>
-In-Reply-To: <CANiDSCvqEkzD_-pUExT2Aci9t_tfFPWusnjST5iF-5N9yiob4g@mail.gmail.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 29 Feb 2024 17:57:38 +0100
-X-Gmail-Original-Message-ID: <CANiDSCsqER=3OqzxRKYR_vs4as5aO1bfSXmFJtNmzw1kznd_wQ@mail.gmail.com>
-Message-ID: <CANiDSCsqER=3OqzxRKYR_vs4as5aO1bfSXmFJtNmzw1kznd_wQ@mail.gmail.com>
-Subject: Re: [PATCH v4] media: ucvideo: Add quirk for Logitech Rally Bar
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Oliver Neukum <oneukum@suse.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000a97e9f061287624c@google.com>
 
-Oliver, friendly ping
+Thu, Feb 29, 2024 at 05:02:25PM CET, syzbot+3c47b5843403a45aef57@syzkaller.appspotmail.com wrote:
+>Hello,
+>
+>syzbot found the following issue on:
+>
+>HEAD commit:    2a770cdc4382 tun: Fix xdp_rxq_info's queue_index when deta..
+>git tree:       net
+>console output: https://syzkaller.appspot.com/x/log.txt?x=11bfb032180000
+>kernel config:  https://syzkaller.appspot.com/x/.config?x=eff9f3183d0a20dd
+>dashboard link: https://syzkaller.appspot.com/bug?extid=3c47b5843403a45aef57
+>compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+>
+>Unfortunately, I don't have any reproducer for this issue yet.
+>
+>Downloadable assets:
+>disk image: https://storage.googleapis.com/syzbot-assets/54ceb0944449/disk-2a770cdc.raw.xz
+>vmlinux: https://storage.googleapis.com/syzbot-assets/69b79e7b7a86/vmlinux-2a770cdc.xz
+>kernel image: https://storage.googleapis.com/syzbot-assets/dedbc599c2f7/bzImage-2a770cdc.xz
+>
+>IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>Reported-by: syzbot+3c47b5843403a45aef57@syzkaller.appspotmail.com
+>
+>============================================
+>WARNING: possible recursive locking detected
+>6.8.0-rc5-syzkaller-00129-g2a770cdc4382 #0 Not tainted
+>--------------------------------------------
+>syz-executor.1/20275 is trying to acquire lock:
+>ffff888045338d00 (team->team_lock_key#2){+.+.}-{3:3}, at: team_port_change_check+0x51/0x1e0 drivers/net/team/team.c:2997
+>
+>but task is already holding lock:
+>ffff888045338d00 (team->team_lock_key#2){+.+.}-{3:3}, at: team_add_slave+0xad/0x2750 drivers/net/team/team.c:1974
+>
+>other info that might help us debug this:
+> Possible unsafe locking scenario:
+>
+>       CPU0
+>       ----
+>  lock(team->team_lock_key#2);
+>  lock(team->team_lock_key#2);
+>
+> *** DEADLOCK ***
+>
+> May be due to missing lock nesting notation
+>
+>2 locks held by syz-executor.1/20275:
+> #0: ffffffff8f3759c8 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
+> #0: ffffffff8f3759c8 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x82c/0x1040 net/core/rtnetlink.c:6615
+> #1: ffff888045338d00 (team->team_lock_key#2){+.+.}-{3:3}, at: team_add_slave+0xad/0x2750 drivers/net/team/team.c:1974
 
-On Mon, 19 Feb 2024 at 16:13, Ricardo Ribalda <ribalda@chromium.org> wrote:
->
-> Hi Oliver
->
-> Would you prefer a version like this?
->
-> https://lore.kernel.org/all/20231222-rallybar-v2-1-5849d62a9514@chromium.org/
->
-> If so I can re-submit a version with the 3 vid/pids.  Alan, would you
-> be happy with that?
->
-> Regards!
->
-> On Tue, 13 Feb 2024 at 11:47, Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > On Mon, Feb 12, 2024 at 02:04:31PM -0500, Alan Stern wrote:
-> > > On Mon, Feb 12, 2024 at 01:22:42PM +0100, Oliver Neukum wrote:
-> > > > On 04.02.24 11:52, Laurent Pinchart wrote:
-> > > > > Hi Ricardo,
-> > > > >
-> > > > > Thank you for the patch.
-> > > >
-> > > > Hi,
-> > > >
-> > > > sorry for commenting on this late, but this patch has
-> > > > a fundamental issue. In fact this issue is the reason the
-> > > > handling for quirks is in usbcore at all.
-> > > >
-> > > > If you leave the setting/clearing of this flag to a driver you
-> > > > are introducing a race condition. The driver may or may not be
-> > > > present at the time a device is enumerated. And you have
-> > > > no idea how long the autosuspend delay is on a system
-> > > > and what its default policy is regarding suspending
-> > > > devices.
-> > > > That means that a device can have been suspended and
-> > > > resumed before it is probed. On a device that needs
-> > > > RESET_RESUME, we are in trouble.
-> > >
-> > > Not necessarily.  If the driver knows that one of these devices may
-> > > already have been suspend and resumed, it can issue its own preemptive
-> > > reset at probe time.
-> > >
-> > > > The inverse issue will arise if a device does not react
-> > > > well to RESET_RESUME. You cannot rule out that a device
-> > > > that must not be reset will be reset.
-> > >
-> > > That's a separate issue, with its own list of potential problems.
-> > >
-> > > > I am sorry, but it seems to me that the exceptions need
-> > > > to go into usbcore.
-> > >
-> > > If we do then we may want to come up with a better scheme for seeing
-> > > which devices need to have a quirk flag set.  A static listing probably
-> > > won't be good enough; the decision may have to be made dynamically.
-> >
-> > I don't mind either way personally. Oliver, could you try to find a good
-> > solution with Ricardo ? I'll merge the outcome.
-> >
-> > --
-> > Regards,
-> >
-> > Laurent Pinchart
->
->
->
-> --
-> Ricardo Ribalda
+Interesting. Looks like syscaller is adding netdev to team when the vlan
+on the same netdev is enslaved in the same team. In real life, does not
+make any sense at all. Will try to fix this deadlock tomorrow.
 
 
-
--- 
-Ricardo Ribalda
+>
+>stack backtrace:
+>CPU: 0 PID: 20275 Comm: syz-executor.1 Not tainted 6.8.0-rc5-syzkaller-00129-g2a770cdc4382 #0
+>Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+>Call Trace:
+> <TASK>
+> __dump_stack lib/dump_stack.c:88 [inline]
+> dump_stack_lvl+0x1e7/0x2e0 lib/dump_stack.c:106
+> check_deadlock kernel/locking/lockdep.c:3062 [inline]
+> validate_chain+0x15c0/0x58e0 kernel/locking/lockdep.c:3856
+> __lock_acquire+0x1345/0x1fd0 kernel/locking/lockdep.c:5137
+> lock_acquire+0x1e3/0x530 kernel/locking/lockdep.c:5754
+> __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+> __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
+> team_port_change_check+0x51/0x1e0 drivers/net/team/team.c:2997
+> team_device_event+0x161/0x5b0 drivers/net/team/team.c:3023
+> notifier_call_chain+0x18f/0x3b0 kernel/notifier.c:93
+> call_netdevice_notifiers_extack net/core/dev.c:2004 [inline]
+> call_netdevice_notifiers net/core/dev.c:2018 [inline]
+> dev_close_many+0x33c/0x4c0 net/core/dev.c:1559
+> vlan_device_event+0x18b7/0x1de0 net/8021q/vlan.c:449
+> notifier_call_chain+0x18f/0x3b0 kernel/notifier.c:93
+> call_netdevice_notifiers_extack net/core/dev.c:2004 [inline]
+> call_netdevice_notifiers net/core/dev.c:2018 [inline]
+> dev_close_many+0x33c/0x4c0 net/core/dev.c:1559
+> dev_close+0x1c0/0x2c0 net/core/dev.c:1581
+> team_port_add drivers/net/team/team.c:1312 [inline]
+> team_add_slave+0x1aef/0x2750 drivers/net/team/team.c:1975
+> do_set_master net/core/rtnetlink.c:2707 [inline]
+> do_setlink+0xe58/0x41c0 net/core/rtnetlink.c:2913
+> rtnl_setlink+0x40d/0x5a0 net/core/rtnetlink.c:3209
+> rtnetlink_rcv_msg+0x885/0x1040 net/core/rtnetlink.c:6618
+> netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+> netlink_unicast_kernel net/netlink/af_netlink.c:1341 [inline]
+> netlink_unicast+0x7ea/0x980 net/netlink/af_netlink.c:1367
+> netlink_sendmsg+0xa3b/0xd70 net/netlink/af_netlink.c:1908
+> sock_sendmsg_nosec net/socket.c:730 [inline]
+> __sock_sendmsg+0x221/0x270 net/socket.c:745
+> sock_write_iter+0x2dd/0x400 net/socket.c:1160
+> do_iter_readv_writev+0x46c/0x640
+> vfs_writev+0x395/0xbb0 fs/read_write.c:971
+> do_writev+0x1b1/0x350 fs/read_write.c:1018
+> do_syscall_64+0xf9/0x240
+> entry_SYSCALL_64_after_hwframe+0x6f/0x77
+>RIP: 0033:0x7ff40be7dda9
+>Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+>RSP: 002b:00007ff40cb2f0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+>RAX: ffffffffffffffda RBX: 00007ff40bfabf80 RCX: 00007ff40be7dda9
+>RDX: 0000000000000001 RSI: 0000000020000400 RDI: 0000000000000003
+>RBP: 00007ff40beca47a R08: 0000000000000000 R09: 0000000000000000
+>R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+>R13: 000000000000000b R14: 00007ff40bfabf80 R15: 00007ffdeb79a408
+> </TASK>
+>
+>
+>---
+>This report is generated by a bot. It may contain errors.
+>See https://goo.gl/tpsmEJ for more information about syzbot.
+>syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+>syzbot will keep track of this issue. See:
+>https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+>If the report is already addressed, let syzbot know by replying with:
+>#syz fix: exact-commit-title
+>
+>If you want to overwrite report's subsystems, reply with:
+>#syz set subsystems: new-subsystem
+>(See the list of subsystem names on the web dashboard)
+>
+>If the report is a duplicate of another one, reply with:
+>#syz dup: exact-subject-of-another-report
+>
+>If you want to undo deduplication, reply with:
+>#syz undup
