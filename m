@@ -1,39 +1,39 @@
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DBB7E10E;
-	Thu, 29 Feb 2024 18:10:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2FD7A14B;
+	Thu, 29 Feb 2024 18:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709230262; cv=none; b=Mqty2sO5Z3/13+hVl/hpTzTCvyRNw7G4WpwvmBZaQdG8L6isdltFiVnPCW40xto7A79fIoushh3AGBbJgoSEMrt6rXKwNor4Xodl70IVvFN0PihyoKQ4Ieb1IG36QMt1nhfKl5/TI1UN7bYqQ5WQ/BIT4VI6l+88CujFX3YfJ7Y=
+	t=1709230261; cv=none; b=U2dY8kG727MyqNMUfWDnTx1qxgTzCCtH4ew1w+yMKYKYL2jVdO5f6bHvu1CBkG6AKMBbo/4k5jhSMFWZSTuwx7s7r558XGs5m/hVCzVLCoUEehOkv8IM8dIiCEDpmy2sONZM4p/IQdw/R8gfyGmwkN1cbLu0Gie9p6gT5DXra5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709230262; c=relaxed/simple;
-	bh=h+SPw0GdFvm0QNkB7z2Z691z87obygwWxn7jzpzmhYE=;
+	s=arc-20240116; t=1709230261; c=relaxed/simple;
+	bh=mP9ABIgXPEmFGqEbjqxNjXtSeS2IMK9lm00xUoVbHRI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=s6GYxf/+tIpMx8LtjkEHF1sPCGTd3x2l6iSJ7uzKQtBMuPREncibin5WBJEvz33D2lZRlMqKdC6nHkxii/Smdt+CUmZ9tdvoZTwn7rlI7uOh559ADBm76tSOA4QQuYFnQWYYcAWF8tfxcug8TN89MigNfAvZWz9nkngJcHPze0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OO3hwQ08; arc=none smtp.client-ip=217.70.183.195
+	 In-Reply-To:To:Cc; b=n336SSFiKB8tJiw9UoK8DU7VaC4ayDqgcuTYLn8xbkzWqYiPOwH4FE7zy7ISRC4jhYxVeMJ6DZkfq/OPpAXNiOB/0FU79C2iabDB2R7NZaGUKPlpHUuTbKBpLhrv4on+5lBmCpRZF5LcV5cc0BG8Yjdw5aMrMhkyyuxnRlj2fpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Cpk14BfT; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OO3hwQ08"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C8B9D6000D;
-	Thu, 29 Feb 2024 18:10:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Cpk14BfT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4D4C56000C;
+	Thu, 29 Feb 2024 18:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709230258;
+	t=1709230257;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2KjP0tKD670ot1mY6zPPbSUpgJRRflTSHBgbfRubJdc=;
-	b=OO3hwQ08HWAyapA/2XepbuagNM2zP1pxIlO8mrWqHd+LCRlzIUf0wbHfUQiX/H8vMQEJbM
-	jiK4GuNALRnuV0HyyIj8DO298cKZV8OkaW+qpDWKncMDYFKX7sR6YxzcbOV3KDyBveLnRK
-	OKpQ4huodC9QD68KyaUEAStQHGeJVkaThwKPZ8M6PQqNJOYTL4WEROfJ5wS7fr+npsb4i4
-	WHpe34vjgsngwacZrHY97OA8fz84MzK3GSdQY4PVImxhLpQSZ2KkKNjo9FnZB1SGCKsGJL
-	kjQkFVkI2ya/cdaCZZEb70771Z8cTZznf1gL2fslCYnSxwzXduerUHyUZiPp2w==
+	bh=dhbJWAePeOlXAq18CeK+BoWzpOuEusDTkmL/xbVCgow=;
+	b=Cpk14BfTCsFsOT/2tbMt0Vk1Ye2bt8g6YUDNumx8MIh2aiob7GdyK7qkaCvlqqEj2ipnIH
+	iKN6jI5I/KE/Rm/n5JZnpRrXFr6uQjlFj3l08/yZuDzSkDlEiV4WxhvamL3IUYefC9mzl5
+	Gi0EKaaGvlarxBTJ8/pJk3/woOtadfI6z/1W1j+NVIRXBPhrkCoMbx5YmDROX+R7xwYtMT
+	8I4NA4T4BJDAEFO2tD0k5liRSPVLm2qnGdrCagoYYigkgrRdQYe/wKk4asJDBnwCAO0MWL
+	biPHbX4EFuIjkoFK0C1DiRrj1X7RShSSHXFnWuxsXeKJTdtX5yUJg7sz0gkGGg==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Thu, 29 Feb 2024 19:10:56 +0100
-Subject: [PATCH v2 08/11] i2c: nomadik: fetch i2c-transfer-timeout-us
- property from devicetree
+Date: Thu, 29 Feb 2024 19:10:54 +0100
+Subject: [PATCH v2 06/11] i2c: nomadik: support short xfer timeouts using
+ waitqueue & hrtimer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240229-mbly-i2c-v2-8-b32ed18c098c@bootlin.com>
+Message-Id: <20240229-mbly-i2c-v2-6-b32ed18c098c@bootlin.com>
 References: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
 In-Reply-To: <20240229-mbly-i2c-v2-0-b32ed18c098c@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -60,44 +60,213 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Allow overriding the default timeout value (200ms) from devicetree,
-using the generic i2c-transfer-timeout-us property.
+Replace the completion by a waitqueue for synchronization from IRQ
+handler to task. For short timeouts, use hrtimers, else use timers.
+Usecase: avoid blocking the I2C bus for too long when an issue occurs.
 
-The i2c_adapter->timeout field is an unaccurate jiffies amount;
-i2c-nomadik uses hrtimers for timeouts below one jiffy.
+The threshold picked is one jiffy: if timeout is below that, use
+hrtimers. This threshold is NOT configurable.
 
+Implement behavior but do NOT change fetching of timeout. This means the
+timeout is unchanged (200ms) and the hrtimer case will never trigger.
+
+A waitqueue is used because it supports both desired timeout approaches.
+See wait_event_timeout() and wait_event_hrtimeout(). An atomic boolean
+serves as synchronization condition.
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/i2c/busses/i2c-nomadik.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-nomadik.c | 70 +++++++++++++++++++++++++++-------------
+ 1 file changed, 48 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-nomadik.c b/drivers/i2c/busses/i2c-nomadik.c
-index afd54999bbbb..2d3247979e45 100644
+index aa68ab402b10..e68b8e0d7919 100644
 --- a/drivers/i2c/busses/i2c-nomadik.c
 +++ b/drivers/i2c/busses/i2c-nomadik.c
-@@ -964,6 +964,8 @@ static const struct i2c_algorithm nmk_i2c_algo = {
- static void nmk_i2c_of_probe(struct device_node *np,
- 			     struct nmk_i2c_dev *priv)
- {
-+	u32 timeout_usecs;
+@@ -162,10 +162,11 @@ struct i2c_nmk_client {
+  * @clk_freq: clock frequency for the operation mode
+  * @tft: Tx FIFO Threshold in bytes
+  * @rft: Rx FIFO Threshold in bytes
+- * @timeout: Slave response timeout (ms)
++ * @timeout_usecs: Slave response timeout
+  * @sm: speed mode
+  * @stop: stop condition.
+- * @xfer_complete: acknowledge completion for a I2C message.
++ * @xfer_wq: xfer done wait queue.
++ * @xfer_done: xfer done boolean.
+  * @result: controller propogated result.
+  */
+ struct nmk_i2c_dev {
+@@ -179,10 +180,11 @@ struct nmk_i2c_dev {
+ 	u32				clk_freq;
+ 	unsigned char			tft;
+ 	unsigned char			rft;
+-	int				timeout;
++	int				timeout_usecs;
+ 	enum i2c_freq_mode		sm;
+ 	int				stop;
+-	struct completion		xfer_complete;
++	struct wait_queue_head		xfer_wq;
++	bool				xfer_done;
+ 	int				result;
+ };
+ 
+@@ -434,6 +436,22 @@ static void setup_i2c_controller(struct nmk_i2c_dev *priv)
+ 	writel(priv->rft, priv->virtbase + I2C_RFTR);
+ }
+ 
++static bool nmk_i2c_wait_xfer_done(struct nmk_i2c_dev *priv)
++{
++	if (priv->timeout_usecs < jiffies_to_usecs(1)) {
++		unsigned long timeout_usecs = priv->timeout_usecs;
++		ktime_t timeout = ktime_set(0, timeout_usecs * NSEC_PER_USEC);
 +
- 	/* Default to 100 kHz if no frequency is given in the node */
- 	if (of_property_read_u32(np, "clock-frequency", &priv->clk_freq))
- 		priv->clk_freq = I2C_MAX_STANDARD_MODE_FREQ;
-@@ -975,7 +977,12 @@ static void nmk_i2c_of_probe(struct device_node *np,
++		wait_event_hrtimeout(priv->xfer_wq, priv->xfer_done, timeout);
++	} else {
++		unsigned long timeout = usecs_to_jiffies(priv->timeout_usecs);
++
++		wait_event_timeout(priv->xfer_wq, priv->xfer_done, timeout);
++	}
++
++	return priv->xfer_done;
++}
++
+ /**
+  * read_i2c() - Read from I2C client device
+  * @priv: private data of I2C Driver
+@@ -445,9 +463,9 @@ static void setup_i2c_controller(struct nmk_i2c_dev *priv)
+  */
+ static int read_i2c(struct nmk_i2c_dev *priv, u16 flags)
+ {
+-	int status = 0;
+ 	u32 mcr, irq_mask;
+-	unsigned long timeout;
++	int status = 0;
++	bool xfer_done;
+ 
+ 	mcr = load_i2c_mcr_reg(priv, flags);
+ 	writel(mcr, priv->virtbase + I2C_MCR);
+@@ -459,7 +477,8 @@ static int read_i2c(struct nmk_i2c_dev *priv, u16 flags)
+ 	/* enable the controller */
+ 	i2c_set_bit(priv->virtbase + I2C_CR, I2C_CR_PE);
+ 
+-	init_completion(&priv->xfer_complete);
++	init_waitqueue_head(&priv->xfer_wq);
++	priv->xfer_done = false;
+ 
+ 	/* enable interrupts by setting the mask */
+ 	irq_mask = (I2C_IT_RXFNF | I2C_IT_RXFF |
+@@ -475,10 +494,9 @@ static int read_i2c(struct nmk_i2c_dev *priv, u16 flags)
+ 	writel(readl(priv->virtbase + I2C_IMSCR) | irq_mask,
+ 	       priv->virtbase + I2C_IMSCR);
+ 
+-	timeout = wait_for_completion_timeout(
+-		&priv->xfer_complete, priv->adap.timeout);
++	xfer_done = nmk_i2c_wait_xfer_done(priv);
+ 
+-	if (timeout == 0) {
++	if (!xfer_done) {
+ 		/* Controller timed out */
+ 		dev_err(&priv->adev->dev, "read from slave 0x%x timed out\n",
+ 			priv->cli.slave_adr);
+@@ -513,9 +531,9 @@ static void fill_tx_fifo(struct nmk_i2c_dev *priv, int no_bytes)
+  */
+ static int write_i2c(struct nmk_i2c_dev *priv, u16 flags)
+ {
+-	u32 status = 0;
+ 	u32 mcr, irq_mask;
+-	unsigned long timeout;
++	u32 status = 0;
++	bool xfer_done;
+ 
+ 	mcr = load_i2c_mcr_reg(priv, flags);
+ 
+@@ -528,7 +546,8 @@ static int write_i2c(struct nmk_i2c_dev *priv, u16 flags)
+ 	/* enable the controller */
+ 	i2c_set_bit(priv->virtbase + I2C_CR, I2C_CR_PE);
+ 
+-	init_completion(&priv->xfer_complete);
++	init_waitqueue_head(&priv->xfer_wq);
++	priv->xfer_done = false;
+ 
+ 	/* enable interrupts by settings the masks */
+ 	irq_mask = (I2C_IT_TXFOVR | I2C_IT_MAL | I2C_IT_BERR);
+@@ -554,10 +573,9 @@ static int write_i2c(struct nmk_i2c_dev *priv, u16 flags)
+ 	writel(readl(priv->virtbase + I2C_IMSCR) | irq_mask,
+ 	       priv->virtbase + I2C_IMSCR);
+ 
+-	timeout = wait_for_completion_timeout(
+-		&priv->xfer_complete, priv->adap.timeout);
++	xfer_done = nmk_i2c_wait_xfer_done(priv);
+ 
+-	if (timeout == 0) {
++	if (!xfer_done) {
+ 		/* Controller timed out */
+ 		dev_err(&priv->adev->dev, "write to slave 0x%x timed out\n",
+ 			priv->cli.slave_adr);
+@@ -807,7 +825,9 @@ static irqreturn_t i2c_irq_handler(int irq, void *arg)
+ 				priv->cli.count);
+ 			init_hw(priv);
+ 		}
+-		complete(&priv->xfer_complete);
++		priv->xfer_done = true;
++		wake_up(&priv->xfer_wq);
++
+ 
+ 		break;
+ 
+@@ -817,7 +837,9 @@ static irqreturn_t i2c_irq_handler(int irq, void *arg)
+ 		init_hw(priv);
+ 
+ 		i2c_set_bit(priv->virtbase + I2C_ICR, I2C_IT_MAL);
+-		complete(&priv->xfer_complete);
++		priv->xfer_done = true;
++		wake_up(&priv->xfer_wq);
++
+ 
+ 		break;
+ 
+@@ -834,7 +856,9 @@ static irqreturn_t i2c_irq_handler(int irq, void *arg)
+ 			init_hw(priv);
+ 
+ 		i2c_set_bit(priv->virtbase + I2C_ICR, I2C_IT_BERR);
+-		complete(&priv->xfer_complete);
++		priv->xfer_done = true;
++		wake_up(&priv->xfer_wq);
++
+ 	}
+ 	break;
+ 
+@@ -848,7 +872,9 @@ static irqreturn_t i2c_irq_handler(int irq, void *arg)
+ 		init_hw(priv);
+ 
+ 		dev_err(dev, "Tx Fifo Over run\n");
+-		complete(&priv->xfer_complete);
++		priv->xfer_done = true;
++		wake_up(&priv->xfer_wq);
++
+ 
+ 		break;
+ 
+@@ -949,7 +975,7 @@ static void nmk_i2c_of_probe(struct device_node *np,
  		priv->sm = I2C_FREQ_MODE_FAST;
  	priv->tft = 1; /* Tx FIFO threshold */
  	priv->rft = 8; /* Rx FIFO threshold */
--	priv->timeout_usecs = 200 * USEC_PER_MSEC; /* Slave response timeout */
-+
-+	/* Slave response timeout */
-+	if (!of_property_read_u32(np, "i2c-transfer-timeout-us", &timeout_usecs))
-+		priv->timeout_usecs = timeout_usecs;
-+	else
-+		priv->timeout_usecs = 200 * USEC_PER_MSEC;
+-	priv->timeout = 200; /* Slave response timeout(ms) */
++	priv->timeout_usecs = 200 * USEC_PER_MSEC; /* Slave response timeout */
  }
  
  static int nmk_i2c_probe(struct amba_device *adev, const struct amba_id *id)
+@@ -1009,7 +1035,7 @@ static int nmk_i2c_probe(struct amba_device *adev, const struct amba_id *id)
+ 	adap->owner = THIS_MODULE;
+ 	adap->class = I2C_CLASS_DEPRECATED;
+ 	adap->algo = &nmk_i2c_algo;
+-	adap->timeout = msecs_to_jiffies(priv->timeout);
++	adap->timeout = usecs_to_jiffies(priv->timeout_usecs);
+ 	snprintf(adap->name, sizeof(adap->name),
+ 		 "Nomadik I2C at %pR", &adev->res);
+ 
 
 -- 
 2.44.0
