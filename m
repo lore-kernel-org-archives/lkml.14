@@ -1,60 +1,61 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228967E108
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5527E0F9
+	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 13:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709212038; cv=none; b=LFP0bOQzNbLFCfmTgTiaLZcIGSDrKB43mgavCtFc9roGOHXEhObVqE03YcrlnWV6ZVgsCj5DhIUG0DPTlLZ2q8luP+g4dI4hH3k/Ejrf3hjb9qvW+dtfCu/GfSGpKvOU55wv7eil2AEK0uVHUuJkUcGAMq9ucQL/f1ArDnltBZg=
+	t=1709212038; cv=none; b=LlaSKOoHgu8EMo5Z0aIkEHciJQl2R/CrCHGsL1Xbm5D2iWXBE6uh8An7TV0hXyZaaFWZ2+UafUMyBwTAbaRFWr8JeE8Gpluj4mdKwxeT1X09spGVpuvWWS8S+J33mad0U/WkpCNt7DCllCKNyFmxRj2OcW1fL4nlCqig9eniO08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709212038; c=relaxed/simple;
-	bh=X1JC6Xko/brlq2AN9Kavl/JUaqcQsV6GNBW/pXtYk2g=;
+	bh=58NUV9okk92amQIHcmrvyddywNRiyxMSOvtlK9kind0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=F871uYptRS0iq3uVR0aTAV18CKAvcy0KT+ZOGtRpMjidLUENFW6zGLfSdokQDTiLbBss+TO9znTlDJjJYw+0fS0Mwjpx8J+KIbLYqCLL/cVmHyjjtpRPeRaNxrUmGAQNUvyNd+EUuO3JmJmSsBciKPGTW91MxYhMQOgSwO1C7UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q3bsZ+Sr; arc=none smtp.client-ip=209.85.128.54
+	 In-Reply-To:To:Cc; b=ryBm90duVS+p2q6FCKyU3lU0+NE0fE1oXjVlE3kF/hsosdvI4MzYTGRP1X8YBjQoWxbaAA+JyJ2HjGDHO8mDMlOb47bb88S8qBZLSSkTTIMoI51CHc6eoPrjN+3d+hyqku1R1tOJIEYcIqoxE5ZWvMTVqgKVoS37RsFbeYLBqKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BLOAv2qf; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q3bsZ+Sr"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-412c23551e2so1455395e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 05:07:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BLOAv2qf"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-412b434effaso6033115e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 05:07:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709212033; x=1709816833; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709212035; x=1709816835; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3uIfY5ntnNufGy4UYEPo9i3yGnfffKpCKmKs8Z7x9Cg=;
-        b=q3bsZ+Sryrek3Dp0PONMDHUeprLNmBcJV/dUgHjpVgoTW5r/SVuUqKhAwsEOptWI6N
-         arCOeiGBriFJRMpQAs6aoQk1liLLYHZyqcUfzNFeXqQX1cuqe+ykguOWDeFRQUPCb6D5
-         6A3b2ws8n2bkY9govH/NX4mStfYL3kZj2mfujkn7etR/9s4N6Vz1vE4LNmK/ZKnOSozY
-         VMvP9Qpkk9Jde/5aQhm/CeHe8Eh2oE69t2hV88xjQTjY70wKwxC0CuQs+7l/dBO1+UTi
-         9LvumiNGGKSz4yHZq7vupoBELLBlwClcYlMw6pxRDgmUHCWGd7755zfWrx1aIIpuVvep
-         A3Yg==
+        bh=djTK4QWx2RqxzGqF8Cq4ZaFcpyWxxa+r0xmgHQrJJjM=;
+        b=BLOAv2qfeD6scwH6+ydTurbASp0o8598kLpGpv2hqeUHNGKI/Rny3Vmwx0S0BmChTE
+         pyv/dnOanbA7voZwDZh60oh0zz9XNgGc27t+UZpz3+Smn5BRmFAEJ0uZGirpgapiT5LG
+         C9l+MJUw8cmtvCd9GAth7T8zG9jw/gbDGDAK4SUpq574RBVYkbBpG2CzgJ4K8rK3TDUh
+         GXyNnfXSbaEFe2ptluKjha99H+MIvRvHXOZao427xH5kgKAO1mQ2ewq9q3sOA3aT+xAe
+         KyK3tbypmY7TPpDlqkwjEBitazdFjs0+Gy/mpibH5kSD8jdULjMt4AwJBLpCubfpSyRR
+         612w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709212033; x=1709816833;
+        d=1e100.net; s=20230601; t=1709212035; x=1709816835;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3uIfY5ntnNufGy4UYEPo9i3yGnfffKpCKmKs8Z7x9Cg=;
-        b=B3+aYVyG5FpcauKMISRY3VVAMZ3/JUPoGyZF8PijfoY7DZkbDSlX3fZ2h7kMQ5lQXa
-         TvC9lr65VTef9jR9rKsvKrzeEJb+gSd8Bt379x2rZndK74ST3uSkqbtbOiO6IL/KNX3o
-         3R7cybgxAnrFOXeyy3937L3Y1pJ8xUrGzC92P/FfrGnwkdkY7EkDJ6jiEXr+A+m4qgMn
-         EKKGB0BCWu/CHAz0qylJtVIzDsH/+VwJX626NKb6VlbXUDzBomRxmTjbYjz5/dMNAtad
-         eHU+xY1BorqrIezciDReGCn8zOHf7ZfSWiKu4CLqA3lOkNJ2xmqYBH/DYF5tCrZuD+h0
-         /vAg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVSPlimqTLTLdFdGG9noMVyJXt/1jm8jTZtu/smYDLTTCKXc01bs4+yerICtdWUercBoBhJIuyNKIJcYC3dLZfD0SMzw1KrFwIbBy0
-X-Gm-Message-State: AOJu0YwqC9Wa2nlASEIJTBmbdIF4ZfUvrS0ei6GpvqCXo09v3By+/IEO
-	Bn/vb+t7CreZNFD8q/7pDezevfqWkn+/3NXImk8bt0f0yrDeHaTVWPH95thFARU=
-X-Google-Smtp-Source: AGHT+IFs4nV8miq0IK8B287pip+3Gpyj9/MX3VZQhKrSuFji1E+4+hZHhgsqd+s9dN8nbt2XIkHbiQ==
-X-Received: by 2002:a05:600c:1f07:b0:412:a0f9:391 with SMTP id bd7-20020a05600c1f0700b00412a0f90391mr1978004wmb.2.1709212033570;
-        Thu, 29 Feb 2024 05:07:13 -0800 (PST)
+        bh=djTK4QWx2RqxzGqF8Cq4ZaFcpyWxxa+r0xmgHQrJJjM=;
+        b=gFM+h/j7PJuGIwTFwsNoPMXNOmzO9NjKdIaQsmeg3erkQ+RY6W/y/ckmT54qS3ralm
+         9CzWHnXwHy5425xZz7P8XlsZRmj3Hp8vPkG3yC+NJoNTodLgeGPVu7YRO9s/nbZRDiXB
+         KsnmcxeTklLBbGzi1Ga+O/C8Q+/PTr4zmLQQne9fKcdkAxxBdzorbjJjs+nWBhOlDiID
+         3LEuHgKomcQJ2DrYgT3BKk4+u0B6mQnY28lN/DZmq4t8RFYrr0rhMKn4nJLQC1KQT8ab
+         A+ni9zqXELSJSzAzjhBhg82aUoFgqEgvo9iLVcOeIfuW2C9KCUHERl1PCuhDFu8xg5w2
+         uA9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUJyL6wSk5YW8eETQKWro/LqLp0/HLKKDD1rxIaS/JjLnlYjfYkuU3qShEthUDrZ9yfRSD5AhzP/+5qhoepsd4Sw2UJksTjyz4eEPeS
+X-Gm-Message-State: AOJu0Yx4xrel6sDDGtOdC3h4wSnwqAmkGW+aayEpUnT+0cJ0R6n0H+VW
+	QmmCUz4xKrLEnwJwwGKVy8EKkAHQSgfxFyJOyFwyZ3I+0MHzt/KCdGwLcWgyfJQ=
+X-Google-Smtp-Source: AGHT+IFsLBUQujeobwIe+PBXF8p9tO8MDxUnuJMHt7vo2bYz6hqUMOeD8rjeD66N7xF8fiNb7HaPxQ==
+X-Received: by 2002:a05:600c:1c15:b0:412:b2fe:6e46 with SMTP id j21-20020a05600c1c1500b00412b2fe6e46mr1883397wms.27.1709212035213;
+        Thu, 29 Feb 2024 05:07:15 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id t7-20020a05600c198700b00412a38e732csm2071473wmq.35.2024.02.29.05.07.12
+        by smtp.gmail.com with ESMTPSA id t7-20020a05600c198700b00412a38e732csm2071473wmq.35.2024.02.29.05.07.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Feb 2024 05:07:13 -0800 (PST)
+        Thu, 29 Feb 2024 05:07:14 -0800 (PST)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Thu, 29 Feb 2024 14:07:03 +0100
-Subject: [PATCH RFT 3/7] phy: qcom: qmp-combo: introduce QPHY_MODE
+Date: Thu, 29 Feb 2024 14:07:05 +0100
+Subject: [PATCH RFT 5/7] arm64: dts: qcom-sm8550: allow 4 lanes for
+ DisplayPort and enable QMP PHY mode-switch
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-3-07e24a231840@linaro.org>
+Message-Id: <20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-5-07e24a231840@linaro.org>
 References: <20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-0-07e24a231840@linaro.org>
 In-Reply-To: <20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-0-07e24a231840@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -75,105 +76,74 @@ Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2847;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1519;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=X1JC6Xko/brlq2AN9Kavl/JUaqcQsV6GNBW/pXtYk2g=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBl4IF7bR995LMpFRuBZdMowgnvRMAzKvP6HT+j6bBn
- u6qijAOJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZeCBewAKCRB33NvayMhJ0dQnD/
- 4hNlvIyL/Ebb4vd28Lo3pt7v0cvIWPEgi6PPa/eZ5GmfzzRU6yKgZYIaKc6aJa6PVdZy5nOY534bbM
- C9Z5GPriw4NAxtshNm8QqBAjTU4JsnWWnjnFl/uh6vUJKjvvx8nmFLfTCiUU5Ld4Sjz72lq4BGQsdx
- CZBpiP+9l1wvfC0sQMHCZd8H3bbcw+kDOYbNaddUPUX9WBs0+/Gly0eD6RIppiPsVmI10kVcHCOPsV
- cDjdboIKv3VP5jgNKB59IjGgG94HLPR8sCyyWCpQsfT6NPsKER06GeDaEN+U1BOwwhivt8KbHtvIuW
- dYExHtEopydMXRbuK3RKSTNRt/aSp/NLcsSkX8Up4FtIYVc9sSov8qYuVpK8HgvtyUk5WbIKA+nLa3
- OKTV5RsMCTcPBMreqQcGlYH45vYN7Fl6m1DANR5Hr1OvbvVkhu0uFpYPLLx8xuyopRHj7TZHllTAOP
- oDBgQDYry4ojq3ngLDPIEADXMe7wlZghvBUUHrSIIi6KWAroAjkLv0bljBNjhu+K2/oDxnlsTVi58a
- 4euoIMmLUHEhxyRea7K7Zdvcs7Th8kKZ3z6dSGR/00l/8v7INoyvCrXySk4Hqorx2ePkrsXHxwaYQi
- 2yrXhNLfgwlsZ/1jfqWVpnbKmyx2bZsv1dJp46javpCAf5/bNawRFV7P3ERQ==
+ bh=58NUV9okk92amQIHcmrvyddywNRiyxMSOvtlK9kind0=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBl4IF8UDzf8qs6mL+cMusxdeoc3fQAwLA0KUeC2ovw
+ E+lkVHyJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZeCBfAAKCRB33NvayMhJ0YrKD/
+ 4m2Kis3LNB77dZB8vYp62njN8b2m/hqcE4OG8BzKDNwroowc1vKqWlvzjhknEKJQOF5oZX3iRLJ556
+ gB7oNGWgcrA1bHQqiOXEGIRXiHfrc9Potve9hyBNS1XaiftpnMbrQ5gdAhUQ8+2SocAssdXYjp76TZ
+ vmU3lEQeo5nObYKlT7QAzxd7GdobWi1no2PmgJ9+SX9SbJBw7Tm+qsqXnSFJ+oZUOee2tEBMpVHYRH
+ 54EMJDa+5KxnG+1NkbbDgNGiFajVRxgszB8+R446IB8CO7Z+DPmUj/whiB/iKoP19tpnMzzOX+nWVl
+ +H4o6r7ihQKPXlnREoWvpZ14SdBwPooMrbl0fLG5T2YPDF+d0V8ntAe8CENos4UwcT4qe7T1gKjsuc
+ KicVy2iEj5Ico2k7p5PjJZBgwnss3EY3UeTaYhw29rzq+bV88S/x0OIDd1PnGu1+truO75zE9Se/fQ
+ GpP3EW5x+2xpo0C8sgNdlQT3ApgAO3aOyYvuWBxnloZEWyjHl3Dbaf1JSGVzm6afRFNzm48FdmWaA3
+ G/bZA95MZngsBvzmZlx2DArbQhXskVmiC+NZJWAmoX8bXtkCrTBt3qpC2HUcV0yZgGR92b6CUTeshF
+ lZ5821eZyd7/ObrNZz3ZaniVEz0Q3pbGEIIjYiktwvlN3oCbGBXVwmpyzlqw==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Introduce an enum for the QMP Combo PHY modes, use it in the
-QMP commmon phy init function and default to COMBO mode.
+Allow up to 4 lanes for the DisplayPort link from the PHY to the Controller
+and allow mode-switch events to the QMP Combo PHY.
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 41 +++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/qcom/sm8550-hdk.dts | 3 ++-
+ arch/arm64/boot/dts/qcom/sm8550-qrd.dts | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-index 3721bbea9eae..ac5d528fd7a1 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-@@ -61,6 +61,12 @@
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+index 12d60a0ee095..86d6f993acd5 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+@@ -941,7 +941,7 @@ &mdss_dp0 {
  
- #define PHY_INIT_COMPLETE_TIMEOUT		10000
+ &mdss_dp0_out {
+ 	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+-	data-lanes = <0 1>;
++	data-lanes = <0 1 2 3>;
+ };
  
-+enum qphy_mode {
-+	QPHY_MODE_COMBO = 0,
-+	QPHY_MODE_DP_ONLY,
-+	QPHY_MODE_USB_ONLY,
-+};
-+
- /* set of registers with offsets different per-PHY */
- enum qphy_reg_layout {
- 	/* PCS registers */
-@@ -1491,6 +1497,7 @@ struct qmp_combo {
+ &pcie0 {
+@@ -1284,6 +1284,7 @@ &usb_dp_qmpphy {
+ 	vdda-phy-supply = <&vreg_l3e_1p2>;
+ 	vdda-pll-supply = <&vreg_l3f_0p88>;
  
- 	struct mutex phy_mutex;
- 	int init_count;
-+	enum qphy_mode init_mode;
++	mode-switch;
+ 	orientation-switch;
  
- 	struct phy *usb_phy;
- 	enum phy_mode mode;
-@@ -2531,12 +2538,33 @@ static int qmp_combo_com_init(struct qmp_combo *qmp, bool force)
- 	if (qmp->orientation == TYPEC_ORIENTATION_REVERSE)
- 		val |= SW_PORTSELECT_VAL;
- 	writel(val, com + QPHY_V3_DP_COM_TYPEC_CTRL);
--	writel(USB3_MODE | DP_MODE, com + QPHY_V3_DP_COM_PHY_MODE_CTRL);
+ 	status = "okay";
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+index 92f015017418..2f6c76c9a135 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+@@ -806,7 +806,7 @@ &mdss_dp0 {
+ };
  
--	/* bring both QMP USB and QMP DP PHYs PCS block out of reset */
--	qphy_clrbits(com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
--			SW_DPPHY_RESET_MUX | SW_DPPHY_RESET |
--			SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
-+	switch (qmp->init_mode) {
-+		case QPHY_MODE_COMBO:
-+			writel(USB3_MODE | DP_MODE, com + QPHY_V3_DP_COM_PHY_MODE_CTRL);
-+
-+			/* bring both QMP USB and QMP DP PHYs PCS block out of reset */
-+			qphy_clrbits(com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
-+					SW_DPPHY_RESET_MUX | SW_DPPHY_RESET |
-+					SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
-+			break;
-+
-+		case QPHY_MODE_DP_ONLY:
-+			writel(DP_MODE, com + QPHY_V3_DP_COM_PHY_MODE_CTRL);
-+
-+			/* bring QMP DP PHY PCS block out of reset */
-+			qphy_clrbits(com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
-+					SW_DPPHY_RESET_MUX | SW_DPPHY_RESET);
-+			break;
-+
-+		case QPHY_MODE_USB_ONLY:
-+			writel(USB3_MODE, com + QPHY_V3_DP_COM_PHY_MODE_CTRL);
-+
-+			/* bring QMP USB PHY PCS block out of reset */
-+			qphy_clrbits(com, QPHY_V3_DP_COM_RESET_OVRD_CTRL,
-+					SW_USB3PHY_RESET_MUX | SW_USB3PHY_RESET);
-+			break;
-+	}
+ &mdss_dp0_out {
+-	data-lanes = <0 1>;
++	data-lanes = <0 1 2 3>;
+ 	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+ };
  
- 	qphy_clrbits(com, QPHY_V3_DP_COM_SWI_CTRL, 0x03);
- 	qphy_clrbits(com, QPHY_V3_DP_COM_SW_RESET, SW_RESET);
-@@ -3545,6 +3573,9 @@ static int qmp_combo_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_node_put;
+@@ -1161,6 +1161,7 @@ &usb_dp_qmpphy {
+ 	vdda-phy-supply = <&vreg_l3e_1p2>;
+ 	vdda-pll-supply = <&vreg_l3f_0p88>;
  
-+	/* Set PHY_MODE as combo by default */
-+	qmp->init_mode = QPHY_MODE_COMBO;
-+
- 	qmp->usb_phy = devm_phy_create(dev, usb_np, &qmp_combo_usb_phy_ops);
- 	if (IS_ERR(qmp->usb_phy)) {
- 		ret = PTR_ERR(qmp->usb_phy);
++	mode-switch;
+ 	orientation-switch;
+ 
+ 	status = "okay";
 
 -- 
 2.34.1
