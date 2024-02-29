@@ -1,232 +1,136 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E0B4594E
-	for <linux-kernel@vger.kernel.org>; Thu, 29 Feb 2024 06:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709189088; cv=fail; b=MB6lKfv3dtEyttlBgoTcO54nnJ3hx2I1GhBqjHwfkz6OfeYQ16GhinxZAEmRuhGk1cdsOXI52F0xMjK9eXYuH/J1Hw4lzTLysVYHniBtFYv9TjYwpctonN3WeswMg8dUnKyHgCufWBg3DnPts53PDjGqcc7waPUIuzlpAFqq2gE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709189088; c=relaxed/simple;
-	bh=kLDXLLHf5mMe6fMjTWlo5IdkRVhQiaAk9XjAX+k2O0U=;
-	h=References:From:To:Cc:Subject:In-reply-to:Date:Message-ID:
-	 Content-Type:MIME-Version; b=WSm5499iOjgV9ZnDAy1NhfPVvPzEkjwEAwhtuxHh5BmhOe36QHlBrqDxBLjScwWTFirnLiqTaePjvqyOcyCqOi1p4x4PedQBBTUY8L5LDK5gXf9SO+rASnEG08gB9oq3lSNgl9XqnqVYSRrJcshy//jptoyYID0GYBNPSjL4fNI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YBX/Iv/2; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=dpIJVuQ5; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94C3446B3;
+	Thu, 29 Feb 2024 06:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709189125; cv=none; b=c1yWNiV7OAAlUl6vlTqTN/22ie0wVdr2zQFEA9YCIikcIxMcT+HRQ/Q937WwBpr/sLhnrBem5WbE39sPnrVzeuVT2vDFgkbUT3/drRNrO8me4JE7rOBi5aGnmX38aferWIFgJXKYMhIXDiT1d+wWm529IaKSjBjNuDlan0hoJTk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709189125; c=relaxed/simple;
+	bh=0buapzlXS8Ejb7a/3Ux3/lyjLsR/FLcFCfrhtlks/tU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=sxEvfG2Vqmy0BhEfbZ0oH5jvT3MXYxr2MMwaNqM8LsGPaJYfjanAWCDNiKzLUEm9QjbT8bfXX3oJEXa7MS4dIcXryGQzLmkOy2xi3IV8QN2Phf0MlRj1ysZtlTKWWA8ial/3mDfwWAgO0HIHinJMpk04FO0Rw3w0S8dlz1omGr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=elo/ByeJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YBX/Iv/2";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="dpIJVuQ5"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41T1x0dK012264;
-	Thu, 29 Feb 2024 06:43:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=references : from :
- to : cc : subject : in-reply-to : date : message-id : content-type :
- mime-version; s=corp-2023-11-20;
- bh=vDqyXAlxy4iwwagzYvF3DdLNN7pqD5gvRjdJzsUMWhI=;
- b=YBX/Iv/239fo2/Gtw5QGEj8X5+HmMThgp72GOD6esVF/0d6BMeP8l8SwB0U/lyD1Mscl
- RJEz0kTe02TRjsOieHmT9puYosjTt0dsBLnVhnPMh+MWG4vRiFkpddkE4Fkwe5KGVlam
- gd/9bEEPBLXXYIEBfDkIKAxxaQrGa1/e064UuJi+nyBxFTMadzzqkqZ1Yk1eR9/oLW9s
- qgEo1mObPoofZtB7tQ1Fhs7r2o/4Ig+g78i5sOf31akHxjjZprmHXIi6hPTrNcfBInP4
- xLLOOq2Pe8NR0EHyT0qYV3O7peW6/hSVM+XUK2DsSjKOousNPXgg6y/3Gb0eULPVmMGO GQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3wf6ve4ha4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 06:43:14 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41T65vng001716;
-	Thu, 29 Feb 2024 06:43:14 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2100.outbound.protection.outlook.com [104.47.58.100])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3wf6wa2q29-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 06:43:13 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jcZiIzE7GxtFoRd8Zxscl81PkcM6giEvi19gQ4tU+ga0MiT38U7/XfwpYnoVn/NlouQd3iEiN6SultlOrCYa0hsjfbRYs+qvjcnq8F2YrVckK/iaHQCxLNhrLnxfrC4NcV5byD9PkfCLb4c6hivZ2BdQFmMPU3sMaIQqfPjK3KX19oC2rabisExoqQfg6Yuwuo8Ch9fWUO1Up9L+nF39/onIh4EgXhMl2b7s/VWgRrW2DCBoYBm1fMeQx5LYPmrKD+mzpyJ3ExBBHvC3rfHw/3MSQWgqPTcxkyMAkkPJAHt3OJxOWbjM8z62VBtx/JUpyjnK40xnKJenI97cf8PySQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vDqyXAlxy4iwwagzYvF3DdLNN7pqD5gvRjdJzsUMWhI=;
- b=dtbLruDsusI+4npDO1tljkI+k9spdePQ3i7pOKSk6U/Egm/Tp6G8XcLwZwP7LuOzF6UIGUIvvppJtuSEHzhEUqgw+9sRMbsZksL/VoYBtBS7R8IgVLgy4iEQ6iOLDfgqc/CoPVUkG7h0Bo6pU7UJ3/C6AfbSL9ItYvemdZF2jwdwIleKuKmH/bucN5eh+WkzdDkJJsUmyWEQ21EV5XiLEOe+6Qqoga75yAshffmJk8F2PnDhyMJgtbLwnZFqUdrHWZ0txYq9ta7CXfvu5RtMQ/RF+DePbNW3+AaCt38Cne5AfSb+kVSq9/0vtJtkeySbt4WcYZO0RPiYqHiXfHVrRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vDqyXAlxy4iwwagzYvF3DdLNN7pqD5gvRjdJzsUMWhI=;
- b=dpIJVuQ5s644b40cnwqsyLERR4SWeucM2kQjJM+HbQgc18hjqcu07tJZwKDj4SqsG2fPi3PU/cboZ9d0o4tf4XH/fEtBx3jSDENr2xeXPZef5motqjaXNn65KennQdFaLjXLaZfk4PnWizjhN5v1U8DKB78HeVg/oXQpiEYU2+s=
-Received: from CO6PR10MB5409.namprd10.prod.outlook.com (2603:10b6:5:357::14)
- by SN4PR10MB5542.namprd10.prod.outlook.com (2603:10b6:806:1e9::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
- 2024 06:43:11 +0000
-Received: from CO6PR10MB5409.namprd10.prod.outlook.com
- ([fe80::2bb1:744:f397:1d4f]) by CO6PR10MB5409.namprd10.prod.outlook.com
- ([fe80::2bb1:744:f397:1d4f%6]) with mapi id 15.20.7316.039; Thu, 29 Feb 2024
- 06:43:11 +0000
-References: <20240213055554.1802415-1-ankur.a.arora@oracle.com>
- <20240213055554.1802415-24-ankur.a.arora@oracle.com>
- <Zd85iRyY6-zlo2wl@localhost.localdomain>
-User-agent: mu4e 1.4.10; emacs 27.2
-From: Ankur Arora <ankur.a.arora@oracle.com>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, peterz@infradead.org,
-        torvalds@linux-foundation.org, paulmck@kernel.org,
-        akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, mingo@redhat.com,
-        vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
-        jpoimboe@kernel.org, mark.rutland@arm.com, jgross@suse.com,
-        andrew.cooper3@citrix.com, bristot@kernel.org,
-        mathieu.desnoyers@efficios.com, geert@linux-m68k.org,
-        glaubitz@physik.fu-berlin.de, anton.ivanov@cambridgegreys.com,
-        mattst88@gmail.com, krypton@ulrich-teichert.org, rostedt@goodmis.org,
-        David.Laight@aculab.com, richard@nod.at, mjguzik@gmail.com,
-        jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
-        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
-Subject: Re: [PATCH 23/30] sched/fair: handle tick expiry under lazy preemption
-In-reply-to: <Zd85iRyY6-zlo2wl@localhost.localdomain>
-Date: Wed, 28 Feb 2024 22:43:34 -0800
-Message-ID: <871q8v7otl.fsf@oracle.com>
-Content-Type: text/plain
-X-ClientProxiedBy: PH7PR10CA0021.namprd10.prod.outlook.com
- (2603:10b6:510:23d::20) To CO6PR10MB5409.namprd10.prod.outlook.com
- (2603:10b6:5:357::14)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="elo/ByeJ"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T62Plr015559;
+	Thu, 29 Feb 2024 06:45:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=emc
+	n0d2LH07w89hcfQ+HA5r9ZWQUNqouPMcNxEHPBB8=; b=elo/ByeJupaMlKELTh4
+	t6f2i8E30mKBpVoKUEZA62qXVvPl0LVp9KUZ+1Q09r96h+DBGje3+318b1npk0Mt
+	xcLBrmKMAiza6d6A5azgh7SlQxE6A1uZhzyt2HuafSHcyUXN/c0bV2cBA1LrGSJS
+	Fbwe7OpIjBXWwopk57Buy47FjsUM/PLCJfsmV8CdXYgSYgs7ZnYwjvBbDCed00z4
+	o3umJ7JVqw8hwPX7cbyiEnT4+GWP+baZJr6rRUGZ9u9l4lHX+Gmd5hKmhK9IUmKq
+	OCNFyw4PktM0WC99rFD6Z4QJ3jZ7LAHotuJmqyP+MR1Pmpsg5e2PZIO5ktTVMrgm
+	O5g==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wjm9mg2xx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 06:45:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41T6j6gU005435
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 Feb 2024 06:45:06 GMT
+Received: from hu-mkshah-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 28 Feb 2024 22:45:02 -0800
+From: Maulik Shah <quic_mkshah@quicinc.com>
+Date: Thu, 29 Feb 2024 12:14:59 +0530
+Subject: [PATCH v2] PM: suspend: Set mem_sleep_current during kernel
+ command line setup
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR10MB5409:EE_|SN4PR10MB5542:EE_
-X-MS-Office365-Filtering-Correlation-Id: ccea6f37-1319-40a4-0e47-08dc38f1b246
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	vz5/a0i/UDDhJ2mG0sCFMSAeq8AdOczskpsNkjUogpnPNR3cGjRkKAFPRCRm4js30n5BBf4SydfjX2fHzrJc177OpXq1g90Hu/hWhFJIIbCeaiptmIY941MpY1wixoOqi5SPoBk4iP6rnF7ufHnYDe0gFOxxdtAo1wQfDwSojSAqfGwf0Io7Mti0d1dhyUE2b0w4cAZeKZZOaKA/RAB4It7TyElFB8krcLvZ3NCqL98k3y+RtI2VhOruETmZfGt0xHz0DTDniZfztgEBSdT2dsKDCC3Q0xCanv5Rgvecc2VWnt1P0CrmmHgS22hKb1BBAPAvLryvV2X6uO6HDpOcRsrJBL9RbJsGp5UcqeA1Nzax70XPL5J2odhelYGw3UoqRgq24+wnpHey4nCkk4lPSEQI5e20/cV5AtSn8+L5jRmSxWRgvkxmE9X1og5r7fqyRDRgBf4WqNYhrwDziBvVG8m+5zUCmSS1HJ2NOoHLCd9n6K6wRuXga9QPgHAuTceUORPWjOMFbfh3uywOka0KVf1XXBmSQZXCjr0IKwwMf5vJkiWQ8W3EGmQQfvOOx9Fx81AJloNmeVanSTgOEQ44StUgu/Eoe2MYeTuZY/PCaME5yQwixsOhBhIRaTZ/LQfO
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5409.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?A6vQXNjLdR3ElM3KYAKjhl92HzHbHcnUou01FZ0tgzVG6mroe8ZHZzfcvW1v?=
- =?us-ascii?Q?qkS5roxYiGSE2JcJIHpBUKeK8UG4fRC1Yx1P9IUfJXj1nyVgOyRyhjql1vmk?=
- =?us-ascii?Q?kY+v1PTqU+SV6cwoUb/JbgXtTVx8z214lt7T8BwMf9vT5z7jOB6CyczubhAz?=
- =?us-ascii?Q?kk0t4db3xH6J/gD2cJl5hE5yxr2Hr2ffJGwALBbRfeiIYYRHaD169ShpYO/p?=
- =?us-ascii?Q?e9atMvPA/d96EjWCJj8j/WYTFP/mp5rBzRg4VzdK6qe/FKqiwxKydREA09wt?=
- =?us-ascii?Q?aQPjzp8LnEnucRms+jR7z6UKjxY9Z4cVHWfanU8gDidLNxpmmoKTIQkPzmJs?=
- =?us-ascii?Q?W1RHe+EBIAePfaow8rnvGx557bblhSIGOvSJbX0BQhEcoEzpCOsBd/Ra93zy?=
- =?us-ascii?Q?FOPt4pFNASLllaV0LShmb3m/1LBvZCFPNAhGkEG7d77nOKmW73aosgRAflaC?=
- =?us-ascii?Q?RqUJ7g4zEwt5oCN+PkMd90oe+VXDbFjhW7xwFz6GIaN3ce0JY2a5Jpi3m2zz?=
- =?us-ascii?Q?xX/RGquBRwP30wiBg+9JEt1cVUWiIFuadgFU2UL+7mDFEi045vaGd1P/Q04u?=
- =?us-ascii?Q?AQUjhgyQmcJukTOi1xWVl14NgiTY2H2DCKASB3K5Qa0gATmnBwqFBrGc5Ixl?=
- =?us-ascii?Q?AMshAPN7FuU8MIsADRL49DPKdZRrS3SU7Oi1I/dFisOV4O8oQBBuMAkWzY+y?=
- =?us-ascii?Q?PHtaMtEFiw0MmPMYfXrfcvW1vqc+XtPMr9KQxLQsQ8MQ6r1/ooAC/Uq1/9C/?=
- =?us-ascii?Q?353otDOCZ9WTifYvDa2pzo09mvZkghActueBxuEIcQIyri+78ap3naPCBU6b?=
- =?us-ascii?Q?LJKAJuIKr0XhzqqpGddJjNmVOK07l5KnE8/GXcFyDWnR6QY9Mp00mZFxPrpO?=
- =?us-ascii?Q?KUrJ23jsTVnuiXUqD6nb0pYxy4oUjKChHn1zzCbDG7iCfZWglNz+HedFLL10?=
- =?us-ascii?Q?e5tv9bt2ueoQH7FDQqoG0wi0raA22X7vxOoWwwidGvlI6MYgTn0ehPOjhjb2?=
- =?us-ascii?Q?0xiKt63OisA1UX07NnCrcVSrhjDFn7eZKhQ+1MUWOcWF07Hoak0XlBcDnGuP?=
- =?us-ascii?Q?hIEPufnXkqvqlTXgD8cXWXAIUa4kJ3UdUVK8YaApMo/Tdrusk9L67pnZY+gs?=
- =?us-ascii?Q?1c4XfZu6jlmGbuWS641k59+MJQoTF8zbrBxbogP4r7gaScgemcprfYAi4+6y?=
- =?us-ascii?Q?2t6Hs3MPc8006sXlABs1kCOmhjvK7ppK8j7AxK4vaSN1qDuF9TwFtlVg80Ih?=
- =?us-ascii?Q?wuU6n5/N6t/38/F9KwFAT8WrYwAmSmByLSYGAeqhLDoDMKrAoC+Fgm8EEM71?=
- =?us-ascii?Q?FbPWmgYPYFYofnNPmnrcLx4L7Q3ZiBy8VXjAb9Qa5xQz5bKkrcK+EJSakAe6?=
- =?us-ascii?Q?HQpjfNkTO2A72lnLFea5XSBo4u7OBr71zUtjR6MuEdXLmsXOPuJ5OyOY9ljd?=
- =?us-ascii?Q?wvLm6aVP5nN/t4qhSIeXiRQ2F9Euw1ldi3Q20JI5omB6kP+94ap1vZv2lEIo?=
- =?us-ascii?Q?UGFNAMcWOOuNyOkx5kHmso+9ZdHhkRDwxAgbz4qpTZyrWCfjfUbcT96pEwoJ?=
- =?us-ascii?Q?58yTaCutnugD4wmekibZDF1u9bliMX44KN7YbrzAkELMYuka5bnR6/F0oXzS?=
- =?us-ascii?Q?4Q=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	dZ1sgqPWoWmGzvRkSm+ZjFaTqcBBeZjbOImUOKQP9dmzkkXDj8HQGl/gQQ9pNbxuHpTFtAXXbk071u0a7XTwGv/WfgshgEFDvPo1IzdlJ8vrn69mJ/9+ttwLwzNtQG227AE9yetvDH8Jf4Ss6z6UrEeg0jtJPDMGFdjFHRXDpE7Na+hoizYlpsdF+Izj558HSvPBLxWpA8lyCoHC5aBlJa9ZZdGDAsWggMekgOnOABqYRHW0h818AbXr2ZyOQHvGxNrxI3Ot3YhFVxVWfBuKREdUj9A40qGMCFEeRPgZ6anAQAu6IqDoLfQ790KwaEnjLKrYumU/0596LQD6ARPX1uUULmAtExOxlemmNgJqQ5G3+92nXYlGR13KbPlEyfADL8UDPB+y6rjeZb1ERepxMYV06VjEivC1V529w9uUM3qfZ9OqRYZyhO2bVJZ345oFG3DbVozOH+DccDsXeI4EEDV7AwTkYbn8+JNXnkBbglA7RJU6mWfa634JIoHB/s5tDPRJw/gyLBzyiV0ffPkRmJrte6e4vp+ELcG2behGs/UrfCTmPCJdu9QBjF7kElBLIyPDPikNZ870Z8U9ZpNyaPYMCJ0CVgyiykK8Z6CkIXk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccea6f37-1319-40a4-0e47-08dc38f1b246
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5409.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 06:43:11.2697
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ezCBStJ0pz3Ac2YnAUgB71Eah1e4MtNhMv41dhPdeKGouUSrQ5bdTIK7zC863+a+GW8CvrDQ76fv1VGwo322oVsUy8HKGrgSMjvkjZnvoR4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR10MB5542
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240229-suspend_ops_late_init-v2-1-34852c61a5fa@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAOon4GUC/4WNQQ6CMBBFr0JmbU1bRIIr72EIKWUqk2iLHSAa0
+ rtbuYDL95L//gaMkZDhUmwQcSWm4DPoQwF2NP6OgobMoKU+Sa0awQtP6IcuTNw9zIwdeZqFrl0
+ ve1X1BhHydoro6L13b23mkXgO8bPfrOpn/xVXJZQ4l6W0pqma2pnrayFL3h5teEKbUvoCbD7iE
+ LwAAAA=
+To: Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, <andersson@kernel.org>,
+        <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Sudeep Holla <Sudeep.Holla@arm.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <quic_lsrao@quicinc.com>, <stable@vger.kernel.org>,
+        Maulik Shah
+	<quic_mkshah@quicinc.com>
+X-Mailer: b4 0.12.5-dev-2aabd
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709189102; l=1510;
+ i=quic_mkshah@quicinc.com; s=20240109; h=from:subject:message-id;
+ bh=0buapzlXS8Ejb7a/3Ux3/lyjLsR/FLcFCfrhtlks/tU=;
+ b=WWcHkAudwd4SllibZe3KiNF+5OlTg+CorqCafl88Xb10qD5gu73SIPuDLX/G7i4dzhCejW1rl
+ gCqKo4QakZGBYg1eDJbm4ci+XfsDEWoMYGzmqnH4tOGkOl5+5fgAtex
+X-Developer-Key: i=quic_mkshah@quicinc.com; a=ed25519;
+ pk=bd9h5FIIliUddIk8p3BlQWBlzKEQ/YW5V+fe759hTWQ=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: MCNXFFn5pYu6e0fJ6Ok17OiI1CT3bNnd
+X-Proofpoint-ORIG-GUID: MCNXFFn5pYu6e0fJ6Ok17OiI1CT3bNnd
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-02-28_08,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 adultscore=0
- mlxscore=0 mlxlogscore=855 phishscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402290051
-X-Proofpoint-ORIG-GUID: 9ZIp6Q5_p94He3dyngU9oUgCVLT89bqh
-X-Proofpoint-GUID: 9ZIp6Q5_p94He3dyngU9oUgCVLT89bqh
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1011
+ adultscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402290051
 
+psci_init_system_suspend() invokes suspend_set_ops() very early during
+bootup even before kernel command line for mem_sleep_default is setup.
+This leads to kernel command line mem_sleep_default=s2idle not working
+as mem_sleep_current gets changed to deep via suspend_set_ops() and never
+changes back to s2idle.
 
-Juri Lelli <juri.lelli@redhat.com> writes:
+Set mem_sleep_current along with mem_sleep_default during kernel command
+line setup as default suspend mode.
 
-> Hi Ankur,
->
-> On 12/02/24 21:55, Ankur Arora wrote:
->> The default policy for lazy scheduling is to schedule in exit-to-user,
->> assuming that would happen within the remaining time quanta of the
->> task.
->>
->> However, that runs into the 'hog' problem -- the target task might
->> be running in the kernel and might not relinquish CPU on its own.
->>
->> Handle that by upgrading the ignored tif_resched(NR_lazy) bit to
->> tif_resched(NR_now) at the next tick.
->>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Juri Lelli <juri.lelli@redhat.com>
->> Cc: Vincent Guittot <vincent.guittot@linaro.org>
->> Originally-by: Thomas Gleixner <tglx@linutronix.de>
->> Link: https://lore.kernel.org/lkml/87jzshhexi.ffs@tglx/
->> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
->>
->> ---
->> Note:
->>   Instead of special casing the tick, it might be simpler to always
->>   do the upgrade on the second resched_curr().
->>
->>   The theoretical problem with doing that is that the current
->>   approach deterministically provides a well-defined extra unit of
->>   time. Going with a second resched_curr() might mean that the
->>   amount of extra time the task gets depends on the vagaries of
->>   the incoming resched_curr() (which is fine if it's mostly from
->>   the tick; not fine if we could get it due to other reasons.)
->>
->>   Practically, both performed equally well in my tests.
->>
->>   Thoughts?
->
-> I'm still digesting the series, so I could simply be confused, but I
-> have the impression that the extra unit of time might be a problem for
-> deadline (and maybe rt as well?).
->
-> For deadline we call resched_curr_tick() from the throttle part of
-> update_curr_dl_se() if the dl_se happens to not be the leftmost anymore,
-> so in this case I believe we really want to reschedule straight away and
-> not wait for the second time around (otherwise we might be breaking the
-> new leftmost tasks guarantees)?
+Fixes: faf7ec4a92c0 ("drivers: firmware: psci: add system suspend support")
+CC: stable@vger.kernel.org # 5.4+
+Signed-off-by: Maulik Shah <quic_mkshah@quicinc.com>
+---
+Changes in v2:
+- Set mem_sleep_current during mem_sleep_default kernel command line setup
+- Update commit message accordingly
+- Retain Fixes: tag
+- Link to v1: https://lore.kernel.org/r/20240219-suspend_ops_late_init-v1-1-6330ca9597fa@quicinc.com
+---
+ kernel/power/suspend.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes, agreed, this looks like it breaks the deadline invariant for both
-preempt=none and preempt=voluntary.
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index 742eb26618cc..e3ae93bbcb9b 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -192,6 +192,7 @@ static int __init mem_sleep_default_setup(char *str)
+ 		if (mem_sleep_labels[state] &&
+ 		    !strcmp(str, mem_sleep_labels[state])) {
+ 			mem_sleep_default = state;
++			mem_sleep_current = state;
+ 			break;
+ 		}
+ 
 
-For RT, update_curr_rt() seems to have a similar problem if the task
-doesn't have RUNTIME_INF.
+---
+base-commit: d37e1e4c52bc60578969f391fb81f947c3e83118
+change-id: 20240219-suspend_ops_late_init-27fb0b15baee
 
-Relatedly, do you think there's a similar problem when switching to
-a task with a higher scheduling class?
-(Related to code is in patch 25, 26.)
+Best regards,
+-- 
+Maulik Shah <quic_mkshah@quicinc.com>
 
-For preempt=voluntary, wakeup_preempt() will do the right thing, but
-for preempt=none, we only reschedule lazily so the target might
-continue to run until the end of the tick.
-
-Thanks for the review, btw.
-
---
-ankur
