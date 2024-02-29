@@ -1,93 +1,186 @@
-Received: from bues.ch (bues.ch [80.190.117.144])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF5A160629;
-	Thu, 29 Feb 2024 18:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.190.117.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139707828D;
+	Thu, 29 Feb 2024 18:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709232033; cv=none; b=lxUzGeLqQUIySs6IDnd4EChgPCKbZ2ViOsS93dVX1Snvu7rtYmzHtmkAyJHPXzY5872noTTccxmxADWZulnZLvRaR108R7/AhNzg439tjjUcRvPCx8ZbdJ5AJ0yfnwyK29cvg8JukIX1JedC7dFuLGLCn4JGgjOQgOgSm588M0E=
+	t=1709232059; cv=none; b=l/y5ovLxuLvAhI14G6C5M0zUTvKgrHpEaeKMpCJiq3eDJBExvfMAFwUZqAOsTMgKlwyAaJaCl/tSiAYJbeRYgjW9BCZFqlWzEXO1qtgwzHz+aGZHFjaJlMygQUc6/AzVdXo4mquxZkTlUb+IBuDRJMb/TNTilpSJR1Y8QnIfqHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709232033; c=relaxed/simple;
-	bh=UW+TdciKB5gSR3r9g/ate3m4F5PvqE5YslCXW8lrDB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NzqqzIREYIgV9z4AqVXaG2RJsHcYtT3gbQCNcFLXCU6L9V4OZScUr82D8CYpn8YqvbZcfPcUEAGjH0X6RmQ0mkKLwZxQjkQOG3IE1URZGTK+EbvxXnnQXVbQDUvgz1nbdgitJBXY0Gn6tzi9urdGJQu9EmSGmOT9AGBi3Nnsnlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bues.ch; spf=pass smtp.mailfrom=bues.ch; arc=none smtp.client-ip=80.190.117.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bues.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bues.ch
-Received: by bues.ch with esmtpsa (Exim 4.96)
-	(envelope-from <m@bues.ch>)
-	id 1rfkqo-000F5s-3B;
-	Thu, 29 Feb 2024 19:09:46 +0100
-Date: Thu, 29 Feb 2024 19:08:54 +0100
-From: Michael =?UTF-8?B?QsO8c2No?= <m@bues.ch>
-To: Rand Deeb <rand.sec96@gmail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- deeb.rand@confident.ru, lvc-project@linuxtesting.org,
- voskresenski.stanislav@confident.ru
-Subject: Re: [PATCH] ssb: Fix potential NULL pointer dereference in
- ssb_device_uevent
-Message-ID: <20240229190854.3717772c@barney>
-In-Reply-To: <20240229093756.129324-1-rand.sec96@gmail.com>
-References: <20240229093756.129324-1-rand.sec96@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709232059; c=relaxed/simple;
+	bh=XOIwSKahWpPR9jGAWZnUuaG5OHH6sWJYuNj9i3WFYso=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S7uQqUJVScrQzx2qfpkpen3z3OFduL19my/oxwL80+9yt13pUXTA9AqvrYWr0zYQp+2K81ShkjG9xszAJGYLBqQ6m6zYBfOITkhzXo7hJvx91Uz5XwBDvw19BtNkPdF8Ozr1J5XV9Gc9ThVpu4ew+R/BCgGXnnpiJOD4c34ejI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4C0qKd/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4C0qKd/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B3F5C433C7;
+	Thu, 29 Feb 2024 18:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709232058;
+	bh=XOIwSKahWpPR9jGAWZnUuaG5OHH6sWJYuNj9i3WFYso=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Z4C0qKd/Rb41/Yaf+xCj37agyrwn3r1ddkExRoiOTQQ1rOv6K0esta8w4jH7PujD+
+	 kD7/qP8No/C/78+0smVm9IZtu4d/jrk7LEqvuhyFtMxBc3j0LJtbp0URAThI+keGei
+	 qks/8U5YbqWJsiittU3E6aFngNaeGWrH/DmfvXcvuQjZSKoYhQxx9U49A0Gkb/15KR
+	 j9sQH34m8e6nV3/YFkW66ccdvDbTCUuikr9q5EpBgPuov6ncnUJDohVrx0fTvIKk01
+	 sVVwxjS5r90wPV2vfn4N5Gn1d3uC8zTkPgkNbpWl1EoFhHIEm+KMpBrfUVqBbnH6QE
+	 aw4KV5QlkVDCA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rflKx-0088Cq-QW;
+	Thu, 29 Feb 2024 18:40:56 +0000
+Date: Thu, 29 Feb 2024 18:40:54 +0000
+Message-ID: <8634tb2jwp.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	mark.rutland@arm.com,
+	Mark Brown <broonie@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH V16 5/8] KVM: arm64: nvhe: Disable branch generation in nVHE guests
+In-Reply-To: <20240125094119.2542332-6-anshuman.khandual@arm.com>
+References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+	<20240125094119.2542332-6-anshuman.khandual@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ob.XXZ=76OiP5u+w1/NKFuc";
- protocol="application/pgp-signature"; micalg=pgp-sha512
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
---Sig_/ob.XXZ=76OiP5u+w1/NKFuc
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 29 Feb 2024 12:37:56 +0300
-Rand Deeb <rand.sec96@gmail.com> wrote:
-
->  static int ssb_device_uevent(struct device *dev, struct kobj_uevent_env =
-*env)
->  {
-> -	struct ssb_device *ssb_dev =3D dev_to_ssb_dev(dev);
-> +	struct ssb_device *ssb_dev;
-> =20
->  	if (!dev)
->  		return -ENODEV;
-> =20
-> +	ssb_dev =3D dev_to_ssb_dev(dev);
+On Thu, 25 Jan 2024 09:41:16 +0000,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+> Disable the BRBE before we enter the guest, saving the status and enable it
+> back once we get out of the guest. This avoids capturing branch records in
+> the guest kernel or userspace, which would be confusing the host samples.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> CC: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Changes in V16:
+> 
+> - Dropped BRBCR_EL1 and BRBFCR_EL1 from enum vcpu_sysreg
+> - Reverted back the KVM NVHE patch - used host_debug_state based 'brbcr_el1'
+>   element, and dropped the previous dependency on Jame's coresight series
+> 
+>  arch/arm64/include/asm/kvm_host.h  |  5 ++++-
+>  arch/arm64/kvm/debug.c             |  5 +++++
+>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 33 ++++++++++++++++++++++++++++++
+>  3 files changed, 42 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 21c57b812569..bce8792092af 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -569,7 +569,7 @@ struct kvm_vcpu_arch {
+>  	u8 cflags;
+>  
+>  	/* Input flags to the hypervisor code, potentially cleared after use */
+> -	u8 iflags;
+> +	u16 iflags;
+>  
+>  	/* State flags for kernel bookkeeping, unused by the hypervisor code */
+>  	u8 sflags;
+> @@ -610,6 +610,7 @@ struct kvm_vcpu_arch {
+>  		u64 pmscr_el1;
+>  		/* Self-hosted trace */
+>  		u64 trfcr_el1;
+> +		u64 brbcr_el1;
+>  	} host_debug_state;
+>  
+>  	/* VGIC state */
+> @@ -779,6 +780,8 @@ struct kvm_vcpu_arch {
+>  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
+>  /* vcpu running in HYP context */
+>  #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
+> +/* Save BRBE context if active  */
+> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(8))
+>  
+>  /* SVE enabled for host EL0 */
+>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+> index 8725291cb00a..99f85d8acbf3 100644
+> --- a/arch/arm64/kvm/debug.c
+> +++ b/arch/arm64/kvm/debug.c
+> @@ -335,10 +335,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+>  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
+>  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+>  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
 > +
->  	return add_uevent_var(env,
->  			     "MODALIAS=3Dssb:v%04Xid%04Xrev%02X",
->  			     ssb_dev->id.vendor, ssb_dev->id.coreid,
+> +	/* Check if we have BRBE implemented and available at the host */
+> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
+> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+>  
+>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>  {
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> index 4558c02eb352..79bcf0fb1326 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> @@ -79,6 +79,34 @@ static void __debug_restore_trace(u64 trfcr_el1)
+>  	write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
+>  }
+>  
+> +static void __debug_save_brbe(u64 *brbcr_el1)
+> +{
+> +	*brbcr_el1 = 0;
+> +
+> +	/* Check if the BRBE is enabled */
+> +	if (!(read_sysreg_s(SYS_BRBCR_EL1) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+> +		return;
+> +
+> +	/*
+> +	 * Prohibit branch record generation while we are in guest.
+> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
+> +	 * modify the filtering set by the host.
+> +	 */
+> +	*brbcr_el1 = read_sysreg_s(SYS_BRBCR_EL1);
+> +	write_sysreg_s(0, SYS_BRBCR_EL1);
 
-Good catch.
-Acked-by: Michael B=C3=BCsch <m@bues.ch>
+As for TRFCR and PMSCR, this is broken on hVHE.
 
+Please see [1]
 
---=20
-Michael B=C3=BCsch
-https://bues.ch/
+	M.
 
---Sig_/ob.XXZ=76OiP5u+w1/NKFuc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+[1] https://lore.kernel.org/r/20240229145417.3606279-1-maz@kernel.org
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmXgyDcACgkQ9TK+HZCN
-iw6qKg//T18rCQhWWnilcYj4srdCKlazbrCftkkAQSu680rHZXaMTlgLWeNKxBve
-TUf2P0v7S2d6BDpoNiyixNkYiJX0VyhXPQRUvmqFMhP+cy9zuWMrvLLBxgGRzuh/
-XeKw9Gnwhp+KQNsuE9MlH1JC8T+tVQxvpBvyxNdHGL3UWi9+xRgNnRtRkc2nWTBO
-7x4hMpYNmE+NbyIwoj4ps2+wruvzTvAQnaMNtwcyImBKd/J7fE7FPRVqP57+xR+C
-bftMfFV4xn7rArpU+Pg+8wEryOUIhPJ9ZmO/CLejkjaE2qoy7PP4sZbdcCSeMxak
-w10uZ1x7veeNspxNEMSKTjuvRcKJgg0x2eFKFhLbTnJg9D60yeDVTK+9S/QVHpXa
-frndJ8VCxjMq2+bY2sdglOZelAtAh9PQzLgma3HlRvwe6zprWZdmexih06oFV+kW
-4vQNus9qhZxCl7Wpxap/OlFwdgINqU/J6VDAsnt0wyMd1kdGXJaZDXeKAfY/a6B8
-eM//hyWbJ+axLvtJxbnZOCUffy64yqGLJMYUQi9dfAriyDtIozRP7vGsqEDlhVTP
-xz4PlzWuoEyzCAF9DBQ3hYxihCgGuOE9bGXg8dG0MPTw8V1XjigKdqPJyWETi43o
-PJGNkPWysXXCE03+KAmvpz3VNYGBFRy7+YiRUC6bImGqMaszisM=
-=8bGs
------END PGP SIGNATURE-----
-
---Sig_/ob.XXZ=76OiP5u+w1/NKFuc--
+-- 
+Without deviation from the norm, progress is not possible.
