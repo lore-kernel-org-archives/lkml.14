@@ -1,174 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118BF3B2A6
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 19:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD6420DCD;
+	Fri,  1 Mar 2024 19:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709322265; cv=none; b=K2mhzPPpprz7UfO5zRQCCyzNgSGWwXos8kjpKSCGxQl3JzjdM/4arTUvTS5O0PIM7ro2zQ92UhrI1qsQMl+oloZiq5Bw0b5SPG9xpbpf71dBUo2qP7Q0mpv/zgIPdK+NJGTSd+gCV70eZ2YBbgTlin3X1KgrfbXCZgrXYuHlUI0=
+	t=1709322299; cv=none; b=ZEgcHIqd2+jM4oXnXEaOi5P/wVQno4kCnBpKVudOJbhJpUgLAD0cGz28+GMg6ROB0jlckLYa1mHFb87frA5yfDihAP7DYtbQ/VtXjK/j0HPeVE4+k3/GpPfcZ+koWS97enObSp/mhbAPAq6wvl9HWgkI5E4U29wrLkBEhx9j24o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709322265; c=relaxed/simple;
-	bh=0W+wImXykfI+kFSl8R1LGXPsuEpOm5r99zqYr61SZsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bZsQIVPMD+skWdKWc+dWv4vyKDrpC0WARoEJYHhL9lfh6PW0bWnOtRSTDjqn4cbDSEASwaHA7c/5cY0y4auvQfzfMuSRBGgIEr9Ks3E2BqLLLnO8D7dTlBkp4ePgTFjNapDaoyIyrUDMjuAs2x02vcnXB+PS0gUAKTZyUOET9dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J+FPnGDz; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709322299; c=relaxed/simple;
+	bh=8lwYTHmcz1N3RNwv/Abs9wbTECfpsDj44DA5D9MMh9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JnN6wkJKkHcxdkxgbGgWm+vQVvMj23jr6r77aDXueUbIJrO/qG9Fwl96nFAdtrPsGALLjij2JMbvCEpI2yXm2oAj1LOMTx0T3Y71kHGp0UdPSrQ/i2fVptWC6rNBQzXal5oBIZf0Rx0tse7+9DCIQPhrpMEFU8xorRYLjeBCEcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QhADx1af; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J+FPnGDz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709322264; x=1740858264;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0W+wImXykfI+kFSl8R1LGXPsuEpOm5r99zqYr61SZsE=;
-  b=J+FPnGDz2qQrhyerZUT66yHt1bKZigYz85YkUIsWPcReq1WKano1JPfn
-   w/81wUHkCUiAxTgnSGTcoGslWRgal0X7r8Mq6VEGz/CxnEzYF3k1OaoYI
-   a/b9W4hKQSmki6sXVlOyazvSDsWl6+zUm21SRwyNne+cNvgbKKGp3jDF8
-   PsBFF+ObodE2jXgnXNu4idO4UGFAYHQkj99ViIljmRz+n+eW1CELzlRnf
-   hUESh7m02df6b7jXmZ7Dgi/+gP+7n6Wv4rNloB5sIk/WTBUC2SE4z1Evf
-   SbzTvb+gCqzt4A+rYKX1UsnXwbqwefnSDKEO1yjajtwJLSOLBaOeJFJ0k
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="3726936"
-X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
-   d="scan'208";a="3726936"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 11:44:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,197,1705392000"; 
-   d="scan'208";a="8521774"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 11:44:22 -0800
-Date: Fri, 1 Mar 2024 11:50:00 -0800
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dimitri Sivanich <sivanich@hpe.com>, David Woodhouse
- <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel
- <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
- <robin.murphy@arm.com>, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>, Russ
- Anderson <russ.anderson@hpe.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH] Allocate DMAR fault interrupts locally
-Message-ID: <20240301115000.4ba2e411@jacob-builder>
-In-Reply-To: <87plwe7w3m.ffs@tglx>
-References: <ZeDj/LK56borSxO4@hpe.com>
-	<87plwe7w3m.ffs@tglx>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QhADx1af"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DDEBC433F1;
+	Fri,  1 Mar 2024 19:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709322298;
+	bh=8lwYTHmcz1N3RNwv/Abs9wbTECfpsDj44DA5D9MMh9g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=QhADx1afMqH/uKdM+aDqalPjrFzmzQWyhj/ZacgFr/gMqeLhhU4OH/z3UhDO3V4Bq
+	 y732d0Zc1y6/MAdHt4zE199vlFklIzicS1f3BxcVhuVMJ2/6y7BN99pMwqzaO50ID7
+	 g8dCljTYocEx4eFOTSR9wRiIIRt9FPE5+HLbrd2OSY+JU9qlgn2cs61l18dYoZlOrT
+	 lH4/CKDeTB1W0MAN+JyncS9g3XCI/tlKHTXnZXovWlKKWoCKt62hO8EFkQOabPAYtL
+	 9MTQKQxkPBhyec4626FFP1b5avopg9+LTsJFe1IUHYGnwt/Mxf221oCPTtBtngortI
+	 DMrhIQGWImpcw==
+Date: Fri, 1 Mar 2024 13:44:56 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+Cc: agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+	mani@kernel.org, quic_msarkar@quicinc.com,
+	quic_kraravin@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Josh Triplett <josh@joshtriplett.org>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] PCI: dwc: refactor common code
+Message-ID: <20240301194456.GA405061@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240301051220.20917-2-quic_schintav@quicinc.com>
 
-Hi Thomas,
+On Thu, Feb 29, 2024 at 09:11:34PM -0800, Shashank Babu Chinta Venkata wrote:
+> Refactor common code from RC(Root Complex) and EP(End Point)
+> drivers and move them to a common repository. This acts as placeholder
+> for common source code for both drivers avoiding duplication.
+> 
+> Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig         |  5 ++
+>  drivers/pci/controller/dwc/Makefile        |  1 +
+>  drivers/pci/controller/dwc/pcie-qcom-cmn.c | 85 ++++++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-qcom-cmn.h | 30 ++++++++
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c  | 39 +---------
+>  drivers/pci/controller/dwc/pcie-qcom.c     | 67 ++---------------
+>  6 files changed, 133 insertions(+), 94 deletions(-)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-cmn.c
+>  create mode 100644 drivers/pci/controller/dwc/pcie-qcom-cmn.h
 
-On Thu, 29 Feb 2024 23:18:37 +0100, Thomas Gleixner <tglx@linutronix.de>
-wrote:
+Hmm.  I'm a little ambivalent about adding two new files.  Overall I
+think I prefer the drivers that include both RC and EP mode in a
+single source file because one file is easier to browse than four and
+more things can be static.
 
-> Dimitri!
-> 
-> On Thu, Feb 29 2024 at 14:07, Dimitri Sivanich wrote:
-> 
-> The subject lacks a subsystem prefix. You're doing this for how many
-> decades now?
-> 
-> > The Intel IOMMU code currently tries to allocate all DMAR fault
-> > interrupt 
-> > +#ifdef CONFIG_X86_LOCAL_APIC  
-> 
-> I seriously doubt that this code can ever be compiled w/o X86_LOCAL_APIC:
-> 
-> obj-$(CONFIG_DMAR_TABLE) += dmar.o
-> 
-> config DMAR_TABLE
->         bool
-> 
-> config INTEL_IOMMU
->         depends on PCI_MSI && ACPI && X86
->         select DMAR_TABLE
-> 
-> config IRQ_REMAP
->         depends on X86_64 && X86_IO_APIC && PCI_MSI && ACPI
->         select DMAR_TABLE
-> 
-> config X86_LOCAL_APIC
->         def_bool y
->         depends on X86_64 || SMP || X86_32_NON_STANDARD || X86_UP_APIC ||
-> PCI_MSI
-> 
-> What are you trying to achieve here other than #ifdef voodoo?
-> 
-> > +static void __init irq_remap_enable_fault_handling_thr(struct
-> > work_struct *work) +{
-> > +	irq_remap_enable_fault_handling();  
-> 
-> because if INTEL_IOMMU=y and IRQ_REMAP=n then X86_LOCAL_APIC=y and this
-> muck gets invoked for nothing. 'git grep irq_remap_enable_fault_handling
-> include/' might give you a hint.
-> 
-> > +}
-> > +
-> > +static int __init assign_dmar_vectors(void)
-> > +{
-> > +	struct work_struct irq_remap_work;
-> > +	int nid;
-> > +
-> > +	INIT_WORK(&irq_remap_work,
-> > irq_remap_enable_fault_handling_thr);
-> > +	cpus_read_lock();
-> > +	for_each_online_node(nid) {
-> > +		/* Boot cpu dmar vectors are assigned before the rest
-> > */
-> > +		if (nid == cpu_to_node(get_boot_cpu_id()))
-> > +			continue;
-> > +		schedule_work_on(cpumask_first(cpumask_of_node(nid)),
-> > +				 &irq_remap_work);
-> > +		flush_work(&irq_remap_work);
-> > +	}
-> > +	cpus_read_unlock();
-> > +	return 0;
-> > +}
-> > +
-> > +arch_initcall(assign_dmar_vectors);  
-> 
-> Stray newline before arch_initcall(), but that's not the problem.
-> 
-> The real problems are:
-> 
->  1) This approach only works when _ALL_ APs have been brought up during
->     boot. With 'maxcpus=N' on the command line this will fail to enable
->     fault handling when the APs which have not been brought up initially
->     are onlined later on.
-> 
->     This might be working in practice because intel_iommu_init() will
->     enable the interrupts later on via init_dmars() unconditionally, but
->     that's far from correct because IRQ_REMAP does not depend on
->     INTEL_IOMMU.
-The dmar fault interrupt is VT-d's own interrupt, not subject to IRQ_REMAP.
-So this set up has nothing to do with IR, right?
+A single file would also reduce quite a bit more duplication between
+pcie-qcom.c and pcie-qcom-ep.c, e.g., register names and fields with
+needlessly different names:
 
-Maybe we should not call it irq_remap_work, call it dmar_fault_irq_work
-instead?
+  #define AUX_PWR_DET                     BIT(4)  # pcie-qcom.c
+  #define PARF_SYS_CTRL_AUX_PWR_DET       BIT(4)  # pcie-qcom-ep.c
 
->  2) It leaves a gap where the reporting is not working between bringing
->     up the APs during boot and this initcall. Mostly theoretical, but
->     that does not make it more correct either.
-> 
-> What you really want is a cpu hotplug state in the CPUHP_BP_PREPARE_DYN
-> space which enables the interrupt for the node _before_ the first AP of
-> the node is brought up. That will solve the problem nicely w/o any of
-> the above issues.
-> 
-> Thanks,
-> 
->         tglx
-> 
+I do see PCIE_QCOM is bool and PCIE_QCOM_EP is tristate, so that and
+other considerations might make a single source file impractical.
 
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -27,6 +27,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+>  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
+>  obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
+> +obj-$(CONFIG_PCIE_QCOM_CMN) += pcie-qcom-cmn.o
 
-Thanks,
+If we have to have pcie-qcom-cmn.o, at least move this next to the
+existing lines:
 
-Jacob
+  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+  obj-$(CONFIG_PCIE_QCOM_EP) += pcie-qcom-ep.o
+
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-cmn.c
+> @@ -0,0 +1,85 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2014-2015, 2020 The Linux Foundation. All rights reserved.
+> + * Copyright 2015, 2021 Linaro Limited.
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> + *
+
+Spurious blank line.
+
+> +int qcom_pcie_cmn_icc_get_resource(struct dw_pcie *pci, struct icc_path *icc_mem)
+
+I don't see the value of adding "cmn" in the middle of the names.
+
+> +{
+> +	int ret = 0;
+> +
+> +	if (IS_ERR(pci))
+> +		return PTR_ERR(pci);
+> +
+> +	icc_mem = devm_of_icc_get(pci->dev, "pcie-mem");
+> +	if (IS_ERR(icc_mem))
+> +		return PTR_ERR(icc_mem);
+> +
+> +	return ret;
+
+No need for the "ret" variable since it's never assigned.  "return 0"
+here would be easier to read.
+
+> +int qcom_pcie_cmn_icc_init(struct dw_pcie *pci, struct icc_path *icc_mem)
+> +{
+> +	int ret = 0;
+
+Unnecessary initialization.
+
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-cmn.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2014-2015, 2020 The Linux Foundation. All rights reserved.
+> + * Copyright 2015, 2021 Linaro Limited.
+> + * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#include <linux/pci.h>
+> +#include "../../pci.h"
+> +#include "pcie-designware.h"
+> +
+> +#ifdef CONFIG_PCIE_QCOM_CMN
+
+Why the #ifdef wrapper?  And why do we need the stubs when
+CONFIG_PCIE_QCOM_CMN isn't defined?
+
+> +#else
+> +static inline int qcom_pcie_cmn_icc_get_resource(struct dw_pcie *pci, struct icc_path *icc_mem)
+> +{
+> +	return 0;
+> +}
