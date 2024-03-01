@@ -1,46 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22B13399B
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 01:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DA72BAF0
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 01:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709257900; cv=none; b=EzKuZ/jCu+QHVapQJ3vkNDWkQs0rlP6UAumsf/ft3mla+nQCH/9onvqOve8Kt2PSIaUGk4tsw+L18TCzgx70TDOTMDWArsKf2xV2upXlcwW2M0qBoJeylrA+2190j/J+27MqC6ftB+gbVSY+4vMCIWUB0hxSV4hZ4KVqVcgG3RA=
+	t=1709258123; cv=none; b=KLzHd7VGh0YNsHbmOYNWWzqElZPlhHzZIpu8Y+ldMfg1J++CBdQA+cG1AYX75BzMTUl8HAUQvIMqk1ChcLUoe+Lx5UvokLeXG4AVKfgFPg20AJ0m5bbtyZqIuR/M54r+dMx1y+xlh4dve6Dk5Y7v8AqbgxavCYwPv4tdwrhddxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709257900; c=relaxed/simple;
-	bh=hFW6W71DX+J8HilFF8PSecokRa8ihHk28CG7/DMhH3w=;
+	s=arc-20240116; t=1709258123; c=relaxed/simple;
+	bh=cbqoixCcz2zE8+F9Pz2JkEG1qy/+t8gYH7RfdkUJYUw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rlk7qNydeM7oaT3K9hsYcAfVPSWqiCqDAQ6C/PrHTG5enk/ACpNQ2ag4dnrwoMB3dCKJkSa+IXorYA8HDeCSNZOyH439nX8XjGj0J0q7PHy+c9BaqMxgELfYWQjaEo4AgHKcCYkv6ey/jwQPyMzQAwm2FwioJcsukQ6GIXUp7cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=huy8Z9ze; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=B5ABLYWXNbb1ae0OaYUUrjQKXsPIr1eibaxcgH9OZS0OTEg00/YIlSEsEY0A3WdHZ1eZKCE4un54v68Z1fdmw2YOQIMo93KeQAuYB0YnJxD1Vd34u4U5lH+59qJNfXAXJj2kHKSmW7c5RK+yuucFemlPHgwz61bxvfcsKsOVGMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gY/nZbu3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="huy8Z9ze"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709257899; x=1740793899;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hFW6W71DX+J8HilFF8PSecokRa8ihHk28CG7/DMhH3w=;
-  b=huy8Z9zeni11Ubf1UrQuvHqcE6RMqIDLA9Eo5JHFnnyW+MBdtOcbu/fR
-   4E9t+cWSDOtr4H73mKy6Tp8yRF6Zo1In/2+Dwo/WuztrgWm3KeDe6v1E4
-   tiCiO7Mqe/C21Rq5k5lzhRfEAUlHrLFUx5GTXBKyUl2/vDfkIAtKMcGcR
-   xYJUI+4LI969/QWks1nr7W19M8vv97We6DzKIcys5ixOIf4DFnnmJVNe7
-   WRBVItpXogiCbq18jrwN0RhMkCLqt7BSbqw4gORY4iNfa3WoI6tuC/i5I
-   E2Auhh6YgaE89cghmhSslLBasiVxer0zGQvuFc5CFW00/FzNAKO6hC1Be
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="15211690"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="15211690"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 17:51:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="45581615"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 17:51:35 -0800
-Message-ID: <86db24b9-5461-4b6b-8858-a7ca2966c957@linux.intel.com>
-Date: Fri, 1 Mar 2024 09:51:34 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gY/nZbu3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDC31C433C7;
+	Fri,  1 Mar 2024 01:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709258122;
+	bh=cbqoixCcz2zE8+F9Pz2JkEG1qy/+t8gYH7RfdkUJYUw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gY/nZbu3L7l92Zt1PCeX1GhBMup6uD9QPIRva9ZiDGX97+d0l1EYQJofw1vcRB/1H
+	 y9YkGZt5rxsFIbyVDuSiWwW36SDZf1wSiPIHG3H7mXbVJbDo6cfCRumFVZS56qANjF
+	 UpO5U9w0NDrEMSRedjunrhhkfRHljnZu1Cf1aPSsKjBp9+7uTfST23NDCzbxjqPWj1
+	 JVhyN5JackZIzxecSMsGRUVFUqTgGE4FpMaK6uVi+srfHD1E0W6R7EFGZzVMWgb/ts
+	 OOyJOSMg8rElxld5nLthF613+gRap9DLo7rXD6LXOSDNz7Ca8DnNVv+7UNqayhX9nB
+	 A3sqpI/zI1XJQ==
+Message-ID: <3325fdb0-1f21-4ba9-919a-09fa0206f7c5@kernel.org>
+Date: Fri, 1 Mar 2024 09:55:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,89 +35,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu/vt-d: improve ITE fault handling if device was
- released
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: baolu.lu@linux.intel.com, bhelgaas@google.com, robin.murphy@arm.com,
- jgg@ziepe.ca, kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org,
- lukas@wunner.de, yi.l.liu@intel.com, dan.carpenter@linaro.org,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240229210726.GA363458@bhelgaas>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <20240229210726.GA363458@bhelgaas>
+Subject: Re: [f2fs-dev] [PATCH 1/4] f2fs: fix blkofs_end correctly in
+ f2fs_migrate_blocks()
+Content-Language: en-US
+To: Daeho Jeong <daeho43@gmail.com>
+Cc: jaegeuk@kernel.org, Daeho Jeong <daehojeong@google.com>,
+ linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+References: <20240226013208.2389246-1-chao@kernel.org>
+ <2b81aa6f-db51-4a7c-97ab-2af2c2fea056@kernel.org>
+ <CACOAw_yn4m+nEGMEX8RL1xFEaZpzXvjUhUdSoo9d2EeGfzPrAA@mail.gmail.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <CACOAw_yn4m+nEGMEX8RL1xFEaZpzXvjUhUdSoo9d2EeGfzPrAA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+On 2024/3/1 1:41, Daeho Jeong wrote:
+> On Thu, Feb 29, 2024 at 2:11 AM Chao Yu <chao@kernel.org> wrote:
+>>
+>> Jaegeuk, Daeho,
+>>
+>> Any comments on this serials?
+>>
+>> Thanks,
+> 
+> No functional difference here, since start_blk is always aligned with
+> the section address.
 
-On 3/1/2024 5:07 AM, Bjorn Helgaas wrote:
-> On Wed, Feb 28, 2024 at 11:07:24PM -0500, Ethan Zhao wrote:
->> Break the loop to blindly retry the timeout ATS invalidation request
->> after ITE fault hit if device was released or isn't present anymore.
->>
->> This is part of the followup of prior proposed patchset
->>
->> https://do-db2.lkml.org/lkml/2024/2/22/350
-> Use lore URL, please.
+You're right.
 
-Sure !
+> However, this is more clear in itself.
 
->
->> Fixes: 6ba6c3a4cacf ("VT-d: add device IOTLB invalidation support")
->> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
->> ---
->>   drivers/iommu/intel/dmar.c | 25 +++++++++++++++++++++++++
->>   1 file changed, 25 insertions(+)
+Thanks for the review!
+
+One more thing is, I found that fallocate() on pinned file will preallocate
+aligned w/ section-size which is about several hundred megabyte for ZUFS case,
+since commit e1175f022911 ("f2fs: fix to align to section for fallocate() on
+pinned file").
+
+It looks not make sense, especially for logcat case which actually want to
+preallocate 2MB space, so, what about reverting commit e1175f022911 and
+looking for other solution to avoid GCing on fragmented pinned file.
+
+What do you think?
+
+Thanks,
+
+> 
+> Reviewed-by: Daeho Jeong <daehojeong@google.com>
+> 
+> Thanks,
+> 
 >>
->> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
->> index d14797aabb7a..d01d68205557 100644
->> --- a/drivers/iommu/intel/dmar.c
->> +++ b/drivers/iommu/intel/dmar.c
->> @@ -1273,6 +1273,9 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
->>   {
->>   	u32 fault;
->>   	int head, tail;
->> +	u64 iqe_err, ite_sid;
->> +	struct device *dev = NULL;
->> +	struct pci_dev *pdev = NULL;
->>   	struct q_inval *qi = iommu->qi;
->>   	int shift = qi_shift(iommu);
->>   
->> @@ -1317,6 +1320,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
->>   		tail = readl(iommu->reg + DMAR_IQT_REG);
->>   		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
->>   
->> +		/*
->> +		 * SID field is valid only when the ITE field is Set in FSTS_REG
->> +		 * see Intel VT-d spec r4.1, section 11.4.9.9
->> +		 */
->> +		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
->> +		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
->> +
->>   		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
->>   		pr_info("Invalidation Time-out Error (ITE) cleared\n");
->>   
->> @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
->>   			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
->>   		} while (head != tail);
->>   
->> +		/*
->> +		 * If got ITE, we need to check if the sid of ITE is one of the
->> +		 * current valid ATS invalidation target devices, if no, or the
->> +		 * target device isn't presnet, don't try this request anymore.
->> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
->> +		 */
->> +		if (ite_sid) {
->> +			dev = device_rbtree_find(iommu, ite_sid);
->> +			if (!dev || !dev_is_pci(dev))
->> +				return -ETIMEDOUT;
->> +			pdev = to_pci_dev(dev);
->> +			if (!pci_device_is_present(pdev) &&
->> +				ite_sid == pci_dev_id(pci_physfn(pdev)))
->> +				return -ETIMEDOUT;
->> +		}
->>   		if (qi->desc_status[wait_index] == QI_ABORT)
->>   			return -EAGAIN;
->>   	}
->> -- 
->> 2.31.1
+>> On 2024/2/26 9:32, Chao Yu wrote:
+>>> In f2fs_migrate_blocks(), when traversing blocks in last section,
+>>> blkofs_end should be (start_blk + blkcnt - 1) % blk_per_sec, fix it.
+>>>
+>>> Signed-off-by: Chao Yu <chao@kernel.org>
+>>> ---
+>>>    fs/f2fs/data.c | 5 +++--
+>>>    1 file changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>> index c21b92f18463..0c728e82d936 100644
+>>> --- a/fs/f2fs/data.c
+>>> +++ b/fs/f2fs/data.c
+>>> @@ -3841,13 +3841,14 @@ static int f2fs_migrate_blocks(struct inode *inode, block_t start_blk,
+>>>        struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>>        unsigned int blkofs;
+>>>        unsigned int blk_per_sec = BLKS_PER_SEC(sbi);
+>>> +     unsigned int end_blk = start_blk + blkcnt - 1;
+>>>        unsigned int secidx = start_blk / blk_per_sec;
+>>>        unsigned int end_sec;
+>>>        int ret = 0;
+>>>
+>>>        if (!blkcnt)
+>>>                return 0;
+>>> -     end_sec = secidx + (blkcnt - 1) / blk_per_sec;
+>>> +     end_sec = end_blk / blk_per_sec;
+>>>
+>>>        f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+>>>        filemap_invalidate_lock(inode->i_mapping);
+>>> @@ -3857,7 +3858,7 @@ static int f2fs_migrate_blocks(struct inode *inode, block_t start_blk,
+>>>
+>>>        for (; secidx <= end_sec; secidx++) {
+>>>                unsigned int blkofs_end = secidx == end_sec ?
+>>> -                     (blkcnt - 1) % blk_per_sec : blk_per_sec - 1;
+>>> +                             end_blk % blk_per_sec : blk_per_sec - 1;
+>>>
+>>>                f2fs_down_write(&sbi->pin_sem);
+>>>
 >>
+>>
+>> _______________________________________________
+>> Linux-f2fs-devel mailing list
+>> Linux-f2fs-devel@lists.sourceforge.net
+>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
