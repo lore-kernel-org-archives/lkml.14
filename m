@@ -1,261 +1,198 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1835C3A8E8;
-	Fri,  1 Mar 2024 14:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709303892; cv=fail; b=ejdrpeOeHbbhTJfNhcQumzF/uANI7oF64JtsLZshoYHztmp0WL3Ip6SpTHQT8kHu3jIAh0w63pq4SHWQ7rqjrV2yo7SJBpr1ZDbZLBfO67GUl5zvegmwj3y1fTnxcoKGwv610k3HZ12gntDNXaVe2Y4RxlfG4K4+v5X0a8hC+8I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709303892; c=relaxed/simple;
-	bh=mkew6BgxINgrP+SrOug7QFgSoXrMDkXyQzPM/4XRYvQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mCgpKt9Zcdf13HW4dgzhvvQugRhTQdUu8yLAWgmByM5GPa6Fg8RbAhbXl7/ouKuJh0l3kjy8e51/RMoLBcTLiFAfrzdLoM5Hm0UTneuZ7XmI6HHd9I94aHOiwo2q3kQE9bV8VXdQ/JIFE/zb7pQlChy+yTCQ/JQ8eIASHOIZWdQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=by6/6/8V; arc=fail smtp.client-ip=40.107.236.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8011F95F;
+	Fri,  1 Mar 2024 14:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709303928; cv=none; b=nvsImUtgsv+rRq20pxdvhUEx1N1JlwEjWd3VpIw5birkZ8cFUamoQDb7fKPRQ4WGthNsSXcz2jxOYIRXCXbi+FqZF8kXH9omzx6oUE8v6iPMug179aaQLkyVieJ58XtR+b92ymknz2mhWy1hUgZjhAfBOFZR69lUCZcS8UT9wbU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709303928; c=relaxed/simple;
+	bh=15DiaVZmWQ5lkOk5yiyj7mODdqrJ813l7zkAfz6n24c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=K9VY29TCG83mzt9WJ5SnWXfIPQoS1aEIR6iJQ0sbKNse+4a2q66VRsNWQY0w+vUupQvc7UQE8lPOQYUbagEZlu5hlMK7s5vF4efKPhsO0UE/J8T0Gk3C+oG1CM2spOmUqkfeZoWKu28InAgYRz3lGtGEVYjq5yc/DfymQWD4L6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=OAjzj4cs; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="by6/6/8V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cRFzbZOhSOpaNJqFpKdqeICvpjkrOLasM95+JNnly5eqvUkAHtNHGLzrPXCJ0t8U+tbIb+33tbbS5amCq9x2BdAtEUt42KA598EdF1F7kZUH/ZMxkhCU/HRiN80XRxuFk9muVny/G2cC9/Q0Q2eDvCWEtsSzwdSD3e2wjd8c2j5G3kdEvAMw73ckDEwZcKNAHGJPK+e0UPT6NNLIJ3W3dzpZYjUYFal7cjskupJyn8p/ldjvaQWV76gcaK398333h1/tNLZKf/79T6KLzqtm6lYIzMGc0lyYzHcn3Fgd0DOusQ9fH7cBdajUFVCHnCn/rbUz7W88edYbu5E4BmtVDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MQDlZU/CCXiCX74FYVwpVtLyq9aqakrmIEie4cQYDj0=;
- b=FIYwyfC0iejtie6s5aM/hM1MaUlbDvdz/FoydnMVfbVMi70FxeBADWB4e/0jpdIXahpdwhMuOObLW7M6MGsunrUnUGVxMdABP9XPpDYTzIkjg7OE7+VutOdaN/GmnFEAw5XiWInV2qddX3Vik3GvIvkqIh92tvIPd+OvhTxTTM+zLKoTvAP5ClE5fdzDUF35OyyZOb4hc05BVjNPQHBeZbiPtRqFbk2Ce+MVe4VwTlnRhUb1up1MZIEWayBL7ns3LAYLHpwrk/Qvhk09HG2IWVTj8vXMioGFmJRTVpLRIbBKprtEb8bfkDUeFUNHPwIH3/7s4YuD+ttTWKO/dCw9zQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=alien8.de smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MQDlZU/CCXiCX74FYVwpVtLyq9aqakrmIEie4cQYDj0=;
- b=by6/6/8VxgbmYrRzlEWIkso1Txrv7ngke7iaYH1n5HFzTZIdiBLYkSF+z6ISrxDpMVt/iBFsvazB9gje8vwotI4LzaGTRvwUoQIIUvVTg1KF1NfcL9WoPhFAOE5MnOMdw1HGilu5rqIKthiLQzNLWT+fOvgnjr9+uB0M1v0DKwE=
-Received: from SN1PR12CA0058.namprd12.prod.outlook.com (2603:10b6:802:20::29)
- by DM4PR12MB6639.namprd12.prod.outlook.com (2603:10b6:8:be::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Fri, 1 Mar
- 2024 14:38:05 +0000
-Received: from SA2PEPF0000150A.namprd04.prod.outlook.com
- (2603:10b6:802:20:cafe::c7) by SN1PR12CA0058.outlook.office365.com
- (2603:10b6:802:20::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.32 via Frontend
- Transport; Fri, 1 Mar 2024 14:38:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF0000150A.mail.protection.outlook.com (10.167.242.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7362.11 via Frontend Transport; Fri, 1 Mar 2024 14:38:04 +0000
-Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 1 Mar
- 2024 08:37:59 -0600
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: <bp@alien8.de>, <tony.luck@intel.com>, <linux-edac@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <avadhut.naik@amd.com>,
-	<john.allen@amd.com>, <muralidhara.mk@amd.com>, <sathyapriya.k@amd.com>,
-	<naveenkrishna.chatradhi@amd.com>, Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: [PATCH v2 2/3] RAS/AMD/FMPM: Save SPA values
-Date: Fri, 1 Mar 2024 08:37:47 -0600
-Message-ID: <20240301143748.854090-3-yazen.ghannam@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240301143748.854090-1-yazen.ghannam@amd.com>
-References: <20240301143748.854090-1-yazen.ghannam@amd.com>
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="OAjzj4cs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Bbd1F8GZfxauwRffXe1ckbLd3IotHJxaRzc9bB9mM4A=; t=1709303924; x=1709908724; 
+	b=OAjzj4csyBV7wNKs/XQTXo0n8id6U1Nx+f4hTcJYThExAXNTw3gxL3Yjqg6Wt6c9BMSt5R113Fd
+	kuXqlsnxH79yrENZCEcgNQnOMoctNMaFkQhEKi9KUdUZEnQnwjrxMmSAcdJ4LEjfwSspk6BZ52jX5
+	+BKEzf+dcLbPUje8oGnDcwldksIk6GW41EcmlSmvdqyyvrnQAPX3YMpZEcda8aVu+Z/+Vf3kMEpov
+	CAz8PMi6iQWVJLFV4FhLnVrhwwHBhrXKn3UZGSbAVxYJK4SNlnjdoXBFTVAEjYRG0aRbEEL867srF
+	Y6Om4nymaIKXaPnJ0ubnq1adfySfvz4Y5dGg==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1rg425-00000000w7u-0gXm; Fri, 01 Mar 2024 15:38:41 +0100
+Received: from dynamic-077-188-054-101.77.188.pool.telefonica.de ([77.188.54.101] helo=suse-laptop.fritz.box)
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1rg424-00000002oNJ-3r7I; Fri, 01 Mar 2024 15:38:41 +0100
+Message-ID: <f8bef08f5acf6ea9f153a07351c5b06bcc64c763.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] sh: Fix build with CONFIG_UBSAN=y
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: "Liu, Yujie" <yujie.liu@intel.com>
+Cc: lkp <lkp@intel.com>, "masahiroy@kernel.org" <masahiroy@kernel.org>, 
+ "dalias@libc.org" <dalias@libc.org>, "linux-sh@vger.kernel.org"
+ <linux-sh@vger.kernel.org>,  "keescook@chromium.org"
+ <keescook@chromium.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "ysato@users.osdn.me"
+ <ysato@users.osdn.me>,  "linux-hardening@vger.kernel.org"
+ <linux-hardening@vger.kernel.org>, "Schier, Nicolas" <n.schier@avm.de>
+Date: Fri, 01 Mar 2024 15:38:40 +0100
+In-Reply-To: <e7a80eeafa9b916108ee53f2fe60524554ab0fa6.camel@intel.com>
+References: <20240130232717.work.088-kees@kernel.org>
+	 <494586ed5a0871cf7cfd005f513577952306a0bc.camel@physik.fu-berlin.de>
+	 <fe057f57aba0f8a9040d4700d27f5bd478032925.camel@physik.fu-berlin.de>
+	 <202402020228.BBEF7DAC@keescook>
+	 <9fda57fc1b1ba6ad9bd6f7df3fb12674d0f4f940.camel@physik.fu-berlin.de>
+	 <cd1a36a234c8fc61c5febe646ae0f05ed20ae32a.camel@physik.fu-berlin.de>
+	 <202402121025.B0B6E47@keescook>
+	 <178e0bebb1a85efebce1f504122ee190c068e0c9.camel@physik.fu-berlin.de>
+	 <93572a771cb3a0b36a9213f18dd43c034c84cf6d.camel@physik.fu-berlin.de>
+	 <e7a80eeafa9b916108ee53f2fe60524554ab0fa6.camel@intel.com>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF0000150A:EE_|DM4PR12MB6639:EE_
-X-MS-Office365-Filtering-Correlation-Id: 993f285e-dbe7-4e7d-abb0-08dc39fd3476
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	1hHDxRehyIU/ZawTVBEUnUuXLy9byyToZElLVlSXYUzYnMFYSvqaixoCLH6FabI7Y3VnHyoInWp/DPwkm8mBRO66C0y3gkw+GWlHlp6oJp6VKfx+e/+fB/5FZLCQ8y0UUovEJS2l9T4cdXd7W27DMqQ1GQY6lxCNXlVdFV7zB2o3pDwMQuf1EWUSKsE8+znAysicR87cH+2SBICdz9ufsGTcDmX6yvHn58Mesit2JtpFB0B8+S9GK+C2y/2MmFlfFmWCCD4fqDXfxRmEFOJODMywZyXpiPUZBHU3AoazVVKygPS0P+yK85U8WQIMhsecD+mCT5dh2hCcPxP7sAimFI9WsomV6/OQs8Io4C9RK1ETrjJZ924okyIenwPGthUqfG7zCZLSCwrArUIfMyX60ofsSjtpkaggsFhkidmq8v2fRzhi4AHdCGpyzT0n/xbFHugs+ARmJq/z0F8K+kvtj9I5/OEHMd/VjRO3W9ttSU1hVTL6xjheEhh6hsYcUNRd/tHooRuohMJkvOqinDpVPuLPAEoLN1OmIc0Z+2h3pl1evQBjNWhyy4FyoOpQDiGQmeTi50CaCg9phT0k5OXf0Gz8+EPI6kGpZRIE5Fxr+KaSrtGPpMKGSi7VGe2tj3oBtmRfZaPGAF0fTLMR04IRcPk9E9QzugsgyxPpBUnMvBP5cQFCo7YuJpbMfH1mZBHgwg/8dQpyynIiqeQ2YFSXEQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2024 14:38:04.8844
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 993f285e-dbe7-4e7d-abb0-08dc39fd3476
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF0000150A.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6639
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-The system physical address (SPA) of an error is not a stable value. It
-will change depending on the location of the memory: parts can be
-swapped. And it will change depending on memory topology: NUMA nodes
-and/or interleaving can be adjusted.
+Hi Yujie,
 
-Therefore, the SPA value is not part of the "FRU Memory Poison" record
-format. And it will not be saved to persistent storage.
+On Fri, 2024-03-01 at 05:46 +0000, Liu, Yujie wrote:
+> On Wed, 2024-02-14 at 13:52 +0100, John Paul Adrian Glaubitz wrote:
+> > Hi Kees,
+> >=20
+> > On Mon, 2024-02-12 at 19:45 +0100, John Paul Adrian Glaubitz wrote:
+> > > On Mon, 2024-02-12 at 10:26 -0800, Kees Cook wrote:
+> > > > > I just wanted to try reproduce the problem again with the reprodu=
+cer in [1] as well
+> > > > > as with gcc-13.2.0, but your branch devel/overflow/ubsan-only no =
+longer exists.
+> > > > >=20
+> > > > > Can you tell me where to find the patches now?
+> > > >=20
+> > > > Sure, they're in -next, but for an -rc2 based tree, see:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/=
+?h=3Dfor-next/kspp
+> > >=20
+> > > OK, thanks. I will give it a try with gcc-13.
+> >=20
+> > I'm still unable to reproduce the error that the kernel test robot repo=
+rted.
+> >=20
+> > I'm using gcc-13:
+> >=20
+> > glaubitz@node54:/data/home/glaubitz/linux-kees> sh4-linux-gcc
+> > sh4-linux-gcc: fatal error: no input files
+> > compilation terminated.
+> > glaubitz@node54:/data/home/glaubitz/linux-kees> sh4-linux-gcc --version
+> > sh4-linux-gcc (GCC) 13.2.0
+> > Copyright (C) 2023 Free Software Foundation, Inc.
+> > This is free software; see the source for copying conditions.=C2=A0 The=
+re is NO
+> > warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURP=
+OSE.
+> >=20
+> > glaubitz@node54:/data/home/glaubitz/linux-kees>
+> >=20
+> > I checked out your tree and the for-next/kspp branch.
+> >=20
+> > Then fetched the config that triggered the bug like this:
+> >=20
+> > $ wget https://download.01.org/0day-ci/archive/20240131/202401310416.s8=
+HLiLnC-lkp@intel.com/config=C2=A0-O .config
+> >=20
+> > Building the kernel with "make -j32 uImage" works fine. No errors excep=
+t for
+> > some unreleated warnings that still need to be fixed.
+>=20
+> Sorry for late reply. Seems like the warnings can be reproduced by
+> "make zImage" which is the default make target, but cannot be
+> reproduced by "make uImage".
+>=20
+> HEAD is now at 918327e9b7ffb ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL
+>=20
+> $ wget https://download.01.org/0day-ci/archive/20240131/202401310416.s8HL=
+iLnC-lkp@intel.com/config -O .config
+> $ sh4-linux-gcc --version
+> sh4-linux-gcc (GCC) 13.2.0
+>=20
+> $ make -j72 CROSS_COMPILE=3Dsh4-linux- ARCH=3Dsh olddefconfig
+> $ make -j72 CROSS_COMPILE=3Dsh4-linux- ARCH=3Dsh
+> ...
+>   LD      arch/sh/boot/compressed/vmlinux
+> sh4-linux-ld: arch/sh/boot/compressed/misc.o: in function `zlib_inflate_t=
+able':
+> misc.c:(.text+0x670): undefined reference to `__ubsan_handle_shift_out_of=
+_bounds'
+> sh4-linux-ld: arch/sh/boot/compressed/misc.o: in function `inflate_fast':
+> misc.c:(.text+0xc5c): undefined reference to `__ubsan_handle_shift_out_of=
+_bounds'
+> sh4-linux-ld: arch/sh/boot/compressed/misc.o: in function `zlib_inflateRe=
+set':
+> misc.c:(.text+0xd00): undefined reference to `__ubsan_handle_shift_out_of=
+_bounds'
+> sh4-linux-ld: arch/sh/boot/compressed/misc.o: in function `zlib_inflate':
+> misc.c:(.text+0x23fc): undefined reference to `__ubsan_handle_shift_out_o=
+f_bounds'
+> sh4-linux-ld: arch/sh/boot/compressed/ashldi3.o: in function `__ashldi3':
+> ashldi3.c:(.text+0xc8): undefined reference to `__ubsan_handle_shift_out_=
+of_bounds'
+> make[3]: *** [arch/sh/boot/compressed/Makefile:38: arch/sh/boot/compresse=
+d/vmlinux] Error 1
+> make[2]: *** [arch/sh/boot/Makefile:40: arch/sh/boot/compressed/vmlinux] =
+Error 2
+> make[1]: *** [arch/sh/Makefile:170: zImage] Error 2
+> make: *** [Makefile:240: __sub-make] Error 2
+>=20
+> $ make -j72 CROSS_COMPILE=3Dsh4-linux- ARCH=3Dsh uImage
+> ...
+>   OBJCOPY arch/sh/boot/vmlinux.bin
+>   GZIP    arch/sh/boot/vmlinux.bin.gz
+>   UIMAGE  arch/sh/boot/uImage.gz
+> Image Name:   Linux-6.8.0-rc2+
+> Created:      Fri Mar  1 13:31:36 2024
+> Image Type:   SuperH Linux Kernel Image (gzip compressed)
+> Data Size:    9297141 Bytes =3D 9079.24 KiB =3D 8.87 MiB
+> Load Address: 08001000
+> Entry Point:  08002000
+>   Image arch/sh/boot/uImage is ready
 
-However, the SPA values can be helpful during debug and for system
-admins during run time.
+Thanks a lot for pointing this out. This explains the problem.
 
-Save the SPA values in a separate structure. This is updated when
-records are restored and when new errors are saved.
+I will have another look over the weekend and acknowledge the patch if Kees=
+ wants
+to pick it up through his own tree.
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
-Link:
-https://lore.kernel.org/r/20240226152941.2615007-3-yazen.ghannam@amd.com
+Adrian
 
-v1->v2:
-* Changed variable names to remove "sys_" prefix. (Boris)
-* Used "spa_" prefix to highlight that these are for SPA values. (Yazen)
-* Added warning to "index out-of-bound" condition. (Boris)
-* Reworked save_spa() flow to get a valid array position before saving
-  SPA value (Yazen).
-
- drivers/ras/amd/fmpm.c | 68 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
-
-diff --git a/drivers/ras/amd/fmpm.c b/drivers/ras/amd/fmpm.c
-index 80dd112b720a..a7bb36eb60cb 100644
---- a/drivers/ras/amd/fmpm.c
-+++ b/drivers/ras/amd/fmpm.c
-@@ -111,6 +111,11 @@ struct fru_rec {
-  */
- static struct fru_rec **fru_records;
- 
-+/* system physical addresses array */
-+static u64 *spa_entries;
-+
-+#define INVALID_SPA	~0ULL
-+
- #define CPER_CREATOR_FMP						\
- 	GUID_INIT(0xcd5c2993, 0xf4b2, 0x41b2, 0xb5, 0xd4, 0xf9, 0xc3,	\
- 		  0xa0, 0x33, 0x08, 0x75)
-@@ -140,6 +145,9 @@ static unsigned int max_nr_fru;
- /* Total length of record including headers and list of descriptor entries. */
- static size_t max_rec_len;
- 
-+/* Total number of SPA entries across all FRUs. */
-+static unsigned int spa_nr_entries;
-+
- /*
-  * Protect the local records cache in fru_records and prevent concurrent
-  * writes to storage. This is only needed after init once notifier block
-@@ -269,6 +277,52 @@ static bool rec_has_fpd(struct fru_rec *rec, struct cper_fru_poison_desc *fpd)
- 	return false;
- }
- 
-+static void save_spa(struct fru_rec *rec, unsigned int entry,
-+		     u64 addr, u64 id, unsigned int cpu)
-+{
-+	unsigned int i, fru_idx, spa_entry;
-+	struct atl_err a_err;
-+	unsigned long spa;
-+
-+	if (entry >= max_nr_entries) {
-+		pr_warn_once("entry out-of-bounds\n");
-+		return;
-+	}
-+
-+	for (i = 0; i < spa_nr_entries; i += max_nr_entries) {
-+		fru_idx = i / max_nr_entries;
-+		if (fru_records[fru_idx] == rec)
-+			break;
-+	}
-+
-+	if (i >= spa_nr_entries) {
-+		pr_warn_once("record not found");
-+		return;
-+	}
-+
-+	spa_entry = i + entry;
-+	if (spa_entry >= spa_nr_entries) {
-+		pr_warn_once("spa_entries[] index out-of-bounds\n");
-+		return;
-+	}
-+
-+	memset(&a_err, 0, sizeof(struct atl_err));
-+
-+	a_err.addr = addr;
-+	a_err.ipid = id;
-+	a_err.cpu  = cpu;
-+
-+	spa = amd_convert_umc_mca_addr_to_sys_addr(&a_err);
-+	if (IS_ERR_VALUE(spa)) {
-+		pr_debug("Failed to get system address\n");
-+		return;
-+	}
-+
-+	spa_entries[spa_entry] = spa;
-+	pr_debug("fru_idx: %u, entry: %u, spa_entry: %u, spa: 0x%016llx\n",
-+		 fru_idx, entry, spa_entry, spa_entries[spa_entry]);
-+}
-+
- static void update_fru_record(struct fru_rec *rec, struct mce *m)
- {
- 	struct cper_sec_fru_mem_poison *fmp = &rec->fmp;
-@@ -301,6 +355,7 @@ static void update_fru_record(struct fru_rec *rec, struct mce *m)
- 	entry  = fmp->nr_entries;
- 
- save_fpd:
-+	save_spa(rec, entry, m->addr, m->ipid, m->extcpu);
- 	fpd_dest  = &rec->entries[entry];
- 	memcpy(fpd_dest, &fpd, sizeof(struct cper_fru_poison_desc));
- 
-@@ -385,6 +440,7 @@ static void retire_mem_fmp(struct fru_rec *rec)
- 			continue;
- 
- 		retire_dram_row(fpd->addr, fpd->hw_id, err_cpu);
-+		save_spa(rec, i, fpd->addr, fpd->hw_id, err_cpu);
- 	}
- }
- 
-@@ -696,6 +752,8 @@ static int get_system_info(void)
- 	if (!max_nr_entries)
- 		max_nr_entries = FMPM_DEFAULT_MAX_NR_ENTRIES;
- 
-+	spa_nr_entries = max_nr_fru * max_nr_entries;
-+
- 	max_rec_len  = sizeof(struct fru_rec);
- 	max_rec_len += sizeof(struct cper_fru_poison_desc) * max_nr_entries;
- 
-@@ -714,6 +772,7 @@ static void free_records(void)
- 		kfree(rec);
- 
- 	kfree(fru_records);
-+	kfree(spa_entries);
- }
- 
- static int allocate_records(void)
-@@ -734,6 +793,15 @@ static int allocate_records(void)
- 		}
- 	}
- 
-+	spa_entries = kcalloc(spa_nr_entries, sizeof(u64), GFP_KERNEL);
-+	if (!spa_entries) {
-+		ret = -ENOMEM;
-+		goto out_free;
-+	}
-+
-+	for (i = 0; i < spa_nr_entries; i++)
-+		spa_entries[i] = INVALID_SPA;
-+
- 	return ret;
- 
- out_free:
--- 
-2.34.1
-
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
