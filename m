@@ -1,275 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1595D5EE67;
-	Fri,  1 Mar 2024 22:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA434206E
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 22:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709333940; cv=none; b=g/N4TZIbC4BmQ/P/4UX4wHIdTyt2WsRUAJIOsr3EMmgZs6qe0EZENwlGNblzSjszaie+vr/QZYGLovIfjX2oVgfxJupIe/e1zs3rqPuF3/KxqKlCyCxbJyWRSgUtMOzXS+hPZLzcyfuN0XJovUVxixPTyJE4mCogaQY2A9crVlU=
+	t=1709333979; cv=none; b=Mj4VAG0FImUTdGJtgDvWPp5KmY7V5hhWVT8YhKVeCwlfN9hrWwRb1dtF8PZdRYZZP/X4RmdUoN30YPzHyd55bIKMfgI2bbRXG9cI12SLdYLsOSh2WQe41WGYVDkir0IE4L7hCmmh/cvPEzagn5leDGmWSdkWzSdEpiLWfsvY+4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709333940; c=relaxed/simple;
-	bh=fcebmwXS1BjQVg9Ypr2SmOyNCdgw+hKrXZuUCmC8840=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aPmkweerocCx4AKFpwW8p4b7wETLa9EJcHlU9b33cZuRlMspXkso4+founWxNL7Jwrs8Sz12su956Z3KNkNAvg91b+YaHUjaTnO3PSSPytRyfpVIfP3i0+xAjyzPCGMp6Lsics/7Qw+jZZcBgod2+pVikSrL8Fq9gVOMwjkbGw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59869C433F1;
-	Fri,  1 Mar 2024 22:58:59 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id C72C11060625; Fri,  1 Mar 2024 23:58:56 +0100 (CET)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Date: Fri, 01 Mar 2024 23:58:26 +0100
-Subject: [PATCH 1/2] power: supply: core: add
- power_supply_for_each_device()
+	s=arc-20240116; t=1709333979; c=relaxed/simple;
+	bh=9mixZGRjVd+uWR2Vm6koGSHFqRdJ7D/yHJ7KL1mIxf0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k2AhYsLZdeufEcCD1Fl1adTJNqkihzv9FrQ8SUomk9aGrCg6ZhPN/C2qarjUbR23ZFR8vCzVUUzgzUSwu8Q6msePiY8GrK06Ar3sp19mtoovUaWVOPBSZ6s02i5Up/npeywTFxgtFD7AvCy4AzSL4WENNyPG8LBfzNYT3d06Jn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 3603e7df-d81f-11ee-b3cf-005056bd6ce9;
+	Sat, 02 Mar 2024 00:58:26 +0200 (EET)
+From: andy.shevchenko@gmail.com
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v1 1/1] gpio: nomadik: Finish conversion to use firmware node APIs
+Date: Sat,  2 Mar 2024 00:58:19 +0200
+Message-ID: <20240301225819.193814-1-andy.shevchenko@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240301-psy-class-cleanup-v1-1-aebe8c4b6b08@collabora.com>
-References: <20240301-psy-class-cleanup-v1-0-aebe8c4b6b08@collabora.com>
-In-Reply-To: <20240301-psy-class-cleanup-v1-0-aebe8c4b6b08@collabora.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>, 
- Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sebastian Reichel <sebastian.reichel@collabora.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9158;
- i=sebastian.reichel@collabora.com; h=from:subject:message-id;
- bh=fcebmwXS1BjQVg9Ypr2SmOyNCdgw+hKrXZuUCmC8840=;
- b=owEBbQKS/ZANAwAKAdju1/PIO/qaAcsmYgBl4l2w5lczmcxqXCvn2iduocsky+U9ck1Gq/IOw
- 69GWIYOei+JAjMEAAEKAB0WIQTvZg0HRj+Lcmp5VBPY7tfzyDv6mgUCZeJdsAAKCRDY7tfzyDv6
- mjrqD/0a1uywEYagB3wNXh6a8A55JbrsP5oCnXIU9eqfQJbTMhbgavfw/8LIJs8LQLm5AdH0GOy
- /Nin0Ol1CoXjKYhS74SWmGXsTWIQn7g9FVKIfWOFCmqjgzQrsY/f50c9QDWAQmDrUBwCR8c0nqt
- CoVHfLO+UGdvVEIIbKvnjBdAXy5fx1LnecncViRZTkZ7ZE6PrzutEfH/Nho1FLKCe14+1BXtpPQ
- J1fn5xpyCa4PgZlMAjjFZviOhhUQOfCI7bhCsy9Vh8Ll1W462IXPWWgVMCmsxeFklXbtRLSnYPR
- QK26HrWA7mmCIcKmQ/nreGTeIP6tUTi07NXjOChqAiRFDvUPJH1u7dhrZYGUZfHeVa+0PuYyidN
- gGJ6H9zwF8iSNiflC5NyEPW6R5dfOvuJAUUjb2NQc/XFujvfE3PnYGcafT/MwnoSTu0yUNlxAHF
- ik5ECPqNNTH8fXlRu8+D3royvVymGNMLkmcCn28cgMXimdMWafBuYyxLDXiVXt76s4Lwhu2h2L3
- 44J8ikzjUUSmkYlb4c/H/tE/eRiCCiBGKDEdrltTEbhQQDyFMoDpJ1k28NjyvZyIxGO1C/XglnS
- QPXJl2k8r8beFGJPqwvB8i8gegKdqhDjDYATWnbIrtvRB/URIcnRetETIDs4ZZZyhsIBGT7URoF
- VabSTh4IAf63PYA==
-X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
- fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
+Content-Transfer-Encoding: 8bit
 
-Introduce power_supply_for_each_device(), which is a wrapper
-for class_for_each_device() using the power_supply_class and
-going through all devices.
+Previously driver got a few updates in order to replace OF APIs by
+respective firmware node, however it was not finished to the logical
+end, e.g., some APIs that has been used are still require OF node
+to be passed. Finish that job by converting leftovers to use firmware
+node APIs.
 
-This allows making the power_supply_class itself a local
-variable, so that drivers cannot mess with it and simplifies
-the code slightly.
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/power/supply/ab8500_btemp.c      |  3 +--
- drivers/power/supply/ab8500_chargalg.c   |  3 +--
- drivers/power/supply/ab8500_charger.c    |  3 +--
- drivers/power/supply/ab8500_fg.c         |  3 +--
- drivers/power/supply/apm_power.c         |  3 +--
- drivers/power/supply/power_supply_core.c | 34 +++++++++++++++-----------------
- include/linux/power_supply.h             |  3 +--
- 7 files changed, 22 insertions(+), 30 deletions(-)
+ drivers/gpio/Kconfig        |  1 -
+ drivers/gpio/gpio-nomadik.c | 13 ++++++-------
+ 2 files changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/power/supply/ab8500_btemp.c b/drivers/power/supply/ab8500_btemp.c
-index 41dba40fffdf..56f136b2d071 100644
---- a/drivers/power/supply/ab8500_btemp.c
-+++ b/drivers/power/supply/ab8500_btemp.c
-@@ -617,8 +617,7 @@ static int ab8500_btemp_get_ext_psy_data(struct device *dev, void *data)
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index f633be517654..ef20ab921010 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -481,7 +481,6 @@ config GPIO_MXS
+ config GPIO_NOMADIK
+ 	bool "Nomadik GPIO driver"
+ 	depends on ARCH_U8500 || ARCH_NOMADIK || MACH_EYEQ5 || COMPILE_TEST
+-	depends on OF_GPIO
+ 	select GPIOLIB_IRQCHIP
+ 	help
+ 	  Say yes here to support the Nomadik SoC GPIO block. This block is also
+diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
+index c9fd6631e0aa..483086deb397 100644
+--- a/drivers/gpio/gpio-nomadik.c
++++ b/drivers/gpio/gpio-nomadik.c
+@@ -23,10 +23,10 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+-#include <linux/of_device.h>
+-#include <linux/of_platform.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/reset.h>
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
+@@ -504,7 +504,7 @@ static inline void nmk_gpio_dbg_show_one(struct seq_file *s,
+  * it is the pin controller or GPIO driver. However we need to use the right
+  * platform device when looking up resources so pay attention to pdev.
   */
- static void ab8500_btemp_external_power_changed(struct power_supply *psy)
+-struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
++struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
+ 					     struct platform_device *pdev)
  {
--	class_for_each_device(&power_supply_class, NULL, psy,
--			      ab8500_btemp_get_ext_psy_data);
-+	power_supply_for_each_device(psy, ab8500_btemp_get_ext_psy_data);
- }
- 
- /* ab8500 btemp driver interrupts and their respective isr */
-diff --git a/drivers/power/supply/ab8500_chargalg.c b/drivers/power/supply/ab8500_chargalg.c
-index 329ae784a72d..55ab7a28056e 100644
---- a/drivers/power/supply/ab8500_chargalg.c
-+++ b/drivers/power/supply/ab8500_chargalg.c
-@@ -1231,8 +1231,7 @@ static void ab8500_chargalg_algorithm(struct ab8500_chargalg *di)
+ 	struct nmk_gpio_chip *nmk_chip;
+@@ -517,9 +517,9 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
+ 	u32 id, ngpio;
  	int ret;
  
- 	/* Collect data from all power_supply class devices */
--	class_for_each_device(&power_supply_class, NULL,
--		di->chargalg_psy, ab8500_chargalg_get_ext_psy_data);
-+	power_supply_for_each_device(di->chargalg_psy, ab8500_chargalg_get_ext_psy_data);
- 
- 	ab8500_chargalg_end_of_charge(di);
- 	ab8500_chargalg_check_temp(di);
-diff --git a/drivers/power/supply/ab8500_charger.c b/drivers/power/supply/ab8500_charger.c
-index 1c2b69bbed17..9b34d1a60f66 100644
---- a/drivers/power/supply/ab8500_charger.c
-+++ b/drivers/power/supply/ab8500_charger.c
-@@ -1949,8 +1949,7 @@ static void ab8500_charger_check_vbat_work(struct work_struct *work)
- 	struct ab8500_charger *di = container_of(work,
- 		struct ab8500_charger, check_vbat_work.work);
- 
--	class_for_each_device(&power_supply_class, NULL,
--			      &di->usb_chg, ab8500_charger_get_ext_psy_data);
-+	power_supply_for_each_device(&di->usb_chg, ab8500_charger_get_ext_psy_data);
- 
- 	/* First run old_vbat is 0. */
- 	if (di->old_vbat == 0)
-diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab8500_fg.c
-index e49e704023e1..2ccaf6116c09 100644
---- a/drivers/power/supply/ab8500_fg.c
-+++ b/drivers/power/supply/ab8500_fg.c
-@@ -2407,8 +2407,7 @@ static int ab8500_fg_init_hw_registers(struct ab8500_fg *di)
-  */
- static void ab8500_fg_external_power_changed(struct power_supply *psy)
+-	gpio_dev = bus_find_device_by_of_node(&platform_bus_type, np);
++	gpio_dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
+ 	if (!gpio_dev) {
+-		pr_err("populate \"%pOFn\": device not found\n", np);
++		dev_err(&pdev->dev, "populate \"%pfwP\": device not found\n", fwnode);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 	gpio_pdev = to_platform_device(gpio_dev);
+@@ -624,7 +624,6 @@ static const struct irq_chip nmk_irq_chip = {
+ static int nmk_gpio_probe(struct platform_device *pdev)
  {
--	class_for_each_device(&power_supply_class, NULL, psy,
--			      ab8500_fg_get_ext_psy_data);
-+	power_supply_for_each_device(psy, ab8500_fg_get_ext_psy_data);
- }
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
+ 	struct nmk_gpio_chip *nmk_chip;
+ 	struct gpio_irq_chip *girq;
+ 	bool supports_sleepmode;
+@@ -632,7 +631,7 @@ static int nmk_gpio_probe(struct platform_device *pdev)
+ 	int irq;
+ 	int ret;
  
- /**
-diff --git a/drivers/power/supply/apm_power.c b/drivers/power/supply/apm_power.c
-index 034f28699977..8ef1b6f1f787 100644
---- a/drivers/power/supply/apm_power.c
-+++ b/drivers/power/supply/apm_power.c
-@@ -79,8 +79,7 @@ static void find_main_battery(void)
- 	main_battery = NULL;
- 	bp.main = main_battery;
- 
--	error = class_for_each_device(&power_supply_class, NULL, &bp,
--				      __find_main_battery);
-+	error = power_supply_for_each_device(&bp, __find_main_battery);
- 	if (error) {
- 		main_battery = bp.main;
- 		return;
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 4f27f17f8741..0eb8a57dda70 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -25,12 +25,10 @@
- #include "power_supply.h"
- #include "samsung-sdi-battery.h"
- 
--/* exported for the APM Power driver, APM emulation */
--const struct class power_supply_class = {
-+static const struct class power_supply_class = {
- 	.name = "power_supply",
- 	.dev_uevent = power_supply_uevent,
- };
--EXPORT_SYMBOL_GPL(power_supply_class);
- 
- static BLOCKING_NOTIFIER_HEAD(power_supply_notifier);
- 
-@@ -100,8 +98,7 @@ static void power_supply_changed_work(struct work_struct *work)
- 	if (likely(psy->changed)) {
- 		psy->changed = false;
- 		spin_unlock_irqrestore(&psy->changed_lock, flags);
--		class_for_each_device(&power_supply_class, NULL, psy,
--				      __power_supply_changed_work);
-+		power_supply_for_each_device(psy, __power_supply_changed_work);
- 		power_supply_update_leds(psy);
- 		blocking_notifier_call_chain(&power_supply_notifier,
- 				PSY_EVENT_PROP_CHANGED, psy);
-@@ -119,6 +116,12 @@ static void power_supply_changed_work(struct work_struct *work)
- 	spin_unlock_irqrestore(&psy->changed_lock, flags);
- }
- 
-+int power_supply_for_each_device(void *data, int (*fn)(struct device *dev, void *data))
-+{
-+	return class_for_each_device(&power_supply_class, NULL, data, fn);
-+}
-+EXPORT_SYMBOL_GPL(power_supply_for_each_device);
-+
- void power_supply_changed(struct power_supply *psy)
- {
- 	unsigned long flags;
-@@ -194,8 +197,7 @@ static int power_supply_populate_supplied_from(struct power_supply *psy)
- {
- 	int error;
- 
--	error = class_for_each_device(&power_supply_class, NULL, psy,
--				      __power_supply_populate_supplied_from);
-+	error = power_supply_for_each_device(psy, __power_supply_populate_supplied_from);
- 
- 	dev_dbg(&psy->dev, "%s %d\n", __func__, error);
- 
-@@ -208,7 +210,7 @@ static int  __power_supply_find_supply_from_node(struct device *dev,
- 	struct device_node *np = data;
- 	struct power_supply *epsy = dev_get_drvdata(dev);
- 
--	/* returning non-zero breaks out of class_for_each_device loop */
-+	/* returning non-zero breaks out of power_supply_for_each_device loop */
- 	if (epsy->of_node == np)
- 		return 1;
- 
-@@ -220,17 +222,16 @@ static int power_supply_find_supply_from_node(struct device_node *supply_node)
- 	int error;
- 
- 	/*
--	 * class_for_each_device() either returns its own errors or values
-+	 * power_supply_for_each_device() either returns its own errors or values
- 	 * returned by __power_supply_find_supply_from_node().
- 	 *
- 	 * __power_supply_find_supply_from_node() will return 0 (no match)
- 	 * or 1 (match).
- 	 *
--	 * We return 0 if class_for_each_device() returned 1, -EPROBE_DEFER if
-+	 * We return 0 if power_supply_for_each_device() returned 1, -EPROBE_DEFER if
- 	 * it returned 0, or error as returned by it.
- 	 */
--	error = class_for_each_device(&power_supply_class, NULL, supply_node,
--				      __power_supply_find_supply_from_node);
-+	error = power_supply_for_each_device(supply_node, __power_supply_find_supply_from_node);
- 
- 	return error ? (error == 1 ? 0 : error) : -EPROBE_DEFER;
- }
-@@ -336,8 +337,7 @@ int power_supply_am_i_supplied(struct power_supply *psy)
- 	struct psy_am_i_supplied_data data = { psy, 0 };
- 	int error;
- 
--	error = class_for_each_device(&power_supply_class, NULL, &data,
--				      __power_supply_am_i_supplied);
-+	error = power_supply_for_each_device(&data, __power_supply_am_i_supplied);
- 
- 	dev_dbg(&psy->dev, "%s count %u err %d\n", __func__, data.count, error);
- 
-@@ -372,8 +372,7 @@ int power_supply_is_system_supplied(void)
- 	int error;
- 	unsigned int count = 0;
- 
--	error = class_for_each_device(&power_supply_class, NULL, &count,
--				      __power_supply_is_system_supplied);
-+	error = power_supply_for_each_device(&count, __power_supply_is_system_supplied);
- 
- 	/*
- 	 * If no system scope power class device was found at all, most probably we
-@@ -419,8 +418,7 @@ int power_supply_get_property_from_supplier(struct power_supply *psy,
- 	 * This function is not intended for use with a supply with multiple
- 	 * suppliers, we simply pick the first supply to report the psp.
- 	 */
--	ret = class_for_each_device(&power_supply_class, NULL, &data,
--				    __power_supply_get_supplier_property);
-+	ret = power_supply_for_each_device(&data, __power_supply_get_supplier_property);
- 	if (ret < 0)
- 		return ret;
- 	if (ret == 0)
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 514f652de64d..92dd205774ec 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -894,8 +894,7 @@ extern int power_supply_powers(struct power_supply *psy, struct device *dev);
- #define to_power_supply(device) container_of(device, struct power_supply, dev)
- 
- extern void *power_supply_get_drvdata(struct power_supply *psy);
--/* For APM emulation, think legacy userspace. */
--extern const struct class power_supply_class;
-+extern int power_supply_for_each_device(void *data, int (*fn)(struct device *dev, void *data));
- 
- static inline bool power_supply_is_amp_property(enum power_supply_property psp)
- {
-
+-	nmk_chip = nmk_gpio_populate_chip(np, pdev);
++	nmk_chip = nmk_gpio_populate_chip(dev_fwnode(dev), pdev);
+ 	if (IS_ERR(nmk_chip)) {
+ 		dev_err(dev, "could not populate nmk chip struct\n");
+ 		return PTR_ERR(nmk_chip);
 -- 
-2.43.0
+2.44.0
 
