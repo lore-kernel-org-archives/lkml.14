@@ -1,56 +1,56 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2DC6CDD6
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDE46D1BC
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 11:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709291405; cv=none; b=giVk3tWJ5PJ8dS+8VHsr3BtUkxkGemTcoc8tQt+Or2c19WWngcn6GnAX6Pu4jNZBzLaZkdi0875OzV54bKfiEaJjo0Wm6RPBTH79Y4FL5ibnq+x1ck9ofbI+Y6KUjCvjTdOcv0DxJXyEG9WpHiyouaIt+TRQa6gV1rBC4YdZpAQ=
+	t=1709291406; cv=none; b=SGk6BgxaQhjxuwdtqCW3C4gcNdpaprzYGF+S/79DuMzoqDTHq4jlW0TO1Iy4sT2OHberQy2W16cIGaAYs1HRbM3YFHjlKFniqqgaSh5G/+kJMs9rXmjr85RYFhU0Mh9r+g0pA+P8VceDrr+k1kuAadrIaUGqAQ4qu53QUOFLcLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709291405; c=relaxed/simple;
-	bh=LV1fyBSu3ZwpN4ZiEusmgcvF6MxivbLEh1Lghj2THIw=;
+	s=arc-20240116; t=1709291406; c=relaxed/simple;
+	bh=trfivC8vG6hLXCya2zGOrWr40HQ6g3p1iNxASZJFkrs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qDxE7sdY6WbYhxaz9NW/TZzS+1gUA7aVTjzJ8ZwzLM9eVecdNxP5xsUbcSpfTAX3/NAmUYNUJj8gF7py6oxy90hoxGZBV9peWz/JPq20xaF9p50DXZzoJ7tDUCP370q83uWvi1Jh24RYq6tNJtBA0pkVCujRPdfY/OBO7ATuCPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kRxinnnD; arc=none smtp.client-ip=209.85.167.47
+	 MIME-Version; b=Reas5GSkfbmi26M3q9vZIxmLI1w9oO6Xfxo1UnNLAA/xSi+6fYE20HE9gXfiyneqOXnEpl74GrYsrX4V1gGjZ/MficJafIkGCUYkcHXJ8Eifufvk/RK6BOA4ql5+QZpjbkv/821DkohhliV5ZAdJV9prScMZdm8IygZ7+0eFmMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MH2QSPN8; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRxinnnD"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-513230201b2so1822699e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 03:10:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MH2QSPN8"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d180d6bd32so20220081fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 03:10:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709291401; x=1709896201; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1709291402; x=1709896202; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AYY5vhGREGmnIQ7NfihjkFOwl5i8Nexdj/rtVbJhxCk=;
-        b=kRxinnnDoTzXlGHqXXGnPJ85UTCRw5YUg1vXk2Skn7hi1SGtRCCY+supBv6ivh9pJZ
-         iLQCPijkLoXdfn9C4mUJONOp7nRDmz+YNDn9IhnvdGDRmlOOBNLCJrnlQLoPsJjGaHe7
-         b+d8/nSgNyjpGq5nGurY1lQPokWx+fDslRVOt1A5zW36CwrZnK0c7hVn/emq6u6q7KAP
-         53CmyTb9SIQpYe/9LhMh1UDtlbudEhtXLIyQr/vR5NvK+ma6dxIheO3YnYUb4Ksb+ZLg
-         QlTED4yi1hUEUPULSmOKWXCo5jgyoLg11TxdWTRLWG6SiTjiLO0oJ/+LP2XAXBXEJS4k
-         dcIQ==
+        bh=FsbzmPBgmd/PDvdJrOlCLNy3reKyEs/GH7VUyr30KAw=;
+        b=MH2QSPN8McSPaZM8MAoLJ5plo31CPRlIOkIBmdIh3MV9T1SPLH5pIgPVvD2+mBPluH
+         4ljb5w+Pp2e2WrviJz0IDVmoPNxfVeqLK6XpL+W0TdMFTOUCIVEeGNuHpFz3wgJJ8aDl
+         v3Uwd5DX/bVpunGcGfSZuXRQ4xo7W8BvmIolA0PU7uFY5EZXh60q/vmUybCYaQ7s/WaT
+         Jf7Nm2cIDwO1idutXsi0WFnaacX1fsMfTGSzUgMJ9EhxYVxvh1YgzAfQVIF2bBIpr7WE
+         JpHwLLhc/ME7XbFd0vm4MF37wd4iUL22+A4goM/AVrsZ3pkws6rnH/9MATEWrPdlNdQf
+         dVPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709291401; x=1709896201;
+        d=1e100.net; s=20230601; t=1709291402; x=1709896202;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=AYY5vhGREGmnIQ7NfihjkFOwl5i8Nexdj/rtVbJhxCk=;
-        b=MB/PU4mq00KqB1oz+fxuz5SlbFcx/46/Dsak7V4C6o8C11NfME3gGInstu17qfzr0Y
-         SFo9szWXSDY51yDQx0dmXg4r3uZPapsW9i+K29gNS/uTOaDoDuKS7Hr5mnu13tgbi+yn
-         S3IuCz6nfO4HZfnCDf3pW83dvGhaVBTjkSOdu3PsDZlhknSv8M8vcj4CsLPNW40wwru+
-         pUiSgU24EZeibFEUEaQuJRnPSWsXVH0j/uT/3+EaXXC6YC+7Mq5Xy1pOK6RsH4Bs0eCD
-         PTqp6JvPFJL/XijRaf4LjG6vU7QxbUe7k6glOOVlJx3QOlAkKDOLViII6OFSwUoFHrcf
-         nGYw==
-X-Gm-Message-State: AOJu0YzRSzVPpEIJ+SV587HNV/7PqcdXcSfwTYEicUEQF2ho0E3i9XpP
-	B5XtPWYz6XOk3OcpeanEGrWSN8dyC516OGdKQ/lL9l1UXro6dkmnNI1Q4f4FcFg=
-X-Google-Smtp-Source: AGHT+IHx2omjBwV13BMAVRo0qLA80YK8oxD3iBNrU+OgrtEJ+EsjKczxiZhF+ZpPK05I0fb+A4lrAQ==
-X-Received: by 2002:ac2:5b85:0:b0:512:bed5:3d87 with SMTP id o5-20020ac25b85000000b00512bed53d87mr982592lfn.23.1709291401482;
-        Fri, 01 Mar 2024 03:10:01 -0800 (PST)
+        bh=FsbzmPBgmd/PDvdJrOlCLNy3reKyEs/GH7VUyr30KAw=;
+        b=HQdzrtbL2PvmMYZpfj5+PSLfmMwqTBKuaMCBiI7dFHYa208Hu7AhKY/5UUq1XfurFH
+         bMYt3899RgK1HarD4uHgj1bN8uPmYXIU6xZh4AICzS5EM50e0RSj2W+0xlz62cL7qGAE
+         AcXrPrW8OB0RiiJq/RNncgs3bKd7FNfghoW77+TLDBsZN+C5fJZe/8xeK6+iLqFJzelc
+         0w4WI5qBbCMw6YT1E3aPTsXiXkIbtHknM3MK+CiyBAvHlI2VopkB7pxH9UCirJZ0stfi
+         FLUhDTbG1wBTcgkv+takwsxYXWds4nOVd3uocbe2FMHLJztPUV0ewU5bhCo0OPYtOA9y
+         dQ4Q==
+X-Gm-Message-State: AOJu0Yz/oE8j1rgDfsIhU2Z17PCn0icsLM/sK41SKOZMBiyWdEnH+yBJ
+	680WnhrWCw/t7Ns8+/hhQmCa6G7U/9aDM51teQplgfbtasA6gygqiRT2WTt8p/c=
+X-Google-Smtp-Source: AGHT+IFm5psR3SfBycTnthdTG0tbEc2ft0NApkF4oN3RC78E9vOMGTa1BQgwiQGSSYr29Qe/VkoEfg==
+X-Received: by 2002:a2e:b54e:0:b0:2d2:779d:3054 with SMTP id a14-20020a2eb54e000000b002d2779d3054mr931113ljn.0.1709291402467;
+        Fri, 01 Mar 2024 03:10:02 -0800 (PST)
 Received: from kepler.redhat.com (1F2EF13F.nat.pool.telekom.hu. [31.46.241.63])
-        by smtp.gmail.com with ESMTPSA id b20-20020a05600c4e1400b00412cad66f8fsm490264wmq.44.2024.03.01.03.10.00
+        by smtp.gmail.com with ESMTPSA id b20-20020a05600c4e1400b00412cad66f8fsm490264wmq.44.2024.03.01.03.10.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 03:10:00 -0800 (PST)
+        Fri, 01 Mar 2024 03:10:02 -0800 (PST)
 Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Valentin Schneider <vschneid@redhat.com>
-Subject: [PATCH 5/7] sched/balancing: Update run_rebalance_domains() comments
-Date: Fri,  1 Mar 2024 12:09:49 +0100
-Message-Id: <20240301110951.3707367-6-mingo@kernel.org>
+Subject: [PATCH 6/7] sched/balancing: Vertically align the comments of 'struct sg_lb_stats' and 'struct sd_lb_stats'
+Date: Fri,  1 Mar 2024 12:09:50 +0100
+Message-Id: <20240301110951.3707367-7-mingo@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240301110951.3707367-1-mingo@kernel.org>
 References: <20240301110951.3707367-1-mingo@kernel.org>
@@ -73,17 +73,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The first sentence of the comment explaining run_rebalance_domains()
-is historic and not true anymore:
-
-    * run_rebalance_domains is triggered when needed from the scheduler tick.
-
-... contradicted/modified by the second sentence:
-
-    * Also triggered for NOHZ idle balancing (with NOHZ_BALANCING_KICK set).
-
-Avoid that kind of confusion straight away and explain from what
-places sched_balance_softirq() is triggered.
+Make them easier to read.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -92,29 +82,66 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 ---
- kernel/sched/fair.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 31838b9dcf36..0e13b0016f33 100644
+index 0e13b0016f33..99495c93e094 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -12409,8 +12409,13 @@ static int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
- }
- 
- /*
-- * run_rebalance_domains is triggered when needed from the scheduler tick.
-- * Also triggered for NOHZ idle balancing (with NOHZ_BALANCING_KICK set).
-+ * The run_rebalance_domains() softirq handler is triggered via SCHED_SOFTIRQ
-+ * from two places:
-+ *
-+ *  - the scheduler_tick(),
-+ *
-+ *  - from the SMP cross-call function nohz_csd_func(),
-+ *    used by NOHZ idle balancing (with NOHZ_BALANCING_KICK set).
+@@ -9436,19 +9436,19 @@ static void update_blocked_averages(int cpu)
+  * sg_lb_stats - stats of a sched_group required for load_balancing
   */
- static __latent_entropy void run_rebalance_domains(struct softirq_action *h)
- {
+ struct sg_lb_stats {
+-	unsigned long avg_load; /*Avg load across the CPUs of the group */
+-	unsigned long group_load; /* Total load over the CPUs of the group */
++	unsigned long avg_load;			/* Avg load across the CPUs of the group */
++	unsigned long group_load;		/* Total load over the CPUs of the group */
+ 	unsigned long group_capacity;
+-	unsigned long group_util; /* Total utilization over the CPUs of the group */
+-	unsigned long group_runnable; /* Total runnable time over the CPUs of the group */
+-	unsigned int sum_nr_running; /* Nr of tasks running in the group */
+-	unsigned int sum_h_nr_running; /* Nr of CFS tasks running in the group */
++	unsigned long group_util;		/* Total utilization over the CPUs of the group */
++	unsigned long group_runnable;		/* Total runnable time over the CPUs of the group */
++	unsigned int sum_nr_running;		/* Nr of tasks running in the group */
++	unsigned int sum_h_nr_running;		/* Nr of CFS tasks running in the group */
+ 	unsigned int idle_cpus;
+ 	unsigned int group_weight;
+ 	enum group_type group_type;
+-	unsigned int group_asym_packing; /* Tasks should be moved to preferred CPU */
+-	unsigned int group_smt_balance;  /* Task on busy SMT be moved */
+-	unsigned long group_misfit_task_load; /* A CPU has a task too big for its capacity */
++	unsigned int group_asym_packing;	/* Tasks should be moved to preferred CPU */
++	unsigned int group_smt_balance;		/* Task on busy SMT be moved */
++	unsigned long group_misfit_task_load;	/* A CPU has a task too big for its capacity */
+ #ifdef CONFIG_NUMA_BALANCING
+ 	unsigned int nr_numa_running;
+ 	unsigned int nr_preferred_running;
+@@ -9460,15 +9460,15 @@ struct sg_lb_stats {
+  *		 during load balancing.
+  */
+ struct sd_lb_stats {
+-	struct sched_group *busiest;	/* Busiest group in this sd */
+-	struct sched_group *local;	/* Local group in this sd */
+-	unsigned long total_load;	/* Total load of all groups in sd */
+-	unsigned long total_capacity;	/* Total capacity of all groups in sd */
+-	unsigned long avg_load;	/* Average load across all groups in sd */
+-	unsigned int prefer_sibling; /* tasks should go to sibling first */
++	struct sched_group *busiest;		/* Busiest group in this sd */
++	struct sched_group *local;		/* Local group in this sd */
++	unsigned long total_load;		/* Total load of all groups in sd */
++	unsigned long total_capacity;		/* Total capacity of all groups in sd */
++	unsigned long avg_load;			/* Average load across all groups in sd */
++	unsigned int prefer_sibling;		/* tasks should go to sibling first */
+ 
+-	struct sg_lb_stats busiest_stat;/* Statistics of the busiest group */
+-	struct sg_lb_stats local_stat;	/* Statistics of the local group */
++	struct sg_lb_stats busiest_stat;	/* Statistics of the busiest group */
++	struct sg_lb_stats local_stat;		/* Statistics of the local group */
+ };
+ 
+ static inline void init_sd_lb_stats(struct sd_lb_stats *sds)
 -- 
 2.40.1
 
