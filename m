@@ -1,138 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC3F69E03
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 08:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E379200C3;
+	Fri,  1 Mar 2024 08:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709280479; cv=none; b=ilofXo76dDOrf7Q7cReSJE81UWoY0AqA6KTREedP9390DRu6XJCUC67/7WsHDQuEvB3vCnAigAoLDUUhKCTQtlKSl97WkwH2hePC73rS2ID57QTY9fgThxlo3XVun9yL3QbQphLWgk/d+h6ZTDE2IxAy4rcvLVR8MNhTGMgMy7I=
+	t=1709280576; cv=none; b=t02ASlfVUqN32RFdT5n7ifKxAu9UsFGfJHDBmw8pSejPJhgjRU6TXfV/8fJ9H023hmzPtRTqXOaMh7DHdw5Y0pej9iDmBE5vh/y9sG0n3I6Ffau0/TLtYTDz62sam3hH+eGdh8RpnTwxmaUmemG4Vtn+LfFlTFztdZwP3mdzAwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709280479; c=relaxed/simple;
-	bh=/cVxTPK8YMoBH+k7owpPAvLO8OBKEisXNbpy2Gi5tXs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KoF1CLz9yG9TkX63uvWlG8awDNXXACKPpP8wSnbC62btpXFzyLdeKZCkL0VBKwzd7XZbRJ9ytvnVgqNUaEAbJHk738jUzAHvokFPVGkfXy4KGdgCaxyUMB36D/498Wqv5Vo+iudEgtFfefhd+T1/SXKrjM/Bj3iU2e4RRxA9940=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eauSVewi; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709280576; c=relaxed/simple;
+	bh=SDOpostQbxSaHQbVT+H3u8LtntR385azXDotbcIDeEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DWsoCnIJqu4wbCIXcWgxMV7+cqN2EY357NIYfVM8QAL+K/kDzqsSnz2cn1VTVLhWpg9KtDY58NcRWlD1FfVc3wdJxZPJb8Gqwx5VCmES5E4Ugi1xGR/5VrQrQI/Kukbt3OVieawn3iEp3To/6jmiPpyCfMofTKsIl96eDoSMCd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4ZroOJY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eauSVewi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709280478; x=1740816478;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/cVxTPK8YMoBH+k7owpPAvLO8OBKEisXNbpy2Gi5tXs=;
-  b=eauSVewi23opmyVnh7gJL1Jq27r6WB7PpKnu+2xGJduAfTYjM82P7jgo
-   IGfF1/Uy8lOTUb46dMNiq5ELOT5d3dWMcqLrMBtWbpPuuhEnAg4Udnas3
-   nGvRdhNiD7xfj9phHRgFdQLweDHPCiNAn0LW78AQtR6ezrjKLQAeeuH/z
-   3a3mZxsfuRc+C+9feWKELdJR97MUgNt3BuHTHilu8MT/HY0tFxmwrMmRq
-   G30mcgkExt8NI3E5q8YjhjfrphfbDlbtEW1F5xCC9meP9JEZbcQi+C69e
-   am8y9zRB0lUmTg73SdMvQ63ktydxdq2E31DyPtjQnZfugVsBZ1fyWrP3V
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="15240430"
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="15240430"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 00:07:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="8187527"
-Received: from unknown (HELO ply01-vm-store.amr.corp.intel.com) ([10.238.153.201])
-  by orviesa009.jf.intel.com with ESMTP; 01 Mar 2024 00:07:52 -0800
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-To: baolu.lu@linux.intel.com,
-	bhelgaas@google.com,
-	robin.murphy@arm.com,
-	jgg@ziepe.ca
-Cc: kevin.tian@intel.com,
-	dwmw2@infradead.org,
-	will@kernel.org,
-	lukas@wunner.de,
-	yi.l.liu@intel.com,
-	dan.carpenter@linaro.org,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ethan Zhao <haifeng.zhao@linux.intel.com>
-Subject: [PATCH v14 3/3] iommu/vt-d: improve ITE fault handling if target device isn't present
-Date: Fri,  1 Mar 2024 03:07:27 -0500
-Message-Id: <20240301080727.3529832-4-haifeng.zhao@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240301080727.3529832-1-haifeng.zhao@linux.intel.com>
-References: <20240301080727.3529832-1-haifeng.zhao@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4ZroOJY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF45C433C7;
+	Fri,  1 Mar 2024 08:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709280575;
+	bh=SDOpostQbxSaHQbVT+H3u8LtntR385azXDotbcIDeEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V4ZroOJYkhMhHrVl1Ap4ozy2FeV7TA0/Efnc93tTYUHxflBLZOl8k1ljZ70MuD6HI
+	 +KD5jrkApO4SgulrrTz5XoH6+JBz96ZO+j12YNr/jBjAhY1fsZdaZfA7IYMvkqtl0K
+	 5772p83G7hOiJXoTVe+CclZocIbEFK7fI4jGNhBW8q9hBK1A01WUDvHoVdsHUClY7i
+	 iM9aXaWeD7z8XehuHy0JmAn/Nb8JcBjw9Usv22n+UfguUVaECBXPYVg+9/E09tOAAm
+	 qv6YDkjIgVmvSR3cku0DRHQewuOaXxltaz9f7jAYWeeD6xtcgfpmUjeih9lO6Ge2KT
+	 uExrktrOerLuA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rfxxh-000000006eC-2A9v;
+	Fri, 01 Mar 2024 09:09:46 +0100
+Date: Fri, 1 Mar 2024 09:09:45 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and
+ GICv3 ITS enable
+Message-ID: <ZeGNSbPjxELBklbx@hovoldconsulting.com>
+References: <ZeCCPRVvYCNfMYnd@hovoldconsulting.com>
+ <20240229205240.GA361626@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229205240.GA361626@bhelgaas>
 
-Because surprise removal could happen anytime, e.g. user could request safe
-removal to EP(endpoint device) via sysfs and brings its link down to do
-surprise removal cocurrently. such aggressive cases would cause ATS
-invalidation request issued to non-existence target device, then deadly
-loop to retry that request after ITE fault triggered in interrupt context.
-this patch aims to optimize the ITE handling by checking the target device
-presence state to avoid retrying the timeout request blindly, thus avoid
-hard lockup or system hang.
+On Thu, Feb 29, 2024 at 02:52:40PM -0600, Bjorn Helgaas wrote:
+> On Thu, Feb 29, 2024 at 02:10:21PM +0100, Johan Hovold wrote:
 
-Devices TLB should only be invalidated when devices are in the 
-iommu->device_rbtree (probed, not released) and present.
+> > It also depends on the severity of the issue and to some extent the
+> > complexity of the fix. These binding fixes are certainly low risk.
+> > :)
+> 
+> IIUC we're talking about:
+> 
+>   arm64: dts: qcom: sc8280xp: add missing PCIe minimum OPP
+>   dt-bindings: PCI: qcom: Allow 'required-opps'
 
-Fixes: 6ba6c3a4cacf ("VT-d: add device IOTLB invalidation support")
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
----
- drivers/iommu/intel/dmar.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Right.
 
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index d14797aabb7a..fa1ac111a6e2 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -1273,6 +1273,8 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
- {
- 	u32 fault;
- 	int head, tail;
-+	u64 iqe_err, ite_sid;
-+	struct device *dev = NULL;
- 	struct q_inval *qi = iommu->qi;
- 	int shift = qi_shift(iommu);
- 
-@@ -1317,6 +1319,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
- 		tail = readl(iommu->reg + DMAR_IQT_REG);
- 		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
- 
-+		/*
-+		 * SID field is valid only when the ITE field is Set in FSTS_REG
-+		 * see Intel VT-d spec r4.1, section 11.4.9.9
-+		 */
-+		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
-+		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
-+
- 		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
- 		pr_info("Invalidation Time-out Error (ITE) cleared\n");
- 
-@@ -1326,6 +1335,19 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
- 			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
- 		} while (head != tail);
- 
-+		/*
-+		 * If device was released or isn't present, no need to retry
-+		 * the ATS invalidate request anymore.
-+		 *
-+		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
-+		 * see Intel VT-d spec r4.1, section 11.4.9.9
-+		 */
-+		if (ite_sid) {
-+			dev = device_rbtree_find(iommu, ite_sid);
-+			if (!dev || !dev_is_pci(dev) ||
-+				!pci_device_is_present(to_pci_dev(dev)))
-+				return -ETIMEDOUT;
-+		}
- 		if (qi->desc_status[wait_index] == QI_ABORT)
- 			return -EAGAIN;
- 	}
--- 
-2.31.1
+> These don't look like a regression fix (correct me if I'm wrong), and
+> I can't tell whether they fix a user-visible problem, since
+> sc8280xp.dtsi does already contain 'required-opps' for ufs_mem_hc,
+> usb_0, and usb_1, which are mentioned in the commit log as covering up
+> the issue.
 
+The issue has been there since PCIe support was added for this platform
+and does not cause any issues until the USB and UFS controllers are
+runtime suspended.
+
+When that happens nothing is currently making sure that we have enough
+power to run PCIe at gen3 speeds, something which can potentially result
+in system instability (e.g. resets).
+
+> If these patches wait until v6.9, what badness ensues?
+
+We'd have a few more weeks where users enabling runtime PM for USB on
+the X13s could hit this before we can get the fix backported to stable.
+
+I could have put some more details in the commit message for the DT
+patch, but I did not think that amending the PCIe binding would be
+controversial. (I guess we can also take the DT fix without waiting for
+the binding update as it has been acked by a DT maintainer even if that
+would result in some DT checker warnings until things are aligned
+again.)
+
+Let me know what you decide regarding getting the whole series into 6.8,
+and then I can spend some more time on rewording, splitting and rebasing
+this series if needed.
+
+Johan
