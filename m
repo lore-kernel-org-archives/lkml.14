@@ -1,101 +1,95 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCB03FB88;
-	Fri,  1 Mar 2024 13:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E552638FBE
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 13:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709298224; cv=none; b=qoROA6c8jOY8uN7NWIft369vTPd6X173Jbju9WsJXoEam+pxGWo9iRU0onOvHdz13H6xeTDYRB085Wpb9NTRZ6obai3njNWN00WzIODwYbMQTDPC5PZZhj6K9N3ke5SyTSMzCh/0UzxFVFoIpAuA6HRU38HIMEuzurgrRYPt8w0=
+	t=1709298257; cv=none; b=X567dpHQyONrJmffvPaRUOOCjCnQdJy+OCh6VUYIFu9AN4XMt/jj3CGUxcevVWN8+6W6/VvkKiO6KHTMveWrMjRaHg8BnMwY7P0Dm8BrgdPfmeNFu8KYNKBxOWVDBQYQv+btOQZZSwJZJ4sLXwJRrPiC1Bx8VZH7fYWf7uMTum4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709298224; c=relaxed/simple;
-	bh=XVWHgOv8IhoO1Wovn6/Qb2yGIBl4zlvLX2d0j1c6F7U=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZnxOr7DxHqIF33k2Yi1Qy8hQY4GECk5tL8NFmtEPwOTA1b607shQrrlEBeBrwETk0LUerTiIYARADJuLO2Ct79p3TSuINvY6rJphMzJi26dZrtBTr5iACQP5XXlXWADsg5Eu7sQAhVDbLaBIdK9hsXD3KNJXATipU8zxBOUx5Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=od9DJPKg; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="od9DJPKg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1709298222; x=1740834222;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XVWHgOv8IhoO1Wovn6/Qb2yGIBl4zlvLX2d0j1c6F7U=;
-  b=od9DJPKgkHf6JgXlsx2hSM72wI9FzzkT92WXTyAt8cLSNVDBH6w79T8m
-   GWONungnzTV1IdMMSjye9XnnVJcDpJa/DE/GFJKATsPzFTNMOt9aT4BVl
-   6Qf+eg5kRtv7V0Pr4NAfMzI3YA4sDxrhzibpery+XQ66QxckPeDUyC9PO
-   hTdNz/lPMf2rd4sgz+HLjeKWHwB6fpBjLCor2iP3ajPynFEA9WlSMx/H/
-   hQiciA6xLU+88mSWDlI6w0S9TAZcOewX7B96AnyZD4U1VGnZpRSvNtOxB
-   AzLSpDusbGD6ltlG4QstNuH4KOzZeAOX4hg+Mj7e3cNSVXD0q7h3g09Yw
-   w==;
-X-CSE-ConnectionGUID: B8GzHJbiTdOd45juRr3szA==
-X-CSE-MsgGUID: v2RSYSlqTES/9dwmI5yorw==
-X-IronPort-AV: E=Sophos;i="6.06,196,1705388400"; 
-   d="asc'?scan'208";a="18677917"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Mar 2024 06:03:40 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 1 Mar 2024 06:03:27 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 1 Mar 2024 06:03:24 -0700
-Date: Fri, 1 Mar 2024 13:02:41 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Yangyu Chen <cyy@cyyself.name>
-CC: Palmer Dabbelt <palmer@dabbelt.com>, <alexghiti@rivosinc.com>,
-	<andy.chiu@sifive.com>, Charlie Jenkins <charlie@rivosinc.com>,
-	<guoren@kernel.org>, <jszhang@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>
-Subject: Re: [PATCH v2 0/3] RISC-V: mm: do not treat hint addr on mmap as the
- upper bound to search
-Message-ID: <20240301-patient-backpedal-f0e9333d3b8b@wendy>
-References: <mhng-67b02dff-5423-466d-bd90-f3ad3a3ab6a9@palmer-ri-x1c9a>
- <tencent_BA062F64BB719A8F42F0435BCD3117B73F05@qq.com>
+	s=arc-20240116; t=1709298257; c=relaxed/simple;
+	bh=0ndBKkzJP+ZMoxO9U7QYSs+Fbh76QQrdNHEic+5wGnc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Imz20Y4uyfGltY1QKE6NHbR5bviX5lv8OAv8dOMLcKBenRX8JIA1ja9DYc61hNVbXUq8helhqilaGopgk+jI49XsM0iljhR2/nR8h3jlJimj9q7u6bK3czWUxsfVyORvXN2jFoNhtqaelqnybm74fn0ixQ2JsUjvl3/zMc1mAYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav413.sakura.ne.jp (fsav413.sakura.ne.jp [133.242.250.112])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 421D46Sd054249;
+	Fri, 1 Mar 2024 22:04:06 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav413.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp);
+ Fri, 01 Mar 2024 22:04:06 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 421D46jq054245
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 1 Mar 2024 22:04:06 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <70bfa1c9-6790-4537-bdc5-5d633c6ea806@I-love.SAKURA.ne.jp>
+Date: Fri, 1 Mar 2024 22:04:06 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TtKYHipymQ1kqmeZ"
-Content-Disposition: inline
-In-Reply-To: <tencent_BA062F64BB719A8F42F0435BCD3117B73F05@qq.com>
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH for 6.8] tomoyo: fix UAF write bug in tomoyo_write_control()
+Content-Language: en-US
+To: Sam Sun <samsun1006219@gmail.com>, paul@paul-moore.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc: syzkaller@googlegroups.com, takedakn@nttdata.co.jp, jmorris@namei.org,
+        serge@hallyn.com, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <CAEkJfYNDspuGxYx5kym8Lvp--D36CMDUErg4rxfWFJuPbbji8g@mail.gmail.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <CAEkJfYNDspuGxYx5kym8Lvp--D36CMDUErg4rxfWFJuPbbji8g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---TtKYHipymQ1kqmeZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Since tomoyo_write_control() updates head->write_buf when write() of long
+lines is requested, we need to fetch head->write_buf after head->io_sem is
+held. Otherwise, concurrent write() requests can cause use-after-free-write
+and double-free problems.
 
-On Fri, Mar 01, 2024 at 04:54:05AM +0800, Yangyu Chen wrote:
+Reported-by: Sam Sun <samsun1006219@gmail.com>
+Closes: https://lkml.kernel.org/r/CAEkJfYNDspuGxYx5kym8Lvp--D36CMDUErg4rxfWFJuPbbji8g@mail.gmail.com
+Fixes: bd03a3e4c9a9 ("TOMOYO: Add policy namespace support.")
+Cc: stable@vger.kernel.org # Linux 3.1+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+I couldn't reproduce this problem in my environment, but I believe
+this does fix a bug. Linus, can you directly apply to linux.git ?
+If Linus wants a GIT PULL request, can Paul send this patch via LSM tree
+because TOMOYO's git tree is not working?
 
-> Another concern is that if we can't make this decision in time to catch up
-> with v6.9 we don't want some bad things to happen as a large number of sv48
-> machines might appear this year and they may run on the next v6.9 LTS
-> kernel, Shall we change the code in the kernel to use sv48 by default right
-> now?
+ security/tomoyo/common.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Just pointing out that v6.9 is highly unlikely to be the next lts
-kernel, depending on whether or not Linus delays some releases, it'll
-most likely be either v6.11 or v6.12.
+diff --git a/security/tomoyo/common.c b/security/tomoyo/common.c
+index 57ee70ae50f2..ea3140d510ec 100644
+--- a/security/tomoyo/common.c
++++ b/security/tomoyo/common.c
+@@ -2649,13 +2649,14 @@ ssize_t tomoyo_write_control(struct tomoyo_io_buffer *head,
+ {
+ 	int error = buffer_len;
+ 	size_t avail_len = buffer_len;
+-	char *cp0 = head->write_buf;
++	char *cp0;
+ 	int idx;
+ 
+ 	if (!head->write)
+ 		return -EINVAL;
+ 	if (mutex_lock_interruptible(&head->io_sem))
+ 		return -EINTR;
++	cp0 = head->write_buf;
+ 	head->read_user_buf_avail = 0;
+ 	idx = tomoyo_read_lock();
+ 	/* Read a line and dispatch it to the policy handler. */
+-- 
+2.34.1
 
 
---TtKYHipymQ1kqmeZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeHR8QAKCRB4tDGHoIJi
-0s8fAQDEhn3LtPgIBbJeywYsW5zoE8XHl7tmIMdJIjMWrFfPygEAiml/BgsyQQtP
-+pjfl+cmRe2HDnQTEEwjNwMlo/Sz0QQ=
-=1CU+
------END PGP SIGNATURE-----
-
---TtKYHipymQ1kqmeZ--
