@@ -1,231 +1,168 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4766C3B194;
-	Fri,  1 Mar 2024 19:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66963A294
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 19:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709321223; cv=none; b=kyWsu9KBHcQvd7w3eCtuzqzXZXG5VujIhXnY7iMSoBlPQ3sM7I8sOzsWr41HXbhOd/hp8djvqrYTJMmCkq42+4mzGkRYDCBPhWmo85mzqMLG1r5Cq2l/cNSqYk9Tj4V1bIC1iDmwTOd0v3sv/hjsMSFYxxW4tezRn2pXE/JnRGA=
+	t=1709321258; cv=none; b=nOl+PSrJQ6gSneohe8JAmH/SEd9l5M/yW3UG0XXOO/u45qfZyEgS4q/cZ3CEfWRlwes6hZrwqg2BK0tpYyN/sHGn79Uz65LtY1OrK/bwH1iOD6LJEf6FEiFVYXz6MU4yUilmK9TG+XcNs0uJKkRf/PVFLB5tU+GLHANSvHXqpLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709321223; c=relaxed/simple;
-	bh=ljxScE5x1fMGmoZxR70bdsQl71mpsKTqENIYWvLhnPI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MOWTi2GaDYlLVGWeDgXkIBNK8tH3mb2xQu4HEUNQ72HYMpdxLGpqNE//a3XEWq/zNUiHXBDzhllBQVbausLCbVgdQzr9SUDWDwLVTHUU27RCFykLjLJSSKWpqBe/HCJNnxo5Jswg4arJTdaiC4GN2OkVnKwFG8QSxL2RkzNYUvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ArRvwRo9; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1709321258; c=relaxed/simple;
+	bh=3SPJ05RL58/5ZjVtXXCUK7X7HZLiiNivuJJCDF3p/Y0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E0BLa60Weq9R92SraI/oxkXyQ1PlsW3V0T7ygHcRwn3JxVPFCzQAr0PsdkuSuHYL8tkzHz/rDvZUrKmRgyqPFufCpLpxI/EplmMSE4vSUjt9WL4Ti4olHuVJdlkE485hhRfBaojeOtY3zx9+hdv+kzsagL1x3Cz8RHtHoYGVjEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EV3fC4ED; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ArRvwRo9"
-Received: from localhost.localdomain (unknown [167.220.77.82])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 35C3D20B74C0;
-	Fri,  1 Mar 2024 11:26:56 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 35C3D20B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1709321216;
-	bh=WGu8YW37brgqi1ZUilW8ClBLPCcNPQXPsBsaqdHd2jI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ArRvwRo96GImnyfufm73/8YYYSFL9Eduy+qRlyNKwlMf2QQrPLWMi3OXKlzaamX2J
-	 FyJKZaanhzCnOMLADaydG1kQRI+kTuyCk+p3e4EIvYAgzq9npD2rvdDWgtYZyDCBhe
-	 l7a4cQ3BsHhF+PcKzVaNnkWu4+4W2CoVtJ0vDvFA=
-From: Jarred White <jarredwhite@linux.microsoft.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org (open list:ACPI),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Jarred White <jarredwhite@linux.microsoft.com>,
-	srivatsabhat@linux.microsoft.com,
-	stable@vger.kernel.org
-Subject: [PATCH v3] acpi: Use access_width over bit_width for system memory accesses
-Date: Fri,  1 Mar 2024 11:25:59 -0800
-Message-Id: <20240301192600.2568-1-jarredwhite@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EV3fC4ED"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-565d1656c12so4397855a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 11:27:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709321255; x=1709926055; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=r05fhKMu/fhnW65A8rEmq1zNewcr8Tq1Kh6RnpEpJiM=;
+        b=EV3fC4EDt5NsTGZ7HnQAjlgs7cAR0j5Q35RFALhhNPXhIKPm7VOL0mncCMmDNj1FXa
+         2EEHbn6CS8BUA11zos0QqzjXjJZo97s9O3GnUFMLGz898scdkl/KcDY1frAyPhwM0S0T
+         jft1/LoRnV4oLfW4/XhTWXonP3Ct8ADMOCtUOJ2GShJWnrohXam97pHnItoq3bG70M+J
+         yXc6dCLvl2PqsupGCgnCQpYV9WVMNX7pU6cI+zsS2pLV5gcGAXo5Mq62yv+imvjr7tNE
+         MJw5ZIc3p9htvTWxitBT1aNtCEKMAZcF4yrOk8kcfwYZYQKNsMGXl295CWqC2AFG1cWQ
+         fVPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709321255; x=1709926055;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r05fhKMu/fhnW65A8rEmq1zNewcr8Tq1Kh6RnpEpJiM=;
+        b=muT6zPE7Ln7ygYrSBTIpru6O1K/3CkrUobjhijVwIE1DjcVZWqJzZPdtOz7NxY2zWm
+         ThbzM2WkjJ3udAS4IgMv0Pf3hPAbKBd8s1P9K5CM/3v20c0j37RYI6Xtdg26uoRJmTxo
+         HdWlwDWmtxwk5mqOLTx3Vgth0/jb3dWAnsaVVY4JssWcwpqBv8WY50ERZGSf48sl0xEL
+         V5lFBTgUhwalpT0nkHGPeXGbeB66DD6y42Bla8cfpmHq0j+cPqeD3nZseeWCRJgschDc
+         m0e/iVyYY/T5H8jh3zvh5V5dqs2TqevBr6wE62JG/QKiy1fbow4mE0H0WGxzcGfjcwRN
+         ppHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWKaZ4UZSjgInzpj6JRjIVljZYA03HrS5Z/HyYaX5HUrjQlOxs7tlbUFAPCQQBa+HhZrBFZNcxbUHHAWiMrAejR4Y42bHMzpfnQqNR
+X-Gm-Message-State: AOJu0Yzde4M3p8JTUVx0z/v+cVgn/VhIzMYy3NteeJ0PlfboHr2iDetA
+	EDTNqBxFtJmpHc/FDhDGZ/FbqH+QeF9xIlm+BndGb8D0NRUFygypgiQaaF0poMY=
+X-Google-Smtp-Source: AGHT+IGLaqQure+tiJnp+bdS1ep5HnvBBQJYiv7rpvBOzb0HyTG/jY0zZUOhx/T9dHgs/oyfPWXFxQ==
+X-Received: by 2002:a05:6402:230f:b0:566:13f8:bcc with SMTP id l15-20020a056402230f00b0056613f80bccmr2177761eda.0.1709321255138;
+        Fri, 01 Mar 2024 11:27:35 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id bf26-20020a0564021a5a00b00566ad448c25sm1516898edb.18.2024.03.01.11.27.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Mar 2024 11:27:34 -0800 (PST)
+Message-ID: <104e0845-9af8-49d8-9f2b-4d9960691017@linaro.org>
+Date: Fri, 1 Mar 2024 20:27:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] arm64: dts: Add corstone1000 external system device
+ node
+Content-Language: en-US
+To: abdellatif.elkhlifi@arm.com, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Drew.Reed@arm.com,
+ Adam.Johnston@arm.com, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org
+References: <20240301164227.339208-1-abdellatif.elkhlifi@arm.com>
+ <20240301164227.339208-3-abdellatif.elkhlifi@arm.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240301164227.339208-3-abdellatif.elkhlifi@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-To align with ACPI 6.3+, since bit_width can be any 8-bit value, we cannot
-depend on it being always on a clean 8b boundary. This was uncovered on the
-Cobalt 100 platform.
+On 01/03/2024 17:42, abdellatif.elkhlifi@arm.com wrote:
+> From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+> 
+> add device tree node for the external system core in Corstone-1000
+> 
+> Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+> ---
+>  arch/arm64/boot/dts/arm/corstone1000.dtsi | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/arm/corstone1000.dtsi b/arch/arm64/boot/dts/arm/corstone1000.dtsi
+> index 6ad7829f9e28..67df642363e9 100644
+> --- a/arch/arm64/boot/dts/arm/corstone1000.dtsi
+> +++ b/arch/arm64/boot/dts/arm/corstone1000.dtsi
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0 OR MIT
+>  /*
+> - * Copyright (c) 2022, Arm Limited. All rights reserved.
+> + * Copyright 2022, 2024, Arm Limited and/or its affiliates <open-source-office@arm.com>
+>   * Copyright (c) 2022, Linaro Limited. All rights reserved.
+>   *
+>   */
+> @@ -157,5 +157,13 @@ mhu_seh1: mailbox@1b830000 {
+>  			secure-status = "okay";     /* secure-world-only */
+>  			status = "disabled";
+>  		};
+> +
+> +		extsys0: remoteproc@1a010310 {
 
-SError Interrupt on CPU26, code 0xbe000011 -- SError
- CPU: 26 PID: 1510 Comm: systemd-udevd Not tainted 5.15.2.1-13 #1
- Hardware name: MICROSOFT CORPORATION, BIOS MICROSOFT CORPORATION
- pstate: 62400009 (nZCv daif +PAN -UAO +TCO -DIT -SSBS BTYPE=--)
- pc : cppc_get_perf_caps+0xec/0x410
- lr : cppc_get_perf_caps+0xe8/0x410
- sp : ffff8000155ab730
- x29: ffff8000155ab730 x28: ffff0080139d0038 x27: ffff0080139d0078
- x26: 0000000000000000 x25: ffff0080139d0058 x24: 00000000ffffffff
- x23: ffff0080139d0298 x22: ffff0080139d0278 x21: 0000000000000000
- x20: ffff00802b251910 x19: ffff0080139d0000 x18: ffffffffffffffff
- x17: 0000000000000000 x16: ffffdc7e111bad04 x15: ffff00802b251008
- x14: ffffffffffffffff x13: ffff013f1fd63300 x12: 0000000000000006
- x11: ffffdc7e128f4420 x10: 0000000000000000 x9 : ffffdc7e111badec
- x8 : ffff00802b251980 x7 : 0000000000000000 x6 : ffff0080139d0028
- x5 : 0000000000000000 x4 : ffff0080139d0018 x3 : 00000000ffffffff
- x2 : 0000000000000008 x1 : ffff8000155ab7a0 x0 : 0000000000000000
- Kernel panic - not syncing: Asynchronous SError Interrupt
- CPU: 26 PID: 1510 Comm: systemd-udevd Not tainted 
-5.15.2.1-13 #1
- Hardware name: MICROSOFT CORPORATION, BIOS MICROSOFT CORPORATION
- Call trace:
-  dump_backtrace+0x0/0x1e0
-  show_stack+0x24/0x30
-  dump_stack_lvl+0x8c/0xb8
-  dump_stack+0x18/0x34
-  panic+0x16c/0x384
-  add_taint+0x0/0xc0
-  arm64_serror_panic+0x7c/0x90
-  arm64_is_fatal_ras_serror+0x34/0xa4
-  do_serror+0x50/0x6c
-  el1h_64_error_handler+0x40/0x74
-  el1h_64_error+0x7c/0x80
-  cppc_get_perf_caps+0xec/0x410
-  cppc_cpufreq_cpu_init+0x74/0x400 [cppc_cpufreq]
-  cpufreq_online+0x2dc/0xa30
-  cpufreq_add_dev+0xc0/0xd4
-  subsys_interface_register+0x134/0x14c
-  cpufreq_register_driver+0x1b0/0x354
-  cppc_cpufreq_init+0x1a8/0x1000 [cppc_cpufreq]
-  do_one_initcall+0x50/0x250
-  do_init_module+0x60/0x27c
-  load_module+0x2300/0x2570
-  __do_sys_finit_module+0xa8/0x114
-  __arm64_sys_finit_module+0x2c/0x3c
-  invoke_syscall+0x78/0x100
-  el0_svc_common.constprop.0+0x180/0x1a0
-  do_el0_svc+0x84/0xa0
-  el0_svc+0x2c/0xc0
-  el0t_64_sync_handler+0xa4/0x12c
-  el0t_64_sync+0x1a4/0x1a8
+Looks not really ordered.
 
-Instead, use access_width to determine the size and use the offset and width
-to shift and mask the bits we want to read/write out. Make sure to add a check
-for system memory since pcc redefines the access_width to subspace id. If 
-access_width is not set, then fallback to using the bit_width.
+> +			compatible = "arm,corstone1000-extsys";
+> +			reg = <0x1a010310 0x4>,
+> +				<0x1a010314 0X4>;
 
-Signed-off-by: Jarred White <jarredwhite@linux.microsoft.com>
-CC: srivatsabhat@linux.microsoft.com
-CC: stable@vger.kernel.org #5.15+
----
-changelog:
-v1-->v2:
-https://lore.kernel.org/linux-acpi/20231216001312.1160-1-jarredwhite@linux.microsoft.com/
-	1. Fixed coding style errors
-	2. Backwards compatibility with ioremapping of address still an
-		open question. Suggestions are welcomed.
-v2-->v3:
-	1. Created a fallback mechanism to revert to using the bit_width
-	2. Re-labeled macro to GET_BIT_WIDTH
-	3. Collapsed the if/else statements in the cpc_read() and cpc_write() routines
+And this needs alignment.
 
- drivers/acpi/cppc_acpi.c | 32 +++++++++++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index d155a86a8614..57de7edda7a5 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -166,6 +166,13 @@ show_cppc_data(cppc_get_perf_caps, cppc_perf_caps, nominal_freq);
- show_cppc_data(cppc_get_perf_ctrs, cppc_perf_fb_ctrs, reference_perf);
- show_cppc_data(cppc_get_perf_ctrs, cppc_perf_fb_ctrs, wraparound_time);
- 
-+/* Check for valid access_width, otherwise, fallback to using the bit_width */
-+#define GET_BIT_WIDTH(reg) ((reg)->access_width ? (8 << ((reg)->access_width - 1)) : (reg)->bit_width)
-+
-+/* Shift and apply the mask for CPC reads/writes */
-+#define MASK_VAL(reg, val) ((val) >> ((reg)->bit_offset & 			\
-+					GENMASK(((reg)->bit_width), 0)))
-+
- static ssize_t show_feedback_ctrs(struct kobject *kobj,
- 		struct kobj_attribute *attr, char *buf)
- {
-@@ -780,6 +787,7 @@ int acpi_cppc_processor_probe(struct acpi_processor *pr)
- 			} else if (gas_t->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
- 				if (gas_t->address) {
- 					void __iomem *addr;
-+					size_t access_width;
- 
- 					if (!osc_cpc_flexible_adr_space_confirmed) {
- 						pr_debug("Flexible address space capability not supported\n");
-@@ -787,7 +795,9 @@ int acpi_cppc_processor_probe(struct acpi_processor *pr)
- 							goto out_free;
- 					}
- 
--					addr = ioremap(gas_t->address, gas_t->bit_width/8);
-+					/* Check for access_width for the size, otherwise use bit_width */
-+					access_width = GET_BIT_WIDTH(gas_t) / 8;
-+					addr = ioremap(gas_t->address, access_width);
- 					if (!addr)
- 						goto out_free;
- 					cpc_ptr->cpc_regs[i-2].sys_mem_vaddr = addr;
-@@ -983,6 +993,7 @@ int __weak cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val)
- static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
- {
- 	void __iomem *vaddr = NULL;
-+	int size;
- 	int pcc_ss_id = per_cpu(cpu_pcc_subspace_idx, cpu);
- 	struct cpc_reg *reg = &reg_res->cpc_entry.reg;
- 
-@@ -994,7 +1005,7 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
- 	*val = 0;
- 
- 	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
--		u32 width = 8 << (reg->access_width - 1);
-+		u32 width = GET_BIT_WIDTH(reg);
- 		u32 val_u32;
- 		acpi_status status;
- 
-@@ -1018,7 +1029,9 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
- 		return acpi_os_read_memory((acpi_physical_address)reg->address,
- 				val, reg->bit_width);
- 
--	switch (reg->bit_width) {
-+	size = GET_BIT_WIDTH(reg);
-+
-+	switch (size) {
- 	case 8:
- 		*val = readb_relaxed(vaddr);
- 		break;
-@@ -1037,18 +1050,22 @@ static int cpc_read(int cpu, struct cpc_register_resource *reg_res, u64 *val)
- 		return -EFAULT;
- 	}
- 
-+	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY)
-+		*val = MASK_VAL(reg, *val);
-+
- 	return 0;
- }
- 
- static int cpc_write(int cpu, struct cpc_register_resource *reg_res, u64 val)
- {
- 	int ret_val = 0;
-+	int size;
- 	void __iomem *vaddr = NULL;
- 	int pcc_ss_id = per_cpu(cpu_pcc_subspace_idx, cpu);
- 	struct cpc_reg *reg = &reg_res->cpc_entry.reg;
- 
- 	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
--		u32 width = 8 << (reg->access_width - 1);
-+		u32 width = GET_BIT_WIDTH(reg);
- 		acpi_status status;
- 
- 		status = acpi_os_write_port((acpi_io_address)reg->address,
-@@ -1070,7 +1087,12 @@ static int cpc_write(int cpu, struct cpc_register_resource *reg_res, u64 val)
- 		return acpi_os_write_memory((acpi_physical_address)reg->address,
- 				val, reg->bit_width);
- 
--	switch (reg->bit_width) {
-+	size = GET_BIT_WIDTH(reg);
-+
-+	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY)
-+		val = MASK_VAL(reg, val);
-+
-+	switch (size) {
- 	case 8:
- 		writeb_relaxed(val, vaddr);
- 		break;
--- 
-2.34.1
+Best regards,
+Krzysztof
 
