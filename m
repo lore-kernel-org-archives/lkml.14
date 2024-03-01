@@ -1,66 +1,36 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615256A352
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 09:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCBA42A8B;
+	Fri,  1 Mar 2024 09:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709286989; cv=none; b=h9UhKOyUd5WosDwguMOmJBcRAaVhSMAzlnEjEamKo2Pz2Jw+M+QleTws5h1Xt3z+LYXQ9PVbh2HA3fSwkeg9SQMy4hhJHRce5qPhiBB8/8//GmpCWg6SnPyd3p1dbitFylRmS6iuORT/GOkXwSI5UHivx1spMODQJTqZ1oSF0+Y=
+	t=1709287069; cv=none; b=neqBLCdd73td6B5eikHPE1szN7QP8F4+q4BMO0SlN++Qq0yDBNbcVsmMelhJ/CuU5YiuUd+74HwOcXrOmj1XdCeqOgR0yg9x3/uaE4RAmNM6zvmscSqaPUNTd/roc4bYRoZav+C0GZs6XvX/cU96gWwSNeEUzR7RkXF4swXLZdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709286989; c=relaxed/simple;
-	bh=18S77KXqW9B4dMKuNYPGTI7+MDToDmytBAg7uEmV2FU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k+BBlZd9TFAkE8c5LwCUZCQMlW1oOH3n0tVPSJ96MXq+/O69yvSqDGTWrn/YYTWQ20eYTp6aw1j2H2ita778Zk3QwbSggoiNRXChkQraaI28YGp/rwQHnWH4VZr/ADx992SokW1MNGvLS84KQoW4m+6lE4WdLhfnVef5MpRaqgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=esHeHjXV; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="esHeHjXV"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d2305589a2so24249191fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 01:56:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709286985; x=1709891785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VkH3dZexrgeoLVbHTxNag0IKuqLj3ZDSeXVaWdmYMB4=;
-        b=esHeHjXVLkxuYULK8vcdvXvxv2F7/hzg5RBmX1JLSxBVcAmA2Cl1OPbmI4CHuHPtyr
-         lPAA7z6ovWbw9ny8umQidO3VKizxq5pL9GfcJDPZr2NcATOThAEI0V1GZ1N+9sToom65
-         SdFR0bKoVVnNKxxBS/k0csn7MNnrn0eRkJsEUApNAL/bivCxpM0bn6lSeCZWUt8SsZG4
-         142ST2RwUzbh0HKcmKJA7pEiKfEJaUXwJWDPmmMei0bwoVxf/CsXvzgEn39x4tZA5tuJ
-         jeyLXgIX+RNlftDkQe+PzLR+8qkWLQSydMcpibOnrtv9fENuFxsMgV3z566tCTePPavL
-         rk1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709286985; x=1709891785;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VkH3dZexrgeoLVbHTxNag0IKuqLj3ZDSeXVaWdmYMB4=;
-        b=TA1M3WlD9UFrO+qDDjN2gFX0yo/yv/42us/1v9AC/x6InmpSJQHYXY5rTcq8QYQJ4M
-         u2nFEEOd7iNYPpnVf4E5orpfUK4r86OnG5Tb/p1MwTXtbn7oyItHIE5W6+obPAdZrh02
-         qz3kYnbK9P/dIMwziPdtP6xwoUIBuv5JI0+ZIUqe3I9k+XRIhAx2WyouQi0vydPxu3ro
-         z4kxeHiViyB79pBBjXK5PU85at1iLNVI7ENTrXKNVLpkeJuftAKF1yNeOd+8xRJipwQb
-         HvDdI1uOWzZaj0RBvV2V9ZrXZy35mHtgUx9N6VCgkCoF0YhQWjl23Z9pneKfpw7YfcZN
-         cxXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVS+SoHBuoLk0sQO+uu9R1muduGW1OrvPcCW5jKtmDVs2ElomW+WjwbmY9QCzypryA0oLSlC9C57sljXh9NXcPRKGhLMU/4dUnxwTy1
-X-Gm-Message-State: AOJu0YzrxQ0m61X6dFWmRubgAFZnIyniSlN+k8CLu00F14fkzJaldv/q
-	ZGKCkvU2qJqpf/zzVrIJwPBsSLcT25Vhvi1FG7fFxprf+3Uj9fd0UInUE2LQvoLRJwd977Av2AH
-	t
-X-Google-Smtp-Source: AGHT+IF5nLUsEK/GcU+i4clsC9SpRItPO0y27bMdAQSTFmJjQXi6Pjl+T6nj+mStxcIQL7zVO61Bzw==
-X-Received: by 2002:a2e:808d:0:b0:2d2:a8b3:a20e with SMTP id i13-20020a2e808d000000b002d2a8b3a20emr765752ljg.53.1709286985354;
-        Fri, 01 Mar 2024 01:56:25 -0800 (PST)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id b22-20020a2e9896000000b002d2607e6d29sm530333ljj.70.2024.03.01.01.56.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 01:56:24 -0800 (PST)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: Linus <torvalds@linux-foundation.org>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [GIT PULL] pmdomain fixes for v6.8-rc7
-Date: Fri,  1 Mar 2024 10:56:23 +0100
-Message-Id: <20240301095623.3659989-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709287069; c=relaxed/simple;
+	bh=7i7qkNtRTTPOCju0zKhcOsfkVU1pD4TeLBCBwyMYrNc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MUuEddCE1+ZEUQb5Ilp6nRPzSmfIlOF9y3y9ECNn4oV9wjsENgNRvOhES0BOgVv/6aP+TSY1QmG9ICaTRN2FwAsobCl29Tv4VULZJNShoBOldavKdJ0YaPFc7CuBOwSIfssWvEtC0/kcvk14jS/4AKAznQ+q9NftsH5jBGYTXpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TmNm86Gd3zNp35;
+	Fri,  1 Mar 2024 17:56:56 +0800 (CST)
+Received: from kwepemm600012.china.huawei.com (unknown [7.193.23.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0259418007D;
+	Fri,  1 Mar 2024 17:57:37 +0800 (CST)
+Received: from build.huawei.com (10.175.101.6) by
+ kwepemm600012.china.huawei.com (7.193.23.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 1 Mar 2024 17:57:36 +0800
+From: Wenchao Hao <haowenchao2@huawei.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Wenchao
+ Hao <haowenchao2@huawei.com>, <linux-rdma@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] RDMA/restrack: Fix potential invalid address access
+Date: Fri, 1 Mar 2024 17:55:15 +0800
+Message-ID: <20240301095514.3598280-1-haowenchao2@huawei.com>
+X-Mailer: git-send-email 2.32.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,42 +38,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600012.china.huawei.com (7.193.23.74)
 
-Hi Linus,
+struct rdma_restrack_entry's kern_name was set to KBUILD_MODNAME
+in ib_create_cq(), while if the module exited but forgot del this
+rdma_restrack_entry, it would cause a invalid address access in
+rdma_restrack_clean() when print the owner of this rdma_restrack_entry.
 
-Here's a PR with a couple of pmdomain fixes intended for v6.8-rc7. Details about
-the highlights are as usual found in the signed tag.
+Fix this issue by using kstrdup() to set rdma_restrack_entry's
+kern_name.
 
-Please pull this in!
+Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
+---
+ drivers/infiniband/core/restrack.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Kind regards
-Ulf Hansson
+diff --git a/drivers/infiniband/core/restrack.c b/drivers/infiniband/core/restrack.c
+index 01a499a8b88d..6605011c4edc 100644
+--- a/drivers/infiniband/core/restrack.c
++++ b/drivers/infiniband/core/restrack.c
+@@ -177,7 +177,8 @@ static void rdma_restrack_attach_task(struct rdma_restrack_entry *res,
+ void rdma_restrack_set_name(struct rdma_restrack_entry *res, const char *caller)
+ {
+ 	if (caller) {
+-		res->kern_name = caller;
++		kfree(res->kern_name);
++		res->kern_name = kstrdup(caller, GFP_KERNEL);
+ 		return;
+ 	}
+ 
+@@ -195,7 +196,7 @@ void rdma_restrack_parent_name(struct rdma_restrack_entry *dst,
+ 			       const struct rdma_restrack_entry *parent)
+ {
+ 	if (rdma_is_kernel_res(parent))
+-		dst->kern_name = parent->kern_name;
++		dst->kern_name = kstrdup(parent->kern_name, GFP_KERNEL);
+ 	else
+ 		rdma_restrack_attach_task(dst, parent->task);
+ }
+@@ -306,6 +307,7 @@ static void restrack_release(struct kref *kref)
+ 		put_task_struct(res->task);
+ 		res->task = NULL;
+ 	}
++	kfree(res->kern_name);
+ 	complete(&res->comp);
+ }
+ 
+-- 
+2.32.0
 
-
-The following changes since commit 841c35169323cd833294798e58b9bf63fa4fa1de:
-
-  Linux 6.8-rc4 (2024-02-11 12:18:13 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm.git tags/pmdomain-v6.8-rc4
-
-for you to fetch changes up to 2a93c6cbd5a703d44c414a3c3945a87ce11430ba:
-
-  pmdomain: qcom: rpmhpd: Fix enabled_corner aggregation (2024-02-28 16:31:45 +0100)
-
-----------------------------------------------------------------
-Providers:
- - qcom: Fix enabled_corner aggregation for rpmhpd
- - arm: Fix NULL dereference on scmi_perf_domain removal
-
-----------------------------------------------------------------
-Bjorn Andersson (1):
-      pmdomain: qcom: rpmhpd: Fix enabled_corner aggregation
-
-Cristian Marussi (1):
-      pmdomain: arm: Fix NULL dereference on scmi_perf_domain removal
-
- drivers/pmdomain/arm/scmi_perf_domain.c | 3 +++
- drivers/pmdomain/qcom/rpmhpd.c          | 7 +++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
