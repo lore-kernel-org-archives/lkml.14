@@ -1,118 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF793C470;
-	Fri,  1 Mar 2024 20:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECFF3C46C
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 20:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709324793; cv=none; b=UoiBNmCzEtkhMUqNfXEkb2iUzsvMa46q8KELJrapP9Mdv8ZOXI3oR05eugQqmZFSg5ezs6iApAgB30HT4hXxRTDIsRJe+K4opcvMPsQ6p8necIHzdCqShe8yI/wxBK/4T3XJTwVcP2vnXj/QYaGzlgcU6whYHL0dONoZXxtm6uE=
+	t=1709324856; cv=none; b=CKhMDvvOJh8vmf3CtlBNjLTuOuOJ/YA65srYIATGtcfMsR82iHpkhsK4EhnMCLrAF1WE96c1m8F0VHzMTcuMgwJ8X8Pr2Cnr5gl29EqrcUy0K7W9Vp5tSdY66z/KRR9S8jJMhhmEl/i7TtXVKtifaRx4CZDWx/7/wKV5LgFUT/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709324793; c=relaxed/simple;
-	bh=PrJ3aVeOXXr6ChkhosX0KQsUPRlQeGLh2zV6DSxUaAw=;
-	h=Mime-Version:Content-Type:Date:Subject:From:To:Cc:Message-Id:
-	 References:In-Reply-To; b=CgCjJ+4b6gZA30WFxzOJfl3Jp1pvzHLBwlXCpXB+gXuTp9kdIFu+s2A2EMCEe8Kg6Dbf7RmZtiEoCe9UKu9iDpX1C+7+4zORMpgA7qCyfvp93tuFjwqu7a8byw9YMwBp/S3hAiteewwrqYsyxQIBbtnt2D8tX9JZiogMw+tj960=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=suEoBXOv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1709324856; c=relaxed/simple;
+	bh=DnUJs5+uISqN9crku1KoMOQ953Bxm+qboqKzjh/95IE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uFAkSPPjY0zbuSXI7Tff51RowCXFCTp/o7zIEDbZgYcE3eYL1a8A4GJWWPNelvdRCywmHX+ecMQnWzZOrolipS/bXloQ+FgCA5w7FrSnXlcix9zKpmgjXgNhiR+aM8kddcpvFJdW38/w6VNwmsdzq6R3G3vy243027AAjdDY5EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GCsC91Eq; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="suEoBXOv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96EAEC433F1;
-	Fri,  1 Mar 2024 20:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709324793;
-	bh=PrJ3aVeOXXr6ChkhosX0KQsUPRlQeGLh2zV6DSxUaAw=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=suEoBXOvlqG4qAZ3jekNNeljlAYHrPsJh6fR6LYNf/nXwWORCnJ90dMd+VgUybDla
-	 LUWLkUUn7sIPKDhK54MQZoTOMNtmWdySLbBDM7ziR5xEJ8eK0OxZHY+jaQOk+TDJmw
-	 a0wqaGOAbG65tmeI/W7VNls4nyTpWx1Sr4skloCYei7/jBFRQESWhaVkSVc/3Tn6G6
-	 MfxgKWbb65y3xQHVFxmRmAb5woFOk3JI05GkF1+wFFLJGbTCcE6+5C/P2VAreW2kub
-	 mq8vTYMgeHp+gRYF29A/6uaqutoIRlUX+kxSNQYhnbXuiEb4KV0z3ztp9Pvf6XujJu
-	 q7TL/Ss+pvcKg==
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GCsC91Eq"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso2091432a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 12:27:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1709324854; x=1709929654; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FbfKK2EYH3OSU0GBIWu6lSnSWqW1KYjbvzvVhBb4gRQ=;
+        b=GCsC91Eqgvyh4afFCuSz8H3qZ8QqrZDoprnVqDBINTy173L8fMqWw5rnkita0+fRmn
+         XIbAYw1IFkWxA2iBOpwFaFKHUmVyKpSPW5l7Gt3titTuB37KZlgkikp0sO+iM/DEWHQ4
+         qjDSly3WY52FReUEKQu+b+0P2uI5LiGS/+VwU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709324854; x=1709929654;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FbfKK2EYH3OSU0GBIWu6lSnSWqW1KYjbvzvVhBb4gRQ=;
+        b=ZTJ7YljT5azl7ea8k84UQx3Pji+UxB3TSeMYvrOCNS/O/ARch07fPrgU3nBx7du0cS
+         eibyQN4HmRdGGgQILGpn1CTd5EaC+HYQU1nc/Px5c/v/BNbEvVxbtFYZCnr+guS4lLx0
+         0iOgz+1zUU3aLnnq5qujZa7W1q10N57DAvlfmHFiKYoQoY7xs1QeI7P/D23mU4MSRlE9
+         I3iO61spwqySPS4wnkEvwn+Fw9wCAPJHF0+8+m2nzxxvk785M2GugtDjQ1VeUxhOt/gz
+         V4ccvrR9tOtyqeERAEcWavN2qRcX/KgnZ6pu9Xo0WmJxnEEK0VHLtgWNwc0LbujeNipU
+         U8JA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlP65AYvVnWz+mREnLiXbvZ8GaSsEO7yCqCMOTA5BdKjNAdFi0wOGmR5+hiL783jlafc2lM/iTAvPlPYHVGoiG0ZFjIwyGjhRZtUSK
+X-Gm-Message-State: AOJu0Yxtze4om2dZqFJKHbMtN3FoRClnJi6v8zoOXUiwG6nOutpviitY
+	v6D7s0jpkEvWVTacfce/BJiLpt/IoHgk8rfVwRi4+hib4Yw7bC+ryrBDuvEOhw==
+X-Google-Smtp-Source: AGHT+IFCqqO7wZ18+05UaKVoS8w2IKK+O4ARDFgyorWuSmx3ehlO/p40sKlA9YJ91qT+gZfsdivgyw==
+X-Received: by 2002:a17:90a:b394:b0:299:42d1:91df with SMTP id e20-20020a17090ab39400b0029942d191dfmr2788029pjr.14.1709324854080;
+        Fri, 01 Mar 2024 12:27:34 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d23-20020a17090ac25700b0029ae07f56b3sm3668071pjx.5.2024.03.01.12.27.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Mar 2024 12:27:33 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3 0/2] string: Convert selftests to KUnit
+Date: Fri,  1 Mar 2024 12:27:29 -0800
+Message-Id: <20240301202524.make.800-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 01 Mar 2024 22:26:29 +0200
-Subject: Re: [PATCH v3 01/10] crypto: ecdsa - Convert byte arrays with key
- coordinates to digits
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Stefan Berger" <stefanb@linux.ibm.com>, "Lukas Wunner"
- <lukas@wunner.de>
-Cc: <keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
- <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
- <linux-kernel@vger.kernel.org>, <saulo.alessandre@tse.jus.br>
-Message-Id: <CZIOY02QS2QC.LV0A0HNT7VKM@suppilovahvero>
-X-Mailer: aerc 0.15.2
-References: <20240223204149.4055630-1-stefanb@linux.ibm.com>
- <20240223204149.4055630-2-stefanb@linux.ibm.com>
- <20240229091105.GA29363@wunner.de>
- <aabeec7b-618c-4d15-b033-4162b6e54f6a@linux.ibm.com>
-In-Reply-To: <aabeec7b-618c-4d15-b033-4162b6e54f6a@linux.ibm.com>
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=908; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=DnUJs5+uISqN9crku1KoMOQ953Bxm+qboqKzjh/95IE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBl4jozssJSDBeQ6SS3cHQIRC2M+sjmHVadtdbbw
+ jC5BioxJFiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZeI6MwAKCRCJcvTf3G3A
+ JgAED/wII/zyCWUkDErz/vQ6I40XSy0Zfa+6aIzCeKJUsXVuJMl2azaL/wTX76kzKuFWFI3Wy0S
+ sTXJNJXeop+Q+XlCfSly/87MqGuRNs1C3YO1X6Eus9r5gHPoH5+dqrxsbatTlJWjdpNNAeV8XZ7
+ fiR7J1Kxrt3YJvc/5vzyQWer+pJ1+4q7XEaGYhEAJC3mXP05xtYmJXPIT71g6SxLq1O4fSytCcp
+ MHrb+0zvyD5TMvWWqnTMXF0tcMLbEN4R0RhLwaPVG2zAYk68AIATv3G07QIF7qMZO9VHZrojU+n
+ B/GG4Ja8jOSkjDoxnrwKG4xPpTVVoTHBOlR9hBb8M77vEbbeAFPnTuleTZj7uJ5tcCqbT4Ilma/
+ dCp+4insJmj/jnJDMzBy6h4BGlKnPETxb1p+pFF1fJUQC2vVkKeO0nupw2dn5Zw2Dfm4cWiH3u8
+ 2j/+HNJVh2/8piWORl29kMlyuWNkhLv11IwFyj4ZzYvMLguw2vW25dgEzLSCLRDgNe2SPp52J16
+ O1vBXB2xfe9Z7ZojvMt3IhoT5yVHX4zGRjDRh0u9ZetvjNE4YyDz6EkOx7JFUcfOP8XqpeHWKC1
+ HbiPUBPVFk6GNm1LgSQa2j8UiqVvhbQWvxEYXw8hP4IGGStOxyshAqpn0iju37SS6+lNWe2NOrQ
+ ImSrpdg/ 4ST6TkA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu Feb 29, 2024 at 4:57 PM EET, Stefan Berger wrote:
->
->
-> On 2/29/24 04:11, Lukas Wunner wrote:
-> > On Fri, Feb 23, 2024 at 03:41:40PM -0500, Stefan Berger wrote:
-> >> +static inline void ecc_digits_from_bytes(const u8 *in, unsigned int n=
-bytes,
-> >> +					 u64 *out, unsigned int ndigits)
-> >> +{
-> >> +	unsigned int sz =3D ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
-> >> +	u8 tmp[ECC_MAX_DIGITS << ECC_DIGITS_TO_BYTES_SHIFT];
-> >> +	unsigned int o =3D sz - nbytes;
-> >> +
-> >> +	memset(tmp, 0, o);
-> >> +	memcpy(&tmp[o], in, nbytes);
-> >> +	ecc_swap_digits(tmp, out, ndigits);
-> >> +}
-> >=20
-> > Copying the whole key into tmp seems inefficient.  You only need
-> > special handling for the first few bytes of "in" (6 bytes in the
-> > P521 case) and could use ecc_swap_digits() to convert the rest
-> > of "in" directly to "out" without using tmp.
-> >=20
-> > So it would be sufficient to allocate the first digit on the stack,
-> > memset + memcpy, then convert that to native byte order into "in[0]"
-> > and use ecc_swap_digits() for the rest.
-> >=20
-> > And the special handling would be conditional on "!o", so is skipped
-> > for existing curves.
->
-> Thanks. It looks like this now:
->
-> static inline void ecc_digits_from_bytes(const u8 *in, unsigned int nbyte=
-s,
->                                           u64 *out, unsigned int ndigits)
-> {
->          unsigned int o =3D nbytes & 7;
->          u64 msd =3D 0;
->          size_t i;
->
->          if (o =3D=3D 0) {
->                  ecc_swap_digits(in, out, ndigits);
->          } else {
->                  for (i =3D 0; i < o; i++)
->                          msd =3D (msd << 8) | in[i];
->                  out[ndigits - 1] =3D msd;
->                  ecc_swap_digits(&in[o], out, ndigits - 1);
+Hi,
 
-This would be more stream-lined IMHO:
+I realized the string selftests hadn't been converted to KUnit yet. Do that.
 
-        unsigned int o =3D nbytes & 7;
-	unsigned int n =3D ndigits;
-        u64 msd =3D 0;
-        size_t i;
+-Kees
 
-        if (o !=3D 0) {
-                for (i =3D 0; i < o; i++)
-                        msd =3D (msd << 8) | in[i];
+ v3: retain all text context in failure reporting
+ v2: https://lore.kernel.org/lkml/20240301002416.it.092-kees@kernel.org/
+ v1: https://lore.kernel.org/lkml/20240229233432.work.675-kees@kernel.org/
 
-                out[--n] =3D msd;
-        }
 
-        ecc_swap_digits(in, out, n);
+Kees Cook (2):
+  string: Convert selftest to KUnit
+  string: Convert helpers selftest to KUnit
 
-BR, Jarkko
+ MAINTAINERS                                   |   4 +-
+ lib/Kconfig.debug                             |  12 +-
+ lib/Makefile                                  |   4 +-
+ ...tring_helpers.c => string_helpers_kunit.c} | 216 ++++++++----------
+ lib/{test_string.c => string_kunit.c}         | 200 ++++++----------
+ 5 files changed, 178 insertions(+), 258 deletions(-)
+ rename lib/{test-string_helpers.c => string_helpers_kunit.c} (72%)
+ rename lib/{test_string.c => string_kunit.c} (46%)
+
+-- 
+2.34.1
+
