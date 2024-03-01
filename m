@@ -1,155 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 921D31FDB
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C9039FDD
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 16:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709311119; cv=none; b=N5E8j6LkSS9u23/KXOPZ88T6EUJOhTU7WsGBceftB5d46QIeCfCPPOKUdkpwU2xXAC6K0bOjkwDixU6SWBdWVm7e8wiJ1QIEa2qu+bEIiMUhe+osawdb1f3ImSN00wqxAoaLLY+UJ8iz8njtH1fsFQY6cDqVGtUHlmxgNvB8Bcw=
+	t=1709311121; cv=none; b=CJH/gDKVzhd7vbxQv5Z/FfMT1EVyobwyQ4/0LKUGmoLA5FoMLr6ZMDmZPga/Fd5YjFSkc2PnZyh1CGmXVGNT4shFQwlJfUYXSoaIg5s/NYyOtB7LnNTpocJiTHY7Cj2QWJPkCZEQOpbooHy+9isRl7vA2MDg7xstfUIGhaB3h4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709311119; c=relaxed/simple;
-	bh=qrrimEnDkMs4q4acxDFMqu61Fpou7nGw9xqMBx1dwyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WKVPd2VcprvGcz/86pLrFofBtq2VT+ShFlP2Q9MiKaTJJb786zT/aZ7dNOixi8Q/fxsHftt54h0+8ghRmSsV+x0FDZBPVxRyou1MehG50zrMGHnHCFwKWSBYvZAA5tJuUnqvFKQcXKRFFnYudd56bTCpWLOp/0gwg9taw1Qbps4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 228791FB;
-	Fri,  1 Mar 2024 08:39:15 -0800 (PST)
-Received: from [10.57.67.78] (unknown [10.57.67.78])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 316713F73F;
-	Fri,  1 Mar 2024 08:38:35 -0800 (PST)
-Message-ID: <4fbcdd49-cd93-4af8-83e2-f1cef0ea2eeb@arm.com>
-Date: Fri, 1 Mar 2024 16:38:33 +0000
+	s=arc-20240116; t=1709311121; c=relaxed/simple;
+	bh=OQhrdRbsy6dNNd/zZSQhmGvtRjzZYE4Nim/ssYLKPhk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ja65TpSmbCRF8qnuphOp6sHEEktm2DIG0XCfBacAPYy1gX1Mr5X90XcOI201IxYZM3ftu5Gj5G3VNrPx2NrO2unwCKrBtoQlMQMbTytkQSzFc8wmQg7YMMFSJxqosrsmZtYuyCuUcQDw8jM13ZvqjeSpGWpDG395Us+pYpifhLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DhjSW31y; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DhjSW31y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709311118;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xts3XtVON9I71sFj7FzOone2ONVNFLRmYJBbj5l1ezs=;
+	b=DhjSW31yK14q5tOvKvNqMCmvzbAAUrTuqOy3DMGENGWsNq+rNfklwMGN5AH2YYDYVfRV1C
+	xjr48XtKIQGMOGJcwk4PN1BrjExBNjPA9rretWv3nDr3d1YmV7sYiZBHrKfpX85YBFiezH
+	74tKOZ6te+P93rqKk9y5GTYVEh23J3E=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-532--gxOMAYONgKet0F_c8Pwcg-1; Fri, 01 Mar 2024 11:38:34 -0500
+X-MC-Unique: -gxOMAYONgKet0F_c8Pwcg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 76E0F185A78B;
+	Fri,  1 Mar 2024 16:38:31 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.114])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5725F492BE2;
+	Fri,  1 Mar 2024 16:38:30 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: netdev@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-afs@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 11/21] rxrpc: Don't pick values out of the wire header when setting up security
+Date: Fri,  1 Mar 2024 16:37:43 +0000
+Message-ID: <20240301163807.385573-12-dhowells@redhat.com>
+In-Reply-To: <20240301163807.385573-1-dhowells@redhat.com>
+References: <20240301163807.385573-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/6] swiotlb: Remove pointless stride adjustment for
- allocations >= PAGE_SIZE
-Content-Language: en-GB
-To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>,
- Christoph Hellwig <hch@lst.de>
-Cc: Michael Kelley <mhklinux@outlook.com>, Will Deacon <will@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Petr Tesarik <petr.tesarik1@huawei-partners.com>,
- "kernel-team@android.com" <kernel-team@android.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Dexuan Cui
- <decui@microsoft.com>, Nicolin Chen <nicolinc@nvidia.com>
-References: <20240228133930.15400-1-will@kernel.org>
- <20240228133930.15400-7-will@kernel.org>
- <SN6PR02MB4157A62353559DA8DB8BC4ADD45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <SN6PR02MB41577D09E97B1D9645369D58D45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20240229133346.GA7177@lst.de>
- <SN6PR02MB4157314F142D05E279B7991ED45F2@SN6PR02MB4157.namprd02.prod.outlook.com>
- <20240229154756.GA10137@lst.de>
- <20240301163927.18358ee2@meshulam.tesarici.cz>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20240301163927.18358ee2@meshulam.tesarici.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On 2024-03-01 3:39 pm, Petr Tesařík wrote:
-> On Thu, 29 Feb 2024 16:47:56 +0100
-> Christoph Hellwig <hch@lst.de> wrote:
-> 
->> On Thu, Feb 29, 2024 at 03:44:11PM +0000, Michael Kelley wrote:
->>> Any thoughts on how that historical behavior should apply if
->>> the DMA min_align_mask is non-zero, or the alloc_align_mask
->>> parameter to swiotbl_tbl_map_single() is non-zero? As currently
->>> used, alloc_align_mask is page aligned if the IOMMU granule is
->>>> = PAGE_SIZE. But a non-zero min_align_mask could mandate
->>> returning a buffer that is not page aligned. Perhaps do the
->>> historical behavior only if alloc_align_mask and min_align_mask
->>> are both zero?
->>
->> I think the driver setting min_align_mask is a clear indicator
->> that the driver requested a specific alignment and the defaults
->> don't apply.  For swiotbl_tbl_map_single as used by dma-iommu
->> I'd have to tak a closer look at how it is used.
-> 
-> I'm not sure it helps in this discussion, but let me dive into a bit
-> of ancient history to understand how we ended up here.
-> 
-> IIRC this behaviour was originally motivated by limitations of PC AT
-> hardware. Intel 8237 is a 16-bit DMA controller. To make it somehow
-> usable with addresses up to 16MB (yeah, the infamous DMA zone), IBM
-> added a page register, but it was on a separate chip and it did not
-> increment when the 8237 address rolled over back to zero. Effectively,
-> the page register selected a 64K-aligned window of 64K buffers.
-> Consequently, DMA buffers could not cross a 64K physical boundary.
-> 
-> Thanks to how the buddy allocator works, the 64K-boundary constraint
-> was satisfied by allocation size, and drivers took advantage of it when
-> allocating device buffers. IMO software bounce buffers simply followed
-> the same logic that worked for buffers allocated by the buddy allocator.
-> 
-> OTOH min_align_mask was motivated by NVME which prescribes the value of
-> a certain number of low bits in the DMA address (for simplicity assumed
-> to be identical with the same bits in the physical address).
-> 
-> The only pre-existing user of alloc_align_mask is x86 IOMMU code, and
-> IIUC it is used to guarantee that unaligned transactions do not share
-> the IOMMU granule with another device. This whole thing is weird,
-> because swiotlb_tbl_map_single() is called like this:
-> 
->                  aligned_size = iova_align(iovad, size);
->                  phys = swiotlb_tbl_map_single(dev, phys, size, aligned_size,
->                                                iova_mask(iovad), dir, attrs);
-> 
-> Here:
-> 
-> * alloc_size = iova_align(iovad, size)
-> * alloc_align_mask = iova_mask(iovad)
-> 
-> Now, iova_align() rounds up its argument to a multiple of iova granule
-> and iova_mask() is simply "granule - 1". This works, because granule
-> size must be a power of 2, and I assume it must also be >= PAGE_SIZE.
+Don't pick values out of the wire header in rxkad when setting up DATA
+packet security, but rather use other sources.  This makes it easier to get
+rid of txb->wire.
 
-Not quite, the granule must *not* be larger than PAGE_SIZE (but can be 
-smaller).
-> In that case, the alloc_align_mask argument is not even needed if you
-> adjust the code to match documentation---the resulting buffer will be
-> aligned to a granule boundary by virtue of having a size that is a
-> multiple of the granule size.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: linux-afs@lists.infradead.org
+cc: netdev@vger.kernel.org
+---
+ net/rxrpc/rxkad.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I think we've conflated two different notions of "allocation" here. The 
-page-alignment which Christoph quoted applies for dma_alloc_coherent(), 
-which nowadays *should* only be relevant to SWIOTLB code in the 
-swiotlb_alloc() path for stealing coherent pages out of restricted DMA 
-pools. Historically there was never any official alignment requirement 
-for the DMA addresses returned by dma_map_{page,sg}(), until 
-min_align_mask was introduced.
+diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
+index e451ac90bfee..ef0849c8329c 100644
+--- a/net/rxrpc/rxkad.c
++++ b/net/rxrpc/rxkad.c
+@@ -259,7 +259,7 @@ static int rxkad_secure_packet_auth(const struct rxrpc_call *call,
+ 
+ 	_enter("");
+ 
+-	check = txb->seq ^ ntohl(txb->wire.callNumber);
++	check = txb->seq ^ call->call_id;
+ 	hdr->data_size = htonl((u32)check << 16 | txb->len);
+ 
+ 	txb->len += sizeof(struct rxkad_level1_hdr);
+@@ -302,7 +302,7 @@ static int rxkad_secure_packet_encrypt(const struct rxrpc_call *call,
+ 
+ 	_enter("");
+ 
+-	check = txb->seq ^ ntohl(txb->wire.callNumber);
++	check = txb->seq ^ call->call_id;
+ 
+ 	rxkhdr->data_size = htonl(txb->len | (u32)check << 16);
+ 	rxkhdr->checksum = 0;
+@@ -362,9 +362,9 @@ static int rxkad_secure_packet(struct rxrpc_call *call, struct rxrpc_txbuf *txb)
+ 	memcpy(&iv, call->conn->rxkad.csum_iv.x, sizeof(iv));
+ 
+ 	/* calculate the security checksum */
+-	x = (ntohl(txb->wire.cid) & RXRPC_CHANNELMASK) << (32 - RXRPC_CIDSHIFT);
++	x = (call->cid & RXRPC_CHANNELMASK) << (32 - RXRPC_CIDSHIFT);
+ 	x |= txb->seq & 0x3fffffff;
+-	crypto.buf[0] = txb->wire.callNumber;
++	crypto.buf[0] = htonl(call->call_id);
+ 	crypto.buf[1] = htonl(x);
+ 
+ 	sg_init_one(&sg, crypto.buf, 8);
 
-> To sum it up:
-> 
-> 1. min_align_mask is by far the most important constraint. Devices will
->     simply stop working if it is not met.
-> 2. Alignment to the smallest PAGE_SIZE order which is greater than or
->     equal to the requested size has been documented, and some drivers
->     may rely on it.
-
-Strictly it stopped being necessary since fafadcd16595 when the 
-historical swiotlb_alloc() was removed, but 602d9858f07c implies that 
-indeed the assumption of it for streaming mappings had already set in. 
-Of course NVMe is now using min_align_mask, but I'm not sure if it's 
-worth taking the risk to find out who else should also be.
-
-> 3. alloc_align_mask is a misguided fix for a bug in the above.
-
-No, alloc_align_mask is about describing the explicit requirement rather 
-than relying on any implicit behaviour, and thus being able to do the 
-optimal thing for, say, a 9KB mapping given a 4KB IOVA granule and 64KB 
-PAGE_SIZE.
-
-Thanks,
-Robin.
-
-> 
-> Correct me if anything of the above is wrong.
-> 
-> HTH
-> Petr T
