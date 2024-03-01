@@ -1,160 +1,143 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3473EA8E
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C933EA90
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709319404; cv=none; b=SpPGWbQXaKfI8CpAdLgvOQ858qV0DqcWUWSGPBYW4R3LeVfDgWNkCUhZ9lRwC4HYQDkPPqWkYk0dqBsx6oDnqn6tdbpunPMIkhzI4swMIowlXPTougg2z7//f9woLc5UAGAiySTvM/XuyFXQr3M51Wg/0OVHBaKeRMtOsx+C2s8=
+	t=1709319405; cv=none; b=W9NqyJ8eNWw7vfnnGea19rm+Dbe7ZFJThHTkP+XLYN9gsYlePMisurfU7zfp8Q4erFJ9W+RybFUI18SuXL2mHq9a0473T1CwtHD/1fVhJeDo2oCI7cX2PsfZruQbFpKnBzaVqu9c84GBuLm+G0hLzkF0FsRdcdAnlUkCpSNxVAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709319404; c=relaxed/simple;
-	bh=g1aUKyrw7DvdgN01eaAjL5EDa8+hBV/p20E6Ldm6SxI=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=A4ceDh66dSbku4oNGXhmw7OzMrT1aCs1tCdGglJplk/+6og5Z+r/GqRpu9lKaXgw8PMFXleFDG3Ik2BJSP5Y7V7vwEERM2RrwI9JkZnCajblM5XKN5kzsDIBFioSFm1CUXPYp9jAPXbIKITczYKUgTBTQrhwpFbBjktTvPOZSuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pwl7JyU6; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1709319405; c=relaxed/simple;
+	bh=TfcfErpuT6t/nH9b4l53LwwZsv95+LrrGJa3N4lUvOs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kMoR/2VbcyEgN6hRE4wjFalAXEfK4fqRhV8fl6UdZaquudb0CX7BplSOA4WEBHcnirQFUnUa4+/BpBVQpgxVtQbR9OSdfcpstlouTaFs0gR+Wlb9sJDSVRvIlbEs4irZGw6YbQBv4ifoFh3tkhavixGOHoWYk1KCAbPWdGSrntM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=G5KnqcSv reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pwl7JyU6"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-d9a541b720aso4374174276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 10:56:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1709319402; x=1709924202; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z8m41PXVl/EgCm4ozUPka7O+Ter4HT44OkTHNVK9970=;
-        b=pwl7JyU6cGI+yxVc+r5x4UlyezDJq+503nQIbufqWvxoyj2cWEFhJSmTGpU5lLWTqz
-         rmL9a9GCBLdLBhrX+90X1Vx+O/dNigkM2QmOdSQ9e3+ygqENydZwtRq79oqz9Ustoph7
-         gzl9SZYJKvZDaLFzBDjJV4ujoPtV+yqTFAam2yKZGtwvLX4ga9tv+b+hG8UUeeapoyCh
-         5JUv4BQcJMjrkigKANFPZb4WlxddY9tlxSZ6n34n8vHceHhUCvk9I20S103bxUu5tjUZ
-         dCm5pAyaBGZQJRtsYML7L2MRmTRdml6pbFH2jIrR+ofz9rV5X4eLnuiJyr3lq1x7fl2Z
-         lxbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709319402; x=1709924202;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z8m41PXVl/EgCm4ozUPka7O+Ter4HT44OkTHNVK9970=;
-        b=xTVWbSLUmELt+178WyEiZAJiurgucM06N8sRhNjE4pjMscYPz3tldU+qZJg9/P5I97
-         t0zOxAFsaFhK1s+D+1C+I8A0by+DR4HyoQ0lBJAX4Uwr7PgbcHnVRIcCZ8eMygwuTxmp
-         gZ+99BG4SvNyUHcTlXw/s/ViOuK3m5TkuSiyo61lBskN1BYcjRmCJ48UY7RniG4VLmO4
-         8oqxDRtv1m04G3KK3s/1+/BkWnJfIOl6a6BrdLVFenVq0Mv49Ib8kxXma0fI0TAiTnoT
-         UGc9fxFixc6DKplRRq7c2PJ7c3dFCWlSWgjrigTkW6g+YF/c19NmK/ZT8ek0e4bt5gwf
-         ur3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVBgh+mlMgyOmMPZt9h29Vds3Ep/sHXtxeDPqVXhI7TPi8jDOnxt8E5yln4IRz11aQBAkg868TyH8naBr8xgWdKFChmX6/vxiG9qwWj
-X-Gm-Message-State: AOJu0Yx0kACT8zrVA4mZWICpAjsDPXWqqymJRre3aKj/CLIg7UjD5Ent
-	ytWRa+tYnSdnVrVxjMydinANbt/d777ongrxInMGaoyBOG/2DoifeAEG9hf1EgoEma2vxbNu6OW
-	pEuHleA==
-X-Google-Smtp-Source: AGHT+IHszUKUo379JPDZ9uRqjQAesqFxQ4RJ6sQjSKFJqvbovVon6KJGIBP96328fmqpnkcer+Ejzja0pT7W
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
- (user=irogers job=sendgmr) by 2002:a05:6902:120a:b0:dc6:f877:ea7b with SMTP
- id s10-20020a056902120a00b00dc6f877ea7bmr540903ybu.9.1709319402300; Fri, 01
- Mar 2024 10:56:42 -0800 (PST)
-Date: Fri,  1 Mar 2024 10:55:51 -0800
-In-Reply-To: <20240301185559.2661241-1-irogers@google.com>
-Message-Id: <20240301185559.2661241-13-irogers@google.com>
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="G5KnqcSv"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2EDB640E0185;
+	Fri,  1 Mar 2024 18:56:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id KvZZqETTfLv7; Fri,  1 Mar 2024 18:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1709319398; bh=/WQ87890KHEPpK3lVDVLOKrC8uxI03kb24WeEwvSTNE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=G5KnqcSvp3UKf77rC9RFyaG1IliKafm7uUCpqaVp7D+RP5RotbtDeghd4Zh1djaa1
+	 y8aQ7oZvUC8OV7NykSK3oWy810kyME/1fZXjZ+Ce7fieGpttZqnNpEEyfVxq/i3mmz
+	 3a6yWY1L2OQhUk3UGiURYKiVmYSRcALe6wSOCBhE6DrvwnWbcB5Hmui/A+kPhkIkzC
+	 eoUBvUhrB7Qrbl3OJ1M8ThrOaUbO4fMSVciV3VVPPPY6LiItKHorUPOY1OxUmjDfcK
+	 +6aZhjfijjiyqxtDfdSIVBYlYAlRqUEqbQ5J9Cko0FIWc6MqK+b7mbyOvYu/4H1XAm
+	 7AbSbIuW+HrlZenwQDrCnlil75hp+hNNqtMYIGz+V6swvWjFCQ5CsZoTIvCvjnt7dj
+	 71gO0TKvZrojVit3Zet/6N0S/EvmXDEsH8Q6YlZHpbwImdf30zN8cQJPEuQa9X0FPy
+	 ssdkaULYfUsxFywQJo7IZ0YnwOnW7ivKe7N0RDyY0ZLo/Q76oOzu+fN/cmROIagfOw
+	 ttExE4HQGCKArrH+Gs/I88PQlmbi5qzlOyao6UgZ4dunREw88iDOVw6puYgQCqg8WH
+	 n1wgrrXPLKetCa/uNTVBD0bcNUtE2bs/lEsDgp2F7HxSKsiNfjJKt9gtzLLIf9+FEe
+	 KoPoI5g6etZqPxU5UJw5tTgM=
+Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D93CC40E00B2;
+	Fri,  1 Mar 2024 18:56:35 +0000 (UTC)
+From: Borislav Petkov <bp@alien8.de>
+To: Baoquan He <bhe@redhat.com>
+Cc: X86 ML <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH 2/2] Revert "x86/boot: Add xloadflags bits to check for 5-level paging support"
+Date: Fri,  1 Mar 2024 19:56:18 +0100
+Message-ID: <20240301185618.19663-3-bp@alien8.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240301185618.19663-1-bp@alien8.de>
+References: <20240301185618.19663-1-bp@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240301185559.2661241-1-irogers@google.com>
-X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
-Subject: [PATCH v2 12/20] perf jevents: Add context switch metrics for Intel
-From: Ian Rogers <irogers@google.com>
-To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-Metrics break down context switches for different kinds of
-instruction.
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+This reverts commit f2d08c5d3bcf3f7ef788af122b57a919efa1e9d0.
+
+This whole dynamic switching support is silly. I don't see a use case
+where one would use an old kernel with CONFIG_X86_5LEVEL disabled to
+kexec into. I.e., you use pretty much the same kernel.
+
+But I'm open to corrections.
+
+Commit message of
+
+  f2d08c5d3bcf ("x86/boot: Add xloadflags bits to check for 5-level pagin=
+g support")
+
+claims:
+
+    The flags will be used by the kernel kexec subsystem and the userspac=
+e
+    kexec tools.
+
+but they're nowhere to be found in kexec tools:
+
+  [ ~/src/kexec-tools> git describe
+  v2.0.28-4-g6ee2ac1bf739
+  [ ~/src/kexec-tools> git grep XLF_5LEVEL
+  [ ~/src/kexec-tools>
+
+Zap it all.
+
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 ---
- tools/perf/pmu-events/intel_metrics.py | 55 ++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ arch/x86/boot/header.S                | 12 +-----------
+ arch/x86/include/uapi/asm/bootparam.h |  2 --
+ 2 files changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 6f6d1cdf6649..49e51c33c0f7 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -272,6 +272,60 @@ def IntelBr():
-                      description="breakdown of retired branch instructions")
- 
- 
-+def IntelCtxSw() -> MetricGroup:
-+  cs = Event("context\-switches")
-+  metrics = [
-+      Metric("cs_rate", "Context switches per second", d_ratio(cs, interval_sec), "ctxsw/s")
-+  ]
-+
-+  ev = Event("instructions")
-+  metrics.append(Metric("cs_instr", "Instructions per context switch",
-+                        d_ratio(ev, cs), "instr/cs"))
-+
-+  ev = Event("cycles")
-+  metrics.append(Metric("cs_cycles", "Cycles per context switch",
-+                        d_ratio(ev, cs), "cycles/cs"))
-+
-+  try:
-+    ev = Event("MEM_INST_RETIRED.ALL_LOADS", "MEM_UOPS_RETIRED.ALL_LOADS")
-+    metrics.append(Metric("cs_loads", "Loads per context switch",
-+                          d_ratio(ev, cs), "loads/cs"))
-+  except:
-+    pass
-+
-+  try:
-+    ev = Event("MEM_INST_RETIRED.ALL_STORES", "MEM_UOPS_RETIRED.ALL_STORES")
-+    metrics.append(Metric("cs_stores", "Stores per context switch",
-+                          d_ratio(ev, cs), "stores/cs"))
-+  except:
-+    pass
-+
-+  try:
-+    ev = Event("BR_INST_RETIRED.NEAR_TAKEN", "BR_INST_RETIRED.TAKEN_JCC")
-+    metrics.append(Metric("cs_br_taken", "Branches taken per context switch",
-+                          d_ratio(ev, cs), "br_taken/cs"))
-+  except:
-+    pass
-+
-+  try:
-+    l2_misses = (Event("L2_RQSTS.DEMAND_DATA_RD_MISS") +
-+                 Event("L2_RQSTS.RFO_MISS") +
-+                 Event("L2_RQSTS.CODE_RD_MISS"))
-+    try:
-+      l2_misses += Event("L2_RQSTS.HWPF_MISS", "L2_RQSTS.L2_PF_MISS", "L2_RQSTS.PF_MISS")
-+    except:
-+      pass
-+
-+    metrics.append(Metric("cs_l2_misses", "L2 misses per context switch",
-+                          d_ratio(l2_misses, cs), "l2_misses/cs"))
-+  except:
-+    pass
-+
-+  return MetricGroup("cs", metrics,
-+                     description = ("Number of context switches per second, instructions "
-+                                    "retired & core cycles between context switches"))
-+
-+
- def IntelIlp() -> MetricGroup:
-     tsc = Event("msr/tsc/")
-     c0 = Event("msr/mperf/")
-@@ -633,6 +687,7 @@ all_metrics = MetricGroup("", [
-     Smi(),
-     Tsx(),
-     IntelBr(),
-+    IntelCtxSw(),
-     IntelIlp(),
-     IntelL2(),
-     IntelLdSt(),
--- 
-2.44.0.278.ge034bb2e1d-goog
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index a1bbedd989e4..0f261224acef 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -364,17 +364,7 @@ xloadflags:
+ # define XLF4 0
+ #endif
+=20
+-#ifdef CONFIG_X86_64
+-#ifdef CONFIG_X86_5LEVEL
+-#define XLF56 (XLF_5LEVEL|XLF_5LEVEL_ENABLED)
+-#else
+-#define XLF56 XLF_5LEVEL
+-#endif
+-#else
+-#define XLF56 0
+-#endif
+-
+-			.word XLF0 | XLF1 | XLF23 | XLF4 | XLF56
++			.word XLF0 | XLF1 | XLF23 | XLF4
+=20
+ cmdline_size:   .long   COMMAND_LINE_SIZE-1     #length of the command l=
+ine,
+                                                 #added with boot protoco=
+l
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uap=
+i/asm/bootparam.h
+index 4a38e7917756..b53b524f6ed2 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -22,8 +22,6 @@
+ #define XLF_EFI_HANDOVER_32		(1<<2)
+ #define XLF_EFI_HANDOVER_64		(1<<3)
+ #define XLF_EFI_KEXEC			(1<<4)
+-#define XLF_5LEVEL			(1<<5)
+-#define XLF_5LEVEL_ENABLED		(1<<6)
+=20
+ #ifndef __ASSEMBLY__
+=20
+--=20
+2.43.0
 
