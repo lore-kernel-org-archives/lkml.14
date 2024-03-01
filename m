@@ -1,94 +1,150 @@
 Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4216F53D
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:29:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C5970CBF
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 15:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709306999; cv=none; b=hWPqoz7/6N86IMsJYdKpUpTxjCKZGikPLBh5PjiGmaxCC10SaNPpaWFqs34mln5FPbDMDBAMQJ7JLvW9lBz9e87kUlhHqPIQ756O8HqYLv0vmiwBf9URfNvi41Ech/vwMtUKO8+MfoejjkjGsJvhYVZXHlqhkZbf1kJcIiQiVZ4=
+	t=1709307006; cv=none; b=o36pSX1BDWCKeC9SE+rZTK38JxLWA2YDmKdZH+Oen4VrjUbGyu8k99fbUD/C41/QjNKvLuhIIu6ZCdUmBhH2XUnhKCE2txQ2/WoRW2hY9fW+Z8V2u06DISHgtiw5MuC3T3nscJPMcZFXf8fNseuWazumQUNE4171bhmVFY7xfvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709306999; c=relaxed/simple;
-	bh=zh1tMmI9C8esm9t8S5ODtHnOIgNunq7h2YrtfEFvx/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jau09z1RQL9UgFA52xxbzLADu2wb3PJgSSC8CLSO5yTKtqQ2L4/ItpueXhG/o4roaxIyXL5Yx1bfhPdWo7DEEsoui/yEzjnhD3psZkaEEJcAfUVyKtUX/GlDq+F8CDG5Z6++2PhOTp4cL+QHz+u7gUAwykoM5SXmRJhdsjQ/lZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iN+Gj8BL; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1709307006; c=relaxed/simple;
+	bh=I1uWE9DpsoosndzzuWpPPfCptv98Id+uzZjAljEvYQc=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=GqKAa0wHWCkYPzRYtsgaRE/PlinPUWJnDNrccu36ITVrrhp5VRKJONwbq7G+DflRE6OGXtUHRFMH6rnIO4UlbcjGqWa7p38kgaqpetL9EYsd3/AlnCXqVAdcZptpI9oUtTi2GKBKW9QsbxBeLMHfWyeZp3Io0iBk2gMJnPICSEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yRATUcaU; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iN+Gj8BL"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d275e63590so29904021fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 07:29:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yRATUcaU"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d2ab9c5e83so23126791fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 07:30:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709306996; x=1709911796; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LwF1vEHHtNcLEL22JU7CbamIfjcY0v8w9f8KAiAGRpo=;
-        b=iN+Gj8BLG7HaTyiBwK6YrhMrrIGiUH1KBbRM+WYLGIStLQUsdJiiDT8mAnZhyYDe0i
-         c9M/sZSyJC3TxXEIAeRBVuAiHTKg6msl4k8SgObymvgGho+tdkul7JSAZm/ZYzpidVMj
-         bFm3yJByorJR58EPp23wAxNsFc+DU7GFkuwsCqsUh+wbHJGPOINsql66cjrGOomlD5fw
-         FSgwzISi1HG0hbsWJ2v+R2XowxCCzXND8GW3lWvgMt7eAH5bjqfc1XQXD0f37mVJpHIB
-         1ktYZPekGQZubSeNJiS8/IESaCq6PCGWpPnL9Ib2y9V6zRIToV1fOpdDRSbUsDMLAjY/
-         HVFg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1709307002; x=1709911802; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=BRJMyL12Hfga3nBS66W3o9I5fxawyXMCNLNUrn0/Hvw=;
+        b=yRATUcaU3E7Vae6O96rI1awojOkW9Po71t5JK+f60PDI2iVyrzCZak7HJWSwCevLnX
+         NCvPNnlLw1z5yxzqYcfjxlnRLOwjRLTBdU5TK0R0BIuoV2ymSgH709Xkx7vRBmQGI2ju
+         dcBg73jbwe2vOjZMw+ppIgTLpGanEs7QUJhJnWH0ckGtYVidQiuERrSfOvMRur3GaVPR
+         cNQ/KrzqAjUozozcTQvrEmgSpCN+KVv3RnHbymR82O/bPRD3nMCs9W//Dmz8c1eXBP3P
+         XtcSovqjnrERJMALaPG1nG5s68mI+WhO3LwWU48GNhSQa8sjsP/VWVdGkPFXmPFKTqKu
+         AMGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709306996; x=1709911796;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LwF1vEHHtNcLEL22JU7CbamIfjcY0v8w9f8KAiAGRpo=;
-        b=Bj4ww0/uY6aNPA9BOFPc/2sBPJFrDpmpc9EmnthBvpz7+2IC4FGXwQkiNo35m7z1t2
-         /W6yojUtTe/LXTJ1y/U9l7S6jED4H291fgS/aNaLtcFih5T4LUjRJHWTutG9njiLvHe5
-         h+pE+c+tYDrfuh3VdBk78JnqrbLi3++MvmfoPoTuE7JHIMTXjyC4JgBmJUXKBJHJ0VJZ
-         8LkCcMJViTzBAjlXFnsPL6d56Df41wb9EnnajoOrNHo+7z23MnEGk6IfJD9PTom6N8Sd
-         +KkzIBN1GQeolGs4Bdr0XOTzhkpuAs2UJohGWrNmWrYBdgQP7G96pY2/HpVt7gVJ94yr
-         aGag==
-X-Forwarded-Encrypted: i=1; AJvYcCVx4qgCgTP4LvcakLqYo3WOFMnjAk+NZ9JMNPztgy+w4h6F9UfO27EXH3MgIxChTP1oJnSHrOEPInJ07zIYTA/ZThp9gMTI3kSPbu/U
-X-Gm-Message-State: AOJu0YxEIlHGJCwwueqeYaFR6ZYnt2QQ0/5VDUIiOnc5xkK4J4f7mJmA
-	uI6IZXFF7ZF5D8pciMK+M+ytvmMqe4A55paB9czt+9WpTCqXpeNjJvdD1rvs05c=
-X-Google-Smtp-Source: AGHT+IF+EdHbA/WMtHbEnW0MVWTX37KjpNSG/+lUHF/XBnrsQVeoc3UrADapsOV5vobHj+kpeNESiw==
-X-Received: by 2002:a2e:2404:0:b0:2d2:935a:7a3d with SMTP id k4-20020a2e2404000000b002d2935a7a3dmr1312182ljk.34.1709306996297;
-        Fri, 01 Mar 2024 07:29:56 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id g8-20020a05600c310800b00412b0ef22basm5835531wmo.10.2024.03.01.07.29.55
+        d=1e100.net; s=20230601; t=1709307002; x=1709911802;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BRJMyL12Hfga3nBS66W3o9I5fxawyXMCNLNUrn0/Hvw=;
+        b=MkoYGAGZeI2mhzf13dLJb9IVzHVvo2YjrjqHBdSR+yLiCvcAlzp30fHsJGrbxLatKR
+         aC+1NRhC668DnwLloHqGGASih6/P6+QpFbZ5AkwEw16zRjORF80NIxlQR7Chzh4q/2Dy
+         wV6bKwkB6UTBJAXf9UsmnXif7us3bF4W7qorWYeQ2KcganDB8MML6jldCv710AOEsqea
+         To7u5UOCzI+2cK+u4CXjCBALNZbDqsh3UdPgWHYGJbadMJtXKpCvfUHscmcG/nFcnR+J
+         wYsaUWV6xaNReq0hmN+KWU5Z06ae57Pu0rrGJNPkKHZzoMJCoi+r5YkWkfXBzhDKtYYA
+         YEBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnmkw/gfc5WFcN/83eP2yG6iEsxiMlK5EHchxA3RW0SksrMbf+pyu8+/nU6OlXR8fylVC9Rk9TNsqsmSRRR49Bw0IioRRJlpfKHVQe
+X-Gm-Message-State: AOJu0YypfyDr3tVtFpNCC2amj6lLKa5n18RQK15J2JDKT1Rt2lhVgSLf
+	yEKaWFA1wRUsADU+9sACzMKoH0JCn4fT2PwXqDgJHtcayUO45ljuowstrqgBFYU=
+X-Google-Smtp-Source: AGHT+IFtbsethllwdu9/U10rpGbV0itlW8rLnEVMWQkX3g7hsPRaSzXqc3jmdeQd4Le6Db0GX6+1Dg==
+X-Received: by 2002:a2e:7d01:0:b0:2d2:b651:b0c3 with SMTP id y1-20020a2e7d01000000b002d2b651b0c3mr1563443ljc.49.1709307002212;
+        Fri, 01 Mar 2024 07:30:02 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:efbe:c807:bcd8:19bf])
+        by smtp.gmail.com with ESMTPSA id n18-20020adffe12000000b0033d67791dc0sm4797347wrr.43.2024.03.01.07.30.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 07:29:56 -0800 (PST)
-Date: Fri, 1 Mar 2024 18:29:52 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH 2/2] io_uring/net: remove unnecessary check
-Message-ID: <3d17a814-2300-4902-8b2c-2a73c0e9bfc4@moroto.mountain>
+        Fri, 01 Mar 2024 07:30:01 -0800 (PST)
+References: <20240301132936.621238-1-avromanov@salutedevices.com>
+ <20240301132936.621238-4-avromanov@salutedevices.com>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Alexey Romanov <avromanov@salutedevices.com>
+Cc: neil.armstrong@linaro.org, clabbe@baylibre.com,
+ herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com, vadim.fedorenko@linux.dev,
+ linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kernel@salutedevices.com
+Subject: Re: [PATCH v5 03/21] drivers: crypto: meson: make CLK controller
+ optional
+Date: Fri, 01 Mar 2024 16:21:20 +0100
+In-reply-to: <20240301132936.621238-4-avromanov@salutedevices.com>
+Message-ID: <1jwmqmrmva.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f5d7887-f76e-4e68-98c2-894bfedbf292@moroto.mountain>
-X-Mailer: git-send-email haha only kidding
+Content-Type: text/plain
 
-"namelen" is type size_t so it can't be negative.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- io_uring/net.c | 2 --
- 1 file changed, 2 deletions(-)
+On Fri 01 Mar 2024 at 16:29, Alexey Romanov <avromanov@salutedevices.com> wrote:
 
-diff --git a/io_uring/net.c b/io_uring/net.c
-index da257bf429d5..04a7426c80d2 100644
---- a/io_uring/net.c
-+++ b/io_uring/net.c
-@@ -557,8 +557,6 @@ static int io_recvmsg_mshot_prep(struct io_kiocb *req,
- 			  (REQ_F_APOLL_MULTISHOT|REQ_F_BUFFER_SELECT)) {
- 		int hdr;
- 
--		if (unlikely(namelen < 0))
--			return -EOVERFLOW;
- 		if (check_add_overflow(sizeof(struct io_uring_recvmsg_out),
- 					namelen, &hdr))
- 			return -EOVERFLOW;
+> Amlogic crypto IP doesn't take a clock input on some
+> SoCs: AXG / A1 / S4 / G12. So make it optional.
+>
+
+I commented this patch on v2 and the comment keep on being un-addressed.
+
+The SoC either:
+* has a clock that is required for the IP to work
+* Or does not
+
+It is not something you are free to provide or not.
+
+For the record, I find very hard believe that some SoC would have clock,
+and other would not, for the same HW.
+
+Isn't it more likely that the clock just happens to be left enabled by
+the bootloader on some SoC and it conviently allows to ignore it ?
+
+> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+> ---
+>  drivers/crypto/amlogic/amlogic-gxl-core.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
+> index e9e733ed98e0..a3a69a59f476 100644
+> --- a/drivers/crypto/amlogic/amlogic-gxl-core.c
+> +++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
+> @@ -269,16 +269,11 @@ static int meson_crypto_probe(struct platform_device *pdev)
+>  		dev_err(&pdev->dev, "Cannot request MMIO err=%d\n", err);
+>  		return err;
+>  	}
+> -	mc->busclk = devm_clk_get(&pdev->dev, "blkmv");
+> +
+> +	mc->busclk = devm_clk_get_optional_enabled(&pdev->dev, "blkmv");
+>  	if (IS_ERR(mc->busclk)) {
+>  		err = PTR_ERR(mc->busclk);
+> -		dev_err(&pdev->dev, "Cannot get core clock err=%d\n", err);
+> -		return err;
+> -	}
+> -
+> -	err = clk_prepare_enable(mc->busclk);
+> -	if (err != 0) {
+> -		dev_err(&pdev->dev, "Cannot prepare_enable busclk\n");
+> +		dev_err(&pdev->dev, "Cannot get and enable core clock err=%d\n", err);
+>  		return err;
+>  	}
+>  
+> @@ -306,7 +301,6 @@ static int meson_crypto_probe(struct platform_device *pdev)
+>  	meson_unregister_algs(mc);
+>  error_flow:
+>  	meson_free_chanlist(mc, mc->flow_cnt - 1);
+> -	clk_disable_unprepare(mc->busclk);
+>  	return err;
+>  }
+>  
+> @@ -321,8 +315,6 @@ static void meson_crypto_remove(struct platform_device *pdev)
+>  	meson_unregister_algs(mc);
+>  
+>  	meson_free_chanlist(mc, mc->flow_cnt - 1);
+> -
+> -	clk_disable_unprepare(mc->busclk);
+>  }
+>  
+>  static const struct meson_pdata meson_gxl_pdata = {
+
+
 -- 
-2.43.0
-
+Jerome
