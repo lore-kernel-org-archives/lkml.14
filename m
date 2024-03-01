@@ -1,69 +1,68 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5367040BE2;
-	Fri,  1 Mar 2024 13:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49333381DE;
+	Fri,  1 Mar 2024 13:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709300362; cv=none; b=RUzpgFSb7neqzuuub/bPapGEhBm5t3xjlrxeEQm4QYaHiqTA44CPXPBFu/EITylP++iX02hQ5j1bTVh7uM156ND60ORhPDiNhIJQdN8ygGUzjC25a5whO5vlBvTlGszBZ53uOjo/mFpchRjw5liQta4lBiVO4N/TEUlrNGUTfis=
+	t=1709300371; cv=none; b=NDepxziwH9glH1JqBipUQzmemy7LvQ8sEhbzmoX7tvmBYOpJWqaTD0OsvBNLtUTn4SIJPeYFVr7oQg9ZqkM9XSG6CAzRldu6YyyFaPy7Vk+Tevl3xmiDX9ydaqKgP94om78oUaKmJ/XqVY7NKR0b5g5zAsJixD/Z1e9JWJZ5/DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709300362; c=relaxed/simple;
-	bh=3Zqv/QP+qVPDOSk8rV9eN9SJEoX5Dn3fLrlvb7D3tpQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fnMRte5DwqRbjp1cADlf2SG1l0rZ10WS5gBjiCS8ao/jI7Bev6zbWr/CldoPI7jXmUADSOg8ZcwR8WDNZHtqUgaWqSTDYdyJO31PJnA6WjSpzIdFUu34t8rstBTPBMfvUTlFnJ/nMa0NXohb+hu/+csH7Cjkn1xTyHG1czuaMB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA47B1FB;
-	Fri,  1 Mar 2024 05:39:57 -0800 (PST)
-Received: from e127643.lan (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 90F403F6C4;
-	Fri,  1 Mar 2024 05:39:16 -0800 (PST)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org
-Cc: al.grant@arm.com,
-	James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf version: Display availability of OpenCSD support
-Date: Fri,  1 Mar 2024 13:38:29 +0000
-Message-Id: <20240301133829.346286-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1709300371; c=relaxed/simple;
+	bh=200DnVfdBW01DT/X3+moyKLm3jYVD1mA8Rk9R6nnvy8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QxVTsNeAyUAatAjKzCJEbQv+lXdHuGmDqhzqch0aDiTlrHDUlVmzSo9/sLHQD3z4XRjhTuw5xk4Qy8YJqGK7svHU/NQouzSAp6JOuSu+RI+lcaRQPKW5FptR5BR58B+AjL+nf6fkUH39pM5TqqCFny6tMFsx1xGZpllOIdeL77A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmlsN0Af; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmlsN0Af"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7827C433C7;
+	Fri,  1 Mar 2024 13:39:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709300371;
+	bh=200DnVfdBW01DT/X3+moyKLm3jYVD1mA8Rk9R6nnvy8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LmlsN0Afn3hqkExjN7Wyw+6uU+Dpkw1N5GNTe84u1nwEX8OeaUvMkmMNvrEZ2TmVC
+	 j0lcFtUkG0FmPkNWw2wmFAjH83SByHMprhRWazPBtPscr8gzzMkm+Psxu3yn0At+M8
+	 2nm9OOjvrm2E4B8jXOaYIj4ooZGeOqbJgeOq2p/gtpMP5/8l1PSOlSjPeUzxM/MbIu
+	 nGYgHnOjfgUprywtIpDeOSN6rCVEN/GWi6TvCO2yXQbDvIWM2qVDCfMZQZASfV9JV+
+	 4sDMCQmrBrgCcyxmb8DE50icAWVqKwKSa+A1qMkg1HMvMMq72jD1VdwIpkC4MhNoPr
+	 gfHvFPrOUsJ2w==
+Date: Fri, 1 Mar 2024 14:39:22 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>, 
+	Serge Hallyn <serge@hallyn.com>, Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, 
+	James Morris <jmorris@namei.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler <casey@schaufler-ca.com>, 
+	Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, audit@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, linux-unionfs@vger.kernel.org
+Subject: Re: [PATCH v2 14/25] evm: add support for fscaps security hooks
+Message-ID: <20240301-sport-bekriegen-5b34fd5a014b@brauner>
+References: <20240221-idmap-fscap-refactor-v2-0-3039364623bd@kernel.org>
+ <20240221-idmap-fscap-refactor-v2-14-3039364623bd@kernel.org>
+ <15a69385b49c4f8626f082bc9b957132388414fb.camel@huaweicloud.com>
+ <20240301-zucht-umfeld-9a923a7d070a@brauner>
+ <e6f263b25061651e948a881d36bfdff17cfaf1b0.camel@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e6f263b25061651e948a881d36bfdff17cfaf1b0.camel@huaweicloud.com>
 
-This is useful for scripts that work with Perf and ETM trace. Rather
-than them trying to parse Perf's error output at runtime to see if it
-was linked or not.
+> I have seen this policy of adding tests in other subsystems (eBPF),
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/builtin-version.c | 1 +
- 1 file changed, 1 insertion(+)
+It makes sense if the drive of the patchset would be IMA/EVM features
+not refactoring of existing code.
 
-diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-index 1bafe5855ae7..398aa53e9e2e 100644
---- a/tools/perf/builtin-version.c
-+++ b/tools/perf/builtin-version.c
-@@ -84,6 +84,7 @@ static void library_status(void)
- 	STATUS(HAVE_LIBTRACEEVENT, libtraceevent);
- 	STATUS(HAVE_BPF_SKEL, bpf_skeletons);
- 	STATUS(HAVE_DWARF_UNWIND_SUPPORT, dwarf-unwind-support);
-+	STATUS(HAVE_CSTRACE_SUPPORT, libopencsd);
- }
- 
- int cmd_version(int argc, const char **argv)
--- 
-2.34.1
+> Happy to try adding the tests, would appreciate your help to review if
 
+Cool, happy to help review them.
