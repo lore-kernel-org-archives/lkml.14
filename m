@@ -1,100 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A79B37701;
-	Fri,  1 Mar 2024 18:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 499D817BA4
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709316131; cv=none; b=lQmmH8ZrznpeAgro6wjZdT6JDDjdp7pViFt830ndgAvPTymZG5vaIn61mp5x3mqwE3ZQ/fTCo0pnk9gWwfHNQ7ci+76GLmN7jG4qqDVboa6pR1gyuRc00golwIWDwYMjmiZ9dnxTtlFDU7vzZxn4oM78BzCpLDulNM2DMU2kcCM=
+	t=1709316254; cv=none; b=ZUfPenXxsEu7KOXdqwbpxU9dunrE0Vvmfps/aXkk1cRISOffeOXWiyobBv/k/oeNyuEw6LccgTVgwgbkvDrjgW4LjTauGf62toxlOlCJW/cllhqslsiqEu7Nenxns/9nfvNjZhqoae6tT7fJ0hAr+ddBTaLYgE1c1oGIQfcjjJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709316131; c=relaxed/simple;
-	bh=BW1c/RkhUJtoUJ2pTjmMw2HsXxDX+1fRKgzP9b4AcP8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=leIqbBRkSPnbVgVDKQk6lDQPzAYMmHaTjzHlU8IAyGyv5ULRc+48UUErg+Ia3vymR80FpHXLWKQTN2yMjfY0pVuA7Fyn5Cis4Hr45d8HGGjq1D+Rpbml7ePMEjxgzQwJ0JsJcGzQbUYvqtlroKkmXWYxPj5H5XN08/y4xMuwZIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mQL0Cqh3; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mQL0Cqh3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709316130; x=1740852130;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BW1c/RkhUJtoUJ2pTjmMw2HsXxDX+1fRKgzP9b4AcP8=;
-  b=mQL0Cqh3f4G8+GV4y5XZt556trM4BlE7/bQIDtKvNTvFZ3WSpXdQMh1t
-   o9TRh11QnL3TyA8BTpIkCUbyyRKeH4VfVHo8KIQY3eVOL3EjIdf68BwQR
-   yfg3GYJ7frgmbBIe08zUYR38ohxn5018T0+ykIII8v0gnPpAZIiaVqNMe
-   7CX/g+PR0SwiA1znuxZ/Tmn5RBQfzDsP1qCFvvWvpoJWyUIZsR5H358M7
-   +zKtx6T3H/Q5rX4xVZGRvRCjBpXlAP5Fdkf0A83yP8QDkN3iLqkuELllQ
-   dJfCDvzIl+cmQtfCRN8VW9Owq3dQcAkWOmD2iq1HEpBxtk+6IIpH2olzR
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="7684821"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="7684821"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 10:01:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="937037848"
-X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="937037848"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2024 10:01:42 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 2CA611A5; Fri,  1 Mar 2024 20:01:41 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Len Brown <lenb@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v4 1/4] driver core: Drop unneeded 'extern' keyword in fwnode.h
-Date: Fri,  1 Mar 2024 20:00:05 +0200
-Message-ID: <20240301180138.271590-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240301180138.271590-1-andriy.shevchenko@linux.intel.com>
-References: <20240301180138.271590-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1709316254; c=relaxed/simple;
+	bh=wm1vvnyXKFgcFNI7otyHTbvXDz55V2VsO09wlIS3jYI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SvDFQ8B+C7kTjADH0B5eJeh0i1zqp0F6ZN9b6ynz40rO/q+IE4iD6iOWByu2cOLDX9gRrevjIRuaksd2uVXmb+g/Z0S1Rfy96WFBY9gexC6FDL77hZ+fqnMd+G7b9vL09d3ZJy0p2OuHy+rhmRekuG77eTMs4SejuH4BuPYepDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C214C1FB;
+	Fri,  1 Mar 2024 10:04:50 -0800 (PST)
+Received: from [10.57.67.78] (unknown [10.57.67.78])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D8B83F6C4;
+	Fri,  1 Mar 2024 10:04:11 -0800 (PST)
+Message-ID: <d4f2f99c-b8bb-4ed9-8d91-ed0f5b418425@arm.com>
+Date: Fri, 1 Mar 2024 18:04:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] dma-mapping: introduce dma_can_skip_unmap()
+Content-Language: en-GB
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ iommu@lists.linux.dev, Zelin Deng <zelin.deng@linux.alibaba.com>
+References: <20240301071918.64631-1-xuanzhuo@linux.alibaba.com>
+ <64be2e23-c526-45d3-bb7b-29e31241bbef@arm.com>
+ <20240301064632-mutt-send-email-mst@kernel.org>
+ <a00f0b55-0681-4e9c-b75e-e7e3d4110471@arm.com>
+ <20240301082703-mutt-send-email-mst@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20240301082703-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-We do not use 'extern' keyword with functions. Remove the last one
-mistakenly added to fwnode.h.
+On 2024-03-01 1:41 pm, Michael S. Tsirkin wrote:
+> On Fri, Mar 01, 2024 at 12:42:39PM +0000, Robin Murphy wrote:
+>> On 2024-03-01 11:50 am, Michael S. Tsirkin wrote:
+>>> On Fri, Mar 01, 2024 at 11:38:25AM +0000, Robin Murphy wrote:
+>>>> Not only is this idea not viable, the entire premise seems flawed - the
+>>>> reasons for virtio needing to use the DMA API at all are highly likely to be
+>>>> the same reasons for it needing to use the DMA API *properly* anyway.
+>>>
+>>> The idea has nothing to do with virtio per se
+>>
+>> Sure, I can see that, but if virtio is presented as the justification for
+>> doing this then it's the justification I'm going to look at first. And the
+>> fact is that it *does* seem to have particular significance, since having up
+>> to 19 DMA addresses involved in a single transfer is very much an outlier
+>> compared to typical hardware drivers.
+> 
+> That's a valid comment. Xuan Zhuo do other drivers do this too,
+> could you check pls?
+> 
+>> Furthermore the fact that DMA API
+>> support was retrofitted to the established virtio design means I would
+>> always expect it to run up against more challenges than a hardware driver
+>> designed around the expectation that DMA buffers have DMA addresses.
+> 
+> 
+> It seems virtio can't drive any DMA changes then it's forever tainted?
+> Seems unfair - we retrofitted it years ago, enough refactoring happened
+> since then.
 
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Saravana Kannan <saravanak@google.com>
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/fwnode.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No, I'm not saying we couldn't still do things to help virtio if and 
+when it does prove reasonable to do so; just that if anything it's 
+*because* that retrofit is mature and fairly well polished by now that 
+any remaining issues like this one are going to be found in the most 
+awkward corners and thus unlikely to generalise.
 
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index 2a72f55d26eb..2d23a14857c7 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -209,9 +209,9 @@ static inline void fwnode_dev_initialized(struct fwnode_handle *fwnode,
- 		fwnode->flags &= ~FWNODE_FLAG_INITIALIZED;
- }
- 
--extern bool fw_devlink_is_strict(void);
- int fwnode_link_add(struct fwnode_handle *con, struct fwnode_handle *sup);
- void fwnode_links_purge(struct fwnode_handle *fwnode);
- void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
-+bool fw_devlink_is_strict(void);
- 
- #endif
--- 
-2.43.0.rc1.1.gbec44491f096
+FWIW in my experience it seems more common for network drivers to 
+actually have the opposite problem, where knowing the DMA address of a 
+buffer is easy, but keeping track of the corresponding CPU address can 
+be more of a pain.
 
+>>> - we are likely not the
+>>> only driver that wastes a lot of memory (hot in cache, too) keeping DMA
+>>> addresses around for the sole purpose of calling DMA unmap.  On a bunch
+>>> of systems unmap is always a nop and we could save some memory if there
+>>> was a way to find out. What is proposed is an API extension allowing
+>>> that for anyone - not just virtio.
+>>
+>> And the point I'm making is that that "always" is a big assumption, and in
+>> fact for the situations where it is robustly true we already have the
+>> DEFINE_DMA_UNMAP_{ADDR,LEN} mechanism.
+>> I'd consider it rare for DMA
+>> addresses to be stored in isolation, as opposed to being part of some kind
+>> of buffer descriptor (or indeed struct scatterlist, for an obvious example)
+>> that a driver or subsystem still has to keep track of anyway, so in general
+>> I believe the scope for saving decidedly small amounts of memory at runtime
+>> is also considerably less than you might be imagining.
+>>
+>> Thanks,
+>> Robin.
+> 
+> 
+> Yes. DEFINE_DMA_UNMAP_ exits but that's only compile time.
+> And I think the fact we have that mechanism is a hint that
+> enough configurations could benefit from a runtime
+> mechanism, too.
+> 
+> E.g. since you mentioned scatterlist, it has a bunch of ifdefs
+> in place.
+
+But what could that benefit be in general? It's not like we can change 
+structure layouts on a per-DMA-mapping-call basis to save 
+already-allocated memory... :/
+
+Thanks,
+Robin.
+
+> 
+> Of course
+> - finding more examples would be benefitial to help maintainers
+>    do the cost/benefit analysis
+> - a robust implementation is needed
+> 
+> 
