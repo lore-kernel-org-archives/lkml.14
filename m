@@ -1,66 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7AD6E5FA;
-	Fri,  1 Mar 2024 11:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4568D6BFC9;
+	Fri,  1 Mar 2024 11:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709292973; cv=none; b=Pb0qFFtBs61Ej1RkIkJc1D4nwn/7ROtH1w5a3PGyWL/AlHDYej2JwJnvv7F3sUzPE8SfGe/k+X37VAILjm+sw5QYBNSEu8PASHSl9YoOVH6fzK4HB91/RrGX+panEJ6kFE68h9ZPt0DdQ6pev313ot4fvp49kOa9sklQcsiLEaw=
+	t=1709293010; cv=none; b=PwQmFfHNpWfY90SfWUfmtAKnLASMRXrRn7vYHmNWFB8sJXykbubCdib2CwPHgnPJy1tFkf3c5ommoBhIqbszMvQ+cLXy/rR1OpQ5EIte2Cq3G/EwatGo1TzuIrrMaKcQNsZdTV/zWxpbIK3eRxiTp05V6WgaR3w9mi3S+eXpj3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709292973; c=relaxed/simple;
-	bh=IUevqR1A07cWHkVggjDSo4XmHuRv9F+Y/1PfArld/rQ=;
+	s=arc-20240116; t=1709293010; c=relaxed/simple;
+	bh=VmuLKrIiPvi0d1zugpUUZmB0Q+nwGsD8HuFFE2t/am4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lrSwQ4yEw3DA5fB7t5pZ48UndF9jHueEFCz/jYCe3ny0lVzvwuqpuTNkjY68GbnFdFUT0OefOtgjYakWH++8GZu0gKK8YsoGE5FQTcgJiI3Lt5lNi9tkvuO8bDRbRgn143BfVgexBXTCSavuTVNNSGw78vZnVw7zNPliWxcHbWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gly2++nY; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HIdJWOs0rH38VuMIvo7GAUuP5uQN2jWU0ME+KIV9M5qIonUtEIHOHGZHT5Y6XjEugRTc2vw7bSB6PSmJ62yKob3nQJA9FGKP6iBsucRzjbFOG21UZO6dO7RJD3YhIG58ddZ+H5xnrYDnD+qh+I+f9yOSHGyDfOzEHHq08/vEwi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QVzUIz6x; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gly2++nY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QVzUIz6x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709292971; x=1740828971;
+  t=1709293008; x=1740829008;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=IUevqR1A07cWHkVggjDSo4XmHuRv9F+Y/1PfArld/rQ=;
-  b=Gly2++nYshSQB1wQElOTCOaXfcs9xo79ISBFaqOUH+1alCpWTGxuIanc
-   FVPsLrmRjBMDou37D0eEtjbamt51YGKEzCGwV+ltiVykrt4MrM0mIq2+x
-   mrmxLEz6EZHmsx85YOL1E6PWPNTvYiT9kJEe4pyUAoUJoy5SJ5uojc4Rt
-   2OaLVzjM8QNtzgLnKUFSd/1YYu6unfV0vKeLD1f9abKv1WUzoW9UgxDfe
-   rFtX2nFUAGiLb8+/lNh05V/CPEzy9feZlZMyAFTk41bWwrPp+TrwOwnOj
-   RA6vibmJnBoqyA929dqLsZA3SIPZRLGiSJulhYJOfVaLPncKHsI5eDl85
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="14466310"
+  bh=VmuLKrIiPvi0d1zugpUUZmB0Q+nwGsD8HuFFE2t/am4=;
+  b=QVzUIz6xWYgsyl68cfOKEBv0o1zzUu//hfk+PTP2RaJvJn9Ab7v5dV6x
+   hv1uQdDRuKwniprGUCVRMhBYPLJ33K5S4JppTM7gmufLVjnJl008anzKx
+   9QHA8VYxzjp93ydzoPFi4Ax2xtYDrVZxNJkGQrFmZ9lDakOku2tqHutX+
+   ExO6o6BuXSlS4gA9jNQMZyFY7bvlTXZ7SyES1XT3OVHwWtQt316O95u6d
+   gfeCJlgm933PMDgLvKGuZb05MB+/s++7qd5XJ75kO7yzzAJBwelvYo34s
+   d1542xcTP0p7d+LMGs3iYoqIq2kVNh82R3R9TONoPx0cJMKzUTsqmEF3F
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3688283"
 X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="14466310"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 03:36:10 -0800
+   d="scan'208";a="3688283"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 03:36:47 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="937037589"
 X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
-   d="scan'208";a="12880627"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 01 Mar 2024 03:36:06 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rg1BL-000Dp8-0s;
-	Fri, 01 Mar 2024 11:36:03 +0000
-Date: Fri, 1 Mar 2024 19:35:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pawel Dembicki <paweldembicki@gmail.com>, netdev@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org,
-	Pawel Dembicki <paweldembicki@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 06/16] net: dsa: vsc73xx: add
- port_stp_state_set function
-Message-ID: <202403011918.VO71zUCH-lkp@intel.com>
-References: <20240223210049.3197486-7-paweldembicki@gmail.com>
+   d="scan'208";a="937037589"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2024 03:36:44 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 621B93BC; Fri,  1 Mar 2024 13:36:43 +0200 (EET)
+Date: Fri, 1 Mar 2024 13:36:43 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>, 
+	erdemaktas@google.com, Sean Christopherson <seanjc@google.com>, 
+	Sagi Shahar <sagis@google.com>, chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+Subject: Re: [PATCH v19 008/130] x86/tdx: Warning with 32bit build
+ shift-count-overflow
+Message-ID: <jvyz3nuz225ry6ss6hs42jyuvrytsnsi2l74cwibtt5sedaimb@v2vilg4mbhws>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <a50918ba3415be4186a91161fe3bbd839153d8b2.1708933498.git.isaku.yamahata@intel.com>
+ <2f6897c0-1b57-45b3-a1f1-9862b0e4c884@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,88 +63,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240223210049.3197486-7-paweldembicki@gmail.com>
+In-Reply-To: <2f6897c0-1b57-45b3-a1f1-9862b0e4c884@intel.com>
 
-Hi Pawel,
+On Thu, Feb 29, 2024 at 11:49:13AM +1300, Huang, Kai wrote:
+> 
+> 
+> On 26/02/2024 9:25 pm, isaku.yamahata@intel.com wrote:
+> > From: Isaku Yamahata <isaku.yamahata@intel.com>
+> > 
+> > This patch fixes the following warnings.
+> > 
+> >     In file included from arch/x86/kernel/asm-offsets.c:22:
+> >     arch/x86/include/asm/tdx.h:92:87: warning: shift count >= width of type [-Wshift-count-overflow]
+> >     arch/x86/include/asm/tdx.h:20:21: note: expanded from macro 'TDX_ERROR'
+> >     #define TDX_ERROR                       _BITUL(63)
+> > 
+> >                                             ^~~~~~~~~~
+> > 
 
-kernel test robot noticed the following build warnings:
+I think you trim the warning message. I don't see the actual user of the
+define. Define itself will not generate the warning. You need to actually
+use it outside of preprocessor. I don't understand who would use it in
+32-bit code. Maybe fixing it this way masking other issue.
 
-[auto build test WARNING on net-next/main]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Pawel-Dembicki/net-dsa-vsc73xx-use-read_poll_timeout-instead-delay-loop/20240224-050950
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20240223210049.3197486-7-paweldembicki%40gmail.com
-patch subject: [PATCH net-next v5 06/16] net: dsa: vsc73xx: add port_stp_state_set function
-config: x86_64-randconfig-161-20240301 (https://download.01.org/0day-ci/archive/20240301/202403011918.VO71zUCH-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403011918.VO71zUCH-lkp@intel.com/
-
-smatch warnings:
-drivers/net/dsa/vitesse-vsc73xx-core.c:1054 vsc73xx_refresh_fwd_map() warn: inconsistent indenting
-
-vim +1054 drivers/net/dsa/vitesse-vsc73xx-core.c
-
-  1031	
-  1032	static void vsc73xx_refresh_fwd_map(struct dsa_switch *ds, int port, u8 state)
-  1033	{
-  1034		struct dsa_port *other_dp, *dp = dsa_to_port(ds, port);
-  1035		struct vsc73xx *vsc = ds->priv;
-  1036		u16 mask;
-  1037	
-  1038		if (state != BR_STATE_FORWARDING) {
-  1039			/* Ports that aren't in the forwarding state must not
-  1040			 * forward packets anywhere.
-  1041			 */
-  1042			vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-  1043					    VSC73XX_SRCMASKS + port,
-  1044					    VSC73XX_SRCMASKS_PORTS_MASK, 0);
-  1045	
-  1046			dsa_switch_for_each_available_port(other_dp, ds) {
-  1047				if (other_dp == dp)
-  1048					continue;
-  1049				vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-  1050						    VSC73XX_SRCMASKS + other_dp->index,
-  1051						    BIT(port), 0);
-  1052			}
-  1053	
-> 1054		return;
-  1055		}
-  1056	
-  1057		/* Forwarding ports must forward to the CPU and to other ports
-  1058		 * in the same bridge
-  1059		 */
-  1060		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-  1061				    VSC73XX_SRCMASKS + CPU_PORT, BIT(port), BIT(port));
-  1062	
-  1063		mask = BIT(CPU_PORT);
-  1064	
-  1065		if (dp->bridge) {
-  1066			dsa_switch_for_each_user_port(other_dp, ds) {
-  1067				if (other_dp->bridge == dp->bridge &&
-  1068				    other_dp->index != port &&
-  1069				    other_dp->stp_state == BR_STATE_FORWARDING) {
-  1070					int other_port = other_dp->index;
-  1071	
-  1072					mask |= BIT(other_port);
-  1073					vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER,
-  1074							    0,
-  1075							    VSC73XX_SRCMASKS +
-  1076							    other_port,
-  1077							    BIT(port), BIT(port));
-  1078				}
-  1079			}
-  1080		}
-  1081	
-  1082		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-  1083				    VSC73XX_SRCMASKS + port,
-  1084				    VSC73XX_SRCMASKS_PORTS_MASK, mask);
-  1085	}
-  1086	
+That said, I don't object the change itself. We just need to understand
+the context more.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Kiryl Shutsemau / Kirill A. Shutemov
