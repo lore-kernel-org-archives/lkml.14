@@ -1,143 +1,194 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C933EA90
-	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE883FB0C
+	for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2024 18:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709319405; cv=none; b=W9NqyJ8eNWw7vfnnGea19rm+Dbe7ZFJThHTkP+XLYN9gsYlePMisurfU7zfp8Q4erFJ9W+RybFUI18SuXL2mHq9a0473T1CwtHD/1fVhJeDo2oCI7cX2PsfZruQbFpKnBzaVqu9c84GBuLm+G0hLzkF0FsRdcdAnlUkCpSNxVAE=
+	t=1709319407; cv=none; b=rSVG9Zi9f7Samh03g3Ce3qy7XJSbKhhmqZRzBElciEB3DZki+g9dzgJEWk7dzXFlhPO8cXGKU/mD4CIn1605+BfZLEa/hy3dwtUCIxeiEuDezwegwAA0PEUvyedDw7MgkeOTWD1TlKsVeGOSlR/Mp1nSnmZ0KxdCu2yNgUMJ9jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709319405; c=relaxed/simple;
-	bh=TfcfErpuT6t/nH9b4l53LwwZsv95+LrrGJa3N4lUvOs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kMoR/2VbcyEgN6hRE4wjFalAXEfK4fqRhV8fl6UdZaquudb0CX7BplSOA4WEBHcnirQFUnUa4+/BpBVQpgxVtQbR9OSdfcpstlouTaFs0gR+Wlb9sJDSVRvIlbEs4irZGw6YbQBv4ifoFh3tkhavixGOHoWYk1KCAbPWdGSrntM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=G5KnqcSv reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1709319407; c=relaxed/simple;
+	bh=Vef9VTUxJdFoMoInyvsFelDJcm09RH8PY/vrqOgBuqE=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=T114+TgD1c2ISIfcEL58WdIoEuqsiu99U65vZemTdwvzpA0Kw1jlIFPOF6b1EK3l9LmA1MBPRXQaJrP4UbKJGmGcnuhhcsA78UFhVtBoNt7v+cC+HnMsFhcFSX8MLDk4jAVZa1HzQUd3mv0nIzsZTJhkoV5pwBOKPY146IqDYqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UZUY4lAb; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="G5KnqcSv"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2EDB640E0185;
-	Fri,  1 Mar 2024 18:56:41 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id KvZZqETTfLv7; Fri,  1 Mar 2024 18:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1709319398; bh=/WQ87890KHEPpK3lVDVLOKrC8uxI03kb24WeEwvSTNE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G5KnqcSvp3UKf77rC9RFyaG1IliKafm7uUCpqaVp7D+RP5RotbtDeghd4Zh1djaa1
-	 y8aQ7oZvUC8OV7NykSK3oWy810kyME/1fZXjZ+Ce7fieGpttZqnNpEEyfVxq/i3mmz
-	 3a6yWY1L2OQhUk3UGiURYKiVmYSRcALe6wSOCBhE6DrvwnWbcB5Hmui/A+kPhkIkzC
-	 eoUBvUhrB7Qrbl3OJ1M8ThrOaUbO4fMSVciV3VVPPPY6LiItKHorUPOY1OxUmjDfcK
-	 +6aZhjfijjiyqxtDfdSIVBYlYAlRqUEqbQ5J9Cko0FIWc6MqK+b7mbyOvYu/4H1XAm
-	 7AbSbIuW+HrlZenwQDrCnlil75hp+hNNqtMYIGz+V6swvWjFCQ5CsZoTIvCvjnt7dj
-	 71gO0TKvZrojVit3Zet/6N0S/EvmXDEsH8Q6YlZHpbwImdf30zN8cQJPEuQa9X0FPy
-	 ssdkaULYfUsxFywQJo7IZ0YnwOnW7ivKe7N0RDyY0ZLo/Q76oOzu+fN/cmROIagfOw
-	 ttExE4HQGCKArrH+Gs/I88PQlmbi5qzlOyao6UgZ4dunREw88iDOVw6puYgQCqg8WH
-	 n1wgrrXPLKetCa/uNTVBD0bcNUtE2bs/lEsDgp2F7HxSKsiNfjJKt9gtzLLIf9+FEe
-	 KoPoI5g6etZqPxU5UJw5tTgM=
-Received: from zn.tnic (pd953021b.dip0.t-ipconnect.de [217.83.2.27])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D93CC40E00B2;
-	Fri,  1 Mar 2024 18:56:35 +0000 (UTC)
-From: Borislav Petkov <bp@alien8.de>
-To: Baoquan He <bhe@redhat.com>
-Cc: X86 ML <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 2/2] Revert "x86/boot: Add xloadflags bits to check for 5-level paging support"
-Date: Fri,  1 Mar 2024 19:56:18 +0100
-Message-ID: <20240301185618.19663-3-bp@alien8.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240301185618.19663-1-bp@alien8.de>
-References: <20240301185618.19663-1-bp@alien8.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UZUY4lAb"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60832a48684so34387507b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2024 10:56:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709319405; x=1709924205; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SYoE2D4a3KJQc8bbU4jnrR8QgBUsbfSWcnqtOE2sI50=;
+        b=UZUY4lAbOdiuH5DcbT5xYaI8mxFj5jur2LLLwdgfor2whpDAC3bvCzW7Pp3pZutOfT
+         fD5Mf44OdOgoeWt2MnZvRWy7Z81npk8aFuBDm5B1RusCjt7CZ2IX33LrIEWU7W1BV7TR
+         6cs0nefNogpZfHHLhrUQW1GADDQK6it4cZPYpr476HmkQttsXGdWZTY3x+WhzViiBWmc
+         8RLFxBd7WKxBNODyBxPW4y9pzwqJoEip9fqgYX18p8YjO1016gnA+HOtWEcPvopKietw
+         oR3eSVdehORBpDUWJT+Gejp16wRPXKmgsrN6Nmw4hCE9qNpCDEFxTuhI8C6oDXLdXuGB
+         E9UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709319405; x=1709924205;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SYoE2D4a3KJQc8bbU4jnrR8QgBUsbfSWcnqtOE2sI50=;
+        b=GpmpmUArT1V/55RuotBIxiZwIUZUNSVITrf6RhaamS8Ge6mvf2gP4WmOP76cMrim6K
+         SA2wPTE3zi18lSRyXaG7C2hsuPYgEDp7adBgOkcV6C1iJy3QcUffUjh5vsiNuGqJ+Qlt
+         QF6Yi2B3Y7omK6ojqk+u87idWB1cnL6kw1RFtSCtC+S++yWZYvtiL6p2vocoyhuRuI5i
+         PAukTLKrQyPpThOuYsfGLOWDWDp8FVVEjoGDGIVTE3XlIuNyPoD7zpa6RcH00w5nIjjY
+         kVww5Ycr5ia+rT4jvpJiVVGxNeA+fulL3+a5vDaWkNMl2D05JIx3j2Iz6V9AR8s/oHlN
+         KF5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU0hWFPNAyv9TDKf2CcVFoT0e4YHRumHzjW6qxlirtc+IdPlh6LqDwIGDjZCrJdA2C/6JdW9gERnwamuXe/+cNfgDZp+61nM4Qb1aJE
+X-Gm-Message-State: AOJu0Yxg8htWX/7H7XkgYRCkd6aVEkP33OZcJr8xHMBII0DHuedUDlXL
+	fsHNNx7XOYeUKgU0qnTrQcQVTyrVYxlIHVwqPUhr1zaa3QEAFsAyZBMffDtFJ4cZILcQ2N8QSNC
+	v+8nbQw==
+X-Google-Smtp-Source: AGHT+IF0SWVVshOg7HdsBIR86ZUbzjXMuc6wwH4zn+FDddCl5MH4vJhOjvctNYIFJLl28qP8v4N/OmgNrEKs
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:af4b:7fc1:b7be:fcb7])
+ (user=irogers job=sendgmr) by 2002:a05:690c:ecc:b0:608:ecf3:ef8 with SMTP id
+ cs12-20020a05690c0ecc00b00608ecf30ef8mr483741ywb.0.1709319404865; Fri, 01 Mar
+ 2024 10:56:44 -0800 (PST)
+Date: Fri,  1 Mar 2024 10:55:52 -0800
+In-Reply-To: <20240301185559.2661241-1-irogers@google.com>
+Message-Id: <20240301185559.2661241-14-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20240301185559.2661241-1-irogers@google.com>
+X-Mailer: git-send-email 2.44.0.278.ge034bb2e1d-goog
+Subject: [PATCH v2 13/20] perf jevents: Add FPU metrics for Intel
+From: Ian Rogers <irogers@google.com>
+To: Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@arm.com>, John Garry <john.g.garry@oracle.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
+Metrics break down of floating point operations.
 
-This reverts commit f2d08c5d3bcf3f7ef788af122b57a919efa1e9d0.
-
-This whole dynamic switching support is silly. I don't see a use case
-where one would use an old kernel with CONFIG_X86_5LEVEL disabled to
-kexec into. I.e., you use pretty much the same kernel.
-
-But I'm open to corrections.
-
-Commit message of
-
-  f2d08c5d3bcf ("x86/boot: Add xloadflags bits to check for 5-level pagin=
-g support")
-
-claims:
-
-    The flags will be used by the kernel kexec subsystem and the userspac=
-e
-    kexec tools.
-
-but they're nowhere to be found in kexec tools:
-
-  [ ~/src/kexec-tools> git describe
-  v2.0.28-4-g6ee2ac1bf739
-  [ ~/src/kexec-tools> git grep XLF_5LEVEL
-  [ ~/src/kexec-tools>
-
-Zap it all.
-
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- arch/x86/boot/header.S                | 12 +-----------
- arch/x86/include/uapi/asm/bootparam.h |  2 --
- 2 files changed, 1 insertion(+), 13 deletions(-)
+ tools/perf/pmu-events/intel_metrics.py | 90 ++++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
 
-diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-index a1bbedd989e4..0f261224acef 100644
---- a/arch/x86/boot/header.S
-+++ b/arch/x86/boot/header.S
-@@ -364,17 +364,7 @@ xloadflags:
- # define XLF4 0
- #endif
-=20
--#ifdef CONFIG_X86_64
--#ifdef CONFIG_X86_5LEVEL
--#define XLF56 (XLF_5LEVEL|XLF_5LEVEL_ENABLED)
--#else
--#define XLF56 XLF_5LEVEL
--#endif
--#else
--#define XLF56 0
--#endif
--
--			.word XLF0 | XLF1 | XLF23 | XLF4 | XLF56
-+			.word XLF0 | XLF1 | XLF23 | XLF4
-=20
- cmdline_size:   .long   COMMAND_LINE_SIZE-1     #length of the command l=
-ine,
-                                                 #added with boot protoco=
-l
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uap=
-i/asm/bootparam.h
-index 4a38e7917756..b53b524f6ed2 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -22,8 +22,6 @@
- #define XLF_EFI_HANDOVER_32		(1<<2)
- #define XLF_EFI_HANDOVER_64		(1<<3)
- #define XLF_EFI_KEXEC			(1<<4)
--#define XLF_5LEVEL			(1<<5)
--#define XLF_5LEVEL_ENABLED		(1<<6)
-=20
- #ifndef __ASSEMBLY__
-=20
---=20
-2.43.0
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index 49e51c33c0f7..6f18d5fd9f95 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -326,6 +326,95 @@ def IntelCtxSw() -> MetricGroup:
+                                     "retired & core cycles between context switches"))
+ 
+ 
++def IntelFpu() -> Optional[MetricGroup]:
++  cyc = Event("cycles")
++  try:
++    s_64 = Event("FP_ARITH_INST_RETIRED.SCALAR_SINGLE",
++                 "SIMD_INST_RETIRED.SCALAR_SINGLE")
++  except:
++    return None
++  d_64 = Event("FP_ARITH_INST_RETIRED.SCALAR_DOUBLE",
++               "SIMD_INST_RETIRED.SCALAR_DOUBLE")
++  s_128 = Event("FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE",
++                "SIMD_INST_RETIRED.PACKED_SINGLE")
++
++  flop = s_64 + d_64 + 4 * s_128
++
++  d_128 = None
++  s_256 = None
++  d_256 = None
++  s_512 = None
++  d_512 = None
++  try:
++    d_128 = Event("FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE")
++    flop += 2 * d_128
++    s_256 = Event("FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE")
++    flop += 8 * s_256
++    d_256 = Event("FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE")
++    flop += 4 * d_256
++    s_512 = Event("FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE")
++    flop += 16 * s_512
++    d_512 = Event("FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE")
++    flop += 8 * d_512
++  except:
++    pass
++
++  f_assist = Event("ASSISTS.FP", "FP_ASSIST.ANY", "FP_ASSIST.S")
++  if f_assist in [
++      "ASSISTS.FP",
++      "FP_ASSIST.S",
++  ]:
++    f_assist += "/cmask=1/"
++
++  flop_r = d_ratio(flop, interval_sec)
++  flop_c = d_ratio(flop, cyc)
++  nmi_constraint = MetricConstraint.GROUPED_EVENTS
++  if f_assist.name == "ASSISTS.FP": # Icelake+
++    nmi_constraint = MetricConstraint.NO_GROUP_EVENTS_NMI
++  def FpuMetrics(group: str, fl: Optional[Event], mult: int, desc: str) -> Optional[MetricGroup]:
++    if not fl:
++      return None
++
++    f = fl * mult
++    fl_r = d_ratio(f, interval_sec)
++    r_s = d_ratio(fl, interval_sec)
++    return MetricGroup(group, [
++        Metric(f"{group}_of_total", desc + " floating point operations per second",
++               d_ratio(f, flop), "100%"),
++        Metric(f"{group}_flops", desc + " floating point operations per second",
++               fl_r, "flops/s"),
++        Metric(f"{group}_ops", desc + " operations per second",
++               r_s, "ops/s"),
++    ])
++
++  return MetricGroup("fpu", [
++      MetricGroup("fpu_total", [
++          Metric("fpu_total_flops", "Floating point operations per second",
++                 flop_r, "flops/s"),
++          Metric("fpu_total_flopc", "Floating point operations per cycle",
++                 flop_c, "flops/cycle", constraint=nmi_constraint),
++      ]),
++      MetricGroup("fpu_64", [
++          FpuMetrics("fpu_64_single", s_64, 1, "64-bit single"),
++          FpuMetrics("fpu_64_double", d_64, 1, "64-bit double"),
++      ]),
++      MetricGroup("fpu_128", [
++          FpuMetrics("fpu_128_single", s_128, 4, "128-bit packed single"),
++          FpuMetrics("fpu_128_double", d_128, 2, "128-bit packed double"),
++      ]),
++      MetricGroup("fpu_256", [
++          FpuMetrics("fpu_256_single", s_256, 8, "128-bit packed single"),
++          FpuMetrics("fpu_256_double", d_256, 4, "128-bit packed double"),
++      ]),
++      MetricGroup("fpu_512", [
++          FpuMetrics("fpu_512_single", s_512, 16, "128-bit packed single"),
++          FpuMetrics("fpu_512_double", d_512, 8, "128-bit packed double"),
++      ]),
++      Metric("fpu_assists", "FP assists as a percentage of cycles",
++             d_ratio(f_assist, cyc), "100%"),
++  ])
++
++
+ def IntelIlp() -> MetricGroup:
+     tsc = Event("msr/tsc/")
+     c0 = Event("msr/mperf/")
+@@ -688,6 +777,7 @@ all_metrics = MetricGroup("", [
+     Tsx(),
+     IntelBr(),
+     IntelCtxSw(),
++    IntelFpu(),
+     IntelIlp(),
+     IntelL2(),
+     IntelLdSt(),
+-- 
+2.44.0.278.ge034bb2e1d-goog
 
